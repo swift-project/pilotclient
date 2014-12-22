@@ -30,9 +30,7 @@ namespace BlackMisc
 
     namespace Aviation
     {
-        /*!
-         * COM system (aka "radio")
-         */
+        //! COM system (aka "radio")
         class CComSystem : public CValueObjectStdTuple<CComSystem, CModulator<CComSystem>>
         {
         public:
@@ -42,6 +40,14 @@ namespace BlackMisc
                 ChannelSpacing50KHz,
                 ChannelSpacing25KHz,
                 ChannelSpacing8_33KHz
+            };
+
+            //! COM unit
+            enum ComUnit
+            {
+                Com1,
+                Com2,
+                Com3
             };
 
             //! Default constructor
@@ -166,17 +172,19 @@ namespace BlackMisc
             virtual bool validValues() const override;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CComSystem)
-            ChannelSpacing m_channelSpacing;
+            ChannelSpacing m_channelSpacing; //!< channel spacing
 
             /*!
              * Give me channel spacing in KHz
              * \remarks Just a helper method, that is why no CFrequency is returned
              */
             static double channelSpacingToFrequencyKHz(ChannelSpacing channelSpacing);
+
+            BLACK_ENABLE_TUPLE_CONVERSION(CComSystem)
+
         };
-    }
-}
+    } // namespace
+} // namespace
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CComSystem, (o.m_channelSpacing))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CComSystem)

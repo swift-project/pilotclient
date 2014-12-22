@@ -179,6 +179,31 @@ namespace BlackCore
         return changed;
     }
 
+    /*
+     * COM frequency
+     */
+    bool CContextOwnAircraft::updateComFrequency(const CFrequency &frequency, int comUnit, const QString &originator)
+    {
+        CComSystem::ComUnit unit = static_cast<CComSystem::ComUnit>(comUnit);
+        if (unit != CComSystem::Com1 && unit != CComSystem::Com2) { return false; }
+        if (!CComSystem::isValidComFrequency(frequency)) { return false; }
+        CComSystem com1 = this->m_ownAircraft.getCom1System();
+        CComSystem com2 = this->m_ownAircraft.getCom2System();
+        CTransponder xpdr = this->m_ownAircraft.getTransponder();
+        if (unit == CComSystem::Com1)
+        {
+            com1.setFrequencyActive(frequency);
+        }
+        else
+        {
+            com2.setFrequencyActive(frequency);
+        }
+        return updateOwnCockpit(com1, com2, xpdr, originator);
+    }
+
+    /*
+     * Pilot
+     */
     bool CContextOwnAircraft::updatePilot(const CUser &pilot, const QString &originator)
     {
         if (this->m_ownAircraft.getPilot() == pilot) { return false; }

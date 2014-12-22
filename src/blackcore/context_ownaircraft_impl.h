@@ -55,6 +55,9 @@ namespace BlackCore
         //! \copydoc IContextOwnAircraft::updateOwnCockpit
         virtual bool updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) override;
 
+        //! \copydoc IContextOwnAircraft::updateComFrequency
+        virtual bool updateComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const QString &originator) override;
+
         //! \copydoc IContextOwnAircraft::updatePilot
         virtual bool updatePilot(const BlackMisc::Network::CUser &pilot, const QString &originator) override;
 

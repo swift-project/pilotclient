@@ -21,7 +21,7 @@ namespace BlackGui
     namespace Views
     {
         //! ATC stations view
-        class CAtcStationView : public CViewBase<Models::CAtcStationListModel, BlackMisc::Aviation::CAtcStationList>
+        class CAtcStationView : public CViewBase<Models::CAtcStationListModel, BlackMisc::Aviation::CAtcStationList, BlackMisc::Aviation::CAtcStation>
         {
             Q_OBJECT
 
@@ -37,6 +37,9 @@ namespace BlackGui
             //! Request some dummy ATC stations
             void testRequestDummyAtcOnlineStations(int number);
 
+            //! Request COM frequency
+            void requestComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit unit);
+
         public slots:
             //! \copydoc CAtcStationListModel::changedAtcStationConnectionStatus
             void changedAtcStationConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
@@ -48,6 +51,8 @@ namespace BlackGui
         private slots:
             void ps_testRequest1kAtcOnlineDummies() { emit this->testRequestDummyAtcOnlineStations(1000); }
             void ps_testRequest3kAtcOnlineDummies() { emit this->testRequestDummyAtcOnlineStations(3000); }
+            void ps_tuneInAtcCom1();
+            void ps_tuneInAtcCom2();
         };
     }
 }

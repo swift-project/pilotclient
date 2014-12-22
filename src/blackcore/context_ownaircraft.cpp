@@ -20,7 +20,7 @@ namespace BlackCore
         case CRuntimeConfig::Remote:
             return new BlackCore::CContextOwnAircraftProxy(BlackCore::CDBusServer::ServiceName, conn, mode, parent);
         default:
-            qFatal("Always initialize an ownaircraft context");
+            qFatal("Always initialize an ownAircraft context");
             return nullptr;
         }
     }

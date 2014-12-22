@@ -64,6 +64,11 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateOwnCockpit"), com1, com2, transponder, originator);
     }
 
+    bool CContextOwnAircraftProxy::updateComFrequency(const PhysicalQuantities::CFrequency &frequency, int comUnit, const QString &originator)
+    {
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateComFrequency"), frequency, comUnit, originator);
+    }
+
     bool CContextOwnAircraftProxy::updatePilot(const BlackMisc::Network::CUser &pilot, const QString &originator)
     {
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updatePilot"), pilot, originator);

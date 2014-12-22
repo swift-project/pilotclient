@@ -20,7 +20,7 @@ namespace BlackGui
     namespace Views
     {
         //! Network servers
-        class CServerView : public CViewBase<Models::CServerListModel, BlackMisc::Network::CServerList>
+        class CServerView : public CViewBase<Models::CServerListModel, BlackMisc::Network::CServerList, BlackMisc::Network::CServer>
         {
 
         public:

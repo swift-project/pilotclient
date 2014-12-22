@@ -46,7 +46,6 @@ namespace BlackGui
             // scroll modes
             this->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
             this->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
-
         }
 
         void CViewBaseNonTemplate::customMenu(QMenu &menu) const
@@ -75,6 +74,16 @@ namespace BlackGui
             QFontMetrics m(this->getHorizontalHeaderFont());
             int h = m.height();
             return h;
+        }
+
+        bool CViewBaseNonTemplate::hasSelection() const
+        {
+            return this->selectionModel()->hasSelection();
+        }
+
+        QModelIndexList CViewBaseNonTemplate::selectedRows() const
+        {
+            return this->selectionModel()->selectedRows();
         }
 
         void CViewBaseNonTemplate::init()
@@ -152,7 +161,7 @@ namespace BlackGui
             }
         }
 
-        template <class ModelClass, class ContainerType> int CViewBase<ModelClass, ContainerType>::updateContainer(const ContainerType &container, bool sort, bool resize)
+        template <class ModelClass, class ContainerType, class ObjectType> int CViewBase<ModelClass, ContainerType, ObjectType>::updateContainer(const ContainerType &container, bool sort, bool resize)
         {
             Q_ASSERT(this->m_model);
             int c = this->m_model->update(container, sort);
@@ -160,7 +169,7 @@ namespace BlackGui
             return c;
         }
 
-        template <class ModelClass, class ContainerType> BlackMisc::CWorker *CViewBase<ModelClass, ContainerType>::updateContainerAsync(const ContainerType &container, bool sort, bool resize)
+        template <class ModelClass, class ContainerType, class ObjectType> BlackMisc::CWorker *CViewBase<ModelClass, ContainerType, ObjectType>::updateContainerAsync(const ContainerType &container, bool sort, bool resize)
         {
             ModelClass *model = this->derivedModel();
             auto sortColumn = model->getSortColumn();
@@ -175,7 +184,7 @@ namespace BlackGui
             return worker;
         }
 
-        template <class ModelClass, class ContainerType> void CViewBase<ModelClass, ContainerType>::updateContainerMaybeAsync(const ContainerType &container, bool sort, bool resize)
+        template <class ModelClass, class ContainerType, class ObjectType> void CViewBase<ModelClass, ContainerType, ObjectType>::updateContainerMaybeAsync(const ContainerType &container, bool sort, bool resize)
         {
             if (container.size() > asyncRowsCountThreshold && sort)
             {
@@ -188,25 +197,37 @@ namespace BlackGui
             }
         }
 
-        template <class ModelClass, class ContainerType> int CViewBase<ModelClass, ContainerType>::rowCount() const
+        template <class ModelClass, class ContainerType, class ObjectType> ContainerType CViewBase<ModelClass, ContainerType, ObjectType>::selectedObjects() const
+        {
+            if (!this->hasSelection()) { return ContainerType(); }
+            ContainerType c;
+            QModelIndexList indexes = this->selectedRows();
+            for (QModelIndex &i : indexes)
+            {
+                c.push_back(this->at(i));
+            }
+            return c;
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType> int CViewBase<ModelClass, ContainerType, ObjectType>::rowCount() const
         {
             Q_ASSERT(this->m_model);
             return this->m_model->rowCount();
         }
 
-        template <class ModelClass, class ContainerType> int CViewBase<ModelClass, ContainerType>::columnCount() const
+        template <class ModelClass, class ContainerType, class ObjectType> int CViewBase<ModelClass, ContainerType, ObjectType>::columnCount() const
         {
             Q_ASSERT(this->m_model);
             return this->m_model->columnCount(QModelIndex());
         }
 
-        template <class ModelClass, class ContainerType> bool CViewBase<ModelClass, ContainerType>::isEmpty() const
+        template <class ModelClass, class ContainerType, class ObjectType> bool CViewBase<ModelClass, ContainerType, ObjectType>::isEmpty() const
         {
             Q_ASSERT(this->m_model);
             return this->m_model->rowCount() < 1;
         }
 
-        template <class ModelClass, class ContainerType> void CViewBase<ModelClass, ContainerType>::setObjectName(const QString &name)
+        template <class ModelClass, class ContainerType, class ObjectType> void CViewBase<ModelClass, ContainerType, ObjectType>::setObjectName(const QString &name)
         {
             // then name here is mainly set for debugging purposes so each model can be identified
             Q_ASSERT(m_model);
@@ -215,7 +236,7 @@ namespace BlackGui
             this->m_model->setObjectName(modelName);
         }
 
-        template <class ModelClass, class ContainerType> void CViewBase<ModelClass, ContainerType>::setSortIndicator()
+        template <class ModelClass, class ContainerType, class ObjectType> void CViewBase<ModelClass, ContainerType, ObjectType>::setSortIndicator()
         {
             if (this->m_model->hasValidSortColumn())
             {
@@ -226,7 +247,7 @@ namespace BlackGui
             }
         }
 
-        template <class ModelClass, class ContainerType> void CViewBase<ModelClass, ContainerType>::standardInit(ModelClass *model)
+        template <class ModelClass, class ContainerType, class ObjectType> void CViewBase<ModelClass, ContainerType, ObjectType>::standardInit(ModelClass *model)
         {
             Q_ASSERT(model || this->m_model);
             if (model)
@@ -239,7 +260,7 @@ namespace BlackGui
             this->setSortIndicator();
         }
 
-        template <class ModelClass, class ContainerType>  void CViewBase<ModelClass, ContainerType>::performResizeToContents()
+        template <class ModelClass, class ContainerType, class ObjectType>  void CViewBase<ModelClass, ContainerType, ObjectType>::performResizeToContents()
         {
             // small set or large set?
             if (this->performResizing())
@@ -252,7 +273,7 @@ namespace BlackGui
             }
         }
 
-        template <class ModelClass, class ContainerType> int CViewBase<ModelClass, ContainerType>::performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize)
+        template <class ModelClass, class ContainerType, class ObjectType> int CViewBase<ModelClass, ContainerType, ObjectType>::performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize)
         {
             ContainerType c;
             c.convertFromCVariant(variant);
@@ -261,16 +282,16 @@ namespace BlackGui
 
         // see here for the reason of thess forward instantiations
         // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
-        template class CViewBase<BlackGui::Models::CStatusMessageListModel, BlackMisc::CStatusMessageList>;
-        template class CViewBase<BlackGui::Models::CNameVariantPairModel, BlackMisc::CNameVariantPairList>;
-        template class CViewBase<BlackGui::Models::CAtcStationListModel, BlackMisc::Aviation::CAtcStationList>;
-        template class CViewBase<BlackGui::Models::CAircraftListModel, BlackMisc::Aviation::CAircraftList>;
-        template class CViewBase<BlackGui::Models::CAirportListModel, BlackMisc::Aviation::CAirportList>;
-        template class CViewBase<BlackGui::Models::CServerListModel, BlackMisc::Network::CServerList>;
-        template class CViewBase<BlackGui::Models::CUserListModel, BlackMisc::Network::CUserList>;
-        template class CViewBase<BlackGui::Models::CClientListModel, BlackMisc::Network::CClientList>;
-        template class CViewBase<BlackGui::Models::CAircraftModelListModel, BlackMisc::Network::CAircraftModelList>;
-        template class CViewBase<BlackGui::Models::CKeyboardKeyListModel, BlackMisc::Settings::CSettingKeyboardHotkeyList>;
+        template class CViewBase<BlackGui::Models::CStatusMessageListModel, BlackMisc::CStatusMessageList, BlackMisc::CStatusMessage>;
+        template class CViewBase<BlackGui::Models::CNameVariantPairModel, BlackMisc::CNameVariantPairList, BlackMisc::CNameVariantPair>;
+        template class CViewBase<BlackGui::Models::CAtcStationListModel, BlackMisc::Aviation::CAtcStationList, BlackMisc::Aviation::CAtcStation>;
+        template class CViewBase<BlackGui::Models::CAircraftListModel, BlackMisc::Aviation::CAircraftList, BlackMisc::Aviation::CAircraft>;
+        template class CViewBase<BlackGui::Models::CAirportListModel, BlackMisc::Aviation::CAirportList, BlackMisc::Aviation::CAirport>;
+        template class CViewBase<BlackGui::Models::CServerListModel, BlackMisc::Network::CServerList, BlackMisc::Network::CServer>;
+        template class CViewBase<BlackGui::Models::CUserListModel, BlackMisc::Network::CUserList, BlackMisc::Network::CUser>;
+        template class CViewBase<BlackGui::Models::CClientListModel, BlackMisc::Network::CClientList, BlackMisc::Network::CClient>;
+        template class CViewBase<BlackGui::Models::CAircraftModelListModel, BlackMisc::Network::CAircraftModelList, BlackMisc::Network::CAircraftModel>;
+        template class CViewBase<BlackGui::Models::CKeyboardKeyListModel, BlackMisc::Settings::CSettingKeyboardHotkeyList, BlackMisc::Settings::CSettingKeyboardHotkey>;
 
     } // namespace
 } // namespace

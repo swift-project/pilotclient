@@ -20,7 +20,7 @@ namespace BlackGui
     namespace Views
     {
         //! Aircrafts view
-        class CAircraftView : public CViewBase<Models::CAircraftListModel, BlackMisc::Aviation::CAircraftList>
+        class CAircraftView : public CViewBase<Models::CAircraftListModel, BlackMisc::Aviation::CAircraftList, BlackMisc::Aviation::CAircraft>
         {
 
         public:

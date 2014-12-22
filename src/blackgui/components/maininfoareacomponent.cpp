@@ -42,7 +42,7 @@ namespace BlackGui
 
         CAircraftComponent *CMainInfoAreaComponent::getAircraftComponent()
         {
-            return this->ui->comp_Aircrafts;
+            return this->ui->comp_Aircraft;
         }
 
         CUserComponent *CMainInfoAreaComponent::getUserComponent()

@@ -14,12 +14,14 @@
 #include "blackmisc/avinformationmessage.h"
 #include "blackmisc/logmessage.h"
 #include "blackcore/context_network.h"
+#include "blackcore/context_ownaircraft.h"
 
 using namespace BlackGui;
 using namespace BlackGui::Models;
 using namespace BlackGui::Views;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackCore;
 
 namespace BlackGui
@@ -57,6 +59,7 @@ namespace BlackGui
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::ps_requestOnlineStationsUpdate);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::countChanged, this, &CAtcStationComponent::ps_countChanged);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::countChanged, this, &CAtcStationComponent::ps_countChanged);
+            connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::requestComFrequency, this, &CAtcStationComponent::ps_setComFrequency);
 
             connect(this->ui->tvp_AtcStationsBooked, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::ps_reloadAtcStationsBooked);
             connect(this->ui->tvp_AtcStationsBooked, &CAtcStationView::countChanged, this, &CAtcStationComponent::ps_countChanged);
@@ -239,6 +242,13 @@ namespace BlackGui
             b = CGuiUtility::replaceTabCountValue(b, this->countBookedStations());
             this->tabBar()->setTabText(io, o);
             this->tabBar()->setTabText(ib, b);
+        }
+
+        void CAtcStationComponent::ps_setComFrequency(const PhysicalQuantities::CFrequency &frequency, CComSystem::ComUnit unit)
+        {
+            if (unit != CComSystem::Com1 && unit != CComSystem::Com2) { return; }
+            if (!CComSystem::isValidComFrequency(frequency)) { return; }
+            this->getIContextOwnAircraft()->updateComFrequency(frequency, static_cast<int>(unit), originator());
         }
 
         void CAtcStationComponent::ps_onlineAtcStationSelected(QModelIndex index)

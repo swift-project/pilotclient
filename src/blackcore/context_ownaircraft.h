@@ -105,6 +105,9 @@ namespace BlackCore
         //! \todo remove "own", left over from past
         virtual bool updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) = 0;
 
+        //! Tune in a com frequency
+        virtual bool updateComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const QString &originator) = 0;
+
         //! Set current pilot
         virtual bool updatePilot(const BlackMisc::Network::CUser &pilot, const QString &originator) = 0;
 

@@ -20,6 +20,7 @@
 #include <QMenu>
 #include <QPoint>
 #include <QFont>
+#include <QList>
 
 namespace BlackGui
 {
@@ -62,6 +63,12 @@ namespace BlackGui
 
             //! Horizontal font height
             int getHorizontalHeaderFontHeight() const;
+
+            //! Selection (selected rows)
+            bool hasSelection() const;
+
+            //! Selected rows if any
+            QModelIndexList selectedRows() const;
 
         signals:
             //! Ask for new data
@@ -140,7 +147,7 @@ namespace BlackGui
         };
 
         //! Base class for views
-        template <class ModelClass, class ContainerType> class CViewBase : public CViewBaseNonTemplate
+        template <class ModelClass, class ContainerType, class ObjectType> class CViewBase : public CViewBaseNonTemplate
         {
 
         public:
@@ -166,7 +173,7 @@ namespace BlackGui
             void updateContainerMaybeAsync(const ContainerType &container, bool sort = true, bool performResizing = true);
 
             //! Insert
-            template<class ObjectType> void insert(const ObjectType &value, bool resize = true)
+            void insert(const ObjectType &value, bool resize = true)
             {
                 Q_ASSERT(this->m_model);
                 this->m_model->insert(value);
@@ -174,11 +181,14 @@ namespace BlackGui
             }
 
             //! Value object at
-            template<class ObjectType> const ObjectType &at(const QModelIndex &index) const
+            const ObjectType &at(const QModelIndex &index) const
             {
                 Q_ASSERT(this->m_model);
                 return this->m_model->at(index);
             }
+
+            //! Selected objects
+            ContainerType selectedObjects() const;
 
             //! Row count
             int rowCount() const;

@@ -141,7 +141,7 @@ namespace BlackGui
          */
         void CSettingsComponent::ps_networkServerSelected(QModelIndex index)
         {
-            const CServer clickedServer = this->ui->tvp_SettingsTnServers->at<CServer>(index);
+            const CServer clickedServer = this->ui->tvp_SettingsTnServers->at(index);
             this->ui->frp_ServerForm->setServer(clickedServer);
         }
 
@@ -198,7 +198,7 @@ namespace BlackGui
         {
             QModelIndex i = this->ui->tvp_SettingsMiscHotkeys->currentIndex();
             if (i.row() < 0 || i.row() >= this->ui->tvp_SettingsMiscHotkeys->rowCount()) return;
-            CSettingKeyboardHotkey hotkey = this->ui->tvp_SettingsMiscHotkeys->at<CSettingKeyboardHotkey>(i);
+            CSettingKeyboardHotkey hotkey = this->ui->tvp_SettingsMiscHotkeys->at(i);
             CSettingKeyboardHotkey defaultHotkey;
             defaultHotkey.setFunction(hotkey.getFunction());
             this->ui->tvp_SettingsMiscHotkeys->derivedModel()->update(i, defaultHotkey);

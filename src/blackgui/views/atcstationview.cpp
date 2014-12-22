@@ -8,10 +8,12 @@
  */
 
 #include "atcstationview.h"
+#include "blackmisc/avatcstationlist.h"
 #include "blackmisc/testing.h"
 #include <QHeaderView>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
 using namespace BlackGui::Models;
 
 namespace BlackGui
@@ -59,7 +61,29 @@ namespace BlackGui
                 menu.addAction(CIcons::tableSheet16(), "Test: 3k ATC online stations", this, SLOT(ps_testRequest3kAtcOnlineDummies()));
                 menu.addSeparator();
             }
+
+            if (this->hasSelection())
+            {
+                menu.addAction(CIcons::appCockpit16(), "Tune in COM1", this, SLOT(ps_tuneInAtcCom1()));
+                menu.addAction(CIcons::appCockpit16(), "Tune in COM2", this, SLOT(ps_tuneInAtcCom2()));
+                menu.addSeparator();
+            }
             CViewBase::customMenu(menu);
         }
-    }
-}
+
+        void CAtcStationView::ps_tuneInAtcCom1()
+        {
+            CAtcStationList l = this->selectedObjects();
+            if (l.isEmpty()) { return; }
+            emit this->requestComFrequency(l.front().getFrequency(), CComSystem::Com1);
+        }
+
+        void CAtcStationView::ps_tuneInAtcCom2()
+        {
+            CAtcStationList l = this->selectedObjects();
+            if (l.isEmpty()) { return; }
+            emit this->requestComFrequency(l.front().getFrequency(), CComSystem::Com2);
+        }
+
+    } // namespace
+} // namespace
