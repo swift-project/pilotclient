@@ -44,7 +44,7 @@ namespace BlackMisc
          */
         CVariant CAircraftModel::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toQVariant(); }
+            if (index.isMyself()) { return this->toCVariant(); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {

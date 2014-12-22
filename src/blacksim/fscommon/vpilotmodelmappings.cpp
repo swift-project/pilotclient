@@ -40,7 +40,7 @@ namespace BlackSim
             if (!dir.exists()) return;
             QStringList nameFilters({"*.vmr"});
             QFileInfoList entries = dir.entryInfoList(nameFilters, QDir::Files | QDir::Readable);
-            foreach(QFileInfo file, entries)
+            for (const QFileInfo &file : entries)
             {
                 this->addFilename(file.absoluteFilePath());
             }
@@ -63,7 +63,7 @@ namespace BlackSim
             bool success = true;
             this->m_loadedFiles = 0;
             this->m_fileListWithProblems.clear();
-            foreach(QString fn, this->m_fileList)
+            for (const QString &fn : this->m_fileList)
             {
                 this->m_loadedFiles++;
                 bool s = this->loadFile(fn);
@@ -108,8 +108,8 @@ namespace BlackSim
                 if (modelName.contains("//"))
                 {
                     // multiple models
-                    QStringList models = modelName.split("//");
-                    foreach(QString model, models)
+                    const QStringList models = modelName.split("//");
+                    for (const QString &model : models)
                     {
                         if (model.isEmpty()) { continue; }
                         CAircraftMapping mapping("vpilot", folder, typeCode, airlineCode, model);

@@ -52,7 +52,7 @@ namespace BlackSim
             QStringList titles = this->getTitles(true);
             QStringList ambiguousTitles;
             QString last;
-            foreach(QString title, titles)
+            for (const QString &title : titles)
             {
                 if (title.isEmpty()) { continue; }
                 if (title.compare(last, Qt::CaseInsensitive) == 0)
@@ -116,7 +116,7 @@ namespace BlackSim
             // Dirs last is crucial,since I will break recursion on "aircraft.cfg" level
             QFileInfoList files = dir.entryInfoList(QDir::Files | QDir::AllDirs, QDir::DirsLast);
 
-            foreach(QFileInfo file, files)
+            for (const QFileInfo &file : files)
             {
                 if (m_cancelRead) { return -1; }
                 if (file.isDir())

@@ -584,7 +584,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::updateOtherAircraft()
         {
-            foreach(CSimConnectObject simObj, m_simConnectObjects)
+            for (const CSimConnectObject &simObj : m_simConnectObjects)
             {
                 if (simObj.getInterpolator()->hasEnoughAircraftSituations())
                 {

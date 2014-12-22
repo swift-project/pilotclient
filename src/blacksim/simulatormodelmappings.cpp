@@ -36,7 +36,7 @@ namespace BlackSim
     {
         if (modelNames.isEmpty() || this->m_mappings.isEmpty()) { return this->m_mappings.size(); }
         CAircraftMappingList newList;
-        foreach(CAircraftMapping mapping, this->m_mappings)
+        for (const CAircraftMapping &mapping : this->m_mappings)
         {
             QString modelString = mapping.getModel().getModelString();
             if (modelString.isEmpty()) { continue; }
