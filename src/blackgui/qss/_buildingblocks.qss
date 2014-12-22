@@ -1,0 +1,12 @@
+Useful blocks, currently not used but saved for future
+
+/** required when dock widget is floating **/
+/** background-image not working on QDockWidget, so I use direct children **/
+#sw_MainMiddle QDockWidget {
+  background-color: black;
+}
+
+#sw_MainMiddle QDockWidget > QWidget {
+  background-color: black;
+  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+}

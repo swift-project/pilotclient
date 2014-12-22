@@ -19,13 +19,22 @@ QMainWindow {
 
 /** required when dock widget is floating **/
 /** background-image not working on QDockWidget, so I use direct children **/
-#sw_MainMiddle QDockWidget {
-  background-color: black;
-}
-
-#sw_MainMiddle QDockWidget > QWidget {
+#sw_MainMiddle BlackGui--CDockWidgetInfoArea {
   background-color: black;
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
+}
+
+#sw_MainMiddle BlackGui--CDockWidgetInfoArea > QWidget {
+  background-color: black;
+  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+}
+
+/** fix the menu, which is overridden by the above QWidget **/
+#sw_MainMiddle BlackGui--CDockWidgetInfoArea > QMenu {
+  border: 2px solid darkslategray; /* reserve space for selection border */
+  background: lightgray;
+  color: black;
+  padding: 2px;
 }
 
 /** required when info area is not floating **/
