@@ -161,6 +161,8 @@ namespace BlackMisc
                 return this->m_situation.propertyByIndex(index.copyFrontRemoved());
             case IndexIcao:
                 return this->m_icao.propertyByIndex(index.copyFrontRemoved());
+            case IndexParts:
+                return this->m_parts.propertyByIndex(index.copyFrontRemoved());
             default:
                 return (ICoordinateGeodetic::canHandleIndex(index)) ?
                        ICoordinateGeodetic::propertyByIndex(index) :
@@ -201,6 +203,9 @@ namespace BlackMisc
                 break;
             case IndexSituation:
                 this->m_situation.setPropertyByIndex(variant, index.copyFrontRemoved());
+                break;
+            case IndexParts:
+                this->m_parts.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             default:
                 CValueObject::setPropertyByIndex(variant, index);

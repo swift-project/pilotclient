@@ -19,6 +19,7 @@
 #include "avselcal.h"
 #include "aviotransponder.h"
 #include "aviocomsystem.h"
+#include "aviation/aircraftparts.h"
 #include "valueobject.h"
 #include "namevariantpairlist.h"
 #include "propertyindex.h"
@@ -42,7 +43,8 @@ namespace BlackMisc
                 IndexCom2System,
                 IndexTransponder,
                 IndexSituation,
-                IndexIcao
+                IndexIcao,
+                IndexParts
             };
 
             //! Default constructor.
@@ -239,6 +241,12 @@ namespace BlackMisc
             //! Meaningful default settings for Transponder
             void initTransponder();
 
+            //! Get aircraft parts
+            const BlackMisc::Aviation::CAircraftParts &getParts() const { return m_parts; }
+
+            //! Set aircraft parts
+            void setParts(const BlackMisc::Aviation::CAircraftParts &parts) { m_parts = parts; }
+
             //! \copydoc CValueObject::propertyByIndex
             virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
@@ -257,13 +265,25 @@ namespace BlackMisc
             CComSystem                m_com1system;
             CComSystem                m_com2system;
             CTransponder              m_transponder;
+            CAircraftParts            m_parts;
             CSelcal                   m_selcal;
             CAircraftIcao             m_icao;
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraft, (o.m_callsign, o.m_pilot, o.m_situation, o.m_com1system, o.m_com2system, o.m_transponder, o.m_icao, o.m_distanceToOwnAircraft, o.m_bearingToOwnAircraft))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraft, (
+                                   o.m_callsign,
+                                   o.m_pilot,
+                                   o.m_situation,
+                                   o.m_com1system,
+                                   o.m_com2system,
+                                   o.m_transponder,
+                                   o.m_parts,
+                                   o.m_icao,
+                                   o.m_distanceToPlane,
+								   o.m_bearingToOwnAircraft))
+
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraft)
 
 #endif // guard
