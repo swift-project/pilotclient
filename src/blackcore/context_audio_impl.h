@@ -168,7 +168,6 @@ namespace BlackCore
 
         CInputManager *m_inputManager = nullptr;
         CInputManager::RegistrationHandle m_handlePtt;
-        QThread m_threadVoice;
         QPointer<IVoiceChannel> m_channelCom1;
         QPointer<IVoiceChannel> m_channelCom2;
     };

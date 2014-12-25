@@ -46,9 +46,6 @@ namespace BlackCore
         //! Leave voice room
         virtual void leaveVoiceRoom() = 0;
 
-        //! Set room output volume
-        virtual void setRoomOutputVolume(const qint32 volume) = 0;
-
         //! Start transmitting
         virtual void startTransmitting() = 0;
 

@@ -71,42 +71,8 @@ namespace BlackCore
          */
         virtual const BlackMisc::Audio::CAudioDeviceInfo defaultAudioOutputDevice() const = 0;
 
-        /************************************************
-         * SETUP TESTS
-         ***********************************************/
-
-        /*!
-         * \brief Runs a 5 seconds test, measuring your background noise.
-         */
-        virtual void runSquelchTest() = 0;
-
-        /*!
-         * \brief Runs a 5 seconds test, measuring the qualitiy of your mic input
-         */
-        virtual void runMicrophoneTest() = 0;
-
-        /*!
-         * \brief Value of the measured squelch
-         * \return
-         */
-        virtual float inputSquelch() const = 0;
-
-        /*!
-         * \brief Result of the mic test.
-         * \return
-         */
-        virtual qint32 micTestResult() const = 0;
-
-        /*!
-         * \brief Result of the mic test as human readable string
-         * \return
-         */
-        virtual QString micTestResultAsString() const = 0;
-
         //! Get voice channel object
         virtual IVoiceChannel *getVoiceChannel(qint32 channelIndex) const = 0;
-
-    public slots:
 
         /*!
          * \brief Current input device
@@ -133,26 +99,6 @@ namespace BlackCore
          * \param enable (default true)
          */
         virtual void enableAudioLoopback(bool enable = true) = 0;
-
-    signals:
-
-        // Test signals
-        /*!
-         * \brief Squelch test completed
-         */
-        void squelchTestFinished();
-
-        /*!
-         * \brief Microphone test completed
-         */
-        void micTestFinished();
-
-        // non protocol related signals
-
-        /*!
-         * We sent a message about the status of the network connection, for the attention of the user.
-         */
-        void statusMessage(const BlackMisc::CStatusMessage &message);
     };
 
 } // namespace BlackCore

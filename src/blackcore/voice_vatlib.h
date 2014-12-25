@@ -7,18 +7,8 @@
 #define BLACKCORE_VOICE_VATLIB_H
 
 #include "voice.h"
-#include "../blacksound/soundgenerator.h"
-#include "../blackmisc/nwuserlist.h"
-#include "../blackmisc/avcallsignlist.h"
-#include "../blackmisc/sharedlockablepointer.h"
 
-#include <QMap>
-#include <QSet>
 #include <QString>
-#include <QMutex>
-#include <QReadWriteLock>
-#include <atomic>
-#include <utility>
 
 #ifdef Q_OS_WIN
 #ifndef NOMINMAX
@@ -31,24 +21,6 @@
 
 namespace BlackCore
 {
-    /*!
-     * \brief Deleter
-     */
-    struct Cvatlib_Voice_Simple_Deleter
-    {
-        /*!
-         * \brief Cleanup
-         * \param pointer
-         */
-        static inline void cleanup(Cvatlib_Voice_Simple *pointer)
-        {
-            if (pointer) pointer->Destroy();
-        }
-    };
-
-    //! Shared lockable pointer to Cvatlib_Voice_Simple
-    typedef BlackMisc::SharedLockablePtr<Cvatlib_Voice_Simple> TVatlibPointer;
-
     /*!
      * Vatlib implementation of the IVoice interface.
      */
@@ -81,25 +53,6 @@ namespace BlackCore
         //! \copydoc IVoice::defaultAudioOutputDevice()
         virtual const BlackMisc::Audio::CAudioDeviceInfo defaultAudioOutputDevice() const override;
 
-        /************************************************
-         * SETUP TESTS
-         ***********************************************/
-
-        //! \copydoc IVoice::runSquelchTest
-        virtual void runSquelchTest() override;
-
-        //! \copydoc IVoice::runMicTest
-        virtual void runMicrophoneTest() override;
-
-        //! \copydoc IVoice::inputSquelch
-        virtual float inputSquelch() const override;
-
-        //! \copydoc IVoice::micTestResult()
-        virtual qint32 micTestResult() const override;
-
-        //! \copydoc IVoice::micTestResultAsString
-        virtual QString micTestResultAsString() const override;
-
         //! \copydoc IVoice::getVoiceChannel
         virtual IVoiceChannel *getVoiceChannel(qint32 channelIndex) const override;
 
@@ -131,34 +84,19 @@ namespace BlackCore
          */
         virtual void timerEvent(QTimerEvent *);
 
-    private slots:
-        // slots for Mic tests
-        void onEndFindSquelch();
-        void onEndMicTest();
-
     private:
 
         // shimlib callbacks
         static void onRoomStatusUpdate(Cvatlib_Voice_Simple *obj, Cvatlib_Voice_Simple::roomStatusUpdate upd, qint32 roomIndex, void *cbVar);
-        static void onInputHardwareDeviceReceived(Cvatlib_Voice_Simple *obj, const char *name, void *cbVar);
-        static void onOutputHardwareDeviceReceived(Cvatlib_Voice_Simple *obj, const char *name, void *cbVar);
 
-        void exceptionDispatcher(const char *caller);
         void onRoomStatusUpdate(qint32 roomIndex, Cvatlib_Voice_Simple::roomStatusUpdate roomStatus);
 
-        TVatlibPointer m_vatlib;
         BlackMisc::Audio::CAudioDeviceInfoList m_devices; /*!< in and output devices */
         BlackMisc::Audio::CAudioDeviceInfo m_currentOutputDevice;
         BlackMisc::Audio::CAudioDeviceInfo m_currentInputDevice;
-        std::atomic<float> m_inputSquelch;
-        std::atomic<Cvatlib_Voice_Simple::agc> m_micTestResult;
         QHash<qint32, IVoiceChannel *> m_hashChannelIndex;
         bool m_isAudioLoopbackEnabled; /*!< A flag whether audio loopback is enabled or not */
 
-        // Thread serialization
-        mutable QMutex m_lockCurrentOutputDevice;
-        mutable QMutex m_lockCurrentInputDevice;
-        mutable QMutex m_lockDeviceList;
     };
 
 } // namespace

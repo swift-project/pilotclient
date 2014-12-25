@@ -36,7 +36,6 @@ namespace BlackCore
           q_ptr(parent)
     {
         m_roomIndex.store(InvalidRoomIndex);
-        m_volume.store(100);
         m_connectionRefCount.store(0);
         m_outputEnabled.store(true);
         m_roomStatus.store(IVoiceChannel::Disconnected);
@@ -365,12 +364,6 @@ namespace BlackCore
             d_ptr->changeConnectionStatus(IVoiceChannel::Disconnecting);
             d_ptr->changeConnectionStatus(IVoiceChannel::Disconnected);
         }
-    }
-
-    // Set room volume
-    void CVoiceChannelVatlib::setRoomOutputVolume(const qint32 volume)
-    {
-        d_ptr->setRoomOutputVolume(volume);
     }
 
     void CVoiceChannelVatlib::startTransmitting()

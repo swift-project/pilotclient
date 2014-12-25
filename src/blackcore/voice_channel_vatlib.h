@@ -43,9 +43,6 @@ namespace BlackCore
         //! \copydoc IVoiceChannel::leaveVoiceRoom
         virtual void leaveVoiceRoom() override;
 
-        //! \copydoc IVoiceChannel::setRoomOutputVolume
-        virtual void setRoomOutputVolume(const qint32 volume) override;
-
         //! \copydoc IVoiceChannel::startTransmitting
         virtual void startTransmitting() override;
 

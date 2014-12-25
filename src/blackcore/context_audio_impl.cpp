@@ -35,17 +35,10 @@ namespace BlackCore
         m_voice(new CVoiceVatlib())
     {
         // 1. Init by "voice driver"
-        m_voice->moveToThread(&m_threadVoice);
-        m_threadVoice.start();
 
         // 2. Register PTT hotkey function
-        CVoiceVatlib *voice = m_voice.data();
         m_inputManager = CInputManager::getInstance();
         m_handlePtt = m_inputManager->registerHotkeyFunc(CHotkeyFunction::Ptt(), voice, &CVoiceVatlib::handlePushToTalk);
-
-        // 3. Signal / slots
-        connect(voice, &CVoiceVatlib::micTestFinished, this, &CContextAudio::audioTestCompleted);
-        connect(voice, &CVoiceVatlib::squelchTestFinished, this, &CContextAudio::audioTestCompleted);
 
         m_channelCom1 = m_voice->getVoiceChannel(0);
         m_channelCom1->setMyAircraftCallsign(getIContextOwnAircraft()->getOwnAircraft().getCallsign());
@@ -64,8 +57,6 @@ namespace BlackCore
     CContextAudio::~CContextAudio()
     {
         this->leaveAllVoiceRooms();
-        m_threadVoice.quit();
-        m_threadVoice.wait(1000);
     }
 
     /*
@@ -380,7 +371,7 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        this->m_voice->runMicrophoneTest();
+        // Deprecated
     }
 
     /*
@@ -388,9 +379,7 @@ namespace BlackCore
      */
     void CContextAudio::runSquelchTest()
     {
-        Q_ASSERT(this->m_voice);
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        this->m_voice->runSquelchTest();
+        CLogMessage(this).warning("This method is deprecated and will be removed soon");
     }
 
     /*
@@ -398,9 +387,8 @@ namespace BlackCore
      */
     QString CContextAudio::getMicrophoneTestResult() const
     {
-        Q_ASSERT(this->m_voice);
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        return this->m_voice->micTestResultAsString();
+        CLogMessage(this).warning("This method is deprecated and will be removed soon");
+        return QString();
     }
 
     /*
@@ -408,9 +396,8 @@ namespace BlackCore
      */
     double CContextAudio::getSquelchValue() const
     {
-        Q_ASSERT(this->m_voice);
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        return static_cast<double>(this->m_voice->inputSquelch());
+        CLogMessage(this).warning("This method is deprecated and will be removed soon");
+        return 0.0;
     }
 
     /*

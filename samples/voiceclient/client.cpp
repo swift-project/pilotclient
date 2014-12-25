@@ -19,13 +19,9 @@ Client::Client(QObject *parent) :
     QObject(parent),
     m_voice(new BlackCore::CVoiceVatlib())
 {
-    m_voice->moveToThread(&m_threadVoice);
-    m_threadVoice.start();
     m_channelCom1 = m_voice->getVoiceChannel(0);
 
     using namespace BlackCore;
-    connect(m_voice, &IVoice::squelchTestFinished,                  this, &Client::onSquelchTestFinished);
-    connect(m_voice, &IVoice::micTestFinished,                      this, &Client::onMicTestFinished);
     connect(m_channelCom1.data(), &IVoiceChannel::connectionStatusChanged,              this, &Client::connectionStatusChanged);
     connect(m_channelCom1.data(), &IVoiceChannel::audioStarted,                         this, &Client::audioStartedStream);
     connect(m_channelCom1.data(), &IVoiceChannel::audioStopped,                         this, &Client::audioStoppedStream);
@@ -36,8 +32,6 @@ Client::Client(QObject *parent) :
     m_commands["help"]              = std::bind(&Client::help, this, _1);
     m_commands["echo"]              = std::bind(&Client::echo, this, _1);
     m_commands["exit"]              = std::bind(&Client::exit, this, _1);
-    m_commands["squelchtest"]       = std::bind(&Client::squelchTestCmd, this, _1);
-    m_commands["mictest"]           = std::bind(&Client::micTestCmd, this, _1);
     m_commands["setcallsign"]       = std::bind(&Client::setCallsignCmd, this, _1);
     m_commands["initconnect"]       = std::bind(&Client::initiateConnectionCmd, this, _1);
     m_commands["termconnect"]       = std::bind(&Client::terminateConnectionCmd, this, _1);
@@ -97,23 +91,7 @@ void Client::echo(QTextStream &line)
 void Client::exit(QTextStream &)
 {
     qDebug() << "Shutting down...";
-    m_threadVoice.quit();
-    m_threadVoice.wait(5000);
     emit quit();
-}
-
-void Client::squelchTestCmd(QTextStream & /** args **/)
-{
-    std::cout << "Running squelch test. Please be quiet for 5 seconds..." << std::endl;
-    printLinePrefix();
-    m_voice->runSquelchTest();
-}
-
-void Client::micTestCmd(QTextStream & /** args **/)
-{
-    std::cout << "Running mic test. Speak normally for 5 seconds..." << std::endl;
-    printLinePrefix();
-    m_voice->runMicrophoneTest();
 }
 
 void Client::setCallsignCmd(QTextStream &args)
@@ -187,17 +165,6 @@ void Client::disableLoopbackCmd(QTextStream &/*args*/)
     std::cout << "Disabling audio loopback." << std::endl;
     m_voice->enableAudioLoopback(false);
     printLinePrefix();
-}
-
-void Client::onSquelchTestFinished()
-{
-    std::cout << "Input squelch: " << m_voice->inputSquelch() << std::endl;
-    printLinePrefix();
-}
-
-void Client::onMicTestFinished()
-{
-    std::cout << "Mic test result: " << (int)m_voice->micTestResult() << std::endl;
     printLinePrefix();
 }
 

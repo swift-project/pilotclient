@@ -33,8 +33,6 @@ private: //commands
     void help(QTextStream &args);
     void echo(QTextStream &args);
     void exit(QTextStream &args);
-    void squelchTestCmd(QTextStream &args);
-    void micTestCmd(QTextStream &args);
     void setCallsignCmd(QTextStream &args);
     void initiateConnectionCmd(QTextStream &args);
     void terminateConnectionCmd(QTextStream &args);
@@ -46,9 +44,6 @@ private: //commands
 
     void printLinePrefix();
 
-public slots:
-    void onSquelchTestFinished();
-    void onMicTestFinished();
 private slots:
 
     void connectionStatusChanged(BlackCore::IVoiceChannel::ConnectionStatus oldStatus,
@@ -61,7 +56,6 @@ private slots:
 private:
     QMap<QString, std::function<void(QTextStream &)>> m_commands;
     BlackCore::IVoice *m_voice;
-    QThread m_threadVoice;
     QPointer<BlackCore::IVoiceChannel> m_channelCom1;
 
 };
