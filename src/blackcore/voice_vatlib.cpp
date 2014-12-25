@@ -53,6 +53,67 @@ namespace BlackCore
         return make_unique<CAudioOutputDeviceVatlib>(m_audioService.data(), this);
     }
 
+    /* FIXME:
+       Can the following methods be more general somehow?
+       E.g.:
+       template <typename Input, typename Output>
+       connectVoice(Input input, Output output)
+       {
+           ...
+       }
+     */
+
+    void CVoiceVatlib::connectChannelOutputDevice(IVoiceChannel *channel, IAudioOutputDevice *device)
+    {
+        auto voiceChannelVatlib = qobject_cast<CVoiceChannelVatlib*>(channel);
+        Q_ASSERT_X(voiceChannelVatlib, "CVoiceVatlib::connectChannelOutputDevice", "No valid CVoiceChannelVatlib pointer.");
+
+        if (!device)
+        {
+            Vat_VoiceConnect(voiceChannelVatlib->getVoiceChannel(), 0, nullptr, 0);
+            return;
+        }
+
+        auto audioDeviceVatlib = qobject_cast<CAudioOutputDeviceVatlib*>(device);
+        Q_ASSERT_X(audioDeviceVatlib, "CVoiceVatlib::connectOutputDevice", "No valid CAudioOutputDeviceVatlib pointer.");
+
+        Vat_VoiceConnect(voiceChannelVatlib->getVoiceChannel(), 0, audioDeviceVatlib->getVatLocalOutputCodec(), 0);
+    }
+
+    void CVoiceVatlib::connectChannelInputDevice(IAudioInputDevice *device, IVoiceChannel *channel)
+    {
+        auto voiceChannelVatlib = qobject_cast<CVoiceChannelVatlib*>(channel);
+        Q_ASSERT_X(voiceChannelVatlib, "CVoiceVatlib::connectChannelInputDevice", "No valid CVoiceChannelVatlib pointer.");
+
+        if (!device)
+        {
+            Vat_VoiceConnect(voiceChannelVatlib->getVoiceChannel(), 0, nullptr, 0);
+            return;
+        }
+
+        auto audioDeviceVatlib = qobject_cast<CAudioInputDeviceVatlib*>(device);
+        Q_ASSERT_X(audioDeviceVatlib, "CVoiceVatlib::connectChannelInputDevice", "No valid CAudioInputDeviceVatlib pointer.");
+
+        Vat_VoiceConnect(audioDeviceVatlib->getVatLocalInputCodec(), 0, voiceChannelVatlib->getVoiceChannel(), 0);
+    }
+
+    void CVoiceVatlib::enableAudioLoopback(IAudioInputDevice *input, IAudioOutputDevice *output)
+    {
+        auto vatlibInput = qobject_cast<CAudioInputDeviceVatlib*>(input);
+        Q_ASSERT_X(vatlibInput, "CVoiceVatlib::enableAudioLoopback", "No valid CAudioInputDeviceVatlib pointer.");
+
+        if (!output)
+        {
+            Vat_VoiceConnect(vatlibInput->getVatLocalInputCodec(), 0, nullptr, 0);
+            return;
+        }
+
+        auto vatlibOutput = qobject_cast<CAudioOutputDeviceVatlib*>(output);
+        Q_ASSERT_X(vatlibOutput, "CVoiceVatlib::enableAudioLoopback", "No valid CAudioOutputDeviceVatlib pointer.");
+
+        Vat_VoiceConnect(vatlibInput->getVatLocalInputCodec(), 0, vatlibOutput->getVatLocalOutputCodec(), 0);
+    }
+
     /*
      * Process voice handling
      */

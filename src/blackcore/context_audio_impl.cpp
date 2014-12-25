@@ -39,6 +39,7 @@ namespace BlackCore
 
         // 2. Register PTT hotkey function
         m_inputManager = CInputManager::getInstance();
+        m_handlePtt = m_inputManager->registerHotkeyFunc(CHotkeyFunction::Ptt(), this, &CContextAudio::ps_setVoiceTransmission);
 
         m_channelCom1 = m_voice->createVoiceChannel();
         m_channelCom1->setMyAircraftCallsign(getIContextOwnAircraft()->getOwnAircraft().getCallsign());
@@ -49,6 +50,9 @@ namespace BlackCore
 
         m_voiceInputDevice = m_voice->createInputDevice();
         m_voiceOutputDevice = m_voice->createOutputDevice();
+
+        m_voice->connectChannelOutputDevice(m_channelCom1.get(), m_voiceOutputDevice.get());
+        m_voice->connectChannelOutputDevice(m_channelCom2.get(), m_voiceOutputDevice.get());
 
         // 4. load sounds (init), not possible in own thread
         QTimer::singleShot(10 * 1000, this, SLOT(ps_initNotificationSounds()));
@@ -401,7 +405,10 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        m_voice->enableAudioLoopback(enable);
+        if (enable)
+            m_voice->enableAudioLoopback(m_voiceInputDevice.get(), m_voiceOutputDevice.get());
+        else
+            m_voice->enableAudioLoopback(m_voiceInputDevice.get(), nullptr);
     }
 
     bool CContextAudio::parseCommandLine(const QString &commandLine)
@@ -450,6 +457,13 @@ namespace BlackCore
             }
         }
         return false;
+    }
+
+    void CContextAudio::ps_setVoiceTransmission(bool enable)
+    {
+        // FIXME: Use the 'active' channel instead of hardcoded COM1
+        if (enable) m_voice->connectChannelInputDevice(m_voiceInputDevice.get(), m_channelCom1.get());
+        else m_voice->connectChannelInputDevice(nullptr, m_channelCom1.get());
     }
 
     /*

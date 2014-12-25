@@ -23,6 +23,8 @@ Client::Client(QObject *parent) :
     m_inputDevice = m_voice->createInputDevice();
     m_outputDevice = m_voice->createOutputDevice();
 
+    m_voice->connectChannelOutputDevice(m_channelCom1.get(), m_outputDevice.get());
+
     using namespace BlackCore;
     connect(m_channelCom1.get(), &IVoiceChannel::connectionStatusChanged,              this, &Client::connectionStatusChanged);
     connect(m_channelCom1.get(), &IVoiceChannel::audioStarted,                         this, &Client::audioStartedStream);
@@ -163,15 +165,14 @@ void Client::listCallsignsCmd(QTextStream &args)
 void Client::enableLoopbackCmd(QTextStream &/*args*/)
 {
     std::cout << "Enabling audio loopback." << std::endl;
-    m_voice->enableAudioLoopback(true);
+    m_voice->enableAudioLoopback(m_inputDevice.get(), m_outputDevice.get());
     printLinePrefix();
 }
 
 void Client::disableLoopbackCmd(QTextStream &/*args*/)
 {
     std::cout << "Disabling audio loopback." << std::endl;
-    m_voice->enableAudioLoopback(false);
-    printLinePrefix();
+    m_voice->enableAudioLoopback(m_inputDevice.get(), nullptr);
     printLinePrefix();
 }
 

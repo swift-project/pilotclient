@@ -50,9 +50,14 @@ namespace BlackCore
         //! \copydoc IVoice::createOutputDevice()
         virtual std::unique_ptr<IAudioOutputDevice> createOutputDevice() override;
 
-        //! \copydoc IVoice::enableAudioLoopback
-        virtual void enableAudioLoopback(bool enable = true) override;
+        //! \copydoc IVoice::connectChannelOutputDevice()
+        virtual void connectChannelOutputDevice(IVoiceChannel *channel, IAudioOutputDevice *device) override;
 
+        //! \copydoc IVoice::connectChannelInputDevice()
+        virtual void connectChannelInputDevice(IAudioInputDevice *device, IVoiceChannel *channel) override;
+
+        //! \copydoc IVoice::enableAudioLoopback()
+        virtual void enableAudioLoopback(IAudioInputDevice *input, IAudioOutputDevice *output) override;
 
     protected: // QObject overrides
 
@@ -84,8 +89,6 @@ namespace BlackCore
 
         QScopedPointer<VatAudioService_tag, VatAudioServiceDeleter> m_audioService;
         QScopedPointer<VatUDPAudioPort_tag, VatUDPAudioPortDeleter> m_udpPort;
-        bool m_isAudioLoopbackEnabled; /*!< A flag whether audio loopback is enabled or not */
-
     };
 
 } // namespace

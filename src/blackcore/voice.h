@@ -47,11 +47,18 @@ namespace BlackCore
         //! Create output device object
         virtual std::unique_ptr<IAudioOutputDevice> createOutputDevice() = 0;
 
+        //! Connect voice channel to an audio output device
+        virtual void connectChannelOutputDevice(IVoiceChannel *channel, IAudioOutputDevice *device) = 0;
+
         /*!
-         * \brief Enable audio loopback to route recorded voice from microphone to speakers
-         * \param enable (default true)
+         * Connect input device to voice channel to start/stop voice transmission
+         * \param device Audio input device, e.g. a microphone. Pass nullptr to stop transmission
+         * \param channel Voice channel audio should be transmitted to
          */
-        virtual void enableAudioLoopback(bool enable = true) = 0;
+        virtual void connectChannelInputDevice(IAudioInputDevice *device, IVoiceChannel *channel) = 0;
+
+        //! Connect audio input to an audio output to hear your own voice
+        virtual void enableAudioLoopback(IAudioInputDevice *input, IAudioOutputDevice *output) = 0;
     };
 
 } // namespace BlackCore

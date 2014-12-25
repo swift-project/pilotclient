@@ -157,6 +157,8 @@ namespace BlackCore
         //! Init notification sounds
         void ps_initNotificationSounds();
 
+        void ps_setVoiceTransmission(bool enable);
+
     private:
         const int MinUnmuteVolume = 20; //!< minimum volume when unmuted
         const int VoiceRoomEnabledVolume = 95; //!< voice room volume when enabled
