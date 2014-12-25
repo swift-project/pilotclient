@@ -8,6 +8,7 @@
 #include "context_ownaircraft.h"
 #include "context_application.h"
 #include "voice_channel.h"
+#include "voice_vatlib.h"
 
 #include "blacksound/soundgenerator.h"
 #include "blackmisc/notificationsounds.h"
@@ -38,14 +39,14 @@ namespace BlackCore
 
         // 2. Register PTT hotkey function
         m_inputManager = CInputManager::getInstance();
-        m_handlePtt = m_inputManager->registerHotkeyFunc(CHotkeyFunction::Ptt(), voice, &CVoiceVatlib::handlePushToTalk);
 
-        m_channelCom1 = m_voice->getVoiceChannel(0);
+        m_channelCom1 = m_voice->createVoiceChannel();
         m_channelCom1->setMyAircraftCallsign(getIContextOwnAircraft()->getOwnAircraft().getCallsign());
-        connect(m_channelCom1.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_com1ConnectionStatusChanged);
-        m_channelCom2 = m_voice->getVoiceChannel(1);
+        connect(m_channelCom1.get(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_com1ConnectionStatusChanged);
+        m_channelCom2 = m_voice->createVoiceChannel();
         m_channelCom2->setMyAircraftCallsign(getIContextOwnAircraft()->getOwnAircraft().getCallsign());
-        connect(m_channelCom2.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_com2ConnectionStatusChanged);
+        connect(m_channelCom2.get(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_com2ConnectionStatusChanged);
+
         m_voiceInputDevice = m_voice->createInputDevice();
         m_voiceOutputDevice = m_voice->createOutputDevice();
 

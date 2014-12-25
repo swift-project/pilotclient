@@ -38,6 +38,11 @@ namespace BlackCore
      */
     CVoiceVatlib::~CVoiceVatlib() {}
 
+    std::unique_ptr<IVoiceChannel> CVoiceVatlib::createVoiceChannel()
+    {
+        return make_unique<CVoiceChannelVatlib>(m_audioService.data(), m_udpPort.data(), this);
+    }
+
     std::unique_ptr<IAudioInputDevice> CVoiceVatlib::createInputDevice()
     {
         return make_unique<CAudioInputDeviceVatlib>(m_audioService.data(), this);
@@ -48,38 +53,6 @@ namespace BlackCore
         return make_unique<CAudioOutputDeviceVatlib>(m_audioService.data(), this);
     }
 
-    IVoiceChannel *CVoiceVatlib::getVoiceChannel(qint32 channelIndex) const
-    {
-        IVoiceChannel *channel = m_hashChannelIndex.value(channelIndex, nullptr);
-        Q_ASSERT(channel);
-
-        return channel;
-    }
-
-    /*
-     * Handle PTT
-     */
-    void CVoiceVatlib::handlePushToTalk(bool value)
-    {
-        qDebug() << "PTT";
-        if (!this->m_vatlib) return;
-
-        if (value) qDebug() << "Start transmitting...";
-        else qDebug() << "Stop transmitting...";
-
-        // FIXME: Set only once channel to active for transmitting
-        if (value)
-        {
-            getVoiceChannel(0)->startTransmitting();
-            getVoiceChannel(1)->startTransmitting();
-        }
-        else
-        {
-            getVoiceChannel(0)->stopTransmitting();
-            getVoiceChannel(1)->stopTransmitting();
-        }
-    }
-
     /*
      * Process voice handling
      */
@@ -87,33 +60,6 @@ namespace BlackCore
     {
         Q_ASSERT_X(m_audioService, "CVoiceVatlib", "VatAudioService invalid!");
         Vat_ExecuteTasks(m_audioService.data());
-    }
-
-    /*
-     * Room status update
-     */
-    void CVoiceVatlib::onRoomStatusUpdate(Cvatlib_Voice_Simple *obj, Cvatlib_Voice_Simple::roomStatusUpdate upd, qint32 roomIndex, void *cbVar)
-    {
-        Q_UNUSED(obj)
-        CVoiceVatlib *vatlibRoom = cbvar_cast_voice(cbVar);
-        vatlibRoom->onRoomStatusUpdate(roomIndex, upd);
-    }
-
-    void CVoiceVatlib::onRoomStatusUpdate(qint32 roomIndex, Cvatlib_Voice_Simple::roomStatusUpdate roomStatus)
-    {
-        QList<IVoiceChannel *> voiceChannels = m_hashChannelIndex.values();
-        auto iterator = std::find_if(voiceChannels.begin(), voiceChannels.end(), [&](const IVoiceChannel * voiceChannel)
-        {
-            return voiceChannel->getRoomIndex() == roomIndex;
-        });
-
-        if (iterator == voiceChannels.end())
-        {
-            qWarning() << "Unknown room index";
-            return;
-        }
-
-        (*iterator)->updateRoomStatus(roomStatus);
     }
 
     void CVoiceVatlib::voiceErrorHandler(const char *message)

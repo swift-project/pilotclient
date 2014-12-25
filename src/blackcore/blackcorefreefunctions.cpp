@@ -15,8 +15,7 @@ namespace BlackCore
         // for some reasons (ask RW) these are registered twice
         qRegisterMetaType<ISimulator::ConnectionStatus>();
         qRegisterMetaType<ISimulator::ConnectionStatus>("Status");
-        qRegisterMetaType<IVoiceChannel::ConnectionStatus>();
-        qRegisterMetaType<IVoiceChannel::ConnectionStatus>("ConnectionStatus");
+        qRegisterMetaType<BlackCore::IVoiceChannel::ConnectionStatus>();
     }
 
     bool isCurrentThreadCreatingThread(QObject *toBeTested)

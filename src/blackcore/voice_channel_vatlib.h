@@ -32,7 +32,7 @@ namespace BlackCore
     public:
 
         //! Default constructor
-        CVoiceChannelVatlib(TVatlibPointer vatlib, QObject *parent = nullptr);
+        CVoiceChannelVatlib(VatAudioService audioService, VatUDPAudioPort udpPort, QObject *parent = nullptr);
 
         //! Destructor
         virtual ~CVoiceChannelVatlib();
@@ -43,17 +43,8 @@ namespace BlackCore
         //! \copydoc IVoiceChannel::leaveVoiceRoom
         virtual void leaveVoiceRoom() override;
 
-        //! \copydoc IVoiceChannel::startTransmitting
-        virtual void startTransmitting() override;
-
-        //! \copydoc IVoiceChannel::stopTransmitting
-        virtual void stopTransmitting() override;
-
         //! \copydoc IVoiceChannel::getVoiceRoomCallsigns
         virtual BlackMisc::Aviation::CCallsignList getVoiceRoomCallsigns() const override;
-
-        //! \copydoc IVoiceChannel::switchAudioOutput
-        virtual void switchAudioOutput(bool enable) override;
 
         //! \copydoc IVoiceChannel::setMyAircraftCallsign
         virtual void setMyAircraftCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
@@ -61,20 +52,17 @@ namespace BlackCore
         //! \copydoc IVoiceChannel::getVoiceRoom
         virtual BlackMisc::Audio::CVoiceRoom getVoiceRoom() const override;
 
-        //! \copydoc IVoiceChannel::getRoomIndex
-        virtual qint32 getRoomIndex() const override;
-
         //! \copydoc IVoiceChannel::isMuted
         virtual bool isMuted() const override;
 
         //! Set channel volume
-        virtual void setVolume(quint32 volume) override;
+        virtual void setVolume(int volume) override;
 
         //! Get channel volume
-        virtual quint32 getVolume() const override;
+        virtual int getVolume() const override;
 
-        //! \copydoc IVoiceChannel::updateRoomStatus
-        virtual void updateRoomStatus(Cvatlib_Voice_Simple::roomStatusUpdate roomStatus) override;
+        //! Get vatlib channel pointer
+        VatVoiceChannel getVoiceChannel() const;
 
     private:
         QSharedPointer<CVoiceChannelVatlibPrivate> d_ptr;

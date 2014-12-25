@@ -164,12 +164,12 @@ namespace BlackCore
         //! Connection in transition
         bool inTransitionState() const;
 
-        std::unique_ptr<CVoiceVatlib> m_voice; //!< underlying voice lib
+        std::unique_ptr<IVoice> m_voice; //!< underlying voice lib
 
         CInputManager *m_inputManager = nullptr;
         CInputManager::RegistrationHandle m_handlePtt;
-        QPointer<IVoiceChannel> m_channelCom1;
-        QPointer<IVoiceChannel> m_channelCom2;
+        std::unique_ptr<IVoiceChannel> m_channelCom1;
+        std::unique_ptr<IVoiceChannel> m_channelCom2;
         std::unique_ptr<IAudioOutputDevice> m_voiceOutputDevice;
         int m_outDeviceVolume = 100;
         std::unique_ptr<IAudioInputDevice> m_voiceInputDevice;

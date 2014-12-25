@@ -19,16 +19,16 @@ Client::Client(QObject *parent) :
     QObject(parent),
     m_voice(new BlackCore::CVoiceVatlib())
 {
-    m_channelCom1 = m_voice->getVoiceChannel(0);
+    m_channelCom1 = m_voice->createVoiceChannel();
     m_inputDevice = m_voice->createInputDevice();
     m_outputDevice = m_voice->createOutputDevice();
 
     using namespace BlackCore;
-    connect(m_channelCom1.data(), &IVoiceChannel::connectionStatusChanged,              this, &Client::connectionStatusChanged);
-    connect(m_channelCom1.data(), &IVoiceChannel::audioStarted,                         this, &Client::audioStartedStream);
-    connect(m_channelCom1.data(), &IVoiceChannel::audioStopped,                         this, &Client::audioStoppedStream);
-    connect(m_channelCom1.data(), &IVoiceChannel::userJoinedRoom,                       this, &Client::userJoinedRoom);
-    connect(m_channelCom1.data(), &IVoiceChannel::userLeftRoom,                         this, &Client::userLeftRoom);
+    connect(m_channelCom1.get(), &IVoiceChannel::connectionStatusChanged,              this, &Client::connectionStatusChanged);
+    connect(m_channelCom1.get(), &IVoiceChannel::audioStarted,                         this, &Client::audioStartedStream);
+    connect(m_channelCom1.get(), &IVoiceChannel::audioStopped,                         this, &Client::audioStoppedStream);
+    connect(m_channelCom1.get(), &IVoiceChannel::userJoinedRoom,                       this, &Client::userJoinedRoom);
+    connect(m_channelCom1.get(), &IVoiceChannel::userLeftRoom,                         this, &Client::userLeftRoom);
 
     using namespace std::placeholders;
     m_commands["help"]              = std::bind(&Client::help, this, _1);

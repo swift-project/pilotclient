@@ -7,6 +7,8 @@
 #define BLACKCORE_VOICE_H
 
 #include "audio_device.h"
+#include "voice_channel.h"
+
 #include "../blackmisc/avcallsignlist.h"
 #include "../blackmisc/avselcal.h"
 #include "../blackmisc/nwuserlist.h"
@@ -20,7 +22,6 @@
 
 namespace BlackCore
 {
-    class IVoiceChannel;
     //! Interface to a connection to a ATC voice server for use in flight simulation.
     class IVoice : public QObject
     {
@@ -37,14 +38,14 @@ namespace BlackCore
         //! Virtual destructor.
         virtual ~IVoice() {}
 
+        //! Create voice channel object
+        virtual std::unique_ptr<IVoiceChannel> createVoiceChannel() = 0;
+
         //! Create input device object
         virtual std::unique_ptr<IAudioInputDevice> createInputDevice() = 0;
 
         //! Create output device object
         virtual std::unique_ptr<IAudioOutputDevice> createOutputDevice() = 0;
-
-        //! Get voice channel object
-        virtual IVoiceChannel *getVoiceChannel(qint32 channelIndex) const = 0;
 
         /*!
          * \brief Enable audio loopback to route recorded voice from microphone to speakers

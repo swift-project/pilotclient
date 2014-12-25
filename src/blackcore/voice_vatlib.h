@@ -41,23 +41,18 @@ namespace BlackCore
         //! \brief Destructor
         virtual ~CVoiceVatlib();
 
+        //! \copydoc IVoice::createVoiceChannel()
+        virtual std::unique_ptr<IVoiceChannel> createVoiceChannel() override;
+
         //! \copydoc IVoice::createInputDevice()
         virtual std::unique_ptr<IAudioInputDevice> createInputDevice() override;
 
         //! \copydoc IVoice::createOutputDevice()
         virtual std::unique_ptr<IAudioOutputDevice> createOutputDevice() override;
 
-        //! \copydoc IVoice::getVoiceChannel
-        virtual IVoiceChannel *getVoiceChannel(qint32 channelIndex) const override;
-
         //! \copydoc IVoice::enableAudioLoopback
         virtual void enableAudioLoopback(bool enable = true) override;
 
-        /*!
-         * \brief Starts or stops voice transmission
-         * \param value
-         */
-        void handlePushToTalk(bool value = false);
 
     protected: // QObject overrides
 
@@ -87,14 +82,8 @@ namespace BlackCore
 
         static void voiceErrorHandler(const char *message);
 
-        // shimlib callbacks
-        static void onRoomStatusUpdate(Cvatlib_Voice_Simple *obj, Cvatlib_Voice_Simple::roomStatusUpdate upd, qint32 roomIndex, void *cbVar);
-
-        void onRoomStatusUpdate(qint32 roomIndex, Cvatlib_Voice_Simple::roomStatusUpdate roomStatus);
-
         QScopedPointer<VatAudioService_tag, VatAudioServiceDeleter> m_audioService;
         QScopedPointer<VatUDPAudioPort_tag, VatUDPAudioPortDeleter> m_udpPort;
-        QHash<qint32, IVoiceChannel *> m_hashChannelIndex;
         bool m_isAudioLoopbackEnabled; /*!< A flag whether audio loopback is enabled or not */
 
     };

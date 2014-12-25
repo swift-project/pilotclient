@@ -12,7 +12,6 @@
 #ifndef BLACKCORE_VOICE_CHANNEL_H
 #define BLACKCORE_VOICE_CHANNEL_H
 
-#include "voice_vatlib.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/voiceroomlist.h"
 #include "blackmisc/avcallsignlist.h"
@@ -40,23 +39,20 @@ namespace BlackCore
             ConnectingFailed,   //!< Failed to connect
         };
 
+        //! Constructor
+        IVoiceChannel(QObject *parent = nullptr) : QObject(parent) {}
+
+        //! Destructor
+        virtual ~IVoiceChannel() {}
+
         //! Join voice room
         virtual void joinVoiceRoom(const BlackMisc::Audio::CVoiceRoom &voiceRoom) = 0;
 
         //! Leave voice room
         virtual void leaveVoiceRoom() = 0;
 
-        //! Start transmitting
-        virtual void startTransmitting() = 0;
-
-        //! Stop transmitting
-        virtual void stopTransmitting() = 0;
-
         //! Get voice room callsings
         virtual BlackMisc::Aviation::CCallsignList getVoiceRoomCallsigns() const = 0;
-
-        //! Switch audio output, enable or disable
-        virtual void switchAudioOutput(bool enable) = 0;
 
         //! Set own aircraft's callsign
         virtual void setMyAircraftCallsign(const BlackMisc::Aviation::CCallsign &callsign) = 0;
@@ -64,20 +60,14 @@ namespace BlackCore
         //! Get voice room
         virtual BlackMisc::Audio::CVoiceRoom getVoiceRoom() const = 0;
 
-        //! Get assigned room index
-        virtual qint32 getRoomIndex() const = 0;
-
         //! Is channel muted?
         virtual bool isMuted() const = 0;
 
         //! Set channel volume 0..100
-        virtual void setVolume(quint32 volume) = 0;
+        virtual void setVolume(int volume) = 0;
 
         //! Get channel volume 0..100
-        virtual quint32 getVolume() const = 0;
-
-        //! Update room status
-        virtual void updateRoomStatus(Cvatlib_Voice_Simple::roomStatusUpdate roomStatus) = 0;
+        virtual int getVolume() const = 0;
 
     signals:
 
@@ -104,12 +94,6 @@ namespace BlackCore
         void audioStopped();
 
     protected:
-
-        //! Constructor
-        IVoiceChannel(QObject *parent = nullptr) : QObject(parent) {}
-
-        //! Destructor
-        virtual ~IVoiceChannel() {}
 
     };
 }

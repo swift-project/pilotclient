@@ -58,7 +58,7 @@ private:
     BlackCore::IVoice *m_voice;
     std::unique_ptr<BlackCore::IAudioInputDevice> m_inputDevice;
     std::unique_ptr<BlackCore::IAudioOutputDevice> m_outputDevice;
-    QPointer<BlackCore::IVoiceChannel> m_channelCom1;
+    std::unique_ptr<BlackCore::IVoiceChannel> m_channelCom1;
 
 };
 
