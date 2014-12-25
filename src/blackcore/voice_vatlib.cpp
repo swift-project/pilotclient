@@ -5,6 +5,7 @@
 
 #include "voice_vatlib.h"
 #include "voice_channel_vatlib.h"
+#include "audio_device_vatlib.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <QDebug>
@@ -28,9 +29,6 @@ namespace BlackCore
     {
         Vat_SetVoiceErrorHandler(CVoiceVatlib::voiceErrorHandler);
 
-        this->m_currentInputDevice = this->defaultAudioInputDevice();
-        this->m_currentOutputDevice = this->defaultAudioOutputDevice();
-
         // do processing
         this->startTimer(10);
     }
@@ -40,60 +38,14 @@ namespace BlackCore
      */
     CVoiceVatlib::~CVoiceVatlib() {}
 
-    /*
-     * Devices
-     */
-    const BlackMisc::Audio::CAudioDeviceInfoList &CVoiceVatlib::audioDevices() const
+    std::unique_ptr<IAudioInputDevice> CVoiceVatlib::createInputDevice()
     {
-        return m_devices;
+        return make_unique<CAudioInputDeviceVatlib>(m_audioService.data(), this);
     }
 
-    /*
-     * Default input device
-     */
-    const BlackMisc::Audio::CAudioDeviceInfo CVoiceVatlib::defaultAudioInputDevice() const
+    std::unique_ptr<IAudioOutputDevice> CVoiceVatlib::createOutputDevice()
     {
-        // Constructor creates already a default device
-        return BlackMisc::Audio::CAudioDeviceInfo(BlackMisc::Audio::CAudioDeviceInfo::InputDevice, BlackMisc::Audio::CAudioDeviceInfo::defaultDeviceIndex(), "default");
-    }
-
-    /*
-     * Default output device
-     */
-    const BlackMisc::Audio::CAudioDeviceInfo CVoiceVatlib::defaultAudioOutputDevice() const
-    {
-        // Constructor creates already a default device
-        return BlackMisc::Audio::CAudioDeviceInfo(BlackMisc::Audio::CAudioDeviceInfo::OutputDevice, BlackMisc::Audio::CAudioDeviceInfo::defaultDeviceIndex(), "default");
-    }
-
-    /*
-     * Current output device
-     */
-    CAudioDeviceInfo CVoiceVatlib::getCurrentOutputDevice() const
-    {
-        return m_currentOutputDevice;
-    }
-
-    /*
-     * Current input device
-     */
-    CAudioDeviceInfo CVoiceVatlib::getCurrentInputDevice() const
-    {
-        return m_currentInputDevice;
-    }
-
-    /*
-     * Set input device
-     */
-    void CVoiceVatlib::setInputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device)
-    {
-    }
-
-    /*
-     * Set output device
-     */
-    void CVoiceVatlib::setOutputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device)
-    {
+        return make_unique<CAudioOutputDeviceVatlib>(m_audioService.data(), this);
     }
 
     IVoiceChannel *CVoiceVatlib::getVoiceChannel(qint32 channelIndex) const

@@ -41,34 +41,14 @@ namespace BlackCore
         //! \brief Destructor
         virtual ~CVoiceVatlib();
 
-        // Hardware devices
-        // TODO: Vatlib supports multiple output devices. That basically means, you could connect
-        // to different voice rooms and send their audio to different devices, e.g. ATIS to loudspeakers
-        // and ATC to headspeakers. Is not important to implement that now, if ever.
+        //! \copydoc IVoice::createInputDevice()
+        virtual std::unique_ptr<IAudioInputDevice> createInputDevice() override;
 
-        //! \copydoc IVoice::audioDevices()
-        virtual const BlackMisc::Audio::CAudioDeviceInfoList &audioDevices() const override;
-
-        //! \copydoc IVoice::defaultAudioInputDevice()
-        virtual const BlackMisc::Audio::CAudioDeviceInfo defaultAudioInputDevice() const override;
-
-        //! \copydoc IVoice::defaultAudioOutputDevice()
-        virtual const BlackMisc::Audio::CAudioDeviceInfo defaultAudioOutputDevice() const override;
+        //! \copydoc IVoice::createOutputDevice()
+        virtual std::unique_ptr<IAudioOutputDevice> createOutputDevice() override;
 
         //! \copydoc IVoice::getVoiceChannel
         virtual IVoiceChannel *getVoiceChannel(qint32 channelIndex) const override;
-
-        //! \copydoc IVoice::setInputDevice
-        virtual void setInputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device) override;
-
-        //! \copydoc IVoice::setOutputDevice
-        virtual void setOutputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device) override;
-
-        //! \copydoc IVoice::getCurrentInputDevice()
-        virtual BlackMisc::Audio::CAudioDeviceInfo getCurrentInputDevice() const override;
-
-        //! \copydoc IVoice::getCurrentOutputDevice()
-        virtual BlackMisc::Audio::CAudioDeviceInfo getCurrentOutputDevice() const override;
 
         //! \copydoc IVoice::enableAudioLoopback
         virtual void enableAudioLoopback(bool enable = true) override;
@@ -114,9 +94,6 @@ namespace BlackCore
 
         QScopedPointer<VatAudioService_tag, VatAudioServiceDeleter> m_audioService;
         QScopedPointer<VatUDPAudioPort_tag, VatUDPAudioPortDeleter> m_udpPort;
-        BlackMisc::Audio::CAudioDeviceInfoList m_devices; /*!< in and output devices */
-        BlackMisc::Audio::CAudioDeviceInfo m_currentOutputDevice;
-        BlackMisc::Audio::CAudioDeviceInfo m_currentInputDevice;
         QHash<qint32, IVoiceChannel *> m_hashChannelIndex;
         bool m_isAudioLoopbackEnabled; /*!< A flag whether audio loopback is enabled or not */
 

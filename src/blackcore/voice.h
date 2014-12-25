@@ -6,6 +6,7 @@
 #ifndef BLACKCORE_VOICE_H
 #define BLACKCORE_VOICE_H
 
+#include "audio_device.h"
 #include "../blackmisc/avcallsignlist.h"
 #include "../blackmisc/avselcal.h"
 #include "../blackmisc/nwuserlist.h"
@@ -20,7 +21,6 @@
 namespace BlackCore
 {
     class IVoiceChannel;
-
     //! Interface to a connection to a ATC voice server for use in flight simulation.
     class IVoice : public QObject
     {
@@ -37,46 +37,14 @@ namespace BlackCore
         //! Virtual destructor.
         virtual ~IVoice() {}
 
-        /*!
-         * \brief Audio devices
-         * \return
-         */
-        virtual const BlackMisc::Audio::CAudioDeviceInfoList &audioDevices() const = 0;
+        //! Create input device object
+        virtual std::unique_ptr<IAudioInputDevice> createInputDevice() = 0;
 
-        /*!
-         * \brief Default input device
-         * \return
-         */
-        virtual const BlackMisc::Audio::CAudioDeviceInfo defaultAudioInputDevice() const = 0;
-
-        /*!
-         * \brief Default output device
-         * \return
-         */
-        virtual const BlackMisc::Audio::CAudioDeviceInfo defaultAudioOutputDevice() const = 0;
+        //! Create output device object
+        virtual std::unique_ptr<IAudioOutputDevice> createOutputDevice() = 0;
 
         //! Get voice channel object
         virtual IVoiceChannel *getVoiceChannel(qint32 channelIndex) const = 0;
-
-        /*!
-         * \brief Current input device
-         */
-        virtual BlackMisc::Audio::CAudioDeviceInfo getCurrentInputDevice() const = 0;
-
-        /*!
-         * \brief Current output device
-         */
-        virtual BlackMisc::Audio::CAudioDeviceInfo getCurrentOutputDevice() const = 0;
-
-        /*!
-         * \brief Output device to be used
-         */
-        virtual void setOutputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device) = 0;
-
-        /*!
-         * \brief Input device to be used
-         */
-        virtual void setInputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device) = 0;
 
         /*!
          * \brief Enable audio loopback to route recorded voice from microphone to speakers

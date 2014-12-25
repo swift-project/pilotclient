@@ -46,6 +46,8 @@ namespace BlackCore
         m_channelCom2 = m_voice->getVoiceChannel(1);
         m_channelCom2->setMyAircraftCallsign(getIContextOwnAircraft()->getOwnAircraft().getCallsign());
         connect(m_channelCom2.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_com2ConnectionStatusChanged);
+        m_voiceInputDevice = m_voice->createInputDevice();
+        m_voiceOutputDevice = m_voice->createOutputDevice();
 
         // 4. load sounds (init), not possible in own thread
         QTimer::singleShot(10 * 1000, this, SLOT(ps_initNotificationSounds()));
@@ -122,7 +124,9 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        return this->m_voice->audioDevices();
+        CAudioDeviceInfoList devices = this->m_voiceOutputDevice->getOutputDevices();
+        devices = devices.join(this->m_voiceInputDevice->getInputDevices());
+        return devices;
     }
 
     /*
@@ -133,8 +137,8 @@ namespace BlackCore
         Q_ASSERT(this->m_voice);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         CAudioDeviceInfoList devices;
-        devices.push_back(this->m_voice->getCurrentInputDevice());
-        devices.push_back(this->m_voice->getCurrentOutputDevice());
+        devices.push_back(this->m_voiceInputDevice->getCurrentInputDevice());
+        devices.push_back(this->m_voiceOutputDevice->getCurrentOutputDevice());
         return devices;
     }
 
@@ -149,17 +153,17 @@ namespace BlackCore
         bool changed = false;
         if (audioDevice.getType() == CAudioDeviceInfo::InputDevice)
         {
-            if (this->m_voice->getCurrentInputDevice() != audioDevice)
+            if (this->m_voiceInputDevice->getCurrentInputDevice() != audioDevice)
             {
-                this->m_voice->setInputDevice(audioDevice);
+                this->m_voiceInputDevice->setInputDevice(audioDevice);
                 changed = true;
             }
         }
         else
         {
-            if (this->m_voice->getCurrentOutputDevice() != audioDevice)
+            if (this->m_voiceOutputDevice->getCurrentOutputDevice() != audioDevice)
             {
-                this->m_voice->setOutputDevice(audioDevice);
+                this->m_voiceOutputDevice->setOutputDevice(audioDevice);
                 changed = true;
             }
         }
@@ -207,23 +211,13 @@ namespace BlackCore
     {
         if (this->isMuted() == muted) { return; } // avoid roundtrips / unnecessary signals
 
-        m_channelCom1->switchAudioOutput(!muted);
-        m_channelCom2->switchAudioOutput(!muted);
-        m_channelCom1->setRoomOutputVolume(muted ? 0 : VoiceRoomEnabledVolume);
-        m_channelCom2->setRoomOutputVolume(muted ? 0 : VoiceRoomEnabledVolume);
-
-        // adjust volume when unmuted
-        if (!muted)
+        if (muted)
         {
-            bool adjusted = false;
-            qint32 v1 = this->m_channelCom1->getVolume();
-            qint32 v2 = this->m_channelCom2->getVolume();
-            //! \todo rectify int/qint/quint mess
-            int channelV1 = static_cast<int>(this->m_channelCom1->getVolume());
-            int channelV2 = static_cast<int>(this->m_channelCom2->getVolume());
-            if (channelV1 < MinUnmuteVolume) { v1 = MinUnmuteVolume; adjusted = true; }
-            if (channelV2 < MinUnmuteVolume) { v2 = MinUnmuteVolume; adjusted = true; }
-            if (adjusted) { this->setVolumes(v1, v2); }
+            m_voiceOutputDevice->setOutputVolume(0);
+        }
+        else
+        {
+            m_voiceOutputDevice->setOutputVolume(m_outDeviceVolume);
         }
 
         // signal
@@ -235,9 +229,8 @@ namespace BlackCore
      */
     bool CContextAudio::isMuted() const
     {
-        Q_ASSERT(this->m_voice);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        return m_channelCom1->isMuted() && m_channelCom2->isMuted();
+        return m_voiceOutputDevice->getOutputVolume() == 0;
     }
 
     /*
@@ -333,7 +326,7 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << selcal;
-        CAudioDeviceInfo outputDevice = m_voice->getCurrentOutputDevice();
+        CAudioDeviceInfo outputDevice = m_voiceOutputDevice->getCurrentOutputDevice();
         BlackSound::CSoundGenerator::playSelcal(90, selcal, outputDevice);
     }
 

@@ -21,7 +21,7 @@ class Client : public QObject
 
 public:
     Client(QObject *parent = nullptr);
-    ~Client() { if(m_voice) m_voice->deleteLater(); }
+    ~Client();
 
 signals:
     void quit();
@@ -56,6 +56,8 @@ private slots:
 private:
     QMap<QString, std::function<void(QTextStream &)>> m_commands;
     BlackCore::IVoice *m_voice;
+    std::unique_ptr<BlackCore::IAudioInputDevice> m_inputDevice;
+    std::unique_ptr<BlackCore::IAudioOutputDevice> m_outputDevice;
     QPointer<BlackCore::IVoiceChannel> m_channelCom1;
 
 };

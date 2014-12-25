@@ -18,6 +18,7 @@
 #include "dbus_server.h"
 #include "voice.h"
 #include "voice_channel.h"
+#include "audio_device.h"
 #include "input_manager.h"
 #include "blackinput/keyboard.h"
 #include "blackmisc/voiceroomlist.h"
@@ -169,6 +170,9 @@ namespace BlackCore
         CInputManager::RegistrationHandle m_handlePtt;
         QPointer<IVoiceChannel> m_channelCom1;
         QPointer<IVoiceChannel> m_channelCom2;
+        std::unique_ptr<IAudioOutputDevice> m_voiceOutputDevice;
+        int m_outDeviceVolume = 100;
+        std::unique_ptr<IAudioInputDevice> m_voiceInputDevice;
     };
 } // namespace
 

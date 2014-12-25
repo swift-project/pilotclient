@@ -20,6 +20,8 @@ Client::Client(QObject *parent) :
     m_voice(new BlackCore::CVoiceVatlib())
 {
     m_channelCom1 = m_voice->getVoiceChannel(0);
+    m_inputDevice = m_voice->createInputDevice();
+    m_outputDevice = m_voice->createOutputDevice();
 
     using namespace BlackCore;
     connect(m_channelCom1.data(), &IVoiceChannel::connectionStatusChanged,              this, &Client::connectionStatusChanged);
@@ -40,6 +42,11 @@ Client::Client(QObject *parent) :
     m_commands["users"]             = std::bind(&Client::listCallsignsCmd, this, _1);
     m_commands["enableloopback"]    = std::bind(&Client::enableLoopbackCmd, this, _1);
     m_commands["disableloopback"]   = std::bind(&Client::disableLoopbackCmd, this, _1);
+}
+
+Client::~Client()
+{
+    if(m_voice) m_voice->deleteLater();
 }
 
 void Client::command(QString line)
@@ -120,7 +127,7 @@ void Client::terminateConnectionCmd(QTextStream & /** args **/)
 
 void Client::inputDevicesCmd(QTextStream & /** args **/)
 {
-    for(auto &device : m_voice->audioDevices().getInputDevices())
+    for(const auto &device : m_inputDevice->getInputDevices())
     {
         std::cout << device.getName().toStdString() << std::endl;
     }
@@ -132,7 +139,7 @@ void Client::inputDevicesCmd(QTextStream & /** args **/)
  */
 void Client::outputDevicesCmd(QTextStream & /** args **/)
 {
-    for(auto &device : m_voice->audioDevices().getOutputDevices())
+    for(const auto &device : m_outputDevice->getOutputDevices())
     {
         std::cout << device.getName().toStdString() << std::endl;
     }
