@@ -64,19 +64,22 @@ void Expect::wait(const SourceLocation& srcloc, int timeout)
         return;
     }
 
-    for (auto i = unitsCopy.begin(); i != unitsCopy.end(); ++i)
+    for (auto i : unitsCopy)
     {
-        (*i)->onDone([&](const ExpectUnit* u){ unitsCopy.remove(u); });
-        (*i)->init();
+        i->onDone([&](const ExpectUnit* u){ unitsCopy.remove(u); });
+    }
+    for (auto i : unitsCopy.toList()) // toList is an easy way to make a temporary copy, needed because init might invalidate iterators
+    {
+        i->init();
     }
 
     QTimer timer;
     timer.setSingleShot(true);
     QObject::connect(&timer, &QTimer::timeout, [=, &unitsCopy]{
         reportTimeout(srcloc, unitsCopy);
-        for (auto i = unitsCopy.begin(); i != unitsCopy.end(); ++i)
+        for (auto i : unitsCopy)
         {
-            (*i)->onDone(nullptr); //paranoia
+            i->onDone(nullptr); //paranoia
         }
         unitsCopy.clear();
         m_failed = true;
