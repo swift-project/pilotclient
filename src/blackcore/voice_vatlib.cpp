@@ -8,7 +8,7 @@
 #include "blackmisc/logmessage.h"
 #include <QDebug>
 #include <QTimer>
-
+#include <memory>
 #include <mutex>
 
 using namespace BlackMisc;
@@ -21,10 +21,17 @@ namespace BlackCore
      * Constructor
      */
     CVoiceVatlib::CVoiceVatlib(QObject *parent) :
-        IVoice(parent)
+        IVoice(parent),
+        m_audioService(Vat_CreateAudioService()),
+        m_udpPort(Vat_CreateUDPAudioPort(m_audioService.data(), 3782))
     {
+        Vat_SetVoiceErrorHandler(CVoiceVatlib::voiceErrorHandler);
+
         this->m_currentInputDevice = this->defaultAudioInputDevice();
         this->m_currentOutputDevice = this->defaultAudioOutputDevice();
+
+        // do processing
+        this->startTimer(10);
     }
 
     /*
@@ -125,6 +132,8 @@ namespace BlackCore
      */
     void CVoiceVatlib::timerEvent(QTimerEvent *)
     {
+        Q_ASSERT_X(m_audioService, "CVoiceVatlib", "VatAudioService invalid!");
+        Vat_ExecuteTasks(m_audioService.data());
     }
 
     /*
@@ -152,6 +161,11 @@ namespace BlackCore
         }
 
         (*iterator)->updateRoomStatus(roomStatus);
+    }
+
+    void CVoiceVatlib::voiceErrorHandler(const char *message)
+    {
+        CLogMessage(static_cast<CVoiceVatlib*>(nullptr)).error(message);
     }
 
 } // namespace

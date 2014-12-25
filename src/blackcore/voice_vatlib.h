@@ -7,8 +7,10 @@
 #define BLACKCORE_VOICE_VATLIB_H
 
 #include "voice.h"
+#include <vatlib/vatlib2.h>
 
 #include <QString>
+#include <QScopedPointer>
 
 #ifdef Q_OS_WIN
 #ifndef NOMINMAX
@@ -86,11 +88,32 @@ namespace BlackCore
 
     private:
 
+        // this struct calls "myCustomDeallocator" to delete the pointer
+        struct VatAudioServiceDeleter
+        {
+            static inline void cleanup(VatAudioService_tag *obj)
+            {
+                Vat_DestroyAudioService(obj);
+            }
+        };
+
+        struct VatUDPAudioPortDeleter
+        {
+            static inline void cleanup(VatUDPAudioPort_tag *obj)
+            {
+                Vat_DestroyUDPAudioPort(obj);
+            }
+        };
+
+        static void voiceErrorHandler(const char *message);
+
         // shimlib callbacks
         static void onRoomStatusUpdate(Cvatlib_Voice_Simple *obj, Cvatlib_Voice_Simple::roomStatusUpdate upd, qint32 roomIndex, void *cbVar);
 
         void onRoomStatusUpdate(qint32 roomIndex, Cvatlib_Voice_Simple::roomStatusUpdate roomStatus);
 
+        QScopedPointer<VatAudioService_tag, VatAudioServiceDeleter> m_audioService;
+        QScopedPointer<VatUDPAudioPort_tag, VatUDPAudioPortDeleter> m_udpPort;
         BlackMisc::Audio::CAudioDeviceInfoList m_devices; /*!< in and output devices */
         BlackMisc::Audio::CAudioDeviceInfo m_currentOutputDevice;
         BlackMisc::Audio::CAudioDeviceInfo m_currentInputDevice;

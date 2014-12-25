@@ -16,7 +16,7 @@
 #include "context_settings.h"
 #include "context_runtime.h"
 #include "dbus_server.h"
-#include "voice_vatlib.h"
+#include "voice.h"
 #include "voice_channel.h"
 #include "input_manager.h"
 #include "blackinput/keyboard.h"
@@ -163,8 +163,7 @@ namespace BlackCore
         //! Connection in transition
         bool inTransitionState() const;
 
-        // TODO: see #339, MS' comment on deletion in another thread
-        QScopedPointer<CVoiceVatlib> m_voice; //!< underlying voice lib
+        std::unique_ptr<CVoiceVatlib> m_voice; //!< underlying voice lib
 
         CInputManager *m_inputManager = nullptr;
         CInputManager::RegistrationHandle m_handlePtt;

@@ -13,35 +13,20 @@
 #include "../blackmisc/audiodeviceinfolist.h"
 #include "../blackmisc/statusmessage.h"
 
-#include <vatlib/vatlib.h>
 #include <QObject>
-#include <QSet>
-#include <QStringList>
-#include <QMetaType>
+
+#include <memory>
 
 namespace BlackCore
 {
     class IVoiceChannel;
 
-    /*!
-     * Interface to a connection to a ATC voice server for use in flight simulation.
-     *
-     * \warning If an INetwork signal is connected to a slot, and that slot emits a signal
-     *          which is connected to an INetwork slot, then at least one of those connections
-     *          must be a Qt::QueuedConnection.
-     *          Reason: IVoiceClient implementations are not re-entrant.
-     */
+    //! Interface to a connection to a ATC voice server for use in flight simulation.
     class IVoice : public QObject
     {
-
-        /* TODOS:
-         * - Find a replacement for comUnit. Maybe map it to the ComUnit in the aircraft as a class
-         * - Settings: Settings classes to store hardware settings (squelch, background noise, hardware device)
-         */
-
         Q_OBJECT
 
-    protected:
+    public:
 
         /*!
          * \brief Default constructor with parent
@@ -49,7 +34,6 @@ namespace BlackCore
          */
         IVoice(QObject *parent = nullptr);
 
-    public:
         //! Virtual destructor.
         virtual ~IVoice() {}
 
