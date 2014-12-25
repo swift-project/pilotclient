@@ -14,6 +14,7 @@
 #include <functional>
 #include <QMap>
 #include <QThread>
+#include <QTextStream>
 
 class Client : public QObject
 {
@@ -54,11 +55,15 @@ private slots:
     void userLeftRoom(const BlackMisc::Aviation::CCallsign &callsign);
 
 private:
+
+    QString getCurrentTimeStamp() const;
+
     QMap<QString, std::function<void(QTextStream &)>> m_commands;
     BlackCore::IVoice *m_voice;
     std::unique_ptr<BlackCore::IAudioInputDevice> m_inputDevice;
     std::unique_ptr<BlackCore::IAudioOutputDevice> m_outputDevice;
     std::unique_ptr<BlackCore::IVoiceChannel> m_channelCom1;
+    QTextStream m_stdout;
 
 };
 

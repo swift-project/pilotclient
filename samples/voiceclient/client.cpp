@@ -7,6 +7,7 @@
 #include "blackcore/voice_vatlib.h"
 #include "blackmisc/audiodeviceinfolist.h"
 #include "blackmisc/avcallsignlist.h"
+#include <QDateTime>
 
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Aviation;
@@ -17,7 +18,8 @@ using namespace BlackMisc::Aviation;
  */
 Client::Client(QObject *parent) :
     QObject(parent),
-    m_voice(new BlackCore::CVoiceVatlib())
+    m_voice(new BlackCore::CVoiceVatlib()),
+    m_stdout(stdout)
 {
     m_channelCom1 = m_voice->createVoiceChannel();
     m_inputDevice = m_voice->createInputDevice();
@@ -61,7 +63,7 @@ void Client::command(QString line)
     auto found = m_commands.find(cmd);
     if (found == m_commands.end())
     {
-        std::cout << "No such command" << std::endl;
+        m_stdout << "No such command" << endl;
         printLinePrefix();
     }
     else
@@ -72,8 +74,7 @@ void Client::command(QString line)
 
 void Client::printLinePrefix()
 {
-    std::cout << "voice> ";
-    std::cout.flush();
+    QTextStream(stdout) << "voice> ";
 }
 
 /****************************************************************************/
@@ -82,24 +83,24 @@ void Client::printLinePrefix()
 
 void Client::help(QTextStream &)
 {
-    std::cout << "Commands:" << std::endl;
+    m_stdout << "Commands:" << endl;
     auto keys = m_commands.keys();
-    for (auto i = keys.begin(); i != keys.end(); ++i)
+    for (auto &key : keys)
     {
-        std::cout << " " << i->toStdString() << std::endl;
+        m_stdout << " " << key << endl;
     }
     printLinePrefix();
 }
 
 void Client::echo(QTextStream &line)
 {
-    std::cout << "echo: " << line.readAll().toStdString() << std::endl;
+    m_stdout << "echo: " << line.readAll() << endl;
     printLinePrefix();
 }
 
 void Client::exit(QTextStream &)
 {
-    qDebug() << "Shutting down...";
+    m_stdout << "Shutting down...";
     emit quit();
 }
 
@@ -115,14 +116,14 @@ void Client::initiateConnectionCmd(QTextStream &args)
     QString hostname;
     QString channel;
     args >> hostname >> channel;
-    std::cout << "Joining voice room: " << hostname.toStdString() << "/" << channel.toStdString() << std::endl;
+    m_stdout << getCurrentTimeStamp() << "Joining voice room: " << hostname << "/" << channel << endl;
     m_channelCom1->joinVoiceRoom(BlackMisc::Audio::CVoiceRoom(hostname, channel));
     printLinePrefix();
 }
 
 void Client::terminateConnectionCmd(QTextStream & /** args **/)
 {
-    std::cout << "Leaving room." << std::endl;
+    m_stdout << getCurrentTimeStamp() << "Leaving room." << endl;
     m_channelCom1->leaveVoiceRoom();
     printLinePrefix();
 }
@@ -131,7 +132,7 @@ void Client::inputDevicesCmd(QTextStream & /** args **/)
 {
     for(const auto &device : m_inputDevice->getInputDevices())
     {
-        std::cout << device.getName().toStdString() << std::endl;
+        m_stdout << device.getName() << endl;
     }
     printLinePrefix();
 }
@@ -143,7 +144,7 @@ void Client::outputDevicesCmd(QTextStream & /** args **/)
 {
     for(const auto &device : m_outputDevice->getOutputDevices())
     {
-        std::cout << device.getName().toStdString() << std::endl;
+        m_stdout << device.getName() << endl;
     }
     printLinePrefix();
 }
@@ -157,21 +158,23 @@ void Client::listCallsignsCmd(QTextStream &args)
     CCallsignList callsigns = m_channelCom1->getVoiceRoomCallsigns();
     foreach(CCallsign callsign, callsigns)
     {
-        std::cout << " " << callsign.toStdString() << std::endl;
+        m_stdout << " " << callsign << endl;
     }
     printLinePrefix();
 }
 
 void Client::enableLoopbackCmd(QTextStream &/*args*/)
 {
-    std::cout << "Enabling audio loopback." << std::endl;
+    m_stdout << endl;
+    m_stdout << "Enabling audio loopback." << endl;
     m_voice->enableAudioLoopback(m_inputDevice.get(), m_outputDevice.get());
     printLinePrefix();
 }
 
 void Client::disableLoopbackCmd(QTextStream &/*args*/)
 {
-    std::cout << "Disabling audio loopback." << std::endl;
+    m_stdout << endl;
+    m_stdout << "Disabling audio loopback." << endl;
     m_voice->enableAudioLoopback(m_inputDevice.get(), nullptr);
     printLinePrefix();
 }
@@ -182,22 +185,28 @@ void Client::connectionStatusChanged( BlackCore::IVoiceChannel::ConnectionStatus
     switch (newStatus)
     {
     case BlackCore::IVoiceChannel::Disconnected:
-        std::cout << "CONN_STATUS_DISCONNECTED" << std::endl;
+        m_stdout << endl;
+        m_stdout << getCurrentTimeStamp() << "CONN_STATUS_DISCONNECTED" << endl;
         break;
     case BlackCore::IVoiceChannel::Disconnecting:
-        std::cout << "CONN_STATUS_DISCONNECTING" << std::endl;
+        m_stdout << endl;
+        m_stdout << getCurrentTimeStamp() << "CONN_STATUS_DISCONNECTING" << endl;
         break;
     case BlackCore::IVoiceChannel::DisconnectedError:
-        std::cout << "CONN_STATUS_DISCONNECTED_ERROR" << std::endl;
+        m_stdout << endl;
+        m_stdout << getCurrentTimeStamp() << "CONN_STATUS_DISCONNECTED_ERROR" << endl;
         break;
     case BlackCore::IVoiceChannel::Connecting:
-        std::cout << "CONN_STATUS_CONNECTING" << std::endl;
+        m_stdout << endl;
+        m_stdout << getCurrentTimeStamp() << "CONN_STATUS_CONNECTING" << endl;
         break;
     case BlackCore::IVoiceChannel::Connected:
-        std::cout << "CONN_STATUS_CONNECTED" << std::endl;
+        m_stdout << endl;
+        m_stdout << getCurrentTimeStamp() << "CONN_STATUS_CONNECTED" << endl;
         break;
     case BlackCore::IVoiceChannel::ConnectingFailed:
-        std::cout << "CONN_STATUS_CONNECTING_FAILED" << std::endl;
+        m_stdout << endl;
+        m_stdout << getCurrentTimeStamp() << "CONN_STATUS_CONNECTING_FAILED" << endl;
         break;
     }
     printLinePrefix();
@@ -205,26 +214,34 @@ void Client::connectionStatusChanged( BlackCore::IVoiceChannel::ConnectionStatus
 
 void Client::audioStartedStream()
 {
-    std::cout << "Started stream in room index " << std::endl;
+    m_stdout << endl;
+    m_stdout << getCurrentTimeStamp() << "Started stream in room index " << endl;
     printLinePrefix();
 }
 
 void Client::audioStoppedStream()
 {
-    std::cout << "Stopped stream in room index " << std::endl;
+    m_stdout << endl;
+    m_stdout << getCurrentTimeStamp() << "Stopped stream in room index " << endl;
     printLinePrefix();
 }
 
 void Client::userJoinedRoom(const CCallsign &callsign)
 {
-    std::cout << ": " << callsign.toStdString() << " joined the voice room." << std::endl;
+    m_stdout << endl;
+    m_stdout << getCurrentTimeStamp() << callsign << " joined the voice room." << endl;
     printLinePrefix();
 }
 
 void Client::userLeftRoom(const CCallsign &callsign)
 {
-    std::cout << callsign.toStdString() << " left the voice room." << std::endl;
+    m_stdout << endl;
+    m_stdout << getCurrentTimeStamp() << callsign << " left the voice room." << endl;
     printLinePrefix();
 }
 
-
+QString Client::getCurrentTimeStamp() const
+{
+    QString timeStamp = QDateTime::currentDateTime().toString("hh:mm:ss") + " : ";
+    return timeStamp;
+}
