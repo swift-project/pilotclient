@@ -4,20 +4,13 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "menus.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include <type_traits>
 #include <cassert>
 #include <string>
 
 namespace XBus
 {
-
-    // Own implementation of std::make_unique, a C++14 feature not provided by GCC in C++11 mode
-    template<typename T, typename... Args>
-    std::unique_ptr<T> make_unique(Args&&... args)
-    {
-        return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
-    }
-
     template <typename T> void *voidptr_cast(T i) // "safe" cast from integer to void*
     {
         static_assert(std::is_integral<T>::value, "voidptr_cast expects an integer");
@@ -77,7 +70,7 @@ namespace XBus
     CMenu CMenu::subMenu(std::string name)
     {
         assert(! name.empty());
-        auto items = make_unique<ItemList>();
+        auto items = BlackMisc::make_unique<ItemList>();
         auto itemsVoidPtr = static_cast<void *>(&*items);
         return { XPLMCreateMenu(name.c_str(), m_data->id, XPLMAppendMenuItem(m_data->id, name.c_str(), nullptr, false), handler, itemsVoidPtr), false, std::move(items) };
     }

@@ -6,6 +6,7 @@
 #include "voice_vatlib.h"
 #include "voice_channel_vatlib.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include <QDebug>
 #include <QTimer>
 #include <memory>

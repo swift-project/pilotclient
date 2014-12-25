@@ -17,6 +17,8 @@
 #include <QVariant>
 #include <QDBusArgument>
 
+#include <memory>
+
 /*!
  * Workaround, to call initResource from namespace. Used in BlackMisc::initResources().
  * Q_INIT_RESOURCE adds resource, here the translation files.
@@ -161,6 +163,13 @@ namespace BlackMisc
 
     //! Get local host name env.variable
     const QString &localHostNameEnvVariable();
+
+    //! Own implementation of std::make_unique, a C++14 feature not provided by GCC in C++11 mode
+    template<typename T, typename... Args>
+    std::unique_ptr<T> make_unique(Args&&... args)
+    {
+        return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+    }
 
 } // BlackMisc
 
