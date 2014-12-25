@@ -25,7 +25,7 @@ namespace BlackMisc
          * If you want to safe this object, use the name instead of the index, since the index can change after
          * a restart.
          */
-        class CAudioDevice : public CValueObjectStdTuple<CAudioDevice>
+        class CAudioDeviceInfo : public CValueObjectStdTuple<CAudioDeviceInfo>
         {
         public:
             //! Type
@@ -41,10 +41,10 @@ namespace BlackMisc
              * If m_deviceIndex is -1, default should be used. However on Windows this doesnt work. Needs
              * to be checked in Vatlib.
              */
-            CAudioDevice();
+            CAudioDeviceInfo();
 
             //! Constructor.
-            CAudioDevice(DeviceType type, const qint16 index, const QString &getName);
+            CAudioDeviceInfo(DeviceType type, const qint16 index, const QString &getName);
 
             //! Get the device index
             qint16 getIndex() const { return m_deviceIndex; }
@@ -68,15 +68,15 @@ namespace BlackMisc
             static qint16 invalidDeviceIndex() {return -2;}
 
             //! Default output device
-            static CAudioDevice getDefaultOutputDevice()
+            static CAudioDeviceInfo getDefaultOutputDevice()
             {
-                return CAudioDevice(OutputDevice, defaultDeviceIndex(), "default");
+                return CAudioDeviceInfo(OutputDevice, defaultDeviceIndex(), "default");
             }
 
             //! Default input device
-            static CAudioDevice getDefaultInputDevice()
+            static CAudioDeviceInfo getDefaultInputDevice()
             {
-                return CAudioDevice(InputDevice, defaultDeviceIndex(), "default");
+                return CAudioDeviceInfo(InputDevice, defaultDeviceIndex(), "default");
             }
 
         protected:
@@ -84,8 +84,8 @@ namespace BlackMisc
             virtual QString convertToQString(bool i18n = false) const override;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CAudioDevice)
-            //! Device type, @see CAudioDevice::DeviceType
+            BLACK_ENABLE_TUPLE_CONVERSION(CAudioDeviceInfo)
+            //! Device type, @see CAudioDeviceInfo::DeviceType
             DeviceType m_type;
             /*!
              * deviceIndex is the number is the reference for the VVL. The device is selected by this index.
@@ -100,7 +100,7 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Audio::CAudioDevice, (o.m_type, o.m_deviceIndex, o.m_deviceName, o.m_hostName))
-Q_DECLARE_METATYPE(BlackMisc::Audio::CAudioDevice)
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Audio::CAudioDeviceInfo, (o.m_type, o.m_deviceIndex, o.m_deviceName, o.m_hostName))
+Q_DECLARE_METATYPE(BlackMisc::Audio::CAudioDeviceInfo)
 
 #endif // guard

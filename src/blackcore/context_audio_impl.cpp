@@ -127,7 +127,7 @@ namespace BlackCore
     /*
      * Audio devices
      */
-    CAudioDeviceList CContextAudio::getAudioDevices() const
+    CAudioDeviceInfoList CContextAudio::getAudioDevices() const
     {
         Q_ASSERT(this->m_voice);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
@@ -137,11 +137,11 @@ namespace BlackCore
     /*
      * Audio default devices
      */
-    CAudioDeviceList CContextAudio::getCurrentAudioDevices() const
+    CAudioDeviceInfoList CContextAudio::getCurrentAudioDevices() const
     {
         Q_ASSERT(this->m_voice);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        CAudioDeviceList devices;
+        CAudioDeviceInfoList devices;
         devices.push_back(this->m_voice->getCurrentInputDevice());
         devices.push_back(this->m_voice->getCurrentOutputDevice());
         return devices;
@@ -150,13 +150,13 @@ namespace BlackCore
     /*
      * Set current device
      */
-    void CContextAudio::setCurrentAudioDevice(const CAudioDevice &audioDevice)
+    void CContextAudio::setCurrentAudioDevice(const CAudioDeviceInfo &audioDevice)
     {
         Q_ASSERT(this->m_voice);
-        Q_ASSERT(audioDevice.getType() != CAudioDevice::Unknown);
+        Q_ASSERT(audioDevice.getType() != CAudioDeviceInfo::Unknown);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << audioDevice;
         bool changed = false;
-        if (audioDevice.getType() == CAudioDevice::InputDevice)
+        if (audioDevice.getType() == CAudioDeviceInfo::InputDevice)
         {
             if (this->m_voice->getCurrentInputDevice() != audioDevice)
             {
@@ -342,7 +342,7 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << selcal;
-        CAudioDevice outputDevice = m_voice->getCurrentOutputDevice();
+        CAudioDeviceInfo outputDevice = m_voice->getCurrentOutputDevice();
         BlackSound::CSoundGenerator::playSelcal(90, selcal, outputDevice);
     }
 

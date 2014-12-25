@@ -14,7 +14,7 @@
 
 #include "blackcore/context.h"
 #include "blackmisc/genericdbusinterface.h"
-#include "blackmisc/audiodevicelist.h"
+#include "blackmisc/audiodeviceinfolist.h"
 #include "blackmisc/voiceroomlist.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/avaircraft.h"
@@ -89,10 +89,10 @@ namespace BlackCore
         void changedMute(bool muted);
 
         //! Changed audio devices (e.g. device enabled/disable)
-        void changedAudioDevices(const BlackMisc::Audio::CAudioDeviceList &devices);
+        void changedAudioDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
 
         //! Changed slection of audio devices
-        void changedSelectedAudioDevices(const BlackMisc::Audio::CAudioDeviceList &devices);
+        void changedSelectedAudioDevices(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
 
     public slots:
         //! Get voice rooms for COM1, COM2:
@@ -134,19 +134,19 @@ namespace BlackCore
         virtual BlackMisc::Network::CUserList getCom2RoomUsers() const = 0;
 
         //! Audio devices
-        virtual BlackMisc::Audio::CAudioDeviceList getAudioDevices() const = 0;
+        virtual BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const = 0;
 
         /*!
          * \brief Get current audio device
          * \return input and output devices
          */
-        virtual BlackMisc::Audio::CAudioDeviceList getCurrentAudioDevices() const = 0;
+        virtual BlackMisc::Audio::CAudioDeviceInfoList getCurrentAudioDevices() const = 0;
 
         /*!
          * \brief Set current audio device
          * \param audioDevice can be input or audio device
          */
-        virtual void setCurrentAudioDevice(const BlackMisc::Audio::CAudioDevice &audioDevice) = 0;
+        virtual void setCurrentAudioDevice(const BlackMisc::Audio::CAudioDeviceInfo &audioDevice) = 0;
 
         /*!
          * \brief Set volumes via com units, also allows to mute

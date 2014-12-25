@@ -42,10 +42,10 @@ namespace BlackCore
                                "changedAudioVolumes", this, SIGNAL(changedAudioVolumes(qint32, qint32)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
-                               "changedAudioDevices", this, SIGNAL(changedAudioDevices(BlackMisc::Audio::CAudioDeviceList)));
+                               "changedAudioDevices", this, SIGNAL(changedAudioDevices(BlackMisc::Audio::CAudioDeviceInfoList)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
-                               "changedSelectedAudioDevices", this, SIGNAL(changedSelectedAudioDevices(BlackMisc::Audio::CAudioDeviceList)));
+                               "changedSelectedAudioDevices", this, SIGNAL(changedSelectedAudioDevices(BlackMisc::Audio::CAudioDeviceInfoList)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
                                "changedMute", this, SIGNAL(changedMute(bool)));
@@ -96,23 +96,23 @@ namespace BlackCore
     /*
      * Audio devices
      */
-    CAudioDeviceList CContextAudioProxy::getAudioDevices() const
+    CAudioDeviceInfoList CContextAudioProxy::getAudioDevices() const
     {
-        return this->m_dBusInterface->callDBusRet<CAudioDeviceList>(QLatin1Literal("getAudioDevices"));
+        return this->m_dBusInterface->callDBusRet<CAudioDeviceInfoList>(QLatin1Literal("getAudioDevices"));
     }
 
     /*
      * Get current audio devices
      */
-    BlackMisc::Audio::CAudioDeviceList CContextAudioProxy::getCurrentAudioDevices() const
+    CAudioDeviceInfoList CContextAudioProxy::getCurrentAudioDevices() const
     {
-        return this->m_dBusInterface->callDBusRet<CAudioDeviceList>(QLatin1Literal("getCurrentAudioDevices"));
+        return this->m_dBusInterface->callDBusRet<CAudioDeviceInfoList>(QLatin1Literal("getCurrentAudioDevices"));
     }
 
     /*
      * Set current audio device
      */
-    void CContextAudioProxy::setCurrentAudioDevice(const CAudioDevice &audioDevice)
+    void CContextAudioProxy::setCurrentAudioDevice(const CAudioDeviceInfo &audioDevice)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("setCurrentAudioDevice"), audioDevice);
     }

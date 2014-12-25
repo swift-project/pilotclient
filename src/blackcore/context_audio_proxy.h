@@ -15,7 +15,7 @@
 #include "context_audio.h"
 
 #include "blackmisc/genericdbusinterface.h"
-#include "blackmisc/audiodevicelist.h"
+#include "blackmisc/audiodeviceinfolist.h"
 #include "blackmisc/voiceroomlist.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/avaircraft.h"
@@ -82,13 +82,13 @@ namespace BlackCore
         virtual void leaveAllVoiceRooms() override;
 
         //! \copydoc IContextAudio::getAudioDevices()
-        virtual BlackMisc::Audio::CAudioDeviceList getAudioDevices() const override;
+        virtual BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const override;
 
         //! \copydoc IContextAudio::getCurrentAudioDevices()
-        virtual BlackMisc::Audio::CAudioDeviceList getCurrentAudioDevices() const override;
+        virtual BlackMisc::Audio::CAudioDeviceInfoList getCurrentAudioDevices() const override;
 
         //! \copydoc IContextAudio::setCurrentAudioDevice()
-        virtual void setCurrentAudioDevice(const BlackMisc::Audio::CAudioDevice &audioDevice) override;
+        virtual void setCurrentAudioDevice(const BlackMisc::Audio::CAudioDeviceInfo &audioDevice) override;
 
         //! \copydoc IContextAudio::setVolumes()
         virtual void setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2) override;

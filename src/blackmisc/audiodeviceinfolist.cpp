@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "audiodevicelist.h"
+#include "audiodeviceinfolist.h"
 #include "predicates.h"
 
 namespace BlackMisc
@@ -17,37 +17,37 @@ namespace BlackMisc
         /*
          * Default constructor
          */
-        CAudioDeviceList::CAudioDeviceList() { }
+        CAudioDeviceInfoList::CAudioDeviceInfoList() { }
 
         /*
          * Construct from base class object
          */
-        CAudioDeviceList::CAudioDeviceList(const CSequence &other) :
+        CAudioDeviceInfoList::CAudioDeviceInfoList(const CSequence &other) :
             CSequence(other)
         { }
 
         /*
          * Output devices
          */
-        CAudioDeviceList CAudioDeviceList::getOutputDevices() const
+        CAudioDeviceInfoList CAudioDeviceInfoList::getOutputDevices() const
         {
-            return this->findBy(&CAudioDevice::getType, CAudioDevice::OutputDevice);
+            return this->findBy(&CAudioDeviceInfo::getType, CAudioDeviceInfo::OutputDevice);
         }
 
         /*
          * Output devices
          */
-        CAudioDeviceList CAudioDeviceList::getInputDevices() const
+        CAudioDeviceInfoList CAudioDeviceInfoList::getInputDevices() const
         {
-            return this->findBy(&CAudioDevice::getType, CAudioDevice::InputDevice);
+            return this->findBy(&CAudioDeviceInfo::getType, CAudioDeviceInfo::InputDevice);
         }
 
         /*
          * Count as of type
          */
-        int CAudioDeviceList::count(CAudioDevice::DeviceType type) const
+        int CAudioDeviceInfoList::count(CAudioDeviceInfo::DeviceType type) const
         {
-            return std::count_if(this->begin(), this->end(), [type](const CAudioDevice &device)
+            return std::count_if(this->begin(), this->end(), [type](const CAudioDeviceInfo &device)
             {
                 return device.getType() == type;
             });
@@ -56,11 +56,11 @@ namespace BlackMisc
         /*
          * Register metadata
          */
-        void CAudioDeviceList::registerMetadata()
+        void CAudioDeviceInfoList::registerMetadata()
         {
-            qRegisterMetaType<CAudioDeviceList>();
-            qDBusRegisterMetaType<CAudioDeviceList>();
-            registerMetaValueType<CAudioDeviceList>();
+            qRegisterMetaType<CAudioDeviceInfoList>();
+            qDBusRegisterMetaType<CAudioDeviceInfoList>();
+            registerMetaValueType<CAudioDeviceInfoList>();
         }
 
     } // namespace

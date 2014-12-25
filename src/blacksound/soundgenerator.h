@@ -7,7 +7,7 @@
 #define BLACKSOUND_SOUNDGENERATOR_H
 
 #include "blackmisc/avselcal.h"
-#include "blackmisc/audiodevice.h"
+#include "blackmisc/audiodeviceinfo.h"
 #include "blackmisc/pqtime.h"
 #include "blackmisc/notificationsounds.h"
 #include <QIODevice>
@@ -122,7 +122,7 @@ namespace BlackSound
          * \param audioDevice   output audio device
          * \return
          */
-        static QAudioDeviceInfo findClosestOutputDevice(const BlackMisc::Audio::CAudioDevice &audioDevice);
+        static QAudioDeviceInfo findClosestOutputDevice(const BlackMisc::Audio::CAudioDeviceInfo &audioDevice);
 
         /*!
          * \brief Play signal of tones once
@@ -166,7 +166,7 @@ namespace BlackSound
          * \param audioDevice device to be used
          * \see BlackMisc::Aviation::CSelcal
          */
-        static void playSelcal(qint32 volume, const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::Audio::CAudioDevice &audioDevice);
+        static void playSelcal(qint32 volume, const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::Audio::CAudioDeviceInfo &audioDevice);
 
 
         //! One cycle of tones takes t milliseconds

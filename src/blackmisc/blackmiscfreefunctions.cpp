@@ -67,8 +67,8 @@ void BlackMisc::Settings::registerMetadata()
  */
 void BlackMisc::Audio::registerMetadata()
 {
-    CAudioDevice::registerMetadata();
-    CAudioDeviceList::registerMetadata();
+    CAudioDeviceInfo::registerMetadata();
+    CAudioDeviceInfoList::registerMetadata();
     CVoiceRoom::registerMetadata();
     CVoiceRoomList::registerMetadata();
 }

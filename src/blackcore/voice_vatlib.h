@@ -8,7 +8,6 @@
 
 #include "voice.h"
 #include "../blacksound/soundgenerator.h"
-#include "../blackmisc/audiodevicelist.h"
 #include "../blackmisc/nwuserlist.h"
 #include "../blackmisc/avcallsignlist.h"
 #include "../blackmisc/sharedlockablepointer.h"
@@ -74,13 +73,13 @@ namespace BlackCore
         // and ATC to headspeakers. Is not important to implement that now, if ever.
 
         //! \copydoc IVoice::audioDevices()
-        virtual const BlackMisc::Audio::CAudioDeviceList &audioDevices() const override;
+        virtual const BlackMisc::Audio::CAudioDeviceInfoList &audioDevices() const override;
 
         //! \copydoc IVoice::defaultAudioInputDevice()
-        virtual const BlackMisc::Audio::CAudioDevice defaultAudioInputDevice() const override;
+        virtual const BlackMisc::Audio::CAudioDeviceInfo defaultAudioInputDevice() const override;
 
         //! \copydoc IVoice::defaultAudioOutputDevice()
-        virtual const BlackMisc::Audio::CAudioDevice defaultAudioOutputDevice() const override;
+        virtual const BlackMisc::Audio::CAudioDeviceInfo defaultAudioOutputDevice() const override;
 
         /************************************************
          * SETUP TESTS
@@ -105,16 +104,16 @@ namespace BlackCore
         virtual IVoiceChannel *getVoiceChannel(qint32 channelIndex) const override;
 
         //! \copydoc IVoice::setInputDevice
-        virtual void setInputDevice(const BlackMisc::Audio::CAudioDevice &device) override;
+        virtual void setInputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device) override;
 
         //! \copydoc IVoice::setOutputDevice
-        virtual void setOutputDevice(const BlackMisc::Audio::CAudioDevice &device) override;
+        virtual void setOutputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device) override;
 
         //! \copydoc IVoice::getCurrentInputDevice()
-        virtual BlackMisc::Audio::CAudioDevice getCurrentInputDevice() const override;
+        virtual BlackMisc::Audio::CAudioDeviceInfo getCurrentInputDevice() const override;
 
         //! \copydoc IVoice::getCurrentOutputDevice()
-        virtual BlackMisc::Audio::CAudioDevice getCurrentOutputDevice() const override;
+        virtual BlackMisc::Audio::CAudioDeviceInfo getCurrentOutputDevice() const override;
 
         //! \copydoc IVoice::enableAudioLoopback
         virtual void enableAudioLoopback(bool enable = true) override;
@@ -148,9 +147,9 @@ namespace BlackCore
         void onRoomStatusUpdate(qint32 roomIndex, Cvatlib_Voice_Simple::roomStatusUpdate roomStatus);
 
         TVatlibPointer m_vatlib;
-        BlackMisc::Audio::CAudioDeviceList m_devices; /*!< in and output devices */
-        BlackMisc::Audio::CAudioDevice m_currentOutputDevice;
-        BlackMisc::Audio::CAudioDevice m_currentInputDevice;
+        BlackMisc::Audio::CAudioDeviceInfoList m_devices; /*!< in and output devices */
+        BlackMisc::Audio::CAudioDeviceInfo m_currentOutputDevice;
+        BlackMisc::Audio::CAudioDeviceInfo m_currentInputDevice;
         std::atomic<float> m_inputSquelch;
         std::atomic<Cvatlib_Voice_Simple::agc> m_micTestResult;
         QHash<qint32, IVoiceChannel *> m_hashChannelIndex;

@@ -10,8 +10,8 @@
 #ifndef BLACKMISC_AUDIOALLCLASSES_H
 #define BLACKMISC_AUDIOALLCLASSES_H
 
-#include "blackmisc/audiodevice.h"
-#include "blackmisc/audiodevicelist.h"
+#include "blackmisc/audiodeviceinfo.h"
+#include "blackmisc/audiodeviceinfolist.h"
 #include "blackmisc/voiceroom.h"
 #include "blackmisc/voiceroomlist.h"
 

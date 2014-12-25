@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "audiodevice.h"
+#include "audiodeviceinfo.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <tuple>
 
@@ -18,7 +18,7 @@ namespace BlackMisc
         /*
          * Constructor
          */
-        CAudioDevice::CAudioDevice() :
+        CAudioDeviceInfo::CAudioDeviceInfo() :
             m_type(Unknown), m_deviceIndex(invalidDeviceIndex()),
             m_deviceName(""), m_hostName(BlackMisc::localHostName())
         {
@@ -28,7 +28,7 @@ namespace BlackMisc
         /*
          * Constructor
          */
-        CAudioDevice::CAudioDevice(DeviceType type, const qint16 index, const QString &name) :
+        CAudioDeviceInfo::CAudioDeviceInfo(DeviceType type, const qint16 index, const QString &name) :
             m_type(type), m_deviceIndex(index),
             m_deviceName(name), m_hostName(BlackMisc::localHostName())
         {
@@ -38,7 +38,7 @@ namespace BlackMisc
         /*
          * As String
          */
-        QString CAudioDevice::convertToQString(bool /* i18n */) const
+        QString CAudioDeviceInfo::convertToQString(bool /* i18n */) const
         {
             if (this->m_hostName.isEmpty()) return m_deviceName;
             QString s(this->m_deviceName);

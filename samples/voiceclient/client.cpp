@@ -5,7 +5,7 @@
 
 #include "client.h"
 #include "blackcore/voice_vatlib.h"
-#include "blackmisc/audiodevicelist.h"
+#include "blackmisc/audiodeviceinfolist.h"
 #include "blackmisc/avcallsignlist.h"
 
 using namespace BlackMisc::Audio;
@@ -142,7 +142,7 @@ void Client::terminateConnectionCmd(QTextStream & /** args **/)
 
 void Client::inputDevicesCmd(QTextStream & /** args **/)
 {
-    foreach(BlackMisc::Audio::CAudioDevice device, this->m_voice->audioDevices().getInputDevices())
+    for(auto &device : m_voice->audioDevices().getInputDevices())
     {
         std::cout << device.getName().toStdString() << std::endl;
     }
@@ -154,7 +154,7 @@ void Client::inputDevicesCmd(QTextStream & /** args **/)
  */
 void Client::outputDevicesCmd(QTextStream & /** args **/)
 {
-    foreach(BlackMisc::Audio::CAudioDevice device, this->m_voice->audioDevices().getOutputDevices())
+    for(auto &device : m_voice->audioDevices().getOutputDevices())
     {
         std::cout << device.getName().toStdString() << std::endl;
     }

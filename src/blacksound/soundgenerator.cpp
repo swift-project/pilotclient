@@ -362,9 +362,9 @@ namespace BlackSound
     /*
      * BlackMisc to Qt audio device
      */
-    QAudioDeviceInfo CSoundGenerator::findClosestOutputDevice(const BlackMisc::Audio::CAudioDevice &audioDevice)
+    QAudioDeviceInfo CSoundGenerator::findClosestOutputDevice(const CAudioDeviceInfo &audioDevice)
     {
-        Q_ASSERT(audioDevice.getType() == CAudioDevice::OutputDevice);
+        Q_ASSERT(audioDevice.getType() == CAudioDeviceInfo::OutputDevice);
         const QString lookFor = audioDevice.getName().toLower();
         QAudioDeviceInfo qtDevice = QAudioDeviceInfo::defaultOutputDevice();
         if (lookFor.startsWith("default")) return qtDevice;
@@ -452,7 +452,7 @@ namespace BlackSound
         // CSoundGenerator::playSignalRecorded(volume, tones, device);
     }
 
-    void CSoundGenerator::playSelcal(qint32 volume, const CSelcal &selcal, const CAudioDevice &audioDevice)
+    void CSoundGenerator::playSelcal(qint32 volume, const CSelcal &selcal, const CAudioDeviceInfo &audioDevice)
     {
         if (CSoundGenerator::s_selcalStarted.msecsTo(QDateTime::currentDateTimeUtc()) < 2500) return; // simple check not to play 2 SELCAL at the same time
         CSoundGenerator::s_selcalStarted = QDateTime::currentDateTimeUtc();

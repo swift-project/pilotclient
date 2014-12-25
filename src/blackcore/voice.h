@@ -10,7 +10,7 @@
 #include "../blackmisc/avselcal.h"
 #include "../blackmisc/nwuserlist.h"
 #include "../blackmisc/voiceroomlist.h"
-#include "../blackmisc/audiodevicelist.h"
+#include "../blackmisc/audiodeviceinfolist.h"
 #include "../blackmisc/statusmessage.h"
 
 #include <vatlib/vatlib.h>
@@ -57,19 +57,19 @@ namespace BlackCore
          * \brief Audio devices
          * \return
          */
-        virtual const BlackMisc::Audio::CAudioDeviceList &audioDevices() const = 0;
+        virtual const BlackMisc::Audio::CAudioDeviceInfoList &audioDevices() const = 0;
 
         /*!
          * \brief Default input device
          * \return
          */
-        virtual const BlackMisc::Audio::CAudioDevice defaultAudioInputDevice() const = 0;
+        virtual const BlackMisc::Audio::CAudioDeviceInfo defaultAudioInputDevice() const = 0;
 
         /*!
          * \brief Default output device
          * \return
          */
-        virtual const BlackMisc::Audio::CAudioDevice defaultAudioOutputDevice() const = 0;
+        virtual const BlackMisc::Audio::CAudioDeviceInfo defaultAudioOutputDevice() const = 0;
 
         /************************************************
          * SETUP TESTS
@@ -111,22 +111,22 @@ namespace BlackCore
         /*!
          * \brief Current input device
          */
-        virtual BlackMisc::Audio::CAudioDevice getCurrentInputDevice() const = 0;
+        virtual BlackMisc::Audio::CAudioDeviceInfo getCurrentInputDevice() const = 0;
 
         /*!
          * \brief Current output device
          */
-        virtual BlackMisc::Audio::CAudioDevice getCurrentOutputDevice() const = 0;
+        virtual BlackMisc::Audio::CAudioDeviceInfo getCurrentOutputDevice() const = 0;
 
         /*!
          * \brief Output device to be used
          */
-        virtual void setOutputDevice(const BlackMisc::Audio::CAudioDevice &device) = 0;
+        virtual void setOutputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device) = 0;
 
         /*!
          * \brief Input device to be used
          */
-        virtual void setInputDevice(const BlackMisc::Audio::CAudioDevice &device) = 0;
+        virtual void setInputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device) = 0;
 
         /*!
          * \brief Enable audio loopback to route recorded voice from microphone to speakers

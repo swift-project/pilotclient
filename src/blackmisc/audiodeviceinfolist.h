@@ -12,7 +12,7 @@
 #ifndef BLACKMISC_AUDIODEVICELIST_H
 #define BLACKMISC_AUDIODEVICELIST_H
 
-#include "audiodevice.h"
+#include "audiodeviceinfo.h"
 #include "sequence.h"
 #include "collection.h"
 #include <QObject>
@@ -26,23 +26,23 @@ namespace BlackMisc
         /*!
          * Value object encapsulating a list of audio devices.
          */
-        class CAudioDeviceList : public CSequence<CAudioDevice>
+        class CAudioDeviceInfoList : public CSequence<CAudioDeviceInfo>
         {
         public:
             //! Default constructor.
-            CAudioDeviceList();
+            CAudioDeviceInfoList();
 
             //! Construct from a base class object.
-            CAudioDeviceList(const CSequence &other);
+            CAudioDeviceInfoList(const CSequence &other);
 
             //! Get output devices in that list
-            CAudioDeviceList getOutputDevices() const;
+            CAudioDeviceInfoList getOutputDevices() const;
 
             //! Get output devices in that list
-            CAudioDeviceList getInputDevices() const;
+            CAudioDeviceInfoList getInputDevices() const;
 
             //! Count (as of type)
-            int count(CAudioDevice::DeviceType type) const;
+            int count(CAudioDeviceInfo::DeviceType type) const;
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
@@ -57,8 +57,8 @@ namespace BlackMisc
     } //namespace
 } // namespace
 
-Q_DECLARE_METATYPE(BlackMisc::Audio::CAudioDeviceList)
-Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Audio::CAudioDevice>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Audio::CAudioDevice>)
+Q_DECLARE_METATYPE(BlackMisc::Audio::CAudioDeviceInfoList)
+Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Audio::CAudioDeviceInfo>)
+Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Audio::CAudioDeviceInfo>)
 
 #endif //guard

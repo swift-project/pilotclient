@@ -13,7 +13,7 @@
 #define BLACKGUI_AUDIOSETUPCOMPONENT_H
 
 #include "enableforruntime.h"
-#include "blackmisc/audiodevicelist.h"
+#include "blackmisc/audiodeviceinfolist.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -66,10 +66,10 @@ namespace BlackGui
             void ps_audioDeviceSelected(int index);
 
             //! Current audio devices changed
-            void ps_onCurrentAudioDevicesChanged(const Audio::CAudioDeviceList &devices);
+            void ps_onCurrentAudioDevicesChanged(const Audio::CAudioDeviceInfoList &devices);
 
             //! Audio devices changed
-            void ps_onAudioDevicesChanged(const Audio::CAudioDeviceList &devices);
+            void ps_onAudioDevicesChanged(const Audio::CAudioDeviceInfoList &devices);
 
         private:
             //! Audio test modes

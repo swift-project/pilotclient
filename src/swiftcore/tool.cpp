@@ -96,10 +96,10 @@ namespace BlackMiscTest
             {
                 qtout << "-------------" << endl;
                 qtout << "vatlib audio devices" << endl;
-                CAudioDeviceList devices;
+                CAudioDeviceInfoList devices;
                 QMetaObject::invokeMethod(runtime->getIContextAudio(), "getAudioDevices",
                                           Qt::BlockingQueuedConnection,
-                                          Q_RETURN_ARG(BlackMisc::Audio::CAudioDeviceList, devices));
+                                          Q_RETURN_ARG(BlackMisc::Audio::CAudioDeviceInfoList, devices));
                 qtout << devices << endl;
             }
             else if (line.startsWith("2"))

@@ -66,7 +66,7 @@ namespace BlackCore
     /*
      * Devices
      */
-    const BlackMisc::Audio::CAudioDeviceList &CVoiceVatlib::audioDevices() const
+    const BlackMisc::Audio::CAudioDeviceInfoList &CVoiceVatlib::audioDevices() const
     {
         QMutexLocker lockForReading(&m_lockDeviceList);
         return m_devices;
@@ -75,25 +75,25 @@ namespace BlackCore
     /*
      * Default input device
      */
-    const BlackMisc::Audio::CAudioDevice CVoiceVatlib::defaultAudioInputDevice() const
+    const BlackMisc::Audio::CAudioDeviceInfo CVoiceVatlib::defaultAudioInputDevice() const
     {
         // Constructor creates already a default device
-        return BlackMisc::Audio::CAudioDevice(BlackMisc::Audio::CAudioDevice::InputDevice, BlackMisc::Audio::CAudioDevice::defaultDeviceIndex(), "default");
+        return BlackMisc::Audio::CAudioDeviceInfo(BlackMisc::Audio::CAudioDeviceInfo::InputDevice, BlackMisc::Audio::CAudioDeviceInfo::defaultDeviceIndex(), "default");
     }
 
     /*
      * Default output device
      */
-    const BlackMisc::Audio::CAudioDevice CVoiceVatlib::defaultAudioOutputDevice() const
+    const BlackMisc::Audio::CAudioDeviceInfo CVoiceVatlib::defaultAudioOutputDevice() const
     {
         // Constructor creates already a default device
-        return BlackMisc::Audio::CAudioDevice(BlackMisc::Audio::CAudioDevice::OutputDevice, BlackMisc::Audio::CAudioDevice::defaultDeviceIndex(), "default");
+        return BlackMisc::Audio::CAudioDeviceInfo(BlackMisc::Audio::CAudioDeviceInfo::OutputDevice, BlackMisc::Audio::CAudioDeviceInfo::defaultDeviceIndex(), "default");
     }
 
     /*
      * Current output device
      */
-    CAudioDevice CVoiceVatlib::getCurrentOutputDevice() const
+    CAudioDeviceInfo CVoiceVatlib::getCurrentOutputDevice() const
     {
         QMutexLocker locker(&m_lockCurrentOutputDevice);
         return m_currentOutputDevice;
@@ -102,7 +102,7 @@ namespace BlackCore
     /*
      * Current input device
      */
-    CAudioDevice CVoiceVatlib::getCurrentInputDevice() const
+    CAudioDeviceInfo CVoiceVatlib::getCurrentInputDevice() const
     {
         QMutexLocker locker(&m_lockCurrentInputDevice);
         return m_currentInputDevice;
@@ -111,7 +111,7 @@ namespace BlackCore
     /*
      * Set input device
      */
-    void CVoiceVatlib::setInputDevice(const BlackMisc::Audio::CAudioDevice &device)
+    void CVoiceVatlib::setInputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device)
     {
         std::lock_guard<TVatlibPointer> locker(m_vatlib);
         Q_ASSERT_X(m_vatlib->IsValid() && m_vatlib->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
@@ -143,7 +143,7 @@ namespace BlackCore
     /*
      * Set output device
      */
-    void CVoiceVatlib::setOutputDevice(const BlackMisc::Audio::CAudioDevice &device)
+    void CVoiceVatlib::setOutputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device)
     {
         std::lock_guard<TVatlibPointer> locker(m_vatlib);
         Q_ASSERT_X(m_vatlib->IsValid() && m_vatlib->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
@@ -400,7 +400,7 @@ namespace BlackCore
     void CVoiceVatlib::onInputHardwareDeviceReceived(Cvatlib_Voice_Simple *obj, const char *name, void *cbVar)
     {
         Q_UNUSED(obj)
-        BlackMisc::Audio::CAudioDevice inputDevice(BlackMisc::Audio::CAudioDevice::InputDevice, cbvar_cast_voice(cbVar)->m_devices.count(BlackMisc::Audio::CAudioDevice::InputDevice), QString(name));
+        BlackMisc::Audio::CAudioDeviceInfo inputDevice(BlackMisc::Audio::CAudioDeviceInfo::InputDevice, cbvar_cast_voice(cbVar)->m_devices.count(BlackMisc::Audio::CAudioDeviceInfo::InputDevice), QString(name));
         QMutexLocker lockForWriting(&(cbvar_cast_voice(cbVar)->m_lockDeviceList));
         cbvar_cast_voice(cbVar)->m_devices.push_back(inputDevice);
     }
@@ -411,7 +411,7 @@ namespace BlackCore
     void CVoiceVatlib::onOutputHardwareDeviceReceived(Cvatlib_Voice_Simple *obj, const char *name, void *cbVar)
     {
         Q_UNUSED(obj)
-        BlackMisc::Audio::CAudioDevice outputDevice(BlackMisc::Audio::CAudioDevice::OutputDevice, cbvar_cast_voice(cbVar)->m_devices.count(BlackMisc::Audio::CAudioDevice::OutputDevice), QString(name));
+        BlackMisc::Audio::CAudioDeviceInfo outputDevice(BlackMisc::Audio::CAudioDeviceInfo::OutputDevice, cbvar_cast_voice(cbVar)->m_devices.count(BlackMisc::Audio::CAudioDeviceInfo::OutputDevice), QString(name));
         QMutexLocker lockForWriting(&(cbvar_cast_voice(cbVar)->m_lockDeviceList));
         cbvar_cast_voice(cbVar)->m_devices.push_back(outputDevice);
     }
