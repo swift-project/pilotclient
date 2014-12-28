@@ -67,9 +67,8 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::isPaused
             virtual bool isPaused() const override { return m_simPaused; }
 
-            //! \copydoc ISimulator::isRunning
-            //! \todo RW fix, set better state here
-            virtual bool isRunning() const override { return true; }
+            //! \copydoc ISimulator::isSimulating
+            virtual bool isSimulating() const override { return isConnected(); }
 
             //! Is time synchronization on?
             virtual bool isTimeSynchronized() const override { return m_syncTime; }
@@ -89,7 +88,7 @@ namespace BlackSimPlugin
             virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override { return m_ownAircraft; }
 
             //! \copydoc ISimulator::addRemoteAircraft()
-            virtual void addRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation) override;
+            virtual void addRemoteAircraft(const BlackMisc::Aviation::CAircraft &remoteAircraft, const BlackMisc::Network::CClient &remoteClient) override;
 
             //! \copydoc ISimulator::addAircraftSituation()
             virtual void addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation) override;
@@ -110,11 +109,13 @@ namespace BlackSimPlugin
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
 
             //! \copydoc ISimulator::getAircraftModel()
-            virtual BlackMisc::Network::CAircraftModel getAircraftModel() const override { return m_aircraftModel; }
+            virtual BlackMisc::Network::CAircraftModel getOwnAircraftModel() const override { return m_aircraftModel; }
 
             //! \copydoc BlackCore::ISimulator::getInstalledModels
-            //! \todo
             virtual BlackMisc::Network::CAircraftModelList getInstalledModels() const override { return {}; }
+
+            //! \copydoc BlackCore::ISimulator::getCurrentlyMatchedModels
+            virtual BlackMisc::Network::CAircraftModelList getCurrentlyMatchedModels() const override { return BlackMisc::Network::CAircraftModelList(); }
 
             //! Airports in range
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;

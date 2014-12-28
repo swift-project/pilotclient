@@ -137,7 +137,7 @@ namespace BlackSimPlugin
                             DataDefinitionOwnAircraftModel *dataDefinitionModel = (DataDefinitionOwnAircraftModel *) &pObjData->dwData;
                             CAircraftModel model;
                             model.setQueriedModelString(dataDefinitionModel->title);
-                            simulatorFsx->setAircraftModel(model);
+                            simulatorFsx->setOwnAircraftModel(model);
                             break;
                         }
                     case CSimConnectDefinitions::RequestSimEnvironment:

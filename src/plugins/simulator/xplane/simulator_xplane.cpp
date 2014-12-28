@@ -11,6 +11,8 @@
 #include <QTimer>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
 
 namespace BlackSimPlugin
 {
@@ -88,7 +90,7 @@ namespace BlackSimPlugin
             if (m_service->isValid() && m_traffic->isValid() && m_traffic->initialize())
             {
                 // FIXME duplication
-                connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::ps_emitAircraftModelChanged);
+                connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::ps_emitOwnAircraftModelChanged);
                 connect(m_service, &CXBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::ps_setAirportsInRange);
                 m_service->updateAirportsInRange();
                 m_watcher->setConnection(m_conn);
@@ -131,7 +133,7 @@ namespace BlackSimPlugin
                 delete m_service;
                 m_service = new CXBusServiceProxy(m_conn, this);
                 // FIXME duplication
-                connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::ps_emitAircraftModelChanged);
+                connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::ps_emitOwnAircraftModelChanged);
                 connect(m_service, &CXBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::ps_setAirportsInRange);
                 m_service->updateAirportsInRange();
             }
@@ -155,9 +157,9 @@ namespace BlackSimPlugin
             emit connectionStatusChanged(ISimulator::Disconnected);
         }
 
-        void CSimulatorXPlane::ps_emitAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao)
+        void CSimulatorXPlane::ps_emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao)
         {
-            emit aircraftModelChanged({ path, true });
+            emit ownAircraftModelChanged({ path, CAircraftModel::TypeOwnSimulatorModel });
             Q_UNUSED(filename);
             Q_UNUSED(livery);
             Q_UNUSED(icao);
@@ -210,10 +212,10 @@ namespace BlackSimPlugin
             Q_UNUSED(message);
         }
 
-        BlackMisc::Network::CAircraftModel CSimulatorXPlane::getAircraftModel() const
+        BlackMisc::Network::CAircraftModel CSimulatorXPlane::getOwnAircraftModel() const
         {
             if (! isConnected()) { return {}; }
-            return { m_xplaneData.aircraftModelPath, true };
+            return { m_xplaneData.aircraftModelPath, CAircraftModel::TypeOwnSimulatorModel };
         }
 
         BlackMisc::Network::CAircraftModelList CSimulatorXPlane::getInstalledModels() const
@@ -286,11 +288,15 @@ namespace BlackSimPlugin
             return false;
         }
 
-        void CSimulatorXPlane::addRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situ)
+        void CSimulatorXPlane::addRemoteAircraft(const Aviation::CAircraft &remoteAircraft, const Network::CClient &remoteClient)
         {
+            Q_UNUSED(remoteClient);
             if (! isConnected()) { return; }
-            m_traffic->addPlane(callsign.asString(), "A320", "YYY", "YYY");
-            addAircraftSituation(callsign, situ);
+            // KB: from what I can see here all data are available
+            // Is there any model matching required ????
+            CAircraftIcao icao = remoteAircraft.getIcaoInfo();
+            m_traffic->addPlane(remoteAircraft.getCallsign().asString(), icao.getAircraftDesignator(), icao.getAirlineDesignator(), icao.getLivery());
+            addAircraftSituation(remoteAircraft.getCallsign(), remoteAircraft.getSituation());
         }
 
         void CSimulatorXPlane::addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign,

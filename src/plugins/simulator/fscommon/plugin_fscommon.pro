@@ -1,7 +1,7 @@
 include (../../../../config.pri)
 include (../../../../build.pri)
 
-QT       += core dbus
+QT       += core dbus xml
 
 TARGET = simulator_fscommon
 TEMPLATE = lib

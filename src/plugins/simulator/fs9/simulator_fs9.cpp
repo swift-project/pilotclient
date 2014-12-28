@@ -21,6 +21,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackSim;
@@ -94,8 +95,10 @@ namespace BlackSimPlugin
             return true;
         }
 
-        void CSimulatorFs9::addRemoteAircraft(const CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation)
+        void CSimulatorFs9::addRemoteAircraft(const CAircraft &remoteAircraft, const CClient &remoteClient)
         {
+            Q_UNUSED(remoteClient);
+            CCallsign callsign = remoteAircraft.getCallsign();
             CFs9Client *client = new CFs9Client(this, callsign.toQString(), CTime(25, CTimeUnit::ms()));
             client->setHostAddress(m_fs9Host->getHostAddress());
             client->setPlayerUserId(m_fs9Host->getPlayerUserId());
@@ -103,7 +106,7 @@ namespace BlackSimPlugin
             client->start();
             m_hashFs9Clients.insert(callsign, client);
 
-            addAircraftSituation(callsign, initialSituation);
+            addAircraftSituation(callsign, remoteAircraft.getSituation());
         }
 
         void CSimulatorFs9::addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &situation)
@@ -259,7 +262,7 @@ namespace BlackSimPlugin
         void CSimulatorFs9::ps_changeOwnAircraftModel(const QString &modelname)
         {
             m_aircraftModel.setQueriedModelString(modelname);
-            emit aircraftModelChanged(m_aircraftModel);
+            emit ownAircraftModelChanged(m_aircraftModel);
         }
 
         void CSimulatorFs9::ps_changeHostStatus(BlackSimPlugin::Fs9::CFs9Host::HostStatus status)

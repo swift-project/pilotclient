@@ -18,6 +18,7 @@
 #include "blackmisc/avairportlist.h"
 #include "blackmisc/nwaircraftmodellist.h"
 #include "blackmisc/nwtextmessage.h"
+#include "blackmisc/nwclient.h"
 #include <QObject>
 
 namespace BlackCore
@@ -58,7 +59,7 @@ namespace BlackCore
         virtual bool isPaused() const = 0;
 
         //! Simulator running?
-        virtual bool isRunning() const = 0;
+        virtual bool isSimulating() const = 0;
 
     public slots:
 
@@ -75,8 +76,7 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const = 0;
 
         //! Add new remote aircraft to the simulator
-        //! \todo Add parameter: aircraft model
-        virtual void addRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation) = 0;
+        virtual void addRemoteAircraft(const BlackMisc::Aviation::CAircraft &remoteAircraft, const BlackMisc::Network::CClient &remoteClient) = 0;
 
         //! Add new aircraft situation
         virtual void addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation) = 0;
@@ -97,10 +97,13 @@ namespace BlackCore
         virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const = 0;
 
         //! Own aircraft Model
-        virtual BlackMisc::Network::CAircraftModel getAircraftModel() const = 0;
+        virtual BlackMisc::Network::CAircraftModel getOwnAircraftModel() const = 0;
 
-        //! Aircraft models for available remote aircraft
+        //! Aircraft models for available remote aircrafts
         virtual BlackMisc::Network::CAircraftModelList getInstalledModels() const = 0;
+
+        //! Remote aircraft in range having a valid model matching (which should be all aircraft in range)
+        virtual BlackMisc::Network::CAircraftModelList getCurrentlyMatchedModels() const = 0;
 
         //! Airports in range
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const = 0;
@@ -117,7 +120,7 @@ namespace BlackCore
         void connectionStatusChanged(ISimulator::ConnectionStatus status);
 
         //! Emitted when own aircraft model has changed
-        void aircraftModelChanged(BlackMisc::Network::CAircraftModel model);
+        void ownAircraftModelChanged(BlackMisc::Network::CAircraftModel model);
 
         //! Simulator combined status
         void simulatorStatusChanged(bool connected, bool running, bool paused);
@@ -128,6 +131,8 @@ namespace BlackCore
         //! Simulator stopped;
         void simulatorStopped();
 
+        //! A single model has been matched
+        void modelMatchingCompleted(BlackMisc::Network::CAircraftModel model);
 
     protected:
         //! Emit the combined status

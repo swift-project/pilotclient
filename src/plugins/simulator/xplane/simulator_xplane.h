@@ -44,8 +44,8 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::isSimPaused
             virtual bool isPaused() const override { return false; }
 
-            //! \copydoc ISimulator::isRunning
-            virtual bool isRunning() const override { return isConnected(); }
+            //! \copydoc ISimulator::isSimulating
+            virtual bool isSimulating() const override { return isConnected(); }
 
         public slots:
             //! \copydoc BlackCore::ISimulator::connectTo
@@ -60,13 +60,12 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::getOwnAircraft
             virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
 
-            //! \copydoc BlackCore::ISimulator::addRemoteAircraft
-            virtual void addRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign,
-                const BlackMisc::Aviation::CAircraftSituation &initialSituation) override;
+            //! \copydoc ISimulator::addRemoteAircraft()
+            virtual void addRemoteAircraft(const BlackMisc::Aviation::CAircraft &remoteAircraft, const BlackMisc::Network::CClient &remoteClient) override;
 
             //! \copydoc BlackCore::ISimulator::addAircraftSituation
             virtual void addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign,
-                const BlackMisc::Aviation::CAircraftSituation &situation) override;
+                                              const BlackMisc::Aviation::CAircraftSituation &situation) override;
 
             //! \copydoc BlackCore::ISimulator::removeRemoteAircraft
             virtual void removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
@@ -84,10 +83,13 @@ namespace BlackSimPlugin
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
 
             //! \copydoc BlackCore::ISimulator::getAircraftModel
-            virtual BlackMisc::Network::CAircraftModel getAircraftModel() const override;
+            virtual BlackMisc::Network::CAircraftModel getOwnAircraftModel() const override;
 
             //! \copydoc BlackCore::ISimulator::getInstalledModels
             virtual BlackMisc::Network::CAircraftModelList getInstalledModels() const override;
+
+            //! \copydoc BlackCore::ISimulator::getCurrentlyMatchedModels
+            virtual BlackMisc::Network::CAircraftModelList getCurrentlyMatchedModels() const override { return BlackMisc::Network::CAircraftModelList(); }
 
             //! Airports in range
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
@@ -102,7 +104,7 @@ namespace BlackSimPlugin
             void ps_serviceRegistered(const QString &serviceName);
             void ps_serviceUnregistered();
             void ps_setAirportsInRange(const QStringList &icaoCodes, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts);
-            void ps_emitAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao);
+            void ps_emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao);
             void ps_fastTimerTimeout();
             void ps_slowTimerTimeout();
 
@@ -141,7 +143,7 @@ namespace BlackSimPlugin
                 m_xplaneData = { "", "", 0, 0, 0, 0, 0, 0, 0, 122800, 122800, 122800, 122800, 2000, 0, false };
             }
         };
-    
+
         //! Factory for creating CSimulatorXPlane instance
         class CSimulatorXPlaneFactory : public QObject, public BlackCore::ISimulatorFactory
         {

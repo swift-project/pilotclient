@@ -16,6 +16,6 @@ namespace BlackCore
 
     void ISimulator::emitSimulatorCombinedStatus()
     {
-        emit simulatorStatusChanged(isConnected(), isRunning(), isPaused());
+        emit simulatorStatusChanged(isConnected(), isSimulating(), isPaused());
     }
 } // namespace

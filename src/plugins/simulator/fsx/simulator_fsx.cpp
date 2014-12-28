@@ -10,12 +10,16 @@
 #include "simulator_fsx.h"
 #include "simconnect_datadefinition.h"
 #include "blacksim/fscommon/bcdconversions.h"
+#include "blacksim/fscommon/vpilotmodelmappings.h"
+#include "blacksim/fscommon/fscommonutil.h"
 #include "blacksim/fsx/simconnectutilities.h"
 #include "blacksim/fsx/fsxsimulatorsetup.h"
 #include "blacksim/simulatorinfo.h"
 #include "blackmisc/project.h"
 #include "blackmisc/avairportlist.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/nwaircraftmodel.h"
+#include "blackmisc/nwaircraftmappinglist.h"
 
 #include <QTimer>
 #include <QtConcurrent>
@@ -41,6 +45,10 @@ namespace BlackSimPlugin
             CFsxSimulatorSetup setup;
             setup.init(); // this fetches important settings on local side
             this->m_simulatorInfo.setSimulatorSetup(setup.getSettings());
+
+            // hack to init mapper
+            CAircraftMapper *mapper = mapperInstance();
+            mapper->initCompletelyInBackground();
         }
 
         CSimulatorFsx::~CSimulatorFsx()
@@ -53,30 +61,27 @@ namespace BlackSimPlugin
             return m_simConnected;
         }
 
-        bool CSimulatorFsx::isRunning() const
+        bool CSimulatorFsx::isSimulating() const
         {
             return m_simRunning;
         }
 
         bool CSimulatorFsx::isFsuipcConnected() const
         {
-            Q_ASSERT(m_fsuipc);
             return m_fsuipc->isConnected();
         }
 
         bool CSimulatorFsx::connectTo()
         {
             if (m_simConnected) { return true; }
-
             if (FAILED(SimConnect_Open(&m_hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0)))
             {
                 emit connectionStatusChanged(ConnectionFailed);
-                emitSimulatorCombinedStatus(); // all status values at once
+                emitSimulatorCombinedStatus();
                 return false;
             }
             else
             {
-                Q_ASSERT(m_fsuipc);
                 this->m_fsuipc->connect(); // connect FSUIPC too
             }
 
@@ -96,7 +101,7 @@ namespace BlackSimPlugin
             // simplified connect, timers and signals not in different thread
             auto asyncConnectFunc = [&]() -> bool
             {
-                if (FAILED(SimConnect_Open(&m_hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0))) { return false; }
+                if (FAILED(SimConnect_Open(&m_hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0))) return false;
                 this->m_fsuipc->connect(); // FSUIPC too
                 return true;
             };
@@ -134,27 +139,18 @@ namespace BlackSimPlugin
             if (m_simConnected) { return true; }
             HANDLE hSimConnect; // temporary handle
             bool connect = false;
-            if (FAILED(SimConnect_Open(&hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0)))
-            {
-                connect = false;
-            }
-            else
-            {
-                connect = true;
-            }
+            connect = SUCCEEDED(SimConnect_Open(&hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0));
             SimConnect_Close(hSimConnect);
             return connect;
         }
 
-        void CSimulatorFsx::addRemoteAircraft(const CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation)
+        void CSimulatorFsx::addRemoteAircraft(const CAircraft &remoteAircraft, const CClient &remoteClient)
         {
-            SIMCONNECT_DATA_INITPOSITION initialPosition;
-            initialPosition.Latitude = initialSituation.latitude().value(CAngleUnit::deg());
-            initialPosition.Longitude = initialSituation.longitude().value(CAngleUnit::deg());
-            initialPosition.Altitude = initialSituation.getAltitude().value(CLengthUnit::ft());
-            initialPosition.Pitch = initialSituation.getPitch().value(CAngleUnit::deg());
-            initialPosition.Bank = initialSituation.getBank().value(CAngleUnit::deg());
-            initialPosition.Heading = initialSituation.getHeading().value(CAngleUnit::deg());
+            CCallsign callsign = remoteAircraft.getCallsign();
+            Q_ASSERT(!callsign.isEmpty());
+            if (callsign.isEmpty()) { return; }
+
+            SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxInitPosition(remoteAircraft.getSituation());
             initialPosition.Airspeed = 0;
             initialPosition.OnGround = 0;
 
@@ -165,15 +161,28 @@ namespace BlackSimPlugin
             m_simConnectObjects.insert(callsign, simObj);
             ++m_nextObjID;
 
-            HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, "Boeing 737-800 Paint1", qPrintable(callsign.toQString().left(12)), initialPosition, simObj.getRequestId());
-            Q_UNUSED(hr);
+            addAircraftSituation(callsign, remoteAircraft.getSituation());
 
-            addAircraftSituation(callsign, initialSituation);
+            // matched models
+            CAircraftModel aircraftModel = modelMatching(remoteAircraft, remoteClient);
+            Q_ASSERT(remoteAircraft.getCallsign() == aircraftModel.getCallsign());
+            this->m_matchedModels.replaceOrAdd(&CAircraftModel::getCallsign, aircraftModel.getCallsign(), aircraftModel);
+            emit modelMatchingCompleted(aircraftModel);
+
+            // create AI
+            //! \todo isConnected() or isSimulating() ??
+            if (isConnected())
+            {
+                QByteArray m = aircraftModel.getModelString().toLocal8Bit();
+                HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, m.constData(), qPrintable(callsign.toQString().left(12)), initialPosition, simObj.getRequestId());
+                if (hr != S_OK) { CLogMessage(this).error("SimConnect, can create AI traffic"); }
+            }
         }
 
         void CSimulatorFsx::addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &initialSituation)
         {
-            Q_ASSERT(m_simConnectObjects.contains(callsign));
+            // Q_ASSERT(m_simConnectObjects.contains(callsign));
+            if (!m_simConnectObjects.contains(callsign)) { return; }
 
             CSimConnectObject simObj = m_simConnectObjects.value(callsign);
             simObj.getInterpolator()->addAircraftSituation(initialSituation);
@@ -190,12 +199,12 @@ namespace BlackSimPlugin
             return this->m_simulatorInfo;
         }
 
-        void CSimulatorFsx::setAircraftModel(const BlackMisc::Network::CAircraftModel &model)
+        void CSimulatorFsx::setOwnAircraftModel(const BlackMisc::Network::CAircraftModel &model)
         {
-            if (m_aircraftModel != model)
+            if (m_ownAircraftModel != model)
             {
-                m_aircraftModel = model;
-                emit aircraftModelChanged(model);
+                m_ownAircraftModel = model;
+                emit ownAircraftModelChanged(model);
             }
         }
 
@@ -269,7 +278,6 @@ namespace BlackSimPlugin
                     }
                     changed = true;
                 }
-
                 if (changed) { this->m_ownAircraft.setTransponder(newTransponder); }
             }
 
@@ -312,6 +320,12 @@ namespace BlackSimPlugin
             this->displayStatusMessage(message.asStatusMessage(true, true));
         }
 
+        CAircraftModelList CSimulatorFsx::getInstalledModels() const
+        {
+            if (!mapperInstance()) { return CAircraftModelList(); }
+            return mapperInstance()->getAircraftCfgEntriesList().toAircraftModelList();
+        }
+
         CAirportList CSimulatorFsx::getAirportsInRange() const
         {
             return this->m_airportsInRange;
@@ -327,10 +341,9 @@ namespace BlackSimPlugin
         {
             if (m_simRunning) { return; }
             m_simRunning = true;
-            HRESULT hr;
-            hr = SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestOwnAircraft,
-                                                   CSimConnectDefinitions::DataOwnAircraft,
-                                                   SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_VISUAL_FRAME);
+            HRESULT hr = SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestOwnAircraft,
+                         CSimConnectDefinitions::DataOwnAircraft,
+                         SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_VISUAL_FRAME);
 
             hr += SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestOwnAircraftTitle,
                                                     CSimConnectDefinitions::DataOwnAircraftTitle,
@@ -364,15 +377,16 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::onSimStopped()
         {
-            if (!m_simRunning) return;
+            if (!m_simRunning) { return; }
             m_simRunning = false;
+            mapperInstance()->gracefulShutdown(); // stop background reading if ongoing
             emit simulatorStopped();
-            emitSimulatorCombinedStatus();
+            emitSimulatorCombinedStatus(); // 3 states together
         }
 
         void CSimulatorFsx::onSimFrame()
         {
-            updateOtherAircrafts();
+            updateOtherAircraft();
         }
 
         void CSimulatorFsx::onSimExit()
@@ -397,8 +411,9 @@ namespace BlackSimPlugin
 
             CComSystem com1 = m_ownAircraft.getCom1System(); // set defaults
             CComSystem com2 = m_ownAircraft.getCom2System();
+            CTransponder transponder = m_ownAircraft.getTransponder();
 
-            // When I change cockpit values in the SIM (from GUI to simulator, not originating from simulator)
+            // When I change cockpit values in the sim (from GUI to simulator, not originating from simulator)
             // it takes a little while before these values are set in the simulator.
             // To avoid jitters, I wait some update cylces to stabilize the values
             if (m_skipCockpitUpdateCycles < 1)
@@ -411,8 +426,8 @@ namespace BlackSimPlugin
                 com2.setFrequencyStandby(CFrequency(simulatorOwnAircraft.com2StandbyMHz, CFrequencyUnit::MHz()));
                 m_ownAircraft.setCom2System(com2);
 
-                m_ownAircraft.setTransponderCode(simulatorOwnAircraft.transponderCode);
-
+                transponder.setTransponderCode(simulatorOwnAircraft.transponderCode);
+                m_ownAircraft.setTransponder(transponder);
             }
             else
             {
@@ -439,7 +454,7 @@ namespace BlackSimPlugin
             [requestID](const CSimConnectObject & obj) { return obj.getRequestId() == static_cast<int>(requestID); });
             if (it == m_simConnectObjects.end()) { return; }
 
-            // belongs to use
+            // belongs to us
             it->setObjectId(objectID);
             SimConnect_AIReleaseControl(m_hSimConnect, objectID, requestID);
             SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EventFreezeLat, 1,
@@ -464,14 +479,15 @@ namespace BlackSimPlugin
         void CSimulatorFsx::ps_dispatch()
         {
             SimConnect_CallDispatch(m_hSimConnect, SimConnectProc, this);
-            this->m_fsuipc->process();
+            if (this->m_fsuipc) this->m_fsuipc->process();
         }
 
         void CSimulatorFsx::ps_connectToFinished()
         {
             if (m_watcherConnect.result())
             {
-                initWhenConnected();
+                initEvents();
+                initDataDefinitionsWhenConnected();
                 m_simconnectTimerId = startTimer(50);
                 m_simConnected = true;
 
@@ -490,6 +506,58 @@ namespace BlackSimPlugin
         {
             SimConnect_AIRemoveObject(m_hSimConnect, simObject.getObjectId(), simObject.getRequestId());
             m_simConnectObjects.remove(simObject.getCallsign());
+        }
+
+        HRESULT CSimulatorFsx::initEvents()
+        {
+            HRESULT hr = S_OK;
+            // System events, see http://msdn.microsoft.com/en-us/library/cc526983.aspx#SimConnect_SubscribeToSystemEvent
+            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventSimStatus, "Sim");
+            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventObjectAdded, "ObjectAdded");
+            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventObjectRemoved, "ObjectRemoved");
+            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventFrame, "Frame");
+            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventPause, "Pause");
+            if (hr != S_OK)
+            {
+                CLogMessage(this).error("FSX plugin error: %1") << "SimConnect_SubscribeToSystemEvent failed";
+                return hr;
+            }
+
+            // Mapped events, see event ids here: http://msdn.microsoft.com/en-us/library/cc526980.aspx
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventPauseToggle, "PAUSE_TOGGLE");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, SystemEventSlewToggle, "SLEW_TOGGLE");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFreezeLat, "FREEZE_LATITUDE_LONGITUDE_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFreezeAlt, "FREEZE_ALTITUDE_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFreezeAtt, "FREEZE_ATTITUDE_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetCom1Active, "COM_RADIO_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetCom1Standby, "COM_STBY_RADIO_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetCom2Active, "COM2_RADIO_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetCom2Standby, "COM2_STBY_RADIO_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTransponderCode, "XPNDR_SET");
+
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTimeZuluYear, "ZULU_YEAR_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTimeZuluDay, "ZULU_DAY_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTimeZuluHours, "ZULU_HOURS_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTimeZuluMinutes, "ZULU_MINUTES_SET");
+            if (hr != S_OK)
+            {
+                CLogMessage(this).error("FSX plugin error: %1") << "SimConnect_MapClientEventToSimEvent failed";
+                return hr;
+            }
+
+            // facility
+            hr += SimConnect_SubscribeToFacilities(m_hSimConnect, SIMCONNECT_FACILITY_LIST_TYPE_AIRPORT, m_nextObjID++);
+            if (hr != S_OK)
+            {
+                CLogMessage(this).error("FSX plugin error: %1") << "SimConnect_SubscribeToFacilities failed";
+                return hr;
+            }
+            return hr;
+        }
+
+        HRESULT CSimulatorFsx::initDataDefinitionsWhenConnected()
+        {
+            return CSimConnectDefinitions::initDataDefinitionsWhenConnected(m_hSimConnect);
         }
 
         HRESULT CSimulatorFsx::initWhenConnected()
@@ -514,81 +582,16 @@ namespace BlackSimPlugin
             return hr;
         }
 
-        HRESULT CSimulatorFsx::initEvents()
-        {
-            HRESULT hr = S_OK;
-            // System events, see http://msdn.microsoft.com/en-us/library/cc526983.aspx#SimConnect_SubscribeToSystemEvent
-            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventSimStatus, "Sim");
-            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventObjectAdded, "ObjectAdded");
-            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventObjectRemoved, "ObjectRemoved");
-            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventFrame, "Frame");
-            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventPause, "Pause");
-            if (hr != S_OK)
-            {
-                CLogMessage(this).error("FSX plugin: SimConnect_SubscribeToSystemEvent failed");
-                return hr;
-            }
-
-            // Mapped events, see event ids here: http://msdn.microsoft.com/en-us/library/cc526980.aspx
-            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventPauseToggle, "PAUSE_TOGGLE");
-            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, SystemEventSlewToggle, "SLEW_TOGGLE");
-            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFreezeLat, "FREEZE_LATITUDE_LONGITUDE_SET");
-            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFreezeAlt, "FREEZE_ALTITUDE_SET");
-            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFreezeAtt, "FREEZE_ATTITUDE_SET");
-            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetCom1Active, "COM_RADIO_SET");
-            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetCom1Standby, "COM_STBY_RADIO_SET");
-            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetCom2Active, "COM2_RADIO_SET");
-            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetCom2Standby, "COM2_STBY_RADIO_SET");
-            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTransponderCode, "XPNDR_SET");
-
-            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTimeZuluYear, "ZULU_YEAR_SET");
-            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTimeZuluDay, "ZULU_DAY_SET");
-            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTimeZuluHours, "ZULU_HOURS_SET");
-            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTimeZuluMinutes, "ZULU_MINUTES_SET");
-            if (hr != S_OK)
-            {
-                CLogMessage(this).error("FSX plugin: SimConnect_MapClientEventToSimEvent failed");
-                return hr;
-            }
-
-            // facility
-            hr += SimConnect_SubscribeToFacilities(m_hSimConnect, SIMCONNECT_FACILITY_LIST_TYPE_AIRPORT, m_nextObjID++);
-            if (hr != S_OK)
-            {
-                CLogMessage(this).error("FSX plugin: SimConnect_SubscribeToFacilities failed");
-                return hr;
-            }
-            return hr;
-        }
-
-        HRESULT CSimulatorFsx::initDataDefinitionsWhenConnected()
-        {
-            return CSimConnectDefinitions::initDataDefinitionsWhenConnected(m_hSimConnect);
-        }
-
-        void CSimulatorFsx::updateOtherAircrafts()
+        void CSimulatorFsx::updateOtherAircraft()
         {
             foreach(CSimConnectObject simObj, m_simConnectObjects)
             {
                 if (simObj.getInterpolator()->hasEnoughAircraftSituations())
                 {
-                    SIMCONNECT_DATA_INITPOSITION position;
-                    CAircraftSituation situation = simObj.getInterpolator()->getCurrentSituation();
-                    position.Latitude = situation.latitude().value();
-                    position.Longitude = situation.longitude().value();
-                    position.Altitude = situation.getAltitude().value(CLengthUnit::ft());
-                    position.Pitch = situation.getPitch().value();
-                    position.Bank = situation.getBank().value();
-                    position.Heading = situation.getHeading().value(CAngleUnit::deg());
-                    position.Airspeed = situation.getGroundSpeed().value(CSpeedUnit::kts());
-
-                    //! \todo : epic fail for helicopters and VTOPs!
-                    position.OnGround = position.Airspeed < 30 ? 1 : 0;
-
+                    SIMCONNECT_DATA_INITPOSITION position = aircraftSituationToFsxInitPosition(simObj.getInterpolator()->getCurrentSituation());
                     DataDefinitionRemoteAircraftSituation ddAircraftSituation;
                     ddAircraftSituation.position = position;
 
-                    //! \todo Gear handling with new protocol extension
                     DataDefinitionGearHandlePosition gearHandle;
                     gearHandle.gearHandlePosition = position.Altitude < 1000 ? 1 : 0;
 
@@ -601,6 +604,22 @@ namespace BlackSimPlugin
                     }
                 }
             }
+        }
+
+        SIMCONNECT_DATA_INITPOSITION CSimulatorFsx::aircraftSituationToFsxInitPosition(const CAircraftSituation &situation)
+        {
+            SIMCONNECT_DATA_INITPOSITION position;
+            position.Latitude = situation.latitude().value();
+            position.Longitude = situation.longitude().value();
+            position.Altitude = situation.getAltitude().value(CLengthUnit::ft());
+            position.Pitch = situation.getPitch().value();
+            position.Bank = situation.getBank().value();
+            position.Heading = situation.getHeading().value(CAngleUnit::deg());
+            position.Airspeed = situation.getGroundSpeed().value(CSpeedUnit::kts());
+
+            // TODO: epic fail for helicopters and VTOPs!
+            position.OnGround = position.Airspeed < 30 ? 1 : 0;
+            return position;
         }
 
         void CSimulatorFsx::synchronizeTime(const CTime &zuluTimeSim, const CTime &localTimeSim)
@@ -626,17 +645,101 @@ namespace BlackSimPlugin
             int simMins = zuluTimeSim.valueRounded(CTimeUnit::min());
             int diffMins = qAbs(targetMins - simMins);
             if (diffMins < 2) return;
-
             HRESULT hr = S_OK;
             hr += SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluHours, h, SIMCONNECT_GROUP_PRIORITY_STANDARD, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
             hr += SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluMinutes, m, SIMCONNECT_GROUP_PRIORITY_STANDARD, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+
             if (hr != S_OK)
             {
                 CLogMessage(this).warning("Sending time sync failed!");
             }
+            else
+            {
+                m_syncDeferredCounter = 5; // allow some time to sync
+                CLogMessage(this).info("Synchronized time to UTC: %1") << myTime.toString();
+            }
+        }
 
-            m_syncDeferredCounter = 5; // allow some time to sync
-            CLogMessage(this).info("Synchronized time to UTC: %1") << myTime.toString();
+        CAircraftMapper *CSimulatorFsx::mapperInstance()
+        {
+            static CAircraftMapper *mapper = new CAircraftMapper(
+                std::unique_ptr<CVPilotModelMappings>(new CVPilotModelMappings(true)), // currently hard wired
+                simObjectsDir()
+            );
+            return mapper;
+        }
+
+        CAircraftModel CSimulatorFsx::modelMatching(const CAircraft &remoteAircraft, const CClient &remoteClient)
+        {
+            CAircraftModel aircraftModel(remoteAircraft); // set defaults
+
+            // mapper ready?
+            if (!mapperInstance()->isInitialized())
+            {
+                //! \todo Model Matching before models are read
+                // will be removed later, just for experimental version
+                aircraftModel.setModelString("Boeing 737-800 Paint1");
+                aircraftModel.setDescription("Model mapper not ready");
+                return aircraftModel;
+            }
+
+            // Model by queried string
+            if (remoteClient.getAircraftModel().hasQueriedModelString())
+            {
+                QString directModelString = remoteClient.getAircraftModel().getModelString();
+                if (!directModelString.isEmpty() && mapperInstance()->containsModelWithTitle(directModelString))
+                {
+                    aircraftModel = mapperInstance()->getModelWithTitle(directModelString);
+                    aircraftModel.setModelType(CAircraftModel::TypeQueriedFromNetwork);
+                    aircraftModel.setDescription("Direct query from network");
+                }
+            }
+
+            // ICAO to model
+            if (!aircraftModel.hasModelString())
+            {
+                CAircraftIcao icao = remoteAircraft.getIcaoInfo();
+                BlackMisc::Network::CAircraftMappingList mappingList = mapperInstance()->getAircraftMappingList().findByIcaoAircraftAndAirlineDesignator(icao, true);
+                if (!mappingList.isEmpty())
+                {
+                    CAircraftModel modelFromMappings = mappingList.front().getModel();
+                    // now turn the model from the mapping rules into a model from the simulator which has more metadata
+                    aircraftModel = mapperInstance()->getModelWithTitle(modelFromMappings.getModelString());
+                    Q_ASSERT(aircraftModel.getModelString() == modelFromMappings.getModelString());
+                    aircraftModel.updateMissingParts(modelFromMappings); // update ICAO
+                    aircraftModel.setModelType(CAircraftModel::TypeModelMatching);
+                }
+            }
+
+            // default or sanity check
+            if (!aircraftModel.hasModelString())
+            {
+                aircraftModel.setModelString("Boeing 737-800 Paint1");
+                aircraftModel.setDescription("Default model");
+            }
+            else
+            {
+                // check, do we have the model on disk
+                if (!mapperInstance()->containsModelWithTitle(aircraftModel.getModelString()))
+                {
+                    const QString m = QString("Missing model: %1").arg(aircraftModel.getModelString());
+                    Q_ASSERT_X(false, "modelMatching", m.toLocal8Bit().constData());
+                }
+            }
+
+            aircraftModel.setCallsign(remoteAircraft.getCallsign());
+            Q_ASSERT(!aircraftModel.getCallsign().isEmpty());
+            Q_ASSERT(aircraftModel.hasModelString());
+            return aircraftModel;
+        }
+
+        QString CSimulatorFsx::simObjectsDir()
+        {
+            //! \todo add FS9 dir
+            QString dir = CFsCommonUtil::fsxSimObjectsDirFromRegistry();
+            if (!dir.isEmpty()) { return dir; }
+            return "P:/FlightSimulatorX (MSI)/SimObjects";
+            // "p:/temp/SimObjects"
         }
     } // namespace
 } // namespace
