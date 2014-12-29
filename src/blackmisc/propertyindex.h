@@ -96,6 +96,7 @@ namespace BlackMisc
         //! Compare with index given by enum
         template<class EnumType> bool equalsPropertyIndexEnum(EnumType ev)
         {
+            static_assert(std::is_enum<EnumType>::value, "Argument must be an enum");
             if (this->m_indexes.size() != 1) { return false; }
             return static_cast<int>(ev) == m_indexes.first();
         }

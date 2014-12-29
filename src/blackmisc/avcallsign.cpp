@@ -17,8 +17,9 @@ namespace BlackMisc
         /*
          * Convert to string
          */
-        QString CCallsign::convertToQString(bool /** i18n **/) const
+        QString CCallsign::convertToQString(bool i18n) const
         {
+            Q_UNUSED(i18n);
             return this->m_callsign;
         }
 
@@ -37,19 +38,18 @@ namespace BlackMisc
          */
         const CIcon &CCallsign::convertToIcon(const CCallsign &callsign)
         {
-            QString t = callsign.asString().toUpper();
-            if (t.length() < 3) return CIconList::iconByIndex(CIcons::NetworkRoleUnknown);
-            t = t.right(3);
-
-            if (callsign.getStringAsSet().contains("_"))
+            if (callsign.hasSuffix())
             {
-                if ("APP" == t) return CIconList::iconByIndex(CIcons::NetworkRoleApproach);
-                if ("GND" == t) return CIconList::iconByIndex(CIcons::NetworkRoleGround);
-                if ("TWR" == t) return CIconList::iconByIndex(CIcons::NetworkRoleTower);
-                if ("DEL" == t) return CIconList::iconByIndex(CIcons::NetworkRoleDelivery);
-                if ("CTR" == t) return CIconList::iconByIndex(CIcons::NetworkRoleCenter);
-                if ("SUP" == t) return CIconList::iconByIndex(CIcons::NetworkRoleSup);
-                if ("OBS" == t) return CIconList::iconByIndex(CIcons::NetworkRoleApproach);
+                QString t = callsign.getSuffix();
+                if (t.length() < 3) { return CIconList::iconByIndex(CIcons::NetworkRoleUnknown); }
+                if ("APP" == t) { return CIconList::iconByIndex(CIcons::NetworkRoleApproach); }
+                if ("GND" == t) { return CIconList::iconByIndex(CIcons::NetworkRoleGround); }
+                if ("TWR" == t) { return CIconList::iconByIndex(CIcons::NetworkRoleTower); }
+                if ("DEL" == t) { return CIconList::iconByIndex(CIcons::NetworkRoleDelivery); }
+                if ("CTR" == t) { return CIconList::iconByIndex(CIcons::NetworkRoleCenter); }
+                if ("SUP" == t) { return CIconList::iconByIndex(CIcons::NetworkRoleSup); }
+                if ("OBS" == t) { return CIconList::iconByIndex(CIcons::NetworkRoleApproach); }
+                if ("ATIS" == t) { return CIconList::iconByIndex(CIcons::AviationAtis); }
                 return CIconList::iconByIndex(CIcons::NetworkRoleUnknown);
             }
             else
@@ -63,13 +63,9 @@ namespace BlackMisc
          */
         bool CCallsign::isAtcCallsign() const
         {
-            if (this->m_callsignAsSet.contains('_'))
+            if (this->hasSuffix())
             {
-                if (this->m_callsignAsSet.size() >= 3)
-                {
-                    QString app = this->m_callsignAsSet.right(3);
-                    return atcCallsignAppendixes().contains(app, Qt::CaseInsensitive);
-                }
+                return atcCallsignSuffixes().contains(this->getSuffix(), Qt::CaseInsensitive);
             }
             return false;
         }
@@ -79,11 +75,32 @@ namespace BlackMisc
          */
         QString CCallsign::getAsObserverCallsignString() const
         {
-            if (this->isEmpty()) return "";
+            if (this->isEmpty()) { return ""; }
             QString obs = this->getStringAsSet();
-            if (obs.endsWith("_OBS", Qt::CaseInsensitive)) return obs;
-            if (obs.contains('_')) obs = obs.left(obs.lastIndexOf('_'));
+            if (obs.endsWith("_OBS", Qt::CaseInsensitive)) { return obs; }
+            if (obs.contains('_')) { obs = obs.left(obs.lastIndexOf('_')); }
             return obs.append("_OBS").toUpper();
+        }
+
+        /*
+         * Suffix
+         */
+        QString CCallsign::getSuffix() const
+        {
+            QString s;
+            if (this->hasSuffix())
+            {
+                s = this->getStringAsSet().section('_', -1).toUpper();
+            }
+            return s;
+        }
+
+        /*
+         * Suffix?
+         */
+        bool CCallsign::hasSuffix() const
+        {
+            return this->getStringAsSet().contains('_');
         }
 
         /*
@@ -153,11 +170,11 @@ namespace BlackMisc
         }
 
         /*
-         * Appendixes
+         * Suffixes
          */
-        const QStringList &CCallsign::atcCallsignAppendixes()
+        const QStringList &CCallsign::atcCallsignSuffixes()
         {
-            static const QStringList a( { "APP", "GND", "TWR", "DEL", "CTR", "SUP", "FSS" });
+            static const QStringList a( { "ATIS", "APP", "GND", "TWR", "DEL", "CTR", "SUP", "FSS" });
             return a;
         }
 

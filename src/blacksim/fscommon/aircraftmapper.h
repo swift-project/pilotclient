@@ -31,7 +31,7 @@ namespace BlackSim
         //!          Thereafter all existing models and mappings can be obtained from here.
         //! \sa CAircraftCfgEntries
         //! \sa CAircraftCfgEntriesList
-        class CAircraftMapper : QObject
+        class CAircraftMapper : public QObject
         {
             Q_OBJECT
 

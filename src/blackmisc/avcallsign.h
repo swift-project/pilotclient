@@ -66,6 +66,12 @@ namespace BlackMisc
             //! Makes this callsign looking like an observer callsign (DAMBZ -> DAMBZ_OBS)
             QString getAsObserverCallsignString() const;
 
+            //! Get the callsign suffix ("TWR", "ATIS" ...) if any ("_" is removed)
+            QString getSuffix() const;
+
+            //! Suffix such as "_TWR"?
+            bool hasSuffix() const;
+
             //! Equals callsign string?
             bool equalsString(const QString &callsignString) const;
 
@@ -81,8 +87,8 @@ namespace BlackMisc
             //! Valid callsign?
             static bool isValidCallsign(const QString &callsign);
 
-            //! List of ATC appendixes (e.g. TWR);
-            static const QStringList &atcCallsignAppendixes();
+            //! List of ATC suffixes (e.g. TWR);
+            static const QStringList &atcCallsignSuffixes();
 
         protected:
             //! \copydoc CValueObject::convertToQString()
