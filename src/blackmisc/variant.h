@@ -122,7 +122,7 @@ namespace BlackMisc
 
         //! Returns the value converted to the type T, or a default if it can not be converted.
         //! \details Parameter is passed by value to avoid odr-using the argument in case it is
-        //!          an inline-initialized static const integral data member without a definition (ง9.4.2/3).
+        //!          an inline-initialized static const integral data member without a definition (ยง9.4.2/3).
         template <typename T> T valueOrDefault(T def) const { return canConvert<T>() ? value<T>() : def; }
 
         //! Return the internal QVariant.
