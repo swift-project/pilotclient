@@ -99,7 +99,17 @@ public:
         {
             static int argc = 1;
             static char *argv[] = { strdup("X-Plane") };
+      
+#ifdef Q_OS_UNIX
+            /* Workaround for #362 */
+            char* xplocale = setlocale(LC_ALL, nullptr);
+#endif
+            
             new QSharedApplication(ptr, argc, argv);
+            
+#ifdef Q_OS_UNIX
+            setlocale(LC_ALL, xplocale);
+#endif
         }
         if (! instance()->inherits("QSharedApplication"))
         {
