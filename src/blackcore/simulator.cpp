@@ -23,6 +23,10 @@ namespace BlackCore
     {
         emit simulatorStatusChanged(isConnected(), isSimulating(), isPaused());
     }
+    
+    ISimulatorListener::ISimulatorListener(QObject* parent) : QObject(parent)
+    {
+    }
 
     CSimulatorCommon::CSimulatorCommon(const BlackSim::CSimulatorInfo &simInfo, BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider, BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider, QObject *parent)
         : ISimulator(parent),
@@ -196,6 +200,7 @@ namespace BlackCore
     {
         this->m_debugMessages = driver;
         Q_UNUSED(interpolator);
+    
     }
 
     int CSimulatorCommon::getInstalledModelsCount() const

@@ -113,7 +113,6 @@ namespace BlackSimPlugin
             virtual bool isRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
         private slots:
-            void ps_serviceRegistered(const QString &serviceName);
             void ps_serviceUnregistered();
             void ps_setAirportsInRange(const QStringList &icaoCodes, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts);
             void ps_emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao);
@@ -172,6 +171,31 @@ namespace BlackSimPlugin
 
             }
         };
+        
+        //! Listener waits for xbus service to show up
+        class CSimulatorXPlaneListener : public BlackCore::ISimulatorListener
+        {
+            Q_OBJECT
+            
+        public:
+            //! Constructor
+            CSimulatorXPlaneListener(QObject* parent);
+            
+            //! \copydoc BlackCore::ISimulatorListener::start
+            virtual void start() override;
+            
+            //! \copydoc BlackCore::ISimulatorListener::stop
+            virtual void stop() override;
+            
+        private slots:
+            void ps_serviceRegistered(const QString &serviceName);
+            
+        private:
+            QDBusConnection m_conn { "default" };
+            QDBusServiceWatcher* m_watcher { nullptr };
+            const BlackSim::CSimulatorInfo m_simulatorInfo = BlackSim::CSimulatorInfo::XP();
+            
+        };
 
         //! Factory for creating CSimulatorXPlane instance
         class CSimulatorXPlaneFactory : public QObject, public BlackCore::ISimulatorFactory
@@ -189,6 +213,9 @@ namespace BlackSimPlugin
 
             //! \copydoc BlackCore::ISimulatorFactory::getSimulatorInfo
             virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override { return BlackSim::CSimulatorInfo::XP(); }
+            
+            //! \copydoc BlackCore::ISimulatorFactory::getListener
+            virtual BlackCore::ISimulatorListener *createListener(QObject *parent = nullptr) override { return new CSimulatorXPlaneListener(parent); }
         };
 
     }

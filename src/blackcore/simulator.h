@@ -192,7 +192,7 @@ namespace BlackCore
         //! Simulator started
         void simulatorStarted();
 
-        //! Simulator stopped;
+        //! Simulator stopped
         void simulatorStopped();
 
         //! A single model has been matched
@@ -209,6 +209,38 @@ namespace BlackCore
         //! \sa simulatorStatusChanged;
         void emitSimulatorCombinedStatus();
 
+    };
+    
+    /*!
+     * Interface to a simulator listener.
+     * 
+     * The simulator listener is responsible for letting the core know when
+     * the corresponding simulator is started.
+     */
+    class ISimulatorListener : public QObject
+    {
+        Q_OBJECT
+        
+    public:
+        
+        //! Constructor
+        //! \sa ISimulatorFactory::createListener().
+        ISimulatorListener(QObject* parent);
+        
+        //! Destructor
+        virtual ~ISimulatorListener() = default;
+        
+        //! Start listening for the simulator to start.
+        virtual void start() = 0;
+        
+        //! Stops listening.
+        virtual void stop() = 0;
+        
+    signals:
+        
+        //! Emitted when the listener discovers the simulator running.
+        void simulatorStarted(BlackSim::CSimulatorInfo simulatorInfo);
+        
     };
 
     //! Factory pattern class to create instances of ISimulator
@@ -233,6 +265,9 @@ namespace BlackCore
 
         //! Simulator info
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const = 0;
+        
+        //! Simulator listener instance
+        virtual ISimulatorListener *createListener(QObject *parent = nullptr) = 0;
     };
 
     //! Common base class with providers, interface and some base functionality

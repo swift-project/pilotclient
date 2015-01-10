@@ -32,10 +32,8 @@ namespace BlackSimPlugin
             CSimulatorCommon(CSimulatorInfo::XP(), ownAircraftProvider, remoteAircraftProvider, parent)
         {
             m_watcher = new QDBusServiceWatcher(this);
-            m_watcher->setWatchMode(QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration);
-            m_watcher->addWatchedService(CXBusServiceProxy::InterfaceName());
-            m_watcher->addWatchedService(CXBusTrafficProxy::InterfaceName());
-            connect(m_watcher, &QDBusServiceWatcher::serviceRegistered, this, &CSimulatorXPlane::ps_serviceRegistered);
+            m_watcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
+            m_watcher->addWatchedService("net.vatsim.xbus");
             connect(m_watcher, &QDBusServiceWatcher::serviceUnregistered, this, &CSimulatorXPlane::ps_serviceUnregistered);
 
             m_fastTimer = new QTimer(this);
@@ -167,7 +165,7 @@ namespace BlackSimPlugin
                 connect(m_service, &CXBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::ps_setAirportsInRange);
                 m_service->updateAirportsInRange();
                 m_watcher->setConnection(m_conn);
-                emit connectionStatusChanged(ISimulator::Connected);
+                emitSimulatorCombinedStatus();
                 return true;
             }
             else
@@ -189,45 +187,26 @@ namespace BlackSimPlugin
             {
                 m_traffic->cleanup();
             }
-            emit connectionStatusChanged(ISimulator::Disconnected);
+            
             m_conn = QDBusConnection { "default" };
             m_watcher->setConnection(m_conn);
             delete m_service;
             delete m_traffic;
             m_service = nullptr;
             m_traffic = nullptr;
+            emitSimulatorCombinedStatus();
             return true;
-        }
-
-        void CSimulatorXPlane::ps_serviceRegistered(const QString &serviceName)
-        {
-            if (serviceName == CXBusServiceProxy::InterfaceName())
-            {
-                delete m_service;
-                m_service = new CXBusServiceProxy(m_conn, this);
-                // FIXME duplication
-                connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::ps_emitOwnAircraftModelChanged);
-                connect(m_service, &CXBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::ps_setAirportsInRange);
-                m_service->updateAirportsInRange();
-            }
-            else if (serviceName == CXBusTrafficProxy::InterfaceName())
-            {
-                delete m_traffic;
-                m_traffic = new CXBusTrafficProxy(m_conn, this);
-            }
-            if (m_service && m_traffic)
-            {
-                emit connectionStatusChanged(ISimulator::Connected);
-            }
         }
 
         void CSimulatorXPlane::ps_serviceUnregistered()
         {
+            m_conn = QDBusConnection { "default" };
+            m_watcher->setConnection(m_conn);
             delete m_service;
             delete m_traffic;
             m_service = nullptr;
             m_traffic = nullptr;
-            emit connectionStatusChanged(ISimulator::Disconnected);
+            emitSimulatorCombinedStatus();
         }
 
         void CSimulatorXPlane::ps_emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao)
@@ -433,6 +412,36 @@ namespace BlackSimPlugin
         BlackCore::ISimulator *CSimulatorXPlaneFactory::create(IOwnAircraftProvider *ownAircraftProvider, IRemoteAircraftProvider *renderedAircraftProvider, QObject *parent)
         {
             return new CSimulatorXPlane(ownAircraftProvider, renderedAircraftProvider, parent);
+        }
+
+        CSimulatorXPlaneListener::CSimulatorXPlaneListener(QObject* parent): ISimulatorListener(parent)
+        {
+            
+        }
+        
+        void CSimulatorXPlaneListener::start()
+        {
+            if (m_watcher) // already started
+                return;
+            
+            m_conn = QDBusConnection::sessionBus(); // TODO make this configurable
+            m_watcher = new QDBusServiceWatcher("net.vatsim.xbus", m_conn, QDBusServiceWatcher::WatchForRegistration, this);
+            
+            connect(m_watcher, &QDBusServiceWatcher::serviceRegistered, this, &CSimulatorXPlaneListener::ps_serviceRegistered);
+        }
+
+        void CSimulatorXPlaneListener::stop()
+        {
+            if (m_watcher) {
+                m_watcher->deleteLater();
+                m_watcher = nullptr;
+            }
+        }
+        
+        void CSimulatorXPlaneListener::ps_serviceRegistered(const QString &serviceName)
+        {
+            if (serviceName == "net.vatsim.xbus")
+                emit simulatorStarted(m_simulatorInfo);
         }
 
     } // namespace
