@@ -39,4 +39,9 @@ void BlackMisc::Aviation::registerMetadata()
     CAirportIcao::registerMetadata();
     CSelcal::registerMetadata();
     CFlightPlan::registerMetadata();
+    CAircraftEngine::registerMetadata();
+    CAircraftEngineList::registerMetadata();
+    CAircraftLights::registerMetadata();
+    CAircraftParts::registerMetadata();
+    CAircraftPartsList::registerMetadata();
 }
