@@ -21,6 +21,7 @@
 #include "namevariantpairlist.h"
 #include "variant.h"
 #include "statusmessagelist.h"
+#include "pixmap.h"
 #include "iconlist.h"
 #include "eventallclasses.h"
 #include <QtNetwork/QHostInfo>
@@ -111,6 +112,7 @@ void BlackMisc::registerMetadata()
     CHotkeyFunction::registerMetadata();
     CLogCategory::registerMetadata();
     CLogCategoryList::registerMetadata();
+    CPixmap::registerMetadata();
 
     // sub namespaces
     PhysicalQuantities::registerMetadata();
@@ -119,6 +121,7 @@ void BlackMisc::registerMetadata()
     Geo::registerMetadata();
     Network::registerMetadata();
     Settings::registerMetadata();
+    Simulation::registerMetadata();
     Audio::registerMetadata();
     Hardware::registerMetadata();
     Event::registerMetadata();

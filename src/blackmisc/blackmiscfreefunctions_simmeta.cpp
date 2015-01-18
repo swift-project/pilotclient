@@ -8,25 +8,18 @@
  */
 
 #include "blackmiscfreefunctions.h"
-#include "networkallclasses.h"
+#include "blackmisc/simulation/simulationallclasses.h"
 
 /*
- * Metadata for Network
+ * Metadata for simulation
  *
  * In a separate file to workaround a limitation of MinGW:
  * http://stackoverflow.com/q/16596876/1639256
  */
-void BlackMisc::Network::registerMetadata()
+void BlackMisc::Simulation::registerMetadata()
 {
-    CUser::registerMetadata();
-    CUserList::registerMetadata();
-    CServer::registerMetadata();
-    CServerList::registerMetadata();
-    CTextMessage::registerMetadata();
-    CTextMessageList::registerMetadata();
-    CClient::registerMetadata();
-    CClientList::registerMetadata();
-    CVoiceCapabilities::registerMetadata();
-    CAircraftMapping::registerMetadata();
-    CAircraftMappingList::registerMetadata();
+    CSimulatedAircraft::registerMetadata();
+    CSimulatedAircraftList::registerMetadata();
+    CAircraftModel::registerMetadata();
+    CAircraftModelList::registerMetadata();
 }

@@ -13,6 +13,7 @@
 #define BLACKMISC_SIMULATIONALLCLASSES_H
 
 #include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 

@@ -96,6 +96,12 @@ namespace BlackMisc
         void registerMetadata();
     }
 
+    namespace Simulation
+    {
+        //! Register metadata for Simulation
+        void registerMetadata();
+    }
+
     //! Register all relevant metadata in BlackMisc
     void registerMetadata();
 
@@ -164,7 +170,7 @@ namespace BlackMisc
 
     //! Own implementation of std::make_unique, a C++14 feature not provided by GCC in C++11 mode
     template<typename T, typename... Args>
-    std::unique_ptr<T> make_unique(Args&&... args)
+    std::unique_ptr<T> make_unique(Args &&... args)
     {
         return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
     }
