@@ -1,4 +1,4 @@
-/* Copyright (C) 2013
+/* Copyright (C) 2015
  * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -14,9 +14,12 @@
 
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
-#include "blackmisc/nwaircraftmodel.h"
+#include "blackgui/views/checkboxdelegate.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include <QTabWidget>
 #include <QScopedPointer>
+#include <QCompleter>
 
 namespace Ui { class CMappingComponent; }
 
@@ -26,7 +29,7 @@ namespace BlackGui
     {
         //! Mappings, models etc.
         class CMappingComponent :
-            public QTabWidget,
+            public QFrame,
             public CEnableForDockWidgetInfoArea,
             public CEnableForRuntime
         {
@@ -45,25 +48,59 @@ namespace BlackGui
             //! Numer of models
             int countAircraftModels() const;
 
+            //! \copydoc CListModelBase::getModelsStartsWith
+            BlackMisc::Simulation::CAircraftModelList findModelsStartingWith(const QString modelName, Qt::CaseSensitivity cs);
+
         protected:
             //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
             void runtimeHasBeenSet() override;
 
         private slots:
             //! Aircraft models available
-            void ps_aircraftModelsLoaded();
+            void ps_onAircraftModelsLoaded();
 
             //! Mappings changed
             void ps_onMappingsChanged();
 
             //! Model matched
-            void ps_modelMatched(const BlackMisc::Network::CAircraftModel &model);
+            void ps_modelMatched(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+            //! Changed count
+            void ps_onRowCountChanged(int count, bool withFilter);
+
+            //! Simulated aircraft did change in model
+            //! \sa CViewBaseNonTemplate::objectChanged
+            void ps_onChangedSimulatedAircraft(const BlackMisc::CVariant &simulatedAircraft, const BlackMisc::CPropertyIndex &index);
+
+            //! Aircraft selected (in view)
+            void ps_onAircraftSelectedInView(const QModelIndex &index);
+
+            //! Model selected (in view)
+            void ps_onModelSelectedInView(const QModelIndex &index);
+
+            //! Apply new max remote aircraft
+            void ps_onApplyNewMaxRemoteAircraft();
+
+            //! Save changed aircraft
+            void ps_onSaveAircraft();
+
+            //! Model preview
+            void ps_onModelPreviewChanged(int state);
+
+            //! Requested update for mappings from backend
+            void ps_onMappingsUpdateRequested();
+
+            //! Request update for models from backend
+            void ps_onModelsUpdateRequested();
+
+            //! Connection status has been changed
+            void ps_onConnectionStatusChanged(uint from, uint to);
 
         private:
             QScopedPointer<Ui::CMappingComponent> ui;
+            QCompleter *m_modelCompleter = nullptr;
+            BlackGui::Views::CCheckBoxDelegate *m_currentMappingsViewDelegate = nullptr;
 
-            //! Changed count
-            void ps_countChanged(int count);
         };
 
     } // namespace

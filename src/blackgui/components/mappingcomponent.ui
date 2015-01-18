@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>CMappingComponent</class>
- <widget class="QTabWidget" name="CMappingComponent">
+ <widget class="QFrame" name="CMappingComponent">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,81 +11,226 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>TabWidget</string>
+   <string>Frame</string>
   </property>
-  <property name="currentIndex">
-   <number>0</number>
+  <property name="frameShape">
+   <enum>QFrame::StyledPanel</enum>
   </property>
-  <widget class="QWidget" name="tb_CurrentMappings">
-   <attribute name="title">
-    <string>Current mappings</string>
-   </attribute>
-   <layout class="QVBoxLayout" name="vl_CurrentMappings">
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
-     <number>0</number>
-    </property>
-    <item>
-     <widget class="BlackGui::Views::CAircraftModelView" name="tvp_CurrentMappings">
-      <property name="selectionMode">
-       <enum>QAbstractItemView::SingleSelection</enum>
-      </property>
-      <property name="selectionBehavior">
-       <enum>QAbstractItemView::SelectRows</enum>
-      </property>
-      <attribute name="verticalHeaderVisible">
-       <bool>false</bool>
+  <property name="frameShadow">
+   <enum>QFrame::Raised</enum>
+  </property>
+  <layout class="QGridLayout" name="gl_MappingComponent" columnstretch="0,0,1,4,0">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <property name="horizontalSpacing">
+    <number>3</number>
+   </property>
+   <item row="3" column="2">
+    <widget class="QSpinBox" name="sb_MaxAircraft">
+     <property name="maximum">
+      <number>50</number>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="5">
+    <widget class="QTabWidget" name="tw_ListViews">
+     <property name="currentIndex">
+      <number>1</number>
+     </property>
+     <widget class="QWidget" name="tb_CurrentMappings">
+      <attribute name="title">
+       <string>Current mappings</string>
       </attribute>
+      <layout class="QVBoxLayout" name="vl_CurrentMappings">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="BlackGui::Views::CSimulatedAircraftView" name="tvp_CurrentMappings">
+         <property name="selectionMode">
+          <enum>QAbstractItemView::SingleSelection</enum>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
+         </property>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+        </widget>
+       </item>
+      </layout>
      </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWidget" name="tb_AircraftModels">
-   <attribute name="title">
-    <string>Aircraft models</string>
-   </attribute>
-   <layout class="QVBoxLayout" name="vl_AircraftModels">
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
-     <number>0</number>
-    </property>
-    <item>
-     <widget class="BlackGui::Views::CAircraftModelView" name="tvp_AircraftModels">
-      <property name="selectionMode">
-       <enum>QAbstractItemView::SingleSelection</enum>
-      </property>
-      <property name="selectionBehavior">
-       <enum>QAbstractItemView::SelectRows</enum>
-      </property>
-      <attribute name="verticalHeaderVisible">
-       <bool>false</bool>
+     <widget class="QWidget" name="tb_AircraftModels">
+      <attribute name="title">
+       <string>Aircraft models</string>
       </attribute>
+      <layout class="QVBoxLayout" name="vl_AircraftModels">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="BlackGui::Views::CAircraftModelView" name="tvp_AircraftModels">
+         <property name="selectionMode">
+          <enum>QAbstractItemView::SingleSelection</enum>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
+         </property>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+        </widget>
+       </item>
+      </layout>
      </widget>
-    </item>
-   </layout>
-  </widget>
+    </widget>
+   </item>
+   <item row="2" column="3">
+    <widget class="QLineEdit" name="le_AircraftModel"/>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="QLabel" name="lbl_MaxAircraft">
+     <property name="text">
+      <string>Max. aircraft </string>
+     </property>
+     <property name="margin">
+      <number>0</number>
+     </property>
+     <property name="indent">
+      <number>-1</number>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3">
+    <widget class="QSlider" name="hs_MaxAircraft">
+     <property name="maximum">
+      <number>50</number>
+     </property>
+     <property name="pageStep">
+      <number>5</number>
+     </property>
+     <property name="value">
+      <number>40</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="tickPosition">
+      <enum>QSlider::TicksAbove</enum>
+     </property>
+     <property name="tickInterval">
+      <number>5</number>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QLineEdit" name="le_Callsign">
+     <property name="maxLength">
+      <number>5</number>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="lbl_Aircraft">
+     <property name="text">
+      <string>Aircraft</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="4">
+    <widget class="QPushButton" name="pb_SaveAircraft">
+     <property name="text">
+      <string>Save</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="4">
+    <widget class="QPushButton" name="pb_ApplyMaxAircraft">
+     <property name="text">
+      <string>Apply</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" alignment="Qt::AlignRight">
+    <widget class="QCheckBox" name="cb_AircraftEnabled">
+     <property name="toolTip">
+      <string>enabled / disable</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="lbl_AircraftIcon">
+     <property name="text">
+      <string>Icon</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2" colspan="3" alignment="Qt::AlignLeft">
+    <widget class="QLabel" name="lbl_AircraftIconDisplayed">
+     <property name="text">
+      <string>aircraft icon will go here</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1" alignment="Qt::AlignRight">
+    <widget class="QCheckBox" name="cb_AircraftIconDisplayed">
+     <property name="toolTip">
+      <string>show / hide icon</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <customwidgets>
   <customwidget>
    <class>BlackGui::Views::CAircraftModelView</class>
    <extends>QTableView</extends>
    <header>blackgui/views/aircraftmodelview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Views::CSimulatedAircraftView</class>
+   <extends>QTableView</extends>
+   <header>blackgui/views/simulatedaircraftview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
