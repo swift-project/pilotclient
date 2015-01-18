@@ -12,8 +12,9 @@
 #ifndef BLACKGUI_ENABLEFORDOCKWIDGETINFOAREA_H
 #define BLACKGUI_ENABLEFORDOCKWIDGETINFOAREA_H
 
-#include "../dockwidgetinfoarea.h"
-#include "../infoarea.h"
+#include "blackgui/dockwidgetinfoarea.h"
+#include "blackgui/infoarea.h"
+#include "blackgui/enableforframelesswindow.h"
 #include <QWidget>
 
 namespace BlackGui
@@ -47,6 +48,12 @@ namespace BlackGui
 
             //! \copydoc CDockWidgetInfoArea::isVisibleWidget
             bool isVisibleWidget() const;
+
+            //! Main application window if any
+            BlackGui::CEnableForFramelessWindow *mainApplicationWindow() const;
+
+            //! Main application window widget if any
+            QWidget *mainApplicationWindowWidget() const;
 
         protected:
             //! Constructor

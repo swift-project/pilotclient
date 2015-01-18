@@ -8,6 +8,9 @@
  */
 
 #include "enablefordockwidgetinfoarea.h"
+#include "blackgui/guiutility.h"
+
+using namespace BlackGui;
 
 namespace BlackGui
 {
@@ -62,6 +65,18 @@ namespace BlackGui
             Q_ASSERT(this->m_parentDockableInfoArea);
             if (!this->m_parentDockableInfoArea) return false;
             return this->m_parentDockableInfoArea->isVisibleWidget();
+        }
+
+        CEnableForFramelessWindow *CEnableForDockWidgetInfoArea::mainApplicationWindow() const
+        {
+            CEnableForFramelessWindow *mw = CGuiUtility::mainApplicationWindow();
+            return mw;
+        }
+
+        QWidget *CEnableForDockWidgetInfoArea::mainApplicationWindowWidget() const
+        {
+            CEnableForFramelessWindow *mw = this->mainApplicationWindow();
+            return mw ? mw->getWidget() : nullptr;
         }
 
     } // namespace
