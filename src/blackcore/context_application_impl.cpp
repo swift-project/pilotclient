@@ -108,7 +108,7 @@ namespace BlackCore
     void CContextApplication::processHotkeyFuncEvent(const BlackMisc::Event::CEventHotkeyFunction &event)
     {
         CInputManager::getInstance()->callFunctionsBy(event.getFunction(), event.getFunctionArgument());
-        qDebug() << "Calling function from origin" << event.getEventOriginator().toQString();
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << "Calling function from origin" << event.getEventOriginator().toQString();
     }
 
 } // namespace

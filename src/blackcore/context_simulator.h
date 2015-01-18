@@ -26,12 +26,14 @@
 #include "context.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_runtime.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blacksim/simulatorinfo.h"
 #include "blacksim/simulatorinfolist.h"
-#include "blackmisc/nwaircraftmodellist.h"
 #include "blackmisc/avaircraft.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/avairportlist.h"
 #include "blackmisc/project.h"
+#include "blackmisc/pixmap.h"
 #include <QObject>
 
 namespace BlackCore
@@ -79,19 +81,23 @@ namespace BlackCore
         //! Installed aircraft models ready or changed
         void installedAircraftModelsChanged();
 
-        //! A single model has been matched
-        void modelMatchingCompleted(BlackMisc::Network::CAircraftModel model);
+        //! A single model has been matched for given Aircraft
+        void modelMatchingCompleted(BlackMisc::Simulation::CSimulatedAircraft aircraft);
+
+        //! A remote aircraft got changed
+        void remoteAircraftChanged(BlackMisc::Simulation::CSimulatedAircraft aircraft);
 
         //! Emitted when own aircraft model changes
         //! \todo move to own aircraft context?
-        void ownAircraftModelChanged(BlackMisc::Network::CAircraftModel model);
+        void ownAircraftModelChanged(BlackMisc::Simulation::CSimulatedAircraft aircraft);
 
     public slots:
 
         //! Return list of available simulator plugins
         virtual BlackSim::CSimulatorInfoList getAvailableSimulatorPlugins() const = 0;
 
-        //! Returns true when simulator is connected and available
+        //! Returns true when simulator is connected
+        //! \sa isSimulating
         virtual bool isConnected() const = 0;
 
         //! Can we connect?
@@ -106,8 +112,8 @@ namespace BlackCore
         //! Disconnect from simulator
         virtual bool disconnectFrom() = 0;
 
-        //! Returns true when simulator is running
-        virtual bool isRunning() const = 0;
+        //! Returns true when simulator is running / simulating
+        virtual bool isSimulating() const = 0;
 
         //! Simulator info
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const = 0;
@@ -116,13 +122,17 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const = 0;
 
         //! Aircraft model
-        virtual BlackMisc::Network::CAircraftModel getOwnAircraftModel() const = 0;
+        virtual BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const = 0;
 
         //! Installed models in simulator eco system
-        virtual BlackMisc::Network::CAircraftModelList getInstalledModels() const = 0;
+        virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const = 0;
 
-        //! Remote aircraft in range having a valid model matching (which should be all aircraft in range)
-        virtual BlackMisc::Network::CAircraftModelList getCurrentlyMatchedModels() const = 0;
+        //! Simulated other aircraft in range
+        virtual BlackMisc::Simulation::CSimulatedAircraftList getRemoteAircraft() const = 0;
+
+        //! Changed remote aircraft (e.g. by disabling aircraft)
+        //! \todo tbd No add/remove remote aircraft function as those are added implicitly by accessing airspace monitor
+        virtual int changeRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &changedAircraft, const BlackMisc::CPropertyIndexVariantMap &changeValues) = 0;
 
         //! Set time synchronization between simulator and user's computer time
         //! \remarks not all drivers implement this, e.g. if it is an intrinsic simulator feature
@@ -130,6 +140,12 @@ namespace BlackCore
 
         //! Is time synchronization on?
         virtual bool isTimeSynchronized() const = 0;
+
+        //! Max. number of remote aircraft rendered
+        virtual int getMaxRenderedRemoteAircraft() const = 0;
+
+        //! Max. number of remote aircraft rendered
+        virtual void setMaxRenderedRemoteAircraft(int number) = 0;
 
         //! Time synchronization offset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
@@ -143,7 +159,7 @@ namespace BlackCore
         //! Unload simulator plugin
         virtual void unloadSimulatorPlugin() = 0;
 
-        //! Simulator avialable?
+        //! Simulator avialable (driver available)?
         bool isSimulatorAvailable() const { return BlackMisc::CProject::isCompiledWithFlightSimulatorSupport() && !getSimulatorInfo().isUnspecified(); }
 
         //! Simulator paused?
@@ -151,6 +167,9 @@ namespace BlackCore
 
         //! Settings have been changed
         virtual void settingsChanged(uint type) = 0;
+
+        //! Icon representing the model
+        virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const = 0;
 
     protected:
         //! Constructor

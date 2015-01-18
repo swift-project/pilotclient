@@ -1,7 +1,11 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 #include "blackcore/context_simulator_proxy.h"
 #include <QObject>
@@ -13,6 +17,7 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
+using namespace BlackMisc::Simulation;
 using namespace BlackSim;
 
 namespace BlackCore
@@ -38,11 +43,16 @@ namespace BlackCore
                                "simulatorStatusChanged", this, SIGNAL(simulatorStatusChanged(bool, bool, bool)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                               "ownAircraftModelChanged", this, SIGNAL(ownAircraftModelChanged(BlackMisc::Network::CAircraftModel)));
+                               "installedAircraftModelsChanged", this, SIGNAL(installedAircraftModelsChanged()));
         Q_ASSERT(s);
-
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                               "modelMatchingCompleted", this, SIGNAL(modelMatchingCompleted(BlackMisc::Network::CAircraftModel)));
+                               "ownAircraftModelChanged", this, SIGNAL(ownAircraftModelChanged(BlackMisc::Simulation::CSimulatedAircraft)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                               "modelMatchingCompleted", this, SIGNAL(modelMatchingCompleted(BlackMisc::Simulation::CSimulatedAircraft)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                               "remoteAircraftChanged", this, SIGNAL(remoteAircraftChanged(BlackMisc::Simulation::CSimulatedAircraft)));
         Q_ASSERT(s);
         Q_UNUSED(s);
     }
@@ -77,9 +87,9 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("disconnectFrom"));
     }
 
-    BlackMisc::Network::CAircraftModel CContextSimulatorProxy::getOwnAircraftModel() const
+    BlackMisc::Simulation::CAircraftModel CContextSimulatorProxy::getOwnAircraftModel() const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Network::CAircraftModel>(QLatin1Literal("getOwnAircraftModel"));
+        return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CAircraftModel>(QLatin1Literal("getOwnAircraftModel"));
     }
 
     CAirportList CContextSimulatorProxy::getAirportsInRange() const
@@ -89,12 +99,17 @@ namespace BlackCore
 
     CAircraftModelList CContextSimulatorProxy::getInstalledModels() const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Network::CAircraftModelList>(QLatin1Literal("getInstalledModels"));
+        return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CAircraftModelList>(QLatin1Literal("getInstalledModels"));
     }
 
-    CAircraftModelList CContextSimulatorProxy::getCurrentlyMatchedModels() const
+    CSimulatedAircraftList CContextSimulatorProxy::getRemoteAircraft() const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Network::CAircraftModelList>(QLatin1Literal("getCurrentlyMatchedModels"));
+        return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraftList>(QLatin1Literal("getRemoteAircraft"));
+    }
+
+    int CContextSimulatorProxy::changeRemoteAircraft(const CSimulatedAircraft &changedAircraft, const CPropertyIndexVariantMap &changedValues)
+    {
+        return m_dBusInterface->callDBusRet<int>(QLatin1Literal("changeRemoteAircraft"), changedAircraft, changedValues);
     }
 
     BlackSim::CSimulatorInfo CContextSimulatorProxy::getSimulatorInfo() const
@@ -110,6 +125,16 @@ namespace BlackCore
     bool CContextSimulatorProxy::isTimeSynchronized() const
     {
         return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isTimeSynchronized"));
+    }
+
+    void CContextSimulatorProxy::setMaxRenderedRemoteAircraft(int number)
+    {
+        m_dBusInterface->callDBus(QLatin1Literal("setMaxRenderedRemoteAircraft"), number);
+    }
+
+    int CContextSimulatorProxy::getMaxRenderedRemoteAircraft() const
+    {
+        return m_dBusInterface->callDBusRet<int>(QLatin1Literal("getMaxRenderedRemoteAircraft"));
     }
 
     CTime CContextSimulatorProxy::getTimeSynchronizationOffset() const
@@ -137,14 +162,19 @@ namespace BlackCore
         m_dBusInterface->callDBus(QLatin1Literal("settingsChanged"), type);
     }
 
+    CPixmap CContextSimulatorProxy::iconForModel(const QString &modelString) const
+    {
+        return m_dBusInterface->callDBusRet<CPixmap>(QLatin1Literal("iconForModel"), modelString);
+    }
+
     bool CContextSimulatorProxy::isPaused() const
     {
         return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isPaused"));
     }
 
-    bool CContextSimulatorProxy::isRunning() const
+    bool CContextSimulatorProxy::isSimulating() const
     {
         return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isRunning"));
     }
 
-} // namespace BlackCore
+} // namespace

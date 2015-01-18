@@ -76,6 +76,8 @@ namespace BlackCore
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus);
         connect(this->m_airspace, &CAirspaceMonitor::changedAircraftInRange, this, &CContextNetwork::changedAircraftInRange);
         connect(this->m_airspace, &CAirspaceMonitor::changedAircraftSituation, this, &CContextNetwork::changedAircraftSituation);
+
+        //! \todo Should be set in runtime, but this would require airspace to be a context
         connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraft, this->m_airspace, &CAirspaceMonitor::setOwnAircraft);
         connect(this->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this->m_airspace, &CAirspaceMonitor::setOwnAircraftModel);
     }
@@ -107,23 +109,23 @@ namespace BlackCore
         QString msg;
         if (!server.getUser().isValid())
         {
-            return CLogMessage(this).error("Invalid user credentials");
+            return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Invalid user credentials");
         }
         else if (!this->ownAircraft().getIcaoInfo().hasAircraftAndAirlineDesignator())
         {
-            return CLogMessage(this).error("Invalid ICAO data for own aircraft");
+            return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Invalid ICAO data for own aircraft");
         }
         else if (!CNetworkUtils::canConnect(server, msg, 2000))
         {
-            return CLogMessage(this).error(msg);
+            return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, msg);
         }
         else if (this->m_network->isConnected())
         {
-            return CLogMessage(this).error("Already connected");
+            return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Already connected");
         }
         else if (this->isPendingConnection())
         {
-            return CLogMessage(this).error("Pending connection, please wait");
+            return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Pending connection, please wait");
         }
         else
         {
@@ -137,7 +139,7 @@ namespace BlackCore
             this->m_network->presetIcaoCodes(ownAircraft.getIcaoInfo());
             this->m_network->setOwnAircraft(ownAircraft);
             this->m_network->initiateConnection();
-            return CLogMessage(this).info("Connection pending %1 %2") << server.getAddress() << server.getPort();
+            return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, "Connection pending " + server.getAddress() + " " + QString::number(server.getPort()));
         }
     }
 
@@ -152,15 +154,15 @@ namespace BlackCore
             this->m_currentStatus = INetwork::Disconnecting; // as semaphore we are going to disconnect
             this->m_network->terminateConnection();
             this->m_airspace->clear();
-            return CLogMessage(this).info("Connection terminating");
+            return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, "Connection terminating");
         }
         else if (this->isPendingConnection())
         {
-            return CLogMessage(this).warning("Pending connection, please wait");
+            return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, "Pending connection, please wait");
         }
         else
         {
-            return CLogMessage(this).warning("Already disconnected");
+            return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityWarning, "Already disconnected");
         }
     }
 

@@ -15,10 +15,10 @@
 #include "blackcore/context_simulator.h"
 #include "blackcore/context_network.h"
 #include "blackcore/simulator.h"
-
 #include "blacksim/simulatorinfo.h"
 #include "blacksim/simulatorinfolist.h"
-
+#include "blackmisc/pixmap.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
 #include <QTimer>
 #include <QDir>
 #include <QtConcurrent/QtConcurrent>
@@ -62,29 +62,38 @@ namespace BlackCore
         //! \copydoc IContextSimulator::isPaused
         virtual bool isPaused() const override;
 
-        //! \copydoc IContextSimulator::isRunning
-        virtual bool isRunning() const override;
+        //! \copydoc IContextSimulator::isSimulating
+        virtual bool isSimulating() const override;
 
         //! \copydoc IContextSimulator::getSimulatorInfo()
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
 
         //! \copydoc IContextSimulator::getAircraftModel()
-        virtual BlackMisc::Network::CAircraftModel getOwnAircraftModel() const override;
+        virtual BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const override;
 
-        //! \copydoc IContextSimulator::getAirportsInRange()
+        //! \copydoc IContextSimulator::getAirportsInRange
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
 
-        //! \copydoc IContextSimulator::getInstalledModels()
-        virtual BlackMisc::Network::CAircraftModelList getInstalledModels() const override;
+        //! \copydoc IContextSimulator::getInstalledModels
+        virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override;
 
-        //! \copydoc IContextSimulator::getCurrentlyMatchedModels()
-        virtual BlackMisc::Network::CAircraftModelList getCurrentlyMatchedModels() const override;
+        //! \copydoc IContextSimulator::getRemoteAircraft
+        virtual BlackMisc::Simulation::CSimulatedAircraftList getRemoteAircraft() const override;
+
+        //! \copydoc IContextSimulator::changeRemoteAircraft
+        virtual int changeRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &changedAircraft, const BlackMisc::CPropertyIndexVariantMap &changedValues) override;
 
         //! \copydoc IContextSimulator::setTimeSynchronization
         virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
 
         //! \copydoc IContextSimulator::isTimeSynchronized
         virtual bool isTimeSynchronized() const override;
+
+        //! \copydoc IContextSimulator::getMaxRenderedRemoteAircraft
+        virtual int getMaxRenderedRemoteAircraft() const override;
+
+        //! \copydoc IContextSimulator::setMaxRenderedRemoteAircraft
+        virtual void setMaxRenderedRemoteAircraft(int number) override;
 
         //! \copydoc IContextSimulator::getTimeSynchronizationOffset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
@@ -100,6 +109,9 @@ namespace BlackCore
 
         //! \copydoc IContextSimulator::settingsChanged
         virtual void settingsChanged(uint type) override;
+
+        //! \copydoc IContextSimulator::iconForModel
+        virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
 
     protected:
         //! \brief Constructor
@@ -118,8 +130,7 @@ namespace BlackCore
         void ps_updateOwnAircraftContext();
 
         //! \copydoc ISimulator::addRemoteAircraft
-        // void ps_addRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation);
-        void ps_addRemoteAircraft(const BlackMisc::Aviation::CAircraft &remoteAircraft, const BlackMisc::Network::CClient &remoteClient);
+        void ps_addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
 
         //! \copydoc ISimulator::addAircraftSituation
         void ps_addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation);

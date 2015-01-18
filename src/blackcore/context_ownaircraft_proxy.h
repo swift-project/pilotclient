@@ -14,12 +14,13 @@
 
 #include "blackcore/context_ownaircraft.h"
 #include "blackmisc/genericdbusinterface.h"
-#include "blackmisc/avallclasses.h"
+#include "blackmisc/avaircrafticao.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 
 namespace BlackCore
 {
 
-    //! \brief Own aircraft context proxy
+    //! Own aircraft context proxy
     //! \ingroup dbus
     class CContextOwnAircraftProxy : public IContextOwnAircraft
     {
@@ -31,35 +32,31 @@ namespace BlackCore
         //! Destructor
         virtual ~CContextOwnAircraftProxy() {}
 
-    private:
-        BlackMisc::CGenericDBusInterface *m_dBusInterface; /*!< DBus interface */
-
-        //! \brief Relay connection signals to local signals.
-        void relaySignals(const QString &serviceName, QDBusConnection &connection);
-
-    protected:
-        //! \brief Constructor
-        CContextOwnAircraftProxy(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextOwnAircraft(mode, runtime), m_dBusInterface(nullptr) {}
-
-        //! \brief DBus version constructor
-        CContextOwnAircraftProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime);
-
     public slots: // IContextOwnAircraft overrides
 
         //! \copydoc IContextOwnAircraft::getOwnAircraft()
-        virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
+        virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const override;
 
-        //! \copydoc IContextOwnAircraft::setOwnAircraft()
-        virtual void updateOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator) override;
+        //! \copydoc IContextOwnAircraft::updateAircraft
+        virtual bool updateAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator) override;
 
-        //! \copydoc IContextOwnAircraft::updateOwnPosition
-        virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const QString &originator) override;
+        //! \copydoc IContextOwnAircraft::updateAircraft
+        virtual bool updateAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) override;
 
-        //! \copydoc IContextOwnAircraft::updateOwnSituation
-        virtual bool updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation, const QString &originator) override;
+        //! \copydoc IContextOwnAircraft::updateModel
+        virtual bool updateModel(const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) override;
 
-        //! \copydoc IContextOwnAircraft::updateOwnCockpit
-        virtual bool updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) override;
+        //! \copydoc IContextOwnAircraft::updateClient
+        virtual bool updateClient(const BlackMisc::Network::CClient &client, const QString &originator) override;
+
+        //! \copydoc IContextOwnAircraft::updatePosition
+        virtual bool updatePosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const QString &originator) override;
+
+        //! \copydoc IContextOwnAircraft::updateSituation
+        virtual bool updateSituation(const BlackMisc::Aviation::CAircraftSituation &situation, const QString &originator) override;
+
+        //! \copydoc IContextOwnAircraft::updateCockpit
+        virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) override;
 
         //! \copydoc IContextOwnAircraft::updateComFrequency
         virtual bool updateComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const QString &originator) override;
@@ -80,13 +77,27 @@ namespace BlackCore
         virtual void setAudioOutputVolumes(int outputVolumeCom1, int outputVolumeCom2) override;
 
         //! \copydoc IContextOwnAircraft::setAudioVoiceRoomOverrideUrls
-        virtual void setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url,const QString &voiceRoom2Url);
+        virtual void setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url);
 
         //! \copydoc IContextOwnAircraft::enableAutomaticVoiceRoomResolution
         virtual void enableAutomaticVoiceRoomResolution(bool enable);
 
         //! \copydoc IContextOwnAircraft::parseCommandLine
         virtual bool parseCommandLine(const QString &commandLine) override;
+
+    protected:
+        //! \brief Constructor
+        CContextOwnAircraftProxy(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextOwnAircraft(mode, runtime), m_dBusInterface(nullptr) {}
+
+        //! \brief DBus version constructor
+        CContextOwnAircraftProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime);
+
+    private:
+        BlackMisc::CGenericDBusInterface *m_dBusInterface; //!< DBus interface */
+
+        //! \brief Relay connection signals to local signals.
+        void relaySignals(const QString &serviceName, QDBusConnection &connection);
+
 
     };
 }

@@ -14,6 +14,7 @@
 
 #include "blackcore/context_simulator.h"
 #include "blackmisc/genericdbusinterface.h"
+#include "blackmisc/pixmap.h"
 
 namespace BlackCore
 {
@@ -61,23 +62,26 @@ namespace BlackCore
         //! \copydoc IContextSimulator::disconnectFrom
         virtual bool disconnectFrom() override;
 
-        //! \copydoc IContextSimulator::isRunning
-        virtual bool isRunning() const override;
+        //! \copydoc IContextSimulator::isSimulating
+        virtual bool isSimulating() const override;
 
         //! \copydoc IContextSimulator::isPaused
         virtual bool isPaused() const override;
 
         //! \copydoc IContextSimulator::getAircraftModel()
-        virtual BlackMisc::Network::CAircraftModel getOwnAircraftModel() const override;
+        virtual BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const override;
 
         //! \copydoc IContextSimulator::getAirportsInRange()
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
 
         //! \copydoc IContextSimulator::getInstalledModels()
-        virtual BlackMisc::Network::CAircraftModelList getInstalledModels() const override;
+        virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override;
 
-        //! \copydoc IContextSimulator::getCurrentlyMatchedModels()
-        virtual BlackMisc::Network::CAircraftModelList getCurrentlyMatchedModels() const override;
+        //! \copydoc IContextSimulator::getRemoteAircraft
+        virtual BlackMisc::Simulation::CSimulatedAircraftList getRemoteAircraft() const override;
+
+        //! \copydoc IContextSimulator::changeRemoteAircraft
+        virtual int changeRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &changedAircraft, const BlackMisc::CPropertyIndexVariantMap &changedValues) override;
 
         //! \copydoc IContextSimulator::getSimulatorInfo
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
@@ -87,6 +91,12 @@ namespace BlackCore
 
         //! \copydoc IContextSimulator::isTimeSynchronized
         virtual bool isTimeSynchronized() const override;
+
+        //! \copydoc IContextSimulator::getMaxRenderedRemoteAircraft
+        virtual int getMaxRenderedRemoteAircraft() const override;
+
+        //! \copydoc IContextSimulator::setMaxRenderedRemoteAircraft
+        virtual void setMaxRenderedRemoteAircraft(int number) override;
 
         //! \copydoc IContextSimulator::getTimeSynchronizationOffset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
@@ -102,6 +112,9 @@ namespace BlackCore
 
         //! \copydoc IContextSimulator::settingsChanged
         virtual void settingsChanged(uint type) override;
+
+        //! \copydoc IContextSimulator::iconForModel
+        virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
 
     };
 

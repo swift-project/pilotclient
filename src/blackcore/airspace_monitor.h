@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_AIRSPACE_MONITOR_H
 #define BLACKCORE_AIRSPACE_MONITOR_H
 
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/avatcstationlist.h"
 #include "blackmisc/avaircraftlist.h"
 #include "blackmisc/nwclientlist.h"
@@ -44,6 +45,7 @@ namespace BlackCore
         BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const;
 
         //! Returns the flightplan for the given callsign
+        //! \remarks pseudo synchronous, call the async functions and waits for result
         BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Returns this list of other clients we know about
@@ -99,25 +101,18 @@ namespace BlackCore
         void removedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Read for model matching
-        void readyForModelMatching(const BlackMisc::Aviation::CAircraft &remoteAircraft, const BlackMisc::Network::CClient &remoteClient);
+        void readyForModelMatching(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
 
     public slots:
         //! Own aircraft updated
         void setOwnAircraft(const BlackMisc::Aviation::CAircraft &ownAircraft) { m_ownAircraft = ownAircraft; }
 
         //! Own aircraft model updated
-        void setOwnAircraftModel(const BlackMisc::Network::CAircraftModel &model) { m_ownAircraftModel = model; }
+        void setOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model) { m_ownAircraftModel = model; }
 
     public:
         //! Clear the contents
-        void clear()
-        {
-            removeAllAtcStations();
-            removeAllAircraft();
-            removeAllOtherClients();
-            m_metarCache.clear();
-            m_flightPlanCache.clear();
-        }
+        void clear();
 
     private:
         BlackMisc::Aviation::CAtcStationList m_atcStationsOnline;
@@ -125,14 +120,15 @@ namespace BlackCore
         BlackMisc::Aviation::CAircraftList   m_aircraftInRange;
         BlackMisc::Network::CClientList      m_otherClients;
         QMap<BlackMisc::Aviation::CAirportIcao, BlackMisc::Aviation::CInformationMessage> m_metarCache;
-        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache;
+        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan>            m_flightPlanCache;
+        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftIcao>          m_icaoCodeCache;
 
-        BlackMisc::Aviation::CAircraft     m_ownAircraft;
-        BlackMisc::Network::CAircraftModel m_ownAircraftModel;
+        BlackMisc::Aviation::CAircraft        m_ownAircraft;
+        BlackMisc::Simulation::CAircraftModel m_ownAircraftModel;
 
         INetwork *m_network = nullptr;
-        CVatsimBookingReader  *m_vatsimBookingReader;
-        CVatsimDataFileReader *m_vatsimDataFileReader;
+        CVatsimBookingReader  *m_vatsimBookingReader   = nullptr;
+        CVatsimDataFileReader *m_vatsimDataFileReader  = nullptr;
         CAirspaceWatchdog m_atcWatchdog;
         CAirspaceWatchdog m_aircraftWatchdog;
 
@@ -144,14 +140,28 @@ namespace BlackCore
         //! Helper method, add voice capabilites if available
         void addVoiceCapabilitiesFromDataFile(BlackMisc::CPropertyIndexVariantMap &vm, const BlackMisc::Aviation::CCallsign &callsign);
 
-        void removeAllAtcStations();
+        //! Remove ATC online stations
+        void removeAllOnlineAtcStations();
+
+        //! Remove all aircraft in range
         void removeAllAircraft();
+
+        //! Remove all clients
         void removeAllOtherClients();
 
+        //! Remove data from caches
+        void removeFromAircraftCaches(const BlackMisc::Aviation::CCallsign &callsign);
+
+        //! Schedule a ready for model matching
+        void fireDelayedReadyForModelMatching(const BlackMisc::Aviation::CCallsign &callsign, int trial = 1, int delayMs = 2500);
+
     private slots:
+        //! Create aircraft in range, this is the only place where a new aircraft should be added
+        void ps_aircraftUpdateReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
+
         void ps_realNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
         void ps_capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
-        void ps_fsipirCustomPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &, const QString &, const QString &, const QString &model);
+        void ps_fsipirCustomPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &p1, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &model);
         void ps_serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server);
         void ps_metarReceived(const QString &metarMessage);
         void ps_flightPlanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);
@@ -161,14 +171,13 @@ namespace BlackCore
         void ps_atisVoiceRoomReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
         void ps_atisLogoffTimeReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
         void ps_icaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icaoData);
-        void ps_aircraftUpdateReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
         void ps_pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
         void ps_frequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
         void ps_receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
         void ps_receivedDataFile();
 
-        // non network related slots
-        void ps_sendReadyForModelMatching(const BlackMisc::Aviation::CCallsign &callsign);
+        //!  Send the information if aircraft and(!) client are vailable
+        void ps_sendReadyForModelMatching(const BlackMisc::Aviation::CCallsign &callsign, int trial);
     };
 
 } // namespace

@@ -16,6 +16,7 @@
 #include "blackcore/context_settings.h"
 #include "blackcore/context_runtime.h"
 #include "blackcore/dbus_server.h"
+#include "blackmisc/avatcstation.h"
 
 namespace BlackCore
 {
@@ -33,27 +34,36 @@ namespace BlackCore
         virtual ~CContextOwnAircraft();
 
         //! Own aircraft
-        const BlackMisc::Aviation::CAircraft &ownAircraft() const { return this->m_ownAircraft; }
+        const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft() const { return this->m_ownAircraft; }
 
         //! Own aircraft
-        BlackMisc::Aviation::CAircraft &ownAircraft() { return this->m_ownAircraft; }
+        BlackMisc::Simulation::CSimulatedAircraft &ownAircraft() { return this->m_ownAircraft; }
 
     public slots: // IContextOwnAircraft overrides
 
         //! \copydoc IContextOwnAircraft::getOwnAircraft()
-        virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
+        virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const override;
 
-        //! \copydoc IContextOwnAircraft::setOwnAircraft
-        virtual void updateOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator) override;
+        //! \copydoc IContextOwnAircraft::updateAircraft
+        virtual bool updateAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) override;
 
-        //! \copydoc IContextOwnAircraft::updateOwnPosition
-        virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const QString &originator) override;
+        //! \copydoc IContextOwnAircraft::updateAircraft
+        virtual bool updateAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator) override;
 
-        //! \copydoc IContextOwnAircraft::updateOwnSituation
-        virtual bool updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation, const QString &originator) override;
+        //! \copydoc IContextOwnAircraft::updateModel
+        virtual bool updateModel(const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) override;
 
-        //! \copydoc IContextOwnAircraft::updateOwnCockpit
-        virtual bool updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) override;
+        //! \copydoc IContextOwnAircraft::updateClient
+        virtual bool updateClient(const BlackMisc::Network::CClient &client, const QString &originator) override;
+
+        //! \copydoc IContextOwnAircraft::updatePosition
+        virtual bool updatePosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const QString &originator) override;
+
+        //! \copydoc IContextOwnAircraft::updateSituation
+        virtual bool updateSituation(const BlackMisc::Aviation::CAircraftSituation &situation, const QString &originator) override;
+
+        //! \copydoc IContextOwnAircraft::updateCockpit
+        virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) override;
 
         //! \copydoc IContextOwnAircraft::updateComFrequency
         virtual bool updateComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const QString &originator) override;
@@ -108,7 +118,7 @@ namespace BlackCore
         void ps_changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &atcStation, bool connected);
 
     private:
-        BlackMisc::Aviation::CAircraft m_ownAircraft; //!< my aircraft
+        BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< my aircraft
         bool m_automaticVoiceRoomResolution = true;   //!< automatic voice room resolution, or disable for override
         QString m_voiceRoom1UrlOverride;              //!< overridden voice room url
         QString m_voiceRoom2UrlOverride;              //!< overridden voice room url
@@ -118,6 +128,9 @@ namespace BlackCore
 
         //! Resolve voice rooms
         void resolveVoiceRooms();
+
+        //! Own aircraft
+        const BlackMisc::Aviation::CAircraft &getAviationAircraft() const;
 
     };
 }
