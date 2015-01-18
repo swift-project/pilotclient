@@ -96,7 +96,7 @@ namespace BlackGui
             }
 
             this->ui->le_SmSeverity->setText(statusMessage.getSeverityAsString());
-            this->ui->le_SmType->setText(statusMessage.getCategories().toQString()); // TODO should be called ui->le_SmCategories
+            this->ui->le_SmCategories->setText(statusMessage.getCategories().toQString());
             this->ui->te_SmStatusMessage->setText(statusMessage.getMessage());
             this->ui->lbl_SmSeverityIcon->setPixmap(statusMessage.toPixmap());
 
@@ -109,13 +109,23 @@ namespace BlackGui
          */
         void CInfoWindowComponent::display(const BlackMisc::CVariant &variant, int displayTimeMs)
         {
-            if (variant.isNull()) return;
+            if (variant.isNull())
+            {
+                this->hide();
+                return;
+            }
             if (variant.canConvert<CTextMessage>())
+            {
                 this->displayTextMessage(variant.value<CTextMessage>(), displayTimeMs);
+            }
             else if (variant.canConvert<CStatusMessage>())
+            {
                 this->displayStatusMessage(variant.value<CStatusMessage>(), displayTimeMs);
+            }
             else
+            {
                 this->displayStringMessage(variant.toQString(), displayTimeMs);
+            }
         }
 
         /*
