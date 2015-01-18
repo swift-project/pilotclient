@@ -36,6 +36,9 @@ namespace BlackGui
         //! Get login mode, \sa BlackCore::INetwork::LoginMode
         BlackCore::INetwork::LoginMode getLoginMode() const;
 
+        //! Set login mode
+        void setLoginMode(BlackCore::INetwork::LoginMode mode);
+
     private:
         QScopedPointer<Ui::CLoginModeButtons> ui;
     };
