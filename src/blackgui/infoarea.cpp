@@ -11,6 +11,7 @@
 #include "stylesheetutility.h"
 #include "guiutility.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/logmessage.h"
 #include <QMenu>
 #include <QListIterator>
 #include <QSignalMapper>
@@ -630,7 +631,11 @@ namespace BlackGui
 
     void CInfoArea::ps_tabBarDoubleClicked(int tabBarIndex)
     {
-        if (this->m_lockTabBar) return;
+        if (this->m_lockTabBar)
+        {
+            CLogMessage(this).info("Locked, double click will not cause floating");
+            return;
+        }
         CDockWidgetInfoArea *dw = this->getDockWidgetInfoAreaByTabBarIndex(tabBarIndex);
         if (!dw) { return; }
         dw->toggleFloating();
