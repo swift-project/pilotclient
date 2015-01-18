@@ -13,10 +13,13 @@
 #define BLACKGUI_LISTMODELBASE_H
 
 #include "blackgui/models/columns.h"
+#include "blackgui/models/listmodelfilter.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/propertyindex.h"
 #include <QAbstractItemModel>
 #include <QThread>
+#include <memory>
+#include <iostream>
 
 namespace BlackGui
 {
@@ -35,7 +38,7 @@ namespace BlackGui
             virtual ~CListModelBaseNonTemplate() {}
 
             //! \copydoc QAbstractListModel::columnCount()
-            virtual int columnCount(const QModelIndex &modelIndex) const override;
+            virtual int columnCount(const QModelIndex &modelIndex = QModelIndex()) const override;
 
             //! \copydoc QAbstractItemModel::headerData()
             virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
@@ -43,11 +46,11 @@ namespace BlackGui
             //! Column to property index
             virtual BlackMisc::CPropertyIndex columnToPropertyIndex(int column) const;
 
+            //! Property index to column number
+            virtual int propertyIndexToColumn(const BlackMisc::CPropertyIndex &propertyIndex) const;
+
             //! Index to property index
-            virtual BlackMisc::CPropertyIndex modelIndexToPropertyIndex(const QModelIndex &index) const
-            {
-                return this->columnToPropertyIndex(index.column());
-            }
+            virtual BlackMisc::CPropertyIndex modelIndexToPropertyIndex(const QModelIndex &index) const;
 
             //! Set sort column
             virtual void setSortColumn(int column) { this->m_sortedColumn = column; }
@@ -56,10 +59,7 @@ namespace BlackGui
              * Set column for sorting
              * \param propertyIndex index of column to be sorted
              */
-            virtual void setSortColumnByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex)
-            {
-                this->m_sortedColumn = this->m_columns.propertyIndexToColumn(propertyIndex);
-            }
+            virtual void setSortColumnByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex);
 
             //! Get sort column property index
             virtual int getSortColumn() const { return this->m_sortedColumn; }
@@ -74,26 +74,23 @@ namespace BlackGui
             Qt::ItemFlags flags(const QModelIndex &index) const override;
 
             //! Translation context
-            virtual const QString &getTranslationContext() const
-            {
-                return m_columns.getTranslationContext();
-            }
+            virtual const QString &getTranslationContext() const;
 
         signals:
             //! Asynchronous update finished
             void asyncUpdateFinished();
 
             //! Number of elements changed
-            void rowCountChanged(int count);
+            void rowCountChanged(int count, bool withFilter);
+
+            //! Template free information, that object changed
+            void objectChanged(const BlackMisc::CVariant &object, const BlackMisc::CPropertyIndex &changedIndex);
 
         protected slots:
             //! Helper method with template free signature
             //! \param variant container is transferred in variant
             //! \param sort
-            int updateContainer(const BlackMisc::CVariant &variant, bool sort)
-            {
-                return this->performUpdateContainer(variant, sort);
-            }
+            int ps_updateContainer(const BlackMisc::CVariant &variant, bool sort);
 
         protected:
             /*!
@@ -117,8 +114,7 @@ namespace BlackGui
         };
 
         //! List model
-        template <typename ObjectType, typename ContainerType> class CListModelBase :
-            public CListModelBaseNonTemplate
+        template <typename ObjectType, typename ContainerType> class CListModelBase : public CListModelBaseNonTemplate
         {
 
         public:
@@ -129,13 +125,17 @@ namespace BlackGui
             virtual bool isValidIndex(const QModelIndex &index) const;
 
             //! Used container data
-            virtual const ContainerType &getContainer() const { return this->m_container; }
+            virtual const ContainerType &getContainer() const;
 
             //! \copydoc QAbstractListModel::data()
             virtual QVariant data(const QModelIndex &index, int role) const override;
 
+            //! \copydoc QAbstractListModel::setData()
+            //! \sa CListModelBaseNonTemplate::flags
+            virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+
             //! \copydoc QAbstractListModel::rowCount()
-            virtual int rowCount(const QModelIndex &index = QModelIndex()) const override;
+            virtual int rowCount(const QModelIndex &parentIndex = QModelIndex()) const override;
 
             //! Update by new container
             //! \remarks a sorting is performed only if a valid sort column is set
@@ -151,10 +151,7 @@ namespace BlackGui
             virtual void update(const QModelIndex &index, const ObjectType &object);
 
             //! Update single element
-            virtual void update(int rowIndex, const ObjectType &object)
-            {
-                this->update(this->index(rowIndex), object);
-            }
+            virtual void update(int rowIndex, const ObjectType &object);
 
             //! Object at row position
             virtual const ObjectType &at(const QModelIndex &index) const;
@@ -186,15 +183,25 @@ namespace BlackGui
             int removeIf(K0 k0, V0 v0, KeysValues... keysValues)
             {
                 int c = m_container.removeIf(BlackMisc::Predicates::MemberEqual(k0, v0, keysValues...));
-                if (c > 0) { emit rowCountChanged(this->rowCount());}
+                if (c > 0) { this->emitRowCountChanged();}
+                this->updateFilteredContainer();
                 return c;
             }
 
             //! Clear the list
             virtual void clear();
 
+            //! Filter available
+            bool hasFilter() const;
+
+            //! Remove filter
+            void removeFilter();
+
+            //! Set the filter
+            void setFilter(std::unique_ptr<IModelFilter<ContainerType> > &filter);
+
         protected:
-            ContainerType m_container; //!< used container
+            std::unique_ptr<IModelFilter<ContainerType> > m_filter; //!< Used filter
 
             /*!
              * Constructor
@@ -207,6 +214,18 @@ namespace BlackGui
 
             //! \copydoc CModelBaseNonTemplate::performUpdateContainer
             virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort) override;
+
+            //! Full container or cached filtered container as approproiate
+            const ContainerType &getContainerOrFilteredContainer() const;
+
+            //! Update filtered container
+            void updateFilteredContainer();
+
+            //! Row count changed
+            void emitRowCountChanged();
+            ContainerType m_container;         //!< used container
+            ContainerType m_containerFiltered; //!< cache for filtered container data
+
         };
 
     } // namespace

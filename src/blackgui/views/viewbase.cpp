@@ -18,14 +18,19 @@
 #include "../models/serverlistmodel.h"
 #include "../models/userlistmodel.h"
 #include "../models/clientlistmodel.h"
+#include "../models/simulatedaircraftlistmodel.h"
 #include "../models/keyboardkeylistmodel.h"
+#include "../guiutility.h"
 
 #include <QHeaderView>
 #include <QModelIndex>
 #include <QTime>
 #include <QAction>
+#include <QSortFilterProxyModel>
+#include <QDialog>
 
 using namespace BlackMisc;
+using namespace BlackGui;
 using namespace BlackGui::Models;
 
 namespace BlackGui
@@ -48,10 +53,36 @@ namespace BlackGui
             this->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
         }
 
+        void CViewBaseNonTemplate::setFilterDialog(QDialog *filterDialog)
+        {
+            if (filterDialog)
+            {
+                this->m_withMenuFilter = true;
+                this->m_filterDialog.reset(filterDialog);
+                connect(filterDialog, &QDialog::finished, this, &CViewBaseNonTemplate::ps_filterDialogFinished);
+            }
+            else
+            {
+                if (!this->m_filterDialog.isNull()) { disconnect(this->m_filterDialog.data()); }
+                this->m_withMenuFilter = false;
+                this->m_filterDialog.reset(nullptr);
+            }
+        }
+
+        QWidget *CViewBaseNonTemplate::mainApplicationWindowWidget() const
+        {
+            return CGuiUtility::mainApplicationWindowWidget();
+        }
+
         void CViewBaseNonTemplate::customMenu(QMenu &menu) const
         {
             if (this->m_withMenuItemRefresh) { menu.addAction(BlackMisc::CIcons::refresh16(), "Update", this, SIGNAL(requestUpdate())); }
             if (this->m_withMenuItemClear) { menu.addAction(BlackMisc::CIcons::delete16(), "Clear", this, SLOT(ps_clear())); }
+            if (this->m_withMenuFilter)
+            {
+                menu.addAction(BlackMisc::CIcons::tableSheet16(), "Filter", this, SLOT(ps_displayFilterDialog()));
+                menu.addAction(BlackMisc::CIcons::tableSheet16(), "Remove Filter", this, SLOT(ps_removeFilter()));
+            }
             if (!menu.isEmpty()) { menu.addSeparator(); }
             menu.addAction(BlackMisc::CIcons::resize16(), "Full resize", this, SLOT(fullResizeToContents()));
 
@@ -91,9 +122,21 @@ namespace BlackGui
             int fh = qRound(1.5 * this->getHorizontalHeaderFontHeight());
             this->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive); // faster mode
             this->horizontalHeader()->setStretchLastSection(true);
-            this->verticalHeader()->setDefaultSectionSize(fh);
-            this->verticalHeader()->setMinimumSectionSize(fh);
+            this->verticalHeader()->setDefaultSectionSize(fh); // for height
+            this->verticalHeader()->setMinimumSectionSize(fh); // for height
             this->initRowsResizeModeToInteractive();
+        }
+
+        int CViewBaseNonTemplate::ps_updateContainer(const CVariant &variant, bool sort, bool resize)
+        {
+            return this->performUpdateContainer(variant, sort, resize);
+        }
+
+        void CViewBaseNonTemplate::ps_displayFilterDialog()
+        {
+            if (!this->m_withMenuFilter) { return; }
+            if (!this->m_filterDialog) { return; }
+            this->m_filterDialog->show();
         }
 
         void CViewBaseNonTemplate::initRowsResizeModeToInteractive()
@@ -116,8 +159,8 @@ namespace BlackGui
             if (m_resizeMode == ResizingOnce) { return m_resizeCount < 1; }
             if (m_resizeMode == ResizingAuto)
             {
-                if (reachedResizeThreshold()) return false;
-                if (m_resizeAutoNthTime < 2) return true;
+                if (reachedResizeThreshold()) { return false; }
+                if (m_resizeAutoNthTime < 2)  { return true; }
                 return (m_resizeCount % m_resizeAutoNthTime) == 0;
             }
             return false;
@@ -125,10 +168,6 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::fullResizeToContents()
         {
-            // KWB remove
-            QTime t;
-            t.start();
-
             m_resizeCount++;
             this->resizeColumnsToContents();
             this->resizeRowsToContents();
@@ -177,7 +216,7 @@ namespace BlackGui
             BlackMisc::CWorker *worker = BlackMisc::CWorker::fromTask(this, "ViewSort", [this, model, container, sort, resize, sortColumn, sortOrder]()
             {
                 ContainerType sortedContainer = model->sortContainerByColumn(container, sortColumn, sortOrder);
-                QMetaObject::invokeMethod(this, "updateContainer",
+                QMetaObject::invokeMethod(this, "ps_updateContainer",
                                           Q_ARG(BlackMisc::CVariant, sortedContainer.toCVariant()), Q_ARG(bool, false), Q_ARG(bool, resize));
             });
             worker->then(this, &CViewBase::asyncUpdateFinished);
@@ -197,6 +236,25 @@ namespace BlackGui
             }
         }
 
+        template <class ModelClass, class ContainerType, class ObjectType> void CViewBase<ModelClass, ContainerType, ObjectType>::insert(const ObjectType &value, bool resize)
+        {
+            Q_ASSERT(this->m_model);
+            this->m_model->insert(value);
+            if (resize) { this->performResizeToContents(); }
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType> const ObjectType &CViewBase<ModelClass, ContainerType, ObjectType>::at(const QModelIndex &index) const
+        {
+            Q_ASSERT(this->m_model);
+            return this->m_model->at(index);
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType> const ContainerType &CViewBase<ModelClass, ContainerType, ObjectType>::getContainer() const
+        {
+            Q_ASSERT(this->m_model);
+            return this->m_model->getContainer();
+        }
+
         template <class ModelClass, class ContainerType, class ObjectType> ContainerType CViewBase<ModelClass, ContainerType, ObjectType>::selectedObjects() const
         {
             if (!this->hasSelection()) { return ContainerType(); }
@@ -209,25 +267,29 @@ namespace BlackGui
             return c;
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType> int CViewBase<ModelClass, ContainerType, ObjectType>::rowCount() const
+        template <class ModelClass, class ContainerType, class ObjectType>
+        int CViewBase<ModelClass, ContainerType, ObjectType>::rowCount() const
         {
             Q_ASSERT(this->m_model);
             return this->m_model->rowCount();
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType> int CViewBase<ModelClass, ContainerType, ObjectType>::columnCount() const
+        template <class ModelClass, class ContainerType, class ObjectType>
+        int CViewBase<ModelClass, ContainerType, ObjectType>::columnCount() const
         {
             Q_ASSERT(this->m_model);
             return this->m_model->columnCount(QModelIndex());
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType> bool CViewBase<ModelClass, ContainerType, ObjectType>::isEmpty() const
+        template <class ModelClass, class ContainerType, class ObjectType>
+        bool CViewBase<ModelClass, ContainerType, ObjectType>::isEmpty() const
         {
             Q_ASSERT(this->m_model);
             return this->m_model->rowCount() < 1;
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType> void CViewBase<ModelClass, ContainerType, ObjectType>::setObjectName(const QString &name)
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::setObjectName(const QString &name)
         {
             // then name here is mainly set for debugging purposes so each model can be identified
             Q_ASSERT(m_model);
@@ -236,7 +298,8 @@ namespace BlackGui
             this->m_model->setObjectName(modelName);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType> void CViewBase<ModelClass, ContainerType, ObjectType>::setSortIndicator()
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::setSortIndicator()
         {
             if (this->m_model->hasValidSortColumn())
             {
@@ -247,20 +310,24 @@ namespace BlackGui
             }
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType> void CViewBase<ModelClass, ContainerType, ObjectType>::standardInit(ModelClass *model)
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::standardInit(ModelClass *model)
         {
             Q_ASSERT(model || this->m_model);
             if (model)
             {
                 this->m_model = model;
-                connect(this->m_model, &ModelClass::rowCountChanged, this, &CViewBase::countChanged);
+                connect(this->m_model, &ModelClass::rowCountChanged, this, &CViewBase::rowCountChanged);
+                connect(this->m_model, &ModelClass::objectChanged, this, &CViewBase::objectChanged);
             }
+
             this->setModel(this->m_model); // via QTableView
             CViewBaseNonTemplate::init();
             this->setSortIndicator();
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType>  void CViewBase<ModelClass, ContainerType, ObjectType>::performResizeToContents()
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::performResizeToContents()
         {
             // small set or large set?
             if (this->performResizing())
@@ -273,11 +340,30 @@ namespace BlackGui
             }
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType> int CViewBase<ModelClass, ContainerType, ObjectType>::performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize)
+        template <class ModelClass, class ContainerType, class ObjectType>
+        int CViewBase<ModelClass, ContainerType, ObjectType>::performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize)
         {
             ContainerType c;
             c.convertFromCVariant(variant);
             return this->updateContainer(c, sort, resize);
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        bool CViewBase<ModelClass, ContainerType, ObjectType>::ps_filterDialogFinished(int status)
+        {
+            QDialog::DialogCode statusCode = static_cast<QDialog::DialogCode>(status);
+            if (statusCode == QDialog::Rejected)
+            {
+                this->derivedModel()->removeFilter();
+                return true; // handled
+            }
+            return false;
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::ps_removeFilter()
+        {
+            this->derivedModel()->removeFilter();
         }
 
         // see here for the reason of thess forward instantiations
@@ -290,7 +376,8 @@ namespace BlackGui
         template class CViewBase<BlackGui::Models::CServerListModel, BlackMisc::Network::CServerList, BlackMisc::Network::CServer>;
         template class CViewBase<BlackGui::Models::CUserListModel, BlackMisc::Network::CUserList, BlackMisc::Network::CUser>;
         template class CViewBase<BlackGui::Models::CClientListModel, BlackMisc::Network::CClientList, BlackMisc::Network::CClient>;
-        template class CViewBase<BlackGui::Models::CAircraftModelListModel, BlackMisc::Network::CAircraftModelList, BlackMisc::Network::CAircraftModel>;
+        template class CViewBase<BlackGui::Models::CSimulatedAircraftListModel, BlackMisc::Simulation::CSimulatedAircraftList, BlackMisc::Simulation::CSimulatedAircraft>;
+        template class CViewBase<BlackGui::Models::CAircraftModelListModel, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModel>;
         template class CViewBase<BlackGui::Models::CKeyboardKeyListModel, BlackMisc::Settings::CSettingKeyboardHotkeyList, BlackMisc::Settings::CSettingKeyboardHotkey>;
 
     } // namespace

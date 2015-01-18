@@ -16,6 +16,7 @@
 #include "blackmisc/worker.h"
 #include "blackmisc/variant.h"
 #include <QTableView>
+#include <QWizardPage>
 #include <QHeaderView>
 #include <QMenu>
 #include <QPoint>
@@ -70,6 +71,12 @@ namespace BlackGui
             //! Selected rows if any
             QModelIndexList selectedRows() const;
 
+            //! Filter dialog
+            void setFilterDialog(QDialog *filterDialog);
+
+            //! Main application window widget if any
+            QWidget *mainApplicationWindowWidget() const;
+
         signals:
             //! Ask for new data
             void requestUpdate();
@@ -78,7 +85,10 @@ namespace BlackGui
             void asyncUpdateFinished();
 
             //! Number of elements changed
-            void countChanged(int count);
+            void rowCountChanged(int count, bool withFilter);
+
+            //! Single object was changed in model
+            void objectChanged(const BlackMisc::CVariant &object, const BlackMisc::CPropertyIndex &changedIndex);
 
         public slots:
             //! Resize to contents, strategy depends on container size
@@ -127,13 +137,21 @@ namespace BlackGui
             bool m_forceStretchLastColumnWhenResized  = false; //!< a small table might (few columns) might to fail stretching, force again
             bool m_withMenuItemClear    = false;      //!< allow clearing the view via menu
             bool m_withMenuItemRefresh  = false;      //!< allow refreshing the view via menu
+            bool m_withMenuFilter       = false;      //!< filter can be opened
+            QScopedPointer<QDialog> m_filterDialog;   //!< filter dialog if any
 
         protected slots:
             //! Helper method with template free signature serving as callback from threaded worker
-            int updateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize)
-            {
-                return this->performUpdateContainer(variant, sort, resize);
-            }
+            int ps_updateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize);
+
+            //! Display the filter dialog
+            void ps_displayFilterDialog();
+
+            //! Remove filter
+            virtual void ps_removeFilter() = 0;
+
+            //! Filter dialog finished
+            virtual bool ps_filterDialogFinished(int status) = 0;
 
         private slots:
             //! Custom menu was requested
@@ -173,19 +191,13 @@ namespace BlackGui
             void updateContainerMaybeAsync(const ContainerType &container, bool sort = true, bool performResizing = true);
 
             //! Insert
-            void insert(const ObjectType &value, bool resize = true)
-            {
-                Q_ASSERT(this->m_model);
-                this->m_model->insert(value);
-                if (resize) { this->performResizeToContents(); }
-            }
+            void insert(const ObjectType &value, bool resize = true);
 
             //! Value object at
-            const ObjectType &at(const QModelIndex &index) const
-            {
-                Q_ASSERT(this->m_model);
-                return this->m_model->at(index);
-            }
+            const ObjectType &at(const QModelIndex &index) const;
+
+            //! Access to container
+            const ContainerType &getContainer() const;
 
             //! Selected objects
             ContainerType selectedObjects() const;
@@ -227,6 +239,13 @@ namespace BlackGui
             //! \copydoc CViewBaseNonTemplate::performUpdateContainer
             virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool performResizing) override;
 
+            //! \copydoc CViewBaseNonTemplate::ps_filterDialogFinished
+            //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
+            virtual bool ps_filterDialogFinished(int status) override;
+
+            //! \copydoc CViewBaseNonTemplate::ps_removeFilter
+            //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
+            virtual void ps_removeFilter() override;
         };
     } // namespace
 } // namespace

@@ -233,4 +233,13 @@ namespace BlackGui
         QPainter p(usedWidget);
         usedWidget->style()->drawPrimitive(element, &opt, &p, usedWidget);
     }
+
+    QString CStyleSheetUtility::styleForIconCheckBox(const QString &checkedIcon, const QString &uncheckedIcon, const QString &width, const QString &height)
+    {
+        Q_ASSERT(!checkedIcon.isEmpty());
+        Q_ASSERT(!uncheckedIcon.isEmpty());
+
+        static const QString st = "QCheckBox::indicator { width: %1; height: %2; } QCheckBox::indicator:checked { image: url(%3); } QCheckBox::indicator:unchecked { image: url(%4); }";
+        return st.arg(width).arg(height).arg(checkedIcon).arg(uncheckedIcon);
+    }
 }

@@ -1,0 +1,46 @@
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift Project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
+
+#ifndef BLACKGUI_AIRCRAFTMODELFILTER_H
+#define BLACKGUI_AIRCRAFTMODELFILTER_H
+
+#include "listmodelfilter.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+
+namespace BlackGui
+{
+    namespace Models
+    {
+
+        //! Filter for aircraft models
+        class CAircraftModelFilter : public IModelFilter<BlackMisc::Simulation::CAircraftModelList>
+        {
+        public:
+            //! Constructor
+            CAircraftModelFilter(const QString &modelString, const QString &description);
+
+            //! \copydoc IModelFilter::filter
+            virtual BlackMisc::Simulation::CAircraftModelList filter(const BlackMisc::Simulation::CAircraftModelList &inContainer) const override;
+
+            //! \copydoc IModelFilter::isValid
+            virtual bool isValid() const override;
+
+        private:
+            QString m_model;
+            QString m_description;
+
+        };
+
+    } // namespace
+} // namespace
+
+
+#endif // guard

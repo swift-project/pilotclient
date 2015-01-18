@@ -34,6 +34,8 @@ SOURCES += $$PWD/components/*.cpp
 
 FORMS   += $$PWD/components/*.ui
 FORMS   += $$PWD/*.ui
+FORMS   += $$PWD/views/*.ui
+
 
 win32 {
     HEADERS += $$PWD/win/*.h

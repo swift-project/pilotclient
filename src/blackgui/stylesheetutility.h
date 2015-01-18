@@ -96,6 +96,14 @@ namespace BlackGui
             return f;
         }
 
+        //! File name maininfoarea.qss
+        static const QString &fileNameFilterDialog()
+        {
+            static const QString f("filterdialog.qss");
+            return f;
+        }
+
+
         //! Font weights
         static const QStringList &fontWeights()
         {
@@ -132,6 +140,9 @@ namespace BlackGui
         //! Use style sheets in derived widgets
         //! \sa QWidget::paintEvent
         static void useStyleSheetInDerivedWidget(QWidget *derivedWidget, QStyle::PrimitiveElement element = QStyle::PE_Widget);
+
+        //! Stylesheet string for a checkbox displayed as 2 icons
+        static QString styleForIconCheckBox(const QString &checkedIcon, const QString &uncheckedIcon, const QString &width = "16px", const QString &height = "16px");
 
     signals:
         //! Sheets have been changed

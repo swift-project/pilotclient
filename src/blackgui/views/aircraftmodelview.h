@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_AIRCRAFTMODELVIEW_H
 #define BLACKGUI_AIRCRAFTMODELVIEW_H
 
+#include "aircraftmodelfilterform.h"
 #include "viewbase.h"
 #include "../models/aircraftmodellistmodel.h"
 
@@ -20,7 +21,7 @@ namespace BlackGui
     namespace Views
     {
         //! Aircrafts view
-        class CAircraftModelView : public CViewBase<Models::CAircraftModelListModel, BlackMisc::Network::CAircraftModelList, BlackMisc::Network::CAircraftModel>
+        class CAircraftModelView : public CViewBase<Models::CAircraftModelListModel, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModel>
         {
 
         public:
@@ -31,6 +32,13 @@ namespace BlackGui
             //! Set display mode
             void setAircraftModelMode(Models::CAircraftModelListModel::AircraftModelMode mode);
 
+        protected slots:
+            //! \copydoc CViewBaseNonTemplate::ps_filterDialogFinished
+            virtual bool ps_filterDialogFinished(int status) override;
+
+        private:
+            //! Filter form
+            CAircraftModelFilterForm *getFilterForm() const;
         };
     }
 }
