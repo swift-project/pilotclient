@@ -13,6 +13,7 @@
 #include "blackmisc/blackmiscfreefunctions.h"
 
 using namespace BlackMisc;
+using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 
@@ -53,14 +54,14 @@ namespace BlackGui
 
             case MappedModel:
                 this->m_columns.addColumn(CColumn::standardValueObject("call", "callsign", CAircraftModel::IndexCallsign));
-                this->m_columns.addColumn(CColumn::standardString("model", { CAircraftModel::IndexModelString}));
+                this->m_columns.addColumn(CColumn::standardString("model", CAircraftModel::IndexModelString));
                 this->m_columns.addColumn(CColumn::standardString("ac", "aircraft ICAO", { CAircraftModel::IndexIcao, CAircraftIcao::IndexAircraftDesignator}));
                 this->m_columns.addColumn(CColumn::standardString("al", "airline ICAO", { CAircraftModel::IndexIcao, CAircraftIcao::IndexAirlineDesignator}));
                 // this->m_columns.addColumn(CColumn::standardString("ct", "combined type", { CAircraftModel::IndexIcao, CAircraftIcao::IndexCombinedAircraftType}));
                 this->m_columns.addColumn(CColumn("q.?", "queried", CAircraftModel::IndexHasQueriedModelString,
                                                   new CBoolIconFormatter(CIcons::StandardIconTick16, CIcons::StandardIconCross16, "queried", "not queried")));
-                this->m_columns.addColumn(CColumn::standardString("description", { CAircraftModel::IndexDescription}));
-                this->m_columns.addColumn(CColumn::standardString("filename", { CAircraftModel::IndexFileName}));
+                this->m_columns.addColumn(CColumn::standardString("description",  CAircraftModel::IndexDescription));
+                this->m_columns.addColumn(CColumn::standardString("filename",  CAircraftModel::IndexFileName));
 
                 // default sort order
                 this->setSortColumnByPropertyIndex(CAircraftModel::IndexModelString);

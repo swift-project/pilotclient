@@ -13,6 +13,7 @@
 #include <QBrush>
 
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Aviation;
 
 namespace BlackGui
 {
@@ -22,15 +23,16 @@ namespace BlackGui
          * Constructor
          */
         CUserListModel::CUserListModel(UserMode userMode, QObject *parent) :
-            CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList>("ViewUserList", parent), m_userMode(NotSet)
+            CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList>("ModelUserList", parent), m_userMode(NotSet)
         {
             this->setUserMode(userMode);
 
             // force strings for translation in resource files
-            (void)QT_TRANSLATE_NOOP("ViewUserList", "callsign");
-            (void)QT_TRANSLATE_NOOP("ViewUserList", "realname");
-            (void)QT_TRANSLATE_NOOP("ViewUserList", "userid");
-            (void)QT_TRANSLATE_NOOP("ViewUserList", "email");
+            (void)QT_TRANSLATE_NOOP("ModelUserList", "callsign");
+            (void)QT_TRANSLATE_NOOP("ModelUserList", "realname");
+            (void)QT_TRANSLATE_NOOP("ModelUserList", "homebase");
+            (void)QT_TRANSLATE_NOOP("ModelUserList", "userid");
+            (void)QT_TRANSLATE_NOOP("ModelUserList", "email");
         }
 
         /*
@@ -47,7 +49,8 @@ namespace BlackGui
             case UserDetailed:
                 this->m_columns.addColumn(CColumn(CUser::IndexIcon));
                 this->m_columns.addColumn(CColumn::standardString("realname", CUser::IndexRealName));
-                this->m_columns.addColumn(CColumn::standardValueObject("callsign", CUser::IndexCallsign));
+                this->m_columns.addColumn(CColumn::standardValueObject("callsign", { CUser::IndexCallsign, CCallsign::IndexCallsignString }));
+                this->m_columns.addColumn(CColumn::standardValueObject("hb.", "homebase", { CUser::IndexHomebase, CAirportIcao::IndexString }));
                 this->m_columns.addColumn(CColumn::standardString("userid", CUser::IndexId));
 
                 // default sort order

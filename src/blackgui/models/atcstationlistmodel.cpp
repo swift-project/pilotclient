@@ -49,32 +49,39 @@ namespace BlackGui
             {
             case NotSet:
             case StationsOnline:
-                this->m_columns.addColumn(CColumn::standardString("call", "callsign", { CAtcStation::IndexCallsign, CCallsign::IndexCallsignStringAsSet }));
-                this->m_columns.addColumn(CColumn("type", CAtcStation::IndexIcon));
-                this->m_columns.addColumn(CColumn("distance", CAtcStation::IndexDistance, new CAirspaceDistanceFormatter()));
-                this->m_columns.addColumn(CColumn("frequency", CAtcStation::IndexFrequency, new CComFrequencyFormatter()));
-                this->m_columns.addColumn(CColumn::standardString("controllername", { CAtcStation::IndexController, CUser::IndexRealName }));
-                this->m_columns.addColumn(CColumn("from", "booked from", CAtcStation::IndexBookedFrom, new CDateTimeFormatter(CDateTimeFormatter::formatHm())));
-                this->m_columns.addColumn(CColumn("until", "booked until", CAtcStation::IndexBookedUntil, new CDateTimeFormatter(CDateTimeFormatter::formatHm())));
-                this->m_columns.addColumn(CColumn::standardString("voiceroomurl", { CAtcStation::IndexVoiceRoom, CVoiceRoom::IndexUrl }));
+                {
+                    this->m_columns.addColumn(CColumn::standardString("call", "callsign", { CAtcStation::IndexCallsign, CCallsign::IndexCallsignStringAsSet }));
+                    CColumn col = CColumn("type", CAtcStation::IndexIcon);
+                    col.setSortPropertyIndex({ CAtcStation::IndexCallsign, CCallsign::IndexSuffix });
+                    this->m_columns.addColumn(col);
+                    this->m_columns.addColumn(CColumn("distance", CAtcStation::IndexDistance, new CAirspaceDistanceFormatter()));
+                    this->m_columns.addColumn(CColumn("frequency", CAtcStation::IndexFrequency, new CComFrequencyFormatter()));
+                    this->m_columns.addColumn(CColumn::standardString("controllername", { CAtcStation::IndexController, CUser::IndexRealName }));
+                    this->m_columns.addColumn(CColumn("from", "booked from", CAtcStation::IndexBookedFrom, new CDateTimeFormatter(CDateTimeFormatter::formatHm())));
+                    this->m_columns.addColumn(CColumn("until", "booked until", CAtcStation::IndexBookedUntil, new CDateTimeFormatter(CDateTimeFormatter::formatHm())));
+                    this->m_columns.addColumn(CColumn::standardString("voiceroomurl", { CAtcStation::IndexVoiceRoom, CVoiceRoom::IndexUrl }));
 
-                // default sort order
-                this->setSortColumnByPropertyIndex(CAtcStation::IndexDistance);
-                this->m_sortOrder = Qt::AscendingOrder;
+                    // default sort order
+                    this->setSortColumnByPropertyIndex(CAtcStation::IndexDistance);
+                    this->m_sortOrder = Qt::AscendingOrder;
+                }
                 break;
 
             case StationsBooked:
-                this->m_columns.addColumn(CColumn::standardString("call", "callsign", { CAtcStation::IndexCallsign, CCallsign::IndexCallsignStringAsSet }));
-                this->m_columns.addColumn(CColumn("type", CAtcStation::IndexIcon));
-                this->m_columns.addColumn(CColumn("", "on/offline", CAtcStation::IndexIsOnline, new CBoolLedFormatter("online", "offline")));
-                this->m_columns.addColumn(CColumn::standardString("controllername", { CAtcStation::IndexController, CUser::IndexRealName }));
-                this->m_columns.addColumn(CColumn("from", "booked from", CAtcStation::IndexBookedFrom, new CDateTimeFormatter(CDateTimeFormatter::formatYmdhm())));
-                this->m_columns.addColumn(CColumn("until", "booked until", CAtcStation::IndexBookedUntil, new CDateTimeFormatter(CDateTimeFormatter::formatYmdhm())));
-                this->m_columns.addColumn(CColumn("frequency", CAtcStation::IndexFrequency, new CComFrequencyFormatter()));
+                {
+                    this->m_columns.addColumn(CColumn::standardString("call", "callsign", { CAtcStation::IndexCallsign, CCallsign::IndexCallsignStringAsSet }));
+                    CColumn col = CColumn("type", CAtcStation::IndexIcon);
+                    col.setSortPropertyIndex({ CAtcStation::IndexCallsign, CCallsign::IndexSuffix });
+                    this->m_columns.addColumn(col);                this->m_columns.addColumn(CColumn("", "on/offline", CAtcStation::IndexIsOnline, new CBoolLedFormatter("online", "offline")));
+                    this->m_columns.addColumn(CColumn::standardString("controllername", { CAtcStation::IndexController, CUser::IndexRealName }));
+                    this->m_columns.addColumn(CColumn("from", "booked from", CAtcStation::IndexBookedFrom, new CDateTimeFormatter(CDateTimeFormatter::formatYmdhm())));
+                    this->m_columns.addColumn(CColumn("until", "booked until", CAtcStation::IndexBookedUntil, new CDateTimeFormatter(CDateTimeFormatter::formatYmdhm())));
+                    this->m_columns.addColumn(CColumn("frequency", CAtcStation::IndexFrequency, new CComFrequencyFormatter()));
 
-                // default sort order
-                this->setSortColumnByPropertyIndex(CAtcStation::IndexBookedFrom);
-                this->m_sortOrder = Qt::AscendingOrder;
+                    // default sort order
+                    this->setSortColumnByPropertyIndex(CAtcStation::IndexBookedFrom);
+                    this->m_sortOrder = Qt::AscendingOrder;
+                }
                 break;
 
             default:

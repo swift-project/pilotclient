@@ -35,6 +35,6 @@ namespace BlackGui
             virtual ~CAircraftListModel() {}
 
         };
-    }
-}
+    } // namespace
+} // namespace
 #endif // guard

@@ -9,10 +9,10 @@
 
 //! \file
 
-#ifndef BLACKGUI_AIRCRAFTMODELLISTMODEL_H
-#define BLACKGUI_AIRCRAFTMODELLISTMODEL_H
+#ifndef BLACKGUI_SIMULATEDAIRCRAFTLISTMODEL_H
+#define BLACKGUI_SIMULATEDAIRCRAFTLISTMODEL_H
 
-#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackgui/models/listmodelbase.h"
 #include <QAbstractItemModel>
 #include <QDBusConnection>
@@ -22,30 +22,30 @@ namespace BlackGui
     namespace Models
     {
 
-        //! Aircraft model list model
-        class CAircraftModelListModel : public CListModelBase<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>
+        //! Aircraft list model
+        class CSimulatedAircraftListModel : public CListModelBase<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>
         {
 
         public:
-            //! How to display
-            enum AircraftModelMode {
-                NotSet,
-                ModelOnly,
-                MappedModel
+            //! Model modes
+            enum AircraftMode
+            {
+                InfoMode,  //!< like aircraft in range
+                ModelMode, //!< focusing on used model
+                NotSet
             };
 
             //! Constructor
-            explicit CAircraftModelListModel(AircraftModelMode mode, QObject *parent = nullptr);
+            explicit CSimulatedAircraftListModel(QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CAircraftModelListModel() {}
+            virtual ~CSimulatedAircraftListModel() {}
 
             //! Mode
-            void setAircraftModelMode(CAircraftModelListModel::AircraftModelMode stationMode);
+            void setAircraftMode(AircraftMode mode);
 
         private:
-            AircraftModelMode m_mode = NotSet; //!< current mode
-
+            AircraftMode m_mode = NotSet;
         };
     }
 }

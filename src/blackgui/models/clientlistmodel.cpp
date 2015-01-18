@@ -14,6 +14,7 @@
 #include <QBrush>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Network;
 
 namespace BlackGui
@@ -29,7 +30,7 @@ namespace BlackGui
             this->m_columns.addColumn(CColumn("client", CClient::IndexIcon));
             this->m_columns.addColumn(CColumn::standardValueObject("callsign", CClient::IndexCallsign));
             this->m_columns.addColumn(CColumn::standardString("realname", { CClient::IndexUser, CUser::IndexRealName }));
-            this->m_columns.addColumn(CColumn("capabilities", CClient::IndexVoiceCapabilitiesIcon));
+            this->m_columns.addColumn(CColumn("vo.", "voice capabilities", CClient::IndexVoiceCapabilitiesIcon,new CPixmapFormatter()));
             this->m_columns.addColumn(CColumn::standardString("capabilities", CClient::IndexCapabilitiesString));
             this->m_columns.addColumn(CColumn::standardString("model", {CClient::IndexModel, CAircraftModel::IndexModelString}));
             this->m_columns.addColumn(CColumn("q.?", "queried", {CClient::IndexModel, CAircraftModel::IndexHasQueriedModelString},
@@ -47,16 +48,27 @@ namespace BlackGui
         QVariant CClientListModel::data(const QModelIndex &index, int role) const
         {
             static const CPropertyIndex ms( {CClient::IndexModel, CAircraftModel::IndexModelString});
-            if (role != Qt::DisplayRole) { return CListModelBase::data(index, role); }
+            static const CPropertyIndex qf( {CClient::IndexModel, CAircraftModel::IndexHasQueriedModelString});
+            if (role != Qt::DisplayRole && role != Qt::DecorationRole) { return CListModelBase::data(index, role); }
             CPropertyIndex pi = modelIndexToPropertyIndex(index);
-            if (pi == ms)
+            if (pi == ms && role == Qt::DisplayRole)
             {
                 // no model string for ATC
-                CClient client = this->at(index);
+                const CClient client = this->at(index);
                 bool atc = client.isAtc();
                 if (atc)
                 {
                     return QVariant("ATC");
+                }
+            }
+            else if (pi == qf && role == Qt::DecorationRole)
+            {
+                // no symbol for ATC
+                const CClient client = this->at(index);
+                bool atc = client.isAtc();
+                if (atc)
+                {
+                    return QVariant();
                 }
             }
             return CListModelBase::data(index, role);

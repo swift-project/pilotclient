@@ -9,25 +9,27 @@
 
 //! \file
 
-#ifndef BLACKGUI_AIRCRAFTVIEW_H
-#define BLACKGUI_AIRCRAFTVIEW_H
+#ifndef BLACKGUI_SIMULATEDAIRCRAFTVIEW_H
+#define BLACKGUI_SIMULATEDAIRCRAFTVIEW_H
 
 #include "viewbase.h"
-#include "../models/aircraftlistmodel.h"
+#include "../models/simulatedaircraftlistmodel.h"
 
 namespace BlackGui
 {
     namespace Views
     {
         //! Aircrafts view
-        class CAircraftView : public CViewBase<Models::CAircraftListModel, BlackMisc::Aviation::CAircraftList, BlackMisc::Aviation::CAircraft>
+        class CSimulatedAircraftView : public CViewBase<Models::CSimulatedAircraftListModel, BlackMisc::Simulation::CSimulatedAircraftList, BlackMisc::Simulation::CSimulatedAircraft>
         {
 
         public:
             //! Constructor
-            explicit CAircraftView(QWidget *parent = nullptr);
-        };
+            explicit CSimulatedAircraftView(QWidget *parent = nullptr);
 
-    } // namespace
-} // namespace
+            //! Mode
+            void setAircraftMode(Models::CSimulatedAircraftListModel::AircraftMode mode);
+        };
+    }
+}
 #endif // guard
