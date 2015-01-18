@@ -10,7 +10,9 @@
 #include "avaircraftlist.h"
 #include "nwuser.h"
 #include "predicates.h"
+#include "propertyindexallclasses.h"
 
+using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;
 
@@ -29,6 +31,23 @@ namespace BlackMisc
         CAircraftList::CAircraftList(const CSequence<CAircraft> &other) :
             CSequence<CAircraft>(other)
         { }
+
+        /*
+         * Contains callsign
+         */
+        bool CAircraftList::containsCallsign(const CCallsign &callsign) const
+        {
+            if (callsign.isEmpty()) { return false; }
+            return this->contains(&CAircraft::getCallsign, callsign);
+        }
+
+        /*
+         * Change for callsign
+         */
+        int CAircraftList::applyIfCallsign(const CCallsign &callsign, const CPropertyIndexVariantMap &variantMap)
+        {
+            return this->applyIf(&CAircraft::getCallsign, callsign, variantMap, false);
+        }
 
         /*
          * Register metadata

@@ -17,6 +17,7 @@
 #include "nwuserlist.h"
 #include "collection.h"
 #include "sequence.h"
+#include "propertyindexvariantmap.h"
 #include <QObject>
 #include <QString>
 #include <QList>
@@ -25,7 +26,7 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        //! Value object encapsulating a list of aircrafts.
+        //! Value object encapsulating a list of aircraft.
         class CAircraftList : public CSequence<CAircraft>
         {
         public:
@@ -34,6 +35,12 @@ namespace BlackMisc
 
             //! Construct from a base class object.
             CAircraftList(const CSequence<CAircraft> &other);
+
+            //! Contains callsign?
+            bool containsCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+
+            //! Apply for given callsign
+            int applyIfCallsign(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &variantMap);
 
             //! Find 0..n stations by callsign
             CAircraftList findByCallsign(const CCallsign &callsign) const;
