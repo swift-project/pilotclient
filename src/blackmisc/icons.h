@@ -140,326 +140,142 @@ namespace BlackMisc
         // -------------------------------------------------------------
 
         //! Info
-        static const QPixmap &info16()
-        {
-            static const QPixmap pm(":/pastel/icons/pastel/16/infomation.png");
-            return pm;
-        }
+        static const QPixmap &info16();
 
         //! Warning
-        static const QPixmap &warning16()
-        {
-            static const QPixmap pm(":/pastel/icons/pastel/16/bullet-error.png");
-            return pm;
-        }
+        static const QPixmap &warning16();
 
         //! Error
-        static const QPixmap &error16()
-        {
-            static const QPixmap pm(":/pastel/icons/pastel/16/close-red.png");
-            return pm;
-        }
+        static const QPixmap &error16();
 
         //! Close
-        static const QPixmap &close16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/cross-button.png");
-            return pm;
-        }
+        static const QPixmap &close16();
 
         //! Resize
-        static const QPixmap &resize16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/arrow-resize-135.png");
-            return pm;
-        }
+        static const QPixmap &resize16();
 
         //! Resize horizontally
-        static const QPixmap &resizeHorizontal16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/arrow-resize.png");
-            return pm;
-        }
+        static const QPixmap &resizeHorizontal16();
 
         //! Resize vertically
-        static const QPixmap &resizeVertical16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/arrow-resize-090.png");
-            return pm;
-        }
+        static const QPixmap &resizeVertical16();
 
         //! Refresh
-        static const QPixmap &refresh16()
-        {
-            static const QPixmap pm(":/pastel/icons/pastel/16/arrow-refresh.png");
-            return pm;
-        }
+        static const QPixmap &refresh16();
 
         //! Text
-        static const QPixmap &text16()
-        {
-            static const QPixmap pm(":/pastel/icons/pastel/16/application-view-text.png");
-            return pm;
-        }
+        static const QPixmap &text16();
 
         //! Globe
-        static const QPixmap &globe16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/globe.png");
-            return pm;
-        }
+        static const QPixmap &globe16();
 
         //! Heading 1
-        static const QPixmap &headingOne16()
-        {
-            static const QPixmap pm(":/pastel/icons/pastel/16/text-heading-1.png");
-            return pm;
-        }
+        static const QPixmap &headingOne16();
 
         //! User
-        static const QPixmap &user16()
-        {
-            static const QPixmap pm(":/pastel/icons/pastel/16/user.png");
-            return pm;
-        }
+        static const QPixmap &user16();
 
         //! Users
-        static const QPixmap &users16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/users.png");
-            return pm;
-        }
+        static const QPixmap &users16();
 
         //! View multicolumn
-        static const QPixmap &viewMultiColumn()
-        {
-            static const QPixmap pm(":/pastel/icons/pastel/16/application-view-multicolumns.png");
-            return pm;
-        }
+        static const QPixmap &viewMultiColumn();
 
         //! View tile
-        static const QPixmap &viewTile()
-        {
-            static const QPixmap pm(":/pastel/icons/pastel/16/application-view-tile.png");
-            return pm;
-        }
+        static const QPixmap &viewTile();
 
         //! Tick
-        static const QPixmap &tick16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/tick.png");
-            return pm;
-        }
+        static const QPixmap &tick16();
 
         //! Tick
-        static const QPixmap &tickRed16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/tick-red.png");
-            return pm;
-        }
+        static const QPixmap &tickRed16();
 
         //! Tick
-        static const QPixmap &tickWhite16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/tick-white.png");
-            return pm;
-        }
+        static const QPixmap &tickWhite16();
 
         //! Tick
-        static const QPixmap &tickSmall16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/tick-small.png");
-            return pm;
-        }
+        static const QPixmap &tickSmall16();
 
         //! Cross
-        static const QPixmap &cross16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/cross.png");
-            return pm;
-        }
+        static const QPixmap &cross16();
 
         //! Cross
-        static const QPixmap &crossWhite16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/cross-white.png");
-            return pm;
-        }
+        static const QPixmap &crossWhite16();
 
         //! Cross
-        static const QPixmap &crossCircle16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/cross-circle.png");
-            return pm;
-        }
+        static const QPixmap &crossCircle16();
 
         //! Cross
-        static const QPixmap &crossSmall16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/cross-small.png");
-            return pm;
-        }
+        static const QPixmap &crossSmall16();
 
         //! Delete
-        static const QPixmap &delete16()
-        {
-            static const QPixmap pm(":/pastel/icons/pastel/16/delete.png");
-            return pm;
-        }
+        static const QPixmap &delete16();
 
         //! Radio
-        static const QPixmap &radio16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/radio.png");
-            return pm;
-        }
+        static const QPixmap &radio16();
 
         //! Speaker (network)
-        static const QPixmap &speakerNetwork16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/speaker-network.png");
-            return pm;
-        }
+        static const QPixmap &speakerNetwork16();
 
         //! Joystick
-        static const QPixmap &joystick16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/joystick.png");
-            return pm;
-        }
+        static const QPixmap &joystick16();
 
         //! Lock
-        static const QPixmap &lockOpen16()
-        {
-            static const QPixmap pm(":/pastel/icons/pastel/16/lock-open.png");
-            return pm;
-        }
+        static const QPixmap &lockOpen16();
 
         //! Lock
-        static const QPixmap &lockClosed16()
-        {
-            static const QPixmap pm(":/pastel/icons/pastel/16/lock.png");
-            return pm;
-        }
+        static const QPixmap &lockClosed16();
 
         //! Plugin
-        static const QPixmap &plugin16()
-        {
-            static const QPixmap pm(":/pastel/icons/pastel/16/plugin.png");
-            return pm;
-        }
+        static const QPixmap &plugin16();
 
         //! Docking
-        static const QPixmap &dockTop16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/application-dock-090.png");
-            return pm;
-        }
+        static const QPixmap &dockTop16();
 
         //! Docking
-        static const QPixmap &dockBottom16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/application-dock-270.png");
-            return pm;
-        }
+        static const QPixmap &dockBottom16();
 
         //! Float all
-        static const QPixmap &floatAll16()
-        {
-            static const QPixmap pm(":/pastel/icons/pastel/16/application-cascade.png");
-            return pm;
-        }
+        static const QPixmap &floatAll16();
 
         //! Float all
-        static const QPixmap &floatOne16()
-        {
-            static const QPixmap pm(":/pastel/icons/pastel/16/application-double.png");
-            return pm;
-        }
+        static const QPixmap &floatOne16();
 
         //! Sound volume high
-        static const QPixmap &volumeHigh16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/speaker-volume.png");
-            return pm;
-        }
+        static const QPixmap &volumeHigh16();
 
         //! Sound volume low
-        static const QPixmap &volumeLow16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/speaker-volume-low.png");
-            return pm;
-        }
+        static const QPixmap &volumeLow16();
 
         //! Sound volume muted
-        static const QPixmap &volumeMuted16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/speaker-volume-control-mute.png");
-            return pm;
-        }
+        static const QPixmap &volumeMuted16();
 
         //! Wrench
-        static const QPixmap &wrench16()
-        {
-            static const QPixmap pm(":/pastel/icons/pastel/16/wrench.png");
-            return pm;
-        }
+        static const QPixmap &wrench16();
 
         //! Radar
-        static const QPixmap &radar16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/radar.png");
-            return pm;
-        }
+        static const QPixmap &radar16();
 
         //! Radar
-        static const QPixmap &tableRelationship16()
-        {
-            static const QPixmap pm(":/pastel/icons/pastel/16/table-relationship.png");
-            return pm;
-        }
+        static const QPixmap &tableRelationship16();
 
         //! Paper plane
-        static const QPixmap &paperPlane16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/paper-plane.png");
-            return pm;
-        }
+        static const QPixmap &paperPlane16();
 
         //! Table sheet
-        static const QPixmap &tableSheet16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/table-sheet.png");
-            return pm;
-        }
+        static const QPixmap &tableSheet16();
 
         //! Clouds
-        static const QPixmap &weatherCloudy16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/weather-cloudy.png");
-            return pm;
-        }
+        static const QPixmap &weatherCloudy16();
 
         //! Monitor error
-        static const QPixmap &monitorError16()
-        {
-            static const QPixmap pm(":/pastel/icons/pastel/16/monitor-error.png");
-            return pm;
-        }
+        static const QPixmap &monitorError16();
 
         //! Status bar
-        static const QPixmap &statusBar16()
-        {
-            static const QPixmap pm(":/pastel/icons/pastel/16/application-statusbar.png");
-            return pm;
-        }
+        static const QPixmap &statusBar16();
 
         //! Unknown
-        static const QPixmap &unknown16()
-        {
-            static const QPixmap pm(":/pastel/icons/pastel/16/help.png");
-            return pm;
-        }
+        static const QPixmap &unknown16();
 
         //! Empty icon
         static const QPixmap &empty()
@@ -476,60 +292,28 @@ namespace BlackMisc
         }
 
         //! Arrow
-        static const QPixmap &arrowMediumNorth16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/arrow-090-medium.png");
-            return pm;
-        }
+        static const QPixmap &arrowMediumNorth16();
 
         //! Arrow
-        static const QPixmap &arrowMediumSouth16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/arrow-270-medium.png");
-            return pm;
-        }
+        static const QPixmap &arrowMediumSouth16();
 
         //! Arrow
-        static const QPixmap &arrowMediumEast16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/arrow-000-medium.png");
-            return pm;
-        }
+        static const QPixmap &arrowMediumEast16();
 
         //! Arrow
-        static const QPixmap &arrowMediumWest16()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/arrow-180-medium.png");
-            return pm;
-        }
+        static const QPixmap &arrowMediumWest16();
 
         //! swift icon
-        static const QPixmap &swift24()
-        {
-            static const QPixmap pm(":/own/icons/own/swift/swift24.png");
-            return pm;
-        }
+        static const QPixmap &swift24();
 
         //! swift icon
-        static const QPixmap &swift48()
-        {
-            static const QPixmap pm(":/own/icons/own/swift/swift48.png");
-            return pm;
-        }
+        static const QPixmap &swift48();
 
         //! swift icon (nova)
-        static const QPixmap &swiftNova24()
-        {
-            static const QPixmap pm(":/own/icons/own/swift/swiftCartoonNova24.png");
-            return pm;
-        }
+        static const QPixmap &swiftNova24();
 
         //! swift icon (nova)
-        static const QPixmap &swiftNova48()
-        {
-            static const QPixmap pm(":/own/icons/own/swift/swiftCartoonNova48.png");
-            return pm;
-        }
+        static const QPixmap &swiftNova48();
 
         //! Application weather
         static const QPixmap &appWeather16()
@@ -614,147 +398,67 @@ namespace BlackMisc
         // -------------------------------------------------------------
 
         //! C1
-        static const QPixmap &roleC1()
-        {
-            static const QPixmap pm(":/vatsim/icons/vatsim/C1.png");
-            return pm;
-        }
+        static const QPixmap &roleC1();
 
         //! C2
-        static const QPixmap &roleC2()
-        {
-            static const QPixmap pm(":/vatsim/icons/vatsim/C2.png");
-            return pm;
-        }
+        static const QPixmap &roleC2();
 
         //! C3
-        static const QPixmap &roleC3()
-        {
-            static const QPixmap pm(":/vatsim/icons/vatsim/C2.png");
-            return pm;
-        }
+        static const QPixmap &roleC3();
 
         //! S1
-        static const QPixmap &roleS1()
-        {
-            static const QPixmap pm(":/vatsim/icons/vatsim/S1.png");
-            return pm;
-        }
+        static const QPixmap &roleS1();
 
         //! S2
-        static const QPixmap &roleS2()
-        {
-            static const QPixmap pm(":/vatsim/icons/vatsim/S2.png");
-            return pm;
-        }
+        static const QPixmap &roleS2();
 
         //! S3
-        static const QPixmap &roleS3()
-        {
-            static const QPixmap pm(":/vatsim/icons/vatsim/S3.png");
-            return pm;
-        }
+        static const QPixmap &roleS3();
 
         //! I1
-        static const QPixmap &roleI1()
-        {
-            static const QPixmap pm(":/vatsim/icons/vatsim/I1.png");
-            return pm;
-        }
+        static const QPixmap &roleI1();
 
         //! I3
-        static const QPixmap &roleI3()
-        {
-            static const QPixmap pm(":/vatsim/icons/vatsim/I3.png");
-            return pm;
-        }
+        static const QPixmap &roleI3();
 
         //! MNT
-        static const QPixmap &roleMnt()
-        {
-            static const QPixmap pm(":/vatsim/icons/vatsim/MNT.png");
-            return pm;
-        }
+        static const QPixmap &roleMnt();
 
         //! OBS
-        static const QPixmap &roleObs()
-        {
-            static const QPixmap pm(":/vatsim/icons/vatsim/OBS.png");
-            return pm;
-        }
+        static const QPixmap &roleObs();
 
         //! SUP
-        static const QPixmap &roleSup()
-        {
-            static const QPixmap pm(":/vatsim/icons/vatsim/SUP.png");
-            return pm;
-        }
+        static const QPixmap &roleSup();
 
         //! Pilot
-        static const QPixmap &rolePilot()
-        {
-            static const QPixmap pm(QPixmap(":/own/icons/own/pilot.png").scaledToWidth(16, Qt::SmoothTransformation));
-            return pm;
-        }
+        static const QPixmap &rolePilot();
 
         //! Approach
-        static const QPixmap &roleApproach()
-        {
-            static const QPixmap pm(QPixmap(":/own/icons/own/app.jpg").scaledToWidth(16, Qt::SmoothTransformation));
-            return pm;
-        }
+        static const QPixmap &roleApproach();
 
         //! Ground
-        static const QPixmap &roleGround()
-        {
-            static const QPixmap pm(QPixmap(":/own/icons/own/gnd.jpg").scaledToWidth(16, Qt::SmoothTransformation));
-            return pm;
-        }
+        static const QPixmap &roleGround();
 
         //! Delivery
-        static const QPixmap &roleDelivery()
-        {
-            static const QPixmap pm(QPixmap(":/own/icons/own/del.jpg").scaledToWidth(16, Qt::SmoothTransformation));
-            return pm;
-        }
+        static const QPixmap &roleDelivery();
 
         //! Tower
-        static const QPixmap &roleTower()
-        {
-            static const QPixmap pm(QPixmap(":/own/icons/own/twr.jpg").scaledToWidth(16, Qt::SmoothTransformation));
-            return pm;
-        }
+        static const QPixmap &roleTower();
 
         //! Center
-        static const QPixmap &roleCenter()
-        {
-            static const QPixmap pm(QPixmap(":/own/icons/own/ctr.jpg").scaledToWidth(16, Qt::SmoothTransformation));
-            return pm;
-        }
+        static const QPixmap &roleCenter();
 
         //! Unknown
-        static const QPixmap &roleUnknown()
-        {
-            static const QPixmap pm(":/pastel/icons/pastel/16/help.png");
-            return pm;
-        }
+        static const QPixmap &roleUnknown();
 
         //! Full voice capability
-        static const QPixmap &capabilityVoice()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/headphone.png");
-            return pm;
-        }
+        static const QPixmap &capabilityVoice();
 
         //! Full voice capability
         static const QPixmap &capabilityVoiceBackground();
 
         //! Voice receive only
-        static const QPixmap &capabilityVoiceReceiveOnly()
-        {
-            static const QPixmap pm(":/diagona/icons/diagona/icons/headphone.png");
-            return pm;
-        }
+        static const QPixmap &capabilityVoiceReceiveOnly();
 
         //! Voice receive only
         static const QPixmap &capabilityVoiceReceiveOnlyBackground();
@@ -772,11 +476,7 @@ namespace BlackMisc
         }
 
         //! Attitude indicator
-        static const QPixmap &attitudeIndicator16()
-        {
-            static const QPixmap pm(":/own/icons/own/attitude_indicator_climbing_16.png");
-            return pm;
-        }
+        static const QPixmap &attitudeIndicator16();
 
         //! METAR
         static const QPixmap &metar()

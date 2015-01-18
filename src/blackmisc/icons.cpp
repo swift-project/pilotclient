@@ -14,15 +14,465 @@
 namespace BlackMisc
 {
 
+    const QPixmap &CIcons::info16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/infomation.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::warning16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/bullet-error.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::error16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/close-red.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::close16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/cross-button.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::resize16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/arrow-resize-135.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::resizeHorizontal16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/arrow-resize.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::resizeVertical16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/arrow-resize-090.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::refresh16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/arrow-refresh.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::text16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/application-view-text.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::globe16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/globe.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::headingOne16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/text-heading-1.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::user16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/user.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::users16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/users.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::viewMultiColumn()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/application-view-multicolumns.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::viewTile()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/application-view-tile.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::tick16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/tick.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::tickRed16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/tick-red.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::tickWhite16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/tick-white.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::tickSmall16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/tick-small.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::cross16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/cross.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::crossWhite16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/cross-white.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::crossCircle16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/cross-circle.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::crossSmall16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/cross-small.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::delete16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/delete.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::radio16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/radio.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::speakerNetwork16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/speaker-network.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::joystick16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/joystick.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::lockOpen16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/lock-open.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::lockClosed16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/lock.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::plugin16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/plugin.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::dockTop16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/application-dock-090.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::dockBottom16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/application-dock-270.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::floatAll16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/application-cascade.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::floatOne16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/application-double.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::volumeHigh16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/speaker-volume.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::volumeLow16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/speaker-volume-low.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::volumeMuted16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/speaker-volume-control-mute.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::wrench16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/wrench.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::radar16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/radar.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::tableRelationship16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/table-relationship.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::paperPlane16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/paper-plane.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::tableSheet16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/table-sheet.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::weatherCloudy16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/weather-cloudy.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::monitorError16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/monitor-error.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::statusBar16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/application-statusbar.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::unknown16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/help.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::arrowMediumNorth16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/arrow-090-medium.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::arrowMediumSouth16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/arrow-270-medium.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::arrowMediumEast16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/arrow-000-medium.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::arrowMediumWest16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/arrow-180-medium.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swift24()
+    {
+        static const QPixmap pm(":/own/icons/own/swift/swift24.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swift48()
+    {
+        static const QPixmap pm(":/own/icons/own/swift/swift48.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftNova24()
+    {
+        static const QPixmap pm(":/own/icons/own/swift/swiftCartoonNova24.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftNova48()
+    {
+        static const QPixmap pm(":/own/icons/own/swift/swiftCartoonNova48.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::roleC1()
+    {
+        static const QPixmap pm(":/vatsim/icons/vatsim/C1.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::roleC2()
+    {
+        static const QPixmap pm(":/vatsim/icons/vatsim/C2.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::roleC3()
+    {
+        static const QPixmap pm(":/vatsim/icons/vatsim/C2.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::roleS1()
+    {
+        static const QPixmap pm(":/vatsim/icons/vatsim/S1.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::roleS2()
+    {
+        static const QPixmap pm(":/vatsim/icons/vatsim/S2.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::roleS3()
+    {
+        static const QPixmap pm(":/vatsim/icons/vatsim/S3.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::roleI1()
+    {
+        static const QPixmap pm(":/vatsim/icons/vatsim/I1.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::roleI3()
+    {
+        static const QPixmap pm(":/vatsim/icons/vatsim/I3.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::roleMnt()
+    {
+        static const QPixmap pm(":/vatsim/icons/vatsim/MNT.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::roleObs()
+    {
+        static const QPixmap pm(":/vatsim/icons/vatsim/OBS.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::roleSup()
+    {
+        static const QPixmap pm(":/vatsim/icons/vatsim/SUP.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::rolePilot()
+    {
+        static const QPixmap pm(QPixmap(":/own/icons/own/pilot.png").scaledToWidth(16, Qt::SmoothTransformation));
+        return pm;
+    }
+
+    const QPixmap &CIcons::roleApproach()
+    {
+        static const QPixmap pm(QPixmap(":/own/icons/own/app.jpg").scaledToWidth(16, Qt::SmoothTransformation));
+        return pm;
+    }
+
+    const QPixmap &CIcons::roleGround()
+    {
+        static const QPixmap pm(QPixmap(":/own/icons/own/gnd.jpg").scaledToWidth(16, Qt::SmoothTransformation));
+        return pm;
+    }
+
+    const QPixmap &CIcons::roleDelivery()
+    {
+        static const QPixmap pm(QPixmap(":/own/icons/own/del.jpg").scaledToWidth(16, Qt::SmoothTransformation));
+        return pm;
+    }
+
+    const QPixmap &CIcons::roleTower()
+    {
+        static const QPixmap pm(QPixmap(":/own/icons/own/twr.jpg").scaledToWidth(16, Qt::SmoothTransformation));
+        return pm;
+    }
+
+    const QPixmap &CIcons::roleCenter()
+    {
+        static const QPixmap pm(QPixmap(":/own/icons/own/ctr.jpg").scaledToWidth(16, Qt::SmoothTransformation));
+        return pm;
+    }
+
+    const QPixmap &CIcons::roleUnknown()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/help.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::capabilityVoice()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/headphone.png");
+        return pm;
+    }
+
     const QPixmap &CIcons::capabilityVoiceBackground()
     {
         static const QPixmap pm(changeBackground(":/diagona/icons/diagona/icons/headphone.png", Qt::green));
         return pm;
     }
 
+    const QPixmap &CIcons::capabilityVoiceReceiveOnly()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/headphone.png");
+        return pm;
+    }
+
     const QPixmap &CIcons::capabilityVoiceReceiveOnlyBackground()
     {
         static const QPixmap pm(changeBackground(":/diagona/icons/diagona/icons/headphone.png", Qt::yellow));
+        return pm;
+    }
+
+    const QPixmap &CIcons::attitudeIndicator16()
+    {
+        static const QPixmap pm(":/own/icons/own/attitude_indicator_climbing_16.png");
         return pm;
     }
 

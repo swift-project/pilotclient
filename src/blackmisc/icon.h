@@ -17,9 +17,8 @@
 
 namespace BlackMisc
 {
-    /*!
-     * Value object for icons.
-     */
+    //! Value object for icons. An icon is stored in the global icon repository and
+    //! identified by its index. It contains no(!) pyhsical data for the icon itself.
     class CIcon : public CValueObjectStdTuple<CIcon>
     {
     public:
