@@ -12,15 +12,14 @@
 #ifndef BLACKMISC_AIRCRAFTMODEL_H
 #define BLACKMISC_AIRCRAFTMODEL_H
 
-#include "avaircraft.h"
-#include "avaircrafticao.h"
-#include "nwuser.h"
-#include "propertyindex.h"
-
+#include "blackmisc/avaircraft.h"
+#include "blackmisc/avaircrafticao.h"
+#include "blackmisc/nwuser.h"
+#include "blackmisc/propertyindex.h"
 
 namespace BlackMisc
 {
-    namespace Network
+    namespace Simulation
     {
         //! Aircraft model (other pilot, my models on disk)
         //! \remarks Simulator independent class, supposed to be common denominator
@@ -34,6 +33,7 @@ namespace BlackMisc
                 TypeQueriedFromNetwork, //!< model was queried by network protocol
                 TypeModelMatching,      //!< model is result of model matching
                 TypeModelMapping,       //!< used along with mapping definition
+                TypeManuallySet,        //!< manually set, e.g. from GUI
                 TypeOwnSimulatorModel   //!< represents own simulator model
             };
 
@@ -148,7 +148,7 @@ namespace BlackMisc
 } // namespace
 
 BLACK_DECLARE_TUPLE_CONVERSION(
-    BlackMisc::Network::CAircraftModel, (
+    BlackMisc::Simulation::CAircraftModel, (
         attr(o.m_callsign),
         attr(o.m_icao),
         attr(o.m_modelString, flags<CaseInsensitiveComparison>()),
@@ -156,6 +156,6 @@ BLACK_DECLARE_TUPLE_CONVERSION(
         attr(o.m_fileName, flags <DisabledForComparison> ()),
         attr(o.m_modelType)
     ))
-Q_DECLARE_METATYPE(BlackMisc::Network::CAircraftModel)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftModel)
 
 #endif // guard

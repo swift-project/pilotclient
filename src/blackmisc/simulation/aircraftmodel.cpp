@@ -7,23 +7,17 @@
  * contained in the LICENSE file.
  */
 
-#include "nwaircraftmodel.h"
+#include "aircraftmodel.h"
 #include <QString>
 
 namespace BlackMisc
 {
-    namespace Network
+    namespace Simulation
     {
-        /*
-         * Constructor
-         */
         CAircraftModel::CAircraftModel(const Aviation::CAircraft &aircraft) :
             m_callsign(aircraft.getCallsign()), m_icao(aircraft.getIcaoInfo())
         { }
 
-        /*
-         * Convert to string
-         */
         QString CAircraftModel::convertToQString(bool i18n) const
         {
             QString s = this->m_modelString;
@@ -39,9 +33,6 @@ namespace BlackMisc
             return s;
         }
 
-        /*
-         * Property by index
-         */
         CVariant CAircraftModel::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return this->toCVariant(); }
@@ -69,9 +60,6 @@ namespace BlackMisc
             }
         }
 
-        /*
-         * Set property as index
-         */
         void CAircraftModel::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself())
@@ -106,21 +94,16 @@ namespace BlackMisc
             }
         }
 
-        /*
-         * Update missing parts
-         */
         void CAircraftModel::updateMissingParts(const CAircraftModel &model)
         {
             if (this->m_modelString.isEmpty()) { this->m_modelString = model.getModelString(); }
             if (this->m_description.isEmpty()) { this->m_description = model.getDescription(); }
             if (this->m_fileName.isEmpty())    { this->m_fileName    = model.getFileName(); }
             if (this->m_callsign.isEmpty())    { this->m_callsign    = model.getCallsign(); }
+            if (this->m_modelType == static_cast<int>(TypeUnknown)) { this->m_modelType = model.getModelType(); }
             this->m_icao.updateMissingParts(model.getIcao());
         }
 
-        /*
-         * Matches string?
-         */
         bool CAircraftModel::matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
             if (sensitivity == Qt::CaseSensitive)
@@ -129,7 +112,8 @@ namespace BlackMisc
             }
             else
             {
-                return this->m_modelString.indexOf(modelString) == 0;
+                return this->m_modelString.length() == modelString.length() &&
+                       this->m_modelString.indexOf(modelString) == 0;
             }
         }
 
@@ -141,6 +125,7 @@ namespace BlackMisc
             case TypeModelMatching: return "matching";
             case TypeModelMapping: return "mapping";
             case TypeOwnSimulatorModel: return "own simulator";
+            case TypeManuallySet: return "set";
             case TypeUnknown:
             default: return "unknown";
             }

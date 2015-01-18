@@ -13,7 +13,7 @@
 #define BLACKMISC_NETWORK_AIRCRAFTMAPPING_H
 
 #include "blackmisc/avaircrafticao.h"
-#include "blackmisc/nwaircraftmodel.h"
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/valueobject.h"
 
 namespace BlackMisc
@@ -32,7 +32,7 @@ namespace BlackMisc
             //! Properties
             enum ColumnIndex
             {
-                IndexModel,
+                IndexModel = BlackMisc::CPropertyIndex::GlobalIndexCAircraftMapping,
                 IndexIcao,
                 IndexPackageName,
                 IndexSource
@@ -57,10 +57,10 @@ namespace BlackMisc
             const BlackMisc::Aviation::CAircraftIcao &getIcao() const { return this->m_icao; }
 
             //! Model
-            void setModel(const BlackMisc::Network::CAircraftModel &model) { this->m_model = model; }
+            void setModel(const BlackMisc::Simulation::CAircraftModel &model) { this->m_model = model; }
 
             //! Model
-            const BlackMisc::Network::CAircraftModel &getModel() const { return this->m_model; }
+            const BlackMisc::Simulation::CAircraftModel &getModel() const { return this->m_model; }
 
             //! Matches model string?
             bool matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const;
@@ -74,7 +74,7 @@ namespace BlackMisc
             QString                            m_source;         //!< source, e.g. database, vPilot
             QString                            m_packageName;    //!< something like WoA, ..
             BlackMisc::Aviation::CAircraftIcao m_icao;           //!< ICAO code
-            BlackMisc::Network::CAircraftModel m_model;          //!< aircraft model
+            BlackMisc::Simulation::CAircraftModel m_model;          //!< aircraft model
 
             // BlackSim::CSimulatorInfo m_simulatorInfo; //!< Mapping is for simulator
         };
