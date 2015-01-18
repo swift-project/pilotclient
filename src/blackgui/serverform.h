@@ -22,7 +22,7 @@ namespace Ui { class CNetworkServerForm; }
 namespace BlackGui
 {
 
-//! Server form
+    //! Server form
     class CServerForm : public QFrame
     {
         Q_OBJECT
