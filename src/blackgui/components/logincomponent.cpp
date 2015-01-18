@@ -13,14 +13,17 @@
 #include "blackcore/context_settings.h"
 #include "blackcore/context_ownaircraft.h"
 #include "blackcore/context_audio.h"
+#include "blackcore/context_simulator.h"
 #include "blackcore/network.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/avaircrafticao.h"
 #include "../uppercasevalidator.h"
 #include <QIntValidator>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Simulation;
 using namespace BlackCore;
 using namespace BlackGui;
 
@@ -34,6 +37,11 @@ namespace BlackGui
             ui(new Ui::CLoginComponent)
         {
             ui->setupUi(this);
+            this->m_logoffCountdownTimer = new QTimer(this);
+            this->ui->pb_LogoffTimeout->setMaximum(LogoffIntervalSeconds);
+            this->ui->pb_LogoffTimeout->setValue(LogoffIntervalSeconds);
+            connect(this->m_logoffCountdownTimer, &QTimer::timeout, this, &CLoginComponent::ps_logoffCountdown);
+
             setOkButtonString(false);
             connect(this->ui->bb_OkCancel, &QDialogButtonBox::rejected, this, &CLoginComponent::ps_loginCancelled);
             connect(this->ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CLoginComponent::ps_toggleNetworkConnection);
@@ -67,7 +75,7 @@ namespace BlackGui
             connect(ui->le_VatsimRealName, &QLineEdit::editingFinished, this, &CLoginComponent::ps_validateVatsimValues);
 
             // own aircraft
-            this->ui->le_Callsign->setMaxLength(10);
+            this->ui->le_Callsign->setMaxLength(LogoffIntervalSeconds);
             this->ui->le_Callsign->setValidator(new CUpperCaseValidator(this));
             connect(ui->le_Callsign, &QLineEdit::editingFinished, this, &CLoginComponent::ps_validateAircraftValues);
 
@@ -93,25 +101,28 @@ namespace BlackGui
 
         void CLoginComponent::mainInfoAreaChanged(const QWidget *currentWidget)
         {
+            this->m_logoffCountdownTimer->stop(); // in any case stop the timer
             if (currentWidget != this && currentWidget != this->parentWidget())
             {
                 this->m_visible = false;
+                this->m_logoffCountdownTimer->stop();
             }
             else
             {
-
+                this->setOwnModel();
                 if (this->m_visible)
                 {
+                    // already visible:
                     // re-trigger! treat as same as OK
                     this->ps_toggleNetworkConnection();
                 }
                 else
                 {
-
                     this->m_visible = true;
                     bool isConnected = this->getIContextNetwork()->isConnected();
                     this->setGuiVisibility(isConnected);
                     this->setOkButtonString(isConnected);
+                    if (isConnected) { this->startLogoffTimerCountdown(); }
                 }
             }
         }
@@ -133,6 +144,8 @@ namespace BlackGui
 
         void CLoginComponent::ps_loginCancelled()
         {
+            this->m_logoffCountdownTimer->stop();
+            this->ui->pb_LogoffTimeout->setValue(LogoffIntervalSeconds);
             emit loginOrLogoffCancelled();
         }
 
@@ -201,6 +214,7 @@ namespace BlackGui
                     currentServer = this->getCurrentOtherServer();
                 }
                 this->ui->frp_CurrentServer->setServer(currentServer);
+                this->getIContextOwnAircraft()->updatePilot(currentServer.getUser(), loginOriginator());
 
                 // Login
                 msg = this->getIContextNetwork()->connectToNetwork(currentServer, static_cast<uint>(mode));
@@ -223,7 +237,6 @@ namespace BlackGui
             {
                 emit loginOrLogoffCancelled();
             }
-
         }
 
         void CLoginComponent::ps_onVatsimDataFileLoaded()
@@ -247,10 +260,7 @@ namespace BlackGui
         void CLoginComponent::loadFromSettings()
         {
             //! \todo replace with loading from settings when completed
-            this->ui->le_Callsign->setText("BLACK");
-            this->ui->le_AircraftIcaoDesignator->setText("C172");
-            this->ui->le_AircraftIcaoAirline->setText("GA");
-            this->ui->le_AircraftCombinedType->setText("L1P");
+            this->ui->le_Callsign->setText("SWIFT");
             this->ui->le_VatsimId->setText("1288459");
             this->ui->le_VatsimPassword->setText("4769");
             this->ui->le_VatsimHomeAirport->setText("LOWI");
@@ -312,7 +322,57 @@ namespace BlackGui
             this->ui->gbp_LoginMode->setVisible(!connected);
             this->ui->gb_OwnAircraft->setVisible(!connected);
             this->ui->gb_Network->setVisible(!connected);
-            this->ui->gb_CurrentServer->setVisible(connected);
+            this->ui->fr_LogoffConfirmation->setVisible(connected);
+        }
+
+        void CLoginComponent::startLogoffTimerCountdown()
+        {
+            this->ui->pb_LogoffTimeout->setValue(LogoffIntervalSeconds);
+            this->m_logoffCountdownTimer->setInterval(1000);
+            this->m_logoffCountdownTimer->start();
+        }
+
+        void CLoginComponent::setOwnModel()
+        {
+            static const CAircraftIcao defaultIcao("C172", "L1P", "FOO", "", ""); //! \todo set values for OBS
+            bool simConnected = this->getIContextSimulator() && this->getIContextSimulator()->isSimulating();
+            if (simConnected)
+            {
+                CAircraftModel model = this->getIContextSimulator()->getOwnAircraftModel();
+                this->ui->le_SimulatorModel->setText(model.getModelString());
+                this->setIcaoValuesIfEmpty(model.getIcao());
+
+                // still empty?
+                if (this->ui->le_AircraftIcaoDesignator->text().trimmed().isEmpty())
+                {
+                    this->setIcaoValuesIfEmpty(defaultIcao);
+                }
+            }
+            else
+            {
+                // Set observer mode without simulator
+                //! \todo Currently not working in OBS mode
+                this->ui->gbp_LoginMode->setLoginMode(INetwork::LoginNormal);
+                this->setIcaoValuesIfEmpty(defaultIcao);
+                this->ui->le_SimulatorModel->setText("No simulator");
+            }
+        }
+
+        void CLoginComponent::setIcaoValuesIfEmpty(const CAircraftIcao &icao)
+        {
+            if (this->ui->le_AircraftIcaoDesignator->text().trimmed().isEmpty())
+            {
+                this->ui->le_AircraftIcaoDesignator->setText(icao.getAircraftDesignator());
+            }
+            if (this->ui->le_AircraftIcaoAirline->text().trimmed().isEmpty())
+            {
+                this->ui->le_AircraftIcaoAirline->setText(icao.getAirlineDesignator());
+            }
+            if (this->ui->le_AircraftCombinedType->text().trimmed().isEmpty())
+            {
+                this->ui->le_AircraftCombinedType->setText(icao.getAircraftCombinedType());
+            }
+            this->ps_validateAircraftValues();
         }
 
         bool CLoginComponent::ps_validateAircraftValues()
@@ -362,6 +422,19 @@ namespace BlackGui
             if (settingsType != static_cast<uint>(IContextSettings::SettingsNetwork)) { return; }
             CServerList otherServers = this->getIContextSettings()->getNetworkSettings().getTrafficNetworkServers();
             this->ui->cbp_OtherServers->setServers(otherServers);
+        }
+
+        void CLoginComponent::ps_logoffCountdown()
+        {
+            int v = this->ui->pb_LogoffTimeout->value();
+            v -= 1;
+            if (v < 0) { v = 0; }
+            this->ui->pb_LogoffTimeout->setValue(v);
+            if (v <= 0)
+            {
+                this->m_logoffCountdownTimer->stop();
+                this->ps_toggleNetworkConnection();
+            }
         }
 
         const QString &CLoginComponent::loginOriginator()

@@ -76,6 +76,9 @@ namespace BlackGui
             //! Settings have been changed
             void ps_onSettingsChanged(uint settingsType);
 
+            //! Logoff countdown
+            void ps_logoffCountdown();
+
         private:
 
             //! GUI aircraft values, formatted
@@ -127,11 +130,22 @@ namespace BlackGui
             //! Show/hide elements as appropriate
             void setGuiVisibility(bool connected);
 
+            //! Logoff countdown
+            void startLogoffTimerCountdown();
+
+            //! Own model string
+            void setOwnModel();
+
+            //! Set ICAO values if fields are empty
+            void setIcaoValuesIfEmpty(const BlackMisc::Aviation::CAircraftIcao &icao);
+
             //! Identifies sender of cockpit updates
             static const QString &loginOriginator();
 
             bool m_visible = false; //!< is this component selected?
             QScopedPointer<Ui::CLoginComponent> ui;
+            const int LogoffIntervalSeconds = 10;
+            QTimer *m_logoffCountdownTimer = nullptr;
         };
 
     } // namespace
