@@ -12,6 +12,7 @@
 #include "blackmisc/variant.h"
 
 using namespace BlackMisc;
+using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Network;
 
 namespace BlackSim
@@ -43,6 +44,13 @@ namespace BlackSim
         /*
          * Aircraft model
          */
+        QString CAircraftCfgEntries::getFileDirectory() const
+        {
+            if (this->m_fileName.isEmpty()) { return ""; }
+            QFileInfo fi(this->m_fileName);
+            return fi.absolutePath();
+        }
+
         QString CAircraftCfgEntries::getUiCombinedDescription() const
         {
             QString d(this->m_uiManufacturer);
@@ -62,6 +70,14 @@ namespace BlackSim
             model.setDescription(this->getUiCombinedDescription());
             model.setFileName(this->getFileName());
             return model;
+        }
+
+        QString CAircraftCfgEntries::getThumbnailFileName() const
+        {
+            if (this->m_texture.isEmpty()) { return ""; }
+            if (this->m_fileName.isEmpty()) { return ""; }
+            QString fn = QDir::cleanPath(this->getFileDirectory() + QDir::separator() + "texture." + this->m_texture + QDir::separator() + "thumbnail.jpg");
+            return fn;
         }
 
         /*
@@ -85,6 +101,10 @@ namespace BlackSim
                 return CVariant::from(this->m_atcParkingCode);
             case IndexEntryIndex:
                 return CVariant::from(this->m_index);
+            case IndexTexture:
+                return CVariant::from(this->m_texture);
+            case IndexDescription:
+                return CVariant::from(this->m_description);
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -116,6 +136,12 @@ namespace BlackSim
                 break;
             case IndexTitle:
                 this->setTitle(variant.toQString());
+                break;
+            case IndexDescription:
+                this->setDescription(variant.toQString());
+                break;
+            case IndexTexture:
+                this->setTexture(variant.toQString());
                 break;
             default:
                 CValueObject::setPropertyByIndex(variant, index);

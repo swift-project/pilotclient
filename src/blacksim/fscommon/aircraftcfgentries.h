@@ -12,8 +12,8 @@
 #ifndef BLACKSIM_FSCOMMON_AIRCRAFTCFGENTRY_H
 #define BLACKSIM_FSCOMMON_AIRCRAFTCFGENTRY_H
 
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/nwaircraftmodel.h"
 #include "blackmisc/variant.h"
 
 namespace BlackSim
@@ -37,7 +37,8 @@ namespace BlackSim
                 IndexAtcType,
                 IndexAtcModel,
                 IndexParkingCode,
-                IndexDescription
+                IndexDescription,
+                IndexTexture
             };
 
             //! Default constructor
@@ -48,6 +49,9 @@ namespace BlackSim
 
             //! File name
             QString getFileName() const { return this->m_fileName; }
+
+            //! Directory of entry
+            QString getFileDirectory() const;
 
             //! Title
             QString getTitle() const { return this->m_title; }
@@ -73,6 +77,9 @@ namespace BlackSim
             //! UI manufacturer (e.g. Airbus)
             QString getUiManufacturer() const { return this->m_uiManufacturer; }
 
+            //! Texture
+            QString getTexture() const { return this->m_texture; }
+
             //! Manufacturer + type
             QString getUiCombinedDescription() const;
 
@@ -97,6 +104,9 @@ namespace BlackSim
             //! Description
             void setDescription(const QString &description) { this->m_description = description.trimmed(); }
 
+            //! Texture
+            void setTexture(const QString &texture) { this->m_texture = texture; }
+
             //! UI type (e.g. A321-231 IAE)
             void setUiType(const QString &type) { this->m_uiType = type.trimmed(); }
 
@@ -104,7 +114,10 @@ namespace BlackSim
             void setUiManufacturer(const QString &manufacturer) { this->m_uiManufacturer = manufacturer.trimmed(); }
 
             //! To aircraft model
-            BlackMisc::Network::CAircraftModel toAircraftModel() const;
+            BlackMisc::Simulation::CAircraftModel toAircraftModel() const;
+
+            //! Thumbnail.jpg path if possible
+            QString getThumbnailFileName() const;
 
             //! \copydoc CValueObject::propertyByIndex
             virtual BlackMisc::CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
@@ -127,6 +140,7 @@ namespace BlackSim
             QString m_description; //!< descriptive text
             QString m_uiType;      //!< e.g. A321-231 IAE
             QString m_uiManufacturer; //!< e.g. Airbus
+            QString m_texture;     //!< texture, needed to identify thumbnail.jpg
         };
     }
 }

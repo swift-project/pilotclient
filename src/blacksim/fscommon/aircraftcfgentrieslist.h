@@ -12,11 +12,10 @@
 #ifndef BLACKSIM_FSCOMMON_AIRCRAFTCFGLIST_H
 #define BLACKSIM_FSCOMMON_AIRCRAFTCFGLIST_H
 
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include "aircraftcfgentries.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/collection.h"
-#include "blackmisc/nwaircraftmodellist.h"
-
 #include <QDir>
 #include <QVector>
 #include <QDebug>
@@ -27,7 +26,7 @@ namespace BlackSim
     namespace FsCommon
     {
 
-        //! Utility, providing FSX aircraft.cfg entries
+        //! Utility, providing FS aircraft.cfg entries
         class CAircraftCfgEntriesList : public BlackMisc::CSequence<CAircraftCfgEntries>
         {
 
@@ -44,7 +43,7 @@ namespace BlackSim
                 // not read so far, read it
                 this->clear();
                 this->m_readForDirectory = true;
-                return this->read(this->m_rootDirectory);
+                return this->read(this->m_rootDirectory, excludeDirectories());
             }
 
             //! Change the directory
@@ -80,13 +79,13 @@ namespace BlackSim
             QStringList getTitles(bool sorted = false) const;
 
             //! As aircraft models
-            BlackMisc::Network::CAircraftModelList toAircraftModelList() const;
+            BlackMisc::Simulation::CAircraftModelList toAircraftModelList() const;
 
             //! Ambiguous titles
             QStringList detectAmbiguousTitles() const;
 
             //! Find by title
-            CAircraftCfgEntriesList findByTitle(const QString &title, Qt::CaseSensitivity caseSensitivity) const;
+            CAircraftCfgEntriesList findByTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive) const;
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
@@ -94,11 +93,17 @@ namespace BlackSim
             //! \copydoc CValueObject::convertFromQVariant
             virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
-            //! Unknown entries
-            static const CAircraftCfgEntries &UnknownCfgEntries()
+            //! Do not include the following directories for FS
+            static const QStringList &excludeDirectories()
             {
-                static CAircraftCfgEntries entries;
-                return entries;
+                static const QStringList exclude(
+                {
+                    "SimObjects/Animals",
+                    "SimObjects/Misc",
+                    "SimObjects/GroundVehicles",
+                    "SimObjects/Boats"
+                });
+                return exclude;
             }
 
             //! Register metadata
@@ -110,7 +115,7 @@ namespace BlackSim
             bool m_cancelRead = false;
 
             //! Read all entries in one directory
-            int read(const QString &directory);
+            int read(const QString &directory, const QStringList &excludeDirectories = QStringList());
 
             //! Fix the content read
             static QString fixedStringContent(const QVariant &qv);

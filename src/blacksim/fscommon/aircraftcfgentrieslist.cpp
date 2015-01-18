@@ -14,6 +14,7 @@
 #include <QtConcurrent/QtConcurrent>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Network;
 
 namespace BlackSim
@@ -102,9 +103,19 @@ namespace BlackSim
         /*
          * Read all entrities in given directory
          */
-        int CAircraftCfgEntriesList::read(const QString &directory)
+        int CAircraftCfgEntriesList::read(const QString &directory, const QStringList &excludeDirectories)
         {
             if (m_cancelRead) { return -1; }
+
+            // excluded?
+            for (const QString &excludeDir : excludeDirectories)
+            {
+                if (directory.contains(excludeDir, Qt::CaseInsensitive))
+                {
+                    CLogMessage(this).debug() << "Skipping directory " << directory;
+                    return 0;
+                }
+            }
 
             // set directory with name filters, get aircraft.cfg and sub directories
             QDir dir(directory, "aircraft.cfg", QDir::Name, QDir::Files | QDir::AllDirs);
@@ -123,8 +134,8 @@ namespace BlackSim
                 {
                     QString nextDir = file.absoluteFilePath();
                     if (currentDir.startsWith(nextDir, Qt::CaseInsensitive)) continue; // do not go up
-                    if (dir == currentDir) continue; // do not recursively call same directory
-                    counter += CAircraftCfgEntriesList::read(nextDir);
+                    if (dir == currentDir) { continue; } // do not recursively call same directory
+                    counter += CAircraftCfgEntriesList::read(nextDir, excludeDirectories);
                 }
                 else
                 {
@@ -156,6 +167,7 @@ namespace BlackSim
                                 entry.setDescription(fixedStringContent(aircraftCfg, "description"));
                                 entry.setUiManufacturer(fixedStringContent(aircraftCfg, "ui_manufacturer"));
                                 entry.setUiType(fixedStringContent(aircraftCfg, "ui_type"));
+                                entry.setTexture(fixedStringContent(aircraftCfg, "texture"));
                                 this->push_back(entry);
                             }
                             else
