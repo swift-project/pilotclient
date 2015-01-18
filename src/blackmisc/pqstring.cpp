@@ -10,6 +10,7 @@
 #include "pqstring.h"
 #include "tuple.h"
 #include "pqallquantities.h"
+#include <QThreadStorage>
 
 namespace BlackMisc
 {
@@ -28,24 +29,27 @@ namespace BlackMisc
          */
         CVariant CPqString::parseToVariant(const QString &value, SeparatorMode mode)
         {
-            static QRegExp rx("([-+]?[0-9]*[\\.,]?[0-9]+)\\s*(\\D*)$");
             CVariant v;
 
             // fine tuning of the string
             QString vs = value.trimmed().simplified();
 
             // check
-            if (vs.isEmpty()) return v;
+            if (vs.isEmpty()) { return v; }
 
-            if (rx.indexIn(value) < 0) return v; // not a valid number
-            QString unit = rx.cap(2).trimmed();
+            static QThreadStorage<QRegExp> tsRegex;
+            if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegExp("([-+]?[0-9]*[\\.,]?[0-9]+)\\s*(\\D*)$")); }
+            const auto &regex = tsRegex.localData();
+
+            if (regex.indexIn(value) < 0) { return v; } // not a valid number
+            QString unit = regex.cap(2).trimmed();
             QString number = QString(value).replace(unit, "");
             unit = unit.trimmed(); // trim after replace, not before
 
-            if (unit.isEmpty() || number.isEmpty()) return v;
+            if (unit.isEmpty() || number.isEmpty()) { return v; }
             bool success;
             double numberD = parseNumber(number, success, mode);
-            if (!success) return v;
+            if (!success) {return v; }
 
             if (CMeasurementUnit::isValidUnitSymbol<CAccelerationUnit>(unit))
             {

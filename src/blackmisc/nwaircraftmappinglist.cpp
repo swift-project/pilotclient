@@ -72,7 +72,7 @@ namespace BlackMisc
             return this->findBy(&CAircraftMapping::getIcao, searchIcao);
         }
 
-        CAircraftMappingList CAircraftMappingList::findByModelString(const QString modelString, Qt::CaseSensitivity sensitivity) const
+        CAircraftMappingList CAircraftMappingList::findByModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
             return this->findBy([ = ](const CAircraftMapping & mapping)
             {

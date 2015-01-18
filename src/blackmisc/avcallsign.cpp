@@ -179,8 +179,7 @@ namespace BlackMisc
          */
         bool CCallsign::isValidCallsign(const QString &callsign)
         {
-            //! \todo sometimes callsigns such as 12345, really correct?
-            // static QRegularExpression regexp("^[A-Z]+[A-Z0-9]*$");
+            // We allow all number callsigns
             static QRegularExpression regexp("^[A-Z0-9]*$");
             if (callsign.length() < 2 || callsign.length() > 10) { return false; }
             return (regexp.match(callsign).hasMatch());

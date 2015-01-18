@@ -23,7 +23,7 @@ namespace BlackMisc
          * Constructor
          */
         CAircraftMapping::CAircraftMapping(const QString &source, const QString &packageName, const QString &aircraftDesignator, const QString &airlineDesignator, const QString &model) :
-            m_source(source.trimmed()), m_packageName(packageName.trimmed()), m_icao(CAircraftIcao(aircraftDesignator, airlineDesignator)), m_model(BlackMisc::Simulation::CAircraftModel(model, BlackMisc::Simulation::CAircraftModel::TypeModelMapping))
+            m_source(source.trimmed()), m_packageName(packageName.trimmed()), m_icao(aircraftDesignator, airlineDesignator), m_model(model, BlackMisc::Simulation::CAircraftModel::TypeModelMapping)
         { }
 
         /*

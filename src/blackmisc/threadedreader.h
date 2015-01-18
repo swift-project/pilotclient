@@ -119,7 +119,6 @@ namespace BlackMisc
 
     private:
         QDateTime m_updateTimestamp;                    //!< when was file / resource read
-
         QFuture<FutureRet> m_pendingFuture;             //!< optional future to be stopped
         QNetworkReply *m_pendingNetworkReply = nullptr; //!< optional network reply to be stopped
     };

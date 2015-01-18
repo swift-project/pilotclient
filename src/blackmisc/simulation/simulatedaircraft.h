@@ -38,8 +38,8 @@ namespace BlackMisc
 
             //! Constructor.
             CSimulatedAircraft(const BlackMisc::Aviation::CAircraft &aircraft,
-                               const BlackMisc::Simulation::CAircraftModel &model = BlackMisc::Simulation::CAircraftModel(),
-                               const BlackMisc::Network::CClient &client = BlackMisc::Network::CClient());
+                               const BlackMisc::Simulation::CAircraftModel &model = {},
+                               const BlackMisc::Network::CClient &client = {});
 
             //! \copydoc CValueObject::propertyByIndex
             virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
@@ -75,7 +75,7 @@ namespace BlackMisc
             void setEnabled(bool enabled) { m_enabled = enabled; }
 
             //! Update from aviation aircraft
-            void update(const BlackMisc::Aviation::CAircraft &aircraft);
+            void setAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
 
         protected:
             //! \copydoc CValueObject::convertToQString()

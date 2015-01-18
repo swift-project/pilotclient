@@ -96,13 +96,13 @@ namespace BlackSim
             //! Do not include the following directories for FS
             static const QStringList &excludeDirectories()
             {
-                static const QStringList exclude(
+                static const QStringList exclude
                 {
                     "SimObjects/Animals",
                     "SimObjects/Misc",
                     "SimObjects/GroundVehicles",
                     "SimObjects/Boats"
-                });
+                };
                 return exclude;
             }
 

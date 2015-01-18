@@ -37,7 +37,7 @@ namespace BlackMisc
 
         bool CAircraftIcao::hasKnownAircraftDesignator() const
         {
-            return (this->getAircraftDesignator() != "ZZZZ");
+            return (this->hasAircraftDesignator() && this->getAircraftDesignator() != "ZZZZ");
         }
 
         QString CAircraftIcao::asString() const

@@ -121,10 +121,13 @@ namespace BlackMisc
         }
 
         //! \todo Smarter way to do this?
-        void CSimulatedAircraft::update(const CAircraft &aircraft)
+        void CSimulatedAircraft::setAircraft(const CAircraft &aircraft)
         {
-            // override
-            (*this) = CSimulatedAircraft(aircraft, this->getModel(), this->getClient());
+            static_cast<CAircraft &>(*this) = aircraft;
+            this->m_model.setCallsign(aircraft.getCallsign());
+            this->m_client.setAircraftModel(this->getModel());
+            this->m_client.setUser(aircraft.getPilot());
+            this->m_client.setUserCallsign(aircraft.getCallsign());
         }
 
         QString CSimulatedAircraft::convertToQString(bool i18n) const

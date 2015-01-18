@@ -49,7 +49,7 @@ namespace BlackMisc
             CAircraftMappingList findByIcaoCodeExact(const BlackMisc::Aviation::CAircraftIcao &searchIcao) const;
 
             //! Find by model string
-            CAircraftMappingList findByModelString(const QString modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
+            CAircraftMappingList findByModelString(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }

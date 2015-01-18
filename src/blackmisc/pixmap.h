@@ -14,6 +14,7 @@
 
 #include "valueobject.h"
 #include <QPixmap>
+#include <QReadWriteLock>
 
 namespace BlackMisc
 {
@@ -27,6 +28,12 @@ namespace BlackMisc
 
         //! Constructor.
         CPixmap(const QPixmap &pixmap);
+
+        //! Copy constructor (because of mutex)
+        CPixmap(const CPixmap &other);
+
+        //! Copy assignment (because of mutex)
+        CPixmap &operator =(const CPixmap &other);
 
         //! Corresponding pixmap
         const QPixmap &pixmap() const;
@@ -52,6 +59,8 @@ namespace BlackMisc
 
         mutable QPixmap m_pixmap;               //!< cached pixmap, mutable because of lazy initialization
         mutable bool m_hasCachedPixmap = false; //!< pixmap? Mutable because of lazy initialization
+        mutable QReadWriteLock m_lock;          //!< lock (because of mutable members)
+
         QByteArray m_array;                     //!< data of pixmap
     };
 } // namespace

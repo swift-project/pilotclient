@@ -52,7 +52,7 @@ namespace BlackMisc
             CUser(const QString &id, const QString &realname, const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Constructor.
-            CUser(const QString &id, const QString &realname, const QString &email = "", const QString &password = "", const BlackMisc::Aviation::CCallsign &callsign = BlackMisc::Aviation::CCallsign());
+            CUser(const QString &id, const QString &realname, const QString &email = "", const QString &password = "", const BlackMisc::Aviation::CCallsign &callsign = {});
 
             //! Get full name.
             QString getRealName() const { return m_realname; }
@@ -131,6 +131,9 @@ namespace BlackMisc
 
             //! Valid VATSIM id
             static bool isValidVatsimId(const QString &id);
+
+            //! Beautify real name, e.g. "JOE DoE" -> "Joe Doe";
+            static QString beautifyRealName(const QString &realName);
 
         protected:
             //! \copydoc CValueObject::convertToQString

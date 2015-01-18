@@ -291,7 +291,7 @@ namespace BlackCore
         if (m_simulator)
         {
             // depending on shutdown order, network might already have been deleted
-            //! \todo why do we need to disconnet context when we unload driver?
+            //! \todo link with airspace monitor to be reviewed when airspace monitor becomes context
             if (this->getRuntime()->getIContextNetwork()->isUsingImplementingObject())
             {
                 CContextNetwork *network = this->getRuntime()->getCContextNetwork();

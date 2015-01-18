@@ -52,10 +52,8 @@ namespace BlackMisc
 
         void CUser::setRealName(const QString &realname)
         {
-            // try to strip homebase
-            // I understand the limitations, but we will have more correct hits as failures I assume
-            const QRegularExpression reg("(-\\s*|\\s)([A-Z]{4})$");
-            QString rn = realname.trimmed().simplified();
+
+            QString rn(realname.trimmed().simplified());
             if (rn.isEmpty())
             {
                 this->m_realname = "";
@@ -64,8 +62,12 @@ namespace BlackMisc
 
             if (!this->hasValidHomebase())
             {
-                //! only apply stripping if home base is not explicitly given
-                QRegularExpressionMatch match = reg.match(rn);
+                // only apply stripping if home base is not explicitly given
+                // try to strip homebase: I understand the limitations, but we will have more correct hits as failures I assume
+                static QThreadStorage<QRegularExpression> tsRegex;
+                if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("(-\\s*|\\s)([A-Z]{4})$")); }
+                const auto &regex = tsRegex.localData();
+                QRegularExpressionMatch match = regex.match(rn);
                 if (match.hasMatch())
                 {
                     int pos = match.capturedStart(0);
@@ -74,7 +76,9 @@ namespace BlackMisc
                     this->setHomebase(CAirportIcao(icao));
                 }
             }
-            this->m_realname = rn;
+
+            // do not beautify before stripping home base
+            this->m_realname = beautifyRealName(rn);
         }
 
         CStatusMessageList CUser::validate() const
@@ -140,6 +144,31 @@ namespace BlackMisc
             return i >= 100000 && i <= 9999999;
         }
 
+        QString CUser::beautifyRealName(const QString &realName)
+        {
+            QString newRealName(realName.simplified().trimmed().toLower());
+            if (newRealName.isEmpty()) { return ""; }
+
+            // simple title case
+            QString::Iterator i = newRealName.begin();
+            bool upperNextChar = true;
+            while (i != newRealName.end())
+            {
+                if (i->isSpace())
+                {
+                    upperNextChar = true;
+                }
+                else if (upperNextChar)
+                {
+                    QChar u(i->toUpper());
+                    *i = u;
+                    upperNextChar = false;
+                }
+                ++i;
+            }
+            return newRealName;
+        }
+
         /*
          * Property by index
          */
@@ -166,9 +195,6 @@ namespace BlackMisc
             }
         }
 
-        /*
-         * Set property as index
-         */
         void CUser::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself())

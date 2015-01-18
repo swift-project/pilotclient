@@ -144,7 +144,7 @@ namespace BlackCore
             emit this->changedAircraft(aircraft, originator);
 
             // now set value
-            this->m_ownAircraft.update(aircraft);
+            this->m_ownAircraft.setAircraft(aircraft);
             changed = true;
         }
         return changed;
@@ -421,7 +421,7 @@ namespace BlackCore
      */
     const CAircraft &CContextOwnAircraft::getAviationAircraft() const
     {
-        return static_cast<CAircraft const &>(this->m_ownAircraft);
+        return this->m_ownAircraft;
     }
 
 } // namespace

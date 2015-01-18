@@ -48,7 +48,7 @@ namespace BlackMisc
             CAircraftModelList findModelsStartingWith(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
             //! Model strings
-            QStringList getModelStrings() const;
+            QStringList getSortedModelStrings() const;
 
             //! \copydoc CValueObject::convertFromQVariant
             virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }

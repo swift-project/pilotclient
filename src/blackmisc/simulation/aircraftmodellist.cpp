@@ -44,18 +44,13 @@ namespace BlackMisc
 
         CAircraftModelList CAircraftModelList::findModelsStartingWith(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
-            CAircraftModelList ml;
-            for (const CAircraftModel &model : (*this))
+            return this->findBy([ = ](const CAircraftModel & model)
             {
-                if (model.getModelString().startsWith(modelString, sensitivity))
-                {
-                    ml.push_back(model);
-                }
-            }
-            return ml;
+                return model.getModelString().startsWith(modelString, sensitivity);
+            });
         }
 
-        QStringList CAircraftModelList::getModelStrings() const
+        QStringList CAircraftModelList::getSortedModelStrings() const
         {
             QStringList ms;
             for (const CAircraftModel &model : (*this))
