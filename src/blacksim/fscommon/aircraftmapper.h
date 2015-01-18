@@ -92,7 +92,7 @@ namespace BlackSim
             bool containsModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive);
 
             //! Model with title
-            BlackMisc::Network::CAircraftModel getModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive) const;
+            BlackMisc::Simulation::CAircraftModel getModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive) const;
 
             //! Synchronize models and mappings
             //! \remarks after this step, we only have mappings for which we have models

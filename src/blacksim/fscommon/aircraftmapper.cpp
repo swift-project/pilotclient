@@ -12,6 +12,7 @@
 #include <utility>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Network;
 
 namespace BlackSim
@@ -147,7 +148,7 @@ namespace BlackSim
                 }
             }
             simObjectsSize = this->m_entries.size();
-            CLogMessage(this).info("Read %1 from %2") << simObjectsSize << m_entries.getRootDirectory();
+            CLogMessage(this).info("Read %1 SimObjects from %2") << simObjectsSize << m_entries.getRootDirectory();
 
             // sync
             this->synchronize();
