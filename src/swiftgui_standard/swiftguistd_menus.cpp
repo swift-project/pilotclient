@@ -40,7 +40,7 @@ void SwiftGuiStd::ps_onMenuClicked()
     else if (sender == this->ui->menu_ReloadSettings)
     {
         this->ui->comp_MainInfoArea->getSettingsComponent()->reloadSettings();
-        this->ps_displayStatusMessageInGui(CLogMessage(this).info("Settings reloaded"));
+        CLogMessage(this).info("Settings reloaded");
     }
     else if (sender == this->ui->menu_FileReloadStyleSheets)
     {
@@ -53,7 +53,7 @@ void SwiftGuiStd::ps_onMenuClicked()
     }
     else if (sender == this->ui->menu_FileClose)
     {
-        this->ps_displayStatusMessageInGui(CLogMessage(this).info("Closing"));
+        CLogMessage(this).info("Closing");
         this->close();
     }
     else if (sender == this->ui->menu_FileSettingsDirectory)
