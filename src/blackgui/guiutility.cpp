@@ -21,9 +21,15 @@ namespace BlackGui
         {
             CEnableForFramelessWindow *mw = dynamic_cast<CEnableForFramelessWindow *>(w);
             if (!mw) { continue; }
-            if (mw->isMainApplicationWindow()) return mw;
+            if (mw->isMainApplicationWindow()) { return mw; }
         }
         return nullptr;
+    }
+
+    QWidget *CGuiUtility::mainApplicationWindowWidget()
+    {
+        CEnableForFramelessWindow *mw = mainApplicationWindow();
+        return mw ? mw->getWidget() : nullptr;
     }
 
     bool CGuiUtility::isMainWindowFrameless()
@@ -70,11 +76,11 @@ namespace BlackGui
 
     QString CGuiUtility::replaceTabCountValue(const QString &oldName, int count)
     {
-        const QString v = QString("(").append(QString::number(count)).append(")");
+        const QString v = QString(" (").append(QString::number(count)).append(")");
         if (oldName.isEmpty()) { return v; }
         int index = oldName.lastIndexOf('(');
         if (index == 0) { return v; }
-        if (index < 0) { return QString(oldName).append(" ").append(v); }
-        return QString(oldName.left(index)).append(" ").append(v);
+        if (index < 0) { return QString(oldName).trimmed().append(v); }
+        return QString(oldName.left(index)).trimmed().append(v);
     }
 }
