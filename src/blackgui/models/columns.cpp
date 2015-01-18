@@ -10,21 +10,34 @@
 #include "columns.h"
 #include <QCoreApplication>
 
+using namespace BlackMisc;
+
 namespace BlackGui
 {
     namespace Models
     {
 
-        CColumn::CColumn(const QString &headerName, const QString &toolTip, const BlackMisc::CPropertyIndex &propertyIndex, CDefaultFormatter *formatter, bool editable) :
+        CColumn::CColumn(const QString &headerName, const QString &toolTip, const CPropertyIndex &propertyIndex, CDefaultFormatter *formatter, bool editable) :
             m_columnName(headerName), m_columnToolTip(toolTip), m_formatter(formatter ? formatter : new CDefaultFormatter()), m_propertyIndex(propertyIndex),
             m_editable(editable)
         {}
 
-        CColumn::CColumn(const BlackMisc::CPropertyIndex &propertyIndex) :
+        CColumn::CColumn(const CPropertyIndex &propertyIndex) :
             m_formatter(new CPixmapFormatter()), m_propertyIndex(propertyIndex)
         {}
 
-        CColumn::CColumn(const QString &toolTip, const BlackMisc::CPropertyIndex &propertyIndex) :
+        bool CColumn::hasSortPropertyIndex() const
+        {
+            return !this->m_sortPropertyIndex.isEmpty();
+        }
+
+        void CColumn::setSortPropertyIndex(const CPropertyIndex &propertyIndex)
+        {
+            Q_ASSERT(!propertyIndex.isEmpty());
+            this->m_sortPropertyIndex = propertyIndex;
+        }
+
+        CColumn::CColumn(const QString &toolTip, const CPropertyIndex &propertyIndex) :
             m_columnToolTip(toolTip), m_formatter(new CPixmapFormatter()), m_propertyIndex(propertyIndex)
         {}
 
@@ -55,22 +68,22 @@ namespace BlackGui
             return QCoreApplication::translate(this->getTranslationContextChar(), this->getColumnToolTipChar());
         }
 
-        CColumn CColumn::standardValueObject(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, int alignment)
+        CColumn CColumn::standardValueObject(const QString &headerName, const CPropertyIndex &propertyIndex, int alignment)
         {
             return CColumn(headerName, propertyIndex, new CValueObjectFormatter(alignment));
         }
 
-        CColumn CColumn::standardValueObject(const QString &headerName, const QString &toolTip, const BlackMisc::CPropertyIndex &propertyIndex, int alignment)
+        CColumn CColumn::standardValueObject(const QString &headerName, const QString &toolTip, const CPropertyIndex &propertyIndex, int alignment)
         {
             return CColumn(headerName, toolTip, propertyIndex, new CValueObjectFormatter(alignment));
         }
 
-        CColumn CColumn::standardString(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, int alignment)
+        CColumn CColumn::standardString(const QString &headerName, const CPropertyIndex &propertyIndex, int alignment)
         {
             return CColumn(headerName, propertyIndex, new CStringFormatter(alignment));
         }
 
-        CColumn CColumn::standardString(const QString &headerName, const QString &toolTip, const BlackMisc::CPropertyIndex &propertyIndex, int alignment)
+        CColumn CColumn::standardString(const QString &headerName, const QString &toolTip, const CPropertyIndex &propertyIndex, int alignment)
         {
             return CColumn(headerName, toolTip, propertyIndex, new CStringFormatter(alignment));
         }
@@ -90,7 +103,7 @@ namespace BlackGui
             this->m_columns.push_back(column);
         }
 
-        QString CColumns::propertyIndexToColumnName(const BlackMisc::CPropertyIndex &propertyIndex, bool i18n) const
+        QString CColumns::propertyIndexToColumnName(const CPropertyIndex &propertyIndex, bool i18n) const
         {
             int column = this->propertyIndexToColumn(propertyIndex);
             return this->m_columns.at(column).getColumnName(i18n);
@@ -102,13 +115,23 @@ namespace BlackGui
             return this->m_columns.at(column).getColumnName(i18n);
         }
 
-        BlackMisc::CPropertyIndex CColumns::columnToPropertyIndex(int column) const
+        CPropertyIndex CColumns::columnToPropertyIndex(int column) const
         {
             Q_ASSERT(isValidColumn(column));
             return this->m_columns.at(column).getPropertyIndex();
         }
 
-        int CColumns::propertyIndexToColumn(const BlackMisc::CPropertyIndex &propertyIndex) const
+        CPropertyIndex CColumns::columnToSortPropertyIndex(int column) const
+        {
+            Q_ASSERT(isValidColumn(column));
+            const CColumn col = this->m_columns[column];
+            Q_ASSERT(col.isSortable());
+            if (!col.isSortable()) { return CPropertyIndex(); }
+            if (col.hasSortPropertyIndex()) { return col.getSortPropertyIndex(); }
+            return col.getPropertyIndex();
+        }
+
+        int CColumns::propertyIndexToColumn(const CPropertyIndex &propertyIndex) const
         {
             for (int i = 0; i < this->m_columns.size(); i++)
             {
@@ -145,6 +168,34 @@ namespace BlackGui
         {
             if (!isValidColumn(index)) return false;
             return this->m_columns.at(index.column()).isEditable();
+        }
+
+        bool CColumns::isEditable(int column) const
+        {
+            if (!isValidColumn(column)) return false;
+            return this->m_columns.at(column).isEditable();
+        }
+
+        bool CColumns::isSortable(const QModelIndex &index) const
+        {
+            if (!isValidColumn(index)) return false;
+            return this->m_columns.at(index.column()).isSortable();
+        }
+
+        bool CColumns::isSortable(int column) const
+        {
+            if (!isValidColumn(column)) return false;
+            return this->m_columns.at(column).isSortable();
+        }
+
+        bool CColumns::isValidColumn(const QModelIndex &index) const
+        {
+            return (index.column() >= 0 && index.column() < this->m_columns.size());
+        }
+
+        bool CColumns::isValidColumn(int column) const
+        {
+            return column >= 0 && column < this->m_columns.size();
         }
 
         const CDefaultFormatter *CColumns::getFormatter(const QModelIndex &index) const

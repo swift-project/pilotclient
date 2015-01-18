@@ -20,25 +20,32 @@ namespace BlackGui
     namespace Models
     {
 
+        Qt::ItemFlags CDefaultFormatter::flags(Qt::ItemFlags flags, bool editable) const
+        {
+            return editable ? (flags | Qt::ItemIsEditable) : (flags ^ Qt::ItemIsEditable);
+        }
+
         CVariant CDefaultFormatter::displayRole(const CVariant &dataCVariant) const
         {
-            // seems to be absurd, but calls the correct methods on CValueObjects
-            // so QVariant -> QString -> CVariant is correct
-            if (static_cast<QMetaType::Type>(dataCVariant.type()) == QMetaType::QString) return dataCVariant; // shortcut
-            return dataCVariant.toQString(m_useI18n);
+            return keepStandardTypesConvertToStringOtherwise(dataCVariant);
+        }
+
+        CVariant CDefaultFormatter::editRole(const CVariant &dataCVariant) const
+        {
+            return keepStandardTypesConvertToStringOtherwise(dataCVariant);
+        }
+
+        CVariant CDefaultFormatter::tooltipRole(const CVariant &value) const
+        {
+            if (static_cast<QMetaType::Type>(value.type()) == QMetaType::QString) { return value; }
+            return value.toQString(m_useI18n);
         }
 
         CVariant CDefaultFormatter::decorationRole(const CVariant &dataCVariant) const
         {
             // direct return if type is already correct
-            if (static_cast<QMetaType::Type>(dataCVariant.type()) == QMetaType::QPixmap)
-            {
-                return dataCVariant;
-            }
-            else if (static_cast<QMetaType::Type>(dataCVariant.type()) == QMetaType::QIcon)
-            {
-                return dataCVariant;
-            }
+            if (static_cast<QMetaType::Type>(dataCVariant.type()) == QMetaType::QPixmap) { return dataCVariant; }
+            if (static_cast<QMetaType::Type>(dataCVariant.type()) == QMetaType::QIcon) { return dataCVariant; }
 
             // convert to pixmap
             if (static_cast<QMetaType::Type>(dataCVariant.type()) == QMetaType::QImage)
@@ -70,6 +77,13 @@ namespace BlackGui
             }
         }
 
+        CVariant CDefaultFormatter::checkStateRole(const CVariant &value) const
+        {
+            bool b = value.toBool();
+            Qt::CheckState cs = b ? Qt::Checked : Qt::Unchecked;
+            return CVariant::fromValue(static_cast<int>(cs));
+        }
+
         CVariant CDefaultFormatter::data(int role, const CVariant &inputData) const
         {
             Qt::ItemDataRole roleEnum = static_cast<Qt::ItemDataRole>(role);
@@ -77,24 +91,39 @@ namespace BlackGui
             // always supported
             if (roleEnum == Qt::TextAlignmentRole) return { alignmentRole() };
 
-            // checked
-            if (this->m_supportedRoles.isEmpty()) return CVariant();
-            if (!this->m_supportedRoles.contains(role)) return CVariant();
+            // check
+            if (role == Qt::UserRole) { return CDefaultFormatter::displayRole(inputData); } // just as data provider
+            if (this->m_supportedRoles.isEmpty()) { return CVariant(); }
+            if (!this->m_supportedRoles.contains(role)) { return CVariant(); }
             switch (roleEnum)
             {
             case Qt::DisplayRole:
-                // formatted to string
+                // formatted to standard types or string
                 return displayRole(inputData);
+            case Qt::EditRole:
+                // formatted to standard types or string
+                return editRole(inputData);
             case Qt::ToolTipRole:
                 // formatted to string
                 return tooltipRole(inputData);
             case Qt::DecorationRole:
                 // formatted as pixmap, icon, or color
                 return decorationRole(inputData);
+            case Qt::CheckStateRole:
+                // as Qt check state
+                return checkStateRole(inputData);
             default:
                 break;
             }
             return CVariant();
+        }
+
+        CVariant CDefaultFormatter::keepStandardTypesConvertToStringOtherwise(const CVariant &inputData) const
+        {
+            if (static_cast<QMetaType::Type>(inputData.type()) == QMetaType::QString) { return inputData; }
+            if (static_cast<QMetaType::Type>(inputData.type()) == QMetaType::Bool)  { return inputData; }
+            if (static_cast<QMetaType::Type>(inputData.type()) == QMetaType::Int) { return inputData; }
+            return inputData.toQString(m_useI18n);
         }
 
         CVariant CPixmapFormatter::displayRole(const CVariant &dataCVariant) const
@@ -221,6 +250,12 @@ namespace BlackGui
             return CVariant();
         }
 
+        Qt::ItemFlags CDelegateFormatter::flags(Qt::ItemFlags flags, bool editable) const
+        {
+            flags = CDefaultFormatter::flags(flags, editable);
+            return flags;
+        }
+
         CVariant CBoolTextFormatter::displayRole(const CVariant &dataCVariant) const
         {
             if (dataCVariant.canConvert<bool>())
@@ -232,11 +267,16 @@ namespace BlackGui
             return CVariant();
         }
 
+        Qt::ItemFlags CBoolTextFormatter::flags(Qt::ItemFlags flags, bool editable) const
+        {
+            return CDefaultFormatter::flags(flags, editable);
+        }
+
         CBoolLedFormatter::CBoolLedFormatter(int alignment) : CBoolLedFormatter("on", "off", alignment)
         { }
 
         CBoolLedFormatter::CBoolLedFormatter(const QString &onName, const QString &offName, int alignment) :
-            CBoolTextFormatter(alignment, onName, offName, roleDecorationAndToolTip())
+            CBoolTextFormatter(alignment, onName, offName, rolesDecorationAndToolTip())
         {
             CLedWidget *led = ledDefault();
             led->setOn(true);
@@ -273,7 +313,7 @@ namespace BlackGui
         { }
 
         CBoolIconFormatter::CBoolIconFormatter(const CIcon &onIcon, const CIcon &offIcon, const QString &onName, const QString &offName, int alignment) :
-            CBoolTextFormatter(alignment, onName, offName, roleDecorationAndToolTip()), m_iconOn(onIcon), m_iconOff(offIcon)
+            CBoolTextFormatter(alignment, onName, offName, rolesDecorationAndToolTip()), m_iconOn(onIcon), m_iconOff(offIcon)
         {
             this->m_iconOn.setDescriptiveText(onName);
             this->m_iconOff.setDescriptiveText(offName);
@@ -296,5 +336,11 @@ namespace BlackGui
             Q_ASSERT_X(false, "CBoolIconFormatter", "no boolean value");
             return CVariant();
         }
-    }
-}
+
+        CVariant CBoolIconFormatter::tooltipRole(const CVariant &dataCVariant) const
+        {
+            return CBoolTextFormatter::displayRole(dataCVariant);
+        }
+
+    } // namespace
+} // namespace

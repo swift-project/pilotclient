@@ -28,7 +28,9 @@ namespace BlackGui
         {
             this->m_columns.addColumn(CColumn("time", CStatusMessage::IndexTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHms())));
             this->m_columns.addColumn(CColumn::standardString("category", CStatusMessage::IndexCategoryHumanReadable));
-            this->m_columns.addColumn(CColumn("severity", CStatusMessage::IndexIcon));
+            CColumn col = CColumn("severity", CStatusMessage::IndexIcon);
+            col.setSortPropertyIndex(CStatusMessage::IndexSeverityAsString);
+            this->m_columns.addColumn(col);
             this->m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
             this->m_columns.addColumn(CColumn::standardString("all categories", CStatusMessage::IndexCategories));
 

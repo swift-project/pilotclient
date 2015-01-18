@@ -36,16 +36,20 @@ namespace BlackGui
             //! Virtual destructor
             virtual ~CDefaultFormatter() {}
 
-            //! Value provided as CVariant, formatter converts to QString.
+            //! Flags
+            virtual Qt::ItemFlags flags(Qt::ItemFlags flags, bool editable) const;
+
+            //! Value provided as CVariant, formatter converts to standard types or string.
             //! Used with Qt::DisplayRole displaying a text.
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const;
 
+            //! Value provided as CVariant, formatter converts to standard types or string.
+            //! Used with Qt::DisplayRole displaying a text.
+            virtual BlackMisc::CVariant editRole(const BlackMisc::CVariant &dataCVariant) const;
+
             //! Value provided as CVariant, formatter converts to QString.
             //! Used with Qt::ToolTipRole displaying a text.
-            virtual BlackMisc::CVariant tooltipRole(const BlackMisc::CVariant &value) const
-            {
-                return displayRole(value);
-            }
+            virtual BlackMisc::CVariant tooltipRole(const BlackMisc::CVariant &value) const;
 
             //! Value provided as CVariant, formatted as icon (Qt docu: "The data to be rendered as a decoration in the form of an icon").
             //! Used with Qt::DecorationRole displaying an icon, method returns pixmap, icon, or color (see docu)
@@ -53,6 +57,9 @@ namespace BlackGui
 
             //! Qt::Alignment (as CVariant)
             virtual BlackMisc::CVariant alignmentRole() const;
+
+            //! Value provided as CVariant (expecting a bool), returning as Qt::CheckStae
+            virtual BlackMisc::CVariant checkStateRole(const BlackMisc::CVariant &value) const;
 
             //! Alignment available?
             virtual bool hasAlignment() const { return m_alignment >= 0; }
@@ -72,14 +79,26 @@ namespace BlackGui
             //! Align right/vertically centered
             static int alignRightVCenter() { return Qt::AlignVCenter | Qt::AlignRight; }
 
-            //! Display on role
+            //! Display role
             static const QList<int> &roleDisplay() { static const QList<int> r({ Qt::DisplayRole}); return r; }
 
-            //! Display on role
-            static const QList<int> &roleDecorationAndToolTip() { static const QList<int> r({ Qt::DecorationRole, Qt::ToolTipRole}); return r; }
+            //! Display role
+            static const QList<int> &rolesDisplayAndEdit() { static const QList<int> r({ Qt::DisplayRole, Qt::EditRole}); return r; }
+
+            //! Decoration + ToolTip role
+            static const QList<int> &rolesDecorationAndToolTip() { static const QList<int> r({ Qt::DecorationRole, Qt::ToolTipRole}); return r; }
+
+            //! CheckState role
+            static const QList<int> &roleCheckState() { static const QList<int> r({ Qt::CheckStateRole}); return r; }
+
+            //! No roles
+            static const QList<int> &rolesNone() { static const QList<int> r; return r; }
 
         protected:
-            QList<int>  m_supportedRoles = QList<int>({ Qt::DisplayRole});  //!< supports decoration role
+            //! Standard conversion
+            virtual BlackMisc::CVariant keepStandardTypesConvertToStringOtherwise(const BlackMisc::CVariant &inputData) const;
+
+            QList<int>  m_supportedRoles = roleDisplay();  //!< supports decoration roles
             int  m_alignment      = -1;     //!< alignment horizontal/vertically / Qt::Alignment
             bool m_useI18n        = true;   //!< i18n?
         };
@@ -89,7 +108,7 @@ namespace BlackGui
         {
         public:
             //! Constructor
-            CPixmapFormatter(int alignment = alignDefault(), const QList<int> &supportedRoles = roleDecorationAndToolTip()) : CDefaultFormatter(alignment, false, supportedRoles) {}
+            CPixmapFormatter(int alignment = alignDefault(), const QList<int> &supportedRoles = rolesDecorationAndToolTip()) : CDefaultFormatter(alignment, false, supportedRoles) {}
 
             //! \copydoc CDefaultFormatter::displayRole
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
@@ -109,6 +128,18 @@ namespace BlackGui
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
         };
 
+        //! Layout will be defined by a delegate
+        class CDelegateFormatter : public CDefaultFormatter
+        {
+        public:
+            //! Constructor
+            CDelegateFormatter(int alignment = alignCentered(), const QList<int> &supportedRoles = rolesDecorationAndToolTip()) :
+                CDefaultFormatter(alignment, false, supportedRoles) {}
+
+            //! \copydoc CDefaultFormatter::flags
+            virtual Qt::ItemFlags flags(Qt::ItemFlags flags, bool editable) const override;
+        };
+
         //! Bool value, format as text
         class CBoolTextFormatter : public CDefaultFormatter
         {
@@ -120,8 +151,11 @@ namespace BlackGui
             //! \copydoc CDefaultFormatter::displayRole
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
 
+            //! \copydoc CDefaultFormatter::flags
+            virtual Qt::ItemFlags flags(Qt::ItemFlags flags, bool editable) const override;
+
         protected:
-            QString m_trueName = "true";   //!< displayed when true
+            QString m_trueName  = "true";  //!< displayed when true
             QString m_falseName = "false"; //!< displayed when false
         };
 
@@ -180,10 +214,7 @@ namespace BlackGui
             virtual BlackMisc::CVariant decorationRole(const BlackMisc::CVariant &dataCVariant) const override;
 
             //! \copydoc CDefaultFormatter::tooltipRole
-            virtual BlackMisc::CVariant tooltipRole(const BlackMisc::CVariant &dataCVariant) const override
-            {
-                return CBoolTextFormatter::displayRole(dataCVariant);
-            }
+            virtual BlackMisc::CVariant tooltipRole(const BlackMisc::CVariant &dataCVariant) const override;
 
         protected:
             BlackMisc::CIcon m_iconOn;  //!< Used when on
@@ -195,7 +226,7 @@ namespace BlackGui
         {
         public:
             //! Constructor
-            CValueObjectFormatter(int alignment = alignDefault(), bool i18n = true, QList<int> supportedRoles = {Qt::DisplayRole}) : CDefaultFormatter(alignment, i18n, supportedRoles) {}
+            CValueObjectFormatter(int alignment = alignDefault(), bool i18n = true, QList<int> supportedRoles = roleDisplay()) : CDefaultFormatter(alignment, i18n, supportedRoles) {}
 
             //! \copydoc CDefaultFormatter::displayRole
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &valueObject) const override;
@@ -235,7 +266,7 @@ namespace BlackGui
         {
         public:
             //! Constructor
-            CPhysiqalQuantiyFormatter(MU unit = MU::defaultUnit(), int digits = 2, int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true, QList<int> supportedRoles = { Qt::DisplayRole }) : CValueObjectFormatter(alignment, i18n, supportedRoles), m_unit(unit), m_digits(digits), m_withUnit(withUnit) {}
+            CPhysiqalQuantiyFormatter(MU unit = MU::defaultUnit(), int digits = 2, int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true, QList<int> supportedRoles = roleDisplay() ) : CValueObjectFormatter(alignment, i18n, supportedRoles), m_unit(unit), m_digits(digits), m_withUnit(withUnit) {}
 
             //! \copydoc CDefaultFormatter::displayRole
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &physicalQuantity) const override
@@ -266,8 +297,8 @@ namespace BlackGui
             virtual void setDigits(int digits) { m_digits = digits; }
 
         protected:
-            MU   m_unit; //!< unit
-            int  m_digits = 2; //!< digits
+            MU   m_unit;            //!< unit
+            int  m_digits = 2;      //!< digits
             bool m_withUnit = true; //!< format with unit?
         };
 

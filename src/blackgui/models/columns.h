@@ -49,6 +49,24 @@ namespace BlackGui
             //! Editable?
             bool isEditable() const { return this->m_editable; }
 
+            //! Set editable
+            void setEditable(bool editable) { this->m_editable = editable; }
+
+            //! Sortable?
+            bool isSortable() const { return this->m_sortable; }
+
+            //! Set sortable
+            void setSortable(bool sortable) { this->m_sortable = sortable; }
+
+            //! Property index used when sorting, option alternative
+            BlackMisc::CPropertyIndex getSortPropertyIndex() const { return this->m_sortPropertyIndex; }
+
+            //! Sort index available
+            bool hasSortPropertyIndex() const;
+
+            //! Property index used when sorting, option alternative
+            void setSortPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex);
+
             //! Formatter
             void setFormatter(CDefaultFormatter *formatter) { Q_ASSERT(formatter); m_formatter.reset(formatter); }
 
@@ -86,9 +104,12 @@ namespace BlackGui
             QString m_translationContext;
             QString m_columnName;
             QString m_columnToolTip;
-            QSharedPointer<CDefaultFormatter> m_formatter;
-            BlackMisc::CPropertyIndex m_propertyIndex;
+            QSharedPointer<CDefaultFormatter> m_formatter; //!< Used formatter
+            BlackMisc::CPropertyIndex m_propertyIndex;     //!< Property index for column
+            BlackMisc::CPropertyIndex m_sortPropertyIndex; //!< Property index used when sorted (optional alternative)
+
             bool m_editable = false;
+            bool m_sortable = true;
             const char *getTranslationContextChar() const;
             const char *getColumnNameChar() const;
             const char *getColumnToolTipChar() const;
@@ -119,11 +140,11 @@ namespace BlackGui
             //! Column to property index
             BlackMisc::CPropertyIndex columnToPropertyIndex(int column) const;
 
+            //! Column to property index for sort, considers \sa CColumn::getSo
+            BlackMisc::CPropertyIndex columnToSortPropertyIndex(int column) const;
+
             //! Property index to column
             int propertyIndexToColumn(const BlackMisc::CPropertyIndex &propertyIndex) const;
-
-            //! Column index to property index
-            int indexToPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex) const;
 
             //! Column index to name
             int nameToPropertyIndex(const QString &name) const;
@@ -137,17 +158,20 @@ namespace BlackGui
             //! Is this column editable?
             bool isEditable(const QModelIndex &index) const;
 
-            //! Valid column?
-            bool isValidColumn(const QModelIndex &index) const
-            {
-                return (index.column() >= 0 && index.column() < this->m_columns.size());
-            }
+            //! Is this column editable?
+            bool isEditable(int column) const;
+
+            //! Sortable column?
+            bool isSortable(const QModelIndex &index) const;
+
+            //! Sortable column?
+            bool isSortable(int column) const;
 
             //! Valid column?
-            bool isValidColumn(int column) const
-            {
-                return column >= 0 && column < this->m_columns.size();
-            }
+            bool isValidColumn(const QModelIndex &index) const;
+
+            //! Valid column?
+            bool isValidColumn(int column) const;
 
             //! Aligment as CVariant
             BlackMisc::CVariant getAlignment(const QModelIndex &index) const;
