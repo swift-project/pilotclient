@@ -69,7 +69,10 @@ namespace BlackMisc
             void setAircraftDesignator(const QString &icaoDesignator) { this->m_aircraftDesignator = icaoDesignator.trimmed().toUpper(); }
 
             //! Aircraft designator?
-            bool hasAircraftDesignator() const { return !this->m_aircraftDesignator.isEmpty(); }
+            bool hasAircraftDesignator() const;
+
+            //! Has designator and designator is not "ZZZZ"
+            bool hasKnownAircraftDesignator() const;
 
             //! Get airline, e.g. "DLH"
             const QString &getAirlineDesignator() const { return this->m_airlineDesignator; }

@@ -28,9 +28,7 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        /*!
-         * Value object encapsulating information of an aircraft
-         */
+        //! Value object encapsulating information of an aircraft
         class CAircraft : public CValueObjectStdTuple<CAircraft>, public Geo::ICoordinateGeodetic
         {
         public:
@@ -48,7 +46,7 @@ namespace BlackMisc
             };
 
             //! Default constructor.
-            CAircraft() : m_distanceToPlane(0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()) {}
+            CAircraft() {}
 
             //! Constructor.
             CAircraft(const CCallsign &callsign, const BlackMisc::Network::CUser &user, const CAircraftSituation &situation);
@@ -63,7 +61,7 @@ namespace BlackMisc
             QString getCallsignAsString() const { return m_callsign.asString(); }
 
             //! Set callsign
-            void setCallsign(const CCallsign &callsign) { this->m_callsign = callsign; this->m_pilot.setCallsign(callsign); }
+            virtual void setCallsign(const CCallsign &callsign) { this->m_callsign = callsign; this->m_pilot.setCallsign(callsign); }
 
             //! Get situation.
             const CAircraftSituation &getSituation() const { return m_situation; }
@@ -80,14 +78,14 @@ namespace BlackMisc
             //! Get user's real id
             QString getPilotId() { return m_pilot.getId(); }
 
-            //! Set user
-            void setPilot(const BlackMisc::Network::CUser &user) { m_pilot = user; this->m_pilot.setCallsign(this->m_callsign);}
+            //! Set pilot (user)
+            virtual void setPilot(const BlackMisc::Network::CUser &user) { m_pilot = user; this->m_pilot.setCallsign(this->m_callsign);}
 
             //! Get ICAO info
             const CAircraftIcao &getIcaoInfo() const { return m_icao; }
 
             //! Set ICAO info
-            void setIcaoInfo(const CAircraftIcao &icao) { m_icao = icao; }
+            virtual void setIcaoInfo(const CAircraftIcao &icao) { m_icao = icao; }
 
             //! Get the distance to own plane
             const BlackMisc::PhysicalQuantities::CLength &getDistanceToPlane() const { return m_distanceToPlane; }
@@ -104,8 +102,14 @@ namespace BlackMisc
             //! Has valid id?
             bool hasValidId() const { return this->m_pilot.hasValidId(); }
 
+            //! Valid designator?
+            bool hasValidAircraftDesignator() const { return this->m_icao.hasAircraftDesignator(); }
+
             //! Valid designators?
             bool hasValidAircraftAndAirlineDesignator() const { return this->m_icao.hasAircraftAndAirlineDesignator(); }
+
+            //! Valid callsign
+            bool hasValidCallsign() const { return CCallsign::isValidCallsign(this->getCallsign().asString()); }
 
             //! Distance to aircraft
             PhysicalQuantities::CLength calculcateDistanceToPosition(const Geo::CCoordinateGeodetic &position) const;
@@ -241,15 +245,15 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraft)
-            CCallsign m_callsign;
+            CCallsign                 m_callsign;
             BlackMisc::Network::CUser m_pilot;
-            CAircraftSituation m_situation;
-            BlackMisc::Aviation::CComSystem m_com1system;
-            BlackMisc::Aviation::CComSystem m_com2system;
-            BlackMisc::Aviation::CTransponder m_transponder;
-            BlackMisc::Aviation::CSelcal m_selcal;
-            CAircraftIcao m_icao;
-            BlackMisc::PhysicalQuantities::CLength m_distanceToPlane;
+            CAircraftSituation        m_situation;
+            CComSystem                m_com1system;
+            CComSystem                m_com2system;
+            CTransponder              m_transponder;
+            CSelcal                   m_selcal;
+            CAircraftIcao             m_icao;
+            BlackMisc::PhysicalQuantities::CLength m_distanceToPlane {0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()};
         };
     } // namespace
 } // namespace

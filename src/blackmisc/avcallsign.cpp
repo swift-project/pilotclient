@@ -29,7 +29,8 @@ namespace BlackMisc
         QString CCallsign::unifyCallsign(const QString &callsign)
         {
             QString unified = callsign.toUpper();
-            unified = unified.remove(QRegExp("[^a-zA-Z\\d\\s]"));
+            // allow A-Z, 0-9, _, but no spaces
+            unified = unified.remove(QRegExp("[^A-Z\\d_]"));
             return unified;
         }
 
@@ -48,7 +49,7 @@ namespace BlackMisc
                 if ("DEL" == t) { return CIconList::iconByIndex(CIcons::NetworkRoleDelivery); }
                 if ("CTR" == t) { return CIconList::iconByIndex(CIcons::NetworkRoleCenter); }
                 if ("SUP" == t) { return CIconList::iconByIndex(CIcons::NetworkRoleSup); }
-                if ("OBS" == t) { return CIconList::iconByIndex(CIcons::NetworkRoleApproach); }
+                if ("OBS" == t) { return CIconList::iconByIndex(CIcons::NetworkRoleObs); }
                 if ("ATIS" == t) { return CIconList::iconByIndex(CIcons::AviationAtis); }
                 return CIconList::iconByIndex(CIcons::NetworkRoleUnknown);
             }
@@ -63,11 +64,17 @@ namespace BlackMisc
          */
         bool CCallsign::isAtcCallsign() const
         {
-            if (this->hasSuffix())
-            {
-                return atcCallsignSuffixes().contains(this->getSuffix(), Qt::CaseInsensitive);
-            }
-            return false;
+            if (!this->hasSuffix()) { return false; }
+            return atcCallsignSuffixes().contains(this->getSuffix(), Qt::CaseInsensitive);
+        }
+
+        /*
+         * ATC callsign?
+         */
+        bool CCallsign::isAtcAlikeCallsign() const
+        {
+            if (!this->hasSuffix()) { return false; }
+            return atcAlikeCallsignSuffixes().contains(this->getSuffix(), Qt::CaseInsensitive);
         }
 
         /*
@@ -127,6 +134,8 @@ namespace BlackMisc
                 return CVariant(this->getStringAsSet());
             case IndexTelephonyDesignator:
                 return CVariant(this->getTelephonyDesignator());
+            case IndexSuffix:
+                return CVariant(this->getSuffix());
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -164,8 +173,10 @@ namespace BlackMisc
          */
         bool CCallsign::isValidCallsign(const QString &callsign)
         {
-            static QRegularExpression regexp("^[A-Z]+[A-Z0-9]*$");
-            if (callsign.length() < 2 || callsign.length() > 10) return false;
+            //! \todo sometimes callsigns such as 12345, really correct?
+            // static QRegularExpression regexp("^[A-Z]+[A-Z0-9]*$");
+            static QRegularExpression regexp("^[A-Z0-9]*$");
+            if (callsign.length() < 2 || callsign.length() > 10) { return false; }
             return (regexp.match(callsign).hasMatch());
         }
 
@@ -174,7 +185,13 @@ namespace BlackMisc
          */
         const QStringList &CCallsign::atcCallsignSuffixes()
         {
-            static const QStringList a( { "ATIS", "APP", "GND", "TWR", "DEL", "CTR", "SUP", "FSS" });
+            static const QStringList a( { "APP", "GND", "TWR", "DEL", "CTR" });
+            return a;
+        }
+
+        const QStringList &CCallsign::atcAlikeCallsignSuffixes()
+        {
+            static const QStringList a( { "ATIS", "APP", "GND", "OBS", "TWR", "DEL", "CTR", "SUP", "FSS" });
             return a;
         }
 

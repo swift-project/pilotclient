@@ -8,18 +8,35 @@
  */
 
 #include "nwuser.h"
+#include "blackmisc/avairporticao.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
 #include <tuple>
+#include <QRegExp>
+
+using namespace BlackMisc::Aviation;
 
 namespace BlackMisc
 {
     namespace Network
     {
-        QString CUser::convertToQString(bool /** i18n **/) const
+        CUser::CUser(const QString &id, const QString &realname, const CCallsign &callsign)
+            : m_id(id.trimmed()), m_realname(realname), m_callsign(callsign)
         {
+            this->setRealName(realname); // extracts homebase
+        }
+
+        CUser::CUser(const QString &id, const QString &realname, const QString &email, const QString &password, const CCallsign &callsign)
+            : m_id(id.trimmed()), m_realname(realname), m_email(email), m_password(password), m_callsign(callsign)
+        {
+            this->setRealName(realname); // extracts homebase
+        }
+
+        QString CUser::convertToQString(bool i18n) const
+        {
+            Q_UNUSED(i18n);
             if (this->m_realname.isEmpty()) return "<no realname>";
             QString s = this->m_realname;
             if (this->hasValidId())
@@ -31,6 +48,33 @@ namespace BlackMisc
                 s.append(' ').append(this->getCallsign().getStringAsSet());
             }
             return s;
+        }
+
+        void CUser::setRealName(const QString &realname)
+        {
+            // try to strip homebase
+            // I understand the limitations, but we will have more correct hits as failures I assume
+            const QRegularExpression reg("(-\\s*|\\s)([A-Z]{4})$");
+            QString rn = realname.trimmed().simplified();
+            if (rn.isEmpty())
+            {
+                this->m_realname = "";
+                return;
+            }
+
+            if (!this->hasValidHomebase())
+            {
+                //! only apply stripping if home base is not explicitly given
+                QRegularExpressionMatch match = reg.match(rn);
+                if (match.hasMatch())
+                {
+                    int pos = match.capturedStart(0);
+                    QString icao = match.captured(0).trimmed().right(4);
+                    rn = rn.left(pos).trimmed();
+                    this->setHomebase(CAirportIcao(icao));
+                }
+            }
+            this->m_realname = rn;
         }
 
         CStatusMessageList CUser::validate() const
@@ -48,27 +92,43 @@ namespace BlackMisc
          */
         void CUser::syncronizeData(CUser &otherUser)
         {
-            if (otherUser == (*this)) return;
+            if (otherUser == (*this)) { return; }
 
             if (this->hasValidRealName())
+            {
                 otherUser.setRealName(this->getRealName());
+            }
             else if (otherUser.hasValidRealName())
+            {
                 this->setRealName(otherUser.getRealName());
+            }
 
             if (this->hasValidId())
+            {
                 otherUser.setId(this->getId());
+            }
             else if (otherUser.hasValidId())
+            {
                 this->setId(otherUser.getId());
+            }
 
             if (this->hasValidEmail())
+            {
                 otherUser.setEmail(this->getEmail());
+            }
             else if (otherUser.hasValidEmail())
+            {
                 this->setEmail(otherUser.getEmail());
+            }
 
             if (this->hasValidCallsign())
+            {
                 otherUser.setCallsign(this->getCallsign());
+            }
             else if (otherUser.hasValidCallsign())
+            {
                 this->setCallsign(otherUser.getCallsign());
+            }
         }
 
         bool CUser::isValidVatsimId(const QString &id)
@@ -97,6 +157,8 @@ namespace BlackMisc
                 return CVariant(this->m_password);
             case IndexRealName:
                 return CVariant(this->m_realname);
+            case IndexHomebase:
+                return this->m_homebase.propertyByIndex(index.copyFrontRemoved());
             case IndexCallsign:
                 return this->m_callsign.propertyByIndex(index.copyFrontRemoved());
             default:
@@ -128,6 +190,9 @@ namespace BlackMisc
                 break;
             case IndexRealName:
                 this->setRealName(variant.value<QString>());
+                break;
+            case IndexHomebase:
+                this->m_homebase.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexCallsign:
                 this->m_callsign.setPropertyByIndex(variant, index.copyFrontRemoved());

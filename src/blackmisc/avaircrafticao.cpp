@@ -19,11 +19,9 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        /*
-         * Convert to string
-         */
-        QString CAircraftIcao::convertToQString(bool /** i18n **/) const
+        QString CAircraftIcao::convertToQString(bool i18n) const
         {
+            Q_UNUSED(i18n);
             QString s(this->m_aircraftDesignator);
             if (this->hasAircraftCombinedType()) s.append(" ").append(this->m_aircraftCombinedType);
             if (this->hasAirlineDesignator()) s.append(" ").append(this->m_airlineDesignator);
@@ -32,12 +30,19 @@ namespace BlackMisc
             return s;
         }
 
-        /*
-         * As string
-         */
+        bool CAircraftIcao::hasAircraftDesignator() const
+        {
+            return !this->m_aircraftDesignator.isEmpty();
+        }
+
+        bool CAircraftIcao::hasKnownAircraftDesignator() const
+        {
+            return (this->getAircraftDesignator() != "ZZZZ");
+        }
+
         QString CAircraftIcao::asString() const
         {
-            if (this->m_aircraftDesignator.isEmpty()) return "";
+            if (this->m_aircraftDesignator.isEmpty()) { return ""; }
             QString s(this->m_aircraftDesignator);
             if (!this->m_airlineDesignator.isEmpty())
             {
@@ -72,9 +77,6 @@ namespace BlackMisc
             return true;
         }
 
-        /*
-         * Property by index
-         */
         CVariant CAircraftIcao::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return this->toCVariant(); }
@@ -96,9 +98,6 @@ namespace BlackMisc
             }
         }
 
-        /*
-         * Property by index
-         */
         void CAircraftIcao::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself())
@@ -128,19 +127,13 @@ namespace BlackMisc
             }
         }
 
-        /*
-         * Valid designator?
-         */
         bool CAircraftIcao::isValidDesignator(const QString &designator)
         {
             static QRegularExpression regexp("^[A-Z]+[A-Z0-9]*$");
-            if (designator.length() < 2 || designator.length() > 5) return false;
+            if (designator.length() < 2 || designator.length() > 5) { return false; }
             return (regexp.match(designator).hasMatch());
         }
 
-        /*
-         * Valid combined type
-         */
         bool CAircraftIcao::isValidCombinedType(const QString &combinedType)
         {
             static QRegularExpression regexp("^[A-Z][0-9][A-Z]$");
@@ -148,9 +141,6 @@ namespace BlackMisc
             return (regexp.match(combinedType).hasMatch());
         }
 
-        /*
-         *  Valid airline designator
-         */
         bool CAircraftIcao::isValidAirlineDesignator(const QString &airline)
         {
             static QRegularExpression regexp("^[A-Z]+[A-Z0-9]*$");

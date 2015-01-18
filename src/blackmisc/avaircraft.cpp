@@ -20,11 +20,13 @@ namespace BlackMisc
     namespace Aviation
     {
         CAircraft::CAircraft(const CCallsign &callsign, const Network::CUser &user, const CAircraftSituation &situation)
-            : m_callsign(callsign), m_pilot(user), m_situation(situation), m_distanceToPlane(0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit())
+            : m_callsign(callsign), m_pilot(user), m_situation(situation)
         {
             // sync callsigns
             if (!this->m_pilot.hasValidCallsign() && !callsign.isEmpty())
+            {
                 this->m_pilot.setCallsign(callsign);
+            }
         }
 
         /*
@@ -200,7 +202,6 @@ namespace BlackMisc
                 break;
             }
         }
-
 
     } // namespace
 } // namespace

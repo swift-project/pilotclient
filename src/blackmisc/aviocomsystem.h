@@ -51,11 +51,11 @@ namespace BlackMisc
             };
 
             //! Default constructor
-            CComSystem() : m_channelSpacing(ChannelSpacing25KHz) {}
+            CComSystem() {}
 
             //! Constructor
             CComSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet()):
-                CValueObjectStdTuple(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency), m_channelSpacing(ChannelSpacing25KHz)
+                CValueObjectStdTuple(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency)
             { }
 
             //! Set active frequency
@@ -172,7 +172,7 @@ namespace BlackMisc
             virtual bool validValues() const override;
 
         private:
-            ChannelSpacing m_channelSpacing; //!< channel spacing
+            ChannelSpacing m_channelSpacing = ChannelSpacing25KHz; //!< channel spacing
 
             /*!
              * Give me channel spacing in KHz

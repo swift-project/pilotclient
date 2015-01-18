@@ -13,7 +13,7 @@
 #define BLACKMISC_CLIENT_H
 
 #include "nwuser.h"
-#include "nwaircraftmodel.h"
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "nwvoicecapabilities.h"
 #include "propertyindex.h"
 #include "propertyindexvariantmap.h"
@@ -64,7 +64,7 @@ namespace BlackMisc
             const BlackMisc::Aviation::CCallsign &getCallsign() const { return this->m_user.getCallsign(); }
 
             //! ATC client
-            bool isAtc() const { return getCallsign().isAtcCallsign(); }
+            bool isAtc() const { return getCallsign().isAtcAlikeCallsign(); }
 
             //! Get capabilities
             CPropertyIndexVariantMap getCapabilities() const { return this->m_capabilities; }
@@ -99,6 +99,9 @@ namespace BlackMisc
             //! User
             void setUser(const CUser &user) { this->m_user = user;}
 
+            //! User's callsign
+            void setUserCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+
             //! Server
             const QString &getServer() const { return this->m_server; }
 
@@ -106,10 +109,13 @@ namespace BlackMisc
             void setServer(const QString &server) { this->m_server = server;}
 
             //! Model
-            const CAircraftModel &getAircraftModel() const { return this->m_model; }
+            const BlackMisc::Simulation::CAircraftModel &getAircraftModel() const { return this->m_model; }
+
+            //! \copydoc CAircraftModel::hasQueriedModelString
+            bool hasQueriedModelString() const { return this->m_model.hasQueriedModelString(); }
 
             //! Set model
-            void setAircraftModel(const CAircraftModel &model) { this->m_model = model; }
+            void setAircraftModel(const BlackMisc::Simulation::CAircraftModel &model) { this->m_model = model; }
 
             //! \copydoc CValueObject::toIcon()
             virtual CIcon toIcon() const override { return this->m_user.toIcon(); }
@@ -127,7 +133,7 @@ namespace BlackMisc
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CClient)
             CUser          m_user;
-            CAircraftModel m_model;
+            BlackMisc::Simulation::CAircraftModel m_model;
             CPropertyIndexVariantMap m_capabilities;
             QString                  m_server;
             CVoiceCapabilities       m_voiceCapabilities;

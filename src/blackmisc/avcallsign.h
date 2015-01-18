@@ -29,7 +29,8 @@ namespace BlackMisc
             {
                 IndexCallsignString = BlackMisc::CPropertyIndex::GlobalIndexCCallsign,
                 IndexCallsignStringAsSet,
-                IndexTelephonyDesignator
+                IndexTelephonyDesignator,
+                IndexSuffix
             };
 
             //! Default constructor.
@@ -49,7 +50,12 @@ namespace BlackMisc
             bool isEmpty() const { return this->m_callsignAsSet.isEmpty(); }
 
             //! ATC callsign
+            //! \sa atcCallsignSuffixes()
             bool isAtcCallsign() const;
+
+            //! ATC alike callsign
+            //! \sa atcAlikeCallsignSuffixes()
+            bool isAtcAlikeCallsign() const;
 
             //! Get callsign.
             const QString &asString() const { return this->m_callsign; }
@@ -87,8 +93,11 @@ namespace BlackMisc
             //! Valid callsign?
             static bool isValidCallsign(const QString &callsign);
 
-            //! List of ATC suffixes (e.g. TWR);
+            //! List of real ATC suffixes (e.g. TWR);
             static const QStringList &atcCallsignSuffixes();
+
+            //! List of real ("TWR") and treated like ATC suffixes (e.g. OBS);
+            static const QStringList &atcAlikeCallsignSuffixes();
 
         protected:
             //! \copydoc CValueObject::convertToQString()
@@ -110,10 +119,10 @@ namespace BlackMisc
 } // namespace
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CCallsign, (
-    attr(o.m_callsign, flags<CaseInsensitiveComparison>()),
-    attr(o.m_callsignAsSet, flags<DisabledForComparison>()),
-    attr(o.m_telephonyDesignator, flags<DisabledForComparison>())
-))
+                                   attr(o.m_callsign, flags<CaseInsensitiveComparison>()),
+                                   attr(o.m_callsignAsSet, flags<DisabledForComparison>()),
+                                   attr(o.m_telephonyDesignator, flags<DisabledForComparison>())
+                               ))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CCallsign)
 
 #endif // guard

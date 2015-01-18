@@ -67,9 +67,18 @@ namespace BlackMisc
         bool CClient::hasCapability(CClient::Capabilities capability) const
         {
             if (this->m_capabilities.contains(capability))
+            {
                 return this->m_capabilities.value(capability).toBool();
+            }
             else
+            {
                 return false;
+            }
+        }
+
+        void CClient::setUserCallsign(const Aviation::CCallsign &callsign)
+        {
+            this->m_user.setCallsign(callsign);
         }
 
         /*

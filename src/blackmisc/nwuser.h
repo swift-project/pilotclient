@@ -38,7 +38,8 @@ namespace BlackMisc
                 IndexId,
                 IndexPassword,
                 IndexRealName,
-                IndexCallsign
+                IndexCallsign,
+                IndexHomebase
             };
 
             //! Default constructor.
@@ -48,20 +49,16 @@ namespace BlackMisc
             CUser(const BlackMisc::Aviation::CCallsign &callsign) : m_callsign(callsign) {}
 
             //! Constructor.
-            CUser(const QString &id, const QString &realname, const BlackMisc::Aviation::CCallsign &callsign)
-                : m_id(id), m_realname(realname), m_callsign(callsign)
-            {}
+            CUser(const QString &id, const QString &realname, const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Constructor.
-            CUser(const QString &id, const QString &realname, const QString &email = "", const QString &password = "", const BlackMisc::Aviation::CCallsign &callsign = BlackMisc::Aviation::CCallsign())
-                : m_id(id), m_realname(realname), m_email(email), m_password(password), m_callsign(callsign)
-            {}
+            CUser(const QString &id, const QString &realname, const QString &email = "", const QString &password = "", const BlackMisc::Aviation::CCallsign &callsign = BlackMisc::Aviation::CCallsign());
 
             //! Get full name.
             QString getRealName() const { return m_realname; }
 
             //! setRealName
-            void setRealName(const QString &realname) { m_realname = realname.trimmed().simplified(); }
+            void setRealName(const QString &realname);
 
             //! Get password
             QString getPassword() const { return m_password; }
@@ -83,6 +80,9 @@ namespace BlackMisc
 
             //! Has associated callsign?
             bool hasValidCallsign() const { return !m_callsign.isEmpty(); }
+
+            //! Valid homebase
+            bool hasValidHomebase() const { return !m_homebase.isEmpty(); }
 
             //! Validate, provide details about issues
             BlackMisc::CStatusMessageList validate() const;
@@ -138,6 +138,7 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CUser)
+
             QString m_id;
             QString m_realname;
             QString m_email;
