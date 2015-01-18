@@ -12,9 +12,11 @@
 #include "../guiutility.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackcore/context_network.h"
+#include "blackcore/network.h"
 
 using namespace BlackGui;
 using namespace BlackGui::Views;
+using namespace BlackCore;
 
 namespace BlackGui
 {
@@ -30,8 +32,8 @@ namespace BlackGui
             this->tabBar()->setExpanding(false);
             this->m_updateTimer = new CUpdateTimer(SLOT(update()), this);
 
-            connect(this->ui->tvp_AllUsers, &CUserView::countChanged, this, &CUserComponent::ps_countChanged);
-            connect(this->ui->tvp_Clients, &CClientView::countChanged, this, &CUserComponent::ps_countChanged);
+            connect(this->ui->tvp_AllUsers, &CUserView::rowCountChanged, this, &CUserComponent::ps_onCountChanged);
+            connect(this->ui->tvp_Clients, &CClientView::rowCountChanged, this, &CUserComponent::ps_onCountChanged);
         }
 
         CUserComponent::~CUserComponent()
@@ -70,9 +72,16 @@ namespace BlackGui
             }
         }
 
-        void CUserComponent::ps_countChanged(int count)
+        void CUserComponent::runtimeHasBeenSet()
+        {
+            Q_ASSERT(this->getIContextNetwork());
+            this->connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CUserComponent::ps_connectionStatusChanged);
+        }
+
+        void CUserComponent::ps_onCountChanged(int count, bool withFilter)
         {
             Q_UNUSED(count);
+            Q_UNUSED(withFilter);
             int iu = this->indexOf(this->ui->tb_AllUsers);
             int ic = this->indexOf(this->ui->tb_Clients);
             QString u = this->tabBar()->tabText(iu);
@@ -81,6 +90,18 @@ namespace BlackGui
             c = CGuiUtility::replaceTabCountValue(c, this->countClients());
             this->tabBar()->setTabText(iu, u);
             this->tabBar()->setTabText(ic, c);
+        }
+
+        void CUserComponent::ps_connectionStatusChanged(uint from, uint to)
+        {
+            INetwork::ConnectionStatus fromStatus = static_cast<INetwork::ConnectionStatus>(from);
+            INetwork::ConnectionStatus toStatus = static_cast<INetwork::ConnectionStatus>(to);
+            Q_UNUSED(fromStatus);
+            if (INetwork::isDisconnectedStatus(toStatus))
+            {
+                this->ui->tvp_AllUsers->clear();
+                this->ui->tvp_Clients->clear();
+            }
         }
 
     } // namespace

@@ -13,9 +13,12 @@
 #include "../guiutility.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_simulator.h"
+#include "blackcore/network.h"
 
 using namespace BlackGui;
 using namespace BlackGui::Views;
+using namespace BlackCore;
+
 
 namespace BlackGui
 {
@@ -31,8 +34,8 @@ namespace BlackGui
             this->ui->tvp_AirportsInRange->setResizeMode(CAirportView::ResizingOnce);
             m_updateTimer = new CUpdateTimer(SLOT(update()), this);
 
-            connect(this->ui->tvp_AircraftInRange, &CAircraftView::countChanged, this, &CAircraftComponent::ps_countChanged);
-            connect(this->ui->tvp_AirportsInRange, &CAircraftView::countChanged, this, &CAircraftComponent::ps_countChanged);
+            connect(this->ui->tvp_AircraftInRange, &CAircraftView::rowCountChanged, this, &CAircraftComponent::ps_onRowCountChanged);
+            connect(this->ui->tvp_AirportsInRange, &CAircraftView::rowCountChanged, this, &CAircraftComponent::ps_onRowCountChanged);
         }
 
         CAircraftComponent::~CAircraftComponent()
@@ -76,7 +79,9 @@ namespace BlackGui
 
         void CAircraftComponent::runtimeHasBeenSet()
         {
+            Q_ASSERT(this->getIContextNetwork());
             connect(this->getParentInfoArea(), &CInfoArea::changedInfoAreaTabBarIndex, this, &CAircraftComponent::ps_infoAreaTabBarChanged);
+            connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAircraftComponent::ps_connectionStatusChanged);
         }
 
         void CAircraftComponent::ps_infoAreaTabBarChanged(int index)
@@ -91,9 +96,10 @@ namespace BlackGui
             Q_UNUSED(index);
         }
 
-        void CAircraftComponent::ps_countChanged(int count)
+        void CAircraftComponent::ps_onRowCountChanged(int count, bool withFilter)
         {
             Q_UNUSED(count);
+            Q_UNUSED(withFilter);
             int ac = this->indexOf(this->ui->tb_AircraftInRange);
             int ap = this->indexOf(this->ui->tb_AirportsInRange);
             QString acs = this->tabBar()->tabText(ac);
@@ -102,6 +108,17 @@ namespace BlackGui
             aps = CGuiUtility::replaceTabCountValue(aps, this->countAirportsInRange());
             this->tabBar()->setTabText(ac, acs);
             this->tabBar()->setTabText(ap, aps);
+        }
+
+        void CAircraftComponent::ps_connectionStatusChanged(uint from, uint to)
+        {
+            INetwork::ConnectionStatus fromStatus = static_cast<INetwork::ConnectionStatus>(from);
+            INetwork::ConnectionStatus toStatus = static_cast<INetwork::ConnectionStatus>(to);
+            Q_UNUSED(fromStatus);
+            if (INetwork::isDisconnectedStatus(toStatus))
+            {
+                this->ui->tvp_AircraftInRange->clear();
+            }
         }
 
     } // namespace

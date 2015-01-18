@@ -63,9 +63,16 @@ namespace BlackGui
             //! \copydoc CTimerBasedComponent::stopTimer
             void stopTimer() { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->stopTimer(); }
 
+        protected:
+            //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
+            void runtimeHasBeenSet() override;
+
         private slots:
             //! Number of elements changed
-            void ps_countChanged(int count);
+            void ps_onCountChanged(int count, bool withFilter);
+
+            //! Connection status
+            void ps_connectionStatusChanged(uint from, uint to);
 
         private:
             QScopedPointer<Ui::CUserComponent> ui;

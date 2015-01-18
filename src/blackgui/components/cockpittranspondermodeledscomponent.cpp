@@ -69,7 +69,7 @@ namespace BlackGui
             this->setMode(mode);
             CTransponder xpdr = ownAircraft.getTransponder();
             xpdr.setTransponderMode(mode);
-            this->getIContextOwnAircraft()->updateOwnCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), xpdr, ledsOriginator());
+            this->getIContextOwnAircraft()->updateCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), xpdr, ledsOriginator());
         }
 
         void CCockpitTransponderModeLedsComponent::init(bool horizontal)

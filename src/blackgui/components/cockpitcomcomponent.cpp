@@ -246,7 +246,7 @@ namespace BlackGui
 
         bool CCockpitComComponent::updateOwnCockpitInContext(const CAircraft &ownAircraft)
         {
-            return this->getIContextOwnAircraft()->updateOwnCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), ownAircraft.getTransponder(), CCockpitComComponent::cockpitOriginator());
+            return this->getIContextOwnAircraft()->updateCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), ownAircraft.getTransponder(), CCockpitComComponent::cockpitOriginator());
         }
 
         void CCockpitComComponent::updateFrequencyDisplaysFromComSystems(const CComSystem &com1, const CComSystem &com2)

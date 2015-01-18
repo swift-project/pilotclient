@@ -71,7 +71,10 @@ namespace BlackGui
             void ps_infoAreaTabBarChanged(int index);
 
             //! Number of elements changed
-            void ps_countChanged(int count);
+            void ps_onRowCountChanged(int count, bool withFilter);
+
+            //! Connection status has been changed
+            void ps_connectionStatusChanged(uint from, uint to);
 
         private:
             QScopedPointer<Ui::CAircraftComponent> ui;

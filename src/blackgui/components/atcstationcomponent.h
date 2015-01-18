@@ -107,7 +107,7 @@ namespace BlackGui
             void ps_infoAreaTabBarChanged(int index);
 
             //! Count has been changed
-            void ps_countChanged(int count);
+            void ps_onCountChanged(int count, bool withFilter);
 
             //! Set COM frequency
             void ps_setComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit unit);
