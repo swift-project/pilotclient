@@ -98,7 +98,11 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QCheckBox" name="cb_TimeSync"/>
+           <widget class="QCheckBox" name="cb_TimeSync">
+            <property name="tristate">
+             <bool>false</bool>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QLineEdit" name="le_TimeSyncOffset">
@@ -137,6 +141,19 @@
              <string>offset +/-hh:mm</string>
             </property>
            </widget>
+          </item>
+          <item>
+           <spacer name="hs_TimeSync">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </widget>
