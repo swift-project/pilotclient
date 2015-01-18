@@ -18,6 +18,7 @@
 #include "blackmisc/logmessage.h"
 
 using namespace BlackMisc;
+using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
@@ -136,7 +137,8 @@ namespace BlackSimPlugin
                         {
                             DataDefinitionOwnAircraftModel *dataDefinitionModel = (DataDefinitionOwnAircraftModel *) &pObjData->dwData;
                             CAircraftModel model;
-                            model.setQueriedModelString(dataDefinitionModel->title);
+                            model.setModelString(dataDefinitionModel->title);
+                            model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
                             simulatorFsx->setOwnAircraftModel(model);
                             break;
                         }

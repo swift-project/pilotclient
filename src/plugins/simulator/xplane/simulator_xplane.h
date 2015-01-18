@@ -1,14 +1,19 @@
-/* Copyright (C) 2013 VATSIM Community / contributors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKSIMPLUGIN_SIMULATOR_XPLANE_H
 #define BLACKSIMPLUGIN_SIMULATOR_XPLANE_H
 
-//! \file
-
 #include "blackcore/simulator.h"
+#include "blackmisc/pixmap.h"
 #include <QDBusConnection>
 
 class QDBusServiceWatcher;
@@ -58,17 +63,23 @@ namespace BlackSimPlugin
             virtual bool disconnectFrom() override;
 
             //! \copydoc BlackCore::ISimulator::getOwnAircraft
-            virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
+            virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const override;
 
             //! \copydoc ISimulator::addRemoteAircraft()
-            virtual void addRemoteAircraft(const BlackMisc::Aviation::CAircraft &remoteAircraft, const BlackMisc::Network::CClient &remoteClient) override;
+            virtual void addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
+
+            //! \copydoc BlackCore::ISimulator::getRemoteAircraft
+            virtual BlackMisc::Simulation::CSimulatedAircraftList getRemoteAircraft() const override { return m_remoteAircraft; }
 
             //! \copydoc BlackCore::ISimulator::addAircraftSituation
             virtual void addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign,
                                               const BlackMisc::Aviation::CAircraftSituation &situation) override;
 
             //! \copydoc BlackCore::ISimulator::removeRemoteAircraft
-            virtual void removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual int removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+
+            //! \copydoc ISimulator::changeRemoteAircraft
+            virtual int changeRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &changedAircraft, const BlackMisc::CPropertyIndexVariantMap &changeValues) override;
 
             //! \copydoc BlackCore::ISimulator::updateOwnSimulatorCockpit
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft) override;
@@ -83,13 +94,10 @@ namespace BlackSimPlugin
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
 
             //! \copydoc BlackCore::ISimulator::getAircraftModel
-            virtual BlackMisc::Network::CAircraftModel getOwnAircraftModel() const override;
+            virtual BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const override;
 
             //! \copydoc BlackCore::ISimulator::getInstalledModels
-            virtual BlackMisc::Network::CAircraftModelList getInstalledModels() const override;
-
-            //! \copydoc BlackCore::ISimulator::getCurrentlyMatchedModels
-            virtual BlackMisc::Network::CAircraftModelList getCurrentlyMatchedModels() const override { return BlackMisc::Network::CAircraftModelList(); }
+            virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override;
 
             //! Airports in range
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
@@ -99,6 +107,9 @@ namespace BlackSimPlugin
 
             //! \copydoc ISimulator::getTimeSynchronizationOffset
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override { return BlackMisc::PhysicalQuantities::CTime(0, BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()); }
+
+            //! \copydoc ISimulator::iconForModel
+            virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
 
         private slots:
             void ps_serviceRegistered(const QString &serviceName);
@@ -117,6 +128,7 @@ namespace BlackSimPlugin
             QTimer *m_slowTimer { nullptr };
 
             BlackMisc::Aviation::CAirportList m_airports;
+            BlackMisc::Simulation::CSimulatedAircraftList m_remoteAircraft;
 
             struct // data is written by DBus async method callbacks
             {

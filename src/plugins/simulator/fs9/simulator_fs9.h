@@ -16,9 +16,10 @@
 #include "../fscommon/fsuipc.h"
 #include "blackcore/simulator.h"
 #include "blackcore/interpolator_linear.h"
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/avaircraft.h"
-#include "blackmisc/nwaircraftmodel.h"
 #include "blacksim/simulatorinfo.h"
+#include "blackmisc/pixmap.h"
 #include <QObject>
 #include <QtPlugin>
 #include <QList>
@@ -85,16 +86,22 @@ namespace BlackSimPlugin
             virtual bool disconnectFrom() override;
 
             //! \copydoc ISimulator::getOwnAircraft()
-            virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override { return m_ownAircraft; }
+            virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const override { return m_ownAircraft; }
 
             //! \copydoc ISimulator::addRemoteAircraft()
-            virtual void addRemoteAircraft(const BlackMisc::Aviation::CAircraft &remoteAircraft, const BlackMisc::Network::CClient &remoteClient) override;
+            virtual void addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
+
+            //! \copydoc BlackCore::ISimulator::getRemoteAircraft
+            virtual BlackMisc::Simulation::CSimulatedAircraftList getRemoteAircraft() const override { return m_remoteAircraft; }
 
             //! \copydoc ISimulator::addAircraftSituation()
             virtual void addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation) override;
 
             //! \copydoc ISimulator::removeRemoteAircraft()
-            virtual void removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual int removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+
+            //! \copydoc ISimulator::changeRemoteAircraft
+            virtual int changeRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &changedAircraft, const BlackMisc::CPropertyIndexVariantMap &changeValues) override;
 
             //! \copydoc ISimulator::updateOwnSimulatorCockpit()
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &ownAircraft) override;
@@ -109,13 +116,10 @@ namespace BlackSimPlugin
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
 
             //! \copydoc ISimulator::getAircraftModel()
-            virtual BlackMisc::Network::CAircraftModel getOwnAircraftModel() const override { return m_aircraftModel; }
+            virtual BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const override { return m_ownAircraft.getModel(); }
 
             //! \copydoc BlackCore::ISimulator::getInstalledModels
-            virtual BlackMisc::Network::CAircraftModelList getInstalledModels() const override { return {}; }
-
-            //! \copydoc BlackCore::ISimulator::getCurrentlyMatchedModels
-            virtual BlackMisc::Network::CAircraftModelList getCurrentlyMatchedModels() const override { return BlackMisc::Network::CAircraftModelList(); }
+            virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override { return {}; }
 
             //! Airports in range
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
@@ -126,6 +130,9 @@ namespace BlackSimPlugin
 
             //! Time synchronization offset
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override { return m_syncTimeOffset; }
+
+            //! \copydoc ISimulator::iconForModel
+            virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
 
         protected:
             //! Timer event
@@ -164,16 +171,15 @@ namespace BlackSimPlugin
 
             CLobbyClient *m_lobbyClient;
 
-            BlackSim::CSimulatorInfo m_simulatorInfo;
-            BlackMisc::Aviation::CAircraft m_ownAircraft; //!< Object representing our own aircraft from simulator
-            BlackMisc::Aviation::CAirportList m_airportsInRange;
-            BlackMisc::Network::CAircraftModel m_aircraftModel;
-            BlackMisc::PhysicalQuantities::CTime m_syncTimeOffset;
+            BlackSim::CSimulatorInfo                  m_simulatorInfo;
+            BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< Object representing our own aircraft from simulator
+            BlackMisc::Aviation::CAirportList         m_airportsInRange;
+            BlackMisc::PhysicalQuantities::CTime      m_syncTimeOffset;
+            BlackMisc::Simulation::CSimulatedAircraftList m_remoteAircraft;
 
             QScopedPointer<FsCommon::CFsuipc> m_fsuipc;
         };
-    }
-
-} // namespace BlackCore
+    } // namespace
+} // namespace
 
 #endif // guard

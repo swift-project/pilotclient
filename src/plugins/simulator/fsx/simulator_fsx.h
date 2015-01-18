@@ -19,11 +19,12 @@
 #include "blackcore/interpolator_linear.h"
 #include "blacksim/simulatorinfo.h"
 #include "blacksim/fscommon/aircraftmapper.h"
-#include "blackmisc/avaircraft.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/avairportlist.h"
 #include "blackmisc/statusmessage.h"
-#include "blackmisc/nwaircraftmodel.h"
 #include "blackmisc/nwclient.h"
+#include "blackmisc/pixmap.h"
 
 #include <simconnect/SimConnect.h>
 #include <QObject>
@@ -104,16 +105,19 @@ namespace BlackSimPlugin
             virtual bool disconnectFrom() override;
 
             //! \copydoc ISimulator::getOwnAircraft()
-            virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override { return m_ownAircraft; }
+            virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const override { return m_ownAircraft; }
 
             //! \copydoc ISimulator::addRemoteAircraft()
-            virtual void addRemoteAircraft(const BlackMisc::Aviation::CAircraft &remoteAircraft, const BlackMisc::Network::CClient &remoteClient) override;
+            virtual void addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
 
             //! \copydoc ISimulator::addAircraftSituation()
             virtual void addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation) override;
 
             //! \copydoc ISimulator::removeRemoteAircraft()
-            virtual void removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual int removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+
+            //! \copydoc ISimulator::changeRemoteAircraft
+            virtual int changeRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &changedAircraft, const BlackMisc::CPropertyIndexVariantMap &changeValues) override;
 
             //! \copydoc ISimulator::getSimulatorInfo()
             virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
@@ -128,13 +132,13 @@ namespace BlackSimPlugin
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
 
             //! \copydoc ISimulator::getAircraftModel()
-            virtual BlackMisc::Network::CAircraftModel getOwnAircraftModel() const override { return m_ownAircraftModel; }
+            virtual BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const override { return m_ownAircraft.getModel(); }
 
             //! \copydoc BlackCore::ISimulator::getInstalledModels
-            virtual BlackMisc::Network::CAircraftModelList getInstalledModels() const override;
+            virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override;
 
-            //! \copydoc BlackCore::ISimulator::getCurrentlyMatchedModels
-            virtual BlackMisc::Network::CAircraftModelList getCurrentlyMatchedModels() const override { return m_matchedModels; }
+            //! \copydoc BlackCore::ISimulator::getRemoteAircraft
+            virtual BlackMisc::Simulation::CSimulatedAircraftList getRemoteAircraft() const override;
 
             //! \copydoc ISimulator::getAirportsInRange
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
@@ -148,8 +152,11 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::getTimeSynchronizationOffset
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override { return m_syncTimeOffset; }
 
-            //! \copydoc ISimulator::isSimPaused
+            //! \copydoc ISimulator::isPaused
             virtual bool isPaused() const override { return m_simPaused; }
+
+            //! \copydoc IContextSimulator::iconForModel
+            virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
 
             //! Called when sim has started
             void onSimRunning();
@@ -173,7 +180,7 @@ namespace BlackSimPlugin
             void onSimExit();
 
             //! \private
-            void setOwnAircraftModel(const BlackMisc::Network::CAircraftModel &model);
+            void setOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model);
 
         protected:
             //! Timer event
@@ -186,6 +193,9 @@ namespace BlackSimPlugin
 
             //! Called when asynchronous connection to Simconnect has finished
             void ps_connectToFinished();
+
+            //! Mapper has been initialized
+            void ps_mapperInitialized(bool success);
 
         private:
 
@@ -214,7 +224,7 @@ namespace BlackSimPlugin
             static BlackSim::FsCommon::CAircraftMapper *mapperInstance();
 
             //! Experimental model matching
-            static BlackMisc::Network::CAircraftModel modelMatching(const BlackMisc::Aviation::CAircraft &remoteAircraft, const BlackMisc::Network::CClient &remoteClient);
+            static BlackMisc::Simulation::CAircraftModel modelMatching(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
 
             //! SimObjects directory
             static QString simObjectsDir();
@@ -226,17 +236,16 @@ namespace BlackSimPlugin
             bool m_simTimeSynced = false;       //!< Time synchronized?
             bool m_useSbOffsets  = true;        //!< with SB offsets
             int  m_syncDeferredCounter =  0;    //!< Set when synchronized, used to wait some time
-            int  m_simconnectTimerId   = -1;
+            int  m_simconnectTimerId   = -1;    //!< Timer identifier
             int  m_skipCockpitUpdateCycles = 0; //!< Skip some update cycles to allow changes in simulator cockpit to be set
             HANDLE  m_hSimConnect = nullptr;    //!< Handle to SimConnect object
             uint    m_nextObjID   = 1;          //!< object ID TODO: also used as request id, where to we place other request ids as for facilities
-            BlackMisc::PhysicalQuantities::CTime m_syncTimeOffset;
-            QString simulatorDetails;           //!< describes version etc.
-            BlackSim::CSimulatorInfo               m_simulatorInfo;    //!< about the simulator
-            BlackMisc::Aviation::CAircraft         m_ownAircraft;      //!< Object representing our own aircraft from simulator
-            BlackMisc::Network::CAircraftModel     m_ownAircraftModel; //!< own model
-            BlackMisc::Network::CAircraftModelList m_matchedModels;    //!< mapped models
-            BlackMisc::Aviation::CAirportList      m_airportsInRange;  //!< airports in range
+            BlackMisc::PhysicalQuantities::CTime m_syncTimeOffset;   //!< Time offset (if synchronized)
+            QString simulatorDetails;                                //!< describes version etc.
+            BlackSim::CSimulatorInfo m_simulatorInfo;                //!< about the simulator
+            BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< Object representing our own aircraft from simulator
+            BlackMisc::Simulation::CSimulatedAircraftList m_remoteAircraft;  //!< mapped models
+            BlackMisc::Aviation::CAirportList m_airportsInRange;     //!< airports in range
 
             QHash<BlackMisc::Aviation::CCallsign, CSimConnectObject> m_simConnectObjects;
             QFutureWatcher<bool> m_watcherConnect;

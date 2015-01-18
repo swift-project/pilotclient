@@ -16,12 +16,14 @@
 #include "multiplayer_packet_parser.h"
 #include "blacksim/simulatorinfo.h"
 #include "blackmisc/project.h"
+#include "blackmisc/propertyindexallclasses.h"
 #include <QTimer>
 #include <algorithm>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackSim;
@@ -95,9 +97,8 @@ namespace BlackSimPlugin
             return true;
         }
 
-        void CSimulatorFs9::addRemoteAircraft(const CAircraft &remoteAircraft, const CClient &remoteClient)
+        void CSimulatorFs9::addRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
         {
-            Q_UNUSED(remoteClient);
             CCallsign callsign = remoteAircraft.getCallsign();
             CFs9Client *client = new CFs9Client(this, callsign.toQString(), CTime(25, CTimeUnit::ms()));
             client->setHostAddress(m_fs9Host->getHostAddress());
@@ -105,7 +106,7 @@ namespace BlackSimPlugin
 
             client->start();
             m_hashFs9Clients.insert(callsign, client);
-
+            m_remoteAircraft.replaceOrAdd(&CSimulatedAircraft::getCallsign, remoteAircraft.getCallsign(), remoteAircraft);
             addAircraftSituation(callsign, remoteAircraft.getSituation());
         }
 
@@ -120,15 +121,20 @@ namespace BlackSimPlugin
             client->addAircraftSituation(situation);
         }
 
-        void CSimulatorFs9::removeRemoteAircraft(const CCallsign &callsign)
+        int CSimulatorFs9::removeRemoteAircraft(const CCallsign &callsign)
         {
-            if(!m_hashFs9Clients.contains(callsign)) return;
+            if (!m_hashFs9Clients.contains(callsign)) { return 0; }
 
             auto fs9Client = m_hashFs9Clients.value(callsign);
-
             fs9Client->quit();
-
             m_hashFs9Clients.remove(callsign);
+            return m_remoteAircraft.removeIf(&CSimulatedAircraft::getCallsign, callsign);
+        }
+
+        int CSimulatorFs9::changeRemoteAircraft(const CSimulatedAircraft &changedAircraft, const CPropertyIndexVariantMap &changedValues)
+        {
+            return m_remoteAircraft.incrementalUpdateOrAdd(changedAircraft, changedValues);
+            //! \todo really update aircraft in SIM
         }
 
         bool CSimulatorFs9::updateOwnSimulatorCockpit(const CAircraft &ownAircraft)
@@ -212,6 +218,12 @@ namespace BlackSimPlugin
             this->m_syncTimeOffset = offset;
         }
 
+        CPixmap CSimulatorFs9::iconForModel(const QString &modelString) const
+        {
+            Q_UNUSED(modelString);
+            return CPixmap();
+        }
+
         void CSimulatorFs9::timerEvent(QTimerEvent * /* event */)
         {
             ps_dispatch();
@@ -229,47 +241,49 @@ namespace BlackSimPlugin
 
             switch (messageType)
             {
-                case CFs9Sdk::MULTIPLAYER_PACKET_ID_PARAMS:
+            case CFs9Sdk::MULTIPLAYER_PACKET_ID_PARAMS:
                 {
                     break;
                 }
-                case CFs9Sdk::MULTIPLAYER_PACKET_ID_CHANGE_PLAYER_PLANE:
+            case CFs9Sdk::MULTIPLAYER_PACKET_ID_CHANGE_PLAYER_PLANE:
                 {
                     MPChangePlayerPlane mpChangePlayerPlane;
                     MultiPlayerPacketParser::readMessage(message, mpChangePlayerPlane);
                     ps_changeOwnAircraftModel(mpChangePlayerPlane.aircraft_name);
                     break;
                 }
-                case CFs9Sdk::MULTIPLAYER_PACKET_ID_POSITION_VELOCITY:
+            case CFs9Sdk::MULTIPLAYER_PACKET_ID_POSITION_VELOCITY:
                 {
                     MPPositionVelocity mpPositionVelocity;
                     MultiPlayerPacketParser::readMessage(message, mpPositionVelocity);
                     m_ownAircraft.setSituation(aircraftSituationfromFS9(mpPositionVelocity));
                     break;
                 }
-                case CFs9Sdk::MPCHAT_PACKET_ID_CHAT_TEXT_SEND:
+            case CFs9Sdk::MPCHAT_PACKET_ID_CHAT_TEXT_SEND:
                 {
                     MPChatText mpChatText;
                     MultiPlayerPacketParser::readMessage(message, mpChatText);
                     break;
                 }
 
-                default:
-                    break;
+            default:
+                break;
             }
         }
 
         void CSimulatorFs9::ps_changeOwnAircraftModel(const QString &modelname)
         {
-            m_aircraftModel.setQueriedModelString(modelname);
-            emit ownAircraftModelChanged(m_aircraftModel);
+            CAircraftModel model = m_ownAircraft.getModel();
+            model.setModelString(modelname);
+            m_ownAircraft.setModel(model);
+            emit ownAircraftModelChanged(m_ownAircraft);
         }
 
         void CSimulatorFs9::ps_changeHostStatus(BlackSimPlugin::Fs9::CFs9Host::HostStatus status)
         {
             switch (status)
             {
-                case CFs9Host::Hosting:
+            case CFs9Host::Hosting:
                 {
                     m_isHosting = true;
                     startTimer(50);
@@ -281,14 +295,14 @@ namespace BlackSimPlugin
                     }
                     break;
                 }
-                case CFs9Host::Terminated:
+            case CFs9Host::Terminated:
                 {
                     m_isHosting = false;
                     emit connectionStatusChanged(Disconnected);
                     break;
                 }
-                default:
-                    break;
+            default:
+                break;
             }
         }
 
@@ -307,5 +321,5 @@ namespace BlackSimPlugin
                 removeRemoteAircraft(fs9Client);
             }
         }
-    }
-}
+    } // namespace
+} // namespace

@@ -13,6 +13,8 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Simulation;
 
 namespace BlackSimPlugin
 {
@@ -159,10 +161,16 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::ps_emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao)
         {
-            emit ownAircraftModelChanged({ path, CAircraftModel::TypeOwnSimulatorModel });
-            Q_UNUSED(filename);
-            Q_UNUSED(livery);
-            Q_UNUSED(icao);
+            //! \todo change as appropriate
+            CSimulatedAircraft aircraft(this->getOwnAircraft());
+            CAircraftModel model(aircraft.getModel());
+            model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
+            model.setFileName(path + "/" + filename);
+            CAircraftIcao aircraftIcao(icao);
+            aircraftIcao.setLivery(livery);
+            aircraft.setModel(model);
+            aircraft.setIcaoInfo(aircraftIcao);
+            emit ownAircraftModelChanged(aircraft);
         }
 
         // convert xplane squawk mode to swift squawk mode
@@ -178,11 +186,9 @@ namespace BlackSimPlugin
             return mode == BlackMisc::Aviation::CTransponder::StateStandby ? 1 : 2;
         }
 
-        BlackMisc::Aviation::CAircraft CSimulatorXPlane::getOwnAircraft() const
+        CSimulatedAircraft CSimulatorXPlane::getOwnAircraft() const
         {
             if (! isConnected()) { return {}; }
-            using namespace BlackMisc;
-            using namespace BlackMisc::PhysicalQuantities;
             Aviation::CAircraftSituation situation;
             situation.setPosition({ m_xplaneData.latitude, m_xplaneData.longitude, 0 });
             situation.setAltitude({ m_xplaneData.altitude, Aviation::CAltitude::MeanSeaLevel, CLengthUnit::m() });
@@ -190,7 +196,9 @@ namespace BlackSimPlugin
             situation.setPitch({ m_xplaneData.pitch, CAngleUnit::deg() });
             situation.setBank({ m_xplaneData.roll, CAngleUnit::deg() });
             situation.setGroundspeed({ m_xplaneData.groundspeed, CSpeedUnit::m_s() });
-            Aviation::CAircraft ac { {}, {}, situation };
+            CSimulatedAircraft ac;
+            ac.setSituation(situation);
+            ac.setModel(this->getOwnAircraftModel());
             ac.setIcaoInfo(Aviation::CAircraftIcao { m_xplaneData.aircraftIcaoCode });
             ac.setCom1System(Aviation::CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() }));
             ac.setCom2System(Aviation::CComSystem::getCom2System({ m_xplaneData.com2Active, CFrequencyUnit::kHz() }, { m_xplaneData.com2Standby, CFrequencyUnit::kHz() }));
@@ -212,13 +220,13 @@ namespace BlackSimPlugin
             Q_UNUSED(message);
         }
 
-        BlackMisc::Network::CAircraftModel CSimulatorXPlane::getOwnAircraftModel() const
+        BlackMisc::Simulation::CAircraftModel CSimulatorXPlane::getOwnAircraftModel() const
         {
             if (! isConnected()) { return {}; }
             return { m_xplaneData.aircraftModelPath, CAircraftModel::TypeOwnSimulatorModel };
         }
 
-        BlackMisc::Network::CAircraftModelList CSimulatorXPlane::getInstalledModels() const
+        BlackMisc::Simulation::CAircraftModelList CSimulatorXPlane::getInstalledModels() const
         {
             // TODO
             return {};
@@ -259,6 +267,12 @@ namespace BlackSimPlugin
             }
         }
 
+        CPixmap CSimulatorXPlane::iconForModel(const QString &modelString) const
+        {
+            Q_UNUSED(modelString);
+            return CPixmap();
+        }
+
         bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft)
         {
             if (! isConnected()) { return false; }
@@ -288,15 +302,15 @@ namespace BlackSimPlugin
             return false;
         }
 
-        void CSimulatorXPlane::addRemoteAircraft(const Aviation::CAircraft &remoteAircraft, const Network::CClient &remoteClient)
+        void CSimulatorXPlane::addRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
         {
-            Q_UNUSED(remoteClient);
             if (! isConnected()) { return; }
             // KB: from what I can see here all data are available
             // Is there any model matching required ????
             CAircraftIcao icao = remoteAircraft.getIcaoInfo();
             m_traffic->addPlane(remoteAircraft.getCallsign().asString(), icao.getAircraftDesignator(), icao.getAirlineDesignator(), icao.getLivery());
             addAircraftSituation(remoteAircraft.getCallsign(), remoteAircraft.getSituation());
+            m_remoteAircraft.replaceOrAdd(&CSimulatedAircraft::getCallsign, remoteAircraft.getCallsign(), remoteAircraft);
         }
 
         void CSimulatorXPlane::addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign,
@@ -315,11 +329,18 @@ namespace BlackSimPlugin
             m_traffic->setPlaneTransponder(callsign.asString(), 2000, true, false); // TODO transponder
         }
 
-        void CSimulatorXPlane::removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign)
+        int CSimulatorXPlane::removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign)
         {
-            if (! isConnected()) { return; }
+            if (! isConnected()) { return 0; }
             m_traffic->removePlane(callsign.asString());
+            return m_remoteAircraft.removeIf(&CSimulatedAircraft::getCallsign, callsign);
         }
 
-    }
-}
+        int CSimulatorXPlane::changeRemoteAircraft(const CSimulatedAircraft &changedAircraft, const CPropertyIndexVariantMap &changedValues)
+        {
+            return m_remoteAircraft.incrementalUpdateOrAdd(changedAircraft, changedValues);
+            //! \todo really update aircraft in SIM
+        }
+
+    } // namespace
+} // namespace

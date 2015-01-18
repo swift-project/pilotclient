@@ -15,10 +15,10 @@
 #include "blacksim/fsx/simconnectutilities.h"
 #include "blacksim/fsx/fsxsimulatorsetup.h"
 #include "blacksim/simulatorinfo.h"
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/project.h"
 #include "blackmisc/avairportlist.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/nwaircraftmodel.h"
 #include "blackmisc/nwaircraftmappinglist.h"
 
 #include <QTimer>
@@ -29,6 +29,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Simulation;
 using namespace BlackSim;
 using namespace BlackSim::FsCommon;
 using namespace BlackSim::Fsx;
@@ -48,6 +49,7 @@ namespace BlackSimPlugin
 
             // hack to init mapper
             CAircraftMapper *mapper = mapperInstance();
+            connect(mapper, &CAircraftMapper::initCompleted, this, &CSimulatorFsx::ps_mapperInitialized);
             mapper->initCompletelyInBackground();
         }
 
@@ -113,7 +115,6 @@ namespace BlackSimPlugin
         bool CSimulatorFsx::disconnectFrom()
         {
             if (!m_simConnected) { return true; }
-
             if (m_hSimConnect)
             {
                 SimConnect_Close(m_hSimConnect);
@@ -143,12 +144,13 @@ namespace BlackSimPlugin
             return connect;
         }
 
-        void CSimulatorFsx::addRemoteAircraft(const CAircraft &remoteAircraft, const CClient &remoteClient)
+        void CSimulatorFsx::addRemoteAircraft(const Simulation::CSimulatedAircraft &remoteAircraft)
         {
             CCallsign callsign = remoteAircraft.getCallsign();
             Q_ASSERT(!callsign.isEmpty());
             if (callsign.isEmpty()) { return; }
 
+            bool aircraftAlreadyExists = m_remoteAircraft.containsCallsign(callsign);
             SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxInitPosition(remoteAircraft.getSituation());
             initialPosition.Airspeed = 0;
             initialPosition.OnGround = 0;
@@ -163,18 +165,24 @@ namespace BlackSimPlugin
             addAircraftSituation(callsign, remoteAircraft.getSituation());
 
             // matched models
-            CAircraftModel aircraftModel = modelMatching(remoteAircraft, remoteClient);
+            CAircraftModel aircraftModel = modelMatching(remoteAircraft);
             Q_ASSERT(remoteAircraft.getCallsign() == aircraftModel.getCallsign());
-            this->m_matchedModels.replaceOrAdd(&CAircraftModel::getCallsign, aircraftModel.getCallsign(), aircraftModel);
-            emit modelMatchingCompleted(aircraftModel);
+            CSimulatedAircraft mappedRemoteAircraft(remoteAircraft);
+            mappedRemoteAircraft.setModel(aircraftModel);
+            m_remoteAircraft.replaceOrAdd(&CSimulatedAircraft::getCallsign, callsign, mappedRemoteAircraft);
+            emit modelMatchingCompleted(mappedRemoteAircraft);
 
             // create AI
             //! \todo isConnected() or isSimulating() ??
             if (isConnected())
             {
-                QByteArray m = aircraftModel.getModelString().toLocal8Bit();
-                HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, m.constData(), qPrintable(callsign.toQString().left(12)), initialPosition, simObj.getRequestId());
-                if (hr != S_OK) { CLogMessage(this).error("SimConnect, can create AI traffic"); }
+                //! \todo if exists, recreate (new model?, new ICAO code)
+                if (!aircraftAlreadyExists)
+                {
+                    QByteArray m = aircraftModel.getModelString().toLocal8Bit();
+                    HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, m.constData(), qPrintable(callsign.toQString().left(12)), initialPosition, simObj.getRequestId());
+                    if (hr != S_OK) { CLogMessage(this).error("SimConnect, can not create AI traffic"); }
+                }
             }
         }
 
@@ -188,9 +196,38 @@ namespace BlackSimPlugin
             m_simConnectObjects.insert(callsign, simObj);
         }
 
-        void CSimulatorFsx::removeRemoteAircraft(const CCallsign &callsign)
+        int CSimulatorFsx::removeRemoteAircraft(const CCallsign &callsign)
         {
             removeRemoteAircraft(m_simConnectObjects.value(callsign));
+            return m_remoteAircraft.removeIf(&CSimulatedAircraft::getCallsign, callsign);
+        }
+
+        int CSimulatorFsx::changeRemoteAircraft(const CSimulatedAircraft &changedAircraft, const CPropertyIndexVariantMap &changedValues)
+        {
+            // EXPERIMENTAL VERSION
+
+            const CCallsign callsign = changedAircraft.getCallsign();
+            int c = m_remoteAircraft.incrementalUpdateOrAdd(changedAircraft, changedValues);
+            if (c == 0) { return 0; } // nothing was changed
+            const CSimulatedAircraft aircraftAfterChanges = m_remoteAircraft.findFirstByCallsign(callsign);
+            const QString modelBefore = changedAircraft.getModel().getModelString();
+            const QString modelAfter = aircraftAfterChanges.getModel().getModelString();
+            if (modelBefore != modelAfter)
+            {
+                // model did change
+                removeRemoteAircraft(m_simConnectObjects.value(callsign));
+            }
+
+            if (changedAircraft.isEnabled() && !m_simConnectObjects.contains(callsign))
+            {
+                addRemoteAircraft(aircraftAfterChanges);
+            }
+            else if (!aircraftAfterChanges.isEnabled())
+            {
+                removeRemoteAircraft(m_simConnectObjects.value(callsign));
+            }
+            // apply other changes
+            return c;
         }
 
         CSimulatorInfo CSimulatorFsx::getSimulatorInfo() const
@@ -198,12 +235,23 @@ namespace BlackSimPlugin
             return this->m_simulatorInfo;
         }
 
-        void CSimulatorFsx::setOwnAircraftModel(const BlackMisc::Network::CAircraftModel &model)
+        void CSimulatorFsx::setOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model)
         {
-            if (m_ownAircraftModel != model)
+            if (m_ownAircraft.getModel() != model)
             {
-                m_ownAircraftModel = model;
-                emit ownAircraftModelChanged(model);
+                CAircraftModel newModel(model);
+                if (this->mapperInstance() && this->mapperInstance()->isInitialized())
+                {
+                    // reverse lookup of ICAO
+                    CAircraftMappingList ml = this->mapperInstance()->getAircraftMappingList().findByModelString(model.getModelString());
+                    if (!ml.isEmpty())
+                    {
+                        CAircraftMapping mapping = ml.front();
+                        newModel.setIcao(mapping.getIcao());
+                    }
+                }
+                m_ownAircraft.setModel(newModel);
+                emit ownAircraftModelChanged(m_ownAircraft);
             }
         }
 
@@ -326,6 +374,11 @@ namespace BlackSimPlugin
             return mapperInstance()->getAircraftCfgEntriesList().toAircraftModelList();
         }
 
+        CSimulatedAircraftList CSimulatorFsx::getRemoteAircraft() const
+        {
+            return this->m_remoteAircraft;
+        }
+
         CAirportList CSimulatorFsx::getAirportsInRange() const
         {
             return this->m_airportsInRange;
@@ -335,6 +388,37 @@ namespace BlackSimPlugin
         {
             this->m_simTimeSynced = enable;
             this->m_syncTimeOffset = offset;
+        }
+
+        CPixmap CSimulatorFsx::iconForModel(const QString &modelString) const
+        {
+            static const CPixmap empty;
+            if (modelString.isEmpty() || !mapperInstance()->isInitialized()) { return empty; }
+            CAircraftCfgEntriesList cfgEntries = mapperInstance()->getAircraftCfgEntriesList().findByTitle(modelString);
+            if (cfgEntries.isEmpty())
+            {
+                CLogMessage(this).warning("No FSX .cfg entry for '%1'") << modelString;
+                return empty;
+            }
+
+            // normally we should have only one entry
+            if (cfgEntries.size() > 1)
+            {
+                CLogMessage(this).warning("Multiple FSX .cfg entries for '%1'") << modelString;
+            }
+
+            // use first with icon
+            for (const CAircraftCfgEntries &entry : cfgEntries)
+            {
+                const QString thumbnail = entry.getThumbnailFileName();
+                if (thumbnail.isEmpty()) { continue; }
+                QPixmap pm;
+                if (pm.load(thumbnail))
+                {
+                    return CPixmap(pm);
+                }
+            }
+            return empty;
         }
 
         void CSimulatorFsx::onSimRunning()
@@ -500,6 +584,11 @@ namespace BlackSimPlugin
                 emit connectionStatusChanged(ConnectionFailed);
                 emitSimulatorCombinedStatus();
             }
+        }
+
+        void CSimulatorFsx::ps_mapperInitialized(bool success)
+        {
+            if (success) { emit this->installedAircraftModelsChanged(); }
         }
 
         void CSimulatorFsx::removeRemoteAircraft(const CSimConnectObject &simObject)
@@ -669,7 +758,7 @@ namespace BlackSimPlugin
             return mapper;
         }
 
-        CAircraftModel CSimulatorFsx::modelMatching(const CAircraft &remoteAircraft, const CClient &remoteClient)
+        CAircraftModel CSimulatorFsx::modelMatching(const CSimulatedAircraft &remoteAircraft)
         {
             CAircraftModel aircraftModel(remoteAircraft); // set defaults
 
@@ -680,10 +769,12 @@ namespace BlackSimPlugin
                 // will be removed later, just for experimental version
                 aircraftModel.setModelString("Boeing 737-800 Paint1");
                 aircraftModel.setDescription("Model mapper not ready");
+                CLogMessage(static_cast<CSimulatorFsx *>(nullptr)).warning("Mapper not ready, set to default model");
                 return aircraftModel;
             }
 
             // Model by queried string
+            const CClient remoteClient = remoteAircraft.getClient();
             if (remoteClient.getAircraftModel().hasQueriedModelString())
             {
                 QString directModelString = remoteClient.getAircraftModel().getModelString();
@@ -691,7 +782,6 @@ namespace BlackSimPlugin
                 {
                     aircraftModel = mapperInstance()->getModelWithTitle(directModelString);
                     aircraftModel.setModelType(CAircraftModel::TypeQueriedFromNetwork);
-                    aircraftModel.setDescription("Direct query from network");
                 }
             }
 
@@ -716,6 +806,7 @@ namespace BlackSimPlugin
             {
                 aircraftModel.setModelString("Boeing 737-800 Paint1");
                 aircraftModel.setDescription("Default model");
+                aircraftModel.setModelType(CAircraftModel::TypeModelMatching);
             }
             else
             {
@@ -730,6 +821,7 @@ namespace BlackSimPlugin
             aircraftModel.setCallsign(remoteAircraft.getCallsign());
             Q_ASSERT(!aircraftModel.getCallsign().isEmpty());
             Q_ASSERT(aircraftModel.hasModelString());
+            Q_ASSERT(aircraftModel.getModelType() != CAircraftModel::TypeUnknown);
             return aircraftModel;
         }
 

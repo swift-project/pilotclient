@@ -13,19 +13,18 @@
 #define BLACKCORE_SIMULATOR_H
 
 #include "blacksim/simulatorinfo.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackmisc/avaircraft.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/avairportlist.h"
-#include "blackmisc/nwaircraftmodellist.h"
 #include "blackmisc/nwtextmessage.h"
 #include "blackmisc/nwclient.h"
+#include "blackmisc/pixmap.h"
 #include <QObject>
 
 namespace BlackCore
 {
-    /*!
-     * Interface to a simulator.
-     */
+    //! Interface to a simulator.
     class ISimulator : public QObject
     {
         Q_OBJECT
@@ -73,16 +72,22 @@ namespace BlackCore
         virtual bool disconnectFrom() = 0;
 
         //! Return user aircraft object
-        virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const = 0;
+        virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const = 0;
 
         //! Add new remote aircraft to the simulator
-        virtual void addRemoteAircraft(const BlackMisc::Aviation::CAircraft &remoteAircraft, const BlackMisc::Network::CClient &remoteClient) = 0;
+        virtual void addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) = 0;
+
+        //! Simulated other aircraft in range
+        virtual BlackMisc::Simulation::CSimulatedAircraftList getRemoteAircraft() const = 0;
 
         //! Add new aircraft situation
         virtual void addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation) = 0;
 
         //! Remove remote aircraft from simulator
-        virtual void removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+        virtual int removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
+        //! Change remote aircraft per property
+        virtual int changeRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &changedAircraft, const BlackMisc::CPropertyIndexVariantMap &changeValues) = 0;
 
         //! Update own aircraft cockpit (usually from context)
         virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft) = 0;
@@ -97,13 +102,10 @@ namespace BlackCore
         virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const = 0;
 
         //! Own aircraft Model
-        virtual BlackMisc::Network::CAircraftModel getOwnAircraftModel() const = 0;
+        virtual BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const = 0;
 
         //! Aircraft models for available remote aircrafts
-        virtual BlackMisc::Network::CAircraftModelList getInstalledModels() const = 0;
-
-        //! Remote aircraft in range having a valid model matching (which should be all aircraft in range)
-        virtual BlackMisc::Network::CAircraftModelList getCurrentlyMatchedModels() const = 0;
+        virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const = 0;
 
         //! Airports in range
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const = 0;
@@ -115,12 +117,15 @@ namespace BlackCore
         //! Time synchronization offset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
 
+        //! Representing icon for model string
+        virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const = 0;
+
     signals:
         //! Emitted when the connection status has changed
         void connectionStatusChanged(ISimulator::ConnectionStatus status);
 
         //! Emitted when own aircraft model has changed
-        void ownAircraftModelChanged(BlackMisc::Network::CAircraftModel model);
+        void ownAircraftModelChanged(BlackMisc::Simulation::CSimulatedAircraft aircraft);
 
         //! Simulator combined status
         void simulatorStatusChanged(bool connected, bool running, bool paused);
@@ -132,7 +137,10 @@ namespace BlackCore
         void simulatorStopped();
 
         //! A single model has been matched
-        void modelMatchingCompleted(BlackMisc::Network::CAircraftModel model);
+        void modelMatchingCompleted(BlackMisc::Simulation::CSimulatedAircraft aircraft);
+
+        //! Installed aircraft models ready or changed
+        void installedAircraftModelsChanged();
 
     protected:
         //! Emit the combined status

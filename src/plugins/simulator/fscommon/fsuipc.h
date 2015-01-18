@@ -6,8 +6,8 @@
 #ifndef BLACKSIMPLUGIN_FSUIPC_H
 #define BLACKSIMPLUGIN_FSUIPC_H
 
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/avaircraft.h"
-#include "blackmisc/nwaircraftmodel.h"
 #include <QStringList>
 
 namespace BlackSimPlugin
@@ -92,7 +92,7 @@ namespace BlackSimPlugin
             QString m_lastErrorMessage;
             QString m_fsuipcVersion;
             BlackMisc::Aviation::CAircraft m_aircraft; //!< FSUIPC read aircraft
-            BlackMisc::Network::CAircraftModel m_model; //!< FSUIPC read model
+            BlackMisc::Simulation::CAircraftModel m_model; //!< FSUIPC read model
 
             //! Read data from FSUIPC
             void read();
