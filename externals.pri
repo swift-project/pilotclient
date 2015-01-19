@@ -42,8 +42,8 @@ win32-g++ {
     LIBS += -luser32
 }
 linux-g++* {
-    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/linux64/lib
-    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/linux32/lib
+    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/linux-g++/lib64
+    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/linux-g++/lib32
 }
 macx-clang {
     INCLUDEPATH *= $$EXTERNALDIR/macx-clang/include

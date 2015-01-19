@@ -44,7 +44,7 @@ win32-g++ {
 }
 linux-g++ {
     GCC64 = $$system($$QMAKE_CXX -Q --help=target | grep m64)
-    contains(MINGW64,[enabled]) {
+    contains(GCC64,[enabled]) {
         WORD_SIZE = 64
     }
     else {
