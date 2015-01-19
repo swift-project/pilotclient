@@ -35,7 +35,7 @@ namespace BlackCore
         {
             static inline void cleanup(VatProducerConsumer_tag *obj)
             {
-                if (!obj) Vat_DestroyVoiceChannel(obj);
+                if (obj) Vat_DestroyVoiceChannel(obj);
             }
         };
 

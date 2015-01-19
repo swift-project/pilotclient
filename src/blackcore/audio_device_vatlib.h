@@ -58,7 +58,7 @@ namespace BlackCore
         {
             static inline void cleanup(VatProducerConsumer_tag *obj)
             {
-                if (!obj) Vat_DestroyLocalInputCodec(obj);
+                if (obj) Vat_DestroyLocalInputCodec(obj);
             }
         };
 
@@ -111,7 +111,7 @@ namespace BlackCore
         {
             static inline void cleanup(VatProducerConsumer_tag *obj)
             {
-                if (!obj) Vat_DestroyLocalOutputCodec(obj);
+                if (obj) Vat_DestroyLocalOutputCodec(obj);
             }
         };
 
