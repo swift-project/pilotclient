@@ -14,6 +14,7 @@
 
 #include "network.h"
 #include "blackmisc/simulation/simdirectaccessownaircraft.h"
+#include "token_bucket.h"
 #include <vatlib/vatlib2.h>
 #include <QScopedPointer>
 #include <QTimer>
@@ -61,6 +62,13 @@ namespace BlackCore
         virtual void sendFsipirCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
                                             const QString &aircraftDesignator, const QString &combinedType, const QString &modelString) override;
 
+        //! \copydoc INetwork::broadcastAircraftConfig
+        virtual void broadcastAircraftConfig(const QJsonObject &config) override;
+
+        //! \copydoc INetwork::sendAircraftConfigQuery
+        virtual void sendAircraftConfigQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
+
+
         // Text message slots
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &messages) override;
 
@@ -83,7 +91,9 @@ namespace BlackCore
     private slots:
         void replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign);
         void replyToNameQuery(const BlackMisc::Aviation::CCallsign &callsign);
+        void replyToConfigQuery(const BlackMisc::Aviation::CCallsign &callsign);
         void sendAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign);
+        void sendIncrementalAircraftConfig();
 
     private: //shimlib callbacks
         static void onConnectionStatusChanged(VatSessionID, VatConnectionStatus oldStatus, VatConnectionStatus newStatus, void *cbvar);
@@ -110,6 +120,7 @@ namespace BlackCore
         static void onPilotInfoRequestReceived(VatSessionID, const char *callsign, void *cbvar);
         static void onPilotInfoReceived(VatSessionID, const char *callsign, const VatAircraftInfo *aircraftInfo, void *cbvar);
         static void onPilotPositionUpdate(VatSessionID, const char *callsign, const VatPilotPosition *position, void *cbvar);
+        static void onAircraftConfigReceived(VatSessionID, const char *callsign, const char *aircraftConfig, void *cbvar);
         static void onCustomPacketReceived(VatSessionID, const char *callsign, const char *packetId, const char **data, int dataSize, void *cbvar);
 
     private:
@@ -122,7 +133,13 @@ namespace BlackCore
         void initializeSession();
         void changeConnectionStatus(VatConnectionStatus newStatus);
         bool isDisconnected() const { return m_status != vatStatusConnecting && m_status != vatStatusConnected; }
+        QString convertToUnicodeEscaped(const QString &str);
         static void networkErrorHandler(const char *message);
+
+        struct JsonPackets
+        {
+            static QJsonObject aircraftConfigRequest();
+        };
 
     private slots:
         void process();
@@ -154,6 +171,11 @@ namespace BlackCore
         static int const c_updateIntervalMsec = 5000;
         static int const c_logoffTimeoutSec = 5;
         QTextCodec *m_fsdTextCodec;
+
+        BlackMisc::Aviation::CAircraftParts m_sentAircraftConfig;
+        QTimer m_scheduledConfigUpdate;
+        CTokenBucket m_tokenBucket;
+
     };
 
 } //namespace BlackCore

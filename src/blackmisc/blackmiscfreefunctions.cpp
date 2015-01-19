@@ -372,3 +372,42 @@ bool BlackMisc::Audio::startWindowsMixer()
     QStringList parameterlist;
     return QProcess::startDetached("SndVol.exe", parameterlist);
 }
+
+QJsonObject BlackMisc::getIncrementalObject(const QJsonObject &previousObject, const QJsonObject &currentObject)
+{
+    QJsonObject incrementalObject = currentObject;
+    for (const auto &key : previousObject.keys())
+    {
+        if (previousObject.value(key).isObject())
+        {
+            auto child = getIncrementalObject(previousObject.value(key).toObject(), currentObject.value(key).toObject());
+            if (child.isEmpty()) incrementalObject.remove(key);
+            else incrementalObject.insert(key, child);
+        }
+        else
+        {
+            if (currentObject.value(key) == previousObject.value(key))
+                incrementalObject.remove(key);
+        }
+    }
+    return incrementalObject;
+}
+
+QJsonObject BlackMisc::applyIncrementalObject(const QJsonObject &previousObject, const QJsonObject &incrementalObject)
+{
+    QJsonObject currentObject = previousObject;
+    for(const auto &key : incrementalObject.keys())
+    {
+        // If it is not an object, just insert the value
+        if (!incrementalObject.value(key).isObject())
+        {
+            currentObject.insert(key,incrementalObject.value(key));
+        }
+        else
+        {
+            auto child = applyIncrementalObject(currentObject.value(key).toObject(), incrementalObject.value(key).toObject());
+            currentObject.insert(key, child);
+        }
+    }
+    return currentObject;
+}

@@ -10,6 +10,7 @@
 #include "network_vatlib.h"
 #include "blackmisc/project.h"
 #include "blackmisc/logmessage.h"
+#include <QJsonDocument>
 #include <vector>
 #include <type_traits>
 
@@ -37,7 +38,8 @@ namespace BlackCore
         : INetwork(parent), COwnAircraftProviderSupport(ownAircraft),
         m_loginMode(LoginNormal),
         m_status(vatStatusIdle),
-        m_fsdTextCodec(QTextCodec::codecForName("latin1"))
+        m_fsdTextCodec(QTextCodec::codecForName("latin1")),
+        m_tokenBucket(10, CTime(5, CTimeUnit::s()), 1)
     {
         connect(this, &CNetworkVatlib::terminate, this, &INetwork::terminateConnection, Qt::QueuedConnection);
         connect(this, &INetwork::customPacketReceived, this, &CNetworkVatlib::customPacketDispatcher);
@@ -50,6 +52,9 @@ namespace BlackCore
         connect(&m_processingTimer, SIGNAL(timeout()), this, SLOT(process()));
         connect(&m_updateTimer, SIGNAL(timeout()), this, SLOT(update()));
         m_processingTimer.start(c_processingIntervalMsec);
+
+        this->connect(&this->m_scheduledConfigUpdate, &QTimer::timeout, this, &CNetworkVatlib::sendIncrementalAircraftConfig);
+        m_scheduledConfigUpdate.setSingleShot(true);
     }
 
     void CNetworkVatlib::initializeSession()
@@ -90,6 +95,7 @@ namespace BlackCore
         Vat_SetAircraftInfoRequestHandler(m_net.data(), onPilotInfoRequestReceived, this);
         Vat_SetAircraftInfoHandler(m_net.data(), onPilotInfoReceived, this);
         Vat_SetCustomPilotPacketHandler(m_net.data(), onCustomPacketReceived, this);
+        Vat_SetAircraftConfigHandler(m_net.data(), onAircraftConfigReceived, this);
     }
 
     CNetworkVatlib::~CNetworkVatlib()
@@ -100,6 +106,7 @@ namespace BlackCore
     void CNetworkVatlib::process()
     {
         if (!m_net) { return; }
+        sendIncrementalAircraftConfig();
         Vat_ExecuteNetworkTasks(m_net.data());
     }
 
@@ -226,6 +233,25 @@ namespace BlackCore
             qstrList.push_back(fromFSD(cstrArray[i]));
         }
         return qstrList;
+    }
+
+    QString CNetworkVatlib::convertToUnicodeEscaped(const QString &str)
+    {
+        QString escaped;
+        for (const auto &ch : str)
+        {
+            ushort code = ch.unicode();
+            if (code < 0x80)
+            {
+                escaped += ch;
+            }
+            else
+            {
+                escaped += "\\u";
+                escaped += QString::number(code, 16).rightJustified(4, '0');
+            }
+        }
+        return escaped;
     }
 
     /********************************** * * * * * * * * * * * * * * * * * * * ************************************/
@@ -454,6 +480,19 @@ namespace BlackCore
         Vat_SendInformation(m_net.data(), vatInfoQueryTypeName, toFSD(callsign), toFSD(m_server.getUser().getRealName()));
     }
 
+    void CNetworkVatlib::replyToConfigQuery(const CCallsign &callsign)
+    {
+        QJsonObject currentConfig = ownAircraft().getParts().toJson();
+        // Fixme: Use QJsonObject with std::initializer_list once 5.4 is baseline
+        currentConfig.insert("is_full_data", true);
+        QJsonObject packet;
+        packet.insert("config", currentConfig);
+        QJsonDocument doc(packet);
+        QString data { doc.toJson(QJsonDocument::Compact) };
+        data = convertToUnicodeEscaped(data);
+        Vat_SendAircraftConfig(m_net.data(), toFSD(callsign), toFSD(data));
+    }
+
     void CNetworkVatlib::sendIcaoCodesQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
@@ -468,6 +507,32 @@ namespace BlackCore
 
         VatAircraftInfo aircraftInfo {acTypeICAObytes, airlineICAObytes, liverybytes};
         Vat_SendModernPlaneInfo(m_net.data(), toFSD(callsign), &aircraftInfo);
+    }
+
+    void CNetworkVatlib::sendIncrementalAircraftConfig()
+    {
+        if (!isConnected()) return;
+
+        CAircraftParts currentParts = ownAircraft().getParts();
+
+        // If it hasn't changed, return
+        if (m_sentAircraftConfig == currentParts) return;
+
+        if (!m_tokenBucket.tryConsume())
+        {
+            // If timer is not yet active, start it
+            if (!m_scheduledConfigUpdate.isActive()) m_scheduledConfigUpdate.start(1000);
+            return;
+        }
+
+        // Method could have been triggered by another change in aircraft config
+        // so a previous update might still be scheduled. Stop it.
+        if (m_scheduledConfigUpdate.isActive()) m_scheduledConfigUpdate.stop();
+        QJsonObject previousConfig = m_sentAircraftConfig.toJson();
+        QJsonObject currentConfig = currentParts.toJson();
+        QJsonObject incrementalConfig = getIncrementalObject(previousConfig, currentConfig);
+        broadcastAircraftConfig(incrementalConfig);
+        m_sentAircraftConfig = currentParts;
     }
 
     void CNetworkVatlib::sendPing(const BlackMisc::Aviation::CCallsign &callsign)
@@ -500,6 +565,24 @@ namespace BlackCore
     {
         QStringList data { { "0" }, airlineIcao, aircraftIcao, { "" }, { "" }, { "" }, { "" }, combinedType, modelString };
         sendCustomPacket(callsign, "FSIPIR", data);
+    }
+
+    void CNetworkVatlib::broadcastAircraftConfig(const QJsonObject &config)
+    {
+        // Fixme: Use QJsonObject with std::initializer_list once 5.4 is baseline
+        QJsonObject packet;
+        packet.insert("config", config);
+        QJsonDocument doc(packet);
+        QString data { doc.toJson(QJsonDocument::Compact) };
+        data = convertToUnicodeEscaped(data);
+        Vat_SendAircraftConfigBroadcast(m_net.data(), toFSD(data));
+    }
+
+    void CNetworkVatlib::sendAircraftConfigQuery(const CCallsign &callsign)
+    {
+        QJsonDocument doc(JsonPackets::aircraftConfigRequest());
+        QString data { doc.toJson(QJsonDocument::Compact) };
+        Vat_SendAircraftConfig(m_net.data(), toFSD(callsign), toFSD(data));
     }
 
     /********************************** * * * * * * * * * * * * * * * * * * * ************************************/
@@ -595,6 +678,30 @@ namespace BlackCore
             qDebug() << "Wrong transponder code" << position->transponderMode << callsign;
         }
         emit cbvar_cast(cbvar)->aircraftPositionUpdate(callsign, situation, transponder);
+    }
+
+    void CNetworkVatlib::onAircraftConfigReceived(VatSessionID, const char *callsign, const char *aircraftConfig, void *cbvar)
+    {
+        QByteArray json = cbvar_cast(cbvar)->fromFSD(aircraftConfig).toUtf8();
+        QJsonParseError parserError;
+        QJsonDocument doc = QJsonDocument::fromJson(json, &parserError);
+
+        if (parserError.error != QJsonParseError::NoError)
+            CLogMessage(static_cast<CNetworkVatlib*>(nullptr)).warning("Failed to parse aircraft config packet: %1") << parserError.errorString();
+
+        QJsonObject packet = doc.object();
+
+        if (packet == JsonPackets::aircraftConfigRequest() )
+        {
+            cbvar_cast(cbvar)->replyToConfigQuery(cbvar_cast(cbvar)->fromFSD(callsign));
+            return;
+        }
+
+        QJsonObject config = doc.object().value("config").toObject();
+        if (config.empty()) return;
+
+        bool isFull = config.take("is_full_data").toBool(false);
+        emit cbvar_cast(cbvar)->aircraftConfigPacketReceived(cbvar_cast(cbvar)->fromFSD(callsign), config, isFull);
     }
 
     void CNetworkVatlib::onInterimPilotPositionUpdate(VatSessionID, const char * /** callsign **/, const VatPilotPosition * /** position **/, void * /** cbvar **/)
@@ -837,6 +944,14 @@ namespace BlackCore
     void CNetworkVatlib::networkErrorHandler(const char *message)
     {
         CLogMessage(static_cast<CNetworkVatlib *>(nullptr)).error(message);
+    }
+
+    QJsonObject CNetworkVatlib::JsonPackets::aircraftConfigRequest()
+    {
+        // Fixme: Use static QJsonObject with std::initializer_list once 5.4 is baseline
+        QJsonObject request;
+        request.insert("request", "full");
+        return request;
     }
 
 } // namespace

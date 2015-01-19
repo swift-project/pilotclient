@@ -259,6 +259,12 @@ namespace BlackCore
                                             const QString &aircraftDesignator, const QString &combinedType, const QString &modelString) = 0;
         //! @}
 
+        //! Broadcast an incremental aircraft config
+        virtual void broadcastAircraftConfig(const QJsonObject &config) = 0;
+
+        //! Query callsign for its current full aircraft config
+        virtual void sendAircraftConfigQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
         //! @}
         ////////////////////////////////////////////////////////////////
         //! \name ATC slots
@@ -498,6 +504,9 @@ namespace BlackCore
          */
         void fsipirCustomPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
                                         const QString &aircraftDesignator, const QString &combinedType, const QString &modelString);
+
+        //! We received a aircraft config packet
+        void aircraftConfigPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &incremental, bool isFull);
 
         //! @}
         ////////////////////////////////////////////////////////////////

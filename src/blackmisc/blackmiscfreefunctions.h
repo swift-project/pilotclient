@@ -184,6 +184,14 @@ namespace BlackMisc
         return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
     }
 
+    //! Creates an incremental json object from two existing objects
+    QJsonObject getIncrementalObject(const QJsonObject &previousObject, const QJsonObject &currentObject);
+
+    //! Merges an incremental json object into an existing one
+    QJsonObject applyIncrementalObject(const QJsonObject &previousObject, const QJsonObject &incrementalObject);
+
+
+
 } // BlackMisc
 
 #endif // guard
