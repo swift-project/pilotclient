@@ -29,9 +29,6 @@ namespace BlackGui
 {
     namespace Models
     {
-        /*
-         * Column count
-         */
         int CListModelBaseNonTemplate::columnCount(const QModelIndex &modelIndex) const
         {
             Q_UNUSED(modelIndex);
@@ -39,9 +36,6 @@ namespace BlackGui
             return c;
         }
 
-        /*
-         * Header data
-         */
         QVariant CListModelBaseNonTemplate::headerData(int section, Qt::Orientation orientation, int role) const
         {
             if (orientation != Qt::Horizontal) { return QVariant(); }
@@ -62,41 +56,38 @@ namespace BlackGui
             return QVariant();
         }
 
-        /*
-         * Column to property index
-         */
+        QModelIndex CListModelBaseNonTemplate::index(int row, int column, const QModelIndex &parent) const
+        {
+            Q_UNUSED(parent);
+            return QAbstractItemModel::createIndex(row, column);
+        }
+
+        QModelIndex CListModelBaseNonTemplate::parent(const QModelIndex &child) const
+        {
+            Q_UNUSED(child);
+            return QModelIndex();
+        }
+
         BlackMisc::CPropertyIndex CListModelBaseNonTemplate::columnToPropertyIndex(int column) const
         {
             return this->m_columns.columnToPropertyIndex(column);
         }
 
-        /*
-         * To column
-         */
         int CListModelBaseNonTemplate::propertyIndexToColumn(const CPropertyIndex &propertyIndex) const
         {
             return m_columns.propertyIndexToColumn(propertyIndex);
         }
 
-        /*
-         * Property index
-         */
         BlackMisc::CPropertyIndex CListModelBaseNonTemplate::modelIndexToPropertyIndex(const QModelIndex &index) const
         {
             return this->columnToPropertyIndex(index.column());
         }
 
-        /*
-         * Sort column
-         */
         void CListModelBaseNonTemplate::setSortColumnByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex)
         {
             this->m_sortedColumn = this->m_columns.propertyIndexToColumn(propertyIndex);
         }
 
-        /*
-         * Sort column?
-         */
         bool CListModelBaseNonTemplate::hasValidSortColumn() const
         {
 
@@ -104,12 +95,9 @@ namespace BlackGui
             return this->m_columns.isSortable(this->m_sortedColumn);
         }
 
-        /*
-         * Flags
-         */
         Qt::ItemFlags CListModelBaseNonTemplate::flags(const QModelIndex &index) const
         {
-            Qt::ItemFlags f = QAbstractListModel::flags(index);
+            Qt::ItemFlags f = QAbstractItemModel::flags(index);
             if (!index.isValid()) { return f; }
             bool editable = this->m_columns.isEditable(index);
             f = editable ? (f | Qt::ItemIsEditable) : (f ^ Qt::ItemIsEditable);
@@ -123,25 +111,16 @@ namespace BlackGui
             return f;
         }
 
-        /*
-         * Translation context
-         */
         const QString &CListModelBaseNonTemplate::getTranslationContext() const
         {
             return m_columns.getTranslationContext();
         }
 
-        /*
-         * Update
-         */
         int CListModelBaseNonTemplate::ps_updateContainer(const CVariant &variant, bool sort)
         {
             return this->performUpdateContainer(variant, sort);
         }
 
-        /*
-         * Row count
-         */
         template <typename ObjectType, typename ContainerType>
         int CListModelBase<ObjectType, ContainerType>::rowCount(const QModelIndex &parentIndex) const
         {
@@ -149,9 +128,6 @@ namespace BlackGui
             return this->getContainerOrFilteredContainer().size();
         }
 
-        /*
-         * Valid index?
-         */
         template <typename ObjectType, typename ContainerType>
         bool CListModelBase<ObjectType, ContainerType>::isValidIndex(const QModelIndex &index) const
         {
@@ -160,9 +136,6 @@ namespace BlackGui
                     index.column() >= 0 && index.column() < this->columnCount(index));
         }
 
-        /*
-         * Data
-         */
         template <typename ObjectType, typename ContainerType>
         QVariant CListModelBase<ObjectType, ContainerType>::data(const QModelIndex &index, int role) const
         {
@@ -178,9 +151,6 @@ namespace BlackGui
             return formatter->data(role, obj.propertyByIndex(propertyIndex)).toQVariant();
         }
 
-        /*
-         * Set data
-         */
         template <typename ObjectType, typename ContainerType>
         bool CListModelBase<ObjectType, ContainerType>::setData(const QModelIndex &index, const QVariant &value, int role)
         {
@@ -213,9 +183,6 @@ namespace BlackGui
             return false;
         }
 
-        /*
-         * Update
-         */
         template <typename ObjectType, typename ContainerType>
         int CListModelBase<ObjectType, ContainerType>::update(const ContainerType &container, bool sort)
         {
@@ -239,9 +206,6 @@ namespace BlackGui
             return newSize;
         }
 
-        /*
-         * Update
-         */
         template <typename ObjectType, typename ContainerType>
         void CListModelBase<ObjectType, ContainerType>::update(const QModelIndex &index, const ObjectType &object)
         {
@@ -256,12 +220,9 @@ namespace BlackGui
         template <typename ObjectType, typename ContainerType>
         void CListModelBase<ObjectType, ContainerType>::update(int rowIndex, const ObjectType &object)
         {
-            this->update(this->index(rowIndex), object);
+            this->update(this->index(rowIndex, 0), object);
         }
 
-        /*
-         * Async update
-         */
         template <typename ObjectType, typename ContainerType>
         BlackMisc::CWorker *CListModelBase<ObjectType, ContainerType>::updateAsync(const ContainerType &container, bool sort)
         {
@@ -277,9 +238,6 @@ namespace BlackGui
             return worker;
         }
 
-        /*
-         * Container size decides async/sync
-         */
         template <typename ObjectType, typename ContainerType>
         void CListModelBase<ObjectType, ContainerType>::updateContainerMaybeAsync(const ContainerType &container, bool sort)
         {
@@ -294,18 +252,12 @@ namespace BlackGui
             }
         }
 
-        /*
-         * Filter
-         */
         template <typename ObjectType, typename ContainerType>
         bool CListModelBase<ObjectType, ContainerType>::hasFilter() const
         {
             return m_filter ? true : false;
         }
 
-        /*
-         * Remove filter
-         */
         template <typename ObjectType, typename ContainerType>
         void CListModelBase<ObjectType, ContainerType>::removeFilter()
         {
@@ -317,9 +269,6 @@ namespace BlackGui
             this->emitRowCountChanged();
         }
 
-        /*
-         * Set filter
-         */
         template <typename ObjectType, typename ContainerType>
         void CListModelBase<ObjectType, ContainerType>::setFilter(std::unique_ptr<IModelFilter<ContainerType> > &filter)
         {
@@ -338,9 +287,6 @@ namespace BlackGui
             }
         }
 
-        /*
-         * At
-         */
         template <typename ObjectType, typename ContainerType>
         const ObjectType &CListModelBase<ObjectType, ContainerType>::at(const QModelIndex &index) const
         {
@@ -355,18 +301,12 @@ namespace BlackGui
             }
         }
 
-        /*
-         * Container
-         */
         template <typename ObjectType, typename ContainerType>
         const ContainerType &CListModelBase<ObjectType, ContainerType>::getContainer() const
         {
             return this->m_container;
         }
 
-        /*
-         * Push back
-         */
         template <typename ObjectType, typename ContainerType>
         void CListModelBase<ObjectType, ContainerType>::push_back(const ObjectType &object)
         {
@@ -377,9 +317,6 @@ namespace BlackGui
             this->emitRowCountChanged();
         }
 
-        /*
-         * insert
-         */
         template <typename ObjectType, typename ContainerType>
         void CListModelBase<ObjectType, ContainerType>::insert(const ObjectType &object)
         {
@@ -396,9 +333,6 @@ namespace BlackGui
             this->emitRowCountChanged();
         }
 
-        /*
-         * Remove object
-         */
         template <typename ObjectType, typename ContainerType>
         void CListModelBase<ObjectType, ContainerType>::remove(const ObjectType &object)
         {
@@ -419,9 +353,6 @@ namespace BlackGui
             }
         }
 
-        /*
-         * Clear
-         */
         template <typename ObjectType, typename ContainerType>
         void CListModelBase<ObjectType, ContainerType>::clear()
         {
@@ -432,9 +363,12 @@ namespace BlackGui
             this->emitRowCountChanged();
         }
 
-        /*
-         * Update on container
-         */
+        template <typename ObjectType, typename ContainerType>
+        bool CListModelBase<ObjectType, ContainerType>::isEmpty() const
+        {
+            return this->m_container.isEmpty();
+        }
+
         template <typename ObjectType, typename ContainerType>
         int CListModelBase<ObjectType, ContainerType>::performUpdateContainer(const BlackMisc::CVariant &variant, bool sort)
         {
@@ -487,9 +421,6 @@ namespace BlackGui
             this->updateContainerMaybeAsync(this->m_container, true);
         }
 
-        /*
-         * Sort list
-         */
         template <typename ObjectType, typename ContainerType>
         ContainerType CListModelBase<ObjectType, ContainerType>::sortContainerByColumn(const ContainerType &container, int column, Qt::SortOrder order) const
         {

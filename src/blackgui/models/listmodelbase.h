@@ -26,7 +26,7 @@ namespace BlackGui
     namespace Models
     {
         //! Non templated base class, allows Q_OBJECT and signals to be used
-        class CListModelBaseNonTemplate : public QAbstractListModel
+        class CListModelBaseNonTemplate : public QAbstractItemModel
         {
             Q_OBJECT
 
@@ -37,11 +37,17 @@ namespace BlackGui
             //! Destructor
             virtual ~CListModelBaseNonTemplate() {}
 
-            //! \copydoc QAbstractListModel::columnCount()
+            //! \copydoc QAbstractItemModel::columnCount()
             virtual int columnCount(const QModelIndex &modelIndex = QModelIndex()) const override;
 
             //! \copydoc QAbstractItemModel::headerData()
             virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
+
+            //! \copydoc QAbstractItemModel::headerData()
+            virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
+
+            //! \copydoc QAbstractItemModel::parent()
+            virtual QModelIndex parent(const QModelIndex &child) const override;
 
             //! Column to property index
             virtual BlackMisc::CPropertyIndex columnToPropertyIndex(int column) const;
@@ -99,7 +105,7 @@ namespace BlackGui
              * \param parent
              */
             CListModelBaseNonTemplate(const QString &translationContext, QObject *parent = nullptr)
-                : QAbstractListModel(parent), m_columns(translationContext), m_sortedColumn(-1), m_sortOrder(Qt::AscendingOrder)
+                : QAbstractItemModel(parent), m_columns(translationContext), m_sortedColumn(-1), m_sortOrder(Qt::AscendingOrder)
             {
                 // non unique default name, set translation context as default
                 this->setObjectName(translationContext);
@@ -127,14 +133,14 @@ namespace BlackGui
             //! Used container data
             virtual const ContainerType &getContainer() const;
 
-            //! \copydoc QAbstractListModel::data()
+            //! \copydoc QAbstractItemModel::data()
             virtual QVariant data(const QModelIndex &index, int role) const override;
 
-            //! \copydoc QAbstractListModel::setData()
+            //! \copydoc QAbstractItemModel::setData()
             //! \sa CListModelBaseNonTemplate::flags
             virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
-            //! \copydoc QAbstractListModel::rowCount()
+            //! \copydoc QAbstractItemModel::rowCount()
             virtual int rowCount(const QModelIndex &parentIndex = QModelIndex()) const override;
 
             //! Update by new container
@@ -156,7 +162,7 @@ namespace BlackGui
             //! Object at row position
             virtual const ObjectType &at(const QModelIndex &index) const;
 
-            //! \copydoc QAbstractListModel::sort()
+            //! \copydoc QAbstractItemModel::sort()
             virtual void sort(int column, Qt::SortOrder order) override;
 
             /*!
@@ -190,6 +196,9 @@ namespace BlackGui
 
             //! Clear the list
             virtual void clear();
+
+            //! Empty?
+            virtual bool isEmpty() const;
 
             //! Filter available
             bool hasFilter() const;
