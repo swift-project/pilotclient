@@ -201,12 +201,12 @@ namespace BlackSim
             {
                 return ""; // normal when there is no settings value
             }
-            else if (qv.type() == QMetaType::QStringList)
+            else if (static_cast<QMetaType::Type>(qv.type()) == QMetaType::QStringList)
             {
                 QStringList l = qv.toStringList();
                 return l.join(",").trimmed();
             }
-            else if (qv.type() == QMetaType::QString)
+            else if (static_cast<QMetaType::Type>(qv.type()) == QMetaType::QString)
             {
                 return qv.toString().trimmed();
             }
