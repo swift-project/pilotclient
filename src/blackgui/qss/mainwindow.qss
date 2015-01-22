@@ -411,7 +411,7 @@ QHeaderView::section {
   margin: 0px;
 }
 
-QTableView {
+QTableView, QTreeView {
   border: 1px solid green;
   border-radius: 5px;
   background-color: transparent;

@@ -23,27 +23,14 @@ namespace BlackGui
         CAtcStationView::CAtcStationView(QWidget *parent) : CViewBase(parent)
         {
             this->standardInit(new CAtcStationListModel(CAtcStationListModel::StationsOnline, this));
+            this->m_withMenuItemClear = true;
+            this->m_withMenuItemRefresh = true;
         }
 
         void CAtcStationView::setStationMode(CAtcStationListModel::AtcStationMode stationMode)
         {
             Q_ASSERT(this->m_model);
             this->m_model->setStationMode(stationMode);
-            this->m_withMenuItemClear = true;
-            this->m_withMenuItemRefresh = true;
-
-            switch (stationMode)
-            {
-            case CAtcStationListModel::NotSet:
-            case CAtcStationListModel::StationsOnline:
-                this->m_model->setSortColumnByPropertyIndex(BlackMisc::Aviation::CAtcStation::IndexDistance);
-                break;
-            case CAtcStationListModel::StationsBooked:
-                this->m_model->setSortColumnByPropertyIndex(BlackMisc::Aviation::CAtcStation::IndexBookedFrom);
-                break;
-            default:
-                break;
-            }
             this->setSortIndicator();
         }
 

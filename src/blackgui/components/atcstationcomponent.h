@@ -113,6 +113,8 @@ namespace BlackGui
             void ps_setComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit unit);
 
         private:
+            void updateTreeView();
+
             QScopedPointer<Ui::CAtcStationComponent> ui;
             CUpdateTimer *m_updateTimer = nullptr;
             QDateTime m_timestampLastReadOnlineStations = CUpdateTimer::epoch();  //!< stations read

@@ -21,7 +21,7 @@ namespace BlackGui
     namespace Views
     {
         //! ATC stations view
-        class CAtcStationView : public CViewBase<Models::CAtcStationListModel, BlackMisc::Aviation::CAtcStationList, BlackMisc::Aviation::CAtcStation>
+        class CAtcStationView : public CViewBase<BlackGui::Models::CAtcStationListModel, BlackMisc::Aviation::CAtcStationList, BlackMisc::Aviation::CAtcStation>
         {
             Q_OBJECT
 
@@ -31,7 +31,7 @@ namespace BlackGui
             explicit CAtcStationView(QWidget *parent = nullptr);
 
             //! Set station mode
-            void setStationMode(Models::CAtcStationListModel::AtcStationMode stationMode);
+            void setStationMode(BlackGui::Models::CAtcStationListModel::AtcStationMode stationMode);
 
         signals:
             //! Request some dummy ATC stations

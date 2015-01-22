@@ -25,19 +25,19 @@ namespace BlackGui
          * Constructor
          */
         CAtcStationListModel::CAtcStationListModel(AtcStationMode stationMode, QObject *parent) :
-            CListModelBase("ViewAtcList", parent), m_stationMode(NotSet)
+            CListModelBase("ModelAtcList", parent), m_stationMode(NotSet)
         {
             this->setStationMode(stationMode);
 
             // force strings for translation in resource files
-            (void)QT_TRANSLATE_NOOP("ViewAtcList", "callsign");
-            (void)QT_TRANSLATE_NOOP("ViewAtcList", "distance");
-            (void)QT_TRANSLATE_NOOP("ViewAtcList", "frequency");
-            (void)QT_TRANSLATE_NOOP("ViewAtcList", "controllername");
-            (void)QT_TRANSLATE_NOOP("ViewAtcList", "online");
-            (void)QT_TRANSLATE_NOOP("ViewAtcList", "bookedfrom");
-            (void)QT_TRANSLATE_NOOP("ViewAtcList", "bookeduntil");
-            (void)QT_TRANSLATE_NOOP("ViewAtcList", "voiceroomurl");
+            (void)QT_TRANSLATE_NOOP("ModelAtcList", "callsign");
+            (void)QT_TRANSLATE_NOOP("ModelAtcList", "distance");
+            (void)QT_TRANSLATE_NOOP("ModelAtcList", "frequency");
+            (void)QT_TRANSLATE_NOOP("ModelAtcList", "controllername");
+            (void)QT_TRANSLATE_NOOP("ModelAtcList", "online");
+            (void)QT_TRANSLATE_NOOP("ModelAtcList", "bookedfrom");
+            (void)QT_TRANSLATE_NOOP("ModelAtcList", "bookeduntil");
+            (void)QT_TRANSLATE_NOOP("ModelAtcList", "voiceroomurl");
         }
 
         void CAtcStationListModel::setStationMode(CAtcStationListModel::AtcStationMode stationMode)
@@ -50,7 +50,7 @@ namespace BlackGui
             case NotSet:
             case StationsOnline:
                 {
-                    this->m_columns.addColumn(CColumn::standardString("call", "callsign", { CAtcStation::IndexCallsign, CCallsign::IndexCallsignStringAsSet }));
+                    this->m_columns.addColumn(CColumn::standardString("cs.", "callsign", { CAtcStation::IndexCallsign, CCallsign::IndexCallsignStringAsSet }));
                     CColumn col = CColumn("type", CAtcStation::IndexIcon);
                     col.setSortPropertyIndex({ CAtcStation::IndexCallsign, CCallsign::IndexSuffix });
                     this->m_columns.addColumn(col);
@@ -69,10 +69,11 @@ namespace BlackGui
 
             case StationsBooked:
                 {
-                    this->m_columns.addColumn(CColumn::standardString("call", "callsign", { CAtcStation::IndexCallsign, CCallsign::IndexCallsignStringAsSet }));
+                    this->m_columns.addColumn(CColumn::standardString("cs.", "callsign", { CAtcStation::IndexCallsign, CCallsign::IndexCallsignStringAsSet }));
                     CColumn col = CColumn("type", CAtcStation::IndexIcon);
                     col.setSortPropertyIndex({ CAtcStation::IndexCallsign, CCallsign::IndexSuffix });
-                    this->m_columns.addColumn(col);                this->m_columns.addColumn(CColumn("", "on/offline", CAtcStation::IndexIsOnline, new CBoolLedFormatter("online", "offline")));
+                    this->m_columns.addColumn(col);
+                    this->m_columns.addColumn(CColumn("", "on/offline", CAtcStation::IndexIsOnline, new CBoolLedFormatter("online", "offline")));
                     this->m_columns.addColumn(CColumn::standardString("controllername", { CAtcStation::IndexController, CUser::IndexRealName }));
                     this->m_columns.addColumn(CColumn("from", "booked from", CAtcStation::IndexBookedFrom, new CDateTimeFormatter(CDateTimeFormatter::formatYmdhm())));
                     this->m_columns.addColumn(CColumn("until", "booked until", CAtcStation::IndexBookedUntil, new CDateTimeFormatter(CDateTimeFormatter::formatYmdhm())));
@@ -88,6 +89,49 @@ namespace BlackGui
                 qFatal("Wrong mode");
                 break;
             }
+        }
+
+        QStandardItemModel *CAtcStationListModel::toAtcGroupModel() const
+        {
+            QStandardItemModel *model = new QStandardItemModel();
+            if (this->isEmpty()) { return model; }
+            model->setColumnCount(4);
+            QMap<QString, int> types = this->getContainer().getSuffixes();
+            for (const QString &type : types.keys())
+            {
+                // ownership of QStandardItem is taken by model
+                QStandardItem *typeFolderFirstColumn = new QStandardItem(CCallsign::suffixToIcon(type).toQIcon(), type);
+                QList<QStandardItem *> typeFolderRow { typeFolderFirstColumn };
+                model->invisibleRootItem()->appendRow(typeFolderRow);
+                CAtcStationList stations = this->getContainer().findBySuffix(type);
+                for (const CAtcStation &station : stations)
+                {
+                    QList<QStandardItem *> stationRow;
+                    switch (m_stationMode)
+                    {
+                    case StationsOnline:
+                        stationRow = QList<QStandardItem *>
+                        {
+                            new QStandardItem(station.getCallsign().toQString()),
+                            new QStandardItem(station.getFrequency().valueRoundedWithUnit(CFrequencyUnit::MHz(), 2, true)),
+                            new QStandardItem(station.getControllerRealName()),
+                            new QStandardItem(station.getDistanceToPlane().valueRoundedWithUnit(CLengthUnit::NM(), 1, true))
+                        };
+                        break;
+                    case StationsBooked:
+                        stationRow = QList<QStandardItem *>
+                        {
+                            new QStandardItem(station.getCallsign().toQString()),
+                            new QStandardItem(station.getControllerRealName()),
+                            new QStandardItem(station.getBookedFromUtc().toString(CDateTimeFormatter::formatYmdhm())),
+                            new QStandardItem(station.getBookedUntilUtc().toString(CDateTimeFormatter::formatYmdhm()))
+                        };
+                        break;
+                    }
+                    typeFolderFirstColumn->appendRow(stationRow);
+                }
+            }
+            return model;
         }
 
         void CAtcStationListModel::changedAtcStationConnectionStatus(const CAtcStation &station, bool added)

@@ -8,7 +8,6 @@
  */
 
 #include "atcstationcomponent.h"
-#include "../views/atcstationview.h"
 #include "../guiutility.h"
 #include "ui_atcstationcomponent.h"
 #include "blackmisc/avinformationmessage.h"
@@ -46,6 +45,9 @@ namespace BlackGui
             this->ui->tvp_AtcStationsOnline->setStationMode(CAtcStationListModel::StationsOnline);
             this->ui->tvp_AtcStationsBooked->setStationMode(CAtcStationListModel::StationsBooked);
             this->ui->tvp_AtcStationsBooked->setResizeMode(CAtcStationView::ResizingOnce);
+
+            // header
+            this->ui->tvp_AtcStationsOnlineTree->setHeaderHidden(true);
 
             // Signal / Slots
             bool connected = this->connect(this->ui->le_AtcStationsOnlineMetar, SIGNAL(returnPressed()), this, SLOT(getMetar()));
@@ -123,11 +125,14 @@ namespace BlackGui
                     this->ui->tvp_AtcStationsOnline->updateContainerMaybeAsync(this->getIContextNetwork()->getAtcStationsOnline());
                     this->m_timestampLastReadOnlineStations = QDateTime::currentDateTimeUtc();
                     this->m_timestampOnlineStationsChanged = this->m_timestampLastReadOnlineStations;
+
+                    this->updateTreeView();
                 }
             }
             else
             {
                 this->ui->tvp_AtcStationsOnline->clear();
+                this->updateTreeView();
                 this->ui->le_AtcStationsOnlineMetar->clear();
             }
         }
@@ -146,9 +151,9 @@ namespace BlackGui
             }
             QString icao = airportIcaoCode.isEmpty() ? this->ui->le_AtcStationsOnlineMetar->text().trimmed().toUpper() : airportIcaoCode.trimmed().toUpper();
             this->ui->le_AtcStationsOnlineMetar->setText(icao);
-            if (icao.length() != 4) return;
+            if (icao.length() != 4) { return; }
             CInformationMessage metar = this->getIContextNetwork()->getMetar(icao);
-            if (metar.getType() != CInformationMessage::METAR) return;
+            if (metar.getType() != CInformationMessage::METAR) { return; }
             if (metar.isEmpty())
             {
                 this->ui->te_AtcStationsOnlineInfo->clear();
@@ -202,6 +207,7 @@ namespace BlackGui
             if (INetwork::isDisconnectedStatus(toStatus))
             {
                 this->ui->tvp_AtcStationsOnline->clear();
+                this->updateTreeView();
                 this->ui->le_AtcStationsOnlineMetar->clear();
             }
         }
@@ -250,6 +256,22 @@ namespace BlackGui
             if (unit != CComSystem::Com1 && unit != CComSystem::Com2) { return; }
             if (!CComSystem::isValidComFrequency(frequency)) { return; }
             this->getIContextOwnAircraft()->updateComFrequency(frequency, static_cast<int>(unit), originator());
+        }
+
+        void CAtcStationComponent::updateTreeView()
+        {
+            QAbstractItemModel *old = (this->ui->tvp_AtcStationsOnlineTree->model());
+            this->ui->tvp_AtcStationsOnlineTree->setModel(
+                this->ui->tvp_AtcStationsOnline->derivedModel()->toAtcGroupModel()
+            );
+            if (old) { old->deleteLater(); }
+            if (!this->ui->tvp_AtcStationsOnlineTree->model()) { return; }
+
+            this->ui->tvp_AtcStationsOnlineTree->expandAll();
+            for (int i = 0; i < this->ui->tvp_AtcStationsOnlineTree->model()->columnCount(); i++)
+            {
+                this->ui->tvp_AtcStationsOnlineTree->resizeColumnToContents(i);
+            }
         }
 
         void CAtcStationComponent::ps_onlineAtcStationSelected(QModelIndex index)

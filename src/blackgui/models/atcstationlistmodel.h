@@ -15,6 +15,7 @@
 #include "blackmisc/avatcstationlist.h"
 #include "blackgui/models/listmodelbase.h"
 #include <QAbstractItemModel>
+#include <QStandardItemModel>
 #include <QDBusConnection>
 
 namespace BlackGui
@@ -46,12 +47,15 @@ namespace BlackGui
             //! Station mode
             AtcStationMode getStationMode() const { return this->m_stationMode; }
 
+            //! A group by type (TWR, APP, ...) model
+            QStandardItemModel *toAtcGroupModel() const;
+
         public slots:
             //! Used to quickly update single station (better response for the user)
             void changedAtcStationConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
 
         private:
-            AtcStationMode m_stationMode;
+            AtcStationMode m_stationMode = NotSet;
         };
     }
 }
