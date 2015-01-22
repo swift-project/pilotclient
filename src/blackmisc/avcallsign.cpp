@@ -41,22 +41,28 @@ namespace BlackMisc
         {
             if (callsign.hasSuffix())
             {
-                QString t = callsign.getSuffix();
-                if (t.length() < 3) { return CIconList::iconByIndex(CIcons::NetworkRoleUnknown); }
-                if ("APP" == t) { return CIconList::iconByIndex(CIcons::NetworkRoleApproach); }
-                if ("GND" == t) { return CIconList::iconByIndex(CIcons::NetworkRoleGround); }
-                if ("TWR" == t) { return CIconList::iconByIndex(CIcons::NetworkRoleTower); }
-                if ("DEL" == t) { return CIconList::iconByIndex(CIcons::NetworkRoleDelivery); }
-                if ("CTR" == t) { return CIconList::iconByIndex(CIcons::NetworkRoleCenter); }
-                if ("SUP" == t) { return CIconList::iconByIndex(CIcons::NetworkRoleSup); }
-                if ("OBS" == t) { return CIconList::iconByIndex(CIcons::NetworkRoleObs); }
-                if ("ATIS" == t) { return CIconList::iconByIndex(CIcons::AviationAtis); }
-                return CIconList::iconByIndex(CIcons::NetworkRoleUnknown);
+                return suffixToIcon(callsign.getSuffix());
             }
             else
             {
                 return CIconList::iconByIndex(CIcons::NetworkRolePilot);
             }
+        }
+
+        const CIcon &CCallsign::suffixToIcon(const QString &suffix)
+        {
+            if (suffix.length() < 3) { return CIconList::iconByIndex(CIcons::NetworkRoleUnknown); }
+            QString sfx = suffix.toUpper();
+            if ("APP" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleApproach); }
+            if ("GND" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleGround); }
+            if ("TWR" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleTower); }
+            if ("DEL" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleDelivery); }
+            if ("CTR" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleCenter); }
+            if ("SUP" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleSup); }
+            if ("OBS" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleObs); }
+            if ("ATIS" == sfx) { return CIconList::iconByIndex(CIcons::AviationAtis); }
+            if ("VATSIM" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleMnt); }
+            return CIconList::iconByIndex(CIcons::NetworkRoleUnknown);
         }
 
         /*
@@ -194,6 +200,7 @@ namespace BlackMisc
             static const QStringList a( { "ATIS", "APP", "GND", "OBS", "TWR", "DEL", "CTR", "SUP", "FSS" });
             return a;
         }
+
 
     } // namespace
 } // namespace

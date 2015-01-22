@@ -14,6 +14,7 @@
 
 #include "icons.h"
 #include "pqangle.h"
+#include <QIcon>
 
 namespace BlackMisc
 {
@@ -37,6 +38,9 @@ namespace BlackMisc
 
         //! Corresponding pixmap
         QPixmap toPixmap() const;
+
+        //! A QIcon
+        QIcon toQIcon() const;
 
         //! Icon set?
         bool isSet() const { return (this->m_index != static_cast<int>(CIcons::NotSet));}

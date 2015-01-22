@@ -21,6 +21,14 @@ namespace BlackMisc
     }
 
     /*
+     * Icon
+     */
+    QIcon CIcon::toQIcon() const
+    {
+        return QIcon(toPixmap());
+    }
+
+    /*
      * Rotate
      */
     void CIcon::setRotation(const PhysicalQuantities::CAngle &rotate)

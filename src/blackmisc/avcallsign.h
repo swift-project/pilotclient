@@ -99,15 +99,18 @@ namespace BlackMisc
             //! List of real ("TWR") and treated like ATC suffixes (e.g. OBS);
             static const QStringList &atcAlikeCallsignSuffixes();
 
+            //! Suffix to icon
+            static const BlackMisc::CIcon &suffixToIcon(const QString &suffix);
+
+            //! Representing icon
+            static const CIcon &convertToIcon(const CCallsign &callsign);
+
         protected:
             //! \copydoc CValueObject::convertToQString()
             virtual QString convertToQString(bool i18n = false) const override;
 
             //! Unify the callsign
             static QString unifyCallsign(const QString &callsign);
-
-            //! representing icon
-            static const CIcon &convertToIcon(const CCallsign &callsign);
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CCallsign)
