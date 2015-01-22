@@ -48,8 +48,14 @@ namespace BlackMisc
             //! Find 0..n stations tune in frequency of COM unit (with 25kHt channel spacing
             CAtcStationList findIfComUnitTunedIn25KHz(const BlackMisc::Aviation::CComSystem &comUnit) const;
 
+            //! Find 0..n stations matching the suffix (e.g. TWR)
+            CAtcStationList findBySuffix(const QString &suffix) const;
+
             //! All controllers (with valid data)
             BlackMisc::Network::CUserList getControllers() const;
+
+            //! Get all (different suffixes)
+            QMap<QString, int> getSuffixes() const;
 
             //! Update distances to coordinate, usually own aircraft's position
             void calculateDistancesToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position);

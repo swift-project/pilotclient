@@ -83,10 +83,7 @@ namespace BlackMisc
             }
 
             //! Has METAR?
-            bool hasMetar() const
-            {
-                return this->m_metar.hasMessage();
-            }
+            bool hasMetar() const;
 
             //! Get callsign.
             const CCallsign &getCallsign() const { return m_callsign; }
@@ -94,8 +91,11 @@ namespace BlackMisc
             //! Get callsign as string.
             QString getCallsignAsString() const { return m_callsign.asString(); }
 
+            //! Callsign suffix (e.g. TWR)
+            QString getCallsignSuffix() const;
+
             //! Set callsign
-            void setCallsign(const CCallsign &callsign) { this->m_callsign = callsign; this->m_controller.setCallsign(callsign);}
+            void setCallsign(const CCallsign &callsign);
 
             //! Get controller
             const BlackMisc::Network::CUser &getController() const { return m_controller; }

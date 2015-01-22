@@ -86,6 +86,17 @@ namespace BlackMisc
         }
 
         /*
+         * Find by suffix
+         */
+        CAtcStationList CAtcStationList::findBySuffix(const QString &suffix) const
+        {
+            CAtcStationList r;
+            if (suffix.isEmpty()) { return r; }
+            r = this->findBy(&CAtcStation::getCallsignSuffix, suffix);
+            return r;
+        }
+
+        /*
          * Distances to own plane
          */
         void CAtcStationList::calculateDistancesToPlane(const Geo::CCoordinateGeodetic &position)
@@ -102,6 +113,28 @@ namespace BlackMisc
         CUserList CAtcStationList::getControllers() const
         {
             return this->findBy(Predicates::MemberValid(&CAtcStation::getController)).transform(Predicates::MemberTransform(&CAtcStation::getController));
+        }
+
+        /*
+         * Suffixes with count
+         */
+        QMap<QString, int> CAtcStationList::getSuffixes() const
+        {
+            QMap<QString, int> r;
+            for (const CAtcStation &station : (*this))
+            {
+                const QString s = station.getCallsignSuffix();
+                if (s.isEmpty()) { continue; }
+                if (r.contains(s))
+                {
+                    r[s] = r[s] + 1;
+                }
+                else
+                {
+                    r.insert(s, 1);
+                }
+            }
+            return r;
         }
 
         /*

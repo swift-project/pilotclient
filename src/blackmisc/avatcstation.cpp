@@ -58,6 +58,31 @@ namespace BlackMisc
         }
 
         /*
+         * METAR
+         */
+        bool CAtcStation::hasMetar() const
+        {
+            return this->m_metar.hasMessage();
+        }
+
+        /*
+         * Suffix
+         */
+        QString CAtcStation::getCallsignSuffix() const
+        {
+            return m_callsign.getSuffix();
+        }
+
+        /*
+         * Callsign
+         */
+        void CAtcStation::setCallsign(const CCallsign &callsign)
+        {
+            this->m_callsign = callsign;
+            this->m_controller.setCallsign(callsign);
+        }
+
+        /*
          * Convert to string
          */
         QString CAtcStation::convertToQString(bool i18n) const
