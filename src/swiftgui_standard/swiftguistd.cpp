@@ -163,7 +163,7 @@ void SwiftGuiStd::ps_loginRequested()
 bool SwiftGuiStd::isContextNetworkAvailableCheck()
 {
     if (this->m_contextNetworkAvailable) return true;
-    this->ps_displayStatusMessageInGui(CLogMessage(this).error("Network context not available, no updates this time"));
+    CLogMessage(this).error("Network context not available, no updates this time");
     return false;
 }
 
@@ -173,7 +173,7 @@ bool SwiftGuiStd::isContextNetworkAvailableCheck()
 bool SwiftGuiStd::isContextAudioAvailableCheck()
 {
     if (this->m_contextAudioAvailable) return true;
-    this->ps_displayStatusMessageInGui(CLogMessage(this).error("Voice context not available"));
+    CLogMessage(this).error("Audio context not available");
     return false;
 }
 

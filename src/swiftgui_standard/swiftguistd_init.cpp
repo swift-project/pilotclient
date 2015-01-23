@@ -194,13 +194,13 @@ void SwiftGuiStd::initialDataReads()
     this->m_coreAvailable = (this->getIContextNetwork()->isUsingImplementingObject() || (this->getIContextApplication()->ping(t) == t));
     if (!this->m_coreAvailable)
     {
-        this->ps_displayStatusMessageInGui(CLogMessage(this).error("no initial data read as network context is not available"));
+        CLogMessage(this).error("no initial data read as network context is not available");
         return;
     }
 
     this->ui->comp_MainInfoArea->getSettingsComponent()->reloadSettings(); // init read
     this->ps_reloadOwnAircraft(); // init read, independent of traffic network
-    this->ps_displayStatusMessageInGui(CLogMessage(this).info("initial data read"));
+    CLogMessage(this).info("initial data read");
 }
 
 /*

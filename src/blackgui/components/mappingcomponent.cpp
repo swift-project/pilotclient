@@ -264,7 +264,7 @@ namespace BlackGui
                 return;
             }
             getIContextSimulator()->changeRemoteAircraft(aircraft, changedValues);
-            CLogMessage(this).info("Requesting model changed for %1") << callsign.asString();
+            CLogMessage(this).info("Requesting model change for %1") << callsign.asString();
         }
 
         void CMappingComponent::ps_onModelPreviewChanged(int state)

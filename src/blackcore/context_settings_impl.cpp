@@ -94,11 +94,11 @@ namespace BlackCore
 
         if (ok)
         {
-            return CLogMessage(this).info("Read settings: %1") << this->getSettingsFileName();
+            return CStatusMessage(CStatusMessage::SeverityInfo, QString("Read settings: %1").arg(this->getSettingsFileName()));
         }
         else
         {
-            return CLogMessage(this).error("Problem reading settings: %1") << this->getSettingsFileName();
+            return CStatusMessage(CStatusMessage::SeverityError, QString("Problem reading settings: %1").arg(this->getSettingsFileName()));
         }
     }
 
@@ -109,7 +109,7 @@ namespace BlackCore
     {
         if (!CSettingUtilities::initSettingsDirectory())
         {
-            return CLogMessage(this).error("Cannot init directory: %1") << this->getSettingsDirectory();
+            return CStatusMessage(CStatusMessage::SeverityError, QString("Cannot init directory: %1").arg(this->getSettingsDirectory()));
         }
         QFile jsonFile(this->getSettingsFileName());
         bool ok = false;
@@ -121,11 +121,11 @@ namespace BlackCore
         }
         if (ok)
         {
-            return CLogMessage(this).info("Written settings: %1") << this->getSettingsFileName();
+            return CStatusMessage(CStatusMessage::SeverityInfo, QString("Written settings: %1").arg(this->getSettingsFileName()));
         }
         else
         {
-            return CLogMessage(this).error("Problem writing settings: %1") << this->getSettingsFileName();
+            return CStatusMessage(CStatusMessage::SeverityError, QString("Problem writing settings: %1").arg(this->getSettingsFileName()));
         }
     }
 
@@ -140,9 +140,13 @@ namespace BlackCore
         this->m_settingsSimulator.initDefaultValues();
         this->emitCompletelyChanged();
         if (write)
+        {
             return this->write();
+        }
         else
-            return CLogMessage(this).info("Reset settings data, not written");
+        {
+            return CStatusMessage(CStatusMessage::SeverityInfo, "Reset settings data, not written");
+        }
     }
 
     QString CContextSettings::getSettingsAsJsonString() const
@@ -264,7 +268,9 @@ namespace BlackCore
         }
         else
         {
-            msgs.push_back(CLogMessage(CLogCategory::validation()).error("wrong path: %1") << path);
+            msgs.push_back(
+                CStatusMessage({CLogCategory::validation()}, CStatusMessage::SeverityError, QString("Wrong path: %1").arg(this->getSettingsFileName()))
+            );
         }
         return msgs;
     }
