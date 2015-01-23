@@ -1,7 +1,11 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2015
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 #include "samplesaviation.h"
 #include "blackmisc/pqconstants.h"
@@ -29,33 +33,33 @@ namespace BlackMiscTest
     /*
      * Samples
      */
-    int CSamplesAviation::samples()
+    int CSamplesAviation::samples(QTextStream &out)
     {
         CHeading h1(180, CHeading::Magnetic, CAngleUnit::deg());
         CHeading h2(180, CHeading::True, CAngleUnit::deg());
 
-        qDebug() << h1;
-        qDebug() << h1 << h2 << (h1 == h2) << (h1 != h2) << (h1 == h1);
+        out << h1 << endl;
+        out << h1 << " " << h2 << " " << (h1 == h2) << " " << (h1 != h2) << " " << (h1 == h1) << endl;
 
         // COM system
         CComSystem c1 = CComSystem::getCom1System(125.3);
-        qDebug() << c1;
+        out << c1 << endl;
         c1.setActiveUnicom();
-        qDebug() << c1;
+        out << c1 << endl;
 
         // NAV system
         CNavSystem nav1 = CNavSystem::getNav1System(110.0);
-        qDebug() << nav1;
+        out << nav1 << endl;
 
         // Transponder tests
         CTransponder tr1("T1", 7000, CTransponder::StateStandby);
         CTransponder tr2("T2", "4532", CTransponder::ModeMil3);
-        qDebug() << tr1 << tr2;
+        out << tr1 << " " << tr2 << endl;
 
         // Callsign and ATC station
         CCallsign callsign1("d-ambz");
         CCallsign callsign2("DAmbz");
-        qDebug() << callsign1 << callsign2 << (callsign1 == callsign2);
+        out << callsign1 << " " << callsign2 << " " << (callsign1 == callsign2) << endl;
 
         QDateTime dtFrom = QDateTime::currentDateTimeUtc();
         QDateTime dtUntil = dtFrom.addSecs(60 * 60.0); // 1 hour
@@ -70,8 +74,11 @@ namespace BlackMiscTest
         CAtcStation station3(CCallsign("eddm_twr"), CUser("654321", "Jen Doe"),
                              CFrequency(118.7, CFrequencyUnit::MHz()),
                              geoPos, CLength(100, CLengthUnit::km()), false, dtFrom2, dtUntil2);
-        qDebug() << station1 << station2 << (station1.getCallsign() == station2.getCallsign());
+        out << station1 << " " << station2 << " " << (station1.getCallsign() == station2.getCallsign()) << endl;
 
+        // User parsing
+        CUser user("12345", "Joe KING KGLC");
+        out << user.getRealName() << user.getHomebase() << endl;
 
         // ATC List
         CAtcStationList atcList;
@@ -83,18 +90,18 @@ namespace BlackMiscTest
         atcList.push_back(station3);
         atcList = atcList.findBy(&CAtcStation::getCallsign, "eddm_twr", &CAtcStation::getFrequency, CFrequency(118.7, CFrequencyUnit::MHz()));
         atcList = atcList.sortedBy(&CAtcStation::getBookedFromUtc, &CAtcStation::getCallsign, &CAtcStation::getControllerRealName);
-        qDebug() << atcList;
-        qDebug() << "-----------------------------------------------";
+        out << atcList << endl;
+        out << "-----------------------------------------------" << endl;
 
         // flight plan
         CAltitude alt("FL110");
         CAltitude altMsl(alt);
         altMsl.toMeanSeaLevel();
 
-        qDebug() << alt << altMsl;
+        out << alt << " " << altMsl << endl;
         CAirportIcao frankfurt("eddf");
-        qDebug() << frankfurt;
-        qDebug() << "-----------------------------------------------";
+        out << frankfurt << endl;
+        out << "-----------------------------------------------" << endl;
 
         return 0;
     }

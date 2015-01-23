@@ -1,36 +1,43 @@
-/*  Copyright (C) 2013 VATSIM Community / authors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2015
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 #include "samplesphysicalquantities.h"
 #include "samplesaviation.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include <QTextStream>
 
 using namespace BlackMisc;
 using namespace BlackMiscTest;
 
-/*!
- * Sample tests
- */
+//! Samples
 int main(int argc, char *argv[])
 {
+    QTextStream out(stdout, QIODevice::WriteOnly);
+
     BlackMisc::initResources();
     QFile file(":blackmisc/translations/blackmisc_i18n_de.qm");
-    qDebug() << (file.exists() ? "Found translations in resources" : "No translations in resources");
+    out << (file.exists() ? "Found translations in resources" : "No translations in resources") << endl;
     QTranslator translator;
     bool t = translator.load("blackmisc_i18n_de", ":blackmisc/translations/");
-    qDebug() << (t ? "Translator loaded" : "Translator not loaded");
+    out << (t ? "Translator loaded" : "Translator not loaded") << endl;
+
 
     QCoreApplication a(argc, argv);
-    qDebug() << "Use I18N version, y? n?";
+    out << "Use I18N version, y? n?";
+    out.flush();
     int yn = getchar();
     t = (yn == 'y' || yn == 'Y');
     t =  t ? a.installTranslator(&translator) : false;
-    qDebug() << (t ? "Installed translator" : "No translator ");
+    out << (t ? "Installed translator" : "No translator ");
 
-    CSamplesPhysicalQuantities::samples();
-    CSamplesAviation::samples();
+    CSamplesPhysicalQuantities::samples(out);
+    CSamplesAviation::samples(out);
 
     return 0;
 }
