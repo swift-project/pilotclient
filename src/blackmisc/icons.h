@@ -54,6 +54,7 @@ namespace BlackMisc
             NetworkRoleC3,
             NetworkRoleCenter,
             NetworkRoleDelivery,
+            NetworkRoleFss,
             NetworkRoleGround,
             NetworkRoleI1,
             NetworkRoleI3,
@@ -66,6 +67,7 @@ namespace BlackMisc
             NetworkRoleSup,
             NetworkRoleTower,
             NetworkRoleUnknown,
+            NetworkVatsimLogo,
             NotSet,
             StandardIconAppAircrafts16,
             StandardIconAppAtc16,
@@ -442,6 +444,9 @@ namespace BlackMisc
         //! Delivery
         static const QPixmap &roleDelivery();
 
+        //! FSS (flight service staion)
+        static const QPixmap &roleFss();
+
         //! Tower
         static const QPixmap &roleTower();
 
@@ -450,6 +455,12 @@ namespace BlackMisc
 
         //! Unknown
         static const QPixmap &roleUnknown();
+
+        //! VATSIM logo
+        static const QPixmap &vatsimLogo16();
+
+        //! VATSIM logo
+        static const QPixmap &vatsimLogo32();
 
         //! Full voice capability
         static const QPixmap &capabilityVoice();

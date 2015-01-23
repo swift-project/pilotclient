@@ -60,8 +60,10 @@ namespace BlackMisc
             if ("CTR" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleCenter); }
             if ("SUP" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleSup); }
             if ("OBS" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleObs); }
+            if ("FSS" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleFss); }
             if ("ATIS" == sfx) { return CIconList::iconByIndex(CIcons::AviationAtis); }
-            if ("VATSIM" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleMnt); }
+            if ("EXAM" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleMnt); }
+            if ("VATSIM" == sfx) { return CIconList::iconByIndex(CIcons::NetworkVatsimLogo); }
             return CIconList::iconByIndex(CIcons::NetworkRoleUnknown);
         }
 

@@ -428,6 +428,11 @@ namespace BlackMisc
         return pm;
     }
 
+    const QPixmap &CIcons::roleFss()
+    {
+        return info16();
+    }
+
     const QPixmap &CIcons::roleTower()
     {
         static const QPixmap pm(QPixmap(":/own/icons/own/twr.jpg").scaledToWidth(16, Qt::SmoothTransformation));
@@ -443,6 +448,18 @@ namespace BlackMisc
     const QPixmap &CIcons::roleUnknown()
     {
         static const QPixmap pm(":/pastel/icons/pastel/16/help.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::vatsimLogo16()
+    {
+        static const QPixmap pm(":/vatsim/icons/vatsim/VatsimLogo16.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::vatsimLogo32()
+    {
+        static const QPixmap pm(":/vatsim/icons/vatsim/VatsimLogo32.png");
         return pm;
     }
 
@@ -506,6 +523,7 @@ namespace BlackMisc
         case NetworkRoleC3: return roleC3();
         case NetworkRoleCenter: return roleCenter();
         case NetworkRoleDelivery: return roleDelivery();
+        case NetworkRoleFss: return roleFss();
         case NetworkRoleGround: return roleGround();
         case NetworkRoleI1: return roleI1();
         case NetworkRoleI3: return roleI3();
@@ -518,6 +536,7 @@ namespace BlackMisc
         case NetworkRoleSup: return roleSup();
         case NetworkRoleTower: return roleTower();
         case NetworkRoleUnknown: return roleUnknown();
+        case NetworkVatsimLogo: return vatsimLogo16();
         case NotSet: return empty();
         case StandardIconAppAircrafts16: return appAircrafts16();
         case StandardIconAppAtc16: return appAtc16();

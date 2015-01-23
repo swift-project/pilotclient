@@ -83,6 +83,8 @@
         <file>icons/vatsim/S2.png</file>
         <file>icons/vatsim/S3.png</file>
         <file>icons/vatsim/SUP.png</file>
+        <file>icons/vatsim/VatsimLogo16.png</file>
+        <file>icons/vatsim/VatsimLogo32.png</file>
     </qresource>
     <qresource prefix="/diagona">
         <file>icons/diagona/icons/application-cloud.png</file>
