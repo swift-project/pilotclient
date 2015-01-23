@@ -45,11 +45,11 @@
    <item row="0" column="0" colspan="5">
     <widget class="QTabWidget" name="tw_ListViews">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tb_CurrentMappings">
       <attribute name="title">
-       <string>Current mappings</string>
+       <string>Rendered aircraft</string>
       </attribute>
       <layout class="QVBoxLayout" name="vl_CurrentMappings">
        <property name="leftMargin">

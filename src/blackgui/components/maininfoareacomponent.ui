@@ -444,7 +444,7 @@
     <set>Qt::TopDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string>Mappings</string>
+    <string>Rendering</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>4</number>

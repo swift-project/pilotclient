@@ -377,7 +377,7 @@
          </size>
         </property>
         <property name="text">
-         <string>Mappings</string>
+         <string>Rendering</string>
         </property>
         <property name="checkable">
          <bool>true</bool>
