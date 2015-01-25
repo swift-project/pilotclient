@@ -132,7 +132,7 @@ namespace BlackCore
 
         //! Changed remote aircraft (e.g. by disabling aircraft)
         //! \todo tbd No add/remove remote aircraft function as those are added implicitly by accessing airspace monitor
-        virtual int changeRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &changedAircraft, const BlackMisc::CPropertyIndexVariantMap &changeValues) = 0;
+        virtual int changeRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &toChangeAircraft, const BlackMisc::CPropertyIndexVariantMap &changeValues) = 0;
 
         //! Set time synchronization between simulator and user's computer time
         //! \remarks not all drivers implement this, e.g. if it is an intrinsic simulator feature

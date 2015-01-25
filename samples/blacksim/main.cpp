@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     BlackSim::registerMetadata();
 
     streamOut << "Run samples:" << endl;
-    streamOut << "1 .. FS common" << endl;
+    streamOut << "1 .. FS common / Simulation" << endl;
     streamOut << "2 .. FSX" << endl;
     streamOut << "3 .. Mappings" << endl;
     streamOut << "x .. exit" << endl;
