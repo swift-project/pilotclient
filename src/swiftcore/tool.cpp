@@ -96,7 +96,7 @@ namespace BlackMiscTest
             {
                 qtout << "-------------" << endl;
                 qtout << "Qt audio devices" << endl;
-                BlackSound::CSoundGenerator::printAllQtSoundDevices();
+                BlackSound::CSoundGenerator::printAllQtSoundDevices(qtout);
             }
             else if (line.startsWith("level"))
             {
@@ -104,6 +104,10 @@ namespace BlackMiscTest
                 messageSeverity = CStatusMessage::stringToSeverity(line);
                 refreshSubscriptionSeverities();
                 qtout << "Changed level to " << CStatusMessage::severityToString(messageSeverity) << endl;
+            }
+            else if (line.startsWith("meta"))
+            {
+                BlackMisc::displayAllUserMetatypesTypes(qtout);
             }
             else if (line.startsWith("log"))
             {
@@ -124,7 +128,8 @@ namespace BlackMiscTest
                 qtout << "   log + context + [e]nabled / [d]isabled" << endl;
                 qtout << "   contexts: app / aud / net / own (aircraft) / set / sim / all" << endl;
                 qtout << "   examples: logappd, lognete, logsimd, logalle" << endl;
-                qtout << "3) all . commands can be used, e.g. .com1 127.35" << endl;
+                qtout << "3) display metadata data: meta" << endl;
+                qtout << "4) all . commands can be used, e.g. .com1 127.35" << endl;
                 qtout << endl;
             }
             else if (line.startsWith("."))

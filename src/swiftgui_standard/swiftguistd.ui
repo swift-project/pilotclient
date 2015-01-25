@@ -243,8 +243,15 @@
      </property>
      <addaction name="menu_ReloadSettings"/>
     </widget>
+    <widget class="QMenu" name="menu_Debug">
+     <property name="title">
+      <string>Debug</string>
+     </property>
+     <addaction name="menu_DebugMetaTypes"/>
+    </widget>
     <addaction name="menu_PlanePositions"/>
     <addaction name="menu_Reload"/>
+    <addaction name="menu_Debug"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -355,6 +362,11 @@
   <action name="menu_FileFont">
    <property name="text">
     <string>Font</string>
+   </property>
+  </action>
+  <action name="menu_DebugMetaTypes">
+   <property name="text">
+    <string>Meta types (to console)</string>
    </property>
   </action>
  </widget>

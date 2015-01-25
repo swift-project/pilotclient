@@ -11,6 +11,7 @@
 #include "blackmisc/variant.h"
 #include "blackmisc/pqallquantities.h"
 #include "blackmisc/avallclasses.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <QDebug>
 #include <QMetaType>
@@ -18,6 +19,8 @@
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Network;
 
 namespace BlackMiscTest
 {
@@ -32,12 +35,16 @@ namespace BlackMiscTest
 
         CHeading h1(45, CHeading::True, CAngleUnit::deg());
         CHeading h2(60, CHeading::True, CAngleUnit::deg());
-
         CVariant cvh = h1.toCVariant();
         qDebug() << h1 << cvh.userType();
 
-        qDebug() << cva << cvh; // CVariant knows how to stringify the contained value object
+        CSimulatedAircraft sa(CAircraft("FOO", CUser("123", "Joe Doe"), CAircraftSituation()));
+        CVariant cvsa = sa.toCVariant();
+        qDebug() << sa << cvsa.userType();
 
+        qDebug() << cva << cvh << cvsa; // CVariant knows how to stringify the contained value object
+
+        // from variant
         CAngle *ap_heading = &h1; // angle actually heading
         CAngle *ap_angle = &a1;   // angle really heading
         qDebug() << (*ap_heading) << ap_heading->toCVariant().userType();
@@ -50,6 +57,15 @@ namespace BlackMiscTest
         // This works, angle from variant angle
         ap_angle->convertFromCVariant(a1.toCVariant());
         qDebug() << (*ap_angle) << ap_angle->toCVariant().userType();
+
+        // Sim aircraft
+        CAircraft a;
+        sa.convertFromCVariant(cvsa);
+        a.convertFromCVariant(cvsa);
+        qDebug() << sa << a;
+
+        qDebug() << "--";
+        qDebug() << "Expected 2xASSERT";
 
         // This gives me an unwanted(!) assert, canConvert is not smart enough to detect upcasting
         // because CValueObjects are not QObjects

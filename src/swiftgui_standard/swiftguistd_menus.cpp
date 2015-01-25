@@ -66,6 +66,13 @@ void SwiftGuiStd::ps_onMenuClicked()
         Q_ASSERT(this->getIContextSettings());
         this->getIContextSettings()->reset(true);
     }
+    else if (sender == this->ui->menu_DebugMetaTypes)
+    {
+        QString metadata;
+        QTextStream stream(&metadata);
+        BlackMisc::displayAllUserMetatypesTypes(stream);
+        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(metadata);
+    }
 }
 
 void SwiftGuiStd::initDynamicMenus()

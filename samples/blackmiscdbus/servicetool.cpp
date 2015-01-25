@@ -379,6 +379,13 @@ namespace BlackMiscTest
             qDebug() << "Pinged aircraft via interface"
                      << ((aircraft == aircraftReceived) ? "OK" : "ERROR!") << aircraftReceived;
 
+            CSimulatedAircraft simAircraft(aircraft);
+            CAircraftModel model("foobar", CAircraftModel::TypeModelMapping);
+            simAircraft.setModel(model);
+            CSimulatedAircraft simAircraftReceived = testserviceInterface.pingSimulatedAircraft(simAircraft);
+            qDebug() << "Pinged simulated aircraft via interface"
+                     << ((simAircraft == simAircraftReceived) ? "OK" : "ERROR!") << simAircraftReceived;
+
             CAtcStationList atcStationList;
             atcStationList.push_back(station);
             atcStationList.push_back(station);

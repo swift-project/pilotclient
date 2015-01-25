@@ -500,19 +500,18 @@ namespace BlackSound
         if (removeFileAfterPlaying) BlackMisc::CFileDeleter::addFileForDeletion(file);
     }
 
-    void CSoundGenerator::printAllQtSoundDevices()
+    void CSoundGenerator::printAllQtSoundDevices(QTextStream &out)
     {
-        QTextStream qtout(stdout);
-        qtout << "output" << endl;
+        out << "output:" << endl;
         foreach(QAudioDeviceInfo qd, QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
         {
-            qtout << qd.deviceName() << endl;
+            out << qd.deviceName() << endl;
         }
 
-        qtout << "input" << endl;
+        out << "input:" << endl;
         foreach(QAudioDeviceInfo qd, QAudioDeviceInfo::availableDevices(QAudio::AudioInput))
         {
-            qtout << qd.deviceName() << endl;
+            out << qd.deviceName() << endl;
         }
     }
 

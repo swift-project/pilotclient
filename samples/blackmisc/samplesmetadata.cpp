@@ -11,6 +11,7 @@
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/avatcstationlist.h"
 #include <QDebug>
+#include <QGuiApplication>
 #include <QMetaType>
 
 using namespace BlackMisc::Aviation;
@@ -26,14 +27,16 @@ namespace BlackMiscTest
      */
     int CSamplesMetadata::samples()
     {
+        int argv = 0;
         QTextStream cin(stdin);
-
+        QTextStream cout(stdout);
+        QGuiApplication dummy(argv, nullptr); // otherwise no QPixmap metadata
+        Q_UNUSED(dummy);
         BlackMisc::registerMetadata();
-        BlackMisc::displayAllUserMetatypesTypes();
+        BlackMisc::displayAllUserMetatypesTypes(cout);
 
         cin.readLine();
-        qDebug() << "------- Enter --------";
-
+        cout << "------- Enter --------" << endl;
         return 0;
     }
 

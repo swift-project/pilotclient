@@ -16,7 +16,9 @@
 #include <QList>
 #include <QMap>
 #include <QVariant>
+#include <QMetaType>
 #include <QDBusArgument>
+#include <QTextStream>
 
 #include <memory>
 
@@ -145,9 +147,9 @@ namespace BlackMisc
      */
     QVariant complexQtTypeFromDbusArgument(const QDBusArgument &argument, int type);
 
-    //! brief Display all user metatypes
+    //! Display all user metatypes
     //! \remarks Used in order to debug code, do not remove
-    void displayAllUserMetatypesTypes();
+    void displayAllUserMetatypesTypes(QTextStream &out = QTextStream(stdout));
 
     /*!
      * \brief Calculate a single hash value based on a list of individual hash values

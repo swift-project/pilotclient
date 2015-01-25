@@ -102,6 +102,13 @@ namespace BlackMiscTest
             return asyncCallWithArgumentList(QLatin1String("pingAircraft"), argumentList);
         }
 
+        inline QDBusPendingReply<BlackMisc::Simulation::CSimulatedAircraft> pingSimulatedAircraft(BlackMisc::Simulation::CSimulatedAircraft aircraft)
+        {
+            QList<QVariant> argumentList;
+            argumentList << QVariant::fromValue(aircraft);
+            return asyncCallWithArgumentList(QLatin1String("pingSimulatedAircraft"), argumentList);
+        }
+
         inline QDBusPendingReply<BlackMisc::Aviation::CAtcStationList> pingAtcStationList(BlackMisc::Aviation::CAtcStationList atcStationList)
         {
             QList<QVariant> argumentList;

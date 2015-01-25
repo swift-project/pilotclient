@@ -246,7 +246,7 @@ namespace BlackMiscTest
     }
 
     /*
-     * Ping aircrafts
+     * Ping aircraft
      */
     CAircraftList Testservice::pingAircraftList(const CAircraftList &aircraftList)
     {
@@ -323,6 +323,15 @@ namespace BlackMiscTest
     BlackMisc::Aviation::CAircraft Testservice::pingAircraft(const BlackMisc::Aviation::CAircraft &aircraft)
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "ping aircraft:" << aircraft;
+        return aircraft;
+    }
+
+    /*
+     * Ping simulated aircraft
+     */
+    Simulation::CSimulatedAircraft Testservice::pingSimulatedAircraft(const Simulation::CSimulatedAircraft &aircraft)
+    {
+        qDebug() << "Pid:" << ServiceTool::getPid() << "ping simulated aircraft:" << aircraft;
         return aircraft;
     }
 

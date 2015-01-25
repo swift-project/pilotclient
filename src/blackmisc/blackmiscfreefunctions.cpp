@@ -333,13 +333,15 @@ size_t BlackMisc::heapSizeOf(const QMetaObject &)
 /*
  * Dump all user types
  */
-void BlackMisc::displayAllUserMetatypesTypes()
+void BlackMisc::displayAllUserMetatypesTypes(QTextStream &out)
 {
+
     for (int mt = QMetaType::User; mt < QMetaType::User + 1000; mt++)
     {
-        if (!QMetaType::isRegistered(mt)) continue;
+        if (!QMetaType::isRegistered(mt)) { continue; }
         QMetaType metaType(mt);
-        qDebug() << "type:" << mt << "name:" << QMetaType::typeName(mt) << QMetaType::sizeOf(mt) << BlackMisc::heapSizeOf(metaType);
+        out << "type: " << mt << " name:" << QMetaType::typeName(mt) << " | "
+            << QMetaType::sizeOf(mt) << " / " << BlackMisc::heapSizeOf(metaType) << endl;
     }
 }
 

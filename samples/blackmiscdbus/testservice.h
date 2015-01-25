@@ -19,6 +19,7 @@
 #include "blackmisc/avallclasses.h"
 #include "blackmisc/networkallclasses.h"
 #include "blackmisc/pqallquantities.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/mathallclasses.h"
 #include "blacksim/fscommon/aircraftcfgentrieslist.h"
 #include "servicetool.h"
@@ -105,10 +106,7 @@ namespace BlackMiscTest
         //! Receive speed
         BlackMisc::PhysicalQuantities::CSpeed pingSpeed(const BlackMisc::PhysicalQuantities::CSpeed &speed);
 
-        /*!
         //! Receive altitude
-         * \param comUnit
-         */
         BlackMisc::Aviation::CAltitude pingAltitude(const BlackMisc::Aviation::CAltitude &altitude);
 
         //! Ping ATC station
@@ -116,6 +114,9 @@ namespace BlackMiscTest
 
         //! Ping aircraft
         BlackMisc::Aviation::CAircraft pingAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
+
+        //! Ping simulated aircraft
+        BlackMisc::Simulation::CSimulatedAircraft pingSimulatedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
         //! Ping ATC list
         BlackMisc::Aviation::CAtcStationList pingAtcStationList(const BlackMisc::Aviation::CAtcStationList &atcStationList) const;
