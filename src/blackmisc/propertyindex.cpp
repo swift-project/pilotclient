@@ -13,88 +13,82 @@
 
 namespace BlackMisc
 {
-    /*
-     * Non nested index
-     */
     CPropertyIndex::CPropertyIndex(int singleProperty)
     {
         Q_ASSERT(singleProperty >= static_cast<int>(GlobalIndexCValueObject));
-        this->m_indexes.append(singleProperty);
-        this->listToString();
+        this->setIndexStringByList({singleProperty});
     }
 
-    /*
-     * Construct from initializer list
-     */
-    CPropertyIndex::CPropertyIndex(std::initializer_list<int> il) :
-        m_indexes(il)
+    CPropertyIndex::CPropertyIndex(std::initializer_list<int> il)
     {
-        this->listToString();
+        this->setIndexStringByList(il);
     }
 
-    /*
-     * Construct from QList
-     */
-    CPropertyIndex::CPropertyIndex(const QList<int> &indexes) :
-        m_indexes(indexes)
+    CPropertyIndex::CPropertyIndex(const QList<int> &indexes)
     {
-        this->listToString();
+        this->setIndexStringByList(indexes);
     }
 
-    /*
-     * From string
-     */
     CPropertyIndex::CPropertyIndex(const QString &indexes) : m_indexString(indexes)
     {
         this->parseFromString(indexes);
     }
 
-    /*
-     * Current property index, front element removed
-     */
     CPropertyIndex CPropertyIndex::copyFrontRemoved() const
     {
-        Q_ASSERT(!this->m_indexes.isEmpty());
-        if (this->m_indexes.isEmpty()) return CPropertyIndex();
-        QList<int> c = this->m_indexes;
-        c.removeAt(0);
-        CPropertyIndex pi(c);
+        Q_ASSERT(!this->isEmpty());
+        if (this->isEmpty()) { return CPropertyIndex(); }
+        QList<int> l = this->indexList();
+        l.removeAt(0);
+        CPropertyIndex pi(l);
         return pi;
     }
 
-    /*
-     * Nested index
-     */
     bool CPropertyIndex::isNested() const
     {
-        return this->m_indexes.size() > 1;
+        return this->m_indexString.contains(';');
     }
 
-    /*
-     * Convert to string
-     */
+    bool CPropertyIndex::isMyself() const
+    {
+        return this->m_indexString.isEmpty();
+    }
+
+    bool CPropertyIndex::isEmpty() const
+    {
+        return this->m_indexString.isEmpty();
+    }
+
     QString CPropertyIndex::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
         return this->m_indexString;
     }
 
-    /*
-     * Parse from string
-     */
     void CPropertyIndex::parseFromString(const QString &indexes)
     {
-        this->m_indexString = indexes.simplified().replace(" ", ";").replace(",", ";");
-        this->stringToList();
+        if (indexes.isEmpty())
+        {
+            this->m_indexString.clear();
+        }
+        else
+        {
+            QString is(indexes.simplified().replace(" ", ";").replace(",", ";"));
+            if (is.endsWith(';'))
+            {
+                this->m_indexString = is.left(is.length() - 1);
+            }
+            else
+            {
+                this->m_indexString = is;
+            }
+        }
     }
 
-    /*
-     * To string
-     */
-    void CPropertyIndex::listToString()
+    void CPropertyIndex::setIndexStringByList(const QList<int> &list)
     {
         QString l;
-        foreach(int i, this->m_indexes)
+        for (const int &i : list)
         {
             Q_ASSERT(i >= static_cast<int>(GlobalIndexCValueObject));
             if (!l.isEmpty()) { l.append(";"); }
@@ -103,23 +97,21 @@ namespace BlackMisc
         this->m_indexString = l;
     }
 
-    /*
-     * To int list
-     */
-    void CPropertyIndex::stringToList()
+    QList<int> CPropertyIndex::indexList() const
     {
-        this->m_indexes.clear();
-        if (this->m_indexString.isEmpty()) { return; }
+        QList<int> list;
+        if (this->m_indexString.isEmpty()) { return list; }
         QStringList indexes = this->m_indexString.split(';');
         foreach(QString index, indexes)
         {
-            if (index.isEmpty()) continue;
+            if (index.isEmpty()) { continue; }
             bool ok;
             int i = index.toInt(&ok);
             Q_ASSERT(ok);
             Q_ASSERT(i >= static_cast<int>(GlobalIndexCValueObject));
-            this->m_indexes.append(i);
+            list.append(i);
         }
+        return list;
     }
 
 } // namespace

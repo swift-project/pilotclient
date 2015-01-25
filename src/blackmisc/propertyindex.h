@@ -81,16 +81,20 @@ namespace BlackMisc
         bool isNested() const;
 
         //! Myself index, used with nesting
-        bool isMyself() const { return this->m_indexes.isEmpty(); }
+        bool isMyself() const;
 
         //! Empty?
-        bool isEmpty() const { return this->m_indexes.isEmpty(); }
+        bool isEmpty() const;
+
+        //! Index list
+        QList<int> indexList() const;
 
         //! First element casted to given type, usually then PropertIndex enum
         template<class CastType> CastType frontCasted() const
         {
-            Q_ASSERT(!this->m_indexes.isEmpty());
-            int f = this->m_indexes.isEmpty() ? 0 : this->m_indexes.first();
+            QList<int> l = indexList();
+            Q_ASSERT(!l.isEmpty());
+            int f = l.isEmpty() ? 0 : l.first();
             return static_cast<CastType>(f);
         }
 
@@ -98,8 +102,9 @@ namespace BlackMisc
         template<class EnumType> bool equalsPropertyIndexEnum(EnumType ev)
         {
             static_assert(std::is_enum<EnumType>::value, "Argument must be an enum");
-            if (this->m_indexes.size() != 1) { return false; }
-            return static_cast<int>(ev) == m_indexes.first();
+            QList<int> l = indexList();
+            if (l.size() != 1) { return false; }
+            return static_cast<int>(ev) == l.first();
         }
 
     protected:
@@ -111,14 +116,10 @@ namespace BlackMisc
 
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CPropertyIndex)
-        QList<int> m_indexes;
         QString m_indexString; //! I use a little trick here, the string is used with the tupel system, as it provides all operators, hash ..
 
         //! Convert list to string
-        void listToString();
-
-        //! String to list
-        void stringToList();
+        void setIndexStringByList(const QList<int> &list);
 
     };
 } //namespace
