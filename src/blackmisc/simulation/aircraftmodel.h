@@ -120,7 +120,10 @@ namespace BlackMisc
             void updateMissingParts(const CAircraftModel &model);
 
             //! Queried model string?
-            bool hasQueriedModelString() const { return this->m_modelType == TypeQueriedFromNetwork && this->hasModelString(); }
+            bool hasQueriedModelString() const;
+
+            //! Model string which was manually set
+            bool hasManuallySetString() const;
 
             //! Non empty model string
             bool hasModelString() const { return !m_modelString.isEmpty(); }

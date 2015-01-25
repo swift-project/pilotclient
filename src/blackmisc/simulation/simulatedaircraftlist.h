@@ -48,7 +48,7 @@ namespace BlackMisc
             bool containsCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! Incremental update or add aircraft
-            int incrementalUpdateOrAdd(const BlackMisc::Simulation::CSimulatedAircraft &changedAircraft, const BlackMisc::CPropertyIndexVariantMap &changedValues);
+            int incrementalUpdateOrAdd(const BlackMisc::Simulation::CSimulatedAircraft &toChangeAircraft, const BlackMisc::CPropertyIndexVariantMap &changedValues);
 
             //! All pilots (with valid data)
             BlackMisc::Network::CUserList getPilots() const;

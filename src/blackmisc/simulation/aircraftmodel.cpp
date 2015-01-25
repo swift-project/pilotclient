@@ -104,6 +104,16 @@ namespace BlackMisc
             this->m_icao.updateMissingParts(model.getIcao());
         }
 
+        bool CAircraftModel::hasQueriedModelString() const
+        {
+            return this->m_modelType == TypeQueriedFromNetwork && this->hasModelString();
+        }
+
+        bool CAircraftModel::hasManuallySetString() const
+        {
+            return this->m_modelType == TypeManuallySet && this->hasModelString();
+        }
+
         bool CAircraftModel::matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
             if (sensitivity == Qt::CaseSensitive)

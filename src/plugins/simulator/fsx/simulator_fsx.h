@@ -117,7 +117,7 @@ namespace BlackSimPlugin
             virtual int removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 
             //! \copydoc ISimulator::changeRemoteAircraft
-            virtual int changeRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &changedAircraft, const BlackMisc::CPropertyIndexVariantMap &changeValues) override;
+            virtual int changeRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &toChangeAircraft, const BlackMisc::CPropertyIndexVariantMap &changeValues) override;
 
             //! \copydoc ISimulator::getSimulatorInfo()
             virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;

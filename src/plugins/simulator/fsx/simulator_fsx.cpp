@@ -202,15 +202,15 @@ namespace BlackSimPlugin
             return m_remoteAircraft.removeIf(&CSimulatedAircraft::getCallsign, callsign);
         }
 
-        int CSimulatorFsx::changeRemoteAircraft(const CSimulatedAircraft &changedAircraft, const CPropertyIndexVariantMap &changedValues)
+        int CSimulatorFsx::changeRemoteAircraft(const CSimulatedAircraft &toChangeAircraft, const CPropertyIndexVariantMap &changedValues)
         {
             // EXPERIMENTAL VERSION
 
-            const CCallsign callsign = changedAircraft.getCallsign();
-            int c = m_remoteAircraft.incrementalUpdateOrAdd(changedAircraft, changedValues);
+            const CCallsign callsign = toChangeAircraft.getCallsign();
+            int c = m_remoteAircraft.incrementalUpdateOrAdd(toChangeAircraft, changedValues);
             if (c == 0) { return 0; } // nothing was changed
             const CSimulatedAircraft aircraftAfterChanges = m_remoteAircraft.findFirstByCallsign(callsign);
-            const QString modelBefore = changedAircraft.getModel().getModelString();
+            const QString modelBefore = toChangeAircraft.getModel().getModelString();
             const QString modelAfter = aircraftAfterChanges.getModel().getModelString();
             if (modelBefore != modelAfter)
             {
@@ -218,7 +218,7 @@ namespace BlackSimPlugin
                 removeRemoteAircraft(m_simConnectObjects.value(callsign));
             }
 
-            if (changedAircraft.isEnabled() && !m_simConnectObjects.contains(callsign))
+            if (toChangeAircraft.isEnabled() && !m_simConnectObjects.contains(callsign))
             {
                 addRemoteAircraft(aircraftAfterChanges);
             }
@@ -760,6 +760,15 @@ namespace BlackSimPlugin
 
         CAircraftModel CSimulatorFsx::modelMatching(const CSimulatedAircraft &remoteAircraft)
         {
+
+            // Manually set string?
+            if (remoteAircraft.getModel().hasManuallySetString())
+            {
+                // manual set model
+                return remoteAircraft.getModel();
+            }
+
+            // default model
             CAircraftModel aircraftModel(remoteAircraft); // set defaults
 
             // mapper ready?

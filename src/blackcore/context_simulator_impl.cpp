@@ -143,7 +143,7 @@ namespace BlackCore
         if (c > 0)
         {
             // really changed something
-            emit this->remoteAircraftChanged(changedAircraft);
+            emit this->remoteAircraftChanged(this->getRemoteAircraft().findFirstByCallsign(changedAircraft.getCallsign()));
         }
         return c;
     }

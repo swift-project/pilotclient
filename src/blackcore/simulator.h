@@ -87,7 +87,7 @@ namespace BlackCore
         virtual int removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
         //! Change remote aircraft per property
-        virtual int changeRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &changedAircraft, const BlackMisc::CPropertyIndexVariantMap &changeValues) = 0;
+        virtual int changeRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &toChangeAircraft, const BlackMisc::CPropertyIndexVariantMap &changeValues) = 0;
 
         //! Update own aircraft cockpit (usually from context)
         virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft) = 0;

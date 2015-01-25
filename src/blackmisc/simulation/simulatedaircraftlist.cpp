@@ -79,10 +79,10 @@ namespace BlackMisc
             return this->contains(&CSimulatedAircraft::getCallsign, callsign);
         }
 
-        int CSimulatedAircraftList::incrementalUpdateOrAdd(const CSimulatedAircraft &changedAircraft, const CPropertyIndexVariantMap &changedValues)
+        int CSimulatedAircraftList::incrementalUpdateOrAdd(const CSimulatedAircraft &toChangeAircraft, const CPropertyIndexVariantMap &changedValues)
         {
             int c;
-            const CCallsign cs = changedAircraft.getCallsign();
+            const CCallsign cs = toChangeAircraft.getCallsign();
             if (this->containsCallsign(cs))
             {
                 if (changedValues.isEmpty()) { return 0; }
@@ -91,7 +91,16 @@ namespace BlackMisc
             else
             {
                 c = 1;
-                this->push_back(changedAircraft);
+                if (changedValues.isEmpty())
+                {
+                    this->push_back(toChangeAircraft);
+                }
+                else
+                {
+                    CSimulatedAircraft addAircraft(toChangeAircraft);
+                    addAircraft.apply(changedValues);
+                    this->push_back(addAircraft);
+                }
             }
             return c;
         }
