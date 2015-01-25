@@ -18,8 +18,8 @@
  */
 void BlackMisc::Simulation::registerMetadata()
 {
-    CSimulatedAircraft::registerMetadata();
-    CSimulatedAircraftList::registerMetadata();
     CAircraftModel::registerMetadata();
     CAircraftModelList::registerMetadata();
+    CSimulatedAircraft::registerMetadata();
+    CSimulatedAircraftList::registerMetadata();
 }
