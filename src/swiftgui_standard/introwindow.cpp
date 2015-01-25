@@ -7,6 +7,8 @@
 #include <QDesktopServices>
 #include <QUrl>
 #include <QDir>
+#include <QProcess>
+#include <QFileInfo>
 
 /*
  * Constructor
@@ -79,5 +81,12 @@ void CIntroWindow::buttonClicked() const
     {
         QString path = QDir::toNativeSeparators(BlackMisc::Settings::CSettingUtilities::getSettingsDirectory());
         QDesktopServices::openUrl(QUrl("file:///" + path));
+    }
+    else if (sender == this->ui->pb_CoreStart)
+    {
+        //! \todo make fully OS independent
+        QString sfx = QFileInfo(QCoreApplication::applicationFilePath()).suffix();
+        QString core = QDir(QApplication::applicationDirPath()).filePath("swiftcore." + sfx);
+        QProcess::startDetached(core);
     }
 }

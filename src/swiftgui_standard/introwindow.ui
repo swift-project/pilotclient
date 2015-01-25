@@ -14,7 +14,7 @@
    <string>swift intro screen</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../src/blackgui/blackgui.qrc">
+   <iconset>
     <normaloff>:/blackgui/icons/aircraftdeparture.png</normaloff>:/blackgui/icons/aircraftdeparture.png</iconset>
   </property>
   <property name="styleSheet">
@@ -146,6 +146,13 @@ voice included</string>
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QPushButton" name="pb_CoreStart">
+          <property name="text">
+           <string>start core</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
@@ -245,9 +252,7 @@ voice included</string>
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../../src/blackgui/blackgui.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>bb_OkCancel</sender>
@@ -326,6 +331,22 @@ voice included</string>
     <hint type="destinationlabel">
      <x>86</x>
      <y>250</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_CoreStart</sender>
+   <signal>clicked()</signal>
+   <receiver>CIntroWindow</receiver>
+   <slot>buttonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>90</x>
+     <y>194</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>0</x>
+     <y>218</y>
     </hint>
    </hints>
   </connection>
