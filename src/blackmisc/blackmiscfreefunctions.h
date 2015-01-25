@@ -149,7 +149,7 @@ namespace BlackMisc
 
     //! Display all user metatypes
     //! \remarks Used in order to debug code, do not remove
-    void displayAllUserMetatypesTypes(QTextStream &out = QTextStream(stdout));
+    void displayAllUserMetatypesTypes(QTextStream &out);
 
     /*!
      * \brief Calculate a single hash value based on a list of individual hash values
