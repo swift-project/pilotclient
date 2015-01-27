@@ -1,16 +1,22 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 //! \file
 
 #ifndef BLACKMISC_AIRPORTLIST_H
 #define BLACKMISC_AIRPORTLIST_H
 
-#include "avairport.h"
-#include "collection.h"
-#include "sequence.h"
+#include "blackmisc/avairport.h"
+#include "blackmisc/geoobjectlist.h"
+#include "blackmisc/collection.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/geoobjectlist.h"
 #include <QObject>
 #include <QString>
 #include <QList>
@@ -22,7 +28,9 @@ namespace BlackMisc
         /*!
          * Value object for a list of airports.
          */
-        class CAirportList : public CSequence<CAirport>
+        class CAirportList :
+            public CSequence<CAirport>,
+            public BlackMisc::Geo::IGeoObjectWithRelativePositionList<CAirport, CAirportList>
         {
         public:
             //! Default constructor.
@@ -40,18 +48,6 @@ namespace BlackMisc
             //! Find first station by callsign, if not return given value / default
             CAirport findFirstByIcao(const CAirportIcao &icao, const CAirport &ifNotFound = CAirport()) const;
 
-            //! Find 0..n airports within range of given coordinate
-            CAirportList findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const BlackMisc::PhysicalQuantities::CLength &range) const;
-
-            //! Update distances to coordinate, usually own aircraft's position
-            void calculcateDistanceAndBearingToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position);
-
-            //! Remove if outside given radius
-            void removeIfOutsideRange(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &maxDistance, bool updateDistance);
-
-            //! Sort by range from a given coordinate
-            void sortByRange(const BlackMisc::Geo::CCoordinateGeodetic &position, bool updateDistance);
-
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
@@ -60,6 +56,14 @@ namespace BlackMisc
 
             //! Register metadata
             static void registerMetadata();
+
+        protected:
+            //! Myself
+            virtual const CAirportList &getContainer() const override { return *this; }
+
+            //! Myself
+            virtual CAirportList &getContainer() override { return *this; }
+
         };
     } //namespace
 } // namespace

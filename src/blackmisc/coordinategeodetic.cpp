@@ -22,18 +22,12 @@ namespace BlackMisc
     namespace Geo
     {
 
-        /*
-         * String for converter
-         */
         QString CCoordinateGeodetic::convertToQString(bool i18n) const
         {
             QString s = "Geodetic: {%1, %2, %3}";
             return s.arg(this->m_latitude.valueRoundedWithUnit(6, i18n)).arg(this->m_longitude.valueRoundedWithUnit(6, i18n)).arg(this->m_geodeticHeight.valueRoundedWithUnit(6, i18n));
         }
 
-        /*
-         * From WGS84 coordinates
-         */
         CCoordinateGeodetic CCoordinateGeodetic::fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const CLength &geodeticHeight)
         {
             CLatitude lat = CLatitude::fromWgs84(latitudeWgs84);
@@ -41,10 +35,7 @@ namespace BlackMisc
             return CCoordinateGeodetic(lat, lon, geodeticHeight);
         }
 
-        /*
-         * Great circle distance
-         */
-        PhysicalQuantities::CLength greatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
+        PhysicalQuantities::CLength calculateGreatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
         {
             // same coordinate results in 0 distance
             if (coordinate1.latitude() == coordinate2.latitude() && coordinate1.longitude() == coordinate2.longitude())
@@ -70,7 +61,7 @@ namespace BlackMisc
             return CLength(distance, CLengthUnit::m());
         }
 
-        PhysicalQuantities::CAngle initialBearing(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
+        PhysicalQuantities::CAngle calculateBearing(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
         {
             // same coordinate results in 0 distance
             if (coordinate1.latitude() == coordinate2.latitude() && coordinate1.longitude() == coordinate2.longitude())
@@ -93,25 +84,16 @@ namespace BlackMisc
             return CAngle(bearing, CAngleUnit::deg());
         }
 
-        /*
-         * Great circle distance
-         */
-        CLength ICoordinateGeodetic::greatCircleDistance(const ICoordinateGeodetic &otherCoordinate) const
+        CLength ICoordinateGeodetic::calculateGreatCircleDistance(const ICoordinateGeodetic &otherCoordinate) const
         {
-            return Geo::greatCircleDistance((*this), otherCoordinate);
+            return Geo::calculateGreatCircleDistance((*this), otherCoordinate);
         }
 
-        /*
-         * Initial bearing
-         */
-        CAngle ICoordinateGeodetic::initialBearing(const ICoordinateGeodetic &otherCoordinate) const
+        CAngle ICoordinateGeodetic::bearing(const ICoordinateGeodetic &otherCoordinate) const
         {
-            return Geo::initialBearing((*this), otherCoordinate);
+            return Geo::calculateBearing((*this), otherCoordinate);
         }
 
-        /*
-         * Property by index
-         */
         CVariant ICoordinateGeodetic::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (!index.isMyself())
@@ -127,49 +109,33 @@ namespace BlackMisc
                     return CVariant(this->latitudeAsString());
                 case IndexLongitudeAsString:
                     return CVariant(this->longitudeAsString());
+                case IndexGeodeticHeight:
+                    return this->geodeticHeight().propertyByIndex(index.copyFrontRemoved());
+                case IndexGeodeticHeightAsString:
+                    return CVariant(this->geodeticHeightAsString());
                 default:
                     break;
                 }
             }
 
-            Q_ASSERT_X(false, "ICoordinateGeodetic", "index unknown");
-            QString m = QString("no property, index ").append(index.toQString());
+            const QString m = QString("no property, index ").append(index.toQString());
+            Q_ASSERT_X(false, "ICoordinateGeodetic", m.toLocal8Bit().constData());
             return CVariant::fromValue(m);
         }
 
-        /*
-         * Property by index
-         */
         CVariant CCoordinateGeodetic::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return this->toCVariant(); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
-            switch (i)
+            if (ICoordinateGeodetic::canHandleIndex(index))
             {
-            case IndexLatitude:
-                return this->m_latitude.propertyByIndex(index.copyFrontRemoved());
-            case IndexLatitudeAsString:
-                return CVariant(this->m_latitude.toQString());
-            case IndexLongitude:
-                return this->m_longitude.propertyByIndex(index.copyFrontRemoved());
-            case IndexLongitudeAsString:
-                return CVariant(this->m_longitude.toQString());
-            case IndexGeodeticHeight:
-                return this->m_geodeticHeight.propertyByIndex(index.copyFrontRemoved());
-            case IndexGeodeticHeightAsString:
-                return CVariant(this->m_geodeticHeight.toQString());
-            default:
-                if (ICoordinateGeodetic::canHandleIndex(index))
-                {
-                    return ICoordinateGeodetic::propertyByIndex(index);
-                }
-                return CValueObject::propertyByIndex(index);
+                return ICoordinateGeodetic::propertyByIndex(index);
+            }
+            else
+            {
+                return CValueObject::propertyByIndex(index.copyFrontRemoved());
             }
         }
 
-        /*
-         * Set property as index
-         */
         void CCoordinateGeodetic::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself())
@@ -177,17 +143,17 @@ namespace BlackMisc
                 this->convertFromCVariant(variant);
                 return;
             }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            ICoordinateGeodetic::ColumnIndex i = index.frontCasted<ICoordinateGeodetic::ColumnIndex>();
             switch (i)
             {
             case IndexGeodeticHeight:
-                this->setGeodeticHeight(variant.value<CLength>());
+                this->m_geodeticHeight.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexLatitude:
-                this->setLatitude(variant.value<CLatitude>());
+                this->m_latitude.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexLongitude:
-                this->setLongitude(variant.value<CLongitude>());
+                this->m_longitude.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexLatitudeAsString:
                 this->setLatitude(CLatitude::fromWgs84(variant.toQString()));
@@ -203,5 +169,37 @@ namespace BlackMisc
                 break;
             }
         }
+
+        CCoordinateGeodetic &CCoordinateGeodetic::switchUnit(const CAngleUnit &unit)
+        {
+            this->m_latitude.switchUnit(unit);
+            this->m_longitude.switchUnit(unit);
+            return *this;
+        }
+
+        CCoordinateGeodetic &CCoordinateGeodetic::switchUnit(const CLengthUnit &unit)
+        {
+            this->m_geodeticHeight.switchUnit(unit);
+            return *this;
+        }
+
+        CLength ICoordinateWithRelativePosition::calculcateDistanceToOwnAircraft(const ICoordinateGeodetic &position, bool updateValues)
+        {
+            if (!updateValues) { return Geo::calculateGreatCircleDistance(*this, position); }
+            this->m_distanceToOwnAircraft = Geo::calculateGreatCircleDistance(*this, position);
+            return this->m_distanceToOwnAircraft;
+        }
+
+        CLength ICoordinateWithRelativePosition::calculcateDistanceAndBearingToOwnAircraft(const ICoordinateGeodetic &position, bool updateValues)
+        {
+            if (!updateValues) { return Geo::calculateGreatCircleDistance(*this, position); }
+            this->m_distanceToOwnAircraft = Geo::calculateGreatCircleDistance(*this, position);
+            this->m_bearingToOwnAircraft = Geo::calculateBearing(*this, position);
+            return this->m_distanceToOwnAircraft;
+        }
+
+        ICoordinateWithRelativePosition::ICoordinateWithRelativePosition()
+        { }
+
     } // namespace
 } // namespace

@@ -130,6 +130,7 @@ namespace BlackSimPlugin
             BlackMisc::Aviation::CAirportList m_airports;
             BlackMisc::Simulation::CSimulatedAircraftList m_remoteAircraft;
 
+            //! \todo Add units to members? pitchDeg?, altitudeFt?
             struct // data is written by DBus async method callbacks
             {
                 QString aircraftModelPath;

@@ -37,6 +37,7 @@ namespace BlackMisc
             GlobalIndexCPhysicalQuantity      =   100,
             GlobalIndexCStatusMessage         =   200,
             GlobalIndexCNameVariantPair       =   300,
+            GlobalIndexTimestampBased         =   400,
             GlobalIndexCCallsign              =  1000,
             GlobalIndexCAircraftIcao          =  1100,
             GlobalIndexCAircraft              =  1200,

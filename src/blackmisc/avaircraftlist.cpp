@@ -33,23 +33,6 @@ namespace BlackMisc
         { }
 
         /*
-         * Contains callsign
-         */
-        bool CAircraftList::containsCallsign(const CCallsign &callsign) const
-        {
-            if (callsign.isEmpty()) { return false; }
-            return this->contains(&CAircraft::getCallsign, callsign);
-        }
-
-        /*
-         * Change for callsign
-         */
-        int CAircraftList::applyIfCallsign(const CCallsign &callsign, const CPropertyIndexVariantMap &variantMap)
-        {
-            return this->applyIf(&CAircraft::getCallsign, callsign, variantMap, false);
-        }
-
-        /*
          * Register metadata
          */
         void CAircraftList::registerMetadata()
@@ -64,46 +47,11 @@ namespace BlackMisc
         }
 
         /*
-         * Find by callsign
-         */
-        CAircraftList CAircraftList::findByCallsign(const CCallsign &callsign) const
-        {
-            return this->findBy(&CAircraft::getCallsign, callsign);
-        }
-
-        /*
-         * Find by callsigns
-         */
-        CAircraftList CAircraftList::findByCallsigns(const CCallsignList &callsigns) const
-        {
-            return this->findBy(Predicates::MemberIsAnyOf(&CAircraft::getCallsign, callsigns));
-        }
-
-        /*
-         * Find by callsign
-         */
-        CAircraft CAircraftList::findFirstByCallsign(const CCallsign &callsign, const CAircraft &ifNotFound) const
-        {
-            return this->findByCallsign(callsign).frontOrDefault(ifNotFound);
-        }
-
-        /*
          * All pilots
          */
         CUserList CAircraftList::getPilots() const
         {
             return this->findBy(Predicates::MemberValid(&CAircraft::getPilot)).transform(Predicates::MemberTransform(&CAircraft::getPilot));
-        }
-
-        /*
-         * Aircrafts within range
-         */
-        CAircraftList CAircraftList::findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const
-        {
-            return this->findBy([&](const CAircraft & aircraft)
-            {
-                return BlackMisc::Geo::greatCircleDistance(aircraft, coordinate) <= range;
-            });
         }
 
         /*

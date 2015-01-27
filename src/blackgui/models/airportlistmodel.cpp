@@ -27,7 +27,7 @@ namespace BlackGui
             CListModelBase<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>("ViewAirportList", parent)
         {
             this->m_columns.addColumn(CColumn::standardValueObject("ICAO", CAirport::IndexIcao));
-            this->m_columns.addColumn(CColumn("distance", CAirport::IndexDistance, new CAirspaceDistanceFormatter()));
+            this->m_columns.addColumn(CColumn("distance", CAirport::IndexDistanceToOwnAircraft, new CAirspaceDistanceFormatter()));
             this->m_columns.addColumn(CColumn("bearing", CAirport::IndexBearing, new CAngleDegreeFormatter()));
             this->m_columns.addColumn(CColumn::standardString("name", CAirport::IndexDescriptiveName));
             this->m_columns.addColumn(CColumn("elevation", CAirport::IndexElevation, new CPhysiqalQuantiyFormatter<CLengthUnit, CLength>(CLengthUnit::ft(), 0)));
@@ -35,7 +35,7 @@ namespace BlackGui
             this->m_columns.addColumn(CColumn("longitude", CAirport::IndexLatitude, new CLatLonFormatter()));
 
             // default sort order
-            this->setSortColumnByPropertyIndex(CAirport::IndexDistance);
+            this->setSortColumnByPropertyIndex(CAirport::IndexDistanceToOwnAircraft);
             this->m_sortOrder = Qt::AscendingOrder;
 
             // force strings for translation in resource files

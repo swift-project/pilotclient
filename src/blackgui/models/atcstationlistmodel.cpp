@@ -54,7 +54,7 @@ namespace BlackGui
                     CColumn col = CColumn("type", CAtcStation::IndexIcon);
                     col.setSortPropertyIndex({ CAtcStation::IndexCallsign, CCallsign::IndexSuffix });
                     this->m_columns.addColumn(col);
-                    this->m_columns.addColumn(CColumn("distance", CAtcStation::IndexDistance, new CAirspaceDistanceFormatter()));
+                    this->m_columns.addColumn(CColumn("distance", CAtcStation::IndexDistanceToOwnAircraft, new CAirspaceDistanceFormatter()));
                     this->m_columns.addColumn(CColumn("frequency", CAtcStation::IndexFrequency, new CComFrequencyFormatter()));
                     this->m_columns.addColumn(CColumn::standardString("controllername", { CAtcStation::IndexController, CUser::IndexRealName }));
                     this->m_columns.addColumn(CColumn("from", "booked from", CAtcStation::IndexBookedFrom, new CDateTimeFormatter(CDateTimeFormatter::formatHm())));
@@ -62,7 +62,7 @@ namespace BlackGui
                     this->m_columns.addColumn(CColumn::standardString("voiceroomurl", { CAtcStation::IndexVoiceRoom, CVoiceRoom::IndexUrl }));
 
                     // default sort order
-                    this->setSortColumnByPropertyIndex(CAtcStation::IndexDistance);
+                    this->setSortColumnByPropertyIndex(CAtcStation::IndexDistanceToOwnAircraft);
                     this->m_sortOrder = Qt::AscendingOrder;
                 }
                 break;
@@ -115,7 +115,7 @@ namespace BlackGui
                             new QStandardItem(station.getCallsign().toQString()),
                             new QStandardItem(station.getFrequency().valueRoundedWithUnit(CFrequencyUnit::MHz(), 2, true)),
                             new QStandardItem(station.getControllerRealName()),
-                            new QStandardItem(station.getDistanceToPlane().valueRoundedWithUnit(CLengthUnit::NM(), 1, true))
+                            new QStandardItem(station.getDistanceToOwnAircraft().valueRoundedWithUnit(CLengthUnit::NM(), 1, true))
                         };
                         break;
                     case StationsBooked:

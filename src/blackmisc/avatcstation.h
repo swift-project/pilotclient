@@ -32,7 +32,7 @@ namespace BlackMisc
         /*!
          * Value object encapsulating information about an ATC station.
          */
-        class CAtcStation : public CValueObjectStdTuple<CAtcStation>, public Geo::ICoordinateGeodetic
+        class CAtcStation : public CValueObjectStdTuple<CAtcStation>, public Geo::ICoordinateWithRelativePosition
         {
         public:
             //! Properties by index
@@ -43,7 +43,7 @@ namespace BlackMisc
                 IndexFrequency,
                 IndexPosition,
                 IndexRange,
-                IndexDistance,
+                IndexDistanceToOwnAircraft,
                 IndexIsOnline,
                 IndexBookedFrom,
                 IndexBookedUntil,
@@ -148,18 +148,6 @@ namespace BlackMisc
             //! Set range
             void setRange(const BlackMisc::PhysicalQuantities::CLength &range) { this->m_range = range; }
 
-            //! Get the distance to own plane
-            const BlackMisc::PhysicalQuantities::CLength &getDistanceToPlane() const { return m_distanceToPlane; }
-
-            //! Set distance to own plane
-            void setDistanceToPlane(const BlackMisc::PhysicalQuantities::CLength &distance) { this->m_distanceToPlane = distance; }
-
-            //! Valid distance?
-            bool hasValidDistance() const { return !this->m_distanceToPlane.isNull();}
-
-            //! Calculcate distance to plane, set it, and also return it
-            BlackMisc::PhysicalQuantities::CLength calculcateDistanceToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position, bool update = true);
-
             //! Is station online (or just booked)?
             bool isOnline() const { return m_isOnline; }
 
@@ -243,16 +231,14 @@ namespace BlackMisc
             void setBookedUntilUtc(const QDateTime &until) { this->m_bookedUntilUtc = until; }
 
             //! \copydoc ICoordinateGeodetic::latitude
-            virtual const BlackMisc::Geo::CLatitude &latitude() const override
-            {
-                return this->getPosition().latitude();
-            }
+            virtual const BlackMisc::Geo::CLatitude &latitude() const override;
 
             //! \copydoc ICoordinateGeodetic::longitude
-            virtual const BlackMisc::Geo::CLongitude &longitude() const override
-            {
-                return this->getPosition().longitude();
-            }
+            virtual const BlackMisc::Geo::CLongitude &longitude() const override;
+
+            //! \copydoc ICoordinateGeodetic::geodeticHeight
+            //! \remarks this should be used for elevation as depicted here: http://en.wikipedia.org/wiki/Altitude#mediaviewer/File:Vertical_distances.svg
+            const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override;
 
             //! \copydoc CValueObject::propertyByIndex
             virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
@@ -271,18 +257,17 @@ namespace BlackMisc
             BlackMisc::PhysicalQuantities::CFrequency m_frequency;
             BlackMisc::Geo::CCoordinateGeodetic m_position;
             BlackMisc::PhysicalQuantities::CLength m_range;
-            BlackMisc::PhysicalQuantities::CLength m_distanceToPlane; // make mutable ?
-            bool m_isOnline;
+            bool m_isOnline = false;
             QDateTime m_bookedFromUtc;
             QDateTime m_bookedUntilUtc;
-            CInformationMessage m_atis;
-            CInformationMessage m_metar;
+            CInformationMessage m_atis  = { CInformationMessage::ATIS };
+            CInformationMessage m_metar = { CInformationMessage::METAR };
             BlackMisc::Audio::CVoiceRoom m_voiceRoom;
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAtcStation, (o.m_callsign, o.m_controller, o.m_frequency, o.m_position, o.m_range, o.m_isOnline, o.m_distanceToPlane, o.m_atis, o.m_bookedFromUtc, o.m_bookedUntilUtc, o.m_metar, o.m_voiceRoom))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAtcStation, (o.m_callsign, o.m_controller, o.m_frequency, o.m_position, o.m_range, o.m_isOnline, o.m_atis, o.m_bookedFromUtc, o.m_bookedUntilUtc, o.m_metar, o.m_voiceRoom, o.m_distanceToOwnAircraft, o.m_bearingToOwnAircraft))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAtcStation)
 
 #endif // guard

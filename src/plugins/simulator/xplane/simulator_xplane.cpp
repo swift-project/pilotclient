@@ -7,6 +7,7 @@
 #include "xbus_service_proxy.h"
 #include "xbus_traffic_proxy.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/coordinategeodetic.h"
 #include <QDBusServiceWatcher>
 #include <QTimer>
 
@@ -15,6 +16,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Geo;
 
 namespace BlackSimPlugin
 {
@@ -254,7 +256,8 @@ namespace BlackSimPlugin
         BlackMisc::Aviation::CAirportList CSimulatorXPlane::getAirportsInRange() const
         {
             auto copy = m_airports;
-            copy.sortByRange({ m_xplaneData.latitude, m_xplaneData.longitude, 0 }, true);
+            //! \todo Check if units match, xPlaneData has now hints what the values are
+            copy.sortByRange(CCoordinateGeodetic(m_xplaneData.latitude, m_xplaneData.longitude, 0), true);
             copy.truncate(20);
             return copy;
         }

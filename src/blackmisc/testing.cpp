@@ -55,7 +55,7 @@ namespace BlackMisc
                 station.setPropertyByIndex(CVariant::from(false), CAtcStation::IndexIsOnline);
                 station.setPropertyByIndex(CVariant::from(dtFrom), CAtcStation::IndexBookedFrom);
                 station.setPropertyByIndex(CVariant::from(dtUntil), CAtcStation::IndexBookedUntil);
-                station.setPropertyByIndex(CLength(index + 1, CLengthUnit::NM()).toCVariant(), CAtcStation::IndexDistance);
+                station.setPropertyByIndex(CLength(index + 1, CLengthUnit::NM()).toCVariant(), CAtcStation::IndexDistanceToOwnAircraft);
                 return station;
             }
             else
@@ -63,7 +63,7 @@ namespace BlackMisc
                 CAtcStation station(CCallsign(cs), user,
                                     CFrequency(f, CFrequencyUnit::MHz()),
                                     geoPos, CLength(50, CLengthUnit::km()), false, dtFrom, dtUntil);
-                station.setDistanceToPlane(CLength(index + 1, CLengthUnit::NM()));
+                station.setDistanceToOwnAircraft(CLength(index + 1, CLengthUnit::NM()));
                 return station;
             }
         }
@@ -85,7 +85,7 @@ namespace BlackMisc
                 r.append(station.propertyByIndex({ CAtcStation::IndexController, CUser::IndexRealName}).toQString());
                 r.append(station.propertyByIndex({ CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLatitudeAsString}).toQString());
                 r.append(station.propertyByIndex({ CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLongitudeAsString}).toQString());
-                r.append(station.propertyByIndex({ CAtcStation::IndexDistance, CLength::IndexValueRounded2DigitsWithUnit}).toQString());
+                r.append(station.propertyByIndex({ CAtcStation::IndexDistanceToOwnAircraft, CLength::IndexValueRounded2DigitsWithUnit}).toQString());
                 r.append(station.propertyByIndex({ CAtcStation::IndexBookedFrom}).toDateTime().toString("YYYY-mm-dd hh:mm"));
                 r.append(station.propertyByIndex({ CAtcStation::IndexBookedUntil}).toDateTime().toString("YYYY-mm-dd hh:mm"));
             }
@@ -95,7 +95,7 @@ namespace BlackMisc
                 r.append(station.getController().getRealName());
                 r.append(station.getPosition().latitudeAsString());
                 r.append(station.getPosition().longitudeAsString());
-                r.append(station.getDistanceToPlane().toQString(true));
+                r.append(station.getDistanceToOwnAircraft().toQString(true));
                 r.append(station.getBookedFromUtc().toString("YYYY-mm-dd hh:mm"));
                 r.append(station.getBookedUntilUtc().toString("YYYY-mm-dd hh:mm"));
             }
@@ -121,7 +121,7 @@ namespace BlackMisc
             for (int i = 0; i < n; i++)
             {
                 int p = i % s;
-                atc.calculcateDistanceToPlane(pos.at(p));
+                atc.calculcateDistanceToOwnAircraft(pos.at(p));
             }
         }
 

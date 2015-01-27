@@ -13,7 +13,8 @@
 #define BLACKMISC_SIMULATEDNAIRCRAFTLIST_H
 
 #include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/avcallsignlist.h"
+#include "blackmisc/avcallsignobjectlist.h"
+#include "blackmisc/geoobjectlist.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
@@ -26,7 +27,10 @@ namespace BlackMisc
     namespace Simulation
     {
         //! Value object encapsulating a list of aircraft.
-        class CSimulatedAircraftList : public CSequence<CSimulatedAircraft>
+        class CSimulatedAircraftList :
+            public BlackMisc::CSequence<CSimulatedAircraft>,
+            public BlackMisc::Aviation::ICallsignObjectList<CSimulatedAircraft, CSimulatedAircraftList>,
+            public BlackMisc::Geo::IGeoObjectList<CSimulatedAircraft, CSimulatedAircraftList>
         {
         public:
             //! Default constructor.
@@ -35,31 +39,8 @@ namespace BlackMisc
             //! Construct from a base class object.
             CSimulatedAircraftList(const CSequence<CSimulatedAircraft> &other);
 
-            //! Find 0..n stations by callsign
-            CSimulatedAircraftList findByCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
-
-            //! Find 0..n aircraft matching any of a set of callsigns
-            CSimulatedAircraftList findByCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const;
-
-            //! Find the first aircraft by callsign, if none return given one
-            CSimulatedAircraft findFirstByCallsign(const BlackMisc::Aviation::CCallsign &callsign, const CSimulatedAircraft &ifNotFound = CSimulatedAircraft()) const;
-
-            //! Contains callsign?
-            bool containsCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
-
-            //! Incremental update or add aircraft
-            int incrementalUpdateOrAdd(const BlackMisc::Simulation::CSimulatedAircraft &toChangeAircraft, const BlackMisc::CPropertyIndexVariantMap &changedValues);
-
             //! All pilots (with valid data)
             BlackMisc::Network::CUserList getPilots() const;
-
-            /*!
-             * Find 0..n stations within range of given coordinate
-             * \param coordinate    other position
-             * \param range         within range of other position
-             * \return
-             */
-            CSimulatedAircraftList findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const BlackMisc::PhysicalQuantities::CLength &range) const;
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
@@ -69,6 +50,14 @@ namespace BlackMisc
 
             //! Register metadata
             static void registerMetadata();
+
+        protected:
+            //! Myself
+            virtual const CSimulatedAircraftList &getContainer() const { return *this; }
+
+            //! Myself
+            virtual CSimulatedAircraftList &getContainer() { return *this; }
+
         };
 
     } //namespace

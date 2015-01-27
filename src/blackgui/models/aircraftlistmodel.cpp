@@ -26,7 +26,7 @@ namespace BlackGui
         {
             this->m_columns.addColumn(CColumn::standardValueObject("cs.", "callsign",  { CAircraft::IndexCallsign, CCallsign::IndexCallsignString }));
             this->m_columns.addColumn(CColumn::standardString("realname", "pilot's real name", { CAircraft::IndexPilot, CUser::IndexRealName }));
-            this->m_columns.addColumn(CColumn("distance", CAircraft::IndexDistance, new CAirspaceDistanceFormatter()));
+            this->m_columns.addColumn(CColumn("distance", CAircraft::IndexDistanceToOwnAircraft, new CAirspaceDistanceFormatter()));
             this->m_columns.addColumn(CColumn("frequency", { CAircraft::IndexCom1System, CComSystem::IndexActiveFrequency }, new CComFrequencyFormatter()));
             this->m_columns.addColumn(CColumn::standardString("icao", { CAircraft::IndexIcao, CAircraftIcao::IndexAsString}));
             this->m_columns.addColumn(CColumn::standardString("transponder", { CAircraft::IndexTransponder, CTransponder::IndexTransponderCodeAndModeFormatted }));
@@ -36,7 +36,7 @@ namespace BlackGui
             this->m_columns.addColumn(CColumn("gs", { CAircraft::IndexSituation, CAircraftSituation::IndexGroundspeed }, new CAircraftSpeedFormatter()));
 
             // default sort order
-            this->setSortColumnByPropertyIndex(CAircraft::IndexDistance);
+            this->setSortColumnByPropertyIndex(CAircraft::IndexDistanceToOwnAircraft);
             this->m_sortOrder = Qt::AscendingOrder;
 
             // force strings for translation in resource files

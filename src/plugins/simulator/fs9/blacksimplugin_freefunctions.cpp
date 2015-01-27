@@ -118,13 +118,13 @@ namespace BlackSimPlugin
             // We want the distance in Latitude direction. Longitude must be equal for old and new position.
             helperPosition.setLatitude(newPosition.latitude());
             helperPosition.setLongitude(oldPosition.longitude());
-            CLength distanceLatitudeObj = greatCircleDistance(oldPosition, helperPosition);
+            CLength distanceLatitudeObj = calculateGreatCircleDistance(oldPosition, helperPosition);
 
 
             // Now we want the Longitude distance. Latitude must be equal for old and new position.
             helperPosition.setLatitude(oldPosition.latitude());
             helperPosition.setLongitude(newSituation.longitude());
-            CLength distanceLongitudeObj = greatCircleDistance(oldPosition, helperPosition);
+            CLength distanceLongitudeObj = calculateGreatCircleDistance(oldPosition, helperPosition);
 
             // Latitude and Longitude velocity
             positionVelocity.lat_velocity = distanceLatitudeObj.value(CLengthUnit::ft()) * 65536.0 / updateInterval;

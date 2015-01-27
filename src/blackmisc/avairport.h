@@ -23,7 +23,7 @@ namespace BlackMisc
         /*!
          * Value object encapsulating information about an airpot.
          */
-        class CAirport : public CValueObjectStdTuple<CAirport>, public Geo::ICoordinateGeodetic
+        class CAirport : public CValueObjectStdTuple<CAirport>, public Geo::ICoordinateWithRelativePosition
         {
         public:
             //! Properties by index
@@ -33,7 +33,7 @@ namespace BlackMisc
                 IndexDescriptiveName,
                 IndexPosition,
                 IndexElevation,
-                IndexDistance,
+                IndexDistanceToOwnAircraft,
                 IndexBearing
             };
 
@@ -71,31 +71,19 @@ namespace BlackMisc
             void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { this->m_position = position; }
 
             //! Elevation
-            const BlackMisc::PhysicalQuantities::CLength getElevation() const { return this->getPosition().geodeticHeight(); }
+            //! \sa geodeticHeight
+            const BlackMisc::PhysicalQuantities::CLength getElevation() const { return this->geodeticHeight(); }
 
-            //! Get the distance to own plane
-            const BlackMisc::PhysicalQuantities::CLength &getDistanceToPlane() const { return m_distanceToPlane; }
+            //! Elevation
+            //! \sa setGeodeticHeight
+            void setElevation(const BlackMisc::PhysicalQuantities::CLength &elevation) { return this->m_position.setGeodeticHeight(elevation); }
 
-            //! Set distance to own plane
-            void setDistanceToPlane(const BlackMisc::PhysicalQuantities::CLength &distance) { this->m_distanceToPlane = distance; }
-
-            //! Get the bearing to own plane
-            const BlackMisc::PhysicalQuantities::CAngle &getBearingToPlane() const { return m_bearingToPlane; }
-
-            //! Set bearing to own plane
-            void setBearingToPlane(const BlackMisc::PhysicalQuantities::CAngle &angle) { this->m_bearingToPlane = angle; }
-
-            //! Valid distance?
-            bool hasValidDistance() const { return !this->m_distanceToPlane.isNull();}
-
-            //! Valid bearing?
-            bool hasValidBearing() const { return !this->m_bearingToPlane.isNull();}
+            //! \copydoc ICoordinateGeodetic::geodeticHeight
+            //! \remarks this should be used for elevation as depicted here: http://en.wikipedia.org/wiki/Altitude#mediaviewer/File:Vertical_distances.svg
+            const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override { return this->m_position.geodeticHeight(); }
 
             //! Valid ICAO code
             bool hasValidIcaoCode() const { return !this->getIcao().isEmpty(); }
-
-            //! Calculcate distance and bearing to plane, set it, and return distance
-            BlackMisc::PhysicalQuantities::CLength calculcateDistanceAndBearingToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position, bool updateValues = true);
 
             //! \copydoc ICoordinateGeodetic::latitude
             virtual const BlackMisc::Geo::CLatitude &latitude() const override
@@ -121,16 +109,14 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAirport)
-            CAirportIcao m_icao;
-            QString m_descriptiveName;
+            CAirportIcao                        m_icao;
+            QString                             m_descriptiveName;
             BlackMisc::Geo::CCoordinateGeodetic m_position;
-            BlackMisc::PhysicalQuantities::CAngle m_bearingToPlane;
-            BlackMisc::PhysicalQuantities::CLength m_distanceToPlane; // make mutable ?
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAirport, (o.m_icao, o.m_position))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAirport, (o.m_icao, o.m_descriptiveName, o.m_position, o.m_distanceToOwnAircraft, o.m_bearingToOwnAircraft))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAirport)
 
 #endif // guard

@@ -28,8 +28,7 @@ namespace BlackMisc
         /*
          * Constructor
          */
-        CAtcStation::CAtcStation()  :
-            m_distanceToPlane(0, CLengthUnit::nullUnit()), m_isOnline(false), m_atis(CInformationMessage::ATIS), m_metar(CInformationMessage::METAR)
+        CAtcStation::CAtcStation()
         {
             // void
         }
@@ -37,8 +36,7 @@ namespace BlackMisc
         /*
          * Constructor
          */
-        CAtcStation::CAtcStation(const QString &callsign)  :
-            m_callsign(callsign), m_distanceToPlane(0, CLengthUnit::nullUnit()), m_isOnline(false), m_atis(CInformationMessage::ATIS), m_metar(CInformationMessage::METAR)
+        CAtcStation::CAtcStation(const QString &callsign) : m_callsign(callsign)
         {
             // void
         }
@@ -49,8 +47,7 @@ namespace BlackMisc
         CAtcStation::CAtcStation(const CCallsign &callsign, const CUser &controller, const CFrequency &frequency, const CCoordinateGeodetic &pos, const CLength &range, bool isOnline,
                                  const QDateTime &bookedFromUtc, const QDateTime &bookedUntilUtc, const CInformationMessage &atis, const CInformationMessage &metar) :
             m_callsign(callsign), m_controller(controller), m_frequency(frequency), m_position(pos),
-            m_range(range), m_distanceToPlane(0, CLengthUnit::nullUnit()), m_isOnline(isOnline),
-            m_bookedFromUtc(bookedFromUtc), m_bookedUntilUtc(bookedUntilUtc), m_atis(atis), m_metar(metar)
+            m_range(range), m_isOnline(isOnline), m_bookedFromUtc(bookedFromUtc), m_bookedUntilUtc(bookedUntilUtc), m_atis(atis), m_metar(metar)
         {
             // sync callsigns
             if (!this->m_controller.hasValidCallsign() && !callsign.isEmpty())
@@ -138,12 +135,12 @@ namespace BlackMisc
             s.append(this->m_range.toQString(i18n));
 
             // distance to plane
-            if (this->m_distanceToPlane.isPositiveWithEpsilonConsidered())
+            if (this->m_distanceToOwnAircraft.isPositiveWithEpsilonConsidered())
             {
                 s.append(' ');
                 i18n ? s.append(QCoreApplication::translate("Aviation", "distance")) : s.append("distance");
                 s.append(' ');
-                s.append(this->m_distanceToPlane.toQString(i18n));
+                s.append(this->m_distanceToOwnAircraft.toQString(i18n));
             }
 
             // from / to
@@ -208,16 +205,6 @@ namespace BlackMisc
         }
 
         /*
-         * Distance to planne
-         */
-        CLength CAtcStation::calculcateDistanceToPlane(const CCoordinateGeodetic &position, bool update)
-        {
-            if (!update) return Geo::greatCircleDistance(this->m_position, position);
-            this->m_distanceToPlane = Geo::greatCircleDistance(this->m_position, position);
-            return this->m_distanceToPlane;
-        }
-
-        /*
          * Booked now
          */
         bool CAtcStation::isBookedNow() const
@@ -257,6 +244,30 @@ namespace BlackMisc
         }
 
         /*
+         * latitude
+         */
+        const CLatitude &CAtcStation::latitude() const
+        {
+            return this->getPosition().latitude();
+        }
+
+        /*
+         * lomgitude
+         */
+        const CLongitude &CAtcStation::longitude() const
+        {
+            return this->getPosition().longitude();
+        }
+
+        /*
+         * geodetic height
+         */
+        const CLength &CAtcStation::geodeticHeight() const
+        {
+            return this->m_position.geodeticHeight();
+        }
+
+        /*
          * Property by index
          */
         CVariant CAtcStation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -279,8 +290,8 @@ namespace BlackMisc
                 return CVariant::from(this->m_isOnline);
             case IndexLatitude:
                 return this->latitude().propertyByIndex(index.copyFrontRemoved());
-            case IndexDistance:
-                return this->m_distanceToPlane.propertyByIndex(index.copyFrontRemoved());
+            case IndexDistanceToOwnAircraft:
+                return this->m_distanceToOwnAircraft.propertyByIndex(index.copyFrontRemoved());
             case IndexLongitude:
                 return this->longitude().propertyByIndex(index.copyFrontRemoved());
             case IndexPosition:
@@ -332,8 +343,8 @@ namespace BlackMisc
             case IndexRange:
                 this->m_range.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
-            case IndexDistance:
-                this->m_distanceToPlane.setPropertyByIndex(variant, index.copyFrontRemoved());
+            case IndexDistanceToOwnAircraft:
+                this->m_distanceToOwnAircraft.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexAtis:
                 this->m_atis.setPropertyByIndex(variant, index.copyFrontRemoved());

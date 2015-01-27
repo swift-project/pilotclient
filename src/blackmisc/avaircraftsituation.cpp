@@ -31,7 +31,7 @@ namespace BlackMisc
             s.append(" pitch: ").append(this->m_pitch.toQString(i18n));
             s.append(" gs: ").append(this->m_groundspeed.toQString(i18n));
             s.append(" heading: ").append(this->m_heading.toQString(i18n));
-            s.append(" timestamp: ").append(this->m_timestamp.toString("dd hh:mm:ss"));
+            s.append(" timestamp: ").append(this->getFormattedUtcTimestamp());
             return s;
         }
 
@@ -41,6 +41,11 @@ namespace BlackMisc
         CVariant CAircraftSituation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return this->toCVariant(); }
+            if (ITimestampBased::canHandleIndex(index))
+            {
+                return ITimestampBased::propertyByIndex(index);
+            }
+
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -60,10 +65,8 @@ namespace BlackMisc
                 return this->m_bank.propertyByIndex(index.copyFrontRemoved());
             case IndexGroundspeed:
                 return this->m_groundspeed.propertyByIndex(index.copyFrontRemoved());
-            case IndexTimeStamp:
-                return CVariant::fromValue(this->m_timestamp);
-            case IndexTimeStampFormatted:
-                return CVariant::fromValue(this->m_groundspeed.toQString("dd hh:mm:ss"));
+            case IndexCallsign:
+                return this->m_correspondingCallsign.propertyByIndex(index.copyFrontRemoved());
             default:
                 break;
             }
@@ -101,6 +104,9 @@ namespace BlackMisc
                 break;
             case IndexGroundspeed:
                 this->m_groundspeed.setPropertyByIndex(variant, index.copyFrontRemoved());
+                break;
+            case IndexCallsign:
+                this->m_correspondingCallsign.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             default:
                 Q_ASSERT_X(false, "CAircraftSituation", "index unknown (setter)");

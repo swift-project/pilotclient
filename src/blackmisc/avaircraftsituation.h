@@ -13,8 +13,10 @@
 #define BLACKMISC_AIRCRAFTSITUATION_H
 
 #include "coordinategeodetic.h"
+#include "timestampbased.h"
 #include "avaltitude.h"
 #include "avheading.h"
+#include "avcallsign.h"
 #include "pqspeed.h"
 #include "valueobject.h"
 #include <QDateTime>
@@ -26,7 +28,9 @@ namespace BlackMisc
         /*!
          * Value object encapsulating information of an aircraft's situation
          */
-        class CAircraftSituation : public CValueObjectStdTuple<CAircraftSituation>, public Geo::ICoordinateGeodetic
+        class CAircraftSituation :
+            public CValueObjectStdTuple<CAircraftSituation>,
+            public Geo::ICoordinateGeodetic, public BlackMisc::ITimestampBased
         {
         public:
             //! Properties by index
@@ -40,21 +44,32 @@ namespace BlackMisc
                 IndexBank,
                 IndexPitch,
                 IndexGroundspeed,
-                IndexTimeStamp,
-                IndexTimeStampFormatted
+                IndexCallsign
             };
 
             //! Default constructor.
-            CAircraftSituation() : m_timestamp(QDateTime::currentDateTimeUtc()) {}
+            CAircraftSituation() {}
 
-            //! Comprehensive Constructor
+            //! Comprehensive constructor
             CAircraftSituation(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude,
-                               const BlackMisc::Aviation::CHeading &heading = BlackMisc::Aviation::CHeading(),
-                               const BlackMisc::PhysicalQuantities::CAngle &pitch = BlackMisc::PhysicalQuantities::CAngle(),
-                               const BlackMisc::PhysicalQuantities::CAngle &bank = BlackMisc::PhysicalQuantities::CAngle(),
-                               const BlackMisc::PhysicalQuantities::CSpeed &gs = BlackMisc::PhysicalQuantities::CSpeed())
+                               const BlackMisc::Aviation::CHeading &heading = {},
+                               const BlackMisc::PhysicalQuantities::CAngle &pitch = {},
+                               const BlackMisc::PhysicalQuantities::CAngle &bank = {},
+                               const BlackMisc::PhysicalQuantities::CSpeed &gs = {})
                 : m_position(position), m_altitude(altitude), m_heading(heading), m_pitch(pitch),
-                  m_bank(bank), m_groundspeed(gs), m_timestamp(QDateTime::currentDateTimeUtc()) {}
+                  m_bank(bank), m_groundspeed(gs) {}
+
+            //! Comprehensive constructor
+            CAircraftSituation(const BlackMisc::Aviation::CCallsign &correspondingCallsign,
+                               const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude,
+                               const BlackMisc::Aviation::CHeading &heading = {},
+                               const BlackMisc::PhysicalQuantities::CAngle &pitch = {},
+                               const BlackMisc::PhysicalQuantities::CAngle &bank = {},
+                               const BlackMisc::PhysicalQuantities::CSpeed &gs = {})
+                : m_correspondingCallsign(correspondingCallsign),
+                  m_position(position), m_altitude(altitude), m_heading(heading), m_pitch(pitch),
+                  m_bank(bank), m_groundspeed(gs) {}
+
 
             //! \copydoc CValueObject::propertyByIndex
             virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
@@ -74,11 +89,17 @@ namespace BlackMisc
             //! \copydoc ICoordinateGeodetic::longitude()
             virtual const BlackMisc::Geo::CLongitude &longitude() const override { return this->m_position.longitude(); }
 
-            //! \copydoc CCoordinateGeodetic::height
-            const BlackMisc::PhysicalQuantities::CLength &getHeight() const { return this->m_position.geodeticHeight(); }
+            //! \copydoc ICoordinateGeodetic::geodeticHeight
+            //! \remarks this should be used for elevation as depicted here: http://en.wikipedia.org/wiki/Altitude#mediaviewer/File:Vertical_distances.svg
+            const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override { return this->m_position.geodeticHeight(); }
 
-            //! Set height
-            void setHeight(const BlackMisc::PhysicalQuantities::CLength &height) { this->m_position.setGeodeticHeight(height); }
+            //! Elevation
+            //! \sa geodeticHeight
+            const BlackMisc::PhysicalQuantities::CLength getElevation() const { return this->geodeticHeight(); }
+
+            //! Elevation
+            //! \sa setGeodeticHeight
+            void setElevation(const BlackMisc::PhysicalQuantities::CLength &elevation) { return this->m_position.setGeodeticHeight(elevation); }
 
             //! Get heading
             const BlackMisc::Aviation::CHeading &getHeading() const { return this->m_heading; }
@@ -110,8 +131,11 @@ namespace BlackMisc
             //! Set groundspeed
             void setGroundspeed(const BlackMisc::PhysicalQuantities::CSpeed &groundspeed) { this->m_groundspeed = groundspeed; }
 
-            //! Timestamp
-            const QDateTime &getTimestamp() const { return this->m_timestamp;}
+            //! Corresponding callsign
+            const BlackMisc::Aviation::CCallsign &getCallsign() const { return this->m_correspondingCallsign; }
+
+            //! Corresponding callsign
+            void setCallsign(const BlackMisc::Aviation::CCallsign &callsign) { this->m_correspondingCallsign = callsign; }
 
         protected:
             //! \copydoc CValueObject::convertToQString
@@ -119,18 +143,18 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftSituation)
+            CCallsign m_correspondingCallsign;
             BlackMisc::Geo::CCoordinateGeodetic m_position;
             BlackMisc::Aviation::CAltitude m_altitude;
-            BlackMisc::Aviation::CHeading m_heading;
+            BlackMisc::Aviation::CHeading  m_heading;
             BlackMisc::PhysicalQuantities::CAngle m_pitch;
             BlackMisc::PhysicalQuantities::CAngle m_bank;
             BlackMisc::PhysicalQuantities::CSpeed m_groundspeed;
-            QDateTime m_timestamp;
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftSituation, (o.m_position, o.m_altitude, o.m_heading, o.m_pitch, o.m_bank, o.m_groundspeed))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftSituation, (o.m_correspondingCallsign, o.m_position, o.m_altitude, o.m_heading, o.m_pitch, o.m_bank, o.m_groundspeed))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation)
 
 #endif // guard

@@ -60,50 +60,5 @@ namespace BlackMisc
             return this->findByIcao(icao).frontOrDefault(ifNotFound);
         }
 
-        /*
-         * Airports within range
-         */
-        CAirportList CAirportList::findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const
-        {
-            return this->findBy([&](const CAirport & atcairport)
-            {
-                return greatCircleDistance(atcairport, coordinate) <= range;
-            });
-        }
-
-        /*
-         * Distances, bearing to own plane
-         */
-        void CAirportList::calculcateDistanceAndBearingToPlane(const Geo::CCoordinateGeodetic &position)
-        {
-            std::for_each(this->begin(), this->end(), [ & ](CAirport & airport)
-            {
-                airport.calculcateDistanceAndBearingToPlane(position);
-            });
-        }
-
-        /*
-         * Remove outside range
-         */
-        void CAirportList::removeIfOutsideRange(const Geo::CCoordinateGeodetic &position, const CLength &maxDistance, bool updateValues)
-        {
-            this->removeIf([ & ](CAirport &airport)
-            {
-                return airport.calculcateDistanceAndBearingToPlane(position, updateValues) > maxDistance;
-            });
-        }
-
-        /*
-         * Sort by range
-         */
-        void CAirportList::sortByRange(const BlackMisc::Geo::CCoordinateGeodetic &position, bool updateValues)
-        {
-            if (updateValues)
-            {
-                this->calculcateDistanceAndBearingToPlane(position);
-            }
-            this->sort([ & ](const CAirport &a, const CAirport &b) { return a.getDistanceToPlane() < b.getDistanceToPlane(); });
-        }
-
     } // namespace
 } // namespace

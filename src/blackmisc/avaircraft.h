@@ -29,7 +29,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating information of an aircraft
-        class CAircraft : public CValueObjectStdTuple<CAircraft>, public Geo::ICoordinateGeodetic
+        class CAircraft : public CValueObjectStdTuple<CAircraft>, public BlackMisc::Geo::ICoordinateWithRelativePosition
         {
         public:
             //! Properties by index
@@ -37,7 +37,7 @@ namespace BlackMisc
             {
                 IndexCallsign = BlackMisc::CPropertyIndex::GlobalIndexCAircraft,
                 IndexPilot,
-                IndexDistance,
+                IndexDistanceToOwnAircraft,
                 IndexCom1System,
                 IndexCom2System,
                 IndexTransponder,
@@ -67,7 +67,7 @@ namespace BlackMisc
             const CAircraftSituation &getSituation() const { return m_situation; }
 
             //! Set situation.
-            void setSituation(const CAircraftSituation &situation) { m_situation = situation; }
+            void setSituation(const CAircraftSituation &situation);
 
             //! Get user
             const BlackMisc::Network::CUser &getPilot() const { return m_pilot; }
@@ -87,15 +87,6 @@ namespace BlackMisc
             //! Set ICAO info
             virtual void setIcaoInfo(const CAircraftIcao &icao) { m_icao = icao; }
 
-            //! Get the distance to own plane
-            const BlackMisc::PhysicalQuantities::CLength &getDistanceToPlane() const { return m_distanceToPlane; }
-
-            //! Set distance to own plane
-            void setDistanceToPlane(const BlackMisc::PhysicalQuantities::CLength &distance) { this->m_distanceToPlane = distance; }
-
-            //! Valid distance?
-            bool hasValidDistance() const { return !this->m_distanceToPlane.isNegativeWithEpsilonConsidered();}
-
             //! Has valid realname?
             bool hasValidRealName() const { return this->m_pilot.hasValidRealName(); }
 
@@ -110,15 +101,6 @@ namespace BlackMisc
 
             //! Valid callsign
             bool hasValidCallsign() const { return CCallsign::isValidCallsign(this->getCallsign().asString()); }
-
-            //! Distance to aircraft
-            PhysicalQuantities::CLength calculcateDistanceToPosition(const Geo::CCoordinateGeodetic &position) const;
-
-            /*!
-             * Calculcate distance to plane, set it, and also return it
-             * \param position calculated from this postion to my own aircraft
-             */
-            const BlackMisc::PhysicalQuantities::CLength &setCalculcatedDistanceToPosition(const BlackMisc::Geo::CCoordinateGeodetic &position);
 
             //! Get position
             BlackMisc::Geo::CCoordinateGeodetic getPosition() const { return this->m_situation.getPosition(); }
@@ -141,8 +123,17 @@ namespace BlackMisc
             //! \copydoc ICoordinateGeodetic::longitude
             virtual const BlackMisc::Geo::CLongitude &longitude() const override { return this->m_situation.longitude(); }
 
-            //! \copydoc CCoordinateGeodetic::height
-            const BlackMisc::PhysicalQuantities::CLength &getHeight() const { return this->m_situation.getHeight(); }
+            //! \copydoc ICoordinateGeodetic::geodeticHeight
+            //! \remarks this should be used for elevation as depicted here: http://en.wikipedia.org/wiki/Altitude#mediaviewer/File:Vertical_distances.svg
+            const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override { return this->m_situation.geodeticHeight(); }
+
+            //! Elevation
+            //! \sa geodeticHeight
+            const BlackMisc::PhysicalQuantities::CLength getElevation() const { return this->geodeticHeight(); }
+
+            //! Elevation
+            //! \sa setGeodeticHeight
+            void setElevation(const BlackMisc::PhysicalQuantities::CLength &elevation) { return this->m_situation.setElevation(elevation); }
 
             //! Get heading
             const BlackMisc::Aviation::CHeading &getHeading() const { return this->m_situation.getHeading(); }
@@ -253,12 +244,11 @@ namespace BlackMisc
             CTransponder              m_transponder;
             CSelcal                   m_selcal;
             CAircraftIcao             m_icao;
-            BlackMisc::PhysicalQuantities::CLength m_distanceToPlane {0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()};
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraft, (o.m_callsign, o.m_pilot, o.m_situation, o.m_com1system, o.m_com2system, o.m_transponder, o.m_icao, o.m_distanceToPlane))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraft, (o.m_callsign, o.m_pilot, o.m_situation, o.m_com1system, o.m_com2system, o.m_transponder, o.m_icao, o.m_distanceToOwnAircraft, o.m_bearingToOwnAircraft))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraft)
 
 #endif // guard

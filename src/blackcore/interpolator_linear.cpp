@@ -1,7 +1,11 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/.  */
+/* Copyright (C) 2014
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 #include "interpolator_linear.h"
 #include "blackmisc/avaircraftsituation.h"
@@ -61,25 +65,25 @@ namespace BlackCore
         CCoordinateGeodetic currentPosition;
 
         // Time between start and end packet
-        double deltaTime = beginSituation.getTimestamp().msecsTo(endSituation.getTimestamp());
+        double deltaTime = beginSituation.msecsToAbs(endSituation);
 
         // Fraction of the deltaTime [0.0 - 1.0]
-        double simulationTime = beginSituation.getTimestamp().msecsTo(currentTime) / deltaTime;
+        double simulationTimeFraction = beginSituation.getUtcTimestamp().msecsTo(currentTime) / deltaTime;
 
         // Interpolate latitude: Lat = (LatB - LatA) * t + LatA
         currentPosition.setLatitude((endSituation.getPosition().latitude() - beginSituation.getPosition().latitude())
-                                    * simulationTime
+                                    * simulationTimeFraction
                                     + beginSituation.getPosition().latitude());
 
         // Interpolate latitude: Lon = (LonB - LonA) * t + LonA
         currentPosition.setLongitude((endSituation.getPosition().longitude() - beginSituation.getPosition().longitude())
-                                     * simulationTime
+                                     * simulationTimeFraction
                                      + beginSituation.getPosition().longitude());
         currentSituation.setPosition(currentPosition);
 
         // Interpolate altitude: Alt = (AltB - AltA) * t + AltA
         currentSituation.setAltitude(CAltitude((endSituation.getAltitude() - beginSituation.getAltitude())
-                                               * simulationTime
+                                               * simulationTimeFraction
                                                + beginSituation.getAltitude(),
                                                beginSituation.getAltitude().getReferenceDatum()));
 
@@ -94,7 +98,7 @@ namespace BlackCore
             headingEnd -= CHeading(360, CHeading::Magnetic, CAngleUnit::deg());
 
         currentSituation.setHeading(CHeading((headingEnd - headingBegin)
-                                             * simulationTime
+                                             * simulationTimeFraction
                                              + headingBegin,
                                              headingBegin.getReferenceNorth()));
 
@@ -102,7 +106,7 @@ namespace BlackCore
         CAngle pitchBegin = beginSituation.getPitch();
         CAngle pitchEnd = endSituation.getPitch();
 
-        CAngle pitch = (pitchEnd - pitchBegin) * simulationTime + pitchBegin;
+        CAngle pitch = (pitchEnd - pitchBegin) * simulationTimeFraction + pitchBegin;
 
         // TODO: According to the specification, pitch above horizon should be negative.
         // But somehow we get positive pitches from the network.
@@ -113,7 +117,7 @@ namespace BlackCore
         CAngle bankBegin = beginSituation.getBank();
         CAngle bankEnd = endSituation.getBank();
 
-        CAngle bank = (bankEnd - bankBegin) * simulationTime + bankBegin;
+        CAngle bank = (bankEnd - bankBegin) * simulationTimeFraction + bankBegin;
 
         // TODO: According to the specification, banks to the right should be negative.
         // But somehow we get positive banks from the network.
@@ -121,14 +125,14 @@ namespace BlackCore
         currentSituation.setBank(bank);
 
         currentSituation.setGroundspeed((endSituation.getGroundSpeed() - beginSituation.getGroundSpeed())
-                                        * simulationTime
+                                        * simulationTimeFraction
                                         + beginSituation.getGroundSpeed());
 
         return currentSituation;
     }
 
-    const QDateTime &CInterpolatorLinear::getTimeOfLastReceivedSituation() const
+    QDateTime CInterpolatorLinear::getTimeOfLastReceivedSituation() const
     {
-        return m_aircraftSituationList.back().getTimestamp();
+        return m_aircraftSituationList.back().getUtcTimestamp();
     }
 }

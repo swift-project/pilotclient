@@ -1,7 +1,11 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 //! \file
 
@@ -10,7 +14,7 @@
 
 #include "nwuserlist.h"
 #include "avatcstation.h"
-#include "avcallsignlist.h"
+#include "avcallsignobjectlist.h"
 #include "collection.h"
 #include "sequence.h"
 #include <QObject>
@@ -24,7 +28,9 @@ namespace BlackMisc
         /*!
          * Value object for a list of ATC stations.
          */
-        class CAtcStationList : public CSequence<CAtcStation>
+        class CAtcStationList :
+            public CSequence<CAtcStation>,
+            public ICallsignObjectList<CAtcStation, CAtcStationList>
         {
         public:
             //! Default constructor.
@@ -33,32 +39,11 @@ namespace BlackMisc
             //! Construct from a base class object.
             CAtcStationList(const CSequence<CAtcStation> &other);
 
-            //! Find 0..n stations by callsign
-            CAtcStationList findByCallsign(const CCallsign &callsign) const;
-
-            //! Find 0..n stations matching any of a set of callsigns
-            CAtcStationList findByCallsigns(const CCallsignList &callsigns) const;
-
-            //! Find first station by callsign, if not return given value / default
-            CAtcStation findFirstByCallsign(const CCallsign &callsign, const CAtcStation &ifNotFound = CAtcStation()) const;
-
-            //! Find 0..n stations within range of given coordinate
-            CAtcStationList findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const BlackMisc::PhysicalQuantities::CLength &range) const;
-
             //! Find 0..n stations tune in frequency of COM unit (with 25kHt channel spacing
             CAtcStationList findIfComUnitTunedIn25KHz(const BlackMisc::Aviation::CComSystem &comUnit) const;
 
-            //! Find 0..n stations matching the suffix (e.g. TWR)
-            CAtcStationList findBySuffix(const QString &suffix) const;
-
             //! All controllers (with valid data)
             BlackMisc::Network::CUserList getControllers() const;
-
-            //! Get all (different suffixes)
-            QMap<QString, int> getSuffixes() const;
-
-            //! Update distances to coordinate, usually own aircraft's position
-            void calculateDistancesToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position);
 
             //! Merge with ATC station representing booking information.
             //! Both sides (booking, online station) will be updated.
@@ -77,6 +62,13 @@ namespace BlackMisc
 
             //! Register metadata
             static void registerMetadata();
+
+        protected:
+            //! Myself
+            virtual const CAtcStationList &getContainer() const { return *this; }
+
+            //! Myself
+            virtual CAtcStationList &getContainer() { return *this; }
 
         };
 

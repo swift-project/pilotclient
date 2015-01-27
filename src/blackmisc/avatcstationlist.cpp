@@ -1,7 +1,11 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 #include "avatcstationlist.h"
 #include "predicates.h"
@@ -40,41 +44,6 @@ namespace BlackMisc
         }
 
         /*
-         * Find by callsign
-         */
-        CAtcStationList CAtcStationList::findByCallsign(const CCallsign &callsign) const
-        {
-            return this->findBy(&CAtcStation::getCallsign, callsign);
-        }
-
-        /*
-         * Find by callsigns
-         */
-        CAtcStationList CAtcStationList::findByCallsigns(const CCallsignList &callsigns) const
-        {
-            return this->findBy(Predicates::MemberIsAnyOf(&CAtcStation::getCallsign, callsigns));
-        }
-
-        /*
-         * Find first by callsign
-         */
-        CAtcStation CAtcStationList::findFirstByCallsign(const CCallsign &callsign, const CAtcStation &ifNotFound) const
-        {
-            return this->findByCallsign(callsign).frontOrDefault(ifNotFound);
-        }
-
-        /*
-         * Stations within range
-         */
-        CAtcStationList CAtcStationList::findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const
-        {
-            return this->findBy([&](const CAtcStation & atcStation)
-            {
-                return greatCircleDistance(atcStation, coordinate) <= range;
-            });
-        }
-
-        /*
          * Find if on frequency of COM unit
          */
         CAtcStationList CAtcStationList::findIfComUnitTunedIn25KHz(const CComSystem &comUnit) const
@@ -86,55 +55,11 @@ namespace BlackMisc
         }
 
         /*
-         * Find by suffix
-         */
-        CAtcStationList CAtcStationList::findBySuffix(const QString &suffix) const
-        {
-            CAtcStationList r;
-            if (suffix.isEmpty()) { return r; }
-            r = this->findBy(&CAtcStation::getCallsignSuffix, suffix);
-            return r;
-        }
-
-        /*
-         * Distances to own plane
-         */
-        void CAtcStationList::calculateDistancesToPlane(const Geo::CCoordinateGeodetic &position)
-        {
-            std::for_each(this->begin(), this->end(), [ & ](CAtcStation & station)
-            {
-                station.calculcateDistanceToPlane(position);
-            });
-        }
-
-        /*
          * All controllers
          */
         CUserList CAtcStationList::getControllers() const
         {
             return this->findBy(Predicates::MemberValid(&CAtcStation::getController)).transform(Predicates::MemberTransform(&CAtcStation::getController));
-        }
-
-        /*
-         * Suffixes with count
-         */
-        QMap<QString, int> CAtcStationList::getSuffixes() const
-        {
-            QMap<QString, int> r;
-            for (const CAtcStation &station : (*this))
-            {
-                const QString s = station.getCallsignSuffix();
-                if (s.isEmpty()) { continue; }
-                if (r.contains(s))
-                {
-                    r[s] = r[s] + 1;
-                }
-                else
-                {
-                    r.insert(s, 1);
-                }
-            }
-            return r;
         }
 
         /*
@@ -205,11 +130,13 @@ namespace BlackMisc
                 onlineAtcStation.syncronizeControllerData(bookedAtcStation);
                 if (onlineAtcStation.hasValidDistance())
                 {
-                    bookedAtcStation.setDistanceToPlane(onlineAtcStation.getDistanceToPlane());
+                    bookedAtcStation.setDistanceToOwnAircraft(onlineAtcStation.getDistanceToOwnAircraft());
+                    bookedAtcStation.setBearingToOwnAircraft(onlineAtcStation.getBearingToOwnAIrcraft());
                 }
                 else if (bookedAtcStation.hasValidDistance())
                 {
-                    onlineAtcStation.setDistanceToPlane(bookedAtcStation.getDistanceToPlane());
+                    onlineAtcStation.setDistanceToOwnAircraft(bookedAtcStation.getDistanceToOwnAircraft());
+                    onlineAtcStation.setBearingToOwnAircraft(bookedAtcStation.getBearingToOwnAIrcraft());
                 }
 
                 // update
@@ -248,5 +175,6 @@ namespace BlackMisc
             }
             return true;
         }
+
     } // namespace
 } // namespace

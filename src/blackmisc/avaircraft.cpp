@@ -26,12 +26,10 @@ namespace BlackMisc
             if (!this->m_pilot.hasValidCallsign() && !callsign.isEmpty())
             {
                 this->m_pilot.setCallsign(callsign);
+                this->m_situation.setCallsign(callsign);
             }
         }
 
-        /*
-         * Convert to string
-         */
         QString CAircraft::convertToQString(bool i18n) const
         {
             QString s(this->m_callsign.toQString(i18n));
@@ -43,18 +41,6 @@ namespace BlackMisc
             return s;
         }
 
-        /*
-         * Distance to plane
-         */
-        const PhysicalQuantities::CLength &CAircraft::setCalculcatedDistanceToPosition(const Geo::CCoordinateGeodetic &position)
-        {
-            this->m_distanceToPlane = Geo::greatCircleDistance(position, this->m_situation.getPosition());
-            return this->m_distanceToPlane;
-        }
-
-        /*
-         * Set cockpit data
-         */
         void CAircraft::setCockpit(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder)
         {
             this->setCom1System(com1);
@@ -62,9 +48,6 @@ namespace BlackMisc
             this->setTransponder(transponder);
         }
 
-        /*
-         * Set cockpit data
-         */
         void CAircraft::setCockpit(const CComSystem &com1, const CComSystem &com2, int transponderCode, CTransponder::TransponderMode transponderMode)
         {
             this->setCom1System(com1);
@@ -73,44 +56,29 @@ namespace BlackMisc
             this->m_transponder.setTransponderMode(transponderMode);
         }
 
-        /*
-         * Changed data
-         */
         bool CAircraft::hasChangedCockpitData(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder) const
         {
             return this->getCom1System() != com1 || this->getCom2System() != com2 || this->getTransponder() != transponder;
         }
 
-        /*
-         * Distance to plane
-         */
-        PhysicalQuantities::CLength CAircraft::calculcateDistanceToPosition(const Geo::CCoordinateGeodetic &position) const
-        {
-            return Geo::greatCircleDistance(position, this->m_situation.getPosition());
-        }
-
-
-        /*
-         * Same COM system data
-         */
         bool CAircraft::hasSameComData(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder)
         {
             return this->getCom1System() == com1 && this->getCom2System() == com2 && this->getTransponder() == transponder;
         }
 
-        /*
-         * Valid for login
-         */
         bool CAircraft::isValidForLogin() const
         {
-            if (this->m_callsign.asString().isEmpty()) return false;
-            if (!this->m_pilot.isValid()) return false;
+            if (this->m_callsign.asString().isEmpty()) { return false; }
+            if (!this->m_pilot.isValid()) { return false; }
             return true;
         }
 
-        /*
-         * Meaningful values
-         */
+        void CAircraft::setSituation(const CAircraftSituation &situation)
+        {
+            m_situation = situation;
+            m_situation.setCallsign(this->getCallsign());
+        }
+
         void CAircraft::initComSystems()
         {
             CComSystem com1("COM1", CPhysicalQuantitiesConstants::FrequencyUnicom(), CPhysicalQuantitiesConstants::FrequencyUnicom());
@@ -119,18 +87,12 @@ namespace BlackMisc
             this->setCom2System(com2);
         }
 
-        /*
-         * Meaningful values
-         */
         void CAircraft::initTransponder()
         {
             CTransponder xpdr("TRANSPONDER", 7000, CTransponder::StateStandby);
             this->setTransponder(xpdr);
         }
 
-        /*
-         * Property by index
-         */
         CVariant CAircraft::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return this->toCVariant(); }
@@ -141,8 +103,8 @@ namespace BlackMisc
                 return this->m_callsign.propertyByIndex(index.copyFrontRemoved());
             case IndexPilot:
                 return this->m_pilot.propertyByIndex(index.copyFrontRemoved());
-            case IndexDistance:
-                return this->m_distanceToPlane.propertyByIndex(index.copyFrontRemoved());
+            case IndexDistanceToOwnAircraft:
+                return this->m_distanceToOwnAircraft.propertyByIndex(index.copyFrontRemoved());
             case IndexCom1System:
                 return this->m_com1system.propertyByIndex(index.copyFrontRemoved());
             case IndexCom2System:
@@ -160,9 +122,6 @@ namespace BlackMisc
             }
         }
 
-        /*
-         * Property by index (setter)
-         */
         void CAircraft::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself())
@@ -179,8 +138,8 @@ namespace BlackMisc
             case IndexPilot:
                 this->m_pilot.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
-            case IndexDistance:
-                this->m_distanceToPlane.setPropertyByIndex(variant, index.copyFrontRemoved());
+            case IndexDistanceToOwnAircraft:
+                this->m_distanceToOwnAircraft.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexCom1System:
                 this->m_com1system.setPropertyByIndex(variant, index.copyFrontRemoved());

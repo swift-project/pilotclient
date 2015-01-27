@@ -22,29 +22,28 @@ namespace BlackMisc
         /*
          * Constructor
          */
-        CAirport::CAirport()  :
-            m_distanceToPlane(0, CLengthUnit::nullUnit())
+        CAirport::CAirport()
         { }
 
         /*
          * Constructor
          */
         CAirport::CAirport(const QString &icao)  :
-            m_icao(icao), m_distanceToPlane(0, CLengthUnit::nullUnit())
+            m_icao(icao)
         { }
 
         /*
          * Constructor
          */
         CAirport::CAirport(const CAirportIcao &icao, const BlackMisc::Geo::CCoordinateGeodetic &position) :
-            m_icao(icao), m_position(position), m_distanceToPlane(0, CLengthUnit::nullUnit())
+            m_icao(icao), m_position(position)
         { }
 
         /*
          * Constructor
          */
         CAirport::CAirport(const CAirportIcao &icao, const BlackMisc::Geo::CCoordinateGeodetic &position, const QString &descriptiveName) :
-            m_icao(icao), m_descriptiveName(descriptiveName), m_position(position), m_distanceToPlane(0, CLengthUnit::nullUnit())
+            m_icao(icao), m_descriptiveName(descriptiveName), m_position(position)
         { }
 
         /*
@@ -67,17 +66,6 @@ namespace BlackMisc
         }
 
         /*
-         * Distance to planne
-         */
-        CLength CAirport::calculcateDistanceAndBearingToPlane(const CCoordinateGeodetic &position, bool updateValues)
-        {
-            if (!updateValues) return Geo::greatCircleDistance(this->m_position, position);
-            this->m_distanceToPlane = Geo::greatCircleDistance(this->m_position, position);
-            this->m_bearingToPlane = Geo::initialBearing(this->m_position, position);
-            return this->m_distanceToPlane;
-        }
-
-        /*
          * Property by index
          */
         CVariant CAirport::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -95,9 +83,9 @@ namespace BlackMisc
             case IndexElevation:
                 return this->getElevation().propertyByIndex(index.copyFrontRemoved());
             case IndexBearing:
-                return this->m_bearingToPlane.propertyByIndex(index.copyFrontRemoved());
-            case IndexDistance:
-                return this->m_distanceToPlane.propertyByIndex(index.copyFrontRemoved());
+                return this->m_bearingToOwnAircraft.propertyByIndex(index.copyFrontRemoved());
+            case IndexDistanceToOwnAircraft:
+                return this->m_distanceToOwnAircraft.propertyByIndex(index.copyFrontRemoved());
             default:
                 return (ICoordinateGeodetic::canHandleIndex(index)) ?
                        ICoordinateGeodetic::propertyByIndex(index) :
@@ -128,10 +116,10 @@ namespace BlackMisc
                 this->m_position.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexBearing:
-                this->m_bearingToPlane.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_bearingToOwnAircraft.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
-            case IndexDistance:
-                this->m_distanceToPlane.setPropertyByIndex(variant, index.copyFrontRemoved());
+            case IndexDistanceToOwnAircraft:
+                this->m_distanceToOwnAircraft.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             default:
                 CValueObject::setPropertyByIndex(variant, index);

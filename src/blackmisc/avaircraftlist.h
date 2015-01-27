@@ -14,9 +14,10 @@
 
 #include "avaircraft.h"
 #include "avcallsignlist.h"
+#include "avcallsignobjectlist.h"
+#include "geoobjectlist.h"
 #include "nwuserlist.h"
 #include "collection.h"
-#include "sequence.h"
 #include "propertyindexvariantmap.h"
 #include <QObject>
 #include <QString>
@@ -27,7 +28,10 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating a list of aircraft.
-        class CAircraftList : public CSequence<CAircraft>
+        class CAircraftList :
+            public CSequence<CAircraft>,
+            public ICallsignObjectList<CAircraft, CAircraftList>,
+            public BlackMisc::Geo::IGeoObjectList<CAircraft, CAircraftList>
         {
         public:
             //! Default constructor.
@@ -36,31 +40,8 @@ namespace BlackMisc
             //! Construct from a base class object.
             CAircraftList(const CSequence<CAircraft> &other);
 
-            //! Contains callsign?
-            bool containsCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
-
-            //! Apply for given callsign
-            int applyIfCallsign(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &variantMap);
-
-            //! Find 0..n stations by callsign
-            CAircraftList findByCallsign(const CCallsign &callsign) const;
-
-            //! Find 0..n aircraft matching any of a set of callsigns
-            CAircraftList findByCallsigns(const CCallsignList &callsigns) const;
-
-            //! Find the first aircraft by callsign, if none return given one
-            CAircraft findFirstByCallsign(const CCallsign &callsign, const CAircraft &ifNotFound = CAircraft()) const;
-
             //! All pilots (with valid data)
             BlackMisc::Network::CUserList getPilots() const;
-
-            /*!
-             * Find 0..n stations within range of given coordinate
-             * \param coordinate    other position
-             * \param range         within range of other position
-             * \return
-             */
-            CAircraftList findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const BlackMisc::PhysicalQuantities::CLength &range) const;
 
             //! \brief Update aircraft with data from VATSIM data file
             //! \remarks The list used needs to contain the VATSIM data file objects
@@ -74,6 +55,14 @@ namespace BlackMisc
 
             //! Register metadata
             static void registerMetadata();
+
+        protected:
+            //! Myself
+            virtual const CAircraftList &getContainer() const { return *this; }
+
+            //! Myself
+            virtual CAircraftList &getContainer() { return *this; }
+
         };
 
     } //namespace

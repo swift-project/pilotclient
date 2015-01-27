@@ -1,7 +1,11 @@
-/* Copyright (C) 2013 VATSIM Community / contributors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 //! \file
 
@@ -9,6 +13,8 @@
 #define BLACKMISC_AVAIRCRAFTSITUATIONLIST_H
 
 #include "avaircraftsituation.h"
+#include "timestampobjectlist.h"
+#include "avcallsignobjectlist.h"
 #include "sequence.h"
 
 namespace BlackMisc
@@ -16,7 +22,10 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating a list of aircraft situations
-        class CAircraftSituationList : public CSequence<CAircraftSituation>
+        class CAircraftSituationList :
+            public CSequence<CAircraftSituation>,
+            public ITimestampObjectList<CAircraftSituation, CAircraftSituationList>,
+            public ICallsignObjectList<CAircraftSituation, CAircraftSituationList>
         {
         public:
             //! Default constructor.
@@ -25,36 +34,22 @@ namespace BlackMisc
             //! Construct from a base class object.
             CAircraftSituationList(const CSequence<CAircraftSituation> &other);
 
-            /*!
-             * Get a list of situations before dateTime
-             */
-            CAircraftSituationList findBefore (const QDateTime& dateTime) const;
-
-            /*!
-             * Get a list of situations after dateTime
-             */
-            CAircraftSituationList findAfter (const QDateTime& dateTime) const;
-
-            /*!
-             * Remove situations with timestamp before dateTime
-             */
-            void removeBefore(const QDateTime& dateTime);
-
-            /*!
-             * Remove situations older than seconds
-             * \param seconds
-             */
-            void removeOlderThan(double seconds);
-
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
             //! \copydoc CValueObject::convertFromQVariant
             virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
+        protected:
+            //! Myself
+            virtual const CAircraftSituationList &getContainer() const { return *this; }
+
+            //! Myself
+            virtual CAircraftSituationList &getContainer() { return *this; }
+
         };
-    }
-}
+    } // namespace
+} // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituationList)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Aviation::CAircraftSituation>)

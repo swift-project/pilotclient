@@ -23,10 +23,10 @@ namespace BlackMisc
     namespace Geo
     {
 
-        /*!
-         * Latitude and longitude interface
-         * Interface for geodetic ccordinates
-         */
+        //! Geodetic coordinate
+        //! \sa http://www.esri.com/news/arcuser/0703/geoid1of3.html
+        //! \sa http://http://www.gmat.unsw.edu.au/snap/gps/clynch_pdfs/coordcvt.pdf (page 5)
+        //! \sa http://en.wikipedia.org/wiki/Geodetic_datum#Vertical_datum
         class ICoordinateGeodetic
         {
         public:
@@ -36,7 +36,9 @@ namespace BlackMisc
                 IndexLatitude = BlackMisc::CPropertyIndex::GlobalIndexICoordinateGeodetic,
                 IndexLongitude,
                 IndexLatitudeAsString,
-                IndexLongitudeAsString
+                IndexLongitudeAsString,
+                IndexGeodeticHeight,
+                IndexGeodeticHeightAsString
             };
 
             //! Destructor
@@ -48,6 +50,12 @@ namespace BlackMisc
             //! Longitude
             virtual const CLongitude &longitude() const = 0;
 
+            //! Height, ellipsoidal or geodetic height (used in GPS)
+            //! This is approximately MSL (orthometric) height, aka elevation.
+            //! \sa see http://www.gmat.unsw.edu.au/snap/gps/clynch_pdfs/coordcvt.pdf page 5
+            //! \sa http://www.esri.com/news/arcuser/0703/geoid1of3.html
+            virtual const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const = 0;
+
             //! \copydoc CValueObject::propertyByIndex
             virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
@@ -57,47 +65,70 @@ namespace BlackMisc
             //! Longitude as string
             QString longitudeAsString() const { return this->longitude().toQString(true); }
 
+            //! Height as string
+            QString geodeticHeightAsString() const { return this->geodeticHeight().toQString(true); }
+
             //! Great circle distance
-            BlackMisc::PhysicalQuantities::CLength greatCircleDistance(const ICoordinateGeodetic &otherCoordinate) const;
+            BlackMisc::PhysicalQuantities::CLength calculateGreatCircleDistance(const ICoordinateGeodetic &otherCoordinate) const;
 
             //! Initial bearing
-            BlackMisc::PhysicalQuantities::CAngle initialBearing(const ICoordinateGeodetic &otherCoordinate) const;
+            BlackMisc::PhysicalQuantities::CAngle bearing(const ICoordinateGeodetic &otherCoordinate) const;
 
             //! Can given index be handled
             static bool canHandleIndex(const BlackMisc::CPropertyIndex &index)
             {
                 int i = index.frontCasted<int>();
-                return (i >= static_cast<int>(IndexLatitude)) && (i <= static_cast<int>(IndexLongitudeAsString));
+                return (i >= static_cast<int>(IndexLatitude)) && (i <= static_cast<int>(IndexGeodeticHeightAsString));
             }
         };
 
         //! Great circle distance between points
-        BlackMisc::PhysicalQuantities::CLength greatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
+        BlackMisc::PhysicalQuantities::CLength calculateGreatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
 
         //! Initial bearing
-        BlackMisc::PhysicalQuantities::CAngle initialBearing(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
+        BlackMisc::PhysicalQuantities::CAngle calculateBearing(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
 
-        //! Geodetic coordinate
-        //! \sa http://www.esri.com/news/arcuser/0703/geoid1of3.html
-        //! \sa http://http://www.gmat.unsw.edu.au/snap/gps/clynch_pdfs/coordcvt.pdf (page 5)
-        //! \sa http://en.wikipedia.org/wiki/Geodetic_datum#Vertical_datum
-        class CCoordinateGeodetic : public CValueObjectStdTuple<CCoordinateGeodetic>, public ICoordinateGeodetic
+        //! Interface (actually more an abstract class) of coordinate and
+        //! relative position to own aircraft
+        class ICoordinateWithRelativePosition : public ICoordinateGeodetic
         {
         public:
-            //! Properties by index
-            enum ColumnIndex
-            {
-                IndexLatitude = BlackMisc::CPropertyIndex::GlobalIndexCCoordinateGeodetic,
-                IndexLongitude,
-                IndexLatitudeAsString,
-                IndexLongitudeAsString,
-                IndexGeodeticHeight,
-                IndexGeodeticHeightAsString
-            };
+            //! Get the distance to own plane
+            const BlackMisc::PhysicalQuantities::CLength &getDistanceToOwnAircraft() const { return m_distanceToOwnAircraft; }
+
+            //! Set distance to own plane
+            void setDistanceToOwnAircraft(const BlackMisc::PhysicalQuantities::CLength &distance) { this->m_distanceToOwnAircraft = distance; }
+
+            //! Get the bearing to own plane
+            const BlackMisc::PhysicalQuantities::CAngle &getBearingToOwnAIrcraft() const { return m_bearingToOwnAircraft; }
+
+            //! Set bearing to own plane
+            void setBearingToOwnAircraft(const BlackMisc::PhysicalQuantities::CAngle &angle) { this->m_bearingToOwnAircraft = angle; }
+
+            //! Valid distance?
+            bool hasValidDistance() const { return !this->m_distanceToOwnAircraft.isNull();}
+
+            //! Valid bearing?
+            bool hasValidBearing() const { return !this->m_bearingToOwnAircraft.isNull();}
+
+            //! Calculcate distance, set it, and return distance
+            BlackMisc::PhysicalQuantities::CLength calculcateDistanceToOwnAircraft(const BlackMisc::Geo::ICoordinateGeodetic &position, bool updateValues = true);
+
+            //! Calculcate distance and bearing to plane, set it, and return distance
+            BlackMisc::PhysicalQuantities::CLength calculcateDistanceAndBearingToOwnAircraft(const BlackMisc::Geo::ICoordinateGeodetic &position, bool updateValues = true);
 
         protected:
-            //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
+            //! Constructor
+            ICoordinateWithRelativePosition();
+
+            BlackMisc::PhysicalQuantities::CAngle  m_bearingToOwnAircraft;  //!< temporary stored value
+            BlackMisc::PhysicalQuantities::CLength m_distanceToOwnAircraft; //!< temporary stored value
+        };
+
+
+        //! Geodetic coordinate
+        class CCoordinateGeodetic : public CValueObjectStdTuple<CCoordinateGeodetic>, public ICoordinateGeodetic
+        {
 
         public:
             //! Default constructor
@@ -117,11 +148,8 @@ namespace BlackMisc
             //! \copydoc ICoordinateGeodetic::longitude
             virtual const CLongitude &longitude() const override { return this->m_longitude; }
 
-            //! Height, ellipsoidal or geodetic height (used in GPS)
-            //! This is approximately MSL (orthometric) height, aka elevation.
-            //! \sa see http://www.gmat.unsw.edu.au/snap/gps/clynch_pdfs/coordcvt.pdf page 5
-            //! \sa http://www.esri.com/news/arcuser/0703/geoid1of3.html
-            const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const { return this->m_geodeticHeight; }
+            //! \copydoc ICoordinateGeodetic::geodeticHeight
+            virtual const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override { return this->m_geodeticHeight; }
 
             //! \copydoc CValueObject::propertyByIndex
             virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
@@ -130,19 +158,10 @@ namespace BlackMisc
             virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! Switch unit of latitude / longitude
-            CCoordinateGeodetic &switchUnit(const BlackMisc::PhysicalQuantities::CAngleUnit &unit)
-            {
-                this->m_latitude.switchUnit(unit);
-                this->m_longitude.switchUnit(unit);
-                return *this;
-            }
+            CCoordinateGeodetic &switchUnit(const BlackMisc::PhysicalQuantities::CAngleUnit &unit);
 
             //! Switch unit of height
-            CCoordinateGeodetic &switchUnit(const BlackMisc::PhysicalQuantities::CLengthUnit &unit)
-            {
-                this->m_geodeticHeight.switchUnit(unit);
-                return *this;
-            }
+            CCoordinateGeodetic &switchUnit(const BlackMisc::PhysicalQuantities::CLengthUnit &unit);
 
             //! Set latitude
             void setLatitude(const CLatitude &latitude) { this->m_latitude = latitude; }
@@ -156,15 +175,19 @@ namespace BlackMisc
             //! Coordinate by WGS84 position data
             static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const BlackMisc::PhysicalQuantities::CLength &geodeticHeight = {});
 
+        protected:
+            //! \copydoc CValueObject::convertToQString
+            virtual QString convertToQString(bool i18n = false) const override;
+
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CCoordinateGeodetic)
-            BlackMisc::Geo::CLatitude m_latitude; //!< Latitude
+            BlackMisc::Geo::CLatitude  m_latitude;  //!< Latitude
             BlackMisc::Geo::CLongitude m_longitude; //!< Longitude
             BlackMisc::PhysicalQuantities::CLength m_geodeticHeight; //!< height, ellipsoidal or geodetic height
         };
 
-    }
-}
+    } // namespace
+} // namespace
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Geo::CCoordinateGeodetic, (o.m_latitude, o.m_longitude, o.m_geodeticHeight))
 Q_DECLARE_METATYPE(BlackMisc::Geo::CCoordinateGeodetic)

@@ -203,7 +203,7 @@ namespace BlackCore
         CAtcStationList stations = this->m_atcStationsOnline.findIfComUnitTunedIn25KHz(comSystem);
         if (!stations.isEmpty())
         {
-            stations.sortBy(&CAtcStation::getDistanceToPlane);
+            stations.sortBy(&CAtcStation::getDistanceToOwnAircraft);
             station = stations.front();
         }
         return station;
@@ -488,7 +488,7 @@ namespace BlackCore
             station.setFrequency(frequency);
             station.setPosition(position);
             station.setOnline(true);
-            station.calculcateDistanceToPlane(this->m_ownAircraft.getPosition());
+            station.calculcateDistanceAndBearingToOwnAircraft(this->m_ownAircraft.getPosition());
             this->m_vatsimDataFileReader->getAtcStations().updateFromVatsimDataFileStation(station); // prefill
             this->m_atcStationsOnline.push_back(station);
 
@@ -634,7 +634,7 @@ namespace BlackCore
             aircraft.setCallsign(callsign);
             aircraft.setSituation(situation);
             aircraft.setTransponder(transponder);
-            aircraft.setCalculcatedDistanceToPosition(this->m_ownAircraft.getPosition()); // distance from myself
+            aircraft.calculcateDistanceAndBearingToOwnAircraft(this->m_ownAircraft.getPosition()); // distance from myself
 
             // ICAO from cache if avialable
             bool setIcao = false;
@@ -683,12 +683,12 @@ namespace BlackCore
         else  // not exists yet
         {
             // update
-            CLength distance = this->m_ownAircraft.calculcateDistanceToPosition(situation.getPosition());
+            CLength distance = this->m_ownAircraft.calculateGreatCircleDistance(situation.getPosition());
             distance.switchUnit(CLengthUnit::NM());
             CPropertyIndexVariantMap vm;
             vm.addValue(CAircraft::IndexTransponder, transponder);
             vm.addValue(CAircraft::IndexSituation, situation);
-            vm.addValue(CAircraft::IndexDistance, distance);
+            vm.addValue(CAircraft::IndexDistanceToOwnAircraft, distance);
 
             // here I expect always a changed value
             this->m_aircraftInRange.applyIfCallsign(callsign, vm);

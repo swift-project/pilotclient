@@ -48,80 +48,11 @@ namespace BlackMisc
         }
 
         /*
-         * Find by callsign
-         */
-        CSimulatedAircraftList CSimulatedAircraftList::findByCallsign(const CCallsign &callsign) const
-        {
-            return this->findBy(&CSimulatedAircraft::getCallsign, callsign);
-        }
-
-        /*
-         * Find by callsigns
-         */
-        CSimulatedAircraftList CSimulatedAircraftList::findByCallsigns(const CCallsignList &callsigns) const
-        {
-            return this->findBy(Predicates::MemberIsAnyOf(&CSimulatedAircraft::getCallsign, callsigns));
-        }
-
-        /*
-         * Find by callsign
-         */
-        CSimulatedAircraft CSimulatedAircraftList::findFirstByCallsign(const CCallsign &callsign, const CSimulatedAircraft &ifNotFound) const
-        {
-            return this->findByCallsign(callsign).frontOrDefault(ifNotFound);
-        }
-
-        /*
-         * Contains callsign?
-         */
-        bool CSimulatedAircraftList::containsCallsign(const CCallsign &callsign) const
-        {
-            return this->contains(&CSimulatedAircraft::getCallsign, callsign);
-        }
-
-        int CSimulatedAircraftList::incrementalUpdateOrAdd(const CSimulatedAircraft &toChangeAircraft, const CPropertyIndexVariantMap &changedValues)
-        {
-            int c;
-            const CCallsign cs = toChangeAircraft.getCallsign();
-            if (this->containsCallsign(cs))
-            {
-                if (changedValues.isEmpty()) { return 0; }
-                c = this->applyIf(&CSimulatedAircraft::getCallsign, cs, changedValues);
-            }
-            else
-            {
-                c = 1;
-                if (changedValues.isEmpty())
-                {
-                    this->push_back(toChangeAircraft);
-                }
-                else
-                {
-                    CSimulatedAircraft addAircraft(toChangeAircraft);
-                    addAircraft.apply(changedValues);
-                    this->push_back(addAircraft);
-                }
-            }
-            return c;
-        }
-
-        /*
          * All pilots
          */
         CUserList CSimulatedAircraftList::getPilots() const
         {
             return this->findBy(Predicates::MemberValid(&CSimulatedAircraft::getPilot)).transform(Predicates::MemberTransform(&CSimulatedAircraft::getPilot));
-        }
-
-        /*
-         * Aircrafts within range
-         */
-        CSimulatedAircraftList CSimulatedAircraftList::findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const
-        {
-            return this->findBy([&](const CSimulatedAircraft & aircraft)
-            {
-                return BlackMisc::Geo::greatCircleDistance(aircraft, coordinate) <= range;
-            });
         }
 
     } // namespace

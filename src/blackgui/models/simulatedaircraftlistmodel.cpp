@@ -53,7 +53,7 @@ namespace BlackGui
             case InfoMode:
                 this->m_columns.addColumn(CColumn::standardValueObject("cs.", "callsign", CSimulatedAircraft::IndexCallsign, CCallsign::IndexCallsignString));
                 this->m_columns.addColumn(CColumn::standardString("realname", "pilot's real name", { CSimulatedAircraft::IndexPilot, CUser::IndexRealName }));
-                this->m_columns.addColumn(CColumn("distance", CSimulatedAircraft::IndexDistance, new CAirspaceDistanceFormatter()));
+                this->m_columns.addColumn(CColumn("distance", CSimulatedAircraft::IndexDistanceToOwnAircraft, new CAirspaceDistanceFormatter()));
                 this->m_columns.addColumn(CColumn("frequency", { CSimulatedAircraft::IndexCom1System, CComSystem::IndexActiveFrequency }, new CComFrequencyFormatter()));
                 this->m_columns.addColumn(CColumn::standardString("icao", { CSimulatedAircraft::IndexIcao, CAircraftIcao::IndexAsString}));
                 this->m_columns.addColumn(CColumn::standardString("transponder", { CSimulatedAircraft::IndexTransponder, CTransponder::IndexTransponderCodeAndModeFormatted }));
@@ -63,7 +63,7 @@ namespace BlackGui
                 this->m_columns.addColumn(CColumn("gs.", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexGroundspeed }, new CAircraftSpeedFormatter()));
 
                 // default sort order
-                this->setSortColumnByPropertyIndex(CSimulatedAircraft::IndexDistance);
+                this->setSortColumnByPropertyIndex(CSimulatedAircraft::IndexDistanceToOwnAircraft);
                 this->m_sortOrder = Qt::AscendingOrder;
                 break;
 
@@ -72,7 +72,7 @@ namespace BlackGui
                                                   new CBoolIconFormatter(CIcons::StandardIconTick16, CIcons::StandardIconCross16, "enabled", "disabled"), true));
                 this->m_columns.addColumn(CColumn::standardValueObject("cs.", "callsign", { CSimulatedAircraft::IndexCallsign, CCallsign::IndexCallsignString }));
                 this->m_columns.addColumn(CColumn::standardString("realname", "pilot's real name", { CSimulatedAircraft::IndexPilot, CUser::IndexRealName }));
-                this->m_columns.addColumn(CColumn("distance", CSimulatedAircraft::IndexDistance, new CAirspaceDistanceFormatter()));
+                this->m_columns.addColumn(CColumn("distance", CSimulatedAircraft::IndexDistanceToOwnAircraft, new CAirspaceDistanceFormatter()));
                 this->m_columns.addColumn(CColumn::standardString("icao", { CSimulatedAircraft::IndexIcao, CAircraftIcao::IndexAsString}));
                 this->m_columns.addColumn(CColumn::standardString("model", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexModelString}));
                 this->m_columns.addColumn(CColumn::standardString("desc.", "description", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexDescription}));
