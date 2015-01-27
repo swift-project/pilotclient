@@ -68,6 +68,7 @@ namespace BlackMisc
             NetworkRoleTower,
             NetworkRoleUnknown,
             NetworkVatsimLogo,
+            NetworkVatsimLogoWhite,
             NotSet,
             StandardIconAppAircrafts16,
             StandardIconAppAtc16,
@@ -461,6 +462,12 @@ namespace BlackMisc
 
         //! VATSIM logo
         static const QPixmap &vatsimLogo32();
+
+        //! VATSIM logo
+        static const QPixmap &vatsimLogoWhite16();
+
+        //! VATSIM logo
+        static const QPixmap &vatsimLogoWhite32();
 
         //! Full voice capability
         static const QPixmap &capabilityVoice();

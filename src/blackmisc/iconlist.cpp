@@ -36,6 +36,7 @@ namespace BlackMisc
         static const CIconList icons(
         {
             // keep indexes alphabetically sorted and in sync with CIcons
+            // req. for "iconByIndex"
             CIcon(CIcons::ApplicationIconAircrafts, "aircrafts"),
             CIcon(CIcons::ApplicationIconAtc, "ATC"),
             CIcon(CIcons::ApplicationIconAudio, "audio"),
@@ -76,6 +77,7 @@ namespace BlackMisc
             CIcon(CIcons::NetworkRoleTower, "ATC tower"),
             CIcon(CIcons::NetworkRoleUnknown, "unknown"),
             CIcon(CIcons::NetworkVatsimLogo, "VATSIM"),
+            CIcon(CIcons::NetworkVatsimLogoWhite, "VATSIM"),
             CIcon(CIcons::NotSet, "?"),
             CIcon(CIcons::StandardIconAppAircrafts16, "aircrafts"),
             CIcon(CIcons::StandardIconAppAtc16, "ATC"),

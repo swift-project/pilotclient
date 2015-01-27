@@ -463,6 +463,18 @@ namespace BlackMisc
         return pm;
     }
 
+    const QPixmap &CIcons::vatsimLogoWhite16()
+    {
+        static const QPixmap pm(":/vatsim/icons/vatsim/VatsimLogoWhite16.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::vatsimLogoWhite32()
+    {
+        static const QPixmap pm(":/vatsim/icons/vatsim/VatsimLogoWhite32.png");
+        return pm;
+    }
+
     const QPixmap &CIcons::capabilityVoice()
     {
         static const QPixmap pm(":/diagona/icons/diagona/icons/headphone.png");
@@ -537,6 +549,7 @@ namespace BlackMisc
         case NetworkRoleTower: return roleTower();
         case NetworkRoleUnknown: return roleUnknown();
         case NetworkVatsimLogo: return vatsimLogo16();
+        case NetworkVatsimLogoWhite: return vatsimLogoWhite16();
         case NotSet: return empty();
         case StandardIconAppAircrafts16: return appAircrafts16();
         case StandardIconAppAtc16: return appAtc16();

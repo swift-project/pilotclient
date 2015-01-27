@@ -40,7 +40,6 @@ namespace BlackGui
             enum SettingTab
             {
                 SettingTabNetwork = 0,
-                SettingTabAircraft,
                 SettingTabAircraftAudio,
                 SettingTabSimulator,
                 SettingTabGui,
