@@ -42,7 +42,7 @@ namespace BlackCore
 
     CContextSimulator::~CContextSimulator()
     {
-        disconnectFrom();
+        disconnectFromSimulator();
         unloadSimulatorPlugin();
     }
 
@@ -71,21 +71,21 @@ namespace BlackCore
         return m_simulator->canConnect();
     }
 
-    bool CContextSimulator::connectTo()
+    bool CContextSimulator::connectToSimulator()
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         if (!m_simulator) return false;
         return m_simulator->connectTo();
     }
 
-    void CContextSimulator::asyncConnectTo()
+    void CContextSimulator::asyncConnectToSimulator()
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         if (!m_simulator || m_canConnectResult.isRunning()) return; // already checking
         m_simulator->asyncConnectTo();
     }
 
-    bool CContextSimulator::disconnectFrom()
+    bool CContextSimulator::disconnectFromSimulator()
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         if (!m_simulator) return false;
@@ -250,7 +250,7 @@ namespace BlackCore
         this->settingsChanged(static_cast<uint>(IContextSettings::SettingsSimulator));
 
         // try to connect
-        asyncConnectTo();
+        asyncConnectToSimulator();
 
         // info about what is going on
         CLogMessage(this).info("Simulator plugin loaded: '%1'") << this->m_simulator->getSimulatorInfo().toQString(true);

@@ -13,10 +13,10 @@
 #define BLACKCORE_CONTEXTSIMULATOR_IMPL_H
 
 #include "blackcore/context_simulator.h"
-#include "blackcore/context_network.h"
 #include "blackcore/simulator.h"
 #include "blacksim/simulatorinfo.h"
 #include "blacksim/simulatorinfolist.h"
+#include "blackmisc/nwtextmessagelist.h"
 #include "blackmisc/pixmap.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include <QTimer>
@@ -51,13 +51,13 @@ namespace BlackCore
         virtual bool canConnect() const override;
 
         //! \copydoc IContextSimulator::connectTo
-        virtual bool connectTo() override;
+        virtual bool connectToSimulator() override;
 
         //! \copydoc IContextSimulator::asyncConnectTo
-        virtual void asyncConnectTo() override;
+        virtual void asyncConnectToSimulator() override;
 
         //! \copydoc IContextSimulator::disconnectFrom
-        virtual bool disconnectFrom() override;
+        virtual bool disconnectFromSimulator() override;
 
         //! \copydoc IContextSimulator::isPaused
         virtual bool isPaused() const override;

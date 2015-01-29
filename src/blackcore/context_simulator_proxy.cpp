@@ -72,19 +72,19 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("canConnect"));
     }
 
-    bool CContextSimulatorProxy::connectTo()
+    bool CContextSimulatorProxy::connectToSimulator()
     {
-        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("connectTo"));
+        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("connectToSimulator"));
     }
 
-    void CContextSimulatorProxy::asyncConnectTo()
+    void CContextSimulatorProxy::asyncConnectToSimulator()
     {
-        m_dBusInterface->callDBus(QLatin1Literal("asyncConnectTo"));
+        m_dBusInterface->callDBus(QLatin1Literal("asyncConnectToSimulator"));
     }
 
-    bool CContextSimulatorProxy::disconnectFrom()
+    bool CContextSimulatorProxy::disconnectFromSimulator()
     {
-        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("disconnectFrom"));
+        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("disconnectFromSimulator"));
     }
 
     BlackMisc::Simulation::CAircraftModel CContextSimulatorProxy::getOwnAircraftModel() const

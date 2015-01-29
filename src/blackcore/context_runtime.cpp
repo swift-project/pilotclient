@@ -230,7 +230,7 @@ namespace BlackCore
         if (this->getIContextSimulator())
         {
             disconnect(this->getIContextSimulator());
-            this->getIContextSimulator()->disconnectFrom();
+            this->getIContextSimulator()->disconnectFromSimulator();
             this->getIContextSimulator()->deleteLater();
             this->m_contextSimulator = nullptr;
         }

@@ -104,13 +104,13 @@ namespace BlackCore
         virtual bool canConnect() const = 0;
 
         //! Connect to simulator
-        virtual bool connectTo() = 0;
+        virtual bool connectToSimulator() = 0;
 
         //! Connect to simulator (asynchronous version)
-        virtual void asyncConnectTo() = 0;
+        virtual void asyncConnectToSimulator() = 0;
 
         //! Disconnect from simulator
-        virtual bool disconnectFrom() = 0;
+        virtual bool disconnectFromSimulator() = 0;
 
         //! Returns true when simulator is running / simulating
         virtual bool isSimulating() const = 0;
