@@ -80,17 +80,17 @@ namespace BlackCore
         this->m_dBusInterface->callDBus(QLatin1Literal("readAtcBookingsFromSource"));
     }
 
-    const BlackMisc::Aviation::CAtcStationList CContextNetworkProxy::getAtcStationsOnline() const
+    BlackMisc::Aviation::CAtcStationList CContextNetworkProxy::getAtcStationsOnline() const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1Literal("getAtcStationsOnline"));
     }
 
-    const BlackMisc::Aviation::CAtcStationList CContextNetworkProxy::getAtcStationsBooked() const
+    CAtcStationList CContextNetworkProxy::getAtcStationsBooked() const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1Literal("getAtcStationsBooked"));
     }
 
-    const BlackMisc::Aviation::CAircraftList CContextNetworkProxy::getAircraftInRange() const
+    BlackMisc::Aviation::CAircraftList CContextNetworkProxy::getAircraftInRange() const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAircraftList>(QLatin1Literal("getAircraftInRange"));
     }

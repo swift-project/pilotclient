@@ -118,17 +118,14 @@ namespace BlackCore
         //! Reload bookings from booking service
         virtual void readAtcBookingsFromSource() const = 0;
 
-        /*!
-         * The ATC list with online ATC controllers
-         * \remarks If I make this &getAtcStations XML is not generated correctly
-         */
-        virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const = 0;
+        //! The ATC list with online ATC controllers
+        virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const = 0;
 
         //! ATC list, with booked controllers
-        virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const = 0 ;
+        virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const = 0 ;
 
         //! Aircraft list
-        virtual const BlackMisc::Aviation::CAircraftList getAircraftInRange() const = 0;
+        virtual BlackMisc::Aviation::CAircraftList getAircraftInRange() const = 0;
 
         //! Get all users
         virtual BlackMisc::Network::CUserList getUsers() const = 0;
