@@ -50,18 +50,27 @@ namespace BlackCore
 
         //! Create audio mixer object
         virtual std::unique_ptr<IAudioMixer> createAudioMixer() = 0;
-        //! Connect voice channel to an audio output device
-        virtual void connectChannelOutputDevice(IVoiceChannel *channel, IAudioOutputDevice *device) = 0;
 
-        /*!
-         * Connect input device to voice channel to start/stop voice transmission
-         * \param device Audio input device, e.g. a microphone. Pass nullptr to stop transmission
-         * \param channel Voice channel audio should be transmitted to
-         */
-        virtual void connectChannelInputDevice(IAudioInputDevice *device, IVoiceChannel *channel) = 0;
+        //! Connect audio input device to audio mixer
+        virtual void connectVoice(IAudioInputDevice *device, IAudioMixer *mixer, IAudioMixer::InputPort inputPort) = 0;
 
-        //! Connect audio input to an audio output to hear your own voice
-        virtual void enableAudioLoopback(IAudioInputDevice *input, IAudioOutputDevice *output) = 0;
+        //! Connect voice channel to audio mixer
+        virtual void connectVoice(IVoiceChannel *channel, IAudioMixer *mixer, IAudioMixer::InputPort inputPort) = 0;
+
+        //! Connect audio mixer to audio output device
+        virtual void connectVoice(IAudioMixer *mixer, IAudioMixer::OutputPort outputPort, IAudioOutputDevice *device) = 0;
+
+        //! Connect audio mixer to audio input device
+        virtual void connectVoice(IAudioMixer *mixer, IAudioMixer::OutputPort outputPort, IVoiceChannel *channel) = 0;
+
+        //! Disconnect input device
+        virtual void disconnectVoice(IAudioInputDevice *device) = 0;
+
+        //! Disconnect voice channel
+        virtual void disconnectVoice(IVoiceChannel *channel) = 0;
+
+        //! Disconnect audio mixer output port
+        virtual void disconnectVoice(IAudioMixer *mixer, IAudioMixer::OutputPort outputPort) = 0;
     };
 
 } // namespace BlackCore

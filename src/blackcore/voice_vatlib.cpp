@@ -69,55 +69,69 @@ namespace BlackCore
        }
      */
 
-    void CVoiceVatlib::connectChannelOutputDevice(IVoiceChannel *channel, IAudioOutputDevice *device)
+    void CVoiceVatlib::connectVoice(IAudioInputDevice *device, IAudioMixer *mixer, IAudioMixer::InputPort inputPort)
+    {
+        auto audioInputVatlib = qobject_cast<CAudioInputDeviceVatlib*>(device);
+        Q_ASSERT_X(audioInputVatlib, "CVoiceVatlib::connectVoice", "No valid CAudioInputDeviceVatlib pointer.");
+
+        auto audioMixerVatlib = qobject_cast<CAudioMixerVatlib*>(mixer);
+        Q_ASSERT_X(audioMixerVatlib, "CVoiceVatlib::connectVoice", "No valid CAudioMixerVatlib pointer.");
+
+        Vat_ConnectProducerToProducerConsumer(audioInputVatlib->getVatLocalInputCodec(), 0, audioMixerVatlib->getVatAudioMixer(), inputPort);
+    }
+
+    void CVoiceVatlib::connectVoice(IVoiceChannel *channel, IAudioMixer *mixer, IAudioMixer::InputPort inputPort)
     {
         auto voiceChannelVatlib = qobject_cast<CVoiceChannelVatlib*>(channel);
-        Q_ASSERT_X(voiceChannelVatlib, "CVoiceVatlib::connectChannelOutputDevice", "No valid CVoiceChannelVatlib pointer.");
+        Q_ASSERT_X(voiceChannelVatlib, "CVoiceVatlib::connectVoice", "No valid CVoiceChannelVatlib pointer.");
 
-        if (!device)
-        {
-            Vat_VoiceConnect(voiceChannelVatlib->getVoiceChannel(), 0, nullptr, 0);
-            return;
-        }
+        auto audioMixerVatlib = qobject_cast<CAudioMixerVatlib*>(mixer);
+        Q_ASSERT_X(audioMixerVatlib, "CVoiceVatlib::connectVoice", "No valid CAudioMixerVatlib pointer.");
+
+        Vat_ConnectProducerConsumerToProducerConsumer(voiceChannelVatlib->getVoiceChannel(), 0, audioMixerVatlib->getVatAudioMixer(), inputPort);
+    }
+
+    void CVoiceVatlib::connectVoice(IAudioMixer *mixer, IAudioMixer::OutputPort outputPort, IAudioOutputDevice *device)
+    {
+        auto audioMixerVatlib = qobject_cast<CAudioMixerVatlib*>(mixer);
+        Q_ASSERT_X(audioMixerVatlib, "CVoiceVatlib::connectVoice", "No valid CAudioMixerVatlib pointer.");
 
         auto audioDeviceVatlib = qobject_cast<CAudioOutputDeviceVatlib*>(device);
-        Q_ASSERT_X(audioDeviceVatlib, "CVoiceVatlib::connectOutputDevice", "No valid CAudioOutputDeviceVatlib pointer.");
+        Q_ASSERT_X(audioDeviceVatlib, "CVoiceVatlib::connectVoice", "No valid CAudioOutputDeviceVatlib pointer.");
 
-        Vat_VoiceConnect(voiceChannelVatlib->getVoiceChannel(), 0, audioDeviceVatlib->getVatLocalOutputCodec(), 0);
+        Vat_ConnectProducerConsumerToConsumer(audioMixerVatlib->getVatAudioMixer(), outputPort, audioDeviceVatlib->getVatLocalOutputCodec(), 0);
     }
 
-    void CVoiceVatlib::connectChannelInputDevice(IAudioInputDevice *device, IVoiceChannel *channel)
+    void CVoiceVatlib::connectVoice(IAudioMixer *mixer, IAudioMixer::OutputPort outputPort, IVoiceChannel *channel)
+    {
+        auto audioMixerVatlib = qobject_cast<CAudioMixerVatlib*>(mixer);
+        Q_ASSERT_X(audioMixerVatlib, "CVoiceVatlib::connectVoice", "No valid CAudioMixerVatlib pointer.");
+
+        auto voiceChannelVatlib = qobject_cast<CVoiceChannelVatlib*>(channel);
+        Q_ASSERT_X(voiceChannelVatlib, "CVoiceVatlib::connectVoice", "No valid CVoiceChannelVatlib pointer.");
+
+        Vat_ConnectProducerConsumerToProducerConsumer(audioMixerVatlib->getVatAudioMixer(), outputPort, voiceChannelVatlib->getVoiceChannel(), 0);
+    }
+
+    void CVoiceVatlib::disconnectVoice(IAudioInputDevice *device)
+    {
+        auto audioInputVatlib = qobject_cast<CAudioInputDeviceVatlib*>(device);
+        Q_ASSERT_X(audioInputVatlib, "CVoiceVatlib::connectVoice", "No valid CAudioInputDeviceVatlib pointer.");
+        Vat_ConnectProducerToConsumer(audioInputVatlib->getVatLocalInputCodec(), 0, nullptr, 0);
+    }
+
+    void CVoiceVatlib::disconnectVoice(IVoiceChannel *channel)
     {
         auto voiceChannelVatlib = qobject_cast<CVoiceChannelVatlib*>(channel);
-        Q_ASSERT_X(voiceChannelVatlib, "CVoiceVatlib::connectChannelInputDevice", "No valid CVoiceChannelVatlib pointer.");
-
-        if (!device)
-        {
-            Vat_VoiceConnect(voiceChannelVatlib->getVoiceChannel(), 0, nullptr, 0);
-            return;
-        }
-
-        auto audioDeviceVatlib = qobject_cast<CAudioInputDeviceVatlib*>(device);
-        Q_ASSERT_X(audioDeviceVatlib, "CVoiceVatlib::connectChannelInputDevice", "No valid CAudioInputDeviceVatlib pointer.");
-
-        Vat_VoiceConnect(audioDeviceVatlib->getVatLocalInputCodec(), 0, voiceChannelVatlib->getVoiceChannel(), 0);
+        Q_ASSERT_X(voiceChannelVatlib, "CVoiceVatlib::connectVoice", "No valid CVoiceChannelVatlib pointer.");
+        Vat_ConnectProducerConsumerToConsumer(voiceChannelVatlib->getVoiceChannel(), 0, nullptr, 0);
     }
 
-    void CVoiceVatlib::enableAudioLoopback(IAudioInputDevice *input, IAudioOutputDevice *output)
+    void CVoiceVatlib::disconnectVoice(IAudioMixer *mixer, IAudioMixer::OutputPort outputPort)
     {
-        auto vatlibInput = qobject_cast<CAudioInputDeviceVatlib*>(input);
-        Q_ASSERT_X(vatlibInput, "CVoiceVatlib::enableAudioLoopback", "No valid CAudioInputDeviceVatlib pointer.");
-
-        if (!output)
-        {
-            Vat_VoiceConnect(vatlibInput->getVatLocalInputCodec(), 0, nullptr, 0);
-            return;
-        }
-
-        auto vatlibOutput = qobject_cast<CAudioOutputDeviceVatlib*>(output);
-        Q_ASSERT_X(vatlibOutput, "CVoiceVatlib::enableAudioLoopback", "No valid CAudioOutputDeviceVatlib pointer.");
-
-        Vat_VoiceConnect(vatlibInput->getVatLocalInputCodec(), 0, vatlibOutput->getVatLocalOutputCodec(), 0);
+        auto audioMixerVatlib = qobject_cast<CAudioMixerVatlib*>(mixer);
+        Q_ASSERT_X(audioMixerVatlib, "CVoiceVatlib::connectVoice", "No valid CAudioMixerVatlib pointer.");
+        Vat_ConnectProducerConsumerToConsumer(audioMixerVatlib->getVatAudioMixer(), outputPort, nullptr, 0);
     }
 
     /*

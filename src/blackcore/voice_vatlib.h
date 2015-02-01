@@ -47,14 +47,27 @@ namespace BlackCore
 
         //! \copydoc IVoice::createAudioMixer()
         virtual std::unique_ptr<IAudioMixer> createAudioMixer() override;
-        //! \copydoc IVoice::connectChannelOutputDevice()
-        virtual void connectChannelOutputDevice(IVoiceChannel *channel, IAudioOutputDevice *device) override;
 
-        //! \copydoc IVoice::connectChannelInputDevice()
-        virtual void connectChannelInputDevice(IAudioInputDevice *device, IVoiceChannel *channel) override;
+        //! \copydoc IVoice::connectVoice()
+        virtual void connectVoice(IAudioInputDevice *device, IAudioMixer *mixer, IAudioMixer::InputPort inputPort) override;
 
-        //! \copydoc IVoice::enableAudioLoopback()
-        virtual void enableAudioLoopback(IAudioInputDevice *input, IAudioOutputDevice *output) override;
+        //! \copydoc IVoice::connectVoice()
+        virtual void connectVoice(IVoiceChannel *channel, IAudioMixer *mixer, IAudioMixer::InputPort inputPort) override;
+
+        //! \copydoc IVoice::connectVoice()
+        virtual void connectVoice(IAudioMixer *mixer, IAudioMixer::OutputPort outputPort, IAudioOutputDevice *device) override;
+
+        //! \copydoc IVoice::connectVoice()
+        virtual void connectVoice(IAudioMixer *mixer, IAudioMixer::OutputPort outputPort, IVoiceChannel *channel) override;
+
+        //! \copydoc IVoice::disconnectVoice()
+        void disconnectVoice(IAudioInputDevice *device) override;
+
+        //! \copydoc IVoice::disconnectVoice()
+        void disconnectVoice(IVoiceChannel *channel) override;
+
+        //! \copydoc IVoice::disconnectVoice()
+        void disconnectVoice(IAudioMixer *mixer, IAudioMixer::OutputPort outputPort) override;
 
     protected: // QObject overrides
 
@@ -84,6 +97,7 @@ namespace BlackCore
 
         QScopedPointer<VatAudioService_tag, VatAudioServiceDeleter> m_audioService;
         QScopedPointer<VatUDPAudioPort_tag, VatUDPAudioPortDeleter> m_udpPort;
+
     };
 
 } // namespace
