@@ -21,9 +21,10 @@ namespace BlackSimPlugin
 {
     namespace Fsx
     {
-        BlackCore::ISimulator *CSimulatorFsxFactory::create(QObject *parent)
+        BlackCore::ISimulator *CSimulatorFsxFactory::create(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent)
         {
-            return new CSimulatorFsx(parent);
+            Q_ASSERT(ownAircraft);
+            return new CSimulatorFsx(ownAircraft, parent);
         }
 
         CSimulatorInfo CSimulatorFsxFactory::getSimulatorInfo() const

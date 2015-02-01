@@ -130,7 +130,7 @@ namespace BlackSimPlugin
                         {
                             DataDefinitionOwnAircraft *ownAircaft;
                             ownAircaft = (DataDefinitionOwnAircraft *)&pObjData->dwData;
-                            simulatorFsx->updateOwnAircraftFromSim(*ownAircaft);
+                            simulatorFsx->updateOwnAircraftFromSimulator(*ownAircaft);
                             break;
                         }
                     case CSimConnectDefinitions::RequestOwnAircraftTitle:
@@ -162,19 +162,19 @@ namespace BlackSimPlugin
             case SIMCONNECT_RECV_ID_AIRPORT_LIST:
                 {
                     const CLength maxDistance(200.0, CLengthUnit::NM());
-                    const CCoordinateGeodetic posAircraft = simulatorFsx->getOwnAircraft().getPosition();
+                    const CCoordinateGeodetic posAircraft = simulatorFsx->ownAircraft().getPosition();
                     SIMCONNECT_RECV_AIRPORT_LIST *pAirportList = (SIMCONNECT_RECV_AIRPORT_LIST *) pData;
                     for (unsigned i = 0; i < pAirportList->dwArraySize; ++i)
                     {
                         SIMCONNECT_DATA_FACILITY_AIRPORT *pFacilityAirport = pAirportList->rgData + i;
                         if (!pFacilityAirport) break;
                         const QString icao(pFacilityAirport->Icao);
-                        if (icao.isEmpty()) continue; // airfield without ICAO code
+                        if (icao.isEmpty()) { continue; } // airfield without ICAO code
                         if (!CAirportIcao::isValidIcaoDesignator(icao)) continue; // tiny airfields in SIM
                         CCoordinateGeodetic pos(pFacilityAirport->Latitude, pFacilityAirport->Longitude, pFacilityAirport->Altitude);
                         CAirport airport(CAirportIcao(icao), pos);
                         CLength d = airport.calculcateDistanceAndBearingToOwnAircraft(posAircraft);
-                        if (d > maxDistance) continue;
+                        if (d > maxDistance) { continue; }
                         simulatorFsx->m_airportsInRange.replaceOrAddByIcao(airport);
                     }
                     if (simulatorFsx->m_airportsInRange.size() > 20)
@@ -192,7 +192,7 @@ namespace BlackSimPlugin
                         //! \todo why is offset 19 ident 2/0 ?
                         //! In FSUIPC it is 0/1, according to documentation it is 0/1 but I receive 2/0 here
                         DataDefinitionClientAreaSb *sbData = (DataDefinitionClientAreaSb *) &clientData->dwData;
-                        simulatorFsx->updateOwnAircraftFromSim(*sbData);
+                        simulatorFsx->updateOwnAircraftFromSimulator(*sbData);
                     }
                     break;
                 }

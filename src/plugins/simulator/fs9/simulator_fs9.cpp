@@ -28,15 +28,17 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackSim;
 using namespace BlackSimPlugin::Fs9;
+using namespace BlackSimPlugin::FsCommon;
+
 
 namespace BlackSimPlugin
 {
     namespace Fs9
     {
-        BlackCore::ISimulator *CSimulatorFs9Factory::create(QObject *parent)
+        BlackCore::ISimulator *CSimulatorFs9Factory::create(IOwnAircraftProvider *ownAircraft, QObject *parent)
         {
             registerMetadata();
-            return new Fs9::CSimulatorFs9(parent);
+            return new Fs9::CSimulatorFs9(ownAircraft, parent);
         }
 
         BlackSim::CSimulatorInfo CSimulatorFs9Factory::getSimulatorInfo() const
@@ -44,12 +46,10 @@ namespace BlackSimPlugin
             return CSimulatorInfo::FS9();
         }
 
-        CSimulatorFs9::CSimulatorFs9(QObject *parent) :
-            ISimulator(parent),
+        CSimulatorFs9::CSimulatorFs9(IOwnAircraftProvider *ownAircraft, QObject *parent) :
+            CSimulatorFsCommon(CSimulatorInfo::FS9(), ownAircraft, parent),
             m_fs9Host(new CFs9Host(this)),
-            m_lobbyClient(new CLobbyClient(this)),
-            m_simulatorInfo(CSimulatorInfo::FS9()),
-            m_fsuipc(new FsCommon::CFsuipc())
+            m_lobbyClient(new CLobbyClient(this))
         {
             connect(m_fs9Host.data(), &CFs9Host::customPacketReceived, this, &CSimulatorFs9::ps_processFs9Message);
             connect(m_fs9Host.data(), &CFs9Host::statusChanged, this, &CSimulatorFs9::ps_changeHostStatus);
@@ -68,13 +68,19 @@ namespace BlackSimPlugin
 
         bool CSimulatorFs9::connectTo()
         {
+            Q_ASSERT(m_fsuipc);
             m_fsuipc->connect(); // connect FSUIPC too
 
             // If we are already hosting, connect FS0 through lobby connection
-            if (m_isHosting) m_lobbyClient->connectFs9ToHost(m_fs9Host->getHostAddress());
+            if (m_isHosting)
+            {
+                m_lobbyClient->connectFs9ToHost(m_fs9Host->getHostAddress());
+            }
             // If not, deferre connection until host is setup
-            else m_startedLobbyConnection = true;
-
+            else
+            {
+                m_startedLobbyConnection = true;
+            }
             return true;
         }
 
@@ -90,10 +96,8 @@ namespace BlackSimPlugin
 
             emit connectionStatusChanged(ISimulator::Disconnected);
             if (m_fs9Host) { m_fs9Host->quit(); }
-            m_fsuipc->disconnect();
-
+            CSimulatorFsCommon::disconnectFrom();
             m_isHosting = false;
-
             return true;
         }
 
@@ -137,60 +141,53 @@ namespace BlackSimPlugin
             //! \todo really update aircraft in SIM
         }
 
-        bool CSimulatorFs9::updateOwnSimulatorCockpit(const CAircraft &ownAircraft)
+        bool CSimulatorFs9::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const QString &originator)
         {
+            if (originator == this->simulatorOriginator()) { return false; }
+            if (!this->isSimulating()) { return false; }
+
+            // actually those data should be the same as ownAircraft
             CComSystem newCom1 = ownAircraft.getCom1System();
             CComSystem newCom2 = ownAircraft.getCom2System();
             CTransponder newTransponder = ownAircraft.getTransponder();
 
             bool changed = false;
-            if (newCom1 != this->m_ownAircraft.getCom1System())
+            if (newCom1.getFrequencyActive() != this->m_simCom1.getFrequencyActive())
             {
-                if (newCom1.getFrequencyActive() != this->m_ownAircraft.getCom1System().getFrequencyActive())
-                {
+                // CFrequency newFreq = newCom1.getFrequencyActive();
+                changed = true;
 
-                }
-                if (newCom1.getFrequencyStandby() != this->m_ownAircraft.getCom1System().getFrequencyStandby())
-                {
-
-                }
-
-                this->m_ownAircraft.setCom1System(newCom1);
+            }
+            if (newCom1.getFrequencyStandby() != this->m_simCom1.getFrequencyStandby())
+            {
+                // CFrequency newFreq = newCom1.getFrequencyStandby();
                 changed = true;
             }
 
-            if (newCom2 != this->m_ownAircraft.getCom2System())
+            if (newCom2.getFrequencyActive() != this->m_simCom2.getFrequencyActive())
             {
-                if (newCom2.getFrequencyActive() != this->m_ownAircraft.getCom2System().getFrequencyActive())
-                {
-
-                }
-
-                if (newCom2.getFrequencyStandby() != this->m_ownAircraft.getCom2System().getFrequencyStandby())
-                {
-
-                }
-
-                this->m_ownAircraft.setCom2System(newCom2);
+                // CFrequency newFreq = newCom2.getFrequencyActive();
+                changed = true;
+            }
+            if (newCom2.getFrequencyStandby() != this->m_simCom2.getFrequencyStandby())
+            {
+                // CFrequency newFreq = newCom2.getFrequencyStandby();
                 changed = true;
             }
 
-            if (newTransponder != this->m_ownAircraft.getTransponder())
+            if (newTransponder.getTransponderCode() != this->m_simTransponder.getTransponderCode())
             {
-                if (newTransponder.getTransponderCode() != this->m_ownAircraft.getTransponder().getTransponderCode())
-                {
-                    changed = true;
-                }
-                this->m_ownAircraft.setTransponder(newTransponder);
+                changed = true;
             }
+
+            if (newTransponder.getTransponderMode() != this->m_simTransponder.getTransponderMode())
+            {
+            }
+
+            // avoid changes of cockpit back to old values due to an outdated read back value
 
             // bye
             return changed;
-        }
-
-        CSimulatorInfo CSimulatorFs9::getSimulatorInfo() const
-        {
-            return this->m_simulatorInfo;
         }
 
         void CSimulatorFs9::displayStatusMessage(const BlackMisc::CStatusMessage &message) const
@@ -207,23 +204,6 @@ namespace BlackSimPlugin
             this->displayStatusMessage(message.asStatusMessage(true, true));
         }
 
-        CAirportList CSimulatorFs9::getAirportsInRange() const
-        {
-            return this->m_airportsInRange;
-        }
-
-        void CSimulatorFs9::setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset)
-        {
-            this->m_syncTime = enable;
-            this->m_syncTimeOffset = offset;
-        }
-
-        CPixmap CSimulatorFs9::iconForModel(const QString &modelString) const
-        {
-            Q_UNUSED(modelString);
-            return CPixmap();
-        }
-
         void CSimulatorFs9::timerEvent(QTimerEvent * /* event */)
         {
             ps_dispatch();
@@ -231,14 +211,20 @@ namespace BlackSimPlugin
 
         void CSimulatorFs9::ps_dispatch()
         {
-            if (m_fsuipc) m_fsuipc->process();
-            updateOwnAircraftFromSim(m_fsuipc->getOwnAircraft());
+            if (m_fsuipc)
+            {
+                CSimulatedAircraft fsuipcAircraft(ownAircraft());
+                bool ok = m_fsuipc->read(fsuipcAircraft);
+                if (ok)
+                {
+                    updateOwnAircraftFromSimulator(fsuipcAircraft);
+                }
+            }
         }
 
         void CSimulatorFs9::ps_processFs9Message(const QByteArray &message)
         {
             CFs9Sdk::MULTIPLAYER_PACKET_ID messageType = MultiPlayerPacketParser::readType(message);
-
             switch (messageType)
             {
             case CFs9Sdk::MULTIPLAYER_PACKET_ID_PARAMS:
@@ -249,14 +235,14 @@ namespace BlackSimPlugin
                 {
                     MPChangePlayerPlane mpChangePlayerPlane;
                     MultiPlayerPacketParser::readMessage(message, mpChangePlayerPlane);
-                    ps_changeOwnAircraftModel(mpChangePlayerPlane.aircraft_name);
+                    setOwnAircraftModel(mpChangePlayerPlane.aircraft_name);
                     break;
                 }
             case CFs9Sdk::MULTIPLAYER_PACKET_ID_POSITION_VELOCITY:
                 {
                     MPPositionVelocity mpPositionVelocity;
                     MultiPlayerPacketParser::readMessage(message, mpPositionVelocity);
-                    m_ownAircraft.setSituation(aircraftSituationfromFS9(mpPositionVelocity));
+                    ownAircraft().setSituation(aircraftSituationfromFS9(mpPositionVelocity));
                     break;
                 }
             case CFs9Sdk::MPCHAT_PACKET_ID_CHAT_TEXT_SEND:
@@ -269,14 +255,6 @@ namespace BlackSimPlugin
             default:
                 break;
             }
-        }
-
-        void CSimulatorFs9::ps_changeOwnAircraftModel(const QString &modelname)
-        {
-            CAircraftModel model = m_ownAircraft.getModel();
-            model.setModelString(modelname);
-            m_ownAircraft.setModel(model);
-            emit ownAircraftModelChanged(m_ownAircraft);
         }
 
         void CSimulatorFs9::ps_changeHostStatus(BlackSimPlugin::Fs9::CFs9Host::HostStatus status)
@@ -306,11 +284,13 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorFs9::updateOwnAircraftFromSim(const CAircraft &ownAircraft)
+        void CSimulatorFs9::updateOwnAircraftFromSimulator(const CAircraft &simDataOwnAircraft)
         {
-            m_ownAircraft.setCom1System(ownAircraft.getCom1System());
-            m_ownAircraft.setCom2System(ownAircraft.getCom2System());
-            m_ownAircraft.setTransponder(ownAircraft.getTransponder());
+            this->providerUpdateCockpit(
+                simDataOwnAircraft.getCom1System(),
+                simDataOwnAircraft.getCom2System(),
+                simDataOwnAircraft.getTransponder(),
+                this->simulatorOriginator());
         }
 
         void CSimulatorFs9::disconnectAllClients()

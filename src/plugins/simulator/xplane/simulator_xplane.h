@@ -13,6 +13,7 @@
 #define BLACKSIMPLUGIN_SIMULATOR_XPLANE_H
 
 #include "blackcore/simulator.h"
+#include "blackmisc/simulation/simdirectaccessownaircraft.h"
 #include "blackmisc/pixmap.h"
 #include <QDBusConnection>
 
@@ -29,13 +30,13 @@ namespace BlackSimPlugin
         /*!
          * X-Plane ISimulator implementation
          */
-        class CSimulatorXPlane : public BlackCore::ISimulator
+        class CSimulatorXPlane : public BlackCore::ISimulator, BlackMisc::Simulation::COwnAircraftProviderSupport
         {
             Q_OBJECT
 
         public:
             //! Constructor
-            CSimulatorXPlane(QObject *parent = nullptr);
+            CSimulatorXPlane(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent = nullptr);
 
             //! \copydoc BlackCore::ISimulator::isConnected
             virtual bool isConnected() const override;
@@ -62,9 +63,6 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::disconnectFrom
             virtual bool disconnectFrom() override;
 
-            //! \copydoc BlackCore::ISimulator::getOwnAircraft
-            virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const override;
-
             //! \copydoc ISimulator::addRemoteAircraft()
             virtual void addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
 
@@ -82,7 +80,7 @@ namespace BlackSimPlugin
             virtual int changeRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &changedAircraft, const BlackMisc::CPropertyIndexVariantMap &changeValues) override;
 
             //! \copydoc BlackCore::ISimulator::updateOwnSimulatorCockpit
-            virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft) override;
+            virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator) override;
 
             //! \copydoc BlackCore::ISimulator::getSimulatorInfo
             virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override { return BlackSim::CSimulatorInfo::XP(); }
@@ -92,9 +90,6 @@ namespace BlackSimPlugin
 
             //! \copydoc ISimulator::displayTextMessage
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
-
-            //! \copydoc BlackCore::ISimulator::getAircraftModel
-            virtual BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const override;
 
             //! \copydoc BlackCore::ISimulator::getInstalledModels
             virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override;
@@ -129,6 +124,8 @@ namespace BlackSimPlugin
 
             BlackMisc::Aviation::CAirportList m_airports;
             BlackMisc::Simulation::CSimulatedAircraftList m_remoteAircraft;
+
+            BlackMisc::Simulation::CSimulatedAircraft xplaneDataToSimulatedAircraft() const;
 
             //! \todo Add units to members? pitchDeg?, altitudeFt?
             struct // data is written by DBus async method callbacks
@@ -166,7 +163,7 @@ namespace BlackSimPlugin
 
         public:
             //! \copydoc BlackCore::ISimulatorFactory::create
-            virtual BlackCore::ISimulator *create(QObject *parent = nullptr) override { return new CSimulatorXPlane(parent); }
+            virtual BlackCore::ISimulator *create(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent = nullptr) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::getSimulatorInfo
             virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override { return BlackSim::CSimulatorInfo::XP(); }

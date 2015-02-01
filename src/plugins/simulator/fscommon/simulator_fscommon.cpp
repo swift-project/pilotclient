@@ -1,0 +1,247 @@
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+#include "simulator_fscommon.h"
+#include "blackmisc/logmessage.h"
+#include "blacksim/fscommon/vpilotmodelmappings.h"
+#include "blacksim/fscommon/fscommonutil.h"
+
+using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Simulation;
+using namespace BlackSim::FsCommon;
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
+using namespace BlackMisc;
+using namespace BlackSimPlugin::FsCommon;
+using namespace BlackSim;
+using namespace BlackSim::FsCommon;
+
+namespace BlackSimPlugin
+{
+    namespace FsCommon
+    {
+
+        CSimulatorFsCommon::CSimulatorFsCommon(const BlackSim::CSimulatorInfo &simInfo, BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent) :
+            ISimulator(parent), COwnAircraftProviderSupport(ownAircraft), m_simulatorInfo(simInfo), m_fsuipc(new FsCommon::CFsuipc())
+        {
+            // hack to init mapper
+            CAircraftMapper *mapper = mapperInstance();
+            connect(mapper, &CAircraftMapper::initCompleted, this, &CSimulatorFsCommon::ps_mapperInitialized);
+            mapper->initCompletelyInBackground();
+        }
+
+        CSimulatorFsCommon::~CSimulatorFsCommon()
+        { }
+
+        void CSimulatorFsCommon::ps_mapperInitialized(bool success)
+        {
+            if (success) { emit this->installedAircraftModelsChanged(); }
+        }
+
+        bool CSimulatorFsCommon::disconnectFrom()
+        {
+            if (this->m_fsuipc) { this->m_fsuipc->disconnect(); }
+            return true;
+        }
+
+        bool CSimulatorFsCommon::isFsuipcConnected() const
+        {
+            return !m_fsuipc.isNull() && m_fsuipc->isConnected();
+        }
+
+        CTime CSimulatorFsCommon::getTimeSynchronizationOffset() const
+        {
+            return m_syncTimeOffset;
+        }
+
+        void CSimulatorFsCommon::setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset)
+        {
+            this->m_simTimeSynced = enable;
+            this->m_syncTimeOffset = offset;
+        }
+
+        BlackSim::CSimulatorInfo CSimulatorFsCommon::getSimulatorInfo() const
+        {
+            return this->m_simulatorInfo;
+        }
+
+        CSimulatedAircraftList CSimulatorFsCommon::getRemoteAircraft() const
+        {
+            return this->m_remoteAircraft;
+        }
+
+        CAirportList CSimulatorFsCommon::getAirportsInRange() const
+        {
+            return this->m_airportsInRange;
+        }
+
+
+        void CSimulatorFsCommon::setOwnAircraftModel(const QString &modelName)
+        {
+            CAircraftModel model = ownAircraft().getModel();
+            model.setModelString(modelName);
+            this->setOwnAircraftModel(model);
+        }
+
+        void CSimulatorFsCommon::setOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model)
+        {
+            if (ownAircraft().getModel() != model)
+            {
+                CAircraftModel newModel(model);
+                newModel.setModelType(CAircraftModel::TypeOwnSimulatorModel);
+                if (this->mapperInstance() && this->mapperInstance()->isInitialized())
+                {
+                    // reverse lookup of ICAO
+                    CAircraftMappingList ml = this->mapperInstance()->getAircraftMappingList().findByModelString(model.getModelString());
+                    if (!ml.isEmpty())
+                    {
+                        CAircraftMapping mapping = ml.front();
+                        newModel.setIcao(mapping.getIcao());
+                    }
+                }
+                ownAircraft().setModel(newModel);
+                emit ownAircraftModelChanged(ownAircraft());
+            }
+        }
+
+        CAircraftMapper *CSimulatorFsCommon::mapperInstance()
+        {
+            static CAircraftMapper *mapper = new CAircraftMapper(
+                std::unique_ptr<CVPilotModelMappings>(new CVPilotModelMappings(true)), // currently hard wired
+                simObjectsDir()
+            );
+            return mapper;
+        }
+
+        CAircraftModel CSimulatorFsCommon::modelMatching(const CSimulatedAircraft &remoteAircraft)
+        {
+
+            // Manually set string?
+            if (remoteAircraft.getModel().hasManuallySetString())
+            {
+                // manual set model
+                return remoteAircraft.getModel();
+            }
+
+            // default model
+            CAircraftModel aircraftModel(remoteAircraft); // set defaults
+
+            // mapper ready?
+            if (!mapperInstance()->isInitialized())
+            {
+                //! \todo Model Matching before models are read
+                // will be removed later, just for experimental version
+                aircraftModel.setModelString("Boeing 737-800 Paint1");
+                aircraftModel.setDescription("Model mapper not ready");
+                CLogMessage(static_cast<CSimulatorFsCommon *>(nullptr)).warning("Mapper not ready, set to default model");
+                return aircraftModel;
+            }
+
+            // Model by queried string
+            const CClient remoteClient = remoteAircraft.getClient();
+            if (remoteClient.getAircraftModel().hasQueriedModelString())
+            {
+                QString directModelString = remoteClient.getAircraftModel().getModelString();
+                if (!directModelString.isEmpty() && mapperInstance()->containsModelWithTitle(directModelString))
+                {
+                    aircraftModel = mapperInstance()->getModelWithTitle(directModelString);
+                    aircraftModel.setModelType(CAircraftModel::TypeQueriedFromNetwork);
+                }
+            }
+
+            // ICAO to model
+            if (!aircraftModel.hasModelString())
+            {
+                CAircraftIcao icao = remoteAircraft.getIcaoInfo();
+                BlackMisc::Network::CAircraftMappingList mappingList = mapperInstance()->getAircraftMappingList().findByIcaoAircraftAndAirlineDesignator(icao, true);
+                if (!mappingList.isEmpty())
+                {
+                    CAircraftModel modelFromMappings = mappingList.front().getModel();
+                    // now turn the model from the mapping rules into a model from the simulator which has more metadata
+                    aircraftModel = mapperInstance()->getModelWithTitle(modelFromMappings.getModelString());
+                    Q_ASSERT(aircraftModel.getModelString() == modelFromMappings.getModelString());
+                    aircraftModel.updateMissingParts(modelFromMappings); // update ICAO
+                    aircraftModel.setModelType(CAircraftModel::TypeModelMatching);
+                }
+            }
+
+            // default or sanity check
+            if (!aircraftModel.hasModelString())
+            {
+                aircraftModel.setModelString("Boeing 737-800 Paint1");
+                aircraftModel.setDescription("Default model");
+                aircraftModel.setModelType(CAircraftModel::TypeModelMatching);
+            }
+            else
+            {
+                // check, do we have the model on disk
+                if (!mapperInstance()->containsModelWithTitle(aircraftModel.getModelString()))
+                {
+                    const QString m = QString("Missing model: %1").arg(aircraftModel.getModelString());
+                    Q_ASSERT_X(false, "modelMatching", m.toLocal8Bit().constData());
+                }
+            }
+
+            aircraftModel.setCallsign(remoteAircraft.getCallsign());
+            Q_ASSERT(!aircraftModel.getCallsign().isEmpty());
+            Q_ASSERT(aircraftModel.hasModelString());
+            Q_ASSERT(aircraftModel.getModelType() != CAircraftModel::TypeUnknown);
+            return aircraftModel;
+        }
+
+        QString CSimulatorFsCommon::simObjectsDir()
+        {
+            //! \todo add FS9 dir
+            QString dir = CFsCommonUtil::fsxSimObjectsDirFromRegistry();
+            if (!dir.isEmpty()) { return dir; }
+            return "P:/FlightSimulatorX (MSI)/SimObjects";
+            // "p:/temp/SimObjects"
+        }
+
+        CAircraftModelList CSimulatorFsCommon::getInstalledModels() const
+        {
+            if (!mapperInstance()) { return CAircraftModelList(); }
+            return mapperInstance()->getAircraftCfgEntriesList().toAircraftModelList();
+        }
+
+        CPixmap CSimulatorFsCommon::iconForModel(const QString &modelString) const
+        {
+            static const CPixmap empty;
+            if (modelString.isEmpty() || !mapperInstance()->isInitialized()) { return empty; }
+            CAircraftCfgEntriesList cfgEntries = mapperInstance()->getAircraftCfgEntriesList().findByTitle(modelString);
+            if (cfgEntries.isEmpty())
+            {
+                CLogMessage(this).warning("No .cfg entry for '%1'") << modelString;
+                return empty;
+            }
+
+            // normally we should have only one entry
+            if (cfgEntries.size() > 1)
+            {
+                CLogMessage(this).warning("Multiple FSX .cfg entries for '%1'") << modelString;
+            }
+
+            // use first with icon
+            for (const CAircraftCfgEntries &entry : cfgEntries)
+            {
+                const QString thumbnail = entry.getThumbnailFileName();
+                if (thumbnail.isEmpty()) { continue; }
+                QPixmap pm;
+                if (pm.load(thumbnail))
+                {
+                    return CPixmap(pm);
+                }
+            }
+            return empty;
+        }
+
+
+    } // namespace
+} // namespace
+

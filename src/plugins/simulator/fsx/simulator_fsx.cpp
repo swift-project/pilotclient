@@ -10,8 +10,6 @@
 #include "simulator_fsx.h"
 #include "simconnect_datadefinition.h"
 #include "blacksim/fscommon/bcdconversions.h"
-#include "blacksim/fscommon/vpilotmodelmappings.h"
-#include "blacksim/fscommon/fscommonutil.h"
 #include "blacksim/fsx/simconnectutilities.h"
 #include "blacksim/fsx/fsxsimulatorsetup.h"
 #include "blacksim/simulatorinfo.h"
@@ -38,19 +36,13 @@ namespace BlackSimPlugin
 {
     namespace Fsx
     {
-        CSimulatorFsx::CSimulatorFsx(QObject *parent) :
-            ISimulator(parent),
-            m_simulatorInfo(CSimulatorInfo::FSX()),
-            m_fsuipc(new FsCommon::CFsuipc())
+        CSimulatorFsx::CSimulatorFsx(IOwnAircraftProvider *ownAircraft, QObject *parent) :
+            CSimulatorFsCommon(CSimulatorInfo::FSX(), ownAircraft, parent)
         {
+            Q_ASSERT(ownAircraft);
             CFsxSimulatorSetup setup;
             setup.init(); // this fetches important settings on local side
             this->m_simulatorInfo.setSimulatorSetup(setup.getSettings());
-
-            // hack to init mapper
-            CAircraftMapper *mapper = mapperInstance();
-            connect(mapper, &CAircraftMapper::initCompleted, this, &CSimulatorFsx::ps_mapperInitialized);
-            mapper->initCompletelyInBackground();
         }
 
         CSimulatorFsx::~CSimulatorFsx()
@@ -66,11 +58,6 @@ namespace BlackSimPlugin
         bool CSimulatorFsx::isSimulating() const
         {
             return m_simRunning;
-        }
-
-        bool CSimulatorFsx::isFsuipcConnected() const
-        {
-            return m_fsuipc->isConnected();
         }
 
         bool CSimulatorFsx::connectTo()
@@ -230,103 +217,71 @@ namespace BlackSimPlugin
             return c;
         }
 
-        CSimulatorInfo CSimulatorFsx::getSimulatorInfo() const
+        bool CSimulatorFsx::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const QString &originator)
         {
-            return this->m_simulatorInfo;
-        }
-
-        void CSimulatorFsx::setOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model)
-        {
-            if (m_ownAircraft.getModel() != model)
-            {
-                CAircraftModel newModel(model);
-                if (this->mapperInstance() && this->mapperInstance()->isInitialized())
-                {
-                    // reverse lookup of ICAO
-                    CAircraftMappingList ml = this->mapperInstance()->getAircraftMappingList().findByModelString(model.getModelString());
-                    if (!ml.isEmpty())
-                    {
-                        CAircraftMapping mapping = ml.front();
-                        newModel.setIcao(mapping.getIcao());
-                    }
-                }
-                m_ownAircraft.setModel(newModel);
-                emit ownAircraftModelChanged(m_ownAircraft);
-            }
-        }
-
-        bool CSimulatorFsx::updateOwnSimulatorCockpit(const CAircraft &ownAircraft)
-        {
+            if (originator == this->simulatorOriginator()) { return false; }
             if (!this->isSimulating()) { return false; }
+
+            // actually those data should be the same as ownAircraft
             CComSystem newCom1 = ownAircraft.getCom1System();
             CComSystem newCom2 = ownAircraft.getCom2System();
             CTransponder newTransponder = ownAircraft.getTransponder();
 
             bool changed = false;
-            if (newCom1 != this->m_ownAircraft.getCom1System())
+            if (newCom1.getFrequencyActive() != this->m_simCom1.getFrequencyActive())
             {
-                if (newCom1.getFrequencyActive() != this->m_ownAircraft.getCom1System().getFrequencyActive())
-                {
-                    CFrequency newFreq = newCom1.getFrequencyActive();
-                    SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom1Active,
-                                                   CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-                }
-                if (newCom1.getFrequencyStandby() != this->m_ownAircraft.getCom1System().getFrequencyStandby())
-                {
-                    CFrequency newFreq = newCom1.getFrequencyStandby();
-                    SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom1Standby,
-                                                   CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-                }
-                this->m_ownAircraft.setCom1System(newCom1);
+                CFrequency newFreq = newCom1.getFrequencyActive();
+                SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom1Active,
+                                               CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+                changed = true;
+
+            }
+            if (newCom1.getFrequencyStandby() != this->m_simCom1.getFrequencyStandby())
+            {
+                CFrequency newFreq = newCom1.getFrequencyStandby();
+                SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom1Standby,
+                                               CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
                 changed = true;
             }
 
-            if (newCom2 != this->m_ownAircraft.getCom2System())
+            if (newCom2.getFrequencyActive() != this->m_simCom2.getFrequencyActive())
             {
-                if (newCom2.getFrequencyActive() != this->m_ownAircraft.getCom2System().getFrequencyActive())
-                {
-                    CFrequency newFreq = newCom2.getFrequencyActive();
-                    SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom2Active,
-                                                   CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-                }
-                if (newCom2.getFrequencyStandby() != this->m_ownAircraft.getCom2System().getFrequencyStandby())
-                {
-                    CFrequency newFreq = newCom2.getFrequencyStandby();
-                    SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom2Standby,
-                                                   CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-                }
-                this->m_ownAircraft.setCom2System(newCom2);
+                CFrequency newFreq = newCom2.getFrequencyActive();
+                SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom2Active,
+                                               CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+                changed = true;
+            }
+            if (newCom2.getFrequencyStandby() != this->m_simCom2.getFrequencyStandby())
+            {
+                CFrequency newFreq = newCom2.getFrequencyStandby();
+                SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom2Standby,
+                                               CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
                 changed = true;
             }
 
-            CTransponder xpdr = this->m_ownAircraft.getTransponder();
-            if (newTransponder != xpdr)
+            if (newTransponder.getTransponderCode() != this->m_simTransponder.getTransponderCode())
             {
-                if (newTransponder.getTransponderCode() != xpdr.getTransponderCode())
-                {
-                    SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTransponderCode,
-                                                   CBcdConversions::transponderCodeToBcd(newTransponder), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-                    changed = true;
-                }
+                SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTransponderCode,
+                                               CBcdConversions::transponderCodeToBcd(newTransponder), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+                changed = true;
+            }
 
-                if (newTransponder.getTransponderMode() != xpdr.getTransponderMode())
+            if (newTransponder.getTransponderMode() != this->m_simTransponder.getTransponderMode())
+            {
+                if (m_useSbOffsets)
                 {
-                    if (m_useSbOffsets)
+                    byte ident = newTransponder.isIdentifying() ? 1 : 0; // 1 is ident
+                    byte standby = newTransponder.isInStandby() ? 1 : 0; // 1 is standby
+                    HRESULT hr = S_OK;
+
+                    hr += SimConnect_SetClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbIdent, NULL, 0, 1, &ident);
+                    hr += SimConnect_SetClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbStandby, NULL, 0, 1, &standby);
+                    if (hr != S_OK)
                     {
-                        byte ident = newTransponder.isIdentifying() ? 1 : 0; // 1 is ident
-                        byte standby = newTransponder.isInStandby() ? 1 : 0; // 1 is standby
-                        HRESULT hr = S_OK;
-
-                        hr += SimConnect_SetClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbIdent, NULL, 0, 1, &ident);
-                        hr += SimConnect_SetClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbStandby, NULL, 0, 1, &standby);
-                        if (hr != S_OK)
-                        {
-                            CLogMessage(this).warning("Setting transponder mode failed (SB offsets)");
-                        }
+                        CLogMessage(this).warning("Setting transponder mode failed (SB offsets)");
                     }
-                    changed = true;
                 }
-                if (changed) { this->m_ownAircraft.setTransponder(newTransponder); }
+                changed = true;
             }
 
             // avoid changes of cockpit back to old values due to an outdated read back value
@@ -368,58 +323,6 @@ namespace BlackSimPlugin
             this->displayStatusMessage(message.asStatusMessage(true, true));
         }
 
-        CAircraftModelList CSimulatorFsx::getInstalledModels() const
-        {
-            if (!mapperInstance()) { return CAircraftModelList(); }
-            return mapperInstance()->getAircraftCfgEntriesList().toAircraftModelList();
-        }
-
-        CSimulatedAircraftList CSimulatorFsx::getRemoteAircraft() const
-        {
-            return this->m_remoteAircraft;
-        }
-
-        CAirportList CSimulatorFsx::getAirportsInRange() const
-        {
-            return this->m_airportsInRange;
-        }
-
-        void CSimulatorFsx::setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset)
-        {
-            this->m_simTimeSynced = enable;
-            this->m_syncTimeOffset = offset;
-        }
-
-        CPixmap CSimulatorFsx::iconForModel(const QString &modelString) const
-        {
-            static const CPixmap empty;
-            if (modelString.isEmpty() || !mapperInstance()->isInitialized()) { return empty; }
-            CAircraftCfgEntriesList cfgEntries = mapperInstance()->getAircraftCfgEntriesList().findByTitle(modelString);
-            if (cfgEntries.isEmpty())
-            {
-                CLogMessage(this).warning("No FSX .cfg entry for '%1'") << modelString;
-                return empty;
-            }
-
-            // normally we should have only one entry
-            if (cfgEntries.size() > 1)
-            {
-                CLogMessage(this).warning("Multiple FSX .cfg entries for '%1'") << modelString;
-            }
-
-            // use first with icon
-            for (const CAircraftCfgEntries &entry : cfgEntries)
-            {
-                const QString thumbnail = entry.getThumbnailFileName();
-                if (thumbnail.isEmpty()) { continue; }
-                QPixmap pm;
-                if (pm.load(thumbnail))
-                {
-                    return CPixmap(pm);
-                }
-            }
-            return empty;
-        }
 
         void CSimulatorFsx::onSimRunning()
         {
@@ -478,7 +381,7 @@ namespace BlackSimPlugin
             this->onSimStopped();
         }
 
-        void CSimulatorFsx::updateOwnAircraftFromSim(DataDefinitionOwnAircraft simulatorOwnAircraft)
+        void CSimulatorFsx::updateOwnAircraftFromSimulator(DataDefinitionOwnAircraft simulatorOwnAircraft)
         {
             BlackMisc::Geo::CCoordinateGeodetic position;
             position.setLatitude(CLatitude(simulatorOwnAircraft.latitude, CAngleUnit::deg()));
@@ -491,11 +394,11 @@ namespace BlackSimPlugin
             aircraftSituation.setHeading(CHeading(simulatorOwnAircraft.trueHeading, CHeading::True, CAngleUnit::deg()));
             aircraftSituation.setGroundspeed(CSpeed(simulatorOwnAircraft.velocity, CSpeedUnit::kts()));
             aircraftSituation.setAltitude(CAltitude(simulatorOwnAircraft.altitude, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
-            m_ownAircraft.setSituation(aircraftSituation);
+            ownAircraft().setSituation(aircraftSituation);
 
-            CComSystem com1 = m_ownAircraft.getCom1System(); // set defaults
-            CComSystem com2 = m_ownAircraft.getCom2System();
-            CTransponder transponder = m_ownAircraft.getTransponder();
+            CComSystem com1 = ownAircraft().getCom1System(); // set defaults
+            CComSystem com2 = ownAircraft().getCom2System();
+            CTransponder transponder = ownAircraft().getTransponder();
 
             // When I change cockpit values in the sim (from GUI to simulator, not originating from simulator)
             // it takes a little while before these values are set in the simulator.
@@ -504,14 +407,21 @@ namespace BlackSimPlugin
             {
                 com1.setFrequencyActive(CFrequency(simulatorOwnAircraft.com1ActiveMHz, CFrequencyUnit::MHz()));
                 com1.setFrequencyStandby(CFrequency(simulatorOwnAircraft.com1StandbyMHz, CFrequencyUnit::MHz()));
-                m_ownAircraft.setCom1System(com1);
+                bool changedCom1 = ownAircraft().getCom1System() != com1;
+                this->m_simCom1 = com1;
 
                 com2.setFrequencyActive(CFrequency(simulatorOwnAircraft.com2ActiveMHz, CFrequencyUnit::MHz()));
                 com2.setFrequencyStandby(CFrequency(simulatorOwnAircraft.com2StandbyMHz, CFrequencyUnit::MHz()));
-                m_ownAircraft.setCom2System(com2);
+                bool changedCom2 = ownAircraft().getCom2System() != com2;
+                this->m_simCom2 = com2;
 
                 transponder.setTransponderCode(simulatorOwnAircraft.transponderCode);
-                m_ownAircraft.setTransponder(transponder);
+                bool changedXpr = (ownAircraft().getTransponderCode() != transponder.getTransponderCode());
+
+                if (changedCom1 || changedCom2 || changedXpr)
+                {
+                    this->providerUpdateCockpit(com1, com2, transponder, simulatorOriginator());
+                }
             }
             else
             {
@@ -519,16 +429,22 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorFsx::updateOwnAircraftFromSim(DataDefinitionClientAreaSb sbDataArea)
+        void CSimulatorFsx::updateOwnAircraftFromSimulator(DataDefinitionClientAreaSb sbDataArea)
         {
+            CTransponder::TransponderMode newMode;
             if (sbDataArea.isIdent())
             {
-                this->m_ownAircraft.setTransponderMode(CTransponder::StateIdent);
+                newMode = CTransponder::StateIdent;
             }
             else
             {
-                this->m_ownAircraft.setTransponderMode(sbDataArea.isStandby() ? CTransponder::StateStandby : CTransponder::ModeC);
+                newMode = sbDataArea.isStandby() ? CTransponder::StateStandby : CTransponder::ModeC;
             }
+            bool changed = (this->ownAircraft().getTransponderMode() != newMode);
+            if (!changed) { return; }
+            CTransponder xpdr = this->ownAircraft().getTransponder();
+            xpdr.setTransponderMode(newMode);
+            this->providerUpdateCockpit(ownAircraft().getCom1System(), ownAircraft().getCom2System(), xpdr, this->simulatorOriginator());
         }
 
         void CSimulatorFsx::setSimConnectObjectID(DWORD requestID, DWORD objectID)
@@ -563,7 +479,16 @@ namespace BlackSimPlugin
         void CSimulatorFsx::ps_dispatch()
         {
             SimConnect_CallDispatch(m_hSimConnect, SimConnectProc, this);
-            if (this->m_fsuipc) this->m_fsuipc->process();
+            if (m_fsuipc)
+            {
+                CSimulatedAircraft fsuipcAircraft(ownAircraft());
+                bool ok = m_fsuipc->read(fsuipcAircraft);
+                if (ok)
+                {
+                    // do whatever is required
+                    Q_UNUSED(fsuipcAircraft);
+                }
+            }
         }
 
         void CSimulatorFsx::ps_connectToFinished()
@@ -584,11 +509,6 @@ namespace BlackSimPlugin
                 emit connectionStatusChanged(ConnectionFailed);
                 emitSimulatorCombinedStatus();
             }
-        }
-
-        void CSimulatorFsx::ps_mapperInitialized(bool success)
-        {
-            if (success) { emit this->installedAircraftModelsChanged(); }
         }
 
         void CSimulatorFsx::removeRemoteAircraft(const CSimConnectObject &simObject)
@@ -747,100 +667,6 @@ namespace BlackSimPlugin
                 m_syncDeferredCounter = 5; // allow some time to sync
                 CLogMessage(this).info("Synchronized time to UTC: %1") << myTime.toString();
             }
-        }
-
-        CAircraftMapper *CSimulatorFsx::mapperInstance()
-        {
-            static CAircraftMapper *mapper = new CAircraftMapper(
-                std::unique_ptr<CVPilotModelMappings>(new CVPilotModelMappings(true)), // currently hard wired
-                simObjectsDir()
-            );
-            return mapper;
-        }
-
-        CAircraftModel CSimulatorFsx::modelMatching(const CSimulatedAircraft &remoteAircraft)
-        {
-
-            // Manually set string?
-            if (remoteAircraft.getModel().hasManuallySetString())
-            {
-                // manual set model
-                return remoteAircraft.getModel();
-            }
-
-            // default model
-            CAircraftModel aircraftModel(remoteAircraft); // set defaults
-
-            // mapper ready?
-            if (!mapperInstance()->isInitialized())
-            {
-                //! \todo Model Matching before models are read
-                // will be removed later, just for experimental version
-                aircraftModel.setModelString("Boeing 737-800 Paint1");
-                aircraftModel.setDescription("Model mapper not ready");
-                CLogMessage(static_cast<CSimulatorFsx *>(nullptr)).warning("Mapper not ready, set to default model");
-                return aircraftModel;
-            }
-
-            // Model by queried string
-            const CClient remoteClient = remoteAircraft.getClient();
-            if (remoteClient.getAircraftModel().hasQueriedModelString())
-            {
-                QString directModelString = remoteClient.getAircraftModel().getModelString();
-                if (!directModelString.isEmpty() && mapperInstance()->containsModelWithTitle(directModelString))
-                {
-                    aircraftModel = mapperInstance()->getModelWithTitle(directModelString);
-                    aircraftModel.setModelType(CAircraftModel::TypeQueriedFromNetwork);
-                }
-            }
-
-            // ICAO to model
-            if (!aircraftModel.hasModelString())
-            {
-                CAircraftIcao icao = remoteAircraft.getIcaoInfo();
-                BlackMisc::Network::CAircraftMappingList mappingList = mapperInstance()->getAircraftMappingList().findByIcaoAircraftAndAirlineDesignator(icao, true);
-                if (!mappingList.isEmpty())
-                {
-                    CAircraftModel modelFromMappings = mappingList.front().getModel();
-                    // now turn the model from the mapping rules into a model from the simulator which has more metadata
-                    aircraftModel = mapperInstance()->getModelWithTitle(modelFromMappings.getModelString());
-                    Q_ASSERT(aircraftModel.getModelString() == modelFromMappings.getModelString());
-                    aircraftModel.updateMissingParts(modelFromMappings); // update ICAO
-                    aircraftModel.setModelType(CAircraftModel::TypeModelMatching);
-                }
-            }
-
-            // default or sanity check
-            if (!aircraftModel.hasModelString())
-            {
-                aircraftModel.setModelString("Boeing 737-800 Paint1");
-                aircraftModel.setDescription("Default model");
-                aircraftModel.setModelType(CAircraftModel::TypeModelMatching);
-            }
-            else
-            {
-                // check, do we have the model on disk
-                if (!mapperInstance()->containsModelWithTitle(aircraftModel.getModelString()))
-                {
-                    const QString m = QString("Missing model: %1").arg(aircraftModel.getModelString());
-                    Q_ASSERT_X(false, "modelMatching", m.toLocal8Bit().constData());
-                }
-            }
-
-            aircraftModel.setCallsign(remoteAircraft.getCallsign());
-            Q_ASSERT(!aircraftModel.getCallsign().isEmpty());
-            Q_ASSERT(aircraftModel.hasModelString());
-            Q_ASSERT(aircraftModel.getModelType() != CAircraftModel::TypeUnknown);
-            return aircraftModel;
-        }
-
-        QString CSimulatorFsx::simObjectsDir()
-        {
-            //! \todo add FS9 dir
-            QString dir = CFsCommonUtil::fsxSimObjectsDirFromRegistry();
-            if (!dir.isEmpty()) { return dir; }
-            return "P:/FlightSimulatorX (MSI)/SimObjects";
-            // "p:/temp/SimObjects"
         }
     } // namespace
 } // namespace

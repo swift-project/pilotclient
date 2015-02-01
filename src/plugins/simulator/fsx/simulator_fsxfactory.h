@@ -33,7 +33,7 @@ namespace BlackSimPlugin
 
         public:
             //! \copydoc BlackCore::ISimulatorFactory::create
-            virtual BlackCore::ISimulator *create(QObject *parent) override;
+            virtual BlackCore::ISimulator *create(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::getSimulatorInfo
             virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;

@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKSIMPLUGIN_FS9_FS9SDK_H
 #define BLACKSIMPLUGIN_FS9_FS9SDK_H
 
@@ -18,8 +20,6 @@
 #define NOMINMAX
 #endif
 #include <dplay8.h>
-
-//! \file
 
 namespace BlackSimPlugin
 {

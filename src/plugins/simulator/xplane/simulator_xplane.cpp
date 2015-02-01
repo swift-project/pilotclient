@@ -1,7 +1,11 @@
-/* Copyright (C) 2013 VATSIM Community / contributors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 #include "simulator_xplane.h"
 #include "xbus_service_proxy.h"
@@ -23,7 +27,8 @@ namespace BlackSimPlugin
     namespace XPlane
     {
 
-        CSimulatorXPlane::CSimulatorXPlane(QObject *parent) : BlackCore::ISimulator(parent)
+        CSimulatorXPlane::CSimulatorXPlane(IOwnAircraftProvider *ownAircraft, QObject *parent) :
+            BlackCore::ISimulator(parent), COwnAircraftProviderSupport(ownAircraft)
         {
             m_watcher = new QDBusServiceWatcher(this);
             m_watcher->setWatchMode(QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration);
@@ -164,15 +169,14 @@ namespace BlackSimPlugin
         void CSimulatorXPlane::ps_emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao)
         {
             //! \todo change as appropriate
-            CSimulatedAircraft aircraft(this->getOwnAircraft());
-            CAircraftModel model(aircraft.getModel());
+            CAircraftModel model(ownAircraft().getModel());
             model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
             model.setFileName(path + "/" + filename);
             CAircraftIcao aircraftIcao(icao);
             aircraftIcao.setLivery(livery);
-            aircraft.setModel(model);
-            aircraft.setIcaoInfo(aircraftIcao);
-            emit ownAircraftModelChanged(aircraft);
+            ownAircraft().setIcaoInfo(aircraftIcao);
+            ownAircraft().setModel(model);
+            emit ownAircraftModelChanged(ownAircraft());
         }
 
         // convert xplane squawk mode to swift squawk mode
@@ -188,7 +192,7 @@ namespace BlackSimPlugin
             return mode == BlackMisc::Aviation::CTransponder::StateStandby ? 1 : 2;
         }
 
-        CSimulatedAircraft CSimulatorXPlane::getOwnAircraft() const
+        CSimulatedAircraft CSimulatorXPlane::xplaneDataToSimulatedAircraft() const
         {
             if (! isConnected()) { return {}; }
             Aviation::CAircraftSituation situation;
@@ -198,9 +202,8 @@ namespace BlackSimPlugin
             situation.setPitch({ m_xplaneData.pitch, CAngleUnit::deg() });
             situation.setBank({ m_xplaneData.roll, CAngleUnit::deg() });
             situation.setGroundspeed({ m_xplaneData.groundspeed, CSpeedUnit::m_s() });
-            CSimulatedAircraft ac;
+            CSimulatedAircraft ac(ownAircraft());
             ac.setSituation(situation);
-            ac.setModel(this->getOwnAircraftModel());
             ac.setIcaoInfo(Aviation::CAircraftIcao { m_xplaneData.aircraftIcaoCode });
             ac.setCom1System(Aviation::CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() }));
             ac.setCom2System(Aviation::CComSystem::getCom2System({ m_xplaneData.com2Active, CFrequencyUnit::kHz() }, { m_xplaneData.com2Standby, CFrequencyUnit::kHz() }));
@@ -220,12 +223,6 @@ namespace BlackSimPlugin
             if (! isConnected()) { return; }
             // TODO
             Q_UNUSED(message);
-        }
-
-        BlackMisc::Simulation::CAircraftModel CSimulatorXPlane::getOwnAircraftModel() const
-        {
-            if (! isConnected()) { return {}; }
-            return { m_xplaneData.aircraftModelPath, CAircraftModel::TypeOwnSimulatorModel };
         }
 
         BlackMisc::Simulation::CAircraftModelList CSimulatorXPlane::getInstalledModels() const
@@ -276,11 +273,10 @@ namespace BlackSimPlugin
             return CPixmap();
         }
 
-        bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft)
+        bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator)
         {
-            if (! isConnected()) { return false; }
-            using namespace BlackMisc;
-            using namespace BlackMisc::PhysicalQuantities;
+            if (originator == this->simulatorOriginator()) { return false; }
+            if (!isConnected()) { return false; }
             auto com1 = Aviation::CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() });
             auto com2 = Aviation::CComSystem::getCom2System({ m_xplaneData.com2Active, CFrequencyUnit::kHz() }, { m_xplaneData.com2Standby, CFrequencyUnit::kHz() });
             auto xpdr = Aviation::CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent));
@@ -343,6 +339,11 @@ namespace BlackSimPlugin
         {
             return m_remoteAircraft.incrementalUpdateOrAdd(changedAircraft, changedValues);
             //! \todo really update aircraft in SIM
+        }
+
+        BlackCore::ISimulator *CSimulatorXPlaneFactory::create(IOwnAircraftProvider *ownAircraft, QObject *parent)
+        {
+            return new CSimulatorXPlane(ownAircraft, parent);
         }
 
     } // namespace
