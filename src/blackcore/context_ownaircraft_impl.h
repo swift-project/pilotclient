@@ -17,12 +17,15 @@
 #include "blackcore/context_runtime.h"
 #include "blackcore/dbus_server.h"
 #include "blackmisc/avatcstation.h"
+#include "blackmisc/simulation/simdirectaccessownaircraft.h"
 
 namespace BlackCore
 {
 
-    //! Network context implementation
-    class CContextOwnAircraft : public IContextOwnAircraft
+    //! Own aircraft context implementation
+    class CContextOwnAircraft :
+        public IContextOwnAircraft,
+        public BlackMisc::Simulation::IOwnAircraftProvider
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTOWNAIRCRAFT_INTERFACENAME)
@@ -34,48 +37,33 @@ namespace BlackCore
         virtual ~CContextOwnAircraft();
 
         //! Own aircraft
-        const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft() const { return this->m_ownAircraft; }
+        virtual const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft() const override { return this->m_ownAircraft; }
 
         //! Own aircraft
-        BlackMisc::Simulation::CSimulatedAircraft &ownAircraft() { return this->m_ownAircraft; }
+        virtual BlackMisc::Simulation::CSimulatedAircraft &ownAircraft() override { return this->m_ownAircraft; }
 
     public slots: // IContextOwnAircraft overrides
 
         //! \copydoc IContextOwnAircraft::getOwnAircraft()
         virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const override;
 
-        //! \copydoc IContextOwnAircraft::updateAircraft
-        virtual bool updateAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) override;
-
-        //! \copydoc IContextOwnAircraft::updateAircraft
-        virtual bool updateAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator) override;
-
-        //! \copydoc IContextOwnAircraft::updateModel
-        virtual bool updateModel(const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) override;
-
-        //! \copydoc IContextOwnAircraft::updateClient
-        virtual bool updateClient(const BlackMisc::Network::CClient &client, const QString &originator) override;
-
         //! \copydoc IContextOwnAircraft::updatePosition
-        virtual bool updatePosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const QString &originator) override;
-
-        //! \copydoc IContextOwnAircraft::updateSituation
-        virtual bool updateSituation(const BlackMisc::Aviation::CAircraftSituation &situation, const QString &originator) override;
+        virtual bool updatePosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) override;
 
         //! \copydoc IContextOwnAircraft::updateCockpit
         virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) override;
 
         //! \copydoc IContextOwnAircraft::updateComFrequency
-        virtual bool updateComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const QString &originator) override;
+        virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const QString &originator) override;
 
         //! \copydoc IContextOwnAircraft::updatePilot
-        virtual bool updatePilot(const BlackMisc::Network::CUser &pilot, const QString &originator) override;
+        virtual bool updatePilot(const BlackMisc::Network::CUser &pilot) override;
 
         //! \copydoc IContextOwnAircraft::updateCallsign
-        virtual bool updateCallsign(const BlackMisc::Aviation::CCallsign &callsign, const QString &originator) override;
+        virtual bool updateCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
 
         //! \copydoc IContextOwnAircraft::updateIcaoData
-        virtual bool updateIcaoData(const BlackMisc::Aviation::CAircraftIcao &icaoData, const QString &originator) override;
+        virtual bool updateIcaoData(const BlackMisc::Aviation::CAircraftIcao &icaoData) override;
 
         //! \copydoc IContextOwnAircraft::updateSelcal
         virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator) override;

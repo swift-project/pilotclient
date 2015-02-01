@@ -97,91 +97,11 @@ namespace BlackCore
     }
 
     /*
-     * Own Aircraft
-     */
-    bool CContextOwnAircraft::updateAircraft(const CSimulatedAircraft &aircraft, const QString &originator)
-    {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << ownAircraft() << originator;
-
-        bool changedAircraft = this->updateAircraft(static_cast<CAircraft>(aircraft), originator);
-
-        bool changedModel = this->updateModel(aircraft.getModel(), originator);
-        bool changedClient = this->updateClient(aircraft.getClient(), originator);
-        if (changedModel || changedClient)
-        {
-            if (!changedAircraft)
-            {
-                // no signal so far
-                emit this->changedAircraft(this->m_ownAircraft, originator);
-            }
-        }
-
-        bool changed = changedModel || changedClient || changedAircraft;
-        return changed;
-    }
-
-
-    /*
-     * Own Aircraft
-     */
-    bool CContextOwnAircraft::updateAircraft(const CAircraft &aircraft, const QString &originator)
-    {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << ownAircraft() << originator;
-
-        // trigger the correct signals
-        bool changedCockpit = this->updateCockpit(aircraft.getCom1System(), aircraft.getCom2System(), aircraft.getTransponder(), originator);
-        bool changedPosition = this->updatePosition(aircraft.getPosition(), aircraft.getAltitude() , originator);
-        bool changedSituation = this->updateSituation(aircraft.getSituation(), originator);
-        bool changed = changedCockpit || changedPosition || changedSituation;
-
-        // new voice rooms, cockpit has changed
-        if (changedCockpit) { this->resolveVoiceRooms(); }
-
-        // any change triggers a global updated aircraft signal
-        // comparison is not to avoid setting the value, but avoid wrong signals
-        if (changed || this->getAviationAircraft() != aircraft)
-        {
-            emit this->changedAircraft(aircraft, originator);
-
-            // now set value
-            this->m_ownAircraft.setAircraft(aircraft);
-            changed = true;
-        }
-        return changed;
-    }
-
-    /*
-     * Client
-     */
-    bool CContextOwnAircraft::updateClient(const CClient &client, const QString &originator)
-    {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << client << originator;
-
-        bool changed = this->m_ownAircraft.getClient() != client;
-        if (!changed) { return false; }
-        this->m_ownAircraft.setClient(client);
-        return true;
-    }
-
-    /*
-     * Model
-     */
-    bool CContextOwnAircraft::updateModel(const CAircraftModel &model, const QString &originator)
-    {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << model << originator;
-
-        bool changed = this->m_ownAircraft.getModel() != model;
-        if (!changed) { return false; }
-        this->m_ownAircraft.setModel(model);
-        return true;
-    }
-
-    /*
      * Own position
      */
-    bool CContextOwnAircraft::updatePosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const QString &originator)
+    bool CContextOwnAircraft::updatePosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude)
     {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << position << altitude << originator;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << position << altitude;
         bool changed = (this->m_ownAircraft.getPosition() != position);
         if (changed) { this->m_ownAircraft.setPosition(position); }
 
@@ -189,30 +109,6 @@ namespace BlackCore
         {
             changed = true;
             this->m_ownAircraft.setAltitude(altitude);
-        }
-
-        if (changed)
-        {
-            emit this->changedAircraftPosition(this->m_ownAircraft, originator);
-            emit this->changedAircraft(this->m_ownAircraft, originator);
-        }
-        return changed;
-    }
-
-    /*
-     * Update own situation
-     */
-    bool CContextOwnAircraft::updateSituation(const BlackMisc::Aviation::CAircraftSituation &situation, const QString &originator)
-    {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << situation;
-        bool changed = this->m_ownAircraft.getSituation() != situation;
-        if (!changed) return changed;
-
-        if (changed)
-        {
-            this->m_ownAircraft.setSituation(situation);
-            emit this->changedAircraftSituation(this->m_ownAircraft, originator);
-            emit this->changedAircraft(this->m_ownAircraft, originator);
         }
         return changed;
     }
@@ -228,7 +124,6 @@ namespace BlackCore
         {
             this->m_ownAircraft.setCockpit(com1, com2, transponder);
             emit this->changedAircraftCockpit(this->m_ownAircraft, originator);
-            emit this->changedAircraft(this->m_ownAircraft, originator);
             this->resolveVoiceRooms();
         }
         return changed;
@@ -237,7 +132,7 @@ namespace BlackCore
     /*
      * COM frequency
      */
-    bool CContextOwnAircraft::updateComFrequency(const CFrequency &frequency, int comUnit, const QString &originator)
+    bool CContextOwnAircraft::updateActiveComFrequency(const CFrequency &frequency, int comUnit, const QString &originator)
     {
         CComSystem::ComUnit unit = static_cast<CComSystem::ComUnit>(comUnit);
         if (unit != CComSystem::Com1 && unit != CComSystem::Com2) { return false; }
@@ -259,27 +154,24 @@ namespace BlackCore
     /*
      * Pilot
      */
-    bool CContextOwnAircraft::updatePilot(const CUser &pilot, const QString &originator)
+    bool CContextOwnAircraft::updatePilot(const CUser &pilot)
     {
         if (this->m_ownAircraft.getPilot() == pilot) { return false; }
         this->m_ownAircraft.setPilot(pilot);
-        emit this->changedAircraft(this->m_ownAircraft, originator);
         return true;
     }
 
-    bool CContextOwnAircraft::updateCallsign(const CCallsign &callsign, const QString &originator)
+    bool CContextOwnAircraft::updateCallsign(const CCallsign &callsign)
     {
         if (this->m_ownAircraft.getCallsign() == callsign) { return false; }
         this->m_ownAircraft.setCallsign(callsign);
-        emit this->changedAircraft(this->m_ownAircraft, originator);
         return true;
     }
 
-    bool CContextOwnAircraft::updateIcaoData(const CAircraftIcao &icaoData, const QString &originator)
+    bool CContextOwnAircraft::updateIcaoData(const CAircraftIcao &icaoData)
     {
         if (this->m_ownAircraft.getIcaoInfo() == icaoData) { return false; }
         this->m_ownAircraft.setIcaoInfo(icaoData);
-        emit this->changedAircraft(this->m_ownAircraft, originator);
         return true;
     }
 
@@ -359,11 +251,11 @@ namespace BlackCore
             ".com1", ".com2", // com1, com2 frequencies
             ".selcal"
         });
-        if (commandLine.isEmpty()) return false;
+        if (commandLine.isEmpty()) { return false; }
         parser.parse(commandLine);
-        if (!parser.isKnownCommand()) return false;
+        if (!parser.isKnownCommand()) { return false; }
 
-        CAircraft ownAircraft = this->getOwnAircraft();
+        CAircraft ownAircraft = this->ownAircraft();
         if (parser.matchesCommand(".x", ".xpdr")  && parser.countParts() > 1)
         {
             CTransponder transponder = ownAircraft.getTransponder();

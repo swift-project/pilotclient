@@ -64,18 +64,6 @@ namespace BlackCore
         virtual ~IContextOwnAircraft() {}
 
     signals:
-        //! Aircraft changed
-        //! \remarks local only
-        void changedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
-
-        //! Aircraft situation update
-        //! \remarks local only
-        void changedAircraftSituation(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
-
-        //! Aircraft position update
-        //! \remarks local only
-        void changedAircraftPosition(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
-
         //! Aircraft cockpit update
         //! \remarks DBus and local
         void changedAircraftCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
@@ -89,38 +77,23 @@ namespace BlackCore
         //! Get own aircraft
         virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const = 0;
 
-        //! Own aircraft
-        virtual bool updateAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) = 0;
-
-        //! Own aircraft
-        virtual bool updateAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator) = 0;
-
-        //! Own position, be aware height is terrain height
-        virtual bool updatePosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const QString &originator) = 0;
-
-        //! Complete situation update
-        virtual bool updateSituation(const BlackMisc::Aviation::CAircraftSituation &situation, const QString &originator) = 0;
+        //! Update position
+        virtual bool updatePosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) = 0;
 
         //! Update own cockpit
         virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) = 0;
 
         //! Tune in a com frequency
-        virtual bool updateComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const QString &originator) = 0;
-
-        //! Update model
-        virtual bool updateModel(const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) = 0;
-
-        //! Update client
-        virtual bool updateClient(const BlackMisc::Network::CClient &client, const QString &originator) = 0;
+        virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const QString &originator) = 0;
 
         //! Set current pilot
-        virtual bool updatePilot(const BlackMisc::Network::CUser &pilot, const QString &originator) = 0;
+        virtual bool updatePilot(const BlackMisc::Network::CUser &pilot) = 0;
 
         //! Set ICAO data
-        virtual bool updateIcaoData(const BlackMisc::Aviation::CAircraftIcao &icaoData, const QString &originator) = 0;
+        virtual bool updateIcaoData(const BlackMisc::Aviation::CAircraftIcao &icaoData) = 0;
 
         //! Set callsign
-        virtual bool updateCallsign(const BlackMisc::Aviation::CCallsign &callsign, const QString &originator) = 0;
+        virtual bool updateCallsign(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
         //! Own SELCAL code
         virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator) = 0;

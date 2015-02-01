@@ -23,6 +23,7 @@
 #include "blackmisc/nwclientlist.h"
 #include "blackmisc/digestsignal.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/avaircraftsituationlist.h"
 
 #include <QMap>
 
@@ -44,9 +45,6 @@ namespace BlackCore
     public:
         //! Destructor
         virtual ~CContextNetwork();
-
-        //! Airspace monitor accessible to other contexts
-        CAirspaceMonitor *getAirspaceMonitor() const { return m_airspace; }
 
     public slots:
 
@@ -182,9 +180,6 @@ namespace BlackCore
         const BlackMisc::Aviation::CAircraft &ownAircraft() const;
 
     private slots:
-        //! Own aircraft was updated
-        void ps_changedOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator);
-
         //! ATC bookings received
         void ps_receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
 

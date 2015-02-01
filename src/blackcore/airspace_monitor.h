@@ -15,10 +15,12 @@
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/avatcstationlist.h"
 #include "blackmisc/avaircraftlist.h"
+#include "blackmisc/avaircraftsituationlist.h"
 #include "blackmisc/nwclientlist.h"
 #include "blackmisc/avflightplan.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/avcallsignlist.h"
+#include "blackmisc/simulation/simdirectaccessownaircraft.h"
 #include "network.h"
 #include "vatsimbookingreader.h"
 #include "vatsimdatafilereader.h"
@@ -30,13 +32,13 @@ namespace BlackCore
     /*!
      * Keeps track of other entities in the airspace: aircraft, ATC stations, etc.
      */
-    class CAirspaceMonitor : public QObject
+    class CAirspaceMonitor : public QObject, BlackMisc::Simulation::COwnAircraftProviderSupportReadOnly
     {
         Q_OBJECT
 
     public:
         //! Constructor
-        CAirspaceMonitor(QObject *parent, INetwork *network, CVatsimBookingReader *bookings, CVatsimDataFileReader *dataFile);
+        CAirspaceMonitor(QObject *parent, const BlackMisc::Simulation::IOwnAircraftProviderReadOnly *ownAircraft, INetwork *network, CVatsimBookingReader *bookings, CVatsimDataFileReader *dataFile);
 
         //! Returns the list of users we know about
         BlackMisc::Network::CUserList getUsers() const;
@@ -68,6 +70,9 @@ namespace BlackCore
 
         //! Returns the closest ATC station operating on the given frequency, if any
         BlackMisc::Aviation::CAtcStation getAtcStationForComUnit(const BlackMisc::Aviation::CComSystem &comSystem);
+
+        //! Aircraft situations, empty callsign means all
+        BlackMisc::Aviation::CAircraftSituationList getAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign = {}) const;
 
         //! Request to update other clients' data from the network
         void requestDataUpdates();
@@ -103,13 +108,6 @@ namespace BlackCore
         //! Read for model matching
         void readyForModelMatching(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
 
-    public slots:
-        //! Own aircraft updated
-        void setOwnAircraft(const BlackMisc::Aviation::CAircraft &ownAircraft) { m_ownAircraft = ownAircraft; }
-
-        //! Own aircraft model updated
-        void setOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model) { m_ownAircraftModel = model; }
-
     public:
         //! Clear the contents
         void clear();
@@ -118,21 +116,21 @@ namespace BlackCore
         BlackMisc::Aviation::CAtcStationList m_atcStationsOnline;
         BlackMisc::Aviation::CAtcStationList m_atcStationsBooked;
         BlackMisc::Aviation::CAircraftList   m_aircraftInRange;
+        BlackMisc::Aviation::CAircraftSituationList m_aircraftSituations;
         BlackMisc::Network::CClientList      m_otherClients;
+
+
         QMap<BlackMisc::Aviation::CAirportIcao, BlackMisc::Aviation::CInformationMessage> m_metarCache;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan>            m_flightPlanCache;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftIcao>          m_icaoCodeCache;
 
-        BlackMisc::Aviation::CAircraft        m_ownAircraft;
-        BlackMisc::Simulation::CAircraftModel m_ownAircraftModel;
-
-        INetwork *m_network = nullptr;
+        INetwork              *m_network = nullptr;
         CVatsimBookingReader  *m_vatsimBookingReader   = nullptr;
         CVatsimDataFileReader *m_vatsimDataFileReader  = nullptr;
         CAirspaceWatchdog m_atcWatchdog;
         CAirspaceWatchdog m_aircraftWatchdog;
 
-        // FIXME (MS) should be in INetwork
+        // TODO FIXME (MS) should be in INetwork
         void sendFsipiCustomPacket(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;
         void sendFsipirCustomPacket(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;
         QStringList createFsipiCustomPacketData() const;

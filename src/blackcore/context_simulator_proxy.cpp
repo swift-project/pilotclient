@@ -87,11 +87,6 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("disconnectFromSimulator"));
     }
 
-    BlackMisc::Simulation::CAircraftModel CContextSimulatorProxy::getOwnAircraftModel() const
-    {
-        return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CAircraftModel>(QLatin1Literal("getOwnAircraftModel"));
-    }
-
     CAirportList CContextSimulatorProxy::getAirportsInRange() const
     {
         return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAirportList>(QLatin1Literal("getAirportsInRange"));

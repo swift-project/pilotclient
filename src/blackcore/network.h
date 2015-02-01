@@ -328,31 +328,6 @@ namespace BlackCore
          */
         virtual void sendUserInfoQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
-        /*!
-         * Set our own aircraft data.
-         * \param aircraft Only the situation and avionics parts are used. Callsign, user, and ICAO code parts are ignored.
-         */
-        virtual void setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft) = 0;
-
-        /*!
-         * Set the position and altitude of our own aircraft.
-         * \deprecated No longer needed with own aircraft context, only used in client sample
-         */
-        virtual void setOwnAircraftPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) = 0;
-
-        /*!
-         * Set the position, altitude, orientation, and miscellaneous state of our own aircraft.
-         * \deprecated No longer needed with own aircraft context, only used in client sample
-         */
-        virtual void setOwnAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) = 0;
-
-        /*!
-         * Set the COM frequencies and transponder code and mode of our own aircraft.
-         * \deprecated No longer needed with own aircraft context, only used in client sample
-         */
-        virtual void setOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2,
-                                   const BlackMisc::Aviation::CTransponder &transponder) = 0;
-
         //! @}
         ////////////////////////////////////////////////////////////////
         //! \name Weather slots

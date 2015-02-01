@@ -206,11 +206,6 @@ namespace BlackCore
             c = this->connect(this->m_contextNetwork, &IContextNetwork::changedAtcStationOnlineConnectionStatus,
                               this->getCContextOwnAircraft(),  &CContextOwnAircraft::ps_changedAtcStationOnlineConnectionStatus);
             Q_ASSERT(c);
-
-            // inject updated own aircraft to network
-            c = this->connect(this->m_contextOwnAircraft, &IContextOwnAircraft::changedAircraft,
-                              this->getCContextNetwork(),  &CContextNetwork::ps_changedOwnAircraft);
-            Q_ASSERT(c);
             times.insert("Post setup, connects network", time.restart());
         }
     }

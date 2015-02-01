@@ -68,9 +68,6 @@ namespace BlackCore
         //! \copydoc IContextSimulator::getSimulatorInfo()
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
 
-        //! \copydoc IContextSimulator::getAircraftModel()
-        virtual BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const override;
-
         //! \copydoc IContextSimulator::getAirportsInRange
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
 
@@ -126,9 +123,6 @@ namespace BlackCore
         }
 
     private slots:
-        //! Update own aircraft context, because simulator has changed something
-        void ps_updateOwnAircraftContext();
-
         //! \copydoc ISimulator::addRemoteAircraft
         void ps_addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
 
@@ -138,22 +132,24 @@ namespace BlackCore
         //! \copydoc ISimulator::removeRemoteAircraft
         void ps_removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
-        //! Update simulator cockpit from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
-        //! \remarks set by runtime, only to be used locally (not via DBus)
-        void ps_updateSimulatorCockpitFromContext(const BlackMisc::Aviation::CAircraft &ownAircraft, const QString &originator);
-
         //! Handle new connection status
         void ps_onConnectionStatusChanged(ISimulator::ConnectionStatus status);
 
         //! Text message received
         void ps_textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);
 
+        //! Simulator has changed cockpit
+        void ps_cockitChangedFromSim(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
+
+        //! Update simulator cockpit from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
+        //! \remarks set by runtime, only to be used locally (not via DBus)
+        void ps_updateSimulatorCockpitFromContext(const BlackMisc::Aviation::CAircraft &ownAircraft, const QString &originator);
+
     private:
         //! \brief find and catalog all simulator plugins
         void findSimulatorPlugins();
 
         BlackCore::ISimulator *m_simulator = nullptr; //!< simulator plugin
-        QTimer *m_updateTimer = nullptr;
         QDir m_pluginsDir;
         QSet<ISimulatorFactory *> m_simulatorFactories;
         QFuture<bool> m_canConnectResult;

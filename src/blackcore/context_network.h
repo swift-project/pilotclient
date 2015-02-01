@@ -68,6 +68,12 @@ namespace BlackCore
         virtual ~IContextNetwork() {}
 
     signals:
+        //! An aircraft disappeared
+        void removedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
+
+        //! Read for model matching
+        void readyForModelMatching(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
+
         //! ATC station (online) list has been changed
         void changedAtcStationsOnline();
 

@@ -14,6 +14,8 @@
 
 #include "blackcore/context_runtime_config.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/simulation/simdirectaccessownaircraft.h"
+
 #include <QDBusConnection>
 #include <QObject>
 #include <QMultiMap>

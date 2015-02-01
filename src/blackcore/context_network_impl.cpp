@@ -21,6 +21,7 @@
 #include "blackmisc/avatcstationlist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/simplecommandparser.h"
+#include "blackmisc/simulation/simdirectaccessownaircraft.h"
 
 #include <QtXml/QDomElement>
 #include <QNetworkReply>
@@ -31,6 +32,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Audio;
+using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {
@@ -42,10 +44,12 @@ namespace BlackCore
         IContextNetwork(mode, runtime)
     {
         Q_ASSERT(this->getRuntime());
-        Q_ASSERT(this->getRuntime()->getIContextSettings());
+        Q_ASSERT(this->getIContextSettings());
+        Q_ASSERT(this->getIContextOwnAircraft());
+        Q_ASSERT(this->getIContextOwnAircraft()->isUsingImplementingObject());
 
         // 1. Init by "network driver"
-        this->m_network = new CNetworkVatlib(this);
+        this->m_network = new CNetworkVatlib(this->getRuntime()->getCContextOwnAircraft(), this);
         connect(this->m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::ps_fsdConnectionStatusChanged);
         connect(this->m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::ps_fsdTextMessageReceived);
 
@@ -70,16 +74,19 @@ namespace BlackCore
         this->m_dataUpdateTimer->start(30 * 1000);
 
         // 5. Airspace contents
-        this->m_airspace = new CAirspaceMonitor(this, this->m_network, this->m_vatsimBookingReader, this->m_vatsimDataFileReader);
+        const IOwnAircraftProviderReadOnly *ownAircraft = runtime->getCContextOwnAircraft();
+        this->m_airspace = new CAirspaceMonitor(this, ownAircraft, this->m_network, this->m_vatsimBookingReader, this->m_vatsimDataFileReader);
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationsOnline, this, &CContextNetwork::changedAtcStationsOnline);
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked);
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus);
         connect(this->m_airspace, &CAirspaceMonitor::changedAircraftInRange, this, &CContextNetwork::changedAircraftInRange);
         connect(this->m_airspace, &CAirspaceMonitor::changedAircraftSituation, this, &CContextNetwork::changedAircraftSituation);
+        connect(this->m_airspace, &CAirspaceMonitor::removedAircraft, this, &CContextNetwork::removedAircraft);
+        connect(this->m_airspace, &CAirspaceMonitor::readyForModelMatching, this, &CContextNetwork::readyForModelMatching);
 
         //! \todo Should be set in runtime, but this would require airspace to be a context
-        connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraft, this->m_airspace, &CAirspaceMonitor::setOwnAircraft);
-        connect(this->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this->m_airspace, &CAirspaceMonitor::setOwnAircraftModel);
+        // connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraft, this->m_airspace, &CAirspaceMonitor::setOwnAircraft);
+        // connect(this->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this->m_airspace, &CAirspaceMonitor::setOwnAircraftModel);
     }
 
     /*
@@ -131,13 +138,12 @@ namespace BlackCore
         {
             this->m_currentStatus = INetwork::Connecting; // as semaphore we are going to connect
             INetwork::LoginMode mode = static_cast<INetwork::LoginMode>(loginMode);
-            this->getIContextOwnAircraft()->updatePilot(server.getUser(), this->getPathAndContextId());
+            this->getIContextOwnAircraft()->updatePilot(server.getUser());
             const CAircraft ownAircraft = this->ownAircraft();
             this->m_network->presetServer(server);
             this->m_network->presetLoginMode(mode);
             this->m_network->presetCallsign(ownAircraft.getCallsign());
             this->m_network->presetIcaoCodes(ownAircraft.getIcaoInfo());
-            this->m_network->setOwnAircraft(ownAircraft);
             this->m_network->initiateConnection();
             return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, "Connection pending " + server.getAddress() + " " + QString::number(server.getPort()));
         }
@@ -347,13 +353,6 @@ namespace BlackCore
         Q_ASSERT(this->getRuntime());
         Q_ASSERT(this->getRuntime()->getCContextOwnAircraft());
         return this->getRuntime()->getCContextOwnAircraft()->ownAircraft();
-    }
-
-    void CContextNetwork::ps_changedOwnAircraft(const CAircraft &aircraft, const QString &originator)
-    {
-        Q_ASSERT(this->m_network);
-        Q_UNUSED(originator);
-        this->m_network->setOwnAircraft(aircraft);
     }
 
     /*

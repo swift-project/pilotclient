@@ -8,6 +8,7 @@
  */
 
 #include "context_simulator_impl.h"
+#include "context_ownaircraft_impl.h"
 #include "context_ownaircraft.h"
 #include "context_settings.h"
 #include "context_application.h"
@@ -32,9 +33,7 @@ namespace BlackCore
 {
     CContextSimulator::CContextSimulator(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextSimulator(mode, runtime)
     {
-        m_updateTimer = new QTimer(this);
         findSimulatorPlugins();
-        connect(m_updateTimer, &QTimer::timeout, this, &CContextSimulator::ps_updateOwnAircraftContext);
 
         // do not load plugin here, as it depends on settings
         // it has to be guaranteed the settings are alredy loaded
@@ -97,15 +96,6 @@ namespace BlackCore
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         if (!m_simulator) return BlackSim::CSimulatorInfo::UnspecifiedSim();
         return m_simulator->getSimulatorInfo();
-    }
-
-    Simulation::CAircraftModel CContextSimulator::getOwnAircraftModel() const
-    {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        // If no ISimulator object is available, return a dummy.
-        if (!m_simulator) { return Simulation::CAircraftModel(); }
-
-        return this->m_simulator->getOwnAircraftModel();
     }
 
     CAirportList CContextSimulator::getAirportsInRange() const
@@ -198,22 +188,28 @@ namespace BlackCore
             return false;
         }
 
-        auto iterator = std::find_if(m_simulatorFactories.begin(), m_simulatorFactories.end(), [ = ](const ISimulatorFactory * factory)
+        auto factoryIterator = std::find_if(m_simulatorFactories.begin(), m_simulatorFactories.end(), [ = ](const ISimulatorFactory * factory)
         {
             return factory->getSimulatorInfo() == simulatorInfo;
         });
 
         // no plugin found
-        if (iterator == m_simulatorFactories.end())
+        if (factoryIterator == m_simulatorFactories.end())
         {
             CLogMessage(this).error("Plugin not found: '%1'") << simulatorInfo.toQString(true);
             return false;
         }
 
-        ISimulatorFactory *factory = *iterator;
+
+        // Factory for driver
+        ISimulatorFactory *factory = *factoryIterator;
         Q_ASSERT(factory);
 
-        ISimulator *newSimulator = factory->create(this);
+        // We assume we run in the same process as the own aircraft context
+        // Hence we pass in memory refernce to own aircraft object
+        Q_ASSERT(this->getIContextOwnAircraft()->isUsingImplementingObject());
+        IOwnAircraftProvider *ownAircraft = this->getRuntime()->getCContextOwnAircraft();
+        ISimulator *newSimulator = factory->create(ownAircraft, this);
         Q_ASSERT(newSimulator);
 
         this->unloadSimulatorPlugin(); // old plugin unloaded
@@ -230,17 +226,21 @@ namespace BlackCore
         connect(CLogHandler::instance(), &CLogHandler::remoteMessageLogged, m_simulator, &ISimulator::displayStatusMessage);
 
         // connect with network
-        //! \todo using airspace monitor directly is maybe wrong (KB: I think it is). It assumes simulator and network
-        //!       context reside in the same process, which is not guranteed IMHO
-        CAirspaceMonitor *airspace = this->getRuntime()->getCContextNetwork()->getAirspaceMonitor();
+        IContextNetwork *networkContext = this->getIContextNetwork();
+        Q_ASSERT(networkContext);
+        Q_ASSERT(networkContext->isLocalObject());
+
         // use readyForModelMatching instead of CAirspaceMonitor::addedAircraft, as it contains client information
-        connect(airspace, &CAirspaceMonitor::readyForModelMatching, this, &CContextSimulator::ps_addRemoteAircraft);
-        connect(airspace, &CAirspaceMonitor::changedAircraftSituation, this, &CContextSimulator::ps_addAircraftSituation);
-        connect(airspace, &CAirspaceMonitor::removedAircraft, this, &CContextSimulator::ps_removeRemoteAircraft);
-        for (const auto &aircraft : airspace->getAircraftInRange())
+        bool c = connect(networkContext, &IContextNetwork::readyForModelMatching, this, &CContextSimulator::ps_addRemoteAircraft);
+        Q_ASSERT(c);
+        c = connect(networkContext, &IContextNetwork::changedAircraftSituation, this, &CContextSimulator::ps_addAircraftSituation);
+        Q_ASSERT(c);
+        c = connect(networkContext, &IContextNetwork::removedAircraft, this, &CContextSimulator::ps_removeRemoteAircraft);
+        Q_ASSERT(c);
+        for (const auto &aircraft : networkContext->getAircraftInRange())
         {
             Q_ASSERT(!aircraft.getCallsign().isEmpty());
-            CClient client = airspace->getOtherClients().findFirstByCallsign(aircraft.getCallsign());
+            CClient client = networkContext->getOtherClients().findFirstByCallsign(aircraft.getCallsign());
             CSimulatedAircraft simAircraft(aircraft);
             simAircraft.setClient(client);
             m_simulator->addRemoteAircraft(simAircraft);
@@ -288,43 +288,18 @@ namespace BlackCore
 
     void CContextSimulator::unloadSimulatorPlugin()
     {
-        if (m_simulator)
+        if (this->m_simulator)
         {
             // depending on shutdown order, network might already have been deleted
-            //! \todo link with airspace monitor to be reviewed when airspace monitor becomes context
-            if (this->getRuntime()->getIContextNetwork()->isUsingImplementingObject())
-            {
-                CContextNetwork *network = this->getRuntime()->getCContextNetwork();
-                network->getAirspaceMonitor()->QObject::disconnect(this);
-            }
-
-            this->QObject::disconnect(m_simulator); // disconnect as receiver straight away
-            m_simulator->disconnectFrom(); // disconnect from simulator
-            m_simulator->deleteLater();
+            IContextNetwork *networkContext = this->getIContextNetwork();
+            Q_ASSERT(networkContext);
+            Q_ASSERT(networkContext->isLocalObject());
+            this->m_simulator->disconnect(); // disconnect all simulator signals
+            QObject::disconnect(this, nullptr, this->m_simulator, nullptr); // disconnect receiver simulator
+            this->m_simulator->disconnectFrom(); // disconnect from simulator
+            this->m_simulator->deleteLater();
         }
-        m_simulator = nullptr;
-    }
-
-    void CContextSimulator::ps_updateOwnAircraftContext()
-    {
-        Q_ASSERT(this->getIContextOwnAircraft());
-        Q_ASSERT(this->m_simulator);
-
-        // we make sure not to override values we do not have
-        CAircraft contextAircraft = this->getIContextOwnAircraft()->getOwnAircraft(); // own aircraft from context
-        CAircraft simulatorAircraft = this->m_simulator->getOwnAircraft();            // own aircraft from simulator
-
-        // update from simulator to context
-        contextAircraft.setSituation(simulatorAircraft.getSituation());
-        contextAircraft.setCockpit(simulatorAircraft.getCom1System(), simulatorAircraft.getCom2System(), simulatorAircraft.getTransponderCode(), simulatorAircraft.getTransponderMode());
-
-        Q_ASSERT(this->getIContextOwnAircraft()); // paranoia against context having been deleted from another thread - redmine issue #270
-        if (this->getIContextOwnAircraft())
-        {
-            // the method will check, if an update is really required
-            // these are local (non DBus) calls
-            this->getIContextOwnAircraft()->updateAircraft(contextAircraft, this->getPathAndContextId());
-        }
+        this->m_simulator = nullptr;
     }
 
     void CContextSimulator::ps_addRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
@@ -349,41 +324,46 @@ namespace BlackCore
         this->m_simulator->removeRemoteAircraft(callsign);
     }
 
-    void CContextSimulator::ps_updateSimulatorCockpitFromContext(const CAircraft &ownAircraft, const QString &originator)
-    {
-        Q_ASSERT(this->m_simulator);
-        if (!this->m_simulator) { return; }
-
-        // avoid loops
-        if (originator.isEmpty() || originator == IContextSimulator::InterfaceName()) return;
-
-        // update
-        this->m_simulator->updateOwnSimulatorCockpit(ownAircraft);
-    }
-
     void CContextSimulator::ps_onConnectionStatusChanged(ISimulator::ConnectionStatus status)
     {
         bool connected;
         if (status == ISimulator::Connected)
         {
             connected = true;
-            m_updateTimer->start(100);
         }
         else
         {
             connected = false;
-            m_updateTimer->stop();
         }
         emit connectionChanged(connected);
     }
 
     void CContextSimulator::ps_textMessagesReceived(const Network::CTextMessageList &textMessages)
     {
-        if (!this->m_simulator) return;
+        if (!this->m_simulator) { return; }
         foreach(CTextMessage tm, textMessages)
         {
             this->m_simulator->displayTextMessage(tm);
         }
+    }
+
+    void CContextSimulator::ps_cockitChangedFromSim(const CSimulatedAircraft &ownAircraft)
+    {
+        Q_ASSERT(this->getIContextOwnAircraft());
+        if (!this->getIContextOwnAircraft()) { return; }
+        this->getIContextOwnAircraft()->changedAircraftCockpit(ownAircraft, IContextSimulator::InterfaceName());
+    }
+
+    void CContextSimulator::ps_updateSimulatorCockpitFromContext(const CAircraft &ownAircraft, const QString &originator)
+    {
+        Q_ASSERT(this->m_simulator);
+        if (!this->m_simulator) { return; }
+
+        // avoid loops
+        if (originator.isEmpty() || originator == IContextSimulator::InterfaceName()) { return; }
+
+        // update
+        this->m_simulator->updateOwnSimulatorCockpit(ownAircraft, originator);
     }
 
     void CContextSimulator::settingsChanged(uint type)

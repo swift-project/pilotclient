@@ -20,6 +20,7 @@
 #include "blackmisc/nwtextmessage.h"
 #include "blackmisc/nwclient.h"
 #include "blackmisc/pixmap.h"
+#include "blackmisc/simulation/simdirectaccessownaircraft.h"
 #include <QObject>
 
 namespace BlackCore
@@ -60,6 +61,15 @@ namespace BlackCore
         //! Simulator running?
         virtual bool isSimulating() const = 0;
 
+        //! Originator
+        const QString &simulatorOriginator()
+        {
+            // string is generated once, the timestamp allows to use multiple
+            // components (as long as they are not generated at the same ms)
+            static const QString o = QString("SIMULATOR:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
+            return o;
+        }
+
     public slots:
 
         //! Connect to simulator
@@ -70,9 +80,6 @@ namespace BlackCore
 
         //! Disconnect from simulator
         virtual bool disconnectFrom() = 0;
-
-        //! Return user aircraft object
-        virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const = 0;
 
         //! Add new remote aircraft to the simulator
         virtual void addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) = 0;
@@ -90,7 +97,7 @@ namespace BlackCore
         virtual int changeRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &toChangeAircraft, const BlackMisc::CPropertyIndexVariantMap &changeValues) = 0;
 
         //! Update own aircraft cockpit (usually from context)
-        virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft) = 0;
+        virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator) = 0;
 
         //! Simulator info
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const = 0;
@@ -100,9 +107,6 @@ namespace BlackCore
 
         //! Display a text message
         virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const = 0;
-
-        //! Own aircraft Model
-        virtual BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const = 0;
 
         //! Aircraft models for available remote aircrafts
         virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const = 0;
@@ -142,6 +146,7 @@ namespace BlackCore
         //! Installed aircraft models ready or changed
         void installedAircraftModelsChanged();
 
+
     protected:
         //! Emit the combined status
         //! \sa simulatorStatusChanged;
@@ -158,7 +163,7 @@ namespace BlackCore
         virtual ~ISimulatorFactory() {}
 
         //! Create a new instance
-        virtual ISimulator *create(QObject *parent = nullptr) = 0;
+        virtual ISimulator *create(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent = nullptr) = 0;
 
         //! Simulator info
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const = 0;

@@ -13,6 +13,7 @@
 #define BLACKCORE_NETWORK_VATLIB_H
 
 #include "network.h"
+#include "blackmisc/simulation/simdirectaccessownaircraft.h"
 #include <vatlib/vatlib2.h>
 #include <QScopedPointer>
 #include <QTimer>
@@ -25,13 +26,13 @@ namespace BlackCore
     /*!
      * Implementation of INetwork using the vatlib shim
      */
-    class CNetworkVatlib : public INetwork
+    class CNetworkVatlib : public INetwork, public BlackMisc::Simulation::COwnAircraftProviderSupport
     {
         Q_OBJECT
 
     public:
         //! Constructor
-        CNetworkVatlib(QObject *parent = nullptr);
+        CNetworkVatlib(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent = nullptr);
 
         //! Destructor
         virtual ~CNetworkVatlib();
@@ -74,12 +75,6 @@ namespace BlackCore
         virtual void sendIcaoCodesQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendUserInfoQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
-        virtual void setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft) override;
-        virtual void setOwnAircraftPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) override;
-        virtual void setOwnAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
-        virtual void setOwnCockpit(const BlackMisc::Aviation::CComSystem &com1,
-                                   const BlackMisc::Aviation::CComSystem &com2,
-                                   const BlackMisc::Aviation::CTransponder &xpdr) override;
 
         // Weather slots
         virtual void sendMetarQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao) override;
@@ -147,12 +142,11 @@ namespace BlackCore
 
     private:
         QScopedPointer<PCSBClient, VatlibQScopedPointerDeleter> m_net;
-        LoginMode m_loginMode;
-        VatConnectionStatus m_status;
-        BlackMisc::Network::CServer m_server;
-        BlackMisc::Aviation::CCallsign m_callsign;
-        BlackMisc::Aviation::CAircraftIcao m_icaoCode;
-        BlackMisc::Aviation::CAircraft m_ownAircraft; // not using callsign, user, or icao parts of this member because they can't be changed when connected
+        LoginMode                          m_loginMode;
+        VatConnectionStatus                m_status;
+        BlackMisc::Network::CServer        m_server;
+        BlackMisc::Aviation::CCallsign     m_callsign; //!< "buffered callsign", as this must not change when connected
+        BlackMisc::Aviation::CAircraftIcao m_icaoCode; //!< "buffered icao", as this must not change when connected
 
         QTimer m_processingTimer;
         QTimer m_updateTimer;

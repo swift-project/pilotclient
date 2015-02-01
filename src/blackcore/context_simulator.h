@@ -121,9 +121,6 @@ namespace BlackCore
         //! Airports in range
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const = 0;
 
-        //! Aircraft model
-        virtual BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const = 0;
-
         //! Installed models in simulator eco system
         virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const = 0;
 

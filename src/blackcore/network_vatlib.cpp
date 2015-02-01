@@ -21,22 +21,23 @@ static_assert(! std::is_abstract<BlackCore::CNetworkVatlib>::value, "Must implem
 #define CLIENT_PUBLIC_ID 0xb9ba
 #define CLIENT_PRIVATE_KEY "727d1efd5cb9f8d2c28372469d922bb4"
 
+using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Geo;
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
+using namespace BlackMisc::Simulation;
+using namespace BlackMisc;
+
 namespace BlackCore
 {
 
-    using namespace BlackMisc::PhysicalQuantities;
-    using namespace BlackMisc::Geo;
-    using namespace BlackMisc::Aviation;
-    using namespace BlackMisc::Network;
-    using namespace BlackMisc;
-
     void exceptionDispatcher(const char *caller);
 
-    CNetworkVatlib::CNetworkVatlib(QObject *parent)
-        : INetwork(parent),
-          m_loginMode(LoginNormal),
-          m_status(vatStatusIdle),
-          m_fsdTextCodec(QTextCodec::codecForName("latin1"))
+    CNetworkVatlib::CNetworkVatlib(Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent)
+        : INetwork(parent), COwnAircraftProviderSupport(ownAircraft),
+        m_loginMode(LoginNormal),
+        m_status(vatStatusIdle),
+        m_fsdTextCodec(QTextCodec::codecForName("latin1"))
     {
         connect(this, &CNetworkVatlib::terminate, this, &INetwork::terminateConnection, Qt::QueuedConnection);
         connect(this, &INetwork::customPacketReceived, this, &CNetworkVatlib::customPacketDispatcher);
@@ -93,7 +94,7 @@ namespace BlackCore
 
     CNetworkVatlib::~CNetworkVatlib()
     {
-        Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "CNetworkVatlib destoyed while still connected.");
+        Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "CNetworkVatlib destroyed while still connected.");
     }
 
     void CNetworkVatlib::process()
@@ -114,8 +115,8 @@ namespace BlackCore
                 VatAtcPosition pos;
                 pos.facility = vatFacilityTypeUnknown;
                 pos.visibleRange = 10; // NM
-                pos.latitude = m_ownAircraft.latitude().value(CAngleUnit::deg());
-                pos.longitude = m_ownAircraft.longitude().value(CAngleUnit::deg());
+                pos.latitude  = ownAircraft().latitude().value(CAngleUnit::deg());
+                pos.longitude = ownAircraft().longitude().value(CAngleUnit::deg());
                 pos.elevation = 0;
                 pos.rating = vatAtcRatingObserver;
                 pos.frequency = 199998;
@@ -126,17 +127,17 @@ namespace BlackCore
                 // Normal / Stealth mode
                 VatPilotPosition pos;
                 pos.altitudeAdjust = 0; // TODO: this needs to be calculated
-                pos.altitudeTrue = m_ownAircraft.getAltitude().value(CLengthUnit::ft());
-                pos.heading = m_ownAircraft.getHeading().value(CAngleUnit::deg());
-                pos.pitch = m_ownAircraft.getPitch().value(CAngleUnit::deg());
-                pos.bank = m_ownAircraft.getBank().value(CAngleUnit::deg());
-                pos.latitude = m_ownAircraft.latitude().value(CAngleUnit::deg());
-                pos.longitude = m_ownAircraft.longitude().value(CAngleUnit::deg());
-                pos.groundSpeed = m_ownAircraft.getGroundSpeed().value(CSpeedUnit::kts());
+                pos.altitudeTrue = ownAircraft().getAltitude().value(CLengthUnit::ft());
+                pos.heading      = ownAircraft().getHeading().value(CAngleUnit::deg());
+                pos.pitch        = ownAircraft().getPitch().value(CAngleUnit::deg());
+                pos.bank         = ownAircraft().getBank().value(CAngleUnit::deg());
+                pos.latitude     = ownAircraft().latitude().value(CAngleUnit::deg());
+                pos.longitude    = ownAircraft().longitude().value(CAngleUnit::deg());
+                pos.groundSpeed  = ownAircraft().getGroundSpeed().value(CSpeedUnit::kts());
                 pos.rating = vatPilotRatingUnknown;
-                pos.transponderCode = static_cast<qint16>(m_ownAircraft.getTransponderCode());
+                pos.transponderCode = static_cast<qint16>(ownAircraft().getTransponderCode());
                 pos.transponderMode = vatTransponderModeStandby;
-                switch (m_ownAircraft.getTransponderMode())
+                switch (ownAircraft().getTransponderMode())
                 {
                 case CTransponder::ModeC: pos.transponderMode = vatTransponderModeCharlie; break;
                 case CTransponder::StateIdent: pos.transponderMode = vatTransponderModeIdent; break;
@@ -241,19 +242,20 @@ namespace BlackCore
     {
         Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "Can't change callsign while still connected");
         m_callsign = callsign;
+        ownAircraft().setCallsign(callsign);
     }
 
     void CNetworkVatlib::presetIcaoCodes(const BlackMisc::Aviation::CAircraftIcao &icao)
     {
         Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "Can't change ICAO codes while still connected");
         m_icaoCode = icao;
+        ownAircraft().setIcaoInfo(icao);
     }
 
     void CNetworkVatlib::presetLoginMode(LoginMode mode)
     {
         Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "Can't change login mode while still connected");
         m_loginMode = mode;
-
         m_net.reset(nullptr);
     }
 
@@ -315,44 +317,20 @@ namespace BlackCore
         }
     }
 
-    void CNetworkVatlib::setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft)
-    {
-        m_ownAircraft = aircraft;
-    }
-
-    void CNetworkVatlib::setOwnAircraftPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude)
-    {
-        m_ownAircraft.setPosition(position);
-        m_ownAircraft.setAltitude(altitude);
-    }
-
-    void CNetworkVatlib::setOwnAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
-    {
-        m_ownAircraft.setSituation(situation);
-    }
-
-    void CNetworkVatlib::setOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2,
-            const BlackMisc::Aviation::CTransponder &xpdr)
-    {
-        m_ownAircraft.setCom1System(com1);
-        m_ownAircraft.setCom1System(com2);
-        m_ownAircraft.setTransponder(xpdr);
-    }
-
     void CNetworkVatlib::sendTextMessages(const BlackMisc::Network::CTextMessageList &messages)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
 
         if (messages.isEmpty()) return;
         CTextMessageList privateMessages = messages.getPrivateMessages();
-        for(const auto &message : privateMessages)
+        for (const auto &message : privateMessages)
         {
             if (message.getRecipientCallsign().isEmpty()) continue;
             Vat_SendTextMessage(m_net.data(), toFSD(message.getRecipientCallsign()), toFSD(message.getMessage()));
         }
         CTextMessageList radioMessages = messages.getRadioMessages();
         if (radioMessages.isEmpty()) return;
-        for(const auto &message : radioMessages)
+        for (const auto &message : radioMessages)
         {
             // I could send the same message to n frequencies in one step
             // if this is really required, I need to group by message
@@ -442,7 +420,7 @@ namespace BlackCore
         case CFlightPlan::IFR:  vatlibFP.flightType = vatFlightTypeIFR; break;
         case CFlightPlan::VFR:  vatlibFP.flightType = vatFlightTypeVFR; break;
         case CFlightPlan::SVFR: vatlibFP.flightType = vatFlightTypeSVFR; break;
-        case CFlightPlan::DVFR:  vatlibFP.flightType = vatFlightTypeDVFR; break;
+        case CFlightPlan::DVFR: vatlibFP.flightType = vatFlightTypeDVFR; break;
         }
         Vat_SendFlightPlan(m_net.data(), &vatlibFP);
     }
@@ -468,12 +446,12 @@ namespace BlackCore
     void CNetworkVatlib::replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign) // private
     {
         Vat_SendInformation(m_net.data(), vatInfoQueryTypeFreq, toFSD(callsign),
-                            toFSD(QString::number(m_ownAircraft.getCom1System().getFrequencyActive().value(CFrequencyUnit::MHz()), 'f', 3)));
+                            toFSD(QString::number(ownAircraft().getCom1System().getFrequencyActive().value(CFrequencyUnit::MHz()), 'f', 3)));
     }
 
     void CNetworkVatlib::replyToNameQuery(const BlackMisc::Aviation::CCallsign &callsign) // private
     {
-        Vat_SendInformation(m_net.data(), vatInfoQueryTypeName, toFSD(callsign),toFSD(m_server.getUser().getRealName()));
+        Vat_SendInformation(m_net.data(), vatInfoQueryTypeName, toFSD(callsign), toFSD(m_server.getUser().getRealName()));
     }
 
     void CNetworkVatlib::sendIcaoCodesQuery(const BlackMisc::Aviation::CCallsign &callsign)
@@ -511,14 +489,14 @@ namespace BlackCore
     }
 
     void CNetworkVatlib::sendFsipiCustomPacket(const BlackMisc::Aviation::CCallsign &callsign,
-        const QString &airlineIcao, const QString &aircraftIcao, const QString &combinedType, const QString &modelString)
+            const QString &airlineIcao, const QString &aircraftIcao, const QString &combinedType, const QString &modelString)
     {
         QStringList data { { "0" }, airlineIcao, aircraftIcao, { "" }, { "" }, { "" }, { "" }, combinedType, modelString };
         sendCustomPacket(callsign, "FSIPI", data);
     }
 
     void CNetworkVatlib::sendFsipirCustomPacket(const BlackMisc::Aviation::CCallsign &callsign,
-        const QString &airlineIcao, const QString &aircraftIcao, const QString &combinedType, const QString &modelString)
+            const QString &airlineIcao, const QString &aircraftIcao, const QString &combinedType, const QString &modelString)
     {
         QStringList data { { "0" }, airlineIcao, aircraftIcao, { "" }, { "" }, { "" }, { "" }, combinedType, modelString };
         sendCustomPacket(callsign, "FSIPIR", data);
@@ -832,7 +810,7 @@ namespace BlackCore
         //TODO
     }
 
-    void CNetworkVatlib::onCloudDataReceived(VatSessionID,const VatCloudLayer /** layers **/ [2], VatThunderStormLayer /** storm **/, float /** vis **/, void * /** cbvar **/)
+    void CNetworkVatlib::onCloudDataReceived(VatSessionID, const VatCloudLayer /** layers **/ [2], VatThunderStormLayer /** storm **/, float /** vis **/, void * /** cbvar **/)
     {
         //TODO
     }
@@ -858,7 +836,7 @@ namespace BlackCore
 
     void CNetworkVatlib::networkErrorHandler(const char *message)
     {
-        CLogMessage(static_cast<CNetworkVatlib*>(nullptr)).error(message);
+        CLogMessage(static_cast<CNetworkVatlib *>(nullptr)).error(message);
     }
 
 } // namespace
