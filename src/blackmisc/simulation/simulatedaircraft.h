@@ -53,6 +53,9 @@ namespace BlackMisc
             //! Set model
             void setModel(const BlackMisc::Simulation::CAircraftModel &model);
 
+            //! Set model string
+            void setModelString(const QString &modelString);
+
             //! \copydoc CAircraft::setCallsign
             virtual void setCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
 

@@ -35,7 +35,7 @@ namespace BlackMisc
             // sync some values, order here is crucial
             this->setCallsign(this->getCallsign());
             this->setIcaoInfo(this->getIcaoInfo());
-            this->setModel(this->getModel());
+            this->setModel(this->getModel()); // fix internal values
             this->setPilot(this->hasValidRealName() ? this->getPilot() : this->getClient().getUser());
         }
 
@@ -87,6 +87,11 @@ namespace BlackMisc
             this->m_model = model;
             this->setCallsign(this->hasValidCallsign() ? this->getCallsign() : model.getCallsign());
             this->setIcaoInfo(model.getIcao());
+        }
+
+        void CSimulatedAircraft::setModelString(const QString &modelString)
+        {
+            this->m_model.setModelString(modelString);
         }
 
         void CSimulatedAircraft::setCallsign(const CCallsign &callsign)

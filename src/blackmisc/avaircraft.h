@@ -150,11 +150,26 @@ namespace BlackMisc
             //! Get COM2 system
             const CComSystem &getCom2System() const { return this->m_com2system; }
 
+            //! Get COM unit
+            const CComSystem getComSystem(CComSystem::ComUnit unit) const;
+
+            //! Set COM unit
+            void setComSystem(const CComSystem &com, CComSystem::ComUnit unit);
+
             //! Set COM1 system
             void setCom1System(const CComSystem &comSystem) { this->m_com1system = comSystem; }
 
             //! Set COM2 system
             void setCom2System(const CComSystem &comSystem) { this->m_com2system = comSystem; }
+
+            //! Set COM1 frequency
+            bool setCom1ActiveFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency);
+
+            //! Set COM2 frequency
+            bool setCom2ActiveFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency);
+
+            //! Set COM frequency
+            bool setComActiveFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, CComSystem::ComUnit unit);
 
             //! Given SELCAL selected?
             bool isSelcalSelected(const BlackMisc::Aviation::CSelcal &selcal) const { return this->m_selcal == selcal; }

@@ -79,6 +79,52 @@ namespace BlackMisc
             m_situation.setCallsign(this->getCallsign());
         }
 
+        const CComSystem CAircraft::getComSystem(CComSystem::ComUnit unit) const
+        {
+            switch (unit)
+            {
+            case CComSystem::Com1: return this->getCom1System();
+            case CComSystem::Com2: return this->getCom2System();
+            default: break;
+            }
+            Q_ASSERT(false);
+            return CComSystem(); // avoid warning
+        }
+
+        void CAircraft::setComSystem(const CComSystem &com, CComSystem::ComUnit unit)
+        {
+            switch (unit)
+            {
+            case CComSystem::Com1: this->setCom1System(com); break;
+            case CComSystem::Com2: this->setCom2System(com); break;
+            }
+        }
+
+        bool CAircraft::setCom1ActiveFrequency(const CFrequency &frequency)
+        {
+            if (!CComSystem::isValidComFrequency(frequency)) { return false; }
+            this->m_com1system.setFrequencyActive(frequency);
+            return true;
+        }
+
+        bool CAircraft::setCom2ActiveFrequency(const CFrequency &frequency)
+        {
+            if (!CComSystem::isValidComFrequency(frequency)) { return false; }
+            this->m_com2system.setFrequencyActive(frequency);
+            return true;
+        }
+
+        bool CAircraft::setComActiveFrequency(const CFrequency &frequency, CComSystem::ComUnit unit)
+        {
+            if (!CComSystem::isValidComFrequency(frequency)) { return false; }
+            switch (unit)
+            {
+            case CComSystem::Com1: return this->setCom1ActiveFrequency(frequency);
+            case CComSystem::Com2: return this->setCom2ActiveFrequency(frequency);
+            }
+            return false;
+        }
+
         void CAircraft::initComSystems()
         {
             CComSystem com1("COM1", CPhysicalQuantitiesConstants::FrequencyUnicom(), CPhysicalQuantitiesConstants::FrequencyUnicom());

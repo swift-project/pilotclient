@@ -46,8 +46,7 @@ namespace BlackMisc
             enum ComUnit
             {
                 Com1,
-                Com2,
-                Com3
+                Com2
             };
 
             //! Default constructor
@@ -122,18 +121,6 @@ namespace BlackMisc
             static CComSystem getCom2System(BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
             {
                 return CComSystem(CModulator::NameCom2(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
-            }
-
-            //! COM3 unit
-            static CComSystem getCom3System(double activeFrequencyMHz, double standbyFrequencyMHz = -1)
-            {
-                return CComSystem(CModulator::NameCom3(), BlackMisc::PhysicalQuantities::CFrequency(activeFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()), BlackMisc::PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
-            }
-
-            //! COM3 unit
-            static CComSystem getCom3System(BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
-            {
-                return CComSystem(CModulator::NameCom3(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
             }
 
             //! Valid civil aviation frequency?
