@@ -19,11 +19,12 @@
 #include <QLatin1Char>
 #include <QDateTime>
 
+using namespace BlackMisc;
 using namespace BlackSim::FsCommon;
 using namespace BlackMisc::Aviation;
-using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
+using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackSimPlugin
@@ -31,8 +32,7 @@ namespace BlackSimPlugin
     namespace FsCommon
     {
 
-        CFsuipc::CFsuipc() : m_connected(false), m_validReadValues(false)
-        { }
+        CFsuipc::CFsuipc() { }
 
         CFsuipc::~CFsuipc()
         {
@@ -44,7 +44,6 @@ namespace BlackSimPlugin
             DWORD result;
             this->m_lastErrorMessage = "";
             if (this->m_connected) return this->m_connected; // already connected
-            this->m_validReadValues = false;
             if (FSUIPC_Open(SIM_ANY, &result))
             {
                 this->m_connected = true;
@@ -76,21 +75,18 @@ namespace BlackSimPlugin
         {
             FSUIPC_Close(); // Closing when it wasn't open is okay, so this is safe here
             this->m_connected = false;
-            this->m_validReadValues = false;
         }
 
-        void CFsuipc::process()
+        bool CFsuipc::write(const CSimulatedAircraft &aircraft)
         {
-            if (!this->m_connected) return;
-            this->read();
+            if (!this->isConnected()) { return false; }
+
+            Q_UNUSED(aircraft);
+            //! \todo FSUIPC write values
+            return false;
         }
 
-        void CFsuipc::write()
-        {
-
-        }
-
-        void CFsuipc::read()
+        bool CFsuipc::read(CSimulatedAircraft &aircraft)
         {
             DWORD dwResult;
             char localFsTimeRaw[3];
@@ -115,6 +111,9 @@ namespace BlackSimPlugin
             // https://www.ivao.aero/softdev/ivap/fsuipc_sdk.asp
             // http://squawkbox.ca/doc/sdk/fsuipc.php
 
+            if (!this->isConnected()) { return false; }
+
+            bool read = false;
             if (FSUIPC_Read(0x0238, 3, localFsTimeRaw, &dwResult) &&
 
                     // COM settings
@@ -146,7 +145,7 @@ namespace BlackSimPlugin
                     // If we wanted other reads/writes at the same time, we could put them here
                     FSUIPC_Process(&dwResult))
             {
-                this->m_validReadValues = true;
+                read = true;
 
                 // time, basically as a heartbeat
                 QString fsTime;
@@ -154,12 +153,12 @@ namespace BlackSimPlugin
 
                 // model
                 const QString modelName = QString(modelNameRaw); // to be used to distinguish offsets for different models
-                m_model.setModelString(modelName);
+                aircraft.setModelString(modelName);
 
                 // COMs
-                CComSystem com1 = this->m_aircraft.getCom1System();
-                CComSystem com2 = this->m_aircraft.getCom2System();
-                CTransponder xpdr = this->m_aircraft.getTransponder();
+                CComSystem com1 = aircraft.getCom1System();
+                CComSystem com2 = aircraft.getCom2System();
+                CTransponder xpdr = aircraft.getTransponder();
 
                 // 2710 => 12710 => / 100.0 => 127.1
                 com1ActiveRaw = (10000 + CBcdConversions::bcd2Dec(com1ActiveRaw));
@@ -178,21 +177,19 @@ namespace BlackSimPlugin
                 {
                     //! \todo Reset value for FSUIPC
                     xpdr.setTransponderMode(CTransponder::StateIdent);
-                    // qDebug() << "xpdr ident" << xpdrIdentSb3Raw;
                 }
                 else
                 {
                     xpdr.setTransponderMode(
                         xpdrModeSb3Raw == 0 ? CTransponder::ModeC : CTransponder::StateStandby
                     );
-                    // qDebug() << "xpdr mode" << xpdrModeSb3Raw;
                 }
-                this->m_aircraft.setCockpit(com1, com2, xpdr);
+                aircraft.setCockpit(com1, com2, xpdr);
 
                 // position
                 const double latCorrectionFactor = 90.0 / (10001750.0 * 65536.0 * 65536.0);
                 const double lonCorrectionFactor = 360.0 / (65536.0 * 65536.0 * 65536.0 * 65536.0);
-                CAircraftSituation situation = this->m_aircraft.getSituation();
+                CAircraftSituation situation = aircraft.getSituation();
                 CCoordinateGeodetic position = situation.getPosition();
                 CLatitude lat(latitudeRaw * latCorrectionFactor, CAngleUnit::deg());
                 CLongitude lon(longitudeRaw * lonCorrectionFactor, CAngleUnit::deg());
@@ -214,12 +211,9 @@ namespace BlackSimPlugin
                 situation.setPitch(pitch);
                 situation.setGroundspeed(groundspeed);
                 situation.setAltitude(altitude);
-                this->m_aircraft.setSituation(situation);
+                aircraft.setSituation(situation);
             }
-            else
-            {
-                this->m_validReadValues = false;
-            }
+            return read;
         }
 
         double CFsuipc::intToFractional(double fractional)
@@ -228,5 +222,5 @@ namespace BlackSimPlugin
             if (f < 1.0) return f;
             return intToFractional(f);
         }
-    }
-}
+    } // namespace
+} // namespace
