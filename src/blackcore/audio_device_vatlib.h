@@ -56,7 +56,7 @@ namespace BlackCore
 
         struct VatLocalInputCodecDeleter
         {
-            static inline void cleanup(VatProducerConsumer_tag *obj)
+            static inline void cleanup(VatProducer_tag *obj)
             {
                 if (obj) Vat_DestroyLocalInputCodec(obj);
             }
@@ -68,7 +68,7 @@ namespace BlackCore
         BlackMisc::Audio::CAudioDeviceInfo m_currentDevice;
 
         VatAudioService m_audioService;
-        QScopedPointer<VatProducerConsumer_tag, VatLocalInputCodecDeleter> m_inputCodec;
+        QScopedPointer<VatProducer_tag, VatLocalInputCodecDeleter> m_inputCodec;
     };
 
     //! Audio Output Device
@@ -109,7 +109,7 @@ namespace BlackCore
 
         struct VatLocalOutputCodecDeleter
         {
-            static inline void cleanup(VatProducerConsumer_tag *obj)
+            static inline void cleanup(VatConsumer_tag *obj)
             {
                 if (obj) Vat_DestroyLocalOutputCodec(obj);
             }
@@ -122,7 +122,7 @@ namespace BlackCore
         BlackMisc::Audio::CAudioDeviceInfo m_currentDevice;
 
         VatAudioService m_audioService;
-        QScopedPointer<VatProducerConsumer_tag, VatLocalOutputCodecDeleter> m_outputCodec;
+        QScopedPointer<VatConsumer_tag, VatLocalOutputCodecDeleter> m_outputCodec;
     };
 }
 
