@@ -8,6 +8,7 @@
 
 #include "audio_device.h"
 #include "voice_channel.h"
+#include "audio_mixer.h"
 
 #include "../blackmisc/avcallsignlist.h"
 #include "../blackmisc/avselcal.h"
@@ -47,6 +48,8 @@ namespace BlackCore
         //! Create output device object
         virtual std::unique_ptr<IAudioOutputDevice> createOutputDevice() = 0;
 
+        //! Create audio mixer object
+        virtual std::unique_ptr<IAudioMixer> createAudioMixer() = 0;
         //! Connect voice channel to an audio output device
         virtual void connectChannelOutputDevice(IVoiceChannel *channel, IAudioOutputDevice *device) = 0;
 

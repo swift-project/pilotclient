@@ -45,6 +45,8 @@ namespace BlackCore
         //! \copydoc IVoice::createOutputDevice()
         virtual std::unique_ptr<IAudioOutputDevice> createOutputDevice() override;
 
+        //! \copydoc IVoice::createAudioMixer()
+        virtual std::unique_ptr<IAudioMixer> createAudioMixer() override;
         //! \copydoc IVoice::connectChannelOutputDevice()
         virtual void connectChannelOutputDevice(IVoiceChannel *channel, IAudioOutputDevice *device) override;
 
