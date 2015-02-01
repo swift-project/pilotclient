@@ -19,6 +19,7 @@
 #include "voice.h"
 #include "voice_channel.h"
 #include "audio_device.h"
+#include "audio_mixer.h"
 #include "input_manager.h"
 #include "blackinput/keyboard.h"
 #include "blackmisc/voiceroomlist.h"
@@ -166,15 +167,19 @@ namespace BlackCore
         //! Connection in transition
         bool inTransitionState() const;
 
-        std::unique_ptr<IVoice> m_voice; //!< underlying voice lib
-
         CInputManager *m_inputManager = nullptr;
         CInputManager::RegistrationHandle m_handlePtt;
+
+        std::unique_ptr<IVoice> m_voice; //!< underlying voice lib
+        std::unique_ptr<IAudioMixer> m_audioMixer;
+
+        int m_outDeviceVolume = 100;
         std::unique_ptr<IVoiceChannel> m_channelCom1;
         std::unique_ptr<IVoiceChannel> m_channelCom2;
         std::unique_ptr<IAudioOutputDevice> m_voiceOutputDevice;
-        int m_outDeviceVolume = 100;
         std::unique_ptr<IAudioInputDevice> m_voiceInputDevice;
+
+
     };
 } // namespace
 

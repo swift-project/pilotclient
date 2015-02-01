@@ -51,8 +51,17 @@ namespace BlackCore
         m_voiceInputDevice = m_voice->createInputDevice();
         m_voiceOutputDevice = m_voice->createOutputDevice();
 
-        m_voice->connectChannelOutputDevice(m_channelCom1.get(), m_voiceOutputDevice.get());
-        m_voice->connectChannelOutputDevice(m_channelCom2.get(), m_voiceOutputDevice.get());
+        m_audioMixer = m_voice->createAudioMixer();
+
+        m_voice->connectVoice(m_voiceInputDevice.get(), m_audioMixer.get(), IAudioMixer::InputMicrophone);
+        m_voice->connectVoice(m_channelCom1.get(), m_audioMixer.get(), IAudioMixer::InputVoiceChannel1);
+        m_voice->connectVoice(m_channelCom2.get(), m_audioMixer.get(), IAudioMixer::InputVoiceChannel2);
+        m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputOutputDevice1, m_voiceOutputDevice.get());
+        m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputVoiceChannel1, m_channelCom1.get());
+        m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputVoiceChannel2, m_channelCom2.get());
+
+        m_audioMixer->makeMixerConnection(IAudioMixer::InputVoiceChannel1, IAudioMixer::OutputOutputDevice1);
+        m_audioMixer->makeMixerConnection(IAudioMixer::InputVoiceChannel2, IAudioMixer::OutputOutputDevice1);
 
         // 4. load sounds (init), not possible in own thread
         QTimer::singleShot(10 * 1000, this, SLOT(ps_initNotificationSounds()));
@@ -406,9 +415,9 @@ namespace BlackCore
         Q_ASSERT(this->m_voice);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         if (enable)
-            m_voice->enableAudioLoopback(m_voiceInputDevice.get(), m_voiceOutputDevice.get());
+            m_audioMixer->makeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputOutputDevice1);
         else
-            m_voice->enableAudioLoopback(m_voiceInputDevice.get(), nullptr);
+            m_audioMixer->removeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputOutputDevice1);
     }
 
     bool CContextAudio::parseCommandLine(const QString &commandLine)
@@ -462,8 +471,8 @@ namespace BlackCore
     void CContextAudio::ps_setVoiceTransmission(bool enable)
     {
         // FIXME: Use the 'active' channel instead of hardcoded COM1
-        if (enable) m_voice->connectChannelInputDevice(m_voiceInputDevice.get(), m_channelCom1.get());
-        else m_voice->connectChannelInputDevice(nullptr, m_channelCom1.get());
+        if (enable) m_audioMixer->makeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputVoiceChannel1);
+        else m_audioMixer->removeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputVoiceChannel1);
     }
 
     /*

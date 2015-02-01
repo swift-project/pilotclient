@@ -8,6 +8,7 @@
 
 #include "blackcore/voice.h"
 #include "blackcore/voice_channel.h"
+#include "blackcore/audio_mixer.h"
 
 #include <QObject>
 #include <QPointer>
@@ -15,6 +16,7 @@
 #include <QMap>
 #include <QThread>
 #include <QTextStream>
+#include <QSharedPointer>
 
 class Client : public QObject
 {
@@ -62,7 +64,8 @@ private:
     BlackCore::IVoice *m_voice;
     std::unique_ptr<BlackCore::IAudioInputDevice> m_inputDevice;
     std::unique_ptr<BlackCore::IAudioOutputDevice> m_outputDevice;
-    std::unique_ptr<BlackCore::IVoiceChannel> m_channelCom1;
+    std::unique_ptr<BlackCore::IAudioMixer> m_audioMixer;
+    QSharedPointer<BlackCore::IVoiceChannel> m_channelCom1;
     QTextStream m_stdout;
 
 };

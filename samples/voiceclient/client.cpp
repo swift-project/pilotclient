@@ -11,7 +11,7 @@
 
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Aviation;
-
+using namespace BlackCore;
 
 /*
  * Client
@@ -24,15 +24,19 @@ Client::Client(QObject *parent) :
     m_channelCom1 = m_voice->createVoiceChannel();
     m_inputDevice = m_voice->createInputDevice();
     m_outputDevice = m_voice->createOutputDevice();
+    m_audioMixer = m_voice->createAudioMixer();
 
-    m_voice->connectChannelOutputDevice(m_channelCom1.get(), m_outputDevice.get());
+    m_voice->connectVoice(m_inputDevice.get(), m_audioMixer.get(), IAudioMixer::InputMicrophone);
+    m_voice->connectVoice(m_channelCom1.data(), m_audioMixer.get(), IAudioMixer::InputVoiceChannel1);
+    m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputOutputDevice1, m_outputDevice.get());
+    m_audioMixer->makeMixerConnection(IAudioMixer::InputVoiceChannel1, IAudioMixer::OutputOutputDevice1);
 
     using namespace BlackCore;
-    connect(m_channelCom1.get(), &IVoiceChannel::connectionStatusChanged,              this, &Client::connectionStatusChanged);
-    connect(m_channelCom1.get(), &IVoiceChannel::audioStarted,                         this, &Client::audioStartedStream);
-    connect(m_channelCom1.get(), &IVoiceChannel::audioStopped,                         this, &Client::audioStoppedStream);
-    connect(m_channelCom1.get(), &IVoiceChannel::userJoinedRoom,                       this, &Client::userJoinedRoom);
-    connect(m_channelCom1.get(), &IVoiceChannel::userLeftRoom,                         this, &Client::userLeftRoom);
+    connect(m_channelCom1.data(), &IVoiceChannel::connectionStatusChanged,              this, &Client::connectionStatusChanged);
+    connect(m_channelCom1.data(), &IVoiceChannel::audioStarted,                         this, &Client::audioStartedStream);
+    connect(m_channelCom1.data(), &IVoiceChannel::audioStopped,                         this, &Client::audioStoppedStream);
+    connect(m_channelCom1.data(), &IVoiceChannel::userJoinedRoom,                       this, &Client::userJoinedRoom);
+    connect(m_channelCom1.data(), &IVoiceChannel::userLeftRoom,                         this, &Client::userLeftRoom);
 
     using namespace std::placeholders;
     m_commands["help"]              = std::bind(&Client::help, this, _1);
@@ -167,7 +171,7 @@ void Client::enableLoopbackCmd(QTextStream &/*args*/)
 {
     m_stdout << endl;
     m_stdout << "Enabling audio loopback." << endl;
-    m_voice->enableAudioLoopback(m_inputDevice.get(), m_outputDevice.get());
+    m_audioMixer->makeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputOutputDevice1);
     printLinePrefix();
 }
 
@@ -175,7 +179,7 @@ void Client::disableLoopbackCmd(QTextStream &/*args*/)
 {
     m_stdout << endl;
     m_stdout << "Disabling audio loopback." << endl;
-    m_voice->enableAudioLoopback(m_inputDevice.get(), nullptr);
+    m_audioMixer->removeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputOutputDevice1);
     printLinePrefix();
 }
 
