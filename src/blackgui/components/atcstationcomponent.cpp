@@ -255,7 +255,7 @@ namespace BlackGui
         {
             if (unit != CComSystem::Com1 && unit != CComSystem::Com2) { return; }
             if (!CComSystem::isValidComFrequency(frequency)) { return; }
-            this->getIContextOwnAircraft()->updateComFrequency(frequency, static_cast<int>(unit), originator());
+            this->getIContextOwnAircraft()->updateActiveComFrequency(frequency, static_cast<int>(unit), originator());
         }
 
         void CAtcStationComponent::updateTreeView()

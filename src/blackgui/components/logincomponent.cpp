@@ -183,8 +183,8 @@ namespace BlackGui
                 ownAircraft.setCallsign(aircraftValues.ownCallsign);
 
                 // set latest ICAO, callsign
-                this->getIContextOwnAircraft()->updateIcaoData(ownAircraft.getIcaoInfo(), loginOriginator());
-                this->getIContextOwnAircraft()->updateCallsign(ownAircraft.getCallsign(), loginOriginator());
+                this->getIContextOwnAircraft()->updateIcaoData(ownAircraft.getIcaoInfo());
+                this->getIContextOwnAircraft()->updateCallsign(ownAircraft.getCallsign());
 
                 // Login mode
                 INetwork::LoginMode mode = ui->gbp_LoginMode->getLoginMode();
@@ -214,7 +214,7 @@ namespace BlackGui
                     currentServer = this->getCurrentOtherServer();
                 }
                 this->ui->frp_CurrentServer->setServer(currentServer);
-                this->getIContextOwnAircraft()->updatePilot(currentServer.getUser(), loginOriginator());
+                this->getIContextOwnAircraft()->updatePilot(currentServer.getUser());
 
                 // Login
                 msg = this->getIContextNetwork()->connectToNetwork(currentServer, static_cast<uint>(mode));
@@ -338,7 +338,7 @@ namespace BlackGui
             bool simConnected = this->getIContextSimulator() && this->getIContextSimulator()->isSimulating();
             if (simConnected)
             {
-                CAircraftModel model = this->getIContextSimulator()->getOwnAircraftModel();
+                CAircraftModel model = this->getIContextOwnAircraft()->getOwnAircraft().getModel();
                 this->ui->le_SimulatorModel->setText(model.getModelString());
                 this->setIcaoValuesIfEmpty(model.getIcao());
 
@@ -435,14 +435,6 @@ namespace BlackGui
                 this->m_logoffCountdownTimer->stop();
                 this->ps_toggleNetworkConnection();
             }
-        }
-
-        const QString &CLoginComponent::loginOriginator()
-        {
-            // string is generated once, the timestamp allows to use multiple
-            // components (as long as they are not generated at the same ms)
-            static const QString o = QString("LOGINCOMCOMPONENT:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
-            return o;
         }
 
     } // namespace

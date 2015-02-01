@@ -1,17 +1,29 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2015
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 #include "client.h"
 #include "blackcore/network_vatlib.h"
+#include "blackmisc/simulation/simdirectaccessownaircraft.h"
 #include <iostream>
 #include <QStringList>
 
+using namespace BlackCore;
+using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Geo;
+
 Client::Client(QObject *parent)
-    : QObject(parent), m_net(new BlackCore::CNetworkVatlib(this))
+    : QObject(parent), COwnAircraftProviderSupport(COwnAircraftProviderDummy::instance()),
+      m_net(new BlackCore::CNetworkVatlib(COwnAircraftProviderDummy::instance(), this))
 {
-    using namespace BlackCore;
+
     connect(m_net, &INetwork::atcPositionUpdate,                this, &Client::atcPositionUpdate);
     connect(m_net, &INetwork::atcDisconnected,                  this, &Client::atcDisconnected);
     connect(m_net, &INetwork::connectionStatusChanged,          this, &Client::connectionStatusChanged);
@@ -48,10 +60,7 @@ Client::Client(QObject *parent)
     connect(this, &Client::sendRealNameQuery,                   m_net, &INetwork::sendRealNameQuery);
     connect(this, &Client::sendCapabilitiesQuery,               m_net, &INetwork::sendCapabilitiesQuery);
     connect(this, &Client::sendIcaoCodesQuery,                  m_net, &INetwork::sendIcaoCodesQuery);
-    connect(this, &Client::setOwnAircraft,                      m_net, &INetwork::setOwnAircraft);
-    connect(this, &Client::setOwnAircraftPosition,              m_net, &INetwork::setOwnAircraftPosition);
-    connect(this, &Client::setOwnAircraftSituation,             m_net, &INetwork::setOwnAircraftSituation);
-    connect(this, &Client::setOwnAircraftCockpit,               m_net, &INetwork::setOwnCockpit);
+    connect(this, &Client::setOwnAircraftCockpit,               COwnAircraftProviderDummy::instance(), &COwnAircraftProviderDummy::updateCockpit);
     connect(this, &Client::sendPing,                            m_net, &INetwork::sendPing);
     connect(this, &Client::sendMetarQuery,                      m_net, &INetwork::sendMetarQuery);
     connect(this, &Client::sendWeatherDataQuery,                m_net, &INetwork::sendWeatherDataQuery);
@@ -323,7 +332,8 @@ void Client::setOwnAircraftCmd(QTextStream &args)
     aircraft.setCom1System(BlackMisc::Aviation::CComSystem("COM1", BlackMisc::PhysicalQuantities::CFrequency(com1, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())));
     aircraft.setCom2System(BlackMisc::Aviation::CComSystem("COM2", BlackMisc::PhysicalQuantities::CFrequency(com2, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())));
     aircraft.setTransponder(BlackMisc::Aviation::CTransponder("Transponder", xpdrCode, xpdrMode));
-    emit setOwnAircraft(aircraft);
+
+    ownAircraft().setAircraft(aircraft);
 }
 
 void Client::setOwnAircraftPositionCmd(QTextStream &args)
@@ -332,8 +342,8 @@ void Client::setOwnAircraftPositionCmd(QTextStream &args)
     double lon;
     double alt;
     args >> lat >> lon >> alt;
-    emit setOwnAircraftPosition(BlackMisc::Geo::CCoordinateGeodetic(lat, lon, 0),
-                                BlackMisc::Aviation::CAltitude(alt, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()));
+    ownAircraft().setPosition(CCoordinateGeodetic(lat, lon, 0));
+    ownAircraft().setAltitude(CAltitude(alt, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
 }
 
 void Client::setOwnAircraftSituationCmd(QTextStream &args)
@@ -346,14 +356,14 @@ void Client::setOwnAircraftSituationCmd(QTextStream &args)
     double bank;
     double gs;
     args >> lat >> lon >> alt >> hdg >> pitch >> bank >> gs;
-    emit setOwnAircraftSituation(BlackMisc::Aviation::CAircraftSituation(
-                                     BlackMisc::Geo::CCoordinateGeodetic(lat, lon, 0),
-                                     BlackMisc::Aviation::CAltitude(alt, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()),
-                                     BlackMisc::Aviation::CHeading(hdg, BlackMisc::Aviation::CHeading::True, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
-                                     BlackMisc::PhysicalQuantities::CAngle(pitch, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
-                                     BlackMisc::PhysicalQuantities::CAngle(bank, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
-                                     BlackMisc::PhysicalQuantities::CSpeed(gs, BlackMisc::PhysicalQuantities::CSpeedUnit::kts())
-                                 ));
+    ownAircraft().setSituation(BlackMisc::Aviation::CAircraftSituation(
+                                   BlackMisc::Geo::CCoordinateGeodetic(lat, lon, 0),
+                                   BlackMisc::Aviation::CAltitude(alt, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()),
+                                   BlackMisc::Aviation::CHeading(hdg, BlackMisc::Aviation::CHeading::True, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+                                   BlackMisc::PhysicalQuantities::CAngle(pitch, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+                                   BlackMisc::PhysicalQuantities::CAngle(bank, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+                                   BlackMisc::PhysicalQuantities::CSpeed(gs, BlackMisc::PhysicalQuantities::CSpeedUnit::kts())
+                               ));
 }
 
 void Client::setOwnAircraftCockpitCmd(QTextStream &args)
@@ -366,7 +376,8 @@ void Client::setOwnAircraftCockpitCmd(QTextStream &args)
     emit setOwnAircraftCockpit(
         BlackMisc::Aviation::CComSystem("COM1", BlackMisc::PhysicalQuantities::CFrequency(com1, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())),
         BlackMisc::Aviation::CComSystem("COM2", BlackMisc::PhysicalQuantities::CFrequency(com2, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())),
-        BlackMisc::Aviation::CTransponder("Transponder", xpdrCode, xpdrMode)
+        BlackMisc::Aviation::CTransponder("Transponder", xpdrCode, xpdrMode),
+        "testclient"
     );
 }
 

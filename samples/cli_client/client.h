@@ -1,18 +1,25 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
-#ifndef __BLACKSAMPLE_CLI_CLIENT_H__
-#define __BLACKSAMPLE_CLI_CLIENT_H__
+//! \file
+
+#ifndef BLACKSAMPLE_CLI_CLIENT_H
+#define BLACKSAMPLE_CLI_CLIENT_H
 
 #include "blackcore/network.h"
+#include "blackmisc/simulation/simdirectaccessownaircraft.h"
 #include <QObject>
 #include <QTextStream>
 #include <QMap>
 #include <functional>
 
-class Client : public QObject
+class Client : public QObject, BlackMisc::Simulation::COwnAircraftProviderSupport
 {
     Q_OBJECT
 
@@ -76,11 +83,8 @@ signals: //to send to INetwork
     void sendRealNameQuery(const BlackMisc::Aviation::CCallsign &callsign);
     void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign);
     void sendIcaoCodesQuery(const BlackMisc::Aviation::CCallsign &callsign);
-    void setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
-    void setOwnAircraftPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude);
-    void setOwnAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
     void setOwnAircraftCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2,
-        const BlackMisc::Aviation::CTransponder &xpdr);
+                               const BlackMisc::Aviation::CTransponder &xpdr, const QString &originator);
     void sendPing(const BlackMisc::Aviation::CCallsign &callsign);
     void sendMetarQuery(const QString &airportICAO);
     void sendWeatherDataQuery(const QString &airportICAO);
@@ -112,4 +116,4 @@ private:
     BlackCore::INetwork *m_net;
 };
 
-#endif //__BLACKSAMPLE_CLI_CLIENT_H__
+#endif // guard

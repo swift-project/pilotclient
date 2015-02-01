@@ -139,9 +139,6 @@ namespace BlackGui
             //! Set ICAO values if fields are empty
             void setIcaoValuesIfEmpty(const BlackMisc::Aviation::CAircraftIcao &icao);
 
-            //! Identifies sender of cockpit updates
-            static const QString &loginOriginator();
-
             bool m_visible = false; //!< is this component selected?
             QScopedPointer<Ui::CLoginComponent> ui;
             const int LogoffIntervalSeconds = 10;
