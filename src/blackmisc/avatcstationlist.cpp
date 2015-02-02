@@ -17,21 +17,12 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        /*
-         * Empty constructor
-         */
         CAtcStationList::CAtcStationList() { }
 
-        /*
-         * Construct from base class object
-         */
         CAtcStationList::CAtcStationList(const CSequence<CAtcStation> &other) :
             CSequence<CAtcStation>(other)
         { }
 
-        /*
-         * Register metadata
-         */
         void CAtcStationList::registerMetadata()
         {
             qRegisterMetaType<BlackMisc::CSequence<CAtcStation>>();
@@ -43,9 +34,6 @@ namespace BlackMisc
             registerMetaValueType<CAtcStationList>();
         }
 
-        /*
-         * Find if on frequency of COM unit
-         */
         CAtcStationList CAtcStationList::findIfComUnitTunedIn25KHz(const CComSystem &comUnit) const
         {
             return this->findBy([&](const CAtcStation & atcStation)
@@ -54,17 +42,16 @@ namespace BlackMisc
             });
         }
 
-        /*
-         * All controllers
-         */
+        CAtcStationList CAtcStationList::stationsWithValidVoiceRoom() const
+        {
+            return this->findBy(&CAtcStation::hasValidVoiceRoom, true);
+        }
+
         CUserList CAtcStationList::getControllers() const
         {
             return this->findBy(Predicates::MemberValid(&CAtcStation::getController)).transform(Predicates::MemberTransform(&CAtcStation::getController));
         }
 
-        /*
-         * Merge with booking, both (online/booking will be updated)
-         */
         int CAtcStationList::mergeWithBooking(CAtcStation &bookedAtcStation)
         {
             int c = 0;
@@ -150,9 +137,6 @@ namespace BlackMisc
             return c;
         }
 
-        /*
-         * Merge with VATSIM data file
-         */
         bool CAtcStationList::updateFromVatsimDataFileStation(CAtcStation &stationToBeUpdated) const
         {
             if (this->isEmpty()) return false;

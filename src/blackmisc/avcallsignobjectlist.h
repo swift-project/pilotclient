@@ -51,6 +51,9 @@ namespace BlackMisc
             //! All with given suffix, empty suffixes ignored
             CONTAINER findBySuffix(const QString &suffix) const;
 
+            //! Remove all objects with callsign
+            int removeByCallsign(const CCallsign &callsign);
+
             //! All suffixes with their respective count
             QMap<QString, int> getSuffixes() const;
 

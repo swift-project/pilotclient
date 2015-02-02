@@ -41,21 +41,5 @@ namespace BlackMisc
             registerMetaValueType<CClientList>();
         }
 
-        /*
-         * Find by callsign
-         */
-        CClientList CClientList::findByCallsign(const CCallsign &callsign) const
-        {
-            return findBy(&CClient::getCallsign, callsign);
-        }
-
-        /*
-         * Find by callsign
-         */
-        CClient CClientList::findFirstByCallsign(const CCallsign &callsign, const CClient &ifNotFound) const
-        {
-            return this->findByCallsign(callsign).frontOrDefault(ifNotFound);
-        }
-
     } // namespace
 } // namespace

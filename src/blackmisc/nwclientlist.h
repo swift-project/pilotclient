@@ -15,7 +15,9 @@
 #include "nwclient.h"
 #include "sequence.h"
 #include "collection.h"
+#include "blackmisc/avcallsignobjectlist.h"
 #include "blackmisc/avcallsign.h"
+
 #include <QObject>
 #include <QString>
 #include <QList>
@@ -25,7 +27,9 @@ namespace BlackMisc
     namespace Network
     {
         //! Value object encapsulating a list of voice rooms.
-        class CClientList : public CSequence<CClient>
+        class CClientList :
+            public CSequence<CClient>,
+            public BlackMisc::Aviation::ICallsignObjectList<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>
         {
         public:
             //! Default constructor.
@@ -40,11 +44,12 @@ namespace BlackMisc
             //! Register metadata
             static void registerMetadata();
 
-            //! Find by callsign
-            CClientList findByCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+        protected:
+            //! Myself
+            virtual const CClientList &getContainer() const { return *this; }
 
-            //! First by callsign
-            CClient findFirstByCallsign(const BlackMisc::Aviation::CCallsign &callsign, const CClient &ifNotFound = CClient()) const;
+            //! Myself
+            virtual CClientList &getContainer() { return *this; }
         };
 
     } //namespace

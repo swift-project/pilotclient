@@ -42,6 +42,10 @@ namespace BlackMisc
             //! Find 0..n stations tune in frequency of COM unit (with 25kHt channel spacing
             CAtcStationList findIfComUnitTunedIn25KHz(const BlackMisc::Aviation::CComSystem &comUnit) const;
 
+            //! Find 0..n stations with valid voice room
+            //! \sa CAtcStation::hasValid
+            CAtcStationList stationsWithValidVoiceRoom() const;
+
             //! All controllers (with valid data)
             BlackMisc::Network::CUserList getControllers() const;
 
