@@ -14,6 +14,7 @@
 
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/avcallsignobjectlist.h"
+#include "blackmisc/avaircraftlist.h"
 #include "blackmisc/geoobjectlist.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/collection.h"
@@ -47,6 +48,9 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::convertFromQVariant
             virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+
+            //! To aircraft list
+            BlackMisc::Aviation::CAircraftList toAircraftList() const;
 
             //! Register metadata
             static void registerMetadata();

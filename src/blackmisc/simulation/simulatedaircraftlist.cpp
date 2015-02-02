@@ -55,5 +55,15 @@ namespace BlackMisc
             return this->findBy(Predicates::MemberValid(&CSimulatedAircraft::getPilot)).transform(Predicates::MemberTransform(&CSimulatedAircraft::getPilot));
         }
 
+        CAircraftList CSimulatedAircraftList::toAircraftList() const
+        {
+            CAircraftList al;
+            for (const CSimulatedAircraft &aircraft : (*this))
+            {
+                al.push_back(aircraft);
+            }
+            return al;
+        }
+
     } // namespace
 } // namespace
