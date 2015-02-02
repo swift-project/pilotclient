@@ -61,6 +61,9 @@ namespace BlackMisc
         //! Add a value as non CVariant
         template<class T> void addValue(const CPropertyIndex &index, const T &value) { this->m_values.insert(index, CVariant::fromValue(value)); }
 
+        //! Prepend index to all property indexes
+        void prependIndex(int index);
+
         //! Is empty?
         bool isEmpty() const { return this->m_values.isEmpty(); }
 

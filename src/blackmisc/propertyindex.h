@@ -90,6 +90,9 @@ namespace BlackMisc
         //! Index list
         QList<int> indexList() const;
 
+        //! Shif existing indexes to right and insert given index at front
+        void prepend(int newLeftIndex);
+
         //! First element casted to given type, usually then PropertIndex enum
         template<class CastType> CastType frontCasted() const
         {

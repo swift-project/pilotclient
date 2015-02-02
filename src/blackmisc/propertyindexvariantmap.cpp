@@ -138,6 +138,18 @@ namespace BlackMisc
         this->addValue(index, QString(str));
     }
 
+    void CPropertyIndexVariantMap::prependIndex(int index)
+    {
+        QMap<CPropertyIndex, CVariant> newMap;
+        for (const CPropertyIndex &pi : this->indexes())
+        {
+            CPropertyIndex newPi(pi);
+            newPi.prepend(index);
+            newMap.insert(newPi, this->m_values[pi]);
+        }
+        this->m_values = newMap;
+    }
+
     /*
      * Indexes
      */

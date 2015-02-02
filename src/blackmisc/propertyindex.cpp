@@ -114,4 +114,11 @@ namespace BlackMisc
         return list;
     }
 
+    void CPropertyIndex::prepend(int newLeftIndex)
+    {
+        QList<int> newList = indexList();
+        newList.prepend(newLeftIndex);
+        this->setIndexStringByList(newList);
+    }
+
 } // namespace
