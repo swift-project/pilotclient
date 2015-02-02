@@ -14,7 +14,7 @@
 
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/avatcstationlist.h"
-#include "blackmisc/avaircraftlist.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/avaircraftsituationlist.h"
 #include "blackmisc/nwclientlist.h"
 #include "blackmisc/avflightplan.h"
@@ -32,7 +32,9 @@ namespace BlackCore
     /*!
      * Keeps track of other entities in the airspace: aircraft, ATC stations, etc.
      */
-    class CAirspaceMonitor : public QObject, BlackMisc::Simulation::COwnAircraftProviderSupportReadOnly
+    class CAirspaceMonitor :
+        public QObject,
+        public BlackMisc::Simulation::COwnAircraftProviderSupportReadOnly
     {
         Q_OBJECT
 
@@ -51,7 +53,7 @@ namespace BlackCore
         BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Returns this list of other clients we know about
-        BlackMisc::Network::CClientList getOtherClients() const { return m_otherClients; }
+        BlackMisc::Network::CClientList getOtherClients() const;
 
         //! Returns a list of other clients corresponding to the given callsigns
         BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const;
@@ -66,7 +68,7 @@ namespace BlackCore
         BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const { return m_atcStationsBooked; }
 
         //! Returns the current aircraft in range
-        BlackMisc::Aviation::CAircraftList getAircraftInRange() const { return m_aircraftInRange; }
+        BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const { return m_aircraftInRange; }
 
         //! Returns the closest ATC station operating on the given frequency, if any
         BlackMisc::Aviation::CAtcStation getAtcStationForComUnit(const BlackMisc::Aviation::CComSystem &comSystem);
@@ -115,10 +117,9 @@ namespace BlackCore
     private:
         BlackMisc::Aviation::CAtcStationList m_atcStationsOnline;
         BlackMisc::Aviation::CAtcStationList m_atcStationsBooked;
-        BlackMisc::Aviation::CAircraftList   m_aircraftInRange;
-        BlackMisc::Aviation::CAircraftSituationList m_aircraftSituations;
         BlackMisc::Network::CClientList      m_otherClients;
-
+        BlackMisc::Simulation::CSimulatedAircraftList  m_aircraftInRange;
+        BlackMisc::Aviation::CAircraftSituationList    m_aircraftSituations;
 
         QMap<BlackMisc::Aviation::CAirportIcao, BlackMisc::Aviation::CInformationMessage> m_metarCache;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan>            m_flightPlanCache;
@@ -135,16 +136,13 @@ namespace BlackCore
         void sendFsipirCustomPacket(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;
         QStringList createFsipiCustomPacketData() const;
 
-        //! Helper method, add voice capabilites if available
-        void addVoiceCapabilitiesFromDataFile(BlackMisc::CPropertyIndexVariantMap &vm, const BlackMisc::Aviation::CCallsign &callsign);
-
         //! Remove ATC online stations
         void removeAllOnlineAtcStations();
 
         //! Remove all aircraft in range
         void removeAllAircraft();
 
-        //! Remove all clients
+        //! Remove all other clients
         void removeAllOtherClients();
 
         //! Remove data from caches
