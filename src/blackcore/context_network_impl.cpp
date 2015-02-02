@@ -36,10 +36,6 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {
-
-    /*
-     * Init this context
-     */
     CContextNetwork::CContextNetwork(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
         IContextNetwork(mode, runtime)
     {
@@ -89,17 +85,11 @@ namespace BlackCore
         // connect(this->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this->m_airspace, &CAirspaceMonitor::setOwnAircraftModel);
     }
 
-    /*
-     * Cleanup
-     */
     CContextNetwork::~CContextNetwork()
     {
         this->gracefulShutdown();
     }
 
-    /*
-     * Stop, going down
-     */
     void CContextNetwork::gracefulShutdown()
     {
         if (this->m_vatsimBookingReader)  { this->m_vatsimBookingReader->quit(); }
@@ -107,9 +97,6 @@ namespace BlackCore
         if (this->isConnected()) { this->disconnectFromNetwork(); }
     }
 
-    /*
-     * Connect to network
-     */
     CStatusMessage CContextNetwork::connectToNetwork(const CServer &server, uint loginMode)
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
@@ -149,9 +136,6 @@ namespace BlackCore
         }
     }
 
-    /*
-     * Disconnect from network
-     */
     CStatusMessage CContextNetwork::disconnectFromNetwork()
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
@@ -172,18 +156,12 @@ namespace BlackCore
         }
     }
 
-    /*
-     * Connected
-     */
     bool CContextNetwork::isConnected() const
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         return this->m_network->isConnected();
     }
 
-    /*
-     * Pending connection
-     */
     bool CContextNetwork::isPendingConnection() const
     {
         // if underlying class says pending, we believe it. But not all states (e.g. disconnecting) are covered
@@ -193,27 +171,18 @@ namespace BlackCore
         return INetwork::isPendingStatus(this->m_currentStatus);
     }
 
-    /*
-     * Command line entered
-     */
     bool CContextNetwork::parseCommandLine(const QString &commandLine)
     {
         Q_UNUSED(commandLine);
         return false;
     }
 
-    /*
-     * Send text messages
-     */
     void CContextNetwork::sendTextMessages(const CTextMessageList &textMessages)
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << textMessages;
         this->m_network->sendTextMessages(textMessages);
     }
 
-    /*
-     * Flight plan
-     */
     void CContextNetwork::sendFlightPlan(const CFlightPlan &flightPlan)
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << flightPlan;
@@ -227,17 +196,11 @@ namespace BlackCore
         return this->m_airspace->loadFlightPlanFromNetwork(callsign);
     }
 
-    /*
-     * All users
-     */
     CUserList CContextNetwork::getUsers() const
     {
         return this->m_airspace->getUsers();
     }
 
-    /*
-     * Users with callsigns
-     */
     CUserList CContextNetwork::getUsersForCallsigns(const CCallsignList &callsigns) const
     {
         CUserList users;
@@ -245,9 +208,6 @@ namespace BlackCore
         return this->m_airspace->getUsersForCallsigns(callsigns);
     }
 
-    /*
-     * User for callsign
-     */
     CUser CContextNetwork::getUserForCallsign(const CCallsign &callsign) const
     {
         CCallsignList callsigns;
@@ -257,25 +217,16 @@ namespace BlackCore
         return users[0];
     }
 
-    /*
-     * Other clients
-     */
     CClientList CContextNetwork::getOtherClients() const
     {
         return this->m_airspace->getOtherClients();
     }
 
-    /*
-     * Other clients for callsign
-     */
     CClientList CContextNetwork::getOtherClientsForCallsigns(const CCallsignList &callsigns) const
     {
         return this->m_airspace->getOtherClientsForCallsigns(callsigns);
     }
 
-    /*
-     * VATSIM FSD servers
-     */
     CServerList CContextNetwork::getVatsimFsdServers() const
     {
         Q_ASSERT(this->m_vatsimDataFileReader);
@@ -283,9 +234,6 @@ namespace BlackCore
         return this->m_vatsimDataFileReader->getFsdServers();
     }
 
-    /*
-     * VATSIM Voice servers
-     */
     CServerList CContextNetwork::getVatsimVoiceServers() const
     {
         Q_ASSERT(this->m_vatsimDataFileReader);
@@ -293,9 +241,6 @@ namespace BlackCore
         return this->m_vatsimDataFileReader->getVoiceServers();
     }
 
-    /*
-     * Connection status changed
-     */
     void CContextNetwork::ps_fsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << from << to;
@@ -329,9 +274,6 @@ namespace BlackCore
         emit this->connectionStatusChanged(from, to);
     }
 
-    /*
-     * Data file (VATSIM) has been read
-     */
     void CContextNetwork::ps_dataFileRead()
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
@@ -339,9 +281,6 @@ namespace BlackCore
         emit vatsimDataFileRead();
     }
 
-    /*
-     * Radio text message received
-     */
     void CContextNetwork::ps_fsdTextMessageReceived(const CTextMessageList &messages)
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << messages;
@@ -355,18 +294,12 @@ namespace BlackCore
         return this->getRuntime()->getCContextOwnAircraft()->ownAircraft();
     }
 
-    /*
-     *  Reload bookings
-     */
     void CContextNetwork::readAtcBookingsFromSource() const
     {
         Q_ASSERT(this->m_vatsimBookingReader);
         this->m_vatsimBookingReader->read();
     }
 
-    /*
-     * Updated bookings
-     */
     void CContextNetwork::ps_receivedBookings(const CAtcStationList &)
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
@@ -374,9 +307,6 @@ namespace BlackCore
         emit vatsimBookingsRead();
     }
 
-    /*
-     * Update data
-     */
     void CContextNetwork::requestDataUpdates()
     {
         Q_ASSERT(this->m_network);
@@ -386,9 +316,6 @@ namespace BlackCore
         this->m_airspace->requestDataUpdates();
     }
 
-    /*
-     * Request new ATIS data
-     */
     void CContextNetwork::requestAtisUpdates()
     {
         Q_ASSERT(this->m_network);
@@ -397,26 +324,17 @@ namespace BlackCore
         this->m_airspace->requestAtisUpdates();
     }
 
-    /*
-     * Create dummy ATC stations
-     */
     void CContextNetwork::testCreateDummyOnlineAtcStations(int number)
     {
         this->m_airspace->testCreateDummyOnlineAtcStations(number);
     }
 
-    /*
-     * Request METAR
-     */
     BlackMisc::Aviation::CInformationMessage CContextNetwork::getMetar(const BlackMisc::Aviation::CAirportIcao &airportIcaoCode)
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << airportIcaoCode;
         return m_airspace->getMetar(airportIcaoCode);
     }
 
-    /*
-     * Selected voice rooms
-     */
     CAtcStationList CContextNetwork::getSelectedAtcStations() const
     {
         CAtcStation com1Station = this->m_airspace->getAtcStationForComUnit(this->ownAircraft().getCom1System());
@@ -428,9 +346,6 @@ namespace BlackCore
         return selectedStations;
     }
 
-    /*
-     * Selected voice rooms
-     */
     CVoiceRoomList CContextNetwork::getSelectedVoiceRooms() const
     {
         CAtcStationList stations = this->getSelectedAtcStations();

@@ -54,10 +54,10 @@ namespace BlackCore
         }
 
         //! \copydoc IContextNetwork::getAircraftInRange()
-        virtual BlackMisc::Aviation::CAircraftList getAircraftInRange() const override
+        virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Aviation::CAircraftList();
+            return BlackMisc::Simulation::CSimulatedAircraftList();
         }
 
         //! \copydoc IContextNetwork::connectToNetwork

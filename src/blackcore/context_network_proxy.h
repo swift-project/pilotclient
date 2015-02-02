@@ -63,7 +63,7 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override;
 
         //! \copydoc IContextNetwork::getAircraftInRange()
-        virtual BlackMisc::Aviation::CAircraftList getAircraftInRange() const override;
+        virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;
 
         //! \copydoc IContextNetwork::connectToNetwork
         virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, uint mode) override;

@@ -14,7 +14,7 @@
 
 #include "blackcore/context.h"
 #include "blackmisc/avatcstationlist.h"
-#include "blackmisc/avaircraftlist.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/nwtextmessagelist.h"
@@ -131,7 +131,7 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const = 0 ;
 
         //! Aircraft list
-        virtual BlackMisc::Aviation::CAircraftList getAircraftInRange() const = 0;
+        virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const = 0;
 
         //! Get all users
         virtual BlackMisc::Network::CUserList getUsers() const = 0;

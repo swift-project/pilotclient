@@ -90,9 +90,9 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1Literal("getAtcStationsBooked"));
     }
 
-    BlackMisc::Aviation::CAircraftList CContextNetworkProxy::getAircraftInRange() const
+    Simulation::CSimulatedAircraftList CContextNetworkProxy::getAircraftInRange() const
     {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAircraftList>(QLatin1Literal("getAircraftInRange"));
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraftList>(QLatin1Literal("getAircraftInRange"));
     }
 
     BlackMisc::Network::CUserList CContextNetworkProxy::getUsers() const

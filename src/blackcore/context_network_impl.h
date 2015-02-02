@@ -66,7 +66,7 @@ namespace BlackCore
         }
 
         //! \copydoc IContextNetwork::getAircraftInRange()
-        virtual BlackMisc::Aviation::CAircraftList getAircraftInRange() const override
+        virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override
         {
             BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
             return this->m_airspace->getAircraftInRange();
@@ -159,6 +159,7 @@ namespace BlackCore
         BlackCore::INetwork *m_network  = nullptr;
         INetwork::ConnectionStatus m_currentStatus = INetwork::Disconnected; //!< used to detect pending connections
 
+        // Digest signals, only sending after some time
         BlackMisc::CDigestSignal m_dsAtcStationsBookedChanged { this, &IContextNetwork::changedAtcStationsBooked, &IContextNetwork::changedAtcStationsBookedDigest, 750, 2 };
         BlackMisc::CDigestSignal m_dsAtcStationsOnlineChanged { this, &IContextNetwork::changedAtcStationsOnline, &IContextNetwork::changedAtcStationsOnlineDigest, 750, 4 };
         BlackMisc::CDigestSignal m_dsAircraftsInRangeChanged  { this, &IContextNetwork::changedAircraftInRange, &IContextNetwork::changedAircraftInRangeDigest, 750, 4 };
@@ -176,7 +177,7 @@ namespace BlackCore
             return this->getRuntime()->getIContextSettings()->getNetworkSettings();
         }
 
-        //! Own aircraft
+        //! Own aircraft from \sa CContextOwnAircraft
         const BlackMisc::Aviation::CAircraft &ownAircraft() const;
 
     private slots:
