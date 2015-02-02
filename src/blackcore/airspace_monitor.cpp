@@ -26,8 +26,9 @@ using namespace BlackMisc::PhysicalQuantities;
 namespace BlackCore
 {
 
-    CAirspaceMonitor::CAirspaceMonitor(QObject *parent, const BlackMisc::Simulation::IOwnAircraftProviderReadOnly *ownAircraft, INetwork *network, CVatsimBookingReader *bookings, CVatsimDataFileReader *dataFile)
-        : QObject(parent), COwnAircraftProviderSupportReadOnly(ownAircraft), m_network(network), m_vatsimBookingReader(bookings), m_vatsimDataFileReader(dataFile),
+    CAirspaceMonitor::CAirspaceMonitor(QObject *parent, const BlackMisc::Simulation::IOwnAircraftProviderReadOnly *ownAircraftProvider, INetwork *network, CVatsimBookingReader *bookings, CVatsimDataFileReader *dataFile)
+        : QObject(parent), COwnAircraftProviderSupportReadOnly(ownAircraftProvider),
+          m_network(network), m_vatsimBookingReader(bookings), m_vatsimDataFileReader(dataFile),
           m_atcWatchdog(this), m_aircraftWatchdog(this)
     {
         this->connect(this->m_network, &INetwork::atcPositionUpdate, this, &CAirspaceMonitor::ps_atcPositionUpdate);
@@ -54,7 +55,29 @@ namespace BlackCore
         // ATC stations send updates every 25 s. Configure timeout after 50 s.
         this->m_atcWatchdog.setTimeout(CTime(50, CTimeUnit::s()));
         this->connect(&this->m_aircraftWatchdog, &CAirspaceWatchdog::timeout, this, &CAirspaceMonitor::ps_pilotDisconnected);
-        this->connect(&this->m_atcWatchdog, &CAirspaceWatchdog::timeout, this, &CAirspaceMonitor::ps_atcControllerDisconnected);
+        this->connect(&this->m_atcWatchdog,      &CAirspaceWatchdog::timeout, this, &CAirspaceMonitor::ps_atcControllerDisconnected);
+    }
+
+    bool CAirspaceMonitor::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRedering, const QString &originator)
+    {
+        CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexEnabled, CVariant::fromValue(enabledForRedering));
+        Q_UNUSED(originator);
+        int c = m_aircraftInRange.applyIfCallsign(callsign, vm);
+        return c > 0;
+    }
+
+    bool CAirspaceMonitor::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const QString &originator)
+    {
+        Q_UNUSED(originator);
+        CSimulatedAircraft aircraft = m_aircraftInRange.findFirstByCallsign(callsign);
+        if (!aircraft.hasValidCallsign()) { return false; }
+
+        CAircraftModel newModel(model);
+        aircraft.setModel(newModel); // this consolidates all common data such as callsign, ICAO ...
+
+        CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexModel, aircraft.getModel().toCVariant());
+        int c = m_aircraftInRange.applyIfCallsign(callsign, vm);
+        return c > 0;
     }
 
     CFlightPlan CAirspaceMonitor::loadFlightPlanFromNetwork(const CCallsign &callsign)
@@ -213,12 +236,6 @@ namespace BlackCore
         return station;
     }
 
-    CAircraftSituationList CAirspaceMonitor::getAircraftSituations(const CCallsign &callsign) const
-    {
-        if (callsign.isEmpty()) { return this->m_aircraftSituations; }
-        return this->m_aircraftSituations.findByCallsign(callsign);
-    }
-
     void CAirspaceMonitor::requestDataUpdates()
     {
         if (!this->m_network->isConnected()) return;
@@ -270,7 +287,7 @@ namespace BlackCore
     void CAirspaceMonitor::ps_realNameReplyReceived(const CCallsign &callsign, const QString &realname)
     {
         Q_ASSERT(this->m_vatsimDataFileReader);
-        if (realname.isEmpty()) return;
+        if (realname.isEmpty()) { return; }
         CPropertyIndexVariantMap vm({CAtcStation::IndexController, CUser::IndexRealName}, realname);
         this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
@@ -653,7 +670,7 @@ namespace BlackCore
         if (!exists)
         {
             // new aircraft
-            CAircraft aircraft;
+            CSimulatedAircraft aircraft;
             aircraft.setCallsign(callsign);
             aircraft.setSituation(situation);
             aircraft.setTransponder(transponder);
@@ -681,9 +698,9 @@ namespace BlackCore
                 this->m_otherClients.push_back(c); // initial, will be filled by data later
             }
 
+            // only if still connected
             if (this->m_network->isConnected())
             {
-                // only if still connected
                 // the order here makes some sense, as we hope to receive ICAO codes last, and everthing else already in place
                 this->sendFsipirCustomPacket(callsign); // own aircraft model
                 this->m_network->sendFrequencyQuery(callsign);
@@ -702,12 +719,12 @@ namespace BlackCore
                 }
 
                 this->m_aircraftWatchdog.addCallsign(callsign);
-                emit this->addedAircraft(callsign, situation);
+                emit this->addedAircraft(aircraft);
             } // connected
         }
-        else  // not exists yet
+        else
         {
-            // update
+            // update, aircraft already exists
             CLength distance = ownAircraft().calculateGreatCircleDistance(situation.getPosition());
             distance.switchUnit(CLengthUnit::NM());
             CPropertyIndexVariantMap vm;
@@ -718,7 +735,6 @@ namespace BlackCore
             // here I expect always a changed value
             this->m_aircraftInRange.applyIfCallsign(callsign, vm);
             this->m_aircraftWatchdog.resetCallsign(callsign);
-            emit this->changedAircraftSituation(callsign, situation);
         }
 
         emit this->changedAircraftInRange();

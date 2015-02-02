@@ -12,15 +12,15 @@
 #ifndef BLACKCORE_AIRSPACE_MONITOR_H
 #define BLACKCORE_AIRSPACE_MONITOR_H
 
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/avatcstationlist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/simulation/simdirectaccessownaircraft.h"
+#include "blackmisc/simulation/simdirectaccessrenderedaircraft.h"
+#include "blackmisc/avatcstationlist.h"
 #include "blackmisc/avaircraftsituationlist.h"
 #include "blackmisc/nwclientlist.h"
 #include "blackmisc/avflightplan.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/avcallsignlist.h"
-#include "blackmisc/simulation/simdirectaccessownaircraft.h"
 #include "network.h"
 #include "vatsimbookingreader.h"
 #include "vatsimdatafilereader.h"
@@ -34,13 +34,32 @@ namespace BlackCore
      */
     class CAirspaceMonitor :
         public QObject,
-        public BlackMisc::Simulation::COwnAircraftProviderSupportReadOnly
+        public BlackMisc::Simulation::COwnAircraftProviderSupportReadOnly,
+        public BlackMisc::Simulation::IRenderedAircraftProvider
     {
         Q_OBJECT
 
     public:
         //! Constructor
         CAirspaceMonitor(QObject *parent, const BlackMisc::Simulation::IOwnAircraftProviderReadOnly *ownAircraft, INetwork *network, CVatsimBookingReader *bookings, CVatsimDataFileReader *dataFile);
+
+        //! \copydoc IRenderedAircraftProviderReadOnly::renderedAircraft
+        virtual const BlackMisc::Simulation::CSimulatedAircraftList &renderedAircraft() const override { return m_aircraftInRange; }
+
+        //! \copydoc IRenderedAircraftProvider::renderedAircraft
+        virtual BlackMisc::Simulation::CSimulatedAircraftList &renderedAircraft() override { return m_aircraftInRange; }
+
+        //! \copydoc IRenderedAircraftProvider::renderedAircraftSituations
+        virtual const BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() const override { return m_aircraftSituations; }
+
+        //! \copydoc IRenderedAircraftProvider::renderedAircraftSituations
+        virtual BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() override { return m_aircraftSituations; }
+
+        //! \copydoc IRenderedAircraftProvider::updateAircraftEnabled
+        virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const QString &originator) override;
+
+        //! \copydoc IRenderedAircraftProvider::updateAircraftModel
+        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) override;
 
         //! Returns the list of users we know about
         BlackMisc::Network::CUserList getUsers() const;
@@ -67,14 +86,8 @@ namespace BlackCore
         //! Returns the current booked ATC stations
         BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const { return m_atcStationsBooked; }
 
-        //! Returns the current aircraft in range
-        BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const { return m_aircraftInRange; }
-
         //! Returns the closest ATC station operating on the given frequency, if any
         BlackMisc::Aviation::CAtcStation getAtcStationForComUnit(const BlackMisc::Aviation::CComSystem &comSystem);
-
-        //! Aircraft situations, empty callsign means all
-        BlackMisc::Aviation::CAircraftSituationList getAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign = {}) const;
 
         //! Request to update other clients' data from the network
         void requestDataUpdates();
@@ -99,16 +112,13 @@ namespace BlackCore
         void changedAircraftInRange();
 
         //! A new aircraft appeared
-        void addedAircraft(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation);
-
-        //! An aircraft's situation was changed
-        void changedAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation);
+        void addedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &renderedAircraft);
 
         //! An aircraft disappeared
         void removedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Read for model matching
-        void readyForModelMatching(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
+        void readyForModelMatching(const BlackMisc::Simulation::CSimulatedAircraft &renderedAircraft);
 
     public:
         //! Clear the contents
@@ -125,11 +135,11 @@ namespace BlackCore
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan>            m_flightPlanCache;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftIcao>          m_icaoCodeCache;
 
-        INetwork              *m_network = nullptr;
+        INetwork              *m_network               = nullptr;
         CVatsimBookingReader  *m_vatsimBookingReader   = nullptr;
         CVatsimDataFileReader *m_vatsimDataFileReader  = nullptr;
-        CAirspaceWatchdog m_atcWatchdog;
-        CAirspaceWatchdog m_aircraftWatchdog;
+        CAirspaceWatchdog      m_atcWatchdog;
+        CAirspaceWatchdog      m_aircraftWatchdog;
 
         // TODO FIXME (MS) should be in INetwork
         void sendFsipiCustomPacket(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;

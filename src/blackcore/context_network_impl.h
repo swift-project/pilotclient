@@ -69,7 +69,7 @@ namespace BlackCore
         virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override
         {
             BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-            return this->m_airspace->getAircraftInRange();
+            return this->m_airspace->renderedAircraft();
         }
 
         //! \copydoc IContextNetwork::connectToNetwork()
