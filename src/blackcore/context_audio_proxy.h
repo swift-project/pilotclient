@@ -87,6 +87,9 @@ namespace BlackCore
         //!\copydoc IContextAudio::setVolumes
         virtual void setVolumes(int com1Volume, int com2Volume) override;
 
+        //!\copydoc IContext::setVoiceOutputVolume
+        virtual void setVoiceOutputVolume(int volume) override;
+
         //! \copydoc IContextAudio::setMute
         virtual void setMute(bool muted) override;
 

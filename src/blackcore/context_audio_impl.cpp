@@ -242,6 +242,12 @@ namespace BlackCore
         emit changedAudioVolumes(com1Volume, com2Volume);
     }
 
+    void CContextAudio::setVoiceOutputVolume(int volume)
+    {
+        m_outDeviceVolume = volume;
+        if (!isMuted()) m_voiceOutputDevice->setOutputVolume(m_outDeviceVolume);
+    }
+
     void CContextAudio::setMute(bool muted)
     {
         if (this->isMuted() == muted) { return; } // avoid roundtrips / unnecessary signals

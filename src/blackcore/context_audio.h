@@ -149,6 +149,9 @@ namespace BlackCore
         //! Set the volumes (0..100)
         virtual void setVolumes(int volumeCom1, int volumeCom2) = 0;
 
+        //! Set voice output volume (0..300)
+        virtual void setVoiceOutputVolume(int volume) = 0;
+
         //! Set mute state
         virtual void setMute(bool mute) = 0;
 

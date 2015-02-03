@@ -197,6 +197,11 @@ namespace BlackCore
         this->m_dBusInterface->callDBus(QLatin1Literal("setVolumes"), com1Volume, com2Volume);
     }
 
+    void CContextAudioProxy::setVoiceOutputVolume(int volume)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("setVoiceOutputVolume"), volume);
+    }
+
     /*
      * Toggle mute
      */
