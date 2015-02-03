@@ -64,33 +64,17 @@ namespace BlackCore
     /*
      * COM1 callsigns
      */
-    BlackMisc::Aviation::CCallsignList CContextAudioProxy::getCom1RoomCallsigns() const
+    BlackMisc::Aviation::CCallsignList CContextAudioProxy::getRoomCallsigns(int comUnitValue) const
     {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CCallsignList>(QLatin1Literal("getCom1RoomCallsigns"));
-    }
-
-    /*
-     * COM2 callsigns
-     */
-    BlackMisc::Aviation::CCallsignList CContextAudioProxy::getCom2RoomCallsigns() const
-    {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CCallsignList>(QLatin1Literal("getCom2RoomCallsigns"));
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CCallsignList>(QLatin1Literal("getRoomCallsigns"), comUnitValue);
     }
 
     /*
      * COM1 users
      */
-    BlackMisc::Network::CUserList CContextAudioProxy::getCom1RoomUsers() const
+    BlackMisc::Network::CUserList CContextAudioProxy::getRoomUsers(int comUnitValue) const
     {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1Literal("getCom1RoomUsers"));
-    }
-
-    /*
-     * COM2 users
-     */
-    BlackMisc::Network::CUserList CContextAudioProxy::getCom2RoomUsers() const
-    {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1Literal("getCom2RoomUsers"));
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1Literal("getRoomUsers"), comUnitValue);
     }
 
     /*
@@ -136,17 +120,9 @@ namespace BlackCore
     /*
      * Voice room
      */
-    CVoiceRoom CContextAudioProxy::getCom1VoiceRoom(bool withAudioStatus) const
+    CVoiceRoom CContextAudioProxy::getVoiceRoom(int comUnitValue, bool withAudioStatus) const
     {
-        return this->m_dBusInterface->callDBusRet<CVoiceRoom>(QLatin1Literal("getCom1VoiceRoom"), withAudioStatus);
-    }
-
-    /*
-     * Voice room
-     */
-    CVoiceRoom CContextAudioProxy::getCom2VoiceRoom(bool withAudioStatus) const
-    {
-        return this->m_dBusInterface->callDBusRet<CVoiceRoom>(QLatin1Literal("getCom2VoiceRoom"), withAudioStatus);
+        return this->m_dBusInterface->callDBusRet<CVoiceRoom>(QLatin1Literal("getVoiceRoom"), comUnitValue, withAudioStatus);
     }
 
     /*

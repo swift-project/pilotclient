@@ -57,26 +57,17 @@ namespace BlackCore
         //! \copydoc IContextAudio::getComVoiceRoomsWithAudioStatus()
         virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const override;
 
-        //! \copydoc IContextAudio::getCom1VoiceRoom
-        virtual BlackMisc::Audio::CVoiceRoom getCom1VoiceRoom(bool withAudioStatus) const override;
-
-        //! \copydoc IContextAudio::getCom2VoiceRoom
-        virtual BlackMisc::Audio::CVoiceRoom getCom2VoiceRoom(bool withAudioStatus) const override;
+        //! \copydoc IContextAudio::getVoiceRoom
+        virtual BlackMisc::Audio::CVoiceRoom getVoiceRoom(int comUnitValue, bool withAudioStatus) const override;
 
         //! \copydoc IContextAudio::setComVoiceRooms()
         virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms) override;
 
-        //! \copydoc IContextAudio::getCom1RoomCallsigns()
-        virtual BlackMisc::Aviation::CCallsignList getCom1RoomCallsigns() const override;
+        //! \copydoc IContextAudio::getRoomCallsigns()
+        virtual BlackMisc::Aviation::CCallsignList getRoomCallsigns(int comUnitValue) const override;
 
-        //! \copydoc IContextAudio::getCom2RoomCallsigns()
-        virtual BlackMisc::Aviation::CCallsignList getCom2RoomCallsigns() const override;
-
-        //! \copydoc IContextAudio::getCom1RoomUsers()
-        virtual BlackMisc::Network::CUserList getCom1RoomUsers() const override;
-
-        //! \copydoc IContextAudio::getCom2RoomUsers()
-        virtual BlackMisc::Network::CUserList getCom2RoomUsers() const override;
+        //! \copydoc IContextAudio::getRoomUsers()
+        virtual BlackMisc::Network::CUserList getRoomUsers(int comUnitValue) const override;
 
         //! \copydoc IContextAudio::leaveAllVoiceRooms
         virtual void leaveAllVoiceRooms() override;

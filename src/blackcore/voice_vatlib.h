@@ -11,6 +11,7 @@
 
 #include <QString>
 #include <QScopedPointer>
+#include <QSharedPointer>
 
 #ifdef Q_OS_WIN
 #ifndef NOMINMAX
@@ -37,7 +38,7 @@ namespace BlackCore
         virtual ~CVoiceVatlib();
 
         //! \copydoc IVoice::createVoiceChannel()
-        virtual std::unique_ptr<IVoiceChannel> createVoiceChannel() override;
+        virtual QSharedPointer<IVoiceChannel> createVoiceChannel() override;
 
         //! \copydoc IVoice::createInputDevice()
         virtual std::unique_ptr<IAudioInputDevice> createInputDevice() override;

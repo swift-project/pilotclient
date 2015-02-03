@@ -65,7 +65,37 @@ namespace BlackCore
         VatVoiceChannel getVoiceChannel() const;
 
     private:
-        QSharedPointer<CVoiceChannelVatlibPrivate> d_ptr;
+
+        struct VatVoiceChannelDeleter
+        {
+            static inline void cleanup(VatProducerConsumer_tag *obj)
+            {
+                if (obj) Vat_DestroyVoiceChannel(obj);
+            }
+        };
+
+        BlackMisc::Aviation::CCallsign extractCallsign(const QString &name);
+
+        void userJoinedVoiceRoom(VatVoiceChannel, int id, const char *name);
+        void userLeftVoiceRoom(VatVoiceChannel, int id, const char *name);
+        void transmissionChanged(VatVoiceChannel, VatVoiceTransmissionStatus status);
+        void updateRoomStatus(VatVoiceChannel channel, VatConnectionStatus /** oldStatus **/, VatConnectionStatus newStatus);
+
+        static void processUserJoined(VatVoiceChannel channel, int id, const char *name, void *cbVar);
+        static void processUserLeft(VatVoiceChannel channel, int id, const char *name, void *cbVar);
+        static void processTransmissionChange(VatVoiceChannel channel, VatVoiceTransmissionStatus status, void *cbVar);
+
+        static void roomStatusUpdate(VatVoiceChannel channel, VatConnectionStatus oldStatus, VatConnectionStatus newStatus, void *cbVar);
+
+        BlackMisc::Aviation::CCallsign m_callsign; // Own callsign
+        BlackMisc::Audio::CVoiceRoom m_voiceRoom; // Voice Room
+        BlackMisc::Aviation::CCallsignList m_listCallsigns; // Callsigns connected to room
+        IVoiceChannel::ConnectionStatus m_roomStatus = IVoiceChannel::Disconnected; // Room connection status
+
+        VatAudioService m_audioService;
+        VatUDPAudioPort m_udpPort;
+
+        QScopedPointer<VatProducerConsumer_tag, VatVoiceChannelDeleter> m_voiceChannel;
     };
 }
 

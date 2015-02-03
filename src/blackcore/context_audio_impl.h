@@ -54,26 +54,17 @@ namespace BlackCore
         //! \copydoc IContextAudio::getComVoiceRoomsWithAudioStatus()
         virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const override;
 
-        //! \copydoc IContextAudio::getCom1VoiceRoom
-        virtual BlackMisc::Audio::CVoiceRoom getCom1VoiceRoom(bool withAudioStatus) const override;
-
-        //! \copydoc IContextAudio::getCom2VoiceRoom
-        virtual BlackMisc::Audio::CVoiceRoom getCom2VoiceRoom(bool withAudioStatus) const override;
+        //! \copydoc IContextAudio::getVoiceRoom
+        virtual BlackMisc::Audio::CVoiceRoom getVoiceRoom(int comUnitValue, bool withAudioStatus) const override;
 
         //! \copydoc IContextAudio::setComVoiceRooms
         virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &newRooms) override;
 
-        //! \copydoc IContextAudio::getCom1RoomCallsigns()
-        virtual BlackMisc::Aviation::CCallsignList getCom1RoomCallsigns() const override;
+        //! \copydoc IContextAudio::getRoomCallsigns()
+        virtual BlackMisc::Aviation::CCallsignList getRoomCallsigns(int comUnitValue) const override;
 
-        //! \copydoc IContextAudio::getCom2RoomCallsigns()
-        virtual BlackMisc::Aviation::CCallsignList getCom2RoomCallsigns() const override;
-
-        //! \copydoc IContextAudio::getCom1RoomUsers()
-        virtual BlackMisc::Network::CUserList getCom1RoomUsers() const override;
-
-        //! \copydoc IContextAudio::getCom2RoomUsers()
-        virtual BlackMisc::Network::CUserList getCom2RoomUsers() const override;
+        //! \copydoc IContextAudio::getRoomUsers()
+        virtual BlackMisc::Network::CUserList getRoomUsers(int comUnitValue) const override;
 
         //! \copydoc IContextAudio::leaveAllVoiceRooms
         virtual void leaveAllVoiceRooms() override;
@@ -149,11 +140,7 @@ namespace BlackCore
 
         //! \copydoc IVoice::connectionStatusChanged
         //! \sa IContextAudio::changedVoiceRooms
-        void ps_com1ConnectionStatusChanged(IVoiceChannel::ConnectionStatus oldStatus, IVoiceChannel::ConnectionStatus newStatus);
-
-        //! \copydoc IVoice::connectionStatusChanged
-        //! \sa IContextAudio::changedVoiceRooms
-        void ps_com2ConnectionStatusChanged(IVoiceChannel::ConnectionStatus oldStatus, IVoiceChannel::ConnectionStatus newStatus);
+        void ps_connectionStatusChanged(IVoiceChannel::ConnectionStatus oldStatus, IVoiceChannel::ConnectionStatus newStatus);
 
         //! Init notification sounds
         void ps_initNotificationSounds();
@@ -161,11 +148,14 @@ namespace BlackCore
         void ps_setVoiceTransmission(bool enable);
 
     private:
+
         const int MinUnmuteVolume = 20; //!< minimum volume when unmuted
         const int VoiceRoomEnabledVolume = 95; //!< voice room volume when enabled
 
         //! Connection in transition
         bool inTransitionState() const;
+
+        QSharedPointer<IVoiceChannel> getVoiceChannelBy(const BlackMisc::Audio::CVoiceRoom &voiceRoom);
 
         CInputManager *m_inputManager = nullptr;
         CInputManager::RegistrationHandle m_handlePtt;
@@ -174,12 +164,15 @@ namespace BlackCore
         std::unique_ptr<IAudioMixer> m_audioMixer;
 
         int m_outDeviceVolume = 100;
-        std::unique_ptr<IVoiceChannel> m_channelCom1;
-        std::unique_ptr<IVoiceChannel> m_channelCom2;
+
+        // For easy access.
+        QSharedPointer<IVoiceChannel> m_channel1;
+        QSharedPointer<IVoiceChannel> m_channel2;
         std::unique_ptr<IAudioOutputDevice> m_voiceOutputDevice;
         std::unique_ptr<IAudioInputDevice> m_voiceInputDevice;
 
-
+        QList<QSharedPointer<IVoiceChannel>> m_unusedVoiceChannels;
+        QHash<ComUnit, QSharedPointer<IVoiceChannel>> m_voiceChannelMapping;
     };
 } // namespace
 

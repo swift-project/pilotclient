@@ -47,6 +47,14 @@ namespace BlackCore
         IContextAudio(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : CContext(mode, runtime) {}
 
     public:
+
+        //! ComUnit number
+        enum ComUnit
+        {
+            Com1,
+            Com2
+        };
+
         //! \brief Interface name
         static const QString &InterfaceName()
         {
@@ -101,19 +109,8 @@ namespace BlackCore
         //! Get voice rooms for COM1, COM2, but without latest audio status
         virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRooms() const = 0;
 
-        /*!
-         * \brief COM 1 voice room
-         * \param withAudioStatus   update audio status
-         * \return
-         */
-        virtual BlackMisc::Audio::CVoiceRoom getCom1VoiceRoom(bool withAudioStatus) const = 0;
-
-        /*!
-         * \brief COM 2 voice room
-         * \param withAudioStatus   update audio status
-         * \return
-         */
-        virtual BlackMisc::Audio::CVoiceRoom getCom2VoiceRoom(bool withAudioStatus) const = 0;
+        //! Get voice room per com unit
+        virtual BlackMisc::Audio::CVoiceRoom getVoiceRoom(int comUnit, bool withAudioStatus) const = 0;
 
         //! Set voice rooms
         virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms) = 0;
@@ -121,17 +118,11 @@ namespace BlackCore
         //! Leave all voice rooms
         virtual void leaveAllVoiceRooms() = 0;
 
-        //! COM1 room users callsigns
-        virtual BlackMisc::Aviation::CCallsignList getCom1RoomCallsigns() const = 0;
+        //! Room user callsigns
+        virtual BlackMisc::Aviation::CCallsignList getRoomCallsigns(int comUnit) const = 0;
 
-        //! COM2 room users callsigns
-        virtual BlackMisc::Aviation::CCallsignList getCom2RoomCallsigns() const = 0;
-
-        //! COM1 room users
-        virtual BlackMisc::Network::CUserList getCom1RoomUsers() const = 0;
-
-        //! COM2 room users
-        virtual BlackMisc::Network::CUserList getCom2RoomUsers() const = 0;
+        //! Room users
+        virtual BlackMisc::Network::CUserList getRoomUsers(int comUnit) const = 0;
 
         //! Audio devices
         virtual BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const = 0;

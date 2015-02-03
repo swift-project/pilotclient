@@ -18,6 +18,7 @@
 #include "../blackmisc/statusmessage.h"
 
 #include <QObject>
+#include <QSharedPointer>
 
 #include <memory>
 
@@ -40,7 +41,7 @@ namespace BlackCore
         virtual ~IVoice() {}
 
         //! Create voice channel object
-        virtual std::unique_ptr<IVoiceChannel> createVoiceChannel() = 0;
+        virtual QSharedPointer<IVoiceChannel> createVoiceChannel() = 0;
 
         //! Create input device object
         virtual std::unique_ptr<IAudioInputDevice> createInputDevice() = 0;

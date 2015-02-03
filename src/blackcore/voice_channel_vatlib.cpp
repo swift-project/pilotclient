@@ -8,7 +8,6 @@
  */
 
 #include "voice_channel_vatlib.h"
-#include "voice_channel_vatlib_p.h"
 #include "blackmisc/logmessage.h"
 
 #include <mutex>
@@ -19,42 +18,128 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackCore
 {
-    // Room data hash shared between all CVoiceChannel objects
-    QHash<CVoiceChannelVatlib * const, QSharedPointer<CVoiceChannelVatlibPrivate>> CVoiceChannelVatlibPrivate::m_sharedRoomData;
-
-    // Constructor
-    // Don't set the QObject parent. It will conflict with @QSharedPointer@ memory management
-    CVoiceChannelVatlibPrivate::CVoiceChannelVatlibPrivate(VatAudioService audioService, VatUDPAudioPort udpPort, CVoiceChannelVatlib *parent)
-        : m_audioService(audioService),
-          m_udpPort(udpPort),
-          q_ptr(parent)
+    CVoiceChannelVatlib::CVoiceChannelVatlib(VatAudioService audioService, VatUDPAudioPort udpPort, QObject *parent)
+        : IVoiceChannel(parent),
+          m_audioService(audioService),
+          m_udpPort(udpPort)
     {
-        Q_ASSERT(m_audioService);
-        Q_ASSERT(m_udpPort);
-
-        m_connectionRefCount = 0;
-        m_roomStatus = IVoiceChannel::Disconnected;
-
-        m_voiceChannels.push_back(parent);
-
         m_voiceChannel.reset(Vat_CreateVoiceChannel(m_audioService, "", 3782, "", "", m_udpPort));
-        Vat_SetConnectionChangedHandler(m_voiceChannel.data(), onRoomStatusUpdate, this);
+        Vat_SetConnectionChangedHandler(m_voiceChannel.data(), roomStatusUpdate, this);
         Vat_SetClientJoinedHandler(m_voiceChannel.data(), processUserJoined, this);
         Vat_SetClientLeftHandler(m_voiceChannel.data(), processUserLeft, this);
         Vat_SetVoiceTransmissionChangedHandler(m_voiceChannel.data(), processTransmissionChange, this);
+
     }
 
-    CVoiceChannelVatlibPrivate::~CVoiceChannelVatlibPrivate()
+    CVoiceChannelVatlib::~CVoiceChannelVatlib()
     {
+        Q_ASSERT(m_roomStatus == IVoiceChannel::Disconnected);
     }
 
-    void CVoiceChannelVatlibPrivate::setRoomOutputVolume(int volume)
+    void CVoiceChannelVatlib::joinVoiceRoom(const CVoiceRoom &voiceRoom)
     {
-        // FIXME
-        Q_UNUSED(volume)
+        if (m_roomStatus == IVoiceChannel::Connecting || m_roomStatus == IVoiceChannel::Connected) return;
+
+        // No one else is using this voice room, so prepare to join
+        m_voiceRoom = voiceRoom;
+        Vat_SetRoomInfo(m_voiceChannel.data(), qPrintable(voiceRoom.getHostname()), 3782,
+                        qPrintable(voiceRoom.getChannel()),
+                        qPrintable(m_callsign.toQString()));
+
+        CLogMessage(this).debug() << "Joining voice room " << m_voiceRoom.getVoiceRoomUrl();
+        Vat_JoinRoom(m_voiceChannel.data());
     }
 
-    void CVoiceChannelVatlibPrivate::updateRoomStatus(VatVoiceChannel /* channel */, VatConnectionStatus /** oldVatStatus **/, VatConnectionStatus newVatStatus)
+    // Leave room
+    void CVoiceChannelVatlib::leaveVoiceRoom()
+    {
+        // If this room is not connected, there is nothing to do
+        if (m_roomStatus == IVoiceChannel::Disconnecting || m_roomStatus == IVoiceChannel::Disconnected) return;
+
+        CLogMessage(this).debug() << "Leaving voice room " << m_voiceRoom.getVoiceRoomUrl();
+        Vat_DisconnectFromRoom(m_voiceChannel.data());
+        m_voiceRoom = {};
+        m_listCallsigns = {};
+    }
+
+    CCallsignList CVoiceChannelVatlib::getVoiceRoomCallsigns() const
+    {
+        return m_listCallsigns;
+    }
+
+    void CVoiceChannelVatlib::setMyAircraftCallsign(const CCallsign &callsign)
+    {
+        m_callsign = callsign;
+    }
+
+    BlackMisc::Audio::CVoiceRoom CVoiceChannelVatlib::getVoiceRoom() const
+    {
+        return m_voiceRoom;
+    }
+
+    bool CVoiceChannelVatlib::isMuted() const
+    {
+        // Remove
+        return false;
+    }
+
+    void CVoiceChannelVatlib::setVolume(int /* volume */)
+    {
+        // Remove
+    }
+
+    int CVoiceChannelVatlib::getVolume() const
+    {
+        // Remove
+        return 100;
+    }
+
+    VatVoiceChannel CVoiceChannelVatlib::getVoiceChannel() const
+    {
+        return m_voiceChannel.data();
+    }
+
+    CCallsign CVoiceChannelVatlib::extractCallsign(const QString &name)
+    {
+        CCallsign callsign;
+        if (name.isEmpty()) return callsign;
+
+        // callsign might contain: VATSIM id, user name
+        if (name.contains(" "))
+        {
+            QStringList parts = name.split(" ");
+            callsign = CCallsign(parts[0]);
+            // I throw away VATSIM id here, maybe we could use it
+        }
+        else
+        {
+            callsign = CCallsign(name);
+        }
+
+        return callsign;
+    }
+
+    void CVoiceChannelVatlib::userJoinedVoiceRoom(VatVoiceChannel, int /** id **/, const char *name)
+    {
+        CCallsign callsign(extractCallsign(name));
+        m_listCallsigns.push_back(callsign);
+        emit userJoinedRoom(callsign);
+    }
+
+    void CVoiceChannelVatlib::userLeftVoiceRoom(VatVoiceChannel, int /** id **/, const char *name)
+    {
+        CCallsign callsign(extractCallsign(name));
+        m_listCallsigns.remove(callsign);
+        emit userLeftRoom(callsign);
+    }
+
+    void CVoiceChannelVatlib::transmissionChanged(VatVoiceChannel, VatVoiceTransmissionStatus status)
+    {
+        if (status == vatVoiceStarted) emit audioStarted();
+        else emit audioStopped();
+    }
+
+    void CVoiceChannelVatlib::updateRoomStatus(VatVoiceChannel /* channel */, VatConnectionStatus /** oldVatStatus **/, VatConnectionStatus newVatStatus)
     {
         IVoiceChannel::ConnectionStatus oldStatus = m_roomStatus;
         switch (newVatStatus)
@@ -86,219 +171,35 @@ namespace BlackCore
         default:
             break;
         }
-        emit q_ptr->connectionStatusChanged(oldStatus, m_roomStatus);
+        emit connectionStatusChanged(oldStatus, m_roomStatus);
     }
 
-    void CVoiceChannelVatlibPrivate::userJoinedVoiceRoom(VatVoiceChannel, int /** id **/, const char *name)
+    CVoiceChannelVatlib *cbvar_cast_voiceChannel(void *cbvar)
     {
-        CCallsign callsign(extractCallsign(name));
-        m_listCallsigns.push_back(callsign);
-
-        for (const auto &e : m_voiceChannels)
-            emit e->userJoinedRoom(callsign);
+        return static_cast<CVoiceChannelVatlib *>(cbvar);
     }
 
-    void CVoiceChannelVatlibPrivate::userLeftVoiceRoom(VatVoiceChannel, int /** id **/, const char *name)
+    void CVoiceChannelVatlib::processUserJoined(VatVoiceChannel channel, int id, const char *name, void *cbVar)
     {
-        CCallsign callsign(extractCallsign(name));
-        m_listCallsigns.remove(callsign);
-
-        for (const auto &e : m_voiceChannels)
-            emit e->userLeftRoom(callsign);
+        auto obj = cbvar_cast_voiceChannel(cbVar);
+        obj->userJoinedVoiceRoom(channel, id, name);
     }
 
-    void CVoiceChannelVatlibPrivate::transmissionChanged(VatVoiceChannel, VatVoiceTransmissionStatus status)
+    void CVoiceChannelVatlib::processUserLeft(VatVoiceChannel channel, int id, const char *name, void *cbVar)
     {
-        if (status == vatVoiceStarted)
-            emit q_ptr->audioStarted();
-        else
-            emit q_ptr->audioStopped();
+        auto obj = cbvar_cast_voiceChannel(cbVar);
+        obj->userLeftVoiceRoom(channel, id, name);
     }
 
-    CVoiceChannelVatlibPrivate *cbvar_cast_voiceChannelPrivate(void *cbvar)
+    void CVoiceChannelVatlib::processTransmissionChange(VatVoiceChannel channel, VatVoiceTransmissionStatus status, void *cbVar)
     {
-        return static_cast<CVoiceChannelVatlibPrivate *>(cbvar);
+        auto obj = cbvar_cast_voiceChannel(cbVar);
+        obj->transmissionChanged(channel, status);
     }
 
-    CCallsign CVoiceChannelVatlibPrivate::extractCallsign(const QString &name)
+    void CVoiceChannelVatlib::roomStatusUpdate(VatVoiceChannel channel, VatConnectionStatus oldStatus, VatConnectionStatus newStatus, void *cbVar)
     {
-        CCallsign callsign;
-        if (name.isEmpty()) return callsign;
-
-        // callsign might contain: VATSIM id, user name
-        if (name.contains(" "))
-        {
-            QStringList parts = name.split(" ");
-            callsign = CCallsign(parts[0]);
-            // I throw away VATSIM id here, maybe we could use it
-        }
-        else
-        {
-            callsign = CCallsign(name);
-        }
-
-        return callsign;
-    }
-
-    void CVoiceChannelVatlibPrivate::processUserJoined(VatVoiceChannel channel, int id, const char *name, void *cbVar)
-    {
-        CVoiceChannelVatlibPrivate *voiceChannelPrivate = cbvar_cast_voiceChannelPrivate(cbVar);
-        voiceChannelPrivate->userJoinedVoiceRoom(channel, id, name);
-    }
-
-    void CVoiceChannelVatlibPrivate::processUserLeft(VatVoiceChannel channel, int id, const char *name, void *cbVar)
-    {
-        CVoiceChannelVatlibPrivate *voiceChannelPrivate = cbvar_cast_voiceChannelPrivate(cbVar);
-        voiceChannelPrivate->userLeftVoiceRoom(channel, id, name);
-    }
-
-    void CVoiceChannelVatlibPrivate::processTransmissionChange(VatVoiceChannel channel, VatVoiceTransmissionStatus status, void *cbVar)
-    {
-        CVoiceChannelVatlibPrivate *voiceChannelPrivate = cbvar_cast_voiceChannelPrivate(cbVar);
-
-        voiceChannelPrivate->transmissionChanged(channel, status);
-    }
-
-    /*
-     * Room status update
-     */
-    void CVoiceChannelVatlibPrivate::onRoomStatusUpdate(VatVoiceChannel channel, VatConnectionStatus oldStatus, VatConnectionStatus newStatus, void *cbVar)
-    {
-        auto obj = cbvar_cast_voiceChannelPrivate(cbVar);
+        auto obj = cbvar_cast_voiceChannel(cbVar);
         obj->updateRoomStatus(channel, oldStatus, newStatus);
-    }
-
-    // Get shared room data
-    QHash<CVoiceChannelVatlib * const, QSharedPointer<CVoiceChannelVatlibPrivate>> &CVoiceChannelVatlibPrivate::getSharedRoomData()
-    {
-        return m_sharedRoomData;
-    }
-
-    // Constructor
-    CVoiceChannelVatlib::CVoiceChannelVatlib(VatAudioService audioService, VatUDPAudioPort udpPort, QObject *parent)
-        : IVoiceChannel(parent),
-          d_ptr(new CVoiceChannelVatlibPrivate(audioService, udpPort, this))
-    {
-    }
-
-    // Destructor
-    CVoiceChannelVatlib::~CVoiceChannelVatlib()
-    {
-        d_ptr->m_voiceChannels.removeAll(this);
-    }
-
-    // Join room
-    void CVoiceChannelVatlib::joinVoiceRoom(const CVoiceRoom &voiceRoom)
-    {
-        // Find if a different channel is connected already to this voice room
-        auto roomDataList = CVoiceChannelVatlibPrivate::getSharedRoomData().values();
-        auto iterator = std::find_if(roomDataList.begin(), roomDataList.end(), [&](const QSharedPointer<CVoiceChannelVatlibPrivate> roomData)
-        {
-            return roomData->m_voiceRoom.getVoiceRoomUrl() == voiceRoom.getVoiceRoomUrl();
-        });
-
-        // If we found another channel
-        if (iterator != roomDataList.end())
-        {
-            // Increase the connection reference counter
-            (*iterator)->m_connectionRefCount++;
-
-            d_ptr = (*iterator);
-
-            // Assign shared room data to this channel index
-            CVoiceChannelVatlibPrivate::getSharedRoomData().insert(this, *iterator);
-
-            // Add ourselfes as listener
-            d_ptr->m_voiceChannels.push_back(this);
-
-
-            // Since the room is used already, we have to simulate the state changes
-            emit connectionStatusChanged(IVoiceChannel::Disconnected, IVoiceChannel::Connecting);
-            emit connectionStatusChanged(IVoiceChannel::Connecting, IVoiceChannel::Connected);
-        }
-        else
-        {
-            // No one else is using this voice room, so prepare to join
-            d_ptr->m_voiceRoom = voiceRoom;
-            Vat_SetRoomInfo(d_ptr->m_voiceChannel.data(), qPrintable(voiceRoom.getHostname()), 3782,
-                            qPrintable(voiceRoom.getChannel()),
-                            qPrintable(d_ptr->m_callsign.toQString()));
-
-            d_ptr->m_roomStatus = IVoiceChannel::Disconnected;
-            Vat_JoinRoom(d_ptr->m_voiceChannel.data());
-
-            CVoiceChannelVatlibPrivate::m_sharedRoomData.insert(this, d_ptr);
-            ++d_ptr->m_connectionRefCount;
-        }
-
-    }
-
-    // Leave room
-    void CVoiceChannelVatlib::leaveVoiceRoom()
-    {
-        // If this room is not connected, there is nothing to do
-        if (d_ptr->m_roomStatus == IVoiceChannel::Disconnecting || d_ptr->m_roomStatus == IVoiceChannel::Disconnected) return;
-
-        // Decrease the connection reference counter
-        --d_ptr->m_connectionRefCount;
-
-        // If this was the last channel, connected to the room, leave it.
-        if (d_ptr->m_connectionRefCount == 0)
-        {
-            qDebug() << "Leaving voice room!";
-            Vat_DisconnectFromRoom(d_ptr->m_voiceChannel.data());
-        }
-        else
-        {
-            d_ptr->m_voiceChannels.removeAll(this);
-
-            // We need to assign a private class
-            // This automatically clears callsign list etc.
-            VatAudioService audioService = d_ptr->m_audioService;
-            VatUDPAudioPort udpPort = d_ptr->m_udpPort;
-
-            d_ptr.reset(new CVoiceChannelVatlibPrivate(audioService, udpPort, this));
-            CVoiceChannelVatlibPrivate::getSharedRoomData().insert(this, d_ptr);
-
-            // Simulate the state change
-            emit connectionStatusChanged(IVoiceChannel::Connected, IVoiceChannel::Disconnecting);
-            emit connectionStatusChanged(IVoiceChannel::Disconnecting, IVoiceChannel::Disconnected);
-        }
-    }
-
-    CCallsignList CVoiceChannelVatlib::getVoiceRoomCallsigns() const
-    {
-        return d_ptr->m_listCallsigns;
-    }
-
-    void CVoiceChannelVatlib::setMyAircraftCallsign(const CCallsign &callsign)
-    {
-        d_ptr->m_callsign = callsign;
-    }
-
-    BlackMisc::Audio::CVoiceRoom CVoiceChannelVatlib::getVoiceRoom() const
-    {
-        return d_ptr->m_voiceRoom;
-    }
-
-    bool CVoiceChannelVatlib::isMuted() const
-    {
-        return !d_ptr->m_outputEnabled;
-    }
-
-    void CVoiceChannelVatlib::setVolume(int volume)
-    {
-        d_ptr->setRoomOutputVolume(volume);
-    }
-
-    int CVoiceChannelVatlib::getVolume() const
-    {
-        // FIXME
-        return 100;
-    }
-
-    VatVoiceChannel CVoiceChannelVatlib::getVoiceChannel() const
-    {
-        return d_ptr->m_voiceChannel.data();
     }
 }

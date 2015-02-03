@@ -41,12 +41,12 @@ namespace BlackCore
         m_inputManager = CInputManager::getInstance();
         m_handlePtt = m_inputManager->registerHotkeyFunc(CHotkeyFunction::Ptt(), this, &CContextAudio::ps_setVoiceTransmission);
 
-        m_channelCom1 = m_voice->createVoiceChannel();
-        m_channelCom1->setMyAircraftCallsign(getIContextOwnAircraft()->getOwnAircraft().getCallsign());
-        connect(m_channelCom1.get(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_com1ConnectionStatusChanged);
-        m_channelCom2 = m_voice->createVoiceChannel();
-        m_channelCom2->setMyAircraftCallsign(getIContextOwnAircraft()->getOwnAircraft().getCallsign());
-        connect(m_channelCom2.get(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_com2ConnectionStatusChanged);
+        m_channel1 = m_voice->createVoiceChannel();
+        m_channel1->setMyAircraftCallsign(getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+        connect(m_channel1.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_connectionStatusChanged);
+        m_channel2 = m_voice->createVoiceChannel();
+        m_channel2->setMyAircraftCallsign(getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+        connect(m_channel2.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_connectionStatusChanged);
 
         m_voiceInputDevice = m_voice->createInputDevice();
         m_voiceOutputDevice = m_voice->createOutputDevice();
@@ -54,17 +54,20 @@ namespace BlackCore
         m_audioMixer = m_voice->createAudioMixer();
 
         m_voice->connectVoice(m_voiceInputDevice.get(), m_audioMixer.get(), IAudioMixer::InputMicrophone);
-        m_voice->connectVoice(m_channelCom1.get(), m_audioMixer.get(), IAudioMixer::InputVoiceChannel1);
-        m_voice->connectVoice(m_channelCom2.get(), m_audioMixer.get(), IAudioMixer::InputVoiceChannel2);
+        m_voice->connectVoice(m_channel1.data(), m_audioMixer.get(), IAudioMixer::InputVoiceChannel1);
+        m_voice->connectVoice(m_channel2.data(), m_audioMixer.get(), IAudioMixer::InputVoiceChannel2);
         m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputOutputDevice1, m_voiceOutputDevice.get());
-        m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputVoiceChannel1, m_channelCom1.get());
-        m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputVoiceChannel2, m_channelCom2.get());
+        m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputVoiceChannel1, m_channel1.data());
+        m_voice->connectVoice(m_audioMixer.get(), IAudioMixer::OutputVoiceChannel2, m_channel2.data());
 
         m_audioMixer->makeMixerConnection(IAudioMixer::InputVoiceChannel1, IAudioMixer::OutputOutputDevice1);
         m_audioMixer->makeMixerConnection(IAudioMixer::InputVoiceChannel2, IAudioMixer::OutputOutputDevice1);
 
         // 4. load sounds (init), not possible in own thread
         QTimer::singleShot(10 * 1000, this, SLOT(ps_initNotificationSounds()));
+
+        m_unusedVoiceChannels.push_back(m_channel1);
+        m_unusedVoiceChannels.push_back(m_channel2);
     }
 
     /*
@@ -88,23 +91,17 @@ namespace BlackCore
     /*
      * Voice rooms for COM
      */
-    CVoiceRoom CContextAudio::getCom1VoiceRoom(bool withAudioStatus) const
+    CVoiceRoom CContextAudio::getVoiceRoom(int comUnitValue, bool withAudioStatus) const
     {
         Q_ASSERT(this->m_voice);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << withAudioStatus;
-        // We always have the audio status due to shared status
-        return m_channelCom1->getVoiceRoom();
-    }
 
-    /*
-     * Voice rooms for COM
-     */
-    CVoiceRoom CContextAudio::getCom2VoiceRoom(bool withAudioStatus) const
-    {
-        Q_ASSERT(this->m_voice);
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << withAudioStatus;
-        // We always have the audio status due to shared status
-        return m_channelCom2->getVoiceRoom();
+        auto voiceChannel = m_voiceChannelMapping.value(static_cast<ComUnit>(comUnitValue));
+
+        if (voiceChannel)
+            return voiceChannel->getVoiceRoom();
+        else
+            return CVoiceRoom();
     }
 
     /*
@@ -115,8 +112,29 @@ namespace BlackCore
         Q_ASSERT(this->m_voice);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         CVoiceRoomList voiceRoomList;
-        voiceRoomList.push_back(m_channelCom1->getVoiceRoom());
-        voiceRoomList.push_back(m_channelCom2->getVoiceRoom());
+
+        auto voiceChannelCom1 = m_voiceChannelMapping.value(Com1);
+        if (voiceChannelCom1)
+        {
+            CVoiceRoom room = voiceChannelCom1->getVoiceRoom();
+            voiceRoomList.push_back(room);
+        }
+        else
+        {
+            voiceRoomList.push_back(CVoiceRoom());
+        }
+
+        auto voiceChannelCom2 = m_voiceChannelMapping.value(Com2);
+        if (voiceChannelCom2)
+        {
+            CVoiceRoom room = voiceChannelCom2->getVoiceRoom();
+            voiceRoomList.push_back(room);
+        }
+        else
+        {
+            voiceRoomList.push_back(CVoiceRoom());
+        }
+
         return voiceRoomList;
     }
 
@@ -127,8 +145,11 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        m_channelCom1->leaveVoiceRoom();
-        m_channelCom2->leaveVoiceRoom();
+        m_voiceChannelMapping.clear();
+        m_channel1->leaveVoiceRoom();
+        m_channel2->leaveVoiceRoom();
+        m_unusedVoiceChannels.push_back(m_channel1);
+        m_unusedVoiceChannels.push_back(m_channel2);
     }
 
     /*
@@ -204,9 +225,9 @@ namespace BlackCore
 
     void CContextAudio::setVolumes(int com1Volume, int com2Volume)
     {
-        //! \todo Fix when VATLIB 2.0 is available
-        int channelV1 = static_cast<int>(m_channelCom1->getVolume());
-        int channelV2 = static_cast<int>(m_channelCom2->getVolume());
+        //! \todo Will be removed as part of #371.
+        int channelV1 = static_cast<int>(m_channel1->getVolume());
+        int channelV2 = static_cast<int>(m_channel2->getVolume());
         if (channelV1 == com1Volume && channelV2 == com2Volume) { return; }
 
         bool enable1 = com1Volume > 0;
@@ -214,8 +235,8 @@ namespace BlackCore
         bool muted = !enable1 && !enable2;
 
         //! \todo m_channelCom1->setVolume here crashed, also what is correct setRoomOutputVolume or setVolume
-        m_channelCom1->setVolume(com1Volume);
-        m_channelCom2->setVolume(com2Volume);
+        m_channel1->setVolume(com1Volume);
+        m_channel2->setVolume(com2Volume);
         this->setMute(muted);
 
         emit changedAudioVolumes(com1Volume, com2Volume);
@@ -257,29 +278,86 @@ namespace BlackCore
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << newRooms;
 
         CVoiceRoomList currentRooms = getComVoiceRooms();
-        CVoiceRoom currentRoom1 = currentRooms[0];
-        CVoiceRoom currentRoom2 = currentRooms[1];
-        CVoiceRoom newRoom1 = newRooms[0];
-        CVoiceRoom newRoom2 = newRooms[1];
+        CVoiceRoom currentRoomCom1 = currentRooms[0];
+        CVoiceRoom currentRoomCom2 = currentRooms[1];
+        CVoiceRoom newRoomCom1 = newRooms[0];
+        CVoiceRoom newRoomCom2 = newRooms[1];
 
         bool changed = false;
 
         // changed rooms?  But only compare on "URL",  not status as connected etc.
-        if (currentRoom1.getVoiceRoomUrl() != newRoom1.getVoiceRoomUrl())
+        if (currentRoomCom1.getVoiceRoomUrl() != newRoomCom1.getVoiceRoomUrl())
         {
-            m_channelCom1->leaveVoiceRoom();
-            if (newRoom1.isValid())
+            auto oldVoiceChannel = m_voiceChannelMapping.value(Com1);
+            if (oldVoiceChannel)
             {
-                m_channelCom1->joinVoiceRoom(newRoom1);
+                m_voiceChannelMapping.remove(Com1);
+
+                // If the voice channel is not used by anybody else
+                if (!m_voiceChannelMapping.values().contains(oldVoiceChannel))
+                {
+                    oldVoiceChannel->leaveVoiceRoom();
+                    m_unusedVoiceChannels.push_back(oldVoiceChannel);
+                }
+                else
+                {
+                    emit this->changedVoiceRooms(getComVoiceRooms(), false);
+                }
+            }
+
+            if (newRoomCom1.isValid())
+            {
+                auto newVoiceChannel = getVoiceChannelBy(newRoomCom1);
+                bool inUse = m_voiceChannelMapping.values().contains(newVoiceChannel);
+                m_voiceChannelMapping.insert(Com1, newVoiceChannel);
+
+                // If the voice channel is not used by anybody else
+                if (!inUse)
+                {
+                    newVoiceChannel->joinVoiceRoom(newRoomCom1);
+                }
+                else
+                {
+                    emit this->changedVoiceRooms(getComVoiceRooms(), true);
+                }
             }
             changed = true;
         }
-        if (currentRoom2.getVoiceRoomUrl() != newRoom2.getVoiceRoomUrl())
+        // changed rooms?  But only compare on "URL",  not status as connected etc.
+        if (currentRoomCom2.getVoiceRoomUrl() != newRoomCom2.getVoiceRoomUrl())
         {
-            m_channelCom2->leaveVoiceRoom();
-            if (newRoom2.isValid())
+            auto oldVoiceChannel = m_voiceChannelMapping.value(Com2);
+            if (oldVoiceChannel)
             {
-                m_channelCom2->joinVoiceRoom(newRoom2);
+                m_voiceChannelMapping.remove(Com2);
+
+                // If the voice channel is not used by anybody else
+                if (!m_voiceChannelMapping.values().contains(oldVoiceChannel))
+                {
+                    oldVoiceChannel->leaveVoiceRoom();
+                    m_unusedVoiceChannels.push_back(oldVoiceChannel);
+                }
+                else
+                {
+                    emit this->changedVoiceRooms(getComVoiceRooms(), false);
+                }
+            }
+
+            if (newRoomCom2.isValid())
+            {
+                auto newVoiceChannel = getVoiceChannelBy(newRoomCom2);
+                bool inUse = m_voiceChannelMapping.values().contains(newVoiceChannel);
+                m_voiceChannelMapping.insert(Com2, newVoiceChannel);
+
+                // If the voice channel is not used by anybody else
+                if (!inUse)
+                {
+                    newVoiceChannel->joinVoiceRoom(newRoomCom2);
+                }
+                else
+                {
+                    emit this->changedVoiceRooms(getComVoiceRooms(), true);
+                }
             }
             changed = true;
         }
@@ -289,48 +367,27 @@ namespace BlackCore
         Q_UNUSED(changed);
     }
 
-    /*
-     * Room 1 callsigns
-     */
-    CCallsignList CContextAudio::getCom1RoomCallsigns() const
+    CCallsignList CContextAudio::getRoomCallsigns(int comUnitValue) const
     {
         Q_ASSERT(this->m_voice);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        return m_channelCom1->getVoiceRoomCallsigns();
+
+        auto voiceChannel = m_voiceChannelMapping.value(static_cast<ComUnit>(comUnitValue));
+        if (voiceChannel)
+            return voiceChannel->getVoiceRoomCallsigns();
+        else
+            return CCallsignList();
     }
 
-    /*
-     * Room 2 callsigns
-     */
-    CCallsignList CContextAudio::getCom2RoomCallsigns() const
-    {
-        Q_ASSERT(this->m_voice);
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        return m_channelCom2->getVoiceRoomCallsigns();
-    }
-
-    /*
-     * Room 1 users
-     */
-    Network::CUserList CContextAudio::getCom1RoomUsers() const
+    Network::CUserList CContextAudio::getRoomUsers(int comUnitValue) const
     {
         Q_ASSERT(this->m_voice);
         Q_ASSERT(this->getRuntime());
         if (!this->getRuntime()->getIContextNetwork()) return Network::CUserList();
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        return this->getIContextNetwork()->getUsersForCallsigns(this->getCom1RoomCallsigns());
-    }
 
-    /*
-     * Room 2 users
-     */
-    Network::CUserList CContextAudio::getCom2RoomUsers() const
-    {
-        Q_ASSERT(this->m_voice);
-        Q_ASSERT(this->getRuntime());
-        if (!this->getRuntime()->getIContextNetwork()) return Network::CUserList();
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        return this->getIContextNetwork()->getUsersForCallsigns(this->getCom2RoomCallsigns());
+        auto comUnit = static_cast<ComUnit>(comUnitValue);
+        return this->getIContextNetwork()->getUsersForCallsigns(this->getRoomCallsigns(comUnit));
     }
 
     /*
@@ -449,20 +506,7 @@ namespace BlackCore
             qint32 v = parser.toInt(1);
             if (v >= 0 && v <= 100)
             {
-                qint32 v1 = this->m_channelCom1->getVolume();
-                qint32 v2 = this->m_channelCom2->getVolume();
-                if (parser.commandEndsWith("1"))
-                {
-                    this->setVolumes(v, v2);
-                }
-                else if (parser.commandEndsWith("2"))
-                {
-                    this->setVolumes(v1, v);
-                }
-                else
-                {
-                    this->setVolumes(v, v);
-                }
+                // TODO: vatlib volume
             }
         }
         return false;
@@ -478,7 +522,7 @@ namespace BlackCore
     /*
      * Connection status changed
      */
-    void CContextAudio::ps_com1ConnectionStatusChanged(IVoiceChannel::ConnectionStatus oldStatus, IVoiceChannel::ConnectionStatus newStatus)
+    void CContextAudio::ps_connectionStatusChanged(IVoiceChannel::ConnectionStatus oldStatus, IVoiceChannel::ConnectionStatus newStatus)
     {
         Q_UNUSED(oldStatus);
 
@@ -499,8 +543,8 @@ namespace BlackCore
             if (this->getIContextOwnAircraft())
             {
                 // good chance to update aircraft
-                m_channelCom1->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
-                m_channelCom2->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+                m_channel1->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+                m_channel2->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
             }
             emit this->changedVoiceRooms(getComVoiceRooms(), false);
             break;
@@ -509,35 +553,22 @@ namespace BlackCore
         }
     }
 
-    void CContextAudio::ps_com2ConnectionStatusChanged(IVoiceChannel::ConnectionStatus oldStatus, IVoiceChannel::ConnectionStatus newStatus)
+    QSharedPointer<IVoiceChannel> CContextAudio::getVoiceChannelBy(const CVoiceRoom &voiceRoom)
     {
-        Q_UNUSED(oldStatus);
-
-        switch (newStatus)
+        QSharedPointer<IVoiceChannel> voiceChannel;
+        for (const auto &channel : m_voiceChannelMapping.values())
         {
-        case IVoiceChannel::Connected:
-            emit this->changedVoiceRooms(getComVoiceRooms(), true);
-            break;
-        case IVoiceChannel::Disconnecting:
-            break;
-        case IVoiceChannel::Connecting:
-            break;
-        case IVoiceChannel::ConnectingFailed:
-        case IVoiceChannel::DisconnectedError:
-            qWarning() << "Voice room COM2 error";
-        // intentional fall-through
-        case IVoiceChannel::Disconnected:
-            if (this->getIContextOwnAircraft())
-            {
-                // good chance to update aircraft
-                m_channelCom1->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
-                m_channelCom2->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
-            }
-            emit this->changedVoiceRooms(getComVoiceRooms(), false);
-            break;
-        default:
-            break;
+            if (channel->getVoiceRoom().getVoiceRoomUrl() == voiceRoom.getVoiceRoomUrl()) voiceChannel = channel;
         }
+
+        // If we haven't found a valid voice channel pointer, get an unused one
+        if (!voiceChannel)
+        {
+            Q_ASSERT(!m_unusedVoiceChannels.isEmpty());
+            voiceChannel = m_unusedVoiceChannels.takeFirst();
+        }
+
+        return voiceChannel;
     }
 
 } // namespace

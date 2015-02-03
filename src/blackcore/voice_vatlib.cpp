@@ -39,9 +39,9 @@ namespace BlackCore
      */
     CVoiceVatlib::~CVoiceVatlib() {}
 
-    std::unique_ptr<IVoiceChannel> CVoiceVatlib::createVoiceChannel()
+    QSharedPointer<IVoiceChannel> CVoiceVatlib::createVoiceChannel()
     {
-        return make_unique<CVoiceChannelVatlib>(m_audioService.data(), m_udpPort.data(), this);
+        return QSharedPointer<IVoiceChannel>(new CVoiceChannelVatlib(m_audioService.data(), m_udpPort.data(), this));
     }
 
     std::unique_ptr<IAudioInputDevice> CVoiceVatlib::createInputDevice()

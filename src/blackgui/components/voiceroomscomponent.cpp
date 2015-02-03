@@ -81,7 +81,7 @@ namespace BlackGui
             if (room1.isConnected())
             {
                 this->ui->le_CockpitVoiceRoomCom1->setStyleSheet("background: green");
-                if (this->getIContextAudio()) this->ui->tvp_CockpitVoiceRoom1->updateContainer(this->getIContextAudio()->getCom1RoomUsers());
+                if (this->getIContextAudio()) this->ui->tvp_CockpitVoiceRoom1->updateContainer(this->getIContextAudio()->getRoomUsers(IContextAudio::Com1));
             }
             else
             {
@@ -120,7 +120,7 @@ namespace BlackGui
             if (!this->getIContextAudio()) { return; }
             if (!this->ui->le_CockpitVoiceRoomCom1->text().trimmed().isEmpty())
             {
-                this->ui->tvp_CockpitVoiceRoom1->updateContainer(this->getIContextAudio()->getCom1RoomUsers());
+                this->ui->tvp_CockpitVoiceRoom1->updateContainer(this->getIContextAudio()->getRoomUsers(IContextAudio::Com1));
             }
             else
             {
@@ -129,7 +129,7 @@ namespace BlackGui
 
             if (!this->ui->le_CockpitVoiceRoomCom2->text().trimmed().isEmpty())
             {
-                this->ui->tvp_CockpitVoiceRoom2->updateContainer(this->getIContextAudio()->getCom2RoomUsers());
+                this->ui->tvp_CockpitVoiceRoom2->updateContainer(this->getIContextAudio()->getRoomUsers(IContextAudio::Com2));
             }
             else
             {
