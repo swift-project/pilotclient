@@ -67,7 +67,7 @@ namespace BlackGui
             this->m_currentMappingsViewDelegate = new CCheckBoxDelegate(":/diagona/icons/diagona/icons/tick.png", ":/diagona/icons/diagona/icons/cross.png", this);
             this->ui->tvp_CurrentMappings->setItemDelegateForColumn(0, this->m_currentMappingsViewDelegate);
 
-            //! Aircraft previes
+            //! Aircraft previews
             connect(this->ui->cb_AircraftIconDisplayed, &QCheckBox::stateChanged, this, &CMappingComponent::ps_onModelPreviewChanged);
             this->ui->lbl_AircraftIconDisplayed->setText("Icon displayed here");
         }
@@ -98,15 +98,16 @@ namespace BlackGui
             Q_ASSERT(getIContextSimulator());
             Q_ASSERT(getIContextNetwork());
             connect(getIContextSimulator(), &IContextSimulator::installedAircraftModelsChanged, this, &CMappingComponent::ps_onAircraftModelsLoaded);
-            connect(getIContextSimulator(), &IContextSimulator::modelMatchingCompleted, this, &CMappingComponent::ps_modelMatched);
-            connect(getIContextSimulator(), &IContextSimulator::remoteAircraftChanged, this, &CMappingComponent::ps_modelMatched);
+            connect(getIContextSimulator(), &IContextSimulator::modelMatchingCompleted, this, &CMappingComponent::ps_onModelMatchingCompleted);
+            connect(getIContextNetwork(), &IContextNetwork::changedRenderedAircraftModel, this, &CMappingComponent::ps_onRenderedAircraftModelChanged);
+            connect(getIContextNetwork(), &IContextNetwork::changedAircraftEnabled, this, &CMappingComponent::ps_onChangedAircraftEnabled);
             connect(getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMappingComponent::ps_onConnectionStatusChanged);
 
             // requires simulator context
-            connect(this->ui->tvp_CurrentMappings, &CAircraftModelView::objectChanged, this, &CMappingComponent::ps_onChangedSimulatedAircraft);
+            connect(this->ui->tvp_CurrentMappings, &CAircraftModelView::objectChanged, this, &CMappingComponent::ps_onChangedSimulatedAircraftInView);
 
             // data
-            this->ui->hs_MaxAircraft->setValue(getIContextSimulator()->getMaxRenderedRemoteAircraft());
+            this->ui->hs_MaxAircraft->setValue(getIContextSimulator()->getMaxRenderedAircraft());
 
             // with external core models might be already available
             this->ps_onAircraftModelsLoaded();
@@ -117,14 +118,9 @@ namespace BlackGui
             this->ps_onModelsUpdateRequested();
         }
 
-        void CMappingComponent::ps_modelMatched(const BlackMisc::Simulation::CSimulatedAircraft &aircraft)
+        void CMappingComponent::ps_onModelMatchingCompleted(const BlackMisc::Simulation::CSimulatedAircraft &aircraft)
         {
             Q_UNUSED(aircraft);
-            ps_onMappingsChanged();
-        }
-
-        void CMappingComponent::ps_onMappingsChanged()
-        {
             this->ps_onMappingsUpdateRequested();
         }
 
@@ -143,12 +139,22 @@ namespace BlackGui
             this->ui->tw_ListViews->tabBar()->setTabText(cm, c);
         }
 
-        void CMappingComponent::ps_onChangedSimulatedAircraft(const BlackMisc::CVariant &object, const BlackMisc::CPropertyIndex &index)
+        void CMappingComponent::ps_onChangedSimulatedAircraftInView(const BlackMisc::CVariant &object, const BlackMisc::CPropertyIndex &index)
         {
-            Q_UNUSED(index);
-            const CSimulatedAircraft sa = object.to<CSimulatedAircraft>();
-            CPropertyIndexVariantMap vm(index, sa.propertyByIndex(index));
-            this->getIContextSimulator()->changeRemoteAircraft(sa, vm);
+            const CSimulatedAircraft sa = object.to<CSimulatedAircraft>(); // changed in GUI
+            const CSimulatedAircraft saFromBackend = this->getIContextNetwork()->getAircraftForCallsign(sa.getCallsign());
+            if (!saFromBackend.hasValidCallsign()) { return; } // obviously deleted
+            if (index.contains(CSimulatedAircraft::IndexEnabled))
+            {
+                bool enabled = sa.propertyByIndex(index).toBool();
+                if (saFromBackend.isEnabled() == enabled) { return; }
+                CLogMessage(this).info("Request to %1 aircraft %2") << (enabled ? "enable" : "disable") << saFromBackend.getCallsign().toQString();
+                this->getIContextNetwork()->updateAircraftEnabled(saFromBackend.getCallsign(), enabled, mappingtOriginator());
+            }
+            else
+            {
+                Q_ASSERT_X(false, "ps_onChangedSimulatedAircraftInView", "Index not supported");
+            }
         }
 
         void CMappingComponent::ps_onAircraftSelectedInView(const QModelIndex &index)
@@ -195,10 +201,10 @@ namespace BlackGui
         {
             Q_ASSERT(getIContextSimulator());
             int noRequested = this->ui->hs_MaxAircraft->value();
-            this->getIContextSimulator()->setMaxRenderedRemoteAircraft(noRequested);
+            this->getIContextSimulator()->setMaxRenderedAircraft(noRequested);
 
             // real value
-            int noRendered = this->getIContextSimulator()->getMaxRenderedRemoteAircraft();
+            int noRendered = this->getIContextSimulator()->getMaxRenderedAircraft();
             if (noRequested == noRendered)
             {
                 CLogMessage(this).info("Max.rendered aircraft: %1") << noRendered;
@@ -242,29 +248,39 @@ namespace BlackGui
                 return;
             }
 
+            CSimulatedAircraft aircraftFromBackend = this->getIContextNetwork()->getAircraftForCallsign(callsign);
             bool enabled = this->ui->cb_AircraftEnabled->isChecked();
-            CSimulatedAircraft aircraft = this->ui->tvp_CurrentMappings->getContainer().findFirstByCallsign(callsign);
-            CAircraftModel model = this->ui->tvp_AircraftModels->getContainer().findFirstByModelString(modelString);
-            Q_ASSERT(model.hasModelString());
-
-            CPropertyIndexVariantMap changedValues;
-            if (aircraft.getModel().getModelString() != model.getModelString())
+            bool changed = false;
+            if (aircraftFromBackend.getModelString() != modelString)
             {
-                model.updateMissingParts(aircraft.getModel());
+                CAircraftModelList models = this->getIContextSimulator()->getInstalledModelsStartingWith(modelString);
+                if (models.isEmpty())
+                {
+                    CLogMessage(this).validationError("No model for title: %1") << modelString;
+                    return;
+                }
+                else if (models.size() > 1)
+                {
+                    CLogMessage(this).validationError("Ambigious title: %1") << modelString;
+                    return;
+                }
+                CAircraftModel model(models.front());
                 model.setModelType(CAircraftModel::TypeManuallySet);
-                changedValues.addValue(CSimulatedAircraft::IndexModel, model.toCVariant());
+                CLogMessage(this).info("Requesting changes for %1") << callsign.asString();
+                this->getIContextNetwork()->updateAircraftModel(aircraftFromBackend.getCallsign(), model, mappingtOriginator());
+                changed = true;
             }
-            if (aircraft.isEnabled() != enabled)
+            if (aircraftFromBackend.isEnabled() != enabled)
             {
-                changedValues.addValue(CSimulatedAircraft::IndexEnabled, CVariant::fromValue(enabled));
+                this->getIContextNetwork()->updateAircraftEnabled(aircraftFromBackend.getCallsign(), enabled, mappingtOriginator());
+                changed = true;
             }
-            if (changedValues.isEmpty())
+
+            if (!changed)
             {
                 CLogMessage(this).info("Model mapping, nothing to change");
                 return;
             }
-            getIContextSimulator()->changeRemoteAircraft(aircraft, changedValues);
-            CLogMessage(this).info("Requesting model change for %1") << callsign.asString();
         }
 
         void CMappingComponent::ps_onModelPreviewChanged(int state)
@@ -280,7 +296,7 @@ namespace BlackGui
         void CMappingComponent::ps_onMappingsUpdateRequested()
         {
             Q_ASSERT(getIContextSimulator());
-            const CSimulatedAircraftList aircraft = getIContextSimulator()->getRemoteAircraft();
+            const CSimulatedAircraftList aircraft = getIContextNetwork()->getAircraftInRange();
             this->ui->tvp_CurrentMappings->updateContainer(aircraft);
         }
 
@@ -299,6 +315,20 @@ namespace BlackGui
             this->ui->le_AircraftModel->setCompleter(this->m_modelCompleter);
         }
 
+        void CMappingComponent::ps_onRenderedAircraftModelChanged(const CSimulatedAircraft &aircraft, const QString &originator)
+        {
+            if (originator == mappingtOriginator()) { return; }
+            this->ps_onMappingsUpdateRequested();
+            Q_UNUSED(aircraft);
+        }
+
+        void CMappingComponent::ps_onChangedAircraftEnabled(const CSimulatedAircraft &aircraft, const QString &originator)
+        {
+            if (originator == mappingtOriginator()) { return; }
+            this->ps_onMappingsUpdateRequested();
+            Q_UNUSED(aircraft);
+        }
+
         void CMappingComponent::ps_onConnectionStatusChanged(uint from, uint to)
         {
             INetwork::ConnectionStatus fromStatus = static_cast<INetwork::ConnectionStatus>(from);
@@ -308,6 +338,14 @@ namespace BlackGui
             {
                 this->ui->tvp_CurrentMappings->clear();
             }
+        }
+
+        const QString &CMappingComponent::mappingtOriginator()
+        {
+            // string is generated once, the timestamp allows to use multiple
+            // components (as long as they are not generated at the same ms)
+            static const QString o = QString("MAPPINGCOMPONENT:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
+            return o;
         }
 
     } // namespace

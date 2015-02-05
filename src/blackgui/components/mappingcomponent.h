@@ -59,18 +59,15 @@ namespace BlackGui
             //! Aircraft models available
             void ps_onAircraftModelsLoaded();
 
-            //! Mappings changed
-            void ps_onMappingsChanged();
-
             //! Model matched
-            void ps_modelMatched(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            void ps_onModelMatchingCompleted(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Changed count
             void ps_onRowCountChanged(int count, bool withFilter);
 
             //! Simulated aircraft did change in model
             //! \sa CViewBaseNonTemplate::objectChanged
-            void ps_onChangedSimulatedAircraft(const BlackMisc::CVariant &simulatedAircraft, const BlackMisc::CPropertyIndex &index);
+            void ps_onChangedSimulatedAircraftInView(const BlackMisc::CVariant &simulatedAircraft, const BlackMisc::CPropertyIndex &index);
 
             //! Aircraft selected (in view)
             void ps_onAircraftSelectedInView(const QModelIndex &index);
@@ -93,14 +90,20 @@ namespace BlackGui
             //! Request update for models from backend
             void ps_onModelsUpdateRequested();
 
+            //! Rendered aircraft changed
+            void ps_onRenderedAircraftModelChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
+
+            //! aircraft enabled, disabled
+            void ps_onChangedAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
+
             //! Connection status has been changed
             void ps_onConnectionStatusChanged(uint from, uint to);
 
         private:
+            const QString &mappingtOriginator();
             QScopedPointer<Ui::CMappingComponent> ui;
             QCompleter *m_modelCompleter = nullptr;
             BlackGui::Views::CCheckBoxDelegate *m_currentMappingsViewDelegate = nullptr;
-
         };
 
     } // namespace
