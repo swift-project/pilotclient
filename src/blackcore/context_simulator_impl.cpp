@@ -241,6 +241,7 @@ namespace BlackCore
         Q_ASSERT(c);
         c = connect(networkContext, &IContextNetwork::changedAircraftEnabled, this->m_simulator, &ISimulator::changeAircraftEnabled);
         Q_ASSERT(c);
+        Q_UNUSED(c);
 
         for (const CSimulatedAircraft &simAircraft : networkContext->getAircraftInRange())
         {
@@ -296,6 +297,7 @@ namespace BlackCore
             IContextNetwork *networkContext = this->getIContextNetwork();
             Q_ASSERT(networkContext);
             Q_ASSERT(networkContext->isLocalObject());
+            Q_UNUSED(networkContext);
             this->m_simulator->disconnect(); // disconnect all simulator signals
             QObject::disconnect(this, nullptr, this->m_simulator, nullptr); // disconnect receiver simulator
             this->m_simulator->disconnectFrom(); // disconnect from simulator

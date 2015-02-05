@@ -260,8 +260,8 @@ namespace BlackMisc
             bool m_isOnline = false;
             QDateTime m_bookedFromUtc;
             QDateTime m_bookedUntilUtc;
-            CInformationMessage m_atis  = { CInformationMessage::ATIS };
-            CInformationMessage m_metar = { CInformationMessage::METAR };
+            CInformationMessage m_atis  { CInformationMessage::ATIS };
+            CInformationMessage m_metar { CInformationMessage::METAR };
             BlackMisc::Audio::CVoiceRoom m_voiceRoom;
         };
     } // namespace

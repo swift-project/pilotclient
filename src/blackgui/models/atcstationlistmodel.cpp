@@ -127,6 +127,10 @@ namespace BlackGui
                             new QStandardItem(station.getBookedUntilUtc().toString(CDateTimeFormatter::formatYmdhm()))
                         };
                         break;
+                    case NotSet:
+                    default:
+                        Q_ASSERT(false);
+                        break;
                     }
                     typeFolderFirstColumn->appendRow(stationRow);
                 }

@@ -88,6 +88,8 @@ namespace BlackMisc
                 return CVariant::fromValue(this->getMSecsSinceEpoch());
             case IndexUtcTimestampFormatted:
                 return CVariant::fromValue(this->getFormattedUtcTimestamp());
+            default:
+                break;
             }
         }
         const QString m = QString("Cannot handle index %1").arg(index.toQString());
@@ -108,6 +110,9 @@ namespace BlackMisc
             case IndexMSecsSinceEpoch:
                 this->setMSecsSinceEpoch(variant.toInt());
                 return;
+            case IndexUtcTimestampFormatted:
+            default:
+                break;
             }
         }
         const QString m = QString("Cannot handle index %1").arg(index.toQString());
