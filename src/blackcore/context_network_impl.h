@@ -15,6 +15,7 @@
 #include "blackcore/context_network.h"
 #include "blackcore/context_settings.h"
 #include "blackcore/context_runtime.h"
+#include "blackmisc/simulation/simdirectaccessrenderedaircraft.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/network.h"
 #include "blackcore/airspace_monitor.h"
@@ -26,8 +27,7 @@
 #include "blackmisc/avaircraftsituationlist.h"
 
 #include <QMap>
-
-class QTimer;
+#include <QTimer>
 
 namespace BlackCore
 {
@@ -35,7 +35,9 @@ namespace BlackCore
     class CVatsimDataFileReader;
 
     //! Network context implementation
-    class CContextNetwork : public IContextNetwork
+    class CContextNetwork :
+        public IContextNetwork,
+        public BlackMisc::Simulation::IRenderedAircraftProvider
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTNETWORK_INTERFACENAME)
@@ -45,6 +47,18 @@ namespace BlackCore
     public:
         //! Destructor
         virtual ~CContextNetwork();
+
+        //! \copydoc IRenderedAircraftProviderReadOnly::renderedAircraft
+        virtual const BlackMisc::Simulation::CSimulatedAircraftList &renderedAircraft() const override;
+
+        //! \copydoc IRenderedAircraftProvider::renderedAircraft
+        virtual BlackMisc::Simulation::CSimulatedAircraftList &renderedAircraft() override;
+
+        //! \copydoc IRenderedAircraftProviderReadOnly::renderedAircraftSituations
+        virtual const BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() const override;
+
+        //! \copydoc IRenderedAircraftProviderReadOnly::renderedAircraftSituations
+        virtual BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() override;
 
     public slots:
 
@@ -66,11 +80,10 @@ namespace BlackCore
         }
 
         //! \copydoc IContextNetwork::getAircraftInRange()
-        virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override
-        {
-            BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-            return this->m_airspace->renderedAircraft();
-        }
+        virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;
+
+        //! \copydoc IContextNetwork::getAircraftForCallsign
+        virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
         //! \copydoc IContextNetwork::connectToNetwork()
         virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, uint mode) override;
@@ -135,6 +148,12 @@ namespace BlackCore
 
         //! \copydoc IContextNetwork::requestAtisUpdates
         virtual void requestAtisUpdates() override;
+
+        //! \copydoc IContextNetwork::updateAircraftEnabled
+        virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const QString &originator) override;
+
+        //! \copydoc IContextNetwork::updateAircraftModel
+        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) override;
 
         //! \copydoc IContextNetwork::testCreateDummyOnlineAtcStations
         virtual void testCreateDummyOnlineAtcStations(int number) override;

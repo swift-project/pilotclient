@@ -76,18 +76,37 @@ namespace BlackCore
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked);
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus);
         connect(this->m_airspace, &CAirspaceMonitor::changedAircraftInRange, this, &CContextNetwork::changedAircraftInRange);
-        connect(this->m_airspace, &CAirspaceMonitor::changedAircraftSituation, this, &CContextNetwork::changedAircraftSituation);
         connect(this->m_airspace, &CAirspaceMonitor::removedAircraft, this, &CContextNetwork::removedAircraft);
         connect(this->m_airspace, &CAirspaceMonitor::readyForModelMatching, this, &CContextNetwork::readyForModelMatching);
-
-        //! \todo Should be set in runtime, but this would require airspace to be a context
-        // connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraft, this->m_airspace, &CAirspaceMonitor::setOwnAircraft);
-        // connect(this->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this->m_airspace, &CAirspaceMonitor::setOwnAircraftModel);
     }
 
     CContextNetwork::~CContextNetwork()
     {
         this->gracefulShutdown();
+    }
+
+    const CSimulatedAircraftList &CContextNetwork::renderedAircraft() const
+    {
+        Q_ASSERT(this->m_airspace);
+        return m_airspace->renderedAircraft();
+    }
+
+    CSimulatedAircraftList &CContextNetwork::renderedAircraft()
+    {
+        Q_ASSERT(this->m_airspace);
+        return m_airspace->renderedAircraft();
+    }
+
+    CAircraftSituationList &CContextNetwork::renderedAircraftSituations()
+    {
+        Q_ASSERT(this->m_airspace);
+        return m_airspace->renderedAircraftSituations();
+    }
+
+    const CAircraftSituationList &CContextNetwork::renderedAircraftSituations() const
+    {
+        Q_ASSERT(this->m_airspace);
+        return m_airspace->renderedAircraftSituations();
     }
 
     void CContextNetwork::gracefulShutdown()
@@ -297,7 +316,20 @@ namespace BlackCore
     void CContextNetwork::readAtcBookingsFromSource() const
     {
         Q_ASSERT(this->m_vatsimBookingReader);
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         this->m_vatsimBookingReader->read();
+    }
+
+    CSimulatedAircraftList CContextNetwork::getAircraftInRange() const
+    {
+        BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        return this->m_airspace->renderedAircraft();
+    }
+
+    CSimulatedAircraft CContextNetwork::getAircraftForCallsign(const CCallsign &callsign) const
+    {
+        BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign;
+        return this->m_airspace->renderedAircraft().findFirstByCallsign(callsign);
     }
 
     void CContextNetwork::ps_receivedBookings(const CAtcStationList &)
@@ -310,7 +342,8 @@ namespace BlackCore
     void CContextNetwork::requestDataUpdates()
     {
         Q_ASSERT(this->m_network);
-        if (!this->isConnected()) return;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (!this->isConnected()) { return; }
 
         this->requestAtisUpdates();
         this->m_airspace->requestDataUpdates();
@@ -319,13 +352,37 @@ namespace BlackCore
     void CContextNetwork::requestAtisUpdates()
     {
         Q_ASSERT(this->m_network);
-        if (!this->isConnected()) return;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (!this->isConnected()) { return; }
 
         this->m_airspace->requestAtisUpdates();
     }
 
+    bool CContextNetwork::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRedering, const QString &originator)
+    {
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << enabledForRedering << originator;
+        bool c = this->m_airspace->updateAircraftEnabled(callsign, enabledForRedering, originator);
+        if (c)
+        {
+            emit this->changedAircraftEnabled(this->renderedAircraft().findFirstByCallsign(callsign), originator);
+        }
+        return c;
+    }
+
+    bool CContextNetwork::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const QString &originator)
+    {
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << model << originator;
+        bool c = this->m_airspace->updateAircraftModel(callsign, model, originator);
+        if (c)
+        {
+            emit this->changedRenderedAircraftModel(this->renderedAircraft().findFirstByCallsign(callsign), originator);
+        }
+        return c;
+    }
+
     void CContextNetwork::testCreateDummyOnlineAtcStations(int number)
     {
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << number;
         this->m_airspace->testCreateDummyOnlineAtcStations(number);
     }
 

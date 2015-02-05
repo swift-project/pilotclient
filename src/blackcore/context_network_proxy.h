@@ -26,7 +26,7 @@
 namespace BlackCore
 {
 
-    //! \brief Network context proxy
+    //! Network context proxy
     //! \ingroup dbus
     class CContextNetworkProxy : public IContextNetwork
     {
@@ -64,6 +64,9 @@ namespace BlackCore
 
         //! \copydoc IContextNetwork::getAircraftInRange()
         virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;
+
+        //! \copydoc IContextNetwork::getAircraftForCallsign
+        virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
         //! \copydoc IContextNetwork::connectToNetwork
         virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, uint mode) override;
@@ -121,6 +124,12 @@ namespace BlackCore
 
         //! \copydoc IContextNetwork::requestAtisUpdates
         virtual void requestAtisUpdates() override;
+
+        //! \copydoc IContextNetwork::updateAircraftEnabled
+        virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const QString &originator) override;
+
+        //! \copydoc IContextNetwork::updateAircraftModel
+        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) override;
 
         //! \copydoc IContextNetwork::testCreateDummyOnlineAtcStations
         virtual void testCreateDummyOnlineAtcStations(int number) override;

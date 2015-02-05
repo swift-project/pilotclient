@@ -81,11 +81,8 @@ namespace BlackCore
         //! Installed aircraft models ready or changed
         void installedAircraftModelsChanged();
 
-        //! A single model has been matched for given Aircraft
+        //! A single model has been matched for given aircraft
         void modelMatchingCompleted(BlackMisc::Simulation::CSimulatedAircraft aircraft);
-
-        //! A remote aircraft got changed
-        void remoteAircraftChanged(BlackMisc::Simulation::CSimulatedAircraft aircraft);
 
         //! Emitted when own aircraft model changes
         //! \todo move to own aircraft context?
@@ -124,25 +121,24 @@ namespace BlackCore
         //! Installed models in simulator eco system
         virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const = 0;
 
-        //! Simulated other aircraft in range
-        virtual BlackMisc::Simulation::CSimulatedAircraftList getRemoteAircraft() const = 0;
+        //! Model for model string
+        virtual BlackMisc::Simulation::CAircraftModelList getInstalledModelsStartingWith(const QString modelString) const = 0;
 
-        //! Changed remote aircraft (e.g. by disabling aircraft)
-        //! \todo tbd No add/remove remote aircraft function as those are added implicitly by accessing airspace monitor
-        virtual int changeRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &toChangeAircraft, const BlackMisc::CPropertyIndexVariantMap &changeValues) = 0;
+        //! ICAO data for model string
+        virtual BlackMisc::Aviation::CAircraftIcao getIcaoForModelString(const QString &modelString) const = 0;
 
         //! Set time synchronization between simulator and user's computer time
         //! \remarks not all drivers implement this, e.g. if it is an intrinsic simulator feature
-        virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) = 0;
+        virtual bool setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) = 0;
 
         //! Is time synchronization on?
         virtual bool isTimeSynchronized() const = 0;
 
         //! Max. number of remote aircraft rendered
-        virtual int getMaxRenderedRemoteAircraft() const = 0;
+        virtual int getMaxRenderedAircraft() const = 0;
 
         //! Max. number of remote aircraft rendered
-        virtual void setMaxRenderedRemoteAircraft(int number) = 0;
+        virtual void setMaxRenderedAircraft(int number) = 0;
 
         //! Time synchronization offset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;

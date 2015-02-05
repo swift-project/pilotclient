@@ -51,9 +51,6 @@ namespace BlackCore
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                "modelMatchingCompleted", this, SIGNAL(modelMatchingCompleted(BlackMisc::Simulation::CSimulatedAircraft)));
         Q_ASSERT(s);
-        s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                               "remoteAircraftChanged", this, SIGNAL(remoteAircraftChanged(BlackMisc::Simulation::CSimulatedAircraft)));
-        Q_ASSERT(s);
         Q_UNUSED(s);
     }
 
@@ -97,14 +94,14 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CAircraftModelList>(QLatin1Literal("getInstalledModels"));
     }
 
-    CSimulatedAircraftList CContextSimulatorProxy::getRemoteAircraft() const
+    CAircraftModelList CContextSimulatorProxy::getInstalledModelsStartingWith(const QString modelString) const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraftList>(QLatin1Literal("getRemoteAircraft"));
+        return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CAircraftModelList>(QLatin1Literal("getInstalledModelsStartingWith"));
     }
 
-    int CContextSimulatorProxy::changeRemoteAircraft(const CSimulatedAircraft &changedAircraft, const CPropertyIndexVariantMap &changedValues)
+    CAircraftIcao CContextSimulatorProxy::getIcaoForModelString(const QString &modelString) const
     {
-        return m_dBusInterface->callDBusRet<int>(QLatin1Literal("changeRemoteAircraft"), changedAircraft, changedValues);
+        return m_dBusInterface->callDBusRet<CAircraftIcao>(QLatin1Literal("getIcaoForModelString"), modelString);
     }
 
     BlackSim::CSimulatorInfo CContextSimulatorProxy::getSimulatorInfo() const
@@ -112,9 +109,9 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<BlackSim::CSimulatorInfo>(QLatin1Literal("getSimulatorInfo"));
     }
 
-    void CContextSimulatorProxy::setTimeSynchronization(bool enable, CTime offset)
+    bool CContextSimulatorProxy::setTimeSynchronization(bool enable, CTime offset)
     {
-        m_dBusInterface->callDBus(QLatin1Literal("setTimeSynchronization"), enable, offset);
+        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("setTimeSynchronization"), enable, offset);
     }
 
     bool CContextSimulatorProxy::isTimeSynchronized() const
@@ -122,14 +119,14 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isTimeSynchronized"));
     }
 
-    void CContextSimulatorProxy::setMaxRenderedRemoteAircraft(int number)
+    void CContextSimulatorProxy::setMaxRenderedAircraft(int number)
     {
         m_dBusInterface->callDBus(QLatin1Literal("setMaxRenderedRemoteAircraft"), number);
     }
 
-    int CContextSimulatorProxy::getMaxRenderedRemoteAircraft() const
+    int CContextSimulatorProxy::getMaxRenderedAircraft() const
     {
-        return m_dBusInterface->callDBusRet<int>(QLatin1Literal("getMaxRenderedRemoteAircraft"));
+        return m_dBusInterface->callDBusRet<int>(QLatin1Literal("getMaxRenderedAircraft"));
     }
 
     CTime CContextSimulatorProxy::getTimeSynchronizationOffset() const

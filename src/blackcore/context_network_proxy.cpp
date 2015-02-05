@@ -72,6 +72,12 @@ namespace BlackCore
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "vatsimBookingsRead", this, SIGNAL(vatsimBookingsRead()));
         Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
+                               "changedRenderedAircraftModel", this, SIGNAL(changedRenderedAircraftModel(BlackMisc::Simulation::CSimulatedAircraft,QString)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
+                               "changedAircraftEnabled", this, SIGNAL(changedAircraftEnabled(BlackMisc::Simulation::CSimulatedAircraft,QString)));
+        Q_ASSERT(s);
         Q_UNUSED(s);
     }
 
@@ -94,6 +100,11 @@ namespace BlackCore
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraftList>(QLatin1Literal("getAircraftInRange"));
     }
+
+    Simulation::CSimulatedAircraft CContextNetworkProxy::getAircraftForCallsign(const CCallsign &callsign) const
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraft>(QLatin1Literal("getAircraftForCallsign"), callsign);
+   }
 
     BlackMisc::Network::CUserList CContextNetworkProxy::getUsers() const
     {
@@ -148,6 +159,16 @@ namespace BlackCore
     void CContextNetworkProxy::requestAtisUpdates()
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("requestAtisUpdates"));
+    }
+
+    bool CContextNetworkProxy::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRedering, const QString &originator)
+    {
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateAircraftEnabled"), callsign, enabledForRedering, originator);
+    }
+
+    bool CContextNetworkProxy::updateAircraftModel(const CCallsign &callsign, const Simulation::CAircraftModel &model, const QString &originator)
+    {
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateAircraftModel"), callsign, model, originator);
     }
 
     void CContextNetworkProxy::testCreateDummyOnlineAtcStations(int number)

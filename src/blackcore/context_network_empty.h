@@ -60,6 +60,14 @@ namespace BlackCore
             return BlackMisc::Simulation::CSimulatedAircraftList();
         }
 
+        //! \copydoc IContextNetwork::getAircraftForCallsign
+        virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override
+        {
+            Q_UNUSED(callsign);
+            logEmptyContextWarning(Q_FUNC_INFO);
+            return BlackMisc::Simulation::CSimulatedAircraft();
+        }
+
         //! \copydoc IContextNetwork::connectToNetwork
         virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, uint mode) override
         {
@@ -194,17 +202,37 @@ namespace BlackCore
         }
 
         //! \copydoc IContextNetwork::getVatsimVoiceServers
-        virtual BlackMisc::Network::CServerList getVatsimVoiceServers() const
+        virtual BlackMisc::Network::CServerList getVatsimVoiceServers() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             return BlackMisc::Network::CServerList();
         }
 
         //! \copydoc IContextNetwork::getVatsimFsdServers
-        virtual BlackMisc::Network::CServerList getVatsimFsdServers() const
+        virtual BlackMisc::Network::CServerList getVatsimFsdServers() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             return BlackMisc::Network::CServerList();
+        }
+
+        //! \copydoc IContextNetwork::updateAircraftEnabled
+        virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const QString &originator) override
+        {
+            Q_UNUSED(callsign);
+            Q_UNUSED(originator);
+            Q_UNUSED(enabledForRedering);
+            logEmptyContextWarning(Q_FUNC_INFO);
+            return false;
+        }
+
+        //! \copydoc IContextNetwork::updateAircraftModel
+        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) override
+        {
+            Q_UNUSED(callsign);
+            Q_UNUSED(originator);
+            Q_UNUSED(model);
+            logEmptyContextWarning(Q_FUNC_INFO);
+            return false;
         }
     };
 } // namespace

@@ -74,26 +74,26 @@ namespace BlackCore
         //! \copydoc IContextSimulator::getInstalledModels()
         virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override;
 
-        //! \copydoc IContextSimulator::getRemoteAircraft
-        virtual BlackMisc::Simulation::CSimulatedAircraftList getRemoteAircraft() const override;
+        //! \copydoc IContextSimulator::getInstalledModelsStartingWith
+        virtual BlackMisc::Simulation::CAircraftModelList getInstalledModelsStartingWith(const QString modelString) const override;
 
-        //! \copydoc IContextSimulator::changeRemoteAircraft
-        virtual int changeRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &changedAircraft, const BlackMisc::CPropertyIndexVariantMap &changedValues) override;
+        //! \copydoc IContextSimulator::getIcaoForModelString
+        virtual BlackMisc::Aviation::CAircraftIcao getIcaoForModelString(const QString &modelString) const override;
 
         //! \copydoc IContextSimulator::getSimulatorInfo
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
 
         //! \copydoc IContextSimulator::setTimeSynchronization
-        virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
+        virtual bool setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
 
         //! \copydoc IContextSimulator::isTimeSynchronized
         virtual bool isTimeSynchronized() const override;
 
-        //! \copydoc IContextSimulator::getMaxRenderedRemoteAircraft
-        virtual int getMaxRenderedRemoteAircraft() const override;
+        //! \copydoc IContextSimulator::getMaxRenderedAircraft
+        virtual int getMaxRenderedAircraft() const override;
 
         //! \copydoc IContextSimulator::setMaxRenderedRemoteAircraft
-        virtual void setMaxRenderedRemoteAircraft(int number) override;
+        virtual void setMaxRenderedAircraft(int number) override;
 
         //! \copydoc IContextSimulator::getTimeSynchronizationOffset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;

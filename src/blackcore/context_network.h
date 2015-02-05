@@ -72,7 +72,7 @@ namespace BlackCore
         void removedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Read for model matching
-        void readyForModelMatching(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
+        void readyForModelMatching(const BlackMisc::Simulation::CSimulatedAircraft &renderedAircraft);
 
         //! ATC station (online) list has been changed
         void changedAtcStationsOnline();
@@ -92,8 +92,11 @@ namespace BlackCore
         //! Digest signal changedAircraftInRange()
         void changedAircraftInRangeDigest();
 
-        //! Aircraft situation update
-        void changedAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation);
+        //! Aircraft model was changed
+        void changedRenderedAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
+
+        //! Aircraft enabled / disabled
+        void changedAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
 
         //! Connection status changed for online station
         void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &atcStation, bool connected);
@@ -132,6 +135,9 @@ namespace BlackCore
 
         //! Aircraft list
         virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const = 0;
+
+        //! Aircraft for given callsign
+        virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
         //! Get all users
         virtual BlackMisc::Network::CUserList getUsers() const = 0;
@@ -182,11 +188,7 @@ namespace BlackCore
         //! Command line was entered
         virtual bool parseCommandLine(const QString &commandLine) = 0;
 
-        /*!
-         * Get METAR, if not available request it
-         * \param airportIcaoCode such as EDDF, KLAX
-         * \return
-         */
+        //! Get METAR, if not available request it (code such as EDDF, KLAX)
         virtual BlackMisc::Aviation::CInformationMessage getMetar(const BlackMisc::Aviation::CAirportIcao &airportIcaoCode) = 0;
 
         //! Use the selected COM1/2 frequencies, and get the corresponding voice room for it
@@ -200,6 +202,12 @@ namespace BlackCore
 
         //! Request ATIS updates (for all stations)
         virtual void requestAtisUpdates() = 0;
+
+        //! Enable/disable rendering
+        virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const QString &originator) = 0;
+
+        //! Change model string
+        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) = 0;
 
         //! Create dummy ATC stations for performance tests etc.
         virtual void testCreateDummyOnlineAtcStations(int number) = 0;
