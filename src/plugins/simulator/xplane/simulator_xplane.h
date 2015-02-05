@@ -23,20 +23,22 @@ namespace BlackSimPlugin
 {
     namespace XPlane
     {
-
         class CXBusServiceProxy;
         class CXBusTrafficProxy;
 
         /*!
          * X-Plane ISimulator implementation
          */
-        class CSimulatorXPlane : public BlackCore::ISimulator, BlackMisc::Simulation::COwnAircraftProviderSupport
+        class CSimulatorXPlane : public BlackCore::CSimulatorCommon
         {
             Q_OBJECT
 
         public:
-            //! Constructor
-            CSimulatorXPlane(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent = nullptr);
+            //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
+            CSimulatorXPlane(
+                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraft,
+                QObject *parent = nullptr);
 
             //! \copydoc BlackCore::ISimulator::isConnected
             virtual bool isConnected() const override;
@@ -53,6 +55,9 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::isSimulating
             virtual bool isSimulating() const override { return isConnected(); }
 
+            //! \copydoc BlackCore::ISimulator::getIcaoForModelString
+            virtual BlackMisc::Aviation::CAircraftIcao getIcaoForModelString(const QString &modelString) const override;
+
         public slots:
             //! \copydoc BlackCore::ISimulator::connectTo
             virtual bool connectTo() override;
@@ -64,26 +69,23 @@ namespace BlackSimPlugin
             virtual bool disconnectFrom() override;
 
             //! \copydoc ISimulator::addRemoteAircraft()
-            virtual void addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
-
-            //! \copydoc BlackCore::ISimulator::getRemoteAircraft
-            virtual BlackMisc::Simulation::CSimulatedAircraftList getRemoteAircraft() const override { return m_remoteAircraft; }
+            virtual bool addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
 
             //! \copydoc BlackCore::ISimulator::addAircraftSituation
             virtual void addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign,
                                               const BlackMisc::Aviation::CAircraftSituation &situation) override;
 
             //! \copydoc BlackCore::ISimulator::removeRemoteAircraft
-            virtual int removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual bool removeRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 
-            //! \copydoc ISimulator::changeRemoteAircraft
-            virtual int changeRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &changedAircraft, const BlackMisc::CPropertyIndexVariantMap &changeValues) override;
+            //! \copydoc ISimulator::changeRenderedAircraftModel
+            virtual bool changeRenderedAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) override;
+
+            //! \copydoc ISimulator::changeAircraftEnabled
+            virtual bool changeAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) override;
 
             //! \copydoc BlackCore::ISimulator::updateOwnSimulatorCockpit
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator) override;
-
-            //! \copydoc BlackCore::ISimulator::getSimulatorInfo
-            virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override { return BlackSim::CSimulatorInfo::XP(); }
 
             //! \copydoc BlackCore::ISimulator::displayStatusMessage
             virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const override;
@@ -94,11 +96,11 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::getInstalledModels
             virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override;
 
-            //! Airports in range
-            virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
+             //! \copydoc BlackCore::ISimulator::getAirportsInRange
+            virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const;
 
             //! \copydoc ISimulator::setTimeSynchronization
-            virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
+            virtual bool setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
 
             //! \copydoc ISimulator::getTimeSynchronizationOffset
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override { return BlackMisc::PhysicalQuantities::CTime(0, BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()); }
@@ -121,10 +123,7 @@ namespace BlackSimPlugin
             CXBusTrafficProxy *m_traffic { nullptr };
             QTimer *m_fastTimer { nullptr };
             QTimer *m_slowTimer { nullptr };
-
-            BlackMisc::Aviation::CAirportList m_airports;
-            BlackMisc::Simulation::CSimulatedAircraftList m_remoteAircraft;
-
+            BlackMisc::Aviation::CAirportList m_airportsInRange;   //!< aiports in range of own aircraft
             BlackMisc::Simulation::CSimulatedAircraft xplaneDataToSimulatedAircraft() const;
 
             //! \todo Add units to members? pitchDeg?, altitudeFt?
@@ -158,12 +157,15 @@ namespace BlackSimPlugin
         class CSimulatorXPlaneFactory : public QObject, public BlackCore::ISimulatorFactory
         {
             Q_OBJECT
-            Q_PLUGIN_METADATA(IID "net.vatsim.PilotClient.BlackCore.SimulatorInterface")
+            Q_PLUGIN_METADATA(IID "org.swift.PilotClient.BlackCore.SimulatorInterface")
             Q_INTERFACES(BlackCore::ISimulatorFactory)
 
         public:
-            //! \copydoc BlackCore::ISimulatorFactory::create
-            virtual BlackCore::ISimulator *create(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent = nullptr) override;
+            //! \copydoc BlackCore::ISimulatorFactory::create()
+            virtual BlackCore::ISimulator *create(
+                BlackMisc::Simulation::IOwnAircraftProvider      *ownAircraftProvider,
+                BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraftProvider,
+                QObject *parent) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::getSimulatorInfo
             virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override { return BlackSim::CSimulatorInfo::XP(); }

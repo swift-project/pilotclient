@@ -26,9 +26,9 @@ namespace BlackSimPlugin
 {
     namespace FsCommon
     {
-
-        CSimulatorFsCommon::CSimulatorFsCommon(const BlackSim::CSimulatorInfo &simInfo, BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent) :
-            ISimulator(parent), COwnAircraftProviderSupport(ownAircraft), m_simulatorInfo(simInfo), m_fsuipc(new FsCommon::CFsuipc())
+        CSimulatorFsCommon::CSimulatorFsCommon(const BlackSim::CSimulatorInfo &simInfo, BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider, IRenderedAircraftProvider *renderedAircraftProvider, QObject *parent) :
+            CSimulatorCommon(simInfo, ownAircraftProvider, renderedAircraftProvider, parent),
+            m_fsuipc(new FsCommon::CFsuipc())
         {
             // hack to init mapper
             CAircraftMapper *mapper = mapperInstance();
@@ -60,27 +60,17 @@ namespace BlackSimPlugin
             return m_syncTimeOffset;
         }
 
-        void CSimulatorFsCommon::setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset)
+        bool CSimulatorFsCommon::setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset)
         {
             this->m_simTimeSynced = enable;
             this->m_syncTimeOffset = offset;
-        }
-
-        BlackSim::CSimulatorInfo CSimulatorFsCommon::getSimulatorInfo() const
-        {
-            return this->m_simulatorInfo;
-        }
-
-        CSimulatedAircraftList CSimulatorFsCommon::getRemoteAircraft() const
-        {
-            return this->m_remoteAircraft;
+            return true;
         }
 
         CAirportList CSimulatorFsCommon::getAirportsInRange() const
         {
-            return this->m_airportsInRange;
+            return m_airportsInRange;
         }
-
 
         void CSimulatorFsCommon::setOwnAircraftModel(const QString &modelName)
         {
@@ -95,18 +85,19 @@ namespace BlackSimPlugin
             {
                 CAircraftModel newModel(model);
                 newModel.setModelType(CAircraftModel::TypeOwnSimulatorModel);
-                if (this->mapperInstance() && this->mapperInstance()->isInitialized())
-                {
-                    // reverse lookup of ICAO
-                    CAircraftMappingList ml = this->mapperInstance()->getAircraftMappingList().findByModelString(model.getModelString());
-                    if (!ml.isEmpty())
-                    {
-                        CAircraftMapping mapping = ml.front();
-                        newModel.setIcao(mapping.getIcao());
-                    }
-                }
+                CSimulatorFsCommon::reverseLookupIcaoData(newModel);
                 ownAircraft().setModel(newModel);
                 emit ownAircraftModelChanged(ownAircraft());
+            }
+        }
+
+        void CSimulatorFsCommon::reverseLookupIcaoData(CAircraftModel &model)
+        {
+            if (mapperInstance() && mapperInstance()->isInitialized())
+            {
+                // reverse lookup of ICAO
+                CAircraftIcao icao =  mapperInstance()->getIcaoForModelString(model.getModelString());
+                icao.updateMissingParts(icao);
             }
         }
 
@@ -121,24 +112,26 @@ namespace BlackSimPlugin
 
         CAircraftModel CSimulatorFsCommon::modelMatching(const CSimulatedAircraft &remoteAircraft)
         {
-
-            // Manually set string?
-            if (remoteAircraft.getModel().hasManuallySetString())
-            {
-                // manual set model
-                return remoteAircraft.getModel();
-            }
+            //! \todo Model Matching before models are read
 
             // default model
             CAircraftModel aircraftModel(remoteAircraft); // set defaults
 
+            // Manually set string?
+            if (remoteAircraft.getModel().hasManuallySetString())
+            {
+                // manual set model, maybe update missing parts
+                aircraftModel.updateMissingParts(remoteAircraft.getModel());
+                CSimulatorFsCommon::reverseLookupIcaoData(aircraftModel);
+                return aircraftModel;
+            }
+
             // mapper ready?
             if (!mapperInstance()->isInitialized())
             {
-                //! \todo Model Matching before models are read
                 // will be removed later, just for experimental version
-                aircraftModel.setModelString("Boeing 737-800 Paint1");
-                aircraftModel.setDescription("Model mapper not ready");
+                aircraftModel = CAircraftMapper::getDefaultModel();
+                aircraftModel.setCallsign(remoteAircraft.getCallsign());
                 CLogMessage(static_cast<CSimulatorFsCommon *>(nullptr)).warning("Mapper not ready, set to default model");
                 return aircraftModel;
             }
@@ -174,9 +167,7 @@ namespace BlackSimPlugin
             // default or sanity check
             if (!aircraftModel.hasModelString())
             {
-                aircraftModel.setModelString("Boeing 737-800 Paint1");
-                aircraftModel.setDescription("Default model");
-                aircraftModel.setModelType(CAircraftModel::TypeModelMatching);
+                aircraftModel = CAircraftMapper::getDefaultModel();
             }
             else
             {
@@ -187,8 +178,8 @@ namespace BlackSimPlugin
                     Q_ASSERT_X(false, "modelMatching", m.toLocal8Bit().constData());
                 }
             }
-
             aircraftModel.setCallsign(remoteAircraft.getCallsign());
+
             Q_ASSERT(!aircraftModel.getCallsign().isEmpty());
             Q_ASSERT(aircraftModel.hasModelString());
             Q_ASSERT(aircraftModel.getModelType() != CAircraftModel::TypeUnknown);
@@ -208,6 +199,12 @@ namespace BlackSimPlugin
         {
             if (!mapperInstance()) { return CAircraftModelList(); }
             return mapperInstance()->getAircraftCfgEntriesList().toAircraftModelList();
+        }
+
+        CAircraftIcao CSimulatorFsCommon::getIcaoForModelString(const QString &modelString) const
+        {
+            if (!mapperInstance()) { return CAircraftIcao(); }
+            return mapperInstance()->getIcaoForModelString(modelString);
         }
 
         CPixmap CSimulatorFsCommon::iconForModel(const QString &modelString) const
@@ -241,7 +238,34 @@ namespace BlackSimPlugin
             return empty;
         }
 
+        int CSimulatorFsCommon::getMaxRenderedAircraft() const
+        {
+            return this->m_maxRenderedAircraft;
+        }
+
+        void CSimulatorFsCommon::setMaxRenderedAircraft(int maxRenderedAircraft)
+        {
+            this->m_maxRenderedAircraft = maxRenderedAircraft;
+        }
+
+        bool CSimulatorFsCommon::changeRenderedAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator)
+        {
+            return this->changeAircraftEnabled(aircraft, originator);
+        }
+
+        bool CSimulatorFsCommon::changeAircraftEnabled(const CSimulatedAircraft &aircraft, const QString &originator)
+        {
+            if (originator == simulatorOriginator()) { return false; }
+            if (aircraft.isEnabled())
+            {
+                this->addRemoteAircraft(aircraft);
+            }
+            else
+            {
+                this->removeRenderedAircraft(aircraft.getCallsign());
+            }
+            return true;
+        }
 
     } // namespace
 } // namespace
-

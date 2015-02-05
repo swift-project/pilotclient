@@ -36,12 +36,15 @@ namespace BlackSimPlugin
         class CSimulatorFs9Factory : public QObject, public BlackCore::ISimulatorFactory
         {
             Q_OBJECT
-            Q_PLUGIN_METADATA(IID "net.vatsim.PilotClient.BlackCore.SimulatorInterface")
+            Q_PLUGIN_METADATA(IID "org.swift.PilotClient.BlackCore.SimulatorInterface")
             Q_INTERFACES(BlackCore::ISimulatorFactory)
 
         public:
             //! \copydoc BlackCore::ISimulatorFactory::create()
-            virtual BlackCore::ISimulator *create(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent) override;
+            virtual BlackCore::ISimulator *create(
+                    BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                    BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraftProvider,
+                    QObject *parent) override;
 
             //! Simulator info
             virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
@@ -53,8 +56,11 @@ namespace BlackSimPlugin
             Q_OBJECT
 
         public:
-            //! Constructor
-            CSimulatorFs9(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent);
+            //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
+            CSimulatorFs9(
+                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraft,
+                QObject *parent = nullptr);
 
             //! Destructor
             virtual ~CSimulatorFs9();
@@ -80,19 +86,13 @@ namespace BlackSimPlugin
             virtual bool disconnectFrom() override;
 
             //! \copydoc ISimulator::addRemoteAircraft()
-            virtual void addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
-
-            //! \copydoc BlackCore::ISimulator::getRemoteAircraft
-            virtual BlackMisc::Simulation::CSimulatedAircraftList getRemoteAircraft() const override { return m_remoteAircraft; }
+            virtual bool addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
 
             //! \copydoc ISimulator::addAircraftSituation()
             virtual void addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation) override;
 
             //! \copydoc ISimulator::removeRemoteAircraft()
-            virtual int removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
-
-            //! \copydoc ISimulator::changeRemoteAircraft
-            virtual int changeRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &changedAircraft, const BlackMisc::CPropertyIndexVariantMap &changeValues) override;
+            virtual bool removeRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 
             //! \copydoc ISimulator::updateOwnSimulatorCockpit()
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &ownAircraft, const QString &originator) override;

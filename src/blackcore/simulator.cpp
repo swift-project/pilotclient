@@ -9,13 +9,33 @@
 
 #include "simulator.h"
 
+using namespace BlackMisc::Aviation;
+using namespace BlackSim;
+
 namespace BlackCore
 {
-    ISimulator::ISimulator(QObject *parent) : QObject(parent)
-    { }
-
     void ISimulator::emitSimulatorCombinedStatus()
     {
         emit simulatorStatusChanged(isConnected(), isSimulating(), isPaused());
     }
+
+    CSimulatorCommon::CSimulatorCommon(const BlackSim::CSimulatorInfo &simInfo, BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider, BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraftProvider, QObject *parent)
+        : ISimulator(parent), COwnAircraftProviderSupport(ownAircraftProvider), CRenderedAircraftProviderSupport(renderedAircraftProvider), m_simulatorInfo(simInfo)
+    { }
+
+    int CSimulatorCommon::getMaxRenderedAircraft() const
+    {
+        return m_maxRenderedAircraft;
+    }
+
+    void CSimulatorCommon::setMaxRenderedAircraft(int maxRenderedAircraft)
+    {
+        m_maxRenderedAircraft = maxRenderedAircraft;
+    }
+
+    CSimulatorInfo CSimulatorCommon::getSimulatorInfo() const
+    {
+        return m_simulatorInfo;
+    }
+
 } // namespace

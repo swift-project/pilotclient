@@ -36,10 +36,11 @@ namespace BlackSimPlugin
 {
     namespace Fsx
     {
-        CSimulatorFsx::CSimulatorFsx(IOwnAircraftProvider *ownAircraft, QObject *parent) :
-            CSimulatorFsCommon(CSimulatorInfo::FSX(), ownAircraft, parent)
+        CSimulatorFsx::CSimulatorFsx(IOwnAircraftProvider *ownAircraftProvider, IRenderedAircraftProvider *renderedAircraftProvider, QObject *parent) :
+            CSimulatorFsCommon(CSimulatorInfo::FSX(), ownAircraftProvider, renderedAircraftProvider, parent)
         {
-            Q_ASSERT(ownAircraft);
+            Q_ASSERT(ownAircraftProvider);
+            Q_ASSERT(renderedAircraftProvider);
             CFsxSimulatorSetup setup;
             setup.init(); // this fetches important settings on local side
             this->m_simulatorInfo.setSimulatorSetup(setup.getSettings());
@@ -131,13 +132,20 @@ namespace BlackSimPlugin
             return connect;
         }
 
-        void CSimulatorFsx::addRemoteAircraft(const Simulation::CSimulatedAircraft &remoteAircraft)
+        bool CSimulatorFsx::addRemoteAircraft(const Simulation::CSimulatedAircraft &remoteAircraft)
         {
             CCallsign callsign = remoteAircraft.getCallsign();
             Q_ASSERT(!callsign.isEmpty());
-            if (callsign.isEmpty()) { return; }
+            if (callsign.isEmpty()) { return false; }
 
-            bool aircraftAlreadyExists = m_remoteAircraft.containsCallsign(callsign);
+            bool aircraftAlreadyExistsInSim = this->m_simConnectObjects.contains(callsign);
+            if (aircraftAlreadyExistsInSim)
+            {
+                // remove first
+                this->removeRenderedAircraft(callsign);
+                Q_ASSERT(false);
+            }
+
             SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxInitPosition(remoteAircraft.getSituation());
             initialPosition.Airspeed = 0;
             initialPosition.OnGround = 0;
@@ -146,7 +154,6 @@ namespace BlackSimPlugin
             simObj.setCallsign(callsign);
             simObj.setRequestId(m_nextObjID);
             simObj.setObjectId(0);
-            m_simConnectObjects.insert(callsign, simObj);
             ++m_nextObjID;
 
             addAircraftSituation(callsign, remoteAircraft.getSituation());
@@ -154,22 +161,27 @@ namespace BlackSimPlugin
             // matched models
             CAircraftModel aircraftModel = modelMatching(remoteAircraft);
             Q_ASSERT(remoteAircraft.getCallsign() == aircraftModel.getCallsign());
-            CSimulatedAircraft mappedRemoteAircraft(remoteAircraft);
-            mappedRemoteAircraft.setModel(aircraftModel);
-            m_remoteAircraft.replaceOrAdd(&CSimulatedAircraft::getCallsign, callsign, mappedRemoteAircraft);
-            emit modelMatchingCompleted(mappedRemoteAircraft);
+            providerUpdateAircraftModel(remoteAircraft.getCallsign(), aircraftModel, simulatorOriginator());
+            CSimulatedAircraft aircraftAfterModelApplied = renderedAircraft().findFirstByCallsign(remoteAircraft.getCallsign());
+            emit modelMatchingCompleted(aircraftAfterModelApplied);
 
             // create AI
-            //! \todo isConnected() or isSimulating() ??
-            if (isConnected())
+            if (isSimulating())
             {
                 //! \todo if exists, recreate (new model?, new ICAO code)
-                if (!aircraftAlreadyExists)
-                {
-                    QByteArray m = aircraftModel.getModelString().toLocal8Bit();
-                    HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, m.constData(), qPrintable(callsign.toQString().left(12)), initialPosition, simObj.getRequestId());
-                    if (hr != S_OK) { CLogMessage(this).error("SimConnect, can not create AI traffic"); }
-                }
+                QByteArray m = aircraftModel.getModelString().toLocal8Bit();
+                HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, m.constData(), qPrintable(callsign.toQString().left(12)), initialPosition, simObj.getRequestId());
+                if (hr != S_OK) { CLogMessage(this).error("SimConnect, can not create AI traffic"); }
+                m_simConnectObjects.insert(callsign, simObj);
+                renderedAircraft().applyIfCallsign(callsign, CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(true)));
+                CLogMessage(this).info("FSX: Added aircraft %1") << callsign.toQString();
+                return true;
+            }
+            else
+            {
+                renderedAircraft().applyIfCallsign(callsign, CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(false)));
+                CLogMessage(this).warning("FSX: Not connected, not added aircraft %1") << callsign.toQString();
+                return false;
             }
         }
 
@@ -183,38 +195,10 @@ namespace BlackSimPlugin
             m_simConnectObjects.insert(callsign, simObj);
         }
 
-        int CSimulatorFsx::removeRemoteAircraft(const CCallsign &callsign)
+        bool CSimulatorFsx::removeRenderedAircraft(const CCallsign &callsign)
         {
-            removeRemoteAircraft(m_simConnectObjects.value(callsign));
-            return m_remoteAircraft.removeIf(&CSimulatedAircraft::getCallsign, callsign);
-        }
-
-        int CSimulatorFsx::changeRemoteAircraft(const CSimulatedAircraft &toChangeAircraft, const CPropertyIndexVariantMap &changedValues)
-        {
-            // EXPERIMENTAL VERSION
-
-            const CCallsign callsign = toChangeAircraft.getCallsign();
-            int c = m_remoteAircraft.incrementalUpdateOrAdd(toChangeAircraft, changedValues);
-            if (c == 0) { return 0; } // nothing was changed
-            const CSimulatedAircraft aircraftAfterChanges = m_remoteAircraft.findFirstByCallsign(callsign);
-            const QString modelBefore = toChangeAircraft.getModel().getModelString();
-            const QString modelAfter = aircraftAfterChanges.getModel().getModelString();
-            if (modelBefore != modelAfter)
-            {
-                // model did change
-                removeRemoteAircraft(m_simConnectObjects.value(callsign));
-            }
-
-            if (toChangeAircraft.isEnabled() && !m_simConnectObjects.contains(callsign))
-            {
-                addRemoteAircraft(aircraftAfterChanges);
-            }
-            else if (!aircraftAfterChanges.isEnabled())
-            {
-                removeRemoteAircraft(m_simConnectObjects.value(callsign));
-            }
-            // apply other changes
-            return c;
+            // only remove from sim
+            return removeRenderedAircraft(m_simConnectObjects.value(callsign));
         }
 
         bool CSimulatorFsx::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const QString &originator)
@@ -511,10 +495,13 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorFsx::removeRemoteAircraft(const CSimConnectObject &simObject)
+        bool CSimulatorFsx::removeRenderedAircraft(const CSimConnectObject &simObject)
         {
             SimConnect_AIRemoveObject(m_hSimConnect, simObject.getObjectId(), simObject.getRequestId());
             m_simConnectObjects.remove(simObject.getCallsign());
+            renderedAircraft().applyIfCallsign(simObject.getCallsign(), CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(false)));
+            CLogMessage(this).info("FSX: Removed aircraft %1") << simObject.getCallsign().toQString();
+            return true;
         }
 
         HRESULT CSimulatorFsx::initEvents()

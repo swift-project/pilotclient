@@ -21,14 +21,15 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Geo;
+using namespace BlackSim;
 
 namespace BlackSimPlugin
 {
     namespace XPlane
     {
 
-        CSimulatorXPlane::CSimulatorXPlane(IOwnAircraftProvider *ownAircraft, QObject *parent) :
-            BlackCore::ISimulator(parent), COwnAircraftProviderSupport(ownAircraft)
+        CSimulatorXPlane::CSimulatorXPlane(IOwnAircraftProvider *ownAircraftProvider, IRenderedAircraftProvider *renderedAircraftProvider, QObject *parent) :
+            CSimulatorCommon(CSimulatorInfo::XP(), ownAircraftProvider, renderedAircraftProvider, parent)
         {
             m_watcher = new QDBusServiceWatcher(this);
             m_watcher->setWatchMode(QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration);
@@ -234,7 +235,7 @@ namespace BlackSimPlugin
         void CSimulatorXPlane::ps_setAirportsInRange(const QStringList &icaos, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts)
         {
             qDebug() << alts;
-            m_airports.clear();
+            m_airportsInRange.clear();
             auto icaoIt = icaos.begin();
             auto nameIt = names.begin();
             auto latIt = lats.begin();
@@ -245,26 +246,27 @@ namespace BlackSimPlugin
                 using namespace BlackMisc::PhysicalQuantities;
                 using namespace BlackMisc::Geo;
 
-                m_airports.push_back({ *icaoIt, { CLatitude(*latIt, CAngleUnit::deg()), CLongitude(*lonIt, CAngleUnit::deg()), CLength(*altIt, CLengthUnit::ft()) }, *nameIt });
+                m_airportsInRange.push_back({ *icaoIt, { CLatitude(*latIt, CAngleUnit::deg()), CLongitude(*lonIt, CAngleUnit::deg()), CLength(*altIt, CLengthUnit::ft()) }, *nameIt });
             }
             using namespace BlackMisc::Math;
         }
 
         BlackMisc::Aviation::CAirportList CSimulatorXPlane::getAirportsInRange() const
         {
-            auto copy = m_airports;
+            auto copy = m_airportsInRange;
             //! \todo Check if units match, xPlaneData has now hints what the values are
             copy.sortByRange(CCoordinateGeodetic(m_xplaneData.latitude, m_xplaneData.longitude, 0), true);
             copy.truncate(20);
             return copy;
         }
 
-        void CSimulatorXPlane::setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime)
+        bool CSimulatorXPlane::setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime)
         {
             if (enable)
             {
                 CLogMessage(this).warning("X-Plane already provides real time synchronization");
             }
+            return false;
         }
 
         CPixmap CSimulatorXPlane::iconForModel(const QString &modelString) const
@@ -301,15 +303,19 @@ namespace BlackSimPlugin
             return false;
         }
 
-        void CSimulatorXPlane::addRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
+        bool CSimulatorXPlane::addRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
         {
-            if (! isConnected()) { return; }
+            if (!isConnected()) { return false; }
+            //! \todo XPlane driver check if already exists, how?
+            //! \todo XPlane driver set correct return value
             // KB: from what I can see here all data are available
             // Is there any model matching required ????
             CAircraftIcao icao = remoteAircraft.getIcaoInfo();
             m_traffic->addPlane(remoteAircraft.getCallsign().asString(), icao.getAircraftDesignator(), icao.getAirlineDesignator(), icao.getLivery());
             addAircraftSituation(remoteAircraft.getCallsign(), remoteAircraft.getSituation());
-            m_remoteAircraft.replaceOrAdd(&CSimulatedAircraft::getCallsign, remoteAircraft.getCallsign(), remoteAircraft);
+            renderedAircraft().applyIfCallsign(remoteAircraft.getCallsign(), CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(true)));
+            CLogMessage(this).info("XP: Added aircraft %1") << remoteAircraft.getCallsign().toQString();
+            return true;
         }
 
         void CSimulatorXPlane::addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign,
@@ -328,22 +334,43 @@ namespace BlackSimPlugin
             m_traffic->setPlaneTransponder(callsign.asString(), 2000, true, false); // TODO transponder
         }
 
-        int CSimulatorXPlane::removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign)
+        bool CSimulatorXPlane::removeRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign)
         {
-            if (! isConnected()) { return 0; }
+            if (! isConnected()) { return false; }
             m_traffic->removePlane(callsign.asString());
-            return m_remoteAircraft.removeIf(&CSimulatedAircraft::getCallsign, callsign);
+            renderedAircraft().applyIfCallsign(callsign, CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(false)));
+            CLogMessage(this).info("XP: Removed aircraft %1") << callsign.toQString();
+            return true;
         }
 
-        int CSimulatorXPlane::changeRemoteAircraft(const CSimulatedAircraft &changedAircraft, const CPropertyIndexVariantMap &changedValues)
+        bool CSimulatorXPlane::changeRenderedAircraftModel(const CSimulatedAircraft &aircraft, const QString &originator)
         {
-            return m_remoteAircraft.incrementalUpdateOrAdd(changedAircraft, changedValues);
-            //! \todo really update aircraft in SIM
+            return this->changeAircraftEnabled(aircraft, originator);
         }
 
-        BlackCore::ISimulator *CSimulatorXPlaneFactory::create(IOwnAircraftProvider *ownAircraft, QObject *parent)
+        CAircraftIcao CSimulatorXPlane::getIcaoForModelString(const QString &modelString) const
         {
-            return new CSimulatorXPlane(ownAircraft, parent);
+            Q_UNUSED(modelString);
+            return CAircraftIcao();
+        }
+
+        bool CSimulatorXPlane::changeAircraftEnabled(const CSimulatedAircraft &aircraft, const QString &originator)
+        {
+            if (originator == simulatorOriginator()) { return false; }
+            if (aircraft.isEnabled())
+            {
+                this->addRemoteAircraft(aircraft);
+            }
+            else
+            {
+                this->removeRenderedAircraft(aircraft.getCallsign());
+            }
+            return true;
+        }
+
+        BlackCore::ISimulator *CSimulatorXPlaneFactory::create(IOwnAircraftProvider *ownAircraftProvider, IRenderedAircraftProvider *renderedAircraftProvider, QObject *parent)
+        {
+            return new CSimulatorXPlane(ownAircraftProvider, renderedAircraftProvider, parent);
         }
 
     } // namespace

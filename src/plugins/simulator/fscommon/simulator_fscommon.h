@@ -23,7 +23,7 @@ namespace BlackSimPlugin
     namespace FsCommon
     {
         //! Common base class for MS flight simulators
-        class CSimulatorFsCommon : public BlackCore::ISimulator, public BlackMisc::Simulation::COwnAircraftProviderSupport
+        class CSimulatorFsCommon : public BlackCore::CSimulatorCommon
         {
         public:
             //! Destructor
@@ -53,35 +53,46 @@ namespace BlackSimPlugin
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
 
             //! \copydoc ISimulator::setTimeSynchronization
-            virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
+            virtual bool setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
 
-            //! \copydoc ISimulator::getSimulatorInfo
-            virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
-
-            //! \copydoc BlackCore::ISimulator::getRemoteAircraft
-            virtual BlackMisc::Simulation::CSimulatedAircraftList getRemoteAircraft() const override;
-
-            //! \copydoc ISimulator::getAirportsInRange
-            virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
+            //! \copydoc BlackCore::ISimulator::getAirportsInRange
+            virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const;
 
             //! \copydoc BlackCore::ISimulator::getInstalledModels
             virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override;
 
+            //! \copydoc BlackCore::ISimulator::getIcaoForModelString
+            virtual BlackMisc::Aviation::CAircraftIcao getIcaoForModelString(const QString &modelString) const override;
+
             //! \copydoc IContextSimulator::iconForModel
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
 
+            //! \copydoc ISimulator::getMaxRenderedAircraft
+            virtual int getMaxRenderedAircraft() const override;
+
+            //! \copydoc ISimulator::setMaxRenderedAircraft
+            virtual void setMaxRenderedAircraft(int maxRenderedAircraft) override;
+
+            //! \copydoc ISimulator::changeRenderedAircraftModel
+            virtual bool changeRenderedAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) override;
+
+            //! \copydoc ISimulator::changeAircraftEnabled
+            virtual bool changeAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) override;
+
         protected:
             //! Constructor
-            CSimulatorFsCommon(const BlackSim::CSimulatorInfo &simInfo, BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent = nullptr);
+            CSimulatorFsCommon(
+                const BlackSim::CSimulatorInfo &simInfo,
+                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraftProvider,
+                QObject *parent = nullptr);
 
             QString simulatorDetails;                       //!< describes version etc.
-            BlackSim::CSimulatorInfo m_simulatorInfo;       //!< about the simulator
             QScopedPointer<FsCommon::CFsuipc> m_fsuipc;     //!< FSUIPC
             bool m_simPaused = false;                       //!< Simulator paused?
             bool m_simTimeSynced = false;                   //!< Time synchronized?
             BlackMisc::PhysicalQuantities::CTime m_syncTimeOffset; //!< time offset
-            BlackMisc::Simulation::CSimulatedAircraftList m_remoteAircraft; //!< mapped models
-            BlackMisc::Aviation::CAirportList m_airportsInRange;            //!< airports in range
+            BlackMisc::Aviation::CAirportList m_airportsInRange;   //!< aiports in range of own aircraft
 
             // cockpit as set in SIM
             BlackMisc::Aviation::CComSystem  m_simCom1;  //!< cockpit COM1 state in simulator
@@ -91,8 +102,11 @@ namespace BlackSimPlugin
             //! Set own model
             void setOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model);
 
-            //! Own aircraft has to be be changed
+            //! Set own model
             void setOwnAircraftModel(const QString &modelName);
+
+            //! Reverse lookup
+            static void reverseLookupIcaoData(BlackMisc::Simulation::CAircraftModel &model);
 
             //! Get the mapper singleton
             static BlackSim::FsCommon::CAircraftMapper *mapperInstance();

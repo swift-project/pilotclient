@@ -71,8 +71,11 @@ namespace BlackSimPlugin
             Q_OBJECT
 
         public:
-            //! Constructor
-            CSimulatorFsx(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent = nullptr);
+            //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
+            CSimulatorFsx(
+                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraftProvider,
+                QObject *parent = nullptr);
 
             //! Destructor
             virtual ~CSimulatorFsx();
@@ -101,16 +104,13 @@ namespace BlackSimPlugin
             virtual bool disconnectFrom() override;
 
             //! \copydoc ISimulator::addRemoteAircraft()
-            virtual void addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
+            virtual bool addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
 
             //! \copydoc ISimulator::addAircraftSituation()
             virtual void addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation) override;
 
-            //! \copydoc ISimulator::removeRemoteAircraft()
-            virtual int removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
-
-            //! \copydoc ISimulator::changeRemoteAircraft
-            virtual int changeRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &toChangeAircraft, const BlackMisc::CPropertyIndexVariantMap &changeValues) override;
+            //! \copydoc ISimulator::removeRenderedAircraft()
+            virtual bool removeRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 
             //! \copydoc ISimulator::updateOwnCockpit
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &ownAircraft, const QString &originator) override;
@@ -157,7 +157,7 @@ namespace BlackSimPlugin
         private:
 
             //! Remove a remote aircraft
-            void removeRemoteAircraft(const CSimConnectObject &simObject);
+            bool removeRenderedAircraft(const CSimConnectObject &simObject);
 
             //! Init when connected
             HRESULT initWhenConnected();
@@ -186,7 +186,7 @@ namespace BlackSimPlugin
             int  m_skipCockpitUpdateCycles = 0; //!< Skip some update cycles to allow changes in simulator cockpit to be set
             HANDLE  m_hSimConnect = nullptr;    //!< Handle to SimConnect object
             uint    m_nextObjID   = 1;          //!< object ID TODO: also used as request id, where to we place other request ids as for facilities
-            BlackMisc::PhysicalQuantities::CTime m_syncTimeOffset;          //!< Time offset (if synchronized)
+            BlackMisc::PhysicalQuantities::CTime m_syncTimeOffset;   //!< Time offset (if synchronized)
             QHash<BlackMisc::Aviation::CCallsign, CSimConnectObject> m_simConnectObjects;
             QFutureWatcher<bool> m_watcherConnect;
         };

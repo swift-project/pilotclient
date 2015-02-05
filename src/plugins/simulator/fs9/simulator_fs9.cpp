@@ -16,6 +16,7 @@
 #include "multiplayer_packet_parser.h"
 #include "blacksim/simulatorinfo.h"
 #include "blackmisc/project.h"
+#include "blackmisc/logmessage.h"
 #include "blackmisc/propertyindexallclasses.h"
 #include <QTimer>
 #include <algorithm>
@@ -35,10 +36,13 @@ namespace BlackSimPlugin
 {
     namespace Fs9
     {
-        BlackCore::ISimulator *CSimulatorFs9Factory::create(IOwnAircraftProvider *ownAircraft, QObject *parent)
+        BlackCore::ISimulator *CSimulatorFs9Factory::create(
+            IOwnAircraftProvider *ownAircraftProvider,
+            IRenderedAircraftProvider *renderedAircraftProvider,
+            QObject *parent)
         {
             registerMetadata();
-            return new Fs9::CSimulatorFs9(ownAircraft, parent);
+            return new Fs9::CSimulatorFs9(ownAircraftProvider, renderedAircraftProvider, parent);
         }
 
         BlackSim::CSimulatorInfo CSimulatorFs9Factory::getSimulatorInfo() const
@@ -46,10 +50,9 @@ namespace BlackSimPlugin
             return CSimulatorInfo::FS9();
         }
 
-        CSimulatorFs9::CSimulatorFs9(IOwnAircraftProvider *ownAircraft, QObject *parent) :
-            CSimulatorFsCommon(CSimulatorInfo::FS9(), ownAircraft, parent),
-            m_fs9Host(new CFs9Host(this)),
-            m_lobbyClient(new CLobbyClient(this))
+        CSimulatorFs9::CSimulatorFs9(IOwnAircraftProvider *ownAircraftProvider, IRenderedAircraftProvider *renderedAircraftProvider, QObject *parent) :
+            CSimulatorFsCommon(CSimulatorInfo::FS9(), ownAircraftProvider, renderedAircraftProvider, parent),
+            m_fs9Host(new CFs9Host(this)), m_lobbyClient(new CLobbyClient(this))
         {
             connect(m_fs9Host.data(), &CFs9Host::customPacketReceived, this, &CSimulatorFs9::ps_processFs9Message);
             connect(m_fs9Host.data(), &CFs9Host::statusChanged, this, &CSimulatorFs9::ps_changeHostStatus);
@@ -101,17 +104,25 @@ namespace BlackSimPlugin
             return true;
         }
 
-        void CSimulatorFs9::addRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
+        bool CSimulatorFs9::addRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
         {
             CCallsign callsign = remoteAircraft.getCallsign();
+            if (m_hashFs9Clients.contains(callsign))
+            {
+                // already exists, remove first
+                this->removeRenderedAircraft(callsign);
+            }
+
             CFs9Client *client = new CFs9Client(this, callsign.toQString(), CTime(25, CTimeUnit::ms()));
             client->setHostAddress(m_fs9Host->getHostAddress());
             client->setPlayerUserId(m_fs9Host->getPlayerUserId());
 
             client->start();
             m_hashFs9Clients.insert(callsign, client);
-            m_remoteAircraft.replaceOrAdd(&CSimulatedAircraft::getCallsign, remoteAircraft.getCallsign(), remoteAircraft);
             addAircraftSituation(callsign, remoteAircraft.getSituation());
+            renderedAircraft().applyIfCallsign(callsign, CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(true)));
+            CLogMessage(this).info("FS9: Added aircraft %1") << callsign.toQString();
+            return true;
         }
 
         void CSimulatorFs9::addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &situation)
@@ -125,20 +136,16 @@ namespace BlackSimPlugin
             client->addAircraftSituation(situation);
         }
 
-        int CSimulatorFs9::removeRemoteAircraft(const CCallsign &callsign)
+        bool CSimulatorFs9::removeRenderedAircraft(const CCallsign &callsign)
         {
-            if (!m_hashFs9Clients.contains(callsign)) { return 0; }
+            if (!m_hashFs9Clients.contains(callsign)) { return false; }
 
             auto fs9Client = m_hashFs9Clients.value(callsign);
             fs9Client->quit();
             m_hashFs9Clients.remove(callsign);
-            return m_remoteAircraft.removeIf(&CSimulatedAircraft::getCallsign, callsign);
-        }
-
-        int CSimulatorFs9::changeRemoteAircraft(const CSimulatedAircraft &changedAircraft, const CPropertyIndexVariantMap &changedValues)
-        {
-            return m_remoteAircraft.incrementalUpdateOrAdd(changedAircraft, changedValues);
-            //! \todo really update aircraft in SIM
+            renderedAircraft().applyIfCallsign(callsign, CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(false)));
+            CLogMessage(this).info("FS9: Removed aircraft %1") << callsign.toQString();
+            return true;
         }
 
         bool CSimulatorFs9::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const QString &originator)
@@ -195,7 +202,9 @@ namespace BlackSimPlugin
             if (message.getSeverity() != BlackMisc::CStatusMessage::SeverityDebug)
             {
                 if (m_fs9Host)
+                {
                     QMetaObject::invokeMethod(m_fs9Host, "sendTextMessage", Q_ARG(QString, message.toQString()));
+                }
             }
         }
 
@@ -298,7 +307,7 @@ namespace BlackSimPlugin
             // Stop all FS9 client tasks
             for (auto fs9Client : m_hashFs9Clients.keys())
             {
-                removeRemoteAircraft(fs9Client);
+                removeRenderedAircraft(fs9Client);
             }
         }
     } // namespace

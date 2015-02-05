@@ -13,14 +13,15 @@
 #define BLACKCORE_SIMULATOR_H
 
 #include "blacksim/simulatorinfo.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/simdirectaccessownaircraft.h"
+#include "blackmisc/simulation/simdirectaccessrenderedaircraft.h"
+#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/avairportlist.h"
 #include "blackmisc/nwtextmessage.h"
 #include "blackmisc/nwclient.h"
 #include "blackmisc/pixmap.h"
-#include "blackmisc/simulation/simdirectaccessownaircraft.h"
 #include <QObject>
 
 namespace BlackCore
@@ -39,9 +40,6 @@ namespace BlackCore
             Connected,
             ConnectionFailed
         };
-
-        //! Constructor
-        ISimulator(QObject *parent = nullptr);
 
         //! Destructor
         virtual ~ISimulator() {}
@@ -82,22 +80,25 @@ namespace BlackCore
         virtual bool disconnectFrom() = 0;
 
         //! Add new remote aircraft to the simulator
-        virtual void addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) = 0;
-
-        //! Simulated other aircraft in range
-        virtual BlackMisc::Simulation::CSimulatedAircraftList getRemoteAircraft() const = 0;
+        virtual bool addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) = 0;
 
         //! Add new aircraft situation
         virtual void addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation) = 0;
 
         //! Remove remote aircraft from simulator
-        virtual int removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+        virtual bool removeRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
         //! Change remote aircraft per property
-        virtual int changeRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &toChangeAircraft, const BlackMisc::CPropertyIndexVariantMap &changeValues) = 0;
+        virtual bool changeRenderedAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) = 0;
+
+        //! Aircraft got enabled / disabled
+        virtual bool changeAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) = 0;
 
         //! Update own aircraft cockpit (usually from context)
         virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator) = 0;
+
+        //! ICAO data for model string
+        virtual BlackMisc::Aviation::CAircraftIcao getIcaoForModelString(const QString &modelString) const = 0;
 
         //! Simulator info
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const = 0;
@@ -116,13 +117,19 @@ namespace BlackCore
 
         //! Set time synchronization between simulator and user's computer time
         //! \remarks not all drivers implement this, e.g. if it is an intrinsic simulator feature
-        virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) = 0;
+        virtual bool setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) = 0;
 
         //! Time synchronization offset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
 
         //! Representing icon for model string
         virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const = 0;
+
+        //! Max. rendered aircraft
+        virtual int getMaxRenderedAircraft() const = 0;
+
+        //! Max. rendered aircraft
+        virtual void setMaxRenderedAircraft(int maxRenderedAircraft) = 0;
 
     signals:
         //! Emitted when the connection status has changed
@@ -146,8 +153,10 @@ namespace BlackCore
         //! Installed aircraft models ready or changed
         void installedAircraftModelsChanged();
 
-
     protected:
+        //! Default constructor
+        ISimulator(QObject *parent = nullptr) : QObject(parent) {}
+
         //! Emit the combined status
         //! \sa simulatorStatusChanged;
         void emitSimulatorCombinedStatus();
@@ -162,17 +171,54 @@ namespace BlackCore
         //! ISimulatorVirtual destructor
         virtual ~ISimulatorFactory() {}
 
-        //! Create a new instance
-        virtual ISimulator *create(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent = nullptr) = 0;
+        //!
+        //! Create a new instance of a driver
+        //! \param ownAircraftProvider       in memory access to own aircraft data
+        //! \param renderedAircraftProvider  in memory access to rendered aircraft data such as situation history and aircraft itself
+        //! \param parent QObject
+        //! \return driver instance
+        //!
+        virtual ISimulator *create(
+            BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+            BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraftProvider,
+            QObject *parent = nullptr) = 0;
 
         //! Simulator info
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const = 0;
     };
 
-} // namespace BlackCore
+    //! Common base class with providers, interface and some base functionality
+    class CSimulatorCommon :
+        public BlackCore::ISimulator,
+        public BlackMisc::Simulation::COwnAircraftProviderSupport,     // gain access to in memor own aircraft data
+        public BlackMisc::Simulation::CRenderedAircraftProviderSupport // gain access to in memory rendered aircraft data
+    {
 
-// TODO: Use CProject to store this string
-Q_DECLARE_INTERFACE(BlackCore::ISimulatorFactory, "net.vatsim.PilotClient.BlackCore.SimulatorInterface")
+    public:
+        //! \copydoc ISimulator::getMaxRenderedAircraft
+        int getMaxRenderedAircraft() const override;
+
+        //! \copydoc ISimulator::setMaxRenderedAircraft
+        void setMaxRenderedAircraft(int maxRenderedAircraft) override;
+
+        //! \copydoc ISimulator::getSimulatorInfo
+        virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
+
+    protected:
+        //! Constructor
+        CSimulatorCommon(
+                const BlackSim::CSimulatorInfo &simInfo,
+                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraftProvider,
+                QObject *parent = nullptr);
+
+        BlackSim::CSimulatorInfo m_simulatorInfo;            //!< about the simulator
+        int m_maxRenderedAircraft = 99;
+    };
+
+} // namespace
+
+Q_DECLARE_INTERFACE(BlackCore::ISimulatorFactory, "org.swift.PilotClient.BlackCore.SimulatorInterface")
 Q_DECLARE_METATYPE(BlackCore::ISimulator::ConnectionStatus)
 
 #endif // guard

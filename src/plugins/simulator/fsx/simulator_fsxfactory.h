@@ -28,12 +28,15 @@ namespace BlackSimPlugin
         {
             Q_OBJECT
             // TODO: @RW, move this string into CProject please
-            Q_PLUGIN_METADATA(IID "net.vatsim.PilotClient.BlackCore.SimulatorInterface")
+            Q_PLUGIN_METADATA(IID "org.swift.PilotClient.BlackCore.SimulatorInterface")
             Q_INTERFACES(BlackCore::ISimulatorFactory)
 
         public:
             //! \copydoc BlackCore::ISimulatorFactory::create
-            virtual BlackCore::ISimulator *create(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent) override;
+            virtual BlackCore::ISimulator *create(
+                    BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                    BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraftProvider,
+                    QObject *parent) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::getSimulatorInfo
             virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
