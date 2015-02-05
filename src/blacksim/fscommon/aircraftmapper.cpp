@@ -14,6 +14,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Aviation;
 
 namespace BlackSim
 {
@@ -72,6 +73,14 @@ namespace BlackSim
             return m_init;
         }
 
+        CAircraftIcao CAircraftMapper::getIcaoForModelString(const QString &modelString) const
+        {
+            if (modelString.isEmpty() || !this->isInitialized()) { return CAircraftIcao(); }
+            CAircraftMappingList mappings = this->m_mappings->getMappingList().findByModelString(modelString);
+            if (mappings.isEmpty()) { return CAircraftIcao(); }
+            return mappings.front().getIcao();
+        }
+
         bool CAircraftMapper::containsModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity)
         {
             return this->m_entries.containsModelWithTitle(title, caseSensitivity);
@@ -81,7 +90,10 @@ namespace BlackSim
         {
             CAircraftCfgEntriesList el = this->m_entries.findByTitle(title, caseSensitivity);
             if (el.isEmpty()) { return CAircraftModel(); }
-            return el.front().toAircraftModel();
+            CAircraftModel model = el.front().toAircraftModel();
+            CAircraftIcao icao = this->getIcaoForModelString(model.getModelString());
+            model.setIcao(icao);
+            return model;
         }
 
         int CAircraftMapper::synchronize()
@@ -101,6 +113,17 @@ namespace BlackSim
                 this->m_backgroundInit.cancel();
                 this->m_backgroundRead.cancel();
             }
+        }
+
+        const CAircraftModel &CAircraftMapper::getDefaultModel()
+        {
+            static const CAircraftModel aircraftModel(
+                "Boeing 737-800 Paint1",
+                CAircraftModel::TypeModelMatchingDefaultModel,
+                "B737-800 default model",
+                CAircraftIcao("B738", "L2J", "", "", "FFFFFF")
+            );
+            return aircraftModel;
         }
 
         bool CAircraftMapper::initCompletely(QString simObjectDir)
