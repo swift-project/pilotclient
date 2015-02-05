@@ -32,6 +32,7 @@ namespace BlackMisc
                 TypeUnknown,
                 TypeQueriedFromNetwork, //!< model was queried by network protocol
                 TypeModelMatching,      //!< model is result of model matching
+                TypeModelMatchingDefaultModel, //!< a default model assigned by model matching
                 TypeModelMapping,       //!< used along with mapping definition
                 TypeManuallySet,        //!< manually set, e.g. from GUI
                 TypeOwnSimulatorModel   //!< represents own simulator model
@@ -55,6 +56,10 @@ namespace BlackMisc
 
             //! Constructor.
             CAircraftModel(const QString &model, ModelType type) : m_modelString(model), m_modelType(type) {}
+
+            //! Constructor.
+            CAircraftModel(const QString &model, ModelType type, const QString &description, const BlackMisc::Aviation::CAircraftIcao &icao) :
+                m_icao(icao), m_modelString(model), m_description(description), m_modelType(type) {}
 
             //! Constructor
             CAircraftModel(const BlackMisc::Aviation::CAircraft &aircraft);

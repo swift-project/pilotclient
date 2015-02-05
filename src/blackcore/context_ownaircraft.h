@@ -65,11 +65,9 @@ namespace BlackCore
 
     signals:
         //! Aircraft cockpit update
-        //! \remarks DBus and local
         void changedAircraftCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
 
         //! Changed SELCAL code
-        //! \remarks DBus and local
         void changedSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator);
 
     public slots:

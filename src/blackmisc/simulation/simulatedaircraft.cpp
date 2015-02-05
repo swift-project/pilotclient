@@ -51,6 +51,8 @@ namespace BlackMisc
                 return this->m_client.propertyByIndex(index.copyFrontRemoved());
             case IndexEnabled:
                 return CVariant::fromValue(this->isEnabled());
+            case IndexRendered:
+                return CVariant::fromValue(this->isRendered());
             default:
                 return CAircraft::propertyByIndex(index);
             }
@@ -74,6 +76,9 @@ namespace BlackMisc
                 break;
             case IndexEnabled:
                 this->m_enabled = variant.toBool();
+                break;
+            case IndexRendered:
+                this->m_rendered = variant.toBool();
                 break;
             default:
                 CAircraft::setPropertyByIndex(variant, index);
@@ -140,6 +145,9 @@ namespace BlackMisc
             QString s = CAircraft::convertToQString(i18n);
             s += " enabled: ";
             s += this->isEnabled() ? "yes" : "no";
+            s += " ";
+            s += " rendered: ";
+            s += this->isRendered() ? "yes" : "no";
             s += " ";
             s += this->m_model.toQString(i18n);
             s += " ";

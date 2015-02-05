@@ -134,6 +134,7 @@ namespace BlackMisc
             case TypeQueriedFromNetwork: return "queried";
             case TypeModelMatching: return "matching";
             case TypeModelMapping: return "mapping";
+            case TypeModelMatchingDefaultModel: return "map. default";
             case TypeOwnSimulatorModel: return "own simulator";
             case TypeManuallySet: return "set";
             case TypeUnknown:

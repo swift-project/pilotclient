@@ -30,7 +30,8 @@ namespace BlackMisc
             {
                 IndexModel = BlackMisc::CPropertyIndex::GlobalIndexCSimulatedAircraft,
                 IndexClient,
-                IndexEnabled
+                IndexEnabled,
+                IndexRendered
             };
 
             //! Default constructor.
@@ -49,6 +50,9 @@ namespace BlackMisc
 
             //! Get model
             const BlackMisc::Simulation::CAircraftModel &getModel() const { return m_model; }
+
+            //! Get model string
+            QString getModelString() const { return m_model.getModelString(); }
 
             //! Set model
             void setModel(const BlackMisc::Simulation::CAircraftModel &model);
@@ -74,8 +78,14 @@ namespace BlackMisc
             //! Enabled?
             bool isEnabled() const { return m_enabled; }
 
-            //! Enabled
+            //! Enabled / disabled
             void setEnabled(bool enabled) { m_enabled = enabled; }
+
+            //! Rendered?
+            bool isRendered() const { return m_rendered; }
+
+            //! Rendered?
+            void setRendered(bool rendered) { m_rendered = rendered; }
 
             //! Update from aviation aircraft
             void setAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
@@ -88,7 +98,8 @@ namespace BlackMisc
             BLACK_ENABLE_TUPLE_CONVERSION(CSimulatedAircraft)
             BlackMisc::Simulation::CAircraftModel m_model;
             BlackMisc::Network::CClient        m_client;
-            bool                               m_enabled = true;
+            bool m_enabled = true;   // to be displayed in sim
+            bool m_rendered = false; // really shown in sim
             void init();
 
         };
@@ -98,7 +109,8 @@ namespace BlackMisc
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Simulation::CSimulatedAircraft, (
                                    attr(o.m_model),
                                    attr(o.m_client),
-                                   attr(o.m_enabled)
+                                   attr(o.m_enabled),
+                                   attr(o.m_rendered)
                                ))
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatedAircraft)
 

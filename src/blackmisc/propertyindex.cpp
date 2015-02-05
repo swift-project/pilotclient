@@ -121,4 +121,9 @@ namespace BlackMisc
         this->setIndexStringByList(newList);
     }
 
+    bool CPropertyIndex::contains(int index) const
+    {
+        return this->indexList().contains(index);
+    }
+
 } // namespace

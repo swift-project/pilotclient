@@ -93,6 +93,16 @@ namespace BlackMisc
         //! Shif existing indexes to right and insert given index at front
         void prepend(int newLeftIndex);
 
+        //! Contains index?
+        bool contains(int index) const;
+
+        //! Compare with index given by enum
+        template<class EnumType> bool contains(EnumType ev) const
+        {
+            static_assert(std::is_enum<EnumType>::value, "Argument must be an enum");
+            return contains(static_cast<int>(ev));
+        }
+
         //! First element casted to given type, usually then PropertIndex enum
         template<class CastType> CastType frontCasted() const
         {
