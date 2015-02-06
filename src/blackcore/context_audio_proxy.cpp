@@ -33,9 +33,6 @@ namespace BlackCore
     void CContextAudioProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
         bool s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
-                                    "audioTestCompleted", this, SIGNAL(audioTestCompleted()));
-        Q_ASSERT(s);
-        s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
                                "changedVoiceRooms", this, SIGNAL(changedVoiceRooms(BlackMisc::Audio::CVoiceRoomList, bool)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
@@ -147,38 +144,6 @@ namespace BlackCore
     void CContextAudioProxy::playNotification(uint notification, bool considerSettings) const
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("playNotification"), notification, considerSettings);
-    }
-
-    /*
-     * MIC test
-     */
-    void CContextAudioProxy::runMicrophoneTest()
-    {
-        this->m_dBusInterface->callDBus(QLatin1Literal("runMicrophoneTest"));
-    }
-
-    /*
-     * Mic test
-     */
-    void CContextAudioProxy::runSquelchTest()
-    {
-        this->m_dBusInterface->callDBus(QLatin1Literal("runSquelchTest"));
-    }
-
-    /*
-     *  Test result
-     */
-    QString CContextAudioProxy::getMicrophoneTestResult() const
-    {
-        return this->m_dBusInterface->callDBusRet<QString>(QLatin1Literal("getMicrophoneTestResult"));
-    }
-
-    /*
-     * Squelch value
-     */
-    double CContextAudioProxy::getSquelchValue() const
-    {
-        return this->m_dBusInterface->callDBusRet<double>(QLatin1Literal("getSquelchValue"));
     }
 
     /*

@@ -65,7 +65,7 @@ namespace BlackGui
                 this->connect(this->ui->pb_SetupAudioSquelchTest, &QPushButton::clicked, this, &CAudioSetupComponent::ps_startAudioTest);
 
                 // context
-                this->connect(this->getIContextAudio(), &IContextAudio::audioTestCompleted, this, &CAudioSetupComponent::ps_audioTestUpdate);
+//                this->connect(this->getIContextAudio(), &IContextAudio::audioTestCompleted, this, &CAudioSetupComponent::ps_audioTestUpdate);
                 this->connect(this->getIContextAudio(), &IContextAudio::changedAudioDevices, this, &CAudioSetupComponent::ps_onAudioDevicesChanged);
                 this->connect(this->getIContextAudio(), &IContextAudio::changedSelectedAudioDevices, this, &CAudioSetupComponent::ps_onCurrentAudioDevicesChanged);
             }
@@ -134,13 +134,13 @@ namespace BlackGui
             if (sender == this->ui->pb_SetupAudioMicrophoneTest)
             {
                 this->m_audioTestRunning = MicrophoneTest;
-                this->getIContextAudio()->runMicrophoneTest();
+//                this->getIContextAudio()->runMicrophoneTest();
                 this->ui->pte_SetupAudioTestActionAndResult->appendPlainText("Speak normally for 5 seconds");
             }
             else if (sender == this->ui->pb_SetupAudioSquelchTest)
             {
                 this->m_audioTestRunning = SquelchTest;
-                this->getIContextAudio()->runSquelchTest();
+//                this->getIContextAudio()->runSquelchTest();
                 this->ui->pte_SetupAudioTestActionAndResult->appendPlainText("Silence for 5 seconds");
             }
             this->ui->prb_SetupAudioTestProgress->setVisible(true);
@@ -174,12 +174,14 @@ namespace BlackGui
                 this->ui->pte_SetupAudioTestActionAndResult->clear();
                 if (this->m_audioTestRunning == SquelchTest)
                 {
-                    double s = this->getIContextAudio()->getSquelchValue();
+//                    double s = this->getIContextAudio()->getSquelchValue();
+                    double s = 0.0;
                     this->ui->pte_SetupAudioTestActionAndResult->appendPlainText(QString::number(s));
                 }
                 else if (this->m_audioTestRunning == MicrophoneTest)
                 {
-                    QString m = this->getIContextAudio()->getMicrophoneTestResult();
+//                    QString m = this->getIContextAudio()->getMicrophoneTestResult();
+                    QString m;
                     this->ui->pte_SetupAudioTestActionAndResult->appendPlainText(m);
                 }
                 this->m_audioTestRunning = NoAudioTest;

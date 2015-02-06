@@ -79,8 +79,6 @@ namespace BlackCore
         virtual ~IContextAudio() {}
 
     signals:
-        //! \brief Audio test has been completed
-        void audioTestCompleted();
 
         //! Voice rooms changed
         //! \details the flag indicates, whether a room got connected or disconnected
@@ -167,18 +165,6 @@ namespace BlackCore
          * \param considerSettings consider settings (notification on/off), false means settings ignored
          */
         virtual void playNotification(uint notification, bool considerSettings) const = 0;
-
-        //! Microphone test
-        virtual void runMicrophoneTest() = 0;
-
-        //! Microphone test
-        virtual void runSquelchTest() = 0;
-
-        //! Get the microphone test result
-        virtual QString getMicrophoneTestResult() const = 0;
-
-        //! Get the squelch value
-        virtual double getSquelchValue() const = 0;
 
         //! Enable audio loopback
         virtual void enableAudioLoopback(bool enable = true) = 0;

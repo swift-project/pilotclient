@@ -435,42 +435,6 @@ namespace BlackCore
     }
 
     /*
-     * Mic test.
-     */
-    void CContextAudio::runMicrophoneTest()
-    {
-        Q_ASSERT(this->m_voice);
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        // Deprecated
-    }
-
-    /*
-     * Squelch test.
-     */
-    void CContextAudio::runSquelchTest()
-    {
-        CLogMessage(this).warning("This method is deprecated and will be removed soon");
-    }
-
-    /*
-     * Microphone test
-     */
-    QString CContextAudio::getMicrophoneTestResult() const
-    {
-        CLogMessage(this).warning("This method is deprecated and will be removed soon");
-        return QString();
-    }
-
-    /*
-     * Squelch value
-     */
-    double CContextAudio::getSquelchValue() const
-    {
-        CLogMessage(this).warning("This method is deprecated and will be removed soon");
-        return 0.0;
-    }
-
-    /*
      * Audio loopback
      */
     void CContextAudio::enableAudioLoopback(bool enable)

@@ -102,18 +102,6 @@ namespace BlackCore
         //! \copydoc IContextAudio::playNotification
         virtual void playNotification(uint notification, bool considerSettings) const override;
 
-        //! \copydoc IContextAudio::runMicrophoneTest()
-        virtual void runMicrophoneTest() override;
-
-        //! \copydoc IContextAudio::runSquelchTest()
-        virtual void runSquelchTest() override;
-
-        //! \copydoc IContextAudio::getMicrophoneTestResult()
-        virtual QString getMicrophoneTestResult() const override;
-
-        //! \copydoc IContextAudio::getSquelchValue()
-        virtual double getSquelchValue() const override;
-
         //! \copydoc IContextAudio::enableAudioLoopback()
         virtual void enableAudioLoopback(bool enable = true) override;
 
