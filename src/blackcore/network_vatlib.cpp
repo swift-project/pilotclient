@@ -115,6 +115,8 @@ namespace BlackCore
                 pos.latitude = m_ownAircraft.latitude().value(CAngleUnit::deg());
                 pos.longitude = m_ownAircraft.longitude().value(CAngleUnit::deg());
                 pos.elevation = 0;
+                pos.rating = vatAtcRatingObserver;
+                pos.frequency = 199998;
                 Vat_SendATCUpdate(m_net.data(), &pos);
             }
             else
