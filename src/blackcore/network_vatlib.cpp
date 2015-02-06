@@ -15,9 +15,11 @@
 
 static_assert(! std::is_abstract<BlackCore::CNetworkVatlib>::value, "Must implement all pure virtuals");
 
-//TODO just placeholders to allow this to compile
-#define CLIENT_PUBLIC_ID 0
-#define CLIENT_PRIVATE_KEY ""
+// TODO just placeholders to allow this to compile
+// This is just a test key and is NOT valid on the live network.
+// Replace it with the BoG assigned key before shipping the installer
+#define CLIENT_PUBLIC_ID 0xb9ba
+#define CLIENT_PRIVATE_KEY "727d1efd5cb9f8d2c28372469d922bb4"
 
 namespace BlackCore
 {
