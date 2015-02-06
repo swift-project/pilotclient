@@ -36,7 +36,7 @@ namespace BlackCore
                                "changedVoiceRooms", this, SIGNAL(changedVoiceRooms(BlackMisc::Audio::CVoiceRoomList, bool)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
-                               "changedAudioVolumes", this, SIGNAL(changedAudioVolumes(qint32, qint32)));
+                               "changedAudioVolume", this, SIGNAL(changedAudioVolume(int)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
                                "changedAudioDevices", this, SIGNAL(changedAudioDevices(BlackMisc::Audio::CAudioDeviceInfoList)));
@@ -144,22 +144,6 @@ namespace BlackCore
     void CContextAudioProxy::playNotification(uint notification, bool considerSettings) const
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("playNotification"), notification, considerSettings);
-    }
-
-    /*
-     * Volumes, by COM systems
-     */
-    void CContextAudioProxy::setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2)
-    {
-        this->m_dBusInterface->callDBus(QLatin1Literal("setVolumes"), com1, com2);
-    }
-
-    /*
-     * Volumes
-     */
-    void CContextAudioProxy::setVolumes(int com1Volume, int com2Volume)
-    {
-        this->m_dBusInterface->callDBus(QLatin1Literal("setVolumes"), com1Volume, com2Volume);
     }
 
     void CContextAudioProxy::setVoiceOutputVolume(int volume)

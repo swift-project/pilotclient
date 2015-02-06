@@ -117,7 +117,7 @@ namespace BlackGui
             }
             else if (senderButton == this->ui->pb_SoundMaxVolume && this->getIContextAudio())
             {
-                this->getIContextAudio()->setVolumes(100, 100);
+                this->getIContextAudio()->setVoiceOutputVolume(100);
             }
             else if (senderButton == this->ui->pb_SoundMute && this->getIContextAudio())
             {

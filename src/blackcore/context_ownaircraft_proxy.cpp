@@ -80,9 +80,9 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateIcaoData"), icaoData);
     }
 
-    void CContextOwnAircraftProxy::setAudioOutputVolumes(int outputVolumeCom1, int outputVolumeCom2)
+    void CContextOwnAircraftProxy::setAudioOutputVolume(int outputVolume)
     {
-        this->m_dBusInterface->callDBus(QLatin1Literal("updateCockpitOutputVolumes"), outputVolumeCom1, outputVolumeCom2);
+        this->m_dBusInterface->callDBus(QLatin1Literal("setAudioOutputVolume"), outputVolume);
     }
 
     void CContextOwnAircraftProxy::setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url)

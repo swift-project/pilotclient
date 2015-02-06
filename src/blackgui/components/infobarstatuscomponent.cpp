@@ -92,7 +92,7 @@ namespace BlackGui
             {
                 this->ui->led_Audio->setOn(!this->getIContextAudio()->isMuted());
                 connect(getIContextAudio(), &IContextAudio::changedMute, this, &CInfoBarStatusComponent::ps_onMuteChanged);
-                connect(getIContextAudio(), &IContextAudio::changedAudioVolumes, this, &CInfoBarStatusComponent::ps_onVolumesChanged);
+//                connect(getIContextAudio(), &IContextAudio::changedAudioVolumes, this, &CInfoBarStatusComponent::ps_onVolumesChanged);
             }
         }
 

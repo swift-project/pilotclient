@@ -209,43 +209,11 @@ namespace BlackCore
         }
     }
 
-    /*
-     * Set volumes
-     */
-    void CContextAudio::setVolumes(const CComSystem &com1, const CComSystem &com2)
-    {
-        Q_ASSERT(this->m_voice);
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << com1 << com2;
-
-        // volumes
-        qint32 vol1 = com1.getVolumeOutput();
-        qint32 vol2 = com2.getVolumeOutput();
-        this->setVolumes(vol1, vol2);
-    }
-
-    void CContextAudio::setVolumes(int com1Volume, int com2Volume)
-    {
-        //! \todo Will be removed as part of #371.
-        int channelV1 = static_cast<int>(m_channel1->getVolume());
-        int channelV2 = static_cast<int>(m_channel2->getVolume());
-        if (channelV1 == com1Volume && channelV2 == com2Volume) { return; }
-
-        bool enable1 = com1Volume > 0;
-        bool enable2 = com2Volume > 0;
-        bool muted = !enable1 && !enable2;
-
-        //! \todo m_channelCom1->setVolume here crashed, also what is correct setRoomOutputVolume or setVolume
-        m_channel1->setVolume(com1Volume);
-        m_channel2->setVolume(com2Volume);
-        this->setMute(muted);
-
-        emit changedAudioVolumes(com1Volume, com2Volume);
-    }
-
     void CContextAudio::setVoiceOutputVolume(int volume)
     {
         m_outDeviceVolume = volume;
         if (!isMuted()) m_voiceOutputDevice->setOutputVolume(m_outDeviceVolume);
+        emit changedAudioVolume(volume);
     }
 
     void CContextAudio::setMute(bool muted)
@@ -451,9 +419,7 @@ namespace BlackCore
     {
         static CSimpleCommandParser parser(
         {
-            ".vol", ".volume",    // all volumes
-            ".vol1", ".volume1",  // COM1 volume
-            ".vol2", ".volume2",  // COM2 volume
+            ".vol", ".volume",    // output volume
             ".mute",              // mute
             ".unmute"             // unmute
         });
@@ -474,9 +440,9 @@ namespace BlackCore
         else if (parser.commandStartsWith("vol") && parser.countParts() > 1)
         {
             qint32 v = parser.toInt(1);
-            if (v >= 0 && v <= 100)
+            if (v >= 0 && v <= 300)
             {
-                // TODO: vatlib volume
+                setVoiceOutputVolume(v);
             }
         }
         return false;

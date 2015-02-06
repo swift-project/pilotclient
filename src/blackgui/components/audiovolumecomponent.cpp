@@ -43,7 +43,7 @@ namespace BlackGui
             // from audio context
             bool c = connect(this->getIContextAudio(), &IContextAudio::changedMute, this, &CAudioVolumeComponent::ps_onMuteChanged);
             Q_ASSERT(c);
-            connect(this->getIContextAudio(), &IContextAudio::changedAudioVolumes, this, &CAudioVolumeComponent::ps_onVolumesChanged);
+//            connect(this->getIContextAudio(), &IContextAudio::changedAudioVolumes, this, &CAudioVolumeComponent::ps_onVolumesChanged);
             Q_ASSERT(c);
 
             // to audio audio context
@@ -72,7 +72,7 @@ namespace BlackGui
             qint32 v2 = this->ui->hs_VolumeCom2->value();
             this->ui->hs_VolumeCom1->setToolTip(QString::number(v1));
             this->ui->hs_VolumeCom2->setToolTip(QString::number(v2));
-            this->getIContextAudio()->setVolumes(v1, v2);
+//            this->getIContextAudio()->setVolumes(v1, v2);
         }
 
         void CAudioVolumeComponent::ps_onWindowsMixerRequested()

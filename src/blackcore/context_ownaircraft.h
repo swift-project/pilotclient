@@ -96,8 +96,8 @@ namespace BlackCore
         //! Own SELCAL code
         virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator) = 0;
 
-        //! Output volumes,  volumes 0..100
-        virtual void setAudioOutputVolumes(int outputVolumeCom1, int outputVolumeCom2) = 0;
+        //! Output volume 0..300
+        virtual void setAudioOutputVolume(int outputVolume) = 0;
 
         //! Set individual voice rooms (overrides voice rooms)
         //! \remarks Empty string "" disables voice room override

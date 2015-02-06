@@ -84,12 +84,9 @@ namespace BlackCore
         //! \details the flag indicates, whether a room got connected or disconnected
         void changedVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms, bool connected);
 
-        //! Volumes changed (COM1, COM2)
-        //! \sa setVolumes
-        // KB: Is see some potential changes here, which we should do when we have the new 2.0 vatlib
-        // 1. volume integrated in voice room?
-        // 2. Value object for volumes CVolume / CVolumeList?
-        void changedAudioVolumes(int com1Volume, int com2Volume);
+        //! Audio volume changed
+        //! \sa setVoiceOutputVolume
+        void changedAudioVolume(int volume);
 
         //! Mute changed
         void changedMute(bool muted);
@@ -136,16 +133,6 @@ namespace BlackCore
          * \param audioDevice can be input or audio device
          */
         virtual void setCurrentAudioDevice(const BlackMisc::Audio::CAudioDeviceInfo &audioDevice) = 0;
-
-        /*!
-         * \brief Set volumes via com units, also allows to mute
-         * \see BlackMisc::Aviation::CComSystem::setVolumeInput()
-         * \see BlackMisc::Aviation::CComSystem::setVolumeOutput()
-         */
-        virtual void setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2) = 0;
-
-        //! Set the volumes (0..100)
-        virtual void setVolumes(int volumeCom1, int volumeCom2) = 0;
 
         //! Set voice output volume (0..300)
         virtual void setVoiceOutputVolume(int volume) = 0;

@@ -183,19 +183,11 @@ namespace BlackCore
         return true;
     }
 
-    void CContextOwnAircraft::setAudioOutputVolumes(int outputVolumeCom1, int outputVolumeCom2)
+    void CContextOwnAircraft::setAudioOutputVolume(int outputVolume)
     {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << outputVolumeCom1 << outputVolumeCom2;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << outputVolume;
 
-        CComSystem com1 = this->m_ownAircraft.getCom1System();
-        com1.setVolumeOutput(outputVolumeCom1);
-        this->m_ownAircraft.setCom1System(com1);
-
-        CComSystem com2 = this->m_ownAircraft.getCom2System();
-        com2.setVolumeOutput(outputVolumeCom2);
-        this->m_ownAircraft.setCom2System(com1);
-
-        if (this->getIContextAudio()) this->getIContextAudio()->setVolumes(com1, com2);
+        if (this->getIContextAudio()) this->getIContextAudio()->setVoiceOutputVolume(outputVolume);
     }
 
     /*
