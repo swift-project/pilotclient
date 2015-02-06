@@ -8,6 +8,9 @@
  */
 
 #include "aircraftlights.h"
+#include "blackmisc/variant.h"
+
+using namespace BlackMisc;
 
 namespace BlackMisc
 {
@@ -15,8 +18,7 @@ namespace BlackMisc
     {
         CAircraftLights::CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn)
             : m_strobeOn(strobeOn), m_landingOn(landingOn), m_taxiOn(taxiOn), m_beaconOn(beaconOn), m_navOn(navOn), m_logoOn(logoOn)
-        {
-        }
+        { }
 
         CAircraftLights CAircraftLights::allLightsOn()
         {
@@ -45,5 +47,65 @@ namespace BlackMisc
             s += m_logoOn;
             return s;
         }
+
+        CVariant CAircraftLights::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        {
+            if (index.isMyself()) { return this->toCVariant(); }
+
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexBeacon:
+                return CVariant::from(m_beaconOn);
+            case IndexLanding:
+                return CVariant::from(m_landingOn);
+            case IndexLogo:
+                return CVariant::from(m_logoOn);
+            case IndexNav:
+                return CVariant::from(m_navOn);
+            case IndexStrobe:
+                return CVariant::from(m_strobeOn);
+            case IndexTaxi:
+                return CVariant::from(m_taxiOn);
+            default:
+                return CValueObject::propertyByIndex(index);
+            }
+        }
+
+        void CAircraftLights::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        {
+            if (index.isMyself())
+            {
+                this->convertFromCVariant(variant);
+                return;
+            }
+
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexBeacon:
+                this->m_beaconOn = variant.toBool();
+                break;
+            case IndexLanding:
+                this->m_landingOn = variant.toBool();
+                break;
+            case IndexLogo:
+                this->m_logoOn = variant.toBool();
+                break;
+            case IndexNav:
+                this->m_navOn = variant.toBool();
+                break;
+            case IndexStrobe:
+                this->m_strobeOn = variant.toBool();
+                break;
+            case IndexTaxi:
+                this->m_taxiOn = variant.toBool();
+                break;
+            default:
+                CValueObject::setPropertyByIndex(variant, index);
+                break;
+            }
+        }
+
     } // namespace
 } // namespace

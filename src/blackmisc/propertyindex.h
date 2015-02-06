@@ -44,6 +44,8 @@ namespace BlackMisc
             GlobalIndexCAircraftSituation     =  1300,
             GlobalIndexCAtcStation            =  1400,
             GlobalIndexCAirport               =  1500,
+            GlobalIndexCAircraftParts         =  1600,
+            GlobalIndexCAircraftLights        =  1700,
             GlobalIndexCModulator             =  2000,
             GlobalIndexCTransponder           =  2100,
             GlobalIndexICoordinateGeodetic    =  3000,

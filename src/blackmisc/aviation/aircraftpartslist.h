@@ -13,8 +13,8 @@
 #define BLACKMISC_AIRCRAFTPARTSLIST_H
 
 #include "aircraftparts.h"
-#include "blackmisc/collection.h"
-#include "blackmisc/sequence.h"
+#include "blackmisc/timestampobjectlist.h"
+#include "blackmisc/avcallsignobjectlist.h"
 #include <QDateTime>
 
 namespace BlackMisc
@@ -22,7 +22,10 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating a list of aircraft parts.
-        class CAircraftPartsList : public CSequence<CAircraftParts>
+        class CAircraftPartsList :
+            public CSequence<CAircraftParts>,
+            public ITimestampObjectList<CAircraftParts, CAircraftPartsList>,
+            public ICallsignObjectList<CAircraftParts, CAircraftPartsList>
         {
         public:
             //! Default constructor.
@@ -30,12 +33,6 @@ namespace BlackMisc
 
             //! Construct from a base class object.
             CAircraftPartsList(const CSequence<CAircraftParts> &other);
-
-            //! Get a list of situations before dateTime
-            CAircraftPartsList findBefore (const QDateTime& dateTime) const;
-
-            //! Remove parts with timestamp before dateTime
-            void removeBefore(const QDateTime& dateTime);
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
@@ -45,6 +42,14 @@ namespace BlackMisc
 
             //! Register metadata
             static void registerMetadata();
+
+        protected:
+            //! Myself
+            virtual const CAircraftPartsList &getContainer() const { return *this; }
+
+            //! Myself
+            virtual CAircraftPartsList &getContainer() { return *this; }
+
         };
 
     } //namespace

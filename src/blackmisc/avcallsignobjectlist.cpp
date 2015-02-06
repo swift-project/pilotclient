@@ -12,6 +12,7 @@
 #include "blackmisc/avatcstationlist.h"
 #include "blackmisc/avaircraftlist.h"
 #include "blackmisc/avaircraftsituationlist.h"
+#include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/nwclientlist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 
@@ -130,6 +131,7 @@ namespace BlackMisc
         template class ICallsignObjectList<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
         template class ICallsignObjectList<BlackMisc::Aviation::CAircraft, BlackMisc::Aviation::CAircraftList>;
         template class ICallsignObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
+        template class ICallsignObjectList<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList>;
         template class ICallsignObjectList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
         template class ICallsignObjectList<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>;
 

@@ -154,7 +154,7 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftSituation, (o.m_correspondingCallsign, o.m_position, o.m_altitude, o.m_heading, o.m_pitch, o.m_bank, o.m_groundspeed))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftSituation, (o.m_correspondingCallsign, o.m_position, o.m_altitude, o.m_heading, o.m_pitch, o.m_bank, o.m_groundspeed, o.m_timestampMSecsSinceEpoch))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation)
 
 #endif // guard

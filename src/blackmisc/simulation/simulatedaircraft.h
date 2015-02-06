@@ -67,7 +67,7 @@ namespace BlackMisc
             virtual void setIcaoInfo(const BlackMisc::Aviation::CAircraftIcao &icao) override;
 
             //! \copydoc CAircraft::setPilot
-            virtual void setPilot(const BlackMisc::Network::CUser &user);
+            virtual void setPilot(const BlackMisc::Network::CUser &user) override;
 
             //! Get client
             const BlackMisc::Network::CClient &getClient() const { return m_client; }

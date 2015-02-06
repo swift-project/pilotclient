@@ -19,22 +19,6 @@ namespace BlackMisc
             CSequence<CAircraftParts>(other)
         { }
 
-        CAircraftPartsList CAircraftPartsList::findBefore(const QDateTime &dateTime) const
-        {
-            return findBy([&](const CAircraftParts & parts)
-            {
-                return parts.getTimestamp() < dateTime;
-            });
-        }
-
-        void CAircraftPartsList::removeBefore(const QDateTime &dateTime)
-        {
-            removeIf([&](const CAircraftParts &parts)
-            {
-                return parts.getTimestamp() < dateTime;
-            });
-        }
-
         void CAircraftPartsList::registerMetadata()
         {
             qRegisterMetaType<BlackMisc::CSequence<CAircraftParts>>();

@@ -20,9 +20,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        /*
-         * Convert to string
-         */
         QString CAircraftSituation::convertToQString(bool i18n) const
         {
             QString s(this->m_position.toQString(i18n));
@@ -35,9 +32,6 @@ namespace BlackMisc
             return s;
         }
 
-        /*
-         * Property by index
-         */
         CVariant CAircraftSituation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return this->toCVariant(); }
@@ -68,22 +62,20 @@ namespace BlackMisc
             case IndexCallsign:
                 return this->m_correspondingCallsign.propertyByIndex(index.copyFrontRemoved());
             default:
-                break;
+                return CValueObject::propertyByIndex(index);
             }
-
-            Q_ASSERT_X(false, "CAircraftSituation", "index unknown");
-            QString m = QString("no property, index ").append(index.toQString());
-            return CVariant::fromValue(m);
         }
 
-        /*
-         * Property by index
-         */
         void CAircraftSituation::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself())
             {
                 this->convertFromCVariant(variant);
+                return;
+            }
+            if (ITimestampBased::canHandleIndex(index))
+            {
+                ITimestampBased::setPropertyByIndex(variant, index);
                 return;
             }
 
@@ -109,7 +101,7 @@ namespace BlackMisc
                 this->m_correspondingCallsign.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             default:
-                Q_ASSERT_X(false, "CAircraftSituation", "index unknown (setter)");
+                CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
         }

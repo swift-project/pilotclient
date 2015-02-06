@@ -13,6 +13,7 @@
 #define BLACKMISC_AIRCRAFTLIGHTS_H
 
 #include "blackmisc/valueobject.h"
+#include "blackmisc/propertyindex.h"
 
 namespace BlackMisc
 {
@@ -22,12 +23,29 @@ namespace BlackMisc
         class CAircraftLights : public CValueObjectStdTuple<CAircraftLights>
         {
         public:
+            //! Properties by index
+            enum ColumnIndex
+            {
+                IndexStrobe = BlackMisc::CPropertyIndex::GlobalIndexCAircraftLights,
+                IndexLanding,
+                IndexTaxi,
+                IndexBeacon,
+                IndexNav,
+                IndexLogo
+            };
+
 
             //! Default constructor
             CAircraftLights() = default;
 
             //! Constructor
             CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn);
+
+            //! \copydoc CValueObject::propertyByIndex
+            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+
+            //! \copydoc CValueObject::setPropertyByIndex
+            virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! Strobes lights on?
             bool isStrobeOn() const { return m_strobeOn; }
@@ -99,4 +117,4 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftLights, (
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftLights)
 
-#endif // BLACKMISC_AIRCRAFTLIGHTS_H
+#endif // guard

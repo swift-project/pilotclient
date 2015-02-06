@@ -63,7 +63,7 @@ namespace BlackMisc
             QString getCallsignAsString() const { return m_callsign.asString(); }
 
             //! Set callsign
-            virtual void setCallsign(const CCallsign &callsign) { this->m_callsign = callsign; this->m_pilot.setCallsign(callsign); }
+            virtual void setCallsign(const CCallsign &callsign);
 
             //! Get situation.
             const CAircraftSituation &getSituation() const { return m_situation; }
@@ -245,7 +245,7 @@ namespace BlackMisc
             const BlackMisc::Aviation::CAircraftParts &getParts() const { return m_parts; }
 
             //! Set aircraft parts
-            void setParts(const BlackMisc::Aviation::CAircraftParts &parts) { m_parts = parts; }
+            void setParts(const BlackMisc::Aviation::CAircraftParts &parts);
 
             //! \copydoc CValueObject::propertyByIndex
             virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
@@ -281,7 +281,7 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraft, (
                                    o.m_transponder,
                                    o.m_parts,
                                    o.m_icao,
-                                   o.m_distanceToPlane,
+                                   o.m_distanceToOwnAircraft,
 								   o.m_bearingToOwnAircraft))
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraft)

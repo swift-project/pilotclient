@@ -23,11 +23,22 @@ namespace BlackMisc
             : m_callsign(callsign), m_pilot(user), m_situation(situation)
         {
             // sync callsigns
-            if (!this->m_pilot.hasValidCallsign() && !callsign.isEmpty())
+            if (!callsign.isEmpty())
             {
-                this->m_pilot.setCallsign(callsign);
-                this->m_situation.setCallsign(callsign);
+                this->setCallsign(callsign);
             }
+            else if (!user.getCallsign().isEmpty())
+            {
+                this->setCallsign(user.getCallsign());
+            }
+        }
+
+        void CAircraft::setCallsign(const CCallsign &callsign)
+        {
+            this->m_callsign = callsign;
+            this->m_pilot.setCallsign(callsign);
+            this->m_situation.setCallsign(callsign);
+            this->m_parts.setCallsign(callsign);
         }
 
         QString CAircraft::convertToQString(bool i18n) const
@@ -137,6 +148,12 @@ namespace BlackMisc
         {
             CTransponder xpdr("TRANSPONDER", 7000, CTransponder::StateStandby);
             this->setTransponder(xpdr);
+        }
+
+        void CAircraft::setParts(const CAircraftParts &parts)
+        {
+            m_parts = parts;
+            m_parts.setCallsign(this->getCallsign());
         }
 
         CVariant CAircraft::propertyByIndex(const BlackMisc::CPropertyIndex &index) const

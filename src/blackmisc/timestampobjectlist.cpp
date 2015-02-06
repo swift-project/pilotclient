@@ -23,10 +23,16 @@ namespace BlackMisc
     template <class OBJ, class CONTAINER>
     CONTAINER ITimestampObjectList<OBJ, CONTAINER>::findBefore(qint64 msSinceEpoch) const
     {
-        return this->getContainer().findBy([&](const OBJ & obj)
+        return this->container().findBy([&](const OBJ & obj)
         {
             return obj.isOlderThan(msSinceEpoch);
         });
+    }
+
+    template <class OBJ, class CONTAINER>
+    CONTAINER ITimestampObjectList<OBJ, CONTAINER>::findBeforeNowMinusOffset(qint64 msOffset) const
+    {
+        return this->findBefore(QDateTime::currentMSecsSinceEpoch() - msOffset);
     }
 
     template <class OBJ, class CONTAINER>
@@ -38,7 +44,7 @@ namespace BlackMisc
     template <class OBJ, class CONTAINER>
     CONTAINER ITimestampObjectList<OBJ, CONTAINER>::findAfter(qint64 msSinceEpoc) const
     {
-        return this->getContainer().findBy([&](const OBJ & obj)
+        return this->container().findBy([&](const OBJ & obj)
         {
             return obj.isNewerThan(msSinceEpoc);
         });
@@ -47,7 +53,7 @@ namespace BlackMisc
     template <class OBJ, class CONTAINER>
     QList<CONTAINER> ITimestampObjectList<OBJ, CONTAINER>::splitByTime(qint64 msSinceEpoch) const
     {
-        CONTAINER newer(this->getContainer());
+        CONTAINER newer(this->container());
         newer.sortLatestFirst();
         CONTAINER older;
         for (auto it = newer.begin(); it != newer.end(); ++it)
@@ -55,19 +61,21 @@ namespace BlackMisc
             if (it->isOlderThan(msSinceEpoch))
             {
                 // better "move", ?? std::make_move_iterator
-                older.insert(CRange<typename CONTAINER::iterator>(it, newer.end()));
+                older.insert(CRange<CONTAINER::iterator>(it, newer.end()));
                 newer.erase(it, newer.end());
                 break;
             }
         }
-        return QList<CONTAINER>({older, newer});
+
+        // before / after
+        return QList<CONTAINER>({newer, older});
     }
 
     template <class OBJ, class CONTAINER>
     OBJ ITimestampObjectList<OBJ, CONTAINER>::latestValue() const
     {
-        if (this->getContainer().isEmpty()) { return OBJ(); }
-        CONTAINER container(getContainer()); // copy
+        if (this->container().isEmpty()) { return OBJ(); }
+        CONTAINER container(container()); // copy
         container.sortLatestFirst();
         return container.front();
     }
@@ -75,8 +83,8 @@ namespace BlackMisc
     template <class OBJ, class CONTAINER>
     OBJ ITimestampObjectList<OBJ, CONTAINER>::oldestValue() const
     {
-        if (this->getContainer().isEmpty()) { return OBJ(); }
-        CONTAINER container(getContainer()); // copy
+        if (this->container().isEmpty()) { return OBJ(); }
+        CONTAINER container(container()); // copy
         container.sortLatestFirst();
         return container.back();
     }
@@ -96,7 +104,7 @@ namespace BlackMisc
     template <class OBJ, class CONTAINER>
     void ITimestampObjectList<OBJ, CONTAINER>::removeBefore(qint64 msSinceEpoc)
     {
-        this->getContainer().removeIf([&](const OBJ & obj)
+        this->container().removeIf([&](const OBJ & obj)
         {
             return obj.isOlderThan(msSinceEpoc);
         });
@@ -106,7 +114,7 @@ namespace BlackMisc
     void ITimestampObjectList<OBJ, CONTAINER>::removeOlderThanNowMinusOffset(int offsetMs)
     {
         const qint64 epoch = QDateTime::currentMSecsSinceEpoch() - offsetMs;
-        this->getContainer().removeIf([&](const OBJ & obj)
+        this->container().removeIf([&](const OBJ & obj)
         {
             return obj.isOlderThan(epoch);
         });
@@ -115,18 +123,30 @@ namespace BlackMisc
     template <class OBJ, class CONTAINER>
     void ITimestampObjectList<OBJ, CONTAINER>::sortLatestFirst()
     {
-        this->getContainer().sortOldestFirst();
-        std::reverse(this->getContainer().begin(), this->getContainer().end());
+        this->container().sortOldestFirst();
+        std::reverse(this->container().begin(), this->container().end());
     }
 
     template <class OBJ, class CONTAINER>
     void ITimestampObjectList<OBJ, CONTAINER>::sortOldestFirst()
     {
-        this->getContainer().sort(BlackMisc::Predicates::MemberLess(&OBJ::getMSecsSinceEpoch));
+        this->container().sort(BlackMisc::Predicates::MemberLess(&OBJ::getMSecsSinceEpoch));
+    }
+
+    template <class OBJ, class CONTAINER>
+    void ITimestampObjectList<OBJ, CONTAINER>::insertTimestampObject(const OBJ &object, int maxElements)
+    {
+        Q_ASSERT(maxElements > 1);
+        if (this->container().size() >= (maxElements - 1))
+        {
+            this->container().truncate(maxElements - 1);
+        }
+        this->container().insert_front(object);
     }
 
     // see here for the reason of thess forward instantiations
     // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
     template class ITimestampObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
+    template class ITimestampObjectList<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList>;
 
 } // namespace
