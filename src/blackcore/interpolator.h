@@ -13,7 +13,7 @@
 #define BLACKCORE_INTERPOLATOR_H
 
 #include "blackmisc/avaircraftsituation.h"
-#include <QDateTime>
+#include "simulator.h"
 
 namespace BlackCore
 {
@@ -21,26 +21,25 @@ namespace BlackCore
     class IInterpolator
     {
     public:
-        //! Default constructor
-        IInterpolator() {}
 
         //! Virtual destructor
         virtual ~IInterpolator() {}
 
-        //! Init object
-        virtual void initialize() = 0;
+        //! Has situations?
+        virtual bool hasEnoughAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const
+        {
+            Q_ASSERT(m_provider);
+            //! \todo Interpolator, it would be more efficient to directly getting the values and decide then
+            return m_provider->renderedAircraftSituations().findBeforeNowMinusOffset(6000).findByCallsign(callsign).size() > 1;
+        }
 
-        //! Add new aircraft situation
-        virtual void addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) = 0;
+        //! Current interpolated situation
+        virtual BlackMisc::Aviation::CAircraftSituation getCurrentInterpolatedSituation(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
-        //! Do we have enough situations to start calculating?
-        virtual bool hasEnoughAircraftSituations() const = 0;
-
-        //! Get current aircraft situation
-        virtual BlackMisc::Aviation::CAircraftSituation getCurrentSituation() = 0;
-
-        //! Get timestamp of the last received aircraft situation
-        virtual QDateTime getTimeOfLastReceivedSituation() const = 0;
+    protected:
+        //! Constructor
+        IInterpolator(BlackMisc::Simulation::IRenderedAircraftProviderReadOnly *provider) : m_provider(provider) { Q_ASSERT(provider);}
+        BlackMisc::Simulation::IRenderedAircraftProviderReadOnly *m_provider = nullptr; //!< access to provider
     };
 
 } // namespace

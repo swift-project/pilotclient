@@ -21,33 +21,18 @@
 namespace BlackCore
 {
     //! \brief Linear interpolator, calculation inbetween positions
-    class CInterpolatorLinear :  public IInterpolator
+    class CInterpolatorLinear :
+        public IInterpolator,
+        public BlackMisc::Simulation::CRenderedAircraftProviderSupportReadOnly
     {
     public:
-        //! \brief Default constructor
-        CInterpolatorLinear() {}
+        //! Constructor
+        CInterpolatorLinear(BlackMisc::Simulation::IRenderedAircraftProviderReadOnly *provider) :
+            IInterpolator(provider),
+            BlackMisc::Simulation::CRenderedAircraftProviderSupportReadOnly(provider) {}
 
-        //! \brief Virtual destructor
-        virtual ~CInterpolatorLinear() {}
-
-        //! Init object
-        virtual void initialize() override;
-
-        //! \copydoc IInterpolator::addSituation()
-        virtual void addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
-
-        //! \copydoc IInterpolator::hasEnoughAircraftSituations()
-        virtual bool hasEnoughAircraftSituations() const override;
-
-        //! \copydoc IInterpolator::getCurrentSituation()
-        virtual BlackMisc::Aviation::CAircraftSituation getCurrentSituation() override;
-
-        //! \copydoc IInterpolator::getTimeOfLastReceivedSituation()
-        virtual QDateTime getTimeOfLastReceivedSituation() const override;
-
-    private:
-         BlackMisc::Aviation::CAircraftSituationList m_aircraftSituationList;
-
+        //! \copydoc IInterpolator::getCurrentInterpolatedSituation
+        virtual BlackMisc::Aviation::CAircraftSituation getCurrentInterpolatedSituation(const BlackMisc::Aviation::CCallsign &callsign) const override;
     };
 
 } // namespace BlackCore

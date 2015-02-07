@@ -18,16 +18,7 @@ namespace BlackCoreTest
      */
     void CTestInterpolator::interpolatorBasics()
     {
-        IInterpolator *interpolator = new CInterpolatorLinear();
-        QVERIFY2(!interpolator->hasEnoughAircraftSituations(), "Interpolator cannot have enough situations. They should be 0!");
-
-        CAircraftSituation situation;
-        interpolator->addAircraftSituation(situation);
-        QTest::qSleep(6100);
-        situation.setAltitude(CAltitude(500, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
-        interpolator->addAircraftSituation(situation);
-
-        QVERIFY2(interpolator->hasEnoughAircraftSituations(), "Interpolator should have enough situations!");
+        //! \todo what would we test here?
     }
 
 } // namespace

@@ -18,30 +18,11 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackCore
 {
-    void CInterpolatorLinear::initialize()
-    {
-
-    }
-
-    void CInterpolatorLinear::addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
-    {
-        m_aircraftSituationList.push_back(situation);
-
-        // Delete packets older than 30 seconds
-        m_aircraftSituationList.removeBefore(QDateTime::currentDateTimeUtc().addSecs(-30));
-    }
-
-    bool CInterpolatorLinear::hasEnoughAircraftSituations() const
+    CAircraftSituation CInterpolatorLinear::getCurrentInterpolatedSituation(const CCallsign &callsign) const
     {
         QDateTime currentTime = QDateTime::currentDateTimeUtc().addSecs(-6);
-        return !m_aircraftSituationList.findBefore(currentTime).isEmpty() && m_aircraftSituationList.size() > 1;
-    }
-
-    CAircraftSituation CInterpolatorLinear::getCurrentSituation()
-    {
-        QDateTime currentTime = QDateTime::currentDateTimeUtc().addSecs(-6);
-        CAircraftSituationList situationsBefore = m_aircraftSituationList.findBefore(currentTime);
-        CAircraftSituationList situationsAfter = m_aircraftSituationList.findAfter(currentTime);
+        CAircraftSituationList situationsBefore = renderedAircraftSituations().findBefore(currentTime).findByCallsign(callsign);
+        CAircraftSituationList situationsAfter = renderedAircraftSituations().findAfter(currentTime).findByCallsign(callsign);
 
         Q_ASSERT_X(!situationsBefore.isEmpty(), "CInterpolatorLinear::getCurrentSituation()", "List previous situations is empty!");
 
@@ -131,8 +112,4 @@ namespace BlackCore
         return currentSituation;
     }
 
-    QDateTime CInterpolatorLinear::getTimeOfLastReceivedSituation() const
-    {
-        return m_aircraftSituationList.back().getUtcTimestamp();
-    }
-}
+} // namespace
