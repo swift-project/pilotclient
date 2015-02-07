@@ -24,6 +24,10 @@ blacksound {
 blackinput {
     LIBS += -lblackinput
 
+    macx {
+        LIBS += -framework CoreFoundation -framework ApplicationServices -framework Foundation -framework AppKit
+    }
+
     win32 {
         LIBS += -ldxguid -lole32 -ldinput8 -lUser32
     }

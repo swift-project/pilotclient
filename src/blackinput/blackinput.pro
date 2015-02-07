@@ -37,6 +37,7 @@ unix:!macx {
 macx {
     HEADERS += $$PWD/osx/*.h
     SOURCES += $$PWD/osx/*.cpp
+    OBJECTIVE_SOURCES += $$PWD/osx/*.mm
 }
 
 DESTDIR = ../../lib

@@ -1,11 +1,13 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2015
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
-/*!
-    \file
-*/
+//! \file
 
 #ifndef BLACKINPUT_KEYBOARD_MAC_H
 #define BLACKINPUT_KEYBOARD_MAC_H
@@ -14,9 +16,17 @@
 #include "blackmisc/hardware/keyboardkeylist.h"
 #include <QHash>
 
+class __CGEvent;
+typedef __CGEvent* CGEventRef;
+
+typedef unsigned int CGEventType;
+
+class __CGEventTapProxy;
+typedef __CGEventTapProxy* CGEventTapProxy;
+
 namespace BlackInput
 {
-    //! \brief Linux implemenation of IKeyboard using hook procedure
+    //! \brief Mac OSX implemenation of IKeyboard using hook procedure
     //! \todo Change QHash to a CCollection object
     class CKeyboardMac : public IKeyboard
     {
@@ -42,6 +52,8 @@ namespace BlackInput
         //! \copydoc IKeyboard::triggerKey()
         virtual void triggerKey(const BlackMisc::Hardware::CKeyboardKey &key, bool isPressed) override;
 
+        virtual void processKeyEvent(CGEventType type, CGEventRef event);
+
     protected:
 
         //! \copydoc IKeyboard::init()
@@ -60,6 +72,11 @@ namespace BlackInput
          * \param isFinished
          */
         void sendCaptureNotification(const BlackMisc::Hardware::CKeyboardKey &key, bool isFinished);
+
+        static CGEventRef myCGEventCallback(CGEventTapProxy proxy,
+                                     CGEventType type,
+                                     CGEventRef event,
+                                     void *refcon);
 
         BlackMisc::Hardware::CKeyboardKeyList m_listMonitoredKeys; //!< Registered keys
         BlackMisc::Hardware::CKeyboardKey m_pressedKey;    //!< Set of virtual keys pressed in the last cycle
