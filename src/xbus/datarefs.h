@@ -56,7 +56,7 @@ namespace XBus
         void implSetAt(size_t index, T);
 
         template <typename T>
-        T implGetAt(size_t index);
+        T implGetAt(size_t index) const;
 
     private:
         XPLMDataRef m_ref;
@@ -179,9 +179,9 @@ namespace XBus
     template <>
     inline void ArrayDataRefImpl::implSetAt<float>(size_t i, float d) { assert(i <= m_size); XPLMSetDatavf(m_ref, &d, (int)i, 1); }
     template <>
-    inline int ArrayDataRefImpl::implGetAt<int>(size_t i) { assert(i <= m_size); int d; XPLMGetDatavi(m_ref, &d, (int)i, 1); return d; }
+    inline int ArrayDataRefImpl::implGetAt<int>(size_t i) const { assert(i <= m_size); int d; XPLMGetDatavi(m_ref, &d, (int)i, 1); return d; }
     template <>
-    inline float ArrayDataRefImpl::implGetAt<float>(size_t i) { assert(i <= m_size); float d; XPLMGetDatavf(m_ref, &d, (int)i, 1); return d; }
+    inline float ArrayDataRefImpl::implGetAt<float>(size_t i) const { assert(i <= m_size); float d; XPLMGetDatavf(m_ref, &d, (int)i, 1); return d; }
 
 } // namespace
 
