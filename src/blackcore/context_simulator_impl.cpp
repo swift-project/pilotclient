@@ -314,13 +314,6 @@ namespace BlackCore
         this->m_simulator->addRemoteAircraft(remoteAircraft);
     }
 
-    void CContextSimulator::ps_addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &situation)
-    {
-        Q_ASSERT(this->m_simulator);
-        if (!this->m_simulator) { return; }
-        this->m_simulator->addAircraftSituation(callsign, situation);
-    }
-
     void CContextSimulator::ps_removeRemoteAircraft(const CCallsign &callsign)
     {
         Q_ASSERT(this->m_simulator);

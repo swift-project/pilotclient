@@ -60,6 +60,12 @@ namespace BlackCore
         //! \copydoc IRenderedAircraftProviderReadOnly::renderedAircraftSituations
         virtual BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() override;
 
+        //! \copydoc IRenderedAircraftProvider::renderedAircraftParts
+        virtual const BlackMisc::Aviation::CAircraftPartsList &renderedAircraftParts() const override;
+
+        //! \copydoc IRenderedAircraftProvider::renderedAircraftParts
+        virtual BlackMisc::Aviation::CAircraftPartsList &renderedAircraftParts() override;
+
     public slots:
 
         //! \copydoc IContextNetwork::readAtcBookingsFromSource()

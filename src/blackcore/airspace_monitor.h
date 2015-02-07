@@ -55,7 +55,13 @@ namespace BlackCore
         //! \copydoc IRenderedAircraftProvider::renderedAircraftSituations
         virtual BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() override { return m_aircraftSituations; }
 
-        //! \copydoc IRenderedAircraftProvider::updateAircraftEnabled
+        //! \copydoc IRenderedAircraftProvider::renderedAircraftParts
+        virtual const BlackMisc::Aviation::CAircraftPartsList &renderedAircraftParts() const override { return m_aircraftParts; }
+
+        //! \copydoc IRenderedAircraftProvider::renderedAircraftParts
+        virtual BlackMisc::Aviation::CAircraftPartsList &renderedAircraftParts() override { return m_aircraftParts; }
+
+        //! \copydoc IRenderedAircraftProvider::renderedAircraftParts
         virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const QString &originator) override;
 
         //! \copydoc IRenderedAircraftProvider::updateAircraftModel
@@ -130,6 +136,7 @@ namespace BlackCore
         BlackMisc::Network::CClientList      m_otherClients;
         BlackMisc::Simulation::CSimulatedAircraftList  m_aircraftInRange;
         BlackMisc::Aviation::CAircraftSituationList    m_aircraftSituations;
+        BlackMisc::Aviation::CAircraftPartsList        m_aircraftParts;
 
         QMap<BlackMisc::Aviation::CAirportIcao, BlackMisc::Aviation::CInformationMessage> m_metarCache;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan>            m_flightPlanCache;

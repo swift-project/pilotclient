@@ -109,6 +109,18 @@ namespace BlackCore
         return m_airspace->renderedAircraftSituations();
     }
 
+    const CAircraftPartsList &CContextNetwork::renderedAircraftParts() const
+    {
+        Q_ASSERT(this->m_airspace);
+        return m_airspace->renderedAircraftParts();
+    }
+
+    CAircraftPartsList &CContextNetwork::renderedAircraftParts()
+    {
+        Q_ASSERT(this->m_airspace);
+        return m_airspace->renderedAircraftParts();
+    }
+
     void CContextNetwork::gracefulShutdown()
     {
         if (this->m_vatsimBookingReader)  { this->m_vatsimBookingReader->quit(); }

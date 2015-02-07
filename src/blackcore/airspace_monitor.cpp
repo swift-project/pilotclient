@@ -423,6 +423,7 @@ namespace BlackCore
             emit removedAircraft(aircraft.getCallsign());
         }
         m_aircraftSituations.clear();
+        m_aircraftParts.clear();
         m_aircraftInRange.clear();
         m_flightPlanCache.clear();
         m_icaoCodeCache.clear();
