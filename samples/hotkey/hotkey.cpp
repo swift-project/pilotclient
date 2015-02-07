@@ -5,9 +5,13 @@
 
 #include "hotkey.h"
 
+#include "blackmisc/hwkeyboardkeylist.h"
+
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QGroupBox>
+
+using namespace BlackMisc::Hardware;
 
 HotkeyDialog::HotkeyDialog(QWidget *parent) :
     QDialog(parent),
@@ -41,7 +45,12 @@ void HotkeyDialog::keySelectionChanged(BlackMisc::Hardware::CKeyboardKey key)
 void HotkeyDialog::keySelectionFinished(BlackMisc::Hardware::CKeyboardKey key)
 {
     m_lblHotkey->setText(key.toFormattedQString());
+
     m_key = key;
+
+    CKeyboardKeyList keyList;
+    keyList.push_back(key);
+    m_keyboard->setKeysToMonitor(keyList);
 }
 
 void HotkeyDialog::processKeyDown(const BlackMisc::Hardware::CKeyboardKey &key)
