@@ -49,13 +49,9 @@ namespace BlackSimPlugin
             //! Set Simconnect object id
             int getObjectId() const { return m_objectId; }
 
-            //! Get interpolator
-            QSharedPointer<BlackCore::IInterpolator> getInterpolator() const { return m_interpolator; }
-
         private:
 
             BlackMisc::Aviation::CCallsign m_callsign;
-            QSharedPointer<BlackCore::IInterpolator> m_interpolator;
             int m_requestId = -1;
             int m_objectId  = -1;
         };

@@ -312,27 +312,27 @@ namespace BlackSimPlugin
             // Is there any model matching required ????
             CAircraftIcao icao = remoteAircraft.getIcaoInfo();
             m_traffic->addPlane(remoteAircraft.getCallsign().asString(), icao.getAircraftDesignator(), icao.getAirlineDesignator(), icao.getLivery());
-            addAircraftSituation(remoteAircraft.getCallsign(), remoteAircraft.getSituation());
             renderedAircraft().applyIfCallsign(remoteAircraft.getCallsign(), CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(true)));
             CLogMessage(this).info("XP: Added aircraft %1") << remoteAircraft.getCallsign().toQString();
             return true;
         }
 
-        void CSimulatorXPlane::addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign,
-                const BlackMisc::Aviation::CAircraftSituation &situ)
-        {
-            if (! isConnected()) { return; }
-            using namespace BlackMisc::PhysicalQuantities;
-            m_traffic->setPlanePosition(callsign.asString(),
-                                        situ.latitude().value(CAngleUnit::deg()),
-                                        situ.longitude().value(CAngleUnit::deg()),
-                                        situ.getAltitude().value(CLengthUnit::ft()),
-                                        situ.getPitch().value(CAngleUnit::deg()),
-                                        situ.getBank().value(CAngleUnit::deg()),
-                                        situ.getHeading().value(CAngleUnit::deg()));
-            m_traffic->setPlaneSurfaces(callsign.asString(), true, 0, 0, 0, 0, 0, 0, 0, 0, 0, true, true, true, true, 0); // TODO landing gear, lights, control surfaces
-            m_traffic->setPlaneTransponder(callsign.asString(), 2000, true, false); // TODO transponder
-        }
+        //! \todo XPlane driver, where would this go?
+//        void CSimulatorXPlane::addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign,
+//                const BlackMisc::Aviation::CAircraftSituation &situ)
+//        {
+//            if (! isConnected()) { return; }
+//            using namespace BlackMisc::PhysicalQuantities;
+//            m_traffic->setPlanePosition(callsign.asString(),
+//                                        situ.latitude().value(CAngleUnit::deg()),
+//                                        situ.longitude().value(CAngleUnit::deg()),
+//                                        situ.getAltitude().value(CLengthUnit::ft()),
+//                                        situ.getPitch().value(CAngleUnit::deg()),
+//                                        situ.getBank().value(CAngleUnit::deg()),
+//                                        situ.getHeading().value(CAngleUnit::deg()));
+//            m_traffic->setPlaneSurfaces(callsign.asString(), true, 0, 0, 0, 0, 0, 0, 0, 0, 0, true, true, true, true, 0); // TODO landing gear, lights, control surfaces
+//            m_traffic->setPlaneTransponder(callsign.asString(), 2000, true, false); // TODO transponder
+//        }
 
         bool CSimulatorXPlane::removeRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign)
         {

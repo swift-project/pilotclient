@@ -19,23 +19,25 @@
 #include <QScopedArrayPointer>
 
 using namespace BlackMisc;
+using namespace BlackCore;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackSimPlugin
 {
     namespace Fs9
     {
-        CFs9Client::CFs9Client(QObject *owner, const QString &callsign, const CTime &updateInterval) :
+        CFs9Client::CFs9Client(
+            IRenderedAircraftProviderReadOnly *renderedAircraftProvider, QObject *owner, const QString &callsign, const CTime &updateInterval) :
             CDirectPlayPeer(owner, callsign),
-            m_updateInterval(updateInterval)
-        {
-        }
+            m_renderedAircraftProvider(renderedAircraftProvider), m_updateInterval(updateInterval)
+        { }
 
         CFs9Client::~CFs9Client()
         {
-             if(m_hostAddress) m_hostAddress->Release();
-             m_hostAddress = nullptr;
+            if (m_hostAddress) m_hostAddress->Release();
+            m_hostAddress = nullptr;
         }
 
         void CFs9Client::sendTextMessage(const QString &textMessage)
@@ -54,59 +56,55 @@ namespace BlackSimPlugin
             HRESULT hr = S_OK;
 
             // Create our IDirectPlay8Address Host Address
-            if( FAILED( hr = CoCreateInstance(CLSID_DirectPlay8Address, nullptr,
-                                            CLSCTX_INPROC_SERVER,
-                                            IID_IDirectPlay8Address,
-                                            reinterpret_cast<void **>(&m_hostAddress) ) ) )
+            if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Address, nullptr,
+                                             CLSCTX_INPROC_SERVER,
+                                             IID_IDirectPlay8Address,
+                                             reinterpret_cast<void **>(&m_hostAddress))))
             {
                 printDirectPlayError(hr);
                 return;
             }
 
-            if (FAILED (hr = m_hostAddress->BuildFromURLA(hostAddress.toLatin1().data())))
+            if (FAILED(hr = m_hostAddress->BuildFromURLA(hostAddress.toLatin1().data())))
             {
                 printDirectPlayError(hr);
                 return;
             }
         }
 
-        void CFs9Client::addAircraftSituation(const CAircraftSituation &situation)
+        void CFs9Client::timerEvent(QTimerEvent *event)
         {
-            QMutexLocker locker(&m_mutexInterpolator);
-            m_interpolator.addAircraftSituation(situation);
-        }
+            Q_UNUSED(event);
+            if (m_clientStatus == Disconnected) { return; }
 
-        void CFs9Client::timerEvent(QTimerEvent * /*event*/)
-        {
-            if (m_clientStatus == Disconnected) return;
 
             QMutexLocker locker(&m_mutexInterpolator);
+            CInterpolatorLinear interpolator(m_renderedAircraftProvider);
+            if (!interpolator.hasEnoughAircraftSituations(this->m_callsign)) { return; }
 
-            if (m_interpolator.hasEnoughAircraftSituations())
-            {
-                CAircraftSituation situation = m_interpolator.getCurrentSituation();
-                MPPositionSlewMode positionSlewMode = aircraftSituationToFS9(situation);
+            CAircraftSituation situation = interpolator.getCurrentInterpolatedSituation(m_callsign);
+            MPPositionSlewMode positionSlewMode = aircraftSituationToFS9(situation);
 
-                QByteArray positionMessage;
-                MultiPlayerPacketParser::writeType(positionMessage, CFs9Sdk::MULTIPLAYER_PACKET_ID_POSITION_SLEWMODE);
-                MultiPlayerPacketParser::writeSize(positionMessage, positionSlewMode.size());
-                positionSlewMode.packet_index = m_packetIndex;
-                ++m_packetIndex;
-                positionMessage = MultiPlayerPacketParser::writeMessage(positionMessage, positionSlewMode);
+            QByteArray positionMessage;
+            MultiPlayerPacketParser::writeType(positionMessage, CFs9Sdk::MULTIPLAYER_PACKET_ID_POSITION_SLEWMODE);
+            MultiPlayerPacketParser::writeSize(positionMessage, positionSlewMode.size());
+            positionSlewMode.packet_index = m_packetIndex;
+            ++m_packetIndex;
+            positionMessage = MultiPlayerPacketParser::writeMessage(positionMessage, positionSlewMode);
 
-                sendMessage(positionMessage);
+            sendMessage(positionMessage);
 
-                QByteArray paramMessage;
-                MPParam param;
-                MultiPlayerPacketParser::writeType(paramMessage, CFs9Sdk::MULTIPLAYER_PACKET_ID_PARAMS);
-                MultiPlayerPacketParser::writeSize(paramMessage, param.size());
-                param.packet_index = m_packetIndex;
-                ++m_packetIndex;
-                paramMessage = MultiPlayerPacketParser::writeMessage(paramMessage, param);
-                sendMessage(paramMessage);
+            QByteArray paramMessage;
+            MPParam param;
+            MultiPlayerPacketParser::writeType(paramMessage, CFs9Sdk::MULTIPLAYER_PACKET_ID_PARAMS);
+            MultiPlayerPacketParser::writeSize(paramMessage, param.size());
+            param.packet_index = m_packetIndex;
+            ++m_packetIndex;
+            paramMessage = MultiPlayerPacketParser::writeMessage(paramMessage, param);
+            sendMessage(paramMessage);
 
-                m_lastAircraftSituation = situation;
-            }
+            m_lastAircraftSituation = situation;
+
         }
 
         void CFs9Client::initialize()
@@ -126,7 +124,7 @@ namespace BlackSimPlugin
         {
             HRESULT hr = S_OK;
 
-            if( FAILED( hr = createHostAddress() ) )
+            if (FAILED(hr = createHostAddress()))
             {
                 qWarning() << "Failed to create host address!";
                 return hr;
@@ -139,16 +137,16 @@ namespace BlackSimPlugin
             dpAppDesc.guidApplication = CFs9Sdk::guid();
 
             // We now have the host address so lets enum
-            if( FAILED( hr = m_directPlayPeer->EnumHosts(&dpAppDesc,            // pApplicationDesc
-                                                m_hostAddress,                  // pdpaddrHost
-                                                m_deviceAddress,                // pdpaddrDeviceInfo
-                                                nullptr, 0,                     // pvUserEnumData, size
-                                                0,                              // dwEnumCount
-                                                0,                              // dwRetryInterval
-                                                0,                              // dwTimeOut
-                                                nullptr,                        // pvUserContext
-                                                nullptr,                        // pAsyncHandle
-                                                DPNENUMHOSTS_SYNC ) ) )         // dwFlags
+            if (FAILED(hr = m_directPlayPeer->EnumHosts(&dpAppDesc,             // pApplicationDesc
+                            m_hostAddress,                  // pdpaddrHost
+                            m_deviceAddress,                // pdpaddrDeviceInfo
+                            nullptr, 0,                     // pvUserEnumData, size
+                            0,                              // dwEnumCount
+                            0,                              // dwRetryInterval
+                            0,                              // dwTimeOut
+                            nullptr,                        // pvUserContext
+                            nullptr,                        // pAsyncHandle
+                            DPNENUMHOSTS_SYNC)))            // dwFlags
             {
                 return printDirectPlayError(hr);
             }
@@ -160,16 +158,16 @@ namespace BlackSimPlugin
             HRESULT hr = S_OK;
 
             // Create our IDirectPlay8Address Host Address
-            if( FAILED( hr = CoCreateInstance(CLSID_DirectPlay8Address, nullptr,
-                                            CLSCTX_INPROC_SERVER,
-                                            IID_IDirectPlay8Address,
-                                            reinterpret_cast<void **>(&m_hostAddress) ) ) )
+            if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Address, nullptr,
+                                             CLSCTX_INPROC_SERVER,
+                                             IID_IDirectPlay8Address,
+                                             reinterpret_cast<void **>(&m_hostAddress))))
             {
                 return printDirectPlayError(hr);
             }
 
             // Set the SP for our Host Address
-            if( FAILED( hr = m_hostAddress->SetSP(&CLSID_DP8SP_TCPIP ) ) )
+            if (FAILED(hr = m_hostAddress->SetSP(&CLSID_DP8SP_TCPIP)))
             {
                 return printDirectPlayError(hr);
             }
@@ -178,9 +176,9 @@ namespace BlackSimPlugin
             const wchar_t hostname[] = L"localhost";
 
             // Set the hostname into the address
-            if( FAILED( hr = m_hostAddress->AddComponent(DPNA_KEY_HOSTNAME, hostname,
-                                                            2*(wcslen(hostname) + 1), /*bytes*/
-                                                            DPNA_DATATYPE_STRING ) ) )
+            if (FAILED(hr = m_hostAddress->AddComponent(DPNA_KEY_HOSTNAME, hostname,
+                            2 * (wcslen(hostname) + 1), /*bytes*/
+                            DPNA_DATATYPE_STRING)))
             {
                 return printDirectPlayError(hr);
             }
@@ -192,7 +190,7 @@ namespace BlackSimPlugin
         {
             HRESULT hr = S_OK;
 
-            if(m_clientStatus == Connected) return hr;
+            if (m_clientStatus == Connected) return hr;
 
             QMutexLocker locker(&m_mutexHostList);
 
@@ -201,18 +199,18 @@ namespace BlackSimPlugin
             callsign.toWCharArray(wszPlayername.data());
             wszPlayername[callsign.size()] = 0;
 
-            ZeroMemory(&m_playerInfo, sizeof (PLAYER_INFO_STRUCT) );
-                strcpy (m_playerInfo.szAircraft, "Boeing 737-400 Paint1");
+            ZeroMemory(&m_playerInfo, sizeof(PLAYER_INFO_STRUCT));
+            strcpy(m_playerInfo.szAircraft, "Boeing 737-400 Paint1");
             m_playerInfo.dwFlags = 6;
 
             // Prepare and set the player information structure.
-            ZeroMemory( &m_player, sizeof( DPN_PLAYER_INFO ) );
-            m_player.dwSize = sizeof( DPN_PLAYER_INFO );
+            ZeroMemory(&m_player, sizeof(DPN_PLAYER_INFO));
+            m_player.dwSize = sizeof(DPN_PLAYER_INFO);
             m_player.pvData = &m_playerInfo;
-            m_player.dwDataSize = sizeof( PLAYER_INFO_STRUCT );
+            m_player.dwDataSize = sizeof(PLAYER_INFO_STRUCT);
             m_player.dwInfoFlags = DPNINFO_NAME | DPNINFO_DATA;
             m_player.pwszName = wszPlayername.data();
-            if( FAILED( hr = m_directPlayPeer->SetPeerInfo( &m_player, nullptr, nullptr, DPNSETPEERINFO_SYNC ) ) )
+            if (FAILED(hr = m_directPlayPeer->SetPeerInfo(&m_player, nullptr, nullptr, DPNSETPEERINFO_SYNC)))
             {
                 return printDirectPlayError(hr);
             }
@@ -224,16 +222,16 @@ namespace BlackSimPlugin
             dpAppDesc.guidApplication = CFs9Sdk::guid();
 
             // We are now ready to host the app
-            if( FAILED( hr = m_directPlayPeer->Connect( &dpAppDesc,    // AppDesc
-                                                        m_hostAddress,
-                                                        m_deviceAddress,
-                                                        nullptr,
-                                                        nullptr,
-                                                        nullptr, 0,
-                                                        nullptr,
-                                                        nullptr,
-                                                        nullptr,
-                                                        DPNCONNECT_SYNC ) ) )
+            if (FAILED(hr = m_directPlayPeer->Connect(&dpAppDesc,      // AppDesc
+                            m_hostAddress,
+                            m_deviceAddress,
+                            nullptr,
+                            nullptr,
+                            nullptr, 0,
+                            nullptr,
+                            nullptr,
+                            nullptr,
+                            DPNCONNECT_SYNC)))
             {
                 return printDirectPlayError(hr);
             }
@@ -263,7 +261,7 @@ namespace BlackSimPlugin
             if (m_clientStatus == Disconnected) return hr;
 
             BlackMisc::CLogMessage(this).debug() << "Closing DirectPlay connection for " << m_callsign;
-            if( FAILED( hr = m_directPlayPeer->Close(0) ))
+            if (FAILED(hr = m_directPlayPeer->Close(0)))
             {
                 return printDirectPlayError(hr);
             }

@@ -113,27 +113,15 @@ namespace BlackSimPlugin
                 this->removeRenderedAircraft(callsign);
             }
 
-            CFs9Client *client = new CFs9Client(this, callsign.toQString(), CTime(25, CTimeUnit::ms()));
+            CFs9Client *client = new CFs9Client(this->m_renderedAircraftProvider, this, callsign.toQString(), CTime(25, CTimeUnit::ms()));
             client->setHostAddress(m_fs9Host->getHostAddress());
             client->setPlayerUserId(m_fs9Host->getPlayerUserId());
 
             client->start();
             m_hashFs9Clients.insert(callsign, client);
-            addAircraftSituation(callsign, remoteAircraft.getSituation());
             renderedAircraft().applyIfCallsign(callsign, CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(true)));
             CLogMessage(this).info("FS9: Added aircraft %1") << callsign.toQString();
             return true;
-        }
-
-        void CSimulatorFs9::addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &situation)
-        {
-            Q_ASSERT(m_hashFs9Clients.contains(callsign));
-
-            CFs9Client *client = m_hashFs9Clients.value(callsign);
-            if (!client)
-                return;
-
-            client->addAircraftSituation(situation);
         }
 
         bool CSimulatorFs9::removeRenderedAircraft(const CCallsign &callsign)

@@ -82,9 +82,6 @@ namespace BlackCore
         //! Add new remote aircraft to the simulator
         virtual bool addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) = 0;
 
-        //! Add new aircraft situation
-        virtual void addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation) = 0;
-
         //! Remove remote aircraft from simulator
         virtual bool removeRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
@@ -207,13 +204,13 @@ namespace BlackCore
     protected:
         //! Constructor
         CSimulatorCommon(
-                const BlackSim::CSimulatorInfo &simInfo,
-                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraftProvider,
-                QObject *parent = nullptr);
+            const BlackSim::CSimulatorInfo &simInfo,
+            BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+            BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraftProvider,
+            QObject *parent = nullptr);
 
-        BlackSim::CSimulatorInfo m_simulatorInfo;            //!< about the simulator
-        int m_maxRenderedAircraft = 99;
+        BlackSim::CSimulatorInfo m_simulatorInfo; //!< about the simulator
+        int m_maxRenderedAircraft = 99;           //!< max. rendered aircraft
     };
 
 } // namespace

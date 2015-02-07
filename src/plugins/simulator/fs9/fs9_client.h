@@ -38,7 +38,7 @@ namespace BlackSimPlugin
             };
 
             //! Constructor
-            CFs9Client(QObject *owner, const QString &callsign, const BlackMisc::PhysicalQuantities::CTime &updateInterval);
+            CFs9Client(BlackMisc::Simulation::IRenderedAircraftProviderReadOnly *renderedAircraftProvider, QObject *owner, const QString &callsign, const BlackMisc::PhysicalQuantities::CTime &updateInterval);
 
             //! Destructor
             virtual ~CFs9Client();
@@ -85,10 +85,10 @@ namespace BlackSimPlugin
 
             BlackMisc::Aviation::CAircraftSituation m_lastAircraftSituation;
             BlackMisc::PhysicalQuantities::CTime m_updateInterval;
-            BlackCore::CInterpolatorLinear m_interpolator;
             int m_timerId = 0;
 
             QMutex m_mutexInterpolator;
+            BlackMisc::Simulation::IRenderedAircraftProviderReadOnly *m_renderedAircraftProvider = nullptr;
             IDirectPlay8Address *m_hostAddress = nullptr;
             ClientStatus m_clientStatus = Disconnected;
 

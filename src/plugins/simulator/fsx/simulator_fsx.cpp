@@ -18,6 +18,7 @@
 #include "blackmisc/avairportlist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/nwaircraftmappinglist.h"
+#include "blackcore/interpolator_linear.h"
 
 #include <QTimer>
 #include <QtConcurrent>
@@ -156,8 +157,6 @@ namespace BlackSimPlugin
             simObj.setObjectId(0);
             ++m_nextObjID;
 
-            addAircraftSituation(callsign, remoteAircraft.getSituation());
-
             // matched models
             CAircraftModel aircraftModel = modelMatching(remoteAircraft);
             Q_ASSERT(remoteAircraft.getCallsign() == aircraftModel.getCallsign());
@@ -183,16 +182,6 @@ namespace BlackSimPlugin
                 CLogMessage(this).warning("FSX: Not connected, not added aircraft %1") << callsign.toQString();
                 return false;
             }
-        }
-
-        void CSimulatorFsx::addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &initialSituation)
-        {
-            // Q_ASSERT(m_simConnectObjects.contains(callsign));
-            if (!m_simConnectObjects.contains(callsign)) { return; }
-
-            CSimConnectObject simObj = m_simConnectObjects.value(callsign);
-            simObj.getInterpolator()->addAircraftSituation(initialSituation);
-            m_simConnectObjects.insert(callsign, simObj);
         }
 
         bool CSimulatorFsx::removeRenderedAircraft(const CCallsign &callsign)
@@ -580,24 +569,24 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::updateOtherAircraft()
         {
+            BlackCore::CInterpolatorLinear interpolator(this->m_renderedAircraftProvider);
             for (const CSimConnectObject &simObj : m_simConnectObjects)
             {
-                if (simObj.getInterpolator()->hasEnoughAircraftSituations())
+                if (!interpolator.hasEnoughAircraftSituations(simObj.getCallsign())) { continue; }
+
+                SIMCONNECT_DATA_INITPOSITION position = aircraftSituationToFsxInitPosition(interpolator.getCurrentInterpolatedSituation(simObj.getCallsign()));
+                DataDefinitionRemoteAircraftSituation ddAircraftSituation;
+                ddAircraftSituation.position = position;
+
+                DataDefinitionGearHandlePosition gearHandle;
+                gearHandle.gearHandlePosition = position.Altitude < 1000 ? 1 : 0;
+
+                if (simObj.getObjectId() != 0)
                 {
-                    SIMCONNECT_DATA_INITPOSITION position = aircraftSituationToFsxInitPosition(simObj.getInterpolator()->getCurrentSituation());
-                    DataDefinitionRemoteAircraftSituation ddAircraftSituation;
-                    ddAircraftSituation.position = position;
+                    SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSituation, simObj.getObjectId(), SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(ddAircraftSituation), &ddAircraftSituation);
 
-                    DataDefinitionGearHandlePosition gearHandle;
-                    gearHandle.gearHandlePosition = position.Altitude < 1000 ? 1 : 0;
-
-                    if (simObj.getObjectId() != 0)
-                    {
-                        SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSituation, simObj.getObjectId(), SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(ddAircraftSituation), &ddAircraftSituation);
-
-                        // With the following SimConnect call all aircrafts loose their red tag. No idea why though.
-                        SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataGearHandlePosition, simObj.getObjectId(), SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(DataDefinitionGearHandlePosition), &gearHandle);
-                    }
+                    // With the following SimConnect call all aircrafts loose their red tag. No idea why though.
+                    SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataGearHandlePosition, simObj.getObjectId(), SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(DataDefinitionGearHandlePosition), &gearHandle);
                 }
             }
         }
