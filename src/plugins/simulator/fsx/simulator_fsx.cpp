@@ -369,6 +369,30 @@ namespace BlackSimPlugin
             aircraftSituation.setAltitude(CAltitude(simulatorOwnAircraft.altitude, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
             ownAircraft().setSituation(aircraftSituation);
 
+            CAircraftLights lights (    simulatorOwnAircraft.lightStrobe,
+                                        simulatorOwnAircraft.lightLanding,
+                                        simulatorOwnAircraft.lightTaxi,
+                                        simulatorOwnAircraft.lightBeacon,
+                                        simulatorOwnAircraft.lightNav,
+                                        simulatorOwnAircraft.lightLogo );
+
+            QList<bool> helperList {    simulatorOwnAircraft.engine1Combustion != 0, simulatorOwnAircraft.engine2Combustion != 0,
+                                        simulatorOwnAircraft.engine3Combustion != 0, simulatorOwnAircraft.engine4Combustion != 0 };
+
+            CAircraftEngineList engines;
+            for (int index = 0; index < simulatorOwnAircraft.numberOfEngines; ++index)
+            {
+                engines.push_back(CAircraftEngine(index + 1, helperList.at(index)));
+            }
+
+            CAircraftParts parts (  lights, simulatorOwnAircraft.gearHandlePosition,
+                                    simulatorOwnAircraft.flapsHandlePosition * 100,
+                                    simulatorOwnAircraft.spoilersHandlePosition,
+                                    engines,
+                                    simulatorOwnAircraft.simOnGround );
+
+            ownAircraft().setParts(parts);
+
             CComSystem com1 = ownAircraft().getCom1System(); // set defaults
             CComSystem com2 = ownAircraft().getCom2System();
             CTransponder transponder = ownAircraft().getTransponder();

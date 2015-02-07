@@ -282,6 +282,58 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBusAsync(QLatin1String("getTransponderIdent"), setterCallback(o_ident));
         }
 
+        bool CXBusServiceProxy::getBeaconLightsOn() const
+        {
+            return m_dbusInterface->callDBusRet<bool>(QLatin1String("getBeaconLightsOn"));
+        }
+
+        void CXBusServiceProxy::getBeaconLightsOnAsync(bool *o_beaconLightsOn)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getBeaconLightsOn"), setterCallback(o_beaconLightsOn));
+        }
+
+        bool CXBusServiceProxy::getLandingLightsOn() const
+        {
+            return m_dbusInterface->callDBusRet<bool>(QLatin1String("getLandingLightsOn"));
+        }
+
+        void CXBusServiceProxy::getLandingLightsOnAsync(bool *o_landingLightsOn)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getLandingLightsOn"), setterCallback(o_landingLightsOn));
+        }
+
+        bool CXBusServiceProxy::getNavLightsOn() const
+        {
+            return m_dbusInterface->callDBusRet<bool>(QLatin1String("getNavLightsOn"));
+        }
+
+        void CXBusServiceProxy::getNavLightsOnAsync(bool *o_navLightsOn)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getNavLightsOn"), setterCallback(o_navLightsOn));
+        }
+
+        bool CXBusServiceProxy::getStrobeLightsOn() const
+
+        {
+            return m_dbusInterface->callDBusRet<bool>(QLatin1String("getStrobeLightsOn"));
+        }
+
+        void CXBusServiceProxy::getStrobeLightsOnAsync(bool *o_strobeLightsOn)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getStrobeLightsOn"), setterCallback(o_strobeLightsOn));
+        }
+
+        bool CXBusServiceProxy::getTaxiLightsOn() const
+        {
+            return m_dbusInterface->callDBusRet<bool>(QLatin1String("getTaxiLightsOn"));
+        }
+
+        void CXBusServiceProxy::getTaxiLightsOnAsync(bool *o_taxiLightsOn)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getTaxiLightsOn"), setterCallback(o_taxiLightsOn));
+        }
+
+
         void CXBusServiceProxy::setCom1Active(int freq)
         {
             m_dbusInterface->callDBus(QLatin1String("setCom1Active"), freq);
@@ -311,6 +363,54 @@ namespace BlackSimPlugin
         {
             m_dbusInterface->callDBus(QLatin1String("setTransponderMode"), mode);
         }
+        double CXBusServiceProxy::getFlapsDeployRatio() const
+        {
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getFlapsDeployRatio"));
+        }
 
+        void CXBusServiceProxy::getFlapsDeployRatioAsync(double *o_flapsDeployRatio)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getFlapsDeployRatio"), setterCallback(o_flapsDeployRatio));
+        }
+
+        double CXBusServiceProxy::getGearDeployRatio() const
+        {
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getGearDeployRatio"));
+        }
+
+        void CXBusServiceProxy::getGearDeployRatioAsync(double *o_gearDeployRatio)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getGearDeployRatio"), setterCallback(o_gearDeployRatio));
+        }
+
+        int CXBusServiceProxy::getNumberOfEngines() const
+        {
+            return m_dbusInterface->callDBusRet<int>(QLatin1String("getNumberOfEngines"));
+        }
+
+        void CXBusServiceProxy::getNumberOfEnginesAsync(double *o_numberOfEngines)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getNumberOfEngines"), setterCallback(o_numberOfEngines));
+        }
+
+        QList<double> CXBusServiceProxy::getEngineN1Percentage() const
+        {
+            return m_dbusInterface->callDBusRet<QList<double>>(QLatin1String("getEngineN1Percentage"));
+        }
+
+        void CXBusServiceProxy::getEngineN1PercentageAsync(QList<double> *o_engineN1Percentage)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getEngineN1Percentage"), setterCallback(o_engineN1Percentage));
+        }
+
+        double CXBusServiceProxy::getSpeedBrakeRatio() const
+        {
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getSpeedBrakeRatio"));
+        }
+
+        void CXBusServiceProxy::getSpeedBrakeRatioAsync(double *o_speedBrakeRatio)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getSpeedBrakeRatio"), setterCallback(o_speedBrakeRatio));
+        }
     }
 }

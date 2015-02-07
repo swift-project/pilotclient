@@ -155,6 +155,21 @@ namespace XBus
         //! Get whether we are currently squawking ident
         bool getTransponderIdent() const { return m_xpdrIdent.get(); }
 
+        //! Get whether beacon lights are on
+        bool getBeaconLightsOn() const { return m_beaconLightsOn.get(); }
+
+        //! Get whether landing lights are on
+        bool getLandingLightsOn() const { return m_landingLightsOn.get(); }
+
+        //! Get whether nav lights are on
+        bool getNavLightsOn() const { return m_navLightsOn.get(); }
+
+        //! Get whether strobe lights are on
+        bool getStrobeLightsOn() const { return m_strobeLightsOn.get(); }
+
+        //! Get whether taxi lights are on
+        bool getTaxiLightsOn() const { return m_taxiLightsOn.get(); }
+
         //! Set the current COM1 active frequency in kHz
         void setCom1Active(int freq) { m_com1Active.set(freq / 10); }
 
@@ -172,6 +187,28 @@ namespace XBus
 
         //! Set the current transponder mode (depends on the aircraft, 0 and 1 usually mean standby, >1 active)
         void setTransponderMode(int mode) { m_xpdrMode.set(mode); }
+
+        //! Get flaps deploy ratio, where 0.0 is flaps fully retracted, and 1.0 is flaps fully extended.
+        double getFlapsDeployRatio() const { return m_flapsReployRatio.get(); }
+
+        //! Get gear deploy ratio, where 0 is up and 1 is down
+        double getGearDeployRatio() const { return m_gearReployRatio.get(); }
+
+        //! Get the number of engines of current aircraft
+        int getNumberOfEngines() const { return m_numberOfEngines.get(); }
+
+        //! Get the N1 speed as percent of max (per engine)
+        QList<double> getEngineN1Percentage() const
+        {
+            QList<double> list;
+            for (int engineNumber = 0; engineNumber < getNumberOfEngines(); ++engineNumber)
+                list.append(m_enginesN1Percentage.getAt(engineNumber));
+
+            return list;
+        }
+
+        //! Get the ratio how much the speedbrakes surfaces are extended (0.0 is fully retracted, and 1.0 is fully extended)
+        double getSpeedBrakeRatio() const { return m_speedBrakeRatio.get(); }
 
     private:
         BlackMisc::Geo::CGeodesicGrid<128, XPLMNavRef> m_airports;
@@ -199,6 +236,16 @@ namespace XBus
         DataRef<xplane::data::sim::cockpit::radios::transponder_code> m_xpdrCode;
         DataRef<xplane::data::sim::cockpit::radios::transponder_mode> m_xpdrMode;
         DataRef<xplane::data::sim::cockpit::radios::transponder_id> m_xpdrIdent;
+        DataRef<xplane::data::sim::cockpit::electrical::beacon_lights_on> m_beaconLightsOn;
+        DataRef<xplane::data::sim::cockpit::electrical::landing_lights_on> m_landingLightsOn;
+        DataRef<xplane::data::sim::cockpit::electrical::nav_lights_on> m_navLightsOn;
+        DataRef<xplane::data::sim::cockpit::electrical::strobe_lights_on> m_strobeLightsOn;
+        DataRef<xplane::data::sim::cockpit::electrical::taxi_light_on> m_taxiLightsOn;
+        DataRef<xplane::data::sim::flightmodel2::controls::flap_handle_deploy_ratio> m_flapsReployRatio;
+        DataRef<xplane::data::sim::flightmodel2::gear::deploy_ratio> m_gearReployRatio;
+        DataRef<xplane::data::sim::aircraft::engine::acf_num_engines> m_numberOfEngines;
+        ArrayDataRef<xplane::data::sim::flightmodel::engine::ENGN_N1_> m_enginesN1Percentage;
+        DataRef<xplane::data::sim::flightmodel2::controls::speedbrake_ratio> m_speedBrakeRatio;
     };
 
 }

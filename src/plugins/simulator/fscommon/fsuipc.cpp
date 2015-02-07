@@ -106,6 +106,17 @@ namespace BlackSimPlugin
             qint32 groundAltitudeRaw;
             qint64 latitudeRaw;
             qint64 longitudeRaw;
+            qint16 lightsRaw;
+            qint16 onGroundRaw;
+            qint32 flapsControlRaw;
+            qint32 gearControlRaw;
+            qint32 spoilersControlRaw;
+            qint16 numberOfEngines;
+            qint16 engine1CombustionFlag;
+            qint16 engine2CombustionFlag;
+            qint16 engine3CombustionFlag;
+            qint16 engine4CombustionFlag;
+
 
             // http://www.projectmagenta.com/all-fsuipc-offsets/
             // https://www.ivao.aero/softdev/ivap/fsuipc_sdk.asp
@@ -141,6 +152,20 @@ namespace BlackSimPlugin
 
                     // model name
                     FSUIPC_Read(0x3d00, 256, &modelNameRaw, &dwResult) &&
+
+                    // aircraft parts
+                    FSUIPC_Read(0x0D0C, 2, &lightsRaw, &dwResult) &&
+                    FSUIPC_Read(0x0366, 2, &onGroundRaw, &dwResult) &&
+                    FSUIPC_Read(0x0BDC, 4, &flapsControlRaw, &dwResult) &&
+                    FSUIPC_Read(0x0BE8, 4, &gearControlRaw, &dwResult) &&
+                    FSUIPC_Read(0x0BD0, 4, &spoilersControlRaw, &dwResult) &&
+
+                    // engines
+                    FSUIPC_Read(0x0AEC, 2, &numberOfEngines, &dwResult) &&
+                    FSUIPC_Read(0x0894, 2, &engine1CombustionFlag, &dwResult) &&
+                    FSUIPC_Read(0x092C, 2, &engine2CombustionFlag, &dwResult) &&
+                    FSUIPC_Read(0x09C4, 2, &engine3CombustionFlag, &dwResult) &&
+                    FSUIPC_Read(0x0A5C, 2, &engine4CombustionFlag, &dwResult) &&
 
                     // If we wanted other reads/writes at the same time, we could put them here
                     FSUIPC_Process(&dwResult))
@@ -212,6 +237,24 @@ namespace BlackSimPlugin
                 situation.setGroundspeed(groundspeed);
                 situation.setAltitude(altitude);
                 aircraft.setSituation(situation);
+
+                CAircraftLights lights (lightsRaw & (1 << 4), lightsRaw & (1 << 2), lightsRaw & (1 << 3), lightsRaw & (1 << 1),
+                                        lightsRaw & (1 << 0), lightsRaw & (1 << 8));
+
+                QList<bool> helperList { engine1CombustionFlag != 0, engine2CombustionFlag != 0,
+                                         engine3CombustionFlag != 0, engine4CombustionFlag != 0 };
+
+                CAircraftEngineList engines;
+                for (int index = 0; index < numberOfEngines; ++index)
+                {
+                    engines.push_back(CAircraftEngine(index + 1, helperList.at(index)));
+                }
+
+                CAircraftParts parts (lights, gearControlRaw == 16383, flapsControlRaw * 100 / 16383,
+                                      spoilersControlRaw == 16383, engines, onGroundRaw == 1);
+
+                aircraft.setParts(parts);
+
             }
             return read;
         }

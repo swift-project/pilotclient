@@ -66,6 +66,7 @@ namespace BlackSimPlugin
                 m_service->getTransponderCodeAsync(&m_xplaneData.xpdrCode);
                 m_service->getTransponderModeAsync(&m_xplaneData.xpdrMode);
                 m_service->getTransponderIdentAsync(&m_xplaneData.xpdrIdent);
+                m_service->getAllWheelsOnGroundAsync(&m_xplaneData.onGroundAll);
             }
         }
 
@@ -75,6 +76,16 @@ namespace BlackSimPlugin
             {
                 m_service->getAircraftModelPathAsync(&m_xplaneData.aircraftModelPath);
                 m_service->getAircraftIcaoCodeAsync(&m_xplaneData.aircraftIcaoCode);
+                m_service->getBeaconLightsOnAsync(&m_xplaneData.beaconLightsOn);
+                m_service->getLandingLightsOnAsync(&m_xplaneData.landingLightsOn);
+                m_service->getNavLightsOnAsync(&m_xplaneData.navLightsOn);
+                m_service->getStrobeLightsOnAsync(&m_xplaneData.strobeLightsOn);
+                m_service->getTaxiLightsOnAsync(&m_xplaneData.taxiLightsOn);
+                m_service->getFlapsDeployRatioAsync(&m_xplaneData.flapsReployRatio);
+                m_service->getGearDeployRatioAsync(&m_xplaneData.gearReployRatio);
+                m_service->getEngineN1PercentageAsync(&m_xplaneData.enginesN1Percentage);
+                m_service->getSpeedBrakeRatioAsync(&m_xplaneData.speedBrakeRatio);
+
             }
         }
 
@@ -209,6 +220,22 @@ namespace BlackSimPlugin
             ac.setCom1System(Aviation::CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() }));
             ac.setCom2System(Aviation::CComSystem::getCom2System({ m_xplaneData.com2Active, CFrequencyUnit::kHz() }, { m_xplaneData.com2Standby, CFrequencyUnit::kHz() }));
             ac.setTransponder(Aviation::CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent)));
+
+            CAircraftEngineList engines;
+
+            for (int engineNumber = 0; engineNumber < m_xplaneData.enginesN1Percentage.size(); ++engineNumber)
+            {
+                // Engine number start counting at 1
+                // We consider the engine running when N1 is bigger than 5 %
+                CAircraftEngine engine {engineNumber + 1, m_xplaneData.enginesN1Percentage.at(engineNumber) > 5.0};
+                engines.push_back(engine);
+            }
+
+            Aviation::CAircraftParts parts { { m_xplaneData.strobeLightsOn, m_xplaneData.landingLightsOn, m_xplaneData.taxiLightsOn,
+                                               m_xplaneData.beaconLightsOn, m_xplaneData.navLightsOn, false },
+                                             { m_xplaneData.gearReployRatio > 0 }, { static_cast<int>(m_xplaneData.flapsReployRatio * 100) },
+                                             { m_xplaneData.speedBrakeRatio > 0.5 }, engines, { m_xplaneData.onGroundAll } };
+            ac.setParts(parts);
             return ac;
         }
 

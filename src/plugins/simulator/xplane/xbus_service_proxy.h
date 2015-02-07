@@ -249,6 +249,37 @@ namespace BlackSimPlugin
             void getTransponderIdentAsync(bool *o_ident);
             //! @}
 
+            //! \copydoc XBus::CService::getLandingLightsOn
+            //! @{
+            bool getBeaconLightsOn() const;
+            void getBeaconLightsOnAsync(bool *o_beaconLightsOn);
+            //! @}
+
+            //! \copydoc XBus::CService::getLandingLightsOn
+            //! @{
+            bool getLandingLightsOn() const;
+            void getLandingLightsOnAsync(bool *o_landingLightsOn);
+            //! @}
+
+            //! \copydoc XBus::CService::getNavLightsOn
+            //! @{
+            bool getNavLightsOn() const;
+            void getNavLightsOnAsync(bool *o_navLightsOn);
+            //! @}
+
+            //! \copydoc XBus::CService::getStrobeLightsOn
+            //! @{
+            bool getStrobeLightsOn() const;
+            void getStrobeLightsOnAsync(bool *o_strobeLightsOn);
+            //! @}
+
+            //! \copydoc XBus::CService::getTaxiLightsOn
+
+            //! @{
+            bool getTaxiLightsOn() const;
+            void getTaxiLightsOnAsync(bool *o_taxiLightsOn);
+            //! @}
+
             //! \copydoc XBus::CService::setCom1Active
             void setCom1Active(int freq);
 
@@ -266,6 +297,39 @@ namespace BlackSimPlugin
 
             //! \copydoc XBus::CService::setTransponderMode
             void setTransponderMode(int mode);
+
+            //! \copydoc XBus::CService::getFlapsDeployRatio
+
+            //! @{
+            double getFlapsDeployRatio() const;
+            void getFlapsDeployRatioAsync(double *o_flapsDeployRatio);
+            //! @}
+
+            //! \copydoc XBus::CService::getGearDeployRatio
+            //! @{
+            double getGearDeployRatio() const;
+            void getGearDeployRatioAsync(double *o_gearDeployRatio);
+            //! @}
+
+            //! \copydoc XBus::CService::getNumberOfEngines
+
+            //! @{
+            int getNumberOfEngines() const;
+            void getNumberOfEnginesAsync(double *o_numberOfEngines);
+            //! @}
+
+            //! \copydoc XBus::CService::getEngineN1Percentage
+            //! @{
+            QList<double> getEngineN1Percentage() const;
+            void getEngineN1PercentageAsync(QList<double> *o_engineN1Percentage);
+            //! @}
+
+            //! \copydoc XBus::CService::getSpeedBrakeRatio
+            //! @{
+            double getSpeedBrakeRatio() const;
+            void getSpeedBrakeRatioAsync(double *o_speedBrakeRatio);
+            //! @}
+
         };
 
     }

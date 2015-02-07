@@ -134,6 +134,7 @@ namespace BlackSimPlugin
                 double pitch;
                 double roll;
                 double trueHeading;
+                bool onGroundAll;
                 int com1Active;
                 int com1Standby;
                 int com2Active;
@@ -141,11 +142,22 @@ namespace BlackSimPlugin
                 int xpdrCode;
                 int xpdrMode;
                 bool xpdrIdent;
+                bool beaconLightsOn;
+                bool landingLightsOn;
+                bool navLightsOn;
+                bool strobeLightsOn;
+                bool taxiLightsOn;
+                double flapsReployRatio;
+                double gearReployRatio;
+                QList<double> enginesN1Percentage;
+                double speedBrakeRatio;
             } m_xplaneData;
 
             void resetData()
             {
-                m_xplaneData = { "", "", 0, 0, 0, 0, 0, 0, 0, 122800, 122800, 122800, 122800, 2000, 0, false };
+                m_xplaneData = { "", "", 0, 0, 0, 0, 0, 0, 0, false, 122800, 122800, 122800, 122800, 2000, 0, false, false, false, false,
+                                 false, false, 0, 0, {}, false};
+
             }
         };
 
