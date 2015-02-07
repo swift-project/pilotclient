@@ -70,16 +70,26 @@ namespace BlackSimPlugin
             char title[256]; //!< Aircraft model string
         };
 
-        //! Data struct of aircraft position
-        struct DataDefinitionRemoteAircraftSituation
+        //! Data struct of remote aircraft
+        struct DataDefinitionRemoteAircraft
         {
-            SIMCONNECT_DATA_INITPOSITION position;  //!< Position struct
-        };
-
-        //! Data struct of aircraft position
-        struct DataDefinitionGearHandlePosition
-        {
-            qint32 gearHandlePosition;  //!< Bool, 1 if gear handle is applied otherwise 0
+            SIMCONNECT_DATA_INITPOSITION position;  //!< Aircrafts position
+            double lightStrobe;                 //!< Is strobe light on?
+            double lightLanding;                //!< Is landing light on?
+//            double lightTaxi;                   //!< Is taxi light on?
+            double lightBeacon;                 //!< Is beacon light on?
+            double lightNav;                    //!< Is nav light on?
+            double lightLogo;                   //!< Is logo light on?
+            double flapsLeadingEdgeLeftPercent;       //!< Leading edge left in percent
+            double flapsLeadingEdgeRightPercent;      //!< Leading edge right in percent
+            double flapsTrailingEdgeLeftPercent;      //!< Trailing edge left in percent
+            double flapsTrailingEdgeRightPercent;     //!< Trailing edge right in percent
+            double gearHandlePosition;          //!< Gear handle position
+            double spoilersHandlePosition;    //!< Spoilers out?
+            double engine1Combustion; //!< Engine 1 combustion flag
+            double engine2Combustion; //!< Engine 2 combustion flag
+            double engine3Combustion; //!< Engine 3 combustion flag
+            double engine4Combustion; //!< Engine 4 combustion flag
         };
 
         //! Data struct simulator environment
@@ -131,8 +141,7 @@ namespace BlackSimPlugin
             {
                 DataOwnAircraft,
                 DataOwnAircraftTitle,
-                DataRemoteAircraftSituation,
-                DataGearHandlePosition,
+                DataRemoteAircraft,
                 DataSimEnvironment,
                 DataClientAreaSb,       //!< whole SB area
                 DataClientAreaSbIdent,  //!< ident single value
@@ -164,10 +173,7 @@ namespace BlackSimPlugin
             static HRESULT initOwnAircraft(const HANDLE hSimConnect);
 
             //! Initialize data definition for remote aircrafts
-            static HRESULT initRemoteAircraftSituation(const HANDLE hSimConnect);
-
-            //! Initialize data definition for remote aircraft configuration
-            static HRESULT initGearHandlePosition(const HANDLE hSimConnect);
+            static HRESULT initRemoteAircraft(const HANDLE hSimConnect);
 
             //! Initialize data definition for Simulator environment
             static HRESULT initSimulatorEnvironment(const HANDLE hSimConnect);

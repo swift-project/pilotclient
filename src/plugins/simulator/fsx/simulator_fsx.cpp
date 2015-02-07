@@ -23,6 +23,8 @@
 #include <QTimer>
 #include <QtConcurrent>
 
+#include <type_traits>
+
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
@@ -460,11 +462,6 @@ namespace BlackSimPlugin
                                            SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
             SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EventFreezeAtt, 1,
                                            SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-
-            DataDefinitionGearHandlePosition gearHandle;
-            gearHandle.gearHandlePosition = 1;
-
-            SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataGearHandlePosition, objectID, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(gearHandle), &gearHandle);
         }
 
         void CSimulatorFsx::timerEvent(QTimerEvent *event)
@@ -593,24 +590,49 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::updateOtherAircraft()
         {
+            static_assert(sizeof(DataDefinitionRemoteAircraft) == 176, "DataDefinitionRemoteAircraft has an incorrect size.");
             BlackCore::CInterpolatorLinear interpolator(this->m_renderedAircraftProvider);
             for (const CSimConnectObject &simObj : m_simConnectObjects)
             {
                 if (!interpolator.hasEnoughAircraftSituations(simObj.getCallsign())) { continue; }
 
                 SIMCONNECT_DATA_INITPOSITION position = aircraftSituationToFsxInitPosition(interpolator.getCurrentInterpolatedSituation(simObj.getCallsign()));
-                DataDefinitionRemoteAircraftSituation ddAircraftSituation;
-                ddAircraftSituation.position = position;
 
-                DataDefinitionGearHandlePosition gearHandle;
-                gearHandle.gearHandlePosition = position.Altitude < 1000 ? 1 : 0;
+                CAircraftParts parts;
+                if(renderedAircraftParts().findBeforeNowMinusOffset(6000).containsCallsign(simObj.getCallsign()))
+                    parts = renderedAircraftParts().findBeforeNowMinusOffset(6000).latestValue();
+
+                position.OnGround = parts.isOnGround() ? 1 : 0;
+
+                DataDefinitionRemoteAircraft ddRemoteAircraft;
+                ddRemoteAircraft.position = position;
+                ddRemoteAircraft.lightStrobe = parts.getLights().isStrobeOn() ? 1.0 : 0.0;
+                ddRemoteAircraft.lightLanding = parts.getLights().isLandingOn() ? 1.0 : 0.0;
+//                    ddRemoteAircraft.lightTaxi = parts.getLights().isTaxiOn() ? 1.0 : 0.0;
+                ddRemoteAircraft.lightBeacon = parts.getLights().isBeaconOn() ? 1.0 : 0.0;
+                ddRemoteAircraft.lightNav = parts.getLights().isNavOn() ? 1.0 : 0.0;
+                ddRemoteAircraft.lightLogo = parts.getLights().isLogoOn() ? 1.0 : 0.0;
+                ddRemoteAircraft.flapsLeadingEdgeLeftPercent = parts.getFlapsPercent() / 100.0;
+                ddRemoteAircraft.flapsLeadingEdgeRightPercent = parts.getFlapsPercent() / 100.0;
+                ddRemoteAircraft.flapsTrailingEdgeLeftPercent = parts.getFlapsPercent() / 100.0;
+                ddRemoteAircraft.flapsTrailingEdgeRightPercent = parts.getFlapsPercent() / 100.0;
+                ddRemoteAircraft.spoilersHandlePosition = parts.isSpoilersOut() ? 1.0 : 0.0;
+                ddRemoteAircraft.gearHandlePosition = parts.isGearDown() ? 1 : 0;
+                ddRemoteAircraft.engine1Combustion = parts.getEngines().findBy(&CAircraftEngine::getNumber, 1).frontOrDefault().isOn() ? 1 : 0;
+                ddRemoteAircraft.engine2Combustion = parts.getEngines().findBy(&CAircraftEngine::getNumber, 2).frontOrDefault().isOn() ? 1 : 0;
+                ddRemoteAircraft.engine3Combustion = parts.getEngines().findBy(&CAircraftEngine::getNumber, 3).frontOrDefault().isOn() ? 1 : 0;
+                ddRemoteAircraft.engine4Combustion = parts.getEngines().findBy(&CAircraftEngine::getNumber, 4).frontOrDefault().isOn() ? 1 : 0;
 
                 if (simObj.getObjectId() != 0)
                 {
-                    SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSituation, simObj.getObjectId(), SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(ddAircraftSituation), &ddAircraftSituation);
+                    HRESULT hr = S_OK;
 
-                    // With the following SimConnect call all aircrafts loose their red tag. No idea why though.
-                    SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataGearHandlePosition, simObj.getObjectId(), SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(DataDefinitionGearHandlePosition), &gearHandle);
+                    hr += SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraft,
+                                                  simObj.getObjectId(), 0, 0,
+                                                  sizeof(DataDefinitionRemoteAircraft), &ddRemoteAircraft);
+
+                    if (hr != S_OK) CLogMessage(this).warning("Failed so set data on SimObject");
+
                 }
             }
         }
@@ -625,9 +647,6 @@ namespace BlackSimPlugin
             position.Bank = situation.getBank().value();
             position.Heading = situation.getHeading().value(CAngleUnit::deg());
             position.Airspeed = situation.getGroundSpeed().value(CSpeedUnit::kts());
-
-            // TODO: epic fail for helicopters and VTOPs!
-            position.OnGround = position.Airspeed < 30 ? 1 : 0;
             return position;
         }
 
