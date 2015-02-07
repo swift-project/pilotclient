@@ -9,6 +9,8 @@
 
 #include "simdirectaccessrenderedaircraft.h"
 
+using namespace BlackMisc::Aviation;
+
 namespace BlackMisc
 {
     namespace Simulation
@@ -25,6 +27,12 @@ namespace BlackMisc
             return this->m_renderedAircraftProvider->renderedAircraftSituations();
         }
 
+        const Aviation::CAircraftPartsList &CRenderedAircraftProviderSupportReadOnly::renderedAircraftParts() const
+        {
+            Q_ASSERT_X(this->m_renderedAircraftProvider, "renderedAircraftParts", "No object available");
+            return this->m_renderedAircraftProvider->renderedAircraftParts();
+        }
+
         const CSimulatedAircraftList &CRenderedAircraftProviderSupport::renderedAircraft() const
         {
             Q_ASSERT_X(this->m_renderedAircraftProvider, "renderedAircraft", "No object available");
@@ -37,16 +45,28 @@ namespace BlackMisc
             return this->m_renderedAircraftProvider->renderedAircraft();
         }
 
-        const Aviation::CAircraftSituationList &CRenderedAircraftProviderSupport::renderedAircraftSituations() const
+        const CAircraftSituationList &CRenderedAircraftProviderSupport::renderedAircraftSituations() const
         {
             Q_ASSERT_X(this->m_renderedAircraftProvider, "renderedAircraftSituations", "No object available");
             return this->m_renderedAircraftProvider->renderedAircraftSituations();
         }
 
-        Aviation::CAircraftSituationList &CRenderedAircraftProviderSupport::renderedAircraftSituations()
+        CAircraftSituationList &CRenderedAircraftProviderSupport::renderedAircraftSituations()
         {
             Q_ASSERT_X(this->m_renderedAircraftProvider, "renderedAircraftSituations", "No object available");
             return this->m_renderedAircraftProvider->renderedAircraftSituations();
+        }
+
+        const CAircraftPartsList &CRenderedAircraftProviderSupport::renderedAircraftParts() const
+        {
+            Q_ASSERT_X(this->m_renderedAircraftProvider, "renderedAircraftParts", "No object available");
+            return this->m_renderedAircraftProvider->renderedAircraftParts();
+        }
+
+        CAircraftPartsList &CRenderedAircraftProviderSupport::renderedAircraftParts()
+        {
+            Q_ASSERT_X(this->m_renderedAircraftProvider, "renderedAircraftParts", "No object available");
+            return this->m_renderedAircraftProvider->renderedAircraftParts();
         }
 
         bool CRenderedAircraftProviderSupport::providerUpdateAircraftModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const QString &originator)

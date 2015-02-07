@@ -14,6 +14,7 @@
 
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/avaircraftsituationlist.h"
+#include "blackmisc/aviation/aircraftpartslist.h"
 
 namespace BlackMisc
 {
@@ -26,8 +27,11 @@ namespace BlackMisc
             //! All rendered aircraft
             virtual const CSimulatedAircraftList &renderedAircraft() const = 0;
 
-            //! All rendered aircraft
+            //! All situation (per callsign, time history)
             virtual const BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() const = 0;
+
+            //! All parts (per callsign, time history)
+            virtual const BlackMisc::Aviation::CAircraftPartsList &renderedAircraftParts() const = 0;
 
             //! Destructor
             virtual ~IRenderedAircraftProviderReadOnly() {}
@@ -42,6 +46,9 @@ namespace BlackMisc
 
             //! Rendered aircraft situations (history)
             virtual BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() = 0;
+
+            //! All parts (per callsign, time history)
+            virtual BlackMisc::Aviation::CAircraftPartsList &renderedAircraftParts() = 0;
 
             //! Enable/disable rendering
             virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const QString &originator) = 0;
@@ -58,7 +65,10 @@ namespace BlackMisc
             virtual const CSimulatedAircraftList &renderedAircraft() const;
 
             //!\copydoc IRenderedAircraftProviderReadOnly::renderedAircraftSituations
-            virtual const BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() const = 0;
+            virtual const BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() const;
+
+            //!\copydoc IRenderedAircraftProviderReadOnly::renderedAircraftParts
+            virtual const BlackMisc::Aviation::CAircraftPartsList &renderedAircraftParts() const;
 
         protected:
             //! Constructor
@@ -80,7 +90,13 @@ namespace BlackMisc
             virtual const BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() const;
 
             //!\copydoc IRenderedAircraftProvider::renderedAircraftSituations
-            virtual Aviation::CAircraftSituationList &renderedAircraftSituations();
+            virtual BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations();
+
+            //!\copydoc IRenderedAircraftProviderReadOnly::renderedAircraftParts
+            virtual const BlackMisc::Aviation::CAircraftPartsList &renderedAircraftParts() const;
+
+            //!\copydoc IRenderedAircraftProvider::renderedAircraftParts
+            virtual BlackMisc::Aviation::CAircraftPartsList &renderedAircraftParts();
 
             //! \copydoc IRenderedAircraftProvider::updateAircraftEnabled
             virtual bool providerUpdateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const QString &originator);
