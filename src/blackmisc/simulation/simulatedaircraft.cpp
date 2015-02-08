@@ -53,6 +53,8 @@ namespace BlackMisc
                 return CVariant::fromValue(this->isEnabled());
             case IndexRendered:
                 return CVariant::fromValue(this->isRendered());
+            case IndexPartsSynchronized:
+                return CVariant::fromValue(this->isPartsSynchronized());
             default:
                 return CAircraft::propertyByIndex(index);
             }
@@ -79,6 +81,9 @@ namespace BlackMisc
                 break;
             case IndexRendered:
                 this->m_rendered = variant.toBool();
+                break;
+            case IndexPartsSynchronized:
+                this->m_partsSynchronized = variant.toBool();
                 break;
             default:
                 CAircraft::setPropertyByIndex(variant, index);

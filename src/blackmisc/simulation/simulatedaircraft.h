@@ -31,7 +31,8 @@ namespace BlackMisc
                 IndexModel = BlackMisc::CPropertyIndex::GlobalIndexCSimulatedAircraft,
                 IndexClient,
                 IndexEnabled,
-                IndexRendered
+                IndexRendered,
+                IndexPartsSynchronized
             };
 
             //! Default constructor.
@@ -90,6 +91,12 @@ namespace BlackMisc
             //! Update from aviation aircraft
             void setAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
 
+            //! Have parts been synchronized with a remote client?
+            bool isPartsSynchronized() const { return m_partsSynchronized; }
+
+            //! Set the synchronisation flag
+            void setPartsSynchronized(bool synchronized) { m_partsSynchronized = synchronized; }
+
         protected:
             //! \copydoc CValueObject::convertToQString()
             virtual QString convertToQString(bool i18n = false) const override;
@@ -100,6 +107,7 @@ namespace BlackMisc
             BlackMisc::Network::CClient        m_client;
             bool m_enabled = true;   // to be displayed in sim
             bool m_rendered = false; // really shown in sim
+            bool m_partsSynchronized = false;
             void init();
 
         };
@@ -110,7 +118,8 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Simulation::CSimulatedAircraft, (
                                    attr(o.m_model),
                                    attr(o.m_client),
                                    attr(o.m_enabled),
-                                   attr(o.m_rendered)
+                                   attr(o.m_rendered),
+                                   attr(o.m_partsSynchronized)
                                ))
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatedAircraft)
 
