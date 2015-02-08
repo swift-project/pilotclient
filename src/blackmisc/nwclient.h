@@ -48,7 +48,8 @@ namespace BlackMisc
             {
                 FsdWithInterimPositions = BlackMisc::CPropertyIndex::GlobalIndexAbuseMode,
                 FsdWithModelDescription,
-                FsdAtisCanBeReceived
+                FsdAtisCanBeReceived,
+                FsdWithAircraftConfig
             };
 
             //! Default constructor.
@@ -137,7 +138,6 @@ namespace BlackMisc
             CPropertyIndexVariantMap m_capabilities;
             QString                  m_server;
             CVoiceCapabilities       m_voiceCapabilities;
-
         };
     } // namespace
 } // namespace

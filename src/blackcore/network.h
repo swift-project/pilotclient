@@ -73,7 +73,8 @@ namespace BlackCore
         {
             AcceptsAtisResponses        = 1 << 0,
             SupportsInterimPosUpdates   = 1 << 1,
-            SupportsModelDescriptions   = 1 << 2
+            SupportsModelDescriptions   = 1 << 2,
+            SupportsAircraftConfigs     = 1 << 3
         };
 
         /*!

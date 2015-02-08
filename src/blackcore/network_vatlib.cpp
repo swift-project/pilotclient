@@ -61,7 +61,7 @@ namespace BlackCore
     {
         Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "attempted to reinitialize session while still connected");
 
-        int clientCapabilities = vatCapsModelDesc | vatCapsInterminPos | vatCapsAtcInfo;
+        int clientCapabilities = vatCapsModelDesc | vatCapsInterminPos | vatCapsAtcInfo | vatCapsAircraftConfig;
         if (m_loginMode == LoginStealth)
         {
             clientCapabilities |= vatCapsStealth;
@@ -800,8 +800,9 @@ namespace BlackCore
     {
         int flags = 0;
         if (capabilityFlags & vatCapsAtcInfo) { flags |= AcceptsAtisResponses; }
-        else if (capabilityFlags & vatCapsInterminPos) { flags |= SupportsInterimPosUpdates; }
-        else if (capabilityFlags & vatCapsModelDesc) { flags |= SupportsModelDescriptions; }
+        if (capabilityFlags & vatCapsInterminPos) { flags |= SupportsInterimPosUpdates; }
+        if (capabilityFlags & vatCapsModelDesc) { flags |= SupportsModelDescriptions; }
+        if (capabilityFlags & vatCapsAircraftConfig) { flags |= SupportsAircraftConfigs; }
         emit cbvar_cast(cbvar)->capabilitiesReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), flags);
     }
 

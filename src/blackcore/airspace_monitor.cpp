@@ -46,6 +46,7 @@ namespace BlackCore
         this->connect(this->m_network, &INetwork::capabilitiesReplyReceived, this, &CAirspaceMonitor::ps_capabilitiesReplyReceived);
         this->connect(this->m_network, &INetwork::fsipirCustomPacketReceived, this, &CAirspaceMonitor::ps_fsipirCustomPacketReceived);
         this->connect(this->m_network, &INetwork::serverReplyReceived, this, &CAirspaceMonitor::ps_serverReplyReceived);
+        this->connect(this->m_network, &INetwork::aircraftConfigPacketReceived, this, &CAirspaceMonitor::ps_aircraftConfigReceived);
 
         // AutoConnection: this should also avoid race conditions by updating the bookings
         this->connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CAirspaceMonitor::ps_receivedBookings);
@@ -313,7 +314,7 @@ namespace BlackCore
         capabilities.addValue(CClient::FsdAtisCanBeReceived, (flags & INetwork::AcceptsAtisResponses));
         capabilities.addValue(CClient::FsdWithInterimPositions, (flags & INetwork::SupportsInterimPosUpdates));
         capabilities.addValue(CClient::FsdWithModelDescription, (flags & INetwork::SupportsModelDescriptions));
-        //! \todo add aircraft config cap.
+        capabilities.addValue(CClient::FsdWithAircraftConfig, (flags & INetwork::SupportsAircraftConfigs));
 
         CPropertyIndexVariantMap vm(CClient::IndexCapabilities, capabilities.toCVariant());
         CVoiceCapabilities caps = m_vatsimDataFileReader->getVoiceCapabilityForCallsign(callsign);

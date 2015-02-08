@@ -57,6 +57,7 @@ namespace BlackMisc
             if (this->hasCapability(FsdAtisCanBeReceived)) sl << "ATIS";
             if (this->hasCapability(FsdWithInterimPositions)) sl << "interim pos.";
             if (this->hasCapability(FsdWithModelDescription)) sl << "model";
+            if (this->hasCapability(FsdWithAircraftConfig)) sl << "aircraft config";
             if (sl.isEmpty()) return "";
             return sl.join(", ");
         }
