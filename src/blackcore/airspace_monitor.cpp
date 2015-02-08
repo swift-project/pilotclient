@@ -325,6 +325,8 @@ namespace BlackCore
         // apply same to client in aircraft
         vm.prependIndex(static_cast<int>(CSimulatedAircraft::IndexClient));
         this->m_aircraftInRange.applyIf(&CSimulatedAircraft::getCallsign, callsign, vm);
+
+        if (flags & INetwork::SupportsAircraftConfigs) m_network->sendAircraftConfigQuery(callsign);
     }
 
     void CAirspaceMonitor::ps_fsipirCustomPacketReceived(const CCallsign &callsign, const QString &airlineIcao, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &model)
@@ -764,6 +766,37 @@ namespace BlackCore
         CPropertyIndexVariantMap vm({CAircraft::IndexCom1System, CComSystem::IndexActiveFrequency}, frequency.toCVariant());
         int changed = this->m_aircraftInRange.applyIf(&CAircraft::getCallsign, callsign, vm, true);
         if (changed > 0) { emit this->changedAircraftInRange(); }
+    }
+
+    void CAirspaceMonitor::ps_aircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign,  const QJsonObject &incremental, bool isFull)
+    {
+        Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+
+        CSimulatedAircraftList list = this->m_aircraftInRange.findByCallsign(callsign);
+        // Skip unknown callsigns
+        if (list.isEmpty()) return;
+
+        CSimulatedAircraft simAircraft = list.front();
+        // If we are not yet synchronized, we throw away any incremental packet
+        if (!simAircraft.isPartsSynchronized() && !isFull) return;
+
+        CAircraftParts parts = m_aircraftParts.findBackByCallsign(callsign);
+        parts.setCurrentUtcTime();
+        parts.setCallsign(callsign);
+        // update
+        QJsonObject config = applyIncrementalObject(parts.toJson(), incremental);
+        parts.convertFromJson(config);
+
+        // store part history
+        this->m_aircraftParts.insert(parts);
+
+        CPropertyIndexVariantMap vm;
+        vm.addValue(CAircraft::IndexParts, parts);
+        vm.addValue(CSimulatedAircraft::IndexPartsSynchronized, true);
+
+        // here I expect always a changed value
+        this->m_aircraftInRange.applyIfCallsign(callsign, vm);
+        this->m_aircraftWatchdog.resetCallsign(callsign);
     }
 
 } // namespace

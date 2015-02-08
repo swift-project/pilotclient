@@ -188,6 +188,7 @@ namespace BlackCore
         void ps_frequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
         void ps_receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
         void ps_receivedDataFile();
+        void ps_aircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign,  const QJsonObject &incremental, bool isFull);
 
         //!  Send the information if aircraft and(!) client are vailable
         void ps_sendReadyForModelMatching(const BlackMisc::Aviation::CCallsign &callsign, int trial);
