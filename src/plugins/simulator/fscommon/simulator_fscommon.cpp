@@ -103,8 +103,12 @@ namespace BlackSimPlugin
 
         CAircraftMapper *CSimulatorFsCommon::mapperInstance()
         {
+            static CVPilotModelMappings *mappings = new CVPilotModelMappings(true);
+
+            // tries to access simObjectsDir, if this is an mapped remote directory
+            // init might hang for a while
             static CAircraftMapper *mapper = new CAircraftMapper(
-                std::unique_ptr<CVPilotModelMappings>(new CVPilotModelMappings(true)), // currently hard wired
+                std::unique_ptr<CVPilotModelMappings>(mappings), // currently hard wired
                 simObjectsDir()
             );
             return mapper;

@@ -23,10 +23,10 @@ namespace BlackCore
         case CRuntimeConfig::LocalInDbusServer:
             return (new CContextNetwork(mode, runtime))->registerWithDBus(server);
         case CRuntimeConfig::Remote:
-            return new BlackCore::CContextNetworkProxy(BlackCore::CDBusServer::ServiceName, conn, mode, runtime);
+            return new CContextNetworkProxy(BlackCore::CDBusServer::ServiceName, conn, mode, runtime);
         case CRuntimeConfig::NotUsed:
         default:
-            return new BlackCore::CContextNetworkEmpty(runtime);
+            return new CContextNetworkEmpty(runtime);
         }
     }
 

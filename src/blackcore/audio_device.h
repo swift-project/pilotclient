@@ -72,10 +72,10 @@ namespace BlackCore
         //! Set new output device
         virtual void setOutputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device) = 0;
 
-        //! Set output volume between 0 ... 300 %
+        //! Set output volume between 0 ... 300%
         virtual void setOutputVolume(int volume) = 0;
 
-        //! Get output volume
+        //! Get output volume between 0 ... 300%
         virtual int getOutputVolume() const = 0;
     };
 }

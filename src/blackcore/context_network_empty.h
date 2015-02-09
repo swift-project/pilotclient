@@ -28,9 +28,6 @@ namespace BlackCore
         //! Constructor
         CContextNetworkEmpty(CRuntime *runtime) : IContextNetwork(CRuntimeConfig::NotUsed, runtime) {}
 
-        //! Destructor
-        virtual ~CContextNetworkEmpty() {}
-
     public slots: // IContextNetwork overrides
 
         //! \copydoc IContextNetwork::readAtcBookingsFromSource()

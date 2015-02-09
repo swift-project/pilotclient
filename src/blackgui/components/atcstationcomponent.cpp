@@ -223,14 +223,14 @@ namespace BlackGui
         void CAtcStationComponent::ps_requestOnlineStationsUpdate()
         {
             this->m_updateTimer->fireTimer();
-            this->m_timestampLastReadOnlineStations = CUpdateTimer::epoch();
+            this->m_timestampLastReadOnlineStations = CUpdateTimer::epoch(); // mark as outdated
         }
 
         void CAtcStationComponent::ps_infoAreaTabBarChanged(int index)
         {
             // ignore in those cases
-            if (!this->isVisibleWidget()) return;
-            if (this->isParentDockWidgetFloating()) return;
+            if (!this->isVisibleWidget()) { return; }
+            if (this->isParentDockWidgetFloating()) { return; }
 
             // here I know I am the selected widget, update, but keep GUI responsive (-> timer)
             QTimer::singleShot(1000, this, SLOT(update()));

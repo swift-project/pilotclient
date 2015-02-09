@@ -206,7 +206,7 @@ namespace BlackCore
         Q_ASSERT(factory);
 
         // We assume we run in the same process as the own aircraft context
-        // Hence we pass in memory refernce to own aircraft object
+        // Hence we pass in memory reference to own aircraft object
         Q_ASSERT(this->getIContextOwnAircraft()->isUsingImplementingObject());
         Q_ASSERT(this->getIContextNetwork()->isUsingImplementingObject());
         IOwnAircraftProvider *ownAircraftProvider = this->getRuntime()->getCContextOwnAircraft();
