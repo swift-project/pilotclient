@@ -211,9 +211,16 @@ namespace BlackCore
 
     void CContextAudio::setVoiceOutputVolume(int volume)
     {
+        Q_ASSERT(m_voiceOutputDevice);
         m_outDeviceVolume = volume;
-        if (!isMuted()) m_voiceOutputDevice->setOutputVolume(m_outDeviceVolume);
+        if (!isMuted()) { m_voiceOutputDevice->setOutputVolume(m_outDeviceVolume); }
         emit changedAudioVolume(volume);
+    }
+
+    int CContextAudio::getVoiceOutputVolume() const
+    {
+        Q_ASSERT(m_voiceOutputDevice);
+        return m_voiceOutputDevice->getOutputVolume();
     }
 
     void CContextAudio::setMute(bool muted)
@@ -407,12 +414,23 @@ namespace BlackCore
      */
     void CContextAudio::enableAudioLoopback(bool enable)
     {
-        Q_ASSERT(this->m_voice);
+        Q_ASSERT(this->m_audioMixer);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         if (enable)
+        {
             m_audioMixer->makeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputOutputDevice1);
+        }
         else
+        {
             m_audioMixer->removeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputOutputDevice1);
+        }
+    }
+
+    bool CContextAudio::isAudioLoopbackEnabled() const
+    {
+        Q_ASSERT(this->m_audioMixer);
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        return this->m_audioMixer->hasMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputOutputDevice1);
     }
 
     bool CContextAudio::parseCommandLine(const QString &commandLine)
@@ -439,10 +457,11 @@ namespace BlackCore
         }
         else if (parser.commandStartsWith("vol") && parser.countParts() > 1)
         {
-            qint32 v = parser.toInt(1);
+            int v = parser.toInt(1);
             if (v >= 0 && v <= 300)
             {
                 setVoiceOutputVolume(v);
+                return true;
             }
         }
         return false;
@@ -473,7 +492,7 @@ namespace BlackCore
             break;
         case IVoiceChannel::ConnectingFailed:
         case IVoiceChannel::DisconnectedError:
-            qWarning() << "Voice room COM1 error";
+            CLogMessage(this).warning("Voice channel disconnecting error");
         // intentional fall-through
         case IVoiceChannel::Disconnected:
             if (this->getIContextOwnAircraft())

@@ -32,21 +32,21 @@ namespace BlackGui
             ui(new Ui::CAudioSetupComponent)
         {
             ui->setupUi(this);
-            this->ui->prb_SetupAudioTestProgress->hide();
-            this->m_timerAudioTests = new QTimer(this);
+
+            bool c = connect(this->ui->tb_ExpandNotificationSounds, &QToolButton::toggled, this, &CAudioSetupComponent::ps_onToggleNotificationSoundsVisibility);
+            Q_ASSERT(c);
+            c = connect(this->ui->cb_SetupAudioLoopback, &QCheckBox::toggled, this, &CAudioSetupComponent::ps_onLoopbackToggled);
+            Q_ASSERT(c);
+            Q_UNUSED(c);
         }
 
         CAudioSetupComponent::~CAudioSetupComponent()
         { }
 
-        /*
-         * Runtime set
-         */
         void CAudioSetupComponent::runtimeHasBeenSet()
         {
             if (!this->getIContextSettings()) qFatal("Settings missing");
             this->connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &CAudioSetupComponent::ps_changedSettings);
-            this->connect(this->m_timerAudioTests, &QTimer::timeout, this, &CAudioSetupComponent::ps_audioTestUpdate);
 
             // based on audio context
             Q_ASSERT(this->getIContextAudio());
@@ -54,22 +54,22 @@ namespace BlackGui
             {
                 this->initAudioDeviceLists();
 
+                // default
+                this->ui->cb_SetupAudioLoopback->setChecked(this->getIContextAudio()->isAudioLoopbackEnabled());
+
                 // the connects depend on initAudioDeviceLists
-                bool connected = this->connect(this->ui->cb_SetupAudioInputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_audioDeviceSelected(int)));
+                bool connected = this->connect(this->ui->cb_SetupAudioInputDevice,  static_cast<void (QComboBox::*)(int)> (&QComboBox::currentIndexChanged), this, &CAudioSetupComponent::ps_audioDeviceSelected);
                 Q_ASSERT(connected);
-                connected = this->connect(this->ui->cb_SetupAudioOutputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_audioDeviceSelected(int)));
+                connected = this->connect(this->ui->cb_SetupAudioOutputDevice, static_cast<void (QComboBox::*)(int)> (&QComboBox::currentIndexChanged), this, &CAudioSetupComponent::ps_audioDeviceSelected);
                 Q_ASSERT(connected);
                 Q_UNUSED(connected);
 
-                this->connect(this->ui->pb_SetupAudioMicrophoneTest, &QPushButton::clicked, this, &CAudioSetupComponent::ps_startAudioTest);
-                this->connect(this->ui->pb_SetupAudioSquelchTest, &QPushButton::clicked, this, &CAudioSetupComponent::ps_startAudioTest);
-
                 // context
-//                this->connect(this->getIContextAudio(), &IContextAudio::audioTestCompleted, this, &CAudioSetupComponent::ps_audioTestUpdate);
                 this->connect(this->getIContextAudio(), &IContextAudio::changedAudioDevices, this, &CAudioSetupComponent::ps_onAudioDevicesChanged);
                 this->connect(this->getIContextAudio(), &IContextAudio::changedSelectedAudioDevices, this, &CAudioSetupComponent::ps_onCurrentAudioDevicesChanged);
             }
             this->reloadSettings();
+            this->ui->tb_ExpandNotificationSounds->setChecked(false); // collapse
         }
 
         void CAudioSetupComponent::ps_changedSettings(uint typeValue)
@@ -79,9 +79,6 @@ namespace BlackGui
             Q_UNUSED(type);
         }
 
-        /*
-         * Reload settings
-         */
         void CAudioSetupComponent::reloadSettings()
         {
             // local copy
@@ -93,9 +90,11 @@ namespace BlackGui
             this->ui->cb_SetupAudioNotificationVoiceRoom->setChecked(as.getNotificationFlag(BlackSound::CNotificationSounds::NotificationVoiceRoomJoined));
         }
 
-        /*
-         * Set audio device lists
-         */
+        void CAudioSetupComponent::ps_onToggleNotificationSoundsVisibility(bool checked)
+        {
+            this->ui->fr_NotificationSoundsInner->setVisible(checked);
+        }
+
         void CAudioSetupComponent::initAudioDeviceLists()
         {
             if (!this->getIContextAudio()) { return; }
@@ -103,118 +102,31 @@ namespace BlackGui
             this->ps_onCurrentAudioDevicesChanged(this->getIContextAudio()->getCurrentAudioDevices());
         }
 
-        /*
-         * Notification sounds
-         */
         bool CAudioSetupComponent::playNotificationSounds() const
         {
             return this->ui->cb_SetupAudioPlayNotificationSounds->isChecked();
         }
 
-        /*
-         * Start the voice tests
-         */
-        void CAudioSetupComponent::ps_startAudioTest()
-        {
-            if (!this->getIContextAudio())
-            {
-                CLogMessage(this).error("voice context not available");
-                return;
-            }
-            if (this->m_timerAudioTests->isActive())
-            {
-                CLogMessage(this).error("test running, wait until completed");
-                return;
-            }
-
-            QObject *sender = QObject::sender();
-            this->m_timerAudioTests->start(600); // I let this run for <x>ms, so there is enough overhead to really complete it
-            this->ui->prb_SetupAudioTestProgress->setValue(0);
-            this->ui->pte_SetupAudioTestActionAndResult->clear();
-            if (sender == this->ui->pb_SetupAudioMicrophoneTest)
-            {
-                this->m_audioTestRunning = MicrophoneTest;
-//                this->getIContextAudio()->runMicrophoneTest();
-                this->ui->pte_SetupAudioTestActionAndResult->appendPlainText("Speak normally for 5 seconds");
-            }
-            else if (sender == this->ui->pb_SetupAudioSquelchTest)
-            {
-                this->m_audioTestRunning = SquelchTest;
-//                this->getIContextAudio()->runSquelchTest();
-                this->ui->pte_SetupAudioTestActionAndResult->appendPlainText("Silence for 5 seconds");
-            }
-            this->ui->prb_SetupAudioTestProgress->setVisible(true);
-            this->ui->pb_SetupAudioMicrophoneTest->setEnabled(false);
-            this->ui->pb_SetupAudioSquelchTest->setEnabled(false);
-        }
-
-        /*
-         * Start the voice tests
-         */
-        void CAudioSetupComponent::ps_audioTestUpdate()
-        {
-            Q_ASSERT(this->getIContextAudio());
-            if (!this->getIContextAudio()) return;
-            int v = this->ui->prb_SetupAudioTestProgress->value();
-            QObject *sender = this->sender();
-
-            if (v < 100 && (sender == m_timerAudioTests))
-            {
-                // timer update, increasing progress
-                this->ui->prb_SetupAudioTestProgress->setValue(v + 10);
-            }
-            else
-            {
-                this->m_timerAudioTests->stop();
-                this->ui->prb_SetupAudioTestProgress->setValue(100);
-                if (sender == m_timerAudioTests) return; // just timer update
-
-                // getting here we assume the audio test finished signal
-                // fetch results
-                this->ui->pte_SetupAudioTestActionAndResult->clear();
-                if (this->m_audioTestRunning == SquelchTest)
-                {
-//                    double s = this->getIContextAudio()->getSquelchValue();
-                    double s = 0.0;
-                    this->ui->pte_SetupAudioTestActionAndResult->appendPlainText(QString::number(s));
-                }
-                else if (this->m_audioTestRunning == MicrophoneTest)
-                {
-//                    QString m = this->getIContextAudio()->getMicrophoneTestResult();
-                    QString m;
-                    this->ui->pte_SetupAudioTestActionAndResult->appendPlainText(m);
-                }
-                this->m_audioTestRunning = NoAudioTest;
-                this->m_timerAudioTests->stop();
-                this->ui->pb_SetupAudioMicrophoneTest->setEnabled(true);
-                this->ui->pb_SetupAudioSquelchTest->setEnabled(true);
-                this->ui->prb_SetupAudioTestProgress->setVisible(false);
-            }
-        }
-
-        /*
-         * Select audio device
-         */
         void CAudioSetupComponent::ps_audioDeviceSelected(int index)
         {
             if (!this->getIContextAudio()) return;
-            if (index < 0)return;
+            if (index < 0) { return; }
 
             CAudioDeviceInfoList devices = this->getIContextAudio()->getAudioDevices();
-            if (devices.isEmpty()) return;
+            if (devices.isEmpty()) { return; }
             CAudioDeviceInfo selectedDevice;
             QObject *sender = QObject::sender();
             if (sender == this->ui->cb_SetupAudioInputDevice)
             {
                 CAudioDeviceInfoList inputDevices = devices.getInputDevices();
-                if (index >= inputDevices.size()) return;
+                if (index >= inputDevices.size()) { return; }
                 selectedDevice = inputDevices[index];
                 this->getIContextAudio()->setCurrentAudioDevice(selectedDevice);
             }
             else if (sender == this->ui->cb_SetupAudioOutputDevice)
             {
                 CAudioDeviceInfoList outputDevices = devices.getOutputDevices();
-                if (index >= outputDevices.size()) return;
+                if (index >= outputDevices.size()) { return; }
                 selectedDevice = outputDevices[index];
                 this->getIContextAudio()->setCurrentAudioDevice(selectedDevice);
             }
@@ -222,7 +134,7 @@ namespace BlackGui
 
         void CAudioSetupComponent::ps_onCurrentAudioDevicesChanged(const CAudioDeviceInfoList &devices)
         {
-            for(auto &device : devices)
+            for (auto &device : devices)
             {
                 if (device.getType() == CAudioDeviceInfo::InputDevice)
                 {
@@ -240,7 +152,7 @@ namespace BlackGui
             this->ui->cb_SetupAudioOutputDevice->clear();
             this->ui->cb_SetupAudioInputDevice->clear();
 
-            for(auto &device : devices)
+            for (auto &device : devices)
             {
                 if (device.getType() == CAudioDeviceInfo::InputDevice)
                 {
@@ -251,6 +163,13 @@ namespace BlackGui
                     this->ui->cb_SetupAudioOutputDevice->addItem(device.toQString(true));
                 }
             }
+        }
+
+        void CAudioSetupComponent::ps_onLoopbackToggled(bool loopback)
+        {
+            Q_ASSERT(this->getIContextAudio());
+            if (this->getIContextAudio()->isAudioLoopbackEnabled() == loopback) { return; }
+            this->getIContextAudio()->enableAudioLoopback(loopback);
         }
 
     } // namespace

@@ -78,8 +78,11 @@ namespace BlackCore
         //! \copydoc IContextAudio::setCurrentAudioDevice()
         virtual void setCurrentAudioDevice(const BlackMisc::Audio::CAudioDeviceInfo &audioDevice) override;
 
-        //!\copydoc IContext::setVoiceOutputVolume
+        //! \copydoc IContext::setVoiceOutputVolume
         virtual void setVoiceOutputVolume(int volume) override;
+
+        //! \copydoc IContext::getVoiceOutputVolume
+        virtual int getVoiceOutputVolume() const override;
 
         //! \copydoc ICOntext::setMute
         virtual void setMute(bool muted) override;
@@ -96,14 +99,15 @@ namespace BlackCore
         //! \copydoc IContextAudio::enableAudioLoopback()
         virtual void enableAudioLoopback(bool enable = true) override;
 
+        //! \copydoc ICOntextAudio::isAudioLoopbackEnabled
+        virtual bool isAudioLoopbackEnabled() const override;
+
         //! \addtogroup commandline
         //! @{
         //! <pre>
         //! .mute                          mute             CContextAudio
         //! .unmute                        unmute           CContextAudio
-        //! .vol .volume   volume 0..100   set volume       CContextAudio
-        //! .vol1 .volume1 volume 0..100   set volume COM1  CContextAudio
-        //! .vol2 .volume2 volume 0..100   set volume COM2  CContextAudio
+        //! .vol .volume   volume 0..300   set volume       CContextAudio
         //! </pre>
         //! @}
         //! \copydoc IContextAudio::parseCommandLine

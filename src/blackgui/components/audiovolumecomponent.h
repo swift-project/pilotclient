@@ -45,10 +45,13 @@ namespace BlackGui
             void ps_onMuteChanged(bool muted);
 
             //! Volumes changed (elsewhere)
-            void ps_onVolumesChanged(qint32 com1Volume, qint32 com2Volume);
+            void ps_onOutputVolumeChanged(int volume);
 
             //! Change values because of volume GUI controls
-            void ps_changeVolume();
+            void ps_changeOutputVolumeFromSlider(int volume);
+
+            //! Change values because of volume GUI controls
+            void ps_changeOutputVolumeFromSpinBox(int volume);
 
             //! Requested windows mixer
             void ps_onWindowsMixerRequested();

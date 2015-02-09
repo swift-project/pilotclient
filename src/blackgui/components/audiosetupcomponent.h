@@ -53,12 +53,6 @@ namespace BlackGui
             //! Settings have been changed
             void ps_changedSettings(uint typeValue);
 
-            //! start the MIC tests (Squelch)
-            void ps_startAudioTest();
-
-            //! Audio test updates (timer) for progressbar and fetching results
-            void ps_audioTestUpdate();
-
             /*!
              * \brief Audio device selected
              * \param index audio device index (COM1, COM2)
@@ -71,21 +65,17 @@ namespace BlackGui
             //! Audio devices changed
             void ps_onAudioDevicesChanged(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
 
-        private:
-            //! Audio test modes
-            enum AudioTest
-            {
-                NoAudioTest,
-                SquelchTest,
-                MicrophoneTest
-            };
+            //! Loopback toggled
+            void ps_onLoopbackToggled(bool loopback);
 
+            //! Visibilty (show/hide buttons)
+            void ps_onToggleNotificationSoundsVisibility(bool checked);
+
+        private:
             //! Audio device lists from settings
             void initAudioDeviceLists();
 
             QScopedPointer<Ui::CAudioSetupComponent> ui;
-            QTimer   *m_timerAudioTests; //!< audio tests: progress bar, disable/enable buttons
-            AudioTest m_audioTestRunning = NoAudioTest;
         };
     } // namespace
 } // namespace

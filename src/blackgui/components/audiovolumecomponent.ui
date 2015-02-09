@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>275</width>
+    <height>58</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,10 +36,7 @@
     <number>0</number>
    </property>
    <item>
-    <layout class="QFormLayout" name="fl_AudioVolume">
-     <property name="fieldGrowthPolicy">
-      <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-     </property>
+    <layout class="QGridLayout" name="gl_Sound">
      <property name="horizontalSpacing">
       <number>10</number>
      </property>
@@ -56,49 +53,35 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="lbl_VolumeCom1">
-       <property name="text">
-        <string>Volume COM1</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QSlider" name="hs_VolumeCom1">
-       <property name="maximum">
-        <number>100</number>
-       </property>
-       <property name="singleStep">
-        <number>5</number>
-       </property>
-       <property name="sliderPosition">
-        <number>50</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="0">
-      <widget class="QLabel" name="lbl_VolumeCom2">
+      <widget class="QLabel" name="lbl_Volume">
        <property name="text">
-        <string>Volume COM2</string>
+        <string>Volume</string>
        </property>
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QSlider" name="hs_VolumeCom2">
+      <widget class="QSlider" name="hs_Volume">
        <property name="maximum">
-        <number>100</number>
+        <number>140</number>
        </property>
        <property name="singleStep">
         <number>5</number>
        </property>
+       <property name="value">
+        <number>90</number>
+       </property>
        <property name="sliderPosition">
-        <number>50</number>
+        <number>90</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="tickPosition">
+        <enum>QSlider::TicksAbove</enum>
+       </property>
+       <property name="tickInterval">
+        <number>100</number>
        </property>
       </widget>
      </item>
@@ -174,7 +157,7 @@
          </widget>
         </item>
         <item>
-         <spacer name="horizontalSpacer">
+         <spacer name="hs_AudioSoundButtons">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -187,6 +170,26 @@
          </spacer>
         </item>
        </layout>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="lbl_ContextLocation">
+       <property name="text">
+        <string>local</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QSpinBox" name="sb_Volume">
+       <property name="maximum">
+        <number>300</number>
+       </property>
+       <property name="singleStep">
+        <number>5</number>
+       </property>
+       <property name="value">
+        <number>90</number>
+       </property>
       </widget>
      </item>
     </layout>

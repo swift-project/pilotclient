@@ -33,7 +33,7 @@ namespace BlackCore
     void CContextAudioProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
         bool s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
-                               "changedVoiceRooms", this, SIGNAL(changedVoiceRooms(BlackMisc::Audio::CVoiceRoomList, bool)));
+                                    "changedVoiceRooms", this, SIGNAL(changedVoiceRooms(BlackMisc::Audio::CVoiceRoomList, bool)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
                                "changedAudioVolume", this, SIGNAL(changedAudioVolume(int)));
@@ -151,6 +151,11 @@ namespace BlackCore
         this->m_dBusInterface->callDBus(QLatin1Literal("setVoiceOutputVolume"), volume);
     }
 
+    int CContextAudioProxy::getVoiceOutputVolume() const
+    {
+        return this->m_dBusInterface->callDBusRet<int>(QLatin1Literal("getVoiceOutputVolume"));
+    }
+
     /*
      * Toggle mute
      */
@@ -172,7 +177,15 @@ namespace BlackCore
      */
     void CContextAudioProxy::enableAudioLoopback(bool enable)
     {
-        return this->m_dBusInterface->callDBus(QLatin1Literal("enableAudioLoopback"), enable);
+        this->m_dBusInterface->callDBus(QLatin1Literal("enableAudioLoopback"), enable);
+    }
+
+    /*
+     * Loopback
+     */
+    bool CContextAudioProxy::isAudioLoopbackEnabled() const
+    {
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isAudioLoopbackEnabled"));
     }
 
     /*

@@ -84,6 +84,9 @@ namespace BlackCore
         //!\copydoc IContext::setVoiceOutputVolume
         virtual void setVoiceOutputVolume(int volume) override;
 
+        //! \copydoc IContext::getVoiceOutputVolume
+        virtual int getVoiceOutputVolume() const override;
+
         //! \copydoc IContextAudio::setMute
         virtual void setMute(bool muted) override;
 
@@ -98,6 +101,9 @@ namespace BlackCore
 
         //! \copydoc IContextAudio::enableAudioLoopback()
         virtual void enableAudioLoopback(bool enable = true) override;
+
+        //! \copydoc IContextAudio::isAudioLoopbackEnabled()
+        virtual bool isAudioLoopbackEnabled() const override;
 
         //! \copydoc IContextOwnAircraft::parseCommandLine
         virtual bool parseCommandLine(const QString &commandLine) override;

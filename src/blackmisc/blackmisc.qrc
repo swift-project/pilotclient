@@ -308,6 +308,10 @@
         <file>icons/diagona/icons/speaker-network.png</file>
         <file>icons/diagona/icons/speaker--pencil.png</file>
         <file>icons/diagona/icons/speaker--plus.png</file>
+        <file>icons/diagona/icons/toggle.png</file>
+        <file>icons/diagona/icons/toggle-expand.png</file>
+        <file>icons/diagona/icons/toggle-small.png</file>
+        <file>icons/diagona/icons/toggle-small-expand.png</file>
     </qresource>
     <qresource prefix="/own">
         <file>icons/own/app.jpg</file>

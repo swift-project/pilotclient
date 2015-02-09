@@ -225,6 +225,10 @@ QLabel {
   background: transparent;
 }
 
+QToolButton {
+  background-color: transparent; /* transparent tool buttons */
+}
+
 QLineEdit {
   background: transparent;
   border: 1px solid green;

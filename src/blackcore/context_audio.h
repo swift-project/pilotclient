@@ -73,7 +73,7 @@ namespace BlackCore
         virtual QString getPathAndContextId() const { return this->buildPathAndContextId(ObjectPath()); }
 
         //! Factory method
-        static IContextAudio *create(CRuntime *parent, CRuntimeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &conn);
+        static IContextAudio *create(CRuntime *runtime, CRuntimeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &conn);
 
         //! \brief Destructor
         virtual ~IContextAudio() {}
@@ -137,6 +137,9 @@ namespace BlackCore
         //! Set voice output volume (0..300)
         virtual void setVoiceOutputVolume(int volume) = 0;
 
+        //! Voice output volume (0..300)
+        virtual int getVoiceOutputVolume() const = 0;
+
         //! Set mute state
         virtual void setMute(bool mute) = 0;
 
@@ -155,6 +158,9 @@ namespace BlackCore
 
         //! Enable audio loopback
         virtual void enableAudioLoopback(bool enable = true) = 0;
+
+        //! Is loobback enabled?
+        virtual bool isAudioLoopbackEnabled() const = 0;
 
         //! Command line was entered
         virtual bool parseCommandLine(const QString &commandLine) = 0;
