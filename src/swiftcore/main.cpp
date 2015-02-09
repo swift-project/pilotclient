@@ -13,6 +13,7 @@
 #include "blackcore/context_application.h"
 #include "blackcore/context_application_impl.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/worker.h"
 #include "blackmisc/networkutils.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/project.h"
@@ -81,8 +82,12 @@ int main(int argc, char *argv[])
 
     // tool to allow input indepent from event loop
     cout << "Will start server loop ... " << endl;
-    QFuture<void> future = QtConcurrent::run(BlackMiscTest::Tool::serverLoop, coreRuntime);
-    Q_UNUSED(future);
+    BlackMisc::CWorker *worker = BlackMisc::CWorker::fromTask(coreRuntime, "BlackMiscTest::Tool::serverLoop", [coreRuntime]()
+    {
+        BlackMiscTest::Tool::serverLoop(coreRuntime);
+    });
+
+    Q_UNUSED(worker);
     cout << "Server event loop, pid: " << BlackMiscTest::Tool::getPid() << " Thread id: " << QThread::currentThreadId() << endl;
 
     // end

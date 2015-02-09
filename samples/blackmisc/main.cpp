@@ -15,6 +15,7 @@
 #include "samplesvariant.h"
 #include "samplesperformance.h"
 #include "samplesalgorithm.h"
+#include "samplesconcurrent.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/pqallquantities.h"
 
@@ -26,25 +27,28 @@ using namespace BlackMiscTest;
  */
 int main(int argc, char *argv[])
 {
-    // QCoreApplication a(argc, argv);
-    Q_UNUSED(argc);
-    Q_UNUSED(argv);
+    QCoreApplication a(argc, argv);;
+    Q_UNUSED(a);
+
+    QTextStream qtout(stdout);
+    QTextStream qtin(stdin);
 
     BlackMisc::initResources();
     BlackMisc::registerMetadata();
 
     do
     {
-        qDebug() << "1 .. JSON";
-        qDebug() << "2 .. Change object";
-        qDebug() << "3 .. Containers";
-        qDebug() << "4 .. Metadata";
-        qDebug() << "5 .. Variant";
-        qDebug() << "6 .. Performance";
-        qDebug() << "7 .. Algorithms";
-        qDebug() << "-----";
-        qDebug() << "x .. Bye";
-        QTextStream qtin(stdin);
+        qtout << "1 .. JSON" << endl;
+        qtout << "2 .. Change object" << endl;
+        qtout << "3 .. Containers" << endl;
+        qtout << "4 .. Metadata" << endl;
+        qtout << "5 .. Variant" << endl;
+        qtout << "6 .. Performance" << endl;
+        qtout << "7 .. Algorithms" << endl;
+        qtout << "8 .. Concurrent (thread)" << endl;
+
+        qtout << "-----" << endl;
+        qtout << "x .. Bye" << endl;
         QString s = qtin.readLine().toLower().trimmed();
 
         if (s.startsWith("1")) { CSamplesJson::samples(); }
@@ -54,6 +58,7 @@ int main(int argc, char *argv[])
         else if (s.startsWith("5")) { CSamplesVariant::samples(); }
         else if (s.startsWith("6")) { CSamplesPerformance::samples(); }
         else if (s.startsWith("7")) { CSamplesAlgorithm::samples(); }
+        else if (s.startsWith("8")) { CSamplesConcurrent::samples(s, qtout, qtin); }
         else if (s.startsWith("x")) { break; }
     }
     while (true);

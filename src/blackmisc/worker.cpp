@@ -46,8 +46,11 @@ namespace BlackMisc
 
         auto *thread = new CRegularThread(m_owner);
 
-        QString ownerName = m_owner->objectName().isEmpty() ? m_owner->metaObject()->className() : m_owner->objectName();
-        thread->setObjectName(ownerName + ":" + m_name);
+        if (m_owner)
+        {
+            QString ownerName = m_owner->objectName().isEmpty() ? m_owner->metaObject()->className() : m_owner->objectName();
+            thread->setObjectName(ownerName + ":" + m_name);
+        }
         setObjectName(m_name);
 
         moveToThread(thread);

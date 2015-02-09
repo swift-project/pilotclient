@@ -249,7 +249,7 @@ namespace BlackMisc
         void ps_finish();
 
     private:
-        QObject *m_owner;
+        QObject *m_owner = nullptr;
         QString m_name;
     };
 
