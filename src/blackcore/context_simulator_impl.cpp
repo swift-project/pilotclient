@@ -44,16 +44,43 @@ namespace BlackCore
         disconnectFromSimulator();
         unloadSimulatorPlugin();
     }
+    
+    ISimulatorFactory *CContextSimulator::getSimulatorFactory(const CSimulatorInfo &simulator)
+    {
+        if (!m_simulatorDrivers.contains(simulator))
+            return nullptr;
+        
+        DriverInfo& driver = m_simulatorDrivers[simulator];
+        if (!driver.factory) {
+            QPluginLoader loader(driver.fileName);
+            QObject *plugin = loader.instance();
+            if (plugin)
+            {
+                ISimulatorFactory *factory = qobject_cast<ISimulatorFactory *>(plugin);
+                if (factory)
+                {
+                    driver.factory = factory;
+                    CLogMessage(this).info("Loaded plugin: %1") << factory->getSimulatorInfo().toQString();
+                }
+            } else {
+                QString errorMsg = loader.errorString().append(" ").append("Also check if required dll/libs of plugin exists");
+                CLogMessage(this).error(errorMsg);
+            }
+        }
+        
+        return driver.factory;
+    }
 
     CSimulatorInfoList CContextSimulator::getAvailableSimulatorPlugins() const
     {
-        CSimulatorInfoList simulatorPlugins;
-        foreach(ISimulatorFactory * factory, m_simulatorFactories)
-        {
-            simulatorPlugins.push_back(factory->getSimulatorInfo());
-        }
-        simulatorPlugins.sortBy(&CSimulatorInfo::getShortName);
-        return simulatorPlugins;
+        CSimulatorInfoList list;
+        auto keys = m_simulatorDrivers.keys();
+        
+        std::for_each(keys.begin(), keys.end(), [&list](const CSimulatorInfo& driver) {
+            list.push_back(driver);
+        });
+        
+        return list;
     }
 
     bool CContextSimulator::isConnected() const
@@ -249,31 +276,18 @@ namespace BlackCore
             return true;
         } // already loaded
         
-        /* TODO Specify behaviour below */
+        /* TODO Specify behaviour below (maybe assert?) */
         if (simulatorInfo.isUnspecified()) {
             return false;
         }
 
         // warning if we do not have any plugins
-        if (m_simulatorFactories.isEmpty()) {
+        if (m_simulatorDrivers.isEmpty()) {
             CLogMessage(this).error("No simulator plugins");
             return false;
         }
-
-        auto factoryIterator = std::find_if(m_simulatorFactories.begin(), m_simulatorFactories.end(), [ = ](const ISimulatorFactory * factory)
-        {
-            return factory->getSimulatorInfo() == simulatorInfo;
-        });
-
-        // no plugin found
-        if (factoryIterator == m_simulatorFactories.end())
-        {
-            CLogMessage(this).error("Plugin not found: '%1'") << simulatorInfo.toQString(true);
-            return false;
-        }
-
-        // Factory for driver
-        ISimulatorFactory *factory = *factoryIterator;
+        
+        ISimulatorFactory *factory = getSimulatorFactory(simulatorInfo);
         Q_ASSERT(factory);
 
         // We assume we run in the same process as the own aircraft context
@@ -365,31 +379,37 @@ namespace BlackCore
     {
         Q_ASSERT(this->getIContextApplication());
         Q_ASSERT(this->getIContextApplication()->isUsingImplementingObject());
+        Q_ASSERT(!simulatorInfo.isUnspecified());
 
-        if (this->m_simulator && this->m_simulator->getSimulatorInfo() == simulatorInfo) {  // already loaded
-            qWarning("Cannot listen for simulator while still plugin is loaded");
-            return;
-        }
-        
-        if (simulatorInfo.isUnspecified()) {
+        if (this->m_simulator) {  // already loaded
+            qWarning("Cannot listen for simulator while the driver is still loaded");
             return;
         }
 
         // warning if we do not have any plugins
-        if (m_simulatorListeners.isEmpty()) {
-            CLogMessage(this).error("No simulator listeners");
+        if (m_simulatorDrivers.isEmpty()) {
+            CLogMessage(this).error("No simulator drivers");
             return;
         }
 
-        if (!m_simulatorListeners.contains(simulatorInfo)) {
-            CLogMessage(this).error("Listener not found for '%1'") << simulatorInfo.toQString(true);
+        if (!m_simulatorDrivers.contains(simulatorInfo)) {
+            CLogMessage(this).error("Driver not found for '%1'") << simulatorInfo.toQString(true);
             return;
-        } else {
-            ISimulatorListener *listener = m_simulatorListeners[simulatorInfo];
-            Q_ASSERT(listener);
-            listener->start();
-            CLogMessage(this).info("Listening for simulator: '%1'") << simulatorInfo.toQString(true);
         }
+        
+        DriverInfo& driver = m_simulatorDrivers[simulatorInfo];
+        if (!driver.listener) {
+            ISimulatorFactory* factory = getSimulatorFactory(simulatorInfo);
+            Q_ASSERT(factory);
+            
+            driver.listener = factory->createListener();
+            connect(driver.listener, &ISimulatorListener::simulatorStarted, this, &CContextSimulator::ps_simulatorStarted);
+        }
+        
+        ISimulatorListener *listener = m_simulatorDrivers[simulatorInfo].listener;
+        Q_ASSERT(listener);
+        listener->start();
+        CLogMessage(this).info("Listening for simulator: '%1'") << simulatorInfo.toQString(true);
         
     }
     
@@ -559,54 +579,38 @@ namespace BlackCore
     {
         const QString path = qApp->applicationDirPath().append("/plugins/simulator");
         m_pluginsDir = QDir(path);
-        if (!m_pluginsDir.exists())
-        {
+        if (!m_pluginsDir.exists()) {
             CLogMessage(this).error("No plugin directory: %1") << m_pluginsDir.currentPath();
             return;
         }
-
+        
         QStringList fileNames = m_pluginsDir.entryList(QDir::Files);
         fileNames.sort(Qt::CaseInsensitive); // give a certain order, rather than random file order
-        foreach(QString fileName, fileNames)
-        {
-            if (!QLibrary::isLibrary(fileName)) { continue; }
+        for (const auto& fileName: fileNames) {
+            if (!QLibrary::isLibrary(fileName)) {
+
+                continue;
+            }
+            
             CLogMessage(this).info("Try to load plugin: %1") << fileName;
             QString pluginPath = m_pluginsDir.absoluteFilePath(fileName);
             QPluginLoader loader(pluginPath);
             QJsonObject json = loader.metaData();
-            QObject *plugin = loader.instance();
-            if (plugin)
-            {
-                ISimulatorFactory *factory = qobject_cast<ISimulatorFactory *>(plugin);
-                if (factory)
-                {
-//                     CSimulatorInfo simulatorInfo = factory->getSimulatorInfo();
-                    CSimulatorInfo simulatorInfo(json);
-                    m_simulatorFactories.insert(factory);
-                    
-                    ISimulatorListener *listener = factory->createListener(this);
-                    Q_ASSERT(listener);
-                    Q_ASSERT(listener->parent() == this); // requirement
-                    m_simulatorListeners.insert(simulatorInfo, listener);
-                    
-                    /* Will not happen unless start() is called */
-                    connect(listener, &ISimulatorListener::simulatorStarted, this, &CContextSimulator::ps_simulatorStarted);
-        
-                    CLogMessage(this).info("Loaded plugin: %1") << simulatorInfo.toQString();
-                }
-            }
-            else
-            {
-                QString errorMsg = loader.errorString().append(" ").append("Also check if required dll/libs of plugin exists");
-                CLogMessage(this).error(errorMsg);
+            CSimulatorInfo simulatorInfo(json);
+            if (!simulatorInfo.isUnspecified()) {
+                m_simulatorDrivers.insert(simulatorInfo, { nullptr, nullptr, pluginPath} );
+                CLogMessage(this).info("Found simulator driver: %1") << simulatorInfo.toQString();
+            } else {
+                CLogMessage(this).warning("Simulator driver in %1 is invalid") << pluginPath;
             }
         }
     }
     
     void CContextSimulator::stopSimulatorListeners()
     {
-        std::for_each(m_simulatorListeners.begin(), m_simulatorListeners.end(), [](ISimulatorListener* l) {
-            l->stop();
+        std::for_each(m_simulatorDrivers.begin(), m_simulatorDrivers.end(), [](DriverInfo& driver) {
+            if (driver.listener)
+                driver.listener->stop();
         });
     }
 

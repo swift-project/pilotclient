@@ -38,6 +38,10 @@ namespace BlackCore
     public:
         //! Destructor
         virtual ~CContextSimulator();
+        
+        //! Lazy-loads the driver, instantiates the factory and returns it.
+        //! \return nullptr if no corresponding driver was found or an error occured during loading it.
+        ISimulatorFactory* getSimulatorFactory(const BlackSim::CSimulatorInfo& simulator);
 
     public slots:
 
@@ -193,11 +197,20 @@ namespace BlackCore
 
         //! \brief call stop() on all loaded listeners
         void stopSimulatorListeners();
+        
+        /*!
+         * A simple struct containing all info about the driver we need.
+         */
+        struct DriverInfo {
+            ISimulatorFactory* factory; //!< Lazy-loaded, nullptr by default
+            ISimulatorListener* listener; //!< Listener instance, nullptr by default
+            QString fileName; //!< Plugin file name (relative to plugins/simulator)
+        };
 
-        BlackCore::ISimulator *m_simulator = nullptr; //!< simulator plugin
+        BlackCore::ISimulator *m_simulator = nullptr; //!< Actually loaded simulator driver
+        QTimer *m_updateTimer = nullptr;
         QDir m_pluginsDir;
-        QSet<ISimulatorFactory *> m_simulatorFactories;
-        QMap<BlackSim::CSimulatorInfo, ISimulatorListener *> m_simulatorListeners;
+        QMap<BlackSim::CSimulatorInfo, DriverInfo> m_simulatorDrivers;
         QFuture<bool> m_canConnectResult;
     };
 
