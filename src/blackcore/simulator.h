@@ -257,6 +257,7 @@ namespace BlackCore
         
         //! Simulator listener instance
         virtual ISimulatorListener *createListener(QObject *parent = nullptr) = 0;
+        
     };
 
     //! Common base class with providers, interface and some base functionality

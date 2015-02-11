@@ -573,13 +573,15 @@ namespace BlackCore
             CLogMessage(this).info("Try to load plugin: %1") << fileName;
             QString pluginPath = m_pluginsDir.absoluteFilePath(fileName);
             QPluginLoader loader(pluginPath);
+            QJsonObject json = loader.metaData();
             QObject *plugin = loader.instance();
             if (plugin)
             {
                 ISimulatorFactory *factory = qobject_cast<ISimulatorFactory *>(plugin);
                 if (factory)
                 {
-                    CSimulatorInfo simulatorInfo = factory->getSimulatorInfo();
+//                     CSimulatorInfo simulatorInfo = factory->getSimulatorInfo();
+                    CSimulatorInfo simulatorInfo(json);
                     m_simulatorFactories.insert(factory);
                     
                     ISimulatorListener *listener = factory->createListener(this);

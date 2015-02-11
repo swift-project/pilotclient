@@ -26,6 +26,9 @@ namespace BlackSim
 
         //! Constructor
         CSimulatorInfo(const QString &shortname, const QString &fullname);
+        
+        //! This constructor takes a JSON object that comes with the driver.
+        CSimulatorInfo(const QJsonObject& json);
 
         //! Unspecified simulator
         bool isUnspecified() const { return this->m_shortName.isEmpty() || this->m_shortName.startsWith("Unspecified", Qt::CaseInsensitive); }

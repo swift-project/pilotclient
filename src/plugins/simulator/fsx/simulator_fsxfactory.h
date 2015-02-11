@@ -28,7 +28,7 @@ namespace BlackSimPlugin
         {
             Q_OBJECT
             // TODO: @RW, move this string into CProject please
-            Q_PLUGIN_METADATA(IID "org.swift.pilotclient.BlackCore.SimulatorInterface")
+            Q_PLUGIN_METADATA(IID "org.swift.pilotclient.BlackCore.SimulatorInterface" FILE "simulator_fsx.json")
             Q_INTERFACES(BlackCore::ISimulatorFactory)
 
         public:
