@@ -10,21 +10,22 @@
 #include "context_audio.h"
 #include "context_audio_impl.h"
 #include "context_audio_proxy.h"
+#include "context_audio_empty.h"
 
 namespace BlackCore
 {
 
-    IContextAudio *IContextAudio::create(CRuntime *parent, CRuntimeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &conn)
+    IContextAudio *IContextAudio::create(CRuntime *runtime, CRuntimeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &conn)
     {
         switch (mode)
         {
         case CRuntimeConfig::Local:
         case CRuntimeConfig::LocalInDbusServer:
-            return (new CContextAudio(mode, parent))->registerWithDBus(server);
+            return (new CContextAudio(mode, runtime))->registerWithDBus(server);
         case CRuntimeConfig::Remote:
-            return new BlackCore::CContextAudioProxy(BlackCore::CDBusServer::ServiceName, conn, mode, parent);
+            return new CContextAudioProxy(BlackCore::CDBusServer::ServiceName, conn, mode, runtime);
         default:
-            return nullptr; // audio not mandatory
+            return new CContextAudioEmpty(runtime); // audio not mandatory
         }
     }
 } // namespace
