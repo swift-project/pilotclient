@@ -127,7 +127,7 @@ namespace BlackMisc
                 QString url = serverUrl.trimmed().toLower();
                 url.replace(CVoiceRoom::protocolComplete(), "");
                 url.replace(CVoiceRoom::protocol(), "");
-                QStringList splitParts = serverUrl.split("/");
+                QStringList splitParts = url.split("/");
                 m_hostname = splitParts.at(0);
                 m_channel = splitParts.at(1);
             }

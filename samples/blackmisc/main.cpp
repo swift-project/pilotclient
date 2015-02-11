@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
         else if (s.startsWith("3")) { CSamplesContainer::samples(); }
         else if (s.startsWith("4")) { CSamplesMetadata::samples(); }
         else if (s.startsWith("5")) { CSamplesVariant::samples(); }
-        else if (s.startsWith("6")) { CSamplesPerformance::samples(); }
+        else if (s.startsWith("6")) { CSamplesPerformance::samples(qtout); }
         else if (s.startsWith("7")) { CSamplesAlgorithm::samples(); }
         else if (s.startsWith("8")) { CSamplesConcurrent::samples(s, qtout, qtin); }
         else if (s.startsWith("x")) { break; }

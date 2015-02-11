@@ -44,9 +44,9 @@ namespace BlackMisc
             const QDateTime dtUntil = dtFrom.addSecs(60 * 60.0); // 1 hour
             const CUser user(id, usr);
 
+            CAtcStation station;
             if (byPropertyIndex)
             {
-                CAtcStation station;
                 station.setPropertyByIndex(CCallsign(cs).toCVariant(), CAtcStation::IndexCallsign);
                 station.setPropertyByIndex(user.toCVariant(), CAtcStation::IndexController);
                 station.setPropertyByIndex(CFrequency(f, CFrequencyUnit::MHz()).toCVariant(), CAtcStation::IndexFrequency);
@@ -56,16 +56,17 @@ namespace BlackMisc
                 station.setPropertyByIndex(CVariant::from(dtFrom), CAtcStation::IndexBookedFrom);
                 station.setPropertyByIndex(CVariant::from(dtUntil), CAtcStation::IndexBookedUntil);
                 station.setPropertyByIndex(CLength(index + 1, CLengthUnit::NM()).toCVariant(), CAtcStation::IndexDistanceToOwnAircraft);
-                return station;
             }
             else
             {
-                CAtcStation station(CCallsign(cs), user,
-                                    CFrequency(f, CFrequencyUnit::MHz()),
-                                    geoPos, CLength(50, CLengthUnit::km()), false, dtFrom, dtUntil);
+                station = CAtcStation(CCallsign(cs), user,
+                                      CFrequency(f, CFrequencyUnit::MHz()),
+                                      geoPos, CLength(50, CLengthUnit::km()), false, dtFrom, dtUntil);
                 station.setDistanceToOwnAircraft(CLength(index + 1, CLengthUnit::NM()));
-                return station;
             }
+
+            station.setVoiceRoomUrl("vvl://foo.bar.baz/room" + QString::number(index));
+            return station;
         }
 
         void CTesting::readStations(const CAtcStationList &stations, bool byPropertyIndex)

@@ -12,6 +12,8 @@
 #ifndef BLACKMISCTEST_SAMPLESPERFORMANCEINDEX_H
 #define BLACKMISCTEST_SAMPLESPERFORMANCEINDEX_H
 
+#include <QTextStream>
+
 namespace BlackMiscTest
 {
     //! Samples for our containers
@@ -19,7 +21,7 @@ namespace BlackMiscTest
     {
     public:
         //! Run the samples
-        static int samples();
+        static int samples(QTextStream &out);
     };
 } // namespace
 

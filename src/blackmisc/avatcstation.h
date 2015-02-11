@@ -160,6 +160,9 @@ namespace BlackMisc
             //! Set voice room
             void setVoiceRoom(const BlackMisc::Audio::CVoiceRoom &voiceRoom) { this->m_voiceRoom = voiceRoom; }
 
+            //! Set voice room URL
+            void setVoiceRoomUrl(const QString &url) { this->m_voiceRoom.setVoiceRoomUrl(url); }
+
             //! Valid voice room?
             bool hasValidVoiceRoom() const { return this->m_voiceRoom.isValid(); }
 
