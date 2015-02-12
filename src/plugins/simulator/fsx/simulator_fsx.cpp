@@ -491,7 +491,7 @@ namespace BlackSimPlugin
             {
                 initEvents();
                 initDataDefinitionsWhenConnected();
-                m_simconnectTimerId = startTimer(50);
+                m_simconnectTimerId = startTimer(10);
                 m_simConnected = true;
 
                 emit connectionStatusChanged(Connected);
