@@ -39,9 +39,20 @@ namespace BlackCore
 
     CContextOwnAircraft::~CContextOwnAircraft() { }
 
-    /*
-     * Init own aircraft
-     */
+    const CSimulatedAircraft &CContextOwnAircraft::ownAircraft() const
+    {
+        // not thread safe, check
+        Q_ASSERT(this->thread() == QThread::currentThread());
+        return this->m_ownAircraft;
+    }
+
+    CSimulatedAircraft &CContextOwnAircraft::ownAircraft()
+    {
+        // not thread safe, check
+        Q_ASSERT(this->thread() == QThread::currentThread());
+        return this->m_ownAircraft;
+    }
+
     void CContextOwnAircraft::initOwnAircraft()
     {
         Q_ASSERT(this->getRuntime());
@@ -202,7 +213,16 @@ namespace BlackCore
     CSimulatedAircraft CContextOwnAircraft::getOwnAircraft() const
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << this->m_ownAircraft;
-        return this->m_ownAircraft;
+        if (this->thread() == QThread::currentThread()) { return this->m_ownAircraft; }
+        CSimulatedAircraft aircraft;
+        bool s = QMetaObject::invokeMethod(const_cast<CContextOwnAircraft *>(this), // strip away const, invoke will not change anything
+                                           "getOwnAircraft",
+                                           Qt::BlockingQueuedConnection,
+                                           Q_RETURN_ARG(CSimulatedAircraft, aircraft)
+                                          );
+        Q_ASSERT(s);
+        Q_UNUSED(s);
+        return aircraft;
     }
 
     bool CContextOwnAircraft::parseCommandLine(const QString &commandLine)

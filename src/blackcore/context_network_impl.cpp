@@ -103,6 +103,12 @@ namespace BlackCore
         return m_airspace->renderedAircraftSituations();
     }
 
+    CAircraftSituationList CContextNetwork::getRenderedAircraftSituations() const
+    {
+        Q_ASSERT(this->m_airspace);
+        return m_airspace->getRenderedAircraftSituations();
+    }
+
     const CAircraftSituationList &CContextNetwork::renderedAircraftSituations() const
     {
         Q_ASSERT(this->m_airspace);
@@ -119,6 +125,12 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_airspace);
         return m_airspace->renderedAircraftParts();
+    }
+
+    CAircraftPartsList CContextNetwork::getRenderedAircraftParts() const
+    {
+        Q_ASSERT(this->m_airspace);
+        return m_airspace->getRenderedAircraftParts();
     }
 
     void CContextNetwork::gracefulShutdown()
@@ -330,6 +342,18 @@ namespace BlackCore
         Q_ASSERT(this->m_vatsimBookingReader);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         this->m_vatsimBookingReader->readInBackgroundThread();
+    }
+
+    CAtcStationList CContextNetwork::getAtcStationsOnline() const
+    {
+        BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        return this->m_airspace->getAtcStationsOnline();
+    }
+
+    CAtcStationList CContextNetwork::getAtcStationsBooked() const
+    {
+        BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        return this->m_airspace->getAtcStationsBooked();
     }
 
     CSimulatedAircraftList CContextNetwork::getAircraftInRange() const

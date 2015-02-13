@@ -22,8 +22,13 @@ namespace BlackMisc
         class IOwnAircraftProviderReadOnly
         {
         public:
-            //! Own aircraft
+            //! Own aircraft as reference
+            //! \note in memory, not thread safe!
             virtual const CSimulatedAircraft &ownAircraft() const = 0;
+
+            //! Own aircraft as copy
+            //! \note not hread safe!
+            virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const = 0;
 
             //! Destructor
             virtual ~IOwnAircraftProviderReadOnly() {}
@@ -66,6 +71,9 @@ namespace BlackMisc
 
             //! \copydoc IOwnAircraftProvider::ownAircraft
             virtual CSimulatedAircraft &ownAircraft() { return this->m_ownAircraft; }
+
+            //! \copydoc IOwnAircraftProvider::getOwnAircraft
+            virtual CSimulatedAircraft getOwnAircraft() const { return this->m_ownAircraft; }
 
         public slots:
             //! \copydoc IOwnAircraftProvider::updateCockpit

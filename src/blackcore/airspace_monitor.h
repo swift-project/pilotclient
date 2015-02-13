@@ -44,22 +44,22 @@ namespace BlackCore
         CAirspaceMonitor(QObject *parent, const BlackMisc::Simulation::IOwnAircraftProviderReadOnly *ownAircraft, INetwork *network, CVatsimBookingReader *bookings, CVatsimDataFileReader *dataFile);
 
         //! \copydoc IRenderedAircraftProviderReadOnly::renderedAircraft
-        virtual const BlackMisc::Simulation::CSimulatedAircraftList &renderedAircraft() const override { return m_aircraftInRange; }
+        virtual const BlackMisc::Simulation::CSimulatedAircraftList &renderedAircraft() const override;
 
         //! \copydoc IRenderedAircraftProvider::renderedAircraft
-        virtual BlackMisc::Simulation::CSimulatedAircraftList &renderedAircraft() override { return m_aircraftInRange; }
+        virtual BlackMisc::Simulation::CSimulatedAircraftList &renderedAircraft() override;
 
         //! \copydoc IRenderedAircraftProvider::renderedAircraftSituations
-        virtual const BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() const override { return m_aircraftSituations; }
+        virtual const BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() const override;
 
         //! \copydoc IRenderedAircraftProvider::renderedAircraftSituations
-        virtual BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() override { return m_aircraftSituations; }
+        virtual BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() override;
 
         //! \copydoc IRenderedAircraftProvider::renderedAircraftParts
-        virtual const BlackMisc::Aviation::CAircraftPartsList &renderedAircraftParts() const override { return m_aircraftParts; }
+        virtual const BlackMisc::Aviation::CAircraftPartsList &renderedAircraftParts() const override;
 
         //! \copydoc IRenderedAircraftProvider::renderedAircraftParts
-        virtual BlackMisc::Aviation::CAircraftPartsList &renderedAircraftParts() override { return m_aircraftParts; }
+        virtual BlackMisc::Aviation::CAircraftPartsList &renderedAircraftParts() override;
 
         //! \copydoc IRenderedAircraftProvider::renderedAircraftParts
         virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const QString &originator) override;
@@ -95,6 +95,9 @@ namespace BlackCore
         //! Returns the closest ATC station operating on the given frequency, if any
         BlackMisc::Aviation::CAtcStation getAtcStationForComUnit(const BlackMisc::Aviation::CComSystem &comSystem);
 
+        //! Clear the contents
+        void clear();
+
         //! Request to update other clients' data from the network
         void requestDataUpdates();
 
@@ -103,6 +106,13 @@ namespace BlackCore
 
         //! Create dummy entries for performance tests
         void testCreateDummyOnlineAtcStations(int number);
+
+    public slots:
+        //! \copydoc IRenderedAircraftProviderReadOnly::getRenderedAircraftSituations
+        virtual BlackMisc::Aviation::CAircraftSituationList getRenderedAircraftSituations() const override;
+
+        //! \copydoc IRenderedAircraftProviderReadOnly::getRenderedAircraftParts
+        virtual BlackMisc::Aviation::CAircraftPartsList getRenderedAircraftParts() const override;
 
     signals:
         //! Online ATC stations were changed
@@ -125,10 +135,6 @@ namespace BlackCore
 
         //! Read for model matching
         void readyForModelMatching(const BlackMisc::Simulation::CSimulatedAircraft &renderedAircraft);
-
-    public:
-        //! Clear the contents
-        void clear();
 
     private:
         BlackMisc::Aviation::CAtcStationList m_atcStationsOnline;

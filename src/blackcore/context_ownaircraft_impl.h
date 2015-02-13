@@ -37,14 +37,15 @@ namespace BlackCore
         virtual ~CContextOwnAircraft();
 
         //! Own aircraft
-        virtual const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft() const override { return this->m_ownAircraft; }
+        virtual const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft() const override;
 
         //! Own aircraft
-        virtual BlackMisc::Simulation::CSimulatedAircraft &ownAircraft() override { return this->m_ownAircraft; }
+        virtual BlackMisc::Simulation::CSimulatedAircraft &ownAircraft() override;
 
     public slots: // IContextOwnAircraft overrides
 
         //! \copydoc IContextOwnAircraft::getOwnAircraft()
+        //! \copydoc IOwnAircraftProvider::getOwnAircraft()
         virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const override;
 
         //! \copydoc IContextOwnAircraft::updatePosition

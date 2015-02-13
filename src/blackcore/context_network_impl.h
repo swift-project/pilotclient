@@ -60,7 +60,7 @@ namespace BlackCore
         //! \copydoc IRenderedAircraftProviderReadOnly::renderedAircraftSituations
         virtual BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() override;
 
-        //! \copydoc IRenderedAircraftProvider::renderedAircraftParts
+        //! \copydoc IRenderedAircraftProviderReadOnly::renderedAircraftParts
         virtual const BlackMisc::Aviation::CAircraftPartsList &renderedAircraftParts() const override;
 
         //! \copydoc IRenderedAircraftProvider::renderedAircraftParts
@@ -72,24 +72,22 @@ namespace BlackCore
         virtual void readAtcBookingsFromSource() const override;
 
         //! \copydoc IContextNetwork::getAtcStationsOnline()
-        virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const override
-        {
-            BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-            return this->m_airspace->getAtcStationsOnline();
-        }
+        virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const override;
 
         //! \copydoc IContextNetwork::getAtcStationsBooked()
-        virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override
-        {
-            BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-            return this->m_airspace->getAtcStationsBooked();
-        }
+        virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override;
 
         //! \copydoc IContextNetwork::getAircraftInRange()
         virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;
 
         //! \copydoc IContextNetwork::getAircraftForCallsign
         virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+
+        //! \copydoc IRenderedAircraftProviderReadOnly::getRenderedAircraftSituations
+        virtual BlackMisc::Aviation::CAircraftSituationList getRenderedAircraftSituations() const override;
+
+        //! \copydoc IRenderedAircraftProviderReadOnly::getRenderedAircraftParts
+        virtual BlackMisc::Aviation::CAircraftPartsList getRenderedAircraftParts() const override;
 
         //! \copydoc IContextNetwork::connectToNetwork()
         virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, uint mode) override;

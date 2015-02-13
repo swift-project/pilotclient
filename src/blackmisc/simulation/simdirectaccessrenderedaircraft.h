@@ -30,8 +30,16 @@ namespace BlackMisc
             //! All situation (per callsign, time history)
             virtual const BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() const = 0;
 
+            //! Rendered aircraft situations (history) as copy
+            //! \threadsafe
+            virtual BlackMisc::Aviation::CAircraftSituationList getRenderedAircraftSituations() const = 0;
+
             //! All parts (per callsign, time history)
             virtual const BlackMisc::Aviation::CAircraftPartsList &renderedAircraftParts() const = 0;
+
+            //! All parts (per callsign, time history) as copy
+            //! \threadsafe
+            virtual BlackMisc::Aviation::CAircraftPartsList getRenderedAircraftParts() const = 0;
 
             //! Destructor
             virtual ~IRenderedAircraftProviderReadOnly() {}
@@ -42,12 +50,14 @@ namespace BlackMisc
         {
         public:
             //! All rendered aircraft
+            //! \note in memory reference, not thread safe
             virtual CSimulatedAircraftList &renderedAircraft() = 0;
 
             //! Rendered aircraft situations (history)
             virtual BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() = 0;
 
             //! All parts (per callsign, time history)
+            //! \note in memory reference, not thread safe
             virtual BlackMisc::Aviation::CAircraftPartsList &renderedAircraftParts() = 0;
 
             //! Enable/disable rendering

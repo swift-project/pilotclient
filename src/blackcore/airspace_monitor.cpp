@@ -59,6 +59,76 @@ namespace BlackCore
         this->connect(&this->m_atcWatchdog,      &CAirspaceWatchdog::timeout, this, &CAirspaceMonitor::ps_atcControllerDisconnected);
     }
 
+    const CSimulatedAircraftList &CAirspaceMonitor::renderedAircraft() const
+    {
+        // not thread safe, check
+        Q_ASSERT(this->thread() == QThread::currentThread());
+        return m_aircraftInRange;
+    }
+
+    CSimulatedAircraftList &CAirspaceMonitor::renderedAircraft()
+    {
+        // not thread safe, check
+        Q_ASSERT(this->thread() == QThread::currentThread());
+        return m_aircraftInRange;
+    }
+
+    const CAircraftSituationList &CAirspaceMonitor::renderedAircraftSituations() const
+    {
+        // not thread safe, check
+        Q_ASSERT(this->thread() == QThread::currentThread());
+        return m_aircraftSituations;
+    }
+
+    CAircraftSituationList &CAirspaceMonitor::renderedAircraftSituations()
+    {
+        // not thread safe, check
+        Q_ASSERT(this->thread() == QThread::currentThread());
+        return m_aircraftSituations;
+    }
+
+    CAircraftSituationList CAirspaceMonitor::getRenderedAircraftSituations() const
+    {
+        if (this->thread() == QThread::currentThread()) { return this->m_aircraftSituations; }
+        CAircraftSituationList situations;
+        bool s = QMetaObject::invokeMethod(const_cast<CAirspaceMonitor *>(this), // strip away const, invoke will not change anything,
+                                           "getRenderedAircraftSituations",
+                                           Qt::BlockingQueuedConnection,
+                                           Q_RETURN_ARG(CAircraftSituationList, situations)
+                                          );
+        Q_ASSERT(s);
+        Q_UNUSED(s);
+        return situations;
+    }
+
+    const CAircraftPartsList &CAirspaceMonitor::renderedAircraftParts() const
+    {
+        // not thread safe, check
+        Q_ASSERT(this->thread() == QThread::currentThread());
+        return m_aircraftParts;
+    }
+
+    CAircraftPartsList &CAirspaceMonitor::renderedAircraftParts()
+    {
+        // not thread safe, check
+        Q_ASSERT(this->thread() == QThread::currentThread());
+        return m_aircraftParts;
+    }
+
+    CAircraftPartsList CAirspaceMonitor::getRenderedAircraftParts() const
+    {
+        if (this->thread() == QThread::currentThread()) { return this->m_aircraftParts; }
+        CAircraftPartsList parts;
+        bool s = QMetaObject::invokeMethod(const_cast<CAirspaceMonitor *>(this), // strip away const, invoke will not change anything
+                                           "getRenderedAircraftParts",
+                                           Qt::BlockingQueuedConnection,
+                                           Q_RETURN_ARG(CAircraftPartsList, parts)
+                                          );
+        Q_ASSERT(s);
+        Q_UNUSED(s);
+        return parts;
+    }
+
     bool CAirspaceMonitor::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRedering, const QString &originator)
     {
         CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexEnabled, CVariant::fromValue(enabledForRedering));
