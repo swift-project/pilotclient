@@ -43,10 +43,11 @@ int main(int argc, char *argv[])
         qtout << "3 .. Containers" << endl;
         qtout << "4 .. Metadata" << endl;
         qtout << "5 .. Variant" << endl;
-        qtout << "6 .. Performance" << endl;
+        qtout << "6a .. Performance create / copy / ..." << endl;
+        qtout << "6b .. 25/100 Performance impl. type ..." << endl;
+        qtout << "6c .. 25/20 Performance impl. type ..." << endl;
         qtout << "7 .. Algorithms" << endl;
         qtout << "8 .. Concurrent (thread)" << endl;
-
         qtout << "-----" << endl;
         qtout << "x .. Bye" << endl;
         QString s = qtin.readLine().toLower().trimmed();
@@ -56,7 +57,9 @@ int main(int argc, char *argv[])
         else if (s.startsWith("3")) { CSamplesContainer::samples(); }
         else if (s.startsWith("4")) { CSamplesMetadata::samples(); }
         else if (s.startsWith("5")) { CSamplesVariant::samples(); }
-        else if (s.startsWith("6")) { CSamplesPerformance::samples(qtout); }
+        else if (s.startsWith("6a")) { CSamplesPerformance::samplesMisc(qtout); }
+        else if (s.startsWith("6b")) { CSamplesPerformance::samplesImplementationType(qtout, 25, 100); }
+        else if (s.startsWith("6c")) { CSamplesPerformance::samplesImplementationType(qtout, 25, 20); }
         else if (s.startsWith("7")) { CSamplesAlgorithm::samples(); }
         else if (s.startsWith("8")) { CSamplesConcurrent::samples(s, qtout, qtin); }
         else if (s.startsWith("x")) { break; }

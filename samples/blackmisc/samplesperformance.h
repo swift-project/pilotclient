@@ -20,8 +20,12 @@ namespace BlackMiscTest
     class CSamplesPerformance
     {
     public:
-        //! Run the samples
-        static int samples(QTextStream &out);
+        //! Copy, create, RegEx
+        static int samplesMisc(QTextStream &out);
+
+        //! Impact of implementation type
+        static int samplesImplementationType(QTextStream &out, int numberOfCallsigns, int numberOfTimes);
+
     };
 } // namespace
 

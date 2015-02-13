@@ -8,9 +8,14 @@
  */
 
 #include "samplesperformance.h"
+#include "blackmisc/avaircraftsituationlist.h"
+#include "blackmisc/coordinategeodetic.h"
+#include "blackmisc/avaltitude.h"
 #include "blackmisc/testing.h"
 
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Geo;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMiscTest
 {
@@ -18,7 +23,7 @@ namespace BlackMiscTest
     /*
      * Samples
      */
-    int CSamplesPerformance::samples(QTextStream &out)
+    int CSamplesPerformance::samplesMisc(QTextStream &out)
     {
         QTime timer;
         int ms, number;
@@ -144,6 +149,100 @@ namespace BlackMiscTest
         out << "contains matched " << number << " of " << strList4.size() << " strings in " << ms << "ms" << endl;
 
         out << "-----------------------------------------------"  << endl;
+        return 0;
+    }
+
+    int CSamplesPerformance::samplesImplementationType(QTextStream &out, int numberOfCallsigns, int numberOfTimes)
+    {
+        const QDateTime baseTime = QDateTime::currentDateTimeUtc();
+        const qint64 baseTimeEpoch = baseTime.toMSecsSinceEpoch();
+        CAircraftSituationList situations;
+
+        for (int cs = 0; cs < numberOfCallsigns; cs++)
+        {
+            CCallsign callsign("CS" + QString::number(cs));
+            CCoordinateGeodetic coordinate(cs, cs, cs);
+            CAltitude alt(cs, CAltitude::MeanSeaLevel, CLengthUnit::m());
+            for (int t = 0; t < numberOfTimes; t++)
+            {
+                CAircraftSituation s(callsign, coordinate, alt);
+                s.setMSecsSinceEpoch(baseTimeEpoch + 10 * t);
+                situations.push_back(s);
+            }
+        }
+
+        QTime timer;
+        out << "Created " << situations.size() << " situations" << endl;
+
+        timer.start();
+        for (int i = 0; i < 10; i++)
+        {
+            for (int cs = 0; cs < numberOfCallsigns; cs++)
+            {
+                CCallsign callsign("CS" + QString::number(cs));
+                CAircraftSituationList r = situations.findByCallsign(callsign);
+                Q_ASSERT(r.size() == numberOfTimes);
+            }
+        }
+        out << "Reads by callsigns: " << timer.elapsed() << "ms" << endl;
+
+        timer.start();
+        for (int i = 0; i < 10; i++)
+        {
+            for (int t = 0; t < numberOfTimes; t++)
+            {
+                CAircraftSituationList r = situations.findBefore(baseTimeEpoch + 1 + (10 * t));
+                Q_ASSERT(r.size() == numberOfCallsigns * (t + 1));
+            }
+        }
+        out << "Reads by times: " << timer.elapsed() << "ms" << endl;
+
+        timer.start();
+        for (int t = 0; t < numberOfTimes; t++)
+        {
+            for (int cs = 0; cs < numberOfCallsigns; cs++)
+            {
+                CCallsign callsign("CS" + QString::number(cs));
+                CAircraftSituationList r = situations.findByCallsign(callsign).findBefore(baseTimeEpoch + 1 + (10 * t));
+            }
+        }
+        out << "Reads by callsign / times: " << timer.elapsed() << "ms" << endl;
+
+        timer.start();
+        for (int t = 0; t < numberOfTimes; t++)
+        {
+            for (int cs = 0; cs < numberOfCallsigns; cs++)
+            {
+                CCallsign callsign("CS" + QString::number(cs));
+                CAircraftSituationList r = situations.findBefore(baseTimeEpoch + 1 + (10 * t)).findByCallsign(callsign);
+            }
+        }
+        out << "Reads by times / callsign: " << timer.elapsed() << "ms" << endl;
+
+        situations.changeImpl<QVector<CAircraftSituation> >();
+        out << "Changed to QVector" << endl;
+        timer.start();
+        for (int i = 0; i < 10; i++)
+        {
+            for (int cs = 0; cs < numberOfCallsigns; cs++)
+            {
+                CCallsign callsign("CS" + QString::number(cs));
+                CAircraftSituationList r = situations.findByCallsign(callsign);
+                Q_ASSERT(r.size() == numberOfTimes);
+            }
+        }
+        out << "Reads by callsigns: " << timer.elapsed() << "ms" << endl;
+
+        timer.start();
+        for (int i = 0; i < 10; i++)
+        {
+            for (int t = 0; t < numberOfTimes; t++)
+            {
+                CAircraftSituationList r = situations.findBefore(baseTimeEpoch + 1 + (10 * t));
+                Q_ASSERT(r.size() == numberOfCallsigns * (t + 1));
+            }
+        }
+        out << "Reads by times: " << timer.elapsed() << "ms" << endl << endl;
         return 0;
     }
 
