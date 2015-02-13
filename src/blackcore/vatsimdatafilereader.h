@@ -30,16 +30,13 @@ namespace BlackCore
     /*!
      * Read bookings from VATSIM
      */
-    class CVatsimDataFileReader : public BlackMisc::CThreadedReader<void>
+    class CVatsimDataFileReader : public BlackMisc::CThreadedReader
     {
         Q_OBJECT
 
     public:
         //! Constructor
         explicit CVatsimDataFileReader(QObject *owner, const QStringList &urls);
-
-        //! Read / re-read data file
-        void read();
 
         //! Get aircrafts
         //! \threadsafe
@@ -93,14 +90,20 @@ namespace BlackCore
         //! \threadsafe
         void updateWithVatsimDataFileData(BlackMisc::Aviation::CAircraft &aircraftToBeUdpated) const;
 
+        //! Start reading in own thread
+        void readInBackgroundThread();
+
     private slots:
-        //! Data have been read
-        void ps_loadFinished(QNetworkReply *nwReply);
+        //! Data have been read, parse VATSIM file
+        void ps_parseVatsimFile(QNetworkReply *nwReply);
+
+        //! Read / re-read data file
+        void ps_read();
 
     private:
+        QNetworkAccessManager *m_networkManager = nullptr;
         QStringList m_serviceUrls; /*!< URL of the service */
         int m_currentUrlIndex;
-        QNetworkAccessManager *m_networkManager;
         BlackMisc::Network::CServerList      m_voiceServers;
         BlackMisc::Network::CServerList      m_fsdServers;
         BlackMisc::Aviation::CAtcStationList m_atcStations;
@@ -122,9 +125,6 @@ namespace BlackCore
 
         //! Get current section
         static Section currentLineToSection(const QString &currentLine);
-
-        //! Parse the VATSIM data file in backgroun
-        void parseVatsimFileInBackground(QNetworkReply *nwReplyPtr);
 
     signals:
         //! Data have been read

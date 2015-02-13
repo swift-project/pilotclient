@@ -14,7 +14,6 @@
 #include "vatsimbookingreader.h"
 
 #include <QtXml/QDomElement>
-#include <QtConcurrent/QtConcurrent>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -23,45 +22,45 @@ using namespace BlackMisc::Network;
 namespace BlackCore
 {
     CVatsimBookingReader::CVatsimBookingReader(QObject *owner, const QString &url) :
-        CThreadedReader(owner),
-        m_serviceUrl(url), m_networkManager(nullptr)
+        CThreadedReader(owner, "CVatsimBookingReader"),
+        m_serviceUrl(url)
     {
         this->m_networkManager = new QNetworkAccessManager(this);
-        this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CVatsimBookingReader::ps_loadFinished);
-        this->connect(this->m_updateTimer, &QTimer::timeout, this, &CVatsimBookingReader::read);
+        this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CVatsimBookingReader::ps_parseBookings);
+        this->connect(this->m_updateTimer, &QTimer::timeout, this, &CVatsimBookingReader::ps_read);
     }
 
-    void CVatsimBookingReader::read()
+    void CVatsimBookingReader::readInBackgroundThread()
     {
+        if (QThread::currentThread() == QObject::thread())
+        {
+            ps_read();
+        }
+        else
+        {
+            bool s = QMetaObject::invokeMethod(this, "ps_read", Qt::BlockingQueuedConnection);
+            Q_ASSERT(s);
+            Q_UNUSED(s);
+        }
+    }
+
+    void CVatsimBookingReader::ps_read()
+    {
+        this->threadAssertCheck();
         QUrl url(this->m_serviceUrl);
         if (url.isEmpty()) return;
         Q_ASSERT(this->m_networkManager);
         QNetworkRequest request(url);
-        QNetworkReply *reply = this->m_networkManager->get(request);
-        this->setPendingNetworkReply(reply);
+        this->m_networkManager->get(request);
     }
 
-    /*
-     * Bookings read from XML
-     */
-    void CVatsimBookingReader::ps_loadFinished(QNetworkReply *nwReply)
-    {
-        this->setPendingNetworkReply(nullptr);
-        if (!this->isFinished())
-        {
-            QFuture<void> f = QtConcurrent::run(this, &CVatsimBookingReader::parseBookings, nwReply);
-            this->setPendingFuture(f);
-        }
-    }
-
-    /*
-     * Parse bookings
-     */
-    void CVatsimBookingReader::parseBookings(QNetworkReply *nwReplyPtr)
+    void CVatsimBookingReader::ps_parseBookings(QNetworkReply *nwReplyPtr)
     {
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+
+        this->threadAssertCheck();
 
         // Worker thread, make sure to write no members here!
         if (this->isFinished())
@@ -103,7 +102,7 @@ namespace BlackCore
                     if (this->isFinished())
                     {
                         CLogMessage(this).debug() << Q_FUNC_INFO;
-                        CLogMessage(this).info("terminated booking parsing process"); // for users
+                        CLogMessage(this).info("Terminated booking parsing process"); // for users
                         return; // stop, terminate straight away, ending thread
                     }
 
@@ -148,8 +147,8 @@ namespace BlackCore
                     }
                     // time checks
                     QDateTime now = QDateTime::currentDateTimeUtc();
-                    if (now.msecsTo(bookedStation.getBookedUntilUtc()) < (1000 * 60 * 15)) continue; // until n mins in past
-                    if (now.msecsTo(bookedStation.getBookedFromUtc()) > (1000 * 60 * 60 * 24)) continue; // to far in the future, n hours
+                    if (now.msecsTo(bookedStation.getBookedUntilUtc()) < (1000 * 60 * 15))     { continue; } // until n mins in past
+                    if (now.msecsTo(bookedStation.getBookedFromUtc()) > (1000 * 60 * 60 * 24)) { continue; } // to far in the future, n hours
                     bookedStation.setController(user);
                     bookedStations.push_back(bookedStation);
                 }

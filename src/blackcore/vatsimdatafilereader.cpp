@@ -15,7 +15,6 @@
 #include "vatsimdatafilereader.h"
 
 #include <QRegularExpression>
-#include <QtConcurrent/QtConcurrent>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -26,30 +25,12 @@ using namespace BlackMisc::PhysicalQuantities;
 namespace BlackCore
 {
     CVatsimDataFileReader::CVatsimDataFileReader(QObject *owner, const QStringList &urls) :
-        CThreadedReader(owner),
-        m_serviceUrls(urls), m_currentUrlIndex(0), m_networkManager(nullptr)
+        CThreadedReader(owner, "CVatsimDataFileReader"),
+        m_serviceUrls(urls), m_currentUrlIndex(0)
     {
         this->m_networkManager = new QNetworkAccessManager(this);
-        this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CVatsimDataFileReader::ps_loadFinished);
-        this->connect(this->m_updateTimer, &QTimer::timeout, this, &CVatsimDataFileReader::read);
-    }
-
-    void CVatsimDataFileReader::read()
-    {
-        if (this->m_serviceUrls.isEmpty()) return;
-
-        // round robin for load distribution
-        this->m_currentUrlIndex++;
-        if (this->m_serviceUrls.size() >= this->m_currentUrlIndex) this->m_currentUrlIndex = 0;
-
-        // remark: Don't use QThread to run network operations in the background
-        // see http://qt-project.org/doc/qt-4.7/qnetworkaccessmanager.html
-        QUrl url(this->m_serviceUrls.at(this->m_currentUrlIndex));
-        if (url.isEmpty()) return;
-        Q_ASSERT(this->m_networkManager);
-        QNetworkRequest request(url);
-        QNetworkReply *r = this->m_networkManager->get(request);
-        this->setPendingNetworkReply(r);
+        this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CVatsimDataFileReader::ps_parseVatsimFile);
+        this->connect(this->m_updateTimer, &QTimer::timeout, this, &CVatsimDataFileReader::ps_read);
     }
 
     CAircraftList CVatsimDataFileReader::getAircraft() const
@@ -143,34 +124,51 @@ namespace BlackCore
         return users;
     }
 
-    /*
-     * Data file read from XML
-     */
-    void CVatsimDataFileReader::ps_loadFinished(QNetworkReply *nwReply)
+    void CVatsimDataFileReader::readInBackgroundThread()
     {
-        this->setPendingNetworkReply(nullptr);
-        if (!this->isFinished())
+        if (QThread::currentThread() == QObject::thread())
         {
-            QFuture<void> f = QtConcurrent::run(this, &CVatsimDataFileReader::parseVatsimFileInBackground, nwReply);
-            this->setPendingFuture(f);
+            ps_read();
+        }
+        else
+        {
+            bool s = QMetaObject::invokeMethod(this, "ps_read", Qt::BlockingQueuedConnection);
+            Q_ASSERT(s);
+            Q_UNUSED(s);
         }
     }
 
-    /*
-     * Data file read from XML
-     * Example: http://info.vroute.net/vatsim-data.txt
-     */
-    void CVatsimDataFileReader::parseVatsimFileInBackground(QNetworkReply *nwReplyPtr)
+    void CVatsimDataFileReader::ps_read()
+    {
+        this->threadAssertCheck();
+        if (this->m_serviceUrls.isEmpty()) { return; }
+
+        // round robin for load distribution
+        this->m_currentUrlIndex++;
+        if (this->m_serviceUrls.size() >= this->m_currentUrlIndex) this->m_currentUrlIndex = 0;
+
+        // remark: Don't use QThread to run network operations in the background
+        // see http://qt-project.org/doc/qt-4.7/qnetworkaccessmanager.html
+        QUrl url(this->m_serviceUrls.at(this->m_currentUrlIndex));
+        if (url.isEmpty()) { return; }
+        Q_ASSERT(this->m_networkManager);
+        QNetworkRequest request(url);
+        this->m_networkManager->get(request);
+    }
+
+    void CVatsimDataFileReader::ps_parseVatsimFile(QNetworkReply *nwReplyPtr)
     {
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
 
+        this->threadAssertCheck();
+
         // Worker thread, make sure to write only synced here!
         if (this->isFinished())
         {
             CLogMessage(this).debug() << Q_FUNC_INFO;
-            CLogMessage(this).info("terminated VATSIM file parsing process"); // for users
+            CLogMessage(this).info("Terminated VATSIM file parsing process"); // for users
             return; // stop, terminate straight away, ending thread
         }
 
