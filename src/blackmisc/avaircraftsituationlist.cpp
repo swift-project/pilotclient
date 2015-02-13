@@ -23,5 +23,16 @@ namespace BlackMisc
             CSequence<CAircraftSituation>(other)
         { }
 
+        void CAircraftSituationList::registerMetadata()
+        {
+            qRegisterMetaType<BlackMisc::CSequence<CAircraftSituation>>();
+            qDBusRegisterMetaType<BlackMisc::CSequence<CAircraftSituation>>();
+            qRegisterMetaType<BlackMisc::CCollection<CAircraftSituation>>();
+            qDBusRegisterMetaType<BlackMisc::CCollection<CAircraftSituation>>();
+            qRegisterMetaType<CAircraftSituationList>();
+            qDBusRegisterMetaType<CAircraftSituationList>();
+            registerMetaValueType<CAircraftSituationList>();
+        }
+
     } // namespace
 } // namespace

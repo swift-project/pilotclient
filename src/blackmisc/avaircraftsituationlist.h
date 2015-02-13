@@ -40,6 +40,9 @@ namespace BlackMisc
             //! \copydoc CValueObject::convertFromQVariant
             virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
+            //! Metadata
+            static void registerMetadata();
+
         protected:
             //! Myself
             virtual const CAircraftSituationList &getContainer() const { return *this; }
@@ -52,6 +55,7 @@ namespace BlackMisc
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituationList)
+Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Aviation::CAircraftSituation>)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Aviation::CAircraftSituation>)
 
 #endif // guard
