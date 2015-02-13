@@ -19,10 +19,9 @@ namespace BlackMisc
     public:
 
         //! Constructor
-        CGenericDBusInterface(const QString &serverName, const QString &path, const QString &interfaceName, const QDBusConnection &connection, QObject *parent = 0) :
-            QDBusAbstractInterface(serverName, path, interfaceName.toUtf8().constData(), connection, parent)
-        {
-        }
+        CGenericDBusInterface(const QString &serviceName, const QString &path, const QString &interfaceName, const QDBusConnection &connection, QObject *parent = 0) :
+            QDBusAbstractInterface(serviceName, path, interfaceName.toUtf8().constData(), connection, parent)
+        {  }
 
         //! Call DBus, no return value
         template <typename... Args>

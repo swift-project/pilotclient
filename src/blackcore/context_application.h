@@ -1,7 +1,11 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 //! \file
 
@@ -10,6 +14,7 @@
 
 #include "blackcore/context.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/voiceroomlist.h"
 #include "blackmisc/eveventhotkeyfunction.h"
 #include "blackmisc/evoriginator.h"
 #include <QObject>
@@ -19,7 +24,7 @@
 //! @{
 
 //! DBus interface for context
-#define BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME "net.vatsim.PilotClient.BlackCore.ContextApplication"
+#define BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME "org.swift.pilotclient.BlackCore.ContextApplication"
 
 //! DBus object path for context
 #define BLACKCORE_CONTEXTAPPLICATION_OBJECTPATH "/Application"
@@ -85,11 +90,16 @@ namespace BlackCore
         void componentChanged(uint component, uint action);
 
         //! A log message was logged
+        //! \note Used with CLogMessage, do not use directly
         void messageLogged(const BlackMisc::CStatusMessage &message, const BlackMisc::Event::COriginator &origin);
+
+        //! Work around for audio context, #382
+        void fakedSetComVoiceRoom(const BlackMisc::Audio::CVoiceRoomList &requestedRooms);
 
     public slots:
         //! Log a log message
         //! \note Not pure because it can be called from the base class constructor.
+        //! \note this is the function which relays CLogMessage via DBus
         virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::Event::COriginator &origin) { Q_UNUSED(message); Q_UNUSED(origin); }
 
         //! \brief Ping a token, used to check if application is alive

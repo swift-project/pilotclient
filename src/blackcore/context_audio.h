@@ -26,7 +26,7 @@
 //! @{
 
 //! DBus interface for context
-#define BLACKCORE_CONTEXTAUDIO_INTERFACENAME "net.vatsim.PilotClient.BlackCore.ContextAudio"
+#define BLACKCORE_CONTEXTAUDIO_INTERFACENAME "org.swift.pilotclient.BlackCore.ContextAudio"
 
 //! DBus object path for context
 #define BLACKCORE_CONTEXTAUDIO_OBJECTPATH "/Audio"
@@ -36,14 +36,14 @@
 namespace BlackCore
 {
 
-    //! \brief Audio context interface
+    //! Audio context interface
     class IContextAudio : public CContext
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAUDIO_INTERFACENAME)
 
     protected:
-        //! \brief Constructor
+        //! Constructor
         IContextAudio(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : CContext(mode, runtime) {}
 
     public:
@@ -55,14 +55,14 @@ namespace BlackCore
             Com2
         };
 
-        //! \brief Interface name
+        //! Interface name
         static const QString &InterfaceName()
         {
             static QString s(BLACKCORE_CONTEXTAUDIO_INTERFACENAME);
             return s;
         }
 
-        //! \brief Object path
+        //! Object path
         static const QString &ObjectPath()
         {
             static QString s(BLACKCORE_CONTEXTAUDIO_OBJECTPATH);
@@ -75,7 +75,7 @@ namespace BlackCore
         //! Factory method
         static IContextAudio *create(CRuntime *runtime, CRuntimeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &conn);
 
-        //! \brief Destructor
+        //! Destructor
         virtual ~IContextAudio() {}
 
     signals:
@@ -110,6 +110,9 @@ namespace BlackCore
         //! Set voice rooms
         virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms) = 0;
 
+        //! Own callsign as displayed in voice room
+        virtual void setOwnCallsignForRooms(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
         //! Leave all voice rooms
         virtual void leaveAllVoiceRooms() = 0;
 
@@ -123,13 +126,13 @@ namespace BlackCore
         virtual BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const = 0;
 
         /*!
-         * \brief Get current audio device
+         * Get current audio device
          * \return input and output devices
          */
         virtual BlackMisc::Audio::CAudioDeviceInfoList getCurrentAudioDevices() const = 0;
 
         /*!
-         * \brief Set current audio device
+         * Set current audio device
          * \param audioDevice can be input or audio device
          */
         virtual void setCurrentAudioDevice(const BlackMisc::Audio::CAudioDeviceInfo &audioDevice) = 0;
@@ -150,7 +153,7 @@ namespace BlackCore
         virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) const = 0;
 
         /*!
-         * \brief Play notification sound
+         * Play notification sound
          * \param notification CSoundGenerator::Notification
          * \param considerSettings consider settings (notification on/off), false means settings ignored
          */

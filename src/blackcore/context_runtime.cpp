@@ -23,6 +23,7 @@
 #include <QDebug>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
 
 namespace BlackCore
 {
@@ -63,7 +64,7 @@ namespace BlackCore
         }
 
         // DBus
-        if (config.requiresDBusSever()) this->initDBusServer(dbusAddress);
+        if (config.requiresDBusSever()) { this->initDBusServer(dbusAddress); }
         if (config.requiresDBusConnection())
         {
             this->initDBusConnection(dbusAddress);
@@ -85,17 +86,17 @@ namespace BlackCore
         this->m_contextApplication = IContextApplication::create(this, config.getModeApplication(), this->m_dbusServer, this->m_dbusConnection);
         times.insert("Application", time.restart());
 
-        this->m_contextOwnAircraft = IContextOwnAircraft::create(this, config.getModeOwnAircraft(), this->m_dbusServer, this->m_dbusConnection);
-        times.insert("Own aircraft", time.restart());
-
         this->m_contextAudio = IContextAudio::create(this, config.getModeAudio(), this->m_dbusServer, this->m_dbusConnection);
         times.insert("Audio", time.restart());
 
-        this->m_contextSimulator = IContextSimulator::create(this, config.getModeSimulator(), this->m_dbusServer, this->m_dbusConnection);
-        times.insert("Simulator", time.restart());
+        this->m_contextOwnAircraft = IContextOwnAircraft::create(this, config.getModeOwnAircraft(), this->m_dbusServer, this->m_dbusConnection);
+        times.insert("Own aircraft", time.restart());
 
         this->m_contextNetwork = IContextNetwork::create(this, config.getModeNetwork(), this->m_dbusServer, this->m_dbusConnection);
         times.insert("Network", time.restart());
+
+        this->m_contextSimulator = IContextSimulator::create(this, config.getModeSimulator(), this->m_dbusServer, this->m_dbusConnection);
+        times.insert("Simulator", time.restart());
 
         // checks --------------
         // 1. own aircraft and simulator should reside in same location
@@ -147,9 +148,10 @@ namespace BlackCore
 
     void CRuntime::initDBusServer(const QString &dBusAddress)
     {
-        if (this->m_dbusServer) return;
+        if (this->m_dbusServer) { return; }
         Q_ASSERT(!dBusAddress.isEmpty());
         this->m_dbusServer = new CDBusServer(dBusAddress, this);
+        CLogMessage(this).info("DBus server on address: %1") << dBusAddress;
     }
 
     void CRuntime::initPostSetup(QMap<QString, int> &times)
@@ -208,6 +210,19 @@ namespace BlackCore
             Q_ASSERT(c);
             times.insert("Post setup, connects network", time.restart());
         }
+
+        // fake signals to work around setting values in audio context for local audio with remote core
+        if (this->m_contextAudio && this->m_contextAudio->isUsingImplementingObject())
+        {
+            Q_ASSERT(this->m_contextApplication);
+            Q_ASSERT(this->m_contextOwnAircraft);
+            c = this->connect(this->m_contextApplication, &IContextApplication::fakedSetComVoiceRoom,
+                              this->getCContextAudio(),  &CContextAudio::setComVoiceRooms);
+            Q_ASSERT(c);
+            c = this->connect(this->m_contextOwnAircraft, &IContextOwnAircraft::changedCallsign, this->getCContextAudio(), &IContextAudio::setOwnCallsignForRooms);
+            Q_ASSERT(c);
+            times.insert("Post setup, connects audio", time.restart());
+        }
     }
 
     void CRuntime::gracefulShutdown()
@@ -241,14 +256,17 @@ namespace BlackCore
             }
             this->getIContextNetwork()->deleteLater();
             // replace by dummy object avoiding nullptr issues during shutdown phase
-            this->m_contextNetwork = IContextNetwork::create(this, CRuntimeConfig::NotUsed, nullptr, this->m_dbusConnection);
+            QDBusConnection defaultConnection("default");
+            this->m_contextNetwork = IContextNetwork::create(this, CRuntimeConfig::NotUsed, nullptr, defaultConnection);
         }
 
         if (this->getIContextAudio())
         {
             disconnect(this->getIContextAudio());
             this->getIContextAudio()->deleteLater();
-            this->m_contextAudio = nullptr;
+            // replace by dummy object avoiding nullptr issues during shutdown phase
+            QDBusConnection defaultConnection("default");
+            this->m_contextAudio = IContextAudio::create(this, CRuntimeConfig::NotUsed, nullptr, defaultConnection);
         }
 
         if (this->getIContextOwnAircraft())
@@ -406,12 +424,15 @@ namespace BlackCore
 
     bool CRuntimeConfig::requiresDBusSever() const
     {
-        return (this->m_application == LocalInDbusServer ||
-                this->m_audio == LocalInDbusServer ||
-                this->m_network == LocalInDbusServer ||
-                this->m_ownAircraft == LocalInDbusServer ||
-                this->m_settings == LocalInDbusServer ||
-                this->m_simulator == LocalInDbusServer);
+        return (
+                   // those 3 should decide whether we are running the server
+                   this->m_network == LocalInDbusServer ||
+                   this->m_ownAircraft == LocalInDbusServer ||
+                   this->m_simulator == LocalInDbusServer ||
+
+                   // added as work around
+                   this->m_audio == LocalInDbusServer
+               );
     }
 
     bool CRuntimeConfig::requiresDBusConnection() const
@@ -452,7 +473,7 @@ namespace BlackCore
     const CRuntimeConfig &CRuntimeConfig::remoteLocalAudio(const QString &dbusBootstrapAddress)
     {
         static CRuntimeConfig cfg = CRuntimeConfig(CRuntimeConfig(CRuntimeConfig::Remote, dbusBootstrapAddress));
-        cfg.m_audio = CRuntimeConfig::Local;
+        cfg.m_audio = CRuntimeConfig::LocalInDbusServer;
         return cfg;
     }
 } // namespace

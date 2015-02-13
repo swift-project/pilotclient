@@ -18,7 +18,7 @@ namespace BlackCore
         case CRuntimeConfig::LocalInDbusServer:
             return (new CContextOwnAircraft(mode, parent))->registerWithDBus(server);
         case CRuntimeConfig::Remote:
-            return new BlackCore::CContextOwnAircraftProxy(BlackCore::CDBusServer::ServiceName, conn, mode, parent);
+            return new BlackCore::CContextOwnAircraftProxy(BlackCore::CDBusServer::ServiceName(), conn, mode, parent);
         default:
             qFatal("Always initialize an ownAircraft context");
             return nullptr;

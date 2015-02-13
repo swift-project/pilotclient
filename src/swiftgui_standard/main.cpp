@@ -89,17 +89,17 @@ int main(int argc, char *argv[])
     {
         GuiModes::CoreMode coreMode = intro.getCoreMode();
         windowMode = intro.getWindowMode();
-        QString dbusAddress = BlackCore::CDBusServer::fixAddressToDBusAddress(intro.getDBusAddress());
+        QString dbusAddress = CDBusServer::fixAddressToDBusAddress(intro.getDBusAddress());
         switch (coreMode)
         {
         case GuiModes::CoreExternal:
-            runtimeConfig =  BlackCore::CRuntimeConfig::remote(dbusAddress);
+            runtimeConfig =  CRuntimeConfig::remote(dbusAddress);
             break;
         case GuiModes::CoreInGuiProcess:
-            runtimeConfig =  BlackCore::CRuntimeConfig::local(dbusAddress);
+            runtimeConfig =  CRuntimeConfig::local(dbusAddress);
             break;
         case GuiModes::CoreExternalAudioLocal:
-            runtimeConfig =  BlackCore::CRuntimeConfig::remoteLocalAudio(dbusAddress);
+            runtimeConfig =  CRuntimeConfig::remoteLocalAudio(dbusAddress);
             break;
         }
     }

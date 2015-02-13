@@ -1,7 +1,11 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 #include "context_audio_impl.h"
 #include "context_network.h"
@@ -35,17 +39,18 @@ namespace BlackCore
         IContextAudio(mode, runtime),
         m_voice(new CVoiceVatlib())
     {
-        // 1. Init by "voice driver"
+        // own aircraft may or may not be available
+        const CCallsign ownCallsign = (this->getIContextOwnAircraft()) ? getIContextOwnAircraft()->getOwnAircraft().getCallsign() : CCallsign();
 
-        // 2. Register PTT hotkey function
+        // Register PTT hotkey function
         m_inputManager = CInputManager::getInstance();
         m_handlePtt = m_inputManager->registerHotkeyFunc(CHotkeyFunction::Ptt(), this, &CContextAudio::ps_setVoiceTransmission);
 
         m_channel1 = m_voice->createVoiceChannel();
-        m_channel1->setMyAircraftCallsign(getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+        m_channel1->setMyAircraftCallsign(ownCallsign);
         connect(m_channel1.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_connectionStatusChanged);
         m_channel2 = m_voice->createVoiceChannel();
-        m_channel2->setMyAircraftCallsign(getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+        m_channel2->setMyAircraftCallsign(ownCallsign);
         connect(m_channel2.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_connectionStatusChanged);
 
         m_voiceInputDevice = m_voice->createInputDevice();
@@ -62,8 +67,9 @@ namespace BlackCore
 
         m_audioMixer->makeMixerConnection(IAudioMixer::InputVoiceChannel1, IAudioMixer::OutputOutputDevice1);
         m_audioMixer->makeMixerConnection(IAudioMixer::InputVoiceChannel2, IAudioMixer::OutputOutputDevice1);
+        this->setVoiceOutputVolume(90);
 
-        // 4. load sounds (init), not possible in own thread
+        // Load sounds (init), not possible in own thread
         QTimer::singleShot(10 * 1000, this, SLOT(ps_initNotificationSounds()));
 
         m_unusedVoiceChannels.push_back(m_channel1);
@@ -212,9 +218,18 @@ namespace BlackCore
     void CContextAudio::setVoiceOutputVolume(int volume)
     {
         Q_ASSERT(m_voiceOutputDevice);
-        m_outDeviceVolume = volume;
-        if (!isMuted()) { m_voiceOutputDevice->setOutputVolume(m_outDeviceVolume); }
+        bool wasMuted = isMuted();
+        bool changed = m_voiceOutputDevice->getOutputVolume() != volume;
+        if (!changed) { return; }
+        m_voiceOutputDevice->setOutputVolume(volume);
+        m_outVolumeBeforeMute = m_voiceOutputDevice->getOutputVolume();
+
         emit changedAudioVolume(volume);
+        if ((volume > 0 && wasMuted) || (volume < 1 && !wasMuted))
+        {
+            // inform about muted
+            emit changedMute(volume < 1);
+        }
     }
 
     int CContextAudio::getVoiceOutputVolume() const
@@ -227,13 +242,24 @@ namespace BlackCore
     {
         if (this->isMuted() == muted) { return; } // avoid roundtrips / unnecessary signals
 
+        int newVolume;
         if (muted)
         {
-            m_voiceOutputDevice->setOutputVolume(0);
+            Q_ASSERT(this->m_voiceOutputDevice);
+            m_outVolumeBeforeMute = this->m_voiceOutputDevice->getOutputVolume();
+            newVolume = 0;
         }
         else
         {
-            m_voiceOutputDevice->setOutputVolume(m_outDeviceVolume);
+            newVolume = m_outVolumeBeforeMute < MinUnmuteVolume ? MinUnmuteVolume : m_outVolumeBeforeMute;
+            m_outVolumeBeforeMute = newVolume;
+        }
+
+        // do not call setVoiceOutputVolume -> infinite loop
+        if (newVolume != m_voiceOutputDevice->getOutputVolume())
+        {
+            m_voiceOutputDevice->setOutputVolume(newVolume);
+            emit changedAudioVolume(newVolume);
         }
 
         // signal
@@ -246,7 +272,7 @@ namespace BlackCore
     bool CContextAudio::isMuted() const
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        return m_voiceOutputDevice->getOutputVolume() == 0;
+        return m_voiceOutputDevice->getOutputVolume() < 1;
     }
 
     /*
@@ -256,6 +282,7 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         Q_ASSERT(newRooms.size() == 2);
+        Q_ASSERT(getIContextOwnAircraft());
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << newRooms;
 
         CVoiceRoomList currentRooms = getComVoiceRooms();
@@ -263,6 +290,7 @@ namespace BlackCore
         CVoiceRoom currentRoomCom2 = currentRooms[1];
         CVoiceRoom newRoomCom1 = newRooms[0];
         CVoiceRoom newRoomCom2 = newRooms[1];
+        const CCallsign ownCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
 
         bool changed = false;
 
@@ -289,6 +317,7 @@ namespace BlackCore
             if (newRoomCom1.isValid())
             {
                 auto newVoiceChannel = getVoiceChannelBy(newRoomCom1);
+                newVoiceChannel->setMyAircraftCallsign(ownCallsign);
                 bool inUse = m_voiceChannelMapping.values().contains(newVoiceChannel);
                 m_voiceChannelMapping.insert(Com1, newVoiceChannel);
 
@@ -304,6 +333,7 @@ namespace BlackCore
             }
             changed = true;
         }
+
         // changed rooms?  But only compare on "URL",  not status as connected etc.
         if (currentRoomCom2.getVoiceRoomUrl() != newRoomCom2.getVoiceRoomUrl())
         {
@@ -327,6 +357,7 @@ namespace BlackCore
             if (newRoomCom2.isValid())
             {
                 auto newVoiceChannel = getVoiceChannelBy(newRoomCom2);
+                newVoiceChannel->setMyAircraftCallsign(ownCallsign);
                 bool inUse = m_voiceChannelMapping.values().contains(newVoiceChannel);
                 m_voiceChannelMapping.insert(Com2, newVoiceChannel);
 
@@ -346,6 +377,12 @@ namespace BlackCore
         // changed not yet used, but I keep it for debugging
         // changedVoiceRooms called by connectionStatusChanged;
         Q_UNUSED(changed);
+    }
+
+    void CContextAudio::setOwnCallsignForRooms(const CCallsign &callsign)
+    {
+        if (m_channel1) { m_channel1->setMyAircraftCallsign(callsign); }
+        if (m_channel2) { m_channel2->setMyAircraftCallsign(callsign); }
     }
 
     CCallsignList CContextAudio::getRoomCallsigns(int comUnitValue) const

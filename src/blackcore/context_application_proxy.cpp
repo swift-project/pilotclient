@@ -25,7 +25,9 @@ namespace BlackCore
      */
     CContextApplicationProxy::CContextApplicationProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextApplication(mode, runtime), m_dBusInterface(nullptr)
     {
-        this->m_dBusInterface = new BlackMisc::CGenericDBusInterface(serviceName , IContextApplication::ObjectPath(), IContextApplication::InterfaceName(), connection, this);
+        this->m_dBusInterface = new CGenericDBusInterface(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(), connection, this);
+
+        // this->m_dBusInterface = new CGenericDBusInterface(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(), connection, this);
         this->relaySignals(serviceName, connection);
 
         // Enable event forwarding from GUI process to core
@@ -33,7 +35,7 @@ namespace BlackCore
         connect(inputManager, &CInputManager::hotkeyFuncEvent, this, &CContextApplicationProxy::processHotkeyFuncEvent);
         inputManager->setEventForwarding(true);
 
-        connect(this, &IContextApplication::messageLogged, this, [](const CStatusMessage &message, const Event::COriginator &origin)
+        connect(this, &IContextApplication::messageLogged, this, [](const CStatusMessage & message, const Event::COriginator & origin)
         {
             if (!origin.isFromSameProcess())
             {
@@ -43,16 +45,19 @@ namespace BlackCore
     }
 
     /*
-     * Workaround for signals
+     * Connect for signals
      */
     void CContextApplicationProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
         // signals originating from impl side
         bool s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                                    "messageLogged", this, SIGNAL(messageLogged(BlackMisc::CStatusMessage,BlackMisc::Event::COriginator)));
+                                    "messageLogged", this, SIGNAL(messageLogged(BlackMisc::CStatusMessage, BlackMisc::Event::COriginator)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
                                "componentChanged", this, SIGNAL(componentChanged(uint, uint)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
+                               "fakedSetComVoiceRoom", this, SIGNAL(fakedSetComVoiceRoom(BlackMisc::Audio::CVoiceRoomList)));
         Q_ASSERT(s);
         Q_UNUSED(s);
     }

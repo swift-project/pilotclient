@@ -49,12 +49,19 @@ BlackGui::CEnableForFramelessWindow::WindowMode CIntroWindow::getWindowMode() co
 GuiModes::CoreMode CIntroWindow::getCoreMode() const
 {
     if (this->ui->rb_CoreExternalVoiceLocal->isChecked())
+    {
         return GuiModes::CoreExternalAudioLocal;
+    }
     else if (this->ui->rb_CoreInGuiProcess->isChecked())
+    {
         return GuiModes::CoreInGuiProcess;
+    }
     else
+    {
         return GuiModes::CoreExternal;
+    }
 }
+
 /*
  * DBus server address
  */

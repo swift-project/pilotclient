@@ -52,17 +52,17 @@ namespace BlackCore
         // 2. VATSIM bookings
         this->m_vatsimBookingReader = new CVatsimBookingReader(this, this->getRuntime()->getIContextSettings()->getNetworkSettings().getBookingServiceUrl());
         connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CContextNetwork::ps_receivedBookings);
-        this->m_vatsimBookingReader->read(); // first read
-        this->m_vatsimBookingReader->setInterval(180 * 1000);
         this->m_vatsimBookingReader->start();
+        this->m_vatsimBookingReader->setInterval(180 * 1000);
+        this->m_vatsimBookingReader->readInBackgroundThread(); // first read
 
         // 3. VATSIM data file
         const QStringList dataFileUrls = { "http://info.vroute.net/vatsim-data.txt" };
         this->m_vatsimDataFileReader = new CVatsimDataFileReader(this, dataFileUrls);
         connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CContextNetwork::ps_dataFileRead);
-        this->m_vatsimDataFileReader->read(); // first read
-        this->m_vatsimDataFileReader->setInterval(90 * 1000);
         this->m_vatsimDataFileReader->start();
+        this->m_vatsimDataFileReader->readInBackgroundThread(); // first read
+        this->m_vatsimDataFileReader->setInterval(90 * 1000);
 
         // 4. Update timer for data (network data such as frequency)
         this->m_dataUpdateTimer = new QTimer(this);
@@ -329,7 +329,7 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_vatsimBookingReader);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        this->m_vatsimBookingReader->read();
+        this->m_vatsimBookingReader->readInBackgroundThread();
     }
 
     CSimulatedAircraftList CContextNetwork::getAircraftInRange() const

@@ -22,7 +22,7 @@ namespace BlackCore
         case CRuntimeConfig::LocalInDbusServer:
             return (new CContextSimulator(mode, parent))->registerWithDBus(server);
         case CRuntimeConfig::Remote:
-            return new BlackCore::CContextSimulatorProxy(BlackCore::CDBusServer::ServiceName, conn, mode, parent);
+            return new BlackCore::CContextSimulatorProxy(BlackCore::CDBusServer::ServiceName(), conn, mode, parent);
         default:
             return nullptr; // simulator not mandatory
         }

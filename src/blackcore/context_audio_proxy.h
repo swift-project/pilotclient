@@ -63,6 +63,9 @@ namespace BlackCore
         //! \copydoc IContextAudio::setComVoiceRooms()
         virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms) override;
 
+        //! \copydoc IContextAudio::setOwnCallsignForRooms
+        virtual void setOwnCallsignForRooms(const BlackMisc::Aviation::CCallsign &callsign) override;
+
         //! \copydoc IContextAudio::getRoomCallsigns()
         virtual BlackMisc::Aviation::CCallsignList getRoomCallsigns(int comUnitValue) const override;
 

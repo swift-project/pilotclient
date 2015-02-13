@@ -7,7 +7,7 @@
 #include "blackcore/dbus_server.h"
 #include <QMetaMethod>
 
-#define XBUS_SERVICENAME "net.vatsim.xbus"
+#define XBUS_SERVICENAME "org.swift.xbus"
 
 namespace BlackSimPlugin
 {

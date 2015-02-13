@@ -16,7 +16,7 @@
 //! @{
 
 //! DBus interface for context
-#define BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME "net.vatsim.PilotClient.BlackCore.ContextSimulator"
+#define BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME "org.swift.pilotclient.BlackCore.ContextSimulator"
 
 //! DBus object path for context
 #define BLACKCORE_CONTEXTSIMULATOR_OBJECTPATH "/Simulator"

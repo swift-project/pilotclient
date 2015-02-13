@@ -10,6 +10,7 @@
 #include "context_ownaircraft_impl.h"
 #include "context_network.h"
 #include "context_audio.h"
+#include "context_application.h"
 #include "context_runtime.h"
 #include "context_settings.h"
 #include "blackmisc/simplecommandparser.h"
@@ -26,10 +27,6 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {
-
-    /*
-     * Init this context
-     */
     CContextOwnAircraft::CContextOwnAircraft(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
         IContextOwnAircraft(mode, runtime)
     {
@@ -40,9 +37,6 @@ namespace BlackCore
         this->initOwnAircraft();
     }
 
-    /*
-     * Cleanup
-     */
     CContextOwnAircraft::~CContextOwnAircraft() { }
 
     /*
@@ -69,19 +63,22 @@ namespace BlackCore
         this->m_ownAircraft.setCallsign(CCallsign("SWIFT"));
         this->m_ownAircraft.setIcaoInfo(CAircraftIcao("C172", "L1P", "GA", "GA", "0000ff"));
 
-        // voice rooms
-        this->resolveVoiceRooms();
+        // voice rooms, if network is already available
+        if (this->getIContextNetwork())
+        {
+            this->resolveVoiceRooms();
+        }
     }
 
-    /*
-     * Resolve voice rooms
-     */
     void CContextOwnAircraft::resolveVoiceRooms()
     {
+        Q_ASSERT(this->getIContextAudio());
+        Q_ASSERT(this->getIContextNetwork());
+        Q_ASSERT(this->getIContextApplication());
+        if (!this->getIContextNetwork() || !this->getIContextAudio() || !this->getIContextAudio()) { return; } // no chance to resolve rooms
+
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         if (this->m_voiceRoom1UrlOverride.isEmpty() && this->m_voiceRoom2UrlOverride.isEmpty() && !this->m_automaticVoiceRoomResolution) { return; }
-        if (!this->getIContextNetwork()) { return; } // no chance to resolve rooms
-        if (!this->getIContextAudio())   { return; } // no place to set rooms
         if (!this->m_automaticVoiceRoomResolution) { return; } // not responsible
 
         // requires correct frequencies set
@@ -93,12 +90,9 @@ namespace BlackCore
         if (!this->m_voiceRoom2UrlOverride.isEmpty()) rooms[1] = CVoiceRoom(this->m_voiceRoom2UrlOverride);
 
         // set the rooms
-        this->getIContextAudio()->setComVoiceRooms(rooms);
+        emit this->getIContextApplication()->fakedSetComVoiceRoom(rooms);
     }
 
-    /*
-     * Own position
-     */
     bool CContextOwnAircraft::updatePosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude)
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << position << altitude;
@@ -113,9 +107,6 @@ namespace BlackCore
         return changed;
     }
 
-    /*
-     * Own cockpit data
-     */
     bool CContextOwnAircraft::updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator)
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << com1 << com2 << transponder;
@@ -129,9 +120,6 @@ namespace BlackCore
         return changed;
     }
 
-    /*
-     * COM frequency
-     */
     bool CContextOwnAircraft::updateActiveComFrequency(const CFrequency &frequency, int comUnit, const QString &originator)
     {
         CComSystem::ComUnit unit = static_cast<CComSystem::ComUnit>(comUnit);
@@ -151,13 +139,11 @@ namespace BlackCore
         return updateCockpit(com1, com2, xpdr, originator);
     }
 
-    /*
-     * Pilot
-     */
     bool CContextOwnAircraft::updatePilot(const CUser &pilot)
     {
         if (this->m_ownAircraft.getPilot() == pilot) { return false; }
         this->m_ownAircraft.setPilot(pilot);
+        emit changedPilot(pilot);
         return true;
     }
 
@@ -165,6 +151,7 @@ namespace BlackCore
     {
         if (this->m_ownAircraft.getCallsign() == callsign) { return false; }
         this->m_ownAircraft.setCallsign(callsign);
+        emit changedCallsign(callsign);
         return true;
     }
 
@@ -172,6 +159,7 @@ namespace BlackCore
     {
         if (this->m_ownAircraft.getIcaoInfo() == icaoData) { return false; }
         this->m_ownAircraft.setIcaoInfo(icaoData);
+        emit changedIcaoData(icaoData);
         return true;
     }
 
@@ -186,55 +174,37 @@ namespace BlackCore
     void CContextOwnAircraft::setAudioOutputVolume(int outputVolume)
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << outputVolume;
-
         if (this->getIContextAudio()) this->getIContextAudio()->setVoiceOutputVolume(outputVolume);
     }
 
-    /*
-     * Tune in / out voice room
-     */
     void CContextOwnAircraft::ps_changedAtcStationOnlineConnectionStatus(const CAtcStation &atcStation, bool connected)
     {
         // any of our active frequencies?
         Q_UNUSED(connected);
-        if (atcStation.getFrequency() != this->m_ownAircraft.getCom1System().getFrequencyActive() &&
-                atcStation.getFrequency() != this->m_ownAircraft.getCom2System().getFrequencyActive()) return;
+        if (atcStation.getFrequency() != this->m_ownAircraft.getCom1System().getFrequencyActive() && atcStation.getFrequency() != this->m_ownAircraft.getCom2System().getFrequencyActive()) { return; }
         this->resolveVoiceRooms();
     }
 
-    /*
-     *  Voice room URLs
-     */
     void CContextOwnAircraft::setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url)
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << voiceRoom1Url << voiceRoom2Url;
-
         this->m_voiceRoom1UrlOverride = voiceRoom1Url.trimmed();
         this->m_voiceRoom2UrlOverride = voiceRoom2Url.trimmed();
         this->resolveVoiceRooms();
     }
 
-    /*
-     *  Voice room resolution
-     */
     void CContextOwnAircraft::enableAutomaticVoiceRoomResolution(bool enable)
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << enable;
         this->m_automaticVoiceRoomResolution = enable;
     }
 
-    /*
-     * Own aircraft
-     */
     CSimulatedAircraft CContextOwnAircraft::getOwnAircraft() const
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << this->m_ownAircraft;
         return this->m_ownAircraft;
     }
 
-    /*
-     * Command line entered
-     */
     bool CContextOwnAircraft::parseCommandLine(const QString &commandLine)
     {
         static CSimpleCommandParser parser(
@@ -300,9 +270,6 @@ namespace BlackCore
         return false;
     }
 
-    /*
-     * Helper
-     */
     const CAircraft &CContextOwnAircraft::getAviationAircraft() const
     {
         return this->m_ownAircraft;

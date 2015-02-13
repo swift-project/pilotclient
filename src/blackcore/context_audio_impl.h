@@ -60,6 +60,9 @@ namespace BlackCore
         //! \copydoc IContextAudio::setComVoiceRooms
         virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &newRooms) override;
 
+        //! \copydoc IContextAudio::setOwnCallsignForRooms
+        virtual void setOwnCallsignForRooms(const BlackMisc::Aviation::CCallsign &callsign) override;
+
         //! \copydoc IContextAudio::getRoomCallsigns()
         virtual BlackMisc::Aviation::CCallsignList getRoomCallsigns(int comUnitValue) const override;
 
@@ -120,7 +123,7 @@ namespace BlackCore
         //! Register myself in DBus
         CContextAudio *registerWithDBus(CDBusServer *server)
         {
-            if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) return this;
+            if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) { return this; }
             server->addObject(IContextAudio::ObjectPath(), this);
             return this;
         }
@@ -137,9 +140,7 @@ namespace BlackCore
         void ps_setVoiceTransmission(bool enable);
 
     private:
-
         const int MinUnmuteVolume = 20; //!< minimum volume when unmuted
-        const int VoiceRoomEnabledVolume = 95; //!< voice room volume when enabled
 
         //! Connection in transition
         bool inTransitionState() const;
@@ -151,8 +152,7 @@ namespace BlackCore
 
         std::unique_ptr<IVoice> m_voice; //!< underlying voice lib
         std::unique_ptr<IAudioMixer> m_audioMixer;
-
-        int m_outDeviceVolume = 100;
+        int m_outVolumeBeforeMute = 90;
 
         // For easy access.
         QSharedPointer<IVoiceChannel> m_channel1;

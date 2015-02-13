@@ -165,7 +165,7 @@ namespace BlackSimPlugin
         class CSimulatorXPlaneFactory : public QObject, public BlackCore::ISimulatorFactory
         {
             Q_OBJECT
-            Q_PLUGIN_METADATA(IID "org.swift.PilotClient.BlackCore.SimulatorInterface")
+            Q_PLUGIN_METADATA(IID "org.swift.pilotclient.BlackCore.SimulatorInterface")
             Q_INTERFACES(BlackCore::ISimulatorFactory)
 
         public:

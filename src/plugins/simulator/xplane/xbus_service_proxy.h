@@ -13,7 +13,7 @@
 #include <functional>
 
 //! \cond PRIVATE
-#define XBUS_SERVICE_INTERFACENAME "net.vatsim.xbus.service"
+#define XBUS_SERVICE_INTERFACENAME "org.swift.xbus.service"
 #define XBUS_SERVICE_OBJECTPATH "/xbus"
 //! \endcond
 

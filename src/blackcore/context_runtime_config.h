@@ -43,34 +43,49 @@ namespace BlackCore
 
         //! application mode
         ContextMode getModeApplication() const { return this->m_application; }
+
         //! audio mode
         ContextMode getModeAudio() const { return this->m_audio; }
+
         //! network mode
         ContextMode getModeNetwork() const { return this->m_network; }
+
         //! own aircraft
         ContextMode getModeOwnAircraft() const { return this->m_ownAircraft; }
+
         //! settings mode
         ContextMode getModeSettings() const { return this->m_settings; }
+
         //! simulator mode
         ContextMode getModeSimulator() const { return this->m_simulator; }
+
         //! local settings?
         bool hasLocalSettings() const { return this->m_settings == Local || this->m_settings == LocalInDbusServer; }
+
         //! requires server (at least one in server)?
         bool requiresDBusSever() const;
+
         //! requires DBus connection (at least one remote)?
         bool requiresDBusConnection() const;
+
         //! DBus address
         QString getDBusAddress() const { return this->m_dbusAddress; }
+
         //! DBus address?
         bool hasDBusAddress() const { return !this->m_dbusAddress.isEmpty(); }
+
         //! predefined for Core
         static const CRuntimeConfig &forCoreAllLocalInDBus(const QString &dbusBootstrapAddress = "");
+
         //! predefined for Core
         static const CRuntimeConfig &forCoreAllLocalInDBusNoAudio(const QString &dbusBootstrapAddress = "");
+
         //! predefined, completely local (e.g. for unit tests)
         static const CRuntimeConfig &local(const QString &dbusBootstrapAddress = "");
+
         //! predefined, completely remote (e.g. for GUI with core)
         static const CRuntimeConfig &remote(const QString &dbusBootstrapAddress = "");
+
         //! predefined, remote with local audio (e.g. Aduio in GUI)
         static const CRuntimeConfig &remoteLocalAudio(const QString &dbusBootstrapAddress = "");
     };

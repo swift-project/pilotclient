@@ -123,9 +123,12 @@ int main(int argc, char *argv[])
         // this runs in the original process and can be directly debugged
         qDebug();
         qDebug("--------------------------------------------------------");
-        BlackCore::CDBusServer *dBusServer = new BlackCore::CDBusServer(useSessionBusForServer ? "session" : address);
-        qDebug() << "server" << dBusServer->address() << "connected:" << dBusServer->isConnected();
 
+        BlackCore::CDBusServer *dBusServer = new BlackCore::CDBusServer(useSessionBusForServer ? "session" : address);
+        if (dBusServer->hasQDBusServer())
+        {
+            qDebug() << "server" << dBusServer->qDBusServer()->address() << "connected:" << dBusServer->qDBusServer()->isConnected();
+        }
         // start client process
         QStringList args;
         args << "client";

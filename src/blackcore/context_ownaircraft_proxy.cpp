@@ -27,7 +27,7 @@ namespace BlackCore
     }
 
     /*
-     * Workaround for signals, not working without, but why?
+     * Connect signal / slots
      */
     void CContextOwnAircraftProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
@@ -35,7 +35,7 @@ namespace BlackCore
                                     "changedAircraftCockpit", this, SIGNAL(changedAircraftCockpit(BlackMisc::Simulation::CSimulatedAircraft, QString)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
-                               "changedSelcal", this, SIGNAL(changedSelcal(BlackMisc::Aviation::CSelcal, QString)));
+                               "fakedVoiceRoomRequest", this, SIGNAL(changedSelcal(BlackMisc::Aviation::CSelcal, QString)));
         Q_ASSERT(s);
         Q_UNUSED(s);
     }

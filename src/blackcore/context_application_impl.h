@@ -56,7 +56,7 @@ namespace BlackCore
         //! Register myself in DBus, fail safe
         CContextApplication *registerWithDBus(CDBusServer *server)
         {
-            if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) return this;
+            if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) { return this; }
             server->addObject(IContextApplication::ObjectPath(), this);
             return this;
         }

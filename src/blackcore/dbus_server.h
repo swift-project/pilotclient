@@ -1,7 +1,13 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2014
+ * swift project Community / Contributors
+ *
+ * This file is part of swift Project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKCORE_DBUSSERVER_H
 #define BLACKCORE_DBUSSERVER_H
@@ -14,15 +20,17 @@
 #include <QStringList>
 #include <QMap>
 
-#define BLACKCORE_RUNTIME_SERVICENAME "net.vatsim.pilotClient"
-
+//! Service name of DBus service
+#define BLACKCORE_RUNTIME_SERVICENAME "org.swift.pilotclient"
 
 namespace BlackCore
 {
 
     /*!
-     *  \brief     Custom DBusServer
-     *  \details   This class implements a custom DBusServer for DBus peer connections, but can also be used as session or system bus
+     *  Custom DBusServer
+     *  \details This class implements a custom DBusServer for DBus peer connections, but can also be used
+     *           with session or system bus. For session / system bus this class represents no real server,
+     *           but more a wrapper for \sa QDBusConnection and the registered objects
      */
     class CDBusServer : public QObject
     {
@@ -30,10 +38,10 @@ namespace BlackCore
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_RUNTIME_SERVICENAME)
 
     public:
-        //! \brief Service name of DBus serve
-        static const QString ServiceName;
+        //! Service name of DBus server
+        static const QString &ServiceName();
 
-        //! \brief Server mode, normally P2P, but can be changed for debugging / testing
+        //! Server mode, normally P2P, but can be changed for debugging / testing
         enum ServerMode
         {
             SERVERMODE_P2P,
@@ -41,30 +49,10 @@ namespace BlackCore
             SERVERMODE_SYSTEMBUS
         };
 
-    private:
-        QDBusServer m_busServer; //!< QDBusServer implementation
-        ServerMode m_serverMode;
-        QMap<QString, QObject *> m_objects; //!< Mapping of all exposed objects
-        QMap<QString, QDBusConnection> m_DBusConnections; //!< Mapping of all DBusConnection objects
-
-        //! \brief Check if address means a real server with P2P connection
-        static bool isP2P(const QString &address);
-
-        //! \brief Get the class info
-        static const QString getClassInfo(QObject *object);
-
-        //! \brief Register options with connection
-        static const QDBusConnection::RegisterOptions &RegisterOptions()
-        {
-            static QDBusConnection::RegisterOptions opt = QDBusConnection::ExportAdaptors | QDBusConnection::ExportAllSignals | QDBusConnection::ExportAllSlots;
-            return opt;
-        }
-
-    public:
         //! Construct a server for the BlackCore runtime
         //! \remarks We are using address and not ServerMode, as on some systems we need to pass in some specific configuration string
         //! \sa QDBusServer
-        CDBusServer(const QString &address, QObject *parent = nullptr) : CDBusServer(CDBusServer::ServiceName, address, parent) {}
+        CDBusServer(const QString &address, QObject *parent = nullptr) : CDBusServer(CDBusServer::ServiceName(), address, parent) {}
 
         //! Construct a server for some arbitrary service
         CDBusServer(const QString &service, const QString &address, QObject *parent = nullptr);
@@ -73,13 +61,13 @@ namespace BlackCore
         void addObject(const QString &name, QObject *object);
 
         //! Last error
-        QDBusError lastError() const;
+        QDBusError lastQDBusServerError() const;
 
-        //! Connected?
-        bool isConnected() const { return this->m_busServer.isConnected(); }
+        //! DBus server (if avaialable)
+        const QDBusServer *qDBusServer() const;
 
-        //! address
-        QString address() const { return this->m_busServer.address(); }
+        //! With (P2P) DBus server
+        bool hasQDBusServer() const;
 
         //! Unregister all objects
         void unregisterAllObjects();
@@ -118,10 +106,29 @@ namespace BlackCore
         //! Qt DBus address, e.g. "unix:tmpdir=/tmp", "tcp:host=127.0.0.1,port=45000"
         static bool isQtDBusAddress(const QString &address);
 
+    private:
+        ServerMode m_serverMode = SERVERMODE_P2P;
+        QScopedPointer<QDBusServer> m_busServer; //!< QDBusServer implementation
+        QMap<QString, QObject *> m_objects;      //!< Mapping of all exposed objects, for P2P registration when connection establishes, also to later unregister objects
+        QMap<QString, QDBusConnection> m_DBusConnections; //!< Mapping of all DBusConnection objects
+
+        //! Check if address means a real server with P2P connection
+        static bool isP2P(const QString &address);
+
+        //! Get the class info
+        static const QString getClassInfo(QObject *object);
+
+        //! Register options with connection
+        static const QDBusConnection::RegisterOptions &RegisterOptions()
+        {
+            static QDBusConnection::RegisterOptions opt = QDBusConnection::ExportAdaptors | QDBusConnection::ExportAllSignals | QDBusConnection::ExportAllSlots;
+            return opt;
+        }
+
     private slots:
 
-        //! \brief Called when a new DBus client has connected in P2P mode
-        bool registerObjectsWithConnection(const QDBusConnection &connection);
+        //! Called when a new DBus client has connected in P2P mode
+        bool ps_registerObjectsWithP2PConnection(const QDBusConnection &connection);
     };
 }
 

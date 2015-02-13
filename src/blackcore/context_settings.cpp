@@ -23,7 +23,7 @@ namespace BlackCore
             return contextSettings;
         }
         case CRuntimeConfig::Remote:
-            return new BlackCore::CContextSettingsProxy(BlackCore::CDBusServer::ServiceName, conn, mode, parent);
+            return new BlackCore::CContextSettingsProxy(BlackCore::CDBusServer::ServiceName(), conn, mode, parent);
         default:
             qFatal("Always initialize a settings context");
             return nullptr;

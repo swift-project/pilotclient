@@ -7,7 +7,7 @@
 #include "service.h"
 #include "traffic.h"
 
-#define XBUS_SERVICE_SERVICENAME "net.vatsim.xbus"
+#define XBUS_SERVICE_SERVICENAME "org.swift.xbus"
 
 namespace XBus
 {

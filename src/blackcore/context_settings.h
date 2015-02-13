@@ -26,7 +26,7 @@
 //! @{
 
 //! DBus interface for context
-#define BLACKCORE_CONTEXTSETTINGS_INTERFACENAME "net.vatsim.PilotClient.BlackCore.ContextSettings"
+#define BLACKCORE_CONTEXTSETTINGS_INTERFACENAME "org.swift.pilotclient.BlackCore.ContextSettings"
 
 //! DBus object path for context
 #define BLACKCORE_CONTEXTSETTINGS_OBJECTPATH "/Settings"

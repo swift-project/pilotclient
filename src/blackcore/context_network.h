@@ -27,7 +27,7 @@
 //! @{
 
 //! DBus interface for context
-#define BLACKCORE_CONTEXTNETWORK_INTERFACENAME "net.vatsim.PilotClient.BlackCore.ContextNetwork"
+#define BLACKCORE_CONTEXTNETWORK_INTERFACENAME "org.swift.pilotclient.BlackCore.ContextNetwork"
 
 //! DBus object path for context
 #define BLACKCORE_CONTEXTNETWORK_OBJECTPATH "/Network"
@@ -62,7 +62,7 @@ namespace BlackCore
         virtual QString getPathAndContextId() const { return this->buildPathAndContextId(ObjectPath()); }
 
         //! Factory method
-        static IContextNetwork *create(CRuntime *parent, CRuntimeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &conn);
+        static IContextNetwork *create(CRuntime *parent, CRuntimeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &connection);
 
         //! Destructor
         virtual ~IContextNetwork() {}

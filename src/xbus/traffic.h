@@ -14,7 +14,7 @@
 #include "XPMPMultiplayer.h"
 
 //! \cond PRIVATE
-#define XBUS_TRAFFIC_INTERFACENAME "net.vatsim.xbus.traffic"
+#define XBUS_TRAFFIC_INTERFACENAME "org.swift.xbus.traffic"
 #define XBUS_TRAFFIC_OBJECTPATH "/xbus/traffic"
 //! \endcond
 

@@ -22,7 +22,7 @@
 //! @{
 
 //! DBus interface for context
-#define BLACKCORE_CONTEXTOWNAIRCRAFT_INTERFACENAME "net.vatsim.PilotClient.BlackCore.ContextOwnAircraft"
+#define BLACKCORE_CONTEXTOWNAIRCRAFT_INTERFACENAME "org.swift.pilotclient.BlackCore.ContextOwnAircraft"
 
 //! DBus object path for context
 #define BLACKCORE_CONTEXTOWNAIRCRAFT_OBJECTPATH "/OwnAircraft"
@@ -69,6 +69,15 @@ namespace BlackCore
 
         //! Changed SELCAL code
         void changedSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator);
+
+        //! Own callsign was changed
+        void changedCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+
+        //! Own callsign was changed
+        void changedIcaoData(const BlackMisc::Aviation::CAircraftIcao &icao);
+
+        //! own pilot (aka the swift user) changed
+        void changedPilot(const BlackMisc::Network::CUser &pilot);
 
     public slots:
 

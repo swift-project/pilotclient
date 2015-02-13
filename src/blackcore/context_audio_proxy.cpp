@@ -131,6 +131,14 @@ namespace BlackCore
     }
 
     /*
+     * Own voice room callsign
+     */
+    void CContextAudioProxy::setOwnCallsignForRooms(const CCallsign &callsign)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("setOwnCallsignForRooms"), callsign);
+    }
+
+    /*
      * Play SELCAL tone
      */
     void CContextAudioProxy::playSelcalTone(const CSelcal &selcal) const
