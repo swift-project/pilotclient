@@ -89,6 +89,7 @@ namespace BlackSimPlugin
 
             QString simulatorDetails;                       //!< describes version etc.
             QScopedPointer<FsCommon::CFsuipc> m_fsuipc;     //!< FSUIPC
+            bool m_useFsuipc = true;                        //!< use FSUIPC
             bool m_simPaused = false;                       //!< Simulator paused?
             bool m_simTimeSynced = false;                   //!< Time synchronized?
             BlackMisc::PhysicalQuantities::CTime m_syncTimeOffset; //!< time offset

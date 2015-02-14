@@ -46,7 +46,13 @@ namespace BlackSimPlugin
             bool write(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Read data from FSUIPC
-            bool read(BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            //! \param aircraft       object to be updated
+            //! \param cockpit        update cockpit data
+            //! \param situation      update situation data
+            //! \param aircraftParts  update parts
+            //! \return read
+            //!
+            bool read(BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool cockpit, bool situation, bool aircraftParts);
 
             //! Error messages
             static const QStringList &errorMessages()

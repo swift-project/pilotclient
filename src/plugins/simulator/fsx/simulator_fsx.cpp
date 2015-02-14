@@ -46,6 +46,7 @@ namespace BlackSimPlugin
             Q_ASSERT(renderedAircraftProvider);
             CFsxSimulatorSetup setup;
             setup.init(); // this fetches important settings on local side
+            m_useFsuipc = false; // do not use FSUIPC at the moment with FSX
             this->m_simulatorInfo.setSimulatorSetup(setup.getSettings());
         }
 
@@ -75,7 +76,7 @@ namespace BlackSimPlugin
             }
             else
             {
-                this->m_fsuipc->connect(); // connect FSUIPC too
+                if (m_useFsuipc) { this->m_fsuipc->connect(); } // connect FSUIPC too
             }
 
             initWhenConnected();
@@ -94,8 +95,8 @@ namespace BlackSimPlugin
             // simplified connect, timers and signals not in different thread
             auto asyncConnectFunc = [&]() -> bool
             {
-                if (FAILED(SimConnect_Open(&m_hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0))) return false;
-                this->m_fsuipc->connect(); // FSUIPC too
+                if (FAILED(SimConnect_Open(&m_hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0))) { return false; }
+                if (m_useFsuipc) { this->m_fsuipc->connect(); } // FSUIPC too
                 return true;
             };
 
@@ -371,15 +372,16 @@ namespace BlackSimPlugin
             aircraftSituation.setAltitude(CAltitude(simulatorOwnAircraft.altitude, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
             ownAircraft().setSituation(aircraftSituation);
 
-            CAircraftLights lights (    simulatorOwnAircraft.lightStrobe,
-                                        simulatorOwnAircraft.lightLanding,
-                                        simulatorOwnAircraft.lightTaxi,
-                                        simulatorOwnAircraft.lightBeacon,
-                                        simulatorOwnAircraft.lightNav,
-                                        simulatorOwnAircraft.lightLogo );
+            CAircraftLights lights(simulatorOwnAircraft.lightStrobe,
+                                   simulatorOwnAircraft.lightLanding,
+                                   simulatorOwnAircraft.lightTaxi,
+                                   simulatorOwnAircraft.lightBeacon,
+                                   simulatorOwnAircraft.lightNav,
+                                   simulatorOwnAircraft.lightLogo);
 
             QList<bool> helperList {    simulatorOwnAircraft.engine1Combustion != 0, simulatorOwnAircraft.engine2Combustion != 0,
-                                        simulatorOwnAircraft.engine3Combustion != 0, simulatorOwnAircraft.engine4Combustion != 0 };
+                                        simulatorOwnAircraft.engine3Combustion != 0, simulatorOwnAircraft.engine4Combustion != 0
+                                   };
 
             CAircraftEngineList engines;
             for (int index = 0; index < simulatorOwnAircraft.numberOfEngines; ++index)
@@ -387,11 +389,11 @@ namespace BlackSimPlugin
                 engines.push_back(CAircraftEngine(index + 1, helperList.at(index)));
             }
 
-            CAircraftParts parts (  lights, simulatorOwnAircraft.gearHandlePosition,
-                                    simulatorOwnAircraft.flapsHandlePosition * 100,
-                                    simulatorOwnAircraft.spoilersHandlePosition,
-                                    engines,
-                                    simulatorOwnAircraft.simOnGround );
+            CAircraftParts parts(lights, simulatorOwnAircraft.gearHandlePosition,
+                                 simulatorOwnAircraft.flapsHandlePosition * 100,
+                                 simulatorOwnAircraft.spoilersHandlePosition,
+                                 engines,
+                                 simulatorOwnAircraft.simOnGround);
 
             ownAircraft().setParts(parts);
 
@@ -473,10 +475,11 @@ namespace BlackSimPlugin
         void CSimulatorFsx::ps_dispatch()
         {
             SimConnect_CallDispatch(m_hSimConnect, SimConnectProc, this);
-            if (m_fsuipc)
+            if (m_useFsuipc && m_fsuipc)
             {
                 CSimulatedAircraft fsuipcAircraft(ownAircraft());
-                bool ok = m_fsuipc->read(fsuipcAircraft);
+                //! \todo split in high / low frequency reads
+                bool ok = m_fsuipc->read(fsuipcAircraft, true, true, true);
                 if (ok)
                 {
                     // do whatever is required
@@ -599,7 +602,7 @@ namespace BlackSimPlugin
                 SIMCONNECT_DATA_INITPOSITION position = aircraftSituationToFsxInitPosition(interpolator.getCurrentInterpolatedSituation(simObj.getCallsign()));
 
                 CAircraftParts parts;
-                if(renderedAircraftParts().findBeforeNowMinusOffset(6000).containsCallsign(simObj.getCallsign()))
+                if (renderedAircraftParts().findBeforeNowMinusOffset(6000).containsCallsign(simObj.getCallsign()))
                     parts = renderedAircraftParts().findBeforeNowMinusOffset(6000).latestValue();
 
                 position.OnGround = parts.isOnGround() ? 1 : 0;
@@ -628,8 +631,8 @@ namespace BlackSimPlugin
                     HRESULT hr = S_OK;
 
                     hr += SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraft,
-                                                  simObj.getObjectId(), 0, 0,
-                                                  sizeof(DataDefinitionRemoteAircraft), &ddRemoteAircraft);
+                                                        simObj.getObjectId(), 0, 0,
+                                                        sizeof(DataDefinitionRemoteAircraft), &ddRemoteAircraft);
 
                     if (hr != S_OK) CLogMessage(this).warning("Failed so set data on SimObject");
 

@@ -72,7 +72,7 @@ namespace BlackSimPlugin
         bool CSimulatorFs9::connectTo()
         {
             Q_ASSERT(m_fsuipc);
-            m_fsuipc->connect(); // connect FSUIPC too
+            if (m_useFsuipc) { m_fsuipc->connect(); } // connect FSUIPC too
 
             // If we are already hosting, connect FS0 through lobby connection
             if (m_isHosting)
@@ -208,10 +208,10 @@ namespace BlackSimPlugin
 
         void CSimulatorFs9::ps_dispatch()
         {
-            if (m_fsuipc)
+            if (m_useFsuipc && m_fsuipc)
             {
                 CSimulatedAircraft fsuipcAircraft(ownAircraft());
-                bool ok = m_fsuipc->read(fsuipcAircraft);
+                bool ok = m_fsuipc->read(fsuipcAircraft, true, true, true);
                 if (ok)
                 {
                     updateOwnAircraftFromSimulator(fsuipcAircraft);
