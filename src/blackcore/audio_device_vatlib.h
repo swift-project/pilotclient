@@ -15,12 +15,8 @@
 #include "audio_device.h"
 #include "blackmisc/audiodeviceinfo.h"
 #include "blackmisc/audiodeviceinfolist.h"
-
 #include "vatlib/vatlib2.h"
-
 #include <QObject>
-
-//! \file
 
 namespace BlackCore
 {
