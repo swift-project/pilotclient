@@ -47,6 +47,9 @@ namespace BlackGui
             //! Volumes changed (elsewhere)
             void ps_onOutputVolumeChanged(int volume);
 
+            //! Set volume to 100
+            void ps_setVolume100();
+
             //! Change values because of volume GUI controls
             void ps_changeOutputVolumeFromSlider(int volume);
 

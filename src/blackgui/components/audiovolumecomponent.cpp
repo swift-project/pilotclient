@@ -29,6 +29,8 @@ namespace BlackGui
             Q_ASSERT(c);
             c = connect(this->ui->sb_Volume, static_cast<void (QSpinBox::*)(int)> (&QSpinBox::valueChanged), this, &CAudioVolumeComponent::ps_changeOutputVolumeFromSpinBox);
             Q_ASSERT(c);
+            c = connect(this->ui->pb_Volume100, &QPushButton::clicked, this, &CAudioVolumeComponent::ps_setVolume100);
+            Q_ASSERT(c);
             Q_UNUSED(c);
         }
 
@@ -38,6 +40,7 @@ namespace BlackGui
         void CAudioVolumeComponent::runtimeHasBeenSet()
         {
             // from audio context
+            Q_ASSERT(this->getIContextAudio());
             bool c = connect(this->getIContextAudio(), &IContextAudio::changedMute, this, &CAudioVolumeComponent::ps_onMuteChanged);
             Q_ASSERT(c);
             connect(this->getIContextAudio(), &IContextAudio::changedAudioVolume, this, &CAudioVolumeComponent::ps_onOutputVolumeChanged);
@@ -56,6 +59,9 @@ namespace BlackGui
             {
                 this->ui->lbl_ContextLocation->setText("remote");
             }
+
+            // init volume
+            this->ps_changeOutputVolumeFromSlider(this->getIContextAudio()->getVoiceOutputVolume()); // init volume
         }
 
         void CAudioVolumeComponent::ps_onMuteChanged(bool muted)
@@ -76,7 +82,6 @@ namespace BlackGui
                 this->ui->sb_Volume->setToolTip(v);
             }
 
-
             if (volume > 100)
             {
                 int v = volume - 100;
@@ -88,6 +93,11 @@ namespace BlackGui
                 this->ui->hs_Volume->setValue(volume);
                 this->ui->hs_Volume->setToolTip(v);
             }
+        }
+
+        void CAudioVolumeComponent::ps_setVolume100()
+        {
+            this->ps_onOutputVolumeChanged(100);
         }
 
         void CAudioVolumeComponent::ps_changeOutputVolumeFromSlider(int volume)

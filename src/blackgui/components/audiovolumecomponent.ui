@@ -68,6 +68,9 @@
        <property name="singleStep">
         <number>5</number>
        </property>
+       <property name="pageStep">
+        <number>20</number>
+       </property>
        <property name="value">
         <number>90</number>
        </property>
@@ -153,6 +156,25 @@
           <property name="icon">
            <iconset resource="../../blackmisc/blackmisc.qrc">
             <normaloff>:/diagona/icons/diagona/icons/speaker--pencil.png</normaloff>:/diagona/icons/diagona/icons/speaker--pencil.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pb_Volume100">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>40</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>100%</string>
           </property>
          </widget>
         </item>
