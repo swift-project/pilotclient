@@ -14,6 +14,7 @@
 
 #include "aircraftcfgentrieslist.h"
 #include "../simulatormodelmappings.h"
+#include "blackmisc/worker.h"
 #include <QObject>
 #include <QScopedPointer>
 #include <QFuture>
@@ -61,14 +62,8 @@ namespace BlackSim
             //! Read for directory or re-read
             int readSimObjects(const QString &simObjectDir = "");
 
-            //! Read in background
-            QFuture<int> &readInBackground(const QString &simObjectDir = "");
-
             //! Init in background
-            QFuture<bool> &initCompletelyInBackground(const QString &simObjectDir = "");
-
-            //! Running in background
-            bool isRunningInBackground() const;
+            void initCompletelyInBackground(const QString &simObjectDir = "");
 
             //! Init completed?
             bool isInitialized() const;
@@ -110,10 +105,9 @@ namespace BlackSim
         private:
             QScopedPointer<BlackSim::ISimulatorModelMappings> m_mappings; //!< all mapping definitions
             CAircraftCfgEntriesList                           m_entries;  //!< all entries
-            QFuture<bool>                                     m_backgroundInit;
-            QFuture<int>                                      m_backgroundRead;
-            bool                                              m_init = false;
-
+            bool                m_init = false;
+            bool                m_initInProgress = false;
+            BlackMisc::CWorker *m_initWorker = nullptr;
         };
     } // namespace
 } // namespace

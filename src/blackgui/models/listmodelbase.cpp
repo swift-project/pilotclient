@@ -224,11 +224,11 @@ namespace BlackGui
         }
 
         template <typename ObjectType, typename ContainerType>
-        BlackMisc::CWorker *CListModelBase<ObjectType, ContainerType>::updateAsync(const ContainerType &container, bool sort)
+        CWorker *CListModelBase<ObjectType, ContainerType>::updateAsync(const ContainerType &container, bool sort)
         {
             auto sortColumn = this->getSortColumn();
             auto sortOrder = this->getSortOrder();
-            BlackMisc::CWorker *worker = BlackMisc::CWorker::fromTask(this, "ModelSort", [this, container, sort, sortColumn, sortOrder]()
+            CWorker *worker = BlackMisc::CWorker::fromTask(this, "ModelSort", [this, container, sort, sortColumn, sortOrder]()
             {
                 ContainerType sortedContainer = this->sortContainerByColumn(container, sortColumn, sortOrder);
                 QMetaObject::invokeMethod(this, "ps_updateContainer",

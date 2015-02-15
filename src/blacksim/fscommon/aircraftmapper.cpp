@@ -9,6 +9,7 @@
 
 #include "aircraftmapper.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/worker.h"
 #include <utility>
 
 using namespace BlackMisc;
@@ -45,27 +46,13 @@ namespace BlackSim
             return n;
         }
 
-        QFuture<int> &CAircraftMapper::readInBackground(const QString &simObjectDir)
+        void CAircraftMapper::initCompletelyInBackground(const QString &simObjectDir)
         {
-            if (!isRunningInBackground())
+            if (this->m_initWorker) { return; }
+            this->m_initWorker = BlackMisc::CWorker::fromTask(this, "CAircraftMapper::initCompletely", [this, simObjectDir]()
             {
-                this->m_backgroundRead = QtConcurrent::run(this, &CAircraftMapper::readSimObjects, simObjectDir);
-            }
-            return this->m_backgroundRead;
-        }
-
-        QFuture<bool> &CAircraftMapper::initCompletelyInBackground(const QString &simObjectDir)
-        {
-            if (!isRunningInBackground())
-            {
-                this->m_backgroundInit = QtConcurrent::run(this, &CAircraftMapper::initCompletely, simObjectDir);
-            }
-            return this->m_backgroundInit;
-        }
-
-        bool CAircraftMapper::isRunningInBackground() const
-        {
-            return this->m_backgroundInit.isRunning() || this->m_backgroundRead.isRunning();
+                this->initCompletely(simObjectDir);
+            });
         }
 
         bool CAircraftMapper::isInitialized() const
@@ -106,13 +93,9 @@ namespace BlackSim
         void CAircraftMapper::gracefulShutdown()
         {
             // when running, force re-init
-            if (isRunningInBackground())
-            {
-                m_init = false;
-                this->m_entries.cancelRead();
-                this->m_backgroundInit.cancel();
-                this->m_backgroundRead.cancel();
-            }
+            this->m_entries.cancelRead();
+            this->m_initInProgress = false;
+            this->m_init = false;
         }
 
         const CAircraftModel &CAircraftMapper::getDefaultModel()
@@ -129,10 +112,13 @@ namespace BlackSim
         bool CAircraftMapper::initCompletely(QString simObjectDir)
         {
             if (this->m_init) { return true; }
+            if (this->m_initInProgress) { return false; }
+            this->m_initInProgress = true;
             if (!this->m_mappings)
             {
                 CLogMessage(this).error("Missing mapping defintions");
                 emit initCompleted(false);
+                this->m_initInProgress = false;
                 return false;
             }
 
@@ -140,6 +126,7 @@ namespace BlackSim
             {
                 CLogMessage(this).error("Mapping engine, cannot read Flight Simulator directory: %1") << simObjectDir;
                 emit initCompleted(false);
+                this->m_initInProgress = false;
                 return false;
             }
 
@@ -153,6 +140,7 @@ namespace BlackSim
                 {
                     CLogMessage(this).error("Reading mapping rules failed or empty");
                     emit initCompleted(false);
+                    this->m_initInProgress = false;
                     return false;
                 }
             }
@@ -167,6 +155,7 @@ namespace BlackSim
                 {
                     CLogMessage(this).error("No SimObjects found in %1") << simObjectDir;
                     emit initCompleted(false);
+                    this->m_initInProgress = false;
                     return false;
                 }
             }
@@ -180,6 +169,7 @@ namespace BlackSim
             // finish
             CLogMessage(this).info("Mapping system: %1 definitions for %2 entries") << this->m_mappings->size() << this->m_entries.size();
             emit initCompleted(true);
+            this->m_initInProgress = false;
             this->m_init = true;
             return true;
         }

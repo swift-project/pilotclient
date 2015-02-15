@@ -37,56 +37,36 @@ namespace BlackSimTest
             return 0;
         }
 
-        streamOut << "d .. direct, b .. background" << endl;
+        streamOut << "start reading" << endl;
         QString input = streamIn.readLine();
+        Q_UNUSED(input);
 
-        if (!input.startsWith("b"))
-        {
-            streamOut << "reading directly" << endl;
-            QTime time;
-            time.start();
-            streamOut << "reading " << mapper.getAircraftCfgEntriesList().getRootDirectory() << endl;
-            mapper.readSimObjects();
-            streamOut << "read entries: " << mapper.getAircraftCfgEntriesList().size() << " in " << time.restart() << "ms" << endl;
+        streamOut << "reading directly" << endl;
+        QTime time;
+        time.start();
+        streamOut << "reading " << mapper.getAircraftCfgEntriesList().getRootDirectory() << endl;
+        mapper.readSimObjects();
+        streamOut << "read entries: " << mapper.getAircraftCfgEntriesList().size() << " in " << time.restart() << "ms" << endl;
 
-            CAircraftCfgEntriesList entriesList = mapper.getAircraftCfgEntriesList();
-            QJsonDocument doc(entriesList.toJson());
-            QByteArray jsonArray(doc.toJson());
-            streamOut << "write JSON array with size " << jsonArray.size() << endl;
-            QTemporaryFile tempFile;
-            tempFile.open();
-            tempFile.write(jsonArray);
-            tempFile.close();
-            streamOut << "written to " << tempFile.fileName() << " in " << time.restart() << "ms" <<  endl;
+        CAircraftCfgEntriesList entriesList = mapper.getAircraftCfgEntriesList();
+        QJsonDocument doc(entriesList.toJson());
+        QByteArray jsonArray(doc.toJson());
+        streamOut << "write JSON array with size " << jsonArray.size() << endl;
+        QTemporaryFile tempFile;
+        tempFile.open();
+        tempFile.write(jsonArray);
+        tempFile.close();
+        streamOut << "written to " << tempFile.fileName() << " in " << time.restart() << "ms" <<  endl;
 
-            // re-read
-            tempFile.open();
-            jsonArray = tempFile.readAll();
-            doc = QJsonDocument::fromJson(jsonArray);
-            entriesList.clear();
-            entriesList.convertFromJson(doc.object());
-            streamOut << "read JSON array with size " << jsonArray.size() << endl;
-            streamOut << "read entries from disk: " << entriesList.size() << " in " << time.restart() << "ms" << endl;
-            tempFile.close();
-        }
-        else
-        {
-            streamOut << "reading in background" << endl;
-            QFuture<int> f = mapper.readInBackground();
-            int i = 0;
-            do
-            {
-                if (i % 20 == 0)
-                {
-                    streamOut << ".";
-                    streamOut.flush();
-                }
-                QCoreApplication::processEvents(QEventLoop::AllEvents, 1000 * 5);
-            }
-            while (!f.isFinished());
-            streamOut << endl << f.result() << " entries" << endl;
-        }
-        streamOut << "-----------------------------------------------" << endl;
+        // re-read
+        tempFile.open();
+        jsonArray = tempFile.readAll();
+        doc = QJsonDocument::fromJson(jsonArray);
+        entriesList.clear();
+        entriesList.convertFromJson(doc.object());
+        streamOut << "read JSON array with size " << jsonArray.size() << endl;
+        streamOut << "read entries from disk: " << entriesList.size() << " in " << time.restart() << "ms" << endl;
+        tempFile.close();
         return 0;
     }
 
