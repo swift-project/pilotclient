@@ -162,7 +162,7 @@
         <item>
          <widget class="QPushButton" name="pb_Volume100">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -179,17 +179,14 @@
          </widget>
         </item>
         <item>
-         <spacer name="hs_AudioSoundButtons">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+         <widget class="BlackGui::CLevelMeter" name="wip_LevelMeter" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -218,6 +215,14 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::CLevelMeter</class>
+   <extends>QWidget</extends>
+   <header>blackgui/levelmeter.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../../blackmisc/blackmisc.qrc"/>
  </resources>
