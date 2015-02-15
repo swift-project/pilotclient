@@ -189,6 +189,18 @@ namespace BlackMiscTest
         timer.start();
         for (int i = 0; i < 10; i++)
         {
+            QMap<CCallsign, CAircraftSituationList> splitList = situations.splitPerCallsign();
+            Q_ASSERT(splitList.size() == numberOfCallsigns);
+            for (const CAircraftSituationList &slcs : splitList.values())
+            {
+                Q_ASSERT(slcs.size() == numberOfTimes);
+            }
+        }
+        out << "Reads by callsigns split: " << timer.elapsed() << "ms" << endl;
+
+        timer.start();
+        for (int i = 0; i < 10; i++)
+        {
             for (int t = 0; t < numberOfTimes; t++)
             {
                 CAircraftSituationList r = situations.findBefore(baseTimeEpoch + 1 + (10 * t));
@@ -204,9 +216,10 @@ namespace BlackMiscTest
             {
                 CCallsign callsign("CS" + QString::number(cs));
                 CAircraftSituationList r = situations.findByCallsign(callsign).findBefore(baseTimeEpoch + 1 + (10 * t));
+                Q_UNUSED(r);
             }
         }
-        out << "Reads by callsign / times: " << timer.elapsed() << "ms" << endl;
+        out << "Reads by callsigns / times: " << timer.elapsed() << "ms" << endl;
 
         timer.start();
         for (int t = 0; t < numberOfTimes; t++)
@@ -215,9 +228,23 @@ namespace BlackMiscTest
             {
                 CCallsign callsign("CS" + QString::number(cs));
                 CAircraftSituationList r = situations.findBefore(baseTimeEpoch + 1 + (10 * t)).findByCallsign(callsign);
+                Q_UNUSED(r);
             }
         }
-        out << "Reads by times / callsign: " << timer.elapsed() << "ms" << endl;
+        out << "Reads by times / callsigns: " << timer.elapsed() << "ms" << endl;
+
+        timer.start();
+        for (int t = 0; t < numberOfTimes; t++)
+        {
+            QMap<CCallsign, CAircraftSituationList> splitList = situations.splitPerCallsign();
+            Q_ASSERT(splitList.size() == numberOfCallsigns);
+            for (const CAircraftSituationList &slcs : splitList.values())
+            {
+                CAircraftSituationList r = slcs.findBefore(baseTimeEpoch + 1 + (10 * t));
+                Q_UNUSED(r);
+            }
+        }
+        out << "Split reads by callsigns / times: " << timer.elapsed() << "ms" << endl;
 
         situations.changeImpl<QVector<CAircraftSituation> >();
         out << "Changed to QVector" << endl;

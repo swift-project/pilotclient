@@ -100,6 +100,40 @@ namespace BlackMisc
         }
 
         template <class OBJ, class CONTAINER>
+        QMap<CCallsign, CONTAINER> ICallsignObjectList<OBJ, CONTAINER>::splitPerCallsign() const
+        {
+            CONTAINER copyContainer(getContainer());
+            copyContainer.sortByCallsign();
+            QMap<CCallsign, CONTAINER> result;
+            CCallsign cs;
+            for (const OBJ &csObj : copyContainer)
+            {
+                if (csObj.getCallsign().isEmpty())
+                {
+                    Q_ASSERT(false); // there should be no empty callsigns
+                    continue;
+                }
+                if (cs != csObj.getCallsign())
+                {
+                    cs = csObj.getCallsign();
+                    CONTAINER perCallsign({ csObj });
+                    result.insert(cs, perCallsign);
+                }
+                else
+                {
+                    result[cs].push_back(csObj);
+                }
+            }
+            return result;
+        }
+
+        template <class OBJ, class CONTAINER>
+        void ICallsignObjectList<OBJ, CONTAINER>::sortByCallsign()
+        {
+            getContainer().sortBy(&OBJ::getCallsign);
+        }
+
+        template <class OBJ, class CONTAINER>
         int ICallsignObjectList<OBJ, CONTAINER>::incrementalUpdateOrAdd(const OBJ &objectBeforeChanges, const CPropertyIndexVariantMap &changedValues)
         {
             int c;

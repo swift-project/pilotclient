@@ -57,6 +57,12 @@ namespace BlackMisc
             //! All suffixes with their respective count
             QMap<QString, int> getSuffixes() const;
 
+            //! Split into 0..n containers as per callsign
+            QMap<BlackMisc::Aviation::CCallsign, CONTAINER> splitPerCallsign() const;
+
+            //! Sort by callsign
+            void sortByCallsign();
+
             //! Incremental update or add object
             int incrementalUpdateOrAdd(const OBJ &objectBeforeChanged, const BlackMisc::CPropertyIndexVariantMap &changedValues);
 
