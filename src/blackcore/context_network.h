@@ -160,6 +160,12 @@ namespace BlackCore
         //! Known FSD servers, available when data file was first read
         virtual BlackMisc::Network::CServerList getVatsimFsdServers() const = 0;
 
+        //! Is interim position sending enabled?
+        virtual bool isInterimPositionSendingEnabled() const = 0;
+
+        //! Enable interim position sending
+        virtual void enableInterimPositionSending(bool enable) = 0;
+
         /*!
          * Connect to Network
          * \return messages gererated during connecting

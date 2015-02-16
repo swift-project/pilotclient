@@ -231,6 +231,21 @@ namespace BlackCore
             logEmptyContextWarning(Q_FUNC_INFO);
             return false;
         }
+
+        //! \copydoc IContextNetwork::isInterimPositionSendingEnabled
+        virtual bool isInterimPositionSendingEnabled() const override
+        {
+            logEmptyContextWarning(Q_FUNC_INFO);
+            return false;
+        }
+
+        //! \copydoc IContextNetwork::enableInterimPositionSending
+        virtual void enableInterimPositionSending(bool enable) override
+        {
+            Q_UNUSED(enable);
+            logEmptyContextWarning(Q_FUNC_INFO);
+        }
+
     };
 } // namespace
 

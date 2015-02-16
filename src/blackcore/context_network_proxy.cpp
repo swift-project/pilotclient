@@ -73,10 +73,10 @@ namespace BlackCore
                                "vatsimBookingsRead", this, SIGNAL(vatsimBookingsRead()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "changedRenderedAircraftModel", this, SIGNAL(changedRenderedAircraftModel(BlackMisc::Simulation::CSimulatedAircraft,QString)));
+                               "changedRenderedAircraftModel", this, SIGNAL(changedRenderedAircraftModel(BlackMisc::Simulation::CSimulatedAircraft, QString)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "changedAircraftEnabled", this, SIGNAL(changedAircraftEnabled(BlackMisc::Simulation::CSimulatedAircraft,QString)));
+                               "changedAircraftEnabled", this, SIGNAL(changedAircraftEnabled(BlackMisc::Simulation::CSimulatedAircraft, QString)));
         Q_ASSERT(s);
         Q_UNUSED(s);
     }
@@ -104,7 +104,7 @@ namespace BlackCore
     Simulation::CSimulatedAircraft CContextNetworkProxy::getAircraftForCallsign(const CCallsign &callsign) const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraft>(QLatin1Literal("getAircraftForCallsign"), callsign);
-   }
+    }
 
     BlackMisc::Network::CUserList CContextNetworkProxy::getUsers() const
     {
@@ -169,6 +169,16 @@ namespace BlackCore
     bool CContextNetworkProxy::updateAircraftModel(const CCallsign &callsign, const Simulation::CAircraftModel &model, const QString &originator)
     {
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateAircraftModel"), callsign, model, originator);
+    }
+
+    bool CContextNetworkProxy::isInterimPositionSendingEnabled() const
+    {
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isInterimPositionSendingEnabled"));
+    }
+
+    void CContextNetworkProxy::enableInterimPositionSending(bool enable)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("enableInterimPositionSending"), enable);
     }
 
     void CContextNetworkProxy::testCreateDummyOnlineAtcStations(int number)

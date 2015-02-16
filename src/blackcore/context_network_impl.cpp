@@ -416,6 +416,20 @@ namespace BlackCore
         return c;
     }
 
+    bool CContextNetwork::isInterimPositionSendingEnabled() const
+    {
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        Q_ASSERT(this->m_network);
+        return m_network->isInterimPositionSendingEnabled();
+    }
+
+    void CContextNetwork::enableInterimPositionSending(bool enable)
+    {
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << enable;
+        Q_ASSERT(this->m_network);
+        m_network->enableInterimPositionSending(enable);
+    }
+
     void CContextNetwork::testCreateDummyOnlineAtcStations(int number)
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << number;

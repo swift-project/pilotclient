@@ -191,6 +191,12 @@ namespace BlackCore
          */
         virtual void terminateConnection() = 0;
 
+        //! Is interim position sending enabled?
+        virtual bool isInterimPositionSendingEnabled() const = 0;
+
+        //! Enable interim position sending
+        virtual void enableInterimPositionSending(bool enable) = 0;
+
         /*!
          * Send a ping message to a user with a specific callsign.
          * \pre Network must be connected when calling this function.

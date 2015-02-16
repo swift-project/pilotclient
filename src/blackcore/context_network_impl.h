@@ -159,6 +159,12 @@ namespace BlackCore
         //! \copydoc IContextNetwork::updateAircraftModel
         virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) override;
 
+        //! \copydoc IContextNetwork::isInterimPositionSendingEnabled
+        virtual bool isInterimPositionSendingEnabled() const override;
+
+        //! \copydoc IContextNetwork::enableInterimPositionSending
+        virtual void enableInterimPositionSending(bool enable) override;
+
         //! \copydoc IContextNetwork::testCreateDummyOnlineAtcStations
         virtual void testCreateDummyOnlineAtcStations(int number) override;
 

@@ -36,10 +36,10 @@ namespace BlackCore
 
     CNetworkVatlib::CNetworkVatlib(Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent)
         : INetwork(parent), COwnAircraftProviderSupport(ownAircraft),
-        m_loginMode(LoginNormal),
-        m_status(vatStatusIdle),
-        m_fsdTextCodec(QTextCodec::codecForName("latin1")),
-        m_tokenBucket(10, CTime(5, CTimeUnit::s()), 1)
+          m_loginMode(LoginNormal),
+          m_status(vatStatusIdle),
+          m_fsdTextCodec(QTextCodec::codecForName("latin1")),
+          m_tokenBucket(10, CTime(5, CTimeUnit::s()), 1)
     {
         connect(this, &CNetworkVatlib::terminate, this, &INetwork::terminateConnection, Qt::QueuedConnection);
         connect(this, &INetwork::customPacketReceived, this, &CNetworkVatlib::customPacketDispatcher);
@@ -567,6 +567,16 @@ namespace BlackCore
         sendCustomPacket(callsign, "FSIPIR", data);
     }
 
+    void CNetworkVatlib::enableInterimPositionSending(bool enable)
+    {
+        m_sendInterimPositions = enable;
+    }
+
+    bool CNetworkVatlib::isInterimPositionSendingEnabled() const
+    {
+        return m_sendInterimPositions;
+    }
+
     void CNetworkVatlib::broadcastAircraftConfig(const QJsonObject &config)
     {
         // Fixme: Use QJsonObject with std::initializer_list once 5.4 is baseline
@@ -687,11 +697,11 @@ namespace BlackCore
         QJsonDocument doc = QJsonDocument::fromJson(json, &parserError);
 
         if (parserError.error != QJsonParseError::NoError)
-            CLogMessage(static_cast<CNetworkVatlib*>(nullptr)).warning("Failed to parse aircraft config packet: %1") << parserError.errorString();
+            CLogMessage(static_cast<CNetworkVatlib *>(nullptr)).warning("Failed to parse aircraft config packet: %1") << parserError.errorString();
 
         QJsonObject packet = doc.object();
 
-        if (packet == JsonPackets::aircraftConfigRequest() )
+        if (packet == JsonPackets::aircraftConfigRequest())
         {
             cbvar_cast(cbvar)->replyToConfigQuery(cbvar_cast(cbvar)->fromFSD(callsign));
             return;

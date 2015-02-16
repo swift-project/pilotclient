@@ -45,7 +45,6 @@ namespace BlackCore
         virtual bool isPendingConnection() const override { return m_status == vatStatusConnecting; }
 
         // Network slots
-        //! \copydoc INetwork::presetLoginMode
         virtual void presetLoginMode(LoginMode mode) override;
         virtual void presetServer(const BlackMisc::Network::CServer &server) override;
         virtual void presetCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
@@ -61,13 +60,10 @@ namespace BlackCore
                                            const QString &aircraftDesignator, const QString &combinedType, const QString &modelString) override;
         virtual void sendFsipirCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
                                             const QString &aircraftDesignator, const QString &combinedType, const QString &modelString) override;
-
-        //! \copydoc INetwork::broadcastAircraftConfig
+        virtual bool isInterimPositionSendingEnabled() const override;
+        virtual void enableInterimPositionSending(bool enable) override;
         virtual void broadcastAircraftConfig(const QJsonObject &config) override;
-
-        //! \copydoc INetwork::sendAircraftConfigQuery
         virtual void sendAircraftConfigQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
-
 
         // Text message slots
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &messages) override;
@@ -98,9 +94,7 @@ namespace BlackCore
     private: //shimlib callbacks
         static void onConnectionStatusChanged(VatSessionID, VatConnectionStatus oldStatus, VatConnectionStatus newStatus, void *cbvar);
         static void onTextMessageReceived(VatSessionID, const char *from, const char *to, const char *msg, void *cbvar);
-
         static void onRadioMessageReceived(VatSessionID, const char *from, int freqCount, int *freqList, const char *message, void *cbvar);
-
         static void onControllerDisconnected(VatSessionID, const char *callsign, void *cbvar);
         static void onInterimPilotPositionUpdate(VatSessionID, const char *callsign, const VatPilotPosition *position, void *cbvar);
         static void onAtcPositionUpdate(VatSessionID, const char *callsign, const VatAtcPosition *pos, void *cbvar);
@@ -164,6 +158,7 @@ namespace BlackCore
         BlackMisc::Network::CServer        m_server;
         BlackMisc::Aviation::CCallsign     m_callsign; //!< "buffered callsign", as this must not change when connected
         BlackMisc::Aviation::CAircraftIcao m_icaoCode; //!< "buffered icao", as this must not change when connected
+        bool m_sendInterimPositions = false; //!< send interim positions
 
         QTimer m_processingTimer;
         QTimer m_updateTimer;
