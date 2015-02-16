@@ -171,6 +171,9 @@ namespace BlackCore
         //! Listen for the specific simulator to start, load plugin automatically
         virtual void listenForSimulator(const BlackSim::CSimulatorInfo &simulatorInfo) = 0;
         
+        //! Listen for all available simulators
+        virtual void listenForAllSimulators() = 0;
+        
         //! Listen for simulator as set in settings
         virtual void listenForSimulatorFromSettings() = 0;
 

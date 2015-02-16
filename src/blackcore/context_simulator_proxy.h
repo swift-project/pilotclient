@@ -131,6 +131,9 @@ namespace BlackCore
         //! \copydoc IContextSimulator::listenForSimulator()
         virtual void listenForSimulator(const BlackSim::CSimulatorInfo &simulatorInfo) override;
         
+        //! \copydoc IContextSimulator::listenForAllSimulators()
+        virtual void listenForAllSimulators() override;
+        
         //! \copydoc IContextSimulator::listenForSimulatorFromSettings()
         virtual void listenForSimulatorFromSettings() override;
 

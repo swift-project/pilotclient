@@ -41,6 +41,7 @@ namespace BlackCore
         
         //! Lazy-loads the driver, instantiates the factory and returns it.
         //! \return nullptr if no corresponding driver was found or an error occured during loading it.
+        //! \todo Consider moving to private scope.
         ISimulatorFactory* getSimulatorFactory(const BlackSim::CSimulatorInfo& simulator);
 
     public slots:
@@ -131,6 +132,9 @@ namespace BlackCore
         
         //! \copydoc IContextSimulator::listenForSimulator()
         virtual void listenForSimulator(const BlackSim::CSimulatorInfo &simulatorInfo) override;
+        
+        //! \copydoc IContextSimulator::listenForAllSimulators()
+        virtual void listenForAllSimulators() override;
         
         //! \copydoc IContextSimulator::listenForSimulatorFromSettings()
         virtual void listenForSimulatorFromSettings() override;

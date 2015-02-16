@@ -413,10 +413,22 @@ namespace BlackCore
         
     }
     
+    void CContextSimulator::listenForAllSimulators()
+    {
+        auto plugins = getAvailableSimulatorPlugins();
+        for (const auto &p: plugins)
+            listenForSimulator(p);
+    }
+    
     void CContextSimulator::listenForSimulatorFromSettings()
     {
         Q_ASSERT(this->getIContextSettings());
-        listenForSimulator(getIContextSettings()->getSimulatorSettings().getSelectedPlugin());
+        
+        auto plugin = getIContextSettings()->getSimulatorSettings().getSelectedPlugin();
+        if (plugin.isUnspecified())
+            listenForAllSimulators();
+        else
+            listenForSimulator(plugin);
     }
 
     void CContextSimulator::unloadSimulatorPlugin()
@@ -512,30 +524,31 @@ namespace BlackCore
     void CContextSimulator::settingsChanged(uint type)
     {
         Q_ASSERT(this->getIContextSettings());
-        Q_ASSERT(this->m_simulator);
-        if (!this->getIContextSettings()) return;
+        
         auto settingsType = static_cast<IContextSettings::SettingsType>(type);
-        if (settingsType != IContextSettings::SettingsSimulator) return;
+        if (settingsType != IContextSettings::SettingsSimulator)
+            return;
 
         // plugin
         CSettingsSimulator settingsSim = this->getIContextSettings()->getSimulatorSettings();
-        CSimulatorInfo plugin = settingsSim.getSelectedPlugin();
-        if (!this->getSimulatorInfo().isSameSimulator(plugin))
-        {
-            if (this->loadSimulatorPlugin(plugin))
-            {
-                CLogMessage(this).info("Plugin loaded: '%1'") << plugin.toQString(true);
-            }
-            else
-            {
-                CLogMessage(this).error("Cannot load driver: '%1'") << plugin.toQString(true);
+        CSimulatorInfo plugin = getIContextSettings()->getSimulatorSettings().getSelectedPlugin();
+        
+        // no simulator loaded yet, listen
+        if (!m_simulator) {
+            stopSimulatorListeners();
+            if (plugin.isSameSimulator(CSimulatorInfo::UnspecifiedSim())) {
+                listenForAllSimulators();
+            } else {
+                listenForSimulator(plugin);
             }
         }
-
-        // time sync
-        bool timeSync = settingsSim.isTimeSyncEnabled();
-        CTime syncOffset = settingsSim.getSyncTimeOffset();
-        this->m_simulator->setTimeSynchronization(timeSync, syncOffset);
+        else
+        {
+            // time sync
+            bool timeSync = settingsSim.isTimeSyncEnabled();
+            CTime syncOffset = settingsSim.getSyncTimeOffset();
+            m_simulator->setTimeSynchronization(timeSync, syncOffset);
+        }
     }
 
     CPixmap CContextSimulator::iconForModel(const QString &modelString) const

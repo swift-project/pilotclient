@@ -43,39 +43,35 @@ namespace BlackGui
         {
             Q_ASSERT(this->getIContextSimulator());
             Q_ASSERT(this->getIContextSettings());
-            if (this->getIContextSimulator())
+
+            // set values
+            this->setRestrictedValues();
+
+            ui->cb_Plugins->addItem(tr("Auto"), CSimulatorPluginInfo().toQVariant());
+
+            for (const auto &p: getIContextSimulator()->getAvailableSimulatorPlugins())
             {
-                QStringList plugins = this->getIContextSimulator()->getAvailableSimulatorPlugins().toStringList(true);
-                CSimulatorInfo currentPlugin = this->getIContextSimulator()->getSimulatorInfo();
-                this->ui->cb_Plugins->addItems(plugins);
-                this->setCurrentPlugin(currentPlugin);
-
-                // disable / enable driver specific GUI parts
-                bool fsxDriver = this->getIContextSimulator()->getAvailableSimulatorPlugins().supportsSimulator(CSimulatorInfo::FSX());
-                this->ui->comp_SettingsSimulatorFsx->setVisible(fsxDriver);
-
-                // time sync
-                bool timeSynced = this->getIContextSimulator()->isTimeSynchronized();
-                this->ui->cb_TimeSync->setChecked(timeSynced);
-                CTime timeOffset = this->getIContextSimulator()->getTimeSynchronizationOffset();
-                this->ui->le_TimeSyncOffset->setText(timeOffset.formattedHrsMin());
-
-                // only with simulator context set GUI values
-                bool connected = this->connect(this->ui->cb_Plugins, static_cast<void (QComboBox::*)(int)> (&QComboBox::currentIndexChanged), this, &CSettingsSimulatorComponent::ps_pluginHasChanged);
-                Q_ASSERT(connected);
-                connected = this->connect(getIContextSimulator(), &IContextSimulator::restrictedRenderingChanged, this, &CSettingsSimulatorComponent::ps_onRenderingRestricted);
-                Q_ASSERT(connected);
-                Q_UNUSED(connected);
-
-                // set values
-                this->setRestrictedValues();
+                ui->cb_Plugins->addItem(p.toQString(), p.toQVariant());
             }
 
-            if (this->getIContextSettings())
-            {
-                connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &CSettingsSimulatorComponent::ps_settingsHaveChanged);
-            }
+            this->setCurrentPlugin(getIContextSettings()->getSimulatorSettings().getSelectedPlugin());
 
+            // disable / enable driver specific GUI parts
+            bool hasFsxDriver =
+                this->getIContextSimulator()->getAvailableSimulatorPlugins().supportsSimulator(QStringLiteral("fsx"));
+            this->ui->comp_SettingsSimulatorFsx->setVisible(hasFsxDriver);
+
+            // time sync
+            bool timeSynced = this->getIContextSimulator()->isTimeSynchronized();
+            this->ui->cb_TimeSync->setChecked(timeSynced);
+            CTime timeOffset = this->getIContextSimulator()->getTimeSynchronizationOffset();
+            this->ui->le_TimeSyncOffset->setText(timeOffset.formattedHrsMin());
+
+            // max.aircraft
+            this->ui->sb_MaxAircraft->setValue(getIContextSimulator()->getMaxRenderedAircraft());
+
+            connect(this->ui->cb_Plugins, static_cast<void (QComboBox::*)(int)> (&QComboBox::currentIndexChanged), this, &CSettingsSimulatorComponent::ps_pluginHasChanged);
+            connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &CSettingsSimulatorComponent::ps_settingsHaveChanged);
             connect(this->ui->pb_ApplyMaxAircraft, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedAircraft);
             connect(this->ui->pb_ApplyTimeSync, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyTimeSync);
             connect(this->ui->pb_ApplyMaxDistance, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedDistance);
@@ -84,7 +80,11 @@ namespace BlackGui
 
         void CSettingsSimulatorComponent::setCurrentPlugin(const CSimulatorInfo &plugin)
         {
-            if (plugin.isUnspecified()) return;
+            if (plugin.isUnspecified()) {
+                ui->cb_Plugins->setCurrentIndex(0);
+                return;
+            }
+
             const QString searchFor = plugin.getShortName();
             for (int i = 0; i < this->ui->cb_Plugins->count(); ++i)
             {
@@ -119,6 +119,7 @@ namespace BlackGui
             if (!this->getIContextSimulator() || !this->getIContextSettings()) return;
 
             CSimulatorInfoList simDrivers = this->getIContextSimulator()->getAvailableSimulatorPlugins();
+            simDrivers.insert(simDrivers.begin(), CSimulatorInfo::UnspecifiedSim());
             if (simDrivers.isEmpty())
             {
                 CLogMessage(this).error("No drivers available");

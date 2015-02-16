@@ -42,7 +42,7 @@ namespace BlackSim
          */
         void CSettingsSimulator::initDefaultValues()
         {
-            this->m_selectedPlugin = CSimulatorInfo::FSX();
+            this->m_selectedPlugin = CSimulatorInfo::UnspecifiedSim();
             this->m_timeSyncOffset = CTime(0, CTimeUnit::hrmin());
             this->m_timeSync = false;
         }
