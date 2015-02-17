@@ -12,6 +12,7 @@
 #ifndef BLACKMISCTEST_SAMPLESPERFORMANCEINDEX_H
 #define BLACKMISCTEST_SAMPLESPERFORMANCEINDEX_H
 
+#include "blackmisc/avaircraftsituationlist.h"
 #include <QTextStream>
 
 namespace BlackMiscTest
@@ -25,6 +26,15 @@ namespace BlackMiscTest
 
         //! Impact of implementation type
         static int samplesImplementationType(QTextStream &out, int numberOfCallsigns, int numberOfTimes);
+
+        //! Interpolator scenario
+        static int interpolatorScenario(QTextStream &out, int numberOfCallsigns, int numberOfTimes);
+
+        //! Situation values for testing
+        static BlackMisc::Aviation::CAircraftSituationList createSituations(qint64 baseTimeEpoch, int numberOfCallsigns, int numberOfTimes);
+
+    private:
+        static const qint64 DeltaTime = 10;
 
     };
 } // namespace

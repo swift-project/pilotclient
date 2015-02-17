@@ -154,22 +154,8 @@ namespace BlackMiscTest
 
     int CSamplesPerformance::samplesImplementationType(QTextStream &out, int numberOfCallsigns, int numberOfTimes)
     {
-        const QDateTime baseTime = QDateTime::currentDateTimeUtc();
-        const qint64 baseTimeEpoch = baseTime.toMSecsSinceEpoch();
-        CAircraftSituationList situations;
-
-        for (int cs = 0; cs < numberOfCallsigns; cs++)
-        {
-            CCallsign callsign("CS" + QString::number(cs));
-            CCoordinateGeodetic coordinate(cs, cs, cs);
-            CAltitude alt(cs, CAltitude::MeanSeaLevel, CLengthUnit::m());
-            for (int t = 0; t < numberOfTimes; t++)
-            {
-                CAircraftSituation s(callsign, coordinate, alt);
-                s.setMSecsSinceEpoch(baseTimeEpoch + 10 * t);
-                situations.push_back(s);
-            }
-        }
+        const qint64 baseTimeEpoch = QDateTime::currentMSecsSinceEpoch();
+        CAircraftSituationList situations = createSituations(baseTimeEpoch, numberOfCallsigns, numberOfTimes);
 
         QTime timer;
         out << "Created " << situations.size() << " situations" << endl;
@@ -189,21 +175,9 @@ namespace BlackMiscTest
         timer.start();
         for (int i = 0; i < 10; i++)
         {
-            QMap<CCallsign, CAircraftSituationList> splitList = situations.splitPerCallsign();
-            Q_ASSERT(splitList.size() == numberOfCallsigns);
-            for (const CAircraftSituationList &slcs : splitList.values())
-            {
-                Q_ASSERT(slcs.size() == numberOfTimes);
-            }
-        }
-        out << "Reads by callsigns split: " << timer.elapsed() << "ms" << endl;
-
-        timer.start();
-        for (int i = 0; i < 10; i++)
-        {
             for (int t = 0; t < numberOfTimes; t++)
             {
-                CAircraftSituationList r = situations.findBefore(baseTimeEpoch + 1 + (10 * t));
+                CAircraftSituationList r = situations.findBefore(baseTimeEpoch + 1 + (DeltaTime * t));
                 Q_ASSERT(r.size() == numberOfCallsigns * (t + 1));
             }
         }
@@ -215,7 +189,7 @@ namespace BlackMiscTest
             for (int cs = 0; cs < numberOfCallsigns; cs++)
             {
                 CCallsign callsign("CS" + QString::number(cs));
-                CAircraftSituationList r = situations.findByCallsign(callsign).findBefore(baseTimeEpoch + 1 + (10 * t));
+                CAircraftSituationList r = situations.findByCallsign(callsign).findBefore(baseTimeEpoch + 1 + (DeltaTime * t));
                 Q_UNUSED(r);
             }
         }
@@ -227,20 +201,20 @@ namespace BlackMiscTest
             for (int cs = 0; cs < numberOfCallsigns; cs++)
             {
                 CCallsign callsign("CS" + QString::number(cs));
-                CAircraftSituationList r = situations.findBefore(baseTimeEpoch + 1 + (10 * t)).findByCallsign(callsign);
+                CAircraftSituationList r = situations.findBefore(baseTimeEpoch + 1 + (DeltaTime * t)).findByCallsign(callsign);
                 Q_UNUSED(r);
             }
         }
         out << "Reads by times / callsigns: " << timer.elapsed() << "ms" << endl;
 
         timer.start();
+        QMap<CCallsign, CAircraftSituationList> splitList = situations.splitPerCallsign();
+        Q_ASSERT(splitList.size() == numberOfCallsigns);
         for (int t = 0; t < numberOfTimes; t++)
         {
-            QMap<CCallsign, CAircraftSituationList> splitList = situations.splitPerCallsign();
-            Q_ASSERT(splitList.size() == numberOfCallsigns);
             for (const CAircraftSituationList &slcs : splitList.values())
             {
-                CAircraftSituationList r = slcs.findBefore(baseTimeEpoch + 1 + (10 * t));
+                CAircraftSituationList r = slcs.findBefore(baseTimeEpoch + 1 + (DeltaTime * t));
                 Q_UNUSED(r);
             }
         }
@@ -265,12 +239,127 @@ namespace BlackMiscTest
         {
             for (int t = 0; t < numberOfTimes; t++)
             {
-                CAircraftSituationList r = situations.findBefore(baseTimeEpoch + 1 + (10 * t));
+                CAircraftSituationList r = situations.findBefore(baseTimeEpoch + 1 + (DeltaTime * t));
                 Q_ASSERT(r.size() == numberOfCallsigns * (t + 1));
             }
         }
         out << "Reads by times: " << timer.elapsed() << "ms" << endl << endl;
         return 0;
+    }
+
+    int CSamplesPerformance::interpolatorScenario(QTextStream &out, int numberOfCallsigns, int numberOfTimes)
+    {
+        const qint64 baseTimeEpoch = QDateTime::currentMSecsSinceEpoch();
+        CAircraftSituationList situations = createSituations(baseTimeEpoch, numberOfCallsigns, numberOfTimes);
+        CAircraftSituationList situationsBefore;
+        CAircraftSituationList situationsAfter;
+
+        qint64 halfTime = baseTimeEpoch + DeltaTime * numberOfTimes / 2;
+
+        QTime timer;
+        timer.start();
+        for (int cs = 0; cs < numberOfCallsigns; cs++)
+        {
+            CCallsign callsign("CS" + QString::number(cs));
+            situationsBefore = situations.findBefore(halfTime).findByCallsign(callsign);
+            situationsAfter = situations.findAfter(halfTime - 1).findByCallsign(callsign);
+        }
+        out << "Reads by time, callsigns: " << timer.elapsed() << "ms" << endl;
+
+        timer.start();
+        situationsBefore = situations.findBefore(halfTime);
+        situationsAfter = situations.findAfter(halfTime - 1);
+        for (int cs = 0; cs < numberOfCallsigns; cs++)
+        {
+            CCallsign callsign("CS" + QString::number(cs));
+            CAircraftSituationList csSituationsBefore = situationsBefore.findByCallsign(callsign);
+            CAircraftSituationList csSituationsAfter = situationsAfter.findByCallsign(callsign);
+            Q_UNUSED(csSituationsBefore);
+            Q_UNUSED(csSituationsAfter);
+        }
+        out << "Split by time upfront, then callsigns: " << timer.elapsed() << "ms" << endl;
+        int b = situationsBefore.size();
+        int a = situationsAfter.size();
+        Q_ASSERT(a + b == numberOfTimes * numberOfCallsigns);
+
+        timer.start();
+        QList<CAircraftSituationList> split = situations.splitByTime(halfTime);
+        for (int cs = 0; cs < numberOfCallsigns; cs++)
+        {
+            CCallsign callsign("CS" + QString::number(cs));
+            CAircraftSituationList csSituationsBefore = split[0].findByCallsign(callsign);
+            CAircraftSituationList csSituationsAfter = split[1].findByCallsign(callsign);
+            Q_UNUSED(csSituationsBefore);
+            Q_UNUSED(csSituationsAfter);
+        }
+        out << "Single split by time upfront, then callsigns: " << timer.elapsed() << "ms" << endl;
+        b = split[0].size();
+        a = split[1].size();
+        Q_ASSERT(a + b == numberOfTimes * numberOfCallsigns);
+
+        situations.sortLatestFirst(); // eliminate impact of sort
+        timer.start();
+        split = situations.splitByTime(halfTime);
+        for (int cs = 0; cs < numberOfCallsigns; cs++)
+        {
+            CCallsign callsign("CS" + QString::number(cs));
+            CAircraftSituationList csSituationsBefore = split[0].findByCallsign(callsign);
+            CAircraftSituationList csSituationsAfter = split[1].findByCallsign(callsign);
+            Q_UNUSED(csSituationsBefore);
+            Q_UNUSED(csSituationsAfter);
+        }
+        out << "Single, pre-sorted split by time upfront, then callsigns: " << timer.elapsed() << "ms" << endl;
+
+        situations.sortOldestFirst(); // eliminate impact of sort
+        timer.start();
+        split = situations.splitByTimeNoSortAscendingTimestamp(halfTime);
+        for (int cs = 0; cs < numberOfCallsigns; cs++)
+        {
+            CCallsign callsign("CS" + QString::number(cs));
+            CAircraftSituationList csSituationsBefore = split[0].findByCallsign(callsign);
+            CAircraftSituationList csSituationsAfter = split[1].findByCallsign(callsign);
+            Q_UNUSED(csSituationsBefore);
+            Q_UNUSED(csSituationsAfter);
+        }
+        out << "Single, unsorted split by time upfront, then callsigns: " << timer.elapsed() << "ms" << endl;
+
+        timer.start();
+        QMap<CCallsign, CAircraftSituationList> csSituations = situations.splitPerCallsign();
+        out << "Split by " << csSituations.size() << " callsigns, " << timer.elapsed() << "ms" << endl;
+
+        timer.start();
+        for (const CAircraftSituationList &csl : csSituations.values())
+        {
+            CAircraftSituationList csSituationsBefore = csl.findBefore(halfTime);
+            CAircraftSituationList csSituationsAfter = csl.findAfter(halfTime - 1);
+            a = csSituationsBefore.size();
+            b = csSituationsAfter.size();
+            Q_ASSERT(a + b == numberOfTimes);
+            Q_UNUSED(csSituationsBefore);
+            Q_UNUSED(csSituationsAfter);
+        }
+        out << "Split by callsign, by time: " << timer.elapsed() << "ms" << endl;
+
+        out << endl;
+        return 0;
+    }
+
+    CAircraftSituationList CSamplesPerformance::createSituations(qint64 baseTimeEpoch, int numberOfCallsigns, int numberOfTimes)
+    {
+        CAircraftSituationList situations;
+        for (int cs = 0; cs < numberOfCallsigns; cs++)
+        {
+            CCallsign callsign("CS" + QString::number(cs));
+            CCoordinateGeodetic coordinate(cs, cs, cs);
+            CAltitude alt(cs, CAltitude::MeanSeaLevel, CLengthUnit::m());
+            for (int t = 0; t < numberOfTimes; t++)
+            {
+                CAircraftSituation s(callsign, coordinate, alt);
+                s.setMSecsSinceEpoch(baseTimeEpoch + DeltaTime * t);
+                situations.push_back(s);
+            }
+        }
+        return situations;
     }
 
 } // namespace
