@@ -30,7 +30,11 @@ namespace BlackCore
         {}
 
         //! \copydoc IInterpolator::getCurrentInterpolatedSituation
-        virtual BlackMisc::Aviation::CAircraftSituation getCurrentInterpolatedSituation(const QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituationList> &allSituations, const BlackMisc::Aviation::CCallsign &callsign, bool *ok = nullptr) const override;
+        virtual BlackMisc::Aviation::CAircraftSituation getCurrentInterpolatedSituation(const QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituationList> &allSituations, const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc = -1, bool *ok = nullptr) const override;
+
+        //! Log category
+        static QString getMessageCategory() { return "swift.interpolatorlinear"; }
+
     };
 
 } // namespace BlackCore

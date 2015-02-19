@@ -149,8 +149,8 @@ namespace BlackSimPlugin
             if (aircraftAlreadyExistsInSim)
             {
                 // remove first
-                this->removeRenderedAircraft(callsign);
-                Q_ASSERT(false);
+                this->removeRemoteAircraft(callsign);
+                CLogMessage(this).warning("Have to remove aircraft %1 before I can add it") << callsign;
             }
 
             SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxInitPosition(newRemoteAircraft.getSituation());
@@ -188,12 +188,6 @@ namespace BlackSimPlugin
                 CLogMessage(this).warning("FSX: Not connected, not added aircraft %1") << callsign.toQString();
                 return false;
             }
-        }
-
-        bool CSimulatorFsx::removeRenderedAircraft(const CCallsign &callsign)
-        {
-            // only remove from sim
-            return removeRenderedAircraft(m_simConnectObjects.value(callsign));
         }
 
         bool CSimulatorFsx::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const QString &originator)
@@ -352,7 +346,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::onSimFrame()
         {
-            updateOtherAircraft();
+            updateRemoteAircraft();
         }
 
         void CSimulatorFsx::onSimExit()
@@ -511,10 +505,17 @@ namespace BlackSimPlugin
             }
         }
 
-        bool CSimulatorFsx::removeRenderedAircraft(const CSimConnectObject &simObject)
+        bool CSimulatorFsx::removeRemoteAircraft(const CCallsign &callsign)
         {
-            SimConnect_AIRemoveObject(m_hSimConnect, simObject.getObjectId(), simObject.getRequestId());
+            // only remove from sim
+            if (!m_simConnectObjects.contains(callsign)) { return false; }
+            return removeRemoteAircraft(m_simConnectObjects.value(callsign));
+        }
+
+        bool CSimulatorFsx::removeRemoteAircraft(const CSimConnectObject &simObject)
+        {
             m_simConnectObjects.remove(simObject.getCallsign());
+            SimConnect_AIRemoveObject(m_hSimConnect, simObject.getObjectId(), simObject.getRequestId());
             remoteAircraft().applyIfCallsign(simObject.getCallsign(), CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(false)));
             CLogMessage(this).info("FSX: Removed aircraft %1") << simObject.getCallsign().toQString();
             return true;
@@ -594,29 +595,49 @@ namespace BlackSimPlugin
             return hr;
         }
 
-        void CSimulatorFsx::updateOtherAircraft()
+        void CSimulatorFsx::updateRemoteAircraft()
         {
             static_assert(sizeof(DataDefinitionRemoteAircraft) == 176, "DataDefinitionRemoteAircraft has an incorrect size.");
             Q_ASSERT(this->m_interpolator);
             Q_ASSERT_X(this->m_interpolator->thread() != this->thread(), "updateOtherAircraft", "interpolator should run in its own thread");
 
-            bool lastRequestAvailable;
+            // nothing to do, reset request id and exit
+            int remoteAircraftNo = this->remoteAircraft().size();
+            if (remoteAircraftNo < 1) { m_interpolationRequest = 0;  return; }
+
+            // initial request, and bye. First time we have aircraft
+            if (m_interpolationRequest == 0)
+            {
+                m_interpolator->syncRequestSituationsCalculationsForAllCallsigns(++m_interpolationRequest);
+                return;
+            }
+
+            // try to get old request
+            bool lastRequestAvailable = false;
             CAircraftSituationList interpolations = m_interpolator->getRequest(m_interpolationRequest, &lastRequestAvailable);
             if (!lastRequestAvailable)
             {
+                // warning the 1st and every 10th time
+                bool warning = m_interpolationsSkipped % 10;
                 m_interpolationsSkipped++;
+                if (warning)
+                {
+                    CLogMessage(this).warning("Skipped interpolation %1 time(s)") << m_interpolationsSkipped;
+                }
                 return;
             }
 
             // non blocking calculations in background
-            m_interpolator->requestSituationsCalculationsForAllCallsigns(m_interpolationsSkipped);
+            m_interpolator->syncRequestSituationsCalculationsForAllCallsigns(++m_interpolationRequest);
 
             // now send to sim
             for (const CAircraftSituation &currentSituation : interpolations)
             {
-                bool hasParts;
                 const CCallsign callsign(currentSituation.getCallsign());
+                if (!m_simConnectObjects.contains(callsign)) { continue; } // only if aircraft is already available
+                bool hasParts;
                 const CSimConnectObject &simObj = m_simConnectObjects[callsign];
+                if (simObj.getObjectId() == 0) { continue; }
                 SIMCONNECT_DATA_INITPOSITION position = aircraftSituationToFsxInitPosition(currentSituation);
                 CAircraftParts parts = m_interpolator->getLatestPartsBeforeOffset(callsign, IInterpolator::TimeOffsetMs, &hasParts);
 
@@ -625,7 +646,6 @@ namespace BlackSimPlugin
                 {
                     // we have parts
                     position.OnGround = parts.isOnGround() ? 1 : 0;
-
                     ddRemoteAircraft.position = position;
                     ddRemoteAircraft.lightStrobe = parts.getLights().isStrobeOn() ? 1.0 : 0.0;
                     ddRemoteAircraft.lightLanding = parts.getLights().isLandingOn() ? 1.0 : 0.0;
@@ -639,27 +659,49 @@ namespace BlackSimPlugin
                     ddRemoteAircraft.flapsTrailingEdgeRightPercent = parts.getFlapsPercent() / 100.0;
                     ddRemoteAircraft.spoilersHandlePosition = parts.isSpoilersOut() ? 1.0 : 0.0;
                     ddRemoteAircraft.gearHandlePosition = parts.isGearDown() ? 1 : 0;
-                    ddRemoteAircraft.engine1Combustion = parts.getEngines().findBy(&CAircraftEngine::getNumber, 1).frontOrDefault().isOn() ? 1 : 0;
-                    ddRemoteAircraft.engine2Combustion = parts.getEngines().findBy(&CAircraftEngine::getNumber, 2).frontOrDefault().isOn() ? 1 : 0;
-                    ddRemoteAircraft.engine3Combustion = parts.getEngines().findBy(&CAircraftEngine::getNumber, 3).frontOrDefault().isOn() ? 1 : 0;
-                    ddRemoteAircraft.engine4Combustion = parts.getEngines().findBy(&CAircraftEngine::getNumber, 4).frontOrDefault().isOn() ? 1 : 0;
+                    ddRemoteAircraft.engine1Combustion = parts.isEngineOn(1) ? 1 : 0;
+                    ddRemoteAircraft.engine2Combustion = parts.isEngineOn(2) ? 1 : 0;;
+                    ddRemoteAircraft.engine3Combustion = parts.isEngineOn(3) ? 1 : 0;
+                    ddRemoteAircraft.engine4Combustion = parts.isEngineOn(4) ? 1 : 0;
                 }
                 else
                 {
                     //! \todo interpolator, set data without parts by educated guessing whatsoever
-                    position.OnGround = parts.isOnGround() ? 1 : 0;
+                    bool onGround = currentSituation.isOnGroundGuessed();
+                    position.OnGround = onGround ? 1 : 0;
+                    ddRemoteAircraft.position = position;
+                    ddRemoteAircraft.gearHandlePosition = onGround ? 1 : 0;
+
+                    // when first detected moving, lights on
+                    if (onGround && currentSituation.getGroundSpeed().value(CSpeedUnit::km_h()) > 15)
+                    {
+                        // ddRemoteAircraft.light = 1.0;
+                        ddRemoteAircraft.lightBeacon = 1.0;
+                        ddRemoteAircraft.lightNav = 1.0;
+                        ddRemoteAircraft.lightLanding = 0.0;
+                    }
+                    else if (onGround)
+                    {
+                        // ddRemoteAircraft.lightTaxi = 0.0;
+                        ddRemoteAircraft.lightBeacon = 1.0;
+                        ddRemoteAircraft.lightNav = 1.0;
+                        ddRemoteAircraft.lightLanding = 0.0;
+                    }
+                    else if (!onGround)
+                    {
+                        // ddRemoteAircraft.lightTaxi = 0.0;
+                        ddRemoteAircraft.lightBeacon = 1.0;
+                        ddRemoteAircraft.lightNav = 1.0;
+                    }
                 }
 
-                if (simObj.getObjectId() != 0)
-                {
-                    HRESULT hr = S_OK;
-                    hr += SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraft,
-                                                        simObj.getObjectId(), 0, 0,
-                                                        sizeof(DataDefinitionRemoteAircraft), &ddRemoteAircraft);
+                HRESULT hr = S_OK;
+                hr += SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraft,
+                                                    simObj.getObjectId(), 0, 0,
+                                                    sizeof(DataDefinitionRemoteAircraft), &ddRemoteAircraft);
 
-                    if (hr != S_OK) { CLogMessage(this).warning("Failed so set data on SimObject"); }
-                }
-            } // ok, no parts
+                if (hr != S_OK) { CLogMessage(this).warning("Failed so set data on SimObject"); }
+            } // all situations
         }
 
         SIMCONNECT_DATA_INITPOSITION CSimulatorFsx::aircraftSituationToFsxInitPosition(const CAircraftSituation &situation)

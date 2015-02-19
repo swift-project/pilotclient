@@ -126,16 +126,16 @@ namespace BlackCore
 
     signals:
 
-        //--- signals for the provider, work locally only (not in DBus
+        //--- signals for the provider, work locally only (not in DBus)
 
         //! \copydoc IRemoteAircraftProviderReadOnly::addedRemoteAircraftSituation
-        void addedRemoteAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
+        void addedRemoteAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
         //! \copydoc IRemoteAircraftProviderReadOnly::addedRemoteAircraftPart
-        void addedRemoteAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts) override;
+        void addedRemoteAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
 
         //! \copydoc IRemoteAircraftProviderReadOnly::removedAircraft
-        void removedAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+        void removedRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Online ATC stations were changed
         void changedAtcStationsOnline();
@@ -172,6 +172,7 @@ namespace BlackCore
         CVatsimDataFileReader *m_vatsimDataFileReader  = nullptr;
         CAirspaceWatchdog      m_atcWatchdog;
         CAirspaceWatchdog      m_aircraftWatchdog;
+        bool                   m_serverSupportsNameQuery = false; //!< not all servers support name query
 
         // TODO FIXME (MS) should be in INetwork
         void sendFsipiCustomPacket(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;

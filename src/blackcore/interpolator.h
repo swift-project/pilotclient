@@ -32,27 +32,29 @@ namespace BlackCore
         //! Virtual destructor
         virtual ~IInterpolator() {}
 
+        //! Log category
+        static QString getMessageCategory() { return "swift.iinterpolator"; }
+
         //! Has situations?
-        //! \deprecated Try no to use, it would be more efficient to directly getting the values and decide then
+        //! \deprecated Try not to use, it would be more efficient to directly getting the values and decide then
         //! \threadsafe
         virtual bool hasEnoughAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const;
 
         //! Current interpolated situation
         //! \threadsafe
-        virtual BlackMisc::Aviation::CAircraftSituation getCurrentInterpolatedSituation(const QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituationList> &allSituations, const BlackMisc::Aviation::CCallsign &callsign, bool *ok = nullptr) const = 0;
+        virtual BlackMisc::Aviation::CAircraftSituation getCurrentInterpolatedSituation(const QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituationList> &allSituations, const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc = -1, bool *ok = nullptr) const = 0;
 
         //! Latest parts before time - offset
         //! \threadsafe
         BlackMisc::Aviation::CAircraftParts getLatestPartsBeforeOffset(const BlackMisc::Aviation::CCallsign &callsign, qint64 timeOffset = TimeOffsetMs, bool *ok = nullptr) const;
 
-        //! Do a complete calculation for all know callsigns in background.
-        //! Only use positive numbers.
-        //! \threadsafe
-        void requestSituationsCalculationsForAllCallsigns(int requestId);
-
         //! The situations per callsign
         //! \threadsafe
         QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituationList> getSituationsByCallsign() const;
+
+        //! Situations for given callsign
+        //! \threadsafe
+        BlackMisc::Aviation::CAircraftSituationList getSituationsForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
         //! Last finished request id, -1 means none
         //! \threadsafe
@@ -66,10 +68,25 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Aviation::CAircraftSituationList getRequest(int requestId, bool *ok = nullptr) const;
 
+        //! Enable debug messages
+        void enableDebugMessages(bool enabled);
+
         static const qint64 TimeOffsetMs = 6000;           //!< offset for interpolation
         static const int MaxSituationsPerCallsign = 6;     //!< How many situations per callsign
         static const int MaxPartsPerCallsign = 3;          //!< How many parts per callsign
         static const int MaxKeptInterpolationRequests = 3; //!< How many requests are stored
+
+    public slots:
+        //! Do a complete calculation for all know callsigns in background.
+        //! Only use positive numbers.
+        //! \param currentTimeMsSinceEpoch if no value is passed current time is used
+        //! \threadsafe
+        void syncRequestSituationsCalculationsForAllCallsigns(int requestId, qint64 currentTimeMsSinceEpoch = -1);
+
+        //! Do a complete calculation for all know callsigns in background.
+        //! Non blocking call of \syncRequestSituationsCalculationsForAllCallsigns
+        //! \threadsafe
+        void asyncRequestSituationsCalculationsForAllCallsigns(int requestId, qint64 currentTimeMsSinceEpoch = -1);
 
     private slots:
         //! New situation got added
@@ -82,7 +99,7 @@ namespace BlackCore
 
         //! Removed aircraft
         //! \threadsafe
-        void ps_onRemoveAircraft(const BlackMisc::Aviation::CCallsign &callsign);
+        void ps_onRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
     protected:
         //! Constructor
@@ -94,7 +111,7 @@ namespace BlackCore
         //! \deprecated For first version
         QList<BlackMisc::Aviation::CAircraftSituationList> getSituationsTimeSplit(const BlackMisc::Aviation::CCallsign &callsign, qint64 splitTimeMsSinceEpoch) const;
 
-        bool m_withDebugMsg = true;
+        bool m_withDebugMsg = false; //!< allows to disable debug messages
 
     private:
         mutable QReadWriteLock m_situationsLock;

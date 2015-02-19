@@ -82,7 +82,7 @@ namespace BlackSimPlugin
 
 
             bool ok;
-            CAircraftSituation situation = this->m_interpolator->getCurrentInterpolatedSituation(this->m_interpolator->getSituationsByCallsign(), m_callsign, &ok);
+            CAircraftSituation situation = this->m_interpolator->getCurrentInterpolatedSituation(this->m_interpolator->getSituationsByCallsign(), m_callsign, -1, &ok);
             if (!ok) { return; }
             MPPositionSlewMode positionSlewMode = aircraftSituationToFS9(situation);
 

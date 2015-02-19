@@ -49,13 +49,13 @@ namespace BlackMisc
             // those signals have to be implemented by classes using the interface.
         signals:
             //! A new situation got added
-            virtual void addedRemoteAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) = 0;
+            void addedRemoteAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
             //! New parts got added
-            virtual void addedRemoteAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts) = 0;
+            void addedRemoteAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
 
             //! Aircraft was removed
-            virtual void removedAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+            void removedRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
         };
 
@@ -75,7 +75,7 @@ namespace BlackMisc
             virtual BlackMisc::Aviation::CAircraftPartsList &remoteAircraftParts() = 0;
 
             //! Enable/disable rendering
-            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const QString &originator) = 0;
+            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering, const QString &originator) = 0;
 
             //! Change model string
             virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) = 0;

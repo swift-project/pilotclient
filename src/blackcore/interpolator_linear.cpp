@@ -9,8 +9,10 @@
 
 #include "interpolator_linear.h"
 #include "blackmisc/avaircraftsituation.h"
+#include "blackmisc/logmessage.h"
 #include <QDateTime>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Math;
 using namespace BlackMisc::PhysicalQuantities;
@@ -18,64 +20,96 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackCore
 {
-    CAircraftSituation CInterpolatorLinear::getCurrentInterpolatedSituation(const QHash<CCallsign, CAircraftSituationList> &allSituations, const CCallsign &callsign, bool *ok) const
+    CAircraftSituation CInterpolatorLinear::getCurrentInterpolatedSituation(const QHash<CCallsign, CAircraftSituationList> &allSituations, const CCallsign &callsign, qint64 currentTimeMsSinceEpoc, bool *ok) const
     {
         const static CAircraftSituation empty;
-        qint64 splitTimeMsSinceEpoch = QDateTime::currentMSecsSinceEpoch() - TimeOffsetMs;
+        if (ok) { *ok = false; }
+        if (!allSituations.contains(callsign)) { return empty; }
+        if (allSituations[callsign].isEmpty()) { return empty; }
+
+        if (currentTimeMsSinceEpoc < 0) { currentTimeMsSinceEpoc = QDateTime::currentMSecsSinceEpoch(); }
+        qint64 splitTimeMsSinceEpoch = currentTimeMsSinceEpoc - TimeOffsetMs;
         QList<CAircraftSituationList> splitSituations = allSituations[callsign].splitByTime(splitTimeMsSinceEpoch);
-        CAircraftSituationList &situationsBefore = splitSituations[0];
-        CAircraftSituationList &situationsAfter  = splitSituations[1];
-        if (situationsBefore.isEmpty())
-        {
-            if (ok) { *ok = false; }
-            return empty;
-        }
+        CAircraftSituationList &situationsNewer = splitSituations[0]; // latest first
+        CAircraftSituationList &situationsOlder = splitSituations[1]; // latest first
 
-        CAircraftSituation beginSituation;
-        CAircraftSituation endSituation;
+        // interpolation situations
+        CAircraftSituation oldSituation;
+        CAircraftSituation newSituation;
+        int situationsNewerNo = situationsNewer.size();
+        int situationsOlderNo = situationsOlder.size();
 
-        // The first condition covers a situation, when there is now future packet.
-        // So we have to extrapolate.
-        if (situationsAfter.isEmpty())
+        // latest first, now 00:26 -> 00:26 - 6000ms -> 00:20 split time
+        // time     pos
+        // 00:25    10    newer
+        // 00:20    11    newer
+        // <----- split
+        // 00:15    12    older
+        // 00:10    13    older
+        // 00:05    14    older
+
+        // The first condition covers a situation, when there are no before / after situations.
+        // We just place at he last position until we get before / after situations
+        if (situationsOlderNo < 1 || situationsNewerNo < 1)
         {
-            beginSituation = situationsBefore[situationsBefore.size() - 2];
-            endSituation = situationsBefore[situationsBefore.size() - 1];
+            if (ok) { *ok = true; }
+            // no after situations
+            if (situationsOlderNo < 1) { return situationsNewer.back(); }  // oldest newest
+
+            // no before situations
+            if (situationsOlder.size() < 2) { return situationsOlder.front(); } // latest older
+
+            // this will lead to extrapolation
+            oldSituation = situationsOlder[1];       // before newest
+            newSituation = situationsOlder.front();  // newest
+
         }
         else
         {
-            beginSituation = situationsBefore.back();
-            endSituation = situationsAfter.front();
+            oldSituation = situationsOlder.front(); // first oldest
+            newSituation = situationsNewer.back();  // latest newest
+            Q_ASSERT(oldSituation.getMSecsSinceEpoch() < newSituation.getMSecsSinceEpoch());
         }
 
-        CAircraftSituation currentSituation;
+        CAircraftSituation currentSituation(oldSituation);
         CCoordinateGeodetic currentPosition;
 
         // Time between start and end packet
-        double deltaTime = beginSituation.msecsToAbs(endSituation);
+        double deltaTime = oldSituation.absMsecsTo(newSituation);
 
-        // Fraction of the deltaTime [0.0 - 1.0]
-        double simulationTimeFraction = (beginSituation.getMSecsSinceEpoch() - splitTimeMsSinceEpoch) / deltaTime;
+        // Fraction of the deltaTime, ideally [0.0 - 1.0]
+        // < 0 should not happen due to the split, > 1 can happen if new values are delayed beyond split time
+        // 1) values > 1 mean extrapolation
+        // 2) values > 2 mean no new situations coming in
+        double simulationTimeFraction = 1 - ((newSituation.getMSecsSinceEpoch() - splitTimeMsSinceEpoch) / deltaTime);
+        if (simulationTimeFraction > 1.5)
+        {
+            if (this->m_withDebugMsg)
+            {
+                CLogMessage(this).warning("Extrapolation, fraction > 1: %1 for callsign: %2") << simulationTimeFraction << callsign;
+            }
+        }
 
         // Interpolate latitude: Lat = (LatB - LatA) * t + LatA
-        currentPosition.setLatitude((endSituation.getPosition().latitude() - beginSituation.getPosition().latitude())
+        currentPosition.setLatitude((newSituation.getPosition().latitude() - oldSituation.getPosition().latitude())
                                     * simulationTimeFraction
-                                    + beginSituation.getPosition().latitude());
+                                    + oldSituation.getPosition().latitude());
 
         // Interpolate latitude: Lon = (LonB - LonA) * t + LonA
-        currentPosition.setLongitude((endSituation.getPosition().longitude() - beginSituation.getPosition().longitude())
+        currentPosition.setLongitude((newSituation.getPosition().longitude() - oldSituation.getPosition().longitude())
                                      * simulationTimeFraction
-                                     + beginSituation.getPosition().longitude());
+                                     + oldSituation.getPosition().longitude());
         currentSituation.setPosition(currentPosition);
 
         // Interpolate altitude: Alt = (AltB - AltA) * t + AltA
-        currentSituation.setAltitude(CAltitude((endSituation.getAltitude() - beginSituation.getAltitude())
+        currentSituation.setAltitude(CAltitude((newSituation.getAltitude() - oldSituation.getAltitude())
                                                * simulationTimeFraction
-                                               + beginSituation.getAltitude(),
-                                               beginSituation.getAltitude().getReferenceDatum()));
+                                               + oldSituation.getAltitude(),
+                                               oldSituation.getAltitude().getReferenceDatum()));
 
         // Interpolate heading: HDG = (HdgB - HdgA) * t + HdgA
-        CHeading headingBegin = beginSituation.getHeading();
-        CHeading headingEnd = endSituation.getHeading();
+        CHeading headingBegin = oldSituation.getHeading();
+        CHeading headingEnd = newSituation.getHeading();
 
         if ((headingEnd - headingBegin).value(CAngleUnit::deg()) < -180)
         {
@@ -93,8 +127,8 @@ namespace BlackCore
                                              headingBegin.getReferenceNorth()));
 
         // Interpolate Pitch: Pitch = (PitchB - PitchA) * t + PitchA
-        CAngle pitchBegin = beginSituation.getPitch();
-        CAngle pitchEnd = endSituation.getPitch();
+        CAngle pitchBegin = oldSituation.getPitch();
+        CAngle pitchEnd = newSituation.getPitch();
         CAngle pitch = (pitchEnd - pitchBegin) * simulationTimeFraction + pitchBegin;
 
         // TODO: According to the specification, pitch above horizon should be negative.
@@ -103,8 +137,8 @@ namespace BlackCore
         currentSituation.setPitch(pitch);
 
         // Interpolate bank: Bank = (BankB - BankA) * t + BankA
-        CAngle bankBegin = beginSituation.getBank();
-        CAngle bankEnd = endSituation.getBank();
+        CAngle bankBegin = oldSituation.getBank();
+        CAngle bankEnd = newSituation.getBank();
         CAngle bank = (bankEnd - bankBegin) * simulationTimeFraction + bankBegin;
 
         // TODO: According to the specification, banks to the right should be negative.
@@ -112,10 +146,11 @@ namespace BlackCore
         bank *= -1;
         currentSituation.setBank(bank);
 
-        currentSituation.setGroundspeed((endSituation.getGroundSpeed() - beginSituation.getGroundSpeed())
+        currentSituation.setGroundspeed((newSituation.getGroundSpeed() - oldSituation.getGroundSpeed())
                                         * simulationTimeFraction
-                                        + beginSituation.getGroundSpeed());
+                                        + oldSituation.getGroundSpeed());
         if (ok) { *ok = true; }
+        Q_ASSERT(currentSituation.getCallsign() == callsign);
         return currentSituation;
     }
 
