@@ -28,8 +28,8 @@ namespace BlackSimPlugin
     namespace XPlane
     {
 
-        CSimulatorXPlane::CSimulatorXPlane(IOwnAircraftProvider *ownAircraftProvider, IRenderedAircraftProvider *renderedAircraftProvider, QObject *parent) :
-            CSimulatorCommon(CSimulatorInfo::XP(), ownAircraftProvider, renderedAircraftProvider, parent)
+        CSimulatorXPlane::CSimulatorXPlane(IOwnAircraftProvider *ownAircraftProvider, IRemoteAircraftProvider *remoteAircraftProvider, QObject *parent) :
+            CSimulatorCommon(CSimulatorInfo::XP(), ownAircraftProvider, remoteAircraftProvider, parent)
         {
             m_watcher = new QDBusServiceWatcher(this);
             m_watcher->setWatchMode(QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration);
@@ -330,17 +330,17 @@ namespace BlackSimPlugin
             return false;
         }
 
-        bool CSimulatorXPlane::addRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
+        bool CSimulatorXPlane::addRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
         {
             if (!isConnected()) { return false; }
             //! \todo XPlane driver check if already exists, how?
             //! \todo XPlane driver set correct return value
             // KB: from what I can see here all data are available
             // Is there any model matching required ????
-            CAircraftIcao icao = remoteAircraft.getIcaoInfo();
-            m_traffic->addPlane(remoteAircraft.getCallsign().asString(), icao.getAircraftDesignator(), icao.getAirlineDesignator(), icao.getLivery());
-            renderedAircraft().applyIfCallsign(remoteAircraft.getCallsign(), CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(true)));
-            CLogMessage(this).info("XP: Added aircraft %1") << remoteAircraft.getCallsign().toQString();
+            CAircraftIcao icao = newRemoteAircraft.getIcaoInfo();
+            m_traffic->addPlane(newRemoteAircraft.getCallsign().asString(), icao.getAircraftDesignator(), icao.getAirlineDesignator(), icao.getLivery());
+            remoteAircraft().applyIfCallsign(newRemoteAircraft.getCallsign(), CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(true)));
+            CLogMessage(this).info("XP: Added aircraft %1") << newRemoteAircraft.getCallsign().toQString();
             return true;
         }
 
@@ -365,7 +365,7 @@ namespace BlackSimPlugin
         {
             if (! isConnected()) { return false; }
             m_traffic->removePlane(callsign.asString());
-            renderedAircraft().applyIfCallsign(callsign, CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(false)));
+            remoteAircraft().applyIfCallsign(callsign, CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(false)));
             CLogMessage(this).info("XP: Removed aircraft %1") << callsign.toQString();
             return true;
         }
@@ -395,7 +395,7 @@ namespace BlackSimPlugin
             return true;
         }
 
-        BlackCore::ISimulator *CSimulatorXPlaneFactory::create(IOwnAircraftProvider *ownAircraftProvider, IRenderedAircraftProvider *renderedAircraftProvider, QObject *parent)
+        BlackCore::ISimulator *CSimulatorXPlaneFactory::create(IOwnAircraftProvider *ownAircraftProvider, IRemoteAircraftProvider *renderedAircraftProvider, QObject *parent)
         {
             return new CSimulatorXPlane(ownAircraftProvider, renderedAircraftProvider, parent);
         }

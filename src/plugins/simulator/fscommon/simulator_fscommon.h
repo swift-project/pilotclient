@@ -84,7 +84,7 @@ namespace BlackSimPlugin
             CSimulatorFsCommon(
                 const BlackSim::CSimulatorInfo &simInfo,
                 BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraftProvider,
+                BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
                 QObject *parent = nullptr);
 
             QString simulatorDetails;                       //!< describes version etc.

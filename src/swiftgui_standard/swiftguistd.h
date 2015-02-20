@@ -197,10 +197,10 @@ private slots:
 
     /*!
      * \brief Connection status changed
-     * \param from  old status, as uint so it is compliant with DBus
-     * \param to    new status, as uint so it is compliant with DBus
+     * \param from  old status, as int so it is compliant with DBus
+     * \param to    new status, as int so it is compliant with DBus
      */
-    void ps_onConnectionStatusChanged(uint from, uint to);
+    void ps_onConnectionStatusChanged(int from, int to);
 
     //
     // GUI related slots

@@ -19,8 +19,8 @@ namespace BlackCore
         emit simulatorStatusChanged(isConnected(), isSimulating(), isPaused());
     }
 
-    CSimulatorCommon::CSimulatorCommon(const BlackSim::CSimulatorInfo &simInfo, BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider, BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraftProvider, QObject *parent)
-        : ISimulator(parent), COwnAircraftProviderSupport(ownAircraftProvider), CRenderedAircraftProviderSupport(renderedAircraftProvider), m_simulatorInfo(simInfo)
+    CSimulatorCommon::CSimulatorCommon(const BlackSim::CSimulatorInfo &simInfo, BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider, BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider, QObject *parent)
+        : ISimulator(parent), COwnAircraftProviderSupport(ownAircraftProvider), CRemoteAircraftProviderSupport(remoteAircraftProvider), m_simulatorInfo(simInfo)
     { }
 
     int CSimulatorCommon::getMaxRenderedAircraft() const

@@ -14,6 +14,7 @@
 #include "fs9_client.h"
 #include "multiplayer_packets.h"
 #include "multiplayer_packet_parser.h"
+#include "blackcore/interpolator_linear.h"
 #include "blacksim/simulatorinfo.h"
 #include "blackmisc/project.h"
 #include "blackmisc/logmessage.h"
@@ -38,11 +39,11 @@ namespace BlackSimPlugin
     {
         BlackCore::ISimulator *CSimulatorFs9Factory::create(
             IOwnAircraftProvider *ownAircraftProvider,
-            IRenderedAircraftProvider *renderedAircraftProvider,
+            IRemoteAircraftProvider *remoteAircraftProvider,
             QObject *parent)
         {
             registerMetadata();
-            return new Fs9::CSimulatorFs9(ownAircraftProvider, renderedAircraftProvider, parent);
+            return new Fs9::CSimulatorFs9(ownAircraftProvider, remoteAircraftProvider, parent);
         }
 
         BlackSim::CSimulatorInfo CSimulatorFs9Factory::getSimulatorInfo() const
@@ -50,13 +51,15 @@ namespace BlackSimPlugin
             return CSimulatorInfo::FS9();
         }
 
-        CSimulatorFs9::CSimulatorFs9(IOwnAircraftProvider *ownAircraftProvider, IRenderedAircraftProvider *renderedAircraftProvider, QObject *parent) :
-            CSimulatorFsCommon(CSimulatorInfo::FS9(), ownAircraftProvider, renderedAircraftProvider, parent),
+        CSimulatorFs9::CSimulatorFs9(IOwnAircraftProvider *ownAircraftProvider, IRemoteAircraftProvider *remoteAircraftProvider, QObject *parent) :
+            CSimulatorFsCommon(CSimulatorInfo::FS9(), ownAircraftProvider, remoteAircraftProvider, parent),
             m_fs9Host(new CFs9Host(this)), m_lobbyClient(new CLobbyClient(this))
         {
             connect(m_fs9Host.data(), &CFs9Host::customPacketReceived, this, &CSimulatorFs9::ps_processFs9Message);
             connect(m_fs9Host.data(), &CFs9Host::statusChanged, this, &CSimulatorFs9::ps_changeHostStatus);
             m_fs9Host->start();
+            this->m_interpolator = new BlackCore::CInterpolatorLinear(remoteAircraftProvider, this);
+            this->m_interpolator->start();
         }
 
         CSimulatorFs9::~CSimulatorFs9()
@@ -104,22 +107,22 @@ namespace BlackSimPlugin
             return true;
         }
 
-        bool CSimulatorFs9::addRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
+        bool CSimulatorFs9::addRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
         {
-            CCallsign callsign = remoteAircraft.getCallsign();
+            CCallsign callsign = newRemoteAircraft.getCallsign();
             if (m_hashFs9Clients.contains(callsign))
             {
                 // already exists, remove first
                 this->removeRenderedAircraft(callsign);
             }
 
-            CFs9Client *client = new CFs9Client(this->m_renderedAircraftProvider, this, callsign.toQString(), CTime(25, CTimeUnit::ms()));
+            CFs9Client *client = new CFs9Client(m_interpolator, this, callsign.toQString(), CTime(25, CTimeUnit::ms()));
             client->setHostAddress(m_fs9Host->getHostAddress());
             client->setPlayerUserId(m_fs9Host->getPlayerUserId());
 
             client->start();
             m_hashFs9Clients.insert(callsign, client);
-            renderedAircraft().applyIfCallsign(callsign, CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(true)));
+            remoteAircraft().applyIfCallsign(callsign, CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(true)));
             CLogMessage(this).info("FS9: Added aircraft %1") << callsign.toQString();
             return true;
         }
@@ -131,7 +134,7 @@ namespace BlackSimPlugin
             auto fs9Client = m_hashFs9Clients.value(callsign);
             fs9Client->quit();
             m_hashFs9Clients.remove(callsign);
-            renderedAircraft().applyIfCallsign(callsign, CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(false)));
+            remoteAircraft().applyIfCallsign(callsign, CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(false)));
             CLogMessage(this).info("FS9: Removed aircraft %1") << callsign.toQString();
             return true;
         }

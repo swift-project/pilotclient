@@ -16,7 +16,7 @@
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/simdirectaccessownaircraft.h"
-#include "blackmisc/simulation/simdirectaccessrenderedaircraft.h"
+#include "blackmisc/simulation/simdirectaccessremoteaircraft.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/avairportlist.h"
 #include "blackmisc/nwtextmessage.h"
@@ -177,7 +177,7 @@ namespace BlackCore
         //!
         virtual ISimulator *create(
             BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-            BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraftProvider,
+            BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
             QObject *parent = nullptr) = 0;
 
         //! Simulator info
@@ -188,7 +188,7 @@ namespace BlackCore
     class CSimulatorCommon :
         public BlackCore::ISimulator,
         public BlackMisc::Simulation::COwnAircraftProviderSupport,     // gain access to in memor own aircraft data
-        public BlackMisc::Simulation::CRenderedAircraftProviderSupport // gain access to in memory rendered aircraft data
+        public BlackMisc::Simulation::CRemoteAircraftProviderSupport // gain access to in memory rendered aircraft data
     {
 
     public:
@@ -206,7 +206,7 @@ namespace BlackCore
         CSimulatorCommon(
             const BlackSim::CSimulatorInfo &simInfo,
             BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-            BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraftProvider,
+            BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
             QObject *parent = nullptr);
 
         BlackSim::CSimulatorInfo m_simulatorInfo; //!< about the simulator

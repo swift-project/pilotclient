@@ -208,7 +208,7 @@ namespace BlackMiscTest
         out << "Reads by times / callsigns: " << timer.elapsed() << "ms" << endl;
 
         timer.start();
-        QMap<CCallsign, CAircraftSituationList> splitList = situations.splitPerCallsign();
+        QHash<CCallsign, CAircraftSituationList> splitList = situations.splitPerCallsign();
         Q_ASSERT(splitList.size() == numberOfCallsigns);
         for (int t = 0; t < numberOfTimes; t++)
         {
@@ -310,21 +310,8 @@ namespace BlackMiscTest
         }
         out << "Single, pre-sorted split by time upfront, then callsigns: " << timer.elapsed() << "ms" << endl;
 
-        situations.sortOldestFirst(); // eliminate impact of sort
         timer.start();
-        split = situations.splitByTimeNoSortAscendingTimestamp(halfTime);
-        for (int cs = 0; cs < numberOfCallsigns; cs++)
-        {
-            CCallsign callsign("CS" + QString::number(cs));
-            CAircraftSituationList csSituationsBefore = split[0].findByCallsign(callsign);
-            CAircraftSituationList csSituationsAfter = split[1].findByCallsign(callsign);
-            Q_UNUSED(csSituationsBefore);
-            Q_UNUSED(csSituationsAfter);
-        }
-        out << "Single, unsorted split by time upfront, then callsigns: " << timer.elapsed() << "ms" << endl;
-
-        timer.start();
-        QMap<CCallsign, CAircraftSituationList> csSituations = situations.splitPerCallsign();
+        QHash<CCallsign, CAircraftSituationList> csSituations = situations.splitPerCallsign();
         out << "Split by " << csSituations.size() << " callsigns, " << timer.elapsed() << "ms" << endl;
 
         timer.start();

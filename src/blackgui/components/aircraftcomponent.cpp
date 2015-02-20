@@ -110,7 +110,7 @@ namespace BlackGui
             this->tabBar()->setTabText(ap, aps);
         }
 
-        void CAircraftComponent::ps_connectionStatusChanged(uint from, uint to)
+        void CAircraftComponent::ps_connectionStatusChanged(int from, int to)
         {
             INetwork::ConnectionStatus fromStatus = static_cast<INetwork::ConnectionStatus>(from);
             INetwork::ConnectionStatus toStatus = static_cast<INetwork::ConnectionStatus>(to);

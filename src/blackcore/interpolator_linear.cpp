@@ -18,13 +18,18 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackCore
 {
-    CAircraftSituation CInterpolatorLinear::getCurrentInterpolatedSituation(const CCallsign &callsign) const
+    CAircraftSituation CInterpolatorLinear::getCurrentInterpolatedSituation(const QHash<CCallsign, CAircraftSituationList> &allSituations, const CCallsign &callsign, bool *ok) const
     {
-        QDateTime currentTime = QDateTime::currentDateTimeUtc().addSecs(-6);
-        CAircraftSituationList situationsBefore = renderedAircraftSituations().findBefore(currentTime).findByCallsign(callsign);
-        CAircraftSituationList situationsAfter = renderedAircraftSituations().findAfter(currentTime).findByCallsign(callsign);
-
-        Q_ASSERT_X(!situationsBefore.isEmpty(), "CInterpolatorLinear::getCurrentSituation()", "List previous situations is empty!");
+        const static CAircraftSituation empty;
+        qint64 splitTimeMsSinceEpoch = QDateTime::currentMSecsSinceEpoch() - TimeOffsetMs;
+        QList<CAircraftSituationList> splitSituations = allSituations[callsign].splitByTime(splitTimeMsSinceEpoch);
+        CAircraftSituationList &situationsBefore = splitSituations[0];
+        CAircraftSituationList &situationsAfter  = splitSituations[1];
+        if (situationsBefore.isEmpty())
+        {
+            if (ok) { *ok = false; }
+            return empty;
+        }
 
         CAircraftSituation beginSituation;
         CAircraftSituation endSituation;
@@ -49,7 +54,7 @@ namespace BlackCore
         double deltaTime = beginSituation.msecsToAbs(endSituation);
 
         // Fraction of the deltaTime [0.0 - 1.0]
-        double simulationTimeFraction = beginSituation.getUtcTimestamp().msecsTo(currentTime) / deltaTime;
+        double simulationTimeFraction = (beginSituation.getMSecsSinceEpoch() - splitTimeMsSinceEpoch) / deltaTime;
 
         // Interpolate latitude: Lat = (LatB - LatA) * t + LatA
         currentPosition.setLatitude((endSituation.getPosition().latitude() - beginSituation.getPosition().latitude())
@@ -73,10 +78,14 @@ namespace BlackCore
         CHeading headingEnd = endSituation.getHeading();
 
         if ((headingEnd - headingBegin).value(CAngleUnit::deg()) < -180)
+        {
             headingEnd += CHeading(360, CHeading::Magnetic, CAngleUnit::deg());
+        }
 
         if ((headingEnd - headingBegin).value(CAngleUnit::deg()) > 180)
+        {
             headingEnd -= CHeading(360, CHeading::Magnetic, CAngleUnit::deg());
+        }
 
         currentSituation.setHeading(CHeading((headingEnd - headingBegin)
                                              * simulationTimeFraction
@@ -86,7 +95,6 @@ namespace BlackCore
         // Interpolate Pitch: Pitch = (PitchB - PitchA) * t + PitchA
         CAngle pitchBegin = beginSituation.getPitch();
         CAngle pitchEnd = endSituation.getPitch();
-
         CAngle pitch = (pitchEnd - pitchBegin) * simulationTimeFraction + pitchBegin;
 
         // TODO: According to the specification, pitch above horizon should be negative.
@@ -97,7 +105,6 @@ namespace BlackCore
         // Interpolate bank: Bank = (BankB - BankA) * t + BankA
         CAngle bankBegin = beginSituation.getBank();
         CAngle bankEnd = endSituation.getBank();
-
         CAngle bank = (bankEnd - bankBegin) * simulationTimeFraction + bankBegin;
 
         // TODO: According to the specification, banks to the right should be negative.
@@ -108,7 +115,7 @@ namespace BlackCore
         currentSituation.setGroundspeed((endSituation.getGroundSpeed() - beginSituation.getGroundSpeed())
                                         * simulationTimeFraction
                                         + beginSituation.getGroundSpeed());
-
+        if (ok) { *ok = true; }
         return currentSituation;
     }
 

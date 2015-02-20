@@ -15,7 +15,7 @@
 #include "blackcore/context_network.h"
 #include "blackcore/context_settings.h"
 #include "blackcore/context_runtime.h"
-#include "blackmisc/simulation/simdirectaccessrenderedaircraft.h"
+#include "blackmisc/simulation/simdirectaccessremoteaircraft.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/network.h"
 #include "blackcore/airspace_monitor.h"
@@ -37,10 +37,12 @@ namespace BlackCore
     //! Network context implementation
     class CContextNetwork :
         public IContextNetwork,
-        public BlackMisc::Simulation::IRenderedAircraftProvider
+        public BlackMisc::Simulation::IRemoteAircraftProvider
     {
         Q_OBJECT
+        Q_INTERFACES(BlackMisc::Simulation::IRemoteAircraftProvider)
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTNETWORK_INTERFACENAME)
+
         friend class IContextNetwork;
         friend class CRuntime;
 
@@ -48,26 +50,45 @@ namespace BlackCore
         //! Destructor
         virtual ~CContextNetwork();
 
-        //! \copydoc IRenderedAircraftProviderReadOnly::renderedAircraft
-        virtual const BlackMisc::Simulation::CSimulatedAircraftList &renderedAircraft() const override;
+        //! \copydoc IRemoteAircraftProviderReadOnly::renderedAircraft
+        virtual const BlackMisc::Simulation::CSimulatedAircraftList &remoteAircraft() const override;
 
         //! \copydoc IRenderedAircraftProvider::renderedAircraft
-        virtual BlackMisc::Simulation::CSimulatedAircraftList &renderedAircraft() override;
+        virtual BlackMisc::Simulation::CSimulatedAircraftList &remoteAircraft() override;
 
-        //! \copydoc IRenderedAircraftProviderReadOnly::renderedAircraftSituations
-        virtual const BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() const override;
+        //! \copydoc IRemoteAircraftProviderReadOnly::renderedAircraftSituations
+        virtual const BlackMisc::Aviation::CAircraftSituationList &remoteAircraftSituations() const override;
 
-        //! \copydoc IRenderedAircraftProviderReadOnly::renderedAircraftSituations
-        virtual BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() override;
+        //! \copydoc IRemoteAircraftProviderReadOnly::renderedAircraftSituations
+        virtual BlackMisc::Aviation::CAircraftSituationList &remoteAircraftSituations() override;
 
-        //! \copydoc IRenderedAircraftProviderReadOnly::renderedAircraftParts
-        virtual const BlackMisc::Aviation::CAircraftPartsList &renderedAircraftParts() const override;
+        //! \copydoc IRemoteAircraftProviderReadOnly::renderedAircraftParts
+        virtual const BlackMisc::Aviation::CAircraftPartsList &remoteAircraftParts() const override;
 
         //! \copydoc IRenderedAircraftProvider::renderedAircraftParts
-        virtual BlackMisc::Aviation::CAircraftPartsList &renderedAircraftParts() override;
+        virtual BlackMisc::Aviation::CAircraftPartsList &remoteAircraftParts() override;
+
+        //! \copydoc IRemoteAircraftProviderReadOnly::connectSignals
+        virtual bool connectRemoteAircraftProviderSignals(
+            std::function<void(const BlackMisc::Aviation::CAircraftSituation &)> situationSlot,
+            std::function<void(const BlackMisc::Aviation::CAircraftParts &)> partsSlot,
+            std::function<void(const BlackMisc::Aviation::CCallsign &)> removedAircraftSlot
+        ) override;
+
+    signals:
+        // IRemoteAircraftProviderReadOnly must be implemented by concrete class
+        // must not prefixed virtual (though they are) -> warning
+
+        //! \copydoc IRemoteAircraftProviderReadOnly::addedRemoteAircraftSituation
+        void addedRemoteAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
+
+        //! \copydoc IRemoteAircraftProviderReadOnly::addedRemoteAircraftPart
+        void addedRemoteAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts) override;
+
+        //! \copydoc IRemoteAircraftProviderReadOnly::removedAircraft
+        void removedAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 
     public slots:
-
         //! \copydoc IContextNetwork::readAtcBookingsFromSource()
         virtual void readAtcBookingsFromSource() const override;
 
@@ -82,12 +103,6 @@ namespace BlackCore
 
         //! \copydoc IContextNetwork::getAircraftForCallsign
         virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-        //! \copydoc IRenderedAircraftProviderReadOnly::getRenderedAircraftSituations
-        virtual BlackMisc::Aviation::CAircraftSituationList getRenderedAircraftSituations() const override;
-
-        //! \copydoc IRenderedAircraftProviderReadOnly::getRenderedAircraftParts
-        virtual BlackMisc::Aviation::CAircraftPartsList getRenderedAircraftParts() const override;
 
         //! \copydoc IContextNetwork::connectToNetwork()
         virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, uint mode) override;

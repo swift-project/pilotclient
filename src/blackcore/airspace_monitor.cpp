@@ -27,7 +27,8 @@ namespace BlackCore
 {
 
     CAirspaceMonitor::CAirspaceMonitor(QObject *parent, const BlackMisc::Simulation::IOwnAircraftProviderReadOnly *ownAircraftProvider, INetwork *network, CVatsimBookingReader *bookings, CVatsimDataFileReader *dataFile)
-        : QObject(parent), COwnAircraftProviderSupportReadOnly(ownAircraftProvider),
+        : QObject(parent),
+          COwnAircraftProviderSupportReadOnly(ownAircraftProvider),
           m_network(network), m_vatsimBookingReader(bookings), m_vatsimDataFileReader(dataFile),
           m_atcWatchdog(this), m_aircraftWatchdog(this)
     {
@@ -59,28 +60,28 @@ namespace BlackCore
         this->connect(&this->m_atcWatchdog,      &CAirspaceWatchdog::timeout, this, &CAirspaceMonitor::ps_atcControllerDisconnected);
     }
 
-    const CSimulatedAircraftList &CAirspaceMonitor::renderedAircraft() const
+    const CSimulatedAircraftList &CAirspaceMonitor::remoteAircraft() const
     {
         // not thread safe, check
         Q_ASSERT(this->thread() == QThread::currentThread());
         return m_aircraftInRange;
     }
 
-    CSimulatedAircraftList &CAirspaceMonitor::renderedAircraft()
+    CSimulatedAircraftList &CAirspaceMonitor::remoteAircraft()
     {
         // not thread safe, check
         Q_ASSERT(this->thread() == QThread::currentThread());
         return m_aircraftInRange;
     }
 
-    const CAircraftSituationList &CAirspaceMonitor::renderedAircraftSituations() const
+    const CAircraftSituationList &CAirspaceMonitor::remoteAircraftSituations() const
     {
         // not thread safe, check
         Q_ASSERT(this->thread() == QThread::currentThread());
         return m_aircraftSituations;
     }
 
-    CAircraftSituationList &CAirspaceMonitor::renderedAircraftSituations()
+    CAircraftSituationList &CAirspaceMonitor::remoteAircraftSituations()
     {
         // not thread safe, check
         Q_ASSERT(this->thread() == QThread::currentThread());
@@ -89,26 +90,18 @@ namespace BlackCore
 
     CAircraftSituationList CAirspaceMonitor::getRenderedAircraftSituations() const
     {
-        if (this->thread() == QThread::currentThread()) { return this->m_aircraftSituations; }
-        CAircraftSituationList situations;
-        bool s = QMetaObject::invokeMethod(const_cast<CAirspaceMonitor *>(this), // strip away const, invoke will not change anything,
-                                           "getRenderedAircraftSituations",
-                                           Qt::BlockingQueuedConnection,
-                                           Q_RETURN_ARG(CAircraftSituationList, situations)
-                                          );
-        Q_ASSERT(s);
-        Q_UNUSED(s);
-        return situations;
+        Q_ASSERT(this->thread() == QThread::currentThread());
+        return this->m_aircraftSituations;
     }
 
-    const CAircraftPartsList &CAirspaceMonitor::renderedAircraftParts() const
+    const CAircraftPartsList &CAirspaceMonitor::remoteAircraftParts() const
     {
         // not thread safe, check
         Q_ASSERT(this->thread() == QThread::currentThread());
         return m_aircraftParts;
     }
 
-    CAircraftPartsList &CAirspaceMonitor::renderedAircraftParts()
+    CAircraftPartsList &CAirspaceMonitor::remoteAircraftParts()
     {
         // not thread safe, check
         Q_ASSERT(this->thread() == QThread::currentThread());
@@ -117,16 +110,20 @@ namespace BlackCore
 
     CAircraftPartsList CAirspaceMonitor::getRenderedAircraftParts() const
     {
-        if (this->thread() == QThread::currentThread()) { return this->m_aircraftParts; }
-        CAircraftPartsList parts;
-        bool s = QMetaObject::invokeMethod(const_cast<CAirspaceMonitor *>(this), // strip away const, invoke will not change anything
-                                           "getRenderedAircraftParts",
-                                           Qt::BlockingQueuedConnection,
-                                           Q_RETURN_ARG(CAircraftPartsList, parts)
-                                          );
-        Q_ASSERT(s);
-        Q_UNUSED(s);
-        return parts;
+        Q_ASSERT(this->thread() == QThread::currentThread());
+        return this->m_aircraftParts;
+    }
+
+    bool CAirspaceMonitor::connectRemoteAircraftProviderSignals(
+        std::function<void(const CAircraftSituation &)> situationSlot,
+        std::function<void(const CAircraftParts &)> partsSlot,
+        std::function<void(const CCallsign &)> removedAircraftSlot
+    )
+    {
+        bool s1 = connect(this, &CAirspaceMonitor::addedRemoteAircraftSituation, situationSlot);
+        bool s2 = connect(this, &CAirspaceMonitor::addedRemoteAircraftParts, partsSlot);
+        bool s3 = connect(this, &CAirspaceMonitor::removedAircraft, removedAircraftSlot);
+        return s1 && s2 && s3;
     }
 
     bool CAirspaceMonitor::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRedering, const QString &originator)
@@ -738,7 +735,7 @@ namespace BlackCore
         CAircraftSituation situationWithCallsign(situation);
         situationWithCallsign.setCallsign(callsign);
         this->m_aircraftSituations.insert(situationWithCallsign);
-        this->m_aircraftSituations.removeOlderThanNowMinusOffset(30000);
+        this->m_aircraftSituations.removeOlderThanNowMinusOffset(AircraftSituationsRemovedOffsetMs);
 
         bool exists = this->m_aircraftInRange.containsCallsign(callsign);
         if (!exists)
@@ -811,6 +808,7 @@ namespace BlackCore
             this->m_aircraftWatchdog.resetCallsign(callsign);
         }
 
+        emit this->addedRemoteAircraftSituation(situationWithCallsign);
         emit this->changedAircraftInRange();
     }
 
@@ -852,13 +850,15 @@ namespace BlackCore
 
         CAircraftParts parts = m_aircraftParts.findBackByCallsign(callsign);
         parts.setCurrentUtcTime();
-        parts.setCallsign(callsign);
+        parts.setCallsign(callsign); // for default values
+
         // update
         QJsonObject config = applyIncrementalObject(parts.toJson(), incremental);
         parts.convertFromJson(config);
 
         // store part history
         this->m_aircraftParts.insert(parts);
+        emit this->addedRemoteAircraftParts(parts);
 
         CPropertyIndexVariantMap vm;
         vm.addValue(CAircraft::IndexParts, parts);

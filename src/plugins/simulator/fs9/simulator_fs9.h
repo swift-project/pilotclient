@@ -17,7 +17,7 @@
 #include "lobby_client.h"
 #include "../fscommon/simulator_fscommon.h"
 #include "blackcore/simulator.h"
-#include "blackcore/interpolator_linear.h"
+#include "blackcore/interpolator.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/avaircraft.h"
 #include "blacksim/simulatorinfo.h"
@@ -43,7 +43,7 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulatorFactory::create()
             virtual BlackCore::ISimulator *create(
                     BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                    BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraftProvider,
+                    BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                     QObject *parent) override;
 
             //! Simulator info
@@ -59,7 +59,7 @@ namespace BlackSimPlugin
             //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
             CSimulatorFs9(
                 BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraft,
+                BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                 QObject *parent = nullptr);
 
             //! Destructor
@@ -86,7 +86,7 @@ namespace BlackSimPlugin
             virtual bool disconnectFrom() override;
 
             //! \copydoc ISimulator::addRemoteAircraft()
-            virtual bool addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
+            virtual bool addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
 
             //! \copydoc ISimulator::removeRemoteAircraft()
             virtual bool removeRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
@@ -128,6 +128,8 @@ namespace BlackSimPlugin
             bool m_startedLobbyConnection = false;
             QHash<BlackMisc::Aviation::CCallsign, QPointer<CFs9Client>> m_hashFs9Clients;
             CLobbyClient *m_lobbyClient;
+
+            BlackCore::IInterpolator *m_interpolator = nullptr; //!< interpolator instance
         };
     } // namespace
 } // namespace

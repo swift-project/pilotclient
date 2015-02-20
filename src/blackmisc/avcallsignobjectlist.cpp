@@ -100,11 +100,11 @@ namespace BlackMisc
         }
 
         template <class OBJ, class CONTAINER>
-        QMap<CCallsign, CONTAINER> ICallsignObjectList<OBJ, CONTAINER>::splitPerCallsign() const
+        QHash<CCallsign, CONTAINER> ICallsignObjectList<OBJ, CONTAINER>::splitPerCallsign() const
         {
             CONTAINER copyContainer(getContainer());
             copyContainer.sortByCallsign();
-            QMap<CCallsign, CONTAINER> result;
+            QHash<CCallsign, CONTAINER> result;
             CCallsign cs;
             for (const OBJ &csObj : copyContainer)
             {

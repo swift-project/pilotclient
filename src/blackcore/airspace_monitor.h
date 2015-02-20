@@ -14,7 +14,7 @@
 
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/simdirectaccessownaircraft.h"
-#include "blackmisc/simulation/simdirectaccessrenderedaircraft.h"
+#include "blackmisc/simulation/simdirectaccessremoteaircraft.h"
 #include "blackmisc/avatcstationlist.h"
 #include "blackmisc/avaircraftsituationlist.h"
 #include "blackmisc/nwclientlist.h"
@@ -34,37 +34,38 @@ namespace BlackCore
      */
     class CAirspaceMonitor :
         public QObject,
-        public BlackMisc::Simulation::COwnAircraftProviderSupportReadOnly,
-        public BlackMisc::Simulation::IRenderedAircraftProvider
+        public BlackMisc::Simulation::IRemoteAircraftProvider,            // those data will be provided from the class CAirspaceMonitor
+        public BlackMisc::Simulation::COwnAircraftProviderSupportReadOnly // used to obtain in memory inofmration about own aircraft
     {
         Q_OBJECT
+        Q_INTERFACES(BlackMisc::Simulation::IRemoteAircraftProvider)
 
     public:
         //! Constructor
         CAirspaceMonitor(QObject *parent, const BlackMisc::Simulation::IOwnAircraftProviderReadOnly *ownAircraft, INetwork *network, CVatsimBookingReader *bookings, CVatsimDataFileReader *dataFile);
 
-        //! \copydoc IRenderedAircraftProviderReadOnly::renderedAircraft
-        virtual const BlackMisc::Simulation::CSimulatedAircraftList &renderedAircraft() const override;
+        //! \copydoc IRemoteAircraftProviderReadOnly::renderedAircraft
+        virtual const BlackMisc::Simulation::CSimulatedAircraftList &remoteAircraft() const override;
 
-        //! \copydoc IRenderedAircraftProvider::renderedAircraft
-        virtual BlackMisc::Simulation::CSimulatedAircraftList &renderedAircraft() override;
+        //! \copydoc IRemoteAircraftProvider::renderedAircraft
+        virtual BlackMisc::Simulation::CSimulatedAircraftList &remoteAircraft() override;
 
-        //! \copydoc IRenderedAircraftProvider::renderedAircraftSituations
-        virtual const BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() const override;
+        //! \copydoc IRemoteAircraftProvider::remoteAircraftSituations
+        virtual const BlackMisc::Aviation::CAircraftSituationList &remoteAircraftSituations() const override;
 
-        //! \copydoc IRenderedAircraftProvider::renderedAircraftSituations
-        virtual BlackMisc::Aviation::CAircraftSituationList &renderedAircraftSituations() override;
+        //! \copydoc IRemoteAircraftProvider::remoteAircraftSituations
+        virtual BlackMisc::Aviation::CAircraftSituationList &remoteAircraftSituations() override;
 
-        //! \copydoc IRenderedAircraftProvider::renderedAircraftParts
-        virtual const BlackMisc::Aviation::CAircraftPartsList &renderedAircraftParts() const override;
+        //! \copydoc IRemoteAircraftProvider::remoteAircraftParts
+        virtual const BlackMisc::Aviation::CAircraftPartsList &remoteAircraftParts() const override;
 
-        //! \copydoc IRenderedAircraftProvider::renderedAircraftParts
-        virtual BlackMisc::Aviation::CAircraftPartsList &renderedAircraftParts() override;
+        //! \copydoc IRemoteAircraftProvider::remoteAircraftParts
+        virtual BlackMisc::Aviation::CAircraftPartsList &remoteAircraftParts() override;
 
-        //! \copydoc IRenderedAircraftProvider::renderedAircraftParts
+        //! \copydoc IRemoteAircraftProvider::remoteAircraftParts
         virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const QString &originator) override;
 
-        //! \copydoc IRenderedAircraftProvider::updateAircraftModel
+        //! \copydoc IRemoteAircraftProvider::updateAircraftModel
         virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) override;
 
         //! Returns the list of users we know about
@@ -107,14 +108,35 @@ namespace BlackCore
         //! Create dummy entries for performance tests
         void testCreateDummyOnlineAtcStations(int number);
 
-    public slots:
-        //! \copydoc IRenderedAircraftProviderReadOnly::getRenderedAircraftSituations
-        virtual BlackMisc::Aviation::CAircraftSituationList getRenderedAircraftSituations() const override;
+        //! Aircraft situations
+        virtual BlackMisc::Aviation::CAircraftSituationList getRenderedAircraftSituations() const;
 
-        //! \copydoc IRenderedAircraftProviderReadOnly::getRenderedAircraftParts
-        virtual BlackMisc::Aviation::CAircraftPartsList getRenderedAircraftParts() const override;
+        //! Aircraft parts
+        virtual BlackMisc::Aviation::CAircraftPartsList getRenderedAircraftParts() const;
+
+        //! \copydoc IRemoteAircraftProviderReadOnly::connectSignals
+        //! \copydoc IRemoteAircraftProviderReadOnly::connectSignals
+        virtual bool connectRemoteAircraftProviderSignals(
+            std::function<void(const BlackMisc::Aviation::CAircraftSituation &)> situationSlot,
+            std::function<void(const BlackMisc::Aviation::CAircraftParts &)> partsSlot,
+            std::function<void(const BlackMisc::Aviation::CCallsign &)> removedAircraftSlot
+        ) override;
+
+        const qint64 AircraftSituationsRemovedOffsetMs = 30 * 1000; //!< situations will be removed if older than
 
     signals:
+
+        //--- signals for the provider, work locally only (not in DBus
+
+        //! \copydoc IRemoteAircraftProviderReadOnly::addedRemoteAircraftSituation
+        void addedRemoteAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
+
+        //! \copydoc IRemoteAircraftProviderReadOnly::addedRemoteAircraftPart
+        void addedRemoteAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts) override;
+
+        //! \copydoc IRemoteAircraftProviderReadOnly::removedAircraft
+        void removedAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+
         //! Online ATC stations were changed
         void changedAtcStationsOnline();
 
@@ -128,13 +150,10 @@ namespace BlackCore
         void changedAircraftInRange();
 
         //! A new aircraft appeared
-        void addedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &renderedAircraft);
-
-        //! An aircraft disappeared
-        void removedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
+        void addedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
 
         //! Read for model matching
-        void readyForModelMatching(const BlackMisc::Simulation::CSimulatedAircraft &renderedAircraft);
+        void readyForModelMatching(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
 
     private:
         BlackMisc::Aviation::CAtcStationList m_atcStationsOnline;

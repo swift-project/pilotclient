@@ -20,19 +20,17 @@
 
 namespace BlackCore
 {
-    //! \brief Linear interpolator, calculation inbetween positions
-    class CInterpolatorLinear :
-        public IInterpolator,
-        public BlackMisc::Simulation::CRenderedAircraftProviderSupportReadOnly
+    //! Linear interpolator, calculation inbetween positions
+    class CInterpolatorLinear : public IInterpolator
     {
     public:
         //! Constructor
-        CInterpolatorLinear(BlackMisc::Simulation::IRenderedAircraftProviderReadOnly *provider) :
-            IInterpolator(provider),
-            BlackMisc::Simulation::CRenderedAircraftProviderSupportReadOnly(provider) {}
+        CInterpolatorLinear(BlackMisc::Simulation::IRemoteAircraftProviderReadOnly *provider, QObject *parent = nullptr) :
+            IInterpolator(provider, "CInterpolatorLinear", parent)
+        {}
 
         //! \copydoc IInterpolator::getCurrentInterpolatedSituation
-        virtual BlackMisc::Aviation::CAircraftSituation getCurrentInterpolatedSituation(const BlackMisc::Aviation::CCallsign &callsign) const override;
+        virtual BlackMisc::Aviation::CAircraftSituation getCurrentInterpolatedSituation(const QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituationList> &allSituations, const BlackMisc::Aviation::CCallsign &callsign, bool *ok = nullptr) const override;
     };
 
 } // namespace BlackCore

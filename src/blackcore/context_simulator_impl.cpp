@@ -210,7 +210,7 @@ namespace BlackCore
         Q_ASSERT(this->getIContextOwnAircraft()->isUsingImplementingObject());
         Q_ASSERT(this->getIContextNetwork()->isUsingImplementingObject());
         IOwnAircraftProvider *ownAircraftProvider = this->getRuntime()->getCContextOwnAircraft();
-        IRenderedAircraftProvider *renderedAircraftProvider = this->getRuntime()->getCContextNetwork();
+        IRemoteAircraftProvider *renderedAircraftProvider = this->getRuntime()->getCContextNetwork();
         ISimulator *newSimulator = factory->create(ownAircraftProvider, renderedAircraftProvider, this);
         Q_ASSERT(newSimulator);
 

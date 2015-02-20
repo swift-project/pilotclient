@@ -35,7 +35,7 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulatorFactory::create
             virtual BlackCore::ISimulator *create(
                     BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                    BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraftProvider,
+                    BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
                     QObject *parent) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::getSimulatorInfo

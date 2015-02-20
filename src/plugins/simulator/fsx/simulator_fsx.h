@@ -74,7 +74,7 @@ namespace BlackSimPlugin
             //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
             CSimulatorFsx(
                 BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraftProvider,
+                BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                 QObject *parent = nullptr);
 
             //! Destructor
@@ -104,7 +104,7 @@ namespace BlackSimPlugin
             virtual bool disconnectFrom() override;
 
             //! \copydoc ISimulator::addRemoteAircraft()
-            virtual bool addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
+            virtual bool addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
 
             //! \copydoc ISimulator::removeRenderedAircraft()
             virtual bool removeRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
@@ -181,9 +181,12 @@ namespace BlackSimPlugin
             int  m_syncDeferredCounter =  0;    //!< Set when synchronized, used to wait some time
             int  m_simconnectTimerId   = -1;    //!< Timer identifier
             int  m_skipCockpitUpdateCycles = 0; //!< Skip some update cycles to allow changes in simulator cockpit to be set
+            int  m_interpolationRequest = 0;    //!< current interpolation request
+            int  m_interpolationsSkipped = 0;   //!< number of skipped interpolation request
             HANDLE  m_hSimConnect = nullptr;    //!< Handle to SimConnect object
             uint    m_nextObjID   = 1;          //!< object ID TODO: also used as request id, where to we place other request ids as for facilities
             BlackMisc::PhysicalQuantities::CTime m_syncTimeOffset;   //!< Time offset (if synchronized)
+            BlackCore::IInterpolator *m_interpolator = nullptr;      //!< interpolator instance
             QHash<BlackMisc::Aviation::CCallsign, CSimConnectObject> m_simConnectObjects;
             QFutureWatcher<bool> m_watcherConnect;
         };

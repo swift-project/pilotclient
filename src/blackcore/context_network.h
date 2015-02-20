@@ -117,7 +117,7 @@ namespace BlackCore
          * \remarks If I use the enum, adaptor / interface are not created correctly
          * \see INetwork::ConnectionStatus
          */
-        void connectionStatusChanged(uint from, uint to);
+        void connectionStatusChanged(int from, int to);
 
         //! Text messages received (also private chat messages, rfaio channel messages)
         void textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);

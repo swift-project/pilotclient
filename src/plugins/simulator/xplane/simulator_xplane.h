@@ -37,7 +37,7 @@ namespace BlackSimPlugin
             //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
             CSimulatorXPlane(
                 BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraft,
+                BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraft,
                 QObject *parent = nullptr);
 
             //! \copydoc BlackCore::ISimulator::isConnected
@@ -69,7 +69,7 @@ namespace BlackSimPlugin
             virtual bool disconnectFrom() override;
 
             //! \copydoc ISimulator::addRemoteAircraft()
-            virtual bool addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
+            virtual bool addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
 
             //! \copydoc BlackCore::ISimulator::removeRemoteAircraft
             virtual bool removeRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
@@ -172,7 +172,7 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulatorFactory::create()
             virtual BlackCore::ISimulator *create(
                 BlackMisc::Simulation::IOwnAircraftProvider      *ownAircraftProvider,
-                BlackMisc::Simulation::IRenderedAircraftProvider *renderedAircraftProvider,
+                BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
                 QObject *parent) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::getSimulatorInfo

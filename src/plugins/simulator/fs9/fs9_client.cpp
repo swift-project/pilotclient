@@ -29,10 +29,11 @@ namespace BlackSimPlugin
     namespace Fs9
     {
         CFs9Client::CFs9Client(
-            IRenderedAircraftProviderReadOnly *renderedAircraftProvider, QObject *owner, const QString &callsign, const CTime &updateInterval) :
+            BlackCore::IInterpolator *interpolator, QObject *owner, const QString &callsign, const CTime &updateInterval) :
             CDirectPlayPeer(owner, callsign),
-            m_renderedAircraftProvider(renderedAircraftProvider), m_updateInterval(updateInterval)
-        { }
+            m_interpolator(interpolator), m_updateInterval(updateInterval)
+        {
+        }
 
         CFs9Client::~CFs9Client()
         {
@@ -75,14 +76,14 @@ namespace BlackSimPlugin
         void CFs9Client::timerEvent(QTimerEvent *event)
         {
             Q_UNUSED(event);
+            Q_ASSERT(m_interpolator);
+
             if (m_clientStatus == Disconnected) { return; }
 
 
-            QMutexLocker locker(&m_mutexInterpolator);
-            CInterpolatorLinear interpolator(m_renderedAircraftProvider);
-            if (!interpolator.hasEnoughAircraftSituations(this->m_callsign)) { return; }
-
-            CAircraftSituation situation = interpolator.getCurrentInterpolatedSituation(m_callsign);
+            bool ok;
+            CAircraftSituation situation = this->m_interpolator->getCurrentInterpolatedSituation(this->m_interpolator->getSituationsByCallsign(), m_callsign, &ok);
+            if (!ok) { return; }
             MPPositionSlewMode positionSlewMode = aircraftSituationToFS9(situation);
 
             QByteArray positionMessage;

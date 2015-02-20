@@ -74,7 +74,7 @@ namespace BlackGui
             void ps_onRowCountChanged(int count, bool withFilter);
 
             //! Connection status has been changed
-            void ps_connectionStatusChanged(uint from, uint to);
+            void ps_connectionStatusChanged(int from, int to);
 
         private:
             QScopedPointer<Ui::CAircraftComponent> ui;

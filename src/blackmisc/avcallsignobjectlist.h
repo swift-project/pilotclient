@@ -18,7 +18,7 @@
 #include "blackmisc/propertyindexlist.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include <QList>
-#include <QMap>
+#include <QHash>
 
 namespace BlackMisc
 {
@@ -58,7 +58,7 @@ namespace BlackMisc
             QMap<QString, int> getSuffixes() const;
 
             //! Split into 0..n containers as per callsign
-            QMap<BlackMisc::Aviation::CCallsign, CONTAINER> splitPerCallsign() const;
+            QHash<BlackMisc::Aviation::CCallsign, CONTAINER> splitPerCallsign() const;
 
             //! Sort by callsign
             void sortByCallsign();

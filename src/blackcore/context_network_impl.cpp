@@ -78,6 +78,8 @@ namespace BlackCore
         connect(this->m_airspace, &CAirspaceMonitor::changedAircraftInRange, this, &CContextNetwork::changedAircraftInRange);
         connect(this->m_airspace, &CAirspaceMonitor::removedAircraft, this, &CContextNetwork::removedAircraft);
         connect(this->m_airspace, &CAirspaceMonitor::readyForModelMatching, this, &CContextNetwork::readyForModelMatching);
+        connect(this->m_airspace, &CAirspaceMonitor::addedRemoteAircraftParts, this, &CContextNetwork::addedRemoteAircraftParts);
+        connect(this->m_airspace, &CAirspaceMonitor::addedRemoteAircraftSituation, this, &CContextNetwork::addedRemoteAircraftSituation);
     }
 
     CContextNetwork::~CContextNetwork()
@@ -85,52 +87,49 @@ namespace BlackCore
         this->gracefulShutdown();
     }
 
-    const CSimulatedAircraftList &CContextNetwork::renderedAircraft() const
+    const CSimulatedAircraftList &CContextNetwork::remoteAircraft() const
     {
         Q_ASSERT(this->m_airspace);
-        return m_airspace->renderedAircraft();
+        return m_airspace->remoteAircraft();
     }
 
-    CSimulatedAircraftList &CContextNetwork::renderedAircraft()
+    CSimulatedAircraftList &CContextNetwork::remoteAircraft()
     {
         Q_ASSERT(this->m_airspace);
-        return m_airspace->renderedAircraft();
+        return m_airspace->remoteAircraft();
     }
 
-    CAircraftSituationList &CContextNetwork::renderedAircraftSituations()
+    CAircraftSituationList &CContextNetwork::remoteAircraftSituations()
     {
         Q_ASSERT(this->m_airspace);
-        return m_airspace->renderedAircraftSituations();
+        return m_airspace->remoteAircraftSituations();
     }
 
-    CAircraftSituationList CContextNetwork::getRenderedAircraftSituations() const
+    const CAircraftSituationList &CContextNetwork::remoteAircraftSituations() const
     {
         Q_ASSERT(this->m_airspace);
-        return m_airspace->getRenderedAircraftSituations();
+        return m_airspace->remoteAircraftSituations();
     }
 
-    const CAircraftSituationList &CContextNetwork::renderedAircraftSituations() const
+    const CAircraftPartsList &CContextNetwork::remoteAircraftParts() const
     {
         Q_ASSERT(this->m_airspace);
-        return m_airspace->renderedAircraftSituations();
+        return m_airspace->remoteAircraftParts();
     }
 
-    const CAircraftPartsList &CContextNetwork::renderedAircraftParts() const
+    CAircraftPartsList &CContextNetwork::remoteAircraftParts()
     {
         Q_ASSERT(this->m_airspace);
-        return m_airspace->renderedAircraftParts();
+        return m_airspace->remoteAircraftParts();
     }
 
-    CAircraftPartsList &CContextNetwork::renderedAircraftParts()
+    bool CContextNetwork::connectRemoteAircraftProviderSignals(
+            std::function<void (const CAircraftSituation &)> situationSlot,
+            std::function<void (const CAircraftParts &)> partsSlot,
+            std::function<void (const CCallsign &)> removedAircraftSlot)
     {
         Q_ASSERT(this->m_airspace);
-        return m_airspace->renderedAircraftParts();
-    }
-
-    CAircraftPartsList CContextNetwork::getRenderedAircraftParts() const
-    {
-        Q_ASSERT(this->m_airspace);
-        return m_airspace->getRenderedAircraftParts();
+        return this->m_airspace->connectRemoteAircraftProviderSignals(situationSlot, partsSlot, removedAircraftSlot);
     }
 
     void CContextNetwork::gracefulShutdown()
@@ -359,13 +358,13 @@ namespace BlackCore
     CSimulatedAircraftList CContextNetwork::getAircraftInRange() const
     {
         BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        return this->m_airspace->renderedAircraft();
+        return this->m_airspace->remoteAircraft();
     }
 
     CSimulatedAircraft CContextNetwork::getAircraftForCallsign(const CCallsign &callsign) const
     {
         BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign;
-        return this->m_airspace->renderedAircraft().findFirstByCallsign(callsign);
+        return this->m_airspace->remoteAircraft().findFirstByCallsign(callsign);
     }
 
     void CContextNetwork::ps_receivedBookings(const CAtcStationList &)
@@ -400,7 +399,7 @@ namespace BlackCore
         bool c = this->m_airspace->updateAircraftEnabled(callsign, enabledForRedering, originator);
         if (c)
         {
-            emit this->changedAircraftEnabled(this->renderedAircraft().findFirstByCallsign(callsign), originator);
+            emit this->changedAircraftEnabled(this->remoteAircraft().findFirstByCallsign(callsign), originator);
         }
         return c;
     }
@@ -411,7 +410,7 @@ namespace BlackCore
         bool c = this->m_airspace->updateAircraftModel(callsign, model, originator);
         if (c)
         {
-            emit this->changedRenderedAircraftModel(this->renderedAircraft().findFirstByCallsign(callsign), originator);
+            emit this->changedRenderedAircraftModel(this->remoteAircraft().findFirstByCallsign(callsign), originator);
         }
         return c;
     }
