@@ -15,6 +15,7 @@
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/avcallsignlist.h"
+#include "blackmisc/avaircraftsituationlist.h"
 #include "blackmisc/dictionary.h"
 #include <QList>
 #include <QVector>
@@ -128,7 +129,7 @@ namespace BlackMiscTest
         QVERIFY2(found.isEmpty(), "Empty found");
         callsigns.push_back(CCallsign("EDDM_TWR"));
         callsigns.push_back(CCallsign("KLAX_TWR"));
-        found = callsigns.findBy(&CCallsign::asString, "KLAXTWR");
+        found = callsigns.findBy(&CCallsign::asString, "KLAX_TWR");
         QVERIFY2(found.size() == 1, "found");
     }
 
@@ -213,4 +214,70 @@ namespace BlackMiscTest
         QVERIFY2(d1 == d4, "JSON serialization/deserialization failed");
     }
 
-} //namespace BlackMiscTest
+    void CTestContainers::timestampList()
+    {
+        CAircraftSituationList situations;
+        const qint64 ts = QDateTime::currentMSecsSinceEpoch();
+        const int no = 10;
+        for (int i = 0; i < no; ++i)
+        {
+            CAircraftSituation s;
+            s.setCallsign("CS" + QString::number(i));
+            s.setMSecsSinceEpoch(ts - 10 * i);
+            situations.push_back(s);
+        }
+
+        // test sorting
+        situations.sortOldestFirst();
+        qint64 ms = situations.front().getMSecsSinceEpoch();
+        QVERIFY2(ms == ts - 10 * (no - 1), "Oldest value not first");
+
+        situations.sortLatestFirst();
+        ms = situations.front().getMSecsSinceEpoch();
+        QVERIFY2(ms == ts, "Latest value not first");
+
+        // split in half
+        situations.sortOldestFirst(); // check that we really get latest first
+        QList<CAircraftSituationList> split = situations.splitByTime(ts - ((no / 2) * 10) + 1);
+        CAircraftSituationList before = split[0];
+        CAircraftSituationList after = split[1];
+
+        int beforeSize = before.size();
+        int afterSize = after.size();
+
+        QVERIFY(beforeSize == no / 2);
+        QVERIFY(afterSize == no / 2);
+
+        // check sort order, latest should
+        for (int i = 0; i < no; ++i)
+        {
+            CAircraftSituation s = (i < no / 2) ? before[i] : after[i - no / 2];
+            ms = s.getMSecsSinceEpoch();
+            QVERIFY2(ms == ts - 10 * i, "time does not match");
+        }
+
+        // test shifting
+        situations.clear();
+        const int maxElements = 8;
+        QVERIFY(situations.isEmpty());
+        for (int i = 0; i < no; ++i)
+        {
+            qint64 cTs = ts - 10 * i;
+            CAircraftSituation s;
+            s.setCallsign("CS" + QString::number(i));
+            s.setMSecsSinceEpoch(cTs);
+            situations.insertTimestampObject(s, maxElements);
+            if (i > maxElements - 1)
+            {
+                QVERIFY2(situations.size() == maxElements, "Situations must only contain max.elements");
+            }
+            else
+            {
+                QVERIFY2(situations.size() == i + 1, "Element size does not match");
+                QVERIFY2(situations.front().getMSecsSinceEpoch() == cTs, "Wrong front element");
+            }
+        }
+
+    }
+
+} //namespace

@@ -1,9 +1,13 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2014
+ * swift project community / contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
-/*! \file */
+//! \file
 
 #ifndef BLACKMISCTEST_TESTCONTAINERS_H
 #define BLACKMISCTEST_TESTCONTAINERS_H
@@ -13,12 +17,14 @@
 namespace BlackMiscTest
 {
 
+    //! Testing containers
     class CTestContainers : public QObject
     {
         Q_OBJECT
 
     public:
-        explicit CTestContainers(QObject *parent = 0) : QObject(parent) {}
+        //! Constructor
+        explicit CTestContainers(QObject *parent = nullptr) : QObject(parent) {}
 
     private slots:
         void collectionBasics();
@@ -26,8 +32,9 @@ namespace BlackMiscTest
         void joinAndSplit();
         void findTests();
         void dictionaryBasics();
+        void timestampList();
     };
 
-} //namespace BlackMiscTest
+} // namespace
 
 #endif // guard

@@ -100,8 +100,8 @@ namespace BlackMiscTest
     void CTestAviation::callsignWithContainers()
     {
         CCallsign cs1("EDDm_twr");
-        CCallsign cs2("EDDmtwr");
-        CCallsign cs3("EDDmapp", "München Radar");
+        CCallsign cs2("eddm_TWR");
+        CCallsign cs3("EDDm_app", "München Radar");
         QVERIFY2(cs1 == cs2, "Callsigns shall be equal");
         QVERIFY2(cs1 != cs3, "Callsigns shall not be equal");
 
@@ -164,7 +164,7 @@ namespace BlackMiscTest
         QVERIFY2(icao1 == icao2, "ICAOs shall be equal");
 
         CCallsign call1("EDDS_N_APP");
-        CCallsign call2("eddsnapp");
+        CCallsign call2("edds_n_app");
         QVERIFY2(call1 == call2, "Callsigns shall be equal");
 
         CAtcStation atc1(c1, user1, f1, situation1.getPosition(), CLength(), false, QDateTime(), QDateTime(), CInformationMessage(CInformationMessage::ATIS, "foo"));

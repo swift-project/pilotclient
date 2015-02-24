@@ -90,9 +90,9 @@ namespace BlackMiscTest
         CPropertyIndexVariantMap vm;
         CPropertyIndexVariantMap vmCopy(vmWildcard);
 
-        // remark: Shortcoming here, as the callsign will automatically set for user in station
-        // I have to set this as well, otherwise, not match.
-        vm.addValue(CAtcStation::IndexController, CUser("123456", "Joe Doe", CCallsign("EDDMTWR")));
+        // Remark: Shortcoming here, as the callsign will be automatically set for user in station
+        // I have to set this as well, otherwise, no match.
+        vm.addValue(CAtcStation::IndexController, CUser("123456", "Joe Doe", CCallsign("EDDM_TWR")));
 
         // compare
 

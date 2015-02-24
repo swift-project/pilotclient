@@ -1,7 +1,13 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2014
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKCORETEST_TESTAVIATIONBASE_H
 #define BLACKCORETEST_TESTAVIATIONBASE_H
@@ -11,27 +17,19 @@
 namespace BlackCoreTest
 {
 
-/*!
- * \brief Interpolator classes basic tests
- */
-class CTestInterpolator : public QObject
-{
-    Q_OBJECT
+    //! Interpolator classes basic tests
+    class CTestInterpolator : public QObject
+    {
+        Q_OBJECT
 
-public:
-    /*!
-     * \brief Standard test case constructor
-     * \param parent
-     */
-    explicit CTestInterpolator(QObject *parent = 0) : QObject(parent) {}
+    public:
+        //! Standard test case constructor
+        explicit CTestInterpolator(QObject *parent = nullptr) : QObject(parent) {}
 
-private slots:
-
-    /*!
-     * \brief Basic unit tests for interpolator
-     */
-    void interpolatorBasics();
-};
+    private slots:
+        //! Basic unit tests for interpolator
+        void linearInterpolator();
+    };
 
 } // namespace
 
