@@ -59,10 +59,10 @@ namespace BlackMisc
 
         protected:
             //! Myself
-            virtual const CAirportList &getContainer() const override { return *this; }
+            virtual const CAirportList &container() const override { return *this; }
 
             //! Myself
-            virtual CAirportList &getContainer() override { return *this; }
+            virtual CAirportList &container() override { return *this; }
 
         };
     } //namespace

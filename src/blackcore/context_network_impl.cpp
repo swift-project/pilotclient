@@ -76,7 +76,8 @@ namespace BlackCore
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked);
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus);
         connect(this->m_airspace, &CAirspaceMonitor::changedAircraftInRange, this, &CContextNetwork::changedAircraftInRange);
-        connect(this->m_airspace, &CAirspaceMonitor::removedAircraft, this, &CContextNetwork::removedAircraft);
+        connect(this->m_airspace, &CAirspaceMonitor::removedRemoteAircraft, this, &IContextNetwork::removedAircraft);
+        connect(this->m_airspace, &CAirspaceMonitor::removedRemoteAircraft, this, &CContextNetwork::removedRemoteAircraft);
         connect(this->m_airspace, &CAirspaceMonitor::readyForModelMatching, this, &CContextNetwork::readyForModelMatching);
         connect(this->m_airspace, &CAirspaceMonitor::addedRemoteAircraftParts, this, &CContextNetwork::addedRemoteAircraftParts);
         connect(this->m_airspace, &CAirspaceMonitor::addedRemoteAircraftSituation, this, &CContextNetwork::addedRemoteAircraftSituation);
@@ -124,9 +125,9 @@ namespace BlackCore
     }
 
     bool CContextNetwork::connectRemoteAircraftProviderSignals(
-            std::function<void (const CAircraftSituation &)> situationSlot,
-            std::function<void (const CAircraftParts &)> partsSlot,
-            std::function<void (const CCallsign &)> removedAircraftSlot)
+        std::function<void (const CAircraftSituation &)> situationSlot,
+        std::function<void (const CAircraftParts &)> partsSlot,
+        std::function<void (const CCallsign &)> removedAircraftSlot)
     {
         Q_ASSERT(this->m_airspace);
         return this->m_airspace->connectRemoteAircraftProviderSignals(situationSlot, partsSlot, removedAircraftSlot);
@@ -286,7 +287,7 @@ namespace BlackCore
     void CContextNetwork::ps_fsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << from << to;
-        auto fromOld = this->m_currentStatus;
+        auto fromOld = this->m_currentStatus; // own status cached
         this->m_currentStatus = to;
 
         if (fromOld == INetwork::Disconnecting)
@@ -294,6 +295,13 @@ namespace BlackCore
             // remark: vatlib does not know disconnecting. In vatlib's terminating connection method
             // state Disconnecting is sent manually. We fix the vatlib state here regarding disconnecting
             from = INetwork::Disconnecting;
+        }
+
+        if (to == INetwork::Disconnected)
+        {
+            // make sure airspace is really cleaned up
+            Q_ASSERT(m_airspace);
+            m_airspace->clear();
         }
 
         // send 1st position

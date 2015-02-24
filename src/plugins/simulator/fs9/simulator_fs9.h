@@ -89,7 +89,7 @@ namespace BlackSimPlugin
             virtual bool addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
 
             //! \copydoc ISimulator::removeRemoteAircraft()
-            virtual bool removeRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual bool removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 
             //! \copydoc ISimulator::updateOwnSimulatorCockpit()
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &ownAircraft, const QString &originator) override;

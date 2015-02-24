@@ -235,9 +235,9 @@ namespace BlackCore
         // use readyForModelMatching instead of CAirspaceMonitor::addedAircraft, as it contains client information
         bool c = connect(networkContext, &IContextNetwork::readyForModelMatching, this, &CContextSimulator::ps_addRemoteAircraft);
         Q_ASSERT(c);
-        c = connect(networkContext, &IContextNetwork::removedAircraft, this, &CContextSimulator::ps_removeRemoteAircraft);
+        c = connect(networkContext, &IContextNetwork::removedAircraft, this, &CContextSimulator::ps_removedRemoteAircraft);
         Q_ASSERT(c);
-        c = connect(networkContext, &IContextNetwork::changedRenderedAircraftModel, this->m_simulator, &ISimulator::changeRenderedAircraftModel);
+        c = connect(networkContext, &IContextNetwork::changedRenderedAircraftModel, this->m_simulator, &ISimulator::changeRemoteAircraftModel);
         Q_ASSERT(c);
         c = connect(networkContext, &IContextNetwork::changedAircraftEnabled, this->m_simulator, &ISimulator::changeAircraftEnabled);
         Q_ASSERT(c);
@@ -314,11 +314,11 @@ namespace BlackCore
         this->m_simulator->addRemoteAircraft(remoteAircraft);
     }
 
-    void CContextSimulator::ps_removeRemoteAircraft(const CCallsign &callsign)
+    void CContextSimulator::ps_removedRemoteAircraft(const CCallsign &callsign)
     {
         Q_ASSERT(this->m_simulator);
-        if (!this->m_simulator) return;
-        this->m_simulator->removeRenderedAircraft(callsign);
+        if (!this->m_simulator) { return; }
+        this->m_simulator->removeRemoteAircraft(callsign);
     }
 
     void CContextSimulator::ps_onConnectionStatusChanged(ISimulator::ConnectionStatus status)

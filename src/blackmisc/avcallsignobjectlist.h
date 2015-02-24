@@ -71,10 +71,10 @@ namespace BlackMisc
             ICallsignObjectList();
 
             //! Container
-            virtual const CONTAINER &getContainer() const = 0;
+            virtual const CONTAINER &container() const = 0;
 
             //! Container
-            virtual CONTAINER &getContainer() = 0;
+            virtual CONTAINER &container() = 0;
         };
 
     } //namespace

@@ -106,5 +106,38 @@ namespace BlackMisc
             }
         }
 
+        bool CAircraftSituation::isOnGroundGuessed() const
+        {
+            CLength heightAboveGround(this->getHeightAboveGround());
+            if (!heightAboveGround.isNull())
+            {
+                return heightAboveGround.value(CLengthUnit::m()) < 2.0;
+            }
+
+            // we guess on pitch an bank
+            if (qAbs(this->getPitch().value(CAngleUnit::deg())) > 10) { return false; }
+            if (qAbs(this->getBank().value(CAngleUnit::deg())) > 10) { return false; }
+
+            if (this->getGroundSpeed().value(CSpeedUnit::km_h()) > 80) { return false; }
+
+            // not sure, but his is a guess
+            return true;
+        }
+
+        CLength CAircraftSituation::getHeightAboveGround() const
+        {
+            static const CLength notAvialable(0, CLengthUnit::nullUnit());
+            if (this->m_altitude.getReferenceDatum() == CAltitude::AboveGround)
+            {
+                // we have a sure value
+                return this->getAltitude();
+            }
+            if (!m_position.geodeticHeight().isNull() && !m_altitude.isNull())
+            {
+                return m_altitude - m_position.geodeticHeight();
+            }
+            return notAvialable;
+        }
+
     } // namespace
 } // namespace

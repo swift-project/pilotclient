@@ -108,6 +108,7 @@ namespace BlackMisc
             else if (cat.contains("blackcore")) { this->m_humanReadableCategory = "Core"; }
             else if (cat.contains("blackgui")) { this->m_humanReadableCategory = "GUI"; }
             else if (cat.contains("blacksound")) { this->m_humanReadableCategory = "GUI"; }
+            else if (cat.contains("interpolator")) { this->m_humanReadableCategory = "Interpolator"; }
             else if (cat.contains("xplane")) { this->m_humanReadableCategory = "XPlane"; }
             else if (cat.contains("fsx")) { this->m_humanReadableCategory = "FSX"; }
             else if (cat.contains("fs9")) { this->m_humanReadableCategory = "FS9"; }

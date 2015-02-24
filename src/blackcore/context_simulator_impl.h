@@ -127,7 +127,7 @@ namespace BlackCore
         void ps_addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
 
         //! \copydoc ISimulator::removeRemoteAircraft
-        void ps_removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign);
+        void ps_removedRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Handle new connection status
         void ps_onConnectionStatusChanged(ISimulator::ConnectionStatus status);

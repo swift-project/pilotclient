@@ -31,7 +31,7 @@ namespace BlackMisc
         template <class OBJ, class CONTAINER>
         CONTAINER IGeoObjectList<OBJ, CONTAINER>::findWithinRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const
         {
-            return this->getContainer().findBy([&](const OBJ & geoObj)
+            return this->container().findBy([&](const OBJ & geoObj)
             {
                 return calculateGreatCircleDistance(geoObj, coordinate) <= range;
             });
@@ -40,7 +40,7 @@ namespace BlackMisc
         template <class OBJ, class CONTAINER>
         void IGeoObjectWithRelativePositionList<OBJ, CONTAINER>::calculcateDistanceAndBearingToPlane(const ICoordinateGeodetic &position)
         {
-            for (OBJ &geoObj : this->getContainer())
+            for (OBJ &geoObj : this->container())
             {
                 geoObj.calculcateDistanceAndBearingToOwnAircraft(position);
             }
@@ -49,7 +49,7 @@ namespace BlackMisc
         template <class OBJ, class CONTAINER>
         void IGeoObjectWithRelativePositionList<OBJ, CONTAINER>::removeIfOutsideRange(const Geo::ICoordinateGeodetic &position, const CLength &maxDistance, bool updateValues)
         {
-            this->getContainer().removeIf([ & ](OBJ & geoObj)
+            this->container().removeIf([ & ](OBJ & geoObj)
             {
                 return geoObj.calculcateDistanceAndBearingToOwnAircraft(position, updateValues) > maxDistance;
             });
@@ -62,7 +62,7 @@ namespace BlackMisc
             {
                 this->calculcateDistanceAndBearingToPlane(position);
             }
-            this->getContainer().sort([ & ](const OBJ & a, const OBJ & b) { return a.getDistanceToOwnAircraft() < b.getDistanceToOwnAircraft(); });
+            this->container().sort([ & ](const OBJ & a, const OBJ & b) { return a.getDistanceToOwnAircraft() < b.getDistanceToOwnAircraft(); });
         }
 
 

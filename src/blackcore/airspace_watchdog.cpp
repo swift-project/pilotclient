@@ -36,8 +36,16 @@ namespace BlackCore
 
     void CAirspaceWatchdog::resetCallsign(const CCallsign &callsign)
     {
-        Q_ASSERT(m_callsignTimestamps.contains(callsign));
-        m_callsignTimestamps[callsign] = QDateTime::currentDateTimeUtc();
+        if (m_callsignTimestamps.contains(callsign))
+        {
+            m_callsignTimestamps[callsign] = QDateTime::currentDateTimeUtc();
+        }
+        else
+        {
+            // that should rarely happen
+            CLogMessage(this).warning("Watchdog reset for non-existing callsign: %1") << callsign;
+            this->addCallsign(callsign);
+        }
     }
 
     void CAirspaceWatchdog::removeCallsign(const CCallsign &callsign)

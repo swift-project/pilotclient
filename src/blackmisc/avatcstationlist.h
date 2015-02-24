@@ -69,10 +69,10 @@ namespace BlackMisc
 
         protected:
             //! Myself
-            virtual const CAtcStationList &getContainer() const { return *this; }
+            virtual const CAtcStationList &container() const { return *this; }
 
             //! Myself
-            virtual CAtcStationList &getContainer() { return *this; }
+            virtual CAtcStationList &container() { return *this; }
 
         };
 

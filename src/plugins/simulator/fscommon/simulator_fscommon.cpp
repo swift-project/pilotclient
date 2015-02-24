@@ -252,8 +252,12 @@ namespace BlackSimPlugin
             this->m_maxRenderedAircraft = maxRenderedAircraft;
         }
 
-        bool CSimulatorFsCommon::changeRenderedAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator)
+        bool CSimulatorFsCommon::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft, const QString &originator)
         {
+            if (originator == simulatorOriginator()) { return false; }
+
+            // remove upfront, and then enable / disable again
+            this->removeRemoteAircraft(aircraft.getCallsign());
             return this->changeAircraftEnabled(aircraft, originator);
         }
 
@@ -266,7 +270,7 @@ namespace BlackSimPlugin
             }
             else
             {
-                this->removeRenderedAircraft(aircraft.getCallsign());
+                this->removeRemoteAircraft(aircraft.getCallsign());
             }
             return true;
         }

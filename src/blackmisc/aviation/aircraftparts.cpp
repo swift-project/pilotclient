@@ -98,5 +98,15 @@ namespace BlackMisc
             }
         }
 
+        CAircraftEngine CAircraftParts::getEngine(int number) const
+        {
+            return this->m_engines.findBy(&CAircraftEngine::getNumber, number).frontOrDefault();
+        }
+
+        bool CAircraftParts::isEngineOn(int number) const
+        {
+            return this->getEngine(number).isOn();
+        }
+
     } // namespace
 } // namespace

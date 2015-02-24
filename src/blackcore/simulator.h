@@ -83,10 +83,10 @@ namespace BlackCore
         virtual bool addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) = 0;
 
         //! Remove remote aircraft from simulator
-        virtual bool removeRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+        virtual bool removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
         //! Change remote aircraft per property
-        virtual bool changeRenderedAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) = 0;
+        virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) = 0;
 
         //! Aircraft got enabled / disabled
         virtual bool changeAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) = 0;

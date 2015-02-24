@@ -273,6 +273,12 @@ namespace BlackMisc
         void insert(T &&value) { push_back(std::move(value)); }
 
         /*!
+         * \brief Insert as first element.
+         * \pre The sequence must be initialized.
+         */
+        void insert_front(const T &value) { insert(begin(), value); }
+
+        /*!
          * \brief Synonym for push_back.
          * \pre The sequence must be initialized.
          */

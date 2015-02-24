@@ -64,7 +64,7 @@ namespace BlackMisc
         return otherTimestampObj.m_timestampMSecsSinceEpoch - this->m_timestampMSecsSinceEpoch;
     }
 
-    qint64 ITimestampBased::msecsToAbs(const ITimestampBased &otherTimestampObj) const
+    qint64 ITimestampBased::absMsecsTo(const ITimestampBased &otherTimestampObj) const
     {
         qint64 dt = this->msecsTo(otherTimestampObj);
         return dt > 0 ? dt : dt * -1;

@@ -80,13 +80,14 @@ namespace BlackCore
         // must not prefixed virtual (though they are) -> warning
 
         //! \copydoc IRemoteAircraftProviderReadOnly::addedRemoteAircraftSituation
-        void addedRemoteAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
+        void addedRemoteAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
         //! \copydoc IRemoteAircraftProviderReadOnly::addedRemoteAircraftPart
-        void addedRemoteAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts) override;
+        void addedRemoteAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
 
         //! \copydoc IRemoteAircraftProviderReadOnly::removedAircraft
-        void removedAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+        //! \sa IContextNetwork::removedAircraft() which is the equivalent when using IContextNetwork
+        void removedRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
     public slots:
         //! \copydoc IContextNetwork::readAtcBookingsFromSource()

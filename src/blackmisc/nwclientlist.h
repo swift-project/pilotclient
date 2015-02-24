@@ -46,10 +46,10 @@ namespace BlackMisc
 
         protected:
             //! Myself
-            virtual const CClientList &getContainer() const { return *this; }
+            virtual const CClientList &container() const { return *this; }
 
             //! Myself
-            virtual CClientList &getContainer() { return *this; }
+            virtual CClientList &container() { return *this; }
         };
 
     } //namespace

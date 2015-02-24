@@ -122,7 +122,7 @@ namespace BlackCore
     {
         bool s1 = connect(this, &CAirspaceMonitor::addedRemoteAircraftSituation, situationSlot);
         bool s2 = connect(this, &CAirspaceMonitor::addedRemoteAircraftParts, partsSlot);
-        bool s3 = connect(this, &CAirspaceMonitor::removedAircraft, removedAircraftSlot);
+        bool s3 = connect(this, &CAirspaceMonitor::removedRemoteAircraft, removedAircraftSlot);
         return s1 && s2 && s3;
     }
 
@@ -487,10 +487,11 @@ namespace BlackCore
 
     void CAirspaceMonitor::removeAllAircraft()
     {
-        m_aircraftWatchdog.removeAll();
+        m_aircraftWatchdog.removeAll(); // upfront
         for (CAircraft aircraft : m_aircraftInRange)
         {
-            emit removedAircraft(aircraft.getCallsign());
+            const CCallsign cs(aircraft.getCallsign());
+            emit removedRemoteAircraft(cs);
         }
         m_aircraftSituations.clear();
         m_aircraftParts.clear();
@@ -562,7 +563,11 @@ namespace BlackCore
         remoteAircraft.setClient(remoteClient);
         remoteAircraft.setModel(remoteClient.getAircraftModel());
 
-        bool dataComplete = remoteAircraft.hasValidAircraftDesignator() && remoteAircraft.hasValidRealName();
+        // check if the name and ICAO query went properly through
+        bool dataComplete =
+            remoteAircraft.hasValidAircraftDesignator() &&
+            (!m_serverSupportsNameQuery || remoteAircraft.hasValidRealName());
+
         if (trial < 3 && !dataComplete)
         {
             // allow another period for the client data to arrive, otherwise go ahead
@@ -571,7 +576,7 @@ namespace BlackCore
         }
 
         Q_ASSERT(remoteAircraft.hasValidAircraftDesignator());
-        Q_ASSERT(remoteAircraft.hasValidRealName());
+        Q_ASSERT(!m_serverSupportsNameQuery || remoteAircraft.hasValidRealName());
         emit this->readyForModelMatching(remoteAircraft);
     }
 
@@ -816,13 +821,16 @@ namespace BlackCore
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
         bool contains = this->m_aircraftInRange.containsCallsign(callsign);
+
+        // if with contains false remove here, in case of inconsistencies
         this->m_aircraftWatchdog.removeCallsign(callsign);
         this->m_otherClients.removeByCallsign(callsign);
+        this->removeFromAircraftCaches(callsign);
+
         if (contains)
         {
             this->m_aircraftInRange.removeByCallsign(callsign);
-            this->removeFromAircraftCaches(callsign);
-            emit this->removedAircraft(callsign);
+            emit this->removedRemoteAircraft(callsign);
         }
     }
 

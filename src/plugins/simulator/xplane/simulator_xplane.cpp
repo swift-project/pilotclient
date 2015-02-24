@@ -361,7 +361,7 @@ namespace BlackSimPlugin
 //            m_traffic->setPlaneTransponder(callsign.asString(), 2000, true, false); // TODO transponder
 //        }
 
-        bool CSimulatorXPlane::removeRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign)
+        bool CSimulatorXPlane::removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign)
         {
             if (! isConnected()) { return false; }
             m_traffic->removePlane(callsign.asString());
@@ -370,7 +370,7 @@ namespace BlackSimPlugin
             return true;
         }
 
-        bool CSimulatorXPlane::changeRenderedAircraftModel(const CSimulatedAircraft &aircraft, const QString &originator)
+        bool CSimulatorXPlane::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft, const QString &originator)
         {
             return this->changeAircraftEnabled(aircraft, originator);
         }
@@ -390,7 +390,7 @@ namespace BlackSimPlugin
             }
             else
             {
-                this->removeRenderedAircraft(aircraft.getCallsign());
+                this->removeRemoteAircraft(aircraft.getCallsign());
             }
             return true;
         }

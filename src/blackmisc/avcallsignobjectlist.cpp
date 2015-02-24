@@ -27,25 +27,25 @@ namespace BlackMisc
         template <class OBJ, class CONTAINER>
         bool ICallsignObjectList<OBJ, CONTAINER>::containsCallsign(const CCallsign &callsign) const
         {
-            return this->getContainer().contains(&OBJ::getCallsign, callsign);
+            return this->container().contains(&OBJ::getCallsign, callsign);
         }
 
         template <class OBJ, class CONTAINER>
         int ICallsignObjectList<OBJ, CONTAINER>::applyIfCallsign(const CCallsign &callsign, const CPropertyIndexVariantMap &variantMap)
         {
-            return this->getContainer().applyIf(&OBJ::getCallsign, callsign, variantMap);
+            return this->container().applyIf(&OBJ::getCallsign, callsign, variantMap);
         }
 
         template <class OBJ, class CONTAINER>
         CONTAINER ICallsignObjectList<OBJ, CONTAINER>::findByCallsign(const CCallsign &callsign) const
         {
-            return this->getContainer().findBy(&OBJ::getCallsign, callsign);
+            return this->container().findBy(&OBJ::getCallsign, callsign);
         }
 
         template <class OBJ, class CONTAINER>
         CONTAINER ICallsignObjectList<OBJ, CONTAINER>::findByCallsigns(const CCallsignList &callsigns) const
         {
-            return this->getContainer().findBy(Predicates::MemberIsAnyOf(&OBJ::getCallsign, callsigns));
+            return this->container().findBy(Predicates::MemberIsAnyOf(&OBJ::getCallsign, callsigns));
         }
 
         template <class OBJ, class CONTAINER>
@@ -66,7 +66,7 @@ namespace BlackMisc
             CONTAINER r;
             if (suffix.isEmpty()) { return r; }
             QString sfxUpper(suffix.trimmed().toUpper());
-            r = this->getContainer().findBy([ = ](const OBJ & csObj) -> bool
+            r = this->container().findBy([ = ](const OBJ & csObj) -> bool
             {
                 return (csObj.getCallsign().getSuffix() == sfxUpper);
             });
@@ -76,14 +76,14 @@ namespace BlackMisc
         template <class OBJ, class CONTAINER>
         int ICallsignObjectList<OBJ, CONTAINER>::removeByCallsign(const CCallsign &callsign)
         {
-            return this->getContainer().removeIf(&OBJ::getCallsign, callsign);
+            return this->container().removeIf(&OBJ::getCallsign, callsign);
         }
 
         template <class OBJ, class CONTAINER>
         QMap<QString, int> ICallsignObjectList<OBJ, CONTAINER>::getSuffixes() const
         {
             QMap<QString, int> r;
-            for (const OBJ &csObj : this->getContainer())
+            for (const OBJ &csObj : this->container())
             {
                 const QString s = csObj.getCallsign().getSuffix();
                 if (s.isEmpty()) { continue; }
@@ -102,7 +102,7 @@ namespace BlackMisc
         template <class OBJ, class CONTAINER>
         QHash<CCallsign, CONTAINER> ICallsignObjectList<OBJ, CONTAINER>::splitPerCallsign() const
         {
-            CONTAINER copyContainer(getContainer());
+            CONTAINER copyContainer(container());
             copyContainer.sortByCallsign();
             QHash<CCallsign, CONTAINER> result;
             CCallsign cs;
@@ -130,7 +130,7 @@ namespace BlackMisc
         template <class OBJ, class CONTAINER>
         void ICallsignObjectList<OBJ, CONTAINER>::sortByCallsign()
         {
-            getContainer().sortBy(&OBJ::getCallsign);
+            container().sortBy(&OBJ::getCallsign);
         }
 
         template <class OBJ, class CONTAINER>
@@ -141,20 +141,20 @@ namespace BlackMisc
             if (this->containsCallsign(cs))
             {
                 if (changedValues.isEmpty()) { return 0; }
-                c = this->getContainer().applyIf(&OBJ::getCallsign, cs, changedValues);
+                c = this->container().applyIf(&OBJ::getCallsign, cs, changedValues);
             }
             else
             {
                 c = 1;
                 if (changedValues.isEmpty())
                 {
-                    this->getContainer().push_back(objectBeforeChanges);
+                    this->container().push_back(objectBeforeChanges);
                 }
                 else
                 {
                     OBJ objectAdded(objectBeforeChanges);
                     objectAdded.apply(changedValues);
-                    this->getContainer().push_back(objectAdded);
+                    this->container().push_back(objectAdded);
                 }
             }
             return c;

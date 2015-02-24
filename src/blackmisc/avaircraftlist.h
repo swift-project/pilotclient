@@ -58,10 +58,10 @@ namespace BlackMisc
 
         protected:
             //! Myself
-            virtual const CAircraftList &getContainer() const { return *this; }
+            virtual const CAircraftList &container() const { return *this; }
 
             //! Myself
-            virtual CAircraftList &getContainer() { return *this; }
+            virtual CAircraftList &container() { return *this; }
 
         };
 

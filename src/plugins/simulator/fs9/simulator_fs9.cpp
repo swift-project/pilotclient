@@ -113,7 +113,7 @@ namespace BlackSimPlugin
             if (m_hashFs9Clients.contains(callsign))
             {
                 // already exists, remove first
-                this->removeRenderedAircraft(callsign);
+                this->removeRemoteAircraft(callsign);
             }
 
             CFs9Client *client = new CFs9Client(m_interpolator, this, callsign.toQString(), CTime(25, CTimeUnit::ms()));
@@ -127,7 +127,7 @@ namespace BlackSimPlugin
             return true;
         }
 
-        bool CSimulatorFs9::removeRenderedAircraft(const CCallsign &callsign)
+        bool CSimulatorFs9::removeRemoteAircraft(const CCallsign &callsign)
         {
             if (!m_hashFs9Clients.contains(callsign)) { return false; }
 
@@ -298,7 +298,7 @@ namespace BlackSimPlugin
             // Stop all FS9 client tasks
             for (auto fs9Client : m_hashFs9Clients.keys())
             {
-                removeRenderedAircraft(fs9Client);
+                removeRemoteAircraft(fs9Client);
             }
         }
     } // namespace

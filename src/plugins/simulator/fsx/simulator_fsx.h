@@ -106,8 +106,8 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::addRemoteAircraft()
             virtual bool addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
 
-            //! \copydoc ISimulator::removeRenderedAircraft()
-            virtual bool removeRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+            //! \copydoc ISimulator::remoteRenderedAircraft()
+            virtual bool removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 
             //! \copydoc ISimulator::updateOwnCockpit
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &ownAircraft, const QString &originator) override;
@@ -154,7 +154,7 @@ namespace BlackSimPlugin
         private:
 
             //! Remove a remote aircraft
-            bool removeRenderedAircraft(const CSimConnectObject &simObject);
+            bool removeRemoteAircraft(const CSimConnectObject &simObject);
 
             //! Init when connected
             HRESULT initWhenConnected();
@@ -166,7 +166,7 @@ namespace BlackSimPlugin
             HRESULT initDataDefinitionsWhenConnected();
 
             //! Update other aircrafts
-            void updateOtherAircraft();
+            void updateRemoteAircraft();
 
             //! Format conversion
             SIMCONNECT_DATA_INITPOSITION aircraftSituationToFsxInitPosition(const BlackMisc::Aviation::CAircraftSituation &situation);

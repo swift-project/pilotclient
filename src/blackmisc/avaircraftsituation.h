@@ -89,6 +89,9 @@ namespace BlackMisc
             //! \copydoc ICoordinateGeodetic::longitude()
             virtual const BlackMisc::Geo::CLongitude &longitude() const override { return this->m_position.longitude(); }
 
+            //! Guess if aircraft is "on ground"
+            virtual bool isOnGroundGuessed() const;
+
             //! \copydoc ICoordinateGeodetic::geodeticHeight
             //! \remarks this should be used for elevation as depicted here: http://en.wikipedia.org/wiki/Altitude#mediaviewer/File:Vertical_distances.svg
             const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override { return this->m_position.geodeticHeight(); }
@@ -100,6 +103,10 @@ namespace BlackMisc
             //! Elevation
             //! \sa setGeodeticHeight
             void setElevation(const BlackMisc::PhysicalQuantities::CLength &elevation) { return this->m_position.setGeodeticHeight(elevation); }
+
+            //! Height above ground.
+            //! Do not confuse with elevation (=geodeticHeight) as in \sa geodeticHeight() / \sa getElevation()
+            BlackMisc::PhysicalQuantities::CLength getHeightAboveGround() const;
 
             //! Get heading
             const BlackMisc::Aviation::CHeading &getHeading() const { return this->m_heading; }

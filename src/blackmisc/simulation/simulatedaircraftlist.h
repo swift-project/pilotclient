@@ -57,10 +57,10 @@ namespace BlackMisc
 
         protected:
             //! Myself
-            virtual const CSimulatedAircraftList &getContainer() const { return *this; }
+            virtual const CSimulatedAircraftList &container() const { return *this; }
 
             //! Myself
-            virtual CSimulatedAircraftList &getContainer() { return *this; }
+            virtual CSimulatedAircraftList &container() { return *this; }
 
         };
 

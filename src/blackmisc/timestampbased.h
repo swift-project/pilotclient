@@ -67,7 +67,7 @@ namespace BlackMisc
         qint64 msecsTo(const ITimestampBased &otherTimestampObj) const;
 
         //! Time difference
-        qint64 msecsToAbs(const ITimestampBased &otherTimestampObj) const;
+        qint64 absMsecsTo(const ITimestampBased &otherTimestampObj) const;
 
         //! Set the current time as timestamp
         void setCurrentUtcTime();

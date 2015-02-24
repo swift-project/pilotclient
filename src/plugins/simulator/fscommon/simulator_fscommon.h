@@ -74,7 +74,7 @@ namespace BlackSimPlugin
             virtual void setMaxRenderedAircraft(int maxRenderedAircraft) override;
 
             //! \copydoc ISimulator::changeRenderedAircraftModel
-            virtual bool changeRenderedAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) override;
+            virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) override;
 
             //! \copydoc ISimulator::changeAircraftEnabled
             virtual bool changeAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) override;
