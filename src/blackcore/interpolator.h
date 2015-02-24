@@ -79,12 +79,14 @@ namespace BlackCore
     public slots:
         //! Do a complete calculation for all know callsigns in background.
         //! Only use positive numbers.
+        //! \param requestId
         //! \param currentTimeMsSinceEpoch if no value is passed current time is used
         //! \threadsafe
+        //!
         void syncRequestSituationsCalculationsForAllCallsigns(int requestId, qint64 currentTimeMsSinceEpoch = -1);
 
         //! Do a complete calculation for all know callsigns in background.
-        //! Non blocking call of \syncRequestSituationsCalculationsForAllCallsigns
+        //! Non blocking call of \sa syncRequestSituationsCalculationsForAllCallsigns
         //! \threadsafe
         void asyncRequestSituationsCalculationsForAllCallsigns(int requestId, qint64 currentTimeMsSinceEpoch = -1);
 
