@@ -236,6 +236,7 @@
      <addaction name="menu_TestLocationsEDDF"/>
      <addaction name="menu_TestLocationsEDDM"/>
      <addaction name="menu_TestLocationsEDNX"/>
+     <addaction name="menu_TestLocationsLOWW"/>
     </widget>
     <widget class="QMenu" name="menu_Reload">
      <property name="title">
@@ -367,6 +368,11 @@
   <action name="menu_DebugMetaTypes">
    <property name="text">
     <string>Meta types (to console)</string>
+   </property>
+  </action>
+  <action name="menu_TestLocationsLOWW">
+   <property name="text">
+    <string>Position LOWW (Vienna, AUT)</string>
    </property>
   </action>
  </widget>

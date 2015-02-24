@@ -37,6 +37,10 @@ void SwiftGuiStd::ps_onMenuClicked()
     {
         this->setTestPosition("N 50° 2′ 0", "E 8° 34′ 14", CAltitude(100, CAltitude::MeanSeaLevel, CLengthUnit::m()));
     }
+    else if (sender == this->ui->menu_TestLocationsLOWW)
+    {
+        this->setTestPosition("N 40° 7′ 6.3588", "E 16° 33′ 39.924", CAltitude(100, CAltitude::MeanSeaLevel, CLengthUnit::m()));
+    }
     else if (sender == this->ui->menu_ReloadSettings)
     {
         this->ui->comp_MainInfoArea->getSettingsComponent()->reloadSettings();
