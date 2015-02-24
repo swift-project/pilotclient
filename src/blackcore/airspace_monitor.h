@@ -99,6 +99,9 @@ namespace BlackCore
         //! Clear the contents
         void clear();
 
+        //! Connection status
+        void setConnected(bool connected);
+
         //! Request to update other clients' data from the network
         void requestDataUpdates();
 
@@ -173,6 +176,7 @@ namespace BlackCore
         CAirspaceWatchdog      m_atcWatchdog;
         CAirspaceWatchdog      m_aircraftWatchdog;
         bool                   m_serverSupportsNameQuery = false; //!< not all servers support name query
+        bool                   m_connected = false;               //!< retrieve data
 
         // TODO FIXME (MS) should be in INetwork
         void sendFsipiCustomPacket(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;

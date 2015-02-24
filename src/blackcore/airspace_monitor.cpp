@@ -352,10 +352,19 @@ namespace BlackCore
         removeAllOtherClients();
     }
 
+    void CAirspaceMonitor::setConnected(bool connected)
+    {
+        this->m_connected = connected;
+        if (!connected)
+        {
+            this->clear();
+        }
+    }
+
     void CAirspaceMonitor::ps_realNameReplyReceived(const CCallsign &callsign, const QString &realname)
     {
         Q_ASSERT(this->m_vatsimDataFileReader);
-        if (realname.isEmpty()) { return; }
+        if (!this->m_connected || realname.isEmpty()) { return; }
         CPropertyIndexVariantMap vm({CAtcStation::IndexController, CUser::IndexRealName}, realname);
         this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
@@ -376,7 +385,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags)
     {
-        if (callsign.isEmpty()) { return; }
+        if (!this->m_connected || callsign.isEmpty()) { return; }
         CPropertyIndexVariantMap capabilities;
         capabilities.addValue(CClient::FsdAtisCanBeReceived, (flags & INetwork::AcceptsAtisResponses));
         capabilities.addValue(CClient::FsdWithInterimPositions, (flags & INetwork::SupportsInterimPosUpdates));
@@ -398,7 +407,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_fsipirCustomPacketReceived(const CCallsign &callsign, const QString &airlineIcao, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &model)
     {
-        if (callsign.isEmpty() || model.isEmpty()) { return; }
+        if (!this->m_connected || callsign.isEmpty() || model.isEmpty()) { return; }
 
         // Request of other client, I can get the other's model from that
         CPropertyIndexVariantMap vm({ CClient::IndexModel, CAircraftModel::IndexModelString }, model);
@@ -433,7 +442,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_serverReplyReceived(const CCallsign &callsign, const QString &server)
     {
-        if (callsign.isEmpty() || server.isEmpty()) { return; }
+        if (!this->m_connected || callsign.isEmpty() || server.isEmpty()) { return; }
         if (!this->m_otherClients.contains(&CClient::getCallsign, callsign)) { this->m_otherClients.push_back(CClient(callsign)); }
         CPropertyIndexVariantMap vm(CClient::IndexServer, server);
         this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
@@ -441,7 +450,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_metarReceived(const QString &metarMessage)
     {
-        if (metarMessage.length() < 10) return; // invalid
+        if (!this->m_connected || metarMessage.length() < 10) return; // invalid
         const QString icaoCode = metarMessage.left(4).toUpper();
         const QString icaoCodeTower = icaoCode + "_TWR";
         CCallsign callsignTower(icaoCodeTower);
@@ -465,6 +474,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::sendFsipiCustomPacket(const CCallsign &recipientCallsign) const
     {
+        if (!this->m_connected) { return; }
         CAircraftIcao icao = ownAircraft().getIcaoInfo();
         QString modelString = ownAircraft().getModel().getModelString();
         if (modelString.isEmpty()) { modelString = CProject::systemNameAndVersion(); }
@@ -473,6 +483,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::sendFsipirCustomPacket(const CCallsign &recipientCallsign) const
     {
+        if (!this->m_connected) { return; }
         CAircraftIcao icao = ownAircraft().getIcaoInfo();
         QString modelString = ownAircraft().getModel().getModelString();
         if (modelString.isEmpty()) { modelString = CProject::systemNameAndVersion(); }
@@ -553,7 +564,7 @@ namespace BlackCore
     void CAirspaceMonitor::ps_sendReadyForModelMatching(const CCallsign &callsign, int trial)
     {
         // some checks for special conditions, e.g. logout -> empty list, but still signals pending
-        if (this->m_aircraftInRange.isEmpty()) { return; }
+        if (!this->m_connected || this->m_aircraftInRange.isEmpty()) { return; }
         if (!this->m_aircraftInRange.containsCallsign(callsign)) { return; }
 
         // build simulated aircraft and crosscheck if all data are available
@@ -583,6 +594,7 @@ namespace BlackCore
     void CAirspaceMonitor::ps_atcPositionUpdate(const CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range)
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+        if (!this->m_connected) { return; }
         CAtcStationList stationsWithCallsign = this->m_atcStationsOnline.findByCallsign(callsign);
         if (stationsWithCallsign.isEmpty())
         {
@@ -644,7 +656,7 @@ namespace BlackCore
     void CAirspaceMonitor::ps_atisReceived(const CCallsign &callsign, const CInformationMessage &atisMessage)
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
-        if (callsign.isEmpty()) return;
+        if (!this->m_connected || callsign.isEmpty()) return;
         CPropertyIndexVariantMap vm(CAtcStation::IndexAtis, atisMessage.toCVariant());
         int changedOnline = this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
 
@@ -658,6 +670,7 @@ namespace BlackCore
     void CAirspaceMonitor::ps_atisVoiceRoomReceived(const CCallsign &callsign, const QString &url)
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+        if (!this->m_connected) { return; }
         QString trimmedUrl = url.trimmed();
         CPropertyIndexVariantMap vm({ CAtcStation::IndexVoiceRoom, CVoiceRoom::IndexUrl }, trimmedUrl);
         int changedOnline = this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm, true);
@@ -684,6 +697,7 @@ namespace BlackCore
     void CAirspaceMonitor::ps_atisLogoffTimeReceived(const CCallsign &callsign, const QString &zuluTime)
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+        if (!this->m_connected) { return; }
         if (zuluTime.length() == 4)
         {
             // Logic to set logoff time
@@ -708,6 +722,7 @@ namespace BlackCore
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
         Q_ASSERT(!callsign.isEmpty());
+        if (!this->m_connected) { return; }
 
         // update
         CPropertyIndexVariantMap vm(CAircraft::IndexIcao, icaoData.toCVariant());
@@ -735,6 +750,7 @@ namespace BlackCore
     void CAirspaceMonitor::ps_aircraftUpdateReceived(const CCallsign &callsign, const CAircraftSituation &situation, const CTransponder &transponder)
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+        if (!this->m_connected) { return; }
 
         // store situation history
         CAircraftSituation situationWithCallsign(situation);

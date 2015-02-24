@@ -167,6 +167,7 @@ namespace BlackCore
         else
         {
             this->m_currentStatus = INetwork::Connecting; // as semaphore we are going to connect
+            this->m_airspace->setConnected(true);
             INetwork::LoginMode mode = static_cast<INetwork::LoginMode>(loginMode);
             this->getIContextOwnAircraft()->updatePilot(server.getUser());
             const CAircraft ownAircraft = this->ownAircraft();
@@ -186,7 +187,7 @@ namespace BlackCore
         {
             this->m_currentStatus = INetwork::Disconnecting; // as semaphore we are going to disconnect
             this->m_network->terminateConnection();
-            this->m_airspace->clear();
+            this->m_airspace->setConnected(false);
             return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, "Connection terminating");
         }
         else if (this->isPendingConnection())
