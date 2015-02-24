@@ -125,7 +125,8 @@ namespace BlackCore
             std::function<void(const BlackMisc::Aviation::CCallsign &)> removedAircraftSlot
         ) override;
 
-        const qint64 AircraftSituationsRemovedOffsetMs = 30 * 1000; //!< situations will be removed if older than
+        const qint64 AircraftSituationsRemovedOffsetMs = 30 * 1000; //!< situations older than now - offset will be removed
+        const qint64 AircraftPartsRemoveOffsetMs = 30* 1000;        //!< parts older than now - offset will be removed
 
     signals:
 

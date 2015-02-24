@@ -755,8 +755,8 @@ namespace BlackCore
         // store situation history
         CAircraftSituation situationWithCallsign(situation);
         situationWithCallsign.setCallsign(callsign);
-        this->m_aircraftSituations.insert(situationWithCallsign);
-        this->m_aircraftSituations.removeOlderThanNowMinusOffset(AircraftSituationsRemovedOffsetMs);
+        // this->m_aircraftSituations.insert_front(situationWithCallsign);
+        // this->m_aircraftSituations.removeOlderThanNowMinusOffset(AircraftSituationsRemovedOffsetMs);
 
         bool exists = this->m_aircraftInRange.containsCallsign(callsign);
         if (!exists)
@@ -881,7 +881,8 @@ namespace BlackCore
         parts.convertFromJson(config);
 
         // store part history
-        this->m_aircraftParts.insert(parts);
+        // this->m_aircraftParts.insert_front(parts);
+        // this->m_aircraftParts.removeOlderThanNowMinusOffset(AircraftPartsRemoveOffsetMs);
         emit this->addedRemoteAircraftParts(parts);
 
         CPropertyIndexVariantMap vm;
