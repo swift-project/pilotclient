@@ -60,6 +60,11 @@ namespace BlackMisc
         CSequence(std::initializer_list<T> il) : m_pimpl(new Pimpl<QList<T>>(QList<T>(il))) {}
 
         /*!
+         * \brief By QList of type <T>.
+         */
+        CSequence(const QList<T> &list) : m_pimpl(new Pimpl<QList<T>>(QList<T>(list))) {}
+
+        /*!
          * \brief Copy constructor.
          */
         CSequence(const CSequence &other) : m_pimpl(other.pimpl() ? other.pimpl()->clone() : nullptr) {}
@@ -506,7 +511,7 @@ namespace BlackMisc
         QFuture<TargetContainer> sortedAsync(Predicate p) const
         {
             TargetContainer result = *this;
-            QFuture<TargetContainer> f = QtConcurrent::run([=]()
+            QFuture<TargetContainer> f = QtConcurrent::run([ = ]()
             {
                 result.sort(p);
                 return result;
