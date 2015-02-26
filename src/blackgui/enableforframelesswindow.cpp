@@ -109,6 +109,8 @@ namespace BlackGui
             return (Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
         case WindowNormal:
         default:
+            // tool window and minimized not supported on windows
+            // tool window always with close button on windows
             return (Qt::Tool | Qt::WindowStaysOnTopHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
         }
     }

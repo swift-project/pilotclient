@@ -21,9 +21,7 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        /*!
-         * Value object encapsulating a list of callsigns.
-         */
+        //! Value object for a list of callsigns.
         class CCallsignList : public CSequence<CCallsign>
         {
         public:

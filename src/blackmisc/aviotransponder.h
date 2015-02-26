@@ -49,12 +49,12 @@ namespace BlackMisc
             CTransponder() : CValueObjectStdTuple("transponder"), m_transponderCode(0), m_transponderMode(StateStandby) {}
 
             //! Constructor
-            CTransponder(const QString &name, qint32 transponderCode, TransponderMode transponderMode) :
+            CTransponder(const QString &name, int transponderCode, TransponderMode transponderMode) :
                 CValueObjectStdTuple(name), m_transponderCode(transponderCode), m_transponderMode(transponderMode)
             {  }
 
             //! Constructor with transponder mode as string
-            CTransponder(const QString &name, qint32 transponderCode, QString transponderMode) :
+            CTransponder(const QString &name, int transponderCode, QString transponderMode) :
                 CValueObjectStdTuple(name), m_transponderCode(transponderCode), m_transponderMode(StateStandby)
             {
                 this->setModeAsString(transponderMode);
