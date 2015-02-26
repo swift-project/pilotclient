@@ -266,7 +266,7 @@ namespace BlackMiscTest
             CAircraftSituation s;
             s.setCallsign("CS" + QString::number(i));
             s.setMSecsSinceEpoch(cTs);
-            situations.insertTimestampObject(s, maxElements);
+            situations.push_frontMaxElements(s, maxElements);
             if (i > maxElements - 1)
             {
                 QVERIFY2(situations.size() == maxElements, "Situations must only contain max.elements");

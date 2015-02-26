@@ -12,6 +12,7 @@
 #ifndef BLACKCORETEST_TESTAVIATIONBASE_H
 #define BLACKCORETEST_TESTAVIATIONBASE_H
 
+#include "blackmisc/avaircraftsituation.h"
 #include <QtTest/QtTest>
 
 namespace BlackCoreTest
@@ -29,6 +30,10 @@ namespace BlackCoreTest
     private slots:
         //! Basic unit tests for interpolator
         void linearInterpolator();
+
+    private:
+        //! Test situation for testing
+        static BlackMisc::Aviation::CAircraftSituation getTestSituation(const BlackMisc::Aviation::CCallsign &callsign, int number, qint64 ts, qint64 deltaT);
     };
 
 } // namespace

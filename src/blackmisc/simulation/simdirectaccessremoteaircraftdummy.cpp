@@ -79,5 +79,12 @@ namespace BlackMisc
             emit addedRemoteAircraftSituation(situation);
         }
 
+        void CRemoteAircraftProviderDummy::clear()
+        {
+            m_situations.clear();
+            m_parts.clear();
+            m_aircraft.clear();
+        }
+
     } // namespace
 } // namespace

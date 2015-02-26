@@ -65,6 +65,9 @@ namespace BlackMisc
             //! For testing, add new situation and fire signals
             void insertNewSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
+            // clear all data
+            void clear();
+
         signals:
             //! \copydoc IRemoteAircraftProviderReadOnly::addedRemoteAircraftSituation
             void addedRemoteAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
