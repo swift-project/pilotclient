@@ -120,9 +120,13 @@ namespace BlackCore
         std::function<void(const CCallsign &)> removedAircraftSlot
     )
     {
-        bool s1 = connect(this, &CAirspaceMonitor::addedRemoteAircraftSituation, situationSlot);
+        // bool s1 = connect(this, &CAirspaceMonitor::addedRemoteAircraftSituation, situationSlot);
+        bool s1 = connect(this->m_network, &INetwork::aircraftPositionUpdate, situationSlot);
+        Q_ASSERT(s1);
         bool s2 = connect(this, &CAirspaceMonitor::addedRemoteAircraftParts, partsSlot);
+        Q_ASSERT(s2);
         bool s3 = connect(this, &CAirspaceMonitor::removedRemoteAircraft, removedAircraftSlot);
+        Q_ASSERT(s3);
         return s1 && s2 && s3;
     }
 
@@ -747,16 +751,18 @@ namespace BlackCore
         if (c > 0) { ps_sendReadyForModelMatching(callsign, 1); }
     }
 
-    void CAirspaceMonitor::ps_aircraftUpdateReceived(const CCallsign &callsign, const CAircraftSituation &situation, const CTransponder &transponder)
+    void CAirspaceMonitor::ps_aircraftUpdateReceived(const CAircraftSituation &situation, const CTransponder &transponder)
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
         if (!this->m_connected) { return; }
 
+        CCallsign callsign(situation.getCallsign());
+        Q_ASSERT(!callsign.isEmpty());
+
         // store situation history
-        CAircraftSituation situationWithCallsign(situation);
-        situationWithCallsign.setCallsign(callsign);
-        // this->m_aircraftSituations.insert_front(situationWithCallsign);
+        // this->m_aircraftSituations.insert_front(situation);
         // this->m_aircraftSituations.removeOlderThanNowMinusOffset(AircraftSituationsRemovedOffsetMs);
+        emit this->addedRemoteAircraftSituation(situation);
 
         bool exists = this->m_aircraftInRange.containsCallsign(callsign);
         if (!exists)
@@ -829,7 +835,6 @@ namespace BlackCore
             this->m_aircraftWatchdog.resetCallsign(callsign);
         }
 
-        emit this->addedRemoteAircraftSituation(situationWithCallsign);
         emit this->changedAircraftInRange();
     }
 

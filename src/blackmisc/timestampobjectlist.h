@@ -32,6 +32,9 @@ namespace BlackMisc
         //! List of objects before msSinceEpoch
         CONTAINER findBefore(qint64 msSinceEpoch) const;
 
+        //! Get objects before msSinceEpoch and remove those
+        CONTAINER findBeforeAndRemove(qint64 msSinceEpoch);
+
         //! List of objects before now - offset
         CONTAINER findBeforeNowMinusOffset(qint64 msOffset) const;
 
@@ -67,7 +70,7 @@ namespace BlackMisc
         void sortOldestFirst();
 
         //! Inserts as first object by keeping max. elements
-        void insertTimestampObject(const OBJ &object, int maxElements);
+        void push_frontMaxElements(const OBJ &object, int maxElements);
 
     protected:
         //! Constructor

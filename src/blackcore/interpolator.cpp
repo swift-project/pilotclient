@@ -35,48 +35,19 @@ namespace BlackCore
         Q_UNUSED(c);
     }
 
-    QList<CAircraftSituationList> IInterpolator::getSituationsTimeSplit(const CCallsign &callsign, qint64 splitTimeMsSinceEpoch) const
+    CAircraftSituationList IInterpolator::getInterpolatedSituations(qint64 currentTimeMsSinceEpoch)
     {
-        QReadLocker l(&m_situationsLock);
-        static const QList<CAircraftSituationList> empty({ CAircraftSituationList(), CAircraftSituationList() });
-        if (!this->m_situationsByCallsign.contains(callsign)) { return empty; }
-        return this->m_situationsByCallsign[callsign].splitByTime(splitTimeMsSinceEpoch);
-    }
-
-    bool IInterpolator::hasEnoughAircraftSituations(const CCallsign &callsign) const
-    {
-        QReadLocker l(&m_situationsLock);
-        if (!this->m_situationsByCallsign.contains(callsign)) { return false; }
-        return this->m_situationsByCallsign[callsign].findBeforeNowMinusOffset(TimeOffsetMs).size() > 0;
-    }
-
-    CAircraftParts IInterpolator::getLatestPartsBeforeOffset(const CCallsign &callsign, qint64 timeOffset, bool *ok) const
-    {
-        QReadLocker l(&m_partsLock);
-        static const CAircraftParts empty;
-        if (ok) { *ok = false; }
-        if (this->m_partsByCallsign.contains(callsign)) { return empty; }
-        CAircraftPartsList partsList = this->m_partsByCallsign[callsign].findBeforeNowMinusOffset(timeOffset);
-        l.unlock();
-        if (partsList.isEmpty()) { return empty; }
-        if (ok) { *ok = true; }
-        return partsList.latestValue();
-    }
-
-    void IInterpolator::syncRequestSituationsCalculationsForAllCallsigns(int requestId, qint64 currentTimeMsSinceEpoch)
-    {
-        QReadLocker l(&m_situationsLock);
-        Q_ASSERT(requestId >= 0);
-        const QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituationList> situationsCopy(m_situationsByCallsign);
+        QReadLocker l(&m_lockSituations);
+        const CSituationsPerCallsign situationsCopy(m_situationsByCallsign);
         l.unlock();
 
         CAircraftSituationList latestInterpolations;
         if (currentTimeMsSinceEpoch < 0) { currentTimeMsSinceEpoch = QDateTime::currentMSecsSinceEpoch(); }
         for (const CCallsign &cs : situationsCopy.keys())
         {
-            bool ok = false;
-            CAircraftSituation situation = getCurrentInterpolatedSituation(situationsCopy, cs, currentTimeMsSinceEpoch, &ok);
-            if (ok)
+            InterpolationStatus status;
+            CAircraftSituation situation = getInterpolatedSituation(cs, currentTimeMsSinceEpoch, status, &situationsCopy);
+            if (status.allTrue())
             {
                 latestInterpolations.push_back(situation);
             }
@@ -86,71 +57,51 @@ namespace BlackCore
                 // further logging could go here
             }
         }
-
-        QWriteLocker wl(&m_requestedInterpolationsLock);
-        while (m_requestedInterpolations.size() >= MaxKeptInterpolationRequests - 1)
-        {
-            m_requestedInterpolations.erase(--m_requestedInterpolations.end());
-        }
-        m_requestedInterpolations.insert(requestId, latestInterpolations); // new to old
-        if (m_withDebugMsg)
-        {
-            CLogMessage(this).debug() << "Added request" << requestId << "with" << latestInterpolations.size() << "interpolation(s)";
-        }
+        return latestInterpolations;
     }
 
-    void IInterpolator::asyncRequestSituationsCalculationsForAllCallsigns(int requestId, qint64 currentTimeMsSinceEpoch)
+    IInterpolator::CSituationsPerCallsign IInterpolator::getSituationsByCallsign() const
     {
-        Q_ASSERT(requestId >= 0);
-        QMetaObject::invokeMethod(this, "syncRequestSituationsCalculationsForAllCallsigns",
-                                  Qt::QueuedConnection, Q_ARG(int, requestId), Q_ARG(qint64, currentTimeMsSinceEpoch));
-    }
-
-    QHash<CCallsign, CAircraftSituationList> IInterpolator::getSituationsByCallsign() const
-    {
-        QReadLocker l(&m_situationsLock);
+        QReadLocker l(&m_lockSituations);
         return m_situationsByCallsign;
+    }
+
+    CAircraftPartsList IInterpolator::getAndRemovePartsBeforeOffset(const CCallsign &callsign, qint64 cutoffTime, BlackCore::IInterpolator::PartsStatus &partsStatus)
+    {
+        static const CAircraftPartsList empty;
+        partsStatus.reset();
+        QWriteLocker l(&m_lockParts);
+        if (this->m_partsByCallsign.contains(callsign))
+        {
+            partsStatus.supportsParts = true;
+            return this->m_partsByCallsign[callsign].findBeforeAndRemove(cutoffTime);
+        }
+        else
+        {
+            partsStatus.supportsParts = m_aircraftSupportingParts.contains(callsign);
+            return empty;
+        }
+    }
+
+    void IInterpolator::clear()
+    {
+        QWriteLocker s(&m_lockSituations);
+        QWriteLocker p(&m_lockParts);
+        m_situationsByCallsign.clear();
+        m_partsByCallsign.clear();
     }
 
     CAircraftSituationList IInterpolator::getSituationsForCallsign(const CCallsign &callsign) const
     {
-        QReadLocker l(&m_situationsLock);
+        QReadLocker l(&m_lockSituations);
         static const CAircraftSituationList empty;
         if (!m_situationsByCallsign.contains(callsign)) { return empty; }
         return m_situationsByCallsign[callsign];
     }
 
-    int IInterpolator::latestFinishedRequestId() const
-    {
-        QReadLocker l(&m_requestedInterpolationsLock);
-        if (m_requestedInterpolations.isEmpty()) { return -1; }
-        return m_requestedInterpolations.keys().first();
-    }
-
-    CAircraftSituationList IInterpolator::latestFinishedRequest() const
-    {
-        QReadLocker l(&m_requestedInterpolationsLock);
-        static const CAircraftSituationList empty;
-        if (m_requestedInterpolations.isEmpty()) { return empty; }
-        return m_requestedInterpolations.values().first();
-    }
-
-    CAircraftSituationList IInterpolator::getRequest(int requestId, bool *ok) const
-    {
-        QReadLocker l(&m_requestedInterpolationsLock);
-        static const CAircraftSituationList empty;
-        if (!m_requestedInterpolations.contains(requestId))
-        {
-            if (ok) { *ok = false; }
-            return empty;
-        }
-        if (ok) { *ok = true; }
-        return m_requestedInterpolations[requestId];
-    }
-
     void IInterpolator::ps_onAddedAircraftSituation(const CAircraftSituation &situation)
     {
-        QWriteLocker lock(&m_situationsLock);
+        QWriteLocker lock(&m_lockSituations);
         const CCallsign callsign(situation.getCallsign());
         Q_ASSERT(!callsign.isEmpty());
         if (callsign.isEmpty()) { return; }
@@ -158,32 +109,57 @@ namespace BlackCore
 
         // list from new to old
         CAircraftSituationList &l = this->m_situationsByCallsign[callsign];
-        l.insertTimestampObject(situation, MaxSituationsPerCallsign);
+        l.push_frontMaxElements(situation, MaxSituationsPerCallsign);
     }
 
     void IInterpolator::ps_onAddedAircraftParts(const CAircraftParts &parts)
     {
-        QWriteLocker lock(&m_partsLock);
+        QWriteLocker lock(&m_lockParts);
         const CCallsign callsign(parts.getCallsign());
         Q_ASSERT(!callsign.isEmpty());
         if (callsign.isEmpty()) { return; }
         if (this->m_withDebugMsg) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << parts.getCallsign() << parts.getMSecsSinceEpoch(); }
 
-        // list from new to old
+        // list sorted from new to old
         CAircraftPartsList &l = this->m_partsByCallsign[callsign];
-        l.insertTimestampObject(parts, MaxPartsPerCallsign);
+        l.push_frontMaxElements(parts, MaxPartsPerCallsign);
+
+        if (m_aircraftSupportingParts.contains(callsign)) { return; }
+        m_aircraftSupportingParts.push_back(callsign);
     }
 
     void IInterpolator::ps_onRemovedAircraft(const CCallsign &callsign)
     {
-        QWriteLocker ls(&m_situationsLock);
-        QWriteLocker lp(&m_partsLock);
+        QWriteLocker ls(&m_lockSituations);
+        QWriteLocker lp(&m_lockParts);
         Q_ASSERT(!callsign.isEmpty());
         if (callsign.isEmpty()) { return; }
         if (this->m_withDebugMsg) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
 
         this->m_partsByCallsign.remove(callsign);
         this->m_situationsByCallsign.remove(callsign);
+        this->m_aircraftSupportingParts.remove(callsign);
+    }
+
+    bool IInterpolator::InterpolationStatus::allTrue() const
+    {
+        return interpolationSucceeded && changedPosition;
+    }
+
+    void IInterpolator::InterpolationStatus::reset()
+    {
+        changedPosition = false;
+        interpolationSucceeded = false;
+    }
+
+    bool IInterpolator::PartsStatus::allTrue() const
+    {
+        return supportsParts;
+    }
+
+    void IInterpolator::PartsStatus::reset()
+    {
+        supportsParts = false;
     }
 
 } // namespace

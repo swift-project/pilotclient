@@ -70,13 +70,12 @@ namespace BlackSimPlugin
             char title[256]; //!< Aircraft model string
         };
 
-        //! Data struct of remote aircraft
-        struct DataDefinitionRemoteAircraft
+        //! Data struct of remote aircraft parts
+        struct DataDefinitionRemoteAircraftParts
         {
-            SIMCONNECT_DATA_INITPOSITION position;  //!< Aircrafts position
             double lightStrobe;                 //!< Is strobe light on?
             double lightLanding;                //!< Is landing light on?
-//            double lightTaxi;                   //!< Is taxi light on?
+            // double lightTaxi;                   //!< Is taxi light on?
             double lightBeacon;                 //!< Is beacon light on?
             double lightNav;                    //!< Is nav light on?
             double lightLogo;                   //!< Is logo light on?
@@ -141,7 +140,8 @@ namespace BlackSimPlugin
             {
                 DataOwnAircraft,
                 DataOwnAircraftTitle,
-                DataRemoteAircraft,
+                DataRemoteAircraftParts,
+                DataRemoteAircraftPosition,
                 DataSimEnvironment,
                 DataClientAreaSb,       //!< whole SB area
                 DataClientAreaSbIdent,  //!< ident single value

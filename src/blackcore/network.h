@@ -430,8 +430,9 @@ namespace BlackCore
 
         /*!
          * We received a notification of the state of another aircraft on the network.
+         * Corresponding callsign in \sa CAircraftSituation::getCallsign .
          */
-        void aircraftPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation,
+        void aircraftPositionUpdate(const BlackMisc::Aviation::CAircraftSituation &situation,
                                     const BlackMisc::Aviation::CTransponder &transponder);
 
         /*!

@@ -71,31 +71,32 @@ namespace BlackSimPlugin
         HRESULT CSimConnectDefinitions::initRemoteAircraft(const HANDLE hSimConnect)
         {
             HRESULT hr = S_OK;
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraft, "Initial Position", NULL, SIMCONNECT_DATATYPE_INITPOSITION);
+            // Position
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPosition, "Initial Position", NULL, SIMCONNECT_DATATYPE_INITPOSITION);
 
             // Lights
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraft, "LIGHT STROBE", "Bool");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraft, "LIGHT LANDING", "Bool");
-//            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraft, "LIGHT TAXI", "Bool");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraft, "LIGHT BEACON", "Bool");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraft, "LIGHT NAV", "Bool");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraft, "LIGHT LOGO", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "LIGHT STROBE", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "LIGHT LANDING", "Bool");
+            // hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "LIGHT TAXI", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "LIGHT BEACON", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "LIGHT NAV", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "LIGHT LOGO", "Bool");
 
             // Flaps
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraft, "LEADING EDGE FLAPS LEFT PERCENT", "Percent Over 100");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraft, "LEADING EDGE FLAPS RIGHT PERCENT", "Percent Over 100");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraft, "TRAILING EDGE FLAPS LEFT PERCENT", "Percent Over 100");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraft, "TRAILING EDGE FLAPS RIGHT PERCENT", "Percent Over 100");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "LEADING EDGE FLAPS LEFT PERCENT", "Percent Over 100");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "LEADING EDGE FLAPS RIGHT PERCENT", "Percent Over 100");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "TRAILING EDGE FLAPS LEFT PERCENT", "Percent Over 100");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "TRAILING EDGE FLAPS RIGHT PERCENT", "Percent Over 100");
 
             // Gear & Spoiler
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraft, "GEAR HANDLE POSITION", "Bool");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraft, "SPOILERS HANDLE POSITION", "Percent Over 100");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "GEAR HANDLE POSITION", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "SPOILERS HANDLE POSITION", "Percent Over 100");
 
             // Engines
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraft, "GENERAL ENG COMBUSTION:1", "Bool");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraft, "GENERAL ENG COMBUSTION:2", "Bool");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraft, "GENERAL ENG COMBUSTION:3", "Bool");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraft, "GENERAL ENG COMBUSTION:4", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "GENERAL ENG COMBUSTION:1", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "GENERAL ENG COMBUSTION:2", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "GENERAL ENG COMBUSTION:3", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "GENERAL ENG COMBUSTION:4", "Bool");
 
             if (hr != S_OK)
             {

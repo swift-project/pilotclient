@@ -111,16 +111,16 @@ namespace BlackMisc
             CLength heightAboveGround(this->getHeightAboveGround());
             if (!heightAboveGround.isNull())
             {
-                return heightAboveGround.value(CLengthUnit::m()) < 2.0;
+                return heightAboveGround.value(CLengthUnit::m()) < 1.0;
             }
 
             // we guess on pitch an bank
             if (qAbs(this->getPitch().value(CAngleUnit::deg())) > 10) { return false; }
-            if (qAbs(this->getBank().value(CAngleUnit::deg())) > 10) { return false; }
+            if (qAbs(this->getBank().value(CAngleUnit::deg())) > 10)  { return false; }
 
             if (this->getGroundSpeed().value(CSpeedUnit::km_h()) > 80) { return false; }
 
-            // not sure, but his is a guess
+            // not sure, but this is a guess
             return true;
         }
 

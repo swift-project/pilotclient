@@ -30,6 +30,14 @@ namespace BlackMisc
     }
 
     template <class OBJ, class CONTAINER>
+    CONTAINER ITimestampObjectList<OBJ, CONTAINER>::findBeforeAndRemove(qint64 msSinceEpoch)
+    {
+        CONTAINER result(findBefore(msSinceEpoch));
+        this->removeBefore(msSinceEpoch);
+        return result;
+    }
+
+    template <class OBJ, class CONTAINER>
     CONTAINER ITimestampObjectList<OBJ, CONTAINER>::findBeforeNowMinusOffset(qint64 msOffset) const
     {
         return this->findBefore(QDateTime::currentMSecsSinceEpoch() - msOffset);
@@ -75,18 +83,18 @@ namespace BlackMisc
     OBJ ITimestampObjectList<OBJ, CONTAINER>::latestValue() const
     {
         if (this->container().isEmpty()) { return OBJ(); }
-        CONTAINER container(container()); // copy
-        container.sortLatestFirst();
-        return container.front();
+        CONTAINER copy(container()); // copy
+        copy.sortLatestFirst();
+        return copy.front();
     }
 
     template <class OBJ, class CONTAINER>
     OBJ ITimestampObjectList<OBJ, CONTAINER>::oldestValue() const
     {
         if (this->container().isEmpty()) { return OBJ(); }
-        CONTAINER container(container()); // copy
-        container.sortLatestFirst();
-        return container.back();
+        CONTAINER copy(container()); // copy
+        copy.sortLatestFirst();
+        return copy.back();
     }
 
     template <class OBJ, class CONTAINER>
@@ -134,14 +142,14 @@ namespace BlackMisc
     }
 
     template <class OBJ, class CONTAINER>
-    void ITimestampObjectList<OBJ, CONTAINER>::insertTimestampObject(const OBJ &object, int maxElements)
+    void ITimestampObjectList<OBJ, CONTAINER>::push_frontMaxElements(const OBJ &object, int maxElements)
     {
         Q_ASSERT(maxElements > 1);
         if (this->container().size() >= (maxElements - 1))
         {
             this->container().truncate(maxElements - 1);
         }
-        this->container().insert_front(object);
+        this->container().push_front(object);
     }
 
     // see here for the reason of thess forward instantiations

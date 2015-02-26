@@ -648,16 +648,17 @@ namespace BlackCore
     {
         const CCallsign callsign(callsignChar);
         const CAircraftSituation situation(
+            callsign,
             CCoordinateGeodetic(position->latitude, position->longitude, 0.0),
-            CAltitude(position->altitudeTrue, CAltitude::AboveGround, CLengthUnit::ft()),
+            CAltitude(position->altitudeTrue, CAltitude::MeanSeaLevel, CLengthUnit::ft()),
             CHeading(position->heading, CHeading::True, CAngleUnit::deg()),
             CAngle(position->pitch, CAngleUnit::deg()),
             CAngle(position->bank, CAngleUnit::deg()),
             CSpeed(position->groundSpeed, CSpeedUnit::kts())
         );
 
-        QString tn("transponder ");
-        tn.append(callsign.asString());
+        QString transponderName("transponder ");
+        transponderName.append(callsign.asString());
         CTransponder::TransponderMode mode = CTransponder::StateStandby;
         switch (position->transponderMode)
         {
@@ -675,19 +676,21 @@ namespace BlackCore
             break;
         }
 
-        // I did have a situation where I got wrong transponger codes (KB)
+        // I did have a situation where I got wrong transponder codes (KB)
         // So I now check for a valid code in order to detect such codes
-        CTransponder transponder(tn, 0, mode);
+        CTransponder transponder;
         if (CTransponder::isValidTransponderCode(position->transponderCode))
         {
-            transponder = CTransponder(tn, position->transponderCode, mode);
+            transponder = CTransponder(transponderName, position->transponderCode, mode);
         }
         else
         {
-            // TODO: how do with log this
-            qDebug() << "Wrong transponder code" << position->transponderMode << callsign;
+            CLogMessage(static_cast<CNetworkVatlib *>(nullptr)).warning("Wrong transponder code %1 for %2") << position->transponderCode << callsign;
+
+            // default
+            transponder = CTransponder(transponderName, 7000, mode);
         }
-        emit cbvar_cast(cbvar)->aircraftPositionUpdate(callsign, situation, transponder);
+        emit cbvar_cast(cbvar)->aircraftPositionUpdate(situation, transponder);
     }
 
     void CNetworkVatlib::onAircraftConfigReceived(VatSessionID, const char *callsign, const char *aircraftConfig, void *cbvar)

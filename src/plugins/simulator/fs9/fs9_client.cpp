@@ -81,31 +81,14 @@ namespace BlackSimPlugin
             if (m_clientStatus == Disconnected) { return; }
 
 
-            bool ok;
-            CAircraftSituation situation = this->m_interpolator->getCurrentInterpolatedSituation(this->m_interpolator->getSituationsByCallsign(), m_callsign, -1, &ok);
-            if (!ok) { return; }
-            MPPositionSlewMode positionSlewMode = aircraftSituationToFS9(situation);
+            IInterpolator::InterpolationStatus status;
+            CAircraftSituation situation = this->m_interpolator->getInterpolatedSituation(m_callsign, -1, status);
 
-            QByteArray positionMessage;
-            MultiPlayerPacketParser::writeType(positionMessage, CFs9Sdk::MULTIPLAYER_PACKET_ID_POSITION_SLEWMODE);
-            MultiPlayerPacketParser::writeSize(positionMessage, positionSlewMode.size());
-            positionSlewMode.packet_index = m_packetIndex;
-            ++m_packetIndex;
-            positionMessage = MultiPlayerPacketParser::writeMessage(positionMessage, positionSlewMode);
+            // Test only for successful interpolation. FS9 requires constant positions
+            if (!status.interpolationSucceeded) return;
 
-            sendMessage(positionMessage);
-
-            QByteArray paramMessage;
-            MPParam param;
-            MultiPlayerPacketParser::writeType(paramMessage, CFs9Sdk::MULTIPLAYER_PACKET_ID_PARAMS);
-            MultiPlayerPacketParser::writeSize(paramMessage, param.size());
-            param.packet_index = m_packetIndex;
-            ++m_packetIndex;
-            paramMessage = MultiPlayerPacketParser::writeMessage(paramMessage, param);
-            sendMessage(paramMessage);
-
-            m_lastAircraftSituation = situation;
-
+            sendMultiplayerPosition(situation);
+            sendMultiplayerParamaters();
         }
 
         void CFs9Client::initialize()

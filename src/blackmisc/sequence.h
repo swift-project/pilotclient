@@ -235,6 +235,12 @@ namespace BlackMisc
         void push_back(const T &value) { Q_ASSERT(pimpl()); pimpl()->push_back(value); }
 
         /*!
+         * \brief Insert as first element.
+         * \pre The sequence must be initialized.
+         */
+        void push_front(const T &value) { insert(begin(), value); }
+
+        /*!
          * \brief Move-appends an element at the end of the sequence.
          * \pre The sequence must be initialized.
          */
@@ -271,12 +277,6 @@ namespace BlackMisc
          * \pre The sequence must be initialized.
          */
         void insert(T &&value) { push_back(std::move(value)); }
-
-        /*!
-         * \brief Insert as first element.
-         * \pre The sequence must be initialized.
-         */
-        void insert_front(const T &value) { insert(begin(), value); }
 
         /*!
          * \brief Synonym for push_back.
@@ -376,7 +376,7 @@ namespace BlackMisc
          */
         int applyIf(const CPropertyIndexVariantMap &pattern, const CPropertyIndexVariantMap &newValues, bool skipEqualValues = false)
         {
-            return applyIf([ & ](const T &value) { return value == pattern; }, newValues, skipEqualValues);
+            return applyIf([ & ](const T & value) { return value == pattern; }, newValues, skipEqualValues);
         }
 
         /*!

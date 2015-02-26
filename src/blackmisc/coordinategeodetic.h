@@ -183,7 +183,7 @@ namespace BlackMisc
             BLACK_ENABLE_TUPLE_CONVERSION(CCoordinateGeodetic)
             BlackMisc::Geo::CLatitude  m_latitude;  //!< Latitude
             BlackMisc::Geo::CLongitude m_longitude; //!< Longitude
-            BlackMisc::PhysicalQuantities::CLength m_geodeticHeight; //!< height, ellipsoidal or geodetic height
+            BlackMisc::PhysicalQuantities::CLength m_geodeticHeight { 0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit() }; //!< height, ellipsoidal or geodetic height
         };
 
     } // namespace

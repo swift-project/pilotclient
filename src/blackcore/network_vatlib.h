@@ -27,7 +27,9 @@ namespace BlackCore
     /*!
      * Implementation of INetwork using the vatlib shim
      */
-    class CNetworkVatlib : public INetwork, public BlackMisc::Simulation::COwnAircraftProviderSupport
+    class CNetworkVatlib :
+            public INetwork,
+            public BlackMisc::Simulation::COwnAircraftProviderSupport // network vatlib consumes own aircraft data and sets ICAO/callsign data
     {
         Q_OBJECT
 

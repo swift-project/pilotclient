@@ -75,7 +75,7 @@ namespace BlackMisc
 
         void CRemoteAircraftProviderDummy::insertNewSituation(const CAircraftSituation &situation)
         {
-            this->m_situations.insertTimestampObject(situation, 20);
+            this->m_situations.push_frontMaxElements(situation, 20);
             emit addedRemoteAircraftSituation(situation);
         }
 

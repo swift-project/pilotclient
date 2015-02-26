@@ -43,6 +43,9 @@ namespace BlackMisc
             //! All pilots (with valid data)
             BlackMisc::Network::CUserList getPilots() const;
 
+            //! Callsigns of aircraft with synchronized parts
+            BlackMisc::Aviation::CCallsignList getCallsignsWithSyncronizedParts() const;
+
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
