@@ -62,7 +62,8 @@ namespace BlackSimPlugin
             EventSetTimeZuluYear,
             EventSetTimeZuluDay,
             EventSetTimeZuluHours,
-            EventSetTimeZuluMinutes
+            EventSetTimeZuluMinutes,
+            EventToggleTaxiLights
         };
 
         //! FSX Simulator Implementation
@@ -165,8 +166,12 @@ namespace BlackSimPlugin
             //! Initialize SimConnect data definitions
             HRESULT initDataDefinitionsWhenConnected();
 
-            //! Update other aircrafts
+            //! Update remote aircraft
             void updateRemoteAircraft();
+
+            //! Update remote airacraft parts (send to FSX)
+            bool updateRemoteAircraftParts(const CSimConnectObject &simObj, const BlackMisc::Aviation::CAircraftPartsList &parts,
+                                           BlackCore::IInterpolator::PartsStatus partsStatus, const BlackMisc::Aviation::CAircraftSituation &interpolatedSituation, bool isOnGround) const;
 
             //! Format conversion
             SIMCONNECT_DATA_INITPOSITION aircraftSituationToFsxInitPosition(const BlackMisc::Aviation::CAircraftSituation &situation);
@@ -189,6 +194,11 @@ namespace BlackSimPlugin
             BlackCore::IInterpolator *m_interpolator = nullptr;      //!< interpolator instance
             QHash<BlackMisc::Aviation::CCallsign, CSimConnectObject> m_simConnectObjects;
             QFutureWatcher<bool> m_watcherConnect;
+
+            // statistics
+            qint64 m_statsUpdateAircraftTimeTotal = 0;
+            qint64 m_statsUpdateAircraftTimeAvg = 0;
+            int    m_statsUpdateAircraftCount = 0;
         };
     }
 

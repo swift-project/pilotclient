@@ -85,7 +85,7 @@ namespace BlackCore
 
         //! Parts before given offset time (aka pending parts)
         //! \threadsafe
-        virtual BlackMisc::Aviation::CAircraftPartsList getAndRemovePartsBeforeOffset(const BlackMisc::Aviation::CCallsign &callsign, qint64 timeOffset, PartsStatus &partsStatus);
+        virtual BlackMisc::Aviation::CAircraftPartsList getAndRemovePartsBeforeTime(const BlackMisc::Aviation::CCallsign &callsign, qint64 timeOffset, PartsStatus &partsStatus);
 
         //! Clear all data
         //! \threadsafe
@@ -95,8 +95,15 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Aviation::CAircraftSituationList getSituationsForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
+        //! Parts for given callsign
+        //! \threadsafe
+        BlackMisc::Aviation::CAircraftPartsList getPartsForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+
         //! Enable debug messages
         void enableDebugMessages(bool enabled);
+
+        //! Force sorting (latest first), not required if order can be guaranteed
+        void forceSorting(bool sort);
 
         static const qint64 TimeOffsetMs = 6000;           //!< offset for interpolation
         static const int MaxSituationsPerCallsign = 6;     //!< How many situations per callsign
@@ -120,7 +127,8 @@ namespace BlackCore
         //! Constructor
         IInterpolator(BlackMisc::Simulation::IRemoteAircraftProviderReadOnly *provider, const QString &workerName, QObject *parent = nullptr);
 
-        bool m_withDebugMsg = false; //!< allows to disable debug messages
+        bool m_withDebugMsg = false;              //!< allows to disable debug messages
+        bool m_forceSortWhenAddingValues = false; //!< force sorting (latest first) when adding values
         BlackMisc::Aviation::CCallsignList m_aircraftSupportingParts; //!< aircraft supporting parts
 
         // hashs, because not sorted by key but keeping order

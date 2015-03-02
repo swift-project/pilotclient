@@ -59,10 +59,10 @@ namespace BlackMisc
     }
 
     template <class OBJ, class CONTAINER>
-    QList<CONTAINER> ITimestampObjectList<OBJ, CONTAINER>::splitByTime(qint64 msSinceEpoch) const
+    QList<CONTAINER> ITimestampObjectList<OBJ, CONTAINER>::splitByTime(qint64 msSinceEpoch, bool alreadySortedLatestFirst) const
     {
         CONTAINER newer(this->container());
-        newer.sortLatestFirst();
+        if (!alreadySortedLatestFirst) { newer.sortLatestFirst(); }
         CONTAINER older;
         for (auto it = newer.begin(); it != newer.end(); ++it)
         {

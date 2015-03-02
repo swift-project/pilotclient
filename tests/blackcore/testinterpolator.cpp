@@ -1,4 +1,4 @@
-/* Copyright (C) 2014
+/* Copyright (C) 2015
  * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -25,8 +25,8 @@ namespace BlackCoreTest
     {
         QScopedPointer<CRemoteAircraftProviderDummy> provider(new CRemoteAircraftProviderDummy());
         CInterpolatorLinear interpolator(provider.data());
-
-        const qint64 ts = QDateTime::currentMSecsSinceEpoch();
+        interpolator.forceSorting(true);
+        const qint64 ts =  1425000000000; // QDateTime::currentMSecsSinceEpoch();
         const qint64 deltaT = 5000; // ms
         CCallsign cs("SWIFT");
         for (int i = 0; i < IInterpolator::MaxSituationsPerCallsign; i++)
@@ -39,11 +39,18 @@ namespace BlackCoreTest
             provider->insertNewSituation(s);
         }
 
+        for (int i = 0; i < IInterpolator::MaxPartsPerCallsign; i++)
+        {
+            CAircraftParts p(getTestParts(cs, i, ts, deltaT));
+            provider->insertNewAircraftParts(p);
+        }
+
         // make sure signals are processed
         QCoreApplication::processEvents(QEventLoop::AllEvents, 1000);
 
-        // check if all  situations have been received
+        // check if all situations / parts have been received
         QVERIFY2(interpolator.getSituationsForCallsign(cs).size() == IInterpolator::MaxSituationsPerCallsign, "Missing situations");
+        QVERIFY2(interpolator.getPartsForCallsign(cs).size() == IInterpolator::MaxPartsPerCallsign, "Missing parts");
 
         // interpolation
         IInterpolator::InterpolationStatus status;
@@ -51,7 +58,7 @@ namespace BlackCoreTest
         double lngOld = 360.0;
         for (qint64 currentTime = ts - 2 * deltaT; currentTime < ts; currentTime += 250)
         {
-            // This will use range
+            // This will use time range
             // from:  ts - 2* deltaT - IInterpolator::TimeOffsetMs
             // to:    ts             - IInterpolator::TimeOffsetMs
             CAircraftSituation currentSituation(interpolator.getInterpolatedSituation
@@ -114,8 +121,12 @@ namespace BlackCoreTest
             for (int t = 0; t < IInterpolator::MaxSituationsPerCallsign; t++)
             {
                 qint64 currentTime = ts - t * deltaT;
-                CAircraftSituation s(getTestSituation(cs, i++, currentTime, 0));
+                CAircraftSituation s(getTestSituation(cs, i, currentTime, 0));
                 provider->insertNewSituation(s);
+
+                CAircraftParts p(getTestParts(cs, i, currentTime, 0));
+                provider->insertNewAircraftParts(p);
+                i++;
             }
         }
 
@@ -123,6 +134,7 @@ namespace BlackCoreTest
         CCallsignList callsigns(csKeys);
         QVERIFY(callsigns.size() == callsignsInProvider);
         QVERIFY(interpolator.getSituationsForCallsign("SWIFT0").size() == IInterpolator::MaxSituationsPerCallsign);
+        QVERIFY(interpolator.getPartsForCallsign("SWIFT0").size() == IInterpolator::MaxPartsPerCallsign);
 
         // interpolation for time, then for each callsign
         int doneInterpolations = 0;
@@ -171,6 +183,21 @@ namespace BlackCoreTest
         }
         timeMs = timer.elapsed();
         qDebug() << "All callsigns" << doneInterpolations << "interpolations in" << timeMs << "ms";
+
+        int fetchedParts = 0;
+        timer.start();
+        for (qint64 currentTime = ts - 2 * deltaT; currentTime < ts; currentTime += 250)
+        {
+            for (const CCallsign &callsign : callsigns)
+            {
+                IInterpolator::PartsStatus status;
+                CAircraftPartsList pl = interpolator.getAndRemovePartsBeforeTime(callsign, ts, status);
+                fetchedParts++;
+                Q_UNUSED(pl);
+            }
+        }
+        timeMs = timer.elapsed();
+        qDebug() << "Per callsign" << fetchedParts << "fetched parts in" << timeMs << "ms";
     }
 
     CAircraftSituation CTestInterpolator::getTestSituation(const CCallsign &callsign, int number, qint64 ts, qint64 deltaT)
@@ -187,6 +214,15 @@ namespace BlackCoreTest
         CAircraftSituation s(callsign, c, a, heading, pitch, bank, gs);
         s.setMSecsSinceEpoch(ts - deltaT * number); // values in past
         return s;
+    }
+
+    CAircraftParts CTestInterpolator::getTestParts(const CCallsign &callsign, int number, qint64 ts, qint64 deltaT)
+    {
+        CAircraftLights l(true, false, true, false, true, false);
+        CAircraftEngineList e({ CAircraftEngine(0, true), CAircraftEngine(1, false), CAircraftEngine(2, true) });
+        CAircraftParts p(callsign, l, true, 20, true, e, false);
+        p.setMSecsSinceEpoch(ts - deltaT * number); // values in past
+        return p;
     }
 
 } // namespace

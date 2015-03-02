@@ -65,7 +65,10 @@ namespace BlackMisc
             //! For testing, add new situation and fire signals
             void insertNewSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
-            // clear all data
+            //! For testing, add new parts and fire signals
+            void insertNewAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
+
+            //! Clear all data
             void clear();
 
         signals:

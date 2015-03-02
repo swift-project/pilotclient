@@ -20,8 +20,12 @@ namespace BlackSimTest
     class CSamplesFsx
     {
     public:
-        //! Run the samples
-        static int samples(QTextStream &streamOut);
+        //! Run the misc. samples
+        static int samplesMisc(QTextStream &streamOut);
+
+        //! Driver test / SimConnect test
+        static int driverTest(QTextStream &streamOut);
+
     };
 } // namespace
 

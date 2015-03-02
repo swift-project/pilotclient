@@ -1,4 +1,4 @@
-/* Copyright (C) 2014
+/* Copyright (C) 2015
  * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -9,10 +9,12 @@
 
 //! \file
 
-#ifndef BLACKCORETEST_TESTAVIATIONBASE_H
-#define BLACKCORETEST_TESTAVIATIONBASE_H
+#ifndef BLACKCORETEST_TESTINTERPOLATOR_H
+#define BLACKCORETEST_TESTINTERPOLATOR_H
 
 #include "blackmisc/avaircraftsituation.h"
+#include "blackmisc/aviation/aircraftparts.h"
+
 #include <QtTest/QtTest>
 
 namespace BlackCoreTest
@@ -34,6 +36,10 @@ namespace BlackCoreTest
     private:
         //! Test situation for testing
         static BlackMisc::Aviation::CAircraftSituation getTestSituation(const BlackMisc::Aviation::CCallsign &callsign, int number, qint64 ts, qint64 deltaT);
+
+        //! Test parts
+        static BlackMisc::Aviation::CAircraftParts getTestParts(const BlackMisc::Aviation::CCallsign &callsign, int number, qint64 ts, qint64 deltaT);
+
     };
 
 } // namespace

@@ -146,13 +146,16 @@ namespace BlackSimPlugin
                     case CSimConnectDefinitions::RequestSimEnvironment:
                         {
                             DataDefinitionSimEnvironment *simEnv = (DataDefinitionSimEnvironment *) &pObjData->dwData;
-                            qint32 zh = simEnv->zuluTimeSeconds / 3600;
-                            qint32 zm = (simEnv->zuluTimeSeconds - (zh * 3600)) / 60;
-                            CTime zulu(zh, zm);
-                            qint32 lh = simEnv->localTimeSeconds / 3600;
-                            qint32 lm = (simEnv->localTimeSeconds - (lh * 3600)) / 60;
-                            CTime local(lh, lm);
-                            simulatorFsx->synchronizeTime(zulu, local);
+                            if (simulatorFsx->isTimeSynchronized())
+                            {
+                                int zh = simEnv->zuluTimeSeconds / 3600;
+                                int zm = (simEnv->zuluTimeSeconds - (zh * 3600)) / 60;
+                                CTime zulu(zh, zm);
+                                int lh = simEnv->localTimeSeconds / 3600;
+                                int lm = (simEnv->localTimeSeconds - (lh * 3600)) / 60;
+                                CTime local(lh, lm);
+                                simulatorFsx->synchronizeTime(zulu, local);
+                            }
                             break;
                         }
                     default:
@@ -171,7 +174,7 @@ namespace BlackSimPlugin
                         if (!pFacilityAirport) break;
                         const QString icao(pFacilityAirport->Icao);
                         if (icao.isEmpty()) { continue; } // airfield without ICAO code
-                        if (!CAirportIcao::isValidIcaoDesignator(icao)) continue; // tiny airfields in SIM
+                        if (!CAirportIcao::isValidIcaoDesignator(icao)) { continue; } // tiny airfields in SIM
                         CCoordinateGeodetic pos(pFacilityAirport->Latitude, pFacilityAirport->Longitude, pFacilityAirport->Altitude);
                         CAirport airport(CAirportIcao(icao), pos);
                         CLength d = airport.calculcateDistanceAndBearingToOwnAircraft(posAircraft);

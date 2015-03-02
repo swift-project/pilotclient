@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     }
     else if (i.startsWith("2"))
     {
-        BlackSimTest::CSamplesFsx::samples(streamOut);
+        BlackSimTest::CSamplesFsx::samplesMisc(streamOut);
     }
     else if (i.startsWith("3"))
     {

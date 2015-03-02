@@ -552,6 +552,9 @@ namespace BlackSimPlugin
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTimeZuluDay, "ZULU_DAY_SET");
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTimeZuluHours, "ZULU_HOURS_SET");
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTimeZuluMinutes, "ZULU_MINUTES_SET");
+
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventToggleTaxiLights, "TOGGLE_TAXI_LIGHTS");
+
             if (hr != S_OK)
             {
                 CLogMessage(this).error("FSX plugin error: %1") << "SimConnect_MapClientEventToSimEvent failed";
@@ -617,13 +620,14 @@ namespace BlackSimPlugin
             {
                 const CCallsign callsign(simObj.getCallsign());
                 IInterpolator::InterpolationStatus interpolatorStatus;
-                IInterpolator::PartsStatus partsStatus;
                 if (simObj.getObjectId() == 0) { continue; }
                 CAircraftSituation interpolatedSituation = this->m_interpolator->getInterpolatedSituation(callsign, currentTimestamp, interpolatorStatus);
 
-                // having the on gground flag in parts forces me to obtain parts here
-                // which is not hte smartest thing regarding performance
-                CAircraftPartsList parts = this->m_interpolator->getAndRemovePartsBeforeOffset(callsign, currentTimestamp - IInterpolator::TimeOffsetMs, partsStatus);
+                // having the onGround flag in parts forces me to obtain parts here
+                // which is not the smartest thing regarding performance
+                IInterpolator::PartsStatus partsStatus;
+                CAircraftPartsList parts = this->m_interpolator->getAndRemovePartsBeforeTime(callsign, currentTimestamp - IInterpolator::TimeOffsetMs, partsStatus);
+
                 if (interpolatorStatus.allTrue())
                 {
                     // update situation
@@ -648,87 +652,104 @@ namespace BlackSimPlugin
                                                         simObj.getObjectId(), 0, 0,
                                                         sizeof(SIMCONNECT_DATA_INITPOSITION), &position);
                     if (hr != S_OK) { CLogMessage(this).warning("Failed so set position on SimObject %1 callsign: %2") << simObj.getObjectId() << callsign; }
+
+
+
+                } // interpolation data
+
+                if (interpolatorStatus.interpolationSucceeded)
+                {
+                    // aircraft parts
+                    // inside interpolator if, as no parts can be sent without position
+                    updateRemoteAircraftParts(simObj, parts, partsStatus, interpolatedSituation, isOnGround); // update and retrieve parts in the same step
                 }
 
+            } // all callsigns
+            qint64 dt = QDateTime::currentMSecsSinceEpoch() - currentTimestamp;
+            m_statsUpdateAircraftTimeTotal += dt;
+            m_statsUpdateAircraftCount++;
+            m_statsUpdateAircraftTimeAvg = m_statsUpdateAircraftTimeTotal / m_statsUpdateAircraftCount;
+        }
 
-                // set parts
-                DataDefinitionRemoteAircraftParts ddRemoteAircraftParts;
-                if (partsStatus.supportsParts)
+        bool CSimulatorFsx::updateRemoteAircraftParts(const CSimConnectObject &simObj, const CAircraftPartsList &parts, IInterpolator::PartsStatus partsStatus, const CAircraftSituation &interpolatedSituation, bool isOnGround) const
+        {
+            // set parts
+            DataDefinitionRemoteAircraftParts ddRemoteAircraftParts;
+            if (partsStatus.supportsParts)
+            {
+                // parts is supported, but do we need to update?
+                if (parts.isEmpty()) { return false; }
+
+                // we have parts
+                CAircraftParts newestParts = parts.front();
+                ddRemoteAircraftParts.lightStrobe = newestParts.getLights().isStrobeOn() ? 1.0 : 0.0;
+                ddRemoteAircraftParts.lightLanding = newestParts.getLights().isLandingOn() ? 1.0 : 0.0;
+                // ddRemoteAircraftParts.lightTaxi = newestParts.getLights().isTaxiOn() ? 1.0 : 0.0;
+                ddRemoteAircraftParts.lightBeacon = newestParts.getLights().isBeaconOn() ? 1.0 : 0.0;
+                ddRemoteAircraftParts.lightNav = newestParts.getLights().isNavOn() ? 1.0 : 0.0;
+                ddRemoteAircraftParts.lightLogo = newestParts.getLights().isLogoOn() ? 1.0 : 0.0;
+                ddRemoteAircraftParts.flapsLeadingEdgeLeftPercent = newestParts.getFlapsPercent() / 100.0;
+                ddRemoteAircraftParts.flapsLeadingEdgeRightPercent = newestParts.getFlapsPercent() / 100.0;
+                ddRemoteAircraftParts.flapsTrailingEdgeLeftPercent = newestParts.getFlapsPercent() / 100.0;
+                ddRemoteAircraftParts.flapsTrailingEdgeRightPercent = newestParts.getFlapsPercent() / 100.0;
+                ddRemoteAircraftParts.spoilersHandlePosition = newestParts.isSpoilersOut() ? 1.0 : 0.0;
+                ddRemoteAircraftParts.gearHandlePosition = newestParts.isGearDown() ? 1 : 0;
+                ddRemoteAircraftParts.engine1Combustion = newestParts.isEngineOn(1) ? 1 : 0;
+                ddRemoteAircraftParts.engine2Combustion = newestParts.isEngineOn(2) ? 1 : 0;;
+                ddRemoteAircraftParts.engine3Combustion = newestParts.isEngineOn(3) ? 1 : 0;
+                ddRemoteAircraftParts.engine4Combustion = newestParts.isEngineOn(4) ? 1 : 0;
+            }
+            else
+            {
+                // mode is guessing parts
+                if (this->m_interpolationRequest % 20 != 0) { return false; } // only update every 20th cycle
+                ddRemoteAircraftParts.gearHandlePosition = isOnGround ? 1 : 0;
+
+                // when first detected moving, lights on
+                if (isOnGround)
                 {
-                    // parts is supported, but do we need to update?
-                    if (parts.isEmpty()) { continue; }
+                    // ddRemoteAircraftParts.lightTaxi = 1.0;
+                    ddRemoteAircraftParts.lightBeacon = 1.0;
+                    ddRemoteAircraftParts.lightNav = 1.0;
 
-                    // we have parts
-                    CAircraftParts newestParts = parts.front();
-                    ddRemoteAircraftParts.lightStrobe = newestParts.getLights().isStrobeOn() ? 1.0 : 0.0;
-                    ddRemoteAircraftParts.lightLanding = newestParts.getLights().isLandingOn() ? 1.0 : 0.0;
-                    // ddRemoteAircraftParts.lightTaxi = newestParts.getLights().isTaxiOn() ? 1.0 : 0.0;
-                    ddRemoteAircraftParts.lightBeacon = newestParts.getLights().isBeaconOn() ? 1.0 : 0.0;
-                    ddRemoteAircraftParts.lightNav = newestParts.getLights().isNavOn() ? 1.0 : 0.0;
-                    ddRemoteAircraftParts.lightLogo = newestParts.getLights().isLogoOn() ? 1.0 : 0.0;
-                    ddRemoteAircraftParts.flapsLeadingEdgeLeftPercent = newestParts.getFlapsPercent() / 100.0;
-                    ddRemoteAircraftParts.flapsLeadingEdgeRightPercent = newestParts.getFlapsPercent() / 100.0;
-                    ddRemoteAircraftParts.flapsTrailingEdgeLeftPercent = newestParts.getFlapsPercent() / 100.0;
-                    ddRemoteAircraftParts.flapsTrailingEdgeRightPercent = newestParts.getFlapsPercent() / 100.0;
-                    ddRemoteAircraftParts.spoilersHandlePosition = newestParts.isSpoilersOut() ? 1.0 : 0.0;
-                    ddRemoteAircraftParts.gearHandlePosition = newestParts.isGearDown() ? 1 : 0;
-                    ddRemoteAircraftParts.engine1Combustion = newestParts.isEngineOn(1) ? 1 : 0;
-                    ddRemoteAircraftParts.engine2Combustion = newestParts.isEngineOn(2) ? 1 : 0;;
-                    ddRemoteAircraftParts.engine3Combustion = newestParts.isEngineOn(3) ? 1 : 0;
-                    ddRemoteAircraftParts.engine4Combustion = newestParts.isEngineOn(4) ? 1 : 0;
-                }
-                else
-                {
-                    // mode is guessing parts
-                    if (this->m_interpolationRequest % 20 != 0) { continue; } // only update every 20th cycle
-                    if (!interpolatorStatus.allTrue()) { continue; } // no position, no really guess possible
-
-                    ddRemoteAircraftParts.gearHandlePosition = isOnGround ? 1 : 0;
-
-                    // when first detected moving, lights on
-                    if (isOnGround)
+                    double gskmh = interpolatedSituation.getGroundSpeed().value(CSpeedUnit::km_h());
+                    if (gskmh > 7.5)
                     {
+                        // mode taxi
                         // ddRemoteAircraftParts.lightTaxi = 1.0;
-                        ddRemoteAircraftParts.lightBeacon = 1.0;
-                        ddRemoteAircraftParts.lightNav = 1.0;
-
-                        double gskmh = interpolatedSituation.getGroundSpeed().value(CSpeedUnit::km_h());
-                        if (gskmh > 7.5)
-                        {
-                            // mode taxi
-                            // ddRemoteAircraftParts.lightTaxi = 1.0;
-                            ddRemoteAircraftParts.lightLanding = 0.0;
-                        }
-                        else if (gskmh > 25)
-                        {
-                            // mode accelaration for takeoff
-                            // ddRemoteAircraftParts.lightTaxi = 0.0;
-                            ddRemoteAircraftParts.lightLanding = 1.0;
-                        }
-                        else
-                        {
-                            // slow movements or parking
-                            // ddRemoteAircraftParts.lightTaxi = 0.0;
-                            ddRemoteAircraftParts.lightLanding = 0.0;
-                        }
+                        ddRemoteAircraftParts.lightLanding = 0.0;
+                    }
+                    else if (gskmh > 25)
+                    {
+                        // mode accelaration for takeoff
+                        // ddRemoteAircraftParts.lightTaxi = 0.0;
+                        ddRemoteAircraftParts.lightLanding = 1.0;
                     }
                     else
                     {
+                        // slow movements or parking
                         // ddRemoteAircraftParts.lightTaxi = 0.0;
-                        ddRemoteAircraftParts.lightBeacon = 1.0;
-                        ddRemoteAircraftParts.lightNav = 1.0;
-                        // landing lights for < 10000ft (normally MSL, here ignored)
-                        ddRemoteAircraftParts.lightLanding = (interpolatedSituation.getAltitude().value(CLengthUnit::ft()) < 10000) ? 1.0 : 0;
+                        ddRemoteAircraftParts.lightLanding = 0.0;
                     }
                 }
+                else
+                {
+                    // ddRemoteAircraftParts.lightTaxi = 0.0;
+                    ddRemoteAircraftParts.lightBeacon = 1.0;
+                    ddRemoteAircraftParts.lightNav = 1.0;
+                    // landing lights for < 10000ft (normally MSL, here ignored)
+                    ddRemoteAircraftParts.lightLanding = (interpolatedSituation.getAltitude().value(CLengthUnit::ft()) < 10000) ? 1.0 : 0;
+                }
+            }
 
-                HRESULT hr = S_OK;
-                hr += SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts,
-                                                    simObj.getObjectId(), 0, 0,
-                                                    sizeof(DataDefinitionRemoteAircraftParts), &ddRemoteAircraftParts);
-                if (hr != S_OK) { CLogMessage(this).warning("Failed so set parts on SimObject %1 callsign: %2") << simObj.getObjectId() << callsign; }
+            Q_ASSERT(m_hSimConnect);
+            HRESULT hr = S_OK;
+            hr += SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts,
+                                                simObj.getObjectId(), 0, 0,
+                                                sizeof(DataDefinitionRemoteAircraftParts), &ddRemoteAircraftParts);
 
-            } // all callsigns
+            if (hr != S_OK) { CLogMessage(this).warning("Failed so set parts on SimObject %1 callsign: %2") << simObj.getObjectId() << simObj.getCallsign(); }
+            return hr == S_OK;
         }
 
         SIMCONNECT_DATA_INITPOSITION CSimulatorFsx::aircraftSituationToFsxInitPosition(const CAircraftSituation &situation)
@@ -746,8 +767,8 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::synchronizeTime(const CTime &zuluTimeSim, const CTime &localTimeSim)
         {
-            if (!this->m_simTimeSynced) return;
-            if (!this->isConnected()) return;
+            if (!this->m_simTimeSynced) { return; }
+            if (!this->isConnected())   { return; }
             if (m_syncDeferredCounter > 0)
             {
                 --m_syncDeferredCounter;
@@ -766,7 +787,7 @@ namespace BlackSimPlugin
             int targetMins = myTime.hour() * 60 + myTime.minute();
             int simMins = zuluTimeSim.valueRounded(CTimeUnit::min());
             int diffMins = qAbs(targetMins - simMins);
-            if (diffMins < 2) return;
+            if (diffMins < 2) { return; }
             HRESULT hr = S_OK;
             hr += SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluHours, h, SIMCONNECT_GROUP_PRIORITY_STANDARD, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
             hr += SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluMinutes, m, SIMCONNECT_GROUP_PRIORITY_STANDARD, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);

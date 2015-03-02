@@ -60,7 +60,7 @@ namespace BlackMisc
         CSequence(std::initializer_list<T> il) : m_pimpl(new Pimpl<QList<T>>(QList<T>(il))) {}
 
         /*!
-         * \brief By QList of type <T>.
+         * \brief By QList of type T.
          */
         CSequence(const QList<T> &list) : m_pimpl(new Pimpl<QList<T>>(QList<T>(list))) {}
 

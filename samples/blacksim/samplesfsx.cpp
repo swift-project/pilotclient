@@ -20,12 +20,18 @@ namespace BlackSimTest
     /*
      * Samples
      */
-    int CSamplesFsx::samples(QTextStream &streamOut)
+    int CSamplesFsx::samplesMisc(QTextStream &streamOut)
     {
         BlackSim::registerMetadata();
         streamOut << CSimConnectUtilities::simConnectExceptionToString(CSimConnectUtilities::SIMCONNECT_EXCEPTION_ALREADY_SUBSCRIBED) << endl;
         streamOut << CSimConnectUtilities::simConnectExceptionToString(CSimConnectUtilities::SIMCONNECT_EXCEPTION_ILLEGAL_OPERATION) << endl;
         streamOut << CSimConnectUtilities::simConnectSurfaceTypeToString(CSimConnectUtilities::Bituminus) << endl;
+        return 0;
+    }
+
+    int CSamplesFsx::driverTest(QTextStream &streamOut)
+    {
+        Q_UNUSED(streamOut);
         return 0;
     }
 

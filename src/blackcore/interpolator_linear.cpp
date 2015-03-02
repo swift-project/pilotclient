@@ -30,8 +30,9 @@ namespace BlackCore
 
         if (situationsPerCallsign)
         {
-            if (!situationsPerCallsign->contains(callsign)) { return empty; }
-            if ((*situationsPerCallsign)[callsign].isEmpty())  { return empty; }
+            // lock free, expected that situationsPerCallsign is a copy
+            if (!situationsPerCallsign->contains(callsign))   { return empty; }
+            if ((*situationsPerCallsign)[callsign].isEmpty()) { return empty; }
             splitSituations = (*situationsPerCallsign)[callsign].splitByTime(splitTimeMsSinceEpoch);
         }
         else
@@ -40,7 +41,7 @@ namespace BlackCore
             QReadLocker lock(&m_lockSituations);
             if (!m_situationsByCallsign.contains(callsign)) { return empty; }
             if (m_situationsByCallsign[callsign].isEmpty())  { return empty; }
-            splitSituations = m_situationsByCallsign[callsign].splitByTime(splitTimeMsSinceEpoch);
+            splitSituations = m_situationsByCallsign[callsign].splitByTime(splitTimeMsSinceEpoch, true);
         }
 
         CAircraftSituationList &situationsNewer = splitSituations[0]; // newer part
@@ -78,8 +79,8 @@ namespace BlackCore
         }
         else
         {
-            oldSituation = situationsOlder.front(); // first oldest
-            newSituation = situationsNewer.back();  // latest newest
+            oldSituation = situationsOlder.front(); // first oldest (aka newest oldest)
+            newSituation = situationsNewer.back();  // latest newest (aka oldest of newer block)
             Q_ASSERT(oldSituation.getMSecsSinceEpoch() < newSituation.getMSecsSinceEpoch());
         }
 
@@ -103,12 +104,12 @@ namespace BlackCore
             }
         }
 
-        // Interpolate latitude: Lat = (LatB - LatA) * t + LatA
         const CLatitude oldLat(oldSituation.latitude());
         const CLatitude newLat(newSituation.latitude());
         const CLongitude oldLng(oldSituation.longitude());
         const CLongitude newLng(newSituation.longitude());
 
+        // Interpolate latitude: Lat = (LatB - LatA) * t + LatA
         currentPosition.setLatitude((newLat - oldLat)
                                     * simulationTimeFraction
                                     + oldLat);
@@ -130,6 +131,8 @@ namespace BlackCore
 
         if (newLat == oldLat && newLng == oldLng && oldAlt == newAlt)
         {
+            // stop interpolation here
+            //! \todo Does not work for VTOL aircraft. We need a flag for VTOL aircraft
             return currentSituation;
         }
 

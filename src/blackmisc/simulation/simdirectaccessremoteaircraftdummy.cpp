@@ -76,7 +76,15 @@ namespace BlackMisc
         void CRemoteAircraftProviderDummy::insertNewSituation(const CAircraftSituation &situation)
         {
             this->m_situations.push_frontMaxElements(situation, 20);
+            this->m_situations.sortLatestFirst(); // like in real world, latest should be first
             emit addedRemoteAircraftSituation(situation);
+        }
+
+        void CRemoteAircraftProviderDummy::insertNewAircraftParts(const CAircraftParts &parts)
+        {
+            this->m_parts.push_frontMaxElements(parts, 20);
+            this->m_parts.sortLatestFirst(); // like in real world, latest should be first
+            emit addedRemoteAircraftParts(parts);
         }
 
         void CRemoteAircraftProviderDummy::clear()

@@ -66,7 +66,7 @@ namespace BlackCore
         return m_situationsByCallsign;
     }
 
-    CAircraftPartsList IInterpolator::getAndRemovePartsBeforeOffset(const CCallsign &callsign, qint64 cutoffTime, BlackCore::IInterpolator::PartsStatus &partsStatus)
+    CAircraftPartsList IInterpolator::getAndRemovePartsBeforeTime(const CCallsign &callsign, qint64 cutoffTime, BlackCore::IInterpolator::PartsStatus &partsStatus)
     {
         static const CAircraftPartsList empty;
         partsStatus.reset();
@@ -78,6 +78,7 @@ namespace BlackCore
         }
         else
         {
+            // did we ever have parts for this callsign
             partsStatus.supportsParts = m_aircraftSupportingParts.contains(callsign);
             return empty;
         }
@@ -99,6 +100,19 @@ namespace BlackCore
         return m_situationsByCallsign[callsign];
     }
 
+    CAircraftPartsList IInterpolator::getPartsForCallsign(const CCallsign &callsign) const
+    {
+        QReadLocker l(&m_lockParts);
+        static const CAircraftPartsList empty;
+        if (!m_partsByCallsign.contains(callsign)) { return empty; }
+        return m_partsByCallsign[callsign];
+    }
+
+    void IInterpolator::forceSorting(bool sort)
+    {
+        this->m_forceSortWhenAddingValues = sort;
+    }
+
     void IInterpolator::ps_onAddedAircraftSituation(const CAircraftSituation &situation)
     {
         QWriteLocker lock(&m_lockSituations);
@@ -110,6 +124,10 @@ namespace BlackCore
         // list from new to old
         CAircraftSituationList &l = this->m_situationsByCallsign[callsign];
         l.push_frontMaxElements(situation, MaxSituationsPerCallsign);
+        if (this->m_forceSortWhenAddingValues) { l.sortLatestFirst(); }
+
+        // check sort order
+        Q_ASSERT(l.size() < 2 || l[0].getMSecsSinceEpoch() >= l[1].getMSecsSinceEpoch());
     }
 
     void IInterpolator::ps_onAddedAircraftParts(const CAircraftParts &parts)
@@ -123,9 +141,14 @@ namespace BlackCore
         // list sorted from new to old
         CAircraftPartsList &l = this->m_partsByCallsign[callsign];
         l.push_frontMaxElements(parts, MaxPartsPerCallsign);
+        if (this->m_forceSortWhenAddingValues) { l.sortLatestFirst(); }
 
         if (m_aircraftSupportingParts.contains(callsign)) { return; }
-        m_aircraftSupportingParts.push_back(callsign);
+        m_aircraftSupportingParts.push_back(callsign); // mark as callsign which supports parts
+
+        // check sort order
+        Q_ASSERT(l.size() < 2 || l[0].getMSecsSinceEpoch() >= l[1].getMSecsSinceEpoch());
+
     }
 
     void IInterpolator::ps_onRemovedAircraft(const CCallsign &callsign)

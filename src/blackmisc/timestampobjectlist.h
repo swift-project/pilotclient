@@ -46,7 +46,7 @@ namespace BlackMisc
 
         //! Split into 2 containers, [0] >= msSinceEpoch ("newer") [b] < msSinceEpoch ("older")
         //! \note Sort order: latest elements first
-        QList<CONTAINER> splitByTime(qint64 msSinceEpoch) const;
+        QList<CONTAINER> splitByTime(qint64 msSinceEpoch, bool alreadySortedLatestFirst = false) const;
 
         //! Latest value
         OBJ latestValue() const;
