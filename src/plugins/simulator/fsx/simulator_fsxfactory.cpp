@@ -14,9 +14,6 @@
 #include <QTimer>
 #include <QtConcurrent>
 
-using namespace BlackSim;
-using namespace BlackCore;
-
 namespace BlackSimPlugin
 {
     namespace Fsx
@@ -27,9 +24,14 @@ namespace BlackSimPlugin
             return new CSimulatorFsx(ownAircraftProvider, renderedAircraftProvider, parent);
         }
 
-        CSimulatorInfo CSimulatorFsxFactory::getSimulatorInfo() const
+        BlackSim::CSimulatorInfo CSimulatorFsxFactory::getSimulatorInfo() const
         {
-            return CSimulatorInfo::FSX();
+            return BlackSim::CSimulatorInfo::FSX();
+        }
+
+        BlackCore::ISimulatorListener *CSimulatorFsxFactory::createListener(QObject *parent)
+        {
+            return new CSimulatorFsxListener(parent);
         }
 
     } // namespace

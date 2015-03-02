@@ -71,7 +71,6 @@ namespace BlackSimPlugin
             if (m_simConnected) { return true; }
             if (FAILED(SimConnect_Open(&m_hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0)))
             {
-                emit connectionStatusChanged(ConnectionFailed);
                 emitSimulatorCombinedStatus();
                 return false;
             }
@@ -84,7 +83,6 @@ namespace BlackSimPlugin
             m_simconnectTimerId = startTimer(10);
             m_simConnected = true;
 
-            emit connectionStatusChanged(Connected);
             emitSimulatorCombinedStatus();
             return true;
         }
@@ -123,7 +121,6 @@ namespace BlackSimPlugin
             m_simconnectTimerId = -1;
             m_simConnected = false;
 
-            emit connectionStatusChanged(Disconnected);
             emitSimulatorCombinedStatus();
             return true;
         }
@@ -332,17 +329,16 @@ namespace BlackSimPlugin
                 return;
             }
 
-            emit simulatorStarted();
             emitSimulatorCombinedStatus();
         }
 
         void CSimulatorFsx::onSimStopped()
         {
-            if (!m_simRunning) { return; }
-            m_simRunning = false;
-            mapperInstance()->gracefulShutdown(); // stop background reading if ongoing
-            emit simulatorStopped();
-            emitSimulatorCombinedStatus(); // 3 states together
+            if (m_simRunning) {
+                m_simRunning = false;
+                mapperInstance()->gracefulShutdown(); // stop background reading if ongoing
+            }
+            emitSimulatorCombinedStatus();
         }
 
         void CSimulatorFsx::onSimFrame()
@@ -352,6 +348,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::onSimExit()
         {
+            m_simConnected = false;
             this->onSimStopped();
         }
 
@@ -495,13 +492,11 @@ namespace BlackSimPlugin
                 m_simconnectTimerId = startTimer(10);
                 m_simConnected = true;
 
-                emit connectionStatusChanged(Connected);
                 emitSimulatorCombinedStatus();
             }
             else
             {
                 m_simConnected = false;
-                emit connectionStatusChanged(ConnectionFailed);
                 emitSimulatorCombinedStatus();
             }
         }
@@ -811,6 +806,32 @@ namespace BlackSimPlugin
                 m_syncDeferredCounter = 5; // allow some time to sync
                 CLogMessage(this).info("Synchronized time to UTC: %1") << myTime.toString();
             }
+        }
+
+        CSimulatorFsxListener::CSimulatorFsxListener(QObject *parent) : ISimulatorListener(parent),
+            m_timer(new QTimer(this))
+        {
+            Q_CONSTEXPR int QueryInterval = 5 * 1000; // 5 seconds
+            m_timer->setInterval(QueryInterval);
+
+            connect(m_timer, &QTimer::timeout, [this]() {
+                HANDLE hSimConnect;
+                HRESULT result = SimConnect_Open(&hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0);
+                SimConnect_Close(hSimConnect);
+
+                if (result == S_OK)
+                    emit simulatorStarted(m_simulatorInfo);
+            });
+        }
+
+        void CSimulatorFsxListener::start()
+        {
+            m_timer->start();
+        }
+
+        void CSimulatorFsxListener::stop()
+        {
+            m_timer->stop();
         }
     } // namespace
 } // namespace

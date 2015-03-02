@@ -40,6 +40,9 @@ namespace BlackSimPlugin
 
             //! \copydoc BlackCore::ISimulatorFactory::getSimulatorInfo
             virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
+
+            //! \copydoc BlackCore::ISimulatorFactory::getListener
+            virtual BlackCore::ISimulatorListener *createListener(QObject *parent = nullptr) override;
         };
 
     } // namespace

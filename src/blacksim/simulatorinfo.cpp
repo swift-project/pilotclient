@@ -24,8 +24,8 @@ namespace BlackSim
     {
         Q_ASSERT(json["IID"].toString() == "net.vatsim.PilotClient.BlackCore.SimulatorInterface");
         QJsonObject data = json["MetaData"].toObject();
-        m_fullName = data["full_name"].toString("Unknown");
-        m_shortName = data["short_name"].toString("Unknown");
+        m_fullName = data["full_name"].toString();
+        m_shortName = data["short_name"].toString();
     }
 
     CVariant CSimulatorInfo::getSimulatorSetupValue(int index) const

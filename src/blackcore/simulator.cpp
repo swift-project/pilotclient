@@ -21,7 +21,7 @@ namespace BlackCore
 {
     void ISimulator::emitSimulatorCombinedStatus()
     {
-        quint8 status = 
+        int status =
             (isConnected() ? Connected : static_cast<ISimulator::SimulatorStatus>(0))
           | (isSimulating() ? Running : static_cast<ISimulator::SimulatorStatus>(0))
           | (isPaused() ? Paused : static_cast<ISimulator::SimulatorStatus>(0))

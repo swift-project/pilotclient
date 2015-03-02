@@ -201,6 +201,25 @@ namespace BlackSimPlugin
             qint64 m_statsUpdateAircraftTimeAvg = 0;
             int    m_statsUpdateAircraftCount = 0;
         };
+
+        class CSimulatorFsxListener : public BlackCore::ISimulatorListener {
+            Q_OBJECT
+
+        public:
+            //! Constructor
+            CSimulatorFsxListener(QObject* parent);
+
+            //! \copydoc BlackCore::ISimulatorListener::start
+            virtual void start() override;
+
+            //! \copydoc BlackCore::ISimulatorListener::stop
+            virtual void stop() override;
+
+        private:
+            QTimer* m_timer;
+            const BlackSim::CSimulatorInfo m_simulatorInfo = BlackSim::CSimulatorInfo::FSX();
+
+        };
     }
 
 } // namespace BlackCore
