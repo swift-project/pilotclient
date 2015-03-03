@@ -257,5 +257,31 @@ namespace BlackSimPlugin
             emit statusChanged(m_callsign, m_clientStatus);
             return hr;
         }
+
+        void CFs9Client::sendMultiplayerPosition(const CAircraftSituation &situation)
+        {
+            MPPositionSlewMode positionSlewMode = aircraftSituationToFS9(situation);
+
+            QByteArray positionMessage;
+            MultiPlayerPacketParser::writeType(positionMessage, CFs9Sdk::MULTIPLAYER_PACKET_ID_POSITION_SLEWMODE);
+            MultiPlayerPacketParser::writeSize(positionMessage, positionSlewMode.size());
+            positionSlewMode.packet_index = m_packetIndex;
+            ++m_packetIndex;
+            positionMessage = MultiPlayerPacketParser::writeMessage(positionMessage, positionSlewMode);
+
+            sendMessage(positionMessage);
+        }
+
+        void CFs9Client::sendMultiplayerParamaters()
+        {
+            QByteArray paramMessage;
+            MPParam param;
+            MultiPlayerPacketParser::writeType(paramMessage, CFs9Sdk::MULTIPLAYER_PACKET_ID_PARAMS);
+            MultiPlayerPacketParser::writeSize(paramMessage, param.size());
+            param.packet_index = m_packetIndex;
+            ++m_packetIndex;
+            paramMessage = MultiPlayerPacketParser::writeMessage(paramMessage, param);
+            sendMessage(paramMessage);
+        }
     }
 }

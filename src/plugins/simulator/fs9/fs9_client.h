@@ -83,7 +83,9 @@ namespace BlackSimPlugin
 
             HRESULT closeConnection();
 
-            BlackMisc::Aviation::CAircraftSituation m_lastAircraftSituation;
+            void sendMultiplayerPosition(const BlackMisc::Aviation::CAircraftSituation &situation);
+            void sendMultiplayerParamaters();
+
             BlackMisc::PhysicalQuantities::CTime m_updateInterval;
             BlackCore::IInterpolator *m_interpolator = nullptr;
             int m_timerId = 0;
