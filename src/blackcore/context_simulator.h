@@ -137,8 +137,8 @@ namespace BlackCore
         //! Max. number of remote aircraft rendered
         virtual int getMaxRenderedAircraft() const = 0;
 
-        //! Max. number of remote aircraft rendered
-        virtual void setMaxRenderedAircraft(int number) = 0;
+        //! Max. number of remote aircraft rendered and provide optional selection which aircraft this are
+        virtual void setMaxRenderedAircraft(int number, const BlackMisc::Aviation::CCallsignList &renderedAircraft) = 0;
 
         //! Time synchronization offset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
@@ -163,6 +163,9 @@ namespace BlackCore
 
         //! Icon representing the model
         virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const = 0;
+
+        //! Enable debugging
+        virtual void enableDebugMessages(bool driver, bool interpolator) = 0;
 
     protected:
         //! Constructor

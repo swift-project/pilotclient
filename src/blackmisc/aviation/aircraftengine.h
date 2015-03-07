@@ -27,13 +27,13 @@ namespace BlackMisc
             CAircraftEngine() = default;
 
             //! Constructor
-            CAircraftEngine(int number, bool on) : m_number(number), m_on(on) {}
+            CAircraftEngine(int number, bool on);
 
             //! Get engine number
             int getNumber() const { return m_number; }
 
             //! Set engine number
-            void setNumber (int number) { m_number = number; }
+            void setNumber (int number);
 
             //! Is on/off?
             bool isOn() const { return m_on; }
@@ -61,4 +61,4 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftEngine, (
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftEngine)
 
-#endif // BLACKMISC_AIRCRAFTENGINES_H
+#endif // guard

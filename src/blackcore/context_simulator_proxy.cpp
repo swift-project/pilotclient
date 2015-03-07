@@ -119,9 +119,9 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isTimeSynchronized"));
     }
 
-    void CContextSimulatorProxy::setMaxRenderedAircraft(int number)
+    void CContextSimulatorProxy::setMaxRenderedAircraft(int number, const CCallsignList &renderedAircraft)
     {
-        m_dBusInterface->callDBus(QLatin1Literal("setMaxRenderedRemoteAircraft"), number);
+        m_dBusInterface->callDBus(QLatin1Literal("setMaxRenderedRemoteAircraft"), number, renderedAircraft);
     }
 
     int CContextSimulatorProxy::getMaxRenderedAircraft() const
@@ -157,6 +157,11 @@ namespace BlackCore
     CPixmap CContextSimulatorProxy::iconForModel(const QString &modelString) const
     {
         return m_dBusInterface->callDBusRet<CPixmap>(QLatin1Literal("iconForModel"), modelString);
+    }
+
+    void CContextSimulatorProxy::enableDebugMessages(bool driver, bool interpolator)
+    {
+        m_dBusInterface->callDBus(QLatin1Literal("enableDebugMessages"), driver, interpolator);
     }
 
     bool CContextSimulatorProxy::isPaused() const

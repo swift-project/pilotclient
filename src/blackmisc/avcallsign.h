@@ -57,6 +57,9 @@ namespace BlackMisc
             //! \sa atcAlikeCallsignSuffixes()
             bool isAtcAlikeCallsign() const;
 
+            //! Observer callsign?
+            bool isObserverCallsign() const;
+
             //! Get callsign.
             const QString &asString() const { return this->m_callsign; }
 

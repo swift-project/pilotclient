@@ -103,7 +103,7 @@ namespace BlackCore
         void enableDebugMessages(bool enabled);
 
         //! Force sorting (latest first), not required if order can be guaranteed
-        void forceSorting(bool sort);
+        void forceSortingOfAddedValues(bool sort);
 
         static const qint64 TimeOffsetMs = 6000;           //!< offset for interpolation
         static const int MaxSituationsPerCallsign = 6;     //!< How many situations per callsign

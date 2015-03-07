@@ -184,6 +184,9 @@ namespace BlackCore
         //! \copydoc IContextNetwork::testCreateDummyOnlineAtcStations
         virtual void testCreateDummyOnlineAtcStations(int number) override;
 
+        //! \copydoc IContextNetwork::testAddAircraftParts
+        virtual void testAddAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) override;
+
         //! Gracefully shut down, e.g. for thread safety
         void gracefulShutdown();
 

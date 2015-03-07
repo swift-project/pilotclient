@@ -25,7 +25,7 @@ namespace BlackCoreTest
     {
         QScopedPointer<CRemoteAircraftProviderDummy> provider(new CRemoteAircraftProviderDummy());
         CInterpolatorLinear interpolator(provider.data());
-        interpolator.forceSorting(true);
+        interpolator.forceSortingOfAddedValues(true);
         const qint64 ts =  1425000000000; // QDateTime::currentMSecsSinceEpoch();
         const qint64 deltaT = 5000; // ms
         CCallsign cs("SWIFT");
@@ -219,7 +219,7 @@ namespace BlackCoreTest
     CAircraftParts CTestInterpolator::getTestParts(const CCallsign &callsign, int number, qint64 ts, qint64 deltaT)
     {
         CAircraftLights l(true, false, true, false, true, false);
-        CAircraftEngineList e({ CAircraftEngine(0, true), CAircraftEngine(1, false), CAircraftEngine(2, true) });
+        CAircraftEngineList e({ CAircraftEngine(1, true), CAircraftEngine(2, false), CAircraftEngine(3, true) });
         CAircraftParts p(callsign, l, true, 20, true, e, false);
         p.setMSecsSinceEpoch(ts - deltaT * number); // values in past
         return p;

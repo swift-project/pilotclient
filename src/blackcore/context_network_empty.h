@@ -190,6 +190,14 @@ namespace BlackCore
             logEmptyContextWarning(Q_FUNC_INFO);
         }
 
+        //! \copydoc IContextNetwork::testAddAircraftParts
+        virtual void testAddAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) override
+        {
+            Q_UNUSED(parts);
+            Q_UNUSED(incremental);
+            logEmptyContextWarning(Q_FUNC_INFO);
+        }
+
         //! \copydoc IContextNetwork::parseCommandLine
         virtual bool parseCommandLine(const QString &commandLine) override
         {

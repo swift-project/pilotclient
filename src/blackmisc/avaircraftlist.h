@@ -31,7 +31,7 @@ namespace BlackMisc
         class CAircraftList :
             public CSequence<CAircraft>,
             public ICallsignObjectList<CAircraft, CAircraftList>,
-            public BlackMisc::Geo::IGeoObjectList<CAircraft, CAircraftList>
+            public BlackMisc::Geo::IGeoObjectWithRelativePositionList<CAircraft, CAircraftList>
         {
         public:
             //! Default constructor.

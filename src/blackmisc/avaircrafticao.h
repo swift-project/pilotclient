@@ -32,7 +32,8 @@ namespace BlackMisc
                 IndexCombinedAircraftType,
                 IndexAirlineDesignator,
                 IndexAircraftColor,
-                IndexAsString
+                IndexAsString,
+                IndexIsVtol
             };
 
             //! Default constructor.
@@ -134,6 +135,9 @@ namespace BlackMisc
 
             //! Matches wildcard icao object
             bool matchesWildcardIcao(const CAircraftIcao &otherIcao) const;
+
+            //! Is VTOL aircraft
+            bool isVtol() const;
 
             //! \copydoc CValueObject::propertyByIndex
             virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;

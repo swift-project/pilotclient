@@ -158,13 +158,13 @@ namespace BlackCore
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         if (!m_simulator) return 0;
-        return 13;
+        return m_simulator->getMaxRenderedAircraft();
     }
 
-    void CContextSimulator::setMaxRenderedAircraft(int number)
+    void CContextSimulator::setMaxRenderedAircraft(int number, const CCallsignList &renderedAircraft)
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        if (m_simulator) { this->m_simulator->setMaxRenderedAircraft(number); }
+        if (m_simulator) { this->m_simulator->setMaxRenderedAircraft(number, renderedAircraft); }
     }
 
     CTime CContextSimulator::getTimeSynchronizationOffset() const
@@ -263,7 +263,7 @@ namespace BlackCore
     bool CContextSimulator::loadSimulatorPluginFromSettings()
     {
         Q_ASSERT(this->getIContextSettings());
-        if (!this->getIContextSettings()) return false;
+        if (!this->getIContextSettings()) { return false; }
 
         // TODO warnings if we didn't load the plugin which the settings asked for
 
@@ -396,6 +396,12 @@ namespace BlackCore
     {
         if (!this->m_simulator) { return CPixmap(); }
         return this->m_simulator->iconForModel(modelString);
+    }
+
+    void CContextSimulator::enableDebugMessages(bool driver, bool interpolator)
+    {
+        if (!this->m_simulator) { return; }
+        return this->m_simulator->enableDebugMessages(driver, interpolator);
     }
 
     bool CContextSimulator::isPaused() const

@@ -53,11 +53,14 @@ namespace BlackMisc
             //! Calculate distances, then sort by range
             void sortByRange(const BlackMisc::Geo::ICoordinateGeodetic &position, bool updateValues);
 
+            //! If distance is already set, just sort
+            void sortByDistanceToOwnAircraft();
+
             //! Calculate distances, remove if outside range
             void removeIfOutsideRange(const BlackMisc::Geo::ICoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &maxDistance, bool updateValues);
 
             //! Calculate distances
-            void calculcateDistanceAndBearingToPlane(const BlackMisc::Geo::ICoordinateGeodetic &position);
+            void calculcateDistanceAndBearingToPosition(const BlackMisc::Geo::ICoordinateGeodetic &position);
 
         protected:
             //! Constructor

@@ -69,6 +69,7 @@ namespace BlackCore
     CAircraftPartsList IInterpolator::getAndRemovePartsBeforeTime(const CCallsign &callsign, qint64 cutoffTime, BlackCore::IInterpolator::PartsStatus &partsStatus)
     {
         static const CAircraftPartsList empty;
+        Q_ASSERT_X(!callsign.isEmpty(), "getAndRemovePartsBeforeTime", "empty callsign");
         partsStatus.reset();
         QWriteLocker l(&m_lockParts);
         if (this->m_partsByCallsign.contains(callsign))
@@ -108,7 +109,12 @@ namespace BlackCore
         return m_partsByCallsign[callsign];
     }
 
-    void IInterpolator::forceSorting(bool sort)
+    void IInterpolator::enableDebugMessages(bool enabled)
+    {
+        this->m_withDebugMsg = enabled;
+    }
+
+    void IInterpolator::forceSortingOfAddedValues(bool sort)
     {
         this->m_forceSortWhenAddingValues = sort;
     }
@@ -117,7 +123,7 @@ namespace BlackCore
     {
         QWriteLocker lock(&m_lockSituations);
         const CCallsign callsign(situation.getCallsign());
-        Q_ASSERT(!callsign.isEmpty());
+        Q_ASSERT_X(!callsign.isEmpty(), "ps_onAddedAircraftSituation", "empty callsign");
         if (callsign.isEmpty()) { return; }
         if (this->m_withDebugMsg) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << situation.getCallsign() << situation.getMSecsSinceEpoch(); }
 
@@ -134,7 +140,7 @@ namespace BlackCore
     {
         QWriteLocker lock(&m_lockParts);
         const CCallsign callsign(parts.getCallsign());
-        Q_ASSERT(!callsign.isEmpty());
+        Q_ASSERT_X(!callsign.isEmpty(), "ps_onAddedAircraftParts", "empty callsign");
         if (callsign.isEmpty()) { return; }
         if (this->m_withDebugMsg) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << parts.getCallsign() << parts.getMSecsSinceEpoch(); }
 
@@ -148,7 +154,6 @@ namespace BlackCore
 
         // check sort order
         Q_ASSERT(l.size() < 2 || l[0].getMSecsSinceEpoch() >= l[1].getMSecsSinceEpoch());
-
     }
 
     void IInterpolator::ps_onRemovedAircraft(const CCallsign &callsign)

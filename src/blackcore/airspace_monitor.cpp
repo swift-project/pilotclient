@@ -54,7 +54,7 @@ namespace BlackCore
         this->connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CAirspaceMonitor::ps_receivedDataFile);
 
         // Watchdog
-        // ATC stations send updates every 25 s. Configure timeout after 50 s.
+        // ATC stations send updates every 25s. Configure timeout after 50s.
         this->m_atcWatchdog.setTimeout(CTime(50, CTimeUnit::s()));
         this->connect(&this->m_aircraftWatchdog, &CAirspaceWatchdog::timeout, this, &CAirspaceMonitor::ps_pilotDisconnected);
         this->connect(&this->m_atcWatchdog,      &CAirspaceWatchdog::timeout, this, &CAirspaceMonitor::ps_atcControllerDisconnected);
@@ -338,11 +338,16 @@ namespace BlackCore
 
     void CAirspaceMonitor::testCreateDummyOnlineAtcStations(int number)
     {
-        if (number < 1) return;
+        if (number < 1) { return; }
         this->m_atcStationsOnline.push_back(
             BlackMisc::Aviation::CTesting::createAtcStations(number)
         );
         emit this->changedAtcStationsOnline();
+    }
+
+    void CAirspaceMonitor::testAddAircraftParts(const CAircraftParts &parts, bool incremental)
+    {
+        this->ps_aircraftConfigReceived(parts.getCallsign(), parts.toJson(), !incremental);
     }
 
     void CAirspaceMonitor::clear()
@@ -573,7 +578,7 @@ namespace BlackCore
 
         // build simulated aircraft and crosscheck if all data are available
         CSimulatedAircraft remoteAircraft(this->m_aircraftInRange.findFirstByCallsign(callsign));
-        Q_ASSERT(remoteAircraft.hasValidCallsign());
+        Q_ASSERT_X(remoteAircraft.hasValidCallsign(), "ps_sendReadyForModelMatching", "Inavlid callsign");
         CClient remoteClient = this->m_otherClients.findFirstByCallsign(callsign);
         remoteAircraft.setClient(remoteClient);
         remoteAircraft.setModel(remoteClient.getAircraftModel());
@@ -753,15 +758,20 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_aircraftUpdateReceived(const CAircraftSituation &situation, const CTransponder &transponder)
     {
-        Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+        Q_ASSERT_X(BlackCore::isCurrentThreadCreatingThread(this), "ps_aircraftUpdateReceived", "Called in different thread");
         if (!this->m_connected) { return; }
 
         CCallsign callsign(situation.getCallsign());
-        Q_ASSERT(!callsign.isEmpty());
+        Q_ASSERT_X(!callsign.isEmpty(), "ps_aircraftUpdateReceived", "Empty callsign");
+
+        if (callsign.isObserverCallsign())
+        {
+            return; // just ignore
+        }
 
         // store situation history
-        // this->m_aircraftSituations.insert_front(situation);
-        // this->m_aircraftSituations.removeOlderThanNowMinusOffset(AircraftSituationsRemovedOffsetMs);
+        this->m_aircraftSituations.push_front(situation);
+        this->m_aircraftSituations.removeOlderThanNowMinusOffset(AircraftSituationsRemovedOffsetMs);
         emit this->addedRemoteAircraftSituation(situation);
 
         bool exists = this->m_aircraftInRange.containsCallsign(callsign);
@@ -846,6 +856,8 @@ namespace BlackCore
         // if with contains false remove here, in case of inconsistencies
         this->m_aircraftWatchdog.removeCallsign(callsign);
         this->m_otherClients.removeByCallsign(callsign);
+        this->m_aircraftSituations.removeByCallsign(callsign);
+        this->m_aircraftParts.removeByCallsign(callsign);
         this->removeFromAircraftCaches(callsign);
 
         if (contains)
@@ -865,29 +877,38 @@ namespace BlackCore
         if (changed > 0) { emit this->changedAircraftInRange(); }
     }
 
-    void CAirspaceMonitor::ps_aircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign,  const QJsonObject &incremental, bool isFull)
+    void CAirspaceMonitor::ps_aircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign,  const QJsonObject &jsonObject, bool isFull)
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
 
         CSimulatedAircraftList list = this->m_aircraftInRange.findByCallsign(callsign);
         // Skip unknown callsigns
-        if (list.isEmpty()) return;
+        if (list.isEmpty()) { return; }
 
         CSimulatedAircraft simAircraft = list.front();
         // If we are not yet synchronized, we throw away any incremental packet
-        if (!simAircraft.isPartsSynchronized() && !isFull) return;
+        if (!simAircraft.isPartsSynchronized() && !isFull) { return; }
 
-        CAircraftParts parts = m_aircraftParts.findBackByCallsign(callsign);
+        CAircraftParts parts;
+        if (isFull)
+        {
+            parts.convertFromJson(jsonObject);
+        }
+        else
+        {
+            // incremental update
+            parts = m_aircraftParts.findFirstByCallsign(callsign);
+            QJsonObject config = applyIncrementalObject(parts.toJson(), jsonObject);
+            parts.convertFromJson(config);
+        }
+
+        // make sure in any case right time / callsign
         parts.setCurrentUtcTime();
-        parts.setCallsign(callsign); // for default values
-
-        // update
-        QJsonObject config = applyIncrementalObject(parts.toJson(), incremental);
-        parts.convertFromJson(config);
+        parts.setCallsign(callsign);
 
         // store part history
-        // this->m_aircraftParts.insert_front(parts);
-        // this->m_aircraftParts.removeOlderThanNowMinusOffset(AircraftPartsRemoveOffsetMs);
+        this->m_aircraftParts.push_front(parts);
+        this->m_aircraftParts.removeOlderThanNowMinusOffset(AircraftPartsRemoveOffsetMs);
         emit this->addedRemoteAircraftParts(parts);
 
         CPropertyIndexVariantMap vm;

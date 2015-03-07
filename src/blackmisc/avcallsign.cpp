@@ -85,6 +85,15 @@ namespace BlackMisc
             return atcAlikeCallsignSuffixes().contains(this->getSuffix(), Qt::CaseInsensitive);
         }
 
+
+        /*
+         * OBS callsign?
+         */
+        bool CCallsign::isObserverCallsign() const
+        {
+            return m_callsignAsSet.endsWith("_OBS", Qt::CaseInsensitive);
+        }
+
         /*
          * Callsign as Observer
          */

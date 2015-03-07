@@ -38,7 +38,7 @@ namespace BlackMisc
         }
 
         template <class OBJ, class CONTAINER>
-        void IGeoObjectWithRelativePositionList<OBJ, CONTAINER>::calculcateDistanceAndBearingToPlane(const ICoordinateGeodetic &position)
+        void IGeoObjectWithRelativePositionList<OBJ, CONTAINER>::calculcateDistanceAndBearingToPosition(const ICoordinateGeodetic &position)
         {
             for (OBJ &geoObj : this->container())
             {
@@ -60,11 +60,16 @@ namespace BlackMisc
         {
             if (updateValues)
             {
-                this->calculcateDistanceAndBearingToPlane(position);
+                this->calculcateDistanceAndBearingToPosition(position);
             }
             this->container().sort([ & ](const OBJ & a, const OBJ & b) { return a.getDistanceToOwnAircraft() < b.getDistanceToOwnAircraft(); });
         }
 
+        template <class OBJ, class CONTAINER>
+        void IGeoObjectWithRelativePositionList<OBJ, CONTAINER>::sortByDistanceToOwnAircraft()
+        {
+            this->container().sort([ & ](const OBJ & a, const OBJ & b) { return a.getDistanceToOwnAircraft() < b.getDistanceToOwnAircraft(); });
+        }
 
         // see here for the reason of thess forward instantiations
         // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html

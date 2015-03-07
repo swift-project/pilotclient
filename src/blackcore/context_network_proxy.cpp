@@ -78,7 +78,12 @@ namespace BlackCore
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "changedAircraftEnabled", this, SIGNAL(changedAircraftEnabled(BlackMisc::Simulation::CSimulatedAircraft, QString)));
         Q_ASSERT(s);
-        Q_UNUSED(s);
+        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
+                               "addedAircraft", this, SIGNAL(addedAircraft(BlackMisc::Simulation::CSimulatedAircraft)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
+                               "removedAircraft", this, SIGNAL(removedAircraft(BlackMisc::Aviation::CCallsign)));
+        Q_ASSERT(s);
     }
 
     void CContextNetworkProxy::readAtcBookingsFromSource() const
@@ -184,6 +189,11 @@ namespace BlackCore
     void CContextNetworkProxy::testCreateDummyOnlineAtcStations(int number)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("testCreateDummyOnlineAtcStations"), number);
+    }
+
+    void CContextNetworkProxy::testAddAircraftParts(const CAircraftParts &parts, bool incremental)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("testAddAircraftParts"), parts, incremental);
     }
 
     CStatusMessage CContextNetworkProxy::connectToNetwork(const CServer &server, uint loginMode)

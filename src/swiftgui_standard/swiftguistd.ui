@@ -125,7 +125,7 @@
           <enum>QFrame::NoFrame</enum>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="pg_MainInfoArea">
           <layout class="QVBoxLayout" name="vl_MainInfoArea">
@@ -168,6 +168,28 @@
            </property>
            <item>
             <widget class="BlackGui::Components::CLoginComponent" name="comp_Login" native="true"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="pg_Internals">
+          <layout class="QVBoxLayout" name="vl_Internals">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="BlackGui::Components::CInternalsComponent" name="comp_Internals" native="true"/>
            </item>
           </layout>
          </widget>
@@ -250,6 +272,8 @@
      </property>
      <addaction name="menu_DebugMetaTypes"/>
     </widget>
+    <addaction name="menu_TestInternals"/>
+    <addaction name="separator"/>
     <addaction name="menu_PlanePositions"/>
     <addaction name="menu_Reload"/>
     <addaction name="menu_Debug"/>
@@ -375,6 +399,11 @@
     <string>Position LOWW (Vienna, AUT)</string>
    </property>
   </action>
+  <action name="menu_TestInternals">
+   <property name="text">
+    <string>Internals</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -406,6 +435,12 @@
    <class>BlackGui::Components::CLoginComponent</class>
    <extends>QWidget</extends>
    <header>blackgui/components/logincomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CInternalsComponent</class>
+   <extends>QWidget</extends>
+   <header>blackgui/components/internalscomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

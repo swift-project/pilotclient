@@ -70,6 +70,16 @@ namespace BlackCore
         return this->getRuntime()->getIContextSimulator();
     }
 
+    void CContext::setDebugEnabled(bool debug)
+    {
+        this->m_debugEnabled = debug;
+    }
+
+    bool CContext::isDebugEnabled() const
+    {
+        return this->m_debugEnabled;
+    }
+
     const IContextSimulator *CContext::getIContextSimulator() const
     {
         return this->getRuntime()->getIContextSimulator();

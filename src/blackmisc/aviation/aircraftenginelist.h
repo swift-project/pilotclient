@@ -15,6 +15,7 @@
 #include "aircraftengine.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
+#include <initializer_list>
 
 namespace BlackMisc
 {
@@ -27,8 +28,17 @@ namespace BlackMisc
             //! Default constructor.
             CAircraftEngineList() = default;
 
+            //! Construct by bool values for engines 1,2 ...
+            CAircraftEngineList(std::initializer_list<bool> enginesOnOff);
+
             //! Construct from a base class object.
             CAircraftEngineList(const CSequence<CAircraftEngine> &other);
+
+            //! Get engine 1..n
+            CAircraftEngine getEngine(int engineNumber) const;
+
+            //! Engine number 1..x on?
+            bool isEngineOn(int engineNumber) const;
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
@@ -36,32 +46,11 @@ namespace BlackMisc
             //! \copydoc CValueObject::convertFromQVariant
             virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
-            virtual QJsonObject toJson() const override
-            {
-                QJsonObject map;
-
-                for (const auto &e : *this)
-                {
-                    QJsonObject value = e.toJson();
-                    map.insert(QString::number(e.getNumber()), value);
-                }
-                return map;
-            }
+            //! \copydoc CValueObject::toJson
+            virtual QJsonObject toJson() const override;
 
             //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override
-            {
-                clear();
-                for (const auto &e : json.keys())
-                {
-
-                    CAircraftEngine engine;
-                    int number = e.toInt();
-                    engine.convertFromJson(json.value(e).toObject());
-                    engine.setNumber(number);
-                    push_back(engine);
-                }
-            }
+            virtual void convertFromJson(const QJsonObject &json) override;
 
             //! Register metadata
             static void registerMetadata();

@@ -58,7 +58,8 @@ public:
     enum MainPageIndex
     {
         MainPageInfoArea = 0,
-        MainPageLogin  = 1
+        MainPageLogin  = 1,
+        MainPageInternals = 2
     };
 
     //! Constructor

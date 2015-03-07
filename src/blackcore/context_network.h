@@ -71,6 +71,9 @@ namespace BlackCore
         //! An aircraft disappeared
         void removedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
+        //! A new aircraft appeared
+        void addedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
+
         //! Read for model matching
         void readyForModelMatching(const BlackMisc::Simulation::CSimulatedAircraft &renderedAircraft);
 
@@ -217,6 +220,9 @@ namespace BlackCore
 
         //! Create dummy ATC stations for performance tests etc.
         virtual void testCreateDummyOnlineAtcStations(int number) = 0;
+
+        //! Inject aircraft parts for testing
+        virtual void testAddAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) = 0;
 
     protected:
         //! Constructor

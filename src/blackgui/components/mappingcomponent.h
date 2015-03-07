@@ -53,7 +53,7 @@ namespace BlackGui
 
         protected:
             //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
-            void runtimeHasBeenSet() override;
+            virtual void runtimeHasBeenSet() override;
 
         private slots:
             //! Aircraft models available

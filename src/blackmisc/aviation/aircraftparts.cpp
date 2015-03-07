@@ -100,12 +100,12 @@ namespace BlackMisc
 
         CAircraftEngine CAircraftParts::getEngine(int number) const
         {
-            return this->m_engines.findBy(&CAircraftEngine::getNumber, number).frontOrDefault();
+            return this->m_engines.getEngine(number);
         }
 
         bool CAircraftParts::isEngineOn(int number) const
         {
-            return this->getEngine(number).isOn();
+            return this->m_engines.isEngineOn(number);
         }
 
     } // namespace

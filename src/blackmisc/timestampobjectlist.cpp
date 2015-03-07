@@ -119,7 +119,7 @@ namespace BlackMisc
     }
 
     template <class OBJ, class CONTAINER>
-    void ITimestampObjectList<OBJ, CONTAINER>::removeOlderThanNowMinusOffset(int offsetMs)
+    void ITimestampObjectList<OBJ, CONTAINER>::removeOlderThanNowMinusOffset(qint64 offsetMs)
     {
         const qint64 epoch = QDateTime::currentMSecsSinceEpoch() - offsetMs;
         this->container().removeIf([&](const OBJ & obj)

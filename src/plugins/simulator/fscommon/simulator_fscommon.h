@@ -13,6 +13,7 @@
 #define BLACKSIMPLUGIN_SIMULATOR_COMMON_H
 
 #include "blackcore/simulator.h"
+#include "blackcore/interpolator.h"
 #include "blacksim/fscommon/aircraftmapper.h"
 #include "fsuipc.h"
 
@@ -67,17 +68,14 @@ namespace BlackSimPlugin
             //! \copydoc IContextSimulator::iconForModel
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
 
-            //! \copydoc ISimulator::getMaxRenderedAircraft
-            virtual int getMaxRenderedAircraft() const override;
-
-            //! \copydoc ISimulator::setMaxRenderedAircraft
-            virtual void setMaxRenderedAircraft(int maxRenderedAircraft) override;
-
             //! \copydoc ISimulator::changeRenderedAircraftModel
             virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) override;
 
             //! \copydoc ISimulator::changeAircraftEnabled
             virtual bool changeAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) override;
+
+            //! \copydoc ISimulator::enableDebuggingMessages
+            virtual void enableDebugMessages(bool driver, bool interpolator) override;
 
         protected:
             //! Constructor
@@ -94,6 +92,7 @@ namespace BlackSimPlugin
             bool m_simTimeSynced = false;                   //!< Time synchronized?
             BlackMisc::PhysicalQuantities::CTime m_syncTimeOffset; //!< time offset
             BlackMisc::Aviation::CAirportList m_airportsInRange;   //!< aiports in range of own aircraft
+            BlackCore::IInterpolator *m_interpolator = nullptr;    //!< interpolator instance
 
             // cockpit as set in SIM
             BlackMisc::Aviation::CComSystem  m_simCom1;  //!< cockpit COM1 state in simulator

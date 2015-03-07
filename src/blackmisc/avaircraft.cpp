@@ -156,6 +156,11 @@ namespace BlackMisc
             m_parts.setCallsign(this->getCallsign());
         }
 
+        bool CAircraft::isVtol() const
+        {
+            return m_icao.isVtol();
+        }
+
         CVariant CAircraft::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return this->toCVariant(); }
@@ -180,6 +185,8 @@ namespace BlackMisc
                 return this->m_icao.propertyByIndex(index.copyFrontRemoved());
             case IndexParts:
                 return this->m_parts.propertyByIndex(index.copyFrontRemoved());
+            case IndexIsVtol:
+                return CVariant::fromValue(this->isVtol());
             default:
                 return (ICoordinateGeodetic::canHandleIndex(index)) ?
                        ICoordinateGeodetic::propertyByIndex(index) :

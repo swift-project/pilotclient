@@ -504,22 +504,6 @@ namespace BlackMisc
         }
 
         /*!
-         * \brief Return a copy as derived container sorted by a given comparator predicate.
-         * \remarks Sorts in background.
-         */
-        template <class TargetContainer, class Predicate>
-        QFuture<TargetContainer> sortedAsync(Predicate p) const
-        {
-            TargetContainer result = *this;
-            QFuture<TargetContainer> f = QtConcurrent::run([ = ]()
-            {
-                result.sort(p);
-                return result;
-            });
-            return f;
-        }
-
-        /*!
          * \brief Return a copy sorted by some particular key(s).
          * \param key1 A pointer to a member function of T.
          * \param keys Zero or more additional pointers to member functions of T.

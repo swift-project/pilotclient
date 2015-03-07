@@ -100,7 +100,7 @@ namespace BlackMisc
             void setDistanceToOwnAircraft(const BlackMisc::PhysicalQuantities::CLength &distance) { this->m_distanceToOwnAircraft = distance; }
 
             //! Get the bearing to own plane
-            const BlackMisc::PhysicalQuantities::CAngle &getBearingToOwnAIrcraft() const { return m_bearingToOwnAircraft; }
+            const BlackMisc::PhysicalQuantities::CAngle &getBearingToOwnAircraft() const { return m_bearingToOwnAircraft; }
 
             //! Set bearing to own plane
             void setBearingToOwnAircraft(const BlackMisc::PhysicalQuantities::CAngle &angle) { this->m_bearingToOwnAircraft = angle; }

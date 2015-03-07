@@ -61,7 +61,7 @@ namespace BlackMisc
         void removeBefore(qint64 msSinceEpoch);
 
         //! Remove objects older than seconds
-        void removeOlderThanNowMinusOffset(int offsetMs);
+        void removeOlderThanNowMinusOffset(qint64 offsetMs);
 
         //! Sort by timestamp
         void sortLatestFirst();

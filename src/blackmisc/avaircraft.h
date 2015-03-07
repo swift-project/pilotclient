@@ -30,7 +30,9 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating information of an aircraft
-        class CAircraft : public CValueObjectStdTuple<CAircraft>, public BlackMisc::Geo::ICoordinateWithRelativePosition
+        class CAircraft :
+            public CValueObjectStdTuple<CAircraft>,
+            public BlackMisc::Geo::ICoordinateWithRelativePosition
         {
         public:
             //! Properties by index
@@ -44,7 +46,8 @@ namespace BlackMisc
                 IndexTransponder,
                 IndexSituation,
                 IndexIcao,
-                IndexParts
+                IndexParts,
+                IndexIsVtol
             };
 
             //! Default constructor.
@@ -75,7 +78,7 @@ namespace BlackMisc
             const BlackMisc::Network::CUser &getPilot() const { return m_pilot; }
 
             //! Get user's real name
-            QString getPilotRealname() { return m_pilot.getRealName(); }
+            QString getPilotRealname() const { return m_pilot.getRealName(); }
 
             //! Get user's real id
             QString getPilotId() { return m_pilot.getId(); }
@@ -247,6 +250,9 @@ namespace BlackMisc
             //! Set aircraft parts
             void setParts(const BlackMisc::Aviation::CAircraftParts &parts);
 
+            //! VTOL aircraft?
+            bool isVtol() const;
+
             //! \copydoc CValueObject::propertyByIndex
             virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
@@ -282,7 +288,7 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraft, (
                                    o.m_parts,
                                    o.m_icao,
                                    o.m_distanceToOwnAircraft,
-								   o.m_bearingToOwnAircraft))
+                                   o.m_bearingToOwnAircraft))
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraft)
 

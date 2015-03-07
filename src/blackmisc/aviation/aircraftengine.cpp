@@ -13,8 +13,20 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        QString CAircraftEngine::convertToQString(bool /** i18n */) const
+        CAircraftEngine::CAircraftEngine(int number, bool on) : m_number(number), m_on(on)
         {
+            Q_ASSERT_X(number > 0, "CAircraftEngine", "Engine number have to be > 1");
+        }
+
+        void CAircraftEngine::setNumber(int number)
+        {
+            Q_ASSERT_X(number > 0, "setNumber", "Engine number have to be > 1");
+            m_number = number;
+        }
+
+        QString CAircraftEngine::convertToQString(bool i18n) const
+        {
+            Q_UNUSED(i18n);
             QString s(m_number);
             s += m_on;
             return s;

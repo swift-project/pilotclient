@@ -77,6 +77,27 @@ namespace BlackMisc
             return true;
         }
 
+        bool CAircraftIcao::isVtol() const
+        {
+            // special designators
+            if (
+                this->m_aircraftDesignator == "BALL" ||
+                this->m_aircraftDesignator == "SHIP" ||
+                this->m_aircraftDesignator == "GYRO" ||
+                this->m_aircraftDesignator == "UHEL"
+            ) { return true; }
+
+            if (!m_aircraftCombinedType.isEmpty())
+            {
+                if (
+                    this->m_aircraftCombinedType.startsWith('G') || // gyrocopter
+                    this->m_aircraftCombinedType.startsWith('H') || // helicopter
+                    this->m_aircraftCombinedType.startsWith('T')    // tilt wing
+                ) { return true; }
+            }
+            return false;
+        }
+
         CVariant CAircraftIcao::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return this->toCVariant(); }
@@ -93,6 +114,8 @@ namespace BlackMisc
                 return CVariant::fromValue(this->m_aircraftColor);
             case IndexAsString:
                 return CVariant::fromValue(this->asString());
+            case IndexIsVtol:
+                return CVariant::fromValue(this->isVtol());
             default:
                 return CValueObject::propertyByIndex(index);
             }

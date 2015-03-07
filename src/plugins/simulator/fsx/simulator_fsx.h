@@ -191,7 +191,6 @@ namespace BlackSimPlugin
             HANDLE  m_hSimConnect = nullptr;    //!< Handle to SimConnect object
             uint    m_nextObjID   = 1;          //!< object ID TODO: also used as request id, where to we place other request ids as for facilities
             BlackMisc::PhysicalQuantities::CTime m_syncTimeOffset;   //!< Time offset (if synchronized)
-            BlackCore::IInterpolator *m_interpolator = nullptr;      //!< interpolator instance
             QHash<BlackMisc::Aviation::CCallsign, CSimConnectObject> m_simConnectObjects;
             QFutureWatcher<bool> m_watcherConnect;
 

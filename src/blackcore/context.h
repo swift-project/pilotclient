@@ -112,6 +112,12 @@ namespace BlackCore
         //! Simulator
         IContextSimulator *getIContextSimulator();
 
+        //! Set debug flag
+        void setDebugEnabled(bool debug);
+
+        //! Debug enabled?
+        bool isDebugEnabled() const;
+
         //! Id and path name for round trip protection
         virtual QString getPathAndContextId() const = 0;
 
@@ -135,6 +141,8 @@ namespace BlackCore
         {
             BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).warning("Empty context called, details: %1") << functionName;
         }
+
+        bool m_debugEnabled = false; //!< debug messages enabled
 
         //! Standard message when status message is returned in empty context
         static const BlackMisc::CStatusMessage &statusMessageEmptyContext();

@@ -200,8 +200,15 @@ namespace BlackGui
         void CMappingComponent::ps_onApplyNewMaxRemoteAircraft()
         {
             Q_ASSERT(getIContextSimulator());
+            Q_ASSERT(getIContextNetwork());
+
+            // get initial aircraft to render
             int noRequested = this->ui->hs_MaxAircraft->value();
-            this->getIContextSimulator()->setMaxRenderedAircraft(noRequested);
+            CSimulatedAircraftList inRange(this->getIContextNetwork()->getAircraftInRange());
+            inRange.truncate(noRequested);
+            inRange.sortByDistanceToOwnAircraft();
+            CCallsignList initialCallsigns(inRange.getCallsigns());
+            this->getIContextSimulator()->setMaxRenderedAircraft(noRequested, initialCallsigns);
 
             // real value
             int noRendered = this->getIContextSimulator()->getMaxRenderedAircraft();

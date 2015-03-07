@@ -118,12 +118,12 @@ namespace BlackMisc
                 if (onlineAtcStation.hasValidDistance())
                 {
                     bookedAtcStation.setDistanceToOwnAircraft(onlineAtcStation.getDistanceToOwnAircraft());
-                    bookedAtcStation.setBearingToOwnAircraft(onlineAtcStation.getBearingToOwnAIrcraft());
+                    bookedAtcStation.setBearingToOwnAircraft(onlineAtcStation.getBearingToOwnAircraft());
                 }
                 else if (bookedAtcStation.hasValidDistance())
                 {
                     onlineAtcStation.setDistanceToOwnAircraft(bookedAtcStation.getDistanceToOwnAircraft());
-                    onlineAtcStation.setBearingToOwnAircraft(bookedAtcStation.getBearingToOwnAIrcraft());
+                    onlineAtcStation.setBearingToOwnAircraft(bookedAtcStation.getBearingToOwnAircraft());
                 }
 
                 // update

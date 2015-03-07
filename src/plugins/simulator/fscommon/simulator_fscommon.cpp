@@ -242,16 +242,6 @@ namespace BlackSimPlugin
             return empty;
         }
 
-        int CSimulatorFsCommon::getMaxRenderedAircraft() const
-        {
-            return this->m_maxRenderedAircraft;
-        }
-
-        void CSimulatorFsCommon::setMaxRenderedAircraft(int maxRenderedAircraft)
-        {
-            this->m_maxRenderedAircraft = maxRenderedAircraft;
-        }
-
         bool CSimulatorFsCommon::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft, const QString &originator)
         {
             if (originator == simulatorOriginator()) { return false; }
@@ -273,6 +263,15 @@ namespace BlackSimPlugin
                 this->removeRemoteAircraft(aircraft.getCallsign());
             }
             return true;
+        }
+
+        void CSimulatorFsCommon::enableDebugMessages(bool driver, bool interpolator)
+        {
+            if (this->m_interpolator)
+            {
+                this->m_interpolator->enableDebugMessages(interpolator);
+            }
+            CSimulatorCommon::enableDebugMessages(driver, interpolator);
         }
 
     } // namespace

@@ -37,6 +37,17 @@ namespace BlackMisc
         }
 
         template <class OBJ, class CONTAINER>
+        CCallsignList ICallsignObjectList<OBJ, CONTAINER>::getCallsigns() const
+        {
+            CCallsignList cs;
+            for (const OBJ &obj : this->container())
+            {
+                cs.push_back(obj.getCallsign());
+            }
+            return cs;
+        }
+
+        template <class OBJ, class CONTAINER>
         CONTAINER ICallsignObjectList<OBJ, CONTAINER>::findByCallsign(const CCallsign &callsign) const
         {
             return this->container().findBy(&OBJ::getCallsign, callsign);
@@ -51,13 +62,22 @@ namespace BlackMisc
         template <class OBJ, class CONTAINER>
         OBJ ICallsignObjectList<OBJ, CONTAINER>::findFirstByCallsign(const CCallsign &callsign, const OBJ &ifNotFound) const
         {
-            return this->findByCallsign(callsign).frontOrDefault(ifNotFound);
+            for (const OBJ &callsignObj : this->container())
+            {
+                if (callsignObj.getCallsign() == callsign) { return callsignObj; }
+            }
+            return ifNotFound;
         }
 
         template <class OBJ, class CONTAINER>
-        OBJ ICallsignObjectList<OBJ, CONTAINER>::findBackByCallsign(const CCallsign &callsign, const OBJ &ifNotFound) const
+        OBJ ICallsignObjectList<OBJ, CONTAINER>::findLastByCallsign(const CCallsign &callsign, const OBJ &ifNotFound) const
         {
-            return this->findByCallsign(callsign).backOrDefault(ifNotFound);
+            for (auto current = container().end(); current != container().begin() ; /* Do nothing */)
+            {
+                --current;
+                if (current->getCallsign() == callsign) { return *current; }
+            }
+            return ifNotFound;
         }
 
         template <class OBJ, class CONTAINER>
@@ -71,6 +91,16 @@ namespace BlackMisc
                 return (csObj.getCallsign().getSuffix() == sfxUpper);
             });
             return r;
+        }
+
+        template <class OBJ, class CONTAINER>
+        int ICallsignObjectList<OBJ, CONTAINER>::firstIndexOfCallsign(const CCallsign &callsign)
+        {
+            for (int i = 0; i < this->container().size(); i++)
+            {
+                if (this->container()[i].getCallsign() == callsign) { return i; }
+            }
+            return -1;
         }
 
         template <class OBJ, class CONTAINER>

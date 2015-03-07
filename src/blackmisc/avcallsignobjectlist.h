@@ -36,6 +36,9 @@ namespace BlackMisc
             //! Apply for given callsign
             int applyIfCallsign(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &variantMap);
 
+            //! All callsigns
+            BlackMisc::Aviation::CCallsignList getCallsigns() const;
+
             //! Find 0..n stations by callsign
             CONTAINER findByCallsign(const CCallsign &callsign) const;
 
@@ -46,10 +49,13 @@ namespace BlackMisc
             OBJ findFirstByCallsign(const CCallsign &callsign, const OBJ &ifNotFound = {}) const;
 
             //! Find the back object by callsign, if none return given one
-            OBJ findBackByCallsign(const CCallsign &callsign, const OBJ &ifNotFound = {}) const;
+            OBJ findLastByCallsign(const CCallsign &callsign, const OBJ &ifNotFound = {}) const;
 
             //! All with given suffix, empty suffixes ignored
             CONTAINER findBySuffix(const QString &suffix) const;
+
+            //! First found index of callsign, otherwise -1
+            int firstIndexOfCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Remove all objects with callsign
             int removeByCallsign(const CCallsign &callsign);

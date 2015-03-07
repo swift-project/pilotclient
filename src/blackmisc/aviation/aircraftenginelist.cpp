@@ -13,9 +13,56 @@ namespace BlackMisc
 {
     namespace Aviation
     {
+        CAircraftEngineList::CAircraftEngineList(std::initializer_list<bool> enginesOnOff)
+        {
+            int no = 1; // engines 1 based
+            for (auto it = enginesOnOff.begin(); it != enginesOnOff.end(); ++it)
+            {
+                CAircraftEngine engine(no++, *it);
+                this->push_back(engine);
+            }
+        }
+
         CAircraftEngineList::CAircraftEngineList(const CSequence<CAircraftEngine> &other) :
             CSequence<CAircraftEngine>(other)
         { }
+
+        CAircraftEngine CAircraftEngineList::getEngine(int engineNumber) const
+        {
+            Q_ASSERT(engineNumber >= 0);
+            return this->findBy(&CAircraftEngine::getNumber, engineNumber).frontOrDefault();
+        }
+
+        bool CAircraftEngineList::isEngineOn(int engineNumber) const
+        {
+            return getEngine(engineNumber).isOn();
+        }
+
+        QJsonObject CAircraftEngineList::toJson() const
+        {
+            QJsonObject map;
+
+            for (const auto &e : *this)
+            {
+                QJsonObject value = e.toJson();
+                map.insert(QString::number(e.getNumber()), value);
+            }
+            return map;
+        }
+
+        void CAircraftEngineList::convertFromJson(const QJsonObject &json)
+        {
+            clear();
+            for (const auto &e : json.keys())
+            {
+
+                CAircraftEngine engine;
+                int number = e.toInt();
+                engine.convertFromJson(json.value(e).toObject());
+                engine.setNumber(number);
+                push_back(engine);
+            }
+        }
 
         void CAircraftEngineList::registerMetadata()
         {

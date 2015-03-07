@@ -28,14 +28,21 @@ namespace BlackCore
         return m_maxRenderedAircraft;
     }
 
-    void CSimulatorCommon::setMaxRenderedAircraft(int maxRenderedAircraft)
+    void CSimulatorCommon::setMaxRenderedAircraft(int maxRenderedAircraft, const BlackMisc::Aviation::CCallsignList &callsigns)
     {
         m_maxRenderedAircraft = maxRenderedAircraft;
+        m_callsignsToBeRendered = callsigns;
     }
 
     CSimulatorInfo CSimulatorCommon::getSimulatorInfo() const
     {
         return m_simulatorInfo;
+    }
+
+    void CSimulatorCommon::enableDebugMessages(bool driver, bool interpolator)
+    {
+        this->m_debugMessages = driver;
+        Q_UNUSED(interpolator);
     }
 
 } // namespace

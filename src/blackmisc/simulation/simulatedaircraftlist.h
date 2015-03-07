@@ -31,7 +31,7 @@ namespace BlackMisc
         class CSimulatedAircraftList :
             public BlackMisc::CSequence<CSimulatedAircraft>,
             public BlackMisc::Aviation::ICallsignObjectList<CSimulatedAircraft, CSimulatedAircraftList>,
-            public BlackMisc::Geo::IGeoObjectList<CSimulatedAircraft, CSimulatedAircraftList>
+            public BlackMisc::Geo::IGeoObjectWithRelativePositionList<CSimulatedAircraft, CSimulatedAircraftList>
         {
         public:
             //! Default constructor.

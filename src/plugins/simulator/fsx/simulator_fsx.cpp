@@ -660,7 +660,7 @@ namespace BlackSimPlugin
                 if (interpolatorStatus.interpolationSucceeded)
                 {
                     // aircraft parts
-                    // inside interpolator if, as no parts can be sent without position
+                    // inside "interpolator if", as no parts can be sent without position
                     updateRemoteAircraftParts(simObj, parts, partsStatus, interpolatedSituation, isOnGround); // update and retrieve parts in the same step
                 }
 

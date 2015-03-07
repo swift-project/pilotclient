@@ -93,7 +93,7 @@ namespace BlackCore
         virtual int getMaxRenderedAircraft() const override;
 
         //! \copydoc IContextSimulator::setMaxRenderedRemoteAircraft
-        virtual void setMaxRenderedAircraft(int number) override;
+        virtual void setMaxRenderedAircraft(int number, const BlackMisc::Aviation::CCallsignList &renderedAircraft) override;
 
         //! \copydoc IContextSimulator::getTimeSynchronizationOffset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
@@ -112,6 +112,9 @@ namespace BlackCore
 
         //! \copydoc IContextSimulator::iconForModel
         virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
+
+        //! \copydoc ISimulator::enableDebuggingMessages
+        virtual void enableDebugMessages(bool driver, bool interpolator) override;
 
     };
 

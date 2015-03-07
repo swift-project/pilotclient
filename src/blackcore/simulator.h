@@ -126,7 +126,10 @@ namespace BlackCore
         virtual int getMaxRenderedAircraft() const = 0;
 
         //! Max. rendered aircraft
-        virtual void setMaxRenderedAircraft(int maxRenderedAircraft) = 0;
+        virtual void setMaxRenderedAircraft(int maxRenderedAircraft, const BlackMisc::Aviation::CCallsignList &callsigns) = 0;
+
+        //! Enable debugging messages
+        virtual void enableDebugMessages(bool driver, bool interpolator) = 0;
 
     signals:
         //! Emitted when the connection status has changed
@@ -187,19 +190,25 @@ namespace BlackCore
     //! Common base class with providers, interface and some base functionality
     class CSimulatorCommon :
         public BlackCore::ISimulator,
-        public BlackMisc::Simulation::COwnAircraftProviderSupport,     // gain access to in memor own aircraft data
+        public BlackMisc::Simulation::COwnAircraftProviderSupport,   // gain access to in memor own aircraft data
         public BlackMisc::Simulation::CRemoteAircraftProviderSupport // gain access to in memory rendered aircraft data
     {
 
-    public:
+        Q_OBJECT
+
+    public slots:
+
         //! \copydoc ISimulator::getMaxRenderedAircraft
-        int getMaxRenderedAircraft() const override;
+        virtual int getMaxRenderedAircraft() const override;
 
         //! \copydoc ISimulator::setMaxRenderedAircraft
-        void setMaxRenderedAircraft(int maxRenderedAircraft) override;
+        virtual void setMaxRenderedAircraft(int maxRenderedAircraft, const BlackMisc::Aviation::CCallsignList &callsigns) override;
 
         //! \copydoc ISimulator::getSimulatorInfo
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
+
+        //! \copydoc ISimulator::enableDebuggingMessages
+        virtual void enableDebugMessages(bool driver, bool interpolator) override;
 
     protected:
         //! Constructor
@@ -211,6 +220,8 @@ namespace BlackCore
 
         BlackSim::CSimulatorInfo m_simulatorInfo; //!< about the simulator
         int m_maxRenderedAircraft = 99;           //!< max. rendered aircraft
+        bool m_debugMessages = false;             //!< Display debug messages
+        BlackMisc::Aviation::CCallsignList m_callsignsToBeRendered; //!< all other aircraft are to be ignored
     };
 
 } // namespace

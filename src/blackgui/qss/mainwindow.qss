@@ -221,6 +221,27 @@ QTabBar QToolButton { /* the scroll buttons are tool buttons */
   border: 1px solid green;
 }
 
+QSplitter::handle {
+  background-color: rgba(0, 0, 255, 200);
+  margin-top: 1px;
+  margin-bottom: 1px;
+  height: 1px;
+}
+
+QSplitter::handle:pressed {
+  background-color: rgba(0, 255, 255, 255);
+}
+
+/**
+QSplitter::handle:horizontal {
+  width: 1px;
+}
+
+QSplitter::handle:vertical {
+  height: 1px;
+}
+**/
+
 QLabel {
   background: transparent;
 }
@@ -258,13 +279,14 @@ QPlainTextEdit {
 
 QGroupBox {
   border: 1px solid green;
-  margin-top: 2ex; /* leave space at the top for the title */
+  margin-top: 2.5ex; /* leave space at the top for the title */
+  border-radius: 5px;
 }
 
 QGroupBox::title {
   subcontrol-origin: margin;
   subcontrol-position: middle center; /* position at the top center */
-  padding: 0 3px;
+  padding: 0 5px;
 }
 
 QToolBox::tab {

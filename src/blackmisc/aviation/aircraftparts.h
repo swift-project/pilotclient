@@ -94,7 +94,7 @@ namespace BlackMisc
             //! Engine with number
             CAircraftEngine getEngine(int number) const;
 
-            //! Is engine with number on?
+            //! Is engine with number 1..n on?
             bool isEngineOn(int number) const;
 
             //! Set engines
