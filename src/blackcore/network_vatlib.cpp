@@ -28,6 +28,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc;
+using namespace BlackSim;
 
 namespace BlackCore
 {
@@ -254,6 +255,15 @@ namespace BlackCore
         return escaped;
     }
 
+    VatSimType CNetworkVatlib::convertToSimType(CSimulatorInfo &simInfo)
+    {
+        if (simInfo.isUnspecified()) { return vatSimTypeUnknown; }
+        if (CSimulatorInfo::FS9().isSameSimulator(simInfo)) { return vatSimTypeMSCFS; }
+        if (CSimulatorInfo::FSX().isSameSimulator(simInfo)) { return vatSimTypeMSCFS; }
+        if (CSimulatorInfo::XP().isSameSimulator(simInfo))  { return vatSimTypeXPLANE; }
+        return vatSimTypeUnknown;
+    }
+
     /********************************** * * * * * * * * * * * * * * * * * * * ************************************/
     /**********************************             INetwork slots            ************************************/
     /********************************** * * * * * * * * * * * * * * * * * * * ************************************/
@@ -262,6 +272,12 @@ namespace BlackCore
     {
         Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "Can't change server details while still connected");
         m_server = server;
+    }
+
+    void CNetworkVatlib::presetSimulatorInfo(const CSimulatorInfo &simInfo)
+    {
+        Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "Can't change server details while still connected");
+        m_simulatorInfo = simInfo;
     }
 
     void CNetworkVatlib::presetCallsign(const BlackMisc::Aviation::CCallsign &callsign)
@@ -318,7 +334,7 @@ namespace BlackCore
             info.callsign = callsign.data();
             info.name = name.data();
             info.rating = vatPilotRatingStudent; //TODO
-            info.simType = vatSimTypeMSFS98; //TODO
+            info.simType = convertToSimType(m_simulatorInfo);
             Vat_SpecifyPilotLogon(m_net.data(), toFSD(m_server.getAddress()), m_server.getPort(),
                                   toFSD(m_server.getUser().getId()),
                                   toFSD(m_server.getUser().getPassword()),
@@ -856,7 +872,7 @@ namespace BlackCore
         default:
         case vatFlightTypeVFR:   rules = BlackMisc::Aviation::CFlightPlan::VFR;  break;
         case vatFlightTypeIFR:   rules = BlackMisc::Aviation::CFlightPlan::IFR;  break;
-//        case Cvatlib_Network::fpRuleType_SVFR:  rules = BlackMisc::Aviation::CFlightPlan::SVFR; break;
+            // case Cvatlib_Network::fpRuleType_SVFR:  rules = BlackMisc::Aviation::CFlightPlan::SVFR; break;
         }
 
         auto cruiseAltString = cbvar_cast(cbvar)->fromFSD(fp->cruiseAltitude);
@@ -867,7 +883,6 @@ namespace BlackCore
         }
         BlackMisc::Aviation::CAltitude cruiseAlt;
         cruiseAlt.parseFromString(cruiseAltString);
-
 
         QString depTimePlanned = QString("0000").append(QString::number(fp->departTime)).right(4);
         QString depTimeActual = QString("0000").append(QString::number(fp->departTimeActual)).right(4);

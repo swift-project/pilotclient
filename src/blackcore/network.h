@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_NETWORK_H
 #define BLACKCORE_NETWORK_H
 
+#include "blacksim/simulatorinfo.h"
 #include "blackmisc/avaircraft.h"
 #include "blackmisc/pqfrequency.h"
 #include "blackmisc/coordinategeodetic.h"
@@ -176,6 +177,12 @@ namespace BlackCore
          * \pre Network must be disconnected when calling this function.
          */
         virtual void presetLoginMode(LoginMode mode) = 0;
+
+        /*!
+         * Set simulator info before connecting.
+         * \pre Network must be disconnected when calling this function.
+         */
+        virtual void presetSimulatorInfo(const BlackSim::CSimulatorInfo &simInfo) = 0;
 
         /*!
          * Initiate a connection to the network server.

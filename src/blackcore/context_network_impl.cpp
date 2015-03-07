@@ -33,6 +33,7 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Simulation;
+using namespace BlackSim;
 
 namespace BlackCore
 {
@@ -176,6 +177,14 @@ namespace BlackCore
             this->m_network->presetLoginMode(mode);
             this->m_network->presetCallsign(ownAircraft.getCallsign());
             this->m_network->presetIcaoCodes(ownAircraft.getIcaoInfo());
+            if (getIContextSimulator())
+            {
+                this->m_network->presetSimulatorInfo(getIContextSimulator()->getSimulatorInfo());
+            }
+            else
+            {
+                this->m_network->presetSimulatorInfo(CSimulatorInfo::UnspecifiedSim());
+            }
             this->m_network->initiateConnection();
             return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, "Connection pending " + server.getAddress() + " " + QString::number(server.getPort()));
         }

@@ -89,10 +89,10 @@ namespace BlackSim
 }
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackSim::CSimulatorInfo, (
-    o.m_fullName,
-    o.m_shortName,
-    attr(o.m_simsetup, flags<DisabledForComparison>())
-))
+                                   o.m_fullName,
+                                   o.m_shortName,
+                                   attr(o.m_simsetup, flags<DisabledForComparison>())
+                               ))
 Q_DECLARE_METATYPE(BlackSim::CSimulatorInfo)
 
 #endif // guard
