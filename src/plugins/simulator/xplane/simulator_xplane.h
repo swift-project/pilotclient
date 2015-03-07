@@ -112,6 +112,9 @@ namespace BlackSimPlugin
             void ps_fastTimerTimeout();
             void ps_slowTimerTimeout();
 
+            void ps_addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situ);
+            void ps_addAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
+
         private:
             QDBusConnection m_conn { "default" };
             QDBusServiceWatcher *m_watcher { nullptr };
@@ -120,7 +123,6 @@ namespace BlackSimPlugin
             QTimer *m_fastTimer { nullptr };
             QTimer *m_slowTimer { nullptr };
             BlackMisc::Aviation::CAirportList m_airportsInRange;   //!< aiports in range of own aircraft
-            BlackMisc::Simulation::CSimulatedAircraft xplaneDataToSimulatedAircraft() const;
 
             //! \todo Add units to members? pitchDeg?, altitudeFt?
             struct // data is written by DBus async method callbacks

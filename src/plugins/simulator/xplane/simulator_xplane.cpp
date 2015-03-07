@@ -46,6 +46,27 @@ namespace BlackSimPlugin
             m_slowTimer->start(1000);
 
             resetData();
+
+            bool c = remoteAircraftProvider->connectRemoteAircraftProviderSignals(
+                         std::bind(&CSimulatorXPlane::ps_addAircraftSituation, this, std::placeholders::_1),
+                         std::bind(&CSimulatorXPlane::ps_addAircraftParts, this, std::placeholders::_1),
+                         [] (const BlackMisc::Aviation::CCallsign &) {});
+            Q_ASSERT(c);
+            Q_UNUSED(c);
+        }
+
+        // convert xplane squawk mode to swift squawk mode
+        BlackMisc::Aviation::CTransponder::TransponderMode xpdrMode(int xplaneMode, bool ident)
+        {
+            if (ident) { return BlackMisc::Aviation::CTransponder::StateIdent; }
+            if (xplaneMode == 0 || xplaneMode == 1) { return BlackMisc::Aviation::CTransponder::StateStandby; }
+            return BlackMisc::Aviation::CTransponder::ModeC;
+        }
+
+        // convert swift squawk mode to xplane squawk mode
+        int xpdrMode(BlackMisc::Aviation::CTransponder::TransponderMode mode)
+        {
+            return mode == BlackMisc::Aviation::CTransponder::StateStandby ? 1 : 2;
         }
 
         void CSimulatorXPlane::ps_fastTimerTimeout()
@@ -67,6 +88,19 @@ namespace BlackSimPlugin
                 m_service->getTransponderModeAsync(&m_xplaneData.xpdrMode);
                 m_service->getTransponderIdentAsync(&m_xplaneData.xpdrIdent);
                 m_service->getAllWheelsOnGroundAsync(&m_xplaneData.onGroundAll);
+
+                Aviation::CAircraftSituation situation;
+                situation.setPosition({ m_xplaneData.latitude, m_xplaneData.longitude, 0 });
+                situation.setAltitude({ m_xplaneData.altitude, Aviation::CAltitude::MeanSeaLevel, CLengthUnit::m() });
+                situation.setHeading({ m_xplaneData.trueHeading, Aviation::CHeading::True, CAngleUnit::deg() });
+                situation.setPitch({ m_xplaneData.pitch, CAngleUnit::deg() });
+                situation.setBank({ m_xplaneData.roll, CAngleUnit::deg() });
+                situation.setGroundspeed({ m_xplaneData.groundspeed, CSpeedUnit::m_s() });
+                ownAircraft().setSituation(situation);
+                ownAircraft().setIcaoInfo(Aviation::CAircraftIcao { m_xplaneData.aircraftIcaoCode });
+                ownAircraft().setCom1System(Aviation::CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() }));
+                ownAircraft().setCom2System(Aviation::CComSystem::getCom2System({ m_xplaneData.com2Active, CFrequencyUnit::kHz() }, { m_xplaneData.com2Standby, CFrequencyUnit::kHz() }));
+                ownAircraft().setTransponder(Aviation::CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent)));
             }
         }
 
@@ -86,6 +120,20 @@ namespace BlackSimPlugin
                 m_service->getEngineN1PercentageAsync(&m_xplaneData.enginesN1Percentage);
                 m_service->getSpeedBrakeRatioAsync(&m_xplaneData.speedBrakeRatio);
 
+                CAircraftEngineList engines;
+                for (int engineNumber = 0; engineNumber < m_xplaneData.enginesN1Percentage.size(); ++engineNumber)
+                {
+                    // Engine number start counting at 1
+                    // We consider the engine running when N1 is bigger than 5 %
+                    CAircraftEngine engine {engineNumber + 1, m_xplaneData.enginesN1Percentage.at(engineNumber) > 5.0};
+                    engines.push_back(engine);
+                }
+
+                Aviation::CAircraftParts parts { { m_xplaneData.strobeLightsOn, m_xplaneData.landingLightsOn, m_xplaneData.taxiLightsOn,
+                                                   m_xplaneData.beaconLightsOn, m_xplaneData.navLightsOn, false },
+                                                 { m_xplaneData.gearReployRatio > 0 }, { static_cast<int>(m_xplaneData.flapsReployRatio * 100) },
+                                                 { m_xplaneData.speedBrakeRatio > 0.5 }, engines, { m_xplaneData.onGroundAll } };
+                ownAircraft().setParts(parts);
             }
         }
 
@@ -189,54 +237,6 @@ namespace BlackSimPlugin
             ownAircraft().setIcaoInfo(aircraftIcao);
             ownAircraft().setModel(model);
             emit ownAircraftModelChanged(ownAircraft());
-        }
-
-        // convert xplane squawk mode to swift squawk mode
-        BlackMisc::Aviation::CTransponder::TransponderMode xpdrMode(int xplaneMode, bool ident)
-        {
-            if (ident) { return BlackMisc::Aviation::CTransponder::StateIdent; }
-            if (xplaneMode == 0 || xplaneMode == 1) { return BlackMisc::Aviation::CTransponder::StateStandby; }
-            return BlackMisc::Aviation::CTransponder::ModeC;
-        }
-        // convert swift squawk mode to xplane squawk mode
-        int xpdrMode(BlackMisc::Aviation::CTransponder::TransponderMode mode)
-        {
-            return mode == BlackMisc::Aviation::CTransponder::StateStandby ? 1 : 2;
-        }
-
-        CSimulatedAircraft CSimulatorXPlane::xplaneDataToSimulatedAircraft() const
-        {
-            if (! isConnected()) { return {}; }
-            Aviation::CAircraftSituation situation;
-            situation.setPosition({ m_xplaneData.latitude, m_xplaneData.longitude, 0 });
-            situation.setAltitude({ m_xplaneData.altitude, Aviation::CAltitude::MeanSeaLevel, CLengthUnit::m() });
-            situation.setHeading({ m_xplaneData.trueHeading, Aviation::CHeading::True, CAngleUnit::deg() });
-            situation.setPitch({ m_xplaneData.pitch, CAngleUnit::deg() });
-            situation.setBank({ m_xplaneData.roll, CAngleUnit::deg() });
-            situation.setGroundspeed({ m_xplaneData.groundspeed, CSpeedUnit::m_s() });
-            CSimulatedAircraft ac(ownAircraft());
-            ac.setSituation(situation);
-            ac.setIcaoInfo(Aviation::CAircraftIcao { m_xplaneData.aircraftIcaoCode });
-            ac.setCom1System(Aviation::CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() }));
-            ac.setCom2System(Aviation::CComSystem::getCom2System({ m_xplaneData.com2Active, CFrequencyUnit::kHz() }, { m_xplaneData.com2Standby, CFrequencyUnit::kHz() }));
-            ac.setTransponder(Aviation::CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent)));
-
-            CAircraftEngineList engines;
-
-            for (int engineNumber = 0; engineNumber < m_xplaneData.enginesN1Percentage.size(); ++engineNumber)
-            {
-                // Engine number start counting at 1
-                // We consider the engine running when N1 is bigger than 5 %
-                CAircraftEngine engine {engineNumber + 1, m_xplaneData.enginesN1Percentage.at(engineNumber) > 5.0};
-                engines.push_back(engine);
-            }
-
-            Aviation::CAircraftParts parts { { m_xplaneData.strobeLightsOn, m_xplaneData.landingLightsOn, m_xplaneData.taxiLightsOn,
-                                               m_xplaneData.beaconLightsOn, m_xplaneData.navLightsOn, false },
-                                             { m_xplaneData.gearReployRatio > 0 }, { static_cast<int>(m_xplaneData.flapsReployRatio * 100) },
-                                             { m_xplaneData.speedBrakeRatio > 0.5 }, engines, { m_xplaneData.onGroundAll } };
-            ac.setParts(parts);
-            return ac;
         }
 
         void CSimulatorXPlane::displayStatusMessage(const BlackMisc::CStatusMessage &message) const
@@ -344,22 +344,25 @@ namespace BlackSimPlugin
             return true;
         }
 
-        //! \todo XPlane driver, where would this go?
-//        void CSimulatorXPlane::addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign,
-//                const BlackMisc::Aviation::CAircraftSituation &situ)
-//        {
-//            if (! isConnected()) { return; }
-//            using namespace BlackMisc::PhysicalQuantities;
-//            m_traffic->setPlanePosition(callsign.asString(),
-//                                        situ.latitude().value(CAngleUnit::deg()),
-//                                        situ.longitude().value(CAngleUnit::deg()),
-//                                        situ.getAltitude().value(CLengthUnit::ft()),
-//                                        situ.getPitch().value(CAngleUnit::deg()),
-//                                        situ.getBank().value(CAngleUnit::deg()),
-//                                        situ.getHeading().value(CAngleUnit::deg()));
-//            m_traffic->setPlaneSurfaces(callsign.asString(), true, 0, 0, 0, 0, 0, 0, 0, 0, 0, true, true, true, true, 0); // TODO landing gear, lights, control surfaces
-//            m_traffic->setPlaneTransponder(callsign.asString(), 2000, true, false); // TODO transponder
-//        }
+        void CSimulatorXPlane::ps_addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situ)
+        {
+            if (! isConnected()) { return; }
+            using namespace BlackMisc::PhysicalQuantities;
+            m_traffic->setPlanePosition(situ.getCallsign().asString(),
+                                        situ.latitude().value(CAngleUnit::deg()),
+                                        situ.longitude().value(CAngleUnit::deg()),
+                                        situ.getAltitude().value(CLengthUnit::ft()),
+                                        situ.getPitch().value(CAngleUnit::deg()),
+                                        situ.getBank().value(CAngleUnit::deg()),
+                                        situ.getHeading().value(CAngleUnit::deg()));
+        }
+
+        void CSimulatorXPlane::ps_addAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts)
+        {
+            if (! isConnected()) { return; }
+            m_traffic->setPlaneSurfaces(parts.getCallsign().asString(), true, 0, 0, 0, 0, 0, 0, 0, 0, 0, true, true, true, true, 0); // TODO landing gear, lights, control surfaces
+            m_traffic->setPlaneTransponder(parts.getCallsign().asString(), 2000, true, false); // TODO transponder
+        }
 
         bool CSimulatorXPlane::removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign)
         {
