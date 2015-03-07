@@ -32,23 +32,28 @@ class QXPlaneMessageHandler
     static void handler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
     {
         QByteArray localMsg = msg.toLocal8Bit();
-        char *buffer = new char[64 + localMsg.size() + std::strlen(context.file)];
+        QByteArray file(context.file);
+        if (file.isEmpty()) file = "<unknown>";
+
+        int line = context.line;
+
+        char *buffer = new char[64 + localMsg.size() + file.size()];
         switch (type) {
         case QtDebugMsg:
-            std::sprintf(buffer, "%s:%u: Debug: %s\n", context.file, context.line, localMsg.constData());
+            std::sprintf(buffer, "%s:%u: Debug: %s\n", file.constData(), line, localMsg.constData());
             XPLMDebugString(buffer);
             break;
         case QtWarningMsg:
-            std::sprintf(buffer, "%s:%u: Warning: %s\n", context.file, context.line, localMsg.constData());
+            std::sprintf(buffer, "%s:%u: Warning: %s\n", file.constData(), line, localMsg.constData());
             XPLMDebugString(buffer);
             break;
         default:
         case QtCriticalMsg:
-            std::sprintf(buffer, "%s:%u: Error: %s\n", context.file, context.line, localMsg.constData());
+            std::sprintf(buffer, "%s:%u: Error: %s\n", file.constData(), line, localMsg.constData());
             XPLMDebugString(buffer);
             break;
         case QtFatalMsg:
-            std::sprintf(buffer, "%s:%u: Fatal: %s\n", context.file, context.line, localMsg.constData());
+            std::sprintf(buffer, "%s:%u: Fatal: %s\n", file.constData(), line, localMsg.constData());
             XPLMDebugString(buffer);
             std::abort();
         }
