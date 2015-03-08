@@ -92,9 +92,6 @@ namespace BlackSimPlugin
 
             GUID pAppGuid = CFs9Sdk::guid();
 
-            // Set to true in order to automatically launch FS9. Perfect for testing.
-            bool bLaunchNotFound = false;
-
             // Setup the DPL_CONNECT_INFO struct
             DPL_CONNECT_INFO dnConnectInfo;
             ZeroMemory(&dnConnectInfo, sizeof(DPL_CONNECT_INFO));
@@ -102,7 +99,6 @@ namespace BlackSimPlugin
             dnConnectInfo.pvLobbyConnectData = nullptr;
             dnConnectInfo.dwLobbyConnectDataSize = 0;
             dnConnectInfo.dwFlags = 0;
-            if (bLaunchNotFound) dnConnectInfo.dwFlags |= DPLCONNECT_LAUNCHNOTFOUND;
             dnConnectInfo.guidApplication = pAppGuid;
 
             if (FAILED(hr = allocAndInitConnectSettings(address, &pAppGuid, &dnConnectInfo.pdplConnectionSettings)))
@@ -113,21 +109,18 @@ namespace BlackSimPlugin
                     &m_applicationHandle,
                     INFINITE,
                     0);
-            if (FAILED(hr))
-            {
-                if (hr == DPNERR_NOCONNECTION && !bLaunchNotFound)
-                    qWarning() << "There were no waiting application.";
-                else
-                    return printDirectPlayError(hr);
-            }
-            else
-            {
+            if (FAILED(hr)) {
+                return hr == DPNERR_NOCONNECTION ? S_FALSE : printDirectPlayError(hr);
+            } else {
                 qDebug() << "Connected!";
+                freeConnectSettings(dnConnectInfo.pdplConnectionSettings);
+                return S_OK;
             }
+        }
 
-            freeConnectSettings(dnConnectInfo.pdplConnectionSettings);
+        void CLobbyClient::cleanup()
+        {
 
-            return S_OK;
         }
 
         HRESULT CLobbyClient::allocAndInitConnectSettings(const QString &address, GUID *pAppGuid, DPL_CONNECTION_SETTINGS **ppdplConnectSettings)
@@ -247,7 +240,9 @@ namespace BlackSimPlugin
                 {
                     PDPL_MESSAGE_DISCONNECT pDisconnectMsg;
                     pDisconnectMsg = (PDPL_MESSAGE_DISCONNECT)msgBuffer;
-                    Q_UNUSED(pDisconnectMsg)
+                    Q_UNUSED(pDisconnectMsg);
+
+                    emit disconnected();
 
                     // We should free any data associated with the
                     // app here, but there is none.

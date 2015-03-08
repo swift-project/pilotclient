@@ -48,6 +48,8 @@ namespace BlackSimPlugin
             //! Send a custom DirectPlay message
             HRESULT sendMessage(const QByteArray &data);
 
+            void reset();
+
         signals:
             //! Received custom FS9 packet
             void customPacketReceived(const QByteArray &data);

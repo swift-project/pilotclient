@@ -32,24 +32,6 @@ namespace BlackSimPlugin
 {
     namespace Fs9
     {
-        //! Factory implementation to create CSimulatorFs9 instances
-        class CSimulatorFs9Factory : public QObject, public BlackCore::ISimulatorFactory
-        {
-            Q_OBJECT
-            Q_PLUGIN_METADATA(IID "org.swift.pilotclient.BlackCore.SimulatorInterface" FILE "simulator_fs9.json")
-            Q_INTERFACES(BlackCore::ISimulatorFactory)
-
-        public:
-            //! \copydoc BlackCore::ISimulatorFactory::create(ownAircraftProvider, remoteAircraftProvider, parent)
-            virtual BlackCore::ISimulator *create(
-                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                QObject *parent) override;
-
-            //! Simulator info
-            virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
-        };
-
         //! FSX Simulator Implementation
         class CSimulatorFs9 : public BlackSimPlugin::FsCommon::CSimulatorFsCommon
         {
@@ -63,7 +45,7 @@ namespace BlackSimPlugin
                 QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CSimulatorFs9();
+            virtual ~CSimulatorFs9() = default;
 
             //! \copydoc ISimulator::isConnected()
             virtual bool isConnected() const override;
@@ -116,9 +98,6 @@ namespace BlackSimPlugin
             //! Process incoming FS9 message
             void ps_processFs9Message(const QByteArray &message);
 
-            //! Change DirectPlay host status
-            void ps_changeHostStatus(BlackSimPlugin::Fs9::CFs9Host::HostStatus status);
-
         private:
 
             //! Called when data about our own aircraft are received
@@ -126,14 +105,63 @@ namespace BlackSimPlugin
 
             void disconnectAllClients();
 
-            // DirectPlay object handling
-            QPointer<CFs9Host> m_fs9Host;
-            bool m_isHosting = false;  //!< Is sim connected?
-            bool m_startedLobbyConnection = false;
+            QSharedPointer<CFs9Host> m_fs9Host;
             QHash<BlackMisc::Aviation::CCallsign, QPointer<CFs9Client>> m_hashFs9Clients;
-            CLobbyClient *m_lobbyClient;
+            QSharedPointer<CLobbyClient> m_lobbyClient;
         };
-    } // namespace
-} // namespace
+
+        //! Listener for FS9
+        //! Listener starts the FS9 multiplayer host and tries to make the running instance
+        //! of simulator to connect to it. When emitting the simulatorStarted() signal,
+        //! FS9 is already connected.
+        class CSimulatorFs9Listener : public BlackCore::ISimulatorListener {
+            Q_OBJECT
+
+        public:
+            //! Constructor
+            CSimulatorFs9Listener(const QSharedPointer<CFs9Host> &fs9Host, const QSharedPointer<CLobbyClient> &lobbyClient, QObject* parent);
+
+            //! \copydoc BlackCore::ISimulatorListener::start
+            virtual void start() override;
+
+            //! \copydoc BlackCore::ISimulatorListener::stop
+            virtual void stop() override;
+
+        private:
+
+            QTimer* m_timer = nullptr;
+            QSharedPointer<CFs9Host> m_fs9Host;
+            QSharedPointer<CLobbyClient> m_lobbyClient;
+            bool m_lobbyConnected = false;
+            const BlackSim::CSimulatorInfo m_simulatorInfo = BlackSim::CSimulatorInfo::FS9();
+
+        };
+
+        //! Factory implementation to create CSimulatorFs9 instances
+        class CSimulatorFs9Factory : public QObject, public BlackCore::ISimulatorFactory
+        {
+            Q_OBJECT
+            Q_PLUGIN_METADATA(IID "org.swift.pilotclient.BlackCore.SimulatorInterface" FILE "simulator_fs9.json")
+            Q_INTERFACES(BlackCore::ISimulatorFactory)
+
+        public:
+            CSimulatorFs9Factory(QObject* parent = nullptr);
+
+            //! \copydoc BlackCore::ISimulatorFactory::create()
+            virtual BlackCore::ISimulator *create(QObject *parent) override;
+
+            //! Simulator info
+            virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
+
+            //! \copydoc BlackCore::ISimulatorFactory::getListener
+            virtual BlackCore::ISimulatorListener *createListener(QObject *parent = nullptr) override;
+
+        private:
+            QSharedPointer<CFs9Host> m_fs9Host;
+            QSharedPointer<CLobbyClient> m_lobbyClient;
+
+        };
+    } // namespace Fs9
+} // namespace BlackCore
 
 #endif // guard

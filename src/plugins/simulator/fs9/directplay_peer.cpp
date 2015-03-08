@@ -291,8 +291,14 @@ namespace BlackSimPlugin
                             DPNSEND_SYNC | DPNSEND_NOLOOPBACK)))
             {
                 CLogMessage(this).warning("DirectPlay: Failed to send message!");
+                qDebug() << message;
             }
             return hr;
+        }
+
+        void CDirectPlayPeer::reset()
+        {
+            m_playerUser = 0;
         }
     }
 }

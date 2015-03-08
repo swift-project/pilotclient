@@ -13,6 +13,10 @@ namespace BlackSimPlugin
         {
             Q_OBJECT
 
+        signals:
+            //! Emitted when FS9 is closed
+            void disconnected();
+
         public:
 
             //! Constructor
@@ -26,6 +30,9 @@ namespace BlackSimPlugin
 
             //! Connect FS9 simulator to our host
             HRESULT connectFs9ToHost(const QString address);
+
+            //! Cleanup & be ready to another connection
+            void cleanup();
 
         private:
 

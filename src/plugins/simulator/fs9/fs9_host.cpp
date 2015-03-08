@@ -72,6 +72,7 @@ namespace BlackSimPlugin
             MultiPlayerPacketParser::writeType(message, CFs9Sdk::MPCHAT_PACKET_ID_CHAT_TEXT_SEND);
             MultiPlayerPacketParser::writeSize(message, mpChatText.chat_data.size() + 1);
             message = MultiPlayerPacketParser::writeMessage(message, mpChatText);
+            qDebug() << "Message:" << textMessage;
             sendMessage(message);
         }
 
@@ -86,7 +87,6 @@ namespace BlackSimPlugin
         {
             stopHosting();
         }
-
 
         HRESULT CFs9Host::startHosting(const QString &session, const QString &callsign)
         {

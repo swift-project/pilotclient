@@ -54,6 +54,9 @@ namespace BlackSimPlugin
             //!
             bool read(BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool cockpit, bool situation, bool aircraftParts);
 
+            //! Find out whether we can connect to FSUIPC or not
+            static bool canConnect();
+
             //! Error messages
             static const QStringList &errorMessages()
             {

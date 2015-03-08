@@ -60,7 +60,7 @@ namespace BlackCore
                 if (factory)
                 {
                     driver.factory = factory;
-                    CLogMessage(this).info("Loaded plugin: %1") << factory->getSimulatorInfo().toQString();
+                    CLogMessage(this).debug() << "Loaded plugin: " << plugin->info.toQString();
                 }
             } else {
                 QString errorMsg = loader.errorString().append(" ").append("Also check if required dll/libs of plugin exists");
@@ -342,14 +342,14 @@ namespace BlackCore
         asyncConnectToSimulator();
 
         // info about what is going on
-        CLogMessage(this).info("Simulator plugin loaded: '%1'") << this->m_simulator->getSimulatorInfo().toQString(true);
+        CLogMessage(this).info("Simulator plugin loaded: %1") << this->m_simulator->getSimulatorInfo().toQString(true);
         return true;
     }
 
     bool CContextSimulator::loadSimulatorPluginFromSettings()
     {
         Q_ASSERT(this->getIContextSettings());
-        if (!this->getIContextSettings()) { return false; }
+        if (!this->getIContextSettings()) return false; // TODO assert or if?
 
         // TODO warnings if we didn't load the plugin which the settings asked for
 
@@ -409,7 +409,7 @@ namespace BlackCore
         ISimulatorListener *listener = m_simulatorDrivers[simulatorInfo].listener;
         Q_ASSERT(listener);
         listener->start();
-        CLogMessage(this).info("Listening for simulator: '%1'") << simulatorInfo.toQString(true);
+        CLogMessage(this).debug() << "Listening for simulator:" << simulatorInfo.toQString(true);
         
     }
     
@@ -433,19 +433,25 @@ namespace BlackCore
 
     void CContextSimulator::unloadSimulatorPlugin()
     {
-        if (this->m_simulator)
-        {
+        if (m_simulator) {
             // depending on shutdown order, network might already have been deleted
             IContextNetwork *networkContext = this->getIContextNetwork();
             Q_ASSERT(networkContext);
             Q_ASSERT(networkContext->isLocalObject());
             Q_UNUSED(networkContext);
-            this->m_simulator->disconnect(); // disconnect all simulator signals
-            QObject::disconnect(this, nullptr, this->m_simulator, nullptr); // disconnect receiver simulator
-            this->m_simulator->disconnectFrom(); // disconnect from simulator
-            this->m_simulator->deleteLater();
+            Q_ASSERT(m_simulator->simulator);
+            
+            m_simulator->simulator->disconnect();
+            CLogHandler::instance()->disconnect(m_simulator->simulator);
+            this->disconnect(m_simulator->simulator);
+            
+            if (m_simulator->simulator->isConnected())
+                m_simulator->simulator->disconnectFrom(); // disconnect from simulator
+                
+            m_simulator->simulator->deleteLater();
+            m_simulator->simulator = nullptr;
+            m_simulator = nullptr;
         }
-        this->m_simulator = nullptr;
     }
 
     void CContextSimulator::ps_addRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
@@ -479,6 +485,7 @@ namespace BlackCore
 
     void CContextSimulator::ps_textMessagesReceived(const Network::CTextMessageList &textMessages)
     {
+        Q_ASSERT(this->m_simulator); // TODO Assert or if?
         if (!this->m_simulator) { return; }
         foreach(CTextMessage tm, textMessages)
         {
@@ -511,7 +518,7 @@ namespace BlackCore
 
     void CContextSimulator::ps_updateSimulatorCockpitFromContext(const CAircraft &ownAircraft, const QString &originator)
     {
-        Q_ASSERT(this->m_simulator);
+        Q_ASSERT(this->m_simulator); // TODO Assert or if?
         if (!this->m_simulator) { return; }
 
         // avoid loops
@@ -583,7 +590,7 @@ namespace BlackCore
     
     void CContextSimulator::ps_simulatorStarted(CSimulatorInfo simulatorInfo)
     {
-        CLogMessage(this).info("Simulator %1 started.") << simulatorInfo.toQString();
+        CLogMessage(this).debug() << simulatorInfo.toQString() << "started";
         stopSimulatorListeners();
         loadSimulatorPlugin(simulatorInfo);
     }
@@ -605,15 +612,19 @@ namespace BlackCore
                 continue;
             }
             
-            CLogMessage(this).info("Try to load plugin: %1") << fileName;
+            CLogMessage(this).debug() << "Try to load plugin: " << fileName;
             QString pluginPath = m_pluginsDir.absoluteFilePath(fileName);
             QPluginLoader loader(pluginPath);
             QJsonObject json = loader.metaData();
             CSimulatorInfo simulatorInfo(json);
-            if (!simulatorInfo.isUnspecified()) {
+            if (!simulatorInfo.isUnspecified())
+            {
                 m_simulatorDrivers.insert(simulatorInfo, { nullptr, nullptr, pluginPath} );
-                CLogMessage(this).info("Found simulator driver: %1") << simulatorInfo.toQString();
-            } else {
+                CLogMessage(this).debug() << "Found simulator driver: " << simulatorInfo.toQString();
+            }
+            else
+            {
+
                 CLogMessage(this).warning("Simulator driver in %1 is invalid") << pluginPath;
             }
         }
