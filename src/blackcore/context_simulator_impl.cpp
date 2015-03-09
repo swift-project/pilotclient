@@ -404,13 +404,19 @@ namespace BlackCore
             
             driver.listener = factory->createListener();
             connect(driver.listener, &ISimulatorListener::simulatorStarted, this, &CContextSimulator::ps_simulatorStarted);
+            driver.listener->moveToThread(&m_listenersThread);
         }
         
         ISimulatorListener *listener = m_simulatorDrivers[simulatorInfo].listener;
         Q_ASSERT(listener);
-        listener->start();
+
+        if (!m_listenersThread.isRunning())
+        {
+            m_listenersThread.start(QThread::LowPriority);
+        }
+
+        QMetaObject::invokeMethod(listener, "start");
         CLogMessage(this).debug() << "Listening for simulator:" << simulatorInfo.toQString(true);
-        
     }
     
     void CContextSimulator::listenForAllSimulators()
@@ -428,12 +434,15 @@ namespace BlackCore
         if (plugin.isUnspecified())
             listenForAllSimulators();
         else
+        {
             listenForSimulator(plugin);
+        }
     }
 
     void CContextSimulator::unloadSimulatorPlugin()
     {
-        if (m_simulator) {
+        if (m_simulator)
+        {
             // depending on shutdown order, network might already have been deleted
             IContextNetwork *networkContext = this->getIContextNetwork();
             Q_ASSERT(networkContext);
@@ -541,11 +550,15 @@ namespace BlackCore
         CSimulatorInfo plugin = getIContextSettings()->getSimulatorSettings().getSelectedPlugin();
         
         // no simulator loaded yet, listen
-        if (!m_simulator) {
+        if (!m_simulator)
+        {
             stopSimulatorListeners();
-            if (plugin.isSameSimulator(CSimulatorInfo::UnspecifiedSim())) {
+            if (plugin.isSameSimulator(CSimulatorInfo::UnspecifiedSim()))
+            {
                 listenForAllSimulators();
-            } else {
+            }
+            else
+            {
                 listenForSimulator(plugin);
             }
         }
@@ -599,16 +612,18 @@ namespace BlackCore
     {
         const QString path = qApp->applicationDirPath().append("/plugins/simulator");
         m_pluginsDir = QDir(path);
-        if (!m_pluginsDir.exists()) {
+        if (!m_pluginsDir.exists())
+        {
             CLogMessage(this).error("No plugin directory: %1") << m_pluginsDir.currentPath();
             return;
         }
         
         QStringList fileNames = m_pluginsDir.entryList(QDir::Files);
         fileNames.sort(Qt::CaseInsensitive); // give a certain order, rather than random file order
-        for (const auto& fileName: fileNames) {
-            if (!QLibrary::isLibrary(fileName)) {
-
+        for (const auto& fileName: fileNames)
+        {
+            if (!QLibrary::isLibrary(fileName))
+            {
                 continue;
             }
             
@@ -624,7 +639,6 @@ namespace BlackCore
             }
             else
             {
-
                 CLogMessage(this).warning("Simulator driver in %1 is invalid") << pluginPath;
             }
         }
@@ -634,7 +648,7 @@ namespace BlackCore
     {
         std::for_each(m_simulatorDrivers.begin(), m_simulatorDrivers.end(), [](DriverInfo& driver) {
             if (driver.listener)
-                driver.listener->stop();
+                QMetaObject::invokeMethod(driver.listener, "stop");
         });
     }
 

@@ -209,6 +209,7 @@ namespace BlackSimPlugin
             //! Constructor
             CSimulatorFsxListener(QObject* parent);
 
+        public slots:
             //! \copydoc BlackCore::ISimulatorListener::start
             virtual void start() override;
 

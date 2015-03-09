@@ -121,6 +121,7 @@ namespace BlackSimPlugin
             //! Constructor
             CSimulatorFs9Listener(const QSharedPointer<CFs9Host> &fs9Host, const QSharedPointer<CLobbyClient> &lobbyClient, QObject* parent);
 
+        public slots:
             //! \copydoc BlackCore::ISimulatorListener::start
             virtual void start() override;
 

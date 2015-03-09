@@ -181,6 +181,7 @@ namespace BlackSimPlugin
             //! Constructor
             CSimulatorXPlaneListener(QObject* parent);
             
+        public slots:
             //! \copydoc BlackCore::ISimulatorListener::start
             virtual void start() override;
             

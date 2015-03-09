@@ -218,7 +218,8 @@ namespace BlackCore
         
         //! Destructor
         virtual ~ISimulatorListener() = default;
-        
+
+    public slots:
         //! Start listening for the simulator to start.
         virtual void start() = 0;
         

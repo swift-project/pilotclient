@@ -14,6 +14,7 @@
 
 #include "blackcore/context_simulator.h"
 #include "blackcore/simulator.h"
+#include "blackmisc/worker.h"
 #include "blacksim/simulatorinfo.h"
 #include "blacksim/simulatorinfolist.h"
 #include "blackmisc/nwtextmessagelist.h"
@@ -216,6 +217,7 @@ namespace BlackCore
         QDir m_pluginsDir;
         QMap<BlackSim::CSimulatorInfo, DriverInfo> m_simulatorDrivers;
         QFuture<bool> m_canConnectResult;
+        BlackMisc::CRegularThread m_listenersThread;
     };
 
 } // namespace
