@@ -69,7 +69,7 @@ namespace BlackMisc
             if (it->isOlderThan(msSinceEpoch))
             {
                 // better "move", ?? std::make_move_iterator
-                older.insert(CRange<CONTAINER::iterator>(it, newer.end()));
+                older.insert(CRange<typename CONTAINER::iterator>(it, newer.end()));
                 newer.erase(it, newer.end());
                 break;
             }
