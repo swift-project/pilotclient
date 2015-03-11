@@ -24,14 +24,16 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Geo;
 using namespace BlackSim;
 
+namespace {
+    inline QString xbusServiceName() {
+        return QStringLiteral("org.swift.xbus");
+    }
+}
+
 namespace BlackSimPlugin
 {
     namespace XPlane
     {
-        
-        static inline QString xbusServiceName() {
-          return QStringLiteral("org.swift.xbus");
-        }
 
         CSimulatorXPlane::CSimulatorXPlane(IOwnAircraftProvider *ownAircraftProvider, IRemoteAircraftProvider *remoteAircraftProvider, QObject *parent) :
             CSimulatorCommon(CSimulatorInfo::XP(), ownAircraftProvider, remoteAircraftProvider, parent)
@@ -232,7 +234,10 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::displayStatusMessage(const BlackMisc::CStatusMessage &message) const
         {
-            Q_ASSERT(isConnected());
+            /* We do not assert here as status message may come because of network problems */
+            if (!isConnected())
+                return;
+            
             // TODO XPLMSpeakString()? 
             // http://www.xsquawkbox.net/xpsdk/mediawiki/XPLMSpeakString
             Q_UNUSED(message);
@@ -240,7 +245,9 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::displayTextMessage(const BlackMisc::Network::CTextMessage &message) const
         {
-            Q_ASSERT(isConnected());
+            if (!isConnected())
+                return;
+            
             // TODO XPLMSpeakString()? 
             // http://www.xsquawkbox.net/xpsdk/mediawiki/XPLMSpeakString
             Q_UNUSED(message);
