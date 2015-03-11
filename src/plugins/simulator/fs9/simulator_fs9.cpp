@@ -34,62 +34,42 @@ using namespace BlackSimPlugin::Fs9;
 using namespace BlackSimPlugin::FsCommon;
 
 
+namespace {
+    /* These instances should be global, as they are shared between all classes
+     * this file contains. They are instantied by CFs9Factory. */
+    QSharedPointer<CFs9Host> fs9Host;
+    QSharedPointer<CLobbyClient> lobbyClient;
+}
+
 namespace BlackSimPlugin
 {
     namespace Fs9
     {
-        CSimulatorFs9Factory::CSimulatorFs9Factory(QObject *parent) :
-            QObject(parent),
-            m_fs9Host(new CFs9Host(this), [](CFs9Host* host){
-                host->quit();
-                host->deleteLater();
-            }),
-            m_lobbyClient(new CLobbyClient(this))
-        {
-            registerMetadata();
-        }
-
-        BlackCore::ISimulator *CSimulatorFs9Factory::create(
-            IOwnAircraftProvider *ownAircraftProvider,
-            IRemoteAircraftProvider *remoteAircraftProvider,
-            QObject *parent)
-        {
-            return new Fs9::CSimulatorFs9(ownAircraftProvider, remoteAircraftProvider, parent);
-        }
-        
-        BlackCore::ISimulatorListener *CSimulatorFs9Factory::createListener(QObject *parent)
-        {
-            return new CSimulatorFs9Listener(m_fs9Host, m_lobbyClient, parent);
-        }
-
-        BlackSim::CSimulatorInfo CSimulatorFs9Factory::getSimulatorInfo() const
-        {
-            return CSimulatorInfo::FS9();
-        }
-
         CSimulatorFs9::CSimulatorFs9(IOwnAircraftProvider *ownAircraftProvider,
-                                     IRemoteAircraftProvider *remoteAircraftProvider,
-                                     const QSharedPointer<CFs9Host> &fs9Host,
-                                     const QSharedPointer<CLobbyClient> &lobbyClient, QObject *parent) :
-                CSimulatorFsCommon(CSimulatorInfo::FS9(), ownAircraftProvider, remoteAircraftProvider, parent),
-                m_fs9Host(new CFs9Host(this)),
-                m_lobbyClient(new CLobbyClient(this))
+                                     IRemoteAircraftProvider *remoteAircraftProvider, QObject *parent) :
+            CSimulatorFsCommon(CSimulatorInfo::FS9(), ownAircraftProvider, remoteAircraftProvider, parent)
         {
-            connect(m_lobbyClient.data(), &CLobbyClient::disconnected, this, std::bind(&CSimulatorFs9::simulatorStatusChanged, this, 0));
-            connect(m_fs9Host.data(), &CFs9Host::customPacketReceived, this, &CSimulatorFs9::ps_processFs9Message);
+            connect(lobbyClient.data(), &CLobbyClient::disconnected, this, std::bind(&CSimulatorFs9::simulatorStatusChanged, this, 0));
+            connect(fs9Host.data(), &CFs9Host::customPacketReceived, this, &CSimulatorFs9::ps_processFs9Message);
+
             this->m_interpolator = new BlackCore::CInterpolatorLinear(remoteAircraftProvider, this);
             this->m_interpolator->start();
         }
 
         bool CSimulatorFs9::isConnected() const
         {
-            return m_fs9Host->isConnected();
+            return fs9Host->isConnected();
         }
 
         bool CSimulatorFs9::connectTo()
         {
-            Q_ASSERT(m_fs9Host->isConnected());
-            m_fsuipc->connect(); // connect FSUIPC too
+            Q_ASSERT(m_fsuipc);
+            Q_ASSERT(fs9Host->isConnected());
+            
+            if (m_useFsuipc)
+            {
+                m_fsuipc->connect(); // connect FSUIPC too
+            }
             startTimer(50);
             emitSimulatorCombinedStatus();
 
@@ -119,8 +99,8 @@ namespace BlackSimPlugin
             }
 
             CFs9Client *client = new CFs9Client(m_interpolator, this, callsign.toQString(), CTime(25, CTimeUnit::ms()));
-            client->setHostAddress(m_fs9Host->getHostAddress());
-            client->setPlayerUserId(m_fs9Host->getPlayerUserId());
+            client->setHostAddress(fs9Host->getHostAddress());
+            client->setPlayerUserId(fs9Host->getPlayerUserId());
 
             client->start();
             m_hashFs9Clients.insert(callsign, client);
@@ -207,7 +187,7 @@ namespace BlackSimPlugin
 
             if (message.getSeverity() != BlackMisc::CStatusMessage::SeverityDebug)
             {
-                QMetaObject::invokeMethod(m_fs9Host.data(), "sendTextMessage", Q_ARG(QString, message.toQString()));
+                QMetaObject::invokeMethod(fs9Host.data(), "sendTextMessage", Q_ARG(QString, message.toQString()));
             }
         }
 
@@ -275,7 +255,7 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorFs9::updateOwnAircraftFromSim(const CAircraft &ownAircraft)
+        void CSimulatorFs9::updateOwnAircraftFromSimulator(const CAircraft &simDataOwnAircraft)
         {
             this->providerUpdateCockpit(
                 simDataOwnAircraft.getCom1System(),
@@ -293,37 +273,30 @@ namespace BlackSimPlugin
             }
         }
 
-        CSimulatorFs9Listener::CSimulatorFs9Listener(const QSharedPointer<CFs9Host> &fs9Host,
-                                                     const QSharedPointer<CLobbyClient> &lobbyClient,
-                                                     QObject *parent) :
+        CSimulatorFs9Listener::CSimulatorFs9Listener(QObject *parent) :
             BlackCore::ISimulatorListener(parent),
-            m_timer(new QTimer(this)),
-            m_fs9Host(fs9Host),
-            m_lobbyClient(lobbyClient)
+            m_timer(new QTimer(this))
         {
             Q_CONSTEXPR int QueryInterval = 5 * 1000; // 5 seconds
             m_timer->setInterval(QueryInterval);
 
             connect(m_timer, &QTimer::timeout, [this]()
             {
-                if (m_fs9Host->getHostAddress().isEmpty()) // host not yet set up
+                if (fs9Host->getHostAddress().isEmpty()) // host not yet set up
                     return;
 
-                if (m_lobbyConnected || m_lobbyClient->connectFs9ToHost(m_fs9Host->getHostAddress()) == S_OK) {
+                if (m_lobbyConnected || lobbyClient->connectFs9ToHost(fs9Host->getHostAddress()) == S_OK)
+                {
                     m_lobbyConnected = true;
                      CLogMessage(this).info("Swift is joining FS9 to the multiplayer session...");
                 }
 
-                if (m_lobbyConnected && m_fs9Host->isConnected()) {
+                if (m_lobbyConnected && fs9Host->isConnected())
+                {
                     emit simulatorStarted(m_simulatorInfo);
                     m_lobbyConnected = false;
                 }
             });
-
-            m_fs9Host->start();
-
-            // After FS9 is disconnected, reset its data stored in the host
-            connect(m_lobbyClient.data(), &CLobbyClient::disconnected, m_fs9Host.data(), &CFs9Host::reset);
         }
 
         void CSimulatorFs9Listener::start()
@@ -335,5 +308,46 @@ namespace BlackSimPlugin
         {
             m_timer->stop();
         }
-    }
-}
+
+        CSimulatorFs9Factory::CSimulatorFs9Factory(QObject *parent) :
+            QObject(parent)
+        {
+            /* Nobody should have created the host before */
+            Q_ASSERT(!fs9Host);
+
+            registerMetadata();
+
+            fs9Host.reset(new CFs9Host(this));
+            lobbyClient.reset(new CLobbyClient(this));
+
+            /* After FS9 is disconnected, reset its data stored in the host */
+            connect(lobbyClient.data(), &CLobbyClient::disconnected, fs9Host.data(), &CFs9Host::reset);
+
+            fs9Host->start();
+        }
+
+        CSimulatorFs9Factory::~CSimulatorFs9Factory()
+        {
+            fs9Host->quit();
+        }
+
+        BlackCore::ISimulator *CSimulatorFs9Factory::create(
+            IOwnAircraftProvider *ownAircraftProvider,
+            IRemoteAircraftProvider *remoteAircraftProvider,
+            QObject *parent)
+        {
+            return new CSimulatorFs9(ownAircraftProvider, remoteAircraftProvider, parent);
+        }
+
+        BlackSim::CSimulatorInfo CSimulatorFs9Factory::getSimulatorInfo() const
+        {
+            return CSimulatorInfo::FS9();
+        }
+
+        BlackCore::ISimulatorListener *CSimulatorFs9Factory::createListener(QObject *parent)
+        {
+            return new CSimulatorFs9Listener(parent);
+        }
+        
+    } // namespace
+} // namespace

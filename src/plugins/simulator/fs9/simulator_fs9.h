@@ -32,7 +32,7 @@ namespace BlackSimPlugin
 {
     namespace Fs9
     {
-        //! FSX Simulator Implementation
+        //! FS9 Simulator Implementation
         class CSimulatorFs9 : public BlackSimPlugin::FsCommon::CSimulatorFsCommon
         {
             Q_OBJECT
@@ -105,9 +105,7 @@ namespace BlackSimPlugin
 
             void disconnectAllClients();
 
-            QSharedPointer<CFs9Host> m_fs9Host;
             QHash<BlackMisc::Aviation::CCallsign, QPointer<CFs9Client>> m_hashFs9Clients;
-            QSharedPointer<CLobbyClient> m_lobbyClient;
         };
 
         //! Listener for FS9
@@ -119,7 +117,7 @@ namespace BlackSimPlugin
 
         public:
             //! Constructor
-            CSimulatorFs9Listener(const QSharedPointer<CFs9Host> &fs9Host, const QSharedPointer<CLobbyClient> &lobbyClient, QObject* parent);
+            CSimulatorFs9Listener(QObject* parent);
 
         public slots:
             //! \copydoc BlackCore::ISimulatorListener::start
@@ -131,8 +129,6 @@ namespace BlackSimPlugin
         private:
 
             QTimer* m_timer = nullptr;
-            QSharedPointer<CFs9Host> m_fs9Host;
-            QSharedPointer<CLobbyClient> m_lobbyClient;
             bool m_lobbyConnected = false;
             const BlackSim::CSimulatorInfo m_simulatorInfo = BlackSim::CSimulatorInfo::FS9();
 
@@ -148,18 +144,19 @@ namespace BlackSimPlugin
         public:
             CSimulatorFs9Factory(QObject* parent = nullptr);
 
+            virtual ~CSimulatorFs9Factory();
+
             //! \copydoc BlackCore::ISimulatorFactory::create()
-            virtual BlackCore::ISimulator *create(QObject *parent) override;
+            virtual BlackCore::ISimulator *create(
+                    BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                    BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                    QObject *parent) override;
 
             //! Simulator info
             virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
 
-            //! \copydoc BlackCore::ISimulatorFactory::getListener
+            //! \copydoc BlackCore::ISimulatorFactory::createListener
             virtual BlackCore::ISimulatorListener *createListener(QObject *parent = nullptr) override;
-
-        private:
-            QSharedPointer<CFs9Host> m_fs9Host;
-            QSharedPointer<CLobbyClient> m_lobbyClient;
 
         };
     } // namespace Fs9
