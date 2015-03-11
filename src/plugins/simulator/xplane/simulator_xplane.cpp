@@ -14,6 +14,7 @@
 #include "blackmisc/coordinategeodetic.h"
 #include <QDBusServiceWatcher>
 #include <QTimer>
+#include <QString>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -27,13 +28,17 @@ namespace BlackSimPlugin
 {
     namespace XPlane
     {
+        
+        static inline QString xbusServiceName() {
+          return QStringLiteral("org.swift.xbus");
+        }
 
         CSimulatorXPlane::CSimulatorXPlane(IOwnAircraftProvider *ownAircraftProvider, IRemoteAircraftProvider *remoteAircraftProvider, QObject *parent) :
             CSimulatorCommon(CSimulatorInfo::XP(), ownAircraftProvider, remoteAircraftProvider, parent)
         {
             m_watcher = new QDBusServiceWatcher(this);
             m_watcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
-            m_watcher->addWatchedService("net.vatsim.xbus");
+            m_watcher->addWatchedService(xbusServiceName());
             connect(m_watcher, &QDBusServiceWatcher::serviceUnregistered, this, &CSimulatorXPlane::ps_serviceUnregistered);
 
             m_fastTimer = new QTimer(this);
@@ -155,6 +160,7 @@ namespace BlackSimPlugin
         bool CSimulatorXPlane::connectTo()
         {
             if (isConnected()) {
+                qWarning("X-Plane already connected");
                 return true;
             }
             
@@ -226,21 +232,26 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::displayStatusMessage(const BlackMisc::CStatusMessage &message) const
         {
-            if (! isConnected()) { return; }
-            // TODO
+            Q_ASSERT(isConnected());
+            // TODO XPLMSpeakString()? 
+            // http://www.xsquawkbox.net/xpsdk/mediawiki/XPLMSpeakString
             Q_UNUSED(message);
         }
 
         void CSimulatorXPlane::displayTextMessage(const BlackMisc::Network::CTextMessage &message) const
         {
-            if (! isConnected()) { return; }
+            Q_ASSERT(isConnected());
+            // TODO XPLMSpeakString()? 
+            // http://www.xsquawkbox.net/xpsdk/mediawiki/XPLMSpeakString
             Q_UNUSED(message);
         }
 
         BlackMisc::Simulation::CAircraftModelList CSimulatorXPlane::getInstalledModels() const
         {
+            Q_ASSERT(isConnected());
             //! \todo XP driver, function not available
             CLogMessage(this).error("Function not avialable");
+            
             return {};
         }
 
@@ -302,8 +313,8 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator)
         {
+            Q_ASSERT(isConnected());
             if (originator == this->simulatorOriginator()) { return false; }
-            if (!isConnected()) { return false; }
             auto com1 = Aviation::CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() });
             auto com2 = Aviation::CComSystem::getCom2System({ m_xplaneData.com2Active, CFrequencyUnit::kHz() }, { m_xplaneData.com2Standby, CFrequencyUnit::kHz() });
             auto xpdr = Aviation::CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent));
@@ -330,7 +341,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::addRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
         {
-            if (!isConnected()) { return false; }
+            Q_ASSERT(isConnected());
             //! \todo XPlane driver check if already exists, how?
             //! \todo XPlane driver set correct return value
             // KB: from what I can see here all data are available
@@ -344,7 +355,7 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::ps_addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situ)
         {
-            if (! isConnected()) { return; }
+            Q_ASSERT(isConnected());
             using namespace BlackMisc::PhysicalQuantities;
             m_traffic->setPlanePosition(situ.getCallsign().asString(),
                                         situ.latitude().value(CAngleUnit::deg()),
@@ -357,7 +368,7 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::ps_addAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts)
         {
-            if (! isConnected()) { return; }
+            Q_ASSERT(isConnected());
             m_traffic->setPlaneSurfaces(parts.getCallsign().asString(), true, 0, 0, 0, 0, 0, 0, 0, 0, 0, true, true, true, true, 0); // TODO landing gear, lights, control surfaces
             m_traffic->setPlaneTransponder(parts.getCallsign().asString(), 2000, true, false); // TODO transponder
         }
@@ -370,7 +381,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign)
         {
-            if (! isConnected()) { return false; }
+            Q_ASSERT(isConnected());
             m_traffic->removePlane(callsign.asString());
             remoteAircraft().setRendered(callsign, false);
             CLogMessage(this).info("XP: Removed aircraft %1") << callsign.toQString();
@@ -425,8 +436,7 @@ namespace BlackSimPlugin
                 return;
             
             m_conn = QDBusConnection::sessionBus(); // TODO make this configurable
-            m_watcher = new QDBusServiceWatcher("net.vatsim.xbus", m_conn, QDBusServiceWatcher::WatchForRegistration, this);
-            
+            m_watcher = new QDBusServiceWatcher(xbusServiceName(), m_conn, QDBusServiceWatcher::WatchForRegistration, this);
             connect(m_watcher, &QDBusServiceWatcher::serviceRegistered, this, &CSimulatorXPlaneListener::ps_serviceRegistered);
         }
 
@@ -440,7 +450,7 @@ namespace BlackSimPlugin
         
         void CSimulatorXPlaneListener::ps_serviceRegistered(const QString &serviceName)
         {
-            if (serviceName == "net.vatsim.xbus")
+            if (serviceName == xbusServiceName())
                 emit simulatorStarted(m_simulatorInfo);
         }
 
