@@ -44,12 +44,12 @@ namespace BlackMisc
         //! With Pixmap?
         bool isNull() const;
 
+        //! \copydoc CValueObject::toPixmap
+        virtual QPixmap toPixmap() const override;
+
     protected:
         //! \copydoc CValueObject::convertToQString
         virtual QString convertToQString(bool i18n = false) const override;
-
-        //! \copydoc CValueObject::toPixmap
-        virtual QPixmap toPixmap() const override;
 
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(BlackMisc::CPixmap)
