@@ -209,6 +209,9 @@ namespace BlackMisc
         //! Is given variant equal to value of property index?
         virtual bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const;
 
+        //! Parse from string, e.g. 100km/h
+        virtual void parseFromString(const QString &) { qFatal("Not implemented"); }
+
     protected:
         template <typename T>
         friend struct Private::CValueObjectMetaInfo;
@@ -252,9 +255,6 @@ namespace BlackMisc
 
         //! Unmarshall from DBus
         virtual void unmarshallFromDbus(const QDBusArgument &) = 0;
-
-        //! Parse from string, e.g. 100km/h
-        virtual void parseFromString(const QString &) { qFatal("Not implemented"); }
     };
 
     //! \private FIXME defined out-of-line because it depends on CValueObject
