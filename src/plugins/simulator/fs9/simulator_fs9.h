@@ -40,7 +40,7 @@ namespace BlackSimPlugin
             Q_INTERFACES(BlackCore::ISimulatorFactory)
 
         public:
-            //! \copydoc BlackCore::ISimulatorFactory::create()
+            //! \copydoc BlackCore::ISimulatorFactory::create(ownAircraftProvider, remoteAircraftProvider, parent)
             virtual BlackCore::ISimulator *create(
                     BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                     BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,

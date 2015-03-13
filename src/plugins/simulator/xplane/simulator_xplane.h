@@ -34,10 +34,10 @@ namespace BlackSimPlugin
             Q_OBJECT
 
         public:
-            //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
+            //! \copydoc BlackCore::ISimulatorFactory::create(ownAircraftProvider, remoteAircraftProvider, parent)
             CSimulatorXPlane(
                 BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraft,
+                BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                 QObject *parent = nullptr);
 
             //! \copydoc BlackCore::ISimulator::isConnected
@@ -92,7 +92,7 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::getInstalledModels
             virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override;
 
-             //! \copydoc BlackCore::ISimulator::getAirportsInRange
+            //! \copydoc BlackCore::ISimulator::getAirportsInRange
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const;
 
             //! \copydoc ISimulator::setTimeSynchronization
@@ -158,7 +158,8 @@ namespace BlackSimPlugin
             void resetData()
             {
                 m_xplaneData = { "", "", 0, 0, 0, 0, 0, 0, 0, false, 122800, 122800, 122800, 122800, 2000, 0, false, false, false, false,
-                                 false, false, 0, 0, {}, false};
+                                 false, false, 0, 0, {}, false
+                               };
 
             }
         };
@@ -173,7 +174,7 @@ namespace BlackSimPlugin
         public:
             //! \copydoc BlackCore::ISimulatorFactory::create()
             virtual BlackCore::ISimulator *create(
-                BlackMisc::Simulation::IOwnAircraftProvider      *ownAircraftProvider,
+                BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
                 BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
                 QObject *parent) override;
 
