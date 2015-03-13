@@ -15,7 +15,7 @@
 #include "multiplayer_packets.h"
 #include "multiplayer_packet_parser.h"
 #include "blackcore/interpolator_linear.h"
-#include "blacksim/simulatorinfo.h"
+#include "blacksim/simulatorplugininfo.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/project.h"
 #include "blackmisc/logmessage.h"
@@ -47,7 +47,7 @@ namespace BlackSimPlugin
     {
         CSimulatorFs9::CSimulatorFs9(IOwnAircraftProvider *ownAircraftProvider,
                                      IRemoteAircraftProvider *remoteAircraftProvider, QObject *parent) :
-            CSimulatorFsCommon(CSimulatorInfo::FS9(), ownAircraftProvider, remoteAircraftProvider, parent)
+            CSimulatorFsCommon(CSimulatorPluginInfo::FS9(), ownAircraftProvider, remoteAircraftProvider, parent)
         {
             connect(lobbyClient.data(), &CLobbyClient::disconnected, this, std::bind(&CSimulatorFs9::simulatorStatusChanged, this, 0));
             connect(fs9Host.data(), &CFs9Host::customPacketReceived, this, &CSimulatorFs9::ps_processFs9Message);
@@ -339,9 +339,9 @@ namespace BlackSimPlugin
             return new CSimulatorFs9(ownAircraftProvider, remoteAircraftProvider, parent);
         }
 
-        BlackSim::CSimulatorInfo CSimulatorFs9Factory::getSimulatorInfo() const
+        BlackSim::CSimulatorPluginInfo CSimulatorFs9Factory::getSimulatorInfo() const
         {
-            return CSimulatorInfo::FS9();
+            return CSimulatorPluginInfo::FS9();
         }
 
         BlackCore::ISimulatorListener *CSimulatorFs9Factory::createListener(QObject *parent)

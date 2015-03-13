@@ -12,7 +12,7 @@
 #ifndef BLACKSIM_SIMULATORINFOLIST_H
 #define BLACKSIM_SIMULATORINFOLIST_H
 
-#include "simulatorinfo.h"
+#include "simulatorplugininfo.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/collection.h"
 #include <QStringList>
@@ -20,20 +20,20 @@
 namespace BlackSim
 {
     //! Value object encapsulating a list of SimulatorInfo objects.
-    class CSimulatorInfoList : public BlackMisc::CSequence<CSimulatorInfo>
+    class CSimulatorPluginInfoList : public BlackMisc::CSequence<CSimulatorPluginInfo>
     {
     public:
         //! Default constructor
-        CSimulatorInfoList();
+        CSimulatorPluginInfoList();
 
         //! Construct from a base class object.
-        CSimulatorInfoList(const CSequence<CSimulatorInfo> &other);
+        CSimulatorPluginInfoList(const CSequence<CSimulatorPluginInfo> &other);
 
         //! \copydoc CValueObject::toQVariant
         virtual QVariant toQVariant() const { return QVariant::fromValue(*this); }
 
         //! Is simulator supported
-        bool supportsSimulator(const CSimulatorInfo &info);
+        bool supportsSimulator(const QString &simulator);
 
         //! String list with meaningful representations
         QStringList toStringList(bool i18n = false) const;
@@ -44,8 +44,8 @@ namespace BlackSim
     };
 }
 
-Q_DECLARE_METATYPE(BlackSim::CSimulatorInfoList)
-Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackSim::CSimulatorInfo>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackSim::CSimulatorInfo>)
+Q_DECLARE_METATYPE(BlackSim::CSimulatorPluginInfoList)
+Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackSim::CSimulatorPluginInfo>)
+Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackSim::CSimulatorPluginInfo>)
 
 #endif // guard

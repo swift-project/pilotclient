@@ -33,10 +33,12 @@ namespace BlackCore
     {
     }
 
-    CSimulatorCommon::CSimulatorCommon(const BlackSim::CSimulatorInfo &simInfo, BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider, BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider, QObject *parent)
+    CSimulatorCommon::CSimulatorCommon(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                                       BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                                       QObject *parent)
         : ISimulator(parent),
           COwnAircraftProviderSupport(ownAircraftProvider),
-          CRemoteAircraftProviderSupport(remoteAircraftProvider), m_simulatorInfo(simInfo)
+          CRemoteAircraftProviderSupport(remoteAircraftProvider)
     {
         m_oneSecondTimer = new QTimer(this);
         connect(this->m_oneSecondTimer, &QTimer::timeout, this, &CSimulatorCommon::ps_oneSecondTimer);
@@ -195,12 +197,7 @@ namespace BlackCore
     {
         return !m_maxRenderedDistance.isNull();
     }
-
-    CSimulatorInfo CSimulatorCommon::getSimulatorInfo() const
-    {
-        return m_simulatorInfo;
-    }
-
+    
     void CSimulatorCommon::enableDebugMessages(bool driver, bool interpolator)
     {
         this->m_debugMessages = driver;

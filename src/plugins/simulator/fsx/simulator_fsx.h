@@ -17,7 +17,7 @@
 #include "../fscommon/simulator_fscommon.h"
 #include "blackcore/simulator.h"
 #include "blackcore/interpolator_linear.h"
-#include "blacksim/simulatorinfo.h"
+#include "blacksim/simulatorplugininfo.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/avairportlist.h"
@@ -218,7 +218,7 @@ namespace BlackSimPlugin
 
         private:
             QTimer* m_timer;
-            const BlackSim::CSimulatorInfo m_simulatorInfo = BlackSim::CSimulatorInfo::FSX();
+            const BlackSim::CSimulatorPluginInfo m_simulatorInfo = BlackSim::CSimulatorPluginInfo::FSX();
 
         };
     }

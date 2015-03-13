@@ -16,7 +16,7 @@
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/settingutilities.h"
 #include "blackmisc/pqtime.h"
-#include "simulatorinfo.h"
+#include "simulatorplugininfo.h"
 
 namespace BlackSim
 {
@@ -51,10 +51,10 @@ namespace BlackSim
             }
 
             //! Selected driver
-            const BlackSim::CSimulatorInfo &getSelectedPlugin() const { return this->m_selectedPlugin; }
+            const BlackSim::CSimulatorPluginInfo &getSelectedPlugin() const { return this->m_selectedPlugin; }
 
             //! Selected driver
-            void setSelectedPlugin(const BlackSim::CSimulatorInfo &plugin) { this->m_selectedPlugin = plugin; }
+            void setSelectedPlugin(const BlackSim::CSimulatorPluginInfo &plugin) { this->m_selectedPlugin = plugin; }
 
             //! Time synchronization offset time
             const BlackMisc::PhysicalQuantities::CTime &getSyncTimeOffset() const { return this->m_timeSyncOffset;}
@@ -80,7 +80,7 @@ namespace BlackSim
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CSettingsSimulator)
-            BlackSim::CSimulatorInfo m_selectedPlugin;
+            BlackSim::CSimulatorPluginInfo m_selectedPlugin;
             bool m_timeSync = false;
             BlackMisc::PhysicalQuantities::CTime m_timeSyncOffset;
         };

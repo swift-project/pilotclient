@@ -13,7 +13,7 @@
 #define BLACKCORE_SIMULATOR_H
 
 #include "blackcore/interpolator.h"
-#include "blacksim/simulatorinfo.h"
+#include "blacksim/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/simdirectaccessownaircraft.h"
@@ -103,9 +103,6 @@ namespace BlackCore
 
         //! ICAO data for model string
         virtual BlackMisc::Aviation::CAircraftIcao getIcaoForModelString(const QString &modelString) const = 0;
-
-        //! Simulator info
-        virtual BlackSim::CSimulatorInfo getSimulatorInfo() const = 0;
 
         //! Display a status message in the simulator
         virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const = 0;
@@ -230,7 +227,7 @@ namespace BlackCore
     signals:
         
         //! Emitted when the listener discovers the simulator running.
-        void simulatorStarted(BlackSim::CSimulatorInfo simulatorInfo);
+        void simulatorStarted();
         
     };
 
@@ -253,9 +250,6 @@ namespace BlackCore
             BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
             BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
             QObject *parent = nullptr) = 0;
-
-        //! Simulator info
-        virtual BlackSim::CSimulatorInfo getSimulatorInfo() const = 0;
         
         //! Simulator listener instance
         virtual ISimulatorListener *createListener(QObject *parent = nullptr) = 0;
@@ -293,9 +287,6 @@ namespace BlackCore
         //! \copydoc ISimulator::isMaxDistanceRestricted
         virtual bool isMaxDistanceRestricted() const override;
 
-        //! \copydoc ISimulator::getSimulatorInfo
-        virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
-
         //! \copydoc ISimulator::enableDebuggingMessages
         virtual void enableDebugMessages(bool driver, bool interpolator) override;
 
@@ -321,11 +312,9 @@ namespace BlackCore
     protected:
         //! Constructor
         CSimulatorCommon(
-            const BlackSim::CSimulatorInfo &simInfo,
             BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
             BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
             QObject *parent = nullptr);
-
 
         //! Blink the highlighted aircraft
         void blinkHighlightedAircraft();
@@ -339,7 +328,6 @@ namespace BlackCore
         //! Override parts and situation from current interpolator values, if any!
         void setInitialAircraftSituationAndParts(BlackMisc::Simulation::CSimulatedAircraft &aircraft) const;
 
-        BlackSim::CSimulatorInfo m_simulatorInfo; //!< about the simulator
         bool m_debugMessages = false;             //!< Display debug messages
         bool m_blinkCycle = false;                //!< use for highlighting
         IInterpolator *m_interpolator = nullptr;  //!< interpolator instance

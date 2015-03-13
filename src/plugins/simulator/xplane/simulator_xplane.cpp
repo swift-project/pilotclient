@@ -36,7 +36,7 @@ namespace BlackSimPlugin
     {
 
         CSimulatorXPlane::CSimulatorXPlane(IOwnAircraftProvider *ownAircraftProvider, IRemoteAircraftProvider *remoteAircraftProvider, QObject *parent) :
-            CSimulatorCommon(CSimulatorInfo::XP(), ownAircraftProvider, remoteAircraftProvider, parent)
+            CSimulatorCommon(ownAircraftProvider, remoteAircraftProvider, parent)
         {
             m_watcher = new QDBusServiceWatcher(this);
             m_watcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
@@ -458,7 +458,7 @@ namespace BlackSimPlugin
         void CSimulatorXPlaneListener::ps_serviceRegistered(const QString &serviceName)
         {
             if (serviceName == xbusServiceName())
-                emit simulatorStarted(m_simulatorInfo);
+                emit simulatorStarted();
         }
 
     } // namespace

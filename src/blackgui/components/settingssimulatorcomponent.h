@@ -65,7 +65,7 @@ namespace BlackGui
             QScopedPointer<Ui::CSettingsSimulatorComponent> ui; //!< UI
 
             //! Smarter way to set current driver, avoids unnecessary signals and less formatting dependend
-            void setCurrentPlugin(const BlackSim::CSimulatorInfo &plugin);
+            void setCurrentPlugin(const BlackSim::CSimulatorPluginInfo &plugin);
 
             //! Set the GUI values
             void setRestrictedValues();

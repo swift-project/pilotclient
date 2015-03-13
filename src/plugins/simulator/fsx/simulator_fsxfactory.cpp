@@ -9,7 +9,7 @@
 
 #include "simulator_fsxfactory.h"
 #include "simulator_fsx.h"
-#include "blacksim/simulatorinfo.h"
+#include "blacksim/simulatorplugininfo.h"
 #include "blackmisc/project.h"
 #include <QTimer>
 #include <QtConcurrent>
@@ -24,9 +24,9 @@ namespace BlackSimPlugin
             return new CSimulatorFsx(ownAircraftProvider, renderedAircraftProvider, parent);
         }
 
-        BlackSim::CSimulatorInfo CSimulatorFsxFactory::getSimulatorInfo() const
+        BlackSim::CSimulatorPluginInfo CSimulatorFsxFactory::getSimulatorInfo() const
         {
-            return BlackSim::CSimulatorInfo::FSX();
+            return BlackSim::CSimulatorPluginInfo::FSX();
         }
 
         BlackCore::ISimulatorListener *CSimulatorFsxFactory::createListener(QObject *parent)

@@ -256,13 +256,16 @@ namespace BlackCore
         return escaped;
     }
 
-    VatSimType CNetworkVatlib::convertToSimType(CSimulatorInfo &simInfo)
+    VatSimType CNetworkVatlib::convertToSimType(CSimulatorPluginInfo &simInfo)
     {
-        if (simInfo.isUnspecified()) { return vatSimTypeUnknown; }
-        if (CSimulatorInfo::FS9().isSameSimulator(simInfo)) { return vatSimTypeMSCFS; }
-        if (CSimulatorInfo::FSX().isSameSimulator(simInfo)) { return vatSimTypeMSCFS; }
-        if (CSimulatorInfo::XP().isSameSimulator(simInfo))  { return vatSimTypeXPLANE; }
-        return vatSimTypeUnknown;
+        /* TODO Define recognized simulators somewhere */
+        if (simInfo.simulator() == "fs9" || simInfo.simulator() == "fsx") {
+            return vatSimTypeMSCFS;
+        } else if (simInfo.simulator() == "xplane") {
+            return vatSimTypeXPLANE;
+        } else {
+            return vatSimTypeUnknown;
+        }
     }
 
     /********************************** * * * * * * * * * * * * * * * * * * * ************************************/
@@ -275,7 +278,7 @@ namespace BlackCore
         m_server = server;
     }
 
-    void CNetworkVatlib::presetSimulatorInfo(const CSimulatorInfo &simInfo)
+    void CNetworkVatlib::presetSimulatorInfo(const CSimulatorPluginInfo &simInfo)
     {
         Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "Can't change server details while still connected");
         m_simulatorInfo = simInfo;

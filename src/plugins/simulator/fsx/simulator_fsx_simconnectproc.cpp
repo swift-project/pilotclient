@@ -12,7 +12,7 @@
 #include "blacksim/fscommon/bcdconversions.h"
 #include "blacksim/fsx/simconnectutilities.h"
 #include "blacksim/fsx/fsxsimulatorsetup.h"
-#include "blacksim/simulatorinfo.h"
+#include "blacksim/simulatorplugininfo.h"
 #include "blackmisc/project.h"
 #include "blackmisc/avairportlist.h"
 #include "blackmisc/logmessage.h"

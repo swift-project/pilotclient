@@ -20,7 +20,7 @@
 #include "blackcore/interpolator.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/avaircraft.h"
-#include "blacksim/simulatorinfo.h"
+#include "blacksim/simulatorplugininfo.h"
 #include "blackmisc/pixmap.h"
 #include <QObject>
 #include <QtPlugin>
@@ -130,7 +130,7 @@ namespace BlackSimPlugin
 
             QTimer* m_timer = nullptr;
             bool m_lobbyConnected = false;
-            const BlackSim::CSimulatorInfo m_simulatorInfo = BlackSim::CSimulatorInfo::FS9();
+            const BlackSim::CSimulatorPluginInfo m_simulatorInfo = BlackSim::CSimulatorPluginInfo::FS9();
 
         };
 
@@ -153,7 +153,7 @@ namespace BlackSimPlugin
                     QObject *parent) override;
 
             //! Simulator info
-            virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
+            virtual BlackSim::CSimulatorPluginInfo getSimulatorInfo() const override;
 
             //! \copydoc BlackCore::ISimulatorFactory::createListener
             virtual BlackCore::ISimulatorListener *createListener(QObject *parent = nullptr) override;

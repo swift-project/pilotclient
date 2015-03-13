@@ -12,27 +12,29 @@
 namespace BlackSim
 {
 
-    CSimulatorInfoList::CSimulatorInfoList() { }
+    CSimulatorPluginInfoList::CSimulatorPluginInfoList() { }
 
-    bool CSimulatorInfoList::supportsSimulator(const CSimulatorInfo &info)
+    bool CSimulatorPluginInfoList::supportsSimulator(const QString &simulator)
     {
-        return this->contains(info);
+        return std::find_if(begin(), end(), [&simulator](const CSimulatorPluginInfo &info) {
+            return info.simulator() == simulator;
+        }) != end();
     }
 
-    QStringList CSimulatorInfoList::toStringList(bool i18n) const
+    QStringList CSimulatorPluginInfoList::toStringList(bool i18n) const
     {
-        return this->transform([i18n](const CSimulatorInfo &info) { return info.toQString(i18n); });
+        return this->transform([i18n](const CSimulatorPluginInfo &info) { return info.toQString(i18n); });
     }
 
-    void CSimulatorInfoList::registerMetadata()
+    void CSimulatorPluginInfoList::registerMetadata()
     {
-        qRegisterMetaType<BlackMisc::CSequence<CSimulatorInfo>>();
-        qDBusRegisterMetaType<BlackMisc::CSequence<CSimulatorInfo>>();
-        qRegisterMetaType<BlackMisc::CCollection<CSimulatorInfo>>();
-        qDBusRegisterMetaType<BlackMisc::CCollection<CSimulatorInfo>>();
-        qRegisterMetaType<CSimulatorInfoList>();
-        qDBusRegisterMetaType<CSimulatorInfoList>();
-        BlackMisc::registerMetaValueType<CSimulatorInfoList>();
+        qRegisterMetaType<BlackMisc::CSequence<CSimulatorPluginInfo>>();
+        qDBusRegisterMetaType<BlackMisc::CSequence<CSimulatorPluginInfo>>();
+        qRegisterMetaType<BlackMisc::CCollection<CSimulatorPluginInfo>>();
+        qDBusRegisterMetaType<BlackMisc::CCollection<CSimulatorPluginInfo>>();
+        qRegisterMetaType<CSimulatorPluginInfoList>();
+        qDBusRegisterMetaType<CSimulatorPluginInfoList>();
+        BlackMisc::registerMetaValueType<CSimulatorPluginInfoList>();
     }
 
 } // namespace BlackSim

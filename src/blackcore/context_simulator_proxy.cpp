@@ -54,9 +54,9 @@ namespace BlackCore
         Q_UNUSED(s);
     }
 
-    CSimulatorInfoList CContextSimulatorProxy::getAvailableSimulatorPlugins() const
+    CSimulatorPluginInfoList CContextSimulatorProxy::getAvailableSimulatorPlugins() const
     {
-        return m_dBusInterface->callDBusRet<CSimulatorInfoList>(QLatin1Literal("getAvailableSimulatorPlugins"));
+        return m_dBusInterface->callDBusRet<CSimulatorPluginInfoList>(QLatin1Literal("getAvailableSimulatorPlugins"));
     }
 
     bool CContextSimulatorProxy::isConnected() const
@@ -114,9 +114,9 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<CAircraftIcao>(QLatin1Literal("getIcaoForModelString"), modelString);
     }
 
-    BlackSim::CSimulatorInfo CContextSimulatorProxy::getSimulatorInfo() const
+    BlackSim::CSimulatorPluginInfo CContextSimulatorProxy::getSimulatorInfo() const
     {
-        return m_dBusInterface->callDBusRet<BlackSim::CSimulatorInfo>(QLatin1Literal("getSimulatorInfo"));
+        return m_dBusInterface->callDBusRet<BlackSim::CSimulatorPluginInfo>(QLatin1Literal("getSimulatorInfo"));
     }
 
     bool CContextSimulatorProxy::setTimeSynchronization(bool enable, CTime offset)
@@ -174,7 +174,7 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<BlackMisc::PhysicalQuantities::CTime>(QLatin1Literal("getTimeSynchronizationOffset"));
     }
 
-    bool CContextSimulatorProxy::loadSimulatorPlugin(const BlackSim::CSimulatorInfo &simulatorInfo)
+    bool CContextSimulatorProxy::loadSimulatorPlugin(const BlackSim::CSimulatorPluginInfo &simulatorInfo)
     {
         return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("loadSimulatorPlugin"), simulatorInfo);
     }
@@ -184,7 +184,7 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("loadSimulatorPluginFromSettings"));
     }
     
-    void CContextSimulatorProxy::listenForSimulator(const CSimulatorInfo &simulatorInfo)
+    void CContextSimulatorProxy::listenForSimulator(const CSimulatorPluginInfo &simulatorInfo)
     {
         m_dBusInterface->callDBus(QLatin1Literal("listenForSimulator"), simulatorInfo);
     }

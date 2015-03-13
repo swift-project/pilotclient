@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_FOREIGNWINDOWS_H
 #define BLACKGUI_FOREIGNWINDOWS_H
 
-#include "blacksim/simulatorinfo.h"
+#include "blacksim/simulatorplugininfo.h"
 #include "windowfinder.h"
 #include <QWindow>
 #include <QWidget>

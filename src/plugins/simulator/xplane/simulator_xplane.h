@@ -194,7 +194,6 @@ namespace BlackSimPlugin
         private:
             QDBusConnection m_conn { "default" };
             QDBusServiceWatcher* m_watcher { nullptr };
-            const BlackSim::CSimulatorInfo m_simulatorInfo = BlackSim::CSimulatorInfo::XP();
             
         };
 
@@ -212,10 +211,7 @@ namespace BlackSimPlugin
                 BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
                 QObject *parent) override;
 
-            //! \copydoc BlackCore::ISimulatorFactory::getSimulatorInfo
-            virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override { return BlackSim::CSimulatorInfo::XP(); }
-            
-            //! \copydoc BlackCore::ISimulatorFactory::getListener
+            //! \copydoc BlackCore::ISimulatorFactory::createListener
             virtual BlackCore::ISimulatorListener *createListener(QObject *parent = nullptr) override { return new CSimulatorXPlaneListener(parent); }
         };
 

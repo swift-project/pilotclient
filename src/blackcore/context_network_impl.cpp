@@ -185,7 +185,7 @@ namespace BlackCore
             }
             else
             {
-                this->m_network->presetSimulatorInfo(CSimulatorInfo::UnspecifiedSim());
+                this->m_network->presetSimulatorInfo(CSimulatorPluginInfo());
             }
             this->m_network->initiateConnection();
             return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, "Connection pending " + server.getAddress() + " " + QString::number(server.getPort()));

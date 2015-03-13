@@ -42,7 +42,6 @@ namespace BlackSim
          */
         void CSettingsSimulator::initDefaultValues()
         {
-            this->m_selectedPlugin = CSimulatorInfo::UnspecifiedSim();
             this->m_timeSyncOffset = CTime(0, CTimeUnit::hrmin());
             this->m_timeSync = false;
         }
@@ -58,7 +57,7 @@ namespace BlackSim
             {
                 if (command == CSettingUtilities::CmdAdd() || command == CSettingUtilities::CmdUpdate())
                 {
-                    CSimulatorInfo v = value.value<CSimulatorInfo>();
+                    CSimulatorPluginInfo v = value.value<CSimulatorPluginInfo>();
                     changedFlag = (v != this->m_selectedPlugin);
                     this->m_selectedPlugin = v;
                     return CLogMessage(CLogCategory::settingsUpdate()).info("selected driver%1 changed") << (changedFlag ? "" : " not");

@@ -51,7 +51,7 @@ namespace BlackCore
         virtual void presetServer(const BlackMisc::Network::CServer &server) override;
         virtual void presetCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void presetIcaoCodes(const BlackMisc::Aviation::CAircraftIcao &icao) override;
-        virtual void presetSimulatorInfo(const BlackSim::CSimulatorInfo &simInfo) override;
+        virtual void presetSimulatorInfo(const BlackSim::CSimulatorPluginInfo &simInfo) override;
         virtual void initiateConnection() override;
         virtual void terminateConnection() override;
         virtual void sendPing(const BlackMisc::Aviation::CCallsign &callsign) override;
@@ -131,7 +131,7 @@ namespace BlackCore
         void changeConnectionStatus(VatConnectionStatus newStatus);
         bool isDisconnected() const { return m_status != vatStatusConnecting && m_status != vatStatusConnected; }
         static QString convertToUnicodeEscaped(const QString &str);
-        static VatSimType convertToSimType(BlackSim::CSimulatorInfo &simInfo);
+        static VatSimType convertToSimType(BlackSim::CSimulatorPluginInfo &simInfo);
         static void networkLogHandler(SeverityLevel severity, const char *message);
 
         struct JsonPackets
@@ -160,7 +160,7 @@ namespace BlackCore
         LoginMode                          m_loginMode;
         VatConnectionStatus                m_status;
         BlackMisc::Network::CServer        m_server;
-        BlackSim::CSimulatorInfo           m_simulatorInfo;
+        BlackSim::CSimulatorPluginInfo           m_simulatorInfo;
         BlackMisc::Aviation::CCallsign     m_callsign; //!< "buffered callsign", as this must not change when connected
         BlackMisc::Aviation::CAircraftIcao m_icaoCode; //!< "buffered icao", as this must not change when connected
         bool m_sendInterimPositions = false; //!< send interim positions

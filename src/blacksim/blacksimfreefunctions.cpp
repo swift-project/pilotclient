@@ -18,8 +18,8 @@ namespace BlackSim
 
     void registerMetadata()
     {
-        BlackSim::CSimulatorInfo::registerMetadata();
-        BlackSim::CSimulatorInfoList::registerMetadata();
+        BlackSim::CSimulatorPluginInfo::registerMetadata();
+        BlackSim::CSimulatorPluginInfoList::registerMetadata();
         BlackSim::Settings::CSettingsSimulator::registerMetadata();
         BlackSim::FsCommon::CAircraftCfgEntries::registerMetadata();
         BlackSim::FsCommon::CAircraftCfgEntriesList::registerMetadata();

@@ -178,6 +178,21 @@ namespace BlackCore
                 c = connect(this->m_contextNetwork, &IContextNetwork::textMessagesReceived,
                             this->getCContextSimulator(), &CContextSimulator::ps_textMessagesReceived);
                 Q_ASSERT(c);
+
+                // use readyForModelMatching instead of CAirspaceMonitor::addedAircraft, as it contains client information
+                // ready for model matching is sent delayed when all information are available
+                c = connect(this->m_contextNetwork, &IContextNetwork::readyForModelMatching,
+                            this->getCContextSimulator(), &CContextSimulator::ps_addRemoteAircraft);
+                Q_ASSERT(c);
+                c = connect(this->m_contextNetwork, &IContextNetwork::removedAircraft,
+                            this->getCContextSimulator(), &CContextSimulator::ps_removedRemoteAircraft);
+                Q_ASSERT(c);
+                c = connect(this->m_contextNetwork, &IContextNetwork::changedRemoteAircraftModel,
+                            this->getCContextSimulator(), &CContextSimulator::ps_changedRemoteAircraftModel);
+                Q_ASSERT(c);
+                c = connect(this->m_contextNetwork, &IContextNetwork::changedRemoteAircraftEnabled,
+                            this->getCContextSimulator(), &CContextSimulator::ps_changedRemoteAircraftEnabled);
+                Q_ASSERT(c);
             }
 
             // only if own aircraft runs locally

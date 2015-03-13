@@ -27,7 +27,7 @@
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_runtime.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
-#include "blacksim/simulatorinfo.h"
+#include "blacksim/simulatorplugininfo.h"
 #include "blacksim/simulatorinfolist.h"
 #include "blackmisc/avaircraft.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
@@ -86,7 +86,7 @@ namespace BlackCore
     public slots:
 
         //! Return list of available simulator plugins
-        virtual BlackSim::CSimulatorInfoList getAvailableSimulatorPlugins() const = 0;
+        virtual BlackSim::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const = 0;
 
         //! Returns true when simulator is connected
         //! \sa isSimulating
@@ -108,7 +108,7 @@ namespace BlackCore
         virtual bool isSimulating() const = 0;
 
         //! Simulator info
-        virtual BlackSim::CSimulatorInfo getSimulatorInfo() const = 0;
+        virtual BlackSim::CSimulatorPluginInfo getSimulatorInfo() const = 0;
 
         //! Airports in range
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const = 0;
@@ -163,13 +163,13 @@ namespace BlackCore
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
 
         //! Load specific simulator plugin
-        virtual bool loadSimulatorPlugin(const BlackSim::CSimulatorInfo &simulatorInfo) = 0;
+        virtual bool loadSimulatorPlugin(const BlackSim::CSimulatorPluginInfo &simulatorInfo) = 0;
 
         //! Load specific simulator plugin as set in settings
         virtual bool loadSimulatorPluginFromSettings() = 0;
         
         //! Listen for the specific simulator to start, load plugin automatically
-        virtual void listenForSimulator(const BlackSim::CSimulatorInfo &simulatorInfo) = 0;
+        virtual void listenForSimulator(const BlackSim::CSimulatorPluginInfo &simulatorInfo) = 0;
         
         //! Listen for all available simulators
         virtual void listenForAllSimulators() = 0;

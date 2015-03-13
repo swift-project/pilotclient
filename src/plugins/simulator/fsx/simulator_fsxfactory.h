@@ -13,7 +13,7 @@
 #define BLACKSIMPLUGIN_SIMULATOR_FSXFACTORY_H
 
 #include "blackcore/simulator.h"
-#include "blacksim/simulatorinfo.h"
+#include "blacksim/simulatorplugininfo.h"
 
 #include <simconnect/SimConnect.h>
 #include <QObject>
@@ -39,7 +39,7 @@ namespace BlackSimPlugin
                     QObject *parent) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::getSimulatorInfo
-            virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
+            virtual BlackSim::CSimulatorPluginInfo getSimulatorInfo() const override;
 
             //! \copydoc BlackCore::ISimulatorFactory::getListener
             virtual BlackCore::ISimulatorListener *createListener(QObject *parent = nullptr) override;

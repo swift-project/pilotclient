@@ -78,14 +78,14 @@ namespace BlackGui
             connect(this->ui->pb_ClearRestrictedRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_clearRestricedRendering);
         }
 
-        void CSettingsSimulatorComponent::setCurrentPlugin(const CSimulatorInfo &plugin)
+        void CSettingsSimulatorComponent::setCurrentPlugin(const CSimulatorPluginInfo &plugin)
         {
             if (plugin.isUnspecified()) {
                 ui->cb_Plugins->setCurrentIndex(0);
                 return;
             }
 
-            const QString searchFor = plugin.getShortName();
+            const QString searchFor = plugin.name();
             for (int i = 0; i < this->ui->cb_Plugins->count(); ++i)
             {
                 const QString t = ui->cb_Plugins->itemText(i);
@@ -118,8 +118,8 @@ namespace BlackGui
             Q_ASSERT(this->getIContextSettings());
             if (!this->getIContextSimulator() || !this->getIContextSettings()) return;
 
-            CSimulatorInfoList simDrivers = this->getIContextSimulator()->getAvailableSimulatorPlugins();
-            simDrivers.insert(simDrivers.begin(), CSimulatorInfo::UnspecifiedSim());
+            CSimulatorPluginInfoList simDrivers = this->getIContextSimulator()->getAvailableSimulatorPlugins();
+            simDrivers.insert(simDrivers.begin(), CSimulatorPluginInfo());
             if (simDrivers.isEmpty())
             {
                 CLogMessage(this).error("No drivers available");
@@ -132,7 +132,7 @@ namespace BlackGui
             }
 
             // update
-            CSimulatorInfo currentDriver = simDrivers[index];
+            CSimulatorPluginInfo currentDriver = simDrivers[index];
             const QString path = CSettingUtilities::appendPaths(IContextSettings::PathSimulatorSettings(), CSettingsSimulator::ValueSelectedDriver());
             this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), currentDriver.toCVariant());
         }

@@ -12,7 +12,7 @@
 #include "blacksim/fscommon/bcdconversions.h"
 #include "blacksim/fsx/simconnectutilities.h"
 #include "blacksim/fsx/fsxsimulatorsetup.h"
-#include "blacksim/simulatorinfo.h"
+#include "blacksim/simulatorplugininfo.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/project.h"
 #include "blackmisc/avairportlist.h"
@@ -39,7 +39,7 @@ namespace BlackSimPlugin
     namespace Fsx
     {
         CSimulatorFsx::CSimulatorFsx(IOwnAircraftProvider *ownAircraftProvider, IRemoteAircraftProvider *remoteAircraftProvider, QObject *parent) :
-            CSimulatorFsCommon(CSimulatorInfo::FSX(), ownAircraftProvider, remoteAircraftProvider, parent)
+            CSimulatorFsCommon(CSimulatorPluginInfo::FSX(), ownAircraftProvider, remoteAircraftProvider, parent)
         {
             Q_ASSERT(ownAircraftProvider);
             Q_ASSERT(remoteAircraftProvider);

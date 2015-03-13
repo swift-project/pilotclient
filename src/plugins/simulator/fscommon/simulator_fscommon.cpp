@@ -26,7 +26,7 @@ namespace BlackSimPlugin
 {
     namespace FsCommon
     {
-        CSimulatorFsCommon::CSimulatorFsCommon(const BlackSim::CSimulatorInfo &simInfo, BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider, IRemoteAircraftProvider *renderedAircraftProvider, QObject *parent) :
+        CSimulatorFsCommon::CSimulatorFsCommon(const BlackSim::CSimulatorPluginInfo &simInfo, BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider, IRemoteAircraftProvider *renderedAircraftProvider, QObject *parent) :
             CSimulatorCommon(simInfo, ownAircraftProvider, renderedAircraftProvider, parent),
             m_fsuipc(new FsCommon::CFsuipc())
         {
