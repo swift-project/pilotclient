@@ -139,6 +139,12 @@ namespace BlackCore
 
         void ps_setVoiceTransmission(bool enable);
 
+        //! User joined the room
+        void ps_userJoinedRoom(const BlackMisc::Aviation::CCallsign &callsign);
+
+        //! User left the room
+        void ps_userLeftRoom(const BlackMisc::Aviation::CCallsign &callsign);
+
     private:
         const int MinUnmuteVolume = 20; //!< minimum volume when unmuted
 

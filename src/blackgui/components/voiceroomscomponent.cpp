@@ -40,6 +40,7 @@ namespace BlackGui
         void CVoiceRoomsComponent::runtimeHasBeenSet()
         {
             this->connect(this->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CVoiceRoomsComponent::ps_updateAudioVoiceRoomsFromContext);
+            this->connect(this->getIContextAudio(), &IContextAudio::changedVoiceRoomMembers, this, &CVoiceRoomsComponent::ps_updateVoiceRoomMembers);
         }
 
         void CVoiceRoomsComponent::ps_onVoiceRoomOverrideChanged(bool checked)
@@ -102,7 +103,7 @@ namespace BlackGui
             }
             if (changedUrl1 || changedUrl2)
             {
-                this->updateVoiceRoomMembers();
+                this->ps_updateVoiceRoomMembers();
 
                 // notify
                 if (this->getIContextAudio())
@@ -115,7 +116,7 @@ namespace BlackGui
             }
         }
 
-        void CVoiceRoomsComponent::updateVoiceRoomMembers()
+        void CVoiceRoomsComponent::ps_updateVoiceRoomMembers()
         {
             if (!this->getIContextAudio()) { return; }
             if (!this->ui->le_CockpitVoiceRoomCom1->text().trimmed().isEmpty())

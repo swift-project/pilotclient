@@ -84,6 +84,9 @@ namespace BlackCore
         //! \details the flag indicates, whether a room got connected or disconnected
         void changedVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms, bool connected);
 
+        //! Voice room members changed
+        void changedVoiceRoomMembers();
+
         //! Audio volume changed
         //! \sa setVoiceOutputVolume
         void changedAudioVolume(int volume);

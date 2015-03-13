@@ -49,9 +49,13 @@ namespace BlackCore
         m_channel1 = m_voice->createVoiceChannel();
         m_channel1->setMyAircraftCallsign(ownCallsign);
         connect(m_channel1.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_connectionStatusChanged);
+        connect(m_channel1.data(), &IVoiceChannel::userJoinedRoom, this, &CContextAudio::ps_userJoinedRoom);
+        connect(m_channel1.data(), &IVoiceChannel::userLeftRoom, this, &CContextAudio::ps_userLeftRoom);
         m_channel2 = m_voice->createVoiceChannel();
         m_channel2->setMyAircraftCallsign(ownCallsign);
         connect(m_channel2.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_connectionStatusChanged);
+        connect(m_channel1.data(), &IVoiceChannel::userJoinedRoom, this, &CContextAudio::ps_userJoinedRoom);
+        connect(m_channel1.data(), &IVoiceChannel::userLeftRoom, this, &CContextAudio::ps_userLeftRoom);
 
         m_voiceInputDevice = m_voice->createInputDevice();
         m_voiceOutputDevice = m_voice->createOutputDevice();
@@ -544,6 +548,16 @@ namespace BlackCore
         default:
             break;
         }
+    }
+
+    void CContextAudio::ps_userJoinedRoom(const CCallsign & /**callsign**/)
+    {
+        emit this->changedVoiceRoomMembers();
+    }
+
+    void CContextAudio::ps_userLeftRoom(const CCallsign & /**callsign**/)
+    {
+        emit this->changedVoiceRoomMembers();
     }
 
     QSharedPointer<IVoiceChannel> CContextAudio::getVoiceChannelBy(const CVoiceRoom &voiceRoom)

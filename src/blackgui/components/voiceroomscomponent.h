@@ -51,12 +51,12 @@ namespace BlackGui
             //! Set the voice room url fields (checkboxes, line edits)
             void ps_updateAudioVoiceRoomsFromContext(const BlackMisc::Audio::CVoiceRoomList &selectedVoiceRooms, bool connected);
 
+            //! Update voice room views
+            void ps_updateVoiceRoomMembers();
+
         private:
             //! Set the URL fields
             void setVoiceRoomUrlFieldsReadOnlyState();
-
-            //! Update voice room views
-            void updateVoiceRoomMembers();
 
             QScopedPointer<Ui::CVoiceRoomsComponent> ui;
         };
