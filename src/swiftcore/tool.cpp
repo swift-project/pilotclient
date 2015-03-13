@@ -135,7 +135,7 @@ namespace BlackMiscTest
             else if (line.startsWith("."))
             {
                 // handle dot commands
-                bool c = runtime->parseCommandLine(line);
+                bool c = runtime->parseCommandLine(line, "foo");
                 if (c) { qtout << "Handled command " << line; }
                 else   { qtout << "Not handled " <<  line; }
                 qtout << endl;

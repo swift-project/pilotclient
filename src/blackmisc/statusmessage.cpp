@@ -144,7 +144,7 @@ namespace BlackMisc
         s.append(QString::number(this->m_severity));
 
         s.append(" when: ");
-        s.append(this->m_timestamp.toString("yyyy-MM-dd HH:mm::ss"));
+        s.append(this->getFormattedUtcTimestampYmdhms());
 
         s.append(" ").append(this->m_message);
         return s;
@@ -247,6 +247,7 @@ namespace BlackMisc
     CVariant CStatusMessage::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
     {
         if (index.isMyself()) { return this->toCVariant(); }
+        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -256,13 +257,6 @@ namespace BlackMisc
             return CVariant::from(static_cast<uint>(this->m_severity));
         case IndexSeverityAsString:
             return CVariant::from(this->getSeverityAsString());
-        case IndexTimestamp:
-            return CVariant::from(this->m_timestamp);
-        case IndexTimestampFormatted:
-            {
-                if (this->m_timestamp.isNull() || !this->m_timestamp.isValid()) return "";
-                return this->m_timestamp.toString("HH:mm::ss.zzz");
-            }
         case IndexCategories:
             return CVariant::from(this->m_categories.toQString());
         case IndexCategoryHumanReadable:
@@ -277,19 +271,13 @@ namespace BlackMisc
      */
     void CStatusMessage::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
     {
-        if (index.isMyself())
-        {
-            this->convertFromCVariant(variant);
-            return;
-        }
+        if (index.isMyself()) { this->convertFromCVariant(variant); return; }
+        if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(variant, index); return; }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMessage:
             this->m_message = variant.value<QString>();
-            break;
-        case IndexTimestamp:
-            this->m_timestamp = variant.value<QDateTime>();
             break;
         case IndexSeverity:
             this->m_severity = static_cast<StatusSeverity>(variant.value<uint>());

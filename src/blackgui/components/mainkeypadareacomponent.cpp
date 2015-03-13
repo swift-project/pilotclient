@@ -154,7 +154,7 @@ namespace BlackGui
         {
             QString c(this->ui->le_CommandLineInput->text().trimmed().simplified());
             if (c.isEmpty()) { return; }
-            emit this->commandEntered(c);
+            emit this->commandEntered(c, keypadOriginator());
             this->ui->le_CommandLineInput->clear();
         }
 
@@ -234,6 +234,14 @@ namespace BlackGui
             ui->pb_MainTextMessages->setChecked(false);
             ui->pb_MainUsers->setChecked(false);
             ui->pb_MainWeather->setChecked(false);
+        }
+
+        const QString &CMainKeypadAreaComponent::keypadOriginator()
+        {
+            // string is generated once, the timestamp allows to use multiple
+            // components (as long as they are not generated at the same ms)
+            static const QString o = QString("KEYPADAREACOMPONENT:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
+            return o;
         }
 
     } // namespace

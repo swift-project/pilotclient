@@ -15,6 +15,7 @@
 #include "blackmisc/avselcal.h"
 
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
 {
@@ -38,51 +39,55 @@ namespace BlackMisc
             return s;
         }
 
-        /*
-         * Private message?
-         */
         bool CTextMessage::isPrivateMessage() const
         {
             return !this->m_senderCallsign.isEmpty() && !this->m_recipientCallsign.isEmpty();
         }
 
-        /*
-         * Sent to frequency?
-         */
+        bool CTextMessage::isSupervisorMessage() const
+        {
+            return this->m_senderCallsign.isSupervisorCallsign();
+        }
+
+        bool CTextMessage::wasSent() const
+        {
+            return m_wasSent;
+        }
+
+        void CTextMessage::markAsSent()
+        {
+            m_wasSent = true;
+        }
+
+        QString CTextMessage::getRecipientCallsignOrFrequency() const
+        {
+            if (!this->m_recipientCallsign.isEmpty()) { return m_recipientCallsign.asString(); }
+            if (this->m_frequency.isNull()) { return ""; }
+            return this->m_frequency.valueRoundedWithUnit(CFrequencyUnit::MHz(), 3);
+        }
+
         bool CTextMessage::isSendToFrequency(const PhysicalQuantities::CFrequency &frequency) const
         {
-            if (!this->isRadioMessage()) return false;
+            if (!this->isRadioMessage()) { return false; }
             return this->m_frequency == frequency;
         }
 
-        /*
-         * Sent to UNICOM?
-         */
         bool CTextMessage::isSendToUnicom() const
         {
             return this->isSendToFrequency(BlackMisc::PhysicalQuantities::CPhysicalQuantitiesConstants::FrequencyUnicom());
         }
 
-        /*
-         * Valid receiver?
-         */
         bool CTextMessage::hasValidRecipient() const
         {
             if (!this->m_recipientCallsign.isEmpty()) return true;
             return BlackMisc::Aviation::CComSystem::isValidCivilAviationFrequency(this->m_frequency);
         }
 
-        /*
-         * Radio message?
-         */
         bool CTextMessage::isRadioMessage() const
         {
             return (BlackMisc::Aviation::CComSystem::isValidCivilAviationFrequency(this->m_frequency));
         }
 
-        /*
-         * Initial server message?
-         */
         bool CTextMessage::isServerMessage() const
         {
             if (!this->isPrivateMessage()) return false;
@@ -90,12 +95,9 @@ namespace BlackMisc
             return (cs.asString().startsWith("SERVER", Qt::CaseInsensitive));
         }
 
-        /*
-         * Formatted string
-         */
         QString CTextMessage::asString(bool withSender, bool withRecipient, const QString &separator) const
         {
-            QString s = this->receivedTime();
+            QString s(this->getFormattedUtcTimestampHms());
             if (withSender)
             {
                 if (!this->m_senderCallsign.isEmpty())
@@ -129,26 +131,17 @@ namespace BlackMisc
             return s;
         }
 
-        /*
-         * As status message
-         */
         CStatusMessage CTextMessage::asStatusMessage(bool withSender, bool withRecipient, const QString &separator) const
         {
             QString m = this->asString(withSender, withRecipient, separator);
             return { this, CStatusMessage::SeverityInfo, m };
         }
 
-        /*
-         * Toggle sender / receiver
-         */
         void CTextMessage::toggleSenderRecipient()
         {
             qSwap(this->m_senderCallsign, this->m_recipientCallsign);
         }
 
-        /*
-         * Find out if this is a SELCAL message
-         */
         bool CTextMessage::isSelcalMessage() const
         {
             // some first level checks, before really parsing the message
@@ -158,18 +151,12 @@ namespace BlackMisc
             return this->getSelcalCode().length() == 4;
         }
 
-        /*
-         *  Matching given SELCAL code
-         */
         bool CTextMessage::isSelcalMessageFor(const QString &selcal) const
         {
             if (!CSelcal::isValidCode(selcal)) return false;
             return selcal.toUpper() ==  this->getSelcalCode();
         }
 
-        /*
-         * SELCAL code, 4 letters
-         */
         QString CTextMessage::getSelcalCode() const
         {
             // http://forums.vatsim.net/viewtopic.php?f=8&t=63467#p458062
@@ -187,6 +174,64 @@ namespace BlackMisc
             if (candidate.length() != 10) return invalid;
             if (!candidate.startsWith("SELCAL")) return invalid;
             return candidate.right(4).toUpper();
+        }
+
+        CIcon CTextMessage::toIcon() const
+        {
+            return m_senderCallsign.toIcon();
+        }
+
+        QPixmap CTextMessage::toPixmap() const
+        {
+            return m_senderCallsign.toPixmap();
+        }
+
+        CVariant CTextMessage::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        {
+            if (index.isMyself()) { return this->toCVariant(); }
+            if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
+
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexSenderCallsign:
+                return this->m_senderCallsign.propertyByIndex(index.copyFrontRemoved());
+            case IndexRecipientCallsign:
+                return this->m_recipientCallsign.propertyByIndex(index.copyFrontRemoved());
+            case IndexRecipientCallsignOrFrequency:
+                return CVariant::fromValue(this->getRecipientCallsignOrFrequency());
+            case IndexMessage:
+                return CVariant::fromValue(this->m_message);
+            default:
+                return CValueObject::propertyByIndex(index);
+            }
+        }
+
+        void CTextMessage::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        {
+            if (index.isMyself())
+            {
+                this->convertFromCVariant(variant);
+                return;
+            }
+            if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(variant, index); return; }
+
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexSenderCallsign:
+                this->m_senderCallsign.setPropertyByIndex(variant, index.copyFrontRemoved());
+                break;
+            case IndexRecipientCallsign:
+                this->m_recipientCallsign.setPropertyByIndex(variant, index.copyFrontRemoved());
+                break;
+            case IndexMessage:
+                this->m_message = variant.value<QString>();
+                break;
+            default:
+                CValueObject::setPropertyByIndex(variant, index);
+                break;
+            }
         }
 
     } // namespace

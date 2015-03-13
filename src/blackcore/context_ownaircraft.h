@@ -117,7 +117,7 @@ namespace BlackCore
         virtual void enableAutomaticVoiceRoomResolution(bool enable) = 0;
 
         //! Parse command line
-        virtual bool parseCommandLine(const QString &commandLine) = 0;
+        virtual bool parseCommandLine(const QString &commandLine, const QString &originator) = 0;
 
     protected:
         //! Constructor

@@ -67,6 +67,9 @@ namespace BlackCore
                                "textMessagesReceived", this, SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
+                               "textMessageSent", this, SIGNAL(textMessageSent(BlackMisc::Network::CTextMessage)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "vatsimDataFileRead", this, SIGNAL(vatsimDataFileRead()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
@@ -211,9 +214,9 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isConnected"));
     }
 
-    bool CContextNetworkProxy::parseCommandLine(const QString &commandLine)
+    bool CContextNetworkProxy::parseCommandLine(const QString &commandLine, const QString &originator)
     {
-        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("commandLineEntered"), commandLine);
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("commandLineEntered"), commandLine, originator);
     }
 
     void CContextNetworkProxy::sendTextMessages(const CTextMessageList &textMessages)

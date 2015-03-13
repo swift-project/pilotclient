@@ -154,7 +154,7 @@ namespace BlackCore
 
     public slots:
         //! Parse command line in all contexts
-        bool parseCommandLine(const QString commandLine);
+        bool parseCommandLine(const QString commandLine, const QString &originator);
 
     private:
         bool m_init = false; /*!< flag */

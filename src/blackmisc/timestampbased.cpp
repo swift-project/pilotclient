@@ -18,11 +18,6 @@ namespace BlackMisc
         return QDateTime::fromMSecsSinceEpoch(this->m_timestampMSecsSinceEpoch, Qt::UTC);
     }
 
-    QString ITimestampBased::getFormattedUtcTimestamp() const
-    {
-        return this->getUtcTimestamp().toString("dd hh:mm:ss");
-    }
-
     void ITimestampBased::setUtcTimestamp(const QDateTime &timestamp)
     {
         this->m_timestampMSecsSinceEpoch = timestamp.toMSecsSinceEpoch();
@@ -75,6 +70,37 @@ namespace BlackMisc
         this->m_timestampMSecsSinceEpoch = QDateTime::currentMSecsSinceEpoch();
     }
 
+    QString ITimestampBased::getFormattedUtcTimestamp() const
+    {
+        return this->getUtcTimestamp().toString("dd hh:mm:ss");
+    }
+
+    QString ITimestampBased::getFormattedUtcTimestampHms() const
+    {
+        return this->getUtcTimestamp().toString("hh:mm:ss");
+    }
+
+    QString ITimestampBased::getFormattedUtcTimestampHm() const
+    {
+        return this->getUtcTimestamp().toString("hh::mm");
+    }
+
+    QString ITimestampBased::getFormattedUtcTimestampYmdhms() const
+    {
+        return this->getUtcTimestamp().toString("yyyy-MM-dd HH:mm::ss");
+    }
+
+    QString ITimestampBased::getFormattedUtcTimestampYmdhmsz() const
+    {
+        return this->getUtcTimestamp().toString("yyyy-MM-dd HH:mm:ss.zzz");
+    }
+
+    bool ITimestampBased::canHandleIndex(const CPropertyIndex &index)
+    {
+        int i = index.frontCasted<int>();
+        return (i >= static_cast<int>(IndexUtcTimestamp)) && (i <= static_cast<int>(IndexMSecsSinceEpoch));
+    }
+
     CVariant ITimestampBased::propertyByIndex(const CPropertyIndex &index) const
     {
         if (!index.isEmpty())
@@ -88,6 +114,10 @@ namespace BlackMisc
                 return CVariant::fromValue(this->getMSecsSinceEpoch());
             case IndexUtcTimestampFormatted:
                 return CVariant::fromValue(this->getFormattedUtcTimestamp());
+            case IndexUtcTimestampFormattedHm:
+                return CVariant::fromValue(this->getFormattedUtcTimestampHm());
+            case IndexUtcTimestampFormattedHms:
+                return CVariant::fromValue(this->getFormattedUtcTimestampHms());
             default:
                 break;
             }

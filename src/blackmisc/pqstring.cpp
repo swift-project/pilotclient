@@ -120,7 +120,7 @@ namespace BlackMisc
                 break;
             case SeparatorsBestGuess:
                 numberD = number.toDouble(&success);
-                if (!success) numberD = QLocale::system().toDouble(number, &success);
+                if (!success) { numberD = QLocale::system().toDouble(number, &success); }
                 break;
             default:
                 qFatal("Wrong mode");

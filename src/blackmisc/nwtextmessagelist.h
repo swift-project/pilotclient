@@ -13,6 +13,7 @@
 #define BLACKMISC_TEXTMESSAGELIST_H
 
 #include "nwtextmessage.h"
+#include "timestampobjectlist.h"
 #include "collection.h"
 #include "sequence.h"
 #include <QObject>
@@ -26,7 +27,9 @@ namespace BlackMisc
         /*!
          * Value object encapsulating a list of text messages
          */
-        class CTextMessageList : public CSequence<CTextMessage>
+        class CTextMessageList :
+            public CSequence<CTextMessage>,
+            public BlackMisc::ITimestampObjectList<CTextMessage, CTextMessageList>
         {
         public:
             //! Default constructor.
@@ -59,14 +62,23 @@ namespace BlackMisc
             //! Public messages
             CTextMessageList getRadioMessages() const;
 
+            //! Supervisor messages
+            CTextMessageList getSupervisorMessages() const;
+
             //! Contains radio messages?
             bool containsRadioMessages() const;
+
+            //! Contains supervisor message
+            CTextMessageList containsSupervisorMessages() const;
 
             //! Find by frequency
             CTextMessageList findByFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency) const;
 
             //! Toggle all sender receivers
             void toggleSenderRecipients();
+
+            //! Mark all messages as sent
+            void markAsSent();
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
@@ -76,6 +88,14 @@ namespace BlackMisc
 
             //! Register metadata
             static void registerMetadata();
+
+        protected:
+            //! Myself
+            virtual const CTextMessageList &container() const override { return *this; }
+
+            //! Myself
+            virtual CTextMessageList &container() override { return *this; }
+
         };
     } //namespace
 } // namespace

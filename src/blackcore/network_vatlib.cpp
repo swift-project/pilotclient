@@ -363,15 +363,18 @@ namespace BlackCore
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
 
-        if (messages.isEmpty()) return;
+        if (messages.isEmpty()) { return; }
         CTextMessageList privateMessages = messages.getPrivateMessages();
+        privateMessages.markAsSent();
         for (const auto &message : privateMessages)
         {
-            if (message.getRecipientCallsign().isEmpty()) continue;
+            if (message.getRecipientCallsign().isEmpty()) { continue; }
             Vat_SendTextMessage(m_net.data(), toFSD(message.getRecipientCallsign()), toFSD(message.getMessage()));
+            emit textMessageSent(message);
         }
+
         CTextMessageList radioMessages = messages.getRadioMessages();
-        if (radioMessages.isEmpty()) return;
+        radioMessages.markAsSent();
         for (const auto &message : radioMessages)
         {
             // I could send the same message to n frequencies in one step
@@ -380,6 +383,7 @@ namespace BlackCore
             QVector<int> freqsVec;
             freqsVec.push_back(message.getFrequency().valueRounded(CFrequencyUnit::kHz(), 0));
             Vat_SendRadioMessage(m_net.data(), freqsVec.data(), freqsVec.size(), toFSD(message.getMessage()));
+            emit textMessageSent(message);
         }
     }
 

@@ -125,6 +125,12 @@ namespace BlackCore
         //! Text messages received (also private chat messages, rfaio channel messages)
         void textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);
 
+        //! A superivisor text message was received
+        void supervisorTextMessageReceived(const BlackMisc::Network::CTextMessage &message);
+
+        //! Text message sent (by me)
+        void textMessageSent(const BlackMisc::Network::CTextMessage &sentMessage);
+
     public slots:
 
         //! Reload bookings from booking service
@@ -195,7 +201,7 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
         //! Command line was entered
-        virtual bool parseCommandLine(const QString &commandLine) = 0;
+        virtual bool parseCommandLine(const QString &commandLine, const QString &originator) = 0;
 
         //! Get METAR, if not available request it (code such as EDDF, KLAX)
         virtual BlackMisc::Aviation::CInformationMessage getMetar(const BlackMisc::Aviation::CAirportIcao &airportIcaoCode) = 0;

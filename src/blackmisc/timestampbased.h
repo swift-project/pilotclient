@@ -27,7 +27,9 @@ namespace BlackMisc
         {
             IndexUtcTimestamp = BlackMisc::CPropertyIndex::GlobalIndexTimestampBased,
             IndexUtcTimestampFormatted,
-            IndexMSecsSinceEpoch
+            IndexUtcTimestampFormattedHms,
+            IndexUtcTimestampFormattedHm,
+            IndexMSecsSinceEpoch // keep this as last item
         };
 
         //! Get timestamp
@@ -38,9 +40,6 @@ namespace BlackMisc
 
         //! Timestamp as ms value
         void setMSecsSinceEpoch(qint64 mSecsSinceEpoch) { m_timestampMSecsSinceEpoch = mSecsSinceEpoch; }
-
-        //! Formatted timestamp
-        QString getFormattedUtcTimestamp() const;
 
         //! Set timestamp
         void setUtcTimestamp(const QDateTime &timestamp);
@@ -72,12 +71,23 @@ namespace BlackMisc
         //! Set the current time as timestamp
         void setCurrentUtcTime();
 
+        //! Formatted timestamp
+        QString getFormattedUtcTimestamp() const;
+
+        //! As hh:mm:ss
+        QString getFormattedUtcTimestampHms() const;
+
+        //! As hh:mm
+        QString getFormattedUtcTimestampHm() const;
+
+        //! As YYYY mm dd hh ss
+        QString getFormattedUtcTimestampYmdhms() const;
+
+        //! As YYYY mm dd hh ss.zzz
+        QString getFormattedUtcTimestampYmdhmsz() const;
+
         //! Can given index be handled
-        static bool canHandleIndex(const BlackMisc::CPropertyIndex &index)
-        {
-            int i = index.frontCasted<int>();
-            return (i >= static_cast<int>(IndexUtcTimestamp)) && (i <= static_cast<int>(IndexMSecsSinceEpoch));
-        }
+        static bool canHandleIndex(const BlackMisc::CPropertyIndex &index);
 
     protected:
         //! \copydoc CValueObject::propertyByIndex

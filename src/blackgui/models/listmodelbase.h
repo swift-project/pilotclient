@@ -162,17 +162,21 @@ namespace BlackGui
             //! Object at row position
             virtual const ObjectType &at(const QModelIndex &index) const;
 
+            //! Sort by given sort order \sa getSortColumn() \sa getSortOrder()
+            void sort();
+
             //! \copydoc QAbstractItemModel::sort()
             virtual void sort(int column, Qt::SortOrder order) override;
 
-            /*!
-             * Sort container by given column / order. This is used by sort() but als
-             * for asynchronous updates in the views
-             * \param container used list
-             * \param column    column inder
-             * \param order     sort order (ascending / descending)
-             * \threadsafe under normal conditions thread safe as long as the column metadata are not changed
-             */
+            //! Truncate to given number
+            void truncate(int maxNumber, bool forceSort = false);
+
+            //! Sort container by given column / order. This is used by sort() but als
+            //! for asynchronous updates in the views
+            //! \param container used list
+            //! \param column    column inder
+            //! \param order     sort order (ascending / descending)
+            //! \threadsafe under normal conditions thread safe as long as the column metadata are not changed
             ContainerType sortContainerByColumn(const ContainerType &container, int column, Qt::SortOrder order) const;
 
             //! Similar to ContainerType::push_back

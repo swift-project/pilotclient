@@ -68,7 +68,7 @@ namespace BlackCore
         virtual void enableAutomaticVoiceRoomResolution(bool enable);
 
         //! \copydoc IContextOwnAircraft::parseCommandLine
-        virtual bool parseCommandLine(const QString &commandLine) override;
+        virtual bool parseCommandLine(const QString &commandLine, const QString &originator) override;
 
     protected:
         //! \brief Constructor

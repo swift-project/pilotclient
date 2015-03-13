@@ -14,6 +14,7 @@
 
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/textmessagetextedit.h"
 #include "blackmisc/nwtextmessage.h"
 #include "blackmisc/avaircraft.h"
 #include "blackmisc/nwtextmessagelist.h"
@@ -21,7 +22,6 @@
 #include "blackcore/context_ownaircraft.h"
 #include <QFrame>
 #include <QLineEdit>
-#include <QTextEdit>
 #include <QScopedPointer>
 
 namespace Ui { class CTextMessageComponent; }
@@ -58,20 +58,17 @@ namespace BlackGui
             void displayInInfoWindow(const BlackMisc::CVariant &message, int displayDurationMs) const;
 
             //! Command line was entered
-            void commandEntered(const QString commandLine);
+            void commandEntered(const QString commandLine, const QString &orignator);
 
         public slots:
-            //! \addtogroup commandline
-            //! @{
-            //! <pre>
-            //! .m  .msg   message text  set transponder code    CTextMessageComponent
-            //! </pre>
-            //! @}
-            //! \copydoc IContextOwnAircraft::parseCommandLine
-            bool parseCommandLine(const QString &commandLine);
-
             //! Text messages received
-            void onTextMessageReceived(const BlackMisc::Network::CTextMessageList &messages) { this->textMessagesReceived(messages); }
+            void onTextMessageReceived(const BlackMisc::Network::CTextMessageList &messages);
+
+            //! Text messages sent
+            void onTextMessageSent(const BlackMisc::Network::CTextMessage &sentMessage);
+
+            //! Used to allow direct input from global command line when visible
+            virtual bool handleGlobalCommandLine(const QString &commandLine, const QString &originator);
 
         protected:
             //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
@@ -79,32 +76,21 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CTextMessageComponent> ui;
-            QWidget   *getTabWidget(Tab tab); //!< enum to widget
-            QAction   *m_clearTextEditAction = nullptr;
-            QTextEdit *m_currentTextEdit     = nullptr; //!< text edit currently visible
+            CTextMessageTextEdit *m_currentTextEdit = nullptr; //!< text edit currently visible
 
-            /*!
-             * \brief Add new text message tab
-             * \param tabName   name of the new tab, usually the channel name
-             * \return
-             */
+            //! Enum to widget
+            QWidget *getTabWidget(Tab tab);
+
+            //! Add new text message tab
+            //! \param tabName   name of the new tab, usually the channel name
+            //! \return
             QWidget *addNewTextMessageTab(const QString &tabName);
 
             //! Find text message tab by its name
             QWidget *findTextMessageTabByName(const QString &name) const;
 
-            /*!
-             * \brief Private channel text message
-             * \param textMessage
-             * \param sending   sending or receiving
-             */
-            void addPrivateChannelTextMessage(const BlackMisc::Network::CTextMessage &textMessage, bool sending = false);
-
-            /*!
-             * Stub for sending a text message (eihter radio or private message).
-             * Sets sender / receiver depending on frequency / channel situation.
-             */
-            BlackMisc::Network::CTextMessage getTextMessageStubForChannel();
+            //! Private channel text message
+            void addPrivateChannelTextMessage(const BlackMisc::Network::CTextMessage &textMessage);
 
             //! own aircraft
             const BlackMisc::Aviation::CAircraft getOwnAircraft() const { Q_ASSERT(this->getIContextOwnAircraft()); return this->getIContextOwnAircraft()->getOwnAircraft(); }
@@ -118,12 +104,17 @@ namespace BlackGui
             //! Show current frequencies
             void showCurrentFrequenciesFromCockpit();
 
-            /*!
-             * \brief Append text messages (received, to be sent) to GUI
-             * \param messages
-             * \param sending
-             */
-            void textMessagesReceived(const BlackMisc::Network::CTextMessageList &messages, bool sending = false);
+            //! Append text messages (received, to be sent) to GUI
+            void displayTextMessage(const BlackMisc::Network::CTextMessageList &messages);
+
+            //! \copydoc IContextOwnAircraft::parseCommandLine
+            QString textMessageToCommand(const QString &enteredLine);
+
+            //! Originator
+            static const QString &componentOriginator();
+
+            //! Handle a text message entered
+            void handleEnteredTextMessage(const QString &textMessage);
 
         private slots:
 
@@ -133,17 +124,11 @@ namespace BlackGui
             //! Close text message tab
             void ps_closeTextMessageTab();
 
-            //! Context menu for text edit including clear
-            void ps_showContextMenuForTextEdit(const QPoint &pt);
-
-            //! Clear text edit
-            void ps_clearTextEdit();
-
             //! Top level was changed
             void ps_topLevelChanged(QWidget *widget, bool topLevel);
 
             //! Command line entered
-            void ps_commandEntered();
+            void ps_textMessageEntered();
         };
     }
 }

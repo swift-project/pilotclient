@@ -95,7 +95,7 @@ namespace BlackGui
     {
         QDir directory(qssDirectory());
         if (!directory.exists()) return false;
-        directory.setNameFilters({"*.qss"});
+        directory.setNameFilters({"*.qss", "*.css"});
         directory.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 
         QFileInfoList fileInfoList = directory.entryInfoList();

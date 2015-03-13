@@ -45,10 +45,10 @@ namespace BlackMisc
 
         protected:
             //! Myself
-            virtual const CAircraftSituationList &container() const { return *this; }
+            virtual const CAircraftSituationList &container() const override { return *this; }
 
             //! Myself
-            virtual CAircraftSituationList &container() { return *this; }
+            virtual CAircraftSituationList &container() override { return *this; }
 
         };
     } // namespace

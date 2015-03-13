@@ -21,6 +21,7 @@
 using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackGui;
+using namespace BlackGui::Views;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
@@ -39,22 +40,10 @@ namespace BlackGui
             ui->setupUi(this);
 
             this->ui->le_textMessages->setVisible(false);
-            connect(this->ui->le_textMessages, &QLineEdit::returnPressed, this, &CTextMessageComponent::ps_commandEntered);
+            connect(this->ui->le_textMessages, &QLineEdit::returnPressed, this, &CTextMessageComponent::ps_textMessageEntered);
 
-            this->m_clearTextEditAction = new QAction("Clear", this);
-            connect(this->m_clearTextEditAction, &QAction::triggered, this, &CTextMessageComponent::ps_clearTextEdit);
-
-            ui->te_TextMessagesAll->setContextMenuPolicy(Qt::CustomContextMenu);
-            connect(ui->te_TextMessagesAll, &QTextEdit::customContextMenuRequested, this, &CTextMessageComponent::ps_showContextMenuForTextEdit);
-
-            ui->te_TextMessagesUnicom->setContextMenuPolicy(Qt::CustomContextMenu);
-            connect(ui->te_TextMessagesUnicom, &QTextEdit::customContextMenuRequested, this, &CTextMessageComponent::ps_showContextMenuForTextEdit);
-
-            ui->te_TextMessagesCOM1->setContextMenuPolicy(Qt::CustomContextMenu);
-            connect(ui->te_TextMessagesCOM1, &QTextEdit::customContextMenuRequested, this, &CTextMessageComponent::ps_showContextMenuForTextEdit);
-
-            ui->te_TextMessagesCOM2->setContextMenuPolicy(Qt::CustomContextMenu);
-            connect(ui->te_TextMessagesCOM2, &QTextEdit::customContextMenuRequested, this, &CTextMessageComponent::ps_showContextMenuForTextEdit);
+            this->ui->tvp_TextMessagesAll->rowsResizeModeToContent();
+            this->ui->tvp_TextMessagesAll->setResizeMode(CTextMessageView::ResizingAuto);
         }
 
         CTextMessageComponent::~CTextMessageComponent()
@@ -82,13 +71,12 @@ namespace BlackGui
         /*
          * Text messages received or send, append to GUI
          */
-        void CTextMessageComponent::textMessagesReceived(const CTextMessageList &messages, bool sending)
+        void CTextMessageComponent::displayTextMessage(const CTextMessageList &messages)
         {
             if (messages.isEmpty()) return;
             foreach(CTextMessage message, messages)
             {
                 bool relevantForMe = false;
-                QString m = message.asString(true, false, "\t");
 
                 // SELCAL
                 if (message.isSelcalMessage() && getOwnAircraft().isSelcalSelected(message.getSelcalCode()))
@@ -108,7 +96,7 @@ namespace BlackGui
                 // UNICOM
                 if (message.isSendToUnicom())
                 {
-                    this->ui->te_TextMessagesUnicom->append(m);
+                    this->ui->tep_TextMessagesUnicom->insertTextMessage(message);
                     relevantForMe = true;
                 }
 
@@ -118,28 +106,31 @@ namespace BlackGui
                     // check for own COM frequencies
                     if (message.isSendToFrequency(this->getOwnAircraft().getCom1System().getFrequencyActive()))
                     {
-                        this->ui->te_TextMessagesCOM1->append(m);
+                        this->ui->tep_TextMessagesCOM1->insertTextMessage(message);
                         relevantForMe = true;
                     }
                     if (message.isSendToFrequency(this->getOwnAircraft().getCom2System().getFrequencyActive()))
                     {
-                        this->ui->te_TextMessagesCOM2->append(m);
+                        this->ui->tep_TextMessagesCOM2->insertTextMessage(message);
                         relevantForMe = true;
                     }
                 }
                 else if (message.isPrivateMessage() && !message.isServerMessage())
                 {
                     // private message
-                    this->addPrivateChannelTextMessage(message, sending);
+                    this->addPrivateChannelTextMessage(message);
                     relevantForMe = true;
                 }
 
                 // message for me? right frequency? otherwise quit
-                if (relevantForMe || message.isServerMessage()) { this->ui->te_TextMessagesAll->append(m); }
+                if (relevantForMe || message.isServerMessage())
+                {
+                    this->ui->tvp_TextMessagesAll->insert(message);
+                }
                 if (!relevantForMe) { return; }
 
                 // overlay message if this channel is not selected
-                if (!sending && !message.isSendToUnicom() && !message.isServerMessage())
+                if (!message.wasSent() && !message.isSendToUnicom() && !message.isServerMessage())
                 {
                     // if the channel is selected, do nothing
                     if (!this->isCorrespondingTextMessageTabSelected(message))
@@ -148,6 +139,14 @@ namespace BlackGui
                     }
                 }
             }
+        }
+
+        const QString &CTextMessageComponent::componentOriginator()
+        {
+            // string is generated once, the timestamp allows to use multiple
+            // components (as long as they are not generated at the same ms)
+            static const QString o = QString("TEXTMESSAGECOMPONENT:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
+            return o;
         }
 
         void CTextMessageComponent::ps_onChangedAircraftCockpit()
@@ -171,9 +170,9 @@ namespace BlackGui
          */
         bool CTextMessageComponent::isCorrespondingTextMessageTabSelected(CTextMessage textMessage) const
         {
-            if (!this->isVisible()) return false;
-            if (!textMessage.hasValidRecipient()) return false;
-            if (textMessage.isEmpty()) return false; // ignore empty message
+            if (!this->isVisibleWidget()) { return false; }
+            if (!textMessage.hasValidRecipient()) { return false; }
+            if (textMessage.isEmpty()) { return false; } // ignore empty message
             if (textMessage.isPrivateMessage())
             {
                 // private message
@@ -214,25 +213,19 @@ namespace BlackGui
             this->ui->tw_TextMessages->setTabText(this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesCOM2), f2);
         }
 
-        /*
-         * Add new text message tab
-         */
         QWidget *CTextMessageComponent::addNewTextMessageTab(const QString &tabName)
         {
             QWidget *newTab = new QWidget(this);
             QPushButton *closeButton = new QPushButton("Close", newTab);
             QVBoxLayout *layout = new QVBoxLayout(newTab);
-            QTextEdit *textEdit = new QTextEdit(newTab);
+            CTextMessageTextEdit *textEdit = new CTextMessageTextEdit(newTab);
             int marginLeft, marginRight, marginTop, marginBottom;
             this->ui->tb_TextMessagesAll->layout()->getContentsMargins(&marginLeft, &marginTop, &marginRight, &marginBottom);
             newTab->layout()->setContentsMargins(marginLeft, marginTop, marginRight, 2);
-            textEdit->setReadOnly(true);
-            textEdit->setWordWrapMode(QTextOption::NoWrap);
             layout->addWidget(textEdit);
             layout->addWidget(closeButton);
             newTab->setLayout(layout);
             textEdit->setContextMenuPolicy(Qt::CustomContextMenu);
-            connect(textEdit, &QTextEdit::customContextMenuRequested, this, &CTextMessageComponent::ps_showContextMenuForTextEdit);
             int index = this->ui->tw_TextMessages->addTab(newTab, tabName);
             this->connect(closeButton, &QPushButton::released, this, &CTextMessageComponent::ps_closeTextMessageTab);
             this->ui->tw_TextMessages->setCurrentIndex(index);
@@ -245,101 +238,42 @@ namespace BlackGui
             return newTab;
         }
 
-        /*
-         * Add a private channel text message
-         */
-        void CTextMessageComponent::addPrivateChannelTextMessage(const CTextMessage &textMessage, bool sending)
+        void CTextMessageComponent::addPrivateChannelTextMessage(const CTextMessage &textMessage)
         {
-            if (!textMessage.isPrivateMessage()) return;
-            CCallsign cs = sending ? textMessage.getRecipientCallsign() : textMessage.getSenderCallsign();
-            if (cs.isEmpty()) return;
-            QWidget *tab = this->findTextMessageTabByName(cs.getStringAsSet());
-            if (tab == nullptr) tab = this->findTextMessageTabByName(cs.asString());
-            if (tab == nullptr) tab = this->addNewTextMessageTab(cs.getStringAsSet());
+            if (!textMessage.isPrivateMessage()) { return; }
+            CCallsign cs = textMessage.getRecipientCallsign();
+            if (cs.isEmpty()) { return; }
+            QString csStr(cs.asString());
+            QWidget *tab = this->findTextMessageTabByName(csStr);
+            if (tab == nullptr) { tab = this->findTextMessageTabByName(csStr); }
+            if (tab == nullptr) { tab = this->addNewTextMessageTab(csStr); }
             Q_ASSERT(tab != nullptr);
-            QTextEdit *textEdit = tab->findChild<QTextEdit *>();
+            CTextMessageTextEdit *textEdit = tab->findChild<CTextMessageTextEdit *>();
             Q_ASSERT(textEdit != nullptr);
-            if (textEdit == nullptr) return; // do not crash, though this situation could not happen
-            textEdit->append(textMessage.asString(true, false, "\t"));
+            if (textEdit == nullptr) { return; } // do not crash, though this situation could not happen
+            textEdit->insertTextMessage(textMessage);
 
             // sound
             if (this->getIContextAudio())
+            {
                 this->getIContextAudio()->playNotification(BlackSound::CNotificationSounds::NotificationTextMessagePrivate, true);
+            }
         }
 
-        /*
-         * Message tab by name
-         */
         QWidget *CTextMessageComponent::findTextMessageTabByName(const QString &name) const
         {
-            if (name.isEmpty()) return nullptr;
+            if (name.isEmpty()) { return nullptr; }
             QString n = name.trimmed();
             for (int index = 0; index < this->ui->tw_TextMessages->count(); index++)
             {
                 QString tabName = this->ui->tw_TextMessages->tabText(index);
-                if (tabName.indexOf(n, 0, Qt::CaseInsensitive) < 0) continue;
+                if (tabName.indexOf(n, 0, Qt::CaseInsensitive) < 0) { continue; }
                 QWidget *tab = this->ui->tw_TextMessages->widget(index);
                 return tab;
             }
             return nullptr;
         }
 
-        /*
-         * Text message stub (sender/receiver) for current channel
-         */
-        CTextMessage CTextMessageComponent::getTextMessageStubForChannel()
-        {
-            CTextMessage tm;
-            int index = this->ui->tw_TextMessages->currentIndex();
-            if (index < 0 || index == this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesAll)) { return tm; }
-
-            // from
-            tm.setSenderCallsign(this->getOwnAircraft().getCallsign());
-
-            // frequency text message?
-            if (index == this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesCOM1))
-            {
-                tm.setFrequency(this->getOwnAircraft().getCom1System().getFrequencyActive());
-            }
-            else if (index == this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesCOM2))
-            {
-                tm.setFrequency(this->getOwnAircraft().getCom2System().getFrequencyActive());
-            }
-            else if (index == this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesUnicom))
-            {
-                tm.setFrequency(CPhysicalQuantitiesConstants::FrequencyUnicom());
-            }
-            else
-            {
-                // not a standard channel
-                QString selectedTabText = this->ui->tw_TextMessages->tabText(index);
-                bool isNumber;
-                double frequency = selectedTabText.toDouble(&isNumber);
-                if (isNumber)
-                {
-                    CFrequency radioFrequency = CFrequency(frequency, CFrequencyUnit::MHz());
-                    if (CComSystem::isValidCivilAviationFrequency(radioFrequency))
-                    {
-                        tm.setFrequency(radioFrequency);
-                    }
-                    else
-                    {
-                        CCallsign toCallsign(selectedTabText);
-                        tm.setRecipientCallsign(toCallsign);
-                    }
-                }
-                else
-                {
-                    CCallsign toCallsign(selectedTabText);
-                    tm.setRecipientCallsign(toCallsign);
-                }
-            }
-            return tm; // now valid message stub with receiver
-        }
-
-        /*
-         * Close message tab
-         */
         void CTextMessageComponent::ps_closeTextMessageTab()
         {
             QObject *sender = QObject::sender();
@@ -355,151 +289,117 @@ namespace BlackGui
             if (index >= 0) { this->ui->tw_TextMessages->removeTab(index); }
         }
 
-        /*
-         * Show the context menu for text edit area
-         */
-        void CTextMessageComponent::ps_showContextMenuForTextEdit(const QPoint &pt)
-        {
-            QObject *sender = QObject::sender();
-            this->m_currentTextEdit = qobject_cast<QTextEdit *>(sender);
-            Q_ASSERT(this->m_currentTextEdit);
-
-            QMenu *menu = this->m_currentTextEdit->createStandardContextMenu();
-            menu->setParent(this->m_currentTextEdit);
-            menu->setObjectName(this->m_currentTextEdit->objectName().append("_contextMenu"));
-            menu->addSeparator();
-            menu->addAction(this->m_clearTextEditAction);
-            menu->exec(this->m_currentTextEdit->mapToGlobal(pt));
-            delete menu;
-        }
-
-        /*
-         * Clear a text edit area
-         */
-        void CTextMessageComponent::ps_clearTextEdit()
-        {
-            if (!this->m_currentTextEdit) return;
-            this->m_currentTextEdit->clear();
-            this->m_currentTextEdit = nullptr;
-        }
-
-        /*
-         * Top level was changed
-         */
         void CTextMessageComponent::ps_topLevelChanged(QWidget *widget, bool topLevel)
         {
+            // own input field if floating window
             Q_UNUSED(widget);
             this->ui->le_textMessages->setVisible(topLevel);
         }
 
-        /*
-         * Command line entered
-         */
-        void CTextMessageComponent::ps_commandEntered()
+        void CTextMessageComponent::ps_textMessageEntered()
         {
             if (!this->ui->le_textMessages->isVisible()) { return; }
-            const QString cl(this->ui->le_textMessages->text().trimmed().simplified());
-            if (cl.isEmpty()) { return; }
-            this->ui->le_textMessages->clear();
+            if (!this->isVisible()) { return; }
 
-            bool handledMyself = this->parseCommandLine(cl);
-            if (handledMyself) { return; }
-
-            // not my business, relay
-            emit commandEntered(cl);
+            QString cl(this->ui->le_textMessages->text().trimmed().simplified());
+            this->handleEnteredTextMessage(cl);
         }
 
-        /*
-         * Command entered
-         */
-        bool CTextMessageComponent::parseCommandLine(const QString &commandLine)
+        void CTextMessageComponent::handleEnteredTextMessage(const QString &textMessage)
         {
-            static CSimpleCommandParser parser(
-            {
-                ".msg", ".m"
-            });
-            if (commandLine.isEmpty()) { return false; }
-            parser.parse(commandLine);
-            if (parser.isKnownCommand())
-            {
-                if (parser.matchesCommand(".msg", ".m"))
-                {
-                    if (!this->getIContextNetwork()->isConnected())
-                    {
-                        CLogMessage(this).error("network needs to be connected");
-                        return false;
-                    }
-                    if (parser.countParts() < 3)
-                    {
-                        CLogMessage(this).error("incorrect message");
-                        return false;
-                    }
-                    QString receiver = parser.part(1).trimmed(); // receiver
+            if (!this->isVisibleWidget()) { return; }
 
-                    // select current tab by command
-                    this->setVisible(true);
-                    if (receiver == "c1" || receiver == "com1")
-                    {
-                        this->ui->tw_TextMessages->setCurrentWidget(this->ui->tb_TextMessagesCOM1);
-                    }
-                    else if (receiver == "c2" || receiver == "com2")
-                    {
-                        this->ui->tw_TextMessages->setCurrentWidget(this->ui->tb_TextMessagesCOM2);
-                    }
-                    else if (receiver == "u" || receiver == "unicom" || receiver == "uni")
-                    {
-                        this->ui->tw_TextMessages->setCurrentWidget(this->ui->tb_TextMessagesUnicom);
-                    }
-                    else
-                    {
-                        QWidget *tab = this->findTextMessageTabByName(receiver.trimmed());
-                        if (tab == nullptr) tab = this->addNewTextMessageTab(receiver.trimmed().toUpper());
-                        this->ui->tw_TextMessages->setCurrentWidget(tab);
-                    }
-                    CTextMessage tm = this->getTextMessageStubForChannel();
-                    QString msg(parser.remainingStringAfter(2));
-                    tm.setMessage(msg);
-                    if (tm.isEmpty()) { return false; }
-                    CTextMessageList tml(tm);
-                    this->getIContextNetwork()->sendTextMessages(tml);
-                    this->textMessagesReceived(tml, true);
-                    return true;
-                }
-                else
-                {
-                    // no command
-                    return false;
-                }
+            QString cl(textMessage.trimmed().simplified());
+            if (cl.isEmpty()) { return; }
+
+            // is this a command?
+            if (!cl.startsWith("."))
+            {
+                // build a command line
+                cl = this->textMessageToCommand(cl);
+            }
+
+            // relay the command
+            if (cl.isEmpty()) { return; }
+            emit commandEntered(cl, componentOriginator());
+        }
+
+        QString CTextMessageComponent::textMessageToCommand(const QString &enteredLine)
+        {
+            // only if visible
+            if (enteredLine.isEmpty()) { return ""; }
+
+            int index = this->ui->tw_TextMessages->currentIndex();
+            QString cmd(".msg ");
+            if (index < 0 || index == this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesAll))
+            {
+                CLogMessage(this).validationError("Incorrect message channel");
+                return "";
             }
             else
             {
-                // only if visible
-                if (this->isVisible()) { return false; }
-
-                // single line, no command
-                // line is considered to be a message to the selected channel, send
-                if (!this->isNetworkConnected())
+                if (index == this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesCOM1))
                 {
-                    CLogMessage(this).error("network needs to be connected");
-                    return false;
+                    cmd.append(QString::number(this->getOwnAircraft().getCom1System().getFrequencyActive().valueRounded(3)));
                 }
-
-                int index = this->ui->tw_TextMessages->currentIndex();
-                if (index < 0 || index == this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesAll))
+                else if (index == this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesCOM2))
                 {
-                    CLogMessage(this).error("incorrect channel");
+                    cmd.append(QString::number(this->getOwnAircraft().getCom2System().getFrequencyActive().valueRounded(3)));
+                }
+                else if (index == this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesUnicom))
+                {
+                    cmd.append(QString::number(CPhysicalQuantitiesConstants::FrequencyUnicom().valueRounded(3)));
                 }
                 else
                 {
-                    CTextMessage tm = this->getTextMessageStubForChannel();
-                    tm.setMessage(commandLine.simplified().trimmed());
-                    if (tm.isEmpty()) { return true; }
-                    CTextMessageList textMessageList(tm);
-                    this->getIContextNetwork()->sendTextMessages(textMessageList);
-                    this->textMessagesReceived(textMessageList, true);
+                    // not a standard channel
+                    QString selectedTabText = this->ui->tw_TextMessages->tabText(index).trimmed();
+                    bool isNumber;
+                    double frequency = selectedTabText.toDouble(&isNumber);
+                    if (isNumber)
+                    {
+                        CFrequency radioFrequency = CFrequency(frequency, CFrequencyUnit::MHz());
+                        if (CComSystem::isValidCivilAviationFrequency(radioFrequency))
+                        {
+                            cmd.append(QString::number(radioFrequency.valueRounded(3)));
+                        }
+                        else
+                        {
+                            cmd.append(selectedTabText);
+                        }
+                    }
+                    else
+                    {
+                        cmd.append(selectedTabText);
+                    }
                 }
-                return true;
+                cmd.append(" ").append(enteredLine);
+                return cmd;
             }
+            return "";
         }
+
+        void CTextMessageComponent::onTextMessageReceived(const CTextMessageList &messages)
+        {
+            this->displayTextMessage(messages);
+        }
+
+        void CTextMessageComponent::onTextMessageSent(const CTextMessage &sentMessage)
+        {
+            this->displayTextMessage(CTextMessageList({ sentMessage }));
+        }
+
+        bool CTextMessageComponent::handleGlobalCommandLine(const QString &commandLine, const QString &originator)
+        {
+            if (originator == componentOriginator()) { return false; }
+            if (commandLine.isEmpty() || commandLine.startsWith(".")) { return false; }
+
+            // non command input
+            if (!this->isVisibleWidget()) { return false; } // invisble, do ignore
+            this->handleEnteredTextMessage(commandLine); // handle as it was entered by own command line
+
+            return false; // we never handle the message directly, but forward it
+        }
+
     } // namespace
 } // namespace

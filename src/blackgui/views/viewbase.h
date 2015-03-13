@@ -74,6 +74,9 @@ namespace BlackGui
             //! Filter dialog
             void setFilterDialog(QDialog *filterDialog);
 
+            //! Resize mode to content
+            void rowsResizeModeToContent();
+
             //! Main application window widget if any
             QWidget *mainApplicationWindowWidget() const;
 
@@ -110,10 +113,6 @@ namespace BlackGui
 
             //! Init as interactive, as this allows manually resizing
             void initRowsResizeModeToInteractive();
-
-            //! Set fixed row height (vertical header with height)
-            //! \sa initRowsResizeModeToFixed
-            virtual void setRowsResizeModeToInteractive(int height);
 
             //! Helper method with template free signature
             //! \param variant contains the container

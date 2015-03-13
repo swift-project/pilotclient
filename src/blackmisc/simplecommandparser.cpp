@@ -22,6 +22,7 @@ namespace BlackMisc
 
     void CSimpleCommandParser::parse(const QString &commandLine)
     {
+        this->m_knownCommand = false;
         this->m_originalLine = commandLine;
         this->m_cleanedLine = commandLine.trimmed().simplified();
         if (!this->m_cleanedLine.isEmpty())
@@ -52,8 +53,8 @@ namespace BlackMisc
         if (index < 0) { return this->m_originalLine.trimmed(); }
         QString p = this->part(index);
         int fi = this->m_originalLine.indexOf(p, 0, Qt::CaseInsensitive);
-        if (fi < 0) return "";
-        return this->m_originalLine.right(fi + p.length()).trimmed();
+        if (fi < 0) { return ""; }
+        return this->m_originalLine.mid(fi).trimmed();
     }
 
     int CSimpleCommandParser::countParts() const
@@ -97,7 +98,7 @@ namespace BlackMisc
     double CSimpleCommandParser::toDouble(int index, double def) const
     {
         const QString p = this->part(index);
-        if (p.isEmpty()) return def;
+        if (p.isEmpty()) { return def; }
         bool ok;
         double d = CPqString::parseNumber(p, ok, CPqString::SeparatorsBestGuess);
         return ok ? d : def;

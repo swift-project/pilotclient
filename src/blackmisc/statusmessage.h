@@ -15,7 +15,7 @@
 #include "icon.h"
 #include "propertyindex.h"
 #include "logcategorylist.h"
-#include <QDateTime>
+#include "timestampbased.h"
 
 namespace BlackMisc
 {
@@ -23,7 +23,9 @@ namespace BlackMisc
     /*!
      * Streamable status message, e.g. from Core -> GUI
      */
-    class CStatusMessage : public CValueObjectStdTuple<CStatusMessage>
+    class CStatusMessage :
+        public CValueObjectStdTuple<CStatusMessage>,
+        public ITimestampBased
     {
     public:
         //! Status severities
@@ -42,9 +44,7 @@ namespace BlackMisc
             IndexCategoryHumanReadable,
             IndexSeverity,
             IndexSeverityAsString,
-            IndexMessage,
-            IndexTimestamp,
-            IndexTimestampFormatted
+            IndexMessage
         };
 
         //! Constructor
@@ -147,7 +147,6 @@ namespace BlackMisc
         CLogCategoryList m_categories;
         StatusSeverity   m_severity = SeverityDebug;
         QString          m_message;
-        QDateTime        m_timestamp = QDateTime::currentDateTimeUtc();
         bool             m_redundant = false;
         mutable QVector<quintptr> m_handledByObjects;
         mutable QString           m_humanReadableCategory; //!< human readable category cache
@@ -157,13 +156,13 @@ namespace BlackMisc
 
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CStatusMessage, (
-    o.m_categories,
-    o.m_severity,
-    o.m_message,
-    o.m_timestamp,
-    o.m_redundant,
-    attr(o.m_handledByObjects, flags<DisabledForHashing | DisabledForJson | DisabledForComparison | DisabledForMarshalling>())
-))
+                                   o.m_categories,
+                                   o.m_severity,
+                                   o.m_message,
+                                   o.m_timestampMSecsSinceEpoch,
+                                   o.m_redundant,
+                                   attr(o.m_handledByObjects, flags < DisabledForHashing | DisabledForJson | DisabledForComparison | DisabledForMarshalling > ())
+                               ))
 Q_DECLARE_METATYPE(BlackMisc::CStatusMessage)
 
 #endif // guard

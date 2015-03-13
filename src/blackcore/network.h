@@ -503,6 +503,11 @@ namespace BlackCore
         void textMessagesReceived(const BlackMisc::Network::CTextMessageList &messages);
 
         /*!
+         * We have sent a text message.
+         */
+        void textMessageSent(const BlackMisc::Network::CTextMessage &sentMessage);
+
+        /*!
          * We received a custom packet.
          * \deprecated As a short cut you can use this signal directly, but it is better to implement the decoding in INetwork and add a new signal.
          */

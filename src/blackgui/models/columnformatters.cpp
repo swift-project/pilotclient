@@ -118,6 +118,11 @@ namespace BlackGui
             return CVariant();
         }
 
+        int CDefaultFormatter::alignDefault()
+        {
+            return alignLeftVCenter();
+        }
+
         CVariant CDefaultFormatter::keepStandardTypesConvertToStringOtherwise(const CVariant &inputData) const
         {
             if (static_cast<QMetaType::Type>(inputData.type()) == QMetaType::QString) { return inputData; }
@@ -176,6 +181,12 @@ namespace BlackGui
             else if (static_cast<QMetaType::Type>(dateTime.type()) == QMetaType::QTime)
             {
                 QTime t = dateTime.value<QTime>();
+                return t.toString(m_formatString);
+            }
+            else if (static_cast<QMetaType::Type>(dateTime.type()) == QMetaType::Int)
+            {
+                //! \todo potential risk if int is not qint64
+                QDateTime t = QDateTime::fromMSecsSinceEpoch(dateTime.toInt());
                 return t.toString(m_formatString);
             }
             else

@@ -45,7 +45,7 @@ win32 {
 RESOURCES +=
 
 DESTDIR = ../../lib
-OTHER_FILES += ./qss/*.qss
+OTHER_FILES += ./qss/*.qss ./qss/*.css
 
 win32:isEmpty(MINGW_IN_SHELL):  COPY = xcopy /yi
 else:                           COPY = cp -r

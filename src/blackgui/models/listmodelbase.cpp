@@ -17,6 +17,7 @@
 #include "blackmisc/nwserverlist.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/nwclientlist.h"
+#include "blackmisc/nwtextmessagelist.h"
 #include "blackmisc/nwaircraftmappinglist.h"
 #include "blackmisc/setkeyboardhotkeylist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
@@ -404,9 +405,12 @@ namespace BlackGui
             emit this->rowCountChanged(n, this->hasFilter());
         }
 
-        /*
-         * Sort requested by abstract model
-         */
+        template <typename ObjectType, typename ContainerType>
+        void CListModelBase<ObjectType, ContainerType>::sort()
+        {
+            this->sort(this->getSortColumn(), this->getSortOrder());
+        }
+
         template <typename ObjectType, typename ContainerType>
         void CListModelBase<ObjectType, ContainerType>::sort(int column, Qt::SortOrder order)
         {
@@ -419,6 +423,16 @@ namespace BlackGui
 
             // sort the values
             this->updateContainerMaybeAsync(this->m_container, true);
+        }
+
+        template <typename ObjectType, typename ContainerType>
+        void CListModelBase<ObjectType, ContainerType>::truncate(int maxNumber, bool forceSort)
+        {
+            if (this->rowCount() <= maxNumber) { return; }
+            if (forceSort) { this->sort(); } // make sure container is sorted
+            ContainerType container(this->getContainer());
+            container.truncate(maxNumber);
+            this->updateContainerMaybeAsync(container, false);
         }
 
         template <typename ObjectType, typename ContainerType>
@@ -452,6 +466,7 @@ namespace BlackGui
         template class CListModelBase<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>;
         template class CListModelBase<BlackMisc::Network::CServer, BlackMisc::Network::CServerList>;
         template class CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList>;
+        template class CListModelBase<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList>;
         template class CListModelBase<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>;
         template class CListModelBase<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
         template class CListModelBase<BlackMisc::Network::CAircraftMapping, BlackMisc::Network::CAircraftMappingList>;

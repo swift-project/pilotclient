@@ -137,12 +137,12 @@ namespace BlackCore
         BlackCore::registerMetadata();
     }
 
-    bool CRuntime::parseCommandLine(const QString commandLine)
+    bool CRuntime::parseCommandLine(const QString commandLine, const QString &originator)
     {
         bool handled = false;
-        if (this->getIContextAudio()) { handled = handled || this->getIContextAudio()->parseCommandLine(commandLine); }
-        if (this->getIContextNetwork()) { handled = handled || this->getIContextNetwork()->parseCommandLine(commandLine); }
-        if (this->getIContextOwnAircraft()) { handled = handled || this->getIContextOwnAircraft()->parseCommandLine(commandLine); }
+        if (this->getIContextAudio()) { handled = handled || this->getIContextAudio()->parseCommandLine(commandLine, originator); }
+        if (this->getIContextNetwork()) { handled = handled || this->getIContextNetwork()->parseCommandLine(commandLine, originator); }
+        if (this->getIContextOwnAircraft()) { handled = handled || this->getIContextOwnAircraft()->parseCommandLine(commandLine, originator); }
         return handled;
     }
 

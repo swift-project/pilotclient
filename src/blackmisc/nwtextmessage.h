@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_TEXTMESSAGE_H
 #define BLACKMISC_TEXTMESSAGE_H
 
+#include "blackmisc/timestampbased.h"
 #include "pqfrequency.h"
 #include "avcallsign.h"
 #include "statusmessage.h"
@@ -25,101 +26,81 @@ namespace BlackMisc
         /*!
          * Value object encapsulating information of a text message
          */
-        class CTextMessage : public CValueObjectStdTuple<CTextMessage>
+        class CTextMessage :
+            public CValueObjectStdTuple<CTextMessage>,
+            public BlackMisc::ITimestampBased
         {
         public:
-            //! \brief Default constructor.
-            CTextMessage() : m_received(QDateTime::currentDateTimeUtc()), m_frequency(0, BlackMisc::PhysicalQuantities::CFrequencyUnit::nullUnit()) {}
+            //! Properties by index
+            enum ColumnIndex
+            {
+                IndexSenderCallsign = BlackMisc::CPropertyIndex::GlobalIndexCTextMessage,
+                IndexRecipientCallsign,
+                IndexRecipientCallsignOrFrequency,
+                IndexMessage
+            };
 
-            //! \brief Constructor, radio message
+            //! Default constructor.
+            CTextMessage() {}
+
+            //! Constructor, radio message
             CTextMessage(const QString &message, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Aviation::CCallsign &senderCallsign = BlackMisc::Aviation::CCallsign())
-                : m_message(message), m_received(QDateTime::currentDateTimeUtc()), m_senderCallsign(senderCallsign), m_frequency(frequency)
+                : m_message(message), m_senderCallsign(senderCallsign), m_frequency(frequency)
             {
                 this->m_frequency.switchUnit(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz());
             }
 
-            //! \brief Constructor, private message
+            //! Constructor, private message
             CTextMessage(const QString &message, const BlackMisc::Aviation::CCallsign &senderCallsign, const BlackMisc::Aviation::CCallsign &recipientCallsign = BlackMisc::Aviation::CCallsign())
-                : m_message(message), m_received(QDateTime::currentDateTimeUtc()), m_senderCallsign(senderCallsign), m_recipientCallsign(recipientCallsign), m_frequency(0, BlackMisc::PhysicalQuantities::CFrequencyUnit::nullUnit()) {}
+                : m_message(message), m_senderCallsign(senderCallsign), m_recipientCallsign(recipientCallsign), m_frequency(0, BlackMisc::PhysicalQuantities::CFrequencyUnit::nullUnit()) {}
 
-            //! \brief Get callsign (from)
-            const BlackMisc::Aviation::CCallsign &getSenderCallsign() const
-            {
-                return m_senderCallsign;
-            }
+            //! Get callsign (from)
+            const BlackMisc::Aviation::CCallsign &getSenderCallsign() const { return m_senderCallsign; }
 
-            //! \brief Set callsign (from)
-            void setSenderCallsign(const BlackMisc::Aviation::CCallsign &callsign)
-            {
-                m_senderCallsign = callsign;
-            }
+            //! Set callsign (from)
+            void setSenderCallsign(const BlackMisc::Aviation::CCallsign &callsign) { m_senderCallsign = callsign;}
 
-            //! \brief Get callsign (to)
-            const BlackMisc::Aviation::CCallsign &getRecipientCallsign() const
-            {
-                return m_recipientCallsign;
-            }
+            //! Get callsign (to)
+            const BlackMisc::Aviation::CCallsign &getRecipientCallsign() const { return m_recipientCallsign; }
 
-            //! \brief Set callsign (recipient)
-            void setRecipientCallsign(const BlackMisc::Aviation::CCallsign &callsign)
-            {
-                m_recipientCallsign = callsign;
-            }
+            //! Set callsign (recipient)
+            void setRecipientCallsign(const BlackMisc::Aviation::CCallsign &callsign) { m_recipientCallsign = callsign; }
 
-            //! \brief Send to particular frequency?
+            //! Get recipient or frequency
+            QString getRecipientCallsignOrFrequency() const;
+
+            //! Send to particular frequency?
             bool isSendToFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency) const;
 
-            //! \brief Send to UNICOM?
+            //! Send to UNICOM?
             bool isSendToUnicom() const;
 
-            //! \brief Valid receviver?
+            //! Valid receviver?
             bool hasValidRecipient() const;
 
-            //! \brief Get message
-            const QString &getMessage() const
-            {
-                return m_message;
-            }
+            //! Get message
+            const QString &getMessage() const { return m_message; }
 
-            //! \brief Empty message
-            bool isEmpty() const
-            {
-                return m_message.isEmpty();
-            }
+            //! Empty message
+            bool isEmpty() const { return m_message.isEmpty(); }
 
-            //! \brief Set message
-            void setMessage(const QString &message)
-            {
-                m_message = message.trimmed();
-            }
+            //! Set message
+            void setMessage(const QString &message) { m_message = message.trimmed(); }
 
-            //! \brief Get frequency
-            const BlackMisc::PhysicalQuantities::CFrequency &getFrequency() const
-            {
-                return m_frequency;
-            }
+            //! Get frequency
+            const BlackMisc::PhysicalQuantities::CFrequency &getFrequency() const { return m_frequency; }
 
-            //! \brief Set frequency
-            void setFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency)
-            {
-                m_frequency = frequency;
-            }
+            //! Set frequency
+            void setFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency) {  m_frequency = frequency; }
 
-            //! \brief Is private message?
+            //! Is private message?
             bool isPrivateMessage() const;
 
-            //! \brief Is radio message?
+            //! Is radio message?
             bool isRadioMessage() const;
 
-            //! \brief Initial message of server?
+            //! Initial message of server?
             bool isServerMessage() const;
-
-            //! \brief Received (hh mm ss)
-            QString receivedTime() const
-            {
-                QString rt = this->m_received.toString("hh::mm::ss");
-                return rt;
-            }
 
             /*!
              * Whole message as formatted string.
@@ -141,22 +122,41 @@ namespace BlackMisc
              */
             BlackMisc::CStatusMessage asStatusMessage(bool withSender, bool withRecipient, const QString &separator = ", ") const;
 
-            //! \brief Toggle sender receiver, can be used to ping my own message
+            //! Toggle sender receiver, can be used to ping my own message
             void toggleSenderRecipient();
 
             /*!
-             * \brief Is this a text message encapsulating a SELCAL
+             * Is this a text message encapsulating a SELCAL
              * \see http://forums.vatsim.net/viewtopic.php?f=8&t=63467
              */
             bool isSelcalMessage() const;
 
-            /*!
-             * \brief Is this a text message encapsulating a SELCAL for given code
-             */
+            //! Is this a text message encapsulating a SELCAL for given code?
             bool isSelcalMessageFor(const QString &selcal) const;
 
-            //! \brief Get SELCAL code (if applicable, e.g. ABCD), otherwise ""
+            //! Supervisor message?
+            bool isSupervisorMessage() const;
+
+            //! Was sent?
+            bool wasSent() const;
+
+            //! Mark as sent
+            void markAsSent();
+
+            //! Get SELCAL code (if applicable, e.g. ABCD), otherwise ""
             QString getSelcalCode() const;
+
+            //! As icon, not implement by all classes
+            virtual CIcon toIcon() const override;
+
+            //! As pixmap, required for most GUI views
+            virtual QPixmap toPixmap() const override;
+
+            //! \copydoc CValueObject::propertyByIndex
+            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+
+            //! \copydoc CValueObject::setPropertyByIndex
+            virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
         protected:
             //! \copydoc CValueObject::convertToQString
@@ -165,15 +165,15 @@ namespace BlackMisc
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CTextMessage)
             QString m_message;
-            QDateTime m_received;
             BlackMisc::Aviation::CCallsign m_senderCallsign;
             BlackMisc::Aviation::CCallsign m_recipientCallsign;
-            BlackMisc::PhysicalQuantities::CFrequency m_frequency;
+            BlackMisc::PhysicalQuantities::CFrequency m_frequency {0, BlackMisc::PhysicalQuantities::CFrequencyUnit::nullUnit()};
+            bool m_wasSent = false;
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CTextMessage, (o.m_message, o.m_received, o.m_senderCallsign, o.m_recipientCallsign, o.m_frequency))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CTextMessage, (o.m_message, o.m_timestampMSecsSinceEpoch, o.m_senderCallsign, o.m_recipientCallsign, o.m_frequency))
 Q_DECLARE_METATYPE(BlackMisc::Network::CTextMessage)
 
 #endif // guard

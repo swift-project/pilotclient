@@ -199,9 +199,9 @@ namespace BlackCore
     /*
      * Parse command line
      */
-    bool CContextAudioProxy::parseCommandLine(const QString &commandLine)
+    bool CContextAudioProxy::parseCommandLine(const QString &commandLine, const QString &originator)
     {
-        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("parseCommandLine"), commandLine);
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("parseCommandLine"), commandLine, originator);
     }
 
 } // namespace

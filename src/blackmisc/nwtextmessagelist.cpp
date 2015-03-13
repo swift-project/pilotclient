@@ -94,11 +94,27 @@ namespace BlackMisc
         }
 
         /*
+         * Supervisor messages?
+         */
+        CTextMessageList CTextMessageList::containsSupervisorMessages() const
+        {
+            return this->findBy(&CTextMessage::isSupervisorMessage, true);
+        }
+
+        /*
          * Radio messages
          */
         CTextMessageList CTextMessageList::getRadioMessages() const
         {
             return this->findBy(&CTextMessage::isRadioMessage, true);
+        }
+
+        /*
+         * Supervisor messages
+         */
+        CTextMessageList CTextMessageList::getSupervisorMessages() const
+        {
+            return this->findBy(&CTextMessage::isSupervisorMessage, true);
         }
 
         /*
@@ -136,8 +152,16 @@ namespace BlackMisc
          */
         void CTextMessageList::toggleSenderRecipients()
         {
-            if (this->isEmpty()) return;
-            std::for_each(this->begin(), this->end(), [](CTextMessage &tm) { tm.toggleSenderRecipient(); });
+            if (this->isEmpty()) { return; }
+            std::for_each(this->begin(), this->end(), [](CTextMessage & tm) { tm.toggleSenderRecipient(); });
+        }
+
+        /*
+         * Mark all messages as sent
+         */
+        void CTextMessageList::markAsSent()
+        {
+            std::for_each(this->begin(), this->end(), [](CTextMessage & tm) { tm.markAsSent(); });
         }
 
     } // namespace

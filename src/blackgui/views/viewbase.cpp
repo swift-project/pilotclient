@@ -13,6 +13,7 @@
 #include "../models/atcstationlistmodel.h"
 #include "../models/aircraftlistmodel.h"
 #include "../models/aircraftmodellistmodel.h"
+#include "../models/textmessagelistmodel.h"
 #include "../models/airportlistmodel.h"
 #include "../models/airportlistmodel.h"
 #include "../models/serverlistmodel.h"
@@ -51,6 +52,7 @@ namespace BlackGui
             // scroll modes
             this->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
             this->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+            this->setWordWrap(true);
         }
 
         void CViewBaseNonTemplate::setFilterDialog(QDialog *filterDialog)
@@ -142,15 +144,17 @@ namespace BlackGui
         void CViewBaseNonTemplate::initRowsResizeModeToInteractive()
         {
             const int height = this->verticalHeader()->minimumSectionSize();
-            this->setRowsResizeModeToInteractive(height);
-        }
-
-        void CViewBaseNonTemplate::setRowsResizeModeToInteractive(int height)
-        {
             QHeaderView *verticalHeader = this->verticalHeader();
             Q_ASSERT(verticalHeader);
             verticalHeader->setSectionResizeMode(QHeaderView::Interactive);
             verticalHeader->setDefaultSectionSize(height);
+        }
+
+        void CViewBaseNonTemplate::rowsResizeModeToContent()
+        {
+            QHeaderView *verticalHeader = this->verticalHeader();
+            Q_ASSERT(verticalHeader);
+            verticalHeader->setSectionResizeMode(QHeaderView::ResizeToContents);
         }
 
         bool CViewBaseNonTemplate::performResizing() const
@@ -376,6 +380,7 @@ namespace BlackGui
         template class CViewBase<BlackGui::Models::CServerListModel, BlackMisc::Network::CServerList, BlackMisc::Network::CServer>;
         template class CViewBase<BlackGui::Models::CUserListModel, BlackMisc::Network::CUserList, BlackMisc::Network::CUser>;
         template class CViewBase<BlackGui::Models::CClientListModel, BlackMisc::Network::CClientList, BlackMisc::Network::CClient>;
+        template class CViewBase<BlackGui::Models::CTextMessageListModel, BlackMisc::Network::CTextMessageList, BlackMisc::Network::CTextMessage>;
         template class CViewBase<BlackGui::Models::CSimulatedAircraftListModel, BlackMisc::Simulation::CSimulatedAircraftList, BlackMisc::Simulation::CSimulatedAircraft>;
         template class CViewBase<BlackGui::Models::CAircraftModelListModel, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModel>;
         template class CViewBase<BlackGui::Models::CKeyboardKeyListModel, BlackMisc::Settings::CSettingKeyboardHotkeyList, BlackMisc::Settings::CSettingKeyboardHotkey>;

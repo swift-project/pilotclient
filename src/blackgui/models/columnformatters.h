@@ -68,10 +68,13 @@ namespace BlackGui
             virtual BlackMisc::CVariant data(int role, const BlackMisc::CVariant &inputData) const;
 
             //! Default value
-            static int alignDefault() { return alignLeftVCenter(); }
+            static int alignDefault();
 
             //! Align left/vertically centered
             static int alignLeftVCenter() { return Qt::AlignVCenter | Qt::AlignLeft; }
+
+            //! Align left/vertically on top
+            static int alignLeftTop() { return Qt::AlignTop | Qt::AlignLeft; }
 
             //! Align centered
             static int alignCentered() { return Qt::AlignVCenter | Qt::AlignHCenter; }

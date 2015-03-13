@@ -26,7 +26,7 @@ namespace BlackGui
         CStatusMessageListModel::CStatusMessageListModel(QObject *parent) :
             CListModelBase<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>("ViewStatusMessageList", parent)
         {
-            this->m_columns.addColumn(CColumn("time", CStatusMessage::IndexTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHms())));
+            this->m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHms())));
             this->m_columns.addColumn(CColumn::standardString("category", CStatusMessage::IndexCategoryHumanReadable));
             CColumn col = CColumn("severity", CStatusMessage::IndexIcon);
             col.setSortPropertyIndex(CStatusMessage::IndexSeverityAsString);
@@ -34,7 +34,7 @@ namespace BlackGui
             this->m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
             this->m_columns.addColumn(CColumn::standardString("all categories", CStatusMessage::IndexCategories));
 
-            this->m_sortedColumn = CStatusMessage::IndexTimestamp;
+            this->m_sortedColumn = CStatusMessage::IndexUtcTimestamp;
             this->m_sortOrder = Qt::DescendingOrder;
 
             // force strings for translation in resource files

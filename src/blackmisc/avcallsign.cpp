@@ -77,6 +77,14 @@ namespace BlackMisc
         }
 
         /*
+         * Supervisor callsign?
+         */
+        bool CCallsign::isSupervisorCallsign() const
+        {
+            return this->m_callsign.endsWith("SUP");
+        }
+
+        /*
          * ATC callsign?
          */
         bool CCallsign::isAtcAlikeCallsign() const

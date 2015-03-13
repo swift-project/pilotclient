@@ -470,17 +470,18 @@ namespace BlackCore
         return this->m_audioMixer->hasMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputOutputDevice1);
     }
 
-    bool CContextAudio::parseCommandLine(const QString &commandLine)
+    bool CContextAudio::parseCommandLine(const QString &commandLine, const QString &originator)
     {
-        static CSimpleCommandParser parser(
+        Q_UNUSED(originator);
+        if (commandLine.isEmpty()) { return false; }
+        CSimpleCommandParser parser(
         {
             ".vol", ".volume",    // output volume
             ".mute",              // mute
             ".unmute"             // unmute
         });
-        if (commandLine.isEmpty()) return false;
         parser.parse(commandLine);
-        if (!parser.isKnownCommand()) return false;
+        if (!parser.isKnownCommand()) { return false; }
 
         if (parser.matchesCommand(".mute"))
         {

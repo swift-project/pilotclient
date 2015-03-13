@@ -121,8 +121,14 @@ namespace BlackCore
          */
         bool isPendingConnection() const;
 
+        //! \addtogroup commandline
+        //! @{
+        //! <pre>
+        //! .m  .msg   message text
+        //! </pre>
+        //! @}
         //! \copydoc IContextNetwork::parseCommandLine
-        virtual bool parseCommandLine(const QString &commandLine) override;
+        virtual bool parseCommandLine(const QString &commandLine, const QString &originator) override;
 
         //! \copydoc IContextNetwork::sendTextMessages()
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;
@@ -235,6 +241,9 @@ namespace BlackCore
         //! Data file has been read
         void ps_dataFileRead();
 
+        //! Check if a supervisor message was received
+        void ps_checkForSupervisiorTextMessage(const BlackMisc::Network::CTextMessageList &messages);
+
         /*!
          * \brief Connection status changed?
          * \param from  old status
@@ -242,8 +251,6 @@ namespace BlackCore
          */
         void ps_fsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to);
 
-        //! Radio text messages received
-        void ps_fsdTextMessageReceived(const BlackMisc::Network::CTextMessageList &messages);
     };
 }
 

@@ -87,7 +87,7 @@ namespace BlackCore
         //! </pre>
         //! @}
         //! \copydoc IContextOwnAircraft::parseCommandLine
-        virtual bool parseCommandLine(const QString &commandLine) override;
+        virtual bool parseCommandLine(const QString &commandLine, const QString &originator) override;
 
     protected:
         //! Constructor, with link to runtime

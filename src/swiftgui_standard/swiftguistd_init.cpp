@@ -86,6 +86,7 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     connect(this->getIContextNetwork(), &IContextNetwork::connectionTerminated, this, &SwiftGuiStd::ps_onConnectionTerminated);
     connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &SwiftGuiStd::ps_onConnectionStatusChanged);
     connect(this->getIContextNetwork(), &IContextNetwork::textMessagesReceived, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageReceived);
+    connect(this->getIContextNetwork(), &IContextNetwork::textMessageSent, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageSent);
     connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &SwiftGuiStd::ps_handleTimerBasedUpdates);
     connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &SwiftGuiStd::ps_onChangedSetttings);
 
@@ -141,10 +142,8 @@ void SwiftGuiStd::initGuiSignals()
     connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::connectPressed, this, &SwiftGuiStd::ps_loginRequested);
     connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::changedOpacity, this , &SwiftGuiStd::ps_onChangedWindowOpacity);
     connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::identPressed, this->ui->comp_MainInfoArea->getCockpitComponent(), &CCockpitComponent::setSelectedTransponderModeStateIdent);
+    connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::commandEntered, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::handleGlobalCommandLine);
     connect(this->ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedInfoAreaStatus, ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::onMainInfoAreaChanged);
-
-    // command line
-    connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::commandEntered, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::parseCommandLine);
 
     // menu
     connect(this->ui->menu_ReloadSettings, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);

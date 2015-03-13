@@ -166,7 +166,7 @@ namespace BlackCore
         virtual bool isAudioLoopbackEnabled() const = 0;
 
         //! Command line was entered
-        virtual bool parseCommandLine(const QString &commandLine) = 0;
+        virtual bool parseCommandLine(const QString &commandLine, const QString &orignator) = 0;
     };
 }
 

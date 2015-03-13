@@ -42,6 +42,9 @@ namespace BlackGui
             //! Destructor
             ~CMainKeypadAreaComponent();
 
+            //! Originator
+            static const QString &keypadOriginator();
+
         signals:
             //! Button to select main info area has been pressed
             //! \sa CMainInfoAreaComponent
@@ -51,7 +54,7 @@ namespace BlackGui
             void changedOpacity(int opacity);
 
             //! Command was entered
-            void commandEntered(const QString &commandLine);
+            void commandEntered(const QString &commandLine, const QString &originator);
 
             //! Connect was pressed
             void connectPressed();

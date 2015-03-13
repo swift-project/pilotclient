@@ -60,6 +60,9 @@ namespace BlackMisc
             //! Observer callsign?
             bool isObserverCallsign() const;
 
+            //! Supervisor?
+            bool isSupervisorCallsign() const;
+
             //! Get callsign.
             const QString &asString() const { return this->m_callsign; }
 

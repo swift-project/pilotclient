@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_STATUSMESSAGELIST_H
 #define BLACKMISC_STATUSMESSAGELIST_H
 
+#include "timestampobjectlist.h"
 #include "valueobject.h"
 #include "sequence.h"
 #include "collection.h"
@@ -23,7 +24,9 @@ namespace BlackMisc
     /*!
      * Status messages, e.g. from Core -> GUI
      */
-    class CStatusMessageList : public CSequence<CStatusMessage>
+    class CStatusMessageList :
+        public CSequence<CStatusMessage>,
+        public ITimestampObjectList<CStatusMessage, CStatusMessageList>
     {
     public:
         //! Constructor
@@ -52,6 +55,13 @@ namespace BlackMisc
 
         //! Register metadata of unit and quantity
         static void registerMetadata();
+
+    protected:
+        //! Myself
+        virtual const CStatusMessageList &container() const override { return *this; }
+
+        //! Myself
+        virtual CStatusMessageList &container() override { return *this; }
     };
 }
 

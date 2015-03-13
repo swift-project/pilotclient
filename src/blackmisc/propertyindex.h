@@ -56,6 +56,7 @@ namespace BlackMisc
             GlobalIndexCAircraftModel         =  4300,
             GlobalIndexCSimulatedAircraft     =  4400,
             GlobalIndexCAircraftMapping       =  4500,
+            GlobalIndexCTextMessage           =  4600,
             GlobalIndexCVoiceRoom             =  5000,
             GlobalIndexCSettingKeyboardHotkey =  6000,
             GlobalIndexCAircraftCfgEntries    =  7000,

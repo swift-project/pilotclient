@@ -48,7 +48,9 @@ namespace BlackCore
         // 1. Init by "network driver"
         this->m_network = new CNetworkVatlib(this->getRuntime()->getCContextOwnAircraft(), this);
         connect(this->m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::ps_fsdConnectionStatusChanged);
-        connect(this->m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::ps_fsdTextMessageReceived);
+        connect(this->m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::textMessagesReceived);
+        connect(this->m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::ps_checkForSupervisiorTextMessage);
+        connect(this->m_network, &INetwork::textMessageSent, this, &CContextNetwork::textMessageSent);
 
         // 2. VATSIM bookings
         this->m_vatsimBookingReader = new CVatsimBookingReader(this, this->getRuntime()->getIContextSettings()->getNetworkSettings().getBookingServiceUrl());
@@ -225,9 +227,90 @@ namespace BlackCore
         return INetwork::isPendingStatus(this->m_currentStatus);
     }
 
-    bool CContextNetwork::parseCommandLine(const QString &commandLine)
+    bool CContextNetwork::parseCommandLine(const QString &commandLine, const QString &originator)
     {
-        Q_UNUSED(commandLine);
+        Q_UNUSED(originator;)
+        if (commandLine.isEmpty()) { return false; }
+        CSimpleCommandParser parser({ ".msg", ".m" });
+        parser.parse(commandLine);
+        if (!parser.isKnownCommand()) { return false; }
+        if (parser.matchesCommand(".msg", ".m"))
+        {
+            if (!this->getIContextNetwork()->isConnected())
+            {
+                CLogMessage(this).validationError("Network needs to be connected");
+                return false;
+            }
+            else if (!this->getIContextOwnAircraft())
+            {
+                CLogMessage(this).validationError("No own aircraft data, no text message can be sent");
+                return false;
+            }
+            if (parser.countParts() < 3)
+            {
+                CLogMessage(this).validationError("Incorrect message");
+                return false;
+            }
+            QString receiver = parser.part(1).trimmed(); // receiver
+
+            // set receiver
+            CSimulatedAircraft ownAircraft(this->getIContextOwnAircraft()->getOwnAircraft());
+            if (ownAircraft.getCallsign().isEmpty())
+            {
+                CLogMessage(this).validationError("No own callsign");
+                return false;
+            }
+
+            CTextMessage tm;
+            tm.setSenderCallsign(ownAircraft.getCallsign());
+
+            if (receiver == "c1" || receiver == "com1")
+            {
+                tm.setFrequency(ownAircraft.getCom1System().getFrequencyActive());
+            }
+            else if (receiver == "c2" || receiver == "com2")
+            {
+                tm.setFrequency(ownAircraft.getCom2System().getFrequencyActive());
+            }
+            else if (receiver == "u" || receiver == "unicom" || receiver == "uni")
+            {
+                tm.setFrequency(CPhysicalQuantitiesConstants::FrequencyUnicom());
+            }
+            else
+            {
+                bool isNumber;
+                double frequencyMhz = receiver.toDouble(&isNumber);
+                if (isNumber)
+                {
+                    CFrequency radioFrequency = CFrequency(frequencyMhz, CFrequencyUnit::MHz());
+                    if (CComSystem::isValidCivilAviationFrequency(radioFrequency))
+                    {
+                        tm.setFrequency(radioFrequency);
+                    }
+                    else
+                    {
+                        CLogMessage(this).validationError("Wrong COM frequency for text message");
+                        return false;
+                    }
+                }
+                else
+                {
+                    CCallsign toCallsign(receiver);
+                    tm.setRecipientCallsign(toCallsign);
+                }
+            }
+
+            QString msg(parser.remainingStringAfter(2));
+            tm.setMessage(msg);
+            if (tm.isEmpty())
+            {
+                CLogMessage(this).validationError("No text message body");
+                return false;
+            }
+            CTextMessageList tml(tm);
+            this->sendTextMessages(tml);
+            return true;
+        }
         return false;
     }
 
@@ -350,10 +433,16 @@ namespace BlackCore
         emit vatsimDataFileRead();
     }
 
-    void CContextNetwork::ps_fsdTextMessageReceived(const CTextMessageList &messages)
+    void CContextNetwork::ps_checkForSupervisiorTextMessage(const CTextMessageList &messages)
     {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << messages; }
-        this->textMessagesReceived(messages); // relay
+        if (messages.containsPrivateMessages())
+        {
+            CTextMessageList supMessages(messages.getSupervisorMessages());
+            for (const CTextMessage &m : supMessages)
+            {
+                emit supervisorTextMessageReceived(m);
+            }
+        }
     }
 
     const CAircraft &CContextNetwork::ownAircraft() const

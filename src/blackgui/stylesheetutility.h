@@ -96,6 +96,13 @@ namespace BlackGui
             return f;
         }
 
+        //! File name textmessage.qss
+        static const QString &fileNameTextMessage()
+        {
+            static const QString f("textmessage.css");
+            return f;
+        }
+
         //! File name maininfoarea.qss
         static const QString &fileNameFilterDialog()
         {

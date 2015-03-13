@@ -77,7 +77,7 @@ namespace BlackGui
             // message and display
             this->ui->le_TmFrom->setText(textMessage.getSenderCallsign().asString());
             this->ui->le_TmTo->setText(textMessage.getRecipientCallsign().asString());
-            this->ui->le_TmReceived->setText(textMessage.receivedTime());
+            this->ui->le_TmReceived->setText(textMessage.getFormattedUtcTimestampHms());
             this->ui->te_TmText->setText(textMessage.getMessage());
 
             this->setCurrentPage(this->ui->pg_TextMessage);

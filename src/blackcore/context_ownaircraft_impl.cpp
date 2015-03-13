@@ -225,15 +225,17 @@ namespace BlackCore
         return aircraft;
     }
 
-    bool CContextOwnAircraft::parseCommandLine(const QString &commandLine)
+    bool CContextOwnAircraft::parseCommandLine(const QString &commandLine, const QString &originator)
     {
-        static CSimpleCommandParser parser(
+        Q_UNUSED(originator);
+        if (commandLine.isEmpty()) { return false; }
+        CSimpleCommandParser parser(
         {
             ".x", ".xpdr",    // transponder
             ".com1", ".com2", // com1, com2 frequencies
+            ".c1", ".c2",     // com1, com2 frequencies
             ".selcal"
         });
-        if (commandLine.isEmpty()) { return false; }
         parser.parse(commandLine);
         if (!parser.isKnownCommand()) { return false; }
 
@@ -256,7 +258,7 @@ namespace BlackCore
                 return true;
             }
         }
-        else if (parser.commandStartsWith("com"))
+        else if (parser.commandStartsWith("com") || parser.commandStartsWith("c"))
         {
             CFrequency frequency(parser.toDouble(1), CFrequencyUnit::MHz());
             if (CComSystem::isValidComFrequency(frequency))
