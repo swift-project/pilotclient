@@ -63,8 +63,8 @@ namespace BlackCore
                                            const QString &aircraftDesignator, const QString &combinedType, const QString &modelString) override;
         virtual void sendFsipirCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
                                             const QString &aircraftDesignator, const QString &combinedType, const QString &modelString) override;
-        virtual bool isInterimPositionSendingEnabled() const override;
-        virtual void enableInterimPositionSending(bool enable) override;
+        virtual bool isFastPositionSendingEnabled() const override;
+        virtual void enableFastPositionSending(bool enable) override;
         virtual void broadcastAircraftConfig(const QJsonObject &config) override;
         virtual void sendAircraftConfigQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
 

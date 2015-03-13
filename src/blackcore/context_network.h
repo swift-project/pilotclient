@@ -170,10 +170,16 @@ namespace BlackCore
         virtual BlackMisc::Network::CServerList getVatsimFsdServers() const = 0;
 
         //! Is interim position sending enabled?
-        virtual bool isInterimPositionSendingEnabled() const = 0;
+        virtual bool isFastPositionSendingEnabled() const = 0;
 
         //! Enable interim position sending
-        virtual void enableInterimPositionSending(bool enable) = 0;
+        virtual void enableFastPositionSending(bool enable) = 0;
+
+        //! Callsigns enabled for fast position updates
+        virtual void setFastPositionEnabledCallsigns(BlackMisc::Aviation::CCallsignList &callsigns) = 0;
+
+        //! Callsigns enabled for fast position updates
+        virtual BlackMisc::Aviation::CCallsignList getFastPositionEnabledCallsigns() = 0;
 
         /*!
          * Connect to Network

@@ -241,18 +241,32 @@ namespace BlackCore
             return false;
         }
 
-        //! \copydoc IContextNetwork::isInterimPositionSendingEnabled
-        virtual bool isInterimPositionSendingEnabled() const override
+        //! \copydoc IContextNetwork::isFastPositionSendingEnabled
+        virtual bool isFastPositionSendingEnabled() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             return false;
         }
 
-        //! \copydoc IContextNetwork::enableInterimPositionSending
-        virtual void enableInterimPositionSending(bool enable) override
+        //! \copydoc IContextNetwork::enableFastPositionSending
+        virtual void enableFastPositionSending(bool enable) override
         {
             Q_UNUSED(enable);
             logEmptyContextWarning(Q_FUNC_INFO);
+        }
+
+        //! \copydoc IContextNetwork::setFastPositionEnabledCallsigns
+        virtual void setFastPositionEnabledCallsigns(BlackMisc::Aviation::CCallsignList &callsigns) override
+        {
+            Q_UNUSED(callsigns);
+            logEmptyContextWarning(Q_FUNC_INFO);
+        }
+
+        //! \copydoc IContextNetwork::getFastPositionEnabledCallsigns
+        virtual BlackMisc::Aviation::CCallsignList getFastPositionEnabledCallsigns() override
+        {
+            logEmptyContextWarning(Q_FUNC_INFO);
+            return BlackMisc::Aviation::CCallsignList();
         }
 
     };

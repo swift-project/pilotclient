@@ -531,18 +531,31 @@ namespace BlackCore
         return c;
     }
 
-    bool CContextNetwork::isInterimPositionSendingEnabled() const
+    bool CContextNetwork::isFastPositionSendingEnabled() const
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         Q_ASSERT(this->m_network);
-        return m_network->isInterimPositionSendingEnabled();
+        return m_network->isFastPositionSendingEnabled();
     }
 
-    void CContextNetwork::enableInterimPositionSending(bool enable)
+    void CContextNetwork::enableFastPositionSending(bool enable)
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << enable; }
         Q_ASSERT(this->m_network);
-        m_network->enableInterimPositionSending(enable);
+        m_network->enableFastPositionSending(enable);
+    }
+
+    void CContextNetwork::setFastPositionEnabledCallsigns(CCallsignList &callsigns)
+    {
+        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsigns; }
+        Q_ASSERT(this->m_network);
+    }
+
+    CCallsignList CContextNetwork::getFastPositionEnabledCallsigns()
+    {
+        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        Q_ASSERT(this->m_network);
+        return CCallsignList();
     }
 
     void CContextNetwork::testCreateDummyOnlineAtcStations(int number)

@@ -587,12 +587,12 @@ namespace BlackCore
         sendCustomPacket(callsign, "FSIPIR", data);
     }
 
-    void CNetworkVatlib::enableInterimPositionSending(bool enable)
+    void CNetworkVatlib::enableFastPositionSending(bool enable)
     {
         m_sendInterimPositions = enable;
     }
 
-    bool CNetworkVatlib::isInterimPositionSendingEnabled() const
+    bool CNetworkVatlib::isFastPositionSendingEnabled() const
     {
         return m_sendInterimPositions;
     }

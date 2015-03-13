@@ -179,14 +179,24 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateAircraftModel"), callsign, model, originator);
     }
 
-    bool CContextNetworkProxy::isInterimPositionSendingEnabled() const
+    bool CContextNetworkProxy::isFastPositionSendingEnabled() const
     {
-        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isInterimPositionSendingEnabled"));
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isFastPositionSendingEnabled"));
     }
 
-    void CContextNetworkProxy::enableInterimPositionSending(bool enable)
+    void CContextNetworkProxy::enableFastPositionSending(bool enable)
     {
-        this->m_dBusInterface->callDBus(QLatin1Literal("enableInterimPositionSending"), enable);
+        this->m_dBusInterface->callDBus(QLatin1Literal("enableFastPositionSending"), enable);
+    }
+
+    void CContextNetworkProxy::setFastPositionEnabledCallsigns(CCallsignList &callsigns)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("setFastPositionEnabledCallsigns"), callsigns);
+    }
+
+    CCallsignList CContextNetworkProxy::getFastPositionEnabledCallsigns()
+    {
+        return this->m_dBusInterface->callDBusRet<CCallsignList>(QLatin1Literal("getFastPositionEnabledCallsigns"));
     }
 
     void CContextNetworkProxy::testCreateDummyOnlineAtcStations(int number)
