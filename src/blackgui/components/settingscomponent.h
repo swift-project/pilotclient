@@ -39,7 +39,8 @@ namespace BlackGui
             //! Tabs
             enum SettingTab
             {
-                SettingTabNetwork = 0,
+                SettingTabNetworkServers = 0,
+                SettingTabNetwork,
                 SettingTabAircraftAudio,
                 SettingTabSimulator,
                 SettingTabGui,
@@ -92,12 +93,6 @@ namespace BlackGui
             virtual void runtimeHasBeenSet() override;
 
         private slots:
-
-            //! Network server selected
-            void ps_networkServerSelected(QModelIndex index);
-
-            //! Alter traffic server
-            void ps_alterTrafficServer();
 
             //! Settings have been changed
             void ps_changedSettings(uint typeValue);

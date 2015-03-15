@@ -70,11 +70,15 @@ namespace BlackGui
             case ModelMode:
                 this->m_columns.addColumn(CColumn("e.", "enabled", CSimulatedAircraft::IndexEnabled,
                                                   new CBoolIconFormatter(CIcons::StandardIconTick16, CIcons::StandardIconCross16, "enabled", "disabled"), true));
+                this->m_columns.addColumn(CColumn("r.", "rendered", CSimulatedAircraft::IndexRendered,
+                                                  new CBoolIconFormatter(CIcons::StandardIconTick16, CIcons::StandardIconCross16, "rendered", "skipped"), true));
                 this->m_columns.addColumn(CColumn::standardValueObject("cs.", "callsign", { CSimulatedAircraft::IndexCallsign, CCallsign::IndexCallsignString }));
                 this->m_columns.addColumn(CColumn::standardString("realname", "pilot's real name", { CSimulatedAircraft::IndexPilot, CUser::IndexRealName }));
                 this->m_columns.addColumn(CColumn("distance", CSimulatedAircraft::IndexDistanceToOwnAircraft, new CAirspaceDistanceFormatter()));
                 this->m_columns.addColumn(CColumn("p.", "parts", CSimulatedAircraft::IndexPartsSynchronized,
                                                   new CBoolIconFormatter(CIcons::StandardIconTick16, CIcons::StandardIconCross16, "parts", "no parts"), true));
+                this->m_columns.addColumn(CColumn("f.", "fast position updates", CSimulatedAircraft::IndexFastPositionUpdates,
+                                                  new CBoolIconFormatter(CIcons::StandardIconTick16, CIcons::StandardIconCross16, "enabled", "disabled"), true));
                 this->m_columns.addColumn(CColumn::standardString("icao", { CSimulatedAircraft::IndexIcao, CAircraftIcao::IndexAsString}));
                 this->m_columns.addColumn(CColumn::standardString("model", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexModelString}));
                 this->m_columns.addColumn(CColumn::standardString("desc.", "description", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexDescription}));
@@ -83,7 +87,7 @@ namespace BlackGui
                 this->m_columns.addColumn(CColumn("gs.", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexGroundspeed }, new CAircraftSpeedFormatter()));
 
                 // default sort order
-                this->setSortColumnByPropertyIndex(CSimulatedAircraft::IndexCallsign);
+                this->setSortColumnByPropertyIndex(CSimulatedAircraft::IndexDistanceToOwnAircraft);
                 this->m_sortOrder = Qt::AscendingOrder;
                 break;
 

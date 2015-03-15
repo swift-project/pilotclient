@@ -79,6 +79,9 @@ namespace BlackGui
             //! Logoff countdown
             void ps_logoffCountdown();
 
+            //! Reverse lookup model
+            void ps_reverseLookupModel();
+
         private:
 
             //! GUI aircraft values, formatted
@@ -136,8 +139,11 @@ namespace BlackGui
             //! Own model string
             void setOwnModel();
 
-            //! Set ICAO values if fields are empty
-            void setIcaoValuesIfEmpty(const BlackMisc::Aviation::CAircraftIcao &icao);
+            //! Set ICAO values
+            void setGuiIcaoValues(const BlackMisc::Aviation::CAircraftIcao &icao, bool onlyIfEmpty);
+
+            //! Merge with GUI icao values
+            void mergeGuiIcaoValues(BlackMisc::Aviation::CAircraftIcao &icao) const;
 
             bool m_visible = false; //!< is this component selected?
             QScopedPointer<Ui::CLoginComponent> ui;

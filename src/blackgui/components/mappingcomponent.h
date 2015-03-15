@@ -51,6 +51,10 @@ namespace BlackGui
             //! \copydoc CListModelBase::getModelsStartsWith
             BlackMisc::Simulation::CAircraftModelList findModelsStartingWith(const QString modelName, Qt::CaseSensitivity cs);
 
+        signals:
+            //! Request a text message
+            void requestTextMessage(const BlackMisc::Aviation::CCallsign &callsign);
+
         protected:
             //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
             virtual void runtimeHasBeenSet() override;
@@ -74,9 +78,6 @@ namespace BlackGui
 
             //! Model selected (in view)
             void ps_onModelSelectedInView(const QModelIndex &index);
-
-            //! Apply new max remote aircraft
-            void ps_onApplyNewMaxRemoteAircraft();
 
             //! Save changed aircraft
             void ps_onSaveAircraft();

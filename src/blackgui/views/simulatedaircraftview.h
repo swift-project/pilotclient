@@ -14,6 +14,7 @@
 
 #include "viewbase.h"
 #include "../models/simulatedaircraftlistmodel.h"
+#include <QMenu>
 
 namespace BlackGui
 {
@@ -22,6 +23,7 @@ namespace BlackGui
         //! Aircrafts view
         class CSimulatedAircraftView : public CViewBase<Models::CSimulatedAircraftListModel, BlackMisc::Simulation::CSimulatedAircraftList, BlackMisc::Simulation::CSimulatedAircraft>
         {
+            Q_OBJECT
 
         public:
             //! Constructor
@@ -29,7 +31,21 @@ namespace BlackGui
 
             //! Mode
             void setAircraftMode(Models::CSimulatedAircraftListModel::AircraftMode mode);
+
+        signals:
+            //! Request a text message
+            void requestTextMessage(const BlackMisc::Aviation::CCallsign &callsign);
+
+        protected:
+            //! \copydoc CViewBase::customMenu
+            virtual void customMenu(QMenu &menu) const override;
+
+        private slots:
+            void ps_requestTextMessage();
+            void ps_enableAircraft();
+            void ps_fastPositionUpdates();
+
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard

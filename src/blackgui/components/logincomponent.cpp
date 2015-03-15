@@ -90,6 +90,7 @@ namespace BlackGui
             this->ui->le_AircraftIcaoDesignator->setMaxLength(5);
             this->ui->le_AircraftIcaoDesignator->setValidator(new CUpperCaseValidator(this));
             connect(ui->le_AircraftIcaoDesignator, &QLineEdit::editingFinished, this, &CLoginComponent::ps_validateAircraftValues);
+            connect(ui->tb_SimulatorIcaoReverseLookup, &QToolButton::clicked, this, &CLoginComponent::ps_reverseLookupModel);
 
             // server GUI element
             this->ui->frp_CurrentServer->setReadOnly(true);
@@ -278,6 +279,13 @@ namespace BlackGui
             return values;
         }
 
+        void CLoginComponent::mergeGuiIcaoValues(CAircraftIcao &icao) const
+        {
+            CGuiAircraftValues values = getAircraftValuesFromGui();
+            CAircraftIcao guiIcao(values.ownAircraftIcaoTypeDesignator, values.ownAircraftCombinedType, values.ownAircraftIcaoAirline, "", "");
+            icao.updateMissingParts(guiIcao);
+        }
+
         CLoginComponent::CVatsimValues CLoginComponent::getVatsimValuesFromGui() const
         {
             CVatsimValues values;
@@ -334,18 +342,23 @@ namespace BlackGui
 
         void CLoginComponent::setOwnModel()
         {
-            static const CAircraftIcao defaultIcao("C172", "L1P", "FOO", "", ""); //! \todo set values for OBS
+            Q_ASSERT(this->getIContextOwnAircraft());
+            Q_ASSERT(this->getIContextSimulator());
+
+            static const CAircraftIcao defaultIcao("C172", "L1P", "FOO", "", ""); // default values
+            CAircraftIcao icao;
+
             bool simConnected = this->getIContextSimulator() && this->getIContextSimulator()->isSimulating();
             if (simConnected)
             {
                 CAircraftModel model = this->getIContextOwnAircraft()->getOwnAircraft().getModel();
                 this->ui->le_SimulatorModel->setText(model.getModelString());
-                this->setIcaoValuesIfEmpty(model.getIcao());
 
-                // still empty?
-                if (this->ui->le_AircraftIcaoDesignator->text().trimmed().isEmpty())
+                icao = model.getIcao();
+                if (!icao.hasAircraftDesignator())
                 {
-                    this->setIcaoValuesIfEmpty(defaultIcao);
+                    // not valid, reverse lookup
+                    this->getIContextSimulator()->getIcaoForModelString(model.getModelString());
                 }
             }
             else
@@ -353,22 +366,27 @@ namespace BlackGui
                 // Set observer mode without simulator
                 //! \todo Currently not working in OBS mode
                 this->ui->gbp_LoginMode->setLoginMode(INetwork::LoginNormal);
-                this->setIcaoValuesIfEmpty(defaultIcao);
                 this->ui->le_SimulatorModel->setText("No simulator");
             }
+
+            if (icao.hasAircraftDesignator())
+            {
+                this->setGuiIcaoValues(icao, false);
+            }
+
         }
 
-        void CLoginComponent::setIcaoValuesIfEmpty(const CAircraftIcao &icao)
+        void CLoginComponent::setGuiIcaoValues(const CAircraftIcao &icao, bool onlyIfEmpty)
         {
-            if (this->ui->le_AircraftIcaoDesignator->text().trimmed().isEmpty())
+            if (!onlyIfEmpty || this->ui->le_AircraftIcaoDesignator->text().trimmed().isEmpty())
             {
                 this->ui->le_AircraftIcaoDesignator->setText(icao.getAircraftDesignator());
             }
-            if (this->ui->le_AircraftIcaoAirline->text().trimmed().isEmpty())
+            if (!onlyIfEmpty || this->ui->le_AircraftIcaoAirline->text().trimmed().isEmpty())
             {
                 this->ui->le_AircraftIcaoAirline->setText(icao.getAirlineDesignator());
             }
-            if (this->ui->le_AircraftCombinedType->text().trimmed().isEmpty())
+            if (!onlyIfEmpty || this->ui->le_AircraftCombinedType->text().trimmed().isEmpty())
             {
                 this->ui->le_AircraftCombinedType->setText(icao.getAircraftCombinedType());
             }
@@ -434,6 +452,30 @@ namespace BlackGui
             {
                 this->m_logoffCountdownTimer->stop();
                 this->ps_toggleNetworkConnection();
+            }
+        }
+
+        void CLoginComponent::ps_reverseLookupModel()
+        {
+            Q_ASSERT(getIContextOwnAircraft());
+            Q_ASSERT(getIContextSimulator());
+
+            CAircraftModel model(this->getIContextOwnAircraft()->getOwnAircraft().getModel());
+            CAircraftIcao icao = this->getIContextSimulator()->getIcaoForModelString(model.getModelString());
+            if (icao.hasAircraftDesignator())
+            {
+                CLogMessage(this).validationInfo("Reverse lookup for %1") << model.getModelString();
+
+                // set value in backend
+                this->mergeGuiIcaoValues(icao);
+                this->getIContextOwnAircraft()->updateIcaoData(icao);
+
+                // update GUI
+                this->setGuiIcaoValues(icao, false);
+            }
+            else
+            {
+                CLogMessage(this).validationWarning("Reverse lookup for %1 failed") << model.getModelString();
             }
         }
 

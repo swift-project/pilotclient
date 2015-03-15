@@ -21,8 +21,6 @@
 #include "blackcore/interpolator_linear.h"
 
 #include <QTimer>
-#include <QtConcurrent>
-
 #include <type_traits>
 
 using namespace BlackMisc;

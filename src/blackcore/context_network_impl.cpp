@@ -409,7 +409,7 @@ namespace BlackCore
         // send 1st position
         if (to == INetwork::Connected)
         {
-            CLogMessage(this).info("Connected, own aircraft %1") << this->ownAircraft().toQString();
+            CLogMessage(this).info("Connected, own aircraft %1") << this->ownAircraft().getCallsignAsString();
         }
 
         // send as message

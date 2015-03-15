@@ -21,5 +21,6 @@ namespace BlackGui
         {
             this->standardInit(new CAircraftListModel(this));
         }
-    }
-}
+
+    } // ns
+} // ns

@@ -118,6 +118,9 @@
               <height>16777215</height>
              </size>
             </property>
+            <property name="toolTip">
+             <string>offset +/-hh:mm</string>
+            </property>
             <property name="inputMask">
              <string>#99:99</string>
             </property>
@@ -130,33 +133,71 @@
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="lbl_TimeSyncOffset">
+           <widget class="QPushButton" name="pb_ApplyTimeSync">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="minimumSize">
+             <size>
+              <width>75</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>75</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="text">
-             <string>offset +/-hh:mm</string>
+             <string>apply</string>
             </property>
            </widget>
           </item>
-          <item>
-           <spacer name="hs_TimeSync">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
          </layout>
         </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="lbl_MaxAircraft">
+         <property name="text">
+          <string>Max.aircraft</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <layout class="QHBoxLayout" name="hl_MaxAircraft">
+         <item>
+          <widget class="QSpinBox" name="sb_MaxAircraft"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pb_ApplyMaxAircraft">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>75</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>75</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>apply</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </item>

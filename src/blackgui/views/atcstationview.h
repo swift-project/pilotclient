@@ -40,6 +40,9 @@ namespace BlackGui
             //! Request COM frequency
             void requestComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit unit);
 
+            //! Request a text message to
+            void requestTextMessage(const BlackMisc::Aviation::CCallsign &callsign);
+
         public slots:
             //! \copydoc CAtcStationListModel::changedAtcStationConnectionStatus
             void changedAtcStationConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
@@ -53,6 +56,7 @@ namespace BlackGui
             void ps_testRequest3kAtcOnlineDummies() { emit this->testRequestDummyAtcOnlineStations(3000); }
             void ps_tuneInAtcCom1();
             void ps_tuneInAtcCom2();
+            void ps_requestTextMessage();
         };
     }
 }

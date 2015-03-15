@@ -19,7 +19,7 @@
   <property name="frameShadow">
    <enum>QFrame::Raised</enum>
   </property>
-  <layout class="QGridLayout" name="gl_MappingComponent" columnstretch="0,0,1,4,0">
+  <layout class="QGridLayout" name="gl_MappingComponent" columnstretch="0,0,1,3,0">
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -35,10 +35,30 @@
    <property name="horizontalSpacing">
     <number>3</number>
    </property>
-   <item row="3" column="2">
-    <widget class="QSpinBox" name="sb_MaxAircraft">
-     <property name="maximum">
-      <number>50</number>
+   <item row="1" column="0">
+    <widget class="QLabel" name="lbl_AircraftIcon">
+     <property name="text">
+      <string>Icon</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2" colspan="3" alignment="Qt::AlignLeft">
+    <widget class="QLabel" name="lbl_AircraftIconDisplayed">
+     <property name="text">
+      <string>aircraft icon will go here</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1" alignment="Qt::AlignRight">
+    <widget class="QCheckBox" name="cb_AircraftIconDisplayed">
+     <property name="toolTip">
+      <string>show / hide icon</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
      </property>
     </widget>
    </item>
@@ -116,41 +136,6 @@
    <item row="2" column="3">
     <widget class="QLineEdit" name="le_AircraftModel"/>
    </item>
-   <item row="3" column="0" colspan="2">
-    <widget class="QLabel" name="lbl_MaxAircraft">
-     <property name="text">
-      <string>Max. aircraft </string>
-     </property>
-     <property name="margin">
-      <number>0</number>
-     </property>
-     <property name="indent">
-      <number>-1</number>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="3">
-    <widget class="QSlider" name="hs_MaxAircraft">
-     <property name="maximum">
-      <number>50</number>
-     </property>
-     <property name="pageStep">
-      <number>5</number>
-     </property>
-     <property name="value">
-      <number>40</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="tickPosition">
-      <enum>QSlider::TicksAbove</enum>
-     </property>
-     <property name="tickInterval">
-      <number>5</number>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="2">
     <widget class="QLineEdit" name="le_Callsign">
      <property name="maxLength">
@@ -175,13 +160,6 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="4">
-    <widget class="QPushButton" name="pb_ApplyMaxAircraft">
-     <property name="text">
-      <string>Apply</string>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="1" alignment="Qt::AlignRight">
     <widget class="QCheckBox" name="cb_AircraftEnabled">
      <property name="toolTip">
@@ -189,33 +167,6 @@
      </property>
      <property name="text">
       <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="lbl_AircraftIcon">
-     <property name="text">
-      <string>Icon</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2" colspan="3" alignment="Qt::AlignLeft">
-    <widget class="QLabel" name="lbl_AircraftIconDisplayed">
-     <property name="text">
-      <string>aircraft icon will go here</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1" alignment="Qt::AlignRight">
-    <widget class="QCheckBox" name="cb_AircraftIconDisplayed">
-     <property name="toolTip">
-      <string>show / hide icon</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
      </property>
     </widget>
    </item>

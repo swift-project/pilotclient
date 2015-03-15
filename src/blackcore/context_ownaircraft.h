@@ -73,7 +73,7 @@ namespace BlackCore
         //! Own callsign was changed
         void changedCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
-        //! Own callsign was changed
+        //! Own ICAO was changed
         void changedIcaoData(const BlackMisc::Aviation::CAircraftIcao &icao);
 
         //! own pilot (aka the swift user) changed

@@ -50,7 +50,7 @@ namespace BlackSimPlugin
             bool c = remoteAircraftProvider->connectRemoteAircraftProviderSignals(
                          std::bind(&CSimulatorXPlane::ps_addAircraftSituation, this, std::placeholders::_1),
                          std::bind(&CSimulatorXPlane::ps_addAircraftParts, this, std::placeholders::_1),
-                         [] (const BlackMisc::Aviation::CCallsign &) {});
+            [](const BlackMisc::Aviation::CCallsign &) {});
             Q_ASSERT(c);
             Q_UNUSED(c);
         }
@@ -129,10 +129,13 @@ namespace BlackSimPlugin
                     engines.push_back(engine);
                 }
 
-                Aviation::CAircraftParts parts { { m_xplaneData.strobeLightsOn, m_xplaneData.landingLightsOn, m_xplaneData.taxiLightsOn,
-                                                   m_xplaneData.beaconLightsOn, m_xplaneData.navLightsOn, false },
-                                                 { m_xplaneData.gearReployRatio > 0 }, { static_cast<int>(m_xplaneData.flapsReployRatio * 100) },
-                                                 { m_xplaneData.speedBrakeRatio > 0.5 }, engines, { m_xplaneData.onGroundAll } };
+                Aviation::CAircraftParts parts { {
+                        m_xplaneData.strobeLightsOn, m_xplaneData.landingLightsOn, m_xplaneData.taxiLightsOn,
+                        m_xplaneData.beaconLightsOn, m_xplaneData.navLightsOn, false
+                    },
+                    { m_xplaneData.gearReployRatio > 0 }, { static_cast<int>(m_xplaneData.flapsReployRatio * 100) },
+                    { m_xplaneData.speedBrakeRatio > 0.5 }, engines, { m_xplaneData.onGroundAll }
+                };
                 ownAircraft().setParts(parts);
             }
         }
@@ -228,7 +231,9 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::ps_emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao)
         {
-            //! \todo change as appropriate
+            //! \todo XP, change as appropriate
+            // try to set correct model and ICAO values here
+            // thy show up in GUI
             CAircraftModel model(ownAircraft().getModel());
             model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
             model.setFileName(path + "/" + filename);

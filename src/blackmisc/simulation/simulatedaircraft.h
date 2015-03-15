@@ -32,7 +32,8 @@ namespace BlackMisc
                 IndexClient,
                 IndexEnabled,
                 IndexRendered,
-                IndexPartsSynchronized
+                IndexPartsSynchronized,
+                IndexFastPositionUpdates
             };
 
             //! Default constructor.
@@ -85,6 +86,12 @@ namespace BlackMisc
             //! Rendered?
             bool isRendered() const { return m_rendered; }
 
+            //! Support fast position updates
+            bool fastPositionUpdates() const {return m_fastPositionUpdates;}
+
+            //! Support fast position updates
+            void setFastPositionUpdates(bool useFastPositions) { m_fastPositionUpdates = useFastPositions; }
+
             //! Rendered?
             void setRendered(bool rendered) { m_rendered = rendered; }
 
@@ -104,10 +111,12 @@ namespace BlackMisc
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CSimulatedAircraft)
             BlackMisc::Simulation::CAircraftModel m_model;
-            BlackMisc::Network::CClient        m_client;
-            bool m_enabled = true;   // to be displayed in sim
-            bool m_rendered = false; // really shown in sim
-            bool m_partsSynchronized = false;
+            BlackMisc::Network::CClient m_client;
+            bool m_enabled = true;              //!< to be displayed in sim
+            bool m_rendered = false;            //!< really shown in simulator
+            bool m_partsSynchronized = false;   //!< sync.parts
+            bool m_fastPositionUpdates =false;  //!<use fast position updates
+
             void init();
 
         };
@@ -119,7 +128,8 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Simulation::CSimulatedAircraft, (
                                    attr(o.m_client),
                                    attr(o.m_enabled),
                                    attr(o.m_rendered),
-                                   attr(o.m_partsSynchronized)
+                                   attr(o.m_partsSynchronized),
+                                   attr(o.m_fastPositionUpdates)
                                ))
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatedAircraft)
 

@@ -46,8 +46,11 @@ namespace BlackGui
             //! Settings have been changed
             void ps_settingsHaveChanged(uint settingsType);
 
-            //! A GUI value has been changed
-            void ps_guiValueHasChanged();
+            //! Apply max aircraft
+            void ps_onApplyNewMaxRemoteAircraft();
+
+            //! Apply time sync
+            void ps_onApplyTimeSync();
 
         private:
             Ui::CSettingsSimulatorComponent *ui; //!< UI

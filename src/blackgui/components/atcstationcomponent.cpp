@@ -62,6 +62,7 @@ namespace BlackGui
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::rowCountChanged, this, &CAtcStationComponent::ps_onCountChanged);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::rowCountChanged, this, &CAtcStationComponent::ps_onCountChanged);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::requestComFrequency, this, &CAtcStationComponent::ps_setComFrequency);
+            connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::requestTextMessage, this, &CAtcStationComponent::requestTextMessage);
 
             connect(this->ui->tvp_AtcStationsBooked, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::ps_reloadAtcStationsBooked);
             connect(this->ui->tvp_AtcStationsBooked, &CAtcStationView::rowCountChanged, this, &CAtcStationComponent::ps_onCountChanged);
@@ -264,7 +265,7 @@ namespace BlackGui
             this->ui->tvp_AtcStationsOnlineTree->setModel(
                 this->ui->tvp_AtcStationsOnline->derivedModel()->toAtcGroupModel()
             );
-            if (old) { old->deleteLater(); }
+            if (old) { old->deleteLater(); } // delete old model replaced by current model
             if (!this->ui->tvp_AtcStationsOnlineTree->model()) { return; }
 
             this->ui->tvp_AtcStationsOnlineTree->expandAll();

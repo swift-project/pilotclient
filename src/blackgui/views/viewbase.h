@@ -44,6 +44,13 @@ namespace BlackGui
                 ResizingOff    //!< never
             };
 
+            //! How rows are resizes
+            enum RowsResizeMode
+            {
+                Interactive,
+                Content
+            };
+
             //! When (rows count) to use asynchronous updates
             static const int asyncRowsCountThreshold = 50;
 
@@ -74,9 +81,6 @@ namespace BlackGui
             //! Filter dialog
             void setFilterDialog(QDialog *filterDialog);
 
-            //! Resize mode to content
-            void rowsResizeModeToContent();
-
             //! Main application window widget if any
             QWidget *mainApplicationWindowWidget() const;
 
@@ -100,6 +104,12 @@ namespace BlackGui
             //! Full resizing to content, might be slow
             virtual void fullResizeToContents();
 
+            //! Init as interactive, as this allows manually resizing
+            void rowsResizeModeToInteractive();
+
+            //! Resize mode to content
+            void rowsResizeModeToContent();
+
         protected:
             //! Constructor
             CViewBaseNonTemplate(QWidget *parent);
@@ -110,9 +120,6 @@ namespace BlackGui
 
             //! Perform resizing / non slot method for template
             virtual void performResizeToContents() = 0;
-
-            //! Init as interactive, as this allows manually resizing
-            void initRowsResizeModeToInteractive();
 
             //! Helper method with template free signature
             //! \param variant contains the container
@@ -130,6 +137,7 @@ namespace BlackGui
             void init();
 
             ResizeMode m_resizeMode   = ResizingAuto; //!< mode
+            RowsResizeMode m_rowResizeMode = Interactive; //!< row resize mode
             int        m_resizeCount  = 0;            //!< flag / counter, how many resize activities
             int m_skipResizeThreshold = 40;           //!< when to skip resize (rows count)
             int m_resizeAutoNthTime   = 1;            //!< with ResizeAuto, resize every n-th time
@@ -200,6 +208,9 @@ namespace BlackGui
 
             //! Selected objects
             ContainerType selectedObjects() const;
+
+            //! Selected object (or default)
+            ObjectType selectedObject() const;
 
             //! Row count
             int rowCount() const;

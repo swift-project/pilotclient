@@ -87,6 +87,8 @@ namespace BlackGui
             }
             if (!menu.isEmpty()) { menu.addSeparator(); }
             menu.addAction(BlackMisc::CIcons::resize16(), "Full resize", this, SLOT(fullResizeToContents()));
+            menu.addAction(BlackMisc::CIcons::resizeVertical16(), "Resize rows to content", this, SLOT(rowsResizeModeToContent()));
+            menu.addAction(BlackMisc::CIcons::resizeVertical16(), "Resize rows interactive", this, SLOT(rowsResizeModeToInteractive()));
 
             // resize to content might decrease performance,
             // so I only allow changing to "content resizing" if size matches
@@ -126,7 +128,15 @@ namespace BlackGui
             this->horizontalHeader()->setStretchLastSection(true);
             this->verticalHeader()->setDefaultSectionSize(fh); // for height
             this->verticalHeader()->setMinimumSectionSize(fh); // for height
-            this->initRowsResizeModeToInteractive();
+
+            switch (this->m_rowResizeMode)
+            {
+            case Interactive: this->rowsResizeModeToInteractive(); break;
+            case Content: this->rowsResizeModeToContent(); break;
+            default:
+                Q_ASSERT(false);
+                break;
+            }
         }
 
         int CViewBaseNonTemplate::ps_updateContainer(const CVariant &variant, bool sort, bool resize)
@@ -141,13 +151,14 @@ namespace BlackGui
             this->m_filterDialog->show();
         }
 
-        void CViewBaseNonTemplate::initRowsResizeModeToInteractive()
+        void CViewBaseNonTemplate::rowsResizeModeToInteractive()
         {
             const int height = this->verticalHeader()->minimumSectionSize();
             QHeaderView *verticalHeader = this->verticalHeader();
             Q_ASSERT(verticalHeader);
             verticalHeader->setSectionResizeMode(QHeaderView::Interactive);
             verticalHeader->setDefaultSectionSize(height);
+            this->m_rowResizeMode = Interactive;
         }
 
         void CViewBaseNonTemplate::rowsResizeModeToContent()
@@ -155,6 +166,7 @@ namespace BlackGui
             QHeaderView *verticalHeader = this->verticalHeader();
             Q_ASSERT(verticalHeader);
             verticalHeader->setSectionResizeMode(QHeaderView::ResizeToContents);
+            this->m_rowResizeMode = Content;
         }
 
         bool CViewBaseNonTemplate::performResizing() const
@@ -240,26 +252,30 @@ namespace BlackGui
             }
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType> void CViewBase<ModelClass, ContainerType, ObjectType>::insert(const ObjectType &value, bool resize)
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::insert(const ObjectType &value, bool resize)
         {
             Q_ASSERT(this->m_model);
             this->m_model->insert(value);
             if (resize) { this->performResizeToContents(); }
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType> const ObjectType &CViewBase<ModelClass, ContainerType, ObjectType>::at(const QModelIndex &index) const
+        template <class ModelClass, class ContainerType, class ObjectType>
+        const ObjectType &CViewBase<ModelClass, ContainerType, ObjectType>::at(const QModelIndex &index) const
         {
             Q_ASSERT(this->m_model);
             return this->m_model->at(index);
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType> const ContainerType &CViewBase<ModelClass, ContainerType, ObjectType>::getContainer() const
+        template <class ModelClass, class ContainerType, class ObjectType>
+        const ContainerType &CViewBase<ModelClass, ContainerType, ObjectType>::getContainer() const
         {
             Q_ASSERT(this->m_model);
             return this->m_model->getContainer();
         }
 
-        template <class ModelClass, class ContainerType, class ObjectType> ContainerType CViewBase<ModelClass, ContainerType, ObjectType>::selectedObjects() const
+        template <class ModelClass, class ContainerType, class ObjectType>
+        ContainerType CViewBase<ModelClass, ContainerType, ObjectType>::selectedObjects() const
         {
             if (!this->hasSelection()) { return ContainerType(); }
             ContainerType c;
@@ -269,6 +285,13 @@ namespace BlackGui
                 c.push_back(this->at(i));
             }
             return c;
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        ObjectType CViewBase<ModelClass, ContainerType, ObjectType>::selectedObject() const
+        {
+            ContainerType c = this->selectedObjects();
+            return c.frontOrDefault();
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>

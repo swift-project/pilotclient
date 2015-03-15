@@ -22,6 +22,38 @@
   <property name="currentIndex">
    <number>0</number>
   </property>
+  <widget class="QWidget" name="tb_SettingsTrafficNetworkServers">
+   <attribute name="title">
+    <string>Servers</string>
+   </attribute>
+   <layout class="QVBoxLayout" name="vl_SettingsTrafficNetworkServers">
+    <property name="spacing">
+     <number>2</number>
+    </property>
+    <property name="leftMargin">
+     <number>1</number>
+    </property>
+    <property name="topMargin">
+     <number>1</number>
+    </property>
+    <property name="rightMargin">
+     <number>1</number>
+    </property>
+    <property name="bottomMargin">
+     <number>1</number>
+    </property>
+    <item>
+     <widget class="BlackGui::Components::CSettingsNetworkServersComponent" name="comp_SettingsServersComponent">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
   <widget class="QWidget" name="tb_SettingsTrafficNetwork">
    <attribute name="title">
     <string>Network</string>
@@ -43,104 +75,13 @@
      <number>1</number>
     </property>
     <item>
-     <widget class="BlackGui::Views::CServerView" name="tvp_SettingsTnServers">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="editTriggers">
-       <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
-      </property>
-      <property name="selectionMode">
-       <enum>QAbstractItemView::SingleSelection</enum>
-      </property>
-      <property name="selectionBehavior">
-       <enum>QAbstractItemView::SelectRows</enum>
-      </property>
-      <attribute name="verticalHeaderVisible">
-       <bool>false</bool>
-      </attribute>
-     </widget>
-    </item>
-    <item>
-     <widget class="BlackGui::CServerForm" name="frp_ServerForm">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
+     <widget class="BlackGui::Components::CSettingsNetworkComponent" name="comp_SettingsNetwork">
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QFrame" name="fr_SettingsTnButtons">
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-      <layout class="QHBoxLayout" name="hl_SettingsBottomBar">
-       <property name="topMargin">
-        <number>3</number>
-       </property>
-       <property name="bottomMargin">
-        <number>3</number>
-       </property>
-       <item>
-        <spacer name="hs_SettingsTnSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pb_SettingsTnSaveServer">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Save</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pb_SettingsTnRemoveServer">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Remove</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
      </widget>
     </item>
    </layout>
@@ -610,20 +551,21 @@
    <header>blackgui/views/keyboardkeyview.h</header>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Views::CServerView</class>
-   <extends>QTableView</extends>
-   <header>blackgui/views/serverview.h</header>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Components::CSettingsSimulatorComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/settingssimulatorcomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::CServerForm</class>
+   <class>BlackGui::Components::CSettingsNetworkServersComponent</class>
    <extends>QFrame</extends>
-   <header>blackgui/serverform.h</header>
+   <header>blackgui/components/settingsnetworkserverscomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CSettingsNetworkComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/settingsnetworkcomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -8,6 +8,7 @@
  */
 
 #include "context_ownaircraft_impl.h"
+#include "context_simulator.h"
 #include "context_network.h"
 #include "context_audio.h"
 #include "context_application.h"
@@ -23,7 +24,6 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Simulation;
-
 
 namespace BlackCore
 {
@@ -69,9 +69,11 @@ namespace BlackCore
         this->m_ownAircraft.setSituation(situation);
         this->m_ownAircraft.setPilot(this->getIContextSettings()->getNetworkSettings().getCurrentTrafficNetworkServer().getUser());
 
+        // from simulator, if available
+        this->m_ownAircraft.setCallsign(CCallsign("SWIFT")); // would come from settings
+
         // TODO: This would need to come from somewhere (mappings)
         // Own callsign, plane ICAO status, model used
-        this->m_ownAircraft.setCallsign(CCallsign("SWIFT"));
         this->m_ownAircraft.setIcaoInfo(CAircraftIcao("C172", "L1P", "GA", "GA", "0000ff"));
 
         // voice rooms, if network is already available
@@ -196,6 +198,18 @@ namespace BlackCore
         this->resolveVoiceRooms();
     }
 
+    void CContextOwnAircraft::ps_changedSimulatorModel(const CSimulatedAircraft &ownAircraft)
+    {
+        this->m_ownAircraft.setModel(ownAircraft.getModel());
+        CAircraftIcao icao(ownAircraft.getIcaoInfo());
+        if (icao.hasAircraftDesignator())
+        {
+            // if the model knows it ICAO, cool
+            // otherwise we ignore it and take an elsewhere set
+            this->m_ownAircraft.setIcaoInfo(icao);
+        }
+    }
+
     void CContextOwnAircraft::setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url)
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << voiceRoom1Url << voiceRoom2Url;
@@ -213,16 +227,8 @@ namespace BlackCore
     CSimulatedAircraft CContextOwnAircraft::getOwnAircraft() const
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << this->m_ownAircraft;
-        if (this->thread() == QThread::currentThread()) { return this->m_ownAircraft; }
-        CSimulatedAircraft aircraft;
-        bool s = QMetaObject::invokeMethod(const_cast<CContextOwnAircraft *>(this), // strip away const, invoke will not change anything
-                                           "getOwnAircraft",
-                                           Qt::BlockingQueuedConnection,
-                                           Q_RETURN_ARG(CSimulatedAircraft, aircraft)
-                                          );
-        Q_ASSERT(s);
-        Q_UNUSED(s);
-        return aircraft;
+        Q_ASSERT(this->thread() == QThread::currentThread());
+        return this->m_ownAircraft;
     }
 
     bool CContextOwnAircraft::parseCommandLine(const QString &commandLine, const QString &originator)

@@ -52,6 +52,10 @@ namespace BlackGui
             //! Number of online stations
             int countOnlineStations() const;
 
+        signals:
+            //! Request a text message
+            void requestTextMessage(const BlackMisc::Aviation::CCallsign &callsign);
+
         public slots:
             //! Update stations
             void update();

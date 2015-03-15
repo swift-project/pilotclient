@@ -53,6 +53,7 @@ namespace BlackGui
             {
                 menu.addAction(CIcons::appCockpit16(), "Tune in COM1", this, SLOT(ps_tuneInAtcCom1()));
                 menu.addAction(CIcons::appCockpit16(), "Tune in COM2", this, SLOT(ps_tuneInAtcCom2()));
+                menu.addAction(CIcons::appTextMessages16(), "Text message", this, SLOT(ps_requestTextMessage()));
                 menu.addSeparator();
             }
             CViewBase::customMenu(menu);
@@ -60,16 +61,23 @@ namespace BlackGui
 
         void CAtcStationView::ps_tuneInAtcCom1()
         {
-            CAtcStationList l = this->selectedObjects();
-            if (l.isEmpty()) { return; }
-            emit this->requestComFrequency(l.front().getFrequency(), CComSystem::Com1);
+            CAtcStation s(this->selectedObject());
+            if (s.getCallsign().isEmpty()) { return; }
+            emit this->requestComFrequency(s.getFrequency(), CComSystem::Com1);
         }
 
         void CAtcStationView::ps_tuneInAtcCom2()
         {
-            CAtcStationList l = this->selectedObjects();
-            if (l.isEmpty()) { return; }
-            emit this->requestComFrequency(l.front().getFrequency(), CComSystem::Com2);
+            CAtcStation s(this->selectedObject());
+            if (s.getCallsign().isEmpty()) { return; }
+            emit this->requestComFrequency(s.getFrequency(), CComSystem::Com2);
+        }
+
+        void CAtcStationView::ps_requestTextMessage()
+        {
+            CAtcStation s(this->selectedObject());
+            if (s.getCallsign().isEmpty()) { return; }
+            emit this->requestTextMessage(s.getCallsign());
         }
 
     } // namespace

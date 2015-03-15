@@ -80,7 +80,7 @@ namespace BlackGui
             QScopedPointer<Ui::CAircraftComponent> ui;
             CUpdateTimer *m_updateTimer = nullptr;
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard

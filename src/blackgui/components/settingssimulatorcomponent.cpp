@@ -3,8 +3,10 @@
 
 #include "blackcore/context_settings.h"
 #include "blackcore/context_simulator.h"
+#include "blackcore/context_network.h"
 #include "blacksim/simulatorinfolist.h"
 #include "blacksim/setsimulator.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/settingutilities.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/variant.h"
@@ -14,6 +16,8 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Settings;
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Aviation;
 using namespace BlackSim;
 using namespace BlackSim::Settings;
 using namespace BlackCore;
@@ -57,6 +61,9 @@ namespace BlackGui
                 CTime timeOffset = this->getIContextSimulator()->getTimeSynchronizationOffset();
                 this->ui->le_TimeSyncOffset->setText(timeOffset.formattedHrsMin());
 
+                // max.aircraft
+                this->ui->sb_MaxAircraft->setValue(getIContextSimulator()->getMaxRenderedAircraft());
+
                 // only with simulator context set GUI values
                 bool connected = this->connect(this->ui->cb_Plugins, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_pluginHasChanged(int)));
                 Q_ASSERT(connected);
@@ -68,8 +75,8 @@ namespace BlackGui
                 connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &CSettingsSimulatorComponent::ps_settingsHaveChanged);
             }
 
-            connect(this->ui->cb_TimeSync, &QCheckBox::released, this, &CSettingsSimulatorComponent::ps_guiValueHasChanged);
-            connect(this->ui->le_TimeSyncOffset, &QLineEdit::returnPressed, this, &CSettingsSimulatorComponent::ps_guiValueHasChanged);
+            connect(this->ui->pb_ApplyMaxAircraft, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyNewMaxRemoteAircraft);
+            connect(this->ui->pb_ApplyTimeSync, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyTimeSync);
         }
 
         void CSettingsSimulatorComponent::setCurrentPlugin(const CSimulatorInfo &plugin)
@@ -124,37 +131,50 @@ namespace BlackGui
             this->ui->cb_TimeSync->setChecked(simSettings.isTimeSyncEnabled());
         }
 
-        void CSettingsSimulatorComponent::ps_guiValueHasChanged()
+        void CSettingsSimulatorComponent::ps_onApplyNewMaxRemoteAircraft()
         {
-            Q_ASSERT(this->getIContextSettings());
-            if (!this->getIContextSettings()) return;
+            Q_ASSERT(getIContextSimulator());
+            Q_ASSERT(getIContextNetwork());
 
-            QObject *sender = QObject::sender();
-            if (!sender) return;
+            // get initial aircraft to render
+            int noRequested = this->ui->sb_MaxAircraft->value();
+            CSimulatedAircraftList inRange(this->getIContextNetwork()->getAircraftInRange());
+            inRange.truncate(noRequested);
+            inRange.sortByDistanceToOwnAircraft();
+            CCallsignList initialCallsigns(inRange.getCallsigns());
+            this->getIContextSimulator()->setMaxRenderedAircraft(noRequested, initialCallsigns);
 
-            const QString ps = IContextSettings::PathSimulatorSettings();
-            if (sender == this->ui->cb_TimeSync)
+            // real value
+            int noRendered = this->getIContextSimulator()->getMaxRenderedAircraft();
+            if (noRequested == noRendered)
             {
-                bool timeSync = this->ui->cb_TimeSync->isChecked();
-                this->getIContextSettings()->value(CSettingUtilities::appendPaths(ps, CSettingsSimulator::ValueSyncTime()), CSettingUtilities::CmdUpdate(), CVariant::from(timeSync));
+                CLogMessage(this).info("Max.rendered aircraft: %1") << noRendered;
             }
-            else if (sender == this->ui->le_TimeSyncOffset)
+            else
             {
-                const QString os = this->ui->le_TimeSyncOffset->text();
-                CTime ost(0, CTimeUnit::hrmin());
-                if (!os.isEmpty())
-                {
-                    ost.parseFromString(os);
-                }
-                if (ost.isNull())
-                {
-                    CLogMessage().validationWarning("Invalid offset time");
-                }
-                else
-                {
-                    this->getIContextSettings()->value(CSettingUtilities::appendPaths(ps, CSettingsSimulator::ValueSyncTimeOffset()), CSettingUtilities::CmdUpdate(), ost.toCVariant());
-                }
+                CLogMessage(this).info("Max.rendered aircraft: %1, requested: %2") << noRendered << noRequested;
+                this->ui->sb_MaxAircraft->setValue(noRendered);
+            }
+        }
+
+        void CSettingsSimulatorComponent::ps_onApplyTimeSync()
+        {
+            bool timeSync = this->ui->cb_TimeSync->isChecked();
+            const QString os = this->ui->le_TimeSyncOffset->text();
+            CTime ost(0, CTimeUnit::hrmin());
+            if (!os.isEmpty())
+            {
+                ost.parseFromString(os);
+            }
+            if (ost.isNull())
+            {
+                CLogMessage().validationWarning("Invalid offset time");
+            }
+            else
+            {
+                getIContextSimulator()->setTimeSynchronization(timeSync, ost);
             }
         }
     }
+
 } // namespace

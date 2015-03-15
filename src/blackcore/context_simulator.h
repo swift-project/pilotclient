@@ -85,7 +85,6 @@ namespace BlackCore
         void modelMatchingCompleted(BlackMisc::Simulation::CSimulatedAircraft aircraft);
 
         //! Emitted when own aircraft model changes
-        //! \todo move to own aircraft context?
         void ownAircraftModelChanged(BlackMisc::Simulation::CSimulatedAircraft aircraft);
 
     public slots:

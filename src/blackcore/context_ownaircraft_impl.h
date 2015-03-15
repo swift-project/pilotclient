@@ -103,8 +103,12 @@ namespace BlackCore
 
     private slots:
         //! Station has been changed, needed to tune in/out voice room
-        //! Set in runtime
+        //! \note Connected in runtime
         void ps_changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &atcStation, bool connected);
+
+        //! Simulator model has been changed
+        //! \note Connected in runtime
+        void ps_changedSimulatorModel(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
 
     private:
         BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< my aircraft

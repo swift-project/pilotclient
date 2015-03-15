@@ -179,7 +179,7 @@ void SwiftGuiStd::initGuiSignals()
     connect(this->ui->comp_Login, &CLoginComponent::requestNetworkSettings, this->ui->comp_MainInfoArea->getFlightPlanComponent(), [ = ]()
     {
         this->ps_setMainPageInfoArea(CMainInfoAreaComponent::InfoAreaSettings);
-        this->ui->comp_MainInfoArea->getSettingsComponent()->setSettingsTab(CSettingsComponent::SettingTabNetwork);
+        this->ui->comp_MainInfoArea->getSettingsComponent()->setSettingsTab(CSettingsComponent::SettingTabNetworkServers);
     });
 
     // main info area

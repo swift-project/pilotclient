@@ -37,7 +37,6 @@ namespace BlackGui
     {
         CSettingsComponent::CSettingsComponent(QWidget *parent) :
             QTabWidget(parent),
-            CEnableForRuntime(nullptr, false),
             ui(new Ui::CSettingsComponent)
         {
             ui->setupUi(this);
@@ -77,11 +76,9 @@ namespace BlackGui
          */
         void CSettingsComponent::reloadSettings()
         {
-            // local copy
-            CSettingsNetwork nws = this->getIContextSettings()->getNetworkSettings();
-
-            // update servers
-            this->ui->tvp_SettingsTnServers->updateContainer(nws.getTrafficNetworkServers());
+            // reload components
+            this->ui->comp_AudioSetup->reloadSettings();
+            this->ui->comp_SettingsServersComponent->reloadSettings();
 
             // update hot keys
             this->ui->tvp_SettingsMiscHotkeys->updateContainer(this->getIContextSettings()->getHotkeys());
@@ -100,7 +97,7 @@ namespace BlackGui
          */
         void CSettingsComponent::runtimeHasBeenSet()
         {
-            if (!this->getIContextSettings()) qFatal("Settings missing");
+            Q_ASSERT_X(this->getIContextSettings(), "runtimeHasBeenSet", "Missing settings");
             this->connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &CSettingsComponent::ps_changedSettings);
 
             // Opacity, intervals
@@ -108,11 +105,6 @@ namespace BlackGui
             this->connect(this->ui->hs_SettingsGuiAircraftRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedAircraftUpdateInterval);
             this->connect(this->ui->hs_SettingsGuiAtcRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedAtcStationsUpdateInterval);
             this->connect(this->ui->hs_SettingsGuiUserRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedUsersUpdateInterval);
-
-            // Settings server
-            this->connect(this->ui->pb_SettingsTnRemoveServer, &QPushButton::released, this, &CSettingsComponent::ps_alterTrafficServer);
-            this->connect(this->ui->pb_SettingsTnSaveServer, &QPushButton::released, this, &CSettingsComponent::ps_alterTrafficServer);
-            this->connect(this->ui->tvp_SettingsTnServers, &QTableView::clicked, this, &CSettingsComponent::ps_networkServerSelected);
 
             // Settings hotkeys
             this->connect(this->ui->pb_SettingsMiscCancel, &QPushButton::clicked, this, &CSettingsComponent::reloadSettings);
@@ -134,42 +126,6 @@ namespace BlackGui
             Q_ASSERT(connected);
             this->connect(this->ui->tb_SettingsGuiFontColor, &QToolButton::clicked, this, &CSettingsComponent::ps_fontColorDialog);
             Q_UNUSED(connected);
-        }
-
-        /*
-         * Network has been selected
-         */
-        void CSettingsComponent::ps_networkServerSelected(QModelIndex index)
-        {
-            const CServer clickedServer = this->ui->tvp_SettingsTnServers->at(index);
-            this->ui->frp_ServerForm->setServer(clickedServer);
-        }
-
-        /*
-         * Alter server
-         */
-        void CSettingsComponent::ps_alterTrafficServer()
-        {
-            CServer server = this->ui->frp_ServerForm->getServer();
-            CStatusMessageList  msgs = server.validate();
-            if (!msgs.isEmpty())
-            {
-                msgs.addCategories(this);
-                msgs.addCategory(CLogCategory::validation());
-                CLogMessage::preformatted(msgs);
-                return;
-            }
-
-            const QString path = CSettingUtilities::appendPaths(IContextSettings::PathNetworkSettings(), CSettingsNetwork::ValueTrafficServers());
-            QObject *sender = QObject::sender();
-            if (sender == this->ui->pb_SettingsTnRemoveServer)
-            {
-                this->getIContextSettings()->value(path, CSettingUtilities::CmdRemove(), server.toCVariant());
-            }
-            else if (sender == this->ui->pb_SettingsTnSaveServer)
-            {
-                this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), server.toCVariant());
-            }
         }
 
         /*

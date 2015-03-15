@@ -8,8 +8,10 @@
  */
 
 #include "simulatedaircraftview.h"
+#include "blackmisc/project.h"
 #include <QHeaderView>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackGui::Models;
 
@@ -27,5 +29,44 @@ namespace BlackGui
         {
             this->m_model->setAircraftMode(mode);
         }
-    }
-}
+
+        void CSimulatedAircraftView::customMenu(QMenu &menu) const
+        {
+            if (BlackMisc::CProject::isDebugBuild())
+            {
+                // tbd
+            }
+
+            if (this->hasSelection())
+            {
+                CSimulatedAircraft aircraft(selectedObject());
+                Q_ASSERT(!aircraft.getCallsign().isEmpty());
+                menu.addAction(CIcons::appTextMessages16(), "Text message", this, SLOT(ps_requestTextMessage()));
+                menu.addAction(CIcons::appAircrafts16(), aircraft.isEnabled() ? "disable aircraft" : "enabled aircraft", this, SLOT(ps_enableAircraft()));
+                menu.addAction(CIcons::globe16(), aircraft.fastPositionUpdates() ? "normal updates" : "fast position updates", this, SLOT(ps_fastPositionUpdates()));
+                menu.addSeparator();
+            }
+            CViewBase::customMenu(menu);
+        }
+
+        void CSimulatedAircraftView::ps_requestTextMessage()
+        {
+            CSimulatedAircraft aircraft(selectedObject());
+            if (aircraft.getCallsign().isEmpty()) { return; }
+            emit requestTextMessage(aircraft.getCallsign());
+        }
+
+        void CSimulatedAircraftView::ps_enableAircraft()
+        {
+            CSimulatedAircraft aircraft(selectedObject());
+            if (aircraft.getCallsign().isEmpty()) { return; }
+        }
+
+        void CSimulatedAircraftView::ps_fastPositionUpdates()
+        {
+            CSimulatedAircraft aircraft(selectedObject());
+            if (aircraft.getCallsign().isEmpty()) { return; }
+        }
+
+    } // ns
+} // ns

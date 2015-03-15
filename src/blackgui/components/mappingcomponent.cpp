@@ -44,24 +44,15 @@ namespace BlackGui
             this->ui->tvp_AircraftModels->setResizeMode(CAircraftModelView::ResizingOff);
 
             connect(this->ui->tvp_AircraftModels,  &CAircraftModelView::requestUpdate, this, &CMappingComponent::ps_onModelsUpdateRequested);
-            connect(this->ui->tvp_CurrentMappings, &CAircraftModelView::requestUpdate, this, &CMappingComponent::ps_onMappingsUpdateRequested);
             connect(this->ui->tvp_AircraftModels,  &CAircraftModelView::rowCountChanged, this, &CMappingComponent::ps_onRowCountChanged);
-            connect(this->ui->tvp_CurrentMappings, &CAircraftModelView::rowCountChanged, this, &CMappingComponent::ps_onRowCountChanged);
-            connect(this->ui->tvp_CurrentMappings, &CAircraftModelView::clicked, this, &CMappingComponent::ps_onAircraftSelectedInView);
             connect(this->ui->tvp_AircraftModels,  &CAircraftModelView::clicked, this, &CMappingComponent::ps_onModelSelectedInView);
 
-            connect(this->ui->pb_ApplyMaxAircraft, &QPushButton::clicked, this, &CMappingComponent::ps_onApplyNewMaxRemoteAircraft);
-            connect(this->ui->pb_SaveAircraft, &QPushButton::clicked, this, &CMappingComponent::ps_onSaveAircraft);
+            connect(this->ui->tvp_CurrentMappings, &CSimulatedAircraftView::rowCountChanged, this, &CMappingComponent::ps_onRowCountChanged);
+            connect(this->ui->tvp_CurrentMappings, &CSimulatedAircraftView::clicked, this, &CMappingComponent::ps_onAircraftSelectedInView);
+            connect(this->ui->tvp_CurrentMappings, &CSimulatedAircraftView ::requestUpdate, this, &CMappingComponent::ps_onMappingsUpdateRequested);
+            connect(this->ui->tvp_CurrentMappings, &CSimulatedAircraftView::requestTextMessage, this, &CMappingComponent::requestTextMessage);
 
-            // sync slider and text field
-            connect(this->ui->hs_MaxAircraft, &QSlider::valueChanged, [ = ](int newValue)
-            {
-                this->ui->sb_MaxAircraft->setValue(newValue);
-            });
-            connect(this->ui->sb_MaxAircraft, static_cast<void (QSpinBox::*)(int)> (&QSpinBox::valueChanged), [ = ](int newValue)
-            {
-                this->ui->hs_MaxAircraft->setValue(newValue);
-            });
+            connect(this->ui->pb_SaveAircraft, &QPushButton::clicked, this, &CMappingComponent::ps_onSaveAircraft);
 
             this->m_modelCompleter = new QCompleter(this);
             this->m_currentMappingsViewDelegate = new CCheckBoxDelegate(":/diagona/icons/diagona/icons/tick.png", ":/diagona/icons/diagona/icons/cross.png", this);
@@ -105,9 +96,6 @@ namespace BlackGui
 
             // requires simulator context
             connect(this->ui->tvp_CurrentMappings, &CAircraftModelView::objectChanged, this, &CMappingComponent::ps_onChangedSimulatedAircraftInView);
-
-            // data
-            this->ui->hs_MaxAircraft->setValue(getIContextSimulator()->getMaxRenderedAircraft());
 
             // with external core models might be already available
             this->ps_onAircraftModelsLoaded();
@@ -197,32 +185,6 @@ namespace BlackGui
             }
         }
 
-        void CMappingComponent::ps_onApplyNewMaxRemoteAircraft()
-        {
-            Q_ASSERT(getIContextSimulator());
-            Q_ASSERT(getIContextNetwork());
-
-            // get initial aircraft to render
-            int noRequested = this->ui->hs_MaxAircraft->value();
-            CSimulatedAircraftList inRange(this->getIContextNetwork()->getAircraftInRange());
-            inRange.truncate(noRequested);
-            inRange.sortByDistanceToOwnAircraft();
-            CCallsignList initialCallsigns(inRange.getCallsigns());
-            this->getIContextSimulator()->setMaxRenderedAircraft(noRequested, initialCallsigns);
-
-            // real value
-            int noRendered = this->getIContextSimulator()->getMaxRenderedAircraft();
-            if (noRequested == noRendered)
-            {
-                CLogMessage(this).info("Max.rendered aircraft: %1") << noRendered;
-            }
-            else
-            {
-                CLogMessage(this).info("Max.rendered aircraft: %1, requested: %2") << noRendered << noRequested;
-                this->ui->sb_MaxAircraft->setValue(noRendered);
-            }
-        }
-
         void CMappingComponent::ps_onSaveAircraft()
         {
             Q_ASSERT(getIContextSimulator());
@@ -292,11 +254,17 @@ namespace BlackGui
 
         void CMappingComponent::ps_onModelPreviewChanged(int state)
         {
+            static const QPixmap empty;
             Qt::CheckState s = static_cast<Qt::CheckState>(state);
             if (s == Qt::Unchecked)
             {
-                this->ui->lbl_AircraftIconDisplayed->setPixmap(QPixmap());
+                this->ui->lbl_AircraftIconDisplayed->setPixmap(empty);
                 this->ui->lbl_AircraftIconDisplayed->setText("Icon disabled");
+            }
+            else if (s == Qt::Checked)
+            {
+                this->ui->lbl_AircraftIconDisplayed->setPixmap(empty);
+                this->ui->lbl_AircraftIconDisplayed->setText("Icon will go here");
             }
         }
 

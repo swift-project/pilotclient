@@ -42,7 +42,6 @@ namespace BlackGui
             this->ui->le_textMessages->setVisible(false);
             connect(this->ui->le_textMessages, &QLineEdit::returnPressed, this, &CTextMessageComponent::ps_textMessageEntered);
 
-            this->ui->tvp_TextMessagesAll->rowsResizeModeToContent();
             this->ui->tvp_TextMessagesAll->setResizeMode(CTextMessageView::ResizingAuto);
         }
 

@@ -20,6 +20,7 @@ namespace BlackGui
     namespace Views
     {
         //! Aircrafts view
+        //! \deprecated use simulated aircraft instead
         class CAircraftView : public CViewBase<Models::CAircraftListModel, BlackMisc::Aviation::CAircraftList, BlackMisc::Aviation::CAircraft>
         {
 
