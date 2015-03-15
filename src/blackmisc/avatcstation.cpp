@@ -104,7 +104,7 @@ namespace BlackMisc
             }
 
             // controller name
-            if (!this->m_controller.isValid())
+            if (this->m_controller.isValid())
             {
                 s.append(' ');
                 s.append(this->m_controller.toQString(i18n));
