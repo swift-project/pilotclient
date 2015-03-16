@@ -68,7 +68,10 @@ namespace BlackGui
             void onTextMessageSent(const BlackMisc::Network::CTextMessage &sentMessage);
 
             //! Used to allow direct input from global command line when visible
-            virtual bool handleGlobalCommandLine(const QString &commandLine, const QString &originator);
+            bool handleGlobalCommandLine(const QString &commandLine, const QString &originator);
+
+            //! Display the tab for given callsign
+            void showCorrespondingTab(const BlackMisc::Aviation::CCallsign &callsign);
 
         protected:
             //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
@@ -76,15 +79,23 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CTextMessageComponent> ui;
-            CTextMessageTextEdit *m_currentTextEdit = nullptr; //!< text edit currently visible
 
             //! Enum to widget
-            QWidget *getTabWidget(Tab tab);
+            QWidget *getTabWidget(Tab tab) const;
+
+            //! Select given tab
+            void selectTabWidget(Tab tab);
+
+            //! New message tab for given callsign
+            QWidget *addNewTextMessageTab(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Add new text message tab
             //! \param tabName   name of the new tab, usually the channel name
             //! \return
             QWidget *addNewTextMessageTab(const QString &tabName);
+
+            //! Find text message tab by callsign
+            QWidget *findTextMessageTabByCallsign(const BlackMisc::Aviation::CCallsign &callsign, bool callsignResolution = false) const;
 
             //! Find text message tab by its name
             QWidget *findTextMessageTabByName(const QString &name) const;
@@ -93,13 +104,13 @@ namespace BlackGui
             void addPrivateChannelTextMessage(const BlackMisc::Network::CTextMessage &textMessage);
 
             //! own aircraft
-            const BlackMisc::Aviation::CAircraft getOwnAircraft() const { Q_ASSERT(this->getIContextOwnAircraft()); return this->getIContextOwnAircraft()->getOwnAircraft(); }
+            const BlackMisc::Aviation::CAircraft getOwnAircraft() const;
 
             //! For this text message's recepient, is the current tab selected?
             bool isCorrespondingTextMessageTabSelected(BlackMisc::Network::CTextMessage textMessage) const;
 
             //! Network connected?
-            bool isNetworkConnected() const { return this->getIContextNetwork() && this->getIContextNetwork()->isConnected() ; }
+            bool isNetworkConnected() const;
 
             //! Show current frequencies
             void showCurrentFrequenciesFromCockpit();
@@ -124,7 +135,7 @@ namespace BlackGui
             //! Close text message tab
             void ps_closeTextMessageTab();
 
-            //! Top level was changed
+            //! Top level was changed (used to enable elements when floating)
             void ps_topLevelChanged(QWidget *widget, bool topLevel);
 
             //! Command line entered

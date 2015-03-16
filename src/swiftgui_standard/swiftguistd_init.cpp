@@ -182,6 +182,10 @@ void SwiftGuiStd::initGuiSignals()
         this->ui->comp_MainInfoArea->getSettingsComponent()->setSettingsTab(CSettingsComponent::SettingTabNetworkServers);
     });
 
+    // textmessages
+    connect(this->ui->comp_MainInfoArea->getAtcStationComponent(), &CAtcStationComponent::requestTextMessage, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab);
+    connect(this->ui->comp_MainInfoArea->getMappingComponet(), &CMappingComponent::requestTextMessage, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab);
+
     // main info area
     connect(this->ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedWholeInfoAreaFloating, this, &SwiftGuiStd::ps_onChangedMainInfoAreaFloating);
 }

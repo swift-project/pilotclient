@@ -25,8 +25,18 @@ namespace BlackGui
             Q_OBJECT
 
         public:
-            //! Constructor
-            CUpdateTimer(const char *slot, QObject *parent);
+            //! Construct a timer which forwards messages to the given slot of parent.
+            template <typename F, typename P>
+            CUpdateTimer(F slot, P *parent) : QObject(parent)
+            {
+                Q_ASSERT(parent);
+                this->initTimers();
+                bool c = this->connect(this->m_timer, &QTimer::timeout, parent, slot);
+                Q_ASSERT(c);
+                c = this->connect(this->m_timerSingleShot, &QTimer::timeout, parent, slot);
+                Q_ASSERT(c);
+                Q_UNUSED(c);
+            }
 
             //! Destructor
             ~CUpdateTimer();
@@ -55,6 +65,7 @@ namespace BlackGui
             void fireTimer();
 
         private:
+            void initTimers(); //!< init timers
             QTimer *m_timer = nullptr;           //!< periodically updating
             QTimer *m_timerSingleShot = nullptr; //!< single update
         };

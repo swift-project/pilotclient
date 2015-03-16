@@ -32,7 +32,7 @@ namespace BlackGui
             this->ui->tvp_LiveData->setIconMode(true);
             this->ui->tvp_LiveData->setAutoResizeFrequency(10); // only resize every n-th time
             this->addOrUpdateByName("info", "no data yet", CIcons::StandardIconWarning16);
-            m_updateTimer = new CUpdateTimer(SLOT(update()), this);
+            m_updateTimer = new CUpdateTimer(&CSimulatorComponent::update, this);
         }
 
         CSimulatorComponent::~CSimulatorComponent()

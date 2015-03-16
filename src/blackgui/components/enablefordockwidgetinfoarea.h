@@ -55,6 +55,9 @@ namespace BlackGui
             //! Main application window widget if any
             QWidget *mainApplicationWindowWidget() const;
 
+            //! Display myself
+            void displayMyself();
+
         protected:
             //! Constructor
             //! \remarks Normally the infoa area will be provided later \sa setParentDockWidgetInfoArea

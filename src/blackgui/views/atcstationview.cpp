@@ -53,7 +53,7 @@ namespace BlackGui
             {
                 menu.addAction(CIcons::appCockpit16(), "Tune in COM1", this, SLOT(ps_tuneInAtcCom1()));
                 menu.addAction(CIcons::appCockpit16(), "Tune in COM2", this, SLOT(ps_tuneInAtcCom2()));
-                menu.addAction(CIcons::appTextMessages16(), "Text message", this, SLOT(ps_requestTextMessage()));
+                menu.addAction(CIcons::appTextMessages16(), "Show text messages", this, SLOT(ps_requestTextMessage()));
                 menu.addSeparator();
             }
             CViewBase::customMenu(menu);

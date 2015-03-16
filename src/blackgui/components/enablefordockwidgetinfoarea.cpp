@@ -79,5 +79,17 @@ namespace BlackGui
             return mw ? mw->getWidget() : nullptr;
         }
 
+        void CEnableForDockWidgetInfoArea::displayMyself()
+        {
+            // if we are already visible, we are done
+            if (this->isVisibleWidget()) { return; }
+
+            // select myself
+            if (getParentInfoArea())
+            {
+                getParentInfoArea()->selectArea(this->getDockWidgetInfoArea());
+            }
+        }
+
     } // namespace
 } // namespace

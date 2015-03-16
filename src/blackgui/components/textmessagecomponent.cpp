@@ -14,6 +14,7 @@
 #include "blackmisc/notificationsounds.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/simplecommandparser.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
 
 #include <QPushButton>
 #include <QMenu>
@@ -26,6 +27,7 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Settings;
+using namespace BlackMisc::Simulation;
 
 namespace BlackGui
 {
@@ -48,7 +50,7 @@ namespace BlackGui
         CTextMessageComponent::~CTextMessageComponent()
         { }
 
-        QWidget *CTextMessageComponent::getTabWidget(CTextMessageComponent::Tab tab)
+        QWidget *CTextMessageComponent::getTabWidget(CTextMessageComponent::Tab tab) const
         {
             switch (tab)
             {
@@ -67,9 +69,15 @@ namespace BlackGui
             return nullptr;
         }
 
-        /*
-         * Text messages received or send, append to GUI
-         */
+        void CTextMessageComponent::selectTabWidget(CTextMessageComponent::Tab tab)
+        {
+            QWidget *w = getTabWidget(tab);
+            if (w)
+            {
+                this->ui->tw_TextMessages->setCurrentWidget(w);
+            }
+        }
+
         void CTextMessageComponent::displayTextMessage(const CTextMessageList &messages)
         {
             if (messages.isEmpty()) return;
@@ -178,7 +186,7 @@ namespace BlackGui
                 CCallsign cs = textMessage.getSenderCallsign();
                 if (cs.isEmpty()) return false;
                 QWidget *tab = this->findTextMessageTabByName(cs.getStringAsSet());
-                if (!tab) return false;
+                if (!tab) { return false; }
                 return this->ui->tw_TextMessages->currentWidget() == tab;
             }
             else
@@ -198,6 +206,11 @@ namespace BlackGui
             }
         }
 
+        bool CTextMessageComponent::isNetworkConnected() const
+        {
+            return this->getIContextNetwork() && this->getIContextNetwork()->isConnected() ;
+        }
+
         void CTextMessageComponent::showCurrentFrequenciesFromCockpit()
         {
             const CAircraft ownAircraft = this->getOwnAircraft();
@@ -210,6 +223,12 @@ namespace BlackGui
             this->ui->tb_TextMessagesCOM1->setToolTip(f2);
             this->ui->tw_TextMessages->setTabText(this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesCOM1), f1);
             this->ui->tw_TextMessages->setTabText(this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesCOM2), f2);
+        }
+
+        QWidget *CTextMessageComponent::addNewTextMessageTab(const CCallsign &callsign)
+        {
+            Q_ASSERT(!callsign.isEmpty());
+            return addNewTextMessageTab(callsign.asString());
         }
 
         QWidget *CTextMessageComponent::addNewTextMessageTab(const QString &tabName)
@@ -242,10 +261,8 @@ namespace BlackGui
             if (!textMessage.isPrivateMessage()) { return; }
             CCallsign cs = textMessage.getRecipientCallsign();
             if (cs.isEmpty()) { return; }
-            QString csStr(cs.asString());
-            QWidget *tab = this->findTextMessageTabByName(csStr);
-            if (tab == nullptr) { tab = this->findTextMessageTabByName(csStr); }
-            if (tab == nullptr) { tab = this->addNewTextMessageTab(csStr); }
+            QWidget *tab = this->findTextMessageTabByCallsign(cs);
+            if (tab == nullptr) { tab = this->addNewTextMessageTab(cs); }
             Q_ASSERT(tab != nullptr);
             CTextMessageTextEdit *textEdit = tab->findChild<CTextMessageTextEdit *>();
             Q_ASSERT(textEdit != nullptr);
@@ -257,6 +274,34 @@ namespace BlackGui
             {
                 this->getIContextAudio()->playNotification(BlackSound::CNotificationSounds::NotificationTextMessagePrivate, true);
             }
+        }
+
+        const CAircraft CTextMessageComponent::getOwnAircraft() const
+        {
+            Q_ASSERT(this->getIContextOwnAircraft());
+            return this->getIContextOwnAircraft()->getOwnAircraft();
+        }
+
+        QWidget *CTextMessageComponent::findTextMessageTabByCallsign(const CCallsign &callsign, bool callsignResolution) const
+        {
+            QWidget *w = findTextMessageTabByName(callsign.asString());
+            if (w) { return w; }
+            if (!callsignResolution) { return nullptr; }
+
+            // resolve callsign
+            CAtcStation station(getIContextNetwork()->getOnlineStationForCallsign(callsign));
+            if (!station.getCallsign().isEmpty())
+            {
+                if (this->getOwnAircraft().getCom1System().isActiveFrequencyWithin25kHzChannel(station.getFrequency()))
+                {
+                    return getTabWidget(TextMessagesCom1);
+                }
+                else if (this->getOwnAircraft().getCom2System().isActiveFrequencyWithin25kHzChannel(station.getFrequency()))
+                {
+                    return getTabWidget(TextMessagesCom2);
+                }
+            }
+            return nullptr;
         }
 
         QWidget *CTextMessageComponent::findTextMessageTabByName(const QString &name) const
@@ -398,6 +443,31 @@ namespace BlackGui
             this->handleEnteredTextMessage(commandLine); // handle as it was entered by own command line
 
             return false; // we never handle the message directly, but forward it
+        }
+
+        void CTextMessageComponent::showCorrespondingTab(const CCallsign &callsign)
+        {
+            Q_ASSERT(getIContextOwnAircraft());
+            Q_ASSERT(getIContextNetwork());
+
+            if (callsign.isEmpty())
+            {
+                CLogMessage(this).warning("No callsign to display text message");
+                return;
+            }
+            QWidget *w = findTextMessageTabByCallsign(callsign, true);
+            if (!w && getIContextNetwork())
+            {
+                CSimulatedAircraft aircraft(getIContextNetwork()->getAircraftForCallsign(callsign));
+                if (!aircraft.getCallsign().isEmpty())
+                {
+                    // we assume a private message
+                    w = this->addNewTextMessageTab(aircraft.getCallsign());
+                }
+            }
+            if (!w) { return; }
+            this->ui->tw_TextMessages->setCurrentWidget(w);
+            this->displayMyself();
         }
 
     } // namespace

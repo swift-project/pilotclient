@@ -45,6 +45,11 @@ namespace BlackGui
             return this->ui->comp_Aircraft;
         }
 
+        CMappingComponent *CMainInfoAreaComponent::getMappingComponet()
+        {
+            return this->ui->comp_Mappings;
+        }
+
         CUserComponent *CMainInfoAreaComponent::getUserComponent()
         {
             return this->ui->comp_Users;

@@ -155,9 +155,6 @@ private:
      */
     bool isMainPageSelected(MainPageIndex mainPage) const;
 
-    //! Show or hide the main Page
-    void hideMainPage(bool hide);
-
     //! Start all update timers
     void startUpdateTimersWhenConnected();
 

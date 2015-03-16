@@ -62,6 +62,9 @@ namespace BlackGui
             //! Aircrafts
             CAircraftComponent *getAircraftComponent();
 
+            //! Mappings
+            CMappingComponent *getMappingComponet();
+
             //! User component
             CUserComponent *getUserComponent();
 

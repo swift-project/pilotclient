@@ -41,9 +41,9 @@ namespace BlackGui
             {
                 CSimulatedAircraft aircraft(selectedObject());
                 Q_ASSERT(!aircraft.getCallsign().isEmpty());
-                menu.addAction(CIcons::appTextMessages16(), "Text message", this, SLOT(ps_requestTextMessage()));
-                menu.addAction(CIcons::appAircrafts16(), aircraft.isEnabled() ? "disable aircraft" : "enabled aircraft", this, SLOT(ps_enableAircraft()));
-                menu.addAction(CIcons::globe16(), aircraft.fastPositionUpdates() ? "normal updates" : "fast position updates", this, SLOT(ps_fastPositionUpdates()));
+                menu.addAction(CIcons::appTextMessages16(), "Show text messages", this, SLOT(ps_requestTextMessage()));
+                menu.addAction(CIcons::appAircrafts16(), aircraft.isEnabled() ? "Disable aircraft" : "Enabled aircraft", this, SLOT(ps_enableAircraft()));
+                menu.addAction(CIcons::globe16(), aircraft.fastPositionUpdates() ? "Normal updates" : "Fast position updates", this, SLOT(ps_fastPositionUpdates()));
                 menu.addSeparator();
             }
             CViewBase::customMenu(menu);

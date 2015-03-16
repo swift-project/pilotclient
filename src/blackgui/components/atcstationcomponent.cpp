@@ -33,7 +33,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->tabBar()->setExpanding(false);
-            this->m_updateTimer = new CUpdateTimer(SLOT(update()), this);
+            this->m_updateTimer = new CUpdateTimer(&CAtcStationComponent::update, this);
 
             // some icons
             this->ui->pb_AtcStationsAtisReload->setIcon(CIcons::atis());
@@ -273,6 +273,14 @@ namespace BlackGui
             {
                 this->ui->tvp_AtcStationsOnlineTree->resizeColumnToContents(i);
             }
+        }
+
+        const QString &CAtcStationComponent::originator()
+        {
+            // string is generated once, the timestamp allows to use multiple
+            // components (as long as they are not generated at the same ms)
+            static const QString o = QString("ATCSTATIOCOMPONENT:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
+            return o;
         }
 
         void CAtcStationComponent::ps_onlineAtcStationSelected(QModelIndex index)

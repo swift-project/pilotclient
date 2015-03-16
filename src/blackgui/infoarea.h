@@ -89,6 +89,9 @@ namespace BlackGui
         //! Select area
         void selectArea(int areaIndex);
 
+        //! Set current tab bar index by given widget
+        void selectArea(const CDockWidgetInfoArea *dockWidgetInfoArea);
+
         //! Select area (sender is QAction)
         void selectAreaByAction();
 
@@ -163,9 +166,6 @@ namespace BlackGui
 
         //! Widget to tab bar index
         int dockWidgetInfoAreaToTabBarIndex(const CDockWidgetInfoArea *dockWidgetInfoArea) const;
-
-        //! Set current tab bar index by given widget
-        void setCurrentTabIndex(const CDockWidgetInfoArea *dockWidgetInfoArea);
 
         //! Features of the dockable widgets
         void setFeaturesForDockableWidgets(QDockWidget::DockWidgetFeatures features);

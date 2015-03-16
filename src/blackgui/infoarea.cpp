@@ -297,7 +297,7 @@ namespace BlackGui
         }
         else
         {
-            this->setCurrentTabIndex(dw);
+            this->selectArea(dw);
         }
     }
 
@@ -599,7 +599,7 @@ namespace BlackGui
         return getTabBarIndexByTitle(dockWidgetInfoArea->windowTitle());
     }
 
-    void CInfoArea::setCurrentTabIndex(const CDockWidgetInfoArea *dockWidgetInfoArea)
+    void CInfoArea::selectArea(const CDockWidgetInfoArea *dockWidgetInfoArea)
     {
         if (!this->m_tabBar) { return; }
         int tabIndex = this->dockWidgetInfoAreaToTabBarIndex(dockWidgetInfoArea);
@@ -654,7 +654,7 @@ namespace BlackGui
         if (!topLevel)
         {
             CDockWidgetInfoArea *dwia = dynamic_cast<CDockWidgetInfoArea *>(dockWidget);
-            this->setCurrentTabIndex(dwia);
+            this->selectArea(dwia);
         }
 
         // when toplevel is changed, I need a round in the event loop until

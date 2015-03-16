@@ -483,6 +483,12 @@ namespace BlackCore
         return this->m_airspace->remoteAircraft().findFirstByCallsign(callsign);
     }
 
+    CAtcStation CContextNetwork::getOnlineStationForCallsign(const CCallsign &callsign) const
+    {
+        if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+        return this->m_airspace->getAtcStationsOnline().findFirstByCallsign(callsign);
+    }
+
     void CContextNetwork::ps_receivedBookings(const CAtcStationList &)
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }

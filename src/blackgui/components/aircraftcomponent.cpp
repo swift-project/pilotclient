@@ -32,7 +32,7 @@ namespace BlackGui
             ui->setupUi(this);
             this->tabBar()->setExpanding(false);
             this->ui->tvp_AirportsInRange->setResizeMode(CAirportView::ResizingOnce);
-            m_updateTimer = new CUpdateTimer(SLOT(update()), this);
+            m_updateTimer = new CUpdateTimer(&CAircraftComponent::update, this);
 
             connect(this->ui->tvp_AircraftInRange, &CAircraftView::rowCountChanged, this, &CAircraftComponent::ps_onRowCountChanged);
             connect(this->ui->tvp_AirportsInRange, &CAircraftView::rowCountChanged, this, &CAircraftComponent::ps_onRowCountChanged);

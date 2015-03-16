@@ -105,6 +105,9 @@ namespace BlackCore
         //! \copydoc IContextNetwork::getAircraftForCallsign
         virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
+        //! \copydoc IContextNetwork::getOnlineStationForCallsign
+        virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+
         //! \copydoc IContextNetwork::connectToNetwork()
         virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, uint mode) override;
 

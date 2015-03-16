@@ -13,19 +13,11 @@ namespace BlackGui
 {
     namespace Components
     {
-        CUpdateTimer::CUpdateTimer(const char *slot, QObject *parent) :
-            QObject(parent)
+        void CUpdateTimer::initTimers()
         {
-            Q_ASSERT(parent);
             this->m_timer = new QTimer(this);
             this->m_timerSingleShot = new QTimer(this);
             this->m_timerSingleShot->setSingleShot(true);
-
-            bool c = this->connect(this->m_timer, SIGNAL(timeout()), parent, slot);
-            Q_ASSERT(c);
-            c = this->connect(this->m_timerSingleShot, SIGNAL(timeout()), parent, slot);
-            Q_ASSERT(c);
-            Q_UNUSED(c);
         }
 
         CUpdateTimer::~CUpdateTimer()
@@ -54,5 +46,6 @@ namespace BlackGui
             this->m_timer->start(); // restart other timer
             this->m_timerSingleShot->start(10);
         }
-    }
+
+    } // namespace
 } // namespace

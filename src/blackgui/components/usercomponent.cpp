@@ -30,7 +30,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->tabBar()->setExpanding(false);
-            this->m_updateTimer = new CUpdateTimer(SLOT(update()), this);
+            this->m_updateTimer = new CUpdateTimer(&CUserComponent::update, this);
 
             connect(this->ui->tvp_AllUsers, &CUserView::rowCountChanged, this, &CUserComponent::ps_onCountChanged);
             connect(this->ui->tvp_Clients, &CClientView::rowCountChanged, this, &CUserComponent::ps_onCountChanged);

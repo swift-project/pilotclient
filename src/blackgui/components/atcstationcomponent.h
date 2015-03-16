@@ -118,6 +118,7 @@ namespace BlackGui
 
         private:
             void updateTreeView();
+            const QString &originator();
 
             QScopedPointer<Ui::CAtcStationComponent> ui;
             CUpdateTimer *m_updateTimer = nullptr;
@@ -125,14 +126,6 @@ namespace BlackGui
             QDateTime m_timestampOnlineStationsChanged  = CUpdateTimer::epoch();  //!< stations marked as changed
             QDateTime m_timestampLastReadBookedStations = CUpdateTimer::epoch();  //!< stations read
             QDateTime m_timestampBookedStationsChanged  = CUpdateTimer::epoch();  //!< stations marked as changed
-
-            const QString &originator()
-            {
-                // string is generated once, the timestamp allows to use multiple
-                // components (as long as they are not generated at the same ms)
-                static const QString o = QString("ATCSTATIOCOMPONENT:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
-                return o;
-            }
 
         };
     } // namespace

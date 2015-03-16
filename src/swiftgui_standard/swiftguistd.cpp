@@ -56,9 +56,6 @@ SwiftGuiStd::SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowM
 SwiftGuiStd::~SwiftGuiStd()
 { }
 
-/*
- * Graceful shutdown
- */
 void SwiftGuiStd::performGracefulShutdown()
 {
     if (!this->m_init) { return; }
@@ -99,9 +96,6 @@ void SwiftGuiStd::performGracefulShutdown()
     }
 }
 
-/*
- * Close event, window closes
- */
 void SwiftGuiStd::closeEvent(QCloseEvent *event)
 {
     Q_UNUSED(event);
@@ -109,9 +103,6 @@ void SwiftGuiStd::closeEvent(QCloseEvent *event)
     QApplication::exit();
 }
 
-/*
- * Set main page
- */
 void SwiftGuiStd::ps_setMainPage(SwiftGuiStd::MainPageIndex mainPage)
 {
     this->ui->sw_MainMiddle->setCurrentIndex(mainPage);
@@ -123,26 +114,11 @@ void SwiftGuiStd::ps_setMainPageInfoArea(CMainInfoAreaComponent::InfoArea infoAr
     this->ui->comp_MainInfoArea->selectArea(infoArea);
 }
 
-/*
- * Given main page selected?
- */
 bool SwiftGuiStd::isMainPageSelected(SwiftGuiStd::MainPageIndex mainPage) const
 {
     return this->ui->sw_MainMiddle->currentIndex() == static_cast<int>(mainPage);
 }
 
-void SwiftGuiStd::hideMainPage(bool hide)
-{
-    //! \todo further implement hide main page
-    if (hide)
-    {
-
-    }
-    else
-    {
-
-    }
-}
 
 void SwiftGuiStd::ps_loginRequested()
 {
@@ -157,9 +133,6 @@ void SwiftGuiStd::ps_loginRequested()
     }
 }
 
-/*
- * Is the network context available?
- */
 bool SwiftGuiStd::isContextNetworkAvailableCheck()
 {
     if (this->m_contextNetworkAvailable) return true;
@@ -167,9 +140,6 @@ bool SwiftGuiStd::isContextNetworkAvailableCheck()
     return false;
 }
 
-/*
- * Is the audio context available?
- */
 bool SwiftGuiStd::isContextAudioAvailableCheck()
 {
     if (this->m_contextAudioAvailable) return true;
@@ -177,9 +147,6 @@ bool SwiftGuiStd::isContextAudioAvailableCheck()
     return false;
 }
 
-/*
- * Display a status message
- */
 void SwiftGuiStd::ps_displayStatusMessageInGui(const CStatusMessage &statusMessage)
 {
     if (!this->m_init) return;
@@ -205,17 +172,11 @@ void SwiftGuiStd::ps_onChangedSetttings(uint typeValue)
     if (type == IContextSettings::SettingsHotKeys) this->ps_registerHotkeyFunctions();
 }
 
-/*
-* Connection terminated
-*/
 void SwiftGuiStd::ps_onConnectionTerminated()
 {
     this->updateGuiStatusInformation();
 }
 
-/*
-* Connection status changed
-*/
 void SwiftGuiStd::ps_onConnectionStatusChanged(int from, int to)
 {
     Q_UNUSED(from);
@@ -239,9 +200,6 @@ void SwiftGuiStd::ps_onConnectionStatusChanged(int from, int to)
     }
 }
 
-/*
-* Timer event
-*/
 void SwiftGuiStd::ps_handleTimerBasedUpdates()
 {
     QObject *sender = QObject::sender();
@@ -255,9 +213,6 @@ void SwiftGuiStd::ps_handleTimerBasedUpdates()
     this->ps_reloadOwnAircraft(); // regular updates
 }
 
-/*
-* Context availability
-*/
 void SwiftGuiStd::setContextAvailability()
 {
     qint64 t = QDateTime::currentMSecsSinceEpoch();
@@ -266,9 +221,6 @@ void SwiftGuiStd::setContextAvailability()
     this->m_contextAudioAvailable = this->m_coreAvailable || this->getIContextAudio()->isUsingImplementingObject();
 }
 
-/*
-* Update GUI
-*/
 void SwiftGuiStd::updateGuiStatusInformation()
 {
     const QString now = QDateTime::currentDateTimeUtc().toString("yyyy-MM-dd HH:mm:ss");
@@ -285,9 +237,6 @@ void SwiftGuiStd::updateGuiStatusInformation()
     this->ui->comp_InfoBarStatus->setDBusTooltip(s);
 }
 
-/*
- * Opacity 0-100
- */
 void SwiftGuiStd::ps_onChangedWindowOpacity(int opacity)
 {
     qreal o = opacity / 100.0;
@@ -297,9 +246,6 @@ void SwiftGuiStd::ps_onChangedWindowOpacity(int opacity)
     this->ui->comp_MainInfoArea->getSettingsComponent()->setGuiOpacity(o * 100.0);
 }
 
-/*
- * Stay on top
- */
 void SwiftGuiStd::ps_toogleWindowStayOnTop()
 {
     Qt::WindowFlags flags = this->windowFlags();
@@ -319,9 +265,6 @@ void SwiftGuiStd::ps_toogleWindowStayOnTop()
     this->show();
 }
 
-/*
- * Hotkey functions
- */
 void SwiftGuiStd::ps_registerHotkeyFunctions()
 {
     CInputManager *m_inputManager = BlackCore::CInputManager::getInstance();
@@ -342,9 +285,6 @@ void SwiftGuiStd::ps_registerHotkeyFunctions()
     });
 }
 
-/*
- * Styles
- */
 void SwiftGuiStd::ps_onStyleSheetsChanged()
 {
     const QString s = CStyleSheetUtility::instance().styles(
@@ -357,26 +297,17 @@ void SwiftGuiStd::ps_onStyleSheetsChanged()
 }
 
 
-/*
- * Main widget (login, main info area...)
- */
 void SwiftGuiStd::ps_onCurrentMainWidgetChanged(int currentIndex)
 {
     emit currentMainInfoAreaChanged(this->ui->sw_MainMiddle->currentWidget());
     Q_UNUSED(currentIndex);
 }
 
-/*
- * Main info area floating?
- */
 void SwiftGuiStd::ps_onChangedMainInfoAreaFloating(bool floating)
 {
-    this->hideMainPage(floating);
+    Q_UNUSED(floating);
 }
 
-/*
- * Notification
- */
 void SwiftGuiStd::playNotifcationSound(CNotificationSounds::Notification notification) const
 {
     if (!this->m_contextAudioAvailable) return;
