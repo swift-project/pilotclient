@@ -255,6 +255,7 @@ namespace BlackMisc
         using Hash = Policy::Hash::Inherit;         //!< Hash policy
         using DBus = Policy::DBus::Inherit;         //!< DBus policy
         using Json = Policy::Json::Inherit;         //!< JSON policy
+        using PropertyIndex = Policy::PropertyIndex::Default;   //!< PropertyIndex policy
     };
 
     /*!
@@ -271,6 +272,7 @@ namespace BlackMisc
         using Hash = Policy::Hash::MetaTuple;           //!< Hash policy
         using DBus = Policy::DBus::MetaTuple;           //!< DBus policy
         using Json = Policy::Json::MetaTuple;           //!< JSon policy
+        using PropertyIndex = Policy::PropertyIndex::Default;   //!< PropertyIndex policy
     };
 
     /*!
@@ -295,10 +297,20 @@ namespace BlackMisc
         using HashPolicy = typename CValueObjectStdTuplePolicy<Derived>::Hash;
         using DBusPolicy = typename CValueObjectStdTuplePolicy<Derived>::DBus;
         using JsonPolicy = typename CValueObjectStdTuplePolicy<Derived>::Json;
+        using PropertyIndexPolicy = typename CValueObjectStdTuplePolicy<Derived>::PropertyIndex;
 
     public:
         //! Base class
         using base_type = Base;
+
+        //! Update by variant map
+        //! \return number of values changed, with skipEqualValues equal values will not be changed
+        CPropertyIndexList apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues = false)
+        {
+            CPropertyIndexList result;
+            PropertyIndexPolicy::apply(*derived(), indexMap, result, skipEqualValues);
+            return result;
+        }
 
         //! \copydoc CValueObject::getValueHash()
         virtual uint getValueHash() const override
@@ -331,6 +343,18 @@ namespace BlackMisc
         {
             return maybeConvertFromQVariant(variant, IsRegisteredQMetaType<Derived>());
         }
+
+        //! Set property by index
+        virtual void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index) { PropertyIndexPolicy::setPropertyByIndex(*derived(), variant, index); }
+
+        //! Property by index
+        virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const { CVariant result; PropertyIndexPolicy::propertyByIndex(*derived(), index, result); return result; }
+
+        //! Property by index as String
+        virtual QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const { return PropertyIndexPolicy::propertyByIndexAsString(*derived(), index, i18n); }
+
+        //! Is given variant equal to value of property index?
+        virtual bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const { return PropertyIndexPolicy::equalsPropertyByIndex(*derived(), compareValue, index); }
 
         //! Register metadata
         static void registerMetadata()

@@ -18,6 +18,9 @@
 
 namespace BlackMisc
 {
+    class CPropertyIndexList;
+    class CPropertyIndexVariantMap;
+
     template <class>
     struct CValueObjectStdTuplePolicy;
 
@@ -356,6 +359,123 @@ namespace BlackMisc
                 //! \copydoc BlackMisc::deserializeJson
                 template <class T, class...>
                 static void deserializeImpl(const QJsonObject &, T &) {}
+            };
+        }
+
+        namespace PropertyIndex
+        {
+            //! CValueObjectStdTuple policy for PropertyIndex related methods
+            struct Default
+            {
+                //! \private
+                template <class T>
+                using EnableIfEmptyBase = typename std::enable_if<std::is_same<typename T::base_type, CEmpty>::value>::type *;
+
+                //! \private
+                template <class T>
+                using DisableIfEmptyBase = typename std::enable_if<! std::is_same<typename T::base_type, CEmpty>::value>::type *;
+
+                //! \copydoc CValueObjectStdTuple::apply
+                //! @{
+                template <class T, class...>
+                static void apply(T &obj, const CPropertyIndexVariantMap &indexMap, CPropertyIndexList &o_changed, bool skipEqualValues, DisableIfEmptyBase<T> = nullptr) { o_changed = obj.T::base_type::apply(indexMap, skipEqualValues); }
+                template <class T, class...>
+                static void apply(T &obj, const CPropertyIndexVariantMap &indexMap, CPropertyIndexList &o_changed, bool skipEqualValues, EnableIfEmptyBase<T> = nullptr)
+                {
+                    if (indexMap.isEmpty()) return;
+
+                    const auto &map = indexMap.map();
+                    for (auto it = map.begin(); it != map.end(); ++it)
+                    {
+                        const CVariant value = it.value().toCVariant();
+                        const CPropertyIndex index = it.key();
+                        if (skipEqualValues)
+                        {
+                            bool equal = obj.equalsPropertyByIndex(value, index);
+                            if (equal) { continue; }
+                        }
+                        obj.setPropertyByIndex(value, index);
+                        o_changed.push_back(index);
+                    }
+                }
+                //! @}
+
+                //! \copydoc CValueObjectStdTuple::setPropertyByIndex
+                //! @{
+                template <class T, class...>
+                static void setPropertyByIndex(T &obj, const CVariant &variant, const CPropertyIndex &index, DisableIfEmptyBase<T> = nullptr) { return obj.T::base_type::setPropertyByIndex(variant, index); }
+                template <class T, class...>
+                static void setPropertyByIndex(T &obj, const CVariant &variant, const CPropertyIndex &index, EnableIfEmptyBase<T> = nullptr)
+                {
+                    if (index.isMyself())
+                    {
+                        obj.convertFromCVariant(variant);
+                        return;
+                    }
+
+                    // not all classes have implemented nesting
+                    const QString m = QString("Property by index not found (setter), index: ").append(index.toQString());
+                    qFatal("%s", qPrintable(m));
+                }
+                //! @}
+
+                //! \copydoc CValueObjectStdTuple::propertyByIndex
+                //! @{
+                template <class T, class...>
+                static void propertyByIndex(const T &obj, const CPropertyIndex &index, CVariant &o_property, DisableIfEmptyBase<T> = nullptr) { o_property = obj.T::base_type::propertyByIndex(index); }
+                template <class T, class...>
+                static void propertyByIndex(const T &obj, const CPropertyIndex &index, CVariant &o_property, EnableIfEmptyBase<T> = nullptr)
+                {
+                    if (index.isMyself())
+                    {
+                        o_property = obj.toCVariant();
+                        return;
+                    }
+                    using Base = CValueObjectStdTuple<T, typename T::base_type>;
+                    auto i = index.frontCasted<typename Base::ColumnIndex>();
+                    switch (i)
+                    {
+                    case Base::IndexIcon:
+                        o_property = CVariant::from(obj.toIcon());
+                        break;
+                    case Base::IndexPixmap:
+                        o_property = CVariant::from(obj.toPixmap());
+                        break;
+                    case Base::IndexString:
+                        o_property = CVariant(obj.toQString());
+                        break;
+                    default:
+                        break;
+                    }
+
+                    // not all classes have implemented nesting
+                    const QString m = QString("Property by index not found, index: ").append(index.toQString());
+                    qFatal("%s", qPrintable(m));
+                }
+                //! @}
+
+                //! \copydoc CValueObjectStdTuple::propertyByIndexAsString
+                //! @{
+                template <class T, class...>
+                static QString propertyByIndexAsString(const T &obj, const CPropertyIndex &index, bool i18n, DisableIfEmptyBase<T> = nullptr) { return obj.T::base_type::propertyByIndexAsString(index, i18n); }
+                template <class T, class...>
+                static QString propertyByIndexAsString(const T &obj, const CPropertyIndex &index, bool i18n, EnableIfEmptyBase<T> = nullptr)
+                {
+                    // default implementation, requires propertyByIndex
+                    return obj.propertyByIndex(index).toQString(i18n);
+                }
+                //! @}
+
+                //! \copydoc CValueObjectStdTuple::equalsPropertyByIndex
+                //! @{
+                template <class T, class...>
+                static bool equalsPropertyByIndex(const T &obj, const CVariant &compareValue, const CPropertyIndex &index, DisableIfEmptyBase<T> = nullptr) { return obj.T::base_type::equalsPropertyByIndex(compareValue, index); }
+                template <class T, class...>
+                static bool equalsPropertyByIndex(const T &obj, const CVariant &compareValue, const CPropertyIndex &index, EnableIfEmptyBase<T> = nullptr)
+                {
+                    return obj.propertyByIndex(index) == compareValue;
+                }
+                //! @}
             };
         }
     }
