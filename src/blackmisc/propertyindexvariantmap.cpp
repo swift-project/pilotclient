@@ -44,20 +44,52 @@ namespace BlackMisc
     }
 
     /*
-     * Compare with CValueObject
+     * Compare with CVariant
      */
-    bool operator==(const CPropertyIndexVariantMap &indexMap, const CValueObject &valueObject)
+    bool operator==(const CPropertyIndexVariantMap &indexMap, const CVariant &variant)
     {
         if (indexMap.isEmpty()) return indexMap.isWildcard();
         const auto &map = indexMap.map();
         for (auto it = map.begin(); it != map.end(); ++it)
         {
             // QVariant cannot be compared directly
-            CVariant p = valueObject.propertyByIndex(it.key()); // from value object
+            CVariant p = variant.propertyByIndex(it.key()); // from value object
             CVariant v = it.value().toCVariant(); // from map
             if (p != v) return false;
         }
         return true;
+    }
+
+    /*
+     * Compare with CVariant
+     */
+    bool operator!=(const CPropertyIndexVariantMap &indexMap, const CVariant &variant)
+    {
+        return !(indexMap == variant);
+    }
+
+    /*
+     * Compare with CVariant
+     */
+    bool operator==(const CVariant &variant, const CPropertyIndexVariantMap &valueMap)
+    {
+        return valueMap == variant;
+    }
+
+    /*
+     * Compare with CVariant
+     */
+    bool operator!=(const CVariant &variant, const CPropertyIndexVariantMap &valueMap)
+    {
+        return !(valueMap == variant);
+    }
+
+    /*
+     * Compare with CValueObject
+     */
+    bool operator==(const CPropertyIndexVariantMap &indexMap, const CValueObject &valueObject)
+    {
+        return indexMap == valueObject.toCVariant();
     }
 
     /*

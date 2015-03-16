@@ -187,4 +187,35 @@ namespace BlackMisc
 
         *this = fixQVariantFromDbusArgument(dbusVar.variant(), QMetaType::type(qPrintable(typeName)));
     }
+
+    void CVariant::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
+    {
+        auto *meta = getValueObjectMetaInfo();
+        Q_ASSERT(meta);
+        meta->setPropertyByIndex(data(), variant, index);
+    }
+
+    CVariant CVariant::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+    {
+        auto *meta = getValueObjectMetaInfo();
+        Q_ASSERT(meta);
+        CVariant result;
+        meta->propertyByIndex(data(), result, index);
+        return result;
+    }
+
+    QString CVariant::propertyByIndexAsString(const CPropertyIndex &index, bool i18n) const
+    {
+        auto *meta = getValueObjectMetaInfo();
+        Q_ASSERT(meta);
+        return meta->propertyByIndexAsString(data(), index, i18n);
+    }
+
+    bool CVariant::equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const
+    {
+        auto *meta = getValueObjectMetaInfo();
+        Q_ASSERT(meta);
+        return meta->equalsPropertyByIndex(data(), compareValue, index);
+    }
+
 } // namespace

@@ -197,6 +197,18 @@ namespace BlackMisc
         //! \copydoc CValueObject::compareImpl
         virtual int compareImpl(const CValueObject &other) const override;
 
+        //! \copydoc CValueObject::setPropertyByIndex
+        virtual void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index) override;
+
+        //! \copydoc CValueObject::propertyByIndex
+        virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+
+        //! \copydoc CValueObject::propertyByIndexAsString
+        virtual QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const override;
+
+        //! \copydoc CValueObject::equalsPropertyByIndex
+        virtual bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const override;
+
     private:
         QVariant m_v;
 
@@ -234,6 +246,11 @@ namespace BlackMisc
         return !(value == variant);
     }
 
+    namespace Private
+    {
+        //! \private Needed so we can copy forward-declared CVariant.
+        inline void assign(CVariant &a, const CVariant &b) { a = b; }
+    }
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::CVariant)

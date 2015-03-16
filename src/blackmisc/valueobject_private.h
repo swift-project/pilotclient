@@ -22,9 +22,14 @@ namespace BlackMisc
 
     template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, QDBusArgument>::type const &
     operator>>(const QDBusArgument &argument, T &valueObject);
+    class CVariant;
+    class CPropertyIndex;
 
     namespace Private
     {
+        //! \private Needed so we can copy forward-declared CVariant.
+        void assign(CVariant &, const CVariant &);
+
         //! \private Abstract base class representing the set of operations supported by a particular value type.
         struct IValueObjectMetaInfo
         {
@@ -37,6 +42,10 @@ namespace BlackMisc
             virtual int getMetaTypeId() const = 0;
             virtual const void *upCastTo(const void *object, int metaTypeId) const = 0;
             virtual int compare(const void *lhs, const void *rhs) const = 0;
+            virtual void setPropertyByIndex(void *object, const CVariant &variant, const CPropertyIndex &index) const = 0;
+            virtual void propertyByIndex(const void *object, CVariant &o_variant, const BlackMisc::CPropertyIndex &index) const = 0;
+            virtual QString propertyByIndexAsString(const void *object, const CPropertyIndex &index, bool i18n) const = 0;
+            virtual bool equalsPropertyByIndex(const void *object, const CVariant &compareValue, const CPropertyIndex &index) const = 0;
         };
 
         //! \private Implementation of IValueObjectMetaInfo representing the set of operations supported by T.
@@ -74,6 +83,22 @@ namespace BlackMisc
                 return metaTypeId == getMetaTypeId() ? object : CValueObjectMetaInfo<typename T::base_type>{}.upCastTo(base, metaTypeId);
             }
             virtual int compare(const void *lhs, const void *rhs) const override; // FIXME defined out-of-line in valueobject.h because it uses CValueObject
+            virtual void setPropertyByIndex(void *object, const CVariant &variant, const CPropertyIndex &index) const override
+            {
+                cast(object).setPropertyByIndex(variant, index);
+            }
+            virtual void propertyByIndex(const void *object, CVariant &o_variant, const BlackMisc::CPropertyIndex &index) const override
+            {
+                assign(o_variant, cast(object).propertyByIndex(index));
+            }
+            virtual QString propertyByIndexAsString(const void *object, const CPropertyIndex &index, bool i18n) const override
+            {
+                return cast(object).propertyByIndexAsString(index, i18n);
+            }
+            virtual bool equalsPropertyByIndex(const void *object, const CVariant &compareValue, const CPropertyIndex &index) const override
+            {
+                return cast(object).equalsPropertyByIndex(compareValue, index);
+            }
 
             static const T &cast(const void *object) { return *static_cast<const T *>(object); }
             static T &cast(void *object) { return *static_cast<T *>(object); }
