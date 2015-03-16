@@ -24,7 +24,7 @@ namespace BlackGui
         this->m_textDocument = new QTextDocument(this);
         this->setDocument(m_textDocument);
         this->setReadOnly(true);
-        this->setWordWrapMode(QTextOption::NoWrap);
+        this->setWordWrap(true);
 
         // menu
         this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -34,11 +34,10 @@ namespace BlackGui
         m_actionAll = new QAction("Keep all messages", this);
         m_actionWithRecipient = new QAction("With recipient", this);
         m_actionWithSender = new QAction("With sender", this);
+        m_actionWordWrap = new QAction("Word wrap", this);
         m_actionWithRecipient->setCheckable(true);
         m_actionWithSender->setCheckable(true);
-        m_actionWithRecipient->setChecked(this->m_withRecipient);
-        m_actionWithSender->setCheckable(true);
-        m_actionWithSender->setChecked(this->m_withSender);
+        m_actionWordWrap->setCheckable(true);
 
         connect(this->m_actionClearTextEdit, &QAction::triggered, this, &CTextMessageTextEdit::clear);
         connect(this->m_actionAll, &QAction::triggered, this, &CTextMessageTextEdit::ps_keepLastNMessages);
@@ -46,6 +45,7 @@ namespace BlackGui
         connect(this->m_actionLast25, &QAction::triggered, this, &CTextMessageTextEdit::ps_keepLastNMessages);
         connect(this->m_actionWithSender, &QAction::triggered, this, &CTextMessageTextEdit::ps_setVisibleFields);
         connect(this->m_actionWithRecipient, &QAction::triggered, this, &CTextMessageTextEdit::ps_setVisibleFields);
+        connect(this->m_actionWordWrap, &QAction::triggered, this, &CTextMessageTextEdit::ps_setWordWrap);
 
         connect(this, &QTextEdit::customContextMenuRequested, this, &CTextMessageTextEdit::ps_showContextMenuForTextEdit);
 
@@ -146,9 +146,14 @@ namespace BlackGui
 
     void CTextMessageTextEdit::ps_showContextMenuForTextEdit(const QPoint &pt)
     {
+        m_actionWithRecipient->setChecked(this->m_withRecipient);
+        m_actionWithSender->setChecked(this->m_withSender);
+        m_actionWordWrap->setChecked(this->m_wordWrap);
+
         QScopedPointer<QMenu> menu(this->createStandardContextMenu());
         menu->setObjectName(this->objectName().append("_contextMenu"));
         menu->addSeparator();
+        menu->addAction(this->m_actionWordWrap);
         QMenu *subMenu = menu->addMenu("Max.messages");
         subMenu->addAction(this->m_actionLast10);
         subMenu->addAction(this->m_actionLast25);
@@ -195,6 +200,26 @@ namespace BlackGui
         {
             m_withSender = m_actionWithSender->isChecked();
         }
+    }
+
+    void CTextMessageTextEdit::setWordWrap(bool wordWrap)
+    {
+        m_wordWrap = wordWrap;
+        if (m_wordWrap)
+        {
+            this->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+        }
+        else
+        {
+            this->setWordWrapMode(QTextOption::NoWrap);
+        }
+    }
+
+    void CTextMessageTextEdit::ps_setWordWrap()
+    {
+        QObject *sender = QObject::sender();
+        if (sender != m_actionWordWrap) { return; }
+        this->setWordWrap(m_actionWordWrap->isChecked());
     }
 
 } // namespace

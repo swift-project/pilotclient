@@ -345,7 +345,7 @@ namespace BlackGui
             Q_ASSERT(this->getIContextOwnAircraft());
             Q_ASSERT(this->getIContextSimulator());
 
-            static const CAircraftIcao defaultIcao("C172", "L1P", "FOO", "", ""); // default values
+            static const CAircraftIcao defaultIcao("C172", "L1P", "", "", ""); // default values
             CAircraftIcao icao;
 
             bool simConnected = this->getIContextSimulator() && this->getIContextSimulator()->isSimulating();
@@ -367,6 +367,7 @@ namespace BlackGui
                 //! \todo Currently not working in OBS mode
                 this->ui->gbp_LoginMode->setLoginMode(INetwork::LoginNormal);
                 this->ui->le_SimulatorModel->setText("No simulator");
+                icao = defaultIcao;
             }
 
             if (icao.hasAircraftDesignator())

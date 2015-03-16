@@ -54,6 +54,9 @@ namespace BlackGui
         //! Visible fields
         void ps_setVisibleFields();
 
+        //! Toggle word wrap
+        void ps_setWordWrap();
+
     private:
         //! Convert to HTML
         static QString toHtml(const BlackMisc::Network::CTextMessageList &messages, bool withFrom, bool withTo);
@@ -64,11 +67,15 @@ namespace BlackGui
         //! Stylesheet for content
         void setStyleSheetForContent(const QString &styleSheet);
 
+        //! Word wrap
+        void setWordWrap(bool wordWrap);
+
         BlackMisc::Network::CTextMessageList m_messages;
         QTextDocument *m_textDocument = nullptr;
         int m_keepMaxMessages = 10;
         bool m_withSender = true;
         bool m_withRecipient = false;
+        bool m_wordWrap = true;
 
         QAction *m_actionClearTextEdit = nullptr;
         QAction *m_actionLast10 = nullptr;
@@ -76,6 +83,8 @@ namespace BlackGui
         QAction *m_actionAll = nullptr;
         QAction *m_actionWithSender = nullptr;
         QAction *m_actionWithRecipient = nullptr;
+        QAction *m_actionWordWrap = nullptr;
+
     };
 
 } // namespace
