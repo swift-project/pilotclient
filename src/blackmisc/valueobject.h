@@ -38,25 +38,6 @@ namespace BlackMisc
     class CIcon;
     class CVariant;
 
-    namespace PhysicalQuantities
-    {
-        template <class MU, class PQ> class CPhysicalQuantity;
-
-        //! Traits class to test whether a class is a physical quantity class. Useful for enable_if.
-        template <class T>
-        class IsQuantity
-        {
-            struct yes { char x; };
-            struct no { yes x[2]; };
-            template <class MU, class PQ> static yes test(const CPhysicalQuantity<MU, PQ> &);
-            static no test(...);
-
-        public:
-            //! True if and only if T is derived from CPhysicalQuantity.
-            static const bool value = sizeof(test(*(T *)0)) == sizeof(yes);
-        };
-    }
-
     /*!
      * This registers the value type T with the BlackMisc meta type system,
      * making it available for use with the extended feature set of BlackMisc::CVariant.
