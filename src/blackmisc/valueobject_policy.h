@@ -18,6 +18,7 @@
 
 namespace BlackMisc
 {
+    class CEmpty;
     class CPropertyIndexList;
     class CPropertyIndexVariantMap;
 
@@ -58,7 +59,7 @@ namespace BlackMisc
 
             private:
                 template <class T>
-                static void maybeRegisterMetaValueType() { maybeRegisterMetaValueType<T>(std::is_base_of<CValueObject, T>()); }
+                static void maybeRegisterMetaValueType() { maybeRegisterMetaValueType<T>(std::is_base_of<CEmpty, T>()); } // FIXME use TemplateIsBaseOf
                 template <class T>
                 static void maybeRegisterMetaValueType(std::true_type) { BlackMisc::registerMetaValueType<T>(); }
                 template <class T>
@@ -115,7 +116,7 @@ namespace BlackMisc
 
                 private:
                     template <class U> static bool baseEquals(const U &a, const U &b) { return a == b; }
-                    template <class U> static bool baseEquals(const CValueObject &, const CValueObject &) { return true; }
+                    template <class U> static bool baseEquals(const CEmpty &, const CEmpty &) { return true; }
                 };
             };
 
@@ -192,28 +193,53 @@ namespace BlackMisc
 
         namespace Compare
         {
-            //! CValueObjectStdTuple policy for a class without polymorphic comparison support
+            //! CValueObjectStdTuple policy for a class without compare() support
             struct None
             {
-                //! Policy implementation of CValueObject::compareImpl
-                template <class T, class...>
-                static bool compareImpl(const T &, const T &) { return 0; }
+                //! Inner class template which actually bestows the friend function via the Barton-Nackman trick
+                template <class T, class>
+                struct Ops {};
             };
 
-            //! CValueObjectStdTuple polymorphic comparison policy which inherits the policy of the base class
+            //! CValueObjectStdTuple compare() policy which inherits the policy of the base class
             struct Inherit
             {
-                //! Policy implementation of CValueObject::compareImpl
-                template <class T, class Base = T>
-                static bool compareImpl(const T &a, const T &b) { return Private::Inherit<Base>::Compare::template compareImpl<T, typename Base::base_type>(a, b); }
+                //! Inner class template which actually bestows the operators via the Barton-Nackman trick
+                template <class T, class Base>
+                struct Ops : public CValueObjectStdTuplePolicy<Base>::Compare::template Ops<T, typename Base::base_type> {};
             };
 
-            //! CValueObjectStdTuple policy for a class with default metatuple-based polymorphic comparison support
-            struct MetaTuple : private Private::EncapsulationBreaker
+            //! CValueObjectStdTuple policy for a class with default metatuple-based compare() support
+            struct MetaTuple
             {
-                //! Policy implementation of CValueObject::compareImpl
-                template <class T, class...>
-                static bool compareImpl(const T &a, const T &b) { return compare(Private::EncapsulationBreaker::toMetaTuple(a), Private::EncapsulationBreaker::toMetaTuple(b)); }
+                //! Inner class template which actually bestows the operators via the Barton-Nackman trick
+                template <class T, class>
+                struct Ops : private Private::EncapsulationBreaker
+                {
+                    //! compare friend function
+                    friend int compare(const T &a, const T &b)
+                    {
+                        int result = BlackMisc::compare(Private::EncapsulationBreaker::toMetaTuple(a), Private::EncapsulationBreaker::toMetaTuple(b));
+                        return result ? result : compare(static_cast<const typename T::base_type &>(a), static_cast<const typename T::base_type &>(b));
+                    }
+                };
+            };
+
+            //! CValueObjectStdTuple policy for a class which implements compare() in terms of the less than operator
+            struct LessThan
+            {
+                //! Inner class template which actually bestows the operators via the Barton-Nackman trick
+                template <class T, class>
+                struct Ops
+                {
+                    //! compare friend function
+                    friend int compare(const T &a, const T &b)
+                    {
+                        if (a < b) { return -1; }
+                        if (b < a) { return 1; }
+                        return 0;
+                    }
+                };
             };
         }
 
@@ -372,24 +398,7 @@ namespace BlackMisc
                 template <class T, class...>
                 static void apply(T &obj, const CPropertyIndexVariantMap &indexMap, CPropertyIndexList &o_changed, bool skipEqualValues, DisableIfEmptyBase<T> = nullptr) { o_changed = obj.T::base_type::apply(indexMap, skipEqualValues); }
                 template <class T, class...>
-                static void apply(T &obj, const CPropertyIndexVariantMap &indexMap, CPropertyIndexList &o_changed, bool skipEqualValues, EnableIfEmptyBase<T> = nullptr)
-                {
-                    if (indexMap.isEmpty()) return;
-
-                    const auto &map = indexMap.map();
-                    for (auto it = map.begin(); it != map.end(); ++it)
-                    {
-                        const CVariant value = it.value().toCVariant();
-                        const CPropertyIndex index = it.key();
-                        if (skipEqualValues)
-                        {
-                            bool equal = obj.equalsPropertyByIndex(value, index);
-                            if (equal) { continue; }
-                        }
-                        obj.setPropertyByIndex(value, index);
-                        o_changed.push_back(index);
-                    }
-                }
+                static void apply(T &obj, const CPropertyIndexVariantMap &indexMap, CPropertyIndexList &o_changed, bool skipEqualValues, EnableIfEmptyBase<T> = nullptr); // implemented in valueobject.h due to cyclic include dependency
                 //! @}
 
                 //! \copydoc CValueObjectStdTuple::setPropertyByIndex
@@ -397,18 +406,7 @@ namespace BlackMisc
                 template <class T, class...>
                 static void setPropertyByIndex(T &obj, const CVariant &variant, const CPropertyIndex &index, DisableIfEmptyBase<T> = nullptr) { return obj.T::base_type::setPropertyByIndex(variant, index); }
                 template <class T, class...>
-                static void setPropertyByIndex(T &obj, const CVariant &variant, const CPropertyIndex &index, EnableIfEmptyBase<T> = nullptr)
-                {
-                    if (index.isMyself())
-                    {
-                        obj.convertFromCVariant(variant);
-                        return;
-                    }
-
-                    // not all classes have implemented nesting
-                    const QString m = QString("Property by index not found (setter), index: ").append(index.toQString());
-                    qFatal("%s", qPrintable(m));
-                }
+                static void setPropertyByIndex(T &obj, const CVariant &variant, const CPropertyIndex &index, EnableIfEmptyBase<T> = nullptr); // implemented in valueobject.h due to cyclic include dependency
                 //! @}
 
                 //! \copydoc CValueObjectStdTuple::propertyByIndex
@@ -416,34 +414,7 @@ namespace BlackMisc
                 template <class T, class...>
                 static void propertyByIndex(const T &obj, const CPropertyIndex &index, CVariant &o_property, DisableIfEmptyBase<T> = nullptr) { o_property = obj.T::base_type::propertyByIndex(index); }
                 template <class T, class...>
-                static void propertyByIndex(const T &obj, const CPropertyIndex &index, CVariant &o_property, EnableIfEmptyBase<T> = nullptr)
-                {
-                    if (index.isMyself())
-                    {
-                        o_property = obj.toCVariant();
-                        return;
-                    }
-                    using Base = CValueObjectStdTuple<T, typename T::base_type>;
-                    auto i = index.frontCasted<typename Base::ColumnIndex>();
-                    switch (i)
-                    {
-                    case Base::IndexIcon:
-                        o_property = CVariant::from(obj.toIcon());
-                        break;
-                    case Base::IndexPixmap:
-                        o_property = CVariant::from(obj.toPixmap());
-                        break;
-                    case Base::IndexString:
-                        o_property = CVariant(obj.toQString());
-                        break;
-                    default:
-                        break;
-                    }
-
-                    // not all classes have implemented nesting
-                    const QString m = QString("Property by index not found, index: ").append(index.toQString());
-                    qFatal("%s", qPrintable(m));
-                }
+                static void propertyByIndex(const T &obj, const CPropertyIndex &index, CVariant &o_property, EnableIfEmptyBase<T> = nullptr); // implemented in valueobject.h due to cyclic include dependency
                 //! @}
 
                 //! \copydoc CValueObjectStdTuple::propertyByIndexAsString
@@ -451,11 +422,7 @@ namespace BlackMisc
                 template <class T, class...>
                 static QString propertyByIndexAsString(const T &obj, const CPropertyIndex &index, bool i18n, DisableIfEmptyBase<T> = nullptr) { return obj.T::base_type::propertyByIndexAsString(index, i18n); }
                 template <class T, class...>
-                static QString propertyByIndexAsString(const T &obj, const CPropertyIndex &index, bool i18n, EnableIfEmptyBase<T> = nullptr)
-                {
-                    // default implementation, requires propertyByIndex
-                    return obj.propertyByIndex(index).toQString(i18n);
-                }
+                static QString propertyByIndexAsString(const T &obj, const CPropertyIndex &index, bool i18n, EnableIfEmptyBase<T> = nullptr); // implemented in valueobject.h due to cyclic include dependency
                 //! @}
 
                 //! \copydoc CValueObjectStdTuple::equalsPropertyByIndex
@@ -463,10 +430,7 @@ namespace BlackMisc
                 template <class T, class...>
                 static bool equalsPropertyByIndex(const T &obj, const CVariant &compareValue, const CPropertyIndex &index, DisableIfEmptyBase<T> = nullptr) { return obj.T::base_type::equalsPropertyByIndex(compareValue, index); }
                 template <class T, class...>
-                static bool equalsPropertyByIndex(const T &obj, const CVariant &compareValue, const CPropertyIndex &index, EnableIfEmptyBase<T> = nullptr)
-                {
-                    return obj.propertyByIndex(index) == compareValue;
-                }
+                static bool equalsPropertyByIndex(const T &obj, const CVariant &compareValue, const CPropertyIndex &index, EnableIfEmptyBase<T> = nullptr); // implemented in valueobject.h due to cyclic include dependency
                 //! @}
             };
         }

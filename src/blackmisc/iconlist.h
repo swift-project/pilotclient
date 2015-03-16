@@ -12,7 +12,6 @@
 #ifndef BLACKMISC_ICONLIST_H
 #define BLACKMISC_ICONLIST_H
 
-#include "valueobject.h"
 #include "sequence.h"
 #include "collection.h"
 #include "icon.h"

@@ -85,38 +85,6 @@ namespace BlackMisc
     }
 
     /*
-     * Compare with CValueObject
-     */
-    bool operator==(const CPropertyIndexVariantMap &indexMap, const CValueObject &valueObject)
-    {
-        return indexMap == valueObject.toCVariant();
-    }
-
-    /*
-     * Compare with CValueObject
-     */
-    bool operator!=(const CPropertyIndexVariantMap &indexMap, const CValueObject &valueObject)
-    {
-        return !(indexMap == valueObject);
-    }
-
-    /*
-     * Compare with CValueObject
-     */
-    bool operator==(const CValueObject &valueObject, const CPropertyIndexVariantMap &valueMap)
-    {
-        return valueMap == valueObject;
-    }
-
-    /*
-     * Compare with CValueObject
-     */
-    bool operator!=(const CValueObject &valueObject, const CPropertyIndexVariantMap &valueMap)
-    {
-        return !(valueMap == valueObject);
-    }
-
-    /*
      * Convert to string
      */
     QString CPropertyIndexVariantMap::convertToQString(bool i18n) const

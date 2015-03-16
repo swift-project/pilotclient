@@ -12,16 +12,14 @@
 #ifndef BLACKMISC_VALUEOBJECT_PRIVATE_H
 #define BLACKMISC_VALUEOBJECT_PRIVATE_H
 
+#include <QString>
 #include <QMetaType>
 #include <QDBusArgument>
 #include <QJsonObject>
 
 namespace BlackMisc
 {
-    class CValueObject;
-
-    template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, QDBusArgument>::type const &
-    operator>>(const QDBusArgument &argument, T &valueObject);
+    class CEmpty;
     class CVariant;
     class CPropertyIndex;
 
@@ -41,7 +39,7 @@ namespace BlackMisc
             virtual uint getValueHash(const void *object) const = 0;
             virtual int getMetaTypeId() const = 0;
             virtual const void *upCastTo(const void *object, int metaTypeId) const = 0;
-            virtual int compare(const void *lhs, const void *rhs) const = 0;
+            virtual int compareImpl(const void *lhs, const void *rhs) const = 0;
             virtual void setPropertyByIndex(void *object, const CVariant &variant, const CPropertyIndex &index) const = 0;
             virtual void propertyByIndex(const void *object, CVariant &o_variant, const BlackMisc::CPropertyIndex &index) const = 0;
             virtual QString propertyByIndexAsString(const void *object, const CPropertyIndex &index, bool i18n) const = 0;
@@ -66,8 +64,7 @@ namespace BlackMisc
             }
             virtual void unmarshall(const QDBusArgument &arg, void *object) const override
             {
-                // FIXME Using the usual >> operator syntax here attempts to call the Container<T> overload in QtDBus/qdbusargument.h
-                BlackMisc::operator >>(arg, cast(object));
+                arg >> cast(object);
             }
             virtual uint getValueHash(const void *object) const override
             {
@@ -82,7 +79,10 @@ namespace BlackMisc
                 const auto base = static_cast<const void *>(static_cast<const typename T::base_type *>(&cast(object)));
                 return metaTypeId == getMetaTypeId() ? object : CValueObjectMetaInfo<typename T::base_type>{}.upCastTo(base, metaTypeId);
             }
-            virtual int compare(const void *lhs, const void *rhs) const override; // FIXME defined out-of-line in valueobject.h because it uses CValueObject
+            virtual int compareImpl(const void *lhs, const void *rhs) const override
+            {
+                return compare(cast(lhs), cast(rhs));
+            }
             virtual void setPropertyByIndex(void *object, const CVariant &variant, const CPropertyIndex &index) const override
             {
                 cast(object).setPropertyByIndex(variant, index);
@@ -109,10 +109,13 @@ namespace BlackMisc
 
         //! \private Explicit specialization for the terminating case of the recursive CValueObjectMetaInfo::upCastTo.
         template <>
-        inline const void *CValueObjectMetaInfo<CValueObject>::upCastTo(const void *, int) const
+        struct CValueObjectMetaInfo<CEmpty>
         {
-            return nullptr;
-        }
+            const void *upCastTo(const void *, int) const
+            {
+                return nullptr;
+            }
+        };
 
         //! \private Getter to obtain the IValueObjectMetaInfo which was stored by BlackMisc::registerMetaValueType.
         IValueObjectMetaInfo *getValueObjectMetaInfo(int typeId);

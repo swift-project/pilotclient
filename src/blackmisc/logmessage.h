@@ -137,7 +137,8 @@ namespace BlackMisc
         CLogMessage &operator <<(QChar v) { return arg(v); }
         CLogMessage &operator <<(char v) { return arg(QChar(v)); }
         CLogMessage &operator <<(double v) { return arg(QString::number(v)); }
-        CLogMessage &operator <<(const CValueObject &v) { return arg(v.toQString()); }
+        template <class T, class = typename std::enable_if<IsValueObject<T>::value>::type>
+        CLogMessage &operator <<(const T &v) { return arg(v.toQString()); }
         //! @}
 
         //! Sends a verbatim, preformatted message to the log.

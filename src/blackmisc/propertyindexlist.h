@@ -9,6 +9,8 @@
 
 //! \file
 
+#include "valueobject.h" // outside include guard due to cyclic dependency hack (MS)
+
 #ifndef BLACKMISC_PROPERTYINDEXLIST_H
 #define BLACKMISC_PROPERTYINDEXLIST_H
 

@@ -12,7 +12,6 @@
 #ifndef BLACKMISC_CONTAINERBASE_H
 #define BLACKMISC_CONTAINERBASE_H
 
-#include "valueobject.h"
 #include "range.h"
 #include "propertyindexvariantmap.h"
 #include "blackmiscfreefunctions.h"

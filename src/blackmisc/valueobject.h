@@ -37,6 +37,12 @@ namespace BlackMisc
     class CPropertyIndexVariantMap;
     class CIcon;
     class CVariant;
+    class CEmpty;
+
+    //! Traits class to test whether a class is derived from CValueObjectStdTuple.
+    //! \todo TemplateIsBaseOf gives incorrect result due to ambiguity if there is more than one specialization of CValueObjectStdTuple which is a base of T.
+    template <class T>
+    using IsValueObject = typename std::is_base_of<CEmpty, T>::type;
 
     /*!
      * This registers the value type T with the BlackMisc meta type system,
@@ -57,189 +63,76 @@ namespace BlackMisc
     }
 
     /*!
-     * Base class for value types.
+     * Default base class for CValueObjectStdTuple.
      */
-    class CValueObject
+    class CEmpty
     {
-        //! Stream << overload to be used in debugging messages
-        friend QDebug operator<<(QDebug debug, const CValueObject &uc)
-        {
-            debug << uc.stringForStreaming();
-            return debug;
-        }
-
-        //! Operator << based on text stream
-        friend QTextStream &operator<<(QTextStream &textStream, const CValueObject &uc)
-        {
-            textStream << uc.stringForStreaming();
-            return textStream;
-        }
-
-        //! Operator << when there is no debug stream
-        friend QNoDebug operator<<(QNoDebug nodebug, const CValueObject &valueObject)
-        {
-            Q_UNUSED(valueObject);
-            return nodebug;
-        }
-
-        //! Operator << for QDataStream
-        friend QDataStream &operator<<(QDataStream &stream, const CValueObject &valueObject)
-        {
-            stream << valueObject.stringForStreaming();
-            return stream;
-        }
-
-        //! Stream operator << for std::cout
-        friend std::ostream &operator<<(std::ostream &ostr, const CValueObject &uc)
-        {
-            ostr << uc.stringForStreaming().toStdString();
-            return ostr;
-        }
-
-        //! Unmarshalling operator >>, DBus to object
-        friend const QDBusArgument &operator>>(const QDBusArgument &argument, CValueObject &valueObject);
-
-        //! Marshalling operator <<, object to DBus
-        friend QDBusArgument &operator<<(QDBusArgument &argument, const CValueObject &valueObject);
-
-        /*!
-         * Compares two instances of related classes
-         * and returns an integer less than, equal to, or greater than zero
-         * if v1 is less than, equal to, or greater than v2.
-         * \pre The runtime types of the two objects must be the same or related by inheritance.
-         */
-        friend int compare(const CValueObject &v1, const CValueObject &v2);
-
     public:
-        //! Root
-        using base_type = CValueObject;
+        //! Base class is alias of itself
+        using base_type = CEmpty;
 
-        //! Base class enums
-        enum ColumnIndex
-        {
-            IndexPixmap = 10, // manually set to avoid circular dependencies
-            IndexIcon,
-            IndexString
-        };
-
-        //! Virtual destructor
-        virtual ~CValueObject() {}
-
-        //! Cast as QString
-        QString toQString(bool i18n = false) const;
-
-        //! Cast to pretty-printed QString
-        virtual QString toFormattedQString(bool i18n = false) const;
-
-        //! To std string
-        std::string toStdString(bool i18n = false) const;
-
-        //! Update by variant map
-        //! \return number of values changed, with skipEqualValues equal values will not be changed
-        CPropertyIndexList apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues = false);
-
-        //! Value hash, allows comparisons between QVariants
-        virtual uint getValueHash() const = 0;
-
-        //! Virtual method to return QVariant, used with DBus QVariant lists
-        virtual QVariant toQVariant() const = 0;
-
-        //! Method to return CVariant
-        CVariant toCVariant() const;
-
-        //! Set from QVariant
-        virtual void convertFromQVariant(const QVariant &variant) = 0;
-
-        //! Set from CVariant
-        void convertFromCVariant(const CVariant &variant);
-
-        //! Contribute to JSON object
-        virtual QJsonObject toJson() const { QJsonObject json; return json;}
-
-        //! Initialize from JSON object
-        virtual void convertFromJson(const QJsonObject &json) { Q_UNUSED(json); }
-
-        //! As icon, not implement by all classes
+        //! As icon, not implemented by all classes
+        //! \todo Here because incomplete type. Move to policy class during policy refactoring.
         virtual CIcon toIcon() const;
 
         //! As pixmap, required for most GUI views
+        //! \todo Here because incomplete type. Move to policy class during policy refactoring.
         virtual QPixmap toPixmap() const;
 
-        //! Set property by index
-        virtual void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index);
-
-        //! Property by index
-        virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
-
-        //! Property by index as String
-        //! \details Intentionally not abstract, avoiding all classes need to implement this method
-        virtual QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const;
-
-        //! Is given variant equal to value of property index?
-        virtual bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const;
-
         //! Parse from string, e.g. 100km/h
+        //! \todo Here to avoid name hiding in PQ classes. Fix during policy refactoring.
         virtual void parseFromString(const QString &) { qFatal("Not implemented"); }
 
     protected:
-        template <typename T>
-        friend struct Private::CValueObjectMetaInfo;
-
-        //! Default constructor.
-        CValueObject() = default;
-
-        //! Copy constructor.
-        CValueObject(const CValueObject &) = default;
-
-        //! Copy assignment operator.
-        CValueObject &operator =(const CValueObject &) = default;
-
-        //! String for streaming operators
-        virtual QString stringForStreaming() const;
-
         //! String for QString conversion
+        //! \todo Here because pure virtual. Move to CValueObjectStdTuple when all dynamic polymorphism is removed.
         virtual QString convertToQString(bool i18n = false) const = 0;
 
-        //! Returns the Qt meta type ID of this object.
-        virtual int getMetaTypeId() const = 0;
+        //! Protected default constructor
+        CEmpty() = default;
 
-        /*!
-         * Returns true if this object is an instance of the class with the given meta type ID,
-         * or one of its subclasses.
-         */
-        virtual bool isA(int metaTypeId) const { Q_UNUSED(metaTypeId); return false; }
+        //! Protected copy constructor
+        CEmpty(const CEmpty &) = default;
 
-        /*!
-         * Compare this value with another value of the same type
-         * \param other
-         * \return Less than, equal to, or greater than zero if this is
-         *         less than, equal to, or greather than other.
-         * \pre Other must have the same runtime type as the this object.
-         * \remark It is usually safer to use the friend function compare() instead.
-         */
-        virtual int compareImpl(const CValueObject &other) const = 0;
+        //! Protected copy assignment operator
+        CEmpty &operator =(const CEmpty &) = default;
 
-        //! Marshall to DBus
-        virtual void marshallToDbus(QDBusArgument &) const = 0;
-
-        //! Unmarshall from DBus
-        virtual void unmarshallFromDbus(const QDBusArgument &) = 0;
+        //! Non-virtual protected destructor
+        ~CEmpty() = default;
     };
 
-    //! \private FIXME defined out-of-line because it depends on CValueObject
-    template <typename T>
-    int Private::CValueObjectMetaInfo<T>::compare(const void *lhs, const void *rhs) const
+    //! Dummy comparison.
+    inline int compare(const CEmpty &, const CEmpty &) { return 0; }
+
+    /*!
+     * Terminating base cases for the recursive methods of CValueObjectStdTuple.
+     */
+    struct CValueObjectDummyBase
     {
-        // Casting to CValueObject here only because compareImpl is protected and CValueObjectMetaInfo is a friend of CValueObject.
-        // TODO: make compareImpl public (and typesafe), then this doesn't need to be defined out-of-line.
-        return static_cast<const CValueObject *>(lhs)->compareImpl(*static_cast<const CValueObject *>(rhs));
-    }
+        //! Value hash
+        static uint getValueHash() { return 0; }
+
+        //! To JSON
+        static QJsonObject toJson() { return {}; }
+
+        //! From JSON
+        static void convertFromJson(const QJsonObject &) {}
+
+        //! Is a
+        static bool isA(int) { return false; }
+
+        //! Marshall to DBus
+        static void marshallToDbus(QDBusArgument &) {}
+
+        //! Unmarshall from DBus
+        static void unmarshallFromDbus(const QDBusArgument &) {}
+    };
 
     /*!
      * Default policy classes for use by CValueObjectStdTuple.
      *
      * The default policies are inherited from the policies of the base class. There is a specialization
-     * for the terminating case in which the base class is CValueObject.
+     * for the terminating case in which the base class is CEmpty.
      *
      * Specialize this template to use non-default policies for a particular derived class.
      * Due to the void default template parameter, specializations can inherit from CValueObjectStdTuplePolicy<>
@@ -261,9 +154,9 @@ namespace BlackMisc
     /*!
      * Default policy classes for use by CValueObjectStdTuple.
      *
-     * Specialization for the terminating case in which the base class is CValueObject.
+     * Specialization for the terminating case in which the base class is CEmpty.
      */
-    template <> struct CValueObjectStdTuplePolicy<CValueObject>
+    template <> struct CValueObjectStdTuplePolicy<CEmpty>
     {
         using MetaType = Policy::MetaType::Default;     //!< Metatype policy
         using Equals = Policy::Equals::MetaTuple;       //!< Equals policy
@@ -282,64 +175,181 @@ namespace BlackMisc
      * to specify different policy classes.
      *
      * \tparam Derived  The class which is inheriting from this one (CRTP).
-     * \tparam Base     The class which this one shall inherit from (default is CValueObject,
+     * \tparam Base     The class which this one shall inherit from (default is CEmpty,
      *                  but this can be changed to create a deeper inheritance hierarchy).
      */
-    template <class Derived, class Base = CValueObject> class CValueObjectStdTuple :
+    template <class Derived, class Base /*= CEmpty*/> class CValueObjectStdTuple :
         public Base,
         private CValueObjectStdTuplePolicy<Derived>::Equals::template Ops<Derived, Base>,
-        private CValueObjectStdTuplePolicy<Derived>::LessThan::template Ops<Derived, Base>
+        private CValueObjectStdTuplePolicy<Derived>::LessThan::template Ops<Derived, Base>,
+        private CValueObjectStdTuplePolicy<Derived>::Compare::template Ops<Derived, Base>
     {
-        static_assert(std::is_base_of<CValueObject, Base>::value, "Base must be derived from CValueObject");
+        static_assert(std::is_same<CEmpty, Base>::value || IsValueObject<Base>::value, "Base must be either CEmpty or derived from CValueObjectStdTuple");
 
         using MetaTypePolicy = typename CValueObjectStdTuplePolicy<Derived>::MetaType;
-        using ComparePolicy = typename CValueObjectStdTuplePolicy<Derived>::Compare;
         using HashPolicy = typename CValueObjectStdTuplePolicy<Derived>::Hash;
         using DBusPolicy = typename CValueObjectStdTuplePolicy<Derived>::DBus;
         using JsonPolicy = typename CValueObjectStdTuplePolicy<Derived>::Json;
         using PropertyIndexPolicy = typename CValueObjectStdTuplePolicy<Derived>::PropertyIndex;
 
+        using BaseOrDummy = typename std::conditional<std::is_same<Base, CEmpty>::value, CValueObjectDummyBase, Base>::type;
+
+        //! Stream << overload to be used in debugging messages
+        friend QDebug operator<<(QDebug debug, const Derived &obj)
+        {
+            debug << obj.stringForStreaming();
+            return debug;
+        }
+
+        //! Operator << when there is no debug stream
+        friend QNoDebug operator<<(QNoDebug nodebug, const Derived &obj)
+        {
+            Q_UNUSED(obj);
+            return nodebug;
+        }
+
+        //! Operator << based on text stream
+        friend QTextStream &operator<<(QTextStream &textStream, const Derived &obj)
+        {
+            textStream << obj.stringForStreaming();
+            return textStream;
+        }
+
+        //! Operator << for QDataStream
+        friend QDataStream &operator<<(QDataStream &stream, const Derived &valueObject)
+        {
+            stream << valueObject.stringForStreaming();
+            return stream;
+        }
+
+        //! Stream operator << for std::cout
+        friend std::ostream &operator<<(std::ostream &ostr, const Derived &obj)
+        {
+            ostr << obj.stringForStreaming().toStdString();
+            return ostr;
+        }
+
+        //! Unmarshalling operator >>, DBus to object
+        friend const QDBusArgument &operator>>(const QDBusArgument &arg, Derived &obj)
+        {
+            arg.beginStructure();
+            static_cast<CValueObjectStdTuple &>(obj).unmarshallFromDbus(arg); // virtual method is protected in Derived
+            arg.endStructure();
+            return arg;
+        }
+
+        //! Marshalling operator <<, object to DBus
+        friend QDBusArgument &operator<<(QDBusArgument &arg, const Derived &obj)
+        {
+            arg.beginStructure();
+            static_cast<const CValueObjectStdTuple &>(obj).marshallToDbus(arg); // virtual method is protected in Derived
+            arg.endStructure();
+            return arg;
+        }
+
+        //! operator >> for JSON
+        friend const QJsonObject &operator>>(const QJsonObject &json, Derived &valueObject)
+        {
+            valueObject.convertFromJson(json);
+            return json;
+        }
+
+        //! operator >> for JSON
+        friend const QJsonValue &operator>>(const QJsonValue &json, Derived &valueObject)
+        {
+            valueObject.convertFromJson(json.toObject());
+            return json;
+        }
+
+        //! operator >> for JSON
+        friend const QJsonValueRef &operator>>(const QJsonValueRef &json, Derived &valueObject)
+        {
+            valueObject.convertFromJson(json.toObject());
+            return json;
+        }
+
+        //! operator << for JSON
+        friend QJsonArray &operator<<(QJsonArray &json, const Derived &value)
+        {
+            json.append(value.toJson());
+            return json;
+        }
+
+        //! operator << for JSON
+        friend QJsonObject& operator<<(QJsonObject &json, const std::pair<QString, Derived> &value)
+        {
+            json.insert(value.first, QJsonValue(value.second.toJson()));
+            return json;
+        }
+
+        //! qHash overload, needed for storing value in a QSet.
+        friend uint qHash(const Derived &value, uint seed = 0)
+        {
+            return qHash(value.getValueHash(), seed);
+        }
+
     public:
         //! Base class
         using base_type = Base;
 
+        //! Destructor
+        virtual ~CValueObjectStdTuple() {}
+
+        //! Base class enums
+        enum ColumnIndex
+        {
+            IndexPixmap = 10, // manually set to avoid circular dependencies
+            IndexIcon,
+            IndexString
+        };
+
+        //! Cast as QString
+        QString toQString(bool i18n = false) const { return this->convertToQString(i18n); }
+
+        //! Cast to pretty-printed QString
+        virtual QString toFormattedQString(bool i18n = false) const { return this->toQString(i18n); }
+
+        //! To std string
+        std::string toStdString(bool i18n = false) const { return this->convertToQString(i18n).toStdString(); }
+
         //! Update by variant map
         //! \return number of values changed, with skipEqualValues equal values will not be changed
-        CPropertyIndexList apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues = false)
+        CPropertyIndexList apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues = false); // implemented later due to cyclic include dependency
+
+        //! Method to return CVariant
+        CVariant toCVariant() const;
+
+        //! Set from CVariant
+        void convertFromCVariant(const CVariant &variant);
+
+        //! Value hash, allows comparisons between QVariants
+        virtual uint getValueHash() const
         {
-            CPropertyIndexList result;
-            PropertyIndexPolicy::apply(*derived(), indexMap, result, skipEqualValues);
-            return result;
+            return HashPolicy::hashImpl(*derived()) ^ BaseOrDummy::getValueHash();
         }
 
-        //! \copydoc CValueObject::getValueHash()
-        virtual uint getValueHash() const override
-        {
-            return HashPolicy::hashImpl(*derived()) ^ Base::getValueHash();
-        }
-
-        //! \copydoc CValueObject::toJson
-        virtual QJsonObject toJson() const override
+        //! Cast to JSON object
+        virtual QJsonObject toJson() const
         {
             QJsonObject json = JsonPolicy::serializeImpl(*derived());
-            return Json::appendJsonObject(json, Base::toJson());
+            return Json::appendJsonObject(json, BaseOrDummy::toJson());
         }
 
-        //! \copydoc CValueObject::convertFromJson
-        virtual void convertFromJson(const QJsonObject &json) override
+        //! Assign from JSON object
+        virtual void convertFromJson(const QJsonObject &json)
         {
-            Base::convertFromJson(json);
+            BaseOrDummy::convertFromJson(json);
             JsonPolicy::deserializeImpl(json, *derived());
         }
 
-        //! \copydoc CValueObject::toQVariant()
-        virtual QVariant toQVariant() const override
+        //! Virtual method to return QVariant, used with DBus QVariant lists
+        virtual QVariant toQVariant() const
         {
             return maybeToQVariant(IsRegisteredQMetaType<Derived>());
         }
 
-        //! \copydoc CValueObject::convertFromQVariant
-        virtual void convertFromQVariant(const QVariant &variant) override
+        //! Set from QVariant
+        virtual void convertFromQVariant(const QVariant &variant)
         {
             return maybeConvertFromQVariant(variant, IsRegisteredQMetaType<Derived>());
         }
@@ -348,7 +358,7 @@ namespace BlackMisc
         virtual void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index) { PropertyIndexPolicy::setPropertyByIndex(*derived(), variant, index); }
 
         //! Property by index
-        virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const { CVariant result; PropertyIndexPolicy::propertyByIndex(*derived(), index, result); return result; }
+        virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const; // implemented later due to cyclic include dependency
 
         //! Property by index as String
         virtual QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const { return PropertyIndexPolicy::propertyByIndexAsString(*derived(), index, i18n); }
@@ -363,6 +373,9 @@ namespace BlackMisc
         }
 
     protected:
+        template <typename T>
+        friend struct Private::CValueObjectMetaInfo;
+
         //! Default constructor.
         CValueObjectStdTuple() = default;
 
@@ -377,40 +390,37 @@ namespace BlackMisc
         //! Copy assignment operator.
         CValueObjectStdTuple &operator =(const CValueObjectStdTuple &) = default;
 
-        //! \copydoc CValueObject::getMetaTypeId
-        virtual int getMetaTypeId() const override
+        //! String for streaming operators
+        virtual QString stringForStreaming() const { return this->convertToQString(); }
+
+        //! Returns the Qt meta type ID of this object.
+        virtual int getMetaTypeId() const
         {
             return maybeGetMetaTypeId(IsRegisteredQMetaType<Derived>());
         }
 
-        //! \copydoc CValueObject::isA
-        virtual bool isA(int metaTypeId) const override
+        /*!
+         * Returns true if this object is an instance of the class with the given meta type ID,
+         * or one of its subclasses.
+         */
+        virtual bool isA(int metaTypeId) const
         {
             if (metaTypeId == QMetaType::UnknownType) { return false; }
             if (metaTypeId == maybeGetMetaTypeId(IsRegisteredQMetaType<Derived>())) { return true; }
-            return Base::isA(metaTypeId);
+            return BaseOrDummy::isA(metaTypeId);
         }
 
-        //! \copydoc CValueObject::compareImpl
-        virtual int compareImpl(const CValueObject &other) const override
+        //! Marshall to DBus
+        virtual void marshallToDbus(QDBusArgument &argument) const
         {
-            const auto &otherDerived = static_cast<const Derived &>(other);
-            int result = ComparePolicy::compareImpl(*derived(), otherDerived);
-            if (result) return result;
-            return Base::compareImpl(other);
-        }
-
-        //! \copydoc CValueObject::marshallToDbus()
-        virtual void marshallToDbus(QDBusArgument &argument) const override
-        {
-            Base::marshallToDbus(argument);
+            BaseOrDummy::marshallToDbus(argument);
             DBusPolicy::marshallImpl(argument, *derived());
         }
 
-        //! \copydoc CValueObject::unmarshallFromDbus()
-        virtual void unmarshallFromDbus(const QDBusArgument &argument) override
+        //! Unmarshall from DBus
+        virtual void unmarshallFromDbus(const QDBusArgument &argument)
         {
-            Base::unmarshallFromDbus(argument);
+            BaseOrDummy::unmarshallFromDbus(argument);
             DBusPolicy::unmarshallImpl(argument, *derived());
         }
 
@@ -428,82 +438,119 @@ namespace BlackMisc
         void maybeConvertFromQVariant(const QVariant &variant, std::false_type) { Q_UNUSED(variant); }
     };
 
-    /*!
-     * Non-member non-friend operator for streaming T objects to QDBusArgument.
-     * Needed because we can't rely on the friend operator in some cases due to
-     * an unrelated template for streaming Container<T> in QtDBus/qdbusargument.h
-     * which matches more types than it can actually handle.
-     */
-    template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, QDBusArgument>::type const &
-    operator>>(const QDBusArgument &argument, T &valueObject)
-    {
-        return argument >> static_cast<CValueObject &>(valueObject);
-    }
-
-    /*!
-     * Non-member non-friend operator for streaming T objects from QDBusArgument.
-     * Needed because we can't rely on the friend operator in some cases due to
-     * an unrelated template for streaming Container<T> in QtDBus/qdbusargument.h
-     * which matches more types than it can actually handle.
-     */
-    template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, QDBusArgument>::type &
-    operator<<(QDBusArgument &argument, const T &valueObject)
-    {
-        return argument << static_cast<CValueObject const &>(valueObject);
-    }
-
-    //! Non member, non friend operator >> for JSON
-    inline const QJsonObject &operator>>(const QJsonObject &json, CValueObject &valueObject)
-    {
-        valueObject.convertFromJson(json);
-        return json;
-    }
-
-    //! Non member, non friend operator >> for JSON
-    inline const QJsonValue &operator>>(const QJsonValue &json, CValueObject &valueObject)
-    {
-        valueObject.convertFromJson(json.toObject());
-        return json;
-    }
-
-    //! Non member, non friend operator >> for JSON
-    inline const QJsonValueRef &operator>>(const QJsonValueRef &json, CValueObject &valueObject)
-    {
-        valueObject.convertFromJson(json.toObject());
-        return json;
-    }
-
-    //! Non member, non friend operator << for JSON
-    inline QJsonArray &operator<<(QJsonArray &json, const CValueObject &value)
-    {
-        json.append(value.toJson());
-        return json;
-    }
-
-    /*!
-     * Non member, non friend operator << for JSON
-     * \param json
-     * \param value as pair name/value
-     * \return
-     */
-    template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, QJsonObject>::type &
-    operator<<(QJsonObject &json, const std::pair<QString, T> &value)
-    {
-        json.insert(value.first, QJsonValue(value.second.toJson()));
-        return json;
-    }
-
-    //! qHash overload, needed for storing CValueObject in a QSet.
-    inline uint qHash(const BlackMisc::CValueObject &value, uint seed = 0)
-    {
-        return ::qHash(value.getValueHash(), seed);
-    }
-
-    // Needed so that our qHash overload doesn't hide the qHash overloads in the global namespace.
-    // This will be safe as long as no global qHash has the same signature as ours.
-    // Alternative would be to qualify all our invokations of the global qHash as ::qHash.
-    using ::qHash;
-
 } // namespace
+
+// TODO Includes due to cyclic dependencies can be removed when CValueObjectStdTuple is split into parts along policy boundaries.
+#include "variant.h"
+#include "propertyindex.h"
+#include "propertyindexlist.h"
+#include "iconlist.h"
+
+// TODO Implementations of templates that must appear after those includes, should be moved at the same time that policies are refactored.
+namespace BlackMisc
+{
+    template <class Derived, class Base>
+    CVariant CValueObjectStdTuple<Derived, Base>::toCVariant() const
+    {
+        return CVariant(this->toQVariant());
+    }
+    template <class Derived, class Base>
+    void CValueObjectStdTuple<Derived, Base>::convertFromCVariant(const CVariant &variant)
+    {
+        this->convertFromQVariant(variant.getQVariant());
+    }
+    template <class Derived, class Base>
+    CPropertyIndexList CValueObjectStdTuple<Derived, Base>::apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues)
+    {
+        CPropertyIndexList result;
+        PropertyIndexPolicy::apply(*derived(), indexMap, result, skipEqualValues);
+        return result;
+    }
+    template <class Derived, class Base>
+    CVariant CValueObjectStdTuple<Derived, Base>::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+    {
+        CVariant result;
+        PropertyIndexPolicy::propertyByIndex(*derived(), index, result);
+        return result;
+    }
+    namespace Policy
+    {
+        namespace PropertyIndex
+        {
+            template <class T, class...>
+            void Default::apply(T &obj, const CPropertyIndexVariantMap &indexMap, CPropertyIndexList &o_changed, bool skipEqualValues, Default::EnableIfEmptyBase<T>)
+            {
+                if (indexMap.isEmpty()) return;
+
+                const auto &map = indexMap.map();
+                for (auto it = map.begin(); it != map.end(); ++it)
+                {
+                    const CVariant value = it.value().toCVariant();
+                    const CPropertyIndex index = it.key();
+                    if (skipEqualValues)
+                    {
+                        bool equal = obj.equalsPropertyByIndex(value, index);
+                        if (equal) { continue; }
+                    }
+                    obj.setPropertyByIndex(value, index);
+                    o_changed.push_back(index);
+                }
+            }
+            template <class T, class...>
+            void Default::setPropertyByIndex(T &obj, const CVariant &variant, const CPropertyIndex &index, Default::EnableIfEmptyBase<T>)
+            {
+                if (index.isMyself())
+                {
+                    obj.convertFromCVariant(variant);
+                    return;
+                }
+
+                // not all classes have implemented nesting
+                const QString m = QString("Property by index not found (setter), index: ").append(index.toQString());
+                qFatal("%s", qPrintable(m));
+            }
+            template <class T, class...>
+            void Default::propertyByIndex(const T &obj, const CPropertyIndex &index, CVariant &o_property, Default::EnableIfEmptyBase<T>)
+            {
+                if (index.isMyself())
+                {
+                    o_property = obj.toCVariant();
+                    return;
+                }
+                using Base = CValueObjectStdTuple<T, typename T::base_type>;
+                auto i = index.frontCasted<typename Base::ColumnIndex>();
+                switch (i)
+                {
+                case Base::IndexIcon:
+                    o_property = CVariant::from(obj.toIcon());
+                    return;
+                case Base::IndexPixmap:
+                    o_property = CVariant::from(obj.toPixmap());
+                    return;
+                case Base::IndexString:
+                    o_property = CVariant(obj.toQString());
+                    return;
+                default:
+                    break;
+                }
+
+                // not all classes have implemented nesting
+                const QString m = QString("Property by index not found, index: ").append(index.toQString());
+                qFatal("%s", qPrintable(m));
+            }
+            template <class T, class...>
+            QString Default::propertyByIndexAsString(const T &obj, const CPropertyIndex &index, bool i18n, Default::EnableIfEmptyBase<T>)
+            {
+                // default implementation, requires propertyByIndex
+                return obj.propertyByIndex(index).toQString(i18n);
+            }
+            template <class T, class...>
+            bool Default::equalsPropertyByIndex(const T &obj, const CVariant &compareValue, const CPropertyIndex &index, Default::EnableIfEmptyBase<T>)
+            {
+                return obj.propertyByIndex(index) == compareValue;
+            }
+        }
+    }
+}
 
 #endif // guard

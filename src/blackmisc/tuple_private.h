@@ -25,8 +25,26 @@
 
 namespace BlackMisc
 {
-    class CValueObject;
+    class CEmpty;
     template <class> class TupleConverter;
+    template <class Derived, class Base = CEmpty> class CValueObjectStdTuple;
+
+    //! Traits class to test whether a class template specialization is a base class of another class.
+    template <template <class...> class Base, class Derived>
+    class TemplateIsBaseOf
+    {
+        struct yes { char x; };
+        struct no { yes x[2]; };
+        template <class... Ts> static yes test(const Base<Ts...> &);
+        static no test(...);
+
+    public:
+        //! True if and only if Derived is derived from a specialization of Base.
+        static const bool value = sizeof(test(std::declval<Derived>())) == sizeof(yes);
+
+        //! std::true_type or std::false_type.
+        using type = std::integral_constant<bool, value>;
+    };
 
     namespace Private
     {
@@ -145,7 +163,7 @@ namespace BlackMisc
         template <class Derived>
         struct AttributeComparable<Derived, false, false>
         {
-            template <class T> using isCValueObject = typename std::is_base_of<CValueObject, typename T::type>::type;
+            template <class T> using isCValueObject = typename std::is_base_of<CEmpty, T>::type; // FIXME use TemplateIsBaseOf
             friend int compare(const Derived &a, const Derived &b) { return compareHelper(a.m_obj, b.m_obj, isCValueObject<Derived>()); }
             friend bool operator ==(const Derived &a, const Derived &b) { return a.m_obj == b.m_obj; }
             friend bool operator !=(const Derived &a, const Derived &b) { return a.m_obj != b.m_obj; }

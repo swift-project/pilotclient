@@ -111,19 +111,23 @@ namespace BlackMisc
 
         //! Operator == with CValueObject
         //! \todo Still needed?
-        friend bool operator ==(const CPropertyIndexVariantMap &valueMap, const CValueObject &valueObject);
+        template <class T, class = typename std::enable_if<IsValueObject<T>::value>::type>
+        friend bool operator ==(const CPropertyIndexVariantMap &valueMap, const T &valueObject) { return valueMap == CVariant::from(valueObject); }
 
         //! Operator != with CValueObject
         //! \todo Still needed?
-        friend bool operator !=(const CPropertyIndexVariantMap &valueMap, const CValueObject &valueObject);
+        template <class T, class = typename std::enable_if<IsValueObject<T>::value>::type>
+        friend bool operator !=(const CPropertyIndexVariantMap &valueMap, const T &valueObject) { return valueMap != CVariant::from(valueObject); }
 
         //! Operator == with CValueObject
         //! \todo Still needed?
-        friend bool operator ==(const CValueObject &valueObject, const CPropertyIndexVariantMap &valueMap);
+        template <class T, class = typename std::enable_if<IsValueObject<T>::value>::type>
+        friend bool operator ==(const T &valueObject, const CPropertyIndexVariantMap &valueMap) { return valueMap == CVariant::from(valueObject); }
 
         //! Operator != with CValueObject
         //! \todo Still needed?
-        friend bool operator !=(const CValueObject &valueObject, const CPropertyIndexVariantMap &valueMap);
+        template <class T, class = typename std::enable_if<IsValueObject<T>::value>::type>
+        friend bool operator !=(const T &valueObject, const CPropertyIndexVariantMap &valueMap) { return valueMap != CVariant::from(valueObject); }
 
         //! Map
         const QMap<CPropertyIndex, CVariant> &map() const { return this->m_values; }

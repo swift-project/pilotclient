@@ -12,12 +12,17 @@
 #ifndef BLACKMISC_ICON_H
 #define BLACKMISC_ICON_H
 
+#include "valueobject.h"
 #include "icons.h"
-#include "pqangle.h"
 #include <QIcon>
 
 namespace BlackMisc
 {
+    namespace PhysicalQuantities
+    {
+        class CAngle;
+    }
+
     //! Value object for icons. An icon is stored in the global icon repository and
     //! identified by its index. It contains no(!) pyhsical data for the icon itself.
     class CIcon : public CValueObjectStdTuple<CIcon>

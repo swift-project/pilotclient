@@ -9,10 +9,11 @@
 
 //! \file
 
+#include "valueobject.h" // outside include guard due to cyclic dependency hack (MS)
+
 #ifndef BLACKMISC_VARIANT_H
 #define BLACKMISC_VARIANT_H
 
-#include "valueobject.h"
 #include <QVariant>
 #include <QDateTime>
 #include <QJsonValueRef>
@@ -220,7 +221,7 @@ namespace BlackMisc
     };
 
     //! Compare stored value of CVariant with any CValueObject derived class.
-    template <class T, class = typename std::enable_if<std::is_base_of<CValueObject, T>::value>::type>
+    template <class T, class = typename std::enable_if<IsValueObject<T>::value>::type>
     bool operator ==(const T &value, const CVariant &variant)
     {
         if (variant.canConvert<T>()) { return variant.value<T>() == value; }
@@ -228,21 +229,21 @@ namespace BlackMisc
     }
 
     //! Compare stored value of CVariant with any CValueObject derived class.
-    template <class T, class = typename std::enable_if<std::is_base_of<CValueObject, T>::value>::type>
+    template <class T, class = typename std::enable_if<IsValueObject<T>::value>::type>
     bool operator !=(const T &value, const CVariant &variant)
     {
         return !(value == variant);
     }
 
     //! Compare stored value of CVariant with any CValueObject derived class.
-    template <class T, class = typename std::enable_if<std::is_base_of<CValueObject, T>::value>::type>
+    template <class T, class = typename std::enable_if<IsValueObject<T>::value>::type>
     bool operator ==(const CVariant &variant, const T &value)
     {
         return value == variant;
     }
 
     //! Compare stored value of CVariant with any CValueObject derived class.
-    template <class T, class = typename std::enable_if<std::is_base_of<CValueObject, T>::value>::type>
+    template <class T, class = typename std::enable_if<IsValueObject<T>::value>::type>
     bool operator !=(const CVariant &variant, const T &value)
     {
         return !(value == variant);
