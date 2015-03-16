@@ -27,12 +27,16 @@ namespace BlackMisc
     // forward declaration
     class CPropertyIndex;
     class CPropertyIndexList;
+    class CPropertyIndexVariantMap;
+
+    //! \private
+    template <> struct CValueObjectStdTuplePolicy<CPropertyIndexVariantMap> : public CValueObjectLegacy {};
 
     /*!
      * Specialized value object compliant map for variants,
      * based on indexes
      */
-    class CPropertyIndexVariantMap : public CValueObject
+    class CPropertyIndexVariantMap : public CValueObjectStdTuple<CPropertyIndexVariantMap>
     {
 
     public:
@@ -154,12 +158,6 @@ namespace BlackMisc
 
         //! \copydoc CValueObject::getMetaTypeId
         virtual int getMetaTypeId() const override;
-
-        //! \copydoc CValueObject::isA
-        virtual bool isA(int metaTypeId) const override;
-
-        //! \copydoc CValueObject::compareImpl
-        virtual int compareImpl(const CValueObject &other) const override;
 
         //! \copydoc CValueObject::marshallToDbus
         virtual void marshallToDbus(QDBusArgument &argument) const override;

@@ -22,7 +22,7 @@ namespace BlackMisc
     /*!
      * Value object encapsulating information of a server
      */
-    class CTestValueObject : public BlackMisc::CValueObject
+    class CTestValueObject : public BlackMisc::CValueObjectStdTuple<CTestValueObject>
     {
     public:
         //! Properties by index
@@ -51,70 +51,15 @@ namespace BlackMisc
         //! Set description
         void setDescription(const QString &description) { m_description = description; }
 
-        //! Equal operator ==
-        bool operator ==(const CTestValueObject &other) const;
-
-        //! Unequal operator !=
-        bool operator !=(const CTestValueObject &other) const;
-
-        //! Less than operator <
-        bool operator <(const CTestValueObject &other) const;
-
-        //! \copydoc CValueObject::getValueHash()
-        virtual uint getValueHash() const override;
-
-        //! \copydoc CValueObject::toJson
-        virtual QJsonObject toJson() const override;
-
-        //! \copydoc CValueObject::fromJson
-        void convertFromJson(const QJsonObject &json) override;
-
-        //! Register metadata
-        static void registerMetadata();
-
-        //! \copydoc TupleConverter<>::jsonMembers()
-        static const QStringList &jsonMembers();
-
         //! \copydoc CValueObject::propertyByIndex
         virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
         //! \copydoc CValueObject::setPropertyByIndex
         void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
-        //! \copydoc CValueObject::toQVariant
-        virtual QVariant toQVariant() const override
-        {
-            return QVariant::fromValue(*this);
-        }
-
-        //! \copydoc CValueObject::fromQVariant
-        virtual void convertFromQVariant(const QVariant &variant) override
-        {
-            Q_ASSERT(variant.canConvert<CTestValueObject>());
-            if (variant.canConvert<CTestValueObject>())
-            {
-                (*this) = variant.value<CTestValueObject>();
-            }
-        }
-
     protected:
         //! \copydoc CValueObject::convertToQString()
         virtual QString convertToQString(bool i18n = false) const override;
-
-        //! \copydoc CValueObject::getMetaTypeId
-        virtual int getMetaTypeId() const override;
-
-        //! \copydoc CValueObject::isA
-        virtual bool isA(int metaTypeId) const override;
-
-        //! \copydoc CValueObject::compareImpl
-        virtual int compareImpl(const CValueObject &other) const override;
-
-        //! \copydoc CValueObject::marshallToDbus
-        virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-        //! \copydoc CValueObject::unmarshallFromDbus
-        virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CTestValueObject)

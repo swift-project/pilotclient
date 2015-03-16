@@ -169,6 +169,22 @@ namespace BlackMisc
     };
 
     /*!
+     * Policy classes for use by classes with incomplete migration to CValueObjectStdTuple.
+     *
+     * This is to make it easier to apply the necessary changes to these classes for #356.
+     * \todo Remove this and finish migrating classes that use it.
+     */
+    struct CValueObjectLegacy : public CValueObjectStdTuplePolicy<CEmpty>
+    {
+        using Equals = Policy::Equals::None;        //!< Equals policy
+        using LessThan = Policy::LessThan::None;    //!< Less than policy
+        using Compare = Policy::Compare::None;      //!< Compare policy
+        using Hash = Policy::Hash::Own;             //!< Hash policy
+        using DBus = Policy::DBus::Own;             //!< DBus policy
+        using Json = Policy::Json::Own;             //!< JSon policy
+    };
+
+    /*!
      * Standard implementation of CValueObject using meta tuple system.
      *
      * This uses policy-based design. Specialize the class template CValueObjectStdTuplePolicy

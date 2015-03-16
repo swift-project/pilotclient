@@ -118,24 +118,6 @@ namespace BlackMisc
     }
 
     /*
-     * is a
-     */
-    bool CPropertyIndexVariantMap::isA(int metaTypeId) const
-    {
-        if (metaTypeId == qMetaTypeId<CPropertyIndexVariantMap>()) { return true; }
-        return this->CValueObject::isA(metaTypeId);
-    }
-
-    /*
-     * Compare
-     */
-    int CPropertyIndexVariantMap::compareImpl(const CValueObject &/*otherBase*/) const
-    {
-        qFatal("not implemented");
-        return 0;
-    }
-
-    /*
      * Marshall to DBus
      */
     void CPropertyIndexVariantMap::marshallToDbus(QDBusArgument &argument) const

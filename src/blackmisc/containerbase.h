@@ -42,12 +42,29 @@ namespace BlackMisc
         static QString stringify(QString str, bool /*i18n*/) { return str; }
     };
 
+    // forward declaration
+    template <template <class> class C, class T, class CIt>
+    class CContainerBase;
+
+    //! \private
+    template <template <class> class C, class T, class CIt>
+    struct CValueObjectStdTuplePolicy<CContainerBase<C, T, CIt>> : public CValueObjectLegacy
+    {};
+
     /*!
      * \brief Base class for CCollection and CSequence adding mutating operations and CValueObject facility on top of CRangeBase.
      */
     template <template <class> class C, class T, class CIt>
-    class CContainerBase : public CValueObject, public CRangeBase<C<T>, CIt>
+    class CContainerBase : public CValueObjectStdTuple<CContainerBase<C, T, CIt>>, public CRangeBase<C<T>, CIt>
     {
+        //! \copydoc BlackMisc::CValueObject::compare
+        friend int compare(const C<T> &a, const C<T> &b)
+        {
+            if (a.size() < b.size()) { return -1; }
+            if (a.size() > b.size()) { return 1; }
+            return std::lexicographical_compare(a.cbegin(), a.cend(), b.cbegin(), b.cend());
+        }
+
     public:
         /*!
          * \brief Return a new container of a different type, containing the same elements as this one.
@@ -127,7 +144,7 @@ namespace BlackMisc
             }
         }
 
-    protected: // CValueObject overrides
+    protected: // CValueObjectStdTuple overrides
         //! \copydoc BlackMisc::CValueObject::convertToQString
         virtual QString convertToQString(bool i18n = false) const override
         {
@@ -139,27 +156,6 @@ namespace BlackMisc
 
         //! \copydoc BlackMisc::CValueObject::getMetaTypeId
         virtual int getMetaTypeId() const override { return qMetaTypeId<C<T>>(); }
-
-        //! \copydoc BlackMisc::CValueObject::isA
-        virtual bool isA(int metaTypeId) const override
-        {
-            if (metaTypeId == qMetaTypeId<C<T>>()) { return true; }
-            return CValueObject::isA(metaTypeId);
-        }
-
-        //! \copydoc BlackMisc::CValueObject::compareImpl
-        virtual int compareImpl(const CValueObject &other) const override
-        {
-            const auto &o = static_cast<const CContainerBase &>(other);
-            if (derived().size() < o.derived().size()) { return -1; }
-            if (derived().size() > o.derived().size()) { return 1; }
-            //for (auto i1 = derived().cbegin(), i2 = o.derived().cbegin(); i1 != derived().cend() && i2 != o.derived().cend(); ++i1, ++i2)
-            //{
-            //    if (*i1 < *i2) { return -1; }
-            //    if (*i1 > *i2) { return 1; }
-            //}
-            return 0;
-        }
 
         //! \copydoc BlackMisc::CValueObject::marshallToDbus
         virtual void marshallToDbus(QDBusArgument &argument) const override

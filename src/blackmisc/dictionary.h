@@ -74,10 +74,26 @@ namespace BlackMisc
     struct AssociativityTraits : public Private::AssociativityTraits<Private::ADL::SupportsQHash<Key>::value, Private::ADL::SupportsQMap<Key>::value>
     {};
 
-    //! Associative container with value semantics, chooses a sensible default implementation container type
+    // forward declaration
     template<class Key, class Value, template <class...> class Impl = AssociativityTraits<Key>::template DefaultType>
-    class CDictionary : public CValueObject
+    class CDictionary;
+
+    //! \private
+    template <class Key, class Value, template <class...> class Impl>
+    struct CValueObjectStdTuplePolicy<CDictionary<Key, Value, Impl>> : public CValueObjectLegacy
+    {};
+
+    //! Associative container with value semantics, chooses a sensible default implementation container type
+    template<class Key, class Value, template <class...> class Impl /*= AssociativityTraits<Key>::template DefaultType*/>
+    class CDictionary : public CValueObjectStdTuple<CDictionary<Key, Value, Impl>>
     {
+        //! \copydoc BlackMisc::CValueObject::compare
+        friend int compare(const CDictionary &a, const CDictionary &b)
+        {
+            if (a.m_impl.size() < b.m_impl.size()) { return -1; }
+            if (a.m_impl.size() > b.m_impl.size()) { return 1; }
+            return 0;
+        }
 
     public:
         //! The implementation container
@@ -407,22 +423,6 @@ namespace BlackMisc
 
         //! \copydoc BlackMisc::CValueObject::getMetaTypeId
         virtual int getMetaTypeId() const override { return qMetaTypeId<CDictionary>(); }
-
-        //! \copydoc BlackMisc::CValueObject::isA
-        virtual bool isA(int metaTypeId) const override
-        {
-            if (metaTypeId == qMetaTypeId<CDictionary>()) { return true; }
-            return CValueObject::isA(metaTypeId);
-        }
-
-        //! \copydoc BlackMisc::CValueObject::compareImpl
-        virtual int compareImpl(const CValueObject &other) const override
-        {
-            const auto &o = static_cast<const CDictionary &>(other);
-            if (m_impl.size() < o.m_impl.size()) { return -1; }
-            if (m_impl.size() > o.m_impl.size()) { return 1; }
-            return 0;
-        }
 
         //! \copydoc BlackMisc::CValueObject::marshallToDbus
         virtual void marshallToDbus(QDBusArgument &argument) const override
