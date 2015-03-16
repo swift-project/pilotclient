@@ -306,7 +306,7 @@ namespace BlackMisc
                 return this->m_voiceRoom.propertyByIndex(index.copyFrontRemoved());
             default:
                 if (ICoordinateGeodetic::canHandleIndex(index)) { return ICoordinateGeodetic::propertyByIndex(index); }
-                return CValueObject::propertyByIndex(index);
+                return CValueObjectStdTuple::propertyByIndex(index);
             }
         }
 
@@ -356,7 +356,7 @@ namespace BlackMisc
                 this->m_voiceRoom.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObjectStdTuple::setPropertyByIndex(variant, index);
                 break;
             }
         }

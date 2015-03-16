@@ -190,7 +190,7 @@ namespace BlackMisc
             default:
                 return (ICoordinateGeodetic::canHandleIndex(index)) ?
                        ICoordinateGeodetic::propertyByIndex(index) :
-                       CValueObject::propertyByIndex(index);
+                       CValueObjectStdTuple::propertyByIndex(index);
             }
         }
 
@@ -232,7 +232,7 @@ namespace BlackMisc
                 this->m_parts.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObjectStdTuple::setPropertyByIndex(variant, index);
                 break;
             }
         }

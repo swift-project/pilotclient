@@ -54,7 +54,7 @@ namespace BlackMisc
             case IndexSpoilersOut:
                 return CVariant::fromValue(this->m_spoilersOut);
             default:
-                return CValueObject::propertyByIndex(index);
+                return CValueObjectStdTuple::propertyByIndex(index);
             }
         }
 
@@ -93,7 +93,7 @@ namespace BlackMisc
                 this->m_correspondingCallsign.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObjectStdTuple::setPropertyByIndex(variant, index);
                 break;
             }
         }

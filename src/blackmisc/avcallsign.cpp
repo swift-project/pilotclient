@@ -162,7 +162,7 @@ namespace BlackMisc
             case IndexSuffix:
                 return CVariant(this->getSuffix());
             default:
-                return CValueObject::propertyByIndex(index);
+                return CValueObjectStdTuple::propertyByIndex(index);
             }
         }
 
@@ -189,7 +189,7 @@ namespace BlackMisc
                 this->m_telephonyDesignator = variant.toQString();
                 break;
             default:
-                return CValueObject::setPropertyByIndex(variant, index);
+                return CValueObjectStdTuple::setPropertyByIndex(variant, index);
             }
         }
 

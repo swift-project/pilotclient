@@ -65,7 +65,7 @@ namespace BlackMisc
         case IndexPixmap:
             return CVariant(this->m_icon.toPixmap());
         default:
-            return CValueObject::propertyByIndex(index);
+            return CValueObjectStdTuple::propertyByIndex(index);
         }
     }
 
@@ -100,7 +100,7 @@ namespace BlackMisc
             }
             break;
         default:
-            CValueObject::setPropertyByIndex(variant, index);
+            CValueObjectStdTuple::setPropertyByIndex(variant, index);
             break;
         }
     }

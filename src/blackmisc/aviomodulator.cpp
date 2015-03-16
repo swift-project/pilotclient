@@ -52,7 +52,7 @@ namespace BlackMisc
             case IndexOutputVolume:
                 return CVariant::from(this->getVolumeOutput());
             default:
-                return CValueObject::propertyByIndex(index);
+                return CValueObjectStdTuple<CModulator<AVIO>, CAvionicsBase>::propertyByIndex(index);
             }
         }
 
@@ -85,7 +85,7 @@ namespace BlackMisc
                 this->setVolumeOutput(variant.toInt());
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObjectStdTuple<CModulator<AVIO>, CAvionicsBase>::setPropertyByIndex(variant, index);
                 break;
             }
         }

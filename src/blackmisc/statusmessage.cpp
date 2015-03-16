@@ -262,7 +262,7 @@ namespace BlackMisc
         case IndexCategoryHumanReadable:
             return CVariant::from(this->getHumanReadableCategory());
         default:
-            return CValueObject::propertyByIndex(index);
+            return CValueObjectStdTuple::propertyByIndex(index);
         }
     }
 
@@ -286,7 +286,7 @@ namespace BlackMisc
             this->m_categories = variant.value<CLogCategoryList>();
             break;
         default:
-            CValueObject::setPropertyByIndex(variant, index);
+            CValueObjectStdTuple::setPropertyByIndex(variant, index);
             break;
         }
     }

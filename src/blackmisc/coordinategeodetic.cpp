@@ -132,7 +132,7 @@ namespace BlackMisc
             }
             else
             {
-                return CValueObject::propertyByIndex(index.copyFrontRemoved());
+                return CValueObjectStdTuple::propertyByIndex(index);
             }
         }
 
@@ -165,7 +165,7 @@ namespace BlackMisc
                 this->m_geodeticHeight.parseFromString(variant.toQString());
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObjectStdTuple::setPropertyByIndex(variant, index);
                 break;
             }
         }

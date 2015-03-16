@@ -68,7 +68,7 @@ namespace BlackMisc
             case IndexTaxi:
                 return CVariant::from(m_taxiOn);
             default:
-                return CValueObject::propertyByIndex(index);
+                return CValueObjectStdTuple::propertyByIndex(index);
             }
         }
 
@@ -102,7 +102,7 @@ namespace BlackMisc
                 this->m_taxiOn = variant.toBool();
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObjectStdTuple::setPropertyByIndex(variant, index);
                 break;
             }
         }

@@ -61,7 +61,7 @@ namespace BlackMisc
             case IndexSource:
                 return QVariant::fromValue(this->m_source);
             default:
-                return CValueObject::propertyByIndex(index);
+                return CValueObjectStdTuple::propertyByIndex(index);
             }
         }
 
@@ -91,7 +91,7 @@ namespace BlackMisc
                 this->m_source = variant.toQString();
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObjectStdTuple::setPropertyByIndex(variant, index);
                 break;
             }
         }

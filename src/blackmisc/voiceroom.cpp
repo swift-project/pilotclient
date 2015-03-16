@@ -48,7 +48,7 @@ namespace BlackMisc
             case IndexUrl:
                 return CVariant::from(this->getVoiceRoomUrl());
             default:
-                return CValueObject::propertyByIndex(index);
+                return CValueObjectStdTuple::propertyByIndex(index);
             }
         }
 
@@ -82,7 +82,7 @@ namespace BlackMisc
                 this->setVoiceRoomUrl(variant.value<QString>());
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObjectStdTuple::setPropertyByIndex(variant, index);
                 break;
             }
         }
