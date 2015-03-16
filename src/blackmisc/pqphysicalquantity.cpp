@@ -350,15 +350,13 @@ namespace BlackMisc
         /*
          * Compare
          */
-        template <class MU, class PQ> int CPhysicalQuantity<MU, PQ>::compareImpl(const CValueObject &otherBase) const
+        template <class MU, class PQ> int CPhysicalQuantity<MU, PQ>::compareImpl(const PQ &a, const PQ &b)
         {
-            const auto &other = static_cast<const CPhysicalQuantity &>(otherBase);
+            if (a.isNull() > b.isNull()) { return -1; }
+            if (a.isNull() < b.isNull()) { return 1; }
 
-            if (this->isNull() > other.isNull()) { return -1; }
-            if (this->isNull() < other.isNull()) { return 1; }
-
-            if (*this < other) { return -1; }
-            else if (*this > other) { return 1; }
+            if (a < b) { return -1; }
+            else if (a > b) { return 1; }
             else { return 0; }
         }
 

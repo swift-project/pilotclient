@@ -142,16 +142,14 @@ namespace BlackMisc
         /*
          * Compare
          */
-        template <class ImplMatrix, int Rows, int Columns> int CMatrixBase<ImplMatrix, Rows, Columns>::compareImpl(const CValueObject &otherBase) const
+        template <class ImplMatrix, int Rows, int Columns> int CMatrixBase<ImplMatrix, Rows, Columns>::compareImpl(const ImplMatrix &a, const ImplMatrix &b)
         {
-            const auto &other = static_cast<const CMatrixBase &>(otherBase);
-
             for (int r = 0; r < Rows; ++r)
             {
                 for (int c = 0; c < Columns; ++c)
                 {
-                    if (this->m_matrix(r, c) < other.m_matrix(r, c)) { return -1; }
-                    if (this->m_matrix(r, c) > other.m_matrix(r, c)) { return 1; }
+                    if (a.m_matrix(r, c) < b.m_matrix(r, c)) { return -1; }
+                    if (a.m_matrix(r, c) > b.m_matrix(r, c)) { return 1; }
                 }
             }
             return 0;

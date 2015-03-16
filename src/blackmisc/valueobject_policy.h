@@ -197,7 +197,7 @@ namespace BlackMisc
             {
                 //! Policy implementation of CValueObject::compareImpl
                 template <class T, class...>
-                static bool compareImpl(const T &, const T &) { qFatal("Not implemented"); return 0; }
+                static bool compareImpl(const T &, const T &) { return 0; }
             };
 
             //! CValueObjectStdTuple polymorphic comparison policy which inherits the policy of the base class
@@ -214,14 +214,6 @@ namespace BlackMisc
                 //! Policy implementation of CValueObject::compareImpl
                 template <class T, class...>
                 static bool compareImpl(const T &a, const T &b) { return compare(Private::EncapsulationBreaker::toMetaTuple(a), Private::EncapsulationBreaker::toMetaTuple(b)); }
-            };
-
-            //! CValueObjectStdTuple policy for a class which implements its own custom poylymorphic comparison support
-            struct Own
-            {
-                //! Policy implementation of CValueObject::compareImpl
-                template <class T, class...>
-                static bool compareImpl(const T &, const T &) { return 0; }
             };
         }
 

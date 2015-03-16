@@ -32,7 +32,7 @@ namespace BlackMisc
         using MetaType = Policy::MetaType::QMetaTypeAndDBusOnly;
         using Equals = Policy::Equals::OwnEquals;
         using LessThan = Policy::LessThan::OwnLessThan;
-        using Compare = Policy::Compare::Own;
+        using Compare = Policy::Compare::None;
         using Hash = Policy::Hash::Own;
         using DBus = Policy::DBus::Own;
         using Json = Policy::Json::Own;
@@ -194,8 +194,8 @@ namespace BlackMisc
         //! Less than operator.
         friend bool operator <(const CVariant &a, const CVariant &b) { return compare(a, b) < 0; }
 
-        //! \copydoc CValueObject::compareImpl
-        virtual int compareImpl(const CValueObject &other) const override;
+        //! \copydoc CValueObject::compare
+        friend int compare(const CVariant &a, const CVariant &b) { return compareImpl(a, b); }
 
         //! \copydoc CValueObject::setPropertyByIndex
         virtual void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index) override;
@@ -215,6 +215,8 @@ namespace BlackMisc
         Private::IValueObjectMetaInfo *getValueObjectMetaInfo() const { return Private::getValueObjectMetaInfo(m_v); }
         void *data() { return m_v.data(); }
         const void *data() const { return m_v.data(); }
+
+        static int compareImpl(const CVariant &, const CVariant &);
     };
 
     //! Compare stored value of CVariant with any CValueObject derived class.

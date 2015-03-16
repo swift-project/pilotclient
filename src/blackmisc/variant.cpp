@@ -35,24 +35,22 @@ namespace BlackMisc
         return m_v.toString();
     }
 
-    int CVariant::compareImpl(const CValueObject &otherBase) const
+    int CVariant::compareImpl(const CVariant &a, const CVariant &b)
     {
-        const auto &other = static_cast<const CVariant &>(otherBase);
-
-        if (userType() < other.userType()) { return -1; }
-        if (userType() > other.userType()) { return 1; }
-        auto *meta = getValueObjectMetaInfo();
-        auto *otherMeta = other.getValueObjectMetaInfo();
-        if (meta && otherMeta)
+        if (a.userType() < b.userType()) { return -1; }
+        if (a.userType() > b.userType()) { return 1; }
+        auto *aMeta = a.getValueObjectMetaInfo();
+        auto *bMeta = b.getValueObjectMetaInfo();
+        if (aMeta && bMeta)
         {
             const void *casted = nullptr;
-            if ((casted = meta->upCastTo(data(), otherMeta->getMetaTypeId())))
+            if ((casted = aMeta->upCastTo(a.data(), bMeta->getMetaTypeId())))
             {
-                return otherMeta->compare(casted, other.data());
+                return bMeta->compareImpl(casted, b.data());
             }
-            else if ((casted = otherMeta->upCastTo(other.data(), meta->getMetaTypeId())))
+            else if ((casted = bMeta->upCastTo(b.data(), aMeta->getMetaTypeId())))
             {
-                return meta->compare(data(), casted);
+                return aMeta->compareImpl(a.data(), casted);
             }
             else
             {
@@ -60,8 +58,8 @@ namespace BlackMisc
                 return 0;
             }
         }
-        if (m_v < other.m_v) { return -1; }
-        if (m_v > other.m_v) { return 1; }
+        if (a.m_v < b.m_v) { return -1; }
+        if (a.m_v > b.m_v) { return 1; }
         return 0;
     }
 

@@ -22,7 +22,7 @@ namespace BlackMisc
     {
         using Equals = Policy::Equals::None;
         using LessThan = Policy::LessThan::None;
-        using Compare = Policy::Compare::Own;
+        using Compare = Policy::Compare::None;
         using Hash = Policy::Hash::Own;
         using DBus = Policy::DBus::Own;
         using Json = Policy::Json::Own;
@@ -36,6 +36,9 @@ namespace BlackMisc
          */
         template<class ImplMatrix, int Rows, int Columns> class CMatrixBase : public CValueObjectStdTuple<CMatrixBase<ImplMatrix, Rows, Columns>>
         {
+            //! \copydoc CValueObject::compare
+            friend int compare(const ImplMatrix &a, const ImplMatrix &b) { return compareImpl(a, b); }
+
         public:
             //! \brief Default constructor
             CMatrixBase() = default;
@@ -214,9 +217,6 @@ namespace BlackMisc
             // no bug, Qt expects columns rows
             QGenericMatrix<Columns, Rows, double> m_matrix; //!< backing data
 
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
             //! \copydoc CValueObject::marshallToDbus
             virtual void marshallToDbus(QDBusArgument &argument) const override;
 
@@ -241,6 +241,9 @@ namespace BlackMisc
 
             //! \brief Check range of row / column
             void checkRange(int row, int column) const;
+
+            //! Implementation of compare
+            static int compareImpl(const ImplMatrix &, const ImplMatrix &);
         };
 
     } // namespace

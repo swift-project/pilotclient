@@ -34,7 +34,7 @@ namespace BlackMisc
         using MetaType = Policy::MetaType::DefaultAndQList;
         using Equals = Policy::Equals::None;
         using LessThan = Policy::LessThan::None;
-        using Compare = Policy::Compare::Own;
+        using Compare = Policy::Compare::None;
         using Hash = Policy::Hash::Own;
         using DBus = Policy::DBus::Own;
         using Json = Policy::Json::Own;
@@ -47,6 +47,9 @@ namespace BlackMisc
          */
         template <class MU, class PQ> class CPhysicalQuantity : public CValueObjectStdTuple<CPhysicalQuantity<MU, PQ>>
         {
+            //! \copydoc CValueObject::compare
+            friend int compare(const PQ &a, const PQ &b) { return compareImpl(a, b); }
+
         public:
             //! Index
             enum ColumnIndex
@@ -254,15 +257,15 @@ namespace BlackMisc
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
         private:
             double m_value; //!< numeric part
             MU m_unit;      //!< unit part
 
             //! Which subclass of CMeasurementUnit is used?
             typedef MU UnitClass;
+
+            //! Implementation of compare
+            static int compareImpl(const PQ &, const PQ &);
 
             //! Easy access to derived class (CRTP template parameter)
             PQ const *derived() const { return static_cast<PQ const *>(this); }

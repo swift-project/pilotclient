@@ -24,7 +24,7 @@ namespace BlackMisc
         using MetaType = Policy::MetaType::Default;
         using Equals = Policy::Equals::None;
         using LessThan = Policy::LessThan::None;
-        using Compare = Policy::Compare::Own;
+        using Compare = Policy::Compare::None;
         using Hash = Policy::Hash::Own;
         using DBus = Policy::DBus::Own;
         using Json = Policy::Json::Own;
