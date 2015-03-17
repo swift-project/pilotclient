@@ -31,7 +31,7 @@ namespace BlackSimPlugin
         CFs9Client::CFs9Client(
             BlackCore::IInterpolator *interpolator, QObject *owner, const QString &callsign, const CTime &updateInterval) :
             CDirectPlayPeer(owner, callsign),
-            m_interpolator(interpolator), m_updateInterval(updateInterval)
+            m_updateInterval(updateInterval), m_interpolator(interpolator)
         {
         }
 

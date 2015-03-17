@@ -431,7 +431,7 @@ namespace BlackGui
 
         void CTextMessageComponent::onTextMessageSent(const CTextMessage &sentMessage)
         {
-            this->displayTextMessage(CTextMessageList({ sentMessage }));
+            this->displayTextMessage(sentMessage);
         }
 
         bool CTextMessageComponent::handleGlobalCommandLine(const QString &commandLine, const QString &originator)
