@@ -41,7 +41,7 @@ namespace BlackGui
             void requestComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit unit);
 
             //! Request a text message to
-            void requestTextMessage(const BlackMisc::Aviation::CCallsign &callsign);
+            void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
 
         public slots:
             //! \copydoc CAtcStationListModel::changedAtcStationConnectionStatus

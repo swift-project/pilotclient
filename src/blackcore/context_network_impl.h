@@ -76,9 +76,6 @@ namespace BlackCore
         ) override;
 
     signals:
-        // IRemoteAircraftProviderReadOnly must be implemented by concrete class
-        // must not prefixed virtual (though they are) -> warning
-
         //! \copydoc IRemoteAircraftProviderReadOnly::addedRemoteAircraftSituation
         void addedRemoteAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
@@ -183,6 +180,9 @@ namespace BlackCore
 
         //! \copydoc IContextNetwork::updateAircraftModel
         virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) override;
+
+        //! \copydoc IContextNetwork::updateFastPositionUpdates
+        virtual bool updateFastPositionUpdates(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates, const QString &originator) override;
 
         //! \copydoc IContextNetwork::isFastPositionSendingEnabled
         virtual bool isFastPositionSendingEnabled() const override;

@@ -249,6 +249,16 @@ namespace BlackCore
             return false;
         }
 
+        //! \copydoc IContextNetwork::updateFastPositionUpdates
+        virtual bool updateFastPositionUpdates(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending, const QString &originator) override
+        {
+            logEmptyContextWarning(Q_FUNC_INFO);
+            Q_UNUSED(callsign);
+            Q_UNUSED(enableFastPositionSending);
+            Q_UNUSED(originator);
+            return false;
+        }
+
         //! \copydoc IContextNetwork::isFastPositionSendingEnabled
         virtual bool isFastPositionSendingEnabled() const override
         {

@@ -101,6 +101,9 @@ namespace BlackCore
         //! Aircraft enabled / disabled
         void changedAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
 
+        //! Aircraft enabled / disabled
+        void changedFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
+
         //! Connection status changed for online station
         void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &atcStation, bool connected);
 
@@ -232,6 +235,9 @@ namespace BlackCore
 
         //! Change model string
         virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) = 0;
+
+        //! Change fast position updates
+        virtual bool updateFastPositionUpdates(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending, const QString &originator) = 0;
 
         //! Create dummy ATC stations for performance tests etc.
         virtual void testCreateDummyOnlineAtcStations(int number) = 0;

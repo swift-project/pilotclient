@@ -34,7 +34,13 @@ namespace BlackGui
 
         signals:
             //! Request a text message
-            void requestTextMessage(const BlackMisc::Aviation::CCallsign &callsign);
+            void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
+
+            //! Request enable / disable fast position updates
+            void requestFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+            //! Enable aircraft
+            void requestEnableAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
         protected:
             //! \copydoc CViewBase::customMenu

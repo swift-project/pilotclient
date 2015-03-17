@@ -68,6 +68,9 @@ namespace BlackCore
         //! \copydoc IRemoteAircraftProvider::updateAircraftModel
         virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) override;
 
+        //! \copydoc IRemoteAircraftProvider::updateFastPositionEnabled
+        virtual bool updateFastPositionUpdates(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates, const QString &originator) override;
+
         //! Returns the list of users we know about
         BlackMisc::Network::CUserList getUsers() const;
 

@@ -77,7 +77,7 @@ namespace BlackGui
         {
             CAtcStation s(this->selectedObject());
             if (s.getCallsign().isEmpty()) { return; }
-            emit this->requestTextMessage(s.getCallsign());
+            emit this->requestTextMessageWidget(s.getCallsign());
         }
 
     } // namespace

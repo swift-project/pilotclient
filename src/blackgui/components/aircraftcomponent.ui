@@ -43,7 +43,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="BlackGui::Views::CAircraftView" name="tvp_AircraftInRange">
+     <widget class="BlackGui::Views::CSimulatedAircraftView" name="tvp_AircraftInRange">
       <property name="selectionMode">
        <enum>QAbstractItemView::SingleSelection</enum>
       </property>
@@ -95,14 +95,14 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Views::CAircraftView</class>
-   <extends>QTableView</extends>
-   <header>blackgui/views/aircraftview.h</header>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Views::CAirportView</class>
    <extends>QTableView</extends>
    <header>blackgui/views/airportview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Views::CSimulatedAircraftView</class>
+   <extends>QTableView</extends>
+   <header>blackgui/views/simulatedaircraftview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

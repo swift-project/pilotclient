@@ -53,7 +53,7 @@ namespace BlackGui
 
         signals:
             //! Request a text message
-            void requestTextMessage(const BlackMisc::Aviation::CCallsign &callsign);
+            void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
 
         protected:
             //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
@@ -85,23 +85,32 @@ namespace BlackGui
             //! Model preview
             void ps_onModelPreviewChanged(int state);
 
-            //! Requested update for mappings from backend
+            //! Request update for mappings from backend
             void ps_onMappingsUpdateRequested();
 
             //! Request update for models from backend
             void ps_onModelsUpdateRequested();
 
-            //! Rendered aircraft changed
+            //! Rendered aircraft changed in backend
             void ps_onRenderedAircraftModelChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
 
-            //! aircraft enabled, disabled
+            //! Aircraft enabled, disabled in backend
             void ps_onChangedAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
+
+            //! Fast position updates on/off in backend
+            void ps_onFastPositionUpdatesEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
 
             //! Connection status has been changed
             void ps_onConnectionStatusChanged(uint from, uint to);
 
+            //! Fast position updates onf/off
+            void ps_onMenuChangeFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+            //! Enable / disable aircraft
+            void ps_onMenuEnableAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
         private:
-            const QString &mappingtOriginator();
+            static const QString &mappingtOriginator();
             QScopedPointer<Ui::CMappingComponent> ui;
             QCompleter *m_modelCompleter = nullptr;
             BlackGui::Views::CCheckBoxDelegate *m_currentMappingsViewDelegate = nullptr;

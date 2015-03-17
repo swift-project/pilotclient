@@ -537,6 +537,17 @@ namespace BlackCore
         return c;
     }
 
+    bool CContextNetwork::updateFastPositionUpdates(const CCallsign &callsign, bool enableFastPositonUpdates, const QString &originator)
+    {
+        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << enableFastPositonUpdates << originator; }
+        bool c = this->m_airspace->updateFastPositionUpdates(callsign, enableFastPositonUpdates, originator);
+        if (c)
+        {
+            emit this->changedFastPositionUpdates(this->remoteAircraft().findFirstByCallsign(callsign), originator);
+        }
+        return c;
+    }
+
     bool CContextNetwork::isFastPositionSendingEnabled() const
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
@@ -561,6 +572,7 @@ namespace BlackCore
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         Q_ASSERT(this->m_network);
+        //! \todo Fast position updates in vatlib
         return CCallsignList();
     }
 

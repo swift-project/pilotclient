@@ -49,8 +49,10 @@ namespace BlackGui
 
             connect(this->ui->tvp_CurrentMappings, &CSimulatedAircraftView::rowCountChanged, this, &CMappingComponent::ps_onRowCountChanged);
             connect(this->ui->tvp_CurrentMappings, &CSimulatedAircraftView::clicked, this, &CMappingComponent::ps_onAircraftSelectedInView);
-            connect(this->ui->tvp_CurrentMappings, &CSimulatedAircraftView ::requestUpdate, this, &CMappingComponent::ps_onMappingsUpdateRequested);
-            connect(this->ui->tvp_CurrentMappings, &CSimulatedAircraftView::requestTextMessage, this, &CMappingComponent::requestTextMessage);
+            connect(this->ui->tvp_CurrentMappings, &CSimulatedAircraftView::requestUpdate, this, &CMappingComponent::ps_onMappingsUpdateRequested);
+            connect(this->ui->tvp_CurrentMappings, &CSimulatedAircraftView::requestTextMessageWidget, this, &CMappingComponent::requestTextMessageWidget);
+            connect(this->ui->tvp_CurrentMappings, &CSimulatedAircraftView::requestEnableAircraft, this, &CMappingComponent::ps_onMenuEnableAircraft);
+            connect(this->ui->tvp_CurrentMappings, &CSimulatedAircraftView::requestFastPositionUpdates, this, &CMappingComponent::ps_onMenuChangeFastPositionUpdates);
 
             connect(this->ui->pb_SaveAircraft, &QPushButton::clicked, this, &CMappingComponent::ps_onSaveAircraft);
 
@@ -304,6 +306,13 @@ namespace BlackGui
             Q_UNUSED(aircraft);
         }
 
+        void CMappingComponent::ps_onFastPositionUpdatesEnabled(const CSimulatedAircraft &aircraft, const QString &originator)
+        {
+            if (originator == mappingtOriginator()) { return; }
+            this->ps_onMappingsUpdateRequested();
+            Q_UNUSED(aircraft);
+        }
+
         void CMappingComponent::ps_onConnectionStatusChanged(uint from, uint to)
         {
             INetwork::ConnectionStatus fromStatus = static_cast<INetwork::ConnectionStatus>(from);
@@ -312,6 +321,22 @@ namespace BlackGui
             if (INetwork::isDisconnectedStatus(toStatus))
             {
                 this->ui->tvp_CurrentMappings->clear();
+            }
+        }
+
+        void CMappingComponent::ps_onMenuChangeFastPositionUpdates(const CSimulatedAircraft &aircraft)
+        {
+            if (getIContextNetwork())
+            {
+                getIContextNetwork()->updateFastPositionUpdates(aircraft.getCallsign(), aircraft.fastPositionUpdates(), mappingtOriginator());
+            }
+        }
+
+        void CMappingComponent::ps_onMenuEnableAircraft(const CSimulatedAircraft &aircraft)
+        {
+            if (getIContextNetwork())
+            {
+                getIContextNetwork()->updateAircraftEnabled(aircraft.getCallsign(), aircraft.isEnabled(), mappingtOriginator());
             }
         }
 

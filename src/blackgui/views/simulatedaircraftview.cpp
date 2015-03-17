@@ -53,19 +53,23 @@ namespace BlackGui
         {
             CSimulatedAircraft aircraft(selectedObject());
             if (aircraft.getCallsign().isEmpty()) { return; }
-            emit requestTextMessage(aircraft.getCallsign());
+            emit requestTextMessageWidget(aircraft.getCallsign());
         }
 
         void CSimulatedAircraftView::ps_enableAircraft()
         {
             CSimulatedAircraft aircraft(selectedObject());
             if (aircraft.getCallsign().isEmpty()) { return; }
+            aircraft.setEnabled(!aircraft.isEnabled());
+            emit requestFastPositionUpdates(aircraft);
         }
 
         void CSimulatedAircraftView::ps_fastPositionUpdates()
         {
             CSimulatedAircraft aircraft(selectedObject());
             if (aircraft.getCallsign().isEmpty()) { return; }
+            aircraft.setFastPositionUpdates(!aircraft.fastPositionUpdates());
+            emit requestFastPositionUpdates(aircraft);
         }
 
     } // ns

@@ -73,6 +73,14 @@ namespace BlackMisc
             return n > 0;
         }
 
+        bool CRemoteAircraftProviderDummy::updateFastPositionUpdates(const CCallsign &callsign, bool enableFastPositionUpdates, const QString &originator)
+        {
+            Q_UNUSED(originator);
+            CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexFastPositionUpdates, CVariant::fromValue(enableFastPositionUpdates));
+            int n = this->m_aircraft.applyIfCallsign(callsign, vm);
+            return n > 0;
+        }
+
         void CRemoteAircraftProviderDummy::insertNewSituation(const CAircraftSituation &situation)
         {
             this->m_situations.push_frontMaxElements(situation, 20);

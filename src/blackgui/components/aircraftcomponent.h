@@ -49,6 +49,10 @@ namespace BlackGui
             //! Airports in range
             int countAirportsInRange() const;
 
+        signals:
+            //! Request a text message
+            void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
+
         public slots:
             //! Update aircrafts
             void update();

@@ -82,6 +82,9 @@ namespace BlackCore
                                "changedAircraftEnabled", this, SIGNAL(changedAircraftEnabled(BlackMisc::Simulation::CSimulatedAircraft, QString)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
+                               "changedFastPositionUpdates", this, SIGNAL(changedFastPositionUpdates(BlackMisc::Simulation::CSimulatedAircraft,QString)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "addedAircraft", this, SIGNAL(addedAircraft(BlackMisc::Simulation::CSimulatedAircraft)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
@@ -182,6 +185,11 @@ namespace BlackCore
     bool CContextNetworkProxy::updateAircraftModel(const CCallsign &callsign, const Simulation::CAircraftModel &model, const QString &originator)
     {
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateAircraftModel"), callsign, model, originator);
+    }
+
+    bool CContextNetworkProxy::updateFastPositionUpdates(const CCallsign &callsign, bool enableFastPositionSending, const QString &originator)
+    {
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateFastPositionUpdates"), callsign, enableFastPositionSending, originator);
     }
 
     bool CContextNetworkProxy::isFastPositionSendingEnabled() const

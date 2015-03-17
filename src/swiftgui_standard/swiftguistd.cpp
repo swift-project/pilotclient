@@ -216,7 +216,7 @@ void SwiftGuiStd::ps_handleTimerBasedUpdates()
 void SwiftGuiStd::setContextAvailability()
 {
     qint64 t = QDateTime::currentMSecsSinceEpoch();
-    this->m_coreAvailable = this->getIContextApplication()->ping(t) == t;
+    this->m_coreAvailable = (this->getIContextApplication()->ping(t) == t);
     this->m_contextNetworkAvailable = this->m_coreAvailable || this->getIContextNetwork()->isUsingImplementingObject();
     this->m_contextAudioAvailable = this->m_coreAvailable || this->getIContextAudio()->isUsingImplementingObject();
 }

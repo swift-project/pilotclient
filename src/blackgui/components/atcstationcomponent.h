@@ -54,7 +54,7 @@ namespace BlackGui
 
         signals:
             //! Request a text message
-            void requestTextMessage(const BlackMisc::Aviation::CCallsign &callsign);
+            void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
 
         public slots:
             //! Update stations

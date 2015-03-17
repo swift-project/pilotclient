@@ -62,7 +62,7 @@ namespace BlackGui
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::rowCountChanged, this, &CAtcStationComponent::ps_onCountChanged);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::rowCountChanged, this, &CAtcStationComponent::ps_onCountChanged);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::requestComFrequency, this, &CAtcStationComponent::ps_setComFrequency);
-            connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::requestTextMessage, this, &CAtcStationComponent::requestTextMessage);
+            connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::requestTextMessageWidget, this, &CAtcStationComponent::requestTextMessageWidget);
 
             connect(this->ui->tvp_AtcStationsBooked, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::ps_reloadAtcStationsBooked);
             connect(this->ui->tvp_AtcStationsBooked, &CAtcStationView::rowCountChanged, this, &CAtcStationComponent::ps_onCountChanged);

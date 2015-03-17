@@ -152,6 +152,14 @@ namespace BlackCore
         return c > 0;
     }
 
+    bool CAirspaceMonitor::updateFastPositionUpdates(const CCallsign &callsign, bool enableFastPositonUpdates, const QString &originator)
+    {
+        CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexFastPositionUpdates, CVariant::fromValue(enableFastPositonUpdates));
+        Q_UNUSED(originator);
+        int c = m_aircraftInRange.applyIfCallsign(callsign, vm);
+        return c > 0;
+    }
+
     CFlightPlan CAirspaceMonitor::loadFlightPlanFromNetwork(const CCallsign &callsign)
     {
         CFlightPlan plan;
