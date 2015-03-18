@@ -292,7 +292,7 @@ namespace BlackMisc
         }
 
         //! operator << for JSON
-        friend QJsonObject& operator<<(QJsonObject &json, const std::pair<QString, Derived> &value)
+        friend QJsonObject& operator<<(QJsonObject &json, const std::pair<QString, const Derived &> &value)
         {
             json.insert(value.first, QJsonValue(value.second.toJson()));
             return json;

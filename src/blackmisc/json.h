@@ -50,7 +50,7 @@ const QJsonValueRef &operator >>(const QJsonValueRef &json, QDateTime &value);
 //! \ingroup JSON
 template<class ENUM> typename
 std::enable_if<std::is_enum<ENUM>::value, QJsonObject>::type
-&operator<<(QJsonObject &json, std::pair<QString, ENUM> value)
+&operator<<(QJsonObject &json, std::pair<QString, const ENUM &> value)
 {
     json.insert(value.first, QJsonValue(static_cast<int>(value.second)));
     return json;
@@ -93,15 +93,15 @@ QJsonArray &operator<<(QJsonArray &json, const QDateTime &value);
 //! \name Streaming operators for QJsonObject (from value)
 //! \ingroup JSON
 //! @{
-QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, int> &value);
-QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, qint16> &value);
-QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, qlonglong> &value);
-QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, uint> &value);
-QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, qulonglong> &value);
-QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, QString> &value);
-QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, double> &value);
-QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, bool> &value);
-QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, QDateTime> &value);
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const int &> &value);
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const qint16 &> &value);
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const qlonglong &> &value);
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const uint &> &value);
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const qulonglong &> &value);
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QString &> &value);
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const double &> &value);
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const bool &> &value);
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QDateTime &> &value);
 //! @}
 
 namespace BlackMisc

@@ -289,7 +289,7 @@ namespace BlackMisc
             template <class Tu, size_t... Is>
             static void serializeJson(QJsonObject &json, const QStringList &names, const Tu &tu, index_sequence<Is...>)
             {
-                serializeJsonImpl(json, std::make_pair(names[Is], std::get<Is>(tu))...);
+                serializeJsonImpl(json, std::make_pair(names[Is], get_ref<Is>(tu))...);
             }
 
             template <class Tu, size_t... Is>
@@ -301,7 +301,7 @@ namespace BlackMisc
             template <class Tu, size_t... Is>
             static void serializeJson(QJsonObject &json, const Tu &tu, index_sequence<Is...>)
             {
-                serializeJsonImpl(json, std::make_pair(std::get<Is>(tu).m_jsonName, std::get<Is>(tu).m_obj)...);
+                serializeJsonImpl(json, std::make_pair(std::get<Is>(tu).m_jsonName, get_ref<Is>(tu))...);
                 Q_UNUSED(tu); // avoid compiler warning when all attributes are JSON disabled
             }
 

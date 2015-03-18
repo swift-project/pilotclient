@@ -167,55 +167,55 @@ QJsonArray &operator<<(QJsonArray &json, const QDateTime &value)
     return json;
 }
 
-QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, int> &value)
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const int &> &value)
 {
     json.insert(value.first, QJsonValue(value.second));
     return json;
 }
 
-QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, qint16> &value)
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const qint16 &> &value)
 {
     json.insert(value.first, QJsonValue(value.second));
     return json;
 }
 
-QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, qulonglong> &value)
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const qulonglong &> &value)
 {
     json.insert(value.first, QJsonValue(static_cast<int>(value.second)));
     return json;
 }
 
-QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, qlonglong> &value)
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const qlonglong &> &value)
 {
     json.insert(value.first, QJsonValue(value.second));
     return json;
 }
 
-QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, uint> &value)
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const uint &> &value)
 {
     json.insert(value.first, QJsonValue(static_cast<int>(value.second)));
     return json;
 }
 
-QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, QString> &value)
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QString &> &value)
 {
     json.insert(value.first, QJsonValue(value.second));
     return json;
 }
 
-QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, double> &value)
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const double &> &value)
 {
     json.insert(value.first, QJsonValue(value.second));
     return json;
 }
 
-QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, bool> &value)
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const bool &> &value)
 {
     json.insert(value.first, QJsonValue(value.second));
     return json;
 }
 
-QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, QDateTime> &value)
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QDateTime &> &value)
 {
     json.insert(value.first, QJsonValue(value.second.toString()));
     return json;
