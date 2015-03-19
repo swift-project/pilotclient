@@ -11,7 +11,6 @@
 #include "../models/statusmessagelistmodel.h"
 #include "../models/namevariantpairlistmodel.h"
 #include "../models/atcstationlistmodel.h"
-#include "../models/aircraftlistmodel.h"
 #include "../models/aircraftmodellistmodel.h"
 #include "../models/textmessagelistmodel.h"
 #include "../models/airportlistmodel.h"
@@ -87,8 +86,14 @@ namespace BlackGui
             }
             if (!menu.isEmpty()) { menu.addSeparator(); }
             menu.addAction(BlackMisc::CIcons::resize16(), "Full resize", this, SLOT(fullResizeToContents()));
-            menu.addAction(BlackMisc::CIcons::resizeVertical16(), "Resize rows to content", this, SLOT(rowsResizeModeToContent()));
-            menu.addAction(BlackMisc::CIcons::resizeVertical16(), "Resize rows interactive", this, SLOT(rowsResizeModeToInteractive()));
+            if (m_rowResizeMode == Interactive)
+            {
+                menu.addAction(BlackMisc::CIcons::resizeVertical16(), "Resize rows to content", this, SLOT(rowsResizeModeToContent()));
+            }
+            else
+            {
+                menu.addAction(BlackMisc::CIcons::resizeVertical16(), "Resize rows interactive", this, SLOT(rowsResizeModeToInteractive()));
+            }
 
             // resize to content might decrease performance,
             // so I only allow changing to "content resizing" if size matches
@@ -398,7 +403,6 @@ namespace BlackGui
         template class CViewBase<BlackGui::Models::CStatusMessageListModel, BlackMisc::CStatusMessageList, BlackMisc::CStatusMessage>;
         template class CViewBase<BlackGui::Models::CNameVariantPairModel, BlackMisc::CNameVariantPairList, BlackMisc::CNameVariantPair>;
         template class CViewBase<BlackGui::Models::CAtcStationListModel, BlackMisc::Aviation::CAtcStationList, BlackMisc::Aviation::CAtcStation>;
-        template class CViewBase<BlackGui::Models::CAircraftListModel, BlackMisc::Aviation::CAircraftList, BlackMisc::Aviation::CAircraft>;
         template class CViewBase<BlackGui::Models::CAirportListModel, BlackMisc::Aviation::CAirportList, BlackMisc::Aviation::CAirport>;
         template class CViewBase<BlackGui::Models::CServerListModel, BlackMisc::Network::CServerList, BlackMisc::Network::CServer>;
         template class CViewBase<BlackGui::Models::CUserListModel, BlackMisc::Network::CUserList, BlackMisc::Network::CUser>;

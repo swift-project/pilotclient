@@ -25,7 +25,6 @@
 #include "blackgui/transpondermodeselector.h"
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackgui/models/serverlistmodel.h"
-#include "blackgui/models/aircraftlistmodel.h"
 #include "blackgui/models/userlistmodel.h"
 #include "blackgui/models/statusmessagelistmodel.h"
 #include "blackgui/models/keyboardkeylistmodel.h"

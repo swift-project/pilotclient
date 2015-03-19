@@ -211,6 +211,15 @@ namespace BlackSimPlugin
             return mapperInstance()->getIcaoForModelString(modelString);
         }
 
+        void CSimulatorFsCommon::reloadInstalledModels()
+        {
+            if (mapperInstance())
+            {
+                mapperInstance()->markUninitialized();
+                mapperInstance()->initCompletelyInBackground();
+            }
+        }
+
         CPixmap CSimulatorFsCommon::iconForModel(const QString &modelString) const
         {
             static const CPixmap empty;

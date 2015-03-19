@@ -98,6 +98,11 @@ namespace BlackSim
             this->m_init = false;
         }
 
+        void CAircraftMapper::markUninitialized()
+        {
+            this->m_init = false;
+        }
+
         const CAircraftModel &CAircraftMapper::getDefaultModel()
         {
             static const CAircraftModel aircraftModel(

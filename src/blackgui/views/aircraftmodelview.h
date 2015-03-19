@@ -23,6 +23,7 @@ namespace BlackGui
         //! Aircrafts view
         class CAircraftModelView : public CViewBase<Models::CAircraftModelListModel, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModel>
         {
+            Q_OBJECT
 
         public:
 
@@ -32,14 +33,30 @@ namespace BlackGui
             //! Set display mode
             void setAircraftModelMode(Models::CAircraftModelListModel::AircraftModelMode mode);
 
+            //! Display automatically (when models are loaded)
+            bool displayAutomatically() const;
+
+        signals:
+            //! Request reloading of backend models
+            void requestModelReload();
+
         protected slots:
             //! \copydoc CViewBaseNonTemplate::ps_filterDialogFinished
             virtual bool ps_filterDialogFinished(int status) override;
 
+        protected:
+            //! \copydoc CViewBase::customMenu
+            virtual void customMenu(QMenu &menu) const override;
+
+        private slots:
+            //! Toggle auto display
+            void ps_toggleAutoDisplay();
+
         private:
             //! Filter form
             CAircraftModelFilterForm *getFilterForm() const;
+            bool m_displayAutomatically = false;
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard

@@ -58,49 +58,49 @@ namespace BlackCore
 
     bool CContextSimulator::isConnected() const
     {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         if (!m_simulator) return false;
         return m_simulator->isConnected();
     }
 
     bool CContextSimulator::canConnect() const
     {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         if (!m_simulator) return false;
         return m_simulator->canConnect();
     }
 
     bool CContextSimulator::connectToSimulator()
     {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         if (!m_simulator) return false;
         return m_simulator->connectTo();
     }
 
     void CContextSimulator::asyncConnectToSimulator()
     {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         if (!m_simulator || m_canConnectResult.isRunning()) return; // already checking
         m_simulator->asyncConnectTo();
     }
 
     bool CContextSimulator::disconnectFromSimulator()
     {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         if (!m_simulator) return false;
         return m_simulator->disconnectFrom();
     }
 
     BlackSim::CSimulatorInfo CContextSimulator::getSimulatorInfo() const
     {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         if (!m_simulator) return BlackSim::CSimulatorInfo::UnspecifiedSim();
         return m_simulator->getSimulatorInfo();
     }
 
     CAirportList CContextSimulator::getAirportsInRange() const
     {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         // If no ISimulator object is available, return a dummy.
         if (!m_simulator) { return CAirportList(); }
 
@@ -109,7 +109,7 @@ namespace BlackCore
 
     CAircraftModelList CContextSimulator::getInstalledModels() const
     {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         // If no ISimulator object is available, return a dummy.
         if (!m_simulator) { return CAircraftModelList(); }
 
@@ -118,21 +118,28 @@ namespace BlackCore
 
     CAircraftModelList CContextSimulator::getInstalledModelsStartingWith(const QString modelString) const
     {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << modelString;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << modelString; }
         if (!m_simulator) { return CAircraftModelList(); }
         return this->m_simulator->getInstalledModels().findModelsStartingWith(modelString);
     }
 
+    void CContextSimulator::reloadInstalledModels()
+    {
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (!m_simulator) { return; }
+        m_simulator->reloadInstalledModels();
+    }
+
     CAircraftIcao CContextSimulator::getIcaoForModelString(const QString &modelString) const
     {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << modelString;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << modelString; }
         if (!m_simulator) { return CAircraftIcao(); }
         return this->m_simulator->getIcaoForModelString(modelString);
     }
 
     bool CContextSimulator::setTimeSynchronization(bool enable, CTime offset)
     {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         if (!m_simulator) { return false; }
         bool c = this->m_simulator->setTimeSynchronization(enable, offset);
         if (!c) { return false; }
@@ -149,7 +156,7 @@ namespace BlackCore
 
     bool CContextSimulator::isTimeSynchronized() const
     {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         if (!m_simulator) return false;
         return this->m_simulator->isTimeSynchronized();
     }

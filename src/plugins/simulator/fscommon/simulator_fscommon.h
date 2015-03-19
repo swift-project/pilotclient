@@ -56,14 +56,17 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::setTimeSynchronization
             virtual bool setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
 
-            //! \copydoc BlackCore::ISimulator::getAirportsInRange
-            virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const;
+            //! \copydoc ISimulator::getAirportsInRange
+            virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
 
-            //! \copydoc BlackCore::ISimulator::getInstalledModels
+            //! \copydoc ISimulator::getInstalledModels
             virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override;
 
-            //! \copydoc BlackCore::ISimulator::getIcaoForModelString
+            //! \copydoc ISimulator::getIcaoForModelString
             virtual BlackMisc::Aviation::CAircraftIcao getIcaoForModelString(const QString &modelString) const override;
+
+            //! \copydoc ISimulator::reloadInstalledModels
+            virtual void reloadInstalledModels() override;
 
             //! \copydoc IContextSimulator::iconForModel
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;

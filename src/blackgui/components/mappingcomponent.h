@@ -109,6 +109,9 @@ namespace BlackGui
             //! Enable / disable aircraft
             void ps_onMenuEnableAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
+            //! Reload models
+            void ps_onMenuRequestModelReload();
+
         private:
             static const QString &mappingtOriginator();
             void updateSimulatedAircraftView();

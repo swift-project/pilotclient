@@ -109,6 +109,9 @@ namespace BlackCore
         //! Aircraft models for available remote aircrafts
         virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const = 0;
 
+        //! Reload the installed models
+        virtual void reloadInstalledModels() = 0;
+
         //! Airports in range
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const = 0;
 

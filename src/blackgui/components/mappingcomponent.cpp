@@ -46,6 +46,7 @@ namespace BlackGui
             connect(this->ui->tvp_AircraftModels,  &CAircraftModelView::requestUpdate, this, &CMappingComponent::ps_onModelsUpdateRequested);
             connect(this->ui->tvp_AircraftModels,  &CAircraftModelView::rowCountChanged, this, &CMappingComponent::ps_onRowCountChanged);
             connect(this->ui->tvp_AircraftModels,  &CAircraftModelView::clicked, this, &CMappingComponent::ps_onModelSelectedInView);
+            connect(this->ui->tvp_AircraftModels,  &CAircraftModelView::requestModelReload, this, &CMappingComponent::ps_onMenuRequestModelReload);
 
             connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::rowCountChanged, this, &CMappingComponent::ps_onRowCountChanged);
             connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::clicked, this, &CMappingComponent::ps_onAircraftSelectedInView);
@@ -106,7 +107,14 @@ namespace BlackGui
 
         void CMappingComponent::ps_onAircraftModelsLoaded()
         {
-            this->ps_onModelsUpdateRequested();
+            if (ui->tvp_AircraftModels->displayAutomatically())
+            {
+                this->ps_onModelsUpdateRequested();
+            }
+            else
+            {
+                CLogMessage(this).info("Models loaded, you can update the model view");
+            }
         }
 
         void CMappingComponent::ps_onModelMatchingCompleted(const BlackMisc::Simulation::CSimulatedAircraft &aircraft)
@@ -336,6 +344,15 @@ namespace BlackGui
             if (getIContextNetwork())
             {
                 getIContextNetwork()->updateAircraftEnabled(aircraft.getCallsign(), aircraft.isEnabled(), mappingtOriginator());
+            }
+        }
+
+        void CMappingComponent::ps_onMenuRequestModelReload()
+        {
+            if (this->getIContextSimulator())
+            {
+                this->getIContextSimulator()->reloadInstalledModels();
+                CLogMessage(this).info("Requested to reload simulator aircraft models");
             }
         }
 

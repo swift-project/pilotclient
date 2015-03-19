@@ -254,14 +254,20 @@ namespace BlackSimPlugin
         void CSimulatorXPlane::displayTextMessage(const BlackMisc::Network::CTextMessage &message) const
         {
             if (! isConnected()) { return; }
-            // TODO
             Q_UNUSED(message);
         }
 
         BlackMisc::Simulation::CAircraftModelList CSimulatorXPlane::getInstalledModels() const
         {
-            // TODO
+            //! \todo XP driver, function not available
+            CLogMessage(this).error("Function not avialable");
             return {};
+        }
+
+        void CSimulatorXPlane::reloadInstalledModels()
+        {
+            //! \todo XP driver, function not available
+            CLogMessage(this).error("Function not avialable");
         }
 
         void CSimulatorXPlane::ps_setAirportsInRange(const QStringList &icaos, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts)
@@ -296,7 +302,7 @@ namespace BlackSimPlugin
         {
             if (enable)
             {
-                CLogMessage(this).warning("X-Plane already provides real time synchronization");
+                CLogMessage(this).info("X-Plane provides real time synchronization, use this on");
             }
             return false;
         }

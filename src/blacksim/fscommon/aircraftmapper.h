@@ -99,6 +99,9 @@ namespace BlackSim
             //! Shutdown
             void gracefulShutdown();
 
+            //! To force reload
+            void markUninitialized();
+
             //! default model
             static const BlackMisc::Simulation::CAircraftModel &getDefaultModel();
 
