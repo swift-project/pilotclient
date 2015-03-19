@@ -69,7 +69,7 @@ namespace BlackGui
             //! Changed count
             void ps_onRowCountChanged(int count, bool withFilter);
 
-            //! Simulated aircraft did change in model
+            //! Simulated aircraft did change in view
             //! \sa CViewBaseNonTemplate::objectChanged
             void ps_onChangedSimulatedAircraftInView(const BlackMisc::CVariant &simulatedAircraft, const BlackMisc::CPropertyIndex &index);
 
@@ -86,7 +86,7 @@ namespace BlackGui
             void ps_onModelPreviewChanged(int state);
 
             //! Request update for mappings from backend
-            void ps_onMappingsUpdateRequested();
+            void ps_onSimulatedAircraftUpdateRequested();
 
             //! Request update for models from backend
             void ps_onModelsUpdateRequested();
@@ -111,6 +111,7 @@ namespace BlackGui
 
         private:
             static const QString &mappingtOriginator();
+            void updateSimulatedAircraftView();
             QScopedPointer<Ui::CMappingComponent> ui;
             QCompleter *m_modelCompleter = nullptr;
             BlackGui::Views::CCheckBoxDelegate *m_currentMappingsViewDelegate = nullptr;

@@ -58,7 +58,7 @@ namespace BlackMiscTest
         while (line != "x" && runtime)
         {
             qtout << "-------------" << endl;
-            qtout << "Connected with network: " << (runtime->getIContextNetwork()->isConnected() ? "yes" : "no") << endl;
+            qtout << "Connected with network: " << BlackMisc::boolToYesNo(runtime->getIContextNetwork()->isConnected()) << endl;
             qtout << "Thread id: " << QThread::currentThreadId() << endl;
             qtout << "-------------" << endl;
             qtout << "x .. to exit" << endl;

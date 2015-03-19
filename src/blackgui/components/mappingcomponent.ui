@@ -85,7 +85,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="BlackGui::Views::CSimulatedAircraftView" name="tvp_CurrentMappings">
+        <widget class="BlackGui::Views::CSimulatedAircraftView" name="tvp_SimulatedAircraft">
          <property name="selectionMode">
           <enum>QAbstractItemView::SingleSelection</enum>
          </property>

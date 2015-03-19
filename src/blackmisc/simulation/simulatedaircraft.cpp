@@ -154,10 +154,10 @@ namespace BlackMisc
         {
             QString s = CAircraft::convertToQString(i18n);
             s += " enabled: ";
-            s += this->isEnabled() ? "yes" : "no";
+            s +=  BlackMisc::boolToYesNo(this->isEnabled());
             s += " ";
             s += " rendered: ";
-            s += this->isRendered() ? "yes" : "no";
+            s +=  BlackMisc::boolToYesNo(this->isRendered());
             s += " ";
             s += this->m_model.toQString(i18n);
             s += " ";

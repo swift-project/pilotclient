@@ -396,12 +396,12 @@ QJsonObject BlackMisc::getIncrementalObject(const QJsonObject &previousObject, c
 QJsonObject BlackMisc::applyIncrementalObject(const QJsonObject &previousObject, const QJsonObject &incrementalObject)
 {
     QJsonObject currentObject = previousObject;
-    for(const auto &key : incrementalObject.keys())
+    for (const auto &key : incrementalObject.keys())
     {
         // If it is not an object, just insert the value
         if (!incrementalObject.value(key).isObject())
         {
-            currentObject.insert(key,incrementalObject.value(key));
+            currentObject.insert(key, incrementalObject.value(key));
         }
         else
         {
@@ -410,4 +410,18 @@ QJsonObject BlackMisc::applyIncrementalObject(const QJsonObject &previousObject,
         }
     }
     return currentObject;
+}
+
+
+QString BlackMisc::boolToOnOff(bool v, bool i18n)
+{
+    Q_UNUSED(i18n);
+    return v ? "on" : "off";
+}
+
+
+QString BlackMisc::boolToYesNo(bool v, bool i18n)
+{
+    Q_UNUSED(i18n);
+    return v ? "yes" : "no";
 }

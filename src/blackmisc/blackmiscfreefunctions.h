@@ -171,6 +171,12 @@ namespace BlackMisc
     //! A map converted to string
     template<class K, class V> QString qmapToString(const QMap<K, V> &map);
 
+    //! Bool to on/off
+    QString boolToOnOff(bool v, bool  i18n = false);
+
+    //! Bool to yes / no
+    QString boolToYesNo(bool v, bool  i18n = false);
+
     //! Get local host name
     const QString &localHostName();
 

@@ -61,7 +61,7 @@ namespace BlackGui
             CSimulatedAircraft aircraft(selectedObject());
             if (aircraft.getCallsign().isEmpty()) { return; }
             aircraft.setEnabled(!aircraft.isEnabled());
-            emit requestFastPositionUpdates(aircraft);
+            emit requestEnableAircraft(aircraft);
         }
 
         void CSimulatedAircraftView::ps_fastPositionUpdates()

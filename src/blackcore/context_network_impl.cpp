@@ -521,7 +521,8 @@ namespace BlackCore
         bool c = this->m_airspace->updateAircraftEnabled(callsign, enabledForRedering, originator);
         if (c)
         {
-            emit this->changedAircraftEnabled(this->remoteAircraft().findFirstByCallsign(callsign), originator);
+            CSimulatedAircraft aircraft(this->remoteAircraft().findFirstByCallsign(callsign));
+            emit this->changedAircraftEnabled(aircraft, originator);
         }
         return c;
     }
@@ -532,7 +533,8 @@ namespace BlackCore
         bool c = this->m_airspace->updateAircraftModel(callsign, model, originator);
         if (c)
         {
-            emit this->changedRenderedAircraftModel(this->remoteAircraft().findFirstByCallsign(callsign), originator);
+            CSimulatedAircraft aircraft(this->remoteAircraft().findFirstByCallsign(callsign));
+            emit this->changedRenderedAircraftModel(aircraft, originator);
         }
         return c;
     }
@@ -543,7 +545,9 @@ namespace BlackCore
         bool c = this->m_airspace->updateFastPositionUpdates(callsign, enableFastPositonUpdates, originator);
         if (c)
         {
-            emit this->changedFastPositionUpdates(this->remoteAircraft().findFirstByCallsign(callsign), originator);
+            CSimulatedAircraft aircraft(this->remoteAircraft().findFirstByCallsign(callsign));
+            CLogMessage(this).info("Callsign %1 sets fast positions ") << aircraft.getCallsign() << BlackMisc::boolToOnOff(aircraft.fastPositionUpdates());
+            emit this->changedFastPositionUpdates(aircraft, originator);
         }
         return c;
     }
