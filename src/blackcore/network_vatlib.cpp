@@ -48,7 +48,7 @@ namespace BlackCore
         Q_ASSERT_X(m_fsdTextCodec, "CNetworkVatlib", "Missing default wire text encoding");
         //TODO reinit m_fsdTextCodec from WireTextEncoding config setting if present
 
-        Vat_SetNetworkErrorHandler(CNetworkVatlib::networkErrorHandler);
+        Vat_SetNetworkLogHandler(SeverityError, CNetworkVatlib::networkLogHandler);
 
         connect(&m_processingTimer, SIGNAL(timeout()), this, SLOT(process()));
         connect(&m_updateTimer, SIGNAL(timeout()), this, SLOT(update()));
@@ -74,8 +74,8 @@ namespace BlackCore
                                              clientCapabilities));
 
         Vat_SetStateChangeHandler(m_net.data(), onConnectionStatusChanged, this);
-        Vat_SetMessageHandler(m_net.data(), onTextMessageReceived, this);
-        Vat_SetRadioHandler(m_net.data(), onRadioMessageReceived, this);
+        Vat_SetTextMessageHandler(m_net.data(), onTextMessageReceived, this);
+        Vat_SetRadioMessageHandler(m_net.data(), onRadioMessageReceived, this);
         Vat_SetDeletePilotHandler(m_net.data(), onPilotDisconnected, this);
         Vat_SetDeleteAtcHandler(m_net.data(), onControllerDisconnected, this);
         Vat_SetPilotPositionHandler(m_net.data(), onPilotPositionUpdate, this);
@@ -83,9 +83,9 @@ namespace BlackCore
         Vat_SetAtcPositionHandler(m_net.data(), onAtcPositionUpdate, this);
         Vat_SetKillHandler(m_net.data(), onKicked, this);
         Vat_SetPongHandler(m_net.data(), onPong, this);
-        Vat_SetACARSDataHandler(m_net.data(), onMetarReceived, this);
+        Vat_SetMetarResponseHandler(m_net.data(), onMetarReceived, this);
         Vat_SetInfoRequestHandler(m_net.data(), onInfoQueryRequestReceived, this);
-        Vat_SetInfoReplyHandler(m_net.data(), onInfoQueryReplyReceived, this);
+        Vat_SetInfoResponseHandler(m_net.data(), onInfoQueryReplyReceived, this);
         Vat_SetInfoCAPSReplyHandler(m_net.data(), onCapabilitiesReplyReceived, this);
         Vat_SetControllerAtisHandler(m_net.data(), onAtisReplyReceived, this);
         Vat_SetFlightPlanHandler(m_net.data(), onFlightPlanReceived, this);
@@ -134,7 +134,8 @@ namespace BlackCore
             {
                 // Normal / Stealth mode
                 VatPilotPosition pos;
-                pos.altitudeAdjust = 0; // TODO: this needs to be calculated
+                // TODO: we need to distinguish true and pressure altitude
+                pos.altitudePressure = ownAircraft().getAltitude().value(CLengthUnit::ft());
                 pos.altitudeTrue = ownAircraft().getAltitude().value(CLengthUnit::ft());
                 pos.heading      = ownAircraft().getHeading().value(CAngleUnit::deg());
                 pos.pitch        = ownAircraft().getPitch().value(CAngleUnit::deg());
@@ -564,7 +565,7 @@ namespace BlackCore
     void CNetworkVatlib::sendMetarQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
-        Vat_RequestACARS(m_net.data(), toFSD(airportIcao.asString()));
+        Vat_RequestMetar(m_net.data(), toFSD(airportIcao.asString()));
     }
 
     void CNetworkVatlib::sendWeatherDataQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao)
@@ -974,7 +975,7 @@ namespace BlackCore
         emit cbvar_cast(cbvar)->icaoCodesReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), icao);
     }
 
-    void CNetworkVatlib::networkErrorHandler(const char *message)
+    void CNetworkVatlib::networkLogHandler(SeverityLevel /** severity **/, const char *message)
     {
         CLogMessage(static_cast<CNetworkVatlib *>(nullptr)).error(message);
     }

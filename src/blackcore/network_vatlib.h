@@ -132,7 +132,7 @@ namespace BlackCore
         bool isDisconnected() const { return m_status != vatStatusConnecting && m_status != vatStatusConnected; }
         static QString convertToUnicodeEscaped(const QString &str);
         static VatSimType convertToSimType(BlackSim::CSimulatorInfo &simInfo);
-        static void networkErrorHandler(const char *message);
+        static void networkLogHandler(SeverityLevel severity, const char *message);
 
         struct JsonPackets
         {

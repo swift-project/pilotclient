@@ -32,7 +32,7 @@ namespace BlackCore
         m_audioService(Vat_CreateAudioService()),
         m_udpPort(Vat_CreateUDPAudioPort(m_audioService.data(), 3782))
     {
-        Vat_SetVoiceErrorHandler(CVoiceVatlib::voiceErrorHandler);
+        Vat_SetVoiceLogHandler(SeverityError, CVoiceVatlib::voiceLogHandler);
 
         // do processing
         this->startTimer(10);
@@ -147,7 +147,7 @@ namespace BlackCore
         Vat_ExecuteTasks(m_audioService.data());
     }
 
-    void CVoiceVatlib::voiceErrorHandler(const char *message)
+    void CVoiceVatlib::voiceLogHandler(SeverityLevel /** severity **/, const char *message)
     {
         CLogMessage(static_cast<CVoiceVatlib*>(nullptr)).error(message);
     }

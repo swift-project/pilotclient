@@ -100,7 +100,7 @@ namespace BlackCore
             }
         };
 
-        static void voiceErrorHandler(const char *message);
+        static void voiceLogHandler(SeverityLevel severity, const char *message);
 
         QScopedPointer<VatAudioService_tag, VatAudioServiceDeleter> m_audioService;
         QScopedPointer<VatUDPAudioPort_tag, VatUDPAudioPortDeleter> m_udpPort;
