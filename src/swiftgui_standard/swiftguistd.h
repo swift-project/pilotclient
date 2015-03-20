@@ -224,10 +224,7 @@ private slots:
     //! Update timer
     void ps_handleTimerBasedUpdates();
 
-    /*!
-     * \brief changeOpacity
-     * \param opacity 0-100
-     */
+    //! Change opacity 0-100
     void ps_onChangedWindowOpacity(int opacity = -1);
 
     //! Toogle Windows stay on top
@@ -244,6 +241,7 @@ private slots:
 
     //! Whole main info area floating
     void ps_onChangedMainInfoAreaFloating(bool floating);
+
 };
 
 #pragma pop_macro("interface")

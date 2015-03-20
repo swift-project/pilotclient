@@ -63,10 +63,14 @@ void SwiftGuiStd::ps_onMenuClicked()
     {
         CStyleSheetUtility::instance().read();
     }
-    else if (sender == this->ui->menu_FileFont)
+    else if (sender == this->ui->menu_WindowFont)
     {
         this->ps_setMainPageToInfoArea();
         this->ui->comp_MainInfoArea->selectSettingsTab(BlackGui::Components::CSettingsComponent::SettingTabGui);
+    }
+    else if (sender == this->ui->menu_WindowMinimize)
+    {
+        this->showMinimized();
     }
     else if (sender == this->ui->menu_FileClose)
     {
@@ -98,3 +102,4 @@ void SwiftGuiStd::initDynamicMenus()
     Q_ASSERT(this->ui->comp_MainInfoArea);
     this->ui->menu_InfoAreas->addActions(this->ui->comp_MainInfoArea->getInfoAreaSelectActions(this->ui->menu_InfoAreas));
 }
+

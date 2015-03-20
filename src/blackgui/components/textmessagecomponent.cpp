@@ -259,7 +259,7 @@ namespace BlackGui
         void CTextMessageComponent::addPrivateChannelTextMessage(const CTextMessage &textMessage)
         {
             if (!textMessage.isPrivateMessage()) { return; }
-            CCallsign cs = textMessage.getRecipientCallsign();
+            CCallsign cs = textMessage.wasSent() ? textMessage.getRecipientCallsign() : textMessage.getSenderCallsign();
             if (cs.isEmpty()) { return; }
             QWidget *tab = this->findTextMessageTabByCallsign(cs);
             if (tab == nullptr) { tab = this->addNewTextMessageTab(cs); }
@@ -346,6 +346,7 @@ namespace BlackGui
             if (!this->isVisible()) { return; }
 
             QString cl(this->ui->le_textMessages->text().trimmed().simplified());
+            this->ui->le_textMessages->clear();
             this->handleEnteredTextMessage(cl);
         }
 

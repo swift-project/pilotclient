@@ -27,7 +27,9 @@ namespace BlackGui
 
         void CSimulatedAircraftView::setAircraftMode(CSimulatedAircraftListModel::AircraftMode mode)
         {
+            Q_ASSERT(this->m_model);
             this->m_model->setAircraftMode(mode);
+            this->setSortIndicator();
         }
 
         void CSimulatedAircraftView::customMenu(QMenu &menu) const
