@@ -47,6 +47,7 @@ namespace BlackGui
             this->ui->led_DBus->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "DBus connected", "DBus disconnected", 14);
             this->ui->led_Network->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Network connected", "Network disconnected", 14);
             this->ui->led_Simulator->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Blue, shape, "Simulator running", "Simulator disconnected", "Simulator connected", 14);
+            this->ui->led_MapperReady->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Blue, shape, "Mapper ready", "Mappings loading", "Mappings loading", 14);
 
             shape = CLedWidget::Rounded;
             this->ui->led_Ptt->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Ptt", "Silence", 18);
@@ -75,6 +76,7 @@ namespace BlackGui
             if (this->getIContextSimulator())
             {
                 connect(this->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CInfoBarStatusComponent::ps_onSimulatorStatusChanged);
+                connect(this->getIContextSimulator(), &IContextSimulator::installedAircraftModelsChanged, this, &CInfoBarStatusComponent::ps_onMapperReady);
             }
 
             if (this->getIContextNetwork())
@@ -92,7 +94,6 @@ namespace BlackGui
             {
                 this->ui->led_Audio->setOn(!this->getIContextAudio()->isMuted());
                 connect(getIContextAudio(), &IContextAudio::changedMute, this, &CInfoBarStatusComponent::ps_onMuteChanged);
-//                connect(getIContextAudio(), &IContextAudio::changedAudioVolumes, this, &CInfoBarStatusComponent::ps_onVolumesChanged);
             }
         }
 
@@ -169,15 +170,21 @@ namespace BlackGui
             }
         }
 
-        void CInfoBarStatusComponent::ps_onVolumesChanged(qint32 com1Volume, qint32 com2Volume)
-        {
-            bool pseudoMute = (com1Volume < 1 && com2Volume < 1);
-            this->ps_onMuteChanged(pseudoMute);
-        }
-
         void CInfoBarStatusComponent::ps_onMuteChanged(bool muted)
         {
             this->ui->led_Audio->setOn(!muted);
+        }
+
+        void CInfoBarStatusComponent::ps_onMapperReady()
+        {
+            if (!getIContextSimulator())
+            {
+                this->ui->led_MapperReady->setOn(false);
+                return;
+            }
+
+            bool on = this->getIContextSimulator()->getInstalledModelsCount() > 0;
+            this->ui->led_MapperReady->setOn(on);
         }
     } // namespace
 } // namespace

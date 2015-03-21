@@ -45,4 +45,9 @@ namespace BlackCore
         Q_UNUSED(interpolator);
     }
 
+    int CSimulatorCommon::getInstalledModelsCount() const
+    {
+        return getInstalledModels().size();
+    }
+
 } // namespace

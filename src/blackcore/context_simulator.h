@@ -123,6 +123,9 @@ namespace BlackCore
         //! Installed models in simulator eco system
         virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const = 0;
 
+        //! Number of installed models in simulator eco system
+        virtual int getInstalledModelsCount() const = 0;
+
         //! Model for model string
         virtual BlackMisc::Simulation::CAircraftModelList getInstalledModelsStartingWith(const QString modelString) const = 0;
 

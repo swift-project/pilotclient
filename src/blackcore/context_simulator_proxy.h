@@ -77,6 +77,9 @@ namespace BlackCore
         //! \copydoc IContextSimulator::getInstalledModelsStartingWith
         virtual BlackMisc::Simulation::CAircraftModelList getInstalledModelsStartingWith(const QString modelString) const override;
 
+        //! \copydoc IContextSimulator::getInstalledModelsCount
+        virtual int getInstalledModelsCount() const override;
+
         //! \copydoc IContextSimulator::reloadInstalledModels
         virtual void reloadInstalledModels() override;
 

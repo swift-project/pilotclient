@@ -109,6 +109,9 @@ namespace BlackCore
         //! Aircraft models for available remote aircrafts
         virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const = 0;
 
+        //! Count of aircraft models for available remote aircrafts
+        virtual int getInstalledModelsCount() const = 0;
+
         //! Reload the installed models
         virtual void reloadInstalledModels() = 0;
 
@@ -212,6 +215,9 @@ namespace BlackCore
 
         //! \copydoc ISimulator::enableDebuggingMessages
         virtual void enableDebugMessages(bool driver, bool interpolator) override;
+
+        //! \copydoc ISimulator::getInstalledModelsCount
+        virtual int getInstalledModelsCount() const override;
 
     protected:
         //! Constructor

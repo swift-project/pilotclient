@@ -304,6 +304,7 @@
     </property>
     <addaction name="menu_WindowFont"/>
     <addaction name="menu_WindowMinimize"/>
+    <addaction name="menu_WindowToggleOnTop"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menuWindow"/>
@@ -417,6 +418,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+W, Ctrl+M</string>
+   </property>
+  </action>
+  <action name="menu_WindowToggleOnTop">
+   <property name="text">
+    <string>Toggle stay on top</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W, Ctrl+T</string>
    </property>
   </action>
  </widget>

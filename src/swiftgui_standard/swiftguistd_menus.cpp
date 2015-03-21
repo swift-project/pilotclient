@@ -72,6 +72,10 @@ void SwiftGuiStd::ps_onMenuClicked()
     {
         this->showMinimized();
     }
+    else if (sender == this->ui->menu_WindowToggleOnTop)
+    {
+        this->ps_toogleWindowStayOnTop();
+    }
     else if (sender == this->ui->menu_FileClose)
     {
         CLogMessage(this).info("Closing");

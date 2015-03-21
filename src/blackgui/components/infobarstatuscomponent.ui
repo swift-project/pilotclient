@@ -25,7 +25,7 @@
   </property>
   <layout class="QHBoxLayout" name="hl_InfoBarStatus">
    <property name="spacing">
-    <number>3</number>
+    <number>2</number>
    </property>
    <property name="leftMargin">
     <number>0</number>
@@ -51,7 +51,7 @@
       <string>Network</string>
      </property>
      <property name="text">
-      <string>Net</string>
+      <string>nt.</string>
      </property>
     </widget>
    </item>
@@ -70,7 +70,7 @@
       <string>Simulator</string>
      </property>
      <property name="text">
-      <string>Sim</string>
+      <string>sm.</string>
      </property>
     </widget>
    </item>
@@ -85,6 +85,19 @@
     </widget>
    </item>
    <item>
+    <widget class="QLabel" name="lb_MapperReady">
+     <property name="toolTip">
+      <string>Mappings ready</string>
+     </property>
+     <property name="text">
+      <string>mp.</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="BlackGui::CLedWidget" name="led_MapperReady" native="true"/>
+   </item>
+   <item>
     <widget class="QLabel" name="lbl_DBus">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -93,7 +106,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>DBus</string>
+      <string>DB</string>
      </property>
     </widget>
    </item>
@@ -119,7 +132,7 @@
       <string>Push to talk</string>
      </property>
      <property name="text">
-      <string>Ptt</string>
+      <string>ptt</string>
      </property>
     </widget>
    </item>
@@ -135,7 +148,7 @@
       <number>0</number>
      </property>
      <property name="text">
-      <string>Audio</string>
+      <string>au.</string>
      </property>
      <property name="margin">
       <number>0</number>

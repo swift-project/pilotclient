@@ -62,11 +62,11 @@ namespace BlackGui
             //! Context menu requested
             void ps_customAudioContextMenuRequested(const QPoint &position);
 
-            //! Volumes changed 0..100
-            void ps_onVolumesChanged(qint32 com1Volume, qint32 com2Volume);
-
             //! Mute changed
             void ps_onMuteChanged(bool muted);
+
+            //! Mapper is ready
+            void ps_onMapperReady();
         };
     }
 }

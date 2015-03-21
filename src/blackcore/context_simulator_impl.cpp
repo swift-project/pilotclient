@@ -116,6 +116,14 @@ namespace BlackCore
         return this->m_simulator->getInstalledModels();
     }
 
+    int CContextSimulator::getInstalledModelsCount() const
+    {
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (!m_simulator) { return 0; }
+
+        return this->m_simulator->getInstalledModels().size();
+    }
+
     CAircraftModelList CContextSimulator::getInstalledModelsStartingWith(const QString modelString) const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << modelString; }
