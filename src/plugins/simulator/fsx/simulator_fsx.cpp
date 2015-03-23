@@ -39,7 +39,7 @@ namespace BlackSimPlugin
     namespace Fsx
     {
         CSimulatorFsx::CSimulatorFsx(IOwnAircraftProvider *ownAircraftProvider, IRemoteAircraftProvider *remoteAircraftProvider, QObject *parent) :
-            CSimulatorFsCommon(CSimulatorPluginInfo::FSX(), ownAircraftProvider, remoteAircraftProvider, parent)
+            CSimulatorFsCommon(ownAircraftProvider, remoteAircraftProvider, parent)
         {
             Q_ASSERT(ownAircraftProvider);
             Q_ASSERT(remoteAircraftProvider);
@@ -820,7 +820,7 @@ namespace BlackSimPlugin
                 SimConnect_Close(hSimConnect);
 
                 if (result == S_OK)
-                    emit simulatorStarted(m_simulatorInfo);
+                    emit simulatorStarted();
             });
         }
 

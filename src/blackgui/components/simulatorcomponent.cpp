@@ -62,13 +62,22 @@ namespace BlackGui
 
         void CSimulatorComponent::update()
         {
+            Q_ASSERT(getIContextSimulator());
+
             if (!this->isVisibleWidget()) return; // no updates on invisible widgets
             if (!this->getIContextOwnAircraft()) return;
-            if (!this->getIContextSimulator()->isSimulating())
-            {
-                if (this->rowCount() == 1) { return; }
-                this->clear();
-                this->addOrUpdateByName("info", "sim not running", CIcons::StandardIconWarning16);
+
+            if (!this->getIContextSimulator()->isConnected()) {
+                addOrUpdateByName("info", tr("No simulator available"), CIcons::StandardIconWarning16);
+                return;
+            }
+
+            if (!this->getIContextSimulator()->isSimulating()) {
+                this->addOrUpdateByName("info",
+                                        tr("Simulator (%1) not yet running").arg(
+                                            getIContextSimulator()->getSimulatorInfo().getSimulator()
+                                        ),
+                                        CIcons::StandardIconWarning16);
                 return;
             }
 
@@ -118,6 +127,8 @@ namespace BlackGui
                 this->m_updateTimer->startTimer(intervalMs);
             } else {
                 this->stopTimer();
+                clear();
+                update();
             }
         }
 

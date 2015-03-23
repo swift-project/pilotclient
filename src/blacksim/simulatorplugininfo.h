@@ -23,7 +23,7 @@ namespace BlackSim
         /**
          * The _name_ property identifies the plugin itself and must be uniqe.
          */
-        Q_PROPERTY(QString name READ name)
+        Q_PROPERTY(QString getName READ getName)
         
         /**
          * The _simulator_ property specifies which simulator the plugin handles.
@@ -31,19 +31,18 @@ namespace BlackSim
          * Swift enables some features for particular simulators. Currently recognized are:
          *      fsx, fs9, xplane
          */
-        Q_PROPERTY(QString simulator READ simulator)
+        Q_PROPERTY(QString getSimulator READ getSimulator)
         
         /**
          * The _description_ property provides a short, human-readable description of the plugin.
          */
-        Q_PROPERTY(QString description READ description)
+        Q_PROPERTY(QString getDescription READ getDescription)
         
     public:
         //! Default constructor
         CSimulatorPluginInfo() = default;
-        
-        //! This constructor takes a JSON object that comes with the plugin metadata
-        CSimulatorPluginInfo(const QJsonObject& json);
+
+        virtual void convertFromJson(const QJsonObject &json) override;
 
         //! Unspecified simulator
         bool isUnspecified() const;
@@ -63,13 +62,13 @@ namespace BlackSim
         //!  * provides plugin name;
         //!  * specifies simulator it handles.
         //! Unspecified sim is considered as invalid.
-        inline bool isValid() const { return m_valid; }
+        bool isValid() const { return m_valid; }
         
-        inline bool operator==(const CSimulatorPluginInfo& other) { return name() == other.name(); }
+        bool operator==(const CSimulatorPluginInfo &other) { return getName() == other.getName(); }
         
-        inline const QString& name() const { return m_name; }
-        inline const QString& simulator() const { return m_simulator; }
-        inline const QString& description() const { return m_description; }
+        const QString &getName() const { return m_name; }
+        const QString &getSimulator() const { return m_simulator; }
+        const QString &getDescription() const { return m_description; }
 
     protected:
         //! \copydoc CValueObject::convertToQString
@@ -86,7 +85,10 @@ namespace BlackSim
 }
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackSim::CSimulatorPluginInfo, (
-                                   o.m_name,
+                                   attr(o.m_name),
+                                   attr(o.m_simulator),
+                                   attr(o.m_description),
+                                   attr(o.m_valid),
                                    attr(o.m_simsetup, flags<DisabledForComparison>())
                                ))
 Q_DECLARE_METATYPE(BlackSim::CSimulatorPluginInfo)

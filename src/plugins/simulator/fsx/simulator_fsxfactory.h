@@ -38,9 +38,6 @@ namespace BlackSimPlugin
                     BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
                     QObject *parent) override;
 
-            //! \copydoc BlackCore::ISimulatorFactory::getSimulatorInfo
-            virtual BlackSim::CSimulatorPluginInfo getSimulatorInfo() const override;
-
             //! \copydoc BlackCore::ISimulatorFactory::getListener
             virtual BlackCore::ISimulatorListener *createListener(QObject *parent = nullptr) override;
         };

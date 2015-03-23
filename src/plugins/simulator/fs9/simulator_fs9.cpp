@@ -47,7 +47,7 @@ namespace BlackSimPlugin
     {
         CSimulatorFs9::CSimulatorFs9(IOwnAircraftProvider *ownAircraftProvider,
                                      IRemoteAircraftProvider *remoteAircraftProvider, QObject *parent) :
-            CSimulatorFsCommon(CSimulatorPluginInfo::FS9(), ownAircraftProvider, remoteAircraftProvider, parent)
+            CSimulatorFsCommon(ownAircraftProvider, remoteAircraftProvider, parent)
         {
             connect(lobbyClient.data(), &CLobbyClient::disconnected, this, std::bind(&CSimulatorFs9::simulatorStatusChanged, this, 0));
             connect(fs9Host.data(), &CFs9Host::customPacketReceived, this, &CSimulatorFs9::ps_processFs9Message);
@@ -293,7 +293,7 @@ namespace BlackSimPlugin
 
                 if (m_lobbyConnected && fs9Host->isConnected())
                 {
-                    emit simulatorStarted(m_simulatorInfo);
+                    emit simulatorStarted();
                     m_lobbyConnected = false;
                 }
             });
@@ -337,11 +337,6 @@ namespace BlackSimPlugin
             QObject *parent)
         {
             return new CSimulatorFs9(ownAircraftProvider, remoteAircraftProvider, parent);
-        }
-
-        BlackSim::CSimulatorPluginInfo CSimulatorFs9Factory::getSimulatorInfo() const
-        {
-            return CSimulatorPluginInfo::FS9();
         }
 
         BlackCore::ISimulatorListener *CSimulatorFs9Factory::createListener(QObject *parent)

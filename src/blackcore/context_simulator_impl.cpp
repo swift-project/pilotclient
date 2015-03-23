@@ -36,9 +36,8 @@ namespace BlackCore
             m_mapper(new QSignalMapper(this))
     {
         findSimulatorPlugins();
+        // Maps listener instance
         connect(m_mapper, static_cast<void (QSignalMapper::*)(QObject *)>(&QSignalMapper::mapped), this, &CContextSimulator::ps_simulatorStarted);
-        // do not load plugin here, as it depends on settings
-        // it has to be guaranteed the settings are alredy loaded
     }
 
     CContextSimulator::~CContextSimulator()
@@ -109,26 +108,6 @@ namespace BlackCore
 
         Q_ASSERT(m_simulator->simulator);
         return m_simulator->simulator->canConnect();
-    }
-
-    bool CContextSimulator::connectToSimulator()
-    {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulator)
-            return false;
-
-        Q_ASSERT(m_simulator->simulator);
-        return m_simulator->simulator->connectTo();
-    }
-
-    void CContextSimulator::asyncConnectToSimulator()
-    {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulator || m_canConnectResult.isRunning())
-            return; // already checking
-
-        Q_ASSERT(m_simulator->simulator);
-        m_simulator->simulator->asyncConnectTo();
     }
 
     bool CContextSimulator::disconnectFromSimulator()
@@ -210,7 +189,7 @@ namespace BlackCore
             return;
         }
         Q_ASSERT(m_simulator->simulator);
-        m_simulator->reloadInstalledModels();
+        m_simulator->simulator->reloadInstalledModels();
     }
 
     CAircraftIcao CContextSimulator::getIcaoForModelString(const QString &modelString) const
@@ -419,10 +398,10 @@ namespace BlackCore
         settingsChanged(static_cast<uint>(IContextSettings::SettingsSimulator));
 
         // try to connect
-        asyncConnectToSimulator();
+        m_simulator->simulator->asyncConnectTo();
 
         // info about what is going on
-        CLogMessage(this).info("Simulator plugin loaded: %1") << this->m_simulator->getSimulatorInfo().toQString(true);
+        CLogMessage(this).info("Simulator plugin loaded: %1") << this->m_simulator->info.toQString(true);
         return true;
     }
 
@@ -567,7 +546,7 @@ namespace BlackCore
         m_simulator->simulator->removeRemoteAircraft(callsign);
     }
 
-    void CContextSimulator::ps_onConnectionStatusChanged(ISimulator::ConnectionStatus status)
+    void CContextSimulator::ps_onSimulatorStatusChanged(int status)
     {
         Q_ASSERT(m_simulator);
         Q_ASSERT(m_simulator->simulator);

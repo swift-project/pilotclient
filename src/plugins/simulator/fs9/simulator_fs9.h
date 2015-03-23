@@ -130,7 +130,6 @@ namespace BlackSimPlugin
 
             QTimer* m_timer = nullptr;
             bool m_lobbyConnected = false;
-            const BlackSim::CSimulatorPluginInfo m_simulatorInfo = BlackSim::CSimulatorPluginInfo::FS9();
 
         };
 
@@ -151,9 +150,6 @@ namespace BlackSimPlugin
                     BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                     BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                     QObject *parent) override;
-
-            //! Simulator info
-            virtual BlackSim::CSimulatorPluginInfo getSimulatorInfo() const override;
 
             //! \copydoc BlackCore::ISimulatorFactory::createListener
             virtual BlackCore::ISimulatorListener *createListener(QObject *parent = nullptr) override;

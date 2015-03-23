@@ -17,7 +17,7 @@ namespace BlackSim
     bool CSimulatorPluginInfoList::supportsSimulator(const QString &simulator)
     {
         return std::find_if(begin(), end(), [&simulator](const CSimulatorPluginInfo &info) {
-            return info.simulator() == simulator;
+            return info.getSimulator() == simulator;
         }) != end();
     }
 

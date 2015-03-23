@@ -15,8 +15,10 @@ using namespace BlackMisc;
 namespace BlackSim
 {
     
-    CSimulatorPluginInfo::CSimulatorPluginInfo(const QJsonObject &json)
+    void CSimulatorPluginInfo::convertFromJson(const QJsonObject &json)
     {
+
+
         if (json["IID"].toString() != QStringLiteral("org.swift.pilotclient.BlackCore.SimulatorInterface"))
         {
             return;
@@ -33,17 +35,11 @@ namespace BlackSim
             return;
         }
 
-        m_name = data["name"].toString();
-        m_simulator = data["simulator"].toString();
-
-        if (data["description"].isString())
-        {
-            m_description = data["description"].toString();
-        }
+        CValueObject::convertFromJson(data);
 
         m_valid = true;
     }
-    
+
     bool CSimulatorPluginInfo::isUnspecified() const
     {
         return m_name.isEmpty();

@@ -81,7 +81,6 @@ namespace BlackSimPlugin
         protected:
             //! Constructor
             CSimulatorFsCommon(
-                const BlackSim::CSimulatorPluginInfo &simInfo,
                 BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                 BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
                 QObject *parent = nullptr);

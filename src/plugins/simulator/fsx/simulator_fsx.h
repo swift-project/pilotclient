@@ -195,6 +195,7 @@ namespace BlackSimPlugin
             uint    m_nextObjID   = 1;          //!< object ID TODO: also used as request id, where to we place other request ids as for facilities
             QHash<BlackMisc::Aviation::CCallsign, CSimConnectObject> m_simConnectObjects;
             QFutureWatcher<bool> m_watcherConnect;
+            BlackSim::CSimulatorPluginInfo m_simulatorInfo;
 
             // statistics
             qint64 m_statsUpdateAircraftTimeTotal = 0;
@@ -218,7 +219,6 @@ namespace BlackSimPlugin
 
         private:
             QTimer* m_timer;
-            const BlackSim::CSimulatorPluginInfo m_simulatorInfo = BlackSim::CSimulatorPluginInfo::FSX();
 
         };
     }

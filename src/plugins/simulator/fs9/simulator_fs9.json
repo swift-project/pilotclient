@@ -1,4 +1,5 @@
 {
-    "short_name" : "FS9",
-    "full_name" : "Microsoft Flight Simulator 2004"
+    "name" : "swift_generic_fs9",
+    "simulator" : "fs9",
+    "description" : "Microsoft Flight Simulator 2004"
 }

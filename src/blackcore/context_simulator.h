@@ -65,10 +65,8 @@ namespace BlackCore
         virtual ~IContextSimulator() {}
 
     signals:
-        //! Simulator started or stopped
-        void startedChanged(bool startedChanged);
-
         //! Simulator combined status
+        //! \sa ISimulator::SimulatorStatus
         void simulatorStatusChanged(int status);
 
         //! Only a limited number of aircraft displayed
@@ -84,7 +82,6 @@ namespace BlackCore
         void ownAircraftModelChanged(BlackMisc::Simulation::CSimulatedAircraft aircraft);
 
     public slots:
-
         //! Return list of available simulator plugins
         virtual BlackSim::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const = 0;
 
@@ -93,13 +90,8 @@ namespace BlackCore
         virtual bool isConnected() const = 0;
 
         //! Can we connect?
+        //! \todo Remove?
         virtual bool canConnect() const = 0;
-
-        //! Connect to simulator
-        virtual bool connectToSimulator() = 0;
-
-        //! Connect to simulator (asynchronous version)
-        virtual void asyncConnectToSimulator() = 0;
 
         //! Disconnect from simulator
         virtual bool disconnectFromSimulator() = 0;

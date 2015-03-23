@@ -84,14 +84,18 @@ namespace BlackGui
                 ui->cb_Plugins->setCurrentIndex(0);
                 return;
             }
-
-            const QString searchFor = plugin.name();
+            
             for (int i = 0; i < this->ui->cb_Plugins->count(); ++i)
             {
-                const QString t = ui->cb_Plugins->itemText(i);
-                if (t.indexOf(searchFor, 0, Qt::CaseInsensitive) >= 0)
+                QVariant data = this->ui->cb_Plugins->itemData(i);
+                Q_ASSERT(data.canConvert<CSimulatorPluginInfo>());
+                CSimulatorPluginInfo p = data.value<CSimulatorPluginInfo>();
+                
+                if (p.getName() == plugin.getName())
                 {
-                    if (i == this->ui->cb_Plugins->currentIndex()) return;
+                    if (i == this->ui->cb_Plugins->currentIndex())
+                        return;
+                    
                     this->ui->cb_Plugins->setCurrentIndex(i);
                     break;
                 }

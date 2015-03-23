@@ -53,12 +53,6 @@ namespace BlackCore
         //! \copydoc IContextSimulator::canConnect
         virtual bool canConnect() const override;
 
-        //! \copydoc IContextSimulator::connectTo
-        virtual bool connectToSimulator() override;
-
-        //! \copydoc IContextSimulator::asyncConnectTo
-        virtual void asyncConnectToSimulator() override;
-
         //! \copydoc IContextSimulator::disconnectFrom
         virtual bool disconnectFromSimulator() override;
 

@@ -1,4 +1,5 @@
 {
-    "short_name" : "FSX",
-    "full_name" : "Microsoft Flight Simulator X (2006)"
+    "name" : "swift_generic_fsx",
+    "simulator" : "fsx",
+    "description" : "Microsoft Flight Simulator X (2006)"
 }

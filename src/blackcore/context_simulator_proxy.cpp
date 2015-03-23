@@ -69,16 +69,6 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("canConnect"));
     }
 
-    bool CContextSimulatorProxy::connectToSimulator()
-    {
-        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("connectToSimulator"));
-    }
-
-    void CContextSimulatorProxy::asyncConnectToSimulator()
-    {
-        m_dBusInterface->callDBus(QLatin1Literal("asyncConnectToSimulator"));
-    }
-
     bool CContextSimulatorProxy::disconnectFromSimulator()
     {
         return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("disconnectFromSimulator"));
