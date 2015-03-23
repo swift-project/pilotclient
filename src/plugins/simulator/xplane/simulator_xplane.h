@@ -74,11 +74,14 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::removeRemoteAircraft
             virtual bool removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 
+            //! \copydoc BlackCore::ISimulator::removeAllRemoteAircraft
+            virtual void removeAllRemoteAircraft() override;
+
             //! \copydoc ISimulator::changeRenderedAircraftModel
             virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) override;
 
             //! \copydoc ISimulator::changeAircraftEnabled
-            virtual bool changeAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) override;
+            virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) override;
 
             //! \copydoc BlackCore::ISimulator::updateOwnSimulatorCockpit
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator) override;
@@ -107,6 +110,9 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::iconForModel
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
 
+            //! \copydoc ISimulator::isRenderedAircraft
+            virtual bool isRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
+
         private slots:
             void ps_serviceRegistered(const QString &serviceName);
             void ps_serviceUnregistered();
@@ -117,6 +123,7 @@ namespace BlackSimPlugin
 
             void ps_addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situ);
             void ps_addAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
+            void ps_removedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
         private:
             QDBusConnection m_conn { "default" };

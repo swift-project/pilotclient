@@ -32,15 +32,21 @@ namespace BlackGui
             //! Mode
             void setAircraftMode(Models::CSimulatedAircraftListModel::AircraftMode mode);
 
+            //! configure the menu
+            void configureMenu(bool menuHighlight, bool menuEnable, bool menufastPositionUpdates);
+
         signals:
             //! Request a text message
             void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
 
-            //! Request enable / disable fast position updates
+            //! Request enable / disable fast position updates, \sa CSimulatedAircraft::fastPositionUpdates
             void requestFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
-            //! Enable aircraft
+            //! Request to enable / disable aircraft, \sa CSimulatedAircraft::isEnabled
             void requestEnableAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+            //! Highlight given aircraft in simulator
+            void requestHighlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
         protected:
             //! \copydoc CViewBase::customMenu
@@ -50,7 +56,12 @@ namespace BlackGui
             void ps_requestTextMessage();
             void ps_enableAircraft();
             void ps_fastPositionUpdates();
+            void ps_highlightInSimulator();
 
+        private:
+            bool m_withMenuHighlight = true;
+            bool m_withMenuEnable = true;
+            bool m_withMenuFastPosition = true;
         };
     } // ns
 } // ns

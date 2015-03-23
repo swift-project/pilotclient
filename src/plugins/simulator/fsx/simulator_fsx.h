@@ -110,6 +110,9 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::remoteRenderedAircraft()
             virtual bool removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 
+            //! \copydoc BlackCore::ISimulator::removeAllRemoteAircraft
+            virtual void removeAllRemoteAircraft() override;
+
             //! \copydoc ISimulator::updateOwnCockpit
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &ownAircraft, const QString &originator) override;
 
@@ -118,6 +121,9 @@ namespace BlackSimPlugin
 
             //! \copydoc ISimulator::displayTextMessage()
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
+
+            //! \copydoc ISimulator::isRenderedAircraft
+            virtual bool isRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
             //! Called when sim has started
             void onSimRunning();
@@ -141,11 +147,11 @@ namespace BlackSimPlugin
             void onSimExit();
 
         protected:
-            //! Timer event
+            //! Timer event (our SimConnect event loop), runs \sa ps_dispatch
+            //! \sa m_simconnectTimerId
             virtual void timerEvent(QTimerEvent *event);
 
         private slots:
-
             //! Dispatch SimConnect messages
             void ps_dispatch();
 
@@ -153,7 +159,6 @@ namespace BlackSimPlugin
             void ps_connectToFinished();
 
         private:
-
             //! Remove a remote aircraft
             bool removeRemoteAircraft(const CSimConnectObject &simObject);
 
@@ -190,7 +195,6 @@ namespace BlackSimPlugin
             int  m_interpolationsSkipped = 0;   //!< number of skipped interpolation request
             HANDLE  m_hSimConnect = nullptr;    //!< Handle to SimConnect object
             uint    m_nextObjID   = 1;          //!< object ID TODO: also used as request id, where to we place other request ids as for facilities
-            BlackMisc::PhysicalQuantities::CTime m_syncTimeOffset;   //!< Time offset (if synchronized)
             QHash<BlackMisc::Aviation::CCallsign, CSimConnectObject> m_simConnectObjects;
             QFutureWatcher<bool> m_watcherConnect;
 

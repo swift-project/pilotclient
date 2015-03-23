@@ -151,9 +151,9 @@ namespace BlackSimPlugin
                 CLogMessage(this).warning("Have to remove aircraft %1 before I can add it") << callsign;
             }
 
-            SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxInitPosition(newRemoteAircraft.getSituation());
-            initialPosition.Airspeed = 0;
-            initialPosition.OnGround = 0;
+            CSimulatedAircraft newRemoteAircraftCopy(newRemoteAircraft);
+            this->setInitialAircraftSituationAndParts(newRemoteAircraftCopy);
+            SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxInitPosition(newRemoteAircraftCopy.getSituation());
 
             CSimConnectObject simObj;
             simObj.setCallsign(callsign);
@@ -162,10 +162,11 @@ namespace BlackSimPlugin
             ++m_nextObjID;
 
             // matched models
-            CAircraftModel aircraftModel = modelMatching(newRemoteAircraft);
+            CAircraftModel aircraftModel = modelMatching(newRemoteAircraftCopy);
             Q_ASSERT(newRemoteAircraft.getCallsign() == aircraftModel.getCallsign());
-            providerUpdateAircraftModel(newRemoteAircraft.getCallsign(), aircraftModel, simulatorOriginator());
+            this->providerUpdateAircraftModel(newRemoteAircraft.getCallsign(), aircraftModel, simulatorOriginator());
             CSimulatedAircraft aircraftAfterModelApplied = remoteAircraft().findFirstByCallsign(newRemoteAircraft.getCallsign());
+            aircraftAfterModelApplied.setRendered(true);
             emit modelMatchingCompleted(aircraftAfterModelApplied);
 
             // create AI
@@ -176,16 +177,15 @@ namespace BlackSimPlugin
                 HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, m.constData(), qPrintable(callsign.toQString().left(12)), initialPosition, simObj.getRequestId());
                 if (hr != S_OK) { CLogMessage(this).error("SimConnect, can not create AI traffic"); }
                 m_simConnectObjects.insert(callsign, simObj);
-                remoteAircraft().applyIfCallsign(callsign, CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(true)));
                 CLogMessage(this).info("FSX: Added aircraft %1") << callsign.toQString();
                 return true;
             }
             else
             {
-                remoteAircraft().applyIfCallsign(callsign, CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(false)));
                 CLogMessage(this).warning("FSX: Not connected, not added aircraft %1") << callsign.toQString();
                 return false;
             }
+            remoteAircraft().setRendered(callsign, false);
         }
 
         bool CSimulatorFsx::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const QString &originator)
@@ -294,6 +294,10 @@ namespace BlackSimPlugin
             this->displayStatusMessage(message.asStatusMessage(true, true));
         }
 
+        bool CSimulatorFsx::isRenderedAircraft(const CCallsign &callsign) const
+        {
+            return this->m_simConnectObjects.contains(callsign);
+        }
 
         void CSimulatorFsx::onSimRunning()
         {
@@ -510,11 +514,20 @@ namespace BlackSimPlugin
             return removeRemoteAircraft(m_simConnectObjects.value(callsign));
         }
 
+        void CSimulatorFsx::removeAllRemoteAircraft()
+        {
+            QList<CCallsign> callsigns(m_simConnectObjects.keys());
+            for (const CCallsign &cs : callsigns)
+            {
+                removeRemoteAircraft(cs);
+            }
+        }
+
         bool CSimulatorFsx::removeRemoteAircraft(const CSimConnectObject &simObject)
         {
             m_simConnectObjects.remove(simObject.getCallsign());
             SimConnect_AIRemoveObject(m_hSimConnect, simObject.getObjectId(), simObject.getRequestId());
-            remoteAircraft().applyIfCallsign(simObject.getCallsign(), CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(false)));
+            remoteAircraft().setRendered(simObject.getCallsign(), false);
             CLogMessage(this).info("FSX: Removed aircraft %1") << simObject.getCallsign().toQString();
             return true;
         }
@@ -633,7 +646,7 @@ namespace BlackSimPlugin
 
                     //! \todo The onGround in parts is nuts, as already mentioned in the discussion
                     // a) I am forced to read parts even if i just want to update position
-                    // b) Unlike the other values it is not a fire aforget value, as I need it again in the next cycle
+                    // b) Unlike the other values it is not a fire and forget value, as I need it again in the next cycle
                     if (partsStatus.supportsParts && !parts.isEmpty())
                     {
                         // we have parts, and use the closest ground

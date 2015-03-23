@@ -248,13 +248,14 @@ namespace BlackCore
         Q_ASSERT(networkContext->isLocalObject());
 
         // use readyForModelMatching instead of CAirspaceMonitor::addedAircraft, as it contains client information
+        // ready for model matching is sent delayed when all information are available
         bool c = connect(networkContext, &IContextNetwork::readyForModelMatching, this, &CContextSimulator::ps_addRemoteAircraft);
         Q_ASSERT(c);
         c = connect(networkContext, &IContextNetwork::removedAircraft, this, &CContextSimulator::ps_removedRemoteAircraft);
         Q_ASSERT(c);
-        c = connect(networkContext, &IContextNetwork::changedRenderedAircraftModel, this->m_simulator, &ISimulator::changeRemoteAircraftModel);
+        c = connect(networkContext, &IContextNetwork::changedRemoteAircraftModel, this, &CContextSimulator::ps_changedRemoteAircraftModel);
         Q_ASSERT(c);
-        c = connect(networkContext, &IContextNetwork::changedAircraftEnabled, this->m_simulator, &ISimulator::changeAircraftEnabled);
+        c = connect(networkContext, &IContextNetwork::changedRemoteAircraftEnabled, this, &CContextSimulator::ps_changedRemoteAircraftEnabled);
         Q_ASSERT(c);
         Q_UNUSED(c);
 
@@ -366,6 +367,22 @@ namespace BlackCore
         this->getIContextOwnAircraft()->changedAircraftCockpit(ownAircraft, IContextSimulator::InterfaceName());
     }
 
+    void CContextSimulator::ps_changedRemoteAircraftModel(const CSimulatedAircraft &aircraft, const QString &originator)
+    {
+        Q_ASSERT(this->m_simulator);
+        if (!this->m_simulator) { return; }
+
+        this->m_simulator->changeRemoteAircraftModel(aircraft, originator);
+    }
+
+    void CContextSimulator::ps_changedRemoteAircraftEnabled(const CSimulatedAircraft &aircraft, const QString &originator)
+    {
+        Q_ASSERT(this->m_simulator);
+        if (!this->m_simulator) { return; }
+
+        this->m_simulator->changeRemoteAircraftEnabled(aircraft, originator);
+    }
+
     void CContextSimulator::ps_updateSimulatorCockpitFromContext(const CAircraft &ownAircraft, const QString &originator)
     {
         Q_ASSERT(this->m_simulator);
@@ -417,6 +434,12 @@ namespace BlackCore
     {
         if (!this->m_simulator) { return; }
         return this->m_simulator->enableDebugMessages(driver, interpolator);
+    }
+
+    void CContextSimulator::highlightAircraft(const CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const CTime &displayTime)
+    {
+        if (!this->m_simulator) { return; }
+        this->m_simulator->highlightAircraft(aircraftToHighlight, enableHighlight, displayTime);
     }
 
     bool CContextSimulator::isPaused() const

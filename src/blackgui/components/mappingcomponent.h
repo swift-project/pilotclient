@@ -112,6 +112,9 @@ namespace BlackGui
             //! Reload models
             void ps_onMenuRequestModelReload();
 
+            //! Highlight in simulator
+            void ps_onMenuHighlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
         private:
             static const QString &mappingtOriginator();
             void updateSimulatedAircraftView();

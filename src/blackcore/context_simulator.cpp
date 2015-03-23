@@ -11,8 +11,28 @@
 #include "context_simulator_impl.h"
 #include "context_simulator_proxy.h"
 
+using namespace BlackMisc::PhysicalQuantities;
+
 namespace BlackCore
 {
+
+    const QString &IContextSimulator::InterfaceName()
+    {
+        static const QString s(BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME);
+        return s;
+    }
+
+    const QString &IContextSimulator::ObjectPath()
+    {
+        static const QString s(BLACKCORE_CONTEXTSIMULATOR_OBJECTPATH);
+        return s;
+    }
+
+    const BlackMisc::PhysicalQuantities::CTime &IContextSimulator::HighlightTime()
+    {
+        static const CTime t(10.0, CTimeUnit::s());
+        return t;
+    }
 
     IContextSimulator *IContextSimulator::create(CRuntime *parent, CRuntimeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &conn)
     {

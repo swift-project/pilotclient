@@ -85,7 +85,7 @@ namespace BlackSimPlugin
             CAircraftSituation situation = this->m_interpolator->getInterpolatedSituation(m_callsign, -1, status);
 
             // Test only for successful interpolation. FS9 requires constant positions
-            if (!status.interpolationSucceeded) return;
+            if (!status.interpolationSucceeded) { return; }
 
             sendMultiplayerPosition(situation);
             sendMultiplayerParamaters();

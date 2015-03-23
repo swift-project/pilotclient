@@ -83,6 +83,12 @@ namespace BlackMisc
             //! Set logo lights
             void setLogoOn(bool on) { m_logoOn = on; }
 
+            //! All on
+            void setAllOn();
+
+            //! All off
+            void setAllOff();
+
             //! Returns object with all lights switched on
             static CAircraftLights allLightsOn();
 

@@ -90,6 +90,12 @@ namespace BlackMisc
             m_situation.setCallsign(this->getCallsign());
         }
 
+        void CAircraft::setPilot(const Network::CUser &user)
+        {
+            m_pilot = user;
+            this->m_pilot.setCallsign(this->m_callsign);
+        }
+
         const CComSystem CAircraft::getComSystem(CComSystem::ComUnit unit) const
         {
             switch (unit)
@@ -150,10 +156,30 @@ namespace BlackMisc
             this->setTransponder(xpdr);
         }
 
+        CAircraftLights CAircraft::getLights() const
+        {
+            return m_parts.getLights();
+        }
+
         void CAircraft::setParts(const CAircraftParts &parts)
         {
             m_parts = parts;
             m_parts.setCallsign(this->getCallsign());
+        }
+
+        void CAircraft::setLights(CAircraftLights &lights)
+        {
+            m_parts.setLights(lights);
+        }
+
+        void CAircraft::setAllLightsOn()
+        {
+            m_parts.setAllLightsOn();
+        }
+
+        void CAircraft::setAllLightsOff()
+        {
+            m_parts.setAllLightsOff();
         }
 
         bool CAircraft::isVtol() const

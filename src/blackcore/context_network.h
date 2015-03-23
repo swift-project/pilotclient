@@ -96,10 +96,14 @@ namespace BlackCore
         void changedAircraftInRangeDigest();
 
         //! Aircraft model was changed
-        void changedRenderedAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
+        //! \details All remote aircraft are stored in the network context. The model can be updated here
+        //!          via \sa updateAircraftModel and then this signal is fired
+        void changedRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
 
         //! Aircraft enabled / disabled
-        void changedAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
+        //! \details All remote aircraft are stored in the network context. The aircraft can be enabled (for rendering) here
+        //!          via \sa updateAircraftEnabled and then this signal is fired
+        void changedRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
 
         //! Aircraft enabled / disabled
         void changedFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);

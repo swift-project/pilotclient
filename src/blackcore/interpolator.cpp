@@ -75,6 +75,7 @@ namespace BlackCore
         if (this->m_partsByCallsign.contains(callsign))
         {
             partsStatus.supportsParts = true;
+            if (cutoffTime < 0) { return this->m_partsByCallsign[callsign]; }
             return this->m_partsByCallsign[callsign].findBeforeAndRemove(cutoffTime);
         }
         else
@@ -91,6 +92,16 @@ namespace BlackCore
         QWriteLocker p(&m_lockParts);
         m_situationsByCallsign.clear();
         m_partsByCallsign.clear();
+    }
+
+    bool IInterpolator::hasDataForCallsign(const CCallsign &callsign) const
+    {
+        if (callsign.isEmpty()) { return false; }
+        QReadLocker s(&m_lockSituations);
+        if (m_situationsByCallsign.contains(callsign)) { return true; }
+
+        QReadLocker p(&m_lockParts);
+        return m_partsByCallsign.contains(callsign);
     }
 
     CAircraftSituationList IInterpolator::getSituationsForCallsign(const CCallsign &callsign) const

@@ -70,6 +70,12 @@ namespace BlackMisc
             //! Set aircraft lights
             void setLights(const CAircraftLights &lights) { m_lights = lights; }
 
+            //! Set all lights on
+            void setAllLightsOn();
+
+            //! Set all lights off
+            void setAllLightsOff();
+
             //! Is gear down?
             bool isGearDown() const { return m_gearDown; }
 

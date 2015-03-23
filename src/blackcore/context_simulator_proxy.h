@@ -119,6 +119,9 @@ namespace BlackCore
         //! \copydoc IContextSimulator::iconForModel
         virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
 
+        //! \copydoc IContextSimulator::highlightAircraft
+        virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
+
         //! \copydoc ISimulator::enableDebuggingMessages
         virtual void enableDebugMessages(bool driver, bool interpolator) override;
 

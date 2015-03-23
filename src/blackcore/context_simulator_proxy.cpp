@@ -169,6 +169,11 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<CPixmap>(QLatin1Literal("iconForModel"), modelString);
     }
 
+    void CContextSimulatorProxy::highlightAircraft(const CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const CTime &displayTime)
+    {
+        m_dBusInterface->callDBus(QLatin1Literal("highlightAircraft"), aircraftToHighlight, enableHighlight, displayTime);
+    }
+
     void CContextSimulatorProxy::enableDebugMessages(bool driver, bool interpolator)
     {
         m_dBusInterface->callDBus(QLatin1Literal("enableDebugMessages"), driver, interpolator);

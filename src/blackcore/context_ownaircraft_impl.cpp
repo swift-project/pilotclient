@@ -88,9 +88,9 @@ namespace BlackCore
         Q_ASSERT(this->getIContextAudio());
         Q_ASSERT(this->getIContextNetwork());
         Q_ASSERT(this->getIContextApplication());
-        if (!this->getIContextNetwork() || !this->getIContextAudio() || !this->getIContextAudio()) { return; } // no chance to resolve rooms
+        if (!this->getIContextNetwork() || !this->getIContextAudio() || !this->getIContextApplication()) { return; } // no chance to resolve rooms
 
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         if (this->m_voiceRoom1UrlOverride.isEmpty() && this->m_voiceRoom2UrlOverride.isEmpty() && !this->m_automaticVoiceRoomResolution) { return; }
         if (!this->m_automaticVoiceRoomResolution) { return; } // not responsible
 

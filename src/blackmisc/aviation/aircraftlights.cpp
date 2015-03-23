@@ -107,5 +107,25 @@ namespace BlackMisc
             }
         }
 
+        void CAircraftLights::setAllOn()
+        {
+            m_beaconOn = true;
+            m_landingOn = true;
+            m_logoOn = true;
+            m_navOn = true;
+            m_strobeOn = true;
+            m_taxiOn = true;
+        }
+
+        void CAircraftLights::setAllOff()
+        {
+            m_beaconOn = false;
+            m_landingOn = false;
+            m_logoOn = false;
+            m_navOn = false;
+            m_strobeOn = false;
+            m_taxiOn = false;
+        }
+
     } // namespace
 } // namespace

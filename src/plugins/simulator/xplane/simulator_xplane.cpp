@@ -50,7 +50,8 @@ namespace BlackSimPlugin
             bool c = remoteAircraftProvider->connectRemoteAircraftProviderSignals(
                          std::bind(&CSimulatorXPlane::ps_addAircraftSituation, this, std::placeholders::_1),
                          std::bind(&CSimulatorXPlane::ps_addAircraftParts, this, std::placeholders::_1),
-            [](const BlackMisc::Aviation::CCallsign &) {});
+                         std::bind(&CSimulatorXPlane::ps_removedAircraft, this, std::placeholders::_1)
+                     );
             Q_ASSERT(c);
             Q_UNUSED(c);
         }
@@ -313,6 +314,13 @@ namespace BlackSimPlugin
             return CPixmap();
         }
 
+        bool CSimulatorXPlane::isRenderedAircraft(const CCallsign &callsign) const
+        {
+            //! \todo XP implement isRenderedAircraft correctly
+            // work around, but not really telling me if callsign is really(!) visible in SIM
+            return remoteAircraft().findFirstByCallsign(callsign).isRendered();
+        }
+
         bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator)
         {
             if (originator == this->simulatorOriginator()) { return false; }
@@ -375,18 +383,31 @@ namespace BlackSimPlugin
             m_traffic->setPlaneTransponder(parts.getCallsign().asString(), 2000, true, false); // TODO transponder
         }
 
+        void CSimulatorXPlane::ps_removedAircraft(const CCallsign &callsign)
+        {
+            Q_UNUSED(callsign);
+            //! \todo call removeRemoteAircraft or just let removeRemoteAircraft handle it?
+        }
+
         bool CSimulatorXPlane::removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign)
         {
             if (! isConnected()) { return false; }
             m_traffic->removePlane(callsign.asString());
-            remoteAircraft().applyIfCallsign(callsign, CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(false)));
+            remoteAircraft().setRendered(callsign, false);
             CLogMessage(this).info("XP: Removed aircraft %1") << callsign.toQString();
             return true;
         }
 
+        void CSimulatorXPlane::removeAllRemoteAircraft()
+        {
+            m_traffic->removeAllPlanes();
+            remoteAircraft().markAllAsNotRendered();
+            CLogMessage(this).info("XP: Removed all aircraft");
+        }
+
         bool CSimulatorXPlane::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft, const QString &originator)
         {
-            return this->changeAircraftEnabled(aircraft, originator);
+            return this->changeRemoteAircraftEnabled(aircraft, originator);
         }
 
         CAircraftIcao CSimulatorXPlane::getIcaoForModelString(const QString &modelString) const
@@ -395,7 +416,7 @@ namespace BlackSimPlugin
             return CAircraftIcao();
         }
 
-        bool CSimulatorXPlane::changeAircraftEnabled(const CSimulatedAircraft &aircraft, const QString &originator)
+        bool CSimulatorXPlane::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft, const QString &originator)
         {
             if (originator == simulatorOriginator()) { return false; }
             if (aircraft.isEnabled())

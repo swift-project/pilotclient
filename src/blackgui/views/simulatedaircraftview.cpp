@@ -32,6 +32,13 @@ namespace BlackGui
             this->setSortIndicator();
         }
 
+        void CSimulatedAircraftView::configureMenu(bool menuHighlight, bool menuEnable, bool menufastPositionUpdates)
+        {
+            this->m_withMenuEnable = menuEnable;
+            this->m_withMenuFastPosition = menufastPositionUpdates;
+            this->m_withMenuHighlight = menuHighlight;
+        }
+
         void CSimulatedAircraftView::customMenu(QMenu &menu) const
         {
             if (BlackMisc::CProject::isDebugBuild())
@@ -44,8 +51,9 @@ namespace BlackGui
                 CSimulatedAircraft aircraft(selectedObject());
                 Q_ASSERT(!aircraft.getCallsign().isEmpty());
                 menu.addAction(CIcons::appTextMessages16(), "Show text messages", this, SLOT(ps_requestTextMessage()));
-                menu.addAction(CIcons::appAircrafts16(), aircraft.isEnabled() ? "Disable aircraft" : "Enabled aircraft", this, SLOT(ps_enableAircraft()));
-                menu.addAction(CIcons::globe16(), aircraft.fastPositionUpdates() ? "Normal updates" : "Fast position updates", this, SLOT(ps_fastPositionUpdates()));
+                if (m_withMenuEnable)       { menu.addAction(CIcons::appAircrafts16(), aircraft.isEnabled() ? "Disable aircraft" : "Enabled aircraft", this, SLOT(ps_enableAircraft())); }
+                if (m_withMenuHighlight)    { menu.addAction(CIcons::appSimulator16(), "Highlight in simulator", this, SLOT(ps_highlightInSimulator())); }
+                if (m_withMenuFastPosition) { menu.addAction(CIcons::globe16(), aircraft.fastPositionUpdates() ? "Normal updates" : "Fast position updates", this, SLOT(ps_fastPositionUpdates())); }
                 menu.addSeparator();
             }
             CViewBase::customMenu(menu);
@@ -72,6 +80,13 @@ namespace BlackGui
             if (aircraft.getCallsign().isEmpty()) { return; }
             aircraft.setFastPositionUpdates(!aircraft.fastPositionUpdates());
             emit requestFastPositionUpdates(aircraft);
+        }
+
+        void CSimulatedAircraftView::ps_highlightInSimulator()
+        {
+            CSimulatedAircraft aircraft(selectedObject());
+            if (aircraft.getCallsign().isEmpty()) { return; }
+            emit requestHighlightInSimulator(aircraft);
         }
 
     } // ns

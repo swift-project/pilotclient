@@ -257,10 +257,10 @@ namespace BlackSimPlugin
 
             // remove upfront, and then enable / disable again
             this->removeRemoteAircraft(aircraft.getCallsign());
-            return this->changeAircraftEnabled(aircraft, originator);
+            return this->changeRemoteAircraftEnabled(aircraft, originator);
         }
 
-        bool CSimulatorFsCommon::changeAircraftEnabled(const CSimulatedAircraft &aircraft, const QString &originator)
+        bool CSimulatorFsCommon::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft, const QString &originator)
         {
             if (originator == simulatorOriginator()) { return false; }
             if (aircraft.isEnabled())

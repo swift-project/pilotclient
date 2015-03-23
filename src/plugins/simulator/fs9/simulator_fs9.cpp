@@ -134,9 +134,18 @@ namespace BlackSimPlugin
             auto fs9Client = m_hashFs9Clients.value(callsign);
             fs9Client->quit();
             m_hashFs9Clients.remove(callsign);
-            remoteAircraft().applyIfCallsign(callsign, CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(false)));
+            remoteAircraft().setRendered(callsign, false);
             CLogMessage(this).info("FS9: Removed aircraft %1") << callsign.toQString();
             return true;
+        }
+
+        void CSimulatorFs9::removeAllRemoteAircraft()
+        {
+            QList<CCallsign> callsigns(this->m_hashFs9Clients.keys());
+            for (const CCallsign &cs : callsigns)
+            {
+                removeRemoteAircraft(cs);
+            }
         }
 
         bool CSimulatorFs9::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const QString &originator)
@@ -204,8 +213,14 @@ namespace BlackSimPlugin
             this->displayStatusMessage(message.asStatusMessage(true, true));
         }
 
-        void CSimulatorFs9::timerEvent(QTimerEvent * /* event */)
+        bool CSimulatorFs9::isRenderedAircraft(const CCallsign &callsign) const
         {
+            return m_hashFs9Clients.contains(callsign);
+        }
+
+        void CSimulatorFs9::timerEvent(QTimerEvent *event)
+        {
+            Q_UNUSED(event);
             ps_dispatch();
         }
 

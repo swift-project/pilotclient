@@ -76,10 +76,10 @@ namespace BlackCore
                                "vatsimBookingsRead", this, SIGNAL(vatsimBookingsRead()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "changedRenderedAircraftModel", this, SIGNAL(changedRenderedAircraftModel(BlackMisc::Simulation::CSimulatedAircraft, QString)));
+                               "changedRemoteAircraftModel", this, SIGNAL(changedRemoteAircraftModel(BlackMisc::Simulation::CSimulatedAircraft, QString)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "changedAircraftEnabled", this, SIGNAL(changedAircraftEnabled(BlackMisc::Simulation::CSimulatedAircraft, QString)));
+                               "changedRemoteAircraftEnabled", this, SIGNAL(changedRemoteAircraftEnabled(BlackMisc::Simulation::CSimulatedAircraft, QString)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "changedFastPositionUpdates", this, SIGNAL(changedFastPositionUpdates(BlackMisc::Simulation::CSimulatedAircraft,QString)));

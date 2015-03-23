@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_SIMULATOR_H
 #define BLACKCORE_SIMULATOR_H
 
+#include "blackcore/interpolator.h"
 #include "blacksim/simulatorinfo.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
@@ -26,6 +27,7 @@
 
 namespace BlackCore
 {
+
     //! Interface to a simulator.
     class ISimulator : public QObject
     {
@@ -80,16 +82,20 @@ namespace BlackCore
         virtual bool disconnectFrom() = 0;
 
         //! Add new remote aircraft to the simulator
+        //! \sa changeRemoteAircraftEnabled to hide a remote aircraft
         virtual bool addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) = 0;
 
         //! Remove remote aircraft from simulator
         virtual bool removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
+        //! Remove all remote aircraft
+        virtual void removeAllRemoteAircraft() = 0;
+
         //! Change remote aircraft per property
         virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) = 0;
 
         //! Aircraft got enabled / disabled
-        virtual bool changeAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) = 0;
+        virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) = 0;
 
         //! Update own aircraft cockpit (usually from context)
         virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator) = 0;
@@ -136,6 +142,15 @@ namespace BlackCore
 
         //! Enable debugging messages
         virtual void enableDebugMessages(bool driver, bool interpolator) = 0;
+
+        //! Is the aircraft rendered (displayed in simulator)?
+        virtual bool isRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+
+        //! Highlight the aircraft for given time (or disable highlight)
+        virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) = 0;
+
+        //! Is rendering enabled
+        virtual bool isRenderingEnabled() const = 0;
 
     signals:
         //! Emitted when the connection status has changed
@@ -197,7 +212,7 @@ namespace BlackCore
     class CSimulatorCommon :
         public BlackCore::ISimulator,
         public BlackMisc::Simulation::COwnAircraftProviderSupport,   // gain access to in memor own aircraft data
-        public BlackMisc::Simulation::CRemoteAircraftProviderSupport // gain access to in memory rendered aircraft data
+        public BlackMisc::Simulation::CRemoteAircraftProviderSupport // gain access to in memory remote aircraft data
     {
 
         Q_OBJECT
@@ -219,6 +234,16 @@ namespace BlackCore
         //! \copydoc ISimulator::getInstalledModelsCount
         virtual int getInstalledModelsCount() const override;
 
+        //! \copydoc IContextSimulator::highlightAircraft
+        virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
+
+        //! \copydoc IContextSimulator::isRenderingEnabled
+        virtual bool isRenderingEnabled() const override;
+
+    protected slots:
+        //! Slow timer used to highlight aircraft, can be used for other things too
+        virtual void ps_oneSecondTimer();
+
     protected:
         //! Constructor
         CSimulatorCommon(
@@ -227,10 +252,26 @@ namespace BlackCore
             BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
             QObject *parent = nullptr);
 
+
+        //! Blink the highlighted aircraft
+        void blinkHighlightedAircraft();
+
+        //! Restore aircraft from backedn data
+        void resetAircraftFromBacked(const BlackMisc::Aviation::CCallsign &callsign);
+
+        //! Override parts and situation from current interpolator values, if any!
+        void setInitialAircraftSituationAndParts(BlackMisc::Simulation::CSimulatedAircraft &aircraft) const;
+
         BlackSim::CSimulatorInfo m_simulatorInfo; //!< about the simulator
-        int m_maxRenderedAircraft = 99;           //!< max. rendered aircraft
+        int m_maxRenderedAircraft = 90;           //!< max. rendered aircraft
         bool m_debugMessages = false;             //!< Display debug messages
-        BlackMisc::Aviation::CCallsignList m_callsignsToBeRendered; //!< all other aircraft are to be ignored
+        bool m_blinkCycle = false;                //!< use for highlighting
+        IInterpolator *m_interpolator = nullptr;  //!< interpolator instance
+        qint64 m_highlightEndTimeMsEpoch = 0;
+        BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft; //!< all other aircraft are to be ignored
+        BlackMisc::Aviation::CCallsignList m_callsignsToBeRendered;
+        QTimer *m_oneSecondTimer = nullptr;
+
     };
 
 } // namespace

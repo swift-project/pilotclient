@@ -80,6 +80,9 @@ namespace BlackGui
             //! Connection status has been changed
             void ps_connectionStatusChanged(int from, int to);
 
+            //! Highlight in simulator
+            void ps_onMenuHighlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
         private:
             QScopedPointer<Ui::CAircraftComponent> ui;
             CUpdateTimer *m_updateTimer = nullptr;

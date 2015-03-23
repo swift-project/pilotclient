@@ -42,9 +42,9 @@ namespace BlackSimPlugin
         public:
             //! \copydoc BlackCore::ISimulatorFactory::create(ownAircraftProvider, remoteAircraftProvider, parent)
             virtual BlackCore::ISimulator *create(
-                    BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                    BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                    QObject *parent) override;
+                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                QObject *parent) override;
 
             //! Simulator info
             virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
@@ -91,6 +91,9 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::removeRemoteAircraft()
             virtual bool removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 
+            //! \copydoc BlackCore::ISimulator::removeAllRemoteAircraft
+            virtual void removeAllRemoteAircraft() override;
+
             //! \copydoc ISimulator::updateOwnSimulatorCockpit()
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &ownAircraft, const QString &originator) override;
 
@@ -99,6 +102,9 @@ namespace BlackSimPlugin
 
             //! \copydoc ISimulator::displayTextMessage()
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
+
+            //! \copydoc ISimulator::isRenderedAircraft
+            virtual bool isRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
         protected:
             //! Timer event
@@ -124,12 +130,10 @@ namespace BlackSimPlugin
 
             // DirectPlay object handling
             QPointer<CFs9Host> m_fs9Host;
-            bool m_isHosting = false;        //!< Is sim connected
+            bool m_isHosting = false;  //!< Is sim connected?
             bool m_startedLobbyConnection = false;
             QHash<BlackMisc::Aviation::CCallsign, QPointer<CFs9Client>> m_hashFs9Clients;
             CLobbyClient *m_lobbyClient;
-
-            BlackCore::IInterpolator *m_interpolator = nullptr; //!< interpolator instance
         };
     } // namespace
 } // namespace

@@ -34,6 +34,7 @@
 #include "blackmisc/avairportlist.h"
 #include "blackmisc/project.h"
 #include "blackmisc/pixmap.h"
+#include "blackmisc/pqtime.h"
 #include <QObject>
 
 namespace BlackCore
@@ -46,18 +47,13 @@ namespace BlackCore
 
     public:
         //! Service name
-        static const QString &InterfaceName()
-        {
-            static QString s(BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME);
-            return s;
-        }
+        static const QString &InterfaceName();
 
         //! Service path
-        static const QString &ObjectPath()
-        {
-            static QString s(BLACKCORE_CONTEXTSIMULATOR_OBJECTPATH);
-            return s;
-        }
+        static const QString &ObjectPath();
+
+        //! Highlight time
+        static const BlackMisc::PhysicalQuantities::CTime &HighlightTime();
 
         //! \copydoc CContext::getPathAndContextId()
         virtual QString getPathAndContextId() const { return this->buildPathAndContextId(ObjectPath()); }
@@ -171,6 +167,9 @@ namespace BlackCore
 
         //! Enable debugging
         virtual void enableDebugMessages(bool driver, bool interpolator) = 0;
+
+        //! Highlight aircraft in simulator
+        virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) = 0;
 
     protected:
         //! Constructor

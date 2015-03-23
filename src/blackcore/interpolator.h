@@ -15,7 +15,6 @@
 #include "blackmisc/avaircraftsituation.h"
 #include "blackmisc/simulation/simdirectaccessremoteaircraft.h"
 #include "blackmisc/worker.h"
-#include "simulator.h"
 #include <QHash>
 #include <QList>
 
@@ -39,7 +38,7 @@ namespace BlackCore
         virtual ~IInterpolator() {}
 
         //! Log category
-        static QString getMessageCategory() { return "swift.iinterpolator"; }
+        static QString getMessageCategory() { return "swift.interpolator"; }
 
         //! Status of interpolation
         struct InterpolationStatus
@@ -79,23 +78,28 @@ namespace BlackCore
         //!
         virtual BlackMisc::Aviation::CAircraftSituationList getInterpolatedSituations(qint64 currentTimeMsSinceEpoch = -1);
 
-        //! The situations per callsign
+        //! All situations for all callsigns (in map as per callsign)
         //! \threadsafe
         CSituationsPerCallsign getSituationsByCallsign() const;
 
         //! Parts before given offset time (aka pending parts)
+        //! \note
         //! \threadsafe
-        virtual BlackMisc::Aviation::CAircraftPartsList getAndRemovePartsBeforeTime(const BlackMisc::Aviation::CCallsign &callsign, qint64 timeOffset, PartsStatus &partsStatus);
+        virtual BlackMisc::Aviation::CAircraftPartsList getAndRemovePartsBeforeTime(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTime, PartsStatus &partsStatus);
 
         //! Clear all data
         //! \threadsafe
         virtual void clear();
 
-        //! Situations for given callsign
+        //! Knows callsign?
+        //! \threadsafe
+        virtual bool hasDataForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+
+        //! All situations for given callsign
         //! \threadsafe
         BlackMisc::Aviation::CAircraftSituationList getSituationsForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
-        //! Parts for given callsign
+        //! All parts for given callsign
         //! \threadsafe
         BlackMisc::Aviation::CAircraftPartsList getPartsForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 

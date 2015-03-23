@@ -119,6 +119,9 @@ namespace BlackCore
         //! \copydoc ISimulator::enableDebuggingMessages
         virtual void enableDebugMessages(bool driver, bool interpolator) override;
 
+        //! \copydoc IContextSimulator::highlightAircraft
+        virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
+
     protected:
         //! \brief Constructor
         CContextSimulator(CRuntimeConfig::ContextMode, CRuntime *runtime);
@@ -132,13 +135,13 @@ namespace BlackCore
         }
 
     private slots:
-        //! \copydoc ISimulator::addRemoteAircraft
+        //! Remote aircraft added
         void ps_addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
 
-        //! \copydoc ISimulator::removeRemoteAircraft
+        //! Remove remote aircraft
         void ps_removedRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
-        //! Handle new connection status
+        //! Handle new connection status of simulator
         void ps_onConnectionStatusChanged(ISimulator::ConnectionStatus status);
 
         //! Text message received
@@ -146,6 +149,12 @@ namespace BlackCore
 
         //! Simulator has changed cockpit
         void ps_cockitChangedFromSim(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
+
+        //! Changed remote aircraft model
+        void ps_changedRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
+
+        //! Enable / disable aircraft
+        void ps_changedRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
 
         //! Update simulator cockpit from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
         //! \remarks set by runtime, only to be used locally (not via DBus)
@@ -161,6 +170,6 @@ namespace BlackCore
         QFuture<bool> m_canConnectResult;
     };
 
-} // namespace BlackCore
+} // namespace
 
 #endif // guard

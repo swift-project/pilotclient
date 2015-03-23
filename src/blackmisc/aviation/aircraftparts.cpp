@@ -98,6 +98,16 @@ namespace BlackMisc
             }
         }
 
+        void CAircraftParts::setAllLightsOn()
+        {
+            m_lights.setAllOn();
+        }
+
+        void CAircraftParts::setAllLightsOff()
+        {
+            m_lights.setAllOff();
+        }
+
         CAircraftEngine CAircraftParts::getEngine(int number) const
         {
             return this->m_engines.getEngine(number);

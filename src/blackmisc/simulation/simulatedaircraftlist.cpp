@@ -66,6 +66,60 @@ namespace BlackMisc
             return csl;
         }
 
+        void CSimulatedAircraftList::markAllAsNotRendered()
+        {
+            for (CSimulatedAircraft &aircraft : (*this))
+            {
+                if (!aircraft.isRendered()) { continue; }
+                aircraft.setRendered(false);
+            }
+        }
+
+        int CSimulatedAircraftList::setRendered(const CCallsign &callsign, bool rendered)
+        {
+            int c = 0;
+            for (CSimulatedAircraft &aircraft : (*this))
+            {
+                if (aircraft.getCallsign() != callsign) { continue; }
+                aircraft.setRendered(rendered);
+                c++;
+            }
+            return c;
+        }
+
+        int CSimulatedAircraftList::setAircraftParts(const CCallsign &callsign, const CAircraftParts &parts)
+        {
+            int c = 0;
+            for (CSimulatedAircraft &aircraft : (*this))
+            {
+                if (aircraft.getCallsign() != callsign) { continue; }
+                aircraft.setParts(parts);
+                aircraft.setPartsSynchronized(true);
+                c++;
+            }
+            return c;
+        }
+
+        bool CSimulatedAircraftList::isEnabled(const CCallsign &callsign) const
+        {
+            for (const CSimulatedAircraft &aircraft : (*this))
+            {
+                if (aircraft.getCallsign() != callsign) { continue; }
+                return aircraft.isEnabled();
+            }
+            return false;
+        }
+
+        bool CSimulatedAircraftList::isRendered(const CCallsign &callsign) const
+        {
+            for (const CSimulatedAircraft &aircraft : (*this))
+            {
+                if (aircraft.getCallsign() != callsign) { continue; }
+                return aircraft.isRendered();
+            }
+            return false;
+        }
+
         CAircraftList CSimulatedAircraftList::toAircraftList() const
         {
             CAircraftList al;

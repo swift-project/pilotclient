@@ -46,6 +46,21 @@ namespace BlackMisc
             //! Callsigns of aircraft with synchronized parts
             BlackMisc::Aviation::CCallsignList getCallsignsWithSyncronizedParts() const;
 
+            //! Mark all aircraft as unrendered
+            void markAllAsNotRendered();
+
+            //! Mark as rendered
+            int setRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered);
+
+            //! Set aircraft parts
+            int setAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
+
+            //! Enabled?
+            bool isEnabled(const BlackMisc::Aviation::CCallsign &callsign) const;
+
+            //! Rendered?
+            bool isRendered(const BlackMisc::Aviation::CCallsign &callsign) const;
+
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 

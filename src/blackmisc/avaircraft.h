@@ -84,7 +84,7 @@ namespace BlackMisc
             QString getPilotId() { return m_pilot.getId(); }
 
             //! Set pilot (user)
-            virtual void setPilot(const BlackMisc::Network::CUser &user) { m_pilot = user; this->m_pilot.setCallsign(this->m_callsign);}
+            virtual void setPilot(const BlackMisc::Network::CUser &user);
 
             //! Get ICAO info
             const CAircraftIcao &getIcaoInfo() const { return m_icao; }
@@ -247,8 +247,20 @@ namespace BlackMisc
             //! Get aircraft parts
             const BlackMisc::Aviation::CAircraftParts &getParts() const { return m_parts; }
 
+            //! Get aircraft parts
+            CAircraftLights getLights() const;
+
             //! Set aircraft parts
             void setParts(const BlackMisc::Aviation::CAircraftParts &parts);
+
+            //! Set aircraft lights
+            void setLights(BlackMisc::Aviation::CAircraftLights &lights);
+
+            //! Set aircraft lights on
+            void setAllLightsOn();
+
+            //! Set aircraft lights off
+            void setAllLightsOff();
 
             //! VTOL aircraft?
             bool isVtol() const;

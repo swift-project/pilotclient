@@ -919,12 +919,8 @@ namespace BlackCore
         this->m_aircraftParts.removeOlderThanNowMinusOffset(AircraftPartsRemoveOffsetMs);
         emit this->addedRemoteAircraftParts(parts);
 
-        CPropertyIndexVariantMap vm;
-        vm.addValue(CAircraft::IndexParts, parts);
-        vm.addValue(CSimulatedAircraft::IndexPartsSynchronized, true);
-
         // here I expect always a changed value
-        this->m_aircraftInRange.applyIfCallsign(callsign, vm);
+        this->m_aircraftInRange.setAircraftParts(callsign, parts);
         this->m_aircraftWatchdog.resetCallsign(callsign);
     }
 

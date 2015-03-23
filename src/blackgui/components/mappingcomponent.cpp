@@ -24,6 +24,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackCore;
 using namespace BlackGui;
 using namespace BlackGui::Views;
@@ -54,6 +55,7 @@ namespace BlackGui
             connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::requestTextMessageWidget, this, &CMappingComponent::requestTextMessageWidget);
             connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::requestEnableAircraft, this, &CMappingComponent::ps_onMenuEnableAircraft);
             connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::requestFastPositionUpdates, this, &CMappingComponent::ps_onMenuChangeFastPositionUpdates);
+            connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::requestHighlightInSimulator, this, &CMappingComponent::ps_onMenuHighlightInSimulator);
 
             connect(this->ui->pb_SaveAircraft, &QPushButton::clicked, this, &CMappingComponent::ps_onSaveAircraft);
 
@@ -93,8 +95,8 @@ namespace BlackGui
             Q_ASSERT(getIContextNetwork());
             connect(getIContextSimulator(), &IContextSimulator::installedAircraftModelsChanged, this, &CMappingComponent::ps_onAircraftModelsLoaded);
             connect(getIContextSimulator(), &IContextSimulator::modelMatchingCompleted, this, &CMappingComponent::ps_onModelMatchingCompleted);
-            connect(getIContextNetwork(), &IContextNetwork::changedRenderedAircraftModel, this, &CMappingComponent::ps_onRenderedAircraftModelChanged);
-            connect(getIContextNetwork(), &IContextNetwork::changedAircraftEnabled, this, &CMappingComponent::ps_onChangedAircraftEnabled);
+            connect(getIContextNetwork(), &IContextNetwork::changedRemoteAircraftModel, this, &CMappingComponent::ps_onRenderedAircraftModelChanged);
+            connect(getIContextNetwork(), &IContextNetwork::changedRemoteAircraftEnabled, this, &CMappingComponent::ps_onChangedAircraftEnabled);
             connect(getIContextNetwork(), &IContextNetwork::changedFastPositionUpdates, this, &CMappingComponent::ps_onFastPositionUpdatesEnabled);
             connect(getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMappingComponent::ps_onConnectionStatusChanged);
 
@@ -336,6 +338,14 @@ namespace BlackGui
             if (getIContextNetwork())
             {
                 getIContextNetwork()->updateFastPositionUpdates(aircraft.getCallsign(), aircraft.fastPositionUpdates(), mappingtOriginator());
+            }
+        }
+
+        void CMappingComponent::ps_onMenuHighlightInSimulator(const CSimulatedAircraft &aircraft)
+        {
+            if (getIContextSimulator())
+            {
+                getIContextSimulator()->highlightAircraft(aircraft, true, IContextSimulator::HighlightTime());
             }
         }
 

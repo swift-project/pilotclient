@@ -20,6 +20,7 @@ using namespace BlackGui::Views;
 using namespace BlackGui::Models;
 using namespace BlackCore;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackGui
 {
@@ -33,11 +34,14 @@ namespace BlackGui
             ui->setupUi(this);
             this->tabBar()->setExpanding(false);
             this->ui->tvp_AirportsInRange->setResizeMode(CAirportView::ResizingOnce);
+
             m_updateTimer = new CUpdateTimer(&CAircraftComponent::update, this);
             this->ui->tvp_AircraftInRange->setAircraftMode(CSimulatedAircraftListModel::InfoMode);
+            this->ui->tvp_AircraftInRange->configureMenu(true, false, false);
 
             connect(this->ui->tvp_AircraftInRange, &CSimulatedAircraftView::rowCountChanged, this, &CAircraftComponent::ps_onRowCountChanged);
             connect(this->ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestTextMessageWidget, this, &CAircraftComponent::requestTextMessageWidget);
+            connect(this->ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestHighlightInSimulator, this, &CAircraftComponent::ps_onMenuHighlightInSimulator);
             connect(this->ui->tvp_AirportsInRange, &CSimulatedAircraftView::rowCountChanged, this, &CAircraftComponent::ps_onRowCountChanged);
 
         }
@@ -122,6 +126,14 @@ namespace BlackGui
             if (INetwork::isDisconnectedStatus(toStatus))
             {
                 this->ui->tvp_AircraftInRange->clear();
+            }
+        }
+
+        void CAircraftComponent::ps_onMenuHighlightInSimulator(const CSimulatedAircraft &aircraft)
+        {
+            if (getIContextSimulator())
+            {
+                getIContextSimulator()->highlightAircraft(aircraft, true, IContextSimulator::HighlightTime());
             }
         }
 

@@ -522,7 +522,7 @@ namespace BlackCore
         if (c)
         {
             CSimulatedAircraft aircraft(this->remoteAircraft().findFirstByCallsign(callsign));
-            emit this->changedAircraftEnabled(aircraft, originator);
+            emit this->changedRemoteAircraftEnabled(aircraft, originator);
         }
         return c;
     }
@@ -534,7 +534,7 @@ namespace BlackCore
         if (c)
         {
             CSimulatedAircraft aircraft(this->remoteAircraft().findFirstByCallsign(callsign));
-            emit this->changedRenderedAircraftModel(aircraft, originator);
+            emit this->changedRemoteAircraftModel(aircraft, originator);
         }
         return c;
     }
