@@ -421,7 +421,6 @@ namespace BlackGui
                 cmd.append(" ").append(enteredLine);
                 return cmd;
             }
-            return "";
         }
 
         void CTextMessageComponent::onTextMessageReceived(const CTextMessageList &messages)

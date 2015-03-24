@@ -69,7 +69,7 @@ namespace BlackMisc
     /*
      * Can connect to IP/port?
      */
-    bool CNetworkUtils::canConnect(const QString &hostAddress, quint16 port, QString &message, int timeoutMs)
+    bool CNetworkUtils::canConnect(const QString &hostAddress, int port, QString &message, int timeoutMs)
     {
         if (!CNetworkUtils::hasConnectedInterface(false))
         {
@@ -80,7 +80,7 @@ namespace BlackMisc
         // http://qt-project.org/forums/viewthread/9346
         QTcpSocket socket;
         bool connected = false;
-        socket.connectToHost(hostAddress, port);
+        socket.connectToHost(hostAddress, static_cast<quint16>(port));
         if (!socket.waitForConnected(timeoutMs))
         {
             message = QObject::tr("Connection failed : %1", "BlackMisc").arg(socket.errorString());

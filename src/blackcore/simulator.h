@@ -267,10 +267,10 @@ namespace BlackCore
         bool m_debugMessages = false;             //!< Display debug messages
         bool m_blinkCycle = false;                //!< use for highlighting
         IInterpolator *m_interpolator = nullptr;  //!< interpolator instance
-        qint64 m_highlightEndTimeMsEpoch = 0;
+        qint64 m_highlightEndTimeMsEpoch = 0;     //!< end highlighting
         BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft; //!< all other aircraft are to be ignored
-        BlackMisc::Aviation::CCallsignList m_callsignsToBeRendered;
-        QTimer *m_oneSecondTimer = nullptr;
+        BlackMisc::Aviation::CCallsignList m_callsignsToBeRendered;          //!< callsigns which will be rendered
+        QTimer *m_oneSecondTimer = nullptr;       //!< timer
 
     };
 

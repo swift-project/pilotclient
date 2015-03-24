@@ -57,8 +57,6 @@ namespace BlackMisc
                     return u;
                 }
             }
-            Q_ASSERT("Wrong index");
-            return QString(""); // never reached
         }
 
         void CVoiceCapabilities::setFromFlightPlanRemarks(const QString &flightPlanRemarks)

@@ -118,7 +118,7 @@ namespace BlackSimPlugin
             //! Set default values
             void setDefaultValues()
             {
-                std::fill(data, data + 128, 0);
+                std::fill(data, data + 128, static_cast<byte>(0));
                 data[17] = 1; // standby
                 data[19] = 0; // no ident
             }

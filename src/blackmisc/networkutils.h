@@ -38,7 +38,7 @@ namespace BlackMisc
          * \param message       human readable message
          * \return
          */
-        static bool canConnect(const QString &hostAddress, quint16 port, QString &message, int timeoutMs = 1500);
+        static bool canConnect(const QString &hostAddress, int port, QString &message, int timeoutMs = 1500);
 
         /*!
          * Can connect to server?

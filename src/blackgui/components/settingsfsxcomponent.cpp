@@ -69,7 +69,7 @@ namespace BlackGui
                 CLogMessage(this).warning("invalid port");
                 return;
             }
-            quint16 p = port.toUInt();
+            int p = port.toInt();
             QString msg;
             if (!CNetworkUtils::canConnect(address, p, msg))
             {
@@ -108,7 +108,7 @@ namespace BlackGui
                 CLogMessage(this).warning("invalid port");
                 return;
             }
-            quint16 p = port.toUInt();
+            int p = port.toInt();
             QString fileName = this->getIContextSimulator()->getSimulatorInfo().getSimulatorSetupValueAsString(CFsxSimulatorSetup::SetupSimConnectCfgFile);
             Q_ASSERT(!fileName.isEmpty());
             // write either local or remote file

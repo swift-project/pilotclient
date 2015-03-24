@@ -38,6 +38,9 @@ namespace BlackMisc
         class IOwnAircraftProvider : public IOwnAircraftProviderReadOnly
         {
         public:
+
+            using IOwnAircraftProviderReadOnly::ownAircraft;
+
             //! Own aircraft
             virtual CSimulatedAircraft &ownAircraft() = 0;
 

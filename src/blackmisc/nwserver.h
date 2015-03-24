@@ -69,10 +69,10 @@ namespace BlackMisc
             void setDescription(const QString &description) { m_description = description.trimmed().simplified(); }
 
             //! Get port
-            qint32 getPort() const { return m_port; }
+            int getPort() const { return m_port; }
 
             //! Set port
-            void setPort(qint32 port) { m_port = port; }
+            void setPort(int port) { m_port = port; }
 
             //! Server is accepting connections
             bool isAcceptingConnections() const { return m_isAcceptingConnections; }
@@ -101,9 +101,9 @@ namespace BlackMisc
             QString m_name;
             QString m_description;
             QString m_address;
-            qint32 m_port;
-            CUser m_user;
-            bool m_isAcceptingConnections;
+            int     m_port;
+            CUser   m_user;
+            bool    m_isAcceptingConnections;
         };
     } // namespace
 } // namespace

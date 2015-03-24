@@ -28,7 +28,7 @@ namespace BlackMisc
         {
             Q_UNUSED(i18n);
             QString s(m_number);
-            s += m_on;
+            s += BlackMisc::boolToOnOff(m_on);
             return s;
         }
     } // namespace

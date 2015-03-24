@@ -29,7 +29,7 @@ namespace BlackSim
         //
         // Create a very simple SimConnect.cfg
         //
-        bool CSimConnectUtilities::writeSimConnectCfg(const QString &fileName, const QString &ip, quint16 port)
+        bool CSimConnectUtilities::writeSimConnectCfg(const QString &fileName, const QString &ip, int port)
         {
             QString sc = CSimConnectUtilities::simConnectCfg(ip, port);
             QFile file(fileName);
@@ -46,7 +46,7 @@ namespace BlackSim
         //
         // simconnect.cfg file
         //
-        QString CSimConnectUtilities::simConnectCfg(const QString &ip, quint16 port)
+        QString CSimConnectUtilities::simConnectCfg(const QString &ip, int port)
         {
             QString sc = QString("[SimConnect]\nProtocol=Ipv4\nAddress=%1\nPort=%2\n"
                                  "MaxReceiveSize=4096\nDisableNagle=0").arg(ip).arg(port);

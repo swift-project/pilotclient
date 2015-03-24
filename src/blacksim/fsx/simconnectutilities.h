@@ -48,7 +48,7 @@ namespace BlackSim
              * \param port Port of FSX (e.g. 500)
              * \return content for simconnect.cfg
              */
-            static QString simConnectCfg(const QString &ip, quint16 port = 500);
+            static QString simConnectCfg(const QString &ip, int port = 500);
 
             /*!
              * Create a FSX simconnect.cfg file
@@ -57,7 +57,7 @@ namespace BlackSim
              * \param port Port of FSX (e.g. 500)
              * \return success
              */
-            static bool writeSimConnectCfg(const QString &fileName, const QString &ip, quint16 port = 500);
+            static bool writeSimConnectCfg(const QString &fileName, const QString &ip, int port = 500);
 
             /*!
              * Resolve SimConnect exception (based on Qt metadata).

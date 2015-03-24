@@ -185,7 +185,6 @@ namespace BlackSimPlugin
                 CLogMessage(this).warning("FSX: Not connected, not added aircraft %1") << callsign.toQString();
                 return false;
             }
-            remoteAircraft().setRendered(callsign, false);
         }
 
         bool CSimulatorFsx::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const QString &originator)

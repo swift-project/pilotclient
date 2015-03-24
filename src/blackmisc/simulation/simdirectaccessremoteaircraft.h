@@ -63,6 +63,11 @@ namespace BlackMisc
         class IRemoteAircraftProvider : public IRemoteAircraftProviderReadOnly
         {
         public:
+
+            using IRemoteAircraftProviderReadOnly::remoteAircraft;
+            using IRemoteAircraftProviderReadOnly::remoteAircraftParts;
+            using IRemoteAircraftProviderReadOnly::remoteAircraftSituations;
+
             //! All rendered aircraft
             //! \note in memory reference, not thread safe
             virtual CSimulatedAircraftList &remoteAircraft() = 0;

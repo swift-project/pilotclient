@@ -18,15 +18,15 @@ namespace BlackMisc
             QString s;
             s += m_lights.toQString(i18n);
             s += " gear down: ";
-            s += m_gearDown;
+            s += BlackMisc::boolToYesNo(m_gearDown);
             s += " flaps pct: ";
-            s += m_flapsPercentage;
+            s += QString::number(m_flapsPercentage);
             s += " spoilers out: ";
-            s += m_spoilersOut;
+            s += BlackMisc::boolToYesNo(m_spoilersOut);
             s += " engines on: ";
             s += m_engines.toQString(i18n);
             s += " on ground: ";
-            s += m_isOnGround;
+            s += BlackMisc::boolToYesNo(m_isOnGround);
             return s;
         }
 

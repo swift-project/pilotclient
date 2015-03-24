@@ -173,7 +173,7 @@ void Client::presetLoginModeCmd(QTextStream &args)
 {
     QString modeString;
     args >> modeString;
-    BlackCore::INetwork::LoginMode mode;
+    BlackCore::INetwork::LoginMode mode(BlackCore::INetwork::LoginNormal);
     if (modeString == "normal") { mode = BlackCore::INetwork::LoginNormal; }
     if (modeString == "observer") { mode = BlackCore::INetwork::LoginAsObserver; }
     if (modeString == "stealth") { mode = BlackCore::INetwork::LoginStealth; }
