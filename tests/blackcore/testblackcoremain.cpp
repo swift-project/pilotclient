@@ -25,8 +25,8 @@ namespace BlackCoreTest
             status |= QTest::qExec(&interpolatorTests, argc, argv);
         }
         {
-//            CTestNetwork networkTests;
-//            status |= QTest::qExec(&networkTests, argc, argv);
+            CTestNetwork networkTests;
+            status |= QTest::qExec(&networkTests, argc, argv);
         }
         return status;
     }
