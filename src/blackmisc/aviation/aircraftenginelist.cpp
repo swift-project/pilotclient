@@ -30,23 +30,7 @@ namespace BlackMisc
         CAircraftEngine CAircraftEngineList::getEngine(int engineNumber) const
         {
             Q_ASSERT(engineNumber >= 0);
-
-            // The following commented line results in a gcc compiler segfault:
-            //
-            // internal compiler error: in size_binop_loc, at fold-const.c:1450
-            // } // namespace
-            // ^
-            //
-            // frontOrDefault() is defined as:
-            // static const value_type def; return empty() ? def : front();
-            // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            // Workaround it by using non static const value instead.
-
-            //return this->findBy(&CAircraftEngine::getNumber, engineNumber).frontOrDefault();
-
-            const CAircraftEngine def;
-            auto results = this->findBy(&CAircraftEngine::getNumber, engineNumber);
-            return results.empty() ? def : front();
+            return this->findBy(&CAircraftEngine::getNumber, engineNumber).frontOrDefault();
         }
 
         bool CAircraftEngineList::isEngineOn(int engineNumber) const

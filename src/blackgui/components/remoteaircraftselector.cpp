@@ -33,7 +33,7 @@ namespace BlackGui
 
         BlackMisc::Aviation::CCallsign CRemoteAircraftSelector::getSelectedCallsign() const
         {
-            const CCallsign empty;
+            const CCallsign empty {};
             int index = ui->cb_RemoteAircraftSelector->currentIndex();
             if (index < 0 || index > this->m_aircraft.size()) { return empty; }
             return m_aircraft[index].getCallsign();

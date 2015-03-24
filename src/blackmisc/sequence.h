@@ -165,7 +165,7 @@ namespace BlackMisc
         /*!
          * \brief Access the first element, or a default-initialized value if the sequence is empty.
          */
-        const_reference frontOrDefault() const { static const value_type def; return empty() ? def : front(); }
+        const_reference frontOrDefault() const { static const value_type def {}; return empty() ? def : front(); }
 
         /*!
          * \brief Access the first element, or a default-initialized value if the sequence is empty.

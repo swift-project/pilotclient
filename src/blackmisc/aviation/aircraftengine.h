@@ -24,7 +24,7 @@ namespace BlackMisc
         public:
 
             //! Default constructor
-            CAircraftEngine() = default;
+            CAircraftEngine() {}
 
             //! Constructor
             CAircraftEngine(int number, bool on);
