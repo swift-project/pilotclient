@@ -611,6 +611,7 @@ namespace BlackCore
     void CAirspaceMonitor::ps_atcPositionUpdate(const CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range)
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+        Q_ASSERT(CComSystem::isValidCivilAviationFrequency(frequency));
         if (!this->m_connected) { return; }
         CAtcStationList stationsWithCallsign = this->m_atcStationsOnline.findByCallsign(callsign);
         if (stationsWithCallsign.isEmpty())

@@ -745,8 +745,11 @@ namespace BlackCore
 
     void CNetworkVatlib::onAtcPositionUpdate(VatSessionID, const char *callsign, const VatAtcPosition *pos, void *cbvar)
     {
-        CFrequency freq(pos->frequency, CFrequencyUnit::kHz());
+        int frequencyKHz = pos->frequency;
+        if (frequencyKHz < 100000) { frequencyKHz += 100000; }
+        CFrequency freq(frequencyKHz, CFrequencyUnit::kHz());
         freq.switchUnit(CFrequencyUnit::MHz()); // we would not need to bother, but this makes it easier to identify
+        Q_ASSERT(CComSystem::isValidCivilAviationFrequency(freq));
         emit cbvar_cast(cbvar)->atcPositionUpdate(cbvar_cast(cbvar)->fromFSD(callsign), freq,
                 CCoordinateGeodetic(pos->latitude, pos->longitude, 0), CLength(pos->visibleRange, CLengthUnit::NM()));
     }
