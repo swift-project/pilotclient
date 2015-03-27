@@ -19,7 +19,7 @@ namespace BlackMisc
     namespace Aviation { class CHeading; }
 
     //! \private
-    template <> struct CValueObjectStdTuplePolicy<Aviation::CHeading> : public CValueObjectStdTuplePolicy<>
+    template <> struct CValueObjectPolicy<Aviation::CHeading> : public CValueObjectPolicy<>
     {
         using Equals = Policy::Equals::MetaTuple;
         using Compare = Policy::Compare::MetaTuple;
@@ -34,7 +34,7 @@ namespace BlackMisc
          * \brief Heading as used in aviation, can be true or magnetic heading
          * \remarks Intentionally allowing +/- CAngle , and >= / <= CAngle.
          */
-        class CHeading : public CValueObjectStdTuple<CHeading, PhysicalQuantities::CAngle>
+        class CHeading : public CValueObject<CHeading, PhysicalQuantities::CAngle>
         {
         public:
             /*!
@@ -52,13 +52,13 @@ namespace BlackMisc
 
         public:
             //! \brief Default constructor: 0 heading true
-            CHeading() : CValueObjectStdTuple(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
+            CHeading() : CValueObject(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
 
             //! \brief Constructor
-            CHeading(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CValueObjectStdTuple(value, unit), m_north(north) {}
+            CHeading(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CValueObject(value, unit), m_north(north) {}
 
             //! \brief Constructor by CAngle
-            CHeading(CAngle heading, ReferenceNorth north) : CValueObjectStdTuple(heading), m_north(north) {}
+            CHeading(CAngle heading, ReferenceNorth north) : CValueObject(heading), m_north(north) {}
 
             //! \brief Magnetic heading?
             bool isMagneticHeading() const { return Magnetic == this->m_north; }

@@ -29,7 +29,7 @@ namespace BlackMisc
     namespace PhysicalQuantities { template <class, class> class CPhysicalQuantity; }
 
     //! \private
-    template <class MU, class PQ> struct CValueObjectStdTuplePolicy<PhysicalQuantities::CPhysicalQuantity<MU, PQ>> : public CValueObjectStdTuplePolicy<>
+    template <class MU, class PQ> struct CValueObjectPolicy<PhysicalQuantities::CPhysicalQuantity<MU, PQ>> : public CValueObjectPolicy<>
     {
         using MetaType = Policy::MetaType::DefaultAndQList;
         using Equals = Policy::Equals::None;
@@ -45,7 +45,7 @@ namespace BlackMisc
         /*!
          * A physical quantity such as "5m", "20s", "1500ft/s"
          */
-        template <class MU, class PQ> class CPhysicalQuantity : public CValueObjectStdTuple<CPhysicalQuantity<MU, PQ>>
+        template <class MU, class PQ> class CPhysicalQuantity : public CValueObject<CPhysicalQuantity<MU, PQ>>
         {
             //! \copydoc CValueObject::compare
             friend int compare(const PQ &a, const PQ &b) { return compareImpl(a, b); }

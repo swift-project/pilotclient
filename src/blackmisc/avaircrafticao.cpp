@@ -117,7 +117,7 @@ namespace BlackMisc
             case IndexIsVtol:
                 return CVariant::fromValue(this->isVtol());
             default:
-                return CValueObjectStdTuple::propertyByIndex(index);
+                return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -145,7 +145,7 @@ namespace BlackMisc
                 this->setAircraftColor(variant.value<QString>());
                 break;
             default:
-                CValueObjectStdTuple::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
         }

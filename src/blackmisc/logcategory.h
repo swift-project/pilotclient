@@ -21,7 +21,7 @@ namespace BlackMisc
      *
      * A log handler can filter messages based on their categories.
      */
-    class CLogCategory : public CValueObjectStdTuple<CLogCategory>
+    class CLogCategory : public CValueObject<CLogCategory>
     {
     public:
         //! \name Predefined special categories (public static methods)

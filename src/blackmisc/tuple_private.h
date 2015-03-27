@@ -27,7 +27,7 @@ namespace BlackMisc
 {
     class CEmpty;
     template <class> class TupleConverter;
-    template <class Derived, class Base = CEmpty> class CValueObjectStdTuple;
+    template <class Derived, class Base = CEmpty> class CValueObject;
 
     //! Traits class to test whether a class template specialization is a base class of another class.
     template <template <class...> class Base, class Derived>
@@ -52,7 +52,7 @@ namespace BlackMisc
         // Inhibit doxygen warnings about missing documentation
         //! \cond PRIVATE
 
-        // To allow CValueObjectStdTuple policy classes to use the tuple system
+        // To allow CValueObject policy classes to use the tuple system
         class EncapsulationBreaker
         {
         protected:

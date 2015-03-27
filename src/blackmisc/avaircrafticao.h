@@ -22,7 +22,7 @@ namespace BlackMisc
         /*!
          * Value object for ICAO classification
          */
-        class CAircraftIcao : public CValueObjectStdTuple<CAircraftIcao>
+        class CAircraftIcao : public CValueObject<CAircraftIcao>
         {
         public:
             //! Properties by index

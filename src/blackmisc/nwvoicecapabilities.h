@@ -22,7 +22,7 @@ namespace BlackMisc
         /*!
          * Value object encapsulating information for voice capabilities.
          */
-        class CVoiceCapabilities : public CValueObjectStdTuple<CVoiceCapabilities>
+        class CVoiceCapabilities : public CValueObject<CVoiceCapabilities>
         {
         public:
             //! Voice capabilities

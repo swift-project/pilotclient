@@ -25,7 +25,7 @@ namespace BlackMisc
         }
 
         CSimulatedAircraft::CSimulatedAircraft(const CAircraft &aircraft, const CAircraftModel &model, const CClient &client) :
-            CValueObjectStdTuple(aircraft), m_model(model), m_client(client)
+            CValueObject(aircraft), m_model(model), m_client(client)
         {
             init();
         }

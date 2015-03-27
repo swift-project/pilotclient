@@ -25,7 +25,7 @@ namespace BlackMisc
     {
         //! Value object encapsulating information of aircraft's parts
         class CAircraftParts :
-            public CValueObjectStdTuple<CAircraftParts>,
+            public CValueObject<CAircraftParts>,
             public BlackMisc::ITimestampBased
         {
         public:

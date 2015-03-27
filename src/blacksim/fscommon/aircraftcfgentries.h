@@ -25,7 +25,7 @@ namespace BlackSim
          * \remarks an entry in the aircraft.cfg is title, atc type, ... This class already bundles
          *          relevant entries, hence the class is named Entries (plural)
          */
-        class CAircraftCfgEntries: public BlackMisc::CValueObjectStdTuple<CAircraftCfgEntries>
+        class CAircraftCfgEntries: public BlackMisc::CValueObject<CAircraftCfgEntries>
         {
         public:
             //! Properties by index

@@ -37,7 +37,7 @@ namespace BlackMisc
         case IndexName:
             return CVariant::fromValue(this->m_name);
         default:
-            return CValueObjectStdTuple::propertyByIndex(index);
+            return CValueObject::propertyByIndex(index);
         }
     }
 
@@ -61,7 +61,7 @@ namespace BlackMisc
             this->setName(variant.value<QString>());
             break;
         default:
-            CValueObjectStdTuple::setPropertyByIndex(variant, index);
+            CValueObject::setPropertyByIndex(variant, index);
             break;
         }
     }

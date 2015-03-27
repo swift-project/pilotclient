@@ -48,14 +48,14 @@ namespace BlackMisc
 
     //! \private
     template <template <class> class C, class T, class CIt>
-    struct CValueObjectStdTuplePolicy<CContainerBase<C, T, CIt>> : public CValueObjectLegacy
+    struct CValueObjectPolicy<CContainerBase<C, T, CIt>> : public CValueObjectLegacy
     {};
 
     /*!
      * \brief Base class for CCollection and CSequence adding mutating operations and CValueObject facility on top of CRangeBase.
      */
     template <template <class> class C, class T, class CIt>
-    class CContainerBase : public CValueObjectStdTuple<CContainerBase<C, T, CIt>>, public CRangeBase<C<T>, CIt>
+    class CContainerBase : public CValueObject<CContainerBase<C, T, CIt>>, public CRangeBase<C<T>, CIt>
     {
         //! \copydoc BlackMisc::CValueObject::compare
         friend int compare(const C<T> &a, const C<T> &b)
@@ -144,7 +144,7 @@ namespace BlackMisc
             }
         }
 
-    protected: // CValueObjectStdTuple overrides
+    protected: // CValueObject overrides
         //! \copydoc BlackMisc::CValueObject::convertToQString
         virtual QString convertToQString(bool i18n = false) const override
         {

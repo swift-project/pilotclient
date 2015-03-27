@@ -25,7 +25,7 @@ namespace BlackMisc
         /*!
          * Base class for COM, NAV, Squawk units.
          */
-        template <class AVIO> class CModulator : public CValueObjectStdTuple<CModulator<AVIO>, CAvionicsBase>
+        template <class AVIO> class CModulator : public CValueObject<CModulator<AVIO>, CAvionicsBase>
         {
         public:
             //! Column indexes
@@ -98,11 +98,11 @@ namespace BlackMisc
         protected:
             //! Default constructor
             CModulator() :
-                CModulator::CValueObjectStdTuple("default") {}
+                CModulator::CValueObject("default") {}
 
             //! Constructor
             CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency) :
-                CModulator::CValueObjectStdTuple(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency) {}
+                CModulator::CValueObject(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency) {}
 
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override

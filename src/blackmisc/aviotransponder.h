@@ -21,7 +21,7 @@ namespace BlackMisc
         /*!
          * Transponder
          */
-        class CTransponder : public CValueObjectStdTuple<CTransponder, CAvionicsBase>
+        class CTransponder : public CValueObject<CTransponder, CAvionicsBase>
         {
         public:
             //! Transponder codes
@@ -46,23 +46,23 @@ namespace BlackMisc
             };
 
             //! Default constructor
-            CTransponder() : CValueObjectStdTuple("transponder"), m_transponderCode(0), m_transponderMode(StateStandby) {}
+            CTransponder() : CValueObject("transponder"), m_transponderCode(0), m_transponderMode(StateStandby) {}
 
             //! Constructor
             CTransponder(const QString &name, int transponderCode, TransponderMode transponderMode) :
-                CValueObjectStdTuple(name), m_transponderCode(transponderCode), m_transponderMode(transponderMode)
+                CValueObject(name), m_transponderCode(transponderCode), m_transponderMode(transponderMode)
             {  }
 
             //! Constructor with transponder mode as string
             CTransponder(const QString &name, int transponderCode, QString transponderMode) :
-                CValueObjectStdTuple(name), m_transponderCode(transponderCode), m_transponderMode(StateStandby)
+                CValueObject(name), m_transponderCode(transponderCode), m_transponderMode(StateStandby)
             {
                 this->setModeAsString(transponderMode);
             }
 
             //! Constructor, code as string
             CTransponder(const QString &name, QString transponderCode, TransponderMode transponderMode) :
-                CValueObjectStdTuple(name), m_transponderCode(0), m_transponderMode(transponderMode)
+                CValueObject(name), m_transponderCode(0), m_transponderMode(transponderMode)
             {
                 bool ok = false;
                 this->m_transponderCode = transponderCode.toUInt(&ok);
@@ -71,7 +71,7 @@ namespace BlackMisc
 
             //! Constructor
             CTransponder(const QString &name, QString transponderCode, QString transponderMode) :
-                CValueObjectStdTuple(name), m_transponderCode(0), m_transponderMode(StateStandby)
+                CValueObject(name), m_transponderCode(0), m_transponderMode(StateStandby)
             {
                 bool ok = false;
                 this->m_transponderCode = transponderCode.toUInt(&ok);

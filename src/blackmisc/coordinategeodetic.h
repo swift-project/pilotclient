@@ -127,7 +127,7 @@ namespace BlackMisc
 
 
         //! Geodetic coordinate
-        class CCoordinateGeodetic : public CValueObjectStdTuple<CCoordinateGeodetic>, public ICoordinateGeodetic
+        class CCoordinateGeodetic : public CValueObject<CCoordinateGeodetic>, public ICoordinateGeodetic
         {
 
         public:

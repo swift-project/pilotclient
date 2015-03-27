@@ -28,7 +28,7 @@ namespace BlackMisc
     class CVariant;
 
     //! \private
-    template <> struct CValueObjectStdTuplePolicy<CVariant> : public CValueObjectStdTuplePolicy<>
+    template <> struct CValueObjectPolicy<CVariant> : public CValueObjectPolicy<>
     {
         using MetaType = Policy::MetaType::QMetaTypeAndDBusOnly;
         using Equals = Policy::Equals::OwnEquals;
@@ -43,17 +43,17 @@ namespace BlackMisc
      * Wrapper around QVariant which provides transparent access to CValueObject methods
      * of the contained object if it is registered with BlackMisc::registerMetaValueType.
      */
-    class CVariant : public CValueObjectStdTuple<CVariant>
+    class CVariant : public CValueObject<CVariant>
     {
     public:
         //! Default constructor.
         CVariant() {}
 
         //! Copy constructor.
-        CVariant(const CVariant &other) : CValueObjectStdTuple(other), m_v(other.m_v) {}
+        CVariant(const CVariant &other) : CValueObject(other), m_v(other.m_v) {}
 
         //! Move constructor.
-        CVariant(CVariant &&other) : CValueObjectStdTuple(std::move(other)), m_v(std::move(other.m_v)) {}
+        CVariant(CVariant &&other) : CValueObject(std::move(other)), m_v(std::move(other.m_v)) {}
 
         //! Construct from a QVariant.
         CVariant(const QVariant &var) : m_v(var) {}

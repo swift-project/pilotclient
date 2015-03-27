@@ -32,7 +32,7 @@ namespace BlackMisc
         /*!
          * Value object encapsulating information about an ATC station.
          */
-        class CAtcStation : public CValueObjectStdTuple<CAtcStation>, public Geo::ICoordinateWithRelativePosition
+        class CAtcStation : public CValueObject<CAtcStation>, public Geo::ICoordinateWithRelativePosition
         {
         public:
             //! Properties by index

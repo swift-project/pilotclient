@@ -26,7 +26,7 @@ namespace BlackMisc
         /*!
          * Value object encapsulating information of a user.
          */
-        class CUser : public CValueObjectStdTuple<CUser>
+        class CUser : public CValueObject<CUser>
         {
         public:
             /*!

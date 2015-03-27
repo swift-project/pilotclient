@@ -19,7 +19,7 @@ namespace BlackMisc
     namespace Math { class CVector3D; }
 
     //! \private
-    template <> struct CValueObjectStdTuplePolicy<Math::CVector3D> : public CValueObjectStdTuplePolicy<>
+    template <> struct CValueObjectPolicy<Math::CVector3D> : public CValueObjectPolicy<>
     {
         using Compare = Policy::Compare::None;
         using Hash = Policy::Hash::Own;
@@ -33,7 +33,7 @@ namespace BlackMisc
         /*!
          * \brief Concrete vector implementation
          */
-        class CVector3D : public CValueObjectStdTuple<CVector3D, CVector3DBase<CVector3D>>
+        class CVector3D : public CValueObject<CVector3D, CVector3DBase<CVector3D>>
         {
         public:
             /*!
@@ -44,12 +44,12 @@ namespace BlackMisc
             /*!
              * \brief Constructor by value
              */
-            CVector3D(double i, double j, double k) : CValueObjectStdTuple(i, j, k) {}
+            CVector3D(double i, double j, double k) : CValueObject(i, j, k) {}
 
             /*!
              * \brief Constructor by value
              */
-            explicit CVector3D(double value) : CValueObjectStdTuple(value) {}
+            explicit CVector3D(double value) : CValueObject(value) {}
 
             /*!
              * \brief i

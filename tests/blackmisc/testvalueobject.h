@@ -22,7 +22,7 @@ namespace BlackMisc
     /*!
      * Value object encapsulating information of a server
      */
-    class CTestValueObject : public BlackMisc::CValueObjectStdTuple<CTestValueObject>
+    class CTestValueObject : public BlackMisc::CValueObject<CTestValueObject>
     {
     public:
         //! Properties by index

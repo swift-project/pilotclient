@@ -25,7 +25,7 @@ namespace BlackMisc
         /*!
          * Another client software.
          */
-        class CClient : public CValueObjectStdTuple<CClient>
+        class CClient : public CValueObject<CClient>
         {
         public:
             //! Properties by index

@@ -18,7 +18,7 @@
 namespace BlackSim
 {
     //! Describing a simulator
-    class CSimulatorInfo : public BlackMisc::CValueObjectStdTuple<CSimulatorInfo>
+    class CSimulatorInfo : public BlackMisc::CValueObject<CSimulatorInfo>
     {
     public:
         //! Default constructor

@@ -21,7 +21,7 @@ namespace BlackMisc
     namespace Hardware
     {
         //! Value object representing a joystick button
-        class CJoystickButton : public CValueObjectStdTuple<CJoystickButton>
+        class CJoystickButton : public CValueObject<CJoystickButton>
         {
         public:
             //! Properties by index

@@ -24,7 +24,7 @@ namespace BlackMisc
      * Property index. The index can be nested, that's why it is a sequence
      * (e.g. PropertyIndexPilot, PropertyIndexRealname).
      */
-    class CPropertyIndex : public CValueObjectStdTuple<CPropertyIndex>
+    class CPropertyIndex : public CValueObject<CPropertyIndex>
     {
         // In the first trial I have used CSequence<int> as base class
         // This has created too much circular dependencies of the headers

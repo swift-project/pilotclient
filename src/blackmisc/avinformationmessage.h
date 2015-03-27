@@ -25,7 +25,7 @@ namespace BlackMisc
          * Value object encapsulating information message.
          * ATIS, METAR, TAF
          */
-        class CInformationMessage : public CValueObjectStdTuple<CInformationMessage>
+        class CInformationMessage : public CValueObject<CInformationMessage>
         {
         public:
             /*!

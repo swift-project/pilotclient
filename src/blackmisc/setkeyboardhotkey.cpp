@@ -65,7 +65,7 @@ namespace BlackMisc
             case IndexKeyAsStringRepresentation:
                 return CVariant::from(m_key.getKeyAsStringRepresentation());
             default:
-                return CValueObjectStdTuple::propertyByIndex(index);
+                return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -106,7 +106,7 @@ namespace BlackMisc
                 this->setObject(variant.value<BlackMisc::Settings::CSettingKeyboardHotkey>());
                 break;
             default:
-                CValueObjectStdTuple::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
         }

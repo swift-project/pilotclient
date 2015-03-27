@@ -20,7 +20,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating information of a callsign.
-        class CAirportIcao : public CValueObjectStdTuple<CAirportIcao>
+        class CAirportIcao : public CValueObject<CAirportIcao>
         {
         public:
             //! Default constructor.

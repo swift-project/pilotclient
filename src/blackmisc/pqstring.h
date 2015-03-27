@@ -26,7 +26,7 @@ namespace BlackMisc
          * \details Used to parse strings into physical quantities, validate strings
          * \sa BlackMisc::PhysicalQuantity
          */
-        class CPqString : public CValueObjectStdTuple<CPqString>
+        class CPqString : public CValueObject<CPqString>
         {
         protected:
             //! \copydoc CValueObject::convertToQString

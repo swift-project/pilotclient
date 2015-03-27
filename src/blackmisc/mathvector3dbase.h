@@ -21,7 +21,7 @@ namespace BlackMisc
     namespace Math { template <class> class CVector3DBase; }
 
     //! \private
-    template <class ImplVector> struct CValueObjectStdTuplePolicy<Math::CVector3DBase<ImplVector>> : public CValueObjectStdTuplePolicy<>
+    template <class ImplVector> struct CValueObjectPolicy<Math::CVector3DBase<ImplVector>> : public CValueObjectPolicy<>
     {
         using Equals = Policy::Equals::None;
         using LessThan = Policy::LessThan::None;
@@ -34,7 +34,7 @@ namespace BlackMisc
         class CMatrix3x1;
 
         //! 3D vector base (x, y, z)
-        template <class ImplVector> class CVector3DBase : public CValueObjectStdTuple<CVector3DBase<ImplVector>>
+        template <class ImplVector> class CVector3DBase : public CValueObject<CVector3DBase<ImplVector>>
         {
         public:
             // getter and setters are implemented in the derived classes

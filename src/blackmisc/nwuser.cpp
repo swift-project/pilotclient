@@ -191,7 +191,7 @@ namespace BlackMisc
             case IndexCallsign:
                 return this->m_callsign.propertyByIndex(index.copyFrontRemoved());
             default:
-                return CValueObjectStdTuple::propertyByIndex(index);
+                return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -224,7 +224,7 @@ namespace BlackMisc
                 this->m_callsign.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             default:
-                CValueObjectStdTuple::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
         }

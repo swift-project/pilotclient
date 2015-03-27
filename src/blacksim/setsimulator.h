@@ -23,7 +23,7 @@ namespace BlackSim
     namespace Settings
     {
         //! Value object encapsulating information of simulator related settings.
-        class CSettingsSimulator : public BlackMisc::CValueObjectStdTuple<CSettingsSimulator>
+        class CSettingsSimulator : public BlackMisc::CValueObject<CSettingsSimulator>
         {
         public:
             //! Default constructor.

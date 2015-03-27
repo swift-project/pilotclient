@@ -26,7 +26,7 @@ namespace BlackMisc
         /*!
          * Value object for a flight plan
          */
-        class CFlightPlan : public CValueObjectStdTuple<CFlightPlan>
+        class CFlightPlan : public CValueObject<CFlightPlan>
         {
         public:
             /*!

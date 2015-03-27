@@ -89,7 +89,7 @@ namespace BlackMisc
             default:
                 return (ICoordinateGeodetic::canHandleIndex(index)) ?
                        ICoordinateGeodetic::propertyByIndex(index) :
-                       CValueObjectStdTuple::propertyByIndex(index);
+                       CValueObject::propertyByIndex(index);
             }
         }
 
@@ -122,7 +122,7 @@ namespace BlackMisc
                 this->m_distanceToOwnAircraft.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             default:
-                CValueObjectStdTuple::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
         }

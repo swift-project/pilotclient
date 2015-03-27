@@ -19,7 +19,7 @@ namespace BlackMisc
     namespace Aviation { class CComSystem; }
 
     //! \private
-    template <> struct CValueObjectStdTuplePolicy<Aviation::CComSystem> : public CValueObjectStdTuplePolicy<>
+    template <> struct CValueObjectPolicy<Aviation::CComSystem> : public CValueObjectPolicy<>
     {
         using LessThan = Policy::LessThan::None;
         using Compare = Policy::Compare::None;
@@ -31,7 +31,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! COM system (aka "radio")
-        class CComSystem : public CValueObjectStdTuple<CComSystem, CModulator<CComSystem>>
+        class CComSystem : public CValueObject<CComSystem, CModulator<CComSystem>>
         {
         public:
             //! Channel spacing frequency
@@ -54,7 +54,7 @@ namespace BlackMisc
 
             //! Constructor
             CComSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet()):
-                CValueObjectStdTuple(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency)
+                CValueObject(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency)
             { }
 
             //! Set active frequency

@@ -19,7 +19,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating information about aircraft's engines
-        class CAircraftEngine : public CValueObjectStdTuple<CAircraftEngine>
+        class CAircraftEngine : public CValueObject<CAircraftEngine>
         {
         public:
 

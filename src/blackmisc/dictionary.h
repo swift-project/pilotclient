@@ -80,12 +80,12 @@ namespace BlackMisc
 
     //! \private
     template <class Key, class Value, template <class...> class Impl>
-    struct CValueObjectStdTuplePolicy<CDictionary<Key, Value, Impl>> : public CValueObjectLegacy
+    struct CValueObjectPolicy<CDictionary<Key, Value, Impl>> : public CValueObjectLegacy
     {};
 
     //! Associative container with value semantics, chooses a sensible default implementation container type
     template<class Key, class Value, template <class...> class Impl /*= AssociativityTraits<Key>::template DefaultType*/>
-    class CDictionary : public CValueObjectStdTuple<CDictionary<Key, Value, Impl>>
+    class CDictionary : public CValueObject<CDictionary<Key, Value, Impl>>
     {
         //! \copydoc BlackMisc::CValueObject::compare
         friend int compare(const CDictionary &a, const CDictionary &b)

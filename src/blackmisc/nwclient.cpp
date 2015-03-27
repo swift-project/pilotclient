@@ -112,7 +112,7 @@ namespace BlackMisc
             case IndexVoiceCapabilitiesString:
                 return CVariant(this->m_voiceCapabilities.toQString(true));
             default:
-                return CValueObjectStdTuple::propertyByIndex(index);
+                return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -148,7 +148,7 @@ namespace BlackMisc
                 this->m_voiceCapabilities.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             default:
-                CValueObjectStdTuple::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
         }

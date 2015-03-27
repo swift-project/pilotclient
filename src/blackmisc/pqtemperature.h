@@ -22,17 +22,17 @@ namespace BlackMisc
         /*!
          * Physical unit temperature
          */
-        class CTemperature : public CValueObjectStdTuple<CTemperature, CPhysicalQuantity<CTemperatureUnit, CTemperature>>
+        class CTemperature : public CValueObject<CTemperature, CPhysicalQuantity<CTemperatureUnit, CTemperature>>
         {
         public:
             //! Default constructor
-            CTemperature() : CValueObjectStdTuple(0, CTemperatureUnit::defaultUnit()) {}
+            CTemperature() : CValueObject(0, CTemperatureUnit::defaultUnit()) {}
 
             //! Init by double value
-            CTemperature(double value, const CTemperatureUnit &unit): CValueObjectStdTuple(value, unit) {}
+            CTemperature(double value, const CTemperatureUnit &unit): CValueObject(value, unit) {}
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CTemperature(const QString &unitString) : CValueObjectStdTuple(unitString) {}
+            CTemperature(const QString &unitString) : CValueObject(unitString) {}
         };
 
     }

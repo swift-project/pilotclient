@@ -24,7 +24,7 @@ namespace BlackMisc
          * \see http://en.wikipedia.org/wiki/SELCAL
          * \see http://www.asri.aero/our-services/selcal/ User Guide
          */
-        class CSelcal : public CValueObjectStdTuple<CSelcal>
+        class CSelcal : public CValueObject<CSelcal>
         {
         public:
             //! Default constructor.

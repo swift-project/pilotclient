@@ -23,7 +23,7 @@ namespace BlackMisc
         /*!
          * Value object encapsulating information about an airpot.
          */
-        class CAirport : public CValueObjectStdTuple<CAirport>, public Geo::ICoordinateWithRelativePosition
+        class CAirport : public CValueObject<CAirport>, public Geo::ICoordinateWithRelativePosition
         {
         public:
             //! Properties by index

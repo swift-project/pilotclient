@@ -30,7 +30,7 @@ namespace BlackMisc
     namespace PhysicalQuantities { class CMeasurementUnit; }
 
     //! \private
-    template <> struct CValueObjectStdTuplePolicy<PhysicalQuantities::CMeasurementUnit> : public CValueObjectStdTuplePolicy<>
+    template <> struct CValueObjectPolicy<PhysicalQuantities::CMeasurementUnit> : public CValueObjectPolicy<>
     {
         using MetaType = Policy::MetaType::DefaultAndQList;
         using Equals = Policy::Equals::None;
@@ -46,7 +46,7 @@ namespace BlackMisc
         /*!
          * Base class for all units, such as meter, hertz.
          */
-        class CMeasurementUnit : public CValueObjectStdTuple<CMeasurementUnit>
+        class CMeasurementUnit : public CValueObject<CMeasurementUnit>
         {
         protected:
             /*!

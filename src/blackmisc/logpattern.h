@@ -23,7 +23,7 @@ namespace BlackMisc
     class CLogPattern;
 
     //! \private
-    template <> struct CValueObjectStdTuplePolicy<CLogPattern> : public CValueObjectStdTuplePolicy<>
+    template <> struct CValueObjectPolicy<CLogPattern> : public CValueObjectPolicy<>
     {
         using LessThan = Policy::LessThan::None;
         using Compare = Policy::Compare::None;
@@ -35,7 +35,7 @@ namespace BlackMisc
     /*!
      * Value class for matching log messages based on their categories.
      */
-    class CLogPattern : public CValueObjectStdTuple<CLogPattern>
+    class CLogPattern : public CValueObject<CLogPattern>
     {
     public:
         //! Default constructed CLogPattern will match any message.

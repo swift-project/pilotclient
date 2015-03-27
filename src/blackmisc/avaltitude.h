@@ -19,7 +19,7 @@ namespace BlackMisc
     namespace Aviation { class CAltitude; }
 
     //! \private
-    template <> struct CValueObjectStdTuplePolicy<Aviation::CAltitude> : public CValueObjectStdTuplePolicy<>
+    template <> struct CValueObjectPolicy<Aviation::CAltitude> : public CValueObjectPolicy<>
     {
         using Equals = Policy::Equals::MetaTuple;
         using Compare = Policy::Compare::MetaTuple;
@@ -34,7 +34,7 @@ namespace BlackMisc
          * Altitude as used in aviation, can be AGL or MSL altitude
          * \remarks Intentionally allowing +/- CLength , and >= / <= CLength.
          */
-        class CAltitude : public CValueObjectStdTuple<CAltitude, PhysicalQuantities::CLength>
+        class CAltitude : public CValueObject<CAltitude, PhysicalQuantities::CLength>
         {
         public:
             /*!
@@ -53,16 +53,16 @@ namespace BlackMisc
 
         public:
             //! Default constructor: 0 Altitude true
-            CAltitude() : CValueObjectStdTuple(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel) {}
+            CAltitude() : CValueObject(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel) {}
 
             //! Constructor
-            CAltitude(double value, ReferenceDatum datum, const BlackMisc::PhysicalQuantities::CLengthUnit &unit) : CValueObjectStdTuple(value, unit), m_datum(datum) {}
+            CAltitude(double value, ReferenceDatum datum, const BlackMisc::PhysicalQuantities::CLengthUnit &unit) : CValueObject(value, unit), m_datum(datum) {}
 
             //! Altitude as string
             CAltitude(const QString &altitudeAsString, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode = BlackMisc::PhysicalQuantities::CPqString::SeparatorsLocale);
 
             //! Constructor by CLength
-            CAltitude(BlackMisc::PhysicalQuantities::CLength altitude, ReferenceDatum datum) : CValueObjectStdTuple(altitude), m_datum(datum) {}
+            CAltitude(BlackMisc::PhysicalQuantities::CLength altitude, ReferenceDatum datum) : CValueObject(altitude), m_datum(datum) {}
 
             //! AGL Above ground level?
             bool isAboveGroundLevel() const { return AboveGround == this->m_datum; }

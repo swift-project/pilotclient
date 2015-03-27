@@ -22,7 +22,7 @@ namespace BlackMisc
     namespace Event
     {
         //! Value object encapsulating a hotkey function for distribution
-        class CEventHotkeyFunction : public CValueObjectStdTuple<CEventHotkeyFunction>
+        class CEventHotkeyFunction : public CValueObject<CEventHotkeyFunction>
         {
         public:
             //! Default constructor.

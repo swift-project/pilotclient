@@ -31,7 +31,7 @@ namespace BlackMisc
     {
         //! Value object encapsulating information of an aircraft
         class CAircraft :
-            public CValueObjectStdTuple<CAircraft>,
+            public CValueObject<CAircraft>,
             public BlackMisc::Geo::ICoordinateWithRelativePosition
         {
         public:

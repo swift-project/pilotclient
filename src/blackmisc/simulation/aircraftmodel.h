@@ -23,7 +23,7 @@ namespace BlackMisc
     {
         //! Aircraft model (other pilot, my models on disk)
         //! \remarks Simulator independent class, supposed to be common denominator
-        class CAircraftModel : public CValueObjectStdTuple<CAircraftModel>
+        class CAircraftModel : public CValueObject<CAircraftModel>
         {
         public:
             //! Model type

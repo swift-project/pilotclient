@@ -106,7 +106,7 @@ namespace BlackSim
             case IndexDescription:
                 return CVariant::from(this->m_description);
             default:
-                return CValueObjectStdTuple::propertyByIndex(index);
+                return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -144,7 +144,7 @@ namespace BlackSim
                 this->setTexture(variant.toQString());
                 break;
             default:
-                CValueObjectStdTuple::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
         }

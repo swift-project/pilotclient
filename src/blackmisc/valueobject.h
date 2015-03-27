@@ -39,8 +39,8 @@ namespace BlackMisc
     class CVariant;
     class CEmpty;
 
-    //! Traits class to test whether a class is derived from CValueObjectStdTuple.
-    //! \todo TemplateIsBaseOf gives incorrect result due to ambiguity if there is more than one specialization of CValueObjectStdTuple which is a base of T.
+    //! Traits class to test whether a class is derived from CValueObject.
+    //! \todo TemplateIsBaseOf gives incorrect result due to ambiguity if there is more than one specialization of CValueObject which is a base of T.
     template <class T>
     using IsValueObject = typename std::is_base_of<CEmpty, T>::type;
 
@@ -63,7 +63,7 @@ namespace BlackMisc
     }
 
     /*!
-     * Default base class for CValueObjectStdTuple.
+     * Default base class for CValueObject.
      */
     class CEmpty
     {
@@ -85,7 +85,7 @@ namespace BlackMisc
 
     protected:
         //! String for QString conversion
-        //! \todo Here because pure virtual. Move to CValueObjectStdTuple when all dynamic polymorphism is removed.
+        //! \todo Here because pure virtual. Move to CValueObject when all dynamic polymorphism is removed.
         virtual QString convertToQString(bool i18n = false) const = 0;
 
         //! Protected default constructor
@@ -105,7 +105,7 @@ namespace BlackMisc
     inline int compare(const CEmpty &, const CEmpty &) { return 0; }
 
     /*!
-     * Terminating base cases for the recursive methods of CValueObjectStdTuple.
+     * Terminating base cases for the recursive methods of CValueObject.
      */
     struct CValueObjectDummyBase
     {
@@ -129,17 +129,17 @@ namespace BlackMisc
     };
 
     /*!
-     * Default policy classes for use by CValueObjectStdTuple.
+     * Default policy classes for use by CValueObject.
      *
      * The default policies are inherited from the policies of the base class. There is a specialization
      * for the terminating case in which the base class is CEmpty.
      *
      * Specialize this template to use non-default policies for a particular derived class.
-     * Due to the void default template parameter, specializations can inherit from CValueObjectStdTuplePolicy<>
+     * Due to the void default template parameter, specializations can inherit from CValueObjectPolicy<>
      * so that only the policies which differ from the default need be specified.
      * Policy classes which can be used are defined in namespace BlackMisc::Policy.
      */
-    template <class Derived = void> struct CValueObjectStdTuplePolicy
+    template <class Derived = void> struct CValueObjectPolicy
     {
         using MetaType = Policy::MetaType::Inherit; //!< Metatype policy
         using Equals = Policy::Equals::Inherit;     //!< Equals policy
@@ -152,11 +152,11 @@ namespace BlackMisc
     };
 
     /*!
-     * Default policy classes for use by CValueObjectStdTuple.
+     * Default policy classes for use by CValueObject.
      *
      * Specialization for the terminating case in which the base class is CEmpty.
      */
-    template <> struct CValueObjectStdTuplePolicy<CEmpty>
+    template <> struct CValueObjectPolicy<CEmpty>
     {
         using MetaType = Policy::MetaType::Default;     //!< Metatype policy
         using Equals = Policy::Equals::MetaTuple;       //!< Equals policy
@@ -169,12 +169,12 @@ namespace BlackMisc
     };
 
     /*!
-     * Policy classes for use by classes with incomplete migration to CValueObjectStdTuple.
+     * Policy classes for use by classes with incomplete migration to new CValueObject.
      *
      * This is to make it easier to apply the necessary changes to these classes for #356.
      * \todo Remove this and finish migrating classes that use it.
      */
-    struct CValueObjectLegacy : public CValueObjectStdTuplePolicy<CEmpty>
+    struct CValueObjectLegacy : public CValueObjectPolicy<CEmpty>
     {
         using Equals = Policy::Equals::None;        //!< Equals policy
         using LessThan = Policy::LessThan::None;    //!< Less than policy
@@ -187,26 +187,26 @@ namespace BlackMisc
     /*!
      * Standard implementation of CValueObject using meta tuple system.
      *
-     * This uses policy-based design. Specialize the class template CValueObjectStdTuplePolicy
+     * This uses policy-based design. Specialize the class template CValueObjectPolicy
      * to specify different policy classes.
      *
      * \tparam Derived  The class which is inheriting from this one (CRTP).
      * \tparam Base     The class which this one shall inherit from (default is CEmpty,
      *                  but this can be changed to create a deeper inheritance hierarchy).
      */
-    template <class Derived, class Base /*= CEmpty*/> class CValueObjectStdTuple :
+    template <class Derived, class Base /*= CEmpty*/> class CValueObject :
         public Base,
-        private CValueObjectStdTuplePolicy<Derived>::Equals::template Ops<Derived, Base>,
-        private CValueObjectStdTuplePolicy<Derived>::LessThan::template Ops<Derived, Base>,
-        private CValueObjectStdTuplePolicy<Derived>::Compare::template Ops<Derived, Base>
+        private CValueObjectPolicy<Derived>::Equals::template Ops<Derived, Base>,
+        private CValueObjectPolicy<Derived>::LessThan::template Ops<Derived, Base>,
+        private CValueObjectPolicy<Derived>::Compare::template Ops<Derived, Base>
     {
-        static_assert(std::is_same<CEmpty, Base>::value || IsValueObject<Base>::value, "Base must be either CEmpty or derived from CValueObjectStdTuple");
+        static_assert(std::is_same<CEmpty, Base>::value || IsValueObject<Base>::value, "Base must be either CEmpty or derived from CValueObject");
 
-        using MetaTypePolicy = typename CValueObjectStdTuplePolicy<Derived>::MetaType;
-        using HashPolicy = typename CValueObjectStdTuplePolicy<Derived>::Hash;
-        using DBusPolicy = typename CValueObjectStdTuplePolicy<Derived>::DBus;
-        using JsonPolicy = typename CValueObjectStdTuplePolicy<Derived>::Json;
-        using PropertyIndexPolicy = typename CValueObjectStdTuplePolicy<Derived>::PropertyIndex;
+        using MetaTypePolicy = typename CValueObjectPolicy<Derived>::MetaType;
+        using HashPolicy = typename CValueObjectPolicy<Derived>::Hash;
+        using DBusPolicy = typename CValueObjectPolicy<Derived>::DBus;
+        using JsonPolicy = typename CValueObjectPolicy<Derived>::Json;
+        using PropertyIndexPolicy = typename CValueObjectPolicy<Derived>::PropertyIndex;
 
         using BaseOrDummy = typename std::conditional<std::is_same<Base, CEmpty>::value, CValueObjectDummyBase, Base>::type;
 
@@ -249,7 +249,7 @@ namespace BlackMisc
         friend const QDBusArgument &operator>>(const QDBusArgument &arg, Derived &obj)
         {
             arg.beginStructure();
-            static_cast<CValueObjectStdTuple &>(obj).unmarshallFromDbus(arg); // virtual method is protected in Derived
+            static_cast<CValueObject &>(obj).unmarshallFromDbus(arg); // virtual method is protected in Derived
             arg.endStructure();
             return arg;
         }
@@ -258,7 +258,7 @@ namespace BlackMisc
         friend QDBusArgument &operator<<(QDBusArgument &arg, const Derived &obj)
         {
             arg.beginStructure();
-            static_cast<const CValueObjectStdTuple &>(obj).marshallToDbus(arg); // virtual method is protected in Derived
+            static_cast<const CValueObject &>(obj).marshallToDbus(arg); // virtual method is protected in Derived
             arg.endStructure();
             return arg;
         }
@@ -309,7 +309,7 @@ namespace BlackMisc
         using base_type = Base;
 
         //! Destructor
-        virtual ~CValueObjectStdTuple() {}
+        virtual ~CValueObject() {}
 
         //! Base class enums
         enum ColumnIndex
@@ -393,18 +393,18 @@ namespace BlackMisc
         friend struct Private::CValueObjectMetaInfo;
 
         //! Default constructor.
-        CValueObjectStdTuple() = default;
+        CValueObject() = default;
 
         //! Template constructor, forwards all arguments to base class constructor.
         //! \todo When our compilers support C++11 inheriting constructors, use those instead.
-        template <typename T, typename... Ts, typename = typename std::enable_if<! std::is_same<CValueObjectStdTuple, typename std::decay<T>::type>::value>::type>
-        CValueObjectStdTuple(T &&first, Ts &&... args) : Base(std::forward<T>(first), std::forward<Ts>(args)...) {}
+        template <typename T, typename... Ts, typename = typename std::enable_if<! std::is_same<CValueObject, typename std::decay<T>::type>::value>::type>
+        CValueObject(T &&first, Ts &&... args) : Base(std::forward<T>(first), std::forward<Ts>(args)...) {}
 
         //! Copy constructor.
-        CValueObjectStdTuple(const CValueObjectStdTuple &) = default;
+        CValueObject(const CValueObject &) = default;
 
         //! Copy assignment operator.
-        CValueObjectStdTuple &operator =(const CValueObjectStdTuple &) = default;
+        CValueObject &operator =(const CValueObject &) = default;
 
         //! String for streaming operators
         virtual QString stringForStreaming() const { return this->convertToQString(); }
@@ -456,7 +456,7 @@ namespace BlackMisc
 
 } // namespace
 
-// TODO Includes due to cyclic dependencies can be removed when CValueObjectStdTuple is split into parts along policy boundaries.
+// TODO Includes due to cyclic dependencies can be removed when CValueObject is split into parts along policy boundaries.
 #include "variant.h"
 #include "propertyindex.h"
 #include "propertyindexlist.h"
@@ -466,24 +466,24 @@ namespace BlackMisc
 namespace BlackMisc
 {
     template <class Derived, class Base>
-    CVariant CValueObjectStdTuple<Derived, Base>::toCVariant() const
+    CVariant CValueObject<Derived, Base>::toCVariant() const
     {
         return CVariant(this->toQVariant());
     }
     template <class Derived, class Base>
-    void CValueObjectStdTuple<Derived, Base>::convertFromCVariant(const CVariant &variant)
+    void CValueObject<Derived, Base>::convertFromCVariant(const CVariant &variant)
     {
         this->convertFromQVariant(variant.getQVariant());
     }
     template <class Derived, class Base>
-    CPropertyIndexList CValueObjectStdTuple<Derived, Base>::apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues)
+    CPropertyIndexList CValueObject<Derived, Base>::apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues)
     {
         CPropertyIndexList result;
         PropertyIndexPolicy::apply(*derived(), indexMap, result, skipEqualValues);
         return result;
     }
     template <class Derived, class Base>
-    CVariant CValueObjectStdTuple<Derived, Base>::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+    CVariant CValueObject<Derived, Base>::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
     {
         CVariant result;
         PropertyIndexPolicy::propertyByIndex(*derived(), index, result);
@@ -533,7 +533,7 @@ namespace BlackMisc
                     o_property = obj.toCVariant();
                     return;
                 }
-                using Base = CValueObjectStdTuple<T, typename T::base_type>;
+                using Base = CValueObject<T, typename T::base_type>;
                 auto i = index.frontCasted<typename Base::ColumnIndex>();
                 switch (i)
                 {

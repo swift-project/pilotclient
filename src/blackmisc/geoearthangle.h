@@ -21,7 +21,7 @@ namespace BlackMisc
         /*!
          * Base class for latitude / longitude
          */
-        template <class LATorLON> class CEarthAngle : public CValueObjectStdTuple<CEarthAngle<LATorLON>, PhysicalQuantities::CAngle>
+        template <class LATorLON> class CEarthAngle : public CValueObject<CEarthAngle<LATorLON>, PhysicalQuantities::CAngle>
         {
         public:
             //! Plus operator +=
@@ -105,13 +105,13 @@ namespace BlackMisc
 
         protected:
             //! Default constructor
-            CEarthAngle() : CEarthAngle::CValueObjectStdTuple(0.0, BlackMisc::PhysicalQuantities::CAngleUnit::deg()) {}
+            CEarthAngle() : CEarthAngle::CValueObject(0.0, BlackMisc::PhysicalQuantities::CAngleUnit::deg()) {}
 
             //! Init by double value
-            CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle::CValueObjectStdTuple(value, unit) {}
+            CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle::CValueObject(value, unit) {}
 
             //! Init by CAngle value
-            CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle::CValueObjectStdTuple(angle) {}
+            CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle::CValueObject(angle) {}
 
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override

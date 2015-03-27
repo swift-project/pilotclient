@@ -21,7 +21,7 @@ namespace BlackMisc
     namespace Network
     {
         //! Mapping
-        class CAircraftMapping : public CValueObjectStdTuple<CAircraftMapping>
+        class CAircraftMapping : public CValueObject<CAircraftMapping>
         {
 
         protected:

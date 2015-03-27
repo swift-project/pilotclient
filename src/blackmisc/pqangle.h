@@ -20,24 +20,24 @@ namespace BlackMisc
     namespace PhysicalQuantities
     {
         //! Physical unit angle (radians, degrees)
-        class CAngle : public CValueObjectStdTuple<CAngle, CPhysicalQuantity<CAngleUnit, CAngle>>
+        class CAngle : public CValueObject<CAngle, CPhysicalQuantity<CAngleUnit, CAngle>>
         {
         public:
             //! Default constructor
-            CAngle() : CValueObjectStdTuple(0, CAngleUnit::defaultUnit()) {}
+            CAngle() : CValueObject(0, CAngleUnit::defaultUnit()) {}
 
             //! Init by double value
-            CAngle(double value, const CAngleUnit &unit): CValueObjectStdTuple(value, unit) {}
+            CAngle(double value, const CAngleUnit &unit): CValueObject(value, unit) {}
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CAngle(const QString &unitString) : CValueObjectStdTuple(unitString) {}
+            CAngle(const QString &unitString) : CValueObject(unitString) {}
 
             /*!
              * \brief Init as sexagesimal degrees, minutes, seconds
              * The sign of all parameters must be the same, either all positive or all negative.
              */
             CAngle(int degrees, int minutes, double seconds) :
-                CValueObjectStdTuple(
+                CValueObject(
                     degrees + minutes / 100.0 + seconds / 10000.0,
                     CAngleUnit::sexagesimalDeg()) {}
 
@@ -46,7 +46,7 @@ namespace BlackMisc
              * The sign of both parameters must be the same, either both positive or both negative.
              */
             CAngle(int degrees, double minutes) :
-                CValueObjectStdTuple(
+                CValueObject(
                     degrees + minutes / 100.0,
                     CAngleUnit::sexagesimalDegMin()) {}
 

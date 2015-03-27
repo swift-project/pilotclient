@@ -23,7 +23,7 @@ namespace BlackMisc
         /*!
          * Value object encapsulating information of a voice room
          */
-        class CVoiceRoom : public CValueObjectStdTuple<CVoiceRoom>
+        class CVoiceRoom : public CValueObject<CVoiceRoom>
         {
         public:
             //! Properties by index

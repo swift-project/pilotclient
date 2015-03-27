@@ -18,7 +18,7 @@ namespace BlackMisc
     namespace Math { template <class, int, int> class CMatrixBase; }
 
     //! \private
-    template <class ImplMatrix, int Rows, int Columns> struct CValueObjectStdTuplePolicy<Math::CMatrixBase<ImplMatrix, Rows, Columns>> : public CValueObjectStdTuplePolicy<>
+    template <class ImplMatrix, int Rows, int Columns> struct CValueObjectPolicy<Math::CMatrixBase<ImplMatrix, Rows, Columns>> : public CValueObjectPolicy<>
     {
         using Equals = Policy::Equals::None;
         using LessThan = Policy::LessThan::None;
@@ -34,7 +34,7 @@ namespace BlackMisc
         /*!
          * \brief Base functionality of a matrix
          */
-        template<class ImplMatrix, int Rows, int Columns> class CMatrixBase : public CValueObjectStdTuple<CMatrixBase<ImplMatrix, Rows, Columns>>
+        template<class ImplMatrix, int Rows, int Columns> class CMatrixBase : public CValueObject<CMatrixBase<ImplMatrix, Rows, Columns>>
         {
             //! \copydoc CValueObject::compare
             friend int compare(const ImplMatrix &a, const ImplMatrix &b) { return compareImpl(a, b); }

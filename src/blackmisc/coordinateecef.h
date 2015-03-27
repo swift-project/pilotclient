@@ -15,7 +15,7 @@ namespace BlackMisc
     namespace Geo { class CCoordinateEcef; }
 
     //! \private
-    template <> struct CValueObjectStdTuplePolicy<Geo::CCoordinateEcef> : public CValueObjectStdTuplePolicy<>
+    template <> struct CValueObjectPolicy<Geo::CCoordinateEcef> : public CValueObjectPolicy<>
     {
         using Compare = Policy::Compare::None;
         using Hash = Policy::Hash::Own;
@@ -29,7 +29,7 @@ namespace BlackMisc
         /*!
          * \brief Earth centered, earth fixed position
          */
-        class CCoordinateEcef : public CValueObjectStdTuple<CCoordinateEcef, Math::CVector3DBase<CCoordinateEcef>>
+        class CCoordinateEcef : public CValueObject<CCoordinateEcef, Math::CVector3DBase<CCoordinateEcef>>
         {
         public:
             /*!
@@ -40,12 +40,12 @@ namespace BlackMisc
             /*!
              * \brief Constructor by values
              */
-            CCoordinateEcef(double x, double y, double z) : CValueObjectStdTuple(x, y, z) {}
+            CCoordinateEcef(double x, double y, double z) : CValueObject(x, y, z) {}
 
             /*!
              * \brief Constructor by math vector
              */
-            explicit CCoordinateEcef(const BlackMisc::Math::CVector3D vector) : CValueObjectStdTuple(vector.i(), vector.j(), vector.k()) {}
+            explicit CCoordinateEcef(const BlackMisc::Math::CVector3D vector) : CValueObject(vector.i(), vector.j(), vector.k()) {}
 
             //! \brief x
             double x() const

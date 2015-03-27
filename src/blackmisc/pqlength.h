@@ -20,17 +20,17 @@ namespace BlackMisc
     {
 
         //! Physical unit length (length)
-        class CLength : public CValueObjectStdTuple<CLength, CPhysicalQuantity<CLengthUnit, CLength>>
+        class CLength : public CValueObject<CLength, CPhysicalQuantity<CLengthUnit, CLength>>
         {
         public:
             //! Default constructor
-            CLength() : CValueObjectStdTuple(0, CLengthUnit::defaultUnit()) {}
+            CLength() : CValueObject(0, CLengthUnit::defaultUnit()) {}
 
             //! Init by double value
-            CLength(double value, const CLengthUnit &unit) : CValueObjectStdTuple(value, unit) {}
+            CLength(double value, const CLengthUnit &unit) : CValueObject(value, unit) {}
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CLength(const QString &unitString) : CValueObjectStdTuple(unitString) {}
+            CLength(const QString &unitString) : CValueObject(unitString) {}
         };
 
     }

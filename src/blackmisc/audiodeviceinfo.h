@@ -25,7 +25,7 @@ namespace BlackMisc
          * If you want to safe this object, use the name instead of the index, since the index can change after
          * a restart.
          */
-        class CAudioDeviceInfo : public CValueObjectStdTuple<CAudioDeviceInfo>
+        class CAudioDeviceInfo : public CValueObject<CAudioDeviceInfo>
         {
         public:
             //! Type

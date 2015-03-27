@@ -22,7 +22,7 @@ namespace BlackMisc
     {
         //! Comprehensive information of an aircraft
         //! \sa CAircraft
-        class CSimulatedAircraft : public CValueObjectStdTuple<CSimulatedAircraft, BlackMisc::Aviation::CAircraft>
+        class CSimulatedAircraft : public CValueObject<CSimulatedAircraft, BlackMisc::Aviation::CAircraft>
         {
         public:
             //! Properties by index

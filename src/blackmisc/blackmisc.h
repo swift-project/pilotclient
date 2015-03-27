@@ -70,7 +70,7 @@
 
 /*!
  * \namespace BlackMisc::Policy
- * \brief Policy classes for CValueObjectStdTuple.
+ * \brief Policy classes for CValueObject.
  */
 
 /*!

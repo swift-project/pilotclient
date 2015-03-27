@@ -21,7 +21,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating information of a callsign.
-        class CCallsign : public CValueObjectStdTuple<CCallsign>
+        class CCallsign : public CValueObject<CCallsign>
         {
         public:
             //! Indexes

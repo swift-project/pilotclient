@@ -18,7 +18,7 @@ namespace BlackMisc
     {
 
         //! \brief Base class for avionics
-        class CAvionicsBase : public CValueObjectStdTuple<CAvionicsBase>
+        class CAvionicsBase : public CValueObject<CAvionicsBase>
         {
         protected:
             QString m_name; //!< name of the unit

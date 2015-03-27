@@ -22,7 +22,7 @@ namespace BlackMisc
     namespace Hardware
     {
         //! Value object representing a keyboard key.
-        class CKeyboardKey : public CValueObjectStdTuple<CKeyboardKey>
+        class CKeyboardKey : public CValueObject<CKeyboardKey>
         {
         public:
             //! Properties by index

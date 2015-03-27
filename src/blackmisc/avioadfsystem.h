@@ -20,7 +20,7 @@ namespace BlackMisc
     namespace Aviation { class CAdfSystem; }
 
     //! \private
-    template <> struct CValueObjectStdTuplePolicy<Aviation::CAdfSystem> : public CValueObjectStdTuplePolicy<>
+    template <> struct CValueObjectPolicy<Aviation::CAdfSystem> : public CValueObjectPolicy<>
     {
         using MetaType = Policy::MetaType::Default;
         using Equals = Policy::Equals::None;
@@ -37,7 +37,7 @@ namespace BlackMisc
         /*!
          * ADF system ("for NDBs")
          */
-        class CAdfSystem : public CValueObjectStdTuple<CAdfSystem, CModulator<CAdfSystem>>
+        class CAdfSystem : public CValueObject<CAdfSystem, CModulator<CAdfSystem>>
         {
         public:
             //! Default constructor
@@ -45,7 +45,7 @@ namespace BlackMisc
 
             //! Constructor
             CAdfSystem(const QString &name, const PhysicalQuantities::CFrequency &activeFrequency, const PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet()):
-                CValueObjectStdTuple(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency)
+                CValueObject(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency)
             { }
 
             //! Valid aviation frequency?

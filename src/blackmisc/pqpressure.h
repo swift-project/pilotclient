@@ -22,17 +22,17 @@ namespace BlackMisc
         /*!
          * Physical unit distance
          */
-        class CPressure : public CValueObjectStdTuple<CPressure, CPhysicalQuantity<CPressureUnit, CPressure>>
+        class CPressure : public CValueObject<CPressure, CPhysicalQuantity<CPressureUnit, CPressure>>
         {
         public:
             //! Default constructor
-            CPressure() : CValueObjectStdTuple(0, CPressureUnit::defaultUnit()) {}
+            CPressure() : CValueObject(0, CPressureUnit::defaultUnit()) {}
 
             //! Init by double value
-            CPressure(double value, const CPressureUnit &unit) : CValueObjectStdTuple(value, unit) {}
+            CPressure(double value, const CPressureUnit &unit) : CValueObject(value, unit) {}
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CPressure(const QString &unitString) : CValueObjectStdTuple(unitString) {}
+            CPressure(const QString &unitString) : CValueObject(unitString) {}
         };
 
     }

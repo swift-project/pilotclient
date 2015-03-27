@@ -27,7 +27,7 @@ namespace BlackMisc
          * Value object encapsulating information of a text message
          */
         class CTextMessage :
-            public CValueObjectStdTuple<CTextMessage>,
+            public CValueObject<CTextMessage>,
             public BlackMisc::ITimestampBased
         {
         public:

@@ -30,13 +30,13 @@ namespace BlackMisc
     class CPropertyIndexVariantMap;
 
     //! \private
-    template <> struct CValueObjectStdTuplePolicy<CPropertyIndexVariantMap> : public CValueObjectLegacy {};
+    template <> struct CValueObjectPolicy<CPropertyIndexVariantMap> : public CValueObjectLegacy {};
 
     /*!
      * Specialized value object compliant map for variants,
      * based on indexes
      */
-    class CPropertyIndexVariantMap : public CValueObjectStdTuple<CPropertyIndexVariantMap>
+    class CPropertyIndexVariantMap : public CValueObject<CPropertyIndexVariantMap>
     {
 
     public:

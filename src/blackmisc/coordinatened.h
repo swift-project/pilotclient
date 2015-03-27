@@ -20,7 +20,7 @@ namespace BlackMisc
         /*!
          * \brief North, East, Down
          */
-        class CCoordinateNed : public CValueObjectStdTuple<CCoordinateNed, Math::CVector3DBase<CCoordinateNed>>
+        class CCoordinateNed : public CValueObject<CCoordinateNed, Math::CVector3DBase<CCoordinateNed>>
         {
         protected:
             //! \copydoc CValueObject::convertToQString
@@ -48,22 +48,22 @@ namespace BlackMisc
             /*!
              * \brief Constructor by values
              */
-            CCoordinateNed(const CCoordinateGeodetic &referencePosition, double north, double east, double down) : CValueObjectStdTuple(north, east, down), m_referencePosition(referencePosition), m_hasReferencePosition(true) {}
+            CCoordinateNed(const CCoordinateGeodetic &referencePosition, double north, double east, double down) : CValueObject(north, east, down), m_referencePosition(referencePosition), m_hasReferencePosition(true) {}
 
             /*!
              * \brief Constructor by values
              */
-            CCoordinateNed(double north, double east, double down) : CValueObjectStdTuple(north, east, down), m_referencePosition(), m_hasReferencePosition(false) {}
+            CCoordinateNed(double north, double east, double down) : CValueObject(north, east, down), m_referencePosition(), m_hasReferencePosition(false) {}
 
             /*!
              * \brief Constructor by math vector
              */
-            explicit CCoordinateNed(const BlackMisc::Math::CVector3D &vector) : CValueObjectStdTuple(vector.i(), vector.j(), vector.k()), m_referencePosition(), m_hasReferencePosition(false) {}
+            explicit CCoordinateNed(const BlackMisc::Math::CVector3D &vector) : CValueObject(vector.i(), vector.j(), vector.k()), m_referencePosition(), m_hasReferencePosition(false) {}
 
             /*!
              * \brief Constructor by math vector and reference position
              */
-            CCoordinateNed(const CCoordinateGeodetic &referencePosition, const BlackMisc::Math::CVector3D &vector) : CValueObjectStdTuple(vector.i(), vector.j(), vector.k()), m_referencePosition(referencePosition), m_hasReferencePosition(true) {}
+            CCoordinateNed(const CCoordinateGeodetic &referencePosition, const BlackMisc::Math::CVector3D &vector) : CValueObject(vector.i(), vector.j(), vector.k()), m_referencePosition(referencePosition), m_hasReferencePosition(true) {}
 
             /*!
              * \brief Corresponding reference position

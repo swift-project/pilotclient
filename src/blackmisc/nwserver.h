@@ -23,7 +23,7 @@ namespace BlackMisc
         /*!
          * Value object encapsulating information of a server
          */
-        class CServer : public CValueObjectStdTuple<CServer>
+        class CServer : public CValueObject<CServer>
         {
         public:
             //! Properties by index

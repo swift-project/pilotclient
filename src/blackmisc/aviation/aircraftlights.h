@@ -20,7 +20,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating information about aircraft's lights
-        class CAircraftLights : public CValueObjectStdTuple<CAircraftLights>
+        class CAircraftLights : public CValueObject<CAircraftLights>
         {
         public:
             //! Properties by index

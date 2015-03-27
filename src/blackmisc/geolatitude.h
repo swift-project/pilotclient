@@ -21,7 +21,7 @@ namespace BlackMisc
     {
 
         //! Latitude
-        class CLatitude : public CValueObjectStdTuple<CLatitude, CEarthAngle<CLatitude>>
+        class CLatitude : public CValueObject<CLatitude, CEarthAngle<CLatitude>>
         {
         protected:
             //! \copydoc CValueObject::convertToQString
@@ -40,10 +40,10 @@ namespace BlackMisc
             CLatitude() = default;
 
             //! Constructor
-            explicit CLatitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CValueObjectStdTuple(angle) {}
+            explicit CLatitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CValueObject(angle) {}
 
             //! Init by double value
-            CLatitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CValueObjectStdTuple(value, unit) {}
+            CLatitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CValueObject(value, unit) {}
         };
 
     }

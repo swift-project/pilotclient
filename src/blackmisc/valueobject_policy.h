@@ -23,7 +23,7 @@ namespace BlackMisc
     class CPropertyIndexVariantMap;
 
     template <class>
-    struct CValueObjectStdTuplePolicy;
+    struct CValueObjectPolicy;
 
     template <typename T>
     void registerMetaValueType();
@@ -34,7 +34,7 @@ namespace BlackMisc
         {
             //! \private Alias for the policy of the base class of T
             template <class T>
-            using Inherit = CValueObjectStdTuplePolicy<typename T::base_type>;
+            using Inherit = CValueObjectPolicy<typename T::base_type>;
 
             //! \private
             using BlackMisc::Private::EncapsulationBreaker;
@@ -42,7 +42,7 @@ namespace BlackMisc
 
         namespace MetaType
         {
-            //! CValueObjectStdTuple registerMetadata policy which only registers with QMetaType and QtDBus
+            //! CValueObject registerMetadata policy which only registers with QMetaType and QtDBus
             struct QMetaTypeAndDBusOnly
             {
                 //! Register with QMetaType
@@ -50,7 +50,7 @@ namespace BlackMisc
                 static void registerImpl() { qRegisterMetaType<T>(); qDBusRegisterMetaType<T>(); }
             };
 
-            //! CValueObjectStdTuple default registerMetadata policy
+            //! CValueObject default registerMetadata policy
             struct Default
             {
                 //! Register with QMetaType
@@ -66,7 +66,7 @@ namespace BlackMisc
                 static void maybeRegisterMetaValueType(std::false_type) {}
             };
 
-            //! CValueObjectStdTuple registerMetadata policy which inherits the policy of the base class
+            //! CValueObject registerMetadata policy which inherits the policy of the base class
             struct Inherit
             {
                 //! Register with QMetaType
@@ -74,7 +74,7 @@ namespace BlackMisc
                 static void registerImpl() { Private::Inherit<Base>::MetaType::template registerImpl<T, typename Base::base_type>(); }
             };
 
-            //! CValueObjectStdTuple registerMetadata policy which also registers QList<T>
+            //! CValueObject registerMetadata policy which also registers QList<T>
             struct DefaultAndQList
             {
                 //! Register with QMetaType
@@ -85,7 +85,7 @@ namespace BlackMisc
 
         namespace Equals
         {
-            //! CValueObjectStdTuple policy for a class which should not have an equals operator
+            //! CValueObject policy for a class which should not have an equals operator
             struct None
             {
                 //! Inner class template which actually bestows the operators via the Barton-Nackman trick
@@ -93,15 +93,15 @@ namespace BlackMisc
                 struct Ops {};
             };
 
-            //! CValueObjectStdTuple equals operator policy which inherits the policy of the base class
+            //! CValueObject equals operator policy which inherits the policy of the base class
             struct Inherit
             {
                 //! Inner class template which actually bestows the operators via the Barton-Nackman trick
                 template <class T, class Base>
-                struct Ops : public CValueObjectStdTuplePolicy<Base>::Equals::template Ops<T, typename Base::base_type> {};
+                struct Ops : public CValueObjectPolicy<Base>::Equals::template Ops<T, typename Base::base_type> {};
             };
 
-            //! CValueObjectStdTuple policy for a class whose meta tuple members can be compared by the equals operator
+            //! CValueObject policy for a class whose meta tuple members can be compared by the equals operator
             struct MetaTuple
             {
                 //! Inner class template which actually bestows the operators via the Barton-Nackman trick
@@ -135,7 +135,7 @@ namespace BlackMisc
 
         namespace LessThan
         {
-            //! CValueObjectStdTuple policy for a class which should not have a less than operator
+            //! CValueObject policy for a class which should not have a less than operator
             struct None
             {
                 //! Inner class template which actually bestows the operators via the Barton-Nackman trick
@@ -143,15 +143,15 @@ namespace BlackMisc
                 struct Ops {};
             };
 
-            //! CValueObjectStdTuple less than operator policy which inherits the policy of the base class
+            //! CValueObject less than operator policy which inherits the policy of the base class
             struct Inherit
             {
                 //! Inner class template which actually bestows the operators via the Barton-Nackman trick
                 template <class T, class Base>
-                struct Ops : public CValueObjectStdTuplePolicy<Base>::LessThan::template Ops<T, typename Base::base_type> {};
+                struct Ops : public CValueObjectPolicy<Base>::LessThan::template Ops<T, typename Base::base_type> {};
             };
 
-            //! CValueObjectStdTuple policy for a class whose meta tuple members can be compared by the less than operator
+            //! CValueObject policy for a class whose meta tuple members can be compared by the less than operator
             struct MetaTuple
             {
                 //! Inner class template which actually bestows the operators via the Barton-Nackman trick
@@ -193,7 +193,7 @@ namespace BlackMisc
 
         namespace Compare
         {
-            //! CValueObjectStdTuple policy for a class without compare() support
+            //! CValueObject policy for a class without compare() support
             struct None
             {
                 //! Inner class template which actually bestows the friend function via the Barton-Nackman trick
@@ -201,15 +201,15 @@ namespace BlackMisc
                 struct Ops {};
             };
 
-            //! CValueObjectStdTuple compare() policy which inherits the policy of the base class
+            //! CValueObject compare() policy which inherits the policy of the base class
             struct Inherit
             {
                 //! Inner class template which actually bestows the operators via the Barton-Nackman trick
                 template <class T, class Base>
-                struct Ops : public CValueObjectStdTuplePolicy<Base>::Compare::template Ops<T, typename Base::base_type> {};
+                struct Ops : public CValueObjectPolicy<Base>::Compare::template Ops<T, typename Base::base_type> {};
             };
 
-            //! CValueObjectStdTuple policy for a class with default metatuple-based compare() support
+            //! CValueObject policy for a class with default metatuple-based compare() support
             struct MetaTuple
             {
                 //! Inner class template which actually bestows the operators via the Barton-Nackman trick
@@ -225,7 +225,7 @@ namespace BlackMisc
                 };
             };
 
-            //! CValueObjectStdTuple policy for a class which implements compare() in terms of the less than operator
+            //! CValueObject policy for a class which implements compare() in terms of the less than operator
             struct LessThan
             {
                 //! Inner class template which actually bestows the operators via the Barton-Nackman trick
@@ -245,7 +245,7 @@ namespace BlackMisc
 
         namespace Hash
         {
-            //! CValueObjectStdTuple policy for a class without hashing support
+            //! CValueObject policy for a class without hashing support
             struct None
             {
                 //! \copydoc BlackMisc::CValueObject::getHashValue
@@ -253,7 +253,7 @@ namespace BlackMisc
                 static uint hashImpl(const T &) { qFatal("Not implemented"); return 0; }
             };
 
-            //! CValueObjectStdTuple hashing policy which inherits the policy of the base class
+            //! CValueObject hashing policy which inherits the policy of the base class
             struct Inherit
             {
                 //! \copydoc BlackMisc::CValueObject::getHashValue
@@ -261,7 +261,7 @@ namespace BlackMisc
                 static uint hashImpl(const T &obj) { return Private::Inherit<Base>::Hash::template hashImpl<T, typename Base::base_type>(obj); }
             };
 
-            //! CValueObjectStdTuple policy for a class with default metatuple-based hashing support
+            //! CValueObject policy for a class with default metatuple-based hashing support
             struct MetaTuple : private Private::EncapsulationBreaker
             {
                 //! \copydoc BlackMisc::CValueObject::getHashValue
@@ -269,7 +269,7 @@ namespace BlackMisc
                 static uint hashImpl(const T &obj) { return qHash(Private::EncapsulationBreaker::toMetaTuple(obj)); }
             };
 
-            //! CValueObjectStdTuple policy for a class which implements its own custom hashing support
+            //! CValueObject policy for a class which implements its own custom hashing support
             struct Own
             {
                 //! \copydoc BlackMisc::CValueObject::getHashValue
@@ -280,7 +280,7 @@ namespace BlackMisc
 
         namespace DBus
         {
-            //! CValueObjectStdTuple policy for a class without DBus marshalling support
+            //! CValueObject policy for a class without DBus marshalling support
             struct None
             {
                 //! \copydoc BlackMisc::CValueObject::marshallToDbus
@@ -292,7 +292,7 @@ namespace BlackMisc
                 static void unmarshallImpl(const QDBusArgument &, T &) { qFatal("Not implemented"); }
             };
 
-            //! CValueObjectStdTuple marshalling policy which inherits the policy of the base class
+            //! CValueObject marshalling policy which inherits the policy of the base class
             struct Inherit
             {
                 //! \copydoc BlackMisc::CValueObject::marshallToDbus
@@ -304,7 +304,7 @@ namespace BlackMisc
                 static void unmarshallImpl(const QDBusArgument &arg, T &obj) { return Private::Inherit<Base>::DBus::template unmarshallImpl<T, typename Base::base_type>(arg, obj); }
             };
 
-            //! CValueObjectStdTuple policy for a class with default metatuple-based DBus marshalling support
+            //! CValueObject policy for a class with default metatuple-based DBus marshalling support
             struct MetaTuple : private Private::EncapsulationBreaker
             {
                 //! \copydoc BlackMisc::CValueObject::marshallToDbus
@@ -316,7 +316,7 @@ namespace BlackMisc
                 static void unmarshallImpl(const QDBusArgument &arg, T &obj) { arg >> Private::EncapsulationBreaker::toMetaTuple(obj); }
             };
 
-            //! CValueObjectStdTuple policy for a class which implements its own custom DBus marshalling support
+            //! CValueObject policy for a class which implements its own custom DBus marshalling support
             struct Own
             {
                 //! \copydoc BlackMisc::CValueObject::marshallToDbus
@@ -331,7 +331,7 @@ namespace BlackMisc
 
         namespace Json
         {
-            //! CValueObjectStdTuple policy for a class without JSON support
+            //! CValueObject policy for a class without JSON support
             struct None
             {
                 //! \copydoc BlackMisc::serializeJson
@@ -343,7 +343,7 @@ namespace BlackMisc
                 static void deserializeImpl(const QJsonObject &, T &) { qFatal("Not implemented"); }
             };
 
-            //! CValueObjectStdTuple JSON policy which inherits the policy of the base class
+            //! CValueObject JSON policy which inherits the policy of the base class
             struct Inherit
             {
                 //! \copydoc BlackMisc::serializeJson
@@ -355,7 +355,7 @@ namespace BlackMisc
                 static void deserializeImpl(const QJsonObject &json, T &obj) { Private::Inherit<Base>::Json::template deserializeImpl<T, typename Base::base_type>(json, obj); }
             };
 
-            //! CValueObjectStdTuple policy for a class with default metatuple-based JSON support
+            //! CValueObject policy for a class with default metatuple-based JSON support
             struct MetaTuple : private Private::EncapsulationBreaker
             {
                 //! \copydoc BlackMisc::serializeJson
@@ -367,7 +367,7 @@ namespace BlackMisc
                 static void deserializeImpl(const QJsonObject &json, T &obj) { BlackMisc::deserializeJson(json, Private::EncapsulationBreaker::toMetaTuple(obj)); }
             };
 
-            //! CValueObjectStdTuple policy for a class which implements its own custom JSON support
+            //! CValueObject policy for a class which implements its own custom JSON support
             struct Own
             {
                 //! \copydoc BlackMisc::serializeJson
@@ -382,7 +382,7 @@ namespace BlackMisc
 
         namespace PropertyIndex
         {
-            //! CValueObjectStdTuple policy for PropertyIndex related methods
+            //! CValueObject policy for PropertyIndex related methods
             struct Default
             {
                 //! \private
@@ -393,7 +393,7 @@ namespace BlackMisc
                 template <class T>
                 using DisableIfEmptyBase = typename std::enable_if<! std::is_same<typename T::base_type, CEmpty>::value>::type *;
 
-                //! \copydoc CValueObjectStdTuple::apply
+                //! \copydoc CValueObject::apply
                 //! @{
                 template <class T, class...>
                 static void apply(T &obj, const CPropertyIndexVariantMap &indexMap, CPropertyIndexList &o_changed, bool skipEqualValues, DisableIfEmptyBase<T> = nullptr) { o_changed = obj.T::base_type::apply(indexMap, skipEqualValues); }
@@ -401,7 +401,7 @@ namespace BlackMisc
                 static void apply(T &obj, const CPropertyIndexVariantMap &indexMap, CPropertyIndexList &o_changed, bool skipEqualValues, EnableIfEmptyBase<T> = nullptr); // implemented in valueobject.h due to cyclic include dependency
                 //! @}
 
-                //! \copydoc CValueObjectStdTuple::setPropertyByIndex
+                //! \copydoc CValueObject::setPropertyByIndex
                 //! @{
                 template <class T, class...>
                 static void setPropertyByIndex(T &obj, const CVariant &variant, const CPropertyIndex &index, DisableIfEmptyBase<T> = nullptr) { return obj.T::base_type::setPropertyByIndex(variant, index); }
@@ -409,7 +409,7 @@ namespace BlackMisc
                 static void setPropertyByIndex(T &obj, const CVariant &variant, const CPropertyIndex &index, EnableIfEmptyBase<T> = nullptr); // implemented in valueobject.h due to cyclic include dependency
                 //! @}
 
-                //! \copydoc CValueObjectStdTuple::propertyByIndex
+                //! \copydoc CValueObject::propertyByIndex
                 //! @{
                 template <class T, class...>
                 static void propertyByIndex(const T &obj, const CPropertyIndex &index, CVariant &o_property, DisableIfEmptyBase<T> = nullptr) { o_property = obj.T::base_type::propertyByIndex(index); }
@@ -417,7 +417,7 @@ namespace BlackMisc
                 static void propertyByIndex(const T &obj, const CPropertyIndex &index, CVariant &o_property, EnableIfEmptyBase<T> = nullptr); // implemented in valueobject.h due to cyclic include dependency
                 //! @}
 
-                //! \copydoc CValueObjectStdTuple::propertyByIndexAsString
+                //! \copydoc CValueObject::propertyByIndexAsString
                 //! @{
                 template <class T, class...>
                 static QString propertyByIndexAsString(const T &obj, const CPropertyIndex &index, bool i18n, DisableIfEmptyBase<T> = nullptr) { return obj.T::base_type::propertyByIndexAsString(index, i18n); }
@@ -425,7 +425,7 @@ namespace BlackMisc
                 static QString propertyByIndexAsString(const T &obj, const CPropertyIndex &index, bool i18n, EnableIfEmptyBase<T> = nullptr); // implemented in valueobject.h due to cyclic include dependency
                 //! @}
 
-                //! \copydoc CValueObjectStdTuple::equalsPropertyByIndex
+                //! \copydoc CValueObject::equalsPropertyByIndex
                 //! @{
                 template <class T, class...>
                 static bool equalsPropertyByIndex(const T &obj, const CVariant &compareValue, const CPropertyIndex &index, DisableIfEmptyBase<T> = nullptr) { return obj.T::base_type::equalsPropertyByIndex(compareValue, index); }

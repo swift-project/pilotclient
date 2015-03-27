@@ -19,7 +19,7 @@ namespace BlackMisc
     namespace Aviation { class CTrack; }
 
     //! \private
-    template <> struct CValueObjectStdTuplePolicy<Aviation::CTrack> : public CValueObjectStdTuplePolicy<>
+    template <> struct CValueObjectPolicy<Aviation::CTrack> : public CValueObjectPolicy<>
     {
         using Equals = Policy::Equals::MetaTuple;
         using Compare = Policy::Compare::MetaTuple;
@@ -35,7 +35,7 @@ namespace BlackMisc
          * \remarks Intentionally allowing +/- BlackMisc::PhysicalQuantities::CAngle ,
          *          and >= / <= CAngle.
          */
-        class CTrack : public CValueObjectStdTuple<CTrack, PhysicalQuantities::CAngle>
+        class CTrack : public CValueObject<CTrack, PhysicalQuantities::CAngle>
         {
         public:
             /*!
@@ -48,13 +48,13 @@ namespace BlackMisc
             };
 
             //! \brief Default constructor: 0 Track magnetic
-            CTrack() : CValueObjectStdTuple(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
+            CTrack() : CValueObject(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
 
             //! \brief Constructor
-            CTrack(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CValueObjectStdTuple(value, unit), m_north(north) {}
+            CTrack(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CValueObject(value, unit), m_north(north) {}
 
             //! \brief Constructor by CAngle
-            CTrack(BlackMisc::PhysicalQuantities::CAngle track, ReferenceNorth north) : CValueObjectStdTuple(track), m_north(north) {}
+            CTrack(BlackMisc::PhysicalQuantities::CAngle track, ReferenceNorth north) : CValueObject(track), m_north(north) {}
 
             //! \brief Magnetic Track?
             bool isMagneticTrack() const

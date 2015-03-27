@@ -23,7 +23,7 @@ namespace BlackMisc
     namespace Settings
     {
         //! Value object encapsulating information of audio related settings.
-        class CSettingsAudio : public CValueObjectStdTuple<CSettingsAudio>
+        class CSettingsAudio : public CValueObject<CSettingsAudio>
         {
         public:
             //! Default constructor.

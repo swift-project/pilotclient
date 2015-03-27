@@ -19,7 +19,7 @@ namespace BlackMisc
     namespace Aviation { class CNavSystem; }
 
     //! \private
-    template <> struct CValueObjectStdTuplePolicy<Aviation::CNavSystem> : public CValueObjectStdTuplePolicy<>
+    template <> struct CValueObjectPolicy<Aviation::CNavSystem> : public CValueObjectPolicy<>
     {
         using MetaType = Policy::MetaType::Default;
         using Equals = Policy::Equals::None;
@@ -33,7 +33,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! NAV system (radio navigation)
-        class CNavSystem : public CValueObjectStdTuple<CNavSystem, CModulator<CNavSystem>>
+        class CNavSystem : public CValueObject<CNavSystem, CModulator<CNavSystem>>
         {
         public:
             //! Default constructor
@@ -41,7 +41,7 @@ namespace BlackMisc
 
             //! Constructor
             CNavSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency):
-                CValueObjectStdTuple(name, activeFrequency, standbyFrequency)
+                CValueObject(name, activeFrequency, standbyFrequency)
             { }
 
             //! Set active frequency

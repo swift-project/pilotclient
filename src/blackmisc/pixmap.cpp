@@ -19,7 +19,7 @@ namespace BlackMisc
         this->fillByteArray();
     }
 
-    CPixmap::CPixmap(const CPixmap &other) : CValueObjectStdTuple(), m_pixmap(other.m_pixmap), m_hasCachedPixmap(other.m_hasCachedPixmap), m_array(other.m_array)
+    CPixmap::CPixmap(const CPixmap &other) : CValueObject(), m_pixmap(other.m_pixmap), m_hasCachedPixmap(other.m_hasCachedPixmap), m_array(other.m_array)
     {}
 
     CPixmap &CPixmap::operator =(const CPixmap &other)

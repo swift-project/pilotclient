@@ -21,7 +21,7 @@ namespace BlackMisc
     /*!
      * Value / variant pair
      */
-    class CNameVariantPair : public CValueObjectStdTuple<CNameVariantPair>
+    class CNameVariantPair : public CValueObject<CNameVariantPair>
     {
     public:
         //! Properties by index

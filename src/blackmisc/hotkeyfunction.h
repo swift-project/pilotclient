@@ -18,7 +18,7 @@
 namespace BlackMisc
 {
     //! Value object representing a hotkey function.
-    class CHotkeyFunction : public CValueObjectStdTuple<CHotkeyFunction>
+    class CHotkeyFunction : public CValueObject<CHotkeyFunction>
     {
     public:
         //! Function type

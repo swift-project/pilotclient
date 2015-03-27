@@ -26,7 +26,7 @@ namespace BlackMisc
     {
         //! Value object encapsulating information of network related settings.
         //! \remarks Not only traffic network settings, but also URLs, DBus address, ...
-        class CSettingsNetwork : public CValueObjectStdTuple<CSettingsNetwork>
+        class CSettingsNetwork : public CValueObject<CSettingsNetwork>
         {
         public:
             //! Default constructor.

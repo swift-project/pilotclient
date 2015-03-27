@@ -22,7 +22,7 @@ namespace BlackMisc
     namespace Event { class COriginator; }
 
     //! \private
-    template <> struct CValueObjectStdTuplePolicy<Event::COriginator> : public CValueObjectStdTuplePolicy<>
+    template <> struct CValueObjectPolicy<Event::COriginator> : public CValueObjectPolicy<>
     {
         using Json = Policy::Json::None;
     };
@@ -31,7 +31,7 @@ namespace BlackMisc
     {
 
         //! Value object encapsulating information about the originiator
-        class COriginator : public CValueObjectStdTuple<COriginator>
+        class COriginator : public CValueObject<COriginator>
         {
         public:
             //! Default constructor.

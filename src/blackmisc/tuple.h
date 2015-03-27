@@ -69,7 +69,7 @@ namespace BlackMisc
         template <> class TupleConverter<T> : TupleConverterBase                \
         {                                                                       \
             friend class T;                                                     \
-            template <class, class> friend class BlackMisc::CValueObjectStdTuple; \
+            template <class, class> friend class BlackMisc::CValueObject;       \
             friend class BlackMisc::Private::EncapsulationBreaker;              \
             static_assert(Private::HasEnabledTupleConversion<T>::value,         \
                           "Missing BLACK_ENABLE_TUPLE_CONVERSION macro in " #T); \
@@ -121,7 +121,7 @@ namespace BlackMisc
         template <class... U> class TupleConverter<T<U...>> : TupleConverterBase \
         {                                                                       \
             friend class T<U...>;                                               \
-            template <class, class> friend class BlackMisc::CValueObjectStdTuple; \
+            template <class, class> friend class BlackMisc::CValueObject;       \
             friend class BlackMisc::Private::EncapsulationBreaker;              \
             static_assert(Private::HasEnabledTupleConversion<T<U...>>::value,   \
                           "Missing BLACK_ENABLE_TUPLE_CONVERSION macro in " #T); \

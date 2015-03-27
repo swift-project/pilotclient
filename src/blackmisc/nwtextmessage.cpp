@@ -203,7 +203,7 @@ namespace BlackMisc
             case IndexMessage:
                 return CVariant::fromValue(this->m_message);
             default:
-                return CValueObjectStdTuple::propertyByIndex(index);
+                return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -229,7 +229,7 @@ namespace BlackMisc
                 this->m_message = variant.value<QString>();
                 break;
             default:
-                CValueObjectStdTuple::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
         }

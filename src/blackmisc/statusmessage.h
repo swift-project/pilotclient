@@ -24,7 +24,7 @@ namespace BlackMisc
      * Streamable status message, e.g. from Core -> GUI
      */
     class CStatusMessage :
-        public CValueObjectStdTuple<CStatusMessage>,
+        public CValueObject<CStatusMessage>,
         public ITimestampBased
     {
     public:

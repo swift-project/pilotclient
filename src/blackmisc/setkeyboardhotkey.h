@@ -24,7 +24,7 @@ namespace BlackMisc
     namespace Settings
     {
         //! Value object encapsulating the keyboard hotkey assignment
-        class CSettingKeyboardHotkey : public CValueObjectStdTuple<CSettingKeyboardHotkey>
+        class CSettingKeyboardHotkey : public CValueObject<CSettingKeyboardHotkey>
         {
         public:
             //! Properties by index
