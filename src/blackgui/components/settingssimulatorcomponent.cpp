@@ -32,12 +32,12 @@ namespace BlackGui
             ui(new Ui::CSettingsSimulatorComponent)
         {
             ui->setupUi(this);
+            CLedWidget::LedShape shape = CLedWidget::Circle;
+            this->ui->led_RestrictedRendering->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Limited", "Unlimited", 14);
         }
 
         CSettingsSimulatorComponent::~CSettingsSimulatorComponent()
-        {
-            delete ui;
-        }
+        { }
 
         void CSettingsSimulatorComponent::runtimeHasBeenSet()
         {
@@ -51,8 +51,7 @@ namespace BlackGui
                 this->setCurrentPlugin(currentPlugin);
 
                 // disable / enable driver specific GUI parts
-                bool fsxDriver =
-                    this->getIContextSimulator()->getAvailableSimulatorPlugins().supportsSimulator(CSimulatorInfo::FSX());
+                bool fsxDriver = this->getIContextSimulator()->getAvailableSimulatorPlugins().supportsSimulator(CSimulatorInfo::FSX());
                 this->ui->comp_SettingsSimulatorFsx->setVisible(fsxDriver);
 
                 // time sync
@@ -61,13 +60,15 @@ namespace BlackGui
                 CTime timeOffset = this->getIContextSimulator()->getTimeSynchronizationOffset();
                 this->ui->le_TimeSyncOffset->setText(timeOffset.formattedHrsMin());
 
-                // max.aircraft
-                this->ui->sb_MaxAircraft->setValue(getIContextSimulator()->getMaxRenderedAircraft());
-
                 // only with simulator context set GUI values
-                bool connected = this->connect(this->ui->cb_Plugins, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_pluginHasChanged(int)));
+                bool connected = this->connect(this->ui->cb_Plugins, static_cast<void (QComboBox::*)(int)> (&QComboBox::currentIndexChanged), this, &CSettingsSimulatorComponent::ps_pluginHasChanged);
+                Q_ASSERT(connected);
+                connected = this->connect(getIContextSimulator(), &IContextSimulator::restrictedRenderingChanged, this, &CSettingsSimulatorComponent::ps_onRenderingRestricted);
                 Q_ASSERT(connected);
                 Q_UNUSED(connected);
+
+                // set values
+                this->setRestrictedValues();
             }
 
             if (this->getIContextSettings())
@@ -75,8 +76,10 @@ namespace BlackGui
                 connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &CSettingsSimulatorComponent::ps_settingsHaveChanged);
             }
 
-            connect(this->ui->pb_ApplyMaxAircraft, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyNewMaxRemoteAircraft);
+            connect(this->ui->pb_ApplyMaxAircraft, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedAircraft);
             connect(this->ui->pb_ApplyTimeSync, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyTimeSync);
+            connect(this->ui->pb_ApplyMaxDistance, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedDistance);
+            connect(this->ui->pb_ClearRestrictedRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_clearRestricedRendering);
         }
 
         void CSettingsSimulatorComponent::setCurrentPlugin(const CSimulatorInfo &plugin)
@@ -93,6 +96,20 @@ namespace BlackGui
                     break;
                 }
             }
+        }
+
+        void CSettingsSimulatorComponent::setRestrictedValues()
+        {
+            Q_ASSERT(getIContextSimulator());
+            this->ui->led_RestrictedRendering->setOn(getIContextSimulator()->isRenderingRestricted());
+            this->ui->lbl_RestrictionText->setText(getIContextSimulator()->getRenderRestrictionText());
+
+            int distanceBoundaryNM = getIContextSimulator()->getRenderedDistanceBoundary().valueInteger(CLengthUnit::NM());
+            this->ui->sb_MaxDistance->setMaximum(distanceBoundaryNM);
+            this->ui->sb_MaxAircraft->setValue(getIContextSimulator()->getMaxRenderedAircraft());
+
+            int distanceNM = getIContextSimulator()->getMaxRenderedDistance().valueInteger(CLengthUnit::NM());
+            this->ui->sb_MaxDistance->setValue(distanceNM);
         }
 
         void CSettingsSimulatorComponent::ps_pluginHasChanged(int index)
@@ -131,18 +148,13 @@ namespace BlackGui
             this->ui->cb_TimeSync->setChecked(simSettings.isTimeSyncEnabled());
         }
 
-        void CSettingsSimulatorComponent::ps_onApplyNewMaxRemoteAircraft()
+        void CSettingsSimulatorComponent::ps_onApplyMaxRenderedAircraft()
         {
             Q_ASSERT(getIContextSimulator());
-            Q_ASSERT(getIContextNetwork());
 
             // get initial aircraft to render
             int noRequested = this->ui->sb_MaxAircraft->value();
-            CSimulatedAircraftList inRange(this->getIContextNetwork()->getAircraftInRange());
-            inRange.truncate(noRequested);
-            inRange.sortByDistanceToOwnAircraft();
-            CCallsignList initialCallsigns(inRange.getCallsigns());
-            this->getIContextSimulator()->setMaxRenderedAircraft(noRequested, initialCallsigns);
+            this->getIContextSimulator()->setMaxRenderedAircraft(noRequested);
 
             // real value
             int noRendered = this->getIContextSimulator()->getMaxRenderedAircraft();
@@ -155,6 +167,18 @@ namespace BlackGui
                 CLogMessage(this).info("Max.rendered aircraft: %1, requested: %2") << noRendered << noRequested;
                 this->ui->sb_MaxAircraft->setValue(noRendered);
             }
+        }
+
+        void CSettingsSimulatorComponent::ps_onApplyMaxRenderedDistance()
+        {
+            Q_ASSERT(getIContextSimulator());
+
+            // get initial aircraft to render
+            int maxDistanceNM = this->ui->sb_MaxDistance->value();
+            CLength distance(maxDistanceNM, CLengthUnit::NM());
+            this->getIContextSimulator()->setMaxRenderedDistance(distance);
+
+            CLogMessage(this).info("Max.distance requested: %1") << distance.valueRoundedWithUnit(2, true);
         }
 
         void CSettingsSimulatorComponent::ps_onApplyTimeSync()
@@ -174,6 +198,18 @@ namespace BlackGui
             {
                 getIContextSimulator()->setTimeSynchronization(timeSync, ost);
             }
+        }
+
+        void CSettingsSimulatorComponent::ps_onRenderingRestricted(bool restricted)
+        {
+            Q_UNUSED(restricted);
+            setRestrictedValues();
+        }
+
+        void CSettingsSimulatorComponent::ps_clearRestricedRendering()
+        {
+            Q_ASSERT(getIContextSimulator());
+            this->getIContextSimulator()->deleteAllRenderingRestrictions();
         }
     }
 

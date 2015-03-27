@@ -171,20 +171,71 @@ namespace BlackCore
 
     int CContextSimulator::getMaxRenderedAircraft() const
     {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) {CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         if (!m_simulator) return 0;
         return m_simulator->getMaxRenderedAircraft();
     }
 
-    void CContextSimulator::setMaxRenderedAircraft(int number, const CCallsignList &renderedAircraft)
+    void CContextSimulator::setMaxRenderedAircraft(int number)
     {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        if (m_simulator) { this->m_simulator->setMaxRenderedAircraft(number, renderedAircraft); }
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << number; }
+        if (m_simulator) { this->m_simulator->setMaxRenderedAircraft(number); }
+    }
+
+    void CContextSimulator::setMaxRenderedDistance(CLength &distance)
+    {
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << distance; }
+        if (m_simulator) { this->m_simulator->setMaxRenderedDistance(distance); }
+    }
+
+    QString CContextSimulator::getRenderRestrictionText() const
+    {
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (!m_simulator) { return ""; }
+        if (!m_simulator->isRenderingRestricted()) { return "none"; }
+        QString rt;
+        if (m_simulator->isMaxAircraftRestricted())
+        {
+            rt.append(QString::number(m_simulator->getMaxRenderedAircraft())).append(" A/C");
+        }
+        if (m_simulator->isMaxDistanceRestricted())
+        {
+            if (!rt.isEmpty()) { rt.append(" ");}
+            rt.append(m_simulator->getMaxRenderedDistance().valueRoundedWithUnit(CLengthUnit::NM(), 0));
+        }
+        return rt;
+    }
+
+    CLength CContextSimulator::getMaxRenderedDistance() const
+    {
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (m_simulator) { return this->m_simulator->getMaxRenderedDistance(); }
+        return CLength(0, CLengthUnit::nullUnit());
+    }
+
+    CLength CContextSimulator::getRenderedDistanceBoundary() const
+    {
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (m_simulator) { return this->m_simulator->getRenderedDistanceBoundary(); }
+        return CLength(20.0, CLengthUnit::NM());
+    }
+
+    void CContextSimulator::deleteAllRenderingRestrictions()
+    {
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (m_simulator) { this->m_simulator->deleteAllRenderingRestrictions(); }
+    }
+
+    bool CContextSimulator::isRenderingRestricted() const
+    {
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (m_simulator) { return this->m_simulator->isRenderingRestricted(); }
+        return false;
     }
 
     CTime CContextSimulator::getTimeSynchronizationOffset() const
     {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         if (!m_simulator) return CTime(0, CTimeUnit::hrmin());
         return this->m_simulator->getTimeSynchronizationOffset();
     }
@@ -237,6 +288,7 @@ namespace BlackCore
         connect(m_simulator, &ISimulator::ownAircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
         connect(m_simulator, &ISimulator::modelMatchingCompleted, this, &IContextSimulator::modelMatchingCompleted);
         connect(m_simulator, &ISimulator::installedAircraftModelsChanged, this, &IContextSimulator::installedAircraftModelsChanged);
+        connect(m_simulator, &ISimulator::restrictedRenderingChanged, this, &IContextSimulator::restrictedRenderingChanged);
 
         // log from context to simulator
         connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, m_simulator, &ISimulator::displayStatusMessage);

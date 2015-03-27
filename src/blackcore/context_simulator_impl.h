@@ -96,7 +96,25 @@ namespace BlackCore
         virtual int getMaxRenderedAircraft() const override;
 
         //! \copydoc IContextSimulator::setMaxRenderedAircraft
-        virtual void setMaxRenderedAircraft(int number, const BlackMisc::Aviation::CCallsignList &renderedAircraft) override;
+        virtual void setMaxRenderedAircraft(int number) override;
+
+        //! \copydoc IContextSimulator::setMaxRenderedDistance
+        virtual void setMaxRenderedDistance(BlackMisc::PhysicalQuantities::CLength &distance) override;
+
+        //! \copydoc IContextSimulator::getRenderRestrictionText
+        virtual QString getRenderRestrictionText() const override;
+
+        //! \copydoc IContextSimulator::getMaxRenderedDistance
+        virtual BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const override;
+
+        //! \copydoc IContextSimulator::getRenderedDistanceBoundary
+        virtual BlackMisc::PhysicalQuantities::CLength getRenderedDistanceBoundary() const override;
+
+        //! \copydoc IContextSimulator::setMaxRenderedDistance
+        virtual void deleteAllRenderingRestrictions() override;
+
+        //! \copydoc IContextSimulator::isRenderingRestricted
+        virtual bool isRenderingRestricted() const override;
 
         //! \copydoc IContextSimulator::getTimeSynchronizationOffset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;

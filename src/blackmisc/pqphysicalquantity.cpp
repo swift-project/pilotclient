@@ -235,6 +235,20 @@ namespace BlackMisc
         }
 
         /*
+         * Value rounded as integer
+         */
+        template <class MU, class PQ> int CPhysicalQuantity<MU, PQ>::valueInteger(const MU &unit) const
+        {
+            double v = unit.roundValue(this->value(unit), 0);
+            return static_cast<int>(v);
+        }
+
+        template <class MU, class PQ> double CPhysicalQuantity<MU, PQ>::valueRounded(int digits) const
+        {
+            return this->valueRounded(this->m_unit, digits);
+        }
+
+        /*
          * Value in unit
          */
         template <class MU, class PQ> double CPhysicalQuantity<MU, PQ>::value(const MU &unit) const

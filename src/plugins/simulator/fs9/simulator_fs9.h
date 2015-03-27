@@ -74,8 +74,6 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::isSimulating
             virtual bool isSimulating() const override { return isConnected(); }
 
-        public slots:
-
             //! \copydoc ISimulator::connectTo()
             virtual bool connectTo() override;
 

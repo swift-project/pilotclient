@@ -44,6 +44,9 @@ namespace BlackMisc
 
         //! Initializer list constructor.
         QOrderedSet(std::initializer_list<T> il) { for (const auto &v : il) { insert(v); } }
+
+        //! Constructor from QList
+        QOrderedSet(const QList<T> &list) { for (const auto &v : list) { insert(v); }}
     };
 
     /*!
@@ -84,6 +87,11 @@ namespace BlackMisc
          * \brief Copy constructor.
          */
         CCollection(const CCollection &other) : m_pimpl(other.pimpl() ? other.pimpl()->clone() : nullptr) {}
+
+        /*!
+         * \brief Constructor from QList.
+         */
+        CCollection(const QList<T> &list) : m_pimpl(new Pimpl<QOrderedSet<T>>(QOrderedSet<T>(list))) {}
 
         /*!
          * \brief Move constructor.

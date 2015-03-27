@@ -28,7 +28,7 @@ namespace BlackMisc
         /*
          * Constructor
          */
-        CAudioDeviceInfo::CAudioDeviceInfo(DeviceType type, const qint16 index, const QString &name) :
+        CAudioDeviceInfo::CAudioDeviceInfo(DeviceType type, const int index, const QString &name) :
             m_type(type), m_deviceIndex(index),
             m_deviceName(name), m_hostName(BlackMisc::localHostName())
         {
@@ -38,8 +38,9 @@ namespace BlackMisc
         /*
          * As String
          */
-        QString CAudioDeviceInfo::convertToQString(bool /* i18n */) const
+        QString CAudioDeviceInfo::convertToQString(bool i18n) const
         {
+            Q_UNUSED(i18n);
             if (this->m_hostName.isEmpty()) return m_deviceName;
             QString s(this->m_deviceName);
             s.append(" [");

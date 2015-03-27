@@ -58,7 +58,6 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::getIcaoForModelString
             virtual BlackMisc::Aviation::CAircraftIcao getIcaoForModelString(const QString &modelString) const override;
 
-        public slots:
             //! \copydoc BlackCore::ISimulator::connectTo
             virtual bool connectTo() override;
 

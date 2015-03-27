@@ -46,17 +46,29 @@ namespace BlackGui
             //! Settings have been changed
             void ps_settingsHaveChanged(uint settingsType);
 
-            //! Apply max aircraft
-            void ps_onApplyNewMaxRemoteAircraft();
+            //! Apply max.aircraft
+            void ps_onApplyMaxRenderedAircraft();
+
+            //! Apply max.distance
+            void ps_onApplyMaxRenderedDistance();
 
             //! Apply time sync
             void ps_onApplyTimeSync();
 
+            //! Restricted number of rendered aircraft
+            void ps_onRenderingRestricted(bool restricted);
+
+            //! Clear restricted rendering
+            void ps_clearRestricedRendering();
+
         private:
-            Ui::CSettingsSimulatorComponent *ui; //!< UI
+            QScopedPointer<Ui::CSettingsSimulatorComponent> ui; //!< UI
 
             //! Smarter way to set current driver, avoids unnecessary signals and less formatting dependend
             void setCurrentPlugin(const BlackSim::CSimulatorInfo &plugin);
+
+            //! Set the GUI values
+            void setRestrictedValues();
 
         };
     }

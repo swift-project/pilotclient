@@ -43,6 +43,9 @@ namespace BlackCore
             ConnectionFailed
         };
 
+        //! Render all aircraft
+        const int MaxAircraftInfinite = 100;
+
         //! Destructor
         virtual ~ISimulator() {}
 
@@ -70,7 +73,7 @@ namespace BlackCore
             return o;
         }
 
-    public slots:
+    public:
 
         //! Connect to simulator
         virtual bool connectTo() = 0;
@@ -138,7 +141,28 @@ namespace BlackCore
         virtual int getMaxRenderedAircraft() const = 0;
 
         //! Max. rendered aircraft
-        virtual void setMaxRenderedAircraft(int maxRenderedAircraft, const BlackMisc::Aviation::CCallsignList &callsigns) = 0;
+        virtual void setMaxRenderedAircraft(int maxRenderedAircraft) = 0;
+
+        //! Max. distance for rendered aircraft
+        virtual void setMaxRenderedDistance(BlackMisc::PhysicalQuantities::CLength &distance) = 0;
+
+        //! Max. distance for rendered aircraft
+        virtual BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const = 0;
+
+        //! Technical range until aircraft are visible
+        virtual BlackMisc::PhysicalQuantities::CLength getRenderedDistanceBoundary() const = 0;
+
+        //! Restricted number of aircraft
+        virtual bool isMaxAircraftRestricted() const = 0;
+
+        //! Restriced distance
+        virtual bool isMaxDistanceRestricted() const = 0;
+
+        //! Is there a restriction? No rendering -> limited number of aircraft -> unlimited number of aircraft
+        virtual bool isRenderingRestricted() const = 0;
+
+        //! Delete all restrictions (if any) -> unlimited number of aircraft
+        virtual void deleteAllRenderingRestrictions() = 0;
 
         //! Enable debugging messages
         virtual void enableDebugMessages(bool driver, bool interpolator) = 0;
@@ -161,6 +185,9 @@ namespace BlackCore
 
         //! Simulator combined status
         void simulatorStatusChanged(bool connected, bool running, bool paused);
+
+        //! Only a limited number of aircraft displayed
+        void restrictedRenderingChanged(bool restricted);
 
         //! Simulator started
         void simulatorStarted();
@@ -217,13 +244,27 @@ namespace BlackCore
 
         Q_OBJECT
 
-    public slots:
-
+    public:
         //! \copydoc ISimulator::getMaxRenderedAircraft
         virtual int getMaxRenderedAircraft() const override;
 
         //! \copydoc ISimulator::setMaxRenderedAircraft
-        virtual void setMaxRenderedAircraft(int maxRenderedAircraft, const BlackMisc::Aviation::CCallsignList &callsigns) override;
+        virtual void setMaxRenderedAircraft(int maxRenderedAircraft) override;
+
+        //! \copydoc ISimulator::setMaxRenderedDistance
+        virtual void setMaxRenderedDistance(BlackMisc::PhysicalQuantities::CLength &distance) override;
+
+        //! \copydoc ISimulator::getMaxRenderedDistance
+        virtual BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const override;
+
+        //! \copydoc ISimulator::getRenderedDistanceBoundary
+        virtual BlackMisc::PhysicalQuantities::CLength getRenderedDistanceBoundary() const override;
+
+        //! \copydoc ISimulator::isMaxAircraftRestricted
+        virtual bool isMaxAircraftRestricted() const override;
+
+        //! \copydoc ISimulator::isMaxDistanceRestricted
+        virtual bool isMaxDistanceRestricted() const override;
 
         //! \copydoc ISimulator::getSimulatorInfo
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
@@ -239,6 +280,12 @@ namespace BlackCore
 
         //! \copydoc IContextSimulator::isRenderingEnabled
         virtual bool isRenderingEnabled() const override;
+
+        //! \copydoc IContextSimulator::isRenderingRestricted
+        virtual bool isRenderingRestricted() const override;
+
+        //! \copydoc IContextSimulator::deleteAllRenderingRestrictions
+        virtual void deleteAllRenderingRestrictions();
 
     protected slots:
         //! Slow timer used to highlight aircraft, can be used for other things too
@@ -256,6 +303,9 @@ namespace BlackCore
         //! Blink the highlighted aircraft
         void blinkHighlightedAircraft();
 
+        //! Recalculate the restricted aircraft
+        void recalculateRestrictedAircraft();
+
         //! Restore aircraft from backedn data
         void resetAircraftFromBacked(const BlackMisc::Aviation::CCallsign &callsign);
 
@@ -263,15 +313,16 @@ namespace BlackCore
         void setInitialAircraftSituationAndParts(BlackMisc::Simulation::CSimulatedAircraft &aircraft) const;
 
         BlackSim::CSimulatorInfo m_simulatorInfo; //!< about the simulator
-        int m_maxRenderedAircraft = 90;           //!< max. rendered aircraft
         bool m_debugMessages = false;             //!< Display debug messages
         bool m_blinkCycle = false;                //!< use for highlighting
         IInterpolator *m_interpolator = nullptr;  //!< interpolator instance
         qint64 m_highlightEndTimeMsEpoch = 0;     //!< end highlighting
+        int m_timerCounter = 0;                   //!< allows to calculate n seconds
+        QTimer *m_oneSecondTimer = nullptr;       //!< timer
         BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft; //!< all other aircraft are to be ignored
         BlackMisc::Aviation::CCallsignList m_callsignsToBeRendered;          //!< callsigns which will be rendered
-        QTimer *m_oneSecondTimer = nullptr;       //!< timer
-
+        int m_maxRenderedAircraft = MaxAircraftInfinite;                     //!< max.rendered aircraft
+        BlackMisc::PhysicalQuantities::CLength m_maxRenderedDistance { 0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()}; //!< max.distance for rendering
     };
 
 } // namespace

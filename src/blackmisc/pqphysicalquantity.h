@@ -115,11 +115,11 @@ namespace BlackMisc
             //! Rounded value in given unit
             double valueRounded(const MU &unit, int digits = -1) const;
 
+            //! As integer value
+            int valueInteger(const MU &unit) const;
+
             //! Rounded value in current unit
-            double valueRounded(int digits = -1) const
-            {
-                return this->valueRounded(this->m_unit, digits);
-            }
+            double valueRounded(int digits = -1) const;
 
             //! Value to QString with the given unit, e.g. "5.00m"
             QString valueRoundedWithUnit(const MU &unit, int digits = -1, bool i18n = false) const;

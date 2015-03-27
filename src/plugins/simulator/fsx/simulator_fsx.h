@@ -93,8 +93,6 @@ namespace BlackSimPlugin
             //! SimConnect Callback
             static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
 
-        public slots:
-
             //! \copydoc ISimulator::connectTo()
             virtual bool connectTo() override;
 

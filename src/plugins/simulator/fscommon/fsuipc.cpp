@@ -91,31 +91,18 @@ namespace BlackSimPlugin
             DWORD dwResult;
             char localFsTimeRaw[3];
             char modelNameRaw[256];
-            qint16 com1ActiveRaw;
-            qint16 com2ActiveRaw;
-            qint16 com1StandbyRaw;
-            qint16 com2StandbyRaw;
-            qint16 transponderCodeRaw;
-            qint8 xpdrModeSb3Raw;
-            qint8 xpdrIdentSb3Raw;
-            qint32 groundspeedRaw;
-            qint32 pitchRaw;
-            qint32 bankRaw;
-            qint32 headingRaw;
-            qint64 altitudeRaw;
-            qint32 groundAltitudeRaw;
-            qint64 latitudeRaw;
-            qint64 longitudeRaw;
-            qint16 lightsRaw;
-            qint16 onGroundRaw;
-            qint32 flapsControlRaw;
-            qint32 gearControlRaw;
-            qint32 spoilersControlRaw;
-            qint16 numberOfEngines;
-            qint16 engine1CombustionFlag;
-            qint16 engine2CombustionFlag;
-            qint16 engine3CombustionFlag;
-            qint16 engine4CombustionFlag;
+            qint16 com1ActiveRaw = 0, com2ActiveRaw = 0, com1StandbyRaw = 0, com2StandbyRaw = 0;
+            qint16 transponderCodeRaw = 0;
+            qint8 xpdrModeSb3Raw = 0, xpdrIdentSb3Raw = 0;
+            qint32 groundspeedRaw = 0, pitchRaw = 0, bankRaw = 0, headingRaw = 0;
+            qint64 altitudeRaw = 0;
+            qint32 groundAltitudeRaw = 0;
+            qint64 latitudeRaw = 0, longitudeRaw = 0;
+            qint16 lightsRaw = 0;
+            qint16 onGroundRaw = 0;
+            qint32 flapsControlRaw = 0, gearControlRaw = 0, spoilersControlRaw = 0;
+            qint16 numberOfEngines = 0;
+            qint16 engine1CombustionFlag = 0, engine2CombustionFlag = 0, engine3CombustionFlag = 0, engine4CombustionFlag = 0;
 
 
             // http://www.projectmagenta.com/all-fsuipc-offsets/
@@ -198,7 +185,7 @@ namespace BlackSimPlugin
                     com1.setFrequencyStandbyMHz(com1StandbyRaw / 100.0);
                     com2.setFrequencyStandbyMHz(com2StandbyRaw / 100.0);
 
-                    transponderCodeRaw = CBcdConversions::bcd2Dec(transponderCodeRaw);
+                    transponderCodeRaw = static_cast<qint16>(CBcdConversions::bcd2Dec(transponderCodeRaw));
                     xpdr.setTransponderCode(transponderCodeRaw);
                     // Mode by SB3
                     if (xpdrIdentSb3Raw != 0)

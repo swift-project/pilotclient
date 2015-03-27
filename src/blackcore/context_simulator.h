@@ -74,6 +74,9 @@ namespace BlackCore
         //! Simulator combined status
         void simulatorStatusChanged(bool connected, bool running, bool paused);
 
+        //! Only a limited number of aircraft displayed
+        void restrictedRenderingChanged(bool restricted);
+
         //! Installed aircraft models ready or changed
         void installedAircraftModelsChanged();
 
@@ -138,8 +141,26 @@ namespace BlackCore
         //! Max. number of remote aircraft rendered
         virtual int getMaxRenderedAircraft() const = 0;
 
-        //! Max. number of remote aircraft rendered and provide optional selection which aircraft this are
-        virtual void setMaxRenderedAircraft(int number, const BlackMisc::Aviation::CCallsignList &renderedAircraft) = 0;
+        //! Max. rendered distance
+        virtual BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const = 0;
+
+        //! Technical range until aircraft are visible
+        virtual BlackMisc::PhysicalQuantities::CLength getRenderedDistanceBoundary() const = 0;
+
+        //! Text describing the rendering restrictions
+        virtual QString getRenderRestrictionText() const = 0;
+
+        //! Max. number of remote aircraft rendered and provide optional selection which aircraft those are
+        virtual void setMaxRenderedAircraft(int number) = 0;
+
+        //! Max. distance until we render an aircraft
+        virtual void setMaxRenderedDistance(BlackMisc::PhysicalQuantities::CLength &distance) = 0;
+
+        //! Delete all restrictions (if any) -> unlimited number of aircraft
+        virtual void deleteAllRenderingRestrictions() = 0;
+
+        //! Is number of aircraft restricted
+        virtual bool isRenderingRestricted() const = 0;
 
         //! Time synchronization offset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;

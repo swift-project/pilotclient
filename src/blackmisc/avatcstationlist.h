@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_ATCSTATIONLIST_H
 #define BLACKMISC_ATCSTATIONLIST_H
 
+#include "geoobjectlist.h"
 #include "nwuserlist.h"
 #include "avatcstation.h"
 #include "avcallsignobjectlist.h"
@@ -30,7 +31,8 @@ namespace BlackMisc
          */
         class CAtcStationList :
             public CSequence<CAtcStation>,
-            public ICallsignObjectList<CAtcStation, CAtcStationList>
+            public BlackMisc::Aviation::ICallsignObjectList<CAtcStation, CAtcStationList>,
+            public BlackMisc::Geo::IGeoObjectWithRelativePositionList<CAtcStation, CAtcStationList>
         {
         public:
             //! Default constructor.

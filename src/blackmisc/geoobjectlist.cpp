@@ -71,6 +71,17 @@ namespace BlackMisc
             this->container().sort([ & ](const OBJ & a, const OBJ & b) { return a.getDistanceToOwnAircraft() < b.getDistanceToOwnAircraft(); });
         }
 
+        template <class OBJ, class CONTAINER>
+        CONTAINER IGeoObjectWithRelativePositionList<OBJ, CONTAINER>::getClosestObjects(int number) const
+        {
+            if (number < 1) { return CONTAINER(); }
+            if (this->container().size() >= number) { return (this->container()); }
+            CONTAINER closest(this->container());
+            closest.sortByDistanceToOwnAircraft();
+            closest.truncate(number);
+            return closest;
+        }
+
         // see here for the reason of thess forward instantiations
         // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
         template class IGeoObjectList<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;

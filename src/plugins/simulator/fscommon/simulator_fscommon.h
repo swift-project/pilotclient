@@ -42,8 +42,6 @@ namespace BlackSimPlugin
             //! SimObjects directory
             static QString simObjectsDir();
 
-        public slots:
-
             //! \copydoc ISimulator::isPaused
             virtual bool isPaused() const override { return m_simPaused; }
 

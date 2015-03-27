@@ -51,6 +51,9 @@ namespace BlackCore
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                "modelMatchingCompleted", this, SIGNAL(modelMatchingCompleted(BlackMisc::Simulation::CSimulatedAircraft)));
         Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                               "restrictedRenderingChanged", this, SIGNAL(restrictedRenderingChanged(bool)));
+        Q_ASSERT(s);
         Q_UNUSED(s);
     }
 
@@ -129,9 +132,39 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isTimeSynchronized"));
     }
 
-    void CContextSimulatorProxy::setMaxRenderedAircraft(int number, const CCallsignList &renderedAircraft)
+    void CContextSimulatorProxy::setMaxRenderedAircraft(int number)
     {
-        m_dBusInterface->callDBus(QLatin1Literal("setMaxRenderedRemoteAircraft"), number, renderedAircraft);
+        m_dBusInterface->callDBus(QLatin1Literal("setMaxRenderedAircraft"), number);
+    }
+
+    void CContextSimulatorProxy::setMaxRenderedDistance(CLength &distance)
+    {
+        m_dBusInterface->callDBus(QLatin1Literal("setMaxRenderedDistance"), distance);
+    }
+
+    void CContextSimulatorProxy::deleteAllRenderingRestrictions()
+    {
+        m_dBusInterface->callDBus(QLatin1Literal("deleteAllRenderingRestrictions"));
+    }
+
+    bool CContextSimulatorProxy::isRenderingRestricted() const
+    {
+        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isRenderingRestricted"));
+    }
+
+    CLength CContextSimulatorProxy::getMaxRenderedDistance() const
+    {
+        return m_dBusInterface->callDBusRet<CLength>(QLatin1Literal("getMaxRenderedDistance"));
+    }
+
+    CLength CContextSimulatorProxy::getRenderedDistanceBoundary() const
+    {
+        return m_dBusInterface->callDBusRet<CLength>(QLatin1Literal("getRenderedDistanceBoundary"));
+    }
+
+    QString CContextSimulatorProxy::getRenderRestrictionText() const
+    {
+        return m_dBusInterface->callDBusRet<QString>(QLatin1Literal("getRenderRestrictionText"));
     }
 
     int CContextSimulatorProxy::getMaxRenderedAircraft() const

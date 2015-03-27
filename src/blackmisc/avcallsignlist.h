@@ -22,14 +22,14 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object for a list of callsigns.
-        class CCallsignList : public CSequence<CCallsign>
+        class CCallsignList : public CCollection<CCallsign>
         {
         public:
             //! Default constructor.
             CCallsignList();
 
             //! Construct from a base class object.
-            CCallsignList(const CSequence<CCallsign> &other);
+            CCallsignList(const CCollection<CCallsign> &other);
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }

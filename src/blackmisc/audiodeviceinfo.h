@@ -29,7 +29,7 @@ namespace BlackMisc
         {
         public:
             //! Type
-            enum DeviceType : uint
+            enum DeviceType
             {
                 InputDevice,
                 OutputDevice,
@@ -44,10 +44,10 @@ namespace BlackMisc
             CAudioDeviceInfo();
 
             //! Constructor.
-            CAudioDeviceInfo(DeviceType type, const qint16 index, const QString &getName);
+            CAudioDeviceInfo(DeviceType type, const int index, const QString &getName);
 
             //! Get the device index
-            qint16 getIndex() const { return m_deviceIndex; }
+            int getIndex() const { return m_deviceIndex; }
 
             //! Get the device name
             const QString &getName() const { return m_deviceName; }
@@ -62,10 +62,10 @@ namespace BlackMisc
             bool isValid() const { return m_deviceIndex >= -1 && !m_deviceName.isEmpty(); }
 
             //! Device index for default device
-            static qint16 defaultDeviceIndex() {return -1;}
+            static int defaultDeviceIndex() {return -1;}
 
             //! Invalid device index
-            static qint16 invalidDeviceIndex() {return -2;}
+            static int invalidDeviceIndex() {return -2;}
 
             //! Default output device
             static CAudioDeviceInfo getDefaultOutputDevice()
@@ -91,7 +91,7 @@ namespace BlackMisc
              * deviceIndex is the number is the reference for the VVL. The device is selected by this index.
              * The managing class needs to take care, that indexes are valid.
              */
-            qint16 m_deviceIndex;
+            int m_deviceIndex;
             //! Device name
             QString m_deviceName;
             //! We use a DBus based system. Hence an audio device can reside on a differen computers, this here is its name

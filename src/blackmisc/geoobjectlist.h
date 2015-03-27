@@ -56,6 +56,9 @@ namespace BlackMisc
             //! If distance is already set, just sort
             void sortByDistanceToOwnAircraft();
 
+            //! Get n closest objects
+            CONTAINER getClosestObjects(int number) const;
+
             //! Calculate distances, remove if outside range
             void removeIfOutsideRange(const BlackMisc::Geo::ICoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &maxDistance, bool updateValues);
 

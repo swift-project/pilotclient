@@ -14,21 +14,12 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        /*
-         * Empty constructor
-         */
         CCallsignList::CCallsignList() { }
 
-        /*
-         * Construct from base class object
-         */
-        CCallsignList::CCallsignList(const CSequence<CCallsign> &other) :
-            CSequence<CCallsign>(other)
+        CCallsignList::CCallsignList(const CCollection<CCallsign> &other) :
+            CCollection<CCallsign>(other)
         { }
 
-        /*
-         * Register metadata
-         */
         void CCallsignList::registerMetadata()
         {
             qRegisterMetaType<BlackMisc::CSequence<CCallsign>>();
