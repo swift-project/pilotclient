@@ -90,6 +90,7 @@ namespace BlackCore
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "removedAircraft", this, SIGNAL(removedAircraft(BlackMisc::Aviation::CCallsign)));
         Q_ASSERT(s);
+        Q_UNUSED(s);
     }
 
     void CContextNetworkProxy::readAtcBookingsFromSource() const

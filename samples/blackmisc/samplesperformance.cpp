@@ -281,6 +281,8 @@ namespace BlackMiscTest
         int b = situationsBefore.size();
         int a = situationsAfter.size();
         Q_ASSERT(a + b == numberOfTimes * numberOfCallsigns);
+        Q_UNUSED(a);
+        Q_UNUSED(b);
 
         timer.start();
         QList<CAircraftSituationList> split = situations.splitByTime(halfTime);

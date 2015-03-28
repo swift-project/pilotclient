@@ -63,7 +63,6 @@ namespace BlackInput
     {
         switch (virtualKey)
         {
-        qDebug() << virtualKey;
         case VK_LSHIFT: return CKeyboardKey::ModifierShiftLeft; break;
         case VK_RSHIFT: return CKeyboardKey::ModifierShiftRight; break;
         case VK_LCONTROL: return CKeyboardKey::ModifierCtrlLeft; break;
