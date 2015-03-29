@@ -21,7 +21,7 @@ else {
 }
 
 ###########################
-# Detect 32 or 64 bits
+# Detect 32 or 64 bit
 ###########################
 
 win32-msvc* {
@@ -73,12 +73,17 @@ contains(BLACK_CONFIG, ProfileRelease) {
 }
 
 ###########################
+# No incremental build
+###########################
+# win32-msvc*:QMAKE_LFLAGS_DEBUG *= /INCREMENTAL:NO
+
+###########################
 # No gigantic MinGW obj files
 ###########################
 win32-g++: QMAKE_CXXFLAGS_DEBUG += -Og
 
 ###########################
-# No FSX or FS9 for 64 bits
+# No FSX or FS9 for 64 bit
 ###########################
 
 equals(WORD_SIZE,64): BLACK_CONFIG -= FSX FS9
@@ -87,7 +92,9 @@ equals(WORD_SIZE,64): BLACK_CONFIG -= FSX FS9
 # Suppress stupid warnings
 ###########################
 win32-msvc*:DEFINES *= _SCL_SECURE_NO_WARNINGS
-win32-msvc*:QMAKE_CXXFLAGS *= /wd4351
+# win32-msvc*:QMAKE_CXXFLAGS *=
+win32-msvc*:QMAKE_CXXFLAGS_WARN_ON *= /wd4351
+# win32-msvc*:QMAKE_CXXFLAGS_WARN_ON *= /Wall /W3 /wd4640 /wd4619 /wd4350 /wd4351 /wd4946
 
 ################################
 # Defines for conditional compilation
