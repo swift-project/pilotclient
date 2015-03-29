@@ -534,7 +534,7 @@ namespace BlackMisc
                     return;
                 }
                 using Base = CValueObject<T, typename T::base_type>;
-                auto i = index.frontCasted<typename Base::ColumnIndex>();
+                auto i = index.frontCasted<typename CValueObject<T, typename T::base_type>::ColumnIndex>();
                 switch (i)
                 {
                 case Base::IndexIcon:
