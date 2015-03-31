@@ -65,14 +65,11 @@ namespace BlackCore
         virtual ~IContextSimulator() {}
 
     signals:
-        //! Emitted when the simulator connection changes
-        void connectionChanged(bool connected);
-
         //! Simulator started or stopped
         void startedChanged(bool startedChanged);
 
         //! Simulator combined status
-        void simulatorStatusChanged(bool connected, bool running, bool paused);
+        void simulatorStatusChanged(int status);
 
         //! Only a limited number of aircraft displayed
         void restrictedRenderingChanged(bool restricted);

@@ -13,6 +13,7 @@
 #include "blackcore/context_network.h"
 #include "blackcore/context_application.h"
 #include "blackcore/context_audio.h"
+#include "blackcore/simulator.h"
 #include "blackmisc/project.h"
 #include "blackmisc/icons.h"
 
@@ -97,21 +98,16 @@ namespace BlackGui
             }
         }
 
-        void CInfoBarStatusComponent::ps_onSimulatorStatusChanged(bool connected, bool running, bool paused)
+        void CInfoBarStatusComponent::ps_onSimulatorStatusChanged(quint8 status)
         {
-            if (connected && running)
-            {
+//             if (connected && running)
+            if (status & (ISimulator::Connected | ISimulator::Running)) {
                 this->ui->led_Simulator->setOn(true);
-            }
-            else if (connected)
-            {
+            } else if (status & ISimulator::Connected) {
                 this->ui->led_Simulator->setTriState();
-            }
-            else
-            {
+            } else {
                 this->ui->led_Simulator->setOn(false);
             }
-            Q_UNUSED(paused);
         }
 
         void CInfoBarStatusComponent::ps_onNetworkConnectionChanged(uint from, uint to)

@@ -54,7 +54,7 @@ namespace BlackGui
 
         private slots:
             //! Simulator connection has been changed
-            void ps_onSimulatorStatusChanged(bool connected, bool running, bool paused);
+            void ps_onSimulatorStatusChanged(quint8 status);
 
             //! Network connection has been changed
             void ps_onNetworkConnectionChanged(uint from, uint to);

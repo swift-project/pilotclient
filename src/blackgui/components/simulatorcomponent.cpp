@@ -12,6 +12,7 @@
 #include "blackcore/context_settings.h"
 #include "blackcore/context_simulator.h"
 #include "blackcore/context_ownaircraft.h"
+#include "blackcore/simulator.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/avaircraft.h"
 
@@ -101,7 +102,7 @@ namespace BlackGui
         {
             Q_ASSERT(this->getIContextSimulator());
             if (!this->getIContextSimulator()) return;
-            QObject::connect(this->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &CSimulatorComponent::ps_onSimulatorConnectionChanged);
+            QObject::connect(this->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CSimulatorComponent::ps_onSimulatorStatusChanged);
 
             this->setUpdateInterval(getUpdateIntervalMs());
             if (!getIContextSimulator()->isConnected())
@@ -110,10 +111,9 @@ namespace BlackGui
             }
         }
 
-        void CSimulatorComponent::ps_onSimulatorConnectionChanged(bool isAvailable)
+        void CSimulatorComponent::ps_onSimulatorStatusChanged(int status)
         {
-            if (isAvailable)
-            {
+            if (status & ISimulator::Connected) {
                 int intervalMs = getUpdateIntervalMs();
                 this->m_updateTimer->startTimer(intervalMs);
             } else {

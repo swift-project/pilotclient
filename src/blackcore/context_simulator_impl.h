@@ -166,7 +166,7 @@ namespace BlackCore
         void ps_removedRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Handle new connection status of simulator
-        void ps_onConnectionStatusChanged(ISimulator::ConnectionStatus status);
+        void ps_onSimulatorStatusChanged(int status);
 
         //! Text message received
         void ps_textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);
@@ -190,6 +190,9 @@ namespace BlackCore
     private:
         //! \brief find and catalog all simulator plugins
         void findSimulatorPlugins();
+
+        //! \brief call stop() on all loaded listeners
+        void stopSimulatorListeners();
 
         BlackCore::ISimulator *m_simulator = nullptr; //!< simulator plugin
         QDir m_pluginsDir;

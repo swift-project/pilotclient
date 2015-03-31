@@ -72,8 +72,8 @@ namespace BlackGui
             void runtimeHasBeenSet() override;
 
         private slots:
-            //! \copydoc ISimulator::
-            void ps_onSimulatorConnectionChanged(bool isAvailable);
+            //! \copydoc ISimulator::simulatorStatusChanged
+            void ps_onSimulatorStatusChanged(int status);
 
         private:
             //! Update interval

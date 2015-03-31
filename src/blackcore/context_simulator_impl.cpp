@@ -248,6 +248,11 @@ namespace BlackCore
         if (this->m_simulator && this->m_simulator->getSimulatorInfo() == simulatorInfo) {
             return true;
         } // already loaded
+        
+        /* TODO Specify behaviour below */
+        if (simulatorInfo.isUnspecified()) {
+            return false;
+        }
 
         // warning if we do not have any plugins
         if (m_simulatorFactories.isEmpty()) {
@@ -283,8 +288,7 @@ namespace BlackCore
         this->unloadSimulatorPlugin(); // old plugin unloaded
         m_simulator = newSimulator;
 
-        connect(m_simulator, &ISimulator::connectionStatusChanged, this, &CContextSimulator::ps_onConnectionStatusChanged);
-        connect(m_simulator, &ISimulator::simulatorStatusChanged, this, &CContextSimulator::simulatorStatusChanged);
+        connect(m_simulator, &ISimulator::simulatorStatusChanged, this, &CContextSimulator::ps_onSimulatorStatusChanged);
         connect(m_simulator, &ISimulator::ownAircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
         connect(m_simulator, &ISimulator::modelMatchingCompleted, this, &IContextSimulator::modelMatchingCompleted);
         connect(m_simulator, &ISimulator::installedAircraftModelsChanged, this, &IContextSimulator::installedAircraftModelsChanged);
@@ -438,7 +442,7 @@ namespace BlackCore
         {
             connected = false;
         }
-        emit connectionChanged(connected);
+        emit simulatorStatusChanged(status);
     }
 
     void CContextSimulator::ps_textMessagesReceived(const Network::CTextMessageList &textMessages)
@@ -547,6 +551,7 @@ namespace BlackCore
     void CContextSimulator::ps_simulatorStarted(CSimulatorInfo simulatorInfo)
     {
         CLogMessage(this).info("Simulator %1 started.") << simulatorInfo.toQString();
+        stopSimulatorListeners();
         loadSimulatorPlugin(simulatorInfo);
     }
 
@@ -594,6 +599,13 @@ namespace BlackCore
                 CLogMessage(this).error(errorMsg);
             }
         }
+    }
+    
+    void CContextSimulator::stopSimulatorListeners()
+    {
+        std::for_each(m_simulatorListeners.begin(), m_simulatorListeners.end(), [](ISimulatorListener* l) {
+            l->stop();
+        });
     }
 
 } // namespace

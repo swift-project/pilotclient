@@ -34,13 +34,10 @@ namespace BlackCore
     void CContextSimulatorProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
         bool s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                    "connectionChanged", this, SIGNAL(connectionChanged(bool)));
+                                    "simulatorStatusChanged", this, SIGNAL(simulatorStatusChanged(int)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                               "startedChanged", this, SIGNAL(startedChanged(bool)));
-        Q_ASSERT(s);
-        s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                               "simulatorStatusChanged", this, SIGNAL(simulatorStatusChanged(bool, bool, bool)));
+                               "simulatorStatusChanged", this, SIGNAL(simulatorStatusChanged(int)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                "installedAircraftModelsChanged", this, SIGNAL(installedAircraftModelsChanged()));

@@ -32,15 +32,13 @@ namespace BlackCore
     class ISimulator : public QObject
     {
         Q_OBJECT
-        Q_ENUMS(ConnectionStatus)
-
     public:
-        //! ISimulator connection
-        enum ConnectionStatus
+        //! ISimulator status
+        enum SimulatorStatus
         {
-            Disconnected,
-            Connected,
-            ConnectionFailed
+            Connected   = 1 << 0, //!< Is the plugin connected to the simulator?
+            Running     = 1 << 1, //!< Is the simulator actually simulating?
+            Paused      = 1 << 2, //!< Is the simulator paused?
         };
 
         //! Render all aircraft
@@ -177,23 +175,14 @@ namespace BlackCore
         virtual bool isRenderingEnabled() const = 0;
 
     signals:
-        //! Emitted when the connection status has changed
-        void connectionStatusChanged(ISimulator::ConnectionStatus status);
+        //! Simulator combined status
+        void simulatorStatusChanged(quint8 status);
 
         //! Emitted when own aircraft model has changed
         void ownAircraftModelChanged(BlackMisc::Simulation::CSimulatedAircraft aircraft);
 
-        //! Simulator combined status
-        void simulatorStatusChanged(bool connected, bool running, bool paused);
-
         //! Only a limited number of aircraft displayed
         void restrictedRenderingChanged(bool restricted);
-
-        //! Simulator started
-        void simulatorStarted();
-
-        //! Simulator stopped
-        void simulatorStopped();
 
         //! A single model has been matched
         void modelMatchingCompleted(BlackMisc::Simulation::CSimulatedAircraft aircraft);
@@ -363,6 +352,5 @@ namespace BlackCore
 } // namespace
 
 Q_DECLARE_INTERFACE(BlackCore::ISimulatorFactory, "org.swift.pilotclient.BlackCore.SimulatorInterface")
-Q_DECLARE_METATYPE(BlackCore::ISimulator::ConnectionStatus)
 
 #endif // guard
