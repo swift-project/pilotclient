@@ -170,6 +170,12 @@ namespace BlackCore
 
         //! Load specific simulator plugin as set in settings
         virtual bool loadSimulatorPluginFromSettings() = 0;
+        
+        //! Listen for the specific simulator to start, load plugin automatically
+        virtual void listenForSimulator(const BlackSim::CSimulatorInfo &simulatorInfo) = 0;
+        
+        //! Listen for simulator as set in settings
+        virtual void listenForSimulatorFromSettings() = 0;
 
         //! Unload simulator plugin
         virtual void unloadSimulatorPlugin() = 0;

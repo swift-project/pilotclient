@@ -124,6 +124,12 @@ namespace BlackCore
 
         //! \copydoc IContextSimulator::loadSimulatorPluginFromSettings()
         virtual bool loadSimulatorPluginFromSettings() override;
+        
+        //! \copydoc IContextSimulator::listenForSimulator()
+        virtual void listenForSimulator(const BlackSim::CSimulatorInfo &simulatorInfo) override;
+        
+        //! \copydoc IContextSimulator::listenForSimulatorFromSettings()
+        virtual void listenForSimulatorFromSettings() override;
 
         //! \copydoc IContextSimulator::unloadSimulatorPlugin()
         virtual void unloadSimulatorPlugin() override;
@@ -164,6 +170,9 @@ namespace BlackCore
 
         //! Text message received
         void ps_textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);
+        
+        //! Listener reports the simulator has started
+        void ps_simulatorStarted(BlackSim::CSimulatorInfo simulatorInfo);
 
         //! Simulator has changed cockpit
         void ps_cockitChangedFromSim(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
@@ -185,6 +194,7 @@ namespace BlackCore
         BlackCore::ISimulator *m_simulator = nullptr; //!< simulator plugin
         QDir m_pluginsDir;
         QSet<ISimulatorFactory *> m_simulatorFactories;
+        QMap<BlackSim::CSimulatorInfo, ISimulatorListener *> m_simulatorListeners;
         QFuture<bool> m_canConnectResult;
     };
 

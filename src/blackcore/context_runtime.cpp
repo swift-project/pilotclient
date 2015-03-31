@@ -196,11 +196,12 @@ namespace BlackCore
             if (this->m_contextSettings)
             {
                 connect(this->m_contextSettings, &IContextSettings::changedSettings, this->m_contextSimulator, &IContextSimulator::settingsChanged);
-                if (!this->m_contextSimulator->loadSimulatorPluginFromSettings())
-                {
-                    CLogMessage(this).warning("No simulator plugin loaded");
-                }
-                times.insert("Post setup, load sim. plugin", time.restart());
+//                 if (!this->m_contextSimulator->loadSimulatorPluginFromSettings())
+//                 {
+//                     CLogMessage(this).warning("No simulator plugin loaded");
+//                 }
+                this->m_contextSimulator->listenForSimulatorFromSettings();
+                times.insert("Post setup, load sim. listener(s)", time.restart());
             }
         }
 

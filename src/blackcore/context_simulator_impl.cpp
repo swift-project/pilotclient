@@ -356,6 +356,44 @@ namespace BlackCore
             return false;
         }
     }
+    
+    void CContextSimulator::listenForSimulator(const CSimulatorInfo &simulatorInfo)
+    {
+        Q_ASSERT(this->getIContextApplication());
+        Q_ASSERT(this->getIContextApplication()->isUsingImplementingObject());
+
+        if (this->m_simulator && this->m_simulator->getSimulatorInfo() == simulatorInfo) {  // already loaded
+            qWarning("Cannot listen for simulator while still plugin is loaded");
+            return;
+        }
+        
+        if (simulatorInfo.isUnspecified()) {
+            return;
+        }
+
+        // warning if we do not have any plugins
+        if (m_simulatorListeners.isEmpty()) {
+            CLogMessage(this).error("No simulator listeners");
+            return;
+        }
+
+        if (!m_simulatorListeners.contains(simulatorInfo)) {
+            CLogMessage(this).error("Listener not found for '%1'") << simulatorInfo.toQString(true);
+            return;
+        } else {
+            ISimulatorListener *listener = m_simulatorListeners[simulatorInfo];
+            Q_ASSERT(listener);
+            listener->start();
+            CLogMessage(this).info("Listening for simulator: '%1'") << simulatorInfo.toQString(true);
+        }
+        
+    }
+    
+    void CContextSimulator::listenForSimulatorFromSettings()
+    {
+        Q_ASSERT(this->getIContextSettings());
+        listenForSimulator(getIContextSettings()->getSimulatorSettings().getSelectedPlugin());
+    }
 
     void CContextSimulator::unloadSimulatorPlugin()
     {
@@ -505,6 +543,12 @@ namespace BlackCore
         if (!this->m_simulator) return false;
         return this->m_simulator->isSimulating();
     }
+    
+    void CContextSimulator::ps_simulatorStarted(CSimulatorInfo simulatorInfo)
+    {
+        CLogMessage(this).info("Simulator %1 started.") << simulatorInfo.toQString();
+        loadSimulatorPlugin(simulatorInfo);
+    }
 
     void CContextSimulator::findSimulatorPlugins()
     {
@@ -532,6 +576,15 @@ namespace BlackCore
                 {
                     CSimulatorInfo simulatorInfo = factory->getSimulatorInfo();
                     m_simulatorFactories.insert(factory);
+                    
+                    ISimulatorListener *listener = factory->createListener(this);
+                    Q_ASSERT(listener);
+                    Q_ASSERT(listener->parent() == this); // requirement
+                    m_simulatorListeners.insert(simulatorInfo, listener);
+                    
+                    /* Will not happen unless start() is called */
+                    connect(listener, &ISimulatorListener::simulatorStarted, this, &CContextSimulator::ps_simulatorStarted);
+        
                     CLogMessage(this).info("Loaded plugin: %1") << simulatorInfo.toQString();
                 }
             }
