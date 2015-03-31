@@ -116,9 +116,7 @@ namespace BlackGui
             {
                 int intervalMs = getUpdateIntervalMs();
                 this->m_updateTimer->startTimer(intervalMs);
-            }
-            else
-            {
+            } else {
                 this->stopTimer();
             }
         }

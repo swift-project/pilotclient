@@ -245,12 +245,12 @@ namespace BlackCore
         Q_ASSERT(this->getIContextApplication());
         Q_ASSERT(this->getIContextApplication()->isUsingImplementingObject());
 
-        if (this->m_simulator && this->m_simulator->getSimulatorInfo() == simulatorInfo) { return true; } // already loaded
-        if (simulatorInfo.isUnspecified()) { return false; }
+        if (this->m_simulator && this->m_simulator->getSimulatorInfo() == simulatorInfo) {
+            return true;
+        } // already loaded
 
         // warning if we do not have any plugins
-        if (m_simulatorFactories.isEmpty())
-        {
+        if (m_simulatorFactories.isEmpty()) {
             CLogMessage(this).error("No simulator plugins");
             return false;
         }

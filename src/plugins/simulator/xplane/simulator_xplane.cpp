@@ -154,12 +154,15 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::connectTo()
         {
-            if (isConnected()) { return true; }
+            if (isConnected()) {
+                return true;
+            }
+            
             m_conn = QDBusConnection::sessionBus(); // TODO make this configurable
             m_service = new CXBusServiceProxy(m_conn, this);
             m_traffic = new CXBusTrafficProxy(m_conn, this);
-            if (m_service->isValid() && m_traffic->isValid() && m_traffic->initialize())
-            {
+            
+            if (m_service->isValid() && m_traffic->isValid() && m_traffic->initialize()) {
                 // FIXME duplication
                 connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::ps_emitOwnAircraftModelChanged);
                 connect(m_service, &CXBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::ps_setAirportsInRange);
@@ -167,9 +170,7 @@ namespace BlackSimPlugin
                 m_watcher->setConnection(m_conn);
                 emitSimulatorCombinedStatus();
                 return true;
-            }
-            else
-            {
+            } else {
                 disconnectFrom();
                 return false;
             }
@@ -183,8 +184,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::disconnectFrom()
         {
-            if (m_traffic)
-            {
+            if (m_traffic) {
                 m_traffic->cleanup();
             }
             
