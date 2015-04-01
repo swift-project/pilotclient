@@ -10,7 +10,7 @@
 #include "blackmisc/coordinategeodetic.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindex.h"
-#include "mathematics.h"
+#include "blackmisc/math/mathutils.h"
 #include "variant.h"
 #include <QtCore/qmath.h>
 
@@ -79,8 +79,8 @@ namespace BlackMisc
             double x = qCos(lat1rad) * qSin(lat2rad) -
                        qSin(lat1rad) * qCos(lat2rad) * qCos(dLon);
             double bearing = qAtan2(y, x);
-            bearing = CMath::rad2deg(bearing); // now in deg
-            bearing = CMath::normalizeDegrees(bearing); // normalize
+            bearing = CMathUtils::rad2deg(bearing); // now in deg
+            bearing = CMathUtils::normalizeDegrees(bearing); // normalize
             return CAngle(bearing, CAngleUnit::deg());
         }
 

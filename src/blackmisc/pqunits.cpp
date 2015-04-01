@@ -13,7 +13,7 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-        using BlackMisc::Math::CMath;
+        using BlackMisc::Math::CMathUtils;
 
         /*
          * Rounded to QString
@@ -26,9 +26,9 @@ namespace BlackMisc
             {
                 digits -= 4;
                 Q_ASSERT(digits >= 0);
-                double de = CMath::trunc(value);
-                double mi = CMath::trunc((value - de) * 100.0);
-                double se = CMath::trunc((value - de - mi / 100.0) * 1000000) / 100.0;
+                double de = CMathUtils::trunc(value);
+                double mi = CMathUtils::trunc((value - de) * 100.0);
+                double se = CMathUtils::trunc((value - de - mi / 100.0) * 1000000) / 100.0;
                 const char *fmt = value < 0 ? "-%L1 %L2 %L3" : "%L1 %L2 %L3";
                 s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
                 s = s.arg(fabs(de), 0, 'f', 0).arg(fabs(mi), 2, 'f', 0, '0').arg(fabs(se), 2, 'f', digits, '0');
@@ -37,8 +37,8 @@ namespace BlackMisc
             {
                 digits -= 2;
                 Q_ASSERT(digits >= 0);
-                double de = CMath::trunc(value);
-                double mi = CMath::trunc((value - de) * 100.0);
+                double de = CMathUtils::trunc(value);
+                double mi = CMathUtils::trunc((value - de) * 100.0);
                 const char *fmt = value < 0 ? "-%L1 %L2" : "%L1 %L2";
                 s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
                 s = s.arg(fabs(de), 0, 'f', 0).arg(fabs(mi), 2, 'f', digits, '0');
@@ -61,9 +61,9 @@ namespace BlackMisc
             {
                 digits -= 4;
                 Q_ASSERT(digits >= 0);
-                double hr = CMath::trunc(value);
-                double mi = CMath::trunc((value - hr) * 100.0);
-                double se = CMath::trunc((value - hr - mi / 100.0) * 1000000) / 100.0;
+                double hr = CMathUtils::trunc(value);
+                double mi = CMathUtils::trunc((value - hr) * 100.0);
+                double se = CMathUtils::trunc((value - hr - mi / 100.0) * 1000000) / 100.0;
                 const char *fmt = value < 0 ? "-%L1h%L2m%L3s" : "%L1h%L2m%L3s";
                 s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
                 s = s.arg(fabs(hr), 2, 'f', 0, '0').arg(fabs(mi), 2, 'f', 0, '0').arg(fabs(se), 2, 'f', digits, '0');
@@ -72,8 +72,8 @@ namespace BlackMisc
             {
                 digits -= 2;
                 Q_ASSERT(digits >= 0);
-                double hr = CMath::trunc(value);
-                double mi = CMath::trunc((value - hr) * 100.0);
+                double hr = CMathUtils::trunc(value);
+                double mi = CMathUtils::trunc((value - hr) * 100.0);
                 const char *fmt = value < 0 ? "-%L1h%L2m" : "%L1h%L2m";
                 s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
                 s = s.arg(fabs(hr), 2, 'f', 0, '0').arg(fabs(mi), 2, 'f', digits, '0');
@@ -82,8 +82,8 @@ namespace BlackMisc
             {
                 digits -= 2;
                 Q_ASSERT(digits >= 0);
-                double mi = CMath::trunc(value);
-                double se = CMath::trunc((value - mi) * 100.0);
+                double mi = CMathUtils::trunc(value);
+                double se = CMathUtils::trunc((value - mi) * 100.0);
                 const char *fmt = value < 0 ? "-%L2m%L3s" : "%L2m%L3s";
                 s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
                 s = s.arg(fabs(mi), 2, 'f', 0, '0').arg(fabs(se), 2, 'f', digits, '0');

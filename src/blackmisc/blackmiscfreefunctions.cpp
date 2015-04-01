@@ -10,7 +10,7 @@
 #include "blackmiscfreefunctions.h"
 #include "blackmisc/aviation/aviation.h"
 #include "pqallquantities.h"
-#include "mathallclasses.h"
+#include "math/math.h"
 #include "geoallclasses.h"
 #include "networkallclasses.h"
 #include "audioallclasses.h"

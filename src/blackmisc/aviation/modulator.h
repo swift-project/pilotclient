@@ -14,7 +14,7 @@
 
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/aviation/avionicsbase.h"
-#include "blackmisc/mathematics.h"
+#include "blackmisc/math/mathutils.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
 namespace BlackMisc
@@ -126,14 +126,14 @@ namespace BlackMisc
             //! Set active frequency
             virtual void setFrequencyActiveMHz(double frequencyMHz)
             {
-                frequencyMHz = Math::CMath::round(frequencyMHz, 3);
+                frequencyMHz = Math::CMathUtils::round(frequencyMHz, 3);
                 this->m_frequencyActive = BlackMisc::PhysicalQuantities::CFrequency(frequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz());
             }
 
             //! Set standby frequency
             virtual void setFrequencyStandbyMHz(double frequencyMHz)
             {
-                frequencyMHz = Math::CMath::round(frequencyMHz, 3);
+                frequencyMHz = Math::CMathUtils::round(frequencyMHz, 3);
                 this->m_frequencyStandby = BlackMisc::PhysicalQuantities::CFrequency(frequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz());
             }
 

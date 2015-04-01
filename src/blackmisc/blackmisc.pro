@@ -25,11 +25,13 @@ TRANSLATIONS += translations/blackmisc_i18n_de.ts \
 
 HEADERS +=  *.h \
             $$PWD/aviation/*.h \
+            $$PWD/math/*.h \
             $$PWD/simulation/*.h \
 
 
 SOURCES +=  *.cpp \
             $$PWD/aviation/*.cpp \
+            $$PWD/math/*.cpp \
             $$PWD/simulation/*.cpp \
 
 

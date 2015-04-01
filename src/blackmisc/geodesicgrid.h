@@ -8,7 +8,7 @@
 
 //! \file
 
-#include "mathematics.h"
+#include "blackmisc/math/mathutils.h"
 #include "coordinategeodetic.h"
 #include "range.h"
 #include "iterator.h"
@@ -128,12 +128,12 @@ namespace BlackMisc
             {
                 using namespace std;
                 using namespace BlackMisc::Math;
-                Q_ASSERT(lat >= -CMath::PIHALF() && lat <= CMath::PIHALF());
-                Q_ASSERT(lon >= -CMath::PI() && lon <= CMath::PI());
-                static const double ratio = Slices / CMath::PI();
+                Q_ASSERT(lat >= -CMathUtils::PIHALF() && lat <= CMathUtils::PIHALF());
+                Q_ASSERT(lon >= -CMathUtils::PI() && lon <= CMathUtils::PI());
+                static const double ratio = Slices / CMathUtils::PI();
                 Key x = qFloor(acos(cos(lat) * cos(lon)) * ratio);
                 Key y = qFloor(acos(cos(lat) * sin(lon)) * ratio);
-                Key z = qFloor(  (lat + CMath::PIHALF()) * ratio);
+                Key z = qFloor(  (lat + CMathUtils::PIHALF()) * ratio);
                 return (x << Xshift) | (y << Yshift) | (z << Zshift);
             }
 

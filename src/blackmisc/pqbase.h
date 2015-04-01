@@ -13,7 +13,7 @@
 #define BLACKMISC_PQBASE_H
 
 #include "blackmisc/valueobject.h"
-#include "blackmisc/mathematics.h"
+#include "blackmisc/math/mathutils.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <QCoreApplication>
 #include <QtDBus/QDBusArgument>
@@ -119,17 +119,17 @@ namespace BlackMisc
             {
                 virtual double toDefault(double factor) const override
                 {
-                    using BlackMisc::Math::CMath;
-                    double part2 = CMath::fract(factor) * SubdivPolicy::fraction();
-                    factor = CMath::trunc(factor) + part2 / SubdivPolicy::subfactor();
+                    using BlackMisc::Math::CMathUtils;
+                    double part2 = CMathUtils::fract(factor) * SubdivPolicy::fraction();
+                    factor = CMathUtils::trunc(factor) + part2 / SubdivPolicy::subfactor();
                     return factor * FactorPolicy::factor();
                 }
                 virtual double fromDefault(double factor) const override
                 {
-                    using BlackMisc::Math::CMath;
+                    using BlackMisc::Math::CMathUtils;
                     factor /= FactorPolicy::factor();
-                    double part2 = CMath::fract(factor) * SubdivPolicy::subfactor();
-                    return CMath::trunc(factor) + part2 / SubdivPolicy::fraction();
+                    double part2 = CMathUtils::fract(factor) * SubdivPolicy::subfactor();
+                    return CMathUtils::trunc(factor) + part2 / SubdivPolicy::fraction();
                 }
             };
 
@@ -143,19 +143,19 @@ namespace BlackMisc
             {
                 virtual double toDefault(double factor) const override
                 {
-                    using BlackMisc::Math::CMath;
-                    double part2 = CMath::fract(factor) * SubdivPolicy::fraction();
-                    double part3 = CMath::fract(part2) * SubdivPolicy::fraction();
-                    factor = CMath::trunc(factor) + (CMath::trunc(part2) + part3 / SubdivPolicy::subfactor()) / SubdivPolicy::subfactor();
+                    using BlackMisc::Math::CMathUtils;
+                    double part2 = CMathUtils::fract(factor) * SubdivPolicy::fraction();
+                    double part3 = CMathUtils::fract(part2) * SubdivPolicy::fraction();
+                    factor = CMathUtils::trunc(factor) + (CMathUtils::trunc(part2) + part3 / SubdivPolicy::subfactor()) / SubdivPolicy::subfactor();
                     return factor * FactorPolicy::factor();
                 }
                 virtual double fromDefault(double factor) const override
                 {
-                    using BlackMisc::Math::CMath;
+                    using BlackMisc::Math::CMathUtils;
                     factor /= FactorPolicy::factor();
-                    double part2 = CMath::fract(factor) * SubdivPolicy::subfactor();
-                    double part3 = CMath::fract(part2) * SubdivPolicy::subfactor();
-                    return CMath::trunc(factor) + (CMath::trunc(part2) + part3 / SubdivPolicy::fraction()) / SubdivPolicy::fraction();
+                    double part2 = CMathUtils::fract(factor) * SubdivPolicy::subfactor();
+                    double part3 = CMathUtils::fract(part2) * SubdivPolicy::subfactor();
+                    return CMathUtils::trunc(factor) + (CMathUtils::trunc(part2) + part3 / SubdivPolicy::fraction()) / SubdivPolicy::fraction();
                 }
             };
 

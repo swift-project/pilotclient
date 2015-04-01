@@ -13,7 +13,7 @@
 #define BLACKMISC_PQANGLE_H
 
 #include "blackmisc/pqphysicalquantity.h"
-#include "blackmisc/mathematics.h"
+#include "blackmisc/math/mathutils.h"
 
 namespace BlackMisc
 {

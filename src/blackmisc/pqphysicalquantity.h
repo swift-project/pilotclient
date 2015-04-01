@@ -15,7 +15,7 @@
 #include "blackmisc/pqbase.h"
 #include "blackmisc/pqunits.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/mathematics.h"
+#include "blackmisc/math/mathutils.h"
 #include "blackmisc/pqstring.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <QtDBus/QDBusMetaType>

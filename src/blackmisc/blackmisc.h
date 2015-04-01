@@ -19,11 +19,6 @@
  */
 
 /*!
- * \namespace BlackMisc::Math
- * \brief Math classes such as vectors, matrices, and utility methods.
- */
-
-/*!
  * \namespace BlackMisc::GeoPosition
  * \brief Position handling as geo locations and coordinates systems.
  */

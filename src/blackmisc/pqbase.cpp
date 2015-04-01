@@ -10,7 +10,7 @@
 //! \file
 
 #include "blackmisc/pqbase.h"
-#include "blackmisc/mathematics.h"
+#include "blackmisc/math/mathutils.h"
 
 using namespace BlackMisc::Math;
 
@@ -60,7 +60,7 @@ namespace BlackMisc
         double CMeasurementUnit::roundValue(double value, int digits) const
         {
             if (digits < 0) digits = this->m_displayDigits;
-            return CMath::round(value, digits);
+            return CMathUtils::round(value, digits);
         }
 
         /*
@@ -69,7 +69,7 @@ namespace BlackMisc
         QString CMeasurementUnit::makeRoundedQString(double value, int digits, bool /* i18n */) const
         {
             if (digits < 0) digits = this->m_displayDigits;
-            double v = CMath::round(value, digits);
+            double v = CMathUtils::round(value, digits);
             QString s = QLocale::system().toString(v, 'f', digits);
             return s;
         }

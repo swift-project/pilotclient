@@ -63,8 +63,8 @@ namespace BlackMisc
             quint32 d = static_cast<quint32>(f / channelSpacingKHz);
             frequency.switchUnit(CFrequencyUnit::MHz());
             double f0 = frequency.valueRounded(CFrequencyUnit::MHz(), 3);
-            double f1 = CMath::round(d * (channelSpacingKHz / 1000.0), 3);
-            double f2 = CMath::round((d + 1) * (channelSpacingKHz / 1000.0), 3);
+            double f1 = CMathUtils::round(d * (channelSpacingKHz / 1000.0), 3);
+            double f2 = CMathUtils::round((d + 1) * (channelSpacingKHz / 1000.0), 3);
             bool down = qAbs(f1 - f0) < qAbs(f2 - f0); // which is the closest value
             frequency.setCurrentUnitValue(down ? f1 : f2);
         }

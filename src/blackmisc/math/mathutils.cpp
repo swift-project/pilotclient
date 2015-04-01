@@ -1,20 +1,22 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
-#include "blackmisc/mathematics.h"
-#include <algorithm> // std::max
+#include "blackmisc/math/mathutils.h"
+#include <algorithm>
 #include <cmath>
 
 namespace BlackMisc
 {
     namespace Math
     {
-        /*
-         * Hypotenuse
-         */
-        double CMath::hypot(double x, double y)
+
+        double CMathUtils::hypot(double x, double y)
         {
             x = qAbs(x);
             y = qAbs(y);
@@ -24,20 +26,14 @@ namespace BlackMisc
             return max * sqrt(1 + r * r);
         }
 
-        /*
-         * Real part of cubic root
-         */
-        double CMath::cubicRootReal(double x)
+        double CMathUtils::cubicRootReal(double x)
         {
             double result;
             result = std::pow(qAbs(x), (double)1.0 / 3.0);
             return x < 0 ? -result : result;
         }
 
-        /*
-         * Round utility method
-         */
-        double CMath::round(double value, int digits)
+        double CMathUtils::round(double value, int digits)
         {
             // gosh, is there no Qt method for this??? It's year 2013
             double fractpart, intpart;
@@ -49,10 +45,7 @@ namespace BlackMisc
             return rv;
         }
 
-        /*
-         * Round by given epsilon value
-         */
-        double CMath::roundEpsilon(double value, double epsilon)
+        double CMathUtils::roundEpsilon(double value, double epsilon)
         {
             double fractpart, intpart;
             fractpart = modf(value, &intpart);
@@ -62,35 +55,23 @@ namespace BlackMisc
             return rv;
         }
 
-        /*
-         * Equal, considering equal
-         */
-        bool CMath::epsilonEqual(double v1, double v2, double epsilon)
+        bool CMathUtils::epsilonEqual(double v1, double v2, double epsilon)
         {
             if (v1 == v2) return true;
             return qAbs(v1 - v2) <= epsilon;
         }
 
-        /*
-         * To radians
-         */
-        double CMath::deg2rad(double degree)
+        double CMathUtils::deg2rad(double degree)
         {
-            return degree * CMath::PI() / 180.0;
+            return degree * CMathUtils::PI() / 180.0;
         }
 
-        /*
-         * To radians
-         */
-        double CMath::rad2deg(double radians)
+        double CMathUtils::rad2deg(double radians)
         {
-            return radians * 180.0 / CMath::PI();
+            return radians * 180.0 / CMathUtils::PI();
         }
 
-        /*
-         * Normalize degrees
-         */
-        double CMath::normalizeDegrees(double degrees)
+        double CMathUtils::normalizeDegrees(double degrees)
         {
             double result = std::fmod(degrees, 360.0);
             return (result >= 0.0) ? result : result + 360.0;

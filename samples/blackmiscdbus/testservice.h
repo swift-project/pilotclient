@@ -20,7 +20,7 @@
 #include "blackmisc/networkallclasses.h"
 #include "blackmisc/pqallquantities.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/mathallclasses.h"
+#include "blackmisc/math/math.h"
 #include "blacksim/fscommon/aircraftcfgentrieslist.h"
 #include "servicetool.h"
 #include <QObject>

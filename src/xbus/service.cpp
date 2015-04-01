@@ -88,7 +88,7 @@ namespace XBus
                 if (icao[0] != 0)
                 {
                     using namespace BlackMisc::Math;
-                    m_airports.insert(CMath::deg2rad(lat), CMath::deg2rad(lon), i);
+                    m_airports.insert(CMathUtils::deg2rad(lat), CMathUtils::deg2rad(lon), i);
                 }
             }
         }
@@ -115,7 +115,7 @@ namespace XBus
         using namespace BlackMisc::Math;
         QStringList icaos, names;
         QDoubleList lats, lons, alts;
-        for (auto navref : m_airports.inAdjacentTiles(CMath::deg2rad(getLatitude()), CMath::deg2rad(getLongitude())))
+        for (auto navref : m_airports.inAdjacentTiles(CMathUtils::deg2rad(getLatitude()), CMathUtils::deg2rad(getLongitude())))
         {
             float lat, lon, alt;
             char icao[32], name[256];

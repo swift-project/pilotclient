@@ -10,7 +10,7 @@
 #include "blacksimplugin_freefunctions.h"
 #include "fs9_host.h"
 #include "fs9_client.h"
-#include "blackmisc/mathematics.h"
+#include "blackmisc/math/mathutils.h"
 #include "blackmisc/logmessage.h"
 
 using namespace BlackMisc::Aviation;
