@@ -47,13 +47,33 @@ namespace BlackGui
     void CDockWidget::setEmptyTitleBar()
     {
         if (!this->m_titleBarWidgetOriginal) { this->initTitleBarWidgets(); }
-        if (this->titleBarWidget() == this->m_titleBarWidgetEmpty) return; // on purpose, as I do not know what happens when I call setTitleBar
+        if (this->titleBarWidget() == this->m_titleBarWidgetEmpty) { return; } // on purpose, as I do not know what happens when I call setTitleBar
         this->setTitleBarWidget(this->m_titleBarWidgetEmpty);
     }
 
     void CDockWidget::setNullTitleBar()
     {
         this->setTitleBarWidget(nullptr);
+    }
+
+    void CDockWidget::setMarginsWhenFloating(const QMargins &margins)
+    {
+        this->m_marginsWhenFloating = margins;
+    }
+
+    void CDockWidget::setMarginsWhenFloating(int left, int top, int right, int bottom)
+    {
+        this->m_marginsWhenFloating = QMargins(left, top, right, bottom);
+    }
+
+    void CDockWidget::setMarginsWhenDocked(const QMargins &margins)
+    {
+        this->m_marginsWhenDocked = margins;
+    }
+
+    void CDockWidget::setMarginsWhenDocked(int left, int top, int right, int bottom)
+    {
+        this->m_marginsWhenDocked = QMargins(left, top, right, bottom);
     }
 
     void CDockWidget::setWindowTitle(const QString &title)

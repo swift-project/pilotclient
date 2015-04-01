@@ -4,8 +4,8 @@ http://qt-project.org/doc/qt-5.3/stylesheet-examples.html
 http://web.forret.com/tools/color.asp?RGB=2F4F4F&name=Dark+slate+gray
 
 Remarks:
-there is no opacity with background image, so we need semitransparent images
-use -- instead of :: for namespaces
+1) there is no opacity with background image, so we need semitransparent images
+2) use -- instead of :: for namespaces
 
 Used dynamic properties
 frameless (infobar.qss , here)
@@ -21,20 +21,27 @@ QMainWindow {
 /** background-image not working on QDockWidget, so I use direct children **/
 #sw_MainMiddle BlackGui--CDockWidgetInfoArea {
   background-color: black;
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
+/** this is the first widget in the dock area **/
+/** all dock widgets shall have this QWidget as container **/
 #sw_MainMiddle BlackGui--CDockWidgetInfoArea > QWidget {
   background-color: black;
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
+/** the following QFrame, likely the component itself
+#sw_MainMiddle BlackGui--CDockWidgetInfoArea > QWidget > QFrame {
+    border: 0px;
+    padding: 0px;
+}
+
 /** fix the menu, which is overridden by the above QWidget **/
 #sw_MainMiddle BlackGui--CDockWidgetInfoArea > QMenu {
-  border: 2px solid darkslategray; /* reserve space for selection border */
+  border: 1px solid darkslategray; /* reserve space for selection border */
   background: lightgray;
   color: black;
-  padding: 2px;
+  padding: 0px;
 }
 
 /** required when info area is not floating **/
@@ -46,14 +53,8 @@ BlackGui--CInfoArea {
 /** fix scroll areas **/
 
 /** in flight plan **/
-QAbstractScrollArea #qw_FlightPlanTabMain {
-  background-color: black;
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
-}
-QAbstractScrollArea #qw_RemarksGenerator {
-  background-color: transparent;
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
-}
+QAbstractScrollArea #qw_FlightPlanTabMain { background-color: black; background-image: url(:/textures/icons/textures/texture-inner.jpg); }
+QAbstractScrollArea #qw_RemarksGenerator  { background-color: transparent; background-image: url(:/textures/icons/textures/texture-inner.jpg); }
 
 /** in log component **/
 QAbstractScrollArea #pg_StatusPageMessages { background-color: black; }

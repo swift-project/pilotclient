@@ -49,16 +49,16 @@ namespace BlackGui
         void setNullTitleBar();
 
         //! Margins when window is floating
-        void setMarginsWhenFloating(const QMargins &margins) { this->m_marginsWhenFloating = margins; }
+        void setMarginsWhenFloating(const QMargins &margins);
 
         //! Margins when window is floating
-        void setMarginsWhenFloating(int left, int top, int right, int bottom) { this->m_marginsWhenFloating = QMargins(left, top, right, bottom); }
+        void setMarginsWhenFloating(int left, int top, int right, int bottom);
 
         //! Margins when widget is floating
-        void setMarginsWhenDocked(const QMargins &margins) { this->m_marginsWhenDocked = margins; }
+        void setMarginsWhenDocked(const QMargins &margins);
 
         //! Margins when widget is floating
-        void setMarginsWhenDocked(int left, int top, int right, int bottom) { this->m_marginsWhenDocked = QMargins(left, top, right, bottom); }
+        void setMarginsWhenDocked(int left, int top, int right, int bottom);
 
         //! Window title backup
         const QString &windowTitleBackup() const { return this->m_windowTitleBackup; }

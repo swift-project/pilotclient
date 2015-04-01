@@ -17,6 +17,8 @@
 #include <QFont>
 #include <QStringList>
 #include <QStyle>
+#include <QScopedPointer>
+#include <QSettings>
 
 namespace BlackGui
 {
@@ -48,6 +50,9 @@ namespace BlackGui
         //! Current font color from style sheet
         QString fontColor();
 
+        //! GUI ini file data
+        const QSettings *iniFile() const { return m_iniFile.data(); }
+
         //! Get the font style
         static QString fontStyle(const QString &combinedStyleAndWeight);
 
@@ -55,82 +60,40 @@ namespace BlackGui
         static QString fontWeight(const QString &combinedStyleAndWeight);
 
         //! Central reader
-        static CStyleSheetUtility &instance()
-        {
-            static CStyleSheetUtility r;
-            return r;
-        }
+        static CStyleSheetUtility &instance();
 
         //! File name fonts.qss
-        static const QString &fileNameFonts()
-        {
-            static const QString f("fonts.qss");
-            return f;
-        }
+        static const QString &fileNameFonts();
 
         //! File name mainwindow.qss
-        static const QString &fileNameMainWindow()
-        {
-            static const QString f("mainwindow.qss");
-            return f;
-        }
+        static const QString &fileNameMainWindow();
 
         //! File name infobar.qss
-        static const QString &fileNameInfoBar()
-        {
-            static const QString f("infobar.qss");
-            return f;
-        }
+        static const QString &fileNameInfoBar();
 
         //! File name dockwidgettab.qss
-        static const QString &fileNameDockWidgetTab()
-        {
-            static const QString f("dockwidgettab.qss");
-            return f;
-        }
+        static const QString &fileNameDockWidgetTab();
 
         //! File name maininfoarea.qss
-        static const QString &fileNameInfoWindow()
-        {
-            static const QString f("stylesheetinfo.qss");
-            return f;
-        }
+        static const QString &fileNameInfoWindow();
 
         //! File name textmessage.qss
-        static const QString &fileNameTextMessage()
-        {
-            static const QString f("textmessage.css");
-            return f;
-        }
+        static const QString &fileNameTextMessage();
 
         //! File name maininfoarea.qss
-        static const QString &fileNameFilterDialog()
-        {
-            static const QString f("filterdialog.qss");
-            return f;
-        }
+        static const QString &fileNameFilterDialog();
 
+        //! File name ini file
+        static const QString &fileNameIniFile();
 
         //! Font weights
-        static const QStringList &fontWeights()
-        {
-            static const QStringList w( {"bold", "semibold", "light", "black", "normal"});
-            return w;
-        }
+        static const QStringList &fontWeights();
 
         //! Font styles
-        static const QStringList &fontStyles()
-        {
-            static const QStringList s( {"italic", "oblique", "normal"});
-            return s;
-        }
+        static const QStringList &fontStyles();
 
         //! Transparent background color
-        static const QString &transparentBackgroundColor()
-        {
-            static const QString t = "background-color: transparent;";
-            return t;
-        }
+        static const QString &transparentBackgroundColor();
 
         //! qss directory
         static QString qssDirectory();
@@ -157,6 +120,7 @@ namespace BlackGui
 
     private:
         QMap<QString, QString> m_styleSheets; //!< filename, stylesheet
+        QScopedPointer<QSettings> m_iniFile;
 
         //! Constructor
         explicit CStyleSheetUtility(QObject *parent = nullptr);

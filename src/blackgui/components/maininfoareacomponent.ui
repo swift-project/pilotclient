@@ -92,7 +92,7 @@
     <set>Qt::TopDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string>Aircrafts</string>
+    <string>Aircraft</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>4</number>

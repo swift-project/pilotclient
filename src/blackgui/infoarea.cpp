@@ -46,8 +46,7 @@ namespace BlackGui
         }
 
         this->ps_setDockArea(Qt::TopDockWidgetArea);
-        this->setMarginsWhenFloating(5, 5, 5, 5); // left, top, right bottom
-        this->setMarginsWhenDocked(1, 1, 1, 1);   // top has no effect
+        this->iniFileBasedSettings();
         this->connectAllWidgets();
         this->setFeaturesForDockableWidgets(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable);
         this->tabifyAllWidgets();
@@ -533,6 +532,30 @@ namespace BlackGui
         return infoAreas;
     }
 
+    void CInfoArea::iniFileBasedSettings()
+    {
+        const QSettings *settings = CStyleSheetUtility::instance().iniFile();
+        if (settings)
+        {
+            this->setMarginsWhenDocked(
+                settings->value("infoarea/margindocked.left").toInt(),
+                settings->value("infoarea/margindocked.top").toInt(),
+                settings->value("infoarea/margindocked.right").toInt(),
+                settings->value("infoarea/margindocked.bottom").toInt());
+            this->setMarginsWhenFloating(
+                settings->value("infoarea/marginfloating.left").toInt(),
+                settings->value("infoarea/marginfloating.top").toInt(),
+                settings->value("infoarea/marginfloating.right").toInt(),
+                settings->value("infoarea/marginfloating.bottom").toInt());
+        }
+        else
+        {
+            // some defaut if not available
+            this->setMarginsWhenFloating(10, 10, 20, 20); // left, top, right, bottom
+            this->setMarginsWhenDocked(1, 1, 1, 1);   // top has no effect
+        }
+    }
+
     void CInfoArea::ps_emitInfoAreaStatus()
     {
         int sia = this->getSelectedDockInfoAreaIndex();
@@ -664,6 +687,7 @@ namespace BlackGui
 
     void CInfoArea::ps_onStyleSheetChanged()
     {
+        this->iniFileBasedSettings();
         if (this->m_tabBar)
         {
             QString qss = CStyleSheetUtility::instance().style(CStyleSheetUtility::fileNameDockWidgetTab());

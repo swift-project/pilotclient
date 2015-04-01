@@ -94,7 +94,13 @@ namespace BlackGui
     bool CStyleSheetUtility::read()
     {
         QDir directory(qssDirectory());
-        if (!directory.exists()) return false;
+        if (!directory.exists()) { return false; }
+
+        // ini file
+        QString iniFile = directory.absolutePath().append("/").append(fileNameIniFile());
+        m_iniFile.reset(new QSettings(iniFile, QSettings::IniFormat));
+
+        // qss/css files
         directory.setNameFilters({"*.qss", "*.css"});
         directory.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 
@@ -130,7 +136,7 @@ namespace BlackGui
         QString style;
         foreach(QString fileName, fileNames)
         {
-            if (!this->containsStyle(fileName)) continue;
+            if (!this->containsStyle(fileName)) { continue; }
             QString s = this->m_styleSheets[fileName.toLower()].trimmed();
             if (s.isEmpty()) continue;
             if (!style.isEmpty()) style.append("\n\n");
@@ -212,6 +218,78 @@ namespace BlackGui
             }
         }
         return n;
+    }
+
+    CStyleSheetUtility &CStyleSheetUtility::instance()
+    {
+        static CStyleSheetUtility r;
+        return r;
+    }
+
+    const QString &CStyleSheetUtility::fileNameFonts()
+    {
+        static const QString f("fonts.qss");
+        return f;
+    }
+
+    const QString &CStyleSheetUtility::fileNameMainWindow()
+    {
+        static const QString f("mainwindow.qss");
+        return f;
+    }
+
+    const QString &CStyleSheetUtility::fileNameInfoBar()
+    {
+        static const QString f("infobar.qss");
+        return f;
+    }
+
+    const QString &CStyleSheetUtility::fileNameDockWidgetTab()
+    {
+        static const QString f("dockwidgettab.qss");
+        return f;
+    }
+
+    const QString &CStyleSheetUtility::fileNameInfoWindow()
+    {
+        static const QString f("stylesheetinfo.qss");
+        return f;
+    }
+
+    const QString &CStyleSheetUtility::fileNameTextMessage()
+    {
+        static const QString f("textmessage.css");
+        return f;
+    }
+
+    const QString &CStyleSheetUtility::fileNameFilterDialog()
+    {
+        static const QString f("filterdialog.qss");
+        return f;
+    }
+
+    const QString &CStyleSheetUtility::fileNameIniFile()
+    {
+        static const QString f("gui.ini");
+        return f;
+    }
+
+    const QStringList &CStyleSheetUtility::fontWeights()
+    {
+        static const QStringList w( {"bold", "semibold", "light", "black", "normal"});
+        return w;
+    }
+
+    const QStringList &CStyleSheetUtility::fontStyles()
+    {
+        static const QStringList s( {"italic", "oblique", "normal"});
+        return s;
+    }
+
+    const QString &CStyleSheetUtility::transparentBackgroundColor()
+    {
+        static const QString t = "background-color: transparent;";
+        return t;
     }
 
     QString CStyleSheetUtility::qssDirectory()

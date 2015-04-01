@@ -38,7 +38,7 @@ namespace BlackGui
     bool CDockWidgetInfoArea::isSelectedDockWidget() const
     {
         const CInfoArea *ia = getParentInfoArea();
-        if (!ia) return false;
+        if (!ia) { return false; }
         return ia->isSelectedDockWidgetInfoArea(this);
     }
 
@@ -46,12 +46,12 @@ namespace BlackGui
     {
         // if the widget is invisible we are done
         // but if it is visible, there is no guarantee it can be seen by the user
-        if (!this->isVisible()) return false;
+        if (!this->isVisible()) { return false; }
 
         // further checks
         if (this->isFloating())
         {
-            if (this->isMinimized()) return false;
+            if (this->isMinimized()) { return false; }
             return true;
         }
         else
@@ -125,7 +125,7 @@ namespace BlackGui
         foreach(CDockWidgetInfoArea * ia, nestedInfoAreas)
         {
             QList<CEnableForDockWidgetInfoArea *> nestedInfoAreaComponents = ia->findEmbeddedDockWidgetInfoAreaComponents();
-            if (nestedInfoAreaComponents.isEmpty()) continue;
+            if (nestedInfoAreaComponents.isEmpty()) { continue; }
             foreach(CEnableForDockWidgetInfoArea * iac, nestedInfoAreaComponents)
             {
                 bool r = widgetsWithDockWidgetInfoAreaComponent.removeOne(iac);
