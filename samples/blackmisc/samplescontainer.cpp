@@ -9,7 +9,7 @@
 
 #include "samplescontainer.h"
 #include "blackmisc/blackmiscfreefunctions.h"
-#include "blackmisc/avatcstationlist.h"
+#include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/propertyindexallclasses.h"
 #include <QDebug>
 #include <QMetaType>

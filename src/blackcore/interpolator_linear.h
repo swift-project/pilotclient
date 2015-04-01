@@ -13,8 +13,8 @@
 #define BLACKCORE_INTERPOLATOR_LINEAR_H
 
 #include "interpolator.h"
-#include "blackmisc/avaircraftsituation.h"
-#include "blackmisc/avaircraftsituationlist.h"
+#include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/sequence.h"
 #include <QDateTime>
 

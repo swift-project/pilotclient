@@ -15,7 +15,7 @@
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/updatetimer.h"
-#include "blackmisc/avaircraft.h"
+#include "blackmisc/aviation/aircraft.h"
 
 #include <QTabWidget>
 #include <QScopedPointer>

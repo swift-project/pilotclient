@@ -13,8 +13,8 @@
 #define BLACKGUI_FLIGHTPLANCOMPONENT_H
 
 #include "blackgui/components/enableforruntime.h"
-#include "blackmisc/avaircraft.h"
-#include "blackmisc/avflightplan.h"
+#include "blackmisc/aviation/aircraft.h"
+#include "blackmisc/aviation/flightplan.h"
 
 #include <QTabWidget>
 

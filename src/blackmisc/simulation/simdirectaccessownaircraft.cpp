@@ -8,7 +8,7 @@
  */
 
 #include "simdirectaccessownaircraft.h"
-#include "blackmisc/avaircraft.h"
+#include "blackmisc/aviation/aircraft.h"
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;

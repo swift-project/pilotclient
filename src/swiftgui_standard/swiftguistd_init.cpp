@@ -18,7 +18,7 @@
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackgui/models/keyboardkeylistmodel.h"
 #include "blackmisc/icons.h"
-#include "blackmisc/avselcal.h"
+#include "blackmisc/aviation/selcal.h"
 #include "blackmisc/project.h"
 #include "blackmisc/hotkeyfunction.h"
 #include "blackmisc/logmessage.h"

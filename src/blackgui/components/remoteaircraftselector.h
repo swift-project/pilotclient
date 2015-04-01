@@ -13,7 +13,7 @@
 #define BLACKGUI_REMOTEAIRCRAFTSELECTOR_H
 
 #include "enableforruntime.h"
-#include "blackmisc/avcallsign.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 
 

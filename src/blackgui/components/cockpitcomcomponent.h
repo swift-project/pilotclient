@@ -12,8 +12,8 @@
 
 #include "enablefordockwidgetinfoarea.h"
 #include "enableforruntime.h"
-#include "blackmisc/avaircraft.h"
-#include "blackmisc/aviotransponder.h"
+#include "blackmisc/aviation/aircraft.h"
+#include "blackmisc/aviation/transponder.h"
 #include "blackmisc/voiceroomlist.h"
 #include <QFrame>
 #include <QScopedPointer>

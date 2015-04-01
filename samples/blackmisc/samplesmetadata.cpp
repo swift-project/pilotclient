@@ -9,7 +9,7 @@
 
 #include "samplesmetadata.h"
 #include "blackmisc/blackmiscfreefunctions.h"
-#include "blackmisc/avatcstationlist.h"
+#include "blackmisc/aviation/atcstationlist.h"
 #include <QDebug>
 #include <QGuiApplication>
 #include <QMetaType>

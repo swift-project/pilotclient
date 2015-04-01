@@ -9,9 +9,9 @@
 
 #include "blackmisc/geoobjectlist.h"
 #include "blackmisc/predicates.h"
-#include "blackmisc/avatcstationlist.h"
-#include "blackmisc/avaircraftlist.h"
-#include "blackmisc/avairportlist.h"
+#include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/aircraftlist.h"
+#include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 
 using namespace BlackMisc::PhysicalQuantities;

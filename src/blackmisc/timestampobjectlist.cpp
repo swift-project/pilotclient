@@ -9,7 +9,7 @@
 
 #include "blackmisc/timestampobjectlist.h"
 #include "blackmisc/predicates.h"
-#include "blackmisc/avaircraftsituationlist.h"
+#include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/nwtextmessagelist.h"
 #include "blackmisc/statusmessagelist.h"

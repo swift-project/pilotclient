@@ -19,7 +19,7 @@
 #include "blackcore/simulator.h"
 #include "blackcore/interpolator.h"
 #include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/avaircraft.h"
+#include "blackmisc/aviation/aircraft.h"
 #include "blacksim/simulatorplugininfo.h"
 #include "blackmisc/pixmap.h"
 #include <QObject>

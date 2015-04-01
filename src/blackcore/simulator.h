@@ -19,7 +19,7 @@
 #include "blackmisc/simulation/simdirectaccessownaircraft.h"
 #include "blackmisc/simulation/simdirectaccessremoteaircraft.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackmisc/avairportlist.h"
+#include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/nwtextmessage.h"
 #include "blackmisc/nwclient.h"
 #include "blackmisc/pixmap.h"

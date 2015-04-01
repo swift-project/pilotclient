@@ -13,7 +13,7 @@
 #define BLACKCORE_AIRSPACE_WATCHDOG_H
 
 #include "blackmisc/pqtime.h"
-#include "blackmisc/avcallsign.h"
+#include "blackmisc/aviation/callsign.h"
 #include <QObject>
 #include <QHash>
 

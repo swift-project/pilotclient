@@ -12,7 +12,7 @@
 #ifndef BLACKCORETEST_TESTINTERPOLATOR_H
 #define BLACKCORETEST_TESTINTERPOLATOR_H
 
-#include "blackmisc/avaircraftsituation.h"
+#include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftparts.h"
 
 #include <QtTest/QtTest>

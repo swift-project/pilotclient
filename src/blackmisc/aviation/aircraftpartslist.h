@@ -9,12 +9,12 @@
 
 //! \file
 
-#ifndef BLACKMISC_AIRCRAFTPARTSLIST_H
-#define BLACKMISC_AIRCRAFTPARTSLIST_H
+#ifndef BLACKMISC_AVIATION_AIRCRAFTPARTSLIST_H
+#define BLACKMISC_AVIATION_AIRCRAFTPARTSLIST_H
 
 #include "aircraftparts.h"
 #include "blackmisc/timestampobjectlist.h"
-#include "blackmisc/avcallsignobjectlist.h"
+#include "blackmisc/aviation/callsignobjectlist.h"
 #include <QDateTime>
 
 namespace BlackMisc

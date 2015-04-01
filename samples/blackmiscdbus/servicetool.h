@@ -13,8 +13,8 @@
 #define BLACKMISCTEST_SERVICETOOL_H
 
 #include "blackcore/dbus_server.h"
-#include "blackmisc/avatcstationlist.h"
-#include "blackmisc/avairportlist.h"
+#include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/nwclientlist.h"
 #include "blacksim/fscommon/aircraftcfgentrieslist.h"
 #include <QCoreApplication>

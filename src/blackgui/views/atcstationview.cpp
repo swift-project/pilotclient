@@ -8,7 +8,7 @@
  */
 
 #include "atcstationview.h"
-#include "blackmisc/avatcstationlist.h"
+#include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/testing.h"
 #include <QHeaderView>
 

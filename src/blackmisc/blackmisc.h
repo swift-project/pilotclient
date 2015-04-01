@@ -19,11 +19,6 @@
  */
 
 /*!
- * \namespace BlackMisc::Aviation
- * \brief Aviation and Avionics classes such as CHeading or CTransponder .
- */
-
-/*!
  * \namespace BlackMisc::Math
  * \brief Math classes such as vectors, matrices, and utility methods.
  */

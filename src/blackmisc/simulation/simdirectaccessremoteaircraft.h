@@ -13,7 +13,7 @@
 #define BLACKMISC_SIMDIRECTACCESSREMOTEAIRCRAFT_H
 
 #include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/avaircraftsituationlist.h"
+#include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include <functional>
 

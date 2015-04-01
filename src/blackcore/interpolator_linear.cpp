@@ -8,7 +8,7 @@
  */
 
 #include "interpolator_linear.h"
-#include "blackmisc/avaircraftsituation.h"
+#include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/logmessage.h"
 #include <QDateTime>
 

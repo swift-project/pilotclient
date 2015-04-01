@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_AIRCRAFTENGINES_H
-#define BLACKMISC_AIRCRAFTENGINES_H
+#ifndef BLACKMISC_AVIATION_AIRCRAFTENGINES_H
+#define BLACKMISC_AVIATION_AIRCRAFTENGINES_H
 
 #include "blackmisc/valueobject.h"
 
@@ -54,11 +54,10 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftEngine)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftEngine, (
                                    attr(o.m_number, flags<DisabledForJson>()),
                                    attr(o.m_on, "on")
                                ))
-
-Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftEngine)
 
 #endif // guard

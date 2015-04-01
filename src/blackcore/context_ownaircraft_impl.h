@@ -16,7 +16,7 @@
 #include "blackcore/context_settings.h"
 #include "blackcore/context_runtime.h"
 #include "blackcore/dbus_server.h"
-#include "blackmisc/avatcstation.h"
+#include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/simulation/simdirectaccessownaircraft.h"
 
 namespace BlackCore

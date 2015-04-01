@@ -9,14 +9,14 @@
 
 #include "samplesaviation.h"
 #include "blackmisc/pqconstants.h"
-#include "blackmisc/avheading.h"
-#include "blackmisc/aviocomsystem.h"
-#include "blackmisc/avionavsystem.h"
-#include "blackmisc/aviotransponder.h"
-#include "blackmisc/avatcstationlist.h"
-#include "blackmisc/avflightplan.h"
-#include "blackmisc/avaircrafticao.h"
-#include "blackmisc/avairporticao.h"
+#include "blackmisc/aviation/heading.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/navsystem.h"
+#include "blackmisc/aviation/transponder.h"
+#include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/flightplan.h"
+#include "blackmisc/aviation/aircrafticao.h"
+#include "blackmisc/aviation/airporticao.h"
 
 
 #include <QDebug>

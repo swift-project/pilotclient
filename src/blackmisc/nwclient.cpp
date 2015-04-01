@@ -7,9 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "nwclient.h"
-#include "icon.h"
-#include "avcallsign.h"
+#include "blackmisc/nwclient.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/aviation/callsign.h"
 
 #include <QString>
 

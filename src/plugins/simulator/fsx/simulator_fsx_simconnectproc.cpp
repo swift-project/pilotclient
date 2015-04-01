@@ -14,7 +14,7 @@
 #include "blacksim/fsx/fsxsimulatorsetup.h"
 #include "blacksim/simulatorplugininfo.h"
 #include "blackmisc/project.h"
-#include "blackmisc/avairportlist.h"
+#include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/logmessage.h"
 
 using namespace BlackMisc;

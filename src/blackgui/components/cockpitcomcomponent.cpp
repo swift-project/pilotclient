@@ -13,7 +13,7 @@
 #include "blackcore/context_network.h"
 #include "blackcore/context_ownaircraft.h"
 #include "blackcore/context_audio.h"
-#include "blackmisc/avaircraft.h"
+#include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/voiceroomlist.h"
 #include "blackmisc/logmessage.h"
 

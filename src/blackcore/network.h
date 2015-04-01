@@ -13,15 +13,15 @@
 #define BLACKCORE_NETWORK_H
 
 #include "blacksim/simulatorplugininfo.h"
-#include "blackmisc/avaircraft.h"
+#include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/pqfrequency.h"
 #include "blackmisc/coordinategeodetic.h"
 #include "blackmisc/pqlength.h"
 #include "blackmisc/pqtime.h"
 #include "blackmisc/nwserverlist.h"
 #include "blackmisc/nwtextmessagelist.h"
-#include "blackmisc/avinformationmessage.h"
-#include "blackmisc/avflightplan.h"
+#include "blackmisc/aviation/informationmessage.h"
+#include "blackmisc/aviation/flightplan.h"
 #include <QObject>
 #include <QString>
 #include <QMap>

@@ -13,7 +13,7 @@
 #define BLACKMISC_ALLVALUECLASSES_H
 
 #include "blackmisc/pqallquantities.h"
-#include "blackmisc/avallclasses.h"
+#include "blackmisc/aviation/aviationall.h"
 #include "blackmisc/geoallclasses.h"
 #include "blackmisc/settingsblackmiscclasses.h"
 #include "blackmisc/propertyindexallclasses.h"

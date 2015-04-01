@@ -13,7 +13,7 @@
 #define BLACKSIM_FSCOMMON_BCDCONVERSIONS_H
 
 #include "blackmisc/pqfrequency.h"
-#include "blackmisc/aviotransponder.h"
+#include "blackmisc/aviation/transponder.h"
 #include <QtGlobal>
 
 namespace BlackSim

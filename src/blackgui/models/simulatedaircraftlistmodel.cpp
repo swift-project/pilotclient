@@ -9,7 +9,7 @@
 
 #include "simulatedaircraftlistmodel.h"
 #include "blackmisc/nwuser.h"
-#include "blackmisc/avaircraftsituation.h"
+#include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
 using namespace BlackMisc::Simulation;

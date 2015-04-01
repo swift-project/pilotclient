@@ -13,8 +13,8 @@
 #define BLACKMISC_SIMULATEDNAIRCRAFTLIST_H
 
 #include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/avcallsignobjectlist.h"
-#include "blackmisc/avaircraftlist.h"
+#include "blackmisc/aviation/callsignobjectlist.h"
+#include "blackmisc/aviation/aircraftlist.h"
 #include "blackmisc/geoobjectlist.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/collection.h"

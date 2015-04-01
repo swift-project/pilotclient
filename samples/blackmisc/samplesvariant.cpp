@@ -10,7 +10,7 @@
 #include "samplesvariant.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/pqallquantities.h"
-#include "blackmisc/avallclasses.h"
+#include "blackmisc/aviation/aviation.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <QDebug>

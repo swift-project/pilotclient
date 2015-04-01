@@ -12,11 +12,11 @@
 #ifndef BLACKMISC_CLIENTLIST_H
 #define BLACKMISC_CLIENTLIST_H
 
-#include "nwclient.h"
-#include "sequence.h"
-#include "collection.h"
-#include "blackmisc/avcallsignobjectlist.h"
-#include "blackmisc/avcallsign.h"
+#include "blackmisc/nwclient.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/collection.h"
+#include "blackmisc/aviation/callsignobjectlist.h"
+#include "blackmisc/aviation/callsign.h"
 
 #include <QObject>
 #include <QString>

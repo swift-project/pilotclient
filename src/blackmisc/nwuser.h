@@ -12,8 +12,8 @@
 #ifndef BLACKMISC_USER_H
 #define BLACKMISC_USER_H
 
-#include "avcallsign.h"
-#include "avairporticao.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/airporticao.h"
 #include "propertyindex.h"
 #include "statusmessagelist.h"
 

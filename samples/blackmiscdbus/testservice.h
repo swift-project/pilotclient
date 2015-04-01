@@ -16,7 +16,7 @@
 #pragma push_macro("interface")
 #undef interface
 
-#include "blackmisc/avallclasses.h"
+#include "blackmisc/aviation/aviation.h"
 #include "blackmisc/networkallclasses.h"
 #include "blackmisc/pqallquantities.h"
 #include "blackmisc/simulation/simulatedaircraft.h"

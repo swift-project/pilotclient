@@ -14,7 +14,7 @@
 
 #include "blackgui/components/enableforruntime.h"
 #include "blackmisc/nwserver.h"
-#include "blackmisc/avaircrafticao.h"
+#include "blackmisc/aviation/aircrafticao.h"
 #include <QTabWidget>
 #include <QModelIndex>
 #include <QTimer>

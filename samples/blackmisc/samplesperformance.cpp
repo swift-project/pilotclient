@@ -8,9 +8,9 @@
  */
 
 #include "samplesperformance.h"
-#include "blackmisc/avaircraftsituationlist.h"
+#include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/coordinategeodetic.h"
-#include "blackmisc/avaltitude.h"
+#include "blackmisc/aviation/altitude.h"
 #include "blackmisc/testing.h"
 
 using namespace BlackMisc::Aviation;

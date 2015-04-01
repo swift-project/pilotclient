@@ -13,6 +13,7 @@ namespace BlackMisc
 {
     namespace Aviation
     {
+
         CAircraftPartsList::CAircraftPartsList() { }
 
         CAircraftPartsList::CAircraftPartsList(const CSequence<CAircraftParts> &other) :
@@ -29,5 +30,6 @@ namespace BlackMisc
             qDBusRegisterMetaType<CAircraftPartsList>();
             registerMetaValueType<CAircraftPartsList>();
         }
+
     } // namespace
 } // namespace

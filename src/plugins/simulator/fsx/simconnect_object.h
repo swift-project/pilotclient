@@ -12,7 +12,7 @@
 #ifndef BLACKSIMPLUGIN_SIMCONNECT_OBJECT_H
 #define BLACKSIMPLUGIN_SIMCONNECT_OBJECT_H
 
-#include "blackmisc/avcallsign.h"
+#include "blackmisc/aviation/callsign.h"
 #include <QSharedPointer>
 
 namespace BlackCore { class IInterpolator; }

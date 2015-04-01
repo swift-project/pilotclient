@@ -8,7 +8,7 @@
  */
 
 #include "aircraftmodellistmodel.h"
-#include "blackmisc/avaircrafticao.h"
+#include "blackmisc/aviation/aircrafticao.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 

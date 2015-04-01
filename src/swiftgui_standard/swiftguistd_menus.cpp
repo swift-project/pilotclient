@@ -11,7 +11,7 @@
 #include "ui_swiftguistd.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackmisc/avaltitude.h"
+#include "blackmisc/aviation/altitude.h"
 #include "blackmisc/logmessage.h"
 #include <QPoint>
 #include <QMenu>

@@ -9,15 +9,15 @@
 
 //! \file
 
-#ifndef BLACKMISC_AIRCRAFTPARTS_H
-#define BLACKMISC_AIRCRAFTPARTS_H
+#ifndef BLACKMISC_AVIATION_AIRCRAFTPARTS_H
+#define BLACKMISC_AVIATION_AIRCRAFTPARTS_H
 
-#include "blackmisc/avcallsign.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/propertyindex.h"
-#include "aircraftlights.h"
-#include "aircraftenginelist.h"
+#include "blackmisc/aviation/aircraftlights.h"
+#include "blackmisc/aviation/aircraftenginelist.h"
 
 namespace BlackMisc
 {
@@ -136,7 +136,6 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-// FIXME: Use correct JSON names, when tuple bug is fixed
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftParts, (
                                    attr(o.m_correspondingCallsign, flags < DisabledForJson > ()),
                                    attr(o.m_lights, "lights"),

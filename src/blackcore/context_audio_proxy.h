@@ -18,7 +18,7 @@
 #include "blackmisc/audiodeviceinfolist.h"
 #include "blackmisc/voiceroomlist.h"
 #include "blackmisc/nwuserlist.h"
-#include "blackmisc/avaircraft.h"
+#include "blackmisc/aviation/aircraft.h"
 
 namespace BlackCore
 {

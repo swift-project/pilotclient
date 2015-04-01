@@ -10,8 +10,8 @@
 #include "voice_channel.h"
 #include "audio_mixer.h"
 
-#include "../blackmisc/avcallsignlist.h"
-#include "../blackmisc/avselcal.h"
+#include "blackmisc/aviation/callsignlist.h"
+#include "blackmisc/aviation/selcal.h"
 #include "../blackmisc/nwuserlist.h"
 #include "../blackmisc/voiceroomlist.h"
 #include "../blackmisc/audiodeviceinfolist.h"

@@ -10,7 +10,7 @@
 #include "atcstationcomponent.h"
 #include "../guiutility.h"
 #include "ui_atcstationcomponent.h"
-#include "blackmisc/avinformationmessage.h"
+#include "blackmisc/aviation/informationmessage.h"
 #include "blackmisc/logmessage.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_ownaircraft.h"

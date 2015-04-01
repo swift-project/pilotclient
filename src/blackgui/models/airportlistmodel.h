@@ -13,7 +13,7 @@
 #define BLACKGUI_AIRPORTLISTMODEL_H
 
 #include <QAbstractItemModel>
-#include "blackmisc/avairportlist.h"
+#include "blackmisc/aviation/airportlist.h"
 #include "blackgui/models/listmodelbase.h"
 
 namespace BlackGui

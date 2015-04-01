@@ -13,7 +13,7 @@
 #define BLACKGUI_LOGINCOMPONENT_H
 
 #include "enableforruntime.h"
-#include "blackmisc/avaircraft.h"
+#include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/nwserver.h"
 #include <QFrame>
 #include <QScopedPointer>

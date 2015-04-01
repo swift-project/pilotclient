@@ -14,7 +14,7 @@
 
 #include "maininfoareacomponent.h"
 #include "enableforruntime.h"
-#include "blackmisc/avaircraft.h"
+#include "blackmisc/aviation/aircraft.h"
 
 #include <QFrame>
 #include <QPushButton>

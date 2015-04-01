@@ -13,7 +13,7 @@
 #define BLACKSIMPLUGIN_FREEFUNCTIONS_H
 
 #include "multiplayer_packets.h"
-#include "blackmisc/avaircraftsituation.h"
+#include "blackmisc/aviation/aircraftsituation.h"
 
 namespace BlackSimPlugin
 {

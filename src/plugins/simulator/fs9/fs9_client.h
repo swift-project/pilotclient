@@ -12,7 +12,7 @@
 
 #include "directplay_peer.h"
 #include "blackcore/interpolator.h"
-#include "blackmisc/avaircraftsituation.h"
+#include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/pqtime.h"
 #include <QMutex>
 #include <QScopedPointer>

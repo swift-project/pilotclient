@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_ATCLISTMODEL_H
 #define BLACKGUI_ATCLISTMODEL_H
 
-#include "blackmisc/avatcstationlist.h"
+#include "blackmisc/aviation/atcstationlist.h"
 #include "blackgui/models/listmodelbase.h"
 #include <QAbstractItemModel>
 #include <QStandardItemModel>

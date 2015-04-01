@@ -14,8 +14,8 @@
 
 #include "enableforruntime.h"
 #include "../led.h"
-#include "blackmisc/avaircraft.h"
-#include "blackmisc/aviotransponder.h"
+#include "blackmisc/aviation/aircraft.h"
+#include "blackmisc/aviation/transponder.h"
 #include <QFrame>
 
 namespace BlackGui

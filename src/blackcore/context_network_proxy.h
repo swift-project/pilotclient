@@ -15,7 +15,7 @@
 #include "context_network.h"
 #include "network_vatlib.h"
 
-#include "blackmisc/avallclasses.h"
+#include "blackmisc/aviation/aviation.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/nwtextmessagelist.h"

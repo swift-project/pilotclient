@@ -13,6 +13,7 @@ namespace BlackMisc
 {
     namespace Aviation
     {
+
         QString CAircraftParts::convertToQString(bool i18n) const
         {
             QString s;

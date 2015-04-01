@@ -18,7 +18,7 @@
 #include "vatsimdatafilereader.h"
 
 #include "blackmisc/networkutils.h"
-#include "blackmisc/avatcstationlist.h"
+#include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/simplecommandparser.h"
 #include "blackmisc/simulation/simdirectaccessownaircraft.h"

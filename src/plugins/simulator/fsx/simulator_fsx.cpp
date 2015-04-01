@@ -15,7 +15,7 @@
 #include "blacksim/simulatorplugininfo.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/project.h"
-#include "blackmisc/avairportlist.h"
+#include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/nwaircraftmappinglist.h"
 #include "blackcore/interpolator_linear.h"

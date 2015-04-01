@@ -19,12 +19,12 @@
 #include "blackcore/dbus_server.h"
 #include "blackcore/network.h"
 #include "blackcore/airspace_monitor.h"
-#include "blackmisc/avatcstationlist.h"
+#include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/setnetwork.h"
 #include "blackmisc/nwclientlist.h"
 #include "blackmisc/digestsignal.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/avaircraftsituationlist.h"
+#include "blackmisc/aviation/aircraftsituationlist.h"
 
 #include <QMap>
 #include <QTimer>

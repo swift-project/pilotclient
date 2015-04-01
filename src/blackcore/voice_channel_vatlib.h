@@ -14,7 +14,7 @@
 #include "voice_vatlib.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/voiceroomlist.h"
-#include "blackmisc/avcallsignlist.h"
+#include "blackmisc/aviation/callsignlist.h"
 #include <QObject>
 #include <QSharedPointer>
 

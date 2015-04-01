@@ -13,12 +13,12 @@
 #define BLACKCORE_VATSIMDATAFILEREADER_H
 
 #include "blackmisc/threadedreader.h"
-#include "blackmisc/avatcstationlist.h"
-#include "blackmisc/avaircraftlist.h"
+#include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/aircraftlist.h"
 #include "blackmisc/nwserverlist.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/nwvoicecapabilities.h"
-#include "blackmisc/avcallsignlist.h"
+#include "blackmisc/aviation/callsignlist.h"
 
 #include <QObject>
 #include <QTimer>

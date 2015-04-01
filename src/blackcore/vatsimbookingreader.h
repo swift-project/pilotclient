@@ -13,7 +13,7 @@
 #define BLACKCORE_VATSIMBOOKINGREADER_H
 
 #include "blackmisc/threadedreader.h"
-#include "blackmisc/avatcstationlist.h"
+#include "blackmisc/aviation/atcstationlist.h"
 
 #include <QObject>
 #include <QTimer>

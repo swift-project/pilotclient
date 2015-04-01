@@ -12,7 +12,7 @@
 #ifndef BLACKMISC_TESTING_H
 #define BLACKMISC_TESTING_H
 
-#include "avatcstationlist.h"
+#include "blackmisc/aviation/atcstationlist.h"
 
 /*!
  * Generate data for testing purposes.

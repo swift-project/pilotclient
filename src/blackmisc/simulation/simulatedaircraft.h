@@ -12,7 +12,7 @@
 #ifndef BLACKMISC_SIMULATEDAIRCRAFT_H
 #define BLACKMISC_SIMULATEDAIRCRAFT_H
 
-#include "blackmisc/avaircraft.h"
+#include "blackmisc/aviation/aircraft.h"
 #include "aircraftmodel.h"
 #include "blackmisc/nwclient.h"
 

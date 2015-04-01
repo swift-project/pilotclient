@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_SELCALCODESELECTOR_H
 #define BLACKGUI_SELCALCODESELECTOR_H
 
-#include "blackmisc/avselcal.h"
+#include "blackmisc/aviation/selcal.h"
 #include <QFrame>
 #include <QScopedPointer>
 

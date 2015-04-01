@@ -10,9 +10,9 @@
 #include "nwtextmessage.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/pqconstants.h"
-#include "blackmisc/aviocomsystem.h"
-#include "blackmisc/avcallsign.h"
-#include "blackmisc/avselcal.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/selcal.h"
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;

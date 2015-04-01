@@ -14,7 +14,7 @@
 
 #include "blackcore/context_ownaircraft.h"
 #include "blackmisc/genericdbusinterface.h"
-#include "blackmisc/avaircrafticao.h"
+#include "blackmisc/aviation/aircrafticao.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 
 namespace BlackCore

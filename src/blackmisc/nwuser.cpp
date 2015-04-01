@@ -8,7 +8,7 @@
  */
 
 #include "nwuser.h"
-#include "blackmisc/avairporticao.h"
+#include "blackmisc/aviation/airporticao.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindex.h"

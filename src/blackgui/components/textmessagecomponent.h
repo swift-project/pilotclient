@@ -16,7 +16,7 @@
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/textmessagetextedit.h"
 #include "blackmisc/nwtextmessage.h"
-#include "blackmisc/avaircraft.h"
+#include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/nwtextmessagelist.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_ownaircraft.h"

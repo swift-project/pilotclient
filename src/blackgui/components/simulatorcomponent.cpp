@@ -14,7 +14,7 @@
 #include "blackcore/context_ownaircraft.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/iconlist.h"
-#include "blackmisc/avaircraft.h"
+#include "blackmisc/aviation/aircraft.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

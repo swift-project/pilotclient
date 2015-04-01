@@ -8,7 +8,7 @@
  */
 
 #include "blackmiscfreefunctions.h"
-#include "avallclasses.h"
+#include "blackmisc/aviation/aviation.h"
 #include "pqallquantities.h"
 #include "mathallclasses.h"
 #include "geoallclasses.h"

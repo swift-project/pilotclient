@@ -12,7 +12,7 @@
 #ifndef BLACKMISCTEST_SAMPLESPERFORMANCEINDEX_H
 #define BLACKMISCTEST_SAMPLESPERFORMANCEINDEX_H
 
-#include "blackmisc/avaircraftsituationlist.h"
+#include "blackmisc/aviation/aircraftsituationlist.h"
 #include <QTextStream>
 
 namespace BlackMiscTest

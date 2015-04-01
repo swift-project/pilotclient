@@ -14,8 +14,8 @@
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/avcallsignlist.h"
-#include "blackmisc/avaircraftsituationlist.h"
+#include "blackmisc/aviation/callsignlist.h"
+#include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/dictionary.h"
 #include <QList>
 #include <QVector>

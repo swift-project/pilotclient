@@ -8,7 +8,7 @@
  */
 
 #include "blackmisc/sequence.h"
-#include "blackmisc/avatcstation.h"
+#include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/nwuser.h"
 #include "blackmisc/logmessage.h"
 #include "vatsimbookingreader.h"

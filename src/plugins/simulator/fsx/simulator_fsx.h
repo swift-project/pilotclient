@@ -20,7 +20,7 @@
 #include "blacksim/simulatorplugininfo.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/avairportlist.h"
+#include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/nwclient.h"
 #include "blackmisc/pixmap.h"

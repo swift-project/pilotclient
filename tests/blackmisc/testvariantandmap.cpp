@@ -4,7 +4,7 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "testvariantandmap.h"
-#include "blackmisc/avatcstation.h"
+#include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/propertyindexallclasses.h"
 #include "blackmisc/tuple.h"
 #include <QList>

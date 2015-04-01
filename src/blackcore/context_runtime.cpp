@@ -14,7 +14,7 @@
 #include "blacksim/blacksimfreefunctions.h"
 #include "blackmisc/nwserver.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackmisc/avaircraft.h"
+#include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/logmessage.h"
 #include "blackcore/context_runtime.h"

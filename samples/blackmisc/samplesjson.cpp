@@ -8,8 +8,8 @@
  */
 
 #include "samplesjson.h"
-#include "blackmisc/avatcstationlist.h"
-#include "blackmisc/avaircraft.h"
+#include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/aircraft.h"
 #include <QJsonDocument>
 #include <QTextStream>
 

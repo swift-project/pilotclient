@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_TRANSPONDERMODESELECTOR_H
 #define BLACKGUI_TRANSPONDERMODESELECTOR_H
 
-#include "blackmisc/aviotransponder.h"
+#include "blackmisc/aviation/transponder.h"
 #include <QTimer>
 #include <QComboBox>
 #include <QStringList>

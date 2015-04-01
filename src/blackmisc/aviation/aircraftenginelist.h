@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_AIRCRAFTENGINELIST_H
-#define BLACKMISC_AIRCRAFTENGINELIST_H
+#ifndef BLACKMISC_AVIATION_AIRCRAFTENGINELIST_H
+#define BLACKMISC_AVIATION_AIRCRAFTENGINELIST_H
 
 #include "aircraftengine.h"
 #include "blackmisc/collection.h"

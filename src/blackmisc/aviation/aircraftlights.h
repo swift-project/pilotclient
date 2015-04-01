@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_AIRCRAFTLIGHTS_H
-#define BLACKMISC_AIRCRAFTLIGHTS_H
+#ifndef BLACKMISC_AVIATION_AIRCRAFTLIGHTS_H
+#define BLACKMISC_AVIATION_AIRCRAFTLIGHTS_H
 
 #include "blackmisc/valueobject.h"
 #include "blackmisc/propertyindex.h"
@@ -112,6 +112,7 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftLights)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftLights, (
                                    attr(o.m_strobeOn, "strobe_on"),
                                    attr(o.m_landingOn, "landing_on"),
@@ -120,7 +121,5 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftLights, (
                                    attr(o.m_navOn, "nav_on"),
                                    attr(o.m_logoOn, "logo_on")
                                ))
-
-Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftLights)
 
 #endif // guard

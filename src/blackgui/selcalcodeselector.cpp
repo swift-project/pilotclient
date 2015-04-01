@@ -9,7 +9,7 @@
 
 #include "selcalcodeselector.h"
 #include "ui_selcalcodeselector.h"
-#include "blackmisc/avselcal.h"
+#include "blackmisc/aviation/selcal.h"
 #include "blackmisc/icons.h"
 
 using namespace BlackMisc;

@@ -12,7 +12,7 @@
 #ifndef BLACKMISC_NETWORK_AIRCRAFTMAPPING_H
 #define BLACKMISC_NETWORK_AIRCRAFTMAPPING_H
 
-#include "blackmisc/avaircrafticao.h"
+#include "blackmisc/aviation/aircrafticao.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/valueobject.h"
 

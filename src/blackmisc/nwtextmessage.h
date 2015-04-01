@@ -14,7 +14,7 @@
 
 #include "blackmisc/timestampbased.h"
 #include "pqfrequency.h"
-#include "avcallsign.h"
+#include "blackmisc/aviation/callsign.h"
 #include "statusmessage.h"
 #include "valueobject.h"
 #include <QDateTime>

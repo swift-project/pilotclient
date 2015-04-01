@@ -12,8 +12,8 @@
 #ifndef BLACKMISC_AIRCRAFTMODEL_H
 #define BLACKMISC_AIRCRAFTMODEL_H
 
-#include "blackmisc/avaircraft.h"
-#include "blackmisc/avaircrafticao.h"
+#include "blackmisc/aviation/aircraft.h"
+#include "blackmisc/aviation/aircrafticao.h"
 #include "blackmisc/nwuser.h"
 #include "blackmisc/propertyindex.h"
 

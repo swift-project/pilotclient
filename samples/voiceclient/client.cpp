@@ -6,7 +6,7 @@
 #include "client.h"
 #include "blackcore/voice_vatlib.h"
 #include "blackmisc/audiodeviceinfolist.h"
-#include "blackmisc/avcallsignlist.h"
+#include "blackmisc/aviation/callsignlist.h"
 #include <QDateTime>
 
 using namespace BlackMisc::Audio;

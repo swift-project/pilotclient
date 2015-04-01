@@ -12,7 +12,7 @@
 #ifndef BLACKCORE_INTERPOLATOR_H
 #define BLACKCORE_INTERPOLATOR_H
 
-#include "blackmisc/avaircraftsituation.h"
+#include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/simulation/simdirectaccessremoteaircraft.h"
 #include "blackmisc/worker.h"
 #include <QHash>

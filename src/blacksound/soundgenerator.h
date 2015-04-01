@@ -12,7 +12,7 @@
 #ifndef BLACKSOUND_SOUNDGENERATOR_H
 #define BLACKSOUND_SOUNDGENERATOR_H
 
-#include "blackmisc/avselcal.h"
+#include "blackmisc/aviation/selcal.h"
 #include "blackmisc/audiodeviceinfo.h"
 #include "blackmisc/pqtime.h"
 #include "blackmisc/notificationsounds.h"

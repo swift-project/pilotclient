@@ -16,7 +16,7 @@
 #include "blackcore/context_simulator.h"
 #include "blackcore/network.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/avaircrafticao.h"
+#include "blackmisc/aviation/aircrafticao.h"
 #include "../uppercasevalidator.h"
 #include <QIntValidator>
 
