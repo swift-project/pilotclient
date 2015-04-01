@@ -8,7 +8,6 @@
 #ifndef BLACKMISCTEST_TESTGEO_H
 #define BLACKMISCTEST_TESTGEO_H
 
-#include "blackmisc/coordinatetransformation.h"
 #include <QtTest/QtTest>
 
 namespace BlackMiscTest

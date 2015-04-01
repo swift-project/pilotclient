@@ -4,7 +4,6 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "samplesgeo.h"
-#include "samplesgeodetictoecef.h"
 #include <QCoreApplication>
 
 /*!
@@ -17,6 +16,5 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     BlackMiscTest::CSamplesGeo::samples();
-    BlackMiscTest::CSamplesGeodeticToEcef::samples();
     return a.exec();
 }

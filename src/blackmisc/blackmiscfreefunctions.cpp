@@ -41,8 +41,6 @@ void BlackMisc::Math::registerMetadata()
  */
 void BlackMisc::Geo::registerMetadata()
 {
-    CCoordinateEcef::registerMetadata();
-    CCoordinateNed::registerMetadata();
     CCoordinateGeodetic::registerMetadata();
     CLatitude::registerMetadata();
     CLongitude::registerMetadata();

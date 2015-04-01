@@ -4,6 +4,8 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "samplesgeo.h"
+#include "blackmisc/geolatitude.h"
+#include "blackmisc/geolongitude.h"
 
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
@@ -30,26 +32,6 @@ namespace BlackMiscTest
 //    lat3 += lon1; // must not work
 //    lat3 = lon1; //must not work
 //    CGeoLongitude lonx(lat2); // must notwork
-
-        CCoordinateGeodetic cg(10.0, 20.0, 1000);
-        CCoordinateEcef ce = CCoordinateTransformation::toEcef(cg);
-        CCoordinateGeodetic cg2 = CCoordinateTransformation::toGeodetic(ce);
-        cg2.switchUnit(CAngleUnit::deg());
-        qDebug() << cg << ce << cg2;
-
-        CCoordinateNed cned = CCoordinateTransformation::toNed(ce, cg);
-        CCoordinateEcef ce2 = CCoordinateTransformation::toEcef(cned);
-        qDebug() << ce << cned << ce2;
-        qDebug() << (cned + cned) << (ce + ce);
-
-//    cned += ce2; // must not work
-
-        // checked with http://www.movable-type.co.uk/scripts/latlong.html
-        CCoordinateGeodetic coord1 = CCoordinateGeodetic::fromWgs84("50 03 59N", "005 42 53W");
-        CCoordinateGeodetic coord2 = CCoordinateGeodetic::fromWgs84("50 03 59N", "005 42 53W");
-        CCoordinateGeodetic coord3 = CCoordinateGeodetic::fromWgs84("58 38 38N", "003 04 12W");
-        qDebug() << coord1 << coord2 << calculateGreatCircleDistance(coord1, coord2); // should be 0
-        qDebug() << coord1 << coord3 << calculateGreatCircleDistance(coord1, coord3) << calculateGreatCircleDistance(coord1, coord3).switchUnit(CLengthUnit::km()) ; // should be Distance:  968.9 km (to 4 SF*)
 
         // bye
         qDebug() << "-----------------------------------------------";

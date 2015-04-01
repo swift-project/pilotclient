@@ -5,7 +5,6 @@
 
 #ifndef BLACKMISCTEST_SAMPLESGEO_H
 #define BLACKMISCTEST_SAMPLESGEO_H
-#include "blackmisc/coordinatetransformation.h"
 
 namespace BlackMiscTest
 {
