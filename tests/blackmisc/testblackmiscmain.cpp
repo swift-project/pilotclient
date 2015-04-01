@@ -5,7 +5,6 @@
 
 #include "testphysicalquantities.h"
 #include "testaviation.h"
-#include "testvectormatrix.h"
 #include "testgeo.h"
 #include "testcontainers.h"
 #include "testvariantandmap.h"
@@ -23,14 +22,12 @@ namespace BlackMiscTest
         {
             CTestPhysicalQuantities pqBaseTests ;
             CTestAviation avBaseTests;
-            CTestVectorMatrix vmTests;
             CTestGeo geoTests;
             CTestContainers containerTests;
             CTestVariantAndMap variantAndMap;
             CTestHardware hardwareTests;
             status |= QTest::qExec(&pqBaseTests, argc, argv);
             status |= QTest::qExec(&avBaseTests, argc, argv);
-            status |= QTest::qExec(&vmTests, argc, argv);
             status |= QTest::qExec(&geoTests, argc, argv);
             status |= QTest::qExec(&containerTests, argc, argv);
             status |= QTest::qExec(&variantAndMap, argc, argv);

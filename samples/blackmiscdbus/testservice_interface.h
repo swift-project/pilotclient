@@ -242,13 +242,6 @@ namespace BlackMiscTest
             return asyncCallWithArgumentList(QLatin1String("receiveList"), argumentList);
         }
 
-        inline QDBusPendingReply<> receiveMatrix(BlackMisc::Math::CMatrix3x3 matrix)
-        {
-            QList<QVariant> argumentList;
-            argumentList << QVariant::fromValue(matrix);
-            return asyncCallWithArgumentList(QLatin1String("receiveMatrix"), argumentList);
-        }
-
         inline QDBusPendingReply<> receiveSpeed(BlackMisc::PhysicalQuantities::CSpeed speed)
         {
             QList<QVariant> argumentList;

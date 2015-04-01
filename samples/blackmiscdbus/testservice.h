@@ -67,9 +67,6 @@ namespace BlackMiscTest
         //! Receive altitude
         void receiveAltitude(const BlackMisc::Aviation::CAltitude &altitude);
 
-        //! Receive matrix
-        void receiveMatrix(const BlackMisc::Math::CMatrix3x3 &matrix);
-
         //! Receive list
         void receiveList(const QList<double> &list);
 

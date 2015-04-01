@@ -34,10 +34,6 @@
  */
 void BlackMisc::Math::registerMetadata()
 {
-    CMatrix3x3::registerMetadata();
-    CMatrix3x1::registerMetadata();
-    CMatrix1x3::registerMetadata();
-    CVector3D::registerMetadata();
 }
 
 /*

@@ -345,12 +345,6 @@ namespace BlackMiscTest
             testserviceInterface.receiveAtcStation(station);
             qDebug() << "Send ATC" << station;
 
-            // Math
-            CMatrix3x3 m33;
-            m33.setCellIndex();
-            testserviceInterface.receiveMatrix(m33);
-            qDebug() << "Send matrix" << m33;
-
             // Geo
             // EDDF: 50° 2′ 0″ N, 8° 34′ 14″ E, 100m MSL
             geoPos = CCoordinateGeodetic::fromWgs84("50° 2′ 1″ 23 N", "8° 34′ 14″ E", CLength(111, CLengthUnit::m()));

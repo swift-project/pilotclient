@@ -100,14 +100,6 @@ namespace BlackMiscTest
     }
 
     /*
-     * Receive matrix
-     */
-    void Testservice::receiveMatrix(const BlackMisc::Math::CMatrix3x3 &matrix)
-    {
-        qDebug() << "Pid:" << ServiceTool::getPid() << "Received matrix:" << matrix;
-    }
-
-    /*
      * Receive a list
      */
     void Testservice::receiveList(const QList<double> &list)
