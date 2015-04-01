@@ -64,6 +64,12 @@
    </item>
    <item row="0" column="0" colspan="5">
     <widget class="QTabWidget" name="tw_ListViews">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -86,6 +92,12 @@
        </property>
        <item>
         <widget class="BlackGui::Views::CSimulatedAircraftView" name="tvp_SimulatedAircraft">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="selectionMode">
           <enum>QAbstractItemView::SingleSelection</enum>
          </property>
@@ -118,6 +130,12 @@
        </property>
        <item>
         <widget class="BlackGui::Views::CAircraftModelView" name="tvp_AircraftModels">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="selectionMode">
           <enum>QAbstractItemView::SingleSelection</enum>
          </property>

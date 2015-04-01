@@ -35,7 +35,7 @@ namespace BlackSimTest
         std::unique_ptr<ISimulatorModelMappings> cvm(new CVPilotModelMappings(true));
         bool s = cvm->read();
         streamOut << "directory: " << CVPilotModelMappings::standardMappingsDirectory() << endl;
-        streamOut << "loaded: " << (s ? "yes" : "no") << " size: " << cvm->size() << endl;
+        streamOut << "loaded: " << BlackMisc::boolToYesNo(s) << " size: " << cvm->size() << endl;
 
         // mapper with rule set, handing over ownership
         CAircraftMapper mapper(std::move(cvm));

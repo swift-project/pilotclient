@@ -37,7 +37,7 @@ namespace BlackSimTest
             return 0;
         }
 
-        streamOut << "start reading" << endl;
+        streamOut << "start reading, press RETURN" << endl;
         QString input = streamIn.readLine();
         Q_UNUSED(input);
 

@@ -92,7 +92,7 @@ namespace BlackGui
             void ps_onModelsUpdateRequested();
 
             //! Rendered aircraft changed in backend
-            void ps_onRenderedAircraftModelChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
+            void ps_onRemoteAircraftModelChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
 
             //! Aircraft enabled, disabled in backend
             void ps_onChangedAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);

@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     BlackMisc::registerMetadata();
 
     streamOut << "Run samples:" << endl;
-    streamOut << "1 .. FS common / Simulation" << endl;
+    streamOut << "1 .. FS common / Simulation (with cfg files reading)" << endl;
     streamOut << "2 .. FSX" << endl;
     streamOut << "3 .. Mappings" << endl;
     streamOut << "x .. exit" << endl;

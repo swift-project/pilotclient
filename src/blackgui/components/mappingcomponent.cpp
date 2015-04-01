@@ -95,7 +95,7 @@ namespace BlackGui
             Q_ASSERT(getIContextNetwork());
             connect(getIContextSimulator(), &IContextSimulator::installedAircraftModelsChanged, this, &CMappingComponent::ps_onAircraftModelsLoaded);
             connect(getIContextSimulator(), &IContextSimulator::modelMatchingCompleted, this, &CMappingComponent::ps_onModelMatchingCompleted);
-            connect(getIContextNetwork(), &IContextNetwork::changedRemoteAircraftModel, this, &CMappingComponent::ps_onRenderedAircraftModelChanged);
+            connect(getIContextNetwork(), &IContextNetwork::changedRemoteAircraftModel, this, &CMappingComponent::ps_onRemoteAircraftModelChanged);
             connect(getIContextNetwork(), &IContextNetwork::changedRemoteAircraftEnabled, this, &CMappingComponent::ps_onChangedAircraftEnabled);
             connect(getIContextNetwork(), &IContextNetwork::changedFastPositionUpdates, this, &CMappingComponent::ps_onFastPositionUpdatesEnabled);
             connect(getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMappingComponent::ps_onConnectionStatusChanged);
@@ -177,7 +177,8 @@ namespace BlackGui
                 const int MaxHeight = 125;
                 this->ui->lbl_AircraftIconDisplayed->setText("");
                 this->ui->lbl_AircraftIconDisplayed->setToolTip(model.getDescription());
-                CPixmap pm =  this->getIContextSimulator()->iconForModel(model.getModelString());
+                QString modelString(model.getModelString());
+                CPixmap pm =  this->getIContextSimulator()->iconForModel(modelString);
                 if (pm.isNull())
                 {
                     this->ui->lbl_AircraftIconDisplayed->setPixmap(CIcons::crossWhite16());
@@ -301,7 +302,7 @@ namespace BlackGui
             this->ui->le_AircraftModel->setCompleter(this->m_modelCompleter);
         }
 
-        void CMappingComponent::ps_onRenderedAircraftModelChanged(const CSimulatedAircraft &aircraft, const QString &originator)
+        void CMappingComponent::ps_onRemoteAircraftModelChanged(const CSimulatedAircraft &aircraft, const QString &originator)
         {
             this->updateSimulatedAircraftView();
             Q_UNUSED(originator);
