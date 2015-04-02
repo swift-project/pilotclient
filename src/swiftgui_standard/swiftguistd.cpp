@@ -149,9 +149,9 @@ bool SwiftGuiStd::isContextAudioAvailableCheck()
 
 void SwiftGuiStd::ps_displayStatusMessageInGui(const CStatusMessage &statusMessage)
 {
-    if (!this->m_init) return;
-    if (statusMessage.isRedundant()) return;
-    if (statusMessage.wasHandledBy(this)) return;
+    if (!this->m_init) { return; }
+    if (statusMessage.isRedundant()) { return; }
+    if (statusMessage.wasHandledBy(this)) { return; }
     statusMessage.markAsHandledBy(this);
     this->m_statusBar.displayStatusMessage(statusMessage);
     this->ui->comp_MainInfoArea->displayStatusMessage(statusMessage);
@@ -306,6 +306,17 @@ void SwiftGuiStd::ps_onCurrentMainWidgetChanged(int currentIndex)
 void SwiftGuiStd::ps_onChangedMainInfoAreaFloating(bool floating)
 {
     Q_UNUSED(floating);
+}
+
+void SwiftGuiStd::ps_toggleNavigatorHorizontal()
+{
+
+}
+
+void SwiftGuiStd::ps_toggleNavigatorVertical()
+{
+    bool v = ui->ndw_NavigatorVertical->isVisible();
+    ui->ndw_NavigatorVertical->setVisible(!v);
 }
 
 void SwiftGuiStd::playNotifcationSound(CNotificationSounds::Notification notification) const

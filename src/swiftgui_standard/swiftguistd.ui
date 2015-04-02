@@ -18,8 +18,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>350</width>
-    <height>550</height>
+    <width>20</width>
+    <height>100</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -305,6 +305,8 @@
     <addaction name="menu_WindowFont"/>
     <addaction name="menu_WindowMinimize"/>
     <addaction name="menu_WindowToggleOnTop"/>
+    <addaction name="menu_NavigatorVertical"/>
+    <addaction name="menu_NavigatorHorizontal"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menuWindow"/>
@@ -346,6 +348,42 @@
     <number>4</number>
    </attribute>
    <widget class="BlackGui::Components::CInfoBarStatusComponent" name="comp_InfoBarStatus"/>
+  </widget>
+  <widget class="BlackGui::Components::CNavigatorDockWidget" name="ndw_NavigatorHorizontal">
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::NoDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Horizontal navigator</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="qw_NavigatorHorizontal"/>
+  </widget>
+  <widget class="BlackGui::Components::CNavigatorDockWidget" name="ndw_NavigatorVertical">
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::NoDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Vertical navigator</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="qw_NavigatorVertical"/>
   </widget>
   <action name="menu_TestLocationsEDDF">
    <property name="text">
@@ -428,6 +466,16 @@
     <string>Ctrl+W, Ctrl+T</string>
    </property>
   </action>
+  <action name="menu_NavigatorVertical">
+   <property name="text">
+    <string>Vertical navigator</string>
+   </property>
+  </action>
+  <action name="menu_NavigatorHorizontal">
+   <property name="text">
+    <string>Horizontal navigator</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -465,6 +513,12 @@
    <class>BlackGui::Components::CInternalsComponent</class>
    <extends>QWidget</extends>
    <header>blackgui/components/internalscomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CNavigatorDockWidget</class>
+   <extends>QDockWidget</extends>
+   <header>blackgui/components/navigatordockwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -121,6 +121,9 @@ private:
     //! Init GUI signals
     void initGuiSignals();
 
+    //! Init the navigstion bars
+    void initNavigationBars();
+
     //! Init dynamic menus
     void initDynamicMenus();
 
@@ -139,19 +142,15 @@ private:
     //! Context availability, used by watchdog
     void setContextAvailability();
 
-    /*!
-     * \brief Position of own plane for testing
-     * \param wgsLatitude   WGS latitude
-     * \param wgsLongitude  WGS longitude
-     * \param altitude
-     */
+    //! \brief Position of own plane for testing
+    //! \param wgsLatitude   WGS latitude
+    //! \param wgsLongitude  WGS longitude
+    //! \param altitude
     void setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const BlackMisc::Aviation::CAltitude &altitude);
 
-    /*!
-     * \brief Is given main page selected?
-     * \param mainPage  index to be checked
-     * \return
-     */
+    //! Is given main page selected?
+    //! \param mainPage index to be checked
+    //! \return
     bool isMainPageSelected(MainPageIndex mainPage) const;
 
     //! Start all update timers
@@ -241,6 +240,12 @@ private slots:
 
     //! Whole main info area floating
     void ps_onChangedMainInfoAreaFloating(bool floating);
+
+    //! Toggle horizontal navigator
+    void ps_toggleNavigatorHorizontal();
+
+    //! Toggle vertical navigator
+    void ps_toggleNavigatorVertical();
 
 };
 

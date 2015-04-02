@@ -38,9 +38,8 @@ using namespace BlackGui::Components;
  */
 void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
 {
-    if (this->m_init) return;
-
-    this->setVisible(false);
+    if (this->m_init) { return; }
+    this->setVisible(false); // hide all, so no flashing windows during init
 
     // icon, initial position where intro was before
     this->setWindowIcon(CIcons::swift24());
@@ -69,7 +68,7 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     }
 
     // timers
-    if (this->m_timerContextWatchdog == nullptr) this->m_timerContextWatchdog = new QTimer(this);
+    if (this->m_timerContextWatchdog == nullptr) { this->m_timerContextWatchdog = new QTimer(this) ; }
 
     // context
     this->createRuntime(runtimeConfig, this);
@@ -106,6 +105,9 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     this->ps_setMainPageToInfoArea();
     this->initDynamicMenus();
 
+    // navigation bars
+    // this->initNavigationBars();
+
     // starting
     this->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ApplicationGui, IContextApplication::ApplicationStarts);
 
@@ -124,6 +126,15 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     this->setVisible(true);
 
     this->m_init = true;
+}
+
+/*
+ * Init navigation bars
+ */
+void SwiftGuiStd::initNavigationBars()
+{
+    ui->ndw_NavigatorHorizontal->setVisible(false);
+    ui->ndw_NavigatorVertical->setVisible(false);
 }
 
 /*
@@ -159,7 +170,9 @@ void SwiftGuiStd::initGuiSignals()
     connect(this->ui->menu_WindowFont, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_WindowMinimize, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_WindowToggleOnTop, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_DebugMetaTypes, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_NavigatorHorizontal, &QAction::triggered, this, &SwiftGuiStd::ps_toggleNavigatorHorizontal);
+    connect(this->ui->menu_NavigatorVertical, &QAction::triggered, this, &SwiftGuiStd::ps_toggleNavigatorVertical);
+    connect(this->ui->menu_DebugMetaTypes, &QAction::triggered, this, &SwiftGuiStd::ps_toggleNavigatorHorizontal);
 
     // command line / text messages
     connect(this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::displayInInfoWindow, this->m_compInfoWindow, &CInfoWindowComponent::display);

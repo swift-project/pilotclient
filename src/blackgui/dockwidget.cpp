@@ -76,6 +76,11 @@ namespace BlackGui
         this->m_marginsWhenDocked = QMargins(left, top, right, bottom);
     }
 
+    bool CDockWidget::isWidgetVisible() const
+    {
+        return this->m_dockWidgetVisible && this->isVisible();
+    }
+
     void CDockWidget::setWindowTitle(const QString &title)
     {
         this->m_windowTitleBackup = title;
@@ -105,6 +110,17 @@ namespace BlackGui
         {
             QDockWidget::setWindowTitle("");
         }
+    }
+
+    void CDockWidget::resetWasAlreadyFloating()
+    {
+        this->m_wasAlreadyFloating = false;
+        this->m_resetedFloating = true;
+    }
+
+    void CDockWidget::setPreferredSizeWhenFloating(const QSize &size)
+    {
+        this->m_preferredSizeWhenFloating = size;
     }
 
     void CDockWidget::toggleFloating()
@@ -141,6 +157,16 @@ namespace BlackGui
     {
         CStyleSheetUtility::useStyleSheetInDerivedWidget(this, QStyle::PE_FrameDockWidget);
         QDockWidget::paintEvent(event);
+    }
+
+    void CDockWidget::mouseMoveEvent(QMouseEvent *event)
+    {
+        if (!handleMouseMoveEvent(event)) { QDockWidget::mouseMoveEvent(event); } ;
+    }
+
+    void CDockWidget::mousePressEvent(QMouseEvent *event)
+    {
+        if (!handleMousePressEvent(event)) { QDockWidget::mousePressEvent(event); }
     }
 
     void CDockWidget::addToContextMenu(QMenu *contextMenu) const

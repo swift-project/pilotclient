@@ -71,7 +71,7 @@ namespace BlackGui
 
         //! Is widget visible? Not to be confused with \sa QWidget::isVisbible
         //! \remarks Logical vsibility as in \sa QDockWidget::visibilityChanged
-        bool isWidgetVisible() const { return this->m_dockWidgetVisible && this->isVisible(); }
+        bool isWidgetVisible() const;
 
         //! Allow a status bar to be displayed
         void allowStatusBar(bool allow) { this->m_allowStatusBar = allow; }
@@ -80,13 +80,13 @@ namespace BlackGui
         void showTitleWhenDocked(bool show);
 
         //! Reset first time floating, marked as never floated before
-        void resetWasAlreadyFloating() { this->m_wasAlreadyFloating = false; this->m_resetedFloating = true; }
+        void resetWasAlreadyFloating();
 
         //! Was widget already floating?
         bool wasAlreadyFloating() const { return this->m_wasAlreadyFloating; }
 
         //! Size when floating first time
-        void setPreferredSizeWhenFloating(const QSize &size) { this->m_preferredSizeWhenFloating = size; }
+        void setPreferredSizeWhenFloating(const QSize &size);
 
         //! Position offset when floating first time
         void setOffsetWhenFloating(const QPoint &point) { this->m_offsetWhenFloating = point; }
@@ -122,10 +122,10 @@ namespace BlackGui
         virtual void paintEvent(QPaintEvent *event) override;
 
         //! \copydoc QMainWindow::mouseMoveEvent
-        virtual void mouseMoveEvent(QMouseEvent *event) override { if (!handleMouseMoveEvent(event)) { QDockWidget::mouseMoveEvent(event); } ; }
+        virtual void mouseMoveEvent(QMouseEvent *event) override;
 
         //! \copydoc QMainWindow::mousePressEvent
-        virtual void mousePressEvent(QMouseEvent *event) override { if (!handleMousePressEvent(event)) { QDockWidget::mousePressEvent(event); } }
+        virtual void mousePressEvent(QMouseEvent *event) override;
 
         //! Contribute to menu
         virtual void addToContextMenu(QMenu *contextMenu) const;
