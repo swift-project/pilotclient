@@ -13,11 +13,11 @@
 #define BLACKCORE_SIMULATOR_H
 
 #include "blackcore/interpolator.h"
-#include "blacksim/simulatorplugininfo.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/simdirectaccessownaircraft.h"
-#include "blackmisc/simulation/simdirectaccessremoteaircraft.h"
+#include "blackmisc/simulation/ownaircraftprovider.h"
+#include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/nwtextmessage.h"

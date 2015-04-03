@@ -17,7 +17,7 @@
 #include "../fscommon/simulator_fscommon.h"
 #include "blackcore/simulator.h"
 #include "blackcore/interpolator_linear.h"
-#include "blacksim/simulatorplugininfo.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/airportlist.h"
@@ -195,7 +195,7 @@ namespace BlackSimPlugin
             uint    m_nextObjID   = 1;          //!< object ID TODO: also used as request id, where to we place other request ids as for facilities
             QHash<BlackMisc::Aviation::CCallsign, CSimConnectObject> m_simConnectObjects;
             QFutureWatcher<bool> m_watcherConnect;
-            BlackSim::CSimulatorPluginInfo m_simulatorInfo;
+            BlackMisc::Simulation::CSimulatorPluginInfo m_simulatorInfo;
 
             // statistics
             qint64 m_statsUpdateAircraftTimeTotal = 0;
@@ -203,6 +203,7 @@ namespace BlackSimPlugin
             int    m_statsUpdateAircraftCount = 0;
         };
 
+        //! Listener for FSX
         class CSimulatorFsxListener : public BlackCore::ISimulatorListener {
             Q_OBJECT
 
@@ -223,6 +224,6 @@ namespace BlackSimPlugin
         };
     }
 
-} // namespace BlackCore
+} // namespace
 
 #endif // guard

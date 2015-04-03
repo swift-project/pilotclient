@@ -136,7 +136,7 @@ namespace BlackCore
         virtual BlackMisc::Settings::CSettingsAudio getAudioSettings() const = 0;
 
         //! Audio settings
-        virtual BlackSim::Settings::CSettingsSimulator getSimulatorSettings() const = 0;
+        virtual BlackMisc::Simulation::Settings::CSettingsSimulator getSimulatorSettings() const = 0;
 
         //! Hotkeys
         virtual BlackMisc::Settings::CSettingKeyboardHotkeyList getHotkeys() const = 0;

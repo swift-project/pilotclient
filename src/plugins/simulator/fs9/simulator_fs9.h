@@ -20,7 +20,7 @@
 #include "blackcore/interpolator.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/aviation/aircraft.h"
-#include "blacksim/simulatorplugininfo.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/pixmap.h"
 #include <QObject>
 #include <QtPlugin>
@@ -141,11 +141,13 @@ namespace BlackSimPlugin
             Q_INTERFACES(BlackCore::ISimulatorFactory)
 
         public:
+            //! Constructor
             CSimulatorFs9Factory(QObject* parent = nullptr);
 
+            //! Destructor
             virtual ~CSimulatorFs9Factory();
 
-            //! \copydoc BlackCore::ISimulatorFactory::create()
+            //! \copydoc BlackCore::ISimulatorFactory::create(ownAircraftProvider, remoteAircraftProvider, parent)
             virtual BlackCore::ISimulator *create(
                     BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                     BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,

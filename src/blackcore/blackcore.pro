@@ -8,7 +8,7 @@ QT       += network dbus xml multimedia
 TARGET = blackcore
 TEMPLATE = lib
 CONFIG += staticlib
-CONFIG += blackmisc blackinput blacksim
+CONFIG += blackmisc blackinput
 
 INCLUDEPATH += ..
 DEPENDPATH += . ..
@@ -25,8 +25,8 @@ DEFINES += LOG_IN_FILE
 HEADERS += *.h
 SOURCES += *.cpp
 
-win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib ../../lib/blacksound.lib ../../lib/blacksim.lib
-else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a ../../lib/libblacksound.a ../../lib/libblacksim.a
+win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib ../../lib/blacksound.lib
+else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a ../../lib/libblacksound.a
 
 DESTDIR = ../../lib
 

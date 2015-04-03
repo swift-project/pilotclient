@@ -9,18 +9,17 @@
 
 #include "simulator_fscommon.h"
 #include "blackmisc/logmessage.h"
-#include "blacksim/fscommon/vpilotmodelmappings.h"
-#include "blacksim/fscommon/fscommonutil.h"
+#include "blackmisc/simulation/fscommon/vpilotmodelmappings.h"
+#include "blackmisc/simulation/fscommon/fscommonutil.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
-using namespace BlackSim::FsCommon;
+using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc;
-using namespace BlackSimPlugin::FsCommon;
-using namespace BlackSim;
-using namespace BlackSim::FsCommon;
+using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::FsCommon;
 
 namespace BlackSimPlugin
 {

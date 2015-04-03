@@ -26,8 +26,8 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Geo;
-using namespace BlackSim;
-using namespace BlackSim::Settings;
+using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::Settings;
 
 namespace BlackCore
 {
@@ -122,12 +122,12 @@ namespace BlackCore
         return m_simulator->simulator->disconnectFrom();
     }
 
-    BlackSim::CSimulatorPluginInfo CContextSimulator::getSimulatorInfo() const
+    BlackMisc::Simulation::CSimulatorPluginInfo CContextSimulator::getSimulatorInfo() const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         if (!m_simulator)
         {
-            return BlackSim::CSimulatorPluginInfo();
+            return BlackMisc::Simulation::CSimulatorPluginInfo();
         }
 
         Q_ASSERT(m_simulator->simulator);

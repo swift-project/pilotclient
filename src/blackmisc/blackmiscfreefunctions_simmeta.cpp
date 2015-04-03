@@ -8,7 +8,18 @@
  */
 
 #include "blackmiscfreefunctions.h"
-#include "blackmisc/simulation/simulationallclasses.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/simulation/simulatorinfolist.h"
+#include "blackmisc/simulation/setsimulator.h"
+#include "blackmisc/simulation/fsx/simconnectutilities.h"
+#include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
+
+using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::Fsx;
+using namespace BlackMisc::Simulation::FsCommon;
+using namespace BlackMisc::Simulation::Settings;
+
 
 /*
  * Metadata for simulation
@@ -18,6 +29,12 @@
  */
 void BlackMisc::Simulation::registerMetadata()
 {
+    CSimulatorPluginInfo::registerMetadata();
+    CSimulatorPluginInfoList::registerMetadata();
+    CSettingsSimulator::registerMetadata();
+    FsCommon::CAircraftCfgEntries::registerMetadata();
+    FsCommon::CAircraftCfgEntriesList::registerMetadata();
+    Fsx::CSimConnectUtilities::registerMetadata();
     CAircraftModel::registerMetadata();
     CAircraftModelList::registerMetadata();
     CSimulatedAircraft::registerMetadata();

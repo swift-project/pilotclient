@@ -4,8 +4,8 @@
 #include "blackcore/context_settings.h"
 #include "blackcore/context_simulator.h"
 #include "blackcore/context_network.h"
-#include "blacksim/simulatorinfolist.h"
-#include "blacksim/setsimulator.h"
+#include "blackmisc/simulation/simulatorinfolist.h"
+#include "blackmisc/simulation/setsimulator.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/settingutilities.h"
 #include "blackmisc/logmessage.h"
@@ -18,8 +18,8 @@ using namespace BlackMisc::Settings;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;
-using namespace BlackSim;
-using namespace BlackSim::Settings;
+using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::Settings;
 using namespace BlackCore;
 
 namespace BlackGui

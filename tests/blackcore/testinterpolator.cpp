@@ -9,7 +9,7 @@
 
 #include "testinterpolator.h"
 #include "blackcore/interpolator_linear.h"
-#include "blackmisc/simulation/simdirectaccessremoteaircraftdummy.h"
+#include "blackmisc/simulation/remoteaircraftprovider.h"
 #include <QScopedPointer>
 
 using namespace BlackCore;

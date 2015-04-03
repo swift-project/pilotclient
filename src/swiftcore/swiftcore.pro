@@ -10,21 +10,19 @@ TEMPLATE = app
 
 CONFIG   += console
 CONFIG   -= app_bundle
-CONFIG   += blackmisc blacksound blackinput blackcore blacksim
+CONFIG   += blackmisc blacksound blackinput blackcore
 
-DEPENDPATH += . ../../src/blackmisc ../../src/blacksound ../../src/blackcore ../../src/blacksim ../../src/blackinput
+DEPENDPATH += . ../../src/blackmisc ../../src/blacksound ../../src/blackcore ../../src/blackinput
 INCLUDEPATH += . ../../src
 
 win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib \
                                      ../../lib/blacksound.lib \
                                      ../../lib/blackcore.lib \
-                                     ../../lib/blacksim.lib \
                                      ../../lib/blackinput.lib
 
 else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a \
                                      ../../lib/libblacksound.a \
                                      ../../lib/libblackcore.a \
-                                     ../../lib/libblacksim.a \
                                      ../../lib/libblackinput.a
 
 

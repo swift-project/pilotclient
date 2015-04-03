@@ -15,7 +15,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackSim;
+using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {

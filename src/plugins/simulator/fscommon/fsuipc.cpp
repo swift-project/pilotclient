@@ -13,14 +13,14 @@
 // bug in FSUIPC_User.h, windows.h not included, so we have to import it first
 #include "FSUIPC/FSUIPC_User.h"
 
-#include "blacksim/fscommon/bcdconversions.h"
+#include "blackmisc/simulation/fscommon/bcdconversions.h"
 #include "blackmisc/logmessage.h"
 #include <QDebug>
 #include <QLatin1Char>
 #include <QDateTime>
 
 using namespace BlackMisc;
-using namespace BlackSim::FsCommon;
+using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;

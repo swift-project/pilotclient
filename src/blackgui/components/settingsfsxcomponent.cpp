@@ -14,15 +14,15 @@
 #include "blackmisc/networkutils.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/logmessage.h"
-#include "blacksim/fsx/fsxsimulatorsetup.h"
-#include "blacksim/fsx/simconnectutilities.h"
+#include "blackmisc/simulation/fsx/fsxsimulatorsetup.h"
+#include "blackmisc/simulation/fsx/simconnectutilities.h"
 #include <QDesktopServices>
 #include <QFile>
 #include <QDir>
 #include <QFileInfo>
 
 using namespace BlackMisc;
-using namespace BlackSim::Fsx;
+using namespace BlackMisc::Simulation::Fsx;
 using namespace BlackMisc::Network;
 
 namespace BlackGui
@@ -114,7 +114,7 @@ namespace BlackGui
             // write either local or remote file
             bool localSimulatorObject = this->getIContextSimulator()->isUsingImplementingObject();
             bool success = localSimulatorObject ?
-                           BlackSim::Fsx::CSimConnectUtilities::writeSimConnectCfg(fileName, address, p) :
+                           BlackMisc::Simulation::Fsx::CSimConnectUtilities::writeSimConnectCfg(fileName, address, p) :
                            this->getIContextApplication()->writeToFile(fileName, CSimConnectUtilities::simConnectCfg(address, p));
             if (success)
             {
@@ -148,7 +148,7 @@ namespace BlackGui
             else if (sender == this->ui->pb_SettingsFsxDeleteSimconnectCfg)
             {
                 if (!this->getIContextSimulator()) return;
-                QString fileName = BlackSim::Fsx::CSimConnectUtilities::getLocalSimConnectCfgFilename();
+                QString fileName = BlackMisc::Simulation::Fsx::CSimConnectUtilities::getLocalSimConnectCfgFilename();
                 QString m = QString("Deleted %1 ").append(fileName);
                 if (this->getIContextSimulator()->isUsingImplementingObject())
                 {
@@ -166,7 +166,7 @@ namespace BlackGui
             else if (sender == this->ui->pb_SettingsFsxExistsSimconncetCfg)
             {
                 if (!this->getIContextSimulator()) return;
-                QString fileName = BlackSim::Fsx::CSimConnectUtilities::getLocalSimConnectCfgFilename();
+                QString fileName = BlackMisc::Simulation::Fsx::CSimConnectUtilities::getLocalSimConnectCfgFilename();
                 bool exists = this->getIContextSimulator()->isUsingImplementingObject() ?
                               QFile::exists(fileName) :
                               this->getIContextApplication()->existsFile(fileName);

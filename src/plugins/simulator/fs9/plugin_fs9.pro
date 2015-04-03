@@ -7,7 +7,7 @@ TARGET = simulator_fs9
 TEMPLATE = lib
 
 CONFIG += plugin shared
-CONFIG += blackmisc blackcore blacksim
+CONFIG += blackmisc blackcore
 
 LIBS +=  -lsimulator_fscommon -lFSUIPC_User -luuid
 
@@ -23,10 +23,8 @@ SOURCES += *.cpp
 HEADERS += *.h
 
 win32:!win32-g++*: PRE_TARGETDEPS += ../../../../lib/blackmisc.lib \
-                                     ../../../../lib/blacksim.lib \
                                      ../../../../lib/blackcore.lib
 else:              PRE_TARGETDEPS += ../../../../lib/libblackmisc.a \
-                                     ../../../../lib/libblacksim.a \
                                      ../../../../lib/libblackcore.a
 
 DESTDIR = ../../../../bin/plugins/simulator

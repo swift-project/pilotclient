@@ -21,7 +21,7 @@
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/simplecommandparser.h"
-#include "blackmisc/simulation/simdirectaccessownaircraft.h"
+#include "blackmisc/simulation/ownaircraftprovider.h"
 
 #include <QtXml/QDomElement>
 #include <QNetworkReply>
@@ -33,7 +33,6 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Simulation;
-using namespace BlackSim;
 
 namespace BlackCore
 {

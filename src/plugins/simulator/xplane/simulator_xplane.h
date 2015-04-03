@@ -13,7 +13,7 @@
 #define BLACKSIMPLUGIN_SIMULATOR_XPLANE_H
 
 #include "blackcore/simulator.h"
-#include "blackmisc/simulation/simdirectaccessownaircraft.h"
+#include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/pixmap.h"
 #include <QDBusConnection>
 

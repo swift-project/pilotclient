@@ -13,8 +13,8 @@
 #define BLACKCORE_AIRSPACE_MONITOR_H
 
 #include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/simulation/simdirectaccessownaircraft.h"
-#include "blackmisc/simulation/simdirectaccessremoteaircraft.h"
+#include "blackmisc/simulation/ownaircraftprovider.h"
+#include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/nwclientlist.h"

@@ -13,7 +13,6 @@
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/blackcorefreefunctions.h"
 #include "blackcore/context_runtime_config.h"
-#include "blacksim/blacksimfreefunctions.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/icons.h"
@@ -39,7 +38,7 @@ int main(int argc, char *argv[])
     // register
     BlackMisc::initResources();
     BlackMisc::registerMetadata();
-    BlackSim::registerMetadata();
+    BlackMisc::Simulation::registerMetadata();
     BlackCore::registerMetadata();
     // BlackMisc::displayAllUserMetatypesTypes();
 

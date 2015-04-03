@@ -15,7 +15,7 @@
 #include "blackcore/context_network.h"
 #include "blackcore/context_settings.h"
 #include "blackcore/context_runtime.h"
-#include "blackmisc/simulation/simdirectaccessremoteaircraft.h"
+#include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/network.h"
 #include "blackcore/airspace_monitor.h"

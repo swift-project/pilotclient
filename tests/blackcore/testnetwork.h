@@ -13,7 +13,7 @@
 #define BLACKCORETEST_TESTNETWORK_H
 
 #include "blackcore/network_vatlib.h"
-#include "blackmisc/simulation/simdirectaccessownaircraft.h"
+#include "blackmisc/simulation/ownaircraftprovider.h"
 #include <QtTest/QtTest>
 
 namespace BlackCoreTest

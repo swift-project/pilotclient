@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_SIMULATEDNAIRCRAFTLIST_H
-#define BLACKMISC_SIMULATEDNAIRCRAFTLIST_H
+#ifndef BLACKMISC_SIMULATION_SIMULATEDNAIRCRAFTLIST_H
+#define BLACKMISC_SIMULATION_SIMULATEDNAIRCRAFTLIST_H
 
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/callsignobjectlist.h"

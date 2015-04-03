@@ -32,6 +32,7 @@ namespace BlackMiscTest
             status |= QTest::qExec(&containerTests, argc, argv);
             status |= QTest::qExec(&variantAndMap, argc, argv);
             status |= QTest::qExec(&hardwareTests, argc, argv);
+            status |= QTest::qExec(&hardwareTests, argc, argv);
         }
         return status;
     }

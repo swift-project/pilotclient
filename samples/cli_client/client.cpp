@@ -9,7 +9,6 @@
 
 #include "client.h"
 #include "blackcore/network_vatlib.h"
-#include "blackmisc/simulation/simdirectaccessownaircraft.h"
 #include <iostream>
 #include <QStringList>
 

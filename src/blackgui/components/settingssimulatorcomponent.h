@@ -10,7 +10,7 @@
 #ifndef BLACKGUI_SETTINGSSIMULATORCOMPONENT_H
 #define BLACKGUI_SETTINGSSIMULATORCOMPONENT_H
 
-#include "blacksim/setsimulator.h"
+#include "blackmisc/simulation/setsimulator.h"
 #include "enableforruntime.h"
 #include "enableforruntime.h"
 #include <QFrame>
@@ -65,7 +65,7 @@ namespace BlackGui
             QScopedPointer<Ui::CSettingsSimulatorComponent> ui; //!< UI
 
             //! Smarter way to set current driver, avoids unnecessary signals and less formatting dependend
-            void setCurrentPlugin(const BlackSim::CSimulatorPluginInfo &plugin);
+            void setCurrentPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &plugin);
 
             //! Set the GUI values
             void setRestrictedValues();

@@ -1,7 +1,7 @@
 include (../../config.pri)
 include (../../build.pri)
 
-QT       += network dbus
+QT       += network dbus xml
 
 TARGET = blackmisc
 TEMPLATE = lib
@@ -27,13 +27,15 @@ HEADERS +=  *.h \
             $$PWD/aviation/*.h \
             $$PWD/math/*.h \
             $$PWD/simulation/*.h \
-
+            $$PWD/simulation/fscommon\*.h \
+            $$PWD/simulation/fsx\*.h
 
 SOURCES +=  *.cpp \
             $$PWD/aviation/*.cpp \
             $$PWD/math/*.cpp \
             $$PWD/simulation/*.cpp \
-
+            $$PWD/simulation/fscommon\*.cpp \
+            $$PWD/simulation/fsx\*.cpp
 
 DESTDIR = ../../lib
 OTHER_FILES += $$TRANSLATIONS readme.txt

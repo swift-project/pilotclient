@@ -10,7 +10,7 @@
 
 BLACK_VER_MAJ     =   0
 BLACK_VER_MIN     =   6
-BLACK_VER_PAT     =   0
+BLACK_VER_PAT     =   1
 BLACK_VERSION     =   $${BLACK_VER_MAJ}.$${BLACK_VER_MIN}.$${BLACK_VER_PAT}
 DEFINES += BLACK_VERSION=$$BLACK_VERSION
 
@@ -27,7 +27,6 @@ BLACK_CONFIG    += BlackCore
 BLACK_CONFIG    += BlackGui
 BLACK_CONFIG    += BlackSound
 BLACK_CONFIG    += BlackInput
-BLACK_CONFIG	+= BlackSim
 BLACK_CONFIG    += Samples
 BLACK_CONFIG    += Unittests
 BLACK_CONFIG    += FS9

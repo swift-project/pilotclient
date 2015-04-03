@@ -7,7 +7,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = blackgui
 TEMPLATE = lib
 CONFIG += staticlib
-CONFIG += blackmisc blacksim blackcore
+CONFIG += blackmisc blackcore
 
 INCLUDEPATH += ..
 DEPENDPATH += . ..
@@ -19,8 +19,8 @@ precompile_header:!isEmpty(PRECOMPILED_HEADER) {
 
 DEFINES += LOG_IN_FILE
 
-win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib ../../lib/blacksim.lib ../../lib/blackcore.lib
-else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a ../../lib/libblacksim.a ../../lib/libblackcore.a
+win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib ../../lib/blackcore.lib
+else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a ../../lib/libblackcore.a
 
 
 HEADERS += *.h

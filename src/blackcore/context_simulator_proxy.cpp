@@ -18,7 +18,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
-using namespace BlackSim;
+using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {
@@ -104,9 +104,9 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<CAircraftIcao>(QLatin1Literal("getIcaoForModelString"), modelString);
     }
 
-    BlackSim::CSimulatorPluginInfo CContextSimulatorProxy::getSimulatorInfo() const
+    BlackMisc::Simulation::CSimulatorPluginInfo CContextSimulatorProxy::getSimulatorInfo() const
     {
-        return m_dBusInterface->callDBusRet<BlackSim::CSimulatorPluginInfo>(QLatin1Literal("getSimulatorInfo"));
+        return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorPluginInfo>(QLatin1Literal("getSimulatorInfo"));
     }
 
     bool CContextSimulatorProxy::setTimeSynchronization(bool enable, CTime offset)
@@ -164,7 +164,7 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<BlackMisc::PhysicalQuantities::CTime>(QLatin1Literal("getTimeSynchronizationOffset"));
     }
 
-    bool CContextSimulatorProxy::loadSimulatorPlugin(const BlackSim::CSimulatorPluginInfo &simulatorInfo)
+    bool CContextSimulatorProxy::loadSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo)
     {
         return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("loadSimulatorPlugin"), simulatorInfo);
     }

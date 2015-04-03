@@ -48,6 +48,7 @@ namespace BlackSimPlugin
             //! Send a custom DirectPlay message
             HRESULT sendMessage(const QByteArray &data);
 
+            //! Reset peer
             void reset();
 
         signals:

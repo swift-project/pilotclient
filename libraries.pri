@@ -29,10 +29,6 @@ blackinput {
     }
 }
 
-blacksim {
-    LIBS += -lblacksim
-}
-
 blackmisc {
     LIBS += -lblackmisc
 }

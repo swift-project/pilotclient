@@ -9,10 +9,10 @@
 
 #include "simulator_fsx.h"
 #include "simconnect_datadefinition.h"
-#include "blacksim/fscommon/bcdconversions.h"
-#include "blacksim/fsx/simconnectutilities.h"
-#include "blacksim/fsx/fsxsimulatorsetup.h"
-#include "blacksim/simulatorplugininfo.h"
+#include "blackmisc/simulation/fscommon/bcdconversions.h"
+#include "blackmisc/simulation/fsx/simconnectutilities.h"
+#include "blackmisc/simulation/fsx/fsxsimulatorsetup.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/project.h"
 #include "blackmisc/aviation/airportlist.h"
@@ -29,9 +29,9 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
-using namespace BlackSim;
-using namespace BlackSim::FsCommon;
-using namespace BlackSim::Fsx;
+using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::FsCommon;
+using namespace BlackMisc::Simulation::Fsx;
 using namespace BlackCore;
 
 namespace BlackSimPlugin

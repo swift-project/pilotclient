@@ -11,7 +11,6 @@
 #include "blackcore/context_all_proxies.h"
 #include "blackcore/context_all_empties.h"
 #include "blackcore/blackcorefreefunctions.h"
-#include "blacksim/blacksimfreefunctions.h"
 #include "blackmisc/nwserver.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/aviation/aircraft.h"
@@ -133,7 +132,7 @@ namespace BlackCore
     {
         BlackMisc::registerMetadata();
         BlackMisc::initResources();
-        BlackSim::registerMetadata();
+        BlackMisc::Simulation::registerMetadata();
         BlackCore::registerMetadata();
     }
 

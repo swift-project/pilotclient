@@ -7,7 +7,7 @@ TARGET = simulator_xplane
 TEMPLATE = lib
 
 CONFIG += plugin shared
-CONFIG += blackmisc blackcore blacksim
+CONFIG += blackmisc blackcore
 
 DEPENDPATH += . ../../../../src
 INCLUDEPATH += . ../../../../src

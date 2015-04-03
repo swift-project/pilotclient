@@ -45,7 +45,7 @@ namespace BlackCore
     public slots:
 
         //! \copydoc IContextSimulator::getSimulatorPluginList()
-        virtual BlackSim::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const override;
+        virtual BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const override;
 
         //! \copydoc IContextSimulator::isConnected()
         virtual bool isConnected() const override;
@@ -81,7 +81,7 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CAircraftIcao getIcaoForModelString(const QString &modelString) const override;
 
         //! \copydoc IContextSimulator::getSimulatorInfo
-        virtual BlackSim::CSimulatorPluginInfo getSimulatorInfo() const override;
+        virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorInfo() const override;
 
         //! \copydoc IContextSimulator::setTimeSynchronization
         virtual bool setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
@@ -117,13 +117,13 @@ namespace BlackCore
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
 
         //! \copydoc IContextSimulator::loadSimulatorPlugin
-        virtual bool loadSimulatorPlugin(const BlackSim::CSimulatorPluginInfo &simulatorInfo) override;
+        virtual bool loadSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
 
         //! \copydoc IContextSimulator::loadSimulatorPluginFromSettings()
         virtual bool loadSimulatorPluginFromSettings();
         
         //! \copydoc IContextSimulator::listenForSimulator()
-        virtual void listenForSimulator(const BlackSim::CSimulatorPluginInfo &simulatorInfo) override;
+        virtual void listenForSimulator(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
         
         //! \copydoc IContextSimulator::listenForAllSimulators()
         virtual void listenForAllSimulators() override;

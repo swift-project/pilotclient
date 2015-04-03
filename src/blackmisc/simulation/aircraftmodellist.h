@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_AIRCRAFTMODELLIST_H
-#define BLACKMISC_AIRCRAFTMODELLIST_H
+#ifndef BLACKMISC_SIMULATION_AIRCRAFTMODELLIST_H
+#define BLACKMISC_SIMULATION_AIRCRAFTMODELLIST_H
 
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/collection.h"

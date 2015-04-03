@@ -9,7 +9,7 @@
 
 #include "simulator_fsxfactory.h"
 #include "simulator_fsx.h"
-#include "blacksim/simulatorplugininfo.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/project.h"
 #include <QTimer>
 #include <QtConcurrent>

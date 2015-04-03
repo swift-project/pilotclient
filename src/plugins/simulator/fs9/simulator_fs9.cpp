@@ -15,7 +15,7 @@
 #include "multiplayer_packets.h"
 #include "multiplayer_packet_parser.h"
 #include "blackcore/interpolator_linear.h"
-#include "blacksim/simulatorplugininfo.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/project.h"
 #include "blackmisc/logmessage.h"
@@ -29,7 +29,7 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
-using namespace BlackSim;
+using namespace BlackMisc::Simulation;
 using namespace BlackSimPlugin::Fs9;
 using namespace BlackSimPlugin::FsCommon;
 

@@ -76,7 +76,7 @@ namespace BlackMisc
             BlackMisc::Aviation::CAircraftIcao m_icao;           //!< ICAO code
             BlackMisc::Simulation::CAircraftModel m_model;          //!< aircraft model
 
-            // BlackSim::CSimulatorPluginInfo m_simulatorInfo; //!< Mapping is for simulator
+            // BlackMisc::Simulation::CSimulatorPluginInfo m_simulatorInfo; //!< Mapping is for simulator
         };
     }
 }

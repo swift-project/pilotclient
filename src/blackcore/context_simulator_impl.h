@@ -15,8 +15,8 @@
 #include "blackcore/context_simulator.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/worker.h"
-#include "blacksim/simulatorplugininfo.h"
-#include "blacksim/simulatorinfolist.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
+#include "blackmisc/simulation/simulatorinfolist.h"
 #include "blackmisc/nwtextmessagelist.h"
 #include "blackmisc/pixmap.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
@@ -43,12 +43,12 @@ namespace BlackCore
         //! Lazy-loads the driver, instantiates the factory and returns it.
         //! \return nullptr if no corresponding driver was found or an error occured during loading it.
         //! \todo Consider moving to private scope.
-        ISimulatorFactory* getSimulatorFactory(const BlackSim::CSimulatorPluginInfo& simulator);
+        ISimulatorFactory* getSimulatorFactory(const BlackMisc::Simulation::CSimulatorPluginInfo& simulator);
 
     public slots:
 
         //! \copydoc IContextSimulator::getSimulatorPluginList()
-        virtual BlackSim::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const override;
+        virtual BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const override;
 
         //! \copydoc IContextSimulator::isConnected()
         virtual bool isConnected() const override;
@@ -66,7 +66,7 @@ namespace BlackCore
         virtual bool isSimulating() const override;
 
         //! \copydoc IContextSimulator::getSimulatorInfo()
-        virtual BlackSim::CSimulatorPluginInfo getSimulatorInfo() const override;
+        virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorInfo() const override;
 
         //! \copydoc IContextSimulator::getAirportsInRange
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
@@ -120,13 +120,13 @@ namespace BlackCore
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
 
         //! \copydoc IContextSimulator::loadSimulatorPlugin()
-        virtual bool loadSimulatorPlugin(const BlackSim::CSimulatorPluginInfo &simulatorInfo) override;
+        virtual bool loadSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
 
         //! \copydoc IContextSimulator::loadSimulatorPluginFromSettings()
         virtual bool loadSimulatorPluginFromSettings() override;
         
         //! \copydoc IContextSimulator::listenForSimulator()
-        virtual void listenForSimulator(const BlackSim::CSimulatorPluginInfo &simulatorInfo) override;
+        virtual void listenForSimulator(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
         
         //! \copydoc IContextSimulator::listenForAllSimulators()
         virtual void listenForAllSimulators() override;
@@ -200,13 +200,13 @@ namespace BlackCore
         struct PluginData;
         
         //! \brief Locate PluginData (linear search)
-        PluginData* findPlugin(const BlackSim::CSimulatorPluginInfo &info);
+        PluginData* findPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
         
         /*!
          * A simple struct containing all info about the plugin.
          */
         struct PluginData {
-            BlackSim::CSimulatorPluginInfo info;
+            BlackMisc::Simulation::CSimulatorPluginInfo info;
             ISimulatorFactory *factory; //!< Lazy-loaded, nullptr by default
             ISimulatorListener *listener; //!< Listener instance, nullptr by default
             ISimulator *simulator; //!< The simulator itself (always nullptr unless it is the currently working one)

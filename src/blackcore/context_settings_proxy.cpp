@@ -15,7 +15,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Settings;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Hardware;
-using namespace BlackSim::Settings;
+using namespace BlackMisc::Simulation::Settings;
 
 namespace BlackCore
 {

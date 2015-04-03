@@ -49,4 +49,4 @@ namespace BlackSimPlugin
     }
 }
 
-#endif //BLACKSIMPLUGIN_FS9_CALLBACK_WRAPPER_H
+#endif // guard

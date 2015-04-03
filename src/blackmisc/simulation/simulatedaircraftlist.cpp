@@ -21,21 +21,13 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        /*
-         * Default constructor
-         */
+
         CSimulatedAircraftList::CSimulatedAircraftList() { }
 
-        /*
-         * Construct from base class object
-         */
         CSimulatedAircraftList::CSimulatedAircraftList(const CSequence<CSimulatedAircraft> &other) :
             CSequence<CSimulatedAircraft>(other)
         { }
 
-        /*
-         * Register metadata
-         */
         void CSimulatedAircraftList::registerMetadata()
         {
             qRegisterMetaType<BlackMisc::CSequence<CSimulatedAircraft>>();
@@ -47,9 +39,6 @@ namespace BlackMisc
             registerMetaValueType<CSimulatedAircraftList>();
         }
 
-        /*
-         * All pilots
-         */
         CUserList CSimulatedAircraftList::getPilots() const
         {
             return this->findBy(Predicates::MemberValid(&CSimulatedAircraft::getPilot)).transform(Predicates::MemberTransform(&CSimulatedAircraft::getPilot));

@@ -14,7 +14,7 @@
 
 #include "blackcore/simulator.h"
 #include "blackcore/interpolator.h"
-#include "blacksim/fscommon/aircraftmapper.h"
+#include "blackmisc/simulation/fscommon/aircraftmapper.h"
 #include "fsuipc.h"
 
 #include <QObject>
@@ -108,7 +108,7 @@ namespace BlackSimPlugin
             static void reverseLookupIcaoData(BlackMisc::Simulation::CAircraftModel &model);
 
             //! Get the mapper singleton
-            static BlackSim::FsCommon::CAircraftMapper *mapperInstance();
+            static BlackMisc::Simulation::FsCommon::CAircraftMapper *mapperInstance();
 
         protected slots:
 

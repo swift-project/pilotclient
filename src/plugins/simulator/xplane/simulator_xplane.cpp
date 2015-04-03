@@ -22,7 +22,7 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Geo;
-using namespace BlackSim;
+using namespace BlackMisc::Simulation;
 
 namespace {
     inline QString xbusServiceName() {

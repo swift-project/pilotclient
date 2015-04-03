@@ -13,7 +13,7 @@
 #define BLACKSIMPLUGIN_SIMULATOR_FSXFACTORY_H
 
 #include "blackcore/simulator.h"
-#include "blacksim/simulatorplugininfo.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
 
 #include <simconnect/SimConnect.h>
 #include <QObject>
