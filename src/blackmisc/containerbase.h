@@ -57,6 +57,8 @@ namespace BlackMisc
     template <template <class> class C, class T, class CIt>
     class CContainerBase : public CValueObject<CContainerBase<C, T, CIt>>, public CRangeBase<C<T>, CIt>
     {
+    public:
+
         //! \copydoc BlackMisc::CValueObject::compare
         friend int compare(const C<T> &a, const C<T> &b)
         {
@@ -65,7 +67,6 @@ namespace BlackMisc
             return std::lexicographical_compare(a.cbegin(), a.cend(), b.cbegin(), b.cend());
         }
 
-    public:
         /*!
          * \brief Return a new container of a different type, containing the same elements as this one.
          * \tparam Other the type of the new container.
