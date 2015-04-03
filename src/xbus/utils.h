@@ -40,20 +40,20 @@ class QXPlaneMessageHandler
         char *buffer = new char[64 + localMsg.size() + file.size()];
         switch (type) {
         case QtDebugMsg:
-            std::sprintf(buffer, "%s:%u: Debug: %s\n", file.constData(), line, localMsg.constData());
+            std::sprintf(buffer, "%s:%d: Debug: %s\n", file.constData(), line, localMsg.constData());
             XPLMDebugString(buffer);
             break;
         case QtWarningMsg:
-            std::sprintf(buffer, "%s:%u: Warning: %s\n", file.constData(), line, localMsg.constData());
+            std::sprintf(buffer, "%s:%d: Warning: %s\n", file.constData(), line, localMsg.constData());
             XPLMDebugString(buffer);
             break;
         default:
         case QtCriticalMsg:
-            std::sprintf(buffer, "%s:%u: Error: %s\n", file.constData(), line, localMsg.constData());
+            std::sprintf(buffer, "%s:%d: Error: %s\n", file.constData(), line, localMsg.constData());
             XPLMDebugString(buffer);
             break;
         case QtFatalMsg:
-            std::sprintf(buffer, "%s:%u: Fatal: %s\n", file.constData(), line, localMsg.constData());
+            std::sprintf(buffer, "%s:%d: Fatal: %s\n", file.constData(), line, localMsg.constData());
             XPLMDebugString(buffer);
             std::abort();
         }
