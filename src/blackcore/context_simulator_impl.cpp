@@ -531,7 +531,15 @@ namespace BlackCore
 
     void CContextSimulator::ps_addRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
     {
-        Q_ASSERT(m_simulator);
+        // todo:
+        // This was previously an assert and it should be one again in the future.
+        // This slot should not even be called when no simulator is available.
+        if(!m_simulator)
+        {
+            // Do something if no simulator is running
+            return;
+        }
+
         Q_ASSERT(m_simulator->simulator);
         Q_ASSERT(!remoteAircraft.getCallsign().isEmpty());
 
@@ -540,7 +548,15 @@ namespace BlackCore
 
     void CContextSimulator::ps_removedRemoteAircraft(const CCallsign &callsign)
     {
-        Q_ASSERT(m_simulator);
+        // todo:
+        // This was previously an assert and it should be one again in the future.
+        // This slot should not even be called when no simulator is available.
+        if(!m_simulator)
+        {
+            // Do something if no simulator is running
+            return;
+        }
+
         Q_ASSERT(m_simulator->simulator);
 
         m_simulator->simulator->removeRemoteAircraft(callsign);
@@ -561,10 +577,17 @@ namespace BlackCore
 
     void CContextSimulator::ps_textMessagesReceived(const Network::CTextMessageList &textMessages)
     {
-        Q_ASSERT(m_simulator);
-        Q_ASSERT(m_simulator->simulator);
+        // todo:
+        // This was previously an assert and it should be one again in the future.
+        // This slot should not even be called when no simulator is available.
+        if(!m_simulator)
+        {
+            // Do something if no simulator is running
+            return;
+        }
 
-        for (auto &tm: textMessages)
+        Q_ASSERT(m_simulator->simulator);
+        for (const auto &tm : textMessages)
         {
             m_simulator->simulator->displayTextMessage(tm);
         }
@@ -591,7 +614,15 @@ namespace BlackCore
 
     void CContextSimulator::ps_updateSimulatorCockpitFromContext(const CAircraft &ownAircraft, const QString &originator)
     {
-        Q_ASSERT(m_simulator);
+        // todo:
+        // This was previously an assert and it should be one again in the future.
+        // This slot should not even be called when no simulator is available.
+        if(!m_simulator)
+        {
+            // Do something if no simulator is running
+            return;
+        }
+
         Q_ASSERT(m_simulator->simulator);
 
         // avoid loops
