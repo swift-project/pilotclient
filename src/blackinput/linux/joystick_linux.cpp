@@ -7,29 +7,135 @@
  * contained in the LICENSE file.
  */
 
+#include "blackmisc/logmessage.h"
 #include "joystick_linux.h"
+#include <QFile>
+#include <QFileSystemWatcher>
+#include <QSocketNotifier>
+#include <QSignalMapper>
+#include <linux/joystick.h>
+#include <unistd.h>
+#include <fcntl.h>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Hardware;
+
+namespace
+{
+    inline QString inputDevicesDir()
+    {
+        return QStringLiteral("/dev/input/");
+    }
+}
 
 namespace BlackInput
 {
     CJoystickLinux::CJoystickLinux(QObject *parent) :
-        IJoystick(parent)
+        IJoystick(parent),
+        m_mapper(new QSignalMapper(this)),
+        m_inputWatcher(new QFileSystemWatcher(this))
     {
-    }
+        connect(m_mapper, static_cast<void (QSignalMapper::*)(QObject *)>(&QSignalMapper::mapped), this, &CJoystickLinux::ps_readInput);
 
-    CJoystickLinux::~CJoystickLinux()
-    {
+        m_inputWatcher->addPath(inputDevicesDir());
+        connect(m_inputWatcher, &QFileSystemWatcher::directoryChanged, this, &CJoystickLinux::ps_directoryChanged);
+        ps_directoryChanged(inputDevicesDir());
     }
 
     void CJoystickLinux::startCapture()
     {
+
     }
 
     void CJoystickLinux::triggerButton(const CJoystickButton button, bool isPressed)
     {
-        if(!isPressed) emit buttonUp(button);
+        if (!isPressed) emit buttonUp(button);
         else emit buttonDown(button);
     }
 
+    void CJoystickLinux::cleanupJoysticks()
+    {
+        for (auto it = m_joysticks.begin(); it != m_joysticks.end();)
+        {
+            if (!it.value()->exists())
+            {
+                it.value()->deleteLater();
+                it = m_joysticks.erase(it);
+            }
+            else
+            {
+                ++it;
+            }
+        }
+    }
+
+    void CJoystickLinux::addJoystickDevice(const QString &path)
+    {
+        Q_ASSERT(!m_joysticks.contains(path));
+
+        QFile *joystick = new QFile(path, this);
+        if (joystick->open(QIODevice::ReadOnly))
+        {
+            char name[256];
+            if (ioctl(joystick->handle(), JSIOCGNAME(sizeof(name)), name) < 0)
+            {
+                strncpy(name, "Unknown", sizeof(name));
+            }
+
+            CLogMessage(this).info("Found joystick: %1") << name;
+
+            fcntl(joystick->handle(), F_SETFL, O_NONBLOCK);
+
+            /* Forward */
+            struct js_event event;
+            while (joystick->read(reinterpret_cast<char *>(&event), sizeof(event)) == sizeof(event)) {}
+
+            QSocketNotifier *notifier = new QSocketNotifier(joystick->handle(), QSocketNotifier::Read, joystick);
+            m_mapper->setMapping(notifier, joystick);
+            connect(notifier, &QSocketNotifier::activated, m_mapper, static_cast<void (QSignalMapper::*)()>(&QSignalMapper::map));
+            notifier->setEnabled(true);
+
+            m_joysticks.insert(path, joystick);
+        }
+        else
+        {
+            joystick->deleteLater();
+        }
+    }
+
+    void CJoystickLinux::ps_directoryChanged(QString path)
+    {
+        cleanupJoysticks();
+
+        QDir dir(path, QLatin1String("js*"), 0, QDir::System);
+        for (const auto &entry : dir.entryInfoList())
+        {
+            QString f = entry.absoluteFilePath();
+            if (!m_joysticks.contains(f))
+            {
+                addJoystickDevice(f);
+            }
+        }
+    }
+
+    void CJoystickLinux::ps_readInput(QObject *object)
+    {
+        QFile *joystick = qobject_cast<QFile *>(object);
+        Q_ASSERT(joystick);
+
+        struct js_event event;
+        while (joystick->read(reinterpret_cast<char *>(&event), sizeof(event)) == sizeof(event))
+        {
+            switch (event.type & ~JS_EVENT_INIT)
+            {
+            case JS_EVENT_BUTTON:
+                if (event.value)
+                    emit buttonDown(CJoystickButton(event.number));
+                else
+                    emit buttonUp(CJoystickButton(event.number));
+
+                break;
+            }
+        }
+    }
 } // namespace BlackInput

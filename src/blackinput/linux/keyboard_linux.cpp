@@ -131,7 +131,7 @@ namespace BlackInput
             quint8 events[EV_MAX/8 + 1];
             memset(events, 0, sizeof(events));
 
-            if ((ioctl(fd, EVIOCGVERSION, &version) >= 0) && (ioctl(fd, EVIOCGNAME(sizeof(name)), name)>=0) && (ioctl(fd, EVIOCGBIT(0,sizeof(events)), &events) >= 0) && test_bit(EV_KEY, events) && (((version >> 16) & 0xFF) > 0)) {
+            if ((ioctl(fd, EVIOCGVERSION, &version) >= 0) && (ioctl(fd, EVIOCGNAME(sizeof(name)), name)>=0) && (ioctl(fd, EVIOCGBIT(0,sizeof(events)), &events) >= 0) && test_bit(EV_KEY, events) && !test_bit(EV_SYN, events) && (((version >> 16) & 0xFF) > 0)) {
                 name[255]=0;
                 qDebug() << "CKeyboardLinux: " << qPrintable(inputFile->fileName()) << " " << name;
                 // Is it grabbed by someone else?

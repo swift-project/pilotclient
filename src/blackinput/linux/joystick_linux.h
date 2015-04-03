@@ -15,11 +15,17 @@
 #include "blackinput/joystick.h"
 #include "blackmisc/hardware/joystickbutton.h"
 #include "blackmisc/collection.h"
-#include <QSet>
+#include <QMap>
+#include <QString>
+
+class QFile;
+class QFileSystemWatcher;
+class QSignalMapper;
 
 namespace BlackInput
 {
-    //! Linux implemenation of IJoystick with DirectInput
+    //! Linux implemenation of IJoystick
+    //! \sa https://www.kernel.org/doc/Documentation/input/joystick-api.txt
     class CJoystickLinux : public IJoystick
     {
         Q_OBJECT
@@ -33,7 +39,7 @@ namespace BlackInput
         CJoystickLinux &operator=(CJoystickLinux const &) = delete;
 
         //! \brief Destructor
-        virtual ~CJoystickLinux();
+        virtual ~CJoystickLinux() = default;
 
         //! \copydoc IJoystick::startCapture()
         virtual void startCapture() override;
@@ -45,10 +51,31 @@ namespace BlackInput
 
         friend class IJoystick;
 
-        //! Destructor
+        //! Removes all joysticks that are no longer present.
+        void cleanupJoysticks();
+
+        //! Adds new joystick input for reading
+        void addJoystickDevice(const QString &path);
+
+        //! Constructor
         CJoystickLinux(QObject *parent = nullptr);
 
+    private slots:
+
+        //! Slot for handling directory changes
+        //! \param path Watched directory path.
+        void ps_directoryChanged(QString path);
+
+        //! Slot for reading the device handle
+        //! \param object QFile that has data to be read.
+        void ps_readInput(QObject *object);
+
+    private:
+
         IJoystick::Mode m_mode = ModeNominal; //!< Current working mode
+        QSignalMapper *m_mapper = nullptr; //!< Maps device handles
+        QMap<QString, QFile *> m_joysticks; //!< All read joysticks, file path <-> file instance pairs
+        QFileSystemWatcher *m_inputWatcher = nullptr;
     };
 
 } // namespace BlackInput
