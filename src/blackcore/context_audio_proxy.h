@@ -15,8 +15,8 @@
 #include "context_audio.h"
 
 #include "blackmisc/genericdbusinterface.h"
-#include "blackmisc/audiodeviceinfolist.h"
-#include "blackmisc/voiceroomlist.h"
+#include "blackmisc/audio/audiodeviceinfolist.h"
+#include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/aviation/aircraft.h"
 
@@ -67,7 +67,7 @@ namespace BlackCore
         virtual void setOwnCallsignForRooms(const BlackMisc::Aviation::CCallsign &callsign) override;
 
         //! \copydoc IContextAudio::getRoomCallsigns()
-        virtual BlackMisc::Aviation::CCallsignList getRoomCallsigns(int comUnitValue) const override;
+        virtual BlackMisc::Aviation::CCallsignSet getRoomCallsigns(int comUnitValue) const override;
 
         //! \copydoc IContextAudio::getRoomUsers()
         virtual BlackMisc::Network::CUserList getRoomUsers(int comUnitValue) const override;

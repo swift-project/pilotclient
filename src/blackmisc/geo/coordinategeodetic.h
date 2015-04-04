@@ -12,10 +12,10 @@
 #ifndef BLACKMISC_COORDINATEGEODETIC_H
 #define BLACKMISC_COORDINATEGEODETIC_H
 
-#include "blackmisc/geolatitude.h"
-#include "blackmisc/geolongitude.h"
+#include "blackmisc/geo/latitude.h"
+#include "blackmisc/geo/longitude.h"
 #include "blackmisc/pqlength.h"
-#include "propertyindex.h"
+#include "blackmisc/propertyindex.h"
 
 namespace BlackMisc
 {

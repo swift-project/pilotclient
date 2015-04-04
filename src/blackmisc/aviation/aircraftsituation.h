@@ -12,7 +12,7 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFTSITUATION_H
 #define BLACKMISC_AVIATION_AIRCRAFTSITUATION_H
 
-#include "blackmisc/coordinategeodetic.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/aviation/heading.h"

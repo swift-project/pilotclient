@@ -13,8 +13,8 @@
 #define BLACKCORE_AUDIODEVICEVATLIB_H
 
 #include "audio_device.h"
-#include "blackmisc/audiodeviceinfo.h"
-#include "blackmisc/audiodeviceinfolist.h"
+#include "blackmisc/audio/audiodeviceinfo.h"
+#include "blackmisc/audio/audiodeviceinfolist.h"
 #include "vatlib/vatlib2.h"
 #include <QObject>
 

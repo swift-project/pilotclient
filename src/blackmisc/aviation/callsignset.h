@@ -9,40 +9,27 @@
 
 //! \file
 
-#ifndef BLACKMISC_AUDIODEVICELIST_H
-#define BLACKMISC_AUDIODEVICELIST_H
+#ifndef BLACKMISC_AVIATION_CALLSIGNSET_H
+#define BLACKMISC_AVIATION_CALLSIGNSET_H
 
-#include "audiodeviceinfo.h"
-#include "sequence.h"
-#include "collection.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/collection.h"
+#include "blackmisc/sequence.h"
 #include <QObject>
-#include <QString>
-#include <QList>
 
 namespace BlackMisc
 {
-    namespace Audio
+    namespace Aviation
     {
-        /*!
-         * Value object encapsulating a list of audio devices.
-         */
-        class CAudioDeviceInfoList : public CSequence<CAudioDeviceInfo>
+        //! Value object for a set of callsigns.
+        class CCallsignSet : public CCollection<CCallsign>
         {
         public:
             //! Default constructor.
-            CAudioDeviceInfoList();
+            CCallsignSet();
 
             //! Construct from a base class object.
-            CAudioDeviceInfoList(const CSequence &other);
-
-            //! Get output devices in that list
-            CAudioDeviceInfoList getOutputDevices() const;
-
-            //! Get output devices in that list
-            CAudioDeviceInfoList getInputDevices() const;
-
-            //! Count (as of type)
-            int count(CAudioDeviceInfo::DeviceType type) const;
+            CCallsignSet(const CCollection<CCallsign> &other);
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
@@ -52,13 +39,13 @@ namespace BlackMisc
 
             //! Register metadata
             static void registerMetadata();
-        };
 
+        };
     } //namespace
 } // namespace
 
-Q_DECLARE_METATYPE(BlackMisc::Audio::CAudioDeviceInfoList)
-Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Audio::CAudioDeviceInfo>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Audio::CAudioDeviceInfo>)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CCallsignSet)
+Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Aviation::CCallsign>)
+Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Aviation::CCallsign>)
 
 #endif //guard

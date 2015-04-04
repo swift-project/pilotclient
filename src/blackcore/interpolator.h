@@ -133,7 +133,7 @@ namespace BlackCore
 
         bool m_withDebugMsg = false;              //!< allows to disable debug messages
         bool m_forceSortWhenAddingValues = false; //!< force sorting (latest first) when adding values
-        BlackMisc::Aviation::CCallsignList m_aircraftSupportingParts; //!< aircraft supporting parts
+        BlackMisc::Aviation::CCallsignSet m_aircraftSupportingParts; //!< aircraft supporting parts
 
         // hashs, because not sorted by key but keeping order
         CSituationsPerCallsign m_situationsByCallsign; //!< situations

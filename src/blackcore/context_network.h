@@ -20,7 +20,7 @@
 #include "blackmisc/nwtextmessagelist.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/nwclientlist.h"
-#include "blackmisc/voiceroomlist.h"
+#include "blackmisc/audio/voiceroomlist.h"
 #include "blackcore/network.h"
 
 //! \addtogroup dbus
@@ -162,7 +162,7 @@ namespace BlackCore
         virtual BlackMisc::Network::CUserList getUsers() const = 0;
 
         //! Users for given callsigns, e.g. for voice room resolution
-        virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const = 0;
+        virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const = 0;
 
         //! User for given callsign, e.g. for text messages
         virtual BlackMisc::Network::CUser getUserForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
@@ -171,7 +171,7 @@ namespace BlackCore
         virtual BlackMisc::Network::CClientList getOtherClients() const = 0;
 
         //! Clients for given callsign, e.g. to test/fetch direct aircraft model
-        virtual BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const = 0;
+        virtual BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const = 0;
 
         //! Known voice servers, available when data file was first read
         virtual BlackMisc::Network::CServerList getVatsimVoiceServers() const = 0;
@@ -186,10 +186,10 @@ namespace BlackCore
         virtual void enableFastPositionSending(bool enable) = 0;
 
         //! Callsigns enabled for fast position updates
-        virtual void setFastPositionEnabledCallsigns(BlackMisc::Aviation::CCallsignList &callsigns) = 0;
+        virtual void setFastPositionEnabledCallsigns(BlackMisc::Aviation::CCallsignSet &callsigns) = 0;
 
         //! Callsigns enabled for fast position updates
-        virtual BlackMisc::Aviation::CCallsignList getFastPositionEnabledCallsigns() = 0;
+        virtual BlackMisc::Aviation::CCallsignSet getFastPositionEnabledCallsigns() = 0;
 
         /*!
          * Connect to Network

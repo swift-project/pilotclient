@@ -67,11 +67,11 @@ namespace BlackCore
         }
 
         //! \copydoc IContextAudio::getRoomCallsigns()
-        virtual BlackMisc::Aviation::CCallsignList getRoomCallsigns(int comUnitValue) const override
+        virtual BlackMisc::Aviation::CCallsignSet getRoomCallsigns(int comUnitValue) const override
         {
             Q_UNUSED(comUnitValue);
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Aviation::CCallsignList();
+            return BlackMisc::Aviation::CCallsignSet();
         }
 
         //! \copydoc IContextAudio::getRoomUsers()

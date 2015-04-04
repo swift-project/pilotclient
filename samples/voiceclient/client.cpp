@@ -5,8 +5,8 @@
 
 #include "client.h"
 #include "blackcore/voice_vatlib.h"
-#include "blackmisc/audiodeviceinfolist.h"
-#include "blackmisc/aviation/callsignlist.h"
+#include "blackmisc/audio/audiodeviceinfolist.h"
+#include "blackmisc/aviation/callsignset.h"
 #include <QDateTime>
 
 using namespace BlackMisc::Audio;
@@ -112,7 +112,7 @@ void Client::setCallsignCmd(QTextStream &args)
 {
     QString callsign;
     args >> callsign;
-    m_channelCom1->setMyAircraftCallsign(BlackMisc::Aviation::CCallsign(callsign));
+    m_channelCom1->setOwnAircraftCallsign(BlackMisc::Aviation::CCallsign(callsign));
 }
 
 void Client::initiateConnectionCmd(QTextStream &args)
@@ -159,7 +159,7 @@ void Client::outputDevicesCmd(QTextStream & /** args **/)
 void Client::listCallsignsCmd(QTextStream &args)
 {
     Q_UNUSED(args)
-    CCallsignList callsigns = m_channelCom1->getVoiceRoomCallsigns();
+    CCallsignSet callsigns = m_channelCom1->getVoiceRoomCallsigns();
     foreach(CCallsign callsign, callsigns)
     {
         m_stdout << " " << callsign << endl;

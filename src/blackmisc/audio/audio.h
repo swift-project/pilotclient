@@ -1,5 +1,5 @@
 /* Copyright (C) 2013
- * swift Project Community / Contributors
+ * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
  * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
@@ -7,12 +7,19 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKMISC_AUDIOALLCLASSES_H
-#define BLACKMISC_AUDIOALLCLASSES_H
+//! \file
 
-#include "blackmisc/audiodeviceinfo.h"
-#include "blackmisc/audiodeviceinfolist.h"
-#include "blackmisc/voiceroom.h"
-#include "blackmisc/voiceroomlist.h"
+#ifndef BLACKMISC_AUDIO_AUDIO_H
+#define BLACKMISC_AUDIO_AUDIO_H
+
+/*!
+ * \namespace BlackMisc::Audio
+ * \brief Audio classes such as audio devices and voice rooms.
+ */
+
+#include "blackmisc/audio/audiodeviceinfo.h"
+#include "blackmisc/audio/audiodeviceinfolist.h"
+#include "blackmisc/audio/voiceroom.h"
+#include "blackmisc/audio/voiceroomlist.h"
 
 #endif // guard

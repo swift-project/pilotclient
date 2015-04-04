@@ -14,7 +14,7 @@
 #include "multiplayer_packet_parser.h"
 #include "blacksimplugin_freefunctions.h"
 #include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/coordinategeodetic.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/logmessage.h"
 #include <QScopedArrayPointer>
 

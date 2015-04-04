@@ -32,9 +32,9 @@ void BlackMisc::Simulation::registerMetadata()
     CSimulatorPluginInfo::registerMetadata();
     CSimulatorPluginInfoList::registerMetadata();
     CSettingsSimulator::registerMetadata();
-    FsCommon::CAircraftCfgEntries::registerMetadata();
-    FsCommon::CAircraftCfgEntriesList::registerMetadata();
-    Fsx::CSimConnectUtilities::registerMetadata();
+    CAircraftCfgEntries::registerMetadata();
+    CAircraftCfgEntriesList::registerMetadata();
+    CSimConnectUtilities::registerMetadata();
     CAircraftModel::registerMetadata();
     CAircraftModelList::registerMetadata();
     CSimulatedAircraft::registerMetadata();

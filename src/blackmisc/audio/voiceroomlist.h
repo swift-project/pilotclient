@@ -9,27 +9,31 @@
 
 //! \file
 
-#ifndef BLACKMISC_AVIATION_CALLSIGNLIST_H
-#define BLACKMISC_AVIATION_CALLSIGNLIST_H
+#ifndef BLACKMISC_AUDIO_VOICEROOMLIST_H
+#define BLACKMISC_AUDIO_VOICEROOMLIST_H
 
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/collection.h"
+#include "voiceroom.h"
 #include "blackmisc/sequence.h"
+#include "blackmisc/collection.h"
 #include <QObject>
+#include <QString>
+#include <QList>
 
 namespace BlackMisc
 {
-    namespace Aviation
+    namespace Audio
     {
-        //! Value object for a list of callsigns.
-        class CCallsignList : public CCollection<CCallsign>
+        /*!
+         * Value object encapsulating a list of voice rooms.
+         */
+        class CVoiceRoomList : public CSequence<CVoiceRoom>
         {
         public:
             //! Default constructor.
-            CCallsignList();
+            CVoiceRoomList();
 
             //! Construct from a base class object.
-            CCallsignList(const CCollection<CCallsign> &other);
+            CVoiceRoomList(const CSequence &other);
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
@@ -37,15 +41,18 @@ namespace BlackMisc
             //! \copydoc CValueObject::convertFromQVariant
             virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
-            //! Register metadata
+            //! \brief Register metadata
             static void registerMetadata();
 
+            //! Frequently needed for voice room resolutions
+            static const CVoiceRoomList &twoEmptyRooms();
         };
+
     } //namespace
 } // namespace
 
-Q_DECLARE_METATYPE(BlackMisc::Aviation::CCallsignList)
-Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Aviation::CCallsign>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Aviation::CCallsign>)
+Q_DECLARE_METATYPE(BlackMisc::Audio::CVoiceRoomList)
+Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Audio::CVoiceRoom>)
+Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Audio::CVoiceRoom>)
 
 #endif //guard

@@ -14,7 +14,7 @@
 
 #include "blackcore/context.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackmisc/voiceroomlist.h"
+#include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/eveventhotkeyfunction.h"
 #include "blackmisc/evoriginator.h"
 #include <QObject>

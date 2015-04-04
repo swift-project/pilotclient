@@ -18,7 +18,7 @@
 #include "blackmisc/nwserverlist.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/nwvoicecapabilities.h"
-#include "blackmisc/aviation/callsignlist.h"
+#include "blackmisc/aviation/callsignset.h"
 
 #include <QObject>
 #include <QTimer>
@@ -56,7 +56,7 @@ namespace BlackCore
 
         //! Users for callsign(s)
         //! \threadsafe
-        BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns);
+        BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns);
 
         //! User for callsign
         //! \threadsafe
@@ -64,7 +64,7 @@ namespace BlackCore
 
         //! Controllers for callsigns
         //! \threadsafe
-        BlackMisc::Network::CUserList getControllersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns);
+        BlackMisc::Network::CUserList getControllersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns);
 
         //! Controllers for callsign
         //! \threadsafe
@@ -72,7 +72,7 @@ namespace BlackCore
 
         //! Users for callsigns
         //! \threadsafe
-        BlackMisc::Network::CUserList getPilotsForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns);
+        BlackMisc::Network::CUserList getPilotsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns);
 
         //! Users for callsign
         //! \threadsafe

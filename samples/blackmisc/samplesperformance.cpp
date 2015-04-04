@@ -9,7 +9,7 @@
 
 #include "samplesperformance.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
-#include "blackmisc/coordinategeodetic.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/testing.h"
 

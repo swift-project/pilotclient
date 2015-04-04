@@ -16,7 +16,7 @@
 
 #include "blacksound/soundgenerator.h"
 #include "blackmisc/notificationsounds.h"
-#include "blackmisc/voiceroomlist.h"
+#include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/hotkeyfunction.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/simplecommandparser.h"
@@ -47,12 +47,12 @@ namespace BlackCore
         m_handlePtt = m_inputManager->registerHotkeyFunc(CHotkeyFunction::Ptt(), this, &CContextAudio::ps_setVoiceTransmission);
 
         m_channel1 = m_voice->createVoiceChannel();
-        m_channel1->setMyAircraftCallsign(ownCallsign);
+        m_channel1->setOwnAircraftCallsign(ownCallsign);
         connect(m_channel1.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_connectionStatusChanged);
         connect(m_channel1.data(), &IVoiceChannel::userJoinedRoom, this, &CContextAudio::ps_userJoinedRoom);
         connect(m_channel1.data(), &IVoiceChannel::userLeftRoom, this, &CContextAudio::ps_userLeftRoom);
         m_channel2 = m_voice->createVoiceChannel();
-        m_channel2->setMyAircraftCallsign(ownCallsign);
+        m_channel2->setOwnAircraftCallsign(ownCallsign);
         connect(m_channel2.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_connectionStatusChanged);
         connect(m_channel1.data(), &IVoiceChannel::userJoinedRoom, this, &CContextAudio::ps_userJoinedRoom);
         connect(m_channel1.data(), &IVoiceChannel::userLeftRoom, this, &CContextAudio::ps_userLeftRoom);
@@ -321,7 +321,7 @@ namespace BlackCore
             if (newRoomCom1.isValid())
             {
                 auto newVoiceChannel = getVoiceChannelBy(newRoomCom1);
-                newVoiceChannel->setMyAircraftCallsign(ownCallsign);
+                newVoiceChannel->setOwnAircraftCallsign(ownCallsign);
                 bool inUse = m_voiceChannelMapping.values().contains(newVoiceChannel);
                 m_voiceChannelMapping.insert(Com1, newVoiceChannel);
 
@@ -361,7 +361,7 @@ namespace BlackCore
             if (newRoomCom2.isValid())
             {
                 auto newVoiceChannel = getVoiceChannelBy(newRoomCom2);
-                newVoiceChannel->setMyAircraftCallsign(ownCallsign);
+                newVoiceChannel->setOwnAircraftCallsign(ownCallsign);
                 bool inUse = m_voiceChannelMapping.values().contains(newVoiceChannel);
                 m_voiceChannelMapping.insert(Com2, newVoiceChannel);
 
@@ -385,11 +385,11 @@ namespace BlackCore
 
     void CContextAudio::setOwnCallsignForRooms(const CCallsign &callsign)
     {
-        if (m_channel1) { m_channel1->setMyAircraftCallsign(callsign); }
-        if (m_channel2) { m_channel2->setMyAircraftCallsign(callsign); }
+        if (m_channel1) { m_channel1->setOwnAircraftCallsign(callsign); }
+        if (m_channel2) { m_channel2->setOwnAircraftCallsign(callsign); }
     }
 
-    CCallsignList CContextAudio::getRoomCallsigns(int comUnitValue) const
+    CCallsignSet CContextAudio::getRoomCallsigns(int comUnitValue) const
     {
         Q_ASSERT(this->m_voice);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
@@ -398,7 +398,7 @@ namespace BlackCore
         if (voiceChannel)
             return voiceChannel->getVoiceRoomCallsigns();
         else
-            return CCallsignList();
+            return CCallsignSet();
     }
 
     Network::CUserList CContextAudio::getRoomUsers(int comUnitValue) const
@@ -541,8 +541,8 @@ namespace BlackCore
             if (this->getIContextOwnAircraft())
             {
                 // good chance to update aircraft
-                m_channel1->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
-                m_channel2->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+                m_channel1->setOwnAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+                m_channel2->setOwnAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
             }
             emit this->changedVoiceRooms(getComVoiceRooms(), false);
             break;

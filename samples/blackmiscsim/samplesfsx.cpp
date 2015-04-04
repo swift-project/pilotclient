@@ -8,11 +8,11 @@
  */
 
 #include "samplesfsx.h"
-#include "blacksim/blacksimfreefunctions.h"
-#include "blacksim/fsx/simconnectutilities.h"
+#include "blackmisc/simulation/fsx/simconnectutilities.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include <QDebug>
 
-using namespace BlackSim::Fsx;
+using namespace BlackMisc::Simulation::Fsx;
 
 namespace BlackSimTest
 {
@@ -22,7 +22,7 @@ namespace BlackSimTest
      */
     int CSamplesFsx::samplesMisc(QTextStream &streamOut)
     {
-        BlackSim::registerMetadata();
+        BlackMisc::registerMetadata();
         streamOut << CSimConnectUtilities::simConnectExceptionToString(CSimConnectUtilities::SIMCONNECT_EXCEPTION_ALREADY_SUBSCRIBED) << endl;
         streamOut << CSimConnectUtilities::simConnectExceptionToString(CSimConnectUtilities::SIMCONNECT_EXCEPTION_ILLEGAL_OPERATION) << endl;
         streamOut << CSimConnectUtilities::simConnectSurfaceTypeToString(CSimConnectUtilities::Bituminus) << endl;

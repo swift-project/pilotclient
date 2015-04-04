@@ -14,7 +14,7 @@
 #include "enableforruntime.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/aviation/transponder.h"
-#include "blackmisc/voiceroomlist.h"
+#include "blackmisc/audio/voiceroomlist.h"
 #include <QFrame>
 #include <QScopedPointer>
 

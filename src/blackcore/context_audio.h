@@ -14,11 +14,11 @@
 
 #include "blackcore/context.h"
 #include "blackmisc/genericdbusinterface.h"
-#include "blackmisc/audiodeviceinfolist.h"
-#include "blackmisc/voiceroomlist.h"
+#include "blackmisc/audio/audiodeviceinfolist.h"
+#include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/aviation/aircraft.h"
-#include "blackmisc/aviation/callsignlist.h"
+#include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/selcal.h"
 #include <QObject>
 
@@ -120,7 +120,7 @@ namespace BlackCore
         virtual void leaveAllVoiceRooms() = 0;
 
         //! Room user callsigns
-        virtual BlackMisc::Aviation::CCallsignList getRoomCallsigns(int comUnit) const = 0;
+        virtual BlackMisc::Aviation::CCallsignSet getRoomCallsigns(int comUnit) const = 0;
 
         //! Room users
         virtual BlackMisc::Network::CUserList getRoomUsers(int comUnit) const = 0;

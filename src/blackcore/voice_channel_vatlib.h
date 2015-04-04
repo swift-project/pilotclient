@@ -13,8 +13,8 @@
 #include "voice_channel.h"
 #include "voice_vatlib.h"
 #include "blackmisc/statusmessage.h"
-#include "blackmisc/voiceroomlist.h"
-#include "blackmisc/aviation/callsignlist.h"
+#include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/aviation/callsignset.h"
 #include <QObject>
 #include <QSharedPointer>
 
@@ -44,10 +44,10 @@ namespace BlackCore
         virtual void leaveVoiceRoom() override;
 
         //! \copydoc IVoiceChannel::getVoiceRoomCallsigns
-        virtual BlackMisc::Aviation::CCallsignList getVoiceRoomCallsigns() const override;
+        virtual BlackMisc::Aviation::CCallsignSet getVoiceRoomCallsigns() const override;
 
         //! \copydoc IVoiceChannel::setMyAircraftCallsign
-        virtual void setMyAircraftCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
+        virtual void setOwnAircraftCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
 
         //! \copydoc IVoiceChannel::getVoiceRoom
         virtual BlackMisc::Audio::CVoiceRoom getVoiceRoom() const override;
@@ -89,7 +89,7 @@ namespace BlackCore
 
         BlackMisc::Aviation::CCallsign m_callsign; // Own callsign
         BlackMisc::Audio::CVoiceRoom m_voiceRoom; // Voice Room
-        BlackMisc::Aviation::CCallsignList m_listCallsigns; // Callsigns connected to room
+        BlackMisc::Aviation::CCallsignSet m_listCallsigns; // Callsigns connected to room
         IVoiceChannel::ConnectionStatus m_roomStatus = IVoiceChannel::Disconnected; // Room connection status
 
         VatAudioService m_audioService;

@@ -8,7 +8,7 @@
  */
 
 #include "columnformatters.h"
-#include "blackmisc/geolatitude.h"
+#include "blackmisc/geo/latitude.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/icons.h"

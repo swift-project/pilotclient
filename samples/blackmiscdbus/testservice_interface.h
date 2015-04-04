@@ -13,8 +13,15 @@
 #define BLACKMISCTEST_TESTSERVICE_INTERFACE_H
 
 #include "blackmisc/blackmiscfreefunctions.h"
-#include "blackmisc/blackmiscallvalueclasses.h"
-#include "blacksim/fscommon/aircraftcfgentrieslist.h"
+#include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/track.h"
+#include "blackmisc/aviation/transponder.h"
+#include "blackmisc/aviation/aircraftlist.h"
+#include "blackmisc/aviation/airportlist.h"
+#include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/nwclientlist.h"
+#include "blackmisc/variantlist.h"
 #include <QtCore/QObject>
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
@@ -27,26 +34,25 @@
 namespace BlackMiscTest
 {
 
-    /*!
-     * Proxy class for interface blackmisctest.testservice
-     */
+    //! Proxy class for interface blackmisctest.testservice
     class TestServiceInterface: public QDBusAbstractInterface
     {
         Q_OBJECT
 
     public:
+        //! Interface name
         static inline const char *staticInterfaceName() { return "blackmisctest.testservice"; }
 
     public:
-        //! \brief Constructor
+        //! Constructor
         TestServiceInterface(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent = 0);
 
-        //! \brief Destructor
+        //! Destructor
         ~TestServiceInterface();
 
     public Q_SLOTS:
 
-        //! \brief DBus calls
+        //! DBus calls
         //! @{
         inline QDBusPendingReply<BlackMisc::Aviation::CAtcStation> getAtcStation()
         {
@@ -54,7 +60,7 @@ namespace BlackMiscTest
             return asyncCallWithArgumentList(QLatin1String("getAtcStation"), argumentList);
         }
 
-        inline QDBusPendingReply<BlackSim::FsCommon::CAircraftCfgEntriesList> getAircraftCfgEntriesList(int number)
+        inline QDBusPendingReply<BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList> getAircraftCfgEntriesList(int number)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(number);
@@ -287,7 +293,7 @@ namespace BlackMiscTest
 
 
     Q_SIGNALS:
-        //! \brief send message
+        //! send message
         void sendStringMessage(const QString &message);
     };
 } // namespace

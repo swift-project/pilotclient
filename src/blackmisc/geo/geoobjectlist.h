@@ -9,12 +9,12 @@
 
 //! \file
 
-#ifndef BLACKMISC_GEOOBJECTLIST_H
-#define BLACKMISC_GEOOBJECTLIST_H
+#ifndef BLACKMISC_GEO_GEOOBJECTLIST_H
+#define BLACKMISC_GEO_GEOOBJECTLIST_H
 
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/coordinategeodetic.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 
 namespace BlackMisc
 {

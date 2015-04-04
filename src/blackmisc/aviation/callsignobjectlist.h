@@ -14,7 +14,7 @@
 
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/aviation/callsignlist.h"
+#include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/propertyindexlist.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include <QList>
@@ -37,13 +37,13 @@ namespace BlackMisc
             int applyIfCallsign(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &variantMap);
 
             //! All callsigns
-            BlackMisc::Aviation::CCallsignList getCallsigns() const;
+            BlackMisc::Aviation::CCallsignSet getCallsigns() const;
 
             //! Find 0..n stations by callsign
             CONTAINER findByCallsign(const CCallsign &callsign) const;
 
             //! Find 0..n aircraft matching any of a set of callsigns
-            CONTAINER findByCallsigns(const CCallsignList &callsigns) const;
+            CONTAINER findByCallsigns(const CCallsignSet &callsigns) const;
 
             //! Find the first aircraft by callsign, if none return given one
             OBJ findFirstByCallsign(const CCallsign &callsign, const OBJ &ifNotFound = {}) const;

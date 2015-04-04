@@ -14,7 +14,7 @@
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/aviation/callsignlist.h"
+#include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/dictionary.h"
 #include <QList>
@@ -124,7 +124,7 @@ namespace BlackMiscTest
     void CTestContainers::findTests()
     {
         BlackMisc::registerMetadata();
-        CCallsignList callsigns;
+        CCallsignSet callsigns;
         CSequence<CCallsign> found = callsigns.findBy(&CCallsign::asString, "Foo");
         QVERIFY2(found.isEmpty(), "Empty found");
         callsigns.push_back(CCallsign("EDDM_TWR"));

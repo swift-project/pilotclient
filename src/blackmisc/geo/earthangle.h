@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_GEOEARTHANGLE_H
-#define BLACKMISC_GEOEARTHANGLE_H
+#ifndef BLACKMISC_GEO_EARTHANGLE_H
+#define BLACKMISC_GEO_EARTHANGLE_H
 
 #include "blackmisc/pqangle.h"
 

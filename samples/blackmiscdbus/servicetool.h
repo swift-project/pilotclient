@@ -16,7 +16,7 @@
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/nwclientlist.h"
-#include "blacksim/fscommon/aircraftcfgentrieslist.h"
+#include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include <QCoreApplication>
 #include <QProcess>
 #include <QDBusConnection>
@@ -101,7 +101,7 @@ namespace BlackMiscTest
          * \param number
          * \return
          */
-        static BlackSim::FsCommon::CAircraftCfgEntriesList getAircraftCfgEntries(int number);
+        static BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList getAircraftCfgEntries(int number);
 
         /*!
          * \brief Get airports

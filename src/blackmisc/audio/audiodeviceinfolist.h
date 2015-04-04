@@ -9,12 +9,12 @@
 
 //! \file
 
-#ifndef BLACKMISC_VOICEROOMLIST_H
-#define BLACKMISC_VOICEROOMLIST_H
+#ifndef BLACKMISC_AUDIO_AUDIODEVICELIST_H
+#define BLACKMISC_AUDIO_AUDIODEVICELIST_H
 
-#include "voiceroom.h"
-#include "sequence.h"
-#include "collection.h"
+#include "blackmisc/audio/audiodeviceinfo.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/collection.h"
 #include <QObject>
 #include <QString>
 #include <QList>
@@ -23,17 +23,24 @@ namespace BlackMisc
 {
     namespace Audio
     {
-        /*!
-         * Value object encapsulating a list of voice rooms.
-         */
-        class CVoiceRoomList : public CSequence<CVoiceRoom>
+        //! Value object encapsulating a list of audio devices.
+        class CAudioDeviceInfoList : public CSequence<CAudioDeviceInfo>
         {
         public:
             //! Default constructor.
-            CVoiceRoomList();
+            CAudioDeviceInfoList();
 
             //! Construct from a base class object.
-            CVoiceRoomList(const CSequence &other);
+            CAudioDeviceInfoList(const CSequence &other);
+
+            //! Get output devices in that list
+            CAudioDeviceInfoList getOutputDevices() const;
+
+            //! Get output devices in that list
+            CAudioDeviceInfoList getInputDevices() const;
+
+            //! Count (as of type)
+            int count(CAudioDeviceInfo::DeviceType type) const;
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
@@ -41,18 +48,15 @@ namespace BlackMisc
             //! \copydoc CValueObject::convertFromQVariant
             virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
-            //! \brief Register metadata
+            //! Register metadata
             static void registerMetadata();
-
-            //! Frequently needed for voice room resolutions
-            static const CVoiceRoomList &twoEmptyRooms();
         };
 
     } //namespace
 } // namespace
 
-Q_DECLARE_METATYPE(BlackMisc::Audio::CVoiceRoomList)
-Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Audio::CVoiceRoom>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Audio::CVoiceRoom>)
+Q_DECLARE_METATYPE(BlackMisc::Audio::CAudioDeviceInfoList)
+Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Audio::CAudioDeviceInfo>)
+Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Audio::CAudioDeviceInfo>)
 
 #endif //guard

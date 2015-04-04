@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/aviation/callsignlist.h"
+#include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/predicates.h"
 
 namespace BlackMisc
@@ -15,21 +15,21 @@ namespace BlackMisc
     namespace Aviation
     {
 
-        CCallsignList::CCallsignList() { }
+        CCallsignSet::CCallsignSet() { }
 
-        CCallsignList::CCallsignList(const CCollection<CCallsign> &other) :
+        CCallsignSet::CCallsignSet(const CCollection<CCallsign> &other) :
             CCollection<CCallsign>(other)
         { }
 
-        void CCallsignList::registerMetadata()
+        void CCallsignSet::registerMetadata()
         {
             qRegisterMetaType<BlackMisc::CSequence<CCallsign>>();
             qDBusRegisterMetaType<BlackMisc::CSequence<CCallsign>>();
             qRegisterMetaType<BlackMisc::CCollection<CCallsign>>();
             qDBusRegisterMetaType<BlackMisc::CCollection<CCallsign>>();
-            qRegisterMetaType<CCallsignList>();
-            qDBusRegisterMetaType<CCallsignList>();
-            registerMetaValueType<CCallsignList>();
+            qRegisterMetaType<CCallsignSet>();
+            qDBusRegisterMetaType<CCallsignSet>();
+            registerMetaValueType<CCallsignSet>();
         }
 
     } // namespace

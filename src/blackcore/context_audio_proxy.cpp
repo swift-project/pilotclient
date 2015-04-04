@@ -61,9 +61,9 @@ namespace BlackCore
     /*
      * COM1 callsigns
      */
-    BlackMisc::Aviation::CCallsignList CContextAudioProxy::getRoomCallsigns(int comUnitValue) const
+    BlackMisc::Aviation::CCallsignSet CContextAudioProxy::getRoomCallsigns(int comUnitValue) const
     {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CCallsignList>(QLatin1Literal("getRoomCallsigns"), comUnitValue);
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CCallsignSet>(QLatin1Literal("getRoomCallsigns"), comUnitValue);
     }
 
     /*

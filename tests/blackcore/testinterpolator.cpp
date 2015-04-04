@@ -9,7 +9,7 @@
 
 #include "testinterpolator.h"
 #include "blackcore/interpolator_linear.h"
-#include "blackmisc/simulation/remoteaircraftprovider.h"
+#include "blackmisc/simulation/remoteaircraftproviderdummy.h"
 #include <QScopedPointer>
 
 using namespace BlackCore;
@@ -26,6 +26,8 @@ namespace BlackCoreTest
         QScopedPointer<CRemoteAircraftProviderDummy> provider(new CRemoteAircraftProviderDummy());
         CInterpolatorLinear interpolator(provider.data());
         interpolator.forceSortingOfAddedValues(true);
+
+        // fixed time so everything can be debugged
         const qint64 ts =  1425000000000; // QDateTime::currentMSecsSinceEpoch();
         const qint64 deltaT = 5000; // ms
         CCallsign cs("SWIFT");
@@ -131,7 +133,7 @@ namespace BlackCoreTest
         }
 
         QList<CCallsign> csKeys = interpolator.getSituationsByCallsign().keys();
-        CCallsignList callsigns(csKeys);
+        CCallsignSet callsigns(csKeys);
         QVERIFY(callsigns.size() == callsignsInProvider);
         QVERIFY(interpolator.getSituationsForCallsign("SWIFT0").size() == IInterpolator::MaxSituationsPerCallsign);
         QVERIFY(interpolator.getPartsForCallsign("SWIFT0").size() == IInterpolator::MaxPartsPerCallsign);

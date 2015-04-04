@@ -12,7 +12,7 @@
 #define NOMINMAX
 #endif
 #include "datarefs.h"
-#include "blackmisc/geodesicgrid.h"
+#include "blackmisc/geo/geodesicgrid.h"
 #include <XPLM/XPLMNavigation.h>
 #include <QStringList>
 #include <QObject>

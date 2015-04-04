@@ -20,7 +20,7 @@
 #include "blackmisc/nwclientlist.h"
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/nwuserlist.h"
-#include "blackmisc/aviation/callsignlist.h"
+#include "blackmisc/aviation/callsignset.h"
 #include "network.h"
 #include "vatsimbookingreader.h"
 #include "vatsimdatafilereader.h"
@@ -75,7 +75,7 @@ namespace BlackCore
         BlackMisc::Network::CUserList getUsers() const;
 
         //! Returns a list of the users corresponding to the given callsigns
-        BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const;
+        BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const;
 
         //! Returns the flightplan for the given callsign
         //! \remarks pseudo synchronous, call the async functions and waits for result
@@ -85,7 +85,7 @@ namespace BlackCore
         BlackMisc::Network::CClientList getOtherClients() const;
 
         //! Returns a list of other clients corresponding to the given callsigns
-        BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const;
+        BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const;
 
         //! Returns a METAR for the given airport, if available
         BlackMisc::Aviation::CInformationMessage getMetar(const BlackMisc::Aviation::CAirportIcao &airportIcaoCode);

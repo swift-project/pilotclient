@@ -13,7 +13,7 @@
 #define BLACKGUI_AUDIOSETUPCOMPONENT_H
 
 #include "enableforruntime.h"
-#include "blackmisc/audiodeviceinfolist.h"
+#include "blackmisc/audio/audiodeviceinfolist.h"
 #include <QFrame>
 #include <QScopedPointer>
 

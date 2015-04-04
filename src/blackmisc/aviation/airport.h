@@ -13,7 +13,7 @@
 #define BLACKMISC_AVIATION_AIRPORT_H
 
 #include "blackmisc/aviation/airporticao.h"
-#include "blackmisc/coordinategeodetic.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/propertyindex.h"
 
 namespace BlackMisc

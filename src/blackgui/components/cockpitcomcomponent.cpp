@@ -14,7 +14,7 @@
 #include "blackcore/context_ownaircraft.h"
 #include "blackcore/context_audio.h"
 #include "blackmisc/aviation/aircraft.h"
-#include "blackmisc/voiceroomlist.h"
+#include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/logmessage.h"
 
 #include <QDoubleSpinBox>

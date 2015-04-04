@@ -9,8 +9,8 @@
 
 #include "samplesfscommon.h"
 #include "blackmisc/sampleutils.h"
-#include "blacksim/fscommon/aircraftcfgentrieslist.h"
-#include "blacksim/fscommon/aircraftmapper.h"
+#include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
+#include "blackmisc/simulation/fscommon/aircraftmapper.h"
 
 #include <QDebug>
 #include <QFuture>
@@ -19,7 +19,7 @@
 #include <QTemporaryFile>
 
 using namespace BlackMisc;
-using namespace BlackSim::FsCommon;
+using namespace BlackMisc::Simulation::FsCommon;
 
 namespace BlackSimTest
 {

@@ -204,11 +204,11 @@ namespace BlackCore
         return users;
     }
 
-    CUserList CAirspaceMonitor::getUsersForCallsigns(const CCallsignList &callsigns) const
+    CUserList CAirspaceMonitor::getUsersForCallsigns(const CCallsignSet &callsigns) const
     {
         CUserList users;
         if (callsigns.isEmpty()) { return users; }
-        CCallsignList searchList(callsigns);
+        CCallsignSet searchList(callsigns);
 
         // myself, which is not in the lists below
         if (!ownAircraft().getCallsign().isEmpty() && searchList.contains(ownAircraft().getCallsign()))
@@ -261,7 +261,7 @@ namespace BlackCore
         return users;
     }
 
-    CClientList CAirspaceMonitor::getOtherClientsForCallsigns(const CCallsignList &callsigns) const
+    CClientList CAirspaceMonitor::getOtherClientsForCallsigns(const CCallsignSet &callsigns) const
     {
         CClientList clients;
         if (callsigns.isEmpty()) return clients;

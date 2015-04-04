@@ -9,23 +9,17 @@
 namespace BlackMiscTest
 {
 
-/*!
- * \brief Samples for vector / matrix
- */
-class CSamplesGeo
-{
-public:
-    /*!
-     * \brief Run the samples
-     */
-    static int samples();
+    //! Samples for geo
+    class CSamplesGeo
+    {
+    public:
+        //! Run the samples
+        static int samples();
 
-private:
-    /*!
-     * \brief Avoid init
-     */
-    CSamplesGeo();
-};
+    private:
+        //! Constructor
+        CSamplesGeo();
+    };
 } // namespace
 
 

@@ -7,7 +7,6 @@
  * contained in the LICENSE file.
  */
 
-#include "blacksim/blacksimfreefunctions.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "samplesfscommon.h"
 #include "samplesfsx.h"
@@ -29,7 +28,6 @@ int main(int argc, char *argv[])
     QTextStream streamIn(stdin);
     QTextStream streamOut(stdout);
     BlackMisc::registerMetadata();
-    BlackSim::registerMetadata();
 
     streamOut << "Run samples:" << endl;
     streamOut << "1 .. FS common / Simulation" << endl;

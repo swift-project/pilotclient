@@ -22,7 +22,7 @@
 #include "audio_mixer.h"
 #include "input_manager.h"
 #include "blackinput/keyboard.h"
-#include "blackmisc/voiceroomlist.h"
+#include "blackmisc/audio/voiceroomlist.h"
 
 #include <QThread>
 #include <QQueue>
@@ -64,7 +64,7 @@ namespace BlackCore
         virtual void setOwnCallsignForRooms(const BlackMisc::Aviation::CCallsign &callsign) override;
 
         //! \copydoc IContextAudio::getRoomCallsigns()
-        virtual BlackMisc::Aviation::CCallsignList getRoomCallsigns(int comUnitValue) const override;
+        virtual BlackMisc::Aviation::CCallsignSet getRoomCallsigns(int comUnitValue) const override;
 
         //! \copydoc IContextAudio::getRoomUsers()
         virtual BlackMisc::Network::CUserList getRoomUsers(int comUnitValue) const override;

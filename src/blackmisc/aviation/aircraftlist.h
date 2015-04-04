@@ -13,9 +13,9 @@
 #define BLACKMISC_AVIATION_AIRCRAFTLIST_H
 
 #include "blackmisc/aviation/aircraft.h"
-#include "blackmisc/aviation/callsignlist.h"
+#include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/callsignobjectlist.h"
-#include "blackmisc/geoobjectlist.h"
+#include "blackmisc/geo/geoobjectlist.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/propertyindexvariantmap.h"

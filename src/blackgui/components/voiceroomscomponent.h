@@ -13,7 +13,7 @@
 #define BLACKGUI_VOICEROOMSCOMPONENT_H
 
 #include "enableforruntime.h"
-#include "blackmisc/voiceroomlist.h"
+#include "blackmisc/audio/voiceroomlist.h"
 #include <QFrame>
 #include <QScopedPointer>
 

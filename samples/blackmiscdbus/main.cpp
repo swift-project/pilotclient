@@ -8,7 +8,6 @@
  */
 
 #include "blackmisc/blackmiscfreefunctions.h"
-#include "blacksim/blacksimfreefunctions.h"
 #include "servicetool.h"
 #include "blackcore/dbus_server.h"
 #include <QDBusMetaType>
@@ -27,7 +26,6 @@ int main(int argc, char *argv[])
     // is just for testing, I did not split it up
 
     BlackMisc::registerMetadata();
-    BlackSim::registerMetadata();
     QCoreApplication a(argc, argv);
 
     // trying to get the arguments into a list

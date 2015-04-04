@@ -12,8 +12,8 @@
 #ifndef BLACKCORE_AUDIODEVICE_H
 #define BLACKCORE_AUDIODEVICE_H
 
-#include "blackmisc/audiodeviceinfo.h"
-#include "blackmisc/audiodeviceinfolist.h"
+#include "blackmisc/audio/audiodeviceinfo.h"
+#include "blackmisc/audio/audiodeviceinfolist.h"
 #include <QObject>
 
 //! \file

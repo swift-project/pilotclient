@@ -335,7 +335,7 @@ namespace BlackCore
         int m_timerCounter = 0;                   //!< allows to calculate n seconds
         QTimer *m_oneSecondTimer = nullptr;       //!< timer
         BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft; //!< all other aircraft are to be ignored
-        BlackMisc::Aviation::CCallsignList m_callsignsToBeRendered;          //!< callsigns which will be rendered
+        BlackMisc::Aviation::CCallsignSet m_callsignsToBeRendered;          //!< callsigns which will be rendered
         int m_maxRenderedAircraft = MaxAircraftInfinite;                     //!< max.rendered aircraft
         BlackMisc::PhysicalQuantities::CLength m_maxRenderedDistance { 0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()}; //!< max.distance for rendering
     };

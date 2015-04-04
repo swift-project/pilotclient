@@ -15,7 +15,7 @@
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/pqfrequency.h"
-#include "blackmisc/coordinategeodetic.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/pqlength.h"
 #include "blackmisc/pqtime.h"
 #include "blackmisc/nwserverlist.h"

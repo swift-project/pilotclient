@@ -11,7 +11,7 @@
 #include "xbus_service_proxy.h"
 #include "xbus_traffic_proxy.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/coordinategeodetic.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 #include <QDBusServiceWatcher>
 #include <QTimer>
 #include <QString>

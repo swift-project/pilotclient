@@ -9,11 +9,11 @@
 
 //! \file
 
-#ifndef BLACKMISC_AUDIODEVICE_H
-#define BLACKMISC_AUDIODEVICE_H
+#ifndef BLACKMISC_AUDIO_AUDIODEVICE_H
+#define BLACKMISC_AUDIO_AUDIODEVICE_H
 
-#include "blackmiscfreefunctions.h"
-#include "valueobject.h"
+#include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/valueobject.h"
 #include <QString>
 
 namespace BlackMisc

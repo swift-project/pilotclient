@@ -9,7 +9,7 @@
 
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/voiceroom.h"
+#include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/blackmiscfreefunctions.h"

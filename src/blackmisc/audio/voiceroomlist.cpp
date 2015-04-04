@@ -8,27 +8,19 @@
  */
 
 #include "voiceroomlist.h"
-#include "predicates.h"
+#include "blackmisc/predicates.h"
 
 namespace BlackMisc
 {
     namespace Audio
     {
-        /*
-         * Default constructor
-         */
+
         CVoiceRoomList::CVoiceRoomList() { }
 
-        /*
-         * Construct from base class object
-         */
         CVoiceRoomList::CVoiceRoomList(const CSequence &other) :
             CSequence(other)
         { }
 
-        /*
-         * Register metadata
-         */
         void CVoiceRoomList::registerMetadata()
         {
             qRegisterMetaType<CVoiceRoomList>();
@@ -36,9 +28,6 @@ namespace BlackMisc
             registerMetaValueType<CVoiceRoomList>();
         }
 
-        /*
-         * Two empty rooms
-         */
         const CVoiceRoomList &CVoiceRoomList::twoEmptyRooms()
         {
             static CVoiceRoomList emptyRooms;

@@ -9,18 +9,19 @@
 
 //! \file
 
-#ifndef BLACKMISC_GEOLONGITUDE_H
-#define BLACKMISC_GEOLONGITUDE_H
+#ifndef BLACKMISC_GEO_LATITUDE_H
+#define BLACKMISC_GEO_LATITUDE_H
 
-#include "blackmisc/geoearthangle.h"
+#include <QtCore/qmath.h>
+#include "blackmisc/geo/earthangle.h"
 
 namespace BlackMisc
 {
     namespace Geo
     {
 
-        //! Longitude
-        class CLongitude : public CValueObject<CLongitude, CEarthAngle<CLongitude>>
+        //! Latitude
+        class CLatitude : public CValueObject<CLatitude, CEarthAngle<CLatitude>>
         {
         protected:
             //! \copydoc CValueObject::convertToQString
@@ -28,24 +29,26 @@ namespace BlackMisc
             {
                 QString s(CEarthAngle::convertToQString(i18n));
                 if (!this->isZeroEpsilonConsidered())
-                    s.append(this->isNegativeWithEpsilonConsidered() ? " W" : " E");
+                {
+                    s.append(this->isNegativeWithEpsilonConsidered() ? " S" : " N");
+                }
                 return s;
             }
 
         public:
             //! Default constructor
-            CLongitude() = default;
+            CLatitude() = default;
 
             //! Constructor
-            explicit CLongitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CValueObject(angle) {}
+            explicit CLatitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CValueObject(angle) {}
 
             //! Init by double value
-            CLongitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CValueObject(value, unit) {}
+            CLatitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CValueObject(value, unit) {}
         };
 
     }
 }
 
-Q_DECLARE_METATYPE(BlackMisc::Geo::CLongitude)
+Q_DECLARE_METATYPE(BlackMisc::Geo::CLatitude)
 
 #endif // guard

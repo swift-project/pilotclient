@@ -9,7 +9,7 @@
 #include "blackmisc/aviation/informationmessage.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircrafticao.h"
-#include "blackmisc/aviation/callsignlist.h"
+#include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/navsystem.h"
 #include "blackmisc/aviation/transponder.h"
@@ -105,7 +105,7 @@ namespace BlackMiscTest
         QVERIFY2(cs1 == cs2, "Callsigns shall be equal");
         QVERIFY2(cs1 != cs3, "Callsigns shall not be equal");
 
-        CCallsignList list;
+        CCallsignSet list;
         list.push_back(cs1);
         QVERIFY2(list.size() == 1, "List shall be 1");
         QVERIFY2(list.contains(cs1), "Callsign is in list");

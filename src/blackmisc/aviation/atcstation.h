@@ -12,12 +12,12 @@
 #ifndef BLACKMISC_AVIATION_ATCSTATION_H
 #define BLACKMISC_AVIATION_ATCSTATION_H
 
-#include "blackmisc/voiceroom.h"
+#include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/informationmessage.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/nwuser.h"
-#include "blackmisc/coordinategeodetic.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/pqfrequency.h"
 #include "blackmisc/pqlength.h"
 #include "blackmisc/pqtime.h"

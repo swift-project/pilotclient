@@ -7,11 +7,11 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/coordinategeodetic.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/math/mathutils.h"
-#include "variant.h"
+#include "blackmisc/variant.h"
 #include <QtCore/qmath.h>
 
 using namespace BlackMisc::PhysicalQuantities;

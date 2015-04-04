@@ -19,7 +19,7 @@
 #include "blackmisc/aviation/transponder.h"
 #include "blackmisc/aviation/track.h"
 #include "blackmisc/aviation/callsign.h"
-#include "blackmisc/aviation/callsignlist.h"
+#include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/aircraftlist.h"

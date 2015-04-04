@@ -8,7 +8,7 @@
  */
 
 #include "blackcore/context_network_proxy.h"
-#include "blackmisc/voiceroomlist.h"
+#include "blackmisc/audio/voiceroomlist.h"
 #include <QObject>
 #include <QMetaEnum>
 #include <QDBusConnection>
@@ -128,7 +128,7 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1Literal("getUsers"));
     }
 
-    BlackMisc::Network::CUserList CContextNetworkProxy::getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const
+    BlackMisc::Network::CUserList CContextNetworkProxy::getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1Literal("getUsersForCallsigns"), callsigns);
     }
@@ -153,7 +153,7 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CServerList>(QLatin1Literal("getVatsimVoiceServers"));
     }
 
-    BlackMisc::Network::CClientList CContextNetworkProxy::getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const
+    BlackMisc::Network::CClientList CContextNetworkProxy::getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CClientList>(QLatin1Literal("getOtherClientsForCallsigns"), callsigns);
     }
@@ -203,14 +203,14 @@ namespace BlackCore
         this->m_dBusInterface->callDBus(QLatin1Literal("enableFastPositionSending"), enable);
     }
 
-    void CContextNetworkProxy::setFastPositionEnabledCallsigns(CCallsignList &callsigns)
+    void CContextNetworkProxy::setFastPositionEnabledCallsigns(CCallsignSet &callsigns)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("setFastPositionEnabledCallsigns"), callsigns);
     }
 
-    CCallsignList CContextNetworkProxy::getFastPositionEnabledCallsigns()
+    CCallsignSet CContextNetworkProxy::getFastPositionEnabledCallsigns()
     {
-        return this->m_dBusInterface->callDBusRet<CCallsignList>(QLatin1Literal("getFastPositionEnabledCallsigns"));
+        return this->m_dBusInterface->callDBusRet<CCallsignSet>(QLatin1Literal("getFastPositionEnabledCallsigns"));
     }
 
     void CContextNetworkProxy::testCreateDummyOnlineAtcStations(int number)

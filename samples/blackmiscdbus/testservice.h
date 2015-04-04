@@ -21,7 +21,7 @@
 #include "blackmisc/pqallquantities.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/math/math.h"
-#include "blacksim/fscommon/aircraftcfgentrieslist.h"
+#include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include "servicetool.h"
 #include <QObject>
 #include <QDebug>
@@ -149,7 +149,7 @@ namespace BlackMiscTest
         BlackMisc::Aviation::CAtcStationList getAtcStationList(int number) const;
 
         //! return n aircraft cfg entries
-        BlackSim::FsCommon::CAircraftCfgEntriesList getAircraftCfgEntriesList(int number) const;
+        BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList getAircraftCfgEntriesList(int number) const;
 
         //! Get object paths
         QList<QDBusObjectPath> getObjectPaths(int number) const;

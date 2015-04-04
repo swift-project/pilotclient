@@ -149,7 +149,7 @@ namespace BlackCore
         }
 
         //! \copydoc IContextNetwork::getUsersForCallsigns
-        virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const override
+        virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override
         {
             Q_UNUSED(callsigns);
             logEmptyContextWarning(Q_FUNC_INFO);
@@ -172,7 +172,7 @@ namespace BlackCore
         }
 
         //! \copydoc IContextNetwork::getOtherClientForCallsigns
-        virtual BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const override
+        virtual BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override
         {
             Q_UNUSED(callsigns);
             logEmptyContextWarning(Q_FUNC_INFO);
@@ -274,17 +274,17 @@ namespace BlackCore
         }
 
         //! \copydoc IContextNetwork::setFastPositionEnabledCallsigns
-        virtual void setFastPositionEnabledCallsigns(BlackMisc::Aviation::CCallsignList &callsigns) override
+        virtual void setFastPositionEnabledCallsigns(BlackMisc::Aviation::CCallsignSet &callsigns) override
         {
             Q_UNUSED(callsigns);
             logEmptyContextWarning(Q_FUNC_INFO);
         }
 
         //! \copydoc IContextNetwork::getFastPositionEnabledCallsigns
-        virtual BlackMisc::Aviation::CCallsignList getFastPositionEnabledCallsigns() override
+        virtual BlackMisc::Aviation::CCallsignSet getFastPositionEnabledCallsigns() override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Aviation::CCallsignList();
+            return BlackMisc::Aviation::CCallsignSet();
         }
 
     };

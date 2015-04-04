@@ -8,43 +8,29 @@
  */
 
 #include "audiodeviceinfolist.h"
-#include "predicates.h"
+#include "blackmisc/predicates.h"
 
 namespace BlackMisc
 {
     namespace Audio
     {
-        /*
-         * Default constructor
-         */
+
         CAudioDeviceInfoList::CAudioDeviceInfoList() { }
 
-        /*
-         * Construct from base class object
-         */
         CAudioDeviceInfoList::CAudioDeviceInfoList(const CSequence &other) :
             CSequence(other)
         { }
 
-        /*
-         * Output devices
-         */
         CAudioDeviceInfoList CAudioDeviceInfoList::getOutputDevices() const
         {
             return this->findBy(&CAudioDeviceInfo::getType, CAudioDeviceInfo::OutputDevice);
         }
 
-        /*
-         * Output devices
-         */
         CAudioDeviceInfoList CAudioDeviceInfoList::getInputDevices() const
         {
             return this->findBy(&CAudioDeviceInfo::getType, CAudioDeviceInfo::InputDevice);
         }
 
-        /*
-         * Count as of type
-         */
         int CAudioDeviceInfoList::count(CAudioDeviceInfo::DeviceType type) const
         {
             return std::count_if(this->begin(), this->end(), [type](const CAudioDeviceInfo &device)
@@ -53,9 +39,6 @@ namespace BlackMisc
             });
         }
 
-        /*
-         * Register metadata
-         */
         void CAudioDeviceInfoList::registerMetadata()
         {
             qRegisterMetaType<CAudioDeviceInfoList>();

@@ -338,7 +338,7 @@ namespace BlackCore
         return this->m_airspace->getUsers();
     }
 
-    CUserList CContextNetwork::getUsersForCallsigns(const CCallsignList &callsigns) const
+    CUserList CContextNetwork::getUsersForCallsigns(const CCallsignSet &callsigns) const
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         CUserList users;
@@ -349,7 +349,7 @@ namespace BlackCore
     CUser CContextNetwork::getUserForCallsign(const CCallsign &callsign) const
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        CCallsignList callsigns;
+        CCallsignSet callsigns;
         callsigns.push_back(callsign);
         CUserList users = this->getUsersForCallsigns(callsigns);
         if (users.size() < 1) return CUser();
@@ -362,7 +362,7 @@ namespace BlackCore
         return this->m_airspace->getOtherClients();
     }
 
-    CClientList CContextNetwork::getOtherClientsForCallsigns(const CCallsignList &callsigns) const
+    CClientList CContextNetwork::getOtherClientsForCallsigns(const CCallsignSet &callsigns) const
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         return this->m_airspace->getOtherClientsForCallsigns(callsigns);
@@ -565,18 +565,18 @@ namespace BlackCore
         m_network->enableFastPositionSending(enable);
     }
 
-    void CContextNetwork::setFastPositionEnabledCallsigns(CCallsignList &callsigns)
+    void CContextNetwork::setFastPositionEnabledCallsigns(CCallsignSet &callsigns)
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsigns; }
         Q_ASSERT(this->m_network);
     }
 
-    CCallsignList CContextNetwork::getFastPositionEnabledCallsigns()
+    CCallsignSet CContextNetwork::getFastPositionEnabledCallsigns()
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         Q_ASSERT(this->m_network);
         //! \todo Fast position updates in vatlib
-        return CCallsignList();
+        return CCallsignSet();
     }
 
     void CContextNetwork::testCreateDummyOnlineAtcStations(int number)

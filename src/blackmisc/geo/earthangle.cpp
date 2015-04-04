@@ -7,9 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/geoearthangle.h"
-#include "blackmisc/geolatitude.h"
-#include "blackmisc/geolongitude.h"
+#include "blackmisc/geo/earthangle.h"
+#include "blackmisc/geo/latitude.h"
+#include "blackmisc/geo/longitude.h"
 #include "blackmisc/iconlist.h"
 
 namespace BlackMisc
@@ -17,9 +17,6 @@ namespace BlackMisc
     namespace Geo
     {
 
-        /*
-         * Latitude or Longitude from a WGS string
-         */
         template <class LATorLON> LATorLON CEarthAngle<LATorLON>::fromWgs84(const QString &wgsCoordinate)
         {
             // http://www.regular-expressions.info/floatingpoint.html
@@ -68,9 +65,6 @@ namespace BlackMisc
             return LATorLON(a);
         }
 
-        /*
-         * Icon
-         */
         template <class LATorLON> CIcon CEarthAngle<LATorLON>::toIcon() const
         {
             return BlackMisc::CIconList::iconByIndex(CIcons::GeoPosition);

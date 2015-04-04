@@ -8,7 +8,7 @@
  */
 
 #include "atcstationlistmodel.h"
-#include "blackmisc/voiceroom.h"
+#include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/nwuser.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 

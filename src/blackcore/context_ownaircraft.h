@@ -15,7 +15,7 @@
 #include "blackcore/context.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/aircrafticao.h"
-#include "blackmisc/voiceroomlist.h"
+#include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/aviation/selcal.h"
 
 //! \addtogroup dbus

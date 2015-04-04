@@ -15,7 +15,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;
-using namespace BlackSim::FsCommon;
+using namespace BlackMisc::Simulation::FsCommon;
 
 namespace BlackMiscTest
 {

@@ -37,9 +37,9 @@ namespace BlackMisc
         }
 
         template <class OBJ, class CONTAINER>
-        CCallsignList ICallsignObjectList<OBJ, CONTAINER>::getCallsigns() const
+        CCallsignSet ICallsignObjectList<OBJ, CONTAINER>::getCallsigns() const
         {
-            CCallsignList cs;
+            CCallsignSet cs;
             for (const OBJ &obj : this->container())
             {
                 cs.push_back(obj.getCallsign());
@@ -54,7 +54,7 @@ namespace BlackMisc
         }
 
         template <class OBJ, class CONTAINER>
-        CONTAINER ICallsignObjectList<OBJ, CONTAINER>::findByCallsigns(const CCallsignList &callsigns) const
+        CONTAINER ICallsignObjectList<OBJ, CONTAINER>::findByCallsigns(const CCallsignSet &callsigns) const
         {
             return this->container().findBy(Predicates::MemberIsAnyOf(&OBJ::getCallsign, callsigns));
         }

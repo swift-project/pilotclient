@@ -4,8 +4,8 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "samplesgeo.h"
-#include "blackmisc/geolatitude.h"
-#include "blackmisc/geolongitude.h"
+#include "blackmisc/geo/latitude.h"
+#include "blackmisc/geo/longitude.h"
 
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;

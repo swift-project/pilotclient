@@ -9,20 +9,18 @@
 
 //! \file
 
-#include "propertyindex.h"
-#include "blackmiscfreefunctions.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include <QString>
 
-#ifndef BLACKMISC_VOICEROOM_H
-#define BLACKMISC_VOICEROOM_H
+#ifndef BLACKMISC_AUDIO_VOICEROOM_H
+#define BLACKMISC_AUDIO_VOICEROOM_H
 
 namespace BlackMisc
 {
     namespace Audio
     {
-        /*!
-         * Value object encapsulating information of a voice room
-         */
+        //! Value object encapsulating information of a voice room
         class CVoiceRoom : public CValueObject<CVoiceRoom>
         {
         public:

@@ -13,10 +13,10 @@
 #define BLACKMISC_AVIATION_AIRPORTLIST_H
 
 #include "blackmisc/aviation/airport.h"
-#include "blackmisc/geoobjectlist.h"
+#include "blackmisc/geo/geoobjectlist.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/geoobjectlist.h"
+#include "blackmisc/geo/geoobjectlist.h"
 #include <QObject>
 #include <QString>
 #include <QList>

@@ -19,18 +19,13 @@ namespace BlackMisc
 {
     namespace Audio
     {
-        /*
-         * Constructor
-         */
+
         CVoiceRoom::CVoiceRoom(const QString &voiceRoomUrl, bool connected) :
             m_connected(connected), m_audioPlaying(false)
         {
             this->setVoiceRoomUrl(voiceRoomUrl);
         }
 
-        /*
-         * Property by index
-         */
         CVariant CVoiceRoom::propertyByIndex(const CPropertyIndex &index) const
         {
             if (index.isMyself()) { return this->toCVariant(); }
@@ -52,9 +47,6 @@ namespace BlackMisc
             }
         }
 
-        /*
-         * Property by index
-         */
         void CVoiceRoom::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
         {
             if (index.isMyself())
@@ -87,9 +79,6 @@ namespace BlackMisc
             }
         }
 
-        /*
-         * To string
-         */
         QString CVoiceRoom::convertToQString(bool /* i18n */) const
         {
             if (!this->isValid()) return "Invalid";
@@ -99,9 +88,6 @@ namespace BlackMisc
             return s;
         }
 
-        /*
-         * Server URL
-         */
         QString CVoiceRoom::getVoiceRoomUrl(bool noProtocol) const
         {
             if (!this->isValid()) return "";
@@ -112,9 +98,6 @@ namespace BlackMisc
             return url;
         }
 
-        /*
-         * Voice room URL
-         */
         void CVoiceRoom::setVoiceRoomUrl(const QString &serverUrl)
         {
             if (serverUrl.isEmpty())
@@ -133,9 +116,6 @@ namespace BlackMisc
             }
         }
 
-        /*
-         * ATIS voice channel
-         */
         bool CVoiceRoom::isAtis() const
         {
             return (this->m_channel.contains("ATIS", Qt::CaseInsensitive));

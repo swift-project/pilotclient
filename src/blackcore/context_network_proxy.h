@@ -21,7 +21,7 @@
 #include "blackmisc/nwtextmessagelist.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/genericdbusinterface.h"
-#include "blackmisc/voiceroomlist.h"
+#include "blackmisc/audio/voiceroomlist.h"
 
 namespace BlackCore
 {
@@ -105,7 +105,7 @@ namespace BlackCore
         virtual BlackMisc::Network::CUserList getUsers() const override;
 
         //! \copydoc IContextNetwork::getUsersForCallsigns
-        virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const override;
+        virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override;
 
         //! \copydoc IContextNetwork::getUserForCallsign
         virtual BlackMisc::Network::CUser getUserForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
@@ -120,7 +120,7 @@ namespace BlackCore
         virtual BlackMisc::Network::CServerList getVatsimFsdServers() const override;
 
         //! \copydoc IContextNetwork::getOtherClientForCallsigns
-        virtual BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const override;
+        virtual BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override;
 
         //! \copydoc IContextNetwork::requestDataUpdates
         virtual void requestDataUpdates()override;
@@ -144,10 +144,10 @@ namespace BlackCore
         virtual void enableFastPositionSending(bool enable) override;
 
         //! \copydoc IContextNetwork::setFastPositionEnabledCallsigns
-        virtual void setFastPositionEnabledCallsigns(BlackMisc::Aviation::CCallsignList &callsigns) override;
+        virtual void setFastPositionEnabledCallsigns(BlackMisc::Aviation::CCallsignSet &callsigns) override;
 
         //! \copydoc IContextNetwork::getFastPositionEnabledCallsigns
-        virtual BlackMisc::Aviation::CCallsignList getFastPositionEnabledCallsigns() override;
+        virtual BlackMisc::Aviation::CCallsignSet getFastPositionEnabledCallsigns() override;
 
         //! \copydoc IContextNetwork::testCreateDummyOnlineAtcStations
         virtual void testCreateDummyOnlineAtcStations(int number) override;

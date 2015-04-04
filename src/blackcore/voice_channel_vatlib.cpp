@@ -62,12 +62,12 @@ namespace BlackCore
         m_listCallsigns = {};
     }
 
-    CCallsignList CVoiceChannelVatlib::getVoiceRoomCallsigns() const
+    CCallsignSet CVoiceChannelVatlib::getVoiceRoomCallsigns() const
     {
         return m_listCallsigns;
     }
 
-    void CVoiceChannelVatlib::setMyAircraftCallsign(const CCallsign &callsign)
+    void CVoiceChannelVatlib::setOwnAircraftCallsign(const CCallsign &callsign)
     {
         m_callsign = callsign;
     }

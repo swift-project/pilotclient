@@ -57,14 +57,14 @@ namespace BlackCore
         return this->m_fsdServers;
     }
 
-    CUserList CVatsimDataFileReader::getPilotsForCallsigns(const CCallsignList &callsigns)
+    CUserList CVatsimDataFileReader::getPilotsForCallsigns(const CCallsignSet &callsigns)
     {
         return this->getAircraft().findByCallsigns(callsigns).transform(Predicates::MemberTransform(&CAircraft::getPilot));
     }
 
     CUserList CVatsimDataFileReader::getPilotsForCallsign(const CCallsign &callsign)
     {
-        CCallsignList callsigns;
+        CCallsignSet callsigns;
         callsigns.push_back(callsign);
         return this->getPilotsForCallsigns(callsigns);
     }
@@ -95,24 +95,24 @@ namespace BlackCore
 
     CUserList CVatsimDataFileReader::getControllersForCallsign(const CCallsign &callsign)
     {
-        CCallsignList callsigns;
+        CCallsignSet callsigns;
         callsigns.push_back(callsign);
         return this->getControllersForCallsigns(callsigns);
     }
 
     CUserList CVatsimDataFileReader::getUsersForCallsign(const CCallsign &callsign)
     {
-        CCallsignList callsigns;
+        CCallsignSet callsigns;
         callsigns.push_back(callsign);
         return this->getUsersForCallsigns(callsigns);
     }
 
-    CUserList CVatsimDataFileReader::getControllersForCallsigns(const CCallsignList &callsigns)
+    CUserList CVatsimDataFileReader::getControllersForCallsigns(const CCallsignSet &callsigns)
     {
         return this->getAtcStations().findByCallsigns(callsigns).transform(Predicates::MemberTransform(&CAtcStation::getController));
     }
 
-    CUserList CVatsimDataFileReader::getUsersForCallsigns(const CCallsignList &callsigns)
+    CUserList CVatsimDataFileReader::getUsersForCallsigns(const CCallsignSet &callsigns)
     {
         CUserList users;
         if (callsigns.isEmpty()) return users;

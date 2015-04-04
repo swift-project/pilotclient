@@ -15,7 +15,7 @@
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/callsignobjectlist.h"
 #include "blackmisc/aviation/aircraftlist.h"
-#include "blackmisc/geoobjectlist.h"
+#include "blackmisc/geo/geoobjectlist.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
@@ -44,7 +44,7 @@ namespace BlackMisc
             BlackMisc::Network::CUserList getPilots() const;
 
             //! Callsigns of aircraft with synchronized parts
-            BlackMisc::Aviation::CCallsignList getCallsignsWithSyncronizedParts() const;
+            BlackMisc::Aviation::CCallsignSet getCallsignsWithSyncronizedParts() const;
 
             //! Mark all aircraft as unrendered
             void markAllAsNotRendered();

@@ -44,9 +44,9 @@ namespace BlackMisc
             return this->findBy(Predicates::MemberValid(&CSimulatedAircraft::getPilot)).transform(Predicates::MemberTransform(&CSimulatedAircraft::getPilot));
         }
 
-        CCallsignList CSimulatedAircraftList::getCallsignsWithSyncronizedParts() const
+        CCallsignSet CSimulatedAircraftList::getCallsignsWithSyncronizedParts() const
         {
-            CCallsignList csl;
+            CCallsignSet csl;
             for (const CSimulatedAircraft &aircraft : (*this))
             {
                 if (!aircraft.isPartsSynchronized()) { continue; }

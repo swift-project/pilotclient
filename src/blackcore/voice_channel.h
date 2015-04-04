@@ -13,8 +13,8 @@
 #define BLACKCORE_VOICE_CHANNEL_H
 
 #include "blackmisc/statusmessage.h"
-#include "blackmisc/voiceroomlist.h"
-#include "blackmisc/aviation/callsignlist.h"
+#include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/aviation/callsignset.h"
 #include <QObject>
 #include <QScopedPointer>
 
@@ -52,10 +52,10 @@ namespace BlackCore
         virtual void leaveVoiceRoom() = 0;
 
         //! Get voice room callsings
-        virtual BlackMisc::Aviation::CCallsignList getVoiceRoomCallsigns() const = 0;
+        virtual BlackMisc::Aviation::CCallsignSet getVoiceRoomCallsigns() const = 0;
 
         //! Set own aircraft's callsign
-        virtual void setMyAircraftCallsign(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+        virtual void setOwnAircraftCallsign(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
         //! Get voice room
         virtual BlackMisc::Audio::CVoiceRoom getVoiceRoom() const = 0;

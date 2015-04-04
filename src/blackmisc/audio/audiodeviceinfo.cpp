@@ -15,29 +15,17 @@ namespace BlackMisc
 {
     namespace Audio
     {
-        /*
-         * Constructor
-         */
+
         CAudioDeviceInfo::CAudioDeviceInfo() :
             m_type(Unknown), m_deviceIndex(invalidDeviceIndex()),
             m_deviceName(""), m_hostName(BlackMisc::localHostName())
-        {
-            // void
-        }
+        { }
 
-        /*
-         * Constructor
-         */
         CAudioDeviceInfo::CAudioDeviceInfo(DeviceType type, const int index, const QString &name) :
             m_type(type), m_deviceIndex(index),
             m_deviceName(name), m_hostName(BlackMisc::localHostName())
-        {
-            // void
-        }
+        { }
 
-        /*
-         * As String
-         */
         QString CAudioDeviceInfo::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);

@@ -87,9 +87,9 @@ namespace BlackCore
 
         //! \todo Simulator, why is there no difference on CSequence?
         CSimulatedAircraftList newAircraftInRange(remoteAircraft().getClosestObjects(getMaxRenderedAircraft()));
-        CCallsignList newAircraftCallsigns(newAircraftInRange.getCallsigns());
-        CCallsignList toBeRemovedCallsigns(m_callsignsToBeRendered.difference(newAircraftCallsigns));
-        CCallsignList toBeAddedCallsigns(newAircraftCallsigns.difference(m_callsignsToBeRendered));
+        CCallsignSet newAircraftCallsigns(newAircraftInRange.getCallsigns());
+        CCallsignSet toBeRemovedCallsigns(m_callsignsToBeRendered.difference(newAircraftCallsigns));
+        CCallsignSet toBeAddedCallsigns(newAircraftCallsigns.difference(m_callsignsToBeRendered));
         for (const CCallsign &cs : toBeRemovedCallsigns)
         {
             removeRemoteAircraft(cs);

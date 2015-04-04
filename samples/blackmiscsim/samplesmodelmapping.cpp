@@ -10,17 +10,16 @@
 #include "samplesmodelmapping.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/sampleutils.h"
-#include "blacksim/blacksimfreefunctions.h"
-#include "blacksim/fscommon/vpilotmodelmappings.h"
-#include "blacksim/fscommon/aircraftmapper.h"
+#include "blackmisc/simulation/fscommon/vpilotmodelmappings.h"
+#include "blackmisc/simulation/fscommon/aircraftmapper.h"
 
 #include <QDebug>
 #include <memory>
 #include <utility>
 
 using namespace BlackMisc;
-using namespace BlackSim;
-using namespace BlackSim::FsCommon;
+using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Aviation;
 
 namespace BlackSimTest
@@ -32,7 +31,6 @@ namespace BlackSimTest
     int CSamplesModelMapping::samples(QTextStream &streamOut, QTextStream &streamIn)
     {
         BlackMisc::registerMetadata();
-        BlackSim::registerMetadata();
 
         std::unique_ptr<ISimulatorModelMappings> cvm(new CVPilotModelMappings(true));
         bool s = cvm->read();
