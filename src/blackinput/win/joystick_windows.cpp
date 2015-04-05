@@ -20,8 +20,8 @@ using namespace BlackMisc::Hardware;
 namespace BlackInput
 {
 
-    TCHAR *CJoystickWindows::m_helperWindowClassName = TEXT("SDLHelperWindowInputCatcher");
-    TCHAR *CJoystickWindows::m_helperWindowName = TEXT("SDLHelperWindowInputMsgWindow");
+    const TCHAR *CJoystickWindows::m_helperWindowClassName = TEXT("SDLHelperWindowInputCatcher");
+    const TCHAR *CJoystickWindows::m_helperWindowName = TEXT("SDLHelperWindowInputMsgWindow");
     ATOM CJoystickWindows::m_helperWindowClass = 0;
     HWND CJoystickWindows::m_helperWindow = nullptr;
 

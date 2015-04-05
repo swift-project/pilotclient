@@ -119,8 +119,8 @@ namespace BlackInput
 
         IJoystick::Mode m_mode = ModeNominal; //!< Current working mode
 
-        static WCHAR *m_helperWindowClassName; //!< Helper window class name
-        static WCHAR *m_helperWindowName; //!< Helper window name
+        static const WCHAR *m_helperWindowClassName; //!< Helper window class name
+        static const WCHAR *m_helperWindowName; //!< Helper window name
         static ATOM m_helperWindowClass;
         static HWND m_helperWindow; //!< Helper window handle
 
