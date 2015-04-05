@@ -10,7 +10,7 @@
 #ifndef BLACKCORE_TOKENBUCKET_H
 #define BLACKCORE_TOKENBUCKET_H
 
-#include "blackmisc/pqtime.h"
+#include "blackmisc/pq/time.h"
 #include <QtGlobal>
 #include <QDateTime>
 

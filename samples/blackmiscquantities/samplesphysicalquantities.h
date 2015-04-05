@@ -12,7 +12,7 @@
 #ifndef BLACKMISCTEST_SAMPLESPHYSICALQUANTITIES_H
 #define BLACKMISCTEST_SAMPLESPHYSICALQUANTITIES_H
 
-#include "blackmisc/pqconstants.h"
+#include "blackmisc/pq/constants.h"
 #include <QDebug>
 #include <QTextStream>
 

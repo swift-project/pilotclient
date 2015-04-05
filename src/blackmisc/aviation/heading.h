@@ -12,7 +12,7 @@
 #ifndef BLACKMISC_AVIATION_HEADING_H
 #define BLACKMISC_AVIATION_HEADING_H
 
-#include "blackmisc/pqangle.h"
+#include "blackmisc/pq/angle.h"
 
 namespace BlackMisc
 {

@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/pqallquantities.h"
-#include "blackmiscfreefunctions.h"
+#include "blackmisc/pq/pq.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include <QCoreApplication>
 
 namespace BlackMisc
@@ -16,18 +16,10 @@ namespace BlackMisc
     namespace PhysicalQuantities
     {
 
-        /*
-         * Constructor by double
-         */
         template <class MU, class PQ> CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(double value, const MU &unit) :
             m_value(unit.isNull() ? 0.0 : value), m_unit(unit)
-        {
-            // void
-        }
+        { }
 
-        /*
-         * Equal operator ==
-         */
         template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator ==(const CPhysicalQuantity<MU, PQ> &other) const
         {
             if (this == &other) return true;
@@ -39,26 +31,17 @@ namespace BlackMisc
             return diff <= this->m_unit.getEpsilon();
         }
 
-        /*
-         * Not equal
-         */
         template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator !=(const CPhysicalQuantity<MU, PQ> &other) const
         {
             return !((*this) == other);
         }
 
-        /*
-         * Plus operator
-         */
         template <class MU, class PQ> CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator +=(const CPhysicalQuantity<MU, PQ> &other)
         {
             this->m_value += other.value(this->m_unit);
             return *this;
         }
 
-        /*
-         * Plus operator
-         */
         template <class MU, class PQ> PQ CPhysicalQuantity<MU, PQ>::operator +(const PQ &other) const
         {
             PQ copy(other);
@@ -66,34 +49,22 @@ namespace BlackMisc
             return copy;
         }
 
-        /*
-         * Explicit plus
-         */
         template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::addValueSameUnit(double value)
         {
             this->m_value += value;
         }
 
-        /*
-         * Explicit minus
-         */
         template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::substractValueSameUnit(double value)
         {
             this->m_value -= value;
         }
 
-        /*
-         * Minus operator
-         */
         template <class MU, class PQ> CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator -=(const CPhysicalQuantity<MU, PQ> &other)
         {
             this->m_value -= other.value(this->m_unit);
             return *this;
         }
 
-        /*
-         * Minus operator
-         */
         template <class MU, class PQ> PQ CPhysicalQuantity<MU, PQ>::operator -(const PQ &other) const
         {
             PQ copy = *derived();
@@ -101,9 +72,6 @@ namespace BlackMisc
             return copy;
         }
 
-        /*
-         * Marshall
-         */
         template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::marshallToDbus(QDBusArgument &argument) const
         {
             argument << this->value(UnitClass::defaultUnit());
@@ -111,9 +79,6 @@ namespace BlackMisc
             argument << this->m_unit;
         }
 
-        /*
-         * Unmarshall
-         */
         template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::unmarshallFromDbus(const QDBusArgument &argument)
         {
             double ignore;
@@ -122,18 +87,12 @@ namespace BlackMisc
             argument >> this->m_unit;
         }
 
-        /*
-         * Multiply operator
-         */
         template <class MU, class PQ> CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator *=(double factor)
         {
             this->m_value *= factor;
             return *this;
         }
 
-        /*
-         * Multiply operator
-         */
         template <class MU, class PQ> PQ CPhysicalQuantity<MU, PQ>::operator *(double factor) const
         {
             PQ copy = *derived();
@@ -141,18 +100,12 @@ namespace BlackMisc
             return copy;
         }
 
-        /*
-         * Divide operator /=
-         */
         template <class MU, class PQ> CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator /=(double divisor)
         {
             this->m_value /= divisor;
             return *this;
         }
 
-        /*
-         * Divide operator /
-         */
         template <class MU, class PQ> PQ CPhysicalQuantity<MU, PQ>::operator /(double divisor) const
         {
             PQ copy = *derived();
@@ -160,9 +113,6 @@ namespace BlackMisc
             return copy;
         }
 
-        /*
-         * Less operator <
-         */
         template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator <(const CPhysicalQuantity<MU, PQ> &other) const
         {
             if (*this == other) return false;
@@ -171,35 +121,23 @@ namespace BlackMisc
             return (this->m_value < other.value(this->m_unit));
         }
 
-        /*
-         * Greater than
-         */
         template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator >(const CPhysicalQuantity<MU, PQ> &other) const
         {
             return other < *this;
         }
 
-        /*
-         * Greater / Equal
-         */
         template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator >=(const CPhysicalQuantity<MU, PQ> &other) const
         {
             if (*this == other) return true;
             return *this > other;
         }
 
-        /*
-         * Less equal
-         */
         template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator <=(const CPhysicalQuantity<MU, PQ> &other) const
         {
             if (*this == other) return true;
             return *this < other;
         }
 
-        /*
-         * Switch to another unit
-         */
         template <class MU, class PQ> PQ &CPhysicalQuantity<MU, PQ>::switchUnit(const MU &newUnit)
         {
             if (this->m_unit != newUnit)
@@ -210,33 +148,21 @@ namespace BlackMisc
             return *derived();
         }
 
-        /*
-         * Init by double
-         */
         template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::setValueSameUnit(double baseValue)
         {
             this->m_value = baseValue;
         }
 
-        /*
-         * Value rounded in unit
-         */
         template <class MU, class PQ> QString CPhysicalQuantity<MU, PQ>::valueRoundedWithUnit(const MU &unit, int digits, bool i18n) const
         {
             return unit.makeRoundedQStringWithUnit(this->value(unit), digits, i18n);
         }
 
-        /*
-         * Value rounded in unit
-         */
         template <class MU, class PQ> double CPhysicalQuantity<MU, PQ>::valueRounded(const MU &unit, int digits) const
         {
             return unit.roundValue(this->value(unit), digits);
         }
 
-        /*
-         * Value rounded as integer
-         */
         template <class MU, class PQ> int CPhysicalQuantity<MU, PQ>::valueInteger(const MU &unit) const
         {
             double v = unit.roundValue(this->value(unit), 0);
@@ -248,17 +174,11 @@ namespace BlackMisc
             return this->valueRounded(this->m_unit, digits);
         }
 
-        /*
-         * Value in unit
-         */
         template <class MU, class PQ> double CPhysicalQuantity<MU, PQ>::value(const MU &unit) const
         {
             return unit.convertFrom(this->m_value, this->m_unit);
         }
 
-        /*
-         * Convert to string
-         */
         template <class MU, class PQ> QString CPhysicalQuantity<MU, PQ>::convertToQString(bool i18n) const
         {
             if (this->isNull())
@@ -268,9 +188,6 @@ namespace BlackMisc
             return this->valueRoundedWithUnit(this->getUnit(), -1, i18n);
         }
 
-        /*
-         * Hash
-         */
         template <class MU, class PQ> uint CPhysicalQuantity<MU, PQ>::getValueHash() const
         {
             QList<uint> hashs;
@@ -280,9 +197,6 @@ namespace BlackMisc
             return BlackMisc::calculateHash(hashs, "PQ");
         }
 
-        /*
-         * JSON Object
-         */
         template <class MU, class PQ> QJsonObject CPhysicalQuantity<MU, PQ>::toJson() const
         {
             QJsonObject json;
@@ -291,9 +205,6 @@ namespace BlackMisc
             return json;
         }
 
-        /*
-         * JSON Object
-         */
         template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::convertFromJson(const QJsonObject &json)
         {
             const QString unitSymbol = json.value("unit").toString();
@@ -301,9 +212,6 @@ namespace BlackMisc
             this->m_value = json.value("value").toDouble();
         }
 
-        /*
-         * Property
-         */
         template <class MU, class PQ> CVariant CPhysicalQuantity<MU, PQ>::propertyByIndex(const CPropertyIndex &index) const
         {
             if (index.isMyself()) { return this->toCVariant(); }
@@ -329,9 +237,6 @@ namespace BlackMisc
             }
         }
 
-        /*
-         * Property
-         */
         template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
         {
             if (index.isMyself())
@@ -361,9 +266,6 @@ namespace BlackMisc
             }
         }
 
-        /*
-         * Compare
-         */
         template <class MU, class PQ> int CPhysicalQuantity<MU, PQ>::compareImpl(const PQ &a, const PQ &b)
         {
             if (a.isNull() > b.isNull()) { return -1; }

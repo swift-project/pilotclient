@@ -2,7 +2,7 @@
 #include "blackcore/context_all_interfaces.h"
 #include "blackmisc/propertyindexallclasses.h"
 #include "blackmisc/aviation/aviation.h"
-#include "blackmisc/pqallquantities.h"
+#include "blackmisc/pq/pq.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/worker.h"
 #include "blacksound/soundgenerator.h"

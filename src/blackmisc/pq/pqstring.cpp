@@ -7,26 +7,21 @@
  * contained in the LICENSE file.
  */
 
-#include "pqstring.h"
-#include "tuple.h"
-#include "pqallquantities.h"
+#include "blackmisc/pq/pqstring.h"
+#include "blackmisc/tuple.h"
+#include "blackmisc/pq/pq.h"
 #include <QThreadStorage>
 
 namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-        /*
-         * Convert to string
-         */
+
         QString CPqString::convertToQString(bool /** i18n **/) const
         {
             return this->m_string;
         }
 
-        /*
-         * Parse
-         */
         CVariant CPqString::parseToVariant(const QString &value, SeparatorMode mode)
         {
             CVariant v;

@@ -24,6 +24,7 @@ TRANSLATIONS += translations/blackmisc_i18n_de.ts \
                 translations/blackmisc_i18n_en.ts
 
 HEADERS +=  *.h \
+            $$PWD/pq/*.h \
             $$PWD/aviation/*.h \
             $$PWD/math/*.h \
             $$PWD/geo/*.h \
@@ -33,6 +34,7 @@ HEADERS +=  *.h \
             $$PWD/simulation/fsx\*.h
 
 SOURCES +=  *.cpp \
+            $$PWD/pq/*.cpp \
             $$PWD/aviation/*.cpp \
             $$PWD/math/*.cpp \
             $$PWD/geo/*.cpp \

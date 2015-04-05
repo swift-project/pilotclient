@@ -18,9 +18,9 @@
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/nwuser.h"
 #include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/pqfrequency.h"
-#include "blackmisc/pqlength.h"
-#include "blackmisc/pqtime.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/time.h"
 #include <QDateTime>
 #include <QMap>
 #include <functional>

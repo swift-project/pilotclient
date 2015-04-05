@@ -12,7 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_FSCOMMON_BCDCONVERSIONS_H
 #define BLACKMISC_SIMULATION_FSCOMMON_BCDCONVERSIONS_H
 
-#include "blackmisc/pqfrequency.h"
+#include "blackmisc/pq/frequency.h"
 #include "blackmisc/aviation/transponder.h"
 #include <QtGlobal>
 

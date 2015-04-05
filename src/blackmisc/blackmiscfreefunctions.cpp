@@ -9,7 +9,7 @@
 
 #include "blackmiscfreefunctions.h"
 #include "blackmisc/aviation/aviation.h"
-#include "pqallquantities.h"
+#include "blackmisc/pq/pq.h"
 #include "math/math.h"
 #include "geo/geo.h"
 #include "networkallclasses.h"

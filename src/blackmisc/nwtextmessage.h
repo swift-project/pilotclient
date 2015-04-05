@@ -13,7 +13,7 @@
 #define BLACKMISC_TEXTMESSAGE_H
 
 #include "blackmisc/timestampbased.h"
-#include "pqfrequency.h"
+#include "blackmisc/pq/frequency.h"
 #include "blackmisc/aviation/callsign.h"
 #include "statusmessage.h"
 #include "valueobject.h"

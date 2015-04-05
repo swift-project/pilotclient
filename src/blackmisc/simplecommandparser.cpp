@@ -8,7 +8,7 @@
  */
 
 #include "simplecommandparser.h"
-#include "pqstring.h"
+#include "blackmisc/pq/pqstring.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 

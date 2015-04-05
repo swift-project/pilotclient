@@ -15,7 +15,7 @@
 #include "blackmisc/valueobject.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/settingutilities.h"
-#include "blackmisc/pqtime.h"
+#include "blackmisc/pq/time.h"
 #include "simulatorplugininfo.h"
 
 namespace BlackMisc

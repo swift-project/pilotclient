@@ -8,7 +8,7 @@
  */
 
 #include "icon.h"
-#include "pqangle.h"
+#include "blackmisc/pq/angle.h"
 
 namespace BlackMisc
 {

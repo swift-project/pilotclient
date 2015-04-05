@@ -9,7 +9,7 @@
 
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/blackmiscfreefunctions.h"
-#include "blackmisc/pqconstants.h"
+#include "blackmisc/pq/constants.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/propertyindex.h"
 

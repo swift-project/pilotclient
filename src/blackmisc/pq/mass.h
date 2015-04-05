@@ -9,10 +9,10 @@
 
 //! \file
 
-#ifndef BLACKMISC_PQMASS_H
-#define BLACKMISC_PQMASS_H
+#ifndef BLACKMISC_PQ_MASS_H
+#define BLACKMISC_PQ_MASS_H
 
-#include "blackmisc/pqphysicalquantity.h"
+#include "blackmisc/pq/physicalquantity.h"
 
 namespace BlackMisc
 {

@@ -13,7 +13,7 @@
 #define BLACKGUI_COLUMNFORMATTERS_H
 
 #include "blackgui/led.h"
-#include "blackmisc/pqallquantities.h"
+#include "blackmisc/pq/pq.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/icon.h"

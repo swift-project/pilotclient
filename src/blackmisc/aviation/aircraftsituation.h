@@ -17,7 +17,7 @@
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/aviation/heading.h"
 #include "blackmisc/aviation/callsign.h"
-#include "blackmisc/pqspeed.h"
+#include "blackmisc/pq/speed.h"
 #include "blackmisc/valueobject.h"
 #include <QDateTime>
 

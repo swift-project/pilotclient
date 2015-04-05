@@ -24,11 +24,6 @@
  */
 
 /*!
- * \namespace BlackMisc::PhysicalQuantities
- * \brief Classes for physical quantities and units such as length, mass, speed.
- */
-
-/*!
  * \namespace BlackMisc::Network
  * \brief Classes related to the traffic network such as VATSIM user etc.
  */

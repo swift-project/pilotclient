@@ -9,35 +9,33 @@
 
 //! \file
 
-#ifndef BLACKMISC_CTEMPERATURE_H
-#define BLACKMISC_CTEMPERATURE_H
+#ifndef BLACKMISC_PQ_LENGTH_H
+#define BLACKMISC_PQ_LENGTH_H
 
-#include "pqphysicalquantity.h"
+#include "blackmisc/pq/physicalquantity.h"
 
 namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
 
-        /*!
-         * Physical unit temperature
-         */
-        class CTemperature : public CValueObject<CTemperature, CPhysicalQuantity<CTemperatureUnit, CTemperature>>
+        //! Physical unit length (length)
+        class CLength : public CValueObject<CLength, CPhysicalQuantity<CLengthUnit, CLength>>
         {
         public:
             //! Default constructor
-            CTemperature() : CValueObject(0, CTemperatureUnit::defaultUnit()) {}
+            CLength() : CValueObject(0, CLengthUnit::defaultUnit()) {}
 
             //! Init by double value
-            CTemperature(double value, const CTemperatureUnit &unit): CValueObject(value, unit) {}
+            CLength(double value, const CLengthUnit &unit) : CValueObject(value, unit) {}
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CTemperature(const QString &unitString) : CValueObject(unitString) {}
+            CLength(const QString &unitString) : CValueObject(unitString) {}
         };
 
     }
 }
 
-Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTemperature)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CLength)
 
 #endif // guard

@@ -9,7 +9,7 @@
 
 #include "nwtextmessage.h"
 #include "blackmisc/blackmiscfreefunctions.h"
-#include "blackmisc/pqconstants.h"
+#include "blackmisc/pq/constants.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/selcal.h"

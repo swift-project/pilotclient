@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "pqtime.h"
+#include "blackmisc/pq/time.h"
 
 namespace BlackMisc
 {

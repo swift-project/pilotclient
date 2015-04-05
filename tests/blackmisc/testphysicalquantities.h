@@ -7,7 +7,7 @@
 #define BLACKMISCTEST_TESTPHYSICALQUANTITIESBASE_H
 
 #include <QtTest/QtTest>
-#include "blackmisc/pqconstants.h"
+#include "blackmisc/pq/constants.h"
 
 namespace BlackMiscTest
 {

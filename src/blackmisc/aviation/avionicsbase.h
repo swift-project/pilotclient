@@ -9,7 +9,7 @@
 //! \file
 
 #include "blackmisc/valueobject.h"
-#include "blackmisc/pqconstants.h"
+#include "blackmisc/pq/constants.h"
 #include <QtGlobal>
 
 namespace BlackMisc

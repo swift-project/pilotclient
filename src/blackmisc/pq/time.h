@@ -9,10 +9,10 @@
 
 //! \file
 
-#ifndef BLACKMISC_PQTIME_H
-#define BLACKMISC_PQTIME_H
+#ifndef BLACKMISC_PQ_TIME_H
+#define BLACKMISC_PQ_TIME_H
 
-#include "pqphysicalquantity.h"
+#include "blackmisc/pq/physicalquantity.h"
 
 namespace BlackMisc
 {

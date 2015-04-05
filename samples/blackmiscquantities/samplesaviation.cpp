@@ -8,7 +8,7 @@
  */
 
 #include "samplesaviation.h"
-#include "blackmisc/pqconstants.h"
+#include "blackmisc/pq/constants.h"
 #include "blackmisc/aviation/heading.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/navsystem.h"

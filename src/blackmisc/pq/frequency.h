@@ -9,35 +9,36 @@
 
 //! \file
 
-#ifndef BLACKMISC_CSPEED_H
-#define BLACKMISC_CSPEED_H
+#ifndef BLACKMISC_PQ_FREQUENCY_H
+#define BLACKMISC_PQ_FREQUENCY_H
 
-#include "pqphysicalquantity.h"
+#include "blackmisc/pq/physicalquantity.h"
 
 namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-
         /*!
-         * Speed class, e.g. "m/s", "NM/h", "km/h", "ft/s"
+         * Physical unit frequency
          */
-        class CSpeed : public CValueObject<CSpeed, CPhysicalQuantity<CSpeedUnit, CSpeed>>
+        class CFrequency : public CValueObject<CFrequency, CPhysicalQuantity<CFrequencyUnit, CFrequency>>
         {
         public:
             //! Default constructor
-            CSpeed() : CValueObject(0, CSpeedUnit::defaultUnit()) {}
+            CFrequency() : CValueObject(0, CFrequencyUnit::defaultUnit()) {}
 
             //! Init by double value
-            CSpeed(double value, const CSpeedUnit &unit) : CValueObject(value, unit) {}
+            CFrequency(double value, const CFrequencyUnit &unit) : CValueObject(value, unit) {}
+
+            //! Init by int value converted to double
+            CFrequency(int value, const CFrequencyUnit &unit) : CFrequency(double(value), unit) {}
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CSpeed(const QString &unitString) : CValueObject(unitString) {}
+            CFrequency(const QString &unitString) : CValueObject(unitString) {}
         };
-
     }
 }
 
-Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CSpeed)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CFrequency)
 
 #endif // guard

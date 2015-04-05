@@ -9,14 +9,14 @@
 
 //! \file
 
-#ifndef BLACKMISC_PQPHYSICALQUANTITY_H
-#define BLACKMISC_PQPHYSICALQUANTITY_H
+#ifndef BLACKMISC_PQ_PHYSICALQUANTITY_H
+#define BLACKMISC_PQ_PHYSICALQUANTITY_H
 
-#include "blackmisc/pqbase.h"
-#include "blackmisc/pqunits.h"
+#include "blackmisc/pq/measurementunit.h"
+#include "blackmisc/pq/units.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/math/mathutils.h"
-#include "blackmisc/pqstring.h"
+#include "blackmisc/pq/pqstring.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <QtDBus/QDBusMetaType>
 #include <QtGlobal>

@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/pqunits.h"
+#include "blackmisc/pq/units.h"
 
 namespace BlackMisc
 {
@@ -15,9 +15,6 @@ namespace BlackMisc
     {
         using BlackMisc::Math::CMathUtils;
 
-        /*
-         * Rounded to QString
-         */
         QString CAngleUnit::makeRoundedQStringWithUnit(double value, int digits, bool i18n) const
         {
             if (digits < 0) digits = this->getDisplayDigits();
@@ -50,9 +47,6 @@ namespace BlackMisc
             return s;
         }
 
-        /*
-         * Rounded to QString
-         */
         QString CTimeUnit::makeRoundedQStringWithUnit(double value, int digits, bool i18n) const
         {
             if (digits < 0) digits = this->getDisplayDigits();

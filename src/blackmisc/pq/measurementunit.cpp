@@ -9,7 +9,7 @@
 
 //! \file
 
-#include "blackmisc/pqbase.h"
+#include "blackmisc/pq/measurementunit.h"
 #include "blackmisc/math/mathutils.h"
 
 using namespace BlackMisc::Math;
@@ -18,26 +18,18 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-        /*
-         * Equal operator
-         */
+
         bool CMeasurementUnit::operator ==(const CMeasurementUnit &other) const
         {
             if (this == &other) return true;
             return this->m_name == other.m_name;
         }
 
-        /*
-         * Unequal operator
-         */
         bool CMeasurementUnit::operator !=(const CMeasurementUnit &other) const
         {
             return !(other == *this);
         }
 
-        /*
-         * Conversion
-         */
         double CMeasurementUnit::convertFrom(double value, const CMeasurementUnit &unit) const
         {
             if (this->isNull() || unit.isNull()) return 0;
@@ -45,27 +37,17 @@ namespace BlackMisc
             return this->m_converter->fromDefault(unit.m_converter->toDefault(value));
         }
 
-        /*
-         * Value to QString with unit, e.g. "5.00m"
-         * @return
-         */
         QString CMeasurementUnit::makeRoundedQStringWithUnit(double value, int digits, bool i18n) const
         {
             return this->makeRoundedQString(value, digits).append(this->getSymbol(i18n));
         }
 
-        /*
-         * Value rounded
-         */
         double CMeasurementUnit::roundValue(double value, int digits) const
         {
             if (digits < 0) digits = this->m_displayDigits;
             return CMathUtils::round(value, digits);
         }
 
-        /*
-         * Rounded to QString
-         */
         QString CMeasurementUnit::makeRoundedQString(double value, int digits, bool /* i18n */) const
         {
             if (digits < 0) digits = this->m_displayDigits;

@@ -9,10 +9,10 @@
 
 //! \file
 
-#ifndef BLACKMISC_PQANGLE_H
-#define BLACKMISC_PQANGLE_H
+#ifndef BLACKMISC_PQ_ANGLE_H
+#define BLACKMISC_PQ_ANGLE_H
 
-#include "blackmisc/pqphysicalquantity.h"
+#include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/math/mathutils.h"
 
 namespace BlackMisc

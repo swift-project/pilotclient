@@ -12,7 +12,7 @@
 #ifndef BLACKMISC_GEO_EARTHANGLE_H
 #define BLACKMISC_GEO_EARTHANGLE_H
 
-#include "blackmisc/pqangle.h"
+#include "blackmisc/pq/angle.h"
 
 namespace BlackMisc
 {

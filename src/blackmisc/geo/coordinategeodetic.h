@@ -14,7 +14,7 @@
 
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
-#include "blackmisc/pqlength.h"
+#include "blackmisc/pq/length.h"
 #include "blackmisc/propertyindex.h"
 
 namespace BlackMisc

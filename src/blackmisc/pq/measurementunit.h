@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_PQBASE_H
-#define BLACKMISC_PQBASE_H
+#ifndef BLACKMISC_PQ_MEASUREMENTUNIT_H
+#define BLACKMISC_PQ_MEASUREMENTUNIT_H
 
 #include "blackmisc/valueobject.h"
 #include "blackmisc/math/mathutils.h"

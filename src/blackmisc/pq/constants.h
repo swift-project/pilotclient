@@ -9,10 +9,10 @@
 
 //! \file
 
-#ifndef BLACKMISC_PQCONSTANTS_H
-#define BLACKMISC_PQCONSTANTS_H
+#ifndef BLACKMISC_PQ_CONSTANTS_H
+#define BLACKMISC_PQ_CONSTANTS_H
 
-#include "blackmisc/pqallquantities.h"
+#include "blackmisc/pq/pq.h"
 
 namespace BlackMisc
 {

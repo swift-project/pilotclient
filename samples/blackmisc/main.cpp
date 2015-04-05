@@ -17,7 +17,7 @@
 #include "samplesalgorithm.h"
 #include "samplesconcurrent.h"
 #include "blackmisc/blackmiscfreefunctions.h"
-#include "blackmisc/pqallquantities.h"
+#include "blackmisc/pq/pq.h"
 
 using namespace BlackMisc;
 using namespace BlackMiscTest;

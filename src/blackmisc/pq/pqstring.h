@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_PQSTRING_H
-#define BLACKMISC_PQSTRING_H
+#ifndef BLACKMISC_PQ_PQSTRING_H
+#define BLACKMISC_PQ_PQSTRING_H
 
 #include "blackmisc/valueobject.h"
 #include "blackmisc/blackmiscfreefunctions.h"

@@ -18,7 +18,7 @@
 
 #include "blackmisc/aviation/aviation.h"
 #include "blackmisc/networkallclasses.h"
-#include "blackmisc/pqallquantities.h"
+#include "blackmisc/pq/pq.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/math/math.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"

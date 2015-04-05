@@ -12,7 +12,7 @@
 #ifndef BLACKMISC_AVIATION_ALTITUDE_H
 #define BLACKMISC_AVIATION_ALTITUDE_H
 
-#include "blackmisc/pqlength.h"
+#include "blackmisc/pq/length.h"
 
 namespace BlackMisc
 {

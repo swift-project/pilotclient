@@ -34,7 +34,7 @@
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/project.h"
 #include "blackmisc/pixmap.h"
-#include "blackmisc/pqtime.h"
+#include "blackmisc/pq/time.h"
 #include <QObject>
 
 namespace BlackCore

@@ -12,7 +12,7 @@
 #ifndef BLACKMISC_AVIATION_SELCAL_H
 #define BLACKMISC_AVIATION_SELCAL_H
 
-#include "blackmisc/pqfrequency.h"
+#include "blackmisc/pq/frequency.h"
 #include "blackmisc/valueobject.h"
 
 namespace BlackMisc

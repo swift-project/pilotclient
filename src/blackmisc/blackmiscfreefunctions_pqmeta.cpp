@@ -8,7 +8,7 @@
  */
 
 #include "blackmiscfreefunctions.h"
-#include "pqallquantities.h"
+#include "blackmisc/pq/pq.h"
 
 /*
  * Metadata for PQs

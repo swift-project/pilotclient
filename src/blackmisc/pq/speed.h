@@ -9,33 +9,35 @@
 
 //! \file
 
-#ifndef BLACKMISC_PQLENGTH_H
-#define BLACKMISC_PQLENGTH_H
+#ifndef BLACKMISC_PQ_SPEED_H
+#define BLACKMISC_PQ_SPEED_H
 
-#include "blackmisc/pqphysicalquantity.h"
+#include "blackmisc/pq/physicalquantity.h"
 
 namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
 
-        //! Physical unit length (length)
-        class CLength : public CValueObject<CLength, CPhysicalQuantity<CLengthUnit, CLength>>
+        /*!
+         * Speed class, e.g. "m/s", "NM/h", "km/h", "ft/s"
+         */
+        class CSpeed : public CValueObject<CSpeed, CPhysicalQuantity<CSpeedUnit, CSpeed>>
         {
         public:
             //! Default constructor
-            CLength() : CValueObject(0, CLengthUnit::defaultUnit()) {}
+            CSpeed() : CValueObject(0, CSpeedUnit::defaultUnit()) {}
 
             //! Init by double value
-            CLength(double value, const CLengthUnit &unit) : CValueObject(value, unit) {}
+            CSpeed(double value, const CSpeedUnit &unit) : CValueObject(value, unit) {}
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CLength(const QString &unitString) : CValueObject(unitString) {}
+            CSpeed(const QString &unitString) : CValueObject(unitString) {}
         };
 
     }
 }
 
-Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CLength)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CSpeed)
 
 #endif // guard

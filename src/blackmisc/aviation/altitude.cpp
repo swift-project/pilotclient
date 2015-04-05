@@ -8,7 +8,7 @@
  */
 
 #include "blackmisc/aviation/altitude.h"
-#include "blackmisc/pqstring.h"
+#include "blackmisc/pq/pqstring.h"
 #include "blackmisc/iconlist.h"
 
 using BlackMisc::PhysicalQuantities::CLength;

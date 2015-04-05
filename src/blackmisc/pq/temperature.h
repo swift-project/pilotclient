@@ -9,10 +9,10 @@
 
 //! \file
 
-#ifndef BLACKMISC_PQPRESSURE_H
-#define BLACKMISC_PQPRESSURE_H
+#ifndef BLACKMISC_PQ_TEMPERATURE_H
+#define BLACKMISC_PQ_TEMPERATURE_H
 
-#include "pqphysicalquantity.h"
+#include "blackmisc/pq/physicalquantity.h"
 
 namespace BlackMisc
 {
@@ -20,24 +20,24 @@ namespace BlackMisc
     {
 
         /*!
-         * Physical unit distance
+         * Physical unit temperature
          */
-        class CPressure : public CValueObject<CPressure, CPhysicalQuantity<CPressureUnit, CPressure>>
+        class CTemperature : public CValueObject<CTemperature, CPhysicalQuantity<CTemperatureUnit, CTemperature>>
         {
         public:
             //! Default constructor
-            CPressure() : CValueObject(0, CPressureUnit::defaultUnit()) {}
+            CTemperature() : CValueObject(0, CTemperatureUnit::defaultUnit()) {}
 
             //! Init by double value
-            CPressure(double value, const CPressureUnit &unit) : CValueObject(value, unit) {}
+            CTemperature(double value, const CTemperatureUnit &unit): CValueObject(value, unit) {}
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CPressure(const QString &unitString) : CValueObject(unitString) {}
+            CTemperature(const QString &unitString) : CValueObject(unitString) {}
         };
 
     }
 }
 
-Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CPressure)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTemperature)
 
-#endif // BLACKMISC_PQPRESSURE_H
+#endif // guard

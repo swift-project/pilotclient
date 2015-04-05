@@ -9,36 +9,35 @@
 
 //! \file
 
-#ifndef BLACKMISC_PQFREQUENCY_H
-#define BLACKMISC_PQFREQUENCY_H
+#ifndef BLACKMISC_PQ_PRESSURE_H
+#define BLACKMISC_PQ_PRESSURE_H
 
-#include "pqphysicalquantity.h"
+#include "blackmisc/pq/physicalquantity.h"
 
 namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
+
         /*!
-         * Physical unit frequency
+         * Physical unit distance
          */
-        class CFrequency : public CValueObject<CFrequency, CPhysicalQuantity<CFrequencyUnit, CFrequency>>
+        class CPressure : public CValueObject<CPressure, CPhysicalQuantity<CPressureUnit, CPressure>>
         {
         public:
             //! Default constructor
-            CFrequency() : CValueObject(0, CFrequencyUnit::defaultUnit()) {}
+            CPressure() : CValueObject(0, CPressureUnit::defaultUnit()) {}
 
             //! Init by double value
-            CFrequency(double value, const CFrequencyUnit &unit) : CValueObject(value, unit) {}
-
-            //! Init by int value converted to double
-            CFrequency(int value, const CFrequencyUnit &unit) : CFrequency(double(value), unit) {}
+            CPressure(double value, const CPressureUnit &unit) : CValueObject(value, unit) {}
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CFrequency(const QString &unitString) : CValueObject(unitString) {}
+            CPressure(const QString &unitString) : CValueObject(unitString) {}
         };
+
     }
 }
 
-Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CFrequency)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CPressure)
 
-#endif // guard
+#endif // BLACKMISC_PQPRESSURE_H

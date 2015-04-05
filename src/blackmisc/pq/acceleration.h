@@ -9,10 +9,10 @@
 
 //! \file
 
-#ifndef BLACKMISC_PQACCELERATION_H
-#define BLACKMISC_PQACCELERATION_H
+#ifndef BLACKMISC_PQ_ACCELERATION_H
+#define BLACKMISC_PQ_ACCELERATION_H
 
-#include "blackmisc/pqphysicalquantity.h"
+#include "blackmisc/pq/physicalquantity.h"
 
 namespace BlackMisc
 {

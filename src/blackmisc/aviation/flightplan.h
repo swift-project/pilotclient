@@ -15,8 +15,8 @@
 #include "blackmisc/valueobject.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/aviation/airporticao.h"
-#include "blackmisc/pqtime.h"
-#include "blackmisc/pqspeed.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/pq/speed.h"
 #include <QDateTime>
 
 namespace BlackMisc

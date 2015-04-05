@@ -4,7 +4,7 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "testaviation.h"
-#include "blackmisc/pqconstants.h"
+#include "blackmisc/pq/constants.h"
 #include "blackmisc/aviation/heading.h"
 #include "blackmisc/aviation/informationmessage.h"
 #include "blackmisc/aviation/aircraftsituation.h"
