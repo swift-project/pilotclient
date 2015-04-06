@@ -14,8 +14,8 @@
 #include "blackmisc/aviation/navsystem.h"
 #include "blackmisc/aviation/transponder.h"
 #include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/nwuser.h"
-#include "blackmisc/nwserver.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/network/server.h"
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;

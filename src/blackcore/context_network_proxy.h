@@ -18,8 +18,8 @@
 #include "blackmisc/aviation/aviation.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackmisc/nwtextmessagelist.h"
-#include "blackmisc/nwuserlist.h"
+#include "blackmisc/network/textmessagelist.h"
+#include "blackmisc/network/userlist.h"
 #include "blackmisc/genericdbusinterface.h"
 #include "blackmisc/audio/voiceroomlist.h"
 

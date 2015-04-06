@@ -15,7 +15,7 @@
 #include <QComboBox>
 #include <QStringList>
 
-#include "blackmisc/nwserverlist.h"
+#include "blackmisc/network/serverlist.h"
 
 namespace BlackGui
 {

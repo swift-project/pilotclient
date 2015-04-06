@@ -4,7 +4,7 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "testhardware.h"
-#include "blackmisc/hwkeyboardkey.h"
+#include "blackmisc/hardware/keyboardkey.h"
 
 using namespace BlackMisc::Hardware;
 

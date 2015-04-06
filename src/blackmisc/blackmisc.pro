@@ -27,7 +27,9 @@ HEADERS +=  *.h \
             $$PWD/pq/*.h \
             $$PWD/aviation/*.h \
             $$PWD/math/*.h \
+            $$PWD/network/*.h \
             $$PWD/geo/*.h \
+            $$PWD/hardware/*.h \
             $$PWD/audio/*.h \
             $$PWD/simulation/*.h \
             $$PWD/simulation/fscommon\*.h \
@@ -37,6 +39,8 @@ SOURCES +=  *.cpp \
             $$PWD/pq/*.cpp \
             $$PWD/aviation/*.cpp \
             $$PWD/math/*.cpp \
+            $$PWD/network/*.cpp \
+            $$PWD/hardware/*.cpp \
             $$PWD/geo/*.cpp \
             $$PWD/audio/*.cpp \
             $$PWD/simulation/*.cpp \

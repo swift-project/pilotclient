@@ -12,7 +12,7 @@
 #ifndef BLACKMISC_SETTINGS_NETWORK_H
 #define BLACKMISC_SETTINGS_NETWORK_H
 
-#include "nwserverlist.h"
+#include "network/serverlist.h"
 #include "valueobject.h"
 #include "statusmessagelist.h"
 #include "settingutilities.h"

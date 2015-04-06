@@ -9,14 +9,14 @@
 
 //! \file
 
-#ifndef BLACKMISC_CLIENT_H
-#define BLACKMISC_CLIENT_H
+#ifndef BLACKMISC_NETWORK_CLIENT_H
+#define BLACKMISC_NETWORK_CLIENT_H
 
-#include "nwuser.h"
+#include "blackmisc/network/user.h"
 #include "blackmisc/simulation/aircraftmodel.h"
-#include "nwvoicecapabilities.h"
-#include "propertyindex.h"
-#include "propertyindexvariantmap.h"
+#include "blackmisc/network/voicecapabilities.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexvariantmap.h"
 
 namespace BlackMisc
 {

@@ -24,11 +24,6 @@
  */
 
 /*!
- * \namespace BlackMisc::Network
- * \brief Classes related to the traffic network such as VATSIM user etc.
- */
-
-/*!
  * \namespace BlackMisc::Settings
  * \brief Classes related to configuration settings.
  */

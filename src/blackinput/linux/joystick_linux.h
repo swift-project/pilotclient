@@ -13,7 +13,7 @@
 //! \file
 
 #include "blackinput/joystick.h"
-#include "blackmisc/hwjoystickbutton.h"
+#include "blackmisc/hardware/joystickbutton.h"
 #include "blackmisc/collection.h"
 #include <QSet>
 

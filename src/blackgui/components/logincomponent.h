@@ -14,7 +14,7 @@
 
 #include "enableforruntime.h"
 #include "blackmisc/aviation/aircraft.h"
-#include "blackmisc/nwserver.h"
+#include "blackmisc/network/server.h"
 #include <QFrame>
 #include <QScopedPointer>
 

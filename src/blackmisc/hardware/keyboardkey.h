@@ -9,11 +9,11 @@
 
 //! \file
 
-#ifndef BLACKMISC_KEYBOARDKEY_H
-#define BLACKMISC_KEYBOARDKEY_H
+#ifndef BLACKMISC_HARDWARE_KEYBOARDKEY_H
+#define BLACKMISC_HARDWARE_KEYBOARDKEY_H
 
-#include "propertyindex.h"
-#include "blackmiscfreefunctions.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include <QStringList>
 #include <QKeySequence>
 

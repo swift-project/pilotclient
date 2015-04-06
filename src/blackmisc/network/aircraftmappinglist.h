@@ -9,12 +9,12 @@
 
 //! \file
 
-#ifndef BLACKMISC_AIRCRAFTMAPPINGLIST_H
-#define BLACKMISC_AIRCRAFTMAPPINGLIST_H
+#ifndef BLACKMISC_NETWORK_AIRCRAFTMAPPINGLIST_H
+#define BLACKMISC_NETWORK_AIRCRAFTMAPPINGLIST_H
 
-#include "nwaircraftmapping.h"
-#include "collection.h"
-#include "sequence.h"
+#include "blackmisc/network/aircraftmapping.h"
+#include "blackmisc/collection.h"
+#include "blackmisc/sequence.h"
 #include <QObject>
 #include <QString>
 #include <QList>

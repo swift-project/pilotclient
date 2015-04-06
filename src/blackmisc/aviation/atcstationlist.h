@@ -13,7 +13,7 @@
 #define BLACKMISC_AVIATION_ATCSTATIONLIST_H
 
 #include "blackmisc/geo/geoobjectlist.h"
-#include "blackmisc/nwuserlist.h"
+#include "blackmisc/network/userlist.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/callsignobjectlist.h"
 #include "blackmisc/collection.h"

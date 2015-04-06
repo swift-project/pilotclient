@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_SERVERLISTMODEL_H
 #define BLACKGUI_SERVERLISTMODEL_H
 
-#include "blackmisc/nwserverlist.h"
+#include "blackmisc/network/serverlist.h"
 #include "blackgui/models/listmodelbase.h"
 #include <QAbstractItemModel>
 

@@ -9,12 +9,12 @@
 
 //! \file
 
-#ifndef BLACKMISC_SERVER_H
-#define BLACKMISC_SERVER_H
+#ifndef BLACKMISC_NETWORK_SERVER_H
+#define BLACKMISC_NETWORK_SERVER_H
 
-#include "nwuser.h"
-#include "statusmessagelist.h"
-#include "valueobject.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/statusmessagelist.h"
+#include "blackmisc/valueobject.h"
 
 namespace BlackMisc
 {

@@ -9,13 +9,13 @@
 
 //! \file
 
-#ifndef BLACKMISC_TEXTMESSAGELIST_H
-#define BLACKMISC_TEXTMESSAGELIST_H
+#ifndef BLACKMISC_NETWORK_TEXTMESSAGELIST_H
+#define BLACKMISC_NETWORK_TEXTMESSAGELIST_H
 
-#include "nwtextmessage.h"
-#include "timestampobjectlist.h"
-#include "collection.h"
-#include "sequence.h"
+#include "blackmisc/network/textmessage.h"
+#include "blackmisc/timestampobjectlist.h"
+#include "blackmisc/collection.h"
+#include "blackmisc/sequence.h"
 #include <QObject>
 #include <QString>
 #include <QList>

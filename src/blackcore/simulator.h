@@ -20,8 +20,8 @@
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/nwtextmessage.h"
-#include "blackmisc/nwclient.h"
+#include "blackmisc/network/textmessage.h"
+#include "blackmisc/network/client.h"
 #include "blackmisc/pixmap.h"
 #include <QObject>
 

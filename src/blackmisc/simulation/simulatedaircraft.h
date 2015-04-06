@@ -14,7 +14,7 @@
 
 #include "blackmisc/aviation/aircraft.h"
 #include "aircraftmodel.h"
-#include "blackmisc/nwclient.h"
+#include "blackmisc/network/client.h"
 
 namespace BlackMisc
 {

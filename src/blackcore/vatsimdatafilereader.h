@@ -15,9 +15,9 @@
 #include "blackmisc/threadedreader.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/aircraftlist.h"
-#include "blackmisc/nwserverlist.h"
-#include "blackmisc/nwuserlist.h"
-#include "blackmisc/nwvoicecapabilities.h"
+#include "blackmisc/network/serverlist.h"
+#include "blackmisc/network/userlist.h"
+#include "blackmisc/network/voicecapabilities.h"
 #include "blackmisc/aviation/callsignset.h"
 
 #include <QObject>

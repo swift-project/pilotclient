@@ -12,7 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_MODELMAPPINGS_H
 #define BLACKMISC_SIMULATION_MODELMAPPINGS_H
 
-#include "blackmisc/nwaircraftmappinglist.h"
+#include "blackmisc/network/aircraftmappinglist.h"
 #include <QObject>
 
 namespace BlackMisc

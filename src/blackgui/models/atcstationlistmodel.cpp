@@ -9,7 +9,7 @@
 
 #include "atcstationlistmodel.h"
 #include "blackmisc/audio/voiceroom.h"
-#include "blackmisc/nwuser.h"
+#include "blackmisc/network/user.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
 using namespace BlackMisc::PhysicalQuantities;

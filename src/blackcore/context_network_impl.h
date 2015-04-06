@@ -21,7 +21,7 @@
 #include "blackcore/airspace_monitor.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/setnetwork.h"
-#include "blackmisc/nwclientlist.h"
+#include "blackmisc/network/clientlist.h"
 #include "blackmisc/digestsignal.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"

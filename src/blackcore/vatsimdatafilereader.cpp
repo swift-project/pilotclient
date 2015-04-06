@@ -9,8 +9,8 @@
 
 #include "blackmisc/sequence.h"
 #include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/nwuser.h"
-#include "blackmisc/nwserver.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/network/server.h"
 #include "blackmisc/logmessage.h"
 #include "vatsimdatafilereader.h"
 

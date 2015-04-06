@@ -14,7 +14,7 @@
 
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/aviation/aircrafticao.h"
-#include "blackmisc/nwuser.h"
+#include "blackmisc/network/user.h"
 #include "blackmisc/propertyindex.h"
 
 namespace BlackMisc

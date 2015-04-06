@@ -16,7 +16,7 @@
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/callsignobjectlist.h"
 #include "blackmisc/geo/geoobjectlist.h"
-#include "blackmisc/nwuserlist.h"
+#include "blackmisc/network/userlist.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include <QObject>

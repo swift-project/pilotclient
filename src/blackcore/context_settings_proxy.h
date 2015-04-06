@@ -12,7 +12,7 @@
 #include "blackmisc/genericdbusinterface.h"
 #include "blackmisc/settingutilities.h"
 #include "blackmisc/setnetwork.h"
-#include "blackmisc/hwkeyboardkeylist.h"
+#include "blackmisc/hardware/keyboardkeylist.h"
 
 namespace BlackCore
 {

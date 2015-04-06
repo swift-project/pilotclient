@@ -7,7 +7,7 @@
 #ifndef BLACKINPUT_KEYMAPPING_LINUX_H
 #define BLACKINPUT_KEYMAPPING_LINUX_H
 
-#include "blackmisc/hwkeyboardkey.h"
+#include "blackmisc/hardware/keyboardkey.h"
 
 namespace BlackInput
 {

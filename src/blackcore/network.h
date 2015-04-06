@@ -18,8 +18,8 @@
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
-#include "blackmisc/nwserverlist.h"
-#include "blackmisc/nwtextmessagelist.h"
+#include "blackmisc/network/serverlist.h"
+#include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/aviation/informationmessage.h"
 #include "blackmisc/aviation/flightplan.h"
 #include <QObject>

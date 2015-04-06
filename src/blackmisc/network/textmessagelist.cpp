@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "nwtextmessagelist.h"
-#include "predicates.h"
+#include "blackmisc/network/textmessagelist.h"
+#include "blackmisc/predicates.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
@@ -17,49 +17,32 @@ namespace BlackMisc
 {
     namespace Network
     {
-        /*
-         * Empty constructor
-         */
+
         CTextMessageList::CTextMessageList() { }
 
-        /*
-         * Single private message constructor
-         */
         CTextMessageList::CTextMessageList(const QString &message, const CCallsign &recipientCallsign)
         {
             CTextMessage pm(message, recipientCallsign);
             this->push_back(pm);
         }
 
-        /*
-         * Single private message
-         */
         CTextMessageList::CTextMessageList(const QString &message, const CCallsign &fromCallsign, const CCallsign &toCallsign)
         {
             CTextMessage pm(message, fromCallsign, toCallsign);
             this->push_back(pm);
         }
 
-        /*
-         * Single radio message
-         */
         CTextMessageList::CTextMessageList(const QString &message, const CFrequency &frequency, const CCallsign &fromCallsign)
         {
             CTextMessage pm(message, frequency, fromCallsign);
             this->push_back(pm);
         }
 
-        /*
-         * Single text message
-         */
         CTextMessageList::CTextMessageList(const CTextMessage &message)
         {
             this->push_back(message);
         }
 
-        /*
-         * Radio messages
-         */
         CTextMessageList::CTextMessageList(const QString &message, const QList<CFrequency> &frequencies, const BlackMisc::Aviation::CCallsign &fromCallsign)
         {
             if (frequencies.isEmpty()) return;
@@ -70,64 +53,40 @@ namespace BlackMisc
             }
         }
 
-        /*
-         * Construct from base class object
-         */
         CTextMessageList::CTextMessageList(const CSequence<CTextMessage> &other) :
             CSequence<CTextMessage>(other)
         { }
 
-        /*
-         * Private messages
-         */
         CTextMessageList CTextMessageList::getPrivateMessages() const
         {
             return this->findBy(&CTextMessage::isPrivateMessage, true);
         }
 
-        /*
-         * Private messages?
-         */
         bool CTextMessageList::containsPrivateMessages() const
         {
             return this->contains(&CTextMessage::isPrivateMessage, true);
         }
 
-        /*
-         * Supervisor messages?
-         */
         CTextMessageList CTextMessageList::containsSupervisorMessages() const
         {
             return this->findBy(&CTextMessage::isSupervisorMessage, true);
         }
 
-        /*
-         * Radio messages
-         */
         CTextMessageList CTextMessageList::getRadioMessages() const
         {
             return this->findBy(&CTextMessage::isRadioMessage, true);
         }
 
-        /*
-         * Supervisor messages
-         */
         CTextMessageList CTextMessageList::getSupervisorMessages() const
         {
             return this->findBy(&CTextMessage::isSupervisorMessage, true);
         }
 
-        /*
-         * Radio messages?
-         */
         bool CTextMessageList::containsRadioMessages() const
         {
             return this->contains(&CTextMessage::isRadioMessage, true);
         }
 
-        /*
-         * Register metadata
-         */
         void CTextMessageList::registerMetadata()
         {
             qRegisterMetaType<BlackMisc::CSequence<CTextMessage>>();
@@ -139,26 +98,17 @@ namespace BlackMisc
             registerMetaValueType<CTextMessageList>();
         }
 
-        /*
-         * Find by frequency
-         */
         CTextMessageList CTextMessageList::findByFrequency(const CFrequency &frequency) const
         {
             return this->findBy(&CTextMessage::getFrequency, frequency);
         }
 
-        /*
-         * Toggle all senders / receivers
-         */
         void CTextMessageList::toggleSenderRecipients()
         {
             if (this->isEmpty()) { return; }
             std::for_each(this->begin(), this->end(), [](CTextMessage & tm) { tm.toggleSenderRecipient(); });
         }
 
-        /*
-         * Mark all messages as sent
-         */
         void CTextMessageList::markAsSent()
         {
             std::for_each(this->begin(), this->end(), [](CTextMessage & tm) { tm.markAsSent(); });

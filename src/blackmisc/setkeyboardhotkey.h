@@ -13,7 +13,7 @@
 #define BLACKMISC_SETTINGS_KEYBOARDHOTKEY_H
 
 #include "propertyindex.h"
-#include "hwkeyboardkey.h"
+#include "hardware/keyboardkey.h"
 #include "hotkeyfunction.h"
 #include "blackmiscfreefunctions.h"
 #include <QStringList>

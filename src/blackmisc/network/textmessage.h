@@ -9,14 +9,14 @@
 
 //! \file
 
-#ifndef BLACKMISC_TEXTMESSAGE_H
-#define BLACKMISC_TEXTMESSAGE_H
+#ifndef BLACKMISC_NETWORK_TEXTMESSAGE_H
+#define BLACKMISC_NETWORK_TEXTMESSAGE_H
 
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/aviation/callsign.h"
-#include "statusmessage.h"
-#include "valueobject.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/valueobject.h"
 #include <QDateTime>
 
 namespace BlackMisc

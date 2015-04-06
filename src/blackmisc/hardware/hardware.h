@@ -7,19 +7,10 @@
  * contained in the LICENSE file.
  */
 
-//! \file
+#ifndef BLACKMISC_HARDWARE_HARDWAREALL_H
+#define BLACKMISC_HARDWARE_HARDWAREALL_H
 
-#ifndef BLACKMISC_NETWORKALLCLASSES_H
-#define BLACKMISC_NETWORKALLCLASSES_H
-
-#include "blackmisc/nwuser.h"
-#include "blackmisc/nwuserlist.h"
-#include "blackmisc/nwserverlist.h"
-#include "blackmisc/nwtextmessagelist.h"
-#include "blackmisc/nwclient.h"
-#include "blackmisc/nwclientlist.h"
-#include "blackmisc/nwvoicecapabilities.h"
-#include "blackmisc/nwaircraftmapping.h"
-#include "blackmisc/nwaircraftmappinglist.h"
+#include "blackmisc/hardware/keyboardkeylist.h"
+#include "blackmisc/hardware/joystickbutton.h"
 
 #endif // guard

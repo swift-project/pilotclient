@@ -8,7 +8,7 @@
 
 #include "led.h"
 #include "blackinput/keyboard.h"
-#include "blackmisc/hwkeyboardkey.h"
+#include "blackmisc/hardware/keyboardkey.h"
 
 #include <QDialog>
 #include <QPushButton>

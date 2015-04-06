@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/nwclient.h"
+#include "blackmisc/network/client.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/aviation/callsign.h"
 
@@ -17,9 +17,7 @@ namespace BlackMisc
 {
     namespace Network
     {
-        /*
-         * Convert to string
-         */
+
         QString CClient::convertToQString(bool i18n) const
         {
             QString s = this->m_user.toQString(i18n);
@@ -32,25 +30,16 @@ namespace BlackMisc
             return s;
         }
 
-        /*
-         * Capability
-         */
         void CClient::setCapability(bool hasCapability, CClient::Capabilities capability)
         {
             this->m_capabilities.addValue(static_cast<int>(capability), hasCapability);
         }
 
-        /*
-         * Capabilities
-         */
         void CClient::setCapabilities(const CPropertyIndexVariantMap &capabilities)
         {
             this->m_capabilities = capabilities;
         }
 
-        /*
-         * Capabilities
-         */
         QString CClient::getCapabilitiesAsString() const
         {
             QStringList sl;
@@ -62,9 +51,6 @@ namespace BlackMisc
             return sl.join(", ");
         }
 
-        /*
-         * Capability
-         */
         bool CClient::hasCapability(CClient::Capabilities capability) const
         {
             if (this->m_capabilities.contains(capability))
@@ -82,9 +68,6 @@ namespace BlackMisc
             this->m_user.setCallsign(callsign);
         }
 
-        /*
-         * Property by index
-         */
         CVariant CClient::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return this->toCVariant(); }
@@ -116,9 +99,6 @@ namespace BlackMisc
             }
         }
 
-        /*
-         * Set property as index
-         */
         void CClient::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself())

@@ -8,7 +8,7 @@
  */
 
 #include "blackmiscfreefunctions.h"
-#include "networkallclasses.h"
+#include "network/network.h"
 
 /*
  * Metadata for Network

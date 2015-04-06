@@ -8,7 +8,7 @@
  */
 
 #include "simulatedaircraftlistmodel.h"
-#include "blackmisc/nwuser.h"
+#include "blackmisc/network/user.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 

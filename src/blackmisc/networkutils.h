@@ -12,7 +12,7 @@
 #ifndef BLACKMISC_NETWORKUTILS_H
 #define BLACKMISC_NETWORKUTILS_H
 
-#include "nwserver.h"
+#include "network/server.h"
 #include <QStringList>
 
 namespace BlackMisc

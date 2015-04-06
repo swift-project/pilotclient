@@ -10,7 +10,7 @@
 #ifndef BLACKINPUT_KEYBOARD_H
 #define BLACKINPUT_KEYBOARD_H
 
-#include "blackmisc/hwkeyboardkeylist.h"
+#include "blackmisc/hardware/keyboardkeylist.h"
 #include <QMultiMap>
 #include <QObject>
 #include <QPointer>

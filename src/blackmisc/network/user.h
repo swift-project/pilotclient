@@ -9,13 +9,13 @@
 
 //! \file
 
-#ifndef BLACKMISC_USER_H
-#define BLACKMISC_USER_H
+#ifndef BLACKMISC_NETWORK_USER_H
+#define BLACKMISC_NETWORK_USER_H
 
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/airporticao.h"
-#include "propertyindex.h"
-#include "statusmessagelist.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/statusmessagelist.h"
 
 namespace BlackMisc
 {

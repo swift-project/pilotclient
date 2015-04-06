@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "nwaircraftmappinglist.h"
-#include "predicates.h"
+#include "blackmisc/network/aircraftmappinglist.h"
+#include "blackmisc/predicates.h"
 
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
@@ -17,14 +17,8 @@ namespace BlackMisc
 {
     namespace Network
     {
-        /*
-         * Empty constructor
-         */
         CAircraftMappingList::CAircraftMappingList() { }
 
-        /*
-         * Construct from base class object
-         */
         CAircraftMappingList::CAircraftMappingList(const CSequence<CAircraftMapping> &other) :
             CSequence<CAircraftMapping>(other)
         { }
@@ -80,9 +74,6 @@ namespace BlackMisc
             });
         }
 
-        /*
-         * Register metadata
-         */
         void CAircraftMappingList::registerMetadata()
         {
             qRegisterMetaType<BlackMisc::CSequence<CAircraftMapping>>();

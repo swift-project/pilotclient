@@ -12,7 +12,7 @@
 #ifndef BLACKINPUT_JOYSTICK_H
 #define BLACKINPUT_JOYSTICK_H
 
-#include "blackmisc/hwjoystickbutton.h"
+#include "blackmisc/hardware/joystickbutton.h"
 #include <QMultiMap>
 #include <QObject>
 #include <QPointer>

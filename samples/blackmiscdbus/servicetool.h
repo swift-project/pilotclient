@@ -15,7 +15,7 @@
 #include "blackcore/dbus_server.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/nwclientlist.h"
+#include "blackmisc/network/clientlist.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include <QCoreApplication>
 #include <QProcess>

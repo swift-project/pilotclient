@@ -12,10 +12,10 @@
 
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/selcal.h"
-#include "../blackmisc/nwuserlist.h"
-#include "../blackmisc/audio/voiceroomlist.h"
-#include "../blackmisc/audio/audiodeviceinfolist.h"
-#include "../blackmisc/statusmessage.h"
+#include "blackmisc/network/userlist.h"
+#include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/audio/audiodeviceinfolist.h"
+#include "blackmisc/statusmessage.h"
 
 #include <QObject>
 #include <QSharedPointer>

@@ -13,7 +13,7 @@
 #define BLACKGUI_SETTINGSCOMPONENT_H
 
 #include "blackgui/components/enableforruntime.h"
-#include "blackmisc/nwserver.h"
+#include "blackmisc/network/server.h"
 #include "blackmisc/aviation/aircrafticao.h"
 #include <QTabWidget>
 #include <QModelIndex>

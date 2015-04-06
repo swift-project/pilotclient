@@ -12,7 +12,7 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFT_H
 #define BLACKMISC_AVIATION_AIRCRAFT_H
 
-#include "blackmisc/nwuser.h"
+#include "blackmisc/network/user.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircrafticao.h"
 #include "blackmisc/aviation/callsign.h"

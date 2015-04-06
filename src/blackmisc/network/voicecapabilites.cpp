@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/nwvoicecapabilities.h"
+#include "blackmisc/network/voicecapabilities.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/iconlist.h"
 #include <tuple>
@@ -19,17 +19,11 @@ namespace BlackMisc
     namespace Network
     {
 
-        /*
-         * Constructor
-         */
         CVoiceCapabilities::CVoiceCapabilities(const QString &flightPlanRemarks)
         {
             this->setFromFlightPlanRemarks(flightPlanRemarks);
         }
 
-        /*
-         * Convert to string
-         */
         QString CVoiceCapabilities::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
@@ -90,9 +84,6 @@ namespace BlackMisc
             this->setCapabilities(Unknown);
         }
 
-        /*
-         * Icon
-         */
         CIcon CVoiceCapabilities::toIcon() const
         {
             switch (this->m_voiceCapabilities)
@@ -112,9 +103,6 @@ namespace BlackMisc
             return CIconList::iconByIndex(CIcons::NetworkCapabilityUnknown); // never reached
         }
 
-        /*
-         * From enum
-         */
         const CVoiceCapabilities &CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::VoiceCapabilities capabilities)
         {
             static const CVoiceCapabilities u(CVoiceCapabilities::Unknown);
@@ -136,9 +124,6 @@ namespace BlackMisc
             }
         }
 
-        /*
-         * All
-         */
         const QList<CVoiceCapabilities> &CVoiceCapabilities::allCapabilities()
         {
             static const QList<CVoiceCapabilities> all({fromVoiceCapabilities(Unknown), fromVoiceCapabilities(Voice), fromVoiceCapabilities(VoiceReceivingOnly), fromVoiceCapabilities(TextOnly)});

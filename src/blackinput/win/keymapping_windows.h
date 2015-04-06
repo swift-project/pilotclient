@@ -7,7 +7,7 @@
 #ifndef BLACKINPUT_KEYMAPPING_WINDOWS_H
 #define BLACKINPUT_KEYMAPPING_WINDOWS_H
 
-#include "blackmisc/hwkeyboardkey.h"
+#include "blackmisc/hardware/keyboardkey.h"
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif

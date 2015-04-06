@@ -13,7 +13,7 @@
 #define BLACKGUI_USERLISTMODEL_H
 
 #include <QAbstractItemModel>
-#include "blackmisc/nwuserlist.h"
+#include "blackmisc/network/userlist.h"
 #include "blackgui/models/listmodelbase.h"
 
 namespace BlackGui

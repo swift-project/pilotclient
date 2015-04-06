@@ -8,8 +8,8 @@
 
 #include "blackinput/keyboard.h"
 #include "blackinput/joystick.h"
-#include "blackmisc/hwkeyboardkeylist.h"
-#include "blackmisc/hwjoystickbutton.h"
+#include "blackmisc/hardware/keyboardkeylist.h"
+#include "blackmisc/hardware/joystickbutton.h"
 #include "blackmisc/hotkeyfunction.h"
 #include "blackmisc/setkeyboardhotkeylist.h"
 #include "blackmisc/eveventhotkeyfunction.h"

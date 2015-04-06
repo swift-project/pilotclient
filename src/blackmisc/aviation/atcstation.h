@@ -16,7 +16,7 @@
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/informationmessage.h"
 #include "blackmisc/aviation/callsign.h"
-#include "blackmisc/nwuser.h"
+#include "blackmisc/network/user.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/length.h"

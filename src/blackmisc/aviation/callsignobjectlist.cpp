@@ -13,7 +13,7 @@
 #include "blackmisc/aviation/aircraftlist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
-#include "blackmisc/nwclientlist.h"
+#include "blackmisc/network/clientlist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 
 namespace BlackMisc

@@ -1,5 +1,5 @@
 /* Copyright (C) 2014
- * swift Project Community / Contributors
+ * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
  * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
@@ -9,12 +9,12 @@
 
 //! \file
 
-#ifndef BLACKMISC_JOYSTICKBUTTON_H
-#define BLACKMISC_JOYSTICKBUTTON_H
+#ifndef BLACKMISC_HARDWARE_JOYSTICKBUTTON_H
+#define BLACKMISC_HARDWARE_JOYSTICKBUTTON_H
 
-#include "valueobject.h"
-#include "propertyindex.h"
-#include "blackmiscfreefunctions.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 
 namespace BlackMisc
 {

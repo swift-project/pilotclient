@@ -8,7 +8,7 @@
  */
 
 #include "testing.h"
-#include "nwvoicecapabilities.h"
+#include "network/voicecapabilities.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Geo;

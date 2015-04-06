@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_TEXTMESSAGELISTMODEL_H
 #define BLACKGUI_TEXTMESSAGELISTMODEL_H
 
-#include "blackmisc/nwtextmessagelist.h"
+#include "blackmisc/network/textmessagelist.h"
 #include "blackgui/models/listmodelbase.h"
 #include <QAbstractItemModel>
 #include <QStandardItemModel>

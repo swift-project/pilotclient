@@ -17,7 +17,7 @@
 #undef interface
 
 #include "blackmisc/aviation/aviation.h"
-#include "blackmisc/networkallclasses.h"
+#include "blackmisc/network/network.h"
 #include "blackmisc/pq/pq.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/math/math.h"

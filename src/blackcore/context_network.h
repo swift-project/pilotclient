@@ -17,9 +17,9 @@
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackmisc/nwtextmessagelist.h"
-#include "blackmisc/nwuserlist.h"
-#include "blackmisc/nwclientlist.h"
+#include "blackmisc/network/textmessagelist.h"
+#include "blackmisc/network/userlist.h"
+#include "blackmisc/network/clientlist.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include "blackcore/network.h"
 

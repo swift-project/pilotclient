@@ -9,7 +9,7 @@
 
 #include "blackmisc/sequence.h"
 #include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/nwuser.h"
+#include "blackmisc/network/user.h"
 #include "blackmisc/logmessage.h"
 #include "vatsimbookingreader.h"
 

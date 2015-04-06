@@ -15,9 +15,9 @@
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/textmessagetextedit.h"
-#include "blackmisc/nwtextmessage.h"
+#include "blackmisc/network/textmessage.h"
 #include "blackmisc/aviation/aircraft.h"
-#include "blackmisc/nwtextmessagelist.h"
+#include "blackmisc/network/textmessagelist.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_ownaircraft.h"
 #include <QFrame>

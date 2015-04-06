@@ -7,9 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "nwaircraftmapping.h"
-#include "propertyindex.h"
-#include "variant.h"
+#include "blackmisc/network/aircraftmapping.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/variant.h"
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
@@ -19,33 +19,21 @@ namespace BlackMisc
     namespace Network
     {
 
-        /*
-         * Constructor
-         */
         CAircraftMapping::CAircraftMapping(const QString &source, const QString &packageName, const QString &aircraftDesignator, const QString &airlineDesignator, const QString &model) :
             m_source(source.trimmed()), m_packageName(packageName.trimmed()), m_icao(aircraftDesignator, airlineDesignator), m_model(model, BlackMisc::Simulation::CAircraftModel::TypeModelMapping)
         { }
 
-        /*
-         * Convert to string
-         */
         QString CAircraftMapping::convertToQString(bool i18n) const
         {
             QString s = QString(this->m_model.toQString(i18n)).append(' ').append(this->m_icao.toQString(i18n));
             return s;
         }
 
-        /*
-         * Model string?
-         */
         bool CAircraftMapping::matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
             return this->m_model.matchesModelString(modelString, sensitivity);
         }
 
-        /*
-         * Property by index
-         */
         CVariant CAircraftMapping::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return this->toCVariant(); }
@@ -65,9 +53,6 @@ namespace BlackMisc
             }
         }
 
-        /*
-         * Set property as index
-         */
         void CAircraftMapping::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself())

@@ -11,8 +11,8 @@
 #define BLACKINPUT_KEYBOARD_WINDOWS_H
 
 #include "blackinput/keyboard.h"
-#include "blackmisc/hwkeyboardkey.h"
-#include "blackmisc/hwkeyboardkeylist.h"
+#include "blackmisc/hardware/keyboardkey.h"
+#include "blackmisc/hardware/keyboardkeylist.h"
 #include <QHash>
 #ifndef NOMINMAX
 #define NOMINMAX

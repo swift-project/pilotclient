@@ -11,7 +11,7 @@
 #include "blackcore/context_all_proxies.h"
 #include "blackcore/context_all_empties.h"
 #include "blackcore/blackcorefreefunctions.h"
-#include "blackmisc/nwserver.h"
+#include "blackmisc/network/server.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/blackmiscfreefunctions.h"

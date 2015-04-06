@@ -17,7 +17,7 @@
 #include "blackmisc/project.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/nwaircraftmappinglist.h"
+#include "blackmisc/network/aircraftmappinglist.h"
 #include "blackcore/interpolator_linear.h"
 
 #include <QTimer>

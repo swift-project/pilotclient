@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_NETWORKSERVERFORM_H
 #define BLACKGUI_NETWORKSERVERFORM_H
 
-#include "blackmisc/nwserver.h"
+#include "blackmisc/network/server.h"
 #include "blackmisc/statusmessagelist.h"
 #include <QFrame>
 #include <QScopedPointer>

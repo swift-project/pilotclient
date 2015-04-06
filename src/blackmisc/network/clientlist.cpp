@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "nwclientlist.h"
-#include "predicates.h"
+#include "blackmisc/network/clientlist.h"
+#include "blackmisc/predicates.h"
 
 using namespace BlackMisc::Aviation;
 
@@ -16,20 +16,12 @@ namespace BlackMisc
 {
     namespace Network
     {
-        /*
-         * Default constructor
-         */
+
         CClientList::CClientList() { }
 
-        /*
-         * Construct from base class object
-         */
         CClientList::CClientList(const CSequence &other) : CSequence<CClient>(other)
         { }
 
-        /*
-         * Register metadata
-         */
         void CClientList::registerMetadata()
         {
             qRegisterMetaType<BlackMisc::CSequence<CClient>>();

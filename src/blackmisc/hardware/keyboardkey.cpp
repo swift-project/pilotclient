@@ -1,5 +1,5 @@
 /* Copyright (C) 2013
- * swift Project Community / Contributors
+ * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
  * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
@@ -7,10 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "hwkeyboardkey.h"
-#include "blackmiscfreefunctions.h"
-#include "propertyindex.h"
-#include "variant.h"
+#include "blackmisc/hardware/keyboardkey.h"
+#include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/variant.h"
 #include <QCoreApplication>
 
 namespace BlackMisc

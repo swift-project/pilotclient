@@ -8,7 +8,7 @@
  */
 
 #include "blackmisc/aviation/aircraftlist.h"
-#include "blackmisc/nwuser.h"
+#include "blackmisc/network/user.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/propertyindexallclasses.h"
 

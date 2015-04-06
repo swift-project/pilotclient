@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_INFOWINDOW_H
 #define BLACKGUI_INFOWINDOW_H
 
-#include "blackmisc/nwtextmessage.h"
+#include "blackmisc/network/textmessage.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/variant.h"
 

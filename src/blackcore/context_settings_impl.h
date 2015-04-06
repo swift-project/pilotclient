@@ -18,7 +18,7 @@
 
 #include "blackcore/settingsallclasses.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackmisc/hwkeyboardkeylist.h"
+#include "blackmisc/hardware/keyboardkeylist.h"
 
 namespace BlackCore
 {

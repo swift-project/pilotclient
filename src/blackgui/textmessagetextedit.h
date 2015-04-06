@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_TEXTMESSAGETEXTEDIT_H
 #define BLACKGUI_TEXTMESSAGETEXTEDIT_H
 
-#include "blackmisc/nwtextmessagelist.h"
+#include "blackmisc/network/textmessagelist.h"
 #include <QTextEdit>
 #include <QAction>
 

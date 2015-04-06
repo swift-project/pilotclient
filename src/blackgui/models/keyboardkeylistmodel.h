@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_KEYBOARDKEYLISTMODEL_H
 #define BLACKGUI_KEYBOARDKEYLISTMODEL_H
 
-#include "blackmisc/hwkeyboardkeylist.h"
+#include "blackmisc/hardware/keyboardkeylist.h"
 #include "blackmisc/setkeyboardhotkeylist.h"
 #include "blackgui/models/listmodelbase.h"
 #include <QAbstractItemModel>

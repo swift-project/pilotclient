@@ -12,7 +12,7 @@
 #ifndef BLACKMISC_SETTINGS_KEYBOARDHOTKEYLIST_H
 #define BLACKMISC_SETTINGS_KEYBOARDHOTKEYLIST_H
 
-#include "hwkeyboardkey.h"
+#include "hardware/keyboardkey.h"
 #include "setkeyboardhotkey.h"
 #include "collection.h"
 #include "sequence.h"

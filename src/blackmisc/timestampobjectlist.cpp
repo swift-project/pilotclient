@@ -11,7 +11,7 @@
 #include "blackmisc/predicates.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
-#include "blackmisc/nwtextmessagelist.h"
+#include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/statusmessagelist.h"
 #include <algorithm>
 #include <iterator>

@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "nwtextmessage.h"
+#include "blackmisc/network/textmessage.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/pq/constants.h"
 #include "blackmisc/aviation/comsystem.h"
@@ -21,9 +21,7 @@ namespace BlackMisc
 {
     namespace Network
     {
-        /*
-         * Convert to string
-         */
+
         QString CTextMessage::convertToQString(bool i18n) const
         {
             QString s(this->m_message);

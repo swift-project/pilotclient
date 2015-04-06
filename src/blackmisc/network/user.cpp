@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "nwuser.h"
+#include "blackmisc/network/user.h"
 #include "blackmisc/aviation/airporticao.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/blackmiscfreefunctions.h"
@@ -91,9 +91,6 @@ namespace BlackMisc
             return msgs;
         }
 
-        /*
-         * Exchange data
-         */
         void CUser::syncronizeData(CUser &otherUser)
         {
             if (otherUser == (*this)) { return; }
@@ -169,9 +166,6 @@ namespace BlackMisc
             return newRealName;
         }
 
-        /*
-         * Property by index
-         */
         CVariant CUser::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return this->toCVariant(); }

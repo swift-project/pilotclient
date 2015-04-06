@@ -11,7 +11,7 @@
 #define BLACKINPUT_KEYBOARD_LINUX_H
 
 #include "blackinput/keyboard.h"
-#include "blackmisc/hwkeyboardkeylist.h"
+#include "blackmisc/hardware/keyboardkeylist.h"
 #include <QHash>
 
 class QFileSystemWatcher;

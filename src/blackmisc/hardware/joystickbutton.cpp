@@ -1,5 +1,5 @@
 /* Copyright (C) 2014
- * swift Project Community / Contributors
+ * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
  * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
@@ -7,9 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "hwjoystickbutton.h"
-#include "blackmiscfreefunctions.h"
-#include "variant.h"
+#include "blackmisc/hardware/joystickbutton.h"
+#include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/variant.h"
 #include <QCoreApplication>
 
 namespace BlackMisc

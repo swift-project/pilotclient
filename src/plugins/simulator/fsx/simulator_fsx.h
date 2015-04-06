@@ -22,7 +22,7 @@
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/statusmessage.h"
-#include "blackmisc/nwclient.h"
+#include "blackmisc/network/client.h"
 #include "blackmisc/pixmap.h"
 
 #include <simconnect/SimConnect.h>

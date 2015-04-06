@@ -7,13 +7,13 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKMISC_VOICECAPABILITIES_H
-#define BLACKMISC_VOICECAPABILITIES_H
-
 //! \file
 
-#include "valueobject.h"
-#include "blackmiscfreefunctions.h"
+#ifndef BLACKMISC_NETWORK_VOICECAPABILITIES_H
+#define BLACKMISC_NETWORK_VOICECAPABILITIES_H
+
+#include "blackmisc/valueobject.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 
 namespace BlackMisc
 {

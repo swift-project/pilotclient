@@ -16,7 +16,7 @@
 #include "blackmisc/genericdbusinterface.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/audio/voiceroomlist.h"
-#include "blackmisc/nwuserlist.h"
+#include "blackmisc/network/userlist.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/selcal.h"

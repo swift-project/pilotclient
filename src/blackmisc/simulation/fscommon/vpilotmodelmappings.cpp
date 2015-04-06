@@ -8,7 +8,7 @@
  */
 
 #include "vpilotmodelmappings.h"
-#include "blackmisc/nwaircraftmapping.h"
+#include "blackmisc/network/aircraftmapping.h"
 
 #include <QtXml/QDomElement>
 #include <QFile>

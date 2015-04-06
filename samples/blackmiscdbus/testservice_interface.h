@@ -20,7 +20,7 @@
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/nwclientlist.h"
+#include "blackmisc/network/clientlist.h"
 #include "blackmisc/variantlist.h"
 #include <QtCore/QObject>
 #include <QtCore/QByteArray>

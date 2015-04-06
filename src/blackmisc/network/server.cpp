@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "nwserver.h"
+#include "blackmisc/network/server.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
@@ -17,9 +17,7 @@ namespace BlackMisc
 {
     namespace Network
     {
-        /*
-         * Convert to string
-         */
+
         QString CServer::convertToQString(bool i18n) const
         {
             QString s(this->m_name);
@@ -31,9 +29,6 @@ namespace BlackMisc
             return s;
         }
 
-        /*
-         * Valid for login
-         */
         bool CServer::isValidForLogin() const
         {
             return this->m_user.hasValidCredentials() && this->m_port > 0 && !this->m_address.isEmpty() && this->isAcceptingConnections();
@@ -50,9 +45,6 @@ namespace BlackMisc
             return msgs;
         }
 
-        /*
-         * Property by index
-         */
         CVariant CServer::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return this->toCVariant(); }
@@ -80,9 +72,6 @@ namespace BlackMisc
             return CVariant::fromValue(m);
         }
 
-        /*
-         * Property by index (setter)
-         */
         void CServer::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself())

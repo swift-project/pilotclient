@@ -30,7 +30,7 @@
 #include "blackgui/models/keyboardkeylistmodel.h"
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/managedstatusbar.h"
-#include "blackmisc/nwtextmessage.h"
+#include "blackmisc/network/textmessage.h"
 #include "blackmisc/loghandler.h"
 #include "blacksound/soundgenerator.h"
 #include <QMainWindow>

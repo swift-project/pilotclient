@@ -9,10 +9,10 @@
 
 //! \file
 
-#ifndef BLACKMISC_CLIENTLIST_H
-#define BLACKMISC_CLIENTLIST_H
+#ifndef BLACKMISC_NETWORK_CLIENTLIST_H
+#define BLACKMISC_NETWORK_CLIENTLIST_H
 
-#include "blackmisc/nwclient.h"
+#include "blackmisc/network/client.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/aviation/callsignobjectlist.h"

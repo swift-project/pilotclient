@@ -15,7 +15,7 @@
 #include "blackcore/context_network.h"
 #include "blackcore/context_settings.h"
 #include "blackcore/context_audio.h"
-#include "blackmisc/hwkeyboardkeylist.h"
+#include "blackmisc/hardware/keyboardkeylist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/settingsblackmiscclasses.h"
 #include <QColorDialog>
