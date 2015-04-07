@@ -519,7 +519,8 @@ namespace BlackCore
     /*
      * Connection status changed
      */
-    void CContextAudio::ps_connectionStatusChanged(IVoiceChannel::ConnectionStatus oldStatus, IVoiceChannel::ConnectionStatus newStatus)
+    void CContextAudio::ps_connectionStatusChanged(BlackCore::IVoiceChannel::ConnectionStatus oldStatus,
+                                                   BlackCore::IVoiceChannel::ConnectionStatus newStatus)
     {
         Q_UNUSED(oldStatus);
 

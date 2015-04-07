@@ -75,7 +75,8 @@ namespace BlackCore
         void statusMessage(const BlackMisc::CStatusMessage &message);
 
         //! The status of a room has changed.
-        void connectionStatusChanged(ConnectionStatus oldStatus, ConnectionStatus newStatus);
+        void connectionStatusChanged(BlackCore::IVoiceChannel::ConnectionStatus oldStatus,
+                                     BlackCore::IVoiceChannel::ConnectionStatus newStatus);
 
         // Signals about users joining and leaving
 
