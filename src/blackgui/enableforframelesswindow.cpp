@@ -9,7 +9,7 @@
 
 #include "enableforframelesswindow.h"
 #include "blackmisc/icons.h"
-#include <QSizeGrip>
+#include "blackmisc/blackmiscfreefunctions.h"
 #include <QStatusBar>
 #include <QPushButton>
 
@@ -28,6 +28,7 @@ namespace BlackGui
     void CEnableForFramelessWindow::setMode(CEnableForFramelessWindow::WindowMode mode)
     {
         if (mode == this->m_windowMode) { return; }
+        // set the main window or dock widget
         this->m_widget->setWindowFlags(modeToWindowFlags(mode));
         this->setWindowAttributes(mode);
         this->m_widget->show();
@@ -45,7 +46,9 @@ namespace BlackGui
         // http://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5
         this->m_widget->setAttribute(Qt::WA_NoSystemBackground, frameless);
         this->m_widget->setAttribute(Qt::WA_TranslucentBackground, frameless);
-        this->m_widget->setProperty("frameless", frameless);
+
+        // property selector will check on string, so I directly provide a string
+        this->m_widget->setProperty("frameless", BlackMisc::boolToTrueFalse(frameless));
     }
 
     bool CEnableForFramelessWindow::handleMouseMoveEvent(QMouseEvent *event)
@@ -72,12 +75,25 @@ namespace BlackGui
         return false;
     }
 
-    void CEnableForFramelessWindow::addFramelessSizeGrip(QStatusBar *statusBar)
+    void CEnableForFramelessWindow::addFramelessSizeGripToStatusBar(QStatusBar *statusBar)
     {
         if (!statusBar) { return; }
-        QSizeGrip *grip = new QSizeGrip(this->m_widget);
-        grip->setObjectName("sg_FramelessSizeGrip");
-        statusBar->addPermanentWidget(grip);
+        if (!this->m_framelessSizeGrip)
+        {
+            this->m_framelessSizeGrip = new QSizeGrip(this->m_widget);
+            this->m_framelessSizeGrip->setObjectName("sg_FramelessSizeGrip");
+            statusBar->addPermanentWidget(this->m_framelessSizeGrip);
+        }
+        else
+        {
+            this->m_framelessSizeGrip->show();
+        }
+    }
+
+    void CEnableForFramelessWindow::hideFramelessSizeGripInStatusBar()
+    {
+        if (!this->m_framelessSizeGrip) { return; }
+        this->m_framelessSizeGrip->hide();
     }
 
     QHBoxLayout *CEnableForFramelessWindow::addFramelessCloseButton(QMenuBar *menuBar)

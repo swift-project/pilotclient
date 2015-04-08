@@ -1,14 +1,13 @@
+/** style is applied to a CDockWidgetInfoBar **/
+/** frameless is dynamic property**/
+/** for frameless only use QDockWidget[frameless="true"] QFrame **/
+
 QFrame {
   margin: 0px;
   padding-left: 6px;
   padding-right: 6px;
   padding-bottom: 0px;
-}
-
-/** frameless is dynamic property**/
-/** for frameless only use QDockWidget[frameless="true"] QFrame **/
-QDockWidget QFrame
- {
+  padding-top: 0px;
   background-color: darkslategray;
   background-image: url(:/textures/icons/textures/texture-outer.jpg);
   border: 0px;

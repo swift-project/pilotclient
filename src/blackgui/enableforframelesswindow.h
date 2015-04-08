@@ -18,6 +18,7 @@
 #include <QPushButton>
 #include <QHBoxLayout>
 #include <QMenuBar>
+#include <QSizeGrip>
 
 namespace BlackGui
 {
@@ -42,7 +43,7 @@ namespace BlackGui
         void setMode(WindowMode mode);
 
         //! Framless
-        void setFrameless(bool frameless);
+        virtual void setFrameless(bool frameless);
 
         //! Frameless?
         bool isFrameless() const { return this->m_windowMode == WindowFrameless; }
@@ -55,7 +56,10 @@ namespace BlackGui
 
     protected:
         //! Resize grip handle
-        void addFramelessSizeGrip(QStatusBar *statusBar);
+        void addFramelessSizeGripToStatusBar(QStatusBar *statusBar);
+
+        //! Resize grip handle
+        void hideFramelessSizeGripInStatusBar();
 
         //! Attributes
         void setWindowAttributes(WindowMode mode);
@@ -71,6 +75,7 @@ namespace BlackGui
         WindowMode   m_windowMode = WindowNormal;      //!< Window mode, \sa WindowMode
         bool         m_mainApplicationWindow = false;  //!< is the main application window (only 1)
         QWidget     *m_widget = nullptr;               //!< corresponding main window or dock widget
+        QSizeGrip   *m_framelessSizeGrip = nullptr;
 
         //! Mouse press, required for frameless window
         bool handleMousePressEvent(QMouseEvent *event);

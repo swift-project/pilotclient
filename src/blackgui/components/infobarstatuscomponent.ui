@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>27</height>
+    <width>415</width>
+    <height>20</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,10 +18,13 @@
     <normaloff>:/own/icons/own/swift/swift24.png</normaloff>:/own/icons/own/swift/swift24.png</iconset>
   </property>
   <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
+   <enum>QFrame::NoFrame</enum>
   </property>
   <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
+   <enum>QFrame::Plain</enum>
+  </property>
+  <property name="lineWidth">
+   <number>0</number>
   </property>
   <layout class="QHBoxLayout" name="hl_InfoBarStatus">
    <property name="spacing">

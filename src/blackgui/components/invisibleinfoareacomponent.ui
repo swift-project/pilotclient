@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CInvisibleInfoAreaComponent</class>
+ <widget class="QMainWindow" name="CInvisibleInfoAreaComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Invisible info area</string>
+  </property>
+  <widget class="QWidget" name="qw_InvisibleInfoArea"/>
+  <widget class="BlackGui::Components::CNavigatorDockWidget" name="comp_Navigator">
+   <property name="allowedAreas">
+    <set>Qt::LeftDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Navigator</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="qw_Navigaor"/>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::Components::CNavigatorDockWidget</class>
+   <extends>QDockWidget</extends>
+   <header>blackgui/components/navigatordockwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

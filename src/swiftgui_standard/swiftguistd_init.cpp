@@ -38,6 +38,8 @@ using namespace BlackGui::Components;
  */
 void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
 {
+    // POST(!) GUI init
+
     if (this->m_init) { return; }
     this->setVisible(false); // hide all, so no flashing windows during init
 
@@ -64,7 +66,7 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
         this->ui->vl_CentralWidgetOutside->addWidget(this->ui->sb_MainStatusBar, 0);
 
         // grip
-        this->addFramelessSizeGrip(this->ui->sb_MainStatusBar);
+        this->addFramelessSizeGripToStatusBar(this->ui->sb_MainStatusBar);
     }
 
     // timers
@@ -74,12 +76,13 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     this->createRuntime(runtimeConfig, this);
     CEnableForRuntime::setRuntimeForComponents(this->getRuntime(), this);
 
+    // info bar and status bar
+    this->m_statusBar.initStatusBar(this->ui->sb_MainStatusBar);
+    this->ui->dw_InfoBarStatus->allowStatusBar(false);
+    this->ui->dw_InfoBarStatus->setPreferredSizeWhenFloating(this->ui->dw_InfoBarStatus->size()); // set floating size
+
     // wire GUI signals
     this->initGuiSignals();
-
-    // status bar
-    this->ui->dw_InfoBarStatus->allowStatusBar(false);
-    this->m_statusBar.initStatusBar(this->ui->sb_MainStatusBar);
 
     // signal / slots contexts / timers
     connect(this->getIContextNetwork(), &IContextNetwork::connectionTerminated, this, &SwiftGuiStd::ps_onConnectionTerminated);
@@ -105,9 +108,6 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     this->ps_setMainPageToInfoArea();
     this->initDynamicMenus();
 
-    // navigation bars
-    // this->initNavigationBars();
-
     // starting
     this->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ApplicationGui, IContextApplication::ApplicationStarts);
 
@@ -126,15 +126,6 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     this->setVisible(true);
 
     this->m_init = true;
-}
-
-/*
- * Init navigation bars
- */
-void SwiftGuiStd::initNavigationBars()
-{
-    ui->ndw_NavigatorHorizontal->setVisible(false);
-    ui->ndw_NavigatorVertical->setVisible(false);
 }
 
 /*
@@ -170,9 +161,8 @@ void SwiftGuiStd::initGuiSignals()
     connect(this->ui->menu_WindowFont, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_WindowMinimize, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_WindowToggleOnTop, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_NavigatorHorizontal, &QAction::triggered, this, &SwiftGuiStd::ps_toggleNavigatorHorizontal);
-    connect(this->ui->menu_NavigatorVertical, &QAction::triggered, this, &SwiftGuiStd::ps_toggleNavigatorVertical);
-    connect(this->ui->menu_DebugMetaTypes, &QAction::triggered, this, &SwiftGuiStd::ps_toggleNavigatorHorizontal);
+    connect(this->ui->menu_WindowToggleNavigator, &QAction::triggered, this->ui->comp_InvisibleInfoArea, &CInvisibleInfoAreaComponent::toggleNavigator);
+    connect(this->ui->menu_DebugMetaTypes, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
 
     // command line / text messages
     connect(this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::displayInInfoWindow, this->m_compInfoWindow, &CInfoWindowComponent::display);

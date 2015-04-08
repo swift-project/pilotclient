@@ -90,6 +90,9 @@
       <property name="styleSheet">
        <string notr="true"/>
       </property>
+      <property name="lineWidth">
+       <number>0</number>
+      </property>
       <layout class="QVBoxLayout" name="vl_CentralFrameInside">
        <property name="leftMargin">
         <number>0</number>
@@ -125,7 +128,7 @@
           <enum>QFrame::NoFrame</enum>
          </property>
          <property name="currentIndex">
-          <number>2</number>
+          <number>3</number>
          </property>
          <widget class="QWidget" name="pg_MainInfoArea">
           <layout class="QVBoxLayout" name="vl_MainInfoArea">
@@ -190,6 +193,13 @@
            </property>
            <item>
             <widget class="BlackGui::Components::CInternalsComponent" name="comp_Internals" native="true"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="pg_InvisibleAreas">
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <widget class="BlackGui::Components::CInvisibleInfoAreaComponent" name="comp_InvisibleInfoArea" native="true"/>
            </item>
           </layout>
          </widget>
@@ -305,8 +315,7 @@
     <addaction name="menu_WindowFont"/>
     <addaction name="menu_WindowMinimize"/>
     <addaction name="menu_WindowToggleOnTop"/>
-    <addaction name="menu_NavigatorVertical"/>
-    <addaction name="menu_NavigatorHorizontal"/>
+    <addaction name="menu_WindowToggleNavigator"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menuWindow"/>
@@ -344,46 +353,34 @@
    <property name="allowedAreas">
     <set>Qt::TopDockWidgetArea</set>
    </property>
+   <property name="windowTitle">
+    <string>Info status bar</string>
+   </property>
    <attribute name="dockWidgetArea">
     <number>4</number>
    </attribute>
-   <widget class="BlackGui::Components::CInfoBarStatusComponent" name="comp_InfoBarStatus"/>
-  </widget>
-  <widget class="BlackGui::Components::CNavigatorDockWidget" name="ndw_NavigatorHorizontal">
-   <property name="floating">
-    <bool>false</bool>
-   </property>
-   <property name="features">
-    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
-   </property>
-   <property name="allowedAreas">
-    <set>Qt::NoDockWidgetArea</set>
-   </property>
-   <property name="windowTitle">
-    <string>Horizontal navigator</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="qw_NavigatorHorizontal"/>
-  </widget>
-  <widget class="BlackGui::Components::CNavigatorDockWidget" name="ndw_NavigatorVertical">
-   <property name="floating">
-    <bool>false</bool>
-   </property>
-   <property name="features">
-    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
-   </property>
-   <property name="allowedAreas">
-    <set>Qt::NoDockWidgetArea</set>
-   </property>
-   <property name="windowTitle">
-    <string>Vertical navigator</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="qw_NavigatorVertical"/>
+   <widget class="QWidget" name="qw_InfoBarStatusInner">
+    <layout class="QVBoxLayout" name="vl_InfoBarStatusOuter">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item alignment="Qt::AlignTop">
+      <widget class="BlackGui::Components::CInfoBarStatusComponent" name="comp_InfoBarStatus" native="true"/>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <action name="menu_TestLocationsEDDF">
    <property name="text">
@@ -466,9 +463,9 @@
     <string>Ctrl+W, Ctrl+T</string>
    </property>
   </action>
-  <action name="menu_NavigatorVertical">
+  <action name="menu_WindowToggleNavigator">
    <property name="text">
-    <string>Vertical navigator</string>
+    <string>Navigator</string>
    </property>
   </action>
   <action name="menu_NavigatorHorizontal">
@@ -516,9 +513,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CNavigatorDockWidget</class>
-   <extends>QDockWidget</extends>
-   <header>blackgui/components/navigatordockwidget.h</header>
+   <class>BlackGui::Components::CInvisibleInfoAreaComponent</class>
+   <extends>QWidget</extends>
+   <header>blackgui/components/invisibleinfoareacomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

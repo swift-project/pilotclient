@@ -22,9 +22,7 @@ namespace BlackGui
 {
     CDockWidgetInfoBar::CDockWidgetInfoBar(QWidget *parent) : CDockWidget(parent)
     {
-        this->setProperty("frameless", CGuiUtility::isMainWindowFrameless());
-        this->setMarginsWhenDocked(0, 0, 0, -1);
-        this->setWindowTitle("Info bar");
+        this->setWindowTitle("Info status bar");
         this->setWindowIcon(CIcons::swift24());
         this->ps_onStyleSheetsChanged();
     }
@@ -37,6 +35,7 @@ namespace BlackGui
 
     void CDockWidgetInfoBar::ps_onStyleSheetsChanged()
     {
+        if (!this->objectName().isEmpty()) { this->setMarginsFromSettings(); }
         QString st = CStyleSheetUtility::instance().style(CStyleSheetUtility::fileNameInfoBar());
         this->setStyleSheet(st);
     }

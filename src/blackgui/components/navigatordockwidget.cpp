@@ -7,7 +7,6 @@
  * contained in the LICENSE file.
  */
 
-
 #include "navigatordockwidget.h"
 #include "ui_navigatordockwidget.h"
 
@@ -18,7 +17,7 @@ namespace BlackGui
     namespace Components
     {
         CNavigatorDockWidget::CNavigatorDockWidget(QWidget *parent) :
-            CDockWidget(parent),
+            CDockWidgetInfoArea(parent),
             ui(new Ui::CNavigatorDockWidget)
         {
             ui->setupUi(this);

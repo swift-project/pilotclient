@@ -177,6 +177,9 @@ namespace BlackMisc
     //! Bool to yes / no
     QString boolToYesNo(bool v, bool  i18n = false);
 
+    //! Bool to true / false
+    QString boolToTrueFalse(bool v, bool  i18n = false);
+
     //! Get local host name
     const QString &localHostName();
 

@@ -308,17 +308,6 @@ void SwiftGuiStd::ps_onChangedMainInfoAreaFloating(bool floating)
     Q_UNUSED(floating);
 }
 
-void SwiftGuiStd::ps_toggleNavigatorHorizontal()
-{
-
-}
-
-void SwiftGuiStd::ps_toggleNavigatorVertical()
-{
-    bool v = ui->ndw_NavigatorVertical->isVisible();
-    ui->ndw_NavigatorVertical->setVisible(!v);
-}
-
 void SwiftGuiStd::playNotifcationSound(CNotificationSounds::Notification notification) const
 {
     if (!this->m_contextAudioAvailable) return;

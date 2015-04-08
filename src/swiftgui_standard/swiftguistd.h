@@ -58,7 +58,8 @@ public:
     {
         MainPageInfoArea = 0,
         MainPageLogin  = 1,
-        MainPageInternals = 2
+        MainPageInternals = 2,
+        MainPageInvisible = 3
     };
 
     //! Constructor
@@ -120,9 +121,6 @@ private:
 
     //! Init GUI signals
     void initGuiSignals();
-
-    //! Init the navigstion bars
-    void initNavigationBars();
 
     //! Init dynamic menus
     void initDynamicMenus();
@@ -240,13 +238,6 @@ private slots:
 
     //! Whole main info area floating
     void ps_onChangedMainInfoAreaFloating(bool floating);
-
-    //! Toggle horizontal navigator
-    void ps_toggleNavigatorHorizontal();
-
-    //! Toggle vertical navigator
-    void ps_toggleNavigatorVertical();
-
 };
 
 #pragma pop_macro("interface")

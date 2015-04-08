@@ -38,7 +38,17 @@
   <property name="dockOptions">
    <set>QMainWindow::AllowTabbedDocks|QMainWindow::ForceTabbedDocks</set>
   </property>
-  <widget class="QWidget" name="qw_centralWidgetEmpty"/>
+  <widget class="QWidget" name="qw_centralWidgetEmpty">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+  </widget>
   <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Cockpit">
    <property name="maximumSize">
     <size>
@@ -271,7 +281,7 @@
       <number>0</number>
      </property>
      <property name="topMargin">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="rightMargin">
       <number>0</number>
@@ -282,10 +292,13 @@
      <item>
       <widget class="BlackGui::Components::CTextMessageComponent" name="comp_TextMessages">
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::NoFrame</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Plain</enum>
+       </property>
+       <property name="lineWidth">
+        <number>0</number>
        </property>
       </widget>
      </item>
@@ -309,7 +322,7 @@
     <number>4</number>
    </attribute>
    <widget class="QWidget" name="qw_SimulatorInner">
-    <layout class="QVBoxLayout" name="verticalLayout">
+    <layout class="QVBoxLayout" name="vl_Simulator">
      <property name="spacing">
       <number>0</number>
      </property>
@@ -363,7 +376,7 @@
       <number>0</number>
      </property>
      <property name="topMargin">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="rightMargin">
       <number>0</number>
@@ -408,11 +421,14 @@
      </size>
     </property>
     <layout class="QVBoxLayout" name="vl_Weather">
+     <property name="spacing">
+      <number>0</number>
+     </property>
      <property name="leftMargin">
       <number>0</number>
      </property>
      <property name="topMargin">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="rightMargin">
       <number>0</number>
@@ -423,10 +439,13 @@
      <item>
       <widget class="QFrame" name="fr_WeatherDummy">
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::NoFrame</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Plain</enum>
+       </property>
+       <property name="lineWidth">
+        <number>0</number>
        </property>
       </widget>
      </item>
@@ -504,7 +523,7 @@
       <number>0</number>
      </property>
      <property name="topMargin">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="rightMargin">
       <number>0</number>
@@ -515,10 +534,13 @@
      <item>
       <widget class="BlackGui::Components::CLogComponent" name="comp_Log">
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::NoFrame</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Plain</enum>
+       </property>
+       <property name="lineWidth">
+        <number>0</number>
        </property>
       </widget>
      </item>
@@ -550,7 +572,7 @@
       <number>0</number>
      </property>
      <property name="topMargin">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="rightMargin">
       <number>0</number>

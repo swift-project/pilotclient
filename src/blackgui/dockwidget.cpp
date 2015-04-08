@@ -18,9 +18,10 @@
 
 namespace BlackGui
 {
-    CDockWidget::CDockWidget(QWidget *parent) :
+    CDockWidget::CDockWidget(bool allowStatusBar, QWidget *parent) :
         QDockWidget(parent),
-        CEnableForFramelessWindow(CEnableForFramelessWindow::WindowNormal, false, this)
+        CEnableForFramelessWindow(CEnableForFramelessWindow::WindowNormal, false, this),
+        m_allowStatusBar(allowStatusBar)
     {
 
         this->ps_onStyleSheetsChanged();
@@ -37,6 +38,9 @@ namespace BlackGui
 
     }
 
+    CDockWidget::CDockWidget(QWidget *parent): CDockWidget(true, parent)
+    { }
+
     void CDockWidget::setOriginalTitleBar()
     {
         if (!this->m_titleBarWidgetOriginal) { this->initTitleBarWidgets(); }
@@ -51,7 +55,7 @@ namespace BlackGui
         this->setTitleBarWidget(this->m_titleBarWidgetEmpty);
     }
 
-    void CDockWidget::setNullTitleBar()
+    void CDockWidget::setNullTitleBarWidget()
     {
         this->setTitleBarWidget(nullptr);
     }
@@ -61,9 +65,19 @@ namespace BlackGui
         this->m_marginsWhenFloating = margins;
     }
 
+    void CDockWidget::setMarginsWhenFramelessFloating(const QMargins &margins)
+    {
+        this->m_marginsWhenFramelessFloating = margins;
+    }
+
     void CDockWidget::setMarginsWhenFloating(int left, int top, int right, int bottom)
     {
         this->m_marginsWhenFloating = QMargins(left, top, right, bottom);
+    }
+
+    void CDockWidget::setMarginsWhenFramelessFloating(int left, int top, int right, int bottom)
+    {
+        this->m_marginsWhenFramelessFloating = QMargins(left, top, right, bottom);
     }
 
     void CDockWidget::setMarginsWhenDocked(const QMargins &margins)
@@ -123,9 +137,53 @@ namespace BlackGui
         this->m_preferredSizeWhenFloating = size;
     }
 
+    void CDockWidget::setFrameless(bool frameless)
+    {
+        CEnableForFramelessWindow::setFrameless(frameless);
+
+        // grip
+        bool hasStatusBar = this->m_statusBar.getStatusBar();
+        if (frameless)
+        {
+            if (hasStatusBar)
+            {
+                this->addFramelessSizeGripToStatusBar(this->m_statusBar.getStatusBar());
+            }
+        }
+        else
+        {
+            if (hasStatusBar)
+            {
+                this->hideFramelessSizeGripInStatusBar();
+            }
+        }
+
+        // margins
+        if (this->isFloating())
+        {
+            this->setContentsMargins(frameless ? this->m_marginsWhenFramelessFloating : this->m_marginsWhenFloating);
+        }
+
+        // resize
+        if (frameless)
+        {
+            QWidget *innerWidget = this->widget(); // the inner widget containing the layout
+            Q_ASSERT(innerWidget);
+            this->resize(innerWidget->size());
+        }
+
+        //! \todo CDockWidget, check if style sheet reload is needed
+        this->ps_onStyleSheetsChanged(); // force style sheet reload
+    }
+
     void CDockWidget::toggleFloating()
     {
-        this->setFloating(!this->isFloating());
+        bool floating = !this->isFloating();
+        if (!floating)
+        {
+            this->setFrameless(false);
+        }
+        this->setFloating(floating);
     }
 
     void CDockWidget::toggleVisibility()
@@ -137,6 +195,18 @@ namespace BlackGui
         else
         {
             this->show();
+        }
+    }
+
+    void CDockWidget::toggleFrameless()
+    {
+        if (this->isFrameless())
+        {
+            this->setFrameless(false);
+        }
+        else
+        {
+            this->setFrameless(true);
         }
     }
 
@@ -174,11 +244,21 @@ namespace BlackGui
         if (this->isFloating())
         {
             contextMenu->addAction(BlackMisc::CIcons::dockTop16(), "Dock", this, SLOT(toggleFloating()));
+            if (this->isFrameless())
+            {
+                contextMenu->addAction(BlackMisc::CIcons::tableSheet16(), "Normal window", this, SLOT(toggleFrameless()));
+            }
+            else
+            {
+                contextMenu->addAction(BlackMisc::CIcons::tableSheet16(), "Frameless", this, SLOT(toggleFrameless()));
+            }
+            contextMenu->addAction(BlackMisc::CIcons::refresh16(), "Redraw", this, SLOT(update()));
         }
         else
         {
             contextMenu->addAction(BlackMisc::CIcons::floatOne16(), "Float", this, SLOT(toggleFloating()));
         }
+
     }
 
     void CDockWidget::initialFloating()
@@ -204,6 +284,43 @@ namespace BlackGui
         }
     }
 
+    bool CDockWidget::setMarginsFromSettings(const QString &section)
+    {
+        QString sectionUsed(section.isEmpty() ? this->objectName() : section);
+        if (sectionUsed.isEmpty()) { return false; }
+        const QSettings *settings = CStyleSheetUtility::instance().iniFile();
+        if (!settings) { return false; }
+
+        // checked if value exists as there is no way to check if key/section exist
+        if (settings->value(sectionUsed + "/margindocked.left").toString().isEmpty())
+        {
+            // no values considered as no section, now we check if an alias exists
+            sectionUsed = settings->value("alias/" + sectionUsed).toString();
+            if (sectionUsed.isEmpty()) { return false; }
+            if (settings->value(sectionUsed + "/margindocked.left").toString().isEmpty()) { return false; }
+        }
+
+        if (settings)
+        {
+            this->setMarginsWhenDocked(
+                settings->value(sectionUsed + "/margindocked.left", 1).toInt(),
+                settings->value(sectionUsed + "/margindocked.top", 1).toInt(),
+                settings->value(sectionUsed + "/margindocked.right", 1).toInt(),
+                settings->value(sectionUsed + "/margindocked.bottom", 1).toInt());
+            this->setMarginsWhenFloating(
+                settings->value(sectionUsed + "/marginfloating.left", 10).toInt(),
+                settings->value(sectionUsed + "/marginfloating.top", 10).toInt(),
+                settings->value(sectionUsed + "/marginfloating.right", 10).toInt(),
+                settings->value(sectionUsed + "/marginfloating.bottom", 10).toInt());
+            this->setMarginsWhenFramelessFloating(
+                settings->value(sectionUsed + "/marginfloating.frameless.left", 5).toInt(),
+                settings->value(sectionUsed + "/marginfloating.frameless.top", 5).toInt(),
+                settings->value(sectionUsed + "/marginfloating.frameless.right", 5).toInt(),
+                settings->value(sectionUsed + "/marginfloating.frameless.bottom", 5).toInt());
+        }
+        return true;
+    }
+
     void CDockWidget::ps_onTopLevelChanged(bool topLevel)
     {
         if (topLevel)
@@ -212,21 +329,22 @@ namespace BlackGui
             {
                 QDockWidget::setWindowTitle(this->m_windowTitleBackup);
             }
-            this->setNullTitleBar();
-            this->setContentsMargins(this->m_marginsWhenFloating);
+            this->setNullTitleBarWidget();
             if (!this->m_wasAlreadyFloating) { this->initialFloating(); }
+
+            this->setContentsMargins(
+                this->isFrameless() ?
+                this->m_marginsWhenFramelessFloating :
+                this->m_marginsWhenFloating
+            );
             this->m_statusBar.show();
-
-            if (this->m_wasAlreadyFloating || this->m_resetedFloating)
-            {
-                //! \todo dock widget frameless
-                // this->setFrameless(topLevel);
-            }
-
             this->m_wasAlreadyFloating = true;
         }
         else
         {
+            // frameless
+            this->setFrameless(false);
+
             if (!this->m_windowTitleWhenDocked) { QDockWidget::setWindowTitle(""); }
             this->m_statusBar.hide();
             this->setEmptyTitleBar();
@@ -237,9 +355,6 @@ namespace BlackGui
             {
                 this->setMinimumSize(this->m_initialDockedMinimumSize);
             }
-
-            // frameless
-            this->setFrameless(topLevel);
         }
 
         // relay
@@ -259,17 +374,17 @@ namespace BlackGui
         if (!this->m_allowStatusBar) { return; }
         this->m_statusBar.initStatusBar();
 
-        QWidget *innerDockWidget = this->widget(); // the inner widget containing the layout
-        Q_ASSERT(innerDockWidget);
-        if (!innerDockWidget) { return; }
-        QVBoxLayout *vLayout = qobject_cast<QVBoxLayout *>(innerDockWidget->layout());
+        QWidget *innerWidget = this->widget(); // the inner widget containing the layout
+        Q_ASSERT(innerWidget);
+        if (!innerWidget) { return; }
+        QVBoxLayout *vLayout = qobject_cast<QVBoxLayout *>(innerWidget->layout());
         Q_ASSERT(vLayout);
         if (!vLayout) { return; }
         vLayout->addWidget(this->m_statusBar.getStatusBar(), 0, Qt::AlignBottom);
 
         // adjust stretching of the original widget. It was the only widget so far
         // and should occupy maximum space
-        QWidget *compWidget = innerDockWidget->findChild<QWidget *>(QString(), Qt::FindDirectChildrenOnly);
+        QWidget *compWidget = innerWidget->findChild<QWidget *>(QString(), Qt::FindDirectChildrenOnly);
         Q_ASSERT(compWidget);
         if (!compWidget) { return; }
         QSizePolicy sizePolicy = compWidget->sizePolicy();
@@ -293,6 +408,6 @@ namespace BlackGui
 
     void CDockWidget::ps_onStyleSheetsChanged()
     {
-        // void, for further extensions
+        this->update();
     }
 } // namespace

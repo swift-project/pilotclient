@@ -499,6 +499,15 @@ namespace BlackGui
         }
     }
 
+    void CInfoArea::setMarginsWhenFramelessFloating(int left, int top, int right, int bottom)
+    {
+        for (CDockWidgetInfoArea *dw : this->m_dockWidgetInfoAreas)
+        {
+            //! Margins when window is floating
+            dw->setMarginsWhenFramelessFloating(left, top, right, bottom);
+        }
+    }
+
     void CInfoArea::setMarginsWhenDocked(int left, int top, int right, int bottom)
     {
         for (CDockWidgetInfoArea *dw : this->m_dockWidgetInfoAreas)
@@ -534,24 +543,21 @@ namespace BlackGui
 
     void CInfoArea::iniFileBasedSettings()
     {
+        const QString section(this->objectName());
         const QSettings *settings = CStyleSheetUtility::instance().iniFile();
-        if (settings)
+        if (settings && !section.isEmpty())
         {
-            this->setMarginsWhenDocked(
-                settings->value("infoarea/margindocked.left").toInt(),
-                settings->value("infoarea/margindocked.top").toInt(),
-                settings->value("infoarea/margindocked.right").toInt(),
-                settings->value("infoarea/margindocked.bottom").toInt());
-            this->setMarginsWhenFloating(
-                settings->value("infoarea/marginfloating.left").toInt(),
-                settings->value("infoarea/marginfloating.top").toInt(),
-                settings->value("infoarea/marginfloating.right").toInt(),
-                settings->value("infoarea/marginfloating.bottom").toInt());
+            for (CDockWidgetInfoArea *dw : this->m_dockWidgetInfoAreas)
+            {
+                //! Margins when window is floating
+                dw->setMarginsFromSettings(section);
+            }
         }
         else
         {
-            // some defaut if not available
-            this->setMarginsWhenFloating(10, 10, 20, 20); // left, top, right, bottom
+            // some defaults if not available
+            this->setMarginsWhenFloating(10, 10, 10, 10); // left, top, right, bottom
+            this->setMarginsWhenFramelessFloating(5, 5, 5, 5); // left, top, right, bottom
             this->setMarginsWhenDocked(1, 1, 1, 1);   // top has no effect
         }
     }

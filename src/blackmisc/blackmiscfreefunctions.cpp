@@ -413,9 +413,14 @@ QString BlackMisc::boolToOnOff(bool v, bool i18n)
     return v ? "on" : "off";
 }
 
-
 QString BlackMisc::boolToYesNo(bool v, bool i18n)
 {
     Q_UNUSED(i18n);
     return v ? "yes" : "no";
+}
+
+QString BlackMisc::boolToTrueFalse(bool v, bool i18n)
+{
+    Q_UNUSED(i18n);
+    return v ? "true" : "false";
 }

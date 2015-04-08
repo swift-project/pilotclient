@@ -46,7 +46,7 @@ namespace BlackGui
         void setEmptyTitleBar();
 
         //! Set null (nullptr) title bar
-        void setNullTitleBar();
+        void setNullTitleBarWidget();
 
         //! Margins when window is floating
         void setMarginsWhenFloating(const QMargins &margins);
@@ -54,11 +54,20 @@ namespace BlackGui
         //! Margins when window is floating
         void setMarginsWhenFloating(int left, int top, int right, int bottom);
 
+        //! Margins when window is floating (frameless)
+        void setMarginsWhenFramelessFloating(const QMargins &margins);
+
+        //! Margins when window is floating (frameless)
+        void setMarginsWhenFramelessFloating(int left, int top, int right, int bottom);
+
         //! Margins when widget is floating
         void setMarginsWhenDocked(const QMargins &margins);
 
         //! Margins when widget is floating
         void setMarginsWhenDocked(int left, int top, int right, int bottom);
+
+        //! Set margings from .ini file
+        bool setMarginsFromSettings(const QString &section = "");
 
         //! Window title backup
         const QString &windowTitleBackup() const { return this->m_windowTitleBackup; }
@@ -91,12 +100,18 @@ namespace BlackGui
         //! Position offset when floating first time
         void setOffsetWhenFloating(const QPoint &point) { this->m_offsetWhenFloating = point; }
 
+        //! \copydoc CEnableForFramelessWindow::setFrameless
+        virtual void setFrameless(bool frameless) override;
+
     public slots:
         //! Toggle floating
         void toggleFloating();
 
         //! Toggle visibility
         void toggleVisibility();
+
+        //! Toggle frameless mode (EXPERIMENTAL)
+        void toggleFrameless();
 
         //! Set title and internally keep a backup
         void setWindowTitle(const QString &title);
@@ -114,6 +129,9 @@ namespace BlackGui
     protected:
         //! Constructor
         explicit CDockWidget(QWidget *parent = nullptr);
+
+        //! Constructor
+        CDockWidget(bool allowStatusBar, QWidget *parent = nullptr);
 
         //! Override close event
         virtual void closeEvent(QCloseEvent *event) override;
@@ -141,18 +159,19 @@ namespace BlackGui
 
     private slots:
         //! Top level has been chaged
-        virtual void ps_onTopLevelChanged(bool topLevel);
+        void ps_onTopLevelChanged(bool topLevel);
 
         //! Context menu
-        virtual void ps_showContextMenu(const QPoint &pos);
+        void ps_showContextMenu(const QPoint &pos);
 
         //! Visibility has changed
-        virtual void ps_onVisibilityChanged(bool visible);
+        void ps_onVisibilityChanged(bool visible);
 
     private:
         QWidget *m_titleBarWidgetEmpty    = nullptr; //!< replacing default title bar
         QWidget *m_titleBarWidgetOriginal = nullptr; //!< the original title bar
         QMargins m_marginsWhenFloating;              //!< Offsets when window is floating
+        QMargins m_marginsWhenFramelessFloating;     //!< Offsets when window is frameless floating
         QMargins m_marginsWhenDocked;                //!< Offsets when window is docked
         CManagedStatusBar m_statusBar;               //!< Status bar when floating
         QString  m_windowTitleBackup;                //!< original title, even if the widget title is deleted for layout purposes
@@ -171,6 +190,7 @@ namespace BlackGui
 
         //! Init status bar
         void initStatusBar();
+
     };
 
 } // namespace
