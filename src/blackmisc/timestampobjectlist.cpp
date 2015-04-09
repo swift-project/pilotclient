@@ -23,6 +23,18 @@ namespace BlackMisc
     { }
 
     template <class OBJ, class CONTAINER>
+    const CONTAINER &ITimestampObjectList<OBJ, CONTAINER>::container() const
+    {
+        return static_cast<const CONTAINER &>(*this);
+    }
+
+    template <class OBJ, class CONTAINER>
+    CONTAINER &ITimestampObjectList<OBJ, CONTAINER>::container()
+    {
+        return static_cast<CONTAINER &>(*this);
+    }
+
+    template <class OBJ, class CONTAINER>
     CONTAINER ITimestampObjectList<OBJ, CONTAINER>::findBefore(qint64 msSinceEpoch) const
     {
         return this->container().findBy([&](const OBJ & obj)

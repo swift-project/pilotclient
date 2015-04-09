@@ -56,12 +56,6 @@ namespace BlackMisc
         //! Register metadata of unit and quantity
         static void registerMetadata();
 
-    protected:
-        //! Myself
-        virtual const CStatusMessageList &container() const override { return *this; }
-
-        //! Myself
-        virtual CStatusMessageList &container() override { return *this; }
     };
 }
 

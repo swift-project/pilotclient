@@ -18,37 +18,37 @@ namespace BlackMisc
     namespace Simulation
     {
 
-        const CSimulatedAircraft &COwnAircraftProviderSupportReadOnly::ownAircraft() const
+        const CSimulatedAircraft &COwnAircraftAwareReadOnly::ownAircraft() const
         {
             Q_ASSERT_X(this->m_ownAircraftProvider, "ownAircraft", "No object available");
             return this->m_ownAircraftProvider->ownAircraft();
         }
 
-        const CSimulatedAircraft &COwnAircraftProviderSupport::ownAircraft() const
+        const CSimulatedAircraft &COwnAircraftAware::ownAircraft() const
         {
             Q_ASSERT_X(this->m_ownAircraftProvider, "ownAircraft", "No object available");
             return this->m_ownAircraftProvider->ownAircraft();
         }
 
-        CSimulatedAircraft &COwnAircraftProviderSupport::ownAircraft()
+        CSimulatedAircraft &COwnAircraftAware::ownAircraft()
         {
             Q_ASSERT_X(this->m_ownAircraftProvider, "ownAircraft", "No object available");
             return this->m_ownAircraftProvider->ownAircraft();
         }
 
-        bool COwnAircraftProviderSupport::providerUpdateCockpit(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder, const QString &originator)
+        bool COwnAircraftAware::providerUpdateCockpit(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder, const QString &originator)
         {
             Q_ASSERT_X(this->m_ownAircraftProvider, "providerUpdateCockpit", "No object available");
             return this->m_ownAircraftProvider->updateCockpit(com1, com2, transponder, originator);
         }
 
-        bool COwnAircraftProviderSupport::providerUpdateActiveComFrequency(const CFrequency &frequency, int comUnit, const QString &originator)
+        bool COwnAircraftAware::providerUpdateActiveComFrequency(const CFrequency &frequency, int comUnit, const QString &originator)
         {
             Q_ASSERT_X(this->m_ownAircraftProvider, "providerUpdateActiveComFrequency", "No object available");
             return this->m_ownAircraftProvider->updateActiveComFrequency(frequency, comUnit, originator);
         }
 
-        bool COwnAircraftProviderSupport::providerUpdateSelcal(const CSelcal &selcal, const QString &originator)
+        bool COwnAircraftAware::providerUpdateSelcal(const CSelcal &selcal, const QString &originator)
         {
             Q_ASSERT_X(this->m_ownAircraftProvider, "providerUpdateSelcal", "No object available");
             return this->m_ownAircraftProvider->updateSelcal(selcal, originator);

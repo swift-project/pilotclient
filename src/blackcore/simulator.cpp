@@ -37,8 +37,8 @@ namespace BlackCore
                                        BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                                        QObject *parent)
         : ISimulator(parent),
-          COwnAircraftProviderSupport(ownAircraftProvider),
-          CRemoteAircraftProviderSupport(remoteAircraftProvider)
+          COwnAircraftAware(ownAircraftProvider),
+          CRemoteAircraftAware(remoteAircraftProvider)
     {
         m_oneSecondTimer = new QTimer(this);
         connect(this->m_oneSecondTimer, &QTimer::timeout, this, &CSimulatorCommon::ps_oneSecondTimer);

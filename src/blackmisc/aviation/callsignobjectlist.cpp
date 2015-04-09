@@ -25,6 +25,18 @@ namespace BlackMisc
         { }
 
         template <class OBJ, class CONTAINER>
+        const CONTAINER &ICallsignObjectList<OBJ, CONTAINER>::container() const
+        {
+            return static_cast<const CONTAINER &>(*this);
+        }
+
+        template <class OBJ, class CONTAINER>
+        CONTAINER &ICallsignObjectList<OBJ, CONTAINER>::container()
+        {
+            return static_cast<CONTAINER &>(*this);
+        }
+
+        template <class OBJ, class CONTAINER>
         bool ICallsignObjectList<OBJ, CONTAINER>::containsCallsign(const CCallsign &callsign) const
         {
             return this->container().contains(&OBJ::getCallsign, callsign);

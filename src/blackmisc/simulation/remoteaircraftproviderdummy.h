@@ -32,10 +32,10 @@ namespace BlackMisc
             CRemoteAircraftProviderDummy(QObject *parent = nullptr);
 
             //! IRemoteAircraftProviderReadOnly::remoteAircraft
-            virtual const CSimulatedAircraftList &remoteAircraft() const;
+            virtual const CSimulatedAircraftList &remoteAircraft() const override;
 
             //! IRemoteAircraftProvider::remoteAircraft
-            virtual CSimulatedAircraftList &remoteAircraft();
+            virtual CSimulatedAircraftList &remoteAircraft() override;
 
             //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraftParts
             virtual const BlackMisc::Aviation::CAircraftPartsList &remoteAircraftParts() const override;

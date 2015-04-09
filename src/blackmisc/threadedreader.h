@@ -46,9 +46,6 @@ namespace BlackMisc
         //! \copydoc CContinuousWorker::cleanup
         virtual void cleanup() override;
 
-        //! Thread ended of stop requested
-        virtual bool isFinished() const override;
-
         /*!
          * Set the update time
          * \param updatePeriodMs <=0 stops the timer
@@ -72,7 +69,6 @@ namespace BlackMisc
 
     private:
         QDateTime m_updateTimestamp; //!< when was file / resource read
-        bool m_stopped = false;      //!< optional network reply to be stopped
     };
 } // namespace
 

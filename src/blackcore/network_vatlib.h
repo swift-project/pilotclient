@@ -29,7 +29,7 @@ namespace BlackCore
      */
     class CNetworkVatlib :
             public INetwork,
-            public BlackMisc::Simulation::COwnAircraftProviderSupport // network vatlib consumes own aircraft data and sets ICAO/callsign data
+            public BlackMisc::Simulation::COwnAircraftAware // network vatlib consumes own aircraft data and sets ICAO/callsign data
     {
         Q_OBJECT
 

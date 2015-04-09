@@ -19,7 +19,7 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 
 Client::Client(QObject *parent)
-    : QObject(parent), COwnAircraftProviderSupport(COwnAircraftProviderDummy::instance()),
+    : QObject(parent), COwnAircraftAware(COwnAircraftProviderDummy::instance()),
       m_net(new BlackCore::CNetworkVatlib(COwnAircraftProviderDummy::instance(), this))
 {
 

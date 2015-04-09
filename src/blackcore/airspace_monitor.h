@@ -34,8 +34,8 @@ namespace BlackCore
      */
     class CAirspaceMonitor :
         public QObject,
-        public BlackMisc::Simulation::IRemoteAircraftProvider,            // those data will be provided from the class CAirspaceMonitor
-        public BlackMisc::Simulation::COwnAircraftProviderSupportReadOnly // used to obtain in memory inofmration about own aircraft
+        public BlackMisc::Simulation::IRemoteAircraftProvider,  // those data will be provided from the class CAirspaceMonitor
+        public BlackMisc::Simulation::COwnAircraftAwareReadOnly // used to obtain in memory inofmration about own aircraft
     {
         Q_OBJECT
         Q_INTERFACES(BlackMisc::Simulation::IRemoteAircraftProvider)
@@ -131,8 +131,8 @@ namespace BlackCore
             std::function<void(const BlackMisc::Aviation::CCallsign &)> removedAircraftSlot
         ) override;
 
-        const qint64 AircraftSituationsRemovedOffsetMs = 30 * 1000; //!< situations older than now - offset will be removed
-        const qint64 AircraftPartsRemoveOffsetMs = 30* 1000;        //!< parts older than now - offset will be removed
+        static const qint64 AircraftSituationsRemovedOffsetMs = 30 * 1000; //!< situations older than now - offset will be removed
+        static const qint64 AircraftPartsRemoveOffsetMs = 30* 1000;        //!< parts older than now - offset will be removed
 
     signals:
 

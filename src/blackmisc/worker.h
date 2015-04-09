@@ -130,7 +130,7 @@ namespace BlackMisc
 
         //! Returns true if the task has finished.
         //! \threadsafe But don't rely on this condition remaining true for any length of time.
-        virtual bool isFinished() const
+        bool isFinished() const
         {
             QMutexLocker lock(&m_finishedMutex);
             return m_finished;

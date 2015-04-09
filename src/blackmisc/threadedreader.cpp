@@ -32,8 +32,8 @@ namespace BlackMisc
 
     void CThreadedReader::requestStop()
     {
+        setFinished();
         QWriteLocker(&this->m_lock);
-        this->m_stopped = true;
         this->m_updateTimer->stop();
     }
 
@@ -45,13 +45,6 @@ namespace BlackMisc
     void CThreadedReader::cleanup()
     {
         // cleanup code would go here
-    }
-
-    bool CThreadedReader::isFinished() const
-    {
-        if (CContinuousWorker::isFinished()) { return true; }
-        QReadLocker(&this->m_lock);
-        return this->m_stopped;
     }
 
     void CThreadedReader::setInterval(int updatePeriodMs)

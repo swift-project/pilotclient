@@ -36,7 +36,7 @@ namespace BlackCore
     void exceptionDispatcher(const char *caller);
 
     CNetworkVatlib::CNetworkVatlib(Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent)
-        : INetwork(parent), COwnAircraftProviderSupport(ownAircraft),
+        : INetwork(parent), COwnAircraftAware(ownAircraft),
           m_loginMode(LoginNormal),
           m_status(vatStatusIdle),
           m_fsdTextCodec(QTextCodec::codecForName("latin1")),

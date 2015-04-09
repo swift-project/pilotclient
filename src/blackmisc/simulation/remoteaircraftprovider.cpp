@@ -16,67 +16,67 @@ namespace BlackMisc
     namespace Simulation
     {
 
-        const CSimulatedAircraftList &CRemoteAircraftProviderSupportReadOnly::remoteAircraft() const
+        const CSimulatedAircraftList &CRemoteAircraftAwareReadOnly::remoteAircraft() const
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, "renderedAircraft", "No object available");
             return this->m_remoteAircraftProvider->remoteAircraft();
         }
 
-        const Aviation::CAircraftSituationList &CRemoteAircraftProviderSupportReadOnly::remoteAircraftSituations() const
+        const Aviation::CAircraftSituationList &CRemoteAircraftAwareReadOnly::remoteAircraftSituations() const
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, "renderedAircraftSituations", "No object available");
             return this->m_remoteAircraftProvider->remoteAircraftSituations();
         }
 
-        const Aviation::CAircraftPartsList &CRemoteAircraftProviderSupportReadOnly::remoteAircraftParts() const
+        const Aviation::CAircraftPartsList &CRemoteAircraftAwareReadOnly::remoteAircraftParts() const
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, "renderedAircraftParts", "No object available");
             return this->m_remoteAircraftProvider->remoteAircraftParts();
         }
 
-        const CSimulatedAircraftList &CRemoteAircraftProviderSupport::remoteAircraft() const
+        const CSimulatedAircraftList &CRemoteAircraftAware::remoteAircraft() const
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, "renderedAircraft", "No object available");
             return this->m_remoteAircraftProvider->remoteAircraft();
         }
 
-        CSimulatedAircraftList &CRemoteAircraftProviderSupport::remoteAircraft()
+        CSimulatedAircraftList &CRemoteAircraftAware::remoteAircraft()
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, "renderedAircraft", "No object available");
             return this->m_remoteAircraftProvider->remoteAircraft();
         }
 
-        const CAircraftSituationList &CRemoteAircraftProviderSupport::remoteAircraftSituations() const
+        const CAircraftSituationList &CRemoteAircraftAware::remoteAircraftSituations() const
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, "renderedAircraftSituations", "No object available");
             return this->m_remoteAircraftProvider->remoteAircraftSituations();
         }
 
-        CAircraftSituationList &CRemoteAircraftProviderSupport::remoteAircraftSituations()
+        CAircraftSituationList &CRemoteAircraftAware::remoteAircraftSituations()
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, "renderedAircraftSituations", "No object available");
             return this->m_remoteAircraftProvider->remoteAircraftSituations();
         }
 
-        const CAircraftPartsList &CRemoteAircraftProviderSupport::remoteAircraftParts() const
+        const CAircraftPartsList &CRemoteAircraftAware::remoteAircraftParts() const
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, "renderedAircraftParts", "No object available");
             return this->m_remoteAircraftProvider->remoteAircraftParts();
         }
 
-        CAircraftPartsList &CRemoteAircraftProviderSupport::remoteAircraftParts()
+        CAircraftPartsList &CRemoteAircraftAware::remoteAircraftParts()
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, "renderedAircraftParts", "No object available");
             return this->m_remoteAircraftProvider->remoteAircraftParts();
         }
 
-        bool CRemoteAircraftProviderSupport::providerUpdateAircraftModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const QString &originator)
+        bool CRemoteAircraftAware::providerUpdateAircraftModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const QString &originator)
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, "providerUpdateAircraftModel", "No object available");
             return this->m_remoteAircraftProvider->updateAircraftModel(callsign, model, originator);
         }
 
-        bool CRemoteAircraftProviderSupport::providerUpdateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRedering, const QString &originator)
+        bool CRemoteAircraftAware::providerUpdateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRedering, const QString &originator)
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, "providerUpdateAircraftEnabled", "No object available");
             return this->m_remoteAircraftProvider->updateAircraftEnabled(callsign, enabledForRedering, originator);

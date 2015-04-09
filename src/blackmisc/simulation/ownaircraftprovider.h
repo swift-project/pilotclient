@@ -70,13 +70,13 @@ namespace BlackMisc
             static COwnAircraftProviderDummy *instance();
 
             //! \copydoc IOwnAircraftProviderReadOnly::ownAircraft
-            virtual const CSimulatedAircraft &ownAircraft() const { return this->m_ownAircraft; }
+            virtual const CSimulatedAircraft &ownAircraft() const override { return this->m_ownAircraft; }
 
             //! \copydoc IOwnAircraftProvider::ownAircraft
-            virtual CSimulatedAircraft &ownAircraft() { return this->m_ownAircraft; }
+            virtual CSimulatedAircraft &ownAircraft() override { return this->m_ownAircraft; }
 
             //! \copydoc IOwnAircraftProvider::getOwnAircraft
-            virtual CSimulatedAircraft getOwnAircraft() const { return this->m_ownAircraft; }
+            virtual CSimulatedAircraft getOwnAircraft() const override { return this->m_ownAircraft; }
 
         public slots:
             //! \copydoc IOwnAircraftProvider::updateCockpit
@@ -92,8 +92,8 @@ namespace BlackMisc
             BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft;
         };
 
-        //! Class which can be directly used providing access to such an interface
-        class COwnAircraftProviderSupportReadOnly
+        //! Delegating class which can be directly used to access an \sa IOwnAircraftProviderReadOnly instance
+        class COwnAircraftAwareReadOnly
         {
         public:
             //! \copydoc IOwnAircraftProviderReadOnly::ownAircraft
@@ -101,12 +101,12 @@ namespace BlackMisc
 
         protected:
             //! Constructor
-            COwnAircraftProviderSupportReadOnly(const IOwnAircraftProviderReadOnly *ownAircraftProvider) : m_ownAircraftProvider(ownAircraftProvider) {}
+            COwnAircraftAwareReadOnly(const IOwnAircraftProviderReadOnly *ownAircraftProvider) : m_ownAircraftProvider(ownAircraftProvider) {}
             const IOwnAircraftProviderReadOnly *m_ownAircraftProvider = nullptr; //!< access to object
         };
 
-        //! Delegating class which can be directly used providing access to such an interface
-        class COwnAircraftProviderSupport
+        //! Delegating class which can be directly used to access an \sa IOwnAircraftProvider instance
+        class COwnAircraftAware
         {
         public:
             //! \copydoc IOwnAircraftProviderReadOnly::ownAircraft
@@ -126,7 +126,7 @@ namespace BlackMisc
 
         protected:
             //! Constructor
-            COwnAircraftProviderSupport(IOwnAircraftProvider *ownAircraftProvider) : m_ownAircraftProvider(ownAircraftProvider) { Q_ASSERT(ownAircraftProvider); }
+            COwnAircraftAware(IOwnAircraftProvider *ownAircraftProvider) : m_ownAircraftProvider(ownAircraftProvider) { Q_ASSERT(ownAircraftProvider); }
             IOwnAircraftProvider *m_ownAircraftProvider = nullptr; //!< access to object
         };
 

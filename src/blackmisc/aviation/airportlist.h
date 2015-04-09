@@ -55,13 +55,6 @@ namespace BlackMisc
             //! Register metadata
             static void registerMetadata();
 
-        protected:
-            //! Myself
-            virtual const CAirportList &container() const override { return *this; }
-
-            //! Myself
-            virtual CAirportList &container() override { return *this; }
-
         };
     } //namespace
 } // namespace

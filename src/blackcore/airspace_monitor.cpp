@@ -28,7 +28,7 @@ namespace BlackCore
 
     CAirspaceMonitor::CAirspaceMonitor(QObject *parent, const BlackMisc::Simulation::IOwnAircraftProviderReadOnly *ownAircraftProvider, INetwork *network, CVatsimBookingReader *bookings, CVatsimDataFileReader *dataFile)
         : QObject(parent),
-          COwnAircraftProviderSupportReadOnly(ownAircraftProvider),
+          COwnAircraftAwareReadOnly(ownAircraftProvider),
           m_network(network), m_vatsimBookingReader(bookings), m_vatsimDataFileReader(dataFile),
           m_atcWatchdog(this), m_aircraftWatchdog(this)
     {
@@ -144,8 +144,7 @@ namespace BlackCore
         CSimulatedAircraft aircraft = m_aircraftInRange.findFirstByCallsign(callsign);
         if (!aircraft.hasValidCallsign()) { return false; }
 
-        CAircraftModel newModel(model);
-        aircraft.setModel(newModel); // this consolidates all common data such as callsign, ICAO ...
+        aircraft.setModel(model); // this consolidates all common data such as callsign, ICAO ...
 
         CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexModel, aircraft.getModel().toCVariant());
         int c = m_aircraftInRange.applyIfCallsign(callsign, vm);

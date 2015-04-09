@@ -19,7 +19,9 @@
 #include <QMap>
 #include <functional>
 
-class Client : public QObject, BlackMisc::Simulation::COwnAircraftProviderSupport
+class Client :
+    public QObject,
+    public BlackMisc::Simulation::COwnAircraftAware
 {
     Q_OBJECT
 

@@ -89,13 +89,6 @@ namespace BlackMisc
             //! Register metadata
             static void registerMetadata();
 
-        protected:
-            //! Myself
-            virtual const CTextMessageList &container() const override { return *this; }
-
-            //! Myself
-            virtual CTextMessageList &container() override { return *this; }
-
         };
     } //namespace
 } // namespace

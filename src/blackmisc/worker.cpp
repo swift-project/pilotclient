@@ -46,6 +46,7 @@ namespace BlackMisc
 
         auto *thread = new CRegularThread(m_owner);
 
+        Q_ASSERT(m_owner); // must not be null, see (9) https://dev.vatsim-germany.org/issues/402
         if (m_owner)
         {
             QString ownerName = m_owner->objectName().isEmpty() ? m_owner->metaObject()->className() : m_owner->objectName();

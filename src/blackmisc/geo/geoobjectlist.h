@@ -39,10 +39,10 @@ namespace BlackMisc
             IGeoObjectList();
 
             //! Container
-            virtual const CONTAINER &container() const = 0;
+            const CONTAINER &container() const;
 
             //! Container
-            virtual CONTAINER &container() = 0;
+            CONTAINER &container();
         };
 
         //! List of objects with geo coordinates.

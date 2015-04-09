@@ -126,16 +126,9 @@ namespace BlackCore
 
     void CVatsimDataFileReader::readInBackgroundThread()
     {
-        if (QThread::currentThread() == QObject::thread())
-        {
-            ps_read();
-        }
-        else
-        {
-            bool s = QMetaObject::invokeMethod(this, "ps_read", Qt::BlockingQueuedConnection);
-            Q_ASSERT(s);
-            Q_UNUSED(s);
-        }
+        bool s = QMetaObject::invokeMethod(this, "ps_read");
+        Q_ASSERT(s);
+        Q_UNUSED(s);
     }
 
     void CVatsimDataFileReader::ps_read()

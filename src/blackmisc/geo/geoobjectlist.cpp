@@ -25,6 +25,18 @@ namespace BlackMisc
         { }
 
         template <class OBJ, class CONTAINER>
+        const CONTAINER &IGeoObjectList<OBJ, CONTAINER>::container() const
+        {
+            return static_cast<const CONTAINER &>(*this);
+        }
+
+        template <class OBJ, class CONTAINER>
+        CONTAINER &IGeoObjectList<OBJ, CONTAINER>::container()
+        {
+            return static_cast<CONTAINER &>(*this);
+        }
+
+        template <class OBJ, class CONTAINER>
         IGeoObjectWithRelativePositionList<OBJ, CONTAINER>::IGeoObjectWithRelativePositionList()
         { }
 

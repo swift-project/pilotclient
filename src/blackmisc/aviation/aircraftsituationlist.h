@@ -43,13 +43,6 @@ namespace BlackMisc
             //! Metadata
             static void registerMetadata();
 
-        protected:
-            //! Myself
-            virtual const CAircraftSituationList &container() const override { return *this; }
-
-            //! Myself
-            virtual CAircraftSituationList &container() override { return *this; }
-
         };
     } // namespace
 } // namespace

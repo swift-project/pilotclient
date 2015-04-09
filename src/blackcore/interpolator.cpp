@@ -21,7 +21,7 @@ namespace BlackCore
 
     IInterpolator::IInterpolator(IRemoteAircraftProviderReadOnly *provider, const QString &workerName, QObject *parent) :
         CContinuousWorker(parent, workerName),
-        CRemoteAircraftProviderSupportReadOnly(provider)
+        CRemoteAircraftAwareReadOnly(provider)
     {
         Q_ASSERT(provider);
         this->m_situationsByCallsign = this->remoteAircraftSituations().splitPerCallsign();

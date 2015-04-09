@@ -259,8 +259,8 @@ namespace BlackCore
     //! Common base class with providers, interface and some base functionality
     class CSimulatorCommon :
         public BlackCore::ISimulator,
-        public BlackMisc::Simulation::COwnAircraftProviderSupport,   // gain access to in memor own aircraft data
-        public BlackMisc::Simulation::CRemoteAircraftProviderSupport // gain access to in memory remote aircraft data
+        public BlackMisc::Simulation::COwnAircraftAware,   // gain access to in memor own aircraft data
+        public BlackMisc::Simulation::CRemoteAircraftAware // gain access to in memory remote aircraft data
     {
 
         Q_OBJECT

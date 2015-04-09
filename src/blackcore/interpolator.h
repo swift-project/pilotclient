@@ -23,7 +23,7 @@ namespace BlackCore
     //! Interpolator, calculation inbetween positions
     class IInterpolator :
         public BlackMisc::CContinuousWorker,
-        public BlackMisc::Simulation::CRemoteAircraftProviderSupportReadOnly
+        public BlackMisc::Simulation::CRemoteAircraftAwareReadOnly
     {
         Q_OBJECT
 

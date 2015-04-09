@@ -89,8 +89,8 @@ namespace BlackMisc
             virtual bool updateFastPositionUpdates(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates, const QString &originator) = 0;
         };
 
-        //! Class which can be directly used providing access to such an interface
-        class CRemoteAircraftProviderSupportReadOnly
+        //! Class which can be directly used to access an \sa IRemoteAircraftProviderReadOnly object
+        class CRemoteAircraftAwareReadOnly
         {
         public:
             //! \copydoc IRemoteAircraftProviderReadOnly::renderedAircraft
@@ -103,16 +103,16 @@ namespace BlackMisc
             virtual const BlackMisc::Aviation::CAircraftPartsList &remoteAircraftParts() const;
 
             //! Destructor
-            virtual ~CRemoteAircraftProviderSupportReadOnly() {}
+            virtual ~CRemoteAircraftAwareReadOnly() {}
 
         protected:
             //! Constructor
-            CRemoteAircraftProviderSupportReadOnly(const IRemoteAircraftProviderReadOnly *remoteAircraftProvider) : m_remoteAircraftProvider(remoteAircraftProvider) {}
+            CRemoteAircraftAwareReadOnly(const IRemoteAircraftProviderReadOnly *remoteAircraftProvider) : m_remoteAircraftProvider(remoteAircraftProvider) {}
             const IRemoteAircraftProviderReadOnly *m_remoteAircraftProvider = nullptr; //!< access to object
         };
 
-        //! Delegating class which can be directly used providing access to such an interface
-        class CRemoteAircraftProviderSupport
+        //! Class which can be directly used to access an \sa IRemoteAircraftProvider object
+        class CRemoteAircraftAware
         {
         public:
             //! \copydoc IRemoteAircraftProviderReadOnly::renderedAircraft
@@ -140,11 +140,11 @@ namespace BlackMisc
             virtual bool providerUpdateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator);
 
             //! Destructor
-            virtual ~CRemoteAircraftProviderSupport() {}
+            virtual ~CRemoteAircraftAware() {}
 
         protected:
             //! Constructor
-            CRemoteAircraftProviderSupport(IRemoteAircraftProvider *remoteAircraftProvider) : m_remoteAircraftProvider(remoteAircraftProvider) { Q_ASSERT(remoteAircraftProvider); }
+            CRemoteAircraftAware(IRemoteAircraftProvider *remoteAircraftProvider) : m_remoteAircraftProvider(remoteAircraftProvider) { Q_ASSERT(remoteAircraftProvider); }
             IRemoteAircraftProvider *m_remoteAircraftProvider = nullptr; //!< access to object
         };
 
