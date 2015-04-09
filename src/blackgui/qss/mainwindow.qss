@@ -326,6 +326,7 @@ QComboBox {
 QComboBox QAbstractItemView {
   background-color: lightgray;
   color: black;
+  qproperty-textElideMode: ElideMiddle;
 }
 
 QDoubleSpinBox {

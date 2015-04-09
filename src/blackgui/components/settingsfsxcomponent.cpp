@@ -11,6 +11,7 @@
 #include "ui_settingsfsxcomponent.h"
 #include "blackcore/context_simulator.h"
 #include "blackcore/context_application.h"
+#include "blackmisc/simulation/fsx/simconnectutilities.h"
 #include "blackmisc/networkutils.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/logmessage.h"
@@ -42,9 +43,7 @@ namespace BlackGui
         }
 
         CSettingsFsxComponent::~CSettingsFsxComponent()
-        {
-            delete ui;
-        }
+        { }
 
         /*
          * SimConnect working?
@@ -56,28 +55,28 @@ namespace BlackGui
 
             if (address.isEmpty() || port.isEmpty())
             {
-                CLogMessage(this).warning("no address or port");
+                CLogMessage(this).validationWarning("No address or port");
                 return;
             }
             if (!CNetworkUtils::isValidIPv4Address(address))
             {
-                CLogMessage(this).warning("IPv4 address invalid");
+                CLogMessage(this).validationWarning("IPv4 address invalid");
                 return;
             }
             if (!CNetworkUtils::isValidPort(port))
             {
-                CLogMessage(this).warning("invalid port");
+                CLogMessage(this).validationWarning("Invalid port");
                 return;
             }
             int p = port.toInt();
             QString msg;
             if (!CNetworkUtils::canConnect(address, p, msg))
             {
-                CLogMessage(this).warning(msg);
+                CLogMessage(this).validationWarning(msg);
                 return;
             }
 
-            CLogMessage(this).info("Connected to %1:%2") << address << port;
+            CLogMessage(this).validationInfo("Connected to %1:%2") << address << port;
         }
 
         /*
@@ -85,9 +84,9 @@ namespace BlackGui
          */
         void CSettingsFsxComponent::saveSimConnectCfg()
         {
-            if (!this->getIContextSimulator() || !this->getIContextSimulator()->isSimulatorAvailable())
+            if (!this->getIContextSimulator())
             {
-                CLogMessage(this).error("Simulator not available");
+                CLogMessage(this).validationError("Simulator driver not available");
                 return;
             }
             QString address = this->ui->le_SettingsFsxAddress->text().trimmed();
@@ -95,22 +94,27 @@ namespace BlackGui
 
             if (address.isEmpty() || port.isEmpty())
             {
-                CLogMessage(this).warning("no address or port");
+                CLogMessage(this).validationError("No address or port");
                 return;
             }
             if (!CNetworkUtils::isValidIPv4Address(address))
             {
-                CLogMessage(this).warning("IPv4 address invalid");
+                CLogMessage(this).validationError("IPv4 address invalid");
                 return;
             }
             if (!CNetworkUtils::isValidPort(port))
             {
-                CLogMessage(this).warning("invalid port");
+                CLogMessage(this).validationError("Invalid port");
                 return;
             }
             int p = port.toInt();
             QString fileName = this->getIContextSimulator()->getSimulatorInfo().getSimulatorSetupValueAsString(CFsxSimulatorSetup::SetupSimConnectCfgFile);
-            Q_ASSERT(!fileName.isEmpty());
+            if (fileName.isEmpty())
+            {
+                CLogMessage(this).validationError("Invalid filename or filename empty");
+                return;
+            }
+
             // write either local or remote file
             bool localSimulatorObject = this->getIContextSimulator()->isUsingImplementingObject();
             bool success = localSimulatorObject ?
@@ -118,11 +122,11 @@ namespace BlackGui
                            this->getIContextApplication()->writeToFile(fileName, CSimConnectUtilities::simConnectCfg(address, p));
             if (success)
             {
-                CLogMessage(this).info(localSimulatorObject ? "Written local %1" : "Written remote %1") << fileName;
+                CLogMessage(this).validationInfo(localSimulatorObject ? "Written local %1" : "Written remote %1") << fileName;
             }
             else
             {
-                CLogMessage(this).error("Cannot write %1") << fileName;
+                CLogMessage(this).validationError("Cannot write %1") << fileName;
             }
             this->ui->pb_SettingsFsxExistsSimconncetCfg->click(); // update status
         }
@@ -132,9 +136,9 @@ namespace BlackGui
          */
         void CSettingsFsxComponent::simConnectCfgFile()
         {
-            if (!this->getIContextSimulator() || !this->getIContextSimulator()->isSimulatorAvailable())
+            if (!this->getIContextSimulator())
             {
-                CLogMessage(this).error("Simulator not available");
+                CLogMessage(this).validationError("Simulator driver not available");
                 return;
             }
 
@@ -149,7 +153,6 @@ namespace BlackGui
             {
                 if (!this->getIContextSimulator()) return;
                 QString fileName = BlackMisc::Simulation::Fsx::CSimConnectUtilities::getLocalSimConnectCfgFilename();
-                QString m = QString("Deleted %1 ").append(fileName);
                 if (this->getIContextSimulator()->isUsingImplementingObject())
                 {
                     QFile f(fileName);
@@ -180,5 +183,5 @@ namespace BlackGui
                 }
             }
         }
-    }
-}
+    } // ns
+} // ns

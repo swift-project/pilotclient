@@ -75,7 +75,7 @@ namespace BlackGui
         WindowMode   m_windowMode = WindowNormal;      //!< Window mode, \sa WindowMode
         bool         m_mainApplicationWindow = false;  //!< is the main application window (only 1)
         QWidget     *m_widget = nullptr;               //!< corresponding main window or dock widget
-        QSizeGrip   *m_framelessSizeGrip = nullptr;
+        QSizeGrip   *m_framelessSizeGrip = nullptr;    //!< size grip object
 
         //! Mouse press, required for frameless window
         bool handleMousePressEvent(QMouseEvent *event);

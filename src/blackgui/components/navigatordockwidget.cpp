@@ -20,6 +20,7 @@ namespace BlackGui
             CDockWidgetInfoArea(parent),
             ui(new Ui::CNavigatorDockWidget)
         {
+            this->allowStatusBar(false);
             ui->setupUi(this);
         }
 

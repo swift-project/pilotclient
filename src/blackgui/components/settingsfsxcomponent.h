@@ -14,6 +14,7 @@
 
 #include "blackgui/components/enableforruntime.h"
 #include <QFrame>
+#include <QScopedPointer>
 
 namespace Ui { class CSettingsFsxComponent; }
 
@@ -44,7 +45,7 @@ namespace BlackGui
             void simConnectCfgFile();
 
         private:
-            Ui::CSettingsFsxComponent *ui;
+            QScopedPointer<Ui::CSettingsFsxComponent> ui;
         };
     }
 }

@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>324</width>
-    <height>150</height>
+    <width>317</width>
+    <height>141</height>
    </rect>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>16777215</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Frame</string>
@@ -21,7 +27,7 @@
   </property>
   <layout class="QVBoxLayout" name="vl_SettingsFsxComponent">
    <property name="spacing">
-    <number>6</number>
+    <number>0</number>
    </property>
    <property name="leftMargin">
     <number>0</number>
@@ -36,153 +42,217 @@
     <number>0</number>
    </property>
    <item>
-    <layout class="QFormLayout" name="fl_Settings">
-     <property name="fieldGrowthPolicy">
-      <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+    <widget class="QGroupBox" name="gb_FsxSimConnectConfigFile">
+     <property name="title">
+      <string>FSX SimConnect config file</string>
      </property>
-     <item row="1" column="0">
-      <widget class="QLabel" name="lbl_SettingsFsxAddress">
-       <property name="text">
-        <string>FSX address</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="le_SettingsFsxAddress">
-       <property name="text">
-        <string>127.0.0.1</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="lbl_SettingsFsxPort">
-       <property name="text">
-        <string>FSX port</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLineEdit" name="le_SettingsFsxPort">
-       <property name="text">
-        <string>500</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0" colspan="2">
-      <layout class="QHBoxLayout" name="hl_SettingsSimconnectCfgButtons">
-       <item>
-        <widget class="QPushButton" name="pb_SettingsFsxOpenSimconnectCfg">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+     <layout class="QFormLayout" name="fl_Settings">
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbl_SettingsFsxAddress">
+        <property name="text">
+         <string>FSX address</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="le_SettingsFsxAddress">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>127.0.0.1</string>
+        </property>
+        <property name="maxLength">
+         <number>128</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_SettingsFsxPort">
+        <property name="text">
+         <string>FSX port</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="le_SettingsFsxPort">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>500</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_SettingsFsxExistsSimconncetCfg">
+        <property name="toolTip">
+         <string>is 'SimConnect.cfg' available?</string>
+        </property>
+        <property name="text">
+         <string>.cfg?</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QWidget" name="wi_SettingsFsxExistsSimconncetCfg" native="true">
+        <layout class="QHBoxLayout" name="hl_SettingsFsxExistsSimconncetCfg">
+         <property name="spacing">
+          <number>4</number>
          </property>
-         <property name="text">
-          <string>Open</string>
+         <property name="leftMargin">
+          <number>0</number>
          </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pb_SettingsFsxDeleteSimconnectCfg">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+         <property name="topMargin">
+          <number>0</number>
          </property>
-         <property name="text">
-          <string>Delete</string>
+         <property name="rightMargin">
+          <number>0</number>
          </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pb_SettingsFsxSaveSimconnectCfg">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+         <property name="bottomMargin">
+          <number>0</number>
          </property>
-         <property name="text">
-          <string>Save</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pb_SettingsFsxTestConnection">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string extracomment="Test connection">Test con.</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="lbl_SettingsFsxExistsSimconncetCfg">
-       <property name="text">
-        <string>&quot;simconnect.cfg&quot;?</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QWidget" name="wi_SettingsFsxExistsSimconncetCfg" native="true">
-       <layout class="QHBoxLayout" name="hl_SettingsFsxExistsSimconncetCfg">
+         <item>
+          <widget class="QLineEdit" name="le_SettingsFsxExistsSimconncetCfg">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pb_SettingsFsxExistsSimconncetCfg">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>check</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <layout class="QHBoxLayout" name="hl_SettingsSimconnectCfgButtons">
         <property name="spacing">
-         <number>4</number>
-        </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
+         <number>3</number>
         </property>
         <item>
-         <widget class="QLineEdit" name="le_SettingsFsxExistsSimconncetCfg">
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pb_SettingsFsxExistsSimconncetCfg">
+         <widget class="QPushButton" name="pb_SettingsFsxOpenSimconnectCfg">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="minimumSize">
+           <size>
+            <width>50</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="text">
-           <string>Check</string>
+           <string>open</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pb_SettingsFsxDeleteSimconnectCfg">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>50</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>del.</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pb_SettingsFsxSaveSimconnectCfg">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>50</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>save</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pb_SettingsFsxTestConnection">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>50</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>Test connection</string>
+          </property>
+          <property name="text">
+           <string extracomment="Test connection">test</string>
           </property>
          </widget>
         </item>
        </layout>
-      </widget>
-     </item>
-     <item row="0" column="0" colspan="2">
-      <widget class="QLabel" name="lbl_HeaderFsxSimConnect">
-       <property name="toolTip">
-        <string>&quot;simconnect.cfg&quot; exists?</string>
-       </property>
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;FSX simconnect config files&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+      </item>
+     </layout>
+    </widget>
    </item>
   </layout>
  </widget>

@@ -15,6 +15,18 @@
   </property>
   <widget class="QWidget" name="qw_InvisibleInfoArea"/>
   <widget class="BlackGui::Components::CNavigatorDockWidget" name="comp_Navigator">
+   <property name="minimumSize">
+    <size>
+     <width>80</width>
+     <height>80</height>
+    </size>
+   </property>
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <property name="features">
+    <set>QDockWidget::AllDockWidgetFeatures</set>
+   </property>
    <property name="allowedAreas">
     <set>Qt::LeftDockWidgetArea</set>
    </property>
