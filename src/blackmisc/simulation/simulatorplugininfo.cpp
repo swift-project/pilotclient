@@ -52,8 +52,14 @@ namespace BlackMisc
         QString CSimulatorPluginInfo::getSimulatorSetupValueAsString(int index) const
         {
             CVariant qv = getSimulatorSetupValue(index);
-            Q_ASSERT(qv.canConvert<QString>());
-            return qv.toQString();
+            if (qv.canConvert<QString>())
+            {
+                return qv.toQString();
+            }
+            else
+            {
+                return "";
+            }
         }
 
         void CSimulatorPluginInfo::setSimulatorSetup(const BlackMisc::CPropertyIndexVariantMap &setup)

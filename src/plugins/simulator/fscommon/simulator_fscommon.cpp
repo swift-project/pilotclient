@@ -25,8 +25,12 @@ namespace BlackSimPlugin
 {
     namespace FsCommon
     {
-        CSimulatorFsCommon::CSimulatorFsCommon(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider, IRemoteAircraftProvider *renderedAircraftProvider, QObject *parent) :
-            CSimulatorCommon(ownAircraftProvider, renderedAircraftProvider, parent),
+        CSimulatorFsCommon::CSimulatorFsCommon(
+            const BlackMisc::Simulation::CSimulatorPluginInfo &info,
+            BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+            IRemoteAircraftProvider *renderedAircraftProvider,
+            QObject *parent) :
+            CSimulatorCommon(info, ownAircraftProvider, renderedAircraftProvider, parent),
             m_fsuipc(new FsCommon::CFsuipc())
         {
             // hack to init mapper

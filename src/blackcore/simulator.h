@@ -62,6 +62,9 @@ namespace BlackCore
         //! Simulator running?
         virtual bool isSimulating() const = 0;
 
+        //! Get the simulator info
+        virtual const BlackMisc::Simulation::CSimulatorPluginInfo &getSimulatorPluginInfo() const = 0;
+
         //! Originator
         const QString &simulatorOriginator()
         {
@@ -196,39 +199,39 @@ namespace BlackCore
         void emitSimulatorCombinedStatus();
 
     };
-    
+
     /*!
      * Interface to a simulator listener.
-     * 
+     *
      * The simulator listener is responsible for letting the core know when
      * the corresponding simulator is started.
      */
     class ISimulatorListener : public QObject
     {
         Q_OBJECT
-        
+
     public:
-        
+
         //! Constructor
         //! \sa ISimulatorFactory::createListener().
         //! \note msvc2015: use inherited constructor
-        ISimulatorListener(QObject* parent);
-        
+        ISimulatorListener(QObject *parent);
+
         //! Destructor
         virtual ~ISimulatorListener() = default;
 
     public slots:
         //! Start listening for the simulator to start.
         virtual void start() = 0;
-        
+
         //! Stops listening.
         virtual void stop() = 0;
-        
+
     signals:
-        
+
         //! Emitted when the listener discovers the simulator running.
         void simulatorStarted();
-        
+
     };
 
     //! Factory pattern class to create instances of ISimulator
@@ -241,19 +244,21 @@ namespace BlackCore
 
         //!
         //! Create a new instance of a driver
+        //! \param info                      metadata about simulator
         //! \param ownAircraftProvider       in memory access to own aircraft data
         //! \param renderedAircraftProvider  in memory access to rendered aircraft data such as situation history and aircraft itself
         //! \param parent QObject
         //! \return driver instance
         //!
         virtual ISimulator *create(
+            const BlackMisc::Simulation::CSimulatorPluginInfo &info,
             BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
             BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
             QObject *parent = nullptr) = 0;
-        
+
         //! Simulator listener instance
         virtual ISimulatorListener *createListener(QObject *parent = nullptr) = 0;
-        
+
     };
 
     //! Common base class with providers, interface and some base functionality
@@ -302,6 +307,9 @@ namespace BlackCore
         //! \copydoc IContextSimulator::isRenderingRestricted
         virtual bool isRenderingRestricted() const override;
 
+        //! \copydoc IContextSimulator::getSimulatorPluginInfo
+        virtual const BlackMisc::Simulation::CSimulatorPluginInfo &getSimulatorPluginInfo() const override;
+
         //! \copydoc IContextSimulator::deleteAllRenderingRestrictions
         virtual void deleteAllRenderingRestrictions();
 
@@ -311,10 +319,10 @@ namespace BlackCore
 
     protected:
         //! Constructor
-        CSimulatorCommon(
-            BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-            BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-            QObject *parent = nullptr);
+        CSimulatorCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
+                         BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                         BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                         QObject *parent = nullptr);
 
         //! Blink the highlighted aircraft
         void blinkHighlightedAircraft();
@@ -334,8 +342,9 @@ namespace BlackCore
         qint64 m_highlightEndTimeMsEpoch = 0;     //!< end highlighting
         int m_timerCounter = 0;                   //!< allows to calculate n seconds
         QTimer *m_oneSecondTimer = nullptr;       //!< timer
+        BlackMisc::Simulation::CSimulatorPluginInfo m_simulatorPluginInfo;   //!< info object
         BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft; //!< all other aircraft are to be ignored
-        BlackMisc::Aviation::CCallsignSet m_callsignsToBeRendered;          //!< callsigns which will be rendered
+        BlackMisc::Aviation::CCallsignSet m_callsignsToBeRendered;           //!< callsigns which will be rendered
         int m_maxRenderedAircraft = MaxAircraftInfinite;                     //!< max.rendered aircraft
         BlackMisc::PhysicalQuantities::CLength m_maxRenderedDistance { 0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()}; //!< max.distance for rendering
     };

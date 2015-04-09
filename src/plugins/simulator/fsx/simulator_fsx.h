@@ -74,6 +74,7 @@ namespace BlackSimPlugin
         public:
             //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
             CSimulatorFsx(
+                const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                 BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                 BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                 QObject *parent = nullptr);
@@ -195,7 +196,6 @@ namespace BlackSimPlugin
             uint    m_nextObjID   = 1;          //!< object ID TODO: also used as request id, where to we place other request ids as for facilities
             QHash<BlackMisc::Aviation::CCallsign, CSimConnectObject> m_simConnectObjects;
             QFutureWatcher<bool> m_watcherConnect;
-            BlackMisc::Simulation::CSimulatorPluginInfo m_simulatorInfo;
 
             // statistics
             qint64 m_statsUpdateAircraftTimeTotal = 0;
@@ -204,12 +204,13 @@ namespace BlackSimPlugin
         };
 
         //! Listener for FSX
-        class CSimulatorFsxListener : public BlackCore::ISimulatorListener {
+        class CSimulatorFsxListener : public BlackCore::ISimulatorListener
+        {
             Q_OBJECT
 
         public:
             //! Constructor
-            CSimulatorFsxListener(QObject* parent);
+            CSimulatorFsxListener(QObject *parent);
 
         public slots:
             //! \copydoc BlackCore::ISimulatorListener::start
@@ -219,7 +220,7 @@ namespace BlackSimPlugin
             virtual void stop() override;
 
         private:
-            QTimer* m_timer;
+            QTimer *m_timer;
 
         };
     }

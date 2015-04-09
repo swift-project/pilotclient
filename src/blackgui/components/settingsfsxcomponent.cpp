@@ -108,10 +108,11 @@ namespace BlackGui
                 return;
             }
             int p = port.toInt();
+            //! \todo filename is only available if driver has been loaded
             QString fileName = this->getIContextSimulator()->getSimulatorInfo().getSimulatorSetupValueAsString(CFsxSimulatorSetup::SetupSimConnectCfgFile);
             if (fileName.isEmpty())
             {
-                CLogMessage(this).validationError("Invalid filename or filename empty");
+                CLogMessage(this).validationError("Invalid or empty filename empty, driver loaded?");
                 return;
             }
 

@@ -9,6 +9,7 @@
 
 #include "simulator.h"
 #include "interpolator.h"
+#include "blackmisc/logmessage.h"
 #include "blackmisc/collection.h"
 
 using namespace BlackMisc;
@@ -23,26 +24,30 @@ namespace BlackCore
     {
         int status =
             (isConnected() ? Connected : static_cast<ISimulator::SimulatorStatus>(0))
-          | (isSimulating() ? Running : static_cast<ISimulator::SimulatorStatus>(0))
-          | (isPaused() ? Paused : static_cast<ISimulator::SimulatorStatus>(0))
-          ;
+            | (isSimulating() ? Running : static_cast<ISimulator::SimulatorStatus>(0))
+            | (isPaused() ? Paused : static_cast<ISimulator::SimulatorStatus>(0))
+            ;
         emit simulatorStatusChanged(status);
     }
-    
-    ISimulatorListener::ISimulatorListener(QObject* parent) : QObject(parent)
-    {
-    }
 
-    CSimulatorCommon::CSimulatorCommon(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+    ISimulatorListener::ISimulatorListener(QObject *parent) : QObject(parent)
+    { }
+
+    CSimulatorCommon::CSimulatorCommon(const CSimulatorPluginInfo &info,
+                                       BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                                        BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                                        QObject *parent)
         : ISimulator(parent),
+          m_simulatorPluginInfo(info),
           COwnAircraftAware(ownAircraftProvider),
           CRemoteAircraftAware(remoteAircraftProvider)
     {
+        this->setObjectName("CSimulatorCommon");
         m_oneSecondTimer = new QTimer(this);
+        m_oneSecondTimer->setObjectName(this->objectName().append(":OneSecondTimer"));
         connect(this->m_oneSecondTimer, &QTimer::timeout, this, &CSimulatorCommon::ps_oneSecondTimer);
         m_oneSecondTimer->start(1000);
+        CLogMessage(this).info("Initialized simulator driver %1") << m_simulatorPluginInfo.toQString();
     }
 
     void CSimulatorCommon::blinkHighlightedAircraft()
@@ -197,12 +202,12 @@ namespace BlackCore
     {
         return !m_maxRenderedDistance.isNull();
     }
-    
+
     void CSimulatorCommon::enableDebugMessages(bool driver, bool interpolator)
     {
         this->m_debugMessages = driver;
         Q_UNUSED(interpolator);
-    
+
     }
 
     int CSimulatorCommon::getInstalledModelsCount() const
@@ -233,6 +238,11 @@ namespace BlackCore
     bool CSimulatorCommon::isRenderingRestricted() const
     {
         return this->isMaxDistanceRestricted() || this->isMaxAircraftRestricted();
+    }
+
+    const CSimulatorPluginInfo &CSimulatorCommon::getSimulatorPluginInfo() const
+    {
+        return m_simulatorPluginInfo;
     }
 
     void CSimulatorCommon::deleteAllRenderingRestrictions()

@@ -24,8 +24,10 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
 
-namespace {
-    inline QString xbusServiceName() {
+namespace
+{
+    inline QString xbusServiceName()
+    {
         return QStringLiteral("org.swift.xbus");
     }
 }
@@ -35,8 +37,12 @@ namespace BlackSimPlugin
     namespace XPlane
     {
 
-        CSimulatorXPlane::CSimulatorXPlane(IOwnAircraftProvider *ownAircraftProvider, IRemoteAircraftProvider *remoteAircraftProvider, QObject *parent) :
-            CSimulatorCommon(ownAircraftProvider, remoteAircraftProvider, parent)
+        CSimulatorXPlane::CSimulatorXPlane(
+            const BlackMisc::Simulation::CSimulatorPluginInfo &info,
+            IOwnAircraftProvider *ownAircraftProvider,
+            IRemoteAircraftProvider *remoteAircraftProvider,
+            QObject *parent) :
+            CSimulatorCommon(info, ownAircraftProvider, remoteAircraftProvider, parent)
         {
             m_watcher = new QDBusServiceWatcher(this);
             m_watcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
@@ -161,16 +167,18 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::connectTo()
         {
-            if (isConnected()) {
+            if (isConnected())
+            {
                 qWarning("X-Plane already connected");
                 return true;
             }
-            
+
             m_conn = QDBusConnection::sessionBus(); // TODO make this configurable
             m_service = new CXBusServiceProxy(m_conn, this);
             m_traffic = new CXBusTrafficProxy(m_conn, this);
-            
-            if (m_service->isValid() && m_traffic->isValid() && m_traffic->initialize()) {
+
+            if (m_service->isValid() && m_traffic->isValid() && m_traffic->initialize())
+            {
                 // FIXME duplication
                 connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::ps_emitOwnAircraftModelChanged);
                 connect(m_service, &CXBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::ps_setAirportsInRange);
@@ -178,7 +186,9 @@ namespace BlackSimPlugin
                 m_watcher->setConnection(m_conn);
                 emitSimulatorCombinedStatus();
                 return true;
-            } else {
+            }
+            else
+            {
                 disconnectFrom();
                 return false;
             }
@@ -192,10 +202,11 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::disconnectFrom()
         {
-            if (m_traffic) {
+            if (m_traffic)
+            {
                 m_traffic->cleanup();
             }
-            
+
             m_conn = QDBusConnection { "default" };
             m_watcher->setConnection(m_conn);
             delete m_service;
@@ -237,8 +248,8 @@ namespace BlackSimPlugin
             /* We do not assert here as status message may come because of network problems */
             if (!isConnected())
                 return;
-            
-            // TODO XPLMSpeakString()? 
+
+            // TODO XPLMSpeakString()?
             // http://www.xsquawkbox.net/xpsdk/mediawiki/XPLMSpeakString
             Q_UNUSED(message);
         }
@@ -247,8 +258,8 @@ namespace BlackSimPlugin
         {
             if (!isConnected())
                 return;
-            
-            // TODO XPLMSpeakString()? 
+
+            // TODO XPLMSpeakString()?
             // http://www.xsquawkbox.net/xpsdk/mediawiki/XPLMSpeakString
             Q_UNUSED(message);
         }
@@ -258,7 +269,7 @@ namespace BlackSimPlugin
             Q_ASSERT(isConnected());
             //! \todo XP driver, function not available
             CLogMessage(this).error("Function not avialable");
-            
+
             return {};
         }
 
@@ -427,21 +438,25 @@ namespace BlackSimPlugin
             return true;
         }
 
-        BlackCore::ISimulator *CSimulatorXPlaneFactory::create(IOwnAircraftProvider *ownAircraftProvider, IRemoteAircraftProvider *renderedAircraftProvider, QObject *parent)
+        BlackCore::ISimulator *CSimulatorXPlaneFactory::create(
+            const BlackMisc::Simulation::CSimulatorPluginInfo &info,
+            IOwnAircraftProvider *ownAircraftProvider,
+            IRemoteAircraftProvider *renderedAircraftProvider,
+            QObject *parent)
         {
-            return new CSimulatorXPlane(ownAircraftProvider, renderedAircraftProvider, parent);
+            return new CSimulatorXPlane(info, ownAircraftProvider, renderedAircraftProvider, parent);
         }
 
-        CSimulatorXPlaneListener::CSimulatorXPlaneListener(QObject* parent): ISimulatorListener(parent)
+        CSimulatorXPlaneListener::CSimulatorXPlaneListener(QObject *parent): ISimulatorListener(parent)
         {
-            
+
         }
-        
+
         void CSimulatorXPlaneListener::start()
         {
             if (m_watcher) // already started
                 return;
-            
+
             m_conn = QDBusConnection::sessionBus(); // TODO make this configurable
             m_watcher = new QDBusServiceWatcher(xbusServiceName(), m_conn, QDBusServiceWatcher::WatchForRegistration, this);
             connect(m_watcher, &QDBusServiceWatcher::serviceRegistered, this, &CSimulatorXPlaneListener::ps_serviceRegistered);
@@ -449,12 +464,13 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlaneListener::stop()
         {
-            if (m_watcher) {
+            if (m_watcher)
+            {
                 m_watcher->deleteLater();
                 m_watcher = nullptr;
             }
         }
-        
+
         void CSimulatorXPlaneListener::ps_serviceRegistered(const QString &serviceName)
         {
             if (serviceName == xbusServiceName())

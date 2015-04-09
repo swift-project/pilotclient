@@ -35,10 +35,10 @@ namespace BlackSimPlugin
 
         public:
             //! \copydoc BlackCore::ISimulatorFactory::create(ownAircraftProvider, remoteAircraftProvider, parent)
-            CSimulatorXPlane(
-                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                QObject *parent = nullptr);
+            CSimulatorXPlane(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
+                             BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                             BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                             QObject *parent = nullptr);
 
             //! \copydoc BlackCore::ISimulator::isConnected
             virtual bool isConnected() const override;
@@ -171,30 +171,30 @@ namespace BlackSimPlugin
 
             }
         };
-        
+
         //! Listener waits for xbus service to show up
         class CSimulatorXPlaneListener : public BlackCore::ISimulatorListener
         {
             Q_OBJECT
-            
+
         public:
             //! Constructor
-            CSimulatorXPlaneListener(QObject* parent);
-            
+            CSimulatorXPlaneListener(QObject *parent);
+
         public slots:
             //! \copydoc BlackCore::ISimulatorListener::start
             virtual void start() override;
-            
+
             //! \copydoc BlackCore::ISimulatorListener::stop
             virtual void stop() override;
-            
+
         private slots:
             void ps_serviceRegistered(const QString &serviceName);
-            
+
         private:
             QDBusConnection m_conn { "default" };
-            QDBusServiceWatcher* m_watcher { nullptr };
-            
+            QDBusServiceWatcher *m_watcher { nullptr };
+
         };
 
         //! Factory for creating CSimulatorXPlane instance
@@ -206,16 +206,16 @@ namespace BlackSimPlugin
 
         public:
             //! \copydoc BlackCore::ISimulatorFactory::create()
-            virtual BlackCore::ISimulator *create(
-                BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
-                BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
-                QObject *parent) override;
+            virtual BlackCore::ISimulator *create(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
+                                                  BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
+                                                  BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
+                                                  QObject *parent) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::createListener
             virtual BlackCore::ISimulatorListener *createListener(QObject *parent = nullptr) override { return new CSimulatorXPlaneListener(parent); }
         };
 
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard

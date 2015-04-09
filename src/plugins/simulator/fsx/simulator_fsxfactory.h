@@ -27,16 +27,15 @@ namespace BlackSimPlugin
         class CSimulatorFsxFactory : public QObject, public BlackCore::ISimulatorFactory
         {
             Q_OBJECT
-            // TODO: @RW, move this string into CProject please
             Q_PLUGIN_METADATA(IID "org.swift.pilotclient.BlackCore.SimulatorInterface" FILE "simulator_fsx.json")
             Q_INTERFACES(BlackCore::ISimulatorFactory)
 
         public:
             //! \copydoc BlackCore::ISimulatorFactory::create
-            virtual BlackCore::ISimulator *create(
-                    BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                    BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
-                    QObject *parent) override;
+            virtual BlackCore::ISimulator *create(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
+                                                  BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                                                  BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
+                                                  QObject *parent) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::getListener
             virtual BlackCore::ISimulatorListener *createListener(QObject *parent = nullptr) override;

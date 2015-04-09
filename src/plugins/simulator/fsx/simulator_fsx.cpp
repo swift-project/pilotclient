@@ -38,17 +38,22 @@ namespace BlackSimPlugin
 {
     namespace Fsx
     {
-        CSimulatorFsx::CSimulatorFsx(IOwnAircraftProvider *ownAircraftProvider, IRemoteAircraftProvider *remoteAircraftProvider, QObject *parent) :
-            CSimulatorFsCommon(ownAircraftProvider, remoteAircraftProvider, parent)
+        CSimulatorFsx::CSimulatorFsx(
+            const CSimulatorPluginInfo &info,
+            IOwnAircraftProvider *ownAircraftProvider,
+            IRemoteAircraftProvider *remoteAircraftProvider,
+            QObject *parent) :
+            CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, parent)
         {
             Q_ASSERT(ownAircraftProvider);
             Q_ASSERT(remoteAircraftProvider);
             CFsxSimulatorSetup setup;
             setup.init(); // this fetches important settings on local side
+            this->m_simulatorPluginInfo.setSimulatorSetup(setup.getSettings());
+
             m_useFsuipc = false; // do not use FSUIPC at the moment with FSX
             this->m_interpolator = new CInterpolatorLinear(remoteAircraftProvider, this);
             this->m_interpolator->start();
-            this->m_simulatorInfo.setSimulatorSetup(setup.getSettings());
         }
 
         CSimulatorFsx::~CSimulatorFsx()
@@ -334,7 +339,8 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::onSimStopped()
         {
-            if (m_simRunning) {
+            if (m_simRunning)
+            {
                 m_simRunning = false;
                 mapperInstance()->gracefulShutdown(); // stop background reading if ongoing
             }
@@ -814,7 +820,8 @@ namespace BlackSimPlugin
             Q_CONSTEXPR int QueryInterval = 5 * 1000; // 5 seconds
             m_timer->setInterval(QueryInterval);
 
-            connect(m_timer, &QTimer::timeout, [this]() {
+            connect(m_timer, &QTimer::timeout, [this]()
+            {
                 HANDLE hSimConnect;
                 HRESULT result = SimConnect_Open(&hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0);
                 SimConnect_Close(hSimConnect);

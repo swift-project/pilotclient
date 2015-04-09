@@ -40,6 +40,7 @@ namespace BlackSimPlugin
         public:
             //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
             CSimulatorFs9(
+                const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                 BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                 BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                 QObject *parent = nullptr);
@@ -112,12 +113,13 @@ namespace BlackSimPlugin
         //! Listener starts the FS9 multiplayer host and tries to make the running instance
         //! of simulator to connect to it. When emitting the simulatorStarted() signal,
         //! FS9 is already connected.
-        class CSimulatorFs9Listener : public BlackCore::ISimulatorListener {
+        class CSimulatorFs9Listener : public BlackCore::ISimulatorListener
+        {
             Q_OBJECT
 
         public:
             //! Constructor
-            CSimulatorFs9Listener(QObject* parent);
+            CSimulatorFs9Listener(QObject *parent);
 
         public slots:
             //! \copydoc BlackCore::ISimulatorListener::start
@@ -128,7 +130,7 @@ namespace BlackSimPlugin
 
         private:
 
-            QTimer* m_timer = nullptr;
+            QTimer *m_timer = nullptr;
             bool m_lobbyConnected = false;
 
         };
@@ -142,16 +144,17 @@ namespace BlackSimPlugin
 
         public:
             //! Constructor
-            CSimulatorFs9Factory(QObject* parent = nullptr);
+            CSimulatorFs9Factory(QObject *parent = nullptr);
 
             //! Destructor
             virtual ~CSimulatorFs9Factory();
 
             //! \copydoc BlackCore::ISimulatorFactory::create(ownAircraftProvider, remoteAircraftProvider, parent)
             virtual BlackCore::ISimulator *create(
-                    BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                    BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                    QObject *parent) override;
+                const BlackMisc::Simulation::CSimulatorPluginInfo &info,
+                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                QObject *parent) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::createListener
             virtual BlackCore::ISimulatorListener *createListener(QObject *parent = nullptr) override;
