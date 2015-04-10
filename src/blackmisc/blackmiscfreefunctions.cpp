@@ -8,11 +8,8 @@
  */
 
 #include "blackmiscfreefunctions.h"
-#include "blackmisc/aviation/aviation.h"
-#include "blackmisc/pq/pq.h"
 #include "math/math.h"
 #include "geo/geo.h"
-#include "network/network.h"
 #include "audio/audio.h"
 #include "hardware/hardware.h"
 #include "settingsblackmiscclasses.h"
