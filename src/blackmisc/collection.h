@@ -125,7 +125,7 @@ namespace BlackMisc
          * \brief Like changeImpl, but uses the implementation type of another collection.
          * \pre The other collection must be initialized.
          */
-        void useImplOf(const CCollection &other) { PimplPtr p = other.pimpl()->cloneEmpty(); std::move(begin(), end(), std::inserter(*p, p->begin())); m_pimpl.reset(p.take()); }
+        void useImplOf(const CCollection &other) { CCollection c(other.pimpl()->cloneEmpty()); std::move(begin(), end(), std::inserter(c, c.begin())); *this = std::move(c); }
 
         /*!
          * \brief Returns iterator at the beginning of the collection.
