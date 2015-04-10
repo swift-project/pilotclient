@@ -75,7 +75,7 @@ namespace BlackGui
             if (!this->getIContextSimulator()->isSimulating()) {
                 this->addOrUpdateByName("info",
                                         tr("Simulator (%1) not yet running").arg(
-                                            getIContextSimulator()->getSimulatorInfo().getSimulator()
+                                            getIContextSimulator()->getSimulatorPluginInfo().getSimulator()
                                         ),
                                         CIcons::StandardIconWarning16);
                 return;

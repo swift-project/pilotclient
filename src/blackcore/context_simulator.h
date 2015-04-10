@@ -28,6 +28,7 @@
 #include "blackcore/context_runtime.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
+#include "blackmisc/simulation/simulatorsetup.h"
 #include "blackmisc/simulation/simulatorinfolist.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
@@ -100,7 +101,10 @@ namespace BlackCore
         virtual bool isSimulating() const = 0;
 
         //! Simulator info
-        virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorInfo() const = 0;
+        virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const = 0;
+
+        //! Simulator setup
+        virtual BlackMisc::Simulation::CSimulatorSetup getSimulatorSetup() const = 0;
 
         //! Airports in range
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const = 0;
@@ -173,7 +177,7 @@ namespace BlackCore
         virtual void unloadSimulatorPlugin() = 0;
 
         //! Simulator avialable (driver available)?
-        bool isSimulatorAvailable() const { return BlackMisc::CProject::isCompiledWithFlightSimulatorSupport() && !getSimulatorInfo().isUnspecified(); }
+        bool isSimulatorAvailable() const { return BlackMisc::CProject::isCompiledWithFlightSimulatorSupport() && !getSimulatorPluginInfo().isUnspecified(); }
 
         //! Simulator paused?
         virtual bool isPaused() const = 0;

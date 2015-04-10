@@ -26,9 +26,7 @@
 
 namespace BlackCore
 {
-    /*!
-     * Network simulator concrete implementation
-     */
+    //! Network simulator concrete implementation
     class CContextSimulator : public IContextSimulator
     {
         Q_OBJECT
@@ -39,11 +37,11 @@ namespace BlackCore
     public:
         //! Destructor
         virtual ~CContextSimulator();
-        
+
         //! Lazy-loads the driver, instantiates the factory and returns it.
         //! \return nullptr if no corresponding driver was found or an error occured during loading it.
         //! \todo Consider moving to private scope.
-        ISimulatorFactory* getSimulatorFactory(const BlackMisc::Simulation::CSimulatorPluginInfo& simulator);
+        ISimulatorFactory *getSimulatorFactory(const BlackMisc::Simulation::CSimulatorPluginInfo &simulator);
 
     public slots:
 
@@ -65,8 +63,11 @@ namespace BlackCore
         //! \copydoc IContextSimulator::isSimulating
         virtual bool isSimulating() const override;
 
-        //! \copydoc IContextSimulator::getSimulatorInfo()
-        virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorInfo() const override;
+        //! \copydoc IContextSimulator::getSimulatorPluginInfo()
+        virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const override;
+
+        //! \copydoc IContextSimulator::getSimulatorSetup()
+        virtual BlackMisc::Simulation::CSimulatorSetup getSimulatorSetup() const override;
 
         //! \copydoc IContextSimulator::getAirportsInRange
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
@@ -124,13 +125,13 @@ namespace BlackCore
 
         //! \copydoc IContextSimulator::loadSimulatorPluginFromSettings()
         virtual bool loadSimulatorPluginFromSettings() override;
-        
+
         //! \copydoc IContextSimulator::listenForSimulator()
         virtual void listenForSimulator(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
-        
+
         //! \copydoc IContextSimulator::listenForAllSimulators()
         virtual void listenForAllSimulators() override;
-        
+
         //! \copydoc IContextSimulator::listenForSimulatorFromSettings()
         virtual void listenForSimulatorFromSettings() override;
 
@@ -150,7 +151,7 @@ namespace BlackCore
         virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
 
     protected:
-        //! \brief Constructor
+        //! Constructor
         CContextSimulator(CRuntimeConfig::ContextMode, CRuntime *runtime);
 
         //! Register myself in DBus
@@ -173,7 +174,7 @@ namespace BlackCore
 
         //! Text message received
         void ps_textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);
-        
+
         //! Listener reports the simulator has started
         void ps_simulatorStarted(QObject *listener);
 
@@ -191,34 +192,34 @@ namespace BlackCore
         void ps_updateSimulatorCockpitFromContext(const BlackMisc::Aviation::CAircraft &ownAircraft, const QString &originator);
 
     private:
-        //! \brief find and catalog all simulator plugins
+        //! A simple struct containing all info about the plugin.
+        //! \todo Would we want to use m_member style here?
+        struct PluginData
+        {
+            PluginData(const BlackMisc::Simulation::CSimulatorPluginInfo &info, ISimulatorFactory *factory, ISimulatorListener *listener, ISimulator *simulator, const QString &fileName) :
+                info(info), factory(factory), listener(listener), simulator(simulator), fileName(fileName) {}
+
+            BlackMisc::Simulation::CSimulatorPluginInfo info;
+            ISimulatorFactory *factory = nullptr;   //!< Lazy-loaded, nullptr by default
+            ISimulatorListener *listener = nullptr; //!< Listener instance, nullptr by default
+            ISimulator *simulator = nullptr;        //!< The simulator itself (always nullptr unless it is the currently working one)
+            QString fileName;                       //!< Plugin file name (relative to plugins/simulator)
+        };
+
+        //! Find and catalog all simulator plugins
         void findSimulatorPlugins();
 
-        //! \brief call stop() on all loaded listeners
+        //! Call stop() on all loaded listeners
         void stopSimulatorListeners();
-        
-        struct PluginData;
-        
-        //! \brief Locate PluginData (linear search)
-        PluginData* findPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
-        
-        /*!
-         * A simple struct containing all info about the plugin.
-         */
-        struct PluginData {
-            BlackMisc::Simulation::CSimulatorPluginInfo info;
-            ISimulatorFactory *factory; //!< Lazy-loaded, nullptr by default
-            ISimulatorListener *listener; //!< Listener instance, nullptr by default
-            ISimulator *simulator; //!< The simulator itself (always nullptr unless it is the currently working one)
-            QString fileName; //!< Plugin file name (relative to plugins/simulator)
-        };
+
+        //! Locate PluginData (linear search)
+        PluginData *findPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
         QDir m_pluginsDir;
         QList<PluginData> m_simulatorPlugins;
-        PluginData *m_simulator = nullptr; //!< Currently loaded simulator plugin
-        QFuture<bool> m_canConnectResult;
+        PluginData *m_simulatorPlugin = nullptr; //!< Currently loaded simulator plugin
         BlackMisc::CRegularThread m_listenersThread;
-        QSignalMapper* m_mapper;
+        QSignalMapper *m_mapper = nullptr;
     };
 
 } // namespace

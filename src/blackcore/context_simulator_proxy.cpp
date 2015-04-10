@@ -104,9 +104,14 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<CAircraftIcao>(QLatin1Literal("getIcaoForModelString"), modelString);
     }
 
-    BlackMisc::Simulation::CSimulatorPluginInfo CContextSimulatorProxy::getSimulatorInfo() const
+    BlackMisc::Simulation::CSimulatorPluginInfo CContextSimulatorProxy::getSimulatorPluginInfo() const
     {
-        return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorPluginInfo>(QLatin1Literal("getSimulatorInfo"));
+        return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorPluginInfo>(QLatin1Literal("getSimulatorPluginInfo"));
+    }
+
+    CSimulatorSetup CContextSimulatorProxy::getSimulatorSetup() const
+    {
+        return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorSetup>(QLatin1Literal("getSimulatorSetup"));
     }
 
     bool CContextSimulatorProxy::setTimeSynchronization(bool enable, CTime offset)
@@ -173,17 +178,17 @@ namespace BlackCore
     {
         return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("loadSimulatorPluginFromSettings"));
     }
-    
+
     void CContextSimulatorProxy::listenForSimulator(const CSimulatorPluginInfo &simulatorInfo)
     {
         m_dBusInterface->callDBus(QLatin1Literal("listenForSimulator"), simulatorInfo);
     }
-    
+
     void CContextSimulatorProxy::listenForAllSimulators()
     {
         m_dBusInterface->callDBus(QLatin1Literal("listenForAllSimulators"));
     }
-    
+
     void CContextSimulatorProxy::listenForSimulatorFromSettings()
     {
         m_dBusInterface->callDBus(QLatin1Literal("listenForSimulatorFromSettings"));

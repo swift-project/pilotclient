@@ -13,14 +13,80 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        void CSimulatorSetup::setSettings(const BlackMisc::CPropertyIndexVariantMap &map)
+        void CSimulatorSetup::setValue(const QString &name, const QString &value)
         {
-            this->m_setup = map;
+            this->m_data.addOrReplaceValue(name, value);
         }
 
-        void CSimulatorSetup::init()
+        QString CSimulatorSetup::getStringValue(const QString &name) const
         {
-            // void
+            return m_data.getValueAsString(name);
         }
+
+        void CSimulatorSetup::setSimulatorVersion(const QString versionInfo)
+        {
+            this->setValue("all/versionInfo", versionInfo);
+        }
+
+        void CSimulatorSetup::setSimulatorInstallationDirectory(const QString fullFilePath)
+        {
+            this->setValue("all/installDir", fullFilePath);
+        }
+
+        QString CSimulatorSetup::getSimulatorVersion() const
+        {
+            return this->getStringValue("all/versionInfo");
+        }
+
+        QString CSimulatorSetup::getSimulatorInstallationDirectory() const
+        {
+            return this->getStringValue("all/installDir");
+        }
+
+        void CSimulatorSetup::registerMetadata()
+        {
+            qRegisterMetaType<BlackMisc::Simulation::CSimulatorSetup>();
+            qDBusRegisterMetaType<BlackMisc::Simulation::CSimulatorSetup>();
+            registerMetaValueType<BlackMisc::Simulation::CSimulatorSetup>();
+        }
+
+        QString CSimulatorSetup::convertToQString(bool i18n) const
+        {
+            return m_data.toQString(i18n);
+        }
+
+        CVariant CSimulatorSetup::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        {
+            if (index.isMyself()) { return this->toCVariant(); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexData:
+                return m_data.toCVariant();
+            default:
+                return CValueObject::propertyByIndex(index);
+            }
+        }
+
+        void CSimulatorSetup::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        {
+            if (index.isMyself())
+            {
+                this->convertFromCVariant(variant);
+                return;
+            }
+
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexData:
+                this->m_data.convertFromCVariant(variant.value<QString>());
+                break;
+            default:
+                CValueObject::setPropertyByIndex(variant, index);
+                break;
+            }
+        }
+
     } // ns
 } // ns

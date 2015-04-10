@@ -12,6 +12,7 @@
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/simulatorinfolist.h"
 #include "blackmisc/simulation/setsimulator.h"
+#include "blackmisc/simulation/simulatorsetup.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 
@@ -39,4 +40,5 @@ void BlackMisc::Simulation::registerMetadata()
     CAircraftModelList::registerMetadata();
     CSimulatedAircraft::registerMetadata();
     CSimulatedAircraftList::registerMetadata();
+    CSimulatorSetup::registerMetadata();
 }

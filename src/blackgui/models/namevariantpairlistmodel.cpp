@@ -62,7 +62,7 @@ namespace BlackGui
 
         int CNameVariantPairModel::getRowIndexForName(const QString &name) const
         {
-            int rowIndex = this->m_container.getNameRowIndex(name);
+            int rowIndex = this->m_container.getIndexForName(name);
             return rowIndex;
         }
 
@@ -82,7 +82,7 @@ namespace BlackGui
         bool CNameVariantPairModel::containsNameValue(const QString &name, const BlackMisc::CVariant &value) const
         {
             int rowIndex = this->getRowIndexForName(name);
-            if (rowIndex < 0) return false;
+            if (rowIndex < 0) { return false; }
             QModelIndex i = this->index(rowIndex, 0);
             const CNameVariantPair cv = this->at(i);
             return value == cv.toCVariant();

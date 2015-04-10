@@ -14,6 +14,7 @@
 
 #include "blackcore/interpolator.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
+#include "blackmisc/simulation/simulatorsetup.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
@@ -62,19 +63,11 @@ namespace BlackCore
         //! Simulator running?
         virtual bool isSimulating() const = 0;
 
-        //! Get the simulator info
+        //! Get the simulator info (metadata of plugin)
         virtual const BlackMisc::Simulation::CSimulatorPluginInfo &getSimulatorPluginInfo() const = 0;
 
-        //! Originator
-        const QString &simulatorOriginator()
-        {
-            // string is generated once, the timestamp allows to use multiple
-            // components (as long as they are not generated at the same ms)
-            static const QString o = QString("SIMULATOR:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
-            return o;
-        }
-
-    public:
+        //! Get the setup (simulator environemnt)
+        virtual const BlackMisc::Simulation::CSimulatorSetup &getSimulatorSetup() const = 0;
 
         //! Connect to simulator
         virtual bool connectTo() = 0;
@@ -173,6 +166,15 @@ namespace BlackCore
 
         //! Is rendering enabled
         virtual bool isRenderingEnabled() const = 0;
+
+        //! Originator
+        const QString &simulatorOriginator()
+        {
+            // string is generated once, the timestamp allows to use multiple
+            // components (as long as they are not generated at the same ms)
+            static const QString o = QString("SIMULATOR:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
+            return o;
+        }
 
     signals:
         //! Simulator combined status
@@ -310,6 +312,9 @@ namespace BlackCore
         //! \copydoc IContextSimulator::getSimulatorPluginInfo
         virtual const BlackMisc::Simulation::CSimulatorPluginInfo &getSimulatorPluginInfo() const override;
 
+        //! \copydoc IContextSimulator::getSimulatorSetup
+        virtual const BlackMisc::Simulation::CSimulatorSetup &getSimulatorSetup() const override;
+
         //! \copydoc IContextSimulator::deleteAllRenderingRestrictions
         virtual void deleteAllRenderingRestrictions();
 
@@ -343,6 +348,7 @@ namespace BlackCore
         int m_timerCounter = 0;                   //!< allows to calculate n seconds
         QTimer *m_oneSecondTimer = nullptr;       //!< timer
         BlackMisc::Simulation::CSimulatorPluginInfo m_simulatorPluginInfo;   //!< info object
+        BlackMisc::Simulation::CSimulatorSetup m_simulatorSetup;             //!< setup object
         BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft; //!< all other aircraft are to be ignored
         BlackMisc::Aviation::CCallsignSet m_callsignsToBeRendered;           //!< callsigns which will be rendered
         int m_maxRenderedAircraft = MaxAircraftInfinite;                     //!< max.rendered aircraft

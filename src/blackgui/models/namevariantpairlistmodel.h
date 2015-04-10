@@ -22,9 +22,7 @@ namespace BlackGui
     namespace Models
     {
 
-        /*!
-         * Simple model displaying name / variant values
-         */
+        //! Simple model displaying name / variant values
         class CNameVariantPairModel : public CListModelBase<BlackMisc::CNameVariantPair, BlackMisc::CNameVariantPairList>
         {
 

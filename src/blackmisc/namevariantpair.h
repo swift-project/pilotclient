@@ -18,9 +18,7 @@
 
 namespace BlackMisc
 {
-    /*!
-     * Value / variant pair
-     */
+    //! Value / variant pair
     class CNameVariantPair : public CValueObject<CNameVariantPair>
     {
     public:
@@ -28,9 +26,7 @@ namespace BlackMisc
         enum ColumnIndex
         {
             IndexName = BlackMisc::CPropertyIndex::GlobalIndexCNameVariantPair,
-            IndexVariant,
-            IndexIcon,
-            IndexPixmap
+            IndexVariant
         };
 
         //! Default constructor.
@@ -48,11 +44,14 @@ namespace BlackMisc
         //! Set name.
         void setName(const QString &name) { this->m_name = name; }
 
+        //! Name available?
+        bool hasName() const { return !this->m_name.isEmpty(); }
+
         //! Set variant.
         void setVariant(const CVariant &variant) { m_variant = variant; }
 
-        //! Icon
-        const CIcon &getIcon() const;
+        //! \copydoc CValueObject::toIcon()
+        virtual BlackMisc::CIcon toIcon() const override;
 
         //! Has icon
         bool hasIcon() const;

@@ -21,28 +21,20 @@ namespace BlackMisc
     {
         namespace Fsx
         {
-            /*!
-             * Simulator settings for FSX Flight simulators
-             */
-            class CFsxSimulatorSetup : public BlackMisc::Simulation::CSimulatorSetup
+            //! Simulator settings for FSX Flight simulators
+            class CFsxSimulatorSetup
             {
 
             public:
-                //! Setup values
-                enum
-                {
-                    SetupSimConnectCfgFile = (BlackMisc::CPropertyIndex::GlobalIndexAbuseMode + 100), //!< location of simconnect.cfg file
-                };
-
-
-                //! Default constructor
-                CFsxSimulatorSetup() : BlackMisc::Simulation::CSimulatorSetup() {}
-
-                //! Constructor
-                CFsxSimulatorSetup(const BlackMisc::CPropertyIndexVariantMap &map) : BlackMisc::Simulation::CSimulatorSetup(map) {}
+                //! No constructor
+                CFsxSimulatorSetup() = delete;
 
                 //! Init, to be used where FSX runs
-                void init();
+                static BlackMisc::Simulation::CSimulatorSetup getInitialSetup();
+
+                //! Key
+                static const QString &KeyLocalSimConnectCfgFilename();
+
             };
         } // namespace
     } // namespace

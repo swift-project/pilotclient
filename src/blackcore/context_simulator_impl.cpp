@@ -90,131 +90,143 @@ namespace BlackCore
     {
 
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulator)
+        if (!m_simulatorPlugin)
         {
             return false;
         }
 
-        Q_ASSERT(m_simulator->simulator);
-        return m_simulator->simulator->isConnected();
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        return m_simulatorPlugin->simulator->isConnected();
     }
 
     bool CContextSimulator::canConnect() const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulator)
+        if (!m_simulatorPlugin)
         {
             return false;
         }
 
-        Q_ASSERT(m_simulator->simulator);
-        return m_simulator->simulator->canConnect();
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        return m_simulatorPlugin->simulator->canConnect();
     }
 
     bool CContextSimulator::disconnectFromSimulator()
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulator)
+        if (!m_simulatorPlugin)
         {
             return false;
         }
 
-        Q_ASSERT(m_simulator->simulator);
-        return m_simulator->simulator->disconnectFrom();
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        return m_simulatorPlugin->simulator->disconnectFrom();
     }
 
-    BlackMisc::Simulation::CSimulatorPluginInfo CContextSimulator::getSimulatorInfo() const
+    BlackMisc::Simulation::CSimulatorPluginInfo CContextSimulator::getSimulatorPluginInfo() const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulator)
+        if (!m_simulatorPlugin)
         {
             return BlackMisc::Simulation::CSimulatorPluginInfo();
         }
 
-        Q_ASSERT(m_simulator->simulator);
-        return m_simulator->info;
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        return m_simulatorPlugin->info;
+    }
+
+    CSimulatorSetup CContextSimulator::getSimulatorSetup() const
+    {
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (!m_simulatorPlugin || !m_simulatorPlugin->simulator)
+        {
+            return BlackMisc::Simulation::CSimulatorSetup();
+        }
+
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        return m_simulatorPlugin->simulator->getSimulatorSetup();
     }
 
     CAirportList CContextSimulator::getAirportsInRange() const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         // If no ISimulator object is available, return a dummy.
-        if (!m_simulator)
+        if (!m_simulatorPlugin)
         {
             return CAirportList();
         }
 
-        Q_ASSERT(m_simulator->simulator);
-        return m_simulator->simulator->getAirportsInRange();
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        return m_simulatorPlugin->simulator->getAirportsInRange();
     }
 
     CAircraftModelList CContextSimulator::getInstalledModels() const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         // If no ISimulator object is available, return a dummy.
-        if (!m_simulator)
+        if (!m_simulatorPlugin)
         {
             return CAircraftModelList();
         }
 
-        Q_ASSERT(m_simulator->simulator);
-        return m_simulator->simulator->getInstalledModels();
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        return m_simulatorPlugin->simulator->getInstalledModels();
     }
 
     int CContextSimulator::getInstalledModelsCount() const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulator) { return 0; }
+        if (!m_simulatorPlugin) { return 0; }
 
-        Q_ASSERT(m_simulator->simulator);
-        return this->m_simulator->simulator->getInstalledModels().size();
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        return this->m_simulatorPlugin->simulator->getInstalledModels().size();
     }
 
     CAircraftModelList CContextSimulator::getInstalledModelsStartingWith(const QString modelString) const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << modelString; }
-        if (!m_simulator)
+        if (!m_simulatorPlugin)
         {
             return CAircraftModelList();
         }
 
-        Q_ASSERT(m_simulator->simulator);
-        return m_simulator->simulator->getInstalledModels().findModelsStartingWith(modelString);
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        return m_simulatorPlugin->simulator->getInstalledModels().findModelsStartingWith(modelString);
     }
 
     void CContextSimulator::reloadInstalledModels()
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulator)
+        if (!m_simulatorPlugin)
         {
             return;
         }
-        Q_ASSERT(m_simulator->simulator);
-        m_simulator->simulator->reloadInstalledModels();
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        m_simulatorPlugin->simulator->reloadInstalledModels();
     }
 
     CAircraftIcao CContextSimulator::getIcaoForModelString(const QString &modelString) const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << modelString; }
-        if (!m_simulator)
+        if (!m_simulatorPlugin)
         {
             return CAircraftIcao();
         }
 
-        Q_ASSERT(m_simulator->simulator);
-        return m_simulator->simulator->getIcaoForModelString(modelString);
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        return m_simulatorPlugin->simulator->getIcaoForModelString(modelString);
     }
 
     bool CContextSimulator::setTimeSynchronization(bool enable, CTime offset)
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulator)
+        if (!m_simulatorPlugin)
         {
             return false;
         }
 
-        Q_ASSERT(m_simulator->simulator);
-        bool c = m_simulator->simulator->setTimeSynchronization(enable, offset);
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        bool c = m_simulatorPlugin->simulator->setTimeSynchronization(enable, offset);
         if (!c)
         {
             return false;
@@ -227,64 +239,64 @@ namespace BlackCore
     bool CContextSimulator::isTimeSynchronized() const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulator)
+        if (!m_simulatorPlugin)
         {
             return false;
         }
 
-        Q_ASSERT(m_simulator->simulator);
-        return m_simulator->simulator->isTimeSynchronized();
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        return m_simulatorPlugin->simulator->isTimeSynchronized();
     }
 
     int CContextSimulator::getMaxRenderedAircraft() const
     {
         if (m_debugEnabled) {CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulator)
+        if (!m_simulatorPlugin)
         {
             return 0;
         }
 
-        Q_ASSERT(m_simulator->simulator);
-        return m_simulator->simulator->getMaxRenderedAircraft();
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        return m_simulatorPlugin->simulator->getMaxRenderedAircraft();
     }
 
     void CContextSimulator::setMaxRenderedAircraft(int number)
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << number; }
 
-        if (m_simulator)
+        if (m_simulatorPlugin)
         {
-            Q_ASSERT(m_simulator->simulator);
-            m_simulator->simulator->setMaxRenderedAircraft(number);
+            Q_ASSERT(m_simulatorPlugin->simulator);
+            m_simulatorPlugin->simulator->setMaxRenderedAircraft(number);
         }
     }
 
     void CContextSimulator::setMaxRenderedDistance(CLength &distance)
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << distance; }
-        if (m_simulator)
+        if (m_simulatorPlugin)
         {
-            Q_ASSERT(m_simulator->simulator);
-            this->m_simulator->simulator->setMaxRenderedDistance(distance);
+            Q_ASSERT(m_simulatorPlugin->simulator);
+            this->m_simulatorPlugin->simulator->setMaxRenderedDistance(distance);
         }
     }
 
     QString CContextSimulator::getRenderRestrictionText() const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulator) { return ""; }
+        if (!m_simulatorPlugin) { return ""; }
 
-        Q_ASSERT(m_simulator->simulator);
-        if (!m_simulator->simulator->isRenderingRestricted()) { return "none"; }
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        if (!m_simulatorPlugin->simulator->isRenderingRestricted()) { return "none"; }
         QString rt;
-        if (m_simulator->simulator->isMaxAircraftRestricted())
+        if (m_simulatorPlugin->simulator->isMaxAircraftRestricted())
         {
-            rt.append(QString::number(m_simulator->simulator->getMaxRenderedAircraft())).append(" A/C");
+            rt.append(QString::number(m_simulatorPlugin->simulator->getMaxRenderedAircraft())).append(" A/C");
         }
-        if (m_simulator->simulator->isMaxDistanceRestricted())
+        if (m_simulatorPlugin->simulator->isMaxDistanceRestricted())
         {
             if (!rt.isEmpty()) { rt.append(" ");}
-            rt.append(m_simulator->simulator->getMaxRenderedDistance().valueRoundedWithUnit(CLengthUnit::NM(), 0));
+            rt.append(m_simulatorPlugin->simulator->getMaxRenderedDistance().valueRoundedWithUnit(CLengthUnit::NM(), 0));
         }
         return rt;
     }
@@ -292,55 +304,55 @@ namespace BlackCore
     CLength CContextSimulator::getMaxRenderedDistance() const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulator)
+        if (!m_simulatorPlugin)
         {
             return CLength(0, CLengthUnit::nullUnit());
         }
-        Q_ASSERT(m_simulator->simulator);
-        return this->m_simulator->simulator->getMaxRenderedDistance();
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        return this->m_simulatorPlugin->simulator->getMaxRenderedDistance();
     }
 
     CLength CContextSimulator::getRenderedDistanceBoundary() const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulator)
+        if (!m_simulatorPlugin)
         {
             return CLength(20.0, CLengthUnit::NM());
         }
-        Q_ASSERT(m_simulator->simulator);
-        return this->m_simulator->simulator->getRenderedDistanceBoundary();
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        return this->m_simulatorPlugin->simulator->getRenderedDistanceBoundary();
     }
 
     void CContextSimulator::deleteAllRenderingRestrictions()
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (m_simulator)
+        if (m_simulatorPlugin)
         {
-            Q_ASSERT(m_simulator->simulator);
-            this->m_simulator->simulator->deleteAllRenderingRestrictions();
+            Q_ASSERT(m_simulatorPlugin->simulator);
+            this->m_simulatorPlugin->simulator->deleteAllRenderingRestrictions();
         }
     }
 
     bool CContextSimulator::isRenderingRestricted() const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulator)
+        if (!m_simulatorPlugin)
         {
             return false;
         }
-        Q_ASSERT(m_simulator->simulator);
-        return this->m_simulator->simulator->isRenderingRestricted();
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        return this->m_simulatorPlugin->simulator->isRenderingRestricted();
     }
 
     CTime CContextSimulator::getTimeSynchronizationOffset() const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulator)
+        if (!m_simulatorPlugin)
         {
             return CTime(0, CTimeUnit::hrmin());
         }
-        Q_ASSERT(m_simulator->simulator);
-        return this->m_simulator->simulator->getTimeSynchronizationOffset();
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        return this->m_simulatorPlugin->simulator->getTimeSynchronizationOffset();
     }
 
     bool CContextSimulator::loadSimulatorPlugin(const CSimulatorPluginInfo &simulatorInfo)
@@ -372,17 +384,17 @@ namespace BlackCore
 
         PluginData *plugin = findPlugin(simulatorInfo);
         plugin->simulator = newSimulator;
-        m_simulator = plugin;
+        m_simulatorPlugin = plugin;
 
-        connect(m_simulator->simulator, &ISimulator::simulatorStatusChanged, this, &CContextSimulator::ps_onSimulatorStatusChanged);
-        connect(m_simulator->simulator, &ISimulator::ownAircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
-        connect(m_simulator->simulator, &ISimulator::modelMatchingCompleted, this, &IContextSimulator::modelMatchingCompleted);
-        connect(m_simulator->simulator, &ISimulator::installedAircraftModelsChanged, this, &IContextSimulator::installedAircraftModelsChanged);
-        connect(m_simulator->simulator, &ISimulator::restrictedRenderingChanged, this, &IContextSimulator::restrictedRenderingChanged);
+        connect(m_simulatorPlugin->simulator, &ISimulator::simulatorStatusChanged, this, &CContextSimulator::ps_onSimulatorStatusChanged);
+        connect(m_simulatorPlugin->simulator, &ISimulator::ownAircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
+        connect(m_simulatorPlugin->simulator, &ISimulator::modelMatchingCompleted, this, &IContextSimulator::modelMatchingCompleted);
+        connect(m_simulatorPlugin->simulator, &ISimulator::installedAircraftModelsChanged, this, &IContextSimulator::installedAircraftModelsChanged);
+        connect(m_simulatorPlugin->simulator, &ISimulator::restrictedRenderingChanged, this, &IContextSimulator::restrictedRenderingChanged);
 
         // log from context to simulator
-        connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, m_simulator->simulator, &ISimulator::displayStatusMessage);
-        connect(CLogHandler::instance(), &CLogHandler::remoteMessageLogged, m_simulator->simulator, &ISimulator::displayStatusMessage);
+        connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, m_simulatorPlugin->simulator, &ISimulator::displayStatusMessage);
+        connect(CLogHandler::instance(), &CLogHandler::remoteMessageLogged, m_simulatorPlugin->simulator, &ISimulator::displayStatusMessage);
 
         // connect with network
         IContextNetwork *networkContext = this->getIContextNetwork();
@@ -392,17 +404,17 @@ namespace BlackCore
         for (const CSimulatedAircraft &simAircraft : networkContext->getAircraftInRange())
         {
             Q_ASSERT(!simAircraft.getCallsign().isEmpty());
-            m_simulator->simulator->addRemoteAircraft(simAircraft);
+            m_simulatorPlugin->simulator->addRemoteAircraft(simAircraft);
         }
 
         // apply latest settings
         settingsChanged(static_cast<uint>(IContextSettings::SettingsSimulator));
 
         // try to connect
-        m_simulator->simulator->asyncConnectTo();
+        m_simulatorPlugin->simulator->asyncConnectTo();
 
         // info about what is going on
-        CLogMessage(this).info("Simulator plugin loaded: %1") << this->m_simulator->info.toQString(true);
+        CLogMessage(this).info("Simulator plugin loaded: %1") << this->m_simulatorPlugin->info.toQString(true);
         return true;
     }
 
@@ -441,10 +453,10 @@ namespace BlackCore
         Q_ASSERT(this->getIContextApplication()->isUsingImplementingObject());
         Q_ASSERT(!simulatorInfo.isUnspecified());
 
-        if (this->m_simulator)
+        if (this->m_simulatorPlugin)
         {
             // already loaded
-            CLogMessage(this).warning("Cannot listen for simulator while the driver %1 is still loaded") << m_simulator->info.toQString();
+            CLogMessage(this).warning("Cannot listen for simulator while the driver %1 is still loaded") << m_simulatorPlugin->info.toQString();
             return;
         }
 
@@ -517,25 +529,25 @@ namespace BlackCore
 
     void CContextSimulator::unloadSimulatorPlugin()
     {
-        if (m_simulator)
+        if (m_simulatorPlugin)
         {
             // depending on shutdown order, network might already have been deleted
             IContextNetwork *networkContext = this->getIContextNetwork();
             Q_ASSERT(networkContext);
             Q_ASSERT(networkContext->isLocalObject());
             Q_UNUSED(networkContext);
-            Q_ASSERT(m_simulator->simulator);
+            Q_ASSERT(m_simulatorPlugin->simulator);
 
-            m_simulator->simulator->disconnect();
-            CLogHandler::instance()->disconnect(m_simulator->simulator);
-            this->disconnect(m_simulator->simulator);
+            m_simulatorPlugin->simulator->disconnect();
+            CLogHandler::instance()->disconnect(m_simulatorPlugin->simulator);
+            this->disconnect(m_simulatorPlugin->simulator);
 
-            if (m_simulator->simulator->isConnected())
-                m_simulator->simulator->disconnectFrom(); // disconnect from simulator
+            if (m_simulatorPlugin->simulator->isConnected())
+                m_simulatorPlugin->simulator->disconnectFrom(); // disconnect from simulator
 
-            m_simulator->simulator->deleteLater();
-            m_simulator->simulator = nullptr;
-            m_simulator = nullptr;
+            m_simulatorPlugin->simulator->deleteLater();
+            m_simulatorPlugin->simulator = nullptr;
+            m_simulatorPlugin = nullptr;
         }
     }
 
@@ -544,16 +556,16 @@ namespace BlackCore
         // todo:
         // This was previously an assert and it should be one again in the future.
         // This slot should not even be called when no simulator is available.
-        if (!m_simulator)
+        if (!m_simulatorPlugin)
         {
             // Do something if no simulator is running
             return;
         }
 
-        Q_ASSERT(m_simulator->simulator);
+        Q_ASSERT(m_simulatorPlugin->simulator);
         Q_ASSERT(!remoteAircraft.getCallsign().isEmpty());
 
-        m_simulator->simulator->addRemoteAircraft(remoteAircraft);
+        m_simulatorPlugin->simulator->addRemoteAircraft(remoteAircraft);
     }
 
     void CContextSimulator::ps_removedRemoteAircraft(const CCallsign &callsign)
@@ -561,21 +573,21 @@ namespace BlackCore
         // todo:
         // This was previously an assert and it should be one again in the future.
         // This slot should not even be called when no simulator is available.
-        if (!m_simulator)
+        if (!m_simulatorPlugin)
         {
             // Do something if no simulator is running
             return;
         }
 
-        Q_ASSERT(m_simulator->simulator);
+        Q_ASSERT(m_simulatorPlugin->simulator);
 
-        m_simulator->simulator->removeRemoteAircraft(callsign);
+        m_simulatorPlugin->simulator->removeRemoteAircraft(callsign);
     }
 
     void CContextSimulator::ps_onSimulatorStatusChanged(int status)
     {
-        Q_ASSERT(m_simulator);
-        Q_ASSERT(m_simulator->simulator);
+        Q_ASSERT(m_simulatorPlugin);
+        Q_ASSERT(m_simulatorPlugin->simulator);
 
         if (!(status & ISimulator::Connected))
         {
@@ -590,16 +602,16 @@ namespace BlackCore
         // todo:
         // This was previously an assert and it should be one again in the future.
         // This slot should not even be called when no simulator is available.
-        if (!m_simulator)
+        if (!m_simulatorPlugin)
         {
             // Do something if no simulator is running
             return;
         }
 
-        Q_ASSERT(m_simulator->simulator);
+        Q_ASSERT(m_simulatorPlugin->simulator);
         for (const auto &tm : textMessages)
         {
-            m_simulator->simulator->displayTextMessage(tm);
+            m_simulatorPlugin->simulator->displayTextMessage(tm);
         }
     }
 
@@ -612,14 +624,14 @@ namespace BlackCore
 
     void CContextSimulator::ps_changedRemoteAircraftModel(const CSimulatedAircraft &aircraft, const QString &originator)
     {
-        Q_ASSERT(this->m_simulator);
-        this->m_simulator->simulator->changeRemoteAircraftModel(aircraft, originator);
+        Q_ASSERT(this->m_simulatorPlugin);
+        this->m_simulatorPlugin->simulator->changeRemoteAircraftModel(aircraft, originator);
     }
 
     void CContextSimulator::ps_changedRemoteAircraftEnabled(const CSimulatedAircraft &aircraft, const QString &originator)
     {
-        Q_ASSERT(this->m_simulator);
-        this->m_simulator->simulator->changeRemoteAircraftEnabled(aircraft, originator);
+        Q_ASSERT(this->m_simulatorPlugin);
+        this->m_simulatorPlugin->simulator->changeRemoteAircraftEnabled(aircraft, originator);
     }
 
     void CContextSimulator::ps_updateSimulatorCockpitFromContext(const CAircraft &ownAircraft, const QString &originator)
@@ -627,19 +639,19 @@ namespace BlackCore
         // todo:
         // This was previously an assert and it should be one again in the future.
         // This slot should not even be called when no simulator is available.
-        if (!m_simulator)
+        if (!m_simulatorPlugin)
         {
             // Do something if no simulator is running
             return;
         }
 
-        Q_ASSERT(m_simulator->simulator);
+        Q_ASSERT(m_simulatorPlugin->simulator);
 
         // avoid loops
         if (originator.isEmpty() || originator == IContextSimulator::InterfaceName()) { return; }
 
         // update
-        this->m_simulator->simulator->updateOwnSimulatorCockpit(ownAircraft, originator);
+        this->m_simulatorPlugin->simulator->updateOwnSimulatorCockpit(ownAircraft, originator);
     }
 
     void CContextSimulator::settingsChanged(uint type)
@@ -653,7 +665,7 @@ namespace BlackCore
         CSimulatorPluginInfo plugin = getIContextSettings()->getSimulatorSettings().getSelectedPlugin();
 
         // no simulator loaded yet, listen
-        if (!m_simulator)
+        if (!m_simulatorPlugin)
         {
             stopSimulatorListeners();
             if (plugin.isUnspecified())
@@ -670,58 +682,58 @@ namespace BlackCore
             // time sync
             bool timeSync = settingsSim.isTimeSyncEnabled();
             CTime syncOffset = settingsSim.getSyncTimeOffset();
-            m_simulator->simulator->setTimeSynchronization(timeSync, syncOffset);
+            m_simulatorPlugin->simulator->setTimeSynchronization(timeSync, syncOffset);
         }
     }
 
     CPixmap CContextSimulator::iconForModel(const QString &modelString) const
     {
-        if (!this->m_simulator)
+        if (!this->m_simulatorPlugin)
         {
             return CPixmap();
         }
 
-        Q_ASSERT(m_simulator->simulator);
-        return m_simulator->simulator->iconForModel(modelString);
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        return m_simulatorPlugin->simulator->iconForModel(modelString);
     }
 
     void CContextSimulator::enableDebugMessages(bool driver, bool interpolator)
     {
-        if (!this->m_simulator)
+        if (!this->m_simulatorPlugin)
         {
             return;
         }
 
-        Q_ASSERT(m_simulator->simulator);
-        return m_simulator->simulator->enableDebugMessages(driver, interpolator);
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        return m_simulatorPlugin->simulator->enableDebugMessages(driver, interpolator);
     }
 
     void CContextSimulator::highlightAircraft(const CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const CTime &displayTime)
     {
-        Q_ASSERT(m_simulator->simulator);
-        this->m_simulator->simulator->highlightAircraft(aircraftToHighlight, enableHighlight, displayTime);
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        this->m_simulatorPlugin->simulator->highlightAircraft(aircraftToHighlight, enableHighlight, displayTime);
     }
 
     bool CContextSimulator::isPaused() const
     {
-        if (!this->m_simulator)
+        if (!this->m_simulatorPlugin)
         {
             return false;
         }
 
-        Q_ASSERT(m_simulator->simulator);
-        return m_simulator->simulator->isPaused();
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        return m_simulatorPlugin->simulator->isPaused();
     }
 
     bool CContextSimulator::isSimulating() const
     {
-        if (!this->m_simulator)
+        if (!this->m_simulatorPlugin)
         {
             return false;
         }
 
-        Q_ASSERT(m_simulator->simulator);
-        return m_simulator->simulator->isSimulating();
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        return m_simulatorPlugin->simulator->isSimulating();
     }
 
     void CContextSimulator::ps_simulatorStarted(QObject *listener)

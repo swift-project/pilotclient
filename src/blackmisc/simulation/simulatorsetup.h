@@ -9,10 +9,10 @@
 
 //! \file
 
-#ifndef BLACKMISC_SIMULATION_SIMSETUP_H
-#define BLACKMISC_SIMULATION_SIMSETUP_H
+#ifndef BLACKMISC_SIMULATION_SIMULATORSETUP_H
+#define BLACKMISC_SIMULATION_SIMULATORSETUP_H
 
-#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/namevariantpairlist.h"
 #include <QMap>
 #include <QString>
 
@@ -20,41 +20,67 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        /*!
-         * \brief Simulator settings for flight simulators
-         * \details Represents the generic part of a simulator setup ("common denominator"),
-         *          details kept in specialized classes
-         */
-        class CSimulatorSetup
+        //! Simulator settings for flight simulators.
+        //! Those are set up at runtime and represent information about the simulator (like a small registry)
+        class CSimulatorSetup : public CValueObject<CSimulatorSetup>
         {
-        protected:
-            BlackMisc::CPropertyIndexVariantMap m_setup; //!< values describing the simulator setup (path, config files)
-
-        protected:
-            //! Default constructor
-            CSimulatorSetup() {}
-
-            //! Constructor
-            CSimulatorSetup(const BlackMisc::CPropertyIndexVariantMap &map) : m_setup(map) {}
 
         public:
             //! Specific values
             enum
             {
-                SetupSimPath = BlackMisc::CPropertyIndex::GlobalIndexAbuseMode
+                IndexData = BlackMisc::CPropertyIndex::GlobalIndexCSimulatorSetup
             };
 
-            //! Settings
-            BlackMisc::CPropertyIndexVariantMap getSettings() const { return this->m_setup;}
+            //! Default constructor
+            CSimulatorSetup() {}
+
+            //! All values
+            BlackMisc::CNameVariantPairList getData() const { return this->m_data;}
 
             //! Settings
-            void setSettings(const BlackMisc::CPropertyIndexVariantMap &map);
+            void setData(const BlackMisc::CNameVariantPairList &data) { this->m_data = data; }
 
-            //! Init, to be used where simulator runs
-            void init();
+            //! Set value
+            void setValue(const QString &name, const QString &value);
+
+            //! Get string value
+            QString getStringValue(const QString &name) const;
+
+            //! Simulator version info, something like "FSX 10.3.2"
+            void setSimulatorVersion(const QString versionInfo);
+
+            //! Path where simulator is installed
+            void setSimulatorInstallationDirectory(const QString fullFilePath);
+
+            //! Simulator version info, something like "FSX 10.3.2"
+            QString getSimulatorVersion() const;
+
+            //! Path where simulator is installed
+            QString getSimulatorInstallationDirectory() const;
+
+            //! \copydoc CValueObject::propertyByIndex
+            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+
+            //! \copydoc CValueObject::setPropertyByIndex
+            virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+
+            //! Register metadata
+            void static registerMetadata();
+
+        protected:
+            //! \copydoc CValueObject::convertToQString()
+            virtual QString convertToQString(bool i18n = false) const override;
+
+        private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CSimulatorSetup)
+            BlackMisc::CNameVariantPairList m_data;
 
         };
     } // namespace
 } // namespace
+
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Simulation::CSimulatorSetup, (o.m_data))
+Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorSetup)
 
 #endif // guard

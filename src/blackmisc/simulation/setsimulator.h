@@ -25,6 +25,7 @@ namespace BlackMisc
         namespace Settings
         {
             //! Value object encapsulating information of simulator related settings.
+            //! \deprecated will be removed with new MS settings
             class CSettingsSimulator : public BlackMisc::CValueObject<CSettingsSimulator>
             {
             public:

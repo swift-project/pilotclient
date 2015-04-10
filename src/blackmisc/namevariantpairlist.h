@@ -18,9 +18,8 @@
 
 namespace BlackMisc
 {
-    /*!
-     * Value object encapsulating a list of name/variant pairs.
-     */
+    //! Value object encapsulating a list of name/variant pairs
+    //! Currently name must be unique
     class CNameVariantPairList : public CSequence<CNameVariantPair>
     {
     public:
@@ -30,11 +29,24 @@ namespace BlackMisc
         //! Construct from a base class object.
         CNameVariantPairList(const CSequence<CNameVariantPair> &other);
 
-        //! Get name index
-        int getNameRowIndex(const QString &name) const;
+        //! Get name's index, -1 if not found
+        int getIndexForName(const QString &name) const;
 
         //! Contains name
         bool containsName(const QString &name) const;
+
+        //! Get value
+        CNameVariantPair getValue(const QString &name) const;
+
+        //! Get pair's variant value or default if not existing
+        CVariant getVariantValue(const QString &name) const;
+
+        //! Get pair's variant value as string (empty if not existing)
+        QString getValueAsString(const QString &name) const;
+
+        //! Add value, if name already exists replace (true)
+        //! If one is sure(!) the name does not exists, \sa push_back() can be used
+        bool addOrReplaceValue(const QString &name, const CVariant &value, const CIcon &icon = CIcon());
 
         //! \copydoc CValueObject::toQVariant
         virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }

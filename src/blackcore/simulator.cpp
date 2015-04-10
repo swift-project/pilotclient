@@ -245,6 +245,11 @@ namespace BlackCore
         return m_simulatorPluginInfo;
     }
 
+    const CSimulatorSetup &CSimulatorCommon::getSimulatorSetup() const
+    {
+        return m_simulatorSetup;
+    }
+
     void CSimulatorCommon::deleteAllRenderingRestrictions()
     {
         if (!isRenderingEnabled()) { return; }

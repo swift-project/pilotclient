@@ -180,7 +180,7 @@ namespace BlackCore
             this->m_network->presetIcaoCodes(ownAircraft.getIcaoInfo());
             if (getIContextSimulator())
             {
-                this->m_network->presetSimulatorInfo(getIContextSimulator()->getSimulatorInfo());
+                this->m_network->presetSimulatorInfo(getIContextSimulator()->getSimulatorPluginInfo());
             }
             else
             {

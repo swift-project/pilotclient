@@ -44,29 +44,6 @@ namespace BlackMisc
             return m_name.isEmpty();
         }
 
-        CVariant CSimulatorPluginInfo::getSimulatorSetupValue(int index) const
-        {
-            return this->m_simsetup.value(index);
-        }
-
-        QString CSimulatorPluginInfo::getSimulatorSetupValueAsString(int index) const
-        {
-            CVariant qv = getSimulatorSetupValue(index);
-            if (qv.canConvert<QString>())
-            {
-                return qv.toQString();
-            }
-            else
-            {
-                return "";
-            }
-        }
-
-        void CSimulatorPluginInfo::setSimulatorSetup(const BlackMisc::CPropertyIndexVariantMap &setup)
-        {
-            this->m_simsetup = setup;
-        }
-
         QString CSimulatorPluginInfo::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);

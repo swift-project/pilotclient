@@ -14,32 +14,17 @@
 namespace BlackMisc
 {
 
-    /*
-     * Constructor
-     */
     CNameVariantPair::CNameVariantPair(const QString &name, const CVariant &variant, const CIcon &icon)
         : m_name(name), m_variant(variant), m_icon(icon)
     {  }
 
-    /*
-     * Icon
-     */
-    const CIcon &CNameVariantPair::getIcon() const
-    {
-        return this->m_icon;
-    }
+    CIcon CNameVariantPair::toIcon() const { return m_icon; }
 
-    /*
-     * Icon?
-     */
     bool CNameVariantPair::hasIcon() const
     {
-        return this->getIcon().isSet();
+        return this->m_icon.isSet();
     }
 
-    /*
-     * Convert to string
-     */
     QString CNameVariantPair::convertToQString(bool i18n) const
     {
         QString s(this->m_name);
@@ -47,9 +32,6 @@ namespace BlackMisc
         return s;
     }
 
-    /*
-     * Property by index
-     */
     CVariant CNameVariantPair::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
     {
         if (index.isMyself()) { return this->toCVariant(); }
@@ -60,18 +42,11 @@ namespace BlackMisc
             return CVariant(this->m_name);
         case IndexVariant:
             return this->m_variant;
-        case IndexIcon:
-            return this->m_icon.toCVariant();
-        case IndexPixmap:
-            return CVariant(this->m_icon.toPixmap());
         default:
             return CValueObject::propertyByIndex(index);
         }
     }
 
-    /*
-     * Property by index (setter)
-     */
     void CNameVariantPair::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
     {
         if (index.isMyself())
@@ -104,5 +79,4 @@ namespace BlackMisc
             break;
         }
     }
-
 } // namespace

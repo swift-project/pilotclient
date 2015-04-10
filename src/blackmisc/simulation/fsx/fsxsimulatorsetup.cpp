@@ -17,6 +17,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation::FsCommon;
+using namespace BlackMisc::Simulation;
 
 namespace BlackMisc
 {
@@ -24,18 +25,29 @@ namespace BlackMisc
     {
         namespace Fsx
         {
-            void CFsxSimulatorSetup::init()
+            CSimulatorSetup CFsxSimulatorSetup::getInitialSetup()
             {
-                CSimulatorSetup::init();
-                this->m_setup.addValue(SetupSimConnectCfgFile, CSimConnectUtilities::getLocalSimConnectCfgFilename());
+                CSimulatorSetup s;
+                s.setValue(KeyLocalSimConnectCfgFilename(), CSimConnectUtilities::getLocalSimConnectCfgFilename());
 
                 if (CProject::isCompiledWithFsxSupport())
                 {
                     // set FSX path
                     QString fsxPath = CFsCommonUtil::fsxDirFromRegistry();
-                    if (!fsxPath.isEmpty()) this->m_setup.value(CSimulatorSetup::SetupSimPath, CVariant(fsxPath));
+                    if (!fsxPath.isEmpty())
+                    {
+                        s.setSimulatorInstallationDirectory(fsxPath);
+                    }
                 }
+                return s;
+
             }
+
+            const QString &CFsxSimulatorSetup::KeyLocalSimConnectCfgFilename()
+            {
+                static const QString k("fsx/simConnectCfgFilename"); return k;
+            }
+
         } // namespace
     } // namespace
 } // namespace

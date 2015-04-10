@@ -22,22 +22,16 @@ namespace BlackMisc
         //! Describing a simulator plugin
         class CSimulatorPluginInfo : public BlackMisc::CValueObject<CSimulatorPluginInfo>
         {
-            /**
-             * The _name_ property identifies the plugin itself and must be uniqe.
-             */
+            //! The _name_ property identifies the plugin itself and must be uniqe.
             Q_PROPERTY(QString getName READ getName)
 
-            /**
-             * The _simulator_ property specifies which simulator the plugin handles.
-             * There cannot be two plugins loaded for the same simulator.
-             * swift enables some features for particular simulators. Currently recognized are:
-             *      fsx, fs9, xplane
-             */
+            //! The _simulator_ property specifies which simulator the plugin handles.
+            //! There cannot be two plugins loaded for the same simulator.
+            //! swift enables some features for particular simulators. Currently recognized are:
+            //!   fsx, fs9, xplane
             Q_PROPERTY(QString getSimulator READ getSimulator)
 
-            /**
-             * The _description_ property provides a short, human-readable description of the plugin.
-             */
+            //! The _description_ property provides a short, human-readable description of the plugin.
             Q_PROPERTY(QString getDescription READ getDescription)
 
         public:
@@ -48,15 +42,6 @@ namespace BlackMisc
 
             //! Unspecified simulator
             bool isUnspecified() const;
-
-            //! Single setting value
-            BlackMisc::CVariant getSimulatorSetupValue(int index) const;
-
-            //! Single setting value
-            QString getSimulatorSetupValueAsString(int index) const;
-
-            //! Set single settings
-            void setSimulatorSetup(const BlackMisc::CPropertyIndexVariantMap &setup);
 
             //! Check if the provided plugin metadata is valid.
             //! Simulator plugin (driver) has to meet the following requirements:
@@ -88,7 +73,6 @@ namespace BlackMisc
             QString m_simulator;
             QString m_description;
             bool m_valid { false };
-            BlackMisc::CPropertyIndexVariantMap m_simsetup; //!< allows to access simulator keys requried on remote side
         };
     } // ns
 } // ns
@@ -97,8 +81,7 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Simulation::CSimulatorPluginInfo, (
                                    attr(o.m_name),
                                    attr(o.m_simulator),
                                    attr(o.m_description),
-                                   attr(o.m_valid),
-                                   attr(o.m_simsetup, flags<DisabledForComparison>())
+                                   attr(o.m_valid)
                                ))
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorPluginInfo)
 

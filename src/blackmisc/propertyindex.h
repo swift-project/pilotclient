@@ -58,10 +58,11 @@ namespace BlackMisc
             GlobalIndexCSimulatedAircraft     =  4400,
             GlobalIndexCAircraftMapping       =  4500,
             GlobalIndexCTextMessage           =  4600,
-            GlobalIndexCVoiceRoom             =  5000,
-            GlobalIndexCSettingKeyboardHotkey =  6000,
-            GlobalIndexCAircraftCfgEntries    =  7000,
-            GlobalIndexAbuseMode              = 20000 // property index abused as map key or otherwise
+            GlobalIndexCSimulatorSetup        =  4700,
+            GlobalIndexCAircraftCfgEntries    =  4800,
+            GlobalIndexCVoiceRoom             =  6000,
+            GlobalIndexCSettingKeyboardHotkey =  7000,
+            GlobalIndexAbuseMode              = 20000 // property index abused as map key or otherwise, do be removed if no longer needed
         };
 
         //! Default constructor.

@@ -44,9 +44,6 @@ namespace BlackCore
 
     public slots:
 
-        //! \copydoc IContextSimulator::getSimulatorPluginList()
-        virtual BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const override;
-
         //! \copydoc IContextSimulator::isConnected()
         virtual bool isConnected() const override;
 
@@ -80,8 +77,14 @@ namespace BlackCore
         //! \copydoc IContextSimulator::getIcaoForModelString
         virtual BlackMisc::Aviation::CAircraftIcao getIcaoForModelString(const QString &modelString) const override;
 
-        //! \copydoc IContextSimulator::getSimulatorInfo
-        virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorInfo() const override;
+        //! \copydoc IContextSimulator::getSimulatorPluginInfo
+        virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const override;
+
+        //! \copydoc IContextSimulator::getSimulatorSetup
+        virtual BlackMisc::Simulation::CSimulatorSetup getSimulatorSetup() const override;
+
+        //! \copydoc IContextSimulator::getSimulatorPluginList()
+        virtual BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const override;
 
         //! \copydoc IContextSimulator::setTimeSynchronization
         virtual bool setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
