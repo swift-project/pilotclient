@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFTLIST_H
 #define BLACKMISC_AVIATION_AIRCRAFTLIST_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/callsignobjectlist.h"
@@ -28,7 +29,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating a list of aircraft.
-        class CAircraftList :
+        class BLACKMISC_EXPORT CAircraftList :
             public CSequence<CAircraft>,
             public ICallsignObjectList<CAircraft, CAircraftList>,
             public BlackMisc::Geo::IGeoObjectWithRelativePositionList<CAircraft, CAircraftList>

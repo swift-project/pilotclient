@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_VALUEOBJECT_H
 #define BLACKMISC_VALUEOBJECT_H
 
+#include "blackmiscexport.h"
 #include "dbus.h"
 #include "tuple.h"
 #include "json.h"
@@ -65,7 +66,7 @@ namespace BlackMisc
     /*!
      * Default base class for CValueObject.
      */
-    class CEmpty
+    class BLACKMISC_EXPORT CEmpty
     {
     public:
         //! Base class is alias of itself

@@ -18,7 +18,7 @@ precompile_header:!isEmpty(PRECOMPILED_HEADER) {
     DEFINES += USING_PCH
 }
 
-DEFINES += LOG_IN_FILE
+DEFINES += LOG_IN_FILE BUILD_BLACKMISC_LIB
 RESOURCES += blackmisc.qrc
 
 # lupdate (from cmd, e.g. lupdate blackmisc.pro)

@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_INFORMATIONMESSAGE_H
 #define BLACKMISC_AVIATION_INFORMATIONMESSAGE_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <QString>
@@ -22,7 +23,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating information message (ATIS, METAR, TAF)
-        class CInformationMessage : public CValueObject<CInformationMessage>
+        class BLACKMISC_EXPORT CInformationMessage : public CValueObject<CInformationMessage>
         {
         public:
             /*!

@@ -12,13 +12,14 @@
 #ifndef BLACKMISC_HOTKEYFUNCTION_H
 #define BLACKMISC_HOTKEYFUNCTION_H
 
+#include "blackmiscexport.h"
 #include "propertyindex.h"
 #include "blackmiscfreefunctions.h"
 
 namespace BlackMisc
 {
     //! Value object representing a hotkey function.
-    class CHotkeyFunction : public CValueObject<CHotkeyFunction>
+    class BLACKMISC_EXPORT CHotkeyFunction : public CValueObject<CHotkeyFunction>
     {
     public:
         //! Function type

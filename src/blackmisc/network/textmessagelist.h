@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_NETWORK_TEXTMESSAGELIST_H
 #define BLACKMISC_NETWORK_TEXTMESSAGELIST_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/timestampobjectlist.h"
 #include "blackmisc/collection.h"
@@ -27,7 +28,7 @@ namespace BlackMisc
         /*!
          * Value object encapsulating a list of text messages
          */
-        class CTextMessageList :
+        class BLACKMISC_EXPORT CTextMessageList :
             public CSequence<CTextMessage>,
             public BlackMisc::ITimestampObjectList<CTextMessage, CTextMessageList>
         {

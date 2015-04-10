@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_GEO_LATITUDE_H
 #define BLACKMISC_GEO_LATITUDE_H
 
+#include "blackmisc/blackmiscexport.h"
 #include <QtCore/qmath.h>
 #include "blackmisc/geo/earthangle.h"
 
@@ -28,7 +29,7 @@ namespace BlackMisc
     {
 
         //! Latitude
-        class CLatitude : public CValueObject<CLatitude, CEarthAngle<CLatitude>>
+        class BLACKMISC_EXPORT CLatitude : public CValueObject<CLatitude, CEarthAngle<CLatitude>>
         {
         protected:
             //! \copydoc CValueObject::convertToQString

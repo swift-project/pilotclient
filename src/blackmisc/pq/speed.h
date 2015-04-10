@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_PQ_SPEED_H
 #define BLACKMISC_PQ_SPEED_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/physicalquantity.h"
 
 namespace BlackMisc
@@ -29,7 +30,7 @@ namespace BlackMisc
         /*!
          * Speed class, e.g. "m/s", "NM/h", "km/h", "ft/s"
          */
-        class CSpeed : public CValueObject<CSpeed, CPhysicalQuantity<CSpeedUnit, CSpeed>>
+        class BLACKMISC_EXPORT CSpeed : public CValueObject<CSpeed, CPhysicalQuantity<CSpeedUnit, CSpeed>>
         {
         public:
             //! Default constructor

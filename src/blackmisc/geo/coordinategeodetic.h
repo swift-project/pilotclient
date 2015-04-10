@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_COORDINATEGEODETIC_H
 #define BLACKMISC_COORDINATEGEODETIC_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
 #include "blackmisc/pq/length.h"
@@ -26,7 +27,7 @@ namespace BlackMisc
         //! \sa http://www.esri.com/news/arcuser/0703/geoid1of3.html
         //! \sa http://http://www.gmat.unsw.edu.au/snap/gps/clynch_pdfs/coordcvt.pdf (page 5)
         //! \sa http://en.wikipedia.org/wiki/Geodetic_datum#Vertical_datum
-        class ICoordinateGeodetic
+        class BLACKMISC_EXPORT ICoordinateGeodetic
         {
         public:
             //! Properties by index
@@ -82,14 +83,14 @@ namespace BlackMisc
         };
 
         //! Great circle distance between points
-        BlackMisc::PhysicalQuantities::CLength calculateGreatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
+        BLACKMISC_EXPORT BlackMisc::PhysicalQuantities::CLength calculateGreatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
 
         //! Initial bearing
-        BlackMisc::PhysicalQuantities::CAngle calculateBearing(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
+        BLACKMISC_EXPORT BlackMisc::PhysicalQuantities::CAngle calculateBearing(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
 
         //! Interface (actually more an abstract class) of coordinate and
         //! relative position to own aircraft
-        class ICoordinateWithRelativePosition : public ICoordinateGeodetic
+        class BLACKMISC_EXPORT ICoordinateWithRelativePosition : public ICoordinateGeodetic
         {
         public:
             //! Get the distance to own plane
@@ -126,7 +127,7 @@ namespace BlackMisc
 
 
         //! Geodetic coordinate
-        class CCoordinateGeodetic : public CValueObject<CCoordinateGeodetic>, public ICoordinateGeodetic
+        class BLACKMISC_EXPORT CCoordinateGeodetic : public CValueObject<CCoordinateGeodetic>, public ICoordinateGeodetic
         {
 
         public:

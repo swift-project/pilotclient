@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFTSITUATION_H
 #define BLACKMISC_AVIATION_AIRCRAFTSITUATION_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/aviation/altitude.h"
@@ -26,7 +27,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating information of an aircraft's situation
-        class CAircraftSituation :
+        class BLACKMISC_EXPORT CAircraftSituation :
             public CValueObject<CAircraftSituation>,
             public Geo::ICoordinateGeodetic, public BlackMisc::ITimestampBased
         {

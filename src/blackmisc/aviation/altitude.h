@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_ALTITUDE_H
 #define BLACKMISC_AVIATION_ALTITUDE_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/length.h"
 
 namespace BlackMisc
@@ -34,7 +35,7 @@ namespace BlackMisc
          * Altitude as used in aviation, can be AGL or MSL altitude
          * \remarks Intentionally allowing +/- CLength , and >= / <= CLength.
          */
-        class CAltitude : public CValueObject<CAltitude, PhysicalQuantities::CLength>
+        class BLACKMISC_EXPORT CAltitude : public CValueObject<CAltitude, PhysicalQuantities::CLength>
         {
         public:
             /*!

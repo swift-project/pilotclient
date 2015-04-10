@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_NETWORK_TEXTMESSAGE_H
 #define BLACKMISC_NETWORK_TEXTMESSAGE_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/aviation/callsign.h"
@@ -26,7 +27,7 @@ namespace BlackMisc
         /*!
          * Value object encapsulating information of a text message
          */
-        class CTextMessage :
+        class BLACKMISC_EXPORT CTextMessage :
             public CValueObject<CTextMessage>,
             public BlackMisc::ITimestampBased
         {

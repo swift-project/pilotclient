@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_PIXMAP_H
 #define BLACKMISC_PIXMAP_H
 
+#include "blackmiscexport.h"
 #include "valueobject.h"
 #include <QPixmap>
 #include <QReadWriteLock>
@@ -20,7 +21,7 @@ namespace BlackMisc
 {
     //! Value object for icons. An icon is stored in the global icon repository and
     //! identified by its index. It contains no(!) pyhsical data for the icon itself.
-    class CPixmap : public CValueObject<CPixmap>
+    class BLACKMISC_EXPORT CPixmap : public CValueObject<CPixmap>
     {
     public:
         //! Default constructor.

@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_WORKER_H
 #define BLACKMISC_WORKER_H
 
+#include "blackmiscexport.h"
 #include <QThread>
 #include <QMutex>
 #include <QTimer>
@@ -24,7 +25,7 @@ namespace BlackMisc
 {
 
     //! \private Class for synchronizing singleShot() task with its owner.
-    class CSingleShotController : public QObject
+    class BLACKMISC_EXPORT CSingleShotController : public QObject
     {
         Q_OBJECT
     public:
@@ -74,7 +75,7 @@ namespace BlackMisc
     /*!
      * Just a subclass of QThread whose destructor waits for the thread to finish.
      */
-    class CRegularThread : public QThread
+    class BLACKMISC_EXPORT CRegularThread : public QThread
     {
     public:
         //! Constructor
@@ -91,7 +92,7 @@ namespace BlackMisc
     /*!
      * Base class for CWorker and CContinuousWorker.
      */
-    class CWorkerBase : public QObject
+    class BLACKMISC_EXPORT CWorkerBase : public QObject
     {
         Q_OBJECT
 
@@ -187,7 +188,7 @@ namespace BlackMisc
      * The task is exposed as a function object, so could be a lambda or a hand-written closure.
      * CWorker can not be subclassed, instead it can be extended with rich callable task objects.
      */
-    class CWorker final : public CWorkerBase
+    class BLACKMISC_EXPORT CWorker final : public CWorkerBase
     {
         Q_OBJECT
 
@@ -213,7 +214,7 @@ namespace BlackMisc
     /*!
      * Base class for a long-lived worker object which lives in its own thread.
      */
-    class CContinuousWorker : public CWorkerBase
+    class BLACKMISC_EXPORT CContinuousWorker : public CWorkerBase
     {
         Q_OBJECT
 

@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFTLIGHTS_H
 #define BLACKMISC_AVIATION_AIRCRAFTLIGHTS_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/propertyindex.h"
 
@@ -20,7 +21,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating information about aircraft's lights
-        class CAircraftLights : public CValueObject<CAircraftLights>
+        class BLACKMISC_EXPORT CAircraftLights : public CValueObject<CAircraftLights>
         {
         public:
             //! Properties by index

@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_NETWORK_USERLIST_H
 #define BLACKMISC_NETWORK_USERLIST_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/collection.h"
@@ -24,7 +25,7 @@ namespace BlackMisc
     namespace Network
     {
         //! Value object encapsulating a list of voice rooms.
-        class CUserList : public CSequence<CUser>
+        class BLACKMISC_EXPORT CUserList : public CSequence<CUser>
         {
         public:
             //! Default constructor.

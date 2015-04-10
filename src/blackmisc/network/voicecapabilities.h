@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_NETWORK_VOICECAPABILITIES_H
 #define BLACKMISC_NETWORK_VOICECAPABILITIES_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
@@ -22,7 +23,7 @@ namespace BlackMisc
         /*!
          * Value object encapsulating information for voice capabilities.
          */
-        class CVoiceCapabilities : public CValueObject<CVoiceCapabilities>
+        class BLACKMISC_EXPORT CVoiceCapabilities : public CValueObject<CVoiceCapabilities>
         {
         public:
             //! Voice capabilities

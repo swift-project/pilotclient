@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SETTINGUTILITIES_H
 #define BLACKMISC_SETTINGUTILITIES_H
 
+#include "blackmiscexport.h"
 #include "blackmisc/statusmessagelist.h"
 
 namespace BlackMisc
@@ -19,7 +20,7 @@ namespace BlackMisc
     namespace Settings
     {
         //! Helper / utility methods for settings
-        class CSettingUtilities
+        class BLACKMISC_EXPORT CSettingUtilities
         {
         private:
             CSettingUtilities() {}

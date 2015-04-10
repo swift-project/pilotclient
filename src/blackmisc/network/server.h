@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_NETWORK_SERVER_H
 #define BLACKMISC_NETWORK_SERVER_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/valueobject.h"
@@ -21,7 +22,7 @@ namespace BlackMisc
     namespace Network
     {
         //! Value object encapsulating information of a server
-        class CServer : public CValueObject<CServer>
+        class BLACKMISC_EXPORT CServer : public CValueObject<CServer>
         {
         public:
             //! Properties by index

@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_STATUSMESSAGELIST_H
 #define BLACKMISC_STATUSMESSAGELIST_H
 
+#include "blackmiscexport.h"
 #include "timestampobjectlist.h"
 #include "valueobject.h"
 #include "sequence.h"
@@ -24,7 +25,7 @@ namespace BlackMisc
     /*!
      * Status messages, e.g. from Core -> GUI
      */
-    class CStatusMessageList :
+    class BLACKMISC_EXPORT CStatusMessageList :
         public CSequence<CStatusMessage>,
         public ITimestampObjectList<CStatusMessage, CStatusMessageList>
     {

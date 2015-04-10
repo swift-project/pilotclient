@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_PQ_PQSTRING_H
 #define BLACKMISC_PQ_PQSTRING_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/variant.h"
@@ -26,7 +27,7 @@ namespace BlackMisc
          * \details Used to parse strings into physical quantities, validate strings
          * \sa BlackMisc::PhysicalQuantity
          */
-        class CPqString : public CValueObject<CPqString>
+        class BLACKMISC_EXPORT CPqString : public CValueObject<CPqString>
         {
         protected:
             //! \copydoc CValueObject::convertToQString

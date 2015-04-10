@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_SIMULATEDNAIRCRAFTLIST_H
 #define BLACKMISC_SIMULATION_SIMULATEDNAIRCRAFTLIST_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/callsignobjectlist.h"
 #include "blackmisc/aviation/aircraftlist.h"
@@ -28,7 +29,7 @@ namespace BlackMisc
     namespace Simulation
     {
         //! Value object encapsulating a list of aircraft.
-        class CSimulatedAircraftList :
+        class BLACKMISC_EXPORT CSimulatedAircraftList :
             public BlackMisc::CSequence<CSimulatedAircraft>,
             public BlackMisc::Aviation::ICallsignObjectList<CSimulatedAircraft, CSimulatedAircraftList>,
             public BlackMisc::Geo::IGeoObjectWithRelativePositionList<CSimulatedAircraft, CSimulatedAircraftList>

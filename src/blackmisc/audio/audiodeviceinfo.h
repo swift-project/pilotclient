@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AUDIO_AUDIODEVICE_H
 #define BLACKMISC_AUDIO_AUDIODEVICE_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/valueobject.h"
 #include <QString>
@@ -25,7 +26,7 @@ namespace BlackMisc
          * If you want to safe this object, use the name instead of the index, since the index can change after
          * a restart.
          */
-        class CAudioDeviceInfo : public CValueObject<CAudioDeviceInfo>
+        class BLACKMISC_EXPORT CAudioDeviceInfo : public CValueObject<CAudioDeviceInfo>
         {
         public:
             //! Type

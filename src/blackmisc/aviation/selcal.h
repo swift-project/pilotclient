@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_SELCAL_H
 #define BLACKMISC_AVIATION_SELCAL_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/valueobject.h"
 
@@ -24,7 +25,7 @@ namespace BlackMisc
          * \see http://en.wikipedia.org/wiki/SELCAL
          * \see http://www.asri.aero/our-services/selcal/ User Guide
          */
-        class CSelcal : public CValueObject<CSelcal>
+        class BLACKMISC_EXPORT CSelcal : public CValueObject<CSelcal>
         {
         public:
             //! Default constructor.

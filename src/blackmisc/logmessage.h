@@ -12,6 +12,7 @@
 
 //! \file
 
+#include "blackmiscexport.h"
 #include "statusmessagelist.h"
 #include "statusmessage.h"
 #include "logcategorylist.h"
@@ -38,7 +39,7 @@ namespace BlackMisc
      * \li \c "redundant" To avoid handling the same message twice, this flag identifies a message which has already
      *                    been directly returned as the return value of the method which generated it.
      */
-    class CLogMessageHelper
+    class BLACKMISC_EXPORT CLogMessageHelper
     {
     public:
         //! Deleted constructor.
@@ -69,7 +70,7 @@ namespace BlackMisc
      * The categories are arbitrary string tags which can be attached to the message to categorize it.
      * A message can have more than one category. The categories can be used for filtering by message handlers.
      */
-    class CLogMessage
+    class BLACKMISC_EXPORT CLogMessage
     {
     public:
         //! Construct a message with the "uncategorized" category.

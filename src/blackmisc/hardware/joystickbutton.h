@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_HARDWARE_JOYSTICKBUTTON_H
 #define BLACKMISC_HARDWARE_JOYSTICKBUTTON_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/blackmiscfreefunctions.h"
@@ -21,7 +22,7 @@ namespace BlackMisc
     namespace Hardware
     {
         //! Value object representing a joystick button
-        class CJoystickButton : public CValueObject<CJoystickButton>
+        class BLACKMISC_EXPORT CJoystickButton : public CValueObject<CJoystickButton>
         {
         public:
             //! Properties by index

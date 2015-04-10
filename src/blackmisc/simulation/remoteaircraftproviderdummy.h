@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_REMOTEAIRCRAFTPROVIDERDUMMY_H
 #define BLACKMISC_SIMULATION_REMOTEAIRCRAFTPROVIDERDUMMY_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 
 namespace BlackMisc
@@ -20,7 +21,7 @@ namespace BlackMisc
     {
 
         //! Dummy implementation for testing purpose
-        class CRemoteAircraftProviderDummy :
+        class BLACKMISC_EXPORT CRemoteAircraftProviderDummy :
             public QObject,
             public IRemoteAircraftProvider
         {

@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_MODELMAPPINGS_H
 #define BLACKMISC_SIMULATION_MODELMAPPINGS_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/network/aircraftmappinglist.h"
 #include <QObject>
 
@@ -21,7 +22,7 @@ namespace BlackMisc
     {
         //! Model mappings interface, different mapping readers (e.g. from database, from vPilot data files)
         //! can implement this, but provide the same mapping list.
-        class ISimulatorModelMappings : public QObject
+        class BLACKMISC_EXPORT ISimulatorModelMappings : public QObject
         {
             Q_OBJECT
 

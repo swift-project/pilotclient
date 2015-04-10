@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_NETWORK_AIRCRAFTMAPPINGLIST_H
 #define BLACKMISC_NETWORK_AIRCRAFTMAPPINGLIST_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/network/aircraftmapping.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
@@ -24,7 +25,7 @@ namespace BlackMisc
     namespace Network
     {
         //! Value object encapsulating a list of aircraft mappings
-        class CAircraftMappingList : public CSequence<CAircraftMapping>
+        class BLACKMISC_EXPORT CAircraftMappingList : public CSequence<CAircraftMapping>
         {
         public:
             //! Empty constructor.

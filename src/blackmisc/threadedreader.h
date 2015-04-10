@@ -12,6 +12,7 @@
 
 //! \file
 
+#include "blackmiscexport.h"
 #include "worker.h"
 #include <QReadWriteLock>
 #include <QDateTime>
@@ -25,7 +26,7 @@ namespace BlackMisc
      * Support for threaded based reading and parsing tasks such
      * as data files via http, or file system and parsing (such as FSX models)
      */
-    class CThreadedReader : public CContinuousWorker
+    class BLACKMISC_EXPORT CThreadedReader : public CContinuousWorker
     {
     public:
         //! Thread safe, set update timestamp

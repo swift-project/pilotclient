@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_NAMEVARIANTPAIR_H
 #define BLACKMISC_NAMEVARIANTPAIR_H
 
+#include "blackmiscexport.h"
 #include "variant.h"
 #include "valueobject.h"
 #include "icon.h"
@@ -19,7 +20,7 @@
 namespace BlackMisc
 {
     //! Value / variant pair
-    class CNameVariantPair : public CValueObject<CNameVariantPair>
+    class BLACKMISC_EXPORT CNameVariantPair : public CValueObject<CNameVariantPair>
     {
     public:
         //! Properties by index

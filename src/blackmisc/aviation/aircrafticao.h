@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFTICAO_H
 #define BLACKMISC_AVIATION_AIRCRAFTICAO_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
@@ -20,7 +21,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object for ICAO classification
-        class CAircraftIcao : public CValueObject<CAircraftIcao>
+        class BLACKMISC_EXPORT CAircraftIcao : public CValueObject<CAircraftIcao>
         {
         public:
             //! Properties by index

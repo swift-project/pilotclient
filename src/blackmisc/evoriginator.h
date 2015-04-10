@@ -12,6 +12,7 @@
 
 //! \file
 
+#include "blackmiscexport.h"
 #include "valueobject.h"
 #include "blackmiscfreefunctions.h"
 #include <QByteArray>
@@ -31,7 +32,7 @@ namespace BlackMisc
     {
 
         //! Value object encapsulating information about the originiator
-        class COriginator : public CValueObject<COriginator>
+        class BLACKMISC_EXPORT COriginator : public CValueObject<COriginator>
         {
         public:
             //! Default constructor.

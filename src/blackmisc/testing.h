@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_TESTING_H
 #define BLACKMISC_TESTING_H
 
+#include "blackmiscexport.h"
 #include "blackmisc/aviation/atcstationlist.h"
 
 //! Generate data for testing purposes.
@@ -20,7 +21,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Generate data for testing aviation classes
-        class CTesting
+        class BLACKMISC_EXPORT CTesting
         {
         public:
             //! Generate number of ATC stations

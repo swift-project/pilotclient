@@ -8,6 +8,7 @@
 
 //! \file
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/pq/constants.h"
 #include <QtGlobal>
@@ -27,7 +28,7 @@ namespace BlackMisc
     {
 
         //! Base class for avionics
-        class CAvionicsBase : public CValueObject<CAvionicsBase>
+        class BLACKMISC_EXPORT CAvionicsBase : public CValueObject<CAvionicsBase>
         {
         protected:
             QString m_name; //!< name of the unit

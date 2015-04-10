@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_TIMESTAMPBASED_H
 #define BLACKMISC_TIMESTAMPBASED_H
 
+#include "blackmiscexport.h"
 #include "propertyindex.h"
 #include <QDateTime>
 
@@ -19,7 +20,7 @@ namespace BlackMisc
 {
 
     //! Entity with timestamp
-    class ITimestampBased
+    class BLACKMISC_EXPORT ITimestampBased
     {
     public:
         //! Properties by index

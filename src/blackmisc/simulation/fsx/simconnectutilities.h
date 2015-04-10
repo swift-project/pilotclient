@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_FSX_SIMCONNECTUTILITIES_H
 #define BLACKMISC_SIMULATION_FSX_SIMCONNECTUTILITIES_H
 
+#include "blackmisc/blackmiscexport.h"
 #include <QString>
 #include <QMetaEnum>
 
@@ -34,7 +35,7 @@ namespace BlackMisc
         namespace Fsx
         {
             //! Utilities for SimConnect
-            class CSimConnectUtilities : public QObject
+            class BLACKMISC_EXPORT CSimConnectUtilities : public QObject
             {
                 Q_OBJECT
                 Q_ENUMS(SIMCONNECT_EXCEPTION)

@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFTSITUATIONLIST_H
 #define BLACKMISC_AVIATION_AIRCRAFTSITUATIONLIST_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/timestampobjectlist.h"
 #include "blackmisc/aviation/callsignobjectlist.h"
@@ -22,7 +23,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating a list of aircraft situations
-        class CAircraftSituationList :
+        class BLACKMISC_EXPORT CAircraftSituationList :
             public CSequence<CAircraftSituation>,
             public ITimestampObjectList<CAircraftSituation, CAircraftSituationList>,
             public ICallsignObjectList<CAircraftSituation, CAircraftSituationList>

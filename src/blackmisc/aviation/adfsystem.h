@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_ADFSYSTEM_H
 #define BLACKMISC_AVIATION_ADFSYSTEM_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/modulator.h"
 #include <stdexcept>
 
@@ -35,7 +36,7 @@ namespace BlackMisc
     {
 
         //! ADF system ("for NDBs")
-        class CAdfSystem : public CValueObject<CAdfSystem, CModulator<CAdfSystem>>
+        class BLACKMISC_EXPORT CAdfSystem : public CValueObject<CAdfSystem, CModulator<CAdfSystem>>
         {
         public:
             //! Default constructor

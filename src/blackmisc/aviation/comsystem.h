@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_COMSYSTEM_H
 #define BLACKMISC_AVIATION_COMSYSTEM_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/modulator.h"
 
 namespace BlackMisc
@@ -32,7 +33,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! COM system (aka "radio")
-        class CComSystem : public CValueObject<CComSystem, CModulator<CComSystem>>
+        class BLACKMISC_EXPORT CComSystem : public CValueObject<CComSystem, CModulator<CComSystem>>
         {
         public:
             //! Channel spacing frequency

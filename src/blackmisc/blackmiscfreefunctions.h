@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_FREEFUNCTIONS_H
 #define BLACKMISC_FREEFUNCTIONS_H
 
+#include "blackmisc/blackmiscexport.h"
 #include <QDir> // for Q_INIT_RESOURCE
 #include <QList>
 #include <QMap>
@@ -39,21 +40,21 @@ namespace BlackMisc
     namespace PhysicalQuantities
     {
         //! Register all metadata for PQs
-        void registerMetadata();
+        BLACKMISC_EXPORT void registerMetadata();
 
     } // PQ
 
     namespace Aviation
     {
         //! Register metadata for aviation
-        void registerMetadata();
+        BLACKMISC_EXPORT void registerMetadata();
 
     } // Aviation
 
     namespace Math
     {
         //! Register metadata for math (matrices, vectors)
-        void registerMetadata();
+        BLACKMISC_EXPORT void registerMetadata();
 
     } // Math
 
@@ -61,54 +62,54 @@ namespace BlackMisc
     {
 
         //! Register metadata for geo (coordinates)
-        void registerMetadata();
+        BLACKMISC_EXPORT void registerMetadata();
 
     } // Geo
 
     namespace Network
     {
         //! Register metadata for network (server, user)
-        void registerMetadata();
+        BLACKMISC_EXPORT void registerMetadata();
     }
 
     namespace Settings
     {
         //! Register metadata for settings
-        void registerMetadata();
+        BLACKMISC_EXPORT void registerMetadata();
     }
 
     namespace Audio
     {
         //! Register metadata for audio / voice
-        void registerMetadata();
+        BLACKMISC_EXPORT void registerMetadata();
 
         //! Start the Windows mixer
-        bool startWindowsMixer();
+        BLACKMISC_EXPORT bool startWindowsMixer();
     }
 
     namespace Hardware
     {
         //! Register metadata for Hardware
-        void registerMetadata();
+        BLACKMISC_EXPORT void registerMetadata();
     }
 
     namespace Event
     {
         //! Register metadata for Event
-        void registerMetadata();
+        BLACKMISC_EXPORT void registerMetadata();
     }
 
     namespace Simulation
     {
         //! Register metadata for Simulation
-        void registerMetadata();
+        BLACKMISC_EXPORT void registerMetadata();
     }
 
     //! Register all relevant metadata in BlackMisc
-    void registerMetadata();
+    BLACKMISC_EXPORT void registerMetadata();
 
     //! Init resources
-    void initResources();
+    BLACKMISC_EXPORT void initResources();
 
     //! Checked version from QVariant
     template <class T> void setFromQVariant(T *value, const QVariant &variant)
@@ -134,7 +135,7 @@ namespace BlackMisc
      * \param localUserType
      * \return
      */
-    QVariant fixQVariantFromDbusArgument(const QVariant &variant, int localUserType);
+    BLACKMISC_EXPORT QVariant fixQVariantFromDbusArgument(const QVariant &variant, int localUserType);
 
     /*!
      * Convert a QDBusArgument back to a concrete type if required
@@ -145,11 +146,11 @@ namespace BlackMisc
      * \return          QVariant generated from the above
      * \todo To be removed if a better solution is found
      */
-    QVariant complexQtTypeFromDbusArgument(const QDBusArgument &argument, int type);
+    BLACKMISC_EXPORT QVariant complexQtTypeFromDbusArgument(const QDBusArgument &argument, int type);
 
     //! Display all user metatypes
     //! \remarks Used in order to debug code, do not remove
-    void displayAllUserMetatypesTypes(QTextStream &out);
+    BLACKMISC_EXPORT void displayAllUserMetatypesTypes(QTextStream &out);
 
     /*!
      * \brief Calculate a single hash value based on a list of individual hash values
@@ -157,16 +158,16 @@ namespace BlackMisc
      * \param className   add a hash value for class name on top
      * \return
      */
-    uint calculateHash(const QList<uint> &values, const char *className);
+    BLACKMISC_EXPORT uint calculateHash(const QList<uint> &values, const char *className);
 
     //! Hash value, but with int list
-    uint calculateHash(const QList<int> &values, const char *className);
+    BLACKMISC_EXPORT uint calculateHash(const QList<int> &values, const char *className);
 
     //! Real heap size of an object
-    size_t heapSizeOf(const QMetaType &type);
+    BLACKMISC_EXPORT size_t heapSizeOf(const QMetaType &type);
 
     //! Real heap size of an object
-    size_t heapSizeOf(const QMetaObject &objectType);
+    BLACKMISC_EXPORT size_t heapSizeOf(const QMetaObject &objectType);
 
     //! A map converted to string
     template<class K, class V> QString qmapToString(const QMap<K, V> &map)
@@ -185,19 +186,19 @@ namespace BlackMisc
     }
 
     //! Bool to on/off
-    QString boolToOnOff(bool v, bool  i18n = false);
+    BLACKMISC_EXPORT QString boolToOnOff(bool v, bool  i18n = false);
 
     //! Bool to yes / no
-    QString boolToYesNo(bool v, bool  i18n = false);
+    BLACKMISC_EXPORT QString boolToYesNo(bool v, bool  i18n = false);
 
     //! Bool to true / false
-    QString boolToTrueFalse(bool v, bool  i18n = false);
+    BLACKMISC_EXPORT QString boolToTrueFalse(bool v, bool  i18n = false);
 
     //! Get local host name
-    const QString &localHostName();
+    BLACKMISC_EXPORT const QString &localHostName();
 
     //! Get local host name env.variable
-    const QString &localHostNameEnvVariable();
+    BLACKMISC_EXPORT const QString &localHostNameEnvVariable();
 
     //! Own implementation of std::make_unique, a C++14 feature not provided by GCC in C++11 mode
     template<typename T, typename... Args>
@@ -207,10 +208,10 @@ namespace BlackMisc
     }
 
     //! Creates an incremental json object from two existing objects
-    QJsonObject getIncrementalObject(const QJsonObject &previousObject, const QJsonObject &currentObject);
+    BLACKMISC_EXPORT QJsonObject getIncrementalObject(const QJsonObject &previousObject, const QJsonObject &currentObject);
 
     //! Merges an incremental json object into an existing one
-    QJsonObject applyIncrementalObject(const QJsonObject &previousObject, const QJsonObject &incrementalObject);
+    BLACKMISC_EXPORT QJsonObject applyIncrementalObject(const QJsonObject &previousObject, const QJsonObject &incrementalObject);
 
 
 

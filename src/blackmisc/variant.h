@@ -14,6 +14,7 @@
 #ifndef BLACKMISC_VARIANT_H
 #define BLACKMISC_VARIANT_H
 
+#include "blackmiscexport.h"
 #include <QVariant>
 #include <QDateTime>
 #include <QJsonValueRef>
@@ -43,7 +44,7 @@ namespace BlackMisc
      * Wrapper around QVariant which provides transparent access to CValueObject methods
      * of the contained object if it is registered with BlackMisc::registerMetaValueType.
      */
-    class CVariant : public CValueObject<CVariant>
+    class BLACKMISC_EXPORT CVariant : public CValueObject<CVariant>
     {
     public:
         //! Default constructor.

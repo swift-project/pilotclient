@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_AIRCRAFTMODEL_H
 #define BLACKMISC_SIMULATION_AIRCRAFTMODEL_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/aviation/aircrafticao.h"
 #include "blackmisc/network/user.h"
@@ -23,7 +24,7 @@ namespace BlackMisc
     {
         //! Aircraft model (other pilot, my models on disk)
         //! \remarks Simulator independent class, supposed to be common denominator
-        class CAircraftModel : public CValueObject<CAircraftModel>
+        class BLACKMISC_EXPORT CAircraftModel : public CValueObject<CAircraftModel>
         {
         public:
             //! Model type

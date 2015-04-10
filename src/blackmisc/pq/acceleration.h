@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_PQ_ACCELERATION_H
 #define BLACKMISC_PQ_ACCELERATION_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/physicalquantity.h"
 
 namespace BlackMisc
@@ -27,7 +28,7 @@ namespace BlackMisc
     {
 
         //! Acceleration
-        class CAcceleration : public CValueObject<CAcceleration, CPhysicalQuantity<CAccelerationUnit, CAcceleration>>
+        class BLACKMISC_EXPORT CAcceleration : public CValueObject<CAcceleration, CPhysicalQuantity<CAccelerationUnit, CAcceleration>>
         {
         public:
             //! Default constructor

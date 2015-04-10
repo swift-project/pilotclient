@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_PQ_TEMPERATURE_H
 #define BLACKMISC_PQ_TEMPERATURE_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/physicalquantity.h"
 
 namespace BlackMisc
@@ -29,7 +30,7 @@ namespace BlackMisc
         /*!
          * Physical unit temperature
          */
-        class CTemperature : public CValueObject<CTemperature, CPhysicalQuantity<CTemperatureUnit, CTemperature>>
+        class BLACKMISC_EXPORT CTemperature : public CValueObject<CTemperature, CPhysicalQuantity<CTemperatureUnit, CTemperature>>
         {
         public:
             //! Default constructor

@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_SIMULATORPLUGININFO_H
 #define BLACKMISC_SIMULATION_SIMULATORPLUGININFO_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/valueobject.h"
 
@@ -20,7 +21,7 @@ namespace BlackMisc
     namespace Simulation
     {
         //! Describing a simulator plugin
-        class CSimulatorPluginInfo : public BlackMisc::CValueObject<CSimulatorPluginInfo>
+        class BLACKMISC_EXPORT CSimulatorPluginInfo : public BlackMisc::CValueObject<CSimulatorPluginInfo>
         {
             //! The _identifier_ property identifies the plugin itself and must be uniqe.
             Q_PROPERTY(QString identifier READ getIdentifier)

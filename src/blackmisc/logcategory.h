@@ -12,6 +12,7 @@
 
 //! \file
 
+#include "blackmiscexport.h"
 #include "sequence.h"
 
 namespace BlackMisc
@@ -21,7 +22,7 @@ namespace BlackMisc
      *
      * A log handler can filter messages based on their categories.
      */
-    class CLogCategory : public CValueObject<CLogCategory>
+    class BLACKMISC_EXPORT CLogCategory : public CValueObject<CLogCategory>
     {
     public:
         //! \name Predefined special categories (public static methods)

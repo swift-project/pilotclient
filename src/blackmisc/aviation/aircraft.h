@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFT_H
 #define BLACKMISC_AVIATION_AIRCRAFT_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircrafticao.h"
@@ -30,7 +31,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating information of an aircraft
-        class CAircraft :
+        class BLACKMISC_EXPORT CAircraft :
             public CValueObject<CAircraft>,
             public BlackMisc::Geo::ICoordinateWithRelativePosition
         {

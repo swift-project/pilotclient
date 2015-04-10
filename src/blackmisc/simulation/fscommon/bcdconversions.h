@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_FSCOMMON_BCDCONVERSIONS_H
 #define BLACKMISC_SIMULATION_FSCOMMON_BCDCONVERSIONS_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/aviation/transponder.h"
 #include <QtGlobal>
@@ -24,7 +25,7 @@ namespace BlackMisc
         {
 
             //! BCD conversions for FS
-            class CBcdConversions
+            class BLACKMISC_EXPORT CBcdConversions
             {
             public:
                 //! BCD -> decimal

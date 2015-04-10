@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_PQ_FREQUENCY_H
 #define BLACKMISC_PQ_FREQUENCY_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/physicalquantity.h"
 
 namespace BlackMisc
@@ -28,7 +29,7 @@ namespace BlackMisc
         /*!
          * Physical unit frequency
          */
-        class CFrequency : public CValueObject<CFrequency, CPhysicalQuantity<CFrequencyUnit, CFrequency>>
+        class BLACKMISC_EXPORT CFrequency : public CValueObject<CFrequency, CPhysicalQuantity<CFrequencyUnit, CFrequency>>
         {
         public:
             //! Default constructor

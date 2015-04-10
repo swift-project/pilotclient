@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_FSCOMMON_VPILOTMODELMAPPINGS_H
 #define BLACKMISC_SIMULATION_FSCOMMON_VPILOTMODELMAPPINGS_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "../simulatormodelmappings.h"
 #include <QStringList>
 
@@ -22,7 +23,7 @@ namespace BlackMisc
         namespace FsCommon
         {
             //! Model mappings
-            class CVPilotModelMappings : public ISimulatorModelMappings
+            class BLACKMISC_EXPORT CVPilotModelMappings : public ISimulatorModelMappings
             {
             public:
                 //! Constructor

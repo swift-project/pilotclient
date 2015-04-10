@@ -12,12 +12,13 @@
 #ifndef BLACKMISC_ICONS_H
 #define BLACKMISC_ICONS_H
 
+#include "blackmiscexport.h"
 #include <QPixmap>
 
 namespace BlackMisc
 {
     //! Standard icons
-    class CIcons
+    class BLACKMISC_EXPORT CIcons
     {
     public:
 

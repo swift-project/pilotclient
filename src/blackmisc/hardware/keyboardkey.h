@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_HARDWARE_KEYBOARDKEY_H
 #define BLACKMISC_HARDWARE_KEYBOARDKEY_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <QStringList>
@@ -22,7 +23,7 @@ namespace BlackMisc
     namespace Hardware
     {
         //! Value object representing a keyboard key.
-        class CKeyboardKey : public CValueObject<CKeyboardKey>
+        class BLACKMISC_EXPORT CKeyboardKey : public CValueObject<CKeyboardKey>
         {
         public:
             //! Properties by index

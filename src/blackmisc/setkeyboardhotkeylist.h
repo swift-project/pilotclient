@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SETTINGS_KEYBOARDHOTKEYLIST_H
 #define BLACKMISC_SETTINGS_KEYBOARDHOTKEYLIST_H
 
+#include "blackmiscexport.h"
 #include "hardware/keyboardkey.h"
 #include "setkeyboardhotkey.h"
 #include "collection.h"
@@ -25,7 +26,7 @@ namespace BlackMisc
         /*!
          * Value object encapsulating a list of keyboard keys.
          */
-        class CSettingKeyboardHotkeyList : public CSequence<CSettingKeyboardHotkey>
+        class BLACKMISC_EXPORT CSettingKeyboardHotkeyList : public CSequence<CSettingKeyboardHotkey>
         {
         public:
             //! Default constructor

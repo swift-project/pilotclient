@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SETTINGS_SIMULATOR_H
 #define BLACKMISC_SETTINGS_SIMULATOR_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/settingutilities.h"
@@ -26,7 +27,7 @@ namespace BlackMisc
         {
             //! Value object encapsulating information of simulator related settings.
             //! \deprecated will be removed with new MS settings
-            class CSettingsSimulator : public BlackMisc::CValueObject<CSettingsSimulator>
+            class BLACKMISC_EXPORT CSettingsSimulator : public BlackMisc::CValueObject<CSettingsSimulator>
             {
             public:
                 //! Default constructor.

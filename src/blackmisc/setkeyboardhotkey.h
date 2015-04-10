@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SETTINGS_KEYBOARDHOTKEY_H
 #define BLACKMISC_SETTINGS_KEYBOARDHOTKEY_H
 
+#include "blackmiscexport.h"
 #include "propertyindex.h"
 #include "hardware/keyboardkey.h"
 #include "hotkeyfunction.h"
@@ -24,7 +25,7 @@ namespace BlackMisc
     namespace Settings
     {
         //! Value object encapsulating the keyboard hotkey assignment
-        class CSettingKeyboardHotkey : public CValueObject<CSettingKeyboardHotkey>
+        class BLACKMISC_EXPORT CSettingKeyboardHotkey : public CValueObject<CSettingKeyboardHotkey>
         {
         public:
             //! Properties by index

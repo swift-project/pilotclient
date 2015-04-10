@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_FSX_SIMSETUP_H
 #define BLACKMISC_SIMULATION_FSX_SIMSETUP_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "../simulatorsetup.h"
 #include <QString>
 
@@ -22,7 +23,7 @@ namespace BlackMisc
         namespace Fsx
         {
             //! Simulator settings for FSX Flight simulators
-            class CFsxSimulatorSetup
+            class BLACKMISC_EXPORT CFsxSimulatorSetup
             {
 
             public:

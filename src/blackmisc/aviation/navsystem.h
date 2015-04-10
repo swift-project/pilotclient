@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_NAVSYSTEM_H
 #define BLACKMISC_AVIATION_NAVSYSTEM_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/modulator.h"
 
 namespace BlackMisc
@@ -33,7 +34,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! NAV system (radio navigation)
-        class CNavSystem : public CValueObject<CNavSystem, CModulator<CNavSystem>>
+        class BLACKMISC_EXPORT CNavSystem : public CValueObject<CNavSystem, CModulator<CNavSystem>>
         {
         public:
             //! Default constructor

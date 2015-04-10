@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_PQ_TIME_H
 #define BLACKMISC_PQ_TIME_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/physicalquantity.h"
 
 namespace BlackMisc
@@ -29,7 +30,7 @@ namespace BlackMisc
         /*!
          * Time class, e.g. "ms", "hour", "s", "day"
          */
-        class CTime : public CValueObject<CTime, CPhysicalQuantity<CTimeUnit, CTime>>
+        class BLACKMISC_EXPORT CTime : public CValueObject<CTime, CPhysicalQuantity<CTimeUnit, CTime>>
         {
         public:
             //! Parts

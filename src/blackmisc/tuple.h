@@ -12,6 +12,8 @@
 #ifndef BLACKMISC_TUPLE_H
 #define BLACKMISC_TUPLE_H
 
+#include "blackmiscexport.h"
+
 /*!
  * \defgroup Tuples Tuple conversion of object data members
  */
@@ -204,7 +206,7 @@ namespace BlackMisc
         //! @}
 
         //! \brief   Helper class which parses the stringified macro argument.
-        struct Parser
+        struct BLACKMISC_EXPORT Parser
         {
             Parser(QString); //!< Constructor.
             QStringList m_raw; //!< The raw macro argument, split by top-level commas.

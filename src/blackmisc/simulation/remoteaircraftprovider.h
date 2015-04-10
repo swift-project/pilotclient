@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_REMOTEAIRCRAFTPROVIDER_H
 #define BLACKMISC_SIMULATION_REMOTEAIRCRAFTPROVIDER_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
@@ -24,7 +25,7 @@ namespace BlackMisc
         //! Direct in memory access to remote aircraft
         //! \note Can not be derived from QObject (as for the signals), as this would create multiple
         //!       inheritance. Hence Q_DECLARE_INTERFACE is used.
-        class IRemoteAircraftProviderReadOnly
+        class BLACKMISC_EXPORT IRemoteAircraftProviderReadOnly
         {
         public:
             //! All rendered aircraft
@@ -60,7 +61,7 @@ namespace BlackMisc
         };
 
         //! Direct in memory access to own aircraft
-        class IRemoteAircraftProvider : public IRemoteAircraftProviderReadOnly
+        class BLACKMISC_EXPORT IRemoteAircraftProvider : public IRemoteAircraftProviderReadOnly
         {
         public:
 
@@ -90,7 +91,7 @@ namespace BlackMisc
         };
 
         //! Class which can be directly used to access an \sa IRemoteAircraftProviderReadOnly object
-        class CRemoteAircraftAwareReadOnly
+        class BLACKMISC_EXPORT CRemoteAircraftAwareReadOnly
         {
         public:
             //! \copydoc IRemoteAircraftProviderReadOnly::renderedAircraft
@@ -112,7 +113,7 @@ namespace BlackMisc
         };
 
         //! Class which can be directly used to access an \sa IRemoteAircraftProvider object
-        class CRemoteAircraftAware
+        class BLACKMISC_EXPORT CRemoteAircraftAware
         {
         public:
             //! \copydoc IRemoteAircraftProviderReadOnly::renderedAircraft

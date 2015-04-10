@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_NETWORK_SERVERLIST_H
 #define BLACKMISC_NETWORK_SERVERLIST_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
@@ -23,7 +24,7 @@ namespace BlackMisc
         /*!
          * Value object encapsulating a list of servers.
          */
-        class CServerList : public CSequence<CServer>
+        class BLACKMISC_EXPORT CServerList : public CSequence<CServer>
         {
         public:
             //! Default constructor.

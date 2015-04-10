@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_VALUEOBJECT_PRIVATE_H
 #define BLACKMISC_VALUEOBJECT_PRIVATE_H
 
+#include "blackmisc/blackmiscexport.h"
 #include <QString>
 #include <QMetaType>
 #include <QDBusArgument>
@@ -29,7 +30,7 @@ namespace BlackMisc
         void assign(CVariant &, const CVariant &);
 
         //! \private Abstract base class representing the set of operations supported by a particular value type.
-        struct IValueObjectMetaInfo
+        struct BLACKMISC_EXPORT IValueObjectMetaInfo
         {
             virtual ~IValueObjectMetaInfo() = default;
             virtual QString toQString(const void *object, bool i18n) const = 0;

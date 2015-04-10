@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_FSCOMMONUTIL_H
 #define BLACKMISC_SIMULATION_FSCOMMONUTIL_H
 
+#include "blackmisc/blackmiscexport.h"
 #include <QString>
 
 namespace BlackMisc
@@ -21,7 +22,7 @@ namespace BlackMisc
         namespace FsCommon
         {
             //! FS9/X utils
-            class CFsCommonUtil
+            class BLACKMISC_EXPORT CFsCommonUtil
             {
             public:
                 CFsCommonUtil();

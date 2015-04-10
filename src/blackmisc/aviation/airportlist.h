@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_AIRPORTLIST_H
 #define BLACKMISC_AVIATION_AIRPORTLIST_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/airport.h"
 #include "blackmisc/geo/geoobjectlist.h"
 #include "blackmisc/collection.h"
@@ -26,7 +27,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object for a list of airports.
-        class CAirportList :
+        class BLACKMISC_EXPORT CAirportList :
             public CSequence<CAirport>,
             public BlackMisc::Geo::IGeoObjectWithRelativePositionList<CAirport, CAirportList>
         {

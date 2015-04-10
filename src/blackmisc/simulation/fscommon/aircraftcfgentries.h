@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_FSCOMMON_AIRCRAFTCFGENTRY_H
 #define BLACKMISC_SIMULATION_FSCOMMON_AIRCRAFTCFGENTRY_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
@@ -27,7 +28,7 @@ namespace BlackMisc
              * \remarks an entry in the aircraft.cfg is title, atc type, ... This class already bundles
              *          relevant entries, hence the class is named Entries (plural)
              */
-            class CAircraftCfgEntries: public BlackMisc::CValueObject<CAircraftCfgEntries>
+            class BLACKMISC_EXPORT CAircraftCfgEntries: public BlackMisc::CValueObject<CAircraftCfgEntries>
             {
             public:
                 //! Properties by index

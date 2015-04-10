@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFTENGINES_H
 #define BLACKMISC_AVIATION_AIRCRAFTENGINES_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 
 namespace BlackMisc
@@ -19,7 +20,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating information about aircraft's engines
-        class CAircraftEngine : public CValueObject<CAircraftEngine>
+        class BLACKMISC_EXPORT CAircraftEngine : public CValueObject<CAircraftEngine>
         {
         public:
 

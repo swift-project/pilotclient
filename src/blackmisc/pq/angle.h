@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_PQ_ANGLE_H
 #define BLACKMISC_PQ_ANGLE_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/math/mathutils.h"
 
@@ -27,7 +28,7 @@ namespace BlackMisc
     namespace PhysicalQuantities
     {
         //! Physical unit angle (radians, degrees)
-        class CAngle : public CValueObject<CAngle, CPhysicalQuantity<CAngleUnit, CAngle>>
+        class BLACKMISC_EXPORT CAngle : public CValueObject<CAngle, CPhysicalQuantity<CAngleUnit, CAngle>>
         {
         public:
             //! Default constructor

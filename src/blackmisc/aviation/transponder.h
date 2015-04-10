@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_TRANSPONDER_H
 #define BLACKMISC_AVIATION_TRANSPONDER_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/avionicsbase.h"
 
 namespace BlackMisc
@@ -28,7 +29,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Transponder
-        class CTransponder : public CValueObject<CTransponder, CAvionicsBase>
+        class BLACKMISC_EXPORT CTransponder : public CValueObject<CTransponder, CAvionicsBase>
         {
         public:
             //! Transponder codes

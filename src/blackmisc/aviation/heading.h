@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_HEADING_H
 #define BLACKMISC_AVIATION_HEADING_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/angle.h"
 
 namespace BlackMisc
@@ -34,7 +35,7 @@ namespace BlackMisc
          * \brief Heading as used in aviation, can be true or magnetic heading
          * \remarks Intentionally allowing +/- CAngle , and >= / <= CAngle.
          */
-        class CHeading : public CValueObject<CHeading, PhysicalQuantities::CAngle>
+        class BLACKMISC_EXPORT CHeading : public CValueObject<CHeading, PhysicalQuantities::CAngle>
         {
         public:
             //! Enum type to distinguish between true north and magnetic north

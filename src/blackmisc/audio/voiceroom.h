@@ -9,6 +9,7 @@
 
 //! \file
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <QString>
@@ -21,7 +22,7 @@ namespace BlackMisc
     namespace Audio
     {
         //! Value object encapsulating information of a voice room
-        class CVoiceRoom : public CValueObject<CVoiceRoom>
+        class BLACKMISC_EXPORT CVoiceRoom : public CValueObject<CVoiceRoom>
         {
         public:
             //! Properties by index

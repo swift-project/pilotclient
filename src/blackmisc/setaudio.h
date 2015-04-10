@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SETTINGS_AUDIO_H
 #define BLACKMISC_SETTINGS_AUDIO_H
 
+#include "blackmiscexport.h"
 #include "valueobject.h"
 #include "statusmessagelist.h"
 #include "settingutilities.h"
@@ -23,7 +24,7 @@ namespace BlackMisc
     namespace Settings
     {
         //! Value object encapsulating information of audio related settings.
-        class CSettingsAudio : public CValueObject<CSettingsAudio>
+        class BLACKMISC_EXPORT CSettingsAudio : public CValueObject<CSettingsAudio>
         {
         public:
             //! Default constructor.

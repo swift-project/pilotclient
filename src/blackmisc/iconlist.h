@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_ICONLIST_H
 #define BLACKMISC_ICONLIST_H
 
+#include "blackmiscexport.h"
 #include "sequence.h"
 #include "collection.h"
 #include "icon.h"
@@ -23,7 +24,7 @@ namespace BlackMisc
     /*!
      * Icon
      */
-    class CIconList : public CSequence<CIcon>
+    class BLACKMISC_EXPORT CIconList : public CSequence<CIcon>
     {
     public:
         //! Constructor

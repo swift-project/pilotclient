@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFTPARTS_H
 #define BLACKMISC_AVIATION_AIRCRAFTPARTS_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/timestampbased.h"
@@ -24,7 +25,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating information of aircraft's parts
-        class CAircraftParts :
+        class BLACKMISC_EXPORT CAircraftParts :
             public CValueObject<CAircraftParts>,
             public BlackMisc::ITimestampBased
         {

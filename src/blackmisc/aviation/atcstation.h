@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_ATCSTATION_H
 #define BLACKMISC_AVIATION_ATCSTATION_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/informationmessage.h"
@@ -30,7 +31,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating information about an ATC station.
-        class CAtcStation : public CValueObject<CAtcStation>, public Geo::ICoordinateWithRelativePosition
+        class BLACKMISC_EXPORT CAtcStation : public CValueObject<CAtcStation>, public Geo::ICoordinateWithRelativePosition
         {
         public:
             //! Properties by index

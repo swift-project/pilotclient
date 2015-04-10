@@ -12,6 +12,7 @@
 
 //! \file
 
+#include "blackmiscexport.h"
 #include "logpattern.h"
 #include "statusmessage.h"
 #include <QObject>
@@ -25,7 +26,7 @@ namespace BlackMisc
     /*!
      * Class for subscribing to log messages.
      */
-    class CLogHandler : public QObject
+    class BLACKMISC_EXPORT CLogHandler : public QObject
     {
         Q_OBJECT
 
@@ -94,7 +95,7 @@ namespace BlackMisc
      * A class for subscribing to log messages which match particular patterns.
      * \see CLogHandler::handlerForPattern
      */
-    class CLogPatternHandler : public QObject
+    class BLACKMISC_EXPORT CLogPatternHandler : public QObject
     {
         Q_OBJECT
 
@@ -179,7 +180,7 @@ namespace BlackMisc
      *
      * Also provides a thread-safe API for interacting with the CLogHandler.
      */
-    class CLogSubscriber : public QObject
+    class BLACKMISC_EXPORT CLogSubscriber : public QObject
     {
         Q_OBJECT
 

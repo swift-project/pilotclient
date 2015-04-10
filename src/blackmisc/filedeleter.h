@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_CFILEDELETER_H
 #define BLACKMISC_CFILEDELETER_H
 
+#include "blackmiscexport.h"
 #include <QObject>
 #include <QDebug>
 
@@ -21,7 +22,7 @@ namespace BlackMisc
     /*!
      * Utility class, deleting files when it is destroyed
      */
-    class CFileDeleter
+    class BLACKMISC_EXPORT CFileDeleter
     {
 
     private:

@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_STATUSMESSAGE_H
 #define BLACKMISC_STATUSMESSAGE_H
 
+#include "blackmiscexport.h"
 #include "icon.h"
 #include "propertyindex.h"
 #include "logcategorylist.h"
@@ -23,7 +24,7 @@ namespace BlackMisc
     /*!
      * Streamable status message, e.g. from Core -> GUI
      */
-    class CStatusMessage :
+    class BLACKMISC_EXPORT CStatusMessage :
         public CValueObject<CStatusMessage>,
         public ITimestampBased
     {

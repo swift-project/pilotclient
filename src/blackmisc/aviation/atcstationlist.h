@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_ATCSTATIONLIST_H
 #define BLACKMISC_AVIATION_ATCSTATIONLIST_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/geo/geoobjectlist.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/aviation/atcstation.h"
@@ -27,7 +28,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object for a list of ATC stations.
-        class CAtcStationList :
+        class BLACKMISC_EXPORT CAtcStationList :
             public CSequence<CAtcStation>,
             public BlackMisc::Aviation::ICallsignObjectList<CAtcStation, CAtcStationList>,
             public BlackMisc::Geo::IGeoObjectWithRelativePositionList<CAtcStation, CAtcStationList>

@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_CALLSIGN_H
 #define BLACKMISC_AVIATION_CALLSIGN_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/blackmiscfreefunctions.h"
@@ -21,7 +22,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating information of a callsign.
-        class CCallsign : public CValueObject<CCallsign>
+        class BLACKMISC_EXPORT CCallsign : public CValueObject<CCallsign>
         {
         public:
             //! Indexes

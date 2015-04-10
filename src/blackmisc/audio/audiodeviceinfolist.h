@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AUDIO_AUDIODEVICELIST_H
 #define BLACKMISC_AUDIO_AUDIODEVICELIST_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/collection.h"
@@ -24,7 +25,7 @@ namespace BlackMisc
     namespace Audio
     {
         //! Value object encapsulating a list of audio devices.
-        class CAudioDeviceInfoList : public CSequence<CAudioDeviceInfo>
+        class BLACKMISC_EXPORT CAudioDeviceInfoList : public CSequence<CAudioDeviceInfo>
         {
         public:
             //! Default constructor.

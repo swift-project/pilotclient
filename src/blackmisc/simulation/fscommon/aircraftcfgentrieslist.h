@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_FSCOMMON_AIRCRAFTCFGLIST_H
 #define BLACKMISC_SIMULATION_FSCOMMON_AIRCRAFTCFGLIST_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentries.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/sequence.h"
@@ -29,7 +30,7 @@ namespace BlackMisc
         {
 
             //! Utility, providing FS aircraft.cfg entries
-            class CAircraftCfgEntriesList : public BlackMisc::CSequence<CAircraftCfgEntries>
+            class BLACKMISC_EXPORT CAircraftCfgEntriesList : public BlackMisc::CSequence<CAircraftCfgEntries>
             {
 
             public:

@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SETTINGS_NETWORK_H
 #define BLACKMISC_SETTINGS_NETWORK_H
 
+#include "blackmiscexport.h"
 #include "network/serverlist.h"
 #include "valueobject.h"
 #include "statusmessagelist.h"
@@ -26,7 +27,7 @@ namespace BlackMisc
     {
         //! Value object encapsulating information of network related settings.
         //! \remarks Not only traffic network settings, but also URLs, DBus address, ...
-        class CSettingsNetwork : public CValueObject<CSettingsNetwork>
+        class BLACKMISC_EXPORT CSettingsNetwork : public CValueObject<CSettingsNetwork>
         {
         public:
             //! Default constructor.

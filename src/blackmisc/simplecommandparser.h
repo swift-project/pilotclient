@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMPLECOMMANDPARSER_H
 #define BLACKMISC_SIMPLECOMMANDPARSER_H
 
+#include "blackmiscexport.h"
 #include <QStringList>
 #include <QString>
 
@@ -19,7 +20,7 @@ namespace BlackMisc
 {
     //! Utility methods for simple line parsing used with the command line
     //! \remarks case insensitive parsing, commands start with . as ".msg"
-    class CSimpleCommandParser
+    class BLACKMISC_EXPORT CSimpleCommandParser
     {
     public:
         //! No Constructor

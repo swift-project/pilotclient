@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_NETWORK_CLIENTLIST_H
 #define BLACKMISC_NETWORK_CLIENTLIST_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/network/client.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/collection.h"
@@ -27,7 +28,7 @@ namespace BlackMisc
     namespace Network
     {
         //! Value object encapsulating a list of voice rooms.
-        class CClientList :
+        class BLACKMISC_EXPORT CClientList :
             public CSequence<CClient>,
             public BlackMisc::Aviation::ICallsignObjectList<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>
         {

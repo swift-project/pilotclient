@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_NETWORK_CLIENT_H
 #define BLACKMISC_NETWORK_CLIENT_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/network/voicecapabilities.h"
@@ -25,7 +26,7 @@ namespace BlackMisc
         /*!
          * Another client software.
          */
-        class CClient : public CValueObject<CClient>
+        class BLACKMISC_EXPORT CClient : public CValueObject<CClient>
         {
         public:
             //! Properties by index

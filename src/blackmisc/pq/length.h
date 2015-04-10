@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_PQ_LENGTH_H
 #define BLACKMISC_PQ_LENGTH_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/physicalquantity.h"
 
 namespace BlackMisc
@@ -27,7 +28,7 @@ namespace BlackMisc
     {
 
         //! Physical unit length (length)
-        class CLength : public CValueObject<CLength, CPhysicalQuantity<CLengthUnit, CLength>>
+        class BLACKMISC_EXPORT CLength : public CValueObject<CLength, CPhysicalQuantity<CLengthUnit, CLength>>
         {
         public:
             //! Default constructor

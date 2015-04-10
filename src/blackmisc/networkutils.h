@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_NETWORKUTILS_H
 #define BLACKMISC_NETWORKUTILS_H
 
+#include "blackmiscexport.h"
 #include "network/server.h"
 #include <QStringList>
 
@@ -19,7 +20,7 @@ namespace BlackMisc
 {
 
     //! Utilities, e.g. checking whether a network connection can be established
-    class CNetworkUtils
+    class BLACKMISC_EXPORT CNetworkUtils
     {
 
     public:

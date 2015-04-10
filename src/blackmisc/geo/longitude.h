@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_GEO_LONGITUDE_H
 #define BLACKMISC_GEO_LONGITUDE_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/geo/earthangle.h"
 
 namespace BlackMisc
@@ -27,7 +28,7 @@ namespace BlackMisc
     {
 
         //! Longitude
-        class CLongitude : public CValueObject<CLongitude, CEarthAngle<CLongitude>>
+        class BLACKMISC_EXPORT CLongitude : public CValueObject<CLongitude, CEarthAngle<CLongitude>>
         {
         protected:
             //! \copydoc CValueObject::convertToQString

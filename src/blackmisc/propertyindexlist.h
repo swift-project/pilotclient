@@ -14,6 +14,7 @@
 #ifndef BLACKMISC_PROPERTYINDEXLIST_H
 #define BLACKMISC_PROPERTYINDEXLIST_H
 
+#include "blackmiscexport.h"
 #include "propertyindex.h"
 #include "collection.h"
 #include "sequence.h"
@@ -24,7 +25,7 @@ namespace BlackMisc
     /*!
      * Value object encapsulating a list of property indexes.
      */
-    class CPropertyIndexList : public CSequence<CPropertyIndex>
+    class BLACKMISC_EXPORT CPropertyIndexList : public CSequence<CPropertyIndex>
     {
     public:
         //! Default constructor.

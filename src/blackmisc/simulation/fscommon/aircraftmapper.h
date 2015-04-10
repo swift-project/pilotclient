@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_FSCOMMON_AIRCRAFTMAPPER_H
 #define BLACKMISC_SIMULATION_FSCOMMON_AIRCRAFTMAPPER_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "aircraftcfgentrieslist.h"
 #include "../simulatormodelmappings.h"
 #include "blackmisc/worker.h"
@@ -34,7 +35,7 @@ namespace BlackMisc
             //!          Thereafter all existing models and mappings can be obtained from here.
             //! \sa CAircraftCfgEntries
             //! \sa CAircraftCfgEntriesList
-            class CAircraftMapper : public QObject
+            class BLACKMISC_EXPORT CAircraftMapper : public QObject
             {
                 Q_OBJECT
 

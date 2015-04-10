@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_NETWORK_USER_H
 #define BLACKMISC_NETWORK_USER_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/airporticao.h"
 #include "blackmisc/propertyindex.h"
@@ -26,7 +27,7 @@ namespace BlackMisc
         /*!
          * Value object encapsulating information of a user.
          */
-        class CUser : public CValueObject<CUser>
+        class BLACKMISC_EXPORT CUser : public CValueObject<CUser>
         {
         public:
             /*!

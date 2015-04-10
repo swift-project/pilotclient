@@ -22,6 +22,8 @@
 #ifndef BLACKMISC_PROPERTYINDEXVARIANTMAP_H
 #define BLACKMISC_PROPERTYINDEXVARIANTMAP_H
 
+#include "blackmiscexport.h"
+
 namespace BlackMisc
 {
     // forward declaration
@@ -36,7 +38,7 @@ namespace BlackMisc
      * Specialized value object compliant map for variants,
      * based on indexes
      */
-    class CPropertyIndexVariantMap : public CValueObject<CPropertyIndexVariantMap>
+    class BLACKMISC_EXPORT CPropertyIndexVariantMap : public CValueObject<CPropertyIndexVariantMap>
     {
 
     public:
@@ -96,22 +98,22 @@ namespace BlackMisc
         void clear() { this->m_values.clear(); }
 
         //! Equal operator, required if maps are directly compared, not with CValueObject
-        friend bool operator ==(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b);
+        BLACKMISC_EXPORT friend bool operator ==(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b);
 
         //! Equal operator, required if maps are directly compared, not with CValueObject
-        friend bool operator !=(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b);
+        BLACKMISC_EXPORT friend bool operator !=(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b);
 
         //! Operator == with CVariant
-        friend bool operator ==(const CPropertyIndexVariantMap &valueMap, const CVariant &variant);
+        BLACKMISC_EXPORT friend bool operator ==(const CPropertyIndexVariantMap &valueMap, const CVariant &variant);
 
         //! Operator != with CVariant
-        friend bool operator !=(const CPropertyIndexVariantMap &valueMap, const CVariant &variant);
+        BLACKMISC_EXPORT friend bool operator !=(const CPropertyIndexVariantMap &valueMap, const CVariant &variant);
 
         //! Operator == with CVariant
-        friend bool operator ==(const CVariant &variant, const CPropertyIndexVariantMap &valueMap);
+        BLACKMISC_EXPORT friend bool operator ==(const CVariant &variant, const CPropertyIndexVariantMap &valueMap);
 
         //! Operator != with CVariant
-        friend bool operator !=(const CVariant &variant, const CPropertyIndexVariantMap &valueMap);
+        BLACKMISC_EXPORT friend bool operator !=(const CVariant &variant, const CPropertyIndexVariantMap &valueMap);
 
         //! Operator == with CValueObject
         //! \todo Still needed?

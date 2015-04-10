@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_PQ_CONSTANTS_H
 #define BLACKMISC_PQ_CONSTANTS_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/pq.h"
 
 namespace BlackMisc
@@ -22,7 +23,7 @@ namespace BlackMisc
         /*!
          * Physical quantities constants
          */
-        class CPhysicalQuantitiesConstants
+        class BLACKMISC_EXPORT CPhysicalQuantitiesConstants
         {
         public:
             //! Triple point of purified water, 0.01°C

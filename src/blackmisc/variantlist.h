@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_VARIANTLIST_H
 #define BLACKMISC_VARIANTLIST_H
 
+#include "blackmiscexport.h"
 #include "variant.h"
 #include "sequence.h"
 #include "collection.h"
@@ -22,7 +23,7 @@ namespace BlackMisc
     /*!
      * Value object encapsulating a list of variants.
      */
-    class CVariantList : public CSequence<CVariant>
+    class BLACKMISC_EXPORT CVariantList : public CSequence<CVariant>
     {
     public:
         //! Default constructor.

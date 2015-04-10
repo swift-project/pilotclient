@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_NAMEVARIANPAIRTLIST_H
 #define BLACKMISC_NAMEVARIANPAIRTLIST_H
 
+#include "blackmiscexport.h"
 #include "namevariantpair.h"
 #include "collection.h"
 #include "sequence.h"
@@ -20,7 +21,7 @@ namespace BlackMisc
 {
     //! Value object encapsulating a list of name/variant pairs
     //! Currently name must be unique
-    class CNameVariantPairList : public CSequence<CNameVariantPair>
+    class BLACKMISC_EXPORT CNameVariantPairList : public CSequence<CNameVariantPair>
     {
     public:
         //! Default constructor.

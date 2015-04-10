@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_ICON_H
 #define BLACKMISC_ICON_H
 
+#include "blackmiscexport.h"
 #include "valueobject.h"
 #include "icons.h"
 #include <QIcon>
@@ -25,7 +26,7 @@ namespace BlackMisc
 
     //! Value object for icons. An icon is stored in the global icon repository and
     //! identified by its index. It contains no(!) pyhsical data for the icon itself.
-    class CIcon : public CValueObject<CIcon>
+    class BLACKMISC_EXPORT CIcon : public CValueObject<CIcon>
     {
     public:
         //! Default constructor.

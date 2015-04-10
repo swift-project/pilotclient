@@ -13,6 +13,7 @@
 #define BLACKMISC_SIMULATION_SIMULATORSETUP_H
 
 #include "blackmisc/namevariantpairlist.h"
+#include "blackmisc/blackmiscexport.h"
 #include <QMap>
 #include <QString>
 
@@ -22,7 +23,7 @@ namespace BlackMisc
     {
         //! Simulator settings for flight simulators.
         //! Those are set up at runtime and represent information about the simulator (like a small registry)
-        class CSimulatorSetup : public CValueObject<CSimulatorSetup>
+        class BLACKMISC_EXPORT CSimulatorSetup : public CValueObject<CSimulatorSetup>
         {
 
         public:

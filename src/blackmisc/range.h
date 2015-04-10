@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_RANGE_H
 #define BLACKMISC_RANGE_H
 
+#include "blackmiscexport.h"
 #include "propertyindexvariantmap.h"
 #include "iterator.h"
 #include "predicates.h"

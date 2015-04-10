@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_PQ_PRESSURE_H
 #define BLACKMISC_PQ_PRESSURE_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/physicalquantity.h"
 
 namespace BlackMisc
@@ -29,7 +30,7 @@ namespace BlackMisc
         /*!
          * Physical unit distance
          */
-        class CPressure : public CValueObject<CPressure, CPhysicalQuantity<CPressureUnit, CPressure>>
+        class BLACKMISC_EXPORT CPressure : public CValueObject<CPressure, CPhysicalQuantity<CPressureUnit, CPressure>>
         {
         public:
             //! Default constructor

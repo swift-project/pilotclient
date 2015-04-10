@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_OWNAIRCRAFTPROVIDER_H
 #define BLACKMISC_SIMULATION_OWNAIRCRAFTPROVIDER_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 
 namespace BlackMisc
@@ -19,7 +20,7 @@ namespace BlackMisc
     namespace Simulation
     {
         //! Direct in memory access to own aircraft
-        class IOwnAircraftProviderReadOnly
+        class BLACKMISC_EXPORT IOwnAircraftProviderReadOnly
         {
         public:
             //! Own aircraft as reference
@@ -35,7 +36,7 @@ namespace BlackMisc
         };
 
         //! Direct in memory access to own aircraft
-        class IOwnAircraftProvider : public IOwnAircraftProviderReadOnly
+        class BLACKMISC_EXPORT IOwnAircraftProvider : public IOwnAircraftProviderReadOnly
         {
         public:
 
@@ -58,7 +59,7 @@ namespace BlackMisc
         };
 
         //! For testing
-        class COwnAircraftProviderDummy : public QObject, public IOwnAircraftProvider
+        class BLACKMISC_EXPORT COwnAircraftProviderDummy : public QObject, public IOwnAircraftProvider
         {
             Q_OBJECT
 
@@ -93,7 +94,7 @@ namespace BlackMisc
         };
 
         //! Delegating class which can be directly used to access an \sa IOwnAircraftProviderReadOnly instance
-        class COwnAircraftAwareReadOnly
+        class BLACKMISC_EXPORT COwnAircraftAwareReadOnly
         {
         public:
             //! \copydoc IOwnAircraftProviderReadOnly::ownAircraft
@@ -106,7 +107,7 @@ namespace BlackMisc
         };
 
         //! Delegating class which can be directly used to access an \sa IOwnAircraftProvider instance
-        class COwnAircraftAware
+        class BLACKMISC_EXPORT COwnAircraftAware
         {
         public:
             //! \copydoc IOwnAircraftProviderReadOnly::ownAircraft

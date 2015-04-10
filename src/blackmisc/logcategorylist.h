@@ -12,6 +12,7 @@
 
 //! \file
 
+#include "blackmiscexport.h"
 #include "logcategory.h"
 #include "sequence.h"
 #include "collection.h"
@@ -40,7 +41,7 @@ namespace BlackMisc
     /*!
      * A sequence of log categories.
      */
-    class CLogCategoryList : public CSequence<CLogCategory>
+    class BLACKMISC_EXPORT CLogCategoryList : public CSequence<CLogCategory>
     {
     public:
         //! Empty constructor.

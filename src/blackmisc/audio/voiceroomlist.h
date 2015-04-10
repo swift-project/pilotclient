@@ -13,6 +13,7 @@
 #define BLACKMISC_AUDIO_VOICEROOMLIST_H
 
 #include "voiceroom.h"
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/collection.h"
 #include <QObject>
@@ -26,7 +27,7 @@ namespace BlackMisc
         /*!
          * Value object encapsulating a list of voice rooms.
          */
-        class CVoiceRoomList : public CSequence<CVoiceRoom>
+        class BLACKMISC_EXPORT CVoiceRoomList : public CSequence<CVoiceRoom>
         {
         public:
             //! Default constructor.

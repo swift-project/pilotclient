@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_PQ_MASS_H
 #define BLACKMISC_PQ_MASS_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/physicalquantity.h"
 
 namespace BlackMisc
@@ -29,7 +30,7 @@ namespace BlackMisc
         /*!
          * Mass
          */
-        class CMass : public CValueObject<CMass, CPhysicalQuantity<CMassUnit, CMass>>
+        class BLACKMISC_EXPORT CMass : public CValueObject<CMass, CPhysicalQuantity<CMassUnit, CMass>>
         {
         public:
             //! Default constructor

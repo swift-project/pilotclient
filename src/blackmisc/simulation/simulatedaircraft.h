@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_SIMULATEDAIRCRAFT_H
 #define BLACKMISC_SIMULATION_SIMULATEDAIRCRAFT_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "aircraftmodel.h"
 #include "blackmisc/network/client.h"
@@ -22,7 +23,7 @@ namespace BlackMisc
     {
         //! Comprehensive information of an aircraft
         //! \sa CAircraft
-        class CSimulatedAircraft : public CValueObject<CSimulatedAircraft, BlackMisc::Aviation::CAircraft>
+        class BLACKMISC_EXPORT CSimulatedAircraft : public CValueObject<CSimulatedAircraft, BlackMisc::Aviation::CAircraft>
         {
         public:
             //! Properties by index

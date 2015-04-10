@@ -13,6 +13,7 @@
 #define BLACKMISC_SIMULATION_SIMULATORINFOLIST_H
 
 #include "simulatorplugininfo.h"
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/collection.h"
 #include <QStringList>
@@ -22,7 +23,7 @@ namespace BlackMisc
     namespace Simulation
     {
         //! Value object encapsulating a list of SimulatorInfo objects.
-        class CSimulatorPluginInfoList : public BlackMisc::CSequence<CSimulatorPluginInfo>
+        class BLACKMISC_EXPORT CSimulatorPluginInfoList : public BlackMisc::CSequence<CSimulatorPluginInfo>
         {
         public:
             //! Default constructor

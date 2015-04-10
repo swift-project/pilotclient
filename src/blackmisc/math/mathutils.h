@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_MATH_MATHUTILS_H
 #define BLACKMISC_MATH_MATHUTILS_H
 
+#include "blackmisc/blackmiscexport.h"
 #include <QtCore/qmath.h>
 #include <cmath>
 
@@ -21,7 +22,7 @@ namespace BlackMisc
     {
 
         //! Math utils
-        class CMathUtils
+        class BLACKMISC_EXPORT CMathUtils
         {
         public:
 

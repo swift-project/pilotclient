@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_DIGESTSIGNAL_H
 #define BLACKMISC_DIGESTSIGNAL_H
 
+#include "blackmiscexport.h"
 #include <QTimer>
 #include <QObject>
 
@@ -19,7 +20,7 @@ namespace BlackMisc
 {
 
     //! Receive 1..n signal, collect them over time, and resend afer n milliseconds
-    class CDigestSignal : public QObject
+    class BLACKMISC_EXPORT CDigestSignal : public QObject
     {
         Q_OBJECT
 

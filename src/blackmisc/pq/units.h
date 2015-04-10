@@ -15,6 +15,7 @@
 #pragma push_macro("min")
 #undef min
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/measurementunit.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <QtDBus/QDBusArgument>
@@ -34,7 +35,7 @@ namespace BlackMisc
     {
 
         //! Specialized class for distance units (meter, foot, nautical miles).
-        class CLengthUnit : public CValueObject<CLengthUnit, CMeasurementUnit>
+        class BLACKMISC_EXPORT CLengthUnit : public CValueObject<CLengthUnit, CMeasurementUnit>
         {
         private:
             template <class Converter>
@@ -145,7 +146,7 @@ namespace BlackMisc
         };
 
         //! Specialized class for angles (degrees, radian).
-        class CAngleUnit : public CValueObject<CAngleUnit, CMeasurementUnit>
+        class BLACKMISC_EXPORT CAngleUnit : public CValueObject<CAngleUnit, CMeasurementUnit>
         {
         private:
             template <class Converter>
@@ -236,7 +237,7 @@ namespace BlackMisc
         };
 
         //! Specialized class for frequency (hertz, mega hertz, kilo hertz).
-        class CFrequencyUnit : public CValueObject<CFrequencyUnit, CMeasurementUnit>
+        class BLACKMISC_EXPORT CFrequencyUnit : public CValueObject<CFrequencyUnit, CMeasurementUnit>
         {
         private:
             template <class Converter>
@@ -318,7 +319,7 @@ namespace BlackMisc
         };
 
         //! Specialized class for mass units (kg, lbs).
-        class CMassUnit : public CValueObject<CMassUnit, CMeasurementUnit>
+        class BLACKMISC_EXPORT CMassUnit : public CValueObject<CMassUnit, CMeasurementUnit>
         {
         private:
             template <class Converter>
@@ -409,7 +410,7 @@ namespace BlackMisc
         };
 
         //! Specialized class for pressure (psi, hPa, bar).
-        class CPressureUnit : public CValueObject<CPressureUnit, CMeasurementUnit>
+        class BLACKMISC_EXPORT CPressureUnit : public CValueObject<CPressureUnit, CMeasurementUnit>
         {
         private:
             template <class Converter>
@@ -517,7 +518,7 @@ namespace BlackMisc
         };
 
         //! Specialized class for temperatur units (kelvin, centidegree).
-        class CTemperatureUnit : public CValueObject<CTemperatureUnit, CMeasurementUnit>
+        class BLACKMISC_EXPORT CTemperatureUnit : public CValueObject<CTemperatureUnit, CMeasurementUnit>
         {
         private:
             template <class Converter>
@@ -600,7 +601,7 @@ namespace BlackMisc
         };
 
         //! Specialized class for speed units (m/s, ft/s, NM/h).
-        class CSpeedUnit : public CValueObject<CSpeedUnit, CMeasurementUnit>
+        class BLACKMISC_EXPORT CSpeedUnit : public CValueObject<CSpeedUnit, CMeasurementUnit>
         {
         private:
             template <class Converter>
@@ -702,7 +703,7 @@ namespace BlackMisc
         };
 
         //! Specialized class for time units (ms, hour, min).
-        class CTimeUnit : public CValueObject<CTimeUnit, CMeasurementUnit>
+        class BLACKMISC_EXPORT CTimeUnit : public CValueObject<CTimeUnit, CMeasurementUnit>
         {
         private:
             template <class Converter>
@@ -828,7 +829,7 @@ namespace BlackMisc
         };
 
         //! Specialized class for acceleration units (m/s2, ft/s2).
-        class CAccelerationUnit : public CValueObject<CAccelerationUnit, CMeasurementUnit>
+        class BLACKMISC_EXPORT CAccelerationUnit : public CValueObject<CAccelerationUnit, CMeasurementUnit>
         {
         private:
             template <class Converter>

@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_AIRPORTICAO_H
 #define BLACKMISC_AVIATION_AIRPORTICAO_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
@@ -20,7 +21,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating information of a callsign.
-        class CAirportIcao : public CValueObject<CAirportIcao>
+        class BLACKMISC_EXPORT CAirportIcao : public CValueObject<CAirportIcao>
         {
         public:
             //! Default constructor.

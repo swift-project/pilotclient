@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_PQ_MEASUREMENTUNIT_H
 #define BLACKMISC_PQ_MEASUREMENTUNIT_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/blackmiscfreefunctions.h"
@@ -46,7 +47,7 @@ namespace BlackMisc
         /*!
          * Base class for all units, such as meter, hertz.
          */
-        class CMeasurementUnit : public CValueObject<CMeasurementUnit>
+        class BLACKMISC_EXPORT CMeasurementUnit : public CValueObject<CMeasurementUnit>
         {
         protected:
             /*!

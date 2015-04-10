@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_AIRCRAFTMODELLIST_H
 #define BLACKMISC_SIMULATION_AIRCRAFTMODELLIST_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
@@ -23,7 +24,7 @@ namespace BlackMisc
         /*!
          * Value object encapsulating a list of aircraft models
          */
-        class CAircraftModelList : public CSequence<CAircraftModel>
+        class BLACKMISC_EXPORT CAircraftModelList : public CSequence<CAircraftModel>
         {
         public:
             //! Empty constructor.

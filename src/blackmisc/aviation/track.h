@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_TRACK_H
 #define BLACKMISC_AVIATION_TRACK_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/angle.h"
 
 namespace BlackMisc
@@ -35,7 +36,7 @@ namespace BlackMisc
          * \remarks Intentionally allowing +/- BlackMisc::PhysicalQuantities::CAngle ,
          *          and >= / <= CAngle.
          */
-        class CTrack : public CValueObject<CTrack, PhysicalQuantities::CAngle>
+        class BLACKMISC_EXPORT CTrack : public CValueObject<CTrack, PhysicalQuantities::CAngle>
         {
         public:
             /*!

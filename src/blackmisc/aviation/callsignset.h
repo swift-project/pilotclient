@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_CALLSIGNSET_H
 #define BLACKMISC_AVIATION_CALLSIGNSET_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
@@ -22,7 +23,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object for a set of callsigns.
-        class CCallsignSet : public CCollection<CCallsign>
+        class BLACKMISC_EXPORT CCallsignSet : public CCollection<CCallsign>
         {
         public:
             //! Default constructor.

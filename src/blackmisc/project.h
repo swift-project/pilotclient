@@ -10,6 +10,7 @@
 #ifndef BLACKMISC_CPROJECT_H
 #define BLACKMISC_CPROJECT_H
 
+#include "blackmiscexport.h"
 #include <QString>
 
 namespace BlackMisc
@@ -18,7 +19,7 @@ namespace BlackMisc
     /*!
      * Metadata about the project
      */
-    class CProject
+    class BLACKMISC_EXPORT CProject
     {
     public:
         //! with BlackCore?

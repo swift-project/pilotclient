@@ -12,6 +12,7 @@
 
 //! \file
 
+#include "blackmiscexport.h"
 #include "statusmessage.h"
 #include <QExplicitlySharedDataPointer>
 
@@ -35,7 +36,7 @@ namespace BlackMisc
     /*!
      * Value class for matching log messages based on their categories.
      */
-    class CLogPattern : public CValueObject<CLogPattern>
+    class BLACKMISC_EXPORT CLogPattern : public CValueObject<CLogPattern>
     {
     public:
         //! Default constructed CLogPattern will match any message.

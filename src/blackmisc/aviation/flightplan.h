@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_FLIGHTPLAN_H
 #define BLACKMISC_AVIATION_FLIGHTPLAN_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/aviation/airporticao.h"
@@ -24,7 +25,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object for a flight plan
-        class CFlightPlan : public CValueObject<CFlightPlan>
+        class BLACKMISC_EXPORT CFlightPlan : public CValueObject<CFlightPlan>
         {
         public:
             //! Flight rules (VFR or IFR)

@@ -12,6 +12,7 @@
 
 //! \file
 
+#include "blackmiscexport.h"
 #include "valueobject.h"
 #include "evoriginator.h"
 #include "hotkeyfunction.h"
@@ -22,7 +23,7 @@ namespace BlackMisc
     namespace Event
     {
         //! Value object encapsulating a hotkey function for distribution
-        class CEventHotkeyFunction : public CValueObject<CEventHotkeyFunction>
+        class BLACKMISC_EXPORT CEventHotkeyFunction : public CValueObject<CEventHotkeyFunction>
         {
         public:
             //! Default constructor.

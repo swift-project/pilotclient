@@ -13,6 +13,7 @@
 #define BLACKMISC_AVIATION_AIRCRAFTENGINELIST_H
 
 #include "aircraftengine.h"
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 #include <initializer_list>
@@ -22,7 +23,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating a list of aircraft engines.
-        class CAircraftEngineList : public CSequence<CAircraftEngine>
+        class BLACKMISC_EXPORT CAircraftEngineList : public CSequence<CAircraftEngine>
         {
         public:
             //! Default constructor.

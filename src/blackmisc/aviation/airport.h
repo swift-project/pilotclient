@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_AVIATION_AIRPORT_H
 #define BLACKMISC_AVIATION_AIRPORT_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/airporticao.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/propertyindex.h"
@@ -21,7 +22,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating information about an airpot.
-        class CAirport : public CValueObject<CAirport>, public Geo::ICoordinateWithRelativePosition
+        class BLACKMISC_EXPORT CAirport : public CValueObject<CAirport>, public Geo::ICoordinateWithRelativePosition
         {
         public:
             //! Properties by index
