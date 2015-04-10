@@ -240,10 +240,11 @@ namespace BlackMisc
             {}
 
             //! \copydoc CValueObject::stringForStreaming
-            virtual QString stringForStreaming() const override
-            {
-                return this->getName(false);
-            }
+            // todo: Causes build error. Ask KB is still required.
+//            virtual QString stringForStreaming() const override
+//            {
+//                return this->getName(false);
+//            }
 
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override
