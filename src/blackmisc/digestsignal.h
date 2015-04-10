@@ -37,6 +37,9 @@ namespace BlackMisc
             m_timer.setInterval(maxDelayMs);
         }
 
+        // Destructor
+        virtual ~CDigestSignal() {}
+
     signals:
         //! Send digest signal
         void digestSignal();
