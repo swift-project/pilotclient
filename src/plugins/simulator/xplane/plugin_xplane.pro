@@ -1,5 +1,5 @@
-include (../../../../config.pri)
-include (../../../../build.pri)
+include ($$SourceRoot/config.pri)
+include ($$SourceRoot/build.pri)
 
 QT       += core dbus network
 
@@ -9,15 +9,11 @@ TEMPLATE = lib
 CONFIG += plugin shared
 CONFIG += blackmisc blackcore
 
-DEPENDPATH += . ../../../../src
-INCLUDEPATH += . ../../../../src
+DEPENDPATH += . $$SourceRoot/src
+INCLUDEPATH += . $$SourceRoot/src
 
 SOURCES += *.cpp
 HEADERS += *.h
 
-#win32:!win32-g++*: PRE_TARGETDEPS += ../../../../lib/blackmisc.lib
-#win32:!win32-g++*: PRE_TARGETDEPS += ../../../../lib/blackcore.lib
-
-DESTDIR = ../../../../bin/plugins/simulator
-
-include (../../../../libraries.pri)
+DESTDIR = $$BuildRoot/bin/plugins/simulator
+include ($$SourceRoot/libraries.pri)

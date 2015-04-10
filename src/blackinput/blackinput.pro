@@ -1,5 +1,5 @@
-include (../../config.pri)
-include (../../build.pri)
+include ($$SourceRoot/config.pri)
+include ($$SourceRoot/build.pri)
 
 QT       += network dbus gui multimedia
 
@@ -17,9 +17,6 @@ precompile_header:!isEmpty(PRECOMPILED_HEADER) {
 }
 
 DEFINES += LOG_IN_FILE
-
-win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib
-else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a
 
 HEADERS += *.h
 SOURCES += *.cpp
@@ -40,8 +37,10 @@ macx {
     OBJECTIVE_SOURCES += $$PWD/osx/*.mm
 }
 
-DESTDIR = ../../lib
+DESTDIR = $$BuildRoot/lib
+DLLDESTDIR = $$BuildRoot/bin
+
 OTHER_FILES +=
 RESOURCES +=
 
-include (../../libraries.pri)
+include ($$SourceRoot/libraries.pri)

@@ -1,5 +1,5 @@
-include (../../config.pri)
-include (../../build.pri)
+include ($$SourceRoot/config.pri)
+include ($$SourceRoot/build.pri)
 
 QT       += core dbus network
 
@@ -10,15 +10,12 @@ CONFIG   += blackmisc blackcore
 
 TEMPLATE = app
 
-DEPENDPATH += . ../../src
-INCLUDEPATH += . ../../src
-
-win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib
-else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a
-
-DESTDIR = ../../bin
+DEPENDPATH += . $$SourceRoot/src
+INCLUDEPATH += . $$SourceRoot/src
 
 SOURCES += *.cpp
 HEADERS += *.h
 
-include (../../libraries.pri)
+DESTDIR = $$BuildRoot/bin
+
+include ($$SourceRoot/libraries.pri)

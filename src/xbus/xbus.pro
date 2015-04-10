@@ -1,5 +1,5 @@
-include (../../config.pri)
-include (../../build.pri)
+include ($$SourceRoot/config.pri)
+include ($$SourceRoot/build.pri)
 
 QT       += core gui widgets dbus network
 
@@ -21,8 +21,8 @@ else:unix {
     QMAKE_LFLAGS += -shared -rdynamic -nodefaultlibs -undefined_warning -Wl,--version-script=$$PWD/xbus.map
 }
 
-DEPENDPATH += . ../../src
-INCLUDEPATH += . ../../src
+DEPENDPATH += . $$SourceRoot/src
+INCLUDEPATH += . $$SourceRoot/src
 
 SOURCES += *.cpp
 HEADERS += *.h
@@ -50,11 +50,6 @@ else: LIBS += -lpng -lz
 
 win32-msvc*: DEFINES += _CRT_SECURE_NO_WARNINGS
 
-
-#win32:!win32-g++*: PRE_TARGETDEPS += ../../../../lib/blackmisc.lib
-#win32:!win32-g++*: PRE_TARGETDEPS += ../../../../lib/blackcore.lib
-
-
 # Required by X-Plane SDK and libxplanemp
 win32:DEFINES += IBM=1
 linux:DEFINES += LIN=1
@@ -73,11 +68,10 @@ linux:TARGET = lin
 macx:TARGET = mac
 macx {
     # a single dylib file contains both 32bit and 64bit binaries
-    XBUS_DESTDIR = ../../xbus
-}
-else {
-    equals(WORD_SIZE,64): XBUS_DESTDIR = ../../xbus/64
-    equals(WORD_SIZE,32): XBUS_DESTDIR = ../../xbus
+    XBUS_DESTDIR = $$BuildRoot/xbus
+} else {
+    equals(WORD_SIZE,64): XBUS_DESTDIR = $$BuildRoot/xbus/64
+    equals(WORD_SIZE,32): XBUS_DESTDIR = $$BuildRoot/xbus
 }
 
 # QMake ignores TARGET_EXT on Unix
@@ -85,7 +79,7 @@ else {
 else:unix: QMAKE_POST_LINK += mkdir -p $${XBUS_DESTDIR} && cp $$OUT_PWD/lib$${TARGET}.so    $$XBUS_DESTDIR/$${TARGET}.xpl
 else:      DESTDIR = $$XBUS_DESTDIR
 
-include (../../libraries.pri)
+include ($$SourceRoot/libraries.pri)
 
 # TODO refactor .pri files into common_pre.pri and common_post.pri
 # to sort out this include order fiasco

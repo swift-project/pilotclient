@@ -1,5 +1,5 @@
-include (../../config.pri)
-include (../../build.pri)
+include ($$SourceRoot/config.pri)
+include ($$SourceRoot/build.pri)
 
 QT       += network dbus gui svg
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -18,10 +18,6 @@ precompile_header:!isEmpty(PRECOMPILED_HEADER) {
 }
 
 DEFINES += LOG_IN_FILE
-
-win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib ../../lib/blackcore.lib
-else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a ../../lib/libblackcore.a
-
 
 HEADERS += *.h
 SOURCES += *.cpp
@@ -44,7 +40,9 @@ win32 {
 
 RESOURCES +=
 
-DESTDIR = ../../lib
+DESTDIR = $$BuildRoot/lib
+DLLDESTDIR = $$BuildRoot/bin
+
 OTHER_FILES += ./qss/*.qss ./qss/*.css ./qss/*.ini
 
 win32:isEmpty(MINGW_IN_SHELL):  COPY = xcopy /yi
@@ -60,4 +58,4 @@ else {
                           $$shell_path($$OUT_PWD/../../bin)
 }
 
-include (../../libraries.pri)
+include ($$SourceRoot/libraries.pri)

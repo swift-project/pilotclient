@@ -1,5 +1,5 @@
-include (../../config.pri)
-include (../../build.pri)
+include ($$SourceRoot/config.pri)
+include ($$SourceRoot/build.pri)
 
 QT       += core dbus network multimedia
 QT       -= gui
@@ -11,18 +11,12 @@ CONFIG   += console
 CONFIG   -= app_bundle
 CONFIG   += blackmisc blacksound blackcore
 
-DEPENDPATH += . ../../src
-INCLUDEPATH += . ../../src
+DEPENDPATH += . $$SourceRoot/src
+INCLUDEPATH += . $$SourceRoot/src
 
 SOURCES += *.cpp
 HEADERS += *.h
 
-win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib \
-                                     ../../lib/blackcore.lib \
-                                     ../../lib/blacksound.lib
-else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a \
-                                     ../../lib/libblackcore.a \
-                                     ../../lib/libblacksound.a
-DESTDIR = ../../bin
+DESTDIR = $$BuildRoot/bin
 
-include (../../libraries.pri)
+include ($$SourceRoot/libraries.pri)

@@ -1,12 +1,12 @@
-include (../../config.pri)
-include (../../build.pri)
+include ($$SourceRoot/config.pri)
+include ($$SourceRoot/build.pri)
 
 QT       += network dbus gui multimedia
 
 TARGET = blacksound
 TEMPLATE = lib
 CONFIG += staticlib
-CONFIG   += blackmisc
+CONFIG += blackmisc
 
 INCLUDEPATH += ..
 DEPENDPATH += . ..
@@ -18,12 +18,12 @@ precompile_header:!isEmpty(PRECOMPILED_HEADER) {
 
 DEFINES += LOG_IN_FILE
 
-win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib
-else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a
-
 HEADERS += *.h
 SOURCES += *.cpp
-DESTDIR = ../../lib
+
+DESTDIR = $$BuildRoot/lib
+DLLDESTDIR = $$BuildRoot/bin
+
 OTHER_FILES += ./sounds/*.wav sounds/readme.txt
 RESOURCES +=
 
@@ -40,4 +40,4 @@ else {
                           $$shell_path($$OUT_PWD/../../bin)
 }
 
-include (../../libraries.pri)
+include ($$SourceRoot/libraries.pri)

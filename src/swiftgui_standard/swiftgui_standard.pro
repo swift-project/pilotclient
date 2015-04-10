@@ -1,5 +1,5 @@
-include (../../config.pri)
-include (../../build.pri)
+include ($$SourceRoot/config.pri)
+include ($$SourceRoot/build.pri)
 
 QT       += core dbus gui svg network xml multimedia
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -20,23 +20,15 @@ macx {
     QMAKE_BUNDLE_DATA += deployment
 }
 
-DEPENDPATH += . ../../src/blackmisc ../../src/blackgui ../../src/blacksound ../../src/blackcore  ../../src/blackinput
-INCLUDEPATH += . ../../src
+DEPENDPATH += . $$SourceRoot/src/blackmisc \
+                $$SourceRoot/src/blacksound \
+                $$SourceRoot/src/blackcore \
+                $$SourceRoot/src/blackinput
 
-DESTDIR = ../../bin
+INCLUDEPATH += . $$SourceRoot/src
 
-win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib \
-                                     ../../lib/blackgui.lib \
-                                     ../../lib/blacksound.lib \
-                                     ../../lib/blackcore.lib \
-                                     ../../lib/blackinput.lib
-
-else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a \
-                                     ../../lib/libblackgui.a \
-                                     ../../lib/libblacksound.a \
-                                     ../../lib/libblackcore.a \
-                                     ../../lib/libblackinput.a
+DESTDIR = $$BuildRoot/bin
 
 OTHER_FILES += *.qss
 
-include (../../libraries.pri)
+include ($$SourceRoot/libraries.pri)

@@ -1,5 +1,5 @@
-include (../../config.pri)
-include (../../build.pri)
+include ($$SourceRoot/config.pri)
+include ($$SourceRoot/build.pri)
 
 QT       += network dbus xml
 
@@ -47,7 +47,9 @@ SOURCES +=  *.cpp \
             $$PWD/simulation/fscommon\*.cpp \
             $$PWD/simulation/fsx\*.cpp
 
-DESTDIR = ../../lib
+DESTDIR = $$BuildRoot/lib
+DLLDESTDIR = $$BuildRoot/bin
+
 OTHER_FILES += $$TRANSLATIONS readme.txt
 
-include (../../libraries.pri)
+include ($$SourceRoot/libraries.pri)

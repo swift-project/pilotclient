@@ -1,5 +1,5 @@
-include (../../config.pri)
-include (../../build.pri)
+include ($$SourceRoot/config.pri)
+include ($$SourceRoot/build.pri)
 
 QT       += core testlib dbus network
 
@@ -11,15 +11,12 @@ CONFIG   -= app_bundle
 CONFIG   += blackmisc
 CONFIG   += testcase
 
-DEPENDPATH += . ../../src
-INCLUDEPATH += . ../../src
+DEPENDPATH += . $$SourceRoot/src
+INCLUDEPATH += . $$SourceRoot/src
 
 HEADERS += *.h
 SOURCES += *.cpp
 
-win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib
-else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a
+DESTDIR = $$BuildRoot/bin
 
-DESTDIR = ../../bin
-
-include (../../libraries.pri)
+include ($$SourceRoot/libraries.pri)

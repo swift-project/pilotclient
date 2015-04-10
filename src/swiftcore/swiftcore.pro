@@ -1,5 +1,5 @@
-include (../../config.pri)
-include (../../build.pri)
+include ($$SourceRoot/config.pri)
+include ($$SourceRoot/build.pri)
 
 # widgets required for icon
 QT       += core dbus network xml multimedia gui
@@ -12,25 +12,17 @@ CONFIG   += console
 CONFIG   -= app_bundle
 CONFIG   += blackmisc blacksound blackinput blackcore
 
-DEPENDPATH += . ../../src/blackmisc ../../src/blacksound ../../src/blackcore ../../src/blackinput
-INCLUDEPATH += . ../../src
+DEPENDPATH += . $$SourceRoot/src/blackmisc \
+                $$SourceRoot/src/blacksound \
+                $$SourceRoot/src/blackcore \
+                $$SourceRoot/src/blackinput
 
-win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib \
-                                     ../../lib/blacksound.lib \
-                                     ../../lib/blackcore.lib \
-                                     ../../lib/blackinput.lib
-
-else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a \
-                                     ../../lib/libblacksound.a \
-                                     ../../lib/libblackcore.a \
-                                     ../../lib/libblackinput.a
-
-
-DESTDIR = ../../bin
+INCLUDEPATH += . $$SourceRoot/src
 
 HEADERS += *.h
 SOURCES += *.cpp
 OTHER_FILES += swiftcore.ico swiftcore.rc
 win32: RC_FILE = swiftcore.rc
 
-include (../../libraries.pri)
+DESTDIR = $$BuildRoot/bin
+include ($$SourceRoot/libraries.pri)

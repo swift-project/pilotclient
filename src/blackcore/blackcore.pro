@@ -1,5 +1,5 @@
-include (../../config.pri)
-include (../../build.pri)
+include ($$SourceRoot/config.pri)
+include ($$SourceRoot/build.pri)
 
 # GUI is required for the matrix classes
 # Network for host info etc.
@@ -8,7 +8,7 @@ QT       += network dbus xml multimedia
 TARGET = blackcore
 TEMPLATE = lib
 CONFIG += staticlib
-CONFIG += blackmisc blackinput
+CONFIG += blackmisc blackinput blacksound
 
 INCLUDEPATH += ..
 DEPENDPATH += . ..
@@ -23,11 +23,9 @@ DEFINES += LOG_IN_FILE
 HEADERS += *.h
 SOURCES += *.cpp
 
-win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib ../../lib/blacksound.lib
-else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a ../../lib/libblacksound.a
-
-DESTDIR = ../../lib
+DESTDIR = $$BuildRoot/lib
+DLLDESTDIR = $$BuildRoot/bin
 
 OTHER_FILES += readme.txt *.xml
 
-include (../../libraries.pri)
+include ($$SourceRoot/libraries.pri)

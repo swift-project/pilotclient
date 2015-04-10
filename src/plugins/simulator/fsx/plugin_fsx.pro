@@ -1,5 +1,5 @@
-include (../../../../config.pri)
-include (../../../../build.pri)
+include ($$SourceRoot/config.pri)
+include ($$SourceRoot/build.pri)
 
 QT       += core dbus gui network concurrent xml
 
@@ -14,18 +14,13 @@ LIBS +=  -lsimulator_fscommon -lSimConnect -lFSUIPC_User
 # required for FSUIPC
 win32:!win32-g++*: QMAKE_LFLAGS += /NODEFAULTLIB:LIBC.lib
 
-DEPENDPATH += . ../../../../src
-INCLUDEPATH += . ../../../../src
+DEPENDPATH += . $$SourceRoot/src
+INCLUDEPATH += . $$SourceRoot/src
 
 LIBS += -ldxguid -lole32
 
 SOURCES += *.cpp
 HEADERS += *.h
 
-win32:!win32-g++*: PRE_TARGETDEPS += ../../../../lib/blackmisc.lib \
-                                     ../../../../lib/blackcore.lib
-else:              PRE_TARGETDEPS += ../../../../lib/libblackmisc.a \
-                                     ../../../../lib/libblackcore.a
-
-DESTDIR = ../../../../bin/plugins/simulator
-include (../../../../libraries.pri)
+DESTDIR = $$BuildRoot/bin/plugins/simulator
+include ($$SourceRoot/libraries.pri)

@@ -12,7 +12,7 @@ isEmpty(EXTERNALDIR) {
 
 # if no env variable is set, we use the standard path in the client folder.
 isEmpty(EXTERNALDIR) {
-    EXTERNALDIR = $$TOPSRCDIR/externals
+    EXTERNALDIR = $$SourceRoot/externals
 }
 
 # Test the folder if it exists and has a include subfolder
