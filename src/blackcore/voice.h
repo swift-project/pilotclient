@@ -6,6 +6,7 @@
 #ifndef BLACKCORE_VOICE_H
 #define BLACKCORE_VOICE_H
 
+#include "blackcoreexport.h"
 #include "audio_device.h"
 #include "voice_channel.h"
 #include "audio_mixer.h"
@@ -25,7 +26,7 @@
 namespace BlackCore
 {
     //! Interface to a connection to a ATC voice server for use in flight simulation.
-    class IVoice : public QObject
+    class BLACKCORE_EXPORT IVoice : public QObject
     {
         Q_OBJECT
 

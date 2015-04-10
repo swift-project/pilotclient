@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_NETWORK_H
 #define BLACKCORE_NETWORK_H
 
+#include "blackcoreexport.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/pq/frequency.h"
@@ -51,7 +52,7 @@ namespace BlackCore
      *          which is connected to an INetwork slot, then at least one of those connections
      *          must be a Qt::QueuedConnection.
      */
-    class INetwork : public QObject
+    class BLACKCORE_EXPORT INetwork : public QObject
     {
         Q_OBJECT
         Q_ENUMS(ConnectionStatus)

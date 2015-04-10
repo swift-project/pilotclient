@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_CONTEXTSIMULATOR_IMPL_H
 #define BLACKCORE_CONTEXTSIMULATOR_IMPL_H
 
+#include "blackcoreexport.h"
 #include "blackcore/context_simulator.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/worker.h"
@@ -27,7 +28,7 @@
 namespace BlackCore
 {
     //! Network simulator concrete implementation
-    class CContextSimulator : public IContextSimulator
+    class BLACKCORE_EXPORT CContextSimulator : public IContextSimulator
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME)

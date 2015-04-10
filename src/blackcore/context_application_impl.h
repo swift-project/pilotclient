@@ -6,6 +6,7 @@
 #ifndef BLACKCORE_CONTEXTAPPLICATION_IMPL_H
 #define BLACKCORE_CONTEXTAPPLICATION_IMPL_H
 
+#include "blackcoreexport.h"
 #include "context_application.h"
 #include "context_runtime.h"
 #include "dbus_server.h"
@@ -17,7 +18,7 @@ namespace BlackCore
     /*!
      * Application context
      */
-    class CContextApplication : public IContextApplication
+    class BLACKCORE_EXPORT CContextApplication : public IContextApplication
     {
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME)
         Q_OBJECT

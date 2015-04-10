@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_CONTEXTNETWORK_EMPTY_H
 #define BLACKCORE_CONTEXTNETWORK_EMPTY_H
 
+#include "blackcoreexport.h"
 #include "context_network.h"
 #include "blackmisc/logmessage.h"
 
@@ -19,7 +20,7 @@ namespace BlackCore
 {
 
     //! Empty context, used during shutdown/initialization
-    class CContextNetworkEmpty : public IContextNetwork
+    class BLACKCORE_EXPORT CContextNetworkEmpty : public IContextNetwork
     {
         Q_OBJECT
 

@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_CONTEXTOWNAIRCRAFT_IMPL_H
 #define BLACKCORE_CONTEXTOWNAIRCRAFT_IMPL_H
 
+#include "blackcoreexport.h"
 #include "blackcore/context_ownaircraft.h"
 #include "blackcore/context_settings.h"
 #include "blackcore/context_runtime.h"
@@ -23,7 +24,7 @@ namespace BlackCore
 {
 
     //! Own aircraft context implementation
-    class CContextOwnAircraft :
+    class BLACKCORE_EXPORT CContextOwnAircraft :
         public IContextOwnAircraft,
         public BlackMisc::Simulation::IOwnAircraftProvider
     {

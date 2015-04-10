@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_VATSIMDATAFILEREADER_H
 #define BLACKCORE_VATSIMDATAFILEREADER_H
 
+#include "blackcoreexport.h"
 #include "blackmisc/threadedreader.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/aircraftlist.h"
@@ -30,7 +31,7 @@ namespace BlackCore
     /*!
      * Read bookings from VATSIM
      */
-    class CVatsimDataFileReader : public BlackMisc::CThreadedReader
+    class BLACKCORE_EXPORT CVatsimDataFileReader : public BlackMisc::CThreadedReader
     {
         Q_OBJECT
 

@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_CONTEXTNETWORK_H
 #define BLACKCORE_CONTEXTNETWORK_H
 
+#include "blackcoreexport.h"
 #include "blackcore/context.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
@@ -38,7 +39,7 @@ namespace BlackCore
 {
 
     //! Network context proxy
-    class IContextNetwork : public CContext
+    class BLACKCORE_EXPORT IContextNetwork : public CContext
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTNETWORK_INTERFACENAME)

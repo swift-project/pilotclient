@@ -10,6 +10,7 @@
 #ifndef BLACKCORE_TOKENBUCKET_H
 #define BLACKCORE_TOKENBUCKET_H
 
+#include "blackcoreexport.h"
 #include "blackmisc/pq/time.h"
 #include <QtGlobal>
 #include <QDateTime>
@@ -24,7 +25,7 @@ namespace BlackCore
      * generation. Each time a packet needs to be generated and sent a token is consumed. If no token is available, consumption
      * will fail the the packet cannot be sent.
      */
-    class CTokenBucket
+    class BLACKCORE_EXPORT CTokenBucket
     {
 
     public:

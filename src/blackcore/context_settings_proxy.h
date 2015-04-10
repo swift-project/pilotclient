@@ -6,6 +6,7 @@
 #ifndef BLACKCORE_CONTEXTSETTINGS_PROXY_H
 #define BLACKCORE_CONTEXTSETTINGS_PROXY_H
 
+#include "blackcoreexport.h"
 #include "context_settings.h"
 
 #include "blackmisc/statusmessagelist.h"
@@ -19,7 +20,7 @@ namespace BlackCore
 
     //! \brief Settings context proxy
     //! \ingroup dbus
-    class CContextSettingsProxy : public IContextSettings
+    class BLACKCORE_EXPORT CContextSettingsProxy : public IContextSettings
     {
         Q_OBJECT
         friend class IContextSettings;

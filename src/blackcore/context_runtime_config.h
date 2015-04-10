@@ -1,12 +1,13 @@
 #ifndef BLACKCORE_CONTEXT_RUNTIME_CONFIG_H
 #define BLACKCORE_CONTEXT_RUNTIME_CONFIG_H
 
+#include "blackcoreexport.h"
 #include <QString>
 
 namespace BlackCore
 {
     //! Helper to correctly run a context
-    class CRuntimeConfig
+    class BLACKCORE_EXPORT CRuntimeConfig
     {
 
     public:

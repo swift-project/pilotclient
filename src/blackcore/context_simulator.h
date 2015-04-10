@@ -23,6 +23,7 @@
 
 //! @}
 
+#include "blackcoreexport.h"
 #include "context.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_runtime.h"
@@ -41,7 +42,7 @@
 namespace BlackCore
 {
     //! Network context
-    class IContextSimulator : public CContext
+    class BLACKCORE_EXPORT IContextSimulator : public CContext
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME)

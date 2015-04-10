@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_CONTEXTSETTINGS_H
 #define BLACKCORE_CONTEXTSETTINGS_H
 
+#include "blackcoreexport.h"
 #include "blackcore/context.h"
 #include "blackcore/dbus_server.h"
 #include "blackinput/keyboard.h"
@@ -38,7 +39,7 @@ namespace BlackCore
     /*!
      * Context settings interface
      */
-    class IContextSettings : public CContext
+    class BLACKCORE_EXPORT IContextSettings : public CContext
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSETTINGS_INTERFACENAME)

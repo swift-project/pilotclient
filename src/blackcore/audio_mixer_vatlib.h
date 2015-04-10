@@ -10,6 +10,7 @@
 #ifndef BLACKCORE_AUDIOMIXERVATLIB_H
 #define BLACKCORE_AUDIOMIXERVATLIB_H
 
+#include "blackcoreexport.h"
 #include "audio_mixer.h"
 
 #include "vatlib/vatlib2.h"
@@ -18,7 +19,7 @@
 namespace BlackCore
 {
     //! Interface to an audio mixer
-    class CAudioMixerVatlib : public IAudioMixer
+    class BLACKCORE_EXPORT CAudioMixerVatlib : public IAudioMixer
     {
         Q_OBJECT
 

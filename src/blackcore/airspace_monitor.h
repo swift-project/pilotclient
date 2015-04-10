@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_AIRSPACE_MONITOR_H
 #define BLACKCORE_AIRSPACE_MONITOR_H
 
+#include "blackcoreexport.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
@@ -32,7 +33,7 @@ namespace BlackCore
     /*!
      * Keeps track of other entities in the airspace: aircraft, ATC stations, etc.
      */
-    class CAirspaceMonitor :
+    class BLACKCORE_EXPORT CAirspaceMonitor :
         public QObject,
         public BlackMisc::Simulation::IRemoteAircraftProvider,  // those data will be provided from the class CAirspaceMonitor
         public BlackMisc::Simulation::COwnAircraftAwareReadOnly // used to obtain in memory inofmration about own aircraft

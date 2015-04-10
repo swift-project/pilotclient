@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_OWNAIRCRAFT_PROXY_H
 #define BLACKCORE_OWNAIRCRAFT_PROXY_H
 
+#include "blackcoreexport.h"
 #include "blackcore/context_ownaircraft.h"
 #include "blackmisc/genericdbusinterface.h"
 #include "blackmisc/aviation/aircrafticao.h"
@@ -22,7 +23,7 @@ namespace BlackCore
 
     //! Own aircraft context proxy
     //! \ingroup dbus
-    class CContextOwnAircraftProxy : public IContextOwnAircraft
+    class BLACKCORE_EXPORT CContextOwnAircraftProxy : public IContextOwnAircraft
     {
         Q_OBJECT
         friend class IContextOwnAircraft;

@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_CONTEXT_H
 #define BLACKCORE_CONTEXT_H
 
+#include "blackcoreexport.h"
 #include "blackcore/context_runtime_config.h"
 #include "blackcore/context_runtime.h"
 #include "blackmisc/logmessage.h"
@@ -21,7 +22,7 @@
 namespace BlackCore
 {
     //! Base for all context classes
-    class CContext : public QObject
+    class BLACKCORE_EXPORT CContext : public QObject
     {
     public:
         //! Destructor

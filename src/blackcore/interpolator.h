@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_INTERPOLATOR_H
 #define BLACKCORE_INTERPOLATOR_H
 
+#include "blackcoreexport.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/worker.h"
@@ -21,7 +22,7 @@
 namespace BlackCore
 {
     //! Interpolator, calculation inbetween positions
-    class IInterpolator :
+    class BLACKCORE_EXPORT IInterpolator :
         public BlackMisc::CContinuousWorker,
         public BlackMisc::Simulation::CRemoteAircraftAwareReadOnly
     {
@@ -41,7 +42,7 @@ namespace BlackCore
         static QString getMessageCategory() { return "swift.interpolator"; }
 
         //! Status of interpolation
-        struct InterpolationStatus
+        struct BLACKCORE_EXPORT InterpolationStatus
         {
         public:
             bool changedPosition = false;        //!< position was changed

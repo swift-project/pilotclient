@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_CONTEXTNETWORK_IMPL_H
 #define BLACKCORE_CONTEXTNETWORK_IMPL_H
 
+#include "blackcoreexport.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_settings.h"
 #include "blackcore/context_runtime.h"
@@ -35,7 +36,7 @@ namespace BlackCore
     class CVatsimDataFileReader;
 
     //! Network context implementation
-    class CContextNetwork :
+    class BLACKCORE_EXPORT CContextNetwork :
         public IContextNetwork,
         public BlackMisc::Simulation::IRemoteAircraftProvider
     {

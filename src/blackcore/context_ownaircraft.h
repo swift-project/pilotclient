@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_CONTEXTOWNAIRCRAFT_H
 #define BLACKCORE_CONTEXTOWNAIRCRAFT_H
 
+#include "blackcoreexport.h"
 #include "blackcore/context.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/aircrafticao.h"
@@ -34,7 +35,7 @@ namespace BlackCore
 
     //! Own context proxy
     //! \ingroup dbus
-    class IContextOwnAircraft : public CContext
+    class BLACKCORE_EXPORT IContextOwnAircraft : public CContext
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTOWNAIRCRAFT_INTERFACENAME)

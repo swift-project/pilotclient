@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_CONTEXTNETWORK_PROXY_H
 #define BLACKCORE_CONTEXTNETWORK_PROXY_H
 
+#include "blackcoreexport.h"
 #include "context_network.h"
 #include "network_vatlib.h"
 
@@ -28,7 +29,7 @@ namespace BlackCore
 
     //! Network context proxy
     //! \ingroup dbus
-    class CContextNetworkProxy : public IContextNetwork
+    class BLACKCORE_EXPORT CContextNetworkProxy : public IContextNetwork
     {
         Q_OBJECT
         friend class IContextNetwork;

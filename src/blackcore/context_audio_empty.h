@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_CONTEXTAUDIO_EMPTY_H
 #define BLACKCORE_CONTEXTAUDIO_EMPTY_H
 
+#include "blackcoreexport.h"
 #include "context_audio.h"
 #include "dbus_server.h"
 #include "voice.h"
@@ -21,7 +22,7 @@ namespace BlackCore
     class IVoiceChannel;
 
     //! Audio context implementation
-    class CContextAudioEmpty : public IContextAudio
+    class BLACKCORE_EXPORT CContextAudioEmpty : public IContextAudio
     {
     public:
 

@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_AUDIODEVICEVATLIB_H
 #define BLACKCORE_AUDIODEVICEVATLIB_H
 
+#include "blackcoreexport.h"
 #include "audio_device.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
@@ -21,7 +22,7 @@
 namespace BlackCore
 {
     //! Audio Input Device
-    class CAudioInputDeviceVatlib : public IAudioInputDevice
+    class BLACKCORE_EXPORT CAudioInputDeviceVatlib : public IAudioInputDevice
     {
         Q_OBJECT
 

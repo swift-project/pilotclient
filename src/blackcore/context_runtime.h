@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_CONTEXT_RUNTIME_H
 #define BLACKCORE_CONTEXT_RUNTIME_H
 
+#include "blackcoreexport.h"
 #include "blackcore/context_runtime_config.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
@@ -40,7 +41,7 @@ namespace BlackCore
     class IContextSimulator;
 
     //! The Context runtime class
-    class CRuntime : public QObject
+    class BLACKCORE_EXPORT CRuntime : public QObject
     {
         Q_OBJECT
 

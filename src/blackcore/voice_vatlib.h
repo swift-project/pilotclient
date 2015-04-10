@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_VOICE_VATLIB_H
 #define BLACKCORE_VOICE_VATLIB_H
 
+#include "blackcoreexport.h"
 #include "voice.h"
 #include <vatlib/vatlib2.h>
 
@@ -31,7 +32,7 @@
 namespace BlackCore
 {
     //! Vatlib implementation of the IVoice interface.
-    class CVoiceVatlib : public IVoice
+    class BLACKCORE_EXPORT CVoiceVatlib : public IVoice
     {
         Q_OBJECT
 

@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_AUDIODEVICE_H
 #define BLACKCORE_AUDIODEVICE_H
 
+#include "blackcoreexport.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include <QObject>
@@ -22,7 +23,7 @@ namespace BlackCore
 {
     //! Audio Input Device
     //! \todo Settings classes to store hardware settings (hardware device)
-    class IAudioInputDevice : public QObject
+    class BLACKCORE_EXPORT IAudioInputDevice : public QObject
     {
         Q_OBJECT
 

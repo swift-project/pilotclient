@@ -21,10 +21,12 @@ precompile_header:!isEmpty(PRECOMPILED_HEADER) {
     DEFINES += USING_PCH
 }
 
-DEFINES += LOG_IN_FILE
+DEFINES += LOG_IN_FILE BUILD_BLACKCORE_LIB
 
 HEADERS += *.h
 SOURCES += *.cpp
+
+LIBS *= -lvatlib2
 
 DESTDIR = $$BuildRoot/lib
 DLLDESTDIR = $$BuildRoot/bin

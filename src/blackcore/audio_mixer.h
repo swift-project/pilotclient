@@ -10,12 +10,13 @@
 #ifndef BLACKCORE_AUDIOMIXER_H
 #define BLACKCORE_AUDIOMIXER_H
 
+#include "blackcoreexport.h"
 #include <QObject>
 
 namespace BlackCore
 {
     //! Interface to an audio mixer
-    class IAudioMixer : public QObject
+    class BLACKCORE_EXPORT IAudioMixer : public QObject
     {
         Q_OBJECT
 

@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_CONTEXTVOICE_PROXY_H
 #define BLACKCORE_CONTEXTVOICE_PROXY_H
 
+#include "blackcoreexport.h"
 #include "context_audio.h"
 
 #include "blackmisc/genericdbusinterface.h"
@@ -25,7 +26,7 @@ namespace BlackCore
 
     //! \brief Audio context proxy
     //! \ingroup dbus
-    class CContextAudioProxy : public IContextAudio
+    class BLACKCORE_EXPORT CContextAudioProxy : public IContextAudio
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAUDIO_INTERFACENAME)

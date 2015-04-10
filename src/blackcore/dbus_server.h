@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_DBUSSERVER_H
 #define BLACKCORE_DBUSSERVER_H
 
+#include "blackcoreexport.h"
 #include "blackmisc/valueobject.h" // for qHash overload, include before Qt stuff due GCC issue
 #include <QObject>
 #include <QtDBus/QDBusServer>
@@ -32,7 +33,7 @@ namespace BlackCore
      *           with session or system bus. For session / system bus this class represents no real server,
      *           but more a wrapper for \sa QDBusConnection and the registered objects
      */
-    class CDBusServer : public QObject
+    class BLACKCORE_EXPORT CDBusServer : public QObject
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_RUNTIME_SERVICENAME)

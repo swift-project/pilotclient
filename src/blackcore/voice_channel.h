@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_VOICE_CHANNEL_H
 #define BLACKCORE_VOICE_CHANNEL_H
 
+#include "blackcoreexport.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/aviation/callsignset.h"
@@ -23,7 +24,7 @@
 namespace BlackCore
 {
     //! Interface to a voice channel
-    class IVoiceChannel : public QObject
+    class BLACKCORE_EXPORT IVoiceChannel : public QObject
     {
         Q_OBJECT
 

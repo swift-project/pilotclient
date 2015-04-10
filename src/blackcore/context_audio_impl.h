@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_CONTEXTAUDIO_IMPL_H
 #define BLACKCORE_CONTEXTAUDIO_IMPL_H
 
+#include "blackcoreexport.h"
 #include "context_audio.h"
 #include "context_settings.h"
 #include "context_runtime.h"
@@ -34,7 +35,7 @@ namespace BlackCore
     class IVoiceChannel;
 
     //! Audio context implementation
-    class CContextAudio : public IContextAudio
+    class BLACKCORE_EXPORT CContextAudio : public IContextAudio
     {
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAUDIO_INTERFACENAME)
         Q_OBJECT

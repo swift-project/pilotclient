@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_CONTEXTAPPLICATION_H
 #define BLACKCORE_CONTEXTAPPLICATION_H
 
+#include "blackcoreexport.h"
 #include "blackcore/context.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/audio/voiceroomlist.h"
@@ -38,7 +39,7 @@ namespace BlackCore
     /*!
      * Application context interface
      */
-    class IContextApplication : public CContext
+    class BLACKCORE_EXPORT IContextApplication : public CContext
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME)

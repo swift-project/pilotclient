@@ -6,16 +6,17 @@
 #ifndef BLACKCORE_FREEFUNCTIONS_H
 #define BLACKCORE_FREEFUNCTIONS_H
 
+#include "blackcoreexport.h"
 #include <QObject>
 
 namespace BlackCore
 {
     //! Register all relevant metadata in BlackCore
-    void registerMetadata();
+    BLACKCORE_EXPORT void registerMetadata();
 
     //! Is the current thread the one created the object
     //! \remarks can be used as ASSERT check for threaded objects
-    bool isCurrentThreadCreatingThread(QObject *toBeTested);
+    BLACKCORE_EXPORT bool isCurrentThreadCreatingThread(QObject *toBeTested);
 
 } // BlackCore
 

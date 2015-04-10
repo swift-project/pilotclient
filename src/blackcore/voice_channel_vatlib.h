@@ -10,6 +10,7 @@
 #ifndef BLACKCORE_VOICE_CHANNEL_VATLIB_H
 #define BLACKCORE_VOICE_CHANNEL_VATLIB_H
 
+#include "blackcoreexport.h"
 #include "voice_channel.h"
 #include "voice_vatlib.h"
 #include "blackmisc/statusmessage.h"
@@ -25,7 +26,7 @@ namespace BlackCore
     class CVoiceChannelVatlibPrivate;
 
     //! Class implementing the voice channel interface
-    class CVoiceChannelVatlib : public IVoiceChannel
+    class BLACKCORE_EXPORT CVoiceChannelVatlib : public IVoiceChannel
     {
         Q_OBJECT
 

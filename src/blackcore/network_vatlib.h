@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_NETWORK_VATLIB_H
 #define BLACKCORE_NETWORK_VATLIB_H
 
+#include "blackcoreexport.h"
 #include "network.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "token_bucket.h"
@@ -27,7 +28,7 @@ namespace BlackCore
     /*!
      * Implementation of INetwork using the vatlib shim
      */
-    class CNetworkVatlib :
+    class BLACKCORE_EXPORT CNetworkVatlib :
             public INetwork,
             public BlackMisc::Simulation::COwnAircraftAware // network vatlib consumes own aircraft data and sets ICAO/callsign data
     {

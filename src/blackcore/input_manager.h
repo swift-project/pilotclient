@@ -6,6 +6,7 @@
 #ifndef BLACKCORE_INPUTMANAGER_H
 #define BLACKCORE_INPUTMANAGER_H
 
+#include "blackcoreexport.h"
 #include "blackinput/keyboard.h"
 #include "blackinput/joystick.h"
 #include "blackmisc/hardware/keyboardkeylist.h"
@@ -23,7 +24,7 @@
 namespace BlackCore
 {
     //! Input manager handling hotkey function calls
-    class CInputManager : public QObject
+    class BLACKCORE_EXPORT CInputManager : public QObject
     {
         Q_OBJECT
 

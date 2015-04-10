@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_SIMULATOR_H
 #define BLACKCORE_SIMULATOR_H
 
+#include "blackcoreexport.h"
 #include "blackcore/interpolator.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorsetup.h"
@@ -30,7 +31,7 @@ namespace BlackCore
 {
 
     //! Interface to a simulator.
-    class ISimulator : public QObject
+    class BLACKCORE_EXPORT ISimulator : public QObject
     {
         Q_OBJECT
     public:
@@ -208,7 +209,7 @@ namespace BlackCore
      * The simulator listener is responsible for letting the core know when
      * the corresponding simulator is started.
      */
-    class ISimulatorListener : public QObject
+    class BLACKCORE_EXPORT ISimulatorListener : public QObject
     {
         Q_OBJECT
 
@@ -237,7 +238,7 @@ namespace BlackCore
     };
 
     //! Factory pattern class to create instances of ISimulator
-    class ISimulatorFactory
+    class BLACKCORE_EXPORT ISimulatorFactory
     {
     public:
 
@@ -264,7 +265,7 @@ namespace BlackCore
     };
 
     //! Common base class with providers, interface and some base functionality
-    class CSimulatorCommon :
+    class BLACKCORE_EXPORT CSimulatorCommon :
         public BlackCore::ISimulator,
         public BlackMisc::Simulation::COwnAircraftAware,   // gain access to in memor own aircraft data
         public BlackMisc::Simulation::CRemoteAircraftAware // gain access to in memory remote aircraft data

@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_CONTEXTSIMULATOR_PROXY_H
 #define BLACKCORE_CONTEXTSIMULATOR_PROXY_H
 
+#include "blackcoreexport.h"
 #include "blackcore/context_simulator.h"
 #include "blackmisc/genericdbusinterface.h"
 #include "blackmisc/pixmap.h"
@@ -20,7 +21,7 @@ namespace BlackCore
 {
     //! \brief DBus proxy for Simulator Context
     //! \ingroup dbus
-    class CContextSimulatorProxy : public IContextSimulator
+    class BLACKCORE_EXPORT CContextSimulatorProxy : public IContextSimulator
     {
         Q_OBJECT
         friend class IContextSimulator;

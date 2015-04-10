@@ -6,6 +6,7 @@
 #ifndef BLACKCORE_CONTEXTAPPLICATION_PROXY_H
 #define BLACKCORE_CONTEXTAPPLICATION_PROXY_H
 
+#include "blackcoreexport.h"
 #include "context_application.h"
 #include "blackmisc/genericdbusinterface.h"
 
@@ -14,7 +15,7 @@ namespace BlackCore
 
     //! \brief Application context proxy
     //! \ingroup dbus
-    class CContextApplicationProxy : public IContextApplication
+    class BLACKCORE_EXPORT CContextApplicationProxy : public IContextApplication
     {
         Q_OBJECT
         friend class IContextApplication;
