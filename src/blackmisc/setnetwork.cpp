@@ -8,7 +8,6 @@
  */
 
 #include "setnetwork.h"
-#include "blackcore/dbus_server.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/settingutilities.h"
@@ -26,7 +25,7 @@ namespace BlackMisc
          */
         CSettingsNetwork::CSettingsNetwork() :
             m_bookingServiceUrl("http://vatbook.euroutepro.com/xml2.php"),
-            m_dbusServerAddress(BlackCore::CDBusServer::sessionDBusServer())
+            m_dbusServerAddress(sessionDBusServer())
         {
             // settings
         }

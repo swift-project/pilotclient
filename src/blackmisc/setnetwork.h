@@ -64,6 +64,13 @@ namespace BlackMisc
                 return value;
             }
 
+            //! Denotes a session DBus server
+            static const QString &sessionDBusServer()
+            {
+                static QString session("session");
+                return session;
+            }
+
             //! Value object, traffic network server objects
             BlackMisc::Network::CServerList getTrafficNetworkServers() const { return m_trafficNetworkServers; }
 
