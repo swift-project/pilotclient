@@ -74,7 +74,7 @@ contains(BLACK_CONFIG, ProfileRelease) {
 
 # Needed to workaround C1128 error
 # TODO check whether this is still needed after CValueObject refactoring
-win32-msvc*: equals(WORD_SIZE,64): QMAKE_CXXFLAGS *= /bigobj
+win32-msvc*: QMAKE_CXXFLAGS *= /bigobj
 
 ###########################
 # No incremental build

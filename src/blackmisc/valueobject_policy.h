@@ -58,12 +58,11 @@ namespace BlackMisc
                 static void registerImpl() { QMetaTypeAndDBusOnly::registerImpl<T>(); maybeRegisterMetaValueType<T>(); }
 
             private:
-                template <class T>
-                static void maybeRegisterMetaValueType() { maybeRegisterMetaValueType<T>(std::is_base_of<CEmpty, T>()); } // FIXME use TemplateIsBaseOf
-                template <class T>
-                static void maybeRegisterMetaValueType(std::true_type) { BlackMisc::registerMetaValueType<T>(); }
-                template <class T>
-                static void maybeRegisterMetaValueType(std::false_type) {}
+                // FIXME use TemplateIsBaseOf
+                template <class T, typename std::enable_if<std::is_base_of<CEmpty, T>::value>::type* = nullptr>
+                static void maybeRegisterMetaValueType() { BlackMisc::registerMetaValueType<T>(); }
+                template <class T, typename std::enable_if<!std::is_base_of<CEmpty, T>::value>::type* = nullptr>
+                static void maybeRegisterMetaValueType() {}
             };
 
             //! CValueObject registerMetadata policy which inherits the policy of the base class

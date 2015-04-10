@@ -361,13 +361,13 @@ namespace BlackMisc
         //! Virtual method to return QVariant, used with DBus QVariant lists
         virtual QVariant toQVariant() const
         {
-            return maybeToQVariant(IsRegisteredQMetaType<Derived>());
+            return maybeToQVariant<Derived>();
         }
 
         //! Set from QVariant
         virtual void convertFromQVariant(const QVariant &variant)
         {
-            return maybeConvertFromQVariant(variant, IsRegisteredQMetaType<Derived>());
+            return maybeConvertFromQVariant<Derived>(variant);
         }
 
         //! Set property by index
@@ -412,7 +412,7 @@ namespace BlackMisc
         //! Returns the Qt meta type ID of this object.
         virtual int getMetaTypeId() const
         {
-            return maybeGetMetaTypeId(IsRegisteredQMetaType<Derived>());
+            return maybeGetMetaTypeId<Derived>();
         }
 
         /*!
@@ -422,7 +422,7 @@ namespace BlackMisc
         virtual bool isA(int metaTypeId) const
         {
             if (metaTypeId == QMetaType::UnknownType) { return false; }
-            if (metaTypeId == maybeGetMetaTypeId(IsRegisteredQMetaType<Derived>())) { return true; }
+            if (metaTypeId == maybeGetMetaTypeId<Derived>()) { return true; }
             return BaseOrDummy::isA(metaTypeId);
         }
 
@@ -445,13 +445,42 @@ namespace BlackMisc
         Derived *derived() { return static_cast<Derived *>(this); }
 
         // fallbacks in case Derived is not a registered meta type
-        template <class T> using IsRegisteredQMetaType = std::integral_constant<bool, QMetaTypeId<T>::Defined>;
-        static int maybeGetMetaTypeId(std::true_type) { return qMetaTypeId<Derived>(); }
-        static int maybeGetMetaTypeId(std::false_type) { return QMetaType::UnknownType; }
-        QVariant maybeToQVariant(std::true_type) const { return QVariant::fromValue(*derived()); }
-        QVariant maybeToQVariant(std::false_type) const { return {}; }
-        void maybeConvertFromQVariant(const QVariant &variant, std::true_type) { BlackMisc::setFromQVariant(derived(), variant); }
-        void maybeConvertFromQVariant(const QVariant &variant, std::false_type) { Q_UNUSED(variant); }
+
+        template <typename T, typename std::enable_if<!QMetaTypeId2<T>::Defined>::type* = nullptr>
+        static int maybeGetMetaTypeId()
+        {
+            return QMetaType::UnknownType;
+        }
+
+        template <class T, typename std::enable_if<QMetaTypeId2<T>::Defined>::type* = nullptr>
+        static int maybeGetMetaTypeId()
+        {
+            return qMetaTypeId<T>();
+        }
+
+        template <class T, typename std::enable_if<!QMetaTypeId2<T>::Defined>::type* = nullptr>
+        QVariant maybeToQVariant() const
+        {
+            return {};
+        }
+
+        template <class T, typename std::enable_if<QMetaTypeId2<T>::Defined>::type* = nullptr>
+        QVariant maybeToQVariant() const
+        {
+            return QVariant::fromValue(*derived());
+        }
+
+        template <class T, typename std::enable_if<!QMetaTypeId2<T>::Defined>::type* = nullptr>
+        void maybeConvertFromQVariant(const QVariant &variant)
+        {
+            Q_UNUSED(variant);
+        }
+
+        template <class T, typename std::enable_if<QMetaTypeId2<T>::Defined>::type* = nullptr>
+        void maybeConvertFromQVariant(const QVariant &variant)
+        {
+            BlackMisc::setFromQVariant(derived(), variant);
+        }
     };
 
 } // namespace
