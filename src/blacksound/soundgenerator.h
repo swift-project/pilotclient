@@ -12,6 +12,7 @@
 #ifndef BLACKSOUND_SOUNDGENERATOR_H
 #define BLACKSOUND_SOUNDGENERATOR_H
 
+#include "blacksoundexport.h"
 #include "blackmisc/aviation/selcal.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/pq/time.h"
@@ -28,7 +29,7 @@ namespace BlackSound
 {
 
     //! Playing simple sounds
-    class CSoundGenerator : public QIODevice
+    class BLACKSOUND_EXPORT CSoundGenerator : public QIODevice
     {
         Q_OBJECT
 
