@@ -5,7 +5,11 @@ QT       += network dbus xml
 
 TARGET = blackmisc
 TEMPLATE = lib
-CONFIG += staticlib c++11
+CONFIG += c++11
+
+contains(BLACK_CONFIG, Static) {
+    CONFIG += staticlib
+}
 
 INCLUDEPATH += ..
 # DEPENDPATH += . .. // BlackMisc should be independent

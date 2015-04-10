@@ -6,8 +6,11 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = blackgui
 TEMPLATE = lib
-CONFIG += staticlib
 CONFIG += blackmisc blackcore
+
+contains(BLACK_CONFIG, Static) {
+    CONFIG += staticlib
+}
 
 INCLUDEPATH += ..
 DEPENDPATH += . ..
