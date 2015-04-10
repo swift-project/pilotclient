@@ -12,6 +12,7 @@
 
 //! \file
 
+#include "blackgui/blackguiexport.h"
 #include "viewbase.h"
 #include "../models/statusmessagelistmodel.h"
 
@@ -20,7 +21,7 @@ namespace BlackGui
     namespace Views
     {
         //! Status message view
-        class CStatusMessageView : public CViewBase<Models::CStatusMessageListModel, BlackMisc::CStatusMessageList, BlackMisc::CStatusMessage>
+        class BLACKGUI_EXPORT CStatusMessageView : public CViewBase<Models::CStatusMessageListModel, BlackMisc::CStatusMessageList, BlackMisc::CStatusMessage>
         {
 
         public:

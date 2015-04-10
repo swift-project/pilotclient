@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COLUMNFORMATTERS_H
 #define BLACKGUI_COLUMNFORMATTERS_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackgui/led.h"
 #include "blackmisc/pq/pq.h"
 #include "blackmisc/aviation/comsystem.h"
@@ -26,7 +27,7 @@ namespace BlackGui
     namespace Models
     {
         //! Column formatter default implementation, also serving as interface
-        class CDefaultFormatter
+        class BLACKGUI_EXPORT CDefaultFormatter
         {
         public:
             //! Constructor

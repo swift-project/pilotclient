@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_AIRPORTVIEW_H
 #define BLACKGUI_AIRPORTVIEW_H
 
+#include "blackgui/blackguiexport.h"
 #include "viewbase.h"
 #include "../models/airportlistmodel.h"
 
@@ -20,7 +21,7 @@ namespace BlackGui
     namespace Views
     {
         //! Airports view
-        class CAirportView : public CViewBase<Models::CAirportListModel, BlackMisc::Aviation::CAirportList, BlackMisc::Aviation::CAirport>
+        class BLACKGUI_EXPORT CAirportView : public CViewBase<Models::CAirportListModel, BlackMisc::Aviation::CAirportList, BlackMisc::Aviation::CAirport>
         {
 
         public:

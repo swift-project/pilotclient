@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_DOCKWIDGETINFOAREA_H
 #define BLACKGUI_DOCKWIDGETINFOAREA_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackgui/dockwidget.h"
 
 namespace BlackGui
@@ -23,7 +24,7 @@ namespace BlackGui
     //! Specialized class for dock widgets serving as info area.
     //! \sa CDockWidgetInfoBar
     //! \sa CInfoArea
-    class CDockWidgetInfoArea : public CDockWidget
+    class BLACKGUI_EXPORT CDockWidgetInfoArea : public CDockWidget
     {
         Q_OBJECT
 

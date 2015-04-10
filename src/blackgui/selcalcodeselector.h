@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_SELCALCODESELECTOR_H
 #define BLACKGUI_SELCALCODESELECTOR_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/selcal.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -21,7 +22,7 @@ namespace BlackGui
 {
 
     //! SELCAL mode selector
-    class CSelcalCodeSelector : public QFrame
+    class BLACKGUI_EXPORT CSelcalCodeSelector : public QFrame
     {
         Q_OBJECT
 

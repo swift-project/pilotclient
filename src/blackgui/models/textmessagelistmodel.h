@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_TEXTMESSAGELISTMODEL_H
 #define BLACKGUI_TEXTMESSAGELISTMODEL_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/network/textmessagelist.h"
 #include "blackgui/models/listmodelbase.h"
 #include <QAbstractItemModel>
@@ -23,7 +24,7 @@ namespace BlackGui
     namespace Models
     {
         //! ATC list model
-        class CTextMessageListModel : public CListModelBase<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList>
+        class BLACKGUI_EXPORT CTextMessageListModel : public CListModelBase<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList>
         {
 
         public:

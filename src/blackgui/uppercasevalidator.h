@@ -12,12 +12,13 @@
 #ifndef BLACKGUI_UPPERCASEVALIDATOR_H
 #define BLACKGUI_UPPERCASEVALIDATOR_H
 
+#include "blackgui/blackguiexport.h"
 #include <QValidator>
 
 namespace BlackGui
 {
     //! Forces uppercase
-    class CUpperCaseValidator : public QValidator
+    class BLACKGUI_EXPORT CUpperCaseValidator : public QValidator
     {
 
     public:

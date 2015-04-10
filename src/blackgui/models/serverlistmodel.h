@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_SERVERLISTMODEL_H
 #define BLACKGUI_SERVERLISTMODEL_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackgui/models/listmodelbase.h"
 #include <QAbstractItemModel>
@@ -21,7 +22,7 @@ namespace BlackGui
     namespace Models
     {
         //! Server list model
-        class CServerListModel : public CListModelBase<BlackMisc::Network::CServer, BlackMisc::Network::CServerList>
+        class BLACKGUI_EXPORT CServerListModel : public CListModelBase<BlackMisc::Network::CServer, BlackMisc::Network::CServerList>
         {
 
         public:

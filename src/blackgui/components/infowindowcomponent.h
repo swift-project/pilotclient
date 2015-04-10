@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_INFOWINDOW_H
 #define BLACKGUI_INFOWINDOW_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/variant.h"
@@ -29,7 +30,7 @@ namespace BlackGui
         /*!
          * Multi purpose info window (like pop up window)
          */
-        class CInfoWindowComponent : public QWizardPage
+        class BLACKGUI_EXPORT CInfoWindowComponent : public QWizardPage
         {
             Q_OBJECT
 

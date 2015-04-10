@@ -12,6 +12,7 @@
 #ifndef TICKLABEL_H
 #define TICKLABEL_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/icons.h"
 #include <QLabel>
 #include <QPixmap>
@@ -19,7 +20,7 @@
 namespace BlackGui
 {
     //! Representing a ticked or crossed icon
-    class CTickLabel : public QLabel
+    class BLACKGUI_EXPORT CTickLabel : public QLabel
     {
         Q_OBJECT
 

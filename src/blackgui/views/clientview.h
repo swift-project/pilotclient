@@ -12,6 +12,7 @@
 
 //! \file
 
+#include "blackgui/blackguiexport.h"
 #include "viewbase.h"
 #include "../models/clientlistmodel.h"
 
@@ -20,7 +21,7 @@ namespace BlackGui
     namespace Views
     {
         //! Client view
-        class CClientView : public CViewBase<Models::CClientListModel, BlackMisc::Network::CClientList, BlackMisc::Network::CClient>
+        class BLACKGUI_EXPORT CClientView : public CViewBase<Models::CClientListModel, BlackMisc::Network::CClientList, BlackMisc::Network::CClient>
         {
         public:
             //! Constructor

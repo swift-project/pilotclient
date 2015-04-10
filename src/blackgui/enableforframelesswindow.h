@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_ENABLEFORFRAMLESSWINDOW_H
 #define BLACKGUI_ENABLEFORFRAMLESSWINDOW_H
 
+#include "blackgui/blackguiexport.h"
 #include <QWidget>
 #include <QStatusBar>
 #include <QMouseEvent>
@@ -26,7 +27,7 @@ namespace BlackGui
     //! Main window which can be frameless
     //! \details QMainWindows cannot be promoted. Hence a derived class does not work properly here.
     //!          Furthermore frameless functionality is also required for CDockWidgets as well.
-    class CEnableForFramelessWindow
+    class BLACKGUI_EXPORT CEnableForFramelessWindow
     {
     public:
         //! Window modes

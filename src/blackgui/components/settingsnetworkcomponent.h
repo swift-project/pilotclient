@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_SETTINGSNETWORKCOMPONENT_H
 #define BLACKGUI_SETTINGSNETWORKCOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackgui/components/enableforruntime.h"
 #include <QFrame>
 
@@ -23,7 +24,7 @@ namespace BlackGui
     {
 
         //! General settings for network
-        class CSettingsNetworkComponent :
+        class BLACKGUI_EXPORT CSettingsNetworkComponent :
             public QFrame,
             public CEnableForRuntime
         {

@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_SETTINGSCOMPONENT_H
 #define BLACKGUI_SETTINGSCOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackgui/components/enableforruntime.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/aviation/aircrafticao.h"
@@ -28,7 +29,7 @@ namespace BlackGui
     {
 
         //! Settings component
-        class CSettingsComponent :
+        class BLACKGUI_EXPORT CSettingsComponent :
             public QTabWidget,
             public CEnableForRuntime
         {

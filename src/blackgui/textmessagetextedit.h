@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_TEXTMESSAGETEXTEDIT_H
 #define BLACKGUI_TEXTMESSAGETEXTEDIT_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/network/textmessagelist.h"
 #include <QTextEdit>
 #include <QAction>
@@ -19,7 +20,7 @@
 namespace BlackGui
 {
     //! Specialized text edit for displaying text messages
-    class CTextMessageTextEdit : public QTextEdit
+    class BLACKGUI_EXPORT CTextMessageTextEdit : public QTextEdit
     {
     public:
         //! Constructor

@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_AUDIOSETUPCOMPONENT_H
 #define BLACKGUI_AUDIOSETUPCOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "enableforruntime.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include <QFrame>
@@ -24,7 +25,7 @@ namespace BlackGui
     namespace Components
     {
         //! Audio setup such as input / output devices
-        class CAudioSetupComponent :
+        class BLACKGUI_EXPORT CAudioSetupComponent :
             public QFrame,
             public CEnableForRuntime
         {

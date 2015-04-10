@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_LOGINMODEBUTTONS_H
 #define BLACKMISC_LOGINMODEBUTTONS_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackcore/network.h"
 #include <QGroupBox>
 #include <QScopedPointer>
@@ -22,7 +23,7 @@ namespace Ui { class CLoginModeButtons; }
 namespace BlackGui
 {
     //! Display login modes (normal, stealth, ...)
-    class CLoginModeButtons : public QGroupBox
+    class BLACKGUI_EXPORT CLoginModeButtons : public QGroupBox
     {
         Q_OBJECT
 

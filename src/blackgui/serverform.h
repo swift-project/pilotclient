@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_NETWORKSERVERFORM_H
 #define BLACKGUI_NETWORKSERVERFORM_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/statusmessagelist.h"
 #include <QFrame>
@@ -23,7 +24,7 @@ namespace BlackGui
 {
 
     //! Server form
-    class CServerForm : public QFrame
+    class BLACKGUI_EXPORT CServerForm : public QFrame
     {
         Q_OBJECT
 

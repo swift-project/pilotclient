@@ -10,6 +10,7 @@
 #ifndef BLACKGUI_COCKPITCOMCOMPONENT_H
 #define BLACKGUI_COCKPITCOMCOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "enablefordockwidgetinfoarea.h"
 #include "enableforruntime.h"
 #include "blackmisc/aviation/aircraft.h"
@@ -25,7 +26,7 @@ namespace BlackGui
     namespace Components
     {
         //! The main cockpit area
-        class CCockpitComComponent :
+        class BLACKGUI_EXPORT CCockpitComComponent :
             public QFrame,
             public CEnableForDockWidgetInfoArea,
             public CEnableForRuntime

@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_INFOBARSTATUSCOMPONENT_H
 #define BLACKGUI_INFOBARSTATUSCOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "enableforruntime.h"
 #include "../led.h"
 #include <QFrame>
@@ -23,7 +24,7 @@ namespace BlackGui
     namespace Components
     {
         //! Info bar displaying status (Network, Simulator, DBus)
-        class CInfoBarStatusComponent :
+        class BLACKGUI_EXPORT CInfoBarStatusComponent :
             public QFrame,
             public CEnableForRuntime
         {

@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_NAVIGATORDOCKWIDGET_H
 #define BLACKGUI_COMPONENTS_NAVIGATORDOCKWIDGET_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackgui/dockwidgetinfoarea.h"
 #include <QDockWidget>
 #include <QScopedPointer>
@@ -24,7 +25,7 @@ namespace BlackGui
     {
 
         //! Dock widget for navigators
-        class CNavigatorDockWidget : public BlackGui::CDockWidgetInfoArea
+        class BLACKGUI_EXPORT CNavigatorDockWidget : public BlackGui::CDockWidgetInfoArea
         {
             Q_OBJECT
 

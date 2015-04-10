@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_AIRCRAFTCOMPONENT_H
 #define BLACKGUI_AIRCRAFTCOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/updatetimer.h"
@@ -26,7 +27,7 @@ namespace BlackGui
     namespace Components
     {
         //! Aircraft widget
-        class CAircraftComponent :
+        class BLACKGUI_EXPORT CAircraftComponent :
             public QTabWidget,
             public CEnableForDockWidgetInfoArea,
             public CEnableForRuntime

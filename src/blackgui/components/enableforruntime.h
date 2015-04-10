@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_ENABLEFORRUNTIME_H
 #define BLACKGUI_ENABLEFORRUNTIME_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackcore/context_runtime.h"
 #include "blackmisc/notificationsounds.h"
 #include <QTimer>
@@ -39,7 +40,7 @@ namespace BlackGui
          *          the component widely independent from a central data provideer
          * \sa BlackCore::CRuntime
          */
-        class CEnableForRuntime
+        class BLACKGUI_EXPORT CEnableForRuntime
         {
         public:
             //! Set runtime, usually set by runtime owner (must only be one, usually main window)

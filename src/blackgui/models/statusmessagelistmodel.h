@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_STATUSMESSAGELISTMODEL_H
 #define BLACKGUI_STATUSMESSAGELISTMODEL_H
 
+#include "blackgui/blackguiexport.h"
 #include <QAbstractItemModel>
 #include <QDBusConnection>
 #include "blackmisc/statusmessagelist.h"
@@ -24,7 +25,7 @@ namespace BlackGui
         /*!
          * Server list model
          */
-        class CStatusMessageListModel : public CListModelBase<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>
+        class BLACKGUI_EXPORT CStatusMessageListModel : public CListModelBase<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>
         {
 
         public:

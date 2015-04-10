@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_ATCLISTMODEL_H
 #define BLACKGUI_ATCLISTMODEL_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackgui/models/listmodelbase.h"
 #include <QAbstractItemModel>
@@ -23,7 +24,7 @@ namespace BlackGui
     namespace Models
     {
         //! ATC list model
-        class CAtcStationListModel : public CListModelBase<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>
+        class BLACKGUI_EXPORT CAtcStationListModel : public CListModelBase<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>
         {
 
         public:

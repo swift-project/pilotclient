@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_CCOLUMNCHECKBOXDELEGATE_H
 #define BLACKGUI_CCOLUMNCHECKBOXDELEGATE_H
 
+#include "blackgui/blackguiexport.h"
 #include <QItemDelegate>
 #include <QCheckBox>
 
@@ -21,7 +22,7 @@ namespace BlackGui
     {
 
         //! CheckBox for single column
-        class CCheckBoxDelegate : public QItemDelegate
+        class BLACKGUI_EXPORT CCheckBoxDelegate : public QItemDelegate
         {
             Q_OBJECT
 

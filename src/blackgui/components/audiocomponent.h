@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_AUDIOCOMPONENT_H
 #define BLACKGUI_AUDIOCOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -22,7 +23,7 @@ namespace BlackGui
     namespace Components
     {
         //! Audio component, volume, ...
-        class CAudioComponent : public QFrame
+        class BLACKGUI_EXPORT CAudioComponent : public QFrame
         {
             Q_OBJECT
 

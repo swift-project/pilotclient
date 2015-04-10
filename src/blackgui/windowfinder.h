@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_WINDOWFINDER_H
 #define BLACKGUI_WINDOWFINDER_H
 
+#include "blackgui/blackguiexport.h"
 #include <QString>
 
 class QWindow;
@@ -19,7 +20,7 @@ class QWindow;
 namespace BlackGui
 {
     //! Finder for foreign windows
-    class IWindowFinder
+    class BLACKGUI_EXPORT IWindowFinder
     {
     public:
 

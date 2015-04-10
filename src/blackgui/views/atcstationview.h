@@ -12,6 +12,7 @@
 
 //! \file
 
+#include "blackgui/blackguiexport.h"
 #include "viewbase.h"
 #include "../models/atcstationlistmodel.h"
 #include "blackmisc/project.h"
@@ -21,7 +22,7 @@ namespace BlackGui
     namespace Views
     {
         //! ATC stations view
-        class CAtcStationView : public CViewBase<BlackGui::Models::CAtcStationListModel, BlackMisc::Aviation::CAtcStationList, BlackMisc::Aviation::CAtcStation>
+        class BLACKGUI_EXPORT CAtcStationView : public CViewBase<BlackGui::Models::CAtcStationListModel, BlackMisc::Aviation::CAtcStationList, BlackMisc::Aviation::CAtcStation>
         {
             Q_OBJECT
 

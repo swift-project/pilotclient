@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_MANAGEDSTATUSBAR_H
 #define BLACKGUI_MANAGEDSTATUSBAR_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/statusmessage.h"
 
@@ -24,7 +25,7 @@ namespace BlackGui
 {
 
     //! Managed status bar
-    class CManagedStatusBar : public QObject
+    class BLACKGUI_EXPORT CManagedStatusBar : public QObject
     {
         Q_OBJECT
 

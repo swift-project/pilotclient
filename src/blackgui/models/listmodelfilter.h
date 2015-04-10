@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_LISTMODELFILTER_H
 #define BLACKGUI_LISTMODELFILTER_H
 
+#include "blackgui/blackguiexport.h"
 #include <QString>
 
 namespace BlackGui

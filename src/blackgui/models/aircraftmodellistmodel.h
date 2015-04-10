@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_AIRCRAFTMODELLISTMODEL_H
 #define BLACKGUI_AIRCRAFTMODELLISTMODEL_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackgui/models/listmodelbase.h"
 #include <QAbstractItemModel>
@@ -23,7 +24,7 @@ namespace BlackGui
     {
 
         //! Aircraft model list model
-        class CAircraftModelListModel : public CListModelBase<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>
+        class BLACKGUI_EXPORT CAircraftModelListModel : public CListModelBase<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>
         {
 
         public:

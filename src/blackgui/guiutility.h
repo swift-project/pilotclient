@@ -12,13 +12,14 @@
 #ifndef BLACKGUI_GUIUTILITY_H
 #define BLACKGUI_GUIUTILITY_H
 
+#include "blackgui/blackguiexport.h"
 #include <QWidgetList>
 #include "enableforframelesswindow.h"
 
 namespace BlackGui
 {
     //! GUI utilities
-    class CGuiUtility
+    class BLACKGUI_EXPORT CGuiUtility
     {
 
     public:

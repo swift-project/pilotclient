@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_USERVIEW_H
 #define BLACKGUI_USERVIEW_H
 
+#include "blackgui/blackguiexport.h"
 #include "viewbase.h"
 #include "../models/userlistmodel.h"
 
@@ -20,7 +21,7 @@ namespace BlackGui
     namespace Views
     {
         //! User view
-        class CUserView : public CViewBase<Models::CUserListModel, BlackMisc::Network::CUserList, BlackMisc::Network::CUser>
+        class BLACKGUI_EXPORT CUserView : public CViewBase<Models::CUserListModel, BlackMisc::Network::CUserList, BlackMisc::Network::CUser>
         {
 
         public:

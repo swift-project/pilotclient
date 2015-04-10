@@ -12,12 +12,13 @@
 #ifndef BLACKGUI_WINDOWFINDERWINDOWS_H
 #define BLACKGUI_WINDOWFINDERWINDOWS_H
 
+#include "blackgui/blackguiexport.h"
 #include "../windowfinder.h"
 
 namespace BlackGui
 {
     //! Foreign windows
-    class CWindowFinderWindows : public IWindowFinder
+    class BLACKGUI_EXPORT CWindowFinderWindows : public IWindowFinder
     {
     public:
 

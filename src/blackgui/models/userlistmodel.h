@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_USERLISTMODEL_H
 #define BLACKGUI_USERLISTMODEL_H
 
+#include "blackgui/blackguiexport.h"
 #include <QAbstractItemModel>
 #include "blackmisc/network/userlist.h"
 #include "blackgui/models/listmodelbase.h"
@@ -23,7 +24,7 @@ namespace BlackGui
         /*!
          * User list model
          */
-        class CUserListModel : public CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList>
+        class BLACKGUI_EXPORT CUserListModel : public CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList>
         {
 
         public:

@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COLUMNS_H
 #define BLACKGUI_COLUMNS_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/valueobject.h" // for qHash overload, include before Qt stuff due GCC issue
 #include "blackmisc/collection.h"
 #include "blackmisc/propertyindex.h"
@@ -26,7 +27,7 @@ namespace BlackGui
     namespace Models
     {
         //! Single column
-        class CColumn
+        class BLACKGUI_EXPORT CColumn
         {
         public:
             //! Constructor
@@ -118,7 +119,7 @@ namespace BlackGui
         /*!
          * Header data for a table
          */
-        class CColumns : public QObject
+        class BLACKGUI_EXPORT CColumns : public QObject
         {
         public:
             /*!

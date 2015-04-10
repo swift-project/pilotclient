@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_MAINKEYPADAREACOMPONENT_H
 #define BLACKGUI_MAINKEYPADAREACOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "maininfoareacomponent.h"
 #include "enableforruntime.h"
 #include "blackmisc/aviation/aircraft.h"
@@ -29,7 +30,7 @@ namespace BlackGui
 
         //! Main keypad area as used with main info area
         //! \sa CMainInfoAreaComponent
-        class CMainKeypadAreaComponent :
+        class BLACKGUI_EXPORT CMainKeypadAreaComponent :
             public QFrame,
             public CEnableForRuntime
         {

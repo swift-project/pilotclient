@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_LISTMODELBASE_H
 #define BLACKGUI_LISTMODELBASE_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackgui/models/columns.h"
 #include "blackgui/models/listmodelfilter.h"
 #include "blackmisc/worker.h"
@@ -26,7 +27,7 @@ namespace BlackGui
     namespace Models
     {
         //! Non templated base class, allows Q_OBJECT and signals to be used
-        class CListModelBaseNonTemplate : public QAbstractItemModel
+        class BLACKGUI_EXPORT CListModelBaseNonTemplate : public QAbstractItemModel
         {
             Q_OBJECT
 

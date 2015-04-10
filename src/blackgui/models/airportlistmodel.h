@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_AIRPORTLISTMODEL_H
 #define BLACKGUI_AIRPORTLISTMODEL_H
 
+#include "blackgui/blackguiexport.h"
 #include <QAbstractItemModel>
 #include "blackmisc/aviation/airportlist.h"
 #include "blackgui/models/listmodelbase.h"
@@ -24,7 +25,7 @@ namespace BlackGui
         /*!
          * Airport list model
          */
-        class CAirportListModel : public CListModelBase<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>
+        class BLACKGUI_EXPORT CAirportListModel : public CListModelBase<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>
         {
 
         public:

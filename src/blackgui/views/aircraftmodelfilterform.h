@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_AIRCRAFTMODELFILTERFORM_H
 #define BLACKGUI_AIRCRAFTMODELFILTERFORM_H
 
+#include "blackgui/blackguiexport.h"
 #include "filterdialog.h"
 #include "blackgui/models/aircraftmodelfilter.h"
 #include <QDialog>
@@ -26,7 +27,7 @@ namespace BlackGui
     namespace Views
     {
         //! Form for a aircraft model filter
-        class CAircraftModelFilterForm : public CFilterDialog
+        class BLACKGUI_EXPORT CAircraftModelFilterForm : public CFilterDialog
         {
             Q_OBJECT
 

@@ -10,6 +10,7 @@
 #ifndef BLACKGUI_SETTINGSSIMULATORCOMPONENT_H
 #define BLACKGUI_SETTINGSSIMULATORCOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/setsimulator.h"
 #include "enableforruntime.h"
 #include "enableforruntime.h"
@@ -24,7 +25,7 @@ namespace BlackGui
         /*!
          * All simulator settings component (GUI)
          */
-        class CSettingsSimulatorComponent : public QFrame, public CEnableForRuntime
+        class BLACKGUI_EXPORT CSettingsSimulatorComponent : public QFrame, public CEnableForRuntime
         {
             Q_OBJECT
 

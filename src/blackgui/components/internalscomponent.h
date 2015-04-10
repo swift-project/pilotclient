@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_INTERNALSCOMPONENT_H
 #define BLACKGUI_INTERNALSCOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "enableforruntime.h"
 #include <QWidget>
 #include <QScopedArrayPointer>
@@ -24,7 +25,7 @@ namespace BlackGui
     {
 
         //! Internals for debugging, statistics
-        class CInternalsComponent :
+        class BLACKGUI_EXPORT CInternalsComponent :
             public QWidget,
             public CEnableForRuntime
         {

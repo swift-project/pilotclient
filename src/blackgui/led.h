@@ -14,6 +14,7 @@
 #ifndef BLACKGUI_LED_H
 #define BLACKGUI_LED_H
 
+#include "blackgui/blackguiexport.h"
 #include <Qt>
 #include <QWidget>
 #include <QSvgRenderer>
@@ -23,7 +24,7 @@ namespace BlackGui
 {
     //! Displaying an LED as widget. Non copyable.
     //! \remarks Based on qLed
-    class CLedWidget : public QWidget
+    class BLACKGUI_EXPORT CLedWidget : public QWidget
     {
         Q_OBJECT
         Q_ENUMS(LedColor)

@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_NAMEVARIANTLISTMODEL_H
 #define BLACKGUI_NAMEVARIANTLISTMODEL_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/namevariantpairlist.h"
 #include "blackgui/models/listmodelbase.h"
 #include <QAbstractItemModel>
@@ -23,7 +24,7 @@ namespace BlackGui
     {
 
         //! Simple model displaying name / variant values
-        class CNameVariantPairModel : public CListModelBase<BlackMisc::CNameVariantPair, BlackMisc::CNameVariantPairList>
+        class BLACKGUI_EXPORT CNameVariantPairModel : public CListModelBase<BlackMisc::CNameVariantPair, BlackMisc::CNameVariantPairList>
         {
 
         public:

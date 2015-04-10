@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_COCKPITTRANSPONDERMODELEDSCOMPONENT_H
 #define BLACKMISC_COCKPITTRANSPONDERMODELEDSCOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "enableforruntime.h"
 #include "../led.h"
 #include "blackmisc/aviation/aircraft.h"
@@ -24,7 +25,7 @@ namespace BlackGui
     {
 
         //! LEDs representing transponder mode state
-        class CCockpitTransponderModeLedsComponent : public QFrame, public CEnableForRuntime
+        class BLACKGUI_EXPORT CCockpitTransponderModeLedsComponent : public QFrame, public CEnableForRuntime
         {
             Q_OBJECT
 

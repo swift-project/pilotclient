@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_STYLESHEETUTILITY_H
 #define BLACKGUI_STYLESHEETUTILITY_H
 
+#include "blackgui/blackguiexport.h"
 #include <QMap>
 #include <QObject>
 #include <QFont>
@@ -23,7 +24,7 @@
 namespace BlackGui
 {
     //! Reads and provides style sheets
-    class CStyleSheetUtility : public QObject
+    class BLACKGUI_EXPORT CStyleSheetUtility : public QObject
     {
         Q_OBJECT
 

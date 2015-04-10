@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_NAMEVARIANTPAIRVIEW_H
 #define BLACKGUI_NAMEVARIANTPAIRVIEW_H
 
+#include "blackgui/blackguiexport.h"
 #include "viewbase.h"
 #include "../models/namevariantpairlistmodel.h"
 
@@ -20,7 +21,7 @@ namespace BlackGui
     namespace Views
     {
         //! User view
-        class CNameVariantPairView : public CViewBase<Models::CNameVariantPairModel, BlackMisc::CNameVariantPairList, BlackMisc::CNameVariantPair>
+        class BLACKGUI_EXPORT CNameVariantPairView : public CViewBase<Models::CNameVariantPairModel, BlackMisc::CNameVariantPairList, BlackMisc::CNameVariantPair>
         {
 
         public:

@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_UPDATETIMER_H
 #define BLACKGUI_UPDATETIMER_H
 
+#include "blackgui/blackguiexport.h"
 #include <QTimer>
 #include <QDateTime>
 
@@ -20,7 +21,7 @@ namespace BlackGui
     namespace Components
     {
         //! Timer used in components for updates
-        class CUpdateTimer: public QObject
+        class BLACKGUI_EXPORT CUpdateTimer: public QObject
         {
             Q_OBJECT
 

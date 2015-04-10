@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_USERCOMPONENT_H
 #define BLACKGUI_USERCOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/updatetimer.h"
@@ -27,7 +28,7 @@ namespace BlackGui
     namespace Components
     {
         //! User componenet (users, clients)
-        class CUserComponent :
+        class BLACKGUI_EXPORT CUserComponent :
             public QTabWidget,
             public CEnableForDockWidgetInfoArea,
             public CEnableForRuntime

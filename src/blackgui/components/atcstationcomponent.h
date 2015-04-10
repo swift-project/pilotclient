@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_ATCSTATIONCOMPONENT_H
 #define BLACKGUI_ATCSTATIONCOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/updatetimer.h"
@@ -29,7 +30,7 @@ namespace BlackGui
         /*!
          * ATC stations component
          */
-        class CAtcStationComponent :
+        class BLACKGUI_EXPORT CAtcStationComponent :
             public QTabWidget,
             public CEnableForDockWidgetInfoArea,
             public CEnableForRuntime

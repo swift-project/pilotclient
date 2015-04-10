@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_MAININFOAREACOMPONENT_H
 #define BLACKGUI_MAININFOAREACOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "../infoarea.h"
 #include "allmaininfoareacomponents.h"
 #include <QTabBar>
@@ -24,7 +25,7 @@ namespace BlackGui
     namespace Components
     {
         //! Main info area
-        class CMainInfoAreaComponent : public BlackGui::CInfoArea
+        class BLACKGUI_EXPORT CMainInfoAreaComponent : public BlackGui::CInfoArea
         {
             Q_OBJECT
 

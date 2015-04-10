@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_AIRCRAFTMODELFILTER_H
 #define BLACKGUI_AIRCRAFTMODELFILTER_H
 
+#include "blackgui/blackguiexport.h"
 #include "listmodelfilter.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 
@@ -21,7 +22,7 @@ namespace BlackGui
     {
 
         //! Filter for aircraft models
-        class CAircraftModelFilter : public IModelFilter<BlackMisc::Simulation::CAircraftModelList>
+        class BLACKGUI_EXPORT CAircraftModelFilter : public IModelFilter<BlackMisc::Simulation::CAircraftModelList>
         {
         public:
             //! Constructor

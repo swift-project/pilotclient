@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_FLIGHTPLANCOMPONENT_H
 #define BLACKGUI_FLIGHTPLANCOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackgui/components/enableforruntime.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/aviation/flightplan.h"
@@ -25,7 +26,7 @@ namespace BlackGui
     {
 
         //! Flight plan widget
-        class CFlightPlanComponent :
+        class BLACKGUI_EXPORT CFlightPlanComponent :
             public QTabWidget,
             public CEnableForRuntime
         {

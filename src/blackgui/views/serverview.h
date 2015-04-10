@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_SERVERVIEW_H
 #define BLACKGUI_SERVERVIEW_H
 
+#include "blackgui/blackguiexport.h"
 #include "viewbase.h"
 #include "../models/serverlistmodel.h"
 
@@ -20,7 +21,7 @@ namespace BlackGui
     namespace Views
     {
         //! Network servers
-        class CServerView : public CViewBase<Models::CServerListModel, BlackMisc::Network::CServerList, BlackMisc::Network::CServer>
+        class BLACKGUI_EXPORT CServerView : public CViewBase<Models::CServerListModel, BlackMisc::Network::CServerList, BlackMisc::Network::CServer>
         {
 
         public:

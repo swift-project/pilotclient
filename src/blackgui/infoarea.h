@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_INFOAREA_H
 #define BLACKGUI_INFOAREA_H
 
+#include "blackgui/blackguiexport.h"
 #include "dockwidgetinfoarea.h"
 #include "enableforframelesswindow.h"
 #include <QMainWindow>
@@ -23,7 +24,7 @@ namespace BlackGui
 {
     //! Info area, hosting dockable widgets
     //! \sa CDockWidgetInfoArea
-    class CInfoArea : public QMainWindow, CEnableForFramelessWindow
+    class BLACKGUI_EXPORT CInfoArea : public QMainWindow, CEnableForFramelessWindow
     {
         Q_OBJECT
 

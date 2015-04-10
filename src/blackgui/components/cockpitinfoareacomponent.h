@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COCKPITINFOAREACOMPONENT_H
 #define BLACKGUI_COCKPITINFOAREACOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "../infoarea.h"
 #include <QMainWindow>
 #include <QScopedPointer>
@@ -23,7 +24,7 @@ namespace BlackGui
     {
         //! The cockpit itself is part of the main info area, but itself also an info area.
         //! hence windows can be docked in the cockpit too.
-        class CCockpitInfoAreaComponent : public BlackGui::CInfoArea
+        class BLACKGUI_EXPORT CCockpitInfoAreaComponent : public BlackGui::CInfoArea
         {
             Q_OBJECT
 

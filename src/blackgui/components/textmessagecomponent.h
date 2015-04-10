@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_TEXTMESSAGECOMPONENT_H
 #define BLACKGUI_TEXTMESSAGECOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/textmessagetextedit.h"
@@ -30,7 +31,7 @@ namespace BlackGui
     namespace Components
     {
         //! Text message widget
-        class CTextMessageComponent :
+        class BLACKGUI_EXPORT CTextMessageComponent :
             public QFrame,
             public CEnableForRuntime,
             public CEnableForDockWidgetInfoArea

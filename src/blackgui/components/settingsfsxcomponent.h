@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_SETTINGSFSXCOMPONENT_H
 #define BLACKGUI_SETTINGSFSXCOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackgui/components/enableforruntime.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -23,7 +24,7 @@ namespace BlackGui
     namespace Components
     {
         //! Settings for FSX
-        class CSettingsFsxComponent : public QFrame, public CEnableForRuntime
+        class BLACKGUI_EXPORT CSettingsFsxComponent : public QFrame, public CEnableForRuntime
         {
             Q_OBJECT
 

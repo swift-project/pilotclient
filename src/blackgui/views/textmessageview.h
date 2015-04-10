@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_TEXTMESSAGEVIEW_H
 #define BLACKGUI_TEXTMESSAGEVIEW_H
 
+#include "blackgui/blackguiexport.h"
 #include "viewbase.h"
 #include "../models/textmessagelistmodel.h"
 
@@ -20,7 +21,7 @@ namespace BlackGui
     namespace Views
     {
         //! Airports view
-        class CTextMessageView : public CViewBase<Models::CTextMessageListModel, BlackMisc::Network::CTextMessageList, BlackMisc::Network::CTextMessage>
+        class BLACKGUI_EXPORT CTextMessageView : public CViewBase<Models::CTextMessageListModel, BlackMisc::Network::CTextMessageList, BlackMisc::Network::CTextMessage>
         {
 
         public:

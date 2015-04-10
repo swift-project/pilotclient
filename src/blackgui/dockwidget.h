@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_DOCKWIDGET_H
 #define BLACKGUI_DOCKWIDGET_H
 
+#include "blackguiexport.h"
 #include "managedstatusbar.h"
 #include "enableforframelesswindow.h"
 
@@ -32,7 +33,7 @@ namespace BlackGui
     //! \sa CInfoArea
     //! \sa CDockWidgetInfoArea
     //! \sa CDockWidgetInfoBar
-    class CDockWidget :
+    class BLACKGUI_EXPORT CDockWidget :
         public QDockWidget,
         public CEnableForFramelessWindow
     {

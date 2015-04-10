@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_SIMULATEDAIRCRAFTVIEW_H
 #define BLACKGUI_SIMULATEDAIRCRAFTVIEW_H
 
+#include "blackgui/blackguiexport.h"
 #include "viewbase.h"
 #include "../models/simulatedaircraftlistmodel.h"
 #include <QMenu>
@@ -21,7 +22,7 @@ namespace BlackGui
     namespace Views
     {
         //! Aircrafts view
-        class CSimulatedAircraftView : public CViewBase<Models::CSimulatedAircraftListModel, BlackMisc::Simulation::CSimulatedAircraftList, BlackMisc::Simulation::CSimulatedAircraft>
+        class BLACKGUI_EXPORT CSimulatedAircraftView : public CViewBase<Models::CSimulatedAircraftListModel, BlackMisc::Simulation::CSimulatedAircraftList, BlackMisc::Simulation::CSimulatedAircraft>
         {
             Q_OBJECT
 

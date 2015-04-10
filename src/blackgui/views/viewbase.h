@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_VIEWBASE_H
 #define BLACKGUI_VIEWBASE_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/variant.h"
@@ -29,7 +30,7 @@ namespace BlackGui
     {
 
         //! Non templated base class, allows Q_OBJECT and signals / slots to be used
-        class CViewBaseNonTemplate : public QTableView
+        class BLACKGUI_EXPORT CViewBaseNonTemplate : public QTableView
         {
             Q_OBJECT
 

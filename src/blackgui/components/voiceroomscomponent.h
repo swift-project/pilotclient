@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_VOICEROOMSCOMPONENT_H
 #define BLACKGUI_VOICEROOMSCOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "enableforruntime.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include <QFrame>
@@ -24,7 +25,7 @@ namespace BlackGui
     namespace Components
     {
         //! Displays the voice rooms
-        class CVoiceRoomsComponent :
+        class BLACKGUI_EXPORT CVoiceRoomsComponent :
             public QFrame,
             public CEnableForRuntime
         {

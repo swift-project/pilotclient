@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_SERVERLISTSELECTOR_H
 #define BLACKGUI_SERVERLISTSELECTOR_H
 
+#include "blackgui/blackguiexport.h"
 #include <QComboBox>
 #include <QStringList>
 
@@ -20,7 +21,7 @@
 namespace BlackGui
 {
     //! List of servers
-    class CServerListSelector : public QComboBox
+    class BLACKGUI_EXPORT CServerListSelector : public QComboBox
     {
         Q_OBJECT
 

@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_MAPPINGCOMPONENT_H
 #define BLACKGUI_MAPPINGCOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/views/checkboxdelegate.h"
@@ -28,7 +29,7 @@ namespace BlackGui
     namespace Components
     {
         //! Mappings, models etc.
-        class CMappingComponent :
+        class BLACKGUI_EXPORT CMappingComponent :
             public QFrame,
             public CEnableForDockWidgetInfoArea,
             public CEnableForRuntime

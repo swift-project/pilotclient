@@ -12,6 +12,7 @@
 
 //! \file
 
+#include "blackgui/blackguiexport.h"
 #include "viewbase.h"
 #include "../models/keyboardkeylistmodel.h"
 
@@ -20,7 +21,7 @@ namespace BlackGui
     namespace Views
     {
         //! Keyboard key view
-        class CKeyboardKeyView : public CViewBase<Models::CKeyboardKeyListModel, BlackMisc::Settings::CSettingKeyboardHotkeyList, BlackMisc::Settings::CSettingKeyboardHotkey>
+        class BLACKGUI_EXPORT CKeyboardKeyView : public CViewBase<Models::CKeyboardKeyListModel, BlackMisc::Settings::CSettingKeyboardHotkeyList, BlackMisc::Settings::CSettingKeyboardHotkey>
         {
 
         public:

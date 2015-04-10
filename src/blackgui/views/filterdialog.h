@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_FILTERDIALOG_H
 #define BLACKGUI_FILTERDIALOG_H
 
+#include "blackgui/blackguiexport.h"
 #include <QDialog>
 
 namespace BlackGui
@@ -19,7 +20,7 @@ namespace BlackGui
     namespace Views
     {
         //! Base for filter dialog
-        class CFilterDialog : public QDialog
+        class BLACKGUI_EXPORT CFilterDialog : public QDialog
         {
         public:
             //! Constructor

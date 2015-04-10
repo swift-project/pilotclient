@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_KEYBOARDKEYLISTMODEL_H
 #define BLACKGUI_KEYBOARDKEYLISTMODEL_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/hardware/keyboardkeylist.h"
 #include "blackmisc/setkeyboardhotkeylist.h"
 #include "blackgui/models/listmodelbase.h"
@@ -27,7 +28,7 @@ namespace BlackGui
         /*!
          * Keyboard key list model
          */
-        class CKeyboardKeyListModel : public CListModelBase<BlackMisc::Settings::CSettingKeyboardHotkey, BlackMisc::Settings::CSettingKeyboardHotkeyList>
+        class BLACKGUI_EXPORT CKeyboardKeyListModel : public CListModelBase<BlackMisc::Settings::CSettingKeyboardHotkey, BlackMisc::Settings::CSettingKeyboardHotkeyList>
         {
 
         public:
@@ -51,7 +52,7 @@ namespace BlackGui
         /*!
          * Special edit delegate for key sequence
          */
-        class CKeyboardKeyItemDelegate : public QItemDelegate
+        class BLACKGUI_EXPORT CKeyboardKeyItemDelegate : public QItemDelegate
         {
             Q_OBJECT
 
@@ -79,7 +80,7 @@ namespace BlackGui
         /*!
          * Special edit widget for key sequence
          */
-        class CKeyboardLineEdit : public QLineEdit
+        class BLACKGUI_EXPORT CKeyboardLineEdit : public QLineEdit
         {
             Q_OBJECT
 

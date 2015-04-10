@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_TRANSPONDERMODESELECTOR_H
 #define BLACKGUI_TRANSPONDERMODESELECTOR_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/transponder.h"
 #include <QTimer>
 #include <QComboBox>
@@ -23,7 +24,7 @@ namespace BlackGui
 
     //! Selector for the transponder mode
     //! \remarks features ident reset
-    class CTransponderModeSelector : public QComboBox
+    class BLACKGUI_EXPORT CTransponderModeSelector : public QComboBox
     {
         Q_OBJECT
 

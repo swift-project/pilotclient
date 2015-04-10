@@ -14,6 +14,7 @@
 #ifndef BLACKGUI_LEVELMETER_H
 #define BLACKGUI_LEVELMETER_H
 
+#include "blackgui/blackguiexport.h"
 #include <QTime>
 #include <QWidget>
 
@@ -23,7 +24,7 @@ namespace BlackGui
     //! Widget which displays a vertical audio level meter, indicating the
     //! RMS and peak levels of the window of audio samples most recently analyzed
     //! by the Engine.
-    class CLevelMeter : public QWidget
+    class BLACKGUI_EXPORT CLevelMeter : public QWidget
     {
         Q_OBJECT
     public:

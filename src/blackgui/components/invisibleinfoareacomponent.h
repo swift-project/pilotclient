@@ -10,6 +10,7 @@
 #ifndef BLACKGUI_COMPONENTS_INVISIBLEINFOAREACOMPONENT_H
 #define BLACKGUI_COMPONENTS_INVISIBLEINFOAREACOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackgui/infoarea.h"
 #include "blackgui/components/navigatordockwidget.h"
 #include <QMainWindow>
@@ -22,7 +23,7 @@ namespace BlackGui
     {
 
         //! Info area to carry info areas on visibile when floating
-        class CInvisibleInfoAreaComponent : public BlackGui::CInfoArea
+        class BLACKGUI_EXPORT CInvisibleInfoAreaComponent : public BlackGui::CInfoArea
         {
             Q_OBJECT
 

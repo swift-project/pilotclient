@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_SIMULATORCOMPONENT_H
 #define BLACKGUI_SIMULATORCOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "enableforruntime.h"
 #include "blackmisc/icon.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
@@ -27,7 +28,7 @@ namespace BlackGui
     {
 
         //! Simulator component
-        class CSimulatorComponent :
+        class BLACKGUI_EXPORT CSimulatorComponent :
             public QTabWidget,
             public CEnableForDockWidgetInfoArea,
             public CEnableForRuntime

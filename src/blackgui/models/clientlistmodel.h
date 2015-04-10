@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_CLIENTLISTMODEL_H
 #define BLACKGUI_CLIENTLISTMODEL_H
 
+#include "blackgui/blackguiexport.h"
 #include <QAbstractItemModel>
 #include "blackmisc/network/clientlist.h"
 #include "blackgui/models/listmodelbase.h"
@@ -21,7 +22,7 @@ namespace BlackGui
     namespace Models
     {
         //! Client list model
-        class CClientListModel : public CListModelBase<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>
+        class BLACKGUI_EXPORT CClientListModel : public CListModelBase<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>
         {
 
         public:

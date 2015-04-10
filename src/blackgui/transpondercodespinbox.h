@@ -12,13 +12,14 @@
 #ifndef BLACKGUI_TRANSPONDERCODESPINBOX_H
 #define BLACKGUI_TRANSPONDERCODESPINBOX_H
 
+#include "blackgui/blackguiexport.h"
 #include <QSpinBox>
 
 namespace BlackGui
 {
 
     //! Specialized spin box for Transponder codes
-    class CTransponderCodeSpinBox : public QSpinBox
+    class BLACKGUI_EXPORT CTransponderCodeSpinBox : public QSpinBox
     {
         Q_OBJECT
     public:

@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_LOGINCOMPONENT_H
 #define BLACKGUI_LOGINCOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "enableforruntime.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/network/server.h"
@@ -26,7 +27,7 @@ namespace BlackGui
     {
 
         //! Login component
-        class CLoginComponent :
+        class BLACKGUI_EXPORT CLoginComponent :
             public QFrame,
             public CEnableForRuntime
         {

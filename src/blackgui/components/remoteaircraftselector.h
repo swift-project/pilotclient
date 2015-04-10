@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_REMOTEAIRCRAFTSELECTOR_H
 #define BLACKGUI_REMOTEAIRCRAFTSELECTOR_H
 
+#include "blackgui/blackguiexport.h"
 #include "enableforruntime.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
@@ -27,7 +28,7 @@ namespace BlackGui
     namespace Components
     {
         //! Select a remote aircraft
-        class CRemoteAircraftSelector : public QFrame, public CEnableForRuntime
+        class BLACKGUI_EXPORT CRemoteAircraftSelector : public QFrame, public CEnableForRuntime
         {
             Q_OBJECT
 

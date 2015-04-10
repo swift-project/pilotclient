@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_ENABLEFORDOCKWIDGETINFOAREA_H
 #define BLACKGUI_ENABLEFORDOCKWIDGETINFOAREA_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackgui/dockwidgetinfoarea.h"
 #include "blackgui/infoarea.h"
 #include "blackgui/enableforframelesswindow.h"
@@ -24,7 +25,7 @@ namespace BlackGui
 
         //! Helper class: If a component is residing in an dockable widget.
         //! This class provides access to its info area and dockable widget.
-        class CEnableForDockWidgetInfoArea
+        class BLACKGUI_EXPORT CEnableForDockWidgetInfoArea
         {
         public:
             //! Corresponding dockable widget in info area

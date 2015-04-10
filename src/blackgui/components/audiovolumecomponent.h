@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_AUDIOVOLUME_H
 #define BLACKGUI_AUDIOVOLUME_H
 
+#include "blackgui/blackguiexport.h"
 #include <QFrame>
 #include <QScopedPointer>
 #include "enableforruntime.h"
@@ -23,7 +24,7 @@ namespace BlackGui
     {
 
         //! Audio volume, mixer
-        class CAudioVolumeComponent :
+        class BLACKGUI_EXPORT CAudioVolumeComponent :
             public QFrame,
             public CEnableForRuntime
         {

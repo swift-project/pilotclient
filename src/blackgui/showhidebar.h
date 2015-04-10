@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_SHOWHIDEBAR_H
 #define BLACKGUI_SHOWHIDEBAR_H
 
+#include "blackgui/blackguiexport.h"
 #include <QFrame>
 
 namespace Ui { class CShowHideBar; }
@@ -19,7 +20,7 @@ namespace Ui { class CShowHideBar; }
 namespace BlackGui
 {
     //! Show or hide (expand / collapse) another section
-    class CShowHideBar : public QFrame
+    class BLACKGUI_EXPORT CShowHideBar : public QFrame
     {
         Q_OBJECT
 
