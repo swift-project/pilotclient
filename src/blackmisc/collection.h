@@ -196,7 +196,7 @@ namespace BlackMisc
          * \param value The value to move in.
          * \pre The collection must be initialized.
          */
-        iterator insert(const_iterator hint, T &&value) { insert(std::move(value)); Q_UNUSED(hint); }
+        iterator insert(const_iterator hint, T &&value) { Q_UNUSED(hint); return insert(std::move(value)); }
 
         /*!
          * \brief Inserts an element into the collection.
