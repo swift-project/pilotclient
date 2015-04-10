@@ -20,9 +20,7 @@ namespace BlackMisc
 {
     namespace Network
     {
-        /*!
-         * Value object encapsulating information of a server
-         */
+        //! Value object encapsulating information of a server
         class CServer : public CValueObject<CServer>
         {
         public:

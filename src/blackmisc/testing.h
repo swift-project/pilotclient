@@ -14,9 +14,7 @@
 
 #include "blackmisc/aviation/atcstationlist.h"
 
-/*!
- * Generate data for testing purposes.
- */
+//! Generate data for testing purposes.
 namespace BlackMisc
 {
     namespace Aviation
@@ -54,8 +52,7 @@ namespace BlackMisc
             static void parseWgs(int times);
         };
 
-    } // Aviation
-
-} // BlackMisc
+    } // ns
+} // ns
 
 #endif // guard

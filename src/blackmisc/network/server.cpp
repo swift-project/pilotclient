@@ -64,12 +64,8 @@ namespace BlackMisc
             case IndexIsAcceptingConnections:
                 return CVariant::fromValue(this->m_isAcceptingConnections);
             default:
-                break;
+                return CValueObject::propertyByIndex(index);
             }
-
-            Q_ASSERT_X(false, "CServer", "index unknown");
-            QString m = QString("no property, index ").append(index.toQString());
-            return CVariant::fromValue(m);
         }
 
         void CServer::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
@@ -102,7 +98,7 @@ namespace BlackMisc
                 this->setIsAcceptingConnections(variant.value<bool>());
                 break;
             default:
-                Q_ASSERT_X(false, "CServer", "index unknown");
+                CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
         }
