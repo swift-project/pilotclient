@@ -1,4 +1,5 @@
 #include "testblackmiscmain.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include <QCoreApplication>
 #include <QDebug>
 
@@ -14,6 +15,9 @@ using namespace BlackMiscTest;
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
+
+    BlackMisc::registerMetadata();
+
     CBlackMiscTestMain::unitMain(argc, argv);
     Q_UNUSED(a);
 
