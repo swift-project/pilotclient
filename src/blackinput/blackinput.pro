@@ -19,7 +19,7 @@ precompile_header:!isEmpty(PRECOMPILED_HEADER) {
     DEFINES += USING_PCH
 }
 
-DEFINES += LOG_IN_FILE
+DEFINES += LOG_IN_FILE BUILD_BLACKINPUT_LIB
 
 HEADERS += *.h
 SOURCES += *.cpp
@@ -27,6 +27,8 @@ SOURCES += *.cpp
 win32 {
     HEADERS += $$PWD/win/*.h
     SOURCES += $$PWD/win/*.cpp
+
+    LIBS *= -ldxguid -lole32 -ldinput8 -lUser32
 }
 
 unix:!macx {

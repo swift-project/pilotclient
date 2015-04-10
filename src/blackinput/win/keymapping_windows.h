@@ -7,6 +7,7 @@
 #ifndef BLACKINPUT_KEYMAPPING_WINDOWS_H
 #define BLACKINPUT_KEYMAPPING_WINDOWS_H
 
+#include "blackinput/blackinputexport.h"
 #include "blackmisc/hardware/keyboardkey.h"
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -16,7 +17,7 @@
 namespace BlackInput
 {
     //! \brief This class provides methods to map between windows virtual keys and CKeyboardKey
-    class CKeyMappingWindows
+    class BLACKINPUT_EXPORT CKeyMappingWindows
     {
     public:
         /*!

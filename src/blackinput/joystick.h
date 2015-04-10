@@ -12,6 +12,7 @@
 #ifndef BLACKINPUT_JOYSTICK_H
 #define BLACKINPUT_JOYSTICK_H
 
+#include "blackinputexport.h"
 #include "blackmisc/hardware/joystickbutton.h"
 #include <QMultiMap>
 #include <QObject>
@@ -24,7 +25,7 @@ namespace BlackInput
      * \brief Abstract interface for native joystick handling.
      * \todo Add implementation for Linux and OSX.
      */
-    class IJoystick : public QObject
+    class BLACKINPUT_EXPORT IJoystick : public QObject
     {
         Q_OBJECT
 

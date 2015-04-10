@@ -10,6 +10,7 @@
 #ifndef BLACKINPUT_KEYBOARD_H
 #define BLACKINPUT_KEYBOARD_H
 
+#include "blackinputexport.h"
 #include "blackmisc/hardware/keyboardkeylist.h"
 #include <QMultiMap>
 #include <QObject>
@@ -22,7 +23,7 @@ namespace BlackInput
      * Abstract interface for native keyboard handling.
      * \todo Add implementation for Linux and OSX.
      */
-    class IKeyboard : public QObject
+    class BLACKINPUT_EXPORT IKeyboard : public QObject
     {
         Q_OBJECT
     public:

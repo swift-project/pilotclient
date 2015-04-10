@@ -12,6 +12,7 @@
 
 //! \file
 
+#include "blackinput/blackinputexport.h"
 #include "blackinput/joystick.h"
 #include "blackmisc/hardware/joystickbutton.h"
 #include "blackmisc/collection.h"
@@ -46,7 +47,7 @@ namespace BlackInput
     bool operator == (CJoystickDeviceData const &lhs, CJoystickDeviceData const &rhs);
 
     //! Windows implemenation of IJoystick with DirectInput
-    class CJoystickWindows : public IJoystick
+    class BLACKINPUT_EXPORT CJoystickWindows : public IJoystick
     {
         Q_OBJECT
 

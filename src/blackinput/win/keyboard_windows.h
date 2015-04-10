@@ -10,6 +10,7 @@
 #ifndef BLACKINPUT_KEYBOARD_WINDOWS_H
 #define BLACKINPUT_KEYBOARD_WINDOWS_H
 
+#include "blackinput/blackinputexport.h"
 #include "blackinput/keyboard.h"
 #include "blackmisc/hardware/keyboardkey.h"
 #include "blackmisc/hardware/keyboardkeylist.h"
@@ -23,7 +24,7 @@ namespace BlackInput
 {
     //! \brief Windows implemenation of IKeyboard using hook procedure
     //! \todo Change QHash to a CCollection object
-    class CKeyboardWindows : public IKeyboard
+    class BLACKINPUT_EXPORT CKeyboardWindows : public IKeyboard
     {
         Q_OBJECT
     public:
