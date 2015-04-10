@@ -245,6 +245,11 @@ namespace BlackMisc
             virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
         protected:
+
+            //! Default constructor
+            //! \todo Remove as part of MS' CValueObject refactoring
+            CPhysicalQuantity() : m_value(0.0), m_unit(MU::nullUnit()) {}
+
             //! Constructor with double
             CPhysicalQuantity(double value, const MU &unit);
 
