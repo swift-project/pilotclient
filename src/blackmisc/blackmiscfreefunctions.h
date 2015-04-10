@@ -169,7 +169,20 @@ namespace BlackMisc
     size_t heapSizeOf(const QMetaObject &objectType);
 
     //! A map converted to string
-    template<class K, class V> QString qmapToString(const QMap<K, V> &map);
+    template<class K, class V> QString qmapToString(const QMap<K, V> &map)
+    {
+        QString s;
+        const QString kv("%1: %2 ");
+        QMapIterator<K, V> i(map);
+        while (i.hasNext())
+        {
+            i.next();
+            s.append(
+                kv.arg(i.key()).arg(i.value())
+            );
+        }
+        return s.trimmed();
+    }
 
     //! Bool to on/off
     QString boolToOnOff(bool v, bool  i18n = false);

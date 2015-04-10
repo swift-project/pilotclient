@@ -22,6 +22,10 @@ namespace BlackMisc
     namespace Aviation
     {
 
+        class CComSystem;
+        class CNavSystem;
+        class CAdfSystem;
+
         //! Base class for COM, NAV, Squawk units.
         template <class AVIO> class CModulator : public CValueObject<CModulator<AVIO>, CAvionicsBase>
         {
@@ -209,11 +213,15 @@ namespace BlackMisc
             bool m_enabled = true;     //!< is enabled, used e.g. for mute etc.
 
             //! Easy access to derived class (CRTP template parameter)
-            AVIO const *derived() const { return static_cast<AVIO const *>(this); }
+            AVIO const *derived() const;
 
             //! Easy access to derived class (CRTP template parameter)
-            AVIO *derived() { return static_cast<AVIO *>(this); }
+            AVIO *derived();
         };
+
+        extern template class CModulator<CComSystem>;
+        extern template class CModulator<CNavSystem>;
+        extern template class CModulator<CAdfSystem>;
 
     }
 }

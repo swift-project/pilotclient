@@ -18,6 +18,22 @@
 
 namespace BlackMisc
 {
+    namespace Aviation
+    {
+        class CAtcStation;
+        class CAtcStationList;
+        class CAircraft;
+        class CAircraftList;
+        class CAirport;
+        class CAirportList;
+    }
+
+    namespace Simulation
+    {
+        class CSimulatedAircraft;
+        class CSimulatedAircraftList;
+    }
+
     namespace Geo
     {
         //! List of objects with geo coordinates.
@@ -45,6 +61,11 @@ namespace BlackMisc
             CONTAINER &container();
         };
 
+        extern template class IGeoObjectList<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
+        extern template class IGeoObjectList<BlackMisc::Aviation::CAircraft, BlackMisc::Aviation::CAircraftList>;
+        extern template class IGeoObjectList<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>;
+        extern template class IGeoObjectList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
+
         //! List of objects with geo coordinates.
         template<class OBJ, class CONTAINER>
         class IGeoObjectWithRelativePositionList : public IGeoObjectList<OBJ, CONTAINER>
@@ -70,6 +91,11 @@ namespace BlackMisc
             IGeoObjectWithRelativePositionList();
 
         };
+
+        extern template class IGeoObjectWithRelativePositionList<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
+        extern template class IGeoObjectWithRelativePositionList<BlackMisc::Aviation::CAircraft, BlackMisc::Aviation::CAircraftList>;
+        extern template class IGeoObjectWithRelativePositionList<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>;
+        extern template class IGeoObjectWithRelativePositionList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
 
     } //namespace
 } // namespace

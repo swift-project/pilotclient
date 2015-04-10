@@ -26,6 +26,10 @@ namespace BlackMisc
 
     namespace Geo
     {
+
+        class CLatitude;
+        class CLongitude;
+
         /*!
          * Base class for latitude / longitude
          */
@@ -134,6 +138,10 @@ namespace BlackMisc
             //! Easy access to derived class (CRTP template parameter)
             LATorLON *derived() { return static_cast<LATorLON *>(this); }
         };
+
+        extern template class CEarthAngle<CLatitude>;
+        extern template class CEarthAngle<CLongitude>;
+
     }
 }
 

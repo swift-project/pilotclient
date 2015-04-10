@@ -19,6 +19,24 @@
 
 namespace BlackMisc
 {
+    namespace Aviation
+    {
+        class CAircraftSituation;
+        class CAircraftSituationList;
+        class CAircraftParts;
+        class CAircraftPartsList;
+    }
+
+    namespace Network
+    {
+        class CTextMessage;
+        class CTextMessageList;
+    }
+
+    class CStatusMessage;
+    class CStatusMessageList;
+
+
     //! List of objects with timestamp.
     //! Such objects should implement \sa ITimestampBased
     template<class OBJ, class CONTAINER>
@@ -82,6 +100,11 @@ namespace BlackMisc
         //! Container
         CONTAINER &container();
     };
+
+    extern template class ITimestampObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
+    extern template class ITimestampObjectList<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList>;
+    extern template class ITimestampObjectList<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList>;
+    extern template class ITimestampObjectList<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>;
 
 } //namespace
 

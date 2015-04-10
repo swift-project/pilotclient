@@ -212,6 +212,16 @@ namespace BlackMisc
             this->m_value = json.value("value").toDouble();
         }
 
+        template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::parseFromString(const QString &value, CPqString::SeparatorMode mode)
+        {
+            *this = CPqString::parse<PQ>(value, mode);
+        }
+
+        template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::parseFromString(const QString &value)
+        {
+            *this = CPqString::parse<PQ>(value, CPqString::SeparatorsCLocale);
+        }
+
         template <class MU, class PQ> CVariant CPhysicalQuantity<MU, PQ>::propertyByIndex(const CPropertyIndex &index) const
         {
             if (index.isMyself()) { return this->toCVariant(); }

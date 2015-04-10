@@ -22,6 +22,31 @@
 
 namespace BlackMisc
 {
+
+    namespace Aviation
+    {
+        class CAircraftSituation;
+        class CAircraftSituationList;
+        class CAircraftParts;
+        class CAircraftPartsList;
+        class CAircraft;
+        class CAircraftList;
+        class CAtcStation;
+        class CAtcStationList;
+    }
+
+    namespace Simulation
+    {
+        class CSimulatedAircraft;
+        class CSimulatedAircraftList;
+    }
+
+    namespace Network
+    {
+        class CClient;
+        class CClientList;
+    }
+
     namespace Aviation
     {
         //! List of objects with callsign.
@@ -82,6 +107,13 @@ namespace BlackMisc
             //! Container
             CONTAINER &container();
         };
+
+        extern template class ICallsignObjectList<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
+        extern template class ICallsignObjectList<BlackMisc::Aviation::CAircraft, BlackMisc::Aviation::CAircraftList>;
+        extern template class ICallsignObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
+        extern template class ICallsignObjectList<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList>;
+        extern template class ICallsignObjectList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
+        extern template class ICallsignObjectList<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>;
 
     } //namespace
 } // namespace

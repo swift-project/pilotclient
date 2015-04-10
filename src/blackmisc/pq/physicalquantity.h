@@ -26,7 +26,19 @@
 
 namespace BlackMisc
 {
-    namespace PhysicalQuantities { template <class, class> class CPhysicalQuantity; }
+    namespace PhysicalQuantities
+    {
+        template <class, class> class CPhysicalQuantity;
+        class CLength;
+        class CPressure;
+        class CFrequency;
+        class CMass;
+        class CTemperature;
+        class CSpeed;
+        class CTime;
+        class CPressure;
+        class CAcceleration;
+    }
 
     //! \private
     template <class MU, class PQ> struct CValueObjectPolicy<PhysicalQuantities::CPhysicalQuantity<MU, PQ>> : public CValueObjectPolicy<>
@@ -227,16 +239,10 @@ namespace BlackMisc
             virtual void convertFromJson(const QJsonObject &json) override;
 
             //! Parse to string, with specified separator
-            virtual void parseFromString(const QString &value, CPqString::SeparatorMode mode)
-            {
-                *this = CPqString::parse<PQ>(value, mode);
-            }
+            virtual void parseFromString(const QString &value, CPqString::SeparatorMode mode);
 
             //! \copydoc CValueObject::parseFromString
-            virtual void parseFromString(const QString &value) override
-            {
-                *this = CPqString::parse<PQ>(value, CPqString::SeparatorsCLocale);
-            }
+            virtual void parseFromString(const QString &value) override;
 
             //! \copydoc CValueObject::propertyByIndex
             virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
@@ -278,6 +284,17 @@ namespace BlackMisc
             //! Easy access to derived class (CRTP template parameter)
             PQ *derived() { return static_cast<PQ *>(this); }
         };
+
+        extern template class CPhysicalQuantity<CLengthUnit, CLength>;
+        extern template class CPhysicalQuantity<CPressureUnit, CPressure>;
+        extern template class CPhysicalQuantity<CFrequencyUnit, CFrequency>;
+        extern template class CPhysicalQuantity<CMassUnit, CMass>;
+        extern template class CPhysicalQuantity<CTemperatureUnit, CTemperature>;
+        extern template class CPhysicalQuantity<CSpeedUnit, CSpeed>;
+        extern template class CPhysicalQuantity<CAngleUnit, CAngle>;
+        extern template class CPhysicalQuantity<CTimeUnit, CTime>;
+        extern template class CPhysicalQuantity<CAccelerationUnit, CAcceleration>;
+
     }
 }
 

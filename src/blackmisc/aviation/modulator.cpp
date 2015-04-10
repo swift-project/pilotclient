@@ -85,6 +85,18 @@ namespace BlackMisc
             }
         }
 
+        template <class AVIO>
+        AVIO const *CModulator<AVIO>::derived() const
+        {
+            return static_cast<AVIO const *>(this);
+        }
+
+        template <class AVIO>
+        AVIO *CModulator<AVIO>::derived()
+        {
+            return static_cast<AVIO *>(this);
+        }
+
         // see here for the reason of thess forward instantiations
         // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
         template class CModulator<CComSystem>;

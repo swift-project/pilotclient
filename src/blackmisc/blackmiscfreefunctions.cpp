@@ -244,26 +244,6 @@ QVariant BlackMisc::complexQtTypeFromDbusArgument(const QDBusArgument &argument,
     return QVariant(); // suppress compiler warning
 }
 
-template<class K, class V> QString BlackMisc::qmapToString(const QMap<K, V> &map)
-{
-    QString s;
-    const QString kv("%1: %2 ");
-    QMapIterator<K, V> i(map);
-    while (i.hasNext())
-    {
-        i.next();
-        s.append(
-            kv.arg(i.key()).arg(i.value())
-        );
-    }
-    return s.trimmed();
-}
-
-// forward declare: http://www.parashift.com/c++-faq-lite/separate-template-fn-defn-from-decl.html
-template QString BlackMisc::qmapToString<QString, int>(const QMap<QString, int> &);
-template QString BlackMisc::qmapToString<QString, QString>(const QMap<QString, QString> &);
-template QString BlackMisc::qmapToString<QString, double>(const QMap<QString, double> &);
-
 #ifdef Q_CC_MSVC
 #include <crtdbg.h>
 
