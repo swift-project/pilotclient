@@ -98,7 +98,7 @@ namespace BlackCore
         static void onTextMessageReceived(VatSessionID, const char *from, const char *to, const char *msg, void *cbvar);
         static void onRadioMessageReceived(VatSessionID, const char *from, int freqCount, int *freqList, const char *message, void *cbvar);
         static void onControllerDisconnected(VatSessionID, const char *callsign, void *cbvar);
-        static void onInterimPilotPositionUpdate(VatSessionID, const char *callsign, const VatInterimPilotPosition *position, void *cbvar);
+        static void onInterimPilotPositionUpdate(VatSessionID, const char *sender, const VatInterimPilotPosition *position, void *cbvar);
         static void onAtcPositionUpdate(VatSessionID, const char *callsign, const VatAtcPosition *pos, void *cbvar);
         static void onKicked(VatSessionID, const char *reason, void *cbvar);
         static void onPong(VatSessionID, const char *sender, double elapsedTime, void *cbvar);

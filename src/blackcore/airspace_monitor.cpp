@@ -43,6 +43,7 @@ namespace BlackCore
         this->connect(this->m_network, &INetwork::pilotDisconnected, this, &CAirspaceMonitor::ps_pilotDisconnected);
         this->connect(this->m_network, &INetwork::atcDisconnected, this, &CAirspaceMonitor::ps_atcControllerDisconnected);
         this->connect(this->m_network, &INetwork::aircraftPositionUpdate, this, &CAirspaceMonitor::ps_aircraftUpdateReceived);
+        this->connect(this->m_network, &INetwork::aircraftInterimPositionUpdate, this, &CAirspaceMonitor::ps_aircraftInterimUpdateReceived);
         this->connect(this->m_network, &INetwork::frequencyReplyReceived, this, &CAirspaceMonitor::ps_frequencyReceived);
         this->connect(this->m_network, &INetwork::capabilitiesReplyReceived, this, &CAirspaceMonitor::ps_capabilitiesReplyReceived);
         this->connect(this->m_network, &INetwork::customFSinnPacketReceived, this, &CAirspaceMonitor::ps_customFSinnPacketReceived);
@@ -839,6 +840,42 @@ namespace BlackCore
             this->m_aircraftInRange.applyIfCallsign(callsign, vm);
             this->m_aircraftWatchdog.resetCallsign(callsign);
         }
+
+        emit this->changedAircraftInRange();
+    }
+
+    void CAirspaceMonitor::ps_aircraftInterimUpdateReceived(const CAircraftSituation &situation)
+    {
+        Q_ASSERT_X(BlackCore::isCurrentThreadCreatingThread(this), "ps_aircraftInterimUpdateReceived", "Called in different thread");
+        if (!this->m_connected) { return; }
+
+        CCallsign callsign(situation.getCallsign());
+        Q_ASSERT_X(!callsign.isEmpty(), "ps_aircraftInterimUpdateReceived", "Empty callsign");
+
+        // todo: Check if the timestamp is copied here as well.
+        CAircraftSituation sitationCopy(situation);
+
+        // Interim packets do not have groundspeed, hence set the last known value.
+        // If there is no full position available yet, throw this interim position away.
+        auto history = this->m_aircraftSituations.findByCallsign(callsign);
+        if (history.empty()) return;
+        sitationCopy.setGroundspeed(history.latestValue().getGroundSpeed());
+
+        // store situation history
+        this->m_aircraftSituations.push_front(situation);
+        this->m_aircraftSituations.removeOlderThanNowMinusOffset(AircraftSituationsRemovedOffsetMs);
+        emit this->addedRemoteAircraftSituation(situation);
+
+        // update
+        CLength distance = ownAircraft().calculateGreatCircleDistance(situation.getPosition());
+        distance.switchUnit(CLengthUnit::NM());
+        CPropertyIndexVariantMap vm;
+        vm.addValue(CAircraft::IndexSituation, situation);
+        vm.addValue(CAircraft::IndexDistanceToOwnAircraft, distance);
+
+        // here I expect always a changed value
+        this->m_aircraftInRange.applyIfCallsign(callsign, vm);
+        this->m_aircraftWatchdog.resetCallsign(callsign);
 
         emit this->changedAircraftInRange();
     }

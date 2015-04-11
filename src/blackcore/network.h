@@ -441,6 +441,12 @@ namespace BlackCore
                                     const BlackMisc::Aviation::CTransponder &transponder);
 
         /*!
+         * We received a interim notification of the state of another aircraft on the network.
+         * Corresponding callsign in \sa CAircraftSituation::getCallsign .
+         */
+        void aircraftInterimPositionUpdate(const BlackMisc::Aviation::CAircraftSituation &situation);
+
+        /*!
          * We received a reply to one of our queries.
          * \sa sendFrequencyQuery
          */

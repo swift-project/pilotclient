@@ -754,9 +754,21 @@ namespace BlackCore
         emit cbvar_cast(cbvar)->aircraftConfigPacketReceived(cbvar_cast(cbvar)->fromFSD(callsign), config, isFull);
     }
 
-    void CNetworkVatlib::onInterimPilotPositionUpdate(VatSessionID, const char * /** callsign **/, const VatInterimPilotPosition * /** position **/, void * /** cbvar **/)
+    void CNetworkVatlib::onInterimPilotPositionUpdate(VatSessionID, const char *sender, const VatInterimPilotPosition *position, void *cbvar)
     {
-        //TODO
+        const CCallsign callsign(sender);
+        const CAircraftSituation situation(
+            callsign,
+            CCoordinateGeodetic(position->latitude, position->longitude, 0.0),
+            CAltitude(position->altitudeTrue, CAltitude::MeanSeaLevel, CLengthUnit::ft()),
+            CHeading(position->heading, CHeading::True, CAngleUnit::deg()),
+            CAngle(position->pitch, CAngleUnit::deg()),
+            CAngle(position->bank, CAngleUnit::deg()),
+            // There is no speed information in a interim packet
+            CSpeed(0.0, CSpeedUnit::kts())
+        );
+
+        emit cbvar_cast(cbvar)->aircraftInterimPositionUpdate(situation);
     }
 
     void CNetworkVatlib::onAtcPositionUpdate(VatSessionID, const char *callsign, const VatAtcPosition *pos, void *cbvar)
