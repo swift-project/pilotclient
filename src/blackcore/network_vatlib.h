@@ -133,6 +133,11 @@ namespace BlackCore
         static VatSimType convertToSimType(BlackMisc::Simulation::CSimulatorPluginInfo &simInfo);
         static void networkLogHandler(SeverityLevel severity, const char *message);
 
+        inline QString defaultModelString()
+        {
+            return QStringLiteral("Cessna Skyhawk 172SP");
+        }
+
         struct JsonPackets
         {
             static QJsonObject aircraftConfigRequest();

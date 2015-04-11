@@ -585,7 +585,7 @@ namespace BlackCore
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
         CAircraftIcao icao = ownAircraft().getIcaoInfo();
         QString modelString = ownAircraft().getModel().getModelString();
-        if (modelString.isEmpty()) { modelString = CProject::systemNameAndVersion(); }
+        if (modelString.isEmpty()) { modelString = defaultModelString(); }
 
         QStringList data { { "0" }, icao.getAirlineDesignator(), icao.getAircraftDesignator(),
             { "" }, { "" }, { "" }, { "" }, icao.getAircraftCombinedType(), modelString };
@@ -597,7 +597,7 @@ namespace BlackCore
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
         CAircraftIcao icao = ownAircraft().getIcaoInfo();
         QString modelString = ownAircraft().getModel().getModelString();
-        if (modelString.isEmpty()) { modelString = CProject::systemNameAndVersion(); }
+        if (modelString.isEmpty()) { modelString = defaultModelString(); }
 
         QStringList data { { "0" }, icao.getAirlineDesignator(), icao.getAircraftDesignator(),
             { "" }, { "" }, { "" }, { "" }, icao.getAircraftCombinedType(), modelString };
