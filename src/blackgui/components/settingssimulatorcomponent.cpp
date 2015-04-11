@@ -91,7 +91,7 @@ namespace BlackGui
                 Q_ASSERT(data.canConvert<CSimulatorPluginInfo>());
                 CSimulatorPluginInfo p = data.value<CSimulatorPluginInfo>();
                 
-                if (p.getName() == plugin.getName())
+                if (p.getIdentifier() == plugin.getIdentifier())
                 {
                     if (i == this->ui->cb_Plugins->currentIndex())
                         return;

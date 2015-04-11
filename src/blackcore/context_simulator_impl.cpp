@@ -138,7 +138,7 @@ namespace BlackCore
     CSimulatorSetup CContextSimulator::getSimulatorSetup() const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin || !m_simulatorPlugin->simulator)
+        if (!m_simulatorPlugin)
         {
             return BlackMisc::Simulation::CSimulatorSetup();
         }

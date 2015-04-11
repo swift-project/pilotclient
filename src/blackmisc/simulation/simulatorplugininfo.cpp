@@ -30,7 +30,7 @@ namespace BlackMisc
             }
 
             QJsonObject data = json["MetaData"].toObject();
-            if (data["name"].isUndefined() || data["simulator"].isUndefined())
+            if (data.value("identifier").isUndefined() || data.value("simulator").isUndefined())
             {
                 return;
             }
@@ -47,7 +47,7 @@ namespace BlackMisc
         QString CSimulatorPluginInfo::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            return QString("%1 (%2)").arg(m_name, m_simulator);
+            return QString("%1 (%2)").arg(m_name, m_identifier);
         }
     } // ns
 } // ns
