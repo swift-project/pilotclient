@@ -72,7 +72,7 @@ namespace BlackCore
 
         m_net.reset(Vat_CreateNetworkSession(vatServerLegacyFsd, CProject::systemNameAndVersionChar(),
                                              CProject::versionMajor(), CProject::versionMinor(),
-                                             CProject::simulatorsChar(), CLIENT_PUBLIC_ID, CLIENT_PRIVATE_KEY,
+                                             "None", CLIENT_PUBLIC_ID, CLIENT_PRIVATE_KEY,
                                              clientCapabilities));
 
         Vat_SetStateChangeHandler(m_net.data(), onConnectionStatusChanged, this);
