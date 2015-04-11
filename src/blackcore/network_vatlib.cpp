@@ -15,6 +15,7 @@
 #include <type_traits>
 
 static_assert(! std::is_abstract<BlackCore::CNetworkVatlib>::value, "Must implement all pure virtuals");
+static_assert(VAT_LIBVATLIB_VERSION == 904, "Wrong vatlib header installed");
 
 // TODO just placeholders to allow this to compile
 // This is just a test key and is NOT valid on the live network.
@@ -46,6 +47,7 @@ namespace BlackCore
         connect(this, &INetwork::customPacketReceived, this, &CNetworkVatlib::customPacketDispatcher);
 
         Q_ASSERT_X(m_fsdTextCodec, "CNetworkVatlib", "Missing default wire text encoding");
+        Q_ASSERT_X(Vat_GetVersion() == VAT_LIBVATLIB_VERSION, "swift.network", "Wrong vatlib shared library installed");
         //TODO reinit m_fsdTextCodec from WireTextEncoding config setting if present
 
         Vat_SetNetworkLogHandler(SeverityError, CNetworkVatlib::networkLogHandler);
@@ -84,8 +86,8 @@ namespace BlackCore
         Vat_SetKillHandler(m_net.data(), onKicked, this);
         Vat_SetPongHandler(m_net.data(), onPong, this);
         Vat_SetMetarResponseHandler(m_net.data(), onMetarReceived, this);
-        Vat_SetInfoRequestHandler(m_net.data(), onInfoQueryRequestReceived, this);
-        Vat_SetInfoResponseHandler(m_net.data(), onInfoQueryReplyReceived, this);
+        Vat_SetClientQueryHandler(m_net.data(), onInfoQueryRequestReceived, this);
+        Vat_SetClientQueryResponseHandler(m_net.data(), onInfoQueryReplyReceived, this);
         Vat_SetInfoCAPSReplyHandler(m_net.data(), onCapabilitiesReplyReceived, this);
         Vat_SetControllerAtisHandler(m_net.data(), onAtisReplyReceived, this);
         Vat_SetFlightPlanHandler(m_net.data(), onFlightPlanReceived, this);
@@ -400,37 +402,37 @@ namespace BlackCore
     void CNetworkVatlib::sendIpQuery()
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
-        Vat_RequestInformation(m_net.data(), vatInfoQueryTypeIP, nullptr);
+        Vat_SendClientQuery(m_net.data(), vatClientQueryIP, nullptr);
     }
 
     void CNetworkVatlib::sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
-        Vat_RequestInformation(m_net.data(), vatInfoQueryTypeFreq, toFSD(callsign));
+        Vat_SendClientQuery(m_net.data(), vatClientQueryFreq, toFSD(callsign));
     }
 
     void CNetworkVatlib::sendUserInfoQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
-        Vat_RequestInformation(m_net.data(), vatInfoQueryTypeInfo, toFSD(callsign));
+        Vat_SendClientQuery(m_net.data(), vatClientQueryInfo, toFSD(callsign));
     }
 
     void CNetworkVatlib::sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
-        Vat_RequestInformation(m_net.data(), vatInfoQueryTypeServer, toFSD(callsign));
+        Vat_SendClientQuery(m_net.data(), vatClientQueryServer, toFSD(callsign));
     }
 
     void CNetworkVatlib::sendAtcQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
-        Vat_RequestInformation(m_net.data(), vatInfoQueryTypeAtc, toFSD(callsign));
+        Vat_SendClientQuery(m_net.data(), vatClientQueryAtc, toFSD(callsign));
     }
 
     void CNetworkVatlib::sendAtisQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
-        Vat_RequestInformation(m_net.data(), vatInfoQueryTypeAtis, toFSD(callsign));
+        Vat_SendClientQuery(m_net.data(), vatClientQueryAtis, toFSD(callsign));
     }
 
     void CNetworkVatlib::sendFlightPlan(const CFlightPlan &flightPlan)
@@ -478,30 +480,31 @@ namespace BlackCore
     void CNetworkVatlib::sendFlightPlanQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
-        Vat_RequestInformation(m_net.data(), vatInfoQueryTypeFP, toFSD(callsign));
+        Vat_SendClientQuery(m_net.data(), vatClientQueryFP, toFSD(callsign));
     }
 
     void CNetworkVatlib::sendRealNameQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
-        Vat_RequestInformation(m_net.data(), vatInfoQueryTypeName, toFSD(callsign));
+        Vat_SendClientQuery(m_net.data(), vatClientQueryName, toFSD(callsign));
     }
 
     void CNetworkVatlib::sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
-        Vat_RequestInformation(m_net.data(), vatInfoQueryTypeCaps, toFSD(callsign));
+        Vat_SendClientQuery(m_net.data(), vatClientQueryCaps, toFSD(callsign));
     }
 
     void CNetworkVatlib::replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign) // private
     {
-        Vat_SendInformation(m_net.data(), vatInfoQueryTypeFreq, toFSD(callsign),
-                            toFSD(QString::number(ownAircraft().getCom1System().getFrequencyActive().value(CFrequencyUnit::MHz()), 'f', 3)));
+        QStringList response { QString::number(ownAircraft().getCom1System().getFrequencyActive().value(CFrequencyUnit::MHz()), 'f', 3)};
+        Vat_SendClientQueryResponse(m_net.data(), vatClientQueryFreq, toFSD(callsign), toFSD(response)(), response.size());
     }
 
     void CNetworkVatlib::replyToNameQuery(const BlackMisc::Aviation::CCallsign &callsign) // private
     {
-        Vat_SendInformation(m_net.data(), vatInfoQueryTypeName, toFSD(callsign), toFSD(m_server.getUser().getRealName()));
+        QStringList response { m_server.getUser().getRealName(), "" };
+        Vat_SendClientQueryResponse(m_net.data(), vatClientQueryName, toFSD(callsign), toFSD(response)(), response.size());
     }
 
     void CNetworkVatlib::replyToConfigQuery(const CCallsign &callsign)
@@ -751,7 +754,7 @@ namespace BlackCore
         emit cbvar_cast(cbvar)->aircraftConfigPacketReceived(cbvar_cast(cbvar)->fromFSD(callsign), config, isFull);
     }
 
-    void CNetworkVatlib::onInterimPilotPositionUpdate(VatSessionID, const char * /** callsign **/, const VatPilotPosition * /** position **/, void * /** cbvar **/)
+    void CNetworkVatlib::onInterimPilotPositionUpdate(VatSessionID, const char * /** callsign **/, const VatInterimPilotPosition * /** position **/, void * /** cbvar **/)
     {
         //TODO
     }
@@ -817,7 +820,7 @@ namespace BlackCore
         emit cbvar_cast(cbvar)->metarReplyReceived(cbvar_cast(cbvar)->fromFSD(data));
     }
 
-    void CNetworkVatlib::onInfoQueryRequestReceived(VatSessionID, const char *callsignString, VatInfoQueryType type, const char *, void *cbvar)
+    void CNetworkVatlib::onInfoQueryRequestReceived(VatSessionID, const char *callsignString, VatClientQueryType type, const char *, void *cbvar)
     {
         auto timer = new QTimer(cbvar_cast(cbvar));
         timer->setSingleShot(true);
@@ -826,10 +829,10 @@ namespace BlackCore
         BlackMisc::Aviation::CCallsign callsign(callsignString);
         switch (type)
         {
-        case vatInfoQueryTypeFreq:
+        case vatClientQueryFreq:
             connect(timer, &QTimer::timeout, [ = ]() { cbvar_cast(cbvar)->replyToFrequencyQuery(callsign); });
             break;
-        case vatInfoQueryTypeName:
+        case vatClientQueryName:
             connect(timer, &QTimer::timeout, [ = ]() { cbvar_cast(cbvar)->replyToNameQuery(callsign); });
             break;
         default:
@@ -837,15 +840,15 @@ namespace BlackCore
         }
     }
 
-    void CNetworkVatlib::onInfoQueryReplyReceived(VatSessionID, const char *callsign, VatInfoQueryType type, const char *data, const char *data2, void *cbvar)
+    void CNetworkVatlib::onInfoQueryReplyReceived(VatSessionID, const char *callsign, VatClientQueryType type, const char *data, const char *data2, void *cbvar)
     {
         switch (type)
         {
-        case vatInfoQueryTypeFreq:   emit cbvar_cast(cbvar)->frequencyReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), CFrequency(cbvar_cast(cbvar)->fromFSD(data).toFloat(), CFrequencyUnit::MHz())); break;
-        case vatInfoQueryTypeServer: emit cbvar_cast(cbvar)->serverReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
-        case vatInfoQueryTypeAtc:    emit cbvar_cast(cbvar)->atcReplyReceived(cbvar_cast(cbvar)->fromFSD(data2), *data == 'Y'); break;
-        case vatInfoQueryTypeName:   emit cbvar_cast(cbvar)->realNameReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
-        case vatInfoQueryTypeIP:     emit cbvar_cast(cbvar)->ipReplyReceived(cbvar_cast(cbvar)->fromFSD(data)); break;
+        case vatClientQueryFreq:   emit cbvar_cast(cbvar)->frequencyReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), CFrequency(cbvar_cast(cbvar)->fromFSD(data).toFloat(), CFrequencyUnit::MHz())); break;
+        case vatClientQueryServer: emit cbvar_cast(cbvar)->serverReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
+        case vatClientQueryAtc:    emit cbvar_cast(cbvar)->atcReplyReceived(cbvar_cast(cbvar)->fromFSD(data2), *data == 'Y'); break;
+        case vatClientQueryName:   emit cbvar_cast(cbvar)->realNameReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
+        case vatClientQueryIP:     emit cbvar_cast(cbvar)->ipReplyReceived(cbvar_cast(cbvar)->fromFSD(data)); break;
         default: break;
         }
     }

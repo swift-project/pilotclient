@@ -98,13 +98,13 @@ namespace BlackCore
         static void onTextMessageReceived(VatSessionID, const char *from, const char *to, const char *msg, void *cbvar);
         static void onRadioMessageReceived(VatSessionID, const char *from, int freqCount, int *freqList, const char *message, void *cbvar);
         static void onControllerDisconnected(VatSessionID, const char *callsign, void *cbvar);
-        static void onInterimPilotPositionUpdate(VatSessionID, const char *callsign, const VatPilotPosition *position, void *cbvar);
+        static void onInterimPilotPositionUpdate(VatSessionID, const char *callsign, const VatInterimPilotPosition *position, void *cbvar);
         static void onAtcPositionUpdate(VatSessionID, const char *callsign, const VatAtcPosition *pos, void *cbvar);
         static void onKicked(VatSessionID, const char *reason, void *cbvar);
         static void onPong(VatSessionID, const char *sender, double elapsedTime, void *cbvar);
         static void onMetarReceived(VatSessionID, const char *data, void *cbvar);
-        static void onInfoQueryRequestReceived(VatSessionID, const char *callsign, VatInfoQueryType type, const char *data, void *cbvar);
-        static void onInfoQueryReplyReceived(VatSessionID, const char *callsign, VatInfoQueryType type, const char *data, const char *data2, void *cbvar);
+        static void onInfoQueryRequestReceived(VatSessionID, const char *callsign, VatClientQueryType type, const char *data, void *cbvar);
+        static void onInfoQueryReplyReceived(VatSessionID, const char *callsign, VatClientQueryType type, const char *data, const char *data2, void *cbvar);
         static void onCapabilitiesReplyReceived(VatSessionID, const char *callsign, int capabilityFlags, void *cbvar);
         static void onAtisReplyReceived(VatSessionID, const char *callsign, const VatControllerAtis *atis, void *cbvar);
         static void onFlightPlanReceived(VatSessionID, const char *callsign, const VatFlightPlan *fp, void *cbvar);
