@@ -267,10 +267,8 @@ namespace BlackCore
          * </BLOCKQUOTE>
          */
         //! @{
-        virtual void sendFsipiCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
-                                           const QString &aircraftDesignator, const QString &combinedType, const QString &modelString) = 0;
-        virtual void sendFsipirCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
-                                            const QString &aircraftDesignator, const QString &combinedType, const QString &modelString) = 0;
+        virtual void sendCustomFsinnQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+        virtual void sendCustomFsinnReponse(const BlackMisc::Aviation::CCallsign &callsign) = 0;
         //! @}
 
         //! Broadcast an incremental aircraft config
@@ -516,14 +514,8 @@ namespace BlackCore
         /*!
          * We received an FSInn custom packet.
          */
-        void fsipiCustomPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
+        void customFSinnPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
                                        const QString &aircraftDesignator, const QString &combinedType, const QString &modelString);
-
-        /*!
-         * We received an FSInn custom response packet.
-         */
-        void fsipirCustomPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
-                                        const QString &aircraftDesignator, const QString &combinedType, const QString &modelString);
 
         //! We received a aircraft config packet
         void aircraftConfigPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &incremental, bool isFull);

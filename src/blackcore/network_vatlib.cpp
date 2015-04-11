@@ -577,18 +577,28 @@ namespace BlackCore
         Vat_RequestWeather(m_net.data(), toFSD(airportIcao.asString()));
     }
 
-    void CNetworkVatlib::sendFsipiCustomPacket(const BlackMisc::Aviation::CCallsign &callsign,
-            const QString &airlineIcao, const QString &aircraftIcao, const QString &combinedType, const QString &modelString)
+    void CNetworkVatlib::sendCustomFsinnQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
-        QStringList data { { "0" }, airlineIcao, aircraftIcao, { "" }, { "" }, { "" }, { "" }, combinedType, modelString };
-        sendCustomPacket(callsign, "FSIPI", data);
+        Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
+        CAircraftIcao icao = ownAircraft().getIcaoInfo();
+        QString modelString = ownAircraft().getModel().getModelString();
+        if (modelString.isEmpty()) { modelString = CProject::systemNameAndVersion(); }
+
+        QStringList data { { "0" }, icao.getAirlineDesignator(), icao.getAircraftDesignator(),
+            { "" }, { "" }, { "" }, { "" }, icao.getAircraftCombinedType(), modelString };
+        sendCustomPacket(callsign, "FSIPIR", data);
     }
 
-    void CNetworkVatlib::sendFsipirCustomPacket(const BlackMisc::Aviation::CCallsign &callsign,
-            const QString &airlineIcao, const QString &aircraftIcao, const QString &combinedType, const QString &modelString)
+    void CNetworkVatlib::sendCustomFsinnReponse(const BlackMisc::Aviation::CCallsign &callsign)
     {
-        QStringList data { { "0" }, airlineIcao, aircraftIcao, { "" }, { "" }, { "" }, { "" }, combinedType, modelString };
-        sendCustomPacket(callsign, "FSIPIR", data);
+        Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
+        CAircraftIcao icao = ownAircraft().getIcaoInfo();
+        QString modelString = ownAircraft().getModel().getModelString();
+        if (modelString.isEmpty()) { modelString = CProject::systemNameAndVersion(); }
+
+        QStringList data { { "0" }, icao.getAirlineDesignator(), icao.getAircraftDesignator(),
+            { "" }, { "" }, { "" }, { "" }, icao.getAircraftCombinedType(), modelString };
+        sendCustomPacket(callsign, "FSIPI", data);
     }
 
     void CNetworkVatlib::enableFastPositionSending(bool enable)
@@ -781,7 +791,9 @@ namespace BlackCore
             }
             else
             {
-                emit fsipiCustomPacketReceived(callsign, data[1], data[2], data[7], data[8]);
+                // It doesn't matter whether it was a query or response. The information
+                // is the same for both.
+                emit customFSinnPacketReceived(callsign, data[1], data[2], data[7], data[8]);
             }
         }
         else if (packetId.compare("FSIPIR", Qt::CaseInsensitive) == 0)
@@ -792,7 +804,10 @@ namespace BlackCore
             }
             else
             {
-                emit fsipirCustomPacketReceived(callsign, data[1], data[2], data[7], data[8]);
+                sendCustomFsinnReponse(callsign);
+                // It doesn't matter whether it was a query or response. The information
+                // is the same for both.
+                emit customFSinnPacketReceived(callsign, data[1], data[2], data[7], data[8]);
             }
         }
     }

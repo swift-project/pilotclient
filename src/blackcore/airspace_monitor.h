@@ -185,11 +185,6 @@ namespace BlackCore
         bool                   m_serverSupportsNameQuery = false; //!< not all servers support name query
         bool                   m_connected = false;               //!< retrieve data
 
-        // TODO FIXME (MS) should be in INetwork
-        void sendFsipiCustomPacket(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;
-        void sendFsipirCustomPacket(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;
-        QStringList createFsipiCustomPacketData() const;
-
         //! Remove ATC online stations
         void removeAllOnlineAtcStations();
 
@@ -211,7 +206,7 @@ namespace BlackCore
 
         void ps_realNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
         void ps_capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
-        void ps_fsipirCustomPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &p1, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &model);
+        void ps_customFSinnPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &p1, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &model);
         void ps_serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server);
         void ps_metarReceived(const QString &metarMessage);
         void ps_flightPlanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);

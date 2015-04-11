@@ -45,7 +45,7 @@ namespace BlackCore
         this->connect(this->m_network, &INetwork::aircraftPositionUpdate, this, &CAirspaceMonitor::ps_aircraftUpdateReceived);
         this->connect(this->m_network, &INetwork::frequencyReplyReceived, this, &CAirspaceMonitor::ps_frequencyReceived);
         this->connect(this->m_network, &INetwork::capabilitiesReplyReceived, this, &CAirspaceMonitor::ps_capabilitiesReplyReceived);
-        this->connect(this->m_network, &INetwork::fsipirCustomPacketReceived, this, &CAirspaceMonitor::ps_fsipirCustomPacketReceived);
+        this->connect(this->m_network, &INetwork::customFSinnPacketReceived, this, &CAirspaceMonitor::ps_customFSinnPacketReceived);
         this->connect(this->m_network, &INetwork::serverReplyReceived, this, &CAirspaceMonitor::ps_serverReplyReceived);
         this->connect(this->m_network, &INetwork::aircraftConfigPacketReceived, this, &CAirspaceMonitor::ps_aircraftConfigReceived);
 
@@ -421,7 +421,7 @@ namespace BlackCore
         if (flags & INetwork::SupportsAircraftConfigs) m_network->sendAircraftConfigQuery(callsign);
     }
 
-    void CAirspaceMonitor::ps_fsipirCustomPacketReceived(const CCallsign &callsign, const QString &airlineIcao, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &model)
+    void CAirspaceMonitor::ps_customFSinnPacketReceived(const CCallsign &callsign, const QString &airlineIcao, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &model)
     {
         if (!this->m_connected || callsign.isEmpty() || model.isEmpty()) { return; }
 
@@ -437,7 +437,6 @@ namespace BlackCore
         this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
         vm.prependIndex(static_cast<int>(CSimulatedAircraft::IndexClient));
         this->m_aircraftInRange.applyIf(&CSimulatedAircraft::getCallsign, callsign, vm);
-        this->sendFsipiCustomPacket(callsign); // response
 
         // ICAO response from custom data
         if (!aircraftDesignator.isEmpty())
@@ -486,24 +485,6 @@ namespace BlackCore
         CFlightPlan plan(flightPlan);
         plan.setWhenLastSentOrLoaded(QDateTime::currentDateTimeUtc());
         this->m_flightPlanCache.insert(callsign, plan);
-    }
-
-    void CAirspaceMonitor::sendFsipiCustomPacket(const CCallsign &recipientCallsign) const
-    {
-        if (!this->m_connected) { return; }
-        CAircraftIcao icao = ownAircraft().getIcaoInfo();
-        QString modelString = ownAircraft().getModel().getModelString();
-        if (modelString.isEmpty()) { modelString = CProject::systemNameAndVersion(); }
-        this->m_network->sendFsipiCustomPacket(recipientCallsign, icao.getAirlineDesignator(), icao.getAircraftDesignator(), icao.getAircraftCombinedType(), modelString);
-    }
-
-    void CAirspaceMonitor::sendFsipirCustomPacket(const CCallsign &recipientCallsign) const
-    {
-        if (!this->m_connected) { return; }
-        CAircraftIcao icao = ownAircraft().getIcaoInfo();
-        QString modelString = ownAircraft().getModel().getModelString();
-        if (modelString.isEmpty()) { modelString = CProject::systemNameAndVersion(); }
-        this->m_network->sendFsipirCustomPacket(recipientCallsign, icao.getAirlineDesignator(), icao.getAircraftDesignator(), icao.getAircraftCombinedType(), modelString);
     }
 
     void CAirspaceMonitor::removeAllOnlineAtcStations()
@@ -818,7 +799,13 @@ namespace BlackCore
             if (this->m_network->isConnected())
             {
                 // the order here makes some sense, as we hope to receive ICAO codes last, and everthing else already in place
-                this->sendFsipirCustomPacket(callsign); // own aircraft model
+
+                // Send a custom FSinn query only if we don't have the exact model yet
+                CClient c = this->m_otherClients.findByCallsign(callsign).frontOrDefault();
+                if (c.getAircraftModel().getModelType() != CAircraftModel::TypeQueriedFromNetwork)
+                {
+                    this->m_network->sendCustomFsinnQuery(callsign);
+                }
                 this->m_network->sendFrequencyQuery(callsign);
                 this->m_network->sendRealNameQuery(callsign);
                 this->m_network->sendCapabilitiesQuery(callsign);
