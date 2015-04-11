@@ -51,6 +51,9 @@ namespace BlackMisc
             //! From string hh:mm, or hh:mm:ss, or time units such as s, min
             virtual void parseFromString(const QString &time) override;
 
+            //! From string hh:mm, or hh:mm:ss, or time units such as s, min
+            virtual void parseFromString(const QString &time, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode) override;
+
             //! To Qt time
             //! \warning sign not considered
             QTime toQTime() const;

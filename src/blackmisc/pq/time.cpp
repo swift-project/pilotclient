@@ -79,6 +79,12 @@ namespace BlackMisc
                 CPhysicalQuantity::parseFromString(time);
         }
 
+        void CTime::parseFromString(const QString &time, CPqString::SeparatorMode mode)
+        {
+            this->parseFromString(time);
+            Q_UNUSED(mode);
+        }
+
         QTime CTime::toQTime() const
         {
             CTime copy(*this);

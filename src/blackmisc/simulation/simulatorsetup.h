@@ -27,7 +27,7 @@ namespace BlackMisc
 
         public:
             //! Specific values
-            enum
+            enum ColumnIndex
             {
                 IndexData = BlackMisc::CPropertyIndex::GlobalIndexCSimulatorSetup
             };

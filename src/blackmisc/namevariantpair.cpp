@@ -55,15 +55,11 @@ namespace BlackMisc
             return;
         }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
-        switch (i)
+
+        // special case, handle icon and allow to set it
+        // doing this in the switch gives gcc warning as IndexIcon is no member of ColumnIndex
+        if (i == static_cast<int>(IndexIcon))
         {
-        case IndexName:
-            this->setName(variant.value<QString>());
-            break;
-        case IndexVariant:
-            this->m_variant = variant;
-            break;
-        case IndexIcon:
             if (static_cast<QMetaType::Type>(variant.type()) == QMetaType::Int)
             {
                 CIcons::IconIndex index = static_cast<CIcons::IconIndex>(variant.toInt());
@@ -73,6 +69,17 @@ namespace BlackMisc
             {
                 this->m_icon = variant.value<BlackMisc::CIcon>();
             }
+            return;
+        }
+
+        // properties
+        switch (i)
+        {
+        case IndexName:
+            this->setName(variant.value<QString>());
+            break;
+        case IndexVariant:
+            this->m_variant = variant;
             break;
         default:
             CValueObject::setPropertyByIndex(variant, index);
