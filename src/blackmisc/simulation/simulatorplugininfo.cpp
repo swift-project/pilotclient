@@ -19,29 +19,33 @@ namespace BlackMisc
 
         void CSimulatorPluginInfo::convertFromJson(const QJsonObject &json)
         {
-            if (json["IID"].toString() != QStringLiteral("org.swift.pilotclient.BlackCore.SimulatorInterface"))
-            {
-                return;
-            }
+            if (json.contains("IID")) { // comes from the plugin
+                if (json["IID"].toString() != QStringLiteral("org.swift.pilotclient.BlackCore.SimulatorInterface"))
+                {
+                    return;
+                }
 
-            if (!json["MetaData"].isObject())
-            {
-                return;
-            }
+                if (!json["MetaData"].isObject())
+                {
+                    return;
+                }
 
-            QJsonObject data = json["MetaData"].toObject();
-            if (data.value("identifier").isUndefined() || data.value("simulator").isUndefined())
-            {
-                return;
-            }
+                QJsonObject data = json["MetaData"].toObject();
+                if (data.value("identifier").isUndefined() || data.value("simulator").isUndefined())
+                {
+                    return;
+                }
 
-            CValueObject::convertFromJson(data);
-            m_valid = true;
+                CValueObject::convertFromJson(data);
+                m_valid = true;
+            } else {
+                CValueObject::convertFromJson(json);
+            }
         }
 
         bool CSimulatorPluginInfo::isUnspecified() const
         {
-            return m_name.isEmpty();
+            return m_identifier.isEmpty();
         }
 
         QString CSimulatorPluginInfo::convertToQString(bool i18n) const
