@@ -53,7 +53,7 @@ namespace BlackCore
         Vat_SetNetworkLogHandler(SeverityError, CNetworkVatlib::networkLogHandler);
 
         connect(&m_processingTimer, SIGNAL(timeout()), this, SLOT(process()));
-        connect(&m_updateTimer, SIGNAL(timeout()), this, SLOT(update()));
+        connect(&m_positionUpdateTimer, &QTimer::timeout, this, &CNetworkVatlib::sendPositionUpdate);
         m_processingTimer.start(c_processingIntervalMsec);
 
         this->connect(&this->m_scheduledConfigUpdate, &QTimer::timeout, this, &CNetworkVatlib::sendIncrementalAircraftConfig);
@@ -113,7 +113,7 @@ namespace BlackCore
         Vat_ExecuteNetworkTasks(m_net.data());
     }
 
-    void CNetworkVatlib::update()
+    void CNetworkVatlib::sendPositionUpdate()
     {
         if (!m_net) { return; }
 
@@ -183,7 +183,7 @@ namespace BlackCore
 
             if (isDisconnected())
             {
-                m_updateTimer.stop();
+                m_positionUpdateTimer.stop();
             }
         }
     }
@@ -349,15 +349,15 @@ namespace BlackCore
 
         Vat_Logon(m_net.data());
 
-        if (! m_updateTimer.isActive())
+        if (! m_positionUpdateTimer.isActive())
         {
-            m_updateTimer.start(c_updateIntervalMsec);
+            m_positionUpdateTimer.start(c_updateIntervalMsec);
         }
     }
 
     void CNetworkVatlib::terminateConnection()
     {
-        m_updateTimer.stop();
+        m_positionUpdateTimer.stop();
 
         if (m_net && isConnected())
         {

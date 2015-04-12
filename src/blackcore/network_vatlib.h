@@ -145,7 +145,7 @@ namespace BlackCore
 
     private slots:
         void process();
-        void update();
+        void sendPositionUpdate();
         void customPacketDispatcher(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
 
     signals:
@@ -170,7 +170,7 @@ namespace BlackCore
         bool m_sendInterimPositions = false; //!< send interim positions
 
         QTimer m_processingTimer;
-        QTimer m_updateTimer;
+        QTimer m_positionUpdateTimer;
         static int const c_processingIntervalMsec = 100;
         static int const c_updateIntervalMsec = 5000;
         static int const c_logoffTimeoutSec = 5;
