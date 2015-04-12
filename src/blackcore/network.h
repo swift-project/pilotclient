@@ -22,6 +22,7 @@
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/aviation/informationmessage.h"
 #include "blackmisc/aviation/flightplan.h"
+#include "blackmisc/aviation/callsignset.h"
 #include <QObject>
 #include <QString>
 #include <QMap>
@@ -198,12 +199,6 @@ namespace BlackCore
          */
         virtual void terminateConnection() = 0;
 
-        //! Is interim position sending enabled?
-        virtual bool isFastPositionSendingEnabled() const = 0;
-
-        //! Enable interim position sending
-        virtual void enableFastPositionSending(bool enable) = 0;
-
         /*!
          * Send a ping message to a user with a specific callsign.
          * \pre Network must be connected when calling this function.
@@ -345,6 +340,12 @@ namespace BlackCore
          * \pre Network must be connected when calling this function.
          */
         virtual void sendUserInfoQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
+        /*!
+         * Send interim position directly to a set of receivers.
+         * \pre Network must be connected when calling this function.
+         */
+        virtual void sendInterimPosition(const BlackMisc::Aviation::CCallsignSet &receiver) = 0;
 
         //! @}
         ////////////////////////////////////////////////////////////////

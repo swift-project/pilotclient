@@ -59,6 +59,8 @@ namespace BlackCore
         this->m_atcWatchdog.setTimeout(CTime(50, CTimeUnit::s()));
         this->connect(&this->m_aircraftWatchdog, &CAirspaceWatchdog::timeout, this, &CAirspaceMonitor::ps_pilotDisconnected);
         this->connect(&this->m_atcWatchdog,      &CAirspaceWatchdog::timeout, this, &CAirspaceMonitor::ps_atcControllerDisconnected);
+
+        this->connect(&m_interimPositionUpdateTimer, &QTimer::timeout, this, &CAirspaceMonitor::ps_sendInterimPosition);
     }
 
     const CSimulatedAircraftList &CAirspaceMonitor::remoteAircraft() const
@@ -376,6 +378,18 @@ namespace BlackCore
         {
             this->clear();
         }
+    }
+
+    void CAirspaceMonitor::enableFastPositionSending(bool enable)
+    {
+        if (enable) m_interimPositionUpdateTimer.start();
+        else m_interimPositionUpdateTimer.stop();
+        m_sendInterimPositions = enable;
+    }
+
+    bool CAirspaceMonitor::isFastPositionSendingEnabled() const
+    {
+        return m_sendInterimPositions;
     }
 
     void CAirspaceMonitor::ps_realNameReplyReceived(const CCallsign &callsign, const QString &realname)
@@ -946,6 +960,14 @@ namespace BlackCore
         // here I expect always a changed value
         this->m_aircraftInRange.setAircraftParts(callsign, parts);
         this->m_aircraftWatchdog.resetCallsign(callsign);
+    }
+
+    void CAirspaceMonitor::ps_sendInterimPosition()
+    {
+        Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+        if (!this->m_connected || !m_sendInterimPositions) { return; }
+        CSimulatedAircraftList aircrafts = m_aircraftInRange.findBy(&CSimulatedAircraft::fastPositionUpdates, true);
+        m_network->sendInterimPosition(aircrafts.getCallsigns());
     }
 
 } // namespace

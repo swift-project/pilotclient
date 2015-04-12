@@ -417,6 +417,28 @@ namespace BlackCore
         Vat_SendClientQuery(m_net.data(), vatClientQueryInfo, toFSD(callsign));
     }
 
+    void CNetworkVatlib::sendInterimPosition(const CCallsignSet &receivers)
+    {
+        Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
+
+        if (this->m_loginMode == LoginNormal)
+        {
+            VatInterimPilotPosition pos;
+            // TODO: we need to distinguish true and pressure altitude
+            pos.altitudeTrue = ownAircraft().getAltitude().value(CLengthUnit::ft());
+            pos.heading      = ownAircraft().getHeading().value(CAngleUnit::deg());
+            pos.pitch        = ownAircraft().getPitch().value(CAngleUnit::deg());
+            pos.bank         = ownAircraft().getBank().value(CAngleUnit::deg());
+            pos.latitude     = ownAircraft().latitude().value(CAngleUnit::deg());
+            pos.longitude    = ownAircraft().longitude().value(CAngleUnit::deg());
+
+            for (const auto &receiver : receivers)
+            {
+                Vat_SendInterimPilotUpdate(m_net.data(), toFSD(receiver), &pos);
+            }
+        }
+    }
+
     void CNetworkVatlib::sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
@@ -602,16 +624,6 @@ namespace BlackCore
         QStringList data { { "0" }, icao.getAirlineDesignator(), icao.getAircraftDesignator(),
             { "" }, { "" }, { "" }, { "" }, icao.getAircraftCombinedType(), modelString };
         sendCustomPacket(callsign, "FSIPI", data);
-    }
-
-    void CNetworkVatlib::enableFastPositionSending(bool enable)
-    {
-        m_sendInterimPositions = enable;
-    }
-
-    bool CNetworkVatlib::isFastPositionSendingEnabled() const
-    {
-        return m_sendInterimPositions;
     }
 
     void CNetworkVatlib::broadcastAircraftConfig(const QJsonObject &config)

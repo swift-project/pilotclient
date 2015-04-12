@@ -131,6 +131,12 @@ namespace BlackCore
             std::function<void(const BlackMisc::Aviation::CCallsign &)> removedAircraftSlot
         ) override;
 
+        //! Is interim position sending enabled?
+        bool isFastPositionSendingEnabled() const;
+
+        //! Enable interim position sending
+        void enableFastPositionSending(bool enable);
+
         static const qint64 AircraftSituationsRemovedOffsetMs = 30 * 1000; //!< situations older than now - offset will be removed
         static const qint64 AircraftPartsRemoveOffsetMs = 30* 1000;        //!< parts older than now - offset will be removed
 
@@ -184,6 +190,9 @@ namespace BlackCore
         CAirspaceWatchdog      m_aircraftWatchdog;
         bool                   m_serverSupportsNameQuery = false; //!< not all servers support name query
         bool                   m_connected = false;               //!< retrieve data
+        bool                   m_sendInterimPositions = false;
+
+        QTimer m_interimPositionUpdateTimer;
 
         //! Remove ATC online stations
         void removeAllOnlineAtcStations();
@@ -224,6 +233,8 @@ namespace BlackCore
 
         //!  Send the information if aircraft and(!) client are vailable
         void ps_sendReadyForModelMatching(const BlackMisc::Aviation::CCallsign &callsign, int trial);
+
+        void ps_sendInterimPosition();
     };
 
 } // namespace

@@ -554,15 +554,15 @@ namespace BlackCore
     bool CContextNetwork::isFastPositionSendingEnabled() const
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        Q_ASSERT(this->m_network);
-        return m_network->isFastPositionSendingEnabled();
+        Q_ASSERT(this->m_airspace);
+        return m_airspace->isFastPositionSendingEnabled();
     }
 
     void CContextNetwork::enableFastPositionSending(bool enable)
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << enable; }
-        Q_ASSERT(this->m_network);
-        m_network->enableFastPositionSending(enable);
+        Q_ASSERT(this->m_airspace);
+        m_airspace->enableFastPositionSending(enable);
     }
 
     void CContextNetwork::setFastPositionEnabledCallsigns(CCallsignSet &callsigns)

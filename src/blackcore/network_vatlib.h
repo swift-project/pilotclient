@@ -62,8 +62,6 @@ namespace BlackCore
         virtual void sendCustomFsinnQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendCustomFsinnReponse(const BlackMisc::Aviation::CCallsign &callsign) override;
 
-        virtual bool isFastPositionSendingEnabled() const override;
-        virtual void enableFastPositionSending(bool enable) override;
         virtual void broadcastAircraftConfig(const QJsonObject &config) override;
         virtual void sendAircraftConfigQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
 
@@ -81,6 +79,7 @@ namespace BlackCore
         virtual void sendIcaoCodesQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendUserInfoQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
+        virtual void sendInterimPosition(const BlackMisc::Aviation::CCallsignSet &receiver) override;
 
         // Weather slots
         virtual void sendMetarQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao) override;
@@ -167,7 +166,6 @@ namespace BlackCore
         BlackMisc::Simulation::CSimulatorPluginInfo           m_simulatorInfo;
         BlackMisc::Aviation::CCallsign     m_callsign; //!< "buffered callsign", as this must not change when connected
         BlackMisc::Aviation::CAircraftIcao m_icaoCode; //!< "buffered icao", as this must not change when connected
-        bool m_sendInterimPositions = false; //!< send interim positions
 
         QTimer m_processingTimer;
         QTimer m_positionUpdateTimer;
