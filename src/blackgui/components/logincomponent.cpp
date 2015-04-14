@@ -38,6 +38,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->m_logoffCountdownTimer = new QTimer(this);
+            this->m_logoffCountdownTimer->setObjectName("CLoginComponent:m_logoffCountdownTimer");
             this->ui->pb_LogoffTimeout->setMaximum(LogoffIntervalSeconds);
             this->ui->pb_LogoffTimeout->setValue(LogoffIntervalSeconds);
             connect(this->m_logoffCountdownTimer, &QTimer::timeout, this, &CLoginComponent::ps_logoffCountdown);

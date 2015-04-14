@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKMISC_NETWORK_USERLIST_H
 #define BLACKMISC_NETWORK_USERLIST_H
 

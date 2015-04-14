@@ -16,6 +16,7 @@ namespace BlackGui
     CTransponderModeSelector::CTransponderModeSelector(QWidget *parent) : QComboBox(parent)
     {
         QComboBox::insertItems(0, CTransponderModeSelector::modes());
+        this->m_resetTimer.setObjectName(this->objectName().append(":m_resetTimer"));
         connect(&this->m_resetTimer, &QTimer::timeout, this, &CTransponderModeSelector::resetTransponderMode);
         connect(this, &CTransponderModeSelector::currentTextChanged, this, &CTransponderModeSelector::setSelectedTransponderModeAsString);
         this->m_resetTimer.setInterval(5000);

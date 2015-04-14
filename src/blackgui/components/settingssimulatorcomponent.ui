@@ -309,7 +309,7 @@
     </widget>
    </item>
    <item>
-    <spacer name="verticalSpacer">
+    <spacer name="vs_SettingsSimulatorComponent">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
@@ -322,25 +322,7 @@
     </spacer>
    </item>
    <item>
-    <widget class="BlackGui::Components::CSettingsFsxComponent" name="comp_SettingsSimulatorFsx">
-     <layout class="QVBoxLayout" name="vl_SettingsSimulatorSpecific">
-      <property name="spacing">
-       <number>0</number>
-      </property>
-      <property name="leftMargin">
-       <number>0</number>
-      </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <property name="bottomMargin">
-       <number>0</number>
-      </property>
-     </layout>
-    </widget>
+    <widget class="BlackGui::Components::CSettingsFsxComponent" name="comp_SettingsSimulatorFsx"/>
    </item>
   </layout>
  </widget>

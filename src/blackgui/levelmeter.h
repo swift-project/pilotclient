@@ -20,17 +20,15 @@
 namespace BlackGui
 {
 
-    /**
-     * Widget which displays a vertical audio level meter, indicating the
-     * RMS and peak levels of the window of audio samples most recently analyzed
-     * by the Engine.
-     */
+    //! Widget which displays a vertical audio level meter, indicating the
+    //! RMS and peak levels of the window of audio samples most recently analyzed
+    //! by the Engine.
     class CLevelMeter : public QWidget
     {
         Q_OBJECT
     public:
         //! Constructor
-        CLevelMeter(QWidget *parent = 0);
+        CLevelMeter(QWidget *parent = nullptr);
 
         //! Destructor
         ~CLevelMeter();
@@ -76,7 +74,7 @@ namespace BlackGui
         //! Time at which m_peakHoldLevel was last changed.
         QTime m_peakHoldLevelChanged;
 
-        QTimer *m_redrawTimer;
+        QTimer *m_redrawTimer = nullptr;
         QColor m_rmsColor;
         QColor m_peakColor;
     };

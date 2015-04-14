@@ -69,7 +69,7 @@ namespace BlackCore
             this->initDBusConnection(dbusAddress);
             if (!this->m_dbusConnection.isConnected())
             {
-                QString notConnected("DBus connection failed");
+                QString notConnected("DBus connection failed:");
                 QString e = this->m_dbusConnection.lastError().message();
                 if (!e.isEmpty()) notConnected.append(" ").append(e);
                 Q_ASSERT_X(false, "CRuntime::init", notConnected.toUtf8().constData());
@@ -311,13 +311,19 @@ namespace BlackCore
 
     void CRuntime::initDBusConnection(const QString &address)
     {
-        if (this->m_initDBusConnection) return;
+        if (this->m_initDBusConnection) { return; }
         if (address.isEmpty() || address == CDBusServer::sessionDBusServer())
+        {
             this->m_dbusConnection = QDBusConnection::sessionBus();
+        }
         else if (address == CDBusServer::systemDBusServer())
+        {
             this->m_dbusConnection = QDBusConnection::sessionBus();
+        }
         else
+        {
             this->m_dbusConnection = QDBusConnection::connectToPeer(address, "BlackBoxRuntime");
+        }
     }
 
     const IContextApplication *CRuntime::getIContextApplication() const

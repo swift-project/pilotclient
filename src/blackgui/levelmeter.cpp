@@ -30,6 +30,7 @@ namespace BlackGui
 
         connect(m_redrawTimer, &QTimer::timeout, this, &CLevelMeter::ps_redrawTimerExpired);
         m_redrawTimer->start(RedrawInterval);
+        m_redrawTimer->setObjectName("CLevelMeter");
     }
 
     CLevelMeter::~CLevelMeter()

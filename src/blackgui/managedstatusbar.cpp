@@ -50,6 +50,7 @@ namespace BlackGui
 
         // timer
         this->m_timerStatusBar = new QTimer(this);
+        this->m_timerStatusBar->setObjectName(this->objectName().append(":m_timerStatusBar"));
         this->m_timerStatusBar->setSingleShot(true);
         connect(this->m_timerStatusBar, &QTimer::timeout, this, &CManagedStatusBar::ps_clearStatusBar);
 
