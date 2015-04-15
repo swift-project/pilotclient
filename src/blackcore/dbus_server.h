@@ -21,7 +21,7 @@
 #include <QMap>
 
 //! Service name of DBus service
-#define BLACKCORE_RUNTIME_SERVICENAME "org.swift.pilotclient"
+#define BLACKCORE_RUNTIME_SERVICENAME "org.swift-project"
 
 namespace BlackCore
 {

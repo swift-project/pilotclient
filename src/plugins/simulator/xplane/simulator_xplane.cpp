@@ -28,7 +28,7 @@ namespace
 {
     inline QString xbusServiceName()
     {
-        return QStringLiteral("org.swift.xbus");
+        return QStringLiteral("org.swift-project.xbus");
     }
 }
 

@@ -26,10 +26,10 @@
 //! @{
 
 //! DBus interface for context
-#define BLACKCORE_CONTEXTSETTINGS_INTERFACENAME "org.swift.pilotclient.BlackCore.ContextSettings"
+#define BLACKCORE_CONTEXTSETTINGS_INTERFACENAME "org.swift-project.blackcore.contextsettings"
 
 //! DBus object path for context
-#define BLACKCORE_CONTEXTSETTINGS_OBJECTPATH "/Settings"
+#define BLACKCORE_CONTEXTSETTINGS_OBJECTPATH "/settings"
 
 //! @}
 

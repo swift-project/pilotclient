@@ -26,10 +26,10 @@
 //! @{
 
 //! DBus interface for context
-#define BLACKCORE_CONTEXTAUDIO_INTERFACENAME "org.swift.pilotclient.BlackCore.ContextAudio"
+#define BLACKCORE_CONTEXTAUDIO_INTERFACENAME "org.swift-project.blackcore.contextaudio"
 
 //! DBus object path for context
-#define BLACKCORE_CONTEXTAUDIO_OBJECTPATH "/Audio"
+#define BLACKCORE_CONTEXTAUDIO_OBJECTPATH "/audio"
 
 //! @}
 

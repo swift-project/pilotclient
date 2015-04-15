@@ -20,7 +20,7 @@ namespace BlackMisc
         void CSimulatorPluginInfo::convertFromJson(const QJsonObject &json)
         {
             if (json.contains("IID")) { // comes from the plugin
-                if (json["IID"].toString() != QStringLiteral("org.swift.pilotclient.BlackCore.SimulatorInterface"))
+                if (json["IID"].toString() != QStringLiteral("org.swift-project.blackcore.simulatorinterface"))
                 {
                     return;
                 }

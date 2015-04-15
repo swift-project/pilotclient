@@ -16,10 +16,10 @@
 //! @{
 
 //! DBus interface for context
-#define BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME "org.swift.pilotclient.BlackCore.ContextSimulator"
+#define BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME "org.swift-project.blackcore.contextsimulator"
 
 //! DBus object path for context
-#define BLACKCORE_CONTEXTSIMULATOR_OBJECTPATH "/Simulator"
+#define BLACKCORE_CONTEXTSIMULATOR_OBJECTPATH "/simulator"
 
 //! @}
 

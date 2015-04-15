@@ -27,10 +27,10 @@
 //! @{
 
 //! DBus interface for context
-#define BLACKCORE_CONTEXTNETWORK_INTERFACENAME "org.swift.pilotclient.BlackCore.ContextNetwork"
+#define BLACKCORE_CONTEXTNETWORK_INTERFACENAME "org.swift-project.blackcore.contextnetwork"
 
 //! DBus object path for context
-#define BLACKCORE_CONTEXTNETWORK_OBJECTPATH "/Network"
+#define BLACKCORE_CONTEXTNETWORK_OBJECTPATH "/network"
 
 //! @}
 

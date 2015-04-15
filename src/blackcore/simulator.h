@@ -357,6 +357,6 @@ namespace BlackCore
 
 } // namespace
 
-Q_DECLARE_INTERFACE(BlackCore::ISimulatorFactory, "org.swift.pilotclient.BlackCore.SimulatorInterface")
+Q_DECLARE_INTERFACE(BlackCore::ISimulatorFactory, "org.swift-project.blackcore.simulatorinterface")
 
 #endif // guard

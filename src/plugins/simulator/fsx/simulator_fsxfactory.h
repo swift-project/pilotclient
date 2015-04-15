@@ -27,7 +27,7 @@ namespace BlackSimPlugin
         class CSimulatorFsxFactory : public QObject, public BlackCore::ISimulatorFactory
         {
             Q_OBJECT
-            Q_PLUGIN_METADATA(IID "org.swift.pilotclient.BlackCore.SimulatorInterface" FILE "simulator_fsx.json")
+            Q_PLUGIN_METADATA(IID "org.swift-project.blackcore.simulatorinterface" FILE "simulator_fsx.json")
             Q_INTERFACES(BlackCore::ISimulatorFactory)
 
         public:
