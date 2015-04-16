@@ -33,8 +33,7 @@ namespace BlackMisc
     void CThreadedReader::requestStop()
     {
         setFinished();
-        QWriteLocker(&this->m_lock);
-        this->m_updateTimer->stop();
+        QMetaObject::invokeMethod(m_updateTimer, "stop");
     }
 
     CThreadedReader::~CThreadedReader()
@@ -50,14 +49,13 @@ namespace BlackMisc
     void CThreadedReader::setInterval(int updatePeriodMs)
     {
         Q_ASSERT(this->m_updateTimer);
-        QWriteLocker(&this->m_lock);
         if (updatePeriodMs < 1)
         {
-            this->m_updateTimer->stop();
+            QMetaObject::invokeMethod(m_updateTimer, "stop");
         }
         else
         {
-            this->m_updateTimer->start(updatePeriodMs);
+            QMetaObject::invokeMethod(m_updateTimer, "start", Q_ARG(int, updatePeriodMs));
         }
     }
 
