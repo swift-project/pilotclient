@@ -5,7 +5,7 @@
 
 #include "hotkey.h"
 
-#include "blackmisc/hwkeyboardkeylist.h"
+#include "blackmisc/hardware/keyboardkeylist.h"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
