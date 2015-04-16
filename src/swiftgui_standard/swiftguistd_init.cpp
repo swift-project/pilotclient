@@ -15,6 +15,7 @@
 #include "blackgui/guiutility.h"
 #include "blackgui/components/textmessagecomponent.h"
 #include "blackgui/components/cockpitcomponent.h"
+#include "blackgui/components/navigatordockwidget.h"
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackgui/models/keyboardkeylistmodel.h"
 #include "blackmisc/icons.h"
@@ -32,7 +33,6 @@ using namespace BlackMisc::Hardware;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 
-
 /*
  * Init data
  */
@@ -46,6 +46,7 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     // icon, initial position where intro was before
     this->setWindowIcon(CIcons::swift24());
     this->setWindowTitle(CProject::systemNameAndVersion());
+    this->setObjectName("SwiftGuiStd");
     QPoint pos = CGuiUtility::introWindowPosition();
     this->move(pos);
 
@@ -70,7 +71,11 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     }
 
     // timers
-    if (this->m_timerContextWatchdog == nullptr) { this->m_timerContextWatchdog = new QTimer(this) ; }
+    if (this->m_timerContextWatchdog == nullptr)
+    {
+        this->m_timerContextWatchdog = new QTimer(this);
+        this->m_timerContextWatchdog->setObjectName(this->objectName().append(":m_timerContextWatchdog"));
+    }
 
     // context
     this->createRuntime(runtimeConfig, this);
@@ -80,6 +85,17 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     this->m_statusBar.initStatusBar(this->ui->sb_MainStatusBar);
     this->ui->dw_InfoBarStatus->allowStatusBar(false);
     this->ui->dw_InfoBarStatus->setPreferredSizeWhenFloating(this->ui->dw_InfoBarStatus->size()); // set floating size
+
+    // navigator
+    CNavigatorDockWidget *nav = this->ui->comp_InvisibleInfoArea->getNavigatorComponent();
+    Q_ASSERT(nav);
+    nav->addAction(this->getToggleWindowVisibilityAction(nav));
+    nav->addActions(this->ui->comp_MainInfoArea->getInfoAreaToggleFloatingActions(nav));
+    nav->addAction(this->getWindowNormalAction(nav));
+    nav->addAction(this->getWindowMinimizeAction(nav));
+    nav->addAction(this->getToggleStayOnTopAction(nav));
+
+    this->ui->comp_InvisibleInfoArea->getNavigatorComponent()->buildNavigator(1);
 
     // wire GUI signals
     this->initGuiSignals();
@@ -107,6 +123,7 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     // start screen and complete menu
     this->ps_setMainPageToInfoArea();
     this->initDynamicMenus();
+    this->initMenuIcons();
 
     // starting
     this->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ApplicationGui, IContextApplication::ApplicationStarts);
@@ -237,10 +254,10 @@ void SwiftGuiStd::stopUpdateTimersWhenDisconnected()
 /*
  * Stop all timers
  */
-void SwiftGuiStd::stopAllTimers(bool disconnect)
+void SwiftGuiStd::stopAllTimers(bool disconnectSignalSlots)
 {
     this->m_timerContextWatchdog->stop();
     this->stopUpdateTimersWhenDisconnected();
-    if (!disconnect) return;
+    if (!disconnectSignalSlots) { return; }
     this->disconnect(this->m_timerContextWatchdog);
 }

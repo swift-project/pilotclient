@@ -54,6 +54,11 @@ namespace BlackGui
         //! \param parent which will own the action (deletion)
         QList<QAction *> getInfoAreaSelectActions(QWidget *parent) const;
 
+        //! Create a list of actions to select the info areas and toogle its floating state.
+        //! This could be used in a menu or somewhere else.
+        //! \param parent which will own the action (deletion)
+        QList<QAction *> getInfoAreaToggleFloatingActions(QWidget *parent) const;
+
         //! Docked area indexes
         QList<int> getAreaIndexesDockedOrFloating(bool floating) const;
 
@@ -94,6 +99,9 @@ namespace BlackGui
 
         //! Select area (sender is QAction)
         void selectAreaByAction();
+
+        //! Toggle area floating (sender is QAction)
+        void toggleAreaFloatingByAction();
 
         //! Select next left tab
         void selectLeftTab();

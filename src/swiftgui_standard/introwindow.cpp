@@ -49,7 +49,7 @@ BlackGui::CEnableForFramelessWindow::WindowMode CIntroWindow::getWindowMode() co
     if (this->ui->rb_WindowFrameless->isChecked())
         return BlackGui::CEnableForFramelessWindow::WindowFrameless;
     else
-        return BlackGui::CEnableForFramelessWindow::WindowNormal;
+        return BlackGui::CEnableForFramelessWindow::WindowTool;
 }
 
 /*

@@ -70,7 +70,7 @@ void SwiftGuiStd::ps_onMenuClicked()
     }
     else if (sender == this->ui->menu_WindowMinimize)
     {
-        this->showMinimized();
+        this->ps_showMinimized();
     }
     else if (sender == this->ui->menu_WindowToggleOnTop)
     {
@@ -105,5 +105,10 @@ void SwiftGuiStd::initDynamicMenus()
     Q_ASSERT(this->ui->menu_InfoAreas);
     Q_ASSERT(this->ui->comp_MainInfoArea);
     this->ui->menu_InfoAreas->addActions(this->ui->comp_MainInfoArea->getInfoAreaSelectActions(this->ui->menu_InfoAreas));
+}
+
+void SwiftGuiStd::initMenuIcons()
+{
+    this->ui->menu_WindowMinimize->setIcon(this->style()->standardIcon(QStyle::SP_TitleBarMinButton));
 }
 

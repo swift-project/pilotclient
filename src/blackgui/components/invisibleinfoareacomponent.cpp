@@ -57,6 +57,11 @@ namespace BlackGui
             }
         }
 
+        CNavigatorDockWidget *CInvisibleInfoAreaComponent::getNavigatorComponent()
+        {
+            return this->ui->comp_Navigator;
+        }
+
         void CInvisibleInfoAreaComponent::toggleNavigator()
         {
             this->ui->comp_Navigator->toggleFloating();

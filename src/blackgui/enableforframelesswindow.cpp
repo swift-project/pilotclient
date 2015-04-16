@@ -18,17 +18,18 @@ using namespace BlackMisc;
 namespace BlackGui
 {
 
-    CEnableForFramelessWindow::CEnableForFramelessWindow(CEnableForFramelessWindow::WindowMode mode, bool isMainApplicationWindow, QWidget *correspondingWidget) :
-        m_windowMode(mode), m_mainApplicationWindow(isMainApplicationWindow), m_widget(correspondingWidget)
+    CEnableForFramelessWindow::CEnableForFramelessWindow(CEnableForFramelessWindow::WindowMode mode, bool isMainApplicationWindow, const char *framelessPropertyName, QWidget *correspondingWidget) :
+        m_windowMode(mode), m_mainApplicationWindow(isMainApplicationWindow), m_widget(correspondingWidget), m_framelessPropertyName(framelessPropertyName)
     {
         Q_ASSERT(correspondingWidget);
+        Q_ASSERT(!m_framelessPropertyName.isEmpty());
         this->setWindowAttributes(mode);
     }
 
     void CEnableForFramelessWindow::setMode(CEnableForFramelessWindow::WindowMode mode)
     {
         if (mode == this->m_windowMode) { return; }
-        // set the main window or dock widget
+        // set the main window or dock widget flags and attributes
         this->m_widget->setWindowFlags(modeToWindowFlags(mode));
         this->setWindowAttributes(mode);
         this->m_widget->show();
@@ -37,18 +38,40 @@ namespace BlackGui
 
     void CEnableForFramelessWindow::setFrameless(bool frameless)
     {
-        setMode(frameless ? WindowFrameless : WindowNormal);
+        setMode(frameless ? WindowFrameless : WindowTool);
     }
 
     void CEnableForFramelessWindow::setWindowAttributes(CEnableForFramelessWindow::WindowMode mode)
     {
+        Q_ASSERT_X(this->m_widget, "CEnableForFramelessWindow::setWindowAttributes", "Missing widget representing window");
+        Q_ASSERT_X(!this->m_framelessPropertyName.isEmpty(), "CEnableForFramelessWindow::setWindowAttributes", "Missing property name");
+
         bool frameless = (mode == WindowFrameless);
         // http://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5
         this->m_widget->setAttribute(Qt::WA_NoSystemBackground, frameless);
         this->m_widget->setAttribute(Qt::WA_TranslucentBackground, frameless);
 
+        // Qt::WA_PaintOnScreen leads to a warning
+        // setMask(QRegion(10, 10, 10, 10) would work, but requires "complex" calcs for rounded corners
+        //! \todo Transparent dock widget,try out void QWidget::setMask
+        this->setDynamicProperties(frameless);
+    }
+
+    void CEnableForFramelessWindow::setDynamicProperties(bool frameless)
+    {
+        Q_ASSERT_X(this->m_widget, "CEnableForFramelessWindow::setDynamicProperties", "Missing widget representing window");
+        Q_ASSERT_X(!this->m_framelessPropertyName.isEmpty(), "CEnableForFramelessWindow::setDynamicProperties", "Missing property name");
+
         // property selector will check on string, so I directly provide a string
-        this->m_widget->setProperty("frameless", BlackMisc::boolToTrueFalse(frameless));
+        const QString f(BlackMisc::boolToTrueFalse(frameless));
+        this->m_widget->setProperty(this->m_framelessPropertyName.constData(), f);
+        for (QObject *w : this->m_widget->children())
+        {
+            if (w && w->isWidgetType())
+            {
+                w->setProperty(this->m_framelessPropertyName.constData(), f);
+            }
+        }
     }
 
     bool CEnableForFramelessWindow::handleMouseMoveEvent(QMouseEvent *event)
@@ -117,17 +140,35 @@ namespace BlackGui
         return menuBarLayout;
     }
 
+    void CEnableForFramelessWindow::toolToNormalWindow()
+    {
+        this->m_widget->setWindowFlags((this->m_widget->windowFlags() & (~Qt::Tool)) | Qt::Window);
+    }
+
+    void CEnableForFramelessWindow::normalToToolWindow()
+    {
+        this->m_widget->setWindowFlags(this->m_widget->windowFlags() | Qt::Tool);
+    }
+
+    bool CEnableForFramelessWindow::isToolWindow() const
+    {
+
+        return (this->m_widget->windowFlags() & Qt::Tool) == Qt::Tool;
+    }
+
     Qt::WindowFlags CEnableForFramelessWindow::modeToWindowFlags(CEnableForFramelessWindow::WindowMode mode)
     {
         switch (mode)
         {
         case WindowFrameless:
             return (Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-        case WindowNormal:
-        default:
+        case WindowTool:
             // tool window and minimized not supported on windows
             // tool window always with close button on windows
             return (Qt::Tool | Qt::WindowStaysOnTopHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+        case WindowNormal:
+        default:
+            return (Qt::Desktop | Qt::WindowStaysOnTopHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
         }
     }
 

@@ -47,6 +47,9 @@ namespace BlackGui
         //! Replace count in name such as "stations (4)"
         static QString replaceTabCountValue(const QString &oldName, int count);
 
+        //! Delete hierarchy of layouts
+        static void deleteLayout(QLayout *layout, bool deleteWidgets);
+
     private:
         //! Constructor, use static methods only
         CGuiUtility() {}

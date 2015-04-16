@@ -1,6 +1,6 @@
 /** style is applied to a CDockWidgetInfoBar **/
 /** frameless is dynamic property**/
-/** for frameless only use QDockWidget[frameless="true"] QFrame **/
+/** for frameless only use QDockWidget[framelessDockWidget="true"] QFrame **/
 
 QFrame {
   margin: 0px;

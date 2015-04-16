@@ -9,6 +9,7 @@
 
 #include "dockwidget.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/logmessage.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/guiutility.h"
 #include <QCloseEvent>
@@ -16,14 +17,15 @@
 #include <QPainter>
 #include <QLayout>
 
+using namespace BlackMisc;
+
 namespace BlackGui
 {
     CDockWidget::CDockWidget(bool allowStatusBar, QWidget *parent) :
         QDockWidget(parent),
-        CEnableForFramelessWindow(CEnableForFramelessWindow::WindowNormal, false, this),
+        CEnableForFramelessWindow(CEnableForFramelessWindow::WindowTool, false, "framelessDockWidget", this),
         m_allowStatusBar(allowStatusBar)
     {
-
         this->ps_onStyleSheetsChanged();
         this->initTitleBarWidgets();
 
@@ -35,7 +37,6 @@ namespace BlackGui
         connect(this, &QDockWidget::topLevelChanged, this, &CDockWidget::ps_onTopLevelChanged);
         connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CDockWidget::ps_onStyleSheetsChanged);
         connect(this, &QDockWidget::visibilityChanged, this, &CDockWidget::ps_onVisibilityChanged);
-
     }
 
     CDockWidget::CDockWidget(QWidget *parent): CDockWidget(true, parent)
@@ -179,10 +180,7 @@ namespace BlackGui
     void CDockWidget::toggleFloating()
     {
         bool floating = !this->isFloating();
-        if (!floating)
-        {
-            this->setFrameless(false);
-        }
+        if (!floating) { this->setFrameless(false); }
         this->setFloating(floating);
     }
 
@@ -263,8 +261,7 @@ namespace BlackGui
 
     void CDockWidget::initialFloating()
     {
-
-        // init status bar, as we have now all structure set
+        // init status bar, as we have now all structures set
         this->initStatusBar();
 
         // for the first time resize
@@ -289,36 +286,45 @@ namespace BlackGui
         QString sectionUsed(section.isEmpty() ? this->objectName() : section);
         if (sectionUsed.isEmpty()) { return false; }
         const QSettings *settings = CStyleSheetUtility::instance().iniFile();
+        Q_ASSERT_X(settings, "CDockWidget::setMarginsFromSettings", "Missing ini settings");
         if (!settings) { return false; }
 
-        // checked if value exists as there is no way to check if key/section exist
+        // check if value exists as there is no way to check if key/section exist
         if (settings->value(sectionUsed + "/margindocked.left").toString().isEmpty())
         {
             // no values considered as no section, now we check if an alias exists
             sectionUsed = settings->value("alias/" + sectionUsed).toString();
             if (sectionUsed.isEmpty()) { return false; }
-            if (settings->value(sectionUsed + "/margindocked.left").toString().isEmpty()) { return false; }
+            if (settings->value(sectionUsed + "/margindocked.left").toString().isEmpty())
+            {
+                Q_ASSERT_X(false, "CDockWidget::setMarginsFromSettings", "Wrong ini settings");
+                return false;
+            }
         }
 
-        if (settings)
-        {
-            this->setMarginsWhenDocked(
-                settings->value(sectionUsed + "/margindocked.left", 1).toInt(),
-                settings->value(sectionUsed + "/margindocked.top", 1).toInt(),
-                settings->value(sectionUsed + "/margindocked.right", 1).toInt(),
-                settings->value(sectionUsed + "/margindocked.bottom", 1).toInt());
-            this->setMarginsWhenFloating(
-                settings->value(sectionUsed + "/marginfloating.left", 10).toInt(),
-                settings->value(sectionUsed + "/marginfloating.top", 10).toInt(),
-                settings->value(sectionUsed + "/marginfloating.right", 10).toInt(),
-                settings->value(sectionUsed + "/marginfloating.bottom", 10).toInt());
-            this->setMarginsWhenFramelessFloating(
-                settings->value(sectionUsed + "/marginfloating.frameless.left", 5).toInt(),
-                settings->value(sectionUsed + "/marginfloating.frameless.top", 5).toInt(),
-                settings->value(sectionUsed + "/marginfloating.frameless.right", 5).toInt(),
-                settings->value(sectionUsed + "/marginfloating.frameless.bottom", 5).toInt());
-        }
-        return true;
+        bool ok = true, ok1, ok2, ok3, ok4;
+        this->setMarginsWhenDocked(
+            settings->value(sectionUsed + "/margindocked.left", 1).toInt(&ok1),
+            settings->value(sectionUsed + "/margindocked.top", 1).toInt(&ok2),
+            settings->value(sectionUsed + "/margindocked.right", 1).toInt(&ok3),
+            settings->value(sectionUsed + "/margindocked.bottom", 1).toInt(&ok4));
+        if (!(ok1 && ok2 && ok3 && ok4)) { CLogMessage(this).error("Error in docked margins"); ok = false; }
+
+        this->setMarginsWhenFloating(
+            settings->value(sectionUsed + "/marginfloating.left", 10).toInt(&ok1),
+            settings->value(sectionUsed + "/marginfloating.top", 10).toInt(&ok2),
+            settings->value(sectionUsed + "/marginfloating.right", 10).toInt(&ok3),
+            settings->value(sectionUsed + "/marginfloating.bottom", 10).toInt(&ok4));
+        if (!(ok1 && ok2 && ok3 && ok4)) { CLogMessage(this).error("Error in floating margins"); ok = false; }
+
+        this->setMarginsWhenFramelessFloating(
+            settings->value(sectionUsed + "/marginfloating.frameless.left", 5).toInt(&ok1),
+            settings->value(sectionUsed + "/marginfloating.frameless.top", 5).toInt(&ok2),
+            settings->value(sectionUsed + "/marginfloating.frameless.right", 5).toInt(&ok3),
+            settings->value(sectionUsed + "/marginfloating.frameless.bottom", 5).toInt(&ok4));
+        if (!(ok1 && ok2 && ok3 && ok4)) { CLogMessage(this).error("Error in floating (frameless) margins"); ok = false; }
+
+        return ok;
     }
 
     void CDockWidget::ps_onTopLevelChanged(bool topLevel)
@@ -388,7 +394,7 @@ namespace BlackGui
         Q_ASSERT(compWidget);
         if (!compWidget) { return; }
         QSizePolicy sizePolicy = compWidget->sizePolicy();
-        sizePolicy.setVerticalStretch(1);
+        sizePolicy.setVerticalStretch(1); // make the original widget occupying maximum space
         compWidget->setSizePolicy(sizePolicy);
     }
 

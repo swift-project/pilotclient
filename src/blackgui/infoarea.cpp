@@ -27,7 +27,7 @@ using namespace BlackMisc;
 namespace BlackGui
 {
     CInfoArea::CInfoArea(QWidget *parent) :
-        QMainWindow(parent), CEnableForFramelessWindow(CEnableForFramelessWindow::WindowNormal, false, this)
+        QMainWindow(parent), CEnableForFramelessWindow(CEnableForFramelessWindow::WindowTool, false, "framelessInfoArea", this)
     {
         this->ps_setWholeInfoAreaFloating(this->m_infoAreaFloating);
         this->setWindowIcon(CIcons::swift24());
@@ -69,7 +69,7 @@ namespace BlackGui
 
     void CInfoArea::addToContextMenu(QMenu *menu) const
     {
-        if (!menu) return;
+        if (!menu) { return; }
         bool hasDockedWidgets = this->countDockedWidgetInfoAreas() > 0;
         if (hasDockedWidgets)
         {
@@ -147,8 +147,8 @@ namespace BlackGui
 
     bool CInfoArea::isSelectedDockWidgetInfoArea(const CDockWidgetInfoArea *infoArea) const
     {
-        if (!infoArea) return false;
-        if (infoArea->isFloating()) return false;
+        if (!infoArea) { return false; }
+        if (infoArea->isFloating()) { return false; }
 
         return infoArea == this->getSelectedDockInfoArea();
     }
@@ -188,14 +188,36 @@ namespace BlackGui
 
     QList<QAction *> CInfoArea::getInfoAreaSelectActions(QWidget *parent) const
     {
+        Q_ASSERT(parent);
         int i = 0;
         QList<QAction *> actions;
-        foreach(const CDockWidgetInfoArea * dockWidgetInfoArea, m_dockWidgetInfoAreas)
+        for (const CDockWidgetInfoArea *dockWidgetInfoArea : m_dockWidgetInfoAreas)
         {
             const QPixmap pm = this->indexToPixmap(i);
-            QAction *action = new QAction(QIcon(pm), dockWidgetInfoArea->windowTitleBackup(), parent);
+            const QString wt(dockWidgetInfoArea->windowTitleBackup());
+            QAction *action = new QAction(QIcon(pm), wt, parent);
             action->setData(i);
+            action->setObjectName(this->objectName().append(":getInfoAreaSelectActions:").append(wt));
             connect(action, &QAction::triggered, this, &CInfoArea::selectAreaByAction);
+            actions.append(action);
+            i++;
+        }
+        return actions;
+    }
+
+    QList<QAction *> CInfoArea::getInfoAreaToggleFloatingActions(QWidget *parent) const
+    {
+        Q_ASSERT(parent);
+        int i = 0;
+        QList<QAction *> actions;
+        for (const CDockWidgetInfoArea *dockWidgetInfoArea : m_dockWidgetInfoAreas)
+        {
+            const QPixmap pm = this->indexToPixmap(i);
+            const QString wt(dockWidgetInfoArea->windowTitleBackup());
+            QAction *action = new QAction(QIcon(pm), wt, parent);
+            action->setData(i);
+            action->setObjectName(this->objectName().append(":getInfoAreaToggleFloatingActions:").append(wt));
+            connect(action, &QAction::triggered, this, &CInfoArea::toggleAreaFloatingByAction);
             actions.append(action);
             i++;
         }
@@ -306,7 +328,18 @@ namespace BlackGui
         Q_ASSERT(sender);
         const QAction *action = qobject_cast<const QAction *>(sender);
         Q_ASSERT(action);
-        this->selectArea(action->data().toInt());
+        int index = action->data().toInt();
+        this->selectArea(index);
+    }
+
+    void CInfoArea::toggleAreaFloatingByAction()
+    {
+        const QObject *sender = QObject::sender();
+        Q_ASSERT(sender);
+        const QAction *action = qobject_cast<const QAction *>(sender);
+        Q_ASSERT(action);
+        int index = action->data().toInt();
+        this->toggleFloatingByIndex(index);
     }
 
     void CInfoArea::selectLeftTab()
@@ -392,7 +425,6 @@ namespace BlackGui
 
     void CInfoArea::tabifyAllWidgets()
     {
-        // this->setDockArea(Qt::LeftDockWidgetArea);
         this->setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::East);
         bool init = this->m_tabBar ? false : true;
 

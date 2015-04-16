@@ -244,6 +244,12 @@ namespace BlackGui
         return f;
     }
 
+    const QString &CStyleSheetUtility::fileNameNavigator()
+    {
+        static const QString f("navigator.qss");
+        return f;
+    }
+
     const QString &CStyleSheetUtility::fileNameDockWidgetTab()
     {
         static const QString f("dockwidgettab.qss");

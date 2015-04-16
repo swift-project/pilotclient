@@ -33,11 +33,12 @@ namespace BlackGui
         enum WindowMode
         {
             WindowFrameless,
-            WindowNormal
+            WindowNormal,
+            WindowTool
         };
 
         //! Constructor
-        CEnableForFramelessWindow(WindowMode mode, bool isMainApplicationWindow, QWidget *correspondingWidget);
+        CEnableForFramelessWindow(WindowMode mode, bool isMainApplicationWindow, const char *framelessPropertyname, QWidget *correspondingWidget);
 
         //! Window mode
         void setMode(WindowMode mode);
@@ -64,18 +65,31 @@ namespace BlackGui
         //! Attributes
         void setWindowAttributes(WindowMode mode);
 
+        //! Set dynamic properties such as frameless
+        void setDynamicProperties(bool frameless);
+
         //! Close button for frameless windows
         QHBoxLayout *addFramelessCloseButton(QMenuBar *menuBar);
+
+        //! Remove tool and add desktop window
+        void toolToNormalWindow();
+
+        //! Remove desktop and add tool window
+        void normalToToolWindow();
+
+        //! Tool window
+        bool isToolWindow() const;
 
         //! Translate mode
         static Qt::WindowFlags modeToWindowFlags(WindowMode mode);
 
         QPoint       m_framelessDragPosition;          //!< position, if moving is handled with frameless window */
         QPushButton *m_framelessCloseButton = nullptr; //!< close button
-        WindowMode   m_windowMode = WindowNormal;      //!< Window mode, \sa WindowMode
+        WindowMode   m_windowMode = WindowTool;      //!< Window mode, \sa WindowMode
         bool         m_mainApplicationWindow = false;  //!< is the main application window (only 1)
         QWidget     *m_widget = nullptr;               //!< corresponding main window or dock widget
         QSizeGrip   *m_framelessSizeGrip = nullptr;    //!< size grip object
+        QByteArray   m_framelessPropertyName;          //!< property name for frameless widgets
 
         //! Mouse press, required for frameless window
         bool handleMousePressEvent(QMouseEvent *event);

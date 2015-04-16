@@ -1,0 +1,9 @@
+#fr_NavigatorDockWidgetInner[framelessDockWidget="true"] {
+  margin: 0px;
+  border: 2px solid green;
+  border-radius: 20px;
+}
+
+#fr_NavigatorDockWidgetInner QToolButton {
+  margin: 0px;
+}

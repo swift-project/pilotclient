@@ -9,6 +9,7 @@
 
 #include "icons.h"
 #include <QImage>
+#include <QIcon>
 #include <QPainter>
 
 namespace BlackMisc
@@ -290,6 +291,18 @@ namespace BlackMisc
         return pm;
     }
 
+    const QPixmap &CIcons::empty()
+    {
+        static const QPixmap pm;
+        return pm;
+    }
+
+    const QPixmap &CIcons::empty16()
+    {
+        static const QPixmap pm(16, 16);
+        return pm;
+    }
+
     const QPixmap &CIcons::arrowMediumNorth16()
     {
         static const QPixmap pm(":/diagona/icons/diagona/icons/arrow-090-medium.png");
@@ -336,6 +349,71 @@ namespace BlackMisc
     {
         static const QPixmap pm(":/own/icons/own/swift/swiftCartoonNova48.png");
         return pm;
+    }
+
+    const QPixmap &CIcons::appWeather16()
+    {
+        return weatherCloudy16();
+    }
+
+    const QPixmap &CIcons::appSettings16()
+    {
+        return wrench16();
+    }
+
+    const QPixmap &CIcons::appUsers16()
+    {
+        return users16();
+    }
+
+    const QPixmap &CIcons::appFlightPlan16()
+    {
+        return tableSheet16();
+    }
+
+    const QPixmap &CIcons::appCockpit16()
+    {
+        return radio16();
+    }
+
+    const QPixmap &CIcons::appSimulator16()
+    {
+        return joystick16();
+    }
+
+    const QPixmap &CIcons::appTextMessages16()
+    {
+        return text16();
+    }
+
+    const QPixmap &CIcons::appAtc16()
+    {
+        return radar16();
+    }
+
+    const QPixmap &CIcons::appAircrafts16()
+    {
+        return paperPlane16();
+    }
+
+    const QPixmap &CIcons::appMappings16()
+    {
+        return tableRelationship16();
+    }
+
+    const QPixmap &CIcons::appLog16()
+    {
+        return monitorError16();
+    }
+
+    const QPixmap &CIcons::appAudio16()
+    {
+        return speakerNetwork16();
+    }
+
+    const QPixmap &CIcons::appVoiceRooms16()
+    {
+        return tableRelationship16();
     }
 
     const QPixmap &CIcons::roleC1()
@@ -483,7 +561,7 @@ namespace BlackMisc
 
     const QPixmap &CIcons::capabilityVoiceBackground()
     {
-        static const QPixmap pm(changeBackground(":/diagona/icons/diagona/icons/headphone.png", Qt::green));
+        static const QPixmap pm(changeResourceBackgroundColor(":/diagona/icons/diagona/icons/headphone.png", Qt::green));
         return pm;
     }
 
@@ -495,14 +573,39 @@ namespace BlackMisc
 
     const QPixmap &CIcons::capabilityVoiceReceiveOnlyBackground()
     {
-        static const QPixmap pm(changeBackground(":/diagona/icons/diagona/icons/headphone.png", Qt::yellow));
+        static const QPixmap pm(changeResourceBackgroundColor(":/diagona/icons/diagona/icons/headphone.png", Qt::yellow));
         return pm;
+    }
+
+    const QPixmap &CIcons::capabilityTextOnly()
+    {
+        return appTextMessages16();
+    }
+
+    const QPixmap &CIcons::capabilityUnknown()
+    {
+        return unknown16();
     }
 
     const QPixmap &CIcons::attitudeIndicator16()
     {
         static const QPixmap pm(":/own/icons/own/attitude_indicator_climbing_16.png");
         return pm;
+    }
+
+    const QPixmap &CIcons::metar()
+    {
+        return weatherCloudy16();
+    }
+
+    const QPixmap &CIcons::atis()
+    {
+        return text16();
+    }
+
+    const QPixmap &CIcons::geoPosition16()
+    {
+        return globe16();
     }
 
     const QPixmap &CIcons::pixmapByIndex(CIcons::IconIndex index)
@@ -632,15 +735,28 @@ namespace BlackMisc
         return rotated;
     }
 
-    QPixmap CIcons::changeBackground(const QString resource, Qt::GlobalColor backgroundColor)
+    QImage CIcons::changeImageBackgroundColor(const QImage &imgSource, Qt::GlobalColor backgroundColor)
     {
-        QImage resSource(resource);
-        QImage destBackground(resSource.size(), QImage::Format_RGB32);
-        destBackground.fill(backgroundColor);
-        QPainter p(&destBackground);
+        QImage destBackgroundImg(imgSource.size(), QImage::Format_RGB32);
+        destBackgroundImg.fill(backgroundColor);
+        QPainter p(&destBackgroundImg);
         p.setCompositionMode(QPainter::CompositionMode_SourceAtop);
-        p.drawImage(0, 0, resSource);
-        return QPixmap::fromImage(destBackground);
+        p.drawImage(0, 0, imgSource);
+        return destBackgroundImg;
+    }
+
+    QPixmap CIcons::changeResourceBackgroundColor(const QString &resource, Qt::GlobalColor backgroundColor)
+    {
+        QImage imgSource(resource);
+        QImage destBackgroundImg(changeImageBackgroundColor(imgSource, backgroundColor));
+        return QPixmap::fromImage(destBackgroundImg);
+    }
+
+    QIcon CIcons::changeIconBackgroundColor(const QIcon &icon, Qt::GlobalColor backgroundColor, const QSize &targetsize)
+    {
+        QImage imgSource(icon.pixmap(targetsize).toImage());
+        QImage destBackgroundImg(changeImageBackgroundColor(imgSource, backgroundColor));
+        return QIcon(QPixmap::fromImage(destBackgroundImg));
     }
 
 } // namespace

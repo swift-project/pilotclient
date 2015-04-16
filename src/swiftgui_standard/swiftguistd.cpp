@@ -41,34 +41,39 @@ using namespace BlackMisc::Hardware;
  */
 SwiftGuiStd::SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowMode, QWidget *parent) :
     QMainWindow(parent, CEnableForFramelessWindow::modeToWindowFlags(windowMode)),
-    CEnableForFramelessWindow(windowMode, true, this),
+    CEnableForFramelessWindow(windowMode, true, "framelessMainWindow", this),
     ui(new Ui::SwiftGuiStd)
 {
     // GUI
     ui->setupUi(this);
-    this->ui->wi_CentralWidgetOutside->setProperty("frameless", this->isFrameless());
+    this->setDynamicProperties(windowMode == CEnableForFramelessWindow::WindowFrameless);
     this->m_compInfoWindow = new CInfoWindowComponent(this); // setupUi has to be first!
 }
 
-/*
- * Destructor
- */
 SwiftGuiStd::~SwiftGuiStd()
 { }
 
+void SwiftGuiStd::mouseMoveEvent(QMouseEvent *event)
+{
+    if (!handleMouseMoveEvent(event))
+    {
+        QMainWindow::mouseMoveEvent(event);
+    }
+}
+
+void SwiftGuiStd::mousePressEvent(QMouseEvent *event)
+{
+    if (!handleMousePressEvent(event))
+    {
+        QMainWindow::mousePressEvent(event);
+    }
+}
+
 void SwiftGuiStd::performGracefulShutdown()
 {
-    if (!this->m_init) { return; }
-    this->m_init = false;
-
-    // tell GUI components to shut down
-    emit requestGracefulShutdown();
-
-    // tell context GUI is going down
-    if (this->getIContextApplication())
-    {
-        this->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ApplicationGui, IContextApplication::ApplicationStops);
-    }
+    // clean up GUI
+    this->ui->comp_MainInfoArea->dockAllWidgets();
+    this->ui->comp_InvisibleInfoArea->dockAllWidgets();
 
     // close info window
     if (this->m_compInfoWindow)
@@ -77,8 +82,20 @@ void SwiftGuiStd::performGracefulShutdown()
         this->m_compInfoWindow = nullptr;
     }
 
+    if (!this->m_init) { return; }
+    this->m_init = false;
+
+    // tell GUI components to shut down
+    emit requestGracefulShutdown();
+
     // shut down all timers
     this->stopAllTimers(true);
+
+    // tell context GUI is going down
+    if (this->getIContextApplication())
+    {
+        this->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ApplicationGui, IContextApplication::ApplicationStops);
+    }
 
     // if we have a context, we shut some things down
     if (this->m_contextNetworkAvailable)
@@ -101,6 +118,73 @@ void SwiftGuiStd::closeEvent(QCloseEvent *event)
     Q_UNUSED(event);
     this->performGracefulShutdown();
     QApplication::exit();
+}
+
+void SwiftGuiStd::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::WindowStateChange)
+    {
+        // make sure a tool window is changed to Normal window so it is show in taskbar
+        if (!this->isFrameless())
+        {
+            bool toolWindow(this->isToolWindow());
+            if (isMinimized())
+            {
+                if (toolWindow)
+                {
+                    // still tool, force normal window
+                    BlackMisc::singleShot(0, QThread::currentThread(), [ = ]()
+                    {
+                        this->ps_showMinimized();
+                    });
+                }
+            }
+            else
+            {
+                if (!toolWindow)
+                {
+                    // not tool, force tool window
+                    BlackMisc::singleShot(0, QThread::currentThread(), [ = ]()
+                    {
+                        this->ps_showNormal();
+                    });
+                }
+            }
+        } // frameless?
+    }
+    QMainWindow::changeEvent(event);
+}
+
+QAction *SwiftGuiStd::getWindowMinimizeAction(QObject *parent)
+{
+    QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarMinButton), Qt::white, QSize(16, 16)));
+    QAction *a = new QAction(i, "Window minimized", parent);
+    connect(a, &QAction::triggered, this, &SwiftGuiStd::ps_showMinimized);
+    return a;
+}
+
+QAction *SwiftGuiStd::getWindowNormalAction(QObject *parent)
+{
+    QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarNormalButton), Qt::white, QSize(16, 16)));
+    QAction *a = new QAction(i, "Window normal", parent);
+    connect(a, &QAction::triggered, this, &SwiftGuiStd::ps_showNormal);
+    return a;
+}
+
+QAction *SwiftGuiStd::getToggleWindowVisibilityAction(QObject *parent)
+{
+    QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarShadeButton), Qt::white, QSize(16, 16)));
+    QAction *a = new QAction(i, "Toogle main window visibility", parent);
+    connect(a, &QAction::triggered, this, &SwiftGuiStd::ps_toggleWindowVisibility);
+    return a;
+}
+
+QAction *SwiftGuiStd::getToggleStayOnTopAction(QObject *parent)
+{
+    QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarUnshadeButton), Qt::white, QSize(16, 16)));
+    QAction *a = new QAction(i, "Toogle main window on top", parent);
+    connect(a, &QAction::triggered, this, &SwiftGuiStd::ps_toogleWindowStayOnTop);
+    return a;
 }
 
 void SwiftGuiStd::ps_setMainPage(SwiftGuiStd::MainPageIndex mainPage)
@@ -228,7 +312,7 @@ void SwiftGuiStd::updateGuiStatusInformation()
     if (this->m_contextNetworkAvailable)
     {
         bool dbus = !this->getIContextNetwork()->isUsingImplementingObject();
-        network =  dbus ? now : "local";
+        network = dbus ? now : "local";
         this->ui->comp_InfoBarStatus->setDBusStatus(dbus);
     }
 
@@ -253,16 +337,28 @@ void SwiftGuiStd::ps_toogleWindowStayOnTop()
     {
         flags ^= Qt::WindowStaysOnTopHint;
         flags |= Qt::WindowStaysOnBottomHint;
-        this->ps_displayStatusMessageInGui(CLogMessage(this).info("Window on bottom"));
+        CLogMessage(this).info("Window on bottom");
     }
     else
     {
         flags ^= Qt::WindowStaysOnBottomHint;
         flags |= Qt::WindowStaysOnTopHint;
-        this->ps_displayStatusMessageInGui(CLogMessage(this).info("Window on top"));
+        CLogMessage(this).info("Window on top");
     }
     this->setWindowFlags(flags);
     this->show();
+}
+
+void SwiftGuiStd::ps_toggleWindowVisibility()
+{
+    if (this->isVisible())
+    {
+        this->hide();
+    }
+    else
+    {
+        this->show();
+    }
 }
 
 void SwiftGuiStd::ps_registerHotkeyFunctions()
@@ -306,6 +402,18 @@ void SwiftGuiStd::ps_onCurrentMainWidgetChanged(int currentIndex)
 void SwiftGuiStd::ps_onChangedMainInfoAreaFloating(bool floating)
 {
     Q_UNUSED(floating);
+}
+
+void SwiftGuiStd::ps_showMinimized()
+{
+    if (!this->isFrameless()) { toolToNormalWindow(); }
+    this->showMinimized();
+}
+
+void SwiftGuiStd::ps_showNormal()
+{
+    if (!this->isFrameless()) { normalToToolWindow(); }
+    this->showNormal();
 }
 
 void SwiftGuiStd::playNotifcationSound(CNotificationSounds::Notification notification) const

@@ -71,6 +71,9 @@ namespace BlackGui
         //! File name infobar.qss
         static const QString &fileNameInfoBar();
 
+        //! File name navigator.qss
+        static const QString &fileNameNavigator();
+
         //! File name dockwidgettab.qss
         static const QString &fileNameDockWidgetTab();
 

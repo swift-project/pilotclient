@@ -84,13 +84,28 @@ signals:
 
 protected:
     //! \copydoc QMainWindow::mouseMoveEvent
-    virtual void mouseMoveEvent(QMouseEvent *event) override { if (!handleMouseMoveEvent(event)) { QMainWindow::mouseMoveEvent(event); } ; }
+    virtual void mouseMoveEvent(QMouseEvent *event) override;
 
     //! \copydoc QMainWindow::mousePressEvent
-    virtual void mousePressEvent(QMouseEvent *event) override { if (!handleMousePressEvent(event)) { QMainWindow::mousePressEvent(event); } }
+    virtual void mousePressEvent(QMouseEvent *event) override;
 
     //! \copydoc QMainWindow::closeEvent
     virtual void closeEvent(QCloseEvent *event) override;
+
+    //! \copydoc QMainWindow::changeEvent
+    virtual void changeEvent(QEvent *event) override;
+
+    //! Get a minimize action which minimizes the window
+    QAction *getWindowMinimizeAction(QObject *parent);
+
+    //! Get a normal window action which minimizes the window
+    QAction *getWindowNormalAction(QObject *parent);
+
+    //! Toggle window visibility action
+    QAction *getToggleWindowVisibilityAction(QObject *parent);
+
+    //! Toggle window stay on top action
+    QAction *getToggleStayOnTopAction(QObject *parent);
 
 private:
     QScopedPointer<Ui::SwiftGuiStd> ui;
@@ -125,6 +140,9 @@ private:
     //! Init dynamic menus
     void initDynamicMenus();
 
+    //! Menu icons where required
+    void initMenuIcons();
+
     //! Graceful shutdown
     void performGracefulShutdown();
 
@@ -140,7 +158,7 @@ private:
     //! Context availability, used by watchdog
     void setContextAvailability();
 
-    //! \brief Position of own plane for testing
+    //! Position of own plane for testing
     //! \param wgsLatitude   WGS latitude
     //! \param wgsLongitude  WGS longitude
     //! \param altitude
@@ -148,7 +166,6 @@ private:
 
     //! Is given main page selected?
     //! \param mainPage index to be checked
-    //! \return
     bool isMainPageSelected(MainPageIndex mainPage) const;
 
     //! Start all update timers
@@ -157,11 +174,9 @@ private:
     //! Stop all update timers
     void stopUpdateTimersWhenDisconnected();
 
-    /*!
-     * \brief Stop all timers
-     * \param disconnect also disconnect signal/slots
-     */
-    void stopAllTimers(bool disconnect);
+    //! \brief Stop all timers
+    //! \param disconnect also disconnect signal/slots
+    void stopAllTimers(bool disconnectSignalSlots);
 
     //! Play notifcation sound
     void playNotifcationSound(BlackSound::CNotificationSounds::Notification notification) const;
@@ -189,11 +204,9 @@ private slots:
     //! Settings have been changed
     void ps_onChangedSetttings(uint typeValue);
 
-    /*!
-     * \brief Connection status changed
-     * \param from  old status, as int so it is compliant with DBus
-     * \param to    new status, as int so it is compliant with DBus
-     */
+    //! Connection status changed
+    //! \param from  old status, as int so it is compliant with DBus
+    //! \param to    new status, as int so it is compliant with DBus
     void ps_onConnectionStatusChanged(int from, int to);
 
     //
@@ -224,8 +237,11 @@ private slots:
     //! Change opacity 0-100
     void ps_onChangedWindowOpacity(int opacity = -1);
 
-    //! Toogle Windows stay on top
+    //! Toogle if windows stays on top
     void ps_toogleWindowStayOnTop();
+
+    //! Toggle window visibility
+    void ps_toggleWindowVisibility();
 
     //! Set the hotkey functions
     void ps_registerHotkeyFunctions();
@@ -238,6 +254,12 @@ private slots:
 
     //! Whole main info area floating
     void ps_onChangedMainInfoAreaFloating(bool floating);
+
+    //! Show window minimized
+    void ps_showMinimized();
+
+    //! Show window normal
+    void ps_showNormal();
 };
 
 #pragma pop_macro("interface")

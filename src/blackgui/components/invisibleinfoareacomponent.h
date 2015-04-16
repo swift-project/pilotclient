@@ -11,6 +11,7 @@
 #define BLACKGUI_COMPONENTS_INVISIBLEINFOAREACOMPONENT_H
 
 #include "blackgui/infoarea.h"
+#include "blackgui/components/navigatordockwidget.h"
 #include <QMainWindow>
 
 namespace Ui { class CInvisibleInfoAreaComponent; }
@@ -46,6 +47,9 @@ namespace BlackGui
 
             //! \copydoc CInfoArea::indexToPixmap
             const QPixmap &indexToPixmap(int areaIndex) const override;
+
+            //! Get navigator component
+            BlackGui::Components::CNavigatorDockWidget *getNavigatorComponent();
 
         public slots:
             //! Navigator floating

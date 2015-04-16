@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>89</width>
-    <height>300</height>
+    <width>90</width>
+    <height>383</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
   </property>
   <property name="floating">
    <bool>true</bool>
@@ -22,19 +28,33 @@
   <property name="windowTitle">
    <string>Navigator</string>
   </property>
-  <widget class="QWidget" name="qw_NavigatorDockWidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QToolButton" name="toolButton">
-      <property name="text">
-       <string>...</string>
+  <widget class="QWidget" name="qw_NavigatorDockWidgetOuter">
+   <layout class="QVBoxLayout" name="vl_NavigatorDockWidgetOuter">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QFrame" name="fr_NavigatorDockWidgetInner">
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
       </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QToolButton" name="toolButton_2">
-      <property name="text">
-       <string>...</string>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="lineWidth">
+       <number>0</number>
       </property>
      </widget>
     </item>

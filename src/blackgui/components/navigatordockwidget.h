@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_NAVIGATORDOCKWIDGET_H
-#define BLACKGUI_NAVIGATORDOCKWIDGET_H
+#ifndef BLACKGUI_COMPONENTS_NAVIGATORDOCKWIDGET_H
+#define BLACKGUI_COMPONENTS_NAVIGATORDOCKWIDGET_H
 
 #include "blackgui/dockwidgetinfoarea.h"
 #include <QDockWidget>
@@ -35,8 +35,42 @@ namespace BlackGui
             //! Destructor
             ~CNavigatorDockWidget();
 
+            //! Add action as navigator item
+            void addAction(QAction * action);
+
+            //! Add actions as navigator items
+            void addActions(QList<QAction *> actions);
+
+            //! Navigator
+            void buildNavigator(int columns);
+
+        protected:
+            //! \copydoc CDockWidgetInfoArea::addToContextMenu
+            virtual void addToContextMenu(QMenu *contextMenu) const override;
+
+        protected:
+            //! \copydoc CDockWidget::ps_onStyleSheetsChanged
+            virtual void ps_onStyleSheetsChanged() override;
+
+        private slots:
+            //! Change the layout
+            void ps_changeLayout();
+
         private:
             QScopedPointer<Ui::CNavigatorDockWidget> ui;
+            QList<QWidget *> m_widgets;
+            QList<QAction *> m_actions;
+            bool m_firstBuild = true;
+
+            //! Insert own actions
+            void insertOwnActions();
+
+            //! How many columns for given rows
+            int columnsForRows(int rows);
+
+            //! Set widgets to their minimum size
+            void setMinimumSizeForWidgets(int rows, int columns);
+
         };
 
     } // ns

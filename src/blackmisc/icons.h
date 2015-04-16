@@ -281,18 +281,10 @@ namespace BlackMisc
         static const QPixmap &unknown16();
 
         //! Empty icon
-        static const QPixmap &empty()
-        {
-            static const QPixmap pm;
-            return pm;
-        }
+        static const QPixmap &empty();
 
         //! Empty icon
-        static const QPixmap &empty16()
-        {
-            static const QPixmap pm(16, 16);
-            return pm;
-        }
+        static const QPixmap &empty16();
 
         //! Arrow
         static const QPixmap &arrowMediumNorth16();
@@ -319,82 +311,43 @@ namespace BlackMisc
         static const QPixmap &swiftNova48();
 
         //! Application weather
-        static const QPixmap &appWeather16()
-        {
-            return weatherCloudy16();
-        }
+        static const QPixmap &appWeather16();
 
         //! Application settings
-        static const QPixmap &appSettings16()
-        {
-            return wrench16();
-        }
+        static const QPixmap &appSettings16();
 
         //! Application users
-        static const QPixmap &appUsers16()
-        {
-            return users16();
-        }
+        static const QPixmap &appUsers16();
 
         //! Application flight plan
-        static const QPixmap &appFlightPlan16()
-        {
-            return tableSheet16();
-        }
+        static const QPixmap &appFlightPlan16();
 
         //! Application cockpit
-        static const QPixmap &appCockpit16()
-        {
-            return radio16();
-        }
+        static const QPixmap &appCockpit16();
 
         //! Application simulator
-        static const QPixmap &appSimulator16()
-        {
-            return joystick16();
-        }
+        static const QPixmap &appSimulator16();
 
         //! Application text messages
-        static const QPixmap &appTextMessages16()
-        {
-            return text16();
-        }
+        static const QPixmap &appTextMessages16();
 
         //! Application ATC
-        static const QPixmap &appAtc16()
-        {
-            return radar16();
-        }
+        static const QPixmap &appAtc16();
 
         //! Application aircrafts
-        static const QPixmap &appAircrafts16()
-        {
-            return paperPlane16();
-        }
+        static const QPixmap &appAircrafts16();
 
         //! Application mappings
-        static const QPixmap &appMappings16()
-        {
-            return tableRelationship16();
-        }
+        static const QPixmap &appMappings16();
 
         //! Application log/status messages
-        static const QPixmap &appLog16()
-        {
-            return monitorError16();
-        }
+        static const QPixmap &appLog16();
 
         //! Application audio
-        static const QPixmap &appAudio16()
-        {
-            return speakerNetwork16();
-        }
+        static const QPixmap &appAudio16();
 
         //! Voice rooms
-        static const QPixmap &appVoiceRooms16()
-        {
-            return tableRelationship16();
-        }
+        static const QPixmap &appVoiceRooms16();
 
         // -------------------------------------------------------------
         // Network and aviation
@@ -482,37 +435,22 @@ namespace BlackMisc
         static const QPixmap &capabilityVoiceReceiveOnlyBackground();
 
         //! Text only
-        static const QPixmap &capabilityTextOnly()
-        {
-            return appTextMessages16();
-        }
+        static const QPixmap &capabilityTextOnly();
 
         //! Text only
-        static const QPixmap &capabilityUnknown()
-        {
-            return unknown16();
-        }
+        static const QPixmap &capabilityUnknown();
 
         //! Attitude indicator
         static const QPixmap &attitudeIndicator16();
 
         //! METAR
-        static const QPixmap &metar()
-        {
-            return weatherCloudy16();
-        }
+        static const QPixmap &metar();
 
         //! ATIS
-        static const QPixmap &atis()
-        {
-            return text16();
-        }
+        static const QPixmap &atis();
 
         //! Geo position
-        static const QPixmap &geoPosition16()
-        {
-            return globe16();
-        }
+        static const QPixmap &geoPosition16();
 
         // -------------------------------------------------------------
         // By index
@@ -524,8 +462,19 @@ namespace BlackMisc
         //! Pixmap by given index rotated
         static QPixmap pixmapByIndex(IconIndex index, int rotateDegrees);
 
+        // -------------------------------------------------------------
+        // Utility functions
+        // -------------------------------------------------------------
+
         //! Change color of resource
-        static QPixmap changeBackground(const QString resource, Qt::GlobalColor backgroundColor);
+        static QPixmap changeResourceBackgroundColor(const QString &resource, Qt::GlobalColor backgroundColor);
+
+        //! Change color of icon
+        static QIcon changeIconBackgroundColor(const QIcon &icon, Qt::GlobalColor backgroundColor, const QSize &targetsize);
+
+        //! Change image background color
+        static QImage changeImageBackgroundColor(const QImage &imgSource, Qt::GlobalColor backgroundColor);
+
     };
 }
 #endif // guard

@@ -83,4 +83,32 @@ namespace BlackGui
         if (index < 0) { return QString(oldName).trimmed().append(v); }
         return QString(oldName.left(index)).trimmed().append(v);
     }
-}
+
+    void CGuiUtility::deleteLayout(QLayout *layout, bool deleteWidgets)
+    {
+        // http://stackoverflow.com/a/7569928/356726
+        if (!layout) { return; }
+        QLayoutItem *item {nullptr};
+        QLayout *sublayout {nullptr};
+        QWidget *widget {nullptr};
+        while ((item = layout->takeAt(0)))
+        {
+            if ((sublayout = item->layout()))
+            {
+                deleteLayout(sublayout, deleteWidgets);
+            }
+            else if ((widget = item->widget()))
+            {
+                widget->hide();
+                if (deleteWidgets)
+                {
+                    delete widget;
+                }
+            }
+            else {delete item;}
+        }
+
+        // then finally
+        delete layout;
+    }
+} // ns

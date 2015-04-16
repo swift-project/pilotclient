@@ -39,14 +39,14 @@ namespace BlackGui
 
         this->m_statusBarIcon = new QLabel(this->m_statusBar);
         this->m_statusBarLabel = new QLabel(this->m_statusBar);
-        this->m_statusBarLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        this->m_statusBarLabel->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
         this->m_statusBarIcon->setObjectName(QString("lbl_StatusBarIcon").append(this->m_statusBar->objectName()));
         this->m_statusBarLabel->setObjectName(QString("lbl_StatusBarLabel").append(this->m_statusBar->objectName()));
 
         // use insert to insert from left to right
         // this keeps any grip on the right size
-        this->m_statusBar->insertPermanentWidget(0, this->m_statusBarIcon, 0);
-        this->m_statusBar->insertPermanentWidget(1, this->m_statusBarLabel, 1);
+        this->m_statusBar->insertPermanentWidget(0, this->m_statusBarIcon, 0);  // status icon
+        this->m_statusBar->insertPermanentWidget(1, this->m_statusBarLabel, 1); // status text
 
         // timer
         this->m_timerStatusBar = new QTimer(this);
