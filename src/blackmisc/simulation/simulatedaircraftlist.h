@@ -73,13 +73,6 @@ namespace BlackMisc
             //! Register metadata
             static void registerMetadata();
 
-        protected:
-            //! Myself
-            virtual const CSimulatedAircraftList &container() const { return *this; }
-
-            //! Myself
-            virtual CSimulatedAircraftList &container() { return *this; }
-
         };
 
     } //namespace

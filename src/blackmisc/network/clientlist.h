@@ -43,13 +43,6 @@ namespace BlackMisc
 
             //! Register metadata
             static void registerMetadata();
-
-        protected:
-            //! Myself
-            virtual const CClientList &container() const { return *this; }
-
-            //! Myself
-            virtual CClientList &container() { return *this; }
         };
 
     } //namespace

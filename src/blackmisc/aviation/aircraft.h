@@ -301,7 +301,7 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraft, (
                                    o.m_icao,
                                    o.m_distanceToOwnAircraft,
                                    o.m_bearingToOwnAircraft
-                                   ))
+                               ))
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraft)
 

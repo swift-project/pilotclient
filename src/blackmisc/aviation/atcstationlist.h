@@ -67,13 +67,6 @@ namespace BlackMisc
             //! Register metadata
             static void registerMetadata();
 
-        protected:
-            //! Myself
-            virtual const CAtcStationList &container() const { return *this; }
-
-            //! Myself
-            virtual CAtcStationList &container() { return *this; }
-
         };
 
     } //namespace
