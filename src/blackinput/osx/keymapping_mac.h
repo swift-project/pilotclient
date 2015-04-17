@@ -12,7 +12,7 @@
 #ifndef BLACKINPUT_KEYMAPPING_MAC_H
 #define BLACKINPUT_KEYMAPPING_MAC_H
 
-#include "blackmisc/hwkeyboardkey.h"
+#include "blackmisc/hardware/keyboardkey.h"
 
 namespace BlackInput
 {
