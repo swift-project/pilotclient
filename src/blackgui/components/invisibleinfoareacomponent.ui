@@ -30,7 +30,7 @@
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
-   <widget class="QWidget" name="qw_Navigaor"/>
+   <widget class="QWidget" name="qw_NavigatorDummy"/>
   </widget>
  </widget>
  <customwidgets>

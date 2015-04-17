@@ -24,7 +24,13 @@ namespace BlackGui
             ui(new Ui::CInvisibleInfoAreaComponent)
         {
             ui->setupUi(this);
-            this->ui->comp_Navigator->allowStatusBar(false);
+
+            // remove widgets just required for GUI builder, but not needed for promoted component
+            this->ui->comp_Navigator->layout()->removeWidget(this->ui->qw_NavigatorDummy);
+            delete this->ui->qw_NavigatorDummy;
+            this->ui->qw_NavigatorDummy = nullptr;
+
+            // init area
             this->initInfoArea();
         }
 
