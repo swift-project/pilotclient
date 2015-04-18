@@ -30,6 +30,7 @@ namespace BlackGui
         {
             this->allowStatusBar(false);
             ui->setupUi(this);
+            this->ps_onStyleSheetsChanged();
         }
 
         CNavigatorDockWidget::~CNavigatorDockWidget()

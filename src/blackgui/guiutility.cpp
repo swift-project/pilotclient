@@ -89,10 +89,10 @@ namespace BlackGui
         // http://stackoverflow.com/a/7569928/356726
         if (!layout) { return; }
         QLayoutItem *item {nullptr};
-        QLayout *sublayout {nullptr};
-        QWidget *widget {nullptr};
         while ((item = layout->takeAt(0)))
         {
+            QLayout *sublayout {nullptr};
+            QWidget *widget {nullptr};
             if ((sublayout = item->layout()))
             {
                 deleteLayout(sublayout, deleteWidgets);
