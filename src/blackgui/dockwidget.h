@@ -184,6 +184,7 @@ namespace BlackGui
         bool m_resetedFloating       = false;
         bool m_selected              = false;        //!< selected when tabbed
         bool m_dockWidgetVisible     = false;        //!< logical visible, not to be confused with QDockWidget::isVisible()
+        bool m_wasFrameless          = false;        //!< frameless when last floating
 
         //! Empty widget with no size
         void initTitleBarWidgets();
@@ -191,6 +192,8 @@ namespace BlackGui
         //! Init status bar
         void initStatusBar();
 
+        //! Force a style sheet update
+        void forceStyleSheetUpdate();
     };
 
 } // namespace

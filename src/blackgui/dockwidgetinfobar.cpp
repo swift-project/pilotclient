@@ -24,7 +24,7 @@ namespace BlackGui
     {
         this->setWindowTitle("Info status bar");
         this->setWindowIcon(CIcons::swift24());
-        this->ps_onStyleSheetsChanged();
+        this->ps_onStyleSheetsChanged(); // margins from infobar
     }
 
     void CDockWidgetInfoBar::addToContextMenu(QMenu *contextMenu) const

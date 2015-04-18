@@ -111,6 +111,7 @@ namespace BlackGui
         {
             this->m_framelessSizeGrip->show();
         }
+        statusBar->repaint();
     }
 
     void CEnableForFramelessWindow::hideFramelessSizeGripInStatusBar()
@@ -152,7 +153,6 @@ namespace BlackGui
 
     bool CEnableForFramelessWindow::isToolWindow() const
     {
-
         return (this->m_widget->windowFlags() & Qt::Tool) == Qt::Tool;
     }
 
@@ -168,7 +168,7 @@ namespace BlackGui
             return (Qt::Tool | Qt::WindowStaysOnTopHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
         case WindowNormal:
         default:
-            return (Qt::Desktop | Qt::WindowStaysOnTopHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+            return (Qt::Window | Qt::WindowStaysOnTopHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
         }
     }
 

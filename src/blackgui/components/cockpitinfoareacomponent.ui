@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>161</width>
-    <height>67</height>
+    <height>55</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -58,16 +58,16 @@
    <attribute name="dockWidgetArea">
     <number>8</number>
    </attribute>
-   <widget class="QWidget" name="qw_CockpitVoiceRoomsInner">
-    <layout class="QVBoxLayout" name="vl_CockpitVoiceRooms">
+   <widget class="QWidget" name="qw_CockpitVoiceRoomsOuter">
+    <layout class="QVBoxLayout" name="vl_CockpitVoiceRoomsOuter">
      <property name="spacing">
-      <number>3</number>
+      <number>0</number>
      </property>
      <property name="leftMargin">
       <number>0</number>
      </property>
      <property name="topMargin">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="rightMargin">
       <number>0</number>
@@ -76,13 +76,43 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="BlackGui::Components::CVoiceRoomsComponent" name="comp_VoiceRooms">
+      <widget class="QFrame" name="fr_CockpitVoiceRoomsInner">
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::NoFrame</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Plain</enum>
        </property>
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
+       <layout class="QVBoxLayout" name="vl_CockpitVOiceRoomsInner">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Components::CVoiceRoomsComponent" name="comp_VoiceRooms">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
@@ -110,16 +140,16 @@
    <attribute name="dockWidgetArea">
     <number>8</number>
    </attribute>
-   <widget class="QWidget" name="qw_AudioInner">
-    <layout class="QVBoxLayout" name="vl_Audio">
+   <widget class="QWidget" name="qw_AudioOuter">
+    <layout class="QVBoxLayout" name="vl_AudioOuter">
      <property name="spacing">
-      <number>3</number>
+      <number>0</number>
      </property>
      <property name="leftMargin">
       <number>0</number>
      </property>
      <property name="topMargin">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="rightMargin">
       <number>0</number>
@@ -128,13 +158,43 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="BlackGui::Components::CAudioComponent" name="comp_Audio">
+      <widget class="QFrame" name="fr_AudioInner">
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::NoFrame</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Plain</enum>
        </property>
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
+       <layout class="QVBoxLayout" name="vl_AudioInner">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Components::CAudioComponent" name="comp_Audio">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>

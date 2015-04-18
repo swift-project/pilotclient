@@ -376,6 +376,10 @@ namespace BlackGui
         {
             dw->displayStatusMessage(statusMessage);
         }
+        for (CInfoArea *ia : this->getChildInfoAreas())
+        {
+            ia->displayStatusMessage(statusMessage);
+        }
     }
 
     void CInfoArea::displayStatusMessages(const CStatusMessageList &statusMessages)
@@ -383,6 +387,10 @@ namespace BlackGui
         for (CDockWidgetInfoArea *dw : this->m_dockWidgetInfoAreas)
         {
             dw->displayStatusMessages(statusMessages);
+        }
+        for (CInfoArea *ia : this->getChildInfoAreas())
+        {
+            ia->displayStatusMessages(statusMessages);
         }
     }
 

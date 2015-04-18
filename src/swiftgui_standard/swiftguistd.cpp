@@ -238,7 +238,10 @@ void SwiftGuiStd::ps_displayStatusMessageInGui(const CStatusMessage &statusMessa
     if (statusMessage.wasHandledBy(this)) { return; }
     statusMessage.markAsHandledBy(this);
     this->m_statusBar.displayStatusMessage(statusMessage);
+
+    // main info areas
     this->ui->comp_MainInfoArea->displayStatusMessage(statusMessage);
+    this->ui->comp_InvisibleInfoArea->displayStatusMessage(statusMessage);
 
     // list
     this->ui->comp_MainInfoArea->getLogComponent()->appendStatusMessageToList(statusMessage);

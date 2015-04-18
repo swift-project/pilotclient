@@ -104,13 +104,13 @@ namespace BlackGui
 
     void CDockWidget::displayStatusMessage(const BlackMisc::CStatusMessage &statusMessage)
     {
-        if (!this->isFloating()) { return; }
+        if (!this->m_allowStatusBar || !this->isFloating()) { return; }
         this->m_statusBar.displayStatusMessage(statusMessage);
     }
 
     void CDockWidget::displayStatusMessages(const BlackMisc::CStatusMessageList &statusMessages)
     {
-        if (!this->isFloating()) { return; }
+        if (!this->m_allowStatusBar || !this->isFloating()) { return; }
         this->m_statusBar.displayStatusMessages(statusMessages);
     }
 
@@ -173,8 +173,7 @@ namespace BlackGui
             this->resize(innerWidget->size());
         }
 
-        //! \todo CDockWidget, check if style sheet reload is needed
-        this->ps_onStyleSheetsChanged(); // force style sheet reload
+        this->forceStyleSheetUpdate(); // force style sheet reload
     }
 
     void CDockWidget::toggleFloating()
@@ -336,7 +335,14 @@ namespace BlackGui
                 QDockWidget::setWindowTitle(this->m_windowTitleBackup);
             }
             this->setNullTitleBarWidget();
-            if (!this->m_wasAlreadyFloating) { this->initialFloating(); }
+            if (!this->m_wasAlreadyFloating)
+            {
+                this->initialFloating();
+            }
+            else
+            {
+                if (m_wasFrameless) { setFrameless(true); }
+            }
 
             this->setContentsMargins(
                 this->isFrameless() ?
@@ -380,13 +386,24 @@ namespace BlackGui
         if (!this->m_allowStatusBar) { return; }
         this->m_statusBar.initStatusBar();
 
-        QWidget *innerWidget = this->widget(); // the inner widget containing the layout
-        Q_ASSERT(innerWidget);
-        if (!innerWidget) { return; }
+        // we expect the following hierarchy
+        // QDockWidget (CDockWidget/CDockWidgetInfoArea) -> QWidget (outer widget) -> QFrame (inner widget)
+        // Structure used for frameless floating windows
+
+        QWidget *outerWidget = this->widget(); // the inner widget containing the layout
+        Q_ASSERT_X(outerWidget, "CDockWidget::initStatusBar", "No outer widget");
+        Q_ASSERT_X(outerWidget->layout(), "CDockWidget::initStatusBar", "No outer widget layout");
+        Q_ASSERT_X(outerWidget->layout()->itemAt(0) && outerWidget->layout()->itemAt(0)->widget(), "CDockWidget::initStatusBar", "No outer widget layout item");
+        if (!outerWidget || !outerWidget->layout() || !outerWidget->layout()->itemAt(0) ||  !outerWidget->layout()->itemAt(0)->widget()) { this->m_allowStatusBar = false; return; }
+
+        // Inner widget is supposed to be a QFrame / promoted QFrame
+        QFrame *innerWidget = qobject_cast<QFrame *>(outerWidget->layout()->itemAt(0)->widget()); // the inner widget containing the layout
+        Q_ASSERT_X(innerWidget, "CDockWidget::initStatusBar", "No inner widget");
+        if (!innerWidget) { this->m_allowStatusBar = false; return; }
         QVBoxLayout *vLayout = qobject_cast<QVBoxLayout *>(innerWidget->layout());
-        Q_ASSERT(vLayout);
-        if (!vLayout) { return; }
-        vLayout->addWidget(this->m_statusBar.getStatusBar(), 0, Qt::AlignBottom);
+        Q_ASSERT_X(vLayout, "CDockWidget::initStatusBar", "No outer widget layout");
+        if (!vLayout) { this->m_allowStatusBar = false; return; }
+        vLayout->addWidget(this->m_statusBar.getStatusBar(), 0, Qt::AlignBottom); // 0->vertical stretch minimum
 
         // adjust stretching of the original widget. It was the only widget so far
         // and should occupy maximum space
@@ -414,6 +431,13 @@ namespace BlackGui
 
     void CDockWidget::ps_onStyleSheetsChanged()
     {
-        this->update();
     }
+
+    void CDockWidget::forceStyleSheetUpdate()
+    {
+        QString qss = this->styleSheet();
+        this->setStyleSheet(qss.isEmpty() ? " " : "");
+        this->setStyleSheet(qss);
+    }
+
 } // namespace

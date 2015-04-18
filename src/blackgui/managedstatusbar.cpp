@@ -36,6 +36,7 @@ namespace BlackGui
         this->m_ownStatusBar = statusBar ? false : true;
         this->m_statusBar = statusBar ? statusBar : new QStatusBar();
         if (this->m_statusBar->objectName().isEmpty()) { this->m_statusBar->setObjectName("sb_ManagedStatusBar"); }
+        if (this->m_ownStatusBar) { m_statusBar->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);}
 
         this->m_statusBarIcon = new QLabel(this->m_statusBar);
         this->m_statusBarLabel = new QLabel(this->m_statusBar);

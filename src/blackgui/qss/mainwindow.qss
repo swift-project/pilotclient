@@ -39,17 +39,18 @@ BlackGui--CDockWidgetInfoArea {
   background-color: green; /** I use green here so I can adjust the borders in gui.ini **/
 }
 
-/** this is the first widget in the dock area **/
-/** all dock widgets shall have this QWidget as container **/
 BlackGui--CDockWidgetInfoArea > QWidget {
-  background-color: black;
+  background: black; /** background is background color here **/
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
-/** the following QFrame, likely the component itself
-BlackGui--CDockWidgetInfoArea > QWidget > QFrame {
-  border: 0px;
-  padding: 0px;
+/** this is the first widget in the dock area **/
+/** all dock widgets shall have this QWidget as container **/
+BlackGui--CDockWidgetInfoArea[framelessDockWidget="true"] > QWidget > QFrame {
+  margin: 0px;
+  padding: 3px;
+  border: 2px solid green;
+  border-radius: 10px;
 }
 
 /** fix the menu, which is overridden by the above QWidget **/

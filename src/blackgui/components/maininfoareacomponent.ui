@@ -6,15 +6,9 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1266</width>
-    <height>55</height>
+    <width>1533</width>
+    <height>242</height>
    </rect>
-  </property>
-  <property name="minimumSize">
-   <size>
-    <width>0</width>
-    <height>0</height>
-   </size>
   </property>
   <property name="windowTitle">
    <string>Main info area</string>
@@ -65,8 +59,8 @@
    <attribute name="dockWidgetArea">
     <number>4</number>
    </attribute>
-   <widget class="QWidget" name="qw_CockpitInner">
-    <layout class="QVBoxLayout" name="vl_Cockpit">
+   <widget class="QWidget" name="qw_CockpitOuter">
+    <layout class="QVBoxLayout" name="vl_CockpitOuter">
      <property name="spacing">
       <number>0</number>
      </property>
@@ -83,7 +77,37 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="BlackGui::Components::CCockpitComponent" name="comp_Cockpit" native="true"/>
+      <widget class="QFrame" name="fr_CockpitInner">
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
+       <layout class="QVBoxLayout" name="vl_CockpitInner">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Components::CCockpitComponent" name="comp_Cockpit" native="true"/>
+        </item>
+       </layout>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -91,8 +115,8 @@
   <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Aircraft">
    <property name="minimumSize">
     <size>
-     <width>127</width>
-     <height>38</height>
+     <width>165</width>
+     <height>66</height>
     </size>
    </property>
    <property name="features">
@@ -107,14 +131,8 @@
    <attribute name="dockWidgetArea">
     <number>4</number>
    </attribute>
-   <widget class="QWidget" name="qw_AircraftInner">
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>0</height>
-     </size>
-    </property>
-    <layout class="QVBoxLayout" name="vl_Aircrafts">
+   <widget class="QWidget" name="qw_AircraftOuter">
+    <layout class="QVBoxLayout" name="vl_AircraftOuter">
      <property name="spacing">
       <number>0</number>
      </property>
@@ -122,7 +140,7 @@
       <number>0</number>
      </property>
      <property name="topMargin">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="rightMargin">
       <number>0</number>
@@ -131,19 +149,49 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="BlackGui::Components::CAircraftComponent" name="comp_Aircraft">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
+      <widget class="QFrame" name="fr_AircraftInner">
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
        </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
        </property>
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
+       <layout class="QVBoxLayout" name="vl_AircraftInner">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Components::CAircraftComponent" name="comp_Aircraft">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
@@ -152,8 +200,8 @@
   <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_AtcStations">
    <property name="minimumSize">
     <size>
-     <width>127</width>
-     <height>38</height>
+     <width>165</width>
+     <height>66</height>
     </size>
    </property>
    <property name="floating">
@@ -168,14 +216,14 @@
    <attribute name="dockWidgetArea">
     <number>4</number>
    </attribute>
-   <widget class="QWidget" name="qw_AtcStationsInner">
+   <widget class="QWidget" name="qw_AtcStationsOuter">
     <property name="minimumSize">
      <size>
       <width>0</width>
       <height>0</height>
      </size>
     </property>
-    <layout class="QVBoxLayout" name="vl_AtcStations">
+    <layout class="QVBoxLayout" name="vl_AtcStationsOuter">
      <property name="spacing">
       <number>0</number>
      </property>
@@ -183,7 +231,7 @@
       <number>0</number>
      </property>
      <property name="topMargin">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="rightMargin">
       <number>0</number>
@@ -192,19 +240,49 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="BlackGui::Components::CAtcStationComponent" name="comp_AtcStations">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
+      <widget class="QFrame" name="fr_AtcStationsInner">
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
        </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
        </property>
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
+       <layout class="QVBoxLayout" name="vl_AtcStationsInner">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Components::CAtcStationComponent" name="comp_AtcStations">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
@@ -213,8 +291,8 @@
   <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Users">
    <property name="minimumSize">
     <size>
-     <width>127</width>
-     <height>38</height>
+     <width>163</width>
+     <height>64</height>
     </size>
    </property>
    <property name="allowedAreas">
@@ -226,8 +304,8 @@
    <attribute name="dockWidgetArea">
     <number>4</number>
    </attribute>
-   <widget class="QWidget" name="qw_UsersInner">
-    <layout class="QVBoxLayout" name="vl_Users">
+   <widget class="QWidget" name="qw_UsersOuter">
+    <layout class="QVBoxLayout" name="vl_UsersOuter">
      <property name="spacing">
       <number>0</number>
      </property>
@@ -235,7 +313,7 @@
       <number>0</number>
      </property>
      <property name="topMargin">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="rightMargin">
       <number>0</number>
@@ -244,13 +322,43 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="BlackGui::Components::CUserComponent" name="comp_Users">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
+      <widget class="QFrame" name="fr_UsersInner">
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
        </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
+       <layout class="QVBoxLayout" name="vl_UsersInner">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Components::CUserComponent" name="comp_Users">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
@@ -260,7 +368,7 @@
    <property name="minimumSize">
     <size>
      <width>127</width>
-     <height>38</height>
+     <height>50</height>
     </size>
    </property>
    <property name="allowedAreas">
@@ -272,8 +380,8 @@
    <attribute name="dockWidgetArea">
     <number>4</number>
    </attribute>
-   <widget class="QWidget" name="qw_TextMessagesInner">
-    <layout class="QVBoxLayout" name="vl_TextMessages">
+   <widget class="QWidget" name="qw_TextMessagesOuter">
+    <layout class="QVBoxLayout" name="vl_TextMessagesOuter">
      <property name="spacing">
       <number>0</number>
      </property>
@@ -281,7 +389,7 @@
       <number>0</number>
      </property>
      <property name="topMargin">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="rightMargin">
       <number>0</number>
@@ -308,8 +416,8 @@
   <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Simulator">
    <property name="minimumSize">
     <size>
-     <width>127</width>
-     <height>38</height>
+     <width>165</width>
+     <height>66</height>
     </size>
    </property>
    <property name="allowedAreas">
@@ -321,8 +429,8 @@
    <attribute name="dockWidgetArea">
     <number>4</number>
    </attribute>
-   <widget class="QWidget" name="qw_SimulatorInner">
-    <layout class="QVBoxLayout" name="vl_Simulator">
+   <widget class="QWidget" name="qw_SimulatorOuter">
+    <layout class="QVBoxLayout" name="vl_SimulatorOuter">
      <property name="spacing">
       <number>0</number>
      </property>
@@ -330,7 +438,7 @@
       <number>0</number>
      </property>
      <property name="topMargin">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="rightMargin">
       <number>0</number>
@@ -339,13 +447,43 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="BlackGui::Components::CSimulatorComponent" name="comp_Simulator">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
+      <widget class="QFrame" name="fr_SimulatorInner">
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
        </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
+       <layout class="QVBoxLayout" name="vl_SimulatorInner">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Components::CSimulatorComponent" name="comp_Simulator">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
@@ -354,8 +492,8 @@
   <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_FlightPlan">
    <property name="minimumSize">
     <size>
-     <width>127</width>
-     <height>38</height>
+     <width>165</width>
+     <height>66</height>
     </size>
    </property>
    <property name="allowedAreas">
@@ -367,16 +505,13 @@
    <attribute name="dockWidgetArea">
     <number>4</number>
    </attribute>
-   <widget class="QWidget" name="qw_FlightPlanInner">
-    <layout class="QVBoxLayout" name="vl_FlightPlan">
-     <property name="spacing">
-      <number>0</number>
-     </property>
+   <widget class="QWidget" name="qw_FlightPlanOuter">
+    <layout class="QVBoxLayout" name="vl_FlightPlanOuter">
      <property name="leftMargin">
       <number>0</number>
      </property>
      <property name="topMargin">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="rightMargin">
       <number>0</number>
@@ -385,13 +520,43 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="BlackGui::Components::CFlightPlanComponent" name="comp_FlightPlan">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
+      <widget class="QFrame" name="fr_FlightPlanInner">
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
        </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
+       <layout class="QVBoxLayout" name="vl_FlightPlanInner">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Components::CFlightPlanComponent" name="comp_FlightPlan">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
@@ -401,7 +566,7 @@
    <property name="minimumSize">
     <size>
      <width>80</width>
-     <height>38</height>
+     <height>50</height>
     </size>
    </property>
    <property name="allowedAreas">
@@ -413,7 +578,7 @@
    <attribute name="dockWidgetArea">
     <number>4</number>
    </attribute>
-   <widget class="QWidget" name="qw_WeatherInner">
+   <widget class="QWidget" name="qw_WeatherOuter">
     <property name="minimumSize">
      <size>
       <width>0</width>
@@ -437,7 +602,7 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QFrame" name="fr_WeatherDummy">
+      <widget class="QFrame" name="fr_WeatherInner">
        <property name="frameShape">
         <enum>QFrame::NoFrame</enum>
        </property>
@@ -447,16 +612,28 @@
        <property name="lineWidth">
         <number>0</number>
        </property>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QFrame" name="comp_Weather">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
    </widget>
   </widget>
-  <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Mappings">
+  <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Rendering">
    <property name="minimumSize">
     <size>
-     <width>127</width>
-     <height>38</height>
+     <width>165</width>
+     <height>66</height>
     </size>
    </property>
    <property name="allowedAreas">
@@ -468,8 +645,8 @@
    <attribute name="dockWidgetArea">
     <number>4</number>
    </attribute>
-   <widget class="QWidget" name="qw_MappingsInner">
-    <layout class="QVBoxLayout" name="vl_Mappings">
+   <widget class="QWidget" name="qw_RenderingOuter">
+    <layout class="QVBoxLayout" name="vl_RenderingOuter">
      <property name="spacing">
       <number>0</number>
      </property>
@@ -477,7 +654,7 @@
       <number>0</number>
      </property>
      <property name="topMargin">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="rightMargin">
       <number>0</number>
@@ -486,13 +663,43 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="BlackGui::Components::CMappingComponent" name="comp_Mappings">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
+      <widget class="QFrame" name="fr_RenderingInner">
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
        </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
+       <layout class="QVBoxLayout" name="vl_RenderingInner">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Components::CMappingComponent" name="comp_Mappings">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
@@ -502,7 +709,7 @@
    <property name="minimumSize">
     <size>
      <width>80</width>
-     <height>38</height>
+     <height>70</height>
     </size>
    </property>
    <property name="allowedAreas">
@@ -514,8 +721,8 @@
    <attribute name="dockWidgetArea">
     <number>4</number>
    </attribute>
-   <widget class="QWidget" name="qw_LogInner">
-    <layout class="QVBoxLayout" name="vl_Log">
+   <widget class="QWidget" name="qw_LogOuter">
+    <layout class="QVBoxLayout" name="vl_LogOuter">
      <property name="spacing">
       <number>0</number>
      </property>
@@ -523,7 +730,7 @@
       <number>0</number>
      </property>
      <property name="topMargin">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="rightMargin">
       <number>0</number>
@@ -532,7 +739,7 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="BlackGui::Components::CLogComponent" name="comp_Log">
+      <widget class="QFrame" name="fr_LogInner">
        <property name="frameShape">
         <enum>QFrame::NoFrame</enum>
        </property>
@@ -542,6 +749,36 @@
        <property name="lineWidth">
         <number>0</number>
        </property>
+       <layout class="QVBoxLayout" name="vl_LogInner">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Components::CLogComponent" name="comp_Log">
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="lineWidth">
+           <number>0</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
@@ -550,8 +787,8 @@
   <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Settings">
    <property name="minimumSize">
     <size>
-     <width>127</width>
-     <height>38</height>
+     <width>165</width>
+     <height>66</height>
     </size>
    </property>
    <property name="allowedAreas">
@@ -563,8 +800,8 @@
    <attribute name="dockWidgetArea">
     <number>4</number>
    </attribute>
-   <widget class="QWidget" name="qw_SettingsInner">
-    <layout class="QVBoxLayout" name="vl_Settings">
+   <widget class="QWidget" name="qw_SettingsOuter">
+    <layout class="QVBoxLayout" name="vl_SettingsOuter">
      <property name="spacing">
       <number>0</number>
      </property>
@@ -572,7 +809,7 @@
       <number>0</number>
      </property>
      <property name="topMargin">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="rightMargin">
       <number>0</number>
@@ -581,13 +818,43 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="BlackGui::Components::CSettingsComponent" name="comp_Settings">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
+      <widget class="QFrame" name="fr_SettingsInner">
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
        </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
+       <layout class="QVBoxLayout" name="vl_SettingsInner">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Components::CSettingsComponent" name="comp_Settings">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
