@@ -151,7 +151,7 @@ namespace BlackSimPlugin
             // write a default client area so we are not suddenly squawking ident or so
             DataDefinitionClientAreaSb sbArea;
             sbArea.setDefaultValues();
-            hr += SimConnect_SetClientData(hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSb, NULL, 0, sbSize, &sbArea);
+            hr += SimConnect_SetClientData(hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSb, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_DEFAULT, 0, sbSize, &sbArea);
             if (hr != S_OK)
             {
                 CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: SimConnect_SetClientData %1") << hr;

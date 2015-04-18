@@ -63,7 +63,7 @@ namespace BlackMisc
                 CValueObject(name), m_transponderCode(0), m_transponderMode(transponderMode)
             {
                 bool ok = false;
-                this->m_transponderCode = transponderCode.toUInt(&ok);
+                this->m_transponderCode = transponderCode.toInt(&ok);
                 if (!ok) this->m_transponderCode = -1; // will cause assert / exception
             }
 
@@ -72,7 +72,7 @@ namespace BlackMisc
                 CValueObject(name), m_transponderCode(0), m_transponderMode(StateStandby)
             {
                 bool ok = false;
-                this->m_transponderCode = transponderCode.toUInt(&ok);
+                this->m_transponderCode = transponderCode.toInt(&ok);
                 if (!ok) this->m_transponderCode = -1; // will cause assert / exception
                 this->setModeAsString(transponderMode);
             }

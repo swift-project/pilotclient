@@ -174,7 +174,7 @@ namespace BlackSimPlugin
             {
                 //! \todo if exists, recreate (new model?, new ICAO code)
                 QByteArray m = aircraftModel.getModelString().toLocal8Bit();
-                HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, m.constData(), qPrintable(callsign.toQString().left(12)), initialPosition, simObj.getRequestId());
+                HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, m.constData(), qPrintable(callsign.toQString().left(12)), initialPosition, static_cast<SIMCONNECT_DATA_REQUEST_ID>(simObj.getRequestId()));
                 if (hr != S_OK) { CLogMessage(this).error("SimConnect, can not create AI traffic"); }
                 m_simConnectObjects.insert(callsign, simObj);
                 CLogMessage(this).info("FSX: Added aircraft %1") << callsign.toQString();
@@ -240,12 +240,12 @@ namespace BlackSimPlugin
             {
                 if (m_useSbOffsets)
                 {
-                    byte ident = newTransponder.isIdentifying() ? 1 : 0; // 1 is ident
-                    byte standby = newTransponder.isInStandby() ? 1 : 0; // 1 is standby
+                    byte ident = newTransponder.isIdentifying() ? 1U : 0U; // 1 is ident
+                    byte standby = newTransponder.isInStandby() ? 1U : 0U; // 1 is standby
                     HRESULT hr = S_OK;
 
-                    hr += SimConnect_SetClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbIdent, NULL, 0, 1, &ident);
-                    hr += SimConnect_SetClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbStandby, NULL, 0, 1, &standby);
+                    hr += SimConnect_SetClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbIdent, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_DEFAULT, 0, 1, &ident);
+                    hr += SimConnect_SetClientData(m_hSimConnect, ClientAreaSquawkBox, CSimConnectDefinitions::DataClientAreaSbStandby, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_DEFAULT, 0, 1, &standby);
                     if (hr != S_OK)
                     {
                         CLogMessage(this).warning("Setting transponder mode failed (SB offsets)");
@@ -282,7 +282,7 @@ namespace BlackSimPlugin
                 break;
             }
             HRESULT hr = SimConnect_Text(
-                             m_hSimConnect, type, 7.5, EventTextMessage, m.size(),
+                             m_hSimConnect, type, 7.5, EventTextMessage, static_cast<DWORD>(m.size()),
                              m.data()
                          );
             Q_UNUSED(hr);
@@ -455,7 +455,7 @@ namespace BlackSimPlugin
             if (it == m_simConnectObjects.end()) { return; }
 
             // belongs to us
-            it->setObjectId(objectID);
+            it->setObjectId(static_cast<int>(objectID));
             SimConnect_AIReleaseControl(m_hSimConnect, objectID, requestID);
             SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EventFreezeLat, 1,
                                            SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
@@ -524,7 +524,7 @@ namespace BlackSimPlugin
         bool CSimulatorFsx::removeRemoteAircraft(const CSimConnectObject &simObject)
         {
             m_simConnectObjects.remove(simObject.getCallsign());
-            SimConnect_AIRemoveObject(m_hSimConnect, simObject.getObjectId(), simObject.getRequestId());
+            SimConnect_AIRemoveObject(m_hSimConnect, static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), static_cast<SIMCONNECT_DATA_REQUEST_ID>(simObject.getRequestId()));
             remoteAircraft().setRendered(simObject.getCallsign(), false);
             CLogMessage(this).info("FSX: Removed aircraft %1") << simObject.getCallsign().toQString();
             return true;
@@ -571,7 +571,7 @@ namespace BlackSimPlugin
             }
 
             // facility
-            hr += SimConnect_SubscribeToFacilities(m_hSimConnect, SIMCONNECT_FACILITY_LIST_TYPE_AIRPORT, m_nextObjID++);
+            hr += SimConnect_SubscribeToFacilities(m_hSimConnect, SIMCONNECT_FACILITY_LIST_TYPE_AIRPORT, static_cast<SIMCONNECT_DATA_REQUEST_ID>(m_nextObjID++));
             if (hr != S_OK)
             {
                 CLogMessage(this).error("FSX plugin error: %1") << "SimConnect_SubscribeToFacilities failed";
@@ -655,10 +655,10 @@ namespace BlackSimPlugin
                         isOnGround = interpolatedSituation.isOnGroundGuessed();
                     }
 
-                    position.OnGround = isOnGround ? 1 : 0;
+                    position.OnGround = isOnGround ? 1U : 0U;
                     HRESULT hr = S_OK;
                     hr += SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPosition,
-                                                        simObj.getObjectId(), 0, 0,
+                                                        static_cast<SIMCONNECT_OBJECT_ID>(simObj.getObjectId()), 0, 0,
                                                         sizeof(SIMCONNECT_DATA_INITPOSITION), &position);
                     if (hr != S_OK) { CLogMessage(this).warning("Failed so set position on SimObject %1 callsign: %2") << simObj.getObjectId() << callsign; }
 
@@ -754,7 +754,7 @@ namespace BlackSimPlugin
             Q_ASSERT(m_hSimConnect);
             HRESULT hr = S_OK;
             hr += SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts,
-                                                simObj.getObjectId(), 0, 0,
+                                                static_cast<SIMCONNECT_OBJECT_ID>(simObj.getObjectId()), 0, 0,
                                                 sizeof(DataDefinitionRemoteAircraftParts), &ddRemoteAircraftParts);
 
             if (hr != S_OK) { CLogMessage(this).warning("Failed so set parts on SimObject %1 callsign: %2") << simObj.getObjectId() << simObj.getCallsign(); }
@@ -791,8 +791,8 @@ namespace BlackSimPlugin
                 myDateTime = myDateTime.addSecs(offsetSeconds);
             }
             QTime myTime = myDateTime.time();
-            DWORD h = myTime.hour();
-            DWORD m = myTime.minute();
+            DWORD h = static_cast<DWORD>(myTime.hour());
+            DWORD m = static_cast<DWORD>(myTime.minute());
             int targetMins = myTime.hour() * 60 + myTime.minute();
             int simMins = zuluTimeSim.valueRounded(CTimeUnit::min());
             int diffMins = qAbs(targetMins - simMins);
@@ -824,8 +824,7 @@ namespace BlackSimPlugin
                 HRESULT result = SimConnect_Open(&hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0);
                 SimConnect_Close(hSimConnect);
 
-                if (result == S_OK)
-                    emit simulatorStarted();
+                if (result == S_OK) { emit simulatorStarted(); }
             });
         }
 
