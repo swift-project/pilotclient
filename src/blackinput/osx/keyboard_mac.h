@@ -17,16 +17,16 @@
 #include <QHash>
 
 class __CGEvent;
-typedef __CGEvent* CGEventRef;
 
-typedef unsigned int CGEventType;
+typedef __CGEvent* CGEventRef; //!< Mac event definition
+typedef unsigned int CGEventType; //!< Max event type definition
 
 class __CGEventTapProxy;
-typedef __CGEventTapProxy* CGEventTapProxy;
+typedef __CGEventTapProxy* CGEventTapProxy; //!< Max event proxy definition
 
 namespace BlackInput
 {
-    //! \brief Mac OSX implemenation of IKeyboard using hook procedure
+    //! Mac OSX implemenation of IKeyboard using hook procedure
     //! \todo Change QHash to a CCollection object
     class CKeyboardMac : public IKeyboard
     {
@@ -34,13 +34,13 @@ namespace BlackInput
 
     public:
 
-        //! \brief Copy Constructor
+        //! Copy Constructor
         CKeyboardMac(CKeyboardMac const&) = delete;
 
-        //! \brief Assignment operator
+        //! Assignment operator
         CKeyboardMac &operator=(CKeyboardMac const&) = delete;
 
-        //! \brief Destructor
+        //! Destructor
         virtual ~CKeyboardMac();
 
         //! Set the list of keys to monitor
@@ -52,6 +52,7 @@ namespace BlackInput
         //! \copydoc IKeyboard::triggerKey()
         virtual void triggerKey(const BlackMisc::Hardware::CKeyboardKey &key, bool isPressed) override;
 
+        //! Process key event
         virtual void processKeyEvent(CGEventType type, CGEventRef event);
 
     protected:
@@ -67,7 +68,7 @@ namespace BlackInput
         CKeyboardMac(QObject *parent = nullptr);
 
         /*!
-         * \brief Constructor
+         * Constructor
          * \param keySet
          * \param isFinished
          */

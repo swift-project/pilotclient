@@ -19,7 +19,7 @@
 namespace BlackInput
 {
     /*!
-     * \brief Abstract interface for native keyboard handling.
+     * Abstract interface for native keyboard handling.
      * \todo Add implementation for Linux and OSX.
      */
     class IKeyboard : public QObject
@@ -44,7 +44,7 @@ namespace BlackInput
         virtual void setKeysToMonitor(const BlackMisc::Hardware::CKeyboardKeyList &keylist) = 0;
 
         /*!
-         * \brief Select a key combination as hotkey. This method returns immediatly.
+         * Select a key combination as hotkey. This method returns immediatly.
          *        Listen for signals keySelectionChanged and keySelectionFinished
          *        to retrieve the user input.
          * \param ignoreNextKey
@@ -54,7 +54,7 @@ namespace BlackInput
         virtual void startCapture(bool ignoreNextKey) = 0;
 
         /*!
-         * \brief Triggers a key event manually and calls the registered functions.
+         * Triggers a key event manually and calls the registered functions.
          * \param key
          * \param isPressed
          */
@@ -66,13 +66,13 @@ namespace BlackInput
     signals:
 
         /*!
-         * \brief Key selection has changed, but is not finished yet.
+         * Key selection has changed, but is not finished yet.
          * \param key
          */
         void keySelectionChanged(BlackMisc::Hardware::CKeyboardKey key);
 
         /*!
-         * \brief Key selection has finished.
+         * Key selection has finished.
          * \param key
          */
         void keySelectionFinished(BlackMisc::Hardware::CKeyboardKey key);
@@ -86,7 +86,7 @@ namespace BlackInput
     protected:
 
         /*!
-         * \brief Initializes the platform keyboard device
+         * Initializes the platform keyboard device
          */
         virtual bool init() = 0;
 
@@ -96,4 +96,4 @@ namespace BlackInput
     };
 }
 
-#endif // BLACKINPUT_KEYBOARD_H
+#endif // guard
