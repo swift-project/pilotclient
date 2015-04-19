@@ -538,10 +538,10 @@ namespace BlackCore
         return c;
     }
 
-    bool CContextNetwork::updateFastPositionUpdates(const CCallsign &callsign, bool enableFastPositonUpdates, const QString &originator)
+    bool CContextNetwork::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositonUpdates, const QString &originator)
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << enableFastPositonUpdates << originator; }
-        bool c = this->m_airspace->updateFastPositionUpdates(callsign, enableFastPositonUpdates, originator);
+        bool c = this->m_airspace->updateFastPositionEnabled(callsign, enableFastPositonUpdates, originator);
         if (c)
         {
             CSimulatedAircraft aircraft(this->remoteAircraft().findFirstByCallsign(callsign));

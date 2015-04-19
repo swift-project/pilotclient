@@ -10,12 +10,12 @@
 #include "airspace_watchdog.h"
 #include "blackmisc/logmessage.h"
 
+using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::PhysicalQuantities;
+
 namespace BlackCore
 {
-
-    using namespace BlackMisc;
-    using namespace BlackMisc::Aviation;
-    using namespace BlackMisc::PhysicalQuantities;
 
     CAirspaceWatchdog::CAirspaceWatchdog(QObject *parent)
         : QObject(parent)
@@ -77,4 +77,4 @@ namespace BlackCore
             }
         }
     }
-}
+} // ns

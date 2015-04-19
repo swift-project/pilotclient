@@ -87,7 +87,7 @@ namespace BlackMisc
             virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) = 0;
 
             //! Change fast position updates
-            virtual bool updateFastPositionUpdates(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates, const QString &originator) = 0;
+            virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates, const QString &originator) = 0;
         };
 
         //! Class which can be directly used to access an \sa IRemoteAircraftProviderReadOnly object

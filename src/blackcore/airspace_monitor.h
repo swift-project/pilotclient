@@ -30,9 +30,7 @@
 namespace BlackCore
 {
 
-    /*!
-     * Keeps track of other entities in the airspace: aircraft, ATC stations, etc.
-     */
+    //! Keeps track of other entities in the airspace: aircraft, ATC stations, etc.
     class BLACKCORE_EXPORT CAirspaceMonitor :
         public QObject,
         public BlackMisc::Simulation::IRemoteAircraftProvider,  // those data will be provided from the class CAirspaceMonitor
@@ -70,7 +68,7 @@ namespace BlackCore
         virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) override;
 
         //! \copydoc IRemoteAircraftProvider::updateFastPositionEnabled
-        virtual bool updateFastPositionUpdates(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates, const QString &originator) override;
+        virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates, const QString &originator) override;
 
         //! Returns the list of users we know about
         BlackMisc::Network::CUserList getUsers() const;

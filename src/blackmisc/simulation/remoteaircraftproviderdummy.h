@@ -63,8 +63,8 @@ namespace BlackMisc
             //! \copydoc IRemoteAircraftProvider::updateAircraftModel
             virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) override;
 
-            //! \copydoc IRemoteAircraftProvider::updateFastPositionUpdates
-            virtual bool updateFastPositionUpdates(const Aviation::CCallsign &callsign, bool enableFastPositionUpdates, const QString &originator) override;
+            //! \copydoc IRemoteAircraftProvider::updateFastPositionEnabled
+            virtual bool updateFastPositionEnabled(const Aviation::CCallsign &callsign, bool enableFastPositionUpdates, const QString &originator) override;
 
             //! For testing, add new situation and fire signals
             void insertNewSituation(const BlackMisc::Aviation::CAircraftSituation &situation);

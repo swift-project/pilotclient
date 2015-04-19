@@ -338,7 +338,7 @@ namespace BlackGui
         {
             if (getIContextNetwork())
             {
-                getIContextNetwork()->updateFastPositionUpdates(aircraft.getCallsign(), aircraft.fastPositionUpdates(), mappingtOriginator());
+                getIContextNetwork()->updateFastPositionEnabled(aircraft.getCallsign(), aircraft.fastPositionUpdates(), mappingtOriginator());
             }
         }
 

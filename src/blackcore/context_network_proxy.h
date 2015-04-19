@@ -135,8 +135,8 @@ namespace BlackCore
         //! \copydoc IContextNetwork::updateAircraftModel
         virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) override;
 
-        //! \copydoc IContextNetwork::updateFastPositionUpdates
-        virtual bool updateFastPositionUpdates(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending, const QString &originator) override;
+        //! \copydoc IContextNetwork::updateFastPositionEnabled
+        virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending, const QString &originator) override;
 
         //! \copydoc IContextNetwork::isFastPositionSendingEnabled
         virtual bool isFastPositionSendingEnabled() const override;

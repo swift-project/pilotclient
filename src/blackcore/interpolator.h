@@ -84,7 +84,6 @@ namespace BlackCore
         CSituationsPerCallsign getSituationsByCallsign() const;
 
         //! Parts before given offset time (aka pending parts)
-        //! \note
         //! \threadsafe
         virtual BlackMisc::Aviation::CAircraftPartsList getAndRemovePartsBeforeTime(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTime, PartsStatus &partsStatus);
 
@@ -92,7 +91,7 @@ namespace BlackCore
         //! \threadsafe
         virtual void clear();
 
-        //! Knows callsign?
+        //! Does know callsign?
         //! \threadsafe
         virtual bool hasDataForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
