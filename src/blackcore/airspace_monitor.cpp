@@ -768,11 +768,6 @@ namespace BlackCore
         CCallsign callsign(situation.getCallsign());
         Q_ASSERT_X(!callsign.isEmpty(), "ps_aircraftUpdateReceived", "Empty callsign");
 
-        if (callsign.isObserverCallsign())
-        {
-            return; // just ignore
-        }
-
         // store situation history
         this->m_aircraftSituations.push_front(situation);
         this->m_aircraftSituations.removeOlderThanNowMinusOffset(AircraftSituationsRemovedOffsetMs);

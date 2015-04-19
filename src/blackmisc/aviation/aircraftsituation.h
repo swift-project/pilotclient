@@ -54,9 +54,7 @@ namespace BlackMisc
                                const BlackMisc::Aviation::CHeading &heading = {},
                                const BlackMisc::PhysicalQuantities::CAngle &pitch = {},
                                const BlackMisc::PhysicalQuantities::CAngle &bank = {},
-                               const BlackMisc::PhysicalQuantities::CSpeed &gs = {})
-                : m_position(position), m_altitude(altitude), m_heading(heading), m_pitch(pitch),
-                  m_bank(bank), m_groundspeed(gs) {}
+                               const BlackMisc::PhysicalQuantities::CSpeed &gs = {});
 
             //! Comprehensive constructor
             CAircraftSituation(const BlackMisc::Aviation::CCallsign &correspondingCallsign,
@@ -64,11 +62,7 @@ namespace BlackMisc
                                const BlackMisc::Aviation::CHeading &heading = {},
                                const BlackMisc::PhysicalQuantities::CAngle &pitch = {},
                                const BlackMisc::PhysicalQuantities::CAngle &bank = {},
-                               const BlackMisc::PhysicalQuantities::CSpeed &gs = {})
-                : m_correspondingCallsign(correspondingCallsign),
-                  m_position(position), m_altitude(altitude), m_heading(heading), m_pitch(pitch),
-                  m_bank(bank), m_groundspeed(gs) {}
-
+                               const BlackMisc::PhysicalQuantities::CSpeed &gs = {});
 
             //! \copydoc CValueObject::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -141,7 +135,7 @@ namespace BlackMisc
             const BlackMisc::Aviation::CCallsign &getCallsign() const { return this->m_correspondingCallsign; }
 
             //! Corresponding callsign
-            void setCallsign(const BlackMisc::Aviation::CCallsign &callsign) { this->m_correspondingCallsign = callsign; }
+            void setCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! \copydoc CValueObject::convertToQString
             QString convertToQString(bool i18n = false) const;

@@ -100,7 +100,7 @@ namespace BlackGui
             for (const QString &type : types.keys())
             {
                 // ownership of QStandardItem is taken by model
-                QStandardItem *typeFolderFirstColumn = new QStandardItem(CCallsign::suffixToIcon(type).toQIcon(), type);
+                QStandardItem *typeFolderFirstColumn = new QStandardItem(CCallsign::atcSuffixToIcon(type).toQIcon(), type);
                 QList<QStandardItem *> typeFolderRow { typeFolderFirstColumn };
                 model->invisibleRootItem()->appendRow(typeFolderRow);
                 CAtcStationList stations = this->getContainer().findBySuffix(type);

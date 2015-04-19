@@ -30,17 +30,17 @@ namespace BlackMisc
 
         const CIcon &CCallsign::convertToIcon(const CCallsign &callsign)
         {
-            if (callsign.hasSuffix())
-            {
-                return suffixToIcon(callsign.getSuffix());
-            }
-            else
+            if (callsign.getTypeHint() == CCallsign::Aircraft || !callsign.hasSuffix())
             {
                 return CIconList::iconByIndex(CIcons::NetworkRolePilot);
             }
+            else
+            {
+                return atcSuffixToIcon(callsign.getSuffix());
+            }
         }
 
-        const CIcon &CCallsign::suffixToIcon(const QString &suffix)
+        const CIcon &CCallsign::atcSuffixToIcon(const QString &suffix)
         {
             if (suffix.length() < 3) { return CIconList::iconByIndex(CIcons::NetworkRoleUnknown); }
             QString sfx = suffix.toUpper();
@@ -60,23 +60,39 @@ namespace BlackMisc
 
         bool CCallsign::isAtcCallsign() const
         {
+            if (this->getTypeHint() == Atc) { return true; }
             if (!this->hasSuffix()) { return false; }
             return atcCallsignSuffixes().contains(this->getSuffix(), Qt::CaseInsensitive);
         }
 
         bool CCallsign::isSupervisorCallsign() const
         {
+            if (this->getTypeHint() == Aircraft) { return false; }
             return this->m_callsign.endsWith("SUP");
+        }
+
+        QString CCallsign::getIcaoCode() const
+        {
+            if (this->isAtcCallsign())
+            {
+                if (m_callsign.length() >= 4)
+                {
+                    return m_callsign.left(4).toUpper();
+                }
+            }
+            return "";
         }
 
         bool CCallsign::isAtcAlikeCallsign() const
         {
+            if (this->getTypeHint() == Aircraft) { return false; }
             if (!this->hasSuffix()) { return false; }
             return atcAlikeCallsignSuffixes().contains(this->getSuffix(), Qt::CaseInsensitive);
         }
 
         bool CCallsign::isObserverCallsign() const
         {
+            if (this->getTypeHint() == Aircraft) { return false; }
             return m_callsignAsSet.endsWith("_OBS", Qt::CaseInsensitive);
         }
 

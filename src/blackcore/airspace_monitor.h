@@ -137,7 +137,7 @@ namespace BlackCore
         void enableFastPositionSending(bool enable);
 
         static const qint64 AircraftSituationsRemovedOffsetMs = 30 * 1000; //!< situations older than now - offset will be removed
-        static const qint64 AircraftPartsRemoveOffsetMs = 30* 1000;        //!< parts older than now - offset will be removed
+        static const qint64 AircraftPartsRemoveOffsetMs = 30 * 1000;       //!< parts older than now - offset will be removed
 
     signals:
 

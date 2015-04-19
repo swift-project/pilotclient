@@ -29,16 +29,24 @@ namespace BlackMisc
         { }
 
         CAtcStation::CAtcStation(const QString &callsign) : m_callsign(callsign)
-        { }
+        {
+            this->m_callsign.setTypeHint(CCallsign::Atc);
+        }
 
-        CAtcStation::CAtcStation(const CCallsign &callsign, const CUser &controller, const CFrequency &frequency, const CCoordinateGeodetic &pos, const CLength &range, bool isOnline,
-                                 const QDateTime &bookedFromUtc, const QDateTime &bookedUntilUtc, const CInformationMessage &atis, const CInformationMessage &metar) :
+        CAtcStation::CAtcStation(const CCallsign &callsign, const CUser &controller, const CFrequency &frequency,
+                                 const CCoordinateGeodetic &pos, const CLength &range, bool isOnline,
+                                 const QDateTime &bookedFromUtc, const QDateTime &bookedUntilUtc,
+                                 const CInformationMessage &atis, const CInformationMessage &metar) :
             m_callsign(callsign), m_controller(controller), m_frequency(frequency), m_position(pos),
-            m_range(range), m_isOnline(isOnline), m_bookedFromUtc(bookedFromUtc), m_bookedUntilUtc(bookedUntilUtc), m_atis(atis), m_metar(metar)
+            m_range(range), m_isOnline(isOnline), m_bookedFromUtc(bookedFromUtc), m_bookedUntilUtc(bookedUntilUtc),
+            m_atis(atis), m_metar(metar)
         {
             // sync callsigns
+            this->m_callsign.setTypeHint(CCallsign::Atc);
             if (!this->m_controller.hasValidCallsign() && !callsign.isEmpty())
-                this->m_controller.setCallsign(callsign);
+            {
+                this->m_controller.setCallsign(m_callsign);
+            }
         }
 
         bool CAtcStation::hasMetar() const

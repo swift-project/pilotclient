@@ -35,17 +35,30 @@ namespace BlackMisc
                 IndexSuffix
             };
 
+            //! Representing what
+            enum TypeHint
+            {
+                NoHint,
+                Aircraft,
+                Atc
+            };
+
             //! Default constructor.
             CCallsign() = default;
 
             //! Constructor
-            CCallsign(const QString &callsign, const QString &telephonyDesignator = "")
-                : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign.trimmed())), m_telephonyDesignator(telephonyDesignator.trimmed())
+            CCallsign(const QString &callsign, TypeHint hint = NoHint)
+                : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign.trimmed())), m_typeHint(hint)
+            {}
+
+            //! Constructor
+            CCallsign(const QString &callsign, const QString &telephonyDesignator, TypeHint hint = NoHint)
+                : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign.trimmed())), m_telephonyDesignator(telephonyDesignator.trimmed()), m_typeHint(hint)
             {}
 
             //! Constructor, needed to disambiguate implicit conversion from string literal.
-            CCallsign(const char *callsign)
-                : m_callsignAsSet(callsign), m_callsign(CCallsign::unifyCallsign(callsign))
+            CCallsign(const char *callsign, TypeHint hint = NoHint)
+                : m_callsignAsSet(callsign), m_callsign(CCallsign::unifyCallsign(callsign)), m_typeHint(hint)
             {}
 
             //! Is empty?
@@ -74,8 +87,14 @@ namespace BlackMisc
             //! Get callsign telephony designator (how callsign is pronounced)
             const QString &getTelephonyDesignator() const { return this->m_telephonyDesignator; }
 
+            //! Type hint
+            TypeHint getTypeHint() const { return m_typeHint; }
+
+            //! Type hint
+            void setTypeHint(TypeHint hint) { this->m_typeHint = hint; }
+
             //! Get ICAO code, if this makes sense (EDDF_TWR -> EDDF)
-            QString getIcaoCode() const { return m_callsign.left(4).toUpper(); }
+            QString getIcaoCode() const;
 
             //! Makes this callsign looking like an observer callsign (DAMBZ -> DAMBZ_OBS)
             QString getAsObserverCallsignString() const;
@@ -108,7 +127,7 @@ namespace BlackMisc
             static const QStringList &atcAlikeCallsignSuffixes();
 
             //! Suffix to icon
-            static const BlackMisc::CIcon &suffixToIcon(const QString &suffix);
+            static const BlackMisc::CIcon &atcSuffixToIcon(const QString &suffix);
 
             //! Representing icon
             static const CIcon &convertToIcon(const CCallsign &callsign);
@@ -122,9 +141,10 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CCallsign)
-            QString m_callsignAsSet;
-            QString m_callsign;
-            QString m_telephonyDesignator;
+            QString  m_callsignAsSet;
+            QString  m_callsign;
+            QString  m_telephonyDesignator;
+            TypeHint m_typeHint = NoHint;
         };
     } // namespace
 } // namespace
@@ -132,7 +152,8 @@ namespace BlackMisc
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CCallsign, (
                                    attr(o.m_callsign, flags<CaseInsensitiveComparison>()),
                                    attr(o.m_callsignAsSet, flags<DisabledForComparison>()),
-                                   attr(o.m_telephonyDesignator, flags<DisabledForComparison>())
+                                   attr(o.m_telephonyDesignator, flags<DisabledForComparison>()),
+                                   attr(o.m_typeHint, flags<DisabledForComparison>())
                                ))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CCallsign)
 

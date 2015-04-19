@@ -21,6 +21,18 @@ namespace BlackMisc
     namespace Aviation
     {
 
+        CAircraftSituation::CAircraftSituation(const CCoordinateGeodetic &position, const CAltitude &altitude, const CHeading &heading, const CAngle &pitch, const CAngle &bank, const CSpeed &gs)
+            : m_position(position), m_altitude(altitude), m_heading(heading), m_pitch(pitch),
+              m_bank(bank), m_groundspeed(gs) {}
+
+        CAircraftSituation::CAircraftSituation(const CCallsign &correspondingCallsign, const CCoordinateGeodetic &position, const CAltitude &altitude, const CHeading &heading, const CAngle &pitch, const CAngle &bank, const CSpeed &gs)
+            : m_correspondingCallsign(correspondingCallsign),
+              m_position(position), m_altitude(altitude), m_heading(heading), m_pitch(pitch),
+              m_bank(bank), m_groundspeed(gs)
+        {
+            m_correspondingCallsign.setTypeHint(CCallsign::Aircraft);
+        }
+
         QString CAircraftSituation::convertToQString(bool i18n) const
         {
             QString s(this->m_position.toQString(i18n));
@@ -138,6 +150,12 @@ namespace BlackMisc
                 return m_altitude - m_position.geodeticHeight();
             }
             return notAvialable;
+        }
+
+        void CAircraftSituation::setCallsign(const CCallsign &callsign)
+        {
+            this->m_correspondingCallsign = callsign;
+            this->m_correspondingCallsign.setTypeHint(CCallsign::Aircraft);
         }
 
     } // namespace

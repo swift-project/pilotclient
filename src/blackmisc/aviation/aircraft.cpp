@@ -24,6 +24,7 @@ namespace BlackMisc
             : m_callsign(callsign), m_pilot(user), m_situation(situation)
         {
             // sync callsigns
+            this->m_callsign.setTypeHint(CCallsign::Aircraft);
             if (!callsign.isEmpty())
             {
                 this->setCallsign(callsign);
@@ -37,9 +38,10 @@ namespace BlackMisc
         void CAircraft::setCallsign(const CCallsign &callsign)
         {
             this->m_callsign = callsign;
-            this->m_pilot.setCallsign(callsign);
-            this->m_situation.setCallsign(callsign);
-            this->m_parts.setCallsign(callsign);
+            this->m_callsign.setTypeHint(CCallsign::Aircraft);
+            this->m_pilot.setCallsign(this->m_callsign);
+            this->m_situation.setCallsign(this->m_callsign);
+            this->m_parts.setCallsign(this->m_callsign);
         }
 
         QString CAircraft::convertToQString(bool i18n) const

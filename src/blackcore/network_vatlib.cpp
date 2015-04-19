@@ -261,11 +261,16 @@ namespace BlackCore
     VatSimType CNetworkVatlib::convertToSimType(CSimulatorPluginInfo &simInfo)
     {
         /* TODO Define recognized simulators somewhere */
-        if (simInfo.getSimulator() == "fs9" || simInfo.getSimulator() == "fsx") {
+        if (simInfo.getSimulator() == "fs9" || simInfo.getSimulator() == "fsx")
+        {
             return vatSimTypeMSCFS;
-        } else if (simInfo.getSimulator() == "xplane") {
+        }
+        else if (simInfo.getSimulator() == "xplane")
+        {
             return vatSimTypeXPLANE;
-        } else {
+        }
+        else
+        {
             return vatSimTypeUnknown;
         }
     }
@@ -685,17 +690,17 @@ namespace BlackCore
 
     void CNetworkVatlib::onPilotDisconnected(VatSessionID, const char *callsign, void *cbvar)
     {
-        emit cbvar_cast(cbvar)->pilotDisconnected(cbvar_cast(cbvar)->fromFSD(callsign));
+        emit cbvar_cast(cbvar)->pilotDisconnected(CCallsign(cbvar_cast(cbvar)->fromFSD(callsign), CCallsign::Aircraft));
     }
 
     void CNetworkVatlib::onControllerDisconnected(VatSessionID, const char *callsign, void *cbvar)
     {
-        emit cbvar_cast(cbvar)->atcDisconnected(cbvar_cast(cbvar)->fromFSD(callsign));
+        emit cbvar_cast(cbvar)->atcDisconnected(CCallsign(cbvar_cast(cbvar)->fromFSD(callsign), CCallsign::Atc));
     }
 
     void CNetworkVatlib::onPilotPositionUpdate(VatSessionID, const char *callsignChar , const VatPilotPosition *position, void *cbvar)
     {
-        const CCallsign callsign(callsignChar);
+        const CCallsign callsign(callsignChar, CCallsign::Aircraft);
         const CAircraftSituation situation(
             callsign,
             CCoordinateGeodetic(position->latitude, position->longitude, 0.0),
@@ -747,9 +752,12 @@ namespace BlackCore
         QByteArray json = cbvar_cast(cbvar)->fromFSD(aircraftConfig).toUtf8();
         QJsonParseError parserError;
         QJsonDocument doc = QJsonDocument::fromJson(json, &parserError);
+        CCallsign cs(callsign, CCallsign::Aircraft);
 
         if (parserError.error != QJsonParseError::NoError)
+        {
             CLogMessage(static_cast<CNetworkVatlib *>(nullptr)).warning("Failed to parse aircraft config packet: %1") << parserError.errorString();
+        }
 
         QJsonObject packet = doc.object();
 
@@ -763,7 +771,7 @@ namespace BlackCore
         if (config.empty()) return;
 
         bool isFull = config.take("is_full_data").toBool(false);
-        emit cbvar_cast(cbvar)->aircraftConfigPacketReceived(cbvar_cast(cbvar)->fromFSD(callsign), config, isFull);
+        emit cbvar_cast(cbvar)->aircraftConfigPacketReceived(cs, config, isFull);
     }
 
     void CNetworkVatlib::onInterimPilotPositionUpdate(VatSessionID, const char *sender, const VatInterimPilotPosition *position, void *cbvar)
@@ -788,8 +796,10 @@ namespace BlackCore
         int frequencyKHz = pos->frequency;
         CFrequency freq(frequencyKHz, CFrequencyUnit::kHz());
         freq.switchUnit(CFrequencyUnit::MHz()); // we would not need to bother, but this makes it easier to identify
-        emit cbvar_cast(cbvar)->atcPositionUpdate(cbvar_cast(cbvar)->fromFSD(callsign), freq,
-                CCoordinateGeodetic(pos->latitude, pos->longitude, 0), CLength(pos->visibleRange, CLengthUnit::NM()));
+        Q_ASSERT(CComSystem::isValidCivilAviationFrequency(freq));
+        emit cbvar_cast(cbvar)->atcPositionUpdate(
+            CCallsign(cbvar_cast(cbvar)->fromFSD(callsign), CCallsign::Atc), freq,
+            CCoordinateGeodetic(pos->latitude, pos->longitude, 0), CLength(pos->visibleRange, CLengthUnit::NM()));
     }
 
     void CNetworkVatlib::onKicked(VatSessionID, const char *reason, void *cbvar)
@@ -867,11 +877,11 @@ namespace BlackCore
     {
         switch (type)
         {
-        case vatClientQueryFreq:   emit cbvar_cast(cbvar)->frequencyReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), CFrequency(cbvar_cast(cbvar)->fromFSD(data).toFloat(), CFrequencyUnit::MHz())); break;
-        case vatClientQueryServer: emit cbvar_cast(cbvar)->serverReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
-        case vatClientQueryAtc:    emit cbvar_cast(cbvar)->atcReplyReceived(cbvar_cast(cbvar)->fromFSD(data2), *data == 'Y'); break;
-        case vatClientQueryName:   emit cbvar_cast(cbvar)->realNameReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
-        case vatClientQueryIP:     emit cbvar_cast(cbvar)->ipReplyReceived(cbvar_cast(cbvar)->fromFSD(data)); break;
+        case vatInfoQueryTypeFreq:   emit cbvar_cast(cbvar)->frequencyReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), CFrequency(cbvar_cast(cbvar)->fromFSD(data).toFloat(), CFrequencyUnit::MHz())); break;
+        case vatInfoQueryTypeServer: emit cbvar_cast(cbvar)->serverReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
+        case vatInfoQueryTypeAtc:    emit cbvar_cast(cbvar)->atcReplyReceived(CCallsign(cbvar_cast(cbvar)->fromFSD(data2), CCallsign::Atc), *data == 'Y'); break;
+        case vatInfoQueryTypeName:   emit cbvar_cast(cbvar)->realNameReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
+        case vatInfoQueryTypeIP:     emit cbvar_cast(cbvar)->ipReplyReceived(cbvar_cast(cbvar)->fromFSD(data)); break;
         default: break;
         }
     }
@@ -911,8 +921,7 @@ namespace BlackCore
             }
         }
 
-        emit cbvar_cast(cbvar)->atisReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), atisMessage);
-
+        emit cbvar_cast(cbvar)->atisReplyReceived(CCallsign(cbvar_cast(cbvar)->fromFSD(callsign), CCallsign::Atc), atisMessage);
     }
 
     void CNetworkVatlib::onFlightPlanReceived(VatSessionID, const char *callsign, const VatFlightPlan *fp, void *cbvar)
@@ -954,7 +963,7 @@ namespace BlackCore
             cbvar_cast(cbvar)->fromFSD(fp->remarks)
         );
 
-        emit cbvar_cast(cbvar)->flightPlanReplyReceived(callsign, flightPlan);
+        emit cbvar_cast(cbvar)->flightPlanReplyReceived(CCallsign(callsign, CCallsign::Atc), flightPlan);
     }
 
     void CNetworkVatlib::onTemperatureDataReceived(VatSessionID, const VatTempLayer /** layer **/ [4], int /** pressure **/, void * /** cbvar **/)

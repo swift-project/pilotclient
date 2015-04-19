@@ -115,7 +115,7 @@ namespace BlackCore
                         }
                         else if (name == "callsign")
                         {
-                            bookedStation.setCallsign(CCallsign(value));
+                            bookedStation.setCallsign(CCallsign(value, CCallsign::Atc));
                         }
                         else if (name == "name")
                         {
