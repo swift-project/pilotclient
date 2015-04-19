@@ -24,4 +24,10 @@
 #  define BLACKMISC_EXPORT
 #endif
 
+#if defined(Q_OS_WIN) && defined(Q_CC_GNU)
+#  define BLACKMISC_EXPORT_TEMPLATE BLACKMISC_EXPORT
+#else
+#  define BLACKMISC_EXPORT_TEMPLATE
+#endif
+
 #endif // BLACKMISC_MACROS_H

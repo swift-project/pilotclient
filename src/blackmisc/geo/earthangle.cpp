@@ -17,7 +17,77 @@ namespace BlackMisc
     namespace Geo
     {
 
-        template <class LATorLON> LATorLON CEarthAngle<LATorLON>::fromWgs84(const QString &wgsCoordinate)
+        template <class LATorLON>
+        CEarthAngle<LATorLON> &CEarthAngle<LATorLON>::operator +=(const CEarthAngle &latOrLon)
+        {
+            this->PhysicalQuantities::CAngle::operator +=(latOrLon);
+            return *this;
+        }
+
+        template <class LATorLON>
+        CEarthAngle<LATorLON> &CEarthAngle<LATorLON>::operator -=(const CEarthAngle &latOrLon)
+        {
+            this->PhysicalQuantities::CAngle::operator -=(latOrLon);
+            return *this;
+        }
+
+        template <class LATorLON>
+        CEarthAngle<LATorLON> &CEarthAngle<LATorLON>::operator *=(double multiply)
+        {
+            this->PhysicalQuantities::CAngle::operator *=(multiply);
+            return *this;
+        }
+
+        template <class LATorLON>
+        bool CEarthAngle<LATorLON>::operator >(const CEarthAngle &latOrLon) const
+        {
+            return this->PhysicalQuantities::CAngle::operator >(latOrLon);
+        }
+
+        template <class LATorLON>
+        bool CEarthAngle<LATorLON>::operator <(const CEarthAngle &latOrLon) const
+        {
+            return this->PhysicalQuantities::CAngle::operator >(latOrLon);
+        }
+
+        template <class LATorLON>
+        bool CEarthAngle<LATorLON>::operator <=(const CEarthAngle &latOrLon) const
+        {
+            return this->PhysicalQuantities::CAngle::operator <=(latOrLon);
+        }
+
+        template <class LATorLON>
+        bool CEarthAngle<LATorLON>::operator >=(const CEarthAngle &latOrLon) const
+        {
+            return this->PhysicalQuantities::CAngle::operator >=(latOrLon);
+        }
+
+        template <class LATorLON>
+        LATorLON CEarthAngle<LATorLON>::operator +(const CEarthAngle &latOrLon) const
+        {
+            LATorLON l(*this);
+            l += latOrLon;
+            return l;
+        }
+
+        template <class LATorLON>
+        LATorLON CEarthAngle<LATorLON>::operator -(const CEarthAngle &latOrLon) const
+        {
+            LATorLON l(*this);
+            l -= latOrLon;
+            return l;
+        }
+
+        template <class LATorLON>
+        LATorLON CEarthAngle<LATorLON>::operator *(double multiply) const
+        {
+            LATorLON l(*this);
+            l *= multiply;
+            return l;
+        }
+
+        template <class LATorLON>
+        LATorLON CEarthAngle<LATorLON>::fromWgs84(const QString &wgsCoordinate)
         {
             // http://www.regular-expressions.info/floatingpoint.html
             const QString wgs = wgsCoordinate.simplified().trimmed();
@@ -65,7 +135,35 @@ namespace BlackMisc
             return LATorLON(a);
         }
 
-        template <class LATorLON> CIcon CEarthAngle<LATorLON>::toIcon() const
+        template <class LATorLON>
+        CEarthAngle<LATorLON>::CEarthAngle()
+            : CEarthAngle::CValueObject(0.0, BlackMisc::PhysicalQuantities::CAngleUnit::deg())
+        { }
+
+        template <class LATorLON>
+        CEarthAngle<LATorLON>::CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit)
+            : CEarthAngle::CValueObject(value, unit)
+        { }
+
+        template <class LATorLON>
+        CEarthAngle<LATorLON>::CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle)
+            : CEarthAngle::CValueObject(angle)
+        { }
+
+        template <class LATorLON>
+        QString CEarthAngle<LATorLON>::convertToQString(bool i18n) const
+        {
+            return this->valueRoundedWithUnit(BlackMisc::PhysicalQuantities::CAngleUnit::deg(), 6, i18n);
+        }
+
+        template <class LATorLON>
+        LATorLON const *CEarthAngle<LATorLON>::derived() const { return static_cast<LATorLON const *>(this); }
+
+        template <class LATorLON>
+        LATorLON *CEarthAngle<LATorLON>::derived() { return static_cast<LATorLON *>(this); }
+
+        template <class LATorLON>
+        CIcon CEarthAngle<LATorLON>::toIcon() const
         {
             return BlackMisc::CIconList::iconByIndex(CIcons::GeoPosition);
         }

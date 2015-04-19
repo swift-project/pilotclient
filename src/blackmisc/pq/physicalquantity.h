@@ -76,53 +76,37 @@ namespace BlackMisc
             };
 
             //! Unit
-            MU getUnit() const { return this->m_unit; }
+            MU getUnit() const;
 
             /*!
              * \brief Simply set unit, do no calclulate conversion
              * \sa switchUnit
              */
-            void setUnit(const MU &unit) { this->m_unit = unit; }
+            void setUnit(const MU &unit);
 
             //! Set unit by string
-            void setUnitBySymbol(const QString &unitName)
-            {
-                this->m_unit = CMeasurementUnit::unitFromSymbol<MU>(unitName);
-            }
+            void setUnitBySymbol(const QString &unitName);
 
             //! Unit
-            QString getUnitSymbol() const { return this->m_unit.getSymbol(true); }
+            QString getUnitSymbol() const;
 
             //! Change unit, and convert value to maintain the same quantity
             PQ &switchUnit(const MU &newUnit);
 
             //! Is quantity null?
-            bool isNull() const { return this->m_unit.isNull(); }
+            bool isNull() const;
 
             //! Set null
-            void setNull() { this->m_unit = MU::nullUnit(); }
+            void setNull();
 
             //! Value in given unit
             double value(const MU &unit) const;
 
             //! Value in current unit
-            double value() const
-            {
-                if (this->isNull())
-                {
-                    return 0.0;
-                }
-                return this->m_value;
-            }
+            double value() const;
 
             //! Set value in current unit
-            void setCurrentUnitValue(double value)
-            {
-                if (!this->isNull())
-                {
-                    this->m_value = value;
-                }
-            }
+            void setCurrentUnitValue(double value);
 
             //! Rounded value in given unit
             double valueRounded(const MU &unit, int digits = -1) const;
@@ -137,10 +121,7 @@ namespace BlackMisc
             QString valueRoundedWithUnit(const MU &unit, int digits = -1, bool i18n = false) const;
 
             //! Value to QString with the current unit, e.g. "5.00m"
-            QString valueRoundedWithUnit(int digits = -1, bool i18n = false) const
-            {
-                return this->valueRoundedWithUnit(this->m_unit, digits, i18n);
-            }
+            QString valueRoundedWithUnit(int digits = -1, bool i18n = false) const;
 
             //! Change value without changing unit
             void setValueSameUnit(double value);
@@ -197,31 +178,19 @@ namespace BlackMisc
             PQ operator -(const PQ &other) const;
 
             //! Quantity value <= epsilon
-            bool isZeroEpsilonConsidered() const { return this->m_unit.isEpsilon(this->m_value); }
+            bool isZeroEpsilonConsidered() const;
 
             //! Value >= 0 epsilon considered
-            bool isPositiveWithEpsilonConsidered() const
-            {
-                return !this->isZeroEpsilonConsidered() && this->m_value > 0;
-            }
+            bool isPositiveWithEpsilonConsidered() const;
 
             //! Value <= 0 epsilon considered
-            bool isNegativeWithEpsilonConsidered() const
-            {
-                return !this->isZeroEpsilonConsidered() && this->m_value < 0;
-            }
+            bool isNegativeWithEpsilonConsidered() const;
 
             //! Make value always positive
-            void makePositive()
-            {
-                if (this->m_value < 0) { this->m_value *= -1.0; }
-            }
+            void makePositive();
 
             //! Make value always negative
-            void makeNegative()
-            {
-                if (this->m_value > 0) { this->m_value *= -1.0; }
-            }
+            void makeNegative();
 
             //! \copydoc CValueObject::marshallToDbus
             virtual void marshallToDbus(QDBusArgument &argument) const override;
@@ -254,16 +223,13 @@ namespace BlackMisc
 
             //! Default constructor
             //! \todo Remove as part of MS' CValueObject refactoring
-            CPhysicalQuantity() : m_value(0.0), m_unit(MU::nullUnit()) {}
+            CPhysicalQuantity();
 
             //! Constructor with double
             CPhysicalQuantity(double value, const MU &unit);
 
             //! Constructor by parsed string, e.g. 10m
-            CPhysicalQuantity(const QString &unitString) : m_value(0.0), m_unit(MU::nullUnit())
-            {
-                this->parseFromString(unitString);
-            }
+            CPhysicalQuantity(const QString &unitString);
 
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
@@ -279,21 +245,21 @@ namespace BlackMisc
             static int compareImpl(const PQ &, const PQ &);
 
             //! Easy access to derived class (CRTP template parameter)
-            PQ const *derived() const { return static_cast<PQ const *>(this); }
+            PQ const *derived() const;
 
             //! Easy access to derived class (CRTP template parameter)
-            PQ *derived() { return static_cast<PQ *>(this); }
+            PQ *derived();
         };
 
-        extern template class CPhysicalQuantity<CLengthUnit, CLength>;
-        extern template class CPhysicalQuantity<CPressureUnit, CPressure>;
-        extern template class CPhysicalQuantity<CFrequencyUnit, CFrequency>;
-        extern template class CPhysicalQuantity<CMassUnit, CMass>;
-        extern template class CPhysicalQuantity<CTemperatureUnit, CTemperature>;
-        extern template class CPhysicalQuantity<CSpeedUnit, CSpeed>;
-        extern template class CPhysicalQuantity<CAngleUnit, CAngle>;
-        extern template class CPhysicalQuantity<CTimeUnit, CTime>;
-        extern template class CPhysicalQuantity<CAccelerationUnit, CAcceleration>;
+        extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CLengthUnit, CLength>;
+        extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CPressureUnit, CPressure>;
+        extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CFrequencyUnit, CFrequency>;
+        extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CMassUnit, CMass>;
+        extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CTemperatureUnit, CTemperature>;
+        extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CSpeedUnit, CSpeed>;
+        extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CAngleUnit, CAngle>;
+        extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CTimeUnit, CTime>;
+        extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CAccelerationUnit, CAcceleration>;
 
     }
 }

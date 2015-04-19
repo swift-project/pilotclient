@@ -37,73 +37,33 @@ namespace BlackMisc
         {
         public:
             //! Plus operator +=
-            CEarthAngle &operator +=(const CEarthAngle &latOrLon)
-            {
-                this->PhysicalQuantities::CAngle::operator +=(latOrLon);
-                return *this;
-            }
+            CEarthAngle &operator +=(const CEarthAngle &latOrLon);
 
             //! Minus operator-=
-            CEarthAngle &operator -=(const CEarthAngle &latOrLon)
-            {
-                this->PhysicalQuantities::CAngle::operator -=(latOrLon);
-                return *this;
-            }
+            CEarthAngle &operator -=(const CEarthAngle &latOrLon);
 
             //! Multiply operator *=
-            CEarthAngle operator *=(double multiply)
-            {
-                this->PhysicalQuantities::CAngle::operator *=(multiply);
-                return *this;
-            }
+            CEarthAngle &operator *=(double multiply);
 
             //! Greater operator >
-            bool operator >(const CEarthAngle &latOrLon) const
-            {
-                return this->PhysicalQuantities::CAngle::operator >(latOrLon);
-            }
-
+            bool operator >(const CEarthAngle &latOrLon) const;
             //! Less operator <
-            bool operator <(const CEarthAngle &latOrLon) const
-            {
-                return this->PhysicalQuantities::CAngle::operator >(latOrLon);
-            }
+            bool operator <(const CEarthAngle &latOrLon) const;
 
             //! Less equal operator <=
-            bool operator <=(const CEarthAngle &latOrLon) const
-            {
-                return this->PhysicalQuantities::CAngle::operator <=(latOrLon);
-            }
+            bool operator <=(const CEarthAngle &latOrLon) const;
 
             //! Greater equal operator >=
-            bool operator >=(const CEarthAngle &latOrLon) const
-            {
-                return this->PhysicalQuantities::CAngle::operator >=(latOrLon);
-            }
+            bool operator >=(const CEarthAngle &latOrLon) const;
 
             //! Plus operator +
-            LATorLON operator +(const CEarthAngle &latOrLon) const
-            {
-                LATorLON l(*this);
-                l += latOrLon;
-                return l;
-            }
+            LATorLON operator +(const CEarthAngle &latOrLon) const;
 
             //! Minus operator -
-            LATorLON operator -(const CEarthAngle &latOrLon) const
-            {
-                LATorLON l(*this);
-                l -= latOrLon;
-                return l;
-            }
+            LATorLON operator -(const CEarthAngle &latOrLon) const;
 
             //! Multiply operator *
-            LATorLON operator *(double multiply) const
-            {
-                LATorLON l(*this);
-                l *= multiply;
-                return l;
-            }
+            LATorLON operator *(double multiply) const;
 
             //! \copydoc CValueObject::toIcon
             CIcon toIcon() const override;
@@ -117,30 +77,27 @@ namespace BlackMisc
 
         protected:
             //! Default constructor
-            CEarthAngle() : CEarthAngle::CValueObject(0.0, BlackMisc::PhysicalQuantities::CAngleUnit::deg()) {}
+            CEarthAngle();
 
             //! Init by double value
-            CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle::CValueObject(value, unit) {}
+            CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit);
 
             //! Init by CAngle value
-            CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle::CValueObject(angle) {}
+            CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle);
 
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override
-            {
-                return this->valueRoundedWithUnit(BlackMisc::PhysicalQuantities::CAngleUnit::deg(), 6, i18n);
-            }
+            virtual QString convertToQString(bool i18n = false) const override;
 
         private:
             //! Easy access to derived class (CRTP template parameter)
-            LATorLON const *derived() const { return static_cast<LATorLON const *>(this); }
+            LATorLON const *derived() const;
 
             //! Easy access to derived class (CRTP template parameter)
-            LATorLON *derived() { return static_cast<LATorLON *>(this); }
+            LATorLON *derived();
         };
 
-        extern template class CEarthAngle<CLatitude>;
-        extern template class CEarthAngle<CLongitude>;
+        extern template class BLACKMISC_EXPORT_TEMPLATE CEarthAngle<CLatitude>;
+        extern template class BLACKMISC_EXPORT_TEMPLATE CEarthAngle<CLongitude>;
 
     }
 }

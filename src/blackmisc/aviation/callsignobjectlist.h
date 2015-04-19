@@ -108,12 +108,12 @@ namespace BlackMisc
             CONTAINER &container();
         };
 
-        extern template class ICallsignObjectList<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
-        extern template class ICallsignObjectList<BlackMisc::Aviation::CAircraft, BlackMisc::Aviation::CAircraftList>;
-        extern template class ICallsignObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
-        extern template class ICallsignObjectList<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList>;
-        extern template class ICallsignObjectList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
-        extern template class ICallsignObjectList<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>;
+        extern template class BLACKMISC_EXPORT_TEMPLATE ICallsignObjectList<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
+        extern template class BLACKMISC_EXPORT_TEMPLATE ICallsignObjectList<BlackMisc::Aviation::CAircraft, BlackMisc::Aviation::CAircraftList>;
+        extern template class BLACKMISC_EXPORT_TEMPLATE ICallsignObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
+        extern template class BLACKMISC_EXPORT_TEMPLATE ICallsignObjectList<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList>;
+        extern template class BLACKMISC_EXPORT_TEMPLATE ICallsignObjectList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
+        extern template class BLACKMISC_EXPORT_TEMPLATE ICallsignObjectList<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>;
 
     } //namespace
 } // namespace
