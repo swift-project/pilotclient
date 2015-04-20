@@ -16,6 +16,14 @@
 
 namespace BlackMisc
 {
+    namespace Geo { template <class> class CEarthAngle; }
+
+    //! \private
+    template <class LATorLON> struct CValueObjectPolicy<Geo::CEarthAngle<LATorLON>> : public CValueObjectPolicy<>
+    {
+        using MetaType = Policy::MetaType::None;
+    };
+
     namespace Geo
     {
         /*!

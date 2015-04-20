@@ -17,6 +17,13 @@
 
 namespace BlackMisc
 {
+
+    //! \private
+    template <> struct CValueObjectPolicy<PhysicalQuantities::CAngle> : public CValueObjectPolicy<>
+    {
+        using MetaType = Policy::MetaType::DefaultAndQList;
+    };
+
     namespace PhysicalQuantities
     {
         //! Physical unit angle (radians, degrees)

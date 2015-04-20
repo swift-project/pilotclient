@@ -16,6 +16,13 @@
 
 namespace BlackMisc
 {
+
+    //! \private
+    template <> struct CValueObjectPolicy<PhysicalQuantities::CMass> : public CValueObjectPolicy<>
+    {
+        using MetaType = Policy::MetaType::DefaultAndQList;
+    };
+
     namespace PhysicalQuantities
     {
 

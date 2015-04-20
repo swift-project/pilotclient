@@ -49,7 +49,9 @@ namespace BlackMisc
     //! \private
     template <template <class> class C, class T, class CIt>
     struct CValueObjectPolicy<CContainerBase<C, T, CIt>> : public CValueObjectLegacy
-    {};
+    {
+        using MetaType = Policy::MetaType::None;
+    };
 
     /*!
      * \brief Base class for CCollection and CSequence adding mutating operations and CValueObject facility on top of CRangeBase.

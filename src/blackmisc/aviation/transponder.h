@@ -16,6 +16,15 @@
 
 namespace BlackMisc
 {
+
+    namespace Aviation { class CTransponder; }
+
+    //! \private
+    template <> struct CValueObjectPolicy<Aviation::CTransponder> : public CValueObjectPolicy<>
+    {
+        using MetaType = Policy::MetaType::Default;
+    };
+
     namespace Aviation
     {
         //! Transponder

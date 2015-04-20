@@ -16,6 +16,13 @@
 
 namespace BlackMisc
 {
+
+    //! \private
+    template <> struct CValueObjectPolicy<Geo::CLongitude> : public CValueObjectPolicy<>
+    {
+        using MetaType = Policy::MetaType::Default;
+    };
+
     namespace Geo
     {
 

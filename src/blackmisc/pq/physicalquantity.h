@@ -31,7 +31,7 @@ namespace BlackMisc
     //! \private
     template <class MU, class PQ> struct CValueObjectPolicy<PhysicalQuantities::CPhysicalQuantity<MU, PQ>> : public CValueObjectPolicy<>
     {
-        using MetaType = Policy::MetaType::DefaultAndQList;
+        using MetaType = Policy::MetaType::None;
         using Equals = Policy::Equals::None;
         using LessThan = Policy::LessThan::None;
         using Compare = Policy::Compare::None;

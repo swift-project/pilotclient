@@ -14,6 +14,15 @@
 
 namespace BlackMisc
 {
+
+    namespace Aviation { class CAvionicsBase; }
+
+    //! \private
+    template <> struct CValueObjectPolicy<Aviation::CAvionicsBase> : public CValueObjectPolicy<>
+    {
+        using MetaType = Policy::MetaType::None;
+    };
+
     namespace Aviation
     {
 

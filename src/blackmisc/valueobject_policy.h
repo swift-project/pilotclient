@@ -80,6 +80,14 @@ namespace BlackMisc
                 template <class T, class...>
                 static void registerImpl() { Default::registerImpl<T>(); Default::registerImpl<QList<T>>(); }
             };
+
+            //! CValueObject policy for a class which should not register itself as meta type
+            struct None
+            {
+                //! Register with QMetaType
+                template <class T, class...>
+                static void registerImpl() { }
+            };
         }
 
         namespace Equals

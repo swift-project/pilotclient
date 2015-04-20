@@ -21,6 +21,7 @@ namespace BlackMisc
     //! \private
     template <> struct CValueObjectPolicy<Aviation::CComSystem> : public CValueObjectPolicy<>
     {
+        using MetaType = Policy::MetaType::Default;
         using LessThan = Policy::LessThan::None;
         using Compare = Policy::Compare::None;
         using Hash = Policy::Hash::Own;
