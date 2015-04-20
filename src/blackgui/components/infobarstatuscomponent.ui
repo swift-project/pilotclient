@@ -54,7 +54,7 @@
       <string>Network</string>
      </property>
      <property name="text">
-      <string>nt.</string>
+      <string>net</string>
      </property>
     </widget>
    </item>
@@ -73,7 +73,7 @@
       <string>Simulator</string>
      </property>
      <property name="text">
-      <string>sm.</string>
+      <string>sim</string>
      </property>
     </widget>
    </item>
@@ -93,7 +93,7 @@
       <string>Mappings ready</string>
      </property>
      <property name="text">
-      <string>mp.</string>
+      <string>map</string>
      </property>
     </widget>
    </item>

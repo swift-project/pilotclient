@@ -71,31 +71,11 @@ void SwiftGuiStd::mousePressEvent(QMouseEvent *event)
 
 void SwiftGuiStd::performGracefulShutdown()
 {
-    // clean up GUI
-    this->ui->comp_MainInfoArea->dockAllWidgets();
-    this->ui->comp_InvisibleInfoArea->dockAllWidgets();
-
-    // close info window
-    if (this->m_compInfoWindow)
-    {
-        this->m_compInfoWindow->close();
-        this->m_compInfoWindow = nullptr;
-    }
-
     if (!this->m_init) { return; }
     this->m_init = false;
 
-    // tell GUI components to shut down
-    emit requestGracefulShutdown();
-
     // shut down all timers
     this->stopAllTimers(true);
-
-    // tell context GUI is going down
-    if (this->getIContextApplication())
-    {
-        this->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ApplicationGui, IContextApplication::ApplicationStops);
-    }
 
     // if we have a context, we shut some things down
     if (this->m_contextNetworkAvailable)
@@ -111,6 +91,32 @@ void SwiftGuiStd::performGracefulShutdown()
             this->getIContextNetwork()->disconnect(this); // avoid any status update signals, etc.
         }
     }
+
+    // clean up GUI
+    this->ui->comp_MainInfoArea->dockAllWidgets();
+    this->ui->comp_InvisibleInfoArea->dockAllWidgets();
+
+    // close info window
+    if (this->m_compInfoWindow)
+    {
+        this->m_compInfoWindow->close();
+        this->m_compInfoWindow = nullptr;
+    }
+
+    // allow some other parts to react
+    QApplication::processEvents(QEventLoop::AllEvents, 100);
+
+    // tell GUI components to shut down
+    emit requestGracefulShutdown();
+
+    // tell context GUI is going down
+    if (this->getIContextApplication())
+    {
+        this->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ApplicationGui, IContextApplication::ApplicationStops);
+    }
+
+    // allow some other parts to react
+    QApplication::processEvents(QEventLoop::AllEvents, 100);
 }
 
 void SwiftGuiStd::closeEvent(QCloseEvent *event)
