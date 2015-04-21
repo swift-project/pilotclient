@@ -22,7 +22,7 @@
 //! @{
 
 //! DBus interface for context
-#define BLACKCORE_CONTEXTOWNAIRCRAFT_INTERFACENAME "org.swift-project.blackcore.contextownaircraft"
+#define BLACKCORE_CONTEXTOWNAIRCRAFT_INTERFACENAME "org.swift_project.blackcore.contextownaircraft"
 
 //! DBus object path for context
 #define BLACKCORE_CONTEXTOWNAIRCRAFT_OBJECTPATH "/ownaircraft"

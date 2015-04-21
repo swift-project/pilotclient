@@ -27,7 +27,7 @@
 //! @{
 
 //! DBus interface for context
-#define BLACKCORE_CONTEXTNETWORK_INTERFACENAME "org.swift-project.blackcore.contextnetwork"
+#define BLACKCORE_CONTEXTNETWORK_INTERFACENAME "org.swift_project.blackcore.contextnetwork"
 
 //! DBus object path for context
 #define BLACKCORE_CONTEXTNETWORK_OBJECTPATH "/network"

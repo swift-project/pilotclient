@@ -26,7 +26,7 @@
 //! @{
 
 //! DBus interface for context
-#define BLACKCORE_CONTEXTSETTINGS_INTERFACENAME "org.swift-project.blackcore.contextsettings"
+#define BLACKCORE_CONTEXTSETTINGS_INTERFACENAME "org.swift_project.blackcore.contextsettings"
 
 //! DBus object path for context
 #define BLACKCORE_CONTEXTSETTINGS_OBJECTPATH "/settings"

@@ -26,7 +26,7 @@
 //! @{
 
 //! DBus interface for context
-#define BLACKCORE_CONTEXTAUDIO_INTERFACENAME "org.swift-project.blackcore.contextaudio"
+#define BLACKCORE_CONTEXTAUDIO_INTERFACENAME "org.swift_project.blackcore.contextaudio"
 
 //! DBus object path for context
 #define BLACKCORE_CONTEXTAUDIO_OBJECTPATH "/audio"
