@@ -47,10 +47,13 @@ namespace BlackSimPlugin
             m_watcher = new QDBusServiceWatcher(this);
             m_watcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
             m_watcher->addWatchedService(xbusServiceName());
+            m_watcher->setObjectName("QDBusServiceWatcher");
             connect(m_watcher, &QDBusServiceWatcher::serviceUnregistered, this, &CSimulatorXPlane::ps_serviceUnregistered);
 
             m_fastTimer = new QTimer(this);
             m_slowTimer = new QTimer(this);
+            m_fastTimer->setObjectName(this->objectName().append(":m_fastTimer"));
+            m_slowTimer->setObjectName(this->objectName().append(":m_slowTimer"));
             connect(m_fastTimer, &QTimer::timeout, this, &CSimulatorXPlane::ps_fastTimerTimeout);
             connect(m_slowTimer, &QTimer::timeout, this, &CSimulatorXPlane::ps_slowTimerTimeout);
             m_fastTimer->start(100);

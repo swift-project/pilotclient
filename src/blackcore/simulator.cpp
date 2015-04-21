@@ -42,7 +42,7 @@ namespace BlackCore
           CRemoteAircraftAware(remoteAircraftProvider),
           m_simulatorPluginInfo(info)
     {
-        this->setObjectName("CSimulatorCommon");
+        this->setObjectName(info.getIdentifier());
         m_oneSecondTimer = new QTimer(this);
         m_oneSecondTimer->setObjectName(this->objectName().append(":OneSecondTimer"));
         connect(this->m_oneSecondTimer, &QTimer::timeout, this, &CSimulatorCommon::ps_oneSecondTimer);
@@ -129,13 +129,13 @@ namespace BlackCore
         if (!this->m_interpolator) { return; }
 
         const CCallsign callsign(aircraft.getCallsign());
-        if (!this->m_interpolator->hasDataForCallsign(callsign)) { return; }
+        if (!(this->remoteAircraftSituationsCount(callsign) < 1)) { return; }
 
         // with an interpolator the interpolated situation is used
         // to avoid position jittering
         qint64 time = QDateTime::currentMSecsSinceEpoch();
         IInterpolator::InterpolationStatus is;
-        CAircraftSituation as(m_interpolator->getInterpolatedSituation(callsign, time, is));
+        CAircraftSituation as(m_interpolator->getInterpolatedSituation(callsign, time, aircraft.isVtol(), is));
         if (is.interpolationSucceeded) { aircraft.setSituation(as); }
 
     }

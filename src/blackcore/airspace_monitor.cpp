@@ -77,53 +77,53 @@ namespace BlackCore
         return m_aircraftInRange;
     }
 
-    const CAircraftSituationList &CAirspaceMonitor::remoteAircraftSituations() const
+    CAircraftSituationList CAirspaceMonitor::remoteAircraftSituations(const CCallsign &callsign) const
     {
-        // not thread safe, check
-        Q_ASSERT(this->thread() == QThread::currentThread());
-        return m_aircraftSituations;
+        QReadLocker l(&m_lockSituations);
+        static const CAircraftSituationList empty;
+        if (!m_situationsByCallsign.contains(callsign)) { return empty; }
+        return m_situationsByCallsign[callsign];
     }
 
-    CAircraftSituationList &CAirspaceMonitor::remoteAircraftSituations()
+    int CAirspaceMonitor::remoteAircraftSituationsCount(const CCallsign &callsign) const
     {
-        // not thread safe, check
-        Q_ASSERT(this->thread() == QThread::currentThread());
-        return m_aircraftSituations;
+        QReadLocker l(&m_lockSituations);
+        if (!m_situationsByCallsign.contains(callsign)) { return -1; }
+        return m_situationsByCallsign[callsign].size();
     }
 
-    CAircraftSituationList CAirspaceMonitor::getRenderedAircraftSituations() const
+    CAircraftPartsList CAirspaceMonitor::remoteAircraftParts(const CCallsign &callsign, qint64 cutoffTimeValuesBefore) const
     {
-        Q_ASSERT(this->thread() == QThread::currentThread());
-        return this->m_aircraftSituations;
+        QReadLocker l(&m_lockParts);
+        static const CAircraftPartsList empty;
+        if (!m_partsByCallsign.contains(callsign)) { return empty; }
+        if (cutoffTimeValuesBefore < 0)
+        {
+            return m_partsByCallsign[callsign];
+        }
+        else
+        {
+            return m_partsByCallsign[callsign].findBefore(cutoffTimeValuesBefore);
+        }
     }
 
-    const CAircraftPartsList &CAirspaceMonitor::remoteAircraftParts() const
+    bool CAirspaceMonitor::isRemoteAircraftSupportingParts(const CCallsign &callsign) const
     {
-        // not thread safe, check
-        Q_ASSERT(this->thread() == QThread::currentThread());
-        return m_aircraftParts;
+        QReadLocker l(&m_lockParts);
+        return m_aircraftSupportingParts.contains(callsign);
     }
 
-    CAircraftPartsList &CAirspaceMonitor::remoteAircraftParts()
+    CCallsignSet CAirspaceMonitor::remoteAircraftSupportingParts() const
     {
-        // not thread safe, check
-        Q_ASSERT(this->thread() == QThread::currentThread());
-        return m_aircraftParts;
-    }
-
-    CAircraftPartsList CAirspaceMonitor::getRenderedAircraftParts() const
-    {
-        Q_ASSERT(this->thread() == QThread::currentThread());
-        return this->m_aircraftParts;
+        QReadLocker l(&m_lockParts);
+        return m_aircraftSupportingParts;
     }
 
     bool CAirspaceMonitor::connectRemoteAircraftProviderSignals(
         std::function<void(const CAircraftSituation &)> situationSlot,
         std::function<void(const CAircraftParts &)> partsSlot,
-        std::function<void(const CCallsign &)> removedAircraftSlot
-    )
+        std::function<void(const CCallsign &)> removedAircraftSlot)
     {
-        // bool s1 = connect(this, &CAirspaceMonitor::addedRemoteAircraftSituation, situationSlot);
         bool s1 = connect(this->m_network, &INetwork::aircraftPositionUpdate, situationSlot);
         Q_ASSERT(s1);
         bool s2 = connect(this, &CAirspaceMonitor::addedRemoteAircraftParts, partsSlot);
@@ -516,8 +516,16 @@ namespace BlackCore
             const CCallsign cs(aircraft.getCallsign());
             emit removedRemoteAircraft(cs);
         }
-        m_aircraftSituations.clear();
-        m_aircraftParts.clear();
+
+        // block for lock scope
+        {
+            QWriteLocker l1(&m_lockParts);
+            QWriteLocker l2(&m_lockSituations);
+            m_situationsByCallsign.clear();
+            m_partsByCallsign.clear();
+            m_aircraftSupportingParts.clear();
+        }
+
         m_aircraftInRange.clear();
         m_flightPlanCache.clear();
         m_icaoCodeCache.clear();
@@ -769,8 +777,7 @@ namespace BlackCore
         Q_ASSERT_X(!callsign.isEmpty(), "ps_aircraftUpdateReceived", "Empty callsign");
 
         // store situation history
-        this->m_aircraftSituations.push_front(situation);
-        this->m_aircraftSituations.removeOlderThanNowMinusOffset(AircraftSituationsRemovedOffsetMs);
+        this->storeAircraftSituation(situation);
         emit this->addedRemoteAircraftSituation(situation);
 
         bool exists = this->m_aircraftInRange.containsCallsign(callsign);
@@ -892,15 +899,22 @@ namespace BlackCore
     void CAirspaceMonitor::ps_pilotDisconnected(const CCallsign &callsign)
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
-        bool contains = this->m_aircraftInRange.containsCallsign(callsign);
 
-        // if with contains false remove here, in case of inconsistencies
+        // in case of inconsistencies I always remove here
         this->m_aircraftWatchdog.removeCallsign(callsign);
         this->m_otherClients.removeByCallsign(callsign);
-        this->m_aircraftSituations.removeByCallsign(callsign);
-        this->m_aircraftParts.removeByCallsign(callsign);
         this->removeFromAircraftCaches(callsign);
 
+        // block for lock scope
+        {
+            QWriteLocker l1(&m_lockParts);
+            QWriteLocker l2(&m_lockSituations);
+            m_situationsByCallsign.remove(callsign);
+            m_partsByCallsign.remove(callsign);
+            m_aircraftSupportingParts.remove(callsign);
+        }
+
+        bool contains = this->m_aircraftInRange.containsCallsign(callsign);
         if (contains)
         {
             this->m_aircraftInRange.removeByCallsign(callsign);
@@ -938,7 +952,7 @@ namespace BlackCore
         else
         {
             // incremental update
-            parts = m_aircraftParts.findFirstByCallsign(callsign);
+            parts = this->remoteAircraftParts(callsign).findFirstByCallsign(callsign);
             QJsonObject config = applyIncrementalObject(parts.toJson(), jsonObject);
             parts.convertFromJson(config);
         }
@@ -947,9 +961,8 @@ namespace BlackCore
         parts.setCurrentUtcTime();
         parts.setCallsign(callsign);
 
-        // store part history
-        this->m_aircraftParts.push_front(parts);
-        this->m_aircraftParts.removeOlderThanNowMinusOffset(AircraftPartsRemoveOffsetMs);
+        // store part history (parts always absolute)
+        this->storeAircraftParts(parts);
         emit this->addedRemoteAircraftParts(parts);
 
         // here I expect always a changed value
@@ -963,6 +976,40 @@ namespace BlackCore
         if (!this->m_connected || !m_sendInterimPositions) { return; }
         CSimulatedAircraftList aircrafts = m_aircraftInRange.findBy(&CSimulatedAircraft::fastPositionUpdates, true);
         m_network->sendInterimPosition(aircrafts.getCallsigns());
+
+	void CAirspaceMonitor::storeAircraftSituation(const CAircraftSituation &situation)
+    {
+        QWriteLocker lock(&m_lockSituations);
+        const CCallsign callsign(situation.getCallsign());
+        Q_ASSERT_X(!callsign.isEmpty(), "storeAircraftSituation", "empty callsign");
+        if (callsign.isEmpty()) { return; }
+
+        // list from new to old
+        CAircraftSituationList &l = this->m_situationsByCallsign[callsign];
+        l.push_frontMaxElements(situation, MaxSituationsPerCallsign);
+
+        // check sort order
+        Q_ASSERT_X(l.size() < 2 || l[0].getMSecsSinceEpoch() >= l[1].getMSecsSinceEpoch(), "storeAircraftSituation", "wrong sort order");
+    }
+
+    void CAirspaceMonitor::storeAircraftParts(const CAircraftParts &parts)
+    {
+        QWriteLocker lock(&m_lockParts);
+        const CCallsign callsign(parts.getCallsign());
+        Q_ASSERT_X(!callsign.isEmpty(), "storeAircraftParts", "empty callsign");
+        if (callsign.isEmpty()) { return; }
+
+        // list sorted from new to old
+        CAircraftPartsList &l = this->m_partsByCallsign[callsign];
+        l.push_frontMaxElements(parts, MaxPartsPerCallsign);
+
+        if (!m_aircraftSupportingParts.contains(callsign))
+        {
+            m_aircraftSupportingParts.push_back(callsign); // mark as callsign which supports parts
+        }
+
+        // check sort order
+        Q_ASSERT_X(l.size() < 2 || l[0].getMSecsSinceEpoch() >= l[1].getMSecsSinceEpoch(), "storeAircraftParts", "wrong sort order");
     }
 
 } // namespace

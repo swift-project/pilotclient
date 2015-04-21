@@ -29,24 +29,30 @@ namespace BlackMisc
             return m_aircraft;
         }
 
-        const CAircraftPartsList &CRemoteAircraftProviderDummy::remoteAircraftParts() const
+        CAircraftPartsList CRemoteAircraftProviderDummy::remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeBefore) const
         {
-            return m_parts;
+            if (cutoffTimeBefore < 0) { return m_parts.findByCallsign(callsign); }
+            return m_parts.findByCallsign(callsign).findBefore(cutoffTimeBefore);
         }
 
-        CAircraftPartsList &CRemoteAircraftProviderDummy::remoteAircraftParts()
+        CAircraftSituationList CRemoteAircraftProviderDummy::remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const
         {
-            return m_parts;
+            return m_situations.findByCallsign(callsign);
         }
 
-        const CAircraftSituationList &CRemoteAircraftProviderDummy::remoteAircraftSituations() const
+        int CRemoteAircraftProviderDummy::remoteAircraftSituationsCount(const CCallsign &callsign) const
         {
-            return m_situations;
+            return remoteAircraftSituations(callsign).size();
         }
 
-        CAircraftSituationList &CRemoteAircraftProviderDummy::remoteAircraftSituations()
+        CCallsignSet CRemoteAircraftProviderDummy::remoteAircraftSupportingParts() const
         {
-            return m_situations;
+            return m_parts.getCallsigns();
+        }
+
+        bool CRemoteAircraftProviderDummy::isRemoteAircraftSupportingParts(const CCallsign &callsign) const
+        {
+            return remoteAircraftParts(callsign).size() > 0;
         }
 
         bool CRemoteAircraftProviderDummy::connectRemoteAircraftProviderSignals(std::function<void (const CAircraftSituation &)> situationSlot, std::function<void (const CAircraftParts &)> partsSlot, std::function<void (const CCallsign &)> removedAircraftSlot)
@@ -83,14 +89,14 @@ namespace BlackMisc
 
         void CRemoteAircraftProviderDummy::insertNewSituation(const CAircraftSituation &situation)
         {
-            this->m_situations.push_frontMaxElements(situation, 20);
+            this->m_situations.push_front(situation);
             this->m_situations.sortLatestFirst(); // like in real world, latest should be first
             emit addedRemoteAircraftSituation(situation);
         }
 
         void CRemoteAircraftProviderDummy::insertNewAircraftParts(const CAircraftParts &parts)
         {
-            this->m_parts.push_frontMaxElements(parts, 20);
+            this->m_parts.push_front(parts);
             this->m_parts.sortLatestFirst(); // like in real world, latest should be first
             emit addedRemoteAircraftParts(parts);
         }

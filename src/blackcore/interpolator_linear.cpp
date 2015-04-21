@@ -20,30 +20,20 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackCore
 {
-    CAircraftSituation CInterpolatorLinear::getInterpolatedSituation(const CCallsign &callsign, qint64 currentTimeMsSinceEpoc, InterpolationStatus &status, const CSituationsPerCallsign *situationsPerCallsign) const
+    CAircraftSituation CInterpolatorLinear::getInterpolatedSituation(const CCallsign &callsign, qint64 currentTimeMsSinceEpoc, bool vtolAiracraft, InterpolationStatus &status) const
     {
-        const static CAircraftSituation empty;
+        static const CAircraftSituation empty;
         status.reset();
-        QList<CAircraftSituationList> splitSituations;
+
+        // any data at all?
+        Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
+        if (this->remoteAircraftSituationsCount(callsign) < 1) { return empty; }
+
+        // data, split situations by time
         if (currentTimeMsSinceEpoc < 0) { currentTimeMsSinceEpoc = QDateTime::currentMSecsSinceEpoch(); }
         qint64 splitTimeMsSinceEpoch = currentTimeMsSinceEpoc - TimeOffsetMs;
 
-        if (situationsPerCallsign)
-        {
-            // lock free, expected that situationsPerCallsign is a copy
-            if (!situationsPerCallsign->contains(callsign))   { return empty; }
-            if ((*situationsPerCallsign)[callsign].isEmpty()) { return empty; }
-            splitSituations = (*situationsPerCallsign)[callsign].splitByTime(splitTimeMsSinceEpoch);
-        }
-        else
-        {
-            // only part where it is locked
-            QReadLocker lock(&m_lockSituations);
-            if (!m_situationsByCallsign.contains(callsign)) { return empty; }
-            if (m_situationsByCallsign[callsign].isEmpty())  { return empty; }
-            splitSituations = m_situationsByCallsign[callsign].splitByTime(splitTimeMsSinceEpoch, true);
-        }
-
+        QList<CAircraftSituationList> splitSituations(remoteAircraftSituations(callsign).splitByTime(splitTimeMsSinceEpoch, true));
         CAircraftSituationList &situationsNewer = splitSituations[0]; // newer part
         CAircraftSituationList &situationsOlder = splitSituations[1]; // older part
 
@@ -123,16 +113,15 @@ namespace BlackCore
         // Interpolate altitude: Alt = (AltB - AltA) * t + AltA
         const CAltitude oldAlt(oldSituation.getAltitude());
         const CAltitude newAlt(newSituation.getAltitude());
-        Q_ASSERT(oldAlt.getReferenceDatum() == newAlt.getReferenceDatum()); // otherwise no calculation is possible
+        Q_ASSERT_X(oldAlt.getReferenceDatum() == newAlt.getReferenceDatum(), Q_FUNC_INFO, "mismatch in reference"); // otherwise no calculation is possible
         currentSituation.setAltitude(CAltitude((newAlt - oldAlt)
                                                * simulationTimeFraction
                                                + oldAlt,
                                                oldAlt.getReferenceDatum()));
 
-        if (newLat == oldLat && newLng == oldLng && oldAlt == newAlt)
+        if (!vtolAiracraft && newLat == oldLat && newLng == oldLng && oldAlt == newAlt)
         {
-            // stop interpolation here
-            //! \todo Does not work for VTOL aircraft. We need a flag for VTOL aircraft
+            // stop interpolation here, does not work for VTOL aircraft. We need a flag for VTOL aircraft
             return currentSituation;
         }
 
@@ -179,7 +168,7 @@ namespace BlackCore
                                         * simulationTimeFraction
                                         + oldSituation.getGroundSpeed());
         status.changedPosition = true;
-        Q_ASSERT(currentSituation.getCallsign() == callsign);
+        Q_ASSERT_X(currentSituation.getCallsign() == callsign, Q_FUNC_INFO, "mismatching callsigns");
         return currentSituation;
     }
 

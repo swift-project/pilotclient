@@ -76,13 +76,13 @@ namespace BlackSimPlugin
         void CFs9Client::timerEvent(QTimerEvent *event)
         {
             Q_UNUSED(event);
-            Q_ASSERT(m_interpolator);
+            Q_ASSERT_X(m_interpolator, Q_FUNC_INFO, "Missing interpolator");
 
             if (m_clientStatus == Disconnected) { return; }
 
-
             IInterpolator::InterpolationStatus status;
-            CAircraftSituation situation = this->m_interpolator->getInterpolatedSituation(m_callsign, -1, status);
+            bool vtolAircraft(false);
+            CAircraftSituation situation = this->m_interpolator->getInterpolatedSituation(m_callsign, -1, vtolAircraft, status);
 
             // Test only for successful interpolation. FS9 requires constant positions
             if (!status.interpolationSucceeded) { return; }

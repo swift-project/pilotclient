@@ -43,25 +43,28 @@ namespace BlackCore
         //! Constructor
         CAirspaceMonitor(QObject *parent, const BlackMisc::Simulation::IOwnAircraftProviderReadOnly *ownAircraft, INetwork *network, CVatsimBookingReader *bookings, CVatsimDataFileReader *dataFile);
 
-        //! \copydoc IRemoteAircraftProviderReadOnly::renderedAircraft
+        //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraft
         virtual const BlackMisc::Simulation::CSimulatedAircraftList &remoteAircraft() const override;
 
-        //! \copydoc IRemoteAircraftProvider::renderedAircraft
+        //! \copydoc IRemoteAircraftProvider::remoteAircraft
         virtual BlackMisc::Simulation::CSimulatedAircraftList &remoteAircraft() override;
 
         //! \copydoc IRemoteAircraftProvider::remoteAircraftSituations
-        virtual const BlackMisc::Aviation::CAircraftSituationList &remoteAircraftSituations() const override;
+        virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
-        //! \copydoc IRemoteAircraftProvider::remoteAircraftSituations
-        virtual BlackMisc::Aviation::CAircraftSituationList &remoteAircraftSituations() override;
-
-        //! \copydoc IRemoteAircraftProvider::remoteAircraftParts
-        virtual const BlackMisc::Aviation::CAircraftPartsList &remoteAircraftParts() const override;
+        //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationsCount
+        virtual int remoteAircraftSituationsCount(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
         //! \copydoc IRemoteAircraftProvider::remoteAircraftParts
-        virtual BlackMisc::Aviation::CAircraftPartsList &remoteAircraftParts() override;
+        virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeValuesBefore = -1) const override;
 
-        //! \copydoc IRemoteAircraftProvider::remoteAircraftParts
+        //! \copydoc IRemoteAircraftProviderReadOnly::isRemoteAircraftSupportingParts
+        virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
+
+        //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraftSupportingParts
+        virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
+
+        //! \copydoc IRemoteAircraftProvider::updateAircraftEnabled
         virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const QString &originator) override;
 
         //! \copydoc IRemoteAircraftProvider::updateAircraftModel
@@ -116,12 +119,6 @@ namespace BlackCore
         //! Test injected aircraft parts
         void testAddAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts, bool incremental);
 
-        //! Aircraft situations
-        virtual BlackMisc::Aviation::CAircraftSituationList getRenderedAircraftSituations() const;
-
-        //! Aircraft parts
-        virtual BlackMisc::Aviation::CAircraftPartsList getRenderedAircraftParts() const;
-
         //! \copydoc IRemoteAircraftProviderReadOnly::connectSignals
         //! \copydoc IRemoteAircraftProviderReadOnly::connectSignals
         virtual bool connectRemoteAircraftProviderSignals(
@@ -143,7 +140,7 @@ namespace BlackCore
 
         //--- signals for the provider, work locally only (not in DBus)
 
-        //! \copydoc IRemoteAircraftProviderReadOnly::addedRemoteAircraftSituation
+        //! \copydoc IRemoteAircraftProviderReadOnly::addedRemoteAircraftPart
         void addedRemoteAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
         //! \copydoc IRemoteAircraftProviderReadOnly::addedRemoteAircraftPart
@@ -151,6 +148,8 @@ namespace BlackCore
 
         //! \copydoc IRemoteAircraftProviderReadOnly::removedAircraft
         void removedRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign);
+
+        //--- DBus / local signals
 
         //! Online ATC stations were changed
         void changedAtcStationsOnline();
@@ -175,8 +174,11 @@ namespace BlackCore
         BlackMisc::Aviation::CAtcStationList m_atcStationsBooked;
         BlackMisc::Network::CClientList      m_otherClients;
         BlackMisc::Simulation::CSimulatedAircraftList  m_aircraftInRange;
-        BlackMisc::Aviation::CAircraftSituationList    m_aircraftSituations;
-        BlackMisc::Aviation::CAircraftPartsList        m_aircraftParts;
+
+        // hashs, because not sorted by key but keeping order
+        CSituationsPerCallsign m_situationsByCallsign; //!< situations, for performance reasons per callsign
+        CPartsPerCallsign      m_partsByCallsign;      //!< parts, for performance reasons per callsign
+        BlackMisc::Aviation::CCallsignSet m_aircraftSupportingParts; //!< aircraft supporting parts
 
         QMap<BlackMisc::Aviation::CAirportIcao, BlackMisc::Aviation::CInformationMessage> m_metarCache;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan>            m_flightPlanCache;
@@ -190,8 +192,17 @@ namespace BlackCore
         bool                   m_serverSupportsNameQuery = false; //!< not all servers support name query
         bool                   m_connected = false;               //!< retrieve data
         bool                   m_sendInterimPositions = false;
+        QTimer                 m_interimPositionUpdateTimer;
 
-        QTimer m_interimPositionUpdateTimer;
+        // locks
+        mutable QReadWriteLock m_lockSituations; //!< lock for situations
+        mutable QReadWriteLock m_lockParts;      //!< lock for parts
+
+
+        // TODO FIXME (MS) should be in INetwork
+        void sendFsipiCustomPacket(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;
+        void sendFsipirCustomPacket(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;
+        QStringList createFsipiCustomPacketData() const;
 
         //! Remove ATC online stations
         void removeAllOnlineAtcStations();
@@ -207,6 +218,14 @@ namespace BlackCore
 
         //! Schedule a ready for model matching
         void fireDelayedReadyForModelMatching(const BlackMisc::Aviation::CCallsign &callsign, int trial = 1, int delayMs = 2500);
+
+        //! Store an aircraft situation
+        //! \threadsafe
+        void storeAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
+
+        //! Store an aircraft part
+        //! \threadsafe
+        void storeAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
 
     private slots:
         //! Create aircraft in range, this is the only place where a new aircraft should be added

@@ -78,12 +78,13 @@ namespace BlackCore
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked);
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus);
         connect(this->m_airspace, &CAirspaceMonitor::changedAircraftInRange, this, &CContextNetwork::changedAircraftInRange);
-        connect(this->m_airspace, &CAirspaceMonitor::removedRemoteAircraft, this, &IContextNetwork::removedAircraft);
-        connect(this->m_airspace, &CAirspaceMonitor::removedRemoteAircraft, this, &CContextNetwork::removedRemoteAircraft);
+        connect(this->m_airspace, &CAirspaceMonitor::removedRemoteAircraft, this, &IContextNetwork::removedAircraft); // DBus
         connect(this->m_airspace, &CAirspaceMonitor::readyForModelMatching, this, &CContextNetwork::readyForModelMatching);
-        connect(this->m_airspace, &CAirspaceMonitor::addedRemoteAircraftParts, this, &CContextNetwork::addedRemoteAircraftParts);
-        connect(this->m_airspace, &CAirspaceMonitor::addedRemoteAircraftSituation, this, &CContextNetwork::addedRemoteAircraftSituation);
         connect(this->m_airspace, &CAirspaceMonitor::addedAircraft, this, &CContextNetwork::addedAircraft);
+
+        // remote provider, local only
+        connect(this->m_airspace, &CAirspaceMonitor::removedRemoteAircraft, this, &CContextNetwork::removedRemoteAircraft); // Local
+        connect(this->m_airspace, &CAirspaceMonitor::addedRemoteAircraftParts, this, &CContextNetwork::addedRemoteAircraftParts);
     }
 
     CContextNetwork::~CContextNetwork()
@@ -103,28 +104,34 @@ namespace BlackCore
         return m_airspace->remoteAircraft();
     }
 
-    CAircraftSituationList &CContextNetwork::remoteAircraftSituations()
+    CAircraftSituationList CContextNetwork::remoteAircraftSituations(const CCallsign &callsign) const
     {
         Q_ASSERT(this->m_airspace);
-        return m_airspace->remoteAircraftSituations();
+        return m_airspace->remoteAircraftSituations(callsign);
     }
 
-    const CAircraftSituationList &CContextNetwork::remoteAircraftSituations() const
+    CAircraftPartsList CContextNetwork::remoteAircraftParts(const CCallsign &callsign, qint64 cutoffTimeBefore) const
     {
         Q_ASSERT(this->m_airspace);
-        return m_airspace->remoteAircraftSituations();
+        return m_airspace->remoteAircraftParts(callsign, cutoffTimeBefore);
     }
 
-    const CAircraftPartsList &CContextNetwork::remoteAircraftParts() const
+    int CContextNetwork::remoteAircraftSituationsCount(const CCallsign &callsign) const
     {
         Q_ASSERT(this->m_airspace);
-        return m_airspace->remoteAircraftParts();
+        return m_airspace->remoteAircraftSituationsCount(callsign);
     }
 
-    CAircraftPartsList &CContextNetwork::remoteAircraftParts()
+    bool CContextNetwork::isRemoteAircraftSupportingParts(const CCallsign &callsign) const
     {
         Q_ASSERT(this->m_airspace);
-        return m_airspace->remoteAircraftParts();
+        return m_airspace->isRemoteAircraftSupportingParts(callsign);
+    }
+
+    CCallsignSet CContextNetwork::remoteAircraftSupportingParts() const
+    {
+        Q_ASSERT(this->m_airspace);
+        return m_airspace->remoteAircraftSupportingParts();
     }
 
     bool CContextNetwork::connectRemoteAircraftProviderSignals(

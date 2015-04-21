@@ -25,13 +25,12 @@ namespace BlackCoreTest
     {
         QScopedPointer<CRemoteAircraftProviderDummy> provider(new CRemoteAircraftProviderDummy());
         CInterpolatorLinear interpolator(provider.data());
-        interpolator.forceSortingOfAddedValues(true);
 
         // fixed time so everything can be debugged
         const qint64 ts =  1425000000000; // QDateTime::currentMSecsSinceEpoch();
         const qint64 deltaT = 5000; // ms
         CCallsign cs("SWIFT");
-        for (int i = 0; i < IInterpolator::MaxSituationsPerCallsign; i++)
+        for (int i = 0; i < IRemoteAircraftProviderReadOnly::MaxSituationsPerCallsign; i++)
         {
             CAircraftSituation s(getTestSituation(cs, i, ts, deltaT));
 
@@ -41,30 +40,30 @@ namespace BlackCoreTest
             provider->insertNewSituation(s);
         }
 
-        for (int i = 0; i < IInterpolator::MaxPartsPerCallsign; i++)
+        for (int i = 0; i < IRemoteAircraftProviderReadOnly::MaxPartsPerCallsign; i++)
         {
             CAircraftParts p(getTestParts(cs, i, ts, deltaT));
             provider->insertNewAircraftParts(p);
         }
 
-        // make sure signals are processed
+        // make sure signals are processed, if the interpolator depends on those signals
         QCoreApplication::processEvents(QEventLoop::AllEvents, 1000);
 
         // check if all situations / parts have been received
-        QVERIFY2(interpolator.getSituationsForCallsign(cs).size() == IInterpolator::MaxSituationsPerCallsign, "Missing situations");
-        QVERIFY2(interpolator.getPartsForCallsign(cs).size() == IInterpolator::MaxPartsPerCallsign, "Missing parts");
+        QVERIFY2(provider->remoteAircraftSituations(cs).size() == IRemoteAircraftProviderReadOnly::MaxSituationsPerCallsign, "Missing situations");
+        QVERIFY2(provider->remoteAircraftParts(cs).size() == IRemoteAircraftProviderReadOnly::MaxPartsPerCallsign, "Missing parts");
 
-        // interpolation
+        // interpolation functional check
         IInterpolator::InterpolationStatus status;
         double latOld = 360.0;
         double lngOld = 360.0;
-        for (qint64 currentTime = ts - 2 * deltaT; currentTime < ts; currentTime += 250)
+        for (qint64 currentTime = ts - 2 * deltaT; currentTime < ts; currentTime += (deltaT / 20))
         {
             // This will use time range
             // from:  ts - 2* deltaT - IInterpolator::TimeOffsetMs
             // to:    ts             - IInterpolator::TimeOffsetMs
             CAircraftSituation currentSituation(interpolator.getInterpolatedSituation
-                                                (cs, currentTime, status)
+                                                (cs, currentTime, false, status)
                                                );
             QVERIFY2(status.interpolationSucceeded, "Interpolation was not succesful");
             QVERIFY2(status.changedPosition, "Interpolation did not changed");
@@ -80,15 +79,21 @@ namespace BlackCoreTest
         int interpolationNo = 0;
         qint64 startTimeMsSinceEpoch = ts - 2 * deltaT;
 
-        for (int callsigns = 0; callsigns < 20; callsigns++)
+
+        // Pseudo performance test:
+        // Those make not completely sense, as the performance depends on the implementation of
+        // the dummy provider, which is different from the real provider
+        // With one callsign in the lists (of dummy provider) it is somehow expected to be roughly the same performance
+
+        for (int loops = 0; loops < 20; loops++)
         {
-            for (qint64 currentTime = startTimeMsSinceEpoch; currentTime < ts; currentTime += 250)
+            for (qint64 currentTime = startTimeMsSinceEpoch; currentTime < ts; currentTime += (deltaT / 20))
             {
                 // This will use range
                 // from:  ts - 2* deltaT - IInterpolator::TimeOffsetMs
                 // to:    ts             - IInterpolator::TimeOffsetMs
                 CAircraftSituation currentSituation(interpolator.getInterpolatedSituation
-                                                    (cs, currentTime, status)
+                                                    (cs, currentTime, false, status)
                                                    );
                 QVERIFY2(status.allTrue(), "Failed interpolation");
                 QVERIFY2(currentSituation.getCallsign() == cs, "Wrong callsign");
@@ -101,105 +106,20 @@ namespace BlackCoreTest
         }
         int timeMs = timer.elapsed();
         QVERIFY2(timeMs < interpolationNo, "Interpolation > 1ms");
-        qDebug() << timeMs << "ms" << "for" << interpolationNo;
-
-        CAircraftSituationList interpolations(interpolator.getInterpolatedSituations(startTimeMsSinceEpoch));
-        QVERIFY(interpolations.size() == 1);
-        QVERIFY(interpolations.containsCallsign(cs));
-
-        //
-        // Single interpolation vs. all interpolations at once
-        //
-
-        // Create data in provider
-        provider->clear();
-        interpolator.clear();
-        QVERIFY(interpolator.getSituationsByCallsign().size() == 0);
-        const int callsignsInProvider = 20;
-        for (int callsignNo = 0; callsignNo < callsignsInProvider; callsignNo++)
-        {
-            cs = CCallsign("SWIFT" + QString::number(callsignNo));
-            int i = 0;
-            for (int t = 0; t < IInterpolator::MaxSituationsPerCallsign; t++)
-            {
-                qint64 currentTime = ts - t * deltaT;
-                CAircraftSituation s(getTestSituation(cs, i, currentTime, 0));
-                provider->insertNewSituation(s);
-
-                CAircraftParts p(getTestParts(cs, i, currentTime, 0));
-                provider->insertNewAircraftParts(p);
-                i++;
-            }
-        }
-
-        QList<CCallsign> csKeys = interpolator.getSituationsByCallsign().keys();
-        CCallsignSet callsigns(csKeys);
-        QVERIFY(callsigns.size() == callsignsInProvider);
-        QVERIFY(interpolator.getSituationsForCallsign("SWIFT0").size() == IInterpolator::MaxSituationsPerCallsign);
-        QVERIFY(interpolator.getPartsForCallsign("SWIFT0").size() == IInterpolator::MaxPartsPerCallsign);
-
-        // interpolation for time, then for each callsign
-        int doneInterpolations = 0;
-        timer.start();
-        for (qint64 currentTime = ts - 2 * deltaT; currentTime < ts; currentTime += 250)
-        {
-            // This will use range
-            // from:  ts - 2* deltaT - IInterpolator::TimeOffsetMs
-            // to:    ts             - IInterpolator::TimeOffsetMs
-
-            for (const CCallsign &cs : callsigns)
-            {
-                CAircraftSituation currentSituation(interpolator.getInterpolatedSituation
-                                                    (cs, currentTime, status)
-                                                   );
-                QVERIFY2(status.interpolationSucceeded, "Interpolation was not succesful");
-                QVERIFY2(status.changedPosition, "Interpolation did not changed");
-                double latDeg = currentSituation.getPosition().latitude().valueRounded(CAngleUnit::deg(), 5);
-                double lngDeg = currentSituation.getPosition().longitude().valueRounded(CAngleUnit::deg(), 5);
-                Q_UNUSED(latDeg);
-                Q_UNUSED(lngDeg);
-                doneInterpolations++;
-            }
-        }
-        timeMs = timer.elapsed();
-        qDebug() << "Per callsign" << doneInterpolations << "interpolations in" << timeMs << "ms";
-
-        doneInterpolations = 0;
-        timer.start();
-        for (qint64 currentTime = ts - 2 * deltaT; currentTime < ts; currentTime += 250)
-        {
-            // This will use range
-            // from:  ts - 2* deltaT - IInterpolator::TimeOffsetMs
-            // to:    ts             - IInterpolator::TimeOffsetMs
-
-            CAircraftSituationList currentSituations(interpolator.getInterpolatedSituations(currentTime));
-            QVERIFY2(currentSituations.size() == callsignsInProvider, "Interpolation was not succesful");
-            for (const CAircraftSituation &currentSituation : currentSituations)
-            {
-                double latDeg = currentSituation.getPosition().latitude().valueRounded(CAngleUnit::deg(), 5);
-                double lngDeg = currentSituation.getPosition().longitude().valueRounded(CAngleUnit::deg(), 5);
-                doneInterpolations++;
-                Q_UNUSED(latDeg);
-                Q_UNUSED(lngDeg);
-            }
-        }
-        timeMs = timer.elapsed();
-        qDebug() << "All callsigns" << doneInterpolations << "interpolations in" << timeMs << "ms";
+        qDebug() << timeMs << "ms" << "for" << interpolationNo << "interpolations";
 
         int fetchedParts = 0;
         timer.start();
         for (qint64 currentTime = ts - 2 * deltaT; currentTime < ts; currentTime += 250)
         {
-            for (const CCallsign &callsign : callsigns)
-            {
-                IInterpolator::PartsStatus status;
-                CAircraftPartsList pl = interpolator.getAndRemovePartsBeforeTime(callsign, ts, status);
-                fetchedParts++;
-                Q_UNUSED(pl);
-            }
+            IInterpolator::PartsStatus status;
+            CAircraftPartsList pl(interpolator.getPartsBeforeTime(cs, ts, status));
+            fetchedParts++;
+            QVERIFY2(status.supportsParts, "Parts not supported");
+            QVERIFY2(!pl.isEmpty(), "Parts empty");
         }
         timeMs = timer.elapsed();
-        qDebug() << "Per callsign" << fetchedParts << "fetched parts in" << timeMs << "ms";
+        qDebug() << timeMs << "ms" << "for" << fetchedParts << "fetched parts";
     }
 
     CAircraftSituation CTestInterpolator::getTestSituation(const CCallsign &callsign, int number, qint64 ts, qint64 deltaT)

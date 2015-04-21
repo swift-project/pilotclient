@@ -31,7 +31,7 @@ namespace BlackCore
         {}
 
         //! \copydoc IInterpolator::getCurrentInterpolatedSituation
-        virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc, InterpolationStatus &status, const CSituationsPerCallsign *situationsPerCallsign = nullptr) const override;
+        virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc, bool vtolAiracraft, InterpolationStatus &status) const override;
 
         //! Log category
         static QString getMessageCategory() { return "swift.interpolatorlinear"; }

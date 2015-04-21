@@ -151,8 +151,8 @@ namespace BlackSimPlugin
                 CLogMessage(this).warning("Have to remove aircraft %1 before I can add it") << callsign;
             }
 
-            CSimulatedAircraft newRemoteAircraftCopy(newRemoteAircraft);
-            this->setInitialAircraftSituationAndParts(newRemoteAircraftCopy);
+            CSimulatedAircraft newRemoteAircraftCopy(newRemoteAircraft); // copy which can be modified
+            this->setInitialAircraftSituationAndParts(newRemoteAircraftCopy); // set interpolated data/parts if available
             SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxInitPosition(newRemoteAircraftCopy.getSituation());
 
             CSimConnectObject simObj;
@@ -611,7 +611,7 @@ namespace BlackSimPlugin
         {
             static_assert(sizeof(DataDefinitionRemoteAircraftParts) == 120, "DataDefinitionRemoteAircraftParts has an incorrect size.");
             Q_ASSERT(this->m_interpolator);
-            Q_ASSERT_X(this->m_interpolator->thread() != this->thread(), "updateOtherAircraft", "interpolator should run in its own thread");
+            Q_ASSERT_X(this->m_interpolator->thread() != this->thread(), Q_FUNC_INFO, "interpolator should run in its own thread");
 
             // nothing to do, reset request id and exit
             if (this->isPaused()) { return; } // no interpolation while paused
@@ -623,19 +623,29 @@ namespace BlackSimPlugin
 
             // values used for position and parts
             bool isOnGround = false;
+            bool isVtolAircraft = false; //! \todo determine VTOL aircraft in interpolator
 
             qint64 currentTimestamp = QDateTime::currentMSecsSinceEpoch();
+            CCallsignSet aircraftWithParts(this->remoteAircraftSupportingParts()); // optimization, fetch all parts supporting aircraft in one step (one lock)
+
             for (const CSimConnectObject &simObj : m_simConnectObjects)
             {
+                if (simObj.getObjectId() < 1) { continue; }
+
                 const CCallsign callsign(simObj.getCallsign());
+                Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
                 IInterpolator::InterpolationStatus interpolatorStatus;
-                if (simObj.getObjectId() == 0) { continue; }
-                CAircraftSituation interpolatedSituation = this->m_interpolator->getInterpolatedSituation(callsign, currentTimestamp, interpolatorStatus);
+                CAircraftSituation interpolatedSituation = this->m_interpolator->getInterpolatedSituation(callsign, currentTimestamp, isVtolAircraft, interpolatorStatus);
 
                 // having the onGround flag in parts forces me to obtain parts here
                 // which is not the smartest thing regarding performance
                 IInterpolator::PartsStatus partsStatus;
-                CAircraftPartsList parts = this->m_interpolator->getAndRemovePartsBeforeTime(callsign, currentTimestamp - IInterpolator::TimeOffsetMs, partsStatus);
+                partsStatus.supportsParts = aircraftWithParts.contains(callsign);
+                CAircraftPartsList parts;
+                if (partsStatus.supportsParts)
+                {
+                    this->m_interpolator->getPartsBeforeTime(callsign, currentTimestamp - IInterpolator::TimeOffsetMs, partsStatus);
+                }
 
                 if (interpolatorStatus.allTrue())
                 {
@@ -643,6 +653,7 @@ namespace BlackSimPlugin
                     SIMCONNECT_DATA_INITPOSITION position = aircraftSituationToFsxInitPosition(interpolatedSituation);
 
                     //! \todo The onGround in parts is nuts, as already mentioned in the discussion
+                    // Currently ignored here, only guessing which is faster as aircraft without parts can just be
                     // a) I am forced to read parts even if i just want to update position
                     // b) Unlike the other values it is not a fire and forget value, as I need it again in the next cycle
                     if (partsStatus.supportsParts && !parts.isEmpty())
@@ -661,8 +672,6 @@ namespace BlackSimPlugin
                                                         static_cast<SIMCONNECT_OBJECT_ID>(simObj.getObjectId()), 0, 0,
                                                         sizeof(SIMCONNECT_DATA_INITPOSITION), &position);
                     if (hr != S_OK) { CLogMessage(this).warning("Failed so set position on SimObject %1 callsign: %2") << simObj.getObjectId() << callsign; }
-
-
 
                 } // interpolation data
 

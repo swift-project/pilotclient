@@ -51,23 +51,26 @@ namespace BlackCore
         //! Destructor
         virtual ~CContextNetwork();
 
-        //! \copydoc IRemoteAircraftProviderReadOnly::renderedAircraft
+        //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraft
         virtual const BlackMisc::Simulation::CSimulatedAircraftList &remoteAircraft() const override;
 
-        //! \copydoc IRenderedAircraftProvider::renderedAircraft
+        //! \copydoc IRenderedAircraftProvider::remoteAircraft
         virtual BlackMisc::Simulation::CSimulatedAircraftList &remoteAircraft() override;
 
-        //! \copydoc IRemoteAircraftProviderReadOnly::renderedAircraftSituations
-        virtual const BlackMisc::Aviation::CAircraftSituationList &remoteAircraftSituations() const override;
+        //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraftSituations
+        virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
-        //! \copydoc IRemoteAircraftProviderReadOnly::renderedAircraftSituations
-        virtual BlackMisc::Aviation::CAircraftSituationList &remoteAircraftSituations() override;
+        //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationsCount
+        virtual int remoteAircraftSituationsCount(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
-        //! \copydoc IRemoteAircraftProviderReadOnly::renderedAircraftParts
-        virtual const BlackMisc::Aviation::CAircraftPartsList &remoteAircraftParts() const override;
+        //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraftParts
+        virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const override;
 
-        //! \copydoc IRenderedAircraftProvider::renderedAircraftParts
-        virtual BlackMisc::Aviation::CAircraftPartsList &remoteAircraftParts() override;
+        //! \copydoc IRemoteAircraftProviderReadOnly::isRemoteAircraftSupportingParts
+        virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const;
+
+        //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraftSupportingParts
+        virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
 
         //! \copydoc IRemoteAircraftProviderReadOnly::connectSignals
         virtual bool connectRemoteAircraftProviderSignals(
@@ -77,9 +80,6 @@ namespace BlackCore
         ) override;
 
     signals:
-        //! \copydoc IRemoteAircraftProviderReadOnly::addedRemoteAircraftSituation
-        void addedRemoteAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
-
         //! \copydoc IRemoteAircraftProviderReadOnly::addedRemoteAircraftPart
         void addedRemoteAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
 
