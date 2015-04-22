@@ -25,9 +25,7 @@
 
 namespace BlackCore
 {
-    /*!
-     * Implementation of INetwork using the vatlib shim
-     */
+    //! Implementation of INetwork using the vatlib shim
     class BLACKCORE_EXPORT CNetworkVatlib :
             public INetwork,
             public BlackMisc::Simulation::COwnAircraftAware // network vatlib consumes own aircraft data and sets ICAO/callsign data
@@ -41,13 +39,10 @@ namespace BlackCore
         //! Destructor
         virtual ~CNetworkVatlib();
 
-        //! \copydoc INetwork::isConnected()
+        //! \name Network slots
+        //! @{
         virtual bool isConnected() const override { return m_status == vatStatusConnected; }
-
-        //! \copydoc INetwork::pendingConnection()
         virtual bool isPendingConnection() const override { return m_status == vatStatusConnecting; }
-
-        // Network slots
         virtual void presetLoginMode(LoginMode mode) override;
         virtual void presetServer(const BlackMisc::Network::CServer &server) override;
         virtual void presetCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
@@ -65,26 +60,34 @@ namespace BlackCore
 
         virtual void broadcastAircraftConfig(const QJsonObject &config) override;
         virtual void sendAircraftConfigQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
+        //! @}
 
-        // Text message slots
+        //! \name Text message slots
+        //! @{
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &messages) override;
+        //! @}
 
-        // ATC slots
+        //! \name ATC slots
+        //! @{
         virtual void sendAtcQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendAtisQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan) override;
         virtual void sendFlightPlanQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
+        //! @}
 
-        // Aircraft slots
+        //! \name Aircraft slots
+        //! @{
         virtual void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendIcaoCodesQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendUserInfoQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendInterimPosition(const BlackMisc::Aviation::CCallsignSet &receiver) override;
+        //! @}
 
-        // Weather slots
+        //! \name Weather slots
         virtual void sendMetarQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao) override;
         virtual void sendWeatherDataQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao) override;
+        //! @}
 
     private slots:
         void replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign);
