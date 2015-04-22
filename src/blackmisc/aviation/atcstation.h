@@ -42,6 +42,7 @@ namespace BlackMisc
                 IndexFrequency,
                 IndexPosition,
                 IndexRange,
+                IndexIsInRange,
                 IndexDistanceToOwnAircraft,
                 IndexIsOnline,
                 IndexBookedFrom,
@@ -70,10 +71,7 @@ namespace BlackMisc
             BlackMisc::CIcon toIcon() const { return this->m_callsign.toIcon(); }
 
             //! Has booking times?
-            bool hasBookingTimes() const
-            {
-                return !(this->m_bookedFromUtc.isNull() && this->m_bookedUntilUtc.isNull());
-            }
+            bool hasBookingTimes() const;
 
             //! Has ATIS?
             bool hasAtis() const
@@ -135,10 +133,8 @@ namespace BlackMisc
             //! Set position
             void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { this->m_position = position; }
 
-            /*!
-             * Syncronize controller data
-             * Updates two stations (namely a booked and online ATC station) with complementary data
-             */
+            //! Syncronize controller data
+            //! Updates two stations (namely a booked and online ATC station) with complementary data
             void syncronizeControllerData(CAtcStation &otherStation);
 
             //! Get the radius of the controller's area of visibility.
@@ -146,6 +142,9 @@ namespace BlackMisc
 
             //! Set range
             void setRange(const BlackMisc::PhysicalQuantities::CLength &range) { this->m_range = range; }
+
+            //! In range? If range and distance to own aircraft are not available false
+            bool isInRange() const;
 
             //! Is station online (or just booked)?
             bool isOnline() const { return m_isOnline; }
@@ -165,50 +164,33 @@ namespace BlackMisc
             //! Valid voice room?
             bool hasValidVoiceRoom() const { return this->m_voiceRoom.isValid(); }
 
-            /*!
-             * Booked date/time if any.
-             * This represents the closest booking within a time frame as there can be multiple bookings.
-             */
+            //! Booked date/time if any.
+            //! This represents the closest booking within a time frame as there can be multiple bookings.
             const QDateTime &getBookedFromUtc() const { return m_bookedFromUtc; }
+
+            //! Booked date/time if any.
+            //! This represents the closest booking within a time frame as there can be multiple bookings.
+            const QDateTime &getBookedUntilUtc() const { return m_bookedUntilUtc; }
+
+            //! Has valid booking times?
+            bool hasValidBookingTimes() const;
 
             //! Set booked from
             void setBookedFromUtc(const QDateTime &from) { this->m_bookedFromUtc = from; }
 
-            /*!
-             * Booked date/time if any.
-             * This represents the closest booking within a time frame as there can be multiple bookings.
-             */
-            const QDateTime &getBookedUntilUtc() const { return m_bookedUntilUtc; }
-
-            //! Has valid booking times?
-            bool hasValidBookingTimes() const
-            {
-                return !this->m_bookedFromUtc.isNull() && this->m_bookedFromUtc.isValid() &&
-                       !this->m_bookedUntilUtc.isNull() && this->m_bookedUntilUtc.isValid();
-            }
-
             //! Transfer booking times
-            void setBookedFromUntil(const CAtcStation &otherStation)
-            {
-                this->setBookedFromUtc(otherStation.getBookedFromUtc());
-                this->setBookedUntilUtc(otherStation.getBookedUntilUtc());
-            }
+            void setBookedFromUntil(const CAtcStation &otherStation);
 
             //! Booked now?
             bool isBookedNow() const;
 
             //! Tuned in within 25KHz channel spacing
-            bool isComUnitTunedIn25KHz(const BlackMisc::Aviation::CComSystem &comUnit) const
-            {
-                return comUnit.isActiveFrequencyWithin25kHzChannel(this->getFrequency());
-            }
+            bool isComUnitTunedIn25KHz(const BlackMisc::Aviation::CComSystem &comUnit) const;
 
-            /*!
-             * When booked, 0 means now,
-             * negative values mean booking in past,
-             * positive values mean booking in future,
-             * no booking dates will result in - 1 year
-             */
+            //! When booked, 0 means now,
+            //! negative values mean booking in past,
+            //! positive values mean booking in future,
+            //! no booking dates will result in null time
             BlackMisc::PhysicalQuantities::CTime bookedWhen() const;
 
             //! Get ATIS
@@ -282,7 +264,7 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAtcStation, (
                                    o.m_voiceRoom,
                                    o.m_distanceToOwnAircraft,
                                    o.m_bearingToOwnAircraft
-                                   ))
+                               ))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAtcStation)
 
 #endif // guard

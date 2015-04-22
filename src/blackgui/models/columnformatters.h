@@ -206,6 +206,9 @@ namespace BlackGui
             CBoolIconFormatter(int alignment = alignDefault());
 
             //! Constructor
+            CBoolIconFormatter(const QString &onName, const QString &offName, int alignment = alignDefault());
+
+            //! Constructor
             CBoolIconFormatter(const BlackMisc::CIcon &onIcon, const BlackMisc::CIcon &offIcon, const QString &onName, const QString &offName, int alignment = alignDefault());
 
             //! Constructor

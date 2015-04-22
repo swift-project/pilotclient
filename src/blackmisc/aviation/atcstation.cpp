@@ -49,6 +49,11 @@ namespace BlackMisc
             }
         }
 
+        bool CAtcStation::hasBookingTimes() const
+        {
+            return !(this->m_bookedFromUtc.isNull() && this->m_bookedUntilUtc.isNull());
+        }
+
         bool CAtcStation::hasMetar() const
         {
             return this->m_metar.hasMessage();
@@ -181,6 +186,24 @@ namespace BlackMisc
             otherStation.setController(otherController);
         }
 
+        bool CAtcStation::isInRange() const
+        {
+            if (m_range.isNull() || !hasValidDistance()) { return false; }
+            return (this->getDistanceToOwnAircraft() <= m_range);
+        }
+
+        bool CAtcStation::hasValidBookingTimes() const
+        {
+            return !this->m_bookedFromUtc.isNull() && this->m_bookedFromUtc.isValid() &&
+                   !this->m_bookedUntilUtc.isNull() && this->m_bookedUntilUtc.isValid();
+        }
+
+        void CAtcStation::setBookedFromUntil(const CAtcStation &otherStation)
+        {
+            this->setBookedFromUtc(otherStation.getBookedFromUtc());
+            this->setBookedUntilUtc(otherStation.getBookedUntilUtc());
+        }
+
         bool CAtcStation::isBookedNow() const
         {
             if (!this->hasValidBookingTimes()) return false;
@@ -190,9 +213,14 @@ namespace BlackMisc
             return true;
         }
 
+        bool CAtcStation::isComUnitTunedIn25KHz(const CComSystem &comUnit) const
+        {
+            return comUnit.isActiveFrequencyWithin25kHzChannel(this->getFrequency());
+        }
+
         CTime CAtcStation::bookedWhen() const
         {
-            if (!this->hasValidBookingTimes()) return CTime(-365.0, CTimeUnit::d());
+            if (!this->hasValidBookingTimes()) { return CTime(0, CTimeUnit::nullUnit()); }
             QDateTime now = QDateTime::currentDateTimeUtc();
             qint64 diffMs;
             if (this->m_bookedFromUtc > now)
@@ -257,6 +285,8 @@ namespace BlackMisc
                 return this->m_position.propertyByIndex(index.copyFrontRemoved());
             case IndexRange:
                 return this->m_range.propertyByIndex(index.copyFrontRemoved());
+            case IndexIsInRange:
+                return CVariant::fromValue(isInRange());
             case IndexAtis:
                 return this->m_atis.propertyByIndex(index.copyFrontRemoved());
             case IndexMetar:

@@ -316,7 +316,11 @@ namespace BlackGui
         }
 
         CBoolIconFormatter::CBoolIconFormatter(int alignment) :
-            CBoolIconFormatter(CIcons::StandardIconTick16, CIcons::StandardIconEmpty16, "on", "off", alignment)
+            CBoolIconFormatter(CIcons::StandardIconTick16, CIcons::StandardIconCross16, "on", "off", alignment)
+        { }
+
+        CBoolIconFormatter::CBoolIconFormatter(const QString &onName, const QString &offName, int alignment) :
+            CBoolIconFormatter(CIcons::StandardIconTick16, CIcons::StandardIconCross16, onName, offName, alignment)
         { }
 
         CBoolIconFormatter::CBoolIconFormatter(CIcons::IconIndex onIcon, CIcons::IconIndex offIcon, const QString &onName, const QString &offName, int alignment) :

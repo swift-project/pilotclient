@@ -121,8 +121,8 @@ namespace BlackMisc
             //! Constructor
             ICoordinateWithRelativePosition();
 
-            BlackMisc::PhysicalQuantities::CAngle  m_bearingToOwnAircraft;  //!< temporary stored value
-            BlackMisc::PhysicalQuantities::CLength m_distanceToOwnAircraft; //!< temporary stored value
+            BlackMisc::PhysicalQuantities::CAngle  m_bearingToOwnAircraft  {0.0, BlackMisc::PhysicalQuantities::CAngleUnit::nullUnit()}; //!< temporary stored value
+            BlackMisc::PhysicalQuantities::CLength m_distanceToOwnAircraft {0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()}; //!< temporary stored value
         };
 
 

@@ -37,7 +37,7 @@ namespace BlackMisc
 
         PhysicalQuantities::CLength calculateGreatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
         {
-            // same coordinate results in 0 distance
+            // same coordinates results in 0 distance
             if (coordinate1.latitude() == coordinate2.latitude() && coordinate1.longitude() == coordinate2.longitude())
             {
                 return CLength(0, CLengthUnit::m());
@@ -58,6 +58,7 @@ namespace BlackMisc
             double c = 2.0 * qAtan(qSqrt(a) / qSqrt(1.0 - a));
             double distance = earthRadiusM * c;
 
+            Q_ASSERT_X(distance >= 0, Q_FUNC_INFO, "distance < 0");
             return CLength(distance, CLengthUnit::m());
         }
 
