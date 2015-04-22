@@ -13,6 +13,8 @@
 #define BLACKCORE_AIRSPACE_ANALYZER_H
 
 #include "blackcore/network.h"
+#include "blackmisc/simulation/remoteaircraftprovider.h"
+#include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/aviation/callsign.h"
@@ -21,6 +23,7 @@
 
 namespace BlackCore
 {
+
     //! Class monitoring and analyzing (closests aircraft, outdated aircraft / watchdog) airspace
     //! in background.
     //!
@@ -28,7 +31,10 @@ namespace BlackCore
     //!          clients nearby. The server does not take care of that. When a client crashes, no delete packet is ever sent. This class therefore monitors callsigns and emits a timeout signal if it
     //!          wasn't resetted during the specified timeout value.
     //!
-    class CAirspaceAnalyzer : public BlackMisc::CContinuousWorker
+    class CAirspaceAnalyzer :
+        public BlackMisc::CContinuousWorker,
+        public BlackMisc::Simulation::COwnAircraftAwareReadOnly,
+        public BlackMisc::Simulation::CRemoteAircraftAwareReadOnly
     {
         Q_OBJECT
 
@@ -37,7 +43,9 @@ namespace BlackCore
         typedef QHash<BlackMisc::Aviation::CCallsign, qint64> CCallsignTimestampSet;
 
         //! Constructor
-        CAirspaceAnalyzer(INetwork *network, QObject *parent);
+        CAirspaceAnalyzer(const BlackMisc::Simulation::IOwnAircraftProviderReadOnly *ownAircraftProvider,
+                          const BlackMisc::Simulation::IRemoteAircraftProviderReadOnly *remoteAircraftProvider,
+                          INetwork *network, QObject *parent);
 
     public slots:
         //! Clear

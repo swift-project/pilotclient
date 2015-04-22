@@ -11,13 +11,17 @@
 #include "blackmisc/logmessage.h"
 
 using namespace BlackMisc;
+using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackCore
 {
 
-    CAirspaceAnalyzer::CAirspaceAnalyzer(INetwork *network, QObject *parent) : CContinuousWorker(parent, "CAirspaceAnalyzer")
+    CAirspaceAnalyzer::CAirspaceAnalyzer(const IOwnAircraftProviderReadOnly *ownAircraftProvider, const IRemoteAircraftProviderReadOnly *remoteAircraftProvider, INetwork *network, QObject *parent) :
+        CContinuousWorker(parent, "CAirspaceAnalyzer"),
+        COwnAircraftAwareReadOnly(ownAircraftProvider),
+        CRemoteAircraftAwareReadOnly(remoteAircraftProvider)
     {
         Q_ASSERT_X(network, Q_FUNC_INFO, "Network object required to connect");
 
