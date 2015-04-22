@@ -21,13 +21,12 @@ namespace BlackGui
 {
     namespace Views
     {
-        //! Aircrafts view
+        //! Aircraft view
         class BLACKGUI_EXPORT CAircraftModelView : public CViewBase<Models::CAircraftModelListModel, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModel>
         {
             Q_OBJECT
 
         public:
-
             //! Constructor
             explicit CAircraftModelView(QWidget *parent = nullptr);
 

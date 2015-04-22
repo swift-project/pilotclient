@@ -41,7 +41,7 @@ namespace BlackGui
             {
                 // index must match tab index!
                 InfoAreaCockpit      = 0,
-                InfoAreaAircrafts    = 1,
+                InfoAreaAircraft     = 1,
                 InfoAreaAtc          = 2,
                 InfoAreaUsers        = 3,
                 InfoAreaTextMessages = 4,

@@ -21,7 +21,7 @@ namespace BlackGui
 {
     namespace Views
     {
-        //! Aircrafts view
+        //! Aircraft view
         class BLACKGUI_EXPORT CSimulatedAircraftView : public CViewBase<Models::CSimulatedAircraftListModel, BlackMisc::Simulation::CSimulatedAircraftList, BlackMisc::Simulation::CSimulatedAircraft>
         {
             Q_OBJECT

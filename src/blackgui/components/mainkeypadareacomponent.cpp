@@ -181,7 +181,7 @@ namespace BlackGui
 
         CMainInfoAreaComponent::InfoArea CMainKeypadAreaComponent::buttonToMainInfoArea(const QObject *button) const
         {
-            if (button == ui->pb_MainAircrafts) return CMainInfoAreaComponent::InfoAreaAircrafts;
+            if (button == ui->pb_MainAircrafts) return CMainInfoAreaComponent::InfoAreaAircraft;
             if (button == ui->pb_MainAtc) return CMainInfoAreaComponent::InfoAreaAtc;
             if (button == ui->pb_MainCockpit) return CMainInfoAreaComponent::InfoAreaCockpit;
             if (button == ui->pb_MainFlightplan) return CMainInfoAreaComponent::InfoAreaFlightPlan;
@@ -199,7 +199,7 @@ namespace BlackGui
         {
             switch (area)
             {
-            case CMainInfoAreaComponent::InfoAreaAircrafts: return ui->pb_MainAircrafts;
+            case CMainInfoAreaComponent::InfoAreaAircraft: return ui->pb_MainAircrafts;
             case CMainInfoAreaComponent::InfoAreaAtc: return ui->pb_MainAtc;
             case CMainInfoAreaComponent::InfoAreaCockpit: return ui->pb_MainCockpit;
             case CMainInfoAreaComponent::InfoAreaFlightPlan: return ui->pb_MainFlightplan;

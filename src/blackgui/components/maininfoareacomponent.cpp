@@ -91,7 +91,7 @@ namespace BlackGui
             switch (area)
             {
             case InfoAreaCockpit:
-            case InfoAreaAircrafts:
+            case InfoAreaAircraft:
             case InfoAreaAtc:
             case InfoAreaUsers:
             case InfoAreaLog:
@@ -131,7 +131,7 @@ namespace BlackGui
                 return CIcons::appWeather16();
             case InfoAreaAtc:
                 return CIcons::appAtc16();
-            case InfoAreaAircrafts:
+            case InfoAreaAircraft:
                 return CIcons::appAircrafts16();
             case InfoAreaSettings:
                 return CIcons::appSettings16();
