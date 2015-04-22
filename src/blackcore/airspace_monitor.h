@@ -25,7 +25,7 @@
 #include "network.h"
 #include "vatsimbookingreader.h"
 #include "vatsimdatafilereader.h"
-#include "airspace_watchdog.h"
+#include "airspace_analyzer.h"
 
 namespace BlackCore
 {
@@ -187,8 +187,7 @@ namespace BlackCore
         INetwork              *m_network               = nullptr;
         CVatsimBookingReader  *m_vatsimBookingReader   = nullptr;
         CVatsimDataFileReader *m_vatsimDataFileReader  = nullptr;
-        CAirspaceWatchdog      m_atcWatchdog;
-        CAirspaceWatchdog      m_aircraftWatchdog;
+        CAirspaceAnalyzer     *m_analyzer              = nullptr;
         bool                   m_serverSupportsNameQuery = false; //!< not all servers support name query
         bool                   m_connected = false;               //!< retrieve data
         bool                   m_sendInterimPositions = false;

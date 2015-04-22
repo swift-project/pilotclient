@@ -30,7 +30,7 @@ namespace BlackCore
         : QObject(parent),
           COwnAircraftAwareReadOnly(ownAircraftProvider),
           m_network(network), m_vatsimBookingReader(bookings), m_vatsimDataFileReader(dataFile),
-          m_atcWatchdog(this), m_aircraftWatchdog(this)
+          m_analyzer(new CAirspaceAnalyzer(network, this))
     {
         this->connect(this->m_network, &INetwork::atcPositionUpdate, this, &CAirspaceMonitor::ps_atcPositionUpdate);
         this->connect(this->m_network, &INetwork::atisReplyReceived, this, &CAirspaceMonitor::ps_atisReceived);
@@ -49,18 +49,15 @@ namespace BlackCore
         this->connect(this->m_network, &INetwork::customFSinnPacketReceived, this, &CAirspaceMonitor::ps_customFSinnPacketReceived);
         this->connect(this->m_network, &INetwork::serverReplyReceived, this, &CAirspaceMonitor::ps_serverReplyReceived);
         this->connect(this->m_network, &INetwork::aircraftConfigPacketReceived, this, &CAirspaceMonitor::ps_aircraftConfigReceived);
-
+        this->connect(&m_interimPositionUpdateTimer, &QTimer::timeout, this, &CAirspaceMonitor::ps_sendInterimPosition);
+		
         // AutoConnection: this should also avoid race conditions by updating the bookings
         this->connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CAirspaceMonitor::ps_receivedBookings);
         this->connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CAirspaceMonitor::ps_receivedDataFile);
 
-        // Watchdog
-        // ATC stations send updates every 25s. Configure timeout after 50s.
-        this->m_atcWatchdog.setTimeout(CTime(50, CTimeUnit::s()));
-        this->connect(&this->m_aircraftWatchdog, &CAirspaceWatchdog::timeout, this, &CAirspaceMonitor::ps_pilotDisconnected);
-        this->connect(&this->m_atcWatchdog,      &CAirspaceWatchdog::timeout, this, &CAirspaceMonitor::ps_atcControllerDisconnected);
-
-        this->connect(&m_interimPositionUpdateTimer, &QTimer::timeout, this, &CAirspaceMonitor::ps_sendInterimPosition);
+        // Analyzer
+        this->connect(this->m_analyzer, &CAirspaceAnalyzer::timeoutAircraft, this, &CAirspaceMonitor::ps_pilotDisconnected);
+        this->connect(this->m_analyzer, &CAirspaceAnalyzer::timeoutAtc, this, &CAirspaceMonitor::ps_atcControllerDisconnected);
     }
 
     const CSimulatedAircraftList &CAirspaceMonitor::remoteAircraft() const
@@ -504,13 +501,11 @@ namespace BlackCore
 
     void CAirspaceMonitor::removeAllOnlineAtcStations()
     {
-        m_atcWatchdog.removeAll();
         m_atcStationsOnline.clear();
     }
 
     void CAirspaceMonitor::removeAllAircraft()
     {
-        m_aircraftWatchdog.removeAll(); // upfront
         for (CAircraft aircraft : m_aircraftInRange)
         {
             const CCallsign cs(aircraft.getCallsign());
@@ -637,7 +632,6 @@ namespace BlackCore
                 emit this->m_network->sendServerQuery(callsign);
             }
 
-            this->m_atcWatchdog.addCallsign(callsign);
             emit this->changedAtcStationsOnline();
             // Remark: this->changedAtcStationOnlineConnectionStatus(station, true);
             // will be sent in psFsdAtisVoiceRoomReceived
@@ -651,7 +645,6 @@ namespace BlackCore
             vm.addValue(CAtcStation::IndexRange, range);
             int changed = this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm, true);
             if (changed > 0) { emit this->changedAtcStationsOnline(); }
-            this->m_atcWatchdog.resetCallsign(callsign);
         }
     }
 
@@ -659,9 +652,7 @@ namespace BlackCore
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
 
-        this->m_atcWatchdog.removeCallsign(callsign);
         this->m_otherClients.removeByCallsign(callsign);
-
         if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsign))
         {
             CAtcStation removedStation = this->m_atcStationsOnline.findFirstByCallsign(callsign);
@@ -837,8 +828,6 @@ namespace BlackCore
                 {
                     this->m_network->sendIcaoCodesQuery(callsign);
                 }
-
-                this->m_aircraftWatchdog.addCallsign(callsign);
                 emit this->addedAircraft(aircraft);
             } // connected
         }
@@ -854,7 +843,6 @@ namespace BlackCore
 
             // here I expect always a changed value
             this->m_aircraftInRange.applyIfCallsign(callsign, vm);
-            this->m_aircraftWatchdog.resetCallsign(callsign);
         }
 
         emit this->changedAircraftInRange();
@@ -901,7 +889,6 @@ namespace BlackCore
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
 
         // in case of inconsistencies I always remove here
-        this->m_aircraftWatchdog.removeCallsign(callsign);
         this->m_otherClients.removeByCallsign(callsign);
         this->removeFromAircraftCaches(callsign);
 
@@ -967,7 +954,6 @@ namespace BlackCore
 
         // here I expect always a changed value
         this->m_aircraftInRange.setAircraftParts(callsign, parts);
-        this->m_aircraftWatchdog.resetCallsign(callsign);
     }
 
     void CAirspaceMonitor::ps_sendInterimPosition()
