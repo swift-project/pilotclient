@@ -30,7 +30,7 @@ namespace BlackCore
         : QObject(parent),
           COwnAircraftAwareReadOnly(ownAircraftProvider),
           m_network(network), m_vatsimBookingReader(bookings), m_vatsimDataFileReader(dataFile),
-          m_analyzer(new CAirspaceAnalyzer(network, this))
+          m_analyzer(new CAirspaceAnalyzer(ownAircraftProvider, this, network, this))
     {
         this->connect(this->m_network, &INetwork::atcPositionUpdate, this, &CAirspaceMonitor::ps_atcPositionUpdate);
         this->connect(this->m_network, &INetwork::atisReplyReceived, this, &CAirspaceMonitor::ps_atisReceived);
@@ -549,15 +549,19 @@ namespace BlackCore
     void CAirspaceMonitor::ps_receivedBookings(const CAtcStationList &bookedStations)
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
-        this->m_atcStationsBooked.clear();
-        foreach(CAtcStation bookedStation, bookedStations)
+        if (bookedStations.isEmpty())
         {
-            // complete by VATSIM data file data
-            this->m_vatsimDataFileReader->getAtcStations().updateFromVatsimDataFileStation(bookedStation);
-            // exchange booking and online data, both sides are updated
-            this->m_atcStationsOnline.mergeWithBooking(bookedStation);
-            // into list
-            this->m_atcStationsBooked.push_back(bookedStation);
+            this->m_atcStationsBooked.clear();
+        }
+        else
+        {
+            CAtcStationList newBookedStations(bookedStations); // modifyable copy
+            for (CAtcStation &bookedStation : newBookedStations)
+            {
+                // exchange booking and online data, both sides are updated
+                this->m_atcStationsOnline.syncronizeWithBookedStation(bookedStation);
+            }
+            this->m_atcStationsBooked = newBookedStations;
         }
         emit this->changedAtcStationsBooked(); // all booked stations reloaded
     }
@@ -614,17 +618,26 @@ namespace BlackCore
         CAtcStationList stationsWithCallsign = this->m_atcStationsOnline.findByCallsign(callsign);
         if (stationsWithCallsign.isEmpty())
         {
-            // new station
-            CAtcStation station;
+            // new station, init with data from data file
+            CAtcStation station(this->m_vatsimDataFileReader->getAtcStationsForCallsign(callsign).frontOrDefault());
             station.setCallsign(callsign);
             station.setRange(range);
             station.setFrequency(frequency);
             station.setPosition(position);
             station.setOnline(true);
             station.calculcateDistanceAndBearingToOwnAircraft(ownAircraft().getPosition());
-            this->m_vatsimDataFileReader->getAtcStations().updateFromVatsimDataFileStation(station); // prefill
+
+            // sync with bookings
+            if (this->m_atcStationsBooked.containsCallsign(callsign))
+            {
+                CAtcStation bookedStation(this->m_atcStationsBooked.findFirstByCallsign(callsign));
+                station.syncronizeWithBookedStation(bookedStation);
+                this->m_atcStationsBooked.replaceIf(&CAtcStation::getCallsign, callsign, bookedStation);
+            }
+
             this->m_atcStationsOnline.push_back(station);
 
+            // subsequent queries
             if (this->m_network->isConnected())
             {
                 emit this->m_network->sendRealNameQuery(callsign);
@@ -633,7 +646,7 @@ namespace BlackCore
             }
 
             emit this->changedAtcStationsOnline();
-            // Remark: this->changedAtcStationOnlineConnectionStatus(station, true);
+            // Remark: this->changedAtcStationOnlineConnectionStatus
             // will be sent in psFsdAtisVoiceRoomReceived
         }
         else

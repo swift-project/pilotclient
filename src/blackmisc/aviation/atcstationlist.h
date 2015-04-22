@@ -50,14 +50,10 @@ namespace BlackMisc
             //! All controllers (with valid data)
             BlackMisc::Network::CUserList getControllers() const;
 
-            //! Merge with ATC station representing booking information.
+            //! Syncronize with ATC station representing booking information.
             //! Both sides (booking, online station) will be updated.
-            //! \remarks Can be used if the stored data in this list are online ATC stations
-            int mergeWithBooking(CAtcStation &bookedAtcStation);
-
-            //! Merge with the data from the VATSIM data file
-            //! \remarks Can be used if the stored data in this list are VATSIM data file stations
-            bool updateFromVatsimDataFileStation(CAtcStation &stationToBeUpdated) const;
+            //! \pre Can be used only if the stored data in this list are online ATC stations
+            int syncronizeWithBookedStation(CAtcStation &bookedAtcStation);
 
             //! \copydoc CValueObject::toQVariant
             QVariant toQVariant() const { return QVariant::fromValue(*this); }

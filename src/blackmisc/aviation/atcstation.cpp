@@ -180,10 +180,86 @@ namespace BlackMisc
 
         void CAtcStation::syncronizeControllerData(CAtcStation &otherStation)
         {
-            if (this->m_controller == otherStation.getController()) return;
+            if (this->m_controller == otherStation.getController()) { return; }
             CUser otherController = otherStation.getController();
             this->m_controller.syncronizeData(otherController);
             otherStation.setController(otherController);
+        }
+
+        void CAtcStation::syncronizeWithBookedStation(CAtcStation &bookedStation)
+        {
+            if (bookedStation.getCallsign() != this->getCallsign()) { return; }
+
+            // from online to booking
+            bookedStation.setOnline(true);
+            bookedStation.setFrequency(this->getFrequency());
+
+            // Logoff Zulu Time set?
+            // comes directly from the online controller and is most likely more accurate
+            if (!this->getBookedUntilUtc().isNull())
+            {
+                bookedStation.setBookedUntilUtc(this->getBookedUntilUtc());
+            }
+
+            // from booking to online
+            // booked now stations have valid data and need no update
+            if (!this->isBookedNow() && bookedStation.hasValidBookingTimes())
+            {
+                if (this->hasValidBookingTimes())
+                {
+                    if (bookedStation.isBookedNow())
+                    {
+                        // can't get any better, we just copy from / to over
+                        this->setBookedFromUntil(bookedStation);
+                    }
+                    else
+                    {
+                        // we already have some booking dates, we will verify those now
+                        // and will set the most appropriate booking dates
+                        CTime timeDiffBooking(bookedStation.bookedWhen());
+                        CTime timeDiffOnline(this->bookedWhen()); // diff to now
+                        if (timeDiffBooking.isNegativeWithEpsilonConsidered() && timeDiffOnline.isNegativeWithEpsilonConsidered())
+                        {
+                            // both in past
+                            if (timeDiffBooking > timeDiffOnline)
+                            {
+                                this->setBookedFromUntil(bookedStation);
+                            }
+                        }
+                        else if (timeDiffBooking.isPositiveWithEpsilonConsidered() && timeDiffOnline.isPositiveWithEpsilonConsidered())
+                        {
+                            // both in future
+                            if (timeDiffBooking < timeDiffOnline)
+                            {
+                                this->setBookedFromUntil(bookedStation);
+                            }
+                        }
+                        else if (timeDiffBooking.isPositiveWithEpsilonConsidered() && timeDiffOnline.isNegativeWithEpsilonConsidered())
+                        {
+                            // future booking is better than past booking
+                            this->setBookedFromUntil(bookedStation);
+                        }
+                    }
+                }
+                else
+                {
+                    // no booking info so far, so we just copy over
+                    this->setBookedFromUntil(bookedStation);
+                }
+            }
+
+            // both ways
+            this->syncronizeControllerData(bookedStation);
+            if (this->hasValidDistance())
+            {
+                bookedStation.setDistanceToOwnAircraft(this->getDistanceToOwnAircraft());
+                bookedStation.setBearingToOwnAircraft(this->getBearingToOwnAircraft());
+            }
+            else if (bookedStation.hasValidDistance())
+            {
+                this->setDistanceToOwnAircraft(bookedStation.getDistanceToOwnAircraft());
+                this->setBearingToOwnAircraft(bookedStation.getBearingToOwnAircraft());
+            }
         }
 
         bool CAtcStation::isInRange() const
@@ -206,10 +282,10 @@ namespace BlackMisc
 
         bool CAtcStation::isBookedNow() const
         {
-            if (!this->hasValidBookingTimes()) return false;
+            if (!this->hasValidBookingTimes()) { return false; }
             QDateTime now = QDateTime::currentDateTimeUtc();
-            if (this->m_bookedFromUtc > now) return false;
-            if (now > this->m_bookedUntilUtc) return false;
+            if (this->m_bookedFromUtc > now)  { return false; }
+            if (now > this->m_bookedUntilUtc) { return false; }
             return true;
         }
 

@@ -45,6 +45,17 @@ namespace BlackCore
         return this->m_atcStations;
     }
 
+    CAtcStationList CVatsimDataFileReader::getAtcStationsForCallsign(const CCallsign &callsign) const
+    {
+        CCallsignSet cs({callsign});
+        return this->getAtcStationsForCallsigns(cs);
+    }
+
+    CAtcStationList CVatsimDataFileReader::getAtcStationsForCallsigns(const CCallsignSet &callsigns) const
+    {
+        return this->getAtcStations().findByCallsigns(callsigns);
+    }
+
     CServerList CVatsimDataFileReader::getVoiceServers() const
     {
         QReadLocker rl(&this->m_lock);
@@ -64,8 +75,7 @@ namespace BlackCore
 
     CUserList CVatsimDataFileReader::getPilotsForCallsign(const CCallsign &callsign)
     {
-        CCallsignSet callsigns;
-        callsigns.push_back(callsign);
+        CCallsignSet callsigns({callsign});
         return this->getPilotsForCallsigns(callsigns);
     }
 
@@ -95,21 +105,19 @@ namespace BlackCore
 
     CUserList CVatsimDataFileReader::getControllersForCallsign(const CCallsign &callsign)
     {
-        CCallsignSet callsigns;
-        callsigns.push_back(callsign);
-        return this->getControllersForCallsigns(callsigns);
-    }
-
-    CUserList CVatsimDataFileReader::getUsersForCallsign(const CCallsign &callsign)
-    {
-        CCallsignSet callsigns;
-        callsigns.push_back(callsign);
-        return this->getUsersForCallsigns(callsigns);
+        CCallsignSet cs({callsign});
+        return this->getControllersForCallsigns(cs);
     }
 
     CUserList CVatsimDataFileReader::getControllersForCallsigns(const CCallsignSet &callsigns)
     {
         return this->getAtcStations().findByCallsigns(callsigns).transform(Predicates::MemberTransform(&CAtcStation::getController));
+    }
+
+    CUserList CVatsimDataFileReader::getUsersForCallsign(const CCallsign &callsign)
+    {
+        CCallsignSet callsigns({callsign});
+        return this->getUsersForCallsigns(callsigns);
     }
 
     CUserList CVatsimDataFileReader::getUsersForCallsigns(const CCallsignSet &callsigns)

@@ -53,7 +53,7 @@ namespace BlackMisc
             return this->findBy(Predicates::MemberValid(&CAtcStation::getController)).transform(Predicates::MemberTransform(&CAtcStation::getController));
         }
 
-        int CAtcStationList::mergeWithBooking(CAtcStation &bookedAtcStation)
+        int CAtcStationList::syncronizeWithBookedStation(CAtcStation &bookedAtcStation)
         {
             int c = 0;
             bookedAtcStation.setOnline(false); // reset
@@ -61,104 +61,15 @@ namespace BlackMisc
 
             for (auto i = this->begin(); i != this->end(); ++i)
             {
-                CAtcStation onlineAtcStation = *i;
-                if (onlineAtcStation.getCallsign() != bookedAtcStation.getCallsign()) continue;
-
-                // from online to booking
-                bookedAtcStation.setOnline(true);
-                bookedAtcStation.setFrequency(onlineAtcStation.getFrequency());
-
-                // Logoff Zulu Time set?
-                // comes directly from the online controller and is most likely more accurate
-                if (!onlineAtcStation.getBookedUntilUtc().isNull())
-                    bookedAtcStation.setBookedUntilUtc(onlineAtcStation.getBookedUntilUtc());
-
-                // from booking to online
-                if (!onlineAtcStation.isBookedNow() && bookedAtcStation.hasValidBookingTimes())
-                {
-                    if (onlineAtcStation.hasValidBookingTimes())
-                    {
-                        if (bookedAtcStation.isBookedNow())
-                        {
-                            // can't get any better
-                            onlineAtcStation.setBookedFromUntil(bookedAtcStation);
-                        }
-                        else
-                        {
-                            // we already have some booking dates
-                            CTime timeDiffBooking = bookedAtcStation.bookedWhen();
-                            CTime timeDiffOnline = onlineAtcStation.bookedWhen();
-                            if (timeDiffBooking.isNegativeWithEpsilonConsidered() && timeDiffOnline.isNegativeWithEpsilonConsidered())
-                            {
-                                // both in past
-                                if (timeDiffBooking > timeDiffOnline)
-                                    onlineAtcStation.setBookedFromUntil(bookedAtcStation);
-                            }
-                            else if (timeDiffBooking.isPositiveWithEpsilonConsidered() && timeDiffOnline.isPositiveWithEpsilonConsidered())
-                            {
-                                // both in future
-                                if (timeDiffBooking < timeDiffOnline)
-                                    onlineAtcStation.setBookedFromUntil(bookedAtcStation);
-                            }
-                            else if (timeDiffBooking.isPositiveWithEpsilonConsidered() && timeDiffOnline.isNegativeWithEpsilonConsidered())
-                            {
-                                // future booking is better than past booking
-                                onlineAtcStation.setBookedFromUntil(bookedAtcStation);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // no booking info so far
-                        onlineAtcStation.setBookedFromUntil(bookedAtcStation);
-                    }
-                }
-
-                // both ways
-                onlineAtcStation.syncronizeControllerData(bookedAtcStation);
-                if (onlineAtcStation.hasValidDistance())
-                {
-                    bookedAtcStation.setDistanceToOwnAircraft(onlineAtcStation.getDistanceToOwnAircraft());
-                    bookedAtcStation.setBearingToOwnAircraft(onlineAtcStation.getBearingToOwnAircraft());
-                }
-                else if (bookedAtcStation.hasValidDistance())
-                {
-                    onlineAtcStation.setDistanceToOwnAircraft(bookedAtcStation.getDistanceToOwnAircraft());
-                    onlineAtcStation.setBearingToOwnAircraft(bookedAtcStation.getBearingToOwnAircraft());
-                }
-
-                // update
-                *i = onlineAtcStation;
+                if (i->getCallsign() != bookedAtcStation.getCallsign()) { continue; }
+                i->syncronizeWithBookedStation(bookedAtcStation);
                 c++;
             }
 
             // normally 1 expected, as I should find
             // only one online station for this booking
-            Q_ASSERT(c == 0 || c == 1);
+            Q_ASSERT_X(c == 0 || c == 1, Q_FUNC_INFO, "Found >1 matching station");
             return c;
-        }
-
-        bool CAtcStationList::updateFromVatsimDataFileStation(CAtcStation &stationToBeUpdated) const
-        {
-            if (this->isEmpty()) return false;
-            if (stationToBeUpdated.hasValidRealName() && stationToBeUpdated.hasValidId() && stationToBeUpdated.hasValidFrequency()) return 0;
-
-            CAtcStation dataFileStation = this->findFirstByCallsign(stationToBeUpdated.getCallsign());
-            if (dataFileStation.getCallsign().isEmpty()) return false; // not found
-
-            if (!stationToBeUpdated.hasValidRealName() || !stationToBeUpdated.hasValidId())
-            {
-                CUser user = stationToBeUpdated.getController();
-                if (!stationToBeUpdated.hasValidRealName()) user.setRealName(dataFileStation.getControllerRealName());
-                if (!stationToBeUpdated.hasValidId()) user.setId(dataFileStation.getControllerId());
-                stationToBeUpdated.setController(user);
-            }
-
-            if (!stationToBeUpdated.hasValidFrequency())
-            {
-                stationToBeUpdated.setFrequency(dataFileStation.getFrequency());
-            }
-            return true;
         }
 
     } // namespace

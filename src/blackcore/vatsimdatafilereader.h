@@ -28,9 +28,7 @@
 
 namespace BlackCore
 {
-    /*!
-     * Read bookings from VATSIM
-     */
+    //! Read bookings from VATSIM
     class BLACKCORE_EXPORT CVatsimDataFileReader : public BlackMisc::CThreadedReader
     {
         Q_OBJECT
@@ -39,13 +37,21 @@ namespace BlackCore
         //! Constructor
         explicit CVatsimDataFileReader(QObject *owner, const QStringList &urls);
 
-        //! Get aircrafts
+        //! Get aircraft
         //! \threadsafe
         BlackMisc::Aviation::CAircraftList getAircraft() const;
 
-        //! Get aircrafts
+        //! Get ATC station
         //! \threadsafe
         BlackMisc::Aviation::CAtcStationList getAtcStations() const;
+
+        //! Get ATC stations for callsign
+        //! \threadsafe
+        BlackMisc::Aviation::CAtcStationList getAtcStationsForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+
+        //! Get ATC stations for callsigns
+        //! \threadsafe
+        BlackMisc::Aviation::CAtcStationList getAtcStationsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const;
 
         //! Get all voice servers
         //! \threadsafe
@@ -103,7 +109,7 @@ namespace BlackCore
 
     private:
         QNetworkAccessManager *m_networkManager = nullptr;
-        QStringList m_serviceUrls; /*!< URL of the service */
+        QStringList m_serviceUrls; //!< URL of the service
         int m_currentUrlIndex;
         BlackMisc::Network::CServerList      m_voiceServers;
         BlackMisc::Network::CServerList      m_fsdServers;

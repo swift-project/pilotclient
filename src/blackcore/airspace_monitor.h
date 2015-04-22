@@ -229,14 +229,20 @@ namespace BlackCore
     private slots:
         //! Create aircraft in range, this is the only place where a new aircraft should be added
         void ps_aircraftUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
-        void ps_aircraftInterimUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
+
+        //! Create ATC station, this is the only place where an online ATC station should be added
+        void ps_atcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range);
+
+        //! Send the information if aircraft and(!) client are available
+        //! \note it can take some time to obtain all data for model matching, so function recursively calls itself if something is still missing (trial)
+        void ps_sendReadyForModelMatching(const BlackMisc::Aviation::CCallsign &callsign, int trial);
+
         void ps_realNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
         void ps_capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
         void ps_customFSinnPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &p1, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &model);
         void ps_serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server);
         void ps_metarReceived(const QString &metarMessage);
         void ps_flightPlanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);
-        void ps_atcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range);
         void ps_atcControllerDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
         void ps_atisReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atisMessage);
         void ps_atisVoiceRoomReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
@@ -247,10 +253,7 @@ namespace BlackCore
         void ps_receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
         void ps_receivedDataFile();
         void ps_aircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, bool isFull);
-
-        //!  Send the information if aircraft and(!) client are vailable
-        void ps_sendReadyForModelMatching(const BlackMisc::Aviation::CCallsign &callsign, int trial);
-
+        void ps_aircraftInterimUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
         void ps_sendInterimPosition();
     };
 
