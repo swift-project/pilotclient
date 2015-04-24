@@ -119,14 +119,15 @@ namespace BlackCore
 
         if (isConnected())
         {
+            CSimulatedAircraft myAircraft(ownAircraft());
             if (this->m_loginMode == LoginAsObserver)
             {
                 // Observer
                 VatAtcPosition pos;
                 pos.facility = vatFacilityTypeUnknown;
                 pos.visibleRange = 10; // NM
-                pos.latitude  = ownAircraft().latitude().value(CAngleUnit::deg());
-                pos.longitude = ownAircraft().longitude().value(CAngleUnit::deg());
+                pos.latitude  = myAircraft.latitude().value(CAngleUnit::deg());
+                pos.longitude = myAircraft.longitude().value(CAngleUnit::deg());
                 pos.elevation = 0;
                 pos.rating = vatAtcRatingObserver;
                 pos.frequency = 199998;
@@ -137,18 +138,18 @@ namespace BlackCore
                 // Normal / Stealth mode
                 VatPilotPosition pos;
                 // TODO: we need to distinguish true and pressure altitude
-                pos.altitudePressure = ownAircraft().getAltitude().value(CLengthUnit::ft());
-                pos.altitudeTrue = ownAircraft().getAltitude().value(CLengthUnit::ft());
-                pos.heading      = ownAircraft().getHeading().value(CAngleUnit::deg());
-                pos.pitch        = ownAircraft().getPitch().value(CAngleUnit::deg());
-                pos.bank         = ownAircraft().getBank().value(CAngleUnit::deg());
-                pos.latitude     = ownAircraft().latitude().value(CAngleUnit::deg());
-                pos.longitude    = ownAircraft().longitude().value(CAngleUnit::deg());
-                pos.groundSpeed  = ownAircraft().getGroundSpeed().value(CSpeedUnit::kts());
+                pos.altitudePressure = myAircraft.getAltitude().value(CLengthUnit::ft());
+                pos.altitudeTrue = myAircraft.getAltitude().value(CLengthUnit::ft());
+                pos.heading      = myAircraft.getHeading().value(CAngleUnit::deg());
+                pos.pitch        = myAircraft.getPitch().value(CAngleUnit::deg());
+                pos.bank         = myAircraft.getBank().value(CAngleUnit::deg());
+                pos.latitude     = myAircraft.latitude().value(CAngleUnit::deg());
+                pos.longitude    = myAircraft.longitude().value(CAngleUnit::deg());
+                pos.groundSpeed  = myAircraft.getGroundSpeed().value(CSpeedUnit::kts());
                 pos.rating = vatPilotRatingUnknown;
-                pos.transponderCode = static_cast<qint16>(ownAircraft().getTransponderCode());
+                pos.transponderCode = static_cast<qint16>(myAircraft.getTransponderCode());
                 pos.transponderMode = vatTransponderModeStandby;
-                switch (ownAircraft().getTransponderMode())
+                switch (myAircraft.getTransponderMode())
                 {
                 case CTransponder::ModeC: pos.transponderMode = vatTransponderModeCharlie; break;
                 case CTransponder::StateIdent: pos.transponderMode = vatTransponderModeIdent; break;
@@ -422,20 +423,21 @@ namespace BlackCore
         Vat_SendClientQuery(m_net.data(), vatClientQueryInfo, toFSD(callsign));
     }
 
-    void CNetworkVatlib::sendInterimPosition(const CCallsignSet &receivers)
+    void CNetworkVatlib::sendInterimPositions(const CCallsignSet &receivers)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
-
+        if (receivers.isEmpty()) { return;  }
+        CSimulatedAircraft myAircraft(ownAircraft());
         if (this->m_loginMode == LoginNormal)
         {
             VatInterimPilotPosition pos;
             // TODO: we need to distinguish true and pressure altitude
-            pos.altitudeTrue = ownAircraft().getAltitude().value(CLengthUnit::ft());
-            pos.heading      = ownAircraft().getHeading().value(CAngleUnit::deg());
-            pos.pitch        = ownAircraft().getPitch().value(CAngleUnit::deg());
-            pos.bank         = ownAircraft().getBank().value(CAngleUnit::deg());
-            pos.latitude     = ownAircraft().latitude().value(CAngleUnit::deg());
-            pos.longitude    = ownAircraft().longitude().value(CAngleUnit::deg());
+            pos.altitudeTrue = myAircraft.getAltitude().value(CLengthUnit::ft());
+            pos.heading      = myAircraft.getHeading().value(CAngleUnit::deg());
+            pos.pitch        = myAircraft.getPitch().value(CAngleUnit::deg());
+            pos.bank         = myAircraft.getBank().value(CAngleUnit::deg());
+            pos.latitude     = myAircraft.latitude().value(CAngleUnit::deg());
+            pos.longitude    = myAircraft.longitude().value(CAngleUnit::deg());
 
             for (const auto &receiver : receivers)
             {
@@ -615,7 +617,8 @@ namespace BlackCore
         if (modelString.isEmpty()) { modelString = defaultModelString(); }
 
         QStringList data { { "0" }, icao.getAirlineDesignator(), icao.getAircraftDesignator(),
-            { "" }, { "" }, { "" }, { "" }, icao.getAircraftCombinedType(), modelString };
+            { "" }, { "" }, { "" }, { "" }, icao.getAircraftCombinedType(), modelString
+        };
         sendCustomPacket(callsign, "FSIPIR", data);
     }
 
@@ -627,7 +630,8 @@ namespace BlackCore
         if (modelString.isEmpty()) { modelString = defaultModelString(); }
 
         QStringList data { { "0" }, icao.getAirlineDesignator(), icao.getAircraftDesignator(),
-            { "" }, { "" }, { "" }, { "" }, icao.getAircraftCombinedType(), modelString };
+            { "" }, { "" }, { "" }, { "" }, icao.getAircraftCombinedType(), modelString
+        };
         sendCustomPacket(callsign, "FSIPI", data);
     }
 
@@ -877,11 +881,11 @@ namespace BlackCore
     {
         switch (type)
         {
-        case vatInfoQueryTypeFreq:   emit cbvar_cast(cbvar)->frequencyReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), CFrequency(cbvar_cast(cbvar)->fromFSD(data).toFloat(), CFrequencyUnit::MHz())); break;
-        case vatInfoQueryTypeServer: emit cbvar_cast(cbvar)->serverReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
-        case vatInfoQueryTypeAtc:    emit cbvar_cast(cbvar)->atcReplyReceived(CCallsign(cbvar_cast(cbvar)->fromFSD(data2), CCallsign::Atc), *data == 'Y'); break;
-        case vatInfoQueryTypeName:   emit cbvar_cast(cbvar)->realNameReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
-        case vatInfoQueryTypeIP:     emit cbvar_cast(cbvar)->ipReplyReceived(cbvar_cast(cbvar)->fromFSD(data)); break;
+        case vatClientQueryFreq:   emit cbvar_cast(cbvar)->frequencyReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), CFrequency(cbvar_cast(cbvar)->fromFSD(data).toFloat(), CFrequencyUnit::MHz())); break;
+        case vatClientQueryServer: emit cbvar_cast(cbvar)->serverReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
+        case vatClientQueryAtc:    emit cbvar_cast(cbvar)->atcReplyReceived(CCallsign(cbvar_cast(cbvar)->fromFSD(data2), CCallsign::Atc), *data == 'Y'); break;
+        case vatClientQueryName:   emit cbvar_cast(cbvar)->realNameReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
+        case vatClientQueryIP:     emit cbvar_cast(cbvar)->ipReplyReceived(cbvar_cast(cbvar)->fromFSD(data)); break;
         default: break;
         }
     }

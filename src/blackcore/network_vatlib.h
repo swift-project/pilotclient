@@ -81,7 +81,7 @@ namespace BlackCore
         virtual void sendIcaoCodesQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendUserInfoQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
-        virtual void sendInterimPosition(const BlackMisc::Aviation::CCallsignSet &receiver) override;
+        virtual void sendInterimPositions(const BlackMisc::Aviation::CCallsignSet &receiver) override;
         //! @}
 
         //! \name Weather slots

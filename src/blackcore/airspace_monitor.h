@@ -159,9 +159,6 @@ namespace BlackCore
         static const qint64 AircraftPartsRemoveOffsetMs = 30 * 1000;       //!< parts older than now - offset will be removed
 
     signals:
-
-        //--- DBus / local signals
-
         //! Online ATC stations were changed
         void changedAtcStationsOnline();
 
@@ -218,11 +215,6 @@ namespace BlackCore
         mutable QReadWriteLock m_lockParts;      //!< lock for parts
         mutable QReadWriteLock m_lockAircraft;   //!< lock aircraft
 
-        // TODO FIXME (MS) should be in INetwork
-        void sendFsipiCustomPacket(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;
-        void sendFsipirCustomPacket(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;
-        QStringList createFsipiCustomPacketData() const;
-
         //! Remove ATC online stations
         void removeAllOnlineAtcStations();
 
@@ -274,7 +266,7 @@ namespace BlackCore
         void ps_receivedDataFile();
         void ps_aircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, bool isFull);
         void ps_aircraftInterimUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
-        void ps_sendInterimPosition();
+        void ps_sendInterimPositions();
     };
 
 } // namespace

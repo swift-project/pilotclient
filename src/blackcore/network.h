@@ -346,7 +346,7 @@ namespace BlackCore
          * Send interim position directly to a set of receivers.
          * \pre Network must be connected when calling this function.
          */
-        virtual void sendInterimPosition(const BlackMisc::Aviation::CCallsignSet &receiver) = 0;
+        virtual void sendInterimPositions(const BlackMisc::Aviation::CCallsignSet &receiver) = 0;
 
         //! @}
         ////////////////////////////////////////////////////////////////
