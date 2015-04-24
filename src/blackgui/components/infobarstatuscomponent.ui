@@ -28,7 +28,7 @@
   </property>
   <layout class="QHBoxLayout" name="hl_InfoBarStatus">
    <property name="spacing">
-    <number>2</number>
+    <number>0</number>
    </property>
    <property name="leftMargin">
     <number>0</number>
@@ -75,6 +75,9 @@
      <property name="text">
       <string>sim</string>
      </property>
+     <property name="indent">
+      <number>6</number>
+     </property>
     </widget>
    </item>
    <item>
@@ -95,6 +98,9 @@
      <property name="text">
       <string>map</string>
      </property>
+     <property name="indent">
+      <number>6</number>
+     </property>
     </widget>
    </item>
    <item>
@@ -110,6 +116,9 @@
      </property>
      <property name="text">
       <string>DB</string>
+     </property>
+     <property name="indent">
+      <number>6</number>
      </property>
     </widget>
    </item>
@@ -137,6 +146,9 @@
      <property name="text">
       <string>ptt</string>
      </property>
+     <property name="indent">
+      <number>6</number>
+     </property>
     </widget>
    </item>
    <item>
@@ -153,8 +165,8 @@
      <property name="text">
       <string>au.</string>
      </property>
-     <property name="margin">
-      <number>0</number>
+     <property name="indent">
+      <number>6</number>
      </property>
     </widget>
    </item>
