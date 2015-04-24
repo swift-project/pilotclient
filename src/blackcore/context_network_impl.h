@@ -51,43 +51,55 @@ namespace BlackCore
         //! Destructor
         virtual ~CContextNetwork();
 
-        //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraft
-        virtual const BlackMisc::Simulation::CSimulatedAircraftList &remoteAircraft() const override;
-
-        //! \copydoc IRenderedAircraftProvider::remoteAircraft
-        virtual BlackMisc::Simulation::CSimulatedAircraftList &remoteAircraft() override;
-
-        //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraftSituations
+        //! \copydoc IRemoteAircraftProvider::remoteAircraftSituations
+        //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
         //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationsCount
+        //! \ingroup remoteaircraftprovider
         virtual int remoteAircraftSituationsCount(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
-        //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraftParts
+        //! \copydoc IRemoteAircraftProvider::remoteAircraftParts
+        //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const override;
 
-        //! \copydoc IRemoteAircraftProviderReadOnly::isRemoteAircraftSupportingParts
+        //! \copydoc IRemoteAircraftProvider::isRemoteAircraftSupportingParts
+        //! \ingroup remoteaircraftprovider
         virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const;
 
-        //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraftSupportingParts
+        //! \copydoc IRemoteAircraftProvider::remoteAircraftSupportingParts
+        //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
 
-        //! \copydoc IRemoteAircraftProviderReadOnly::connectSignals
+        //! \copydoc IRemoteAircraftProvider::connectSignals
+        //! \ingroup remoteaircraftprovider
         virtual bool connectRemoteAircraftProviderSignals(
             std::function<void(const BlackMisc::Aviation::CAircraftSituation &)> situationSlot,
             std::function<void(const BlackMisc::Aviation::CAircraftParts &)> partsSlot,
             std::function<void(const BlackMisc::Aviation::CCallsign &)> removedAircraftSlot
         ) override;
 
-    signals:
-        //! \copydoc IRemoteAircraftProviderReadOnly::addedRemoteAircraftPart
-        void addedRemoteAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
+        //! \copydoc IRemoteAircraftProvider::updateAircraftRendered
+        //! \ingroup remoteaircraftprovider
+        virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered, const QString &originator) override;
 
-        //! \copydoc IRemoteAircraftProviderReadOnly::removedAircraft
-        //! \sa IContextNetwork::removedAircraft() which is the equivalent when using IContextNetwork
-        void removedRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign);
+        //! \copydoc IRemoteAircraftProvider::updateMarkAllAsNotRendered
+        //! \ingroup remoteaircraftprovider
+        virtual void updateMarkAllAsNotRendered(const QString &originator) override;
 
     public slots:
+        //! \copydoc IContextNetwork::updateAircraftEnabled
+        //! \ingroup remoteaircraftprovider
+        virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const QString &originator) override;
+
+        //! \copydoc IContextNetwork::updateAircraftModel
+        //! \ingroup remoteaircraftprovider
+        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) override;
+
+        //! \copydoc IContextNetwork::updateFastPositionEnabled
+        //! \ingroup remoteaircraftprovider
+        virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates, const QString &originator) override;
+
         //! \copydoc IContextNetwork::readAtcBookingsFromSource()
         virtual void readAtcBookingsFromSource() const override;
 
@@ -97,10 +109,16 @@ namespace BlackCore
         //! \copydoc IContextNetwork::getAtcStationsBooked()
         virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override;
 
-        //! \copydoc IContextNetwork::getAircraftInRange()
+        //! \copydoc IContextNetwork::getAircraftInRange
+        //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;
 
+        //! \copydoc IRemoteAircraftProvider::getAircraftInRangeCount
+        //! \ingroup remoteaircraftprovider
+        virtual int getAircraftInRangeCount() const override;
+
         //! \copydoc IContextNetwork::getAircraftForCallsign
+        //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
         //! \copydoc IContextNetwork::getOnlineStationForCallsign
@@ -115,14 +133,12 @@ namespace BlackCore
         //! \copydoc IContextNetwork::isConnected()
         virtual bool isConnected() const override;
 
-        /*!
-         * In transition state, e.g. connecting, disconnecting.
-         * \details In such a state it is advisable to wait until an end state (connected/disconnected) is reached
-         * \remarks Intentionally only running locally, not in interface
-         */
+        //! In transition state, e.g. connecting, disconnecting.
+        //! \details In such a state it is advisable to wait until an end state (connected/disconnected) is reached
+        //! \remarks Intentionally only running locally, not in interface
         bool isPendingConnection() const;
 
-        //! \addtogroup commandline
+        //! \ingroup commandline
         //! @{
         //! <pre>
         //! .m  .msg   message text
@@ -176,15 +192,6 @@ namespace BlackCore
         //! \copydoc IContextNetwork::requestAtisUpdates
         virtual void requestAtisUpdates() override;
 
-        //! \copydoc IContextNetwork::updateAircraftEnabled
-        virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const QString &originator) override;
-
-        //! \copydoc IContextNetwork::updateAircraftModel
-        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) override;
-
-        //! \copydoc IContextNetwork::updateFastPositionEnabled
-        virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates, const QString &originator) override;
-
         //! \copydoc IContextNetwork::isFastPositionSendingEnabled
         virtual bool isFastPositionSendingEnabled() const override;
 
@@ -211,12 +218,7 @@ namespace BlackCore
         CContextNetwork(CRuntimeConfig::ContextMode, CRuntime *runtime);
 
         //! Register myself in DBus
-        CContextNetwork *registerWithDBus(CDBusServer *server)
-        {
-            if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) return this;
-            server->addObject(IContextNetwork::ObjectPath(), this);
-            return this;
-        }
+        CContextNetwork *registerWithDBus(CDBusServer *server);
 
     private:
         CAirspaceMonitor    *m_airspace = nullptr;

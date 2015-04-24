@@ -74,6 +74,7 @@ namespace BlackMisc
             {
             case IndexModel:
                 this->m_model.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->setModel(this->m_model); // sync some values
                 break;
             case IndexClient:
                 this->m_client.setPropertyByIndex(variant, index.copyFrontRemoved());

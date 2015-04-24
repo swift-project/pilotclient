@@ -34,7 +34,7 @@ namespace BlackCore
     class CAirspaceAnalyzer :
         public BlackMisc::CContinuousWorker,
         public BlackMisc::Simulation::COwnAircraftAwareReadOnly,
-        public BlackMisc::Simulation::CRemoteAircraftAwareReadOnly
+        public BlackMisc::Simulation::CRemoteAircraftAware
     {
         Q_OBJECT
 
@@ -44,7 +44,7 @@ namespace BlackCore
 
         //! Constructor
         CAirspaceAnalyzer(const BlackMisc::Simulation::IOwnAircraftProviderReadOnly *ownAircraftProvider,
-                          const BlackMisc::Simulation::IRemoteAircraftProviderReadOnly *remoteAircraftProvider,
+                          BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                           INetwork *network, QObject *parent);
 
     public slots:

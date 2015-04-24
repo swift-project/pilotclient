@@ -90,8 +90,7 @@ namespace BlackCore
         if (!isMaxAircraftRestricted()) { return; }
         if (!isRenderingEnabled()) { return; }
 
-        //! \todo Simulator, why is there no difference on CSequence?
-        CSimulatedAircraftList newAircraftInRange(remoteAircraft().getClosestObjects(getMaxRenderedAircraft()));
+        CSimulatedAircraftList newAircraftInRange(getAircraftInRange().getClosestObjects(getMaxRenderedAircraft()));
         CCallsignSet newAircraftCallsigns(newAircraftInRange.getCallsigns());
         CCallsignSet toBeRemovedCallsigns(m_callsignsToBeRendered.difference(newAircraftCallsigns));
         CCallsignSet toBeAddedCallsigns(newAircraftCallsigns.difference(m_callsignsToBeRendered));
@@ -108,7 +107,7 @@ namespace BlackCore
 
     void CSimulatorCommon::resetAircraftFromBacked(const CCallsign &callsign)
     {
-        CSimulatedAircraft aircraft(this->remoteAircraft().findFirstByCallsign(callsign));
+        CSimulatedAircraft aircraft(this->getAircraftForCallsign(callsign));
         bool enabled = aircraft.isEnabled();
         if (enabled)
         {

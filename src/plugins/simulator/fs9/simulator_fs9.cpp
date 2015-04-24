@@ -108,7 +108,7 @@ namespace BlackSimPlugin
 
             client->start();
             m_hashFs9Clients.insert(callsign, client);
-            remoteAircraft().applyIfCallsign(callsign, CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(true)));
+            updateAircraftRendered(callsign, true, this->simulatorOriginator());
             CLogMessage(this).info("FS9: Added aircraft %1") << callsign.toQString();
             return true;
         }
@@ -120,7 +120,7 @@ namespace BlackSimPlugin
             auto fs9Client = m_hashFs9Clients.value(callsign);
             fs9Client->quit();
             m_hashFs9Clients.remove(callsign);
-            remoteAircraft().setRendered(callsign, false);
+            updateAircraftRendered(callsign, false, this->simulatorOriginator());
             CLogMessage(this).info("FS9: Removed aircraft %1") << callsign.toQString();
             return true;
         }
@@ -336,10 +336,10 @@ namespace BlackSimPlugin
         }
 
         BlackCore::ISimulator *CSimulatorFs9Factory::create(
-                const CSimulatorPluginInfo &info,
-                IOwnAircraftProvider *ownAircraftProvider,
-                IRemoteAircraftProvider *remoteAircraftProvider,
-                QObject *parent)
+            const CSimulatorPluginInfo &info,
+            IOwnAircraftProvider *ownAircraftProvider,
+            IRemoteAircraftProvider *remoteAircraftProvider,
+            QObject *parent)
         {
             return new CSimulatorFs9(info, ownAircraftProvider, remoteAircraftProvider, parent);
         }

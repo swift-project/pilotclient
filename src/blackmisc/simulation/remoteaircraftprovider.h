@@ -13,29 +13,47 @@
 #define BLACKMISC_SIMULATION_REMOTEAIRCRAFTPROVIDER_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/simulation/airspaceaircraftsnapshot.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
+
 #include <functional>
 
 namespace BlackMisc
 {
     namespace Simulation
     {
-        //! Direct in memory access to remote aircraft
+        //! Direct thread safe in memory access to remote aircraft
         //! \note Can not be derived from QObject (as for the signals), as this would create multiple
         //!       inheritance. Hence Q_DECLARE_INTERFACE is used.
-        class BLACKMISC_EXPORT IRemoteAircraftProviderReadOnly
+        class BLACKMISC_EXPORT IRemoteAircraftProvider
         {
         public:
+            static const int MaxSituationsPerCallsign = 6; //!< How many situations per callsign
+            static const int MaxPartsPerCallsign = 3;      //!< How many parts per callsign
+
             //! Situations per callsign
             typedef QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituationList> CSituationsPerCallsign;
 
             //! Parts per callsign
             typedef QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftPartsList> CPartsPerCallsign;
 
-            //! All rendered aircraft
-            virtual const CSimulatedAircraftList &remoteAircraft() const = 0;
+            //! All remote aircraft
+            //! \threadsafe
+            virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const = 0;
+
+            //! Count remote aircraft
+            //! \threadsafe
+            virtual int getAircraftInRangeCount() const = 0;
+
+            //! Current snapshot
+            //! \threadsafe
+            virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const = 0;
+
+            //! Aircraft for callsign
+            //! \threadsafe
+            virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
             //! Rendered aircraft situations (per callsign, time history)
             //! \threadsafe
@@ -47,7 +65,7 @@ namespace BlackMisc
 
             //! All parts (per callsign, time history)
             //! \threadsafe
-            virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const = 0;
+            virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeBefore) const = 0;
 
             //! Is remote aircraft supporting parts?
             //! \threadsafe
@@ -57,112 +75,81 @@ namespace BlackMisc
             //! \threadsafe
             virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const = 0;
 
-            //! Destructor
-            virtual ~IRemoteAircraftProviderReadOnly() {}
-
-            //! Connect signals to slot receiver. As the interface is no QObject, slots can not be connected directly.
-            virtual bool connectRemoteAircraftProviderSignals(
-                std::function<void(const BlackMisc::Aviation::CAircraftSituation &)> situationSlot,
-                std::function<void(const BlackMisc::Aviation::CAircraftParts &)> partsSlot,
-                std::function<void(const BlackMisc::Aviation::CCallsign &)> removedAircraftSlot
-            ) = 0;
-
-            static const int MaxSituationsPerCallsign = 6; //!< How many situations per callsign
-            static const int MaxPartsPerCallsign = 3;      //!< How many parts per callsign
-
-            // those signals have to be implemented by classes using the interface.
-        signals:
-            //! New parts got added
-            void addedRemoteAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
-
-            //! Aircraft was removed
-            void removedRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign);
-
-        };
-
-        //! Direct in memory access to own aircraft
-        class BLACKMISC_EXPORT IRemoteAircraftProvider : public IRemoteAircraftProviderReadOnly
-        {
-        public:
-
-            //! The read only /sa IRemoteAircraftProviderReadOnly::remoteAircraft
-            using IRemoteAircraftProviderReadOnly::remoteAircraft;
-
-            //! All rendered aircraft
-            //! \note in memory reference, not thread safe
-            virtual CSimulatedAircraftList &remoteAircraft() = 0;
-
             //! Enable/disable rendering
+            //! \threadsafe
             virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering, const QString &originator) = 0;
 
+            //! Rendered?
+            //! \threadsafe
+            virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered, const QString &originator) = 0;
+
+            //! Mark all as not rendered
+            //! \threadsafe
+            virtual void updateMarkAllAsNotRendered(const QString &originator) = 0;
+
             //! Change model string
+            //! \threadsafe
             virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) = 0;
 
             //! Change fast position updates
+            //! \threadsafe
             virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates, const QString &originator) = 0;
-        };
-
-        //! Class which can be directly used to access an \sa IRemoteAircraftProviderReadOnly object
-        class BLACKMISC_EXPORT CRemoteAircraftAwareReadOnly
-        {
-        public:
-            //! \copydoc IRemoteAircraftProviderReadOnly::renderedAircraft
-            virtual const CSimulatedAircraftList &remoteAircraft() const;
-
-            //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraftSituations
-            virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const;
-
-            //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraftSituationsCount
-            virtual int remoteAircraftSituationsCount(const BlackMisc::Aviation::CCallsign &callsign) const;
-
-            //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraftParts
-            virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const;
-
-            //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraftSupportingParts
-            virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const;
-
-            //! \copydoc IRemoteAircraftProviderReadOnly::isRemoteAircraftSupportingParts
-            virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! Destructor
-            virtual ~CRemoteAircraftAwareReadOnly() {}
+            virtual ~IRemoteAircraftProvider() {}
 
-        protected:
-            //! Constructor
-            CRemoteAircraftAwareReadOnly(const IRemoteAircraftProviderReadOnly *remoteAircraftProvider) : m_remoteAircraftProvider(remoteAircraftProvider) {}
-            const IRemoteAircraftProviderReadOnly *m_remoteAircraftProvider = nullptr; //!< access to object
+            //! Connect signals to slot receiver. As the interface is no QObject, slots can not be connected directly.
+            virtual bool connectRemoteAircraftProviderSignals(
+                std::function<void(const BlackMisc::Aviation::CAircraftSituation &)>          addedSituationSlot,
+                std::function<void(const BlackMisc::Aviation::CAircraftParts &)>              addedPartsSlot,
+                std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,
+                std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshot
+            ) = 0;
+
         };
 
         //! Class which can be directly used to access an \sa IRemoteAircraftProvider object
-        class BLACKMISC_EXPORT CRemoteAircraftAware
+        class CRemoteAircraftAware
         {
         public:
-            //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraft
-            virtual const CSimulatedAircraftList &remoteAircraft() const;
+            //! \copydoc IRemoteAircraftProvider::getAircraftInRange
+            virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const;
 
-            //! \copydoc IRemoteAircraftProvider::remoteAircraft
-            virtual CSimulatedAircraftList &remoteAircraft();
+            //! \copydoc IRemoteAircraftProvider::getAircraftInRangeCount
+            int getAircraftInRangeCount() const;
 
-            //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraftSituations
+            //! \copydoc IRemoteAircraftProvider::getAircraftInRangeForCallsign
+            virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const Aviation::CCallsign &callsign) const;
+
+            //! \copydoc IRemoteAircraftProvider::getLatestAirspaceAircraftSnapshot
+            virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const;
+
+            //! \copydoc IRemoteAircraftProvider::remoteAircraftSituations
             virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const;
 
-            //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraftParts
-            virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign) const;
+            //! \copydoc IRemoteAircraftProvider::remoteAircraftParts
+            virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeBefore) const;
 
-            //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraftSupportingParts
+            //! \copydoc IRemoteAircraftProvider::remoteAircraftSupportingParts
             virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const;
 
-            //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraftSituationsCount
+            //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationsCount
             virtual int remoteAircraftSituationsCount(const BlackMisc::Aviation::CCallsign &callsign) const;
 
+            //! \copydoc IRemoteAircraftProvider::isRemoteAircraftSupportingParts
+            virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const;
+
             //! \copydoc IRemoteAircraftProvider::updateAircraftEnabled
-            virtual bool providerUpdateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const QString &originator);
+            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const QString &originator);
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftModel
-            virtual bool providerUpdateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator);
+            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator);
 
-            //! \copydoc IRemoteAircraftProviderReadOnly::isRemoteAircraftSupportingParts
-            virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const;
+            //! \copydoc IRemoteAircraftProvider::updateAircraftRendered
+            virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered, const QString &originator);
+
+            //! \copydoc IRemoteAircraftProvider::updateMarkAllAsNotRendered
+            virtual void updateMarkAllAsNotRendered(const QString &originator);
 
             //! Destructor
             virtual ~CRemoteAircraftAware() {}
@@ -176,7 +163,6 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-Q_DECLARE_INTERFACE(BlackMisc::Simulation::IRemoteAircraftProviderReadOnly, "IRemoteAircraftProviderReadOnly")
 Q_DECLARE_INTERFACE(BlackMisc::Simulation::IRemoteAircraftProvider, "IRemoteAircraftProvider")
 
 #endif // guard

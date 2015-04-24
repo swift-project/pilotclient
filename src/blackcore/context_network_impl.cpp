@@ -78,30 +78,21 @@ namespace BlackCore
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked);
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus);
         connect(this->m_airspace, &CAirspaceMonitor::changedAircraftInRange, this, &CContextNetwork::changedAircraftInRange);
-        connect(this->m_airspace, &CAirspaceMonitor::removedRemoteAircraft, this, &IContextNetwork::removedAircraft); // DBus
+        connect(this->m_airspace, &CAirspaceMonitor::removedAircraft, this, &IContextNetwork::removedAircraft); // DBus
         connect(this->m_airspace, &CAirspaceMonitor::readyForModelMatching, this, &CContextNetwork::readyForModelMatching);
         connect(this->m_airspace, &CAirspaceMonitor::addedAircraft, this, &CContextNetwork::addedAircraft);
+    }
 
-        // remote provider, local only
-        connect(this->m_airspace, &CAirspaceMonitor::removedRemoteAircraft, this, &CContextNetwork::removedRemoteAircraft); // Local
-        connect(this->m_airspace, &CAirspaceMonitor::addedRemoteAircraftParts, this, &CContextNetwork::addedRemoteAircraftParts);
+    CContextNetwork *CContextNetwork::registerWithDBus(CDBusServer *server)
+    {
+        if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) return this;
+        server->addObject(IContextNetwork::ObjectPath(), this);
+        return this;
     }
 
     CContextNetwork::~CContextNetwork()
     {
         this->gracefulShutdown();
-    }
-
-    const CSimulatedAircraftList &CContextNetwork::remoteAircraft() const
-    {
-        Q_ASSERT(this->m_airspace);
-        return m_airspace->remoteAircraft();
-    }
-
-    CSimulatedAircraftList &CContextNetwork::remoteAircraft()
-    {
-        Q_ASSERT(this->m_airspace);
-        return m_airspace->remoteAircraft();
     }
 
     CAircraftSituationList CContextNetwork::remoteAircraftSituations(const CCallsign &callsign) const
@@ -480,13 +471,19 @@ namespace BlackCore
     CSimulatedAircraftList CContextNetwork::getAircraftInRange() const
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        return this->m_airspace->remoteAircraft();
+        return this->m_airspace->getAircraftInRange();
+    }
+
+    int CContextNetwork::getAircraftInRangeCount() const
+    {
+        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        return this->m_airspace->getAircraftInRangeCount();
     }
 
     CSimulatedAircraft CContextNetwork::getAircraftForCallsign(const CCallsign &callsign) const
     {
         if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
-        return this->m_airspace->remoteAircraft().findFirstByCallsign(callsign);
+        return this->m_airspace->getAircraftInRange().findFirstByCallsign(callsign);
     }
 
     CAtcStation CContextNetwork::getOnlineStationForCallsign(const CCallsign &callsign) const
@@ -527,7 +524,7 @@ namespace BlackCore
         bool c = this->m_airspace->updateAircraftEnabled(callsign, enabledForRedering, originator);
         if (c)
         {
-            CSimulatedAircraft aircraft(this->remoteAircraft().findFirstByCallsign(callsign));
+            CSimulatedAircraft aircraft(this->getAircraftForCallsign(callsign));
             emit this->changedRemoteAircraftEnabled(aircraft, originator);
         }
         return c;
@@ -539,7 +536,7 @@ namespace BlackCore
         bool c = this->m_airspace->updateAircraftModel(callsign, model, originator);
         if (c)
         {
-            CSimulatedAircraft aircraft(this->remoteAircraft().findFirstByCallsign(callsign));
+            CSimulatedAircraft aircraft(this->getAircraftForCallsign(callsign));
             emit this->changedRemoteAircraftModel(aircraft, originator);
         }
         return c;
@@ -551,11 +548,24 @@ namespace BlackCore
         bool c = this->m_airspace->updateFastPositionEnabled(callsign, enableFastPositonUpdates, originator);
         if (c)
         {
-            CSimulatedAircraft aircraft(this->remoteAircraft().findFirstByCallsign(callsign));
+            CSimulatedAircraft aircraft(this->getAircraftForCallsign(callsign));
             CLogMessage(this).info("Callsign %1 sets fast positions ") << aircraft.getCallsign() << BlackMisc::boolToOnOff(aircraft.fastPositionUpdates());
             emit this->changedFastPositionUpdates(aircraft, originator);
         }
         return c;
+    }
+
+    bool CContextNetwork::updateAircraftRendered(const CCallsign &callsign, bool rendered, const QString &originator)
+    {
+        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << rendered << originator; }
+        bool c = this->m_airspace->updateAircraftRendered(callsign, rendered, originator);
+        return c;
+    }
+
+    void CContextNetwork::updateMarkAllAsNotRendered(const QString &originator)
+    {
+        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << originator; }
+        this->m_airspace->updateMarkAllAsNotRendered(originator);
     }
 
     bool CContextNetwork::isFastPositionSendingEnabled() const

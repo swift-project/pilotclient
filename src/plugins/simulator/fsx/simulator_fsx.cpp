@@ -163,9 +163,9 @@ namespace BlackSimPlugin
 
             // matched models
             CAircraftModel aircraftModel = modelMatching(newRemoteAircraftCopy);
-            Q_ASSERT(newRemoteAircraft.getCallsign() == aircraftModel.getCallsign());
-            this->providerUpdateAircraftModel(newRemoteAircraft.getCallsign(), aircraftModel, simulatorOriginator());
-            CSimulatedAircraft aircraftAfterModelApplied = remoteAircraft().findFirstByCallsign(newRemoteAircraft.getCallsign());
+            Q_ASSERT_X(newRemoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "mismatching callsigns");
+            this->updateAircraftModel(newRemoteAircraft.getCallsign(), aircraftModel, simulatorOriginator());
+            CSimulatedAircraft aircraftAfterModelApplied(getAircraftForCallsign(newRemoteAircraft.getCallsign()));
             aircraftAfterModelApplied.setRendered(true);
             emit modelMatchingCompleted(aircraftAfterModelApplied);
 
@@ -523,9 +523,10 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsx::removeRemoteAircraft(const CSimConnectObject &simObject)
         {
-            m_simConnectObjects.remove(simObject.getCallsign());
+            CCallsign callsign(simObject.getCallsign());
+            m_simConnectObjects.remove(callsign);
             SimConnect_AIRemoveObject(m_hSimConnect, static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), static_cast<SIMCONNECT_DATA_REQUEST_ID>(simObject.getRequestId()));
-            remoteAircraft().setRendered(simObject.getCallsign(), false);
+            updateAircraftRendered(callsign, false, simulatorOriginator());
             CLogMessage(this).info("FSX: Removed aircraft %1") << simObject.getCallsign().toQString();
             return true;
         }
@@ -615,7 +616,7 @@ namespace BlackSimPlugin
 
             // nothing to do, reset request id and exit
             if (this->isPaused()) { return; } // no interpolation while paused
-            int remoteAircraftNo = this->remoteAircraft().size();
+            int remoteAircraftNo = this->getAircraftInRangeCount();
             if (remoteAircraftNo < 1) { m_interpolationRequest = 0;  return; }
 
             // interpolate and send to SIM

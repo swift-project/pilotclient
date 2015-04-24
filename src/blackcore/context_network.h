@@ -121,13 +121,11 @@ namespace BlackCore
         //! Bookings read
         void vatsimBookingsRead();
 
-        /*!
-         * Connection status changed
-         * \param from  old status
-         * \param to    new status
-         * \remarks If I use the enum, adaptor / interface are not created correctly
-         * \see INetwork::ConnectionStatus
-         */
+        //! Connection status changed
+        //! \param from  old status
+        //! \param to    new status
+        //! \remarks If I use the enum, adaptor / interface are not created correctly
+        //! \see INetwork::ConnectionStatus
         void connectionStatusChanged(int from, int to);
 
         //! Text messages received (also private chat messages, rfaio channel messages)
@@ -155,6 +153,9 @@ namespace BlackCore
 
         //! Aircraft for given callsign
         virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+
+        //! Aircraft count
+        virtual int getAircraftInRangeCount() const = 0;
 
         //! Online station for callsign
         virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
@@ -192,17 +193,13 @@ namespace BlackCore
         //! Callsigns enabled for fast position updates
         virtual BlackMisc::Aviation::CCallsignSet getFastPositionEnabledCallsigns() = 0;
 
-        /*!
-         * Connect to Network
-         * \return messages gererated during connecting
-         * \see INetwork::LoginMode
-         */
+        //! Connect to Network
+        //! \return messages gererated during connecting
+        //! \see INetwork::LoginMode
         virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, uint loginMode) = 0;
 
-        /*!
-         * Disconnect from network
-         * \return messages generated during disconnecting
-         */
+        //! Disconnect from network
+        //! \return messages generated during disconnecting
         virtual BlackMisc::CStatusMessage disconnectFromNetwork() = 0;
 
         //! Network connected?

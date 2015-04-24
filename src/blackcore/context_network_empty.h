@@ -66,6 +66,13 @@ namespace BlackCore
             return BlackMisc::Simulation::CSimulatedAircraft();
         }
 
+        //! \copydoc IRemoteAircraftProvider::getAircraftInRangeCount
+        virtual int getAircraftInRangeCount() const override
+        {
+            logEmptyContextWarning(Q_FUNC_INFO);
+            return 0;
+        }
+
         //! \copydoc IContextNetwork::getOnlineStationForCallsign
         virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override
         {

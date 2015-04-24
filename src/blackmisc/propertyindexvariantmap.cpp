@@ -13,39 +13,24 @@
 
 namespace BlackMisc
 {
-    /*
-     * Constructor
-     */
     CPropertyIndexVariantMap::CPropertyIndexVariantMap(bool wildcard) : m_wildcard(wildcard) {}
 
-    /*
-     * Constructor single value
-     */
     CPropertyIndexVariantMap::CPropertyIndexVariantMap(const CPropertyIndex &index, const CVariant &value)
         : m_wildcard(false)
     {
         this->addValue(index, value);
     }
 
-    /*
-     * ==
-     */
     bool operator ==(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b)
     {
         return a.m_wildcard == b.m_wildcard && a.m_values == b.m_values;
     }
 
-    /*
-     * !=
-     */
     bool operator !=(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b)
     {
         return !(b == a);
     }
 
-    /*
-     * Compare with CVariant
-     */
     bool operator==(const CPropertyIndexVariantMap &indexMap, const CVariant &variant)
     {
         if (indexMap.isEmpty()) return indexMap.isWildcard();
@@ -60,33 +45,21 @@ namespace BlackMisc
         return true;
     }
 
-    /*
-     * Compare with CVariant
-     */
     bool operator!=(const CPropertyIndexVariantMap &indexMap, const CVariant &variant)
     {
         return !(indexMap == variant);
     }
 
-    /*
-     * Compare with CVariant
-     */
     bool operator==(const CVariant &variant, const CPropertyIndexVariantMap &valueMap)
     {
         return valueMap == variant;
     }
 
-    /*
-     * Compare with CVariant
-     */
     bool operator!=(const CVariant &variant, const CPropertyIndexVariantMap &valueMap)
     {
         return !(valueMap == variant);
     }
 
-    /*
-     * Convert to string
-     */
     QString CPropertyIndexVariantMap::convertToQString(bool i18n) const
     {
         if (this->isEmpty()) return QString("{wildcard: %1}").arg(this->m_wildcard ? "true" : "false");
@@ -109,18 +82,17 @@ namespace BlackMisc
         return s;
     }
 
-    /*
-     * Marshall to DBus
-     */
+    int CPropertyIndexVariantMap::getMetaTypeId() const
+    {
+        return qMetaTypeId<CPropertyIndexVariantMap>();
+    }
+
     void CPropertyIndexVariantMap::marshallToDbus(QDBusArgument &argument) const
     {
         argument << this->m_values.keys();
         argument << this->m_values.values();
     }
 
-    /*
-     * Unmarshall from DBus
-     */
     void CPropertyIndexVariantMap::unmarshallFromDbus(const QDBusArgument &argument)
     {
         QList<CPropertyIndex> indexes;
@@ -137,17 +109,11 @@ namespace BlackMisc
         this->m_values.swap(newMap);
     }
 
-    /*
-     * Add value
-     */
     void CPropertyIndexVariantMap::addValue(const CPropertyIndex &index, const CVariant &value)
     {
         this->m_values.insert(index, value);
     }
 
-    /*
-     * Add string by literal
-     */
     void CPropertyIndexVariantMap::addValue(const CPropertyIndex &index, const char *str)
     {
         this->addValue(index, QString(str));
@@ -165,23 +131,23 @@ namespace BlackMisc
         this->m_values = newMap;
     }
 
-    /*
-     * Indexes
-     */
     CPropertyIndexList CPropertyIndexVariantMap::indexes() const
     {
         return CPropertyIndexList::fromImpl(this->m_values.keys());
     }
 
-    /*
-     * Hash
-     */
+    void CPropertyIndexVariantMap::registerMetadata()
+    {
+        qRegisterMetaType<CPropertyIndexVariantMap>();
+        qDBusRegisterMetaType<CPropertyIndexVariantMap>();
+    }
+
     uint CPropertyIndexVariantMap::getValueHash() const
     {
         // there is no hash for map, so I use this workaround here
         const QString s = this->toQString(false);
         QList<uint> h;
         h << qHash(s);
-        return BlackMisc::calculateHash(h, "CIndexVariantMap");
+        return BlackMisc::calculateHash(h, "CPropertyIndexVariantMap");
     }
 } // namespace

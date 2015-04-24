@@ -19,9 +19,9 @@ using namespace BlackMisc::Simulation;
 namespace BlackCore
 {
 
-    IInterpolator::IInterpolator(IRemoteAircraftProviderReadOnly *provider, const QString &workerName, QObject *parent) :
+    IInterpolator::IInterpolator(IRemoteAircraftProvider *provider, const QString &workerName, QObject *parent) :
         CContinuousWorker(parent, workerName),
-        CRemoteAircraftAwareReadOnly(provider)
+        CRemoteAircraftAware(provider)
     {
         Q_ASSERT_X(provider, Q_FUNC_INFO, "missing provider");
     }

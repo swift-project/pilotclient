@@ -30,7 +30,7 @@ namespace BlackCoreTest
         const qint64 ts =  1425000000000; // QDateTime::currentMSecsSinceEpoch();
         const qint64 deltaT = 5000; // ms
         CCallsign cs("SWIFT");
-        for (int i = 0; i < IRemoteAircraftProviderReadOnly::MaxSituationsPerCallsign; i++)
+        for (int i = 0; i < IRemoteAircraftProvider::MaxSituationsPerCallsign; i++)
         {
             CAircraftSituation s(getTestSituation(cs, i, ts, deltaT));
 
@@ -40,7 +40,7 @@ namespace BlackCoreTest
             provider->insertNewSituation(s);
         }
 
-        for (int i = 0; i < IRemoteAircraftProviderReadOnly::MaxPartsPerCallsign; i++)
+        for (int i = 0; i < IRemoteAircraftProvider::MaxPartsPerCallsign; i++)
         {
             CAircraftParts p(getTestParts(cs, i, ts, deltaT));
             provider->insertNewAircraftParts(p);
@@ -50,8 +50,8 @@ namespace BlackCoreTest
         QCoreApplication::processEvents(QEventLoop::AllEvents, 1000);
 
         // check if all situations / parts have been received
-        QVERIFY2(provider->remoteAircraftSituations(cs).size() == IRemoteAircraftProviderReadOnly::MaxSituationsPerCallsign, "Missing situations");
-        QVERIFY2(provider->remoteAircraftParts(cs).size() == IRemoteAircraftProviderReadOnly::MaxPartsPerCallsign, "Missing parts");
+        QVERIFY2(provider->remoteAircraftSituations(cs).size() == IRemoteAircraftProvider::MaxSituationsPerCallsign, "Missing situations");
+        QVERIFY2(provider->remoteAircraftParts(cs).size() == IRemoteAircraftProvider::MaxPartsPerCallsign, "Missing parts");
 
         // interpolation functional check
         IInterpolator::InterpolationStatus status;

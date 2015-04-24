@@ -32,28 +32,31 @@ namespace BlackMisc
             //! Constructor
             CRemoteAircraftProviderDummy(QObject *parent = nullptr);
 
-            //! IRemoteAircraftProviderReadOnly::remoteAircraft
-            virtual const CSimulatedAircraftList &remoteAircraft() const override;
+            //! IRemoteAircraftProvider::getAircraftInRange
+            virtual CSimulatedAircraftList getAircraftInRange() const override;
 
-            //! IRemoteAircraftProvider::remoteAircraft
-            virtual CSimulatedAircraftList &remoteAircraft() override;
+            //! IRemoteAircraftProvider::getAircraftInRangeCount
+            virtual int getAircraftInRangeCount() const override;
 
-            //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraftParts
+            //! IRemoteAircraftProvider::getAircraftForCallsign
+            virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+
+            //! \copydoc IRemoteAircraftProvider::remoteAircraftParts
             virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const override;
 
-            //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraftSituations
+            //! \copydoc IRemoteAircraftProvider::remoteAircraftSituations
             virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const Aviation::CCallsign &callsign) const override;
 
-            //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraftSituationsCount
+            //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationsCount
             virtual int remoteAircraftSituationsCount(const Aviation::CCallsign &callsign) const override;
 
-            //! \copydoc IRemoteAircraftProviderReadOnly::remoteAircraftSupportingParts
+            //! \copydoc IRemoteAircraftProvider::remoteAircraftSupportingParts
             virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
 
-            //! \copydoc IRemoteAircraftProviderReadOnly::isRemoteAircraftSupportingParts
+            //! \copydoc IRemoteAircraftProvider::isRemoteAircraftSupportingParts
             virtual bool isRemoteAircraftSupportingParts(const Aviation::CCallsign &callsign) const override;
 
-            //! \copydoc IRemoteAircraftProviderReadOnly::connectRemoteAircraftProviderSignals
+            //! \copydoc IRemoteAircraftProvider::connectRemoteAircraftProviderSignals
             virtual bool connectRemoteAircraftProviderSignals(
                 std::function<void(const BlackMisc::Aviation::CAircraftSituation &)> situationSlot,
                 std::function<void(const BlackMisc::Aviation::CAircraftParts &)> partsSlot,
@@ -69,6 +72,12 @@ namespace BlackMisc
             //! \copydoc IRemoteAircraftProvider::updateFastPositionEnabled
             virtual bool updateFastPositionEnabled(const Aviation::CCallsign &callsign, bool enableFastPositionUpdates, const QString &originator) override;
 
+            //! \copydoc IRemoteAircraftProvider::updateAircraftRendered
+            virtual bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered, const QString &originator) override;
+
+            //! \copydoc IRemoteAircraftProvider::updateMarkAllAsNotRendered
+            virtual void updateMarkAllAsNotRendered(const QString &originator) override;
+
             //! For testing, add new situation and fire signals
             void insertNewSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
@@ -79,13 +88,13 @@ namespace BlackMisc
             void clear();
 
         signals:
-            //! \copydoc IRemoteAircraftProviderReadOnly::addedRemoteAircraftSituation
+            //! Added situation
             void addedRemoteAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
-            //! \copydoc IRemoteAircraftProviderReadOnly::addedRemoteAircraftParts
+            //! Added parts
             void addedRemoteAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
 
-            //! \copydoc IRemoteAircraftProviderReadOnly::removedRemoteAircraft
+            //! Added aircraft
             void removedRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
         private:

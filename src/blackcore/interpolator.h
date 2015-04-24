@@ -24,7 +24,7 @@ namespace BlackCore
     //! Interpolator, calculation inbetween positions
     class BLACKCORE_EXPORT IInterpolator :
         public BlackMisc::CContinuousWorker,
-        public BlackMisc::Simulation::CRemoteAircraftAwareReadOnly
+        public BlackMisc::Simulation::CRemoteAircraftAware
     {
         Q_OBJECT
 
@@ -77,7 +77,7 @@ namespace BlackCore
 
     protected:
         //! Constructor
-        IInterpolator(BlackMisc::Simulation::IRemoteAircraftProviderReadOnly *provider, const QString &workerName, QObject *parent = nullptr);
+        IInterpolator(BlackMisc::Simulation::IRemoteAircraftProvider *provider, const QString &workerName, QObject *parent = nullptr);
 
         bool m_withDebugMsg = false;  //!< allows to disable debug messages
     };

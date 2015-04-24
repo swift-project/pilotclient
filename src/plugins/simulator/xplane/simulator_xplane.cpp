@@ -329,7 +329,7 @@ namespace BlackSimPlugin
         {
             //! \todo XP implement isRenderedAircraft correctly
             // work around, but not really telling me if callsign is really(!) visible in SIM
-            return remoteAircraft().findFirstByCallsign(callsign).isRendered();
+            return getAircraftForCallsign(callsign).isRendered();
         }
 
         bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator)
@@ -369,7 +369,7 @@ namespace BlackSimPlugin
             // Is there any model matching required ????
             CAircraftIcao icao = newRemoteAircraft.getIcaoInfo();
             m_traffic->addPlane(newRemoteAircraft.getCallsign().asString(), icao.getAircraftDesignator(), icao.getAirlineDesignator(), icao.getLivery());
-            remoteAircraft().applyIfCallsign(newRemoteAircraft.getCallsign(), CPropertyIndexVariantMap(CSimulatedAircraft::IndexRendered, CVariant::fromValue(true)));
+            updateAircraftRendered(newRemoteAircraft.getCallsign(), true, simulatorOriginator());
             CLogMessage(this).info("XP: Added aircraft %1") << newRemoteAircraft.getCallsign().toQString();
             return true;
         }
@@ -404,7 +404,7 @@ namespace BlackSimPlugin
         {
             Q_ASSERT(isConnected());
             m_traffic->removePlane(callsign.asString());
-            remoteAircraft().setRendered(callsign, false);
+            updateAircraftRendered(callsign, false, simulatorOriginator());
             CLogMessage(this).info("XP: Removed aircraft %1") << callsign.toQString();
             return true;
         }
@@ -412,7 +412,7 @@ namespace BlackSimPlugin
         void CSimulatorXPlane::removeAllRemoteAircraft()
         {
             m_traffic->removeAllPlanes();
-            remoteAircraft().markAllAsNotRendered();
+            updateMarkAllAsNotRendered(simulatorOriginator());
             CLogMessage(this).info("XP: Removed all aircraft");
         }
 

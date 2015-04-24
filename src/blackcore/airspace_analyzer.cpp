@@ -18,10 +18,10 @@ using namespace BlackMisc::PhysicalQuantities;
 namespace BlackCore
 {
 
-    CAirspaceAnalyzer::CAirspaceAnalyzer(const IOwnAircraftProviderReadOnly *ownAircraftProvider, const IRemoteAircraftProviderReadOnly *remoteAircraftProvider, INetwork *network, QObject *parent) :
+    CAirspaceAnalyzer::CAirspaceAnalyzer(const IOwnAircraftProviderReadOnly *ownAircraftProvider, IRemoteAircraftProvider *remoteAircraftProvider, INetwork *network, QObject *parent) :
         CContinuousWorker(parent, "CAirspaceAnalyzer"),
         COwnAircraftAwareReadOnly(ownAircraftProvider),
-        CRemoteAircraftAwareReadOnly(remoteAircraftProvider)
+        CRemoteAircraftAware(remoteAircraftProvider)
     {
         Q_ASSERT_X(network, Q_FUNC_INFO, "Network object required to connect");
 

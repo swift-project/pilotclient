@@ -26,7 +26,7 @@ namespace BlackCore
     {
     public:
         //! Constructor
-        CInterpolatorLinear(BlackMisc::Simulation::IRemoteAircraftProviderReadOnly *provider, QObject *parent = nullptr) :
+        CInterpolatorLinear(BlackMisc::Simulation::IRemoteAircraftProvider *provider, QObject *parent = nullptr) :
             IInterpolator(provider, "CInterpolatorLinear", parent)
         {}
 

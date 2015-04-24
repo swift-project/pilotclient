@@ -82,7 +82,7 @@ namespace BlackCore
                                "changedRemoteAircraftEnabled", this, SIGNAL(changedRemoteAircraftEnabled(BlackMisc::Simulation::CSimulatedAircraft, QString)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "changedFastPositionUpdates", this, SIGNAL(changedFastPositionUpdates(BlackMisc::Simulation::CSimulatedAircraft,QString)));
+                               "changedFastPositionUpdates", this, SIGNAL(changedFastPositionUpdates(BlackMisc::Simulation::CSimulatedAircraft, QString)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "addedAircraft", this, SIGNAL(addedAircraft(BlackMisc::Simulation::CSimulatedAircraft)));
@@ -111,6 +111,11 @@ namespace BlackCore
     Simulation::CSimulatedAircraftList CContextNetworkProxy::getAircraftInRange() const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraftList>(QLatin1Literal("getAircraftInRange"));
+    }
+
+    int CContextNetworkProxy::getAircraftInRangeCount() const
+    {
+        return this->m_dBusInterface->callDBusRet<int>(QLatin1Literal("getAircraftInRangeCount"));
     }
 
     Simulation::CSimulatedAircraft CContextNetworkProxy::getAircraftForCallsign(const CCallsign &callsign) const
