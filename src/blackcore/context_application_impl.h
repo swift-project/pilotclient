@@ -1,7 +1,11 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 #ifndef BLACKCORE_CONTEXTAPPLICATION_IMPL_H
 #define BLACKCORE_CONTEXTAPPLICATION_IMPL_H
@@ -15,9 +19,7 @@ namespace BlackCore
 {
     class CRuntime;
 
-    /*!
-     * Application context
-     */
+    //! Application context
     class BLACKCORE_EXPORT CContextApplication : public IContextApplication
     {
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME)
@@ -55,13 +57,8 @@ namespace BlackCore
         CContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
         //! Register myself in DBus, fail safe
-        CContextApplication *registerWithDBus(CDBusServer *server)
-        {
-            if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) { return this; }
-            server->addObject(IContextApplication::ObjectPath(), this);
-            return this;
-        }
+        CContextApplication *registerWithDBus(CDBusServer *server);
     };
-}
+} // namespace
 
 #endif // guard

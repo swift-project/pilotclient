@@ -1,7 +1,11 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 #include "context_application_impl.h"
 #include "context_runtime.h"
@@ -16,16 +20,17 @@ using namespace BlackMisc;
 
 namespace BlackCore
 {
-    /*
-     * Init this context
-     */
     CContextApplication::CContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
         IContextApplication(mode, runtime)
     {}
 
-    /*
-     * Log a message
-     */
+    CContextApplication *CContextApplication::registerWithDBus(CDBusServer *server)
+    {
+        if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) { return this; }
+        server->addObject(IContextApplication::ObjectPath(), this);
+        return this;
+    }
+
     void CContextApplication::logMessage(const CStatusMessage &message, const Event::COriginator &origin)
     {
         if (!origin.isFromSameProcess())
@@ -35,30 +40,21 @@ namespace BlackCore
         emit this->messageLogged(message, origin);
     }
 
-    /*
-     * Ping, is DBus alive?
-     */
     qint64 CContextApplication::ping(qint64 token) const
     {
         return token;
     }
 
-    /*
-     * Component has changed
-     */
     void CContextApplication::notifyAboutComponentChange(uint component, uint action)
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << QString::number(component) << QString::number(action);
         this->componentChanged(component, action);
     }
 
-    /*
-     * String to file
-     */
     bool CContextApplication::writeToFile(const QString &fileName, const QString &content)
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << fileName << content.left(25);
-        if (fileName.isEmpty()) return false;
+        if (fileName.isEmpty()) { return false; }
         QFile file(fileName);
         if (file.open(QIODevice::WriteOnly | QIODevice::Text))
         {
@@ -66,12 +62,12 @@ namespace BlackCore
             out << content;
             return true;
         }
-        else return false;
+        else
+        {
+            return false;
+        }
     }
 
-    /*
-     * File to string
-     */
     QString CContextApplication::readFromFile(const QString &fileName)
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << fileName;
@@ -87,18 +83,12 @@ namespace BlackCore
         return content;
     }
 
-    /*
-     * Remove file
-     */
     bool CContextApplication::removeFile(const QString &fileName)
     {
         if (fileName.isEmpty()) return false;
         return QFile::remove(fileName);
     }
 
-    /*
-     * Check file
-     */
     bool CContextApplication::existsFile(const QString &fileName)
     {
         if (fileName.isEmpty()) return false;
