@@ -127,6 +127,28 @@ namespace BlackMisc
         //! \private Getter to obtain the IValueObjectMetaInfo which was stored by BlackMisc::registerMetaValueType.
         template <typename T>
         IValueObjectMetaInfo *getValueObjectMetaInfo() { return getValueObjectMetaInfo(qMetaTypeId<T>()); }
+
+        //! \private
+        template <typename T, bool IsRegisteredMetaType /* = true */>
+        struct MetaTypeHelperImpl
+        {
+            static Q_DECL_CONSTEXPR int maybeGetMetaTypeId() { return qMetaTypeId<T>(); }
+            static QVariant maybeToQVariant(const T &obj) { return QVariant::fromValue(obj); }
+            static void maybeConvertFromQVariant(T &obj, const QVariant &var) { BlackMisc::setFromQVariant(&obj, var); }
+        };
+
+        //! \private
+        template <typename T>
+        struct MetaTypeHelperImpl<T, /* IsRegisteredMetaType = */ false>
+        {
+            static Q_DECL_CONSTEXPR int maybeGetMetaTypeId() { return QMetaType::UnknownType; }
+            static QVariant maybeToQVariant(const T &) { return {}; }
+            static void maybeConvertFromQVariant(T &, const QVariant &) {}
+        };
+
+        //! \private
+        template <typename T>
+        using MetaTypeHelper = MetaTypeHelperImpl<T, QMetaTypeId<T>::Defined>;
     }
 }
 

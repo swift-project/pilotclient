@@ -362,13 +362,13 @@ namespace BlackMisc
         //! Virtual method to return QVariant, used with DBus QVariant lists
         virtual QVariant toQVariant() const
         {
-            return maybeToQVariant<Derived>();
+            return Private::MetaTypeHelper<Derived>::maybeToQVariant(*derived());
         }
 
         //! Set from QVariant
         virtual void convertFromQVariant(const QVariant &variant)
         {
-            return maybeConvertFromQVariant<Derived>(variant);
+            Private::MetaTypeHelper<Derived>::maybeConvertFromQVariant(*derived(), variant);
         }
 
         //! Set property by index
@@ -413,7 +413,7 @@ namespace BlackMisc
         //! Returns the Qt meta type ID of this object.
         virtual int getMetaTypeId() const
         {
-            return maybeGetMetaTypeId<Derived>();
+            return Private::MetaTypeHelper<Derived>::maybeGetMetaTypeId();
         }
 
         /*!
@@ -445,44 +445,6 @@ namespace BlackMisc
     private:
         const Derived *derived() const { return static_cast<const Derived *>(this); }
         Derived *derived() { return static_cast<Derived *>(this); }
-
-        // fallbacks in case Derived is not a registered meta type
-
-        template <typename T, typename std::enable_if<!QMetaTypeId2<T>::Defined>::type* = nullptr>
-        static int maybeGetMetaTypeId()
-        {
-            return QMetaType::UnknownType;
-        }
-
-        template <class T, typename std::enable_if<QMetaTypeId2<T>::Defined>::type* = nullptr>
-        static int maybeGetMetaTypeId()
-        {
-            return qMetaTypeId<T>();
-        }
-
-        template <class T, typename std::enable_if<!QMetaTypeId2<T>::Defined>::type* = nullptr>
-        QVariant maybeToQVariant() const
-        {
-            return {};
-        }
-
-        template <class T, typename std::enable_if<QMetaTypeId2<T>::Defined>::type* = nullptr>
-        QVariant maybeToQVariant() const
-        {
-            return QVariant::fromValue(*derived());
-        }
-
-        template <class T, typename std::enable_if<!QMetaTypeId2<T>::Defined>::type* = nullptr>
-        void maybeConvertFromQVariant(const QVariant &variant)
-        {
-            Q_UNUSED(variant);
-        }
-
-        template <class T, typename std::enable_if<QMetaTypeId2<T>::Defined>::type* = nullptr>
-        void maybeConvertFromQVariant(const QVariant &variant)
-        {
-            BlackMisc::setFromQVariant(derived(), variant);
-        }
     };
 
 } // namespace
