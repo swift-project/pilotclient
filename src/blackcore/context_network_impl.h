@@ -244,7 +244,7 @@ namespace BlackCore
         }
 
         //! Own aircraft from \sa CContextOwnAircraft
-        const BlackMisc::Aviation::CAircraft &ownAircraft() const;
+        const BlackMisc::Simulation::CSimulatedAircraft ownAircraft() const;
 
     private slots:
         //! ATC bookings received

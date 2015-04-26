@@ -111,11 +111,16 @@ namespace BlackSimPlugin
                 situation.setPitch({ m_xplaneData.pitch, CAngleUnit::deg() });
                 situation.setBank({ m_xplaneData.roll, CAngleUnit::deg() });
                 situation.setGroundspeed({ m_xplaneData.groundspeed, CSpeedUnit::m_s() });
-                ownAircraft().setSituation(situation);
-                ownAircraft().setIcaoInfo(Aviation::CAircraftIcao { m_xplaneData.aircraftIcaoCode });
-                ownAircraft().setCom1System(Aviation::CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() }));
-                ownAircraft().setCom2System(Aviation::CComSystem::getCom2System({ m_xplaneData.com2Active, CFrequencyUnit::kHz() }, { m_xplaneData.com2Standby, CFrequencyUnit::kHz() }));
-                ownAircraft().setTransponder(Aviation::CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent)));
+
+                // updates
+                updateOwnIcaoData(Aviation::CAircraftIcao { m_xplaneData.aircraftIcaoCode });
+                updateOwnSituation(situation);
+                updateCockpit(
+                    Aviation::CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() }),
+                    Aviation::CComSystem::getCom2System({ m_xplaneData.com2Active, CFrequencyUnit::kHz() }, { m_xplaneData.com2Standby, CFrequencyUnit::kHz() }),
+                    Aviation::CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent)),
+                    simulatorOriginator()
+                );
             }
         }
 
@@ -151,7 +156,7 @@ namespace BlackSimPlugin
                     { m_xplaneData.gearReployRatio > 0 }, { static_cast<int>(m_xplaneData.flapsReployRatio * 100) },
                     { m_xplaneData.speedBrakeRatio > 0.5 }, engines, { m_xplaneData.onGroundAll }
                 };
-                ownAircraft().setParts(parts);
+                updateOwnParts(parts);
             }
         }
 
@@ -236,14 +241,16 @@ namespace BlackSimPlugin
             //! \todo XP, change as appropriate
             // try to set correct model and ICAO values here
             // thy show up in GUI
-            CAircraftModel model(ownAircraft().getModel());
+            CAircraftModel model(getOwnAircraftModel());
             model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
             model.setFileName(path + "/" + filename);
             CAircraftIcao aircraftIcao(icao);
             aircraftIcao.setLivery(livery);
-            ownAircraft().setIcaoInfo(aircraftIcao);
-            ownAircraft().setModel(model);
-            emit ownAircraftModelChanged(ownAircraft());
+
+            // updates
+            updateOwnIcaoData(aircraftIcao);
+            updateOwnModel(model);
+            emit ownAircraftModelChanged(getOwnAircraft());
         }
 
         void CSimulatorXPlane::displayStatusMessage(const BlackMisc::CStatusMessage &message) const

@@ -52,5 +52,5 @@ void SwiftGuiStd::setTestPosition(const QString &wgsLatitude, const QString &wgs
 
     this->m_ownAircraft.setPosition(coordinate);
     this->m_ownAircraft.setAltitude(altitude);
-    this->getIContextOwnAircraft()->updatePosition(coordinate, altitude);
+    this->getIContextOwnAircraft()->updateOwnPosition(coordinate, altitude);
 }

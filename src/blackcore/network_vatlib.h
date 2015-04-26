@@ -85,6 +85,7 @@ namespace BlackCore
         //! @}
 
         //! \name Weather slots
+        //! @{
         virtual void sendMetarQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao) override;
         virtual void sendWeatherDataQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao) override;
         //! @}
@@ -96,7 +97,9 @@ namespace BlackCore
         void sendAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign);
         void sendIncrementalAircraftConfig();
 
-    private: //shimlib callbacks
+    private:
+        //! \name Shimlib callbacks
+        //! @{
         static void onConnectionStatusChanged(VatSessionID, VatConnectionStatus oldStatus, VatConnectionStatus newStatus, void *cbvar);
         static void onTextMessageReceived(VatSessionID, const char *from, const char *to, const char *msg, void *cbvar);
         static void onRadioMessageReceived(VatSessionID, const char *from, int freqCount, int *freqList, const char *message, void *cbvar);
@@ -121,6 +124,7 @@ namespace BlackCore
         static void onPilotPositionUpdate(VatSessionID, const char *callsign, const VatPilotPosition *position, void *cbvar);
         static void onAircraftConfigReceived(VatSessionID, const char *callsign, const char *aircraftConfig, void *cbvar);
         static void onCustomPacketReceived(VatSessionID, const char *callsign, const char *packetId, const char **data, int dataSize, void *cbvar);
+        //! @}
 
     private:
         QByteArray toFSD(QString qstr) const;

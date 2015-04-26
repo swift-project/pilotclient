@@ -33,7 +33,7 @@ namespace BlackCore
     //!
     class CAirspaceAnalyzer :
         public BlackMisc::CContinuousWorker,
-        public BlackMisc::Simulation::COwnAircraftAwareReadOnly,
+        public BlackMisc::Simulation::COwnAircraftAware,
         public BlackMisc::Simulation::CRemoteAircraftAware
     {
         Q_OBJECT
@@ -43,7 +43,7 @@ namespace BlackCore
         typedef QHash<BlackMisc::Aviation::CCallsign, qint64> CCallsignTimestampSet;
 
         //! Constructor
-        CAirspaceAnalyzer(const BlackMisc::Simulation::IOwnAircraftProviderReadOnly *ownAircraftProvider,
+        CAirspaceAnalyzer(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                           BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                           INetwork *network, QObject *parent);
 

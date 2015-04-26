@@ -72,8 +72,8 @@ namespace BlackCore
         this->m_dataUpdateTimer->start(30 * 1000);
 
         // 5. Airspace contents
-        const IOwnAircraftProviderReadOnly *ownAircraft = runtime->getCContextOwnAircraft();
-        this->m_airspace = new CAirspaceMonitor(this, ownAircraft, this->m_network, this->m_vatsimBookingReader, this->m_vatsimDataFileReader);
+        Q_ASSERT_X(this->getRuntime()->getCContextOwnAircraft(), Q_FUNC_INFO, "this and own aircraft context must be local");
+        this->m_airspace = new CAirspaceMonitor(this, this->getRuntime()->getCContextOwnAircraft(), this->m_network, this->m_vatsimBookingReader, this->m_vatsimDataFileReader);
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationsOnline, this, &CContextNetwork::changedAtcStationsOnline);
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked);
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus);
@@ -170,7 +170,7 @@ namespace BlackCore
             this->m_currentStatus = INetwork::Connecting; // as semaphore we are going to connect
             this->m_airspace->setConnected(true);
             INetwork::LoginMode mode = static_cast<INetwork::LoginMode>(loginMode);
-            this->getIContextOwnAircraft()->updatePilot(server.getUser());
+            this->getIContextOwnAircraft()->updateOwnAircraftPilot(server.getUser());
             const CAircraft ownAircraft = this->ownAircraft();
             this->m_network->presetServer(server);
             this->m_network->presetLoginMode(mode);
@@ -442,11 +442,11 @@ namespace BlackCore
         }
     }
 
-    const CAircraft &CContextNetwork::ownAircraft() const
+    const CSimulatedAircraft CContextNetwork::ownAircraft() const
     {
         Q_ASSERT(this->getRuntime());
         Q_ASSERT(this->getRuntime()->getCContextOwnAircraft());
-        return this->getRuntime()->getCContextOwnAircraft()->ownAircraft();
+        return this->getRuntime()->getCContextOwnAircraft()->getOwnAircraft();
     }
 
     void CContextNetwork::readAtcBookingsFromSource() const

@@ -328,11 +328,11 @@ void Client::setOwnAircraftCmd(QTextStream &args)
             BlackMisc::PhysicalQuantities::CAngle(bank, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
             BlackMisc::PhysicalQuantities::CSpeed(gs, BlackMisc::PhysicalQuantities::CSpeedUnit::kts())
                                             ));
-    aircraft.setCom1System(BlackMisc::Aviation::CComSystem("COM1", BlackMisc::PhysicalQuantities::CFrequency(com1, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())));
-    aircraft.setCom2System(BlackMisc::Aviation::CComSystem("COM2", BlackMisc::PhysicalQuantities::CFrequency(com2, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())));
-    aircraft.setTransponder(BlackMisc::Aviation::CTransponder("Transponder", xpdrCode, xpdrMode));
-
-    ownAircraft().setAircraft(aircraft);
+    updateCockpit(
+        BlackMisc::Aviation::CComSystem("COM1", BlackMisc::PhysicalQuantities::CFrequency(com1, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())),
+        BlackMisc::Aviation::CComSystem("COM2", BlackMisc::PhysicalQuantities::CFrequency(com2, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())),
+        BlackMisc::Aviation::CTransponder("Transponder", xpdrCode, xpdrMode),
+        "cmdClient");
 }
 
 void Client::setOwnAircraftPositionCmd(QTextStream &args)
@@ -341,8 +341,10 @@ void Client::setOwnAircraftPositionCmd(QTextStream &args)
     double lon;
     double alt;
     args >> lat >> lon >> alt;
-    ownAircraft().setPosition(CCoordinateGeodetic(lat, lon, 0));
-    ownAircraft().setAltitude(CAltitude(alt, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
+    CAircraftSituation situation(getOwnAircraft().getSituation());
+    situation.setPosition(CCoordinateGeodetic(lat, lon, 0));
+    situation.setAltitude(CAltitude(alt, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
+    updateOwnSituation(situation);
 }
 
 void Client::setOwnAircraftSituationCmd(QTextStream &args)
@@ -355,14 +357,14 @@ void Client::setOwnAircraftSituationCmd(QTextStream &args)
     double bank;
     double gs;
     args >> lat >> lon >> alt >> hdg >> pitch >> bank >> gs;
-    ownAircraft().setSituation(BlackMisc::Aviation::CAircraftSituation(
-                                   BlackMisc::Geo::CCoordinateGeodetic(lat, lon, 0),
-                                   BlackMisc::Aviation::CAltitude(alt, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()),
-                                   BlackMisc::Aviation::CHeading(hdg, BlackMisc::Aviation::CHeading::True, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
-                                   BlackMisc::PhysicalQuantities::CAngle(pitch, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
-                                   BlackMisc::PhysicalQuantities::CAngle(bank, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
-                                   BlackMisc::PhysicalQuantities::CSpeed(gs, BlackMisc::PhysicalQuantities::CSpeedUnit::kts())
-                               ));
+    updateOwnSituation(BlackMisc::Aviation::CAircraftSituation(
+                           BlackMisc::Geo::CCoordinateGeodetic(lat, lon, 0),
+                           BlackMisc::Aviation::CAltitude(alt, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()),
+                           BlackMisc::Aviation::CHeading(hdg, BlackMisc::Aviation::CHeading::True, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+                           BlackMisc::PhysicalQuantities::CAngle(pitch, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+                           BlackMisc::PhysicalQuantities::CAngle(bank, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+                           BlackMisc::PhysicalQuantities::CSpeed(gs, BlackMisc::PhysicalQuantities::CSpeedUnit::kts())
+                       ));
 }
 
 void Client::setOwnAircraftCockpitCmd(QTextStream &args)

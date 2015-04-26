@@ -166,7 +166,7 @@ namespace BlackSimPlugin
             case SIMCONNECT_RECV_ID_AIRPORT_LIST:
                 {
                     const CLength maxDistance(200.0, CLengthUnit::NM());
-                    const CCoordinateGeodetic posAircraft = simulatorFsx->ownAircraft().getPosition();
+                    const CCoordinateGeodetic posAircraft(simulatorFsx->getOwnAircraftPosition());
                     SIMCONNECT_RECV_AIRPORT_LIST *pAirportList = (SIMCONNECT_RECV_AIRPORT_LIST *) pData;
                     for (unsigned i = 0; i < pAirportList->dwArraySize; ++i)
                     {

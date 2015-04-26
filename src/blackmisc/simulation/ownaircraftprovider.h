@@ -19,111 +19,111 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        //! Direct in memory access to own aircraft
-        class BLACKMISC_EXPORT IOwnAircraftProviderReadOnly
+
+        //! Direct threadsafe in memory access to own aircraft
+        class IOwnAircraftProvider
         {
         public:
-            //! Own aircraft as reference
-            //! \note in memory, not thread safe!
-            virtual const CSimulatedAircraft &ownAircraft() const = 0;
-
-            //! Own aircraft as copy
-            //! \note not hread safe!
-            virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const = 0;
-
-            //! Destructor
-            virtual ~IOwnAircraftProviderReadOnly() {}
-        };
-
-        //! Direct in memory access to own aircraft
-        class BLACKMISC_EXPORT IOwnAircraftProvider : public IOwnAircraftProviderReadOnly
-        {
-        public:
-
-            using IOwnAircraftProviderReadOnly::ownAircraft;
 
             //! Own aircraft
-            virtual CSimulatedAircraft &ownAircraft() = 0;
+            //! \threadsafe
+            virtual CSimulatedAircraft getOwnAircraft() const = 0;
 
-            // cockpit related updates, which can come from multiple sources
-            // and are subject of roundtrips
+            //! Own aircraft's position
+            //! \threadsafe
+            virtual BlackMisc::Geo::CCoordinateGeodetic getOwnAircraftPosition() const = 0;
+
+            //! Own aircraft's parts
+            //! \threadsafe
+            virtual BlackMisc::Aviation::CAircraftParts getOwnAircraftParts() const = 0;
+
+            //! Own aircraft model
+            //! \threadsafe
+            virtual BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const = 0;
+
+            //! Distance to own aircraft
+            //! \threadsafe
+            virtual BlackMisc::PhysicalQuantities::CLength getDistanceToOwnAircraft(const BlackMisc::Geo::ICoordinateGeodetic &position) const = 0;
+
+            //! Update aircraft's callsign
+            //! \threadsafe
+            virtual bool updateOwnCallsign(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
+            //! Update ICAO data
+            //! \threadsafe
+            virtual bool updateOwnIcaoData(const BlackMisc::Aviation::CAircraftIcao &icaoData) = 0;
+
+            //! Update model
+            //! \threadsafe
+            virtual bool updateOwnModel(const BlackMisc::Simulation::CAircraftModel &model) = 0;
+
+            //! Update own situation
+            virtual bool updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation) = 0;
+
+            //! Update own parts
+            virtual bool updateOwnParts(const BlackMisc::Aviation::CAircraftParts &parts) = 0;
+
+            // ------------------------------------------------------------------------
+            // cockpit / aircraft related updates, which can come from multiple sources
+            // and are subject of roundtrips -> originator
+            // ------------------------------------------------------------------------
 
             //! Update cockpit, but send signals when applicable
+            //! \threadsafe
             virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) = 0;
 
             //! Update cockpit, but send signals when applicable
+            //! \threadsafe
             virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const QString &originator) = 0;
 
             //! Update cockpit, but send signals when applicable
+            //! \threadsafe
             virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator) = 0;
-        };
 
-        //! For testing
-        class BLACKMISC_EXPORT COwnAircraftProviderDummy : public QObject, public IOwnAircraftProvider
-        {
-            Q_OBJECT
-
-        public:
-            //! Constructor
-            COwnAircraftProviderDummy() = default;
-
-            //! Singleton
-            static COwnAircraftProviderDummy *instance();
-
-            //! \copydoc IOwnAircraftProviderReadOnly::ownAircraft
-            virtual const CSimulatedAircraft &ownAircraft() const override { return this->m_ownAircraft; }
-
-            //! \copydoc IOwnAircraftProvider::ownAircraft
-            virtual CSimulatedAircraft &ownAircraft() override { return this->m_ownAircraft; }
-
-            //! \copydoc IOwnAircraftProvider::getOwnAircraft
-            virtual CSimulatedAircraft getOwnAircraft() const override { return this->m_ownAircraft; }
-
-        public slots:
-            //! \copydoc IOwnAircraftProvider::updateCockpit
-            virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) override;
-
-            //! \copydoc IOwnAircraftProvider::updateComFrequency
-            virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const QString &originator) override;
-
-            //! \copydoc IOwnAircraftProvider::updateSelcal
-            virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator) override;
-
-        private:
-            BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft;
-        };
-
-        //! Delegating class which can be directly used to access an \sa IOwnAircraftProviderReadOnly instance
-        class BLACKMISC_EXPORT COwnAircraftAwareReadOnly
-        {
-        public:
-            //! \copydoc IOwnAircraftProviderReadOnly::ownAircraft
-            virtual const CSimulatedAircraft &ownAircraft() const;
-
-        protected:
-            //! Constructor
-            COwnAircraftAwareReadOnly(const IOwnAircraftProviderReadOnly *ownAircraftProvider) : m_ownAircraftProvider(ownAircraftProvider) {}
-            const IOwnAircraftProviderReadOnly *m_ownAircraftProvider = nullptr; //!< access to object
         };
 
         //! Delegating class which can be directly used to access an \sa IOwnAircraftProvider instance
-        class BLACKMISC_EXPORT COwnAircraftAware
+        class COwnAircraftAware
         {
         public:
-            //! \copydoc IOwnAircraftProviderReadOnly::ownAircraft
-            virtual const CSimulatedAircraft &ownAircraft() const;
+            //! \copydoc IOwnAircraftProvider::getOwnAircraft
+            virtual const CSimulatedAircraft getOwnAircraft() const;
 
-            //! \copydoc IOwnAircraftProvider::ownAircraft
-            virtual CSimulatedAircraft &ownAircraft();
+            //! \copydoc IOwnAircraftProvider::getOwnAircraftPosition
+            virtual BlackMisc::Geo::CCoordinateGeodetic getOwnAircraftPosition() const;
+
+            //! \copydoc IOwnAircraftProvider::getOwnAircraftParts
+            virtual BlackMisc::Aviation::CAircraftParts getOwnAircraftParts() const;
+
+            //! \copydoc IOwnAircraftProvider::getOwnAircraftModel
+            virtual BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const;
+
+            //! \copydoc IOwnAircraftProvider::getDistanceToOwnAircraft
+            virtual BlackMisc::PhysicalQuantities::CLength getDistanceToOwnAircraft(const BlackMisc::Geo::ICoordinateGeodetic &position) const;
 
             //! \copydoc IOwnAircraftProvider::updateCockpit
-            virtual bool providerUpdateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator);
+            virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator);
 
             //! \copydoc IOwnAircraftProvider::updateComFrequency
-            virtual bool providerUpdateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const QString &originator);
+            virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const QString &originator);
 
             //! \copydoc IOwnAircraftProvider::updateSelcal
-            virtual bool providerUpdateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator);
+            virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator);
+
+            //! \copydoc IOwnAircraftProvider::updateOwnCallsign
+            virtual bool updateOwnCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+
+            //! \copydoc IOwnAircraftProvider::updateOwnIcaoData
+            virtual bool updateOwnIcaoData(const BlackMisc::Aviation::CAircraftIcao &icaoData);
+
+            //! \copydoc IOwnAircraftProvider::updateOwnModel
+            virtual bool updateOwnModel(const BlackMisc::Simulation::CAircraftModel &model);
+
+            //! \copydoc IOwnAircraftProvider::updateOwnSituation
+            virtual bool updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
+
+            //! \copydoc IOwnAircraftProvider::updateOwnParts
+            virtual bool updateOwnParts(const BlackMisc::Aviation::CAircraftParts &parts);
 
         protected:
             //! Constructor

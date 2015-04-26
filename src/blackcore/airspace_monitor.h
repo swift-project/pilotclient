@@ -31,17 +31,18 @@ namespace BlackCore
 {
 
     //! Keeps track of other entities in the airspace: aircraft, ATC stations, etc.
+    //! Central instance of data for \sa IRemoteAircraftProvider.
     class BLACKCORE_EXPORT CAirspaceMonitor :
         public QObject,
         public BlackMisc::Simulation::IRemoteAircraftProvider,  // those data will be provided from the class CAirspaceMonitor
-        public BlackMisc::Simulation::COwnAircraftAwareReadOnly // used to obtain in memory inofmration about own aircraft
+        public BlackMisc::Simulation::COwnAircraftAware // used to obtain in memory inofmration about own aircraft
     {
         Q_OBJECT
         Q_INTERFACES(BlackMisc::Simulation::IRemoteAircraftProvider)
 
     public:
         //! Constructor
-        CAirspaceMonitor(QObject *parent, const BlackMisc::Simulation::IOwnAircraftProviderReadOnly *ownAircraft, INetwork *network, CVatsimBookingReader *bookings, CVatsimDataFileReader *dataFile);
+        CAirspaceMonitor(QObject *parent, BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, INetwork *network, CVatsimBookingReader *bookings, CVatsimDataFileReader *dataFile);
 
         //! \copydoc IRemoteAircraftProvider::getAircraftInRange
         //! \ingroup remoteaircraftprovider

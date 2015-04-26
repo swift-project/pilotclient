@@ -26,9 +26,9 @@ using namespace BlackMisc::PhysicalQuantities;
 namespace BlackCore
 {
 
-    CAirspaceMonitor::CAirspaceMonitor(QObject *parent, const BlackMisc::Simulation::IOwnAircraftProviderReadOnly *ownAircraftProvider, INetwork *network, CVatsimBookingReader *bookings, CVatsimDataFileReader *dataFile)
+    CAirspaceMonitor::CAirspaceMonitor(QObject *parent, BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider, INetwork *network, CVatsimBookingReader *bookings, CVatsimDataFileReader *dataFile)
         : QObject(parent),
-          COwnAircraftAwareReadOnly(ownAircraftProvider),
+          COwnAircraftAware(ownAircraftProvider),
           m_network(network), m_vatsimBookingReader(bookings), m_vatsimDataFileReader(dataFile),
           m_analyzer(new CAirspaceAnalyzer(ownAircraftProvider, this, network, this))
     {
@@ -231,7 +231,7 @@ namespace BlackCore
         CCallsignSet searchList(callsigns);
 
         // myself, which is not in the lists below
-        CSimulatedAircraft myAircraft(ownAircraft());
+        CSimulatedAircraft myAircraft(getOwnAircraft());
         if (!myAircraft.getCallsign().isEmpty() && searchList.contains(myAircraft.getCallsign()))
         {
             searchList.remove(myAircraft.getCallsign());
@@ -654,7 +654,7 @@ namespace BlackCore
             station.setFrequency(frequency);
             station.setPosition(position);
             station.setOnline(true);
-            station.calculcateDistanceAndBearingToOwnAircraft(ownAircraft().getPosition());
+            station.calculcateDistanceAndBearingToOwnAircraft(getOwnAircraftPosition());
 
             // sync with bookings
             if (this->m_atcStationsBooked.containsCallsign(callsign))
@@ -826,7 +826,7 @@ namespace BlackCore
             aircraft.setCallsign(callsign);
             aircraft.setSituation(situation);
             aircraft.setTransponder(transponder);
-            aircraft.calculcateDistanceAndBearingToOwnAircraft(ownAircraft().getPosition()); // distance from myself
+            aircraft.calculcateDistanceAndBearingToOwnAircraft(getOwnAircraftPosition()); // distance from myself
 
             // ICAO from cache if avialable
             bool setIcao = false;
@@ -881,7 +881,7 @@ namespace BlackCore
         else
         {
             // update, aircraft already exists
-            CLength distance = ownAircraft().calculateGreatCircleDistance(situation.getPosition());
+            CLength distance = getOwnAircraft().calculateGreatCircleDistance(situation.getPosition());
             distance.switchUnit(CLengthUnit::NM());
             CPropertyIndexVariantMap vm;
             vm.addValue(CAircraft::IndexTransponder, transponder);
@@ -922,7 +922,7 @@ namespace BlackCore
 
         // update aircraft
         //! \todo skip aircraft updates for interim positions as for performance reasons
-        CLength distance = ownAircraft().calculateGreatCircleDistance(iterimSituation.getPosition());
+        CLength distance = getOwnAircraft().calculateGreatCircleDistance(iterimSituation.getPosition());
         distance.switchUnit(CLengthUnit::NM()); // lloks nicer
         CPropertyIndexVariantMap vm;
         vm.addValue(CAircraft::IndexSituation, iterimSituation);

@@ -148,7 +148,7 @@ namespace BlackSimPlugin
         protected:
             //! Timer event (our SimConnect event loop), runs \sa ps_dispatch
             //! \sa m_simconnectTimerId
-            virtual void timerEvent(QTimerEvent *event);
+            virtual void timerEvent(QTimerEvent *event) override;
 
         private slots:
             //! Dispatch SimConnect messages
@@ -220,8 +220,7 @@ namespace BlackSimPlugin
             virtual void stop() override;
 
         private:
-            QTimer *m_timer;
-
+            QTimer *m_timer { nullptr };
         };
     }
 

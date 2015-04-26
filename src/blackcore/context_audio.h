@@ -129,16 +129,12 @@ namespace BlackCore
         //! Audio devices
         virtual BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const = 0;
 
-        /*!
-         * Get current audio device
-         * \return input and output devices
-         */
+        //! Get current audio device
+        //! \return input and output devices
         virtual BlackMisc::Audio::CAudioDeviceInfoList getCurrentAudioDevices() const = 0;
 
-        /*!
-         * Set current audio device
-         * \param audioDevice can be input or audio device
-         */
+        //! Set current audio device
+        //! \param audioDevice can be input or audio device
         virtual void setCurrentAudioDevice(const BlackMisc::Audio::CAudioDeviceInfo &audioDevice) = 0;
 
         //! Set voice output volume (0..300)
@@ -156,11 +152,9 @@ namespace BlackCore
         //! Play SELCAL tone
         virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) const = 0;
 
-        /*!
-         * Play notification sound
-         * \param notification CSoundGenerator::Notification
-         * \param considerSettings consider settings (notification on/off), false means settings ignored
-         */
+        //! Play notification sound
+        //! \param notification CSoundGenerator::Notification
+        //! \param considerSettings consider settings (notification on/off), false means settings ignored
         virtual void playNotification(uint notification, bool considerSettings) const = 0;
 
         //! Enable audio loopback

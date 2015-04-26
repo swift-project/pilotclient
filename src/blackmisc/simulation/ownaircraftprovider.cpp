@@ -18,47 +18,109 @@ namespace BlackMisc
     namespace Simulation
     {
 
-        const CSimulatedAircraft &COwnAircraftAwareReadOnly::ownAircraft() const
+        const CSimulatedAircraft COwnAircraftAware::getOwnAircraft() const
         {
-            Q_ASSERT_X(this->m_ownAircraftProvider, "ownAircraft", "No object available");
-            return this->m_ownAircraftProvider->ownAircraft();
+            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return this->m_ownAircraftProvider->getOwnAircraft();
         }
 
-        const CSimulatedAircraft &COwnAircraftAware::ownAircraft() const
+        Geo::CCoordinateGeodetic COwnAircraftAware::getOwnAircraftPosition() const
         {
-            Q_ASSERT_X(this->m_ownAircraftProvider, "ownAircraft", "No object available");
-            return this->m_ownAircraftProvider->ownAircraft();
+            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return this->m_ownAircraftProvider->getOwnAircraftPosition();
         }
 
-        CSimulatedAircraft &COwnAircraftAware::ownAircraft()
+        CAircraftParts COwnAircraftAware::getOwnAircraftParts() const
         {
-            Q_ASSERT_X(this->m_ownAircraftProvider, "ownAircraft", "No object available");
-            return this->m_ownAircraftProvider->ownAircraft();
+            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return this->m_ownAircraftProvider->getOwnAircraftParts();
         }
 
-        bool COwnAircraftAware::providerUpdateCockpit(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder, const QString &originator)
+        CAircraftModel COwnAircraftAware::getOwnAircraftModel() const
         {
-            Q_ASSERT_X(this->m_ownAircraftProvider, "providerUpdateCockpit", "No object available");
+            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return this->m_ownAircraftProvider->getOwnAircraftModel();
+        }
+
+        CLength COwnAircraftAware::getDistanceToOwnAircraft(const Geo::ICoordinateGeodetic &position) const
+        {
+            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return this->m_ownAircraftProvider->getDistanceToOwnAircraft(position);
+        }
+
+        bool COwnAircraftAware::updateCockpit(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder, const QString &originator)
+        {
+            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
             return this->m_ownAircraftProvider->updateCockpit(com1, com2, transponder, originator);
         }
 
-        bool COwnAircraftAware::providerUpdateActiveComFrequency(const CFrequency &frequency, int comUnit, const QString &originator)
+        bool COwnAircraftAware::updateActiveComFrequency(const CFrequency &frequency, int comUnit, const QString &originator)
         {
-            Q_ASSERT_X(this->m_ownAircraftProvider, "providerUpdateActiveComFrequency", "No object available");
+            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
             return this->m_ownAircraftProvider->updateActiveComFrequency(frequency, comUnit, originator);
         }
 
-        bool COwnAircraftAware::providerUpdateSelcal(const CSelcal &selcal, const QString &originator)
+        bool COwnAircraftAware::updateSelcal(const CSelcal &selcal, const QString &originator)
         {
-            Q_ASSERT_X(this->m_ownAircraftProvider, "providerUpdateSelcal", "No object available");
+            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
             return this->m_ownAircraftProvider->updateSelcal(selcal, originator);
+        }
+
+        bool COwnAircraftAware::updateOwnModel(const CAircraftModel &model)
+        {
+            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return this->m_ownAircraftProvider->updateOwnModel(model);
+        }
+
+        bool COwnAircraftAware::updateOwnSituation(const CAircraftSituation &situation)
+        {
+            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return this->m_ownAircraftProvider->updateOwnSituation(situation);
+        }
+
+        bool COwnAircraftAware::updateOwnParts(const CAircraftParts &parts)
+        {
+            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return this->m_ownAircraftProvider->updateOwnParts(parts);
+        }
+
+        bool COwnAircraftAware::updateOwnCallsign(const CCallsign &callsign)
+        {
+            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return this->m_ownAircraftProvider->updateOwnCallsign(callsign);
+        }
+
+        bool COwnAircraftAware::updateOwnIcaoData(const CAircraftIcao &icaoData)
+        {
+            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return this->m_ownAircraftProvider->updateOwnIcaoData(icaoData);
+        }
+
+        Geo::CCoordinateGeodetic COwnAircraftProviderDummy::getOwnAircraftPosition() const
+        {
+            return m_ownAircraft.getPosition();
+        }
+
+        CAircraftParts COwnAircraftProviderDummy::getOwnAircraftParts() const
+        {
+            return m_ownAircraft.getParts();
+        }
+
+        CAircraftModel COwnAircraftProviderDummy::getOwnAircraftModel() const
+        {
+            return m_ownAircraft.getModel();
+        }
+
+        CLength COwnAircraftProviderDummy::getDistanceToOwnAircraft(const Geo::ICoordinateGeodetic &position) const
+        {
+            return m_ownAircraft.calculateGreatCircleDistance(position);
         }
 
         bool COwnAircraftProviderDummy::updateCockpit(const Aviation::CComSystem &com1, const Aviation::CComSystem &com2, const Aviation::CTransponder &transponder, const QString &originator)
         {
-            ownAircraft().setCom1System(com1);
-            ownAircraft().setCom2System(com2);
-            ownAircraft().setTransponder(transponder);
+            m_ownAircraft.setCom1System(com1);
+            m_ownAircraft.setCom2System(com2);
+            m_ownAircraft.setTransponder(transponder);
             Q_UNUSED(originator);
             return true;
         }
@@ -67,17 +129,47 @@ namespace BlackMisc
         {
             if (!CComSystem::isValidComFrequency(frequency)) { return false; }
             CComSystem::ComUnit comUnitEnum = static_cast<CComSystem::ComUnit>(comUnit);
-            CComSystem com = ownAircraft().getComSystem(comUnitEnum);
+            CComSystem com = m_ownAircraft.getComSystem(comUnitEnum);
             com.setFrequencyActive(frequency);
-            ownAircraft().setComSystem(com, comUnitEnum);
+            m_ownAircraft.setComSystem(com, comUnitEnum);
             Q_UNUSED(originator);
             return true;
         }
 
         bool COwnAircraftProviderDummy::updateSelcal(const CSelcal &selcal, const QString &originator)
         {
-            ownAircraft().setSelcal(selcal);
+            m_ownAircraft.setSelcal(selcal);
             Q_UNUSED(originator);
+            return true;
+        }
+
+        bool COwnAircraftProviderDummy::updateOwnModel(const CAircraftModel &model)
+        {
+            m_ownAircraft.setModel(model);
+            return true;
+        }
+
+        bool COwnAircraftProviderDummy::updateOwnSituation(const CAircraftSituation &situation)
+        {
+            m_ownAircraft.setSituation(situation);
+            return true;
+        }
+
+        bool COwnAircraftProviderDummy::updateOwnParts(const CAircraftParts &parts)
+        {
+            m_ownAircraft.setParts(parts);
+            return true;
+        }
+
+        bool COwnAircraftProviderDummy::updateOwnCallsign(const CCallsign &callsign)
+        {
+            m_ownAircraft.setCallsign(callsign);
+            return true;
+        }
+
+        bool COwnAircraftProviderDummy::updateOwnIcaoData(const CAircraftIcao &icaoData)
+        {
+            m_ownAircraft.setIcaoInfo(icaoData);
             return true;
         }
 

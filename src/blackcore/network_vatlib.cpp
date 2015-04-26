@@ -119,7 +119,7 @@ namespace BlackCore
 
         if (isConnected())
         {
-            CSimulatedAircraft myAircraft(ownAircraft());
+            CSimulatedAircraft myAircraft(getOwnAircraft());
             if (this->m_loginMode == LoginAsObserver)
             {
                 // Observer
@@ -296,14 +296,14 @@ namespace BlackCore
     {
         Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "Can't change callsign while still connected");
         m_callsign = callsign;
-        ownAircraft().setCallsign(callsign);
+        updateOwnCallsign(callsign);
     }
 
     void CNetworkVatlib::presetIcaoCodes(const BlackMisc::Aviation::CAircraftIcao &icao)
     {
         Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "Can't change ICAO codes while still connected");
         m_icaoCode = icao;
-        ownAircraft().setIcaoInfo(icao);
+        updateOwnIcaoData(icao);
     }
 
     void CNetworkVatlib::presetLoginMode(LoginMode mode)
@@ -316,12 +316,7 @@ namespace BlackCore
     void CNetworkVatlib::initiateConnection()
     {
         Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "Can't connect while still connected");
-
-        if (!m_net)
-        {
-            initializeSession();
-        }
-
+        if (!m_net) { initializeSession(); }
         QByteArray callsign = toFSD(m_loginMode == LoginAsObserver ?
                                     m_callsign.getAsObserverCallsignString() :
                                     m_callsign.asString());
@@ -427,7 +422,7 @@ namespace BlackCore
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
         if (receivers.isEmpty()) { return;  }
-        CSimulatedAircraft myAircraft(ownAircraft());
+        CSimulatedAircraft myAircraft(getOwnAircraft());
         if (this->m_loginMode == LoginNormal)
         {
             VatInterimPilotPosition pos;
@@ -526,7 +521,7 @@ namespace BlackCore
 
     void CNetworkVatlib::replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign) // private
     {
-        QStringList response { QString::number(ownAircraft().getCom1System().getFrequencyActive().value(CFrequencyUnit::MHz()), 'f', 3)};
+        QStringList response { QString::number(getOwnAircraft().getCom1System().getFrequencyActive().value(CFrequencyUnit::MHz()), 'f', 3)};
         Vat_SendClientQueryResponse(m_net.data(), vatClientQueryFreq, toFSD(callsign), toFSD(response)(), response.size());
     }
 
@@ -538,7 +533,7 @@ namespace BlackCore
 
     void CNetworkVatlib::replyToConfigQuery(const CCallsign &callsign)
     {
-        QJsonObject currentConfig = ownAircraft().getParts().toJson();
+        QJsonObject currentConfig(getOwnAircraftParts().toJson());
         // Fixme: Use QJsonObject with std::initializer_list once 5.4 is baseline
         currentConfig.insert("is_full_data", true);
         QJsonObject packet;
@@ -567,12 +562,11 @@ namespace BlackCore
 
     void CNetworkVatlib::sendIncrementalAircraftConfig()
     {
-        if (!isConnected()) return;
-
-        CAircraftParts currentParts = ownAircraft().getParts();
+        if (!isConnected()) { return; }
+        CAircraftParts currentParts(getOwnAircraftParts());
 
         // If it hasn't changed, return
-        if (m_sentAircraftConfig == currentParts) return;
+        if (m_sentAircraftConfig == currentParts) { return; }
 
         if (!m_tokenBucket.tryConsume())
         {
@@ -612,8 +606,9 @@ namespace BlackCore
     void CNetworkVatlib::sendCustomFsinnQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
-        CAircraftIcao icao = ownAircraft().getIcaoInfo();
-        QString modelString = ownAircraft().getModel().getModelString();
+        CSimulatedAircraft myAircraft(getOwnAircraft());
+        CAircraftIcao icao = myAircraft.getIcaoInfo();
+        QString modelString = myAircraft.getModel().getModelString();
         if (modelString.isEmpty()) { modelString = defaultModelString(); }
 
         QStringList data { { "0" }, icao.getAirlineDesignator(), icao.getAircraftDesignator(),
@@ -625,8 +620,9 @@ namespace BlackCore
     void CNetworkVatlib::sendCustomFsinnReponse(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
-        CAircraftIcao icao = ownAircraft().getIcaoInfo();
-        QString modelString = ownAircraft().getModel().getModelString();
+        CSimulatedAircraft myAircraft(getOwnAircraft());
+        CAircraftIcao icao = myAircraft.getIcaoInfo();
+        QString modelString = myAircraft.getModel().getModelString();
         if (modelString.isEmpty()) { modelString = defaultModelString(); }
 
         QStringList data { { "0" }, icao.getAirlineDesignator(), icao.getAircraftDesignator(),

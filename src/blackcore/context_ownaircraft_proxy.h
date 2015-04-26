@@ -39,7 +39,7 @@ namespace BlackCore
         virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const override;
 
         //! \copydoc IContextOwnAircraft::updatePosition
-        virtual bool updatePosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) override;
+        virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) override;
 
         //! \copydoc IContextOwnAircraft::updateCockpit
         virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) override;
@@ -48,16 +48,16 @@ namespace BlackCore
         virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const QString &originator) override;
 
         //! \copydoc IContextOwnAircraft::updatePilot
-        virtual bool updatePilot(const BlackMisc::Network::CUser &pilot) override;
+        virtual bool updateOwnAircraftPilot(const BlackMisc::Network::CUser &pilot) override;
 
         //! \copydoc IContextOwnAircraft::updateSelcal
         virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator) override;
 
-        //! \copydoc IContextOwnAircraft::updateCallsign
-        virtual bool updateCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
+        //! \copydoc IContextOwnAircraft::updateOwnCallsign
+        virtual bool updateOwnCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
 
-        //! \copydoc IContextOwnAircraft::updateIcaoData
-        virtual bool updateIcaoData(const BlackMisc::Aviation::CAircraftIcao &icaoData) override;
+        //! \copydoc IContextOwnAircraft::updateOwnIcaoData
+        virtual bool updateOwnIcaoData(const BlackMisc::Aviation::CAircraftIcao &icaoData) override;
 
         //! \copydoc IContextOwnAircraft::setAudioOutputVolumes
         virtual void setAudioOutputVolume(int outputVolume) override;

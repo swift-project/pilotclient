@@ -358,6 +358,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::updateOwnAircraftFromSimulator(DataDefinitionOwnAircraft simulatorOwnAircraft)
         {
+            CSimulatedAircraft myAircraft(getOwnAircraft());
             BlackMisc::Geo::CCoordinateGeodetic position;
             position.setLatitude(CLatitude(simulatorOwnAircraft.latitude, CAngleUnit::deg()));
             position.setLongitude(CLongitude(simulatorOwnAircraft.longitude, CAngleUnit::deg()));
@@ -369,7 +370,6 @@ namespace BlackSimPlugin
             aircraftSituation.setHeading(CHeading(simulatorOwnAircraft.trueHeading, CHeading::True, CAngleUnit::deg()));
             aircraftSituation.setGroundspeed(CSpeed(simulatorOwnAircraft.velocity, CSpeedUnit::kts()));
             aircraftSituation.setAltitude(CAltitude(simulatorOwnAircraft.altitude, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
-            ownAircraft().setSituation(aircraftSituation);
 
             CAircraftLights lights(simulatorOwnAircraft.lightStrobe,
                                    simulatorOwnAircraft.lightLanding,
@@ -378,8 +378,8 @@ namespace BlackSimPlugin
                                    simulatorOwnAircraft.lightNav,
                                    simulatorOwnAircraft.lightLogo);
 
-            QList<bool> helperList {    simulatorOwnAircraft.engine1Combustion != 0, simulatorOwnAircraft.engine2Combustion != 0,
-                                        simulatorOwnAircraft.engine3Combustion != 0, simulatorOwnAircraft.engine4Combustion != 0
+            QList<bool> helperList {simulatorOwnAircraft.engine1Combustion != 0, simulatorOwnAircraft.engine2Combustion != 0,
+                                    simulatorOwnAircraft.engine3Combustion != 0, simulatorOwnAircraft.engine4Combustion != 0
                                    };
 
             CAircraftEngineList engines;
@@ -394,33 +394,37 @@ namespace BlackSimPlugin
                                  engines,
                                  simulatorOwnAircraft.simOnGround);
 
-            ownAircraft().setParts(parts);
-
-            CComSystem com1 = ownAircraft().getCom1System(); // set defaults
-            CComSystem com2 = ownAircraft().getCom2System();
-            CTransponder transponder = ownAircraft().getTransponder();
+            // set values
+            updateOwnSituation(aircraftSituation);
+            updateOwnParts(parts);
 
             // When I change cockpit values in the sim (from GUI to simulator, not originating from simulator)
             // it takes a little while before these values are set in the simulator.
             // To avoid jitters, I wait some update cylces to stabilize the values
             if (m_skipCockpitUpdateCycles < 1)
             {
+                // defaults
+                CComSystem com1(myAircraft.getCom1System()); // set defaults
+                CComSystem com2(myAircraft.getCom2System());
+                CTransponder transponder(myAircraft.getTransponder());
+
+                // updates
                 com1.setFrequencyActive(CFrequency(simulatorOwnAircraft.com1ActiveMHz, CFrequencyUnit::MHz()));
                 com1.setFrequencyStandby(CFrequency(simulatorOwnAircraft.com1StandbyMHz, CFrequencyUnit::MHz()));
-                bool changedCom1 = ownAircraft().getCom1System() != com1;
+                bool changedCom1 = myAircraft.getCom1System() != com1;
                 this->m_simCom1 = com1;
 
                 com2.setFrequencyActive(CFrequency(simulatorOwnAircraft.com2ActiveMHz, CFrequencyUnit::MHz()));
                 com2.setFrequencyStandby(CFrequency(simulatorOwnAircraft.com2StandbyMHz, CFrequencyUnit::MHz()));
-                bool changedCom2 = ownAircraft().getCom2System() != com2;
+                bool changedCom2 = myAircraft.getCom2System() != com2;
                 this->m_simCom2 = com2;
 
                 transponder.setTransponderCode(simulatorOwnAircraft.transponderCode);
-                bool changedXpr = (ownAircraft().getTransponderCode() != transponder.getTransponderCode());
+                bool changedXpr = (myAircraft.getTransponderCode() != transponder.getTransponderCode());
 
                 if (changedCom1 || changedCom2 || changedXpr)
                 {
-                    this->providerUpdateCockpit(com1, com2, transponder, simulatorOriginator());
+                    this->updateCockpit(com1, com2, transponder, simulatorOriginator());
                 }
             }
             else
@@ -440,11 +444,12 @@ namespace BlackSimPlugin
             {
                 newMode = sbDataArea.isStandby() ? CTransponder::StateStandby : CTransponder::ModeC;
             }
-            bool changed = (this->ownAircraft().getTransponderMode() != newMode);
+            CSimulatedAircraft myAircraft(this->getOwnAircraft());
+            bool changed = (myAircraft.getTransponderMode() != newMode);
             if (!changed) { return; }
-            CTransponder xpdr = this->ownAircraft().getTransponder();
+            CTransponder xpdr = myAircraft.getTransponder();
             xpdr.setTransponderMode(newMode);
-            this->providerUpdateCockpit(ownAircraft().getCom1System(), ownAircraft().getCom2System(), xpdr, this->simulatorOriginator());
+            this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), xpdr, this->simulatorOriginator());
         }
 
         void CSimulatorFsx::setSimConnectObjectID(DWORD requestID, DWORD objectID)
@@ -476,7 +481,7 @@ namespace BlackSimPlugin
             SimConnect_CallDispatch(m_hSimConnect, SimConnectProc, this);
             if (m_useFsuipc && m_fsuipc)
             {
-                CSimulatedAircraft fsuipcAircraft(ownAircraft());
+                CSimulatedAircraft fsuipcAircraft(getOwnAircraft());
                 //! \todo split in high / low frequency reads
                 bool ok = m_fsuipc->read(fsuipcAircraft, true, true, true);
                 if (ok)

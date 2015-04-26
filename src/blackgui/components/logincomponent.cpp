@@ -185,8 +185,8 @@ namespace BlackGui
                 ownAircraft.setCallsign(aircraftValues.ownCallsign);
 
                 // set latest ICAO, callsign
-                this->getIContextOwnAircraft()->updateIcaoData(ownAircraft.getIcaoInfo());
-                this->getIContextOwnAircraft()->updateCallsign(ownAircraft.getCallsign());
+                this->getIContextOwnAircraft()->updateOwnIcaoData(ownAircraft.getIcaoInfo());
+                this->getIContextOwnAircraft()->updateOwnCallsign(ownAircraft.getCallsign());
 
                 // Login mode
                 INetwork::LoginMode mode = ui->gbp_LoginMode->getLoginMode();
@@ -216,7 +216,7 @@ namespace BlackGui
                     currentServer = this->getCurrentOtherServer();
                 }
                 this->ui->frp_CurrentServer->setServer(currentServer);
-                this->getIContextOwnAircraft()->updatePilot(currentServer.getUser());
+                this->getIContextOwnAircraft()->updateOwnAircraftPilot(currentServer.getUser());
 
                 // Login
                 msg = this->getIContextNetwork()->connectToNetwork(currentServer, static_cast<uint>(mode));
@@ -470,7 +470,7 @@ namespace BlackGui
 
                 // set value in backend
                 this->mergeGuiIcaoValues(icao);
-                this->getIContextOwnAircraft()->updateIcaoData(icao);
+                this->getIContextOwnAircraft()->updateOwnIcaoData(icao);
 
                 // update GUI
                 this->setGuiIcaoValues(icao, false);

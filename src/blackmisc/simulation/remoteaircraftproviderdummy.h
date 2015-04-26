@@ -20,7 +20,7 @@ namespace BlackMisc
     namespace Simulation
     {
 
-        //! Dummy implementation for testing purpose
+        //! Dummy implementation for testing purpose, not thread safe
         class BLACKMISC_EXPORT CRemoteAircraftProviderDummy :
             public QObject,
             public IRemoteAircraftProvider

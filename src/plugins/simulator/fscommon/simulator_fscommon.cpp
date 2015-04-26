@@ -77,20 +77,20 @@ namespace BlackSimPlugin
 
         void CSimulatorFsCommon::setOwnAircraftModel(const QString &modelName)
         {
-            CAircraftModel model = ownAircraft().getModel();
+            CAircraftModel model = getOwnAircraftModel();
             model.setModelString(modelName);
             this->setOwnAircraftModel(model);
         }
 
         void CSimulatorFsCommon::setOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model)
         {
-            if (ownAircraft().getModel() != model)
+            if (getOwnAircraftModel() != model)
             {
                 CAircraftModel newModel(model);
                 newModel.setModelType(CAircraftModel::TypeOwnSimulatorModel);
                 CSimulatorFsCommon::reverseLookupIcaoData(newModel);
-                ownAircraft().setModel(newModel);
-                emit ownAircraftModelChanged(ownAircraft());
+                updateOwnModel(newModel);
+                emit ownAircraftModelChanged(getOwnAircraft());
             }
         }
 

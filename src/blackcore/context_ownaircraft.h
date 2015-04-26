@@ -81,12 +81,12 @@ namespace BlackCore
         void changedPilot(const BlackMisc::Network::CUser &pilot);
 
     public slots:
-
         //! Get own aircraft
         virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const = 0;
 
         //! Update position
-        virtual bool updatePosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) = 0;
+        //! \note this is in \sa IContextOwnAircraft as we want to set test positions from the GUI / elsewhere
+        virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) = 0;
 
         //! Update own cockpit
         virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) = 0;
@@ -95,13 +95,13 @@ namespace BlackCore
         virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const QString &originator) = 0;
 
         //! Set current pilot
-        virtual bool updatePilot(const BlackMisc::Network::CUser &pilot) = 0;
+        virtual bool updateOwnAircraftPilot(const BlackMisc::Network::CUser &pilot) = 0;
 
         //! Set ICAO data
-        virtual bool updateIcaoData(const BlackMisc::Aviation::CAircraftIcao &icaoData) = 0;
+        virtual bool updateOwnIcaoData(const BlackMisc::Aviation::CAircraftIcao &icaoData) = 0;
 
         //! Set callsign
-        virtual bool updateCallsign(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+        virtual bool updateOwnCallsign(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
         //! Own SELCAL code
         virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator) = 0;
@@ -110,7 +110,7 @@ namespace BlackCore
         virtual void setAudioOutputVolume(int outputVolume) = 0;
 
         //! Set individual voice rooms (overrides voice rooms)
-        //! \remarks Empty string "" disables voice room override
+        //! \note Empty string "" disables voice room override
         //! \sa enableAutomaticVoiceRoomResolution
         virtual void setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url) = 0;
 

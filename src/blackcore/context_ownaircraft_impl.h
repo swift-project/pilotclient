@@ -23,7 +23,8 @@
 namespace BlackCore
 {
 
-    //! Own aircraft context implementation
+    //! Own aircraft context implementation.
+    //! Central instance of data for \sa IOwnAircraftProvider .
     class BLACKCORE_EXPORT CContextOwnAircraft :
         public IContextOwnAircraft,
         public BlackMisc::Simulation::IOwnAircraftProvider
@@ -37,38 +38,62 @@ namespace BlackCore
         //! Destructor
         virtual ~CContextOwnAircraft();
 
-        //! Own aircraft
-        virtual const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft() const override;
+        //! \copydoc IOwnAircraftProvider::getOwnAircraftPosition
+        //! \ingroup ownaircraftprovider
+        virtual BlackMisc::Geo::CCoordinateGeodetic getOwnAircraftPosition() const override;
 
-        //! Own aircraft
-        virtual BlackMisc::Simulation::CSimulatedAircraft &ownAircraft() override;
+        //! \copydoc IOwnAircraftProvider::getOwnAircraftParts
+        //! \ingroup ownaircraftprovider
+        virtual BlackMisc::Aviation::CAircraftParts getOwnAircraftParts() const;
 
-    public slots: // IContextOwnAircraft overrides
+        //! \copydoc IOwnAircraftProvider::getOwnAircraftModel
+        //! \ingroup ownaircraftprovider
+        virtual BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const;
+
+        //! \copydoc IOwnAircraftProvider::getDistanceToOwnAircraft
+        //! \ingroup ownaircraftprovider
+        virtual BlackMisc::PhysicalQuantities::CLength getDistanceToOwnAircraft(const BlackMisc::Geo::ICoordinateGeodetic &position) const override;
+
+        //! \copydoc IOwnAircraftProvider::updateOwnModel
+        //! \ingroup ownaircraftprovider
+        virtual bool updateOwnModel(const BlackMisc::Simulation::CAircraftModel &model) override;
+
+        //! \copydoc IOwnAircraftProvider::updateOwnSituation
+        //! \ingroup ownaircraftprovider
+        virtual bool updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
+
+        //! \copydoc IOwnAircraftProvider::updateOwnParts
+        //! \ingroup ownaircraftprovider
+        virtual bool updateOwnParts(const BlackMisc::Aviation::CAircraftParts &parts) override;
+
+    public slots:
 
         //! \copydoc IContextOwnAircraft::getOwnAircraft()
-        //! \copydoc IOwnAircraftProvider::getOwnAircraft()
+        //! \ingroup ownaircraftprovider
         virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const override;
 
+        //! \copydoc IContextOwnAircraft::updateOwnCallsign
+        //! \ingroup ownaircraftprovider
+        virtual bool updateOwnCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
+
+        //! \copydoc IContextOwnAircraft::updateOwnIcaoData
+        //! \ingroup ownaircraftprovider
+        virtual bool updateOwnIcaoData(const BlackMisc::Aviation::CAircraftIcao &icaoData) override;
+
         //! \copydoc IContextOwnAircraft::updatePosition
-        virtual bool updatePosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) override;
+        virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) override;
 
         //! \copydoc IContextOwnAircraft::updateCockpit
         virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) override;
+
+        //! \copydoc IContextOwnAircraft::updateSelcal
+        virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator) override;
 
         //! \copydoc IContextOwnAircraft::updateComFrequency
         virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const QString &originator) override;
 
         //! \copydoc IContextOwnAircraft::updatePilot
-        virtual bool updatePilot(const BlackMisc::Network::CUser &pilot) override;
-
-        //! \copydoc IContextOwnAircraft::updateCallsign
-        virtual bool updateCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
-
-        //! \copydoc IContextOwnAircraft::updateIcaoData
-        virtual bool updateIcaoData(const BlackMisc::Aviation::CAircraftIcao &icaoData) override;
-
-        //! \copydoc IContextOwnAircraft::updateSelcal
-        virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator) override;
+        virtual bool updateOwnAircraftPilot(const BlackMisc::Network::CUser &pilot) override;
 
         //! \copydoc IContextOwnAircraft::setAudioOutputVolume
         virtual void setAudioOutputVolume(int outputVolume) override;
@@ -113,19 +138,16 @@ namespace BlackCore
 
     private:
         BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< my aircraft
-        bool m_automaticVoiceRoomResolution = true;   //!< automatic voice room resolution, or disable for override
-        QString m_voiceRoom1UrlOverride;              //!< overridden voice room url
-        QString m_voiceRoom2UrlOverride;              //!< overridden voice room url
+        bool m_automaticVoiceRoomResolution = true;  //!< automatic voice room resolution, or disable for override
+        QString m_voiceRoom1UrlOverride;             //!< overridden voice room url
+        QString m_voiceRoom2UrlOverride;             //!< overridden voice room url
+        mutable QReadWriteLock m_lockAircraft;       //!< lock aircraft
 
         //! Init my very own aircraft with some defaults, before overridden by simulator
         void initOwnAircraft();
 
         //! Resolve voice rooms
         void resolveVoiceRooms();
-
-        //! Own aircraft
-        const BlackMisc::Aviation::CAircraft &getAviationAircraft() const;
-
     };
 }
 

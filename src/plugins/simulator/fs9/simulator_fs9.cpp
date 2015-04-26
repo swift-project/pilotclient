@@ -215,7 +215,7 @@ namespace BlackSimPlugin
         {
             if (m_useFsuipc && m_fsuipc)
             {
-                CSimulatedAircraft fsuipcAircraft(ownAircraft());
+                CSimulatedAircraft fsuipcAircraft(getOwnAircraft());
                 bool ok = m_fsuipc->read(fsuipcAircraft, true, true, true);
                 if (ok)
                 {
@@ -244,7 +244,7 @@ namespace BlackSimPlugin
                 {
                     MPPositionVelocity mpPositionVelocity;
                     MultiPlayerPacketParser::readMessage(message, mpPositionVelocity);
-                    ownAircraft().setSituation(aircraftSituationfromFS9(mpPositionVelocity));
+                    updateOwnSituation(aircraftSituationfromFS9(mpPositionVelocity));
                     break;
                 }
             case CFs9Sdk::MPCHAT_PACKET_ID_CHAT_TEXT_SEND:
@@ -261,7 +261,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFs9::updateOwnAircraftFromSimulator(const CAircraft &simDataOwnAircraft)
         {
-            this->providerUpdateCockpit(
+            this->updateCockpit(
                 simDataOwnAircraft.getCom1System(),
                 simDataOwnAircraft.getCom2System(),
                 simDataOwnAircraft.getTransponder(),

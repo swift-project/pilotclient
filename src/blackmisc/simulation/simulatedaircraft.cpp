@@ -112,9 +112,9 @@ namespace BlackMisc
 
         void CSimulatedAircraft::setCallsign(const CCallsign &callsign)
         {
-            this->m_model.setCallsign(callsign);
-            this->m_client.setUserCallsign(callsign);
-            CAircraft::setCallsign(callsign);
+            CAircraft::setCallsign(callsign); // also sets correct hint
+            this->m_model.setCallsign(getCallsign());
+            this->m_client.setUserCallsign(getCallsign());
         }
 
         void CSimulatedAircraft::setIcaoInfo(const CAircraftIcao &icao)
