@@ -69,8 +69,8 @@ namespace BlackCore
         //! \copydoc IContextNetwork::getAircraftInRangeCount
         virtual int getAircraftInRangeCount() const override;
 
-        //! \copydoc IContextNetwork::getAircraftForCallsign
-        virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+        //! \copydoc IContextNetwork::getAircraftInRangeForCallsign
+        virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
         //! \copydoc IContextNetwork::getOnlineStationForCallsign
         virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;

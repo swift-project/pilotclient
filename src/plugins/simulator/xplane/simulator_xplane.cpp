@@ -336,7 +336,7 @@ namespace BlackSimPlugin
         {
             //! \todo XP implement isRenderedAircraft correctly
             // work around, but not really telling me if callsign is really(!) visible in SIM
-            return getAircraftForCallsign(callsign).isRendered();
+            return getAircraftInRangeForCallsign(callsign).isRendered();
         }
 
         bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator)

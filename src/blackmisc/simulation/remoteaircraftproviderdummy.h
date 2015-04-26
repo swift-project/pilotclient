@@ -38,8 +38,8 @@ namespace BlackMisc
             //! IRemoteAircraftProvider::getAircraftInRangeCount
             virtual int getAircraftInRangeCount() const override;
 
-            //! IRemoteAircraftProvider::getAircraftForCallsign
-            virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            //! IRemoteAircraftProvider::getAircraftInRangeForCallsign
+            virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
             //! \copydoc IRemoteAircraftProvider::remoteAircraftParts
             virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const override;

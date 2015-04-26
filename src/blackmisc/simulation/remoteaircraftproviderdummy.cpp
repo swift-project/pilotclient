@@ -29,7 +29,7 @@ namespace BlackMisc
             return m_aircraft.size();
         }
 
-        CSimulatedAircraft CRemoteAircraftProviderDummy::getAircraftForCallsign(const CCallsign &callsign) const
+        CSimulatedAircraft CRemoteAircraftProviderDummy::getAircraftInRangeForCallsign(const CCallsign &callsign) const
         {
             return m_aircraft.findFirstByCallsign(callsign);
         }

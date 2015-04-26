@@ -69,7 +69,7 @@ namespace BlackCore
         return m_aircraftInRange;
     }
 
-    CSimulatedAircraft CAirspaceMonitor::getAircraftForCallsign(const CCallsign &callsign) const
+    CSimulatedAircraft CAirspaceMonitor::getAircraftInRangeForCallsign(const CCallsign &callsign) const
     {
         QReadLocker l(&m_lockAircraft);
         return m_aircraftInRange.findFirstByCallsign(callsign);
@@ -979,7 +979,7 @@ namespace BlackCore
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
 
-        CSimulatedAircraft simAircraft(getAircraftForCallsign(callsign));
+        CSimulatedAircraft simAircraft(getAircraftInRangeForCallsign(callsign));
 
         // If we are not yet synchronized, we throw away any incremental packet
         if (!simAircraft.hasValidCallsign()) { return; }

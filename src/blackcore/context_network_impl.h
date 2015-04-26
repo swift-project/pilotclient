@@ -117,9 +117,9 @@ namespace BlackCore
         //! \ingroup remoteaircraftprovider
         virtual int getAircraftInRangeCount() const override;
 
-        //! \copydoc IContextNetwork::getAircraftForCallsign
+        //! \copydoc IContextNetwork::getAircraftInRangeForCallsign
         //! \ingroup remoteaircraftprovider
-        virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+        virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
         //! \copydoc IContextNetwork::getOnlineStationForCallsign
         virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;

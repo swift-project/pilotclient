@@ -152,7 +152,7 @@ namespace BlackCore
         virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const = 0;
 
         //! Aircraft for given callsign
-        virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+        virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
         //! Aircraft count
         virtual int getAircraftInRangeCount() const = 0;

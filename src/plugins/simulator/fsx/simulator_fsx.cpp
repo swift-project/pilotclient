@@ -165,7 +165,7 @@ namespace BlackSimPlugin
             CAircraftModel aircraftModel = modelMatching(newRemoteAircraftCopy);
             Q_ASSERT_X(newRemoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "mismatching callsigns");
             this->updateAircraftModel(newRemoteAircraft.getCallsign(), aircraftModel, simulatorOriginator());
-            CSimulatedAircraft aircraftAfterModelApplied(getAircraftForCallsign(newRemoteAircraft.getCallsign()));
+            CSimulatedAircraft aircraftAfterModelApplied(getAircraftInRangeForCallsign(newRemoteAircraft.getCallsign()));
             aircraftAfterModelApplied.setRendered(true);
             emit modelMatchingCompleted(aircraftAfterModelApplied);
 

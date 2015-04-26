@@ -48,9 +48,9 @@ namespace BlackCore
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;
 
-        //! \copydoc IRemoteAircraftProvider::getAircraftForCallsign
+        //! \copydoc IRemoteAircraftProvider::getAircraftInRangeForCallsign
         //! \ingroup remoteaircraftprovider
-        virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+        virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
         //! \copydoc IRemoteAircraftProvider::getAircraftInRangeCount
         //! \ingroup remoteaircraftprovider

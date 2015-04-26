@@ -28,10 +28,10 @@ namespace BlackMisc
             return this->m_remoteAircraftProvider->getAircraftInRangeCount();
         }
 
-        CSimulatedAircraft CRemoteAircraftAware::getAircraftForCallsign(const CCallsign &callsign) const
+        CSimulatedAircraft CRemoteAircraftAware::getAircraftInRangeForCallsign(const CCallsign &callsign) const
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_remoteAircraftProvider->getAircraftForCallsign(callsign);
+            return this->m_remoteAircraftProvider->getAircraftInRangeForCallsign(callsign);
         }
 
         CAircraftSituationList CRemoteAircraftAware::remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const

@@ -58,8 +58,8 @@ namespace BlackCore
             return BlackMisc::Simulation::CSimulatedAircraftList();
         }
 
-        //! \copydoc IContextNetwork::getAircraftForCallsign
-        virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override
+        //! \copydoc IContextNetwork::getAircraftInRangeForCallsign
+        virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override
         {
             Q_UNUSED(callsign);
             logEmptyContextWarning(Q_FUNC_INFO);

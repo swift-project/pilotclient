@@ -40,11 +40,6 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraft>(QLatin1Literal("getOwnAircraft"));
     }
 
-    bool CContextOwnAircraftProxy::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude)
-    {
-        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateOwnPosition"), position, altitude);
-    }
-
     bool CContextOwnAircraftProxy::updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator)
     {
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateCockpit"), com1, com2, transponder, originator);
@@ -57,12 +52,17 @@ namespace BlackCore
 
     bool CContextOwnAircraftProxy::updateOwnAircraftPilot(const BlackMisc::Network::CUser &pilot)
     {
-        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updatePilot"), pilot);
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateOwnAircraftPilot"), pilot);
     }
 
     bool CContextOwnAircraftProxy::updateSelcal(const CSelcal &selcal, const QString &originator)
     {
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateSelcal"), selcal, originator);
+    }
+
+    bool CContextOwnAircraftProxy::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude)
+    {
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateOwnPosition"), position, altitude);
     }
 
     bool CContextOwnAircraftProxy::updateOwnCallsign(const CCallsign &callsign)

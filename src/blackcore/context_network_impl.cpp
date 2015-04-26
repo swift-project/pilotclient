@@ -480,7 +480,7 @@ namespace BlackCore
         return this->m_airspace->getAircraftInRangeCount();
     }
 
-    CSimulatedAircraft CContextNetwork::getAircraftForCallsign(const CCallsign &callsign) const
+    CSimulatedAircraft CContextNetwork::getAircraftInRangeForCallsign(const CCallsign &callsign) const
     {
         if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
         return this->m_airspace->getAircraftInRange().findFirstByCallsign(callsign);
@@ -524,7 +524,7 @@ namespace BlackCore
         bool c = this->m_airspace->updateAircraftEnabled(callsign, enabledForRedering, originator);
         if (c)
         {
-            CSimulatedAircraft aircraft(this->getAircraftForCallsign(callsign));
+            CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
             emit this->changedRemoteAircraftEnabled(aircraft, originator);
         }
         return c;
@@ -536,7 +536,7 @@ namespace BlackCore
         bool c = this->m_airspace->updateAircraftModel(callsign, model, originator);
         if (c)
         {
-            CSimulatedAircraft aircraft(this->getAircraftForCallsign(callsign));
+            CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
             emit this->changedRemoteAircraftModel(aircraft, originator);
         }
         return c;
@@ -548,7 +548,7 @@ namespace BlackCore
         bool c = this->m_airspace->updateFastPositionEnabled(callsign, enableFastPositonUpdates, originator);
         if (c)
         {
-            CSimulatedAircraft aircraft(this->getAircraftForCallsign(callsign));
+            CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
             CLogMessage(this).info("Callsign %1 sets fast positions ") << aircraft.getCallsign() << BlackMisc::boolToOnOff(aircraft.fastPositionUpdates());
             emit this->changedFastPositionUpdates(aircraft, originator);
         }

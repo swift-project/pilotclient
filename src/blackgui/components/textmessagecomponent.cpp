@@ -458,7 +458,7 @@ namespace BlackGui
             QWidget *w = findTextMessageTabByCallsign(callsign, true);
             if (!w && getIContextNetwork())
             {
-                CSimulatedAircraft aircraft(getIContextNetwork()->getAircraftForCallsign(callsign));
+                CSimulatedAircraft aircraft(getIContextNetwork()->getAircraftInRangeForCallsign(callsign));
                 if (!aircraft.getCallsign().isEmpty())
                 {
                     // we assume a private message

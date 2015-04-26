@@ -107,7 +107,7 @@ namespace BlackCore
 
     void CSimulatorCommon::resetAircraftFromBacked(const CCallsign &callsign)
     {
-        CSimulatedAircraft aircraft(this->getAircraftForCallsign(callsign));
+        CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
         bool enabled = aircraft.isEnabled();
         if (enabled)
         {

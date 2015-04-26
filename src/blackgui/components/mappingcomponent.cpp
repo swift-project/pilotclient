@@ -143,7 +143,7 @@ namespace BlackGui
         void CMappingComponent::ps_onChangedSimulatedAircraftInView(const BlackMisc::CVariant &object, const BlackMisc::CPropertyIndex &index)
         {
             const CSimulatedAircraft sa = object.to<CSimulatedAircraft>(); // changed in GUI
-            const CSimulatedAircraft saFromBackend = this->getIContextNetwork()->getAircraftForCallsign(sa.getCallsign());
+            const CSimulatedAircraft saFromBackend = this->getIContextNetwork()->getAircraftInRangeForCallsign(sa.getCallsign());
             if (!saFromBackend.hasValidCallsign()) { return; } // obviously deleted
             if (index.contains(CSimulatedAircraft::IndexEnabled))
             {
@@ -231,7 +231,7 @@ namespace BlackGui
                 return;
             }
 
-            CSimulatedAircraft aircraftFromBackend = this->getIContextNetwork()->getAircraftForCallsign(callsign);
+            CSimulatedAircraft aircraftFromBackend = this->getIContextNetwork()->getAircraftInRangeForCallsign(callsign);
             bool enabled = this->ui->cb_AircraftEnabled->isChecked();
             bool changed = false;
             if (aircraftFromBackend.getModelString() != modelString)
