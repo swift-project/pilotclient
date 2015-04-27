@@ -143,17 +143,16 @@ namespace BlackMisc
         void CPhysicalQuantity<MU, PQ>::marshallToDbus(QDBusArgument &argument) const
         {
             argument << this->value(UnitClass::defaultUnit());
-            argument << this->m_value;
-            argument << this->m_unit;
+            // argument << this->m_value;
+            // argument << this->m_unit;
         }
 
         template <class MU, class PQ>
         void CPhysicalQuantity<MU, PQ>::unmarshallFromDbus(const QDBusArgument &argument)
         {
-            double ignore;
-            argument >> ignore;
             argument >> this->m_value;
-            argument >> this->m_unit;
+            // argument >> this->m_unit;
+            this->m_unit = UnitClass::defaultUnit();
         }
 
         template <class MU, class PQ>
