@@ -332,17 +332,25 @@ namespace BlackMisc
             template <class T, class... Ts>
             static void marshallImpl(QDBusArgument &arg, const T &head, const Ts &... tail)
             {
-                arg << head;
+                marshallHelper(arg, head, 0);
                 marshallImpl(arg, tail...);
             }
+            template <class T, typename std::enable_if<std::is_base_of<CEmpty, T>::value, int>::type = 0>
+            static void marshallHelper(QDBusArgument &arg, const T &val, int) { static_cast<const typename T::CValueObject &>(val).marshallToDbus(arg); }
+            template <class T>
+            static void marshallHelper(QDBusArgument &arg, const T &val, ...) { arg << val; }
 
             static void unmarshallImpl(const QDBusArgument &) {}
             template <class T, class... Ts>
             static void unmarshallImpl(const QDBusArgument &arg, T &head, Ts &... tail)
             {
-                arg >> head;
+                unmarshallHelper(arg, head, 0);
                 unmarshallImpl(arg, tail...);
             }
+            template <class T, typename std::enable_if<std::is_base_of<CEmpty, T>::value, int>::type = 0>
+            static void unmarshallHelper(const QDBusArgument &arg, T &val, int) { static_cast<typename T::CValueObject &>(val).unmarshallFromDbus(arg); }
+            template <class T>
+            static void unmarshallHelper(const QDBusArgument &arg, T &val, ...) { arg >> val; }
 
             static void debugImpl(QDebug) {}
             template <class T, class... Ts>

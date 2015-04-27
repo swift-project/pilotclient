@@ -427,6 +427,7 @@ namespace BlackMisc
             return BaseOrDummy::isA(metaTypeId);
         }
 
+    public:
         //! Marshall to DBus
         virtual void marshallToDbus(QDBusArgument &argument) const
         {
