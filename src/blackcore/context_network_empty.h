@@ -104,6 +104,13 @@ namespace BlackCore
             return false;
         }
 
+        //! \copydoc IContextNetwork::getConnectedServer
+        virtual BlackMisc::Network::CServer getConnectedServer() const override
+        {
+            logEmptyContextWarning(Q_FUNC_INFO);
+            return BlackMisc::Network::CServer();
+        }
+
         //! \copydoc IContextNetwork::sendTextMessages()
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override
         {

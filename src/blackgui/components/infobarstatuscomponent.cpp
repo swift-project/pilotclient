@@ -78,11 +78,15 @@ namespace BlackGui
             {
                 connect(this->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CInfoBarStatusComponent::ps_onSimulatorStatusChanged);
                 connect(this->getIContextSimulator(), &IContextSimulator::installedAircraftModelsChanged, this, &CInfoBarStatusComponent::ps_onMapperReady);
+
+                // initial values
+                this->ps_onMapperReady();
+                bool connected = this->getIContextSimulator()->isConnected();
+                this->ps_onSimulatorStatusChanged(connected ? ISimulator::Connected : ISimulator::Disconnected);
             }
 
             if (this->getIContextNetwork())
             {
-                this->ui->led_Simulator->setOn(this->getIContextSimulator()->isConnected());
                 connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CInfoBarStatusComponent::ps_onNetworkConnectionChanged);
             }
 
@@ -98,19 +102,20 @@ namespace BlackGui
             }
         }
 
-        void CInfoBarStatusComponent::ps_onSimulatorStatusChanged(quint8 status)
+        void CInfoBarStatusComponent::ps_onSimulatorStatusChanged(int status)
         {
-//             if (connected && running)
-            if (status & (ISimulator::Connected | ISimulator::Running)) {
+            if (status > 0)
+            {
                 this->ui->led_Simulator->setOn(true);
-            } else if (status & ISimulator::Connected) {
-                this->ui->led_Simulator->setTriState();
-            } else {
+                this->ui->led_Simulator->setOnToolTip(getIContextSimulator()->getSimulatorPluginInfo().getDescription());
+            }
+            else
+            {
                 this->ui->led_Simulator->setOn(false);
             }
         }
 
-        void CInfoBarStatusComponent::ps_onNetworkConnectionChanged(uint from, uint to)
+        void CInfoBarStatusComponent::ps_onNetworkConnectionChanged(int from, int to)
         {
             INetwork::ConnectionStatus fromStatus = static_cast<INetwork::ConnectionStatus>(from);
             INetwork::ConnectionStatus toStatus = static_cast<INetwork::ConnectionStatus>(to);
@@ -126,6 +131,7 @@ namespace BlackGui
                 break;
             case INetwork::Connected:
                 this->ui->led_Network->setOn(true);
+                this->ui->led_Network->setOnToolTip("Connected: " + getIContextNetwork()->getConnectedServer().getName());
                 break;
             case INetwork::Connecting:
                 this->ui->led_Network->setTriStateColor(CLedWidget::Yellow);
@@ -179,8 +185,14 @@ namespace BlackGui
                 return;
             }
 
-            bool on = this->getIContextSimulator()->getInstalledModelsCount() > 0;
+            int models = this->getIContextSimulator()->getInstalledModelsCount();
+            bool on = (models > 0);
             this->ui->led_MapperReady->setOn(on);
+            if (on)
+            {
+                QString m = QString("Mapper with %1 models").arg(models);
+                this->ui->led_MapperReady->setToolTip(m);
+            }
         }
     } // namespace
 } // namespace

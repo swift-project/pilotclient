@@ -164,7 +164,8 @@ namespace BlackSimPlugin
             // matched models
             CAircraftModel aircraftModel = modelMatching(newRemoteAircraftCopy);
             Q_ASSERT_X(newRemoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "mismatching callsigns");
-            this->updateAircraftModel(newRemoteAircraft.getCallsign(), aircraftModel, simulatorOriginator());
+            this->updateAircraftModel(callsign, aircraftModel, simulatorOriginator());
+            this->updateAircraftRendered(callsign, true, simulatorOriginator());
             CSimulatedAircraft aircraftAfterModelApplied(getAircraftInRangeForCallsign(newRemoteAircraft.getCallsign()));
             aircraftAfterModelApplied.setRendered(true);
             emit modelMatchingCompleted(aircraftAfterModelApplied);
@@ -172,7 +173,7 @@ namespace BlackSimPlugin
             // create AI
             if (isSimulating())
             {
-                //! \todo if exists, recreate (new model?, new ICAO code)
+                //! \todo FSX driver if exists, recreate (new model?, new ICAO code)
                 QByteArray m = aircraftModel.getModelString().toLocal8Bit();
                 HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, m.constData(), qPrintable(callsign.toQString().left(12)), initialPosition, static_cast<SIMCONNECT_DATA_REQUEST_ID>(simObj.getRequestId()));
                 if (hr != S_OK) { CLogMessage(this).error("SimConnect, can not create AI traffic"); }
@@ -832,6 +833,8 @@ namespace BlackSimPlugin
         {
             Q_CONSTEXPR int QueryInterval = 5 * 1000; // 5 seconds
             m_timer->setInterval(QueryInterval);
+            this->setObjectName("CSimulatorFsxListener");
+            this->m_timer->setObjectName(this->objectName().append(":m_timer"));
 
             connect(m_timer, &QTimer::timeout, [this]()
             {

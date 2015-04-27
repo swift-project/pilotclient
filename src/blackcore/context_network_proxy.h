@@ -84,6 +84,9 @@ namespace BlackCore
         //! \copydoc IContextNetwork::isConnected()
         virtual bool isConnected() const override;
 
+        //! \copydoc IContextNetwork::getConnectedServer
+        virtual BlackMisc::Network::CServer getConnectedServer() const override;
+
         //! \copydoc IContextNetwork::parseCommandLine
         virtual bool parseCommandLine(const QString &commandLine, const QString &originator) override;
 

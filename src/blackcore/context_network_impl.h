@@ -127,6 +127,9 @@ namespace BlackCore
         //! \copydoc IContextNetwork::connectToNetwork()
         virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, uint mode) override;
 
+        //! \copydoc IContextNetwork::getConnectedServer
+        virtual BlackMisc::Network::CServer getConnectedServer() const override;
+
         //! \copydoc IContextNetwork::disconnectFromNetwork()
         virtual BlackMisc::CStatusMessage disconnectFromNetwork() override;
 
@@ -256,13 +259,8 @@ namespace BlackCore
         //! Check if a supervisor message was received
         void ps_checkForSupervisiorTextMessage(const BlackMisc::Network::CTextMessageList &messages);
 
-        /*!
-         * \brief Connection status changed?
-         * \param from  old status
-         * \param to    new status
-         */
+        //! Connection status changed
         void ps_fsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to);
-
     };
 }
 

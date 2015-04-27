@@ -139,6 +139,10 @@ namespace BlackCore
                    status == DisconnectedFailed || status == DisconnectedLost;
         }
 
+        ////////////////////////////////////////////////////////////////
+        //! \name Network slots
+        //! @{
+        ////////////////////////////////////////////////////////////////
 
         /*!
          * Returns true if the current ConnectionStatus is a connected state.
@@ -146,15 +150,14 @@ namespace BlackCore
         virtual bool isConnected() const = 0;
 
         /*!
+         * Get preset server.
+         */
+        virtual BlackMisc::Network::CServer getPresetServer() const = 0;
+
+        /*!
          * Returns true if the current ConnectionStatus is in transition, e.g. connecting.
          */
         virtual bool isPendingConnection() const = 0;
-
-    public slots:
-        ////////////////////////////////////////////////////////////////
-        //! \name Network slots
-        //! @{
-        ////////////////////////////////////////////////////////////////
 
         /*!
          * Set the server which will be connected to.

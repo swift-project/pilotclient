@@ -194,9 +194,12 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CCallsignSet getFastPositionEnabledCallsigns() = 0;
 
         //! Connect to Network
-        //! \return messages gererated during connecting
+        //! \return messages generated during connecting
         //! \see INetwork::LoginMode
         virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, uint loginMode) = 0;
+
+        //! Server which is connected, if not connected empty default object.
+        virtual BlackMisc::Network::CServer getConnectedServer() const = 0;
 
         //! Disconnect from network
         //! \return messages generated during disconnecting

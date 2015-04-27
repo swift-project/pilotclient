@@ -39,9 +39,10 @@ namespace BlackCore
         //! Destructor
         virtual ~CNetworkVatlib();
 
-        //! \name Network slots
+        //! \name Network functions
         //! @{
         virtual bool isConnected() const override { return m_status == vatStatusConnected; }
+        virtual BlackMisc::Network::CServer getPresetServer() const override { return m_server; }
         virtual bool isPendingConnection() const override { return m_status == vatStatusConnecting; }
         virtual void presetLoginMode(LoginMode mode) override;
         virtual void presetServer(const BlackMisc::Network::CServer &server) override;
@@ -62,12 +63,12 @@ namespace BlackCore
         virtual void sendAircraftConfigQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         //! @}
 
-        //! \name Text message slots
+        //! \name Text message functions
         //! @{
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &messages) override;
         //! @}
 
-        //! \name ATC slots
+        //! \name ATC functions
         //! @{
         virtual void sendAtcQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendAtisQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
@@ -75,7 +76,7 @@ namespace BlackCore
         virtual void sendFlightPlanQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         //! @}
 
-        //! \name Aircraft slots
+        //! \name Aircraft functions
         //! @{
         virtual void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendIcaoCodesQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
@@ -84,7 +85,7 @@ namespace BlackCore
         virtual void sendInterimPositions(const BlackMisc::Aviation::CCallsignSet &receiver) override;
         //! @}
 
-        //! \name Weather slots
+        //! \name Weather functions
         //! @{
         virtual void sendMetarQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao) override;
         virtual void sendWeatherDataQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao) override;

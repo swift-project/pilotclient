@@ -189,6 +189,18 @@ namespace BlackCore
         }
     }
 
+    CServer CContextNetwork::getConnectedServer() const
+    {
+        if (this->isConnected())
+        {
+            return this->m_network->getPresetServer();
+        }
+        else
+        {
+            return CServer();
+        }
+    }
+
     CStatusMessage CContextNetwork::disconnectFromNetwork()
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }

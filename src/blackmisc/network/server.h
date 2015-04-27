@@ -40,7 +40,7 @@ namespace BlackMisc
             CServer() : m_port(-1), m_isAcceptingConnections(true) {}
 
             //! Constructor.
-            CServer(const QString &name, const QString &description, const QString &address, qint32 port, const CUser &user, bool isAcceptingConnections = true)
+            CServer(const QString &name, const QString &description, const QString &address, int port, const CUser &user, bool isAcceptingConnections = true)
                 : m_name(name), m_description(description), m_address(address), m_port(port), m_user(user), m_isAcceptingConnections(isAcceptingConnections) {}
 
             //! Get address.

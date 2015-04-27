@@ -38,6 +38,7 @@ namespace BlackCore
         //! ISimulator status
         enum SimulatorStatus
         {
+            Disconnected = 0,
             Connected   = 1 << 0, //!< Is the plugin connected to the simulator?
             Running     = 1 << 1, //!< Is the simulator actually simulating?
             Paused      = 1 << 2, //!< Is the simulator paused?

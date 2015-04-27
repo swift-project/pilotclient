@@ -42,14 +42,10 @@ namespace BlackMisc
             //! Constructor.
             explicit CAircraftIcao(const QString &icao) : m_aircraftDesignator(icao.trimmed().toUpper()) {}
 
-            /*!
-             * Constructor.
-             * \param icao "B737"
-             * \param airline "DLH"
-             */
-            CAircraftIcao(const QString &icao, const QString &airline)
-                : m_aircraftDesignator(icao.trimmed().toUpper()), m_airlineDesignator(airline.trimmed().toUpper())
-            {}
+            //! Constructor.
+            //! \param icao "B737"
+            //! \param airline "DLH"
+            CAircraftIcao(const QString &icao, const QString &airline);
 
             /*!
              * Constructor.
@@ -115,16 +111,10 @@ namespace BlackMisc
             bool hasAircraftCombinedType() const { return this->getAircraftCombinedType().length() == 3; }
 
             //! Get engine type, e.g. "J"
-            QString getEngineType() const
-            {
-                if (this->m_aircraftCombinedType.length() != 3) return "";
-                return this->m_aircraftCombinedType.right(1);
-            }
+            QString getEngineType() const;
 
-            /*!
-             * \brief As string for GUI representation by index
-             * \remarks Different from toQString()
-             */
+            //! As string for GUI representation by index
+            //! \remarks Different from toQString()
             QString asString() const;
 
             //! Set type
@@ -175,7 +165,7 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftIcao, (
                                    o.m_airlineDesignator,
                                    o.m_livery,
                                    o.m_aircraftColor
-                                   ))
+                               ))
 
 
 #endif // guard

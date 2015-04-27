@@ -55,10 +55,10 @@ namespace BlackGui
 
         private slots:
             //! Simulator connection has been changed
-            void ps_onSimulatorStatusChanged(quint8 status);
+            void ps_onSimulatorStatusChanged(int status);
 
             //! Network connection has been changed
-            void ps_onNetworkConnectionChanged(uint from, uint to);
+            void ps_onNetworkConnectionChanged(int from, int to);
 
             //! Context menu requested
             void ps_customAudioContextMenuRequested(const QPoint &position);

@@ -243,6 +243,11 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isConnected"));
     }
 
+    CServer CContextNetworkProxy::getConnectedServer() const
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CServer>(QLatin1Literal("getConnectedServer"));
+    }
+
     bool CContextNetworkProxy::parseCommandLine(const QString &commandLine, const QString &originator)
     {
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("commandLineEntered"), commandLine, originator);

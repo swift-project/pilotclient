@@ -20,6 +20,10 @@ namespace BlackMisc
     namespace Aviation
     {
 
+        CAircraftIcao::CAircraftIcao(const QString &icao, const QString &airline)
+            : m_aircraftDesignator(icao.trimmed().toUpper()), m_airlineDesignator(airline.trimmed().toUpper())
+        {}
+
         QString CAircraftIcao::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
@@ -39,6 +43,12 @@ namespace BlackMisc
         bool CAircraftIcao::hasKnownAircraftDesignator() const
         {
             return (this->hasAircraftDesignator() && this->getAircraftDesignator() != "ZZZZ");
+        }
+
+        QString CAircraftIcao::getEngineType() const
+        {
+            if (this->m_aircraftCombinedType.length() != 3) return "";
+            return this->m_aircraftCombinedType.right(1);
         }
 
         QString CAircraftIcao::asString() const
