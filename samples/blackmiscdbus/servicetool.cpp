@@ -255,7 +255,8 @@ namespace BlackMiscTest
         // on the client's side
         TestServiceInterface testserviceInterface(Testservice::ServiceName, Testservice::ServicePath, connection);
 
-        CSpeed speed(200, BlackMisc::PhysicalQuantities::CSpeedUnit::km_h());
+        CSpeed speed(200, CSpeedUnit::km_h());
+        CSpeed speedNull(0, CSpeedUnit::nullUnit());
         CAltitude al(1000, CAltitude::MeanSeaLevel, CLengthUnit::ft());
         QTextStream qtin(stdin);
         QString line;
@@ -289,7 +290,8 @@ namespace BlackMiscTest
             // PQs
             testserviceInterface.receiveSpeed(speed);
             qDebug() << "Send speed via interface" << speed;
-
+            testserviceInterface.receiveSpeed(speedNull);
+            qDebug() << "Send null speed via interface" << speedNull;
             speed.switchUnit(CSpeedUnit::kts());
             testserviceInterface.receiveSpeed(speed);
             qDebug() << "Send speed via interface" << speed;
@@ -367,8 +369,22 @@ namespace BlackMiscTest
             qDebug() << "Pinged ATC station via interface"
                      << ((station == stationReceived) ? "OK" : "ERROR!") << stationReceived;
 
+            CUser pingUser("223344", "Ping Me user");
+            CUser userReceived = testserviceInterface.pingUser(pingUser);
+            qDebug() << "Pinged user via interface"
+                     << ((userReceived == pingUser) ? "OK" : "ERROR!") << userReceived;
+
             CAircraftSituation situation;
+            CAircraftSituation situationReceived = testserviceInterface.pingSituation(situation);
+            qDebug() << "Pinged situation via interface"
+                     << ((situation == situationReceived) ? "OK" : "ERROR!") << situationReceived;
+
+            CTransponder transponderReceived = testserviceInterface.pingTransponder(transponder);
+            qDebug() << "Pinged transponder via interface"
+                     << ((transponderReceived == transponder) ? "OK" : "ERROR!") << transponderReceived;
+
             CAircraft aircraft(callsign, CUser("123456", "Joe Pilot"), situation);
+            aircraft.setTransponder(transponder);
             CAircraft aircraftReceived = testserviceInterface.pingAircraft(aircraft);
             qDebug() << "Pinged aircraft via interface"
                      << ((aircraft == aircraftReceived) ? "OK" : "ERROR!") << aircraftReceived;

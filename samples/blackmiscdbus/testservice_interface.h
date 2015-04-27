@@ -94,6 +94,27 @@ namespace BlackMiscTest
             return asyncCallWithArgumentList(QLatin1String("pingAltitude"), argumentList);
         }
 
+        inline QDBusPendingReply<BlackMisc::Aviation::CAircraftSituation> pingSituation(BlackMisc::Aviation::CAircraftSituation situation)
+        {
+            QList<QVariant> argumentList;
+            argumentList << QVariant::fromValue(situation);
+            return asyncCallWithArgumentList(QLatin1String("pingSituation"), argumentList);
+        }
+
+        inline QDBusPendingReply<BlackMisc::Network::CUser> pingUser(BlackMisc::Network::CUser user)
+        {
+            QList<QVariant> argumentList;
+            argumentList << QVariant::fromValue(user);
+            return asyncCallWithArgumentList(QLatin1String("pingUser"), argumentList);
+        }
+
+        inline QDBusPendingReply<BlackMisc::Aviation::CTransponder> pingTransponder(BlackMisc::Aviation::CTransponder transponder)
+        {
+            QList<QVariant> argumentList;
+            argumentList << QVariant::fromValue(transponder);
+            return asyncCallWithArgumentList(QLatin1String("pingTransponder"), argumentList);
+        }
+
         inline QDBusPendingReply<BlackMisc::Aviation::CAtcStation> pingAtcStation(BlackMisc::Aviation::CAtcStation station)
         {
             QList<QVariant> argumentList;

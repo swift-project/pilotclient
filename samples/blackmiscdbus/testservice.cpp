@@ -301,6 +301,33 @@ namespace BlackMiscTest
     }
 
     /*
+     * Ping user
+     */
+    CUser Testservice::pingUser(const CUser &user)
+    {
+        qDebug() << "Pid:" << ServiceTool::getPid() << "ping user:" << user;
+        return user;
+    }
+
+    /*
+     * Ping situation
+     */
+    BlackMisc::Aviation::CAircraftSituation Testservice::pingSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
+    {
+        qDebug() << "Pid:" << ServiceTool::getPid() << "ping situation:" << situation;
+        return situation;
+    }
+
+    /*
+     * Ping transponder
+     */
+    BlackMisc::Aviation::CTransponder Testservice::pingTransponder(const BlackMisc::Aviation::CTransponder &transponder)
+    {
+        qDebug() << "Pid:" << ServiceTool::getPid() << "ping transponder:" << transponder;
+        return transponder;
+    }
+
+    /*
      * Ping ATC station
      */
     BlackMisc::Aviation::CAtcStation Testservice::pingAtcStation(const BlackMisc::Aviation::CAtcStation &station)

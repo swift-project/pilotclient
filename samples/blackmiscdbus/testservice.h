@@ -100,14 +100,23 @@ namespace BlackMiscTest
         //! Receive an value map
         void receiveValueMap(const BlackMisc::CPropertyIndexVariantMap &valueMap) const;
 
-        //! Receive speed
+        //! Ping speed
         BlackMisc::PhysicalQuantities::CSpeed pingSpeed(const BlackMisc::PhysicalQuantities::CSpeed &speed);
 
-        //! Receive altitude
+        //! Ping altitude
         BlackMisc::Aviation::CAltitude pingAltitude(const BlackMisc::Aviation::CAltitude &altitude);
+
+        //! Ping user
+        BlackMisc::Network::CUser pingUser(const BlackMisc::Network::CUser &user);
+
+        //! Ping situation
+        BlackMisc::Aviation::CAircraftSituation pingSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
         //! Ping ATC station
         BlackMisc::Aviation::CAtcStation pingAtcStation(const BlackMisc::Aviation::CAtcStation &station);
+
+        //! Ping transponder
+        BlackMisc::Aviation::CTransponder pingTransponder(const BlackMisc::Aviation::CTransponder &transponder);
 
         //! Ping aircraft
         BlackMisc::Aviation::CAircraft pingAircraft(const BlackMisc::Aviation::CAircraft &aircraft);

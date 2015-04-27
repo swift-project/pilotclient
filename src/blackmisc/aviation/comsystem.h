@@ -145,10 +145,8 @@ namespace BlackMisc
                 return isValidCivilAviationFrequency(f) || isValidMilitaryFrequency(f);
             }
 
-            /*!
-             * Round to channel spacing, set MHz as unit
-             * \see ChannelSpacing
-             */
+            //! Round to channel spacing, set MHz as unit
+            //! \see ChannelSpacing
             static void roundToChannelSpacing(BlackMisc::PhysicalQuantities::CFrequency &frequency, ChannelSpacing channelSpacing);
 
             //! Is compareFrequency within channel spacing of setFrequency
@@ -161,10 +159,8 @@ namespace BlackMisc
         private:
             ChannelSpacing m_channelSpacing = ChannelSpacing25KHz; //!< channel spacing
 
-            /*!
-             * Give me channel spacing in KHz
-             * \remarks Just a helper method, that is why no CFrequency is returned
-             */
+            //! Give me channel spacing in KHz
+            //! \remarks Just a helper method, that is why no CFrequency is returned
             static double channelSpacingToFrequencyKHz(ChannelSpacing channelSpacing);
 
             BLACK_ENABLE_TUPLE_CONVERSION(CComSystem)

@@ -15,7 +15,6 @@
 
 namespace BlackMisc
 {
-
     namespace Aviation
     {
 
@@ -29,43 +28,30 @@ namespace BlackMisc
             public Mixin::CompareByTuple<CAvionicsBase>,
             public Mixin::String<CAvionicsBase>
         {
-        protected:
-            QString m_name; //!< name of the unit
+        public:
+            //! Name
+            QString getName() const { return this->m_name; }
 
-            //! \brief Constructor
+            //! Are set values valid?
+            virtual bool validValues() const { return true; }
+
+        protected:
+            //! Constructor
             CAvionicsBase(const QString &name) : m_name(name) {}
 
-            //! Destructor
-            virtual ~CAvionicsBase() = default;
+            //! Set name
+            void setName(const QString &name) { this->m_name = name; }
 
-            //! \brief Set name
-            void setName(const QString &name)
-            {
-                this->m_name = name;
-            }
-
-        public:
             //! \copydoc CValueObject::convertToQString
             QString convertToQString(bool i18n = false) const { Q_UNUSED(i18n); return ""; }
 
-            //! \brief Name
-            QString getName() const
-            {
-                return this->m_name;
-            }
-
-            //! \brief Are set values valid?
-            virtual bool validValues() const
-            {
-                return true;
-            }
-
         private:
+            QString m_name; //!< name of the unit
             BLACK_ENABLE_TUPLE_CONVERSION(CAvionicsBase)
         };
 
-    }
-}
+    } // namespace
+} // namespace
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAvionicsBase, (o.m_name))
 
