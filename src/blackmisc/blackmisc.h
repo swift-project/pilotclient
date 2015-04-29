@@ -49,6 +49,11 @@
  */
 
 /*!
+ * \namespace BlackMisc::Mixin
+ * \brief Mixin classes which implement common operations for value classes.
+ */
+
+/*!
  * \namespace BlackMisc::Policy
  * \brief Policy classes for CValueObject.
  */

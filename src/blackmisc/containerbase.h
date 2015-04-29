@@ -158,7 +158,7 @@ namespace BlackMisc
         }
 
         //! \copydoc BlackMisc::CValueObject::getMetaTypeId
-        virtual int getMetaTypeId() const override { return qMetaTypeId<C<T>>(); }
+        int getMetaTypeId() const { return qMetaTypeId<C<T>>(); }
 
         //! \copydoc BlackMisc::CValueObject::marshallToDbus
         virtual void marshallToDbus(QDBusArgument &argument) const override

@@ -146,9 +146,6 @@ namespace BlackMisc
         //! \copydoc CValueObject::convertFromQVariant
         virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
-        //! register metadata
-        static void registerMetadata();
-
     protected:
 
         QMap<CPropertyIndex, CVariant> m_values; //!< values
@@ -156,9 +153,6 @@ namespace BlackMisc
 
         //! \copydoc CValueObject::convertToQString
         virtual QString convertToQString(bool i18n = false) const override;
-
-        //! \copydoc CValueObject::getMetaTypeId
-        virtual int getMetaTypeId() const override;
 
         //! \copydoc CValueObject::marshallToDbus
         virtual void marshallToDbus(QDBusArgument &argument) const override;

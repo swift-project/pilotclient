@@ -421,9 +421,6 @@ namespace BlackMisc
             return str += "}";
         }
 
-        //! \copydoc BlackMisc::CValueObject::getMetaTypeId
-        virtual int getMetaTypeId() const override { return qMetaTypeId<CDictionary>(); }
-
         //! \copydoc BlackMisc::CValueObject::marshallToDbus
         virtual void marshallToDbus(QDBusArgument &argument) const override
         {

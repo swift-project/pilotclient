@@ -110,14 +110,6 @@ namespace BlackMisc
     }
 
     /*
-     * metaTypeId
-     */
-    int CPropertyIndexVariantMap::getMetaTypeId() const
-    {
-        return qMetaTypeId<CPropertyIndexVariantMap>();
-    }
-
-    /*
      * Marshall to DBus
      */
     void CPropertyIndexVariantMap::marshallToDbus(QDBusArgument &argument) const
@@ -179,15 +171,6 @@ namespace BlackMisc
     CPropertyIndexList CPropertyIndexVariantMap::indexes() const
     {
         return CPropertyIndexList::fromImpl(this->m_values.keys());
-    }
-
-    /*
-     * Register metadata
-     */
-    void CPropertyIndexVariantMap::registerMetadata()
-    {
-        qRegisterMetaType<CPropertyIndexVariantMap>();
-        qDBusRegisterMetaType<CPropertyIndexVariantMap>();
     }
 
     /*

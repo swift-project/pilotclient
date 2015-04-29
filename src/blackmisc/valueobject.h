@@ -119,9 +119,6 @@ namespace BlackMisc
         //! From JSON
         static void convertFromJson(const QJsonObject &) {}
 
-        //! Is a
-        static bool isA(int) { return false; }
-
         //! Marshall to DBus
         static void marshallToDbus(QDBusArgument &) {}
 
@@ -185,6 +182,66 @@ namespace BlackMisc
         using Json = Policy::Json::Own;             //!< JSon policy
     };
 
+    namespace Mixin
+    {
+
+        /*!
+         * CRTP class template from which a derived class can inherit common methods dealing with the metatype of the class.
+         */
+        template <class Derived>
+        class MetaType
+        {
+        public:
+            //! Register metadata
+            static void registerMetadata()
+            {
+                Private::MetaTypeHelper<Derived>::maybeRegisterMetaType();
+            }
+
+            //! Returns the Qt meta type ID of this object.
+            int getMetaTypeId() const
+            {
+                return Private::MetaTypeHelper<Derived>::maybeGetMetaTypeId();
+            }
+
+            //! Returns true if this object is an instance of the class with the given meta type ID, or one of its subclasses.
+            bool isA(int metaTypeId) const
+            {
+                if (metaTypeId == QMetaType::UnknownType) { return false; }
+                if (metaTypeId == getMetaTypeId()) { return true; }
+                return baseIsA(static_cast<const typename Derived::base_type *>(derived()), metaTypeId);
+            }
+
+            //! Method to return CVariant
+            CVariant toCVariant() const;
+
+            //! Set from CVariant
+            void convertFromCVariant(const CVariant &variant);
+
+            //! Return QVariant, used with DBus QVariant lists
+            //! \todo remove virtual
+            virtual QVariant toQVariant() const
+            {
+                return Private::MetaTypeHelper<Derived>::maybeToQVariant(*derived());
+            }
+
+            //! Set from QVariant
+            //! \todo remove virtual
+            virtual void convertFromQVariant(const QVariant &variant)
+            {
+                return Private::MetaTypeHelper<Derived>::maybeConvertFromQVariant(*derived(), variant);
+            }
+
+        private:
+            const Derived *derived() const { return static_cast<const Derived *>(this); }
+            Derived *derived() { return static_cast<Derived *>(this); }
+
+            template <typename Base2> static bool baseIsA(const Base2 *base, int metaTypeId) { return base->isA(metaTypeId); }
+            static bool baseIsA(const CEmpty *, int) { return false; }
+        };
+
+    }
+
     /*!
      * Standard implementation of CValueObject using meta tuple system.
      *
@@ -197,13 +254,13 @@ namespace BlackMisc
      */
     template <class Derived, class Base /*= CEmpty*/> class CValueObject :
         public Base,
+        public Mixin::MetaType<Derived>,
         private CValueObjectPolicy<Derived>::Equals::template Ops<Derived, Base>,
         private CValueObjectPolicy<Derived>::LessThan::template Ops<Derived, Base>,
         private CValueObjectPolicy<Derived>::Compare::template Ops<Derived, Base>
     {
         static_assert(std::is_same<CEmpty, Base>::value || IsValueObject<Base>::value, "Base must be either CEmpty or derived from CValueObject");
 
-        using MetaTypePolicy = typename CValueObjectPolicy<Derived>::MetaType;
         using HashPolicy = typename CValueObjectPolicy<Derived>::Hash;
         using DBusPolicy = typename CValueObjectPolicy<Derived>::DBus;
         using JsonPolicy = typename CValueObjectPolicy<Derived>::Json;
@@ -333,11 +390,11 @@ namespace BlackMisc
         //! \return number of values changed, with skipEqualValues equal values will not be changed
         CPropertyIndexList apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues = false); // implemented later due to cyclic include dependency
 
-        //! Method to return CVariant
-        CVariant toCVariant() const;
+        //! \copydoc BlackMisc::Mixin::MetaType::toCVariant
+        using Mixin::MetaType<Derived>::toCVariant;
 
-        //! Set from CVariant
-        void convertFromCVariant(const CVariant &variant);
+        //! \copydoc BlackMisc::Mixin::MetaType::convertFromCVariant
+        using Mixin::MetaType<Derived>::convertFromCVariant;
 
         //! Value hash, allows comparisons between QVariants
         virtual uint getValueHash() const
@@ -359,17 +416,11 @@ namespace BlackMisc
             JsonPolicy::deserializeImpl(json, *derived());
         }
 
-        //! Virtual method to return QVariant, used with DBus QVariant lists
-        virtual QVariant toQVariant() const
-        {
-            return Private::MetaTypeHelper<Derived>::maybeToQVariant(*derived());
-        }
+        //! \copydoc BlackMisc::Mixin::MetaType::toQVariant
+        using Mixin::MetaType<Derived>::toQVariant;
 
-        //! Set from QVariant
-        virtual void convertFromQVariant(const QVariant &variant)
-        {
-            Private::MetaTypeHelper<Derived>::maybeConvertFromQVariant(*derived(), variant);
-        }
+        //! \copydoc BlackMisc::Mixin::MetaType::convertFromQVariant
+        using Mixin::MetaType<Derived>::convertFromQVariant;
 
         //! Set property by index
         virtual void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index) { PropertyIndexPolicy::setPropertyByIndex(*derived(), variant, index); }
@@ -383,11 +434,11 @@ namespace BlackMisc
         //! Is given variant equal to value of property index?
         virtual bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const { return PropertyIndexPolicy::equalsPropertyByIndex(*derived(), compareValue, index); }
 
-        //! Register metadata
-        static void registerMetadata()
-        {
-            MetaTypePolicy::template registerImpl<Derived>();
-        }
+        //! \copydoc BlackMisc::Mixin::MetaType::isA
+        using Mixin::MetaType<Derived>::isA;
+
+        //! \copydoc BlackMisc::Mixin::MetaType::registerMetadata
+        using Mixin::MetaType<Derived>::registerMetadata;
 
     protected:
         template <typename T>
@@ -410,22 +461,8 @@ namespace BlackMisc
         //! String for streaming operators
         virtual QString stringForStreaming() const { return this->convertToQString(); }
 
-        //! Returns the Qt meta type ID of this object.
-        virtual int getMetaTypeId() const
-        {
-            return Private::MetaTypeHelper<Derived>::maybeGetMetaTypeId();
-        }
-
-        /*!
-         * Returns true if this object is an instance of the class with the given meta type ID,
-         * or one of its subclasses.
-         */
-        virtual bool isA(int metaTypeId) const
-        {
-            if (metaTypeId == QMetaType::UnknownType) { return false; }
-            if (metaTypeId == maybeGetMetaTypeId<Derived>()) { return true; }
-            return BaseOrDummy::isA(metaTypeId);
-        }
+        //! \copydoc BlackMisc::Mixin::MetaType::getMetaTypeId
+        using Mixin::MetaType<Derived>::getMetaTypeId;
 
     public:
         //! Marshall to DBus
@@ -458,15 +495,18 @@ namespace BlackMisc
 // TODO Implementations of templates that must appear after those includes, should be moved at the same time that policies are refactored.
 namespace BlackMisc
 {
-    template <class Derived, class Base>
-    CVariant CValueObject<Derived, Base>::toCVariant() const
+    namespace Mixin
     {
-        return CVariant(this->toQVariant());
-    }
-    template <class Derived, class Base>
-    void CValueObject<Derived, Base>::convertFromCVariant(const CVariant &variant)
-    {
-        this->convertFromQVariant(variant.getQVariant());
+        template <class Derived>
+        CVariant MetaType<Derived>::toCVariant() const
+        {
+            return CVariant(derived()->toQVariant());
+        }
+        template <class Derived>
+        void MetaType<Derived>::convertFromCVariant(const CVariant &variant)
+        {
+            derived()->convertFromQVariant(variant.getQVariant());
+        }
     }
     template <class Derived, class Base>
     CPropertyIndexList CValueObject<Derived, Base>::apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues)

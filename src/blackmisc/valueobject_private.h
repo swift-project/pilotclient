@@ -15,6 +15,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include <QString>
 #include <QMetaType>
+#include <QDBusMetaType>
 #include <QDBusArgument>
 #include <QJsonObject>
 
@@ -23,6 +24,9 @@ namespace BlackMisc
     class CEmpty;
     class CVariant;
     class CPropertyIndex;
+
+    template <typename T>
+    void registerMetaValueType();
 
     namespace Private
     {
@@ -133,6 +137,7 @@ namespace BlackMisc
         struct MetaTypeHelperImpl
         {
             static Q_DECL_CONSTEXPR int maybeGetMetaTypeId() { return qMetaTypeId<T>(); }
+            static void maybeRegisterMetaType() { qRegisterMetaType<T>(); qDBusRegisterMetaType<T>(); registerMetaValueType<T>(); }
             static QVariant maybeToQVariant(const T &obj) { return QVariant::fromValue(obj); }
             static void maybeConvertFromQVariant(T &obj, const QVariant &var) { BlackMisc::setFromQVariant(&obj, var); }
         };
@@ -142,6 +147,7 @@ namespace BlackMisc
         struct MetaTypeHelperImpl<T, /* IsRegisteredMetaType = */ false>
         {
             static Q_DECL_CONSTEXPR int maybeGetMetaTypeId() { return QMetaType::UnknownType; }
+            static void maybeRegisterMetaType() {}
             static QVariant maybeToQVariant(const T &) { return {}; }
             static void maybeConvertFromQVariant(T &, const QVariant &) {}
         };
