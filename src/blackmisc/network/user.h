@@ -142,6 +142,9 @@ namespace BlackMisc
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CUser)
 
+            //! derive homebase from callsign
+            void deriveHomeBaseFromCallsign();
+
             QString m_id;
             QString m_realname;
             QString m_email;

@@ -33,10 +33,14 @@ namespace BlackMisc
             }
             else
             {
-                QString s = this->CLength::valueRoundedWithUnit(4, i18n);
-                if (this->getUnit() != CLengthUnit::ft())
+                QString s;
+                if (this->getUnit() == CLengthUnit::m())
                 {
-                    s.append(" (").append(this->valueRoundedWithUnit(CLengthUnit::ft(), 4, i18n)).append(")");
+                    s = this->CLength::valueRoundedWithUnit(1, i18n);
+                }
+                else
+                {
+                    s = this->CLength::valueRoundedWithUnit(CLengthUnit::ft(), 0, i18n);
                 }
                 return s.append(this->isMeanSeaLevel() ? " MSL" : " AGL");
             }

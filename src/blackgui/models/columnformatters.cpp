@@ -9,11 +9,13 @@
 
 #include "columnformatters.h"
 #include "blackmisc/geo/latitude.h"
+#include "blackmisc/aviation/altitude.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/icons.h"
 
 using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
 
 namespace BlackGui
 {
@@ -355,6 +357,14 @@ namespace BlackGui
         CVariant CBoolIconFormatter::tooltipRole(const CVariant &dataCVariant) const
         {
             return CBoolTextFormatter::displayRole(dataCVariant);
+        }
+
+        CVariant CAltitudeFormatter::displayRole(const CVariant &altitude) const
+        {
+            CAltitude alt;
+            alt.convertFromCVariant(altitude);
+            if (m_flightLevel) { alt.toFlightLevel(); }
+            return alt.toQString(this->m_useI18n);
         }
 
     } // namespace

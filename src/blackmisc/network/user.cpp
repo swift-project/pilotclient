@@ -25,12 +25,14 @@ namespace BlackMisc
         CUser::CUser(const QString &id, const QString &realname, const CCallsign &callsign)
             : m_id(id.trimmed()), m_realname(realname), m_callsign(callsign)
         {
-            this->setRealName(realname); // extracts homebase
+            this->deriveHomeBaseFromCallsign();
+            this->setRealName(realname); // extracts homebase if this is included in real name
         }
 
         CUser::CUser(const QString &id, const QString &realname, const QString &email, const QString &password, const CCallsign &callsign)
             : m_id(id.trimmed()), m_realname(realname), m_email(email), m_password(password), m_callsign(callsign)
         {
+            this->deriveHomeBaseFromCallsign();
             this->setRealName(realname); // extracts homebase
         }
 
@@ -50,9 +52,20 @@ namespace BlackMisc
             return s;
         }
 
+        void CUser::deriveHomeBaseFromCallsign()
+        {
+            if (this->m_callsign.isEmpty()) { return; }
+            if (this->m_homebase.isEmpty())
+            {
+                if (this->m_callsign.isAtcCallsign())
+                {
+                    this->m_homebase = this->m_callsign.getIcaoCode();
+                }
+            }
+        }
+
         void CUser::setRealName(const QString &realname)
         {
-
             QString rn(realname.trimmed().simplified());
             if (rn.isEmpty())
             {

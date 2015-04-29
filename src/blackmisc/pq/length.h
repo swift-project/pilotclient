@@ -34,8 +34,8 @@ namespace BlackMisc
             CLength(const QString &unitString) : CPhysicalQuantity(unitString) {}
         };
 
-    }
-}
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CLength)
 

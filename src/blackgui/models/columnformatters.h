@@ -268,12 +268,26 @@ namespace BlackGui
             QString m_formatString = "yyyy-MM-dd HH:mm"; //!< how the value is displayed
         };
 
+        //! Formatter when column contains an altitude
+        class CAltitudeFormatter : public CDefaultFormatter
+        {
+        public:
+            //! Constructor
+            CAltitudeFormatter(bool flightlevel = false, int alignment = alignDefault(), bool i18n = true) : CDefaultFormatter(alignment, i18n), m_flightLevel(flightlevel) {}
+
+            //! \copydoc CDefaultFormatter::displayRole
+            virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &altitude) const override;
+
+        private:
+            bool m_flightLevel = false;
+        };
+
         //! Formatter for physical quantities
         template<class MU, class PQ> class CPhysiqalQuantiyFormatter : public CValueObjectFormatter
         {
         public:
             //! Constructor
-            CPhysiqalQuantiyFormatter(MU unit = MU::defaultUnit(), int digits = 2, int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true, QList<int> supportedRoles = roleDisplay() ) : CValueObjectFormatter(alignment, i18n, supportedRoles), m_unit(unit), m_digits(digits), m_withUnit(withUnit) {}
+            CPhysiqalQuantiyFormatter(MU unit = MU::defaultUnit(), int digits = 2, int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true, QList<int> supportedRoles = roleDisplay()) : CValueObjectFormatter(alignment, i18n, supportedRoles), m_unit(unit), m_digits(digits), m_withUnit(withUnit) {}
 
             //! \copydoc CDefaultFormatter::displayRole
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &physicalQuantity) const override

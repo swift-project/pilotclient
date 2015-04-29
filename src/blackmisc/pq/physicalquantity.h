@@ -69,11 +69,9 @@ namespace BlackMisc
             //! Unit
             MU getUnit() const;
 
-            /*!
-             * \brief Simply set unit, do no calclulate conversion
-             * \sa switchUnit
-             */
-            void setUnit(const MU &unit);
+            //! Simply set unit, do no calclulate conversion
+            //! \sa switchUnit
+            void setUnit(const MU &unit) { this->m_unit = unit; }
 
             //! Set unit by string
             void setUnitBySymbol(const QString &unitName);
