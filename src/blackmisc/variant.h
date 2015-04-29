@@ -77,8 +77,8 @@ namespace BlackMisc
         //! Construct a variant from the given type and opaque pointer.
         CVariant(int typeId, const void *copy) : m_v(typeId, copy) {}
 
-        //! \copydoc CValueObject::getValueHash
-        virtual uint getValueHash() const override;
+        //! \copydoc CValueObject::qHash
+        friend uint qHash(const CVariant &var) { return var.getValueHash(); }
 
         //! Change the internal QVariant.
         void reset(const QVariant &var) { m_v = var; }
@@ -219,6 +219,7 @@ namespace BlackMisc
         const void *data() const { return m_v.data(); }
 
         static int compareImpl(const CVariant &, const CVariant &);
+        uint getValueHash() const;
     };
 
     //! Compare stored value of CVariant with any CValueObject derived class.

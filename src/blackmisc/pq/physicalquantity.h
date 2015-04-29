@@ -198,8 +198,11 @@ namespace BlackMisc
             //! \copydoc CValueObject::unmarshallFromDbus
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
-            //! \copydoc CValueObject::getValueHash
-            virtual uint getValueHash() const override;
+            //! \copydoc CValueObject::qHash
+            uint getValueHash() const;
+
+            //! \copydoc CValueObject::qHash
+            friend uint qHash(const PQ &pq) { return pq.getValueHash(); };
 
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;

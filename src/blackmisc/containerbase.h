@@ -118,8 +118,8 @@ namespace BlackMisc
         //! \copydoc CValueObject::convertFromQVariant
         virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant< C<T> >(&derived(), variant); }
 
-        //! \copydoc BlackMisc::CValueObject::getValueHash
-        virtual uint getValueHash() const override { return qHash(&derived()); }
+        //! Simplifies composition, returns 0 for performance
+        friend uint qHash(const C<T> &) { return 0; }
 
         //! \copydoc CValueObject::toJson
         virtual QJsonObject toJson() const override

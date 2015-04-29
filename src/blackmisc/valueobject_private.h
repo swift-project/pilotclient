@@ -51,6 +51,10 @@ namespace BlackMisc
             virtual bool equalsPropertyByIndex(const void *object, const CVariant &compareValue, const CPropertyIndex &index) const = 0;
         };
 
+        //! \private Fallback in case qHash is not defined for T.
+        template <typename T>
+        uint qHash(const T &) { return 0; }
+
         //! \private Implementation of IValueObjectMetaInfo representing the set of operations supported by T.
         template <typename T>
         struct CValueObjectMetaInfo : public IValueObjectMetaInfo
@@ -73,7 +77,7 @@ namespace BlackMisc
             }
             virtual uint getValueHash(const void *object) const override
             {
-                return cast(object).getValueHash();
+                return qHash(cast(object));
             }
             virtual int getMetaTypeId() const override
             {

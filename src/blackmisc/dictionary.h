@@ -232,9 +232,6 @@ namespace BlackMisc
         //! \copydoc CValueObject::convertFromQVariant
         virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
-        //! \copydoc BlackMisc::CValueObject::getValueHash
-        virtual uint getValueHash() const override { return qHash(this); }
-
         //! \copydoc CValueObject::toJson
         virtual QJsonObject toJson() const override
         {

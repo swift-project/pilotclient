@@ -122,6 +122,10 @@ namespace BlackMisc
 }
 
 Q_DECLARE_METATYPE(BlackMisc::CLogPattern)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CLogPattern, (o.m_severities, o.m_strategy, o.m_strings))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CLogPattern, (
+    attr(o.m_severities, flags<DisabledForHashing>()),
+    attr(o.m_strategy),
+    attr(o.m_strings, flags<DisabledForHashing>())
+))
 
 #endif

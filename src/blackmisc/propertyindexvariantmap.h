@@ -137,8 +137,11 @@ namespace BlackMisc
         //! Map
         const QMap<CPropertyIndex, CVariant> &map() const { return this->m_values; }
 
-        //! \copydoc CValueObject::getValueHash
-        virtual uint getValueHash() const override;
+        //! Hash value
+        uint getValueHash() const;
+
+        //! \copydoc CValueObject::qHash
+        friend uint qHash(const CPropertyIndexVariantMap &vm) { return vm.getValueHash(); }
 
         //! \copydoc CValueObject::toQVariant
         virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }

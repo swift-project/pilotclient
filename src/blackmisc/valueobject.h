@@ -110,9 +110,6 @@ namespace BlackMisc
      */
     struct CValueObjectDummyBase
     {
-        //! Value hash
-        static uint getValueHash() { return 0; }
-
         //! To JSON
         static QJsonObject toJson() { return {}; }
 
@@ -240,6 +237,36 @@ namespace BlackMisc
             static bool baseIsA(const CEmpty *, int) { return false; }
         };
 
+        /*!
+         * CRTP class template from which a derived class can inherit common methods dealing with hashing instances by metatuple.
+         */
+        template <class Derived, bool IsTupleBased = true>
+        class HashByTuple : private Private::EncapsulationBreaker
+        {
+        public:
+            //! qHash overload, needed for storing value in a QSet.
+            friend uint qHash(const Derived &value, uint seed = 0)
+            {
+                return ::qHash(hashImpl(value), seed);
+            }
+
+        private:
+            static uint hashImpl(const Derived &value)
+            {
+                return BlackMisc::qHash(toMetaTuple(value)) ^ baseHash(static_cast<const typename Derived::base_type &>(value));
+            }
+
+            template <typename T> static uint baseHash(const T &base) { return qHash(base); }
+            static uint baseHash(const CEmpty &) { return 0; }
+        };
+
+        /*!
+         * Specialization of HashByTuple for classes not registered with the tuple system.
+         */
+        template <class Derived>
+        class HashByTuple<Derived, false>
+        {};
+
     }
 
     /*!
@@ -255,13 +282,13 @@ namespace BlackMisc
     template <class Derived, class Base /*= CEmpty*/> class CValueObject :
         public Base,
         public Mixin::MetaType<Derived>,
+        public Mixin::HashByTuple<Derived, Policy::Hash::IsMetaTuple<Derived, Base>::value>,
         private CValueObjectPolicy<Derived>::Equals::template Ops<Derived, Base>,
         private CValueObjectPolicy<Derived>::LessThan::template Ops<Derived, Base>,
         private CValueObjectPolicy<Derived>::Compare::template Ops<Derived, Base>
     {
         static_assert(std::is_same<CEmpty, Base>::value || IsValueObject<Base>::value, "Base must be either CEmpty or derived from CValueObject");
 
-        using HashPolicy = typename CValueObjectPolicy<Derived>::Hash;
         using DBusPolicy = typename CValueObjectPolicy<Derived>::DBus;
         using JsonPolicy = typename CValueObjectPolicy<Derived>::Json;
         using PropertyIndexPolicy = typename CValueObjectPolicy<Derived>::PropertyIndex;
@@ -356,12 +383,6 @@ namespace BlackMisc
             return json;
         }
 
-        //! qHash overload, needed for storing value in a QSet.
-        friend uint qHash(const Derived &value, uint seed = 0)
-        {
-            return qHash(value.getValueHash(), seed);
-        }
-
     public:
         //! Base class
         using base_type = Base;
@@ -395,12 +416,6 @@ namespace BlackMisc
 
         //! \copydoc BlackMisc::Mixin::MetaType::convertFromCVariant
         using Mixin::MetaType<Derived>::convertFromCVariant;
-
-        //! Value hash, allows comparisons between QVariants
-        virtual uint getValueHash() const
-        {
-            return HashPolicy::hashImpl(*derived()) ^ BaseOrDummy::getValueHash();
-        }
 
         //! Cast to JSON object
         virtual QJsonObject toJson() const

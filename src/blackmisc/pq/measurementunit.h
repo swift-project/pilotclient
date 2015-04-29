@@ -279,10 +279,10 @@ namespace BlackMisc
             //! Unequal operator !=
             bool operator != (const CMeasurementUnit &other) const;
 
-            //! \copydoc CValueObject::getValueHash
-            virtual uint getValueHash() const override
+            //! \copydoc CValueObject::qHash
+            friend uint qHash(const CMeasurementUnit &unit)
             {
-                return qHash(this->getName());
+                return ::qHash(unit.getName());
             }
 
             //! Name such as "meter"

@@ -100,14 +100,14 @@ namespace BlackMiscTest
         QVERIFY2(station1 != vmNoWildcard, "Station should not be equal to empty list");
         QVERIFY2(station1 == vm, "Controller should match");
         QVERIFY2(vmWildcard == vmCopy, "Maps should be equal");
-        QVERIFY2(vmWildcard.getValueHash() == vmCopy.getValueHash(), "Hashs should be equal (simple)");
+        QVERIFY2(qHash(vmWildcard) == qHash(vmCopy), "Hashs should be equal (simple)");
 
         vm.addValue(CAtcStation::IndexFrequency, CFrequency(118.7, CFrequencyUnit::MHz()));
         vm.addValue(CAtcStation::IndexPosition, geoPos);
         vmCopy = vm;
-        QVERIFY2(vm.getValueHash() == vmCopy.getValueHash(), "Hashs should be equal (detailed)");
+        QVERIFY2(qHash(vm) == qHash(vmCopy), "Hashs should be equal (detailed)");
         vmCopy.setWildcard(!vm.isWildcard());
-        QVERIFY2(vm.getValueHash() != vmCopy.getValueHash(), "Hashs should not be equal (detailed)");
+        QVERIFY2(qHash(vm) != qHash(vmCopy), "Hashs should not be equal (detailed)");
     }
 
 } // namespace
