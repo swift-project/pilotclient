@@ -50,7 +50,7 @@ namespace BlackMisc
 
         protected:
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n) const override;
+            virtual QString convertToQString(bool i18n = false) const override;
 
         public:
             //! Default constructor: 0 Altitude true
