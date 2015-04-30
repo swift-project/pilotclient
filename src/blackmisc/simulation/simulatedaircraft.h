@@ -105,7 +105,6 @@ namespace BlackMisc
             //! Set the synchronisation flag
             void setPartsSynchronized(bool synchronized) { m_partsSynchronized = synchronized; }
 
-        protected:
             //! \copydoc CValueObject::convertToQString()
             virtual QString convertToQString(bool i18n = false) const override;
 

@@ -48,7 +48,6 @@ namespace BlackMisc
         //! \copydoc CValueObject::toPixmap
         virtual QPixmap toPixmap() const override;
 
-    protected:
         //! \copydoc CValueObject::convertToQString
         virtual QString convertToQString(bool i18n = false) const override;
 

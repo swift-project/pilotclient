@@ -31,7 +31,7 @@ namespace BlackMisc
         //! Latitude
         class BLACKMISC_EXPORT CLatitude : public CValueObject<CLatitude, CEarthAngle<CLatitude>>
         {
-        protected:
+        public:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const
             {
@@ -43,7 +43,6 @@ namespace BlackMisc
                 return s;
             }
 
-        public:
             //! Default constructor
             CLatitude() = default;
 

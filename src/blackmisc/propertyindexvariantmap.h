@@ -149,13 +149,12 @@ namespace BlackMisc
         //! \copydoc CValueObject::convertFromQVariant
         virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
-    protected:
-
-        QMap<CPropertyIndex, CVariant> m_values; //!< values
-        bool m_wildcard; //!< wildcard
-
         //! \copydoc CValueObject::convertToQString
         virtual QString convertToQString(bool i18n = false) const override;
+
+    protected:
+        QMap<CPropertyIndex, CVariant> m_values; //!< values
+        bool m_wildcard; //!< wildcard
 
     public:
         //! \copydoc CValueObject::marshallToDbus

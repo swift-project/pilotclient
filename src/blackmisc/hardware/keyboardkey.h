@@ -203,7 +203,6 @@ namespace BlackMisc
              */
             static QString toStringRepresentation(int key);
 
-        protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 

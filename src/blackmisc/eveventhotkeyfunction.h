@@ -41,7 +41,6 @@ namespace BlackMisc
             //! Get boolean hotkey function argument
             bool getFunctionArgument() const { return m_hotkeyFuncArgument; }
 
-        protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 

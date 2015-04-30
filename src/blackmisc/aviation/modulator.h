@@ -82,15 +82,15 @@ namespace BlackMisc
             //! \copydoc CValueObject::setPropertyByIndex
             virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
+            //! \copydoc CValueObject::convertToQString
+            virtual QString convertToQString(bool i18n = false) const override;
+
         protected:
             //! Default constructor
             CModulator();
 
             //! Constructor
             CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency);
-
-            //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
 
             //! Set active frequency
             void setFrequencyActiveKHz(double frequencyKHz);

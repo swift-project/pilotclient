@@ -182,7 +182,6 @@ namespace BlackMisc
             //! \copydoc CValueObject::toIcon
             virtual CIcon toIcon() const override;
 
-        protected:
             //! \copydoc CValueObject::convertToQString()
             virtual QString convertToQString(bool i18n = false) const override;
 

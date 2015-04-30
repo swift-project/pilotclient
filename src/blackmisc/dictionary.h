@@ -402,7 +402,6 @@ namespace BlackMisc
         //! Test for inequality.
         bool operator !=(const CDictionary &other) const { return !(*this == other); }
 
-    protected:
         //! \copydoc BlackMisc::CValueObject::convertToQString
         //! \todo Fix brackets
         virtual QString convertToQString(bool i18n = false) const override

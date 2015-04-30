@@ -84,11 +84,11 @@ namespace BlackMisc
         //! \todo Here to avoid name hiding in PQ classes. Fix during policy refactoring.
         virtual void parseFromString(const QString &) { qFatal("Not implemented"); }
 
-    protected:
         //! String for QString conversion
         //! \todo Here because pure virtual. Move to CValueObject when all dynamic polymorphism is removed.
         virtual QString convertToQString(bool i18n = false) const = 0;
 
+    protected:
         //! Protected default constructor
         CEmpty() = default;
 

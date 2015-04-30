@@ -112,10 +112,10 @@ namespace BlackMisc
             //! Representing icon
             static const CIcon &convertToIcon(const CCallsign &callsign);
 
-        protected:
             //! \copydoc CValueObject::convertToQString()
             virtual QString convertToQString(bool i18n = false) const override;
 
+        protected:
             //! Unify the callsign
             static QString unifyCallsign(const QString &callsign);
 

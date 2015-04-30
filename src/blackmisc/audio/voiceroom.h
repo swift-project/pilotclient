@@ -100,7 +100,6 @@ namespace BlackMisc
              */
             static const QString &protocolComplete() { static QString p("vvl://"); return p; }
 
-        protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 

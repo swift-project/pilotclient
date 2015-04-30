@@ -42,7 +42,6 @@ namespace BlackMisc
             //! Set to on/off
             void setOn(bool on) { m_on = on; }
 
-        protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 

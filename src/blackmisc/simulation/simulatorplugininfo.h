@@ -71,7 +71,6 @@ namespace BlackMisc
             //! Description
             const QString &getDescription() const { return m_description; }
 
-        protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 

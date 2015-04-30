@@ -63,7 +63,6 @@ namespace BlackMisc
         //! Implicit conversion
         operator QPixmap() const { return this->toPixmap(); }
 
-    protected:
         //! \copydoc CValueObject::convertToQString
         virtual QString convertToQString(bool i18n = false) const override;
 

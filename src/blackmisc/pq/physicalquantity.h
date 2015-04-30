@@ -222,8 +222,10 @@ namespace BlackMisc
             //! \copydoc CValueObject::setPropertyByIndex
             virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
-        protected:
+            //! \copydoc CValueObject::convertToQString
+            virtual QString convertToQString(bool i18n = false) const override;
 
+        protected:
             //! Default constructor
             //! \todo Remove as part of MS' CValueObject refactoring
             CPhysicalQuantity();
@@ -233,9 +235,6 @@ namespace BlackMisc
 
             //! Constructor by parsed string, e.g. 10m
             CPhysicalQuantity(const QString &unitString);
-
-            //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
 
         private:
             double m_value; //!< numeric part

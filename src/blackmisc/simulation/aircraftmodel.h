@@ -140,7 +140,6 @@ namespace BlackMisc
             //! Model type
             static QString modelTypeToString(ModelType type);
 
-        protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 

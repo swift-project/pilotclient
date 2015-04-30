@@ -51,7 +51,6 @@ namespace BlackMisc
             //! Valid ICAO designator
             static bool isValidIcaoDesignator(const QString &icaoCode);
 
-        protected:
             //! \copydoc CValueObject::convertToQString()
             virtual QString convertToQString(bool i18n = false) const override;
 

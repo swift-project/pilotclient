@@ -90,7 +90,6 @@ namespace BlackMisc
             //! Is empty?
             bool isEmpty() const { return this->m_message.isEmpty(); }
 
-        protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 

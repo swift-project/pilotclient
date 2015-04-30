@@ -127,10 +127,10 @@ namespace BlackMisc
             return static_cast<int>(ev) == l.first();
         }
 
-    protected:
         //! \copydoc CValueObject::convertToQString
         virtual QString convertToQString(bool i18n = false) const override;
 
+    protected:
         //! \copydoc CValueObject::parseFromString
         virtual void parseFromString(const QString &indexes) override;
 

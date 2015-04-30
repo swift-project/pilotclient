@@ -30,7 +30,7 @@ namespace BlackMisc
         //! Longitude
         class BLACKMISC_EXPORT CLongitude : public CValueObject<CLongitude, CEarthAngle<CLongitude>>
         {
-        protected:
+        public:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const
             {
@@ -40,7 +40,6 @@ namespace BlackMisc
                 return s;
             }
 
-        public:
             //! Default constructor
             CLongitude() = default;
 

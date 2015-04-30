@@ -80,7 +80,6 @@ namespace BlackMisc
                 return CAudioDeviceInfo(InputDevice, defaultDeviceIndex(), "default");
             }
 
-        protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 

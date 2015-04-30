@@ -74,6 +74,7 @@ namespace BlackMisc
             //! Init by CAngle value
             CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle);
 
+        public:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 

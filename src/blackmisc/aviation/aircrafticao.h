@@ -153,7 +153,6 @@ namespace BlackMisc
             //! Valid designator?
             static bool isValidAirlineDesignator(const QString &airline);
 
-        protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 

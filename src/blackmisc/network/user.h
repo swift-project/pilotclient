@@ -136,7 +136,6 @@ namespace BlackMisc
             //! Beautify real name, e.g. "JOE DoE" -> "Joe Doe";
             static QString beautifyRealName(const QString &realName);
 
-        protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 

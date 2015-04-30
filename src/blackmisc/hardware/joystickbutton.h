@@ -69,7 +69,6 @@ namespace BlackMisc
             //! Invalid button index
             static qint32 getInvalidIndex() { return m_invalidIndex; }
 
-        protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 

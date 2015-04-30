@@ -25,11 +25,10 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CAircraftMapping : public CValueObject<CAircraftMapping>
         {
 
-        protected:
+        public:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 
-        public:
             //! Properties
             enum ColumnIndex
             {

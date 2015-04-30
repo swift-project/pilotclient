@@ -46,10 +46,10 @@ namespace BlackMisc
                 this->m_name = name;
             }
 
+        public:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override { Q_UNUSED(i18n); return ""; }
 
-        public:
             //! \brief Name
             QString getName() const
             {

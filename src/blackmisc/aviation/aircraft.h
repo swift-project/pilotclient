@@ -272,7 +272,6 @@ namespace BlackMisc
             //! \copydoc CValueObject::setPropertyByIndex
             virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
-        protected:
             //! \copydoc CValueObject::convertToQString()
             virtual QString convertToQString(bool i18n = false) const override;
 

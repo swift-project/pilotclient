@@ -96,7 +96,6 @@ namespace BlackMisc
             //! Returns object with all lights switched off
             static CAircraftLights allLightsOff();
 
-        protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 

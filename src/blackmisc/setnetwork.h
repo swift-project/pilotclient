@@ -97,7 +97,6 @@ namespace BlackMisc
             //! Init with meaningful default values
             void initDefaultValues();
 
-        protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 

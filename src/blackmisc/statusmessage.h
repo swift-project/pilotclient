@@ -139,7 +139,6 @@ namespace BlackMisc
         //! Representing icon
         static const CIcon &convertToIcon(const CStatusMessage &statusMessage);
 
-    protected:
         //! \copydoc CValueObject::convertToQString
         virtual QString convertToQString(bool i18n = false) const override;
 

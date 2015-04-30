@@ -97,7 +97,6 @@ namespace BlackMisc
         //! Register metadata
         static void registerMetadata();
 
-    protected:
         //! \copydoc BlackMisc::CValueObject::convertToQString
         virtual QString convertToQString(bool i18n = false) const override;
 

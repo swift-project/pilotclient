@@ -56,7 +56,6 @@ namespace BlackMisc
             //! Check if originating from the same process name
             bool isFromSameProcessName() const;
 
-        protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 

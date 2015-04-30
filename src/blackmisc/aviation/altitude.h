@@ -48,11 +48,9 @@ namespace BlackMisc
                 FlightLevel         //!< Flight level
             };
 
-        protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 
-        public:
             //! Default constructor: 0 Altitude true
             CAltitude() : CValueObject(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel) {}
 

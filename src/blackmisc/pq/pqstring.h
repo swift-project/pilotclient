@@ -29,11 +29,10 @@ namespace BlackMisc
          */
         class BLACKMISC_EXPORT CPqString : public CValueObject<CPqString>
         {
-        protected:
+        public:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 
-        public:
             //! Number separators / group separators
             enum SeparatorMode
             {

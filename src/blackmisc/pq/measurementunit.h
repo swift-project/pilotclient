@@ -247,13 +247,13 @@ namespace BlackMisc
 //                return this->getName(false);
 //            }
 
+        public:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override
             {
                 return this->getSymbol(i18n);
             }
 
-        public:
             //! \copydoc CValueObject::marshallToDbus
             void marshallToDbus(QDBusArgument &argument) const
             {

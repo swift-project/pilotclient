@@ -68,7 +68,6 @@ namespace BlackMisc
             //! All capabilities as list
             static const QList<CVoiceCapabilities> &allCapabilities();
 
-        protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 

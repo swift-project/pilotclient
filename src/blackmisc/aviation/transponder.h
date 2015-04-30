@@ -171,12 +171,12 @@ namespace BlackMisc
             //! Is valid transponder code?
             static bool isValidTransponderCode(qint32 transponderMode);
 
+            //! \copydoc CValueObject::convertToQString
+            virtual QString convertToQString(bool i18n = false) const override;
+
         protected:
             //! Default value?
             virtual bool isDefaultValue() const { return this->m_transponderCode == 0; }
-
-            //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CTransponder)

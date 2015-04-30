@@ -45,11 +45,9 @@ namespace BlackMisc
                 True = 1        //!< true north
             };
 
-        protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 
-        public:
             //! \brief Default constructor: 0 heading true
             CHeading() : CValueObject(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
 

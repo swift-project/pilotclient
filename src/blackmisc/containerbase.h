@@ -147,7 +147,6 @@ namespace BlackMisc
             }
         }
 
-    protected: // CValueObject overrides
         //! \copydoc BlackMisc::CValueObject::convertToQString
         virtual QString convertToQString(bool i18n = false) const override
         {
@@ -157,6 +156,7 @@ namespace BlackMisc
             return str += "}";
         }
 
+    protected:
         //! \copydoc BlackMisc::CValueObject::getMetaTypeId
         int getMetaTypeId() const { return qMetaTypeId<C<T>>(); }
 
