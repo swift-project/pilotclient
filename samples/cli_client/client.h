@@ -13,7 +13,7 @@
 #define BLACKSAMPLE_CLI_CLIENT_H
 
 #include "blackcore/network.h"
-#include "blackmisc/simulation/ownaircraftprovider.h"
+#include "blackmisc/simulation/ownaircraftproviderdummy.h"
 #include <QObject>
 #include <QTextStream>
 #include <QMap>

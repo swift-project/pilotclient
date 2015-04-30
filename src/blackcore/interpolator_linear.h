@@ -35,8 +35,7 @@ namespace BlackCore
 
         //! Log category
         static QString getMessageCategory() { return "swift.interpolatorlinear"; }
-
-    };
+   };
 
 } // namespace BlackCore
 

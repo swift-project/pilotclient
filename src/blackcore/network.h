@@ -552,4 +552,6 @@ namespace BlackCore
 
 } // namespace
 
+Q_DECLARE_METATYPE(BlackCore::INetwork::ConnectionStatus)
+
 #endif // guard

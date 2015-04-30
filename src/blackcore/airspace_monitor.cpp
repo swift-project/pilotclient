@@ -81,6 +81,12 @@ namespace BlackCore
         return m_aircraftInRange.size();
     }
 
+    CAirspaceAircraftSnapshot CAirspaceMonitor::getLatestAirspaceAircraftSnapshot() const
+    {
+        Q_ASSERT_X(this->m_analyzer, Q_FUNC_INFO, "No analyzer");
+        return this->m_analyzer->getLatestAirspaceAircraftSnapshot();
+    }
+
     CAircraftSituationList CAirspaceMonitor::remoteAircraftSituations(const CCallsign &callsign) const
     {
         QReadLocker l(&m_lockSituations);
@@ -124,9 +130,11 @@ namespace BlackCore
     }
 
     bool CAirspaceMonitor::connectRemoteAircraftProviderSignals(
-        std::function<void(const CAircraftSituation &)> situationSlot,
-        std::function<void(const CAircraftParts &)> partsSlot,
-        std::function<void(const CCallsign &)> removedAircraftSlot)
+        std::function<void(const CAircraftSituation &)>    situationSlot,
+        std::function<void(const CAircraftParts &)>        partsSlot,
+        std::function<void(const CCallsign &)>             removedAircraftSlot,
+        std::function<void(const CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
+    )
     {
         bool s1 = connect(this, &CAirspaceMonitor::addedAircraftSituation, situationSlot);
         Q_ASSERT(s1);
@@ -134,7 +142,10 @@ namespace BlackCore
         Q_ASSERT(s2);
         bool s3 = connect(this, &CAirspaceMonitor::removedAircraft, removedAircraftSlot);
         Q_ASSERT(s3);
-        return s1 && s2 && s3;
+        bool s4 = connect(this->m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, aircraftSnapshotSlot);
+        Q_ASSERT(s4);
+
+        return s1 && s2 && s3 && s4;
     }
 
     bool CAirspaceMonitor::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRedering, const QString &originator)

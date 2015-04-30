@@ -22,6 +22,8 @@ namespace BlackCore
 {
     CAircraftSituation CInterpolatorLinear::getInterpolatedSituation(const CCallsign &callsign, qint64 currentTimeMsSinceEpoc, bool vtolAiracraft, InterpolationStatus &status) const
     {
+        // has to be thread safe
+
         static const CAircraftSituation empty;
         status.reset();
 

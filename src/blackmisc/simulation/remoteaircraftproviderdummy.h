@@ -41,6 +41,9 @@ namespace BlackMisc
             //! IRemoteAircraftProvider::getAircraftInRangeForCallsign
             virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
+            //! \copydoc IRemoteAircraftProvider::getLatestAirspaceAircraftSnapshot
+            virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
+
             //! \copydoc IRemoteAircraftProvider::remoteAircraftParts
             virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const override;
 
@@ -58,9 +61,10 @@ namespace BlackMisc
 
             //! \copydoc IRemoteAircraftProvider::connectRemoteAircraftProviderSignals
             virtual bool connectRemoteAircraftProviderSignals(
-                std::function<void(const BlackMisc::Aviation::CAircraftSituation &)> situationSlot,
-                std::function<void(const BlackMisc::Aviation::CAircraftParts &)> partsSlot,
-                std::function<void(const BlackMisc::Aviation::CCallsign &)> removedAircraftSlot
+                std::function<void(const BlackMisc::Aviation::CAircraftSituation &)>          addedSituationSlot,
+                std::function<void(const BlackMisc::Aviation::CAircraftParts &)>              addedPartsSlot,
+                std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,
+                std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
             ) override;
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftEnabled
@@ -96,6 +100,9 @@ namespace BlackMisc
 
             //! Added aircraft
             void removedRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign);
+
+            //! New aircraft snapshot
+            void airspaceAircraftSnapshot(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
 
         private:
             BlackMisc::Simulation::CSimulatedAircraftList m_aircraft;

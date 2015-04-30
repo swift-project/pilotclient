@@ -20,19 +20,6 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {
-    void ISimulator::emitSimulatorCombinedStatus()
-    {
-        int status =
-            (isConnected() ? Connected : static_cast<ISimulator::SimulatorStatus>(0))
-            | (isSimulating() ? Running : static_cast<ISimulator::SimulatorStatus>(0))
-            | (isPaused() ? Paused : static_cast<ISimulator::SimulatorStatus>(0))
-            ;
-        emit simulatorStatusChanged(status);
-    }
-
-    ISimulatorListener::ISimulatorListener(QObject *parent) : QObject(parent)
-    { }
-
     CSimulatorCommon::CSimulatorCommon(const CSimulatorPluginInfo &info,
                                        BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                                        BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
@@ -44,10 +31,43 @@ namespace BlackCore
     {
         this->setObjectName(info.getIdentifier());
         m_oneSecondTimer = new QTimer(this);
-        m_oneSecondTimer->setObjectName(this->objectName().append(":OneSecondTimer"));
+        m_oneSecondTimer->setObjectName(this->objectName().append(":m_oneSecondTimer"));
         connect(this->m_oneSecondTimer, &QTimer::timeout, this, &CSimulatorCommon::ps_oneSecondTimer);
         m_oneSecondTimer->start(1000);
+
+        // provider signals
+        bool c = remoteAircraftProvider->connectRemoteAircraftProviderSignals(
+                     std::bind(&CSimulatorCommon::ps_remoteProviderAddAircraftSituation, this, std::placeholders::_1),
+                     std::bind(&CSimulatorCommon::ps_remoteProvideraddAircraftParts, this, std::placeholders::_1),
+                     std::bind(&CSimulatorCommon::ps_remoteProviderRemovedAircraft, this, std::placeholders::_1),
+                     std::bind(&CSimulatorCommon::ps_remoteProviderAircraftSnapshot, this, std::placeholders::_1)
+                 );
+        Q_ASSERT(c);
+        Q_UNUSED(c);
+
+        // info
         CLogMessage(this).info("Initialized simulator driver %1") << m_simulatorPluginInfo.toQString();
+    }
+
+    void ISimulator::ps_remoteProviderAddAircraftSituation(const CAircraftSituation &situation)
+    { Q_UNUSED(situation); }
+
+    void ISimulator::ps_remoteProvideraddAircraftParts(const CAircraftParts &parts)
+    { Q_UNUSED(parts); }
+
+    void ISimulator::ps_remoteProviderRemovedAircraft(const CCallsign &callsign)
+    { Q_UNUSED(callsign); }
+
+    void ISimulator::ps_remoteProviderAircraftSnapshot(const CAirspaceAircraftSnapshot &aircraftSnapshot)
+    { Q_UNUSED(aircraftSnapshot); }
+
+    void ISimulator::emitSimulatorCombinedStatus()
+    {
+        int status =
+            (isConnected() ? Connected : static_cast<ISimulator::SimulatorStatus>(0))
+            | (isSimulating() ? Running : static_cast<ISimulator::SimulatorStatus>(0))
+            | (isPaused() ? Paused : static_cast<ISimulator::SimulatorStatus>(0));
+        emit simulatorStatusChanged(status);
     }
 
     void CSimulatorCommon::blinkHighlightedAircraft()
@@ -202,11 +222,10 @@ namespace BlackCore
         return !m_maxRenderedDistance.isNull();
     }
 
-    void CSimulatorCommon::enableDebugMessages(bool driver, bool interpolator)
+    void CSimulatorCommon::enableDebugMessages(bool driverMessages, bool interpolatorMessages)
     {
-        this->m_debugMessages = driver;
-        Q_UNUSED(interpolator);
-
+        this->m_debugMessages = driverMessages;
+        Q_UNUSED(interpolatorMessages);
     }
 
     int CSimulatorCommon::getInstalledModelsCount() const
@@ -239,16 +258,6 @@ namespace BlackCore
         return this->isMaxDistanceRestricted() || this->isMaxAircraftRestricted();
     }
 
-    const CSimulatorPluginInfo &CSimulatorCommon::getSimulatorPluginInfo() const
-    {
-        return m_simulatorPluginInfo;
-    }
-
-    const CSimulatorSetup &CSimulatorCommon::getSimulatorSetup() const
-    {
-        return m_simulatorSetup;
-    }
-
     void CSimulatorCommon::deleteAllRenderingRestrictions()
     {
         if (!isRenderingEnabled()) { return; }
@@ -267,6 +276,19 @@ namespace BlackCore
         {
             recalculateRestrictedAircraft();
         }
+    }
+
+    ISimulatorListener::ISimulatorListener(QObject *parent) : QObject(parent)
+    { }
+
+    const CSimulatorPluginInfo &CSimulatorCommon::getSimulatorPluginInfo() const
+    {
+        return m_simulatorPluginInfo;
+    }
+
+    const CSimulatorSetup &CSimulatorCommon::getSimulatorSetup() const
+    {
+        return m_simulatorSetup;
     }
 
 } // namespace

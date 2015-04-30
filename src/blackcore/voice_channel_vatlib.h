@@ -80,7 +80,7 @@ namespace BlackCore
         void userJoinedVoiceRoom(VatVoiceChannel, int id, const char *name);
         void userLeftVoiceRoom(VatVoiceChannel, int id, const char *name);
         void transmissionChanged(VatVoiceChannel, VatVoiceTransmissionStatus status);
-        void updateRoomStatus(VatVoiceChannel channel, VatConnectionStatus /** oldStatus **/, VatConnectionStatus newStatus);
+        void updateRoomStatus(VatVoiceChannel channel, VatConnectionStatus oldStatus, VatConnectionStatus newStatus);
 
         static void processUserJoined(VatVoiceChannel channel, int id, const char *name, void *cbVar);
         static void processUserLeft(VatVoiceChannel channel, int id, const char *name, void *cbVar);

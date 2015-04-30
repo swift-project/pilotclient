@@ -64,16 +64,19 @@ namespace BlackCore
         //! Current interpolated situation
         //! \threadsafe
         virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
-            const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc, bool isVtolAircraft, InterpolationStatus &status) const = 0;
+            const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc,
+            bool isVtolAircraft, InterpolationStatus &status) const = 0;
 
         //! Parts before given offset time (aka pending parts)
         //! \threadsafe
-        virtual BlackMisc::Aviation::CAircraftPartsList getPartsBeforeTime(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTime, PartsStatus &partsStatus);
+        virtual BlackMisc::Aviation::CAircraftPartsList getPartsBeforeTime(
+            const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTime,
+            PartsStatus &partsStatus);
 
         //! Enable debug messages
         void enableDebugMessages(bool enabled);
 
-        static const qint64 TimeOffsetMs = 6000;           //!< offset for interpolation
+        static const qint64 TimeOffsetMs = 6000; //!< offset for interpolation
 
     protected:
         //! Constructor

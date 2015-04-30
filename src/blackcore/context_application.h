@@ -103,7 +103,7 @@ namespace BlackCore
         //! \note this is the function which relays CLogMessage via DBus
         virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::Event::COriginator &origin) { Q_UNUSED(message); Q_UNUSED(origin); }
 
-        //! \brief Ping a token, used to check if application is alive
+        //! Ping a token, used to check if application is alive
         virtual qint64 ping(qint64 token) const = 0;
 
         //! A component has changed its state

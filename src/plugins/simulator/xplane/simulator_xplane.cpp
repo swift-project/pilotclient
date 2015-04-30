@@ -58,16 +58,7 @@ namespace BlackSimPlugin
             connect(m_slowTimer, &QTimer::timeout, this, &CSimulatorXPlane::ps_slowTimerTimeout);
             m_fastTimer->start(100);
             m_slowTimer->start(1000);
-
             resetData();
-
-            bool c = remoteAircraftProvider->connectRemoteAircraftProviderSignals(
-                         std::bind(&CSimulatorXPlane::ps_addAircraftSituation, this, std::placeholders::_1),
-                         std::bind(&CSimulatorXPlane::ps_addAircraftParts, this, std::placeholders::_1),
-                         std::bind(&CSimulatorXPlane::ps_removedAircraft, this, std::placeholders::_1)
-                     );
-            Q_ASSERT(c);
-            Q_UNUSED(c);
         }
 
         // convert xplane squawk mode to swift squawk mode
@@ -381,27 +372,27 @@ namespace BlackSimPlugin
             return true;
         }
 
-        void CSimulatorXPlane::ps_addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situ)
+        void CSimulatorXPlane::ps_remoteProviderAddAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
         {
             Q_ASSERT(isConnected());
             using namespace BlackMisc::PhysicalQuantities;
-            m_traffic->setPlanePosition(situ.getCallsign().asString(),
-                                        situ.latitude().value(CAngleUnit::deg()),
-                                        situ.longitude().value(CAngleUnit::deg()),
-                                        situ.getAltitude().value(CLengthUnit::ft()),
-                                        situ.getPitch().value(CAngleUnit::deg()),
-                                        situ.getBank().value(CAngleUnit::deg()),
-                                        situ.getHeading().value(CAngleUnit::deg()));
+            m_traffic->setPlanePosition(situation.getCallsign().asString(),
+                                        situation.latitude().value(CAngleUnit::deg()),
+                                        situation.longitude().value(CAngleUnit::deg()),
+                                        situation.getAltitude().value(CLengthUnit::ft()),
+                                        situation.getPitch().value(CAngleUnit::deg()),
+                                        situation.getBank().value(CAngleUnit::deg()),
+                                        situation.getHeading().value(CAngleUnit::deg()));
         }
 
-        void CSimulatorXPlane::ps_addAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts)
+        void CSimulatorXPlane::ps_remoteProvideraddAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts)
         {
             Q_ASSERT(isConnected());
             m_traffic->setPlaneSurfaces(parts.getCallsign().asString(), true, 0, 0, 0, 0, 0, 0, 0, 0, 0, true, true, true, true, 0); // TODO landing gear, lights, control surfaces
             m_traffic->setPlaneTransponder(parts.getCallsign().asString(), 2000, true, false); // TODO transponder
         }
 
-        void CSimulatorXPlane::ps_removedAircraft(const CCallsign &callsign)
+        void CSimulatorXPlane::ps_remoteProviderRemovedAircraft(const CCallsign &callsign)
         {
             Q_UNUSED(callsign);
             //! \todo call removeRemoteAircraft or just let removeRemoteAircraft handle it?

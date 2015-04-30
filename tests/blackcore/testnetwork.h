@@ -13,7 +13,7 @@
 #define BLACKCORETEST_TESTNETWORK_H
 
 #include "blackcore/network_vatlib.h"
-#include "blackmisc/simulation/ownaircraftprovider.h"
+#include "blackmisc/simulation/ownaircraftproviderdummy.h"
 #include <QtTest/QtTest>
 
 namespace BlackCoreTest
@@ -26,8 +26,10 @@ namespace BlackCoreTest
 
     public:
         //! Constructor.
-        explicit CTestNetwork(QObject *parent = 0) :
-            QObject(parent), m_networkVatlib(BlackMisc::Simulation::COwnAircraftProviderDummy::instance(), parent) {}
+        explicit CTestNetwork(QObject *parent = nullptr) :
+            QObject(parent),
+            m_networkVatlib(BlackMisc::Simulation::COwnAircraftProviderDummy::instance(), parent)
+        {}
 
     private slots:
         //! Test the vatlib

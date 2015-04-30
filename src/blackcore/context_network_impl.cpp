@@ -128,10 +128,11 @@ namespace BlackCore
     bool CContextNetwork::connectRemoteAircraftProviderSignals(
         std::function<void (const CAircraftSituation &)> situationSlot,
         std::function<void (const CAircraftParts &)> partsSlot,
-        std::function<void (const CCallsign &)> removedAircraftSlot)
+        std::function<void (const CCallsign &)> removedAircraftSlot,
+        std::function<void (const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot)
     {
         Q_ASSERT(this->m_airspace);
-        return this->m_airspace->connectRemoteAircraftProviderSignals(situationSlot, partsSlot, removedAircraftSlot);
+        return this->m_airspace->connectRemoteAircraftProviderSignals(situationSlot, partsSlot, removedAircraftSlot, aircraftSnapshotSlot);
     }
 
     void CContextNetwork::gracefulShutdown()
@@ -578,6 +579,11 @@ namespace BlackCore
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << originator; }
         this->m_airspace->updateMarkAllAsNotRendered(originator);
+    }
+
+    CAirspaceAircraftSnapshot CContextNetwork::getLatestAirspaceAircraftSnapshot() const
+    {
+        return this->m_airspace->getLatestAirspaceAircraftSnapshot();
     }
 
     bool CContextNetwork::isFastPositionSendingEnabled() const

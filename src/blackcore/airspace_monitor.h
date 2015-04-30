@@ -56,6 +56,10 @@ namespace BlackCore
         //! \ingroup remoteaircraftprovider
         virtual int getAircraftInRangeCount() const override;
 
+        //! \copydoc IRemoteAircraftProvider::getLatestAirspaceAircraftSnapshot
+        //! \ingroup remoteaircraftprovider
+        virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
+
         //! \copydoc IRemoteAircraftProvider::remoteAircraftSituations
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const override;
@@ -142,12 +146,12 @@ namespace BlackCore
         //! Test injected aircraft parts
         void testAddAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts, bool incremental);
 
-        //! \copydoc IRemoteAircraftProvider::connectSignals
-        //! \copydoc IRemoteAircraftProvider::connectSignals
+        //! \copydoc IRemoteAircraftProvider::connectRemoteAircraftProviderSignals
         virtual bool connectRemoteAircraftProviderSignals(
-            std::function<void(const BlackMisc::Aviation::CAircraftSituation &)> situationSlot,
-            std::function<void(const BlackMisc::Aviation::CAircraftParts &)> partsSlot,
-            std::function<void(const BlackMisc::Aviation::CCallsign &)> removedAircraftSlot
+            std::function<void(const BlackMisc::Aviation::CAircraftSituation &)>          addedSituationSlot,
+            std::function<void(const BlackMisc::Aviation::CAircraftParts &)>              addedPartsSlot,
+            std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,
+            std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
         ) override;
 
         //! Is interim position sending enabled?

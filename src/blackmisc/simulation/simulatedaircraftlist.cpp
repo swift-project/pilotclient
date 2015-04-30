@@ -44,6 +44,16 @@ namespace BlackMisc
             return this->findBy(Predicates::MemberValid(&CSimulatedAircraft::getPilot)).transform(Predicates::MemberTransform(&CSimulatedAircraft::getPilot));
         }
 
+        CSimulatedAircraftList CSimulatedAircraftList::findByEnabled(bool enabled) const
+        {
+            return this->findBy(&CSimulatedAircraft::isEnabled, enabled);
+        }
+
+        CSimulatedAircraftList CSimulatedAircraftList::findByVtol(bool vtol) const
+        {
+            return this->findBy(&CSimulatedAircraft::isVtol, vtol);
+        }
+
         CCallsignSet CSimulatedAircraftList::getCallsignsWithSyncronizedParts() const
         {
             CCallsignSet csl;

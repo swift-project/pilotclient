@@ -26,9 +26,7 @@ namespace BlackSimPlugin
         class CXBusServiceProxy;
         class CXBusTrafficProxy;
 
-        /*!
-         * X-Plane ISimulator implementation
-         */
+        //! X-Plane ISimulator implementation
         class CSimulatorXPlane : public BlackCore::CSimulatorCommon
         {
             Q_OBJECT
@@ -112,16 +110,22 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::isRenderedAircraft
             virtual bool isRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
+        protected slots:
+            //! \copydoc CSimulatorCommon::ps_remoteProviderAddAircraftSituation
+            virtual void ps_remoteProviderAddAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
+
+            //! \copydoc CSimulatorCommon::ps_remoteProvideraddAircraftParts
+            virtual void ps_remoteProvideraddAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts) override;
+
+            //! \copydoc CSimulatorCommon::ps_remoteProviderRemovedAircraft
+            virtual void ps_remoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+
         private slots:
             void ps_serviceUnregistered();
             void ps_setAirportsInRange(const QStringList &icaoCodes, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts);
             void ps_emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao);
             void ps_fastTimerTimeout();
             void ps_slowTimerTimeout();
-
-            void ps_addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situ);
-            void ps_addAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
-            void ps_removedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
         private:
             QDBusConnection m_conn { "default" };

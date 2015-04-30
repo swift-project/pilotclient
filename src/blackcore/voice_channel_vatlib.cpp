@@ -139,8 +139,11 @@ namespace BlackCore
         else emit audioStopped();
     }
 
-    void CVoiceChannelVatlib::updateRoomStatus(VatVoiceChannel /* channel */, VatConnectionStatus /** oldVatStatus **/, VatConnectionStatus newVatStatus)
+    void CVoiceChannelVatlib::updateRoomStatus(VatVoiceChannel channel, VatConnectionStatus oldVatStatus, VatConnectionStatus newVatStatus)
     {
+        Q_UNUSED(channel);
+        Q_UNUSED(oldVatStatus);
+
         IVoiceChannel::ConnectionStatus oldStatus = m_roomStatus;
         switch (newVatStatus)
         {
@@ -202,4 +205,4 @@ namespace BlackCore
         auto obj = cbvar_cast_voiceChannel(cbVar);
         obj->updateRoomStatus(channel, oldStatus, newStatus);
     }
-}
+} // ns

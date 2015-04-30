@@ -44,6 +44,12 @@ namespace BlackMisc
             //! All pilots (with valid data)
             BlackMisc::Network::CUserList getPilots() const;
 
+            //! Enabled / disabled aircraft
+            CSimulatedAircraftList findByEnabled(bool enabled) const;
+
+            //! VTOL / non VTOL aircraft
+            CSimulatedAircraftList findByVtol(bool vtol) const;
+
             //! Callsigns of aircraft with synchronized parts
             BlackMisc::Aviation::CCallsignSet getCallsignsWithSyncronizedParts() const;
 

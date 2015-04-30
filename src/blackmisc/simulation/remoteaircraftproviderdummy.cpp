@@ -34,6 +34,11 @@ namespace BlackMisc
             return m_aircraft.findFirstByCallsign(callsign);
         }
 
+        CAirspaceAircraftSnapshot CRemoteAircraftProviderDummy::getLatestAirspaceAircraftSnapshot() const
+        {
+            return CAirspaceAircraftSnapshot(m_aircraft);
+        }
+
         CAircraftPartsList CRemoteAircraftProviderDummy::remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeBefore) const
         {
             if (cutoffTimeBefore < 0) { return m_parts.findByCallsign(callsign); }
@@ -60,12 +65,19 @@ namespace BlackMisc
             return remoteAircraftParts(callsign).size() > 0;
         }
 
-        bool CRemoteAircraftProviderDummy::connectRemoteAircraftProviderSignals(std::function<void (const CAircraftSituation &)> situationSlot, std::function<void (const CAircraftParts &)> partsSlot, std::function<void (const CCallsign &)> removedAircraftSlot)
+        bool CRemoteAircraftProviderDummy::connectRemoteAircraftProviderSignals(
+            std::function<void (const CAircraftSituation &)>        situationSlot,
+            std::function<void (const CAircraftParts &)>            partsSlot,
+            std::function<void (const CCallsign &)>                 removedAircraftSlot,
+            std::function<void (const CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
+        )
         {
             bool s1 = connect(this, &CRemoteAircraftProviderDummy::addedRemoteAircraftSituation, situationSlot);
             bool s2 = connect(this, &CRemoteAircraftProviderDummy::addedRemoteAircraftParts, partsSlot);
             bool s3 = connect(this, &CRemoteAircraftProviderDummy::removedRemoteAircraft, removedAircraftSlot);
-            return s1 && s2 && s3;
+            bool s4 = connect(this, &CRemoteAircraftProviderDummy::airspaceAircraftSnapshot, aircraftSnapshotSlot);
+
+            return s1 && s2 && s3 && s4;
         }
 
         bool CRemoteAircraftProviderDummy::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRendering, const QString &originator)

@@ -194,6 +194,19 @@ namespace BlackCore
         //! Installed aircraft models ready or changed
         void installedAircraftModelsChanged();
 
+    protected slots:
+        //! Provider added situation
+        virtual void ps_remoteProviderAddAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
+
+        //! Provider added parts
+        virtual void ps_remoteProvideraddAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
+
+        //! Provider removed aircraft
+        virtual void ps_remoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
+
+        //! Provider aircraft snapshot
+        virtual void ps_remoteProviderAircraftSnapshot(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &aircraftSnapshot);
+
     protected:
         //! Default constructor
         ISimulator(QObject *parent = nullptr) : QObject(parent) {}
@@ -201,15 +214,11 @@ namespace BlackCore
         //! Emit the combined status
         //! \sa simulatorStatusChanged;
         void emitSimulatorCombinedStatus();
-
     };
 
-    /*!
-     * Interface to a simulator listener.
-     *
-     * The simulator listener is responsible for letting the core know when
-     * the corresponding simulator is started.
-     */
+    //! Interface to a simulator listener.
+    //! The simulator listener is responsible for letting the core know when
+    //! the corresponding simulator is started.
     class BLACKCORE_EXPORT ISimulatorListener : public QObject
     {
         Q_OBJECT
@@ -246,14 +255,12 @@ namespace BlackCore
         //! ISimulatorVirtual destructor
         virtual ~ISimulatorFactory() {}
 
-        //!
         //! Create a new instance of a driver
         //! \param info                      metadata about simulator
         //! \param ownAircraftProvider       in memory access to own aircraft data
         //! \param renderedAircraftProvider  in memory access to rendered aircraft data such as situation history and aircraft itself
         //! \param parent QObject
         //! \return driver instance
-        //!
         virtual ISimulator *create(
             const BlackMisc::Simulation::CSimulatorPluginInfo &info,
             BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
@@ -297,7 +304,7 @@ namespace BlackCore
         virtual bool isMaxDistanceRestricted() const override;
 
         //! \copydoc ISimulator::enableDebuggingMessages
-        virtual void enableDebugMessages(bool driver, bool interpolator) override;
+        virtual void enableDebugMessages(bool driverMessages, bool interpolatorMessages) override;
 
         //! \copydoc ISimulator::getInstalledModelsCount
         virtual int getInstalledModelsCount() const override;

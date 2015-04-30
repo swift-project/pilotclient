@@ -9,6 +9,7 @@
 
 #include "airspace_analyzer.h"
 #include "blackmisc/logmessage.h"
+#include <QDateTime>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -17,7 +18,6 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackCore
 {
-
     CAirspaceAnalyzer::CAirspaceAnalyzer(IOwnAircraftProvider *ownAircraftProvider, IRemoteAircraftProvider *remoteAircraftProvider, INetwork *network, QObject *parent) :
         CContinuousWorker(parent, "CAirspaceAnalyzer"),
         COwnAircraftAware(ownAircraftProvider),
@@ -25,8 +25,18 @@ namespace BlackCore
     {
         Q_ASSERT_X(network, Q_FUNC_INFO, "Network object required to connect");
 
+        // start in thread
+        this->setObjectName("CAirspaceAnalyzer");
+
+        // all in new thread from here on
+        m_timer = new QTimer(this);
+        m_timer->setObjectName(this->objectName().append(":m_timer"));
+        m_timer->start(5000);
+        bool c = connect(m_timer, &QTimer::timeout, this, &CAirspaceAnalyzer::ps_timeout);
+        Q_ASSERT(c);
+
         // disconnect
-        bool c = connect(network, &INetwork::pilotDisconnected, this, &CAirspaceAnalyzer::ps_watchdogRemoveAircraftCallsign);
+        c = connect(network, &INetwork::pilotDisconnected, this, &CAirspaceAnalyzer::ps_watchdogRemoveAircraftCallsign);
         Q_ASSERT(c);
         c = connect(network, &INetwork::atcDisconnected, this, &CAirspaceAnalyzer::ps_watchdogRemoveAtcCallsign);
         Q_ASSERT(c);
@@ -38,9 +48,19 @@ namespace BlackCore
         Q_ASSERT(c);
 
         // network
-        c = connect(network, &INetwork::connectionStatusChanged, this, &CAirspaceAnalyzer::ps_onConnectionStatusChanged);
+        // If I do not explicitly set Qt::QueuedConnection here, I get a warning message when such a signal is sent:
+        // "INetwork::NetworkConenctionStatus is not registered" (similar to https://forum.qt.io/topic/27083/signal-slot-between-threads-qt-5/9)
+        c = connect(network, &INetwork::connectionStatusChanged, this, &CAirspaceAnalyzer::ps_onConnectionStatusChanged, Qt::QueuedConnection);
         Q_ASSERT(c);
         Q_UNUSED(c);
+
+        this->start();
+    }
+
+    CAirspaceAircraftSnapshot CAirspaceAnalyzer::getLatestAirspaceAircraftSnapshot() const
+    {
+        QReadLocker l(&m_lockSnapshot);
+        return m_latestAircraftSnapshot;
     }
 
     void CAirspaceAnalyzer::ps_watchdogTouchAircraftCallsign(const CAircraftSituation &situation, const CTransponder &transponder)
@@ -58,19 +78,31 @@ namespace BlackCore
         m_atcCallsignTimestamps[callsign] = QDateTime::currentMSecsSinceEpoch();
     }
 
-    void CAirspaceAnalyzer::ps_onConnectionStatusChanged(INetwork::ConnectionStatus oldStatus, INetwork::ConnectionStatus newStatus)
+    void CAirspaceAnalyzer::ps_onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus)
     {
         Q_UNUSED(oldStatus);
         if (newStatus == INetwork::Disconnected)
         {
             this->clear();
+            this->m_timer->stop();
         }
+        else if (newStatus == INetwork::Connected)
+        {
+            this->m_timer->start();
+        }
+    }
+
+    void CAirspaceAnalyzer::ps_timeout()
+    {
+        this->analyzeAirspace();
+        this->watchdogCheckTimeouts();
     }
 
     void CAirspaceAnalyzer::clear()
     {
         m_aircraftCallsignTimestamps.clear();
         m_atcCallsignTimestamps.clear();
+        m_latestAircraftSnapshot = CAirspaceAircraftSnapshot();
     }
 
     void CAirspaceAnalyzer::ps_watchdogRemoveAircraftCallsign(const CCallsign &callsign)
@@ -85,9 +117,17 @@ namespace BlackCore
 
     void CAirspaceAnalyzer::watchdogCheckTimeouts()
     {
+        qint64 currentTimeMsEpoch = QDateTime::currentMSecsSinceEpoch();
+
+        qint64 callDiffMs = currentTimeMsEpoch - m_lastWatchdogCallMsSinceEpoch;
+        qint64 callThresholdMs = m_timer->interval() * 1.5;
+        m_lastWatchdogCallMsSinceEpoch = currentTimeMsEpoch;
+
+        // this is a trick to not remove everything while debugging
+        if (callDiffMs > callThresholdMs) { return; }
+
         qint64 aircraftTimeoutMs = m_timeoutAircraft.valueInteger(CTimeUnit::ms());
         qint64 atcTimeoutMs = m_timeoutAtc.valueInteger(CTimeUnit::ms());
-        qint64 currentTimeMsEpoch = QDateTime::currentMSecsSinceEpoch();
         qint64 timeoutAircraftEpochMs = currentTimeMsEpoch - aircraftTimeoutMs;
         qint64 timeoutAtcEpochMs = currentTimeMsEpoch - atcTimeoutMs;
 
@@ -107,4 +147,18 @@ namespace BlackCore
             emit timeoutAtc(callsign);
         }
     }
+
+    void CAirspaceAnalyzer::analyzeAirspace()
+    {
+        CAirspaceAircraftSnapshot snapshot(getAircraftInRange()); // thread safe copy
+
+        // lock block
+        {
+            QWriteLocker l(&m_lockSnapshot);
+            m_latestAircraftSnapshot = snapshot;
+        }
+
+        emit airspaceAircraftSnapshot(snapshot);
+    }
+
 } // ns

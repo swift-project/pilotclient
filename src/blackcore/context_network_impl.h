@@ -74,9 +74,10 @@ namespace BlackCore
         //! \copydoc IRemoteAircraftProvider::connectSignals
         //! \ingroup remoteaircraftprovider
         virtual bool connectRemoteAircraftProviderSignals(
-            std::function<void(const BlackMisc::Aviation::CAircraftSituation &)> situationSlot,
-            std::function<void(const BlackMisc::Aviation::CAircraftParts &)> partsSlot,
-            std::function<void(const BlackMisc::Aviation::CCallsign &)> removedAircraftSlot
+            std::function<void(const BlackMisc::Aviation::CAircraftSituation &)>          addedSituationSlot,
+            std::function<void(const BlackMisc::Aviation::CAircraftParts &)>              addedPartsSlot,
+            std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,
+            std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
         ) override;
 
         //! \copydoc IRemoteAircraftProvider::updateAircraftRendered
@@ -86,6 +87,10 @@ namespace BlackCore
         //! \copydoc IRemoteAircraftProvider::updateMarkAllAsNotRendered
         //! \ingroup remoteaircraftprovider
         virtual void updateMarkAllAsNotRendered(const QString &originator) override;
+
+        //! \copydoc IRemoteAircraftProvider::getLatestAirspaceAircraftSnapshot
+        //! \ingroup remoteaircraftprovider
+        virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
 
     public slots:
         //! \copydoc IContextNetwork::updateAircraftEnabled

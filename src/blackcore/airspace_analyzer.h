@@ -13,6 +13,7 @@
 #define BLACKCORE_AIRSPACE_ANALYZER_H
 
 #include "blackcore/network.h"
+#include "blackmisc/simulation/airspaceaircraftsnapshot.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/worker.h"
@@ -23,7 +24,6 @@
 
 namespace BlackCore
 {
-
     //! Class monitoring and analyzing (closests aircraft, outdated aircraft / watchdog) airspace
     //! in background.
     //!
@@ -47,6 +47,10 @@ namespace BlackCore
                           BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                           INetwork *network, QObject *parent);
 
+        //! Get the latest snapshot
+        //! \threadsafe
+        BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const;
+
     public slots:
         //! Clear
         void clear();
@@ -57,6 +61,9 @@ namespace BlackCore
 
         //! Callsign has timed out
         void timeoutAtc(const BlackMisc::Aviation::CCallsign &callsign);
+
+        //! New aircraft snapshot
+        void airspaceAircraftSnapshot(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
 
     private slots:
         //! Remove callsign from watch list
@@ -73,17 +80,30 @@ namespace BlackCore
                                          const BlackMisc::Geo::CCoordinateGeodetic &pos, const BlackMisc::PhysicalQuantities::CLength &range);
 
         //! Connection status of network changed
-        void ps_onConnectionStatusChanged(INetwork::ConnectionStatus oldStatus, INetwork::ConnectionStatus newStatus);
+        void ps_onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus);
+
+        //! Run a check
+        void ps_timeout();
 
     private:
         //! Check for time outs
         void watchdogCheckTimeouts();
 
-        CCallsignTimestampSet m_aircraftCallsignTimestamps;
-        CCallsignTimestampSet m_atcCallsignTimestamps;
+        //! Analyze the airspace
+        void analyzeAirspace();
+
+        QTimer *m_timer = nullptr; //!< multi purpose timer for snapshots and watchdog
+
+        // watchdog
+        CCallsignTimestampSet m_aircraftCallsignTimestamps; //!< for watchdog (pilots)
+        CCallsignTimestampSet m_atcCallsignTimestamps;      //!< for watchdog (ATC)
         BlackMisc::PhysicalQuantities::CTime m_timeoutAircraft = {15, BlackMisc::PhysicalQuantities::CTimeUnit::s() }; //!< Timeout value for watchdog functionality
         BlackMisc::PhysicalQuantities::CTime m_timeoutAtc = {50, BlackMisc::PhysicalQuantities::CTimeUnit::s() }; //!< Timeout value for watchdog functionality
+        qint64 m_lastWatchdogCallMsSinceEpoch;
 
+        // snapshot
+        BlackMisc::Simulation::CAirspaceAircraftSnapshot m_latestAircraftSnapshot;
+        mutable QReadWriteLock m_lockSnapshot;   //!< lock snapshot
     };
 
 } // namespace

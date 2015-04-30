@@ -5,6 +5,7 @@
 
 #include "blackcorefreefunctions.h"
 #include "voice_channel.h"
+#include "network.h"
 #include "simulator.h"
 #include <QThread>
 
@@ -13,12 +14,13 @@ namespace BlackCore
     void registerMetadata()
     {
         qRegisterMetaType<BlackCore::IVoiceChannel::ConnectionStatus>();
+        qRegisterMetaType<BlackCore::INetwork::ConnectionStatus>();
     }
 
     bool isCurrentThreadCreatingThread(QObject *toBeTested)
     {
-        if (!toBeTested) return false;
-        if (!toBeTested->thread()) return false;
+        if (!toBeTested) { return false; }
+        if (!toBeTested->thread()) { return false; }
         return (QThread::currentThreadId() == toBeTested->thread()->currentThreadId());
     }
 

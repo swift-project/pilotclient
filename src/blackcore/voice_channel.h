@@ -27,6 +27,7 @@ namespace BlackCore
     class BLACKCORE_EXPORT IVoiceChannel : public QObject
     {
         Q_OBJECT
+        Q_ENUMS(ConnectionStatus)
 
     public:
         //! Com status
@@ -37,7 +38,7 @@ namespace BlackCore
             DisconnectedError,  //!< Disconnected due to socket error
             Connecting,         //!< Connection initiated but not established
             Connected,          //!< Connection established
-            ConnectingFailed,   //!< Failed to connect
+            ConnectingFailed    //!< Failed to connect
         };
 
         //! Constructor
@@ -98,7 +99,7 @@ namespace BlackCore
     protected:
 
     };
-}
+} // ns
 
 Q_DECLARE_METATYPE(BlackCore::IVoiceChannel::ConnectionStatus)
 
