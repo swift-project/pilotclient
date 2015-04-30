@@ -557,6 +557,65 @@ namespace BlackMisc
         class CompareByTuple<Derived, false>
         {};
 
+        /*!
+         * CRTP class template from which a derived class can inherit string streaming operations.
+         */
+        template <class Derived>
+        class String
+        {
+        public:
+            //! Stream << overload to be used in debugging messages
+            friend QDebug operator<<(QDebug debug, const Derived &obj)
+            {
+                debug << obj.stringForStreaming();
+                return debug;
+            }
+
+            //! Operator << when there is no debug stream
+            friend QNoDebug operator<<(QNoDebug nodebug, const Derived &obj)
+            {
+                Q_UNUSED(obj);
+                return nodebug;
+            }
+
+            //! Operator << based on text stream
+            friend QTextStream &operator<<(QTextStream &stream, const Derived &obj)
+            {
+                stream << obj.stringForStreaming();
+                return stream;
+            }
+
+            //! Operator << for QDataStream
+            friend QDataStream &operator<<(QDataStream &stream, const Derived &obj)
+            {
+                stream << obj.stringForStreaming();
+                return stream;
+            }
+
+            //! Stream operator << for std::cout
+            friend std::ostream &operator<<(std::ostream &ostr, const Derived &obj)
+            {
+                ostr << obj.stringForStreaming().toStdString();
+                return ostr;
+            }
+
+            //! Cast as QString
+            QString toQString(bool i18n = false) const { return derived()->convertToQString(i18n); }
+
+            //! Cast to pretty-printed QString
+            virtual QString toFormattedQString(bool i18n = false) const { return derived()->toQString(i18n); }
+
+            //! To std string
+            std::string toStdString(bool i18n = false) const { return derived()->convertToQString(i18n).toStdString(); }
+
+            //! String for streaming operators
+            virtual QString stringForStreaming() const { return derived()->convertToQString(); }
+
+        private:
+            const Derived *derived() const { return static_cast<const Derived *>(this); }
+            Derived *derived() { return static_cast<Derived *>(this); }
+        };
+
     }
 
     /*!
@@ -577,46 +636,12 @@ namespace BlackMisc
         public Mixin::JsonByTuple<Derived, Policy::Json::IsMetaTuple<Derived, Base>::value>,
         public Mixin::EqualsByTuple<Derived, Policy::Equals::IsMetaTuple<Derived, Base>::value>,
         public Mixin::LessThanByTuple<Derived, Policy::LessThan::IsMetaTuple<Derived, Base>::value>,
-        public Mixin::CompareByTuple<Derived, Policy::Compare::IsMetaTuple<Derived, Base>::value>
+        public Mixin::CompareByTuple<Derived, Policy::Compare::IsMetaTuple<Derived, Base>::value>,
+        public Mixin::String<Derived>
     {
         static_assert(std::is_same<CEmpty, Base>::value || IsValueObject<Base>::value, "Base must be either CEmpty or derived from CValueObject");
 
         using PropertyIndexPolicy = typename CValueObjectPolicy<Derived>::PropertyIndex;
-
-        //! Stream << overload to be used in debugging messages
-        friend QDebug operator<<(QDebug debug, const Derived &obj)
-        {
-            debug << obj.stringForStreaming();
-            return debug;
-        }
-
-        //! Operator << when there is no debug stream
-        friend QNoDebug operator<<(QNoDebug nodebug, const Derived &obj)
-        {
-            Q_UNUSED(obj);
-            return nodebug;
-        }
-
-        //! Operator << based on text stream
-        friend QTextStream &operator<<(QTextStream &textStream, const Derived &obj)
-        {
-            textStream << obj.stringForStreaming();
-            return textStream;
-        }
-
-        //! Operator << for QDataStream
-        friend QDataStream &operator<<(QDataStream &stream, const Derived &valueObject)
-        {
-            stream << valueObject.stringForStreaming();
-            return stream;
-        }
-
-        //! Stream operator << for std::cout
-        friend std::ostream &operator<<(std::ostream &ostr, const Derived &obj)
-        {
-            ostr << obj.stringForStreaming().toStdString();
-            return ostr;
-        }
 
     public:
         //! Base class
@@ -633,14 +658,14 @@ namespace BlackMisc
             IndexString
         };
 
-        //! Cast as QString
-        QString toQString(bool i18n = false) const { return this->convertToQString(i18n); }
+        //! \copydoc BlackMisc::Mixin::String::toQString
+        using Mixin::String<Derived>::toQString;
 
-        //! Cast to pretty-printed QString
-        virtual QString toFormattedQString(bool i18n = false) const { return this->toQString(i18n); }
+        //! \copydoc BlackMisc::Mixin::String::toFormattedQString
+        virtual QString toFormattedQString(bool i18n = false) const override { return this->Mixin::String<Derived>::toQString(i18n); }
 
-        //! To std string
-        std::string toStdString(bool i18n = false) const { return this->convertToQString(i18n).toStdString(); }
+        //! \copydoc BlackMisc::Mixin::String::toStdString
+        using Mixin::String<Derived>::toStdString;
 
         //! Update by variant map
         //! \return number of values changed, with skipEqualValues equal values will not be changed
@@ -700,13 +725,13 @@ namespace BlackMisc
         //! Copy assignment operator.
         CValueObject &operator =(const CValueObject &) = default;
 
-        //! String for streaming operators
-        virtual QString stringForStreaming() const { return this->convertToQString(); }
-
         //! \copydoc BlackMisc::Mixin::MetaType::getMetaTypeId
         using Mixin::MetaType<Derived>::getMetaTypeId;
 
     public:
+        //! \copydoc BlackMisc::Mixin::String::stringForStreaming
+        virtual QString stringForStreaming() const override { return this->Mixin::String<Derived>::stringForStreaming(); }
+
         //! \copydoc BlackMisc::Mixin::DBusByTuple::marshallToDbus
         using Mixin::DBusByTuple<Derived, Policy::DBus::IsMetaTuple<Derived, Base>::value>::marshallToDbus;
 
