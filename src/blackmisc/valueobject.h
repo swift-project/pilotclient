@@ -102,9 +102,6 @@ namespace BlackMisc
         ~CEmpty() = default;
     };
 
-    //! Dummy comparison.
-    inline int compare(const CEmpty &, const CEmpty &) { return 0; }
-
     /*!
      * Default policy classes for use by CValueObject.
      *
@@ -465,6 +462,101 @@ namespace BlackMisc
             static void baseConvertFromJson(CEmpty &, const QJsonObject &) {}
         };
 
+        /*!
+         * CRTP class template from which a derived class can inherit operator== implemented by metatuple.
+         */
+        template <class Derived, bool IsTupleBased = true>
+        class EqualsByTuple : private Private::EncapsulationBreaker
+        {
+        public:
+            //! Equals
+            friend bool operator ==(const Derived &a, const Derived &b) { return equals(a, b); }
+
+            //! Not equal
+            friend bool operator !=(const Derived &a, const Derived &b) { return ! equals(a, b); }
+
+        private:
+            static bool equals(const Derived &a, const Derived &b)
+            {
+                using Base = typename Derived::base_type;
+                return toMetaTuple(a) == toMetaTuple(b) && baseEquals(static_cast<const Base &>(a), static_cast<const Base &>(b));
+            }
+            template <typename T> static bool baseEquals(const T &a, const T &b) { return a == b; }
+            static bool baseEquals(const CEmpty &, const CEmpty &) { return true; }
+        };
+
+        /*!
+         * Specialization of EqualsByTuple for classes not registered with the tuple system.
+         */
+        template <class Derived>
+        class EqualsByTuple<Derived, false>
+        {};
+
+        /*!
+         * CRTP class template from which a derived class can inherit operator< implemented by metatuple.
+         */
+        template <class Derived, bool IsTupleBased = true>
+        class LessThanByTuple : private Private::EncapsulationBreaker
+        {
+        public:
+            //! Less than
+            friend bool operator <(const Derived &a, const Derived &b) { return less(a, b); }
+
+            //! Greater than
+            friend bool operator >(const Derived &a, const Derived &b) { return less(b, a); }
+
+            //! Less than or equal
+            friend bool operator <=(const Derived &a, const Derived &b) { return ! less(b, a); }
+
+            //! Greater than or equal
+            friend bool operator >=(const Derived &a, const Derived &b) { return ! less(a, b); }
+
+        private:
+            static bool less(const Derived &a, const Derived &b)
+            {
+                using Base = typename Derived::base_type;
+                if (baseLess(static_cast<const Base &>(a), static_cast<const Base &>(b))) { return true; }
+                return toMetaTuple(a) < toMetaTuple(b);
+            }
+            template <typename T> static bool baseLess(const T &a, const T &b) { return a < b; }
+            static bool baseLess(const CEmpty &, const CEmpty &) { return false; }
+        };
+
+        /*!
+         * Specialization of LessThanByTuple for classes not registered with the tuple system.
+         */
+        template <class Derived>
+        class LessThanByTuple<Derived, false>
+        {};
+
+        /*!
+         * CRTP class template from which a derived class can inherit non-member compare() implemented by metatuple.
+         */
+        template <class Derived, bool IsTupleBased = true>
+        class CompareByTuple : private Private::EncapsulationBreaker
+        {
+        public:
+            //! Return negative, zero, or positive if a is less than, equal to, or greater than b.
+            friend int compare(const Derived &a, const Derived &b) { return compareImpl(a, b); }
+
+        private:
+            static int compareImpl(const Derived &a, const Derived &b)
+            {
+                int baseCmp = baseCompare(static_cast<const typename Derived::base_type &>(a), static_cast<const typename Derived::base_type &>(b));
+                if (baseCmp) { return baseCmp; }
+                return BlackMisc::compare(toMetaTuple(a), toMetaTuple(b));
+            }
+            template <typename T> static int baseCompare(const T &a, const T &b) { return compare(a, b); }
+            static int baseCompare(const CEmpty &, const CEmpty &) { return 0; }
+        };
+
+        /*!
+         * Specialization of CompareByTuple for classes not registered with the tuple system.
+         */
+        template <class Derived>
+        class CompareByTuple<Derived, false>
+        {};
+
     }
 
     /*!
@@ -483,9 +575,9 @@ namespace BlackMisc
         public Mixin::HashByTuple<Derived, Policy::Hash::IsMetaTuple<Derived, Base>::value>,
         public Mixin::DBusByTuple<Derived, Policy::DBus::IsMetaTuple<Derived, Base>::value>,
         public Mixin::JsonByTuple<Derived, Policy::Json::IsMetaTuple<Derived, Base>::value>,
-        private CValueObjectPolicy<Derived>::Equals::template Ops<Derived, Base>,
-        private CValueObjectPolicy<Derived>::LessThan::template Ops<Derived, Base>,
-        private CValueObjectPolicy<Derived>::Compare::template Ops<Derived, Base>
+        public Mixin::EqualsByTuple<Derived, Policy::Equals::IsMetaTuple<Derived, Base>::value>,
+        public Mixin::LessThanByTuple<Derived, Policy::LessThan::IsMetaTuple<Derived, Base>::value>,
+        public Mixin::CompareByTuple<Derived, Policy::Compare::IsMetaTuple<Derived, Base>::value>
     {
         static_assert(std::is_same<CEmpty, Base>::value || IsValueObject<Base>::value, "Base must be either CEmpty or derived from CValueObject");
 

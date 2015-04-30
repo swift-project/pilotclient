@@ -193,8 +193,24 @@ namespace BlackMisc
         //! Equal operator.
         friend bool operator ==(const CVariant &a, const CVariant &b) { return compare(a, b) == 0; }
 
+        //! Not equal operator.
+        //! \todo temporary, remove after refactoring
+        friend bool operator !=(const CVariant &a, const CVariant &b) { return compare(a, b) != 0; }
+
         //! Less than operator.
         friend bool operator <(const CVariant &a, const CVariant &b) { return compare(a, b) < 0; }
+
+        //! Greater than operator.
+        //! \todo temporary, remove after refactoring
+        friend bool operator >(const CVariant &a, const CVariant &b) { return compare(a, b) > 0; }
+
+        //! Less than or equal operator.
+        //! \todo temporary, remove after refactoring
+        friend bool operator <=(const CVariant &a, const CVariant &b) { return compare(a, b) <= 0; }
+
+        //! Greater than or equal operator.
+        //! \todo temporary, remove after refactoring
+        friend bool operator >=(const CVariant &a, const CVariant &b) { return compare(a, b) >= 0; }
 
         //! \copydoc CValueObject::compare
         friend int compare(const CVariant &a, const CVariant &b) { return compareImpl(a, b); }

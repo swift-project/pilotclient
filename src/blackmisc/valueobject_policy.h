@@ -138,6 +138,11 @@ namespace BlackMisc
                     friend bool operator !=(const T &a, const T &b) { return !(a == b); }
                 };
             };
+
+            //! \private Detect the policy of T, following inheritance.
+            template <class T, class B, class P = typename CValueObjectPolicy<T>::Equals> struct IsMetaTuple : public std::false_type {};
+            template <class T, class B> struct IsMetaTuple<T, B, MetaTuple> : public std::true_type {};
+            template <class T, class B> struct IsMetaTuple<T, B, Inherit> : public IsMetaTuple<B, typename B::base_type> {};
         }
 
         namespace LessThan
@@ -196,6 +201,11 @@ namespace BlackMisc
                     friend bool operator <=(const T &a, const T &b) { return !(b < a); }
                 };
             };
+
+            //! \private Detect the policy of T, following inheritance.
+            template <class T, class B, class P = typename CValueObjectPolicy<T>::LessThan> struct IsMetaTuple : public std::false_type {};
+            template <class T, class B> struct IsMetaTuple<T, B, MetaTuple> : public std::true_type {};
+            template <class T, class B> struct IsMetaTuple<T, B, Inherit> : public IsMetaTuple<B, typename B::base_type> {};
         }
 
         namespace Compare
@@ -248,6 +258,11 @@ namespace BlackMisc
                     }
                 };
             };
+
+            //! \private Detect the policy of T, following inheritance.
+            template <class T, class B, class P = typename CValueObjectPolicy<T>::Compare> struct IsMetaTuple : public std::false_type {};
+            template <class T, class B> struct IsMetaTuple<T, B, MetaTuple> : public std::true_type {};
+            template <class T, class B> struct IsMetaTuple<T, B, Inherit> : public IsMetaTuple<B, typename B::base_type> {};
         }
 
         namespace Hash

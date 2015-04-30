@@ -55,6 +55,10 @@ namespace BlackMisc
         template <typename T>
         uint qHash(const T &) { return 0; }
 
+        //! \private Fallback in case compare is not defined for T.
+        template <typename T>
+        int compare(const T &, const T &) { return 0; }
+
         //! \private Implementation of IValueObjectMetaInfo representing the set of operations supported by T.
         template <typename T>
         struct CValueObjectMetaInfo : public IValueObjectMetaInfo
