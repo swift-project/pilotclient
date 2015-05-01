@@ -16,6 +16,7 @@
 #include "dbus.h"
 #include "tuple.h"
 #include "json.h"
+#include "icons.h"
 #include "blackmiscfreefunctions.h"
 #include "valueobject_private.h"
 #include "valueobject_policy.h"
@@ -71,14 +72,6 @@ namespace BlackMisc
     public:
         //! Base class is alias of itself
         using base_type = CEmpty;
-
-        //! As icon, not implemented by all classes
-        //! \todo Here because incomplete type. Move to policy class during policy refactoring.
-        virtual CIcon toIcon() const;
-
-        //! As pixmap, required for most GUI views
-        //! \todo Here because incomplete type. Move to policy class during policy refactoring.
-        virtual QPixmap toPixmap() const;
 
         //! Parse from string, e.g. 100km/h
         //! \todo Here to avoid name hiding in PQ classes. Fix during policy refactoring.
@@ -672,6 +665,21 @@ namespace BlackMisc
             Derived *derived() { return static_cast<Derived *>(this); }
         };
 
+        template <class Derived, CIcons::IconIndex IconIndex = CIcons::StandardIconUnknown16>
+        class Icon
+        {
+        public:
+            //! As icon, not implemented by all classes
+            virtual CIcon toIcon() const; // implemented later due to cyclic include dependency
+
+            //! As pixmap, required for most GUI views
+            virtual QPixmap toPixmap() const; // implemented later due to cyclic include dependency
+
+        private:
+            const Derived *derived() const { return static_cast<const Derived *>(this); }
+            Derived *derived() { return static_cast<Derived *>(this); }
+        };
+
     }
 
     /*!
@@ -694,7 +702,8 @@ namespace BlackMisc
         public Mixin::LessThanByTuple<Derived, Policy::LessThan::IsMetaTuple<Derived, Base>::value>,
         public Mixin::CompareByTuple<Derived, Policy::Compare::IsMetaTuple<Derived, Base>::value>,
         public Mixin::String<Derived>,
-        public Mixin::Index<Derived, std::is_same<Base, CEmpty>::value>
+        public Mixin::Index<Derived, std::is_same<Base, CEmpty>::value>,
+        public Mixin::Icon<Derived>
     {
         static_assert(std::is_same<CEmpty, Base>::value || IsValueObject<Base>::value, "Base must be either CEmpty or derived from CValueObject");
 
@@ -754,6 +763,12 @@ namespace BlackMisc
 
         //! \copydoc BlackMisc::Mixin::Index::equalsPropertyByIndex
         using Mixin::Index<Derived, std::is_same<Base, CEmpty>::value>::equalsPropertyByIndex;
+
+        //! \copydoc BlackMisc::Mixin::Icon::toIcon
+        using Mixin::Icon<Derived>::toIcon;
+
+        //! \copydoc BlackMisc::Mixin::Icon::toPixmap
+        using Mixin::Icon<Derived>::toPixmap;
 
         //! \copydoc BlackMisc::Mixin::MetaType::isA
         using Mixin::MetaType<Derived>::isA;
@@ -893,6 +908,16 @@ namespace BlackMisc
         bool Index<Derived, BaseIsEmpty>::equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const
         {
             return derived()->propertyByIndex(index) == compareValue;
+        }
+        template <class Derived, CIcons::IconIndex IconIndex>
+        CIcon Icon<Derived, IconIndex>::toIcon() const
+        {
+            return CIconList::iconByIndex(IconIndex);
+        }
+        template <class Derived, CIcons::IconIndex IconIndex>
+        QPixmap Icon<Derived, IconIndex>::toPixmap() const
+        {
+            return derived()->toIcon().toPixmap();
         }
     }
 }

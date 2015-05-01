@@ -9,6 +9,8 @@
 
 //! \file
 
+#include "valueobject.h" // outside include guard due to cyclic dependency hack (MS)
+
 #ifndef BLACKMISC_ICONLIST_H
 #define BLACKMISC_ICONLIST_H
 

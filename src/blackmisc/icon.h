@@ -9,11 +9,12 @@
 
 //! \file
 
+#include "valueobject.h" // outside include guard due to cyclic dependency hack (MS)
+
 #ifndef BLACKMISC_ICON_H
 #define BLACKMISC_ICON_H
 
 #include "blackmiscexport.h"
-#include "valueobject.h"
 #include "icons.h"
 #include <QIcon>
 
