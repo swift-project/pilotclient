@@ -616,6 +616,62 @@ namespace BlackMisc
             Derived *derived() { return static_cast<Derived *>(this); }
         };
 
+        /*!
+         * CRTP class template from which a derived class can inherit property indexing functions.
+         */
+        template <class Derived, bool BaseIsEmpty = true>
+        class Index
+        {
+        public:
+            //! Update by variant map
+            //! \return number of values changed, with skipEqualValues equal values will not be changed
+            CPropertyIndexList apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues = false); // implemented later due to cyclic include dependency
+
+            //! Set property by index
+            virtual void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index); // implemented later due to cyclic include dependency
+
+            //! Property by index
+            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const; // implemented later due to cyclic include dependency
+
+            //! Property by index as String
+            virtual QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const; // implemented later due to cyclic include dependency
+
+            //! Is given variant equal to value of property index?
+            virtual bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const; // implemented later due to cyclic include dependency
+
+        private:
+            const Derived *derived() const { return static_cast<const Derived *>(this); }
+            Derived *derived() { return static_cast<Derived *>(this); }
+        };
+
+        /*!
+         * Specialization of Index for classes further down an inheritance hierarchy.
+         */
+        template <class Derived>
+        class Index<Derived, false>
+        {
+        public:
+            //! Update by variant map
+            //! \return number of values changed, with skipEqualValues equal values will not be changed
+            CPropertyIndexList apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues = false); // implemented later due to cyclic include dependency
+
+            //! Set property by index
+            virtual void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index) { derived()->Derived::base_type::setPropertyByIndex(variant, index); }
+
+            //! Property by index
+            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const; // implemented later due to cyclic include dependency
+
+            //! Property by index as String
+            virtual QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const { return derived()->Derived::base_type::propertyByIndexAsString(index, i18n); }
+
+            //! Is given variant equal to value of property index?
+            virtual bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const { return derived()->Derived::base_type::equalsPropertyByIndex(compareValue, index); }
+
+        private:
+            const Derived *derived() const { return static_cast<const Derived *>(this); }
+            Derived *derived() { return static_cast<Derived *>(this); }
+        };
+
     }
 
     /*!
@@ -637,11 +693,10 @@ namespace BlackMisc
         public Mixin::EqualsByTuple<Derived, Policy::Equals::IsMetaTuple<Derived, Base>::value>,
         public Mixin::LessThanByTuple<Derived, Policy::LessThan::IsMetaTuple<Derived, Base>::value>,
         public Mixin::CompareByTuple<Derived, Policy::Compare::IsMetaTuple<Derived, Base>::value>,
-        public Mixin::String<Derived>
+        public Mixin::String<Derived>,
+        public Mixin::Index<Derived, std::is_same<Base, CEmpty>::value>
     {
         static_assert(std::is_same<CEmpty, Base>::value || IsValueObject<Base>::value, "Base must be either CEmpty or derived from CValueObject");
-
-        using PropertyIndexPolicy = typename CValueObjectPolicy<Derived>::PropertyIndex;
 
     public:
         //! Base class
@@ -667,9 +722,8 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::String::toStdString
         using Mixin::String<Derived>::toStdString;
 
-        //! Update by variant map
-        //! \return number of values changed, with skipEqualValues equal values will not be changed
-        CPropertyIndexList apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues = false); // implemented later due to cyclic include dependency
+        //! \copydoc BlackMisc::Mixin::Index::apply
+        using Mixin::Index<Derived, std::is_same<Base, CEmpty>::value>::apply;
 
         //! \copydoc BlackMisc::Mixin::MetaType::toCVariant
         using Mixin::MetaType<Derived>::toCVariant;
@@ -689,17 +743,17 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::MetaType::convertFromQVariant
         using Mixin::MetaType<Derived>::convertFromQVariant;
 
-        //! Set property by index
-        virtual void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index) { PropertyIndexPolicy::setPropertyByIndex(*derived(), variant, index); }
+        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+        using Mixin::Index<Derived, std::is_same<Base, CEmpty>::value>::setPropertyByIndex;
 
-        //! Property by index
-        virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const; // implemented later due to cyclic include dependency
+        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+        using Mixin::Index<Derived, std::is_same<Base, CEmpty>::value>::propertyByIndex;
 
-        //! Property by index as String
-        virtual QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const { return PropertyIndexPolicy::propertyByIndexAsString(*derived(), index, i18n); }
+        //! \copydoc BlackMisc::Mixin::Index::propertyByIndexAsString
+        using Mixin::Index<Derived, std::is_same<Base, CEmpty>::value>::propertyByIndexAsString;
 
-        //! Is given variant equal to value of property index?
-        virtual bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const { return PropertyIndexPolicy::equalsPropertyByIndex(*derived(), compareValue, index); }
+        //! \copydoc BlackMisc::Mixin::Index::equalsPropertyByIndex
+        using Mixin::Index<Derived, std::is_same<Base, CEmpty>::value>::equalsPropertyByIndex;
 
         //! \copydoc BlackMisc::Mixin::MetaType::isA
         using Mixin::MetaType<Derived>::isA;
@@ -708,9 +762,6 @@ namespace BlackMisc
         using Mixin::MetaType<Derived>::registerMetadata;
 
     protected:
-        template <typename T>
-        friend struct Private::CValueObjectMetaInfo;
-
         //! Default constructor.
         CValueObject() = default;
 
@@ -737,10 +788,6 @@ namespace BlackMisc
 
         //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
         using Mixin::DBusByTuple<Derived, Policy::DBus::IsMetaTuple<Derived, Base>::value>::unmarshallFromDbus;
-
-    private:
-        const Derived *derived() const { return static_cast<const Derived *>(this); }
-        Derived *derived() { return static_cast<Derived *>(this); }
     };
 
 } // namespace
@@ -766,97 +813,86 @@ namespace BlackMisc
         {
             derived()->convertFromQVariant(variant.getQVariant());
         }
-    }
-    template <class Derived, class Base>
-    CPropertyIndexList CValueObject<Derived, Base>::apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues)
-    {
-        CPropertyIndexList result;
-        PropertyIndexPolicy::apply(*derived(), indexMap, result, skipEqualValues);
-        return result;
-    }
-    template <class Derived, class Base>
-    CVariant CValueObject<Derived, Base>::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
-    {
-        CVariant result;
-        PropertyIndexPolicy::propertyByIndex(*derived(), index, result);
-        return result;
-    }
-    namespace Policy
-    {
-        namespace PropertyIndex
+        template <class Derived>
+        CPropertyIndexList Index<Derived, false>::apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues)
         {
-            template <class T, class...>
-            void Default::apply(T &obj, const CPropertyIndexVariantMap &indexMap, CPropertyIndexList &o_changed, bool skipEqualValues, Default::EnableIfEmptyBase<T>)
-            {
-                if (indexMap.isEmpty()) return;
+            return derived()->Derived::base_type::apply(indexMap, skipEqualValues);
+        }
+        template <class Derived>
+        CVariant Index<Derived, false>::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        {
+            return derived()->Derived::base_type::propertyByIndex(index);
+        }
+        template <class Derived, bool BaseIsEmpty>
+        CPropertyIndexList Index<Derived, BaseIsEmpty>::apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues)
+        {
+            if (indexMap.isEmpty()) return {};
 
-                const auto &map = indexMap.map();
-                for (auto it = map.begin(); it != map.end(); ++it)
-                {
-                    const CVariant value = it.value().toCVariant();
-                    const CPropertyIndex index = it.key();
-                    if (skipEqualValues)
-                    {
-                        bool equal = obj.equalsPropertyByIndex(value, index);
-                        if (equal) { continue; }
-                    }
-                    obj.setPropertyByIndex(value, index);
-                    o_changed.push_back(index);
-                }
-            }
-            template <class T, class...>
-            void Default::setPropertyByIndex(T &obj, const CVariant &variant, const CPropertyIndex &index, Default::EnableIfEmptyBase<T>)
+            CPropertyIndexList changed;
+            const auto &map = indexMap.map();
+            for (auto it = map.begin(); it != map.end(); ++it)
             {
-                if (index.isMyself())
+                const CVariant value = it.value().toCVariant();
+                const CPropertyIndex index = it.key();
+                if (skipEqualValues)
                 {
-                    obj.convertFromCVariant(variant);
-                    return;
+                    bool equal = derived()->equalsPropertyByIndex(value, index);
+                    if (equal) { continue; }
                 }
+                derived()->setPropertyByIndex(value, index);
+                changed.push_back(index);
+            }
+            return changed;
+        }
+        template <class Derived, bool BaseIsEmpty>
+        void Index<Derived, BaseIsEmpty>::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
+        {
+            if (index.isMyself())
+            {
+                derived()->convertFromCVariant(variant);
+                return;
+            }
 
-                // not all classes have implemented nesting
-                const QString m = QString("Property by index not found (setter), index: ").append(index.toQString());
-                qFatal("%s", qPrintable(m));
-            }
-            template <class T, class...>
-            void Default::propertyByIndex(const T &obj, const CPropertyIndex &index, CVariant &o_property, Default::EnableIfEmptyBase<T>)
+            // not all classes have implemented nesting
+            const QString m = QString("Property by index not found (setter), index: ").append(index.toQString());
+            qFatal("%s", qPrintable(m));
+        }
+        template <class Derived, bool BaseIsEmpty>
+        CVariant Index<Derived, BaseIsEmpty>::propertyByIndex(const CPropertyIndex &index) const
+        {
+            if (index.isMyself())
             {
-                if (index.isMyself())
-                {
-                    o_property = obj.toCVariant();
-                    return;
-                }
-                using Base = CValueObject<T, typename T::base_type>;
-                auto i = index.frontCasted<typename CValueObject<T, typename T::base_type>::ColumnIndex>();
-                switch (i)
-                {
-                case Base::IndexIcon:
-                    o_property = CVariant::from(obj.toIcon());
-                    return;
-                case Base::IndexPixmap:
-                    o_property = CVariant::from(obj.toPixmap());
-                    return;
-                case Base::IndexString:
-                    o_property = CVariant(obj.toQString());
-                    return;
-                default:
-                    break;
-                }
+                return derived()->toCVariant();
+            }
+            using Base = CValueObject<Derived, typename Derived::base_type>;
+            auto i = index.frontCasted<typename CValueObject<Derived, typename Derived::base_type>::ColumnIndex>();
+            switch (i)
+            {
+            case Base::IndexIcon:
+                return CVariant::from(derived()->toIcon());
+            case Base::IndexPixmap:
+                return CVariant::from(derived()->toPixmap());
+            case Base::IndexString:
+                return CVariant(derived()->toQString());
+            default:
+                break;
+            }
 
-                // not all classes have implemented nesting
-                const QString m = QString("Property by index not found, index: ").append(index.toQString());
-                qFatal("%s", qPrintable(m));
-            }
-            template <class T, class...>
-            QString Default::propertyByIndexAsString(const T &obj, const CPropertyIndex &index, bool i18n, Default::EnableIfEmptyBase<T>)
-            {
-                // default implementation, requires propertyByIndex
-                return obj.propertyByIndex(index).toQString(i18n);
-            }
-            template <class T, class...>
-            bool Default::equalsPropertyByIndex(const T &obj, const CVariant &compareValue, const CPropertyIndex &index, Default::EnableIfEmptyBase<T>)
-            {
-                return obj.propertyByIndex(index) == compareValue;
-            }
+            // not all classes have implemented nesting
+            const QString m = QString("Property by index not found, index: ").append(index.toQString());
+            qFatal("%s", qPrintable(m));
+            return {};
+        }
+        template <class Derived, bool BaseIsEmpty>
+        QString Index<Derived, BaseIsEmpty>::propertyByIndexAsString(const CPropertyIndex &index, bool i18n) const
+        {
+            // default implementation, requires propertyByIndex
+            return derived()->propertyByIndex(index).toQString(i18n);
+        }
+        template <class Derived, bool BaseIsEmpty>
+        bool Index<Derived, BaseIsEmpty>::equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const
+        {
+            return derived()->propertyByIndex(index) == compareValue;
         }
     }
 }
