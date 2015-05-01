@@ -22,16 +22,16 @@ namespace BlackMisc
     {
         //! Model mappings interface, different mapping readers (e.g. from database, from vPilot data files)
         //! can implement this, but provide the same mapping list.
-        class BLACKMISC_EXPORT ISimulatorModelMappings : public QObject
+        class BLACKMISC_EXPORT IModelMappingsProvider : public QObject
         {
             Q_OBJECT
 
         public:
             //! Constructor
-            ISimulatorModelMappings(QObject *parent = nullptr);
+            IModelMappingsProvider(QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~ISimulatorModelMappings() {}
+            virtual ~IModelMappingsProvider() {}
 
             //! Load data
             virtual bool read() = 0;

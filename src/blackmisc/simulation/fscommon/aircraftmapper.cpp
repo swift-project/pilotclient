@@ -25,11 +25,11 @@ namespace BlackMisc
         {
             CAircraftMapper::CAircraftMapper(QObject *parent) : QObject(parent) { }
 
-            CAircraftMapper::CAircraftMapper(std::unique_ptr<ISimulatorModelMappings> mappings, QObject *parent) :
+            CAircraftMapper::CAircraftMapper(std::unique_ptr<IModelMappingsProvider> mappings, QObject *parent) :
                 QObject(parent), m_mappings(mappings.release())
             {  }
 
-            CAircraftMapper::CAircraftMapper(std::unique_ptr<ISimulatorModelMappings> mappings, const QString &simObjectsDir, QObject *parent) :
+            CAircraftMapper::CAircraftMapper(std::unique_ptr<IModelMappingsProvider> mappings, const QString &simObjectsDir, QObject *parent) :
                 QObject(parent), m_mappings(mappings.release())
             {
                 this->m_entries.changeDirectory(simObjectsDir);

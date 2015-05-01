@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "vpilotmodelmappings.h"
+#include "modelmappingsprovidervpilot.h"
 #include "blackmisc/network/aircraftmapping.h"
 
 #include <QtXml/QDomElement>
@@ -24,19 +24,19 @@ namespace BlackMisc
         namespace FsCommon
         {
 
-            CVPilotModelMappings::CVPilotModelMappings(bool standardDirectory, QObject *parent) :
-                ISimulatorModelMappings(parent)
+            CModelMappingsProviderVPilot::CModelMappingsProviderVPilot(bool standardDirectory, QObject *parent) :
+                IModelMappingsProvider(parent)
             {
-                if (standardDirectory) { this->addDirectory(CVPilotModelMappings::standardMappingsDirectory()); }
+                if (standardDirectory) { this->addDirectory(CModelMappingsProviderVPilot::standardMappingsDirectory()); }
             }
 
-            void CVPilotModelMappings::addFilename(const QString &fileName)
+            void CModelMappingsProviderVPilot::addFilename(const QString &fileName)
             {
                 if (this->m_fileList.contains(fileName)) return;
                 this->m_fileList.append(fileName);
             }
 
-            void CVPilotModelMappings::addDirectory(const QString &directory)
+            void CModelMappingsProviderVPilot::addDirectory(const QString &directory)
             {
                 QDir dir(directory);
                 if (!dir.exists()) return;
@@ -48,7 +48,7 @@ namespace BlackMisc
                 }
             }
 
-            const QString &CVPilotModelMappings::standardMappingsDirectory()
+            const QString &CModelMappingsProviderVPilot::standardMappingsDirectory()
             {
                 static QString directory;
                 if (directory.isEmpty())
@@ -60,7 +60,7 @@ namespace BlackMisc
                 return directory;
             }
 
-            bool CVPilotModelMappings::read()
+            bool CModelMappingsProviderVPilot::read()
             {
                 bool success = true;
                 this->m_loadedFiles = 0;
@@ -75,7 +75,7 @@ namespace BlackMisc
                 return success;
             }
 
-            bool CVPilotModelMappings::loadFile(const QString &fileName)
+            bool CModelMappingsProviderVPilot::loadFile(const QString &fileName)
             {
                 QFile f(fileName);
                 if (!f.exists()) { return  false; }

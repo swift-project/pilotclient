@@ -14,7 +14,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "aircraftcfgentrieslist.h"
-#include "../simulatormodelmappings.h"
+#include "blackmisc/simulation/modelmappingsprovider.h"
 #include "blackmisc/worker.h"
 #include <QObject>
 #include <QScopedPointer>
@@ -51,10 +51,10 @@ namespace BlackMisc
                 CAircraftMapper(QObject *parent = nullptr);
 
                 //! Constructor, handing over ownership or mappings object
-                CAircraftMapper(std::unique_ptr<ISimulatorModelMappings> mappings, QObject *parent = nullptr);
+                CAircraftMapper(std::unique_ptr<IModelMappingsProvider> mappings, QObject *parent = nullptr);
 
                 //! Constructor, handing over ownership or mappings object
-                CAircraftMapper(std::unique_ptr<ISimulatorModelMappings> mappings, const QString &simObjectsDir, QObject *parent = nullptr);
+                CAircraftMapper(std::unique_ptr<IModelMappingsProvider> mappings, const QString &simObjectsDir, QObject *parent = nullptr);
 
                 //! Destructor
                 ~CAircraftMapper();
@@ -109,7 +109,7 @@ namespace BlackMisc
                 static const BlackMisc::Simulation::CAircraftModel &getDefaultModel();
 
             private:
-                QScopedPointer<BlackMisc::Simulation::ISimulatorModelMappings> m_mappings; //!< all mapping definitions
+                QScopedPointer<BlackMisc::Simulation::IModelMappingsProvider> m_mappings; //!< all mapping definitions
                 CAircraftCfgEntriesList                           m_entries;  //!< all entries
                 bool                m_init = false;
                 bool                m_initInProgress = false;

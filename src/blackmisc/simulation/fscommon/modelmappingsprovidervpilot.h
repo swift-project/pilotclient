@@ -13,7 +13,7 @@
 #define BLACKMISC_SIMULATION_FSCOMMON_VPILOTMODELMAPPINGS_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "../simulatormodelmappings.h"
+#include "blackmisc/simulation/modelmappingsprovider.h"
 #include <QStringList>
 
 namespace BlackMisc
@@ -23,14 +23,14 @@ namespace BlackMisc
         namespace FsCommon
         {
             //! Model mappings
-            class BLACKMISC_EXPORT CVPilotModelMappings : public ISimulatorModelMappings
+            class BLACKMISC_EXPORT CModelMappingsProviderVPilot : public IModelMappingsProvider
             {
             public:
                 //! Constructor
-                CVPilotModelMappings(bool standardDirectory, QObject *parent = nullptr);
+                CModelMappingsProviderVPilot(bool standardDirectory, QObject *parent = nullptr);
 
                 //! Destructor
-                virtual ~CVPilotModelMappings() {}
+                virtual ~CModelMappingsProviderVPilot() {}
 
                 //! File names
                 void addFilename(const QString &fileName);

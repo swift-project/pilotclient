@@ -9,7 +9,7 @@
 
 #include "simulator_fscommon.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/simulation/fscommon/vpilotmodelmappings.h"
+#include "blackmisc/simulation/fscommon/modelmappingsprovidervpilot.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 
 using namespace BlackMisc::PhysicalQuantities;
@@ -112,12 +112,12 @@ namespace BlackSimPlugin
 
         CAircraftMapper *CSimulatorFsCommon::mapperInstance()
         {
-            static CVPilotModelMappings *mappings = new CVPilotModelMappings(true);
+            static CModelMappingsProviderVPilot *mappings = new CModelMappingsProviderVPilot(true);
 
             // tries to access simObjectsDir, if this is an mapped remote directory
             // init might hang for a while
             static CAircraftMapper *mapper = new CAircraftMapper(
-                std::unique_ptr<CVPilotModelMappings>(mappings), // currently hard wired
+                std::unique_ptr<CModelMappingsProviderVPilot>(mappings), // currently hard wired
                 simObjectsDir()
             );
             return mapper;

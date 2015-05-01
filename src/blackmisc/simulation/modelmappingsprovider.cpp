@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "simulatormodelmappings.h"
+#include "modelmappingsprovider.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
@@ -17,24 +17,24 @@ namespace BlackMisc
     namespace Simulation
     {
 
-        ISimulatorModelMappings::ISimulatorModelMappings(QObject *parent) : QObject(parent) {}
+        IModelMappingsProvider::IModelMappingsProvider(QObject *parent) : QObject(parent) {}
 
-        int ISimulatorModelMappings::size() const
+        int IModelMappingsProvider::size() const
         {
             return this->m_mappings.size();
         }
 
-        bool ISimulatorModelMappings::isEmpty() const
+        bool IModelMappingsProvider::isEmpty() const
         {
             return this->m_mappings.isEmpty();
         }
 
-        const CAircraftMappingList &ISimulatorModelMappings::getMappingList() const
+        const CAircraftMappingList &IModelMappingsProvider::getMappingList() const
         {
             return this->m_mappings;
         }
 
-        int ISimulatorModelMappings::synchronizeWithExistingModels(const QStringList &modelNames, Qt::CaseSensitivity cs)
+        int IModelMappingsProvider::synchronizeWithExistingModels(const QStringList &modelNames, Qt::CaseSensitivity cs)
         {
             if (modelNames.isEmpty() || this->m_mappings.isEmpty()) { return this->m_mappings.size(); }
             CAircraftMappingList newList;
