@@ -42,25 +42,20 @@ namespace BlackGui
             InfoArea area = static_cast<InfoArea>(areaIndex);
             switch (area)
             {
-            case InfoAreaHorizontalNavigator:
-                return QSize(400, 50);
-            case InfoAreaVerticalNavigator:
-                return QSize(50, 400);
+            case InfoAreaNavigator:
+                {
+                    return this->ui->comp_Navigator->minimumSize();
+                }
             default:
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Unknown index for invisible info area");
                 return QSize(0, 0);
             }
         }
 
         const QPixmap &CInvisibleInfoAreaComponent::indexToPixmap(int areaIndex) const
         {
-            InfoArea area = static_cast<InfoArea>(areaIndex);
-            switch (area)
-            {
-            case InfoAreaHorizontalNavigator:
-            case InfoAreaVerticalNavigator:
-            default:
-                return CIcons::empty();
-            }
+            Q_UNUSED(areaIndex);
+            return CIcons::empty();
         }
 
         CNavigatorDockWidget *CInvisibleInfoAreaComponent::getNavigatorComponent()

@@ -33,8 +33,7 @@ namespace BlackGui
             enum InfoArea
             {
                 // index must match tab index!
-                InfoAreaVerticalNavigator   =  0,
-                InfoAreaHorizontalNavigator =  1
+                InfoAreaNavigator   =  0
             };
 
             //! Consturctor

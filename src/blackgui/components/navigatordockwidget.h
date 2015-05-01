@@ -70,7 +70,7 @@ namespace BlackGui
             int columnsForRows(int rows);
 
             //! Set widgets to their minimum size
-            void setMinimumSizeForWidgets(int rows, int columns);
+            QSize setMinimumSizeForWidgets(int rows, int columns);
 
         };
 

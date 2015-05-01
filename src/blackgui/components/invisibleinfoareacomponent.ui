@@ -2,22 +2,26 @@
 <ui version="4.0">
  <class>CInvisibleInfoAreaComponent</class>
  <widget class="QMainWindow" name="CInvisibleInfoAreaComponent">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>800</width>
-    <height>600</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Invisible info area</string>
   </property>
-  <widget class="QWidget" name="qw_InvisibleInfoArea"/>
+  <widget class="QWidget" name="qw_InvisibleInfoArea">
+   <layout class="QVBoxLayout" name="vl_InvisibleInfoAreaComponent">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+   </layout>
+  </widget>
   <widget class="BlackGui::Components::CNavigatorDockWidget" name="comp_Navigator">
-   <property name="floating">
-    <bool>false</bool>
-   </property>
    <property name="features">
     <set>QDockWidget::AllDockWidgetFeatures</set>
    </property>

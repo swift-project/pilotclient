@@ -139,7 +139,7 @@ namespace BlackGui
         //! Init area after(!) GUI is initialized
         void initInfoArea();
 
-    protected:
+    protected slots:
         //! Tab position for docked widgets tab
         //! \remarks North or South working, East / West not
         void ps_setTabBarPosition(QTabWidget::TabPosition position);
@@ -161,17 +161,17 @@ namespace BlackGui
         //! Valid area index?
         bool isValidAreaIndex(int areaIndex) const;
 
-        //! Corresponding dockable widget for given tab index
-        CDockWidgetInfoArea *getDockWidgetInfoAreaByTabBarIndex(int tabBarIndex);
-
-        //! Corresponding dockable widget for given window title
-        CDockWidgetInfoArea *getDockWidgetInfoAreaByWindowTitle(const QString &title);
-
         //! Corresponding dockable widget for given window title
         int getAreaIndexByWindowTitle(const QString &title) const;
 
         //! Tab bar index by title
         int getTabBarIndexByTitle(const QString &title) const;
+
+        //! Corresponding dockable widget for given tab index
+        CDockWidgetInfoArea *getDockWidgetInfoAreaByTabBarIndex(int tabBarIndex) const;
+
+        //! Corresponding dockable widget for given window title
+        CDockWidgetInfoArea *getDockWidgetInfoAreaByWindowTitle(const QString &title) const;
 
         //! Widget to tab bar index
         int dockWidgetInfoAreaToTabBarIndex(const CDockWidgetInfoArea *dockWidgetInfoArea) const;

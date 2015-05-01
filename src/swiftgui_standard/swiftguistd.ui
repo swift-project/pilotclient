@@ -124,7 +124,7 @@
           <enum>QFrame::NoFrame</enum>
          </property>
          <property name="currentIndex">
-          <number>3</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="pg_MainInfoArea">
           <layout class="QVBoxLayout" name="vl_MainInfoArea">
@@ -193,7 +193,22 @@
           </layout>
          </widget>
          <widget class="QWidget" name="pg_InvisibleAreas">
-          <layout class="QVBoxLayout" name="verticalLayout">
+          <layout class="QVBoxLayout" name="vl_InvisibleArea">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
            <item>
             <widget class="BlackGui::Components::CInvisibleInfoAreaComponent" name="comp_InvisibleInfoArea" native="true"/>
            </item>

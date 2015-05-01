@@ -31,6 +31,7 @@ namespace BlackGui
             this->allowStatusBar(false);
             ui->setupUi(this);
             this->ps_onStyleSheetsChanged();
+            this->buildNavigator(1);
         }
 
         CNavigatorDockWidget::~CNavigatorDockWidget()
@@ -90,10 +91,7 @@ namespace BlackGui
             // set the real values
             c = gridLayout->columnCount();
             r = gridLayout->rowCount();
-            this->setMinimumSizeForWidgets(r, c);
-
-            // sizes
-            QSize ws(gridLayout->sizeHint());
+            QSize ws = this->setMinimumSizeForWidgets(r, c);
             this->resize(ws);
 
             // see documentation, required as layout was changed
@@ -151,14 +149,15 @@ namespace BlackGui
             return (c * rows) < items ? c + 1 : c;
         }
 
-        void CNavigatorDockWidget::setMinimumSizeForWidgets(int rows, int columns)
+        QSize CNavigatorDockWidget::setMinimumSizeForWidgets(int rows, int columns)
         {
-            int w = 10 * columns;
-            int h = 10 * rows;
+            int w = 20 * columns;
+            int h = 20 * rows;
             QSize min(w, h);
             this->ui->qw_NavigatorDockWidgetOuter->setMinimumSize(min);
             this->ui->fr_NavigatorDockWidgetInner->setMinimumSize(min);
             this->setMinimumSize(min);
+            return min;
         }
 
     } // ns

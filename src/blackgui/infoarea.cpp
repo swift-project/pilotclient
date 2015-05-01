@@ -622,13 +622,14 @@ namespace BlackGui
         return this->m_tabBar->count();
     }
 
-    CDockWidgetInfoArea *CInfoArea::getDockWidgetInfoAreaByTabBarIndex(int tabBarIndex)
+    CDockWidgetInfoArea *CInfoArea::getDockWidgetInfoAreaByTabBarIndex(int tabBarIndex) const
     {
-        if (tabBarIndex >= this->m_dockWidgetInfoAreas.count() || tabBarIndex < 0) return nullptr;
+        if (tabBarIndex >= this->m_dockWidgetInfoAreas.count() || tabBarIndex < 0) { return nullptr; }
+        if (!this->m_tabBar) { return nullptr; }
         return getDockWidgetInfoAreaByWindowTitle(this->m_tabBar->tabText(tabBarIndex));
     }
 
-    CDockWidgetInfoArea *CInfoArea::getDockWidgetInfoAreaByWindowTitle(const QString &title)
+    CDockWidgetInfoArea *CInfoArea::getDockWidgetInfoAreaByWindowTitle(const QString &title) const
     {
         Q_ASSERT(!title.isEmpty());
         for (CDockWidgetInfoArea *dw : this->m_dockWidgetInfoAreas)
