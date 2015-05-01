@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/iconlist.h"
 #include "blackmisc/pq/angle.h"
+#include "blackmisc/iconlist.h"
 #include "blackmisc/aviation/heading.h"
 
 namespace BlackMisc
