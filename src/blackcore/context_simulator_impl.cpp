@@ -401,10 +401,10 @@ namespace BlackCore
         Q_ASSERT(networkContext);
         Q_ASSERT(networkContext->isLocalObject());
 
-        for (const CSimulatedAircraft &simAircraft : networkContext->getAircraftInRange())
+        for (const CSimulatedAircraft &simulatedAircraft : networkContext->getAircraftInRange())
         {
-            Q_ASSERT(!simAircraft.getCallsign().isEmpty());
-            m_simulatorPlugin->simulator->addRemoteAircraft(simAircraft);
+            Q_ASSERT(!simulatedAircraft.getCallsign().isEmpty());
+            m_simulatorPlugin->simulator->logicallyAddRemoteAircraft(simulatedAircraft);
         }
 
         // apply latest settings
@@ -565,7 +565,7 @@ namespace BlackCore
         Q_ASSERT(m_simulatorPlugin->simulator);
         Q_ASSERT(!remoteAircraft.getCallsign().isEmpty());
 
-        m_simulatorPlugin->simulator->addRemoteAircraft(remoteAircraft);
+        m_simulatorPlugin->simulator->logicallyAddRemoteAircraft(remoteAircraft);
     }
 
     void CContextSimulator::ps_removedRemoteAircraft(const CCallsign &callsign)
@@ -580,8 +580,7 @@ namespace BlackCore
         }
 
         Q_ASSERT(m_simulatorPlugin->simulator);
-
-        m_simulatorPlugin->simulator->removeRemoteAircraft(callsign);
+        m_simulatorPlugin->simulator->logicallyRemoveRemoteAircraft(callsign);
     }
 
     void CContextSimulator::ps_onSimulatorStatusChanged(int status)
@@ -615,10 +614,9 @@ namespace BlackCore
         }
     }
 
-    void CContextSimulator::ps_cockitChangedFromSim(const CSimulatedAircraft &ownAircraft)
+    void CContextSimulator::ps_cockpitChangedFromSimulator(const CSimulatedAircraft &ownAircraft)
     {
         Q_ASSERT(getIContextOwnAircraft());
-
         getIContextOwnAircraft()->changedAircraftCockpit(ownAircraft, IContextSimulator::InterfaceName());
     }
 

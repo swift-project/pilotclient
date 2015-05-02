@@ -24,7 +24,7 @@
 
 namespace BlackCore
 {
-    //! Class monitoring and analyzing (closests aircraft, outdated aircraft / watchdog) airspace
+    //! Class monitoring and analyzing (closest aircraft, outdated aircraft / watchdog) airspace
     //! in background.
     //!
     //! \details Watchdog functionality: This class was introduced due to a flaw in the VATSIM server implementation: Every client needs to send an add/delete packet on its own to inform other
@@ -76,8 +76,8 @@ namespace BlackCore
         void ps_watchdogTouchAircraftCallsign(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
 
         //! Reset timestamp for callsign
-        void ps_watchdogTouchAtcCallsign(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq,
-                                         const BlackMisc::Geo::CCoordinateGeodetic &pos, const BlackMisc::PhysicalQuantities::CLength &range);
+        void ps_watchdogTouchAtcCallsign(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency,
+                                         const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range);
 
         //! Connection status of network changed
         void ps_onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus);

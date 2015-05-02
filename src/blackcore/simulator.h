@@ -34,6 +34,7 @@ namespace BlackCore
     class BLACKCORE_EXPORT ISimulator : public QObject
     {
         Q_OBJECT
+
     public:
         //! ISimulator status
         enum SimulatorStatus
@@ -80,15 +81,14 @@ namespace BlackCore
         //! Disconnect from simulator
         virtual bool disconnectFrom() = 0;
 
-        //! Add new remote aircraft to the simulator
-        //! \sa changeRemoteAircraftEnabled to hide a remote aircraft
-        virtual bool addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) = 0;
+        //! Logically add a new aircraft. Depending on max. aircraft, enabled status etc.
+        //! it will physically added to the simulator.
+        //! \sa physicallyAddRemoteAircraft
+        virtual bool logicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) = 0;
 
-        //! Remove remote aircraft from simulator
-        virtual bool removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
-
-        //! Remove all remote aircraft
-        virtual void removeAllRemoteAircraft() = 0;
+        //! Logically remove remote aircraft from simulator. Depending on max. aircraft, enabled status etc.
+        //! it will physically added to the simulator.
+        virtual bool logicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
         //! Change remote aircraft per property
         virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) = 0;
@@ -114,10 +114,10 @@ namespace BlackCore
         //! Count of aircraft models for available remote aircrafts
         virtual int getInstalledModelsCount() const = 0;
 
-        //! Reload the installed models
+        //! Reload the installed models from disk
         virtual void reloadInstalledModels() = 0;
 
-        //! Airports in range
+        //! Airports in range from simulator
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const = 0;
 
         //! Set time synchronization between simulator and user's computer time
@@ -161,7 +161,12 @@ namespace BlackCore
         virtual void enableDebugMessages(bool driver, bool interpolator) = 0;
 
         //! Is the aircraft rendered (displayed in simulator)?
-        virtual bool isRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+        //! This shall only return true if the aircraft is really visible in the simulator
+        virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+
+        //! Physically rendered (displayed in simulator)?
+        //! This shall only return aircraft really visible in the simulator
+        virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const = 0;
 
         //! Highlight the aircraft for given time (or disable highlight)
         virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) = 0;
@@ -170,13 +175,7 @@ namespace BlackCore
         virtual bool isRenderingEnabled() const = 0;
 
         //! Originator
-        const QString &simulatorOriginator()
-        {
-            // string is generated once, the timestamp allows to use multiple
-            // components (as long as they are not generated at the same ms)
-            static const QString o = QString("SIMULATOR:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
-            return o;
-        }
+        const QString &simulatorOriginator();
 
     signals:
         //! Simulator combined status
@@ -194,22 +193,19 @@ namespace BlackCore
         //! Installed aircraft models ready or changed
         void installedAircraftModelsChanged();
 
-    protected slots:
-        //! Provider added situation
-        virtual void ps_remoteProviderAddAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
-
-        //! Provider added parts
-        virtual void ps_remoteProvideraddAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
-
-        //! Provider removed aircraft
-        virtual void ps_remoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
-
-        //! Provider aircraft snapshot
-        virtual void ps_remoteProviderAircraftSnapshot(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &aircraftSnapshot);
-
     protected:
         //! Default constructor
         ISimulator(QObject *parent = nullptr) : QObject(parent) {}
+
+        //! Add new remote aircraft physically to the simulator
+        //! \sa changeRemoteAircraftEnabled to hide a remote aircraft
+        virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) = 0;
+
+        //! Remove remote aircraft from simulator
+        virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
+        //! Remove all remote aircraft
+        virtual void physicallyRemoveAllRemoteAircraft() = 0;
 
         //! Emit the combined status
         //! \sa simulatorStatusChanged;
@@ -271,99 +267,6 @@ namespace BlackCore
         virtual ISimulatorListener *createListener(QObject *parent = nullptr) = 0;
 
     };
-
-    //! Common base class with providers, interface and some base functionality
-    class BLACKCORE_EXPORT CSimulatorCommon :
-        public BlackCore::ISimulator,
-        public BlackMisc::Simulation::COwnAircraftAware,   // gain access to in memor own aircraft data
-        public BlackMisc::Simulation::CRemoteAircraftAware // gain access to in memory remote aircraft data
-    {
-
-        Q_OBJECT
-
-    public:
-        //! \copydoc ISimulator::getMaxRenderedAircraft
-        virtual int getMaxRenderedAircraft() const override;
-
-        //! \copydoc ISimulator::setMaxRenderedAircraft
-        virtual void setMaxRenderedAircraft(int maxRenderedAircraft) override;
-
-        //! \copydoc ISimulator::setMaxRenderedDistance
-        virtual void setMaxRenderedDistance(BlackMisc::PhysicalQuantities::CLength &distance) override;
-
-        //! \copydoc ISimulator::getMaxRenderedDistance
-        virtual BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const override;
-
-        //! \copydoc ISimulator::getRenderedDistanceBoundary
-        virtual BlackMisc::PhysicalQuantities::CLength getRenderedDistanceBoundary() const override;
-
-        //! \copydoc ISimulator::isMaxAircraftRestricted
-        virtual bool isMaxAircraftRestricted() const override;
-
-        //! \copydoc ISimulator::isMaxDistanceRestricted
-        virtual bool isMaxDistanceRestricted() const override;
-
-        //! \copydoc ISimulator::enableDebuggingMessages
-        virtual void enableDebugMessages(bool driverMessages, bool interpolatorMessages) override;
-
-        //! \copydoc ISimulator::getInstalledModelsCount
-        virtual int getInstalledModelsCount() const override;
-
-        //! \copydoc IContextSimulator::highlightAircraft
-        virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
-
-        //! \copydoc IContextSimulator::isRenderingEnabled
-        virtual bool isRenderingEnabled() const override;
-
-        //! \copydoc IContextSimulator::isRenderingRestricted
-        virtual bool isRenderingRestricted() const override;
-
-        //! \copydoc IContextSimulator::getSimulatorPluginInfo
-        virtual const BlackMisc::Simulation::CSimulatorPluginInfo &getSimulatorPluginInfo() const override;
-
-        //! \copydoc IContextSimulator::getSimulatorSetup
-        virtual const BlackMisc::Simulation::CSimulatorSetup &getSimulatorSetup() const override;
-
-        //! \copydoc IContextSimulator::deleteAllRenderingRestrictions
-        virtual void deleteAllRenderingRestrictions();
-
-    protected slots:
-        //! Slow timer used to highlight aircraft, can be used for other things too
-        virtual void ps_oneSecondTimer();
-
-    protected:
-        //! Constructor
-        CSimulatorCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                         BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                         BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                         QObject *parent = nullptr);
-
-        //! Blink the highlighted aircraft
-        void blinkHighlightedAircraft();
-
-        //! Recalculate the restricted aircraft
-        void recalculateRestrictedAircraft();
-
-        //! Restore aircraft from backedn data
-        void resetAircraftFromBacked(const BlackMisc::Aviation::CCallsign &callsign);
-
-        //! Override parts and situation from current interpolator values, if any!
-        void setInitialAircraftSituationAndParts(BlackMisc::Simulation::CSimulatedAircraft &aircraft) const;
-
-        bool m_debugMessages = false;             //!< Display debug messages
-        bool m_blinkCycle = false;                //!< use for highlighting
-        IInterpolator *m_interpolator = nullptr;  //!< interpolator instance
-        qint64 m_highlightEndTimeMsEpoch = 0;     //!< end highlighting
-        int m_timerCounter = 0;                   //!< allows to calculate n seconds
-        QTimer *m_oneSecondTimer = nullptr;       //!< timer
-        BlackMisc::Simulation::CSimulatorPluginInfo m_simulatorPluginInfo;   //!< info object
-        BlackMisc::Simulation::CSimulatorSetup m_simulatorSetup;             //!< setup object
-        BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft; //!< all other aircraft are to be ignored
-        BlackMisc::Aviation::CCallsignSet m_callsignsToBeRendered;           //!< callsigns which will be rendered
-        int m_maxRenderedAircraft = MaxAircraftInfinite;                     //!< max.rendered aircraft
-        BlackMisc::PhysicalQuantities::CLength m_maxRenderedDistance { 0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()}; //!< max.distance for rendering
-    };
-
 } // namespace
 
 Q_DECLARE_INTERFACE(BlackCore::ISimulatorFactory, "org.swift-project.blackcore.simulatorinterface")

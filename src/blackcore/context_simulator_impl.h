@@ -180,7 +180,7 @@ namespace BlackCore
         void ps_simulatorStarted(QObject *listener);
 
         //! Simulator has changed cockpit
-        void ps_cockitChangedFromSim(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
+        void ps_cockpitChangedFromSimulator(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
 
         //! Changed remote aircraft model
         void ps_changedRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);

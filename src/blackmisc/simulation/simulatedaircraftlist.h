@@ -47,6 +47,9 @@ namespace BlackMisc
             //! Enabled / disabled aircraft
             CSimulatedAircraftList findByEnabled(bool enabled) const;
 
+            //! Rendered / not rendered aircraft
+            CSimulatedAircraftList findByRendered(bool rendered) const;
+
             //! VTOL / non VTOL aircraft
             CSimulatedAircraftList findByVtol(bool vtol) const;
 
@@ -56,7 +59,7 @@ namespace BlackMisc
             //! Mark all aircraft as unrendered
             void markAllAsNotRendered();
 
-            //! Mark as rendered
+            //! Mark given callsign as rendered
             int setRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered);
 
             //! Set aircraft parts

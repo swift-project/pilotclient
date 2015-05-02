@@ -12,7 +12,7 @@
 #ifndef BLACKSIMPLUGIN_SIMULATOR_COMMON_H
 #define BLACKSIMPLUGIN_SIMULATOR_COMMON_H
 
-#include "blackcore/simulator.h"
+#include "blackcore/simulator_common.h"
 #include "blackcore/interpolator.h"
 #include "blackmisc/simulation/fscommon/aircraftmapper.h"
 #include "fsuipc.h"

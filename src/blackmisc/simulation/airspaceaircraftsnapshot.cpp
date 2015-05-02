@@ -18,7 +18,8 @@ namespace BlackMisc
         CAirspaceAircraftSnapshot::CAirspaceAircraftSnapshot()
         { }
 
-        CAirspaceAircraftSnapshot::CAirspaceAircraftSnapshot(const CSimulatedAircraftList &allAircraft)
+        CAirspaceAircraftSnapshot::CAirspaceAircraftSnapshot(const CSimulatedAircraftList &allAircraft) :
+            m_timestampMsSinceEpoch(QDateTime::currentMSecsSinceEpoch())
         {
             if (!allAircraft.isEmpty())
             {
@@ -31,6 +32,11 @@ namespace BlackMisc
                 m_vtolAircraftCallsignsByDistance = vtolAircraft.getCallsigns();
                 m_enabledVtolAircraftCallsignsByDistance = vtolAircraft.findByEnabled(true).getCallsigns();
             }
+        }
+
+        bool CAirspaceAircraftSnapshot::isValidSnapshot() const
+        {
+            return m_timestampMsSinceEpoch > 0;
         }
 
         CVariant CAirspaceAircraftSnapshot::propertyByIndex(const CPropertyIndex &index) const

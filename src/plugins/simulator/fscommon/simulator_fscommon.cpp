@@ -26,8 +26,8 @@ namespace BlackSimPlugin
     namespace FsCommon
     {
         CSimulatorFsCommon::CSimulatorFsCommon(
-            const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-            BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+            const CSimulatorPluginInfo &info,
+            IOwnAircraftProvider *ownAircraftProvider,
             IRemoteAircraftProvider *renderedAircraftProvider,
             QObject *parent) :
             CSimulatorCommon(info, ownAircraftProvider, renderedAircraftProvider, parent),
@@ -100,7 +100,8 @@ namespace BlackSimPlugin
             {
                 // reverse lookup of ICAO
                 CAircraftIcao icao =  mapperInstance()->getIcaoForModelString(model.getModelString());
-                icao.updateMissingParts(icao);
+                icao.updateMissingParts(model.getIcao());
+                model.setIcao(icao); // now best ICAO info in model
             }
         }
 
@@ -259,7 +260,7 @@ namespace BlackSimPlugin
             if (originator == simulatorOriginator()) { return false; }
 
             // remove upfront, and then enable / disable again
-            this->removeRemoteAircraft(aircraft.getCallsign());
+            this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
             return this->changeRemoteAircraftEnabled(aircraft, originator);
         }
 
@@ -268,11 +269,11 @@ namespace BlackSimPlugin
             if (originator == simulatorOriginator()) { return false; }
             if (aircraft.isEnabled())
             {
-                this->addRemoteAircraft(aircraft);
+                this->physicallyAddRemoteAircraft(aircraft);
             }
             else
             {
-                this->removeRemoteAircraft(aircraft.getCallsign());
+                this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
             }
             return true;
         }

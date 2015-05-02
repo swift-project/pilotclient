@@ -12,7 +12,7 @@
 #ifndef BLACKSIMPLUGIN_SIMULATOR_XPLANE_H
 #define BLACKSIMPLUGIN_SIMULATOR_XPLANE_H
 
-#include "blackcore/simulator.h"
+#include "blackcore/simulator_common.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/pixmap.h"
 #include <QDBusConnection>
@@ -65,14 +65,20 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::disconnectFrom
             virtual bool disconnectFrom() override;
 
-            //! \copydoc ISimulator::addRemoteAircraft()
-            virtual bool addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
+            //! \copydoc ISimulator::physicallyAddRemoteAircraft()
+            virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
 
-            //! \copydoc BlackCore::ISimulator::removeRemoteAircraft
-            virtual bool removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+            //! \copydoc BlackCore::ISimulator::physicallyRemoveRemoteAircraft
+            virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 
-            //! \copydoc BlackCore::ISimulator::removeAllRemoteAircraft
-            virtual void removeAllRemoteAircraft() override;
+            //! \copydoc BlackCore::ISimulator::physicallyRemoveAllRemoteAircraft
+            virtual void physicallyRemoveAllRemoteAircraft() override;
+
+            //! \copydoc ISimulator::physicallyRenderedAircraft
+            virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
+
+            //! \copydoc ISimulator::isPhysicallyRenderedAircraft
+            virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
             //! \copydoc ISimulator::changeRenderedAircraftModel
             virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator) override;
@@ -107,15 +113,12 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::iconForModel
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
 
-            //! \copydoc ISimulator::isRenderedAircraft
-            virtual bool isRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
         protected slots:
             //! \copydoc CSimulatorCommon::ps_remoteProviderAddAircraftSituation
             virtual void ps_remoteProviderAddAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
 
             //! \copydoc CSimulatorCommon::ps_remoteProvideraddAircraftParts
-            virtual void ps_remoteProvideraddAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts) override;
+            virtual void ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts) override;
 
             //! \copydoc CSimulatorCommon::ps_remoteProviderRemovedAircraft
             virtual void ps_remoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;

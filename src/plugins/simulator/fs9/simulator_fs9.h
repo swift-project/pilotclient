@@ -66,14 +66,20 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::disconnectFrom()
             virtual bool disconnectFrom() override;
 
-            //! \copydoc ISimulator::addRemoteAircraft()
-            virtual bool addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
+            //! \copydoc ISimulator::physicallyAddRemoteAircraft()
+            virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
 
-            //! \copydoc ISimulator::removeRemoteAircraft()
-            virtual bool removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+            //! \copydoc ISimulator::physicallyRemoveRemoteAircraft()
+            virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 
-            //! \copydoc BlackCore::ISimulator::removeAllRemoteAircraft
-            virtual void removeAllRemoteAircraft() override;
+            //! \copydoc BlackCore::ISimulator::physicallyRemoveAllRemoteAircraft
+            virtual void physicallyRemoveAllRemoteAircraft() override;
+
+            //! \copydoc ISimulator::physicallyRenderedAircraft
+            virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
+
+            //! \copydoc ISimulator::isPhysicallyRenderedAircraft
+            virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
             //! \copydoc ISimulator::updateOwnSimulatorCockpit()
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &ownAircraft, const QString &originator) override;
@@ -83,9 +89,6 @@ namespace BlackSimPlugin
 
             //! \copydoc ISimulator::displayTextMessage()
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
-
-            //! \copydoc ISimulator::isRenderedAircraft
-            virtual bool isRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
         protected:
             //! Timer event

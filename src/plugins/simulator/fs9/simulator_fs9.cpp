@@ -93,13 +93,13 @@ namespace BlackSimPlugin
             return true;
         }
 
-        bool CSimulatorFs9::addRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
+        bool CSimulatorFs9::physicallyAddRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
         {
             CCallsign callsign = newRemoteAircraft.getCallsign();
             if (m_hashFs9Clients.contains(callsign))
             {
                 // already exists, remove first
-                this->removeRemoteAircraft(callsign);
+                this->physicallyRemoveRemoteAircraft(callsign);
             }
 
             CFs9Client *client = new CFs9Client(m_interpolator, this, callsign.toQString(), CTime(25, CTimeUnit::ms()));
@@ -113,7 +113,7 @@ namespace BlackSimPlugin
             return true;
         }
 
-        bool CSimulatorFs9::removeRemoteAircraft(const CCallsign &callsign)
+        bool CSimulatorFs9::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
         {
             if (!m_hashFs9Clients.contains(callsign)) { return false; }
 
@@ -125,13 +125,18 @@ namespace BlackSimPlugin
             return true;
         }
 
-        void CSimulatorFs9::removeAllRemoteAircraft()
+        void CSimulatorFs9::physicallyRemoveAllRemoteAircraft()
         {
             QList<CCallsign> callsigns(this->m_hashFs9Clients.keys());
             for (const CCallsign &cs : callsigns)
             {
-                removeRemoteAircraft(cs);
+                physicallyRemoveRemoteAircraft(cs);
             }
+        }
+
+        CCallsignSet CSimulatorFs9::physicallyRenderedAircraft() const
+        {
+            return this->m_hashFs9Clients.keys();
         }
 
         bool CSimulatorFs9::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const QString &originator)
@@ -200,7 +205,7 @@ namespace BlackSimPlugin
             this->displayStatusMessage(message.asStatusMessage(true, true));
         }
 
-        bool CSimulatorFs9::isRenderedAircraft(const CCallsign &callsign) const
+        bool CSimulatorFs9::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
         {
             return m_hashFs9Clients.contains(callsign);
         }
@@ -273,7 +278,7 @@ namespace BlackSimPlugin
             // Stop all FS9 client tasks
             for (auto fs9Client : m_hashFs9Clients.keys())
             {
-                removeRemoteAircraft(fs9Client);
+                physicallyRemoveRemoteAircraft(fs9Client);
             }
         }
 

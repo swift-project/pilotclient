@@ -49,6 +49,11 @@ namespace BlackMisc
             return this->findBy(&CSimulatedAircraft::isEnabled, enabled);
         }
 
+        CSimulatedAircraftList CSimulatedAircraftList::findByRendered(bool rendered) const
+        {
+            return this->findBy(&CSimulatedAircraft::isRendered, rendered);
+        }
+
         CSimulatedAircraftList CSimulatedAircraftList::findByVtol(bool vtol) const
         {
             return this->findBy(&CSimulatedAircraft::isVtol, vtol);

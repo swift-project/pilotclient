@@ -49,6 +49,9 @@ namespace BlackMisc
             //! VTOL aircraft callsigns by distance, only enabled aircraft
             const BlackMisc::Aviation::CCallsignSet &getEnabledVtolAircraftCallsignsByDistance() const { return m_enabledVtolAircraftCallsignsByDistance; }
 
+            //! Valid snapshot?
+            bool isValidSnapshot() const;
+
             //! \copydoc CValueObject::propertyByIndex
             virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
@@ -61,7 +64,7 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAirspaceAircraftSnapshot)
-            qint64 m_timestampMsSinceEpoch;
+            qint64 m_timestampMsSinceEpoch = -1;
 
             // remark closest aircraft always first
             BlackMisc::Aviation::CCallsignSet m_aircraftCallsignsByDistance;

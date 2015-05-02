@@ -247,21 +247,17 @@ namespace BlackSimPlugin
         void CSimulatorXPlane::displayStatusMessage(const BlackMisc::CStatusMessage &message) const
         {
             /* We do not assert here as status message may come because of network problems */
-            if (!isConnected())
-                return;
+            if (!isConnected()) { return; }
 
-            // TODO XPLMSpeakString()?
-            // http://www.xsquawkbox.net/xpsdk/mediawiki/XPLMSpeakString
+            //! \todo XP driver, display text message: XPLMSpeakString()? http://www.xsquawkbox.net/xpsdk/mediawiki/XPLMSpeakString
             Q_UNUSED(message);
         }
 
         void CSimulatorXPlane::displayTextMessage(const BlackMisc::Network::CTextMessage &message) const
         {
-            if (!isConnected())
-                return;
+            if (!isConnected()) { return; }
 
-            // TODO XPLMSpeakString()?
-            // http://www.xsquawkbox.net/xpsdk/mediawiki/XPLMSpeakString
+            //! \todo XP driver, display text message: XPLMSpeakString()? http://www.xsquawkbox.net/xpsdk/mediawiki/XPLMSpeakString
             Q_UNUSED(message);
         }
 
@@ -270,7 +266,6 @@ namespace BlackSimPlugin
             Q_ASSERT(isConnected());
             //! \todo XP driver, function not available
             CLogMessage(this).error("Function not avialable");
-
             return {};
         }
 
@@ -302,7 +297,7 @@ namespace BlackSimPlugin
         BlackMisc::Aviation::CAirportList CSimulatorXPlane::getAirportsInRange() const
         {
             auto copy = m_airportsInRange;
-            //! \todo Check if units match, xPlaneData has now hints what the values are
+            //! \todo XP driver: Check if units match, xPlaneData has now hints what the values are
             copy.sortByRange(CCoordinateGeodetic(m_xplaneData.latitude, m_xplaneData.longitude, 0), true);
             copy.truncate(20);
             return copy;
@@ -323,10 +318,9 @@ namespace BlackSimPlugin
             return CPixmap();
         }
 
-        bool CSimulatorXPlane::isRenderedAircraft(const CCallsign &callsign) const
+        bool CSimulatorXPlane::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
         {
-            //! \todo XP implement isRenderedAircraft correctly
-            // work around, but not really telling me if callsign is really(!) visible in SIM
+            //! \todo XP implement isRenderedAircraft correctly. This work around, but not really telling me if callsign is really(!) visible in SIM
             return getAircraftInRangeForCallsign(callsign).isRendered();
         }
 
@@ -358,7 +352,7 @@ namespace BlackSimPlugin
             return false;
         }
 
-        bool CSimulatorXPlane::addRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
+        bool CSimulatorXPlane::physicallyAddRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
         {
             Q_ASSERT(isConnected());
             //! \todo XPlane driver check if already exists, how?
@@ -385,7 +379,7 @@ namespace BlackSimPlugin
                                         situation.getHeading().value(CAngleUnit::deg()));
         }
 
-        void CSimulatorXPlane::ps_remoteProvideraddAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts)
+        void CSimulatorXPlane::ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts)
         {
             Q_ASSERT(isConnected());
             m_traffic->setPlaneSurfaces(parts.getCallsign().asString(), true, 0, 0, 0, 0, 0, 0, 0, 0, 0, true, true, true, true, 0); // TODO landing gear, lights, control surfaces
@@ -398,7 +392,7 @@ namespace BlackSimPlugin
             //! \todo call removeRemoteAircraft or just let removeRemoteAircraft handle it?
         }
 
-        bool CSimulatorXPlane::removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign)
+        bool CSimulatorXPlane::physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign)
         {
             Q_ASSERT(isConnected());
             m_traffic->removePlane(callsign.asString());
@@ -407,11 +401,17 @@ namespace BlackSimPlugin
             return true;
         }
 
-        void CSimulatorXPlane::removeAllRemoteAircraft()
+        void CSimulatorXPlane::physicallyRemoveAllRemoteAircraft()
         {
             m_traffic->removeAllPlanes();
             updateMarkAllAsNotRendered(simulatorOriginator());
             CLogMessage(this).info("XP: Removed all aircraft");
+        }
+
+        CCallsignSet CSimulatorXPlane::physicallyRenderedAircraft() const
+        {
+            //! \todo XP driver, return list of callsigns really present in the simulator
+            return getAircraftInRange().findByRendered(true).getCallsigns(); // just a poor workaround
         }
 
         bool CSimulatorXPlane::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft, const QString &originator)
@@ -430,11 +430,11 @@ namespace BlackSimPlugin
             if (originator == simulatorOriginator()) { return false; }
             if (aircraft.isEnabled())
             {
-                this->addRemoteAircraft(aircraft);
+                this->physicallyAddRemoteAircraft(aircraft);
             }
             else
             {
-                this->removeRemoteAircraft(aircraft.getCallsign());
+                this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
             }
             return true;
         }

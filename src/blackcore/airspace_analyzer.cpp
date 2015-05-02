@@ -70,10 +70,10 @@ namespace BlackCore
         m_aircraftCallsignTimestamps[situation.getCallsign()] = QDateTime::currentMSecsSinceEpoch();
     }
 
-    void CAirspaceAnalyzer::ps_watchdogTouchAtcCallsign(const CCallsign &callsign, const CFrequency &freq, const Geo::CCoordinateGeodetic &pos, const CLength &range)
+    void CAirspaceAnalyzer::ps_watchdogTouchAtcCallsign(const CCallsign &callsign, const CFrequency &frequency, const Geo::CCoordinateGeodetic &position, const CLength &range)
     {
-        Q_UNUSED(freq);
-        Q_UNUSED(pos);
+        Q_UNUSED(frequency);
+        Q_UNUSED(position);
         Q_UNUSED(range);
         m_atcCallsignTimestamps[callsign] = QDateTime::currentMSecsSinceEpoch();
     }
@@ -150,7 +150,9 @@ namespace BlackCore
 
     void CAirspaceAnalyzer::analyzeAirspace()
     {
-        CAirspaceAircraftSnapshot snapshot(getAircraftInRange()); // thread safe copy
+        CAirspaceAircraftSnapshot snapshot(
+            getAircraftInRange() // thread safe copy
+        );
 
         // lock block
         {

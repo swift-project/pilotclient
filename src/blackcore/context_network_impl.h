@@ -92,6 +92,9 @@ namespace BlackCore
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
 
+        //! Network library
+        INetwork* network() const { return m_network; }
+
     public slots:
         //! \copydoc IContextNetwork::updateAircraftEnabled
         //! \ingroup remoteaircraftprovider

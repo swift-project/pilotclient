@@ -137,7 +137,7 @@ namespace BlackSimPlugin
             return connect;
         }
 
-        bool CSimulatorFsx::addRemoteAircraft(const Simulation::CSimulatedAircraft &newRemoteAircraft)
+        bool CSimulatorFsx::physicallyAddRemoteAircraft(const Simulation::CSimulatedAircraft &newRemoteAircraft)
         {
             CCallsign callsign = newRemoteAircraft.getCallsign();
             Q_ASSERT(!callsign.isEmpty());
@@ -147,7 +147,7 @@ namespace BlackSimPlugin
             if (aircraftAlreadyExistsInSim)
             {
                 // remove first
-                this->removeRemoteAircraft(callsign);
+                this->physicallyRemoveRemoteAircraft(callsign);
                 CLogMessage(this).warning("Have to remove aircraft %1 before I can add it") << callsign;
             }
 
@@ -294,9 +294,14 @@ namespace BlackSimPlugin
             this->displayStatusMessage(message.asStatusMessage(true, true));
         }
 
-        bool CSimulatorFsx::isRenderedAircraft(const CCallsign &callsign) const
+        bool CSimulatorFsx::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
         {
             return this->m_simConnectObjects.contains(callsign);
+        }
+
+        CCallsignSet CSimulatorFsx::physicallyRenderedAircraft() const
+        {
+            return this->m_simConnectObjects.keys();
         }
 
         void CSimulatorFsx::onSimRunning()
@@ -511,23 +516,23 @@ namespace BlackSimPlugin
             }
         }
 
-        bool CSimulatorFsx::removeRemoteAircraft(const CCallsign &callsign)
+        bool CSimulatorFsx::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
         {
             // only remove from sim
             if (!m_simConnectObjects.contains(callsign)) { return false; }
-            return removeRemoteAircraft(m_simConnectObjects.value(callsign));
+            return physicallyRemoveRemoteAircraft(m_simConnectObjects.value(callsign));
         }
 
-        void CSimulatorFsx::removeAllRemoteAircraft()
+        void CSimulatorFsx::physicallyRemoveAllRemoteAircraft()
         {
             QList<CCallsign> callsigns(m_simConnectObjects.keys());
             for (const CCallsign &cs : callsigns)
             {
-                removeRemoteAircraft(cs);
+                physicallyRemoveRemoteAircraft(cs);
             }
         }
 
-        bool CSimulatorFsx::removeRemoteAircraft(const CSimConnectObject &simObject)
+        bool CSimulatorFsx::physicallyRemoveRemoteAircraft(const CSimConnectObject &simObject)
         {
             CCallsign callsign(simObject.getCallsign());
             m_simConnectObjects.remove(callsign);
