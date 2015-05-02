@@ -45,17 +45,6 @@ namespace BlackMisc
             //! Multiply operator *=
             CEarthAngle &operator *=(double multiply);
 
-            //! Greater operator >
-            bool operator >(const CEarthAngle &latOrLon) const;
-            //! Less operator <
-            bool operator <(const CEarthAngle &latOrLon) const;
-
-            //! Less equal operator <=
-            bool operator <=(const CEarthAngle &latOrLon) const;
-
-            //! Greater equal operator >=
-            bool operator >=(const CEarthAngle &latOrLon) const;
-
             //! Plus operator +
             LATorLON operator +(const CEarthAngle &latOrLon) const;
 

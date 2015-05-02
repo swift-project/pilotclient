@@ -39,30 +39,6 @@ namespace BlackMisc
         }
 
         template <class LATorLON>
-        bool CEarthAngle<LATorLON>::operator >(const CEarthAngle &latOrLon) const
-        {
-            return this->PhysicalQuantities::CAngle::operator >(latOrLon);
-        }
-
-        template <class LATorLON>
-        bool CEarthAngle<LATorLON>::operator <(const CEarthAngle &latOrLon) const
-        {
-            return this->PhysicalQuantities::CAngle::operator >(latOrLon);
-        }
-
-        template <class LATorLON>
-        bool CEarthAngle<LATorLON>::operator <=(const CEarthAngle &latOrLon) const
-        {
-            return this->PhysicalQuantities::CAngle::operator <=(latOrLon);
-        }
-
-        template <class LATorLON>
-        bool CEarthAngle<LATorLON>::operator >=(const CEarthAngle &latOrLon) const
-        {
-            return this->PhysicalQuantities::CAngle::operator >=(latOrLon);
-        }
-
-        template <class LATorLON>
         LATorLON CEarthAngle<LATorLON>::operator +(const CEarthAngle &latOrLon) const
         {
             LATorLON l(*this);
