@@ -17,30 +17,23 @@
 
 namespace BlackMisc
 {
-
-    //! \private
-    template <> struct CValueObjectPolicy<PhysicalQuantities::CPressure> : public CValueObjectPolicy<>
-    {
-        using MetaType = Policy::MetaType::DefaultAndQList;
-    };
-
     namespace PhysicalQuantities
     {
 
         /*!
          * Physical unit distance
          */
-        class BLACKMISC_EXPORT CPressure : public CValueObject<CPressure, CPhysicalQuantity<CPressureUnit, CPressure>>
+        class BLACKMISC_EXPORT CPressure : public CPhysicalQuantity<CPressureUnit, CPressure>
         {
         public:
             //! Default constructor
-            CPressure() : CValueObject(0, CPressureUnit::defaultUnit()) {}
+            CPressure() : CPhysicalQuantity(0, CPressureUnit::defaultUnit()) {}
 
             //! Init by double value
-            CPressure(double value, const CPressureUnit &unit) : CValueObject(value, unit) {}
+            CPressure(double value, const CPressureUnit &unit) : CPhysicalQuantity(value, unit) {}
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CPressure(const QString &unitString) : CValueObject(unitString) {}
+            CPressure(const QString &unitString) : CPhysicalQuantity(unitString) {}
         };
 
     }

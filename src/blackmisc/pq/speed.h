@@ -17,30 +17,23 @@
 
 namespace BlackMisc
 {
-
-    //! \private
-    template <> struct CValueObjectPolicy<PhysicalQuantities::CSpeed> : public CValueObjectPolicy<>
-    {
-        using MetaType = Policy::MetaType::DefaultAndQList;
-    };
-
     namespace PhysicalQuantities
     {
 
         /*!
          * Speed class, e.g. "m/s", "NM/h", "km/h", "ft/s"
          */
-        class BLACKMISC_EXPORT CSpeed : public CValueObject<CSpeed, CPhysicalQuantity<CSpeedUnit, CSpeed>>
+        class BLACKMISC_EXPORT CSpeed : public CPhysicalQuantity<CSpeedUnit, CSpeed>
         {
         public:
             //! Default constructor
-            CSpeed() : CValueObject(0, CSpeedUnit::defaultUnit()) {}
+            CSpeed() : CPhysicalQuantity(0, CSpeedUnit::defaultUnit()) {}
 
             //! Init by double value
-            CSpeed(double value, const CSpeedUnit &unit) : CValueObject(value, unit) {}
+            CSpeed(double value, const CSpeedUnit &unit) : CPhysicalQuantity(value, unit) {}
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CSpeed(const QString &unitString) : CValueObject(unitString) {}
+            CSpeed(const QString &unitString) : CPhysicalQuantity(unitString) {}
         };
 
     }

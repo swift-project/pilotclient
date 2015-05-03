@@ -26,35 +26,29 @@ class QDBusArgument;
 
 namespace BlackMisc
 {
-    class CVariant;
-
-    //! \private
-    template <> struct CValueObjectPolicy<CVariant> : public CValueObjectPolicy<>
-    {
-        using MetaType = Policy::MetaType::QMetaTypeAndDBusOnly;
-        using Equals = Policy::Equals::OwnEquals;
-        using LessThan = Policy::LessThan::OwnLessThan;
-        using Compare = Policy::Compare::None;
-        using Hash = Policy::Hash::Own;
-        using DBus = Policy::DBus::Own;
-        using Json = Policy::Json::Own;
-    };
-
     /*!
      * Wrapper around QVariant which provides transparent access to CValueObject methods
      * of the contained object if it is registered with BlackMisc::registerMetaValueType.
      */
-    class BLACKMISC_EXPORT CVariant : public CValueObject<CVariant>
+    class BLACKMISC_EXPORT CVariant :
+        public Mixin::MetaType<CVariant>,
+        public Mixin::EqualsByCompare<CVariant>,
+        public Mixin::LessThanByCompare<CVariant>,
+        public Mixin::DBusOperators<CVariant>,
+        public Mixin::JsonOperators<CVariant>,
+        public Mixin::Index<CVariant>,
+        public Mixin::String<CVariant>,
+        public Mixin::Icon<CVariant>
     {
     public:
         //! Default constructor.
         CVariant() {}
 
         //! Copy constructor.
-        CVariant(const CVariant &other) : CValueObject(other), m_v(other.m_v) {}
+        CVariant(const CVariant &) = default;
 
         //! Move constructor.
-        CVariant(CVariant &&other) : CValueObject(std::move(other)), m_v(std::move(other.m_v)) {}
+        CVariant(CVariant &&other) : m_v(std::move(other.m_v)) {}
 
         //! Construct from a QVariant.
         CVariant(const QVariant &var) : m_v(var) {}
@@ -189,28 +183,6 @@ namespace BlackMisc
 
         //! \copydoc CValueObject::unmarshallFromDbus
         void unmarshallFromDbus(const QDBusArgument &argument);
-
-        //! Equal operator.
-        friend bool operator ==(const CVariant &a, const CVariant &b) { return compare(a, b) == 0; }
-
-        //! Not equal operator.
-        //! \todo temporary, remove after refactoring
-        friend bool operator !=(const CVariant &a, const CVariant &b) { return compare(a, b) != 0; }
-
-        //! Less than operator.
-        friend bool operator <(const CVariant &a, const CVariant &b) { return compare(a, b) < 0; }
-
-        //! Greater than operator.
-        //! \todo temporary, remove after refactoring
-        friend bool operator >(const CVariant &a, const CVariant &b) { return compare(a, b) > 0; }
-
-        //! Less than or equal operator.
-        //! \todo temporary, remove after refactoring
-        friend bool operator <=(const CVariant &a, const CVariant &b) { return compare(a, b) <= 0; }
-
-        //! Greater than or equal operator.
-        //! \todo temporary, remove after refactoring
-        friend bool operator >=(const CVariant &a, const CVariant &b) { return compare(a, b) >= 0; }
 
         //! \copydoc CValueObject::compare
         friend int compare(const CVariant &a, const CVariant &b) { return compareImpl(a, b); }

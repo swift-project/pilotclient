@@ -376,7 +376,7 @@ namespace BlackMisc
             case IndexValueRounded6DigitsWithUnit:
                 return CVariant::from(this->valueRoundedWithUnit(6));
             default:
-                return CValueObject<CPhysicalQuantity<MU, PQ>>::propertyByIndex(index);
+                return Mixin::Index<CPhysicalQuantity<MU, PQ>>::propertyByIndex(index);
             }
         }
 
@@ -405,7 +405,7 @@ namespace BlackMisc
                 this->parseFromString(variant.toQString());
                 break;
             default:
-                CValueObject<CPhysicalQuantity<MU, PQ>>::setPropertyByIndex(variant, index);
+                Mixin::Index<CPhysicalQuantity<MU, PQ>>::setPropertyByIndex(variant, index);
                 break;
             }
         }

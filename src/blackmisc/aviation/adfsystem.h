@@ -18,33 +18,33 @@
 
 namespace BlackMisc
 {
-    namespace Aviation { class CAdfSystem; }
-
-    //! \private
-    template <> struct CValueObjectPolicy<Aviation::CAdfSystem> : public CValueObjectPolicy<>
-    {
-        using MetaType = Policy::MetaType::Default;
-        using Equals = Policy::Equals::None;
-        using LessThan = Policy::LessThan::None;
-        using Compare = Policy::Compare::None;
-        using Hash = Policy::Hash::Own;
-        using DBus = Policy::DBus::Own;
-        using Json = Policy::Json::Own;
-    };
-
     namespace Aviation
     {
 
         //! ADF system ("for NDBs")
-        class BLACKMISC_EXPORT CAdfSystem : public CValueObject<CAdfSystem, CModulator<CAdfSystem>>
+        class BLACKMISC_EXPORT CAdfSystem :
+            public CModulator<CAdfSystem>,
+            public Mixin::MetaType<CAdfSystem>,
+            public Mixin::JsonOperators<CAdfSystem>
         {
         public:
+            //! Base type
+            using base_type = CModulator<CAdfSystem>;
+
+            using Mixin::MetaType<CAdfSystem>::registerMetadata;
+            using Mixin::MetaType<CAdfSystem>::getMetaTypeId;
+            using Mixin::MetaType<CAdfSystem>::isA;
+            using Mixin::MetaType<CAdfSystem>::toCVariant;
+            using Mixin::MetaType<CAdfSystem>::toQVariant;
+            using Mixin::MetaType<CAdfSystem>::convertFromCVariant;
+            using Mixin::MetaType<CAdfSystem>::convertFromQVariant;
+
             //! Default constructor
             CAdfSystem() = default;
 
             //! Constructor
             CAdfSystem(const QString &name, const PhysicalQuantities::CFrequency &activeFrequency, const PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet()):
-                CValueObject(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency)
+                CModulator(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency)
             { }
 
             //! Valid aviation frequency?

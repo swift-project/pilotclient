@@ -41,11 +41,6 @@ namespace BlackMisc
     class CVariant;
     class CEmpty;
 
-    //! Traits class to test whether a class is derived from CValueObject.
-    //! \todo TemplateIsBaseOf gives incorrect result due to ambiguity if there is more than one specialization of CValueObject which is a base of T.
-    template <class T>
-    using IsValueObject = typename std::is_base_of<CEmpty, T>::type;
-
     /*!
      * This registers the value type T with the BlackMisc meta type system,
      * making it available for use with the extended feature set of BlackMisc::CVariant.
@@ -149,7 +144,7 @@ namespace BlackMisc
         /*!
          * CRTP class template from which a derived class can inherit common methods dealing with the metatype of the class.
          */
-        template <class Derived>
+        template <class Derived, class... AdditionalTypes>
         class MetaType
         {
         public:
@@ -157,6 +152,8 @@ namespace BlackMisc
             static void registerMetadata()
             {
                 Private::MetaTypeHelper<Derived>::maybeRegisterMetaType();
+
+                [](...){}((qRegisterMetaType<AdditionalTypes>(), qDBusRegisterMetaType<AdditionalTypes>(), 0)...);
             }
 
             //! Returns the Qt meta type ID of this object.
@@ -170,7 +167,7 @@ namespace BlackMisc
             {
                 if (metaTypeId == QMetaType::UnknownType) { return false; }
                 if (metaTypeId == getMetaTypeId()) { return true; }
-                return baseIsA(static_cast<const typename Derived::base_type *>(derived()), metaTypeId);
+                return baseIsA(static_cast<const MetaBaseOfT<Derived> *>(derived()), metaTypeId);
             }
 
             //! Method to return CVariant
@@ -200,13 +197,20 @@ namespace BlackMisc
             Derived *derived() { return static_cast<Derived *>(this); }
 
             template <typename Base2> static bool baseIsA(const Base2 *base, int metaTypeId) { return base->isA(metaTypeId); }
-            static bool baseIsA(const CEmpty *, int) { return false; }
+            static bool baseIsA(const void *, int) { return false; }
         };
+
+        /*!
+         * Variant of MetaType mixin which also registers QList<Derived> with the type system.
+         */
+        template <class Derived>
+        class MetaTypeAndQList : public MetaType<Derived, QList<Derived>>
+        {};
 
         /*!
          * CRTP class template from which a derived class can inherit common methods dealing with hashing instances by metatuple.
          */
-        template <class Derived, bool IsTupleBased = true>
+        template <class Derived>
         class HashByTuple : private Private::EncapsulationBreaker
         {
         public:
@@ -219,25 +223,18 @@ namespace BlackMisc
         private:
             static uint hashImpl(const Derived &value)
             {
-                return BlackMisc::qHash(toMetaTuple(value)) ^ baseHash(static_cast<const typename Derived::base_type &>(value));
+                return BlackMisc::qHash(toMetaTuple(value)) ^ baseHash(static_cast<const BaseOfT<Derived> *>(&value));
             }
 
-            template <typename T> static uint baseHash(const T &base) { return qHash(base); }
-            static uint baseHash(const CEmpty &) { return 0; }
+            template <typename T> static uint baseHash(const T *base) { return qHash(*base); }
+            static uint baseHash(const void *) { return 0; }
         };
 
         /*!
-         * Specialization of HashByTuple for classes not registered with the tuple system.
+         * CRTP class template which will generate marshalling operators for a derived class with its own marshalling implementation.
          */
         template <class Derived>
-        class HashByTuple<Derived, false>
-        {};
-
-        /*!
-         * CRTP class template from which a derived class can inherit common methods dealing with marshalling instances by metatuple.
-         */
-        template <class Derived, bool IsTupleBased = true>
-        class DBusByTuple : private Private::EncapsulationBreaker
+        class DBusOperators
         {
         public:
             //! Unmarshalling operator >>, DBus to object
@@ -257,11 +254,19 @@ namespace BlackMisc
                 arg.endStructure();
                 return arg;
             }
+        };
 
+        /*!
+         * CRTP class template from which a derived class can inherit common methods dealing with marshalling instances by metatuple.
+         */
+        template <class Derived>
+        class DBusByTuple : public DBusOperators<Derived>, private Private::EncapsulationBreaker
+        {
+        public:
             //! Marshall without begin/endStructure, for when composed within another object
             void marshallToDbus(QDBusArgument &arg) const
             {
-                baseMarshall(static_cast<const typename Derived::base_type &>(*derived()), arg);
+                baseMarshall(static_cast<const BaseOfT<Derived> *>(derived()), arg);
                 using BlackMisc::operator<<;
                 arg << Private::EncapsulationBreaker::toMetaTuple(*derived());
             }
@@ -269,7 +274,7 @@ namespace BlackMisc
             //! Unmarshall without begin/endStructure, for when composed within another object
             void unmarshallFromDbus(const QDBusArgument &arg)
             {
-                baseUnmarshall(static_cast<typename Derived::base_type &>(*derived()), arg);
+                baseUnmarshall(static_cast<BaseOfT<Derived> *>(derived()), arg);
                 using BlackMisc::operator>>;
                 arg >> Private::EncapsulationBreaker::toMetaTuple(*derived());
             }
@@ -278,58 +283,17 @@ namespace BlackMisc
             const Derived *derived() const { return static_cast<const Derived *>(this); }
             Derived *derived() { return static_cast<Derived *>(this); }
 
-            template <typename T> static void baseMarshall(const T &base, QDBusArgument &arg) { base.marshallToDbus(arg); }
-            template <typename T> static void baseUnmarshall(T &base, const QDBusArgument &arg) { base.unmarshallFromDbus(arg); }
-            static void baseMarshall(const CEmpty &, QDBusArgument &) {}
-            static void baseUnmarshall(CEmpty &, const QDBusArgument &) {}
+            template <typename T> static void baseMarshall(const T *base, QDBusArgument &arg) { base->marshallToDbus(arg); }
+            template <typename T> static void baseUnmarshall(T *base, const QDBusArgument &arg) { base->unmarshallFromDbus(arg); }
+            static void baseMarshall(const void *, QDBusArgument &) {}
+            static void baseUnmarshall(void *, const QDBusArgument &) {}
         };
 
         /*!
-         * Specialization of DBusByTuple for classes not registered with the tuple system.
+         * CRTP class template which will generate marshalling operators for a derived class with its own marshalling implementation.
          */
         template <class Derived>
-        class DBusByTuple<Derived, false>
-        {
-        public:
-            //! Unmarshalling operator >>, DBus to object
-            friend const QDBusArgument &operator>>(const QDBusArgument &arg, Derived &obj)
-            {
-                arg.beginStructure();
-                obj.unmarshallFromDbus(arg);
-                arg.endStructure();
-                return arg;
-            }
-
-            //! Marshalling operator <<, object to DBus
-            friend QDBusArgument &operator<<(QDBusArgument &arg, const Derived &obj)
-            {
-                arg.beginStructure();
-                obj.marshallToDbus(arg);
-                arg.endStructure();
-                return arg;
-            }
-
-            //! Do nothing
-            void marshallToDbus(QDBusArgument &arg) const { baseMarshall(static_cast<const typename Derived::base_type &>(*derived()), arg); }
-
-            //! Do nothing
-            void unmarshallFromDbus(const QDBusArgument &arg) { baseUnmarshall(static_cast<typename Derived::base_type &>(*derived()), arg); }
-
-        private:
-            const Derived *derived() const { return static_cast<const Derived *>(this); }
-            Derived *derived() { return static_cast<Derived *>(this); }
-
-            template <typename T> static void baseMarshall(const T &base, QDBusArgument &arg) { base.marshallToDbus(arg); }
-            template <typename T> static void baseUnmarshall(T &base, const QDBusArgument &arg) { base.unmarshallFromDbus(arg); }
-            static void baseMarshall(const CEmpty &, QDBusArgument &) {}
-            static void baseUnmarshall(CEmpty &, const QDBusArgument &) {}
-        };
-
-        /*!
-         * CRTP class template from which a derived class can inherit common methods dealing with JSON by metatuple.
-         */
-        template <class Derived, bool IsTupleBased = true>
-        class JsonByTuple : private Private::EncapsulationBreaker
+        class JsonOperators
         {
         public:
             //! operator >> for JSON
@@ -366,18 +330,26 @@ namespace BlackMisc
                 json.insert(value.first, QJsonValue(value.second.toJson()));
                 return json;
             }
+        };
 
+        /*!
+         * CRTP class template from which a derived class can inherit common methods dealing with JSON by metatuple.
+         */
+        template <class Derived>
+        class JsonByTuple : public JsonOperators<Derived>, private Private::EncapsulationBreaker
+        {
+        public:
             //! Cast to JSON object
             QJsonObject toJson() const
             {
                 QJsonObject json = BlackMisc::serializeJson(Private::EncapsulationBreaker::toMetaTuple(*derived()));
-                return Json::appendJsonObject(json, baseToJson(static_cast<const typename Derived::base_type &>(*derived())));
+                return Json::appendJsonObject(json, baseToJson(static_cast<const BaseOfT<Derived> *>(derived())));
             }
 
             //! Assign from JSON object
             void convertFromJson(const QJsonObject &json)
             {
-                baseConvertFromJson(static_cast<typename Derived::base_type &>(*derived()), json);
+                baseConvertFromJson(static_cast<BaseOfT<Derived> *>(derived()), json);
                 BlackMisc::deserializeJson(json, Private::EncapsulationBreaker::toMetaTuple(*derived()));
             }
 
@@ -385,74 +357,30 @@ namespace BlackMisc
             const Derived *derived() const { return static_cast<const Derived *>(this); }
             Derived *derived() { return static_cast<Derived *>(this); }
 
-            template <typename T> static QJsonObject baseToJson(const T &base) { return base.toJson(); }
-            template <typename T> static void baseConvertFromJson(T &base, const QJsonObject &json) { base.convertFromJson(json); }
-            static QJsonObject baseToJson(const CEmpty &) { return {}; }
-            static void baseConvertFromJson(CEmpty &, const QJsonObject &) {}
+            template <typename T> static QJsonObject baseToJson(const T *base) { return base->toJson(); }
+            template <typename T> static void baseConvertFromJson(T *base, const QJsonObject &json) { base->convertFromJson(json); }
+            static QJsonObject baseToJson(const void *) { return {}; }
+            static void baseConvertFromJson(void *, const QJsonObject &) {}
         };
 
         /*!
-         * Specialization of JsonByTuple for classes not registered with the tuple system.
+         * CRTP class template from which a derived class can inherit operator== implemented using its compare function.
          */
         template <class Derived>
-        class JsonByTuple<Derived, false>
+        class EqualsByCompare
         {
         public:
-            //! operator >> for JSON
-            friend const QJsonObject &operator>>(const QJsonObject &json, Derived &obj)
-            {
-                obj.convertFromJson(json);
-                return json;
-            }
+            //! Equals
+            friend bool operator ==(const Derived &a, const Derived &b) { return compare(a, b) == 0; }
 
-            //! operator >> for JSON
-            friend const QJsonValue &operator>>(const QJsonValue &json, Derived &obj)
-            {
-                obj.convertFromJson(json.toObject());
-                return json;
-            }
-
-            //! operator >> for JSON
-            friend const QJsonValueRef &operator>>(const QJsonValueRef &json, Derived &obj)
-            {
-                obj.convertFromJson(json.toObject());
-                return json;
-            }
-
-            //! operator << for JSON
-            friend QJsonArray &operator<<(QJsonArray &json, const Derived &obj)
-            {
-                json.append(obj.toJson());
-                return json;
-            }
-
-            //! operator << for JSON
-            friend QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const Derived &> &value)
-            {
-                json.insert(value.first, QJsonValue(value.second.toJson()));
-                return json;
-            }
-
-            //! Do nothing
-            QJsonObject toJson() const { return baseToJson(static_cast<const typename Derived::base_type &>(*derived())); }
-
-            //! Do nothing
-            void convertFromJson(const QJsonObject &json) { baseConvertFromJson(static_cast<typename Derived::base_type &>(*derived()), json); }
-
-        private:
-            const Derived *derived() const { return static_cast<const Derived *>(this); }
-            Derived *derived() { return static_cast<Derived *>(this); }
-
-            template <typename T> static QJsonObject baseToJson(const T &base) { return base.toJson(); }
-            template <typename T> static void baseConvertFromJson(T &base, const QJsonObject &json) { base.convertFromJson(json); }
-            static QJsonObject baseToJson(const CEmpty &) { return {}; }
-            static void baseConvertFromJson(CEmpty &, const QJsonObject &) {}
+            //! Not equal
+            friend bool operator !=(const Derived &a, const Derived &b) { return compare(a, b) != 0; }
         };
 
         /*!
          * CRTP class template from which a derived class can inherit operator== implemented by metatuple.
          */
-        template <class Derived, bool IsTupleBased = true>
+        template <class Derived>
         class EqualsByTuple : private Private::EncapsulationBreaker
         {
         public:
@@ -465,24 +393,36 @@ namespace BlackMisc
         private:
             static bool equals(const Derived &a, const Derived &b)
             {
-                using Base = typename Derived::base_type;
-                return toMetaTuple(a) == toMetaTuple(b) && baseEquals(static_cast<const Base &>(a), static_cast<const Base &>(b));
+                return toMetaTuple(a) == toMetaTuple(b) && baseEquals(static_cast<const BaseOfT<Derived> *>(&a), static_cast<const BaseOfT<Derived> *>(&b));
             }
-            template <typename T> static bool baseEquals(const T &a, const T &b) { return a == b; }
-            static bool baseEquals(const CEmpty &, const CEmpty &) { return true; }
+            template <typename T> static bool baseEquals(const T *a, const T *b) { return *a == *b; }
+            static bool baseEquals(const void *, const void *) { return true; }
         };
 
         /*!
-         * Specialization of EqualsByTuple for classes not registered with the tuple system.
+         * CRTP class template from which a derived class can inherit operator< implemented using its compare function.
          */
         template <class Derived>
-        class EqualsByTuple<Derived, false>
-        {};
+        class LessThanByCompare
+        {
+        public:
+            //! Less than
+            friend bool operator <(const Derived &a, const Derived &b) { return compare(a, b) < 0; }
+
+            //! Greater than
+            friend bool operator >(const Derived &a, const Derived &b) { return compare(a, b) > 0; }
+
+            //! Less than or equal
+            friend bool operator <=(const Derived &a, const Derived &b) { return compare(a, b) <= 0; }
+
+            //! Greater than or equal
+            friend bool operator >=(const Derived &a, const Derived &b) { return compare(a, b) >= 0; }
+        };
 
         /*!
          * CRTP class template from which a derived class can inherit operator< implemented by metatuple.
          */
-        template <class Derived, bool IsTupleBased = true>
+        template <class Derived>
         class LessThanByTuple : private Private::EncapsulationBreaker
         {
         public:
@@ -501,25 +441,17 @@ namespace BlackMisc
         private:
             static bool less(const Derived &a, const Derived &b)
             {
-                using Base = typename Derived::base_type;
-                if (baseLess(static_cast<const Base &>(a), static_cast<const Base &>(b))) { return true; }
+                if (baseLess(static_cast<const BaseOfT<Derived> *>(&a), static_cast<const BaseOfT<Derived> *>(&b))) { return true; }
                 return toMetaTuple(a) < toMetaTuple(b);
             }
-            template <typename T> static bool baseLess(const T &a, const T &b) { return a < b; }
-            static bool baseLess(const CEmpty &, const CEmpty &) { return false; }
+            template <typename T> static bool baseLess(const T *a, const T *b) { return *a < *b; }
+            static bool baseLess(const void *, const void *) { return false; }
         };
-
-        /*!
-         * Specialization of LessThanByTuple for classes not registered with the tuple system.
-         */
-        template <class Derived>
-        class LessThanByTuple<Derived, false>
-        {};
 
         /*!
          * CRTP class template from which a derived class can inherit non-member compare() implemented by metatuple.
          */
-        template <class Derived, bool IsTupleBased = true>
+        template <class Derived>
         class CompareByTuple : private Private::EncapsulationBreaker
         {
         public:
@@ -529,20 +461,13 @@ namespace BlackMisc
         private:
             static int compareImpl(const Derived &a, const Derived &b)
             {
-                int baseCmp = baseCompare(static_cast<const typename Derived::base_type &>(a), static_cast<const typename Derived::base_type &>(b));
+                int baseCmp = baseCompare(static_cast<const BaseOfT<Derived> *>(&a), static_cast<const BaseOfT<Derived> *>(&b));
                 if (baseCmp) { return baseCmp; }
                 return BlackMisc::compare(toMetaTuple(a), toMetaTuple(b));
             }
-            template <typename T> static int baseCompare(const T &a, const T &b) { return compare(a, b); }
-            static int baseCompare(const CEmpty &, const CEmpty &) { return 0; }
+            template <typename T> static int baseCompare(const T *a, const T *b) { return compare(*a, *b); }
+            static int baseCompare(const void *, const void *) { return 0; }
         };
-
-        /*!
-         * Specialization of CompareByTuple for classes not registered with the tuple system.
-         */
-        template <class Derived>
-        class CompareByTuple<Derived, false>
-        {};
 
         /*!
          * CRTP class template from which a derived class can inherit string streaming operations.
@@ -606,10 +531,18 @@ namespace BlackMisc
         /*!
          * CRTP class template from which a derived class can inherit property indexing functions.
          */
-        template <class Derived, bool BaseIsEmpty = true>
+        template <class Derived>
         class Index
         {
         public:
+            //! Base class enums
+            enum ColumnIndex
+            {
+                IndexPixmap = 10, // manually set to avoid circular dependencies
+                IndexIcon,
+                IndexString
+            };
+
             //! Update by variant map
             //! \return number of values changed, with skipEqualValues equal values will not be changed
             CPropertyIndexList apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues = false); // implemented later due to cyclic include dependency
@@ -632,33 +565,8 @@ namespace BlackMisc
         };
 
         /*!
-         * Specialization of Index for classes further down an inheritance hierarchy.
+         * CRTP class template from which a derived class can inherit icon-related functions.
          */
-        template <class Derived>
-        class Index<Derived, false>
-        {
-        public:
-            //! Update by variant map
-            //! \return number of values changed, with skipEqualValues equal values will not be changed
-            CPropertyIndexList apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues = false); // implemented later due to cyclic include dependency
-
-            //! Set property by index
-            void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index) { derived()->Derived::base_type::setPropertyByIndex(variant, index); }
-
-            //! Property by index
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const; // implemented later due to cyclic include dependency
-
-            //! Property by index as String
-            QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const { return derived()->Derived::base_type::propertyByIndexAsString(index, i18n); }
-
-            //! Is given variant equal to value of property index?
-            bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const { return derived()->Derived::base_type::equalsPropertyByIndex(compareValue, index); }
-
-        private:
-            const Derived *derived() const { return static_cast<const Derived *>(this); }
-            Derived *derived() { return static_cast<Derived *>(this); }
-        };
-
         template <class Derived, CIcons::IconIndex IconIndex = CIcons::StandardIconUnknown16>
         class Icon
         {
@@ -689,29 +597,19 @@ namespace BlackMisc
     template <class Derived, class Base /*= CEmpty*/> class CValueObject :
         public Base,
         public Mixin::MetaType<Derived>,
-        public Mixin::HashByTuple<Derived, Policy::Hash::IsMetaTuple<Derived, Base>::value>,
-        public Mixin::DBusByTuple<Derived, Policy::DBus::IsMetaTuple<Derived, Base>::value>,
-        public Mixin::JsonByTuple<Derived, Policy::Json::IsMetaTuple<Derived, Base>::value>,
-        public Mixin::EqualsByTuple<Derived, Policy::Equals::IsMetaTuple<Derived, Base>::value>,
-        public Mixin::LessThanByTuple<Derived, Policy::LessThan::IsMetaTuple<Derived, Base>::value>,
-        public Mixin::CompareByTuple<Derived, Policy::Compare::IsMetaTuple<Derived, Base>::value>,
+        public Mixin::HashByTuple<Derived>,
+        public Mixin::DBusByTuple<Derived>,
+        public Mixin::JsonByTuple<Derived>,
+        public Mixin::EqualsByTuple<Derived>,
+        public Mixin::LessThanByTuple<Derived>,
+        public Mixin::CompareByTuple<Derived>,
         public Mixin::String<Derived>,
-        public Mixin::Index<Derived, std::is_same<Base, CEmpty>::value>,
+        public Mixin::Index<Derived>,
         public Mixin::Icon<Derived>
     {
-        static_assert(std::is_same<CEmpty, Base>::value || IsValueObject<Base>::value, "Base must be either CEmpty or derived from CValueObject");
-
     public:
         //! Base class
         using base_type = Base;
-
-        //! Base class enums
-        enum ColumnIndex
-        {
-            IndexPixmap = 10, // manually set to avoid circular dependencies
-            IndexIcon,
-            IndexString
-        };
 
         //! \copydoc BlackMisc::Mixin::String::toQString
         using Mixin::String<Derived>::toQString;
@@ -723,7 +621,7 @@ namespace BlackMisc
         using Mixin::String<Derived>::toStdString;
 
         //! \copydoc BlackMisc::Mixin::Index::apply
-        using Mixin::Index<Derived, std::is_same<Base, CEmpty>::value>::apply;
+        using Mixin::Index<Derived>::apply;
 
         //! \copydoc BlackMisc::Mixin::MetaType::toCVariant
         using Mixin::MetaType<Derived>::toCVariant;
@@ -732,10 +630,10 @@ namespace BlackMisc
         using Mixin::MetaType<Derived>::convertFromCVariant;
 
         //! \copydoc BlackMisc::Mixin::JsonByTuple::toJson
-        using Mixin::JsonByTuple<Derived, Policy::Json::IsMetaTuple<Derived, Base>::value>::toJson;
+        using Mixin::JsonByTuple<Derived>::toJson;
 
         //! \copydoc BlackMisc::Mixin::JsonByTuple::convertFromJson
-        using Mixin::JsonByTuple<Derived, Policy::Json::IsMetaTuple<Derived, Base>::value>::convertFromJson;
+        using Mixin::JsonByTuple<Derived>::convertFromJson;
 
         //! \copydoc BlackMisc::Mixin::MetaType::toQVariant
         using Mixin::MetaType<Derived>::toQVariant;
@@ -744,16 +642,16 @@ namespace BlackMisc
         using Mixin::MetaType<Derived>::convertFromQVariant;
 
         //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        using Mixin::Index<Derived, std::is_same<Base, CEmpty>::value>::setPropertyByIndex;
+        using Mixin::Index<Derived>::setPropertyByIndex;
 
         //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-        using Mixin::Index<Derived, std::is_same<Base, CEmpty>::value>::propertyByIndex;
+        using Mixin::Index<Derived>::propertyByIndex;
 
         //! \copydoc BlackMisc::Mixin::Index::propertyByIndexAsString
-        using Mixin::Index<Derived, std::is_same<Base, CEmpty>::value>::propertyByIndexAsString;
+        using Mixin::Index<Derived>::propertyByIndexAsString;
 
         //! \copydoc BlackMisc::Mixin::Index::equalsPropertyByIndex
-        using Mixin::Index<Derived, std::is_same<Base, CEmpty>::value>::equalsPropertyByIndex;
+        using Mixin::Index<Derived>::equalsPropertyByIndex;
 
         //! \copydoc BlackMisc::Mixin::Icon::toIcon
         using Mixin::Icon<Derived>::toIcon;
@@ -793,10 +691,10 @@ namespace BlackMisc
         using Mixin::String<Derived>::stringForStreaming;
 
         //! \copydoc BlackMisc::Mixin::DBusByTuple::marshallToDbus
-        using Mixin::DBusByTuple<Derived, Policy::DBus::IsMetaTuple<Derived, Base>::value>::marshallToDbus;
+        using Mixin::DBusByTuple<Derived>::marshallToDbus;
 
         //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
-        using Mixin::DBusByTuple<Derived, Policy::DBus::IsMetaTuple<Derived, Base>::value>::unmarshallFromDbus;
+        using Mixin::DBusByTuple<Derived>::unmarshallFromDbus;
     };
 
 } // namespace
@@ -812,28 +710,18 @@ namespace BlackMisc
 {
     namespace Mixin
     {
-        template <class Derived>
-        CVariant MetaType<Derived>::toCVariant() const
+        template <class Derived, class... AdditionalTypes>
+        CVariant MetaType<Derived, AdditionalTypes...>::toCVariant() const
         {
             return CVariant(derived()->toQVariant());
         }
-        template <class Derived>
-        void MetaType<Derived>::convertFromCVariant(const CVariant &variant)
+        template <class Derived, class... AdditionalTypes>
+        void MetaType<Derived, AdditionalTypes...>::convertFromCVariant(const CVariant &variant)
         {
             derived()->convertFromQVariant(variant.getQVariant());
         }
         template <class Derived>
-        CPropertyIndexList Index<Derived, false>::apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues)
-        {
-            return derived()->Derived::base_type::apply(indexMap, skipEqualValues);
-        }
-        template <class Derived>
-        CVariant Index<Derived, false>::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
-        {
-            return derived()->Derived::base_type::propertyByIndex(index);
-        }
-        template <class Derived, bool BaseIsEmpty>
-        CPropertyIndexList Index<Derived, BaseIsEmpty>::apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues)
+        CPropertyIndexList Index<Derived>::apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues)
         {
             if (indexMap.isEmpty()) return {};
 
@@ -853,8 +741,8 @@ namespace BlackMisc
             }
             return changed;
         }
-        template <class Derived, bool BaseIsEmpty>
-        void Index<Derived, BaseIsEmpty>::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
+        template <class Derived>
+        void Index<Derived>::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
         {
             if (index.isMyself())
             {
@@ -866,22 +754,21 @@ namespace BlackMisc
             const QString m = QString("Property by index not found (setter), index: ").append(index.toQString());
             qFatal("%s", qPrintable(m));
         }
-        template <class Derived, bool BaseIsEmpty>
-        CVariant Index<Derived, BaseIsEmpty>::propertyByIndex(const CPropertyIndex &index) const
+        template <class Derived>
+        CVariant Index<Derived>::propertyByIndex(const CPropertyIndex &index) const
         {
             if (index.isMyself())
             {
                 return derived()->toCVariant();
             }
-            using Base = CValueObject<Derived, typename Derived::base_type>;
-            auto i = index.frontCasted<typename CValueObject<Derived, typename Derived::base_type>::ColumnIndex>();
+            auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case Base::IndexIcon:
+            case IndexIcon:
                 return CVariant::from(derived()->toIcon());
-            case Base::IndexPixmap:
+            case IndexPixmap:
                 return CVariant::from(derived()->toPixmap());
-            case Base::IndexString:
+            case IndexString:
                 return CVariant(derived()->toQString());
             default:
                 break;
@@ -892,14 +779,14 @@ namespace BlackMisc
             qFatal("%s", qPrintable(m));
             return {};
         }
-        template <class Derived, bool BaseIsEmpty>
-        QString Index<Derived, BaseIsEmpty>::propertyByIndexAsString(const CPropertyIndex &index, bool i18n) const
+        template <class Derived>
+        QString Index<Derived>::propertyByIndexAsString(const CPropertyIndex &index, bool i18n) const
         {
             // default implementation, requires propertyByIndex
             return derived()->propertyByIndex(index).toQString(i18n);
         }
-        template <class Derived, bool BaseIsEmpty>
-        bool Index<Derived, BaseIsEmpty>::equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const
+        template <class Derived>
+        bool Index<Derived>::equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const
         {
             return derived()->propertyByIndex(index) == compareValue;
         }

@@ -74,18 +74,12 @@ namespace BlackMisc
     struct AssociativityTraits : public Private::AssociativityTraits<Private::ADL::SupportsQHash<Key>::value, Private::ADL::SupportsQMap<Key>::value>
     {};
 
-    // forward declaration
-    template<class Key, class Value, template <class...> class Impl = AssociativityTraits<Key>::template DefaultType>
-    class CDictionary;
-
-    //! \private
-    template <class Key, class Value, template <class...> class Impl>
-    struct CValueObjectPolicy<CDictionary<Key, Value, Impl>> : public CValueObjectLegacy
-    {};
-
     //! Associative container with value semantics, chooses a sensible default implementation container type
-    template<class Key, class Value, template <class...> class Impl /*= AssociativityTraits<Key>::template DefaultType*/>
-    class CDictionary : public CValueObject<CDictionary<Key, Value, Impl>>
+    template<class Key, class Value, template <class...> class Impl = AssociativityTraits<Key>::template DefaultType>
+    class CDictionary :
+        public Mixin::DBusOperators<CDictionary<Key, Value, Impl>>,
+        public Mixin::JsonOperators<CDictionary<Key, Value, Impl>>,
+        public Mixin::String<CDictionary<Key, Value, Impl>>
     {
         //! \copydoc BlackMisc::CValueObject::compare
         friend int compare(const CDictionary &a, const CDictionary &b)

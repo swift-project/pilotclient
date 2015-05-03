@@ -55,7 +55,7 @@ namespace BlackMisc
     }
 }
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Event::CEventHotkeyFunction, (o.m_eventOriginator, o.m_hotkeyFunc))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Event::CEventHotkeyFunction, (attr(o.m_eventOriginator, flags<DisabledForJson>()), o.m_hotkeyFunc))
 Q_DECLARE_METATYPE(BlackMisc::Event::CEventHotkeyFunction)
 
 #endif // BLACKMISC_EVENTHOTKEY_H

@@ -17,28 +17,21 @@
 
 namespace BlackMisc
 {
-
-    //! \private
-    template <> struct CValueObjectPolicy<PhysicalQuantities::CAcceleration> : public CValueObjectPolicy<>
-    {
-        using MetaType = Policy::MetaType::DefaultAndQList;
-    };
-
     namespace PhysicalQuantities
     {
 
         //! Acceleration
-        class BLACKMISC_EXPORT CAcceleration : public CValueObject<CAcceleration, CPhysicalQuantity<CAccelerationUnit, CAcceleration>>
+        class BLACKMISC_EXPORT CAcceleration : public CPhysicalQuantity<CAccelerationUnit, CAcceleration>
         {
         public:
             //! Default constructor
-            CAcceleration() : CValueObject(0, CAccelerationUnit::defaultUnit()) {}
+            CAcceleration() : CPhysicalQuantity(0, CAccelerationUnit::defaultUnit()) {}
 
             //! Init by double value
-            CAcceleration(double value, const CAccelerationUnit &unit) : CValueObject(value, unit) {}
+            CAcceleration(double value, const CAccelerationUnit &unit) : CPhysicalQuantity(value, unit) {}
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CAcceleration(const QString &unitString) : CValueObject(unitString) {}
+            CAcceleration(const QString &unitString) : CPhysicalQuantity(unitString) {}
         };
 
     }

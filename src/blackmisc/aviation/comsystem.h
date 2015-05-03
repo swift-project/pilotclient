@@ -17,25 +17,27 @@
 
 namespace BlackMisc
 {
-    namespace Aviation { class CComSystem; }
-
-    //! \private
-    template <> struct CValueObjectPolicy<Aviation::CComSystem> : public CValueObjectPolicy<>
-    {
-        using MetaType = Policy::MetaType::Default;
-        using LessThan = Policy::LessThan::None;
-        using Compare = Policy::Compare::None;
-        using Hash = Policy::Hash::Own;
-        using DBus = Policy::DBus::Own;
-        using Json = Policy::Json::Own;
-    };
-
     namespace Aviation
     {
+
         //! COM system (aka "radio")
-        class BLACKMISC_EXPORT CComSystem : public CValueObject<CComSystem, CModulator<CComSystem>>
+        class BLACKMISC_EXPORT CComSystem :
+            public CModulator<CComSystem>,
+            public Mixin::MetaType<CComSystem>,
+            public Mixin::JsonOperators<CComSystem>
         {
         public:
+            //! Base type
+            using base_type = CModulator<CComSystem>;
+
+            using Mixin::MetaType<CComSystem>::registerMetadata;
+            using Mixin::MetaType<CComSystem>::getMetaTypeId;
+            using Mixin::MetaType<CComSystem>::isA;
+            using Mixin::MetaType<CComSystem>::toCVariant;
+            using Mixin::MetaType<CComSystem>::toQVariant;
+            using Mixin::MetaType<CComSystem>::convertFromCVariant;
+            using Mixin::MetaType<CComSystem>::convertFromQVariant;
+
             //! Channel spacing frequency
             enum ChannelSpacing
             {
@@ -56,7 +58,7 @@ namespace BlackMisc
 
             //! Constructor
             CComSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet()):
-                CValueObject(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency)
+                CModulator(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency)
             { }
 
             //! Set active frequency

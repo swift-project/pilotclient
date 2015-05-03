@@ -18,7 +18,6 @@
  */
 void BlackMisc::PhysicalQuantities::registerMetadata()
 {
-    CMeasurementUnit::registerMetadata();
     CAcceleration::registerMetadata();
     CAccelerationUnit::registerMetadata();
     CAngle::registerMetadata();

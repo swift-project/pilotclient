@@ -17,27 +17,43 @@
 
 namespace BlackMisc
 {
-    namespace Aviation { class CHeading; }
-
-    //! \private
-    template <> struct CValueObjectPolicy<Aviation::CHeading> : public CValueObjectPolicy<>
-    {
-        using Equals = Policy::Equals::MetaTuple;
-        using Compare = Policy::Compare::MetaTuple;
-        using Hash = Policy::Hash::MetaTuple;
-        using DBus = Policy::DBus::MetaTuple;
-        using Json = Policy::Json::MetaTuple;
-    };
-
     namespace Aviation
     {
+
         /*!
          * \brief Heading as used in aviation, can be true or magnetic heading
          * \remarks Intentionally allowing +/- CAngle , and >= / <= CAngle.
          */
-        class BLACKMISC_EXPORT CHeading : public CValueObject<CHeading, PhysicalQuantities::CAngle>
+        class BLACKMISC_EXPORT CHeading :
+            public PhysicalQuantities::CAngle,
+            public Mixin::MetaTypeAndQList<CHeading>,
+            public Mixin::EqualsByTuple<CHeading>,
+            public Mixin::CompareByTuple<CHeading>,
+            public Mixin::HashByTuple<CHeading>,
+            public Mixin::DBusByTuple<CHeading>,
+            public Mixin::JsonByTuple<CHeading>,
+            public Mixin::String<CHeading>
         {
         public:
+            //! Base type
+            using base_type = PhysicalQuantities::CAngle;
+
+            using Mixin::MetaTypeAndQList<CHeading>::registerMetadata;
+            using Mixin::MetaTypeAndQList<CHeading>::getMetaTypeId;
+            using Mixin::MetaTypeAndQList<CHeading>::isA;
+            using Mixin::MetaTypeAndQList<CHeading>::toCVariant;
+            using Mixin::MetaTypeAndQList<CHeading>::toQVariant;
+            using Mixin::MetaTypeAndQList<CHeading>::convertFromCVariant;
+            using Mixin::MetaTypeAndQList<CHeading>::convertFromQVariant;
+            using Mixin::String<CHeading>::toQString;
+            using Mixin::String<CHeading>::toFormattedQString;
+            using Mixin::String<CHeading>::toStdString;
+            using Mixin::String<CHeading>::stringForStreaming;
+            using Mixin::DBusByTuple<CHeading>::marshallToDbus;
+            using Mixin::DBusByTuple<CHeading>::unmarshallFromDbus;
+            using Mixin::JsonByTuple<CHeading>::toJson;
+            using Mixin::JsonByTuple<CHeading>::convertFromJson;
+
             //! Enum type to distinguish between true north and magnetic north
             enum ReferenceNorth
             {
@@ -49,13 +65,13 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
             //! \brief Default constructor: 0 heading true
-            CHeading() : CValueObject(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
+            CHeading() : CAngle(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
 
             //! \brief Constructor
-            CHeading(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CValueObject(value, unit), m_north(north) {}
+            CHeading(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_north(north) {}
 
             //! \brief Constructor by CAngle
-            CHeading(CAngle heading, ReferenceNorth north) : CValueObject(heading), m_north(north) {}
+            CHeading(CAngle heading, ReferenceNorth north) : CAngle(heading), m_north(north) {}
 
             //! \brief Magnetic heading?
             bool isMagneticHeading() const { return Magnetic == this->m_north; }

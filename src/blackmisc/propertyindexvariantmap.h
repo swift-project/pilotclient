@@ -28,20 +28,19 @@ namespace BlackMisc
     // forward declaration
     class CPropertyIndex;
     class CPropertyIndexList;
-    class CPropertyIndexVariantMap;
-
-    //! \private
-    template <> struct CValueObjectPolicy<CPropertyIndexVariantMap> : public CValueObjectLegacy {};
 
     /*!
      * Specialized value object compliant map for variants,
      * based on indexes
      */
-    class BLACKMISC_EXPORT CPropertyIndexVariantMap : public CValueObject<CPropertyIndexVariantMap>
+    class BLACKMISC_EXPORT CPropertyIndexVariantMap :
+        public Mixin::MetaType<CPropertyIndexVariantMap>,
+        public Mixin::DBusOperators<CPropertyIndexVariantMap>,
+        public Mixin::Index<CPropertyIndexVariantMap>,
+        public Mixin::String<CPropertyIndexVariantMap>,
+        public Mixin::Icon<CPropertyIndexVariantMap>
     {
-
     public:
-
         /*!
          * Constructor
          * \param wildcard when used in search, for setting values irrelevant

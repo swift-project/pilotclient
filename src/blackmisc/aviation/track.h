@@ -17,28 +17,44 @@
 
 namespace BlackMisc
 {
-    namespace Aviation { class CTrack; }
-
-    //! \private
-    template <> struct CValueObjectPolicy<Aviation::CTrack> : public CValueObjectPolicy<>
-    {
-        using Equals = Policy::Equals::MetaTuple;
-        using Compare = Policy::Compare::MetaTuple;
-        using Hash = Policy::Hash::MetaTuple;
-        using DBus = Policy::DBus::MetaTuple;
-        using Json = Policy::Json::MetaTuple;
-    };
-
     namespace Aviation
     {
+
         /*!
          * \brief Track as used in aviation, can be true or magnetic Track
          * \remarks Intentionally allowing +/- BlackMisc::PhysicalQuantities::CAngle ,
          *          and >= / <= CAngle.
          */
-        class BLACKMISC_EXPORT CTrack : public CValueObject<CTrack, PhysicalQuantities::CAngle>
+        class BLACKMISC_EXPORT CTrack :
+            public PhysicalQuantities::CAngle,
+            public Mixin::MetaTypeAndQList<CTrack>,
+            public Mixin::EqualsByTuple<CTrack>,
+            public Mixin::CompareByTuple<CTrack>,
+            public Mixin::HashByTuple<CTrack>,
+            public Mixin::DBusByTuple<CTrack>,
+            public Mixin::JsonByTuple<CTrack>,
+            public Mixin::String<CTrack>
         {
         public:
+            //! Base type
+            using base_type = PhysicalQuantities::CAngle;
+
+            using Mixin::MetaTypeAndQList<CTrack>::registerMetadata;
+            using Mixin::MetaTypeAndQList<CTrack>::getMetaTypeId;
+            using Mixin::MetaTypeAndQList<CTrack>::isA;
+            using Mixin::MetaTypeAndQList<CTrack>::toCVariant;
+            using Mixin::MetaTypeAndQList<CTrack>::toQVariant;
+            using Mixin::MetaTypeAndQList<CTrack>::convertFromCVariant;
+            using Mixin::MetaTypeAndQList<CTrack>::convertFromQVariant;
+            using Mixin::String<CTrack>::toQString;
+            using Mixin::String<CTrack>::toFormattedQString;
+            using Mixin::String<CTrack>::toStdString;
+            using Mixin::String<CTrack>::stringForStreaming;
+            using Mixin::DBusByTuple<CTrack>::marshallToDbus;
+            using Mixin::DBusByTuple<CTrack>::unmarshallFromDbus;
+            using Mixin::JsonByTuple<CTrack>::toJson;
+            using Mixin::JsonByTuple<CTrack>::convertFromJson;
+
             /*!
              * Enum type to distinguish between true north and magnetic north
              */
@@ -49,13 +65,13 @@ namespace BlackMisc
             };
 
             //! \brief Default constructor: 0 Track magnetic
-            CTrack() : CValueObject(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
+            CTrack() : CAngle(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
 
             //! \brief Constructor
-            CTrack(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CValueObject(value, unit), m_north(north) {}
+            CTrack(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_north(north) {}
 
             //! \brief Constructor by CAngle
-            CTrack(BlackMisc::PhysicalQuantities::CAngle track, ReferenceNorth north) : CValueObject(track), m_north(north) {}
+            CTrack(BlackMisc::PhysicalQuantities::CAngle track, ReferenceNorth north) : CAngle(track), m_north(north) {}
 
             //! \brief Magnetic Track?
             bool isMagneticTrack() const

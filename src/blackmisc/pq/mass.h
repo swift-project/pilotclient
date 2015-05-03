@@ -17,30 +17,23 @@
 
 namespace BlackMisc
 {
-
-    //! \private
-    template <> struct CValueObjectPolicy<PhysicalQuantities::CMass> : public CValueObjectPolicy<>
-    {
-        using MetaType = Policy::MetaType::DefaultAndQList;
-    };
-
     namespace PhysicalQuantities
     {
 
         /*!
          * Mass
          */
-        class BLACKMISC_EXPORT CMass : public CValueObject<CMass, CPhysicalQuantity<CMassUnit, CMass>>
+        class BLACKMISC_EXPORT CMass : public CPhysicalQuantity<CMassUnit, CMass>
         {
         public:
             //! Default constructor
-            CMass() : CValueObject(0, CMassUnit::defaultUnit()) {}
+            CMass() : CPhysicalQuantity(0, CMassUnit::defaultUnit()) {}
 
             //! Init by double value
-            CMass(double value, const CMassUnit &unit) : CValueObject(value, unit) {}
+            CMass(double value, const CMassUnit &unit) : CPhysicalQuantity(value, unit) {}
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CMass(const QString &unitString) : CValueObject(unitString) {}
+            CMass(const QString &unitString) : CPhysicalQuantity(unitString) {}
         };
 
     }

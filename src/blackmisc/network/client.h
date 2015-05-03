@@ -145,7 +145,7 @@ namespace BlackMisc
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CClient, (
                                    o.m_user,
                                    o.m_model,
-                                   attr(o.m_capabilities, flags<DisabledForComparison>()),
+                                   attr(o.m_capabilities, flags<DisabledForComparison | DisabledForJson>()),
                                    o.m_server,
                                    o.m_voiceCapabilities
                                ))

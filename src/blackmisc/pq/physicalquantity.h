@@ -28,7 +28,7 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-        template <class, class> class CPhysicalQuantity;
+
         class CLength;
         class CPressure;
         class CFrequency;
@@ -38,26 +38,17 @@ namespace BlackMisc
         class CTime;
         class CPressure;
         class CAcceleration;
-    }
 
-    //! \private
-    template <class MU, class PQ> struct CValueObjectPolicy<PhysicalQuantities::CPhysicalQuantity<MU, PQ>> : public CValueObjectPolicy<>
-    {
-        using MetaType = Policy::MetaType::None;
-        using Equals = Policy::Equals::None;
-        using LessThan = Policy::LessThan::None;
-        using Compare = Policy::Compare::None;
-        using Hash = Policy::Hash::Own;
-        using DBus = Policy::DBus::Own;
-        using Json = Policy::Json::Own;
-    };
-
-    namespace PhysicalQuantities
-    {
         /*!
          * A physical quantity such as "5m", "20s", "1500ft/s"
          */
-        template <class MU, class PQ> class CPhysicalQuantity : public CValueObject<CPhysicalQuantity<MU, PQ>>
+        template <class MU, class PQ> class CPhysicalQuantity :
+            public Mixin::DBusOperators<CPhysicalQuantity<MU, PQ>>,
+            public Mixin::JsonOperators<CPhysicalQuantity<MU, PQ>>,
+            public Mixin::Index<CPhysicalQuantity<MU, PQ>>,
+            public Mixin::MetaTypeAndQList<PQ>,
+            public Mixin::String<PQ>,
+            public Mixin::Icon<CPhysicalQuantity<MU, PQ>>
         {
             //! \copydoc CValueObject::compare
             friend int compare(const PQ &a, const PQ &b) { return compareImpl(a, b); }

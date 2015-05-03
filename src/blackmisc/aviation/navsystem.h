@@ -17,32 +17,33 @@
 
 namespace BlackMisc
 {
-    namespace Aviation { class CNavSystem; }
-
-    //! \private
-    template <> struct CValueObjectPolicy<Aviation::CNavSystem> : public CValueObjectPolicy<>
-    {
-        using MetaType = Policy::MetaType::Default;
-        using Equals = Policy::Equals::None;
-        using LessThan = Policy::LessThan::None;
-        using Compare = Policy::Compare::None;
-        using Hash = Policy::Hash::Own;
-        using DBus = Policy::DBus::Own;
-        using Json = Policy::Json::Own;
-    };
-
     namespace Aviation
     {
+
         //! NAV system (radio navigation)
-        class BLACKMISC_EXPORT CNavSystem : public CValueObject<CNavSystem, CModulator<CNavSystem>>
+        class BLACKMISC_EXPORT CNavSystem :
+            public CModulator<CNavSystem>,
+            public Mixin::MetaType<CNavSystem>,
+            public Mixin::JsonOperators<CNavSystem>
         {
         public:
+            //! Base type
+            using base_type = CModulator<CNavSystem>;
+
+            using Mixin::MetaType<CNavSystem>::registerMetadata;
+            using Mixin::MetaType<CNavSystem>::getMetaTypeId;
+            using Mixin::MetaType<CNavSystem>::isA;
+            using Mixin::MetaType<CNavSystem>::toCVariant;
+            using Mixin::MetaType<CNavSystem>::toQVariant;
+            using Mixin::MetaType<CNavSystem>::convertFromCVariant;
+            using Mixin::MetaType<CNavSystem>::convertFromQVariant;
+
             //! Default constructor
             CNavSystem() = default;
 
             //! Constructor
             CNavSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency):
-                CValueObject(name, activeFrequency, standbyFrequency)
+                CModulator(name, activeFrequency, standbyFrequency)
             { }
 
             //! Set active frequency

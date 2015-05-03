@@ -20,19 +20,20 @@
 
 namespace BlackMisc
 {
-    namespace Event { class COriginator; }
-
-    //! \private
-    template <> struct CValueObjectPolicy<Event::COriginator> : public CValueObjectPolicy<>
-    {
-        using Json = Policy::Json::None;
-    };
-
     namespace Event
     {
 
         //! Value object encapsulating information about the originiator
-        class BLACKMISC_EXPORT COriginator : public CValueObject<COriginator>
+        class BLACKMISC_EXPORT COriginator :
+            public Mixin::MetaType<COriginator>,
+            public Mixin::HashByTuple<COriginator>,
+            public Mixin::DBusByTuple<COriginator>,
+            public Mixin::EqualsByTuple<COriginator>,
+            public Mixin::LessThanByTuple<COriginator>,
+            public Mixin::CompareByTuple<COriginator>,
+            public Mixin::Index<COriginator>,
+            public Mixin::String<COriginator>,
+            public Mixin::Icon<COriginator>
         {
         public:
             //! Default constructor.

@@ -18,34 +18,28 @@
 
 namespace BlackMisc
 {
-
-    //! \private
-    template <> struct CValueObjectPolicy<PhysicalQuantities::CAngle> : public CValueObjectPolicy<>
-    {
-        using MetaType = Policy::MetaType::DefaultAndQList;
-    };
-
     namespace PhysicalQuantities
     {
+
         //! Physical unit angle (radians, degrees)
-        class BLACKMISC_EXPORT CAngle : public CValueObject<CAngle, CPhysicalQuantity<CAngleUnit, CAngle>>
+        class BLACKMISC_EXPORT CAngle : public CPhysicalQuantity<CAngleUnit, CAngle>
         {
         public:
             //! Default constructor
-            CAngle() : CValueObject(0, CAngleUnit::defaultUnit()) {}
+            CAngle() : CPhysicalQuantity(0, CAngleUnit::defaultUnit()) {}
 
             //! Init by double value
-            CAngle(double value, const CAngleUnit &unit): CValueObject(value, unit) {}
+            CAngle(double value, const CAngleUnit &unit): CPhysicalQuantity(value, unit) {}
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CAngle(const QString &unitString) : CValueObject(unitString) {}
+            CAngle(const QString &unitString) : CPhysicalQuantity(unitString) {}
 
             /*!
              * \brief Init as sexagesimal degrees, minutes, seconds
              * The sign of all parameters must be the same, either all positive or all negative.
              */
             CAngle(int degrees, int minutes, double seconds) :
-                CValueObject(
+                CPhysicalQuantity(
                     degrees + minutes / 100.0 + seconds / 10000.0,
                     CAngleUnit::sexagesimalDeg()) {}
 
@@ -54,7 +48,7 @@ namespace BlackMisc
              * The sign of both parameters must be the same, either both positive or both negative.
              */
             CAngle(int degrees, double minutes) :
-                CValueObject(
+                CPhysicalQuantity(
                     degrees + minutes / 100.0,
                     CAngleUnit::sexagesimalDegMin()) {}
 

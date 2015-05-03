@@ -42,22 +42,18 @@ namespace BlackMisc
         static QString stringify(QString str, bool /*i18n*/) { return str; }
     };
 
-    // forward declaration
-    template <template <class> class C, class T, class CIt>
-    class CContainerBase;
-
-    //! \private
-    template <template <class> class C, class T, class CIt>
-    struct CValueObjectPolicy<CContainerBase<C, T, CIt>> : public CValueObjectLegacy
-    {
-        using MetaType = Policy::MetaType::None;
-    };
-
     /*!
      * \brief Base class for CCollection and CSequence adding mutating operations and CValueObject facility on top of CRangeBase.
      */
     template <template <class> class C, class T, class CIt>
-    class CContainerBase : public CValueObject<CContainerBase<C, T, CIt>>, public CRangeBase<C<T>, CIt>
+    class CContainerBase :
+        public CRangeBase<C<T>, CIt>,
+        public Mixin::MetaType<C<T>>,
+        public Mixin::DBusOperators<C<T>>,
+        public Mixin::JsonOperators<C<T>>,
+        public Mixin::String<C<T>>,
+        public Mixin::Index<C<T>>,
+        public Mixin::Icon<C<T>>
     {
     public:
 
@@ -112,12 +108,6 @@ namespace BlackMisc
         }
 
     public:
-        //! \copydoc BlackMisc::CValueObject::toQVariant
-        QVariant toQVariant() const { return QVariant::fromValue(derived()); }
-
-        //! \copydoc CValueObject::convertFromQVariant
-        void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant< C<T> >(&derived(), variant); }
-
         //! Simplifies composition, returns 0 for performance
         friend uint qHash(const C<T> &) { return 0; }
 

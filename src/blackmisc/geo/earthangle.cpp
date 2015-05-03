@@ -113,17 +113,17 @@ namespace BlackMisc
 
         template <class LATorLON>
         CEarthAngle<LATorLON>::CEarthAngle()
-            : CEarthAngle::CValueObject(0.0, BlackMisc::PhysicalQuantities::CAngleUnit::deg())
+            : PhysicalQuantities::CAngle(0.0, BlackMisc::PhysicalQuantities::CAngleUnit::deg())
         { }
 
         template <class LATorLON>
         CEarthAngle<LATorLON>::CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit)
-            : CEarthAngle::CValueObject(value, unit)
+            : PhysicalQuantities::CAngle(value, unit)
         { }
 
         template <class LATorLON>
         CEarthAngle<LATorLON>::CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle)
-            : CEarthAngle::CValueObject(angle)
+            : PhysicalQuantities::CAngle(angle)
         { }
 
         template <class LATorLON>

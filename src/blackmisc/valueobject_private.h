@@ -28,6 +28,44 @@ namespace BlackMisc
     template <typename T>
     void registerMetaValueType();
 
+    /*!
+     * If T has a member typedef base_type, this trait will obtain it, otherwise void.
+     */
+    template <class T>
+    class BaseOf
+    {
+        //template <typename U> static typename U::base_type *test(int);
+        template <typename U> static typename U::base_type *test(typename std::enable_if<! std::is_same<typename U::base_type, CEmpty>::value, int>::type);
+        template <typename U> static void *test(...);
+
+    public:
+        //! The declared base_type of T, or void if there is none.
+        typedef typename std::remove_pointer<decltype(test<T>(0))>::type type;
+    };
+
+    /*!
+     * It T has a member typedef base_type which is a registered metatype, this trait will obtain it, otherwise void.
+     */
+    template <class T>
+    class MetaBaseOf
+    {
+    public:
+        //! Type of T::base_type, or void if not declared.
+        typedef typename std::conditional<QMetaTypeId<typename BaseOf<T>::type>::Defined, typename BaseOf<T>::type, void>::type type;
+    };
+
+    /*!
+     * Alias for typename BaseOf<T>::type.
+     */
+    template <class T>
+    using BaseOfT = typename BaseOf<T>::type;
+
+    /*!
+     * Alias for typename MetaBaseOf<T>::type.
+     */
+    template <class T>
+    using MetaBaseOfT = typename MetaBaseOf<T>::type;
+
     namespace Private
     {
         //! \private Needed so we can copy forward-declared CVariant.
@@ -63,21 +101,30 @@ namespace BlackMisc
         template <typename T>
         struct CValueObjectMetaInfo : public IValueObjectMetaInfo
         {
+            // http://en.wikibooks.org/wiki/More_C++_Idioms/Member_Detector
+            struct Fallback { int toJson, convertFromJson; };
+            template <int Fallback:: *> struct int_t { typedef int type; };
+            template <typename U> struct Derived : public U, public Fallback {};
+            template <typename U> static QJsonObject toJsonHelper(const U &, typename int_t<&Derived<U>::toJson>::type) { return {}; }
+            template <typename U> static QJsonObject toJsonHelper(const U &object, ...) { return object.toJson(); }
+            template <typename U> static void convertFromJsonHelper(const QJsonObject &, U &, typename int_t<&Derived<U>::convertFromJson>::type) {}
+            template <typename U> static void convertFromJsonHelper(const QJsonObject &json, U &object, ...) { object.convertFromJson(json); }
+
             virtual QString toQString(const void *object, bool i18n) const override
             {
                 return cast(object).toQString(i18n);
             }
             virtual QJsonObject toJson(const void *object) const override
             {
-                return cast(object).toJson();
+                return toJsonHelper(cast(object), 0);
             }
             virtual void convertFromJson(const QJsonObject &json, void *object) const override
             {
-                cast(object).convertFromJson(json);
+                convertFromJsonHelper(json, cast(object), 0);
             }
             virtual void unmarshall(const QDBusArgument &arg, void *object) const override
             {
-                arg >> cast(object);
+                cast(object).unmarshallFromDbus(arg);
             }
             virtual uint getValueHash(const void *object) const override
             {
@@ -89,8 +136,8 @@ namespace BlackMisc
             }
             virtual const void *upCastTo(const void *object, int metaTypeId) const override
             {
-                const auto base = static_cast<const void *>(static_cast<const typename T::base_type *>(&cast(object)));
-                return metaTypeId == getMetaTypeId() ? object : CValueObjectMetaInfo<typename T::base_type>{}.upCastTo(base, metaTypeId);
+                const auto base = static_cast<const void *>(static_cast<const MetaBaseOfT<T> *>(&cast(object)));
+                return metaTypeId == getMetaTypeId() ? object : CValueObjectMetaInfo<MetaBaseOfT<T>>{}.upCastTo(base, metaTypeId);
             }
             virtual int compareImpl(const void *lhs, const void *rhs) const override
             {
@@ -122,7 +169,7 @@ namespace BlackMisc
 
         //! \private Explicit specialization for the terminating case of the recursive CValueObjectMetaInfo::upCastTo.
         template <>
-        struct CValueObjectMetaInfo<CEmpty>
+        struct CValueObjectMetaInfo<void>
         {
             const void *upCastTo(const void *, int) const
             {

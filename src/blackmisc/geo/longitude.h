@@ -17,20 +17,32 @@
 
 namespace BlackMisc
 {
-
-    //! \private
-    template <> struct CValueObjectPolicy<Geo::CLongitude> : public CValueObjectPolicy<>
-    {
-        using MetaType = Policy::MetaType::Default;
-    };
-
     namespace Geo
     {
 
         //! Longitude
-        class BLACKMISC_EXPORT CLongitude : public CValueObject<CLongitude, CEarthAngle<CLongitude>>
+        class BLACKMISC_EXPORT CLongitude :
+            public CEarthAngle<CLongitude>,
+            public Mixin::MetaType<CLongitude>,
+            public Mixin::String<CLongitude>,
+            public Mixin::DBusOperators<CLongitude>
         {
         public:
+            //! Base type
+            using base_type = CEarthAngle<CLongitude>;
+
+            using Mixin::MetaType<CLongitude>::registerMetadata;
+            using Mixin::MetaType<CLongitude>::getMetaTypeId;
+            using Mixin::MetaType<CLongitude>::isA;
+            using Mixin::MetaType<CLongitude>::toCVariant;
+            using Mixin::MetaType<CLongitude>::toQVariant;
+            using Mixin::MetaType<CLongitude>::convertFromCVariant;
+            using Mixin::MetaType<CLongitude>::convertFromQVariant;
+            using Mixin::String<CLongitude>::toQString;
+            using Mixin::String<CLongitude>::toFormattedQString;
+            using Mixin::String<CLongitude>::toStdString;
+            using Mixin::String<CLongitude>::stringForStreaming;
+
             //! \copydoc CValueObject::convertToQString
             QString convertToQString(bool i18n = false) const
             {
@@ -44,10 +56,10 @@ namespace BlackMisc
             CLongitude() = default;
 
             //! Constructor
-            explicit CLongitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CValueObject(angle) {}
+            explicit CLongitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
 
             //! Init by double value
-            CLongitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CValueObject(value, unit) {}
+            CLongitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle(value, unit) {}
         };
 
     }

@@ -16,19 +16,18 @@
 namespace BlackMisc
 {
 
-    namespace Aviation { class CAvionicsBase; }
-
-    //! \private
-    template <> struct CValueObjectPolicy<Aviation::CAvionicsBase> : public CValueObjectPolicy<>
-    {
-        using MetaType = Policy::MetaType::None;
-    };
-
     namespace Aviation
     {
 
         //! Base class for avionics
-        class BLACKMISC_EXPORT CAvionicsBase : public CValueObject<CAvionicsBase>
+        class BLACKMISC_EXPORT CAvionicsBase :
+            public Mixin::HashByTuple<CAvionicsBase>,
+            public Mixin::DBusByTuple<CAvionicsBase>,
+            public Mixin::JsonByTuple<CAvionicsBase>,
+            public Mixin::EqualsByTuple<CAvionicsBase>,
+            public Mixin::LessThanByTuple<CAvionicsBase>,
+            public Mixin::CompareByTuple<CAvionicsBase>,
+            public Mixin::String<CAvionicsBase>
         {
         protected:
             QString m_name; //!< name of the unit

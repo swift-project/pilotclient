@@ -35,17 +35,21 @@ namespace BlackMisc
     {
 
         //! Specialized class for distance units (meter, foot, nautical miles).
-        class BLACKMISC_EXPORT CLengthUnit : public CValueObject<CLengthUnit, CMeasurementUnit>
+        class BLACKMISC_EXPORT CLengthUnit :
+            public CMeasurementUnit,
+            public Mixin::MetaTypeAndQList<CLengthUnit>,
+            public Mixin::DBusOperators<CLengthUnit>,
+            public Mixin::Index<CLengthUnit>
         {
         private:
             template <class Converter>
             CLengthUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-                CValueObject(name, symbol, converter, displayDigits, epsilon)
+                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
             {}
 
             //! null constructor
             CLengthUnit(const QString &name, const QString &symbol, std::nullptr_t) :
-                CValueObject(name, symbol, nullptr)
+                CMeasurementUnit(name, symbol, nullptr)
             {}
 
             struct NauticalMilesToMeters    { static double factor() { return 1852.0;    } };
@@ -55,8 +59,19 @@ namespace BlackMisc
             typedef One MetersToMeters;
 
         public:
+            //! Base type
+            using base_type = CMeasurementUnit;
+
+            using Mixin::MetaTypeAndQList<CLengthUnit>::registerMetadata;
+            using Mixin::MetaTypeAndQList<CLengthUnit>::getMetaTypeId;
+            using Mixin::MetaTypeAndQList<CLengthUnit>::isA;
+            using Mixin::MetaTypeAndQList<CLengthUnit>::toCVariant;
+            using Mixin::MetaTypeAndQList<CLengthUnit>::toQVariant;
+            using Mixin::MetaTypeAndQList<CLengthUnit>::convertFromCVariant;
+            using Mixin::MetaTypeAndQList<CLengthUnit>::convertFromQVariant;
+
             //! Default constructor, required for Qt Metasystem
-            CLengthUnit() : CValueObject(defaultUnit()) {}
+            CLengthUnit() : CMeasurementUnit(defaultUnit()) {}
 
             //! Default unit
             static const CLengthUnit &defaultUnit() { return m(); }
@@ -145,24 +160,39 @@ namespace BlackMisc
         };
 
         //! Specialized class for angles (degrees, radian).
-        class BLACKMISC_EXPORT CAngleUnit : public CValueObject<CAngleUnit, CMeasurementUnit>
+        class BLACKMISC_EXPORT CAngleUnit :
+            public CMeasurementUnit,
+            public Mixin::MetaTypeAndQList<CAngleUnit>,
+            public Mixin::DBusOperators<CAngleUnit>,
+            public Mixin::Index<CAngleUnit>
         {
         private:
             template <class Converter>
             CAngleUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-                CValueObject(name, symbol, converter, displayDigits, epsilon)
+                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
             {}
 
             CAngleUnit(const QString &name, const QString &symbol, std::nullptr_t) :
-                CValueObject(name, symbol, nullptr)
+                CMeasurementUnit(name, symbol, nullptr)
             {}
 
             struct RadiansToDegrees { static double factor() { return 180.0 / M_PI; } };
             typedef One DegreesToDegrees;
 
         public:
+            //! Base type
+            using base_type = CMeasurementUnit;
+
+            using Mixin::MetaTypeAndQList<CAngleUnit>::registerMetadata;
+            using Mixin::MetaTypeAndQList<CAngleUnit>::getMetaTypeId;
+            using Mixin::MetaTypeAndQList<CAngleUnit>::isA;
+            using Mixin::MetaTypeAndQList<CAngleUnit>::toCVariant;
+            using Mixin::MetaTypeAndQList<CAngleUnit>::toQVariant;
+            using Mixin::MetaTypeAndQList<CAngleUnit>::convertFromCVariant;
+            using Mixin::MetaTypeAndQList<CAngleUnit>::convertFromQVariant;
+
             //!  Default constructor, required for Qt Metasystem
-            CAngleUnit() : CValueObject(defaultUnit()) {}
+            CAngleUnit() : CMeasurementUnit(defaultUnit()) {}
 
             //! Default unit
             static const CAngleUnit &defaultUnit() { return deg(); }
@@ -235,23 +265,38 @@ namespace BlackMisc
         };
 
         //! Specialized class for frequency (hertz, mega hertz, kilo hertz).
-        class BLACKMISC_EXPORT CFrequencyUnit : public CValueObject<CFrequencyUnit, CMeasurementUnit>
+        class BLACKMISC_EXPORT CFrequencyUnit :
+            public CMeasurementUnit,
+            public Mixin::MetaTypeAndQList<CFrequencyUnit>,
+            public Mixin::DBusOperators<CFrequencyUnit>,
+            public Mixin::Index<CFrequencyUnit>
         {
         private:
             template <class Converter>
             CFrequencyUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-                CValueObject(name, symbol, converter, displayDigits, epsilon)
+                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
             {}
 
             CFrequencyUnit(const QString &name, const QString &symbol, std::nullptr_t) :
-                CValueObject(name, symbol, nullptr)
+                CMeasurementUnit(name, symbol, nullptr)
             {}
 
             typedef One HertzToHertz;
 
         public:
+            //! Base type
+            using base_type = CMeasurementUnit;
+
+            using Mixin::MetaTypeAndQList<CFrequencyUnit>::registerMetadata;
+            using Mixin::MetaTypeAndQList<CFrequencyUnit>::getMetaTypeId;
+            using Mixin::MetaTypeAndQList<CFrequencyUnit>::isA;
+            using Mixin::MetaTypeAndQList<CFrequencyUnit>::toCVariant;
+            using Mixin::MetaTypeAndQList<CFrequencyUnit>::toQVariant;
+            using Mixin::MetaTypeAndQList<CFrequencyUnit>::convertFromCVariant;
+            using Mixin::MetaTypeAndQList<CFrequencyUnit>::convertFromQVariant;
+
             //! Default constructor, required for Qt Metasystem
-            CFrequencyUnit() : CValueObject(defaultUnit()) {}
+            CFrequencyUnit() : CMeasurementUnit(defaultUnit()) {}
 
             //! Default unit
             static const CFrequencyUnit &defaultUnit() { return Hz(); }
@@ -316,24 +361,39 @@ namespace BlackMisc
         };
 
         //! Specialized class for mass units (kg, lbs).
-        class BLACKMISC_EXPORT CMassUnit : public CValueObject<CMassUnit, CMeasurementUnit>
+        class BLACKMISC_EXPORT CMassUnit :
+            public CMeasurementUnit,
+            public Mixin::MetaTypeAndQList<CMassUnit>,
+            public Mixin::DBusOperators<CMassUnit>,
+            public Mixin::Index<CMassUnit>
         {
         private:
             template <class Converter>
             CMassUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-                CValueObject(name, symbol, converter, displayDigits, epsilon)
+                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
             {}
 
             CMassUnit(const QString &name, const QString &symbol, std::nullptr_t) :
-                CValueObject(name, symbol, nullptr)
+                CMeasurementUnit(name, symbol, nullptr)
             {}
 
             typedef Milli<One> GramsToKilograms;
             struct PoundsToKilograms { static double factor() { return 0.45359237; } };
 
         public:
+            //! Base type
+            using base_type = CMeasurementUnit;
+
+            using Mixin::MetaTypeAndQList<CMassUnit>::registerMetadata;
+            using Mixin::MetaTypeAndQList<CMassUnit>::getMetaTypeId;
+            using Mixin::MetaTypeAndQList<CMassUnit>::isA;
+            using Mixin::MetaTypeAndQList<CMassUnit>::toCVariant;
+            using Mixin::MetaTypeAndQList<CMassUnit>::toQVariant;
+            using Mixin::MetaTypeAndQList<CMassUnit>::convertFromCVariant;
+            using Mixin::MetaTypeAndQList<CMassUnit>::convertFromQVariant;
+
             //! Default constructor, required for Qt Metasystem
-            CMassUnit() : CValueObject(defaultUnit()) {}
+            CMassUnit() : CMeasurementUnit(defaultUnit()) {}
 
             //! Default unit
             static const CMassUnit &defaultUnit() { return kg(); }
@@ -406,16 +466,20 @@ namespace BlackMisc
         };
 
         //! Specialized class for pressure (psi, hPa, bar).
-        class BLACKMISC_EXPORT CPressureUnit : public CValueObject<CPressureUnit, CMeasurementUnit>
+        class BLACKMISC_EXPORT CPressureUnit :
+            public CMeasurementUnit,
+            public Mixin::MetaTypeAndQList<CPressureUnit>,
+            public Mixin::DBusOperators<CPressureUnit>,
+            public Mixin::Index<CPressureUnit>
         {
         private:
             template <class Converter>
             CPressureUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-                CValueObject(name, symbol, converter, displayDigits, epsilon)
+                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
             {}
 
             CPressureUnit(const QString &name, const QString &symbol, std::nullptr_t) :
-                CValueObject(name, symbol, nullptr)
+                CMeasurementUnit(name, symbol, nullptr)
             {}
 
             typedef Centi<One> PascalsToHectopascals;
@@ -424,8 +488,19 @@ namespace BlackMisc
             struct MillimetersToHectopascals    { static double factor() { return 860.142806;   } };
 
         public:
+            //! Base type
+            using base_type = CMeasurementUnit;
+
+            using Mixin::MetaTypeAndQList<CPressureUnit>::registerMetadata;
+            using Mixin::MetaTypeAndQList<CPressureUnit>::getMetaTypeId;
+            using Mixin::MetaTypeAndQList<CPressureUnit>::isA;
+            using Mixin::MetaTypeAndQList<CPressureUnit>::toCVariant;
+            using Mixin::MetaTypeAndQList<CPressureUnit>::toQVariant;
+            using Mixin::MetaTypeAndQList<CPressureUnit>::convertFromCVariant;
+            using Mixin::MetaTypeAndQList<CPressureUnit>::convertFromQVariant;
+
             //! Default constructor, required for Qt Metasystem
-            CPressureUnit() : CValueObject(defaultUnit()) {}
+            CPressureUnit() : CMeasurementUnit(defaultUnit()) {}
 
             //! Default unit
             static const CPressureUnit &defaultUnit() { return hPa(); }
@@ -513,16 +588,20 @@ namespace BlackMisc
         };
 
         //! Specialized class for temperatur units (kelvin, centidegree).
-        class BLACKMISC_EXPORT CTemperatureUnit : public CValueObject<CTemperatureUnit, CMeasurementUnit>
+        class BLACKMISC_EXPORT CTemperatureUnit :
+            public CMeasurementUnit,
+            public Mixin::MetaTypeAndQList<CTemperatureUnit>,
+            public Mixin::DBusOperators<CTemperatureUnit>,
+            public Mixin::Index<CTemperatureUnit>
         {
         private:
             template <class Converter>
             CTemperatureUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-                CValueObject(name, symbol, converter, displayDigits, epsilon)
+                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
             {}
 
             CTemperatureUnit(const QString &name, const QString &symbol, std::nullptr_t) :
-                CValueObject(name, symbol, nullptr)
+                CMeasurementUnit(name, symbol, nullptr)
             {}
 
             struct KelvinToCentigrade
@@ -537,8 +616,19 @@ namespace BlackMisc
             };
 
         public:
+            //! Base type
+            using base_type = CMeasurementUnit;
+
+            using Mixin::MetaTypeAndQList<CTemperatureUnit>::registerMetadata;
+            using Mixin::MetaTypeAndQList<CTemperatureUnit>::getMetaTypeId;
+            using Mixin::MetaTypeAndQList<CTemperatureUnit>::isA;
+            using Mixin::MetaTypeAndQList<CTemperatureUnit>::toCVariant;
+            using Mixin::MetaTypeAndQList<CTemperatureUnit>::toQVariant;
+            using Mixin::MetaTypeAndQList<CTemperatureUnit>::convertFromCVariant;
+            using Mixin::MetaTypeAndQList<CTemperatureUnit>::convertFromQVariant;
+
             //! Default constructor, required for Qt Metasystem
-            CTemperatureUnit() : CValueObject(defaultUnit()) {}
+            CTemperatureUnit() : CMeasurementUnit(defaultUnit()) {}
 
             //! Default unit
             static const CTemperatureUnit &defaultUnit() { return C(); }
@@ -595,16 +685,20 @@ namespace BlackMisc
         };
 
         //! Specialized class for speed units (m/s, ft/s, NM/h).
-        class BLACKMISC_EXPORT CSpeedUnit : public CValueObject<CSpeedUnit, CMeasurementUnit>
+        class BLACKMISC_EXPORT CSpeedUnit :
+            public CMeasurementUnit,
+            public Mixin::MetaTypeAndQList<CSpeedUnit>,
+            public Mixin::DBusOperators<CSpeedUnit>,
+            public Mixin::Index<CSpeedUnit>
         {
         private:
             template <class Converter>
             CSpeedUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-                CValueObject(name, symbol, converter, displayDigits, epsilon)
+                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
             {}
 
             CSpeedUnit(const QString &name, const QString &symbol, std::nullptr_t) :
-                CValueObject(name, symbol, nullptr)
+                CMeasurementUnit(name, symbol, nullptr)
             {}
 
             struct KnotsToMps       { static double factor() { return 1852.0    / 3600.0; } };
@@ -613,9 +707,19 @@ namespace BlackMisc
             struct FtPerMinToMps    { static double factor() { return    0.3048 /   60.0; } };
 
         public:
+            //! Base type
+            using base_type = CMeasurementUnit;
+
+            using Mixin::MetaTypeAndQList<CSpeedUnit>::registerMetadata;
+            using Mixin::MetaTypeAndQList<CSpeedUnit>::getMetaTypeId;
+            using Mixin::MetaTypeAndQList<CSpeedUnit>::isA;
+            using Mixin::MetaTypeAndQList<CSpeedUnit>::toCVariant;
+            using Mixin::MetaTypeAndQList<CSpeedUnit>::toQVariant;
+            using Mixin::MetaTypeAndQList<CSpeedUnit>::convertFromCVariant;
+            using Mixin::MetaTypeAndQList<CSpeedUnit>::convertFromQVariant;
 
             //! Default constructor, required for Qt Metasystem
-            CSpeedUnit() : CValueObject(defaultUnit()) {}
+            CSpeedUnit() : CMeasurementUnit(defaultUnit()) {}
 
             //! Default unit
             static const CSpeedUnit &defaultUnit() { return m_s(); }
@@ -696,16 +800,20 @@ namespace BlackMisc
         };
 
         //! Specialized class for time units (ms, hour, min).
-        class BLACKMISC_EXPORT CTimeUnit : public CValueObject<CTimeUnit, CMeasurementUnit>
+        class BLACKMISC_EXPORT CTimeUnit :
+            public CMeasurementUnit,
+            public Mixin::MetaTypeAndQList<CTimeUnit>,
+            public Mixin::DBusOperators<CTimeUnit>,
+            public Mixin::Index<CTimeUnit>
         {
         private:
             template <class Converter>
             CTimeUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-                CValueObject(name, symbol, converter, displayDigits, epsilon)
+                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
             {}
 
             CTimeUnit(const QString &name, const QString &symbol, std::nullptr_t) :
-                CValueObject(name, symbol, nullptr)
+                CMeasurementUnit(name, symbol, nullptr)
             {}
 
             typedef One SecondsToSeconds;
@@ -714,9 +822,19 @@ namespace BlackMisc
             struct MinutesToSeconds { static double factor() { return 60.0;                 } };
 
         public:
+            //! Base type
+            using base_type = CMeasurementUnit;
+
+            using Mixin::MetaTypeAndQList<CTimeUnit>::registerMetadata;
+            using Mixin::MetaTypeAndQList<CTimeUnit>::getMetaTypeId;
+            using Mixin::MetaTypeAndQList<CTimeUnit>::isA;
+            using Mixin::MetaTypeAndQList<CTimeUnit>::toCVariant;
+            using Mixin::MetaTypeAndQList<CTimeUnit>::toQVariant;
+            using Mixin::MetaTypeAndQList<CTimeUnit>::convertFromCVariant;
+            using Mixin::MetaTypeAndQList<CTimeUnit>::convertFromQVariant;
 
             //! Default constructor, required for Qt Metasystem
-            CTimeUnit() : CValueObject(defaultUnit()) {}
+            CTimeUnit() : CMeasurementUnit(defaultUnit()) {}
 
             //! Default unit
             static const CTimeUnit &defaultUnit() { return s(); }
@@ -821,23 +939,38 @@ namespace BlackMisc
         };
 
         //! Specialized class for acceleration units (m/s2, ft/s2).
-        class BLACKMISC_EXPORT CAccelerationUnit : public CValueObject<CAccelerationUnit, CMeasurementUnit>
+        class BLACKMISC_EXPORT CAccelerationUnit :
+            public CMeasurementUnit,
+            public Mixin::MetaTypeAndQList<CAccelerationUnit>,
+            public Mixin::DBusOperators<CAccelerationUnit>,
+            public Mixin::Index<CAccelerationUnit>
         {
         private:
             template <class Converter>
             CAccelerationUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-                CValueObject(name, symbol, converter, displayDigits, epsilon)
+                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
             {}
 
             CAccelerationUnit(const QString &name, const QString &symbol, std::nullptr_t) :
-                CValueObject(name, symbol, nullptr)
+                CMeasurementUnit(name, symbol, nullptr)
             {}
 
             struct FeetToMeters { static double factor() { return 0.3048; } };
 
         public:
+            //! Base type
+            using base_type = CMeasurementUnit;
+
+            using Mixin::MetaTypeAndQList<CAccelerationUnit>::registerMetadata;
+            using Mixin::MetaTypeAndQList<CAccelerationUnit>::getMetaTypeId;
+            using Mixin::MetaTypeAndQList<CAccelerationUnit>::isA;
+            using Mixin::MetaTypeAndQList<CAccelerationUnit>::toCVariant;
+            using Mixin::MetaTypeAndQList<CAccelerationUnit>::toQVariant;
+            using Mixin::MetaTypeAndQList<CAccelerationUnit>::convertFromCVariant;
+            using Mixin::MetaTypeAndQList<CAccelerationUnit>::convertFromQVariant;
+
             //! Default constructor, required for Qt Metasystem
-            CAccelerationUnit() : CValueObject(defaultUnit()) {}
+            CAccelerationUnit() : CMeasurementUnit(defaultUnit()) {}
 
             //! Default unit
             static const CAccelerationUnit &defaultUnit() { return m_s2(); }

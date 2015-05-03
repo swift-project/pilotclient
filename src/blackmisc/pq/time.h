@@ -17,20 +17,13 @@
 
 namespace BlackMisc
 {
-
-    //! \private
-    template <> struct CValueObjectPolicy<PhysicalQuantities::CTime> : public CValueObjectPolicy<>
-    {
-        using MetaType = Policy::MetaType::DefaultAndQList;
-    };
-
     namespace PhysicalQuantities
     {
 
         /*!
          * Time class, e.g. "ms", "hour", "s", "day"
          */
-        class BLACKMISC_EXPORT CTime : public CValueObject<CTime, CPhysicalQuantity<CTimeUnit, CTime>>
+        class BLACKMISC_EXPORT CTime : public CPhysicalQuantity<CTimeUnit, CTime>
         {
         public:
             //! Parts
@@ -42,10 +35,10 @@ namespace BlackMisc
             };
 
             //! Default constructor
-            CTime() : CValueObject(0, CTimeUnit::defaultUnit()) {}
+            CTime() : CPhysicalQuantity(0, CTimeUnit::defaultUnit()) {}
 
             //! Init by double value
-            CTime(double value, const CTimeUnit &unit) : CValueObject(value, unit) {}
+            CTime(double value, const CTimeUnit &unit) : CPhysicalQuantity(value, unit) {}
 
             //! By hours, minutes, seconds
             CTime(int hours, int minutes, int seconds = 0);
@@ -54,7 +47,7 @@ namespace BlackMisc
             CTime(const QTime &time, bool negative = false);
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CTime(const QString &unitString) : CValueObject(0, CTimeUnit::nullUnit()) { this->parseFromString(unitString); }
+            CTime(const QString &unitString) : CPhysicalQuantity(0, CTimeUnit::nullUnit()) { this->parseFromString(unitString); }
 
             //! From string hh:mm, or hh:mm:ss, or time units such as s, min
             void parseFromString(const QString &time);

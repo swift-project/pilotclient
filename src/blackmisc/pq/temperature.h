@@ -17,30 +17,23 @@
 
 namespace BlackMisc
 {
-
-    //! \private
-    template <> struct CValueObjectPolicy<PhysicalQuantities::CTemperature> : public CValueObjectPolicy<>
-    {
-        using MetaType = Policy::MetaType::DefaultAndQList;
-    };
-
     namespace PhysicalQuantities
     {
 
         /*!
          * Physical unit temperature
          */
-        class BLACKMISC_EXPORT CTemperature : public CValueObject<CTemperature, CPhysicalQuantity<CTemperatureUnit, CTemperature>>
+        class BLACKMISC_EXPORT CTemperature : public CPhysicalQuantity<CTemperatureUnit, CTemperature>
         {
         public:
             //! Default constructor
-            CTemperature() : CValueObject(0, CTemperatureUnit::defaultUnit()) {}
+            CTemperature() : CPhysicalQuantity(0, CTemperatureUnit::defaultUnit()) {}
 
             //! Init by double value
-            CTemperature(double value, const CTemperatureUnit &unit): CValueObject(value, unit) {}
+            CTemperature(double value, const CTemperatureUnit &unit): CPhysicalQuantity(value, unit) {}
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CTemperature(const QString &unitString) : CValueObject(unitString) {}
+            CTemperature(const QString &unitString) : CPhysicalQuantity(unitString) {}
         };
 
     }

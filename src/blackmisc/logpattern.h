@@ -21,22 +21,16 @@ namespace BlackMisc
     class CLogCategory;
     class CLogCategoryList;
 
-    class CLogPattern;
-
-    //! \private
-    template <> struct CValueObjectPolicy<CLogPattern> : public CValueObjectPolicy<>
-    {
-        using LessThan = Policy::LessThan::None;
-        using Compare = Policy::Compare::None;
-        using Hash = Policy::Hash::None;
-        using DBus = Policy::DBus::Own;
-        using Json = Policy::Json::None;
-    };
-
     /*!
      * Value class for matching log messages based on their categories.
      */
-    class BLACKMISC_EXPORT CLogPattern : public CValueObject<CLogPattern>
+    class BLACKMISC_EXPORT CLogPattern :
+        public Mixin::MetaType<CLogPattern>,
+        public Mixin::EqualsByTuple<CLogPattern>,
+        public Mixin::DBusOperators<CLogPattern>,
+        public Mixin::Index<CLogPattern>,
+        public Mixin::String<CLogPattern>,
+        public Mixin::Icon<CLogPattern>
     {
     public:
         //! Default constructed CLogPattern will match any message.

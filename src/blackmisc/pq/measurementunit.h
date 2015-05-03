@@ -28,26 +28,15 @@
 
 namespace BlackMisc
 {
-    namespace PhysicalQuantities { class CMeasurementUnit; }
-
-    //! \private
-    template <> struct CValueObjectPolicy<PhysicalQuantities::CMeasurementUnit> : public CValueObjectPolicy<>
-    {
-        using MetaType = Policy::MetaType::DefaultAndQList;
-        using Equals = Policy::Equals::None;
-        using LessThan = Policy::LessThan::None;
-        using Compare = Policy::Compare::None;
-        using Hash = Policy::Hash::Own;
-        using DBus = Policy::DBus::Own;
-        using Json = Policy::Json::None;
-    };
-
     namespace PhysicalQuantities
     {
+
         /*!
          * Base class for all units, such as meter, hertz.
          */
-        class BLACKMISC_EXPORT CMeasurementUnit : public CValueObject<CMeasurementUnit>
+        class BLACKMISC_EXPORT CMeasurementUnit :
+            public Mixin::String<CMeasurementUnit>,
+            public Mixin::Icon<CMeasurementUnit>
         {
         protected:
             /*!
@@ -386,7 +375,5 @@ namespace BlackMisc
 
     }
 }
-
-Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CMeasurementUnit)
 
 #endif // guard
