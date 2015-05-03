@@ -25,6 +25,25 @@
 namespace BlackMisc
 {
     /*!
+     * Trait to detect whether T contains a member toQString.
+     */
+    template <typename T>
+    class HasToQString
+    {
+        // http://en.wikibooks.org/wiki/More_C++_Idioms/Member_Detector
+        struct Fallback { int toQString; };
+        template <int Fallback:: *> struct int_t { typedef int type; };
+        template <typename U, bool = std::is_class<U>::value> struct Derived : public U, public Fallback {};
+        template <typename U> struct Derived<U, false> : public Fallback {};
+        template <typename U> static char test(typename int_t<&Derived<U>::toQString>::type);
+        template <typename U> static int test(...);
+
+    public:
+        //! True if T contains a member toQString.
+        static const bool value = sizeof(test<T>(0)) > 1;
+    };
+
+    /*!
      * Helper with static methods for dealing with metadata embedded in log message category strings.
      *
      * There are certain aspects of log messages which cannot be represented in Qt's native log message machinery.
@@ -138,7 +157,7 @@ namespace BlackMisc
         CLogMessage &operator <<(QChar v) { return arg(v); }
         CLogMessage &operator <<(char v) { return arg(QChar(v)); }
         CLogMessage &operator <<(double v) { return arg(QString::number(v)); }
-        template <class T, class = typename std::enable_if<IsValueObject<T>::value>::type>
+        template <class T, class = typename std::enable_if<HasToQString<T>::value>::type>
         CLogMessage &operator <<(const T &v) { return arg(v.toQString()); }
         //! @}
 
