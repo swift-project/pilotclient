@@ -116,22 +116,22 @@ namespace BlackMisc
 
         //! Operator == with CValueObject
         //! \todo Still needed?
-        template <class T, class = typename std::enable_if<IsValueObject<T>::value>::type>
+        template <class T, class = typename std::enable_if<QMetaTypeId<T>::Defined>::type>
         friend bool operator ==(const CPropertyIndexVariantMap &valueMap, const T &valueObject) { return valueMap == CVariant::from(valueObject); }
 
         //! Operator != with CValueObject
         //! \todo Still needed?
-        template <class T, class = typename std::enable_if<IsValueObject<T>::value>::type>
+        template <class T, class = typename std::enable_if<QMetaTypeId<T>::Defined>::type>
         friend bool operator !=(const CPropertyIndexVariantMap &valueMap, const T &valueObject) { return valueMap != CVariant::from(valueObject); }
 
         //! Operator == with CValueObject
         //! \todo Still needed?
-        template <class T, class = typename std::enable_if<IsValueObject<T>::value>::type>
+        template <class T, class = typename std::enable_if<QMetaTypeId<T>::Defined>::type>
         friend bool operator ==(const T &valueObject, const CPropertyIndexVariantMap &valueMap) { return valueMap == CVariant::from(valueObject); }
 
         //! Operator != with CValueObject
         //! \todo Still needed?
-        template <class T, class = typename std::enable_if<IsValueObject<T>::value>::type>
+        template <class T, class = typename std::enable_if<QMetaTypeId<T>::Defined>::type>
         friend bool operator !=(const T &valueObject, const CPropertyIndexVariantMap &valueMap) { return valueMap != CVariant::from(valueObject); }
 
         //! Map
