@@ -19,7 +19,6 @@
 #include "icons.h"
 #include "blackmiscfreefunctions.h"
 #include "valueobject_private.h"
-#include "valueobject_policy.h"
 #include <QtDBus/QDBusMetaType>
 #include <QString>
 #include <QtGlobal>
@@ -80,62 +79,6 @@ namespace BlackMisc
 
         //! Non-virtual protected destructor
         ~CEmpty() = default;
-    };
-
-    /*!
-     * Default policy classes for use by CValueObject.
-     *
-     * The default policies are inherited from the policies of the base class. There is a specialization
-     * for the terminating case in which the base class is CEmpty.
-     *
-     * Specialize this template to use non-default policies for a particular derived class.
-     * Due to the void default template parameter, specializations can inherit from CValueObjectPolicy<>
-     * so that only the policies which differ from the default need be specified.
-     * Policy classes which can be used are defined in namespace BlackMisc::Policy.
-     */
-    template <class Derived = void> struct CValueObjectPolicy
-    {
-        using MetaType = Policy::MetaType::Inherit; //!< Metatype policy
-        using Equals = Policy::Equals::Inherit;     //!< Equals policy
-        using LessThan = Policy::LessThan::Inherit; //!< LessThan policy
-        using Compare = Policy::Compare::Inherit;   //!< Compare policy
-        using Hash = Policy::Hash::Inherit;         //!< Hash policy
-        using DBus = Policy::DBus::Inherit;         //!< DBus policy
-        using Json = Policy::Json::Inherit;         //!< JSON policy
-        using PropertyIndex = Policy::PropertyIndex::Default;   //!< PropertyIndex policy
-    };
-
-    /*!
-     * Default policy classes for use by CValueObject.
-     *
-     * Specialization for the terminating case in which the base class is CEmpty.
-     */
-    template <> struct CValueObjectPolicy<CEmpty>
-    {
-        using MetaType = Policy::MetaType::Default;     //!< Metatype policy
-        using Equals = Policy::Equals::MetaTuple;       //!< Equals policy
-        using LessThan = Policy::LessThan::MetaTuple;   //!< Less than policy
-        using Compare = Policy::Compare::MetaTuple;     //!< Compare policy
-        using Hash = Policy::Hash::MetaTuple;           //!< Hash policy
-        using DBus = Policy::DBus::MetaTuple;           //!< DBus policy
-        using Json = Policy::Json::MetaTuple;           //!< JSon policy
-        using PropertyIndex = Policy::PropertyIndex::Default;   //!< PropertyIndex policy
-    };
-
-    /*!
-     * Policy classes for use by classes with incomplete migration to new CValueObject.
-     *
-     * This is to make it easier to apply the necessary changes to these classes for #356.
-     * \todo Remove this and finish migrating classes that use it.
-     */
-    struct CValueObjectLegacy : public CValueObjectPolicy<CEmpty>
-    {
-        using Equals = Policy::Equals::None;        //!< Equals policy
-        using LessThan = Policy::LessThan::None;    //!< Less than policy
-        using Compare = Policy::Compare::None;      //!< Compare policy
-        using Hash = Policy::Hash::Own;             //!< Hash policy
-        using DBus = Policy::DBus::Own;             //!< DBus policy
-        using Json = Policy::Json::Own;             //!< JSon policy
     };
 
     namespace Mixin
