@@ -62,13 +62,7 @@ namespace BlackMisc
             //! Base type
             using base_type = CMeasurementUnit;
 
-            using Mixin::MetaTypeAndQList<CLengthUnit>::registerMetadata;
-            using Mixin::MetaTypeAndQList<CLengthUnit>::getMetaTypeId;
-            using Mixin::MetaTypeAndQList<CLengthUnit>::isA;
-            using Mixin::MetaTypeAndQList<CLengthUnit>::toCVariant;
-            using Mixin::MetaTypeAndQList<CLengthUnit>::toQVariant;
-            using Mixin::MetaTypeAndQList<CLengthUnit>::convertFromCVariant;
-            using Mixin::MetaTypeAndQList<CLengthUnit>::convertFromQVariant;
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CLengthUnit)
 
             //! Default constructor, required for Qt Metasystem
             CLengthUnit() : CMeasurementUnit(defaultUnit()) {}
@@ -183,13 +177,7 @@ namespace BlackMisc
             //! Base type
             using base_type = CMeasurementUnit;
 
-            using Mixin::MetaTypeAndQList<CAngleUnit>::registerMetadata;
-            using Mixin::MetaTypeAndQList<CAngleUnit>::getMetaTypeId;
-            using Mixin::MetaTypeAndQList<CAngleUnit>::isA;
-            using Mixin::MetaTypeAndQList<CAngleUnit>::toCVariant;
-            using Mixin::MetaTypeAndQList<CAngleUnit>::toQVariant;
-            using Mixin::MetaTypeAndQList<CAngleUnit>::convertFromCVariant;
-            using Mixin::MetaTypeAndQList<CAngleUnit>::convertFromQVariant;
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CAngleUnit)
 
             //!  Default constructor, required for Qt Metasystem
             CAngleUnit() : CMeasurementUnit(defaultUnit()) {}
@@ -287,13 +275,7 @@ namespace BlackMisc
             //! Base type
             using base_type = CMeasurementUnit;
 
-            using Mixin::MetaTypeAndQList<CFrequencyUnit>::registerMetadata;
-            using Mixin::MetaTypeAndQList<CFrequencyUnit>::getMetaTypeId;
-            using Mixin::MetaTypeAndQList<CFrequencyUnit>::isA;
-            using Mixin::MetaTypeAndQList<CFrequencyUnit>::toCVariant;
-            using Mixin::MetaTypeAndQList<CFrequencyUnit>::toQVariant;
-            using Mixin::MetaTypeAndQList<CFrequencyUnit>::convertFromCVariant;
-            using Mixin::MetaTypeAndQList<CFrequencyUnit>::convertFromQVariant;
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CFrequencyUnit)
 
             //! Default constructor, required for Qt Metasystem
             CFrequencyUnit() : CMeasurementUnit(defaultUnit()) {}
@@ -384,13 +366,7 @@ namespace BlackMisc
             //! Base type
             using base_type = CMeasurementUnit;
 
-            using Mixin::MetaTypeAndQList<CMassUnit>::registerMetadata;
-            using Mixin::MetaTypeAndQList<CMassUnit>::getMetaTypeId;
-            using Mixin::MetaTypeAndQList<CMassUnit>::isA;
-            using Mixin::MetaTypeAndQList<CMassUnit>::toCVariant;
-            using Mixin::MetaTypeAndQList<CMassUnit>::toQVariant;
-            using Mixin::MetaTypeAndQList<CMassUnit>::convertFromCVariant;
-            using Mixin::MetaTypeAndQList<CMassUnit>::convertFromQVariant;
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CMassUnit)
 
             //! Default constructor, required for Qt Metasystem
             CMassUnit() : CMeasurementUnit(defaultUnit()) {}
@@ -491,13 +467,7 @@ namespace BlackMisc
             //! Base type
             using base_type = CMeasurementUnit;
 
-            using Mixin::MetaTypeAndQList<CPressureUnit>::registerMetadata;
-            using Mixin::MetaTypeAndQList<CPressureUnit>::getMetaTypeId;
-            using Mixin::MetaTypeAndQList<CPressureUnit>::isA;
-            using Mixin::MetaTypeAndQList<CPressureUnit>::toCVariant;
-            using Mixin::MetaTypeAndQList<CPressureUnit>::toQVariant;
-            using Mixin::MetaTypeAndQList<CPressureUnit>::convertFromCVariant;
-            using Mixin::MetaTypeAndQList<CPressureUnit>::convertFromQVariant;
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CPressureUnit)
 
             //! Default constructor, required for Qt Metasystem
             CPressureUnit() : CMeasurementUnit(defaultUnit()) {}
@@ -619,13 +589,7 @@ namespace BlackMisc
             //! Base type
             using base_type = CMeasurementUnit;
 
-            using Mixin::MetaTypeAndQList<CTemperatureUnit>::registerMetadata;
-            using Mixin::MetaTypeAndQList<CTemperatureUnit>::getMetaTypeId;
-            using Mixin::MetaTypeAndQList<CTemperatureUnit>::isA;
-            using Mixin::MetaTypeAndQList<CTemperatureUnit>::toCVariant;
-            using Mixin::MetaTypeAndQList<CTemperatureUnit>::toQVariant;
-            using Mixin::MetaTypeAndQList<CTemperatureUnit>::convertFromCVariant;
-            using Mixin::MetaTypeAndQList<CTemperatureUnit>::convertFromQVariant;
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CTemperatureUnit)
 
             //! Default constructor, required for Qt Metasystem
             CTemperatureUnit() : CMeasurementUnit(defaultUnit()) {}
@@ -710,13 +674,7 @@ namespace BlackMisc
             //! Base type
             using base_type = CMeasurementUnit;
 
-            using Mixin::MetaTypeAndQList<CSpeedUnit>::registerMetadata;
-            using Mixin::MetaTypeAndQList<CSpeedUnit>::getMetaTypeId;
-            using Mixin::MetaTypeAndQList<CSpeedUnit>::isA;
-            using Mixin::MetaTypeAndQList<CSpeedUnit>::toCVariant;
-            using Mixin::MetaTypeAndQList<CSpeedUnit>::toQVariant;
-            using Mixin::MetaTypeAndQList<CSpeedUnit>::convertFromCVariant;
-            using Mixin::MetaTypeAndQList<CSpeedUnit>::convertFromQVariant;
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CSpeedUnit)
 
             //! Default constructor, required for Qt Metasystem
             CSpeedUnit() : CMeasurementUnit(defaultUnit()) {}
@@ -825,13 +783,7 @@ namespace BlackMisc
             //! Base type
             using base_type = CMeasurementUnit;
 
-            using Mixin::MetaTypeAndQList<CTimeUnit>::registerMetadata;
-            using Mixin::MetaTypeAndQList<CTimeUnit>::getMetaTypeId;
-            using Mixin::MetaTypeAndQList<CTimeUnit>::isA;
-            using Mixin::MetaTypeAndQList<CTimeUnit>::toCVariant;
-            using Mixin::MetaTypeAndQList<CTimeUnit>::toQVariant;
-            using Mixin::MetaTypeAndQList<CTimeUnit>::convertFromCVariant;
-            using Mixin::MetaTypeAndQList<CTimeUnit>::convertFromQVariant;
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CTimeUnit)
 
             //! Default constructor, required for Qt Metasystem
             CTimeUnit() : CMeasurementUnit(defaultUnit()) {}
@@ -961,13 +913,7 @@ namespace BlackMisc
             //! Base type
             using base_type = CMeasurementUnit;
 
-            using Mixin::MetaTypeAndQList<CAccelerationUnit>::registerMetadata;
-            using Mixin::MetaTypeAndQList<CAccelerationUnit>::getMetaTypeId;
-            using Mixin::MetaTypeAndQList<CAccelerationUnit>::isA;
-            using Mixin::MetaTypeAndQList<CAccelerationUnit>::toCVariant;
-            using Mixin::MetaTypeAndQList<CAccelerationUnit>::toQVariant;
-            using Mixin::MetaTypeAndQList<CAccelerationUnit>::convertFromCVariant;
-            using Mixin::MetaTypeAndQList<CAccelerationUnit>::convertFromQVariant;
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CAccelerationUnit)
 
             //! Default constructor, required for Qt Metasystem
             CAccelerationUnit() : CMeasurementUnit(defaultUnit()) {}

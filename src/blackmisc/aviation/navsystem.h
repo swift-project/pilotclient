@@ -30,13 +30,7 @@ namespace BlackMisc
             //! Base type
             using base_type = CModulator<CNavSystem>;
 
-            using Mixin::MetaType<CNavSystem>::registerMetadata;
-            using Mixin::MetaType<CNavSystem>::getMetaTypeId;
-            using Mixin::MetaType<CNavSystem>::isA;
-            using Mixin::MetaType<CNavSystem>::toCVariant;
-            using Mixin::MetaType<CNavSystem>::toQVariant;
-            using Mixin::MetaType<CNavSystem>::convertFromCVariant;
-            using Mixin::MetaType<CNavSystem>::convertFromQVariant;
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CNavSystem)
 
             //! Default constructor
             CNavSystem() = default;

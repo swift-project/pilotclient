@@ -39,23 +39,11 @@ namespace BlackMisc
             //! Base type
             using base_type = PhysicalQuantities::CLength;
 
-            using Mixin::MetaTypeAndQList<CAltitude>::registerMetadata;
-            using Mixin::MetaTypeAndQList<CAltitude>::getMetaTypeId;
-            using Mixin::MetaTypeAndQList<CAltitude>::isA;
-            using Mixin::MetaTypeAndQList<CAltitude>::toCVariant;
-            using Mixin::MetaTypeAndQList<CAltitude>::toQVariant;
-            using Mixin::MetaTypeAndQList<CAltitude>::convertFromCVariant;
-            using Mixin::MetaTypeAndQList<CAltitude>::convertFromQVariant;
-            using Mixin::String<CAltitude>::toQString;
-            using Mixin::String<CAltitude>::toFormattedQString;
-            using Mixin::String<CAltitude>::toStdString;
-            using Mixin::String<CAltitude>::stringForStreaming;
-            using Mixin::DBusByTuple<CAltitude>::marshallToDbus;
-            using Mixin::DBusByTuple<CAltitude>::unmarshallFromDbus;
-            using Mixin::JsonByTuple<CAltitude>::toJson;
-            using Mixin::JsonByTuple<CAltitude>::convertFromJson;
-            using Mixin::Icon<CAltitude>::toIcon;
-            using Mixin::Icon<CAltitude>::toPixmap;
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CAltitude)
+            BLACKMISC_DECLARE_USING_MIXIN_STRING(CAltitude)
+            BLACKMISC_DECLARE_USING_MIXIN_DBUS(CAltitude)
+            BLACKMISC_DECLARE_USING_MIXIN_JSON(CAltitude)
+            BLACKMISC_DECLARE_USING_MIXIN_ICON(CAltitude)
 
             /*!
              * Enum type to distinguish between MSL and AGL

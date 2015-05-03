@@ -32,17 +32,8 @@ namespace BlackMisc
             //! Base type
             using base_type = CEarthAngle<CLatitude>;
 
-            using Mixin::MetaType<CLatitude>::registerMetadata;
-            using Mixin::MetaType<CLatitude>::getMetaTypeId;
-            using Mixin::MetaType<CLatitude>::isA;
-            using Mixin::MetaType<CLatitude>::toCVariant;
-            using Mixin::MetaType<CLatitude>::toQVariant;
-            using Mixin::MetaType<CLatitude>::convertFromCVariant;
-            using Mixin::MetaType<CLatitude>::convertFromQVariant;
-            using Mixin::String<CLatitude>::toQString;
-            using Mixin::String<CLatitude>::toFormattedQString;
-            using Mixin::String<CLatitude>::toStdString;
-            using Mixin::String<CLatitude>::stringForStreaming;
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CLatitude)
+            BLACKMISC_DECLARE_USING_MIXIN_STRING(CLatitude)
 
             //! \copydoc CValueObject::convertToQString
             QString convertToQString(bool i18n = false) const

@@ -31,17 +31,8 @@ namespace BlackMisc
             //! Base type
             using base_type = CEarthAngle<CLongitude>;
 
-            using Mixin::MetaType<CLongitude>::registerMetadata;
-            using Mixin::MetaType<CLongitude>::getMetaTypeId;
-            using Mixin::MetaType<CLongitude>::isA;
-            using Mixin::MetaType<CLongitude>::toCVariant;
-            using Mixin::MetaType<CLongitude>::toQVariant;
-            using Mixin::MetaType<CLongitude>::convertFromCVariant;
-            using Mixin::MetaType<CLongitude>::convertFromQVariant;
-            using Mixin::String<CLongitude>::toQString;
-            using Mixin::String<CLongitude>::toFormattedQString;
-            using Mixin::String<CLongitude>::toStdString;
-            using Mixin::String<CLongitude>::stringForStreaming;
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CLongitude)
+            BLACKMISC_DECLARE_USING_MIXIN_STRING(CLongitude)
 
             //! \copydoc CValueObject::convertToQString
             QString convertToQString(bool i18n = false) const

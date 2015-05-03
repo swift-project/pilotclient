@@ -30,13 +30,7 @@ namespace BlackMisc
             //! Base type
             using base_type = CModulator<CComSystem>;
 
-            using Mixin::MetaType<CComSystem>::registerMetadata;
-            using Mixin::MetaType<CComSystem>::getMetaTypeId;
-            using Mixin::MetaType<CComSystem>::isA;
-            using Mixin::MetaType<CComSystem>::toCVariant;
-            using Mixin::MetaType<CComSystem>::toQVariant;
-            using Mixin::MetaType<CComSystem>::convertFromCVariant;
-            using Mixin::MetaType<CComSystem>::convertFromQVariant;
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CComSystem)
 
             //! Channel spacing frequency
             enum ChannelSpacing

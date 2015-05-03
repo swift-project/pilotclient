@@ -208,6 +208,32 @@ namespace BlackMisc
         {};
 
         /*!
+         * When a derived class and a base class both inherit from Mixin::MetaType,
+         * the derived class uses this macro to disambiguate the inherited members.
+         */
+#       define BLACKMISC_DECLARE_USING_MIXIN_METATYPE(DERIVED)                  \
+            using ::BlackMisc::Mixin::MetaType<DERIVED>::registerMetadata;      \
+            using ::BlackMisc::Mixin::MetaType<DERIVED>::getMetaTypeId;         \
+            using ::BlackMisc::Mixin::MetaType<DERIVED>::isA;                   \
+            using ::BlackMisc::Mixin::MetaType<DERIVED>::toCVariant;            \
+            using ::BlackMisc::Mixin::MetaType<DERIVED>::toQVariant;            \
+            using ::BlackMisc::Mixin::MetaType<DERIVED>::convertFromCVariant;   \
+            using ::BlackMisc::Mixin::MetaType<DERIVED>::convertFromQVariant;
+
+        /*!
+         * When a derived class and a base class both inherit from Mixin::MetaType,
+         * the derived class uses this macro to disambiguate the inherited members.
+         */
+#       define BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(DERIVED)                \
+            using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::registerMetadata;      \
+            using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::getMetaTypeId;         \
+            using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::isA;                   \
+            using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::toCVariant;            \
+            using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::toQVariant;            \
+            using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::convertFromCVariant;   \
+            using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::convertFromQVariant;
+
+        /*!
          * CRTP class template from which a derived class can inherit common methods dealing with hashing instances by metatuple.
          */
         template <class Derived>
@@ -290,6 +316,14 @@ namespace BlackMisc
         };
 
         /*!
+         * When a derived class and a base class both inherit from Mixin::DBusByTuple,
+         * the derived class uses this macro to disambiguate the inherited members.
+         */
+#       define BLACKMISC_DECLARE_USING_MIXIN_DBUS(DERIVED)                          \
+            using ::BlackMisc::Mixin::DBusByTuple<DERIVED>::marshallToDbus;         \
+            using ::BlackMisc::Mixin::DBusByTuple<DERIVED>::unmarshallFromDbus;
+
+        /*!
          * CRTP class template which will generate marshalling operators for a derived class with its own marshalling implementation.
          */
         template <class Derived>
@@ -362,6 +396,14 @@ namespace BlackMisc
             static QJsonObject baseToJson(const void *) { return {}; }
             static void baseConvertFromJson(void *, const QJsonObject &) {}
         };
+
+        /*!
+         * When a derived class and a base class both inherit from Mixin::JsonByTuple,
+         * the derived class uses this macro to disambiguate the inherited members.
+         */
+#       define BLACKMISC_DECLARE_USING_MIXIN_JSON(DERIVED)                          \
+            using ::BlackMisc::Mixin::JsonByTuple<DERIVED>::toJson;                 \
+            using ::BlackMisc::Mixin::JsonByTuple<DERIVED>::convertFromJson;
 
         /*!
          * CRTP class template from which a derived class can inherit operator== implemented using its compare function.
@@ -529,6 +571,16 @@ namespace BlackMisc
         };
 
         /*!
+         * When a derived class and a base class both inherit from Mixin::String,
+         * the derived class uses this macro to disambiguate the inherited members.
+         */
+#       define BLACKMISC_DECLARE_USING_MIXIN_STRING(DERIVED)                \
+            using ::BlackMisc::Mixin::String<DERIVED>::toQString;           \
+            using ::BlackMisc::Mixin::String<DERIVED>::toFormattedQString;  \
+            using ::BlackMisc::Mixin::String<DERIVED>::toStdString;         \
+            using ::BlackMisc::Mixin::String<DERIVED>::stringForStreaming;
+
+        /*!
          * CRTP class template from which a derived class can inherit property indexing functions.
          */
         template <class Derived>
@@ -581,6 +633,14 @@ namespace BlackMisc
             const Derived *derived() const { return static_cast<const Derived *>(this); }
             Derived *derived() { return static_cast<Derived *>(this); }
         };
+
+        /*!
+         * When a derived class and a base class both inherit from Mixin::Icon,
+         * the derived class uses this macro to disambiguate the inherited members.
+         */
+#       define BLACKMISC_DECLARE_USING_MIXIN_ICON(DERIVED)      \
+            using ::BlackMisc::Mixin::Icon<DERIVED>::toIcon;    \
+            using ::BlackMisc::Mixin::Icon<DERIVED>::toPixmap;
 
     }
 

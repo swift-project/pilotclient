@@ -31,13 +31,7 @@ namespace BlackMisc
             //! Base type
             using base_type = CModulator<CAdfSystem>;
 
-            using Mixin::MetaType<CAdfSystem>::registerMetadata;
-            using Mixin::MetaType<CAdfSystem>::getMetaTypeId;
-            using Mixin::MetaType<CAdfSystem>::isA;
-            using Mixin::MetaType<CAdfSystem>::toCVariant;
-            using Mixin::MetaType<CAdfSystem>::toQVariant;
-            using Mixin::MetaType<CAdfSystem>::convertFromCVariant;
-            using Mixin::MetaType<CAdfSystem>::convertFromQVariant;
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAdfSystem)
 
             //! Default constructor
             CAdfSystem() = default;

@@ -39,21 +39,10 @@ namespace BlackMisc
             //! Base type
             using base_type = PhysicalQuantities::CAngle;
 
-            using Mixin::MetaTypeAndQList<CTrack>::registerMetadata;
-            using Mixin::MetaTypeAndQList<CTrack>::getMetaTypeId;
-            using Mixin::MetaTypeAndQList<CTrack>::isA;
-            using Mixin::MetaTypeAndQList<CTrack>::toCVariant;
-            using Mixin::MetaTypeAndQList<CTrack>::toQVariant;
-            using Mixin::MetaTypeAndQList<CTrack>::convertFromCVariant;
-            using Mixin::MetaTypeAndQList<CTrack>::convertFromQVariant;
-            using Mixin::String<CTrack>::toQString;
-            using Mixin::String<CTrack>::toFormattedQString;
-            using Mixin::String<CTrack>::toStdString;
-            using Mixin::String<CTrack>::stringForStreaming;
-            using Mixin::DBusByTuple<CTrack>::marshallToDbus;
-            using Mixin::DBusByTuple<CTrack>::unmarshallFromDbus;
-            using Mixin::JsonByTuple<CTrack>::toJson;
-            using Mixin::JsonByTuple<CTrack>::convertFromJson;
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CTrack)
+            BLACKMISC_DECLARE_USING_MIXIN_STRING(CTrack)
+            BLACKMISC_DECLARE_USING_MIXIN_DBUS(CTrack)
+            BLACKMISC_DECLARE_USING_MIXIN_JSON(CTrack)
 
             /*!
              * Enum type to distinguish between true north and magnetic north
