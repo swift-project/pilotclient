@@ -185,10 +185,10 @@ namespace BlackMisc
         virtual void convertFromJson(const QJsonObject &json) override;
 
         //! \copydoc CValueObject::marshallToDbus
-        virtual void marshallToDbus(QDBusArgument &argument) const override;
+        void marshallToDbus(QDBusArgument &argument) const;
 
         //! \copydoc CValueObject::unmarshallFromDbus
-        virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
+        void unmarshallFromDbus(const QDBusArgument &argument);
 
         //! Equal operator.
         friend bool operator ==(const CVariant &a, const CVariant &b) { return compare(a, b) == 0; }

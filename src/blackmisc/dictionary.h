@@ -418,14 +418,15 @@ namespace BlackMisc
             return str += "}";
         }
 
+    public:
         //! \copydoc BlackMisc::CValueObject::marshallToDbus
-        virtual void marshallToDbus(QDBusArgument &argument) const override
+        void marshallToDbus(QDBusArgument &argument) const
         {
            argument << m_impl;
         }
 
         //! \copydoc BlackMisc::CValueObject::unmarshallFromDbus
-        virtual void unmarshallFromDbus(const QDBusArgument &argument) override
+        void unmarshallFromDbus(const QDBusArgument &argument)
         {
             argument >> m_impl;
         }

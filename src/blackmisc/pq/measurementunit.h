@@ -253,21 +253,21 @@ namespace BlackMisc
                 return this->getSymbol(i18n);
             }
 
+        public:
             //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &argument) const override
+            void marshallToDbus(QDBusArgument &argument) const
             {
                 argument << this->m_symbol;
             }
 
             //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &) override
+            void unmarshallFromDbus(const QDBusArgument &)
             {
                 // the concrete implementations will override this default
                 // this is required so I can also stream None
                 (*this) = CMeasurementUnit::None();
             }
 
-        public:
             //! Default constructor for meta system
             //! \remarks Only public because the need, to use this with the metasystem
             CMeasurementUnit() : m_name("none"), m_symbol(""),  m_epsilon(0), m_displayDigits(0)

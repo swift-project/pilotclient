@@ -135,9 +135,8 @@ namespace BlackMisc
                 return u;
             }
 
-        protected:
             //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
+            void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
                 argument >> unitName;
@@ -226,9 +225,8 @@ namespace BlackMisc
                 return u;
             }
 
-        protected:
             //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
+            void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
                 argument >> unitName;
@@ -308,9 +306,8 @@ namespace BlackMisc
                 return u;
             }
 
-        protected:
             //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
+            void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
                 argument >> unitName;
@@ -399,9 +396,8 @@ namespace BlackMisc
                 return u;
             }
 
-        protected:
             //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
+            void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
                 argument >> unitName;
@@ -507,9 +503,8 @@ namespace BlackMisc
                 return u;
             }
 
-        protected:
             //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
+            void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
                 argument >> unitName;
@@ -590,9 +585,8 @@ namespace BlackMisc
                 return u;
             }
 
-        protected:
             //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
+            void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
                 argument >> unitName;
@@ -692,9 +686,8 @@ namespace BlackMisc
                 return u;
             }
 
-        protected:
             //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
+            void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
                 argument >> unitName;
@@ -818,9 +811,8 @@ namespace BlackMisc
                 return u;
             }
 
-        protected:
             //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
+            void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
                 argument >> unitName;
@@ -884,9 +876,8 @@ namespace BlackMisc
                 return u;
             }
 
-        protected:
             //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
+            void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
                 argument >> unitName;

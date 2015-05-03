@@ -115,12 +115,6 @@ namespace BlackMisc
 
         //! From JSON
         static void convertFromJson(const QJsonObject &) {}
-
-        //! Marshall to DBus
-        static void marshallToDbus(QDBusArgument &) {}
-
-        //! Unmarshall from DBus
-        static void unmarshallFromDbus(const QDBusArgument &) {}
     };
 
     /*!
@@ -267,6 +261,98 @@ namespace BlackMisc
         class HashByTuple<Derived, false>
         {};
 
+        /*!
+         * CRTP class template from which a derived class can inherit common methods dealing with marshalling instances by metatuple.
+         */
+        template <class Derived, bool IsTupleBased = true>
+        class DBusByTuple : private Private::EncapsulationBreaker
+        {
+        public:
+            //! Unmarshalling operator >>, DBus to object
+            friend const QDBusArgument &operator>>(const QDBusArgument &arg, Derived &obj)
+            {
+                arg.beginStructure();
+                obj.unmarshallFromDbus(arg);
+                arg.endStructure();
+                return arg;
+            }
+
+            //! Marshalling operator <<, object to DBus
+            friend QDBusArgument &operator<<(QDBusArgument &arg, const Derived &obj)
+            {
+                arg.beginStructure();
+                obj.marshallToDbus(arg);
+                arg.endStructure();
+                return arg;
+            }
+
+            //! Marshall without begin/endStructure, for when composed within another object
+            void marshallToDbus(QDBusArgument &arg) const
+            {
+                baseMarshall(static_cast<const typename Derived::base_type &>(*derived()), arg);
+                using BlackMisc::operator<<;
+                arg << Private::EncapsulationBreaker::toMetaTuple(*derived());
+            }
+
+            //! Unmarshall without begin/endStructure, for when composed within another object
+            void unmarshallFromDbus(const QDBusArgument &arg)
+            {
+                baseUnmarshall(static_cast<typename Derived::base_type &>(*derived()), arg);
+                using BlackMisc::operator>>;
+                arg >> Private::EncapsulationBreaker::toMetaTuple(*derived());
+            }
+
+        private:
+            const Derived *derived() const { return static_cast<const Derived *>(this); }
+            Derived *derived() { return static_cast<Derived *>(this); }
+
+            template <typename T> static void baseMarshall(const T &base, QDBusArgument &arg) { base.marshallToDbus(arg); }
+            template <typename T> static void baseUnmarshall(T &base, const QDBusArgument &arg) { base.unmarshallFromDbus(arg); }
+            static void baseMarshall(const CEmpty &, QDBusArgument &) {}
+            static void baseUnmarshall(CEmpty &, const QDBusArgument &) {}
+        };
+
+        /*!
+         * Specialization of DBusByTuple for classes not registered with the tuple system.
+         */
+        template <class Derived>
+        class DBusByTuple<Derived, false>
+        {
+        public:
+            //! Unmarshalling operator >>, DBus to object
+            friend const QDBusArgument &operator>>(const QDBusArgument &arg, Derived &obj)
+            {
+                arg.beginStructure();
+                obj.unmarshallFromDbus(arg);
+                arg.endStructure();
+                return arg;
+            }
+
+            //! Marshalling operator <<, object to DBus
+            friend QDBusArgument &operator<<(QDBusArgument &arg, const Derived &obj)
+            {
+                arg.beginStructure();
+                obj.marshallToDbus(arg);
+                arg.endStructure();
+                return arg;
+            }
+
+            //! Do nothing
+            void marshallToDbus(QDBusArgument &arg) const { baseMarshall(static_cast<const typename Derived::base_type &>(*derived()), arg); }
+
+            //! Do nothing
+            void unmarshallFromDbus(const QDBusArgument &arg) { baseUnmarshall(static_cast<typename Derived::base_type &>(*derived()), arg); }
+
+        private:
+            const Derived *derived() const { return static_cast<const Derived *>(this); }
+            Derived *derived() { return static_cast<Derived *>(this); }
+
+            template <typename T> static void baseMarshall(const T &base, QDBusArgument &arg) { base.marshallToDbus(arg); }
+            template <typename T> static void baseUnmarshall(T &base, const QDBusArgument &arg) { base.unmarshallFromDbus(arg); }
+            static void baseMarshall(const CEmpty &, QDBusArgument &) {}
+            static void baseUnmarshall(CEmpty &, const QDBusArgument &) {}
+        };
+
     }
 
     /*!
@@ -283,13 +369,13 @@ namespace BlackMisc
         public Base,
         public Mixin::MetaType<Derived>,
         public Mixin::HashByTuple<Derived, Policy::Hash::IsMetaTuple<Derived, Base>::value>,
+        public Mixin::DBusByTuple<Derived, Policy::DBus::IsMetaTuple<Derived, Base>::value>,
         private CValueObjectPolicy<Derived>::Equals::template Ops<Derived, Base>,
         private CValueObjectPolicy<Derived>::LessThan::template Ops<Derived, Base>,
         private CValueObjectPolicy<Derived>::Compare::template Ops<Derived, Base>
     {
         static_assert(std::is_same<CEmpty, Base>::value || IsValueObject<Base>::value, "Base must be either CEmpty or derived from CValueObject");
 
-        using DBusPolicy = typename CValueObjectPolicy<Derived>::DBus;
         using JsonPolicy = typename CValueObjectPolicy<Derived>::Json;
         using PropertyIndexPolicy = typename CValueObjectPolicy<Derived>::PropertyIndex;
 
@@ -328,24 +414,6 @@ namespace BlackMisc
         {
             ostr << obj.stringForStreaming().toStdString();
             return ostr;
-        }
-
-        //! Unmarshalling operator >>, DBus to object
-        friend const QDBusArgument &operator>>(const QDBusArgument &arg, Derived &obj)
-        {
-            arg.beginStructure();
-            static_cast<CValueObject &>(obj).unmarshallFromDbus(arg); // virtual method is protected in Derived
-            arg.endStructure();
-            return arg;
-        }
-
-        //! Marshalling operator <<, object to DBus
-        friend QDBusArgument &operator<<(QDBusArgument &arg, const Derived &obj)
-        {
-            arg.beginStructure();
-            static_cast<const CValueObject &>(obj).marshallToDbus(arg); // virtual method is protected in Derived
-            arg.endStructure();
-            return arg;
         }
 
         //! operator >> for JSON
@@ -480,19 +548,11 @@ namespace BlackMisc
         using Mixin::MetaType<Derived>::getMetaTypeId;
 
     public:
-        //! Marshall to DBus
-        virtual void marshallToDbus(QDBusArgument &argument) const
-        {
-            BaseOrDummy::marshallToDbus(argument);
-            DBusPolicy::marshallImpl(argument, *derived());
-        }
+        //! \copydoc BlackMisc::Mixin::DBusByTuple::marshallToDbus
+        using Mixin::DBusByTuple<Derived, Policy::DBus::IsMetaTuple<Derived, Base>::value>::marshallToDbus;
 
-        //! Unmarshall from DBus
-        virtual void unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            BaseOrDummy::unmarshallFromDbus(argument);
-            DBusPolicy::unmarshallImpl(argument, *derived());
-        }
+        //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
+        using Mixin::DBusByTuple<Derived, Policy::DBus::IsMetaTuple<Derived, Base>::value>::unmarshallFromDbus;
 
     private:
         const Derived *derived() const { return static_cast<const Derived *>(this); }

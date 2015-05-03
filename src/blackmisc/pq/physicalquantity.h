@@ -193,10 +193,10 @@ namespace BlackMisc
             void makeNegative();
 
             //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
+            void marshallToDbus(QDBusArgument &argument) const;
 
             //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
+            void unmarshallFromDbus(const QDBusArgument &argument);
 
             //! \copydoc CValueObject::qHash
             uint getValueHash() const;

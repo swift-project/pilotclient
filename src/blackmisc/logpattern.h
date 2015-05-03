@@ -86,11 +86,12 @@ namespace BlackMisc
         //! \copydoc CValueObject::convertToQString()
         virtual QString convertToQString(bool i18n = false) const override;
 
+    public:
         //! \copydoc CValueObject::marshallToDbus()
-        virtual void marshallToDbus(QDBusArgument &argument) const override;
+        void marshallToDbus(QDBusArgument &argument) const;
 
         //! \copydoc CValueObject::marshallFromDbus()
-        virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
+        void unmarshallFromDbus(const QDBusArgument &argument);
 
     private:
         bool checkInvariants() const;

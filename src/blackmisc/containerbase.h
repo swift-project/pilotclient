@@ -160,8 +160,9 @@ namespace BlackMisc
         //! \copydoc BlackMisc::CValueObject::getMetaTypeId
         int getMetaTypeId() const { return qMetaTypeId<C<T>>(); }
 
+    public:
         //! \copydoc BlackMisc::CValueObject::marshallToDbus
-        virtual void marshallToDbus(QDBusArgument &argument) const override
+        void marshallToDbus(QDBusArgument &argument) const
         {
             argument.beginArray(qMetaTypeId<T>());
             std::for_each(derived().cbegin(), derived().cend(), [ & ](const T & value) { argument << value; });
@@ -169,7 +170,7 @@ namespace BlackMisc
         }
 
         //! \copydoc BlackMisc::CValueObject::unmarshallFromDbus
-        virtual void unmarshallFromDbus(const QDBusArgument &argument) override
+        void unmarshallFromDbus(const QDBusArgument &argument)
         {
             argument.beginArray();
             while (!argument.atEnd()) { T value; argument >> value; derived().insert(value); }
