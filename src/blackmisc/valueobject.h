@@ -106,18 +106,6 @@ namespace BlackMisc
     inline int compare(const CEmpty &, const CEmpty &) { return 0; }
 
     /*!
-     * Terminating base cases for the recursive methods of CValueObject.
-     */
-    struct CValueObjectDummyBase
-    {
-        //! To JSON
-        static QJsonObject toJson() { return {}; }
-
-        //! From JSON
-        static void convertFromJson(const QJsonObject &) {}
-    };
-
-    /*!
      * Default policy classes for use by CValueObject.
      *
      * The default policies are inherited from the policies of the base class. There is a specialization
@@ -353,6 +341,130 @@ namespace BlackMisc
             static void baseUnmarshall(CEmpty &, const QDBusArgument &) {}
         };
 
+        /*!
+         * CRTP class template from which a derived class can inherit common methods dealing with JSON by metatuple.
+         */
+        template <class Derived, bool IsTupleBased = true>
+        class JsonByTuple : private Private::EncapsulationBreaker
+        {
+        public:
+            //! operator >> for JSON
+            friend const QJsonObject &operator>>(const QJsonObject &json, Derived &obj)
+            {
+                obj.convertFromJson(json);
+                return json;
+            }
+
+            //! operator >> for JSON
+            friend const QJsonValue &operator>>(const QJsonValue &json, Derived &obj)
+            {
+                obj.convertFromJson(json.toObject());
+                return json;
+            }
+
+            //! operator >> for JSON
+            friend const QJsonValueRef &operator>>(const QJsonValueRef &json, Derived &obj)
+            {
+                obj.convertFromJson(json.toObject());
+                return json;
+            }
+
+            //! operator << for JSON
+            friend QJsonArray &operator<<(QJsonArray &json, const Derived &obj)
+            {
+                json.append(obj.toJson());
+                return json;
+            }
+
+            //! operator << for JSON
+            friend QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const Derived &> &value)
+            {
+                json.insert(value.first, QJsonValue(value.second.toJson()));
+                return json;
+            }
+
+            //! Cast to JSON object
+            QJsonObject toJson() const
+            {
+                QJsonObject json = BlackMisc::serializeJson(Private::EncapsulationBreaker::toMetaTuple(*derived()));
+                return Json::appendJsonObject(json, baseToJson(static_cast<const typename Derived::base_type &>(*derived())));
+            }
+
+            //! Assign from JSON object
+            void convertFromJson(const QJsonObject &json)
+            {
+                baseConvertFromJson(static_cast<typename Derived::base_type &>(*derived()), json);
+                BlackMisc::deserializeJson(json, Private::EncapsulationBreaker::toMetaTuple(*derived()));
+            }
+
+        private:
+            const Derived *derived() const { return static_cast<const Derived *>(this); }
+            Derived *derived() { return static_cast<Derived *>(this); }
+
+            template <typename T> static QJsonObject baseToJson(const T &base) { return base.toJson(); }
+            template <typename T> static void baseConvertFromJson(T &base, const QJsonObject &json) { base.convertFromJson(json); }
+            static QJsonObject baseToJson(const CEmpty &) { return {}; }
+            static void baseConvertFromJson(CEmpty &, const QJsonObject &) {}
+        };
+
+        /*!
+         * Specialization of JsonByTuple for classes not registered with the tuple system.
+         */
+        template <class Derived>
+        class JsonByTuple<Derived, false>
+        {
+        public:
+            //! operator >> for JSON
+            friend const QJsonObject &operator>>(const QJsonObject &json, Derived &obj)
+            {
+                obj.convertFromJson(json);
+                return json;
+            }
+
+            //! operator >> for JSON
+            friend const QJsonValue &operator>>(const QJsonValue &json, Derived &obj)
+            {
+                obj.convertFromJson(json.toObject());
+                return json;
+            }
+
+            //! operator >> for JSON
+            friend const QJsonValueRef &operator>>(const QJsonValueRef &json, Derived &obj)
+            {
+                obj.convertFromJson(json.toObject());
+                return json;
+            }
+
+            //! operator << for JSON
+            friend QJsonArray &operator<<(QJsonArray &json, const Derived &obj)
+            {
+                json.append(obj.toJson());
+                return json;
+            }
+
+            //! operator << for JSON
+            friend QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const Derived &> &value)
+            {
+                json.insert(value.first, QJsonValue(value.second.toJson()));
+                return json;
+            }
+
+            //! Do nothing
+            QJsonObject toJson() const { return baseToJson(static_cast<const typename Derived::base_type &>(*derived())); }
+
+            //! Do nothing
+            void convertFromJson(const QJsonObject &json) { baseConvertFromJson(static_cast<typename Derived::base_type &>(*derived()), json); }
+
+        private:
+            const Derived *derived() const { return static_cast<const Derived *>(this); }
+            Derived *derived() { return static_cast<Derived *>(this); }
+
+            template <typename T> static QJsonObject baseToJson(const T &base) { return base.toJson(); }
+            template <typename T> static void baseConvertFromJson(T &base, const QJsonObject &json) { base.convertFromJson(json); }
+            static QJsonObject baseToJson(const CEmpty &) { return {}; }
+            static void baseConvertFromJson(CEmpty &, const QJsonObject &) {}
+        };
+
     }
 
     /*!
@@ -370,16 +482,14 @@ namespace BlackMisc
         public Mixin::MetaType<Derived>,
         public Mixin::HashByTuple<Derived, Policy::Hash::IsMetaTuple<Derived, Base>::value>,
         public Mixin::DBusByTuple<Derived, Policy::DBus::IsMetaTuple<Derived, Base>::value>,
+        public Mixin::JsonByTuple<Derived, Policy::Json::IsMetaTuple<Derived, Base>::value>,
         private CValueObjectPolicy<Derived>::Equals::template Ops<Derived, Base>,
         private CValueObjectPolicy<Derived>::LessThan::template Ops<Derived, Base>,
         private CValueObjectPolicy<Derived>::Compare::template Ops<Derived, Base>
     {
         static_assert(std::is_same<CEmpty, Base>::value || IsValueObject<Base>::value, "Base must be either CEmpty or derived from CValueObject");
 
-        using JsonPolicy = typename CValueObjectPolicy<Derived>::Json;
         using PropertyIndexPolicy = typename CValueObjectPolicy<Derived>::PropertyIndex;
-
-        using BaseOrDummy = typename std::conditional<std::is_same<Base, CEmpty>::value, CValueObjectDummyBase, Base>::type;
 
         //! Stream << overload to be used in debugging messages
         friend QDebug operator<<(QDebug debug, const Derived &obj)
@@ -416,41 +526,6 @@ namespace BlackMisc
             return ostr;
         }
 
-        //! operator >> for JSON
-        friend const QJsonObject &operator>>(const QJsonObject &json, Derived &valueObject)
-        {
-            valueObject.convertFromJson(json);
-            return json;
-        }
-
-        //! operator >> for JSON
-        friend const QJsonValue &operator>>(const QJsonValue &json, Derived &valueObject)
-        {
-            valueObject.convertFromJson(json.toObject());
-            return json;
-        }
-
-        //! operator >> for JSON
-        friend const QJsonValueRef &operator>>(const QJsonValueRef &json, Derived &valueObject)
-        {
-            valueObject.convertFromJson(json.toObject());
-            return json;
-        }
-
-        //! operator << for JSON
-        friend QJsonArray &operator<<(QJsonArray &json, const Derived &value)
-        {
-            json.append(value.toJson());
-            return json;
-        }
-
-        //! operator << for JSON
-        friend QJsonObject& operator<<(QJsonObject &json, const std::pair<QString, const Derived &> &value)
-        {
-            json.insert(value.first, QJsonValue(value.second.toJson()));
-            return json;
-        }
-
     public:
         //! Base class
         using base_type = Base;
@@ -485,19 +560,11 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::MetaType::convertFromCVariant
         using Mixin::MetaType<Derived>::convertFromCVariant;
 
-        //! Cast to JSON object
-        virtual QJsonObject toJson() const
-        {
-            QJsonObject json = JsonPolicy::serializeImpl(*derived());
-            return Json::appendJsonObject(json, BaseOrDummy::toJson());
-        }
+        //! \copydoc BlackMisc::Mixin::JsonByTuple::toJson
+        using Mixin::JsonByTuple<Derived, Policy::Json::IsMetaTuple<Derived, Base>::value>::toJson;
 
-        //! Assign from JSON object
-        virtual void convertFromJson(const QJsonObject &json)
-        {
-            BaseOrDummy::convertFromJson(json);
-            JsonPolicy::deserializeImpl(json, *derived());
-        }
+        //! \copydoc BlackMisc::Mixin::JsonByTuple::convertFromJson
+        using Mixin::JsonByTuple<Derived, Policy::Json::IsMetaTuple<Derived, Base>::value>::convertFromJson;
 
         //! \copydoc BlackMisc::Mixin::MetaType::toQVariant
         using Mixin::MetaType<Derived>::toQVariant;

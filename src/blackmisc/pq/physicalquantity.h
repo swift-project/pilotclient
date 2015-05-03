@@ -205,10 +205,10 @@ namespace BlackMisc
             friend uint qHash(const PQ &pq) { return pq.getValueHash(); };
 
             //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
+            QJsonObject toJson() const;
 
             //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
+            void convertFromJson(const QJsonObject &json);
 
             //! Parse to string, with specified separator
             virtual void parseFromString(const QString &value, CPqString::SeparatorMode mode);

@@ -395,6 +395,11 @@ namespace BlackMisc
                 template <class T, class...>
                 static void deserializeImpl(const QJsonObject &, T &) {}
             };
+
+            //! \private Detect the policy of T, following inheritance.
+            template <class T, class B, class P = typename CValueObjectPolicy<T>::Json> struct IsMetaTuple : public std::false_type {};
+            template <class T, class B> struct IsMetaTuple<T, B, MetaTuple> : public std::true_type {};
+            template <class T, class B> struct IsMetaTuple<T, B, Inherit> : public IsMetaTuple<B, typename B::base_type> {};
         }
 
         namespace PropertyIndex

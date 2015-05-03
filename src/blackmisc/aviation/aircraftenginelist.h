@@ -48,10 +48,10 @@ namespace BlackMisc
             virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
+            QJsonObject toJson() const;
 
             //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
+            void convertFromJson(const QJsonObject &json);
 
             //! Register metadata
             static void registerMetadata();

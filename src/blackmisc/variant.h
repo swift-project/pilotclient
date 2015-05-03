@@ -179,10 +179,10 @@ namespace BlackMisc
         int userType() const { return m_v.userType(); }
 
         //! \copydoc CValueObject::toJson
-        virtual QJsonObject toJson() const override;
+        QJsonObject toJson() const;
 
         //! \copydoc CValueObject::convertFromJson
-        virtual void convertFromJson(const QJsonObject &json) override;
+        void convertFromJson(const QJsonObject &json);
 
         //! \copydoc CValueObject::marshallToDbus
         void marshallToDbus(QDBusArgument &argument) const;

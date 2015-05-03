@@ -122,7 +122,7 @@ namespace BlackMisc
         friend uint qHash(const C<T> &) { return 0; }
 
         //! \copydoc CValueObject::toJson
-        virtual QJsonObject toJson() const override
+        QJsonObject toJson() const
         {
             QJsonArray array;
             QJsonObject json;
@@ -135,7 +135,7 @@ namespace BlackMisc
         }
 
         //! \copydoc CValueObject::convertFromJson
-        virtual void convertFromJson(const QJsonObject &json) override
+        void convertFromJson(const QJsonObject &json)
         {
             QJsonArray array = json.value("containerbase").toArray();
             for (auto i = array.begin(); i != array.end(); ++i)

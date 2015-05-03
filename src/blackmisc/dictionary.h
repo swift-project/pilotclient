@@ -233,7 +233,7 @@ namespace BlackMisc
         virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
         //! \copydoc CValueObject::toJson
-        virtual QJsonObject toJson() const override
+        QJsonObject toJson() const
         {
             QJsonArray array;
             QJsonObject json;
@@ -247,7 +247,7 @@ namespace BlackMisc
         }
 
         //! \copydoc CValueObject::convertFromJson
-        virtual void convertFromJson(const QJsonObject &json) override
+        void convertFromJson(const QJsonObject &json)
         {
             QJsonArray array = json.value("associativecontainerbase").toArray();
             for (auto it = array.begin(); it != array.end(); ++it)

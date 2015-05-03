@@ -42,7 +42,8 @@ namespace BlackMisc
             //! Default constructor
             CSimulatorPluginInfo() = default;
 
-            virtual void convertFromJson(const QJsonObject &json) override;
+            //! \copydoc BlackMisc::CValueObject::convertFromJson
+            void convertFromJson(const QJsonObject &json);
 
             //! Unspecified simulator
             bool isUnspecified() const;
