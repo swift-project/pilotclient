@@ -9,6 +9,7 @@
 
 #include "variant.h"
 #include "blackmiscfreefunctions.h"
+#include "icon.h"
 #include <QDBusArgument>
 #include <QDBusMetaType>
 #include <QDBusVariant>
@@ -214,6 +215,20 @@ namespace BlackMisc
         auto *meta = getValueObjectMetaInfo();
         Q_ASSERT(meta);
         return meta->equalsPropertyByIndex(data(), compareValue, index);
+    }
+
+    CIcon CVariant::toIcon() const
+    {
+        auto *meta = getValueObjectMetaInfo();
+        if (! meta) { return {}; }
+        CIcon result;
+        meta->toIcon(data(), result);
+        return result;
+    }
+
+    QPixmap CVariant::toPixmap() const
+    {
+        return toIcon().toPixmap();
     }
 
 } // namespace

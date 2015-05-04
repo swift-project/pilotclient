@@ -25,6 +25,7 @@ namespace BlackMisc
     class CEmpty;
     class CVariant;
     class CPropertyIndex;
+    class CIcon;
 
     template <typename T>
     void registerMetaValueType();
@@ -33,6 +34,9 @@ namespace BlackMisc
     {
         //! \private Needed so we can copy forward-declared CVariant.
         void assign(CVariant &, const CVariant &);
+
+        //! \private Needed so we can copy forward-declared CIcon.
+        void assign(CIcon &, const CIcon &);
 
         //! \private Abstract base class representing the set of operations supported by a particular value type.
         struct BLACKMISC_EXPORT IValueObjectMetaInfo
@@ -50,6 +54,7 @@ namespace BlackMisc
             virtual void propertyByIndex(const void *object, CVariant &o_variant, const BlackMisc::CPropertyIndex &index) const = 0;
             virtual QString propertyByIndexAsString(const void *object, const CPropertyIndex &index, bool i18n) const = 0;
             virtual bool equalsPropertyByIndex(const void *object, const CVariant &compareValue, const CPropertyIndex &index) const = 0;
+            virtual void toIcon(const void *object, CIcon &o_icon) const = 0;
         };
 
         //! \private Fallback in case qHash is not defined for T.
@@ -65,13 +70,28 @@ namespace BlackMisc
         struct CValueObjectMetaInfo : public IValueObjectMetaInfo
         {
             // http://en.wikibooks.org/wiki/More_C++_Idioms/Member_Detector
-            struct Fallback { int toJson, convertFromJson; };
+            struct Fallback { int toJson, convertFromJson, setPropertyByIndex, propertyByIndex, propertyByIndexAsString, equalsPropertyByIndex, toIcon; };
             template <int Fallback:: *> struct int_t { typedef int type; };
             template <typename U> struct Derived : public U, public Fallback {};
-            template <typename U> static QJsonObject toJsonHelper(const U &, typename int_t<&Derived<U>::toJson>::type) { return {}; }
+#           define DISABLE_IF_HAS(MEMBER) typename int_t<&Derived<U>::MEMBER>::type
+
+            template <typename U> static QJsonObject toJsonHelper(const U &, DISABLE_IF_HAS(toJson)) { return {}; }
             template <typename U> static QJsonObject toJsonHelper(const U &object, ...) { return object.toJson(); }
-            template <typename U> static void convertFromJsonHelper(const QJsonObject &, U &, typename int_t<&Derived<U>::convertFromJson>::type) {}
+            template <typename U> static void convertFromJsonHelper(const QJsonObject &, U &, DISABLE_IF_HAS(convertFromJson)) {}
             template <typename U> static void convertFromJsonHelper(const QJsonObject &json, U &object, ...) { object.convertFromJson(json); }
+            template <typename U> static void setPropertyByIndexHelper(U &, const CVariant &, const CPropertyIndex &, DISABLE_IF_HAS(setPropertyByIndex)) {}
+            template <typename U> static void setPropertyByIndexHelper(U &object, const CVariant &variant, const CPropertyIndex &index, ...) { object.setPropertyByIndex(variant, index); }
+            template <typename U> static void propertyByIndexHelper(CVariant &, const U &, const CPropertyIndex &, DISABLE_IF_HAS(propertyByIndex)) {}
+            template <typename U> static void propertyByIndexHelper(CVariant &o_variant, const U &object, const CPropertyIndex &index, ...) { assign(o_variant, object.propertyByIndex(index)); }
+            template <typename U> static QString propertyByIndexAsStringHelper(const U &, const CPropertyIndex &, bool, DISABLE_IF_HAS(propertyByIndexAsString)) { return {}; }
+            template <typename U> static QString propertyByIndexAsStringHelper(const U &object, const CPropertyIndex &index, bool i18n, ...) { return object.propertyByIndexAsString(index, i18n); }
+            template <typename U> static bool equalsPropertyByIndexHelper(const U &, const CVariant &, const CPropertyIndex &, DISABLE_IF_HAS(equalsPropertyByIndex)) { return false; }
+            template <typename U> static bool equalsPropertyByIndexHelper(const U &object, const CVariant &variant, const CPropertyIndex &index, ...) { return object.equalsPropertyByIndex(variant, index); }
+            template <typename U> static void toIconHelper(const U &, CIcon &, DISABLE_IF_HAS(toIcon)) {}
+            template <typename U> static void toIconHelper(const U &, CIcon &, typename std::enable_if<std::is_same<U, CVariant>::value, int>::type) {} // CIcon is incomplete when CValueObjectMetaInfo<CVariant> is instantiated
+            template <typename U> static void toIconHelper(const U &object, CIcon &o_icon, ...) { assign(o_icon, object.toIcon()); }
+
+#           undef DISABLE_IF_HAS
 
             virtual QString toQString(const void *object, bool i18n) const override
             {
@@ -108,19 +128,23 @@ namespace BlackMisc
             }
             virtual void setPropertyByIndex(void *object, const CVariant &variant, const CPropertyIndex &index) const override
             {
-                cast(object).setPropertyByIndex(variant, index);
+                setPropertyByIndexHelper(cast(object), variant, index, 0);
             }
             virtual void propertyByIndex(const void *object, CVariant &o_variant, const BlackMisc::CPropertyIndex &index) const override
             {
-                assign(o_variant, cast(object).propertyByIndex(index));
+                propertyByIndexHelper(o_variant, cast(object), index, 0);
             }
             virtual QString propertyByIndexAsString(const void *object, const CPropertyIndex &index, bool i18n) const override
             {
-                return cast(object).propertyByIndexAsString(index, i18n);
+                return propertyByIndexAsStringHelper(cast(object), index, i18n, 0);
             }
             virtual bool equalsPropertyByIndex(const void *object, const CVariant &compareValue, const CPropertyIndex &index) const override
             {
-                return cast(object).equalsPropertyByIndex(compareValue, index);
+                return equalsPropertyByIndexHelper(cast(object), compareValue, index, 0);
+            }
+            virtual void toIcon(const void *object, CIcon &o_icon) const override
+            {
+                toIconHelper(cast(object), o_icon, 0);
             }
 
             static const T &cast(const void *object) { return *static_cast<const T *>(object); }

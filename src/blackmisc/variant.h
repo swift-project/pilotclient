@@ -26,6 +26,8 @@ class QDBusArgument;
 
 namespace BlackMisc
 {
+    class CIcon;
+
     /*!
      * Wrapper around QVariant which provides transparent access to CValueObject methods
      * of the contained object if it is registered with BlackMisc::registerMetaValueType.
@@ -198,6 +200,12 @@ namespace BlackMisc
 
         //! \copydoc CValueObject::equalsPropertyByIndex
         bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const;
+
+        //! \copydoc CValueObject::toPixmap
+        QPixmap toPixmap() const;
+
+        //! \copydoc CValueObject::toIcon
+        CIcon toIcon() const;
 
     private:
         QVariant m_v;

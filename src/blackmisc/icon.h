@@ -79,6 +79,12 @@ namespace BlackMisc
         int m_rotateDegrees = 0;
         QString m_descriptiveText;
     };
+
+    namespace Private
+    {
+        //! \private Needed so we can copy forward-declared CIcon.
+        inline void assign(CIcon &a, const CIcon &b) { a = b; }
+    }
 } // namespace
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CIcon, (o.m_index, o.m_descriptiveText))
