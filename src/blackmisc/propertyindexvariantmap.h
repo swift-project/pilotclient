@@ -9,20 +9,19 @@
 
 //! \file
 
+#ifndef BLACKMISC_PROPERTYINDEXVARIANTMAP_H
+#define BLACKMISC_PROPERTYINDEXVARIANTMAP_H
+
 #include "variant.h"
 #include "valueobject.h"
 #include "propertyindex.h"
+#include "blackmiscexport.h"
 
 // a) "propertyindex.h" needed for QMap below, despite forward declaration
 // b) "propertyindexlist.h" here causes circular dependencies
 
 #include <QVariantMap>
 #include <QDBusArgument>
-
-#ifndef BLACKMISC_PROPERTYINDEXVARIANTMAP_H
-#define BLACKMISC_PROPERTYINDEXVARIANTMAP_H
-
-#include "blackmiscexport.h"
 
 namespace BlackMisc
 {
