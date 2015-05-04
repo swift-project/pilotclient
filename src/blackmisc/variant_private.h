@@ -9,10 +9,11 @@
 
 //! \file
 
-#ifndef BLACKMISC_VALUEOBJECT_PRIVATE_H
-#define BLACKMISC_VALUEOBJECT_PRIVATE_H
+#ifndef BLACKMISC_VARIANT_PRIVATE_H
+#define BLACKMISC_VARIANT_PRIVATE_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/inheritance_traits.h"
 #include <QString>
 #include <QMetaType>

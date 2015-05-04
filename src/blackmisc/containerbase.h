@@ -16,6 +16,9 @@
 #include "blackmiscfreefunctions.h"
 #include "predicates.h"
 #include "json.h"
+#include "variant.h"
+#include "dbus.h"
+#include "icon.h"
 #include <algorithm>
 
 namespace BlackMisc
@@ -51,7 +54,6 @@ namespace BlackMisc
         public Mixin::DBusOperators<C<T>>,
         public Mixin::JsonOperators<C<T>>,
         public Mixin::String<C<T>>,
-        public Mixin::Index<C<T>>,
         public Mixin::Icon<C<T>>
     {
     public:

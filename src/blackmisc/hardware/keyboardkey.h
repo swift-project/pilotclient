@@ -14,6 +14,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/valueobject.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <QStringList>
 #include <QKeySequence>

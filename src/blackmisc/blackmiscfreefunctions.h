@@ -13,6 +13,8 @@
 #define BLACKMISC_FREEFUNCTIONS_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/tuple.h"
+#include "blackmisc/inheritance_traits.h"
 #include <QDir> // for Q_INIT_RESOURCE
 #include <QList>
 #include <QMap>
@@ -110,6 +112,103 @@ namespace BlackMisc
 
     //! Init resources
     BLACKMISC_EXPORT void initResources();
+
+    namespace Mixin
+    {
+
+        /*!
+         * CRTP class template from which a derived class can inherit common methods dealing with hashing instances by metatuple.
+         */
+        template <class Derived>
+        class HashByTuple : private Private::EncapsulationBreaker
+        {
+        public:
+            //! qHash overload, needed for storing value in a QSet.
+            friend uint qHash(const Derived &value, uint seed = 0)
+            {
+                return ::qHash(hashImpl(value), seed);
+            }
+
+        private:
+            static uint hashImpl(const Derived &value)
+            {
+                return BlackMisc::qHash(toMetaTuple(value)) ^ baseHash(static_cast<const BaseOfT<Derived> *>(&value));
+            }
+
+            template <typename T> static uint baseHash(const T *base) { return qHash(*base); }
+            static uint baseHash(const void *) { return 0; }
+        };
+
+        /*!
+         * CRTP class template from which a derived class can inherit string streaming operations.
+         */
+        template <class Derived>
+        class String
+        {
+        public:
+            //! Stream << overload to be used in debugging messages
+            friend QDebug operator<<(QDebug debug, const Derived &obj)
+            {
+                debug << obj.stringForStreaming();
+                return debug;
+            }
+
+            //! Operator << when there is no debug stream
+            friend QNoDebug operator<<(QNoDebug nodebug, const Derived &obj)
+            {
+                Q_UNUSED(obj);
+                return nodebug;
+            }
+
+            //! Operator << based on text stream
+            friend QTextStream &operator<<(QTextStream &stream, const Derived &obj)
+            {
+                stream << obj.stringForStreaming();
+                return stream;
+            }
+
+            //! Operator << for QDataStream
+            friend QDataStream &operator<<(QDataStream &stream, const Derived &obj)
+            {
+                stream << obj.stringForStreaming();
+                return stream;
+            }
+
+            //! Stream operator << for std::cout
+            friend std::ostream &operator<<(std::ostream &ostr, const Derived &obj)
+            {
+                ostr << obj.stringForStreaming().toStdString();
+                return ostr;
+            }
+
+            //! Cast as QString
+            QString toQString(bool i18n = false) const { return derived()->convertToQString(i18n); }
+
+            //! Cast to pretty-printed QString
+            QString toFormattedQString(bool i18n = false) const { return derived()->toQString(i18n); }
+
+            //! To std string
+            std::string toStdString(bool i18n = false) const { return derived()->convertToQString(i18n).toStdString(); }
+
+            //! String for streaming operators
+            QString stringForStreaming() const { return derived()->convertToQString(); }
+
+        private:
+            const Derived *derived() const { return static_cast<const Derived *>(this); }
+            Derived *derived() { return static_cast<Derived *>(this); }
+        };
+
+        /*!
+         * When a derived class and a base class both inherit from Mixin::String,
+         * the derived class uses this macro to disambiguate the inherited members.
+         */
+#       define BLACKMISC_DECLARE_USING_MIXIN_STRING(DERIVED)                \
+            using ::BlackMisc::Mixin::String<DERIVED>::toQString;           \
+            using ::BlackMisc::Mixin::String<DERIVED>::toFormattedQString;  \
+            using ::BlackMisc::Mixin::String<DERIVED>::toStdString;         \
+            using ::BlackMisc::Mixin::String<DERIVED>::stringForStreaming;
+
+    } // Mixin
 
     //! Checked version from QVariant
     template <class T> void setFromQVariant(T *value, const QVariant &variant)

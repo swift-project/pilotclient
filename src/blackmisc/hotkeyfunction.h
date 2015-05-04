@@ -14,6 +14,7 @@
 
 #include "blackmiscexport.h"
 #include "propertyindex.h"
+#include "valueobject.h"
 #include "blackmiscfreefunctions.h"
 
 namespace BlackMisc

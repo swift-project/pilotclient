@@ -13,14 +13,56 @@
 #define BLACKMISC_PROPERTYINDEXVARIANTMAP_H
 
 #include "variant.h"
-#include "valueobject.h"
 #include "propertyindexlist.h"
 #include "blackmiscexport.h"
+#include "tuple.h"
+#include "inheritance_traits.h"
 #include <QVariantMap>
 #include <QDBusArgument>
 
 namespace BlackMisc
 {
+
+    class CPropertyIndexVariantMap;
+
+    namespace Mixin
+    {
+        /*!
+         * CRTP class template from which a derived class can inherit property indexing functions.
+         */
+        template <class Derived>
+        class Index
+        {
+        public:
+            //! Base class enums
+            enum ColumnIndex
+            {
+                IndexPixmap = 10, // manually set to avoid circular dependencies
+                IndexIcon,
+                IndexString
+            };
+
+            //! Update by variant map
+            //! \return number of values changed, with skipEqualValues equal values will not be changed
+            CPropertyIndexList apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues = false);
+
+            //! Set property by index
+            void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index);
+
+            //! Property by index
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+
+            //! Property by index as String
+            QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const;
+
+            //! Is given variant equal to value of property index?
+            bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const;
+
+        private:
+            const Derived *derived() const { return static_cast<const Derived *>(this); }
+            Derived *derived() { return static_cast<Derived *>(this); }
+        };
+    } // Mixin
 
     /*!
      * Specialized value object compliant map for variants,
@@ -29,9 +71,7 @@ namespace BlackMisc
     class BLACKMISC_EXPORT CPropertyIndexVariantMap :
         public Mixin::MetaType<CPropertyIndexVariantMap>,
         public Mixin::DBusOperators<CPropertyIndexVariantMap>,
-        public Mixin::Index<CPropertyIndexVariantMap>,
-        public Mixin::String<CPropertyIndexVariantMap>,
-        public Mixin::Icon<CPropertyIndexVariantMap>
+        public Mixin::String<CPropertyIndexVariantMap>
     {
     public:
         /*!
@@ -155,6 +195,81 @@ namespace BlackMisc
         //! \copydoc CValueObject::unmarshallFromDbus
         void unmarshallFromDbus(const QDBusArgument &argument);
     };
+
+    namespace Mixin
+    {
+        template <class Derived>
+        CPropertyIndexList Index<Derived>::apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues)
+        {
+            if (indexMap.isEmpty()) return {};
+
+            CPropertyIndexList changed;
+            const auto &map = indexMap.map();
+            for (auto it = map.begin(); it != map.end(); ++it)
+            {
+                const CVariant value = it.value().toCVariant();
+                const CPropertyIndex index = it.key();
+                if (skipEqualValues)
+                {
+                    bool equal = derived()->equalsPropertyByIndex(value, index);
+                    if (equal) { continue; }
+                }
+                derived()->setPropertyByIndex(value, index);
+                changed.push_back(index);
+            }
+            return changed;
+        }
+        template <class Derived>
+        void Index<Derived>::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
+        {
+            if (index.isMyself())
+            {
+                derived()->convertFromCVariant(variant);
+                return;
+            }
+
+            // not all classes have implemented nesting
+            const QString m = QString("Property by index not found (setter), index: ").append(index.toQString());
+            qFatal("%s", qPrintable(m));
+        }
+        template <class Derived>
+        CVariant Index<Derived>::propertyByIndex(const CPropertyIndex &index) const
+        {
+            if (index.isMyself())
+            {
+                return derived()->toCVariant();
+            }
+            auto i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexIcon:
+                return CVariant::from(derived()->toIcon());
+            case IndexPixmap:
+                return CVariant::from(derived()->toPixmap());
+            case IndexString:
+                return CVariant(derived()->toQString());
+            default:
+                break;
+            }
+
+            // not all classes have implemented nesting
+            const QString m = QString("Property by index not found, index: ").append(index.toQString());
+            qFatal("%s", qPrintable(m));
+            return {};
+        }
+        template <class Derived>
+        QString Index<Derived>::propertyByIndexAsString(const CPropertyIndex &index, bool i18n) const
+        {
+            // default implementation, requires propertyByIndex
+            return derived()->propertyByIndex(index).toQString(i18n);
+        }
+        template <class Derived>
+        bool Index<Derived>::equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const
+        {
+            return derived()->propertyByIndex(index) == compareValue;
+        }
+    } // Mixin
+
 }
 
 Q_DECLARE_METATYPE(BlackMisc::CPropertyIndexVariantMap)

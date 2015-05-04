@@ -9,25 +9,66 @@
 
 //! \file
 
-#include "valueobject.h" // outside include guard due to cyclic dependency hack (MS)
-
 #ifndef BLACKMISC_ICON_H
 #define BLACKMISC_ICON_H
 
 #include "blackmiscexport.h"
 #include "icons.h"
+#include "variant.h"
+#include "tuple.h"
+#include "inheritance_traits.h"
 #include <QIcon>
 
 namespace BlackMisc
 {
+    class CIcon;
+
     namespace PhysicalQuantities
     {
         class CAngle;
     }
 
+    namespace Mixin
+    {
+        /*!
+         * CRTP class template from which a derived class can inherit icon-related functions.
+         */
+        template <class Derived, CIcons::IconIndex IconIndex = CIcons::StandardIconUnknown16>
+        class Icon
+        {
+        public:
+            //! As icon, not implemented by all classes
+            CIcon toIcon() const;
+
+            //! As pixmap, required for most GUI views
+            QPixmap toPixmap() const;
+
+        private:
+            const Derived *derived() const { return static_cast<const Derived *>(this); }
+            Derived *derived() { return static_cast<Derived *>(this); }
+        };
+
+        /*!
+         * When a derived class and a base class both inherit from Mixin::Icon,
+         * the derived class uses this macro to disambiguate the inherited members.
+         */
+#       define BLACKMISC_DECLARE_USING_MIXIN_ICON(DERIVED)      \
+            using ::BlackMisc::Mixin::Icon<DERIVED>::toIcon;    \
+            using ::BlackMisc::Mixin::Icon<DERIVED>::toPixmap;
+    } // Mixin
+
     //! Value object for icons. An icon is stored in the global icon repository and
     //! identified by its index. It contains no(!) pyhsical data for the icon itself.
-    class BLACKMISC_EXPORT CIcon : public CValueObject<CIcon>
+    class BLACKMISC_EXPORT CIcon :
+        public Mixin::MetaType<CIcon>,
+        public Mixin::HashByTuple<CIcon>,
+        public Mixin::DBusByTuple<CIcon>,
+        public Mixin::JsonByTuple<CIcon>,
+        public Mixin::EqualsByTuple<CIcon>,
+        public Mixin::LessThanByTuple<CIcon>,
+        public Mixin::CompareByTuple<CIcon>,
+        public Mixin::String<CIcon>,
+        public Mixin::Icon<CIcon>
     {
     public:
         //! Default constructor.
@@ -84,6 +125,20 @@ namespace BlackMisc
     {
         //! \private Needed so we can copy forward-declared CIcon.
         inline void assign(CIcon &a, const CIcon &b) { a = b; }
+    }
+
+    namespace Mixin
+    {
+        template <class Derived, CIcons::IconIndex IconIndex>
+        CIcon Icon<Derived, IconIndex>::toIcon() const
+        {
+            return CIcon::iconByIndex(IconIndex);
+        }
+        template <class Derived, CIcons::IconIndex IconIndex>
+        QPixmap Icon<Derived, IconIndex>::toPixmap() const
+        {
+            return derived()->toIcon().toPixmap();
+        }
     }
 } // namespace
 

@@ -76,7 +76,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexEngines:
-                this->m_engines.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_engines = variant.to<decltype(this->m_engines)>();
                 break;
             case IndexFlapsPercentage:
                 this->m_flapsPercentage = variant.toInt();

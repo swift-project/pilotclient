@@ -13,6 +13,7 @@
 #define BLACKMISC_AVIATION_AIRCRAFTICAO_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/valueobject.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 

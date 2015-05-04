@@ -13,6 +13,7 @@
 #define BLACKMISC_AVIATION_CALLSIGN_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/valueobject.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/blackmiscfreefunctions.h"

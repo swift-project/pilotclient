@@ -16,6 +16,7 @@
 #include "blackmisc/icons.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/propertyindex.h"
 #include <QTableView>
 #include <QWizardPage>
 #include <QHeaderView>

@@ -14,7 +14,9 @@
 #ifndef BLACKMISC_JSON_H
 #define BLACKMISC_JSON_H
 
-#include "blackmiscexport.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/tuple.h"
+#include "blackmisc/inheritance_traits.h"
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QJsonValueRef>
@@ -113,6 +115,7 @@ namespace BlackMisc
 {
     namespace Json
     {
+
         //! \brief Append to first JSON object (concatenate)
         //! \ingroup JSON
         inline QJsonObject &appendJsonObject(QJsonObject &target, const QJsonObject &toBeAppended)
@@ -125,7 +128,95 @@ namespace BlackMisc
             }
             return target;
         }
-    } // ns
-} // ns
+
+    } // Json
+
+    namespace Mixin
+    {
+
+        /*!
+         * CRTP class template which will generate marshalling operators for a derived class with its own marshalling implementation.
+         */
+        template <class Derived>
+        class JsonOperators
+        {
+        public:
+            //! operator >> for JSON
+            friend const QJsonObject &operator>>(const QJsonObject &json, Derived &obj)
+            {
+                obj.convertFromJson(json);
+                return json;
+            }
+
+            //! operator >> for JSON
+            friend const QJsonValue &operator>>(const QJsonValue &json, Derived &obj)
+            {
+                obj.convertFromJson(json.toObject());
+                return json;
+            }
+
+            //! operator >> for JSON
+            friend const QJsonValueRef &operator>>(const QJsonValueRef &json, Derived &obj)
+            {
+                obj.convertFromJson(json.toObject());
+                return json;
+            }
+
+            //! operator << for JSON
+            friend QJsonArray &operator<<(QJsonArray &json, const Derived &obj)
+            {
+                json.append(obj.toJson());
+                return json;
+            }
+
+            //! operator << for JSON
+            friend QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const Derived &> &value)
+            {
+                json.insert(value.first, QJsonValue(value.second.toJson()));
+                return json;
+            }
+        };
+
+        /*!
+         * CRTP class template from which a derived class can inherit common methods dealing with JSON by metatuple.
+         */
+        template <class Derived>
+        class JsonByTuple : public JsonOperators<Derived>, private Private::EncapsulationBreaker
+        {
+        public:
+            //! Cast to JSON object
+            QJsonObject toJson() const
+            {
+                QJsonObject json = BlackMisc::serializeJson(Private::EncapsulationBreaker::toMetaTuple(*derived()));
+                return Json::appendJsonObject(json, baseToJson(static_cast<const BaseOfT<Derived> *>(derived())));
+            }
+
+            //! Assign from JSON object
+            void convertFromJson(const QJsonObject &json)
+            {
+                baseConvertFromJson(static_cast<BaseOfT<Derived> *>(derived()), json);
+                BlackMisc::deserializeJson(json, Private::EncapsulationBreaker::toMetaTuple(*derived()));
+            }
+
+        private:
+            const Derived *derived() const { return static_cast<const Derived *>(this); }
+            Derived *derived() { return static_cast<Derived *>(this); }
+
+            template <typename T> static QJsonObject baseToJson(const T *base) { return base->toJson(); }
+            template <typename T> static void baseConvertFromJson(T *base, const QJsonObject &json) { base->convertFromJson(json); }
+            static QJsonObject baseToJson(const void *) { return {}; }
+            static void baseConvertFromJson(void *, const QJsonObject &) {}
+        };
+
+        /*!
+         * When a derived class and a base class both inherit from Mixin::JsonByTuple,
+         * the derived class uses this macro to disambiguate the inherited members.
+         */
+#       define BLACKMISC_DECLARE_USING_MIXIN_JSON(DERIVED)                          \
+            using ::BlackMisc::Mixin::JsonByTuple<DERIVED>::toJson;                 \
+            using ::BlackMisc::Mixin::JsonByTuple<DERIVED>::convertFromJson;
+
+    } // Mixin
+} // BlackMisc
 
 #endif // guard

@@ -9,13 +9,15 @@
 
 //! \file
 
-#include "valueobject.h" // outside include guard due to cyclic dependency hack (MS)
-
 #ifndef BLACKMISC_PROPERTYINDEX_H
 #define BLACKMISC_PROPERTYINDEX_H
 
 #include "blackmiscexport.h"
 #include "blackmiscfreefunctions.h"
+#include "variant.h"
+#include "dbus.h"
+#include "json.h"
+#include "compare.h"
 #include <initializer_list>
 
 namespace BlackMisc
@@ -25,7 +27,15 @@ namespace BlackMisc
      * Property index. The index can be nested, that's why it is a sequence
      * (e.g. PropertyIndexPilot, PropertyIndexRealname).
      */
-    class BLACKMISC_EXPORT CPropertyIndex : public CValueObject<CPropertyIndex>
+    class BLACKMISC_EXPORT CPropertyIndex :
+        public Mixin::MetaType<CPropertyIndex>,
+        public Mixin::HashByTuple<CPropertyIndex>,
+        public Mixin::DBusByTuple<CPropertyIndex>,
+        public Mixin::JsonByTuple<CPropertyIndex>,
+        public Mixin::EqualsByTuple<CPropertyIndex>,
+        public Mixin::LessThanByTuple<CPropertyIndex>,
+        public Mixin::CompareByTuple<CPropertyIndex>,
+        public Mixin::String<CPropertyIndex>
     {
         // In the first trial I have used CSequence<int> as base class
         // This has created too much circular dependencies of the headers

@@ -13,6 +13,7 @@
 //! \file
 
 #include "blackmiscexport.h"
+#include "valueobject.h"
 #include "sequence.h"
 
 namespace BlackMisc

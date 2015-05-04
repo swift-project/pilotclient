@@ -9,12 +9,16 @@
 
 //! \file
 
-#include "valueobject.h" // outside include guard due to cyclic dependency hack (MS)
-
 #ifndef BLACKMISC_VARIANT_H
 #define BLACKMISC_VARIANT_H
 
+#include "variant_private.h"
 #include "blackmiscexport.h"
+#include "blackmiscfreefunctions.h"
+#include "tuple.h"
+#include "compare.h"
+#include "dbus.h"
+#include "json.h"
 #include <QVariant>
 #include <QDateTime>
 #include <QJsonValueRef>
@@ -22,11 +26,125 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-class QDBusArgument;
-
 namespace BlackMisc
 {
+    class CPropertyIndex;
     class CIcon;
+
+    namespace Mixin
+    {
+
+        /*!
+         * CRTP class template from which a derived class can inherit common methods dealing with the metatype of the class.
+         */
+        template <class Derived, class... AdditionalTypes>
+        class MetaType
+        {
+        public:
+            //! Register metadata
+            static void registerMetadata()
+            {
+                Private::MetaTypeHelper<Derived>::maybeRegisterMetaType();
+
+                [](...){}((qRegisterMetaType<AdditionalTypes>(), qDBusRegisterMetaType<AdditionalTypes>(), 0)...);
+            }
+
+            //! Returns the Qt meta type ID of this object.
+            int getMetaTypeId() const
+            {
+                return Private::MetaTypeHelper<Derived>::maybeGetMetaTypeId();
+            }
+
+            //! Returns true if this object is an instance of the class with the given meta type ID, or one of its subclasses.
+            bool isA(int metaTypeId) const
+            {
+                if (metaTypeId == QMetaType::UnknownType) { return false; }
+                if (metaTypeId == getMetaTypeId()) { return true; }
+                return baseIsA(static_cast<const MetaBaseOfT<Derived> *>(derived()), metaTypeId);
+            }
+
+            //! Method to return CVariant
+            //! \deprecated Use CVariant::to() instead.
+            CVariant toCVariant() const;
+
+            //! Set from CVariant
+            //! \deprecated Use CVariant::from() instead.
+            void convertFromCVariant(const CVariant &variant);
+
+            //! Return QVariant, used with DBus QVariant lists
+            //! \deprecated Use QVariant::fromValue() instead.
+            QVariant toQVariant() const
+            {
+                return Private::MetaTypeHelper<Derived>::maybeToQVariant(*derived());
+            }
+
+            //! Set from QVariant
+            //! \deprecated Use QVariant::value() instead.
+            void convertFromQVariant(const QVariant &variant)
+            {
+                return Private::MetaTypeHelper<Derived>::maybeConvertFromQVariant(*derived(), variant);
+            }
+
+        private:
+            const Derived *derived() const { return static_cast<const Derived *>(this); }
+            Derived *derived() { return static_cast<Derived *>(this); }
+
+            template <typename Base2> static bool baseIsA(const Base2 *base, int metaTypeId) { return base->isA(metaTypeId); }
+            static bool baseIsA(const void *, int) { return false; }
+        };
+
+        /*!
+         * Variant of MetaType mixin which also registers QList<Derived> with the type system.
+         */
+        template <class Derived>
+        class MetaTypeAndQList : public MetaType<Derived, QList<Derived>>
+        {};
+
+        /*!
+         * When a derived class and a base class both inherit from Mixin::MetaType,
+         * the derived class uses this macro to disambiguate the inherited members.
+         */
+#       define BLACKMISC_DECLARE_USING_MIXIN_METATYPE(DERIVED)                  \
+            using ::BlackMisc::Mixin::MetaType<DERIVED>::registerMetadata;      \
+            using ::BlackMisc::Mixin::MetaType<DERIVED>::getMetaTypeId;         \
+            using ::BlackMisc::Mixin::MetaType<DERIVED>::isA;                   \
+            using ::BlackMisc::Mixin::MetaType<DERIVED>::toCVariant;            \
+            using ::BlackMisc::Mixin::MetaType<DERIVED>::toQVariant;            \
+            using ::BlackMisc::Mixin::MetaType<DERIVED>::convertFromCVariant;   \
+            using ::BlackMisc::Mixin::MetaType<DERIVED>::convertFromQVariant;
+
+        /*!
+         * When a derived class and a base class both inherit from Mixin::MetaType,
+         * the derived class uses this macro to disambiguate the inherited members.
+         */
+#       define BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(DERIVED)                \
+            using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::registerMetadata;      \
+            using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::getMetaTypeId;         \
+            using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::isA;                   \
+            using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::toCVariant;            \
+            using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::toQVariant;            \
+            using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::convertFromCVariant;   \
+            using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::convertFromQVariant;
+
+    } // Mixin
+
+    /*!
+     * This registers the value type T with the BlackMisc meta type system,
+     * making it available for use with the extended feature set of BlackMisc::CVariant.
+     *
+     * The implementation (ab)uses the QMetaType converter function registration mechanism
+     * to store a type-erased representation of the set of operations supported by T.
+     * Unlike the singleton pattern, this approach means that CVariant can be used in plugins.
+     */
+    template <typename T>
+    void registerMetaValueType()
+    {
+        if (QMetaType::hasRegisteredConverterFunction<T, Private::IValueObjectMetaInfo *>()) { return; }
+        auto converter = [](const T &) { static Private::CValueObjectMetaInfo<T> info; return &info; };
+        bool ok = QMetaType::registerConverter<T, Private::IValueObjectMetaInfo *>(converter);
+        Q_ASSERT(ok);
+        Q_UNUSED(ok);
+    }
 
     /*!
      * Wrapper around QVariant which provides transparent access to CValueObject methods
@@ -38,9 +156,7 @@ namespace BlackMisc
         public Mixin::LessThanByCompare<CVariant>,
         public Mixin::DBusOperators<CVariant>,
         public Mixin::JsonOperators<CVariant>,
-        public Mixin::Index<CVariant>,
-        public Mixin::String<CVariant>,
-        public Mixin::Icon<CVariant>
+        public Mixin::String<CVariant>
     {
     public:
         //! Default constructor.
@@ -252,6 +368,21 @@ namespace BlackMisc
         //! \private Needed so we can copy forward-declared CVariant.
         inline void assign(CVariant &a, const CVariant &b) { a = b; }
     }
+
+    namespace Mixin
+    {
+        template <class Derived, class... AdditionalTypes>
+        CVariant MetaType<Derived, AdditionalTypes...>::toCVariant() const
+        {
+            return CVariant(derived()->toQVariant());
+        }
+        template <class Derived, class... AdditionalTypes>
+        void MetaType<Derived, AdditionalTypes...>::convertFromCVariant(const CVariant &variant)
+        {
+            derived()->convertFromQVariant(variant.getQVariant());
+        }
+    }
+
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::CVariant)
