@@ -13,10 +13,10 @@
 #define BLACKMISC_RANGE_H
 
 #include "blackmiscexport.h"
-#include "propertyindexvariantmap.h"
 #include "iterator.h"
 #include "predicates.h"
 #include <QtGlobal>
+#include <QDebug>
 #include <algorithm>
 #include <type_traits>
 #include <iterator>
@@ -70,12 +70,6 @@ namespace BlackMisc
         template <class K0, class V0, class... KeysValues>
         inline auto findBy(K0 k0, V0 v0, KeysValues... keysValues) const
             -> CRange<Iterators::ConditionalIterator<CIt, decltype(BlackMisc::Predicates::MemberEqual(k0, v0, keysValues...))>>;
-
-        /*!
-         * \brief Return a copy containing only those elements matching a given value map.
-         */
-        inline auto findBy(CPropertyIndexVariantMap valueMap) const
-            -> CRange<Iterators::ConditionalIterator<CIt, decltype(BlackMisc::Predicates::Equals(std::move(valueMap)))>>;
 
         /*!
          * \brief Return true if there is an element for which a given predicate returns true.
@@ -266,13 +260,6 @@ namespace BlackMisc
         -> CRange<Iterators::ConditionalIterator<CIt, decltype(BlackMisc::Predicates::MemberEqual(k0, v0, keysValues...))>>
     {
         return findBy(BlackMisc::Predicates::MemberEqual(k0, v0, keysValues...));
-    }
-
-    template <class Derived, class CIt>
-    auto CRangeBase<Derived, CIt>::findBy(CPropertyIndexVariantMap valueMap) const
-        -> CRange<Iterators::ConditionalIterator<CIt, decltype(BlackMisc::Predicates::Equals(std::move(valueMap)))>>
-    {
-        return findBy(BlackMisc::Predicates::Equals(std::move(valueMap)));
     }
 
 }

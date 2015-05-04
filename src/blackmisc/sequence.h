@@ -352,8 +352,8 @@ namespace BlackMisc
          * \brief Modify by applying a value map to each element for which a given predicate returns true.
          * \return The number of elements modified.
          */
-        template <class Predicate>
-        int applyIf(Predicate p, const CPropertyIndexVariantMap &newValues, bool skipEqualValues = false)
+        template <class Predicate, class VariantMap>
+        int applyIf(Predicate p, const VariantMap &newValues, bool skipEqualValues = false)
         {
             int count = 0;
             for (auto &value : *this)
@@ -371,19 +371,10 @@ namespace BlackMisc
          * \param skipEqualValues Equal values will not be updated
          * \return The number of elements modified.
          */
-        template <class K1, class V1>
-        int applyIf(K1 key1, V1 value1, const CPropertyIndexVariantMap &newValues, bool skipEqualValues = false)
+        template <class K1, class V1, class VariantMap>
+        int applyIf(K1 key1, V1 value1, const VariantMap &newValues, bool skipEqualValues = false)
         {
             return applyIf(BlackMisc::Predicates::MemberEqual(key1, value1), newValues, skipEqualValues);
-        }
-
-        /*!
-         * \brief Modify by applying a value map to each element matching a given value map.
-         * \return The number of elements modified.
-         */
-        int applyIf(const CPropertyIndexVariantMap &pattern, const CPropertyIndexVariantMap &newValues, bool skipEqualValues = false)
-        {
-            return applyIf([ & ](const T & value) { return value == pattern; }, newValues, skipEqualValues);
         }
 
         /*!
