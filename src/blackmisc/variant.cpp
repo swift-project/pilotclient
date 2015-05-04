@@ -10,6 +10,7 @@
 #include "variant.h"
 #include "blackmiscfreefunctions.h"
 #include "icon.h"
+#include "logmessage.h"
 #include <QDBusArgument>
 #include <QDBusMetaType>
 #include <QDBusVariant>
@@ -44,18 +45,26 @@ namespace BlackMisc
         auto *bMeta = b.getValueObjectMetaInfo();
         if (aMeta && bMeta)
         {
-            const void *casted = nullptr;
-            if ((casted = aMeta->upCastTo(a.data(), bMeta->getMetaTypeId())))
+            try
             {
-                return bMeta->compareImpl(casted, b.data());
+                const void *casted = nullptr;
+                if ((casted = aMeta->upCastTo(a.data(), bMeta->getMetaTypeId())))
+                {
+                    return bMeta->compareImpl(casted, b.data());
+                }
+                else if ((casted = bMeta->upCastTo(b.data(), aMeta->getMetaTypeId())))
+                {
+                    return aMeta->compareImpl(a.data(), casted);
+                }
+                else
+                {
+                    qWarning() << "Comparing two CVariants containing unrelated value objects";
+                    return 0;
+                }
             }
-            else if ((casted = bMeta->upCastTo(b.data(), aMeta->getMetaTypeId())))
+            catch (const Private::CVariantException &ex)
             {
-                return aMeta->compareImpl(a.data(), casted);
-            }
-            else
-            {
-                qWarning() << "Comparing two CVariants containing unrelated value objects";
+                CLogMessage().debug() << ex.what();
                 return 0;
             }
         }
@@ -81,6 +90,7 @@ namespace BlackMisc
         case QVariant::Char:        json.insert("value", m_v.toString());
         case QVariant::ByteArray:   json.insert("value", m_v.toString());
         default:
+            try
             {
                 auto *meta = getValueObjectMetaInfo();
                 if (meta)
@@ -95,6 +105,10 @@ namespace BlackMisc
                 {
                     qWarning() << "Unsupported CVariant type for toJson";
                 }
+            }
+            catch (const Private::CVariantException &ex)
+            {
+                CLogMessage().debug() << ex.what();
             }
         }
         return json;
@@ -117,6 +131,7 @@ namespace BlackMisc
         case QVariant::Char:        m_v.setValue(json.value("value").toString().size() > 0 ? json.value("value").toString().at(0) : '\0');
         case QVariant::ByteArray:   m_v.setValue(json.value("value").toString().toLatin1());
         default:
+            try
             {
                 auto *meta = Private::getValueObjectMetaInfo(typeId);
                 if (meta)
@@ -137,6 +152,10 @@ namespace BlackMisc
                     qWarning() << "Unsupported CVariant type for fromJson";
                 }
             }
+            catch (const Private::CVariantException &ex)
+            {
+                CLogMessage().debug() << ex.what();
+            }
         }
     }
 
@@ -154,6 +173,7 @@ namespace BlackMisc
         case QVariant::Char:        return qHash(m_v.toChar());
         case QVariant::ByteArray:   return qHash(m_v.toByteArray());
         default:
+            try
             {
                 auto *meta = getValueObjectMetaInfo();
                 if (meta)
@@ -169,6 +189,11 @@ namespace BlackMisc
                     qWarning() << "Unsupported CVariant type for getValueHash";
                     return 0;
                 }
+            }
+            catch (const Private::CVariantException &ex)
+            {
+                CLogMessage().debug() << ex.what();
+                return 0;
             }
         }
     }
@@ -191,39 +216,78 @@ namespace BlackMisc
     {
         auto *meta = getValueObjectMetaInfo();
         Q_ASSERT(meta);
-        meta->setPropertyByIndex(data(), variant, index);
+        try
+        {
+            meta->setPropertyByIndex(data(), variant, index);
+        }
+        catch (const Private::CVariantException &ex)
+        {
+            CLogMessage().debug() << ex.what();
+        }
     }
 
     CVariant CVariant::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
     {
         auto *meta = getValueObjectMetaInfo();
         Q_ASSERT(meta);
-        CVariant result;
-        meta->propertyByIndex(data(), result, index);
-        return result;
+        try
+        {
+            CVariant result;
+            meta->propertyByIndex(data(), result, index);
+            return result;
+        }
+        catch (const Private::CVariantException &ex)
+        {
+            CLogMessage().debug() << ex.what();
+            return {};
+        }
     }
 
     QString CVariant::propertyByIndexAsString(const CPropertyIndex &index, bool i18n) const
     {
         auto *meta = getValueObjectMetaInfo();
         Q_ASSERT(meta);
-        return meta->propertyByIndexAsString(data(), index, i18n);
+        try
+        {
+            return meta->propertyByIndexAsString(data(), index, i18n);
+        }
+        catch (const Private::CVariantException &ex)
+        {
+            CLogMessage().debug() << ex.what();
+            return {};
+        }
     }
 
     bool CVariant::equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const
     {
         auto *meta = getValueObjectMetaInfo();
         Q_ASSERT(meta);
-        return meta->equalsPropertyByIndex(data(), compareValue, index);
+        try
+        {
+            return meta->equalsPropertyByIndex(data(), compareValue, index);
+        }
+        catch (const Private::CVariantException &ex)
+        {
+            CLogMessage().debug() << ex.what();
+            return false;
+        }
     }
 
     CIcon CVariant::toIcon() const
     {
         auto *meta = getValueObjectMetaInfo();
         if (! meta) { return {}; }
-        CIcon result;
-        meta->toIcon(data(), result);
-        return result;
+        try
+        {
+            CIcon result;
+            meta->toIcon(data(), result);
+            return result;
+        }
+        catch (const Private::CVariantException &ex)
+        {
+            CLogMessage().debug() << ex.what();
+            return {};
+        }
     }
 
     QPixmap CVariant::toPixmap() const

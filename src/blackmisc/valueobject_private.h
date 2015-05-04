@@ -19,6 +19,7 @@
 #include <QDBusMetaType>
 #include <QDBusArgument>
 #include <QJsonObject>
+#include <stdexcept>
 
 namespace BlackMisc
 {
@@ -57,17 +58,37 @@ namespace BlackMisc
             virtual void toIcon(const void *object, CIcon &o_icon) const = 0;
         };
 
+        //! \private Exception to signal that an unsupported operation was requested.
+        class CVariantException : public std::invalid_argument
+        {
+        public:
+            template <class T>
+            CVariantException(const T &, const QString &operationName) : std::invalid_argument((blurb<T>(operationName)).toStdString()), m_operationName(operationName) {}
+
+            const QString &operationName() const { return m_operationName; }
+
+            ~CVariantException() Q_DECL_NOEXCEPT {}
+
+        private:
+            QString m_operationName;
+
+            template <class T>
+            static QString blurb(const QString &operationName)
+            {
+                return QString("CVariant requested unsupported operation of contained ") + QMetaType::typeName(qMetaTypeId<T>()) + " object: " + operationName;
+            }
+        };
 
         //! \private
         namespace Fallback
         {
             //! \private Fallback in case qHash is not defined for T.
             template <typename T>
-            uint qHash(const T &object) { return 0; }
+            uint qHash(const T &object) { throw CVariantException(object, "qHash"); }
 
             //! \private Fallback in case compare is not defined for T.
             template <typename T>
-            int compare(const T &a, const T &) { return 0; }
+            int compare(const T &a, const T &) { throw CVariantException(a, "compare"); }
         }
 
         //! \private Implementation of IValueObjectMetaInfo representing the set of operations supported by T.
@@ -80,20 +101,20 @@ namespace BlackMisc
             template <typename U> struct Derived : public U, public Fallback {};
 #           define DISABLE_IF_HAS(MEMBER) typename int_t<&Derived<U>::MEMBER>::type
 
-            template <typename U> static QJsonObject toJsonHelper(const U &, DISABLE_IF_HAS(toJson)) { return {}; }
+            template <typename U> static QJsonObject toJsonHelper(const U &object, DISABLE_IF_HAS(toJson)) { throw CVariantException(object, "toJson"); }
             template <typename U> static QJsonObject toJsonHelper(const U &object, ...) { return object.toJson(); }
-            template <typename U> static void convertFromJsonHelper(const QJsonObject &, U &, DISABLE_IF_HAS(convertFromJson)) {}
+            template <typename U> static void convertFromJsonHelper(const QJsonObject &, U &object, DISABLE_IF_HAS(convertFromJson)) { throw CVariantException(object, "convertFromJson"); }
             template <typename U> static void convertFromJsonHelper(const QJsonObject &json, U &object, ...) { object.convertFromJson(json); }
-            template <typename U> static void setPropertyByIndexHelper(U &, const CVariant &, const CPropertyIndex &, DISABLE_IF_HAS(setPropertyByIndex)) {}
+            template <typename U> static void setPropertyByIndexHelper(U &object, const CVariant &, const CPropertyIndex &, DISABLE_IF_HAS(setPropertyByIndex)) { throw CVariantException(object, "setPropertyByIndex"); }
             template <typename U> static void setPropertyByIndexHelper(U &object, const CVariant &variant, const CPropertyIndex &index, ...) { object.setPropertyByIndex(variant, index); }
-            template <typename U> static void propertyByIndexHelper(CVariant &, const U &, const CPropertyIndex &, DISABLE_IF_HAS(propertyByIndex)) {}
+            template <typename U> static void propertyByIndexHelper(CVariant &, const U &object, const CPropertyIndex &, DISABLE_IF_HAS(propertyByIndex)) { throw CVariantException(object, "propertyByIndex"); }
             template <typename U> static void propertyByIndexHelper(CVariant &o_variant, const U &object, const CPropertyIndex &index, ...) { assign(o_variant, object.propertyByIndex(index)); }
-            template <typename U> static QString propertyByIndexAsStringHelper(const U &, const CPropertyIndex &, bool, DISABLE_IF_HAS(propertyByIndexAsString)) { return {}; }
+            template <typename U> static QString propertyByIndexAsStringHelper(const U &object, const CPropertyIndex &, bool, DISABLE_IF_HAS(propertyByIndexAsString)) { throw CVariantException(object, "propertyByIndexAsString"); }
             template <typename U> static QString propertyByIndexAsStringHelper(const U &object, const CPropertyIndex &index, bool i18n, ...) { return object.propertyByIndexAsString(index, i18n); }
-            template <typename U> static bool equalsPropertyByIndexHelper(const U &, const CVariant &, const CPropertyIndex &, DISABLE_IF_HAS(equalsPropertyByIndex)) { return false; }
+            template <typename U> static bool equalsPropertyByIndexHelper(const U &object, const CVariant &, const CPropertyIndex &, DISABLE_IF_HAS(equalsPropertyByIndex)) { throw CVariantException(object, "equalsPropertyByIndex"); }
             template <typename U> static bool equalsPropertyByIndexHelper(const U &object, const CVariant &variant, const CPropertyIndex &index, ...) { return object.equalsPropertyByIndex(variant, index); }
-            template <typename U> static void toIconHelper(const U &, CIcon &, DISABLE_IF_HAS(toIcon)) {}
-            template <typename U> static void toIconHelper(const U &, CIcon &, typename std::enable_if<std::is_same<U, CVariant>::value, int>::type) {} // CIcon is incomplete when CValueObjectMetaInfo<CVariant> is instantiated
+            template <typename U> static void toIconHelper(const U &object, CIcon &, DISABLE_IF_HAS(toIcon)) { throw CVariantException(object, "toIcon"); }
+            template <typename U> static void toIconHelper(const U &object, CIcon &, typename std::enable_if<std::is_same<U, CVariant>::value, int>::type) { throw CVariantException(object, "toIcon"); } // CIcon is incomplete when CValueObjectMetaInfo<CVariant> is instantiated
             template <typename U> static void toIconHelper(const U &object, CIcon &o_icon, ...) { assign(o_icon, object.toIcon()); }
 
 #           undef DISABLE_IF_HAS
