@@ -57,13 +57,18 @@ namespace BlackMisc
             virtual void toIcon(const void *object, CIcon &o_icon) const = 0;
         };
 
-        //! \private Fallback in case qHash is not defined for T.
-        template <typename T>
-        uint qHash(const T &) { return 0; }
 
-        //! \private Fallback in case compare is not defined for T.
-        template <typename T>
-        int compare(const T &, const T &) { return 0; }
+        //! \private
+        namespace Fallback
+        {
+            //! \private Fallback in case qHash is not defined for T.
+            template <typename T>
+            uint qHash(const T &object) { return 0; }
+
+            //! \private Fallback in case compare is not defined for T.
+            template <typename T>
+            int compare(const T &a, const T &) { return 0; }
+        }
 
         //! \private Implementation of IValueObjectMetaInfo representing the set of operations supported by T.
         template <typename T>
@@ -111,6 +116,7 @@ namespace BlackMisc
             }
             virtual uint getValueHash(const void *object) const override
             {
+                using Private::Fallback::qHash;
                 return qHash(cast(object));
             }
             virtual int getMetaTypeId() const override
@@ -124,6 +130,7 @@ namespace BlackMisc
             }
             virtual int compareImpl(const void *lhs, const void *rhs) const override
             {
+                using Private::Fallback::compare;
                 return compare(cast(lhs), cast(rhs));
             }
             virtual void setPropertyByIndex(void *object, const CVariant &variant, const CPropertyIndex &index) const override
