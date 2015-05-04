@@ -67,6 +67,12 @@ namespace BlackMisc
         //! \copydoc CValueObject::convertToQString
         virtual QString convertToQString(bool i18n = false) const override;
 
+        //! Icon for given index
+        static const CIcon &iconByIndex(CIcons::IconIndex index);
+
+        //! Icon for given index
+        static const CIcon &iconByIndex(int index);
+
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CIcon)
         int m_index = static_cast<int>(CIcons::NotSet);

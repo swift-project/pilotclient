@@ -151,14 +151,11 @@ namespace BlackMisc
 
     const CIcon &CIconList::iconByIndex(CIcons::IconIndex index)
     {
-        return iconByIndex(static_cast<int>(index));
+        return CIcon::iconByIndex(index);
     }
 
     const CIcon &CIconList::iconByIndex(int index)
     {
-        // changed to index / at based approach during #322 (after Sleepy profiling)
-        // this seems to be faster as the findBy approach previously used, but required synced indexes
-        Q_ASSERT_X(index >= 0 && index < allIcons().size(), "iconForIndex", "wrong index");
-        return allIcons()[index];
+        return CIcon::iconByIndex(index);
     }
 }

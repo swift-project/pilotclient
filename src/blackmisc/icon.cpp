@@ -7,7 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "icon.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/iconlist.h"
 #include "blackmisc/pq/angle.h"
 
 namespace BlackMisc
@@ -45,6 +46,19 @@ namespace BlackMisc
         Q_UNUSED(i18n);
         QString s = QString(this->m_descriptiveText).append(" ").append(this->m_index);
         return s;
+    }
+
+    const CIcon &CIcon::iconByIndex(CIcons::IconIndex index)
+    {
+        return iconByIndex(static_cast<int>(index));
+    }
+
+    const CIcon &CIcon::iconByIndex(int index)
+    {
+        // changed to index / at based approach during #322 (after Sleepy profiling)
+        // this seems to be faster as the findBy approach previously used, but required synced indexes
+        Q_ASSERT_X(index >= 0 && index < CIconList::allIcons().size(), "iconForIndex", "wrong index");
+        return CIconList::allIcons()[index];
     }
 
 } // namespace
