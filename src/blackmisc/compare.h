@@ -22,6 +22,8 @@ namespace BlackMisc
 
         /*!
          * CRTP class template from which a derived class can inherit operator== implemented using its compare function.
+         *
+         * \tparam Derived Must overload a function bool compare(const Derived &, const Derived &) which can be found by ADL.
          */
         template <class Derived>
         class EqualsByCompare
@@ -58,6 +60,8 @@ namespace BlackMisc
 
         /*!
          * CRTP class template from which a derived class can inherit operator< implemented using its compare function.
+         *
+         * \tparam Derived Must overload a function bool compare(const Derived &, const Derived &) which can be found by ADL.
          */
         template <class Derived>
         class LessThanByCompare
@@ -107,6 +111,8 @@ namespace BlackMisc
 
         /*!
          * CRTP class template from which a derived class can inherit non-member compare() implemented by metatuple.
+         *
+         * \tparam Derived Must be registered with BLACK_DECLARE_TUPLE_CONVERSION.
          */
         template <class Derived>
         class CompareByTuple : private Private::EncapsulationBreaker

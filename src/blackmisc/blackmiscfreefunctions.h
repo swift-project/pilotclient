@@ -118,6 +118,8 @@ namespace BlackMisc
 
         /*!
          * CRTP class template from which a derived class can inherit common methods dealing with hashing instances by metatuple.
+         *
+         * \tparam Derived Must be registered with BLACK_DECLARE_TUPLE_CONVERSION.
          */
         template <class Derived>
         class HashByTuple : private Private::EncapsulationBreaker
@@ -141,6 +143,10 @@ namespace BlackMisc
 
         /*!
          * CRTP class template from which a derived class can inherit string streaming operations.
+         *
+         * \tparam Derived Must implement a public method QString convertToQString(bool i18n = false) const.
+         *
+         * \see BLACKMISC_DECLARE_USING_MIXIN_STRING
          */
         template <class Derived>
         class String

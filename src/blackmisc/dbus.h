@@ -24,6 +24,8 @@ namespace BlackMisc
 
         /*!
          * CRTP class template which will generate marshalling operators for a derived class with its own marshalling implementation.
+         *
+         * \tparam Derived Must implement public methods void marshallToDbus(QDBusArgument &arg) const and void unmarshallFromDbus(const QDBusArgument &arg).
          */
         template <class Derived>
         class DBusOperators
@@ -50,6 +52,10 @@ namespace BlackMisc
 
         /*!
          * CRTP class template from which a derived class can inherit common methods dealing with marshalling instances by metatuple.
+         *
+         * \tparam Derived Must be registered with BLACK_DECLARE_TUPLE_CONVERSION.
+         *
+         * \see BLACKMISC_DECLARE_USING_MIXIN_DBUS
          */
         template <class Derived>
         class DBusByTuple : public DBusOperators<Derived>, private Private::EncapsulationBreaker

@@ -29,6 +29,9 @@ namespace BlackMisc
     {
         /*!
          * CRTP class template from which a derived class can inherit property indexing functions.
+         *
+         * This is only a placeholder for future support of implementing property indexing through the tuple system.
+         * At the moment, it just implements the default properties: String, Icon, and Pixmap.
          */
         template <class Derived>
         class Index

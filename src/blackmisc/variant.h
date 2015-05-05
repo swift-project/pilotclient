@@ -36,6 +36,8 @@ namespace BlackMisc
 
         /*!
          * CRTP class template from which a derived class can inherit common methods dealing with the metatype of the class.
+         *
+         * \see BLACKMISC_DECLARE_USING_MIXIN_METATYPE
          */
         template <class Derived, class... AdditionalTypes>
         class MetaType
@@ -95,6 +97,8 @@ namespace BlackMisc
 
         /*!
          * Variant of MetaType mixin which also registers QList<Derived> with the type system.
+         *
+         * \see BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST
          */
         template <class Derived>
         class MetaTypeAndQList : public MetaType<Derived, QList<Derived>>

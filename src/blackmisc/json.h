@@ -136,6 +136,8 @@ namespace BlackMisc
 
         /*!
          * CRTP class template which will generate marshalling operators for a derived class with its own marshalling implementation.
+         *
+         * \tparam Must implement public methods QJsonObject toJson() const and void convertFromJson(const QJsonObject &json).
          */
         template <class Derived>
         class JsonOperators
@@ -179,6 +181,10 @@ namespace BlackMisc
 
         /*!
          * CRTP class template from which a derived class can inherit common methods dealing with JSON by metatuple.
+         *
+         * \tparam Derived Must be registered with BLACK_DECLARE_TUPLE_CONVERSION.
+         *
+         * \see BLACKMISC_DECLARE_USING_MIXIN_JSON
          */
         template <class Derived>
         class JsonByTuple : public JsonOperators<Derived>, private Private::EncapsulationBreaker

@@ -60,11 +60,8 @@ namespace BlackMisc
     };
 
     /*!
-     * Standard implementation of CValueObject using meta tuple system.
-     *
-     * This uses policy-based design. Specialize the class template CValueObjectPolicy
-     * to specify different policy classes.
-     *
+     * Mix of the most commonly used mixin classes.
+     * \see BlackMisc::Mixin
      * \tparam Derived  The class which is inheriting from this one (CRTP).
      * \tparam Base     The class which this one shall inherit from (default is CEmpty,
      *                  but this can be changed to create a deeper inheritance hierarchy).
