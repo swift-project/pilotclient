@@ -146,9 +146,11 @@ namespace BlackMisc
             AVIO *derived();
         };
 
+        //! \cond PRIVATE
         extern template class BLACKMISC_EXPORT_TEMPLATE CModulator<CComSystem>;
         extern template class BLACKMISC_EXPORT_TEMPLATE CModulator<CNavSystem>;
         extern template class BLACKMISC_EXPORT_TEMPLATE CModulator<CAdfSystem>;
+        //! \endcond
 
     }
 }

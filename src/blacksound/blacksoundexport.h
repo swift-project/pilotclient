@@ -14,6 +14,11 @@
 
 #include <QtGlobal>
 
+/*!
+ * \def BLACKSOUND_EXPORT
+ * BlackSound Export Macro
+ */
+
 #ifndef WITH_STATIC
 #  if defined(BUILD_BLACKSOUND_LIB)
 #    define BLACKSOUND_EXPORT Q_DECL_EXPORT

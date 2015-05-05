@@ -14,6 +14,11 @@
 
 #include <QtGlobal>
 
+/*!
+ * \def BLACKINPUT_EXPORT
+ * BlackInput Export Macro
+ */
+
 #ifndef WITH_STATIC
 #  if defined(BUILD_BLACKINPUT_LIB)
 #    define BLACKINPUT_EXPORT Q_DECL_EXPORT

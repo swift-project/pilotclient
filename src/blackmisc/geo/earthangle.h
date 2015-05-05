@@ -96,8 +96,10 @@ namespace BlackMisc
             LATorLON *derived();
         };
 
+        //! \cond PRIVATE
         extern template class BLACKMISC_EXPORT_TEMPLATE CEarthAngle<CLatitude>;
         extern template class BLACKMISC_EXPORT_TEMPLATE CEarthAngle<CLongitude>;
+        //! \endcond
 
     }
 }

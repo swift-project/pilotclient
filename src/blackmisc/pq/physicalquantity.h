@@ -251,6 +251,7 @@ namespace BlackMisc
             PQ *derived();
         };
 
+        //! \cond PRIVATE
         extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CLengthUnit, CLength>;
         extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CPressureUnit, CPressure>;
         extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CFrequencyUnit, CFrequency>;
@@ -260,6 +261,7 @@ namespace BlackMisc
         extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CAngleUnit, CAngle>;
         extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CTimeUnit, CTime>;
         extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CAccelerationUnit, CAcceleration>;
+        //! \endcond
 
     }
 }

@@ -14,6 +14,11 @@
 
 #include <QtGlobal>
 
+/*!
+ * \def BLACKGUI_EXPORT
+ * BlackGui Export Macro
+ */
+
 #ifndef WITH_STATIC
 #  if defined(BUILD_BLACKGUI_LIB)
 #    define BLACKGUI_EXPORT Q_DECL_EXPORT

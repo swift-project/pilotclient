@@ -14,6 +14,11 @@
 
 #include <QtGlobal>
 
+/*!
+ * \def BLACKCORE_EXPORT
+ * BlackCore Export Macro
+ */
+
 #ifndef WITH_STATIC
 #  if defined(BUILD_BLACKCORE_LIB)
 #    define BLACKCORE_EXPORT Q_DECL_EXPORT

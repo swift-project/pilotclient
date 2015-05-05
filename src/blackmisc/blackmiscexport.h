@@ -14,6 +14,11 @@
 
 #include <QtGlobal>
 
+/*!
+ * \def BLACKMISC_EXPORT
+ * BlackMisc Export Macro
+ */
+
 #ifndef WITH_STATIC
 #  if defined(BUILD_BLACKMISC_LIB)
 #    define BLACKMISC_EXPORT Q_DECL_EXPORT
@@ -23,6 +28,11 @@
 #else
 #  define BLACKMISC_EXPORT
 #endif
+
+/*!
+ * \def BLACKMISC_EXPORT_TEMPLATE
+ * BlackMisc Template Export Macro
+ */
 
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)
 #  define BLACKMISC_EXPORT_TEMPLATE BLACKMISC_EXPORT

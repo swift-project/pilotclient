@@ -101,10 +101,12 @@ namespace BlackMisc
         CONTAINER &container();
     };
 
+    //! \cond PRIVATE
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList>;
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList>;
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>;
+    //! \endcond
 
 } //namespace
 
