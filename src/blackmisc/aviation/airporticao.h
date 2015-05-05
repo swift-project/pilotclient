@@ -52,7 +52,7 @@ namespace BlackMisc
             static bool isValidIcaoDesignator(const QString &icaoCode);
 
             //! \copydoc CValueObject::convertToQString()
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAirportIcao)

@@ -248,8 +248,11 @@ namespace BlackMisc
 //            }
 
         public:
+            //! Destructor
+            virtual ~CMeasurementUnit() = default;
+
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override
+            QString convertToQString(bool i18n = false) const
             {
                 return this->getSymbol(i18n);
             }

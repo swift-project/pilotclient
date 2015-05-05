@@ -67,7 +67,7 @@ namespace BlackMisc
                         const CInformationMessage &atis = CInformationMessage(CInformationMessage::ATIS), const CInformationMessage &metar = CInformationMessage(CInformationMessage::METAR));
 
             //! \copydoc CValueObject::toIcon()
-            virtual BlackMisc::CIcon toIcon() const override { return this->m_callsign.toIcon(); }
+            BlackMisc::CIcon toIcon() const { return this->m_callsign.toIcon(); }
 
             //! Has booking times?
             bool hasBookingTimes() const
@@ -243,13 +243,13 @@ namespace BlackMisc
             const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override;
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! \copydoc CValueObject::setPropertyByIndex
-            virtual void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index) override;
+            void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index);
 
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAtcStation)

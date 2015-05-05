@@ -33,7 +33,7 @@ namespace BlackMisc
         {
         public:
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const
+            QString convertToQString(bool i18n = false) const
             {
                 QString s(CEarthAngle::convertToQString(i18n));
                 if (!this->isZeroEpsilonConsidered())

@@ -72,7 +72,7 @@ namespace BlackMisc
             const QString &getDescription() const { return m_description; }
 
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CSimulatorPluginInfo)

@@ -131,10 +131,10 @@ namespace BlackMisc
         const QVariant &getQVariant() const { return m_v; }
 
         //! \copydoc CValueObject::toQVariant
-        virtual QVariant toQVariant() const override { return getQVariant(); }
+        QVariant toQVariant() const { return getQVariant(); }
 
         //! \copydoc CValueObject::convertFromQVariant
-        virtual void convertFromQVariant(const QVariant &v) override { m_v = v; }
+        void convertFromQVariant(const QVariant &v) { m_v = v; }
 
         //! True if this variant can be converted to the type with the given metatype ID.
         bool canConvert(int typeId) const { return m_v.canConvert(typeId); }
@@ -146,7 +146,7 @@ namespace BlackMisc
         bool convert(int typeId) { return m_v.convert(typeId); }
 
         //! \copydoc CValueObject::convertToQString
-        virtual QString convertToQString(bool i18n = false) const override;
+        QString convertToQString(bool i18n = false) const;
 
         //! Convert this variant to a bool.
         bool toBool() const { return m_v.toBool(); }
@@ -216,16 +216,16 @@ namespace BlackMisc
         friend int compare(const CVariant &a, const CVariant &b) { return compareImpl(a, b); }
 
         //! \copydoc CValueObject::setPropertyByIndex
-        virtual void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index) override;
+        void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index);
 
         //! \copydoc CValueObject::propertyByIndex
-        virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+        CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
         //! \copydoc CValueObject::propertyByIndexAsString
-        virtual QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const override;
+        QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const;
 
         //! \copydoc CValueObject::equalsPropertyByIndex
-        virtual bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const override;
+        bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const;
 
     private:
         QVariant m_v;

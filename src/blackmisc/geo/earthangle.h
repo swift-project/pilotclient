@@ -55,7 +55,7 @@ namespace BlackMisc
             LATorLON operator *(double multiply) const;
 
             //! \copydoc CValueObject::toIcon
-            CIcon toIcon() const override;
+            CIcon toIcon() const;
 
             /*!
              * Latitude / Longitude from a WGS string such as
@@ -76,7 +76,7 @@ namespace BlackMisc
 
         public:
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
         private:
             //! Easy access to derived class (CRTP template parameter)

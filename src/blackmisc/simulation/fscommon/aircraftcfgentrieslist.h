@@ -91,10 +91,10 @@ namespace BlackMisc
                 CAircraftCfgEntriesList findByTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive) const;
 
                 //! \copydoc CValueObject::toQVariant
-                virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+                QVariant toQVariant() const { return QVariant::fromValue(*this); }
 
                 //! \copydoc CValueObject::convertFromQVariant
-                virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+                void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
 
                 //! Do not include the following directories for FS
                 static const QStringList &excludeDirectories()

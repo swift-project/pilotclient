@@ -49,7 +49,7 @@ namespace BlackMisc
             };
 
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
             //! Default constructor: 0 Altitude true
             CAltitude() : CValueObject(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel) {}
@@ -82,13 +82,13 @@ namespace BlackMisc
             void toMeanSeaLevel();
 
             //! \copydoc CValueObject::parseFromString(const QString &value)
-            virtual void parseFromString(const QString &value) override;
+            void parseFromString(const QString &value);
 
             //! \copydoc CValueObject::parseFromString(const QString &value, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode)
-            virtual void parseFromString(const QString &value, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode) override;
+            void parseFromString(const QString &value, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode);
 
             //! \copydoc CValueObject::toIcon
-            BlackMisc::CIcon toIcon() const override;
+            BlackMisc::CIcon toIcon() const;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAltitude)

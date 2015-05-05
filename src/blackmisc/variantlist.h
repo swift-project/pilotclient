@@ -33,10 +33,10 @@ namespace BlackMisc
         CVariantList(const CSequence &other);
 
         //! \copydoc CValueObject::toQVariant
-        virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+        QVariant toQVariant() const { return QVariant::fromValue(*this); }
 
         //! \copydoc CValueObject::convertFromQVariant
-        virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+        void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
 
         //! \brief Register metadata
         static void registerMetadata();

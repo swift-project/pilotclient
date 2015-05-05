@@ -128,11 +128,11 @@ namespace BlackMisc
         }
 
         //! \copydoc CValueObject::convertToQString
-        virtual QString convertToQString(bool i18n = false) const override;
+        QString convertToQString(bool i18n = false) const;
 
     protected:
         //! \copydoc CValueObject::parseFromString
-        virtual void parseFromString(const QString &indexes) override;
+        void parseFromString(const QString &indexes);
 
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CPropertyIndex)

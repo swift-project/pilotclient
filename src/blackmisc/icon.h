@@ -65,7 +65,7 @@ namespace BlackMisc
         operator QPixmap() const { return this->toPixmap(); }
 
         //! \copydoc CValueObject::convertToQString
-        virtual QString convertToQString(bool i18n = false) const override;
+        QString convertToQString(bool i18n = false) const;
 
         //! Icon for given index
         static const CIcon &iconByIndex(CIcons::IconIndex index);

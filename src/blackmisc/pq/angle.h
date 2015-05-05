@@ -59,7 +59,7 @@ namespace BlackMisc
                     CAngleUnit::sexagesimalDegMin()) {}
 
             //! \copydoc CValueObject::toIcon
-            virtual BlackMisc::CIcon toIcon() const override;
+            BlackMisc::CIcon toIcon() const;
 
             //! Value as factor of PI (e.g. 0.5PI)
             double piFactor() const;

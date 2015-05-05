@@ -39,7 +39,7 @@ namespace BlackMisc
         CIcon findByIndex(CIcons::IconIndex index) const;
 
         //! \copydoc CValueObject::asQVariant
-        virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+        QVariant toQVariant() const { return QVariant::fromValue(*this); }
 
         //! Register metadata of unit and quantity
         static void registerMetadata();

@@ -33,7 +33,7 @@ namespace BlackMisc
             CSimulatorPluginInfoList(const CSequence<CSimulatorPluginInfo> &other);
 
             //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const { return QVariant::fromValue(*this); }
+            QVariant toQVariant() const { return QVariant::fromValue(*this); }
 
             //! Is simulator supported
             bool supportsSimulator(const QString &simulator);

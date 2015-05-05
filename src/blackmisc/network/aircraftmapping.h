@@ -27,7 +27,7 @@ namespace BlackMisc
 
         public:
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
             //! Properties
             enum ColumnIndex
@@ -45,10 +45,10 @@ namespace BlackMisc
             CAircraftMapping(const QString &source, const QString &packageName, const QString &aircraftDesignator, const QString &airlineDesignator, const QString &model);
 
             //! \copydoc CValueObject::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! \copydoc CValueObject::setPropertyByIndex
-            void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+            void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! ICAO
             void setIcao(const BlackMisc::Aviation::CAircraftIcao &icao) { this->m_icao = icao; }

@@ -76,10 +76,10 @@ namespace BlackMisc
                 void initDefaultValues();
 
                 //! \copydoc BlackCore::IContextSettings::value
-                virtual BlackMisc::CStatusMessage value(const QString &path, const QString &command, const BlackMisc::CVariant &value, bool &changedFlag);
+                BlackMisc::CStatusMessage value(const QString &path, const QString &command, const BlackMisc::CVariant &value, bool &changedFlag);
 
                 //! \copydoc CValueObject::convertToQString
-                virtual QString convertToQString(bool i18n = false) const override;
+                QString convertToQString(bool i18n = false) const;
 
             private:
                 BLACK_ENABLE_TUPLE_CONVERSION(CSettingsSimulator)

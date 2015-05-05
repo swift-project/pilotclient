@@ -57,7 +57,7 @@ namespace BlackMisc
             virtual const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const = 0;
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! Latitude as string
             QString latitudeAsString() const { return this->latitude().toQString(true); }
@@ -152,10 +152,10 @@ namespace BlackMisc
             virtual const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override { return this->m_geodeticHeight; }
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! \copydoc CValueObject::setPropertyByIndex
-            virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+            void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! Switch unit of latitude / longitude
             CCoordinateGeodetic &switchUnit(const BlackMisc::PhysicalQuantities::CAngleUnit &unit);
@@ -176,7 +176,7 @@ namespace BlackMisc
             static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const BlackMisc::PhysicalQuantities::CLength &geodeticHeight = {});
 
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CCoordinateGeodetic)

@@ -42,7 +42,7 @@ namespace BlackMisc
             bool getFunctionArgument() const { return m_hotkeyFuncArgument; }
 
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CEventHotkeyFunction)

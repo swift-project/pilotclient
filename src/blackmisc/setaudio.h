@@ -44,13 +44,13 @@ namespace BlackMisc
             void setNotificationFlag(BlackSound::CNotificationSounds::Notification notification, bool value);
 
             //! \copydoc BlackCore::IContextSettings::value
-            virtual BlackMisc::CStatusMessage value(const QString &path, const QString &command, const BlackMisc::CVariant &value, bool &changedFlag);
+            BlackMisc::CStatusMessage value(const QString &path, const QString &command, const BlackMisc::CVariant &value, bool &changedFlag);
 
             //! Init with meaningful default values
             void initDefaultValues();
 
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CSettingsAudio)

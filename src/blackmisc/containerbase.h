@@ -113,10 +113,10 @@ namespace BlackMisc
 
     public:
         //! \copydoc BlackMisc::CValueObject::toQVariant
-        virtual QVariant toQVariant() const override { return QVariant::fromValue(derived()); }
+        QVariant toQVariant() const { return QVariant::fromValue(derived()); }
 
         //! \copydoc CValueObject::convertFromQVariant
-        virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant< C<T> >(&derived(), variant); }
+        void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant< C<T> >(&derived(), variant); }
 
         //! Simplifies composition, returns 0 for performance
         friend uint qHash(const C<T> &) { return 0; }
@@ -148,7 +148,7 @@ namespace BlackMisc
         }
 
         //! \copydoc BlackMisc::CValueObject::convertToQString
-        virtual QString convertToQString(bool i18n = false) const override
+        QString convertToQString(bool i18n = false) const
         {
             QString str;
             for (const auto &value : derived()) { str += (str.isEmpty() ? "{" : ", ") + CContainerHelper::stringify(value, i18n); }

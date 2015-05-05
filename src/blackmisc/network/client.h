@@ -120,16 +120,16 @@ namespace BlackMisc
             void setAircraftModel(const BlackMisc::Simulation::CAircraftModel &model) { this->m_model = model; }
 
             //! \copydoc CValueObject::toIcon()
-            virtual CIcon toIcon() const override { return this->m_user.toIcon(); }
+            CIcon toIcon() const { return this->m_user.toIcon(); }
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! \copydoc CValueObject::setPropertyByIndex
-            virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+            void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CClient)

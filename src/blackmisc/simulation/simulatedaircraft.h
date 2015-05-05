@@ -46,10 +46,10 @@ namespace BlackMisc
                                const BlackMisc::Network::CClient &client = {});
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! \copydoc CValueObject::setPropertyByIndex
-            virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+            void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! Get model
             const BlackMisc::Simulation::CAircraftModel &getModel() const { return m_model; }
@@ -106,7 +106,7 @@ namespace BlackMisc
             void setPartsSynchronized(bool synchronized) { m_partsSynchronized = synchronized; }
 
             //! \copydoc CValueObject::convertToQString()
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CSimulatedAircraft)

@@ -139,10 +139,10 @@ namespace BlackMisc
             bool isVtol() const;
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! \copydoc CValueObject::setPropertyByIndex
-            virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+            void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! Valid designator?
             static bool isValidDesignator(const QString &designator);
@@ -154,7 +154,7 @@ namespace BlackMisc
             static bool isValidAirlineDesignator(const QString &airline);
 
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftIcao)

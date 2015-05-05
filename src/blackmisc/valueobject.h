@@ -73,14 +73,6 @@ namespace BlackMisc
         //! Base class is alias of itself
         using base_type = CEmpty;
 
-        //! Parse from string, e.g. 100km/h
-        //! \todo Here to avoid name hiding in PQ classes. Fix during policy refactoring.
-        virtual void parseFromString(const QString &) { qFatal("Not implemented"); }
-
-        //! String for QString conversion
-        //! \todo Here because pure virtual. Move to CValueObject when all dynamic polymorphism is removed.
-        virtual QString convertToQString(bool i18n = false) const = 0;
-
     protected:
         //! Protected default constructor
         CEmpty() = default;
@@ -182,21 +174,23 @@ namespace BlackMisc
             }
 
             //! Method to return CVariant
+            //! \deprecated Use CVariant::to() instead.
             CVariant toCVariant() const;
 
             //! Set from CVariant
+            //! \deprecated Use CVariant::from() instead.
             void convertFromCVariant(const CVariant &variant);
 
             //! Return QVariant, used with DBus QVariant lists
-            //! \todo remove virtual
-            virtual QVariant toQVariant() const
+            //! \deprecated Use QVariant::fromValue() instead.
+            QVariant toQVariant() const
             {
                 return Private::MetaTypeHelper<Derived>::maybeToQVariant(*derived());
             }
 
             //! Set from QVariant
-            //! \todo remove virtual
-            virtual void convertFromQVariant(const QVariant &variant)
+            //! \deprecated Use QVariant::value() instead.
+            void convertFromQVariant(const QVariant &variant)
             {
                 return Private::MetaTypeHelper<Derived>::maybeConvertFromQVariant(*derived(), variant);
             }
@@ -596,13 +590,13 @@ namespace BlackMisc
             QString toQString(bool i18n = false) const { return derived()->convertToQString(i18n); }
 
             //! Cast to pretty-printed QString
-            virtual QString toFormattedQString(bool i18n = false) const { return derived()->toQString(i18n); }
+            QString toFormattedQString(bool i18n = false) const { return derived()->toQString(i18n); }
 
             //! To std string
             std::string toStdString(bool i18n = false) const { return derived()->convertToQString(i18n).toStdString(); }
 
             //! String for streaming operators
-            virtual QString stringForStreaming() const { return derived()->convertToQString(); }
+            QString stringForStreaming() const { return derived()->convertToQString(); }
 
         private:
             const Derived *derived() const { return static_cast<const Derived *>(this); }
@@ -621,16 +615,16 @@ namespace BlackMisc
             CPropertyIndexList apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues = false); // implemented later due to cyclic include dependency
 
             //! Set property by index
-            virtual void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index); // implemented later due to cyclic include dependency
+            void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index); // implemented later due to cyclic include dependency
 
             //! Property by index
-            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const; // implemented later due to cyclic include dependency
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const; // implemented later due to cyclic include dependency
 
             //! Property by index as String
-            virtual QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const; // implemented later due to cyclic include dependency
+            QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const; // implemented later due to cyclic include dependency
 
             //! Is given variant equal to value of property index?
-            virtual bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const; // implemented later due to cyclic include dependency
+            bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const; // implemented later due to cyclic include dependency
 
         private:
             const Derived *derived() const { return static_cast<const Derived *>(this); }
@@ -649,16 +643,16 @@ namespace BlackMisc
             CPropertyIndexList apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues = false); // implemented later due to cyclic include dependency
 
             //! Set property by index
-            virtual void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index) { derived()->Derived::base_type::setPropertyByIndex(variant, index); }
+            void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index) { derived()->Derived::base_type::setPropertyByIndex(variant, index); }
 
             //! Property by index
-            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const; // implemented later due to cyclic include dependency
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const; // implemented later due to cyclic include dependency
 
             //! Property by index as String
-            virtual QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const { return derived()->Derived::base_type::propertyByIndexAsString(index, i18n); }
+            QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const { return derived()->Derived::base_type::propertyByIndexAsString(index, i18n); }
 
             //! Is given variant equal to value of property index?
-            virtual bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const { return derived()->Derived::base_type::equalsPropertyByIndex(compareValue, index); }
+            bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const { return derived()->Derived::base_type::equalsPropertyByIndex(compareValue, index); }
 
         private:
             const Derived *derived() const { return static_cast<const Derived *>(this); }
@@ -670,10 +664,10 @@ namespace BlackMisc
         {
         public:
             //! As icon, not implemented by all classes
-            virtual CIcon toIcon() const; // implemented later due to cyclic include dependency
+            CIcon toIcon() const; // implemented later due to cyclic include dependency
 
             //! As pixmap, required for most GUI views
-            virtual QPixmap toPixmap() const; // implemented later due to cyclic include dependency
+            QPixmap toPixmap() const; // implemented later due to cyclic include dependency
 
         private:
             const Derived *derived() const { return static_cast<const Derived *>(this); }
@@ -711,9 +705,6 @@ namespace BlackMisc
         //! Base class
         using base_type = Base;
 
-        //! Destructor
-        virtual ~CValueObject() {}
-
         //! Base class enums
         enum ColumnIndex
         {
@@ -726,7 +717,7 @@ namespace BlackMisc
         using Mixin::String<Derived>::toQString;
 
         //! \copydoc BlackMisc::Mixin::String::toFormattedQString
-        virtual QString toFormattedQString(bool i18n = false) const override { return this->Mixin::String<Derived>::toQString(i18n); }
+        using Mixin::String<Derived>::toFormattedQString;
 
         //! \copydoc BlackMisc::Mixin::String::toStdString
         using Mixin::String<Derived>::toStdString;
@@ -791,12 +782,15 @@ namespace BlackMisc
         //! Copy assignment operator.
         CValueObject &operator =(const CValueObject &) = default;
 
+        //! Destructor
+        ~CValueObject() = default;
+
+    public:
         //! \copydoc BlackMisc::Mixin::MetaType::getMetaTypeId
         using Mixin::MetaType<Derived>::getMetaTypeId;
 
-    public:
         //! \copydoc BlackMisc::Mixin::String::stringForStreaming
-        virtual QString stringForStreaming() const override { return this->Mixin::String<Derived>::stringForStreaming(); }
+        using Mixin::String<Derived>::stringForStreaming;
 
         //! \copydoc BlackMisc::Mixin::DBusByTuple::marshallToDbus
         using Mixin::DBusByTuple<Derived, Policy::DBus::IsMetaTuple<Derived, Base>::value>::marshallToDbus;

@@ -89,13 +89,13 @@ namespace BlackMisc
             bool equalsString(const QString &callsignString) const;
 
             //! \copydoc CValueObject::toIcon()
-            virtual BlackMisc::CIcon toIcon() const override { return convertToIcon(*this); }
+            BlackMisc::CIcon toIcon() const { return convertToIcon(*this); }
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! \copydoc CValueObject::setPropertyByIndex
-            virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+            void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! Valid callsign?
             static bool isValidCallsign(const QString &callsign);
@@ -113,7 +113,7 @@ namespace BlackMisc
             static const CIcon &convertToIcon(const CCallsign &callsign);
 
             //! \copydoc CValueObject::convertToQString()
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
         protected:
             //! Unify the callsign

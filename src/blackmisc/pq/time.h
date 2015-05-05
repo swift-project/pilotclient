@@ -57,10 +57,10 @@ namespace BlackMisc
             CTime(const QString &unitString) : CValueObject(0, CTimeUnit::nullUnit()) { this->parseFromString(unitString); }
 
             //! From string hh:mm, or hh:mm:ss, or time units such as s, min
-            virtual void parseFromString(const QString &time) override;
+            void parseFromString(const QString &time);
 
             //! From string hh:mm, or hh:mm:ss, or time units such as s, min
-            virtual void parseFromString(const QString &time, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode) override;
+            void parseFromString(const QString &time, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode);
 
             //! To Qt time
             //! \warning sign not considered

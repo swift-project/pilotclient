@@ -144,13 +144,13 @@ namespace BlackMisc
         friend uint qHash(const CPropertyIndexVariantMap &vm) { return vm.getValueHash(); }
 
         //! \copydoc CValueObject::toQVariant
-        virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+        QVariant toQVariant() const { return QVariant::fromValue(*this); }
 
         //! \copydoc CValueObject::convertFromQVariant
-        virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+        void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
 
         //! \copydoc CValueObject::convertToQString
-        virtual QString convertToQString(bool i18n = false) const override;
+        QString convertToQString(bool i18n = false) const;
 
     protected:
         QMap<CPropertyIndex, CVariant> m_values; //!< values

@@ -180,10 +180,10 @@ namespace BlackMisc
             const QString &getRemarks() const { return m_remarks; }
 
             //! \copydoc CValueObject::toIcon
-            virtual CIcon toIcon() const override;
+            CIcon toIcon() const;
 
             //! \copydoc CValueObject::convertToQString()
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CFlightPlan)

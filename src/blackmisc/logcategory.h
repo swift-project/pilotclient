@@ -106,7 +106,7 @@ namespace BlackMisc
         bool contains(const QString &substring) const { return m_string.contains(substring); }
 
         //! \copydoc CValueObject::convertToQString()
-        virtual QString convertToQString(bool i18n = false) const override;
+        QString convertToQString(bool i18n = false) const;
 
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CLogCategory)

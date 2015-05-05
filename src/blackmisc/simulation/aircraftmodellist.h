@@ -34,7 +34,7 @@ namespace BlackMisc
             CAircraftModelList(const CSequence<CAircraftModel> &other);
 
             //! QVariant, required for DBus QVariant lists
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+            QVariant toQVariant() const { return QVariant::fromValue(*this); }
 
             //! Contains model string
             bool containsModelString(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
@@ -52,7 +52,7 @@ namespace BlackMisc
             QStringList getSortedModelStrings() const;
 
             //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
 
             //! Register metadata
             static void registerMetadata();

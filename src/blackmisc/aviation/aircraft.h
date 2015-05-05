@@ -58,7 +58,7 @@ namespace BlackMisc
             CAircraft(const CCallsign &callsign, const BlackMisc::Network::CUser &user, const CAircraftSituation &situation);
 
             //! \copydoc CValueObject::toIcon()
-            virtual BlackMisc::CIcon toIcon() const override { return this->m_callsign.toIcon(); }
+            BlackMisc::CIcon toIcon() const { return this->m_callsign.toIcon(); }
 
             //! Get callsign.
             const CCallsign &getCallsign() const { return m_callsign; }
@@ -267,13 +267,13 @@ namespace BlackMisc
             bool isVtol() const;
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! \copydoc CValueObject::setPropertyByIndex
-            virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+            void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! \copydoc CValueObject::convertToQString()
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraft)

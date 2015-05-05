@@ -40,6 +40,9 @@ namespace BlackMisc
             //! \brief Constructor
             CAvionicsBase(const QString &name) : m_name(name) {}
 
+            //! Destructor
+            virtual ~CAvionicsBase() = default;
+
             //! \brief Set name
             void setName(const QString &name)
             {
@@ -48,7 +51,7 @@ namespace BlackMisc
 
         public:
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override { Q_UNUSED(i18n); return ""; }
+            QString convertToQString(bool i18n = false) const { Q_UNUSED(i18n); return ""; }
 
             //! \brief Name
             QString getName() const

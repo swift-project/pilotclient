@@ -91,7 +91,7 @@ namespace BlackMisc
             bool isEmpty() const { return this->m_message.isEmpty(); }
 
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CInformationMessage)

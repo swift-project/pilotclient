@@ -211,19 +211,19 @@ namespace BlackMisc
             void convertFromJson(const QJsonObject &json);
 
             //! Parse to string, with specified separator
-            virtual void parseFromString(const QString &value, CPqString::SeparatorMode mode);
+            void parseFromString(const QString &value, CPqString::SeparatorMode mode);
 
             //! \copydoc CValueObject::parseFromString
-            virtual void parseFromString(const QString &value) override;
+            void parseFromString(const QString &value);
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! \copydoc CValueObject::setPropertyByIndex
-            virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+            void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
         protected:
             //! Default constructor

@@ -55,10 +55,10 @@ namespace BlackMisc
             void setButtonObject(const BlackMisc::Hardware::CJoystickButton &button);
 
             //! \copydoc CValueObject::setPropertyByIndex
-            virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
+            void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual CVariant propertyByIndex(const CPropertyIndex &index) const;
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
             //! Button index to string
             static QString buttonIndexToString(qint32 buttonIndex);
@@ -70,7 +70,7 @@ namespace BlackMisc
             static qint32 getInvalidIndex() { return m_invalidIndex; }
 
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CJoystickButton)

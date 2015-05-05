@@ -148,19 +148,19 @@ namespace BlackMisc
             QString getSelcalCode() const;
 
             //! As icon, not implement by all classes
-            virtual CIcon toIcon() const override;
+            CIcon toIcon() const;
 
             //! As pixmap, required for most GUI views
-            virtual QPixmap toPixmap() const override;
+            QPixmap toPixmap() const;
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! \copydoc CValueObject::setPropertyByIndex
-            virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+            void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CTextMessage)

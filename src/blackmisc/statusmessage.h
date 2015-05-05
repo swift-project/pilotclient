@@ -113,7 +113,7 @@ namespace BlackMisc
         void addCategories(const CLogCategoryList &categories) { this->m_categories.push_back(categories); }
 
         //! Representing icon
-        virtual CIcon toIcon() const override { return convertToIcon(*this); }
+        CIcon toIcon() const { return convertToIcon(*this); }
 
         //! Severity as string
         const QString &getSeverityAsString() const;
@@ -128,10 +128,10 @@ namespace BlackMisc
         static const QStringList &allSeverityStrings();
 
         //! \copydoc CValueObject::propertyByIndex
-        virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+        CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
         //! \copydoc CValueObject::setPropertyByIndex
-        virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+        void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
         //! To HTML
         QString toHtml() const;
@@ -140,7 +140,7 @@ namespace BlackMisc
         static const CIcon &convertToIcon(const CStatusMessage &statusMessage);
 
         //! \copydoc CValueObject::convertToQString
-        virtual QString convertToQString(bool i18n = false) const override;
+        QString convertToQString(bool i18n = false) const;
 
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CStatusMessage)

@@ -83,7 +83,7 @@ namespace BlackMisc
         bool isProperSubsetOf(const CLogPattern &other) const;
 
         //! \copydoc CValueObject::convertToQString()
-        virtual QString convertToQString(bool i18n = false) const override;
+        QString convertToQString(bool i18n = false) const;
 
         //! \copydoc CValueObject::marshallToDbus()
         void marshallToDbus(QDBusArgument &argument) const;

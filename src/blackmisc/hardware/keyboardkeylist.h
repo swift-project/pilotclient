@@ -35,7 +35,7 @@ namespace BlackMisc
             CKeyboardKeyList(const CSequence<CKeyboardKey> &baseClass);
 
             //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override  { return QVariant::fromValue(*this); }
+            QVariant toQVariant() const { return QVariant::fromValue(*this); }
 
             //! Register metadata
             static void registerMetadata();

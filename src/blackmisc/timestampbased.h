@@ -91,6 +91,9 @@ namespace BlackMisc
         static bool canHandleIndex(const BlackMisc::CPropertyIndex &index);
 
     protected:
+        //! Destructor
+        virtual ~ITimestampBased() {}
+
         //! \copydoc CValueObject::propertyByIndex
         virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 

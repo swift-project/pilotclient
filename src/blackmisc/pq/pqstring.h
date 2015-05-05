@@ -31,7 +31,7 @@ namespace BlackMisc
         {
         public:
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
             //! Number separators / group separators
             enum SeparatorMode

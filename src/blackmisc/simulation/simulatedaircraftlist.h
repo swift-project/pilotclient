@@ -63,10 +63,10 @@ namespace BlackMisc
             bool isRendered(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+            QVariant toQVariant() const { return QVariant::fromValue(*this); }
 
             //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
 
             //! To aircraft list
             BlackMisc::Aviation::CAircraftList toAircraftList() const;

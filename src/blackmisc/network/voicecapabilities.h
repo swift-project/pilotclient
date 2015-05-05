@@ -54,7 +54,7 @@ namespace BlackMisc
             bool isUnknown() const { return m_voiceCapabilities == Unknown; }
 
             //! \copydoc CValueObject::toIcon()
-            virtual CIcon toIcon() const override;
+            CIcon toIcon() const;
 
             //! From enum
             static const CVoiceCapabilities &fromVoiceCapabilities(VoiceCapabilities capabilities);
@@ -69,7 +69,7 @@ namespace BlackMisc
             static const QList<CVoiceCapabilities> &allCapabilities();
 
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CVoiceCapabilities)

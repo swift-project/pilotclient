@@ -123,13 +123,13 @@ namespace BlackMisc
                 QString getThumbnailFileName() const;
 
                 //! \copydoc CValueObject::propertyByIndex
-                virtual BlackMisc::CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+                BlackMisc::CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
                 //! \copydoc CValueObject::setPropertyByIndex
-                virtual void setPropertyByIndex(const BlackMisc::CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+                void setPropertyByIndex(const BlackMisc::CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
                 //! \copydoc CValueObject::convertToQString
-                virtual QString convertToQString(bool i18n = false) const override;
+                QString convertToQString(bool i18n = false) const;
 
             private:
                 BLACK_ENABLE_TUPLE_CONVERSION(CAircraftCfgEntries)

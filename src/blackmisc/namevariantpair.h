@@ -52,19 +52,19 @@ namespace BlackMisc
         void setVariant(const CVariant &variant) { m_variant = variant; }
 
         //! \copydoc CValueObject::toIcon()
-        virtual BlackMisc::CIcon toIcon() const override;
+        BlackMisc::CIcon toIcon() const;
 
         //! Has icon
         bool hasIcon() const;
 
         //! \copydoc CValueObject::propertyByIndex
-        virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+        CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
         //! \copydoc CValueObject::setPropertyByIndex
-        virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+        void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
         //! \copydoc CValueObject::convertToQString()
-        virtual QString convertToQString(bool i18n = false) const override;
+        QString convertToQString(bool i18n = false) const;
 
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CNameVariantPair)
