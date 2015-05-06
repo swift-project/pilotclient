@@ -19,11 +19,12 @@ using namespace BlackMisc::Simulation;
 namespace BlackCore
 {
 
-    IInterpolator::IInterpolator(IRemoteAircraftProvider *provider, const QString &workerName, QObject *parent) :
-        CContinuousWorker(parent, workerName),
+    IInterpolator::IInterpolator(IRemoteAircraftProvider *provider, const QString &objectName, QObject *parent) :
+        QObject(parent),
         CRemoteAircraftAware(provider)
     {
         Q_ASSERT_X(provider, Q_FUNC_INFO, "missing provider");
+        this->setObjectName(objectName);
     }
 
     CAircraftPartsList IInterpolator::getPartsBeforeTime(const CCallsign &callsign, qint64 cutoffTime, BlackCore::IInterpolator::PartsStatus &partsStatus)
