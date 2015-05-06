@@ -26,17 +26,11 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackCore
 {
-    /*
-     * Constructor
-     */
     CRuntime::CRuntime(const CRuntimeConfig &config, QObject *parent) : QObject(parent)
     {
         this->init(config);
     }
 
-    /*
-     * Init runtime
-     */
     void CRuntime::init(const CRuntimeConfig &config)
     {
         if (m_init) { return; }
@@ -50,8 +44,7 @@ namespace BlackCore
         // upfront reading of settings, as DBus server already relies on settings
         QString dbusAddress;
 
-        // FIXME RW: We are allocating a full settings context in order to get the DBus address.
-        // I wonder if this can be done cleaner.
+        //! \todo Change when settings ready RW: We are allocating a full settings context in order to get the DBus address. I wonder if this can be done cleaner.
         if (config.hasDBusAddress()) { dbusAddress = config.getDBusAddress(); } // bootstrap / explicit
         if (config.hasLocalSettings())
         {
@@ -171,7 +164,7 @@ namespace BlackCore
         // local simulator?
         if (this->m_contextSimulator && this->m_contextSimulator->isUsingImplementingObject())
         {
-            // only connect if simulator runs locally, no round trips
+            // only connect if network runs locally, no round trips
             if (this->m_contextNetwork && this->m_contextNetwork->isUsingImplementingObject())
             {
                 c = connect(this->m_contextNetwork, &IContextNetwork::textMessagesReceived,
@@ -192,6 +185,9 @@ namespace BlackCore
                 c = connect(this->m_contextNetwork, &IContextNetwork::changedRemoteAircraftEnabled,
                             this->getCContextSimulator(), &CContextSimulator::ps_changedRemoteAircraftEnabled);
                 Q_ASSERT(c);
+                c = connect(this->getCContextSimulator(), &CContextSimulator::renderRestrictionsChanged,
+                            this->getCContextNetwork(), &CContextNetwork::ps_simulatorRenderRestrictionsChanged);
+                Q_ASSERT(c);
             }
 
             // only if own aircraft runs locally
@@ -210,10 +206,6 @@ namespace BlackCore
             if (this->m_contextSettings)
             {
                 connect(this->m_contextSettings, &IContextSettings::changedSettings, this->m_contextSimulator, &IContextSimulator::settingsChanged);
-//                 if (!this->m_contextSimulator->loadSimulatorPluginFromSettings())
-//                 {
-//                     CLogMessage(this).warning("No simulator plugin loaded");
-//                 }
                 this->m_contextSimulator->listenForSimulatorFromSettings();
                 times.insert("Post setup, load sim. listener(s)", time.restart());
             }

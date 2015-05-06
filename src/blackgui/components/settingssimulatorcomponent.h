@@ -22,9 +22,7 @@ namespace BlackGui
 {
     namespace Components
     {
-        /*!
-         * All simulator settings component (GUI)
-         */
+        //! All simulator settings component (GUI)
         class BLACKGUI_EXPORT CSettingsSimulatorComponent : public QFrame, public CEnableForRuntime
         {
             Q_OBJECT
@@ -42,7 +40,7 @@ namespace BlackGui
 
         private slots:
             //! Driver changed
-            void ps_pluginHasChanged(int index);
+            void ps_pluginHasBeenSelectedInComboBox(int index);
 
             //! Settings have been changed
             void ps_settingsHaveChanged(uint settingsType);
@@ -53,24 +51,28 @@ namespace BlackGui
             //! Apply max.distance
             void ps_onApplyMaxRenderedDistance();
 
+            //! Apply disable rendering
+            void ps_onApplyDisableRendering();
+
             //! Apply time sync
             void ps_onApplyTimeSync();
 
-            //! Restricted number of rendered aircraft
-            void ps_onRenderingRestricted(bool restricted);
-
             //! Clear restricted rendering
             void ps_clearRestricedRendering();
+
+            //! Simulator plugin changed
+            void ps_simulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
         private:
             QScopedPointer<Ui::CSettingsSimulatorComponent> ui; //!< UI
 
             //! Smarter way to set current driver, avoids unnecessary signals and less formatting dependend
-            void setCurrentPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &plugin);
+            void setCurrentPluginInComboBox(const BlackMisc::Simulation::CSimulatorPluginInfo &plugin);
 
             //! Set the GUI values
-            void setRestrictedValues();
+            void setGuiValues();
 
+            bool m_pluginLoaded = false; // plugin loaded
         };
     }
 } // namespace

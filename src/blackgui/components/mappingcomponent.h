@@ -104,6 +104,9 @@ namespace BlackGui
             //! Connection status has been changed
             void ps_onConnectionStatusChanged(uint from, uint to);
 
+            //! Simulator has handled airspace snapshot
+            void ps_onAirspaceSnapshotHandled();
+
             //! Fast position updates onf/off
             void ps_onMenuChangeFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 

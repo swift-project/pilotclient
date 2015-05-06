@@ -34,6 +34,7 @@ namespace BlackGui
             ui->setupUi(this);
             CLedWidget::LedShape shape = CLedWidget::Circle;
             this->ui->led_RestrictedRendering->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Limited", "Unlimited", 14);
+            this->ui->led_RenderingEnabled->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Rendering enabled", "No aircraft will be rendered", 14);
         }
 
         CSettingsSimulatorComponent::~CSettingsSimulatorComponent()
@@ -45,78 +46,87 @@ namespace BlackGui
             Q_ASSERT(this->getIContextSettings());
 
             // set values
-            this->setRestrictedValues();
-
             ui->cb_Plugins->addItem(tr("Auto"), CSimulatorPluginInfo().toQVariant());
-
-            for (const auto &p: getIContextSimulator()->getAvailableSimulatorPlugins())
+            for (const auto &p : getIContextSimulator()->getAvailableSimulatorPlugins())
             {
                 ui->cb_Plugins->addItem(p.toQString(), p.toQVariant());
             }
 
-            this->setCurrentPlugin(getIContextSettings()->getSimulatorSettings().getSelectedPlugin());
-
-            // disable / enable driver specific GUI parts
-            bool hasFsxDriver =
-                this->getIContextSimulator()->getAvailableSimulatorPlugins().supportsSimulator(QStringLiteral("fsx"));
-            this->ui->comp_SettingsSimulatorFsx->setVisible(hasFsxDriver);
-
-            // time sync
-            bool timeSynced = this->getIContextSimulator()->isTimeSynchronized();
-            this->ui->cb_TimeSync->setChecked(timeSynced);
-            CTime timeOffset = this->getIContextSimulator()->getTimeSynchronizationOffset();
-            this->ui->le_TimeSyncOffset->setText(timeOffset.formattedHrsMin());
-
-            // max.aircraft
-            this->ui->sb_MaxAircraft->setValue(getIContextSimulator()->getMaxRenderedAircraft());
-
-            connect(this->ui->cb_Plugins, static_cast<void (QComboBox::*)(int)> (&QComboBox::currentIndexChanged), this, &CSettingsSimulatorComponent::ps_pluginHasChanged);
+            // connects
+            connect(this->ui->cb_Plugins, static_cast<void (QComboBox::*)(int)> (&QComboBox::currentIndexChanged), this, &CSettingsSimulatorComponent::ps_pluginHasBeenSelectedInComboBox);
             connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &CSettingsSimulatorComponent::ps_settingsHaveChanged);
+            connect(this->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CSettingsSimulatorComponent::ps_simulatorPluginChanged);
             connect(this->ui->pb_ApplyMaxAircraft, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedAircraft);
             connect(this->ui->pb_ApplyTimeSync, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyTimeSync);
             connect(this->ui->pb_ApplyMaxDistance, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedDistance);
             connect(this->ui->pb_ClearRestrictedRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_clearRestricedRendering);
+            connect(this->ui->pb_DisableRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyDisableRendering);
+
+            // values
+            this->ps_simulatorPluginChanged(getIContextSimulator()->getSimulatorPluginInfo());
         }
 
-        void CSettingsSimulatorComponent::setCurrentPlugin(const CSimulatorPluginInfo &plugin)
+        void CSettingsSimulatorComponent::setCurrentPluginInComboBox(const CSimulatorPluginInfo &plugin)
         {
-            if (plugin.isUnspecified()) {
+            if (plugin.isUnspecified())
+            {
                 ui->cb_Plugins->setCurrentIndex(0);
                 return;
             }
-            
+
             for (int i = 0; i < this->ui->cb_Plugins->count(); ++i)
             {
                 QVariant data = this->ui->cb_Plugins->itemData(i);
                 Q_ASSERT(data.canConvert<CSimulatorPluginInfo>());
                 CSimulatorPluginInfo p = data.value<CSimulatorPluginInfo>();
-                
+
                 if (p.getIdentifier() == plugin.getIdentifier())
                 {
-                    if (i == this->ui->cb_Plugins->currentIndex())
-                        return;
-                    
+                    if (i == this->ui->cb_Plugins->currentIndex()) { return; }
                     this->ui->cb_Plugins->setCurrentIndex(i);
                     break;
                 }
             }
         }
 
-        void CSettingsSimulatorComponent::setRestrictedValues()
+        void CSettingsSimulatorComponent::setGuiValues()
         {
             Q_ASSERT(getIContextSimulator());
-            this->ui->led_RestrictedRendering->setOn(getIContextSimulator()->isRenderingRestricted());
-            this->ui->lbl_RestrictionText->setText(getIContextSimulator()->getRenderRestrictionText());
 
-            int distanceBoundaryNM = getIContextSimulator()->getRenderedDistanceBoundary().valueInteger(CLengthUnit::NM());
-            this->ui->sb_MaxDistance->setMaximum(distanceBoundaryNM);
-            this->ui->sb_MaxAircraft->setValue(getIContextSimulator()->getMaxRenderedAircraft());
+            // time sync
+            this->ui->cb_TimeSync->setEnabled(m_pluginLoaded);
+            this->ui->le_TimeSyncOffset->setEnabled(m_pluginLoaded);
+            this->ui->sb_MaxDistance->setEnabled(m_pluginLoaded);
+            this->ui->sb_MaxAircraft->setEnabled(m_pluginLoaded);
 
-            int distanceNM = getIContextSimulator()->getMaxRenderedDistance().valueInteger(CLengthUnit::NM());
-            this->ui->sb_MaxDistance->setValue(distanceNM);
+            // led
+            this->ui->led_RestrictedRendering->setOn(m_pluginLoaded ? getIContextSimulator()->isRenderingRestricted() : false);
+            this->ui->lbl_RestrictionText->setText(m_pluginLoaded ? getIContextSimulator()->getRenderRestrictionText() : "");
+
+            if (m_pluginLoaded)
+            {
+                bool timeSynced = this->getIContextSimulator()->isTimeSynchronized();
+                this->ui->cb_TimeSync->setChecked(timeSynced);
+                CTime timeOffset = this->getIContextSimulator()->getTimeSynchronizationOffset();
+                this->ui->le_TimeSyncOffset->setText(timeOffset.formattedHrsMin());
+
+                int distanceBoundaryNM = getIContextSimulator()->getRenderedDistanceBoundary().valueInteger(CLengthUnit::NM());
+                this->ui->sb_MaxDistance->setMaximum(distanceBoundaryNM);
+                this->ui->sb_MaxAircraft->setValue(getIContextSimulator()->getMaxRenderedAircraft());
+
+                CLength maxDistance(getIContextSimulator()->getMaxRenderedDistance());
+                int distanceNM = maxDistance.isNull() ? distanceBoundaryNM : maxDistance.valueInteger(CLengthUnit::NM());
+                this->ui->sb_MaxDistance->setValue(distanceNM);
+
+                this->ui->led_RenderingEnabled->setOn(getIContextSimulator()->isRenderingEnabled());
+            }
+            else
+            {
+                this->ui->led_RenderingEnabled->setOn(false);
+            }
         }
 
-        void CSettingsSimulatorComponent::ps_pluginHasChanged(int index)
+        void CSettingsSimulatorComponent::ps_pluginHasBeenSelectedInComboBox(int index)
         {
             Q_ASSERT(this->getIContextSimulator());
             Q_ASSERT(this->getIContextSettings());
@@ -148,7 +158,7 @@ namespace BlackGui
             if (type != IContextSettings::SettingsSimulator || !this->getIContextSettings()) return;
             CSettingsSimulator simSettings = this->getIContextSettings()->getSimulatorSettings();
 
-            this->setCurrentPlugin(simSettings.getSelectedPlugin());
+            this->setCurrentPluginInComboBox(simSettings.getSelectedPlugin());
             this->ui->le_TimeSyncOffset->setText(simSettings.getSyncTimeOffset().formattedHrsMin());
             this->ui->cb_TimeSync->setChecked(simSettings.isTimeSyncEnabled());
         }
@@ -172,6 +182,7 @@ namespace BlackGui
                 CLogMessage(this).info("Max.rendered aircraft: %1, requested: %2") << noRendered << noRequested;
                 this->ui->sb_MaxAircraft->setValue(noRendered);
             }
+            this->setGuiValues();
         }
 
         void CSettingsSimulatorComponent::ps_onApplyMaxRenderedDistance()
@@ -182,8 +193,15 @@ namespace BlackGui
             int maxDistanceNM = this->ui->sb_MaxDistance->value();
             CLength distance(maxDistanceNM, CLengthUnit::NM());
             this->getIContextSimulator()->setMaxRenderedDistance(distance);
-
             CLogMessage(this).info("Max.distance requested: %1") << distance.valueRoundedWithUnit(2, true);
+            this->setGuiValues();
+        }
+
+        void CSettingsSimulatorComponent::ps_onApplyDisableRendering()
+        {
+            Q_ASSERT(getIContextSimulator());
+            this->getIContextSimulator()->setMaxRenderedAircraft(0);
+            this->setGuiValues();
         }
 
         void CSettingsSimulatorComponent::ps_onApplyTimeSync()
@@ -205,16 +223,35 @@ namespace BlackGui
             }
         }
 
-        void CSettingsSimulatorComponent::ps_onRenderingRestricted(bool restricted)
-        {
-            Q_UNUSED(restricted);
-            setRestrictedValues();
-        }
-
         void CSettingsSimulatorComponent::ps_clearRestricedRendering()
         {
             Q_ASSERT(getIContextSimulator());
             this->getIContextSimulator()->deleteAllRenderingRestrictions();
+            this->setGuiValues();
+        }
+
+        void CSettingsSimulatorComponent::ps_simulatorPluginChanged(const CSimulatorPluginInfo &info)
+        {
+            // disable / enable driver specific GUI parts
+            bool hasFsxDriver = this->getIContextSimulator()->getAvailableSimulatorPlugins().supportsSimulator(QStringLiteral("fsx"));
+
+            // combobox
+            setCurrentPluginInComboBox(info);
+
+            // other GUI values
+            if (!info.isUnspecified())
+            {
+                m_pluginLoaded = true;
+                this->ui->comp_SettingsSimulatorFsx->setVisible(hasFsxDriver);
+                this->ui->lbl_PluginInfo->setText(info.getDescription());
+                this->setGuiValues();
+            }
+            else
+            {
+                m_pluginLoaded = false;
+                this->ui->lbl_PluginInfo->setText("No plugin loaded");
+                this->setGuiValues();
+            }
         }
     }
 

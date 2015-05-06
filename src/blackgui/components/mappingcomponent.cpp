@@ -44,10 +44,10 @@ namespace BlackGui
             this->ui->tvp_SimulatedAircraft->setResizeMode(CAircraftModelView::ResizingOnce);
             this->ui->tvp_AircraftModels->setResizeMode(CAircraftModelView::ResizingOff);
 
-            connect(this->ui->tvp_AircraftModels,  &CAircraftModelView::requestUpdate, this, &CMappingComponent::ps_onModelsUpdateRequested);
-            connect(this->ui->tvp_AircraftModels,  &CAircraftModelView::rowCountChanged, this, &CMappingComponent::ps_onRowCountChanged);
-            connect(this->ui->tvp_AircraftModels,  &CAircraftModelView::clicked, this, &CMappingComponent::ps_onModelSelectedInView);
-            connect(this->ui->tvp_AircraftModels,  &CAircraftModelView::requestModelReload, this, &CMappingComponent::ps_onMenuRequestModelReload);
+            connect(this->ui->tvp_AircraftModels, &CAircraftModelView::requestUpdate, this, &CMappingComponent::ps_onModelsUpdateRequested);
+            connect(this->ui->tvp_AircraftModels, &CAircraftModelView::rowCountChanged, this, &CMappingComponent::ps_onRowCountChanged);
+            connect(this->ui->tvp_AircraftModels, &CAircraftModelView::clicked, this, &CMappingComponent::ps_onModelSelectedInView);
+            connect(this->ui->tvp_AircraftModels, &CAircraftModelView::requestModelReload, this, &CMappingComponent::ps_onMenuRequestModelReload);
 
             connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::rowCountChanged, this, &CMappingComponent::ps_onRowCountChanged);
             connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::clicked, this, &CMappingComponent::ps_onAircraftSelectedInView);
@@ -95,6 +95,7 @@ namespace BlackGui
             Q_ASSERT(getIContextNetwork());
             connect(getIContextSimulator(), &IContextSimulator::installedAircraftModelsChanged, this, &CMappingComponent::ps_onAircraftModelsLoaded);
             connect(getIContextSimulator(), &IContextSimulator::modelMatchingCompleted, this, &CMappingComponent::ps_onModelMatchingCompleted);
+            connect(getIContextSimulator(), &IContextSimulator::airspaceSnapshotHandled, this, &CMappingComponent::ps_onAirspaceSnapshotHandled);
             connect(getIContextNetwork(), &IContextNetwork::changedRemoteAircraftModel, this, &CMappingComponent::ps_onRemoteAircraftModelChanged);
             connect(getIContextNetwork(), &IContextNetwork::changedRemoteAircraftEnabled, this, &CMappingComponent::ps_onChangedAircraftEnabled);
             connect(getIContextNetwork(), &IContextNetwork::changedFastPositionUpdates, this, &CMappingComponent::ps_onFastPositionUpdatesEnabled);
@@ -332,6 +333,11 @@ namespace BlackGui
             {
                 this->ui->tvp_SimulatedAircraft->clear();
             }
+        }
+
+        void CMappingComponent::ps_onAirspaceSnapshotHandled()
+        {
+            this->updateSimulatedAircraftView();
         }
 
         void CMappingComponent::ps_onMenuChangeFastPositionUpdates(const CSimulatedAircraft &aircraft)

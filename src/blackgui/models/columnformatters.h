@@ -203,16 +203,16 @@ namespace BlackGui
         public:
 
             //! Constructor
-            CBoolIconFormatter(int alignment = alignDefault());
+            CBoolIconFormatter(int alignment = alignCentered());
 
             //! Constructor
-            CBoolIconFormatter(const QString &onName, const QString &offName, int alignment = alignDefault());
+            CBoolIconFormatter(const QString &onName, const QString &offName, int alignment = alignCentered());
 
             //! Constructor
-            CBoolIconFormatter(const BlackMisc::CIcon &onIcon, const BlackMisc::CIcon &offIcon, const QString &onName, const QString &offName, int alignment = alignDefault());
+            CBoolIconFormatter(const BlackMisc::CIcon &onIcon, const BlackMisc::CIcon &offIcon, const QString &onName, const QString &offName, int alignment = alignCentered());
 
             //! Constructor
-            CBoolIconFormatter(BlackMisc::CIcons::IconIndex onIcon, BlackMisc::CIcons::IconIndex offIcon, const QString &onName, const QString &offName, int alignment = alignDefault());
+            CBoolIconFormatter(BlackMisc::CIcons::IconIndex onIcon, BlackMisc::CIcons::IconIndex offIcon, const QString &onName, const QString &offName, int alignment = alignCentered());
 
             //! \copydoc CDefaultFormatter::displayRole
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
@@ -273,7 +273,7 @@ namespace BlackGui
         {
         public:
             //! Constructor
-            CAltitudeFormatter(bool flightlevel = false, int alignment = alignDefault(), bool i18n = true) : CDefaultFormatter(alignment, i18n), m_flightLevel(flightlevel) {}
+            CAltitudeFormatter(bool flightlevel = false, int alignment = alignRightVCenter(), bool i18n = true) : CDefaultFormatter(alignment, i18n), m_flightLevel(flightlevel) {}
 
             //! \copydoc CDefaultFormatter::displayRole
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &altitude) const override;

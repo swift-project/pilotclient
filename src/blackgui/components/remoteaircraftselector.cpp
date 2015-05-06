@@ -58,14 +58,19 @@ namespace BlackGui
 
         void CRemoteAircraftSelector::ps_onAddedAircraft(const CSimulatedAircraft &aircraft)
         {
-            Q_UNUSED(aircraft);
+            CCallsign cs(aircraft.getCallsign());
+            if (cs.isEmpty()) { return; }
+            if (this->m_aircraft.containsCallsign(cs)) { return; }
             this->fillComboBox();
         }
 
         void CRemoteAircraftSelector::ps_onRemovedAircraft(const CCallsign &callsign)
         {
-            Q_UNUSED(callsign);
-            this->fillComboBox();
+            if (callsign.isEmpty()) { return; }
+            if (this->m_aircraft.containsCallsign(callsign))
+            {
+                this->fillComboBox();
+            }
         }
 
         void CRemoteAircraftSelector::fillComboBox()
