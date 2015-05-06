@@ -2,7 +2,7 @@ include (externals.pri)
 
 LIBS *= -L$$BuildRoot/lib
 
-unix {
+unix:!macx {
     # Set the rpath-link to find dependent shared libraries when linking
     # Note: This does not add any rpath into the binaries.
     LIBS += -Wl,-rpath-link,$$BuildRoot/lib

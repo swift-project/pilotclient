@@ -1,7 +1,7 @@
 include ($$SourceRoot/config.pri)
 include ($$SourceRoot/build.pri)
 
-QT       += network dbus gui multimedia
+QT       += network dbus gui widgets multimedia
 
 TARGET = blackinput
 TEMPLATE = lib
@@ -40,6 +40,7 @@ macx {
     HEADERS += $$PWD/osx/*.h
     SOURCES += $$PWD/osx/*.cpp
     OBJECTIVE_SOURCES += $$PWD/osx/*.mm
+    LIBS *= -framework CoreFoundation -framework ApplicationServices -framework Foundation -framework AppKit
 }
 
 DESTDIR = $$BuildRoot/lib
