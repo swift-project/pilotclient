@@ -32,10 +32,6 @@ namespace BlackMisc
         protected:
             QString m_name; //!< name of the unit
 
-            //! Default constructor
-            //! \todo Remove as part of MS' CValueObject refactoring
-            CAvionicsBase() : m_name("empty") {}
-
             //! \brief Constructor
             CAvionicsBase(const QString &name) : m_name(name) {}
 

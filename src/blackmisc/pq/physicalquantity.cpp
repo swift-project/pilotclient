@@ -38,11 +38,6 @@ namespace BlackMisc
         QString CPhysicalQuantity<MU, PQ>::getUnitSymbol() const { return this->m_unit.getSymbol(true); }
 
         template <class MU, class PQ>
-        CPhysicalQuantity<MU, PQ>::CPhysicalQuantity() :
-            m_value(0.0), m_unit(MU::nullUnit())
-        { }
-
-        template <class MU, class PQ>
         CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(double value, const MU &unit) :
             m_value(unit.isNull() ? 0.0 : value), m_unit(unit)
         { }

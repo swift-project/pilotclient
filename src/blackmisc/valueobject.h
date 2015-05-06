@@ -36,6 +36,21 @@
 namespace BlackMisc
 {
 
+    namespace Private
+    {
+        //! \private SFINAE for CValueObject constructor to avoid being selected as a viable copy constructor.
+        //! @{
+        template <typename...> struct DecayFirst
+        {
+            typedef void type;
+        };
+        template <typename T, typename... Ts> struct DecayFirst<T, Ts...>
+        {
+            typedef typename std::decay<T>::type type;
+        };
+        //! @}
+    }
+
     /*!
      * Default base class for CValueObject.
      */
@@ -138,13 +153,10 @@ namespace BlackMisc
         using Mixin::MetaType<Derived>::registerMetadata;
 
     protected:
-        //! Default constructor.
-        CValueObject() = default;
-
         //! Template constructor, forwards all arguments to base class constructor.
         //! \todo When our compilers support C++11 inheriting constructors, use those instead.
-        template <typename T, typename... Ts, typename = typename std::enable_if<! std::is_same<CValueObject, typename std::decay<T>::type>::value>::type>
-        CValueObject(T &&first, Ts &&... args) : Base(std::forward<T>(first), std::forward<Ts>(args)...) {}
+        template <typename... Ts, typename = typename std::enable_if<! std::is_same<CValueObject, typename Private::DecayFirst<Ts...>::type>::value>::type>
+        CValueObject(Ts &&... args) : Base(std::forward<Ts>(args)...) {}
 
         //! Copy constructor.
         CValueObject(const CValueObject &) = default;

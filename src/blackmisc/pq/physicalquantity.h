@@ -217,10 +217,6 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         protected:
-            //! Default constructor
-            //! \todo Remove as part of MS' CValueObject refactoring
-            CPhysicalQuantity();
-
             //! Constructor with double
             CPhysicalQuantity(double value, const MU &unit);
 
