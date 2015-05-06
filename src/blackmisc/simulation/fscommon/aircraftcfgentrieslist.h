@@ -39,26 +39,10 @@ namespace BlackMisc
                 CAircraftCfgEntriesList(const QString &rootDirectory = "") : m_rootDirectory(rootDirectory) {}
 
                 //! Read all aircraft.cfg files starting from root directory
-                int read()
-                {
-                    if (this->m_readForDirectory) { return this->size(); }
-
-                    // not read so far, read it
-                    this->clear();
-                    this->m_readForDirectory = true;
-                    return this->read(this->m_rootDirectory, excludeDirectories());
-                }
+                int read();
 
                 //! Change the directory
-                bool changeDirectory(const QString &directory)
-                {
-                    if (this->m_rootDirectory != directory)
-                    {
-                        this->m_rootDirectory = directory;
-                        this->m_readForDirectory = false;
-                    }
-                    return (!directory.isEmpty() && this->existsDir(directory));
-                }
+                bool changeDirectory(const QString &directory);
 
                 //! Virtual destructor
                 virtual ~CAircraftCfgEntriesList() {}
@@ -97,17 +81,7 @@ namespace BlackMisc
                 void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
 
                 //! Do not include the following directories for FS
-                static const QStringList &excludeDirectories()
-                {
-                    static const QStringList exclude
-                    {
-                        "SimObjects/Animals",
-                        "SimObjects/Misc",
-                        "SimObjects/GroundVehicles",
-                        "SimObjects/Boats"
-                    };
-                    return exclude;
-                }
+                static const QStringList &excludeDirectories();
 
                 //! Register metadata
                 static void registerMetadata();
@@ -120,11 +94,16 @@ namespace BlackMisc
                 //! Read all entries in one directory
                 int read(const QString &directory, const QStringList &excludeDirectories = QStringList());
 
-                //! Fix the content read
-                static QString fixedStringContent(const QVariant &qv);
+                //! Section within file
+                enum FileSection
+                {
+                    General,
+                    Fltsim,
+                    Unknown
+                };
 
-                //! Value from settings, fixed string
-                static QString fixedStringContent(const QSettings &settings, const QString &key);
+                //! Content after "="
+                static QString getFixedIniLineContent(const QString &line);
             };
         } // namespace
     } // namespace

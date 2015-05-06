@@ -22,19 +22,13 @@ namespace BlackMisc
         namespace FsCommon
         {
 
-            /*
-             * Constructor
-             */
-            CAircraftCfgEntries::CAircraftCfgEntries(const QString &filePath, qint32 index, const QString &title, const QString &atcType, const QString &atcModel, const QString &atcParkingCode, const QString &description) :
-                m_index(index), m_fileName(filePath), m_title(title.trimmed()), m_atcType(atcType.trimmed()),
+            CAircraftCfgEntries::CAircraftCfgEntries(const QString &fileName, qint32 index, const QString &title, const QString &atcType, const QString &atcModel, const QString &atcParkingCode, const QString &description) :
+                m_index(index), m_fileName(fileName), m_title(title.trimmed()), m_atcType(atcType.trimmed()),
                 m_atcModel(atcModel.trimmed()), m_atcParkingCode(atcParkingCode.trimmed()), m_description(description.trimmed())
             {
                 // void
             }
 
-            /*
-             * String representation
-             */
             QString CAircraftCfgEntries::convertToQString(bool) const
             {
                 QString s = "{%1, %2, %3, %4, %5, %6}";
@@ -43,9 +37,10 @@ namespace BlackMisc
                 return s;
             }
 
-            /*
-             * Aircraft model
-             */
+            CAircraftCfgEntries::CAircraftCfgEntries(const QString &fileName, int index) :
+                m_index(index), m_fileName(fileName)
+            { }
+
             QString CAircraftCfgEntries::getFileDirectory() const
             {
                 if (this->m_fileName.isEmpty()) { return ""; }
@@ -63,9 +58,31 @@ namespace BlackMisc
                 return d;
             }
 
-            /*
-             * Convert
-             */
+            void CAircraftCfgEntries::setFileName(const QString &filePath)
+            {
+                this->m_fileName = filePath.trimmed();
+            }
+
+            void CAircraftCfgEntries::setTitle(const QString &title)
+            {
+                this->m_title = title.trimmed();
+            }
+
+            void CAircraftCfgEntries::setAtcModel(const QString &atcModel)
+            {
+                this->m_atcModel = atcModel.trimmed();
+            }
+
+            void CAircraftCfgEntries::setAtcType(const QString &atcType)
+            {
+                this->m_atcType = atcType.trimmed();
+            }
+
+            void CAircraftCfgEntries::setAtcParkingCode(const QString &parkingCode)
+            {
+                this->m_atcParkingCode = parkingCode.trimmed();
+            }
+
             CAircraftModel CAircraftCfgEntries::toAircraftModel() const
             {
                 CAircraftModel model(this->getTitle(), CAircraftModel::TypeModelMapping);
@@ -82,9 +99,6 @@ namespace BlackMisc
                 return fn;
             }
 
-            /*
-             * Get particular column
-             */
             CVariant CAircraftCfgEntries::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
             {
                 if (index.isMyself()) { return this->toCVariant(); }
@@ -112,9 +126,6 @@ namespace BlackMisc
                 }
             }
 
-            /*
-             * Set property as index
-             */
             void CAircraftCfgEntries::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
             {
                 if (index.isMyself()) { this->convertFromCVariant(variant); return; }

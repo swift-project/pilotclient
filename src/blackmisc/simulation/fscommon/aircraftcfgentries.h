@@ -23,11 +23,9 @@ namespace BlackMisc
     {
         namespace FsCommon
         {
-            /*!
-             * Set of aircraft.cfg entries representing an aircraft (FSX)
-             * \remarks an entry in the aircraft.cfg is title, atc type, ... This class already bundles
-             *          relevant entries, hence the class is named Entries (plural)
-             */
+            //! Set of aircraft.cfg entries representing an aircraft (FSX)
+            //! \remarks an entry in the aircraft.cfg is title, atc type, ...
+            //!          This class already bundles relevant entries, hence the class is named Entries (plural)
             class BLACKMISC_EXPORT CAircraftCfgEntries: public BlackMisc::CValueObject<CAircraftCfgEntries>
             {
             public:
@@ -46,6 +44,9 @@ namespace BlackMisc
 
                 //! Default constructor
                 CAircraftCfgEntries() = default;
+
+                //! Entries representing an aircraft
+                CAircraftCfgEntries(const QString &fileName, int index);
 
                 //! Entries representing an aircraft
                 CAircraftCfgEntries(const QString &filePath, int index, const QString &title, const QString &atcType, const QString &atcModel, const QString &atcParkingCode, const QString &description);
@@ -83,26 +84,29 @@ namespace BlackMisc
                 //! Texture
                 QString getTexture() const { return this->m_texture; }
 
+                //! Is Rotorcraft?
+                bool isRotorcraft() const { return m_rotorcraft; }
+
                 //! Manufacturer + type
                 QString getUiCombinedDescription() const;
 
                 //! Filepath
-                void setFileName(const QString &filePath) { this->m_fileName = filePath; }
+                void setFileName(const QString &filePath);
 
                 //! Title
-                void setTitle(const QString &title) { this->m_title = title; }
+                void setTitle(const QString &title);
 
                 //! Index
                 void setIndex(int index) { this->m_index = index; }
 
                 //! ATC model
-                void setAtcModel(const QString &atcModel) { this->m_atcModel = atcModel.trimmed(); }
+                void setAtcModel(const QString &atcModel);
 
                 //! ATC type
-                void setAtcType(const QString &atcType) { this->m_atcType = atcType.trimmed(); }
+                void setAtcType(const QString &atcType);
 
                 //! Parking code
-                void setAtcParkingCode(const QString &parkingCode) { this->m_atcParkingCode = parkingCode.trimmed(); }
+                void setAtcParkingCode(const QString &parkingCode);
 
                 //! Description
                 void setDescription(const QString &description) { this->m_description = description.trimmed(); }
@@ -115,6 +119,9 @@ namespace BlackMisc
 
                 //! UI manufacturer (e.g. Airbus)
                 void setUiManufacturer(const QString &manufacturer) { this->m_uiManufacturer = manufacturer.trimmed(); }
+
+                //! Is Rotorcraft?
+                void setRotorcraft(bool isRotorcraft) { m_rotorcraft = isRotorcraft; }
 
                 //! To aircraft model
                 BlackMisc::Simulation::CAircraftModel toAircraftModel() const;
@@ -133,20 +140,21 @@ namespace BlackMisc
 
             private:
                 BLACK_ENABLE_TUPLE_CONVERSION(CAircraftCfgEntries)
-                int m_index;           //!< current index in given config
-                QString m_fileName;    //!< file name of aircraft.cfg
-                QString m_title;       //!< Title in aircraft.cfg
-                QString m_atcType;     //!< ATC type
-                QString m_atcModel;    //!< ATC model
-                QString m_atcParkingCode; //!< ATC parking code
-                QString m_description; //!< descriptive text
-                QString m_uiType;      //!< e.g. A321-231 IAE
-                QString m_uiManufacturer; //!< e.g. Airbus
-                QString m_texture;     //!< texture, needed to identify thumbnail.jpg
+                int m_index;               //!< current index in given config
+                QString m_fileName;        //!< file name of .cfg
+                QString m_title;           //!< Title in .cfg
+                QString m_atcType;         //!< ATC type
+                QString m_atcModel;        //!< ATC model
+                QString m_atcParkingCode;  //!< ATC parking code
+                QString m_description;     //!< descriptive text
+                QString m_uiType;          //!< e.g. A321-231 IAE
+                QString m_uiManufacturer;  //!< e.g. Airbus
+                QString m_texture;         //!< texture, needed to identify thumbnail.jpg
+                bool m_rotorcraft = false; //!< hint if rotorcraft
             };
-        }
-    }
-}
+        } // ns
+    } // ns
+} // ns
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Simulation::FsCommon::CAircraftCfgEntries, (o.m_index, o.m_fileName, o.m_title, o.m_atcType, o.m_atcModel, o.m_atcParkingCode))
 Q_DECLARE_METATYPE(BlackMisc::Simulation::FsCommon::CAircraftCfgEntries)
