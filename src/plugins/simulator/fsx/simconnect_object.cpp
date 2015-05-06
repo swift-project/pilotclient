@@ -17,5 +17,10 @@ namespace BlackSimPlugin
     namespace Fsx
     {
         CSimConnectObject::CSimConnectObject() { }
+
+        CSimConnectObject::CSimConnectObject(const BlackMisc::Aviation::CCallsign &callsign, int requestId, int objectId, bool vtol) :
+            m_callsign(callsign), m_requestId(requestId), m_objectId(objectId), m_vtol(vtol)
+        { }
+
     } // namespace
 } // namespace

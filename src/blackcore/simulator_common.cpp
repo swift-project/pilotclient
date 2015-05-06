@@ -8,7 +8,8 @@
  */
 
 #include "simulator_common.h"
-#include "interpolator.h"
+#include "blackcore/interpolator.h"
+#include "blackcore/blackcorefreefunctions.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/collection.h"
 
@@ -40,7 +41,7 @@ namespace BlackCore
                      std::bind(&CSimulatorCommon::ps_remoteProviderAddAircraftSituation, this, std::placeholders::_1),
                      std::bind(&CSimulatorCommon::ps_remoteProviderAddAircraftParts, this, std::placeholders::_1),
                      std::bind(&CSimulatorCommon::ps_remoteProviderRemovedAircraft, this, std::placeholders::_1),
-                     std::bind(&CSimulatorCommon::ps_remoteProviderAircraftSnapshot, this, std::placeholders::_1)
+                     std::bind(static_cast<void(CSimulatorCommon::*)(const CAirspaceAircraftSnapshot &)>(&CSimulatorCommon::ps_recalculateRenderedAircraft), this, std::placeholders::_1)
                  );
         Q_ASSERT(c);
         Q_UNUSED(c);
@@ -56,8 +57,8 @@ namespace BlackCore
         // if not restriced, directly change
         if (!isRenderingRestricted()) { return this->physicallyAddRemoteAircraft(remoteAircraft); }
 
-        //! \todo Go thru logic
-        return this->physicallyAddRemoteAircraft(remoteAircraft);
+        // will be added with next snapshot
+        return false;
     }
 
     bool CSimulatorCommon::logicallyRemoveRemoteAircraft(const CCallsign &callsign)
@@ -65,8 +66,8 @@ namespace BlackCore
         // if not restriced, directly change
         if (!isRenderingRestricted()) { return this->physicallyRemoveRemoteAircraft(callsign); }
 
-        //! \todo Go thru logic
-        return this->physicallyRemoveRemoteAircraft(callsign);
+        // will be added with next snapshot
+        return false;
     }
 
     void CSimulatorCommon::blinkHighlightedAircraft()
@@ -104,26 +105,6 @@ namespace BlackCore
         }
     }
 
-    void CSimulatorCommon::recalculateRestrictedAircraft()
-    {
-        if (!isMaxAircraftRestricted()) { return; }
-        if (!isRenderingEnabled()) { return; }
-
-        CSimulatedAircraftList newAircraftInRange(getAircraftInRange().getClosestObjects(getMaxRenderedAircraft()));
-        CCallsignSet newAircraftCallsigns(newAircraftInRange.getCallsigns());
-        CCallsignSet toBeRemovedCallsigns(m_callsignsToBeRendered.difference(newAircraftCallsigns));
-        CCallsignSet toBeAddedCallsigns(newAircraftCallsigns.difference(m_callsignsToBeRendered));
-        for (const CCallsign &cs : toBeRemovedCallsigns)
-        {
-            physicallyRemoveRemoteAircraft(cs);
-        }
-        for (const CCallsign &cs : toBeAddedCallsigns)
-        {
-            physicallyAddRemoteAircraft(newAircraftInRange.findFirstByCallsign(cs));
-        }
-        this->m_callsignsToBeRendered = newAircraftCallsigns;
-    }
-
     void CSimulatorCommon::resetAircraftFromBacked(const CCallsign &callsign)
     {
         CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
@@ -138,7 +119,7 @@ namespace BlackCore
         }
         else
         {
-            physicallyRemoveRemoteAircraft(callsign);
+            this->physicallyRemoveRemoteAircraft(callsign);
         }
     }
 
@@ -147,15 +128,14 @@ namespace BlackCore
         if (!this->m_interpolator) { return; }
 
         const CCallsign callsign(aircraft.getCallsign());
-        if (!(this->remoteAircraftSituationsCount(callsign) < 1)) { return; }
+        if (this->remoteAircraftSituationsCount(callsign) < 1) { return; }
 
         // with an interpolator the interpolated situation is used
         // to avoid position jittering
         qint64 time = QDateTime::currentMSecsSinceEpoch();
-        IInterpolator::InterpolationStatus is;
-        CAircraftSituation as(m_interpolator->getInterpolatedSituation(callsign, time, aircraft.isVtol(), is));
-        if (is.interpolationSucceeded) { aircraft.setSituation(as); }
-
+        IInterpolator::InterpolationStatus interpolationStatus;
+        CAircraftSituation as(m_interpolator->getInterpolatedSituation(callsign, time, aircraft.isVtol(), interpolationStatus));
+        if (interpolationStatus.interpolationSucceeded) { aircraft.setSituation(as); }
     }
 
     int CSimulatorCommon::getMaxRenderedAircraft() const
@@ -180,24 +160,24 @@ namespace BlackCore
         }
 
         bool r = isRenderingRestricted();
-        emit restrictedRenderingChanged(r);
+        emit renderRestrictionsChanged(r, getMaxRenderedAircraft(), getMaxRenderedDistance(), getRenderedDistanceBoundary());
     }
 
     void CSimulatorCommon::setMaxRenderedDistance(CLength &distance)
     {
         if (distance == m_maxRenderedDistance) { return; }
-        if (distance.isNull() || distance >= getRenderedDistanceBoundary())
+        if (distance.isNull() || distance > getRenderedDistanceBoundary() || distance.isNegativeWithEpsilonConsidered())
         {
             m_maxRenderedDistance = CLength(0.0, CLengthUnit::nullUnit());
         }
         else
         {
-            Q_ASSERT(distance.isPositiveWithEpsilonConsidered());
+            Q_ASSERT(!distance.isNegativeWithEpsilonConsidered());
             m_maxRenderedDistance = distance;
         }
 
         bool r = isRenderingRestricted();
-        emit restrictedRenderingChanged(r);
+        emit renderRestrictionsChanged(r, getMaxRenderedAircraft(), getMaxRenderedDistance(), getRenderedDistanceBoundary());
     }
 
     CLength CSimulatorCommon::getMaxRenderedDistance() const
@@ -223,7 +203,7 @@ namespace BlackCore
 
     bool CSimulatorCommon::isMaxAircraftRestricted() const
     {
-        return m_maxRenderedAircraft < MaxAircraftInfinite && isRenderingEnabled();
+        return m_maxRenderedAircraft < MaxAircraftInfinite;
     }
 
     bool CSimulatorCommon::isMaxDistanceRestricted() const
@@ -258,8 +238,7 @@ namespace BlackCore
     {
         if (m_maxRenderedAircraft < 1)  { return false; }
         if (!isMaxDistanceRestricted()) { return true; }
-
-        return m_maxRenderedDistance.valueRounded(CLengthUnit::NM(), 2) > 0.1;
+        return m_maxRenderedDistance.isPositiveWithEpsilonConsidered();
     }
 
     bool CSimulatorCommon::isRenderingRestricted() const
@@ -269,22 +248,24 @@ namespace BlackCore
 
     void CSimulatorCommon::deleteAllRenderingRestrictions()
     {
-        if (!isRenderingEnabled()) { return; }
         this->m_maxRenderedDistance = CLength(0, CLengthUnit::nullUnit());
         this->m_maxRenderedAircraft = MaxAircraftInfinite;
-        emit restrictedRenderingChanged(false);
+        emit renderRestrictionsChanged(false, getMaxRenderedAircraft(), getMaxRenderedDistance(), getRenderedDistanceBoundary());
+    }
+
+    bool CSimulatorCommon::physicallyRemoveMultipleRemoteAircraft(const CCallsignSet &callsigns)
+    {
+        int removed = 0;
+        for (const CCallsign &callsign : callsigns)
+        {
+            if (physicallyRemoveRemoteAircraft(callsign)) { removed++; }
+        }
+        return removed > 0;
     }
 
     void CSimulatorCommon::ps_oneSecondTimer()
     {
-        m_timerCounter++;
         blinkHighlightedAircraft();
-
-        // any <n> seconds
-        if (m_timerCounter % 10 == 0)
-        {
-            recalculateRestrictedAircraft();
-        }
     }
 
     void CSimulatorCommon::ps_recalculateRenderedAircraft()
@@ -294,9 +275,39 @@ namespace BlackCore
 
     void CSimulatorCommon::ps_recalculateRenderedAircraft(const CAirspaceAircraftSnapshot &snapshot)
     {
-        if (!snapshot.isValidSnapshot()) { return;}
-        CCallsignSet callsignsInSimuator(physicallyRenderedAircraft());
+        Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
 
+        if (!snapshot.isValidSnapshot()) { return;}
+
+        // for unrestricted values all add/remove actions are directly linked
+        // when changing back from restricted->unrestricted an one time update is required
+        if (!snapshot.isRestricted() && !snapshot.isRestrictionChanged()) { return; }
+
+        // we will handle snapshot
+        emit airspaceSnapshotHandled();
+
+
+        // restricted snapshot values
+        if (!snapshot.isRenderingEnabled())
+        {
+            this->physicallyRemoveAllRemoteAircraft();
+            return;
+        }
+
+        CCallsignSet callsignsInSimulator(physicallyRenderedAircraft());
+        CCallsignSet callsignsToBeRemoved(callsignsInSimulator.difference(snapshot.getEnabledAircraftCallsignsByDistance()));
+        CCallsignSet callsignsToBeAdded(snapshot.getEnabledAircraftCallsignsByDistance().difference(callsignsInSimulator));
+        this->physicallyRemoveMultipleRemoteAircraft(callsignsToBeRemoved);
+
+        if (!callsignsToBeAdded.isEmpty())
+        {
+            CSimulatedAircraftList aircraftToBeAdded(getAircraftInRange().findByCallsigns(callsignsToBeAdded)); // thread safe copy
+            for (const CSimulatedAircraft &aircraft : aircraftToBeAdded)
+            {
+                Q_ASSERT_X(aircraft.isEnabled(), Q_FUNC_INFO, "Disabled aircraft detected as to be added");
+                this->physicallyAddRemoteAircraft(aircraft);
+            }
+        }
     }
 
     void CSimulatorCommon::ps_remoteProviderAddAircraftSituation(const CAircraftSituation &situation)
@@ -312,11 +323,6 @@ namespace BlackCore
     void CSimulatorCommon::ps_remoteProviderRemovedAircraft(const CCallsign &callsign)
     {
         Q_UNUSED(callsign);
-    }
-
-    void CSimulatorCommon::ps_remoteProviderAircraftSnapshot(const CAirspaceAircraftSnapshot &aircraftSnapshot)
-    {
-        ps_recalculateRenderedAircraft(aircraftSnapshot);
     }
 
 } // namespace

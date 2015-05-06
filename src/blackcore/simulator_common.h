@@ -83,7 +83,10 @@ namespace BlackCore
         virtual const BlackMisc::Simulation::CSimulatorSetup &getSimulatorSetup() const override;
 
         //! \copydoc IContextSimulator::deleteAllRenderingRestrictions
-        virtual void deleteAllRenderingRestrictions();
+        virtual void deleteAllRenderingRestrictions() override;
+
+        //! \copydoc IContextSimulator::physicallyRemoveRemoteAircraft
+        virtual bool physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) override;
 
     protected slots:
         //! Slow timer used to highlight aircraft, can be used for other things too
@@ -104,9 +107,6 @@ namespace BlackCore
         //! Provider removed aircraft
         virtual void ps_remoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
-        //! Provider aircraft snapshot
-        virtual void ps_remoteProviderAircraftSnapshot(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &aircraftSnapshot);
-
     protected:
         //! Constructor
         CSimulatorCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
@@ -122,9 +122,6 @@ namespace BlackCore
 
         //! Blink the highlighted aircraft
         void blinkHighlightedAircraft();
-
-        //! Recalculate the restricted aircraft
-        void recalculateRestrictedAircraft();
 
         //! Restore aircraft from backedn data
         void resetAircraftFromBacked(const BlackMisc::Aviation::CCallsign &callsign);

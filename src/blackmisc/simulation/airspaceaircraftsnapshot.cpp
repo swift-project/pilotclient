@@ -10,6 +10,7 @@
 #include "airspaceaircraftsnapshot.h"
 
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
 {
@@ -18,25 +19,83 @@ namespace BlackMisc
         CAirspaceAircraftSnapshot::CAirspaceAircraftSnapshot()
         { }
 
-        CAirspaceAircraftSnapshot::CAirspaceAircraftSnapshot(const CSimulatedAircraftList &allAircraft) :
-            m_timestampMsSinceEpoch(QDateTime::currentMSecsSinceEpoch())
+        CAirspaceAircraftSnapshot::CAirspaceAircraftSnapshot(
+            const CSimulatedAircraftList &allAircraft,
+            bool restricted, int maxAircraft, const CLength &maxRenderedDistance, const CLength &maxRenderedBoundary) :
+            m_timestampMsSinceEpoch(QDateTime::currentMSecsSinceEpoch()),
+            m_restricted(restricted)
         {
-            if (!allAircraft.isEmpty())
+            m_renderingEnabled = !restricted || (
+                                     maxAircraft > 0 &&
+                                     (maxRenderedBoundary.isNull() || maxRenderedBoundary.isPositiveWithEpsilonConsidered()) &&
+                                     (maxRenderedDistance.isNull() || maxRenderedDistance.isPositiveWithEpsilonConsidered())
+                                 );
+            if (allAircraft.isEmpty()) { return; }
+
+            CSimulatedAircraftList aircraft(allAircraft);
+            aircraft.sortByDistanceToOwnAircraft();
+            CSimulatedAircraftList vtolAircraft(aircraft.findByVtol(true));
+            m_aircraftCallsignsByDistance = aircraft.getCallsigns();
+            m_vtolAircraftCallsignsByDistance = vtolAircraft.getCallsigns();
+
+            if (!restricted)
             {
-                CSimulatedAircraftList aircraft(allAircraft);
-                aircraft.sortByDistanceToOwnAircraft();
-                CSimulatedAircraftList vtolAircraft(aircraft.findByVtol(true));
-                m_aircraftCallsignsByDistance = aircraft.getCallsigns();
                 m_enabledAircraftCallsignsByDistance = aircraft.findByEnabled(true).getCallsigns();
                 m_disabledAircraftCallsignsByDistance = aircraft.findByEnabled(false).getCallsigns();
-                m_vtolAircraftCallsignsByDistance = vtolAircraft.getCallsigns();
                 m_enabledVtolAircraftCallsignsByDistance = vtolAircraft.findByEnabled(true).getCallsigns();
+            }
+            else
+            {
+                // if no rendering all aircraft are disabled
+                if (!m_renderingEnabled)
+                {
+                    m_disabledAircraftCallsignsByDistance = aircraft.getCallsigns();
+                    return;
+                }
+
+                int count = 0;
+                for (const CSimulatedAircraft &currentAircraft : aircraft)
+                {
+                    CCallsign cs(currentAircraft.getCallsign());
+                    if (currentAircraft.isEnabled())
+                    {
+                        CLength distance(currentAircraft.getDistanceToOwnAircraft());
+                        if (count >= maxAircraft ||
+                                (!maxRenderedDistance.isNull() && distance >= maxRenderedBoundary) ||
+                                (!maxRenderedBoundary.isNull() && distance >= maxRenderedBoundary))
+                        {
+                            m_disabledAircraftCallsignsByDistance.push_back(cs);
+                        }
+                        else
+                        {
+                            count++;
+                            m_enabledAircraftCallsignsByDistance.push_back(cs);
+                            if (currentAircraft.isVtol()) { m_enabledVtolAircraftCallsignsByDistance.push_back(cs); }
+                        }
+                    }
+                    else
+                    {
+                        m_disabledAircraftCallsignsByDistance.push_back(cs);
+                    }
+                }
             }
         }
 
         bool CAirspaceAircraftSnapshot::isValidSnapshot() const
         {
             return m_timestampMsSinceEpoch > 0;
+        }
+
+        void CAirspaceAircraftSnapshot::setRestrictionChanged(const CAirspaceAircraftSnapshot &snapshot)
+        {
+            if (this->isValidSnapshot() == snapshot.isValidSnapshot())
+            {
+                this->m_restrictionChanged = (snapshot.m_restricted != this->m_restricted);
+            }
+            else
+            {
+                this->m_restrictionChanged = true;
+            }
         }
 
         CVariant CAirspaceAircraftSnapshot::propertyByIndex(const CPropertyIndex &index) const

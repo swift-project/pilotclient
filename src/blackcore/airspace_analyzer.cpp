@@ -63,6 +63,15 @@ namespace BlackCore
         return m_latestAircraftSnapshot;
     }
 
+    void CAirspaceAnalyzer::setSimulatorRenderRestrictionsChanged(bool restricted, int maxAircraft, const CLength &maxRenderedDistance, const CLength &maxRenderedBoundary)
+    {
+        QWriteLocker l(&m_lockRestrictions);
+        this->m_simulatorRenderedAircraftRestricted = restricted;
+        this->m_simulatorMaxRenderedAircraft = maxAircraft;
+        this->m_simulatorMaxRenderedDistance = maxRenderedDistance;
+        this->m_simulatorMaxRenderedBoundary = maxRenderedBoundary;
+    }
+
     void CAirspaceAnalyzer::ps_watchdogTouchAircraftCallsign(const CAircraftSituation &situation, const CTransponder &transponder)
     {
         Q_ASSERT_X(!situation.getCallsign().isEmpty(), Q_FUNC_INFO, "No callsign in situaton");
@@ -150,16 +159,28 @@ namespace BlackCore
 
     void CAirspaceAnalyzer::analyzeAirspace()
     {
+        bool restricted;
+        int maxAircraft;
+        CLength maxRenderedDistance, maxRenderedBoundary;
+        {
+            QReadLocker l(&m_lockRestrictions);
+            restricted = this->m_simulatorRenderedAircraftRestricted;
+            maxAircraft = this->m_simulatorMaxRenderedAircraft;
+            maxRenderedDistance = this->m_simulatorMaxRenderedDistance;
+            maxRenderedBoundary = this->m_simulatorMaxRenderedBoundary;
+        }
+
         CAirspaceAircraftSnapshot snapshot(
-            getAircraftInRange() // thread safe copy
+            getAircraftInRange(), // thread safe copy
+            restricted, maxAircraft, maxRenderedDistance, maxRenderedBoundary
         );
 
         // lock block
         {
             QWriteLocker l(&m_lockSnapshot);
+            snapshot.setRestrictionChanged(m_latestAircraftSnapshot);
             m_latestAircraftSnapshot = snapshot;
         }
-
         emit airspaceAircraftSnapshot(snapshot);
     }
 

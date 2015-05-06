@@ -269,6 +269,11 @@ namespace BlackCore
 
         //! Connection status changed
         void ps_fsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to);
+
+        //! Render restrictions have been changed, used with analyzer
+        //! \sa CAirspaceAnalyzer
+        void ps_simulatorRenderRestrictionsChanged(bool restricted, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance, const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary);
+
     };
 }
 

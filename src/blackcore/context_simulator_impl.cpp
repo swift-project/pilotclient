@@ -126,10 +126,7 @@ namespace BlackCore
     BlackMisc::Simulation::CSimulatorPluginInfo CContextSimulator::getSimulatorPluginInfo() const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin)
-        {
-            return BlackMisc::Simulation::CSimulatorPluginInfo();
-        }
+        if (!m_simulatorPlugin) { return BlackMisc::Simulation::CSimulatorPluginInfo(); }
 
         Q_ASSERT(m_simulatorPlugin->simulator);
         return m_simulatorPlugin->info;
@@ -208,10 +205,7 @@ namespace BlackCore
     CAircraftIcao CContextSimulator::getIcaoForModelString(const QString &modelString) const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << modelString; }
-        if (!m_simulatorPlugin)
-        {
-            return CAircraftIcao();
-        }
+        if (!m_simulatorPlugin) { return CAircraftIcao(); }
 
         Q_ASSERT(m_simulatorPlugin->simulator);
         return m_simulatorPlugin->simulator->getIcaoForModelString(modelString);
@@ -220,17 +214,11 @@ namespace BlackCore
     bool CContextSimulator::setTimeSynchronization(bool enable, CTime offset)
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin)
-        {
-            return false;
-        }
+        if (!m_simulatorPlugin) { return false; }
 
         Q_ASSERT(m_simulatorPlugin->simulator);
         bool c = m_simulatorPlugin->simulator->setTimeSynchronization(enable, offset);
-        if (!c)
-        {
-            return false;
-        }
+        if (!c) { return false; }
 
         CLogMessage(this).info(enable ? QStringLiteral("Set time syncronization to %1").arg(offset.toQString()) : QStringLiteral("Disabled time syncrhonization"));
         return true;
@@ -239,10 +227,7 @@ namespace BlackCore
     bool CContextSimulator::isTimeSynchronized() const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin)
-        {
-            return false;
-        }
+        if (!m_simulatorPlugin) { return false; }
 
         Q_ASSERT(m_simulatorPlugin->simulator);
         return m_simulatorPlugin->simulator->isTimeSynchronized();
@@ -336,21 +321,23 @@ namespace BlackCore
     bool CContextSimulator::isRenderingRestricted() const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin)
-        {
-            return false;
-        }
+        if (!m_simulatorPlugin) { return false; }
         Q_ASSERT(m_simulatorPlugin->simulator);
         return this->m_simulatorPlugin->simulator->isRenderingRestricted();
+    }
+
+    bool CContextSimulator::isRenderingEnabled() const
+    {
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (!m_simulatorPlugin) { return false; }
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        return this->m_simulatorPlugin->simulator->isRenderingEnabled();
     }
 
     CTime CContextSimulator::getTimeSynchronizationOffset() const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin)
-        {
-            return CTime(0, CTimeUnit::hrmin());
-        }
+        if (!m_simulatorPlugin) { return CTime(0, CTimeUnit::hrmin()); }
         Q_ASSERT(m_simulatorPlugin->simulator);
         return this->m_simulatorPlugin->simulator->getTimeSynchronizationOffset();
     }
@@ -386,15 +373,25 @@ namespace BlackCore
         plugin->simulator = newSimulator;
         m_simulatorPlugin = plugin;
 
-        connect(m_simulatorPlugin->simulator, &ISimulator::simulatorStatusChanged, this, &CContextSimulator::ps_onSimulatorStatusChanged);
-        connect(m_simulatorPlugin->simulator, &ISimulator::ownAircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
-        connect(m_simulatorPlugin->simulator, &ISimulator::modelMatchingCompleted, this, &IContextSimulator::modelMatchingCompleted);
-        connect(m_simulatorPlugin->simulator, &ISimulator::installedAircraftModelsChanged, this, &IContextSimulator::installedAircraftModelsChanged);
-        connect(m_simulatorPlugin->simulator, &ISimulator::restrictedRenderingChanged, this, &IContextSimulator::restrictedRenderingChanged);
+        bool c = connect(m_simulatorPlugin->simulator, &ISimulator::simulatorStatusChanged, this, &CContextSimulator::ps_onSimulatorStatusChanged);
+        Q_ASSERT(c);
+        c = connect(m_simulatorPlugin->simulator, &ISimulator::ownAircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
+        Q_ASSERT(c);
+        c = connect(m_simulatorPlugin->simulator, &ISimulator::modelMatchingCompleted, this, &IContextSimulator::modelMatchingCompleted);
+        Q_ASSERT(c);
+        c = connect(m_simulatorPlugin->simulator, &ISimulator::installedAircraftModelsChanged, this, &IContextSimulator::installedAircraftModelsChanged);
+        Q_ASSERT(c);
+        c = connect(m_simulatorPlugin->simulator, &ISimulator::renderRestrictionsChanged, this, &IContextSimulator::renderRestrictionsChanged);
+        Q_ASSERT(c);
+        c = connect(m_simulatorPlugin->simulator, &ISimulator::airspaceSnapshotHandled, this, &IContextSimulator::airspaceSnapshotHandled);
+        Q_ASSERT(c);
 
         // log from context to simulator
-        connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, m_simulatorPlugin->simulator, &ISimulator::displayStatusMessage);
-        connect(CLogHandler::instance(), &CLogHandler::remoteMessageLogged, m_simulatorPlugin->simulator, &ISimulator::displayStatusMessage);
+        c = connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, m_simulatorPlugin->simulator, &ISimulator::displayStatusMessage);
+        Q_ASSERT(c);
+        c = connect(CLogHandler::instance(), &CLogHandler::remoteMessageLogged, m_simulatorPlugin->simulator, &ISimulator::displayStatusMessage);
+        Q_ASSERT(c);
+        Q_UNUSED(c);
 
         // connect with network
         IContextNetwork *networkContext = this->getIContextNetwork();
@@ -414,6 +411,7 @@ namespace BlackCore
         m_simulatorPlugin->simulator->asyncConnectTo();
 
         // info about what is going on
+        emit simulatorPluginChanged(this->m_simulatorPlugin->info);
         CLogMessage(this).info("Simulator plugin loaded: %1") << this->m_simulatorPlugin->info.toQString(true);
         return true;
     }
@@ -532,6 +530,8 @@ namespace BlackCore
         if (m_simulatorPlugin)
         {
             // depending on shutdown order, network might already have been deleted
+            emit simulatorPluginChanged(CSimulatorPluginInfo());
+
             IContextNetwork *networkContext = this->getIContextNetwork();
             Q_ASSERT(networkContext);
             Q_ASSERT(networkContext->isLocalObject());
@@ -543,7 +543,9 @@ namespace BlackCore
             this->disconnect(m_simulatorPlugin->simulator);
 
             if (m_simulatorPlugin->simulator->isConnected())
+            {
                 m_simulatorPlugin->simulator->disconnectFrom(); // disconnect from simulator
+            }
 
             m_simulatorPlugin->simulator->deleteLater();
             m_simulatorPlugin->simulator = nullptr;

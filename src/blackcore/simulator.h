@@ -154,6 +154,9 @@ namespace BlackCore
         //! Is there a restriction? No rendering -> limited number of aircraft -> unlimited number of aircraft
         virtual bool isRenderingRestricted() const = 0;
 
+        //! Is rendering enabled?
+        virtual bool isRenderingEnabled() const = 0;
+
         //! Delete all restrictions (if any) -> unlimited number of aircraft
         virtual void deleteAllRenderingRestrictions() = 0;
 
@@ -171,9 +174,6 @@ namespace BlackCore
         //! Highlight the aircraft for given time (or disable highlight)
         virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) = 0;
 
-        //! Is rendering enabled
-        virtual bool isRenderingEnabled() const = 0;
-
         //! Originator
         const QString &simulatorOriginator();
 
@@ -184,14 +184,17 @@ namespace BlackCore
         //! Emitted when own aircraft model has changed
         void ownAircraftModelChanged(BlackMisc::Simulation::CSimulatedAircraft aircraft);
 
-        //! Only a limited number of aircraft displayed
-        void restrictedRenderingChanged(bool restricted);
+        //! Render restrictions have been changed
+        void renderRestrictionsChanged(bool restricted, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance, const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary);
 
         //! A single model has been matched
         void modelMatchingCompleted(BlackMisc::Simulation::CSimulatedAircraft aircraft);
 
         //! Installed aircraft models ready or changed
         void installedAircraftModelsChanged();
+
+        //! An airspace snapshot was handled
+        void airspaceSnapshotHandled();
 
     protected:
         //! Default constructor
@@ -203,6 +206,9 @@ namespace BlackCore
 
         //! Remove remote aircraft from simulator
         virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
+        //! Remove remote aircraft from simulator
+        virtual bool physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) = 0;
 
         //! Remove all remote aircraft
         virtual void physicallyRemoveAllRemoteAircraft() = 0;

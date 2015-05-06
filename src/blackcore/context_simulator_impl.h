@@ -118,6 +118,9 @@ namespace BlackCore
         //! \copydoc IContextSimulator::isRenderingRestricted
         virtual bool isRenderingRestricted() const override;
 
+        //! \copydoc IContextSimulator::isRenderingEnabled
+        virtual bool isRenderingEnabled() const override;
+
         //! \copydoc IContextSimulator::getTimeSynchronizationOffset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
 

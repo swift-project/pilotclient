@@ -49,7 +49,13 @@ namespace BlackCore
                                "modelMatchingCompleted", this, SIGNAL(modelMatchingCompleted(BlackMisc::Simulation::CSimulatedAircraft)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                               "restrictedRenderingChanged", this, SIGNAL(restrictedRenderingChanged(bool)));
+                               "renderRestrictionsChanged", this, SIGNAL(renderRestrictionsChanged(bool, int, BlackMisc::PhysicalQuantities::CLength, BlackMisc::PhysicalQuantities::CLength)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                               "simulatorPluginChanged", this, SIGNAL(simulatorPluginChanged(BlackMisc::Simulation::CSimulatorPluginInfo &)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                               "airspaceSnapshotHandled", this, SIGNAL(airspaceSnapshotHandled()));
         Q_ASSERT(s);
         Q_UNUSED(s);
     }
@@ -142,6 +148,11 @@ namespace BlackCore
     bool CContextSimulatorProxy::isRenderingRestricted() const
     {
         return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isRenderingRestricted"));
+    }
+
+    bool CContextSimulatorProxy::isRenderingEnabled() const
+    {
+        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isRenderingEnabled"));
     }
 
     CLength CContextSimulatorProxy::getMaxRenderedDistance() const

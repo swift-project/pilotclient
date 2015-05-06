@@ -8,7 +8,8 @@
  */
 
 #include "simulator_fsx.h"
-#include "simconnect_datadefinition.h"
+#include "blackcore/interpolator_linear.h"
+#include "blackcore/blackcorefreefunctions.h"
 #include "blackmisc/simulation/fscommon/bcdconversions.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
 #include "blackmisc/simulation/fsx/fsxsimulatorsetup.h"
@@ -18,7 +19,6 @@
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/aircraftmappinglist.h"
-#include "blackcore/interpolator_linear.h"
 
 #include <QTimer>
 #include <type_traits>
@@ -51,7 +51,6 @@ namespace BlackSimPlugin
 
             m_useFsuipc = false; // do not use FSUIPC at the moment with FSX
             this->m_interpolator = new CInterpolatorLinear(remoteAircraftProvider, this);
-            this->m_interpolator->start();
         }
 
         CSimulatorFsx::~CSimulatorFsx()
@@ -139,8 +138,9 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsx::physicallyAddRemoteAircraft(const Simulation::CSimulatedAircraft &newRemoteAircraft)
         {
-            CCallsign callsign = newRemoteAircraft.getCallsign();
-            Q_ASSERT(!callsign.isEmpty());
+            CCallsign callsign(newRemoteAircraft.getCallsign());
+            Q_ASSERT_X(BlackCore::isCurrentThreadCreatingThread(this),  Q_FUNC_INFO, "thread");
+            Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
             if (callsign.isEmpty()) { return false; }
 
             bool aircraftAlreadyExistsInSim = this->m_simConnectObjects.contains(callsign);
@@ -155,10 +155,7 @@ namespace BlackSimPlugin
             this->setInitialAircraftSituationAndParts(newRemoteAircraftCopy); // set interpolated data/parts if available
             SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxInitPosition(newRemoteAircraftCopy.getSituation());
 
-            CSimConnectObject simObj;
-            simObj.setCallsign(callsign);
-            simObj.setRequestId(m_nextObjID);
-            simObj.setObjectId(0);
+            CSimConnectObject simObj(callsign, m_nextObjID, 0, newRemoteAircraft.isVtol());
             ++m_nextObjID;
 
             // matched models
@@ -519,6 +516,7 @@ namespace BlackSimPlugin
         bool CSimulatorFsx::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
         {
             // only remove from sim
+            Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
             if (!m_simConnectObjects.contains(callsign)) { return false; }
             return physicallyRemoveRemoteAircraft(m_simConnectObjects.value(callsign));
         }
@@ -622,8 +620,8 @@ namespace BlackSimPlugin
         void CSimulatorFsx::updateRemoteAircraft()
         {
             static_assert(sizeof(DataDefinitionRemoteAircraftParts) == 120, "DataDefinitionRemoteAircraftParts has an incorrect size.");
-            Q_ASSERT(this->m_interpolator);
-            Q_ASSERT_X(this->m_interpolator->thread() != this->thread(), Q_FUNC_INFO, "interpolator should run in its own thread");
+            Q_ASSERT_X(this->m_interpolator, Q_FUNC_INFO, "missing interpolator");
+            Q_ASSERT_X(BlackCore::isCurrentThreadCreatingThread(this), Q_FUNC_INFO, "thread");
 
             // nothing to do, reset request id and exit
             if (this->isPaused()) { return; } // no interpolation while paused
@@ -635,19 +633,18 @@ namespace BlackSimPlugin
 
             // values used for position and parts
             bool isOnGround = false;
-            bool isVtolAircraft = false; //! \todo determine VTOL aircraft in interpolator
-
             qint64 currentTimestamp = QDateTime::currentMSecsSinceEpoch();
             CCallsignSet aircraftWithParts(this->remoteAircraftSupportingParts()); // optimization, fetch all parts supporting aircraft in one step (one lock)
 
-            for (const CSimConnectObject &simObj : m_simConnectObjects)
+            const QList<CSimConnectObject> simObjects(m_simConnectObjects.values());
+            for (const CSimConnectObject &simObj : simObjects)
             {
                 if (simObj.getObjectId() < 1) { continue; }
 
                 const CCallsign callsign(simObj.getCallsign());
                 Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
                 IInterpolator::InterpolationStatus interpolatorStatus;
-                CAircraftSituation interpolatedSituation = this->m_interpolator->getInterpolatedSituation(callsign, currentTimestamp, isVtolAircraft, interpolatorStatus);
+                CAircraftSituation interpolatedSituation = this->m_interpolator->getInterpolatedSituation(callsign, currentTimestamp, simObj.isVtol(), interpolatorStatus);
 
                 // having the onGround flag in parts forces me to obtain parts here
                 // which is not the smartest thing regarding performance

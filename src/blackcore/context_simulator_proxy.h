@@ -108,6 +108,9 @@ namespace BlackCore
         //! \copydoc IContextSimulator::isRenderingRestricted
         virtual bool isRenderingRestricted() const override;
 
+        //! \copydoc IContextSimulator::isRenderingEnabled
+        virtual bool isRenderingEnabled() const override;
+
         //! \copydoc IContextSimulator::getMaxRenderedDistance
         virtual BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const override;
 

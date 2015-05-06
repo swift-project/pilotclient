@@ -436,6 +436,13 @@ namespace BlackCore
         emit this->connectionStatusChanged(from, to);
     }
 
+    void CContextNetwork::ps_simulatorRenderRestrictionsChanged(bool restricted, int maxAircraft, const CLength &maxRenderedDistance, const CLength &maxRenderedBoundary)
+    {
+        if (!m_airspace) { return; }
+        if (!m_airspace->analyzer()) { return; }
+        m_airspace->analyzer()->setSimulatorRenderRestrictionsChanged(restricted, maxAircraft, maxRenderedDistance, maxRenderedBoundary);
+    }
+
     void CContextNetwork::ps_dataFileRead()
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }

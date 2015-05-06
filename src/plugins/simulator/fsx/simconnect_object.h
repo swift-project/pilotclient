@@ -28,6 +28,9 @@ namespace BlackSimPlugin
             //! Constructor
             CSimConnectObject();
 
+            //! Constructor
+            CSimConnectObject(const BlackMisc::Aviation::CCallsign &callsign, int requestId, int objectId, bool vtol);
+
             //! Destructor
             ~CSimConnectObject() {}
 
@@ -49,11 +52,17 @@ namespace BlackSimPlugin
             //! Set Simconnect object id
             int getObjectId() const { return m_objectId; }
 
-        private:
+            //! VTOL?
+            bool isVtol() const { return m_vtol; }
 
+            //! VTOL?
+            void setVtol(bool vtol) { m_vtol =  vtol; }
+
+        private:
             BlackMisc::Aviation::CCallsign m_callsign;
             int m_requestId = -1;
             int m_objectId  = -1;
+            bool m_vtol = false;
         };
     } // namespace
 } // namespace

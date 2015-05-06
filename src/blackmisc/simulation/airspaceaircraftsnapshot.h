@@ -29,7 +29,13 @@ namespace BlackMisc
             CAirspaceAircraftSnapshot();
 
             //! Constructor
-            CAirspaceAircraftSnapshot(const BlackMisc::Simulation::CSimulatedAircraftList &allAircraft);
+            CAirspaceAircraftSnapshot(
+                const BlackMisc::Simulation::CSimulatedAircraftList &allAircraft,
+                bool restricted = false,
+                int maxAircraft = 100,
+                const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance = BlackMisc::PhysicalQuantities::CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()),
+                const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary = BlackMisc::PhysicalQuantities::CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit())
+            );
 
             //! Time when snapshot was taken
             const QDateTime getTimestamp() const { return QDateTime::fromMSecsSinceEpoch(m_timestampMsSinceEpoch); }
@@ -52,6 +58,21 @@ namespace BlackMisc
             //! Valid snapshot?
             bool isValidSnapshot() const;
 
+            //! Restricted snapshot?
+            bool isValidRestricted() const { return m_restricted; }
+
+            //! Did restriction change compared to last snapshot
+            void setRestrictionChanged(const CAirspaceAircraftSnapshot &snapshot);
+
+            //! Did the restriction flag change?
+            bool isRestrictionChanged() const { return m_restrictionChanged; }
+
+            //! Restricted values?
+            bool isRestricted() const { return m_restricted; }
+
+            //! Rendering enabled or all aircraft disabled?
+            bool isRenderingEnabled() const { return m_renderingEnabled; }
+
             //! \copydoc CValueObject::propertyByIndex
             virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
@@ -65,6 +86,9 @@ namespace BlackMisc
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAirspaceAircraftSnapshot)
             qint64 m_timestampMsSinceEpoch = -1;
+            bool m_restricted = false;
+            bool m_restrictionChanged = false;
+            bool m_renderingEnabled = true;
 
             // remark closest aircraft always first
             BlackMisc::Aviation::CCallsignSet m_aircraftCallsignsByDistance;

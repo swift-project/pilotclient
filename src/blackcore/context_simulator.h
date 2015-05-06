@@ -71,17 +71,23 @@ namespace BlackCore
         //! \sa ISimulator::SimulatorStatus
         void simulatorStatusChanged(int status);
 
-        //! Only a limited number of aircraft displayed
-        void restrictedRenderingChanged(bool restricted);
+        //! Simulator plugin loaded / unloaded (default info)
+        void simulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
+
+        //! Render restrictions have been changed
+        void renderRestrictionsChanged(bool restricted, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance, const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary);
 
         //! Installed aircraft models ready or changed
         void installedAircraftModelsChanged();
 
         //! A single model has been matched for given aircraft
-        void modelMatchingCompleted(BlackMisc::Simulation::CSimulatedAircraft aircraft);
+        void modelMatchingCompleted(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
         //! Emitted when own aircraft model changes
-        void ownAircraftModelChanged(BlackMisc::Simulation::CSimulatedAircraft aircraft);
+        void ownAircraftModelChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+        //! An airspace snapshot was handled
+        void airspaceSnapshotHandled();
 
     public slots:
         //! Return list of available simulator plugins
@@ -153,8 +159,11 @@ namespace BlackCore
         //! Delete all restrictions (if any) -> unlimited number of aircraft
         virtual void deleteAllRenderingRestrictions() = 0;
 
-        //! Is number of aircraft restricted
+        //! Is number of aircraft restricted ormax distance set?
         virtual bool isRenderingRestricted() const = 0;
+
+        //! Rendering enabled at all
+        virtual bool isRenderingEnabled() const = 0;
 
         //! Time synchronization offset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
@@ -164,13 +173,13 @@ namespace BlackCore
 
         //! Load specific simulator plugin as set in settings
         virtual bool loadSimulatorPluginFromSettings() = 0;
-        
+
         //! Listen for the specific simulator to start, load plugin automatically
         virtual void listenForSimulator(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) = 0;
-        
+
         //! Listen for all available simulators
         virtual void listenForAllSimulators() = 0;
-        
+
         //! Listen for simulator as set in settings
         virtual void listenForSimulatorFromSettings() = 0;
 

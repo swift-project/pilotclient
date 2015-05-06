@@ -160,6 +160,9 @@ namespace BlackCore
         //! Enable interim position sending
         void enableFastPositionSending(bool enable);
 
+        //! Analyzer
+        CAirspaceAnalyzer *analyzer() const { return m_analyzer; }
+
         static const qint64 AircraftSituationsRemovedOffsetMs = 30 * 1000; //!< situations older than now - offset will be removed
         static const qint64 AircraftPartsRemoveOffsetMs = 30 * 1000;       //!< parts older than now - offset will be removed
 

@@ -57,7 +57,6 @@ namespace BlackSimPlugin
             connect(fs9Host.data(), &CFs9Host::customPacketReceived, this, &CSimulatorFs9::ps_processFs9Message);
 
             this->m_interpolator = new BlackCore::CInterpolatorLinear(remoteAircraftProvider, this);
-            this->m_interpolator->start();
         }
 
         bool CSimulatorFs9::isConnected() const
