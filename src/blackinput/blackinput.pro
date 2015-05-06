@@ -40,7 +40,7 @@ macx {
     HEADERS += $$PWD/osx/*.h
     SOURCES += $$PWD/osx/*.cpp
     OBJECTIVE_SOURCES += $$PWD/osx/*.mm
-    LIBS *= -framework CoreFoundation -framework ApplicationServices -framework Foundation -framework AppKit
+    LIBS += -framework CoreFoundation -framework ApplicationServices -framework Foundation -framework AppKit
 }
 
 DESTDIR = $$BuildRoot/lib
