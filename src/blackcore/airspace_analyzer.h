@@ -55,6 +55,9 @@ namespace BlackCore
         //! Render restrictions in simulator
         void setSimulatorRenderRestrictionsChanged(bool restricted, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance, const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary);
 
+        //! Gracefully shut down, e.g. for thread safety
+        void gracefulShutdown();
+
     public slots:
         //! Clear
         void clear();
@@ -96,7 +99,7 @@ namespace BlackCore
         //! Analyze the airspace
         void analyzeAirspace();
 
-        QTimer *m_timer = nullptr; //!< multi purpose timer for snapshots and watchdog
+        QTimer m_timer{this}; //!< multi purpose timer for snapshots and watchdog
 
         // watchdog
         CCallsignTimestampSet m_aircraftCallsignTimestamps; //!< for watchdog (pilots)

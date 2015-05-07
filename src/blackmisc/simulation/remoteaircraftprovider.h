@@ -27,6 +27,7 @@ namespace BlackMisc
         //! Direct thread safe in memory access to remote aircraft
         //! \note Can not be derived from QObject (as for the signals), as this would create multiple
         //!       inheritance. Hence Q_DECLARE_INTERFACE is used.
+        //! \ingroup remoteaircraftprovider
         class BLACKMISC_EXPORT IRemoteAircraftProvider
         {
         public:
@@ -106,6 +107,10 @@ namespace BlackMisc
                 std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshot
             ) = 0;
 
+            //! Disconnect signals from receiver. As the interface is no QObject, slots can not be connected directly.
+            virtual bool disconnectRemoteAircraftProviderSignals(
+                QObject *receiver
+            ) = 0;
         };
 
         //! Class which can be directly used to access an \sa IRemoteAircraftProvider object

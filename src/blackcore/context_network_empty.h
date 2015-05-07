@@ -82,7 +82,7 @@ namespace BlackCore
         }
 
         //! \copydoc IContextNetwork::connectToNetwork
-        virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, uint mode) override
+        virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, int mode) override
         {
             Q_UNUSED(mode);
             Q_UNUSED(server);

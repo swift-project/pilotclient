@@ -29,10 +29,9 @@ namespace BlackCore
         this->setObjectName("CAirspaceAnalyzer");
 
         // all in new thread from here on
-        m_timer = new QTimer(this);
-        m_timer->setObjectName(this->objectName().append(":m_timer"));
-        m_timer->start(5000);
-        bool c = connect(m_timer, &QTimer::timeout, this, &CAirspaceAnalyzer::ps_timeout);
+        m_timer.setObjectName(this->objectName().append(":m_timer"));
+        m_timer.start(5000);
+        bool c = connect(&m_timer, &QTimer::timeout, this, &CAirspaceAnalyzer::ps_timeout);
         Q_ASSERT(c);
 
         // disconnect
@@ -72,6 +71,11 @@ namespace BlackCore
         this->m_simulatorMaxRenderedBoundary = maxRenderedBoundary;
     }
 
+    void CAirspaceAnalyzer::gracefulShutdown()
+    {
+        this->m_timer.stop();
+    }
+
     void CAirspaceAnalyzer::ps_watchdogTouchAircraftCallsign(const CAircraftSituation &situation, const CTransponder &transponder)
     {
         Q_ASSERT_X(!situation.getCallsign().isEmpty(), Q_FUNC_INFO, "No callsign in situaton");
@@ -93,11 +97,11 @@ namespace BlackCore
         if (newStatus == INetwork::Disconnected)
         {
             this->clear();
-            this->m_timer->stop();
+            this->m_timer.stop();
         }
         else if (newStatus == INetwork::Connected)
         {
-            this->m_timer->start();
+            this->m_timer.start();
         }
     }
 
@@ -129,7 +133,7 @@ namespace BlackCore
         qint64 currentTimeMsEpoch = QDateTime::currentMSecsSinceEpoch();
 
         qint64 callDiffMs = currentTimeMsEpoch - m_lastWatchdogCallMsSinceEpoch;
-        qint64 callThresholdMs = m_timer->interval() * 1.5;
+        qint64 callThresholdMs = m_timer.interval() * 1.5;
         m_lastWatchdogCallMsSinceEpoch = currentTimeMsEpoch;
 
         // this is a trick to not remove everything while debugging

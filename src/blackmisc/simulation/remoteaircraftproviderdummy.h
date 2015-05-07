@@ -67,6 +67,9 @@ namespace BlackMisc
                 std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
             ) override;
 
+            //! \copydoc IRemoteAircraftProvider::disconnectRemoteAircraftProviderSignals
+            virtual bool disconnectRemoteAircraftProviderSignals(QObject *receiver) override;
+
             //! \copydoc IRemoteAircraftProvider::updateAircraftEnabled
             virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering, const QString &originator) override;
 

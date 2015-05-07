@@ -80,6 +80,12 @@ namespace BlackMisc
             return s1 && s2 && s3 && s4;
         }
 
+        bool CRemoteAircraftProviderDummy::disconnectRemoteAircraftProviderSignals(QObject *receiver)
+        {
+            if (!receiver) { return false; }
+            return this->disconnect(receiver);
+        }
+
         bool CRemoteAircraftProviderDummy::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRendering, const QString &originator)
         {
             Q_UNUSED(originator);

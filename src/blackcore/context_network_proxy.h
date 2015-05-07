@@ -76,7 +76,7 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
         //! \copydoc IContextNetwork::connectToNetwork
-        virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, uint mode) override;
+        virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, int mode) override;
 
         //! \copydoc IContextNetwork::disconnectFromNetwork()
         virtual BlackMisc::CStatusMessage disconnectFromNetwork() override;

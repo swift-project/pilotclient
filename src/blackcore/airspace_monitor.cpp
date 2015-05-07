@@ -148,6 +148,12 @@ namespace BlackCore
         return s1 && s2 && s3 && s4;
     }
 
+    bool CAirspaceMonitor::disconnectRemoteAircraftProviderSignals(QObject *receiver)
+    {
+        if (!receiver) { return false; }
+        return this->disconnect(receiver);
+    }
+
     bool CAirspaceMonitor::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRedering, const QString &originator)
     {
         Q_UNUSED(originator);
@@ -404,9 +410,22 @@ namespace BlackCore
 
     void CAirspaceMonitor::enableFastPositionSending(bool enable)
     {
-        if (enable) m_interimPositionUpdateTimer.start();
-        else m_interimPositionUpdateTimer.stop();
+        if (enable)
+        {
+            m_interimPositionUpdateTimer.start();
+        }
+        else
+        {
+            m_interimPositionUpdateTimer.stop();
+        }
         m_sendInterimPositions = enable;
+    }
+
+    void CAirspaceMonitor::gracefulShutdown()
+    {
+        if (this->m_analyzer) { this->m_analyzer->gracefulShutdown(); }
+        QObject::disconnect(this);
+        this->enableFastPositionSending(false);
     }
 
     bool CAirspaceMonitor::isFastPositionSendingEnabled() const

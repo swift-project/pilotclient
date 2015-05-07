@@ -154,6 +154,9 @@ namespace BlackCore
             std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
         ) override;
 
+        //! \copydoc IRemoteAircraftProvider::disconnectRemoteAircraftProviderSignals
+        virtual bool disconnectRemoteAircraftProviderSignals(QObject *receiver) override;
+
         //! Is interim position sending enabled?
         bool isFastPositionSendingEnabled() const;
 
@@ -162,6 +165,9 @@ namespace BlackCore
 
         //! Analyzer
         CAirspaceAnalyzer *analyzer() const { return m_analyzer; }
+
+        //! Gracefully shut down, e.g. for thread safety
+        void gracefulShutdown();
 
         static const qint64 AircraftSituationsRemovedOffsetMs = 30 * 1000; //!< situations older than now - offset will be removed
         static const qint64 AircraftPartsRemoveOffsetMs = 30 * 1000;       //!< parts older than now - offset will be removed

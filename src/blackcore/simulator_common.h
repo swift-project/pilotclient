@@ -135,7 +135,7 @@ namespace BlackCore
         IInterpolator *m_interpolator = nullptr;  //!< interpolator instance
         qint64 m_highlightEndTimeMsEpoch = 0;     //!< end highlighting
         int m_timerCounter = 0;                   //!< allows to calculate n seconds
-        QTimer *m_oneSecondTimer = nullptr;       //!< timer
+        QTimer m_oneSecondTimer{this};            //!< timer
         BlackMisc::Simulation::CSimulatorPluginInfo m_simulatorPluginInfo;   //!< info object
         BlackMisc::Simulation::CSimulatorSetup m_simulatorSetup;             //!< setup object
         BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft; //!< all other aircraft are to be ignored

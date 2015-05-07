@@ -532,20 +532,21 @@ namespace BlackCore
             // depending on shutdown order, network might already have been deleted
             emit simulatorPluginChanged(CSimulatorPluginInfo());
 
-            IContextNetwork *networkContext = this->getIContextNetwork();
-            Q_ASSERT(networkContext);
-            Q_ASSERT(networkContext->isLocalObject());
-            Q_UNUSED(networkContext);
+            Q_ASSERT(this->getIContextNetwork());
+            Q_ASSERT(this->getIContextNetwork()->isLocalObject());
             Q_ASSERT(m_simulatorPlugin->simulator);
 
+            // disconnect from simulator
+            if (m_simulatorPlugin->simulator->isConnected())
+            {
+                m_simulatorPlugin->simulator->disconnectFrom();
+            }
+
+            // disconnect signals
+            this->getRuntime()->getCContextNetwork()->disconnectRemoteAircraftProviderSignals(m_simulatorPlugin->simulator);
             m_simulatorPlugin->simulator->disconnect();
             CLogHandler::instance()->disconnect(m_simulatorPlugin->simulator);
             this->disconnect(m_simulatorPlugin->simulator);
-
-            if (m_simulatorPlugin->simulator->isConnected())
-            {
-                m_simulatorPlugin->simulator->disconnectFrom(); // disconnect from simulator
-            }
 
             m_simulatorPlugin->simulator->deleteLater();
             m_simulatorPlugin->simulator = nullptr;

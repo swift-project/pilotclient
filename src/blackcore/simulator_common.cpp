@@ -31,10 +31,9 @@ namespace BlackCore
           m_simulatorPluginInfo(info)
     {
         this->setObjectName(info.getIdentifier());
-        this->m_oneSecondTimer = new QTimer(this);
-        this->m_oneSecondTimer->setObjectName(this->objectName().append(":m_oneSecondTimer"));
-        connect(this->m_oneSecondTimer, &QTimer::timeout, this, &CSimulatorCommon::ps_oneSecondTimer);
-        this->m_oneSecondTimer->start(1000);
+        this->m_oneSecondTimer.setObjectName(this->objectName().append(":m_oneSecondTimer"));
+        connect(&m_oneSecondTimer, &QTimer::timeout, this, &CSimulatorCommon::ps_oneSecondTimer);
+        this->m_oneSecondTimer.start(1000);
 
         // provider signals
         bool c = remoteAircraftProvider->connectRemoteAircraftProviderSignals(

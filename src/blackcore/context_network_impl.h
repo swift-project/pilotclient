@@ -80,6 +80,10 @@ namespace BlackCore
             std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
         ) override;
 
+        //! \copydoc IRemoteAircraftProvider::disconnectRemoteAircraftProviderSignals
+        //! \ingroup remoteaircraftprovider
+        virtual bool disconnectRemoteAircraftProviderSignals(QObject *receiver) override;
+
         //! \copydoc IRemoteAircraftProvider::updateAircraftRendered
         //! \ingroup remoteaircraftprovider
         virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered, const QString &originator) override;
@@ -133,7 +137,7 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
         //! \copydoc IContextNetwork::connectToNetwork()
-        virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, uint mode) override;
+        virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, int mode) override;
 
         //! \copydoc IContextNetwork::getConnectedServer
         virtual BlackMisc::Network::CServer getConnectedServer() const override;

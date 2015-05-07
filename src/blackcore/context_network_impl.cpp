@@ -135,14 +135,21 @@ namespace BlackCore
         return this->m_airspace->connectRemoteAircraftProviderSignals(situationSlot, partsSlot, removedAircraftSlot, aircraftSnapshotSlot);
     }
 
+    bool CContextNetwork::disconnectRemoteAircraftProviderSignals(QObject *receiver)
+    {
+        Q_ASSERT(this->m_airspace);
+        return this->m_airspace->disconnectRemoteAircraftProviderSignals(receiver);
+    }
+
     void CContextNetwork::gracefulShutdown()
     {
         if (this->m_vatsimBookingReader)  { this->m_vatsimBookingReader->requestStop();  this->m_vatsimBookingReader->quit(); }
         if (this->m_vatsimDataFileReader) { this->m_vatsimDataFileReader->requestStop(); this->m_vatsimDataFileReader->quit(); }
         if (this->isConnected()) { this->disconnectFromNetwork(); }
+        if (this->m_airspace) { this->m_airspace->gracefulShutdown(); }
     }
 
-    CStatusMessage CContextNetwork::connectToNetwork(const CServer &server, uint loginMode)
+    CStatusMessage CContextNetwork::connectToNetwork(const CServer &server, int loginMode)
     {
         if (this->isDebugEnabled()) {CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         QString msg;
