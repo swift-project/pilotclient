@@ -35,6 +35,15 @@ namespace BlackMisc
 #endif
     }
 
+    bool CProject::isCompiledWithFs9Support()
+    {
+#ifdef WITH_FS9
+        return true;
+#else
+        return false;
+#endif
+    }
+
     bool CProject::isCompiledWithFsxSupport()
     {
 #ifdef WITH_FSX

@@ -33,6 +33,12 @@ namespace BlackMisc
                 //! FSX's simObject directory from registry
                 static QString fsxSimObjectsDirFromRegistry();
 
+                //! FS9 directory obtained from registry
+                static QString fs9DirFromRegistry();
+
+                //! FS9's aircraft directory from registry
+                static QString fs9AircraftDirFromRegistry();
+
             };
 
         } // namespace

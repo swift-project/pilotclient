@@ -21,19 +21,26 @@ namespace BlackMisc
         namespace FsCommon
         {
 
+            using FsRegistryPathPair = QList<QPair<QString, QString>>;
+
             QString CFsCommonUtil::fsxDirFromRegistry()
             {
                 QString fsxPath;
                 if (CProject::isCompiledWithFsxSupport())
                 {
-                    // set FSX path
-                    QSettings fsxRegistry("HKEY_CURRENT_USER\\Software\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0", QSettings::NativeFormat);
-                    fsxPath = fsxRegistry.value("AppPath").toString().trimmed();
-                    if (fsxPath.isEmpty())
+
+                    FsRegistryPathPair fsxRegistryPathPairs =
                     {
-                        // another trial
-                        QSettings fsxRegistry("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0", QSettings::NativeFormat);
-                        fsxPath = fsxRegistry.value("SetupPath").toString().trimmed();
+                        { QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0"), QStringLiteral("AppPath") },
+                        { QStringLiteral("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0"), QStringLiteral("AppPath") }
+                    };
+
+                    for (const auto &registryPair : fsxRegistryPathPairs)
+                    {
+                        QSettings fsxRegistry(registryPair.first, QSettings::NativeFormat);
+                        fsxPath = fsxRegistry.value(registryPair.second).toString().trimmed();
+
+                        if (!fsxPath.isEmpty()) break;
                     }
                 }
                 return fsxPath;
@@ -45,6 +52,36 @@ namespace BlackMisc
                 if (fsxPath.isEmpty()) { return ""; }
                 fsxPath = QDir(fsxPath).filePath("SimObjects");
                 return fsxPath;
+            }
+
+            QString CFsCommonUtil::fs9DirFromRegistry()
+            {
+                QString fs9Path;
+                if (CProject::isCompiledWithFs9Support())
+                {
+                    FsRegistryPathPair fs9RegistryPathPairs =
+                    {
+                        { QStringLiteral("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\DirectPlay\\Applications\\Microsoft Flight Simulator 2004"), QStringLiteral("AppPath") },
+                        { QStringLiteral("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\DirectPlay\\Applications\\Microsoft Flight Simulator 2004"), QStringLiteral("AppPath") }
+                    };
+
+                    for (const auto &registryPair : fs9RegistryPathPairs)
+                    {
+                        QSettings fs9Registry(registryPair.first, QSettings::NativeFormat);
+                        fs9Path = fs9Registry.value(registryPair.second).toString().trimmed();
+
+                        if (!fs9Path.isEmpty()) break;
+                    }
+                }
+                return fs9Path;
+            }
+
+            QString CFsCommonUtil::fs9AircraftDirFromRegistry()
+            {
+                QString fs9Path = fs9DirFromRegistry();
+                if (fs9Path.isEmpty()) { return ""; }
+                fs9Path = QDir(fs9Path).filePath("Aircraft");
+                return fs9Path;
             }
 
         } // namespace
