@@ -120,10 +120,8 @@ namespace BlackMisc
         public Mixin::String<CPropertyIndexVariantMap>
     {
     public:
-        /*!
-         * Constructor
-         * \param wildcard when used in search, for setting values irrelevant
-         */
+        //! Constructor
+        //! \param wildcard when used in search, for setting values irrelevant
         CPropertyIndexVariantMap(bool wildcard = false);
 
         //! Single value constructor
@@ -240,6 +238,7 @@ namespace BlackMisc
 
         //! \copydoc CValueObject::unmarshallFromDbus
         void unmarshallFromDbus(const QDBusArgument &argument);
+
     };
 
     namespace Mixin

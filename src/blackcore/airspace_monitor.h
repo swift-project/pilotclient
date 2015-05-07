@@ -12,7 +12,11 @@
 #ifndef BLACKCORE_AIRSPACE_MONITOR_H
 #define BLACKCORE_AIRSPACE_MONITOR_H
 
-#include "blackcoreexport.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackcore/network.h"
+#include "blackcore/vatsimbookingreader.h"
+#include "blackcore/vatsimdatafilereader.h"
+#include "airspace_analyzer.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
@@ -22,10 +26,6 @@
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/aviation/callsignset.h"
-#include "network.h"
-#include "vatsimbookingreader.h"
-#include "vatsimdatafilereader.h"
-#include "airspace_analyzer.h"
 
 namespace BlackCore
 {

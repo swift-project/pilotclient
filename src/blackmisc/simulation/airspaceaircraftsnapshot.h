@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_AIRSPACEAIRCRAFTANALYZER_H
 #define BLACKMISC_SIMULATION_AIRSPACEAIRCRAFTANALYZER_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/propertyindex.h"
@@ -22,7 +23,7 @@ namespace BlackMisc
     namespace Simulation
     {
         //! Current situation in the sky analyzed.
-        class CAirspaceAircraftSnapshot : public CValueObject<CAirspaceAircraftSnapshot>
+        class BLACKMISC_EXPORT CAirspaceAircraftSnapshot : public CValueObject<CAirspaceAircraftSnapshot>
         {
         public:
             //! Default constructor
@@ -74,14 +75,13 @@ namespace BlackMisc
             bool isRenderingEnabled() const { return m_renderingEnabled; }
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! \copydoc CValueObject::setPropertyByIndex
-            virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+            void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
-        protected:
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
+            QString convertToQString(bool i18n = false) const;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAirspaceAircraftSnapshot)

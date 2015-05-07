@@ -35,7 +35,13 @@ namespace BlackMisc
             //! Are set values valid?
             virtual bool validValues() const { return true; }
 
+            //! Virtual destructor
+            virtual ~CAvionicsBase() {}
+
         protected:
+            //! Constructor
+            CAvionicsBase() : m_name("default") {}
+
             //! Constructor
             CAvionicsBase(const QString &name) : m_name(name) {}
 

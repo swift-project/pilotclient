@@ -21,7 +21,7 @@ namespace BlackMisc
     {
 
         //! Direct threadsafe in memory access to own aircraft
-        class IOwnAircraftProvider
+        class BLACKMISC_EXPORT IOwnAircraftProvider
         {
         public:
 
@@ -83,7 +83,7 @@ namespace BlackMisc
         };
 
         //! Delegating class which can be directly used to access an \sa IOwnAircraftProvider instance
-        class COwnAircraftAware
+        class BLACKMISC_EXPORT COwnAircraftAware
         {
         public:
             //! \copydoc IOwnAircraftProvider::getOwnAircraft

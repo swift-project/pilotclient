@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_SIMULATOR_COMMON_H
 #define BLACKCORE_SIMULATOR_COMMON_H
 
+#include "blackcore/blackcoreexport.h"
 #include "blackcore/interpolator.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
@@ -31,7 +32,7 @@ namespace BlackCore
 {
 
     //! Common base class with providers, interface and some base functionality
-    class CSimulatorCommon :
+    class BLACKCORE_EXPORT CSimulatorCommon :
         public BlackCore::ISimulator,
         public BlackMisc::Simulation::COwnAircraftAware,   // gain access to in memor own aircraft data
         public BlackMisc::Simulation::CRemoteAircraftAware // gain access to in memory remote aircraft data

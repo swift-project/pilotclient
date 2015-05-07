@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_OWNAIRCRAFTPROVIDERDUMMY_H
 #define BLACKMISC_SIMULATION_OWNAIRCRAFTPROVIDERDUMMY_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 
 namespace BlackMisc
@@ -19,7 +20,7 @@ namespace BlackMisc
     namespace Simulation
     {
         //! For testing, thread safety not implemented in this class
-        class COwnAircraftProviderDummy :
+        class BLACKMISC_EXPORT COwnAircraftProviderDummy :
             public QObject,
             public IOwnAircraftProvider
         {

@@ -319,7 +319,6 @@ namespace BlackMisc
     BLACKMISC_EXPORT QJsonObject applyIncrementalObject(const QJsonObject &previousObject, const QJsonObject &incrementalObject);
 
 
-
 } // BlackMisc
 
 #endif // guard

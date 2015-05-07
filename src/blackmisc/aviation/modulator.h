@@ -88,10 +88,13 @@ namespace BlackMisc
             void setEnabled(bool enable) { this->m_enabled = enable;}
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! \copydoc CValueObject::setPropertyByIndex
-            virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+            void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
+
+            //! \copydoc CValueObject::convertToQString
+            QString convertToQString(bool i18n = false) const;
 
         protected:
             //! Default constructor
@@ -100,9 +103,6 @@ namespace BlackMisc
             //! Constructor
             CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency) :
                 CModulator::CValueObject(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency) {}
-
-            //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
 
             //! Set active frequency
             void setFrequencyActiveKHz(double frequencyKHz)
@@ -207,16 +207,18 @@ namespace BlackMisc
             //! Easy access to derived class (CRTP template parameter)
             AVIO *derived() { return static_cast<AVIO *>(this); }
 
-			//! \cond PRIVATE
-			class CComSystem;
-			class CNavSystem;
-			class CAdfSystem;
-
-			extern template class BLACKMISC_EXPORT_TEMPLATE CModulator<CComSystem>;
-			extern template class BLACKMISC_EXPORT_TEMPLATE CModulator<CNavSystem>;
-			extern template class BLACKMISC_EXPORT_TEMPLATE CModulator<CAdfSystem>;
-			//! \endcond
         };
+
+        //! \cond PRIVATE
+        class CComSystem;
+        class CNavSystem;
+        class CAdfSystem;
+
+        extern template class BLACKMISC_EXPORT_TEMPLATE CModulator<CComSystem>;
+        extern template class BLACKMISC_EXPORT_TEMPLATE CModulator<CNavSystem>;
+        extern template class BLACKMISC_EXPORT_TEMPLATE CModulator<CAdfSystem>;
+        //! \endcond
+
     } // namespace
 } // namespace
 

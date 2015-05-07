@@ -109,7 +109,7 @@ namespace BlackMisc
         };
 
         //! Class which can be directly used to access an \sa IRemoteAircraftProvider object
-        class CRemoteAircraftAware
+        class BLACKMISC_EXPORT CRemoteAircraftAware
         {
         public:
             //! \copydoc IRemoteAircraftProvider::getAircraftInRange

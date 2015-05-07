@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_AIRSPACE_ANALYZER_H
 #define BLACKCORE_AIRSPACE_ANALYZER_H
 
+#include "blackcore/blackcoreexport.h"
 #include "blackcore/network.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
@@ -31,7 +32,7 @@ namespace BlackCore
     //!          clients nearby. The server does not take care of that. When a client crashes, no delete packet is ever sent. This class therefore monitors callsigns and emits a timeout signal if it
     //!          wasn't resetted during the specified timeout value.
     //!
-    class CAirspaceAnalyzer :
+    class BLACKCORE_EXPORT CAirspaceAnalyzer :
         public BlackMisc::CContinuousWorker,
         public BlackMisc::Simulation::COwnAircraftAware,
         public BlackMisc::Simulation::CRemoteAircraftAware

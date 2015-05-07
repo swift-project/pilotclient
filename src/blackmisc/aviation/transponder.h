@@ -176,8 +176,8 @@ namespace BlackMisc
             TransponderMode m_transponderMode; //!< Transponder mode
         };
 
-    }
-}
+    } // ns
+} // ns
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CTransponder, (
                                    o.m_transponderCode,
