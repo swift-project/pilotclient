@@ -107,6 +107,13 @@ namespace BlackSimPlugin
 
             void disconnectAllClients();
 
+            //! Aircraft object directory
+            //! \todo Read from settings if registry fails
+            static QString aircraftObjectsDir();
+
+            //! Do not include the following directories for FS
+            static const QStringList &excludeDirectories();
+
             QHash<BlackMisc::Aviation::CCallsign, QPointer<CFs9Client>> m_hashFs9Clients;
             QMetaObject::Connection m_connectionHostMessages;
             int m_dispatchTimerId = -1;

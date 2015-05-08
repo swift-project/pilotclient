@@ -185,6 +185,13 @@ namespace BlackSimPlugin
             //! Sync time with user's computer
             void synchronizeTime(const BlackMisc::PhysicalQuantities::CTime &zuluTimeSim, const BlackMisc::PhysicalQuantities::CTime &localTimeSim);
 
+            //! SimObjects directory
+            //! \todo Read from settings if registry fails
+            static QString simObjectsDir();
+
+            //! Do not include the following directories for FS
+            static const QStringList &excludeDirectories();
+
             static const int SkipUpdateCyclesForCockpit = 10; //!< skip x cycles before updating cockpit again
             bool m_simConnected  = false;       //!< Is simulator connected?
             bool m_simSimulating    = false;    //!< Simulator running?

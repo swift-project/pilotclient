@@ -852,6 +852,26 @@ namespace BlackSimPlugin
             }
         }
 
+        QString CSimulatorFsx::simObjectsDir()
+        {
+            QString dir = CFsCommonUtil::fsxSimObjectsDirFromRegistry();
+            if (!dir.isEmpty()) { return dir; }
+            return "P:/FlightSimulatorX (MSI)/SimObjects";
+            // "p:/temp/SimObjects"
+        }
+
+        const QStringList &CSimulatorFsx::excludeDirectories()
+        {
+            static const QStringList exclude
+            {
+                "SimObjects/Animals",
+                "SimObjects/Misc",
+                "SimObjects/GroundVehicles",
+                "SimObjects/Boats"
+            };
+            return exclude;
+        }
+
         CSimulatorFsxListener::CSimulatorFsxListener(QObject *parent) : ISimulatorListener(parent),
             m_timer(new QTimer(this))
         {

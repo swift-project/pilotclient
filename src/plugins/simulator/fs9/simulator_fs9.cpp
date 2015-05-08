@@ -300,6 +300,21 @@ namespace BlackSimPlugin
             }
         }
 
+        QString CSimulatorFs9::aircraftObjectsDir()
+        {
+            QString dir = CFsCommonUtil::fs9AircraftDirFromRegistry();
+            if (!dir.isEmpty()) { return dir; }
+            return "C:/Flight Simulator 9/Aircraft";
+        }
+
+        const QStringList &CSimulatorFs9::excludeDirectories()
+        {
+            static const QStringList exclude
+            {
+            };
+            return exclude;
+        }
+
         CSimulatorFs9Listener::CSimulatorFs9Listener(QObject *parent) :
             BlackCore::ISimulatorListener(parent),
             m_timer(new QTimer(this))
