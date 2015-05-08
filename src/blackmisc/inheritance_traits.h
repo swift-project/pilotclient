@@ -46,6 +46,26 @@ namespace BlackMisc
     };
 
     /*!
+     * If T has a member typedef base_type which has a member propertyByIndex, this trait will obtain it, otherwise void.
+     */
+    template <class T>
+    class IndexBaseOf
+    {
+        // http://en.wikibooks.org/wiki/More_C++_Idioms/Member_Detector
+        struct Empty {};
+        struct Fallback { int propertyByIndex; };
+        template <int Fallback:: *> struct int_t { typedef int type; };
+        template <typename U> struct Derived : public Fallback, public std::conditional<std::is_void<U>::value, Empty, U>::type {};
+
+        template <typename U> static void test(typename int_t<&Derived<U>::propertyByIndex>::type);
+        template <typename U> static U test(...);
+
+    public:
+        //! Type of T::base_type, or void if not declared.
+        typedef decltype(test<typename BaseOf<T>::type>(0)) type;
+    };
+
+    /*!
      * Alias for typename BaseOf<T>::type.
      */
     template <class T>
@@ -56,6 +76,12 @@ namespace BlackMisc
      */
     template <class T>
     using MetaBaseOfT = typename MetaBaseOf<T>::type;
+
+    /*!
+     * Alias for typename IndexBaseOf<T>::type.
+     */
+    template <class T>
+    using IndexBaseOfT = typename IndexBaseOf<T>::type;
 }
 
 #endif

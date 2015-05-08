@@ -27,6 +27,7 @@ namespace BlackMisc
 
     namespace Mixin
     {
+
         /*!
          * CRTP class template from which a derived class can inherit property indexing functions.
          *
@@ -64,7 +65,39 @@ namespace BlackMisc
         private:
             const Derived *derived() const { return static_cast<const Derived *>(this); }
             Derived *derived() { return static_cast<Derived *>(this); }
+
+            template <typename T, typename std::enable_if<std::is_default_constructible<T>::value, int>::type = 0>
+            CVariant myself() const { return CVariant::from(*derived()); }
+            template <typename T, typename std::enable_if<std::is_default_constructible<T>::value, int>::type = 0>
+            void myself(const CVariant &variant) { *derived() = variant.to<T>(); }
+
+            template <typename T, typename std::enable_if<! std::is_default_constructible<T>::value, int>::type = 0>
+            CVariant myself() const { qFatal("isMyself should have been handled before reaching here"); return {}; }
+            template <typename T, typename std::enable_if<! std::is_default_constructible<T>::value, int>::type = 0>
+            void myself(const CVariant &) { qFatal("isMyself should have been handled before reaching here"); }
+
+            template <typename T>
+            CVariant basePropertyByIndex(const T *base, const CPropertyIndex &index) const { return base->propertyByIndex(index); }
+            template <typename T>
+            void baseSetPropertyByIndex(T *base, const CVariant &var, const CPropertyIndex &index) { base->setPropertyByIndex(var, index); }
+
+            CVariant basePropertyByIndex(const void *, const CPropertyIndex &index) const
+            { qFatal("%s", qPrintable("Property by index not found, index: " + index.toQString())); return {}; }
+            void baseSetPropertyByIndex(void *, const CVariant &, const CPropertyIndex &index)
+            { qFatal("%s", qPrintable("Property by index not found (setter), index: " + index.toQString())); }
         };
+
+        /*!
+         * When a derived class and a base class both inherit from Mixin::Index,
+         * the derived class uses this macro to disambiguate the inherited members.
+         */
+#       define BLACKMISC_DECLARE_USING_MIXIN_INDEX(DERIVED)                     \
+            using ::BlackMisc::Mixin::Index<DERIVED>::apply;                    \
+            using ::BlackMisc::Mixin::Index<DERIVED>::setPropertyByIndex;       \
+            using ::BlackMisc::Mixin::Index<DERIVED>::propertyByIndex;          \
+            using ::BlackMisc::Mixin::Index<DERIVED>::propertyByIndexAsString;  \
+            using ::BlackMisc::Mixin::Index<DERIVED>::equalsPropertyByIndex;
+
     } // Mixin
 
     /*!
@@ -227,20 +260,19 @@ namespace BlackMisc
         {
             if (index.isMyself())
             {
-                derived()->convertFromCVariant(variant);
-                return;
+                myself<Derived>(variant);
             }
-
-            // not all classes have implemented nesting
-            const QString m = QString("Property by index not found (setter), index: ").append(index.toQString());
-            qFatal("%s", qPrintable(m));
+            else
+            {
+                baseSetPropertyByIndex(static_cast<IndexBaseOfT<Derived> *>(derived()), variant, index);
+            }
         }
         template <class Derived>
         CVariant Index<Derived>::propertyByIndex(const CPropertyIndex &index) const
         {
             if (index.isMyself())
             {
-                return derived()->toCVariant();
+                return myself<Derived>();
             }
             auto i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -252,18 +284,12 @@ namespace BlackMisc
             case IndexString:
                 return CVariant(derived()->toQString());
             default:
-                break;
+                return basePropertyByIndex(static_cast<const IndexBaseOfT<Derived> *>(derived()), index);
             }
-
-            // not all classes have implemented nesting
-            const QString m = QString("Property by index not found, index: ").append(index.toQString());
-            qFatal("%s", qPrintable(m));
-            return {};
         }
         template <class Derived>
         QString Index<Derived>::propertyByIndexAsString(const CPropertyIndex &index, bool i18n) const
         {
-            // default implementation, requires propertyByIndex
             return derived()->propertyByIndex(index).toQString(i18n);
         }
         template <class Derived>

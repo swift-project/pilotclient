@@ -45,7 +45,7 @@ namespace BlackMisc
         template <class MU, class PQ> class CPhysicalQuantity :
             public Mixin::DBusOperators<CPhysicalQuantity<MU, PQ>>,
             public Mixin::JsonOperators<CPhysicalQuantity<MU, PQ>>,
-            public Mixin::Index<CPhysicalQuantity<MU, PQ>>,
+            public Mixin::Index<PQ>,
             public Mixin::MetaTypeAndQList<PQ>,
             public Mixin::String<PQ>,
             public Mixin::Icon<CPhysicalQuantity<MU, PQ>>
