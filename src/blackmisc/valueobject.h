@@ -39,16 +39,15 @@ namespace BlackMisc
     namespace Private
     {
         //! \private SFINAE for CValueObject constructor to avoid being selected as a viable copy constructor.
-        //! @{
         template <typename...> struct DecayFirst
         {
             typedef void type;
         };
+        //! \private
         template <typename T, typename... Ts> struct DecayFirst<T, Ts...>
         {
             typedef typename std::decay<T>::type type;
         };
-        //! @}
     }
 
     /*!

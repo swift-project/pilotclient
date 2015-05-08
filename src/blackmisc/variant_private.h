@@ -96,11 +96,13 @@ namespace BlackMisc
         template <typename T>
         struct CValueObjectMetaInfo : public IValueObjectMetaInfo
         {
+            //! \cond PRIVATE
             // http://en.wikibooks.org/wiki/More_C++_Idioms/Member_Detector
             struct Fallback { int toJson, convertFromJson, setPropertyByIndex, propertyByIndex, propertyByIndexAsString, equalsPropertyByIndex, toIcon; };
             template <int Fallback:: *> struct int_t { typedef int type; };
             template <typename U> struct Derived : public U, public Fallback {};
 #           define DISABLE_IF_HAS(MEMBER) typename int_t<&Derived<U>::MEMBER>::type
+            //! \endcond
 
             template <typename U> static QJsonObject toJsonHelper(const U &object, DISABLE_IF_HAS(toJson)) { throw CVariantException(object, "toJson"); }
             template <typename U> static QJsonObject toJsonHelper(const U &object, ...) { return object.toJson(); }
@@ -203,7 +205,7 @@ namespace BlackMisc
         template <typename T>
         IValueObjectMetaInfo *getValueObjectMetaInfo() { return getValueObjectMetaInfo(qMetaTypeId<T>()); }
 
-        //! \private
+        //! \cond PRIVATE
         template <typename T, bool IsRegisteredMetaType /* = true */>
         struct MetaTypeHelperImpl
         {
@@ -213,7 +215,6 @@ namespace BlackMisc
             static void maybeConvertFromQVariant(T &obj, const QVariant &var) { BlackMisc::setFromQVariant(&obj, var); }
         };
 
-        //! \private
         template <typename T>
         struct MetaTypeHelperImpl<T, /* IsRegisteredMetaType = */ false>
         {
@@ -223,9 +224,9 @@ namespace BlackMisc
             static void maybeConvertFromQVariant(T &, const QVariant &) {}
         };
 
-        //! \private
         template <typename T>
         using MetaTypeHelper = MetaTypeHelperImpl<T, QMetaTypeId<T>::Defined>;
+        //! \endcond
     }
 }
 
