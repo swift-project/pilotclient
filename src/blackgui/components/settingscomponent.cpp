@@ -77,11 +77,10 @@ namespace BlackGui
         void CSettingsComponent::reloadSettings()
         {
             // reload components
+            //! \todo Settings are loaded twice, this here is for init but each component also consumes the signal changed slot
             this->ui->comp_AudioSetup->reloadSettings();
             this->ui->comp_SettingsServersComponent->reloadSettings();
-
-            // update hot keys
-            this->ui->tvp_SettingsMiscHotkeys->updateContainer(this->getIContextSettings()->getHotkeys());
+            this->ui->comp_SettingsHotkeysComponent->reloadSettings();
         }
 
         /*
@@ -97,7 +96,7 @@ namespace BlackGui
          */
         void CSettingsComponent::runtimeHasBeenSet()
         {
-            Q_ASSERT_X(this->getIContextSettings(), "runtimeHasBeenSet", "Missing settings");
+            Q_ASSERT_X(this->getIContextSettings(), Q_FUNC_INFO, "Missing settings");
             this->connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &CSettingsComponent::ps_changedSettings);
 
             // Opacity, intervals
@@ -105,11 +104,6 @@ namespace BlackGui
             this->connect(this->ui->hs_SettingsGuiAircraftRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedAircraftUpdateInterval);
             this->connect(this->ui->hs_SettingsGuiAtcRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedAtcStationsUpdateInterval);
             this->connect(this->ui->hs_SettingsGuiUserRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedUsersUpdateInterval);
-
-            // Settings hotkeys
-            this->connect(this->ui->pb_SettingsMiscCancel, &QPushButton::clicked, this, &CSettingsComponent::reloadSettings);
-            this->connect(this->ui->pb_SettingsMiscSave, &QPushButton::clicked, this, &CSettingsComponent::ps_saveHotkeys);
-            this->connect(this->ui->pb_SettingsMiscRemove, &QPushButton::clicked, this, &CSettingsComponent::ps_clearHotkey);
 
             // Font
             const QFont font = this->font();
@@ -136,28 +130,6 @@ namespace BlackGui
             IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(typeValue);
             this->reloadSettings();
             Q_UNUSED(type);
-        }
-
-        /*
-         * Save the hotkeys
-         */
-        void CSettingsComponent::ps_saveHotkeys()
-        {
-            const QString path = CSettingUtilities::appendPaths(IContextSettings::PathRoot(), IContextSettings::PathHotkeys());
-            this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), this->ui->tvp_SettingsMiscHotkeys->derivedModel()->getContainer().toCVariant());
-        }
-
-        /*
-         * Clear particular hotkey
-         */
-        void CSettingsComponent::ps_clearHotkey()
-        {
-            QModelIndex i = this->ui->tvp_SettingsMiscHotkeys->currentIndex();
-            if (i.row() < 0 || i.row() >= this->ui->tvp_SettingsMiscHotkeys->rowCount()) return;
-            CSettingKeyboardHotkey hotkey = this->ui->tvp_SettingsMiscHotkeys->at(i);
-            CSettingKeyboardHotkey defaultHotkey;
-            defaultHotkey.setFunction(hotkey.getFunction());
-            this->ui->tvp_SettingsMiscHotkeys->derivedModel()->update(i, defaultHotkey);
         }
 
         /*

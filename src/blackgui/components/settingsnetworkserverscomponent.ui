@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>260</width>
+    <height>141</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -38,7 +38,7 @@
    <item>
     <widget class="BlackGui::Views::CServerView" name="tvp_SettingsTnServers">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -82,7 +82,7 @@
    <item>
     <widget class="QFrame" name="fr_SettingsTnServersButtons">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -95,10 +95,10 @@
      </property>
      <layout class="QHBoxLayout" name="hl_SettingsBottomBar">
       <property name="topMargin">
-       <number>3</number>
+       <number>2</number>
       </property>
       <property name="bottomMargin">
-       <number>3</number>
+       <number>2</number>
       </property>
       <item>
        <spacer name="hs_SettingsTnServersSpacer">

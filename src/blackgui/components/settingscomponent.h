@@ -45,7 +45,7 @@ namespace BlackGui
                 SettingTabAircraftAudio,
                 SettingTabSimulator,
                 SettingTabGui,
-                SettingTabMisc
+                SettingTabHotkeys
             };
 
             //! Constructor
@@ -97,12 +97,6 @@ namespace BlackGui
 
             //! Settings have been changed
             void ps_changedSettings(uint typeValue);
-
-            //! Save the Hotkeys
-            void ps_saveHotkeys();
-
-            //! Clear single hotkey
-            void ps_clearHotkey();
 
             //! Font has been changed
             void ps_fontChanged();

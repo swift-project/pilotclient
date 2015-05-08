@@ -626,47 +626,62 @@ namespace BlackGui
     {
         if (tabBarIndex >= this->m_dockWidgetInfoAreas.count() || tabBarIndex < 0) { return nullptr; }
         if (!this->m_tabBar) { return nullptr; }
-        return getDockWidgetInfoAreaByWindowTitle(this->m_tabBar->tabText(tabBarIndex));
+        const QString t(this->m_tabBar->tabText(tabBarIndex));
+
+        // we have a title and search by that (best option, as order does not matter)
+        if (!t.isEmpty()) { return getDockWidgetInfoAreaByWindowTitle(t); }
+
+        // no title, we assume the n-th not floating tab is correct
+        // this will work if the order in m_dockWidgetInfoAreas matches
+        int c = 0;
+        for (CDockWidgetInfoArea *dw : this->m_dockWidgetInfoAreas)
+        {
+            if (dw->isFloating()) { continue; }
+            if (c == tabBarIndex) { return dw; }
+            c++;
+        }
+        Q_ASSERT_X(false, Q_FUNC_INFO, "no dock widgte found");
+        return nullptr;
     }
 
     CDockWidgetInfoArea *CInfoArea::getDockWidgetInfoAreaByWindowTitle(const QString &title) const
     {
-        Q_ASSERT(!title.isEmpty());
+        Q_ASSERT_X(!title.isEmpty(), Q_FUNC_INFO, "No title");
         for (CDockWidgetInfoArea *dw : this->m_dockWidgetInfoAreas)
         {
-            if (dw->windowTitle() == title) { return dw; }
+            if (dw->windowTitleOrBackup() == title) { return dw; }
         }
         return nullptr;
     }
 
     int CInfoArea::getAreaIndexByWindowTitle(const QString &title) const
     {
-        Q_ASSERT(!title.isEmpty());
+        Q_ASSERT_X(!title.isEmpty(), Q_FUNC_INFO, "No title");
         for (int i = 0; i < m_dockWidgetInfoAreas.size(); i++)
         {
-            const QString t(m_dockWidgetInfoAreas.at(i)->windowTitle());
-            if (t == title) { return i; }
+            if (title == m_dockWidgetInfoAreas.at(i)->windowTitleOrBackup()) { return i; }
         }
-        Q_ASSERT(false);
+        Q_ASSERT_X(false, Q_FUNC_INFO, "No area for title");
         return -1;
     }
 
     int CInfoArea::getTabBarIndexByTitle(const QString &title) const
     {
-        Q_ASSERT(!title.isEmpty());
+        Q_ASSERT_X(!title.isEmpty(), Q_FUNC_INFO, "No title");
         if (m_tabBar->count() < 1) { return -1;}
         for (int i = 0; i < m_tabBar->count(); i++)
         {
             if (m_tabBar->tabText(i) == title) { return i; }
         }
+        Q_ASSERT_X(!title.isEmpty(), Q_FUNC_INFO, "Wrong title");
         return -1;
     }
 
     int CInfoArea::dockWidgetInfoAreaToTabBarIndex(const CDockWidgetInfoArea *dockWidgetInfoArea) const
     {
-        if (!dockWidgetInfoArea) return -1;
-        if (dockWidgetInfoArea->isFloating()) return -1;
-        return getTabBarIndexByTitle(dockWidgetInfoArea->windowTitle());
+        if (!dockWidgetInfoArea) { return -1; }
+        if (dockWidgetInfoArea->isFloating()) { return -1; }
+        return getTabBarIndexByTitle(dockWidgetInfoArea->windowTitleOrBackup());
     }
 
     void CInfoArea::selectArea(const CDockWidgetInfoArea *dockWidgetInfoArea)
@@ -693,7 +708,7 @@ namespace BlackGui
         for (int i = 0; i < this->m_tabBar->count(); i++)
         {
             const QString t(this->m_tabBar->tabText(i));
-            int areaIndex = this->getAreaIndexByWindowTitle(t);
+            int areaIndex = t.isEmpty() ? i : this->getAreaIndexByWindowTitle(t);
             const QPixmap p = indexToPixmap(areaIndex);
             this->m_tabBar->setTabIcon(i, p);
         }
@@ -754,7 +769,7 @@ namespace BlackGui
 
     void CInfoArea::ps_showTabTexts(bool show)
     {
-        if (show == this->m_showTabTexts) return;
+        if (show == this->m_showTabTexts) { return; }
         this->m_showTabTexts = show;
         for (CDockWidgetInfoArea *dw : this->m_dockWidgetInfoAreas)
         {

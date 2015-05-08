@@ -326,6 +326,13 @@ namespace BlackGui
         return ok;
     }
 
+    QString CDockWidget::windowTitleOrBackup() const
+    {
+        QString t(windowTitle());
+        if (t.isEmpty()) { return windowTitleBackup(); }
+        return t;
+    }
+
     void CDockWidget::ps_onTopLevelChanged(bool topLevel)
     {
         if (topLevel)

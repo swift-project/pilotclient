@@ -480,79 +480,46 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="tb_SettingsMisc">
+  <widget class="QWidget" name="tb_SettingsHotkeys">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <attribute name="title">
-    <string>Misc</string>
+    <string>Hotkeys</string>
    </attribute>
    <layout class="QVBoxLayout" name="vl_SettingsMisc">
     <property name="spacing">
-     <number>3</number>
+     <number>2</number>
     </property>
     <property name="leftMargin">
-     <number>2</number>
+     <number>1</number>
     </property>
     <property name="topMargin">
-     <number>2</number>
+     <number>1</number>
     </property>
     <property name="rightMargin">
-     <number>2</number>
+     <number>1</number>
     </property>
     <property name="bottomMargin">
-     <number>2</number>
+     <number>1</number>
     </property>
     <item>
-     <widget class="BlackGui::Views::CKeyboardKeyView" name="tvp_SettingsMiscHotkeys">
-      <property name="cornerButtonEnabled">
-       <bool>true</bool>
+     <widget class="BlackGui::Components::CSettingsHotkeyComponent" name="comp_SettingsHotkeysComponent">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-      <attribute name="verticalHeaderVisible">
-       <bool>false</bool>
-      </attribute>
-     </widget>
-    </item>
-    <item>
-     <widget class="QFrame" name="fr_SettingsMisc">
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QHBoxLayout" name="hl_SettingsMisc">
-       <item>
-        <widget class="QPushButton" name="pb_SettingsMiscSave">
-         <property name="text">
-          <string>Save</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pb_SettingsMiscRemove">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Remove</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pb_SettingsMiscCancel">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Cancel</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
      </widget>
     </item>
    </layout>
@@ -564,11 +531,6 @@
    <extends>QFrame</extends>
    <header>blackgui/components/audiosetupcomponent.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Views::CKeyboardKeyView</class>
-   <extends>QTableView</extends>
-   <header>blackgui/views/keyboardkeyview.h</header>
   </customwidget>
   <customwidget>
    <class>BlackGui::Components::CSettingsSimulatorComponent</class>
@@ -586,6 +548,12 @@
    <class>BlackGui::Components::CSettingsNetworkComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/settingsnetworkcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CSettingsHotkeyComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/settingshotkeycomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

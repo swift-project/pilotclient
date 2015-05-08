@@ -44,7 +44,7 @@ namespace BlackGui
 
         void CSettingsNetworkServersComponent::runtimeHasBeenSet()
         {
-            Q_ASSERT_X(this->getIContextSettings(), "runtimeHasBeenSet", "Missing settings");
+            Q_ASSERT_X(this->getIContextSettings(), Q_FUNC_INFO, "Missing settings");
             this->connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &CSettingsNetworkServersComponent::ps_changedSettings);
         }
 

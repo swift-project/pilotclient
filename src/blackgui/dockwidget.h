@@ -73,6 +73,9 @@ namespace BlackGui
         //! Window title backup
         const QString &windowTitleBackup() const { return this->m_windowTitleBackup; }
 
+        //! If current window title is empty, use backup
+        QString windowTitleOrBackup() const;
+
         //! Window title when window is docked
         bool showTitleWhenDocked() const { return this->m_windowTitleWhenDocked; }
 
