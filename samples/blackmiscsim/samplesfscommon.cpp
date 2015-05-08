@@ -10,7 +10,8 @@
 #include "samplesfscommon.h"
 #include "blackmisc/sampleutils.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
-#include "blackmisc/simulation/fscommon/aircraftmapper.h"
+#include "blackmisc/simulation/fscommon/aircraftmatcher.h"
+#include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 
 #include <QDebug>
 #include <QFuture>
@@ -29,13 +30,11 @@ namespace BlackSimTest
      */
     int CSamplesFsCommon::samples(QTextStream &streamOut, QTextStream &streamIn)
     {
-        QString fsxDir = CSampleUtils::selectDirectory({"P:/FlightSimulatorX (MSI)/SimObjects", "P:/Temp/SimObjects"}, streamOut, streamIn);
-        CAircraftMapper mapper;
-        if (!mapper.changeCAircraftCfgEntriesDirectory(fsxDir))
-        {
-            streamOut << "Wrong or empty directoy " << fsxDir << endl;
-            return 0;
-        }
+        QString fsxDir = CSampleUtils::selectDirectory({"C:/Program Files (x86)/Microsoft Games/Microsoft Flight Simulator X/SimObjects",
+                                                        "C:/Flight Simulator 9/Aircraft"}, streamOut, streamIn);
+
+        CAircraftCfgParser parser;
+        parser.changeRootDirectory(fsxDir);
 
         streamOut << "start reading, press RETURN" << endl;
         QString input = streamIn.readLine();
@@ -44,11 +43,11 @@ namespace BlackSimTest
         streamOut << "reading directly" << endl;
         QTime time;
         time.start();
-        streamOut << "reading " << mapper.getAircraftCfgEntriesList().getRootDirectory() << endl;
-        mapper.readSimObjects();
-        streamOut << "read entries: " << mapper.getAircraftCfgEntriesList().size() << " in " << time.restart() << "ms" << endl;
+        streamOut << "reading " << parser.getRootDirectory() << endl;
+        parser.parse();
+        streamOut << "read entries: " << parser.getAircraftCfgEntriesList().size() << " in " << time.restart() << "ms" << endl;
 
-        CAircraftCfgEntriesList entriesList = mapper.getAircraftCfgEntriesList();
+        CAircraftCfgEntriesList entriesList = parser.getAircraftCfgEntriesList();
         QJsonDocument doc(entriesList.toJson());
         QByteArray jsonArray(doc.toJson());
         streamOut << "write JSON array with size " << jsonArray.size() << endl;

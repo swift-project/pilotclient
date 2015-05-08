@@ -10,8 +10,9 @@
 #include "samplesmodelmapping.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/sampleutils.h"
-#include "blackmisc/simulation/fscommon/vpilotmodelmappings.h"
-#include "blackmisc/simulation/fscommon/aircraftmapper.h"
+#include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
+#include "blackmisc/simulation/fscommon/modelmappingsprovidervpilot.h"
+#include "blackmisc/simulation/fscommon/aircraftmatcher.h"
 
 #include <QDebug>
 #include <memory>
@@ -32,37 +33,39 @@ namespace BlackSimTest
     {
         BlackMisc::registerMetadata();
 
-        std::unique_ptr<ISimulatorModelMappings> cvm(new CVPilotModelMappings(true));
+        std::unique_ptr<IModelMappingsProvider> cvm(new CModelMappingsProviderVPilot(true));
         bool s = cvm->read();
-        streamOut << "directory: " << CVPilotModelMappings::standardMappingsDirectory() << endl;
-        streamOut << "loaded: " << BlackMisc::boolToYesNo(s) << " size: " << cvm->size() << endl;
+        streamOut << "directory: " << CModelMappingsProviderVPilot::standardMappingsDirectory() << endl;
+        streamOut << "loaded: " << BlackMisc::boolToYesNo(s) << " size: " << cvm->getMappingList().size() << endl;
 
         // mapper with rule set, handing over ownership
-        CAircraftMapper mapper(std::move(cvm));
+        CAircraftCfgParser cfgParser;
         QString fsxDir = CSampleUtils::selectDirectory({QStringLiteral("P:/FlightSimulatorX (MSI)/SimObjects"),
                                                         QStringLiteral("P:/Temp/SimObjects"),
                                                         QStringLiteral("C:/Flight Simulator 9/Aircraft")}, streamOut, streamIn);
 
-        if (!mapper.changeCAircraftCfgEntriesDirectory(fsxDir))
+        if (!cfgParser.changeRootDirectory(fsxDir))
         {
             streamOut << "Wrong or empty directoy " << fsxDir << endl;
             return 0;
         }
 
         streamOut << "Start reading models" << endl;
-        mapper.changeCAircraftCfgEntriesDirectory(fsxDir);
-        mapper.readSimObjects();
-        streamOut << "Read models: " << mapper.countAircraftCfgEntries() << endl;
-        streamOut << "Ambigious models: " << mapper.getAircraftCfgEntriesList().detectAmbiguousTitles().join(", ") << endl;
+        cfgParser.parse(CAircraftCfgParser::ModeBlocking);
+        streamOut << "Read models: " << cfgParser.getAircraftCfgEntriesList().size() << endl;
+        streamOut << "Ambigious models: " << cfgParser.getAircraftCfgEntriesList().detectAmbiguousTitles().join(", ") << endl;
 
         // sync definitions, remove redundant ones
-        streamOut << "Now synchronizing defintions: " << mapper.countMappingRules() << endl;
-        int afterSync = mapper.synchronize();
+        CAircraftMatcher matcher(CAircraftMatcher::AllModes);
+        matcher.setModelMappingProvider(std::move(cvm));
+        matcher.setInstalledModels(cfgParser.getAircraftCfgEntriesList().toAircraftModelList());
+        streamOut << "Now synchronizing defintions: " << matcher.getAircraftMappingList().size() << endl;
+        int afterSync = matcher.synchronize();
         streamOut << "After synchronizing definitions: " << afterSync << endl;
 
         CAircraftIcaoData icao("C172");
         streamOut << "Searching for " << icao << endl;
-        streamOut << mapper.getAircraftMappingList().findByIcaoCodeExact(icao) << endl;
+        streamOut << matcher.getAircraftMappingList().findByIcaoCodeExact(icao) << endl;
 
         return 0;
     }
