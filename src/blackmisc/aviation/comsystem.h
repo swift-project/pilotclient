@@ -24,13 +24,15 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CComSystem :
             public CModulator<CComSystem>,
             public Mixin::MetaType<CComSystem>,
-            public Mixin::JsonOperators<CComSystem>
+            public Mixin::JsonOperators<CComSystem>,
+            public Mixin::Index<CComSystem>
         {
         public:
             //! Base type
             using base_type = CModulator<CComSystem>;
 
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CComSystem)
+            BLACKMISC_DECLARE_USING_MIXIN_INDEX(CComSystem)
 
             //! Channel spacing frequency
             enum ChannelSpacing

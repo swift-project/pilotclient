@@ -25,13 +25,15 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CAdfSystem :
             public CModulator<CAdfSystem>,
             public Mixin::MetaType<CAdfSystem>,
-            public Mixin::JsonOperators<CAdfSystem>
+            public Mixin::JsonOperators<CAdfSystem>,
+            public Mixin::Index<CAdfSystem>
         {
         public:
             //! Base type
             using base_type = CModulator<CAdfSystem>;
 
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAdfSystem)
+            BLACKMISC_DECLARE_USING_MIXIN_INDEX(CAdfSystem)
 
             //! Default constructor
             CAdfSystem() = default;

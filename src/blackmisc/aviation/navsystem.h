@@ -24,13 +24,15 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CNavSystem :
             public CModulator<CNavSystem>,
             public Mixin::MetaType<CNavSystem>,
-            public Mixin::JsonOperators<CNavSystem>
+            public Mixin::JsonOperators<CNavSystem>,
+            public Mixin::Index<CNavSystem>
         {
         public:
             //! Base type
             using base_type = CModulator<CNavSystem>;
 
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CNavSystem)
+            BLACKMISC_DECLARE_USING_MIXIN_INDEX(CNavSystem)
 
             //! Default constructor
             CNavSystem() = default;

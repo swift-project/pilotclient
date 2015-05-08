@@ -13,7 +13,6 @@
 #define BLACKMISC_GEO_LATITUDE_H
 
 #include "blackmisc/blackmiscexport.h"
-#include <QtCore/qmath.h>
 #include "blackmisc/geo/earthangle.h"
 
 namespace BlackMisc
@@ -26,7 +25,8 @@ namespace BlackMisc
             public CEarthAngle<CLatitude>,
             public Mixin::MetaType<CLatitude>,
             public Mixin::String<CLatitude>,
-            public Mixin::DBusOperators<CLatitude>
+            public Mixin::DBusOperators<CLatitude>,
+            public Mixin::Index<CLatitude>
         {
         public:
             //! Base type
@@ -34,6 +34,7 @@ namespace BlackMisc
 
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CLatitude)
             BLACKMISC_DECLARE_USING_MIXIN_STRING(CLatitude)
+            BLACKMISC_DECLARE_USING_MIXIN_INDEX(CLatitude)
 
             //! \copydoc CValueObject::convertToQString
             QString convertToQString(bool i18n = false) const

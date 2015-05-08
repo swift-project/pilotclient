@@ -33,7 +33,8 @@ namespace BlackMisc
             public Mixin::HashByTuple<CTrack>,
             public Mixin::DBusByTuple<CTrack>,
             public Mixin::JsonByTuple<CTrack>,
-            public Mixin::String<CTrack>
+            public Mixin::String<CTrack>,
+            public Mixin::Index<CTrack>
         {
         public:
             //! Base type
@@ -43,6 +44,7 @@ namespace BlackMisc
             BLACKMISC_DECLARE_USING_MIXIN_STRING(CTrack)
             BLACKMISC_DECLARE_USING_MIXIN_DBUS(CTrack)
             BLACKMISC_DECLARE_USING_MIXIN_JSON(CTrack)
+            BLACKMISC_DECLARE_USING_MIXIN_INDEX(CTrack)
 
             /*!
              * Enum type to distinguish between true north and magnetic north

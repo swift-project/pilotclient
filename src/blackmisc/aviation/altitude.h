@@ -33,7 +33,8 @@ namespace BlackMisc
             public Mixin::DBusByTuple<CAltitude>,
             public Mixin::JsonByTuple<CAltitude>,
             public Mixin::String<CAltitude>,
-            public Mixin::Icon<CAltitude>
+            public Mixin::Icon<CAltitude>,
+            public Mixin::Index<CAltitude>
         {
         public:
             //! Base type
@@ -44,6 +45,7 @@ namespace BlackMisc
             BLACKMISC_DECLARE_USING_MIXIN_DBUS(CAltitude)
             BLACKMISC_DECLARE_USING_MIXIN_JSON(CAltitude)
             BLACKMISC_DECLARE_USING_MIXIN_ICON(CAltitude)
+            BLACKMISC_DECLARE_USING_MIXIN_INDEX(CAltitude)
 
             /*!
              * Enum type to distinguish between MSL and AGL

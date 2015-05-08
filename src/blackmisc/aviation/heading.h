@@ -32,7 +32,8 @@ namespace BlackMisc
             public Mixin::HashByTuple<CHeading>,
             public Mixin::DBusByTuple<CHeading>,
             public Mixin::JsonByTuple<CHeading>,
-            public Mixin::String<CHeading>
+            public Mixin::String<CHeading>,
+            public Mixin::Index<CHeading>
         {
         public:
             //! Base type
@@ -42,6 +43,7 @@ namespace BlackMisc
             BLACKMISC_DECLARE_USING_MIXIN_STRING(CHeading)
             BLACKMISC_DECLARE_USING_MIXIN_DBUS(CHeading)
             BLACKMISC_DECLARE_USING_MIXIN_JSON(CHeading)
+            BLACKMISC_DECLARE_USING_MIXIN_INDEX(CHeading)
 
             //! Enum type to distinguish between true north and magnetic north
             enum ReferenceNorth

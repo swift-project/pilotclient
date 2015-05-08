@@ -25,7 +25,8 @@ namespace BlackMisc
             public CEarthAngle<CLongitude>,
             public Mixin::MetaType<CLongitude>,
             public Mixin::String<CLongitude>,
-            public Mixin::DBusOperators<CLongitude>
+            public Mixin::DBusOperators<CLongitude>,
+            public Mixin::Index<CLongitude>
         {
         public:
             //! Base type
@@ -33,6 +34,7 @@ namespace BlackMisc
 
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CLongitude)
             BLACKMISC_DECLARE_USING_MIXIN_STRING(CLongitude)
+            BLACKMISC_DECLARE_USING_MIXIN_INDEX(CLongitude)
 
             //! \copydoc CValueObject::convertToQString
             QString convertToQString(bool i18n = false) const
