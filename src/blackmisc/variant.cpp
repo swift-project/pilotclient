@@ -89,6 +89,9 @@ namespace BlackMisc
         case QVariant::String:      json.insert("value", m_v.toString());
         case QVariant::Char:        json.insert("value", m_v.toString());
         case QVariant::ByteArray:   json.insert("value", m_v.toString());
+        case QVariant::DateTime:    json.insert("value", m_v.toDateTime().toString(Qt::ISODate));
+        case QVariant::Date:        json.insert("value", m_v.toDate().toString(Qt::ISODate));
+        case QVariant::Time:        json.insert("value", m_v.toTime().toString(Qt::ISODate));
         default:
             try
             {
@@ -130,6 +133,9 @@ namespace BlackMisc
         case QVariant::String:      m_v.setValue(json.value("value").toString());
         case QVariant::Char:        m_v.setValue(json.value("value").toString().size() > 0 ? json.value("value").toString().at(0) : '\0');
         case QVariant::ByteArray:   m_v.setValue(json.value("value").toString().toLatin1());
+        case QVariant::DateTime:    m_v.setValue(QDateTime::fromString(json.value("value").toString(), Qt::ISODate));
+        case QVariant::Date:        m_v.setValue(QDate::fromString(json.value("value").toString(), Qt::ISODate));
+        case QVariant::Time:        m_v.setValue(QTime::fromString(json.value("value").toString(), Qt::ISODate));
         default:
             try
             {
