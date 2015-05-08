@@ -39,7 +39,10 @@ namespace BlackSimTest
 
         // mapper with rule set, handing over ownership
         CAircraftMapper mapper(std::move(cvm));
-        QString fsxDir = CSampleUtils::selectDirectory({"P:/FlightSimulatorX (MSI)/SimObjects", "P:/Temp/SimObjects"}, streamOut, streamIn);
+        QString fsxDir = CSampleUtils::selectDirectory({QStringLiteral("P:/FlightSimulatorX (MSI)/SimObjects"),
+                                                        QStringLiteral("P:/Temp/SimObjects"),
+                                                        QStringLiteral("C:/Flight Simulator 9/Aircraft")}, streamOut, streamIn);
+
         if (!mapper.changeCAircraftCfgEntriesDirectory(fsxDir))
         {
             streamOut << "Wrong or empty directoy " << fsxDir << endl;
