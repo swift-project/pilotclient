@@ -22,9 +22,6 @@ namespace BlackSimPlugin
     namespace XPlane
     {
 
-        //! Typedef needed to use CSequence<double> as a DBus argument
-        typedef BlackMisc::CSequence<double> CDoubleSequence;
-
         /*!
          * Proxy object connected to a real XBus::CService object via DBus
          */
@@ -81,7 +78,7 @@ namespace BlackSimPlugin
             void aircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao);
 
             //! \copydoc XBus::CService::airportsInRangeUpdated
-            void airportsInRangeUpdated(const QStringList &icaoCodes, const QStringList &names, const CDoubleSequence &lats, const CDoubleSequence &lons, const CDoubleSequence &alts);
+            void airportsInRangeUpdated(const QStringList &icaoCodes, const QStringList &names, const QList<double> &lats, const QList<double> &lons, const QList<double> &alts);
 
         public slots:
             //! \copydoc XBus::CService::updateAirportsInRange
