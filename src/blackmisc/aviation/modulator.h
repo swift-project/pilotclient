@@ -38,58 +38,43 @@ namespace BlackMisc
             };
 
             //! Default value?
-            virtual bool isDefaultValue() const
-            {
-                return (this->m_frequencyActive == FrequencyNotSet());
-            }
+            virtual bool isDefaultValue() const;
 
             //! Toggle active and standby frequencies
             void toggleActiveStandby();
 
             //! Active frequency
-            BlackMisc::PhysicalQuantities::CFrequency getFrequencyActive() const
-            {
-                return this->m_frequencyActive;
-            }
+            BlackMisc::PhysicalQuantities::CFrequency getFrequencyActive() const;
 
             //! Standby frequency
-            BlackMisc::PhysicalQuantities::CFrequency getFrequencyStandby() const
-            {
-                return this->m_frequencyStandby;
-            }
+            BlackMisc::PhysicalQuantities::CFrequency getFrequencyStandby() const;
 
             //! Set active frequency
-            virtual void setFrequencyActive(const BlackMisc::PhysicalQuantities::CFrequency &frequency)
-            {
-                this->m_frequencyActive = frequency;
-            }
+            virtual void setFrequencyActive(const BlackMisc::PhysicalQuantities::CFrequency &frequency);
 
             //! Set standby frequency
-            virtual void setFrequencyStandby(const BlackMisc::PhysicalQuantities::CFrequency &frequency)
-            {
-                this->m_frequencyStandby = frequency;
-            }
+            virtual void setFrequencyStandby(const BlackMisc::PhysicalQuantities::CFrequency &frequency);
 
             //! Output volume 0..100
-            int getVolumeOutput() const { return this->m_volumeOutput; }
+            qint32 getVolumeOutput() const;
 
             //! Input volume 0..100
-            int getVolumeInput() const { return this->m_volumeInput; }
+            qint32 getVolumeInput() const;
 
             //! Output volume 0.100
-            void setVolumeOutput(int volume) { this->m_volumeOutput = volume; }
+            void setVolumeOutput(qint32 volume);
 
             //! Input volume 0..100
-            void setVolumeInput(int volume) { this->m_volumeInput = volume; }
+            void setVolumeInput(qint32 volume);
 
             //! Name
-            QString getName() const { return this->m_name; }
+            QString getName() const;
 
             //! Enabled?
-            bool isEnabled() const { return this->m_enabled;}
+            bool isEnabled() const;
 
             //! Enabled?
-            void setEnabled(bool enable) { this->m_enabled = enable;}
+            void setEnabled(bool enable);
 
             //! Are set values valid?
             virtual bool validValues() const { return true; }
@@ -105,100 +90,49 @@ namespace BlackMisc
 
         protected:
             //! Default constructor
-            CModulator() : m_name("default") {}
+            CModulator();
 
             //! Constructor
-            CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency) :
-                m_name(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency) {}
+            CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency);
 
             //! Set active frequency
-            void setFrequencyActiveKHz(double frequencyKHz)
-            {
-                this->m_frequencyActive = BlackMisc::PhysicalQuantities::CFrequency(frequencyKHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::kHz());
-            }
+            void setFrequencyActiveKHz(double frequencyKHz);
 
             //! Set standby frequency
-            void setFrequencyStandbyKHz(double frequencyKHz)
-            {
-                this->m_frequencyStandby = BlackMisc::PhysicalQuantities::CFrequency(frequencyKHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::kHz());
-            }
+            void setFrequencyStandbyKHz(double frequencyKHz);
 
             //! Set active frequency
-            virtual void setFrequencyActiveMHz(double frequencyMHz)
-            {
-                frequencyMHz = Math::CMathUtils::round(frequencyMHz, 3);
-                this->m_frequencyActive = BlackMisc::PhysicalQuantities::CFrequency(frequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz());
-            }
+            virtual void setFrequencyActiveMHz(double frequencyMHz);
 
             //! Set standby frequency
-            virtual void setFrequencyStandbyMHz(double frequencyMHz)
-            {
-                frequencyMHz = Math::CMathUtils::round(frequencyMHz, 3);
-                this->m_frequencyStandby = BlackMisc::PhysicalQuantities::CFrequency(frequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz());
-            }
+            virtual void setFrequencyStandbyMHz(double frequencyMHz);
 
             //! COM1
-            static const QString &NameCom1()
-            {
-                static const QString n("COM1");
-                return n;
-            }
+            static const QString &NameCom1();
 
             //! COM2
-            static const QString &NameCom2()
-            {
-                static const QString n("COM2");
-                return n;
-            }
+            static const QString &NameCom2();
 
             //! COM3
-            static const QString &NameCom3()
-            {
-                static const QString n("COM3");
-                return n;
-            }
+            static const QString &NameCom3();
 
             //! NAV1
-            static const QString &NameNav1()
-            {
-                static const QString n("NAV1");
-                return n;
-            }
+            static const QString &NameNav1();
 
             //! NAV2
-            static const QString &NameNav2()
-            {
-                static const QString n("NAV2");
-                return n;
-            }
+            static const QString &NameNav2();
 
             //! NAV3
-            static const QString &NameNav3()
-            {
-                static const QString n("NAV3");
-                return n;
-            }
+            static const QString &NameNav3();
 
             //! ADF1
-            static const QString &NameAdf1()
-            {
-                static QString n("ADF1");
-                return n;
-            }
+            static const QString &NameAdf1();
 
             //! ADF2
-            static const QString &NameAdf2()
-            {
-                static QString n("ADF2");
-                return n;
-            }
+            static const QString &NameAdf2();
 
             //! Frequency not set
-            static const BlackMisc::PhysicalQuantities::CFrequency &FrequencyNotSet()
-            {
-                static const BlackMisc::PhysicalQuantities::CFrequency f(0, BlackMisc::PhysicalQuantities::CFrequencyUnit::nullUnit());
-                return f;
-            }
+            static const BlackMisc::PhysicalQuantities::CFrequency &FrequencyNotSet();
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CModulator)
@@ -210,11 +144,10 @@ namespace BlackMisc
             bool m_enabled = true;     //!< is enabled, used e.g. for mute etc.
 
             //! Easy access to derived class (CRTP template parameter)
-            AVIO const *derived() const { return static_cast<AVIO const *>(this); }
+            AVIO const *derived() const;
 
             //! Easy access to derived class (CRTP template parameter)
-            AVIO *derived() { return static_cast<AVIO *>(this); }
-
+            AVIO *derived();
         };
 
         //! \cond PRIVATE
