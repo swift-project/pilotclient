@@ -12,7 +12,6 @@
 #include "samplesmetadata.h"
 #include "samplescontainer.h"
 #include "samplesjson.h"
-#include "samplesvariant.h"
 #include "samplesperformance.h"
 #include "samplesalgorithm.h"
 #include "samplesconcurrent.h"
@@ -42,7 +41,6 @@ int main(int argc, char *argv[])
         qtout << "2 .. Change object" << endl;
         qtout << "3 .. Containers" << endl;
         qtout << "4 .. Metadata" << endl;
-        qtout << "5 .. Variant" << endl;
         qtout << "6a .. Performance create / copy / ..." << endl;
         qtout << "6b .. 25/100 Performance impl. type" << endl;
         qtout << "6c .. 25/20 Performance impl. type" << endl;
@@ -57,7 +55,6 @@ int main(int argc, char *argv[])
         else if (s.startsWith("2")) { CSamplesChangeObject::samples(); }
         else if (s.startsWith("3")) { CSamplesContainer::samples(); }
         else if (s.startsWith("4")) { CSamplesMetadata::samples(); }
-        else if (s.startsWith("5")) { CSamplesVariant::samples(); }
         else if (s.startsWith("6a")) { CSamplesPerformance::samplesMisc(qtout); }
         else if (s.startsWith("6b")) { CSamplesPerformance::samplesImplementationType(qtout, 25, 100); }
         else if (s.startsWith("6c")) { CSamplesPerformance::samplesImplementationType(qtout, 25, 20); }

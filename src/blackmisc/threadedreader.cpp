@@ -17,7 +17,6 @@ namespace BlackMisc
         m_updateTimer(new QTimer(this))
     {  }
 
-
     QDateTime CThreadedReader::getUpdateTimestamp() const
     {
         QReadLocker(&this->m_lock);
@@ -49,14 +48,17 @@ namespace BlackMisc
     void CThreadedReader::setInterval(int updatePeriodMs)
     {
         Q_ASSERT(this->m_updateTimer);
+        bool s;
         if (updatePeriodMs < 1)
         {
-            QMetaObject::invokeMethod(m_updateTimer, "stop");
+            s = QMetaObject::invokeMethod(m_updateTimer, "stop");
         }
         else
         {
-            QMetaObject::invokeMethod(m_updateTimer, "start", Q_ARG(int, updatePeriodMs));
+            s = QMetaObject::invokeMethod(m_updateTimer, "start", Q_ARG(int, updatePeriodMs));
         }
+        Q_ASSERT_X(s, Q_FUNC_INFO, "Failed invoke");
+        Q_UNUSED(s);
     }
 
     int CThreadedReader::interval() const
@@ -67,8 +69,7 @@ namespace BlackMisc
 
     void CThreadedReader::threadAssertCheck() const
     {
-        Q_ASSERT_X(QCoreApplication::instance()->thread() != QThread::currentThread(), "CThreadedReader::threadAssertCheck", "Needs to run in own thread");
-        Q_ASSERT_X(QObject::thread() == QThread::currentThread(), "CThreadedReader::threadAssertCheck", "Needs to run in own thread");
+        Q_ASSERT_X(QCoreApplication::instance()->thread() != QThread::currentThread(), Q_FUNC_INFO, "Needs to run in own thread");
+        Q_ASSERT_X(QObject::thread() == QThread::currentThread(), Q_FUNC_INFO, "Wrong object thread");
     }
-
 } // namespace

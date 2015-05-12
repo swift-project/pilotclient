@@ -115,6 +115,8 @@ namespace BlackCore
     {
         m_aircraftCallsignTimestamps.clear();
         m_atcCallsignTimestamps.clear();
+
+        QWriteLocker l(&m_lockSnapshot);
         m_latestAircraftSnapshot = CAirspaceAircraftSnapshot();
     }
 

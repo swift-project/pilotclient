@@ -58,7 +58,7 @@ namespace BlackMisc
             double c = 2.0 * qAtan(qSqrt(a) / qSqrt(1.0 - a));
             double distance = earthRadiusM * c;
 
-            Q_ASSERT_X(distance >= 0, Q_FUNC_INFO, "distance < 0");
+            Q_ASSERT_X(distance >= 0, Q_FUNC_INFO, "distance should never calculate to negative values");
             return CLength(distance, CLengthUnit::m());
         }
 
