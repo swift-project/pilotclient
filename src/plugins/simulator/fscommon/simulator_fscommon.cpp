@@ -99,7 +99,7 @@ namespace BlackSimPlugin
             if (mapperInstance() && mapperInstance()->isInitialized())
             {
                 // reverse lookup of ICAO
-                CAircraftIcao icao =  mapperInstance()->getIcaoForModelString(model.getModelString());
+                CAircraftIcaoData icao =  mapperInstance()->getIcaoForModelString(model.getModelString());
                 icao.updateMissingParts(model.getIcao());
                 model.setIcao(icao); // now best ICAO info in model
             }
@@ -159,7 +159,7 @@ namespace BlackSimPlugin
             // ICAO to model
             if (!aircraftModel.hasModelString())
             {
-                CAircraftIcao icao = remoteAircraft.getIcaoInfo();
+                CAircraftIcaoData icao = remoteAircraft.getIcaoInfo();
                 BlackMisc::Network::CAircraftMappingList mappingList = mapperInstance()->getAircraftMappingList().findByIcaoAircraftAndAirlineDesignator(icao, true);
                 if (!mappingList.isEmpty())
                 {
@@ -209,9 +209,9 @@ namespace BlackSimPlugin
             return mapperInstance()->getAircraftCfgEntriesList().toAircraftModelList();
         }
 
-        CAircraftIcao CSimulatorFsCommon::getIcaoForModelString(const QString &modelString) const
+        CAircraftIcaoData CSimulatorFsCommon::getIcaoForModelString(const QString &modelString) const
         {
-            if (!mapperInstance()) { return CAircraftIcao(); }
+            if (!mapperInstance()) { return CAircraftIcaoData(); }
             return mapperInstance()->getIcaoForModelString(modelString);
         }
 

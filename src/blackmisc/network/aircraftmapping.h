@@ -13,7 +13,7 @@
 #define BLACKMISC_NETWORK_AIRCRAFTMAPPING_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/aviation/aircrafticao.h"
+#include "blackmisc/aviation/aircrafticaodata.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/valueobject.h"
 
@@ -51,10 +51,10 @@ namespace BlackMisc
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! ICAO
-            void setIcao(const BlackMisc::Aviation::CAircraftIcao &icao) { this->m_icao = icao; }
+            void setIcao(const BlackMisc::Aviation::CAircraftIcaoData &icao) { this->m_icao = icao; }
 
             //! ICAO
-            const BlackMisc::Aviation::CAircraftIcao &getIcao() const { return this->m_icao; }
+            const BlackMisc::Aviation::CAircraftIcaoData &getIcao() const { return this->m_icao; }
 
             //! Model
             void setModel(const BlackMisc::Simulation::CAircraftModel &model) { this->m_model = model; }
@@ -66,15 +66,15 @@ namespace BlackMisc
             bool matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const;
 
             //! Matches wildcard icao object
-            bool matchesWildcardIcao(const BlackMisc::Aviation::CAircraftIcao &otherIcao) const { return m_icao.matchesWildcardIcao(otherIcao); }
+            bool matchesWildcardIcao(const BlackMisc::Aviation::CAircraftIcaoData &otherIcao) const { return m_icao.matchesWildcardIcao(otherIcao); }
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftMapping)
 
             QString                            m_source;         //!< source, e.g. database, vPilot
             QString                            m_packageName;    //!< something like WoA, ..
-            BlackMisc::Aviation::CAircraftIcao m_icao;           //!< ICAO code
-            BlackMisc::Simulation::CAircraftModel m_model;          //!< aircraft model
+            BlackMisc::Aviation::CAircraftIcaoData m_icao;       //!< ICAO code
+            BlackMisc::Simulation::CAircraftModel m_model;       //!< aircraft model
 
             // BlackMisc::Simulation::CSimulatorPluginInfo m_simulatorInfo; //!< Mapping is for simulator
         };

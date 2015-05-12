@@ -15,7 +15,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/aviation/altitude.h"
-#include "blackmisc/aviation/airporticao.h"
+#include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/speed.h"
 #include <QDateTime>
@@ -44,7 +44,7 @@ namespace BlackMisc
             CFlightPlan() = default;
 
             //! Constructor
-            CFlightPlan(const QString &equipmentIcao, const CAirportIcao &originAirportIcao, const CAirportIcao &destinationAirportIcao, const CAirportIcao &alternateAirportIcao,
+            CFlightPlan(const QString &equipmentIcao, const CAirportIcaoCode &originAirportIcao, const CAirportIcaoCode &destinationAirportIcao, const CAirportIcaoCode &alternateAirportIcao,
                         QDateTime takeoffTimePlanned, QDateTime takeoffTimeActual, const PhysicalQuantities::CTime &enrouteTime, const PhysicalQuantities::CTime &fuelTime,
                         const CAltitude &cruiseAltitude, const PhysicalQuantities::CSpeed &cruiseTrueAirspeed, FlightRules flightRules, const QString &route, const QString &remarks)
                 : m_equipmentIcao(equipmentIcao), m_originAirportIcao(originAirportIcao), m_destinationAirportIcao(destinationAirportIcao), m_alternateAirportIcao(alternateAirportIcao),
@@ -63,19 +63,19 @@ namespace BlackMisc
             void setOriginAirportIcao(const QString &originAirportIcao) { m_originAirportIcao = originAirportIcao; }
 
             //! Set origin airport ICAO code
-            void setOriginAirportIcao(const CAirportIcao &originAirportIcao) { m_originAirportIcao = originAirportIcao; }
+            void setOriginAirportIcao(const CAirportIcaoCode &originAirportIcao) { m_originAirportIcao = originAirportIcao; }
 
             //! Set destination airport ICAO code
             void setDestinationAirportIcao(const QString &destinationAirportIcao) { m_destinationAirportIcao = destinationAirportIcao; }
 
             //! Set destination airport ICAO code
-            void setDestinationAirportIcao(const CAirportIcao &destinationAirportIcao) { m_destinationAirportIcao = destinationAirportIcao; }
+            void setDestinationAirportIcao(const CAirportIcaoCode &destinationAirportIcao) { m_destinationAirportIcao = destinationAirportIcao; }
 
             //! Set alternate destination airport ICAO code
             void setAlternateAirportIcao(const QString &alternateAirportIcao) { m_alternateAirportIcao = alternateAirportIcao; }
 
             //! Set alternate destination airport ICAO code
-            void setAlternateAirportIcao(const CAirportIcao &alternateAirportIcao) { m_alternateAirportIcao = alternateAirportIcao; }
+            void setAlternateAirportIcao(const CAirportIcaoCode &alternateAirportIcao) { m_alternateAirportIcao = alternateAirportIcao; }
 
             //! Set planned takeoff time
             void setTakeoffTimePlanned(QDateTime takeoffTimePlanned) { m_takeoffTimePlanned = takeoffTimePlanned; }
@@ -120,13 +120,13 @@ namespace BlackMisc
             const QString &getEquipmentIcao() const { return m_equipmentIcao; }
 
             //! Get origin airport ICAO code
-            const CAirportIcao &getOriginAirportIcao() const { return m_originAirportIcao; }
+            const CAirportIcaoCode &getOriginAirportIcao() const { return m_originAirportIcao; }
 
             //! Get destination airport ICAO code
-            const CAirportIcao &getDestinationAirportIcao() const { return m_destinationAirportIcao; }
+            const CAirportIcaoCode &getDestinationAirportIcao() const { return m_destinationAirportIcao; }
 
             //! Get alternate destination airport ICAO code
-            const CAirportIcao &getAlternateAirportIcao() const { return m_alternateAirportIcao; }
+            const CAirportIcaoCode &getAlternateAirportIcao() const { return m_alternateAirportIcao; }
 
             //! Get planned takeoff time (planned)
             const QDateTime &getTakeoffTimePlanned() const { return m_takeoffTimePlanned; }
@@ -188,9 +188,9 @@ namespace BlackMisc
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CFlightPlan)
             QString m_equipmentIcao;
-            CAirportIcao m_originAirportIcao;
-            CAirportIcao m_destinationAirportIcao;
-            CAirportIcao m_alternateAirportIcao;
+            CAirportIcaoCode m_originAirportIcao;
+            CAirportIcaoCode m_destinationAirportIcao;
+            CAirportIcaoCode m_alternateAirportIcao;
             QDateTime m_takeoffTimePlanned;
             QDateTime m_takeoffTimeActual;
             PhysicalQuantities::CTime m_enrouteTime;

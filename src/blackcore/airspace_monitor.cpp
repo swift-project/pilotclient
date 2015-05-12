@@ -312,7 +312,7 @@ namespace BlackCore
         return m_otherClients;
     }
 
-    BlackMisc::Aviation::CInformationMessage CAirspaceMonitor::getMetar(const BlackMisc::Aviation::CAirportIcao &airportIcaoCode)
+    BlackMisc::Aviation::CInformationMessage CAirspaceMonitor::getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode)
     {
         CInformationMessage metar;
         if (airportIcaoCode.isEmpty()) return metar;
@@ -513,7 +513,7 @@ namespace BlackCore
         // ICAO response from custom data
         if (!aircraftDesignator.isEmpty())
         {
-            CAircraftIcao icao(aircraftDesignator, combinedAircraftType, airlineIcao, "", ""); // from custom packet
+            CAircraftIcaoData icao(aircraftDesignator, combinedAircraftType, airlineIcao, "", ""); // from custom packet
             if (aircraftContainsCallsign)
             {
                 // we have that aircraft, set straight away
@@ -802,7 +802,7 @@ namespace BlackCore
         }
     }
 
-    void CAirspaceMonitor::ps_icaoCodesReceived(const CCallsign &callsign, const CAircraftIcao &icaoData)
+    void CAirspaceMonitor::ps_icaoCodesReceived(const CCallsign &callsign, const CAircraftIcaoData &icaoData)
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
         Q_ASSERT(!callsign.isEmpty());
@@ -814,7 +814,7 @@ namespace BlackCore
         {
             // empty so far, try to fetch from data file
             CLogMessage(this).warning("Empty ICAO info for %1 %2") << callsign.toQString() << icaoData.toQString();
-            CAircraftIcao icaoDataFromDataFile = this->m_vatsimDataFileReader->getIcaoInfo(callsign);
+            CAircraftIcaoData icaoDataFromDataFile = this->m_vatsimDataFileReader->getIcaoInfo(callsign);
             if (!icaoDataFromDataFile.hasAircraftDesignator()) { return; } // give up!
             vm = CPropertyIndexVariantMap(CAircraft::IndexIcao, icaoDataFromDataFile.toCVariant());
         }
@@ -862,7 +862,7 @@ namespace BlackCore
             bool setIcao = false;
             if (this->m_icaoCodeCache.contains(callsign))
             {
-                CAircraftIcao icao = this->m_icaoCodeCache.value(callsign);
+                CAircraftIcaoData icao = this->m_icaoCodeCache.value(callsign);
                 this->m_icaoCodeCache.remove(callsign);
                 aircraft.setIcaoInfo(icao);
                 setIcao = true;

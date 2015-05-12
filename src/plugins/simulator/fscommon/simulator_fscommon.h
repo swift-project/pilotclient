@@ -61,7 +61,7 @@ namespace BlackSimPlugin
             virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override;
 
             //! \copydoc ISimulator::getIcaoForModelString
-            virtual BlackMisc::Aviation::CAircraftIcao getIcaoForModelString(const QString &modelString) const override;
+            virtual BlackMisc::Aviation::CAircraftIcaoData getIcaoForModelString(const QString &modelString) const override;
 
             //! \copydoc ISimulator::reloadInstalledModels
             virtual void reloadInstalledModels() override;

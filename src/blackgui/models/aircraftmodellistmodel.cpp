@@ -8,7 +8,7 @@
  */
 
 #include "aircraftmodellistmodel.h"
-#include "blackmisc/aviation/aircrafticao.h"
+#include "blackmisc/aviation/aircrafticaodata.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
@@ -55,9 +55,9 @@ namespace BlackGui
             case MappedModel:
                 this->m_columns.addColumn(CColumn::standardValueObject("call", "callsign", CAircraftModel::IndexCallsign));
                 this->m_columns.addColumn(CColumn::standardString("model", CAircraftModel::IndexModelString));
-                this->m_columns.addColumn(CColumn::standardString("ac", "aircraft ICAO", { CAircraftModel::IndexIcao, CAircraftIcao::IndexAircraftDesignator}));
-                this->m_columns.addColumn(CColumn::standardString("al", "airline ICAO", { CAircraftModel::IndexIcao, CAircraftIcao::IndexAirlineDesignator}));
-                // this->m_columns.addColumn(CColumn::standardString("ct", "combined type", { CAircraftModel::IndexIcao, CAircraftIcao::IndexCombinedAircraftType}));
+                this->m_columns.addColumn(CColumn::standardString("ac", "aircraft ICAO", { CAircraftModel::IndexIcao, CAircraftIcaoData::IndexAircraftDesignator}));
+                this->m_columns.addColumn(CColumn::standardString("al", "airline ICAO", { CAircraftModel::IndexIcao, CAircraftIcaoData::IndexAirlineDesignator}));
+                // this->m_columns.addColumn(CColumn::standardString("ct", "combined type", { CAircraftModel::IndexIcao, CAircraftIcaoData::IndexCombinedAircraftType}));
                 this->m_columns.addColumn(CColumn("q.?", "queried", CAircraftModel::IndexHasQueriedModelString,
                                                   new CBoolIconFormatter(CIcons::StandardIconTick16, CIcons::StandardIconCross16, "queried", "not queried")));
                 this->m_columns.addColumn(CColumn::standardString("description",  CAircraftModel::IndexDescription));

@@ -76,7 +76,7 @@ namespace BlackGui
             {
                 this->ui->le_Callsign->setText(ownAircraft.getCallsign().asString());
             }
-            if (CAircraftIcao::isValidDesignator(ownAircraft.getIcaoInfo().getAircraftDesignator()))
+            if (CAircraftIcaoData::isValidDesignator(ownAircraft.getIcaoInfo().getAircraftDesignator()))
             {
                 this->ui->le_AircraftType->setText(ownAircraft.getIcaoInfo().getAircraftDesignator());
             }

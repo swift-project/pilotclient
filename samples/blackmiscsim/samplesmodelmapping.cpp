@@ -57,7 +57,7 @@ namespace BlackSimTest
         int afterSync = mapper.synchronize();
         streamOut << "After synchronizing definitions: " << afterSync << endl;
 
-        CAircraftIcao icao("C172");
+        CAircraftIcaoData icao("C172");
         streamOut << "Searching for " << icao << endl;
         streamOut << mapper.getAircraftMappingList().findByIcaoCodeExact(icao) << endl;
 

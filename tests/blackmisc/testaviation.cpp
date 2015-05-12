@@ -8,7 +8,7 @@
 #include "blackmisc/aviation/heading.h"
 #include "blackmisc/aviation/informationmessage.h"
 #include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/aviation/aircrafticao.h"
+#include "blackmisc/aviation/aircrafticaodata.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/navsystem.h"
@@ -159,8 +159,8 @@ namespace BlackMiscTest
         CAircraftSituation situation2(situation1);
         QVERIFY2(situation1 == situation2, "situations shall be equal");
 
-        CAircraftIcao icao1(CAircraftIcao("C172", "L1P", "GA", "GA", "0000ff"));
-        CAircraftIcao icao2(icao1);
+        CAircraftIcaoData icao1("C172", "L1P", "GA", "GA", "0000ff");
+        CAircraftIcaoData icao2(icao1);
         QVERIFY2(icao1 == icao2, "ICAOs shall be equal");
 
         CCallsign call1("EDDS_N_APP");

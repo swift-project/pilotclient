@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/aviation/aircrafticao.h"
+#include "blackmisc/aviation/aircrafticaodata.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/variant.h"
@@ -20,11 +20,11 @@ namespace BlackMisc
     namespace Aviation
     {
 
-        CAircraftIcao::CAircraftIcao(const QString &icao, const QString &airline)
+        CAircraftIcaoData::CAircraftIcaoData(const QString &icao, const QString &airline)
             : m_aircraftDesignator(icao.trimmed().toUpper()), m_airlineDesignator(airline.trimmed().toUpper())
         {}
 
-        QString CAircraftIcao::convertToQString(bool i18n) const
+        QString CAircraftIcaoData::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
             QString s(this->m_aircraftDesignator);
@@ -35,23 +35,23 @@ namespace BlackMisc
             return s;
         }
 
-        bool CAircraftIcao::hasAircraftDesignator() const
+        bool CAircraftIcaoData::hasAircraftDesignator() const
         {
             return !this->m_aircraftDesignator.isEmpty();
         }
 
-        bool CAircraftIcao::hasKnownAircraftDesignator() const
+        bool CAircraftIcaoData::hasKnownAircraftDesignator() const
         {
             return (this->hasAircraftDesignator() && this->getAircraftDesignator() != "ZZZZ");
         }
 
-        QString CAircraftIcao::getEngineType() const
+        QString CAircraftIcaoData::getEngineType() const
         {
             if (this->m_aircraftCombinedType.length() != 3) return "";
             return this->m_aircraftCombinedType.right(1);
         }
 
-        QString CAircraftIcao::asString() const
+        QString CAircraftIcaoData::asString() const
         {
             if (this->m_aircraftDesignator.isEmpty()) { return ""; }
             QString s(this->m_aircraftDesignator);
@@ -68,7 +68,7 @@ namespace BlackMisc
             return s;
         }
 
-        void CAircraftIcao::updateMissingParts(const CAircraftIcao &icao)
+        void CAircraftIcaoData::updateMissingParts(const CAircraftIcaoData &icao)
         {
             if (this->m_aircraftDesignator.isEmpty()) { this->setAircraftDesignator(icao.getAircraftDesignator()); }
             if (this->m_airlineDesignator.isEmpty()) { this->setAirlineDesignator(icao.getAirlineDesignator()); }
@@ -77,7 +77,7 @@ namespace BlackMisc
             if (this->m_livery.isEmpty()) { this->setLivery(icao.getLivery()); }
         }
 
-        bool CAircraftIcao::matchesWildcardIcao(const CAircraftIcao &otherIcao) const
+        bool CAircraftIcaoData::matchesWildcardIcao(const CAircraftIcaoData &otherIcao) const
         {
             if ((*this) == otherIcao) return true;
             if (otherIcao.hasAircraftDesignator() && otherIcao.getAircraftDesignator() != this->getAircraftDesignator()) { return false; }
@@ -88,7 +88,7 @@ namespace BlackMisc
             return true;
         }
 
-        bool CAircraftIcao::isVtol() const
+        bool CAircraftIcaoData::isVtol() const
         {
             // special designators
             if (
@@ -109,7 +109,7 @@ namespace BlackMisc
             return false;
         }
 
-        CVariant CAircraftIcao::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CAircraftIcaoData::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return this->toCVariant(); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -132,7 +132,7 @@ namespace BlackMisc
             }
         }
 
-        void CAircraftIcao::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CAircraftIcaoData::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself())
             {
@@ -161,21 +161,21 @@ namespace BlackMisc
             }
         }
 
-        bool CAircraftIcao::isValidDesignator(const QString &designator)
+        bool CAircraftIcaoData::isValidDesignator(const QString &designator)
         {
             static QRegularExpression regexp("^[A-Z]+[A-Z0-9]*$");
             if (designator.length() < 2 || designator.length() > 5) { return false; }
             return (regexp.match(designator).hasMatch());
         }
 
-        bool CAircraftIcao::isValidCombinedType(const QString &combinedType)
+        bool CAircraftIcaoData::isValidCombinedType(const QString &combinedType)
         {
             static QRegularExpression regexp("^[A-Z][0-9][A-Z]$");
             if (combinedType.length() != 3) return false;
             return (regexp.match(combinedType).hasMatch());
         }
 
-        bool CAircraftIcao::isValidAirlineDesignator(const QString &airline)
+        bool CAircraftIcaoData::isValidAirlineDesignator(const QString &airline)
         {
             static QRegularExpression regexp("^[A-Z]+[A-Z0-9]*$");
             if (airline.length() < 2 || airline.length() > 5) return false;

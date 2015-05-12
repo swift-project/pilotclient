@@ -117,10 +117,10 @@ namespace BlackMisc
             this->m_client.setUserCallsign(getCallsign());
         }
 
-        void CSimulatedAircraft::setIcaoInfo(const CAircraftIcao &icao)
+        void CSimulatedAircraft::setIcaoInfo(const CAircraftIcaoData &icao)
         {
             // snyc ICAO info
-            CAircraftIcao newIcao(icao);
+            CAircraftIcaoData newIcao(icao);
             newIcao.updateMissingParts(this->getIcaoInfo());
             newIcao.updateMissingParts(this->getModel().getIcao());
 

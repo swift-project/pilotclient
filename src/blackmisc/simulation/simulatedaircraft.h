@@ -67,7 +67,7 @@ namespace BlackMisc
             virtual void setCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
 
             //! \copydoc CAircraft::setIcaoInfo
-            virtual void setIcaoInfo(const BlackMisc::Aviation::CAircraftIcao &icao) override;
+            virtual void setIcaoInfo(const BlackMisc::Aviation::CAircraftIcaoData &icao) override;
 
             //! \copydoc CAircraft::setPilot
             virtual void setPilot(const BlackMisc::Network::CUser &user) override;

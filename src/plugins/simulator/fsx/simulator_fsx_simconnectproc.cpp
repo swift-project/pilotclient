@@ -174,9 +174,9 @@ namespace BlackSimPlugin
                         if (!pFacilityAirport) break;
                         const QString icao(pFacilityAirport->Icao);
                         if (icao.isEmpty()) { continue; } // airfield without ICAO code
-                        if (!CAirportIcao::isValidIcaoDesignator(icao)) { continue; } // tiny airfields in SIM
+                        if (!CAirportIcaoCode::isValidIcaoDesignator(icao)) { continue; } // tiny airfields in SIM
                         CCoordinateGeodetic pos(pFacilityAirport->Latitude, pFacilityAirport->Longitude, pFacilityAirport->Altitude);
-                        CAirport airport(CAirportIcao(icao), pos);
+                        CAirport airport(CAirportIcaoCode(icao), pos);
                         CLength d = airport.calculcateDistanceAndBearingToOwnAircraft(posAircraft);
                         if (d > maxDistance) { continue; }
                         simulatorFsx->m_airportsInRange.replaceOrAddByIcao(airport);

@@ -202,10 +202,10 @@ namespace BlackCore
         m_simulatorPlugin->simulator->reloadInstalledModels();
     }
 
-    CAircraftIcao CContextSimulator::getIcaoForModelString(const QString &modelString) const
+    CAircraftIcaoData CContextSimulator::getIcaoForModelString(const QString &modelString) const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << modelString; }
-        if (!m_simulatorPlugin) { return CAircraftIcao(); }
+        if (!m_simulatorPlugin) { return CAircraftIcaoData(); }
 
         Q_ASSERT(m_simulatorPlugin->simulator);
         return m_simulatorPlugin->simulator->getIcaoForModelString(modelString);

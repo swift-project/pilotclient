@@ -56,8 +56,8 @@ namespace BlackMisc
             if (!aircraftToBeUpdated.hasValidId()) user.setId(currentDataFileAircraft.getPilotId());
             aircraftToBeUpdated.setPilot(user);
 
-            CAircraftIcao icao = aircraftToBeUpdated.getIcaoInfo();
-            CAircraftIcao dataFileIcao = currentDataFileAircraft.getIcaoInfo();
+            CAircraftIcaoData icao = aircraftToBeUpdated.getIcaoInfo();
+            CAircraftIcaoData dataFileIcao = currentDataFileAircraft.getIcaoInfo();
             if (!icao.hasAircraftDesignator()) icao.setAircraftDesignator(dataFileIcao.getAircraftDesignator());
             if (!icao.hasAirlineDesignator()) icao.setAirlineDesignator(dataFileIcao.getAirlineDesignator());
             if (!icao.hasAircraftCombinedType()) icao.setAircraftCombinedType(dataFileIcao.getAircraftCombinedType());

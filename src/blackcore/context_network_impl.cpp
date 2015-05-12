@@ -662,7 +662,7 @@ namespace BlackCore
         this->m_airspace->testAddAircraftParts(parts, incremental);
     }
 
-    BlackMisc::Aviation::CInformationMessage CContextNetwork::getMetar(const BlackMisc::Aviation::CAirportIcao &airportIcaoCode)
+    BlackMisc::Aviation::CInformationMessage CContextNetwork::getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode)
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << airportIcaoCode; }
         return m_airspace->getMetar(airportIcaoCode);

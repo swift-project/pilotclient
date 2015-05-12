@@ -13,7 +13,7 @@
 #define BLACKMISC_AVIATION_AIRPORT_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/aviation/airporticao.h"
+#include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/propertyindex.h"
 
@@ -43,19 +43,19 @@ namespace BlackMisc
             CAirport(const QString &icao);
 
             //! ATC station constructor
-            CAirport(const CAirportIcao &icao, const BlackMisc::Geo::CCoordinateGeodetic &position);
+            CAirport(const CAirportIcaoCode &icao, const BlackMisc::Geo::CCoordinateGeodetic &position);
 
             //! ATC station constructor
-            CAirport(const CAirportIcao &icao, const BlackMisc::Geo::CCoordinateGeodetic &position, const QString &descriptiveName);
+            CAirport(const CAirportIcaoCode &icao, const BlackMisc::Geo::CCoordinateGeodetic &position, const QString &descriptiveName);
 
             //! Get ICAO code.
-            const CAirportIcao &getIcao() const { return m_icao; }
+            const CAirportIcaoCode &getIcao() const { return m_icao; }
 
             //! Get ICAO code as string.
             QString getIcaoAsString() const { return m_icao.asString(); }
 
             //! Set ICAO code.
-            void setIcao(const CAirportIcao &icao) {  m_icao = icao; }
+            void setIcao(const CAirportIcaoCode &icao) {  m_icao = icao; }
 
             //! Get descriptive name
             QString getDescriptiveName() const { return m_descriptiveName; }
@@ -107,7 +107,7 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAirport)
-            CAirportIcao                        m_icao;
+            CAirportIcaoCode                    m_icao;
             QString                             m_descriptiveName;
             BlackMisc::Geo::CCoordinateGeodetic m_position;
         };

@@ -87,7 +87,7 @@ namespace BlackCore
 
         //! ICAO info for callsign
         //! \threadsafe
-        BlackMisc::Aviation::CAircraftIcao getIcaoInfo(const  BlackMisc::Aviation::CCallsign &callsign);
+        BlackMisc::Aviation::CAircraftIcaoData getIcaoInfo(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Voice capability for callsign
         //! \threadsafe

@@ -100,7 +100,7 @@ namespace BlackCore
         virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator) = 0;
 
         //! ICAO data for model string
-        virtual BlackMisc::Aviation::CAircraftIcao getIcaoForModelString(const QString &modelString) const = 0;
+        virtual BlackMisc::Aviation::CAircraftIcaoData getIcaoForModelString(const QString &modelString) const = 0;
 
         //! Display a status message in the simulator
         virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const = 0;

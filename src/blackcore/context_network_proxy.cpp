@@ -268,7 +268,7 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CFlightPlan>(QLatin1Literal("loadFlightPlanFromNetwork"), callsign);
     }
 
-    CInformationMessage CContextNetworkProxy::getMetar(const CAirportIcao &airportIcaoCode)
+    CInformationMessage CContextNetworkProxy::getMetar(const CAirportIcaoCode &airportIcaoCode)
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CInformationMessage>(QLatin1Literal("getMetar"), airportIcaoCode);
     }

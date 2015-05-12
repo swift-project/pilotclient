@@ -51,7 +51,7 @@ namespace BlackMisc
 
             //! Update ICAO data
             //! \threadsafe
-            virtual bool updateOwnIcaoData(const BlackMisc::Aviation::CAircraftIcao &icaoData) = 0;
+            virtual bool updateOwnIcaoData(const BlackMisc::Aviation::CAircraftIcaoData &icaoData) = 0;
 
             //! Update model
             //! \threadsafe
@@ -114,7 +114,7 @@ namespace BlackMisc
             virtual bool updateOwnCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! \copydoc IOwnAircraftProvider::updateOwnIcaoData
-            virtual bool updateOwnIcaoData(const BlackMisc::Aviation::CAircraftIcao &icaoData);
+            virtual bool updateOwnIcaoData(const BlackMisc::Aviation::CAircraftIcaoData &icaoData);
 
             //! \copydoc IOwnAircraftProvider::updateOwnModel
             virtual bool updateOwnModel(const BlackMisc::Simulation::CAircraftModel &model);

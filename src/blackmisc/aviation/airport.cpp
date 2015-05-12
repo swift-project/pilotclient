@@ -27,11 +27,11 @@ namespace BlackMisc
             m_icao(icao)
         { }
 
-        CAirport::CAirport(const CAirportIcao &icao, const BlackMisc::Geo::CCoordinateGeodetic &position) :
+        CAirport::CAirport(const CAirportIcaoCode &icao, const BlackMisc::Geo::CCoordinateGeodetic &position) :
             m_icao(icao), m_position(position)
         { }
 
-        CAirport::CAirport(const CAirportIcao &icao, const BlackMisc::Geo::CCoordinateGeodetic &position, const QString &descriptiveName) :
+        CAirport::CAirport(const CAirportIcaoCode &icao, const BlackMisc::Geo::CCoordinateGeodetic &position, const QString &descriptiveName) :
             m_icao(icao), m_descriptiveName(descriptiveName), m_position(position)
         { }
 

@@ -165,7 +165,7 @@ void Client::presetIcaoCodesCmd(QTextStream &args)
     QString livery;
     QString color;
     args >> acTypeICAO >> descriptionICAO >> airlineICAO >> livery >> color;
-    emit presetIcaoCodes(BlackMisc::Aviation::CAircraftIcao(acTypeICAO, descriptionICAO, airlineICAO, livery, color));
+    emit presetIcaoCodes(BlackMisc::Aviation::CAircraftIcaoData(acTypeICAO, descriptionICAO, airlineICAO, livery, color));
 }
 
 void Client::presetLoginModeCmd(QTextStream &args)
@@ -527,7 +527,7 @@ void Client::pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign)
     std::cout << "PILOT_DISCONNECTED " << callsign << std::endl;
 }
 
-void Client::icaoCodesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icaoData)
+void Client::icaoCodesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcaoData &icaoData)
 {
     std::cout << "PLANE_INFO_REPLY " << callsign << " " << icaoData.toStdString();
 }

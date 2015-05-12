@@ -39,13 +39,13 @@ namespace BlackMisc
             CAirportList(const CSequence<CAirport> &other);
 
             //! Find 0..n airports by ICAO code
-            CAirportList findByIcao(const CAirportIcao &icao) const;
+            CAirportList findByIcao(const CAirportIcaoCode &icao) const;
 
             //! Replace or add based on same ICAO code
             void replaceOrAddByIcao(const CAirport &addedOrReplacedAirport);
 
             //! Find first station by callsign, if not return given value / default
-            CAirport findFirstByIcao(const CAirportIcao &icao, const CAirport &ifNotFound = CAirport()) const;
+            CAirport findFirstByIcao(const CAirportIcaoCode &icao, const CAirport &ifNotFound = CAirport()) const;
 
             //! \copydoc CValueObject::toQVariant
             QVariant toQVariant() const { return QVariant::fromValue(*this); }

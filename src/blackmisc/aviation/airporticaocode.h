@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_AVIATION_AIRPORTICAO_H
-#define BLACKMISC_AVIATION_AIRPORTICAO_H
+#ifndef BLACKMISC_AVIATION_AIRPORTICAOCODE_H
+#define BLACKMISC_AVIATION_AIRPORTICAOCODE_H
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
@@ -21,17 +21,17 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating information of airport ICAO data.
-        class BLACKMISC_EXPORT CAirportIcao : public CValueObject<CAirportIcao>
+        class BLACKMISC_EXPORT CAirportIcaoCode : public CValueObject<CAirportIcaoCode>
         {
         public:
             //! Default constructor.
-            CAirportIcao() = default;
+            CAirportIcaoCode() = default;
 
             //! Constructor
-            CAirportIcao(const QString &icaoCode) : m_icaoCode(CAirportIcao::unifyAirportCode(icaoCode)) {}
+            CAirportIcaoCode(const QString &icaoCode) : m_icaoCode(CAirportIcaoCode::unifyAirportCode(icaoCode)) {}
 
             //! Constructor, needed to disambiguate implicit conversion from string literal.
-            CAirportIcao(const char *icaoCode) : m_icaoCode(CAirportIcao::unifyAirportCode(icaoCode)) {}
+            CAirportIcaoCode(const char *icaoCode) : m_icaoCode(CAirportIcaoCode::unifyAirportCode(icaoCode)) {}
 
             //! Is empty?
             bool isEmpty() const { return this->m_icaoCode.isEmpty(); }
@@ -55,15 +55,15 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CAirportIcao)
+            BLACK_ENABLE_TUPLE_CONVERSION(CAirportIcaoCode)
             QString m_icaoCode;
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAirportIcao, (
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAirportIcaoCode, (
     attr(o.m_icaoCode, flags<CaseInsensitiveComparison>())
 ))
-Q_DECLARE_METATYPE(BlackMisc::Aviation::CAirportIcao)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAirportIcaoCode)
 
 #endif // guard

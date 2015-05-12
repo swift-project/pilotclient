@@ -54,7 +54,7 @@ namespace BlackSimPlugin
             virtual bool isSimulating() const override { return isConnected(); }
 
             //! \copydoc BlackCore::ISimulator::getIcaoForModelString
-            virtual BlackMisc::Aviation::CAircraftIcao getIcaoForModelString(const QString &modelString) const override;
+            virtual BlackMisc::Aviation::CAircraftIcaoData getIcaoForModelString(const QString &modelString) const override;
 
             //! \copydoc BlackCore::ISimulator::connectTo
             virtual bool connectTo() override;

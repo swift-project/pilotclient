@@ -141,10 +141,10 @@ namespace BlackGui
             void setOwnModel();
 
             //! Set ICAO values
-            void setGuiIcaoValues(const BlackMisc::Aviation::CAircraftIcao &icao, bool onlyIfEmpty);
+            void setGuiIcaoValues(const BlackMisc::Aviation::CAircraftIcaoData &icao, bool onlyIfEmpty);
 
             //! Merge with GUI icao values
-            void mergeGuiIcaoValues(BlackMisc::Aviation::CAircraftIcao &icao) const;
+            void mergeGuiIcaoValues(BlackMisc::Aviation::CAircraftIcaoData &icao) const;
 
             bool m_visible = false; //!< is this component selected?
             QScopedPointer<Ui::CLoginComponent> ui;

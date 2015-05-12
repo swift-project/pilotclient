@@ -90,7 +90,7 @@ namespace BlackMisc
             return this->m_ownAircraftProvider->updateOwnCallsign(callsign);
         }
 
-        bool COwnAircraftAware::updateOwnIcaoData(const CAircraftIcao &icaoData)
+        bool COwnAircraftAware::updateOwnIcaoData(const CAircraftIcaoData &icaoData)
         {
             Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
             return this->m_ownAircraftProvider->updateOwnIcaoData(icaoData);

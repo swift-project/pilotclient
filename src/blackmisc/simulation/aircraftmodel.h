@@ -14,7 +14,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/aircraft.h"
-#include "blackmisc/aviation/aircrafticao.h"
+#include "blackmisc/aviation/aircrafticaodata.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/propertyindex.h"
 
@@ -59,7 +59,7 @@ namespace BlackMisc
             CAircraftModel(const QString &model, ModelType type) : m_modelString(model), m_modelType(type) {}
 
             //! Constructor.
-            CAircraftModel(const QString &model, ModelType type, const QString &description, const BlackMisc::Aviation::CAircraftIcao &icao) :
+            CAircraftModel(const QString &model, ModelType type, const QString &description, const BlackMisc::Aviation::CAircraftIcaoData &icao) :
                 m_icao(icao), m_modelString(model), m_description(description), m_modelType(type) {}
 
             //! Constructor
@@ -96,15 +96,15 @@ namespace BlackMisc
             void setQueriedModelString(const QString &model) { this->m_modelString = model; this->m_modelType = TypeQueriedFromNetwork; }
 
             //! ICAO code
-            BlackMisc::Aviation::CAircraftIcao getIcao() const { return this->m_icao; }
+            BlackMisc::Aviation::CAircraftIcaoData getIcao() const { return this->m_icao; }
 
             //! Set ICAO info
-            void setIcao(const BlackMisc::Aviation::CAircraftIcao &icao) { this->m_icao = icao; }
+            void setIcao(const BlackMisc::Aviation::CAircraftIcaoData &icao) { this->m_icao = icao; }
 
-            //! \copydoc CAircraftIcao::hasAircraftAndAirlineDesignator
+            //! \copydoc CAircraftIcaoData::hasAircraftAndAirlineDesignator
             bool hasAircraftAndAirlineDesignator() const { return this->m_icao.hasAircraftAndAirlineDesignator(); }
 
-            //! \copydoc CAircraftIcao::hasAircraftDesignator
+            //! \copydoc CAircraftIcaoData::hasAircraftDesignator
             bool hasAircraftDesignator() const { return this->m_icao.hasAircraftDesignator(); }
 
             //! Model type
@@ -146,7 +146,7 @@ namespace BlackMisc
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftModel)
             BlackMisc::Aviation::CCallsign m_callsign; //!< aircraft's callsign
-            BlackMisc::Aviation::CAircraftIcao m_icao; //!< ICAO data if available
+            BlackMisc::Aviation::CAircraftIcaoData m_icao; //!< ICAO data if available
             QString m_modelString;                     //!< Simulator model string
             QString m_description;                     //!< descriptive text
             QString m_fileName;                        //!< file name

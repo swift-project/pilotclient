@@ -79,7 +79,7 @@ namespace BlackCore
         return this->getPilotsForCallsigns(callsigns);
     }
 
-    CAircraftIcao CVatsimDataFileReader::getIcaoInfo(const CCallsign &callsign)
+    CAircraftIcaoData CVatsimDataFileReader::getIcaoInfo(const CCallsign &callsign)
     {
         CAircraft aircraft = this->getAircraft().findFirstByCallsign(callsign);
         return aircraft.getIcaoInfo();
@@ -267,9 +267,9 @@ namespace BlackCore
                                 // we expect something like H/B772/F B773 B773/F
                                 static const QRegularExpression reg("/.");
                                 icaoCode = icaoCode.replace(reg, "").trimmed().toUpper();
-                                if (CAircraftIcao::isValidDesignator(icaoCode))
+                                if (CAircraftIcaoData::isValidDesignator(icaoCode))
                                 {
-                                    currentAircraft.setIcaoInfo(CAircraftIcao(icaoCode));
+                                    currentAircraft.setIcaoInfo(CAircraftIcaoData(icaoCode));
                                 }
                                 else
                                 {

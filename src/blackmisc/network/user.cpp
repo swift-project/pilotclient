@@ -8,7 +8,7 @@
  */
 
 #include "blackmisc/network/user.h"
-#include "blackmisc/aviation/airporticao.h"
+#include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindex.h"
@@ -86,7 +86,7 @@ namespace BlackMisc
                     int pos = match.capturedStart(0);
                     QString icao = match.captured(0).trimmed().right(4);
                     rn = rn.left(pos).trimmed();
-                    this->setHomebase(CAirportIcao(icao));
+                    this->setHomebase(CAirportIcaoCode(icao));
                 }
             }
 

@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_AVIATION_AIRCRAFTICAO_H
-#define BLACKMISC_AVIATION_AIRCRAFTICAO_H
+#ifndef BLACKMISC_AVIATION_AIRCRAFTICAODATA_H
+#define BLACKMISC_AVIATION_AIRCRAFTICAODATA_H
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
@@ -22,13 +22,13 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object for ICAO classification
-        class BLACKMISC_EXPORT CAircraftIcao : public CValueObject<CAircraftIcao>
+        class BLACKMISC_EXPORT CAircraftIcaoData : public CValueObject<CAircraftIcaoData>
         {
         public:
             //! Properties by index
             enum ColumnIndex
             {
-                IndexAircraftDesignator = BlackMisc::CPropertyIndex::GlobalIndexCAircraftIcao,
+                IndexAircraftDesignator = BlackMisc::CPropertyIndex::GlobalIndexCAircraftIcaoData,
                 IndexCombinedAircraftType,
                 IndexAirlineDesignator,
                 IndexAircraftColor,
@@ -37,15 +37,15 @@ namespace BlackMisc
             };
 
             //! Default constructor.
-            CAircraftIcao() = default;
+            CAircraftIcaoData() = default;
 
             //! Constructor.
-            explicit CAircraftIcao(const QString &icao) : m_aircraftDesignator(icao.trimmed().toUpper()) {}
+            explicit CAircraftIcaoData(const QString &icao) : m_aircraftDesignator(icao.trimmed().toUpper()) {}
 
             //! Constructor.
             //! \param icao "B737"
             //! \param airline "DLH"
-            CAircraftIcao(const QString &icao, const QString &airline);
+            CAircraftIcaoData(const QString &icao, const QString &airline);
 
             /*!
              * Constructor.
@@ -55,7 +55,7 @@ namespace BlackMisc
              * \param livery "FREIGHT"
              * \param color "CCFFDD" (RGB)
              */
-            CAircraftIcao(const QString &icao, const QString &combinedType, const QString &airline, const QString &livery, const QString &color)
+            CAircraftIcaoData(const QString &icao, const QString &combinedType, const QString &airline, const QString &livery, const QString &color)
                 : m_aircraftDesignator(icao.trimmed().toUpper()), m_aircraftCombinedType(combinedType.trimmed().toUpper()), m_airlineDesignator(airline.trimmed().toUpper()),
                   m_livery(livery.trimmed().toUpper()), m_aircraftColor(color.trimmed().toUpper()) {}
 
@@ -121,10 +121,10 @@ namespace BlackMisc
             void setAircraftCombinedType(const QString &type) { this->m_aircraftCombinedType = type.trimmed().toUpper(); }
 
             //! Missing parts from another ICAO object
-            void updateMissingParts(const CAircraftIcao &icao);
+            void updateMissingParts(const CAircraftIcaoData &icao);
 
             //! Matches wildcard icao object
-            bool matchesWildcardIcao(const CAircraftIcao &otherIcao) const;
+            bool matchesWildcardIcao(const CAircraftIcaoData &otherIcao) const;
 
             //! Is VTOL aircraft
             bool isVtol() const;
@@ -148,7 +148,7 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CAircraftIcao)
+            BLACK_ENABLE_TUPLE_CONVERSION(CAircraftIcaoData)
             QString m_aircraftDesignator;   //!< "B737"
             QString m_aircraftCombinedType; //!< "L2J"
             QString m_airlineDesignator;    //!< "DLH"
@@ -158,8 +158,8 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftIcao)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftIcao, (
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftIcaoData)
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftIcaoData, (
                                    o.m_aircraftDesignator,
                                    o.m_aircraftCombinedType,
                                    o.m_airlineDesignator,

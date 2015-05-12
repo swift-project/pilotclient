@@ -78,7 +78,7 @@ namespace BlackCore
 
         //! \copydoc IContextOwnAircraft::updateOwnIcaoData
         //! \ingroup ownaircraftprovider
-        virtual bool updateOwnIcaoData(const BlackMisc::Aviation::CAircraftIcao &icaoData) override;
+        virtual bool updateOwnIcaoData(const BlackMisc::Aviation::CAircraftIcaoData &icaoData) override;
 
         //! \copydoc IContextOwnAircraft::updatePosition
         virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) override;

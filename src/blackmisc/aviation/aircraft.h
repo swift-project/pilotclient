@@ -15,7 +15,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/aviation/aircrafticao.h"
+#include "blackmisc/aviation/aircrafticaodata.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/selcal.h"
 #include "blackmisc/aviation/transponder.h"
@@ -88,10 +88,10 @@ namespace BlackMisc
             virtual void setPilot(const BlackMisc::Network::CUser &user);
 
             //! Get ICAO info
-            const CAircraftIcao &getIcaoInfo() const { return m_icao; }
+            const CAircraftIcaoData &getIcaoInfo() const { return m_icao; }
 
             //! Set ICAO info
-            virtual void setIcaoInfo(const CAircraftIcao &icao) { m_icao = icao; }
+            virtual void setIcaoInfo(const CAircraftIcaoData &icao) { m_icao = icao; }
 
             //! Has valid realname?
             bool hasValidRealName() const { return this->m_pilot.hasValidRealName(); }
@@ -285,7 +285,7 @@ namespace BlackMisc
             CTransponder              m_transponder;
             CAircraftParts            m_parts;
             CSelcal                   m_selcal;
-            CAircraftIcao             m_icao;
+            CAircraftIcaoData         m_icao;
         };
     } // namespace
 } // namespace

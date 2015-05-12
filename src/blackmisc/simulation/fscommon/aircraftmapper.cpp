@@ -62,11 +62,11 @@ namespace BlackMisc
                 return m_init;
             }
 
-            CAircraftIcao CAircraftMapper::getIcaoForModelString(const QString &modelString) const
+            CAircraftIcaoData CAircraftMapper::getIcaoForModelString(const QString &modelString) const
             {
-                if (modelString.isEmpty() || !this->isInitialized()) { return CAircraftIcao(); }
+                if (modelString.isEmpty() || !this->isInitialized()) { return CAircraftIcaoData(); }
                 CAircraftMappingList mappings = this->m_mappings->getMappingList().findByModelString(modelString);
-                if (mappings.isEmpty()) { return CAircraftIcao(); }
+                if (mappings.isEmpty()) { return CAircraftIcaoData(); }
                 return mappings.front().getIcao();
             }
 
@@ -80,7 +80,7 @@ namespace BlackMisc
                 CAircraftCfgEntriesList el = this->m_entries.findByTitle(title, caseSensitivity);
                 if (el.isEmpty()) { return CAircraftModel(); }
                 CAircraftModel model = el.front().toAircraftModel();
-                CAircraftIcao icao = this->getIcaoForModelString(model.getModelString());
+                CAircraftIcaoData icao = this->getIcaoForModelString(model.getModelString());
                 model.setIcao(icao);
                 return model;
             }
@@ -111,7 +111,7 @@ namespace BlackMisc
                     "Boeing 737-800 Paint1",
                     CAircraftModel::TypeModelMatchingDefaultModel,
                     "B737-800 default model",
-                    CAircraftIcao("B738", "L2J", "", "", "FFFFFF")
+                    CAircraftIcaoData("B738", "L2J", "", "", "FFFFFF")
                 );
                 return aircraftModel;
             }

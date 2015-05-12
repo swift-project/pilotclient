@@ -221,7 +221,7 @@ namespace BlackCore
         virtual bool parseCommandLine(const QString &commandLine, const QString &originator) = 0;
 
         //! Get METAR, if not available request it (code such as EDDF, KLAX)
-        virtual BlackMisc::Aviation::CInformationMessage getMetar(const BlackMisc::Aviation::CAirportIcao &airportIcaoCode) = 0;
+        virtual BlackMisc::Aviation::CInformationMessage getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) = 0;
 
         //! Use the selected COM1/2 frequencies, and get the corresponding voice room for it
         virtual BlackMisc::Audio::CVoiceRoomList getSelectedVoiceRooms() const = 0;

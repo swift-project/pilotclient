@@ -129,7 +129,7 @@ namespace BlackCore
         virtual BlackMisc::Simulation::CAircraftModelList getInstalledModelsStartingWith(const QString modelString) const = 0;
 
         //! ICAO data for model string
-        virtual BlackMisc::Aviation::CAircraftIcao getIcaoForModelString(const QString &modelString) const = 0;
+        virtual BlackMisc::Aviation::CAircraftIcaoData getIcaoForModelString(const QString &modelString) const = 0;
 
         //! Set time synchronization between simulator and user's computer time
         //! \remarks not all drivers implement this, e.g. if it is an intrinsic simulator feature

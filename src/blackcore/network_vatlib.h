@@ -47,7 +47,7 @@ namespace BlackCore
         virtual void presetLoginMode(LoginMode mode) override;
         virtual void presetServer(const BlackMisc::Network::CServer &server) override;
         virtual void presetCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
-        virtual void presetIcaoCodes(const BlackMisc::Aviation::CAircraftIcao &icao) override;
+        virtual void presetIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoData &icao) override;
         virtual void presetSimulatorInfo(const BlackMisc::Simulation::CSimulatorPluginInfo &simInfo) override;
         virtual void initiateConnection() override;
         virtual void terminateConnection() override;
@@ -87,8 +87,8 @@ namespace BlackCore
 
         //! \name Weather functions
         //! @{
-        virtual void sendMetarQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao) override;
-        virtual void sendWeatherDataQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao) override;
+        virtual void sendMetarQuery(const BlackMisc::Aviation::CAirportIcaoCode &airportIcao) override;
+        virtual void sendWeatherDataQuery(const BlackMisc::Aviation::CAirportIcaoCode &airportIcao) override;
         //! @}
 
     private slots:
@@ -174,7 +174,7 @@ namespace BlackCore
         BlackMisc::Network::CServer        m_server;
         BlackMisc::Simulation::CSimulatorPluginInfo           m_simulatorInfo;
         BlackMisc::Aviation::CCallsign     m_callsign; //!< "buffered callsign", as this must not change when connected
-        BlackMisc::Aviation::CAircraftIcao m_icaoCode; //!< "buffered icao", as this must not change when connected
+        BlackMisc::Aviation::CAircraftIcaoData m_icaoCode; //!< "buffered icao", as this must not change when connected
 
         QTimer m_processingTimer;
         QTimer m_positionUpdateTimer;

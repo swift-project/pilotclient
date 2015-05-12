@@ -92,7 +92,7 @@ namespace BlackCore
 
             // TODO: This would need to come from somewhere (mappings)
             // Own callsign, plane ICAO status, model used
-            this->m_ownAircraft.setIcaoInfo(CAircraftIcao("C172", "L1P", "GA", "GA", "0000ff"));
+            this->m_ownAircraft.setIcaoInfo(CAircraftIcaoData("C172", "L1P", "GA", "GA", "0000ff"));
         }
 
         // voice rooms, if network is already available
@@ -229,7 +229,7 @@ namespace BlackCore
         return true;
     }
 
-    bool CContextOwnAircraft::updateOwnIcaoData(const CAircraftIcao &icaoData)
+    bool CContextOwnAircraft::updateOwnIcaoData(const CAircraftIcaoData &icaoData)
     {
         {
             QWriteLocker l(&m_lockAircraft);
@@ -270,7 +270,7 @@ namespace BlackCore
     {
         QWriteLocker l(&m_lockAircraft);
         this->m_ownAircraft.setModel(ownAircraft.getModel());
-        CAircraftIcao icao(ownAircraft.getIcaoInfo());
+        CAircraftIcaoData icao(ownAircraft.getIcaoInfo());
         if (icao.hasAircraftDesignator())
         {
             // if the model knows its ICAO, cool

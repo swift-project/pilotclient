@@ -117,7 +117,7 @@ namespace BlackCore
         BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const;
 
         //! Returns a METAR for the given airport, if available
-        BlackMisc::Aviation::CInformationMessage getMetar(const BlackMisc::Aviation::CAirportIcao &airportIcaoCode);
+        BlackMisc::Aviation::CInformationMessage getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode);
 
         //! Returns the current online ATC stations
         BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const { return m_atcStationsOnline; }
@@ -211,9 +211,9 @@ namespace BlackCore
         CPartsPerCallsign      m_partsByCallsign;      //!< parts, for performance reasons per callsign
         BlackMisc::Aviation::CCallsignSet m_aircraftSupportingParts; //!< aircraft supporting parts
 
-        QMap<BlackMisc::Aviation::CAirportIcao, BlackMisc::Aviation::CInformationMessage> m_metarCache;
+        QMap<BlackMisc::Aviation::CAirportIcaoCode, BlackMisc::Aviation::CInformationMessage> m_metarCache;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan>            m_flightPlanCache;
-        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftIcao>          m_icaoCodeCache;
+        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftIcaoData>          m_icaoCodeCache;
 
         INetwork              *m_network               = nullptr;
         CVatsimBookingReader  *m_vatsimBookingReader   = nullptr;
@@ -273,7 +273,7 @@ namespace BlackCore
         void ps_atisReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atisMessage);
         void ps_atisVoiceRoomReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
         void ps_atisLogoffTimeReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
-        void ps_icaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icaoData);
+        void ps_icaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcaoData &icaoData);
         void ps_pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
         void ps_frequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
         void ps_receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);

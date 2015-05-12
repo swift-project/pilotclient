@@ -15,8 +15,8 @@
 #include "blackmisc/aviation/transponder.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/flightplan.h"
-#include "blackmisc/aviation/aircrafticao.h"
-#include "blackmisc/aviation/airporticao.h"
+#include "blackmisc/aviation/aircrafticaodata.h"
+#include "blackmisc/aviation/airporticaocode.h"
 
 
 #include <QDebug>
@@ -99,7 +99,7 @@ namespace BlackMiscTest
         altMsl.toMeanSeaLevel();
 
         out << alt << " " << altMsl << endl;
-        CAirportIcao frankfurt("eddf");
+        CAirportIcaoCode frankfurt("eddf");
         out << frankfurt << endl;
         out << "-----------------------------------------------" << endl;
 

@@ -59,7 +59,7 @@ namespace BlackMisc
             GlobalIndexCAircraftLights        =  1600,
             GlobalIndexCModulator             =  2000,
             GlobalIndexCTransponder           =  2100,
-            GlobalIndexCAircraftIcao          =  2500,
+            GlobalIndexCAircraftIcaoData      =  2500,
             GlobalIndexCAircraftIcaoCode      =  2600,
             GlobalIndexCAirlineIcaoCode       =  2700,
             GlobalIndexCAirportIcaoCode       =  2800,

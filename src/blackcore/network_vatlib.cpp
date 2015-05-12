@@ -299,7 +299,7 @@ namespace BlackCore
         updateOwnCallsign(callsign);
     }
 
-    void CNetworkVatlib::presetIcaoCodes(const BlackMisc::Aviation::CAircraftIcao &icao)
+    void CNetworkVatlib::presetIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoData &icao)
     {
         Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "Can't change ICAO codes while still connected");
         m_icaoCode = icao;
@@ -591,13 +591,13 @@ namespace BlackCore
         Vat_SendPing(m_net.data(), toFSD(callsign));
     }
 
-    void CNetworkVatlib::sendMetarQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao)
+    void CNetworkVatlib::sendMetarQuery(const BlackMisc::Aviation::CAirportIcaoCode &airportIcao)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
         Vat_RequestMetar(m_net.data(), toFSD(airportIcao.asString()));
     }
 
-    void CNetworkVatlib::sendWeatherDataQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao)
+    void CNetworkVatlib::sendWeatherDataQuery(const BlackMisc::Aviation::CAirportIcaoCode &airportIcao)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
         Vat_RequestWeather(m_net.data(), toFSD(airportIcao.asString()));
@@ -607,7 +607,7 @@ namespace BlackCore
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
         CSimulatedAircraft myAircraft(getOwnAircraft());
-        CAircraftIcao icao = myAircraft.getIcaoInfo();
+        CAircraftIcaoData icao = myAircraft.getIcaoInfo();
         QString modelString = myAircraft.getModel().getModelString();
         if (modelString.isEmpty()) { modelString = defaultModelString(); }
 
@@ -621,7 +621,7 @@ namespace BlackCore
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
         CSimulatedAircraft myAircraft(getOwnAircraft());
-        CAircraftIcao icao = myAircraft.getIcaoInfo();
+        CAircraftIcaoData icao = myAircraft.getIcaoInfo();
         QString modelString = myAircraft.getModel().getModelString();
         if (modelString.isEmpty()) { modelString = defaultModelString(); }
 
@@ -1023,7 +1023,7 @@ namespace BlackCore
 
     void CNetworkVatlib::onPilotInfoReceived(VatSessionID, const char *callsign, const VatAircraftInfo *aircraftInfo, void *cbvar)
     {
-        BlackMisc::Aviation::CAircraftIcao icao;
+        BlackMisc::Aviation::CAircraftIcaoData icao;
         icao.setAircraftDesignator(aircraftInfo->aircraftType);
         icao.setAirlineDesignator(aircraftInfo->airline);
         icao.setLivery(aircraftInfo->livery);

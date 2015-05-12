@@ -15,7 +15,7 @@
 #include "blackcoreexport.h"
 #include "blackcore/context.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/aviation/aircrafticao.h"
+#include "blackmisc/aviation/aircrafticaodata.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/aviation/selcal.h"
 
@@ -75,7 +75,7 @@ namespace BlackCore
         void changedCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Own ICAO was changed
-        void changedIcaoData(const BlackMisc::Aviation::CAircraftIcao &icao);
+        void changedIcaoData(const BlackMisc::Aviation::CAircraftIcaoData &icao);
 
         //! own pilot (aka the swift user) changed
         void changedPilot(const BlackMisc::Network::CUser &pilot);
@@ -98,7 +98,7 @@ namespace BlackCore
         virtual bool updateOwnAircraftPilot(const BlackMisc::Network::CUser &pilot) = 0;
 
         //! Set ICAO data
-        virtual bool updateOwnIcaoData(const BlackMisc::Aviation::CAircraftIcao &icaoData) = 0;
+        virtual bool updateOwnIcaoData(const BlackMisc::Aviation::CAircraftIcaoData &icaoData) = 0;
 
         //! Set callsign
         virtual bool updateOwnCallsign(const BlackMisc::Aviation::CCallsign &callsign) = 0;

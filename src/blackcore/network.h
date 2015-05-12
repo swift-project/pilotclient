@@ -175,7 +175,7 @@ namespace BlackCore
          * Set our own aircraft ICAO codes before connecting.
          * \pre Network must be disconnected when calling this function.
          */
-        virtual void presetIcaoCodes(const BlackMisc::Aviation::CAircraftIcao &icao) = 0;
+        virtual void presetIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoData &icao) = 0;
 
         /*!
          * Select a login mode before connecting.
@@ -362,7 +362,7 @@ namespace BlackCore
          * \pre Network must be connected when calling this function.
          * \sa metarReplyReceived
          */
-        virtual void sendMetarQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao) = 0;
+        virtual void sendMetarQuery(const BlackMisc::Aviation::CAirportIcaoCode &airportIcao) = 0;
 
         /*!
          * Send a message querying the weather data for the airport with a specific ICAO code.
@@ -371,7 +371,7 @@ namespace BlackCore
          * \sa windDataReplyReceived
          * \sa cloudDataReplyReceived
          */
-        virtual void sendWeatherDataQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao) = 0;
+        virtual void sendWeatherDataQuery(const BlackMisc::Aviation::CAirportIcaoCode &airportIcao) = 0;
 
     signals:
         //! @}
@@ -436,7 +436,7 @@ namespace BlackCore
          * We received a reply to one of our queries.
          * \sa sendIcaoCodesQuery
          */
-        void icaoCodesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icao);
+        void icaoCodesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcaoData &icao);
 
         /*!
          * We received a notification of the state of another aircraft on the network.

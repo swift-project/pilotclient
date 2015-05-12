@@ -23,7 +23,7 @@ namespace BlackMisc
             CSequence<CAircraftMapping>(other)
         { }
 
-        CAircraftMappingList CAircraftMappingList::findByIcaoCodeWildcard(const CAircraftIcao &searchIcao) const
+        CAircraftMappingList CAircraftMappingList::findByIcaoCodeWildcard(const CAircraftIcaoData &searchIcao) const
         {
             return this->findBy([ = ](const CAircraftMapping & mapping)
             {
@@ -31,7 +31,7 @@ namespace BlackMisc
             });
         }
 
-        CAircraftMappingList CAircraftMappingList::findByIcaoAircraftDesignator(const CAircraftIcao &searchIcao) const
+        CAircraftMappingList CAircraftMappingList::findByIcaoAircraftDesignator(const CAircraftIcaoData &searchIcao) const
         {
             const QString aircraftIcao = searchIcao.getAircraftDesignator();
             if (aircraftIcao.isEmpty()) { return CAircraftMappingList(); }
@@ -41,7 +41,7 @@ namespace BlackMisc
             });
         }
 
-        CAircraftMappingList CAircraftMappingList::findByIcaoAirlineDesignator(const CAircraftIcao &searchIcao) const
+        CAircraftMappingList CAircraftMappingList::findByIcaoAirlineDesignator(const CAircraftIcaoData &searchIcao) const
         {
             const QString airlineIcao = searchIcao.getAircraftDesignator();
             if (airlineIcao.isEmpty()) { return CAircraftMappingList(); }
@@ -51,7 +51,7 @@ namespace BlackMisc
             });
         }
 
-        CAircraftMappingList CAircraftMappingList::findByIcaoAircraftAndAirlineDesignator(const CAircraftIcao &searchIcao, bool allowRelaxedAirline) const
+        CAircraftMappingList CAircraftMappingList::findByIcaoAircraftAndAirlineDesignator(const CAircraftIcaoData &searchIcao, bool allowRelaxedAirline) const
         {
             CAircraftMappingList aircraftSearch = findByIcaoAircraftDesignator(searchIcao);
             if (aircraftSearch.isEmpty()) { return aircraftSearch; }
@@ -61,7 +61,7 @@ namespace BlackMisc
             return allowRelaxedAirline ? aircraftSearch : aircraftAndAirlineSearch;
         }
 
-        CAircraftMappingList CAircraftMappingList::findByIcaoCodeExact(const CAircraftIcao &searchIcao) const
+        CAircraftMappingList CAircraftMappingList::findByIcaoCodeExact(const CAircraftIcaoData &searchIcao) const
         {
             return this->findBy(&CAircraftMapping::getIcao, searchIcao);
         }

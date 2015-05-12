@@ -58,7 +58,7 @@ namespace BlackMiscTest
         aircraft.setCom1System(CComSystem::getCom1System(122.8, 118.75));
         aircraft.setCom2System(CComSystem::getCom2System(123.8, 124.00));
         aircraft.setTransponder(CTransponder::getStandardTransponder(7000, CTransponder::ModeC));
-        aircraft.setIcaoInfo(CAircraftIcao("B737", "L2J", "DLH", "FREIGHT", "CCDDFF"));
+        aircraft.setIcaoInfo(CAircraftIcaoData("B737", "L2J", "DLH", "FREIGHT", "CCDDFF"));
 
         json = aircraft.toJson();
         doc = QJsonDocument(json);

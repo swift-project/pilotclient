@@ -78,7 +78,7 @@ namespace BlackMisc
                 const BlackMisc::Network::CAircraftMappingList &getAircraftMappingList() const { return m_mappings->getMappingList(); }
 
                 //! Inverse lookup
-                BlackMisc::Aviation::CAircraftIcao getIcaoForModelString(const QString &modelString) const;
+                BlackMisc::Aviation::CAircraftIcaoData getIcaoForModelString(const QString &modelString) const;
 
                 //! Number of aircraft entries
                 int countAircraftCfgEntries() const { return m_entries.size(); }

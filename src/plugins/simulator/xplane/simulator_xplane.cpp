@@ -104,7 +104,7 @@ namespace BlackSimPlugin
                 situation.setGroundspeed({ m_xplaneData.groundspeed, CSpeedUnit::m_s() });
 
                 // updates
-                updateOwnIcaoData(Aviation::CAircraftIcao { m_xplaneData.aircraftIcaoCode });
+                updateOwnIcaoData(Aviation::CAircraftIcaoData { m_xplaneData.aircraftIcaoCode });
                 updateOwnSituation(situation);
                 updateCockpit(
                     Aviation::CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() }),
@@ -235,7 +235,7 @@ namespace BlackSimPlugin
             CAircraftModel model(getOwnAircraftModel());
             model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
             model.setFileName(path + "/" + filename);
-            CAircraftIcao aircraftIcao(icao);
+            CAircraftIcaoData aircraftIcao(icao);
             aircraftIcao.setLivery(livery);
 
             // updates
@@ -359,7 +359,7 @@ namespace BlackSimPlugin
             //! \todo XPlane driver set correct return value
             // KB: from what I can see here all data are available
             // Is there any model matching required ????
-            CAircraftIcao icao = newRemoteAircraft.getIcaoInfo();
+            CAircraftIcaoData icao = newRemoteAircraft.getIcaoInfo();
             m_traffic->addPlane(newRemoteAircraft.getCallsign().asString(), icao.getAircraftDesignator(), icao.getAirlineDesignator(), icao.getLivery());
             updateAircraftRendered(newRemoteAircraft.getCallsign(), true, simulatorOriginator());
             CLogMessage(this).info("XP: Added aircraft %1") << newRemoteAircraft.getCallsign().toQString();
@@ -419,10 +419,10 @@ namespace BlackSimPlugin
             return this->changeRemoteAircraftEnabled(aircraft, originator);
         }
 
-        CAircraftIcao CSimulatorXPlane::getIcaoForModelString(const QString &modelString) const
+        CAircraftIcaoData CSimulatorXPlane::getIcaoForModelString(const QString &modelString) const
         {
             Q_UNUSED(modelString);
-            return CAircraftIcao();
+            return CAircraftIcaoData();
         }
 
         bool CSimulatorXPlane::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft, const QString &originator)

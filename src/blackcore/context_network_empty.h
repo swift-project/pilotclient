@@ -134,7 +134,7 @@ namespace BlackCore
         }
 
         //! \copydoc IContextNetwork::getMetar
-        virtual BlackMisc::Aviation::CInformationMessage getMetar(const BlackMisc::Aviation::CAirportIcao &airportIcaoCode) override
+        virtual BlackMisc::Aviation::CInformationMessage getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) override
         {
             Q_UNUSED(airportIcaoCode);
             logEmptyContextWarning(Q_FUNC_INFO);

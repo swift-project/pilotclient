@@ -30,7 +30,7 @@ namespace BlackMisc
             registerMetaValueType<CAirportList>();
         }
 
-        CAirportList CAirportList::findByIcao(const CAirportIcao &icao) const
+        CAirportList CAirportList::findByIcao(const CAirportIcaoCode &icao) const
         {
             return this->findBy(&CAirport::getIcao, icao);
         }
@@ -41,7 +41,7 @@ namespace BlackMisc
             this->replaceOrAdd(&CAirport::getIcao, addedOrReplacedAirport.getIcao(), addedOrReplacedAirport);
         }
 
-        CAirport CAirportList::findFirstByIcao(const CAirportIcao &icao, const CAirport &ifNotFound) const
+        CAirport CAirportList::findFirstByIcao(const CAirportIcaoCode &icao, const CAirport &ifNotFound) const
         {
             return this->findByIcao(icao).frontOrDefault(ifNotFound);
         }

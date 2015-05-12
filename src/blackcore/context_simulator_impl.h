@@ -86,7 +86,7 @@ namespace BlackCore
         virtual void reloadInstalledModels() override;
 
         //! \copydoc IContextSimulator::getIcaoForModelString
-        virtual BlackMisc::Aviation::CAircraftIcao getIcaoForModelString(const QString &modelString) const override;
+        virtual BlackMisc::Aviation::CAircraftIcaoData getIcaoForModelString(const QString &modelString) const override;
 
         //! \copydoc IContextSimulator::setTimeSynchronization
         virtual bool setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;

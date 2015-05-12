@@ -14,7 +14,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/callsign.h"
-#include "blackmisc/aviation/airporticao.h"
+#include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessagelist.h"
 
@@ -104,10 +104,10 @@ namespace BlackMisc
             void setId(const QString &id) { m_id = id.trimmed(); }
 
             //! Homebase
-            const BlackMisc::Aviation::CAirportIcao &getHomebase() const { return this->m_homebase; }
+            const BlackMisc::Aviation::CAirportIcaoCode &getHomebase() const { return this->m_homebase; }
 
             //! Set homebase
-            void setHomebase(const BlackMisc::Aviation::CAirportIcao &homebase) { this->m_homebase = homebase; }
+            void setHomebase(const BlackMisc::Aviation::CAirportIcaoCode &homebase) { this->m_homebase = homebase; }
 
             //! Get associated callsign.
             const BlackMisc::Aviation::CCallsign &getCallsign() const { return m_callsign; }
@@ -150,7 +150,7 @@ namespace BlackMisc
             QString m_email;
             QString m_password;
             BlackMisc::Aviation::CCallsign m_callsign;
-            BlackMisc::Aviation::CAirportIcao m_homebase;
+            BlackMisc::Aviation::CAirportIcaoCode m_homebase;
         };
     } // namespace
 } // namespace

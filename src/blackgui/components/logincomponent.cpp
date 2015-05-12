@@ -16,7 +16,7 @@
 #include "blackcore/context_simulator.h"
 #include "blackcore/network.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/aviation/aircrafticao.h"
+#include "blackmisc/aviation/aircrafticaodata.h"
 #include "../uppercasevalidator.h"
 #include <QIntValidator>
 
@@ -177,7 +177,7 @@ namespace BlackGui
 
                 CGuiAircraftValues aircraftValues = this->getAircraftValuesFromGui();
                 CAircraft ownAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
-                CAircraftIcao icao = ownAircraft.getIcaoInfo();
+                CAircraftIcaoData icao = ownAircraft.getIcaoInfo();
                 icao.setAircraftDesignator(aircraftValues.ownAircraftIcaoTypeDesignator);
                 icao.setAirlineDesignator(aircraftValues.ownAircraftIcaoAirline);
                 icao.setAircraftCombinedType(aircraftValues.ownAircraftCombinedType);
@@ -252,7 +252,7 @@ namespace BlackGui
 
         void CLoginComponent::setGuiValuesFromAircraft(const CAircraft &ownAircraft)
         {
-            CAircraftIcao icao = ownAircraft.getIcaoInfo();
+            CAircraftIcaoData icao = ownAircraft.getIcaoInfo();
             this->ui->le_Callsign->setText(ownAircraft.getCallsignAsString());
             this->ui->le_AircraftIcaoDesignator->setText(icao.getAircraftDesignator());
             this->ui->le_AircraftIcaoAirline->setText(icao.getAirlineDesignator());
@@ -280,10 +280,10 @@ namespace BlackGui
             return values;
         }
 
-        void CLoginComponent::mergeGuiIcaoValues(CAircraftIcao &icao) const
+        void CLoginComponent::mergeGuiIcaoValues(CAircraftIcaoData &icao) const
         {
             CGuiAircraftValues values = getAircraftValuesFromGui();
-            CAircraftIcao guiIcao(values.ownAircraftIcaoTypeDesignator, values.ownAircraftCombinedType, values.ownAircraftIcaoAirline, "", "");
+            CAircraftIcaoData guiIcao(values.ownAircraftIcaoTypeDesignator, values.ownAircraftCombinedType, values.ownAircraftIcaoAirline, "", "");
             icao.updateMissingParts(guiIcao);
         }
 
@@ -346,8 +346,8 @@ namespace BlackGui
             Q_ASSERT(this->getIContextOwnAircraft());
             Q_ASSERT(this->getIContextSimulator());
 
-            static const CAircraftIcao defaultIcao("C172", "L1P", "", "", ""); // default values
-            CAircraftIcao icao;
+            static const CAircraftIcaoData defaultIcao("C172", "L1P", "", "", ""); // default values
+            CAircraftIcaoData icao;
 
             bool simConnected = this->getIContextSimulator() && this->getIContextSimulator()->isSimulating();
             if (simConnected)
@@ -378,7 +378,7 @@ namespace BlackGui
 
         }
 
-        void CLoginComponent::setGuiIcaoValues(const CAircraftIcao &icao, bool onlyIfEmpty)
+        void CLoginComponent::setGuiIcaoValues(const CAircraftIcaoData &icao, bool onlyIfEmpty)
         {
             if (!onlyIfEmpty || this->ui->le_AircraftIcaoDesignator->text().trimmed().isEmpty())
             {
@@ -399,13 +399,13 @@ namespace BlackGui
         {
             CGuiAircraftValues values = getAircraftValuesFromGui();
 
-            bool validCombinedType = CAircraftIcao::isValidCombinedType(values.ownAircraftCombinedType);
+            bool validCombinedType = CAircraftIcaoData::isValidCombinedType(values.ownAircraftCombinedType);
             this->ui->lblp_AircraftCombinedType->setTicked(validCombinedType);
 
-            bool validAirlineDesignator = values.ownAircraftIcaoAirline.isEmpty() || CAircraftIcao::isValidAirlineDesignator(values.ownAircraftIcaoAirline);
+            bool validAirlineDesignator = values.ownAircraftIcaoAirline.isEmpty() || CAircraftIcaoData::isValidAirlineDesignator(values.ownAircraftIcaoAirline);
             this->ui->lblp_AircraftIcaoAirline->setTicked(validAirlineDesignator);
 
-            bool validIcaoDesignator = CAircraftIcao::isValidDesignator(values.ownAircraftIcaoTypeDesignator);
+            bool validIcaoDesignator = CAircraftIcaoData::isValidDesignator(values.ownAircraftIcaoTypeDesignator);
             this->ui->lblp_AircraftIcaoDesignator->setTicked(validIcaoDesignator);
 
             bool validCallsign = CCallsign::isValidCallsign(values.ownCallsign);
@@ -425,7 +425,7 @@ namespace BlackGui
             bool validVatsimId = CUser::isValidVatsimId(values.vatsimId);
             this->ui->lblp_VatsimId->setTicked(validVatsimId);
 
-            bool validHomeAirport = values.vatsimHomeAirport.isEmpty() || CAirportIcao::isValidIcaoDesignator(values.vatsimHomeAirport);
+            bool validHomeAirport = values.vatsimHomeAirport.isEmpty() || CAirportIcaoCode::isValidIcaoDesignator(values.vatsimHomeAirport);
             this->ui->lblp_VatsimHomeAirport->setTicked(validHomeAirport);
 
             bool validVatsimPassword = !values.vatsimPassword.isEmpty();
@@ -463,7 +463,7 @@ namespace BlackGui
             Q_ASSERT(getIContextSimulator());
 
             CAircraftModel model(this->getIContextOwnAircraft()->getOwnAircraft().getModel());
-            CAircraftIcao icao = this->getIContextSimulator()->getIcaoForModelString(model.getModelString());
+            CAircraftIcaoData icao = this->getIContextSimulator()->getIcaoForModelString(model.getModelString());
             if (icao.hasAircraftDesignator())
             {
                 CLogMessage(this).validationInfo("Reverse lookup for %1") << model.getModelString();
