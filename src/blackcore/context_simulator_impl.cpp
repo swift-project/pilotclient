@@ -410,10 +410,16 @@ namespace BlackCore
         // try to connect
         m_simulatorPlugin->simulator->asyncConnectTo();
 
-        // info about what is going on
-        emit simulatorPluginChanged(this->m_simulatorPlugin->info);
-        CLogMessage(this).info("Simulator plugin loaded: %1") << this->m_simulatorPlugin->info.toQString(true);
-        return true;
+        if (m_simulatorPlugin) // can be already nullptr if connectTo() is synchronous and fails
+        {
+            emit simulatorPluginChanged(this->m_simulatorPlugin->info);
+            CLogMessage(this).info("Simulator plugin loaded: %1") << this->m_simulatorPlugin->info.toQString(true);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     bool CContextSimulator::loadSimulatorPluginFromSettings()
