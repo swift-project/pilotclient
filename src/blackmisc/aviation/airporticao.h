@@ -20,7 +20,7 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        //! Value object encapsulating information of a callsign.
+        //! Value object encapsulating information of airport ICAO data.
         class BLACKMISC_EXPORT CAirportIcao : public CValueObject<CAirportIcao>
         {
         public:

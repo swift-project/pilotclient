@@ -16,24 +16,25 @@
 #include "blackcore/context_network.h"
 #include "blackcore/context_settings.h"
 #include "blackcore/context_runtime.h"
-#include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/network.h"
-#include "blackcore/airspace_monitor.h"
+#include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/setnetwork.h"
 #include "blackmisc/network/clientlist.h"
 #include "blackmisc/digestsignal.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/aviation/aircraftsituationlist.h"
 
 #include <QMap>
 #include <QTimer>
 
 namespace BlackCore
 {
+    class CAirspaceMonitor;
     class CVatsimBookingReader;
     class CVatsimDataFileReader;
+    class CIcaoDataReader;
 
     //! Network context implementation
     class BLACKCORE_EXPORT CContextNetwork :
@@ -97,7 +98,7 @@ namespace BlackCore
         virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
 
         //! Network library
-        INetwork* network() const { return m_network; }
+        INetwork *network() const { return m_network; }
 
     public slots:
         //! \copydoc IContextNetwork::updateAircraftEnabled
@@ -248,6 +249,7 @@ namespace BlackCore
         // for reading XML and VATSIM data files
         CVatsimBookingReader  *m_vatsimBookingReader  = nullptr;
         CVatsimDataFileReader *m_vatsimDataFileReader = nullptr;
+        CIcaoDataReader       *m_icaoDataReader       = nullptr;
         QTimer *m_dataUpdateTimer = nullptr; //!< general updates such as ATIS, frequencies, see requestDataUpdates()
 
         //! Get network settings
@@ -266,7 +268,13 @@ namespace BlackCore
         void ps_receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
 
         //! Data file has been read
-        void ps_dataFileRead();
+        void ps_dataFileRead(int lines);
+
+        //! Read ICAO codes
+        void ps_readAircraftIcaoCodes(int number);
+
+        //! Read ICAO codes
+        void ps_readAirlinesIcaoCodes(int number);
 
         //! Check if a supervisor message was received
         void ps_checkForSupervisiorTextMessage(const BlackMisc::Network::CTextMessageList &messages);
@@ -279,6 +287,6 @@ namespace BlackCore
         void ps_simulatorRenderRestrictionsChanged(bool restricted, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance, const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary);
 
     };
-}
+} // ns
 
 #endif // guard

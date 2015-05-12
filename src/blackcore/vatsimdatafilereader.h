@@ -135,7 +135,7 @@ namespace BlackCore
 
     signals:
         //! Data have been read
-        void dataRead();
+        void dataRead(int lines);
     };
 }
 

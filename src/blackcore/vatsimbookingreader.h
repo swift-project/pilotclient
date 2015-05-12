@@ -23,9 +23,7 @@
 
 namespace BlackCore
 {
-    /*!
-     * Read bookings from VATSIM
-     */
+    //! Read bookings from VATSIM
     class BLACKCORE_EXPORT CVatsimBookingReader : public BlackMisc::CThreadedReader
     {
         Q_OBJECT
@@ -46,10 +44,10 @@ namespace BlackCore
         void ps_read();
 
     private:
-        QString m_serviceUrl; /*!< URL of the service */
+        QString m_serviceUrl; //!< URL of the service
         QNetworkAccessManager *m_networkManager = nullptr;
 
-     signals:
+    signals:
         //! Bookings have been read and converted to BlackMisc::Aviation::CAtcStationList
         void dataRead(const BlackMisc::Aviation::CAtcStationList &bookedStations);
     };

@@ -123,8 +123,8 @@ namespace BlackCore
     CUserList CVatsimDataFileReader::getUsersForCallsigns(const CCallsignSet &callsigns)
     {
         CUserList users;
-        if (callsigns.isEmpty()) return users;
-        foreach(CCallsign callsign, callsigns)
+        if (callsigns.isEmpty()) { return users; }
+        for (const CCallsign &callsign : callsigns)
         {
             users.push_back(this->getPilotsForCallsign(callsign));
             users.push_back(this->getControllersForCallsign(callsign));
@@ -135,7 +135,7 @@ namespace BlackCore
     void CVatsimDataFileReader::readInBackgroundThread()
     {
         bool s = QMetaObject::invokeMethod(this, "ps_read");
-        Q_ASSERT(s);
+        Q_ASSERT_X(s, Q_FUNC_INFO, "Invoke failed");
         Q_UNUSED(s);
     }
 
@@ -181,7 +181,7 @@ namespace BlackCore
 
             if (dataFileData.isEmpty()) return;
             QStringList lines = dataFileData.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
-            if (lines.isEmpty()) return;
+            if (lines.isEmpty()) { return; }
 
             // build on local vars for thread safety
             CServerList     voiceServers;
@@ -198,7 +198,7 @@ namespace BlackCore
                 if (this->isFinished())
                 {
                     CLogMessage(this).debug() << Q_FUNC_INFO;
-                    CLogMessage(this).info("terminated booking parsing process"); // for users
+                    CLogMessage(this).info("Terminated booking parsing process"); // for users
                     return; // stop, terminate straight away, ending thread
                 }
 
@@ -290,7 +290,7 @@ namespace BlackCore
                         }
                         else
                         {
-                            Q_ASSERT_X(false, "CVatsimDataFileReader::loadFinished", "Wrong client type");
+                            Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong client type");
                         }
                     }
                     break;
@@ -335,17 +335,18 @@ namespace BlackCore
 
                 } // switch section
 
-                // this part needs to be synchronized
-                {
-                    QWriteLocker wl(&this->m_lock);
-                    this->setUpdateTimestamp(updateTimestampFromFile);
-                    this->m_aircraft = aircraft;
-                    this->m_atcStations = atcStations;
-                    this->m_voiceServers = voiceServers;
-                    this->m_fsdServers = fsdServers;
-                    this->m_voiceCapabilities = voiceCapabilities;
-                }
             } // for each line
+
+            // this part needs to be synchronized
+            {
+                QWriteLocker wl(&this->m_lock);
+                this->setUpdateTimestamp(updateTimestampFromFile);
+                this->m_aircraft = aircraft;
+                this->m_atcStations = atcStations;
+                this->m_voiceServers = voiceServers;
+                this->m_fsdServers = fsdServers;
+                this->m_voiceCapabilities = voiceCapabilities;
+            }
 
             // warnings, if required
             if (!illegalIcaoCodes.isEmpty())
@@ -354,7 +355,7 @@ namespace BlackCore
             }
 
             // data read finished
-            emit this->dataRead();
+            emit this->dataRead(lines.count());
         }
         else
         {

@@ -11,7 +11,6 @@
 
 namespace BlackMisc
 {
-
     CThreadedReader::CThreadedReader(QObject *owner, const QString &name) :
         CContinuousWorker(owner, name),
         m_updateTimer(new QTimer(this))

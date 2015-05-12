@@ -22,10 +22,8 @@
 
 namespace BlackMisc
 {
-    /*!
-     * Support for threaded based reading and parsing tasks such
-     * as data files via http, or file system and parsing (such as FSX models)
-     */
+    //! Support for threaded based reading and parsing tasks such
+    //! as data files via http, or file system and parsing (such as FSX models)
     class BLACKMISC_EXPORT CThreadedReader : public CContinuousWorker
     {
     public:
@@ -47,11 +45,9 @@ namespace BlackMisc
         //! \copydoc CContinuousWorker::cleanup
         virtual void cleanup() override;
 
-        /*!
-         * Set the update time
-         * \param updatePeriodMs <=0 stops the timer
-         * \threadsafe
-         */
+        //! Set the update time
+        //! \param updatePeriodMs <=0 stops the timer
+        //! \threadsafe
         void setInterval(int updatePeriodMs);
 
         //! Get the timer interval (ms)

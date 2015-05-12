@@ -16,7 +16,8 @@
 #include "network_vatlib.h"
 #include "vatsimbookingreader.h"
 #include "vatsimdatafilereader.h"
-
+#include "icaodatareader.h"
+#include "airspace_monitor.h"
 #include "blackmisc/networkutils.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/logmessage.h"
@@ -66,12 +67,21 @@ namespace BlackCore
         this->m_vatsimDataFileReader->readInBackgroundThread(); // first read
         this->m_vatsimDataFileReader->setInterval(90 * 1000);
 
-        // 4. Update timer for data (network data such as frequency)
+        // 4. ICAO data reader
+        this->m_icaoDataReader = new CIcaoDataReader(this,
+                "http://vatrep.vatsim-germany.org/service/allaircrafticao.php?rows=20000&sord=asc",
+                "http://vatrep.vatsim-germany.org/service/allairlineicao.php?rows=20000&sord=asc");
+        connect(this->m_icaoDataReader, &CIcaoDataReader::readAircraftIcaoCodes, this, &CContextNetwork::ps_readAircraftIcaoCodes);
+        connect(this->m_icaoDataReader, &CIcaoDataReader::readAirlinesIcaoCodes, this, &CContextNetwork::ps_readAirlinesIcaoCodes);
+        this->m_icaoDataReader->start();
+        this->m_icaoDataReader->readInBackgroundThread();
+
+        // 5. Update timer for data (network data such as frequency)
         this->m_dataUpdateTimer = new QTimer(this);
         connect(this->m_dataUpdateTimer, &QTimer::timeout, this, &CContextNetwork::requestDataUpdates);
         this->m_dataUpdateTimer->start(30 * 1000);
 
-        // 5. Airspace contents
+        // 6. Airspace contents
         Q_ASSERT_X(this->getRuntime()->getCContextOwnAircraft(), Q_FUNC_INFO, "this and own aircraft context must be local");
         this->m_airspace = new CAirspaceMonitor(this, this->getRuntime()->getCContextOwnAircraft(), this->m_network, this->m_vatsimBookingReader, this->m_vatsimDataFileReader);
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationsOnline, this, &CContextNetwork::changedAtcStationsOnline);
@@ -450,11 +460,23 @@ namespace BlackCore
         m_airspace->analyzer()->setSimulatorRenderRestrictionsChanged(restricted, maxAircraft, maxRenderedDistance, maxRenderedBoundary);
     }
 
-    void CContextNetwork::ps_dataFileRead()
+    void CContextNetwork::ps_dataFileRead(int lines)
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        CLogMessage(this).info("Read VATSIM data file");
+        CLogMessage(this).info("Read VATSIM data file, %1 lines") << lines;
         emit vatsimDataFileRead();
+    }
+
+    void CContextNetwork::ps_readAircraftIcaoCodes(int number)
+    {
+        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        CLogMessage(this).info("Read %1 aircraft ICAO codes") << number;
+    }
+
+    void CContextNetwork::ps_readAirlinesIcaoCodes(int number)
+    {
+        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        CLogMessage(this).info("Read %1 airline ICAO codes") << number;
     }
 
     void CContextNetwork::ps_checkForSupervisiorTextMessage(const CTextMessageList &messages)
