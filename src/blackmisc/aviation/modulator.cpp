@@ -166,6 +166,9 @@ namespace BlackMisc
             m_name(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency) {}
 
         template <class AVIO>
+        CModulator<AVIO>::~CModulator() {}
+
+        template <class AVIO>
         QString CModulator<AVIO>::convertToQString(bool i18n) const
         {
             QString s(this->getName());

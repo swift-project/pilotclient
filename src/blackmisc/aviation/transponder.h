@@ -166,11 +166,10 @@ namespace BlackMisc
             //! \copydoc CValueObject::convertToQString
             QString convertToQString(bool i18n = false) const;
 
-        protected:
-            //! Default value?
-            virtual bool isDefaultValue() const { return this->m_transponderCode == 0; }
-
         private:
+            //! Default value?
+            bool isDefaultValue() const { return this->m_transponderCode == 0; }
+
             BLACK_ENABLE_TUPLE_CONVERSION(CTransponder)
             int m_transponderCode;             //!< Transponder code
             TransponderMode m_transponderMode; //!< Transponder mode

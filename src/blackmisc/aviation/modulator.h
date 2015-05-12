@@ -95,6 +95,9 @@ namespace BlackMisc
             //! Constructor
             CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency);
 
+            //! Destructor
+            virtual ~CModulator();
+
             //! Set active frequency
             void setFrequencyActiveKHz(double frequencyKHz);
 
