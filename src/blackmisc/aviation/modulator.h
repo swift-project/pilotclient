@@ -13,9 +13,10 @@
 #define BLACKMISC_AVIATION_MODULATORUNIT_H
 
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/aviation/avionicsbase.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/pq/constants.h"
+#include "blackmisc/pq/frequency.h"
 
 namespace BlackMisc
 {
@@ -23,7 +24,7 @@ namespace BlackMisc
     {
 
         //! Base class for COM, NAV, Squawk units.
-        template <class AVIO> class CModulator : public CValueObject<CModulator<AVIO>, CAvionicsBase>
+        template <class AVIO> class CModulator : public CValueObject<CModulator<AVIO>>
         {
         public:
             //! Column indexes
@@ -81,11 +82,17 @@ namespace BlackMisc
             //! Input volume 0..100
             void setVolumeInput(int volume) { this->m_volumeInput = volume; }
 
+            //! Name
+            QString getName() const { return this->m_name; }
+
             //! Enabled?
             bool isEnabled() const { return this->m_enabled;}
 
             //! Enabled?
             void setEnabled(bool enable) { this->m_enabled = enable;}
+
+            //! Are set values valid?
+            virtual bool validValues() const { return true; }
 
             //! \copydoc CValueObject::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -98,11 +105,11 @@ namespace BlackMisc
 
         protected:
             //! Default constructor
-            CModulator() : CModulator::CValueObject("default") {}
+            CModulator() : m_name("default") {}
 
             //! Constructor
             CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency) :
-                CModulator::CValueObject(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency) {}
+                m_name(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency) {}
 
             //! Set active frequency
             void setFrequencyActiveKHz(double frequencyKHz)
@@ -195,6 +202,7 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CModulator)
+            QString m_name; //!< name of the unit
             BlackMisc::PhysicalQuantities::CFrequency m_frequencyActive;  //!< active frequency
             BlackMisc::PhysicalQuantities::CFrequency m_frequencyStandby; //!< standby frequency
             int m_volumeInput = 0;  //!< volume input
@@ -223,6 +231,7 @@ namespace BlackMisc
 } // namespace
 
 BLACK_DECLARE_TUPLE_CONVERSION_TEMPLATE(BlackMisc::Aviation::CModulator, (
+        o.m_name,
         o.m_frequencyActive,
         o.m_frequencyStandby,
         o.m_volumeInput ,

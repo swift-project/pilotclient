@@ -319,7 +319,7 @@ namespace BlackMiscTest
             qDebug() << "Send altitude via interface and variant" << al << qvAl.userType();
             al.addValueSameUnit(1);
 
-            CTransponder transponder("transponder", 7000, CTransponder::ModeC);
+            CTransponder transponder(7000, CTransponder::ModeC);
             testserviceInterface.receiveTransponder(transponder);
             qDebug() << "Send transponder via interface" << transponder;
 

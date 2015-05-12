@@ -331,7 +331,7 @@ void Client::setOwnAircraftCmd(QTextStream &args)
     updateCockpit(
         BlackMisc::Aviation::CComSystem("COM1", BlackMisc::PhysicalQuantities::CFrequency(com1, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())),
         BlackMisc::Aviation::CComSystem("COM2", BlackMisc::PhysicalQuantities::CFrequency(com2, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())),
-        BlackMisc::Aviation::CTransponder("Transponder", xpdrCode, xpdrMode),
+        BlackMisc::Aviation::CTransponder(xpdrCode, xpdrMode),
         "cmdClient");
 }
 
@@ -377,7 +377,7 @@ void Client::setOwnAircraftCockpitCmd(QTextStream &args)
     emit setOwnAircraftCockpit(
         BlackMisc::Aviation::CComSystem("COM1", BlackMisc::PhysicalQuantities::CFrequency(com1, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())),
         BlackMisc::Aviation::CComSystem("COM2", BlackMisc::PhysicalQuantities::CFrequency(com2, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())),
-        BlackMisc::Aviation::CTransponder("Transponder", xpdrCode, xpdrMode),
+        BlackMisc::Aviation::CTransponder(xpdrCode, xpdrMode),
         "testclient"
     );
 }

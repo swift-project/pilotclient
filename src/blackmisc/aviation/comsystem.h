@@ -153,7 +153,7 @@ namespace BlackMisc
             static bool isWithinChannelSpacing(const BlackMisc::PhysicalQuantities::CFrequency &setFrequency, const BlackMisc::PhysicalQuantities::CFrequency &compareFrequency, ChannelSpacing channelSpacing);
 
         protected:
-            //! \copydoc CAvionicsBase::validValues
+            //! \copydoc CModulator::validValues
             virtual bool validValues() const override;
 
         private:

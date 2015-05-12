@@ -13,7 +13,7 @@
 #define BLACKMISC_AVIATION_TRANSPONDER_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/aviation/avionicsbase.h"
+#include "blackmisc/valueobject.h"
 
 namespace BlackMisc
 {
@@ -21,7 +21,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Transponder
-        class BLACKMISC_EXPORT CTransponder : public CValueObject<CTransponder, CAvionicsBase>
+        class BLACKMISC_EXPORT CTransponder : public CValueObject<CTransponder>
         {
         public:
             //! Transponder codes
@@ -46,23 +46,23 @@ namespace BlackMisc
             };
 
             //! Default constructor
-            CTransponder() : CValueObject("transponder"), m_transponderCode(0), m_transponderMode(StateStandby) {}
+            CTransponder() : m_transponderCode(0), m_transponderMode(StateStandby) {}
 
             //! Constructor
-            CTransponder(const QString &name, int transponderCode, TransponderMode transponderMode) :
-                CValueObject(name), m_transponderCode(transponderCode), m_transponderMode(transponderMode)
+            CTransponder(int transponderCode, TransponderMode transponderMode) :
+                m_transponderCode(transponderCode), m_transponderMode(transponderMode)
             {  }
 
             //! Constructor with transponder mode as string
-            CTransponder(const QString &name, int transponderCode, QString transponderMode) :
-                CValueObject(name), m_transponderCode(transponderCode), m_transponderMode(StateStandby)
+            CTransponder(int transponderCode, QString transponderMode) :
+                m_transponderCode(transponderCode), m_transponderMode(StateStandby)
             {
                 this->setModeAsString(transponderMode);
             }
 
             //! Constructor, code as string
-            CTransponder(const QString &name, QString transponderCode, TransponderMode transponderMode) :
-                CValueObject(name), m_transponderCode(0), m_transponderMode(transponderMode)
+            CTransponder(QString transponderCode, TransponderMode transponderMode) :
+                m_transponderCode(0), m_transponderMode(transponderMode)
             {
                 bool ok = false;
                 this->m_transponderCode = transponderCode.toInt(&ok);
@@ -70,8 +70,8 @@ namespace BlackMisc
             }
 
             //! Constructor
-            CTransponder(const QString &name, QString transponderCode, QString transponderMode) :
-                CValueObject(name), m_transponderCode(0), m_transponderMode(StateStandby)
+            CTransponder(QString transponderCode, QString transponderMode) :
+                m_transponderCode(0), m_transponderMode(StateStandby)
             {
                 bool ok = false;
                 this->m_transponderCode = transponderCode.toInt(&ok);
@@ -79,8 +79,8 @@ namespace BlackMisc
                 this->setModeAsString(transponderMode);
             }
 
-            //! \copydoc CAvionicsBase::validValues
-            virtual bool validValues() const override;
+            //! Are set values valid?
+            bool validValues() const;
 
             //! Transponder mode as string
             QString getModeAsString() const
@@ -148,7 +148,7 @@ namespace BlackMisc
             //! Transponder unit
             static CTransponder getStandardTransponder(qint32 transponderCode, TransponderMode mode)
             {
-                return CTransponder("Transponder", transponderCode, mode);
+                return CTransponder(transponderCode, mode);
             }
 
             //! \copydoc CValueObject::propertyByIndex

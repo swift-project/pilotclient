@@ -44,9 +44,7 @@ namespace BlackMisc
 
         QString CTransponder::convertToQString(bool /* i18n */) const
         {
-            QString s = this->getName();
-            s = s.append(" ").append(this->getTransponderCodeFormatted()).append(" ").append(this->getModeAsString());
-            return s;
+            return this->getTransponderCodeFormatted().append(" ").append(this->getModeAsString());
         }
 
         CTransponder::TransponderMode CTransponder::modeFromString(const QString &modeString)

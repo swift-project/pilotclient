@@ -735,14 +735,14 @@ namespace BlackCore
         CTransponder transponder;
         if (CTransponder::isValidTransponderCode(position->transponderCode))
         {
-            transponder = CTransponder(transponderName, position->transponderCode, mode);
+            transponder = CTransponder(position->transponderCode, mode);
         }
         else
         {
             CLogMessage(static_cast<CNetworkVatlib *>(nullptr)).warning("Wrong transponder code %1 for %2") << position->transponderCode << callsign;
 
             // default
-            transponder = CTransponder(transponderName, 7000, mode);
+            transponder = CTransponder(7000, mode);
         }
         emit cbvar_cast(cbvar)->aircraftPositionUpdate(situation, transponder);
     }

@@ -75,7 +75,7 @@ namespace BlackMisc
             }
 
         protected:
-            //! \copydoc CAvionicsBase::validValues
+            //! \copydoc CModulator::validValues
             virtual bool validValues() const override
             {
                 if (this->isDefaultValue()) return true; // special case

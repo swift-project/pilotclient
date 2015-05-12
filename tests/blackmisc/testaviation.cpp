@@ -82,15 +82,15 @@ namespace BlackMiscTest
         QVERIFY2(t1 == t2, "Transponders shall be equal");
         t2.setTransponderMode(CTransponder::ModeC);
         QVERIFY2(t1 != t2, "Transponders shall not be equal");
-        CTransponder tv = CTransponder("transponder", 8888, CTransponder::StateStandby);
+        CTransponder tv = CTransponder(8888, CTransponder::StateStandby);
         QVERIFY2(!tv.validValues(), "No valid transponder");
-        tv = CTransponder("transponder", 781, CTransponder::StateStandby);
+        tv = CTransponder(781, CTransponder::StateStandby);
         QVERIFY2(!tv.validValues(), "No valid transponder");
-        tv = CTransponder("transponder", "0781", CTransponder::StateStandby);
+        tv = CTransponder("0781", CTransponder::StateStandby);
         QVERIFY2(!tv.validValues(), "No valid transponder");
-        tv = CTransponder("transponder", "7211", CTransponder::StateStandby);
+        tv = CTransponder("7211", CTransponder::StateStandby);
         QVERIFY2(tv.validValues(), "No valid transponder");
-        tv = CTransponder("transponder", "schnitzel", CTransponder::StateStandby);
+        tv = CTransponder("schnitzel", CTransponder::StateStandby);
         QVERIFY2(!tv.validValues(), "No valid transponder");
     }
 

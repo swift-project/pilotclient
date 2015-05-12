@@ -52,8 +52,8 @@ namespace BlackMiscTest
         out << nav1 << endl;
 
         // Transponder tests
-        CTransponder tr1("T1", 7000, CTransponder::StateStandby);
-        CTransponder tr2("T2", "4532", CTransponder::ModeMil3);
+        CTransponder tr1(7000, CTransponder::StateStandby);
+        CTransponder tr2("4532", CTransponder::ModeMil3);
         out << tr1 << " " << tr2 << endl;
 
         // Callsign and ATC station
