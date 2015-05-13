@@ -88,15 +88,15 @@ namespace BlackMisc
             //! \copydoc CValueObject::convertToQString
             QString convertToQString(bool i18n = false) const;
 
+            //! Destructor
+            virtual ~CModulator();
+
         protected:
             //! Default constructor
             CModulator();
 
             //! Constructor
             CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency);
-
-            //! Destructor
-            virtual ~CModulator();
 
             //! Set active frequency
             void setFrequencyActiveKHz(double frequencyKHz);
