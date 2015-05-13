@@ -135,7 +135,7 @@ namespace BlackSimPlugin
 
         CCallsignSet CSimulatorFs9::physicallyRenderedAircraft() const
         {
-            return this->m_hashFs9Clients.keys();
+            return CCollection<CCallsign>(this->m_hashFs9Clients.keys());
         }
 
         bool CSimulatorFs9::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const QString &originator)

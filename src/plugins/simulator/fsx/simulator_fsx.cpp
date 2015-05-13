@@ -298,7 +298,7 @@ namespace BlackSimPlugin
 
         CCallsignSet CSimulatorFsx::physicallyRenderedAircraft() const
         {
-            return this->m_simConnectObjects.keys();
+            return CCollection<CCallsign>(this->m_simConnectObjects.keys());
         }
 
         void CSimulatorFsx::onSimRunning()
