@@ -22,6 +22,12 @@ namespace BlackMisc
 {
     namespace Network
     {
+        CUser::CUser(const CCallsign &callsign)
+            : m_callsign(callsign)
+        {
+            this->deriveHomeBaseFromCallsign();
+        }
+
         CUser::CUser(const QString &id, const QString &realname, const CCallsign &callsign)
             : m_id(id.trimmed()), m_realname(realname), m_callsign(callsign)
         {
@@ -34,6 +40,12 @@ namespace BlackMisc
         {
             this->deriveHomeBaseFromCallsign();
             this->setRealName(realname); // extracts homebase
+        }
+
+        void CUser::setCallsign(const CCallsign &callsign)
+        {
+            m_callsign = callsign;
+            this->deriveHomeBaseFromCallsign();
         }
 
         QString CUser::convertToQString(bool i18n) const

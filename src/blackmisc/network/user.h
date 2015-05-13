@@ -47,7 +47,7 @@ namespace BlackMisc
             CUser() = default;
 
             //! Constructor by callsign
-            CUser(const BlackMisc::Aviation::CCallsign &callsign) : m_callsign(callsign) {}
+            CUser(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Constructor.
             CUser(const QString &id, const QString &realname, const BlackMisc::Aviation::CCallsign &callsign);
@@ -113,7 +113,7 @@ namespace BlackMisc
             const BlackMisc::Aviation::CCallsign &getCallsign() const { return m_callsign; }
 
             //! Set associated callsign
-            void setCallsign(const BlackMisc::Aviation::CCallsign &callsign) { m_callsign = callsign; }
+            void setCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! \copydoc CValueObject::toIcon()
             BlackMisc::CIcon toIcon() const { return this->getCallsign().toIcon(); }
