@@ -56,14 +56,14 @@ namespace BlackGui
         bool CEnableForDockWidgetInfoArea::isParentDockWidgetFloating() const
         {
             Q_ASSERT(this->m_parentDockableInfoArea);
-            if (!this->m_parentDockableInfoArea) return false;
+            if (!this->m_parentDockableInfoArea) { return false; }
             return this->m_parentDockableInfoArea->isFloating();
         }
 
         bool CEnableForDockWidgetInfoArea::isVisibleWidget() const
         {
             Q_ASSERT(this->m_parentDockableInfoArea);
-            if (!this->m_parentDockableInfoArea) return false;
+            if (!this->m_parentDockableInfoArea) { return false; }
             return this->m_parentDockableInfoArea->isVisibleWidget();
         }
 

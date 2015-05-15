@@ -383,9 +383,18 @@ namespace BlackGui
 
         void CMappingComponent::updateSimulatedAircraftView()
         {
-            Q_ASSERT_X(getIContextNetwork(), "updateSimulatedAircraftView", "missing network context");
-            const CSimulatedAircraftList aircraft = getIContextNetwork()->getAircraftInRange();
-            this->ui->tvp_SimulatedAircraft->updateContainer(aircraft);
+            Q_ASSERT_X(getIContextNetwork(), Q_FUNC_INFO, "missing network context");
+            Q_ASSERT_X(getIContextSimulator(), Q_FUNC_INFO, "missing simulator context");
+            if (this->isVisibleWidget()) { return; }
+            if (getIContextSimulator()->isConnected())
+            {
+                const CSimulatedAircraftList aircraft(getIContextNetwork()->getAircraftInRange());
+                this->ui->tvp_SimulatedAircraft->updateContainer(aircraft);
+            }
+            else
+            {
+                this->ui->tvp_SimulatedAircraft->clear();
+            }
         }
 
     } // namespace

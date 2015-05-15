@@ -104,10 +104,28 @@ namespace BlackGui
 
         void CInfoBarStatusComponent::ps_onSimulatorStatusChanged(int status)
         {
-            if (status > 0)
+            if (status > 0 && (status & ISimulator::Connected))
             {
-                this->ui->led_Simulator->setOn(true);
-                this->ui->led_Simulator->setOnToolTip(getIContextSimulator()->getSimulatorPluginInfo().getDescription());
+                QString s(
+                    getIContextSimulator()->getSimulatorPluginInfo().getDescription() + ": " +
+                    ISimulator::statusToString(status));
+                // at least connected
+                if (status & ISimulator::Paused)
+                {
+                    // in paused state
+                    this->ui->led_Simulator->setTriState();
+                    this->ui->led_Simulator->setTriStateToolTip(s);
+                }
+                else if (status & ISimulator::Running)
+                {
+                    this->ui->led_Simulator->setOn(true);
+                    this->ui->led_Simulator->setOnToolTip(s);
+                }
+                else
+                {
+                    this->ui->led_Simulator->setTriState();
+                    this->ui->led_Simulator->setTriStateToolTip(s);
+                }
             }
             else
             {
