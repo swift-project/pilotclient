@@ -56,6 +56,7 @@ namespace BlackSimPlugin
         CSimulatorFsx::~CSimulatorFsx()
         {
             disconnectFrom();
+            // fsuipc is disconnected in CSimulatorFsCommon
         }
 
         bool CSimulatorFsx::isConnected() const
@@ -168,7 +169,7 @@ namespace BlackSimPlugin
             emit modelMatchingCompleted(aircraftAfterModelApplied);
 
             // create AI
-            if (isSimulating())
+            if (isConnected())
             {
                 //! \todo FSX driver if exists, recreate (new model?, new ICAO code)
                 QByteArray m = aircraftModel.getModelString().toLocal8Bit();
@@ -304,7 +305,9 @@ namespace BlackSimPlugin
         void CSimulatorFsx::onSimRunning()
         {
             if (m_simRunning) { return; }
-            m_simRunning = true;
+            qDebug() << "onSimRunning";
+            m_simRunning = true; // only place where this should be set to true
+            m_simConnected = true;
             HRESULT hr = SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestOwnAircraft,
                          CSimConnectDefinitions::DataOwnAircraft,
                          SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_VISUAL_FRAME);
@@ -340,11 +343,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::onSimStopped()
         {
-            if (m_simRunning)
-            {
-                m_simRunning = false;
-                mapperInstance()->gracefulShutdown(); // stop background reading if ongoing
-            }
+            m_simRunning = false;
             emitSimulatorCombinedStatus();
         }
 
@@ -355,8 +354,14 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::onSimExit()
         {
+            // reset complete state, we are going down
             m_simConnected = false;
-            this->onSimStopped();
+            m_simRunning = false;
+            m_simPaused = false;
+
+            // stop background reading if ongoing
+            mapperInstance()->gracefulShutdown();
+            emitSimulatorCombinedStatus();
         }
 
         void CSimulatorFsx::updateOwnAircraftFromSimulator(DataDefinitionOwnAircraft simulatorOwnAircraft)
@@ -503,12 +508,13 @@ namespace BlackSimPlugin
                 initDataDefinitionsWhenConnected();
                 m_simconnectTimerId = startTimer(10);
                 m_simConnected = true;
-
                 emitSimulatorCombinedStatus();
             }
             else
             {
+                if (m_simconnectTimerId >= 0) { killTimer(m_simconnectTimerId); }
                 m_simConnected = false;
+                m_simRunning = false;
                 emitSimulatorCombinedStatus();
             }
         }
@@ -549,6 +555,7 @@ namespace BlackSimPlugin
             hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventObjectRemoved, "ObjectRemoved");
             hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventFrame, "Frame");
             hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventPause, "Pause");
+            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventFlightLoaded, "FlightLoaded");
             if (hr != S_OK)
             {
                 CLogMessage(this).error("FSX plugin error: %1") << "SimConnect_SubscribeToSystemEvent failed";
@@ -624,7 +631,7 @@ namespace BlackSimPlugin
             Q_ASSERT_X(BlackCore::isCurrentThreadCreatingThread(this), Q_FUNC_INFO, "thread");
 
             // nothing to do, reset request id and exit
-            if (this->isPaused()) { return; } // no interpolation while paused
+            if (this->isPaused() && this->m_pausedSimFreezesInterpolation) { return; } // no interpolation while paused
             int remoteAircraftNo = this->getAircraftInRangeCount();
             if (remoteAircraftNo < 1) { m_interpolationRequest = 0;  return; }
 

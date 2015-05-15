@@ -49,6 +49,7 @@ namespace BlackSimPlugin
             SystemEventSlewToggle,
             SystemEventFrame,
             SystemEventPause,
+            SystemEventFlightLoaded,
             EventPauseToggle,
             EventFreezeLat,
             EventFreezeAlt,
@@ -127,15 +128,6 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::physicallyRenderedAircraft
             virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
 
-            //! Called when sim has started
-            void onSimRunning();
-
-            //! Called when sim has stopped
-            void onSimStopped();
-
-            //! Slot called every visual frame
-            void onSimFrame();
-
             //! Called when data about our own aircraft are received
             void updateOwnAircraftFromSimulator(DataDefinitionOwnAircraft simulatorOwnAircraft);
 
@@ -144,9 +136,6 @@ namespace BlackSimPlugin
 
             //! Set ID of a SimConnect object
             void setSimConnectObjectID(DWORD requestID, DWORD objectID);
-
-            //! \private
-            void onSimExit();
 
         protected:
             //! Timer event (our SimConnect event loop), runs \sa ps_dispatch
@@ -161,6 +150,18 @@ namespace BlackSimPlugin
             void ps_connectToFinished();
 
         private:
+            //! Called when sim has started
+            void onSimRunning();
+
+            //! Slot called every visual frame
+            void onSimFrame();
+
+            //! Called when simulator has stopped, e.g. by selecting the "select aircraft screen"
+            void onSimStopped();
+
+            //! Simulator is going down
+            void onSimExit();
+
             //! Remove a remote aircraft
             bool physicallyRemoveRemoteAircraft(const CSimConnectObject &simObject);
 

@@ -74,16 +74,12 @@ namespace BlackCore
 
         //! \copydoc IRemoteAircraftProvider::connectSignals
         //! \ingroup remoteaircraftprovider
-        virtual bool connectRemoteAircraftProviderSignals(
+        virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
             std::function<void(const BlackMisc::Aviation::CAircraftSituation &)>          addedSituationSlot,
             std::function<void(const BlackMisc::Aviation::CAircraftParts &)>              addedPartsSlot,
             std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,
             std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
         ) override;
-
-        //! \copydoc IRemoteAircraftProvider::disconnectRemoteAircraftProviderSignals
-        //! \ingroup remoteaircraftprovider
-        virtual bool disconnectRemoteAircraftProviderSignals(QObject *receiver) override;
 
         //! \copydoc IRemoteAircraftProvider::updateAircraftRendered
         //! \ingroup remoteaircraftprovider

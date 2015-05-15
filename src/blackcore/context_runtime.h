@@ -158,7 +158,7 @@ namespace BlackCore
         bool parseCommandLine(const QString commandLine, const QString &originator);
 
     private:
-        bool m_init = false; /*!< flag */
+        bool m_init = false; //!< flag
 
         // DBus
         CDBusServer *m_dbusServer = nullptr;

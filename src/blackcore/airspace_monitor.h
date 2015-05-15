@@ -147,15 +147,12 @@ namespace BlackCore
         void testAddAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts, bool incremental);
 
         //! \copydoc IRemoteAircraftProvider::connectRemoteAircraftProviderSignals
-        virtual bool connectRemoteAircraftProviderSignals(
+        virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
             std::function<void(const BlackMisc::Aviation::CAircraftSituation &)>          addedSituationSlot,
             std::function<void(const BlackMisc::Aviation::CAircraftParts &)>              addedPartsSlot,
             std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,
             std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
         ) override;
-
-        //! \copydoc IRemoteAircraftProvider::disconnectRemoteAircraftProviderSignals
-        virtual bool disconnectRemoteAircraftProviderSignals(QObject *receiver) override;
 
         //! Is interim position sending enabled?
         bool isFastPositionSendingEnabled() const;

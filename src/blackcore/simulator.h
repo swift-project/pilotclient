@@ -45,7 +45,7 @@ namespace BlackCore
             Paused      = 1 << 2, //!< Is the simulator paused?
         };
 
-        //! Render all aircraft
+        //! Render all aircraft if number of aircraft >= MaxAircraftInfinite
         const int MaxAircraftInfinite = 100;
 
         //! Destructor
@@ -174,8 +174,14 @@ namespace BlackCore
         //! Highlight the aircraft for given time (or disable highlight)
         virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) = 0;
 
+        //! Driver will be unloaded
+        virtual void unload() = 0;
+
         //! Originator
         const QString &simulatorOriginator();
+
+        //! Status to string
+        static QString statusToString(int status);
 
     signals:
         //! Simulator combined status

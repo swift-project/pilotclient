@@ -60,18 +60,18 @@ namespace BlackSimPlugin
                 }
             case SIMCONNECT_RECV_ID_QUIT:
                 {
-                    simulatorFsx->onSimExit(); // TODO: What is the difference to sim stopped?
+                    simulatorFsx->onSimExit();
                     break;
                 }
             case SIMCONNECT_RECV_ID_EVENT:
                 {
                     SIMCONNECT_RECV_EVENT *event = static_cast<SIMCONNECT_RECV_EVENT *>(pData);
-
                     switch (event->uEventID)
                     {
                     case SystemEventSimStatus:
                         {
-                            if (event->dwData)
+                            bool running = event->dwData ? true : false;
+                            if (running)
                             {
                                 simulatorFsx->onSimRunning();
                             }
@@ -83,22 +83,27 @@ namespace BlackSimPlugin
                         }
                     case SystemEventPause:
                         {
-                            simulatorFsx->m_simPaused = event->dwData ? true : false;
+                            bool p = event->dwData ? true : false;
+                            simulatorFsx->m_simPaused = p;
+                            simulatorFsx->emitSimulatorCombinedStatus();
                             break;
                         }
+                    default:
+                        break;
                     }
                     break;
                 }
             case SIMCONNECT_RECV_ID_EVENT_OBJECT_ADDREMOVE:
                 {
                     SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE *event = static_cast<SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE *>(pData);
-                    if (event->uEventID == SystemEventObjectAdded)
+                    switch (event->uEventID)
                     {
-                        //
-                    }
-                    else if (event->uEventID == SystemEventObjectRemoved)
-                    {
-                        //
+                    case SystemEventObjectAdded:
+                        break;
+                    case SystemEventObjectRemoved:
+                        break;
+                    default:
+                        break;
                     }
                     break;
                 }
@@ -171,7 +176,7 @@ namespace BlackSimPlugin
                     for (unsigned i = 0; i < pAirportList->dwArraySize; ++i)
                     {
                         SIMCONNECT_DATA_FACILITY_AIRPORT *pFacilityAirport = pAirportList->rgData + i;
-                        if (!pFacilityAirport) break;
+                        if (!pFacilityAirport) { break; }
                         const QString icao(pFacilityAirport->Icao);
                         if (icao.isEmpty()) { continue; } // airfield without ICAO code
                         if (!CAirportIcaoCode::isValidIcaoDesignator(icao)) { continue; } // tiny airfields in SIM
@@ -197,6 +202,18 @@ namespace BlackSimPlugin
                         //! In FSUIPC it is 0/1, according to documentation it is 0/1 but I receive 2/0 here
                         DataDefinitionClientAreaSb *sbData = (DataDefinitionClientAreaSb *) &clientData->dwData;
                         simulatorFsx->updateOwnAircraftFromSimulator(*sbData);
+                    }
+                    break;
+                }
+            case SIMCONNECT_RECV_ID_EVENT_FILENAME:
+                {
+                    SIMCONNECT_RECV_EVENT_FILENAME *event = static_cast<SIMCONNECT_RECV_EVENT_FILENAME *>(pData);
+                    switch (event->uEventID)
+                    {
+                    case SystemEventFlightLoaded:
+                        break;
+                    default:
+                        break;
                     }
                     break;
                 }

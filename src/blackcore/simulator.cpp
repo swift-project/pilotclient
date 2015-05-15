@@ -28,6 +28,22 @@ namespace BlackCore
         return o;
     }
 
+    QString ISimulator::statusToString(int status)
+    {
+        if (status > 0)
+        {
+            QString s;
+            if (status & Connected) { s.append("Connected"); }
+            if (status & Running) { if (!s.isEmpty()) { s.append(", "); } s.append("Simulating"); }
+            if (status & Paused) { if (!s.isEmpty()) { s.append(", "); } s.append("Paused"); }
+            return s;
+        }
+        else
+        {
+            return "Disconnected";
+        }
+    }
+
     void ISimulator::emitSimulatorCombinedStatus()
     {
         int status =

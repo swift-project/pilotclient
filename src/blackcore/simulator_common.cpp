@@ -11,6 +11,7 @@
 #include "blackcore/interpolator.h"
 #include "blackcore/blackcorefreefunctions.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/loghandler.h"
 #include "blackmisc/collection.h"
 
 using namespace BlackMisc;
@@ -31,23 +32,24 @@ namespace BlackCore
           m_simulatorPluginInfo(info)
     {
         this->setObjectName(info.getIdentifier());
+
+        // provider signals
+        m_remoteAircraftProviderConnections = this->m_remoteAircraftProvider->connectRemoteAircraftProviderSignals(
+                std::bind(&CSimulatorCommon::ps_remoteProviderAddAircraftSituation, this, std::placeholders::_1),
+                std::bind(&CSimulatorCommon::ps_remoteProviderAddAircraftParts, this, std::placeholders::_1),
+                std::bind(&CSimulatorCommon::ps_remoteProviderRemovedAircraft, this, std::placeholders::_1),
+                std::bind(static_cast<void(CSimulatorCommon::*)(const CAirspaceAircraftSnapshot &)>(&CSimulatorCommon::ps_recalculateRenderedAircraft), this, std::placeholders::_1));
+
+        // timer
         this->m_oneSecondTimer.setObjectName(this->objectName().append(":m_oneSecondTimer"));
         connect(&m_oneSecondTimer, &QTimer::timeout, this, &CSimulatorCommon::ps_oneSecondTimer);
         this->m_oneSecondTimer.start(1000);
 
-        // provider signals
-        bool c = remoteAircraftProvider->connectRemoteAircraftProviderSignals(
-                     std::bind(&CSimulatorCommon::ps_remoteProviderAddAircraftSituation, this, std::placeholders::_1),
-                     std::bind(&CSimulatorCommon::ps_remoteProviderAddAircraftParts, this, std::placeholders::_1),
-                     std::bind(&CSimulatorCommon::ps_remoteProviderRemovedAircraft, this, std::placeholders::_1),
-                     std::bind(static_cast<void(CSimulatorCommon::*)(const CAirspaceAircraftSnapshot &)>(&CSimulatorCommon::ps_recalculateRenderedAircraft), this, std::placeholders::_1)
-                 );
-        Q_ASSERT(c);
-        Q_UNUSED(c);
-
         // info
         CLogMessage(this).info("Initialized simulator driver %1") << m_simulatorPluginInfo.toQString();
     }
+
+    CSimulatorCommon::~CSimulatorCommon() { }
 
     bool CSimulatorCommon::logicallyAddRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
     {
@@ -195,6 +197,18 @@ namespace BlackCore
         return m_simulatorSetup;
     }
 
+    void CSimulatorCommon::unload()
+    {
+        this->disconnectFrom(); // disconnect from simulator
+        for (QMetaObject::Connection &c : m_remoteAircraftProviderConnections)
+        {
+            QObject::disconnect(c);
+        }
+        m_remoteAircraftProviderConnections.clear();
+        this->disconnect();
+        CLogHandler::instance()->disconnect();
+    }
+
     CLength CSimulatorCommon::getRenderedDistanceBoundary() const
     {
         return CLength(20.0, CLengthUnit::NM());
@@ -282,31 +296,32 @@ namespace BlackCore
         // when changing back from restricted->unrestricted an one time update is required
         if (!snapshot.isRestricted() && !snapshot.isRestrictionChanged()) { return; }
 
-        // we will handle snapshot
-        emit airspaceSnapshotHandled();
-
-
-        // restricted snapshot values
-        if (!snapshot.isRenderingEnabled())
+        // restricted snapshot values?
+        if (snapshot.isRenderingEnabled())
         {
-            this->physicallyRemoveAllRemoteAircraft();
-            return;
-        }
+            CCallsignSet callsignsInSimulator(physicallyRenderedAircraft());
+            CCallsignSet callsignsToBeRemoved(callsignsInSimulator.difference(snapshot.getEnabledAircraftCallsignsByDistance()));
+            CCallsignSet callsignsToBeAdded(snapshot.getEnabledAircraftCallsignsByDistance().difference(callsignsInSimulator));
+            this->physicallyRemoveMultipleRemoteAircraft(callsignsToBeRemoved);
 
-        CCallsignSet callsignsInSimulator(physicallyRenderedAircraft());
-        CCallsignSet callsignsToBeRemoved(callsignsInSimulator.difference(snapshot.getEnabledAircraftCallsignsByDistance()));
-        CCallsignSet callsignsToBeAdded(snapshot.getEnabledAircraftCallsignsByDistance().difference(callsignsInSimulator));
-        this->physicallyRemoveMultipleRemoteAircraft(callsignsToBeRemoved);
-
-        if (!callsignsToBeAdded.isEmpty())
-        {
-            CSimulatedAircraftList aircraftToBeAdded(getAircraftInRange().findByCallsigns(callsignsToBeAdded)); // thread safe copy
-            for (const CSimulatedAircraft &aircraft : aircraftToBeAdded)
+            if (!callsignsToBeAdded.isEmpty())
             {
-                Q_ASSERT_X(aircraft.isEnabled(), Q_FUNC_INFO, "Disabled aircraft detected as to be added");
-                this->physicallyAddRemoteAircraft(aircraft);
+                CSimulatedAircraftList aircraftToBeAdded(getAircraftInRange().findByCallsigns(callsignsToBeAdded)); // thread safe copy
+                for (const CSimulatedAircraft &aircraft : aircraftToBeAdded)
+                {
+                    Q_ASSERT_X(aircraft.isEnabled(), Q_FUNC_INFO, "Disabled aircraft detected as to be added");
+                    this->physicallyAddRemoteAircraft(aircraft);
+                }
             }
         }
+        else
+        {
+            this->physicallyRemoveAllRemoteAircraft();
+        }
+
+        // we handled snapshot
+        emit airspaceSnapshotHandled();
+
     }
 
     void CSimulatorCommon::ps_remoteProviderAddAircraftSituation(const CAircraftSituation &situation)

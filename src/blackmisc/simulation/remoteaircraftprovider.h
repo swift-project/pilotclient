@@ -100,16 +100,13 @@ namespace BlackMisc
             virtual ~IRemoteAircraftProvider() {}
 
             //! Connect signals to slot receiver. As the interface is no QObject, slots can not be connected directly.
-            virtual bool connectRemoteAircraftProviderSignals(
+            //! In order to disconnect a list of connections is provided, which have to be disconnected manually.
+            //! \note connections are direct as functors have no parameter for connection type
+            virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
                 std::function<void(const BlackMisc::Aviation::CAircraftSituation &)>          addedSituationSlot,
                 std::function<void(const BlackMisc::Aviation::CAircraftParts &)>              addedPartsSlot,
                 std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,
                 std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshot
-            ) = 0;
-
-            //! Disconnect signals from receiver. As the interface is no QObject, slots can not be connected directly.
-            virtual bool disconnectRemoteAircraftProviderSignals(
-                QObject *receiver
             ) = 0;
         };
 

@@ -129,29 +129,22 @@ namespace BlackCore
         return m_aircraftSupportingParts;
     }
 
-    bool CAirspaceMonitor::connectRemoteAircraftProviderSignals(
+    QList<QMetaObject::Connection> CAirspaceMonitor::connectRemoteAircraftProviderSignals(
         std::function<void(const CAircraftSituation &)>    situationSlot,
         std::function<void(const CAircraftParts &)>        partsSlot,
         std::function<void(const CCallsign &)>             removedAircraftSlot,
         std::function<void(const CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
     )
     {
-        bool s1 = connect(this, &CAirspaceMonitor::addedAircraftSituation, situationSlot);
-        Q_ASSERT(s1);
-        bool s2 = connect(this, &CAirspaceMonitor::addedAircraftParts, partsSlot);
-        Q_ASSERT(s2);
-        bool s3 = connect(this, &CAirspaceMonitor::removedAircraft, removedAircraftSlot);
-        Q_ASSERT(s3);
-        bool s4 = connect(this->m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, aircraftSnapshotSlot);
-        Q_ASSERT(s4);
-
-        return s1 && s2 && s3 && s4;
-    }
-
-    bool CAirspaceMonitor::disconnectRemoteAircraftProviderSignals(QObject *receiver)
-    {
-        if (!receiver) { return false; }
-        return this->disconnect(receiver);
+        QMetaObject::Connection c1 = connect(this, &CAirspaceMonitor::addedAircraftSituation, situationSlot);
+        Q_ASSERT(c1);
+        QMetaObject::Connection c2 = connect(this, &CAirspaceMonitor::addedAircraftParts, partsSlot);
+        Q_ASSERT(c2);
+        QMetaObject::Connection c3 = connect(this, &CAirspaceMonitor::removedAircraft, removedAircraftSlot);
+        Q_ASSERT(c3);
+        QMetaObject::Connection c4 = this->connect(this->m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, aircraftSnapshotSlot);
+        Q_ASSERT(c4);
+        return QList<QMetaObject::Connection>({ c1, c2, c3, c4});
     }
 
     bool CAirspaceMonitor::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRedering, const QString &originator)

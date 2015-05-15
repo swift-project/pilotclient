@@ -60,15 +60,12 @@ namespace BlackMisc
             virtual bool isRemoteAircraftSupportingParts(const Aviation::CCallsign &callsign) const override;
 
             //! \copydoc IRemoteAircraftProvider::connectRemoteAircraftProviderSignals
-            virtual bool connectRemoteAircraftProviderSignals(
+            virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
                 std::function<void(const BlackMisc::Aviation::CAircraftSituation &)>          addedSituationSlot,
                 std::function<void(const BlackMisc::Aviation::CAircraftParts &)>              addedPartsSlot,
                 std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,
                 std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
             ) override;
-
-            //! \copydoc IRemoteAircraftProvider::disconnectRemoteAircraftProviderSignals
-            virtual bool disconnectRemoteAircraftProviderSignals(QObject *receiver) override;
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftEnabled
             virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering, const QString &originator) override;

@@ -542,16 +542,10 @@ namespace BlackCore
             Q_ASSERT(this->getIContextNetwork()->isLocalObject());
             Q_ASSERT(m_simulatorPlugin->simulator);
 
-            // disconnect from simulator
-            if (m_simulatorPlugin->simulator->isConnected())
-            {
-                m_simulatorPlugin->simulator->disconnectFrom();
-            }
+            // unload and disconnect
+            m_simulatorPlugin->simulator->unload();
 
             // disconnect signals
-            this->getRuntime()->getCContextNetwork()->disconnectRemoteAircraftProviderSignals(m_simulatorPlugin->simulator);
-            m_simulatorPlugin->simulator->disconnect();
-            CLogHandler::instance()->disconnect(m_simulatorPlugin->simulator);
             this->disconnect(m_simulatorPlugin->simulator);
 
             m_simulatorPlugin->simulator->deleteLater();
@@ -599,8 +593,15 @@ namespace BlackCore
 
         if (!(status & ISimulator::Connected))
         {
+            // we got disconnected
             unloadSimulatorPlugin();
-            listenForSimulatorFromSettings();
+
+            // do not immediately listen again, but allow some time for the simulator to shutdown
+            // otherwise we risk reconnecting to a closing simulator
+            BlackMisc::singleShot(1000, QThread::currentThread(), [ = ]()
+            {
+                listenForSimulatorFromSettings();
+            });
         }
         emit simulatorStatusChanged(status);
     }

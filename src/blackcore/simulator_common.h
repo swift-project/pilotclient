@@ -41,6 +41,9 @@ namespace BlackCore
         Q_OBJECT
 
     public:
+        //! Destructor
+        virtual ~CSimulatorCommon();
+
         //! \copydoc ISimulator::getMaxRenderedAircraft
         virtual int getMaxRenderedAircraft() const override;
 
@@ -82,6 +85,9 @@ namespace BlackCore
 
         //! \copydoc IContextSimulator::getSimulatorSetup
         virtual const BlackMisc::Simulation::CSimulatorSetup &getSimulatorSetup() const override;
+
+        //! \copydoc IContextSimulator::unload
+        virtual void unload();
 
         //! \copydoc IContextSimulator::deleteAllRenderingRestrictions
         virtual void deleteAllRenderingRestrictions() override;
@@ -132,6 +138,7 @@ namespace BlackCore
 
         bool m_debugMessages = false;             //!< Display debug messages
         bool m_blinkCycle = false;                //!< use for highlighting
+        bool m_pausedSimFreezesInterpolation = false; //!< paused simulator will also pause interpolation (so AI aircraft will hold)
         IInterpolator *m_interpolator = nullptr;  //!< interpolator instance
         qint64 m_highlightEndTimeMsEpoch = 0;     //!< end highlighting
         int m_timerCounter = 0;                   //!< allows to calculate n seconds
@@ -142,6 +149,8 @@ namespace BlackCore
         BlackMisc::Aviation::CCallsignSet m_callsignsToBeRendered;           //!< callsigns which will be rendered
         int m_maxRenderedAircraft = MaxAircraftInfinite;                     //!< max.rendered aircraft
         BlackMisc::PhysicalQuantities::CLength m_maxRenderedDistance { 0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()}; //!< max.distance for rendering
+        QList<QMetaObject::Connection> m_remoteAircraftProviderConnections;  //!< connected signal/slots
+
     };
 
 } // namespace
