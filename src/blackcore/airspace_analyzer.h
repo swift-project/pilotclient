@@ -58,6 +58,9 @@ namespace BlackCore
         //! Gracefully shut down, e.g. for thread safety
         void gracefulShutdown();
 
+        //! Destructor
+        virtual ~CAirspaceAnalyzer();
+
     public slots:
         //! Clear
         void clear();

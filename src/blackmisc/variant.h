@@ -47,7 +47,7 @@ namespace BlackMisc
             static void registerMetadata()
             {
                 Private::MetaTypeHelper<Derived>::maybeRegisterMetaType();
-                //! \todo KB: What does this monster do? Please some comment
+                // Details: https://dev.vatsim-germany.org/issues/413#note-6
                 [](...){}((qRegisterMetaType<AdditionalTypes>(), qDBusRegisterMetaType<AdditionalTypes>(), 0)...);
             }
 

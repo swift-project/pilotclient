@@ -18,7 +18,6 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {
@@ -37,9 +36,6 @@ namespace BlackCore
                                     "simulatorStatusChanged", this, SIGNAL(simulatorStatusChanged(int)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                               "simulatorStatusChanged", this, SIGNAL(simulatorStatusChanged(int)));
-        Q_ASSERT(s);
-        s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                "installedAircraftModelsChanged", this, SIGNAL(installedAircraftModelsChanged()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
@@ -52,7 +48,7 @@ namespace BlackCore
                                "renderRestrictionsChanged", this, SIGNAL(renderRestrictionsChanged(bool, int, BlackMisc::PhysicalQuantities::CLength, BlackMisc::PhysicalQuantities::CLength)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                               "simulatorPluginChanged", this, SIGNAL(simulatorPluginChanged(BlackMisc::Simulation::CSimulatorPluginInfo &)));
+                               "simulatorPluginChanged", this, SIGNAL(simulatorPluginChanged(BlackMisc::Simulation::CSimulatorPluginInfo)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                "airspaceSnapshotHandled", this, SIGNAL(airspaceSnapshotHandled()));

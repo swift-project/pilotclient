@@ -41,7 +41,7 @@ namespace BlackGui
             explicit CMappingComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CMappingComponent();
+            virtual ~CMappingComponent();
 
             //! Number of current mappings
             int countCurrentMappings() const;

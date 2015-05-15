@@ -478,6 +478,9 @@
    <property name="text">
     <string>Navigator</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+W, Ctrl+N</string>
+   </property>
   </action>
   <action name="menu_NavigatorHorizontal">
    <property name="text">

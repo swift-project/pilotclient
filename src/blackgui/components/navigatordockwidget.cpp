@@ -31,7 +31,6 @@ namespace BlackGui
             this->allowStatusBar(false);
             ui->setupUi(this);
             this->ps_onStyleSheetsChanged();
-            this->buildNavigator(1);
         }
 
         CNavigatorDockWidget::~CNavigatorDockWidget()
@@ -143,7 +142,7 @@ namespace BlackGui
 
         int CNavigatorDockWidget::columnsForRows(int rows)
         {
-            Q_ASSERT(rows >= 0);
+            Q_ASSERT_X(rows >= 0, Q_FUNC_INFO, "no rows");
             int items = this->m_widgets.size();
             int c = items / rows;
             return (c * rows) < items ? c + 1 : c;

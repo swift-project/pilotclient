@@ -73,7 +73,14 @@ namespace BlackCore
 
     void CAirspaceAnalyzer::gracefulShutdown()
     {
-        this->m_timer.stop();
+        bool s = QMetaObject::invokeMethod(&m_timer, "stop");
+        Q_ASSERT_X(s, Q_FUNC_INFO, "invoke failed");
+        Q_UNUSED(s);
+    }
+
+    CAirspaceAnalyzer::~CAirspaceAnalyzer()
+    {
+        gracefulShutdown();
     }
 
     void CAirspaceAnalyzer::ps_watchdogTouchAircraftCallsign(const CAircraftSituation &situation, const CTransponder &transponder)

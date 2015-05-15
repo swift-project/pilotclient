@@ -34,7 +34,7 @@ namespace BlackGui
             explicit CNavigatorDockWidget(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CNavigatorDockWidget();
+            virtual ~CNavigatorDockWidget();
 
             //! Add action as navigator item
             void addAction(QAction * action);
