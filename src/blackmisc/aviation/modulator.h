@@ -56,16 +56,16 @@ namespace BlackMisc
             virtual void setFrequencyStandby(const BlackMisc::PhysicalQuantities::CFrequency &frequency);
 
             //! Output volume 0..100
-            qint32 getVolumeOutput() const;
+            int getVolumeOutput() const;
 
             //! Input volume 0..100
-            qint32 getVolumeInput() const;
+            int getVolumeInput() const;
 
             //! Output volume 0.100
-            void setVolumeOutput(qint32 volume);
+            void setVolumeOutput(int volume);
 
             //! Input volume 0..100
-            void setVolumeInput(qint32 volume);
+            void setVolumeInput(int volume);
 
             //! Name
             QString getName() const;

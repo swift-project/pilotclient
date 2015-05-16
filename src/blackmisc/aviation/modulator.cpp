@@ -62,25 +62,25 @@ namespace BlackMisc
         }
 
         template <class AVIO>
-        qint32 CModulator<AVIO>::getVolumeOutput() const
+        int CModulator<AVIO>::getVolumeOutput() const
         {
             return this->m_volumeOutput;
         }
 
         template <class AVIO>
-        qint32 CModulator<AVIO>::getVolumeInput() const
+        int CModulator<AVIO>::getVolumeInput() const
         {
             return this->m_volumeInput;
         }
 
         template <class AVIO>
-        void CModulator<AVIO>::setVolumeOutput(qint32 volume)
+        void CModulator<AVIO>::setVolumeOutput(int volume)
         {
             this->m_volumeOutput = volume;
         }
 
         template <class AVIO>
-        void CModulator<AVIO>::setVolumeInput(qint32 volume)
+        void CModulator<AVIO>::setVolumeInput(int volume)
         {
             this->m_volumeInput = volume;
         }
