@@ -42,6 +42,10 @@ namespace BlackMisc
             //! Default constructor
             CSimulatorPluginInfo() = default;
 
+            //! Constructor (used with unit tests)
+            CSimulatorPluginInfo(const QString &identifier, const QString &name,
+                                 const QString &simulator, const QString &description, bool valid);
+
             //! \copydoc BlackMisc::CValueObject::convertFromJson
             void convertFromJson(const QJsonObject &json);
 

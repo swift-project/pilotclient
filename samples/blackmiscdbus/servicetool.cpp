@@ -365,11 +365,23 @@ namespace BlackMiscTest
             ivm = testserviceInterface.pingIndexVariantMap(ivm);
             qDebug() << "Pinged variant map via interface" << ivm;
 
+            CSimulatorPluginInfo pluginInfo("fsx", "FSX Simulator", "FSX", "Flight Simulator X", true);
+            CSimulatorPluginInfo pluginInfoReceived = testserviceInterface.pingPluginInfo(pluginInfo);
+            qDebug() << "Pinged info via interface"
+                     << ((pluginInfo == pluginInfoReceived) ? "OK" : "ERROR!") << pluginInfoReceived;
+
             CAtcStation stationReceived  = testserviceInterface.pingAtcStation(station);
             qDebug() << "Pinged ATC station via interface"
                      << ((station == stationReceived) ? "OK" : "ERROR!") << stationReceived;
 
-            CUser pingUser("223344", "Ping Me user");
+            CAircraftIcaoData icaoData("B737", "DLH");
+            icaoData.setAircraftCombinedType("L2J");
+            icaoData.setAircraftColor("green");
+            CAircraftIcaoData icaoReceived = testserviceInterface.pingIcaoData(icaoData);
+            qDebug() << "Pinged ICAO data via interface"
+                     << ((icaoData == icaoReceived) ? "OK" : "ERROR!") << icaoReceived;
+
+            CUser pingUser("223344", "Ping Me User");
             CUser userReceived = testserviceInterface.pingUser(pingUser);
             qDebug() << "Pinged user via interface"
                      << ((userReceived == pingUser) ? "OK" : "ERROR!") << userReceived;

@@ -12,10 +12,11 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation::FsCommon;
 
 namespace BlackMiscTest
 {
@@ -74,7 +75,7 @@ namespace BlackMiscTest
     /*
      * Station
      */
-    BlackMisc::Aviation::CAtcStation Testservice::getAtcStation() const
+    CAtcStation Testservice::getAtcStation() const
     {
         CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", CLength(1487, CLengthUnit::ft())); // Munich
         CAtcStation station(CCallsign("eddm_twr"), CUser("654321", "client"),
@@ -86,7 +87,7 @@ namespace BlackMiscTest
     /*
      * Receive COM unit
      */
-    void Testservice::receiveComUnit(const BlackMisc::Aviation::CComSystem &comUnit)
+    void Testservice::receiveComUnit(const CComSystem &comUnit)
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "Received COM:" << comUnit;
     }
@@ -94,7 +95,7 @@ namespace BlackMiscTest
     /*
      * Receive altitude
      */
-    void Testservice::receiveAltitude(const BlackMisc::Aviation::CAltitude &altitude)
+    void Testservice::receiveAltitude(const CAltitude &altitude)
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "Received altitude:" << altitude;
     }
@@ -118,7 +119,7 @@ namespace BlackMiscTest
     /*
      * Receive transponder
      */
-    void Testservice::receiveTransponder(const BlackMisc::Aviation::CTransponder &transponder) const
+    void Testservice::receiveTransponder(const CTransponder &transponder) const
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "Received transponder:" << transponder;
     }
@@ -126,7 +127,7 @@ namespace BlackMiscTest
     /*
      * Receive track
      */
-    void Testservice::receiveTrack(const BlackMisc::Aviation::CTrack &track) const
+    void Testservice::receiveTrack(const CTrack &track) const
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "Received track:" << track;
     }
@@ -170,7 +171,7 @@ namespace BlackMiscTest
     /*
      * Receive callsign
      */
-    void Testservice::receiveCallsign(const BlackMisc::Aviation::CCallsign &callsign) const
+    void Testservice::receiveCallsign(const CCallsign &callsign) const
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "Received callsign:" << callsign;
     }
@@ -178,7 +179,7 @@ namespace BlackMiscTest
     /*
      * Receive ATC list
      */
-    void Testservice::receiveAtcStationList(const BlackMisc::Aviation::CAtcStationList &atcStationList) const
+    void Testservice::receiveAtcStationList(const CAtcStationList &atcStationList) const
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "Received ATC list:" << atcStationList;
     }
@@ -194,7 +195,7 @@ namespace BlackMiscTest
     /*
      * Receive callsign
      */
-    void Testservice::receiveAtcStation(const BlackMisc::Aviation::CAtcStation &station) const
+    void Testservice::receiveAtcStation(const CAtcStation &station) const
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "Received ATC station:" << station;
     }
@@ -231,7 +232,7 @@ namespace BlackMiscTest
     /*
      * Ping ATC list
      */
-    BlackMisc::Aviation::CAtcStationList Testservice::pingAtcStationList(const BlackMisc::Aviation::CAtcStationList &atcStationList) const
+    CAtcStationList Testservice::pingAtcStationList(const CAtcStationList &atcStationList) const
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "ping ATCs:" << atcStationList;
         return atcStationList;
@@ -294,7 +295,7 @@ namespace BlackMiscTest
     /*
      * Ping altitude
      */
-    BlackMisc::Aviation::CAltitude Testservice::pingAltitude(const BlackMisc::Aviation::CAltitude &altitude)
+    CAltitude Testservice::pingAltitude(const CAltitude &altitude)
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "ping alt:" << altitude;
         return altitude;
@@ -312,7 +313,7 @@ namespace BlackMiscTest
     /*
      * Ping situation
      */
-    BlackMisc::Aviation::CAircraftSituation Testservice::pingSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
+    CAircraftSituation Testservice::pingSituation(const CAircraftSituation &situation)
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "ping situation:" << situation;
         return situation;
@@ -321,7 +322,7 @@ namespace BlackMiscTest
     /*
      * Ping transponder
      */
-    BlackMisc::Aviation::CTransponder Testservice::pingTransponder(const BlackMisc::Aviation::CTransponder &transponder)
+    CTransponder Testservice::pingTransponder(const CTransponder &transponder)
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "ping transponder:" << transponder;
         return transponder;
@@ -330,7 +331,7 @@ namespace BlackMiscTest
     /*
      * Ping ATC station
      */
-    BlackMisc::Aviation::CAtcStation Testservice::pingAtcStation(const BlackMisc::Aviation::CAtcStation &station)
+    CAtcStation Testservice::pingAtcStation(const CAtcStation &station)
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "ping ATC:" << station;
         return station;
@@ -339,7 +340,7 @@ namespace BlackMiscTest
     /*
      * Ping aircraft
      */
-    BlackMisc::Aviation::CAircraft Testservice::pingAircraft(const BlackMisc::Aviation::CAircraft &aircraft)
+    CAircraft Testservice::pingAircraft(const CAircraft &aircraft)
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "ping aircraft:" << aircraft;
         return aircraft;
@@ -348,10 +349,28 @@ namespace BlackMiscTest
     /*
      * Ping simulated aircraft
      */
-    Simulation::CSimulatedAircraft Testservice::pingSimulatedAircraft(const Simulation::CSimulatedAircraft &aircraft)
+    CSimulatedAircraft Testservice::pingSimulatedAircraft(const CSimulatedAircraft &aircraft)
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "ping simulated aircraft:" << aircraft;
         return aircraft;
+    }
+
+    /*
+     * Ping ICAO data
+     */
+    CAircraftIcaoData Testservice::pingIcaoData(const CAircraftIcaoData &icao)
+    {
+        qDebug() << "Pid:" << ServiceTool::getPid() << "ping ICAO data:" << icao;
+        return icao;
+    }
+
+    /*
+     * Ping info
+     */
+    CSimulatorPluginInfo Testservice::pingPluginInfo(const CSimulatorPluginInfo &info)
+    {
+        qDebug() << "Pid:" << ServiceTool::getPid() << "info:" << info;
+        return info;
     }
 
     /*

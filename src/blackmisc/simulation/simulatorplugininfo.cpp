@@ -16,10 +16,14 @@ namespace BlackMisc
 {
     namespace Simulation
     {
+        CSimulatorPluginInfo::CSimulatorPluginInfo(const QString &identifier, const QString &name, const QString &simulator, const QString &description, bool valid) :
+            m_identifier(identifier), m_name(name), m_simulator(simulator), m_description(description), m_valid(valid)
+        { }
 
         void CSimulatorPluginInfo::convertFromJson(const QJsonObject &json)
         {
-            if (json.contains("IID")) { // comes from the plugin
+            if (json.contains("IID"))   // comes from the plugin
+            {
                 if (json["IID"].toString() != QStringLiteral("org.swift-project.blackcore.simulatorinterface"))
                 {
                     return;
@@ -38,7 +42,9 @@ namespace BlackMisc
 
                 CValueObject::convertFromJson(data);
                 m_valid = true;
-            } else {
+            }
+            else
+            {
                 CValueObject::convertFromJson(json);
             }
         }

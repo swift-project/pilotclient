@@ -20,6 +20,7 @@
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/network/clientlist.h"
 #include "blackmisc/variantlist.h"
 #include <QtCore/QObject>
@@ -122,6 +123,13 @@ namespace BlackMiscTest
             return asyncCallWithArgumentList(QLatin1String("pingAtcStation"), argumentList);
         }
 
+        inline QDBusPendingReply<BlackMisc::Aviation::CAircraftIcaoData> pingIcaoData(BlackMisc::Aviation::CAircraftIcaoData icaoData)
+        {
+            QList<QVariant> argumentList;
+            argumentList << QVariant::fromValue(icaoData);
+            return asyncCallWithArgumentList(QLatin1String("pingIcaoData"), argumentList);
+        }
+
         inline QDBusPendingReply<BlackMisc::Aviation::CAircraft> pingAircraft(BlackMisc::Aviation::CAircraft aircraft)
         {
             QList<QVariant> argumentList;
@@ -134,6 +142,13 @@ namespace BlackMiscTest
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(aircraft);
             return asyncCallWithArgumentList(QLatin1String("pingSimulatedAircraft"), argumentList);
+        }
+
+        inline QDBusPendingReply<BlackMisc::Simulation::CSimulatorPluginInfo> pingPluginInfo(BlackMisc::Simulation::CSimulatorPluginInfo info)
+        {
+            QList<QVariant> argumentList;
+            argumentList << QVariant::fromValue(info);
+            return asyncCallWithArgumentList(QLatin1String("pingPluginInfo"), argumentList);
         }
 
         inline QDBusPendingReply<BlackMisc::Aviation::CAtcStationList> pingAtcStationList(BlackMisc::Aviation::CAtcStationList atcStationList)

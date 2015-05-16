@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISCKTEST_TESTSERVICEPQAV_H
-#define BLACKMISCKTEST_TESTSERVICEPQAV_H
+#ifndef BLACKMISCKTEST_TESTSERVICE_H
+#define BLACKMISCKTEST_TESTSERVICE_H
 
 // clash with struct interface in objbase.h used to happen
 #pragma push_macro("interface")
@@ -20,6 +20,7 @@
 #include "blackmisc/network/network.h"
 #include "blackmisc/pq/pq.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/math/math.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include "servicetool.h"
@@ -35,9 +36,7 @@
 namespace BlackMiscTest
 {
 
-    /*!
-     * Testservice for PQ / CValueObject DBus tests
-     */
+    //! Testservice for PQ / CValueObject DBus tests
     class Testservice : public QObject
     {
         Q_OBJECT
@@ -145,6 +144,12 @@ namespace BlackMiscTest
         //! Ping NW clients list
         BlackMisc::Network::CClientList pingClientList(const BlackMisc::Network::CClientList &clientList);
 
+        //! Ping plugin info
+        BlackMisc::Simulation::CSimulatorPluginInfo pingPluginInfo(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
+
+        //! Ping ICAO data object
+        BlackMisc::Aviation::CAircraftIcaoData pingIcaoData(const BlackMisc::Aviation::CAircraftIcaoData &icao);
+
         //! Ping CVariant
         BlackMisc::CVariant pingCVariant(const BlackMisc::Network::CClient &client);
 
@@ -154,10 +159,10 @@ namespace BlackMiscTest
         //! Get station
         BlackMisc::Aviation::CAtcStation getAtcStation() const;
 
-        //! return n ATC stations
+        //! Return n ATC stations
         BlackMisc::Aviation::CAtcStationList getAtcStationList(int number) const;
 
-        //! return n aircraft cfg entries
+        //! Return n aircraft cfg entries
         BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList getAircraftCfgEntriesList(int number) const;
 
         //! Get object paths
