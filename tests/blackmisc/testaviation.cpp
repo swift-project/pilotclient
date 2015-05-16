@@ -159,12 +159,16 @@ namespace BlackMiscTest
         CAircraftSituation situation2(situation1);
         QVERIFY2(situation1 == situation2, "situations shall be equal");
 
-        CAircraftIcaoData icao1("C172", "L1P", "GA", "GA", "0000ff");
+        CAircraftIcaoData icao1(
+            CAircraftIcaoCode("C172", "L1P"),
+            CAirlineIcaoCode("GA"),
+            "0000ff"
+        );
         CAircraftIcaoData icao2(icao1);
         QVERIFY2(icao1 == icao2, "ICAOs shall be equal");
 
-        CCallsign call1("EDDS_N_APP");
-        CCallsign call2("edds_n_app");
+        CCallsign call1("EDDS_N_APP", CCallsign::Atc);
+        CCallsign call2("edds_n_app", CCallsign::Atc);
         QVERIFY2(call1 == call2, "Callsigns shall be equal");
 
         CAtcStation atc1(c1, user1, f1, situation1.getPosition(), CLength(), false, QDateTime(), QDateTime(), CInformationMessage(CInformationMessage::ATIS, "foo"));

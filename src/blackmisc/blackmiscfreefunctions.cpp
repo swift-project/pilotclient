@@ -203,7 +203,7 @@ QVariant BlackMisc::fixQVariantFromDbusArgument(const QVariant &variant, int loc
             meta->unmarshall(arg, valueVariant.data());
             return valueVariant;
         }
-        Q_ASSERT_X(false, "fixQVariantFromDbusArgument", "no meta");
+        Q_ASSERT_X(false, Q_FUNC_INFO, "no meta");
         return valueVariant;
     }
 }

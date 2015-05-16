@@ -283,7 +283,9 @@ namespace BlackGui
         void CLoginComponent::mergeGuiIcaoValues(CAircraftIcaoData &icao) const
         {
             CGuiAircraftValues values = getAircraftValuesFromGui();
-            CAircraftIcaoData guiIcao(values.ownAircraftIcaoTypeDesignator, values.ownAircraftCombinedType, values.ownAircraftIcaoAirline, "", "");
+            CAircraftIcaoData guiIcao(
+                CAircraftIcaoCode(values.ownAircraftIcaoTypeDesignator, values.ownAircraftCombinedType),
+                CAirlineIcaoCode(values.ownAircraftIcaoAirline));
             icao.updateMissingParts(guiIcao);
         }
 
@@ -346,7 +348,11 @@ namespace BlackGui
             Q_ASSERT(this->getIContextOwnAircraft());
             Q_ASSERT(this->getIContextSimulator());
 
-            static const CAircraftIcaoData defaultIcao("C172", "L1P", "", "", ""); // default values
+            static const CAircraftIcaoData defaultIcao(
+                CAircraftIcaoCode("C172", "L1P"),
+                CAirlineIcaoCode()
+            ); // default values
+
             CAircraftIcaoData icao;
 
             bool simConnected = this->getIContextSimulator() && this->getIContextSimulator()->isSimulating();
@@ -399,13 +405,13 @@ namespace BlackGui
         {
             CGuiAircraftValues values = getAircraftValuesFromGui();
 
-            bool validCombinedType = CAircraftIcaoData::isValidCombinedType(values.ownAircraftCombinedType);
+            bool validCombinedType = CAircraftIcaoCode::isValidCombinedType(values.ownAircraftCombinedType);
             this->ui->lblp_AircraftCombinedType->setTicked(validCombinedType);
 
-            bool validAirlineDesignator = values.ownAircraftIcaoAirline.isEmpty() || CAircraftIcaoData::isValidAirlineDesignator(values.ownAircraftIcaoAirline);
+            bool validAirlineDesignator = values.ownAircraftIcaoAirline.isEmpty() || CAircraftIcaoCode::isValidDesignator(values.ownAircraftIcaoAirline);
             this->ui->lblp_AircraftIcaoAirline->setTicked(validAirlineDesignator);
 
-            bool validIcaoDesignator = CAircraftIcaoData::isValidDesignator(values.ownAircraftIcaoTypeDesignator);
+            bool validIcaoDesignator = CAircraftIcaoCode::isValidDesignator(values.ownAircraftIcaoTypeDesignator);
             this->ui->lblp_AircraftIcaoDesignator->setTicked(validIcaoDesignator);
 
             bool validCallsign = CCallsign::isValidCallsign(values.ownCallsign);

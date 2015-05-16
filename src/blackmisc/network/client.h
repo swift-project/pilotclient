@@ -23,9 +23,7 @@ namespace BlackMisc
 {
     namespace Network
     {
-        /*!
-         * Another client software.
-         */
+        //! Another client software.
         class BLACKMISC_EXPORT CClient : public CValueObject<CClient>
         {
         public:
@@ -133,11 +131,11 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CClient)
-            CUser          m_user;
-            BlackMisc::Simulation::CAircraftModel m_model;
-            CPropertyIndexVariantMap m_capabilities;
-            QString                  m_server;
-            CVoiceCapabilities       m_voiceCapabilities;
+            BlackMisc::Network::CUser              m_user;
+            BlackMisc::Simulation::CAircraftModel  m_model;
+            BlackMisc::CPropertyIndexVariantMap    m_capabilities;
+            QString                                m_server;
+            BlackMisc::Network::CVoiceCapabilities m_voiceCapabilities;
         };
     } // namespace
 } // namespace
@@ -145,7 +143,7 @@ namespace BlackMisc
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CClient, (
                                    o.m_user,
                                    o.m_model,
-                                   attr(o.m_capabilities, flags<DisabledForComparison | DisabledForJson>()),
+                                   attr(o.m_capabilities, flags < DisabledForComparison | DisabledForJson > ()),
                                    o.m_server,
                                    o.m_voiceCapabilities
                                ))

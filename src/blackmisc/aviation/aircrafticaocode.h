@@ -42,33 +42,36 @@ namespace BlackMisc
             //! Default constructor.
             CAircraftIcaoCode() = default;
 
+            //! Constructor.
+            CAircraftIcaoCode(const QString &designator, const QString &combinedType = "");
+
             //! Constructor
             CAircraftIcaoCode(const QString &icao, const QString &combinedType, const QString &manufacturer,
                               const QString &model, const QString &wtc, bool military, bool realworld, bool legacy);
 
             //! Get ICAO designator, e.g. "B737"
-            const QString &getAircraftDesignator() const { return m_aircraftDesignator; }
+            const QString &getDesignator() const { return m_designator; }
 
             //! Set ICAO designator, e.g. "B737"
-            void setAircraftDesignator(const QString &icaoDesignator) { this->m_aircraftDesignator = icaoDesignator.trimmed().toUpper(); }
+            void setDesignator(const QString &icaoDesignator) { this->m_designator = icaoDesignator.trimmed().toUpper(); }
 
             //! Aircraft designator?
-            bool hasAircraftDesignator() const;
+            bool hasDesignator() const;
 
             //! Has designator and designator is not "ZZZZ"
-            bool hasKnownAircraftDesignator() const;
+            bool hasKnownDesignator() const;
 
             //! Get type, e.g. "L2J"
-            const QString &getAircraftCombinedType() const { return this->m_aircraftCombinedType; }
+            const QString &getCombinedType() const { return this->m_combinedType; }
 
             //! Combined type available?
-            bool hasAircraftCombinedType() const { return this->getAircraftCombinedType().length() == 3; }
+            bool hasCombinedType() const { return this->getCombinedType().length() == 3; }
 
             //! Get engine type, e.g. "J"
             QString getEngineType() const;
 
             //! Set type
-            void setAircraftCombinedType(const QString &type) { this->m_aircraftCombinedType = type.trimmed().toUpper(); }
+            void setCombinedType(const QString &type) { this->m_combinedType = type.trimmed().toUpper(); }
 
             //! Get model description, e.g. "A-330-200"
             const QString &getModelDescription() const { return m_modelDescription; }
@@ -114,14 +117,14 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftIcaoCode)
-            QString m_aircraftDesignator;   //!< "B737"
-            QString m_aircraftCombinedType; //!< "L2J"
-            QString m_manufacturer;         //!< "Airbus"
-            QString m_modelDescription;     //!< "A-330-200"
-            QString m_wtc;                  //!< wake turbulence "M","H" "L/M", "L"
+            QString m_designator;         //!< "B737"
+            QString m_combinedType;       //!< "L2J"
+            QString m_manufacturer;       //!< "Airbus"
+            QString m_modelDescription;   //!< "A-330-200"
+            QString m_wtc;                //!< wake turbulence "M","H" "L/M", "L"
             bool m_military = false;
-            bool m_realworld = true;        //!< real world aircraft
-            bool m_legacy = true;           //!< legacy code
+            bool m_realworld = true;      //!< real world aircraft
+            bool m_legacy = false;        //!< legacy code
 
         };
     } // namespace
@@ -129,8 +132,8 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftIcaoCode)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftIcaoCode, (
-                                   o.m_aircraftDesignator,
-                                   o.m_aircraftCombinedType,
+                                   o.m_designator,
+                                   o.m_combinedType,
                                    o.m_manufacturer,
                                    o.m_modelDescription,
                                    o.m_wtc,

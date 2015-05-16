@@ -506,7 +506,10 @@ namespace BlackCore
         // ICAO response from custom data
         if (!aircraftDesignator.isEmpty())
         {
-            CAircraftIcaoData icao(aircraftDesignator, combinedAircraftType, airlineIcao, "", ""); // from custom packet
+            CAircraftIcaoData icao(
+                CAircraftIcaoCode(aircraftDesignator, combinedAircraftType),
+                CAirlineIcaoCode(airlineIcao)
+            ); // from custom packet
             if (aircraftContainsCallsign)
             {
                 // we have that aircraft, set straight away
@@ -1074,7 +1077,7 @@ namespace BlackCore
         }
 
         // check sort order
-        Q_ASSERT_X(l.size() < 2 || l[0].getMSecsSinceEpoch() >= l[1].getMSecsSinceEpoch(), "storeAircraftParts", "wrong sort order");
+        Q_ASSERT_X(l.size() < 2 || l[0].getMSecsSinceEpoch() >= l[1].getMSecsSinceEpoch(), Q_FUNC_INFO, "wrong sort order");
     }
 
 } // namespace

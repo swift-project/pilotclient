@@ -160,12 +160,17 @@ void Client::presetCallsignCmd(QTextStream &args)
 void Client::presetIcaoCodesCmd(QTextStream &args)
 {
     QString acTypeICAO;
-    QString descriptionICAO;
+    QString descriptionICAO; //! \todo Is this the combined type ("L2J")?
     QString airlineICAO;
     QString livery;
     QString color;
     args >> acTypeICAO >> descriptionICAO >> airlineICAO >> livery >> color;
-    emit presetIcaoCodes(BlackMisc::Aviation::CAircraftIcaoData(acTypeICAO, descriptionICAO, airlineICAO, livery, color));
+    BlackMisc::Aviation::CAircraftIcaoData icaoData(
+        CAircraftIcaoCode(acTypeICAO, descriptionICAO),
+        CAirlineIcaoCode(airlineICAO),
+        color);
+    icaoData.setLivery(livery);
+    emit presetIcaoCodes(icaoData);
 }
 
 void Client::presetLoginModeCmd(QTextStream &args)

@@ -111,7 +111,9 @@ namespace BlackMisc
                     "Boeing 737-800 Paint1",
                     CAircraftModel::TypeModelMatchingDefaultModel,
                     "B737-800 default model",
-                    CAircraftIcaoData("B738", "L2J", "", "", "FFFFFF")
+                    CAircraftIcaoData(
+                        CAircraftIcaoCode("B738", "L2J"), CAirlineIcaoCode(), "FFFFFF"
+                    )
                 );
                 return aircraftModel;
             }

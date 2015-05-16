@@ -260,20 +260,20 @@ namespace BlackCore
                             situation.setGroundspeed(CSpeed(groundspeed, CSpeedUnit::kts()));
                             CAircraft currentAircraft(user.getCallsign().getStringAsSet(), user, situation);
 
-                            QString icaoCode = clientPartsMap["planned_aircraft"];
-                            if (!icaoCode.isEmpty())
+                            QString aircraftIcaoCode = clientPartsMap["planned_aircraft"];
+                            if (!aircraftIcaoCode.isEmpty())
                             {
                                 // http://uk.flightaware.com/about/faq_aircraft_flight_plan_suffix.rvt
                                 // we expect something like H/B772/F B773 B773/F
                                 static const QRegularExpression reg("/.");
-                                icaoCode = icaoCode.replace(reg, "").trimmed().toUpper();
-                                if (CAircraftIcaoData::isValidDesignator(icaoCode))
+                                aircraftIcaoCode = aircraftIcaoCode.replace(reg, "").trimmed().toUpper();
+                                if (CAircraftIcaoCode::isValidDesignator(aircraftIcaoCode))
                                 {
-                                    currentAircraft.setIcaoInfo(CAircraftIcaoData(icaoCode));
+                                    currentAircraft.setAircraftIcaoDesignator(aircraftIcaoCode);
                                 }
                                 else
                                 {
-                                    illegalIcaoCodes.append(icaoCode);
+                                    illegalIcaoCodes.append(aircraftIcaoCode);
                                 }
                             }
 

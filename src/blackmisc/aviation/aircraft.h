@@ -93,6 +93,9 @@ namespace BlackMisc
             //! Set ICAO info
             virtual void setIcaoInfo(const CAircraftIcaoData &icao) { m_icao = icao; }
 
+            //! Set aircraft ICAO designator
+            virtual void setAircraftIcaoDesignator(const QString &designator) { m_icao.setAircraftDesignator(designator); }
+
             //! Has valid realname?
             bool hasValidRealName() const { return this->m_pilot.hasValidRealName(); }
 

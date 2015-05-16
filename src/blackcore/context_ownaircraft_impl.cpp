@@ -90,9 +90,13 @@ namespace BlackCore
             // from simulator, if available
             this->m_ownAircraft.setCallsign(CCallsign("SWIFT")); // would come from settings
 
-            // TODO: This would need to come from somewhere (mappings)
-            // Own callsign, plane ICAO status, model used
-            this->m_ownAircraft.setIcaoInfo(CAircraftIcaoData("C172", "L1P", "GA", "GA", "0000ff"));
+            //! \todo Own aircraft ICAO default data, this would need to come from somewhere (mappings) -> Own callsign, plane ICAO status, model used
+            this->m_ownAircraft.setIcaoInfo(
+                CAircraftIcaoData(
+                    CAircraftIcaoCode("C172", "L1P"),
+                    CAirlineIcaoCode(),
+                    "0000ff")
+            );
         }
 
         // voice rooms, if network is already available

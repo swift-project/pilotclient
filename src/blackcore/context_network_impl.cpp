@@ -161,7 +161,7 @@ namespace BlackCore
         {
             return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Invalid user credentials");
         }
-        else if (!this->ownAircraft().getIcaoInfo().hasAircraftAndAirlineDesignator())
+        else if (!this->ownAircraft().getIcaoInfo().hasAircraftDesignator())
         {
             return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Invalid ICAO data for own aircraft");
         }
