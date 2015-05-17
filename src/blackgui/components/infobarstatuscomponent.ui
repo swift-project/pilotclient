@@ -173,19 +173,6 @@
    <item>
     <widget class="BlackGui::CLedWidget" name="led_Audio" native="true"/>
    </item>
-   <item>
-    <spacer name="hs_InfoStatusBar">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>239</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
   </layout>
  </widget>
  <customwidgets>
