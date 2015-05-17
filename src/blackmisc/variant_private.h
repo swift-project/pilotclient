@@ -99,7 +99,7 @@ namespace BlackMisc
             //! \cond PRIVATE
             // http://en.wikibooks.org/wiki/More_C++_Idioms/Member_Detector
             struct Fallback { int toJson, convertFromJson, setPropertyByIndex, propertyByIndex, propertyByIndexAsString, equalsPropertyByIndex, toIcon; };
-            template <int Fallback:: *> struct int_t { typedef int type; };
+            template <int Fallback::*> struct int_t { typedef int type; };
             template <typename U> struct Derived : public U, public Fallback {};
 #           define DISABLE_IF_HAS(MEMBER) typename int_t<&Derived<U>::MEMBER>::type
             //! \endcond
@@ -136,7 +136,7 @@ namespace BlackMisc
             }
             virtual void unmarshall(const QDBusArgument &arg, void *object) const override
             {
-                cast(object).unmarshallFromDbus(arg);
+                arg >> cast(object);
             }
             virtual uint getValueHash(const void *object) const override
             {
@@ -145,12 +145,12 @@ namespace BlackMisc
             }
             virtual int getMetaTypeId() const override
             {
-                return maybeGetMetaTypeId(std::integral_constant<bool, QMetaTypeId<T>::Defined>{});
+                return maybeGetMetaTypeId(std::integral_constant<bool, QMetaTypeId<T>::Defined> {});
             }
             virtual const void *upCastTo(const void *object, int metaTypeId) const override
             {
                 const auto base = static_cast<const void *>(static_cast<const MetaBaseOfT<T> *>(&cast(object)));
-                return metaTypeId == getMetaTypeId() ? object : CValueObjectMetaInfo<MetaBaseOfT<T>>{}.upCastTo(base, metaTypeId);
+                return metaTypeId == getMetaTypeId() ? object : CValueObjectMetaInfo<MetaBaseOfT<T>> {} .upCastTo(base, metaTypeId);
             }
             virtual int compareImpl(const void *lhs, const void *rhs) const override
             {
