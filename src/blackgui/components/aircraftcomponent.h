@@ -41,9 +41,6 @@ namespace BlackGui
             //! Destructor
             ~CAircraftComponent();
 
-            //! Timer for updating
-            CUpdateTimer *getTimerComponent() { return this->m_updateTimer; }
-
             //! Aircraft in range
             int countAircraft() const;
 
@@ -60,9 +57,6 @@ namespace BlackGui
 
             //! \copydoc CTimerBasedComponent::setUpdateIntervalSeconds
             void setUpdateIntervalSeconds(int seconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateIntervalSeconds(seconds); }
-
-            //! \copydoc CTimerBasedComponent::setUpdateInterval
-            void setUpdateInterval(int milliSeconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateInterval(milliSeconds); }
 
             //! \copydoc CTimerBasedComponent::stopTimer
             void stopTimer() { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->stopTimer(); }
@@ -86,7 +80,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CAircraftComponent> ui;
-            CUpdateTimer *m_updateTimer = nullptr;
+            QScopedPointer<CUpdateTimer> m_updateTimer;
         };
     } // ns
 } // ns

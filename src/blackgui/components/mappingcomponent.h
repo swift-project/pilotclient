@@ -15,6 +15,7 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/components/updatetimer.h"
 #include "blackgui/views/checkboxdelegate.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
@@ -121,10 +122,15 @@ namespace BlackGui
 
         private:
             static const QString &mappingtOriginator();
-            void updateSimulatedAircraftView();
+            void updateSimulatedAircraftView(bool forceUpdate = false);
             QScopedPointer<Ui::CMappingComponent> ui;
+            QScopedPointer<CUpdateTimer> m_updateTimer;
             QCompleter *m_modelCompleter = nullptr;
+            bool m_missedSimulatedAircraftUpdate = true;
             BlackGui::Views::CCheckBoxDelegate *m_currentMappingsViewDelegate = nullptr;
+
+        private slots:
+            void ps_backgroundUpdate();
         };
 
     } // namespace

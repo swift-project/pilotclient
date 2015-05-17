@@ -28,10 +28,10 @@ namespace BlackGui
         public:
             //! Construct a timer which forwards messages to the given slot of parent.
             template <typename F, typename P>
-            CUpdateTimer(F slot, P *parent) : QObject(parent)
+            CUpdateTimer(const QString &name, F slot, P *parent) : QObject(parent)
             {
                 Q_ASSERT(parent);
-                this->initTimers();
+                this->initTimers(name);
                 bool c = this->connect(this->m_timer, &QTimer::timeout, parent, slot);
                 Q_ASSERT(c);
                 c = this->connect(this->m_timerSingleShot, &QTimer::timeout, parent, slot);
@@ -40,7 +40,7 @@ namespace BlackGui
             }
 
             //! Destructor
-            ~CUpdateTimer();
+            virtual ~CUpdateTimer();
 
             //! Date/time of 1/1/1970, used to init timestamp values as "outdated"
             static const QDateTime &epoch()
@@ -50,7 +50,7 @@ namespace BlackGui
             }
 
         public slots:
-            //! Update time, time < 100 stops updates
+            //! Update time, time < 100ms stops updates
             void setUpdateInterval(int milliSeconds);
 
             //! Update time
@@ -66,10 +66,10 @@ namespace BlackGui
             void fireTimer();
 
         private:
-            void initTimers(); //!< init timers
-            QTimer *m_timer = nullptr;           //!< periodically updating
-            QTimer *m_timerSingleShot = nullptr; //!< single update
+            void initTimers(const QString &name); //!< init timers
+            QTimer *m_timer = nullptr;            //!< periodically updating
+            QTimer *m_timerSingleShot = nullptr;  //!< single update
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard

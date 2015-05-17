@@ -81,7 +81,7 @@ namespace BlackGui
             int getUpdateIntervalMs() const;
 
             QScopedPointer<Ui::CSimulatorComponent> ui;
-            CUpdateTimer *m_updateTimer = nullptr;
+            QScopedPointer<CUpdateTimer> m_updateTimer;
         };
     }
 }

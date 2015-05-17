@@ -29,13 +29,13 @@ namespace BlackGui
 
         CAircraftComponent::CAircraftComponent(QWidget *parent) :
             QTabWidget(parent),
-            ui(new Ui::CAircraftComponent)
+            ui(new Ui::CAircraftComponent),
+            m_updateTimer(new CUpdateTimer("CAircraftComponent", &CAircraftComponent::update, this))
         {
             ui->setupUi(this);
             this->tabBar()->setExpanding(false);
             this->ui->tvp_AirportsInRange->setResizeMode(CAirportView::ResizingOnce);
 
-            m_updateTimer = new CUpdateTimer(&CAircraftComponent::update, this);
             this->ui->tvp_AircraftInRange->setAircraftMode(CSimulatedAircraftListModel::InfoMode);
             this->ui->tvp_AircraftInRange->configureMenu(true, false, false);
 
@@ -43,7 +43,6 @@ namespace BlackGui
             connect(this->ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestTextMessageWidget, this, &CAircraftComponent::requestTextMessageWidget);
             connect(this->ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestHighlightInSimulator, this, &CAircraftComponent::ps_onMenuHighlightInSimulator);
             connect(this->ui->tvp_AirportsInRange, &CSimulatedAircraftView::rowCountChanged, this, &CAircraftComponent::ps_onRowCountChanged);
-
         }
 
         CAircraftComponent::~CAircraftComponent()

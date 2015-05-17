@@ -29,11 +29,11 @@ namespace BlackGui
     {
         CAtcStationComponent::CAtcStationComponent(QWidget *parent) :
             QTabWidget(parent),
-            ui(new Ui::CAtcStationComponent)
+            ui(new Ui::CAtcStationComponent),
+            m_updateTimer(new CUpdateTimer("CAtcStationComponent", &CAtcStationComponent::update, this))
         {
             ui->setupUi(this);
             this->tabBar()->setExpanding(false);
-            this->m_updateTimer = new CUpdateTimer(&CAtcStationComponent::update, this);
 
             // some icons
             this->ui->pb_AtcStationsAtisReload->setIcon(CIcons::atis());

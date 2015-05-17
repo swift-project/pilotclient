@@ -26,12 +26,11 @@ namespace BlackGui
             QTabWidget(parent),
             CEnableForDockWidgetInfoArea(),
             CEnableForRuntime(nullptr, false),
-            ui(new Ui::CUserComponent), m_updateTimer(nullptr)
+            ui(new Ui::CUserComponent),
+            m_updateTimer(new CUpdateTimer("CUserComponent", &CUserComponent::update, this))
         {
             ui->setupUi(this);
             this->tabBar()->setExpanding(false);
-            this->m_updateTimer = new CUpdateTimer(&CUserComponent::update, this);
-
             connect(this->ui->tvp_AllUsers, &CUserView::rowCountChanged, this, &CUserComponent::ps_onCountChanged);
             connect(this->ui->tvp_Clients, &CClientView::rowCountChanged, this, &CUserComponent::ps_onCountChanged);
         }

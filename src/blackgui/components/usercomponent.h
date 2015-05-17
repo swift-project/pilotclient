@@ -42,9 +42,6 @@ namespace BlackGui
             //! Destructor
             ~CUserComponent();
 
-            //! Timer for updating
-            CUpdateTimer *getTimerComponent() { return this->m_updateTimer; }
-
             //! Number of clients
             int countClients() const;
 
@@ -57,9 +54,6 @@ namespace BlackGui
 
             //! \copydoc CTimerBasedComponent::setUpdateIntervalSeconds
             void setUpdateIntervalSeconds(int seconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateIntervalSeconds(seconds); }
-
-            //! \copydoc CTimerBasedComponent::setUpdateInterval
-            void setUpdateInterval(int milliSeconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateInterval(milliSeconds); }
 
             //! \copydoc CTimerBasedComponent::stopTimer
             void stopTimer() { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->stopTimer(); }
@@ -77,7 +71,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CUserComponent> ui;
-            CUpdateTimer *m_updateTimer;
+            QScopedPointer<CUpdateTimer> m_updateTimer;
         };
     }
 }

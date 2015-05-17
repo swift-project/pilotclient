@@ -27,9 +27,7 @@ namespace BlackGui
 {
     namespace Components
     {
-        /*!
-         * ATC stations component
-         */
+        //! ATC stations component
         class BLACKGUI_EXPORT CAtcStationComponent :
             public QTabWidget,
             public CEnableForDockWidgetInfoArea,
@@ -42,10 +40,7 @@ namespace BlackGui
             explicit CAtcStationComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CAtcStationComponent();
-
-            //! Timer for updating
-            CUpdateTimer *getTimerComponent() { return this->m_updateTimer; }
+            virtual ~CAtcStationComponent();
 
             //! Number of booked stations
             int countBookedStations() const;
@@ -63,9 +58,6 @@ namespace BlackGui
 
             //! \copydoc CTimerBasedComponent::setUpdateIntervalSeconds
             void setUpdateIntervalSeconds(int seconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateIntervalSeconds(seconds); }
-
-            //! \copydoc CTimerBasedComponent::setUpdateInterval
-            void setUpdateInterval(int milliSeconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateInterval(milliSeconds); }
 
             //! \copydoc CTimerBasedComponent::stopTimer
             void stopTimer() { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->stopTimer(); }
@@ -122,7 +114,7 @@ namespace BlackGui
             const QString &originator();
 
             QScopedPointer<Ui::CAtcStationComponent> ui;
-            CUpdateTimer *m_updateTimer = nullptr;
+            QScopedPointer<CUpdateTimer> m_updateTimer;
             QDateTime m_timestampLastReadOnlineStations = CUpdateTimer::epoch();  //!< stations read
             QDateTime m_timestampOnlineStationsChanged  = CUpdateTimer::epoch();  //!< stations marked as changed
             QDateTime m_timestampLastReadBookedStations = CUpdateTimer::epoch();  //!< stations read

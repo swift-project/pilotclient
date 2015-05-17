@@ -36,7 +36,9 @@ namespace BlackGui
     {
 
         CMappingComponent::CMappingComponent(QWidget *parent) :
-            QFrame(parent), ui(new Ui::CMappingComponent)
+            QFrame(parent),
+            ui(new Ui::CMappingComponent),
+            m_updateTimer(new CUpdateTimer("CMappingComponent", &CMappingComponent::ps_backgroundUpdate, this))
         {
             ui->setupUi(this);
             this->ui->tvp_AircraftModels->setAircraftModelMode(CAircraftModelListModel::ModelOnly);
@@ -63,9 +65,12 @@ namespace BlackGui
             this->m_currentMappingsViewDelegate = new CCheckBoxDelegate(":/diagona/icons/diagona/icons/tick.png", ":/diagona/icons/diagona/icons/cross.png", this);
             this->ui->tvp_SimulatedAircraft->setItemDelegateForColumn(0, this->m_currentMappingsViewDelegate);
 
-            //! Aircraft previews
+            // Aircraft previews
             connect(this->ui->cb_AircraftIconDisplayed, &QCheckBox::stateChanged, this, &CMappingComponent::ps_onModelPreviewChanged);
             this->ui->lbl_AircraftIconDisplayed->setText("Icon displayed here");
+
+            // Updates
+            this->m_updateTimer->setUpdateInterval(10 * 1000);
         }
 
         CMappingComponent::~CMappingComponent()
@@ -381,11 +386,17 @@ namespace BlackGui
             return o;
         }
 
-        void CMappingComponent::updateSimulatedAircraftView()
+        void CMappingComponent::updateSimulatedAircraftView(bool forceUpdate)
         {
             Q_ASSERT_X(getIContextNetwork(), Q_FUNC_INFO, "missing network context");
             Q_ASSERT_X(getIContextSimulator(), Q_FUNC_INFO, "missing simulator context");
-            if (this->isVisibleWidget()) { return; }
+            if (!forceUpdate && !this->isVisibleWidget())
+            {
+                m_missedSimulatedAircraftUpdate = true;
+                return;
+            }
+
+            m_missedSimulatedAircraftUpdate = false;
             if (getIContextSimulator()->getSimulatorStatus() > 0)
             {
                 const CSimulatedAircraftList aircraft(getIContextNetwork()->getAircraftInRange());
@@ -394,6 +405,16 @@ namespace BlackGui
             else
             {
                 this->ui->tvp_SimulatedAircraft->clear();
+            }
+        }
+
+        void CMappingComponent::ps_backgroundUpdate()
+        {
+            if (this->m_missedSimulatedAircraftUpdate)
+            {
+                // update, normally when view is invisible,
+                // but we want an update from time to have some data when user switches to view
+                this->updateSimulatedAircraftView(true);
             }
         }
 

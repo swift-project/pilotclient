@@ -13,18 +13,20 @@ namespace BlackGui
 {
     namespace Components
     {
-        void CUpdateTimer::initTimers()
+        void CUpdateTimer::initTimers(const QString &name)
         {
             this->m_timer = new QTimer(this);
             this->m_timerSingleShot = new QTimer(this);
             this->m_timerSingleShot->setSingleShot(true);
+            this->m_timer->setObjectName(name + ":periodically");
+            this->m_timerSingleShot->setObjectName(name + ":singleShot");
         }
 
         CUpdateTimer::~CUpdateTimer()
         {
+            if (this->parent()) { this->disconnect(this->parent()); }
             this->m_timer->stop();
             this->m_timerSingleShot->stop();
-            if (this->parent()) this->disconnect(this->parent());
         }
 
         void CUpdateTimer::setUpdateInterval(int milliSeconds)
