@@ -156,14 +156,6 @@ namespace BlackSimPlugin
             return m_service && m_traffic;
         }
 
-        bool CSimulatorXPlane::canConnect() const
-        {
-            if (isConnected()) { return true; }
-            auto conn = QDBusConnection::sessionBus(); // TODO make this configurable
-            CXBusServiceProxy dummy(conn, nullptr, true);
-            return dummy.isValid();
-        }
-
         bool CSimulatorXPlane::connectTo()
         {
             if (isConnected())

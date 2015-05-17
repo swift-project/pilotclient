@@ -89,9 +89,6 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::isSimulating
             virtual bool isSimulating() const override;
 
-            //! \copydoc ISimulator::canConnect()
-            virtual bool canConnect() const override;
-
             //! SimConnect Callback
             static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
 

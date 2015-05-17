@@ -219,10 +219,6 @@ namespace BlackCore
         //! Remove all remote aircraft
         virtual void physicallyRemoveAllRemoteAircraft() = 0;
 
-        //! Can we connect?
-        //! \todo Do we really need this function? Currently made protected, as
-        virtual bool canConnect() const = 0;
-
         //! Emit the combined status
         //! \sa simulatorStatusChanged;
         void emitSimulatorCombinedStatus();

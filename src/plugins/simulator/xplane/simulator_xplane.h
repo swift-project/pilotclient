@@ -41,9 +41,6 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::isConnected
             virtual bool isConnected() const override;
 
-            //! \copydoc BlackCore::ISimulator::canConnect
-            virtual bool canConnect() const override;
-
             //! \copydoc ISimulator::isTimeSynchronized
             virtual bool isTimeSynchronized() const override { return false; } // TODO: Can we query the XP intrinisc feature?
 

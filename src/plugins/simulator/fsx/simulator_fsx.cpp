@@ -128,15 +128,6 @@ namespace BlackSimPlugin
             return true;
         }
 
-        bool CSimulatorFsx::canConnect() const
-        {
-            if (m_simConnected) { return true; }
-            HANDLE hSimConnect; // temporary handle
-            bool connect = SUCCEEDED(SimConnect_Open(&hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0));
-            SimConnect_Close(hSimConnect);
-            return connect;
-        }
-
         bool CSimulatorFsx::physicallyAddRemoteAircraft(const Simulation::CSimulatedAircraft &newRemoteAircraft)
         {
             CCallsign callsign(newRemoteAircraft.getCallsign());
