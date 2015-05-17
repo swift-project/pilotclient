@@ -61,14 +61,9 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<CSimulatorPluginInfoList>(QLatin1Literal("getAvailableSimulatorPlugins"));
     }
 
-    bool CContextSimulatorProxy::isConnected() const
+    int CContextSimulatorProxy::getSimulatorStatus() const
     {
-        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isConnected"));
-    }
-
-    bool CContextSimulatorProxy::canConnect() const
-    {
-        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("canConnect"));
+        return m_dBusInterface->callDBusRet<int>(QLatin1Literal("getSimulatorStatus"));
     }
 
     bool CContextSimulatorProxy::disconnectFromSimulator()
@@ -224,16 +219,6 @@ namespace BlackCore
     void CContextSimulatorProxy::enableDebugMessages(bool driver, bool interpolator)
     {
         m_dBusInterface->callDBus(QLatin1Literal("enableDebugMessages"), driver, interpolator);
-    }
-
-    bool CContextSimulatorProxy::isPaused() const
-    {
-        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isPaused"));
-    }
-
-    bool CContextSimulatorProxy::isSimulating() const
-    {
-        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isRunning"));
     }
 
 } // namespace

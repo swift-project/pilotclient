@@ -93,19 +93,11 @@ namespace BlackCore
         //! Return list of available simulator plugins
         virtual BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const = 0;
 
-        //! Returns true when simulator is connected
-        //! \sa isSimulating
-        virtual bool isConnected() const = 0;
-
-        //! Can we connect?
-        //! \todo Remove?
-        virtual bool canConnect() const = 0;
-
         //! Disconnect from simulator
         virtual bool disconnectFromSimulator() = 0;
 
-        //! Returns true when simulator is running / simulating
-        virtual bool isSimulating() const = 0;
+        //! Simulator combined status
+        virtual int getSimulatorStatus() const = 0;
 
         //! Simulator info
         virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const = 0;
@@ -188,9 +180,6 @@ namespace BlackCore
 
         //! Simulator avialable (driver available)?
         bool isSimulatorAvailable() const { return BlackMisc::CProject::isCompiledWithFlightSimulatorSupport() && !getSimulatorPluginInfo().isUnspecified(); }
-
-        //! Simulator paused?
-        virtual bool isPaused() const = 0;
 
         //! Settings have been changed
         virtual void settingsChanged(uint type) = 0;

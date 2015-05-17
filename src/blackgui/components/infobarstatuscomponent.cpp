@@ -81,8 +81,7 @@ namespace BlackGui
 
                 // initial values
                 this->ps_onMapperReady();
-                bool connected = this->getIContextSimulator()->isConnected();
-                this->ps_onSimulatorStatusChanged(connected ? ISimulator::Connected : ISimulator::Disconnected);
+                this->ps_onSimulatorStatusChanged(this->getIContextSimulator()->getSimulatorStatus());
             }
 
             if (this->getIContextNetwork())
@@ -116,7 +115,7 @@ namespace BlackGui
                     this->ui->led_Simulator->setTriState();
                     this->ui->led_Simulator->setTriStateToolTip(s);
                 }
-                else if (status & ISimulator::Running)
+                else if (status & ISimulator::Simulating)
                 {
                     this->ui->led_Simulator->setOn(true);
                     this->ui->led_Simulator->setOnToolTip(s);

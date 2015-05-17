@@ -62,17 +62,20 @@ namespace BlackGui
 
         void CSimulatorComponent::update()
         {
-            Q_ASSERT(getIContextSimulator());
+            Q_ASSERT_X(getIContextSimulator(), Q_FUNC_INFO, "No simulator context");
 
             if (!this->isVisibleWidget()) return; // no updates on invisible widgets
             if (!this->getIContextOwnAircraft()) return;
 
-            if (!this->getIContextSimulator()->isConnected()) {
+            int simualtorStatus = this->getIContextSimulator()->getSimulatorStatus();
+            if (simualtorStatus == 0)
+            {
                 addOrUpdateByName("info", tr("No simulator available"), CIcons::StandardIconWarning16);
                 return;
             }
 
-            if (!this->getIContextSimulator()->isSimulating()) {
+            if (!(simualtorStatus & ISimulator::Simulating))
+            {
                 this->addOrUpdateByName("info",
                                         tr("Simulator (%1) not yet running").arg(
                                             getIContextSimulator()->getSimulatorPluginInfo().getSimulator()
@@ -109,12 +112,12 @@ namespace BlackGui
 
         void CSimulatorComponent::runtimeHasBeenSet()
         {
-            Q_ASSERT(this->getIContextSimulator());
-            if (!this->getIContextSimulator()) return;
+            Q_ASSERT_X(this->getIContextSimulator(), Q_FUNC_INFO, "Missing simulator context");
+            if (!this->getIContextSimulator()) { return; }
             QObject::connect(this->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CSimulatorComponent::ps_onSimulatorStatusChanged);
 
             this->setUpdateInterval(getUpdateIntervalMs());
-            if (!getIContextSimulator()->isConnected())
+            if (getIContextSimulator()->getSimulatorStatus() == 0)
             {
                 this->stopTimer();
             }
@@ -122,10 +125,13 @@ namespace BlackGui
 
         void CSimulatorComponent::ps_onSimulatorStatusChanged(int status)
         {
-            if (status & ISimulator::Connected) {
+            if (status & ISimulator::Connected)
+            {
                 int intervalMs = getUpdateIntervalMs();
                 this->m_updateTimer->startTimer(intervalMs);
-            } else {
+            }
+            else
+            {
                 this->stopTimer();
                 clear();
                 update();

@@ -86,29 +86,14 @@ namespace BlackCore
         return list;
     }
 
-    bool CContextSimulator::isConnected() const
+    int CContextSimulator::getSimulatorStatus() const
     {
 
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin)
-        {
-            return false;
-        }
+        if (!m_simulatorPlugin) { return 0; }
 
-        Q_ASSERT(m_simulatorPlugin->simulator);
-        return m_simulatorPlugin->simulator->isConnected();
-    }
-
-    bool CContextSimulator::canConnect() const
-    {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin)
-        {
-            return false;
-        }
-
-        Q_ASSERT(m_simulatorPlugin->simulator);
-        return m_simulatorPlugin->simulator->canConnect();
+        Q_ASSERT_X(m_simulatorPlugin->simulator, Q_FUNC_INFO, "Missing simulator");
+        return m_simulatorPlugin->simulator->getSimulatorStatus();
     }
 
     bool CContextSimulator::disconnectFromSimulator()
@@ -720,28 +705,6 @@ namespace BlackCore
     {
         Q_ASSERT(m_simulatorPlugin->simulator);
         this->m_simulatorPlugin->simulator->highlightAircraft(aircraftToHighlight, enableHighlight, displayTime);
-    }
-
-    bool CContextSimulator::isPaused() const
-    {
-        if (!this->m_simulatorPlugin)
-        {
-            return false;
-        }
-
-        Q_ASSERT(m_simulatorPlugin->simulator);
-        return m_simulatorPlugin->simulator->isPaused();
-    }
-
-    bool CContextSimulator::isSimulating() const
-    {
-        if (!this->m_simulatorPlugin)
-        {
-            return false;
-        }
-
-        Q_ASSERT(m_simulatorPlugin->simulator);
-        return m_simulatorPlugin->simulator->isSimulating();
     }
 
     void CContextSimulator::ps_simulatorStarted(QObject *listener)

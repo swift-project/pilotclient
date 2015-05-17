@@ -75,7 +75,7 @@ namespace BlackGui
                     this->ui->tvp_AircraftInRange->updateContainer(this->getIContextNetwork()->getAircraftInRange());
                 }
             }
-            if (this->getIContextSimulator()->isConnected())
+            if (this->getIContextSimulator()->getSimulatorStatus() > 0)
             {
                 bool visible = (this->isVisibleWidget() && this->currentWidget() == this->ui->tb_AirportsInRange);
                 if (this->countAirportsInRange() < 1 || visible)

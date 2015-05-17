@@ -49,20 +49,11 @@ namespace BlackCore
         //! \copydoc IContextSimulator::getSimulatorPluginList()
         virtual BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const override;
 
-        //! \copydoc IContextSimulator::isConnected()
-        virtual bool isConnected() const override;
-
-        //! \copydoc IContextSimulator::canConnect
-        virtual bool canConnect() const override;
+        //! \copydoc IContextSimulator::getSimulatorStatus()
+        virtual int getSimulatorStatus() const override;
 
         //! \copydoc IContextSimulator::disconnectFrom
         virtual bool disconnectFromSimulator() override;
-
-        //! \copydoc IContextSimulator::isPaused
-        virtual bool isPaused() const override;
-
-        //! \copydoc IContextSimulator::isSimulating
-        virtual bool isSimulating() const override;
 
         //! \copydoc IContextSimulator::getSimulatorPluginInfo()
         virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const override;

@@ -15,6 +15,7 @@
 #include "blackcore/context_audio.h"
 #include "blackcore/context_simulator.h"
 #include "blackcore/network.h"
+#include "blackcore/simulator.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/aviation/aircrafticaodata.h"
 #include "../uppercasevalidator.h"
@@ -355,8 +356,9 @@ namespace BlackGui
 
             CAircraftIcaoData icao;
 
-            bool simConnected = this->getIContextSimulator() && this->getIContextSimulator()->isSimulating();
-            if (simConnected)
+            bool simulating = this->getIContextSimulator() &&
+                              (this->getIContextSimulator()->getSimulatorStatus() & ISimulator::Simulating);
+            if (simulating)
             {
                 CAircraftModel model = this->getIContextOwnAircraft()->getOwnAircraft().getModel();
                 this->ui->le_SimulatorModel->setText(model.getModelString());
@@ -381,7 +383,6 @@ namespace BlackGui
             {
                 this->setGuiIcaoValues(icao, false);
             }
-
         }
 
         void CLoginComponent::setGuiIcaoValues(const CAircraftIcaoData &icao, bool onlyIfEmpty)

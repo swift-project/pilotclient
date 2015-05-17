@@ -41,7 +41,7 @@ namespace BlackCore
         {
             Disconnected = 0,
             Connected   = 1 << 0, //!< Is the plugin connected to the simulator?
-            Running     = 1 << 1, //!< Is the simulator actually simulating?
+            Simulating  = 1 << 1, //!< Is the simulator actually simulating?
             Paused      = 1 << 2, //!< Is the simulator paused?
         };
 
@@ -54,17 +54,17 @@ namespace BlackCore
         //! Are we connected to the simulator?
         virtual bool isConnected() const = 0;
 
-        //! Can we connect?
-        virtual bool canConnect() const = 0;
-
-        //! Is time synchronization on?
-        virtual bool isTimeSynchronized() const = 0;
-
         //! Simulator paused?
         virtual bool isPaused() const = 0;
 
         //! Simulator running?
         virtual bool isSimulating() const = 0;
+
+        //! Combined status
+        virtual int getSimulatorStatus() const;
+
+        //! Is time synchronization on?
+        virtual bool isTimeSynchronized() const = 0;
 
         //! Get the simulator info (metadata of plugin)
         virtual const BlackMisc::Simulation::CSimulatorPluginInfo &getSimulatorPluginInfo() const = 0;
@@ -219,6 +219,10 @@ namespace BlackCore
         //! Remove all remote aircraft
         virtual void physicallyRemoveAllRemoteAircraft() = 0;
 
+        //! Can we connect?
+        //! \todo Do we really need this function? Currently made protected, as
+        virtual bool canConnect() const = 0;
+
         //! Emit the combined status
         //! \sa simulatorStatusChanged;
         void emitSimulatorCombinedStatus();
@@ -249,7 +253,6 @@ namespace BlackCore
         virtual void stop() = 0;
 
     signals:
-
         //! Emitted when the listener discovers the simulator running.
         void simulatorStarted();
 

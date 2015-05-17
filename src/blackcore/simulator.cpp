@@ -20,6 +20,15 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {
+    int ISimulator::getSimulatorStatus() const
+    {
+        int status =
+            (isConnected() ? Connected : static_cast<ISimulator::SimulatorStatus>(0))
+            | (isSimulating() ? Simulating : static_cast<ISimulator::SimulatorStatus>(0))
+            | (isPaused() ? Paused : static_cast<ISimulator::SimulatorStatus>(0));
+        return status;
+    }
+
     const QString &ISimulator::simulatorOriginator()
     {
         // string is generated once, the timestamp allows to use multiple
@@ -34,7 +43,7 @@ namespace BlackCore
         {
             QString s;
             if (status & Connected) { s.append("Connected"); }
-            if (status & Running) { if (!s.isEmpty()) { s.append(", "); } s.append("Simulating"); }
+            if (status & Simulating) { if (!s.isEmpty()) { s.append(", "); } s.append("Simulating"); }
             if (status & Paused) { if (!s.isEmpty()) { s.append(", "); } s.append("Paused"); }
             return s;
         }
@@ -46,11 +55,7 @@ namespace BlackCore
 
     void ISimulator::emitSimulatorCombinedStatus()
     {
-        int status =
-            (isConnected() ? Connected : static_cast<ISimulator::SimulatorStatus>(0))
-            | (isSimulating() ? Running : static_cast<ISimulator::SimulatorStatus>(0))
-            | (isPaused() ? Paused : static_cast<ISimulator::SimulatorStatus>(0));
-        emit simulatorStatusChanged(status);
+        emit simulatorStatusChanged(getSimulatorStatus());
     }
 
     ISimulatorListener::ISimulatorListener(QObject *parent) : QObject(parent)

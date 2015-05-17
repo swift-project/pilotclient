@@ -45,20 +45,11 @@ namespace BlackCore
 
     public slots:
 
-        //! \copydoc IContextSimulator::isConnected()
-        virtual bool isConnected() const override;
-
-        //! \copydoc IContextSimulator::canConnect
-        virtual bool canConnect() const override;
+        //! \copydoc IContextSimulator::getSimualtorStatus()
+        virtual int getSimulatorStatus() const override;
 
         //! \copydoc IContextSimulator::disconnectFrom
         virtual bool disconnectFromSimulator() override;
-
-        //! \copydoc IContextSimulator::isSimulating
-        virtual bool isSimulating() const override;
-
-        //! \copydoc IContextSimulator::isPaused
-        virtual bool isPaused() const override;
 
         //! \copydoc IContextSimulator::getAirportsInRange()
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
@@ -128,13 +119,13 @@ namespace BlackCore
 
         //! \copydoc IContextSimulator::loadSimulatorPluginFromSettings()
         virtual bool loadSimulatorPluginFromSettings();
-        
+
         //! \copydoc IContextSimulator::listenForSimulator()
         virtual void listenForSimulator(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
-        
+
         //! \copydoc IContextSimulator::listenForAllSimulators()
         virtual void listenForAllSimulators() override;
-        
+
         //! \copydoc IContextSimulator::listenForSimulatorFromSettings()
         virtual void listenForSimulatorFromSettings() override;
 
