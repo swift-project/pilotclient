@@ -51,15 +51,6 @@ namespace BlackCore
         //! Destructor
         virtual ~ISimulator() {}
 
-        //! Are we connected to the simulator?
-        virtual bool isConnected() const = 0;
-
-        //! Simulator paused?
-        virtual bool isPaused() const = 0;
-
-        //! Simulator running?
-        virtual bool isSimulating() const = 0;
-
         //! Combined status
         virtual int getSimulatorStatus() const;
 
@@ -205,6 +196,15 @@ namespace BlackCore
     protected:
         //! Default constructor
         ISimulator(QObject *parent = nullptr) : QObject(parent) {}
+
+        //! Are we connected to the simulator?
+        virtual bool isConnected() const = 0;
+
+        //! Simulator paused?
+        virtual bool isPaused() const = 0;
+
+        //! Simulator running?
+        virtual bool isSimulating() const = 0;
 
         //! Add new remote aircraft physically to the simulator
         //! \sa changeRemoteAircraftEnabled to hide a remote aircraft

@@ -48,12 +48,6 @@ namespace BlackSimPlugin
             //! Destructor
             virtual ~CSimulatorFs9() = default;
 
-            //! \copydoc ISimulator::isConnected()
-            virtual bool isConnected() const override;
-
-            //! \copydoc ISimulator::isSimulating
-            virtual bool isSimulating() const override { return isConnected(); }
-
             //! \copydoc ISimulator::connectTo()
             virtual bool connectTo() override;
 
@@ -88,6 +82,12 @@ namespace BlackSimPlugin
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
 
         protected:
+            //! \copydoc ISimulator::isConnected()
+            virtual bool isConnected() const override;
+
+            //! \copydoc ISimulator::isSimulating
+            virtual bool isSimulating() const override { return isConnected(); }
+
             //! Timer event
             virtual void timerEvent(QTimerEvent *event);
 

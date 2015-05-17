@@ -83,12 +83,6 @@ namespace BlackSimPlugin
             //! Destructor
             virtual ~CSimulatorFsx();
 
-            //! \copydoc ISimulator::isConnected()
-            virtual bool isConnected() const override;
-
-            //! \copydoc ISimulator::isSimulating
-            virtual bool isSimulating() const override;
-
             //! SimConnect Callback
             static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
 
@@ -135,6 +129,12 @@ namespace BlackSimPlugin
             void setSimConnectObjectID(DWORD requestID, DWORD objectID);
 
         protected:
+            //! \copydoc ISimulator::isConnected()
+            virtual bool isConnected() const override;
+
+            //! \copydoc ISimulator::isSimulating
+            virtual bool isSimulating() const override;
+
             //! Timer event (our SimConnect event loop), runs \sa ps_dispatch
             //! \sa m_simconnectTimerId
             virtual void timerEvent(QTimerEvent *event) override;

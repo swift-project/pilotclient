@@ -38,17 +38,8 @@ namespace BlackSimPlugin
                              BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                              QObject *parent = nullptr);
 
-            //! \copydoc BlackCore::ISimulator::isConnected
-            virtual bool isConnected() const override;
-
             //! \copydoc ISimulator::isTimeSynchronized
             virtual bool isTimeSynchronized() const override { return false; } // TODO: Can we query the XP intrinisc feature?
-
-            //! \copydoc ISimulator::isSimPaused
-            virtual bool isPaused() const override { return false; }
-
-            //! \copydoc ISimulator::isSimulating
-            virtual bool isSimulating() const override { return isConnected(); }
 
             //! \copydoc BlackCore::ISimulator::getIcaoForModelString
             virtual BlackMisc::Aviation::CAircraftIcaoData getIcaoForModelString(const QString &modelString) const override;
@@ -119,6 +110,20 @@ namespace BlackSimPlugin
 
             //! \copydoc CSimulatorCommon::ps_remoteProviderRemovedAircraft
             virtual void ps_remoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+
+        protected:
+            //! \copydoc BlackCore::ISimulator::isConnected
+            virtual bool isConnected() const override;
+
+            //! \copydoc ISimulator::isSimPaused
+            virtual bool isPaused() const override
+            {
+                //! \todo XP: provide correct pause state
+                return false;
+            }
+
+            //! \copydoc ISimulator::isSimulating
+            virtual bool isSimulating() const override { return isConnected(); }
 
         private slots:
             void ps_serviceUnregistered();
