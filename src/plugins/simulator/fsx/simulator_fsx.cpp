@@ -66,7 +66,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsx::isSimulating() const
         {
-            return m_simRunning;
+            return m_simSimulating;
         }
 
         bool CSimulatorFsx::connectTo()
@@ -74,6 +74,9 @@ namespace BlackSimPlugin
             if (m_simConnected) { return true; }
             if (FAILED(SimConnect_Open(&m_hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0)))
             {
+                m_simConnected = false;
+                m_simPaused = false;
+                m_simSimulating = false;
                 emitSimulatorCombinedStatus();
                 return false;
             }
@@ -85,7 +88,6 @@ namespace BlackSimPlugin
             initWhenConnected();
             m_simconnectTimerId = startTimer(10);
             m_simConnected = true;
-
             emitSimulatorCombinedStatus();
             return true;
         }
@@ -109,22 +111,28 @@ namespace BlackSimPlugin
         bool CSimulatorFsx::disconnectFrom()
         {
             if (!m_simConnected) { return true; }
-            if (m_hSimConnect)
-            {
-                SimConnect_Close(m_hSimConnect);
-                this->m_fsuipc->disconnect();
-            }
+
+            // stop mapper init
+            //! \todo mapper shutdown in FSX, review keep it?
+            // mapperInstance()->gracefulShutdown();
 
             if (m_simconnectTimerId)
             {
                 killTimer(m_simconnectTimerId);
             }
 
-            m_hSimConnect = nullptr;
-            m_simconnectTimerId = -1;
-            m_simConnected = false;
+            if (m_hSimConnect)
+            {
+                SimConnect_Close(m_hSimConnect);
+                m_hSimConnect = nullptr;
+            }
 
-            emitSimulatorCombinedStatus();
+            m_simConnected = false;
+            m_simSimulating = false;
+            m_simconnectTimerId = -1;
+
+            // emit status and disconnect FSUIPC
+            CSimulatorFsCommon::disconnectFrom();
             return true;
         }
 
@@ -295,9 +303,8 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::onSimRunning()
         {
-            if (m_simRunning) { return; }
-            qDebug() << "onSimRunning";
-            m_simRunning = true; // only place where this should be set to true
+            if (m_simSimulating) { return; }
+            m_simSimulating = true; // only place where this should be set to true
             m_simConnected = true;
             HRESULT hr = SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestOwnAircraft,
                          CSimConnectDefinitions::DataOwnAircraft,
@@ -334,7 +341,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::onSimStopped()
         {
-            m_simRunning = false;
+            m_simSimulating = false;
             emitSimulatorCombinedStatus();
         }
 
@@ -346,13 +353,7 @@ namespace BlackSimPlugin
         void CSimulatorFsx::onSimExit()
         {
             // reset complete state, we are going down
-            m_simConnected = false;
-            m_simRunning = false;
-            m_simPaused = false;
-
-            // stop background reading if ongoing
-            mapperInstance()->gracefulShutdown();
-            emitSimulatorCombinedStatus();
+            disconnectFrom();
         }
 
         void CSimulatorFsx::updateOwnAircraftFromSimulator(DataDefinitionOwnAircraft simulatorOwnAircraft)
@@ -477,7 +478,24 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::ps_dispatch()
         {
-            SimConnect_CallDispatch(m_hSimConnect, SimConnectProc, this);
+            HRESULT hr = SimConnect_CallDispatch(m_hSimConnect, SimConnectProc, this);
+            if (hr != S_OK)
+            {
+                m_dispatchErrors++;
+                if (m_dispatchErrors == 2)
+                {
+                    // 2nd time, an error / avoid multiple messages
+                    // idea: if it happens once ignore
+                    CLogMessage(this).error("FSX: Dispatch error");
+                }
+                else if (m_dispatchErrors > 5)
+                {
+                    // this normally happens during a FSX crash or shutdown
+                    this->disconnectFrom();
+                }
+                return;
+            }
+            m_dispatchErrors = 0;
             if (m_useFsuipc && m_fsuipc)
             {
                 CSimulatedAircraft fsuipcAircraft(getOwnAircraft());
@@ -505,7 +523,7 @@ namespace BlackSimPlugin
             {
                 if (m_simconnectTimerId >= 0) { killTimer(m_simconnectTimerId); }
                 m_simConnected = false;
-                m_simRunning = false;
+                m_simSimulating = false;
                 emitSimulatorCombinedStatus();
             }
         }

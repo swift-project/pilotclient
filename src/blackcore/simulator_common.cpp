@@ -200,6 +200,8 @@ namespace BlackCore
     void CSimulatorCommon::unload()
     {
         this->disconnectFrom(); // disconnect from simulator
+
+        // disconnect as many signals as possible
         for (QMetaObject::Connection &c : m_remoteAircraftProviderConnections)
         {
             QObject::disconnect(c);

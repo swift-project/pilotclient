@@ -186,15 +186,16 @@ namespace BlackSimPlugin
 
             static const int SkipUpdateCyclesForCockpit = 10; //!< skip x cycles before updating cockpit again
             bool m_simConnected  = false;       //!< Is simulator connected?
-            bool m_simRunning    = false;       //!< Simulator running?
+            bool m_simSimulating    = false;    //!< Simulator running?
             bool m_useSbOffsets  = true;        //!< with SB offsets
             int  m_syncDeferredCounter =  0;    //!< Set when synchronized, used to wait some time
             int  m_simconnectTimerId   = -1;    //!< Timer identifier
             int  m_skipCockpitUpdateCycles = 0; //!< Skip some update cycles to allow changes in simulator cockpit to be set
             int  m_interpolationRequest  = 0;   //!< current interpolation request
             int  m_interpolationsSkipped = 0;   //!< number of skipped interpolation request
-            HANDLE  m_hSimConnect = nullptr;    //!< Handle to SimConnect object
             int  m_nextObjID = 1;               //!< object ID TODO: also used as request id, where to we place other request ids as for facilities
+            int  m_dispatchErrors = 0;          //!< numer of dispatched failed, \sa ps_dispatch
+            HANDLE  m_hSimConnect = nullptr;    //!< Handle to SimConnect object
             QHash<BlackMisc::Aviation::CCallsign, CSimConnectObject> m_simConnectObjects;
             QFutureWatcher<bool> m_watcherConnect;
 

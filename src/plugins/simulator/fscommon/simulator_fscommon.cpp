@@ -50,6 +50,10 @@ namespace BlackSimPlugin
         bool CSimulatorFsCommon::disconnectFrom()
         {
             if (this->m_fsuipc) { this->m_fsuipc->disconnect(); }
+
+            // reset flags
+            m_simPaused = false;
+            emitSimulatorCombinedStatus();
             return true;
         }
 

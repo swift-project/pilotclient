@@ -88,7 +88,9 @@ namespace BlackSimPlugin
         bool CSimulatorFs9::disconnectFrom()
         {
             disconnectAllClients();
-            m_fsuipc->disconnect();
+
+            //  disconnect FSUIPC and status
+            CSimulatorFsCommon::disconnectFrom();
             return true;
         }
 
