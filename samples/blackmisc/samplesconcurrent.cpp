@@ -10,7 +10,7 @@
 #include "samplesconcurrent.h"
 #include "blackmisc/algorithm.h"
 #include <QDebug>
-#include <QCoreApplication>
+#include <QGuiApplication>
 #include <QtConcurrent/QtConcurrent>
 #include <QString>
 
@@ -25,11 +25,11 @@ namespace BlackMiscTest
         Q_UNUSED(type);
 
         out << "Main thread id: " << QThread::currentThreadId() << endl;
-        CThreadOutput b1("b1");
+        CThreadOutput b1("b1", QGuiApplication::instance());
         b1.start();
-        CThreadOutput b2("b2");
+        CThreadOutput b2("b2", QGuiApplication::instance());
         b2.start();
-        CThreadOutput b3("b3");
+        CThreadOutput b3("b3", QGuiApplication::instance());
         b3.start();
         QThread::msleep(10 * 1000);
         b1.stop();

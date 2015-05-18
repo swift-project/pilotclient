@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include <QCoreApplication>
+#include <QGuiApplication>
 #include "sampleschangeobject.h"
 #include "samplesmetadata.h"
 #include "samplescontainer.h"
@@ -21,12 +21,12 @@
 using namespace BlackMisc;
 using namespace BlackMiscTest;
 
-/*!
- * Sample tests
- */
+//! Sample tests
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);;
+    // I use QGuiApplication and not core application
+    // otherwise no QPixmap metadata (metadata sample)
+    QGuiApplication a(argc, argv);
     Q_UNUSED(a);
 
     QTextStream qtout(stdout);
