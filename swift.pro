@@ -22,6 +22,10 @@ contains(BLACK_CONFIG, BlackCore) {
 contains(BLACK_CONFIG, BlackGui) {
     SUBDIRS += src/blackgui
     SUBDIRS += src/swiftgui_standard/swiftgui_standard.pro
+
+    contains(BLACK_CONFIG, BlackCore) {
+        SUBDIRS += src/swiftcorectrl/swiftcorectrl.pro
+    }
 }
 
 win32 {

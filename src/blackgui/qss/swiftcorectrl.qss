@@ -1,0 +1,153 @@
+/** Main window **/
+QWidget {
+  background-image: url(:/textures/icons/textures/texture-outer.jpg);
+  background-color: darkslategray;
+}
+
+/** Main window **/
+QMainWindow {
+  background-image: url(:/textures/icons/textures/texture-outer.jpg);
+  background-color: darkslategray;
+}
+
+/** separator between info areas and rest **/
+/** this hides them **/
+QMainWindow::separator {
+  background: transparent;
+  width: 0px;  /* when vertical */
+  height: 0px; /* when horizontal */
+}
+
+QMainWindow::separator:hover {
+  background: transparent;
+}
+
+QPushButton {
+  /** background-image: url(:/textures/icons/textures/texture-inner.jpg); **/
+  /** need to fix pressed button first **/
+  background: black;
+  border-style: solid;
+  border-width: 1px;
+  border-radius:6px;
+  border-color: green;
+  max-height:20px;
+  min-width:60px;
+  min-height:20px;
+}
+
+QPushButton::disabled {
+  background-color: grey;
+  border-style: solid;
+  border-width: 1px;
+  border-radius:6px;
+  border-color: green;
+  max-height:20px;
+  min-width:60px;
+  min-height:20px;
+}
+
+QTextEdit {
+  background: black; /** background is background color here **/
+  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+  color: grey;
+}
+
+QRadioButton {
+  background: transparent;
+}
+
+QGroupBox {
+  border: 1px solid green;
+  margin-top: 2.5ex; /* leave space at the top for the title */
+  border-radius: 5px;
+}
+
+QGroupBox::title {
+  subcontrol-origin: margin;
+  subcontrol-position: middle center; /* position at the top center */
+  padding: 0 5px;
+  background: transparent;
+}
+
+QComboBox {
+    background-color: black;
+    border: 1px solid yellow;
+}
+
+QTabWidget::pane { /* The tab widget frame */
+  border: none;
+}
+
+QTabWidget::tab-bar  {
+  left: 5px; /* move to the right by 5px */
+}
+
+QTabBar::tab {
+  border: 1px solid green;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  min-width: 30px;
+  padding: 2px;
+  padding-left: 4px;
+  padding-right: 4px;
+  margin-right: 3px;
+}
+
+QTabBar::tab::selected {
+  background-color: grey;
+}
+
+QTabBar::tear {
+  image: url(:/own/icons/own/transparent1px.png);
+  max-width: 1px;
+}
+
+QTabBar QToolButton { /* the scroll buttons are tool buttons */
+  background-color: rgba(0, 0, 255, 200);
+  border: 1px solid green;
+}
+
+QHeaderView::section {
+  border: 1px solid black;
+  background: transparent;
+  color: white; /** font **/
+  padding: 1px;
+  margin: 0px;
+}
+
+QTableView, QTreeView {
+  border: 1px solid green;
+  border-radius: 5px;
+  alternate-background-color: darkslategray;
+  selection-background-color: blue;
+  margin-left: 2px;
+  margin-right: 2px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  padding:0px;
+  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+}
+
+QSizeGrip {
+}
+
+#le_CommandLineInput {
+  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+  margin-bottom: 5px;
+  padding: 3px;
+  border-radius: 5px;
+}
+
+#comp_log {
+  background: transparent; /** background is background color here **/
+}
+
+#gb_dbusMode {
+  background: transparent; /** background is background color here **/
+  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+}
+
+#gb_Controls {
+  background: transparent; /** background is background color here **/
+  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+}

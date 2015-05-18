@@ -274,6 +274,12 @@ namespace BlackGui
         return f;
     }
 
+    const QString &CStyleSheetUtility::fileNameSwiftCoreCtrl()
+    {
+        static const QString f("swiftcorectrl.qss");
+        return f;
+    }
+
     const QString &CStyleSheetUtility::fileNameIniFile()
     {
         static const QString f("gui.ini");

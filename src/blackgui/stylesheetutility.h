@@ -87,6 +87,9 @@ namespace BlackGui
         //! File name maininfoarea.qss
         static const QString &fileNameFilterDialog();
 
+        //! File name swiftcorectrl.qss
+        static const QString &fileNameSwiftCoreCtrl();
+
         //! File name ini file
         static const QString &fileNameIniFile();
 
