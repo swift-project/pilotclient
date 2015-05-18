@@ -148,6 +148,22 @@ namespace BlackSimPlugin
                 m_hostStatus = Hosting;
             }
 
+            // Enumerate the number of stalled DirectPlay peers
+            DWORD dwNumPlayers = 0;
+            hr = m_directPlayPeer->EnumPlayersAndGroups( nullptr, &dwNumPlayers, DPNENUM_PLAYERS );
+
+            if(hr == DPNERR_BUFFERTOOSMALL)
+            {
+                QScopedArrayPointer<DPNID> stalledPeers(new DPNID[dwNumPlayers]);
+                hr = m_directPlayPeer->EnumPlayersAndGroups( stalledPeers.data(), &dwNumPlayers, DPNENUM_PLAYERS );
+
+                // Destroy all stalled peers
+                for (DWORD i = 0; i < dwNumPlayers; ++i)
+                {
+                    m_directPlayPeer->DestroyPeer(stalledPeers[i], nullptr, 0, 0);
+                }
+            }
+
             emit statusChanged(m_hostStatus);
             return hr;
         }
@@ -170,6 +186,22 @@ namespace BlackSimPlugin
             }
 
             m_hostStatus = Terminated;
+
+            // Enumerate the number of stalled DirectPlay peers
+            DWORD dwNumPlayers = 0;
+            hr = m_directPlayPeer->EnumPlayersAndGroups( nullptr, &dwNumPlayers, DPNENUM_PLAYERS );
+
+            if(hr == DPNERR_BUFFERTOOSMALL)
+            {
+                QScopedArrayPointer<DPNID> stalledPeers(new DPNID[dwNumPlayers]);
+                hr = m_directPlayPeer->EnumPlayersAndGroups( stalledPeers.data(), &dwNumPlayers, DPNENUM_PLAYERS );
+
+                // Destroy all stalled peers
+                for (DWORD i = 0; i < dwNumPlayers; ++i)
+                {
+                    m_directPlayPeer->DestroyPeer(stalledPeers[i], nullptr, 0, 0);
+                }
+            }
 
             emit statusChanged(m_hostStatus);
             return hr;
