@@ -54,14 +54,12 @@ namespace BlackSimPlugin
             CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, parent)
         {
             connect(lobbyClient.data(), &CLobbyClient::disconnected, this, std::bind(&CSimulatorFs9::simulatorStatusChanged, this, 0));
-            connect(fs9Host.data(), &CFs9Host::customPacketReceived, this, &CSimulatorFs9::ps_processFs9Message);
-
             this->m_interpolator = new BlackCore::CInterpolatorLinear(remoteAircraftProvider, this);
         }
 
         bool CSimulatorFs9::isConnected() const
         {
-            return fs9Host->isConnected();
+            return m_simConnected;
         }
 
         bool CSimulatorFs9::connectTo()
@@ -69,12 +67,13 @@ namespace BlackSimPlugin
             Q_ASSERT(m_fsuipc);
             Q_ASSERT(fs9Host->isConnected());
 
+            m_connectionHostMessages = connect(fs9Host.data(), &CFs9Host::customPacketReceived, this, &CSimulatorFs9::ps_processFs9Message);
+
             if (m_useFsuipc)
             {
                 m_fsuipc->connect(); // connect FSUIPC too
             }
-            startTimer(50);
-            emitSimulatorCombinedStatus();
+            m_dispatchTimerId = startTimer(50);
 
             return true;
         }
@@ -87,10 +86,18 @@ namespace BlackSimPlugin
 
         bool CSimulatorFs9::disconnectFrom()
         {
+            if (!m_simConnected) return true;
+
+            // Don't forward messages when disconnected
+            disconnect(m_connectionHostMessages);
+            killTimer(m_dispatchTimerId);
+            m_dispatchTimerId = -1;
             disconnectAllClients();
 
             //  disconnect FSUIPC and status
             CSimulatorFsCommon::disconnectFrom();
+            m_simConnected = false;
+            emitSimulatorCombinedStatus();
             return true;
         }
 
@@ -232,6 +239,11 @@ namespace BlackSimPlugin
 
         void CSimulatorFs9::ps_processFs9Message(const QByteArray &message)
         {
+            if (!m_simConnected)
+            {
+                m_simConnected = true;
+                emitSimulatorCombinedStatus();
+            }
             CFs9Sdk::MULTIPLAYER_PACKET_ID messageType = MultiPlayerPacketParser::readType(message);
             switch (messageType)
             {

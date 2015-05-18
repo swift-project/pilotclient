@@ -107,6 +107,10 @@ namespace BlackSimPlugin
             void disconnectAllClients();
 
             QHash<BlackMisc::Aviation::CCallsign, QPointer<CFs9Client>> m_hashFs9Clients;
+            QMetaObject::Connection m_connectionHostMessages;
+            int m_dispatchTimerId = -1;
+
+            bool m_simConnected = false; //!< Is simulator connected?
         };
 
         //! Listener for FS9
