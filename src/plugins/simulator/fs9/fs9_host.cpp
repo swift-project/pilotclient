@@ -80,7 +80,7 @@ namespace BlackSimPlugin
         {
             initDirectPlay();
             createHostAddress();
-            startHosting(CProject::systemNameAndVersion(), m_callsign);
+            startHosting(CProject::systemNameAndVersion(), m_callsign.toQString());
         }
 
         void CFs9Host::cleanup()

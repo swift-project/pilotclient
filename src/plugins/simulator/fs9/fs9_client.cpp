@@ -29,7 +29,7 @@ namespace BlackSimPlugin
     namespace Fs9
     {
         CFs9Client::CFs9Client(
-            BlackCore::IInterpolator *interpolator, QObject *owner, const QString &callsign, const CTime &updateInterval) :
+            BlackCore::IInterpolator *interpolator, QObject *owner, const BlackMisc::Aviation::CCallsign &callsign, const CTime &updateInterval) :
             CDirectPlayPeer(owner, callsign),
             m_updateInterval(updateInterval), m_interpolator(interpolator)
         {
@@ -170,7 +170,7 @@ namespace BlackSimPlugin
             return hr;
         }
 
-        HRESULT CFs9Client::connectToSession(const QString &callsign)
+        HRESULT CFs9Client::connectToSession(const CCallsign &callsign)
         {
             HRESULT hr = S_OK;
 
@@ -178,10 +178,10 @@ namespace BlackSimPlugin
 
             QMutexLocker locker(&m_mutexHostList);
 
-            QScopedArrayPointer<wchar_t> wszPlayername(new wchar_t[callsign.size() + 1]);
+            QScopedArrayPointer<wchar_t> wszPlayername(new wchar_t[callsign.toQString().size() + 1]);
 
-            callsign.toWCharArray(wszPlayername.data());
-            wszPlayername[callsign.size()] = 0;
+            callsign.toQString().toWCharArray(wszPlayername.data());
+            wszPlayername[callsign.toQString().size()] = 0;
 
             ZeroMemory(&m_playerInfo, sizeof(PLAYER_INFO_STRUCT));
             strcpy(m_playerInfo.szAircraft, "Boeing 737-400 Paint1");

@@ -14,6 +14,7 @@
 #include "blackcore/interpolator.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/pq/time.h"
+#include "blackmisc/aviation/callsign.h"
 #include <QMutex>
 #include <QScopedPointer>
 
@@ -38,7 +39,7 @@ namespace BlackSimPlugin
             };
 
             //! Constructor
-            CFs9Client(BlackCore::IInterpolator *interpolator, QObject *owner, const QString &callsign, const BlackMisc::PhysicalQuantities::CTime &updateInterval);
+            CFs9Client(BlackCore::IInterpolator *interpolator, QObject *owner, const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CTime &updateInterval);
 
             //! Destructor
             virtual ~CFs9Client();
@@ -55,7 +56,7 @@ namespace BlackSimPlugin
 
         signals:
             //! Client status changed
-            void statusChanged(const QString &callsign, BlackSimPlugin::Fs9::CFs9Client::ClientStatus);
+            void statusChanged(const BlackMisc::Aviation::CCallsign &callsign, BlackSimPlugin::Fs9::CFs9Client::ClientStatus);
 
         protected slots:
             //! Timer event slot
@@ -79,7 +80,7 @@ namespace BlackSimPlugin
             HRESULT createHostAddress();
 
             //! Start hosting session
-            HRESULT connectToSession(const QString &playername);
+            HRESULT connectToSession(const BlackMisc::Aviation::CCallsign &callsign);
 
             HRESULT closeConnection();
 

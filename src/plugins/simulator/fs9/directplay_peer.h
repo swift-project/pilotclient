@@ -14,6 +14,7 @@
 #include "host_node.h"
 #include "callback_wrapper.h"
 #include "blackmisc/worker.h"
+#include "blackmisc/aviation/callsign.h"
 #include <QObject>
 #include <QList>
 #include <QMutex>
@@ -33,7 +34,7 @@ namespace BlackSimPlugin
 
         public:
             //! Constructor
-            CDirectPlayPeer(QObject *owner, const QString &callsign);
+            CDirectPlayPeer(QObject *owner, const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Destructor
             virtual ~CDirectPlayPeer();
@@ -71,7 +72,7 @@ namespace BlackSimPlugin
             //! Creates a new DirectPlay device address
             HRESULT createHostAddress();
 
-            QString m_callsign; //!< Peer callsign
+            BlackMisc::Aviation::CCallsign m_callsign; //!< Peer callsign
 
             IDirectPlay8Peer *m_directPlayPeer = nullptr; //!< DirectPlay peer address
             IDirectPlay8Address *m_deviceAddress = nullptr; //!< DirectPlay device address

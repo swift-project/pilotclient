@@ -103,7 +103,7 @@ namespace BlackSimPlugin
                 this->physicallyRemoveRemoteAircraft(callsign);
             }
 
-            CFs9Client *client = new CFs9Client(m_interpolator, this, callsign.toQString(), CTime(25, CTimeUnit::ms()));
+            CFs9Client *client = new CFs9Client(m_interpolator, this, callsign, CTime(25, CTimeUnit::ms()));
             client->setHostAddress(fs9Host->getHostAddress());
             client->setPlayerUserId(fs9Host->getPlayerUserId());
 
