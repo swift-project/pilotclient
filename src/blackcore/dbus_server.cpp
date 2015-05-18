@@ -258,6 +258,7 @@ namespace BlackCore
             if (h.contains(":"))
             {
                 QStringList parts = h.split(":");
+                // todo: Replace assert with input validation
                 Q_ASSERT_X(parts.length() == 2, "p2pAdress", "Wrong IP string split");
                 h = parts.at(0).trimmed();
                 p = parts.at(1).trimmed();
@@ -267,6 +268,8 @@ namespace BlackCore
                 p = "45000";
             }
         }
+
+        // todo: Replace assert with input validation
         Q_ASSERT_X(BlackMisc::CNetworkUtils::isValidIPv4Address(p), "p2pAdress", "Wrong IP in String");
         QString p2p = QString("tcp:host=%1,port=%2").arg(h).arg(p);
         return p2p;

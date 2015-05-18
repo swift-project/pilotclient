@@ -796,7 +796,6 @@ namespace BlackCore
         int frequencyKHz = pos->frequency;
         CFrequency freq(frequencyKHz, CFrequencyUnit::kHz());
         freq.switchUnit(CFrequencyUnit::MHz()); // we would not need to bother, but this makes it easier to identify
-        Q_ASSERT(CComSystem::isValidCivilAviationFrequency(freq));
         emit cbvar_cast(cbvar)->atcPositionUpdate(
             CCallsign(cbvar_cast(cbvar)->fromFSD(callsign), CCallsign::Atc), freq,
             CCoordinateGeodetic(pos->latitude, pos->longitude, 0), CLength(pos->visibleRange, CLengthUnit::NM()));
