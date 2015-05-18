@@ -39,12 +39,5 @@ namespace BlackMisc
             });
         }
 
-        void CAudioDeviceInfoList::registerMetadata()
-        {
-            qRegisterMetaType<CAudioDeviceInfoList>();
-            qDBusRegisterMetaType<CAudioDeviceInfoList>();
-            registerMetaValueType<CAudioDeviceInfoList>();
-        }
-
     } // namespace
 } // namespace

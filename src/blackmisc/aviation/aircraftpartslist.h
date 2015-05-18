@@ -26,24 +26,17 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CAircraftPartsList :
             public CSequence<CAircraftParts>,
             public ITimestampObjectList<CAircraftParts, CAircraftPartsList>,
-            public ICallsignObjectList<CAircraftParts, CAircraftPartsList>
+            public ICallsignObjectList<CAircraftParts, CAircraftPartsList>,
+            public BlackMisc::Mixin::MetaType<CAircraftPartsList>
         {
         public:
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftPartsList)
+
             //! Default constructor.
             CAircraftPartsList();
 
             //! Construct from a base class object.
             CAircraftPartsList(const CSequence<CAircraftParts> &other);
-
-            //! \copydoc CValueObject::toQVariant
-            QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
-
-            //! Register metadata
-            static void registerMetadata();
-
         };
 
     } //namespace

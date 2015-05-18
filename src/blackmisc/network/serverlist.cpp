@@ -20,16 +20,5 @@ namespace BlackMisc
             CSequence<CServer>(other)
         { }
 
-        void CServerList::registerMetadata()
-        {
-            qRegisterMetaType<BlackMisc::CSequence<CServer>>();
-            qDBusRegisterMetaType<BlackMisc::CSequence<CServer>>();
-            qRegisterMetaType<BlackMisc::CCollection<CServer>>();
-            qDBusRegisterMetaType<BlackMisc::CCollection<CServer>>();
-            qRegisterMetaType<CServerList>();
-            qDBusRegisterMetaType<CServerList>();
-            registerMetaValueType<CServerList>();
-        }
-
     } // namespace
 } // namespace

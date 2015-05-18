@@ -64,17 +64,5 @@ namespace BlackMisc
                 push_back(engine);
             }
         }
-
-        void CAircraftEngineList::registerMetadata()
-        {
-            qRegisterMetaType<BlackMisc::CSequence<CAircraftEngine>>();
-            qDBusRegisterMetaType<BlackMisc::CSequence<CAircraftEngine>>();
-            qRegisterMetaType<BlackMisc::CCollection<CAircraftEngine>>();
-            qDBusRegisterMetaType<BlackMisc::CCollection<CAircraftEngine>>();
-            qRegisterMetaType<CAircraftEngineList>();
-            qDBusRegisterMetaType<CAircraftEngineList>();
-            registerMetaValueType<CAircraftEngineList>();
-        }
-
     } // namespace
 } // namespace

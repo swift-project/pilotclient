@@ -22,16 +22,5 @@ namespace BlackMisc
         CClientList::CClientList(const CSequence &other) : CSequence<CClient>(other)
         { }
 
-        void CClientList::registerMetadata()
-        {
-            qRegisterMetaType<BlackMisc::CSequence<CClient>>();
-            qDBusRegisterMetaType<BlackMisc::CSequence<CClient>>();
-            qRegisterMetaType<BlackMisc::CCollection<CClient>>();
-            qDBusRegisterMetaType<BlackMisc::CCollection<CClient>>();
-            qRegisterMetaType<CClientList>();
-            qDBusRegisterMetaType<CClientList>();
-            registerMetaValueType<CClientList>();
-        }
-
     } // namespace
 } // namespace

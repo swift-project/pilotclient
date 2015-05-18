@@ -21,13 +21,6 @@ namespace BlackMisc
             CSequence(other)
         { }
 
-        void CVoiceRoomList::registerMetadata()
-        {
-            qRegisterMetaType<CVoiceRoomList>();
-            qDBusRegisterMetaType<CVoiceRoomList>();
-            registerMetaValueType<CVoiceRoomList>();
-        }
-
         const CVoiceRoomList &CVoiceRoomList::twoEmptyRooms()
         {
             static CVoiceRoomList emptyRooms;

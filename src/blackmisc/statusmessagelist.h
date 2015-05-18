@@ -22,14 +22,15 @@
 namespace BlackMisc
 {
 
-    /*!
-     * Status messages, e.g. from Core -> GUI
-     */
+    //! Status messages, e.g. from Core -> GUI
     class BLACKMISC_EXPORT CStatusMessageList :
         public CSequence<CStatusMessage>,
-        public ITimestampObjectList<CStatusMessage, CStatusMessageList>
+        public ITimestampObjectList<CStatusMessage, CStatusMessageList>,
+        public BlackMisc::Mixin::MetaType<CStatusMessageList>
     {
     public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CStatusMessageList)
+
         //! Constructor
         CStatusMessageList() {}
 
@@ -48,17 +49,8 @@ namespace BlackMisc
         //! Add some categories to all messages in the list
         void addCategories(const CLogCategoryList &categories);
 
-        //! \copydoc CValueObject::toQVariant
-        QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-        //! \copydoc CValueObject::convertFromQVariant
-        void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
-
-        //! Register metadata of unit and quantity
-        static void registerMetadata();
-
     };
-}
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::CStatusMessageList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::CStatusMessage>)

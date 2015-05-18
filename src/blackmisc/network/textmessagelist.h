@@ -25,14 +25,15 @@ namespace BlackMisc
 {
     namespace Network
     {
-        /*!
-         * Value object encapsulating a list of text messages
-         */
+        //! Value object encapsulating a list of text messages
         class BLACKMISC_EXPORT CTextMessageList :
             public CSequence<CTextMessage>,
-            public BlackMisc::ITimestampObjectList<CTextMessage, CTextMessageList>
+            public BlackMisc::ITimestampObjectList<CTextMessage, CTextMessageList>,
+            public BlackMisc::Mixin::MetaType<CTextMessageList>
         {
         public:
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CTextMessageList)
+
             //! Default constructor.
             CTextMessageList();
 
@@ -80,15 +81,6 @@ namespace BlackMisc
 
             //! Mark all messages as sent
             void markAsSent();
-
-            //! \copydoc CValueObject::toQVariant
-            QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
-
-            //! Register metadata
-            static void registerMetadata();
 
         };
     } //namespace

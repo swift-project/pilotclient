@@ -12,24 +12,10 @@
 namespace BlackMisc
 {
     /*
-     * Default constructor
-     */
-    CVariantList::CVariantList() = default;
-
-    /*
      * Construct from base class object
      */
     CVariantList::CVariantList(const CSequence &other) :
         CSequence(other)
     {}
 
-    /*
-     * Register metadata
-     */
-    void CVariantList::registerMetadata()
-    {
-        qRegisterMetaType<CVariantList>();
-        qDBusRegisterMetaType<CVariantList>();
-        registerMetaValueType<CVariantList>();
-    }
 } // namespace

@@ -87,17 +87,6 @@ namespace BlackMisc
             return this->contains(&CTextMessage::isRadioMessage, true);
         }
 
-        void CTextMessageList::registerMetadata()
-        {
-            qRegisterMetaType<BlackMisc::CSequence<CTextMessage>>();
-            qDBusRegisterMetaType<BlackMisc::CSequence<CTextMessage>>();
-            qRegisterMetaType<BlackMisc::CCollection<CTextMessage>>();
-            qDBusRegisterMetaType<BlackMisc::CCollection<CTextMessage>>();
-            qRegisterMetaType<CTextMessageList>();
-            qDBusRegisterMetaType<CTextMessageList>();
-            registerMetaValueType<CTextMessageList>();
-        }
-
         CTextMessageList CTextMessageList::findByFrequency(const CFrequency &frequency) const
         {
             return this->findBy(&CTextMessage::getFrequency, frequency);

@@ -282,7 +282,7 @@ namespace BlackMisc
 
                 QString content(line.mid(index + 1).trimmed());
 
-                // fix "" strings, some are malformed and just contain " at beginning, end
+                // fix "" strings, some are malformed and just contain " at beginning, not clsoing at end of line
                 if (content.endsWith('"')) { content.remove(content.size() - 1 , 1); }
                 if (content.startsWith('"')) { content.remove(0 , 1); }
 
@@ -292,17 +292,6 @@ namespace BlackMisc
 
                 // return
                 return content;
-            }
-
-            void CAircraftCfgEntriesList::registerMetadata()
-            {
-                qRegisterMetaType<BlackMisc::CSequence<CAircraftCfgEntries>>();
-                qDBusRegisterMetaType<BlackMisc::CSequence<CAircraftCfgEntries>>();
-                qRegisterMetaType<BlackMisc::CCollection<CAircraftCfgEntries>>();
-                qDBusRegisterMetaType<BlackMisc::CCollection<CAircraftCfgEntries>>();
-                qRegisterMetaType<CAircraftCfgEntriesList>();
-                qDBusRegisterMetaType<CAircraftCfgEntriesList>();
-                BlackMisc::registerMetaValueType<CAircraftCfgEntriesList>();
             }
 
         } // namespace

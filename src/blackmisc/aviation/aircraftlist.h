@@ -29,12 +29,16 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating a list of aircraft.
+        //! \deprecated consider using CSimulatedAircraftList
         class BLACKMISC_EXPORT CAircraftList :
             public CSequence<CAircraft>,
             public ICallsignObjectList<CAircraft, CAircraftList>,
-            public BlackMisc::Geo::IGeoObjectWithRelativePositionList<CAircraft, CAircraftList>
+            public BlackMisc::Geo::IGeoObjectWithRelativePositionList<CAircraft, CAircraftList>,
+            public BlackMisc::Mixin::MetaType<CAircraftList>
         {
         public:
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftList)
+
             //! Default constructor.
             CAircraftList();
 
@@ -44,18 +48,9 @@ namespace BlackMisc
             //! All pilots (with valid data)
             BlackMisc::Network::CUserList getPilots() const;
 
-            //! \brief Update aircraft with data from VATSIM data file
-            //! \remarks The list used needs to contain the VATSIM data file objects
+            //! Update aircraft with data from VATSIM data file
+            //! \remarks The list used ("this") needs to contain the VATSIM data file objects
             bool updateWithVatsimDataFileData(CAircraft &aircraftToBeUpdated) const;
-
-            //! \copydoc CValueObject::toQVariant
-            QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
-
-            //! Register metadata
-            static void registerMetadata();
 
         };
 

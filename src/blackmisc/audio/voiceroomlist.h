@@ -24,26 +24,19 @@ namespace BlackMisc
 {
     namespace Audio
     {
-        /*!
-         * Value object encapsulating a list of voice rooms.
-         */
-        class BLACKMISC_EXPORT CVoiceRoomList : public CSequence<CVoiceRoom>
+        //! Value object encapsulating a list of voice rooms.
+        class BLACKMISC_EXPORT CVoiceRoomList :
+            public CSequence<CVoiceRoom>,
+            public BlackMisc::Mixin::MetaType<CVoiceRoomList>
         {
         public:
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CVoiceRoomList)
+
             //! Default constructor.
             CVoiceRoomList();
 
             //! Construct from a base class object.
             CVoiceRoomList(const CSequence &other);
-
-            //! \copydoc CValueObject::toQVariant
-            QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
-
-            //! \brief Register metadata
-            static void registerMetadata();
 
             //! Frequently needed for voice room resolutions
             static const CVoiceRoomList &twoEmptyRooms();

@@ -23,26 +23,24 @@ namespace BlackMisc
     namespace Simulation
     {
         //! Value object encapsulating a list of SimulatorInfo objects.
-        class BLACKMISC_EXPORT CSimulatorPluginInfoList : public BlackMisc::CSequence<CSimulatorPluginInfo>
+        class BLACKMISC_EXPORT CSimulatorPluginInfoList :
+            public BlackMisc::CSequence<CSimulatorPluginInfo>,
+            public BlackMisc::Mixin::MetaType<CSimulatorPluginInfoList>
         {
         public:
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CSimulatorPluginInfoList)
+
             //! Default constructor
             CSimulatorPluginInfoList();
 
             //! Construct from a base class object.
             CSimulatorPluginInfoList(const CSequence<CSimulatorPluginInfo> &other);
 
-            //! \copydoc CValueObject::toQVariant
-            QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
             //! Is simulator supported
             bool supportsSimulator(const QString &simulator);
 
             //! String list with meaningful representations
             QStringList toStringList(bool i18n = false) const;
-
-            //! Register the metatypes
-            static void registerMetadata();
 
         };
     } // ns

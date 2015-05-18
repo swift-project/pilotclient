@@ -29,16 +29,5 @@ namespace BlackMisc
             return this->transform([i18n](const CSimulatorPluginInfo & info) { return info.toQString(i18n); });
         }
 
-        void CSimulatorPluginInfoList::registerMetadata()
-        {
-            qRegisterMetaType<BlackMisc::CSequence<CSimulatorPluginInfo>>();
-            qDBusRegisterMetaType<BlackMisc::CSequence<CSimulatorPluginInfo>>();
-            qRegisterMetaType<BlackMisc::CCollection<CSimulatorPluginInfo>>();
-            qDBusRegisterMetaType<BlackMisc::CCollection<CSimulatorPluginInfo>>();
-            qRegisterMetaType<CSimulatorPluginInfoList>();
-            qDBusRegisterMetaType<CSimulatorPluginInfoList>();
-            BlackMisc::registerMetaValueType<CSimulatorPluginInfoList>();
-        }
-
     } // namespace
 } // namespace

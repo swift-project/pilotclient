@@ -20,9 +20,7 @@ namespace BlackMisc
 {
     namespace Network
     {
-        /*!
-         * Value object encapsulating information for voice capabilities.
-         */
+        //! Value object encapsulating information for voice capabilities.
         class BLACKMISC_EXPORT CVoiceCapabilities : public CValueObject<CVoiceCapabilities>
         {
         public:

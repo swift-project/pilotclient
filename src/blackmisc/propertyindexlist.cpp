@@ -11,30 +11,10 @@
 
 namespace BlackMisc
 {
-    /*
-     * Default constructor
-     */
     CPropertyIndexList::CPropertyIndexList() { }
 
-    /*
-     * Construct from base class object
-     */
     CPropertyIndexList::CPropertyIndexList(const CSequence<CPropertyIndex> &other) :
         CSequence<CPropertyIndex>(other)
     { }
-
-    /*
-     * Register metadata
-     */
-    void CPropertyIndexList::registerMetadata()
-    {
-        qRegisterMetaType<BlackMisc::CSequence<CPropertyIndex>>();
-        qDBusRegisterMetaType<BlackMisc::CSequence<CPropertyIndex>>();
-        qRegisterMetaType<BlackMisc::CCollection<CPropertyIndex>>();
-        qDBusRegisterMetaType<BlackMisc::CCollection<CPropertyIndex>>();
-        qRegisterMetaType<CPropertyIndexList>();
-        qDBusRegisterMetaType<CPropertyIndexList>();
-        registerMetaValueType<CPropertyIndexList>();
-    }
 
 } // namespace

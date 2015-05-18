@@ -24,17 +24,6 @@ namespace BlackMisc
             CSequence<CAtcStation>(other)
         { }
 
-        void CAtcStationList::registerMetadata()
-        {
-            qRegisterMetaType<BlackMisc::CSequence<CAtcStation>>();
-            qDBusRegisterMetaType<BlackMisc::CSequence<CAtcStation>>();
-            qRegisterMetaType<BlackMisc::CCollection<CAtcStation>>();
-            qDBusRegisterMetaType<BlackMisc::CCollection<CAtcStation>>();
-            qRegisterMetaType<CAtcStationList>();
-            qDBusRegisterMetaType<CAtcStationList>();
-            registerMetaValueType<CAtcStationList>();
-        }
-
         CAtcStationList CAtcStationList::findIfComUnitTunedIn25KHz(const CComSystem &comUnit) const
         {
             return this->findBy([&](const CAtcStation & atcStation)

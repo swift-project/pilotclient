@@ -30,22 +30,19 @@ namespace BlackMisc
         //! Value object encapsulating a list of voice rooms.
         class BLACKMISC_EXPORT CClientList :
             public CSequence<CClient>,
-            public BlackMisc::Aviation::ICallsignObjectList<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>
+            public BlackMisc::Aviation::ICallsignObjectList<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>,
+            public BlackMisc::Mixin::MetaType<CClientList>
         {
         public:
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CClientList)
+
             //! Default constructor.
             CClientList();
 
             //! Construct from a base class object.
             CClientList(const CSequence &other);
 
-            //! QVariant, required for DBus QVariant lists
-            QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-            //! Register metadata
-            static void registerMetadata();
         };
-
     } //namespace
 } // namespace
 

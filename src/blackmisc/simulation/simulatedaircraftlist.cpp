@@ -28,17 +28,6 @@ namespace BlackMisc
             CSequence<CSimulatedAircraft>(other)
         { }
 
-        void CSimulatedAircraftList::registerMetadata()
-        {
-            qRegisterMetaType<BlackMisc::CSequence<CSimulatedAircraft>>();
-            qDBusRegisterMetaType<BlackMisc::CSequence<CSimulatedAircraft>>();
-            qRegisterMetaType<BlackMisc::CCollection<CSimulatedAircraft>>();
-            qDBusRegisterMetaType<BlackMisc::CCollection<CSimulatedAircraft>>();
-            qRegisterMetaType<CSimulatedAircraftList>();
-            qDBusRegisterMetaType<CSimulatedAircraftList>();
-            registerMetaValueType<CSimulatedAircraftList>();
-        }
-
         CUserList CSimulatedAircraftList::getPilots() const
         {
             return this->findBy(Predicates::MemberValid(&CSimulatedAircraft::getPilot)).transform(Predicates::MemberTransform(&CSimulatedAircraft::getPilot));

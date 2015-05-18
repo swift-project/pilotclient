@@ -21,20 +21,19 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        /*!
-         * Value object encapsulating a list of aircraft models
-         */
-        class BLACKMISC_EXPORT CAircraftModelList : public CSequence<CAircraftModel>
+        //! Value object encapsulating a list of aircraft models
+        class BLACKMISC_EXPORT CAircraftModelList :
+            public CSequence<CAircraftModel>,
+            public BlackMisc::Mixin::MetaType<CAircraftModelList>
         {
         public:
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftModelList)
+
             //! Empty constructor.
             CAircraftModelList();
 
             //! Construct from a base class object.
             CAircraftModelList(const CSequence<CAircraftModel> &other);
-
-            //! QVariant, required for DBus QVariant lists
-            QVariant toQVariant() const { return QVariant::fromValue(*this); }
 
             //! Contains model string
             bool containsModelString(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
@@ -50,12 +49,6 @@ namespace BlackMisc
 
             //! Model strings
             QStringList getSortedModelStrings() const;
-
-            //! \copydoc CValueObject::convertFromQVariant
-            void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
-
-            //! Register metadata
-            static void registerMetadata();
 
         };
 

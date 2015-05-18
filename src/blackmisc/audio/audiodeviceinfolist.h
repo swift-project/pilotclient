@@ -25,9 +25,13 @@ namespace BlackMisc
     namespace Audio
     {
         //! Value object encapsulating a list of audio devices.
-        class BLACKMISC_EXPORT CAudioDeviceInfoList : public CSequence<CAudioDeviceInfo>
+        class BLACKMISC_EXPORT CAudioDeviceInfoList :
+            public CSequence<CAudioDeviceInfo>,
+            public BlackMisc::Mixin::MetaType<CAudioDeviceInfoList>
         {
         public:
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAudioDeviceInfoList)
+
             //! Default constructor.
             CAudioDeviceInfoList();
 
@@ -42,15 +46,6 @@ namespace BlackMisc
 
             //! Count (as of type)
             int count(CAudioDeviceInfo::DeviceType type) const;
-
-            //! \copydoc CValueObject::toQVariant
-            QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
-
-            //! Register metadata
-            static void registerMetadata();
         };
 
     } //namespace

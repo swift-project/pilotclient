@@ -20,10 +20,14 @@
 namespace BlackMisc
 {
     //! Value object encapsulating a list of name/variant pairs
-    //! Currently name must be unique
-    class BLACKMISC_EXPORT CNameVariantPairList : public CSequence<CNameVariantPair>
+    //! \note Currently name must be unique
+    class BLACKMISC_EXPORT CNameVariantPairList :
+        public CSequence<CNameVariantPair>,
+        public BlackMisc::Mixin::MetaType<CNameVariantPairList>
     {
     public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CNameVariantPairList)
+
         //! Default constructor.
         CNameVariantPairList();
 
@@ -48,15 +52,6 @@ namespace BlackMisc
         //! Add value, if name already exists replace (true)
         //! If one is sure(!) the name does not exists, \sa push_back() can be used
         bool addOrReplaceValue(const QString &name, const CVariant &value, const CIcon &icon = CIcon());
-
-        //! \copydoc CValueObject::toQVariant
-        QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-        //! \copydoc CValueObject::convertFromQVariant
-        void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
-
-        //! Register metadata
-        static void registerMetadata();
 
     };
 } //namespace

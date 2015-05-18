@@ -61,16 +61,5 @@ namespace BlackMisc
             return ms;
         }
 
-        void CAircraftModelList::registerMetadata()
-        {
-            qRegisterMetaType<BlackMisc::CSequence<CAircraftModel>>();
-            qDBusRegisterMetaType<BlackMisc::CSequence<CAircraftModel>>();
-            qRegisterMetaType<BlackMisc::CCollection<CAircraftModel>>();
-            qDBusRegisterMetaType<BlackMisc::CCollection<CAircraftModel>>();
-            qRegisterMetaType<CAircraftModelList>();
-            qDBusRegisterMetaType<CAircraftModelList>();
-            registerMetaValueType<CAircraftModelList>();
-        }
-
     } // namespace
 } // namespace

@@ -20,28 +20,20 @@
 
 namespace BlackMisc
 {
-    /*!
-     * Value object encapsulating a list of property indexes.
-     */
-    class BLACKMISC_EXPORT CPropertyIndexList : public CSequence<CPropertyIndex>
+    //! Value object encapsulating a list of property indexes.
+    class BLACKMISC_EXPORT CPropertyIndexList :
+        public CSequence<CPropertyIndex>,
+        public BlackMisc::Mixin::MetaType<CPropertyIndexList>
     {
     public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CPropertyIndexList)
+
         //! Default constructor.
         CPropertyIndexList();
 
         //! Construct from a base class object.
         CPropertyIndexList(const CSequence<CPropertyIndex> &other);
-
-        //! \copydoc CValueObject::toQVariant
-        QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-        //! \copydoc CValueObject::convertFromQVariant
-        void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
-
-        //! Register metadata
-        static void registerMetadata();
     };
-
 } //namespace
 
 Q_DECLARE_METATYPE(BlackMisc::CPropertyIndexList)

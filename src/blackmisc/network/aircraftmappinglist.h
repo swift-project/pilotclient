@@ -25,9 +25,13 @@ namespace BlackMisc
     namespace Network
     {
         //! Value object encapsulating a list of aircraft mappings
-        class BLACKMISC_EXPORT CAircraftMappingList : public CSequence<CAircraftMapping>
+        class BLACKMISC_EXPORT CAircraftMappingList :
+            public CSequence<CAircraftMapping>,
+            public BlackMisc::Mixin::MetaType<CAircraftMappingList>
         {
         public:
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftMappingList)
+
             //! Empty constructor.
             CAircraftMappingList();
 
@@ -51,15 +55,6 @@ namespace BlackMisc
 
             //! Find by model string
             CAircraftMappingList findByModelString(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
-
-            //! \copydoc CValueObject::toQVariant
-            QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
-
-            //! Register metadata
-            static void registerMetadata();
         };
 
     } //namespace

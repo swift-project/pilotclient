@@ -70,15 +70,4 @@ namespace BlackMisc
         }
         return -1;
     }
-
-    void CNameVariantPairList::registerMetadata()
-    {
-        qRegisterMetaType<BlackMisc::CSequence<CNameVariantPair>>();
-        qDBusRegisterMetaType<BlackMisc::CSequence<CNameVariantPair>>();
-        qRegisterMetaType<BlackMisc::CCollection<CNameVariantPair>>();
-        qDBusRegisterMetaType<BlackMisc::CCollection<CNameVariantPair>>();
-        qRegisterMetaType<CNameVariantPairList>();
-        qDBusRegisterMetaType<CNameVariantPairList>();
-        registerMetaValueType<CNameVariantPairList>();
-    }
 } // namespace

@@ -23,12 +23,14 @@ namespace BlackMisc
 {
     namespace Settings
     {
-        /*!
-         * Value object encapsulating a list of keyboard keys.
-         */
-        class BLACKMISC_EXPORT CSettingKeyboardHotkeyList : public CSequence<CSettingKeyboardHotkey>
+        //! Value object encapsulating a list of keyboard keys.
+        class BLACKMISC_EXPORT CSettingKeyboardHotkeyList :
+            public CSequence<CSettingKeyboardHotkey>,
+            public BlackMisc::Mixin::MetaType<CSettingKeyboardHotkeyList>
         {
         public:
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CSettingKeyboardHotkeyList)
+
             //! Default constructor
             CSettingKeyboardHotkeyList();
 
@@ -41,20 +43,9 @@ namespace BlackMisc
             //! Key for given function
             BlackMisc::Settings::CSettingKeyboardHotkey keyForFunction(const CHotkeyFunction &function) const;
 
-            /*!
-             * Fill the list with hotkeys
-             * \param reset true, list will be be reset, otherwise values will not be overridde
-             */
+            //! Fill the list with hotkeys
+            //! \param reset true, list will be be reset, otherwise values will not be overridde
             void initAsHotkeyList(bool reset = true);
-
-            //! \copydoc CValueObject::toQVariant
-            QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
-
-            //! Register metadata
-            static void registerMetadata();
 
         };
 

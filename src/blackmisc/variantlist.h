@@ -20,28 +20,21 @@
 namespace BlackMisc
 {
 
-    /*!
-     * Value object encapsulating a list of variants.
-     */
-    class BLACKMISC_EXPORT CVariantList : public CSequence<CVariant>
+    //! Value object encapsulating a list of variants.
+    class BLACKMISC_EXPORT CVariantList :
+        public CSequence<CVariant>,
+        public BlackMisc::Mixin::MetaType<CVariantList>
     {
     public:
+        BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CVariantList)
+
         //! Default constructor.
-        CVariantList();
+        CVariantList() = default;
 
         //! Construct from a base class object.
         CVariantList(const CSequence &other);
 
-        //! \copydoc CValueObject::toQVariant
-        QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-        //! \copydoc CValueObject::convertFromQVariant
-        void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
-
-        //! \brief Register metadata
-        static void registerMetadata();
     };
-
 }
 
 Q_DECLARE_METATYPE(BlackMisc::CVariantList)

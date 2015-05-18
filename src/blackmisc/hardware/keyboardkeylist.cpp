@@ -21,16 +21,5 @@ namespace BlackMisc
             CSequence<CKeyboardKey>(baseClass)
         { }
 
-        void CKeyboardKeyList::registerMetadata()
-        {
-            qRegisterMetaType<BlackMisc::CSequence<CKeyboardKey>>();
-            qDBusRegisterMetaType<BlackMisc::CSequence<CKeyboardKey>>();
-            qRegisterMetaType<BlackMisc::CCollection<CKeyboardKey>>();
-            qDBusRegisterMetaType<BlackMisc::CCollection<CKeyboardKey>>();
-            qRegisterMetaType<CKeyboardKeyList>();
-            qDBusRegisterMetaType<CKeyboardKeyList>();
-            registerMetaValueType<CKeyboardKeyList>();
-        }
-
     } // namespace
 } // namespace

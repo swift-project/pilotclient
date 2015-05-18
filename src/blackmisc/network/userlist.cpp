@@ -20,12 +20,5 @@ namespace BlackMisc
         CUserList::CUserList(const CSequence &other) : CSequence<CUser>(other)
         { }
 
-        void CUserList::registerMetadata()
-        {
-            qRegisterMetaType<CUserList>();
-            qDBusRegisterMetaType<CUserList>();
-            registerMetaValueType<CUserList>();
-        }
-
     } // namespace
 } // namespace

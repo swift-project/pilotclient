@@ -22,23 +22,20 @@ namespace BlackMisc
 {
     namespace Hardware
     {
-        /*!
-         * Value object encapsulating a list of keyboard keys.
-         */
-        class BLACKMISC_EXPORT CKeyboardKeyList : public CSequence<CKeyboardKey>
+        //! Value object encapsulating a list of keyboard keys.
+        class BLACKMISC_EXPORT CKeyboardKeyList :
+            public CSequence<CKeyboardKey>,
+            public BlackMisc::Mixin::MetaType<CKeyboardKeyList>
         {
         public:
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CKeyboardKeyList)
+
             //! Default constructor
             CKeyboardKeyList();
 
             //! Construct from a base class object.
             CKeyboardKeyList(const CSequence<CKeyboardKey> &baseClass);
 
-            //! \copydoc CValueObject::toQVariant
-            QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-            //! Register metadata
-            static void registerMetadata();
         };
 
     } //namespace

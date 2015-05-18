@@ -19,17 +19,6 @@ namespace BlackMisc
             CSequence<CAirport>(other)
         { }
 
-        void CAirportList::registerMetadata()
-        {
-            qRegisterMetaType<BlackMisc::CSequence<CAirport>>();
-            qDBusRegisterMetaType<BlackMisc::CSequence<CAirport>>();
-            qRegisterMetaType<BlackMisc::CCollection<CAirport>>();
-            qDBusRegisterMetaType<BlackMisc::CCollection<CAirport>>();
-            qRegisterMetaType<CAirportList>();
-            qDBusRegisterMetaType<CAirportList>();
-            registerMetaValueType<CAirportList>();
-        }
-
         CAirportList CAirportList::findByIcao(const CAirportIcaoCode &icao) const
         {
             return this->findBy(&CAirport::getIcao, icao);

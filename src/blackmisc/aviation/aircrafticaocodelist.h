@@ -27,7 +27,6 @@ namespace BlackMisc
             public CSequence<CAircraftIcaoCode>,
             public BlackMisc::Mixin::MetaType<CAircraftIcaoCodeList>
         {
-
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftIcaoCodeList)
 

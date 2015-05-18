@@ -20,16 +20,5 @@ namespace BlackMisc
             CSequence<CAircraftParts>(other)
         { }
 
-        void CAircraftPartsList::registerMetadata()
-        {
-            qRegisterMetaType<BlackMisc::CSequence<CAircraftParts>>();
-            qDBusRegisterMetaType<BlackMisc::CSequence<CAircraftParts>>();
-            qRegisterMetaType<BlackMisc::CCollection<CAircraftParts>>();
-            qDBusRegisterMetaType<BlackMisc::CCollection<CAircraftParts>>();
-            qRegisterMetaType<CAircraftPartsList>();
-            qDBusRegisterMetaType<CAircraftPartsList>();
-            registerMetaValueType<CAircraftPartsList>();
-        }
-
     } // namespace
 } // namespace

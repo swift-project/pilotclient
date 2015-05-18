@@ -45,20 +45,6 @@ namespace BlackMisc
         }
 
         /*
-         * Register metadata
-         */
-        void CSettingKeyboardHotkeyList::registerMetadata()
-        {
-            qRegisterMetaType<BlackMisc::CSequence<CSettingKeyboardHotkey>>();
-            qDBusRegisterMetaType<BlackMisc::CSequence<CSettingKeyboardHotkey>>();
-            qRegisterMetaType<BlackMisc::CCollection<CSettingKeyboardHotkey>>();
-            qDBusRegisterMetaType<BlackMisc::CCollection<CSettingKeyboardHotkey>>();
-            qRegisterMetaType<CSettingKeyboardHotkeyList>();
-            qDBusRegisterMetaType<CSettingKeyboardHotkeyList>();
-            registerMetaValueType<CSettingKeyboardHotkeyList>();
-        }
-
-        /*
          * Hotkey list
          */
         void CSettingKeyboardHotkeyList::initAsHotkeyList(bool reset)

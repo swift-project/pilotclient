@@ -25,23 +25,18 @@ namespace BlackMisc
     namespace Network
     {
         //! Value object encapsulating a list of voice rooms.
-        class BLACKMISC_EXPORT CUserList : public CSequence<CUser>
+        class BLACKMISC_EXPORT CUserList :
+            public CSequence<CUser>,
+            public BlackMisc::Mixin::MetaType<CUserList>
         {
         public:
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CUserList)
+
             //! Default constructor.
             CUserList();
 
             //! Construct from a base class object.
             CUserList(const CSequence &other);
-
-            //! \copydoc CValueObject::toQVariant
-            QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
-
-            //! Register metadata
-            static void registerMetadata();
 
         };
 

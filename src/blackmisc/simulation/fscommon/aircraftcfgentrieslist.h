@@ -28,12 +28,13 @@ namespace BlackMisc
     {
         namespace FsCommon
         {
-
             //! Utility, providing FS aircraft.cfg entries
-            class BLACKMISC_EXPORT CAircraftCfgEntriesList : public BlackMisc::CSequence<CAircraftCfgEntries>
+            class BLACKMISC_EXPORT CAircraftCfgEntriesList :
+                public BlackMisc::CSequence<CAircraftCfgEntries>,
+                public BlackMisc::Mixin::MetaType<CAircraftCfgEntriesList>
             {
-
             public:
+                BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftCfgEntriesList)
 
                 //! Constructor
                 CAircraftCfgEntriesList(const QString &rootDirectory = "") : m_rootDirectory(rootDirectory) {}
@@ -74,17 +75,8 @@ namespace BlackMisc
                 //! Find by title
                 CAircraftCfgEntriesList findByTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive) const;
 
-                //! \copydoc CValueObject::toQVariant
-                QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-                //! \copydoc CValueObject::convertFromQVariant
-                void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
-
                 //! Do not include the following directories for FS
                 static const QStringList &excludeDirectories();
-
-                //! Register metadata
-                static void registerMetadata();
 
             private:
                 QString m_rootDirectory;         //!< root directory reading aircraft.cfg files

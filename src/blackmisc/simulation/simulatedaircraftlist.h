@@ -32,9 +32,12 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CSimulatedAircraftList :
             public BlackMisc::CSequence<CSimulatedAircraft>,
             public BlackMisc::Aviation::ICallsignObjectList<CSimulatedAircraft, CSimulatedAircraftList>,
-            public BlackMisc::Geo::IGeoObjectWithRelativePositionList<CSimulatedAircraft, CSimulatedAircraftList>
+            public BlackMisc::Geo::IGeoObjectWithRelativePositionList<CSimulatedAircraft, CSimulatedAircraftList>,
+            public BlackMisc::Mixin::MetaType<CSimulatedAircraftList>
         {
         public:
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CSimulatedAircraftList)
+
             //! Default constructor.
             CSimulatedAircraftList();
 
@@ -71,17 +74,8 @@ namespace BlackMisc
             //! Rendered?
             bool isRendered(const BlackMisc::Aviation::CCallsign &callsign) const;
 
-            //! \copydoc CValueObject::toQVariant
-            QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
-
             //! To aircraft list
             BlackMisc::Aviation::CAircraftList toAircraftList() const;
-
-            //! Register metadata
-            static void registerMetadata();
 
         };
 

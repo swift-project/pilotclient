@@ -56,18 +56,4 @@ namespace BlackMisc
             msg.addCategories(categories);
         }
     }
-
-    /*
-     * Metadata
-     */
-    void CStatusMessageList::registerMetadata()
-    {
-        qRegisterMetaType<BlackMisc::CSequence<CStatusMessage>>();
-        qDBusRegisterMetaType<BlackMisc::CSequence<CStatusMessage>>();
-        qRegisterMetaType<BlackMisc::CCollection<CStatusMessage>>();
-        qDBusRegisterMetaType<BlackMisc::CCollection<CStatusMessage>>();
-        qRegisterMetaType<CStatusMessageList>();
-        qDBusRegisterMetaType<CStatusMessageList>();
-        registerMetaValueType<CStatusMessageList>();
-    }
-}
+} // ns

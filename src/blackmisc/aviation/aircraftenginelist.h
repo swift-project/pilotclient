@@ -23,9 +23,13 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating a list of aircraft engines.
-        class BLACKMISC_EXPORT CAircraftEngineList : public CSequence<CAircraftEngine>
+        class BLACKMISC_EXPORT CAircraftEngineList :
+            public CSequence<CAircraftEngine>,
+            public BlackMisc::Mixin::MetaType<CAircraftEngineList>
         {
         public:
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftEngineList)
+
             //! Default constructor.
             CAircraftEngineList() = default;
 
@@ -41,20 +45,12 @@ namespace BlackMisc
             //! Engine number 1..x on?
             bool isEngineOn(int engineNumber) const;
 
-            //! \copydoc CValueObject::toQVariant
-            QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
-
             //! \copydoc CValueObject::toJson
             QJsonObject toJson() const;
 
             //! \copydoc CValueObject::convertFromJson
             void convertFromJson(const QJsonObject &json);
 
-            //! Register metadata
-            static void registerMetadata();
         };
 
     } //namespace

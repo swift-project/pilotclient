@@ -74,16 +74,5 @@ namespace BlackMisc
             });
         }
 
-        void CAircraftMappingList::registerMetadata()
-        {
-            qRegisterMetaType<BlackMisc::CSequence<CAircraftMapping>>();
-            qDBusRegisterMetaType<BlackMisc::CSequence<CAircraftMapping>>();
-            qRegisterMetaType<BlackMisc::CCollection<CAircraftMapping>>();
-            qDBusRegisterMetaType<BlackMisc::CCollection<CAircraftMapping>>();
-            qRegisterMetaType<CAircraftMappingList>();
-            qDBusRegisterMetaType<CAircraftMappingList>();
-            registerMetaValueType<CAircraftMappingList>();
-        }
-
     } // namespace
 } // namespace

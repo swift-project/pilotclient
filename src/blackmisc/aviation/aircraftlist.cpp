@@ -27,17 +27,6 @@ namespace BlackMisc
             CSequence<CAircraft>(other)
         { }
 
-        void CAircraftList::registerMetadata()
-        {
-            qRegisterMetaType<BlackMisc::CSequence<CAircraft>>();
-            qDBusRegisterMetaType<BlackMisc::CSequence<CAircraft>>();
-            qRegisterMetaType<BlackMisc::CCollection<CAircraft>>();
-            qDBusRegisterMetaType<BlackMisc::CCollection<CAircraft>>();
-            qRegisterMetaType<CAircraftList>();
-            qDBusRegisterMetaType<CAircraftList>();
-            registerMetaValueType<CAircraftList>();
-        }
-
         CUserList CAircraftList::getPilots() const
         {
             return this->findBy(Predicates::MemberValid(&CAircraft::getPilot)).transform(Predicates::MemberTransform(&CAircraft::getPilot));

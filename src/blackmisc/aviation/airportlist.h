@@ -29,9 +29,12 @@ namespace BlackMisc
         //! Value object for a list of airports.
         class BLACKMISC_EXPORT CAirportList :
             public CSequence<CAirport>,
-            public BlackMisc::Geo::IGeoObjectWithRelativePositionList<CAirport, CAirportList>
+            public BlackMisc::Geo::IGeoObjectWithRelativePositionList<CAirport, CAirportList>,
+            public BlackMisc::Mixin::MetaType<CAirportList>
         {
         public:
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAirportList)
+
             //! Default constructor.
             CAirportList();
 
@@ -46,16 +49,6 @@ namespace BlackMisc
 
             //! Find first station by callsign, if not return given value / default
             CAirport findFirstByIcao(const CAirportIcaoCode &icao, const CAirport &ifNotFound = CAirport()) const;
-
-            //! \copydoc CValueObject::toQVariant
-            QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
-
-            //! Register metadata
-            static void registerMetadata();
-
         };
     } //namespace
 } // namespace

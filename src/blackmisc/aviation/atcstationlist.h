@@ -31,9 +31,12 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CAtcStationList :
             public CSequence<CAtcStation>,
             public BlackMisc::Aviation::ICallsignObjectList<CAtcStation, CAtcStationList>,
-            public BlackMisc::Geo::IGeoObjectWithRelativePositionList<CAtcStation, CAtcStationList>
+            public BlackMisc::Geo::IGeoObjectWithRelativePositionList<CAtcStation, CAtcStationList>,
+            public BlackMisc::Mixin::MetaType<CAtcStationList>
         {
         public:
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAtcStationList)
+
             //! Default constructor.
             CAtcStationList();
 
@@ -54,16 +57,6 @@ namespace BlackMisc
             //! Both sides (booking, online station) will be updated.
             //! \pre Can be used only if the stored data in this list are online ATC stations
             int syncronizeWithBookedStation(CAtcStation &bookedAtcStation);
-
-            //! \copydoc CValueObject::toQVariant
-            QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
-
-            //! Register metadata
-            static void registerMetadata();
-
         };
 
     } //namespace
