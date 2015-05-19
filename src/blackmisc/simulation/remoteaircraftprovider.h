@@ -108,6 +108,7 @@ namespace BlackMisc
                 std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,
                 std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshot
             ) = 0;
+
         };
 
         //! Class which can be directly used to access an \sa IRemoteAircraftProvider object
@@ -165,6 +166,6 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-Q_DECLARE_INTERFACE(BlackMisc::Simulation::IRemoteAircraftProvider, "IRemoteAircraftProvider")
+Q_DECLARE_INTERFACE(BlackMisc::Simulation::IRemoteAircraftProvider, "BlackMisc::Simulation::IRemoteAircraftProvider:IRemoteAircraftProvider")
 
 #endif // guard

@@ -17,11 +17,25 @@ namespace BlackCore
         qRegisterMetaType<BlackCore::INetwork::ConnectionStatus>();
     }
 
-    bool isCurrentThreadCreatingThread(QObject *toBeTested)
+    bool isCurrentThreadObjectThread(QObject *toBeTested)
     {
+        Q_ASSERT_X(toBeTested, Q_FUNC_INFO, "missing QObject");
         if (!toBeTested) { return false; }
         if (!toBeTested->thread()) { return false; }
-        return (QThread::currentThreadId() == toBeTested->thread()->currentThreadId());
+        return (QThread::currentThread() == toBeTested->thread());
+    }
+
+    bool isApplicationThreadObjectThread(QObject *toBeTested)
+    {
+        Q_ASSERT_X(toBeTested, Q_FUNC_INFO, "missing QObject");
+        if (!toBeTested) { return false; }
+        if (!toBeTested->thread()) { return false; }
+        return (QCoreApplication::instance()->thread() == toBeTested->thread());
+    }
+
+    bool isCurrentThreadApplicationThread()
+    {
+        return (QCoreApplication::instance()->thread() == QThread::currentThread());
     }
 
 } // namespace

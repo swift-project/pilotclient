@@ -102,7 +102,7 @@ namespace BlackSimPlugin
             virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 
             //! \copydoc BlackCore::ISimulator::physicallyRemoveAllRemoteAircraft
-            virtual void physicallyRemoveAllRemoteAircraft() override;
+            virtual int physicallyRemoveAllRemoteAircraft() override;
 
             //! \copydoc ISimulator::updateOwnCockpit
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &ownAircraft, const QString &originator) override;

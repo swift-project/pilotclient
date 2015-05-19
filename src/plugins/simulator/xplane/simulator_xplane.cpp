@@ -393,11 +393,14 @@ namespace BlackSimPlugin
             return true;
         }
 
-        void CSimulatorXPlane::physicallyRemoveAllRemoteAircraft()
+        int CSimulatorXPlane::physicallyRemoveAllRemoteAircraft()
         {
+            //! \todo XP driver obtain number of removed aircraft
+            int r = getAircraftInRangeCount();
             m_traffic->removeAllPlanes();
             updateMarkAllAsNotRendered(simulatorOriginator());
             CLogMessage(this).info("XP: Removed all aircraft");
+            return r;
         }
 
         CCallsignSet CSimulatorXPlane::physicallyRenderedAircraft() const

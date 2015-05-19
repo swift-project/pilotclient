@@ -197,6 +197,9 @@ namespace BlackCore
         //! An aircraft disappeared
         void removedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
+        //! \copydoc CAirspaceAnalyzer::airspaceAircraftSnapshot
+        void airspaceAircraftSnapshot(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
+
     private:
         BlackMisc::Aviation::CAtcStationList m_atcStationsOnline;
         BlackMisc::Aviation::CAtcStationList m_atcStationsBooked;

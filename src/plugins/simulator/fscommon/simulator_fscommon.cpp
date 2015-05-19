@@ -31,7 +31,7 @@ namespace BlackSimPlugin
             IRemoteAircraftProvider *renderedAircraftProvider,
             QObject *parent) :
             CSimulatorCommon(info, ownAircraftProvider, renderedAircraftProvider, parent),
-            m_fsuipc(new FsCommon::CFsuipc())
+            m_fsuipc(new CFsuipc())
         {
             // hack to init mapper
             CAircraftMapper *mapper = mapperInstance();

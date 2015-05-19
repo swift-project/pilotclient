@@ -133,13 +133,17 @@ namespace BlackSimPlugin
             return true;
         }
 
-        void CSimulatorFs9::physicallyRemoveAllRemoteAircraft()
+        int CSimulatorFs9::physicallyRemoveAllRemoteAircraft()
         {
+            if (this->m_hashFs9Clients.isEmpty()) { return 0; }
             QList<CCallsign> callsigns(this->m_hashFs9Clients.keys());
+            int r = 0;
             for (const CCallsign &cs : callsigns)
             {
-                physicallyRemoveRemoteAircraft(cs);
+                if (physicallyRemoveRemoteAircraft(cs)) { r++; }
             }
+            return r;
+
         }
 
         CCallsignSet CSimulatorFs9::physicallyRenderedAircraft() const

@@ -75,6 +75,7 @@ namespace BlackMisc
     template <class OBJ, class CONTAINER>
     QList<CONTAINER> ITimestampObjectList<OBJ, CONTAINER>::splitByTime(qint64 msSinceEpoch, bool alreadySortedLatestFirst) const
     {
+        // fixme: Split by time is one of the most frequently called functions in interpolator, so any performance improvement here counts
         CONTAINER newer(this->container());
         if (!alreadySortedLatestFirst) { newer.sortLatestFirst(); }
         CONTAINER older;
@@ -82,7 +83,6 @@ namespace BlackMisc
         {
             if (it->isOlderThan(msSinceEpoch))
             {
-                // better "move", ?? std::make_move_iterator
                 older.insert(CRange<typename CONTAINER::iterator>(it, newer.end()));
                 newer.erase(it, newer.end());
                 break;

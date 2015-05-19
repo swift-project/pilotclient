@@ -93,14 +93,11 @@ namespace BlackCore
         virtual void deleteAllRenderingRestrictions() override;
 
         //! \copydoc IContextSimulator::physicallyRemoveRemoteAircraft
-        virtual bool physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) override;
+        virtual int physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) override;
 
     protected slots:
         //! Slow timer used to highlight aircraft, can be used for other things too
         virtual void ps_oneSecondTimer();
-
-        //! Recalculate the rendered aircraft
-        virtual void ps_recalculateRenderedAircraft();
 
         //! Recalculate the rendered aircraft
         virtual void ps_recalculateRenderedAircraft(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
@@ -130,11 +127,11 @@ namespace BlackCore
         //! Blink the highlighted aircraft
         void blinkHighlightedAircraft();
 
-        //! Restore aircraft from backedn data
+        //! Restore aircraft from backend data
         void resetAircraftFromBacked(const BlackMisc::Aviation::CCallsign &callsign);
 
-        //! Override parts and situation from current interpolator values, if any!
-        void setInitialAircraftSituationAndParts(BlackMisc::Simulation::CSimulatedAircraft &aircraft) const;
+        //! Override situation from current interpolator values, if any!
+        bool setInitialAircraftSituation(BlackMisc::Simulation::CSimulatedAircraft &aircraft) const;
 
         bool m_debugMessages = false;             //!< Display debug messages
         bool m_blinkCycle = false;                //!< use for highlighting

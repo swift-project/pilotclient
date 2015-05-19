@@ -23,7 +23,8 @@ namespace BlackMisc
             const CSimulatedAircraftList &allAircraft,
             bool restricted, int maxAircraft, const CLength &maxRenderedDistance, const CLength &maxRenderedBoundary) :
             m_timestampMsSinceEpoch(QDateTime::currentMSecsSinceEpoch()),
-            m_restricted(restricted)
+            m_restricted(restricted),
+            m_threadName(QThread::currentThread()->objectName())
         {
             m_renderingEnabled = !restricted || (
                                      maxAircraft > 0 &&
@@ -38,45 +39,46 @@ namespace BlackMisc
             m_aircraftCallsignsByDistance = aircraft.getCallsigns();
             m_vtolAircraftCallsignsByDistance = vtolAircraft.getCallsigns();
 
+            // no restrictions, just find by attributes
             if (!restricted)
             {
                 m_enabledAircraftCallsignsByDistance = aircraft.findByEnabled(true).getCallsigns();
                 m_disabledAircraftCallsignsByDistance = aircraft.findByEnabled(false).getCallsigns();
                 m_enabledVtolAircraftCallsignsByDistance = vtolAircraft.findByEnabled(true).getCallsigns();
+                return;
             }
-            else
-            {
-                // if no rendering all aircraft are disabled
-                if (!m_renderingEnabled)
-                {
-                    m_disabledAircraftCallsignsByDistance = aircraft.getCallsigns();
-                    return;
-                }
 
-                int count = 0;
-                for (const CSimulatedAircraft &currentAircraft : aircraft)
+            // no rendering, this means all aircraft are disabled
+            if (!m_renderingEnabled)
+            {
+                m_disabledAircraftCallsignsByDistance = aircraft.getCallsigns();
+                return;
+            }
+
+            // restricted
+            int count = 0; // when max. aircraft reached?
+            for (const CSimulatedAircraft &currentAircraft : aircraft)
+            {
+                CCallsign cs(currentAircraft.getCallsign());
+                if (currentAircraft.isEnabled())
                 {
-                    CCallsign cs(currentAircraft.getCallsign());
-                    if (currentAircraft.isEnabled())
-                    {
-                        CLength distance(currentAircraft.getDistanceToOwnAircraft());
-                        if (count >= maxAircraft ||
-                                (!maxRenderedDistance.isNull() && distance >= maxRenderedBoundary) ||
-                                (!maxRenderedBoundary.isNull() && distance >= maxRenderedBoundary))
-                        {
-                            m_disabledAircraftCallsignsByDistance.push_back(cs);
-                        }
-                        else
-                        {
-                            count++;
-                            m_enabledAircraftCallsignsByDistance.push_back(cs);
-                            if (currentAircraft.isVtol()) { m_enabledVtolAircraftCallsignsByDistance.push_back(cs); }
-                        }
-                    }
-                    else
+                    CLength distance(currentAircraft.getDistanceToOwnAircraft());
+                    if (count >= maxAircraft ||
+                            (!maxRenderedDistance.isNull() && distance >= maxRenderedBoundary) ||
+                            (!maxRenderedBoundary.isNull() && distance >= maxRenderedBoundary))
                     {
                         m_disabledAircraftCallsignsByDistance.push_back(cs);
                     }
+                    else
+                    {
+                        count++;
+                        m_enabledAircraftCallsignsByDistance.push_back(cs);
+                        if (currentAircraft.isVtol()) { m_enabledVtolAircraftCallsignsByDistance.push_back(cs); }
+                    }
+                }
+                else
+                {
+                    m_disabledAircraftCallsignsByDistance.push_back(cs);
                 }
             }
         }

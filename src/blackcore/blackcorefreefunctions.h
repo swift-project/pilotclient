@@ -14,9 +14,17 @@ namespace BlackCore
     //! Register all relevant metadata in BlackCore
     BLACKCORE_EXPORT void registerMetadata();
 
-    //! Is the current thread the one created the object
+    //! Is the current thread the QObject's thread?
     //! \remarks can be used as ASSERT check for threaded objects
-    BLACKCORE_EXPORT bool isCurrentThreadCreatingThread(QObject *toBeTested);
+    BLACKCORE_EXPORT bool isCurrentThreadObjectThread(QObject *toBeTested);
+
+    //! Is the application thread the QObject's thread?
+    //! \remarks can be used as ASSERT check for threaded objects
+    BLACKCORE_EXPORT bool isApplicationThreadObjectThread(QObject *toBeTested);
+
+    //! Is the current thread the Application thread?
+    //! \remarks can be used as ASSERT check for threaded objects
+    BLACKCORE_EXPORT bool isCurrentThreadApplicationThread();
 
 } // BlackCore
 

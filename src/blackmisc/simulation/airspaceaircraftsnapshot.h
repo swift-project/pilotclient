@@ -83,12 +83,16 @@ namespace BlackMisc
             //! \copydoc CValueObject::convertToQString
             QString convertToQString(bool i18n = false) const;
 
+            //! Generating thread name
+            const QString &generatingThreadName() const { return m_threadName; }
+
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAirspaceAircraftSnapshot)
             qint64 m_timestampMsSinceEpoch = -1;
             bool m_restricted = false;
             bool m_restrictionChanged = false;
             bool m_renderingEnabled = true;
+            QString m_threadName; //!< generating thread name for debugging purposes
 
             // remark closest aircraft always first
             BlackMisc::Aviation::CCallsignSet m_aircraftCallsignsByDistance;

@@ -7,7 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "airspace_analyzer.h"
+#include "blackcore/airspace_analyzer.h"
+#include "blackcore/blackcorefreefunctions.h"
 #include "blackmisc/logmessage.h"
 #include <QDateTime>
 
@@ -30,7 +31,7 @@ namespace BlackCore
 
         // all in new thread from here on
         m_timer.setObjectName(this->objectName().append(":m_timer"));
-        m_timer.start(5000);
+        m_timer.start(7500);
         bool c = connect(&m_timer, &QTimer::timeout, this, &CAirspaceAnalyzer::ps_timeout);
         Q_ASSERT(c);
 
@@ -53,7 +54,8 @@ namespace BlackCore
         Q_ASSERT(c);
         Q_UNUSED(c);
 
-        this->start();
+        // start in own thread
+        this->start(QThread::LowestPriority);
     }
 
     CAirspaceAircraftSnapshot CAirspaceAnalyzer::getLatestAirspaceAircraftSnapshot() const
@@ -172,6 +174,9 @@ namespace BlackCore
 
     void CAirspaceAnalyzer::analyzeAirspace()
     {
+        Q_ASSERT_X(!isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background thread");
+        Q_ASSERT_X(!isApplicationThreadObjectThread(this), Q_FUNC_INFO, "Expect to run in background thread affinity");
+
         bool restricted;
         int maxAircraft;
         CLength maxRenderedDistance, maxRenderedBoundary;
@@ -183,17 +188,24 @@ namespace BlackCore
             maxRenderedBoundary = this->m_simulatorMaxRenderedBoundary;
         }
 
+        //! \todo Analyzer: generate only when restricted?
+
+        CSimulatedAircraftList aircraftInRange(getAircraftInRange()); // thread safe copy from provider
         CAirspaceAircraftSnapshot snapshot(
-            getAircraftInRange(), // thread safe copy
+            aircraftInRange,
             restricted, maxAircraft, maxRenderedDistance, maxRenderedBoundary
         );
 
         // lock block
         {
             QWriteLocker l(&m_lockSnapshot);
-            snapshot.setRestrictionChanged(m_latestAircraftSnapshot);
+            bool wasValid = m_latestAircraftSnapshot.isValidSnapshot();
             m_latestAircraftSnapshot = snapshot;
+
+            if (!wasValid) { return; } // ignore the 1st snapshot
+            snapshot.setRestrictionChanged(m_latestAircraftSnapshot);
         }
+
         emit airspaceAircraftSnapshot(snapshot);
     }
 

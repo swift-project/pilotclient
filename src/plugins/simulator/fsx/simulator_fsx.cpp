@@ -139,7 +139,7 @@ namespace BlackSimPlugin
         bool CSimulatorFsx::physicallyAddRemoteAircraft(const Simulation::CSimulatedAircraft &newRemoteAircraft)
         {
             CCallsign callsign(newRemoteAircraft.getCallsign());
-            Q_ASSERT_X(BlackCore::isCurrentThreadCreatingThread(this),  Q_FUNC_INFO, "thread");
+            Q_ASSERT_X(BlackCore::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");
             Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
             if (callsign.isEmpty()) { return false; }
 
@@ -151,38 +151,41 @@ namespace BlackSimPlugin
                 CLogMessage(this).warning("Have to remove aircraft %1 before I can add it") << callsign;
             }
 
-            CSimulatedAircraft newRemoteAircraftCopy(newRemoteAircraft); // copy which can be modified
-            this->setInitialAircraftSituationAndParts(newRemoteAircraftCopy); // set interpolated data/parts if available
-            SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxInitPosition(newRemoteAircraftCopy.getSituation());
-
             CSimConnectObject simObj(callsign, m_nextObjID, 0, newRemoteAircraft.isVtol());
             ++m_nextObjID;
 
             // matched models
-            CAircraftModel aircraftModel = modelMatching(newRemoteAircraftCopy);
+            CAircraftModel aircraftModel = modelMatching(newRemoteAircraft);
             Q_ASSERT_X(newRemoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "mismatching callsigns");
+
             this->updateAircraftModel(callsign, aircraftModel, simulatorOriginator());
-            this->updateAircraftRendered(callsign, true, simulatorOriginator());
             CSimulatedAircraft aircraftAfterModelApplied(getAircraftInRangeForCallsign(newRemoteAircraft.getCallsign()));
-            aircraftAfterModelApplied.setRendered(true);
-            emit modelMatchingCompleted(aircraftAfterModelApplied);
 
             // create AI
+            bool rendered = false;
             if (isConnected())
             {
-                //! \todo FSX driver if exists, recreate (new model?, new ICAO code)
+                // initial position
+                this->setInitialAircraftSituation(aircraftAfterModelApplied); // set interpolated data/parts if available
+
+                SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxInitPosition(aircraftAfterModelApplied.getSituation());
                 QByteArray m = aircraftModel.getModelString().toLocal8Bit();
                 HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, m.constData(), qPrintable(callsign.toQString().left(12)), initialPosition, static_cast<SIMCONNECT_DATA_REQUEST_ID>(simObj.getRequestId()));
                 if (hr != S_OK) { CLogMessage(this).error("SimConnect, can not create AI traffic"); }
                 m_simConnectObjects.insert(callsign, simObj);
                 CLogMessage(this).info("FSX: Added aircraft %1") << callsign.toQString();
-                return true;
+                rendered = true;
             }
             else
             {
                 CLogMessage(this).warning("FSX: Not connected, not added aircraft %1") << callsign.toQString();
-                return false;
             }
+
+            aircraftAfterModelApplied.setRendered(rendered);
+            this->updateAircraftRendered(callsign, rendered, simulatorOriginator());
+            emit modelMatchingCompleted(aircraftAfterModelApplied);
+
+            return rendered;
         }
 
         bool CSimulatorFsx::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const QString &originator)
@@ -531,18 +534,21 @@ namespace BlackSimPlugin
         bool CSimulatorFsx::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
         {
             // only remove from sim
-            Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+            Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
             if (!m_simConnectObjects.contains(callsign)) { return false; }
             return physicallyRemoveRemoteAircraft(m_simConnectObjects.value(callsign));
         }
 
-        void CSimulatorFsx::physicallyRemoveAllRemoteAircraft()
+        int CSimulatorFsx::physicallyRemoveAllRemoteAircraft()
         {
+            if (m_simConnectObjects.isEmpty()) { return 0; }
             QList<CCallsign> callsigns(m_simConnectObjects.keys());
+            int r = 0;
             for (const CCallsign &cs : callsigns)
             {
-                physicallyRemoveRemoteAircraft(cs);
+                if (physicallyRemoveRemoteAircraft(cs)) { r++; }
             }
+            return r;
         }
 
         bool CSimulatorFsx::physicallyRemoveRemoteAircraft(const CSimConnectObject &simObject)
@@ -637,7 +643,7 @@ namespace BlackSimPlugin
         {
             static_assert(sizeof(DataDefinitionRemoteAircraftParts) == 120, "DataDefinitionRemoteAircraftParts has an incorrect size.");
             Q_ASSERT_X(this->m_interpolator, Q_FUNC_INFO, "missing interpolator");
-            Q_ASSERT_X(BlackCore::isCurrentThreadCreatingThread(this), Q_FUNC_INFO, "thread");
+            Q_ASSERT_X(BlackCore::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "thread");
 
             // nothing to do, reset request id and exit
             if (this->isPaused() && this->m_pausedSimFreezesInterpolation) { return; } // no interpolation while paused

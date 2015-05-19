@@ -214,10 +214,10 @@ namespace BlackCore
         virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
         //! Remove remote aircraft from simulator
-        virtual bool physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) = 0;
+        virtual int physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) = 0;
 
         //! Remove all remote aircraft
-        virtual void physicallyRemoveAllRemoteAircraft() = 0;
+        virtual int physicallyRemoveAllRemoteAircraft() = 0;
 
         //! Emit the combined status
         //! \sa simulatorStatusChanged;

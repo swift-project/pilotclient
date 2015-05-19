@@ -38,7 +38,7 @@ namespace BlackCore
                 std::bind(&CSimulatorCommon::ps_remoteProviderAddAircraftSituation, this, std::placeholders::_1),
                 std::bind(&CSimulatorCommon::ps_remoteProviderAddAircraftParts, this, std::placeholders::_1),
                 std::bind(&CSimulatorCommon::ps_remoteProviderRemovedAircraft, this, std::placeholders::_1),
-                std::bind(static_cast<void(CSimulatorCommon::*)(const CAirspaceAircraftSnapshot &)>(&CSimulatorCommon::ps_recalculateRenderedAircraft), this, std::placeholders::_1));
+                std::bind(&CSimulatorCommon::ps_recalculateRenderedAircraft, this, std::placeholders::_1));
 
         // timer
         this->m_oneSecondTimer.setObjectName(this->objectName().append(":m_oneSecondTimer"));
@@ -97,7 +97,7 @@ namespace BlackCore
             for (const CSimulatedAircraft &aircraft : m_highlightedAircraft)
             {
                 // get the current state for this aircraft
-                // it might has been removed in the mean time
+                // it might has been removed in the meantime
                 const CCallsign cs(aircraft.getCallsign());
                 resetAircraftFromBacked(cs);
             }
@@ -124,19 +124,26 @@ namespace BlackCore
         }
     }
 
-    void CSimulatorCommon::setInitialAircraftSituationAndParts(CSimulatedAircraft &aircraft) const
+    bool CSimulatorCommon::setInitialAircraftSituation(CSimulatedAircraft &aircraft) const
     {
-        if (!this->m_interpolator) { return; }
-
+        if (!this->m_interpolator) { return false; }
         const CCallsign callsign(aircraft.getCallsign());
-        if (this->remoteAircraftSituationsCount(callsign) < 1) { return; }
+        Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
 
         // with an interpolator the interpolated situation is used
-        // to avoid position jittering
+        // to avoid position jittering when displayed
         qint64 time = QDateTime::currentMSecsSinceEpoch();
         IInterpolator::InterpolationStatus interpolationStatus;
         CAircraftSituation as(m_interpolator->getInterpolatedSituation(callsign, time, aircraft.isVtol(), interpolationStatus));
-        if (interpolationStatus.interpolationSucceeded) { aircraft.setSituation(as); }
+        if (interpolationStatus.interpolationSucceeded)
+        {
+            aircraft.setSituation(as);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     int CSimulatorCommon::getMaxRenderedAircraft() const
@@ -268,14 +275,14 @@ namespace BlackCore
         emit renderRestrictionsChanged(false, getMaxRenderedAircraft(), getMaxRenderedDistance(), getRenderedDistanceBoundary());
     }
 
-    bool CSimulatorCommon::physicallyRemoveMultipleRemoteAircraft(const CCallsignSet &callsigns)
+    int CSimulatorCommon::physicallyRemoveMultipleRemoteAircraft(const CCallsignSet &callsigns)
     {
         int removed = 0;
         for (const CCallsign &callsign : callsigns)
         {
             if (physicallyRemoveRemoteAircraft(callsign)) { removed++; }
         }
-        return removed > 0;
+        return removed;
     }
 
     void CSimulatorCommon::ps_oneSecondTimer()
@@ -283,28 +290,29 @@ namespace BlackCore
         blinkHighlightedAircraft();
     }
 
-    void CSimulatorCommon::ps_recalculateRenderedAircraft()
-    {
-        this->ps_recalculateRenderedAircraft(getLatestAirspaceAircraftSnapshot());
-    }
-
     void CSimulatorCommon::ps_recalculateRenderedAircraft(const CAirspaceAircraftSnapshot &snapshot)
     {
-        Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
-
         if (!snapshot.isValidSnapshot()) { return;}
 
         // for unrestricted values all add/remove actions are directly linked
         // when changing back from restricted->unrestricted an one time update is required
         if (!snapshot.isRestricted() && !snapshot.isRestrictionChanged()) { return; }
 
+        Q_ASSERT_X(BlackCore::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Needs to run in object thread");
+        Q_ASSERT_X(snapshot.generatingThreadName() != QThread::currentThread(), Q_FUNC_INFO, "Expect snapshot from background thread");
+
         // restricted snapshot values?
+        bool changed = false;
         if (snapshot.isRenderingEnabled())
         {
-            CCallsignSet callsignsInSimulator(physicallyRenderedAircraft());
+            CCallsignSet callsignsInSimulator(physicallyRenderedAircraft()); // state in simulator
             CCallsignSet callsignsToBeRemoved(callsignsInSimulator.difference(snapshot.getEnabledAircraftCallsignsByDistance()));
             CCallsignSet callsignsToBeAdded(snapshot.getEnabledAircraftCallsignsByDistance().difference(callsignsInSimulator));
-            this->physicallyRemoveMultipleRemoteAircraft(callsignsToBeRemoved);
+            if (!callsignsToBeRemoved.isEmpty())
+            {
+                int r = this->physicallyRemoveMultipleRemoteAircraft(callsignsToBeRemoved);
+                changed = r > 0;
+            }
 
             if (!callsignsToBeAdded.isEmpty())
             {
@@ -312,18 +320,23 @@ namespace BlackCore
                 for (const CSimulatedAircraft &aircraft : aircraftToBeAdded)
                 {
                     Q_ASSERT_X(aircraft.isEnabled(), Q_FUNC_INFO, "Disabled aircraft detected as to be added");
-                    this->physicallyAddRemoteAircraft(aircraft);
+                    bool a = this->physicallyAddRemoteAircraft(aircraft);
+                    changed = changed || a;
                 }
             }
         }
         else
         {
-            this->physicallyRemoveAllRemoteAircraft();
+            // no rendering at all, we remove everything
+            int r = this->physicallyRemoveAllRemoteAircraft();
+            changed = r > 0;
         }
 
         // we handled snapshot
-        emit airspaceSnapshotHandled();
-
+        if (changed)
+        {
+            emit airspaceSnapshotHandled();
+        }
     }
 
     void CSimulatorCommon::ps_remoteProviderAddAircraftSituation(const CAircraftSituation &situation)

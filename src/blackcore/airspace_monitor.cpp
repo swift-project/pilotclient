@@ -58,9 +58,12 @@ namespace BlackCore
         this->connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CAirspaceMonitor::ps_receivedBookings);
         this->connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CAirspaceMonitor::ps_receivedDataFile);
 
+        // Force snapshot in the main event loop
+        this->connect(this->m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, this, &CAirspaceMonitor::airspaceAircraftSnapshot, Qt::QueuedConnection);
+
         // Analyzer
-        this->connect(this->m_analyzer, &CAirspaceAnalyzer::timeoutAircraft, this, &CAirspaceMonitor::ps_pilotDisconnected);
-        this->connect(this->m_analyzer, &CAirspaceAnalyzer::timeoutAtc, this, &CAirspaceMonitor::ps_atcControllerDisconnected);
+        this->connect(this->m_analyzer, &CAirspaceAnalyzer::timeoutAircraft, this, &CAirspaceMonitor::ps_pilotDisconnected, Qt::QueuedConnection);
+        this->connect(this->m_analyzer, &CAirspaceAnalyzer::timeoutAtc, this, &CAirspaceMonitor::ps_atcControllerDisconnected, Qt::QueuedConnection);
     }
 
     CSimulatedAircraftList CAirspaceMonitor::getAircraftInRange() const
@@ -136,14 +139,18 @@ namespace BlackCore
         std::function<void(const CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
     )
     {
+        // bind does not allow to define connection type
+        // so anything in its own thread will be sent with this thread affinity
         QMetaObject::Connection c1 = connect(this, &CAirspaceMonitor::addedAircraftSituation, situationSlot);
-        Q_ASSERT(c1);
+        Q_ASSERT_X(c1, Q_FUNC_INFO, "connect failed");
         QMetaObject::Connection c2 = connect(this, &CAirspaceMonitor::addedAircraftParts, partsSlot);
-        Q_ASSERT(c2);
+        Q_ASSERT_X(c2, Q_FUNC_INFO, "connect failed");
         QMetaObject::Connection c3 = connect(this, &CAirspaceMonitor::removedAircraft, removedAircraftSlot);
-        Q_ASSERT(c3);
-        QMetaObject::Connection c4 = this->connect(this->m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, aircraftSnapshotSlot);
-        Q_ASSERT(c4);
+        Q_ASSERT_X(c3, Q_FUNC_INFO, "connect failed");
+        // trick is to use the Queued signal here
+        // analyzer (own thread) -> airspaceAircraftSnapshot -> AirspaceMonitor -> airspaceAircraftSnapshot queued in main thread
+        QMetaObject::Connection c4 = this->connect(this, &CAirspaceMonitor::airspaceAircraftSnapshot, aircraftSnapshotSlot);
+        Q_ASSERT_X(c4, Q_FUNC_INFO, "connect failed");
         return QList<QMetaObject::Connection>({ c1, c2, c3, c4});
     }
 
@@ -600,7 +607,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_receivedBookings(const CAtcStationList &bookedStations)
     {
-        Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
         if (bookedStations.isEmpty())
         {
             this->m_atcStationsBooked.clear();
@@ -620,7 +627,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_receivedDataFile()
     {
-        Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
         for (auto client = this->m_otherClients.begin(); client != this->m_otherClients.end(); ++client)
         {
             if (client->hasSpecifiedVoiceCapabilities()) { continue; } // we already have voice caps
@@ -667,7 +674,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_atcPositionUpdate(const CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range)
     {
-        Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
         Q_ASSERT(CComSystem::isValidCivilAviationFrequency(frequency));
         if (!this->m_connected) { return; }
         CAtcStationList stationsWithCallsign = this->m_atcStationsOnline.findByCallsign(callsign);
@@ -718,7 +725,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_atcControllerDisconnected(const CCallsign &callsign)
     {
-        Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
 
         this->m_otherClients.removeByCallsign(callsign);
         if (this->m_atcStationsOnline.containsCallsign(callsign))
@@ -735,7 +742,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_atisReceived(const CCallsign &callsign, const CInformationMessage &atisMessage)
     {
-        Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
         if (!this->m_connected || callsign.isEmpty()) return;
         CPropertyIndexVariantMap vm(CAtcStation::IndexAtis, atisMessage.toCVariant());
         int changedOnline = this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
@@ -749,7 +756,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_atisVoiceRoomReceived(const CCallsign &callsign, const QString &url)
     {
-        Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
         if (!this->m_connected) { return; }
         QString trimmedUrl = url.trimmed();
         CPropertyIndexVariantMap vm({ CAtcStation::IndexVoiceRoom, CVoiceRoom::IndexUrl }, trimmedUrl);
@@ -776,7 +783,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_atisLogoffTimeReceived(const CCallsign &callsign, const QString &zuluTime)
     {
-        Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
         if (!this->m_connected) { return; }
         if (zuluTime.length() == 4)
         {
@@ -800,7 +807,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_icaoCodesReceived(const CCallsign &callsign, const CAircraftIcaoData &icaoData)
     {
-        Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
         Q_ASSERT(!callsign.isEmpty());
         if (!this->m_connected) { return; }
 
@@ -833,7 +840,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_aircraftUpdateReceived(const CAircraftSituation &situation, const CTransponder &transponder)
     {
-        Q_ASSERT_X(BlackCore::isCurrentThreadCreatingThread(this), Q_FUNC_INFO, "Called in different thread");
+        Q_ASSERT_X(BlackCore::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Called in different thread");
         if (!this->m_connected) { return; }
 
         CCallsign callsign(situation.getCallsign());
@@ -923,7 +930,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_aircraftInterimUpdateReceived(const CAircraftSituation &situation)
     {
-        Q_ASSERT_X(BlackCore::isCurrentThreadCreatingThread(this), Q_FUNC_INFO, "Called in different thread");
+        Q_ASSERT_X(BlackCore::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Called in different thread");
         if (!this->m_connected) { return; }
 
         CCallsign callsign(situation.getCallsign());
@@ -955,14 +962,16 @@ namespace BlackCore
         vm.addValue(CAircraft::IndexDistanceToOwnAircraft, distance);
 
         // here I expect always a changed value
+        {
+            QWriteLocker l(&m_lockAircraft);
+            this->m_aircraftInRange.applyIfCallsign(callsign, vm);
+        }
         emit this->changedAircraftInRange();
-        QWriteLocker l(&m_lockAircraft);
-        this->m_aircraftInRange.applyIfCallsign(callsign, vm);
     }
 
     void CAirspaceMonitor::ps_pilotDisconnected(const CCallsign &callsign)
     {
-        Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
 
         // in case of inconsistencies I always remove here
         this->m_otherClients.removeByCallsign(callsign);
@@ -989,7 +998,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_frequencyReceived(const CCallsign &callsign, const CFrequency &frequency)
     {
-        Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
 
         // update
         int changed;
@@ -1003,7 +1012,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_aircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, bool isFull)
     {
-        Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
 
         CSimulatedAircraft simAircraft(getAircraftInRangeForCallsign(callsign));
 
@@ -1039,7 +1048,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_sendInterimPositions()
     {
-        Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
         if (!this->m_connected || !m_sendInterimPositions) { return; }
         CSimulatedAircraftList aircrafts = m_aircraftInRange.findBy(&CSimulatedAircraft::fastPositionUpdates, true);
         m_network->sendInterimPositions(aircrafts.getCallsigns());
