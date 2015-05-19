@@ -102,7 +102,7 @@ void CIntroWindow::buttonClicked() const
     {
         //! \todo make fully OS independent
         QString sfx = QFileInfo(QCoreApplication::applicationFilePath()).suffix();
-        QString core = QDir(QApplication::applicationDirPath()).filePath("swiftcore." + sfx);
+        QString core = QDir(QApplication::applicationDirPath()).filePath("swiftcorectrl." + sfx);
         QProcess::startDetached(core);
     }
 }
