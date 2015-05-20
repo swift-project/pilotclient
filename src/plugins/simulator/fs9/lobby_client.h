@@ -28,6 +28,9 @@ namespace BlackSimPlugin
             //! Initialize DirectPlay
             HRESULT initDirectPlay();
 
+            //! Can FS9 be lobby connected?
+            bool canLobbyConnect();
+
             //! Connect FS9 simulator to our host
             HRESULT connectFs9ToHost(const QString address);
 

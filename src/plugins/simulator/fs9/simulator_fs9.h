@@ -131,7 +131,8 @@ namespace BlackSimPlugin
         private:
 
             QTimer *m_timer = nullptr;
-            bool m_lobbyConnected = false;
+            bool m_isConnecting = false;
+            bool m_isStarted = false;
 
         };
 

@@ -12,6 +12,7 @@
 #include "blackmisc/project.h"
 #include "fs9.h"
 #include "lobby_client.h"
+#include "blackmisc/logmessage.h"
 #include <QDebug>
 #include <QTimer>
 #include <QFile>
@@ -86,6 +87,35 @@ namespace BlackSimPlugin
             return S_OK;
         }
 
+        bool CLobbyClient::canLobbyConnect()
+        {
+            GUID appGuid = CFs9Sdk::guid();
+            DWORD dwSize = 0;
+            DWORD dwItems = 0;
+            HRESULT hr = m_dpLobbyClient->EnumLocalPrograms(&appGuid, nullptr, &dwSize, &dwItems, 0);
+            if (hr == DPNERR_BUFFERTOOSMALL)
+            {
+                QScopedArrayPointer<BYTE> memPtr (new BYTE[dwSize]);
+                DPL_APPLICATION_INFO *appInfo = reinterpret_cast<DPL_APPLICATION_INFO *>(memPtr.data());
+
+                m_dpLobbyClient->EnumLocalPrograms(&appGuid, memPtr.data(), &dwSize, &dwItems, 0);
+
+                if (dwItems > 0)
+                {
+                    BlackMisc::CLogMessage(this).debug() << "Found lobby application:" << QString::fromWCharArray(appInfo->pwszApplicationName);;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         HRESULT CLobbyClient::connectFs9ToHost(const QString address)
         {
             HRESULT hr = S_OK;
@@ -109,9 +139,12 @@ namespace BlackSimPlugin
                     &m_applicationHandle,
                     INFINITE,
                     0);
-            if (FAILED(hr)) {
-                return hr == DPNERR_NOCONNECTION ? S_FALSE : printDirectPlayError(hr);
-            } else {
+            if (FAILED(hr))
+            {
+                return hr;
+            }
+            else
+            {
                 qDebug() << "Connected!";
                 freeConnectSettings(dnConnectInfo.pdplConnectionSettings);
                 return S_OK;

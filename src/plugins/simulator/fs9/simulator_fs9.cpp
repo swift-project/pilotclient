@@ -290,27 +290,35 @@ namespace BlackSimPlugin
             Q_CONSTEXPR int QueryInterval = 5 * 1000; // 5 seconds
             m_timer->setInterval(QueryInterval);
 
-            connect(m_timer, &QTimer::timeout, [this]()
+            // Test whether we can lobby connect at all.
+            bool canLobbyConnect = lobbyClient->canLobbyConnect();
+
+            connect(m_timer, &QTimer::timeout, [this, canLobbyConnect]()
             {
                 if (fs9Host->getHostAddress().isEmpty()) // host not yet set up
                     return;
 
-                if (m_lobbyConnected || lobbyClient->connectFs9ToHost(fs9Host->getHostAddress()) == S_OK)
+                if (canLobbyConnect)
                 {
-                    m_lobbyConnected = true;
-                    CLogMessage(this).info("Swift is joining FS9 to the multiplayer session...");
+                    if (m_isConnecting || lobbyClient->connectFs9ToHost(fs9Host->getHostAddress()) == S_OK)
+                    {
+                        m_isConnecting = true;
+                        CLogMessage(this).info("Swift is joining FS9 to the multiplayer session...");
+                    }
                 }
 
-                if (m_lobbyConnected && fs9Host->isConnected())
+                if (!m_isStarted && fs9Host->isConnected())
                 {
                     emit simulatorStarted();
-                    m_lobbyConnected = false;
+                    m_isStarted = true;
+                    m_isConnecting = false;
                 }
             });
         }
 
         void CSimulatorFs9Listener::start()
         {
+            m_isStarted = false;
             m_timer->start();
         }
 
