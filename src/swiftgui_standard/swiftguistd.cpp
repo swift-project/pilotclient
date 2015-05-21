@@ -295,15 +295,11 @@ void SwiftGuiStd::ps_onConnectionStatusChanged(int from, int to)
 
 void SwiftGuiStd::ps_handleTimerBasedUpdates()
 {
-    QObject *sender = QObject::sender();
-    if (sender == this->m_timerContextWatchdog)
-    {
-        this->setContextAvailability();
-        this->updateGuiStatusInformation();
-    }
+    this->setContextAvailability();
+    this->updateGuiStatusInformation();
 
     // own aircraft
-    this->ps_reloadOwnAircraft(); // regular updates
+    this->ps_reloadOwnAircraft();
 }
 
 void SwiftGuiStd::setContextAvailability()

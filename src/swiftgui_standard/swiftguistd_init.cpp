@@ -105,14 +105,14 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &SwiftGuiStd::ps_onConnectionStatusChanged);
     connect(this->getIContextNetwork(), &IContextNetwork::textMessagesReceived, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageReceived);
     connect(this->getIContextNetwork(), &IContextNetwork::textMessageSent, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageSent);
-    connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &SwiftGuiStd::ps_handleTimerBasedUpdates);
     connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &SwiftGuiStd::ps_onChangedSetttings);
+    connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &SwiftGuiStd::ps_handleTimerBasedUpdates);
 
     // log messages
     m_logSubscriber.changeSubscription(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
 
     // start timers, update timers will be started when network is connected
-    this->m_timerContextWatchdog->start(2 * 1000);
+    this->m_timerContextWatchdog->start(2500);
 
     // init availability
     this->setContextAvailability();
