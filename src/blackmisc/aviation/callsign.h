@@ -150,10 +150,10 @@ namespace BlackMisc
 } // namespace
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CCallsign, (
-                                   attr(o.m_callsign, flags<CaseInsensitiveComparison>()),
-                                   attr(o.m_callsignAsSet, flags<DisabledForComparison>()),
-                                   attr(o.m_telephonyDesignator, flags<DisabledForComparison>()),
-                                   attr(o.m_typeHint, flags<DisabledForComparison>())
+                                   attr(o.m_callsign, flags <CaseInsensitiveComparison> ()),
+                                   attr(o.m_callsignAsSet, flags <DisabledForComparison | DisabledForHashing>()),
+                                   attr(o.m_telephonyDesignator, flags <DisabledForComparison | DisabledForHashing>()),
+                                   attr(o.m_typeHint, flags <DisabledForComparison | DisabledForHashing>())
                                ))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CCallsign)
 
