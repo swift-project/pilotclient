@@ -42,8 +42,8 @@ namespace BlackGui
 
         void CSettingsSimulatorComponent::runtimeHasBeenSet()
         {
-            Q_ASSERT(this->getIContextSimulator());
-            Q_ASSERT(this->getIContextSettings());
+            Q_ASSERT_X(this->getIContextSimulator(), Q_FUNC_INFO, "missing simulator");
+            Q_ASSERT_X(this->getIContextSettings(), Q_FUNC_INFO, "missing settings");
 
             // set values
             ui->cb_Plugins->addItem(tr("Auto"), CSimulatorPluginInfo().toQVariant());
@@ -61,6 +61,8 @@ namespace BlackGui
             connect(this->ui->pb_ApplyMaxDistance, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedDistance);
             connect(this->ui->pb_ClearRestrictedRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_clearRestricedRendering);
             connect(this->ui->pb_DisableRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyDisableRendering);
+            connect(this->ui->sb_MaxAircraft, &QSpinBox::editingFinished, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedAircraft);
+            connect(this->ui->sb_MaxDistance, &QSpinBox::editingFinished, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedDistance);
 
             // values
             this->ps_simulatorPluginChanged(getIContextSimulator()->getSimulatorPluginInfo());

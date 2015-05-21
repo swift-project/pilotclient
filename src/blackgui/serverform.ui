@@ -92,6 +92,9 @@
          <height>16777215</height>
         </size>
        </property>
+       <property name="text">
+        <string>6809</string>
+       </property>
        <property name="maxLength">
         <number>5</number>
        </property>
@@ -169,6 +172,15 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>le_Name</tabstop>
+  <tabstop>le_Description</tabstop>
+  <tabstop>le_Address</tabstop>
+  <tabstop>le_Port</tabstop>
+  <tabstop>le_RealName</tabstop>
+  <tabstop>le_NetworkId</tabstop>
+  <tabstop>le_Password</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
