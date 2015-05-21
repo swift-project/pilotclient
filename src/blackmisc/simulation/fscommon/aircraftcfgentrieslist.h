@@ -37,28 +37,10 @@ namespace BlackMisc
                 BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftCfgEntriesList)
 
                 //! Constructor
-                CAircraftCfgEntriesList(const QString &rootDirectory = "") : m_rootDirectory(rootDirectory) {}
-
-                //! Read all aircraft.cfg files starting from root directory
-                int read();
-
-                //! Change the directory
-                bool changeDirectory(const QString &directory);
+                CAircraftCfgEntriesList() {}
 
                 //! Virtual destructor
                 virtual ~CAircraftCfgEntriesList() {}
-
-                //! Does the directory exist?
-                bool existsDir(const QString &directory = "") const;
-
-                //! Has current directory been read?
-                bool hasReadDirectory() const {  return this->m_readForDirectory; }
-
-                //! Cancel read
-                void cancelRead() { m_cancelRead = true; }
-
-                //! Current root directory
-                QString getRootDirectory() const {  return this->m_rootDirectory; }
 
                 //! Contains model with title?
                 bool containsModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive);
@@ -75,16 +57,7 @@ namespace BlackMisc
                 //! Find by title
                 CAircraftCfgEntriesList findByTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive) const;
 
-                //! Do not include the following directories for FS
-                static const QStringList &excludeDirectories();
-
             private:
-                QString m_rootDirectory;         //!< root directory reading aircraft.cfg files
-                bool m_readForDirectory = false; //!< valid read for given directory
-                bool m_cancelRead = false;
-
-                //! Read all entries in one directory
-                int read(const QString &directory, const QStringList &excludeDirectories = QStringList());
 
                 //! Section within file
                 enum FileSection
@@ -94,8 +67,6 @@ namespace BlackMisc
                     Unknown
                 };
 
-                //! Content after "="
-                static QString getFixedIniLineContent(const QString &line);
             };
         } // namespace
     } // namespace

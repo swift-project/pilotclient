@@ -19,36 +19,10 @@ namespace BlackMisc
 
         IModelMappingsProvider::IModelMappingsProvider(QObject *parent) : QObject(parent) {}
 
-        int IModelMappingsProvider::size() const
-        {
-            return this->m_mappings.size();
-        }
-
-        bool IModelMappingsProvider::isEmpty() const
-        {
-            return this->m_mappings.isEmpty();
-        }
-
         const CAircraftMappingList &IModelMappingsProvider::getMappingList() const
         {
             return this->m_mappings;
         }
 
-        int IModelMappingsProvider::synchronizeWithExistingModels(const QStringList &modelNames, Qt::CaseSensitivity cs)
-        {
-            if (modelNames.isEmpty() || this->m_mappings.isEmpty()) { return this->m_mappings.size(); }
-            CAircraftMappingList newList;
-            for (const CAircraftMapping &mapping : this->m_mappings)
-            {
-                QString modelString = mapping.getModel().getModelString();
-                if (modelString.isEmpty()) { continue; }
-                if (modelNames.contains(modelString, cs))
-                {
-                    newList.push_back(mapping);
-                }
-            }
-            this->m_mappings = newList;
-            return this->m_mappings.size();
-        }
     } // namespace
 } // namespace

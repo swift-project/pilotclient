@@ -36,17 +36,8 @@ namespace BlackMisc
             //! Load data
             virtual bool read() = 0;
 
-            //! Empty
-            bool isEmpty() const;
-
-            //! Size
-            int size() const;
-
             //! Get list
             const BlackMisc::Network::CAircraftMappingList &getMappingList() const;
-
-            //! Synchronize with existing model names, remove unneeded models
-            int synchronizeWithExistingModels(const QStringList &modelNames, Qt::CaseSensitivity cs = Qt::CaseInsensitive);
 
         protected:
             BlackMisc::Network::CAircraftMappingList m_mappings; //!< Mappings
