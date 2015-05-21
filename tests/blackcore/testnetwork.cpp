@@ -1,7 +1,11 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2015
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 #include "testnetwork.h"
 #include "expect.h"
@@ -24,7 +28,7 @@ void BlackCoreTest::CTestNetwork::networkTest(BlackCore::INetwork *net)
     .send(&INetwork::presetServer, CServer("", "", "vatsim-germany.org", 6809, CUser("1234567", "", "", "123456")))
     .send(&INetwork::presetCallsign, "SWIFT")
     .send(&INetwork::presetIcaoCodes, CAircraftIcaoData(
-              CAircraftIcaoCode("C172", "P1L"),
+              CAircraftIcaoCode("C172", "L1P"),
               CAirlineIcaoCode("YYY"), "white"))
     .send(&INetwork::initiateConnection)
     .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus, INetwork::ConnectionStatus newStatus)
