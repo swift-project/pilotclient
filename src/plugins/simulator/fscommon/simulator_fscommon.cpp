@@ -10,7 +10,7 @@
 #include "simulator_fscommon.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/simulation/fscommon/modelmappingsprovidervpilot.h"
-#include "blackmisc/simulation/fscommon/fscommonutil.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
@@ -30,22 +30,37 @@ namespace BlackSimPlugin
             IOwnAircraftProvider *ownAircraftProvider,
             IRemoteAircraftProvider *renderedAircraftProvider,
             IPluginStorageProvider *pluginStorageProvider,
+            QString simRootDirectory,
+            QStringList excludedDirectories,
             QObject *parent) :
             CSimulatorCommon(info, ownAircraftProvider, renderedAircraftProvider, pluginStorageProvider, parent),
-            m_fsuipc(new CFsuipc())
+            m_fsuipc(new CFsuipc()),
+            m_aircraftCfgParser(simRootDirectory, excludedDirectories),
+            m_modelMatcher(CAircraftMatcher::AllModes, this)
         {
             // hack to init mapper
-            CAircraftMapper *mapper = mapperInstance();
-            connect(mapper, &CAircraftMapper::initCompleted, this, &CSimulatorFsCommon::ps_mapperInitialized);
-            mapper->initCompletelyInBackground();
+            connect(&m_modelMatcher, &CAircraftMatcher::initializationFinished, this, &CSimulatorFsCommon::ps_mapperInitialized);
+            auto modelMappingsProvider = std::unique_ptr<IModelMappingsProvider>{ BlackMisc::make_unique<CModelMappingsProviderVPilot>(true) };
+            m_modelMatcher.setModelMappingProvider(std::move(modelMappingsProvider));
+
+            CVariant aircraftCfg = getPluginData(this, "aircraft_cfg");
+            if (aircraftCfg.isValid())
+            {
+                m_modelMatcher.setInstalledModels(aircraftCfg.value<CAircraftCfgEntriesList>().toAircraftModelList());
+            }
+            else
+            {
+                connect(&m_aircraftCfgParser, &CAircraftCfgParser::parsingFinished, this, &CSimulatorFsCommon::ps_aircraftCfgParsingFinished);
+                m_aircraftCfgParser.parse();
+            }
         }
 
         CSimulatorFsCommon::~CSimulatorFsCommon()
         { }
 
-        void CSimulatorFsCommon::ps_mapperInitialized(bool success)
+        void CSimulatorFsCommon::ps_mapperInitialized()
         {
-            if (success) { emit this->installedAircraftModelsChanged(); }
+            emit this->installedAircraftModelsChanged();
         }
 
         bool CSimulatorFsCommon::disconnectFrom()
@@ -101,139 +116,41 @@ namespace BlackSimPlugin
 
         void CSimulatorFsCommon::reverseLookupIcaoData(CAircraftModel &model)
         {
-            if (mapperInstance() && mapperInstance()->isInitialized())
+            if (m_modelMatcher.isInitialized())
             {
                 // reverse lookup of ICAO
-                CAircraftIcaoData icao =  mapperInstance()->getIcaoForModelString(model.getModelString());
+                CAircraftIcaoData icao =  m_modelMatcher.getIcaoForModelString(model.getModelString());
                 icao.updateMissingParts(model.getIcao());
                 model.setIcao(icao); // now best ICAO info in model
             }
         }
 
-        CAircraftMapper *CSimulatorFsCommon::mapperInstance()
+        CAircraftModel CSimulatorFsCommon::getClosestMatch(const CSimulatedAircraft &remoteAircraft)
         {
-            static CModelMappingsProviderVPilot *mappings = new CModelMappingsProviderVPilot(true);
-
-            // tries to access simObjectsDir, if this is an mapped remote directory
-            // init might hang for a while
-            static CAircraftMapper *mapper = new CAircraftMapper(
-                std::unique_ptr<CModelMappingsProviderVPilot>(mappings), // currently hard wired
-                simObjectsDir()
-            );
-            return mapper;
-        }
-
-        CAircraftModel CSimulatorFsCommon::modelMatching(const CSimulatedAircraft &remoteAircraft)
-        {
-            //! \todo Model Matching before models are read
-
-            // default model
-            CAircraftModel aircraftModel(remoteAircraft); // set defaults
-
-            // Manually set string?
-            if (remoteAircraft.getModel().hasManuallySetString())
-            {
-                // manual set model, maybe update missing parts
-                aircraftModel.updateMissingParts(remoteAircraft.getModel());
-                CSimulatorFsCommon::reverseLookupIcaoData(aircraftModel);
-                return aircraftModel;
-            }
-
-            // mapper ready?
-            if (!mapperInstance()->isInitialized())
-            {
-                // will be removed later, just for experimental version
-                aircraftModel = CAircraftMapper::getDefaultModel();
-                aircraftModel.setCallsign(remoteAircraft.getCallsign());
-                CLogMessage(static_cast<CSimulatorFsCommon *>(nullptr)).warning("Mapper not ready, set to default model");
-                return aircraftModel;
-            }
-
-            // Model by queried string
-            const CClient remoteClient = remoteAircraft.getClient();
-            if (remoteClient.getAircraftModel().hasQueriedModelString())
-            {
-                QString directModelString = remoteClient.getAircraftModel().getModelString();
-                if (!directModelString.isEmpty() && mapperInstance()->containsModelWithTitle(directModelString))
-                {
-                    aircraftModel = mapperInstance()->getModelWithTitle(directModelString);
-                    aircraftModel.setModelType(CAircraftModel::TypeQueriedFromNetwork);
-                }
-            }
-
-            // ICAO to model
-            if (!aircraftModel.hasModelString())
-            {
-                CAircraftIcaoData icao = remoteAircraft.getIcaoInfo();
-                BlackMisc::Network::CAircraftMappingList mappingList = mapperInstance()->getAircraftMappingList().findByIcaoAircraftAndAirlineDesignator(icao, true);
-                if (!mappingList.isEmpty())
-                {
-                    CAircraftModel modelFromMappings = mappingList.front().getModel();
-                    // now turn the model from the mapping rules into a model from the simulator which has more metadata
-                    aircraftModel = mapperInstance()->getModelWithTitle(modelFromMappings.getModelString());
-                    Q_ASSERT(aircraftModel.getModelString() == modelFromMappings.getModelString());
-                    aircraftModel.updateMissingParts(modelFromMappings); // update ICAO
-                    aircraftModel.setModelType(CAircraftModel::TypeModelMatching);
-                }
-            }
-
-            // default or sanity check
-            if (!aircraftModel.hasModelString())
-            {
-                aircraftModel = CAircraftMapper::getDefaultModel();
-            }
-            else
-            {
-                // check, do we have the model on disk
-                if (!mapperInstance()->containsModelWithTitle(aircraftModel.getModelString()))
-                {
-                    const QString m = QString("Missing model: %1").arg(aircraftModel.getModelString());
-                    Q_ASSERT_X(false, "modelMatching", m.toLocal8Bit().constData());
-                }
-            }
-            aircraftModel.setCallsign(remoteAircraft.getCallsign());
-
-            Q_ASSERT(!aircraftModel.getCallsign().isEmpty());
-            Q_ASSERT(aircraftModel.hasModelString());
-            Q_ASSERT(aircraftModel.getModelType() != CAircraftModel::TypeUnknown);
-            return aircraftModel;
-        }
-
-        QString CSimulatorFsCommon::simObjectsDir()
-        {
-            //! \todo add FS9 dir
-            QString dir = CFsCommonUtil::fsxSimObjectsDirFromRegistry();
-            if (!dir.isEmpty()) { return dir; }
-            return "P:/FlightSimulatorX (MSI)/SimObjects";
-            // "p:/temp/SimObjects"
+            return m_modelMatcher.getClosestMatch(remoteAircraft);
         }
 
         CAircraftModelList CSimulatorFsCommon::getInstalledModels() const
         {
-            if (!mapperInstance()) { return CAircraftModelList(); }
-            return mapperInstance()->getAircraftCfgEntriesList().toAircraftModelList();
+            return m_aircraftCfgParser.getAircraftCfgEntriesList().toAircraftModelList();
         }
 
         CAircraftIcaoData CSimulatorFsCommon::getIcaoForModelString(const QString &modelString) const
         {
-            if (!mapperInstance()) { return CAircraftIcaoData(); }
-            return mapperInstance()->getIcaoForModelString(modelString);
+            if (!m_modelMatcher.isInitialized()) { return CAircraftIcaoData(); }
+            return m_modelMatcher.getIcaoForModelString(modelString);
         }
 
         void CSimulatorFsCommon::reloadInstalledModels()
         {
-            if (mapperInstance())
-            {
-                mapperInstance()->markUninitialized();
-                mapperInstance()->initCompletelyInBackground();
-            }
+            m_aircraftCfgParser.parse();
         }
 
         CPixmap CSimulatorFsCommon::iconForModel(const QString &modelString) const
         {
             static const CPixmap empty;
-            if (modelString.isEmpty() || !mapperInstance()->isInitialized()) { return empty; }
-            CAircraftCfgEntriesList cfgEntries = mapperInstance()->getAircraftCfgEntriesList().findByTitle(modelString);
+            if (modelString.isEmpty()) { return empty; }
+            CAircraftCfgEntriesList cfgEntries = m_aircraftCfgParser.getAircraftCfgEntriesList().findByTitle(modelString);
             if (cfgEntries.isEmpty())
             {
                 CLogMessage(this).warning("No .cfg entry for '%1'") << modelString;
@@ -290,6 +207,15 @@ namespace BlackSimPlugin
                 this->m_interpolator->enableDebugMessages(interpolator);
             }
             CSimulatorCommon::enableDebugMessages(driver, interpolator);
+        }
+
+        void CSimulatorFsCommon::ps_aircraftCfgParsingFinished()
+        {
+            setPluginData(this, "aircraft_cfg", m_aircraftCfgParser.getAircraftCfgEntriesList().toCVariant());
+            m_modelMatcher.setInstalledModels(m_aircraftCfgParser.getAircraftCfgEntriesList().toAircraftModelList());
+
+            // Now the matcher has all required information to be initialized
+            m_modelMatcher.init();
         }
 
     } // namespace

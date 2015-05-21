@@ -14,7 +14,8 @@
 
 #include "blackcore/simulator_common.h"
 #include "blackcore/interpolator.h"
-#include "blackmisc/simulation/fscommon/aircraftmapper.h"
+#include "blackmisc/simulation/fscommon/aircraftmatcher.h"
+#include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "fsuipc.h"
 
 #include <QObject>
@@ -37,10 +38,7 @@ namespace BlackSimPlugin
             bool isFsuipcConnected() const;
 
             //! Experimental model matching
-            static BlackMisc::Simulation::CAircraftModel modelMatching(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
-
-            //! SimObjects directory
-            static QString simObjectsDir();
+            BlackMisc::Simulation::CAircraftModel getClosestMatch(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
 
             //! \copydoc ISimulator::isPaused
             virtual bool isPaused() const override { return m_simPaused; }
@@ -84,6 +82,8 @@ namespace BlackSimPlugin
                 BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                 BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
                 BlackMisc::IPluginStorageProvider *pluginStorageProvider,
+                QString simRootDirectory,
+                QStringList excludedDirectories,
                 QObject *parent = nullptr);
 
             QString simulatorDetails;                       //!< describes version etc.
@@ -99,6 +99,8 @@ namespace BlackSimPlugin
             BlackMisc::Aviation::CComSystem  m_simCom2;  //!< cockpit COM2 state in simulator
             BlackMisc::Aviation::CTransponder m_simTransponder; //!< cockpit xpdr state in simulator
 
+            BlackMisc::Simulation::FsCommon::CAircraftCfgParser m_aircraftCfgParser; //!< aircraft.cfg parser
+
             //! Set own model
             void setOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model);
 
@@ -106,15 +108,17 @@ namespace BlackSimPlugin
             void setOwnAircraftModel(const QString &modelName);
 
             //! Reverse lookup
-            static void reverseLookupIcaoData(BlackMisc::Simulation::CAircraftModel &model);
+            void reverseLookupIcaoData(BlackMisc::Simulation::CAircraftModel &model);
 
-            //! Get the mapper singleton
-            static BlackMisc::Simulation::FsCommon::CAircraftMapper *mapperInstance();
+            BlackMisc::Simulation::FsCommon::CAircraftMatcher m_modelMatcher; //!< Model matcher
 
         protected slots:
 
             //! Mapper has been initialized
-            void ps_mapperInitialized(bool success);
+            void ps_mapperInitialized();
+
+            //! aircraft.cfg files parsing is finished
+            void ps_aircraftCfgParsingFinished();
         };
 
     } // namespace

@@ -19,6 +19,7 @@
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/aircraftmappinglist.h"
+#include "blackmisc/simulation/fscommon/fscommonutil.h"
 
 #include <QTimer>
 #include <type_traits>
@@ -43,7 +44,8 @@ namespace BlackSimPlugin
             IRemoteAircraftProvider *remoteAircraftProvider,
             IPluginStorageProvider *pluginStorageProvider,
             QObject *parent) :
-            CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, parent)
+            CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider,
+                               simObjectsDir(), excludeDirectories(), parent)
         {
             Q_ASSERT(ownAircraftProvider);
             Q_ASSERT(remoteAircraftProvider);
@@ -51,6 +53,12 @@ namespace BlackSimPlugin
 
             m_useFsuipc = false; // do not use FSUIPC at the moment with FSX
             this->m_interpolator = new CInterpolatorLinear(remoteAircraftProvider, this);
+            m_modelMatcher.setDefaultModel(CAircraftModel(
+                "Boeing 737-800 Paint1",
+                CAircraftModel::TypeModelMatchingDefaultModel,
+                "B737-800 default model",
+                CAircraftIcaoData(CAircraftIcaoCode("B738", "L2J"), CAirlineIcaoCode(), "FFFFFF")
+            ));
         }
 
         CSimulatorFsx::~CSimulatorFsx()
@@ -155,7 +163,7 @@ namespace BlackSimPlugin
             ++m_nextObjID;
 
             // matched models
-            CAircraftModel aircraftModel = modelMatching(newRemoteAircraft);
+            CAircraftModel aircraftModel = getClosestMatch(newRemoteAircraft);
             Q_ASSERT_X(newRemoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "mismatching callsigns");
 
             this->updateAircraftModel(callsign, aircraftModel, simulatorOriginator());
@@ -899,5 +907,6 @@ namespace BlackSimPlugin
         {
             m_timer->stop();
         }
+
     } // namespace
 } // namespace

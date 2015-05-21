@@ -39,7 +39,9 @@ namespace BlackSimPlugin
             };
 
             //! Constructor
-            CFs9Client(BlackCore::IInterpolator *interpolator, QObject *owner, const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CTime &updateInterval);
+            CFs9Client(const BlackMisc::Aviation::CCallsign &callsign, const QString &modelName,
+                       BlackCore::IInterpolator *interpolator, const BlackMisc::PhysicalQuantities::CTime &updateInterval,
+                       QObject *owner);
 
             //! Destructor
             virtual ~CFs9Client();
@@ -89,6 +91,7 @@ namespace BlackSimPlugin
 
             BlackMisc::PhysicalQuantities::CTime m_updateInterval;
             BlackCore::IInterpolator *m_interpolator = nullptr;
+            QString m_modelName;
             int m_timerId = 0;
 
             IDirectPlay8Address *m_hostAddress = nullptr;

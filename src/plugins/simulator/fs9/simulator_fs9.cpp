@@ -20,6 +20,7 @@
 #include "blackmisc/project.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/propertyindexallclasses.h"
+#include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include <QTimer>
 #include <algorithm>
 
@@ -30,6 +31,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackSimPlugin::Fs9;
 using namespace BlackSimPlugin::FsCommon;
 
@@ -52,10 +54,17 @@ namespace BlackSimPlugin
             IRemoteAircraftProvider *remoteAircraftProvider,
             IPluginStorageProvider *pluginStorageProvider,
             QObject *parent) :
-            CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, parent)
+            CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider,
+                               aircraftObjectsDir(), excludeDirectories(), parent)
         {
             connect(lobbyClient.data(), &CLobbyClient::disconnected, this, std::bind(&CSimulatorFs9::simulatorStatusChanged, this, 0));
             this->m_interpolator = new BlackCore::CInterpolatorLinear(remoteAircraftProvider, this);
+            m_modelMatcher.setDefaultModel(CAircraftModel(
+                "Boeing 737-400",
+                CAircraftModel::TypeModelMatchingDefaultModel,
+                "B737-400 default model",
+                CAircraftIcaoData(CAircraftIcaoCode("B734", "L2J"), CAirlineIcaoCode(), "FFFFFF")
+            ));
         }
 
         bool CSimulatorFs9::isConnected() const
@@ -111,7 +120,17 @@ namespace BlackSimPlugin
                 this->physicallyRemoveRemoteAircraft(callsign);
             }
 
-            CFs9Client *client = new CFs9Client(m_interpolator, this, callsign, CTime(25, CTimeUnit::ms()));
+            CSimulatedAircraft newRemoteAircraftCopy(newRemoteAircraft);
+            // matched models
+            CAircraftModel aircraftModel = getClosestMatch(newRemoteAircraftCopy);
+            Q_ASSERT(newRemoteAircraft.getCallsign() == aircraftModel.getCallsign());
+            updateAircraftModel(newRemoteAircraft.getCallsign(), aircraftModel, simulatorOriginator());
+            updateAircraftRendered(newRemoteAircraft.getCallsign(), true, simulatorOriginator());
+            CSimulatedAircraft aircraftAfterModelApplied (getAircraftInRangeForCallsign(newRemoteAircraft.getCallsign()));
+            aircraftAfterModelApplied.setRendered(true);
+            emit modelMatchingCompleted(aircraftAfterModelApplied);
+
+            CFs9Client *client = new CFs9Client(callsign, aircraftModel.getModelString(), m_interpolator, CTime(25, CTimeUnit::ms()), this);
             client->setHostAddress(fs9Host->getHostAddress());
             client->setPlayerUserId(fs9Host->getPlayerUserId());
 

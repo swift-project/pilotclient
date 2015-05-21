@@ -28,10 +28,10 @@ namespace BlackSimPlugin
 {
     namespace Fs9
     {
-        CFs9Client::CFs9Client(
-            BlackCore::IInterpolator *interpolator, QObject *owner, const BlackMisc::Aviation::CCallsign &callsign, const CTime &updateInterval) :
+        CFs9Client::CFs9Client(const CCallsign &callsign, const QString &modelName,
+            BlackCore::IInterpolator *interpolator, const CTime &updateInterval, QObject *owner) :
             CDirectPlayPeer(owner, callsign),
-            m_updateInterval(updateInterval), m_interpolator(interpolator)
+            m_updateInterval(updateInterval), m_interpolator(interpolator), m_modelName(modelName)
         {
         }
 
@@ -183,8 +183,9 @@ namespace BlackSimPlugin
             callsign.toQString().toWCharArray(wszPlayername.data());
             wszPlayername[callsign.toQString().size()] = 0;
 
+            Q_ASSERT(!m_modelName.isEmpty());
             ZeroMemory(&m_playerInfo, sizeof(PLAYER_INFO_STRUCT));
-            strcpy(m_playerInfo.szAircraft, "Boeing 737-400 Paint1");
+            strcpy(m_playerInfo.szAircraft, qPrintable(m_modelName));
             m_playerInfo.dwFlags = 6;
 
             // Prepare and set the player information structure.
@@ -222,7 +223,7 @@ namespace BlackSimPlugin
 
             MPChangePlayerPlane mpChangePlayerPlane;
             mpChangePlayerPlane.engine = CFs9Sdk::ENGINE_TYPE_JET;
-            mpChangePlayerPlane.aircraft_name = "Boeing 737-400";
+            mpChangePlayerPlane.aircraft_name = m_modelName;
             QByteArray message;
             MultiPlayerPacketParser::writeType(message, CFs9Sdk::MULTIPLAYER_PACKET_ID_CHANGE_PLAYER_PLANE);
             MultiPlayerPacketParser::writeSize(message, mpChangePlayerPlane.size());
