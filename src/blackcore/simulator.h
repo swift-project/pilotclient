@@ -41,6 +41,7 @@ namespace BlackCore
 
     public:
         //! ISimulator status
+        //! \todo Qt5.5: Make use of QFlags
         enum SimulatorStatusFlag
         {
             Disconnected = 0,
@@ -48,6 +49,7 @@ namespace BlackCore
             Simulating  = 1 << 1, //!< Is the simulator actually simulating?
             Paused      = 1 << 2, //!< Is the simulator paused?
         };
+        Q_DECLARE_FLAGS(SimulatorStatus, SimulatorStatusFlag)
 
         Q_DECLARE_FLAGS(SimulatorStatus, SimulatorStatusFlag)
 
@@ -180,6 +182,7 @@ namespace BlackCore
 
     signals:
         //! Simulator combined status
+        //! \todo Qt5.5: Make use of QFlags
         void simulatorStatusChanged(int status);
 
         //! Emitted when own aircraft model has changed
