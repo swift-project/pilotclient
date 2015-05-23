@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKMISC_EVENT_ORIGINATOR_H
-#define BLACKMISC_EVENT_ORIGINATOR_H
+#ifndef BLACKMISC_ORIGINATOR_H
+#define BLACKMISC_ORIGINATOR_H
 
 //! \file
 
@@ -18,33 +18,51 @@
 #include <QByteArray>
 #include <QString>
 
+class QObject;
+
 namespace BlackMisc
 {
-
     //! Value object encapsulating information about the originiator
-    class BLACKMISC_EXPORT COriginator :
-        public Mixin::MetaType<COriginator>,
-        public Mixin::HashByTuple<COriginator>,
-        public Mixin::DBusByTuple<COriginator>,
-        public Mixin::EqualsByTuple<COriginator>,
-        public Mixin::LessThanByTuple<COriginator>,
-        public Mixin::CompareByTuple<COriginator>,
-        public Mixin::Index<COriginator>,
-        public Mixin::String<COriginator>,
-        public Mixin::Icon<COriginator>
+    class BLACKMISC_EXPORT COriginator : public CValueObject<COriginator>
     {
     public:
-        //! Default constructor.
-        COriginator();
+        //! Properties by index
+        enum ColumnIndex
+        {
+            IndexName = BlackMisc::CPropertyIndex::GlobalIndexOriginator,
+            IndexMachineId,
+            IndexMachineIdBase64,
+            IndexProcessId,
+            IndexProcessName,
+            IndexUtcTimestamp,
+            IndexIsFromLocalMachine,
+            IndexIsFromSameProcess,
+            IndexIsFromSameProcessName
+        };
+
+        //! Constructor.
+        COriginator(const QString &name = QString());
+
+        //! Constructor using the objectName of object as name
+        COriginator(const QObject *object);
+
+        //! Name
+        QString getName() const { return m_name; }
 
         //! Get machine id
-        QByteArray getMachineId() const {return m_machineId;}
+        QByteArray getMachineId() const;
+
+        //! Machine 64 base64 encoded
+        QString getMachineIdBase64() const { return m_machineIdBase64; }
 
         //! Get process id
-        qint32 getProcessId() const {return m_processId;}
+        qint64 getProcessId() const {return m_processId;}
 
         //! Get process name
         QString getProcessName() const {return m_processName;}
+
+        //! When created
+        QDateTime getTimestamp() const { return QDateTime::fromMSecsSinceEpoch(m_timestampMsEpoch); }
 
         //! Check if originating from the same local machine
         bool isFromLocalMachine() const;
@@ -58,25 +76,30 @@ namespace BlackMisc
         //! \copydoc CValueObject::convertToQString
         QString convertToQString(bool i18n = false) const;
 
+        //! \copydoc CValueObject::propertyByIndex
+        CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+
+        //! \copydoc CValueObject::setPropertyByIndex
+        void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
+
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(COriginator)
-        QString m_originatorName;
-        QByteArray m_machineId;
-        QByteArray m_primaryIpAddress;
-        QByteArray m_objectId;
-        qint32 m_processId;
+        QString m_name;
+        QString m_machineIdBase64; // base 64 encoded
         QString m_processName;
+        qint64 m_processId;
+        qint64 m_timestampMsEpoch;
     };
-}
+} // namespace
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::COriginator, (
-    o.m_originatorName,
-    o.m_machineId,
-    o.m_primaryIpAddress,
-    o.m_objectId,
-    o.m_processId,
-    o.m_processName
+    attr(o.m_name),
+    attr(o.m_machineIdBase64),
+    attr(o.m_processName),
+    attr(o.m_processId),
+    attr(o.m_timestampMsEpoch, flags <DisabledForComparison | DisabledForHashing> ())
 ))
+
 Q_DECLARE_METATYPE(BlackMisc::COriginator)
 
-#endif // BLACKMISC_EVENT_ORIGINATOR_H
+#endif // guard

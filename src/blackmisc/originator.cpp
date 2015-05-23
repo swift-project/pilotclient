@@ -13,13 +13,22 @@
 
 namespace BlackMisc
 {
-
-    // Default constructor
-    COriginator::COriginator()
-        : m_machineId(QDBusConnection::localMachineId()),
+    COriginator::COriginator(const QString &name)
+        : m_name(name),
+          m_machineIdBase64(QDBusConnection::localMachineId().toBase64()),
+          m_processName(QCoreApplication::applicationName()),
           m_processId(QCoreApplication::applicationPid()),
-          m_processName(QCoreApplication::applicationName())
+          m_timestampMsEpoch(QDateTime::currentMSecsSinceEpoch())
+    { }
+
+    COriginator::COriginator(const QObject *object) : COriginator(object->objectName())
     {
+        Q_ASSERT_X(!object->objectName().isEmpty(), Q_FUNC_INFO, "Missing name");
+    }
+
+    QByteArray COriginator::getMachineId() const
+    {
+        return QByteArray::fromBase64(m_machineIdBase64.toLocal8Bit());
     }
 
     bool COriginator::isFromLocalMachine() const
@@ -37,16 +46,50 @@ namespace BlackMisc
         return QCoreApplication::applicationName() == getProcessName();
     }
 
-    QString COriginator::convertToQString(bool /* i18n */) const
+    QString COriginator::convertToQString(bool i18n) const
     {
+        Q_UNUSED(i18n);
         QString s;
-        s.append(m_originatorName);
-        s.append(" ").append(m_machineId);
-        s.append(" ").append(m_primaryIpAddress);
-        s.append(" ").append(m_objectId);
-        s.append(" ").append(m_processId);
+        s.append(m_name);
+        s.append(" ").append(m_machineIdBase64);
+        s.append(" ").append(QString::number(m_processId));
         s.append(" ").append(m_processName);
         return s;
     }
 
-}
+    CVariant COriginator::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+    {
+        if (index.isMyself()) { return this->toCVariant(); }
+
+        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
+        {
+        case IndexName:
+            return CVariant::fromValue(m_name);
+        case IndexMachineIdBase64:
+            return CVariant::fromValue(m_machineIdBase64);
+        case IndexMachineId:
+            return CVariant::fromValue(getMachineId());
+        case IndexProcessId:
+            return CVariant::fromValue(m_processId);
+        case IndexProcessName:
+            return CVariant::fromValue(m_processName);
+        case IndexIsFromLocalMachine:
+            return CVariant::fromValue(isFromLocalMachine());
+        case IndexIsFromSameProcess:
+            return CVariant::fromValue(isFromSameProcess());
+        case IndexIsFromSameProcessName:
+            return CVariant::fromValue(isFromSameProcessName());
+        case IndexUtcTimestamp:
+            return CVariant::fromValue(getTimestamp());
+        default:
+            return CValueObject::propertyByIndex(index);
+        }
+    }
+
+    void COriginator::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+    {
+        CValueObject::setPropertyByIndex(variant, index);
+    }
+
+} // ns

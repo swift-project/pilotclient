@@ -50,6 +50,7 @@ namespace BlackMisc
             GlobalIndexCStatusMessage         =   200,
             GlobalIndexCNameVariantPair       =   300,
             GlobalIndexTimestampBased         =   400,
+            GlobalIndexOriginator             =   500,
             GlobalIndexCCallsign              =  1000,
             GlobalIndexCAircraft              =  1100,
             GlobalIndexCAircraftSituation     =  1200,
