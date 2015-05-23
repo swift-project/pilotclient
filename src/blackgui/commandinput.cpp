@@ -24,7 +24,7 @@ namespace BlackGui
     void CCommandInput::validateCommand()
     {
         QString commandLine = text();
-        setText(QStringLiteral(""));
+        setText(QString());
 
         if (commandLine.startsWith('.'))
         {
