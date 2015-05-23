@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "swiftcorectrl.h"
-#include "ui_swiftcorectrl.h"
+#include "swiftcore.h"
+#include "ui_swiftcore.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/loghandler.h"
 #include "blackcore/dbus_server.h"
@@ -23,9 +23,9 @@ using namespace BlackCore;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 
-CSwiftCoreCtrl::CSwiftCoreCtrl(const SetupInfo &info, QWidget *parent) :
+CSwiftCore::CSwiftCore(const SetupInfo &info, QWidget *parent) :
     CSystemTrayWindow(BlackMisc::CIcons::swiftNova24(), parent),
-    ui(new Ui::CSwiftCoreCtrl)
+    ui(new Ui::CSwiftCore)
 {
     ui->setupUi(this);
 
@@ -40,28 +40,28 @@ CSwiftCoreCtrl::CSwiftCoreCtrl(const SetupInfo &info, QWidget *parent) :
     startCore(info);
 }
 
-CSwiftCoreCtrl::~CSwiftCoreCtrl()
+CSwiftCore::~CSwiftCore()
 {
 }
 
-void CSwiftCoreCtrl::ps_startCorePressed()
+void CSwiftCore::ps_startCorePressed()
 {
     SetupInfo setup;
     setup.m_dbusAddress = getDBusAddress();
     startCore(setup);
 }
 
-void CSwiftCoreCtrl::ps_stopCorePressed()
+void CSwiftCore::ps_stopCorePressed()
 {
     stopCore();
 }
 
-void CSwiftCoreCtrl::ps_appendLogMessage(const CStatusMessage &message)
+void CSwiftCore::ps_appendLogMessage(const CStatusMessage &message)
 {
     ui->comp_log->appendStatusMessageToList(message);
 }
 
-void CSwiftCoreCtrl::ps_p2pModeToggled(bool checked)
+void CSwiftCore::ps_p2pModeToggled(bool checked)
 {
     if (checked)
     {
@@ -69,31 +69,31 @@ void CSwiftCoreCtrl::ps_p2pModeToggled(bool checked)
     }
     else
     {
-        ui->le_p2pAddress->setText(QStringLiteral(""));
+        ui->le_p2pAddress->setText(QString());
         ui->le_p2pAddress->setEnabled(false);
     }
 }
 
-void CSwiftCoreCtrl::ps_onStyleSheetsChanged()
+void CSwiftCore::ps_onStyleSheetsChanged()
 {
     const QString s = CStyleSheetUtility::instance().styles(
     {
         CStyleSheetUtility::fileNameFonts(),
-        CStyleSheetUtility::fileNameSwiftCoreCtrl()
+        CStyleSheetUtility::fileNameSwiftCore()
     }
     );
     setStyleSheet(s);
 }
 
-void CSwiftCoreCtrl::connectSlots()
+void CSwiftCore::connectSlots()
 {
-    connect(ui->pb_startCore, &QPushButton::clicked, this, &CSwiftCoreCtrl::ps_startCorePressed);
-    connect(ui->pb_stopCore, &QPushButton::clicked, this, &CSwiftCoreCtrl::ps_stopCorePressed);
-    connect(ui->rb_p2pBus, &QRadioButton::toggled, this, &CSwiftCoreCtrl::ps_p2pModeToggled);
-    connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CSwiftCoreCtrl::ps_onStyleSheetsChanged);
+    connect(ui->pb_startCore, &QPushButton::clicked, this, &CSwiftCore::ps_startCorePressed);
+    connect(ui->pb_stopCore, &QPushButton::clicked, this, &CSwiftCore::ps_stopCorePressed);
+    connect(ui->rb_p2pBus, &QRadioButton::toggled, this, &CSwiftCore::ps_p2pModeToggled);
+    connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CSwiftCore::ps_onStyleSheetsChanged);
 }
 
-void CSwiftCoreCtrl::setupLogDisplay()
+void CSwiftCore::setupLogDisplay()
 {
     CLogHandler::instance()->install();
     CLogHandler::instance()->enableConsoleOutput(false); // default disable
@@ -101,10 +101,10 @@ void CSwiftCoreCtrl::setupLogDisplay()
                           CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo)
                       );
 
-    logHandler->subscribe(this, &CSwiftCoreCtrl::ps_appendLogMessage);
+    logHandler->subscribe(this, &CSwiftCore::ps_appendLogMessage);
 }
 
-void CSwiftCoreCtrl::startCore(const SetupInfo &setup)
+void CSwiftCore::startCore(const SetupInfo &setup)
 {
     if (getRuntime()) { return; }
     if (setup.m_dbusAddress.isEmpty()) { return; }
@@ -119,7 +119,7 @@ void CSwiftCoreCtrl::startCore(const SetupInfo &setup)
     connect(ui->le_CommandLineInput, &CCommandInput::commandEntered, getRuntime(), &CRuntime::parseCommandLine);
 }
 
-void CSwiftCoreCtrl::stopCore()
+void CSwiftCore::stopCore()
 {
     if (!getRuntime()) { return; }
 
@@ -131,12 +131,12 @@ void CSwiftCoreCtrl::stopCore()
     qApp->quit();
 }
 
-QString CSwiftCoreCtrl::getDBusAddress() const
+QString CSwiftCore::getDBusAddress() const
 {
     if (ui->rb_sessionBus->isChecked()) { return CDBusServer::sessionDBusServer(); }
     if (ui->rb_systemBus->isChecked()) { return CDBusServer::systemDBusServer(); }
     if (ui->rb_p2pBus->isChecked()) { return CDBusServer::fixAddressToDBusAddress(ui->le_p2pAddress->text()); }
 
-    Q_ASSERT_X(false, "CSwiftCoreCtrl::getDBusAddress()", "The impossible happended!");
+    Q_ASSERT_X(false, "CSwiftCore::getDBusAddress()", "The impossible happended!");
     return "";
 }

@@ -274,9 +274,9 @@ namespace BlackGui
         return f;
     }
 
-    const QString &CStyleSheetUtility::fileNameSwiftCoreCtrl()
+    const QString &CStyleSheetUtility::fileNameSwiftCore()
     {
-        static const QString f("swiftcorectrl.qss");
+        static const QString f("swiftcore.qss");
         return f;
     }
 

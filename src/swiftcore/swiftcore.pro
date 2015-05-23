@@ -1,11 +1,11 @@
-include (../../config.pri)
-include (../../build.pri)
+include ($$SourceRoot/config.pri)
+include ($$SourceRoot/build.pri)
 
 QT       += core dbus network xml multimedia gui svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = swiftcorectrl
+TARGET = swiftcore
 TEMPLATE = app
 
 SOURCES += *.cpp
@@ -22,4 +22,4 @@ INCLUDEPATH += . $$SourceRoot/src
 DESTDIR = $$BuildRoot/bin
 OTHER_FILES += *.qss
 
-include (../../libraries.pri)
+include ($$SourceRoot/libraries.pri)

@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef SWIFTCORECTRL_H
-#define SWIFTCORECTRL_H
+#ifndef SWIFTCORE_H
+#define SWIFTCORE_H
 
 #include "blackmisc/statusmessage.h"
 #include "blackcore/context_runtime.h"
@@ -20,11 +20,11 @@
 
 namespace Ui
 {
-    class CSwiftCoreCtrl;
+    class CSwiftCore;
 }
 
 //! swift core control
-class CSwiftCoreCtrl :
+class CSwiftCore :
     public BlackGui::CSystemTrayWindow,
     public BlackGui::Components::CEnableForRuntime
 {
@@ -32,7 +32,7 @@ class CSwiftCoreCtrl :
 
 public:
 
-    //! SwiftCoreCtrl setup information
+    //! SwiftCore setup information
     struct SetupInfo
     {
         SetupInfo() {}
@@ -42,10 +42,10 @@ public:
     };
 
     //! Constructor
-    CSwiftCoreCtrl(const SetupInfo &info, QWidget *parent = nullptr);
+    CSwiftCore(const SetupInfo &info, QWidget *parent = nullptr);
 
     //! Destructor
-    ~CSwiftCoreCtrl();
+    ~CSwiftCore();
 
 private slots:
 
@@ -67,7 +67,7 @@ private:
 
     QString getDBusAddress() const;
 
-    QScopedPointer<Ui::CSwiftCoreCtrl> ui;
+    QScopedPointer<Ui::CSwiftCore> ui;
 };
 
-#endif // SWIFTCORECTRL_H
+#endif // SWIFTCORE_H

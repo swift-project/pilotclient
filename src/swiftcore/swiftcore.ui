@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CSwiftCoreCtrl</class>
- <widget class="BlackGui::CSystemTrayWindow" name="CSwiftCoreCtrl">
+ <class>CSwiftCore</class>
+ <widget class="BlackGui::CSystemTrayWindow" name="CSwiftCore">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>448</width>
+    <width>460</width>
     <height>382</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>swiftcorectrl</string>
+   <string>swiftcore</string>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -128,8 +128,8 @@ QTextEdit {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>448</width>
-     <height>20</height>
+     <width>460</width>
+     <height>25</height>
     </rect>
    </property>
   </widget>

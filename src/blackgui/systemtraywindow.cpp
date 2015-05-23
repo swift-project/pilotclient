@@ -76,7 +76,7 @@ namespace BlackGui
         if (m_systemTrayMode.testFlag(AskOnClose))
         {
             QMessageBox msgBox;
-            msgBox.setText("Are you sure you want to close? This will quit swiftcorectrl!");
+            msgBox.setText("Are you sure you want to close? This will quit swiftcore!");
             msgBox.setStandardButtons(QMessageBox::Close | QMessageBox::Cancel);
             msgBox.setDefaultButton(QMessageBox::Close);
             msgBox.setIcon(QMessageBox::Warning);

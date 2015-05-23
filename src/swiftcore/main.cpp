@@ -1,4 +1,4 @@
-#include "swiftcorectrl.h"
+#include "swiftcore.h"
 
 #include "blackcore/context_runtime.h"
 #include "blackcore/context_settings.h"
@@ -28,7 +28,7 @@ enum CommandLineParseResult
     CommandLineHelpRequested
 };
 
-CommandLineParseResult parseCommandLine(QCommandLineParser &parser, CSwiftCoreCtrl::SetupInfo *setup, QString *errorMessage)
+CommandLineParseResult parseCommandLine(QCommandLineParser &parser, CSwiftCore::SetupInfo *setup, QString *errorMessage)
 {
     parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
     parser.addOption({{"s", "session"}, QCoreApplication::translate("main", "Use session bus.")});
@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
 {
     CRuntime::registerMetadata(); // register metadata
     QApplication a(argc, argv);
-    QApplication::setApplicationName("swiftcorectrl");
+    QApplication::setApplicationName("swiftcore");
     QApplication::setApplicationVersion(CProject::version());
 
     QCommandLineParser parser;
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
 
-    CSwiftCoreCtrl::SetupInfo setup;
+    CSwiftCore::SetupInfo setup;
     QString errorMessage;
     switch (parseCommandLine(parser, &setup, &errorMessage))
     {
@@ -154,13 +154,13 @@ int main(int argc, char *argv[])
     const QString s = CStyleSheetUtility::instance().styles(
     {
         CStyleSheetUtility::fileNameFonts(),
-        CStyleSheetUtility::fileNameSwiftCoreCtrl()
+        CStyleSheetUtility::fileNameSwiftCore()
     }
     );
     a.installTranslator(&translator);
     a.setStyleSheet(s);
 
-    CSwiftCoreCtrl w(setup);
+    CSwiftCore w(setup);
     if (!setup.m_minimzed) w.show();
 
     return a.exec();

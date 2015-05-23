@@ -23,7 +23,7 @@ contains(BLACK_CONFIG, BlackGui) {
     SUBDIRS += src/swiftgui_standard/swiftgui_standard.pro
 
     contains(BLACK_CONFIG, BlackCore) {
-        SUBDIRS += src/swiftcorectrl/swiftcorectrl.pro
+        SUBDIRS += src/swiftcore/swiftcore.pro
     }
 }
 
