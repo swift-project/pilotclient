@@ -38,12 +38,12 @@ namespace BlackSimPlugin
 {
     namespace Fsx
     {
-        CSimulatorFsx::CSimulatorFsx(
-            const CSimulatorPluginInfo &info,
+        CSimulatorFsx::CSimulatorFsx(const CSimulatorPluginInfo &info,
             IOwnAircraftProvider *ownAircraftProvider,
             IRemoteAircraftProvider *remoteAircraftProvider,
+            IPluginStorageProvider *pluginStorageProvider,
             QObject *parent) :
-            CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, parent)
+            CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, parent)
         {
             Q_ASSERT(ownAircraftProvider);
             Q_ASSERT(remoteAircraftProvider);

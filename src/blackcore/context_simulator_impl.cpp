@@ -74,6 +74,40 @@ namespace BlackCore
         return plugin->factory;
     }
 
+    CVariant CContextSimulator::getPluginData(const QObject *obj, const QString& key) const
+    {
+        const QObject* p = obj;
+        while (p && !p->inherits("BlackCore::ISimulatorFactory"))
+        {
+            p = p->parent();
+        }
+
+        if (!p) return CVariant();
+        auto it = std::find_if(m_simulatorPlugins.begin(), m_simulatorPlugins.end(), [p](const PluginData &plugin)
+        {
+            return plugin.factory == qobject_cast<ISimulatorFactory *>(p);
+        });
+        Q_ASSERT(it != m_simulatorPlugins.end());
+        return it->m_storage.value(key);
+    }
+
+    void CContextSimulator::setPluginData(const QObject *obj, const QString &key, const CVariant &value)
+    {
+        const QObject* p = obj;
+        while (p && !p->inherits("BlackCore::ISimulatorFactory"))
+        {
+            p = p->parent();
+        }
+
+        if (!p) { return; }
+        auto it = std::find_if(m_simulatorPlugins.begin(), m_simulatorPlugins.end(), [p](const PluginData &plugin)
+        {
+            return plugin.factory == qobject_cast<ISimulatorFactory *>(p);
+        });
+        Q_ASSERT(it != m_simulatorPlugins.end());
+        it->m_storage.insert(key, value);
+    }
+
     CSimulatorPluginInfoList CContextSimulator::getAvailableSimulatorPlugins() const
     {
         CSimulatorPluginInfoList list;

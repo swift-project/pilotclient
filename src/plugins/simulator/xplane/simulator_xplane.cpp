@@ -37,12 +37,12 @@ namespace BlackSimPlugin
     namespace XPlane
     {
 
-        CSimulatorXPlane::CSimulatorXPlane(
-            const BlackMisc::Simulation::CSimulatorPluginInfo &info,
+        CSimulatorXPlane::CSimulatorXPlane(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
             IOwnAircraftProvider *ownAircraftProvider,
             IRemoteAircraftProvider *remoteAircraftProvider,
+            IPluginStorageProvider *pluginStorageProvider,
             QObject *parent) :
-            CSimulatorCommon(info, ownAircraftProvider, remoteAircraftProvider, parent)
+            CSimulatorCommon(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, parent)
         {
             m_watcher = new QDBusServiceWatcher(this);
             m_watcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
@@ -434,13 +434,12 @@ namespace BlackSimPlugin
             return true;
         }
 
-        BlackCore::ISimulator *CSimulatorXPlaneFactory::create(
-            const BlackMisc::Simulation::CSimulatorPluginInfo &info,
+        BlackCore::ISimulator *CSimulatorXPlaneFactory::create(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
             IOwnAircraftProvider *ownAircraftProvider,
             IRemoteAircraftProvider *renderedAircraftProvider,
-            QObject *parent)
+            IPluginStorageProvider *pluginStorageProvider)
         {
-            return new CSimulatorXPlane(info, ownAircraftProvider, renderedAircraftProvider, parent);
+            return new CSimulatorXPlane(info, ownAircraftProvider, renderedAircraftProvider, pluginStorageProvider, this);
         }
 
         CSimulatorXPlaneListener::CSimulatorXPlaneListener(QObject *parent): ISimulatorListener(parent)

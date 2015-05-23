@@ -50,8 +50,9 @@ namespace BlackSimPlugin
             const CSimulatorPluginInfo &info,
             IOwnAircraftProvider *ownAircraftProvider,
             IRemoteAircraftProvider *remoteAircraftProvider,
+            IPluginStorageProvider *pluginStorageProvider,
             QObject *parent) :
-            CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, parent)
+            CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, parent)
         {
             connect(lobbyClient.data(), &CLobbyClient::disconnected, this, std::bind(&CSimulatorFs9::simulatorStatusChanged, this, 0));
             this->m_interpolator = new BlackCore::CInterpolatorLinear(remoteAircraftProvider, this);
@@ -369,9 +370,9 @@ namespace BlackSimPlugin
             const CSimulatorPluginInfo &info,
             IOwnAircraftProvider *ownAircraftProvider,
             IRemoteAircraftProvider *remoteAircraftProvider,
-            QObject *parent)
+            IPluginStorageProvider *pluginStorageProvider)
         {
-            return new CSimulatorFs9(info, ownAircraftProvider, remoteAircraftProvider, parent);
+            return new CSimulatorFs9(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, this);
         }
 
         BlackCore::ISimulatorListener *CSimulatorFs9Factory::createListener(QObject *parent)

@@ -21,6 +21,7 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
+#include "blackmisc/pluginstorageprovider.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/network/textmessage.h"
@@ -34,8 +35,9 @@ namespace BlackCore
     //! Common base class with providers, interface and some base functionality
     class BLACKCORE_EXPORT CSimulatorCommon :
         public BlackCore::ISimulator,
-        public BlackMisc::Simulation::COwnAircraftAware,   // gain access to in memor own aircraft data
-        public BlackMisc::Simulation::CRemoteAircraftAware // gain access to in memory remote aircraft data
+        public BlackMisc::Simulation::COwnAircraftAware,   // gain access to in memory own aircraft data
+        public BlackMisc::Simulation::CRemoteAircraftAware, // gain access to in memory remote aircraft data
+        public BlackMisc::CPluginStorageAware // gain access to in memory plugin storage
     {
 
         Q_OBJECT
@@ -116,7 +118,8 @@ namespace BlackCore
         CSimulatorCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                          BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                          BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                         QObject *parent = nullptr);
+                         BlackMisc::IPluginStorageProvider *pluginStorageProvider,
+                         QObject *parent);
 
         //! \copydoc IContextSimulator::logicallyAddRemoteAircraft
         virtual bool logicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;

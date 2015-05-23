@@ -21,6 +21,8 @@
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/pixmap.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/pluginstorageprovider.h"
+#include "blackmisc/variant.h"
 #include <QTimer>
 #include <QDir>
 #include <QtConcurrent/QtConcurrent>
@@ -28,7 +30,9 @@
 namespace BlackCore
 {
     //! Network simulator concrete implementation
-    class BLACKCORE_EXPORT CContextSimulator : public IContextSimulator
+    class BLACKCORE_EXPORT CContextSimulator :
+            public IContextSimulator,
+            public BlackMisc::IPluginStorageProvider
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME)
@@ -43,6 +47,12 @@ namespace BlackCore
         //! \return nullptr if no corresponding driver was found or an error occured during loading it.
         //! \todo Consider moving to private scope.
         ISimulatorFactory *getSimulatorFactory(const BlackMisc::Simulation::CSimulatorPluginInfo &simulator);
+
+        //! \copydoc IPluginStorageProvider::getPluginData
+        virtual BlackMisc::CVariant getPluginData(const QObject *obj, const QString& key) const;
+
+        //! \copydoc IPluginStorageProvider::setPluginData
+        virtual void setPluginData(const QObject *obj, const QString& key, const BlackMisc::CVariant &value);
 
     public slots:
 
@@ -199,6 +209,7 @@ namespace BlackCore
             ISimulatorListener *listener = nullptr; //!< Listener instance, nullptr by default
             ISimulator *simulator = nullptr;        //!< The simulator itself (always nullptr unless it is the currently working one)
             QString fileName;                       //!< Plugin file name (relative to plugins/simulator)
+            QHash<QString, BlackMisc::CVariant> m_storage;     //!< Permanent plugin storage - data stored here will be kept even when plugin is unloaded
         };
 
         //! Find and catalog all simulator plugins

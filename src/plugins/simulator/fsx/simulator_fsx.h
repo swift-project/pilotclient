@@ -78,6 +78,7 @@ namespace BlackSimPlugin
                 const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                 BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                 BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                BlackMisc::IPluginStorageProvider *pluginStorageProvider,
                 QObject *parent = nullptr);
 
             //! Destructor

@@ -20,6 +20,7 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
+#include "blackmisc/pluginstorageprovider.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/network/textmessage.h"
@@ -270,18 +271,19 @@ namespace BlackCore
         //! \param info                      metadata about simulator
         //! \param ownAircraftProvider       in memory access to own aircraft data
         //! \param renderedAircraftProvider  in memory access to rendered aircraft data such as situation history and aircraft itself
-        //! \param parent QObject
+        //! \param pluginStorageProvider     in memory access to persistent plugin data store
         //! \return driver instance
         virtual ISimulator *create(
             const BlackMisc::Simulation::CSimulatorPluginInfo &info,
             BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
             BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
-            QObject *parent = nullptr) = 0;
+            BlackMisc::IPluginStorageProvider *pluginStorageProvider) = 0;
 
         //! Simulator listener instance
         virtual ISimulatorListener *createListener(QObject *parent = nullptr) = 0;
 
     };
+
 } // namespace
 
 Q_DECLARE_INTERFACE(BlackCore::ISimulatorFactory, "org.swift-project.blackcore.simulatorinterface")

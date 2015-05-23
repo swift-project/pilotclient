@@ -36,6 +36,7 @@ namespace BlackSimPlugin
             CSimulatorXPlane(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                              BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                              BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                             BlackMisc::IPluginStorageProvider *pluginStorageProvider,
                              QObject *parent = nullptr);
 
             //! \copydoc ISimulator::isTimeSynchronized
@@ -218,7 +219,7 @@ namespace BlackSimPlugin
             virtual BlackCore::ISimulator *create(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                                                   BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
                                                   BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
-                                                  QObject *parent) override;
+                                                  BlackMisc::IPluginStorageProvider *pluginStorageProvider) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::createListener
             virtual BlackCore::ISimulatorListener *createListener(QObject *parent = nullptr) override { return new CSimulatorXPlaneListener(parent); }

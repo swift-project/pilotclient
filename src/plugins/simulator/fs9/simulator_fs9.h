@@ -43,6 +43,7 @@ namespace BlackSimPlugin
                 const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                 BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                 BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                BlackMisc::IPluginStorageProvider *pluginStorageProvider,
                 QObject *parent = nullptr);
 
             //! Destructor
@@ -159,7 +160,7 @@ namespace BlackSimPlugin
                 const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                 BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                 BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                QObject *parent) override;
+                BlackMisc::IPluginStorageProvider *pluginStorageProvider) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::createListener
             virtual BlackCore::ISimulatorListener *createListener(QObject *parent = nullptr) override;
