@@ -17,7 +17,7 @@
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/eveventhotkeyfunction.h"
-#include "blackmisc/evoriginator.h"
+#include "blackmisc/originator.h"
 #include <QObject>
 #include <QReadWriteLock>
 
@@ -92,7 +92,7 @@ namespace BlackCore
 
         //! A log message was logged
         //! \note Used with CLogMessage, do not use directly
-        void messageLogged(const BlackMisc::CStatusMessage &message, const BlackMisc::Event::COriginator &origin);
+        void messageLogged(const BlackMisc::CStatusMessage &message, const BlackMisc::COriginator &origin);
 
         //! Work around for audio context, #382
         void fakedSetComVoiceRoom(const BlackMisc::Audio::CVoiceRoomList &requestedRooms);
@@ -101,7 +101,7 @@ namespace BlackCore
         //! Log a log message
         //! \note Not pure because it can be called from the base class constructor.
         //! \note this is the function which relays CLogMessage via DBus
-        virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::Event::COriginator &origin) { Q_UNUSED(message); Q_UNUSED(origin); }
+        virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::COriginator &origin) { Q_UNUSED(message); Q_UNUSED(origin); }
 
         //! Ping a token, used to check if application is alive
         virtual qint64 ping(qint64 token) const = 0;

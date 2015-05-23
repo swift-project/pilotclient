@@ -35,7 +35,7 @@ namespace BlackCore
         connect(inputManager, &CInputManager::hotkeyFuncEvent, this, &CContextApplicationProxy::processHotkeyFuncEvent);
         inputManager->setEventForwarding(true);
 
-        connect(this, &IContextApplication::messageLogged, this, [](const CStatusMessage & message, const Event::COriginator & origin)
+        connect(this, &IContextApplication::messageLogged, this, [](const CStatusMessage & message, const COriginator & origin)
         {
             if (!origin.isFromSameProcess())
             {
@@ -65,7 +65,7 @@ namespace BlackCore
     /*
      * Log a message
      */
-    void CContextApplicationProxy::logMessage(const CStatusMessage &message, const Event::COriginator &origin)
+    void CContextApplicationProxy::logMessage(const CStatusMessage &message, const COriginator &origin)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("logMessage"), message, origin);
     }

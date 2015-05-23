@@ -26,7 +26,7 @@ namespace BlackCore
 
     public slots:
         //! \copydoc IContextApplication::logMessage
-        virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::Event::COriginator &origin) override;
+        virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::COriginator &origin) override;
 
         //! \copydoc IContextApplication::ping()
         virtual qint64 ping(qint64 token) const override;

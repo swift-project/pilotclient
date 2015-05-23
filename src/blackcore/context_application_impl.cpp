@@ -31,7 +31,7 @@ namespace BlackCore
         return this;
     }
 
-    void CContextApplication::logMessage(const CStatusMessage &message, const Event::COriginator &origin)
+    void CContextApplication::logMessage(const CStatusMessage &message, const COriginator &origin)
     {
         if (!origin.isFromSameProcess())
         {

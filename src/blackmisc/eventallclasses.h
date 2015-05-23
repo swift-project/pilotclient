@@ -10,7 +10,6 @@
 #ifndef BLACKMISC_EVENT_ALLCLASSES_H
 #define BLACKMISC_EVENT_ALLCLASSES_H
 
-#include "blackmisc/evoriginator.h"
 #include "blackmisc/eveventhotkeyfunction.h"
 
 #endif // guard

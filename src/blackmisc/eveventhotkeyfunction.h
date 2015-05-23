@@ -14,7 +14,7 @@
 
 #include "blackmiscexport.h"
 #include "valueobject.h"
-#include "evoriginator.h"
+#include "originator.h"
 #include "hotkeyfunction.h"
 #include "blackmiscfreefunctions.h"
 
