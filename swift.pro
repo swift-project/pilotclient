@@ -16,7 +16,6 @@ contains(BLACK_CONFIG, BlackInput) {
 
 contains(BLACK_CONFIG, BlackCore) {
     SUBDIRS += src/blackcore
-    SUBDIRS += src/swiftcore/swiftcore.pro
 }
 
 contains(BLACK_CONFIG, BlackGui) {
