@@ -48,19 +48,19 @@ namespace BlackMisc
             return this->m_ownAircraftProvider->getDistanceToOwnAircraft(position);
         }
 
-        bool COwnAircraftAware::updateCockpit(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder, const QString &originator)
+        bool COwnAircraftAware::updateCockpit(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder, const COriginator &originator)
         {
             Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
             return this->m_ownAircraftProvider->updateCockpit(com1, com2, transponder, originator);
         }
 
-        bool COwnAircraftAware::updateActiveComFrequency(const CFrequency &frequency, int comUnit, const QString &originator)
+        bool COwnAircraftAware::updateActiveComFrequency(const CFrequency &frequency, int comUnit, const COriginator &originator)
         {
             Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
             return this->m_ownAircraftProvider->updateActiveComFrequency(frequency, comUnit, originator);
         }
 
-        bool COwnAircraftAware::updateSelcal(const CSelcal &selcal, const QString &originator)
+        bool COwnAircraftAware::updateSelcal(const CSelcal &selcal, const COriginator &originator)
         {
             Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
             return this->m_ownAircraftProvider->updateSelcal(selcal, originator);

@@ -316,7 +316,7 @@ namespace BlackSimPlugin
             return getAircraftInRangeForCallsign(callsign).isRendered();
         }
 
-        bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator)
+        bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const COriginator &originator)
         {
             Q_ASSERT(isConnected());
             if (originator == this->simulatorOriginator()) { return false; }
@@ -409,7 +409,7 @@ namespace BlackSimPlugin
             return getAircraftInRange().findByRendered(true).getCallsigns(); // just a poor workaround
         }
 
-        bool CSimulatorXPlane::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft, const QString &originator)
+        bool CSimulatorXPlane::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft, const COriginator &originator)
         {
             return this->changeRemoteAircraftEnabled(aircraft, originator);
         }
@@ -420,7 +420,7 @@ namespace BlackSimPlugin
             return CAircraftIcaoData();
         }
 
-        bool CSimulatorXPlane::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft, const QString &originator)
+        bool CSimulatorXPlane::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft, const COriginator &originator)
         {
             if (originator == simulatorOriginator()) { return false; }
             if (aircraft.isEnabled())

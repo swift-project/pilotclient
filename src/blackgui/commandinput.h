@@ -13,6 +13,7 @@
 #define BLACKGUI_COMMANDINPUT_H
 
 #include "blackguiexport.h"
+#include "blackmisc/originator.h"
 #include <QLineEdit>
 #include <QString>
 
@@ -32,10 +33,13 @@ namespace BlackGui
         //! Destructor
         ~CCommandInput() {}
 
+        //! Originator
+        BlackMisc::COriginator commandInputOriginator();
+
     signals:
 
         //! Command was entered
-        void commandEntered(const QString &command, const QString &originator);
+        void commandEntered(const QString &command, const BlackMisc::COriginator &originator);
 
     private slots:
 
@@ -44,7 +48,7 @@ namespace BlackGui
 
     private:
 
-        const QString &commandInputOriginator();
+        BlackMisc::COriginator m_originator;
     };
 
 }

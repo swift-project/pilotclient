@@ -259,7 +259,7 @@ namespace BlackSimPlugin
             return empty;
         }
 
-        bool CSimulatorFsCommon::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft, const QString &originator)
+        bool CSimulatorFsCommon::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft, const COriginator &originator)
         {
             if (originator == simulatorOriginator()) { return false; }
 
@@ -268,7 +268,7 @@ namespace BlackSimPlugin
             return this->changeRemoteAircraftEnabled(aircraft, originator);
         }
 
-        bool CSimulatorFsCommon::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft, const QString &originator)
+        bool CSimulatorFsCommon::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft, const COriginator &originator)
         {
             if (originator == simulatorOriginator()) { return false; }
             if (aircraft.isEnabled())

@@ -148,12 +148,12 @@ namespace BlackGui
             }
         }
 
-        const QString &CTextMessageComponent::componentOriginator()
+        COriginator CTextMessageComponent::componentOriginator()
         {
-            // string is generated once, the timestamp allows to use multiple
-            // components (as long as they are not generated at the same ms)
-            static const QString o = QString("TEXTMESSAGECOMPONENT:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
-            return o;
+            if (m_originator.getName().isEmpty())
+                m_originator = COriginator(QStringLiteral("TEXTMESSAGECOMPONENT"));
+
+            return m_originator;
         }
 
         void CTextMessageComponent::ps_onChangedAircraftCockpit()
@@ -433,7 +433,7 @@ namespace BlackGui
             this->displayTextMessage(sentMessage);
         }
 
-        bool CTextMessageComponent::handleGlobalCommandLine(const QString &commandLine, const QString &originator)
+        bool CTextMessageComponent::handleGlobalCommandLine(const QString &commandLine, const COriginator &originator)
         {
             if (originator == componentOriginator()) { return false; }
             if (commandLine.isEmpty() || commandLine.startsWith(".")) { return false; }

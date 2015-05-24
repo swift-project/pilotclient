@@ -14,6 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enableforruntime.h"
+#include "blackmisc/originator.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/aviation/flightplan.h"
 
@@ -65,6 +66,9 @@ namespace BlackGui
             //! Validate, generates status messages
             BlackMisc::CStatusMessageList validateAndInitializeFlightPlan(BlackMisc::Aviation::CFlightPlan &fligtPlan);
 
+            //! Flightplan originator
+            BlackMisc::COriginator m_originator;
+
             //! Default value for airport ICAO airports
             static const QString &defaultIcao() { static QString d("ICAO"); return d; }
 
@@ -72,7 +76,7 @@ namespace BlackGui
             static const QString &defaultTime() { static QString t("00:00"); return t; }
 
             //! Originator
-            static const QString &flightPlanOriginator();
+            BlackMisc::COriginator flightPlanOriginator();
 
         private slots:
             //! Call \sa ps_buildRemarksString from combo box signal

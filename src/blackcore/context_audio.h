@@ -14,6 +14,7 @@
 
 #include "blackcoreexport.h"
 #include "blackcore/context.h"
+#include "blackmisc/originator.h"
 #include "blackmisc/genericdbusinterface.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/audio/voiceroomlist.h"
@@ -164,7 +165,7 @@ namespace BlackCore
         virtual bool isAudioLoopbackEnabled() const = 0;
 
         //! Command line was entered
-        virtual bool parseCommandLine(const QString &commandLine, const QString &orignator) = 0;
+        virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::COriginator &originator) = 0;
     };
 }
 

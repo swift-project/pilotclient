@@ -16,6 +16,7 @@
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/updatetimer.h"
+#include "blackmisc/originator.h"
 #include "blackmisc/aviation/atcstation.h"
 #include <QTabWidget>
 #include <QModelIndex>
@@ -111,7 +112,7 @@ namespace BlackGui
 
         private:
             void updateTreeView();
-            const QString &originator();
+            BlackMisc::COriginator originator();
 
             QScopedPointer<Ui::CAtcStationComponent> ui;
             QScopedPointer<CUpdateTimer> m_updateTimer;
@@ -119,6 +120,7 @@ namespace BlackGui
             QDateTime m_timestampOnlineStationsChanged  = CUpdateTimer::epoch();  //!< stations marked as changed
             QDateTime m_timestampLastReadBookedStations = CUpdateTimer::epoch();  //!< stations read
             QDateTime m_timestampBookedStationsChanged  = CUpdateTimer::epoch();  //!< stations marked as changed
+            BlackMisc::COriginator m_originator;
 
         };
     } // namespace

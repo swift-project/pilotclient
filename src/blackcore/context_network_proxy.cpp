@@ -76,13 +76,13 @@ namespace BlackCore
                                "vatsimBookingsRead", this, SIGNAL(vatsimBookingsRead()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "changedRemoteAircraftModel", this, SIGNAL(changedRemoteAircraftModel(BlackMisc::Simulation::CSimulatedAircraft, QString)));
+                               "changedRemoteAircraftModel", this, SIGNAL(changedRemoteAircraftModel(BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::COriginator)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "changedRemoteAircraftEnabled", this, SIGNAL(changedRemoteAircraftEnabled(BlackMisc::Simulation::CSimulatedAircraft, QString)));
+                               "changedRemoteAircraftEnabled", this, SIGNAL(changedRemoteAircraftEnabled(BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::COriginator)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "changedFastPositionUpdates", this, SIGNAL(changedFastPositionUpdates(BlackMisc::Simulation::CSimulatedAircraft, QString)));
+                               "changedFastPositionUpdates", this, SIGNAL(changedFastPositionUpdates(BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::COriginator)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "addedAircraft", this, SIGNAL(addedAircraft(BlackMisc::Simulation::CSimulatedAircraft)));
@@ -183,17 +183,17 @@ namespace BlackCore
         this->m_dBusInterface->callDBus(QLatin1Literal("requestAtisUpdates"));
     }
 
-    bool CContextNetworkProxy::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRedering, const QString &originator)
+    bool CContextNetworkProxy::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRedering, const COriginator &originator)
     {
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateAircraftEnabled"), callsign, enabledForRedering, originator);
     }
 
-    bool CContextNetworkProxy::updateAircraftModel(const CCallsign &callsign, const Simulation::CAircraftModel &model, const QString &originator)
+    bool CContextNetworkProxy::updateAircraftModel(const CCallsign &callsign, const Simulation::CAircraftModel &model, const COriginator &originator)
     {
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateAircraftModel"), callsign, model, originator);
     }
 
-    bool CContextNetworkProxy::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositionSending, const QString &originator)
+    bool CContextNetworkProxy::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositionSending, const COriginator &originator)
     {
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateFastPositionEnabled"), callsign, enableFastPositionSending, originator);
     }
@@ -248,7 +248,7 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CServer>(QLatin1Literal("getConnectedServer"));
     }
 
-    bool CContextNetworkProxy::parseCommandLine(const QString &commandLine, const QString &originator)
+    bool CContextNetworkProxy::parseCommandLine(const QString &commandLine, const COriginator &originator)
     {
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("commandLineEntered"), commandLine, originator);
     }

@@ -275,12 +275,12 @@ namespace BlackGui
             }
         }
 
-        const QString &CAtcStationComponent::originator()
+        COriginator CAtcStationComponent::originator()
         {
-            // string is generated once, the timestamp allows to use multiple
-            // components (as long as they are not generated at the same ms)
-            static const QString o = QString("ATCSTATIOCOMPONENT:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
-            return o;
+            if (m_originator.getName().isEmpty())
+                m_originator = COriginator(QStringLiteral("ATCSTATIOCOMPONENT"));
+
+            return m_originator;
         }
 
         void CAtcStationComponent::ps_onlineAtcStationSelected(QModelIndex index)

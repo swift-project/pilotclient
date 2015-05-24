@@ -29,12 +29,12 @@ namespace BlackCore
         return status;
     }
 
-    const QString &ISimulator::simulatorOriginator()
+    COriginator ISimulator::simulatorOriginator()
     {
-        // string is generated once, the timestamp allows to use multiple
-        // components (as long as they are not generated at the same ms)
-        static const QString o = QString("SIMULATOR:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
-        return o;
+        if (m_originator.getName().isEmpty())
+            m_originator = COriginator(QStringLiteral("SIMULATOR"));
+
+        return m_originator;
     }
 
     QString ISimulator::statusToString(int status)

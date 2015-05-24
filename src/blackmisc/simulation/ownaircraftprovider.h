@@ -13,6 +13,7 @@
 #define BLACKMISC_SIMULATION_OWNAIRCRAFTPROVIDER_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/originator.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 
 namespace BlackMisc
@@ -70,15 +71,15 @@ namespace BlackMisc
 
             //! Update cockpit, but send signals when applicable
             //! \threadsafe
-            virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) = 0;
+            virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const BlackMisc::COriginator &originator) = 0;
 
             //! Update cockpit, but send signals when applicable
             //! \threadsafe
-            virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const QString &originator) = 0;
+            virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const BlackMisc::COriginator &originator) = 0;
 
             //! Update cockpit, but send signals when applicable
             //! \threadsafe
-            virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator) = 0;
+            virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::COriginator &originator) = 0;
 
         };
 
@@ -102,13 +103,13 @@ namespace BlackMisc
             virtual BlackMisc::PhysicalQuantities::CLength getDistanceToOwnAircraft(const BlackMisc::Geo::ICoordinateGeodetic &position) const;
 
             //! \copydoc IOwnAircraftProvider::updateCockpit
-            virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator);
+            virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const BlackMisc::COriginator &originator);
 
             //! \copydoc IOwnAircraftProvider::updateComFrequency
-            virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const QString &originator);
+            virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const BlackMisc::COriginator &originator);
 
             //! \copydoc IOwnAircraftProvider::updateSelcal
-            virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator);
+            virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::COriginator &originator);
 
             //! \copydoc IOwnAircraftProvider::updateOwnCallsign
             virtual bool updateOwnCallsign(const BlackMisc::Aviation::CCallsign &callsign);

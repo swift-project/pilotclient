@@ -15,6 +15,7 @@
 #include "blackgui/blackguiexport.h"
 #include "maininfoareacomponent.h"
 #include "enableforruntime.h"
+#include "blackmisc/originator.h"
 #include "blackmisc/aviation/aircraft.h"
 
 #include <QFrame>
@@ -44,7 +45,7 @@ namespace BlackGui
             ~CMainKeypadAreaComponent();
 
             //! Originator
-            static const QString &keypadOriginator();
+            BlackMisc::COriginator keypadOriginator();
 
         signals:
             //! Button to select main info area has been pressed
@@ -55,7 +56,7 @@ namespace BlackGui
             void changedOpacity(int opacity);
 
             //! Command was entered
-            void commandEntered(const QString &commandLine, const QString &originator);
+            void commandEntered(const QString &commandLine, const BlackMisc::COriginator &originator);
 
             //! Connect was pressed
             void connectPressed();
@@ -82,7 +83,7 @@ namespace BlackGui
             void ps_commandEntered();
 
             //! \copydoc BlackCore::IContextOwnAircraft::changedAircraftCockpit
-            void ps_ownAircraftCockpitChanged(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator);
+            void ps_ownAircraftCockpitChanged(const BlackMisc::Aviation::CAircraft &aircraft, const BlackMisc::COriginator &originator);
 
             //! \copydoc BlackCore::IContextAudio::changedMute
             void ps_muteChanged(bool muted);
@@ -101,6 +102,7 @@ namespace BlackGui
             void unsetInfoAreaButtons();
 
             QScopedPointer<Ui::CMainKeypadAreaComponent> ui;
+            BlackMisc::COriginator m_originator;
         };
 
     } // namespace

@@ -13,6 +13,7 @@
 #include "blackgui/blackguiexport.h"
 #include "enablefordockwidgetinfoarea.h"
 #include "enableforruntime.h"
+#include "blackmisc/originator.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/aviation/transponder.h"
 #include "blackmisc/audio/voiceroomlist.h"
@@ -66,13 +67,13 @@ namespace BlackGui
             void ps_guiChangedSelcal();
 
             //! Update cockpit from context
-            void ps_updateCockpitFromContext(const BlackMisc::Aviation::CAircraft &ownAircraft, const QString &originator);
+            void ps_updateCockpitFromContext(const BlackMisc::Aviation::CAircraft &ownAircraft, const BlackMisc::COriginator &originator);
 
             //! Cockpit values have been changed in GUI
             void ps_testSelcal();
 
             //! SELCAL was changed
-            void ps_onChangedSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator);
+            void ps_onChangedSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::COriginator &originator);
 
             //! Update voice room related information
             void ps_onChangedVoiceRoomStatus(const BlackMisc::Audio::CVoiceRoomList &selectedVoiceRooms, bool connected);
@@ -97,9 +98,10 @@ namespace BlackGui
             void updateFrequencyDisplaysFromComSystems(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
 
             //! Identifies sender of cockpit updates
-            static const QString &cockpitOriginator();
+            BlackMisc::COriginator cockpitOriginator();
 
             QScopedPointer<Ui::CCockpitMainComponent> ui;
+            BlackMisc::COriginator m_originator;
         };
 
     } // namespace

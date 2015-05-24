@@ -188,7 +188,7 @@ namespace BlackSimPlugin
             return rendered;
         }
 
-        bool CSimulatorFsx::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const QString &originator)
+        bool CSimulatorFsx::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const COriginator &originator)
         {
             if (originator == this->simulatorOriginator()) { return false; }
             if (!this->isSimulating()) { return false; }

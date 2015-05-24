@@ -158,7 +158,7 @@ namespace BlackGui
             this->ui->le_CommandLineInput->clear();
         }
 
-        void CMainKeypadAreaComponent::ps_ownAircraftCockpitChanged(const CAircraft &aircraft, const QString &originator)
+        void CMainKeypadAreaComponent::ps_ownAircraftCockpitChanged(const CAircraft &aircraft, const COriginator &originator)
         {
             Q_UNUSED(originator);
             bool ident = aircraft.getTransponder().getTransponderMode() == CTransponder::StateIdent;
@@ -236,12 +236,12 @@ namespace BlackGui
             ui->pb_MainWeather->setChecked(false);
         }
 
-        const QString &CMainKeypadAreaComponent::keypadOriginator()
+        COriginator CMainKeypadAreaComponent::keypadOriginator()
         {
-            // string is generated once, the timestamp allows to use multiple
-            // components (as long as they are not generated at the same ms)
-            static const QString o = QString("KEYPADAREACOMPONENT:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
-            return o;
+            if (m_originator.getName().isEmpty())
+                m_originator = COriginator(QStringLiteral("KEYPADAREACOMPONENT"));
+
+            return m_originator;
         }
 
     } // namespace

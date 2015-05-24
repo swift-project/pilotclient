@@ -129,7 +129,7 @@ namespace BlackCore
         BlackCore::registerMetadata();
     }
 
-    bool CRuntime::parseCommandLine(const QString commandLine, const QString &originator)
+    bool CRuntime::parseCommandLine(const QString &commandLine, const COriginator &originator)
     {
         bool handled = false;
         if (this->getIContextAudio()) { handled = handled || this->getIContextAudio()->parseCommandLine(commandLine, originator); }

@@ -82,7 +82,7 @@ namespace BlackMisc
             return c;
         }
 
-        bool CRemoteAircraftProviderDummy::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRendering, const QString &originator)
+        bool CRemoteAircraftProviderDummy::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRendering, const COriginator &originator)
         {
             Q_UNUSED(originator);
             CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexEnabled, CVariant::fromValue(enabledForRendering));
@@ -90,7 +90,7 @@ namespace BlackMisc
             return n > 0;
         }
 
-        bool CRemoteAircraftProviderDummy::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const QString &originator)
+        bool CRemoteAircraftProviderDummy::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const COriginator &originator)
         {
             Q_UNUSED(originator);
             CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexModel, model.toCVariant());
@@ -98,7 +98,7 @@ namespace BlackMisc
             return n > 0;
         }
 
-        bool CRemoteAircraftProviderDummy::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositionUpdates, const QString &originator)
+        bool CRemoteAircraftProviderDummy::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositionUpdates, const COriginator &originator)
         {
             Q_UNUSED(originator);
             CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexFastPositionUpdates, CVariant::fromValue(enableFastPositionUpdates));
@@ -106,7 +106,7 @@ namespace BlackMisc
             return n > 0;
         }
 
-        bool CRemoteAircraftProviderDummy::updateAircraftRendered(const CCallsign &callsign, bool rendered, const QString &originator)
+        bool CRemoteAircraftProviderDummy::updateAircraftRendered(const CCallsign &callsign, bool rendered, const COriginator &originator)
         {
             Q_UNUSED(originator);
             CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexRendered, CVariant::fromValue(rendered));
@@ -114,7 +114,7 @@ namespace BlackMisc
             return n > 0;
         }
 
-        void CRemoteAircraftProviderDummy::updateMarkAllAsNotRendered(const QString &originator)
+        void CRemoteAircraftProviderDummy::updateMarkAllAsNotRendered(const COriginator &originator)
         {
             Q_UNUSED(originator);
             this->m_aircraft.markAllAsNotRendered();

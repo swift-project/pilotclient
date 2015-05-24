@@ -615,19 +615,19 @@ namespace BlackCore
         getIContextOwnAircraft()->changedAircraftCockpit(ownAircraft, IContextSimulator::InterfaceName());
     }
 
-    void CContextSimulator::ps_changedRemoteAircraftModel(const CSimulatedAircraft &aircraft, const QString &originator)
+    void CContextSimulator::ps_changedRemoteAircraftModel(const CSimulatedAircraft &aircraft, const COriginator &originator)
     {
         Q_ASSERT(this->m_simulatorPlugin);
         this->m_simulatorPlugin->simulator->changeRemoteAircraftModel(aircraft, originator);
     }
 
-    void CContextSimulator::ps_changedRemoteAircraftEnabled(const CSimulatedAircraft &aircraft, const QString &originator)
+    void CContextSimulator::ps_changedRemoteAircraftEnabled(const CSimulatedAircraft &aircraft, const COriginator &originator)
     {
         Q_ASSERT(this->m_simulatorPlugin);
         this->m_simulatorPlugin->simulator->changeRemoteAircraftEnabled(aircraft, originator);
     }
 
-    void CContextSimulator::ps_updateSimulatorCockpitFromContext(const CAircraft &ownAircraft, const QString &originator)
+    void CContextSimulator::ps_updateSimulatorCockpitFromContext(const CAircraft &ownAircraft, const COriginator &originator)
     {
         // todo:
         // This was previously an assert and it should be one again in the future.
@@ -641,7 +641,7 @@ namespace BlackCore
         Q_ASSERT(m_simulatorPlugin->simulator);
 
         // avoid loops
-        if (originator.isEmpty() || originator == IContextSimulator::InterfaceName()) { return; }
+        if (originator.getName().isEmpty() || originator == IContextSimulator::InterfaceName()) { return; }
 
         // update
         this->m_simulatorPlugin->simulator->updateOwnSimulatorCockpit(ownAircraft, originator);

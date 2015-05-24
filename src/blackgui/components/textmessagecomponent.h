@@ -16,6 +16,7 @@
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/textmessagetextedit.h"
+#include "blackmisc/originator.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/network/textmessagelist.h"
@@ -59,7 +60,7 @@ namespace BlackGui
             void displayInInfoWindow(const BlackMisc::CVariant &message, int displayDurationMs) const;
 
             //! Command line was entered
-            void commandEntered(const QString commandLine, const QString &orignator);
+            void commandEntered(const QString commandLine, const BlackMisc::COriginator &orignator);
 
         public slots:
             //! Text messages received
@@ -69,7 +70,7 @@ namespace BlackGui
             void onTextMessageSent(const BlackMisc::Network::CTextMessage &sentMessage);
 
             //! Used to allow direct input from global command line when visible
-            bool handleGlobalCommandLine(const QString &commandLine, const QString &originator);
+            bool handleGlobalCommandLine(const QString &commandLine, const BlackMisc::COriginator &originator);
 
             //! Display the tab for given callsign
             void showCorrespondingTab(const BlackMisc::Aviation::CCallsign &callsign);
@@ -80,6 +81,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CTextMessageComponent> ui;
+            BlackMisc::COriginator m_originator;
 
             //! Enum to widget
             QWidget *getTabWidget(Tab tab) const;
@@ -123,7 +125,7 @@ namespace BlackGui
             QString textMessageToCommand(const QString &enteredLine);
 
             //! Originator
-            static const QString &componentOriginator();
+            BlackMisc::COriginator componentOriginator();
 
             //! Handle a text message entered
             void handleEnteredTextMessage(const QString &textMessage);

@@ -151,7 +151,7 @@ namespace BlackSimPlugin
             return CCollection<CCallsign>(this->m_hashFs9Clients.keys());
         }
 
-        bool CSimulatorFs9::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const QString &originator)
+        bool CSimulatorFs9::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const COriginator &originator)
         {
             if (originator == this->simulatorOriginator()) { return false; }
             if (!this->isSimulating()) { return false; }

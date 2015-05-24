@@ -14,6 +14,7 @@
 
 #include "blackcoreexport.h"
 #include "blackcore/context.h"
+#include "blackmisc/originator.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/statusmessage.h"
@@ -99,15 +100,15 @@ namespace BlackCore
         //! Aircraft model was changed
         //! \details All remote aircraft are stored in the network context. The model can be updated here
         //!          via \sa updateAircraftModel and then this signal is fired
-        void changedRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
+        void changedRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::COriginator &originator);
 
         //! Aircraft enabled / disabled
         //! \details All remote aircraft are stored in the network context. The aircraft can be enabled (for rendering) here
         //!          via \sa updateAircraftEnabled and then this signal is fired
-        void changedRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
+        void changedRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::COriginator &originator);
 
         //! Aircraft enabled / disabled
-        void changedFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
+        void changedFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::COriginator &originator);
 
         //! Connection status changed for online station
         void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &atcStation, bool connected);
@@ -218,7 +219,7 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
         //! Command line was entered
-        virtual bool parseCommandLine(const QString &commandLine, const QString &originator) = 0;
+        virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::COriginator &originator) = 0;
 
         //! Get METAR, if not available request it (code such as EDDF, KLAX)
         virtual BlackMisc::Aviation::CInformationMessage getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) = 0;
@@ -236,13 +237,13 @@ namespace BlackCore
         virtual void requestAtisUpdates() = 0;
 
         //! Enable/disable rendering
-        virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const QString &originator) = 0;
+        virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const BlackMisc::COriginator &originator) = 0;
 
         //! Change model string
-        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) = 0;
+        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::COriginator &originator) = 0;
 
         //! Change fast position updates
-        virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending, const QString &originator) = 0;
+        virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending, const BlackMisc::COriginator &originator) = 0;
 
         //! Create dummy ATC stations for performance tests etc.
         virtual void testCreateDummyOnlineAtcStations(int number) = 0;

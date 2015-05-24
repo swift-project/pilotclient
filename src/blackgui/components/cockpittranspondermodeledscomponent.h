@@ -15,6 +15,7 @@
 #include "blackgui/blackguiexport.h"
 #include "enableforruntime.h"
 #include "../led.h"
+#include "blackmisc/originator.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/aviation/transponder.h"
 #include <QFrame>
@@ -39,7 +40,7 @@ namespace BlackGui
 
         private slots:
             //! \copydoc IContextOwnAircraft::changedAircraftCockpit
-            void ps_onAircraftCockpitChanged(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator);
+            void ps_onAircraftCockpitChanged(const BlackMisc::Aviation::CAircraft &aircraft, const BlackMisc::COriginator &originator);
 
             //! LED clicked
             void ps_onLedClicked();
@@ -60,11 +61,12 @@ namespace BlackGui
             BlackMisc::Aviation::CAircraft getOwnAircraft() const;
 
             //! Identifies sender of cockpit updates
-            static const QString &ledsOriginator();
+            BlackMisc::COriginator ledsOriginator();
 
             QScopedPointer<BlackGui::CLedWidget> m_ledStandby;
             QScopedPointer<BlackGui::CLedWidget> m_ledModes;
             QScopedPointer<BlackGui::CLedWidget> m_ledIdent;
+            BlackMisc::COriginator m_originator;
 
         };
 

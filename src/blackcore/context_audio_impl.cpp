@@ -474,7 +474,7 @@ namespace BlackCore
         return this->m_audioMixer->hasMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputOutputDevice1);
     }
 
-    bool CContextAudio::parseCommandLine(const QString &commandLine, const QString &originator)
+    bool CContextAudio::parseCommandLine(const QString &commandLine, const BlackMisc::COriginator &originator)
     {
         Q_UNUSED(originator);
         if (commandLine.isEmpty()) { return false; }

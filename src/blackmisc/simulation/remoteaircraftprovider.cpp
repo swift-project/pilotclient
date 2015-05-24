@@ -64,19 +64,19 @@ namespace BlackMisc
             return this->m_remoteAircraftProvider->remoteAircraftSituationsCount(callsign);
         }
 
-        bool CRemoteAircraftAware::updateAircraftModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const QString &originator)
+        bool CRemoteAircraftAware::updateAircraftModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const COriginator &originator)
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
             return this->m_remoteAircraftProvider->updateAircraftModel(callsign, model, originator);
         }
 
-        bool CRemoteAircraftAware::updateAircraftRendered(const CCallsign &callsign, bool rendered, const QString &originator)
+        bool CRemoteAircraftAware::updateAircraftRendered(const CCallsign &callsign, bool rendered, const COriginator &originator)
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
             return this->m_remoteAircraftProvider->updateAircraftRendered(callsign, rendered, originator);
         }
 
-        void CRemoteAircraftAware::updateMarkAllAsNotRendered(const QString &originator)
+        void CRemoteAircraftAware::updateMarkAllAsNotRendered(const COriginator &originator)
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
             return this->m_remoteAircraftProvider->updateMarkAllAsNotRendered(originator);
@@ -88,7 +88,7 @@ namespace BlackMisc
             return this->m_remoteAircraftProvider->isRemoteAircraftSupportingParts(callsign);
         }
 
-        bool CRemoteAircraftAware::updateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRedering, const QString &originator)
+        bool CRemoteAircraftAware::updateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRedering, const COriginator &originator)
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
             return this->m_remoteAircraftProvider->updateAircraftEnabled(callsign, enabledForRedering, originator);

@@ -9,10 +9,12 @@
 
 #include "client.h"
 #include "blackcore/network_vatlib.h"
+#include "blackmisc/originator.h"
 #include <iostream>
 #include <QStringList>
 
 using namespace BlackCore;
+using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
@@ -337,7 +339,7 @@ void Client::setOwnAircraftCmd(QTextStream &args)
         BlackMisc::Aviation::CComSystem("COM1", BlackMisc::PhysicalQuantities::CFrequency(com1, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())),
         BlackMisc::Aviation::CComSystem("COM2", BlackMisc::PhysicalQuantities::CFrequency(com2, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())),
         BlackMisc::Aviation::CTransponder(xpdrCode, xpdrMode),
-        "cmdClient");
+        COriginator("cmdClient"));
 }
 
 void Client::setOwnAircraftPositionCmd(QTextStream &args)

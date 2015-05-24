@@ -62,7 +62,7 @@ namespace BlackGui
 
             // init from aircraft
             CAircraft ownAircraft = this->getOwnAircraft();
-            this->ps_updateCockpitFromContext(ownAircraft, "dummyInitialValues");
+            this->ps_updateCockpitFromContext(ownAircraft, COriginator("dummyInitialValues"));
 
             // SELCAL pairs in cockpit
             this->ui->frp_ComPanelSelcalBottom->clear();
@@ -114,7 +114,7 @@ namespace BlackGui
             this->getIContextOwnAircraft()->updateSelcal(this->getSelcal(), cockpitOriginator());
         }
 
-        void CCockpitComComponent::ps_updateCockpitFromContext(const CAircraft &ownAircraft, const QString &originator)
+        void CCockpitComComponent::ps_updateCockpitFromContext(const CAircraft &ownAircraft, const COriginator &originator)
         {
             if (originator == CCockpitComComponent::cockpitOriginator()) return; // comes from myself
 
@@ -182,7 +182,7 @@ namespace BlackGui
             }
         }
 
-        void CCockpitComComponent::ps_onChangedSelcal(const CSelcal &selcal, const QString &originator)
+        void CCockpitComComponent::ps_onChangedSelcal(const CSelcal &selcal, const COriginator &originator)
         {
             if (originator == CCockpitComComponent::cockpitOriginator()) return; // comes from myself
             this->ui->frp_ComPanelSelcalBottom->setSelcalCode(selcal);
@@ -286,12 +286,12 @@ namespace BlackGui
             Q_UNUSED(connected);
         }
 
-        const QString &CCockpitComComponent::cockpitOriginator()
+        COriginator CCockpitComComponent::cockpitOriginator()
         {
-            // string is generated once, the timestamp allows to use multiple
-            // components (as long as they are not generated at the same ms)
-            static const QString o = QString("COCKPITCOMCOMPONENT:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
-            return o;
+            if (m_originator.getName().isEmpty())
+                m_originator = COriginator(QStringLiteral("COCKPITCOMCOMPONENT"));
+
+            return m_originator;
         }
 
     } // namespace

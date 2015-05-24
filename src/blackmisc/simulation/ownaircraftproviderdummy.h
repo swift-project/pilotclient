@@ -50,13 +50,13 @@ namespace BlackMisc
 
         public slots:
             //! \copydoc IOwnAircraftProvider::updateCockpit
-            virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) override;
+            virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const BlackMisc::COriginator &originator) override;
 
             //! \copydoc IOwnAircraftProvider::updateComFrequency
-            virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const QString &originator) override;
+            virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const BlackMisc::COriginator &originator) override;
 
             //! \copydoc IOwnAircraftProvider::updateSelcal
-            virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator) override;
+            virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::COriginator &originator) override;
 
             //! \copydoc IOwnAircraftProvider::updateOwnCallsign
             virtual bool updateOwnCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;

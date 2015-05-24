@@ -30,6 +30,7 @@
 #include "blackgui/models/keyboardkeylistmodel.h"
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/managedstatusbar.h"
+#include "blackmisc/originator.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/loghandler.h"
 #include "blacksound/soundgenerator.h"
@@ -128,6 +129,8 @@ private:
     QString m_transponderResetValue;         //!< Temp. storage of XPdr mode to reset, req. until timer allows singleShoot with Lambdas
     QWidget *m_inputFocusedWidget = nullptr; //!< currently used widget for input, mainly used with cockpit
 
+    BlackMisc::COriginator m_originator;
+
     //! GUI status update
     void updateGuiStatusInformation();
 
@@ -182,11 +185,12 @@ private:
     void playNotifcationSound(BlackSound::CNotificationSounds::Notification notification) const;
 
     //! Originator for aircraft context
-    static const QString &swiftGuiStandardOriginator()
+    BlackMisc::COriginator swiftGuiStandardOriginator()
     {
-        // one time init, timestamp allows "multiple swift GUIs"
-        static const QString o = QString("SWIFTGUISTANDARD:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
-        return o;
+        if (m_originator.getName().isEmpty())
+            m_originator = BlackMisc::COriginator(QStringLiteral("SWIFTGUISTANDARD"));
+
+        return m_originator;
     }
 
 private slots:

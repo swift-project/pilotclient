@@ -417,12 +417,12 @@ namespace BlackGui
             this->setCurrentWidget(this->ui->tb_RemarksGenerator);
         }
 
-        const QString &CFlightPlanComponent::flightPlanOriginator()
+        COriginator CFlightPlanComponent::flightPlanOriginator()
         {
-            // string is generated once, the timestamp allows to use multiple
-            // components (as long as they are not generated at the same ms)
-            static const QString o = QString("FLIGHTPLANCOMPONENT:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
-            return o;
+            if (m_originator.getName().isEmpty())
+                m_originator = COriginator(QStringLiteral("FLIGHTPLANCOMPONENT"));
+
+            return m_originator;
         }
 
     } // namespace

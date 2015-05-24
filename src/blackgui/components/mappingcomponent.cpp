@@ -308,21 +308,21 @@ namespace BlackGui
             this->ui->le_AircraftModel->setCompleter(this->m_modelCompleter);
         }
 
-        void CMappingComponent::ps_onRemoteAircraftModelChanged(const CSimulatedAircraft &aircraft, const QString &originator)
+        void CMappingComponent::ps_onRemoteAircraftModelChanged(const CSimulatedAircraft &aircraft, const COriginator &originator)
         {
             this->updateSimulatedAircraftView();
             Q_UNUSED(originator);
             Q_UNUSED(aircraft);
         }
 
-        void CMappingComponent::ps_onChangedAircraftEnabled(const CSimulatedAircraft &aircraft, const QString &originator)
+        void CMappingComponent::ps_onChangedAircraftEnabled(const CSimulatedAircraft &aircraft, const COriginator &originator)
         {
             this->updateSimulatedAircraftView();
             Q_UNUSED(originator);
             Q_UNUSED(aircraft);
         }
 
-        void CMappingComponent::ps_onFastPositionUpdatesEnabled(const CSimulatedAircraft &aircraft, const QString &originator)
+        void CMappingComponent::ps_onFastPositionUpdatesEnabled(const CSimulatedAircraft &aircraft, const COriginator &originator)
         {
             this->updateSimulatedAircraftView();
             Q_UNUSED(originator);
@@ -378,12 +378,12 @@ namespace BlackGui
             }
         }
 
-        const QString &CMappingComponent::mappingtOriginator()
+        COriginator CMappingComponent::mappingtOriginator()
         {
-            // string is generated once, the timestamp allows to use multiple
-            // components (as long as they are not generated at the same ms)
-            static const QString o = QString("MAPPINGCOMPONENT:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
-            return o;
+            if (m_originator.getName().isEmpty())
+                m_originator = COriginator(QStringLiteral("MAPPINGCOMPONENT"));
+
+            return m_originator;
         }
 
         void CMappingComponent::updateSimulatedAircraftView(bool forceUpdate)

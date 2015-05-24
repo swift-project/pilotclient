@@ -14,6 +14,7 @@
 
 #include "blackcoreexport.h"
 #include "blackcore/context.h"
+#include "blackmisc/originator.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/aircrafticaodata.h"
 #include "blackmisc/audio/voiceroomlist.h"
@@ -66,10 +67,10 @@ namespace BlackCore
 
     signals:
         //! Aircraft cockpit update
-        void changedAircraftCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const QString &originator);
+        void changedAircraftCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::COriginator &originator);
 
         //! Changed SELCAL code
-        void changedSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator);
+        void changedSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::COriginator &originator);
 
         //! Own callsign was changed
         void changedCallsign(const BlackMisc::Aviation::CCallsign &callsign);
@@ -89,10 +90,10 @@ namespace BlackCore
         virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) = 0;
 
         //! Update own cockpit
-        virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) = 0;
+        virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const BlackMisc::COriginator &originator) = 0;
 
         //! Tune in a com frequency
-        virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const QString &originator) = 0;
+        virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const BlackMisc::COriginator &originator) = 0;
 
         //! Set current pilot
         virtual bool updateOwnAircraftPilot(const BlackMisc::Network::CUser &pilot) = 0;
@@ -104,7 +105,7 @@ namespace BlackCore
         virtual bool updateOwnCallsign(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
         //! Own SELCAL code
-        virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator) = 0;
+        virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::COriginator &originator) = 0;
 
         //! Output volume 0..300
         virtual void setAudioOutputVolume(int outputVolume) = 0;
@@ -118,7 +119,7 @@ namespace BlackCore
         virtual void enableAutomaticVoiceRoomResolution(bool enable) = 0;
 
         //! Parse command line
-        virtual bool parseCommandLine(const QString &commandLine, const QString &originator) = 0;
+        virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::COriginator &originator) = 0;
 
     protected:
         //! Constructor

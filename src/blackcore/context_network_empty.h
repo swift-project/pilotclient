@@ -222,7 +222,7 @@ namespace BlackCore
         }
 
         //! \copydoc IContextNetwork::parseCommandLine
-        virtual bool parseCommandLine(const QString &commandLine, const QString &originator) override
+        virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::COriginator &originator) override
         {
             Q_UNUSED(commandLine);
             Q_UNUSED(originator);
@@ -245,7 +245,7 @@ namespace BlackCore
         }
 
         //! \copydoc IContextNetwork::updateAircraftEnabled
-        virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const QString &originator) override
+        virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const BlackMisc::COriginator &originator) override
         {
             Q_UNUSED(callsign);
             Q_UNUSED(originator);
@@ -255,7 +255,7 @@ namespace BlackCore
         }
 
         //! \copydoc IContextNetwork::updateAircraftModel
-        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) override
+        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::COriginator &originator) override
         {
             Q_UNUSED(callsign);
             Q_UNUSED(originator);
@@ -265,7 +265,7 @@ namespace BlackCore
         }
 
         //! \copydoc IContextNetwork::updateFastPositionEnabled
-        virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending, const QString &originator) override
+        virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending, const BlackMisc::COriginator &originator) override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             Q_UNUSED(callsign);

@@ -68,19 +68,19 @@ namespace BlackMisc
             ) override;
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftEnabled
-            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering, const QString &originator) override;
+            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering, const BlackMisc::COriginator &originator) override;
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftModel
-            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const QString &originator) override;
+            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::COriginator &originator) override;
 
             //! \copydoc IRemoteAircraftProvider::updateFastPositionEnabled
-            virtual bool updateFastPositionEnabled(const Aviation::CCallsign &callsign, bool enableFastPositionUpdates, const QString &originator) override;
+            virtual bool updateFastPositionEnabled(const Aviation::CCallsign &callsign, bool enableFastPositionUpdates, const BlackMisc::COriginator &originator) override;
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftRendered
-            virtual bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered, const QString &originator) override;
+            virtual bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered, const BlackMisc::COriginator &originator) override;
 
             //! \copydoc IRemoteAircraftProvider::updateMarkAllAsNotRendered
-            virtual void updateMarkAllAsNotRendered(const QString &originator) override;
+            virtual void updateMarkAllAsNotRendered(const BlackMisc::COriginator &originator) override;
 
             //! For testing, add new situation and fire signals
             void insertNewSituation(const BlackMisc::Aviation::CAircraftSituation &situation);

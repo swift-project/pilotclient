@@ -42,16 +42,16 @@ namespace BlackCore
         virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) override;
 
         //! \copydoc IContextOwnAircraft::updateCockpit
-        virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) override;
+        virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const BlackMisc::COriginator &originator) override;
 
         //! \copydoc IContextOwnAircraft::updateComFrequency
-        virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const QString &originator) override;
+        virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const BlackMisc::COriginator &originator) override;
 
         //! \copydoc IContextOwnAircraft::updatePilot
         virtual bool updateOwnAircraftPilot(const BlackMisc::Network::CUser &pilot) override;
 
         //! \copydoc IContextOwnAircraft::updateSelcal
-        virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator) override;
+        virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::COriginator &originator) override;
 
         //! \copydoc IContextOwnAircraft::updateOwnCallsign
         virtual bool updateOwnCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
@@ -69,7 +69,7 @@ namespace BlackCore
         virtual void enableAutomaticVoiceRoomResolution(bool enable);
 
         //! \copydoc IContextOwnAircraft::parseCommandLine
-        virtual bool parseCommandLine(const QString &commandLine, const QString &originator) override;
+        virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::COriginator &originator) override;
 
     protected:
         //! \brief Constructor

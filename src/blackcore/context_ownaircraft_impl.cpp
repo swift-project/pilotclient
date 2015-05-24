@@ -170,7 +170,7 @@ namespace BlackCore
         return changed;
     }
 
-    bool CContextOwnAircraft::updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator)
+    bool CContextOwnAircraft::updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const COriginator &originator)
     {
         if (this->m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << com1 << com2 << transponder; }
         bool changed;
@@ -187,7 +187,7 @@ namespace BlackCore
         return changed;
     }
 
-    bool CContextOwnAircraft::updateActiveComFrequency(const CFrequency &frequency, int comUnit, const QString &originator)
+    bool CContextOwnAircraft::updateActiveComFrequency(const CFrequency &frequency, int comUnit, const COriginator &originator)
     {
         CComSystem::ComUnit unit = static_cast<CComSystem::ComUnit>(comUnit);
         if (unit != CComSystem::Com1 && unit != CComSystem::Com2) { return false; }
@@ -244,7 +244,7 @@ namespace BlackCore
         return true;
     }
 
-    bool CContextOwnAircraft::updateSelcal(const CSelcal &selcal, const QString &originator)
+    bool CContextOwnAircraft::updateSelcal(const CSelcal &selcal, const COriginator &originator)
     {
         {
             QWriteLocker l(&m_lockAircraft);
@@ -297,7 +297,7 @@ namespace BlackCore
         this->m_automaticVoiceRoomResolution = enable;
     }
 
-    bool CContextOwnAircraft::parseCommandLine(const QString &commandLine, const QString &originator)
+    bool CContextOwnAircraft::parseCommandLine(const QString &commandLine, const COriginator &originator)
     {
         Q_UNUSED(originator);
         if (commandLine.isEmpty()) { return false; }
@@ -319,14 +319,16 @@ namespace BlackCore
             if (CTransponder::isValidTransponderCode(xprCode))
             {
                 transponder.setTransponderCode(xprCode);
-                this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), transponder, "commandline");
+                // todo RW: replace originator
+                this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), transponder, COriginator("commandline"));
                 return true;
             }
             else
             {
                 CTransponder::TransponderMode mode = CTransponder::modeFromString(parser.part(1));
                 transponder.setTransponderMode(mode);
-                this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), transponder, "commandline");
+                // todo RW: replace originator
+                this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), transponder, COriginator("commandline"));
                 return true;
             }
         }
@@ -349,7 +351,8 @@ namespace BlackCore
                 {
                     return false;
                 }
-                this->updateCockpit(com1, com2, myAircraft.getTransponder(), "commandline");
+                // todo RW: replace originator
+                this->updateCockpit(com1, com2, myAircraft.getTransponder(), COriginator("commandline"));
                 return true;
             }
         }
@@ -357,7 +360,8 @@ namespace BlackCore
         {
             if (CSelcal::isValidCode(parser.part(1)))
             {
-                this->updateSelcal(parser.part(1), "commandline");
+                // todo RW: replace originator
+                this->updateSelcal(parser.part(1), COriginator("commandline"));
                 return true;
             }
         }

@@ -51,7 +51,7 @@ namespace BlackCore
     {
         // signals originating from impl side
         bool s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                                    "messageLogged", this, SIGNAL(messageLogged(BlackMisc::CStatusMessage, BlackMisc::Event::COriginator)));
+                                    "messageLogged", this, SIGNAL(messageLogged(BlackMisc::CStatusMessage, BlackMisc::COriginator)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
                                "componentChanged", this, SIGNAL(componentChanged(uint, uint)));

@@ -12,6 +12,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackCore;
 
@@ -35,7 +36,7 @@ namespace BlackGui
             this->setMode(getOwnTransponder().getTransponderMode());
         }
 
-        void CCockpitTransponderModeLedsComponent::ps_onAircraftCockpitChanged(const CAircraft &aircraft, const QString &originator)
+        void CCockpitTransponderModeLedsComponent::ps_onAircraftCockpitChanged(const CAircraft &aircraft, const BlackMisc::COriginator &originator)
         {
             if (ledsOriginator() == originator) { return; }
             this->setMode(aircraft.getTransponderMode());
@@ -132,12 +133,12 @@ namespace BlackGui
             return getIContextOwnAircraft()->getOwnAircraft();
         }
 
-        const QString &CCockpitTransponderModeLedsComponent::ledsOriginator()
+        BlackMisc::COriginator CCockpitTransponderModeLedsComponent::ledsOriginator()
         {
-            // string is generated once, the timestamp allows to use multiple
-            // components (as long as they are not generated at the same ms)
-            static const QString o = QString("XPDRLEDSCOMCOMPONENT:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
-            return o;
+            if (m_originator.getName().isEmpty())
+                m_originator = COriginator(QStringLiteral("XPDRLEDSCOMCOMPONENT"));
+
+            return m_originator;
         }
 
     } // namespace
