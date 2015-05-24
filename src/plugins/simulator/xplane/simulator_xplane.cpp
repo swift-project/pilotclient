@@ -185,12 +185,6 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorXPlane::asyncConnectTo()
-        {
-            // TODO
-            connectTo();
-        }
-
         bool CSimulatorXPlane::disconnectFrom()
         {
             if (!this->isConnected()) { return true; } // avoid emit if already disconnected

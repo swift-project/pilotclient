@@ -48,9 +48,6 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::connectTo
             virtual bool connectTo() override;
 
-            //! \copydoc BlackCore::ISimulator::asyncConnectTo
-            virtual void asyncConnectTo() override;
-
             //! \copydoc BlackCore::ISimulator::disconnectFrom
             virtual bool disconnectFrom() override;
 

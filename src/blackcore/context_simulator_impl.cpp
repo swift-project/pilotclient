@@ -423,8 +423,7 @@ namespace BlackCore
         settingsChanged(static_cast<uint>(IContextSettings::SettingsSimulator));
 
         // try to connect
-        //! \todo #417: we want to change this to connectTo, as the listener already checks the avialability of the simulator
-        m_simulatorPlugin->simulator->asyncConnectTo();
+        m_simulatorPlugin->simulator->connectTo();
 
         if (m_simulatorPlugin) // can be already nullptr if connectTo() is synchronous and fails
         {

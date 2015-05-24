@@ -74,10 +74,6 @@ namespace BlackCore
         //! Connect to simulator
         virtual bool connectTo() = 0;
 
-        //! Connect asynchronously to simulator
-        //! \deprecated #417
-        virtual void asyncConnectTo() = 0;
-
         //! Disconnect from simulator
         virtual bool disconnectFrom() = 0;
 
