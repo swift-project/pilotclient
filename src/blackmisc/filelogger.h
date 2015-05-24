@@ -1,0 +1,71 @@
+/* Copyright (C) 2015
+ * swift Project Community / Contributors
+ *
+ * This file is part of Swift Project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+#ifndef BLACKMISC_FILELOGGER_H
+#define BLACKMISC_FILELOGGER_H
+
+//! \file
+
+#include "blackmiscexport.h"
+#include "loghandler.h"
+#include "statusmessage.h"
+#include <QFile>
+#include <QTextStream>
+
+namespace BlackMisc
+{
+
+    //! Class to write log messages to file
+    class BLACKMISC_EXPORT CFileLogger : public QObject
+    {
+        Q_OBJECT
+
+    public:
+
+        //! Constructor.
+        //! Filename defaults to QCoreApplication::applicationName() and path to "."
+        CFileLogger(QObject *parent = nullptr);
+
+        /*!
+         * Constructor
+         * \param applicationName Use the applications name without any extension.
+         *                        A timestamp and extension will be added automatically.
+         * \param logPath Path the log files is written to. If you leave this empty, the
+         *                file will be written in the working directory of the binary.
+         * \param parent QObject parent
+         */
+        CFileLogger(const QString &applicationName, const QString &logPath, QObject *parent = nullptr);
+
+        //! Destructor.
+        ~CFileLogger();
+
+        //! Change the log pattern. Call this method at least once to start logging
+        void changeLogPattern(const CLogPattern &pattern);
+
+    private slots:
+
+        void ps_writeStatusMessageToFile(const BlackMisc::CStatusMessage &statusMessage);
+
+    private:
+
+        QString getFullFileName();
+        void removeOldLogFiles();
+
+        void writeHeaderToFile();
+        void writeContentToFile(const QString &content);
+
+        CLogSubscriber m_logSubscriber;
+        QFile m_logFile;
+        QTextStream m_stream;
+        QString m_applicationName;
+        QString m_logPath; //!< Empty by default. Hence the working directory "." is used
+    };
+}
+
+#endif
