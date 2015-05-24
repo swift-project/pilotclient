@@ -198,6 +198,10 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulatorListener::stop
             virtual void stop() override;
 
+        private:
+            //! \brief Check if XBus service is already registered
+            bool isXBusRunning() const;
+
         private slots:
             void ps_serviceRegistered(const QString &serviceName);
 

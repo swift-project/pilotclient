@@ -454,9 +454,16 @@ namespace BlackSimPlugin
             if (m_watcher) // already started
                 return;
 
-            m_conn = QDBusConnection::sessionBus(); // TODO make this configurable
-            m_watcher = new QDBusServiceWatcher(xbusServiceName(), m_conn, QDBusServiceWatcher::WatchForRegistration, this);
-            connect(m_watcher, &QDBusServiceWatcher::serviceRegistered, this, &CSimulatorXPlaneListener::ps_serviceRegistered);
+            if (isXBusRunning())
+            {
+                emit simulatorStarted();
+            }
+            else
+            {
+                m_conn = QDBusConnection::sessionBus(); // TODO make this configurable
+                m_watcher = new QDBusServiceWatcher(xbusServiceName(), m_conn, QDBusServiceWatcher::WatchForRegistration, this);
+                connect(m_watcher, &QDBusServiceWatcher::serviceRegistered, this, &CSimulatorXPlaneListener::ps_serviceRegistered);
+            }
         }
 
         void CSimulatorXPlaneListener::stop()
@@ -466,6 +473,20 @@ namespace BlackSimPlugin
                 m_watcher->deleteLater();
                 m_watcher = nullptr;
             }
+        }
+
+        bool CSimulatorXPlaneListener::isXBusRunning() const
+        {
+            QDBusConnection conn = QDBusConnection::sessionBus(); // TODO make this configurable
+            CXBusServiceProxy *service = new CXBusServiceProxy(conn);
+            CXBusTrafficProxy *traffic = new CXBusTrafficProxy(conn);
+
+            bool result = service->isValid() && traffic->isValid();
+
+            service->deleteLater();
+            traffic->deleteLater();
+
+            return result;
         }
 
         void CSimulatorXPlaneListener::ps_serviceRegistered(const QString &serviceName)
