@@ -195,6 +195,8 @@ namespace BlackMisc
     public:
         /*!
          * Returns a new worker object which lives in a new thread.
+         * \note The worker calls its own deleteLater method when finished.
+         *       Typically assign it to a QPointer if you want to store it.
          * \param owner Will be the parent of the new thread (the worker has no parent).
          * \param name A name for the task, which will be used to create a name for the thread.
          * \param task A function object which will be run by the worker in its thread.
