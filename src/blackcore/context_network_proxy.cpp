@@ -250,7 +250,7 @@ namespace BlackCore
 
     bool CContextNetworkProxy::parseCommandLine(const QString &commandLine, const COriginator &originator)
     {
-        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("commandLineEntered"), commandLine, originator);
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("parseCommandLine"), commandLine, originator);
     }
 
     void CContextNetworkProxy::sendTextMessages(const CTextMessageList &textMessages)
