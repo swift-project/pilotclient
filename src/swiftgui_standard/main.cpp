@@ -17,6 +17,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/loghandler.h"
+#include "blackmisc/filelogger.h"
 
 #include <QtGlobal>
 #include <QApplication>
@@ -52,6 +53,8 @@ int main(int argc, char *argv[])
     CLogHandler::instance()->handlerForPattern(
         CLogPattern::anyOf({ CLogCategory::contextSlot(), CLogCategory::context() }).withSeverityAtOrAbove(CStatusMessage::SeverityInfo)
     )->enableConsoleOutput(true);
+    CFileLogger fileLogger(QStringLiteral("swiftgui_std"), QString(), &a);
+    fileLogger.changeLogPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityDebug));
 
     // Translations
     QFile file(":blackmisc/translations/blackmisc_i18n_de.qm");

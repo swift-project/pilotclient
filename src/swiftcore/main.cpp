@@ -11,6 +11,7 @@
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/project.h"
 #include "blackmisc/loghandler.h"
+#include "blackmisc/filelogger.h"
 #include "blackgui/stylesheetutility.h"
 
 #include <QApplication>
@@ -89,6 +90,8 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     QApplication::setApplicationName("swiftcore");
     QApplication::setApplicationVersion(CProject::version());
+    CFileLogger fileLogger(QStringLiteral("swiftcore"), QString(), &a);
+    fileLogger.changeLogPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityDebug));
 
     QCommandLineParser parser;
     parser.setApplicationDescription("swiftcore control");
