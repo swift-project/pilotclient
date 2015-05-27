@@ -10,21 +10,17 @@
 #include "originator.h"
 #include <QCoreApplication>
 #include <QDBusConnection>
+#include <QHostInfo>
 
 namespace BlackMisc
 {
     COriginator::COriginator(const QString &name)
-        : m_name(name),
+        : m_name(name.trimmed()),
           m_machineIdBase64(QDBusConnection::localMachineId().toBase64()),
+          m_machineName(QHostInfo::localHostName()),
           m_processName(QCoreApplication::applicationName()),
-          m_processId(QCoreApplication::applicationPid()),
-          m_timestampMsEpoch(QDateTime::currentMSecsSinceEpoch())
+          m_processId(QCoreApplication::applicationPid())
     { }
-
-    COriginator::COriginator(const QObject *object) : COriginator(object->objectName())
-    {
-        Q_ASSERT_X(!object->objectName().isEmpty(), Q_FUNC_INFO, "Missing name");
-    }
 
     QByteArray COriginator::getMachineId() const
     {
@@ -49,9 +45,9 @@ namespace BlackMisc
     QString COriginator::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
-        QString s;
-        s.append(m_name);
+        QString s(m_name);
         s.append(" ").append(m_machineIdBase64);
+        s.append(" ").append(m_machineName);
         s.append(" ").append(QString::number(m_processId));
         s.append(" ").append(m_processName);
         return s;
@@ -62,12 +58,16 @@ namespace BlackMisc
         if (index.isMyself()) { return this->toCVariant(); }
 
         ColumnIndex i = index.frontCasted<ColumnIndex>();
+        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
+
         switch (i)
         {
         case IndexName:
             return CVariant::fromValue(m_name);
         case IndexMachineIdBase64:
             return CVariant::fromValue(m_machineIdBase64);
+        case IndexMachineName:
+            return CVariant::fromValue(getMachineName());
         case IndexMachineId:
             return CVariant::fromValue(getMachineId());
         case IndexProcessId:
@@ -80,8 +80,6 @@ namespace BlackMisc
             return CVariant::fromValue(isFromSameProcess());
         case IndexIsFromSameProcessName:
             return CVariant::fromValue(isFromSameProcessName());
-        case IndexUtcTimestamp:
-            return CVariant::fromValue(getTimestamp());
         default:
             return CValueObject::propertyByIndex(index);
         }

@@ -13,6 +13,7 @@
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/originatorlist.h"
 #include <algorithm>
 #include <iterator>
 
@@ -172,5 +173,6 @@ namespace BlackMisc
     template class ITimestampObjectList<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList>;
     template class ITimestampObjectList<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList>;
     template class ITimestampObjectList<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>;
+    template class ITimestampObjectList<BlackMisc::COriginator, BlackMisc::COriginatorList>;
 
 } // namespace

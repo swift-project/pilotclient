@@ -14,16 +14,17 @@
 
 #include "blackmiscexport.h"
 #include "valueobject.h"
+#include "timestampbased.h"
 #include "blackmiscfreefunctions.h"
 #include <QByteArray>
 #include <QString>
 
-class QObject;
-
 namespace BlackMisc
 {
     //! Value object encapsulating information about the originiator
-    class BLACKMISC_EXPORT COriginator : public CValueObject<COriginator>
+    class BLACKMISC_EXPORT COriginator :
+        public CValueObject<COriginator>,
+        public ITimestampBased
     {
     public:
         //! Properties by index
@@ -32,9 +33,9 @@ namespace BlackMisc
             IndexName = BlackMisc::CPropertyIndex::GlobalIndexOriginator,
             IndexMachineId,
             IndexMachineIdBase64,
+            IndexMachineName,
             IndexProcessId,
             IndexProcessName,
-            IndexUtcTimestamp,
             IndexIsFromLocalMachine,
             IndexIsFromSameProcess,
             IndexIsFromSameProcessName
@@ -43,11 +44,11 @@ namespace BlackMisc
         //! Constructor.
         COriginator(const QString &name = QString());
 
-        //! Constructor using the objectName of object as name
-        COriginator(const QObject *object);
-
         //! Name
         QString getName() const { return m_name; }
+
+        //! Has name
+        bool hasName() const { return !m_name.isEmpty(); }
 
         //! Get machine id
         QByteArray getMachineId() const;
@@ -55,14 +56,14 @@ namespace BlackMisc
         //! Machine 64 base64 encoded
         QString getMachineIdBase64() const { return m_machineIdBase64; }
 
+        //! Machine name
+        QString getMachineName() const { return m_machineName; }
+
         //! Get process id
         qint64 getProcessId() const {return m_processId;}
 
         //! Get process name
         QString getProcessName() const {return m_processName;}
-
-        //! When created
-        QDateTime getTimestamp() const { return QDateTime::fromMSecsSinceEpoch(m_timestampMsEpoch); }
 
         //! Check if originating from the same local machine
         bool isFromLocalMachine() const;
@@ -84,21 +85,22 @@ namespace BlackMisc
 
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(COriginator)
-        QString m_name;
-        QString m_machineIdBase64; // base 64 encoded
+        QString m_name;            //!< originator name
+        QString m_machineIdBase64; //!< base 64 encoded machine id
+        QString m_machineName;     //!< human readable machine name
         QString m_processName;
         qint64 m_processId;
-        qint64 m_timestampMsEpoch;
     };
 } // namespace
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::COriginator, (
-    attr(o.m_name),
-    attr(o.m_machineIdBase64),
-    attr(o.m_processName),
-    attr(o.m_processId),
-    attr(o.m_timestampMsEpoch, flags <DisabledForComparison | DisabledForHashing> ())
-))
+                                   attr(o.m_name),
+                                   attr(o.m_machineIdBase64),
+                                   attr(o.m_machineName, flags <DisabledForComparison | DisabledForHashing> ()),
+                                   attr(o.m_processName),
+                                   attr(o.m_processId),
+                                   attr(o.m_timestampMSecsSinceEpoch, flags <DisabledForComparison | DisabledForHashing> ())
+                               ))
 
 Q_DECLARE_METATYPE(BlackMisc::COriginator)
 

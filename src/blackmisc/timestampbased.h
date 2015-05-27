@@ -105,5 +105,4 @@ namespace BlackMisc
 
 } // namespace
 
-
 #endif // guard
