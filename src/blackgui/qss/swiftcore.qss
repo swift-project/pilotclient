@@ -128,7 +128,25 @@ QTableView, QTreeView {
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
-QSizeGrip {
+QSizeGrip { }
+
+QScrollArea {
+  border: 1px solid green;
+  border-radius: 5px;
+}
+
+QScrollBar:horizontal {
+  border: 2px solid gray;
+  background: slategray;
+  height: 10px;
+  margin: 0px 5px 0px 5px;
+}
+
+QScrollBar:vertical {
+  border: 2px solid gray;
+  background: slategray;
+  width: 10px;
+  margin: 5px 0px 5px 0;
 }
 
 #le_CommandLineInput {
@@ -138,11 +156,11 @@ QSizeGrip {
   border-radius: 5px;
 }
 
-#comp_log {
+#comp_Log {
   background: transparent; /** background is background color here **/
 }
 
-#gb_dbusMode {
+#gb_DBusMode {
   background: transparent; /** background is background color here **/
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }

@@ -11,9 +11,11 @@
 #include "ui_swiftcore.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/loghandler.h"
+#include "blackmisc/project.h"
+#include "blackgui/components/logcomponent.h"
+#include "blackgui/components/enableforruntime.h"
 #include "blackcore/dbus_server.h"
 #include "blackgui/stylesheetutility.h"
-#include "blackgui/components/enableforruntime.h"
 #include <QMenu>
 #include <QMessageBox>
 #include <QCloseEvent>
@@ -24,25 +26,25 @@ using namespace BlackGui;
 using namespace BlackGui::Components;
 
 CSwiftCore::CSwiftCore(const SetupInfo &info, QWidget *parent) :
-    CSystemTrayWindow(BlackMisc::CIcons::swiftNova24(), parent),
+    CSystemTrayWindow(CIcons::swiftNova24(), parent),
     ui(new Ui::CSwiftCore)
 {
     ui->setupUi(this);
-
+    const QString name("swiftcore " + CProject::version());
     SystemTrayMode mode = MinimizeToTray | QuitOnClose;
     setSystemTrayMode(mode);
-    setToolTip(QStringLiteral("swiftcore"));
-
+    setToolTip(name);
+    setWindowTitle(name);
+    setWindowIcon(CIcons::swiftNova24());
+    setWindowIconText(name);
     setupLogDisplay();
-
     connectSlots();
     ps_onStyleSheetsChanged();
     startCore(info);
 }
 
 CSwiftCore::~CSwiftCore()
-{
-}
+{ }
 
 void CSwiftCore::ps_startCorePressed()
 {
@@ -58,19 +60,19 @@ void CSwiftCore::ps_stopCorePressed()
 
 void CSwiftCore::ps_appendLogMessage(const CStatusMessage &message)
 {
-    ui->comp_log->appendStatusMessageToList(message);
+    ui->comp_InfoArea->getLogComponent()->appendStatusMessageToList(message);
 }
 
 void CSwiftCore::ps_p2pModeToggled(bool checked)
 {
     if (checked)
     {
-        ui->le_p2pAddress->setEnabled(true);
+        ui->le_P2PAddress->setEnabled(true);
     }
     else
     {
-        ui->le_p2pAddress->setText(QString());
-        ui->le_p2pAddress->setEnabled(false);
+        ui->le_P2PAddress->setText(QString());
+        ui->le_P2PAddress->setEnabled(false);
     }
 }
 
@@ -87,9 +89,9 @@ void CSwiftCore::ps_onStyleSheetsChanged()
 
 void CSwiftCore::connectSlots()
 {
-    connect(ui->pb_startCore, &QPushButton::clicked, this, &CSwiftCore::ps_startCorePressed);
-    connect(ui->pb_stopCore, &QPushButton::clicked, this, &CSwiftCore::ps_stopCorePressed);
-    connect(ui->rb_p2pBus, &QRadioButton::toggled, this, &CSwiftCore::ps_p2pModeToggled);
+    connect(ui->pb_StartCore, &QPushButton::clicked, this, &CSwiftCore::ps_startCorePressed);
+    connect(ui->pb_StopCore, &QPushButton::clicked, this, &CSwiftCore::ps_stopCorePressed);
+    connect(ui->rb_P2PBus, &QRadioButton::toggled, this, &CSwiftCore::ps_p2pModeToggled);
     connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CSwiftCore::ps_onStyleSheetsChanged);
 }
 
@@ -100,7 +102,6 @@ void CSwiftCore::setupLogDisplay()
     auto logHandler = CLogHandler::instance()->handlerForPattern(
                           CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo)
                       );
-
     logHandler->subscribe(this, &CSwiftCore::ps_appendLogMessage);
 }
 
@@ -109,9 +110,9 @@ void CSwiftCore::startCore(const SetupInfo &setup)
     if (getRuntime()) { return; }
     if (setup.m_dbusAddress.isEmpty()) { return; }
 
-    ui->pb_startCore->setEnabled(false);
-    ui->pb_stopCore->setEnabled(true);
-    ui->gb_dbusMode->setDisabled(true);
+    ui->pb_StartCore->setEnabled(false);
+    ui->pb_StopCore->setEnabled(true);
+    ui->gb_DBusMode->setDisabled(true);
 
     // context
     createRuntime(CRuntimeConfig::forCoreAllLocalInDBus(setup.m_dbusAddress), this);
@@ -122,10 +123,11 @@ void CSwiftCore::startCore(const SetupInfo &setup)
 void CSwiftCore::stopCore()
 {
     if (!getRuntime()) { return; }
+    getRuntime()->gracefulShutdown();
 
-    ui->pb_startCore->setEnabled(true);
-    ui->pb_stopCore->setEnabled(false);
-    ui->gb_dbusMode->setDisabled(false);
+    ui->pb_StartCore->setEnabled(true);
+    ui->pb_StopCore->setEnabled(false);
+    ui->gb_DBusMode->setDisabled(false);
 
     // Force quit, since we cannot close the runtime
     qApp->quit();
@@ -133,10 +135,10 @@ void CSwiftCore::stopCore()
 
 QString CSwiftCore::getDBusAddress() const
 {
-    if (ui->rb_sessionBus->isChecked()) { return CDBusServer::sessionDBusServer(); }
-    if (ui->rb_systemBus->isChecked()) { return CDBusServer::systemDBusServer(); }
-    if (ui->rb_p2pBus->isChecked()) { return CDBusServer::fixAddressToDBusAddress(ui->le_p2pAddress->text()); }
+    if (ui->rb_SessionBus->isChecked()) { return CDBusServer::sessionDBusServer(); }
+    if (ui->rb_SystemBus->isChecked()) { return CDBusServer::systemDBusServer(); }
+    if (ui->rb_P2PBus->isChecked()) { return CDBusServer::fixAddressToDBusAddress(ui->le_P2PAddress->text()); }
 
-    Q_ASSERT_X(false, "CSwiftCore::getDBusAddress()", "The impossible happended!");
+    Q_ASSERT_X(false, Q_FUNC_INFO, "The impossible happend!");
     return "";
 }

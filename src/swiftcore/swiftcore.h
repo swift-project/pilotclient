@@ -18,10 +18,7 @@
 #include "blackgui/components/enableforruntime.h"
 #include <QScopedPointer>
 
-namespace Ui
-{
-    class CSwiftCore;
-}
+namespace Ui { class CSwiftCore; }
 
 //! swift core control
 class CSwiftCore :
@@ -38,7 +35,7 @@ public:
         SetupInfo() {}
 
         bool m_minimzed = false; //!< Start minimized to tray
-        QString m_dbusAddress;  //!< DBus address (session, system, p2p)
+        QString m_dbusAddress;   //!< DBus address (session, system, p2p)
     };
 
     //! Constructor
@@ -48,7 +45,6 @@ public:
     ~CSwiftCore();
 
 private slots:
-
     // PushButton slots
     void ps_startCorePressed();
     void ps_stopCorePressed();
@@ -59,15 +55,13 @@ private slots:
     virtual void ps_onStyleSheetsChanged();
 
 private:
-
     void connectSlots();
     void setupLogDisplay();
     void startCore(const SetupInfo &setup);
     void stopCore();
-
     QString getDBusAddress() const;
 
     QScopedPointer<Ui::CSwiftCore> ui;
 };
 
-#endif // SWIFTCORE_H
+#endif // guard

@@ -13,10 +13,7 @@
   <property name="windowTitle">
    <string>swiftcore</string>
   </property>
-  <property name="styleSheet">
-   <string notr="true"/>
-  </property>
-  <widget class="QWidget" name="centralwidget">
+  <widget class="QWidget" name="qw_MainWidget">
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="1" column="2">
      <widget class="QGroupBox" name="gb_Controls">
@@ -25,7 +22,7 @@
       </property>
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="1">
-        <widget class="QPushButton" name="pb_startCore">
+        <widget class="QPushButton" name="pb_StartCore">
          <property name="styleSheet">
           <string notr="true">/** Main window **/
 QTextEdit {
@@ -38,7 +35,7 @@ QTextEdit {
         </widget>
        </item>
        <item row="0" column="2">
-        <widget class="QPushButton" name="pb_stopCore">
+        <widget class="QPushButton" name="pb_StopCore">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -72,17 +69,14 @@ QTextEdit {
       </property>
      </widget>
     </item>
-    <item row="3" column="0" colspan="3">
-     <widget class="BlackGui::Components::CLogComponent" name="comp_log" native="true"/>
-    </item>
     <item row="1" column="0" colspan="2">
-     <widget class="QGroupBox" name="gb_dbusMode">
+     <widget class="QGroupBox" name="gb_DBusMode">
       <property name="title">
        <string>DBus Mode</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="0" column="0">
-        <widget class="QRadioButton" name="rb_sessionBus">
+        <widget class="QRadioButton" name="rb_SessionBus">
          <property name="text">
           <string>Session</string>
          </property>
@@ -92,21 +86,21 @@ QTextEdit {
         </widget>
        </item>
        <item row="0" column="2">
-        <widget class="QRadioButton" name="rb_p2pBus">
+        <widget class="QRadioButton" name="rb_P2PBus">
          <property name="text">
           <string>P2P</string>
          </property>
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QRadioButton" name="rb_systemBus">
+        <widget class="QRadioButton" name="rb_SystemBus">
          <property name="text">
           <string>System</string>
          </property>
         </widget>
        </item>
        <item row="1" column="0" colspan="3">
-        <widget class="QLineEdit" name="le_p2pAddress">
+        <widget class="QLineEdit" name="le_P2PAddress">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -121,19 +115,11 @@ QTextEdit {
     <item row="4" column="0" colspan="3">
      <widget class="BlackGui::CCommandInput" name="le_CommandLineInput"/>
     </item>
+    <item row="3" column="0" colspan="3">
+     <widget class="BlackGui::Components::CCoreInfoAreaComponent" name="comp_InfoArea" native="true"/>
+    </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>460</width>
-     <height>25</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -150,15 +136,15 @@ QTextEdit {
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CLogComponent</class>
-   <extends>QWidget</extends>
-   <header>blackgui/components/logcomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::CCommandInput</class>
    <extends>QLineEdit</extends>
    <header>blackgui/commandinput.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CCoreInfoAreaComponent</class>
+   <extends>QWidget</extends>
+   <header>blackgui/components/coreinfoareacomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
