@@ -30,9 +30,9 @@
 #include "blackgui/models/keyboardkeylistmodel.h"
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/managedstatusbar.h"
-#include "blackmisc/originator.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/loghandler.h"
+#include "blackmisc/originatoraware.h"
 #include "blacksound/soundgenerator.h"
 #include <QMainWindow>
 #include <QTextEdit>
@@ -46,6 +46,7 @@ namespace Ui { class SwiftGuiStd; }
 //! swift GUI
 class SwiftGuiStd :
     public QMainWindow,
+    public BlackMisc::COriginatorAware,
     public BlackGui::CEnableForFramelessWindow,
     public BlackGui::Components::CEnableForRuntime
 {
@@ -112,9 +113,9 @@ private:
     QScopedPointer<Ui::SwiftGuiStd> ui;
     bool m_init = false;
     BlackGui::Components::CInfoWindowComponent *m_compInfoWindow = nullptr; //!< the info window (popup
-    BlackGui::CManagedStatusBar m_statusBar;
-    BlackInput::IKeyboard      *m_keyboard = nullptr; //!< hotkeys
-    BlackMisc::CLogSubscriber   m_logSubscriber { this, &SwiftGuiStd::ps_displayStatusMessageInGui };
+    BlackGui::CManagedStatusBar  m_statusBar;
+    BlackInput::IKeyboard       *m_keyboard = nullptr; //!< hotkeys
+    BlackMisc::CLogSubscriber    m_logSubscriber { this, &SwiftGuiStd::ps_displayStatusMessageInGui };
 
     // contexts
     bool m_coreAvailable           = false;
@@ -128,8 +129,6 @@ private:
     // cockpit
     QString m_transponderResetValue;         //!< Temp. storage of XPdr mode to reset, req. until timer allows singleShoot with Lambdas
     QWidget *m_inputFocusedWidget = nullptr; //!< currently used widget for input, mainly used with cockpit
-
-    BlackMisc::COriginator m_originator;
 
     //! GUI status update
     void updateGuiStatusInformation();
@@ -177,21 +176,12 @@ private:
     //! Stop all update timers
     void stopUpdateTimersWhenDisconnected();
 
-    //! \brief Stop all timers
+    //! Stop all timers
     //! \param disconnect also disconnect signal/slots
     void stopAllTimers(bool disconnectSignalSlots);
 
     //! Play notifcation sound
     void playNotifcationSound(BlackSound::CNotificationSounds::Notification notification) const;
-
-    //! Originator for aircraft context
-    BlackMisc::COriginator swiftGuiStandardOriginator()
-    {
-        if (m_originator.getName().isEmpty())
-            m_originator = BlackMisc::COriginator(QStringLiteral("SWIFTGUISTANDARD"));
-
-        return m_originator;
-    }
 
 private slots:
 

@@ -10,6 +10,8 @@
 #include "swiftguistd.h"
 #include "ui_swiftguistd.h"
 #include "blackgui/stylesheetutility.h"
+#include "blackgui/components/settingscomponent.h"
+#include "blackgui/components/logcomponent.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/logmessage.h"

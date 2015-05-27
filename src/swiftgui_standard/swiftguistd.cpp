@@ -12,6 +12,8 @@
 #include "blackmisc/icon.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/models/atcstationlistmodel.h"
+#include "blackgui/components/logcomponent.h"
+#include "blackgui/components/settingscomponent.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_application.h"
@@ -41,6 +43,7 @@ using namespace BlackMisc::Hardware;
  */
 SwiftGuiStd::SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowMode, QWidget *parent) :
     QMainWindow(parent, CEnableForFramelessWindow::modeToWindowFlags(windowMode)),
+    COriginatorAware(this),
     CEnableForFramelessWindow(windowMode, true, "framelessMainWindow", this),
     ui(new Ui::SwiftGuiStd)
 {
@@ -112,7 +115,7 @@ void SwiftGuiStd::performGracefulShutdown()
     // tell context GUI is going down
     if (this->getIContextApplication())
     {
-        this->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ApplicationGui, IContextApplication::ApplicationStops);
+        this->getIContextApplication()->unregisterApplication(originator());
     }
 
     // allow some other parts to react
@@ -304,8 +307,14 @@ void SwiftGuiStd::ps_handleTimerBasedUpdates()
 
 void SwiftGuiStd::setContextAvailability()
 {
-    qint64 t = QDateTime::currentMSecsSinceEpoch();
-    this->m_coreAvailable = (this->getIContextApplication()->ping(t) == t);
+    if (this->getIContextApplication()->isUsingImplementingObject())
+    {
+        this->m_coreAvailable = true;
+    }
+    else
+    {
+        this->m_coreAvailable = isMyOriginator(this->getIContextApplication()->registerApplication(getCurrentTimestampOriginator()));
+    }
     this->m_contextNetworkAvailable = this->m_coreAvailable || this->getIContextNetwork()->isUsingImplementingObject();
     this->m_contextAudioAvailable = this->m_coreAvailable || this->getIContextAudio()->isUsingImplementingObject();
 }
@@ -406,6 +415,7 @@ void SwiftGuiStd::ps_onCurrentMainWidgetChanged(int currentIndex)
 
 void SwiftGuiStd::ps_onChangedMainInfoAreaFloating(bool floating)
 {
+    // code for whole floating area goes here
     Q_UNUSED(floating);
 }
 
@@ -423,7 +433,7 @@ void SwiftGuiStd::ps_showNormal()
 
 void SwiftGuiStd::playNotifcationSound(CNotificationSounds::Notification notification) const
 {
-    if (!this->m_contextAudioAvailable) return;
-    if (!this->ui->comp_MainInfoArea->getSettingsComponent()->playNotificationSounds()) return;
+    if (!this->m_contextAudioAvailable) { return; }
+    if (!this->ui->comp_MainInfoArea->getSettingsComponent()->playNotificationSounds()) { return; }
     this->getIContextAudio()->playNotification(static_cast<uint>(notification), true);
 }

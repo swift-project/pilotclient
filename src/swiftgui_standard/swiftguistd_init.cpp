@@ -13,9 +13,7 @@
 #include "blackcore/context_all_interfaces.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/guiutility.h"
-#include "blackgui/components/textmessagecomponent.h"
-#include "blackgui/components/cockpitcomponent.h"
-#include "blackgui/components/navigatordockwidget.h"
+#include "blackgui/components/allmaininfoareacomponents.h"
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackgui/models/keyboardkeylistmodel.h"
 #include "blackmisc/icons.h"
@@ -125,8 +123,6 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     this->initDynamicMenus();
     this->initMenuIcons();
 
-    // starting
-    this->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ApplicationGui, IContextApplication::ApplicationStarts);
 
     // info
     this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CProject::systemNameAndVersion());
@@ -218,17 +214,16 @@ void SwiftGuiStd::initGuiSignals()
  */
 void SwiftGuiStd::initialDataReads()
 {
-    qint64 t = QDateTime::currentMSecsSinceEpoch();
-    this->m_coreAvailable = (this->getIContextNetwork()->isUsingImplementingObject() || (this->getIContextApplication()->ping(t) == t));
+    this->setContextAvailability();
     if (!this->m_coreAvailable)
     {
-        CLogMessage(this).error("no initial data read as network context is not available");
+        CLogMessage(this).error("No initial data read as network context is not available");
         return;
     }
 
     this->ui->comp_MainInfoArea->getSettingsComponent()->reloadSettings(); // init read
     this->ps_reloadOwnAircraft(); // init read, independent of traffic network
-    CLogMessage(this).info("initial data read");
+    CLogMessage(this).info("Initial data read");
 }
 
 /*
