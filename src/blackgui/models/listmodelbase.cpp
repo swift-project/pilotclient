@@ -8,9 +8,6 @@
  */
 
 #include "listmodelbase.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/namevariantpairlist.h"
-#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/aircraftlist.h"
 #include "blackmisc/aviation/airportlist.h"
@@ -21,6 +18,10 @@
 #include "blackmisc/network/aircraftmappinglist.h"
 #include "blackmisc/setkeyboardhotkeylist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/namevariantpairlist.h"
+#include "blackmisc/statusmessagelist.h"
+#include "blackmisc/originatorlist.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
@@ -459,6 +460,7 @@ namespace BlackGui
 
         // see here for the reason of thess forward instantiations
         // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
+        template class CListModelBase<BlackMisc::COriginator, BlackMisc::COriginatorList>;
         template class CListModelBase<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>;
         template class CListModelBase<BlackMisc::CNameVariantPair, BlackMisc::CNameVariantPairList>;
         template class CListModelBase<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;

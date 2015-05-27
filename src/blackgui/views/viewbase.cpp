@@ -9,6 +9,7 @@
 
 #include "viewbase.h"
 #include "../models/statusmessagelistmodel.h"
+#include "../models/originatorlistmodel.h"
 #include "../models/namevariantpairlistmodel.h"
 #include "../models/atcstationlistmodel.h"
 #include "../models/aircraftmodellistmodel.h"
@@ -402,6 +403,8 @@ namespace BlackGui
         // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
         template class CViewBase<BlackGui::Models::CStatusMessageListModel, BlackMisc::CStatusMessageList, BlackMisc::CStatusMessage>;
         template class CViewBase<BlackGui::Models::CNameVariantPairModel, BlackMisc::CNameVariantPairList, BlackMisc::CNameVariantPair>;
+        template class CViewBase<BlackGui::Models::COriginatorListModel, BlackMisc::COriginatorList, BlackMisc::COriginator>;
+
         template class CViewBase<BlackGui::Models::CAtcStationListModel, BlackMisc::Aviation::CAtcStationList, BlackMisc::Aviation::CAtcStation>;
         template class CViewBase<BlackGui::Models::CAirportListModel, BlackMisc::Aviation::CAirportList, BlackMisc::Aviation::CAirport>;
         template class CViewBase<BlackGui::Models::CServerListModel, BlackMisc::Network::CServerList, BlackMisc::Network::CServer>;
