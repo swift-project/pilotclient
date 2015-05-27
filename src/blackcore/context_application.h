@@ -17,7 +17,7 @@
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/eveventhotkeyfunction.h"
-#include "blackmisc/originator.h"
+#include "blackmisc/originatorlist.h"
 #include <QObject>
 #include <QReadWriteLock>
 
@@ -36,9 +36,7 @@ namespace BlackCore
 {
     class CInputManager;
 
-    /*!
-     * Application context interface
-     */
+    //! Application context interface
     class BLACKCORE_EXPORT IContextApplication : public CContext
     {
         Q_OBJECT
@@ -49,20 +47,6 @@ namespace BlackCore
         IContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
     public:
-        //! Parts of the application
-        enum Application : uint
-        {
-            ApplicationGui,
-            ApplicationCore
-        };
-
-        //! State of application
-        enum Actions : uint
-        {
-            ApplicationStarts,
-            ApplicationStops
-        };
-
         //! Service name
         static const QString &InterfaceName()
         {
@@ -88,7 +72,7 @@ namespace BlackCore
 
     signals:
         //! A component changes
-        void componentChanged(uint component, uint action);
+        void registrationChanged();
 
         //! A log message was logged
         //! \note Used with CLogMessage, do not use directly
@@ -103,23 +87,26 @@ namespace BlackCore
         //! \note this is the function which relays CLogMessage via DBus
         virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::COriginator &origin) { Q_UNUSED(message); Q_UNUSED(origin); }
 
-        //! Ping a token, used to check if application is alive
-        virtual qint64 ping(qint64 token) const = 0;
+        //! Register application, can also be used for ping
+        virtual BlackMisc::COriginator registerApplication(const BlackMisc::COriginator &application) = 0;
 
-        //! A component has changed its state
-        virtual void notifyAboutComponentChange(uint component, uint action) = 0;
+        //! Unregister application
+        virtual void unregisterApplication(const BlackMisc::COriginator &application) = 0;
+
+        //! All registered applications
+        virtual BlackMisc::COriginatorList getRegisteredApplications() const = 0;
 
         //! Remote enabled version of writing a text file
         virtual bool writeToFile(const QString &fileName, const QString &content) = 0;
 
         //!  Remote enabled version of reading a text file
-        virtual QString readFromFile(const QString &fileName) = 0;
+        virtual QString readFromFile(const QString &fileName) const = 0;
 
         //!  Remote enabled version of deleting a file
         virtual bool removeFile(const QString &fileName) = 0;
 
         //!  Remote enabled version of file exists
-        virtual bool existsFile(const QString &fileName) = 0;
+        virtual bool existsFile(const QString &fileName) const = 0;
 
         //! Process remote event
         virtual void processHotkeyFuncEvent(const BlackMisc::Event::CEventHotkeyFunction &event) = 0;

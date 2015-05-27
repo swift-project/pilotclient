@@ -28,23 +28,26 @@ namespace BlackCore
         //! \copydoc IContextApplication::logMessage
         virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::COriginator &origin) override;
 
-        //! \copydoc IContextApplication::ping()
-        virtual qint64 ping(qint64 token) const override;
+        //! \copydoc IContextApplication::registerApplication
+        virtual BlackMisc::COriginator registerApplication(const BlackMisc::COriginator &application) override;
 
-        //! \copydoc IContextApplication::notifyAboutComponentChange
-        virtual void notifyAboutComponentChange(uint component, uint action) override;
+        //! \copydoc IContextApplication::unRegisterApplication
+        virtual void unregisterApplication(const BlackMisc::COriginator &application) override;
+
+        //! \copydoc IContextApplication::getRegisteredApplications
+        virtual BlackMisc::COriginatorList getRegisteredApplications() const override;
 
         //! \copydoc IContextApplication::writeToFile
         virtual bool writeToFile(const QString &fileName, const QString &content) override;
 
         //! \copydoc IContextApplication::readFromFile
-        virtual QString readFromFile(const QString &fileName) override;
+        virtual QString readFromFile(const QString &fileName) const override;
 
         //! \copydoc IContextApplication::removeFile
         virtual bool removeFile(const QString &fileName) override;
 
         //! \copydoc IContextApplication::existsFile
-        virtual bool existsFile(const QString &fileName) override;
+        virtual bool existsFile(const QString &fileName) const override;
 
         //! \copydoc IContextApplication::processHotkeyFuncEvent
         virtual void processHotkeyFuncEvent(const BlackMisc::Event::CEventHotkeyFunction &event) override;
@@ -60,7 +63,6 @@ namespace BlackCore
         BlackMisc::CGenericDBusInterface *m_dBusInterface;
 
         //! Relay connection signals to local signals
-        //! No idea why this has to be wired and is not done automatically
         void relaySignals(const QString &serviceName, QDBusConnection &connection);
     };
 }

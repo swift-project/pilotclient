@@ -11,6 +11,7 @@
 #include "blackcore/input_manager.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/loghandler.h"
+#include "blackmisc/originatorlist.h"
 #include <QObject>
 #include <QMetaEnum>
 #include <QDBusConnection>
@@ -19,10 +20,6 @@ using namespace BlackMisc;
 
 namespace BlackCore
 {
-
-    /*
-     * Constructor for DBus
-     */
     CContextApplicationProxy::CContextApplicationProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextApplication(mode, runtime), m_dBusInterface(nullptr)
     {
         this->m_dBusInterface = new CGenericDBusInterface(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(), connection, this);
@@ -44,9 +41,6 @@ namespace BlackCore
         });
     }
 
-    /*
-     * Connect for signals
-     */
     void CContextApplicationProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
         // signals originating from impl side
@@ -54,7 +48,7 @@ namespace BlackCore
                                     "messageLogged", this, SIGNAL(messageLogged(BlackMisc::CStatusMessage, BlackMisc::COriginator)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                               "componentChanged", this, SIGNAL(componentChanged(uint, uint)));
+                               "registrationChanged", this, SIGNAL(registrationChanged()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
                                "fakedSetComVoiceRoom", this, SIGNAL(fakedSetComVoiceRoom(BlackMisc::Audio::CVoiceRoomList)));
@@ -62,64 +56,47 @@ namespace BlackCore
         Q_UNUSED(s);
     }
 
-    /*
-     * Log a message
-     */
     void CContextApplicationProxy::logMessage(const CStatusMessage &message, const COriginator &origin)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("logMessage"), message, origin);
     }
 
-    /*
-     * Ping, is DBus alive?
-     */
-    qint64 CContextApplicationProxy::ping(qint64 token) const
+    BlackMisc::COriginator CContextApplicationProxy::registerApplication(const COriginator &application)
     {
-        qint64 t = this->m_dBusInterface->callDBusRet<qint64>(QLatin1Literal("ping"), token);
-        return t;
+        return this->m_dBusInterface->callDBusRet<BlackMisc::COriginator>(QLatin1Literal("registerApplication"), application);
     }
 
-    /*
-     * Component has changed
-     */
-    void CContextApplicationProxy::notifyAboutComponentChange(uint component, uint action)
+    void CContextApplicationProxy::unregisterApplication(const COriginator &application)
     {
-        this->m_dBusInterface->callDBus(QLatin1Literal("notifyAboutComponentChange"), component, action);
+        this->m_dBusInterface->callDBus(QLatin1Literal("unregisterApplication"), application);
     }
 
-    /*
-     * To file
-     */
+    BlackMisc::COriginatorList CContextApplicationProxy::getRegisteredApplications() const
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::COriginatorList>(QLatin1Literal("getRegisteredApplications"));
+    }
+
     bool CContextApplicationProxy::writeToFile(const QString &fileName, const QString &content)
     {
-        if (fileName.isEmpty()) return false;
+        if (fileName.isEmpty()) { return false; }
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("writeToFile"), fileName, content);
     }
 
-    /*
-     * From file
-     */
-    QString CContextApplicationProxy::readFromFile(const QString &fileName)
+    QString CContextApplicationProxy::readFromFile(const QString &fileName) const
     {
-        if (fileName.isEmpty()) return "";
+        if (fileName.isEmpty()) { return ""; }
         return this->m_dBusInterface->callDBusRet<QString>(QLatin1Literal("readFromFile"), fileName);
     }
 
-    /*
-     *  Delete file
-     */
     bool CContextApplicationProxy::removeFile(const QString &fileName)
     {
-        if (fileName.isEmpty()) return false;
+        if (fileName.isEmpty()) { return false; }
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("removeFile"), fileName);
     }
 
-    /*
-     * Check file
-     */
-    bool CContextApplicationProxy::existsFile(const QString &fileName)
+    bool CContextApplicationProxy::existsFile(const QString &fileName) const
     {
-        if (fileName.isEmpty()) return false;
+        if (fileName.isEmpty()) { return false; }
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("existsFile"), fileName);
     }
 
