@@ -16,29 +16,19 @@ namespace BlackGui
 {
 
     CCommandInput::CCommandInput(QWidget *parent) :
-        QLineEdit(parent)
+        QLineEdit(parent),
+        COriginatorAware(this)
     {
-        connect(this, &CCommandInput::returnPressed, this, &CCommandInput::validateCommand);
+        connect(this, &CCommandInput::returnPressed, this, &CCommandInput::ps_validateCommand);
     }
 
-    void CCommandInput::validateCommand()
+    void CCommandInput::ps_validateCommand()
     {
-        QString commandLine = text();
-        setText(QString());
-
+        QString commandLine(this->text().trimmed());
+        this->setText(QString());
         if (commandLine.startsWith('.'))
         {
-            emit commandEntered(commandLine, commandInputOriginator());
+            emit commandEntered(commandLine, originator());
         }
     }
-
-    COriginator CCommandInput::commandInputOriginator()
-    {
-        if (m_originator.getName().isEmpty())
-            m_originator =  COriginator(QStringLiteral("COMMANDINPUT"));
-
-        return m_originator;
-    }
-
-}
-
+} // ns

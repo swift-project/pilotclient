@@ -22,6 +22,7 @@ namespace BlackGui
     {
         CCockpitTransponderModeLedsComponent::CCockpitTransponderModeLedsComponent(QWidget *parent) :
             QFrame(parent),
+            COriginatorAware(this),
             m_ledStandby(new CLedWidget(false, CLedWidget::Blue, CLedWidget::Black, CLedWidget::Rounded, "standby", "", LedWidth, this)),
             m_ledModes(new CLedWidget(false, CLedWidget::Green, CLedWidget::Black, CLedWidget::Rounded, "mode C", "", LedWidth, this)),
             m_ledIdent(new CLedWidget(false, CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Rounded, "ident", "", LedWidth, this))
@@ -38,7 +39,7 @@ namespace BlackGui
 
         void CCockpitTransponderModeLedsComponent::ps_onAircraftCockpitChanged(const CAircraft &aircraft, const BlackMisc::COriginator &originator)
         {
-            if (ledsOriginator() == originator) { return; }
+            if (isMyOriginator(originator)) { return; }
             this->setMode(aircraft.getTransponderMode());
         }
 
@@ -70,7 +71,7 @@ namespace BlackGui
             this->setMode(mode);
             CTransponder xpdr = ownAircraft.getTransponder();
             xpdr.setTransponderMode(mode);
-            this->getIContextOwnAircraft()->updateCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), xpdr, ledsOriginator());
+            this->getIContextOwnAircraft()->updateCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), xpdr, originator());
         }
 
         void CCockpitTransponderModeLedsComponent::init(bool horizontal)
@@ -131,14 +132,6 @@ namespace BlackGui
         {
             Q_ASSERT(getIContextOwnAircraft());
             return getIContextOwnAircraft()->getOwnAircraft();
-        }
-
-        BlackMisc::COriginator CCockpitTransponderModeLedsComponent::ledsOriginator()
-        {
-            if (m_originator.getName().isEmpty())
-                m_originator = COriginator(QStringLiteral("XPDRLEDSCOMCOMPONENT"));
-
-            return m_originator;
         }
 
     } // namespace

@@ -13,7 +13,7 @@
 #include "blackgui/blackguiexport.h"
 #include "enablefordockwidgetinfoarea.h"
 #include "enableforruntime.h"
-#include "blackmisc/originator.h"
+#include "blackmisc/originatoraware.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/aviation/transponder.h"
 #include "blackmisc/audio/voiceroomlist.h"
@@ -29,6 +29,7 @@ namespace BlackGui
         //! The main cockpit area
         class BLACKGUI_EXPORT CCockpitComComponent :
             public QFrame,
+            public BlackMisc::COriginatorAware,
             public CEnableForDockWidgetInfoArea,
             public CEnableForRuntime
         {
@@ -97,12 +98,8 @@ namespace BlackGui
             //! COM frequencies displayed
             void updateFrequencyDisplaysFromComSystems(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
 
-            //! Identifies sender of cockpit updates
-            BlackMisc::COriginator cockpitOriginator();
-
             QScopedPointer<Ui::CCockpitMainComponent> ui;
-            BlackMisc::COriginator m_originator;
-        };
+       };
 
     } // namespace
 } // namespace

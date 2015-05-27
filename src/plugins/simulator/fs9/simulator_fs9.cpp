@@ -60,11 +60,11 @@ namespace BlackSimPlugin
             connect(lobbyClient.data(), &CLobbyClient::disconnected, this, std::bind(&CSimulatorFs9::simulatorStatusChanged, this, 0));
             this->m_interpolator = new BlackCore::CInterpolatorLinear(remoteAircraftProvider, this);
             m_modelMatcher.setDefaultModel(CAircraftModel(
-                "Boeing 737-400",
-                CAircraftModel::TypeModelMatchingDefaultModel,
-                "B737-400 default model",
-                CAircraftIcaoData(CAircraftIcaoCode("B734", "L2J"), CAirlineIcaoCode(), "FFFFFF")
-            ));
+                                               "Boeing 737-400",
+                                               CAircraftModel::TypeModelMatchingDefaultModel,
+                                               "B737-400 default model",
+                                               CAircraftIcaoData(CAircraftIcaoCode("B734", "L2J"), CAirlineIcaoCode(), "FFFFFF")
+                                           ));
         }
 
         bool CSimulatorFs9::isConnected() const
@@ -124,9 +124,9 @@ namespace BlackSimPlugin
             // matched models
             CAircraftModel aircraftModel = getClosestMatch(newRemoteAircraftCopy);
             Q_ASSERT(newRemoteAircraft.getCallsign() == aircraftModel.getCallsign());
-            updateAircraftModel(newRemoteAircraft.getCallsign(), aircraftModel, simulatorOriginator());
-            updateAircraftRendered(newRemoteAircraft.getCallsign(), true, simulatorOriginator());
-            CSimulatedAircraft aircraftAfterModelApplied (getAircraftInRangeForCallsign(newRemoteAircraft.getCallsign()));
+            updateAircraftModel(newRemoteAircraft.getCallsign(), aircraftModel, originator());
+            updateAircraftRendered(newRemoteAircraft.getCallsign(), true, originator());
+            CSimulatedAircraft aircraftAfterModelApplied(getAircraftInRangeForCallsign(newRemoteAircraft.getCallsign()));
             aircraftAfterModelApplied.setRendered(true);
             emit modelMatchingCompleted(aircraftAfterModelApplied);
 
@@ -136,7 +136,7 @@ namespace BlackSimPlugin
 
             client->start();
             m_hashFs9Clients.insert(callsign, client);
-            updateAircraftRendered(callsign, true, this->simulatorOriginator());
+            updateAircraftRendered(callsign, true, this->originator());
             CLogMessage(this).info("FS9: Added aircraft %1") << callsign.toQString();
             return true;
         }
@@ -148,7 +148,7 @@ namespace BlackSimPlugin
             auto fs9Client = m_hashFs9Clients.value(callsign);
             fs9Client->quit();
             m_hashFs9Clients.remove(callsign);
-            updateAircraftRendered(callsign, false, this->simulatorOriginator());
+            updateAircraftRendered(callsign, false, this->originator());
             CLogMessage(this).info("FS9: Removed aircraft %1") << callsign.toQString();
             return true;
         }
@@ -173,7 +173,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFs9::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const COriginator &originator)
         {
-            if (originator == this->simulatorOriginator()) { return false; }
+            if (originator == this->originator()) { return false; }
             if (!this->isSimulating()) { return false; }
 
             // actually those data should be the same as ownAircraft
@@ -307,7 +307,7 @@ namespace BlackSimPlugin
                 simDataOwnAircraft.getCom1System(),
                 simDataOwnAircraft.getCom2System(),
                 simDataOwnAircraft.getTransponder(),
-                this->simulatorOriginator());
+                this->originator());
         }
 
         void CSimulatorFs9::disconnectAllClients()

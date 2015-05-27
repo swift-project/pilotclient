@@ -29,14 +29,6 @@ namespace BlackCore
         return status;
     }
 
-    COriginator ISimulator::simulatorOriginator()
-    {
-        if (m_originator.getName().isEmpty())
-            m_originator = COriginator(QStringLiteral("SIMULATOR"));
-
-        return m_originator;
-    }
-
     QString ISimulator::statusToString(int status)
     {
         if (status > 0)

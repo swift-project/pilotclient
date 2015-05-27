@@ -29,6 +29,7 @@ namespace BlackGui
     {
         CAtcStationComponent::CAtcStationComponent(QWidget *parent) :
             QTabWidget(parent),
+            COriginatorAware(this),
             ui(new Ui::CAtcStationComponent),
             m_updateTimer(new CUpdateTimer("CAtcStationComponent", &CAtcStationComponent::update, this))
         {
@@ -273,14 +274,6 @@ namespace BlackGui
             {
                 this->ui->tvp_AtcStationsOnlineTree->resizeColumnToContents(i);
             }
-        }
-
-        COriginator CAtcStationComponent::originator()
-        {
-            if (m_originator.getName().isEmpty())
-                m_originator = COriginator(QStringLiteral("ATCSTATIOCOMPONENT"));
-
-            return m_originator;
         }
 
         void CAtcStationComponent::ps_onlineAtcStationSelected(QModelIndex index)

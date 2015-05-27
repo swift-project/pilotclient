@@ -12,10 +12,12 @@
 #ifndef SWIFTCORE_H
 #define SWIFTCORE_H
 
-#include "blackmisc/statusmessage.h"
 #include "blackcore/context_runtime.h"
 #include "blackgui/systemtraywindow.h"
 #include "blackgui/components/enableforruntime.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/originatoraware.h"
+
 #include <QScopedPointer>
 
 namespace Ui { class CSwiftCore; }
@@ -23,6 +25,7 @@ namespace Ui { class CSwiftCore; }
 //! swift core control
 class CSwiftCore :
     public BlackGui::CSystemTrayWindow,
+    public BlackMisc::COriginatorAware,
     public BlackGui::Components::CEnableForRuntime
 {
     Q_OBJECT

@@ -28,10 +28,12 @@ using namespace BlackMisc::Simulation;
 namespace BlackCore
 {
     CContextOwnAircraft::CContextOwnAircraft(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
-        IContextOwnAircraft(mode, runtime)
+        IContextOwnAircraft(mode, runtime),
+        COriginatorAware(this)
     {
         Q_ASSERT(this->getRuntime());
         Q_ASSERT(this->getRuntime()->getIContextSettings());
+        this->setObjectName("CContextOwnAircraft");
 
         // Init own aircraft
         this->initOwnAircraft();
@@ -360,8 +362,7 @@ namespace BlackCore
         {
             if (CSelcal::isValidCode(parser.part(1)))
             {
-                // todo RW: replace originator
-                this->updateSelcal(parser.part(1), COriginator("commandline"));
+                this->updateSelcal(parser.part(1), this->originator());
                 return true;
             }
         }

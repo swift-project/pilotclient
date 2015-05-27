@@ -179,7 +179,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsCommon::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft, const COriginator &originator)
         {
-            if (originator == simulatorOriginator()) { return false; }
+            if (originator == this->originator()) { return false; }
 
             // remove upfront, and then enable / disable again
             this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
@@ -188,7 +188,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsCommon::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft, const COriginator &originator)
         {
-            if (originator == simulatorOriginator()) { return false; }
+            if (originator == this->originator()) { return false; }
             if (aircraft.isEnabled())
             {
                 this->physicallyAddRemoteAircraft(aircraft);

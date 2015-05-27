@@ -19,6 +19,7 @@
 #include "blackcore/dbus_server.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
+#include "blackmisc/originatoraware.h"
 
 namespace BlackCore
 {
@@ -27,7 +28,8 @@ namespace BlackCore
     //! Central instance of data for \sa IOwnAircraftProvider .
     class BLACKCORE_EXPORT CContextOwnAircraft :
         public IContextOwnAircraft,
-        public BlackMisc::Simulation::IOwnAircraftProvider
+        public BlackMisc::Simulation::IOwnAircraftProvider,
+        public BlackMisc::COriginatorAware
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTOWNAIRCRAFT_INTERFACENAME)

@@ -13,44 +13,33 @@
 #define BLACKGUI_COMMANDINPUT_H
 
 #include "blackguiexport.h"
-#include "blackmisc/originator.h"
+#include "blackmisc/originatoraware.h"
 #include <QLineEdit>
 #include <QString>
 
 namespace BlackGui
 {
-
     //! Specialized LineEdit for command inputs
-    class BLACKGUI_EXPORT CCommandInput : public QLineEdit
+    class BLACKGUI_EXPORT CCommandInput :
+        public QLineEdit,
+        public BlackMisc::COriginatorAware
     {
         Q_OBJECT
 
     public:
-
         //! Constructor
         CCommandInput(QWidget *parent = nullptr);
 
         //! Destructor
         ~CCommandInput() {}
 
-        //! Originator
-        BlackMisc::COriginator commandInputOriginator();
-
     signals:
-
         //! Command was entered
         void commandEntered(const QString &command, const BlackMisc::COriginator &originator);
 
     private slots:
-
         //! Basic command validation
-        void validateCommand();
-
-    private:
-
-        BlackMisc::COriginator m_originator;
+        void ps_validateCommand();
     };
-
 }
-
-#endif // CCOMMANDINPUT_H
+#endif // guard

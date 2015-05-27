@@ -26,25 +26,30 @@
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/network/client.h"
 #include "blackmisc/pixmap.h"
+#include "blackmisc/originatoraware.h"
 #include <QObject>
 
 namespace BlackCore
 {
 
     //! Interface to a simulator.
-    class BLACKCORE_EXPORT ISimulator : public QObject
+    class BLACKCORE_EXPORT ISimulator :
+            public QObject,
+            public BlackMisc::COriginatorAware
     {
         Q_OBJECT
 
     public:
         //! ISimulator status
-        enum SimulatorStatus
+        enum SimulatorStatusFlag
         {
             Disconnected = 0,
             Connected   = 1 << 0, //!< Is the plugin connected to the simulator?
             Simulating  = 1 << 1, //!< Is the simulator actually simulating?
             Paused      = 1 << 2, //!< Is the simulator paused?
         };
+
+        Q_DECLARE_FLAGS(SimulatorStatus, SimulatorStatusFlag)
 
         //! Render all aircraft if number of aircraft >= MaxAircraftInfinite
         const int MaxAircraftInfinite = 100;
@@ -169,9 +174,6 @@ namespace BlackCore
         //! Driver will be unloaded
         virtual void unload() = 0;
 
-        //! Originator
-        BlackMisc::COriginator simulatorOriginator();
-
         //! Status to string
         static QString statusToString(int status);
 
@@ -196,7 +198,10 @@ namespace BlackCore
 
     protected:
         //! Default constructor
-        ISimulator(QObject *parent = nullptr) : QObject(parent) {}
+        ISimulator(QObject *parent = nullptr) :
+            QObject(parent),
+            BlackMisc::COriginatorAware(this)
+        {}
 
         //! Are we connected to the simulator?
         virtual bool isConnected() const = 0;
@@ -223,10 +228,6 @@ namespace BlackCore
         //! Emit the combined status
         //! \sa simulatorStatusChanged;
         void emitSimulatorCombinedStatus();
-
-    private:
-
-        BlackMisc::COriginator m_originator;
     };
 
     //! Interface to a simulator listener.
@@ -287,5 +288,6 @@ namespace BlackCore
 } // namespace
 
 Q_DECLARE_INTERFACE(BlackCore::ISimulatorFactory, "org.swift-project.blackcore.simulatorinterface")
+Q_DECLARE_OPERATORS_FOR_FLAGS(BlackCore::ISimulator::SimulatorStatus)
 
 #endif // guard

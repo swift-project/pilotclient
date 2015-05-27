@@ -15,7 +15,7 @@
 #include "blackgui/blackguiexport.h"
 #include "enableforruntime.h"
 #include "../led.h"
-#include "blackmisc/originator.h"
+#include "blackmisc/originatoraware.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/aviation/transponder.h"
 #include <QFrame>
@@ -26,7 +26,10 @@ namespace BlackGui
     {
 
         //! LEDs representing transponder mode state
-        class BLACKGUI_EXPORT CCockpitTransponderModeLedsComponent : public QFrame, public CEnableForRuntime
+        class BLACKGUI_EXPORT CCockpitTransponderModeLedsComponent :
+            public QFrame,
+            public CEnableForRuntime,
+            public BlackMisc::COriginatorAware
         {
             Q_OBJECT
 
@@ -60,16 +63,10 @@ namespace BlackGui
             //! Own Aircraft
             BlackMisc::Aviation::CAircraft getOwnAircraft() const;
 
-            //! Identifies sender of cockpit updates
-            BlackMisc::COriginator ledsOriginator();
-
             QScopedPointer<BlackGui::CLedWidget> m_ledStandby;
             QScopedPointer<BlackGui::CLedWidget> m_ledModes;
             QScopedPointer<BlackGui::CLedWidget> m_ledIdent;
-            BlackMisc::COriginator m_originator;
-
         };
-
     } // namespace
 } // namespace
 

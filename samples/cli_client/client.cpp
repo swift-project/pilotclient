@@ -21,10 +21,11 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 
 Client::Client(QObject *parent)
-    : QObject(parent), COwnAircraftAware(COwnAircraftProviderDummy::instance()),
+    : QObject(parent),
+      COwnAircraftAware(COwnAircraftProviderDummy::instance()),
+      COriginatorAware("samples:cmdClient"),
       m_net(new BlackCore::CNetworkVatlib(COwnAircraftProviderDummy::instance(), this))
 {
-
     connect(m_net, &INetwork::atcPositionUpdate,                this, &Client::atcPositionUpdate);
     connect(m_net, &INetwork::atcDisconnected,                  this, &Client::atcDisconnected);
     connect(m_net, &INetwork::connectionStatusChanged,          this, &Client::connectionStatusChanged);
@@ -339,7 +340,8 @@ void Client::setOwnAircraftCmd(QTextStream &args)
         BlackMisc::Aviation::CComSystem("COM1", BlackMisc::PhysicalQuantities::CFrequency(com1, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())),
         BlackMisc::Aviation::CComSystem("COM2", BlackMisc::PhysicalQuantities::CFrequency(com2, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())),
         BlackMisc::Aviation::CTransponder(xpdrCode, xpdrMode),
-        COriginator("cmdClient"));
+        originator());
+    Q_UNUSED(aircraft);
 }
 
 void Client::setOwnAircraftPositionCmd(QTextStream &args)
