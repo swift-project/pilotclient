@@ -10,6 +10,8 @@
 #include "mainkeypadareacomponent.h"
 #include "ui_mainkeypadareacomponent.h"
 #include "blackcore/context_audio.h"
+#include "blackcore/context_network.h"
+#include "blackcore/context_ownaircraft.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

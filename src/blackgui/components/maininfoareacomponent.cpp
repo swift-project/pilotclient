@@ -9,6 +9,7 @@
 
 #include "maininfoareacomponent.h"
 #include "ui_maininfoareacomponent.h"
+#include "allmaininfoareacomponents.h"
 #include "../stylesheetutility.h"
 #include "../guiutility.h"
 #include "blackmisc/icons.h"
@@ -97,7 +98,6 @@ namespace BlackGui
             case InfoAreaLog:
             case InfoAreaSimulator:
                 return QSize(400, 300);
-                break;
             case InfoAreaMappings:
             case InfoAreaSettings:
             case InfoAreaTextMessages:
@@ -105,10 +105,8 @@ namespace BlackGui
                 break;
             case InfoAreaFlightPlan:
                 return QSize(625, 500);
-                break;
             default:
                 return QSize(400, 300);
-                break;
             }
         }
 

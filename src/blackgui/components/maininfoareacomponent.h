@@ -14,7 +14,6 @@
 
 #include "blackgui/blackguiexport.h"
 #include "../infoarea.h"
-#include "allmaininfoareacomponents.h"
 #include <QTabBar>
 #include <QPixmap>
 #include <QScopedPointer>
@@ -24,6 +23,19 @@ namespace BlackGui
 {
     namespace Components
     {
+        // forward declaration to break compile dependency from all components
+        class CCockpitComponent;
+        class CAtcStationComponent;
+        class CAircraftComponent;
+        class CMappingComponent;
+        class CUserComponent;
+        class CFlightPlanComponent;
+        class CSettingsComponent;
+        class CLogComponent;
+        class CSimulatorComponent;
+        class CTextMessageComponent;
+
+
         //! Main info area
         class BLACKGUI_EXPORT CMainInfoAreaComponent : public BlackGui::CInfoArea
         {
@@ -104,7 +116,7 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CMainInfoAreaComponent> ui;
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard
