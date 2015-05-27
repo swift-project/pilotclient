@@ -300,7 +300,7 @@ namespace BlackCore
         if (!snapshot.isRestricted() && !snapshot.isRestrictionChanged()) { return; }
 
         Q_ASSERT_X(BlackCore::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Needs to run in object thread");
-        Q_ASSERT_X(snapshot.generatingThreadName() != QThread::currentThread(), Q_FUNC_INFO, "Expect snapshot from background thread");
+        Q_ASSERT_X(snapshot.generatingThreadName() != QThread::currentThread()->objectName(), Q_FUNC_INFO, "Expect snapshot from background thread");
 
         // restricted snapshot values?
         bool changed = false;
