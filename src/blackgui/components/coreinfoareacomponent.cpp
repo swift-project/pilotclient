@@ -1,0 +1,75 @@
+/* Copyright (C) 2015
+ * swift project Community / Contributors
+ *
+ * This file is part of swift Project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+#include "coreinfoareacomponent.h"
+#include "ui_coreinfoareacomponent.h"
+#include "blackgui/components/logcomponent.h"
+#include "blackgui/components/corestatuscomponent.h"
+#include "blackgui/stylesheetutility.h"
+#include "blackgui/guiutility.h"
+#include "blackmisc/icons.h"
+#include <QMenu>
+#include <QListIterator>
+#include <QSignalMapper>
+#include <QCloseEvent>
+
+using namespace BlackMisc;
+using namespace BlackGui;
+
+namespace BlackGui
+{
+    namespace Components
+    {
+        CCoreInfoAreaComponent::CCoreInfoAreaComponent(QWidget *parent) :
+            CInfoArea(parent),
+            ui(new Ui::CCoreInfoAreaComponent)
+        {
+            ui->setupUi(this);
+            initInfoArea();
+            ps_toggleTabBarLocked(true);
+        }
+
+        CCoreInfoAreaComponent::~CCoreInfoAreaComponent()
+        { }
+
+        CLogComponent *CCoreInfoAreaComponent::getLogComponent()
+        {
+            return this->ui->comp_Log;
+        }
+
+        CCoreStatusComponent *CCoreInfoAreaComponent::getStatusComponent()
+        {
+            return this->ui->comp_Status;
+        }
+
+        QSize CCoreInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
+        {
+            InfoArea area = static_cast<InfoArea>(areaIndex);
+            switch (area)
+            {
+            case InfoAreaLog:
+                return QSize(400, 300);
+            default:
+                return QSize(400, 300);
+            }
+        }
+
+        const QPixmap &CCoreInfoAreaComponent::indexToPixmap(int areaIndex) const
+        {
+            InfoArea area = static_cast<InfoArea>(areaIndex);
+            switch (area)
+            {
+            case InfoAreaLog:
+                return CIcons::appLog16();
+            default:
+                return CIcons::statusBar16();
+            }
+        }
+    } // namespace
+} // namespace
