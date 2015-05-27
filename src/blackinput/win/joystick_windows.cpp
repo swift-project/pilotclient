@@ -8,6 +8,7 @@
  */
 
 #include "joystick_windows.h"
+#include "blackmisc/logmessage.h"
 #include <QDebug>
 
 // Qt5 defines UNICODE, hence we can expect an wchar_t strings.
@@ -15,6 +16,7 @@
 // using ascii functions of WINAPI. To fix it, introduce #ifdef UNICODE and add char
 // handling in the second branch.
 
+using namespace BlackMisc;
 using namespace BlackMisc::Hardware;
 
 namespace BlackInput
@@ -33,7 +35,7 @@ namespace BlackInput
 
         initDirectInput();
         enumJoystickDevices();
-        if (!m_availableJoystickDevices.isEmpty()) createJoystickDevice();
+        if (!m_availableJoystickDevices.isEmpty()) { createJoystickDevice(); }
     }
 
     CJoystickWindows::~CJoystickWindows()
@@ -48,7 +50,7 @@ namespace BlackInput
 
     void CJoystickWindows::triggerButton(const CJoystickButton button, bool isPressed)
     {
-        if(!isPressed) emit buttonUp(button);
+        if (!isPressed) emit buttonUp(button);
         else emit buttonDown(button);
     }
 
@@ -70,16 +72,15 @@ namespace BlackInput
         HINSTANCE instance = GetModuleHandle(nullptr);
         if (instance == nullptr)
         {
-            qWarning() << "GetModuleHandle() failed with error code" << GetLastError();
+            CLogMessage(this).error("GetModuleHandle() failed with error code: %1") << GetLastError();
             return E_FAIL;
         }
 
         if (FAILED(hr = m_directInput->Initialize(instance, DIRECTINPUT_VERSION)))
         {
-            // TODO Print an error
+            CLogMessage(this).error("Direct input init failed");
             return hr;
         }
-
         return hr;
     }
 
@@ -88,11 +89,14 @@ namespace BlackInput
         HRESULT hr;
         if (FAILED(hr = m_directInput->EnumDevices(DI8DEVTYPE_JOYSTICK, enumJoysticksCallback, this, DIEDFL_ATTACHEDONLY)))
         {
-            // TODO print error message
+            CLogMessage(this).error("Error reading joystick devices");
             return hr;
         }
 
-        if (m_availableJoystickDevices.isEmpty()) qWarning() << "No joystick device found!";
+        if (m_availableJoystickDevices.isEmpty())
+        {
+            CLogMessage(this).info("No joystick device found");
+        }
         return hr;
     }
 

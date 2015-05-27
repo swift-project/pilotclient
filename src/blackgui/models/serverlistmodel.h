@@ -24,7 +24,6 @@ namespace BlackGui
         //! Server list model
         class BLACKGUI_EXPORT CServerListModel : public CListModelBase<BlackMisc::Network::CServer, BlackMisc::Network::CServerList>
         {
-
         public:
 
             //! Constructor
@@ -33,6 +32,6 @@ namespace BlackGui
             //! Destructor
             virtual ~CServerListModel() {}
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard

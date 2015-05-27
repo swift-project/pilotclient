@@ -32,7 +32,7 @@ namespace BlackCore
           CPluginStorageAware(pluginStorageProvider),
           m_simulatorPluginInfo(info)
     {
-        this->setObjectName(info.getIdentifier());
+        this->setObjectName("Simulator:" + info.getIdentifier());
 
         // provider signals
         m_remoteAircraftProviderConnections = this->m_remoteAircraftProvider->connectRemoteAircraftProviderSignals(

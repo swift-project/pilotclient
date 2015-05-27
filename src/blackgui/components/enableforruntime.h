@@ -34,12 +34,10 @@ namespace BlackGui
     namespace Components
     {
 
-        /*!
-         * \brief Component, which provides references to runtime objects
-         * \details Access to runtime allows to encapsualate many aspects of data access and makes
-         *          the component widely independent from a central data provideer
-         * \sa BlackCore::CRuntime
-         */
+        //! Component, which provides references to runtime objects
+        //! \details Access to runtime allows to encapsualate many aspects of data access and makes
+        //!          the component widely independent from a central data provideer
+        //! \sa BlackCore::CRuntime
         class BLACKGUI_EXPORT CEnableForRuntime
         {
         public:
@@ -118,9 +116,6 @@ namespace BlackGui
 
             //! \copydoc CRuntime::hasRemoteApplicationContext
             bool hasRemoteApplicationContext() const { return this->m_runtime->hasRemoteApplicationContext(); }
-
-            //! \copydoc CRuntime::canPingApplicationContext
-            bool canPingApplicationContext() const { return this->m_runtime->canPingApplicationContext(); }
 
             //! Play a given notification sound
             void playNotifcationSound(BlackSound::CNotificationSounds::Notification notification) const;

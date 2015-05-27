@@ -7,9 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "dockwidgetinfoarea.h"
-#include "infoarea.h"
-#include "components/maininfoareacomponent.h"
+#include "blackgui/dockwidgetinfoarea.h"
+#include "blackgui/infoarea.h"
+#include "components/enablefordockwidgetinfoarea.h"
 #include "blackmisc/icons.h"
 
 using namespace BlackGui::Components;
@@ -96,7 +96,7 @@ namespace BlackGui
         QList<CEnableForDockWidgetInfoArea *> infoAreaDockWidgets = this->findEmbeddedDockWidgetInfoAreaComponents();
         foreach(CEnableForDockWidgetInfoArea * dwia, infoAreaDockWidgets)
         {
-            Q_ASSERT(dwia);
+            Q_ASSERT_X(dwia, Q_FUNC_INFO, "Missing info area");
 
             // KWB: potentially a risk when this object is deleted
             //      but under normal situations the child object will be deleted as well, and we have

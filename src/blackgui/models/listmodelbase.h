@@ -62,10 +62,8 @@ namespace BlackGui
             //! Set sort column
             virtual void setSortColumn(int column) { this->m_sortedColumn = column; }
 
-            /*!
-             * Set column for sorting
-             * \param propertyIndex index of column to be sorted
-             */
+            //! Set column for sorting
+            //! \param propertyIndex index of column to be sorted
             virtual void setSortColumnByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex);
 
             //! Get sort column property index
@@ -100,11 +98,9 @@ namespace BlackGui
             int ps_updateContainer(const BlackMisc::CVariant &variant, bool sort);
 
         protected:
-            /*!
-             * Constructor
-             * \param translationContext    I18N context
-             * \param parent
-             */
+            //! Constructor
+            //! \param translationContext    I18N context
+            //! \param parent
             CListModelBaseNonTemplate(const QString &translationContext, QObject *parent = nullptr)
                 : QAbstractItemModel(parent), m_columns(translationContext), m_sortedColumn(-1), m_sortOrder(Qt::AscendingOrder)
             {
@@ -217,11 +213,9 @@ namespace BlackGui
         protected:
             std::unique_ptr<IModelFilter<ContainerType> > m_filter; //!< Used filter
 
-            /*!
-             * Constructor
-             * \param translationContext    I18N context
-             * \param parent
-             */
+            //! Constructor
+            //! \param translationContext    I18N context
+            //! \param parent
             CListModelBase(const QString &translationContext, QObject *parent = nullptr)
                 : CListModelBaseNonTemplate(translationContext, parent)
             { }

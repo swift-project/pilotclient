@@ -28,7 +28,6 @@ namespace BlackGui
     {
         CAudioSetupComponent::CAudioSetupComponent(QWidget *parent) :
             QFrame(parent),
-            CEnableForRuntime(nullptr, false),
             ui(new Ui::CAudioSetupComponent)
         {
             ui->setupUi(this);
@@ -45,11 +44,11 @@ namespace BlackGui
 
         void CAudioSetupComponent::runtimeHasBeenSet()
         {
-            if (!this->getIContextSettings()) qFatal("Settings missing");
+            Q_ASSERT_X(this->getIContextSettings(), Q_FUNC_INFO, "missing settings");
             this->connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &CAudioSetupComponent::ps_changedSettings);
 
             // based on audio context
-            Q_ASSERT(this->getIContextAudio());
+            Q_ASSERT_X(this->getIContextAudio(), Q_FUNC_INFO, "missing audio");
             if (this->getIContextAudio())
             {
                 this->initAudioDeviceLists();

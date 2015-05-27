@@ -18,9 +18,6 @@ namespace BlackGui
 {
     namespace Models
     {
-        /*
-         * Constructor
-         */
         CTextMessageListModel::CTextMessageListModel(TextMessageMode mode, QObject *parent) :
             CListModelBase("ModelTextMessageList", parent), m_textMessageMode(NotSet)
         {

@@ -113,14 +113,6 @@ namespace BlackCore
         return !this->m_contextApplication->isUsingImplementingObject();
     }
 
-    bool CRuntime::canPingApplicationContext() const
-    {
-        Q_ASSERT(this->m_contextApplication);
-        if (this->m_contextApplication->isUsingImplementingObject()) return true;
-        qint64 token = QDateTime::currentMSecsSinceEpoch();
-        return (token == this->m_contextApplication->ping(token));
-    }
-
     void CRuntime::registerMetadata()
     {
         BlackMisc::registerMetadata();

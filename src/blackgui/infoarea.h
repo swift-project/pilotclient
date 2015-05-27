@@ -144,6 +144,9 @@ namespace BlackGui
         //! \remarks North or South working, East / West not
         void ps_setTabBarPosition(QTabWidget::TabPosition position);
 
+        //! Toogle lock tabbar
+        void ps_toggleTabBarLocked(bool locked);
+
     private:
         QList<CDockWidgetInfoArea *> m_dockWidgetInfoAreas ;
         QTabBar *m_tabBar = nullptr;
@@ -225,9 +228,6 @@ namespace BlackGui
 
         //! Show tab bar
         void ps_showTabBar(bool show);
-
-        //! Toogle lock tabbar
-        void ps_toggleTabBarLocked(bool locked);
 
         //! Toggle tab position North - South
         void ps_toggleTabBarPosition();

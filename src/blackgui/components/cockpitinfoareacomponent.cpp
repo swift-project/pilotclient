@@ -25,6 +25,7 @@ namespace BlackGui
             ui->setupUi(this);
             this->initInfoArea();
             this->ps_setTabBarPosition(QTabWidget::North);
+            this->ps_toggleTabBarLocked(true);
         }
 
         CCockpitInfoAreaComponent::~CCockpitInfoAreaComponent()

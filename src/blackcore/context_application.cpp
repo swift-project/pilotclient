@@ -38,9 +38,6 @@ namespace BlackCore
         }
     }
 
-    /*
-     * Constructor
-     */
     IContextApplication::IContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
         CContext(mode, runtime)
     {

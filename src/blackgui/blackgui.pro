@@ -46,7 +46,7 @@ RESOURCES +=
 DESTDIR = $$BuildRoot/lib
 DLLDESTDIR = $$BuildRoot/bin
 
-OTHER_FILES += ./qss/*.qss ./qss/*.css ./qss/*.ini
+OTHER_FILES += ./qss/*.qss ./qss/*.css ./qss/*.ini *.ico *.rc
 
 win32:isEmpty(MINGW_IN_SHELL):  COPY = xcopy /yi
 else:                           COPY = cp -r

@@ -66,7 +66,6 @@ namespace BlackGui
 
         private:
             BlackGui::CDockWidgetInfoArea *m_parentDockableInfoArea = nullptr; //!< my parent dockable widget
-
         };
     }
 } // namespace

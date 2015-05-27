@@ -20,9 +20,6 @@ namespace BlackGui
 {
     namespace Models
     {
-        /*
-         * Constructor
-         */
         CAirportListModel::CAirportListModel(QObject *parent) :
             CListModelBase<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>("ViewAirportList", parent)
         {
@@ -45,5 +42,5 @@ namespace BlackGui
             (void)QT_TRANSLATE_NOOP("ViewAirportList", "elevation");
             (void)QT_TRANSLATE_NOOP("ViewAirportList", "bearing");
         }
-    }
-}
+    } // ns
+} // ns

@@ -148,9 +148,6 @@ namespace BlackCore
         //! Remote application context, indicates distributed environment
         bool hasRemoteApplicationContext() const;
 
-        //! Is application context available?
-        bool canPingApplicationContext() const;
-
         //! Register metadata
         static void registerMetadata();
 

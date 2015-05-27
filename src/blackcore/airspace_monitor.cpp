@@ -174,6 +174,7 @@ namespace BlackCore
 
     bool CAirspaceMonitor::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositonUpdates, const BlackMisc::COriginator &originator)
     {
+        //! \fixme CAirspaceMonitor: If in the long term originator is not used, remove from signature
         Q_UNUSED(originator);
         CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexFastPositionUpdates, CVariant::fromValue(enableFastPositonUpdates));
         QWriteLocker l(&m_lockAircraft);
@@ -183,6 +184,7 @@ namespace BlackCore
 
     bool CAirspaceMonitor::updateAircraftRendered(const CCallsign &callsign, bool rendered, const BlackMisc::COriginator &originator)
     {
+        //! \fixme CAirspaceMonitor: If in the long term originator is not used, remove from signature
         Q_UNUSED(originator);
         CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexRendered, CVariant::fromValue(rendered));
         QWriteLocker l(&m_lockAircraft);
@@ -192,6 +194,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::updateMarkAllAsNotRendered(const BlackMisc::COriginator &originator)
     {
+        //! \fixme CAirspaceMonitor: If in the long term originator is not used, remove from signature
         Q_UNUSED(originator);
         QWriteLocker l(&m_lockAircraft);
         m_aircraftInRange.markAllAsNotRendered();

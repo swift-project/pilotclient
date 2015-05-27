@@ -23,7 +23,7 @@ namespace BlackGui
 {
     namespace Models
     {
-        //! ATC list model
+        //! Text message list model
         class BLACKGUI_EXPORT CTextMessageListModel : public CListModelBase<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList>
         {
 
@@ -51,6 +51,6 @@ namespace BlackGui
         private:
             TextMessageMode m_textMessageMode = NotSet;
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard

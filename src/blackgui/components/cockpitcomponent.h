@@ -53,7 +53,6 @@ namespace BlackGui
             void ps_onToggleFloating(bool floating);
 
         private:
-
             // toggle area on show/hide details
             void toggleShowHideDetails(bool show, bool considerCurrentSize);
 

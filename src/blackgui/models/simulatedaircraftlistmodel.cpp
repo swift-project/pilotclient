@@ -21,9 +21,6 @@ namespace BlackGui
 {
     namespace Models
     {
-        /*
-         * Constructor
-         */
         CSimulatedAircraftListModel::CSimulatedAircraftListModel(QObject *parent) : CListModelBase("ModelSimulatedAircraftList", parent)
         {
             this->setAircraftMode(InfoMode);
