@@ -26,9 +26,9 @@ DEPENDPATH += . $$SourceRoot/src/blackmisc \
                 $$SourceRoot/src/blackinput
 
 INCLUDEPATH += . $$SourceRoot/src
-
 DESTDIR = $$BuildRoot/bin
-
-OTHER_FILES += *.qss
+OTHER_FILES += *.qss *.ico *.rc
+RC_FILE = swift.rc
+DISTFILES += swift.rc
 
 include ($$SourceRoot/libraries.pri)

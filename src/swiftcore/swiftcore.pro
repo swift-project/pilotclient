@@ -20,6 +20,8 @@ DEPENDPATH += . $$SourceRoot/src/blackmisc \
 
 INCLUDEPATH += . $$SourceRoot/src
 DESTDIR = $$BuildRoot/bin
-OTHER_FILES += *.qss
+OTHER_FILES += *.qss *.ico *.rc
+RC_FILE = swiftcore.rc
+DISTFILES += swiftcore.rc
 
 include ($$SourceRoot/libraries.pri)
