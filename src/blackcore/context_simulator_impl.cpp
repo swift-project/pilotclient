@@ -35,6 +35,7 @@ namespace BlackCore
         IContextSimulator(mode, runtime),
         m_mapper(new QSignalMapper(this))
     {
+        this->setObjectName("CContextSimulator");
         findSimulatorPlugins();
         // Maps listener instance
         connect(m_mapper, static_cast<void (QSignalMapper::*)(QObject *)>(&QSignalMapper::mapped), this, &CContextSimulator::ps_simulatorStarted);
@@ -363,6 +364,12 @@ namespace BlackCore
             return false;
         }
 
+        // Is the plugin already loaded?
+        if (m_simulatorPlugin && m_simulatorPlugin->info == simulatorInfo)
+        {
+            return true;
+        }
+
         ISimulatorFactory *factory = getSimulatorFactory(simulatorInfo);
         Q_ASSERT(factory);
 
@@ -416,6 +423,7 @@ namespace BlackCore
         settingsChanged(static_cast<uint>(IContextSettings::SettingsSimulator));
 
         // try to connect
+        //! \todo #417: we want to change this to connectTo, as the listener already checks the avialability of the simulator
         m_simulatorPlugin->simulator->asyncConnectTo();
 
         if (m_simulatorPlugin) // can be already nullptr if connectTo() is synchronous and fails
@@ -541,25 +549,24 @@ namespace BlackCore
 
     void CContextSimulator::unloadSimulatorPlugin()
     {
-        if (m_simulatorPlugin)
-        {
-            // depending on shutdown order, network might already have been deleted
-            emit simulatorPluginChanged(CSimulatorPluginInfo());
+        if (!m_simulatorPlugin) { return; }
 
-            Q_ASSERT(this->getIContextNetwork());
-            Q_ASSERT(this->getIContextNetwork()->isLocalObject());
-            Q_ASSERT(m_simulatorPlugin->simulator);
+        // depending on shutdown order, network might already have been deleted
+        emit simulatorPluginChanged(CSimulatorPluginInfo());
 
-            // unload and disconnect
-            m_simulatorPlugin->simulator->unload();
+        Q_ASSERT(this->getIContextNetwork());
+        Q_ASSERT(this->getIContextNetwork()->isLocalObject());
+        Q_ASSERT(m_simulatorPlugin->simulator);
 
-            // disconnect signals
-            this->disconnect(m_simulatorPlugin->simulator);
+        // unload and disconnect
+        m_simulatorPlugin->simulator->unload();
 
-            m_simulatorPlugin->simulator->deleteLater();
-            m_simulatorPlugin->simulator = nullptr;
-            m_simulatorPlugin = nullptr;
-        }
+        // disconnect signals
+        this->disconnect(m_simulatorPlugin->simulator);
+
+        m_simulatorPlugin->simulator->deleteLater();
+        m_simulatorPlugin->simulator = nullptr;
+        m_simulatorPlugin = nullptr;
     }
 
     void CContextSimulator::ps_addRemoteAircraft(const CSimulatedAircraft &remoteAircraft)

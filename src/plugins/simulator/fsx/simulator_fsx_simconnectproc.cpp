@@ -84,8 +84,11 @@ namespace BlackSimPlugin
                     case SystemEventPause:
                         {
                             bool p = event->dwData ? true : false;
-                            simulatorFsx->m_simPaused = p;
-                            simulatorFsx->emitSimulatorCombinedStatus();
+                            if (simulatorFsx->m_simPaused != p)
+                            {
+                                simulatorFsx->m_simPaused = p;
+                                simulatorFsx->emitSimulatorCombinedStatus();
+                            }
                             break;
                         }
                     default:

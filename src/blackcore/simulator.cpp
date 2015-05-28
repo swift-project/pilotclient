@@ -45,9 +45,13 @@ namespace BlackCore
         }
     }
 
-    void ISimulator::emitSimulatorCombinedStatus()
+    void ISimulator::emitSimulatorCombinedStatus(int oldStatus)
     {
-        emit simulatorStatusChanged(getSimulatorStatus());
+        int newStatus = getSimulatorStatus();
+        if (oldStatus != newStatus)
+        {
+            emit simulatorStatusChanged(newStatus);
+        }
     }
 
     ISimulatorListener::ISimulatorListener(QObject *parent) : QObject(parent)

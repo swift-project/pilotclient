@@ -193,6 +193,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::disconnectFrom()
         {
+            if (!this->isConnected()) { return true; } // avoid emit if already disconnected
             if (m_traffic)
             {
                 m_traffic->cleanup();

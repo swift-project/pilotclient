@@ -96,7 +96,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFs9::disconnectFrom()
         {
-            if (!m_simConnected) return true;
+            if (!m_simConnected) { return true; }
 
             // Don't forward messages when disconnected
             disconnect(m_connectionHostMessages);

@@ -80,12 +80,13 @@ namespace BlackSimPlugin
         bool CSimulatorFsx::connectTo()
         {
             if (m_simConnected) { return true; }
+            int oldStatus = getSimulatorStatus();
             if (FAILED(SimConnect_Open(&m_hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0)))
             {
                 m_simConnected = false;
                 m_simPaused = false;
                 m_simSimulating = false;
-                emitSimulatorCombinedStatus();
+                emitSimulatorCombinedStatus(oldStatus);
                 return false;
             }
             else
@@ -96,7 +97,7 @@ namespace BlackSimPlugin
             initWhenConnected();
             m_simconnectTimerId = startTimer(10);
             m_simConnected = true;
-            emitSimulatorCombinedStatus();
+            emitSimulatorCombinedStatus(oldStatus);
             return true;
         }
 
@@ -352,8 +353,9 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::onSimStopped()
         {
+            int oldStatus = getSimulatorStatus();
             m_simSimulating = false;
-            emitSimulatorCombinedStatus();
+            emitSimulatorCombinedStatus(oldStatus);
         }
 
         void CSimulatorFsx::onSimFrame()

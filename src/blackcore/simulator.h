@@ -34,8 +34,8 @@ namespace BlackCore
 
     //! Interface to a simulator.
     class BLACKCORE_EXPORT ISimulator :
-            public QObject,
-            public BlackMisc::COriginatorAware
+        public QObject,
+        public BlackMisc::COriginatorAware
     {
         Q_OBJECT
 
@@ -73,6 +73,7 @@ namespace BlackCore
         virtual bool connectTo() = 0;
 
         //! Connect asynchronously to simulator
+        //! \deprecated #417
         virtual void asyncConnectTo() = 0;
 
         //! Disconnect from simulator
@@ -226,8 +227,9 @@ namespace BlackCore
         virtual int physicallyRemoveAllRemoteAircraft() = 0;
 
         //! Emit the combined status
+        //! \param oldStatus optionally one can capture and provide the old status for comparison. In case of equal status values no signal will be sent
         //! \sa simulatorStatusChanged;
-        void emitSimulatorCombinedStatus();
+        void emitSimulatorCombinedStatus(int oldStatus = -1);
     };
 
     //! Interface to a simulator listener.
