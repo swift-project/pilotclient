@@ -157,7 +157,9 @@ namespace BlackCore
         if (maxRenderedAircraft == m_maxRenderedAircraft) { return; }
         if (maxRenderedAircraft < 1)
         {
+            // disable, we set both values to 0
             m_maxRenderedAircraft = 0;
+            m_maxRenderedDistance = CLength(0.0, CLengthUnit::NM());
         }
         else if (maxRenderedAircraft >= MaxAircraftInfinite)
         {
@@ -169,7 +171,8 @@ namespace BlackCore
         }
 
         bool r = isRenderingRestricted();
-        emit renderRestrictionsChanged(r, getMaxRenderedAircraft(), getMaxRenderedDistance(), getRenderedDistanceBoundary());
+        bool e = isRenderingEnabled();
+        emit renderRestrictionsChanged(r, e, getMaxRenderedAircraft(), getMaxRenderedDistance(), getRenderedDistanceBoundary());
     }
 
     void CSimulatorCommon::setMaxRenderedDistance(CLength &distance)
@@ -179,6 +182,12 @@ namespace BlackCore
         {
             m_maxRenderedDistance = CLength(0.0, CLengthUnit::nullUnit());
         }
+        else if (distance.isZeroEpsilonConsidered())
+        {
+            // zero means disabled, we disable max aircraft too
+            this->m_maxRenderedAircraft = 0;
+            this->m_maxRenderedDistance = CLength(0.0, CLengthUnit::NM());
+        }
         else
         {
             Q_ASSERT(!distance.isNegativeWithEpsilonConsidered());
@@ -186,7 +195,8 @@ namespace BlackCore
         }
 
         bool r = isRenderingRestricted();
-        emit renderRestrictionsChanged(r, getMaxRenderedAircraft(), getMaxRenderedDistance(), getRenderedDistanceBoundary());
+        bool e = isRenderingEnabled();
+        emit renderRestrictionsChanged(r, e, getMaxRenderedAircraft(), getMaxRenderedDistance(), getRenderedDistanceBoundary());
     }
 
     CLength CSimulatorCommon::getMaxRenderedDistance() const
@@ -273,7 +283,7 @@ namespace BlackCore
     {
         this->m_maxRenderedDistance = CLength(0, CLengthUnit::nullUnit());
         this->m_maxRenderedAircraft = MaxAircraftInfinite;
-        emit renderRestrictionsChanged(false, getMaxRenderedAircraft(), getMaxRenderedDistance(), getRenderedDistanceBoundary());
+        emit renderRestrictionsChanged(false, true, getMaxRenderedAircraft(), getMaxRenderedDistance(), getRenderedDistanceBoundary());
     }
 
     int CSimulatorCommon::physicallyRemoveMultipleRemoteAircraft(const CCallsignSet &callsigns)

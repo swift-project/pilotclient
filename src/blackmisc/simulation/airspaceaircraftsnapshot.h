@@ -33,6 +33,7 @@ namespace BlackMisc
             CAirspaceAircraftSnapshot(
                 const BlackMisc::Simulation::CSimulatedAircraftList &allAircraft,
                 bool restricted = false,
+                bool renderingEnabled = true,
                 int maxAircraft = 100,
                 const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance = BlackMisc::PhysicalQuantities::CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()),
                 const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary = BlackMisc::PhysicalQuantities::CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit())
@@ -90,8 +91,8 @@ namespace BlackMisc
             BLACK_ENABLE_TUPLE_CONVERSION(CAirspaceAircraftSnapshot)
             qint64 m_timestampMsSinceEpoch = -1;
             bool m_restricted = false;
-            bool m_restrictionChanged = false;
             bool m_renderingEnabled = true;
+            bool m_restrictionChanged = false;
             QString m_threadName; //!< generating thread name for debugging purposes
 
             // remark closest aircraft always first

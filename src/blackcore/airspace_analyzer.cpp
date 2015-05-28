@@ -64,10 +64,11 @@ namespace BlackCore
         return m_latestAircraftSnapshot;
     }
 
-    void CAirspaceAnalyzer::setSimulatorRenderRestrictionsChanged(bool restricted, int maxAircraft, const CLength &maxRenderedDistance, const CLength &maxRenderedBoundary)
+    void CAirspaceAnalyzer::setSimulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const CLength &maxRenderedDistance, const CLength &maxRenderedBoundary)
     {
         QWriteLocker l(&m_lockRestrictions);
         this->m_simulatorRenderedAircraftRestricted = restricted;
+        this->m_simulatorRenderingEnabled = enabled;
         this->m_simulatorMaxRenderedAircraft = maxAircraft;
         this->m_simulatorMaxRenderedDistance = maxRenderedDistance;
         this->m_simulatorMaxRenderedBoundary = maxRenderedBoundary;
@@ -177,33 +178,37 @@ namespace BlackCore
         Q_ASSERT_X(!isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background thread");
         Q_ASSERT_X(!isApplicationThreadObjectThread(this), Q_FUNC_INFO, "Expect to run in background thread affinity");
 
-        bool restricted;
+        bool restricted, enabled;
         int maxAircraft;
         CLength maxRenderedDistance, maxRenderedBoundary;
         {
             QReadLocker l(&m_lockRestrictions);
             restricted = this->m_simulatorRenderedAircraftRestricted;
+            enabled = this->m_simulatorRenderingEnabled,
             maxAircraft = this->m_simulatorMaxRenderedAircraft;
             maxRenderedDistance = this->m_simulatorMaxRenderedDistance;
             maxRenderedBoundary = this->m_simulatorMaxRenderedBoundary;
         }
 
-        //! \todo Analyzer: generate only when restricted?
+        //! \fixme Analyzer: generate only when restricted?
 
         CSimulatedAircraftList aircraftInRange(getAircraftInRange()); // thread safe copy from provider
         CAirspaceAircraftSnapshot snapshot(
             aircraftInRange,
-            restricted, maxAircraft, maxRenderedDistance, maxRenderedBoundary
+            restricted, enabled,
+            maxAircraft, maxRenderedDistance, maxRenderedBoundary
         );
 
         // lock block
         {
             QWriteLocker l(&m_lockSnapshot);
             bool wasValid = m_latestAircraftSnapshot.isValidSnapshot();
+            if (wasValid)
+            {
+                snapshot.setRestrictionChanged(m_latestAircraftSnapshot);
+            }
             m_latestAircraftSnapshot = snapshot;
-
             if (!wasValid) { return; } // ignore the 1st snapshot
-            snapshot.setRestrictionChanged(m_latestAircraftSnapshot);
         }
 
         emit airspaceAircraftSnapshot(snapshot);

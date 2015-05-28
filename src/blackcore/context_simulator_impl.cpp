@@ -255,11 +255,7 @@ namespace BlackCore
     int CContextSimulator::getMaxRenderedAircraft() const
     {
         if (m_debugEnabled) {CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin)
-        {
-            return 0;
-        }
-
+        if (!m_simulatorPlugin) { return 0; }
         Q_ASSERT(m_simulatorPlugin->simulator);
         return m_simulatorPlugin->simulator->getMaxRenderedAircraft();
     }
@@ -267,22 +263,18 @@ namespace BlackCore
     void CContextSimulator::setMaxRenderedAircraft(int number)
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << number; }
+        if (!m_simulatorPlugin) { return; }
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        m_simulatorPlugin->simulator->setMaxRenderedAircraft(number);
 
-        if (m_simulatorPlugin)
-        {
-            Q_ASSERT(m_simulatorPlugin->simulator);
-            m_simulatorPlugin->simulator->setMaxRenderedAircraft(number);
-        }
     }
 
     void CContextSimulator::setMaxRenderedDistance(CLength &distance)
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << distance; }
-        if (m_simulatorPlugin)
-        {
-            Q_ASSERT(m_simulatorPlugin->simulator);
-            this->m_simulatorPlugin->simulator->setMaxRenderedDistance(distance);
-        }
+        if (!m_simulatorPlugin) { return; }
+        Q_ASSERT(m_simulatorPlugin->simulator);
+        this->m_simulatorPlugin->simulator->setMaxRenderedDistance(distance);
     }
 
     QString CContextSimulator::getRenderRestrictionText() const
@@ -308,10 +300,7 @@ namespace BlackCore
     CLength CContextSimulator::getMaxRenderedDistance() const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin)
-        {
-            return CLength(0, CLengthUnit::nullUnit());
-        }
+        if (!m_simulatorPlugin) { return CLength(0, CLengthUnit::nullUnit()); }
         Q_ASSERT(m_simulatorPlugin->simulator);
         return this->m_simulatorPlugin->simulator->getMaxRenderedDistance();
     }

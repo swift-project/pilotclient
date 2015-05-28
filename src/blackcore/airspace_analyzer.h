@@ -53,7 +53,7 @@ namespace BlackCore
         BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const;
 
         //! Render restrictions in simulator
-        void setSimulatorRenderRestrictionsChanged(bool restricted, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance, const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary);
+        void setSimulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance, const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary);
 
         //! Gracefully shut down, e.g. for thread safety
         void gracefulShutdown();
@@ -102,7 +102,7 @@ namespace BlackCore
         //! Analyze the airspace
         void analyzeAirspace();
 
-        QTimer m_timer{this}; //!< multi purpose timer for snapshots and watchdog
+        QTimer m_timer {this}; //!< multi purpose timer for snapshots and watchdog
 
         // watchdog
         CCallsignTimestampSet m_aircraftCallsignTimestamps; //!< for watchdog (pilots)
@@ -114,6 +114,7 @@ namespace BlackCore
         // snapshot
         BlackMisc::Simulation::CAirspaceAircraftSnapshot m_latestAircraftSnapshot;
         bool m_simulatorRenderedAircraftRestricted = false;
+        bool m_simulatorRenderingEnabled = true;
         int m_simulatorMaxRenderedAircraft = -1;
         BlackMisc::PhysicalQuantities::CLength m_simulatorMaxRenderedDistance { 0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit() };
         BlackMisc::PhysicalQuantities::CLength m_simulatorMaxRenderedBoundary { 0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit() };

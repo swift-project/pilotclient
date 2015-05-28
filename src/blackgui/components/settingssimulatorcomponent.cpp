@@ -98,12 +98,18 @@ namespace BlackGui
             // time sync
             this->ui->cb_TimeSync->setEnabled(m_pluginLoaded);
             this->ui->le_TimeSyncOffset->setEnabled(m_pluginLoaded);
-            this->ui->sb_MaxDistance->setEnabled(m_pluginLoaded);
-            this->ui->sb_MaxAircraft->setEnabled(m_pluginLoaded);
+            this->ui->pb_ApplyTimeSync->setEnabled(m_pluginLoaded);
 
             // led
             this->ui->led_RestrictedRendering->setOn(m_pluginLoaded ? getIContextSimulator()->isRenderingRestricted() : false);
             this->ui->lbl_RestrictionText->setText(m_pluginLoaded ? getIContextSimulator()->getRenderRestrictionText() : "");
+
+            this->ui->sb_MaxDistance->setEnabled(m_pluginLoaded);
+            this->ui->sb_MaxAircraft->setEnabled(m_pluginLoaded);
+            this->ui->pb_ApplyMaxAircraft->setEnabled(m_pluginLoaded);
+            this->ui->pb_ApplyMaxDistance->setEnabled(m_pluginLoaded);
+            this->ui->pb_ClearRestrictedRendering->setEnabled((m_pluginLoaded));
+            this->ui->pb_DisableRendering->setEnabled(m_pluginLoaded);
 
             if (m_pluginLoaded)
             {
@@ -112,14 +118,15 @@ namespace BlackGui
                 CTime timeOffset = this->getIContextSimulator()->getTimeSynchronizationOffset();
                 this->ui->le_TimeSyncOffset->setText(timeOffset.formattedHrsMin());
 
-                int distanceBoundaryNM = getIContextSimulator()->getRenderedDistanceBoundary().valueInteger(CLengthUnit::NM());
-                this->ui->sb_MaxDistance->setMaximum(distanceBoundaryNM);
-                this->ui->sb_MaxAircraft->setValue(getIContextSimulator()->getMaxRenderedAircraft());
+                int maxAircraft = getIContextSimulator()->getMaxRenderedAircraft();
+                this->ui->sb_MaxAircraft->setValue(maxAircraft);
 
+                CLength distanceBoundary(getIContextSimulator()->getRenderedDistanceBoundary());
+                int distanceBoundaryNM = distanceBoundary.valueInteger(CLengthUnit::NM());
                 CLength maxDistance(getIContextSimulator()->getMaxRenderedDistance());
                 int distanceNM = maxDistance.isNull() ? distanceBoundaryNM : maxDistance.valueInteger(CLengthUnit::NM());
+                this->ui->sb_MaxDistance->setMaximum(distanceBoundaryNM);
                 this->ui->sb_MaxDistance->setValue(distanceNM);
-
                 this->ui->led_RenderingEnabled->setOn(getIContextSimulator()->isRenderingEnabled());
             }
             else
@@ -132,7 +139,7 @@ namespace BlackGui
         {
             Q_ASSERT(this->getIContextSimulator());
             Q_ASSERT(this->getIContextSettings());
-            if (!this->getIContextSimulator() || !this->getIContextSettings()) return;
+            if (!this->getIContextSimulator() || !this->getIContextSettings()) { return; }
 
             CSimulatorPluginInfoList simDrivers = this->getIContextSimulator()->getAvailableSimulatorPlugins();
             simDrivers.insert(simDrivers.begin(), CSimulatorPluginInfo());
@@ -171,9 +178,13 @@ namespace BlackGui
 
             // get initial aircraft to render
             int noRequested = this->ui->sb_MaxAircraft->value();
+            int oldValue = this->getIContextSimulator()->getMaxRenderedAircraft();
+            if (oldValue == noRequested) { return; }
+
+            // set value
             this->getIContextSimulator()->setMaxRenderedAircraft(noRequested);
 
-            // real value
+            // re-read real value
             int noRendered = this->getIContextSimulator()->getMaxRenderedAircraft();
             if (noRequested == noRendered)
             {
@@ -189,14 +200,22 @@ namespace BlackGui
 
         void CSettingsSimulatorComponent::ps_onApplyMaxRenderedDistance()
         {
-            Q_ASSERT(getIContextSimulator());
+            Q_ASSERT_X(getIContextSimulator(), Q_FUNC_INFO, "missing context");
 
             // get initial aircraft to render
             int maxDistanceNM = this->ui->sb_MaxDistance->value();
-            CLength distance(maxDistanceNM, CLengthUnit::NM());
-            this->getIContextSimulator()->setMaxRenderedDistance(distance);
-            CLogMessage(this).info("Max.distance requested: %1") << distance.valueRoundedWithUnit(2, true);
-            this->setGuiValues();
+            CLength currentDistance(this->getIContextSimulator()->getMaxRenderedDistance());
+            if (maxDistanceNM == currentDistance.valueInteger(CLengthUnit::NM()))
+            {
+                return;
+            }
+            else
+            {
+                CLength distance(maxDistanceNM, CLengthUnit::NM());
+                CLogMessage(this).info("Max.distance requested: %1") << distance.valueRoundedWithUnit(2, true);
+                this->getIContextSimulator()->setMaxRenderedDistance(distance);
+                this->setGuiValues();
+            }
         }
 
         void CSettingsSimulatorComponent::ps_onApplyDisableRendering()
@@ -246,14 +265,13 @@ namespace BlackGui
                 m_pluginLoaded = true;
                 this->ui->comp_SettingsSimulatorFsx->setVisible(hasFsxDriver);
                 this->ui->lbl_PluginInfo->setText(info.getDescription());
-                this->setGuiValues();
             }
             else
             {
                 m_pluginLoaded = false;
                 this->ui->lbl_PluginInfo->setText("No plugin loaded");
-                this->setGuiValues();
             }
+            this->setGuiValues();
         }
     }
 

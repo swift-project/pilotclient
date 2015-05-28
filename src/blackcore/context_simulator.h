@@ -75,7 +75,7 @@ namespace BlackCore
         void simulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
         //! Render restrictions have been changed
-        void renderRestrictionsChanged(bool restricted, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance, const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary);
+        void renderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance, const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary);
 
         //! Installed aircraft models ready or changed
         void installedAircraftModelsChanged();

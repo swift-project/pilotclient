@@ -185,7 +185,7 @@ namespace BlackCore
         void ownAircraftModelChanged(BlackMisc::Simulation::CSimulatedAircraft aircraft);
 
         //! Render restrictions have been changed
-        void renderRestrictionsChanged(bool restricted, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance, const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary);
+        void renderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance, const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary);
 
         //! A single model has been matched
         void modelMatchingCompleted(BlackMisc::Simulation::CSimulatedAircraft aircraft);

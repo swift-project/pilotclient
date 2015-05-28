@@ -101,14 +101,14 @@ namespace BlackCore
         //! \copydoc IContextSimulator::setMaxRenderedAircraft
         virtual void setMaxRenderedAircraft(int number) override;
 
+        //! \copydoc IContextSimulator::getMaxRenderedDistance
+        virtual BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const override;
+
         //! \copydoc IContextSimulator::setMaxRenderedDistance
         virtual void setMaxRenderedDistance(BlackMisc::PhysicalQuantities::CLength &distance) override;
 
         //! \copydoc IContextSimulator::getRenderRestrictionText
         virtual QString getRenderRestrictionText() const override;
-
-        //! \copydoc IContextSimulator::getMaxRenderedDistance
-        virtual BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const override;
 
         //! \copydoc IContextSimulator::getRenderedDistanceBoundary
         virtual BlackMisc::PhysicalQuantities::CLength getRenderedDistanceBoundary() const override;

@@ -21,16 +21,13 @@ namespace BlackMisc
 
         CAirspaceAircraftSnapshot::CAirspaceAircraftSnapshot(
             const CSimulatedAircraftList &allAircraft,
-            bool restricted, int maxAircraft, const CLength &maxRenderedDistance, const CLength &maxRenderedBoundary) :
+            bool restricted, bool renderingEnabled, int maxAircraft,
+            const CLength &maxRenderedDistance, const CLength &maxRenderedBoundary) :
             m_timestampMsSinceEpoch(QDateTime::currentMSecsSinceEpoch()),
             m_restricted(restricted),
+            m_renderingEnabled(renderingEnabled),
             m_threadName(QThread::currentThread()->objectName())
         {
-            m_renderingEnabled = !restricted || (
-                                     maxAircraft > 0 &&
-                                     (maxRenderedBoundary.isNull() || maxRenderedBoundary.isPositiveWithEpsilonConsidered()) &&
-                                     (maxRenderedDistance.isNull() || maxRenderedDistance.isPositiveWithEpsilonConsidered())
-                                 );
             if (allAircraft.isEmpty()) { return; }
 
             CSimulatedAircraftList aircraft(allAircraft);
@@ -92,7 +89,9 @@ namespace BlackMisc
         {
             if (this->isValidSnapshot() == snapshot.isValidSnapshot())
             {
-                this->m_restrictionChanged = (snapshot.m_restricted != this->m_restricted);
+                this->m_restrictionChanged =
+                    (snapshot.m_restricted != this->m_restricted) ||
+                    (snapshot.m_renderingEnabled != this->m_renderingEnabled);
             }
             else
             {
