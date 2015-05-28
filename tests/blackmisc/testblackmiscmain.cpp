@@ -6,6 +6,7 @@
 #include "testphysicalquantities.h"
 #include "testaviation.h"
 #include "testgeo.h"
+#include "testoriginator.h"
 #include "testcontainers.h"
 #include "testvariantandmap.h"
 #include "testhardware.h"
@@ -26,9 +27,11 @@ namespace BlackMiscTest
             CTestContainers containerTests;
             CTestVariantAndMap variantAndMap;
             CTestHardware hardwareTests;
+            CTestOriginator originatorTests;
             status |= QTest::qExec(&pqBaseTests, argc, argv);
             status |= QTest::qExec(&avBaseTests, argc, argv);
             status |= QTest::qExec(&geoTests, argc, argv);
+            status |= QTest::qExec(&originatorTests, argc, argv);
             status |= QTest::qExec(&containerTests, argc, argv);
             status |= QTest::qExec(&variantAndMap, argc, argv);
             status |= QTest::qExec(&hardwareTests, argc, argv);

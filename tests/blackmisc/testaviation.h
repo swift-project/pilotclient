@@ -1,9 +1,13 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2014
+ * swift project community / contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
-/*! \file */
+//! \file
 
 #ifndef BLACKMISCTEST_TESTAVIATIONBASE_H
 #define BLACKMISCTEST_TESTAVIATIONBASE_H
@@ -13,44 +17,29 @@
 namespace BlackMiscTest
 {
 
-    /*!
-     * \brief Aviation classes basic tests
-     */
+    //! Aviation classes basic tests
     class CTestAviation : public QObject
     {
         Q_OBJECT
 
     public:
-        /*!
-         * \brief Standard test case constructor
-         * \param parent
-         */
+        //! Standard test case constructor
         explicit CTestAviation(QObject *parent = nullptr);
 
     private slots:
-        /*!
-         * \brief Basic unit tests for physical units
-         */
+        //! Basic unit tests for physical units
         void headingBasics();
 
-        /*!
-         * \brief COM and NAV units
-         */
+        //! COM and NAV units
         void comAndNav();
 
-        /*!
-         * \brief Transponder
-         */
+        //! Transponder
         void transponder();
 
-        /*!
-         * \brief Callsigns // callsign containers
-         */
+        //! Callsigns and callsign containers
         void callsignWithContainers();
 
-        /*!
-         * \brief Testing copying and equality of objects
-         */
+        //! Testing copying and equality of objects
         void copyAndEqual();
     };
 

@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_SERVER_H
-#define BLACKMISC_SERVER_H
+#ifndef BLACKMISC_TESTVALUEOBJECT_H
+#define BLACKMISC_TESTVALUEOBJECT_H
 
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/sequence.h"
@@ -19,9 +19,7 @@
 
 namespace BlackMisc
 {
-    /*!
-     * Value object encapsulating information of a server
-     */
+    //! Test value object
     class CTestValueObject : public BlackMisc::CValueObject<CTestValueObject>
     {
     public:

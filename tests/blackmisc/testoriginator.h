@@ -9,26 +9,33 @@
 
 //! \file
 
-#ifndef BLACKMISCTEST_TESTGEO_H
-#define BLACKMISCTEST_TESTGEO_H
+#ifndef BLACKMISCTEST_TESTORIGINATOR_H
+#define BLACKMISCTEST_TESTORIGINATOR_H
 
+#include "blackmisc/originatoraware.h"
 #include <QtTest/QtTest>
 
 namespace BlackMiscTest
 {
-
-    //! Geo classes tests
-    class CTestGeo : public QObject
+    //! Testing orignator
+    class CTestOriginator : public QObject
     {
         Q_OBJECT
 
     public:
-        //! Standard test case constructor
-        explicit CTestGeo(QObject *parent = nullptr) : QObject(parent) {}
+        //! Constructor
+        explicit CTestOriginator(QObject *parent = nullptr) : QObject(parent) {}
 
     private slots:
-        //! Basic unit tests for geo classes
-        void geoBasics();
+        void originatorBasics();
+    };
+
+    //! Test originator aware
+    class CTestOriginatorAware : public BlackMisc::COriginatorAware
+    {
+    public:
+        //! Constructor
+        CTestOriginatorAware(QObject *nameObject);
     };
 
 } // namespace
