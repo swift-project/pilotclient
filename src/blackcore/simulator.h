@@ -120,7 +120,7 @@ namespace BlackCore
 
         //! Set time synchronization between simulator and user's computer time
         //! \remarks not all drivers implement this, e.g. if it is an intrinsic simulator feature
-        virtual bool setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) = 0;
+        virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) = 0;
 
         //! Time synchronization offset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
@@ -135,7 +135,7 @@ namespace BlackCore
         virtual void setMaxRenderedAircraft(int maxRenderedAircraft) = 0;
 
         //! Max. distance for rendered aircraft
-        virtual void setMaxRenderedDistance(BlackMisc::PhysicalQuantities::CLength &distance) = 0;
+        virtual void setMaxRenderedDistance(const BlackMisc::PhysicalQuantities::CLength &distance) = 0;
 
         //! Max. distance for rendered aircraft
         virtual BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const = 0;

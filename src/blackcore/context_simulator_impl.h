@@ -90,7 +90,7 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CAircraftIcaoData getIcaoForModelString(const QString &modelString) const override;
 
         //! \copydoc IContextSimulator::setTimeSynchronization
-        virtual bool setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
+        virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
 
         //! \copydoc IContextSimulator::isTimeSynchronized
         virtual bool isTimeSynchronized() const override;
@@ -105,7 +105,7 @@ namespace BlackCore
         virtual BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const override;
 
         //! \copydoc IContextSimulator::setMaxRenderedDistance
-        virtual void setMaxRenderedDistance(BlackMisc::PhysicalQuantities::CLength &distance) override;
+        virtual void setMaxRenderedDistance(const BlackMisc::PhysicalQuantities::CLength &distance) override;
 
         //! \copydoc IContextSimulator::getRenderRestrictionText
         virtual QString getRenderRestrictionText() const override;

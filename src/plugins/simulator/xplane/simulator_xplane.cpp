@@ -38,10 +38,10 @@ namespace BlackSimPlugin
     {
 
         CSimulatorXPlane::CSimulatorXPlane(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-            IOwnAircraftProvider *ownAircraftProvider,
-            IRemoteAircraftProvider *remoteAircraftProvider,
-            IPluginStorageProvider *pluginStorageProvider,
-            QObject *parent) :
+                                           IOwnAircraftProvider *ownAircraftProvider,
+                                           IRemoteAircraftProvider *remoteAircraftProvider,
+                                           IPluginStorageProvider *pluginStorageProvider,
+                                           QObject *parent) :
             CSimulatorCommon(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, parent)
         {
             m_watcher = new QDBusServiceWatcher(this);
@@ -296,8 +296,9 @@ namespace BlackSimPlugin
             return copy;
         }
 
-        bool CSimulatorXPlane::setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime)
+        bool CSimulatorXPlane::setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset)
         {
+            Q_UNUSED(offset);
             if (enable)
             {
                 CLogMessage(this).info("X-Plane provides real time synchronization, use this on");
@@ -436,9 +437,9 @@ namespace BlackSimPlugin
         }
 
         BlackCore::ISimulator *CSimulatorXPlaneFactory::create(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-            IOwnAircraftProvider *ownAircraftProvider,
-            IRemoteAircraftProvider *renderedAircraftProvider,
-            IPluginStorageProvider *pluginStorageProvider)
+                IOwnAircraftProvider *ownAircraftProvider,
+                IRemoteAircraftProvider *renderedAircraftProvider,
+                IPluginStorageProvider *pluginStorageProvider)
         {
             return new CSimulatorXPlane(info, ownAircraftProvider, renderedAircraftProvider, pluginStorageProvider, this);
         }

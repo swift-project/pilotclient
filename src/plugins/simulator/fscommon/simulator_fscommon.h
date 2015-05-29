@@ -50,7 +50,7 @@ namespace BlackSimPlugin
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
 
             //! \copydoc ISimulator::setTimeSynchronization
-            virtual bool setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
+            virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
 
             //! \copydoc ISimulator::getAirportsInRange
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;

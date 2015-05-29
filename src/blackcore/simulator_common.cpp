@@ -175,7 +175,7 @@ namespace BlackCore
         emit renderRestrictionsChanged(r, e, getMaxRenderedAircraft(), getMaxRenderedDistance(), getRenderedDistanceBoundary());
     }
 
-    void CSimulatorCommon::setMaxRenderedDistance(CLength &distance)
+    void CSimulatorCommon::setMaxRenderedDistance(const CLength &distance)
     {
         if (distance == m_maxRenderedDistance) { return; }
         if (distance.isNull() || distance > getRenderedDistanceBoundary() || distance.isNegativeWithEpsilonConsidered())

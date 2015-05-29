@@ -111,7 +111,7 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorSetup>(QLatin1Literal("getSimulatorSetup"));
     }
 
-    bool CContextSimulatorProxy::setTimeSynchronization(bool enable, CTime offset)
+    bool CContextSimulatorProxy::setTimeSynchronization(bool enable, const CTime &offset)
     {
         return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("setTimeSynchronization"), enable, offset);
     }
@@ -126,7 +126,7 @@ namespace BlackCore
         m_dBusInterface->callDBus(QLatin1Literal("setMaxRenderedAircraft"), number);
     }
 
-    void CContextSimulatorProxy::setMaxRenderedDistance(CLength &distance)
+    void CContextSimulatorProxy::setMaxRenderedDistance(const CLength &distance)
     {
         m_dBusInterface->callDBus(QLatin1Literal("setMaxRenderedDistance"), distance);
     }

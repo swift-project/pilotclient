@@ -83,7 +83,7 @@ namespace BlackSimPlugin
             return m_syncTimeOffset;
         }
 
-        bool CSimulatorFsCommon::setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset)
+        bool CSimulatorFsCommon::setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset)
         {
             this->m_simTimeSynced = enable;
             this->m_syncTimeOffset = offset;

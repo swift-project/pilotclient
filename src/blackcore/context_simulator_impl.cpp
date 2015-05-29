@@ -75,16 +75,16 @@ namespace BlackCore
         return plugin->factory;
     }
 
-    CVariant CContextSimulator::getPluginData(const QObject *obj, const QString& key) const
+    CVariant CContextSimulator::getPluginData(const QObject *obj, const QString &key) const
     {
-        const QObject* p = obj;
+        const QObject *p = obj;
         while (p && !p->inherits("BlackCore::ISimulatorFactory"))
         {
             p = p->parent();
         }
 
         if (!p) return CVariant();
-        auto it = std::find_if(m_simulatorPlugins.begin(), m_simulatorPlugins.end(), [p](const PluginData &plugin)
+        auto it = std::find_if(m_simulatorPlugins.begin(), m_simulatorPlugins.end(), [p](const PluginData & plugin)
         {
             return plugin.factory == qobject_cast<ISimulatorFactory *>(p);
         });
@@ -94,14 +94,14 @@ namespace BlackCore
 
     void CContextSimulator::setPluginData(const QObject *obj, const QString &key, const CVariant &value)
     {
-        const QObject* p = obj;
+        const QObject *p = obj;
         while (p && !p->inherits("BlackCore::ISimulatorFactory"))
         {
             p = p->parent();
         }
 
         if (!p) { return; }
-        auto it = std::find_if(m_simulatorPlugins.begin(), m_simulatorPlugins.end(), [p](const PluginData &plugin)
+        auto it = std::find_if(m_simulatorPlugins.begin(), m_simulatorPlugins.end(), [p](const PluginData & plugin)
         {
             return plugin.factory == qobject_cast<ISimulatorFactory *>(p);
         });
@@ -231,7 +231,7 @@ namespace BlackCore
         return m_simulatorPlugin->simulator->getIcaoForModelString(modelString);
     }
 
-    bool CContextSimulator::setTimeSynchronization(bool enable, CTime offset)
+    bool CContextSimulator::setTimeSynchronization(bool enable, const CTime &offset)
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         if (!m_simulatorPlugin) { return false; }
@@ -270,7 +270,7 @@ namespace BlackCore
 
     }
 
-    void CContextSimulator::setMaxRenderedDistance(CLength &distance)
+    void CContextSimulator::setMaxRenderedDistance(const CLength &distance)
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << distance; }
         if (!m_simulatorPlugin) { return; }

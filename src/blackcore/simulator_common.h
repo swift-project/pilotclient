@@ -53,7 +53,7 @@ namespace BlackCore
         virtual void setMaxRenderedAircraft(int maxRenderedAircraft) override;
 
         //! \copydoc ISimulator::setMaxRenderedDistance
-        virtual void setMaxRenderedDistance(BlackMisc::PhysicalQuantities::CLength &distance) override;
+        virtual void setMaxRenderedDistance(const BlackMisc::PhysicalQuantities::CLength &distance) override;
 
         //! \copydoc ISimulator::getMaxRenderedDistance
         virtual BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const override;

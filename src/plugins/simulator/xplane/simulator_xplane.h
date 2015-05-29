@@ -94,7 +94,7 @@ namespace BlackSimPlugin
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const;
 
             //! \copydoc ISimulator::setTimeSynchronization
-            virtual bool setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
+            virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
 
             //! \copydoc ISimulator::getTimeSynchronizationOffset
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override { return BlackMisc::PhysicalQuantities::CTime(0, BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()); }
