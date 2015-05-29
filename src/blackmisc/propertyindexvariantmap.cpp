@@ -39,7 +39,7 @@ namespace BlackMisc
         {
             // QVariant cannot be compared directly
             CVariant p = variant.propertyByIndex(it.key()); // from value object
-            CVariant v = it.value().toCVariant(); // from map
+            CVariant v = it.value(); // from map
             if (p != v) return false;
         }
         return true;

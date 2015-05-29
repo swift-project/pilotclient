@@ -110,7 +110,7 @@ namespace BlackMisc
         using Mixin::Index<Derived>::apply;
 
         //! \copydoc BlackMisc::Mixin::MetaType::toCVariant
-        using Mixin::MetaType<Derived>::toCVariant;
+//        using Mixin::MetaType<Derived>::toCVariant;
 
         //! \copydoc BlackMisc::Mixin::MetaType::convertFromCVariant
         using Mixin::MetaType<Derived>::convertFromCVariant;

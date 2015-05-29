@@ -211,7 +211,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsCommon::ps_aircraftCfgParsingFinished()
         {
-            setPluginData(this, "aircraft_cfg", m_aircraftCfgParser.getAircraftCfgEntriesList().toCVariant());
+            setPluginData(this, "aircraft_cfg", CVariant::from(m_aircraftCfgParser.getAircraftCfgEntriesList()));
             m_modelMatcher.setInstalledModels(m_aircraftCfgParser.getAircraftCfgEntriesList().toAircraftModelList());
 
             // Now the matcher has all required information to be initialized

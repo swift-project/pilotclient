@@ -47,7 +47,7 @@ namespace BlackMisc
 
         CVariant CAircraftSituation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toCVariant(); }
+            if (index.isMyself()) { return CVariant::from(*this); }
             if (ITimestampBased::canHandleIndex(index))
             {
                 return ITimestampBased::propertyByIndex(index);

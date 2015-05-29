@@ -142,7 +142,7 @@ namespace BlackGui
                     // if the channel is selected, do nothing
                     if (!this->isCorrespondingTextMessageTabSelected(message))
                     {
-                        emit this->displayInInfoWindow(message.toCVariant(), 5 * 1000);
+                        emit this->displayInInfoWindow(CVariant::from(message), 5 * 1000);
                     }
                 }
             }

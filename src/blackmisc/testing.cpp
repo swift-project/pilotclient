@@ -47,15 +47,15 @@ namespace BlackMisc
             CAtcStation station;
             if (byPropertyIndex)
             {
-                station.setPropertyByIndex(CCallsign(cs).toCVariant(), CAtcStation::IndexCallsign);
-                station.setPropertyByIndex(user.toCVariant(), CAtcStation::IndexController);
-                station.setPropertyByIndex(CFrequency(f, CFrequencyUnit::MHz()).toCVariant(), CAtcStation::IndexFrequency);
-                station.setPropertyByIndex(CLength(50, CLengthUnit::km()).toCVariant(), CAtcStation::IndexRange);
-                station.setPropertyByIndex(geoPos.toCVariant(), CAtcStation::IndexPosition);
+                station.setPropertyByIndex(CVariant::from(CCallsign(cs)), CAtcStation::IndexCallsign);
+                station.setPropertyByIndex(CVariant::from(user), CAtcStation::IndexController);
+                station.setPropertyByIndex(CVariant::from(CFrequency(f, CFrequencyUnit::MHz())), CAtcStation::IndexFrequency);
+                station.setPropertyByIndex(CVariant::from(CLength(50, CLengthUnit::km())), CAtcStation::IndexRange);
+                station.setPropertyByIndex(CVariant::from(geoPos), CAtcStation::IndexPosition);
                 station.setPropertyByIndex(CVariant::from(false), CAtcStation::IndexIsOnline);
                 station.setPropertyByIndex(CVariant::from(dtFrom), CAtcStation::IndexBookedFrom);
                 station.setPropertyByIndex(CVariant::from(dtUntil), CAtcStation::IndexBookedUntil);
-                station.setPropertyByIndex(CLength(index + 1, CLengthUnit::NM()).toCVariant(), CAtcStation::IndexDistanceToOwnAircraft);
+                station.setPropertyByIndex(CVariant::from(CLength(index + 1, CLengthUnit::NM())), CAtcStation::IndexDistanceToOwnAircraft);
             }
             else
             {

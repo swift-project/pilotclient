@@ -85,7 +85,7 @@ namespace BlackGui
             if (rowIndex < 0) { return false; }
             QModelIndex i = this->index(rowIndex, 0);
             const CNameVariantPair cv = this->at(i);
-            return value == cv.toCVariant();
+            return value == CVariant::from(cv);
         }
     } // namespace
 } // namespace

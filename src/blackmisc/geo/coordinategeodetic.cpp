@@ -126,7 +126,7 @@ namespace BlackMisc
 
         CVariant CCoordinateGeodetic::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toCVariant(); }
+            if (index.isMyself()) { return CVariant::from(*this); }
             if (ICoordinateGeodetic::canHandleIndex(index))
             {
                 return ICoordinateGeodetic::propertyByIndex(index);

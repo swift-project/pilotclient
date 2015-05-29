@@ -70,12 +70,12 @@ namespace BlackMisc
 
         CVariant CClient::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toCVariant(); }
+            if (index.isMyself()) { return CVariant::from(*this); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexCapabilities:
-                return this->m_capabilities.toCVariant();
+                return CVariant::fromValue(this->m_capabilities);
             case IndexCapabilitiesString:
                 return CVariant(this->getCapabilitiesAsString());
             case IndexCallsign:
@@ -91,7 +91,7 @@ namespace BlackMisc
             case IndexVoiceCapabilitiesPixmap:
                 return CVariant::from(this->m_voiceCapabilities.toPixmap());
             case IndexVoiceCapabilitiesIcon:
-                return this->m_voiceCapabilities.toIcon().toCVariant();
+                return CVariant::fromValue(this->m_voiceCapabilities.toIcon());
             case IndexVoiceCapabilitiesString:
                 return CVariant(this->m_voiceCapabilities.toQString(true));
             default:

@@ -345,14 +345,14 @@ namespace BlackMisc
         template <class MU, class PQ>
         CVariant CPhysicalQuantity<MU, PQ>::propertyByIndex(const CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toCVariant(); }
+            if (index.isMyself()) { return CVariant::from(*derived()); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexValue:
                 return CVariant::from(this->m_value);
             case IndexUnit:
-                return this->m_unit.toCVariant();
+                return CVariant::from(this->m_unit);
             case IndexValueRounded0DigitsWithUnit:
                 return CVariant::from(this->valueRoundedWithUnit(0));
             case IndexValueRounded1DigitsWithUnit:

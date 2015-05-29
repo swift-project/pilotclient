@@ -149,7 +149,7 @@ namespace BlackMisc
         bool isEmpty() const { return this->m_values.isEmpty(); }
 
         //! Value
-        CVariant value(const CPropertyIndex &index) const { return this->m_values.value(index).toCVariant(); }
+        CVariant value(const CPropertyIndex &index) const { return CVariant::from(this->m_values.value(index)); }
 
         //! Set value
         void value(const CPropertyIndex &index, const CVariant &value) { this->m_values.value(index, value); }
@@ -252,7 +252,7 @@ namespace BlackMisc
             const auto &map = indexMap.map();
             for (auto it = map.begin(); it != map.end(); ++it)
             {
-                const CVariant value = it.value().toCVariant();
+                const CVariant value = it.value();
                 const CPropertyIndex index = it.key();
                 if (skipEqualValues)
                 {

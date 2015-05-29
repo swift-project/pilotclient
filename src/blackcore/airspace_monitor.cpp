@@ -167,7 +167,7 @@ namespace BlackCore
     {
         Q_UNUSED(originator);
         QWriteLocker l(&m_lockAircraft);
-        CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexModel, model.toCVariant());
+        CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexModel, CVariant::from(model));
         int c = m_aircraftInRange.applyIfCallsign(callsign, vm);
         return c > 0;
     }
@@ -471,7 +471,7 @@ namespace BlackCore
         capabilities.addValue(CClient::FsdWithModelDescription, (flags & INetwork::SupportsModelDescriptions));
         capabilities.addValue(CClient::FsdWithAircraftConfig, (flags & INetwork::SupportsAircraftConfigs));
 
-        CPropertyIndexVariantMap vm(CClient::IndexCapabilities, capabilities.toCVariant());
+        CPropertyIndexVariantMap vm(CClient::IndexCapabilities, CVariant::from(capabilities));
         CVoiceCapabilities caps = m_vatsimDataFileReader->getVoiceCapabilityForCallsign(callsign);
         vm.addValue({CClient::IndexVoiceCapabilities}, caps);
         if (!this->m_otherClients.containsCallsign(callsign)) { this->m_otherClients.push_back(CClient(callsign)); }
@@ -550,7 +550,7 @@ namespace BlackCore
         CInformationMessage metar(CInformationMessage::METAR, metarMessage);
 
         // add METAR to existing stations
-        CPropertyIndexVariantMap vm(CAtcStation::IndexMetar, metar.toCVariant());
+        CPropertyIndexVariantMap vm(CAtcStation::IndexMetar, CVariant::from(metar));
         this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsignTower, vm);
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsignTower, vm);
         this->m_metarCache.insert(icaoCode, metar);
@@ -746,7 +746,7 @@ namespace BlackCore
     {
         Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
         if (!this->m_connected || callsign.isEmpty()) return;
-        CPropertyIndexVariantMap vm(CAtcStation::IndexAtis, atisMessage.toCVariant());
+        CPropertyIndexVariantMap vm(CAtcStation::IndexAtis, CVariant::from(atisMessage));
         int changedOnline = this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
 
         // receiving an ATIS means station is online, update in bookings
@@ -779,7 +779,7 @@ namespace BlackCore
         }
 
         // receiving voice room means ATC has voice
-        vm = CPropertyIndexVariantMap(CClient::IndexVoiceCapabilities, CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::Voice).toCVariant());
+        vm = CPropertyIndexVariantMap(CClient::IndexVoiceCapabilities, CVariant::from(CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::Voice)));
         this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm, false);
     }
 
@@ -814,14 +814,14 @@ namespace BlackCore
         if (!this->m_connected) { return; }
 
         // update
-        CPropertyIndexVariantMap vm(CAircraft::IndexIcao, icaoData.toCVariant());
+        CPropertyIndexVariantMap vm(CAircraft::IndexIcao, CVariant::from(icaoData));
         if (!icaoData.hasAircraftDesignator())
         {
             // empty so far, try to fetch from data file
             CLogMessage(this).warning("Empty ICAO info for %1 %2") << callsign.toQString() << icaoData.toQString();
             CAircraftIcaoData icaoDataFromDataFile = this->m_vatsimDataFileReader->getIcaoInfo(callsign);
             if (!icaoDataFromDataFile.hasAircraftDesignator()) { return; } // give up!
-            vm = CPropertyIndexVariantMap(CAircraft::IndexIcao, icaoDataFromDataFile.toCVariant());
+            vm = CPropertyIndexVariantMap(CAircraft::IndexIcao, CVariant::from(icaoDataFromDataFile));
         }
         // ICAO code received when aircraft is already removed or not yet ready
         // We add it to cache and use it when aircraft is created
@@ -1004,7 +1004,7 @@ namespace BlackCore
 
         // update
         int changed;
-        CPropertyIndexVariantMap vm({CAircraft::IndexCom1System, CComSystem::IndexActiveFrequency}, frequency.toCVariant());
+        CPropertyIndexVariantMap vm({CAircraft::IndexCom1System, CComSystem::IndexActiveFrequency}, CVariant::from(frequency));
         {
             QWriteLocker l(&m_lockAircraft);
             changed = this->m_aircraftInRange.applyIf(&CAircraft::getCallsign, callsign, vm, true);

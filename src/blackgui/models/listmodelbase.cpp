@@ -234,7 +234,7 @@ namespace BlackGui
             {
                 ContainerType sortedContainer = this->sortContainerByColumn(container, sortColumn, sortOrder);
                 QMetaObject::invokeMethod(this, "ps_updateContainer",
-                                          Q_ARG(BlackMisc::CVariant, sortedContainer.toCVariant()), Q_ARG(bool, false));
+                                          Q_ARG(BlackMisc::CVariant, CVariant::from(sortedContainer)), Q_ARG(bool, false));
             });
             worker->then(this, &CListModelBase::asyncUpdateFinished);
             return worker;

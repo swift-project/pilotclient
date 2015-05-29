@@ -106,7 +106,7 @@ namespace BlackMisc
         template <class AVIO>
         CVariant CModulator<AVIO>::propertyByIndex(const CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toCVariant(); }
+            if (index.isMyself()) { return CVariant::from(*derived()); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {

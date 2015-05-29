@@ -65,12 +65,8 @@ namespace BlackMisc
                 return baseIsA(static_cast<const MetaBaseOfT<Derived> *>(derived()), metaTypeId);
             }
 
-            //! Method to return CVariant
-            //! \deprecated Use CVariant::to() instead.
-            CVariant toCVariant() const;
-
             //! Set from CVariant
-            //! \deprecated Use CVariant::from() instead.
+            //! \deprecated Use CVariant::to() instead.
             void convertFromCVariant(const CVariant &variant);
 
             //! Return QVariant, used with DBus QVariant lists
@@ -112,7 +108,6 @@ namespace BlackMisc
             using ::BlackMisc::Mixin::MetaType<DERIVED>::registerMetadata;      \
             using ::BlackMisc::Mixin::MetaType<DERIVED>::getMetaTypeId;         \
             using ::BlackMisc::Mixin::MetaType<DERIVED>::isA;                   \
-            using ::BlackMisc::Mixin::MetaType<DERIVED>::toCVariant;            \
             using ::BlackMisc::Mixin::MetaType<DERIVED>::toQVariant;            \
             using ::BlackMisc::Mixin::MetaType<DERIVED>::convertFromCVariant;   \
             using ::BlackMisc::Mixin::MetaType<DERIVED>::convertFromQVariant;
@@ -125,7 +120,6 @@ namespace BlackMisc
             using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::registerMetadata;      \
             using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::getMetaTypeId;         \
             using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::isA;                   \
-            using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::toCVariant;            \
             using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::toQVariant;            \
             using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::convertFromCVariant;   \
             using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::convertFromQVariant;
@@ -375,11 +369,6 @@ namespace BlackMisc
 
     namespace Mixin
     {
-        template <class Derived, class... AdditionalTypes>
-        CVariant MetaType<Derived, AdditionalTypes...>::toCVariant() const
-        {
-            return CVariant(derived()->toQVariant());
-        }
         template <class Derived, class... AdditionalTypes>
         void MetaType<Derived, AdditionalTypes...>::convertFromCVariant(const CVariant &variant)
         {

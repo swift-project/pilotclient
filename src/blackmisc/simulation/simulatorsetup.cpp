@@ -57,12 +57,12 @@ namespace BlackMisc
 
         CVariant CSimulatorSetup::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toCVariant(); }
+            if (index.isMyself()) { return CVariant::from(*this); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexData:
-                return m_data.toCVariant();
+                return CVariant::from(m_data);
             default:
                 return CValueObject::propertyByIndex(index);
             }

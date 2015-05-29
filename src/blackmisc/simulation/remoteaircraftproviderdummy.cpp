@@ -93,7 +93,7 @@ namespace BlackMisc
         bool CRemoteAircraftProviderDummy::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const COriginator &originator)
         {
             Q_UNUSED(originator);
-            CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexModel, model.toCVariant());
+            CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexModel, CVariant::from(model));
             int n = this->m_aircraft.applyIfCallsign(callsign, vm);
             return n > 0;
         }

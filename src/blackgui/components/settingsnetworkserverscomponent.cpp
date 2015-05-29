@@ -79,11 +79,11 @@ namespace BlackGui
             QObject *sender = QObject::sender();
             if (sender == this->ui->pb_SettingsTnServersRemoveServer)
             {
-                this->getIContextSettings()->value(path, CSettingUtilities::CmdRemove(), server.toCVariant());
+                this->getIContextSettings()->value(path, CSettingUtilities::CmdRemove(), CVariant::from(server));
             }
             else if (sender == this->ui->pb_SettingsTnServersSaveServer)
             {
-                this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), server.toCVariant());
+                this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), CVariant::from(server));
             }
         }
 

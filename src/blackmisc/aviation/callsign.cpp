@@ -128,7 +128,7 @@ namespace BlackMisc
 
         CVariant CCallsign::propertyByIndex(const CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toCVariant(); }
+            if (index.isMyself()) { return CVariant::from(*this); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {

@@ -11,8 +11,10 @@
 #include "ui_settingshotkeycomponent.h"
 #include "blackcore/context_settings.h"
 #include "blackmisc/settingutilities.h"
+#include "blackmisc/variant.h"
 
 using namespace BlackCore;
+using namespace BlackMisc;
 using namespace BlackMisc::Settings;
 
 namespace BlackGui
@@ -56,7 +58,7 @@ namespace BlackGui
         void CSettingsHotkeyComponent::ps_saveHotkeys()
         {
             const QString path = CSettingUtilities::appendPaths(IContextSettings::PathRoot(), IContextSettings::PathHotkeys());
-            this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), this->ui->tvp_SettingsMiscHotkeys->derivedModel()->getContainer().toCVariant());
+            this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), CVariant::from(this->ui->tvp_SettingsMiscHotkeys->derivedModel()->getContainer()));
         }
 
         void CSettingsHotkeyComponent::ps_clearHotkey()

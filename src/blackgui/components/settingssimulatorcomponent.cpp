@@ -157,7 +157,7 @@ namespace BlackGui
             // update
             CSimulatorPluginInfo currentDriver = simDrivers[index];
             const QString path = CSettingUtilities::appendPaths(IContextSettings::PathSimulatorSettings(), CSettingsSimulator::ValueSelectedDriver());
-            this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), currentDriver.toCVariant());
+            this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), CVariant::from(currentDriver));
         }
 
         void CSettingsSimulatorComponent::ps_settingsHaveChanged(uint settingsType)
