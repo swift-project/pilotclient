@@ -88,12 +88,6 @@ namespace BlackSimPlugin
             return true;
         }
 
-        void CSimulatorFs9::asyncConnectTo()
-        {
-            // Since we are running the host in its own thread, it is async anyway
-            connectTo();
-        }
-
         bool CSimulatorFs9::disconnectFrom()
         {
             if (!m_simConnected) { return true; }

@@ -90,9 +90,6 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::connectTo()
             virtual bool connectTo() override;
 
-            //! \copydoc ISimulator::asyncConnectTo()
-            virtual void asyncConnectTo() override;
-
             //! \copydoc ISimulator::disconnectFrom()
             virtual bool disconnectFrom() override;
 
