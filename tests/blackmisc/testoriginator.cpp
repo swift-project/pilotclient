@@ -7,8 +7,6 @@
  * contained in the LICENSE file.
  */
 
-//! \file
-
 #include "testoriginator.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/originatorlist.h"

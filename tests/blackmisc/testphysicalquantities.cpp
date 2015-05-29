@@ -1,7 +1,11 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 #include "testphysicalquantities.h"
 
@@ -175,8 +179,7 @@ namespace BlackMiscTest
         a1.switchUnit(CAccelerationUnit::ft_s2());
         QVERIFY2(a1 == a2, "Accelerations should be similar");
         QVERIFY2(CMathUtils::epsilonEqual(BlackMisc::Math::CMathUtils::round(a2.value() * ftFactor, 6),
-                                     a1.valueRounded(6)),
-                 "Numerical values should be equal");
+                                          a1.valueRounded(6)), "Numerical values should be equal");
     }
 
     /*
@@ -207,6 +210,17 @@ namespace BlackMiscTest
         QVERIFY2(CLength(-22.8, CLengthUnit::ft()) != CLength("-22.8 cm"), "Length !=");
         QVERIFY2(CSpeed(123.45, CSpeedUnit::km_h()) == CSpeed("123.45km/h"), "Speed");
         QVERIFY2(CMass(33.45, CMassUnit::kg()) == CMass("33.45000 kg"), "CMass");
+
+
+        // parsing via variant
+        CSpeed parsedPq1 = CPqString::parseToVariant("100.123 km/h").value<CSpeed>();
+        QVERIFY2(CSpeed(100.123, CSpeedUnit::km_h()) == parsedPq1, "Parsed speed via variant");
+
+        CLength parsedPq2 = CPqString::parseToVariant("-33.123ft").value<CLength>();
+        QVERIFY2(CLength(-33.123, CLengthUnit::ft()) == parsedPq2, "Parsed length via variant");
+
+        CFrequency parsedPq3 = CPqString::parse<CFrequency>("122.8MHz");
+        QVERIFY2(CFrequency(122.8, CFrequencyUnit::MHz()) == parsedPq3, "Parsed frequency via variant");
     }
 
     /*
@@ -214,6 +228,7 @@ namespace BlackMiscTest
      */
     void CTestPhysicalQuantities::basicArithmetic()
     {
+        // pressure
         CPressure p1 = CPhysicalQuantitiesConstants::ISASeaLevelPressure();
         CPressure p2(p1);
         p2 *= 2.0;
@@ -225,5 +240,22 @@ namespace BlackMiscTest
         QVERIFY2(p3.value() == 0, "Value needs to be zero");
         p3 = CPressure(1013, CPressureUnit::hPa());
         QVERIFY2(p3 * 1.5 == 1.5 * p3, "Basic commutative test on PQ failed");
+
+        // the time clasas
+        CTime time1;
+        time1.parseFromString("11:30"); // hhmm
+
+        CTime time2;
+        time2.parseFromString("-11:30"); // hhmm
+
+        CTime time3 = time1 + time2;
+        QVERIFY2(time3.isZeroEpsilonConsidered(), "Time must be 0");
+
+        // angle
+        CAngle a1(180, CAngleUnit::deg());
+        CAngle a2(1.5 * CAngle::PI(), CAngleUnit::rad());
+        a1 += a2;
+        QVERIFY2(a1.valueInteger(CAngleUnit::deg()) == 450, "Expect 450 degrees");
+
     }
 } // namespace

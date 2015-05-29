@@ -27,7 +27,6 @@ int main(int argc, char *argv[])
     bool t = translator.load("blackmisc_i18n_de", ":blackmisc/translations/");
     out << (t ? "Translator loaded" : "Translator not loaded") << endl;
 
-
     QCoreApplication a(argc, argv);
     out << "Use I18N version, y? n?";
     out.flush();

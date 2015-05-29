@@ -16,33 +16,11 @@ using namespace BlackMisc::PhysicalQuantities;
 namespace BlackMiscTest
 {
 
-    /**
+    /*
      * Running the quantities
      */
     int CSamplesPhysicalQuantities::samples(QTextStream &out)
     {
-        // parsing
-        CSpeed parsedPq1 = CPqString::parseToVariant("100.123 km/h").value<CSpeed>();
-        CLength parsedPq2 = CPqString::parseToVariant("-33.123ft").value<CLength>();
-        CVariant parsedPq3 = CPqString::parseToVariant("666");
-        out << "parsed" << " " << parsedPq1 << " " << parsedPq2 << " " << parsedPq3 << endl;
-
-        CSpeed speedParsed = CPqString::parse<CSpeed>("111.33ft/s");
-        CFrequency frequencyParsed = CPqString::parse<CFrequency>("122.8MHz");
-        out << "parsed" << " " << speedParsed << " " << speedParsed.valueRoundedWithUnit(2, true) << frequencyParsed << " " << frequencyParsed.valueRoundedWithUnit(2, true) << endl;
-
-        // the time clasas
-        CTime time1;
-        time1.parseFromString("11:30"); // hhmm
-        out << time1 << " " << time1.toQTime().toString() << " " << time1.formattedHrsMin() << endl;
-
-        CTime time2;
-        time2.parseFromString("-11:30"); // hhmm
-        out << time2 << " " << time2.toQTime().toString() << " " << time2.formattedHrsMin() << endl;
-
-        time1 += time2;
-        out << "0 time: " << time1 << " " << time1.toQTime().toString() << " " << time1.formattedHrsMin() << endl;
-
         // standard tests
         CLengthUnit lu1(CLengthUnit::cm());
         CLengthUnit lu2(CLengthUnit::ft());
@@ -56,8 +34,7 @@ namespace BlackMiscTest
 
         out << CLengthUnit::ft() << endl;
         out << l1 << " " << l2 << " " << l3 << " " << l4 << endl;
-        out << l1.valueRoundedWithUnit(CLengthUnit::ft(), 5)
-            << " " << l2.valueRoundedWithUnit(CLengthUnit::km()) << endl;
+        out << l1.valueRoundedWithUnit(CLengthUnit::ft(), 5) << " " << l2.valueRoundedWithUnit(CLengthUnit::km()) << endl;
         out << l3.getUnit() << endl;
 
         l2.switchUnit(CLengthUnit::ft()); // now in ft

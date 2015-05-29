@@ -7,8 +7,6 @@
  * contained in the LICENSE file.
  */
 
-//! \file
-
 #include "testcontainers.h"
 #include "testvalueobject.h"
 #include "blackmisc/blackmiscfreefunctions.h"
