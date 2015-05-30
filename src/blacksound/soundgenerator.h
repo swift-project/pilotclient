@@ -1,4 +1,4 @@
-/* Copyright (C) 2013
+/* Copyright (C) 2015
  * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -27,23 +27,16 @@
 
 namespace BlackSound
 {
-
     //! Playing simple sounds
     class BLACKSOUND_EXPORT CSoundGenerator : public QIODevice
     {
         Q_OBJECT
 
     public:
-
         //! Tone to be played
         struct Tone
         {
             friend class CSoundGenerator;
-
-        private:
-            int m_frequencyHz; /*!< first tone's frequency, use 0 for silence */
-            int m_secondaryFrequencyHz; /*!< second tone's frequency, or 0 */
-            qint64 m_durationMs; /*!< How long to play (duration) */
 
         public:
             //! Play frequency f for t milliseconds
@@ -57,35 +50,34 @@ namespace BlackSound
                 m_frequencyHz(static_cast<int>(frequency.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::Hz()))),
                 m_secondaryFrequencyHz(static_cast<int>(secondaryFrequency.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::Hz()))),
                 m_durationMs(static_cast<qint64>(duration.valueRounded(BlackMisc::PhysicalQuantities::CTimeUnit::ms()))) {}
+
+        private:
+            int m_frequencyHz;          //!< first tone's frequency, use 0 for silence
+            int m_secondaryFrequencyHz; //!< second tone's frequency, or 0
+            qint64 m_durationMs;        //!< How long to play (duration)
         };
 
-        /*!
-         * \brief Constructor
-         * \param device        device
-         * \param format        audio format
-         * \param tones         list of Tones
-         * \param mode          play once?
-         * \param parent
-         * \see PlayMode
-         */
+        //! Constructor
+        //! \param device        device
+        //! \param format        audio format
+        //! \param tones         list of Tones
+        //! \param mode          play once?
+        //! \param parent
+        //! \see PlayMode
         CSoundGenerator(const QAudioDeviceInfo &device, const QAudioFormat &format, const QList<Tone> &tones, CNotificationSounds::PlayMode mode, QObject *parent = nullptr);
 
-        /*!
-         * \brief Constructor
-         * \param tones         list of Tones
-         * \param mode          play once?
-         * \param parent
-         * \see PlayMode
-         */
+        //! Constructor
+        //! \param tones         list of Tones
+        //! \param mode          play once?
+        //! \param parent
+        //! \see PlayMode
         CSoundGenerator(const QList<Tone> &tones, CNotificationSounds::PlayMode mode, QObject *parent = nullptr);
 
         //! Destructor
         ~CSoundGenerator();
 
-        /*!
-         * \brief Set volume
-         * \param volume 0..100
-         */
+        //! Set volume
+        //! \param volume 0..100
         void setVolume(int volume)
         {
             this->m_audioOutput->setVolume(qreal(volume / 100.0));
@@ -100,10 +92,8 @@ namespace BlackSound
         //! \copydoc QIODevice::readData()
         virtual qint64 readData(char *data, qint64 maxlen) override;
 
-        /*!
-         * \copydoc QIODevice::writeData()
-         * \remarks NOT(!) used here
-         */
+        //! \copydoc QIODevice::writeData()
+        //! \remarks NOT(!) used here
         virtual qint64 writeData(const char *data, qint64 len) override;
 
         //! \copydoc QIODevice::bytesAvailable()
@@ -124,56 +114,44 @@ namespace BlackSound
         //! Default audio format fo play these sounds
         static QAudioFormat defaultAudioFormat();
 
-        /*!
-         * \brief Find the closest Qt device to this audio device
-         * \param audioDevice   output audio device
-         * \return
-         */
+        //! Find the closest Qt device to this audio device
+        //! \param audioDevice   output audio device
+        //! \return
         static QAudioDeviceInfo findClosestOutputDevice(const BlackMisc::Audio::CAudioDeviceInfo &audioDevice);
 
-        /*!
-         * \brief Play signal of tones once
-         * \param volume    0-100
-         * \param tones     list of tones
-         * \param device    device to be used
-         * \return generator used, important with SingleWithAutomaticDeletion automatically deleted
-         */
-        static CSoundGenerator *playSignal(qint32 volume, const QList<Tone> &tones, QAudioDeviceInfo device = QAudioDeviceInfo::defaultOutputDevice());
+        //! Play signal of tones once
+        //! \param volume    0-100
+        //! \param tones     list of tones
+        //! \param device    device to be used
+        //! \return generator used, important with SingleWithAutomaticDeletion automatically deleted
+        static CSoundGenerator *playSignal(int volume, const QList<Tone> &tones, QAudioDeviceInfo device = QAudioDeviceInfo::defaultOutputDevice());
 
-        /*!
-         * \brief Play signal of tones once
-         * \param volume    0-100
-         * \param tones     list of tones
-         * \param device    device to be used
-         * \return generator used, important with SingleWithAutomaticDeletion automatically deleted
-         */
-        static CSoundGenerator *playSignalInBackground(qint32 volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device);
+        //! Play signal of tones once
+        //! \param volume    0-100
+        //! \param tones     list of tones
+        //! \param device    device to be used
+        //! \return generator used, important with SingleWithAutomaticDeletion automatically deleted
+        static CSoundGenerator *playSignalInBackground(int volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device);
 
-        /*!
-         * \brief Record the tones to a wav file, then play the wav file
-         * \param volume    0-100
-         * \param tones     list of tones
-         * \param device    device to be used
-         */
-        static void playSignalRecorded(qint32 volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device);
+        //! Record the tones to a wav file, then play the wav file
+        //! \param volume    0-100
+        //! \param tones     list of tones
+        //! \param device    device to be used
+        static void playSignalRecorded(int volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device);
 
-        /*!
-         * \brief Play SELCAL tone
-         * \param volume    0-100
-         * \param selcal
-         * \param device    device to be used
-         * \see BlackMisc::Aviation::CSelcal
-         */
-        static void playSelcal(qint32 volume, const BlackMisc::Aviation::CSelcal &selcal, QAudioDeviceInfo device = QAudioDeviceInfo::defaultOutputDevice());
+        //! Play SELCAL tone
+        //! \param volume    0-100
+        //! \param selcal
+        //! \param device    device to be used
+        //! \see BlackMisc::Aviation::CSelcal
+        static void playSelcal(int volume, const BlackMisc::Aviation::CSelcal &selcal, QAudioDeviceInfo device = QAudioDeviceInfo::defaultOutputDevice());
 
-        /*!
-         * \brief Play SELCAL tone
-         * \param volume    0-100
-         * \param selcal
-         * \param audioDevice device to be used
-         * \see BlackMisc::Aviation::CSelcal
-         */
-        static void playSelcal(qint32 volume, const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::Audio::CAudioDeviceInfo &audioDevice);
+        //! Play SELCAL tone
+        //! \param volume    0-100
+        //! \param selcal
+        //! \param audioDevice device to be used
+        //! \see BlackMisc::Aviation::CSelcal
+        static void playSelcal(int volume, const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::Audio::CAudioDeviceInfo &audioDevice);
 
 
         //! One cycle of tones takes t milliseconds
@@ -182,44 +160,34 @@ namespace BlackSound
             return BlackMisc::PhysicalQuantities::CTime(this->m_oneCycleDurationMs, BlackMisc::PhysicalQuantities::CTimeUnit::ms());
         }
 
-        /*!
-         * \brief Play given file
-         * \param volume    0-100
-         * \param file
-         * \param removeFileAfterPlaying delete the file, after it has been played
-         */
-        static void playFile(qint32 volume, const QString &file, bool removeFileAfterPlaying);
+        //! Play given file
+        //! \param volume    0-100
+        //! \param file
+        //! \param removeFileAfterPlaying delete the file, after it has been played
+        static void playFile(int volume, const QString &file, bool removeFileAfterPlaying);
 
-        /*!
-         * \brief Play notification
-         * \param volume    0-100
-         * \param notification
-         */
-        static void playNotificationSound(qint32 volume, CNotificationSounds::Notification notification);
+        //! Play notification
+        //! \param volume    0-100
+        //! \param notification
+        static void playNotificationSound(int volume, CNotificationSounds::Notification notification);
 
         //! For debugging purposes
         void static printAllQtSoundDevices(QTextStream &qtout);
 
     signals:
-        /*!
-         * \brief Device was closed
-         * \remarks With singleShot the signal indicates that sound sequence has finished
-         */
+        //! Device was closed
+        //! \remarks With singleShot the signal indicates that sound sequence has finished
         void stopped();
 
     public slots:
-        /*!
-         * \brief Play sound, open device
-         * \param volume 0..100
-         * \param pull pull/push, if false push mode
-         */
+        //! Play sound, open device
+        //! \param volume 0..100
+        //! \param pull pull/push, if false push mode
         void start(int volume, bool pull = true);
 
-        /*!
-         * \brief Play sound in own thread, open device
-         * \remarks always push mode
-         * \param volume 0..100
-         */
+        //! Play sound in own thread, open device
+        //! \remarks always push mode
+        //! \param volume 0..100
         void startInOwnThread(int volume);
 
     signals:
@@ -235,18 +203,18 @@ namespace BlackSound
         void generateData();
 
     private:
-        QList<Tone> m_tones; /*! tones to be played */
-        qint64 m_position; /*!< position in buffer */
-        CNotificationSounds::PlayMode m_playMode; /*!< end data provisioning after playing all tones, play endless loop */
-        bool m_endReached; /*!< indicates end in combination with single play */
-        qint64 m_oneCycleDurationMs; /*!< how long is one cycle of tones */
-        QByteArray m_buffer; /*!< generated buffer for data */
-        QAudioDeviceInfo m_device; /*!< audio device */
-        QAudioFormat m_audioFormat; /*!< used format */
+        QList<Tone> m_tones; //!< tones to be played
+        qint64 m_position;   //!< position in buffer
+        CNotificationSounds::PlayMode m_playMode; //!< end data provisioning after playing all tones, play endless loop
+        bool m_endReached;           //!< indicates end in combination with single play
+        qint64 m_oneCycleDurationMs; //!< how long is one cycle of tones
+        QByteArray m_buffer;         //!< generated buffer for data
+        QAudioDeviceInfo m_device;   //!< audio device
+        QAudioFormat m_audioFormat;  //!< used format
         QScopedPointer<QAudioOutput> m_audioOutput;
-        QTimer *m_pushTimer; /*!< Push mode timer */
-        QIODevice *m_pushModeIODevice; /*!< IO device when used in push mode */
-        QThread *m_ownThread;
+        QTimer *m_pushTimer = nullptr;           //!< Push mode timer
+        QIODevice *m_pushModeIODevice = nullptr; //!< IO device when used in push mode
+        QThread   *m_ownThread = nullptr;
         static QDateTime s_selcalStarted;
 
         //! Header for saving .wav files
@@ -302,14 +270,11 @@ namespace BlackSound
         //! save buffer to wav file
         bool saveToWavFile(const QString &fileName) const;
 
-        /*!
-         * Write amplitude to buffer
-         * \param amplitude value -1 .. 1
-         * \param bufferPointer current buffer pointer
-         */
+        //! Write amplitude to buffer
+        //! \param amplitude value -1 .. 1
+        //! \param bufferPointer current buffer pointer
         void writeAmplitudeToBuffer(const double amplitude, unsigned char *bufferPointer);
     };
 } //namespace
-
 
 #endif // guard

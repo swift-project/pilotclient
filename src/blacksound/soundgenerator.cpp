@@ -33,8 +33,7 @@ namespace BlackSound
     CSoundGenerator::CSoundGenerator(const QAudioDeviceInfo &device, const QAudioFormat &format, const QList<Tone> &tones, CNotificationSounds::PlayMode mode, QObject *parent)
         :   QIODevice(parent),
             m_tones(tones), m_position(0), m_playMode(mode), m_endReached(false), m_oneCycleDurationMs(calculateDurationMs(tones)),
-            m_device(device), m_audioFormat(format), m_audioOutput(new QAudioOutput(format)),
-            m_pushTimer(nullptr), m_pushModeIODevice(nullptr), m_ownThread(nullptr)
+            m_device(device), m_audioFormat(format), m_audioOutput(new QAudioOutput(format))
     {
         Q_ASSERT(tones.size() > 0);
     }
@@ -43,8 +42,7 @@ namespace BlackSound
         :   QIODevice(parent),
             m_tones(tones), m_position(0), m_playMode(mode), m_endReached(false), m_oneCycleDurationMs(calculateDurationMs(tones)),
             m_device(QAudioDeviceInfo::defaultOutputDevice()), m_audioFormat(CSoundGenerator::defaultAudioFormat()),
-            m_audioOutput(new QAudioOutput(CSoundGenerator::defaultAudioFormat())),
-            m_pushTimer(nullptr), m_pushModeIODevice(nullptr), m_ownThread(nullptr)
+            m_audioOutput(new QAudioOutput(CSoundGenerator::defaultAudioFormat()))
     {
         Q_ASSERT(tones.size() > 0);
     }
@@ -52,7 +50,7 @@ namespace BlackSound
     CSoundGenerator::~CSoundGenerator()
     {
         this->stop(true);
-        if (this->m_ownThread) this->m_ownThread->deleteLater();
+        if (this->m_ownThread) { this->m_ownThread->deleteLater(); }
     }
 
     void CSoundGenerator::start(int volume, bool pull)
@@ -133,9 +131,13 @@ namespace BlackSound
                 // periodSize-> Returns the period size in bytes.
                 const qint64 len = this->read(m_buffer.data(), this->m_audioOutput->periodSize());
                 if (len >= 0)
+                {
                     this->m_pushModeIODevice->write(m_buffer.data(), len);
+                }
                 if (len != this->m_audioOutput->periodSize())
+                {
                     break; // not a complete period, so buffer is completely read
+                }
                 --chunks;
             }
         }
@@ -190,9 +192,13 @@ namespace BlackSound
                 // avoid overflow
                 Q_ASSERT(amplitude <= 1.0 && amplitude >= -1.0);
                 if (amplitude < -1.0)
+                {
                     amplitude = -1.0;
+                }
                 else if (amplitude > 1.0)
+                {
                     amplitude = 1.0;
+                }
                 else if (qAbs(amplitude) < double(1.0 / 65535))
                 {
                     amplitude = 0;
@@ -245,17 +251,25 @@ namespace BlackSound
         {
             quint16 value = static_cast<quint16>((1.0 + amplitude) / 2 * 65535);
             if (this->m_audioFormat.byteOrder() == QAudioFormat::LittleEndian)
+            {
                 qToLittleEndian<quint16>(value, bufferPointer);
+            }
             else
+            {
                 qToBigEndian<quint16>(value, bufferPointer);
+            }
         }
         else if (this->m_audioFormat.sampleSize() == 16 && this->m_audioFormat.sampleType() == QAudioFormat::SignedInt)
         {
             qint16 value = static_cast<qint16>(amplitude * 32767);
             if (this->m_audioFormat.byteOrder() == QAudioFormat::LittleEndian)
+            {
                 qToLittleEndian<qint16>(value, bufferPointer);
+            }
             else
+            {
                 qToBigEndian<qint16>(value, bufferPointer);
+            }
         }
     }
 
@@ -309,7 +323,7 @@ namespace BlackSound
 
     qint64 CSoundGenerator::calculateDurationMs(const QList<CSoundGenerator::Tone> &tones)
     {
-        if (tones.isEmpty()) return 0;
+        if (tones.isEmpty()) { return 0; }
         qint64 d = 0;
         foreach(Tone t, tones)
         {
@@ -320,7 +334,7 @@ namespace BlackSound
 
     qint64 CSoundGenerator::readData(char *data, qint64 len)
     {
-        if (len < 1) return 0;
+        if (len < 1) { return 0; }
         if (this->m_endReached)
         {
             this->stop(); // all data read, we can stop output
@@ -368,20 +382,17 @@ namespace BlackSound
         return format;
     }
 
-    /*
-     * BlackMisc to Qt audio device
-     */
     QAudioDeviceInfo CSoundGenerator::findClosestOutputDevice(const CAudioDeviceInfo &audioDevice)
     {
         Q_ASSERT(audioDevice.getType() == CAudioDeviceInfo::OutputDevice);
         const QString lookFor = audioDevice.getName().toLower();
         QAudioDeviceInfo qtDevice = QAudioDeviceInfo::defaultOutputDevice();
-        if (lookFor.startsWith("default")) return qtDevice;
+        if (lookFor.startsWith("default")) { return qtDevice; }
         int score = 0;
         foreach(QAudioDeviceInfo qd, QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
         {
             const QString cn = qd.deviceName().toLower();
-            if (lookFor == cn) return qd; // exact match
+            if (lookFor == cn) { return qd;  } // exact match
             if (cn.length() < lookFor.length())
             {
                 if (lookFor.contains(cn) && cn.length() > score)
@@ -402,34 +413,34 @@ namespace BlackSound
         return qtDevice;
     }
 
-    CSoundGenerator *CSoundGenerator::playSignal(qint32 volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device)
+    CSoundGenerator *CSoundGenerator::playSignal(int volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device)
     {
         CSoundGenerator *generator = new CSoundGenerator(device, CSoundGenerator::defaultAudioFormat(), tones, CNotificationSounds::SingleWithAutomaticDeletion);
-        if (tones.isEmpty()) return generator; // that was easy
-        if (volume < 1) return generator;
-        if (generator->singleCyleDurationMs() < 10) return generator; // unable to hear
+        if (tones.isEmpty()) { return generator; } // that was easy
+        if (volume < 1) { return generator; }
+        if (generator->singleCyleDurationMs() < 10) { return generator; } // unable to hear
 
         // play, and maybe clean up when done
         generator->start(volume);
         return generator;
     }
 
-    CSoundGenerator *CSoundGenerator::playSignalInBackground(qint32 volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device)
+    CSoundGenerator *CSoundGenerator::playSignalInBackground(int volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device)
     {
         CSoundGenerator *generator = new CSoundGenerator(device, CSoundGenerator::defaultAudioFormat(), tones, CNotificationSounds::SingleWithAutomaticDeletion);
-        if (tones.isEmpty()) return generator; // that was easy
-        if (volume < 1) return generator;
-        if (generator->singleCyleDurationMs() < 10) return generator; // unable to hear
+        if (tones.isEmpty()) { return generator; } // that was easy
+        if (volume < 1) { return generator; }
+        if (generator->singleCyleDurationMs() < 10) { return generator; } // unable to hear
 
         // play, and maybe clean up when done
         generator->startInOwnThread(volume);
         return generator;
     }
 
-    void CSoundGenerator::playSignalRecorded(qint32 volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device)
+    void CSoundGenerator::playSignalRecorded(int volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device)
     {
-        if (tones.isEmpty()) return; // that was easy
-        if (volume < 1) return;
+        if (tones.isEmpty()) { return; } // that was easy
+        if (volume < 1) { return; }
 
         CSoundGenerator *generator = new CSoundGenerator(device, CSoundGenerator::defaultAudioFormat(), tones, CNotificationSounds::SingleWithAutomaticDeletion);
         if (generator->singleCyleDurationMs() > 10)
@@ -461,14 +472,14 @@ namespace BlackSound
         // CSoundGenerator::playSignalRecorded(volume, tones, device);
     }
 
-    void CSoundGenerator::playSelcal(qint32 volume, const CSelcal &selcal, const CAudioDeviceInfo &audioDevice)
+    void CSoundGenerator::playSelcal(int volume, const CSelcal &selcal, const CAudioDeviceInfo &audioDevice)
     {
         if (CSoundGenerator::s_selcalStarted.msecsTo(QDateTime::currentDateTimeUtc()) < 2500) return; // simple check not to play 2 SELCAL at the same time
         CSoundGenerator::s_selcalStarted = QDateTime::currentDateTimeUtc();
         CSoundGenerator::playSelcal(volume, selcal, CSoundGenerator::findClosestOutputDevice(audioDevice));
     }
 
-    void CSoundGenerator::playNotificationSound(qint32 volume, CNotificationSounds::Notification notification)
+    void CSoundGenerator::playNotificationSound(int volume, CNotificationSounds::Notification notification)
     {
         QMediaPlayer *mediaPlayer = CSoundGenerator::mediaPlayer();
         if (mediaPlayer->state() == QMediaPlayer::PlayingState) return;
@@ -496,9 +507,9 @@ namespace BlackSound
         mediaPlayer->play();
     }
 
-    void CSoundGenerator::playFile(qint32 volume, const QString &file, bool removeFileAfterPlaying)
+    void CSoundGenerator::playFile(int volume, const QString &file, bool removeFileAfterPlaying)
     {
-        if (!QFile::exists(file)) return;
+        if (!QFile::exists(file)) { return; }
         QMediaPlayer *mediaPlayer = CSoundGenerator::mediaPlayer();
         QMediaResource mediaResource(QUrl(file), "audio");
         QMediaContent media(mediaResource);
