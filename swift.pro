@@ -52,7 +52,6 @@ contains(BLACK_CONFIG, Samples) {
     SUBDIRS += samples/blackmiscquantities/sample_quantities_aviation.pro
     SUBDIRS += samples/blackmiscdbus/sample_blackmisc_dbus.pro
     SUBDIRS += samples/blackmisc/sample_blackmisc.pro
-    SUBDIRS += samples/voiceclient/sample_voice_client.pro
     SUBDIRS += samples/blackmiscsim/sample_blackmisc_sim.pro
     SUBDIRS += samples/hotkey/sample_hotkey.pro
 }
