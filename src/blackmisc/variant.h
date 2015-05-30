@@ -25,6 +25,7 @@
 #include <QJsonValue>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <type_traits>
 
 namespace BlackMisc
 {
@@ -215,10 +216,18 @@ namespace BlackMisc
         void swap(QVariant &other) { m_v.swap(other); }
 
         //! Construct a variant from a value.
-        template <typename T> static CVariant fromValue(T &&value) { return CVariant(QVariant::fromValue(std::forward<T>(value))); }
+        template <typename T> static CVariant fromValue(T &&value)
+        {
+            static_assert(!std::is_same<CVariant, T>::value, "CVariant is an illegal type!");
+            return CVariant(QVariant::fromValue(std::forward<T>(value)));
+        }
 
         //! Synonym for fromValue().
-        template <typename T> static CVariant from(T &&value) { return CVariant(QVariant::fromValue(std::forward<T>(value))); }
+        template <typename T> static CVariant from(T &&value)
+        {
+            static_assert(!std::is_same<CVariant, T>::value, "CVariant is an illegal type!");
+            return CVariant(QVariant::fromValue(std::forward<T>(value)));
+        }
 
         //! Change the value.
         template <typename T> void setValue(T &&value) { m_v.setValue(std::forward<T>(value)); }
