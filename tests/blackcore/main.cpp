@@ -17,9 +17,7 @@ using namespace BlackCoreTest;
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    CBlackCoreTestMain::unitMain(argc, argv);
     Q_UNUSED(a);
 
-    // bye
-    return 0;
+    return CBlackCoreTestMain::unitMain(argc, argv);
 }

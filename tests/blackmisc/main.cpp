@@ -15,12 +15,8 @@ using namespace BlackMiscTest;
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-
-    BlackMisc::registerMetadata();
-
-    CBlackMiscTestMain::unitMain(argc, argv);
     Q_UNUSED(a);
 
-    // bye
-    return 0;
+    BlackMisc::registerMetadata();
+    return CBlackMiscTestMain::unitMain(argc, argv);;
 }
