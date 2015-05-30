@@ -49,11 +49,7 @@ namespace BlackMisc
 
     void CNameVariantPair::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
     {
-        if (index.isMyself())
-        {
-            this->convertFromCVariant(variant);
-            return;
-        }
+        if (index.isMyself()) { (*this) = variant.to<CNameVariantPair>(); return; }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
 
         // special case, handle icon and allow to set it

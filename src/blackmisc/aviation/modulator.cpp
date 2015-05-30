@@ -128,11 +128,7 @@ namespace BlackMisc
         template <class AVIO>
         void CModulator<AVIO>::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
         {
-            if (index.isMyself())
-            {
-                this->convertFromCVariant(variant);
-                return;
-            }
+            if (index.isMyself()) { Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong index to base template"); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {

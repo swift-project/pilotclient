@@ -361,8 +361,7 @@ namespace BlackGui
 
         CVariant CAltitudeFormatter::displayRole(const CVariant &altitude) const
         {
-            CAltitude alt;
-            alt.convertFromCVariant(altitude);
+            CAltitude alt(altitude.to<CAltitude>());
             if (m_flightLevel) { alt.toFlightLevel(); }
             return alt.toQString(this->m_useI18n);
         }

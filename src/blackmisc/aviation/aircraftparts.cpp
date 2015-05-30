@@ -61,11 +61,7 @@ namespace BlackMisc
 
         void CAircraftParts::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
-            if (index.isMyself())
-            {
-                this->convertFromCVariant(variant);
-                return;
-            }
+            if (index.isMyself()) { (*this) = variant.to<CAircraftParts>(); return; }
             if (ITimestampBased::canHandleIndex(index))
             {
                 ITimestampBased::setPropertyByIndex(variant, index);
@@ -76,7 +72,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexEngines:
-                this->m_engines = variant.to<decltype(this->m_engines)>();
+                this->m_engines = variant.to < decltype(this->m_engines) > ();
                 break;
             case IndexFlapsPercentage:
                 this->m_flapsPercentage = variant.toInt();

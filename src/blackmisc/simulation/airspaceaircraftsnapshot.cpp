@@ -107,11 +107,7 @@ namespace BlackMisc
 
         void CAirspaceAircraftSnapshot::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
         {
-            if (index.isMyself())
-            {
-                this->convertFromCVariant(variant);
-                return;
-            }
+            if (index.isMyself()) { (*this) = variant.to<CAirspaceAircraftSnapshot>(); return; }
             CValueObject::setPropertyByIndex(variant, index);
         }
 

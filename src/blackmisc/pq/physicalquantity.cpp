@@ -371,11 +371,7 @@ namespace BlackMisc
         template <class MU, class PQ>
         void CPhysicalQuantity<MU, PQ>::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
         {
-            if (index.isMyself())
-            {
-                this->convertFromCVariant(variant);
-                return;
-            }
+            if (index.isMyself()) { (*this) = variant.to<PQ>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -383,7 +379,7 @@ namespace BlackMisc
                 this->m_value = variant.toDouble();
                 break;
             case IndexUnit:
-                this->m_unit.convertFromCVariant(variant);
+                this->m_unit = variant.to<MU>();
                 break;
             case IndexValueRounded0DigitsWithUnit:
             case IndexValueRounded1DigitsWithUnit:

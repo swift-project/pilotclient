@@ -109,12 +109,6 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::Index::apply
         using Mixin::Index<Derived>::apply;
 
-        //! \copydoc BlackMisc::Mixin::MetaType::toCVariant
-//        using Mixin::MetaType<Derived>::toCVariant;
-
-        //! \copydoc BlackMisc::Mixin::MetaType::convertFromCVariant
-        using Mixin::MetaType<Derived>::convertFromCVariant;
-
         //! \copydoc BlackMisc::Mixin::JsonByTuple::toJson
         using Mixin::JsonByTuple<Derived>::toJson;
 

@@ -78,11 +78,7 @@ namespace BlackMisc
 
         void CAirport::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
-            if (index.isMyself())
-            {
-                this->convertFromCVariant(variant);
-                return;
-            }
+            if (index.isMyself()) { (*this) = variant.to<CAirport>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {

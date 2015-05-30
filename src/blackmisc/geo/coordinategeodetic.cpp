@@ -139,11 +139,7 @@ namespace BlackMisc
 
         void CCoordinateGeodetic::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
-            if (index.isMyself())
-            {
-                this->convertFromCVariant(variant);
-                return;
-            }
+            if (index.isMyself()) { (*this) = variant.to<CCoordinateGeodetic>(); return; }
             ICoordinateGeodetic::ColumnIndex i = index.frontCasted<ICoordinateGeodetic::ColumnIndex>();
             switch (i)
             {

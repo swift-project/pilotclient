@@ -191,7 +191,7 @@ namespace BlackMisc
             uint getValueHash() const;
 
             //! \copydoc CValueObject::qHash
-            friend uint qHash(const PQ &pq) { return pq.getValueHash(); };
+            friend uint qHash(const PQ &pq) { return pq.getValueHash(); }
 
             //! \copydoc CValueObject::toJson
             QJsonObject toJson() const;

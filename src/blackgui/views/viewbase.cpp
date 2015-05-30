@@ -376,8 +376,7 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType>
         int CViewBase<ModelClass, ContainerType, ObjectType>::performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize)
         {
-            ContainerType c;
-            c.convertFromCVariant(variant);
+            ContainerType c(variant.to<ContainerType>());
             return this->updateContainer(c, sort, resize);
         }
 

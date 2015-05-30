@@ -66,10 +66,6 @@ namespace BlackMisc
                 return baseIsA(static_cast<const MetaBaseOfT<Derived> *>(derived()), metaTypeId);
             }
 
-            //! Set from CVariant
-            //! \deprecated Use CVariant::to() instead.
-            void convertFromCVariant(const CVariant &variant);
-
             //! Return QVariant, used with DBus QVariant lists
             //! \deprecated Use QVariant::fromValue() instead.
             QVariant toQVariant() const
@@ -110,7 +106,6 @@ namespace BlackMisc
             using ::BlackMisc::Mixin::MetaType<DERIVED>::getMetaTypeId;         \
             using ::BlackMisc::Mixin::MetaType<DERIVED>::isA;                   \
             using ::BlackMisc::Mixin::MetaType<DERIVED>::toQVariant;            \
-            using ::BlackMisc::Mixin::MetaType<DERIVED>::convertFromCVariant;   \
             using ::BlackMisc::Mixin::MetaType<DERIVED>::convertFromQVariant;
 
         /*!
@@ -122,7 +117,6 @@ namespace BlackMisc
             using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::getMetaTypeId;         \
             using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::isA;                   \
             using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::toQVariant;            \
-            using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::convertFromCVariant;   \
             using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::convertFromQVariant;
 
     } // Mixin
@@ -375,16 +369,6 @@ namespace BlackMisc
         //! \private Needed so we can copy forward-declared CVariant.
         inline void assign(CVariant &a, const CVariant &b) { a = b; }
     }
-
-    namespace Mixin
-    {
-        template <class Derived, class... AdditionalTypes>
-        void MetaType<Derived, AdditionalTypes...>::convertFromCVariant(const CVariant &variant)
-        {
-            derived()->convertFromQVariant(variant.getQVariant());
-        }
-    }
-
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::CVariant)

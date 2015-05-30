@@ -216,11 +216,7 @@ namespace BlackMisc
 
         void CUser::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
-            if (index.isMyself())
-            {
-                this->convertFromCVariant(variant);
-                return;
-            }
+            if (index.isMyself()) { (*this) = variant.to<CUser>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
