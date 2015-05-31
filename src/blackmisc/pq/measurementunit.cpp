@@ -7,8 +7,6 @@
  * contained in the LICENSE file.
  */
 
-//! \file
-
 #include "blackmisc/pq/measurementunit.h"
 #include "blackmisc/math/mathutils.h"
 
