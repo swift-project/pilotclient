@@ -455,7 +455,7 @@ namespace BlackSound
         generator->deleteLater();
     }
 
-    void CSoundGenerator::playSelcal(qint32 volume, const BlackMisc::Aviation::CSelcal &selcal, QAudioDeviceInfo device)
+    void CSoundGenerator::playSelcal(int volume, const BlackMisc::Aviation::CSelcal &selcal, QAudioDeviceInfo device)
     {
         QList<CSoundGenerator::Tone> tones;
         if (selcal.isValid())
