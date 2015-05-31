@@ -168,49 +168,49 @@ namespace BlackMiscTest
         inline QDBusPendingReply<BlackMisc::Aviation::CAircraftList> pingAircraftList(BlackMisc::Aviation::CAircraftList aircraftList)
         {
             QList<QVariant> argumentList;
-            argumentList << aircraftList.toQVariant();
+            argumentList << QVariant::fromValue(aircraftList);
             return asyncCallWithArgumentList(QLatin1String("pingAircraftList"), argumentList);
         }
 
         inline QDBusPendingReply<BlackMisc::Aviation::CAirportList> pingAirportList(BlackMisc::Aviation::CAirportList airportList)
         {
             QList<QVariant> argumentList;
-            argumentList << airportList.toQVariant();
+            argumentList << QVariant::fromValue(airportList);
             return asyncCallWithArgumentList(QLatin1String("pingAirportList"), argumentList);
         }
 
         inline QDBusPendingReply<BlackMisc::Network::CClientList> pingClientList(BlackMisc::Network::CClientList clientList)
         {
             QList<QVariant> argumentList;
-            argumentList << clientList.toQVariant();
+            argumentList << QVariant::fromValue(clientList);
             return asyncCallWithArgumentList(QLatin1String("pingClientList"), argumentList);
         }
 
         inline QDBusPendingReply<BlackMisc::Network::CClient> pingClient(BlackMisc::Network::CClient client)
         {
             QList<QVariant> argumentList;
-            argumentList << client.toQVariant();
+            argumentList << QVariant::fromValue(client);
             return asyncCallWithArgumentList(QLatin1String("pingClient"), argumentList);
         }
 
         inline QDBusPendingReply<BlackMisc::CVariant> pingCVariant(BlackMisc::Network::CClient client)
         {
             QList<QVariant> argumentList;
-            argumentList << client.toQVariant();
+            argumentList << QVariant::fromValue(client);
             return asyncCallWithArgumentList(QLatin1String("pingCVariant"), argumentList);
         }
 
         inline QDBusPendingReply<BlackMisc::CPropertyIndex> pingPropertyIndex(BlackMisc::CPropertyIndex index)
         {
             QList<QVariant> argumentList;
-            argumentList << index.toQVariant();
+            argumentList << QVariant::fromValue(index);
             return asyncCallWithArgumentList(QLatin1String("pingPropertyIndex"), argumentList);
         }
 
         inline QDBusPendingReply<BlackMisc::CPropertyIndexVariantMap> pingIndexVariantMap(BlackMisc::CPropertyIndexVariantMap indexVariantMap)
         {
             QList<QVariant> argumentList;
-            argumentList << indexVariantMap.toQVariant();
+            argumentList << QVariant::fromValue(indexVariantMap);
             return asyncCallWithArgumentList(QLatin1String("pingIndexVariantMap"), argumentList);
         }
 

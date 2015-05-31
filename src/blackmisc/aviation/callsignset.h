@@ -32,12 +32,6 @@ namespace BlackMisc
             //! Construct from a base class object.
             CCallsignSet(const CCollection<CCallsign> &other);
 
-            //! \copydoc CValueObject::toQVariant
-            QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
-
             //! Register metadata
             static void registerMetadata();
 

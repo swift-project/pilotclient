@@ -120,7 +120,7 @@ namespace BlackGui
             // otherwise (comboboxes) standard handling via QItemDelegate
             CKeyboardLineEdit *lineEdit = qobject_cast<CKeyboardLineEdit *>(editor);
             if (lineEdit)
-                model->setData(index, lineEdit->getKey().toQVariant() , Qt::EditRole);
+                model->setData(index, QVariant::fromValue(lineEdit->getKey()) , Qt::EditRole);
             else
                 QItemDelegate::setModelData(editor, model, index);
         }

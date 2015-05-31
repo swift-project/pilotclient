@@ -219,12 +219,6 @@ namespace BlackMisc
         //! \copydoc CValueObject::qHash
         friend uint qHash(const CPropertyIndexVariantMap &vm) { return vm.getValueHash(); }
 
-        //! \copydoc CValueObject::toQVariant
-        QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-        //! \copydoc CValueObject::convertFromQVariant
-        void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
-
         //! \copydoc CValueObject::convertToQString
         QString convertToQString(bool i18n = false) const;
 

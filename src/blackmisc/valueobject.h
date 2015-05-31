@@ -115,12 +115,6 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::JsonByTuple::convertFromJson
         using Mixin::JsonByTuple<Derived>::convertFromJson;
 
-        //! \copydoc BlackMisc::Mixin::MetaType::toQVariant
-        using Mixin::MetaType<Derived>::toQVariant;
-
-        //! \copydoc BlackMisc::Mixin::MetaType::convertFromQVariant
-        using Mixin::MetaType<Derived>::convertFromQVariant;
-
         //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
         using Mixin::Index<Derived>::setPropertyByIndex;
 

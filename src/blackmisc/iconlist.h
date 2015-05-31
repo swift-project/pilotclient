@@ -36,9 +36,6 @@ namespace BlackMisc
         //! Find by index
         CIcon findByIndex(CIcons::IconIndex index) const;
 
-        //! \copydoc CValueObject::asQVariant
-        QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
         //! Register metadata of unit and quantity
         static void registerMetadata();
 

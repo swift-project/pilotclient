@@ -220,12 +220,6 @@ namespace BlackMisc
             removeByValueIf(BlackMisc::Predicates::MemberEqual(membFunc, returnValue));
         }
 
-        //! \copydoc CValueObject::toQVariant()
-        QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
-        //! \copydoc CValueObject::convertFromQVariant
-        void convertFromQVariant(const QVariant &variant) { BlackMisc::setFromQVariant(this, variant); }
-
         //! \copydoc CValueObject::toJson
         QJsonObject toJson() const
         {

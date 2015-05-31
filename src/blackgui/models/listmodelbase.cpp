@@ -150,7 +150,7 @@ namespace BlackGui
             //! Formatted data
             ObjectType obj = this->getContainerOrFilteredContainer()[index.row()];
             BlackMisc::CPropertyIndex propertyIndex = this->columnToPropertyIndex(index.column());
-            return formatter->data(role, obj.propertyByIndex(propertyIndex)).toQVariant();
+            return formatter->data(role, obj.propertyByIndex(propertyIndex)).getQVariant();
         }
 
         template <typename ObjectType, typename ContainerType>

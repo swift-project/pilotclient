@@ -66,20 +66,6 @@ namespace BlackMisc
                 return baseIsA(static_cast<const MetaBaseOfT<Derived> *>(derived()), metaTypeId);
             }
 
-            //! Return QVariant, used with DBus QVariant lists
-            //! \deprecated Use QVariant::fromValue() instead.
-            QVariant toQVariant() const
-            {
-                return Private::MetaTypeHelper<Derived>::maybeToQVariant(*derived());
-            }
-
-            //! Set from QVariant
-            //! \deprecated Use QVariant::value() instead.
-            void convertFromQVariant(const QVariant &variant)
-            {
-                return Private::MetaTypeHelper<Derived>::maybeConvertFromQVariant(*derived(), variant);
-            }
-
         private:
             const Derived *derived() const { return static_cast<const Derived *>(this); }
             Derived *derived() { return static_cast<Derived *>(this); }
@@ -104,9 +90,7 @@ namespace BlackMisc
 #       define BLACKMISC_DECLARE_USING_MIXIN_METATYPE(DERIVED)                  \
             using ::BlackMisc::Mixin::MetaType<DERIVED>::registerMetadata;      \
             using ::BlackMisc::Mixin::MetaType<DERIVED>::getMetaTypeId;         \
-            using ::BlackMisc::Mixin::MetaType<DERIVED>::isA;                   \
-            using ::BlackMisc::Mixin::MetaType<DERIVED>::toQVariant;            \
-            using ::BlackMisc::Mixin::MetaType<DERIVED>::convertFromQVariant;
+            using ::BlackMisc::Mixin::MetaType<DERIVED>::isA;
 
         /*!
          * When a derived class and a base class both inherit from Mixin::MetaType,
@@ -242,12 +226,6 @@ namespace BlackMisc
 
         //! Return the internal QVariant.
         const QVariant &getQVariant() const { return m_v; }
-
-        //! \copydoc CValueObject::toQVariant
-        QVariant toQVariant() const { return getQVariant(); }
-
-        //! \copydoc CValueObject::convertFromQVariant
-        void convertFromQVariant(const QVariant &v) { m_v = v; }
 
         //! True if this variant can be converted to the type with the given metatype ID.
         bool canConvert(int typeId) const { return m_v.canConvert(typeId); }

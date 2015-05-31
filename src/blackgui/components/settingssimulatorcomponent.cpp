@@ -46,10 +46,10 @@ namespace BlackGui
             Q_ASSERT_X(this->getIContextSettings(), Q_FUNC_INFO, "missing settings");
 
             // set values
-            ui->cb_Plugins->addItem(tr("Auto"), CSimulatorPluginInfo().toQVariant());
+            ui->cb_Plugins->addItem(tr("Auto"), QVariant::fromValue(CSimulatorPluginInfo()));
             for (const auto &p : getIContextSimulator()->getAvailableSimulatorPlugins())
             {
-                ui->cb_Plugins->addItem(p.toQString(), p.toQVariant());
+                ui->cb_Plugins->addItem(p.toQString(), QVariant::fromValue(p));
             }
 
             // connects
