@@ -26,7 +26,7 @@ namespace BlackMisc
          */
         class BLACKMISC_EXPORT CAltitude :
             public PhysicalQuantities::CLength,
-            public Mixin::MetaTypeAndQList<CAltitude>,
+            public Mixin::MetaType<CAltitude>,
             public Mixin::EqualsByTuple<CAltitude>,
             public Mixin::CompareByTuple<CAltitude>,
             public Mixin::HashByTuple<CAltitude>,
@@ -40,7 +40,7 @@ namespace BlackMisc
             //! Base type
             using base_type = PhysicalQuantities::CLength;
 
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CAltitude)
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAltitude)
             BLACKMISC_DECLARE_USING_MIXIN_STRING(CAltitude)
             BLACKMISC_DECLARE_USING_MIXIN_DBUS(CAltitude)
             BLACKMISC_DECLARE_USING_MIXIN_JSON(CAltitude)

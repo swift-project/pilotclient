@@ -46,7 +46,7 @@ namespace BlackMisc
             public Mixin::DBusOperators<CPhysicalQuantity<MU, PQ>>,
             public Mixin::JsonOperators<CPhysicalQuantity<MU, PQ>>,
             public Mixin::Index<PQ>,
-            public Mixin::MetaTypeAndQList<PQ>,
+            public Mixin::MetaType<PQ>,
             public Mixin::String<PQ>,
             public Mixin::Icon<CPhysicalQuantity<MU, PQ>>
         {

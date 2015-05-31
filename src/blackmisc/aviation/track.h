@@ -27,7 +27,7 @@ namespace BlackMisc
          */
         class BLACKMISC_EXPORT CTrack :
             public PhysicalQuantities::CAngle,
-            public Mixin::MetaTypeAndQList<CTrack>,
+            public Mixin::MetaType<CTrack>,
             public Mixin::EqualsByTuple<CTrack>,
             public Mixin::CompareByTuple<CTrack>,
             public Mixin::HashByTuple<CTrack>,
@@ -40,7 +40,7 @@ namespace BlackMisc
             //! Base type
             using base_type = PhysicalQuantities::CAngle;
 
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CTrack)
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CTrack)
             BLACKMISC_DECLARE_USING_MIXIN_STRING(CTrack)
             BLACKMISC_DECLARE_USING_MIXIN_DBUS(CTrack)
             BLACKMISC_DECLARE_USING_MIXIN_JSON(CTrack)

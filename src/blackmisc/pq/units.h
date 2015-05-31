@@ -37,7 +37,7 @@ namespace BlackMisc
         //! Specialized class for distance units (meter, foot, nautical miles).
         class BLACKMISC_EXPORT CLengthUnit :
             public CMeasurementUnit,
-            public Mixin::MetaTypeAndQList<CLengthUnit>,
+            public Mixin::MetaType<CLengthUnit>,
             public Mixin::DBusOperators<CLengthUnit>,
             public Mixin::Index<CLengthUnit>
         {
@@ -62,7 +62,7 @@ namespace BlackMisc
             //! Base type
             using base_type = CMeasurementUnit;
 
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CLengthUnit)
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CLengthUnit)
 
             //! Default constructor, required for Qt Metasystem
             CLengthUnit() : CMeasurementUnit(defaultUnit()) {}
@@ -156,7 +156,7 @@ namespace BlackMisc
         //! Specialized class for angles (degrees, radian).
         class BLACKMISC_EXPORT CAngleUnit :
             public CMeasurementUnit,
-            public Mixin::MetaTypeAndQList<CAngleUnit>,
+            public Mixin::MetaType<CAngleUnit>,
             public Mixin::DBusOperators<CAngleUnit>,
             public Mixin::Index<CAngleUnit>
         {
@@ -177,7 +177,7 @@ namespace BlackMisc
             //! Base type
             using base_type = CMeasurementUnit;
 
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CAngleUnit)
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAngleUnit)
 
             //!  Default constructor, required for Qt Metasystem
             CAngleUnit() : CMeasurementUnit(defaultUnit()) {}
@@ -255,7 +255,7 @@ namespace BlackMisc
         //! Specialized class for frequency (hertz, mega hertz, kilo hertz).
         class BLACKMISC_EXPORT CFrequencyUnit :
             public CMeasurementUnit,
-            public Mixin::MetaTypeAndQList<CFrequencyUnit>,
+            public Mixin::MetaType<CFrequencyUnit>,
             public Mixin::DBusOperators<CFrequencyUnit>,
             public Mixin::Index<CFrequencyUnit>
         {
@@ -275,7 +275,7 @@ namespace BlackMisc
             //! Base type
             using base_type = CMeasurementUnit;
 
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CFrequencyUnit)
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CFrequencyUnit)
 
             //! Default constructor, required for Qt Metasystem
             CFrequencyUnit() : CMeasurementUnit(defaultUnit()) {}
@@ -345,7 +345,7 @@ namespace BlackMisc
         //! Specialized class for mass units (kg, lbs).
         class BLACKMISC_EXPORT CMassUnit :
             public CMeasurementUnit,
-            public Mixin::MetaTypeAndQList<CMassUnit>,
+            public Mixin::MetaType<CMassUnit>,
             public Mixin::DBusOperators<CMassUnit>,
             public Mixin::Index<CMassUnit>
         {
@@ -366,7 +366,7 @@ namespace BlackMisc
             //! Base type
             using base_type = CMeasurementUnit;
 
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CMassUnit)
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CMassUnit)
 
             //! Default constructor, required for Qt Metasystem
             CMassUnit() : CMeasurementUnit(defaultUnit()) {}
@@ -444,7 +444,7 @@ namespace BlackMisc
         //! Specialized class for pressure (psi, hPa, bar).
         class BLACKMISC_EXPORT CPressureUnit :
             public CMeasurementUnit,
-            public Mixin::MetaTypeAndQList<CPressureUnit>,
+            public Mixin::MetaType<CPressureUnit>,
             public Mixin::DBusOperators<CPressureUnit>,
             public Mixin::Index<CPressureUnit>
         {
@@ -467,7 +467,7 @@ namespace BlackMisc
             //! Base type
             using base_type = CMeasurementUnit;
 
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CPressureUnit)
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CPressureUnit)
 
             //! Default constructor, required for Qt Metasystem
             CPressureUnit() : CMeasurementUnit(defaultUnit()) {}
@@ -560,7 +560,7 @@ namespace BlackMisc
         //! Specialized class for temperatur units (kelvin, centidegree).
         class BLACKMISC_EXPORT CTemperatureUnit :
             public CMeasurementUnit,
-            public Mixin::MetaTypeAndQList<CTemperatureUnit>,
+            public Mixin::MetaType<CTemperatureUnit>,
             public Mixin::DBusOperators<CTemperatureUnit>,
             public Mixin::Index<CTemperatureUnit>
         {
@@ -589,7 +589,7 @@ namespace BlackMisc
             //! Base type
             using base_type = CMeasurementUnit;
 
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CTemperatureUnit)
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CTemperatureUnit)
 
             //! Default constructor, required for Qt Metasystem
             CTemperatureUnit() : CMeasurementUnit(defaultUnit()) {}
@@ -651,7 +651,7 @@ namespace BlackMisc
         //! Specialized class for speed units (m/s, ft/s, NM/h).
         class BLACKMISC_EXPORT CSpeedUnit :
             public CMeasurementUnit,
-            public Mixin::MetaTypeAndQList<CSpeedUnit>,
+            public Mixin::MetaType<CSpeedUnit>,
             public Mixin::DBusOperators<CSpeedUnit>,
             public Mixin::Index<CSpeedUnit>
         {
@@ -674,7 +674,7 @@ namespace BlackMisc
             //! Base type
             using base_type = CMeasurementUnit;
 
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CSpeedUnit)
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CSpeedUnit)
 
             //! Default constructor, required for Qt Metasystem
             CSpeedUnit() : CMeasurementUnit(defaultUnit()) {}
@@ -760,7 +760,7 @@ namespace BlackMisc
         //! Specialized class for time units (ms, hour, min).
         class BLACKMISC_EXPORT CTimeUnit :
             public CMeasurementUnit,
-            public Mixin::MetaTypeAndQList<CTimeUnit>,
+            public Mixin::MetaType<CTimeUnit>,
             public Mixin::DBusOperators<CTimeUnit>,
             public Mixin::Index<CTimeUnit>
         {
@@ -783,7 +783,7 @@ namespace BlackMisc
             //! Base type
             using base_type = CMeasurementUnit;
 
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CTimeUnit)
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CTimeUnit)
 
             //! Default constructor, required for Qt Metasystem
             CTimeUnit() : CMeasurementUnit(defaultUnit()) {}
@@ -893,7 +893,7 @@ namespace BlackMisc
         //! Specialized class for acceleration units (m/s2, ft/s2).
         class BLACKMISC_EXPORT CAccelerationUnit :
             public CMeasurementUnit,
-            public Mixin::MetaTypeAndQList<CAccelerationUnit>,
+            public Mixin::MetaType<CAccelerationUnit>,
             public Mixin::DBusOperators<CAccelerationUnit>,
             public Mixin::Index<CAccelerationUnit>
         {
@@ -913,7 +913,7 @@ namespace BlackMisc
             //! Base type
             using base_type = CMeasurementUnit;
 
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(CAccelerationUnit)
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAccelerationUnit)
 
             //! Default constructor, required for Qt Metasystem
             CAccelerationUnit() : CMeasurementUnit(defaultUnit()) {}

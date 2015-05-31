@@ -40,7 +40,7 @@ namespace BlackMisc
          *
          * \see BLACKMISC_DECLARE_USING_MIXIN_METATYPE
          */
-        template <class Derived, class... AdditionalTypes>
+        template <class Derived>
         class MetaType
         {
         public:
@@ -48,8 +48,6 @@ namespace BlackMisc
             static void registerMetadata()
             {
                 Private::MetaTypeHelper<Derived>::maybeRegisterMetaType();
-                // Details: https://dev.vatsim-germany.org/issues/413#note-6
-                [](...){}((qRegisterMetaType<AdditionalTypes>(), qDBusRegisterMetaType<AdditionalTypes>(), 0)...);
             }
 
             //! Returns the Qt meta type ID of this object.
@@ -75,15 +73,6 @@ namespace BlackMisc
         };
 
         /*!
-         * Variant of MetaType mixin which also registers QList<Derived> with the type system.
-         *
-         * \see BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST
-         */
-        template <class Derived>
-        class MetaTypeAndQList : public MetaType<Derived, QList<Derived>>
-        {};
-
-        /*!
          * When a derived class and a base class both inherit from Mixin::MetaType,
          * the derived class uses this macro to disambiguate the inherited members.
          */
@@ -91,17 +80,6 @@ namespace BlackMisc
             using ::BlackMisc::Mixin::MetaType<DERIVED>::registerMetadata;      \
             using ::BlackMisc::Mixin::MetaType<DERIVED>::getMetaTypeId;         \
             using ::BlackMisc::Mixin::MetaType<DERIVED>::isA;
-
-        /*!
-         * When a derived class and a base class both inherit from Mixin::MetaType,
-         * the derived class uses this macro to disambiguate the inherited members.
-         */
-#       define BLACKMISC_DECLARE_USING_MIXIN_METATYPE_AND_QLIST(DERIVED)                \
-            using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::registerMetadata;      \
-            using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::getMetaTypeId;         \
-            using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::isA;                   \
-            using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::toQVariant;            \
-            using ::BlackMisc::Mixin::MetaTypeAndQList<DERIVED>::convertFromQVariant;
 
     } // Mixin
 
