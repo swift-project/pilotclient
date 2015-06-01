@@ -10,7 +10,7 @@
 #include "blackmiscfreefunctions.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/simulation/simulatorinfolist.h"
+#include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/setsimulator.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
 #include "blackmisc/simulation/simulatorsetup.h"

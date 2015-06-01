@@ -4,7 +4,7 @@
 #include "blackcore/context_settings.h"
 #include "blackcore/context_simulator.h"
 #include "blackcore/context_network.h"
-#include "blackmisc/simulation/simulatorinfolist.h"
+#include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/setsimulator.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/settingutilities.h"

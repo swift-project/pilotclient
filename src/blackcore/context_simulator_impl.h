@@ -17,7 +17,7 @@
 #include "blackcore/simulator.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/simulation/simulatorinfolist.h"
+#include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/pixmap.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"

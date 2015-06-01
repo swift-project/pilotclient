@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "simulatorinfolist.h"
+#include "simulatorplugininfolist.h"
 
 namespace BlackMisc
 {

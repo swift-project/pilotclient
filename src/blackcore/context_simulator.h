@@ -30,7 +30,7 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorsetup.h"
-#include "blackmisc/simulation/simulatorinfolist.h"
+#include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/aviation/airportlist.h"
