@@ -25,6 +25,7 @@
 
 #include "blackcoreexport.h"
 #include "context.h"
+#include "blackcore/simulator.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_runtime.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
@@ -90,17 +91,24 @@ namespace BlackCore
         void airspaceSnapshotHandled();
 
     public slots:
+        //! Simulator info, currently loaded plugin
+        virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const = 0;
+
         //! Return list of available simulator plugins
         virtual BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const = 0;
 
-        //! Disconnect from simulator
-        virtual bool disconnectFromSimulator() = 0;
+        //! Load and start specific simulator plugin
+        virtual bool startSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) = 0;
+
+        //! Stop and unload simulator plugin and listeners
+        virtual void stopSimulatorPlugin() = 0;
 
         //! Simulator combined status
         virtual int getSimulatorStatus() const = 0;
 
-        //! Simulator info
-        virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const = 0;
+        //! Get simulator status as enum
+        //! \todo To be removed with Qt 5.5 when getSimualtorStatus directly provides the enum
+        ISimulator::SimulatorStatus getSimulatorStatusEnum() const;
 
         //! Simulator setup
         virtual BlackMisc::Simulation::CSimulatorSetup getSimulatorSetup() const = 0;
@@ -159,24 +167,6 @@ namespace BlackCore
 
         //! Time synchronization offset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
-
-        //! Load specific simulator plugin
-        virtual bool loadSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) = 0;
-
-        //! Load specific simulator plugin as set in settings
-        virtual bool loadSimulatorPluginFromSettings() = 0;
-
-        //! Listen for the specific simulator to start, load plugin automatically
-        virtual void listenForSimulator(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) = 0;
-
-        //! Listen for all available simulators
-        virtual void listenForAllSimulators() = 0;
-
-        //! Listen for simulator as set in settings
-        virtual void listenForSimulatorFromSettings() = 0;
-
-        //! Unload simulator plugin
-        virtual void unloadSimulatorPlugin() = 0;
 
         //! Simulator avialable (driver available)?
         bool isSimulatorAvailable() const { return BlackMisc::CProject::isCompiledWithFlightSimulatorSupport() && !getSimulatorPluginInfo().isUnspecified(); }

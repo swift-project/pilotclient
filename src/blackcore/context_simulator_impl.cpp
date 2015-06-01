@@ -17,10 +17,12 @@
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/loghandler.h"
+#include "blackmisc/settingutilities.h"
 #include <QPluginLoader>
 #include <QLibrary>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Settings;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
@@ -43,8 +45,7 @@ namespace BlackCore
 
     CContextSimulator::~CContextSimulator()
     {
-        disconnectFromSimulator();
-        unloadSimulatorPlugin();
+        this->gracefulShutdown();
     }
 
     ISimulatorFactory *CContextSimulator::getSimulatorFactory(const CSimulatorPluginInfo &simulator)
@@ -109,38 +110,39 @@ namespace BlackCore
         it->m_storage.insert(key, value);
     }
 
+    void CContextSimulator::gracefulShutdown()
+    {
+        this->disconnect();
+        this->stopSimulatorPlugin();
+    }
+
     CSimulatorPluginInfoList CContextSimulator::getAvailableSimulatorPlugins() const
     {
         CSimulatorPluginInfoList list;
-
         std::for_each(m_simulatorPlugins.begin(), m_simulatorPlugins.end(), [&list](const PluginData & driver)
         {
             list.push_back(driver.info);
         });
-
         return list;
+    }
+
+    bool CContextSimulator::startSimulatorPlugin(const CSimulatorPluginInfo &simulatorInfo)
+    {
+        return this->loadSimulatorPlugin(simulatorInfo, true);
+    }
+
+    void CContextSimulator::stopSimulatorPlugin()
+    {
+        this->unloadSimulatorPlugin(false);
     }
 
     int CContextSimulator::getSimulatorStatus() const
     {
-
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         if (!m_simulatorPlugin) { return 0; }
 
         Q_ASSERT_X(m_simulatorPlugin->simulator, Q_FUNC_INFO, "Missing simulator");
         return m_simulatorPlugin->simulator->getSimulatorStatus();
-    }
-
-    bool CContextSimulator::disconnectFromSimulator()
-    {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin)
-        {
-            return false;
-        }
-
-        Q_ASSERT(m_simulatorPlugin->simulator);
-        return m_simulatorPlugin->simulator->disconnectFrom();
     }
 
     BlackMisc::Simulation::CSimulatorPluginInfo CContextSimulator::getSimulatorPluginInfo() const
@@ -351,14 +353,14 @@ namespace BlackCore
         return this->m_simulatorPlugin->simulator->getTimeSynchronizationOffset();
     }
 
-    bool CContextSimulator::loadSimulatorPlugin(const CSimulatorPluginInfo &simulatorInfo)
+    bool CContextSimulator::loadSimulatorPlugin(const CSimulatorPluginInfo &simulatorInfo, bool withListener)
     {
         Q_ASSERT(getIContextApplication());
         Q_ASSERT(getIContextApplication()->isUsingImplementingObject());
         Q_ASSERT(!simulatorInfo.isUnspecified());
 
-        // warning if we do not have any plugins
-        if (m_simulatorPlugins.isEmpty() || simulatorInfo.isUnspecified())
+        // error if we do not have any plugins
+        if (m_simulatorPlugins.isEmpty())
         {
             CLogMessage(this).error("No simulator plugins");
             return false;
@@ -368,6 +370,29 @@ namespace BlackCore
         if (m_simulatorPlugin && m_simulatorPlugin->info == simulatorInfo)
         {
             return true;
+        }
+
+        unloadSimulatorPlugin(false); // old plugin unloaded
+
+        // now we have a state where no driver is loaded
+        if (withListener)
+        {
+            // hand over to listeners, when listener is done, it will call this function again
+            if (simulatorInfo.isAuto())
+            {
+                this->listenForAllSimulators();
+            }
+            else
+            {
+                this->listenForSimulator(simulatorInfo);
+            }
+            return false; // not a plugin yet, just listener
+        }
+
+        if (!simulatorInfo.isValid() || simulatorInfo.isUnspecified())
+        {
+            CLogMessage(this).error("Illegal plugin");
+            return false;
         }
 
         ISimulatorFactory *factory = getSimulatorFactory(simulatorInfo);
@@ -380,9 +405,7 @@ namespace BlackCore
         IOwnAircraftProvider *ownAircraftProvider = this->getRuntime()->getCContextOwnAircraft();
         IRemoteAircraftProvider *renderedAircraftProvider = this->getRuntime()->getCContextNetwork();
         ISimulator *newSimulator = factory->create(simulatorInfo, ownAircraftProvider, renderedAircraftProvider, this);
-        Q_ASSERT(newSimulator);
-
-        unloadSimulatorPlugin(); // old plugin unloaded
+        Q_ASSERT_X(newSimulator, Q_FUNC_INFO, "no simulator driver can be created");
 
         PluginData *plugin = findPlugin(simulatorInfo);
         plugin->simulator = newSimulator;
@@ -413,57 +436,19 @@ namespace BlackCore
         Q_ASSERT(networkContext);
         Q_ASSERT(networkContext->isLocalObject());
 
+        // initially add aircraft
         for (const CSimulatedAircraft &simulatedAircraft : networkContext->getAircraftInRange())
         {
             Q_ASSERT(!simulatedAircraft.getCallsign().isEmpty());
             m_simulatorPlugin->simulator->logicallyAddRemoteAircraft(simulatedAircraft);
         }
 
-        // apply latest settings
-        settingsChanged(static_cast<uint>(IContextSettings::SettingsSimulator));
-
         // try to connect
         m_simulatorPlugin->simulator->connectTo();
+        emit simulatorPluginChanged(this->m_simulatorPlugin->info);
+        CLogMessage(this).info("Simulator plugin loaded: %1") << this->m_simulatorPlugin->info.toQString(true);
 
-        if (m_simulatorPlugin) // can be already nullptr if connectTo() is synchronous and fails
-        {
-            emit simulatorPluginChanged(this->m_simulatorPlugin->info);
-            CLogMessage(this).info("Simulator plugin loaded: %1") << this->m_simulatorPlugin->info.toQString(true);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    bool CContextSimulator::loadSimulatorPluginFromSettings()
-    {
-        Q_ASSERT(this->getIContextSettings());
-        if (!this->getIContextSettings()) return false; // TODO assert or if?
-
-        // TODO warnings if we didn't load the plugin which the settings asked for
-
-        CSimulatorPluginInfoList plugins = this->getAvailableSimulatorPlugins();
-        if (plugins.size() == 1)
-        {
-            // load, independent from settings, we have only driver
-            return this->loadSimulatorPlugin(plugins.front());
-        }
-        else if (plugins.size() > 1)
-        {
-            if (this->loadSimulatorPlugin(
-                        this->getIContextSettings()->getSimulatorSettings().getSelectedPlugin()
-                    )) return true;
-
-            // we have plugins, but none got loaded
-            // just load first one
-            return this->loadSimulatorPlugin(plugins.front());
-        }
-        else
-        {
-            return false;
-        }
+        return true;
     }
 
     void CContextSimulator::listenForSimulator(const CSimulatorPluginInfo &simulatorInfo)
@@ -472,18 +457,24 @@ namespace BlackCore
         Q_ASSERT(this->getIContextApplication()->isUsingImplementingObject());
         Q_ASSERT(!simulatorInfo.isUnspecified());
 
-        if (this->m_simulatorPlugin)
-        {
-            // already loaded
-            CLogMessage(this).warning("Cannot listen for simulator while the driver %1 is still loaded") << m_simulatorPlugin->info.toQString();
-            return;
-        }
-
         // warning if we do not have any plugins
         if (m_simulatorPlugins.isEmpty())
         {
             CLogMessage(this).error("No simulator drivers available");
             return;
+        }
+
+        ISimulator::SimulatorStatus simStatus = getSimulatorStatusEnum();
+        if (this->m_simulatorPlugin && this->m_simulatorPlugin->info == simulatorInfo && simStatus.testFlag(ISimulator::Connected))
+        {
+            // the simulator is already connected and running
+            return;
+        }
+
+        if (this->m_simulatorPlugin)
+        {
+            // wrong or disconnected plugin, we start from the scratch
+            this->unloadSimulatorPlugin(false);
         }
 
         PluginData *plugin = findPlugin(simulatorInfo);
@@ -511,7 +502,7 @@ namespace BlackCore
         }
 
         ISimulatorListener *listener = plugin->listener;
-        Q_ASSERT(listener);
+        Q_ASSERT_X(listener, Q_FUNC_INFO, "No listener");
 
         if (!m_listenersThread.isRunning())
         {
@@ -525,47 +516,41 @@ namespace BlackCore
     void CContextSimulator::listenForAllSimulators()
     {
         auto plugins = getAvailableSimulatorPlugins();
-        for (const auto &p : plugins)
+        for (const CSimulatorPluginInfo &p : plugins)
         {
-            listenForSimulator(p);
+            if (p.isUnspecified()) { continue; }
+            if (p.isValid())
+            {
+                listenForSimulator(p);
+            }
         }
     }
 
-    void CContextSimulator::listenForSimulatorFromSettings()
+    void CContextSimulator::unloadSimulatorPlugin(bool startListeners)
     {
-        Q_ASSERT(this->getIContextSettings());
-
-        auto plugin = getIContextSettings()->getSimulatorSettings().getSelectedPlugin();
-        if (plugin.isUnspecified())
+        if (m_simulatorPlugin)
         {
-            listenForAllSimulators();
+            ISimulator *sim = this->m_simulatorPlugin->simulator;
+            m_simulatorPlugin = nullptr;
+
+            Q_ASSERT(this->getIContextNetwork());
+            Q_ASSERT(this->getIContextNetwork()->isLocalObject());
+
+            // unload and disconnect
+            if (sim)
+            {
+                // disconnect signals and delete
+                sim->unload();
+                this->disconnect(sim);
+                sim->deleteLater();
+                emit simulatorPluginChanged(CSimulatorPluginInfo());
+            }
         }
-        else
+
+        if (startListeners)
         {
-            listenForSimulator(plugin);
+            this->listenForAllSimulators();
         }
-    }
-
-    void CContextSimulator::unloadSimulatorPlugin()
-    {
-        if (!m_simulatorPlugin) { return; }
-
-        // depending on shutdown order, network might already have been deleted
-        emit simulatorPluginChanged(CSimulatorPluginInfo());
-
-        Q_ASSERT(this->getIContextNetwork());
-        Q_ASSERT(this->getIContextNetwork()->isLocalObject());
-        Q_ASSERT(m_simulatorPlugin->simulator);
-
-        // unload and disconnect
-        m_simulatorPlugin->simulator->unload();
-
-        // disconnect signals
-        this->disconnect(m_simulatorPlugin->simulator);
-
-        m_simulatorPlugin->simulator->deleteLater();
-        m_simulatorPlugin->simulator = nullptr;
-        m_simulatorPlugin = nullptr;
     }
 
     void CContextSimulator::ps_addRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
@@ -602,19 +587,17 @@ namespace BlackCore
 
     void CContextSimulator::ps_onSimulatorStatusChanged(int status)
     {
-        Q_ASSERT(m_simulatorPlugin);
-        Q_ASSERT(m_simulatorPlugin->simulator);
-
-        if (!(status & ISimulator::Connected))
+        ISimulator::SimulatorStatus statusEnum = ISimulator::statusToEnum(status);
+        if (!statusEnum.testFlag(ISimulator::Connected))
         {
-            // we got disconnected
-            unloadSimulatorPlugin();
+            // we got disconnected, plugin no longer needed
+            unloadSimulatorPlugin(false);
 
             // do not immediately listen again, but allow some time for the simulator to shutdown
             // otherwise we risk reconnecting to a closing simulator
             BlackMisc::singleShot(1000, QThread::currentThread(), [ = ]()
             {
-                listenForSimulatorFromSettings();
+                listenForAllSimulators();
             });
         }
         emit simulatorStatusChanged(status);
@@ -679,33 +662,9 @@ namespace BlackCore
     void CContextSimulator::settingsChanged(uint type)
     {
         auto settingsType = static_cast<IContextSettings::SettingsType>(type);
-        if (settingsType != IContextSettings::SettingsSimulator)
-            return;
+        if (settingsType != IContextSettings::SettingsSimulator) { return; }
 
-        // plugin
-        CSettingsSimulator settingsSim = this->getIContextSettings()->getSimulatorSettings();
-        CSimulatorPluginInfo plugin = getIContextSettings()->getSimulatorSettings().getSelectedPlugin();
-
-        // no simulator loaded yet, listen
-        if (!m_simulatorPlugin)
-        {
-            stopSimulatorListeners();
-            if (plugin.isUnspecified())
-            {
-                listenForAllSimulators();
-            }
-            else
-            {
-                listenForSimulator(plugin);
-            }
-        }
-        else
-        {
-            // time sync
-            bool timeSync = settingsSim.isTimeSyncEnabled();
-            CTime syncOffset = settingsSim.getSyncTimeOffset();
-            m_simulatorPlugin->simulator->setTimeSynchronization(timeSync, syncOffset);
-        }
+        // simulator code would go here
     }
 
     CPixmap CContextSimulator::iconForModel(const QString &modelString) const
@@ -754,7 +713,7 @@ namespace BlackCore
 
         CLogMessage(this).debug() << plugin->info.toQString() << "started";
         stopSimulatorListeners();
-        loadSimulatorPlugin(plugin->info);
+        loadSimulatorPlugin(plugin->info, false);
     }
 
     void CContextSimulator::findSimulatorPlugins()
@@ -799,7 +758,9 @@ namespace BlackCore
         std::for_each(m_simulatorPlugins.begin(), m_simulatorPlugins.end(), [](PluginData & plugin)
         {
             if (plugin.listener)
+            {
                 QMetaObject::invokeMethod(plugin.listener, "stop");
+            }
         });
     }
 

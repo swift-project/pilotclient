@@ -66,11 +66,6 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<int>(QLatin1Literal("getSimulatorStatus"));
     }
 
-    bool CContextSimulatorProxy::disconnectFromSimulator()
-    {
-        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("disconnectFromSimulator"));
-    }
-
     CAirportList CContextSimulatorProxy::getAirportsInRange() const
     {
         return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAirportList>(QLatin1Literal("getAirportsInRange"));
@@ -171,34 +166,14 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<BlackMisc::PhysicalQuantities::CTime>(QLatin1Literal("getTimeSynchronizationOffset"));
     }
 
-    bool CContextSimulatorProxy::loadSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo)
+    bool CContextSimulatorProxy::startSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo)
     {
-        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("loadSimulatorPlugin"), simulatorInfo);
+        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("startSimulatorPlugin"), simulatorInfo);
     }
 
-    bool CContextSimulatorProxy::loadSimulatorPluginFromSettings()
+    void CContextSimulatorProxy::stopSimulatorPlugin()
     {
-        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("loadSimulatorPluginFromSettings"));
-    }
-
-    void CContextSimulatorProxy::listenForSimulator(const CSimulatorPluginInfo &simulatorInfo)
-    {
-        m_dBusInterface->callDBus(QLatin1Literal("listenForSimulator"), simulatorInfo);
-    }
-
-    void CContextSimulatorProxy::listenForAllSimulators()
-    {
-        m_dBusInterface->callDBus(QLatin1Literal("listenForAllSimulators"));
-    }
-
-    void CContextSimulatorProxy::listenForSimulatorFromSettings()
-    {
-        m_dBusInterface->callDBus(QLatin1Literal("listenForSimulatorFromSettings"));
-    }
-
-    void CContextSimulatorProxy::unloadSimulatorPlugin()
-    {
-        m_dBusInterface->callDBus(QLatin1Literal("unloadSimulatorPlugin"));
+        m_dBusInterface->callDBus(QLatin1Literal("stopSimulatorPlugin"));
     }
 
     void CContextSimulatorProxy::settingsChanged(uint type)

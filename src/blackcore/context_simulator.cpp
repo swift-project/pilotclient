@@ -48,4 +48,9 @@ namespace BlackCore
         }
     }
 
+    ISimulator::SimulatorStatus IContextSimulator::getSimulatorStatusEnum() const
+    {
+        return static_cast<ISimulator::SimulatorStatus>(this->getSimulatorStatus());
+    }
+
 } // namespace

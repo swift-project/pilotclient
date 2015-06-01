@@ -23,6 +23,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {
@@ -198,9 +199,9 @@ namespace BlackCore
             if (this->m_contextSettings)
             {
                 connect(this->m_contextSettings, &IContextSettings::changedSettings, this->m_contextSimulator, &IContextSimulator::settingsChanged);
-                this->m_contextSimulator->listenForSimulatorFromSettings();
                 times.insert("Post setup, load sim. listener(s)", time.restart());
             }
+            this->m_contextSimulator->startSimulatorPlugin(CSimulatorPluginInfo::autoPlugin());
         }
 
         // only where network and(!) own aircraft run locally
@@ -236,13 +237,17 @@ namespace BlackCore
         disconnect(this);
 
         // unregister all from DBus
-        if (this->m_dbusServer) this->m_dbusServer->unregisterAllObjects();
+        if (this->m_dbusServer) { this->m_dbusServer->unregisterAllObjects(); }
 
         // handle contexts
         if (this->getIContextSimulator())
         {
             disconnect(this->getIContextSimulator());
-            this->getIContextSimulator()->disconnectFromSimulator();
+            if (this->getIContextSimulator()->isUsingImplementingObject())
+            {
+                // shutdown the plugins
+                this->getCContextSimulator()->gracefulShutdown();
+            }
             this->getIContextSimulator()->deleteLater();
             this->m_contextSimulator = nullptr;
         }

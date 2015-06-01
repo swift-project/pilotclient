@@ -19,7 +19,7 @@
 
 namespace BlackCore
 {
-    //! \brief DBus proxy for Simulator Context
+    //! DBus proxy for Simulator Context
     //! \ingroup dbus
     class BLACKCORE_EXPORT CContextSimulatorProxy : public IContextSimulator
     {
@@ -44,12 +44,20 @@ namespace BlackCore
         CContextSimulatorProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
     public slots:
+        //! \copydoc IContextSimulator::getSimulatorPluginInfo()
+        virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const override;
 
-        //! \copydoc IContextSimulator::getSimualtorStatus()
+        //! \copydoc IContextSimulator::getAvailableSimulatorPlugins()
+        virtual BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const override;
+
+        //! \copydoc IContextSimulator::startSimulatorPlugin()
+        virtual bool startSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
+
+        //! \copydoc IContextSimulator::stopSimulatorPlugin()
+        virtual void stopSimulatorPlugin() override;
+
+        //! \copydoc IContextSimulator::getSimulatorStatus()
         virtual int getSimulatorStatus() const override;
-
-        //! \copydoc IContextSimulator::disconnectFrom
-        virtual bool disconnectFromSimulator() override;
 
         //! \copydoc IContextSimulator::getAirportsInRange()
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
@@ -69,14 +77,8 @@ namespace BlackCore
         //! \copydoc IContextSimulator::getIcaoForModelString
         virtual BlackMisc::Aviation::CAircraftIcaoData getIcaoForModelString(const QString &modelString) const override;
 
-        //! \copydoc IContextSimulator::getSimulatorPluginInfo
-        virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const override;
-
         //! \copydoc IContextSimulator::getSimulatorSetup
         virtual BlackMisc::Simulation::CSimulatorSetup getSimulatorSetup() const override;
-
-        //! \copydoc IContextSimulator::getSimulatorPluginList()
-        virtual BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const override;
 
         //! \copydoc IContextSimulator::setTimeSynchronization
         virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
@@ -114,24 +116,6 @@ namespace BlackCore
         //! \copydoc IContextSimulator::getTimeSynchronizationOffset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
 
-        //! \copydoc IContextSimulator::loadSimulatorPlugin
-        virtual bool loadSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
-
-        //! \copydoc IContextSimulator::loadSimulatorPluginFromSettings()
-        virtual bool loadSimulatorPluginFromSettings();
-
-        //! \copydoc IContextSimulator::listenForSimulator()
-        virtual void listenForSimulator(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
-
-        //! \copydoc IContextSimulator::listenForAllSimulators()
-        virtual void listenForAllSimulators() override;
-
-        //! \copydoc IContextSimulator::listenForSimulatorFromSettings()
-        virtual void listenForSimulatorFromSettings() override;
-
-        //! \copydoc IContextSimulator::unloadSimulatorPlugin()
-        virtual void unloadSimulatorPlugin() override;
-
         //! \copydoc IContextSimulator::settingsChanged
         virtual void settingsChanged(uint type) override;
 
@@ -143,9 +127,7 @@ namespace BlackCore
 
         //! \copydoc ISimulator::enableDebuggingMessages
         virtual void enableDebugMessages(bool driver, bool interpolator) override;
-
     };
-
 } // namespace BlackCore
 
 #endif // guard

@@ -16,7 +16,6 @@
 #include "blackcore/context_simulator.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/worker.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/pixmap.h"
@@ -31,8 +30,8 @@ namespace BlackCore
 {
     //! Network simulator concrete implementation
     class BLACKCORE_EXPORT CContextSimulator :
-            public IContextSimulator,
-            public BlackMisc::IPluginStorageProvider
+        public IContextSimulator,
+        public BlackMisc::IPluginStorageProvider
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME)
@@ -43,30 +42,30 @@ namespace BlackCore
         //! Destructor
         virtual ~CContextSimulator();
 
-        //! Lazy-loads the driver, instantiates the factory and returns it.
-        //! \return nullptr if no corresponding driver was found or an error occured during loading it.
-        //! \todo Consider moving to private scope.
-        ISimulatorFactory *getSimulatorFactory(const BlackMisc::Simulation::CSimulatorPluginInfo &simulator);
-
         //! \copydoc IPluginStorageProvider::getPluginData
-        virtual BlackMisc::CVariant getPluginData(const QObject *obj, const QString& key) const;
+        virtual BlackMisc::CVariant getPluginData(const QObject *obj, const QString &key) const;
 
         //! \copydoc IPluginStorageProvider::setPluginData
-        virtual void setPluginData(const QObject *obj, const QString& key, const BlackMisc::CVariant &value);
+        virtual void setPluginData(const QObject *obj, const QString &key, const BlackMisc::CVariant &value);
+
+        //! Gracefully shut down, e.g. for plugin unloading
+        void gracefulShutdown();
 
     public slots:
+        //! \copydoc IContextSimulator::getSimulatorPluginInfo()
+        virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const override;
 
-        //! \copydoc IContextSimulator::getSimulatorPluginList()
+        //! \copydoc IContextSimulator::getAvailableSimulatorPlugins()
         virtual BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const override;
+
+        //! \copydoc IContextSimulator::startSimulatorPlugin()
+        virtual bool startSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
+
+        //! \copydoc IContextSimulator::stopSimulatorPlugin()
+        virtual void stopSimulatorPlugin() override;
 
         //! \copydoc IContextSimulator::getSimulatorStatus()
         virtual int getSimulatorStatus() const override;
-
-        //! \copydoc IContextSimulator::disconnectFrom
-        virtual bool disconnectFromSimulator() override;
-
-        //! \copydoc IContextSimulator::getSimulatorPluginInfo()
-        virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const override;
 
         //! \copydoc IContextSimulator::getSimulatorSetup()
         virtual BlackMisc::Simulation::CSimulatorSetup getSimulatorSetup() const override;
@@ -124,24 +123,6 @@ namespace BlackCore
 
         //! \copydoc IContextSimulator::getTimeSynchronizationOffset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
-
-        //! \copydoc IContextSimulator::loadSimulatorPlugin()
-        virtual bool loadSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
-
-        //! \copydoc IContextSimulator::loadSimulatorPluginFromSettings()
-        virtual bool loadSimulatorPluginFromSettings() override;
-
-        //! \copydoc IContextSimulator::listenForSimulator()
-        virtual void listenForSimulator(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
-
-        //! \copydoc IContextSimulator::listenForAllSimulators()
-        virtual void listenForAllSimulators() override;
-
-        //! \copydoc IContextSimulator::listenForSimulatorFromSettings()
-        virtual void listenForSimulatorFromSettings() override;
-
-        //! \copydoc IContextSimulator::unloadSimulatorPlugin()
-        virtual void unloadSimulatorPlugin() override;
 
         //! \copydoc IContextSimulator::settingsChanged
         virtual void settingsChanged(uint type) override;
@@ -209,11 +190,30 @@ namespace BlackCore
             ISimulatorListener *listener = nullptr; //!< Listener instance, nullptr by default
             ISimulator *simulator = nullptr;        //!< The simulator itself (always nullptr unless it is the currently working one)
             QString fileName;                       //!< Plugin file name (relative to plugins/simulator)
-            QHash<QString, BlackMisc::CVariant> m_storage;     //!< Permanent plugin storage - data stored here will be kept even when plugin is unloaded
+            QHash<QString, BlackMisc::CVariant> m_storage; //!< Permanent plugin storage - data stored here will be kept even when plugin is unloaded
         };
+
+        //! Lazy-loads the driver, instantiates the factory and returns it.
+        //! \return nullptr if no corresponding driver was found or an error occured during loading it.
+        ISimulatorFactory *getSimulatorFactory(const BlackMisc::Simulation::CSimulatorPluginInfo &simulator);
+
+        //! Load plugin, if required start listeners before
+        bool loadSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo, bool withListeners);
+
+        //! Unload plugin, if desired restart listeners
+        void unloadSimulatorPlugin(bool startListeners);
 
         //! Find and catalog all simulator plugins
         void findSimulatorPlugins();
+
+        //! Load plugin from settings
+        bool loadSimulatorPluginFromSettings();
+
+        //! Listen for single simulator
+        void listenForSimulator(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo);
+
+        //! Listen for all simulators
+        void listenForAllSimulators();
 
         //! Call stop() on all loaded listeners
         void stopSimulatorListeners();
