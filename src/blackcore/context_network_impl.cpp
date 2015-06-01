@@ -147,6 +147,7 @@ namespace BlackCore
 
     void CContextNetwork::gracefulShutdown()
     {
+        this->disconnect(); // all signals
         if (this->m_vatsimBookingReader)  { this->m_vatsimBookingReader->requestStop();  this->m_vatsimBookingReader->quit(); }
         if (this->m_vatsimDataFileReader) { this->m_vatsimDataFileReader->requestStop(); this->m_vatsimDataFileReader->quit(); }
         if (this->isConnected()) { this->disconnectFromNetwork(); }

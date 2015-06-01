@@ -45,6 +45,11 @@ namespace BlackCore
         }
     }
 
+    ISimulator::SimulatorStatus ISimulator::statusToEnum(int status)
+    {
+        return static_cast<SimulatorStatus>(status);
+    }
+
     void ISimulator::emitSimulatorCombinedStatus(int oldStatus)
     {
         int newStatus = getSimulatorStatus();

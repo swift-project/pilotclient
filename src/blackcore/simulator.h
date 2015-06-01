@@ -174,6 +174,10 @@ namespace BlackCore
         //! Status to string
         static QString statusToString(int status);
 
+        //! Status to enum
+        //! \todo remove with Qt 5.5 when SimulatorStatus can be transferred via DBus
+        static SimulatorStatus statusToEnum(int status);
+
     signals:
         //! Simulator combined status
         //! \todo Qt5.5: Make use of QFlags
@@ -256,7 +260,6 @@ namespace BlackCore
     signals:
         //! Emitted when the listener discovers the simulator running.
         void simulatorStarted();
-
     };
 
     //! Factory pattern class to create instances of ISimulator
@@ -283,7 +286,6 @@ namespace BlackCore
         virtual ISimulatorListener *createListener(QObject *parent = nullptr) = 0;
 
     };
-
 } // namespace
 
 Q_DECLARE_INTERFACE(BlackCore::ISimulatorFactory, "org.swift-project.blackcore.simulatorinterface")

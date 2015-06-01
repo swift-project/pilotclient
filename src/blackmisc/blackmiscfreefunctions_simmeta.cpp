@@ -7,7 +7,6 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmiscfreefunctions.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
@@ -21,7 +20,6 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Fsx;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Simulation::Settings;
-
 
 /*
  * Metadata for simulation
