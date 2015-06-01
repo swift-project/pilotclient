@@ -7,7 +7,6 @@
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/setsimulator.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/settingutilities.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/variant.h"
 
@@ -19,7 +18,6 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::Settings;
 using namespace BlackCore;
 
 namespace BlackGui
@@ -46,8 +44,7 @@ namespace BlackGui
             Q_ASSERT_X(this->getIContextSettings(), Q_FUNC_INFO, "missing settings");
 
             // set values
-            ui->cb_Plugins->addItem(tr("Auto"), QVariant::fromValue(CSimulatorPluginInfo()));
-            for (const auto &p : getIContextSimulator()->getAvailableSimulatorPlugins())
+            for (const auto &p : getAvailablePlugins(true))
             {
                 ui->cb_Plugins->addItem(p.toQString(), QVariant::fromValue(p));
             }
@@ -135,14 +132,20 @@ namespace BlackGui
             }
         }
 
+        CSimulatorPluginInfoList CSettingsSimulatorComponent::getAvailablePlugins(bool plusAuto) const
+        {
+            CSimulatorPluginInfoList l(getIContextSimulator()->getAvailableSimulatorPlugins());
+            if (plusAuto) { l.push_front(CSimulatorPluginInfo::autoPlugin()); }
+            return l;
+        }
+
         void CSettingsSimulatorComponent::ps_pluginHasBeenSelectedInComboBox(int index)
         {
             Q_ASSERT(this->getIContextSimulator());
             Q_ASSERT(this->getIContextSettings());
             if (!this->getIContextSimulator() || !this->getIContextSettings()) { return; }
 
-            CSimulatorPluginInfoList simDrivers = this->getIContextSimulator()->getAvailableSimulatorPlugins();
-            simDrivers.insert(simDrivers.begin(), CSimulatorPluginInfo());
+            CSimulatorPluginInfoList simDrivers(getAvailablePlugins(true));
             if (simDrivers.isEmpty())
             {
                 CLogMessage(this).error("No drivers available");
@@ -155,21 +158,16 @@ namespace BlackGui
             }
 
             // update
-            CSimulatorPluginInfo currentDriver = simDrivers[index];
-            const QString path = CSettingUtilities::appendPaths(IContextSettings::PathSimulatorSettings(), CSettingsSimulator::ValueSelectedDriver());
-            this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), CVariant::from(currentDriver));
+            CSimulatorPluginInfo selectedPlugin = simDrivers[index];
+            this->getIContextSimulator()->startSimulatorPlugin(selectedPlugin);
+
+            // changing of GUI state will be done via received signal
         }
 
         void CSettingsSimulatorComponent::ps_settingsHaveChanged(uint settingsType)
         {
             Q_ASSERT(this->getIContextSettings());
-            IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(settingsType);
-            if (type != IContextSettings::SettingsSimulator || !this->getIContextSettings()) return;
-            CSettingsSimulator simSettings = this->getIContextSettings()->getSimulatorSettings();
-
-            this->setCurrentPluginInComboBox(simSettings.getSelectedPlugin());
-            this->ui->le_TimeSyncOffset->setText(simSettings.getSyncTimeOffset().formattedHrsMin());
-            this->ui->cb_TimeSync->setChecked(simSettings.isTimeSyncEnabled());
+            Q_UNUSED(settingsType);
         }
 
         void CSettingsSimulatorComponent::ps_onApplyMaxRenderedAircraft()

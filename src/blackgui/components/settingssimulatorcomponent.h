@@ -12,6 +12,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/setsimulator.h"
+#include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "enableforruntime.h"
 #include "enableforruntime.h"
 #include <QFrame>
@@ -64,7 +65,6 @@ namespace BlackGui
             void ps_simulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
         private:
-            QScopedPointer<Ui::CSettingsSimulatorComponent> ui; //!< UI
 
             //! Smarter way to set current driver, avoids unnecessary signals and less formatting dependend
             void setCurrentPluginInComboBox(const BlackMisc::Simulation::CSimulatorPluginInfo &plugin);
@@ -72,7 +72,11 @@ namespace BlackGui
             //! Set the GUI values
             void setGuiValues();
 
-            bool m_pluginLoaded = false; // plugin loaded
+            //! Available plugins, auto pseudo plugin added
+            BlackMisc::Simulation::CSimulatorPluginInfoList getAvailablePlugins(bool plusAuto) const;
+
+            QScopedPointer<Ui::CSettingsSimulatorComponent> ui; //!< UI
+            bool m_pluginLoaded = false; //!< plugin loaded
         };
     }
 } // namespace
