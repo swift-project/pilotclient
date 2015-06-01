@@ -42,12 +42,10 @@ namespace BlackMisc
                 Q_OBJECT
 
             signals:
-
                 //! Full init completed
                 void initializationFinished();
 
             public:
-
                 //! Enabled matching mode flags
                 enum MatchingModeFlag
                 {

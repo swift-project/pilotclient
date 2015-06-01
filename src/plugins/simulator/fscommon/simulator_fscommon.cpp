@@ -40,14 +40,18 @@ namespace BlackSimPlugin
         {
             // hack to init mapper
             connect(&m_modelMatcher, &CAircraftMatcher::initializationFinished, this, &CSimulatorFsCommon::ps_mapperInitialized);
-            auto modelMappingsProvider = std::unique_ptr<IModelMappingsProvider>{ BlackMisc::make_unique<CModelMappingsProviderVPilot>(true) };
+            auto modelMappingsProvider = std::unique_ptr<IModelMappingsProvider> { BlackMisc::make_unique<CModelMappingsProviderVPilot>(true) };
             m_modelMatcher.setModelMappingProvider(std::move(modelMappingsProvider));
 
             CVariant aircraftCfg = getPluginData(this, "aircraft_cfg");
             if (aircraftCfg.isValid())
             {
                 m_modelMatcher.setInstalledModels(aircraftCfg.value<CAircraftCfgEntriesList>().toAircraftModelList());
+                m_modelMatcher.init();
             }
+            //
+            // reading from settings would go here
+            //
             else
             {
                 connect(&m_aircraftCfgParser, &CAircraftCfgParser::parsingFinished, this, &CSimulatorFsCommon::ps_aircraftCfgParsingFinished);
@@ -55,8 +59,7 @@ namespace BlackSimPlugin
             }
         }
 
-        CSimulatorFsCommon::~CSimulatorFsCommon()
-        { }
+        CSimulatorFsCommon::~CSimulatorFsCommon() { }
 
         void CSimulatorFsCommon::ps_mapperInitialized()
         {
@@ -209,8 +212,15 @@ namespace BlackSimPlugin
             CSimulatorCommon::enableDebugMessages(driver, interpolator);
         }
 
-        void CSimulatorFsCommon::ps_aircraftCfgParsingFinished()
+        void CSimulatorFsCommon::unload()
         {
+            this->m_aircraftCfgParser.cancelParsing();
+            CSimulatorCommon::unload();
+        }
+
+        void CSimulatorFsCommon::ps_aircraftCfgParsingFinished(bool success)
+        {
+            if (!success) { return; }
             setPluginData(this, "aircraft_cfg", CVariant::from(m_aircraftCfgParser.getAircraftCfgEntriesList()));
             m_modelMatcher.setInstalledModels(m_aircraftCfgParser.getAircraftCfgEntriesList().toAircraftModelList());
 

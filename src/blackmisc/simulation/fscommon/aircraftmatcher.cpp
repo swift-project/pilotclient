@@ -51,7 +51,7 @@ namespace BlackMisc
             void CAircraftMatcher::setModelMappingProvider(std::unique_ptr<IModelMappingsProvider> mappings)
             {
                 m_mappingsProvider = std::move(mappings);
-                if (m_matchingMode.testFlag(ModelMapping)) initMappings();
+                if (m_matchingMode.testFlag(ModelMapping)) { initMappings(); }
             }
 
             void CAircraftMatcher::setMatchingModes(MatchingMode matchingModes)
@@ -157,9 +157,9 @@ namespace BlackMisc
                 // finish
                 CLogMessage(this).info("Mapping system: %1 definitions for %2 installed models") << m_modelMappings.size()
                                                                                                  << m_installedModels.size();
-                emit initializationFinished();
                 m_initInProgress = false;
                 m_initialized = true;
+                emit initializationFinished();
             }
 
             void CAircraftMatcher::initMappings()

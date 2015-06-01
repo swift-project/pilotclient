@@ -23,9 +23,10 @@ namespace BlackMisc
         worker->setObjectName(name);
 
         worker->moveToThread(thread);
-        QMetaObject::invokeMethod(worker, "ps_runTask");
+        bool s = QMetaObject::invokeMethod(worker, "ps_runTask");
+        Q_ASSERT_X(s, Q_FUNC_INFO, "cannot invoke");
+        Q_UNUSED(s);
         thread->start();
-
         return worker;
     }
 

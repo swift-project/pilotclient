@@ -24,14 +24,12 @@ namespace BlackMisc
     {
         namespace FsCommon
         {
-
             //! Utility, parsing the aircraft.cfg files
             class BLACKMISC_EXPORT CAircraftCfgParser : public QObject
             {
                 Q_OBJECT
 
             public:
-
                 //! Parser mode
                 enum ParserMode
                 {
@@ -48,7 +46,7 @@ namespace BlackMisc
                 { }
 
                 //! Virtual destructor
-                virtual ~CAircraftCfgParser() {}
+                virtual ~CAircraftCfgParser();
 
                 //! Change the directory
                 bool changeRootDirectory(const QString &directory);
@@ -69,20 +67,15 @@ namespace BlackMisc
                 CAircraftCfgEntriesList getAircraftCfgEntriesList() const { return m_parsedCfgEntriesList; }
 
             signals:
-
                 //! Parsing is finished
-                void parsingFinished();
+                void parsingFinished(bool success);
 
             private slots:
-
                 void ps_updateCfgEntriesList(const BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList &cfgEntriesList);
-
-                CAircraftCfgEntriesList parseImpl(const QString &directory, const QStringList &excludeDirectories = {});
+                CAircraftCfgEntriesList parseImpl(const QString &directory, const QStringList &excludeDirectories, bool *ok);
 
             private:
-
                 //! Section within file
-
                 enum FileSection
                 {
                     General,
@@ -104,12 +97,9 @@ namespace BlackMisc
 
                 QString m_rootDirectory;    //!< root directory parsing aircraft.cfg files
                 QStringList m_excludedDirectories;
-
                 CAircraftCfgEntriesList m_parsedCfgEntriesList;
-                QPointer<BlackMisc::CWorker> m_parserWorker;
-
+                QPointer<BlackMisc::CWorker> m_parserWorker; //!< worker will destroy itself, so weak pointer
                 std::atomic<bool> m_cancelParsing = { false };
-
             };
         } // namespace
     } // namespace

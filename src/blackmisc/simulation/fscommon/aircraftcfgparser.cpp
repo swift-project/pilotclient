@@ -21,6 +21,11 @@ namespace BlackMisc
     {
         namespace FsCommon
         {
+            CAircraftCfgParser::~CAircraftCfgParser()
+            {
+                // that should be safe as long as the worker uses deleteLater (which it does)
+                if (this->m_parserWorker) { this->m_parserWorker->waitForFinished(); }
+            }
 
             bool CAircraftCfgParser::changeRootDirectory(const QString &directory)
             {
@@ -28,7 +33,6 @@ namespace BlackMisc
                 if (directory.isEmpty() || !existsDir(directory)) { return false; }
 
                 m_rootDirectory = directory;
-
                 return true;
             }
 
@@ -36,55 +40,61 @@ namespace BlackMisc
             {
                 if (mode == ModeAsync)
                 {
-                    if (m_parserWorker && !m_parserWorker->isFinished()) return;
-
+                    if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
                     auto rootDirectory = m_rootDirectory;
                     auto excludedDirectories = m_excludedDirectories;
-
                     m_parserWorker = BlackMisc::CWorker::fromTask(this, "CAircraftCfgParser::changeDirectory",
-                                                                  [this, rootDirectory, excludedDirectories]()
+                                     [this, rootDirectory, excludedDirectories]()
                     {
-                        auto aircraftCfgEntriesList = parseImpl(rootDirectory, excludedDirectories);
-                        QMetaObject::invokeMethod(this, "ps_updateCfgEntriesList",
-                                                  Q_ARG(BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList, aircraftCfgEntriesList));
+                        bool ok;
+                        auto aircraftCfgEntriesList = parseImpl(rootDirectory, excludedDirectories, &ok);
+                        if (!ok) { return; }
+                        bool c = QMetaObject::invokeMethod(this, "ps_updateCfgEntriesList",
+                                                           Q_ARG(BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList, aircraftCfgEntriesList));
+                        Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot invoke ps_updateCfgEntriesList");
+                        Q_UNUSED(c);
                     });
                 }
                 else if (mode == ModeBlocking)
                 {
-                    m_parsedCfgEntriesList = parseImpl(m_rootDirectory, m_excludedDirectories);
-                }
-                else
-                {
-
+                    bool ok;
+                    m_parsedCfgEntriesList = parseImpl(m_rootDirectory, m_excludedDirectories, &ok);
+                    emit parsingFinished(ok);
                 }
             }
 
             void CAircraftCfgParser::ps_updateCfgEntriesList(const CAircraftCfgEntriesList &cfgEntriesList)
             {
                 m_parsedCfgEntriesList = cfgEntriesList;
-                emit parsingFinished();
+                emit parsingFinished(true);
             }
 
-            CAircraftCfgEntriesList CAircraftCfgParser::parseImpl(const QString &directory, const QStringList &excludeDirectories)
+            CAircraftCfgEntriesList CAircraftCfgParser::parseImpl(const QString &directory, const QStringList &excludeDirectories, bool *ok)
             {
+                *ok = false;
                 if (m_cancelParsing) { return CAircraftCfgEntriesList(); }
 
                 // excluded?
                 for (const auto &excludeDir : excludeDirectories)
                 {
+                    if (m_cancelParsing) { return CAircraftCfgEntriesList(); }
                     if (directory.contains(excludeDir, Qt::CaseInsensitive))
                     {
                         CLogMessage(this).debug() << "Skipping directory " << directory;
+                        *ok = true;
                         return CAircraftCfgEntriesList();
                     }
                 }
 
                 // set directory with name filters, get aircraft.cfg and sub directories
                 QDir dir(directory, "aircraft.cfg", QDir::Name, QDir::Files | QDir::AllDirs);
-                if (!dir.exists()) return CAircraftCfgEntriesList(); // can happen if there are shortcuts or linked dirs not available
+                if (!dir.exists())
+                {
+                    *ok = true;
+                    return CAircraftCfgEntriesList(); // can happen if there are shortcuts or linked dirs not available
+                }
 
                 QString currentDir = dir.absolutePath();
-
                 CAircraftCfgEntriesList result;
 
                 // Dirs last is crucial,since I will break recursion on "aircraft.cfg" level
@@ -97,7 +107,17 @@ namespace BlackMisc
                         QString nextDir = file.absoluteFilePath();
                         if (currentDir.startsWith(nextDir, Qt::CaseInsensitive)) { continue; } // do not go up
                         if (dir == currentDir) { continue; } // do not recursively call same directory
-                        result.push_back(parseImpl(nextDir, excludeDirectories));
+
+                        bool dirOk;
+                        const CAircraftCfgEntriesList subList(parseImpl(nextDir, excludeDirectories, &dirOk));
+                        if (dirOk)
+                        {
+                            result.push_back(subList);
+                        }
+                        else
+                        {
+                            CLogMessage(this).warning("Parsing failed for %1") << nextDir;
+                        }
                     }
                     else
                     {
@@ -200,7 +220,6 @@ namespace BlackMisc
                         file.close();
 
                         // store all entries
-
                         for (const CAircraftCfgEntries &e : tempEntries)
                         {
                             if (e.getTitle().isEmpty())
@@ -213,9 +232,14 @@ namespace BlackMisc
                             newEntries.setAtcType(atcType);
                             result.push_back(newEntries);
                         }
+                        *ok = true;
                         return result; // do not go any deeper in file tree, we found aircraft.cfg
                     }
                 }
+
+                // all files finished,
+                // normally reached when no aircraft.cfg is found
+                *ok = true;
                 return result;
             }
 
@@ -260,16 +284,13 @@ namespace BlackMisc
 
                 QString content(line.mid(index + 1).trimmed());
 
-                // fix "" strings, some are malformed and just contain " at beginning, end
+                // fix "" strings, some are malformed and just contain " at beginning, not at the end
                 if (content.endsWith('"')) { content.remove(content.size() - 1 , 1); }
                 if (content.startsWith('"')) { content.remove(0 , 1); }
 
                 // fix C style linebreaks
                 content.replace("\\n", " ");
                 content.replace("\\t", " ");
-
-                // return
-
                 return content;
             }
 

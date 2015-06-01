@@ -76,6 +76,9 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::enableDebuggingMessages
             virtual void enableDebugMessages(bool driver, bool interpolator) override;
 
+            //! \copydoc ISimulator::unload
+            virtual void unload() override;
+
         protected:
             //! Constructor
             CSimulatorFsCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
@@ -99,7 +102,9 @@ namespace BlackSimPlugin
             BlackMisc::Aviation::CComSystem  m_simCom2;  //!< cockpit COM2 state in simulator
             BlackMisc::Aviation::CTransponder m_simTransponder; //!< cockpit xpdr state in simulator
 
+            // parser / matcher
             BlackMisc::Simulation::FsCommon::CAircraftCfgParser m_aircraftCfgParser; //!< aircraft.cfg parser
+            BlackMisc::Simulation::FsCommon::CAircraftMatcher m_modelMatcher; //!< Model matcher
 
             //! Set own model
             void setOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model);
@@ -110,15 +115,12 @@ namespace BlackSimPlugin
             //! Reverse lookup
             void reverseLookupIcaoData(BlackMisc::Simulation::CAircraftModel &model);
 
-            BlackMisc::Simulation::FsCommon::CAircraftMatcher m_modelMatcher; //!< Model matcher
-
         protected slots:
-
             //! Mapper has been initialized
             void ps_mapperInitialized();
 
             //! aircraft.cfg files parsing is finished
-            void ps_aircraftCfgParsingFinished();
+            void ps_aircraftCfgParsingFinished(bool success);
         };
 
     } // namespace
