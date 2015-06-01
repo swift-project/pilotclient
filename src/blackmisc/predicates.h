@@ -17,6 +17,8 @@
 
 namespace BlackMisc
 {
+    class CPropertyIndexVariantMap;
+
     namespace Predicates
     {
 
@@ -98,6 +100,14 @@ namespace BlackMisc
                 template <class U> bool operator ()(const U &other) const { return other == m_value; }
             };
 
+            //! \private
+            struct Matches
+            {
+                const CPropertyIndexVariantMap &m_map;
+                Matches(const CPropertyIndexVariantMap &map) : m_map(map) {}
+                template <class T> bool operator()(const T &value) const;
+            };
+
         } //namespace Private
 
         /*!
@@ -171,6 +181,14 @@ namespace BlackMisc
         auto Equals(T &&value) -> Private::Equals<typename std::decay<T>::type>
         {
             return { std::forward<T>(value), 0 };
+        }
+
+        /*!
+         * Predicate which is true if its argument matches a captured CPropertyIndexVariantMap.
+         */
+        inline auto Matches(const CPropertyIndexVariantMap &map) -> Private::Matches
+        {
+            return { map };
         }
 
     } //namespace Predicates

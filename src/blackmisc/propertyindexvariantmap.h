@@ -178,37 +178,11 @@ namespace BlackMisc
         //! Equal operator, required if maps are directly compared, not with CValueObject
         BLACKMISC_EXPORT friend bool operator !=(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b);
 
-        //! Operator == with CVariant
-        BLACKMISC_EXPORT friend bool operator ==(const CPropertyIndexVariantMap &valueMap, const CVariant &variant);
+        //! True if this map matches the value contained in the variant
+        bool matchesVariant(const CVariant &value) const;
 
-        //! Operator != with CVariant
-        BLACKMISC_EXPORT friend bool operator !=(const CPropertyIndexVariantMap &valueMap, const CVariant &variant);
-
-        //! Operator == with CVariant
-        BLACKMISC_EXPORT friend bool operator ==(const CVariant &variant, const CPropertyIndexVariantMap &valueMap);
-
-        //! Operator != with CVariant
-        BLACKMISC_EXPORT friend bool operator !=(const CVariant &variant, const CPropertyIndexVariantMap &valueMap);
-
-        //! Operator == with CValueObject
-        //! \todo Still needed?
-        template <class T, class = typename std::enable_if<QMetaTypeId<T>::Defined>::type>
-        friend bool operator ==(const CPropertyIndexVariantMap &valueMap, const T &valueObject) { return valueMap == CVariant::from(valueObject); }
-
-        //! Operator != with CValueObject
-        //! \todo Still needed?
-        template <class T, class = typename std::enable_if<QMetaTypeId<T>::Defined>::type>
-        friend bool operator !=(const CPropertyIndexVariantMap &valueMap, const T &valueObject) { return valueMap != CVariant::from(valueObject); }
-
-        //! Operator == with CValueObject
-        //! \todo Still needed?
-        template <class T, class = typename std::enable_if<QMetaTypeId<T>::Defined>::type>
-        friend bool operator ==(const T &valueObject, const CPropertyIndexVariantMap &valueMap) { return valueMap == CVariant::from(valueObject); }
-
-        //! Operator != with CValueObject
-        //! \todo Still needed?
-        template <class T, class = typename std::enable_if<QMetaTypeId<T>::Defined>::type>
-        friend bool operator !=(const T &valueObject, const CPropertyIndexVariantMap &valueMap) { return valueMap != CVariant::from(valueObject); }
+        //! True if this map matches the value
+        template <typename T> bool matches(const T &value) const { return matchesVariant(CVariant::from(value)); }
 
         //! Map
         const QMap<CPropertyIndex, CVariant> &map() const { return this->m_values; }
@@ -301,6 +275,12 @@ namespace BlackMisc
             return derived()->propertyByIndex(index) == compareValue;
         }
     } // Mixin
+
+    template <class T>
+    bool Predicates::Private::Matches::operator()(const T &value) const
+    {
+        return m_map.matches(value);
+    }
 
 }
 

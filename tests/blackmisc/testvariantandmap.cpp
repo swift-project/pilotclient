@@ -100,9 +100,9 @@ namespace BlackMiscTest
 
         // compare
 
-        QVERIFY2(vmWildcard == station1, "Station should be equal to wildcard");
-        QVERIFY2(station1 != vmNoWildcard, "Station should not be equal to empty list");
-        QVERIFY2(station1 == vm, "Controller should match");
+        QVERIFY2(vmWildcard.matches(station1), "Station should be equal to wildcard");
+        QVERIFY2(!vmNoWildcard.matches(station1), "Station should not be equal to empty list");
+        QVERIFY2(vm.matches(station1), "Controller should match");
         QVERIFY2(vmWildcard == vmCopy, "Maps should be equal");
         QVERIFY2(qHash(vmWildcard) == qHash(vmCopy), "Hashs should be equal (simple)");
 

@@ -31,10 +31,10 @@ namespace BlackMisc
         return !(b == a);
     }
 
-    bool operator==(const CPropertyIndexVariantMap &indexMap, const CVariant &variant)
+    bool CPropertyIndexVariantMap::matchesVariant(const CVariant &variant) const
     {
-        if (indexMap.isEmpty()) return indexMap.isWildcard();
-        const auto &map = indexMap.map();
+        if (this->isEmpty()) return this->isWildcard();
+        const auto &map = this->map();
         for (auto it = map.begin(); it != map.end(); ++it)
         {
             // QVariant cannot be compared directly
@@ -43,21 +43,6 @@ namespace BlackMisc
             if (p != v) return false;
         }
         return true;
-    }
-
-    bool operator!=(const CPropertyIndexVariantMap &indexMap, const CVariant &variant)
-    {
-        return !(indexMap == variant);
-    }
-
-    bool operator==(const CVariant &variant, const CPropertyIndexVariantMap &valueMap)
-    {
-        return valueMap == variant;
-    }
-
-    bool operator!=(const CVariant &variant, const CPropertyIndexVariantMap &valueMap)
-    {
-        return !(valueMap == variant);
     }
 
     QString CPropertyIndexVariantMap::convertToQString(bool i18n) const

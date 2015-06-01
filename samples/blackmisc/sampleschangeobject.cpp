@@ -70,7 +70,7 @@ namespace BlackMiscTest
         // now Jane's time is over
         CPropertyIndexVariantMap anotherController;
         anotherController.addValue(CAtcStation::IndexController, CVariant::fromValue(CUser("445566", "Fuzzy")));
-        atcList.applyIf(BlackMisc::Predicates::Equals(newController), anotherController);
+        atcList.applyIf(BlackMisc::Predicates::Matches(newController), anotherController);
 
         qDebug() << "-- after update via value map";
         qDebug() << atcList.toQString();
