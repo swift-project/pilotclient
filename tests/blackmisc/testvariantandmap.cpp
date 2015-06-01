@@ -64,10 +64,10 @@ namespace BlackMiscTest
 
         QVERIFY2(station1 == station2, "Station should be equal");
         QVERIFY2(station1 != station3, "Station should not be equal");
-        QVERIFY2(station1qv == station1, "Station should be equal (CVariant)");
-        QVERIFY2(station1 == station1qv, "Station should be equal (CVariant)");
-        QVERIFY2(station2 == station1qv, "Station should be equal (CVariant)");
-        QVERIFY2(station3 != station1qv, "Station should be equal (CVariant)");
+        QVERIFY2(station1qv == CVariant::from(station1), "Station should be equal (CVariant)");
+        QVERIFY2(CVariant::from(station1) == station1qv, "Station should be equal (CVariant)");
+        QVERIFY2(CVariant::from(station2) == station1qv, "Station should be equal (CVariant)");
+        QVERIFY2(CVariant::from(station3) != station1qv, "Station should be equal (CVariant)");
 
         QVERIFY2(compare(station1, station1) == 0, "Station should be equal");
         QVERIFY2(compare(station1, station2) == 0, "Station should be equal");

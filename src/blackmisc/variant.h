@@ -291,35 +291,6 @@ namespace BlackMisc
         uint getValueHash() const;
     };
 
-    //! Compare stored value of CVariant with any CValueObject derived class.
-    template <class T, class = typename std::enable_if<QMetaTypeId<T>::Defined>::type>
-    bool operator ==(const T &value, const CVariant &variant)
-    {
-        if (variant.canConvert<T>()) { return variant.value<T>() == value; }
-        return false;
-    }
-
-    //! Compare stored value of CVariant with any CValueObject derived class.
-    template <class T, class = typename std::enable_if<QMetaTypeId<T>::Defined>::type>
-    bool operator !=(const T &value, const CVariant &variant)
-    {
-        return !(value == variant);
-    }
-
-    //! Compare stored value of CVariant with any CValueObject derived class.
-    template <class T, class = typename std::enable_if<QMetaTypeId<T>::Defined>::type>
-    bool operator ==(const CVariant &variant, const T &value)
-    {
-        return value == variant;
-    }
-
-    //! Compare stored value of CVariant with any CValueObject derived class.
-    template <class T, class = typename std::enable_if<QMetaTypeId<T>::Defined>::type>
-    bool operator !=(const CVariant &variant, const T &value)
-    {
-        return !(value == variant);
-    }
-
     namespace Private
     {
         //! \private Needed so we can copy forward-declared CVariant.
