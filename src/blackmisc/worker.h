@@ -164,6 +164,10 @@ namespace BlackMisc
             if (m_finished) { ifFunctor(); } else { elseFunctor(); }
         }
 
+        //! Blocks until the task is finished.
+        //! \threadsafe
+        void waitForFinished();
+
     signals:
         //! Emitted when the task is finished.
         void finished();

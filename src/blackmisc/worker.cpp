@@ -8,6 +8,7 @@
  */
 
 #include "worker.h"
+#include <QWaitCondition>
 
 namespace BlackMisc
 {
@@ -38,6 +39,19 @@ namespace BlackMisc
         moveToThread(ownThread->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
         QMetaObject::invokeMethod(ownThread, "deleteLater");
         QMetaObject::invokeMethod(this, "deleteLater");
+    }
+
+    void CWorkerBase::waitForFinished()
+    {
+        QMutex mutex;
+        QMutexLocker waitCondLock(&mutex);
+        QWaitCondition waitCond;
+        {
+            QMutexLocker finishedLock(&m_finishedMutex);
+            if (m_finished) { return; }
+            then([ & ] { mutex.lock(); mutex.unlock(); waitCond.wakeAll(); });
+        }
+        waitCond.wait(&mutex);
     }
 
     void CContinuousWorker::start(QThread::Priority priority)
