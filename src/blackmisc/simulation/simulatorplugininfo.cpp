@@ -8,7 +8,6 @@
  */
 
 #include "simulatorplugininfo.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 
 using namespace BlackMisc;
 
@@ -54,10 +53,21 @@ namespace BlackMisc
             return m_identifier.isEmpty();
         }
 
+        bool CSimulatorPluginInfo::isAuto() const
+        {
+            return (*this) == autoPlugin();
+        }
+
         QString CSimulatorPluginInfo::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
             return QString("%1 (%2)").arg(m_name, m_identifier);
+        }
+
+        const CSimulatorPluginInfo &CSimulatorPluginInfo::autoPlugin()
+        {
+            static const CSimulatorPluginInfo p("auto", "auto", "auto", "automatic plugin selection", false);
+            return p;
         }
     } // ns
 } // ns

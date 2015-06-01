@@ -13,7 +13,6 @@
 #define BLACKMISC_SIMULATION_SIMULATORPLUGININFO_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/valueobject.h"
 
 namespace BlackMisc
@@ -60,9 +59,6 @@ namespace BlackMisc
             //! Unspecified sim is considered as invalid.
             bool isValid() const { return m_valid; }
 
-            //! Equals
-            bool operator==(const CSimulatorPluginInfo &other) { return getIdentifier() == other.getIdentifier(); }
-
             //! Identifier
             const QString &getIdentifier() const { return m_identifier; }
 
@@ -75,8 +71,14 @@ namespace BlackMisc
             //! Description
             const QString &getDescription() const { return m_description; }
 
+            //! Special info of type auto?
+            bool isAuto() const;
+
             //! \copydoc CValueObject::convertToQString
             QString convertToQString(bool i18n = false) const;
+
+            //! Info representing a entry representing automatic plugin selection
+            static const CSimulatorPluginInfo &autoPlugin();
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CSimulatorPluginInfo)
@@ -90,11 +92,11 @@ namespace BlackMisc
 } // ns
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Simulation::CSimulatorPluginInfo, (
-                                   attr(o.m_identifier),
-                                   attr(o.m_name),
-                                   attr(o.m_simulator),
-                                   attr(o.m_description),
-                                   attr(o.m_valid)
+                                   attr(o.m_identifier, flags <CaseInsensitiveComparison> ()),
+                                   attr(o.m_name, flags < DisabledForComparison | DisabledForHashing > ()),
+                                   attr(o.m_simulator, flags < DisabledForComparison | DisabledForHashing > ()),
+                                   attr(o.m_description, flags < DisabledForComparison | DisabledForHashing > ()),
+                                   attr(o.m_valid, flags < DisabledForComparison | DisabledForHashing > ())
                                ))
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorPluginInfo)
 
