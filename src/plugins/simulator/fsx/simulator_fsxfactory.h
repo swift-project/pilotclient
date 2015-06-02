@@ -24,7 +24,9 @@ namespace BlackSimPlugin
     namespace Fsx
     {
         //! Factory implementation to create CSimulatorFsx instances
-        class CSimulatorFsxFactory : public QObject, public BlackCore::ISimulatorFactory
+        class CSimulatorFsxFactory :
+            public QObject,
+            public BlackCore::ISimulatorFactory
         {
             Q_OBJECT
             Q_PLUGIN_METADATA(IID "org.swift-project.blackcore.simulatorinterface" FILE "simulator_fsx.json")
@@ -38,7 +40,7 @@ namespace BlackSimPlugin
                                                   BlackMisc::IPluginStorageProvider *pluginStorageProvider) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::getListener
-            virtual BlackCore::ISimulatorListener *createListener(QObject *parent = nullptr) override;
+            virtual BlackCore::ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info, QObject *parent = nullptr) override;
         };
 
     } // namespace

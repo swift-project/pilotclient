@@ -327,8 +327,8 @@ namespace BlackSimPlugin
             return exclude;
         }
 
-        CSimulatorFs9Listener::CSimulatorFs9Listener(QObject *parent) :
-            BlackCore::ISimulatorListener(parent),
+        CSimulatorFs9Listener::CSimulatorFs9Listener(const CSimulatorPluginInfo &info, QObject *parent) :
+            BlackCore::ISimulatorListener(info, parent),
             m_timer(new QTimer(this))
         {
             Q_CONSTEXPR int QueryInterval = 5 * 1000; // 5 seconds
@@ -353,7 +353,7 @@ namespace BlackSimPlugin
 
                 if (!m_isStarted && fs9Host->isConnected())
                 {
-                    emit simulatorStarted();
+                    emit simulatorStarted(getPluginInfo());
                     m_isStarted = true;
                     m_isConnecting = false;
                 }
@@ -402,9 +402,9 @@ namespace BlackSimPlugin
             return new CSimulatorFs9(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, this);
         }
 
-        BlackCore::ISimulatorListener *CSimulatorFs9Factory::createListener(QObject *parent)
+        BlackCore::ISimulatorListener *CSimulatorFs9Factory::createListener(const CSimulatorPluginInfo &info, QObject *parent)
         {
-            return new CSimulatorFs9Listener(parent);
+            return new CSimulatorFs9Listener(info, parent);
         }
 
     } // namespace

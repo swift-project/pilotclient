@@ -217,7 +217,7 @@ namespace BlackSimPlugin
 
         public:
             //! Constructor
-            CSimulatorFsxListener(QObject *parent);
+            CSimulatorFsxListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info, QObject *parent);
 
         public slots:
             //! \copydoc BlackCore::ISimulatorListener::start

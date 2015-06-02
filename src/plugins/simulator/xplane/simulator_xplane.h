@@ -186,7 +186,7 @@ namespace BlackSimPlugin
 
         public:
             //! Constructor
-            CSimulatorXPlaneListener(QObject *parent);
+            CSimulatorXPlaneListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info, QObject *parent);
 
         public slots:
             //! \copydoc BlackCore::ISimulatorListener::start
@@ -205,7 +205,6 @@ namespace BlackSimPlugin
         private:
             QDBusConnection m_conn { "default" };
             QDBusServiceWatcher *m_watcher { nullptr };
-
         };
 
         //! Factory for creating CSimulatorXPlane instance
@@ -223,7 +222,7 @@ namespace BlackSimPlugin
                                                   BlackMisc::IPluginStorageProvider *pluginStorageProvider) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::createListener
-            virtual BlackCore::ISimulatorListener *createListener(QObject *parent = nullptr) override { return new CSimulatorXPlaneListener(parent); }
+            virtual BlackCore::ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info, QObject *parent = nullptr) override { return new CSimulatorXPlaneListener(info, parent); }
         };
 
     } // ns

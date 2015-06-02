@@ -40,10 +40,10 @@ namespace BlackSimPlugin
     namespace Fsx
     {
         CSimulatorFsx::CSimulatorFsx(const CSimulatorPluginInfo &info,
-            IOwnAircraftProvider *ownAircraftProvider,
-            IRemoteAircraftProvider *remoteAircraftProvider,
-            IPluginStorageProvider *pluginStorageProvider,
-            QObject *parent) :
+                                     IOwnAircraftProvider *ownAircraftProvider,
+                                     IRemoteAircraftProvider *remoteAircraftProvider,
+                                     IPluginStorageProvider *pluginStorageProvider,
+                                     QObject *parent) :
             CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider,
                                simObjectsDir(), excludeDirectories(), parent)
         {
@@ -54,11 +54,11 @@ namespace BlackSimPlugin
             m_useFsuipc = false; // do not use FSUIPC at the moment with FSX
             this->m_interpolator = new CInterpolatorLinear(remoteAircraftProvider, this);
             m_modelMatcher.setDefaultModel(CAircraftModel(
-                "Boeing 737-800 Paint1",
-                CAircraftModel::TypeModelMatchingDefaultModel,
-                "B737-800 default model",
-                CAircraftIcaoData(CAircraftIcaoCode("B738", "L2J"), CAirlineIcaoCode(), "FFFFFF")
-            ));
+                                               "Boeing 737-800 Paint1",
+                                               CAircraftModel::TypeModelMatchingDefaultModel,
+                                               "B737-800 default model",
+                                               CAircraftIcaoData(CAircraftIcaoCode("B738", "L2J"), CAirlineIcaoCode(), "FFFFFF")
+                                           ));
         }
 
         CSimulatorFsx::~CSimulatorFsx()
@@ -860,7 +860,8 @@ namespace BlackSimPlugin
             return exclude;
         }
 
-        CSimulatorFsxListener::CSimulatorFsxListener(QObject *parent) : ISimulatorListener(parent),
+        CSimulatorFsxListener::CSimulatorFsxListener(const CSimulatorPluginInfo &info, QObject *parent) :
+            ISimulatorListener(info, parent),
             m_timer(new QTimer(this))
         {
             Q_CONSTEXPR int QueryInterval = 5 * 1000; // 5 seconds
@@ -873,8 +874,7 @@ namespace BlackSimPlugin
                 HANDLE hSimConnect;
                 HRESULT result = SimConnect_Open(&hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0);
                 SimConnect_Close(hSimConnect);
-
-                if (result == S_OK) { emit simulatorStarted(); }
+                if (result == S_OK) { emit simulatorStarted(this->getPluginInfo()); }
             });
         }
 

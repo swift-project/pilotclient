@@ -162,7 +162,7 @@ namespace BlackCore
         void ps_textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);
 
         //! Listener reports the simulator has started
-        void ps_simulatorStarted(QObject *listener);
+        void ps_simulatorStarted(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
         //! Simulator has changed cockpit
         void ps_cockpitChangedFromSimulator(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
@@ -225,7 +225,6 @@ namespace BlackCore
         QList<PluginData> m_simulatorPlugins;
         PluginData *m_simulatorPlugin = nullptr; //!< Currently loaded simulator plugin
         BlackMisc::CRegularThread m_listenersThread;
-        QSignalMapper *m_mapper = nullptr;
     };
 
 } // namespace

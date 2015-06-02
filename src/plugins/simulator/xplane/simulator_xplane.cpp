@@ -430,7 +430,7 @@ namespace BlackSimPlugin
             return true;
         }
 
-        BlackCore::ISimulator *CSimulatorXPlaneFactory::create(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
+        BlackCore::ISimulator *CSimulatorXPlaneFactory::create(const CSimulatorPluginInfo &info,
                 IOwnAircraftProvider *ownAircraftProvider,
                 IRemoteAircraftProvider *renderedAircraftProvider,
                 IPluginStorageProvider *pluginStorageProvider)
@@ -438,19 +438,15 @@ namespace BlackSimPlugin
             return new CSimulatorXPlane(info, ownAircraftProvider, renderedAircraftProvider, pluginStorageProvider, this);
         }
 
-        CSimulatorXPlaneListener::CSimulatorXPlaneListener(QObject *parent): ISimulatorListener(parent)
-        {
-
-        }
+        CSimulatorXPlaneListener::CSimulatorXPlaneListener(const CSimulatorPluginInfo &info, QObject *parent): ISimulatorListener(info, parent)
+        { }
 
         void CSimulatorXPlaneListener::start()
         {
-            if (m_watcher) // already started
-                return;
-
+            if (m_watcher) { return; } // already started
             if (isXBusRunning())
             {
-                emit simulatorStarted();
+                emit simulatorStarted(getPluginInfo());
             }
             else
             {
@@ -486,7 +482,9 @@ namespace BlackSimPlugin
         void CSimulatorXPlaneListener::ps_serviceRegistered(const QString &serviceName)
         {
             if (serviceName == xbusServiceName())
-                emit simulatorStarted();
+            {
+                emit simulatorStarted(getPluginInfo());
+            }
         }
 
     } // namespace

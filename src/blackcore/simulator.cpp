@@ -59,7 +59,8 @@ namespace BlackCore
         }
     }
 
-    ISimulatorListener::ISimulatorListener(QObject *parent) : QObject(parent)
+    ISimulatorListener::ISimulatorListener(const CSimulatorPluginInfo &info, QObject *parent) :
+        QObject(parent), m_info(info)
     { }
 
 } // namespace

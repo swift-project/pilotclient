@@ -34,13 +34,10 @@ using namespace BlackMisc::Simulation::Settings;
 namespace BlackCore
 {
     CContextSimulator::CContextSimulator(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
-        IContextSimulator(mode, runtime),
-        m_mapper(new QSignalMapper(this))
+        IContextSimulator(mode, runtime)
     {
         this->setObjectName("CContextSimulator");
         findSimulatorPlugins();
-        // Maps listener instance
-        connect(m_mapper, static_cast<void (QSignalMapper::*)(QObject *)>(&QSignalMapper::mapped), this, &CContextSimulator::ps_simulatorStarted);
     }
 
     CContextSimulator::~CContextSimulator()
@@ -489,15 +486,13 @@ namespace BlackCore
             ISimulatorFactory *factory = getSimulatorFactory(simulatorInfo);
             Q_ASSERT(factory);
 
-            plugin->listener = factory->createListener();
-            bool c = connect(plugin->listener, &ISimulatorListener::simulatorStarted,
-                             m_mapper, static_cast<void (QSignalMapper::*)()> (&QSignalMapper::map));
+            plugin->listener = factory->createListener(simulatorInfo, this);
+            bool c = connect(plugin->listener, &ISimulatorListener::simulatorStarted, this, &CContextSimulator::ps_simulatorStarted);
             if (!c)
             {
                 CLogMessage(this).error("Unable to use '%1'") << simulatorInfo.toQString();
                 return;
             }
-            m_mapper->setMapping(plugin->listener, plugin->listener);
             plugin->listener->moveToThread(&m_listenersThread);
         }
 
@@ -509,7 +504,9 @@ namespace BlackCore
             m_listenersThread.start(QThread::LowPriority);
         }
 
-        QMetaObject::invokeMethod(listener, "start");
+        bool s = QMetaObject::invokeMethod(listener, "start");
+        Q_ASSERT_X(s, Q_FUNC_INFO, "cannot invoke method");
+        Q_UNUSED(s);
         CLogMessage(this).debug() << "Listening for simulator: " << simulatorInfo.toQString(true);
     }
 
@@ -572,8 +569,7 @@ namespace BlackCore
 
     void CContextSimulator::ps_removedRemoteAircraft(const CCallsign &callsign)
     {
-        // todo:
-        // This was previously an assert and it should be one again in the future.
+        // \fixme: This was previously an assert and it should be one again in the future.
         // This slot should not even be called when no simulator is available.
         if (!m_simulatorPlugin)
         {
@@ -695,25 +691,10 @@ namespace BlackCore
         this->m_simulatorPlugin->simulator->highlightAircraft(aircraftToHighlight, enableHighlight, displayTime);
     }
 
-    void CContextSimulator::ps_simulatorStarted(QObject *listener)
+    void CContextSimulator::ps_simulatorStarted(const CSimulatorPluginInfo &info)
     {
-        Q_ASSERT(listener);
-        Q_ASSERT(listener->inherits("BlackCore::ISimulatorListener"));
-
-        /* Find caller */
-        PluginData *plugin = [this](QObject * listener)
-        {
-            auto it = std::find_if(m_simulatorPlugins.begin(), m_simulatorPlugins.end(), [listener](const PluginData & plugin)
-            {
-                return plugin.listener == listener;
-            });
-            return &(*it);
-        }(listener);
-        Q_ASSERT(plugin);
-
-        CLogMessage(this).debug() << plugin->info.toQString() << "started";
         stopSimulatorListeners();
-        loadSimulatorPlugin(plugin->info, false);
+        loadSimulatorPlugin(info, false);
     }
 
     void CContextSimulator::findSimulatorPlugins()
