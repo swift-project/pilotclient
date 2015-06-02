@@ -30,7 +30,7 @@ namespace BlackMisc
         Q_OBJECT
     public:
         CSingleShotController(QObject *parent) : QObject(parent), m_strongRef(QSharedPointer<int>::create(0)) {}
-        ~CSingleShotController() { auto wr = weakRef(); m_strongRef.clear(); waitForNull(wr); }
+        ~CSingleShotController() Q_DECL_NOEXCEPT { auto wr = weakRef(); m_strongRef.clear(); waitForNull(wr); }
         QWeakPointer<int> weakRef() const { return m_strongRef.toWeakRef(); }
     private:
         static void waitForNull(QWeakPointer<int> wp) { while (wp) { QThread::msleep(10); } }
@@ -82,7 +82,7 @@ namespace BlackMisc
         CRegularThread(QObject *parent = nullptr) : QThread(parent) {}
 
         //! Destructor
-        ~CRegularThread()
+        ~CRegularThread() Q_DECL_NOEXCEPT
         {
             quit();
             wait();
@@ -166,7 +166,7 @@ namespace BlackMisc
 
         //! Blocks until the task is finished.
         //! \threadsafe
-        void waitForFinished();
+        void waitForFinished() Q_DECL_NOEXCEPT;
 
     signals:
         //! Emitted when the task is finished.
@@ -238,11 +238,11 @@ namespace BlackMisc
         //! Stops the thread the next time around its event loop.
         //! The thread and the worker will then be deleted.
         //! \threadsafe
-        void quit();
+        void quit() Q_DECL_NOEXCEPT;
 
         //! Calls quit() and blocks until the thread is finished.
         //! \threadsafe Will deadlock if called by the worker thread.
-        void quitAndWait();
+        void quitAndWait() Q_DECL_NOEXCEPT;
 
     protected slots:
         //! Called when the thread is started.

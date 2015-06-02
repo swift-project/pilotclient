@@ -41,7 +41,7 @@ namespace BlackMisc
         QMetaObject::invokeMethod(this, "deleteLater");
     }
 
-    void CWorkerBase::waitForFinished()
+    void CWorkerBase::waitForFinished() Q_DECL_NOEXCEPT
     {
         QMutex mutex;
         QMutexLocker waitCondLock(&mutex);
@@ -75,12 +75,12 @@ namespace BlackMisc
         thread->start(priority);
     }
 
-    void CContinuousWorker::quit()
+    void CContinuousWorker::quit() Q_DECL_NOEXCEPT
     {
         thread()->quit();
     }
 
-    void CContinuousWorker::quitAndWait()
+    void CContinuousWorker::quitAndWait() Q_DECL_NOEXCEPT
     {
         auto *ownThread = thread();
         quit();
