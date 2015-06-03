@@ -74,11 +74,7 @@ namespace BlackMisc
         template <class OBJ, class CONTAINER>
         OBJ ICallsignObjectList<OBJ, CONTAINER>::findFirstByCallsign(const CCallsign &callsign, const OBJ &ifNotFound) const
         {
-            for (const OBJ &callsignObj : this->container())
-            {
-                if (callsignObj.getCallsign() == callsign) { return callsignObj; }
-            }
-            return ifNotFound;
+            return this->container().findFirstByOrDefault(&OBJ::getCallsign, callsign, ifNotFound);
         }
 
         template <class OBJ, class CONTAINER>

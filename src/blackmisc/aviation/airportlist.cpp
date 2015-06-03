@@ -32,7 +32,7 @@ namespace BlackMisc
 
         CAirport CAirportList::findFirstByIcao(const CAirportIcaoCode &icao, const CAirport &ifNotFound) const
         {
-            return this->findByIcao(icao).frontOrDefault(ifNotFound);
+            return this->findFirstByOrDefault(&CAirport::getIcao, icao, ifNotFound);
         }
 
     } // namespace
