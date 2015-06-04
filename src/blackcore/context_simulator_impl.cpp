@@ -14,6 +14,7 @@
 #include "context_application.h"
 #include "context_network_impl.h"
 #include "context_runtime.h"
+#include "blackcore/blackcorefreefunctions.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/loghandler.h"
@@ -130,7 +131,7 @@ namespace BlackCore
 
     void CContextSimulator::stopSimulatorPlugin()
     {
-        this->unloadSimulatorPlugin(false);
+        this->unloadSimulatorPlugin();
     }
 
     int CContextSimulator::getSimulatorStatus() const
@@ -355,6 +356,7 @@ namespace BlackCore
         Q_ASSERT(getIContextApplication());
         Q_ASSERT(getIContextApplication()->isUsingImplementingObject());
         Q_ASSERT(!simulatorInfo.isUnspecified());
+        Q_ASSERT(BlackCore::isCurrentThreadApplicationThread()); // only run in main thread
 
         // error if we do not have any plugins
         if (m_simulatorPlugins.isEmpty())
@@ -364,12 +366,14 @@ namespace BlackCore
         }
 
         // Is the plugin already loaded?
-        if (m_simulatorPlugin && m_simulatorPlugin->info == simulatorInfo)
+        if (m_simulatorPlugin &&
+                (m_simulatorPlugin->info == simulatorInfo || simulatorInfo.isAuto()))
         {
             return true;
         }
 
-        unloadSimulatorPlugin(false); // old plugin unloaded
+        stopSimulatorListeners(); // we make sure all listeners are stopped and restart those we need
+        unloadSimulatorPlugin(); // old plugin unloaded
 
         // now we have a state where no driver is loaded
         if (withListener)
@@ -393,7 +397,7 @@ namespace BlackCore
         }
 
         ISimulatorFactory *factory = getSimulatorFactory(simulatorInfo);
-        Q_ASSERT(factory);
+        Q_ASSERT_X(factory, Q_FUNC_INFO, "no factory");
 
         // We assume we run in the same process as the own aircraft context
         // Hence we pass in memory reference to own aircraft object
@@ -428,7 +432,7 @@ namespace BlackCore
         Q_ASSERT(c);
         Q_UNUSED(c);
 
-        // connect with network
+        // use network to initally add aircraft
         IContextNetwork *networkContext = this->getIContextNetwork();
         Q_ASSERT(networkContext);
         Q_ASSERT(networkContext->isLocalObject());
@@ -440,7 +444,7 @@ namespace BlackCore
             m_simulatorPlugin->simulator->logicallyAddRemoteAircraft(simulatedAircraft);
         }
 
-        // try to connect
+        // try to connect to simulator
         m_simulatorPlugin->simulator->connectTo();
         emit simulatorPluginChanged(this->m_simulatorPlugin->info);
         CLogMessage(this).info("Simulator plugin loaded: %1") << this->m_simulatorPlugin->info.toQString(true);
@@ -471,7 +475,7 @@ namespace BlackCore
         if (this->m_simulatorPlugin)
         {
             // wrong or disconnected plugin, we start from the scratch
-            this->unloadSimulatorPlugin(false);
+            this->unloadSimulatorPlugin();
         }
 
         PluginData *plugin = findPlugin(simulatorInfo);
@@ -483,31 +487,32 @@ namespace BlackCore
 
         if (!plugin->listener)
         {
-            ISimulatorFactory *factory = getSimulatorFactory(simulatorInfo);
-            Q_ASSERT(factory);
+            if (!m_listenersThread.isRunning())
+            {
+                m_listenersThread.setObjectName("CContextSimulator:Thread for listeners");
+                m_listenersThread.start(QThread::LowPriority);
+            }
 
-            plugin->listener = factory->createListener(simulatorInfo, this);
+            ISimulatorFactory *factory = getSimulatorFactory(simulatorInfo);
+            Q_ASSERT_X(factory, Q_FUNC_INFO, "No simulator factory");
+
+            plugin->listener = factory->createListener(simulatorInfo);
             bool c = connect(plugin->listener, &ISimulatorListener::simulatorStarted, this, &CContextSimulator::ps_simulatorStarted);
             if (!c)
             {
                 CLogMessage(this).error("Unable to use '%1'") << simulatorInfo.toQString();
                 return;
             }
+            Q_ASSERT_X(!plugin->listener->parent(), Q_FUNC_INFO, "Objects with parent cannot be moved to thread");
             plugin->listener->moveToThread(&m_listenersThread);
         }
 
         ISimulatorListener *listener = plugin->listener;
         Q_ASSERT_X(listener, Q_FUNC_INFO, "No listener");
 
-        if (!m_listenersThread.isRunning())
-        {
-            m_listenersThread.start(QThread::LowPriority);
-        }
-
-        bool s = QMetaObject::invokeMethod(listener, "start");
+        bool s = QMetaObject::invokeMethod(listener, "start", Qt::QueuedConnection);
         Q_ASSERT_X(s, Q_FUNC_INFO, "cannot invoke method");
         Q_UNUSED(s);
-        CLogMessage(this).debug() << "Listening for simulator: " << simulatorInfo.toQString(true);
     }
 
     void CContextSimulator::listenForAllSimulators()
@@ -523,7 +528,7 @@ namespace BlackCore
         }
     }
 
-    void CContextSimulator::unloadSimulatorPlugin(bool startListeners)
+    void CContextSimulator::unloadSimulatorPlugin()
     {
         if (m_simulatorPlugin)
         {
@@ -542,11 +547,6 @@ namespace BlackCore
                 sim->deleteLater();
                 emit simulatorPluginChanged(CSimulatorPluginInfo());
             }
-        }
-
-        if (startListeners)
-        {
-            this->listenForAllSimulators();
         }
     }
 
@@ -587,14 +587,7 @@ namespace BlackCore
         if (!statusEnum.testFlag(ISimulator::Connected))
         {
             // we got disconnected, plugin no longer needed
-            unloadSimulatorPlugin(false);
-
-            // do not immediately listen again, but allow some time for the simulator to shutdown
-            // otherwise we risk reconnecting to a closing simulator
-            BlackMisc::singleShot(1000, QThread::currentThread(), [ = ]()
-            {
-                listenForAllSimulators();
-            });
+            unloadSimulatorPlugin();
         }
         emit simulatorStatusChanged(status);
     }

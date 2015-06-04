@@ -136,13 +136,16 @@ namespace BlackCore
         //! Override situation from current interpolator values, if any!
         bool setInitialAircraftSituation(BlackMisc::Simulation::CSimulatedAircraft &aircraft) const;
 
+    protected:
+        IInterpolator *m_interpolator = nullptr;  //!< interpolator instance
+        bool m_pausedSimFreezesInterpolation = false; //!< paused simulator will also pause interpolation (so AI aircraft will hold)
+
+    private:
         bool m_debugMessages = false;             //!< Display debug messages
         bool m_blinkCycle = false;                //!< use for highlighting
-        bool m_pausedSimFreezesInterpolation = false; //!< paused simulator will also pause interpolation (so AI aircraft will hold)
-        IInterpolator *m_interpolator = nullptr;  //!< interpolator instance
         qint64 m_highlightEndTimeMsEpoch = 0;     //!< end highlighting
         int m_timerCounter = 0;                   //!< allows to calculate n seconds
-        QTimer m_oneSecondTimer{this};            //!< timer
+        QTimer m_oneSecondTimer {this};           //!< timer
         BlackMisc::Simulation::CSimulatorPluginInfo m_simulatorPluginInfo;   //!< info object
         BlackMisc::Simulation::CSimulatorSetup m_simulatorSetup;             //!< setup object
         BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft; //!< all other aircraft are to be ignored
@@ -150,9 +153,7 @@ namespace BlackCore
         int m_maxRenderedAircraft = MaxAircraftInfinite;                     //!< max.rendered aircraft
         BlackMisc::PhysicalQuantities::CLength m_maxRenderedDistance { 0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()}; //!< max.distance for rendering
         QList<QMetaObject::Connection> m_remoteAircraftProviderConnections;  //!< connected signal/slots
-
     };
-
 } // namespace
 
 #endif // guard

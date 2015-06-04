@@ -40,7 +40,7 @@ namespace BlackSimPlugin
                                                   BlackMisc::IPluginStorageProvider *pluginStorageProvider) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::getListener
-            virtual BlackCore::ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info, QObject *parent = nullptr) override;
+            virtual BlackCore::ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) override;
         };
 
     } // namespace

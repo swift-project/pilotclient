@@ -79,19 +79,23 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsx::connectTo()
         {
-            connect(&m_watcherConnect, SIGNAL(finished()), this, SLOT(ps_connectToFinished()));
-
-            // simplified connect, timers and signals not in different thread
-            auto asyncConnectFunc = [&]() -> bool
+            if (this->isConnected()) { return true; }
+            if (FAILED(SimConnect_Open(&m_hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0)))
             {
-                if (FAILED(SimConnect_Open(&m_hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0))) { return false; }
-                if (m_useFsuipc) { this->m_fsuipc->connect(); } // FSUIPC too
-                return true;
-            };
+                // reset state as expected for unconnected
+                if (m_simconnectTimerId >= 0) { killTimer(m_simconnectTimerId); }
+                m_simConnected = false;
+                m_simSimulating = false;
+                return false;
+            }
+            if (m_useFsuipc) { this->m_fsuipc->connect(); } // FSUIPC too
 
-            QFuture<bool> result = QtConcurrent::run(asyncConnectFunc);
-            m_watcherConnect.setFuture(result);
-
+            // set structures and move on
+            initEvents();
+            initDataDefinitionsWhenConnected();
+            m_simconnectTimerId = startTimer(10);
+            m_simConnected = true;
+            emitSimulatorCombinedStatus();
             return true;
         }
 
@@ -500,25 +504,6 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorFsx::ps_connectToFinished()
-        {
-            if (m_watcherConnect.result())
-            {
-                initEvents();
-                initDataDefinitionsWhenConnected();
-                m_simconnectTimerId = startTimer(10);
-                m_simConnected = true;
-                emitSimulatorCombinedStatus();
-            }
-            else
-            {
-                if (m_simconnectTimerId >= 0) { killTimer(m_simconnectTimerId); }
-                m_simConnected = false;
-                m_simSimulating = false;
-                emitSimulatorCombinedStatus();
-            }
-        }
-
         bool CSimulatorFsx::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
         {
             // only remove from sim
@@ -860,22 +845,14 @@ namespace BlackSimPlugin
             return exclude;
         }
 
-        CSimulatorFsxListener::CSimulatorFsxListener(const CSimulatorPluginInfo &info, QObject *parent) :
-            ISimulatorListener(info, parent),
+        CSimulatorFsxListener::CSimulatorFsxListener(const CSimulatorPluginInfo &info) :
+            ISimulatorListener(info),
             m_timer(new QTimer(this))
         {
             Q_CONSTEXPR int QueryInterval = 5 * 1000; // 5 seconds
             m_timer->setInterval(QueryInterval);
-            this->setObjectName("CSimulatorFsxListener");
             this->m_timer->setObjectName(this->objectName().append(":m_timer"));
-
-            connect(m_timer, &QTimer::timeout, [this]()
-            {
-                HANDLE hSimConnect;
-                HRESULT result = SimConnect_Open(&hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0);
-                SimConnect_Close(hSimConnect);
-                if (result == S_OK) { emit simulatorStarted(this->getPluginInfo()); }
-            });
+            connect(m_timer, &QTimer::timeout, this, &CSimulatorFsxListener::ps_checkConnection);
         }
 
         void CSimulatorFsxListener::start()
@@ -886,6 +863,18 @@ namespace BlackSimPlugin
         void CSimulatorFsxListener::stop()
         {
             m_timer->stop();
+        }
+
+        void CSimulatorFsxListener::ps_checkConnection()
+        {
+            Q_ASSERT_X(!BlackCore::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background");
+            HANDLE hSimConnect;
+            HRESULT result = SimConnect_Open(&hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0);
+            SimConnect_Close(hSimConnect);
+            if (result == S_OK)
+            {
+                emit simulatorStarted(this->getPluginInfo());
+            }
         }
 
     } // namespace

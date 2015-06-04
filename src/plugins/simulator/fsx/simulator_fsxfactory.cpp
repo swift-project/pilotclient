@@ -27,9 +27,9 @@ namespace BlackSimPlugin
             return new CSimulatorFsx(info, ownAircraftProvider, renderedAircraftProvider, pluginStorageProvider, this);
         }
 
-        BlackCore::ISimulatorListener *CSimulatorFsxFactory::createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info, QObject *parent)
+        BlackCore::ISimulatorListener *CSimulatorFsxFactory::createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info)
         {
-            return new CSimulatorFsxListener(info, parent);
+            return new CSimulatorFsxListener(info);
         }
 
     } // namespace

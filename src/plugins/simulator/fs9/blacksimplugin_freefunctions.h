@@ -61,7 +61,7 @@ namespace BlackSimPlugin
         MPPositionSlewMode aircraftSituationToFS9(const BlackMisc::Aviation::CAircraftSituation &situation);
 
         //! Print the direct play error
-        HRESULT printDirectPlayError(HRESULT error);
+        HRESULT logDirectPlayError(HRESULT error);
 
     }
 }

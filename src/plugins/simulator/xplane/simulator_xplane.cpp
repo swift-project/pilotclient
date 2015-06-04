@@ -158,12 +158,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::connectTo()
         {
-            if (isConnected())
-            {
-                qWarning("X-Plane already connected");
-                return true;
-            }
-
+            if (isConnected()) { return true; }
             m_conn = QDBusConnection::sessionBus(); // TODO make this configurable
             m_service = new CXBusServiceProxy(m_conn, this);
             m_traffic = new CXBusTrafficProxy(m_conn, this);
@@ -438,7 +433,7 @@ namespace BlackSimPlugin
             return new CSimulatorXPlane(info, ownAircraftProvider, renderedAircraftProvider, pluginStorageProvider, this);
         }
 
-        CSimulatorXPlaneListener::CSimulatorXPlaneListener(const CSimulatorPluginInfo &info, QObject *parent): ISimulatorListener(info, parent)
+        CSimulatorXPlaneListener::CSimulatorXPlaneListener(const CSimulatorPluginInfo &info): ISimulatorListener(info)
         { }
 
         void CSimulatorXPlaneListener::start()

@@ -59,8 +59,15 @@ namespace BlackCore
         }
     }
 
-    ISimulatorListener::ISimulatorListener(const CSimulatorPluginInfo &info, QObject *parent) :
-        QObject(parent), m_info(info)
-    { }
+    ISimulatorListener::ISimulatorListener(const CSimulatorPluginInfo &info) :
+        QObject(), m_info(info)
+    {
+        this->setObjectName("ISimulatorListener:" + info.toQString());
+
+        // stop listener after it reports simulator ready
+        bool s = connect(this, &ISimulatorListener::simulatorStarted, this, &ISimulatorListener::stop, Qt::QueuedConnection);
+        Q_ASSERT_X(s, Q_FUNC_INFO, "connect failed");
+        Q_UNUSED(s)
+    }
 
 } // namespace

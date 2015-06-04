@@ -74,6 +74,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFs9::connectTo()
         {
+            Q_ASSERT_X(fs9Host, Q_FUNC_INFO, "No FS9 host");
             if (!fs9Host->isConnected()) { return false; } // host not available, we quit
 
             Q_ASSERT_X(m_fsuipc,  Q_FUNC_INFO, "No FSUIPC");
@@ -327,21 +328,20 @@ namespace BlackSimPlugin
             return exclude;
         }
 
-        CSimulatorFs9Listener::CSimulatorFs9Listener(const CSimulatorPluginInfo &info, QObject *parent) :
-            BlackCore::ISimulatorListener(info, parent),
+        CSimulatorFs9Listener::CSimulatorFs9Listener(const CSimulatorPluginInfo &info) :
+            BlackCore::ISimulatorListener(info),
             m_timer(new QTimer(this))
         {
-            Q_CONSTEXPR int QueryInterval = 5 * 1000; // 5 seconds
+            const int QueryInterval = 5 * 1000; // 5 seconds
             m_timer->setInterval(QueryInterval);
+            m_timer->setObjectName(this->objectName() + ":m_timer");
 
             // Test whether we can lobby connect at all.
             bool canLobbyConnect = lobbyClient->canLobbyConnect();
 
             connect(m_timer, &QTimer::timeout, [this, canLobbyConnect]()
             {
-                if (fs9Host->getHostAddress().isEmpty()) // host not yet set up
-                    return;
-
+                if (fs9Host->getHostAddress().isEmpty()) { return; } // host not yet set up
                 if (canLobbyConnect)
                 {
                     if (m_isConnecting || lobbyClient->connectFs9ToHost(fs9Host->getHostAddress()) == S_OK)
@@ -402,9 +402,9 @@ namespace BlackSimPlugin
             return new CSimulatorFs9(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, this);
         }
 
-        BlackCore::ISimulatorListener *CSimulatorFs9Factory::createListener(const CSimulatorPluginInfo &info, QObject *parent)
+        BlackCore::ISimulatorListener *CSimulatorFs9Factory::createListener(const CSimulatorPluginInfo &info)
         {
-            return new CSimulatorFs9Listener(info, parent);
+            return new CSimulatorFs9Listener(info);
         }
 
     } // namespace

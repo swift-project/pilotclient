@@ -62,13 +62,13 @@ namespace BlackSimPlugin
                                              IID_IDirectPlay8Address,
                                              reinterpret_cast<void **>(&m_hostAddress))))
             {
-                printDirectPlayError(hr);
+                logDirectPlayError(hr);
                 return;
             }
 
             if (FAILED(hr = m_hostAddress->BuildFromURLA(hostAddress.toLatin1().data())))
             {
-                printDirectPlayError(hr);
+                logDirectPlayError(hr);
                 return;
             }
         }
@@ -132,7 +132,7 @@ namespace BlackSimPlugin
                             nullptr,                        // pAsyncHandle
                             DPNENUMHOSTS_SYNC)))            // dwFlags
             {
-                return printDirectPlayError(hr);
+                return logDirectPlayError(hr);
             }
             return hr;
         }
@@ -147,13 +147,13 @@ namespace BlackSimPlugin
                                              IID_IDirectPlay8Address,
                                              reinterpret_cast<void **>(&m_hostAddress))))
             {
-                return printDirectPlayError(hr);
+                return logDirectPlayError(hr);
             }
 
             // Set the SP for our Host Address
             if (FAILED(hr = m_hostAddress->SetSP(&CLSID_DP8SP_TCPIP)))
             {
-                return printDirectPlayError(hr);
+                return logDirectPlayError(hr);
             }
 
             // FIXME: Test if this is also working via network or if we have to use the IP address
@@ -164,7 +164,7 @@ namespace BlackSimPlugin
                             2 * (wcslen(hostname) + 1), /*bytes*/
                             DPNA_DATATYPE_STRING)))
             {
-                return printDirectPlayError(hr);
+                return logDirectPlayError(hr);
             }
 
             return hr;
@@ -173,13 +173,11 @@ namespace BlackSimPlugin
         HRESULT CFs9Client::connectToSession(const CCallsign &callsign)
         {
             HRESULT hr = S_OK;
-
-            if (m_clientStatus == Connected) return hr;
+            if (m_clientStatus == Connected) { return hr; }
 
             QMutexLocker locker(&m_mutexHostList);
 
             QScopedArrayPointer<wchar_t> wszPlayername(new wchar_t[callsign.toQString().size() + 1]);
-
             callsign.toQString().toWCharArray(wszPlayername.data());
             wszPlayername[callsign.toQString().size()] = 0;
 
@@ -197,7 +195,7 @@ namespace BlackSimPlugin
             m_player.pwszName = wszPlayername.data();
             if (FAILED(hr = m_directPlayPeer->SetPeerInfo(&m_player, nullptr, nullptr, DPNSETPEERINFO_SYNC)))
             {
-                return printDirectPlayError(hr);
+                return logDirectPlayError(hr);
             }
 
             // Now set up the Application Description
@@ -218,7 +216,7 @@ namespace BlackSimPlugin
                             nullptr,
                             DPNCONNECT_SYNC)))
             {
-                return printDirectPlayError(hr);
+                return logDirectPlayError(hr);
             }
 
             MPChangePlayerPlane mpChangePlayerPlane;
@@ -246,12 +244,11 @@ namespace BlackSimPlugin
         {
             HRESULT hr = S_OK;
 
-            if (m_clientStatus == Disconnected) return hr;
-
+            if (m_clientStatus == Disconnected) { return hr; }
             BlackMisc::CLogMessage(this).debug() << "Closing DirectPlay connection for " << m_callsign;
             if (FAILED(hr = m_directPlayPeer->Close(0)))
             {
-                return printDirectPlayError(hr);
+                return logDirectPlayError(hr);
             }
 
             m_clientStatus = Disconnected;

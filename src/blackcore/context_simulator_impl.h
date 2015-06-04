@@ -201,7 +201,7 @@ namespace BlackCore
         bool loadSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo, bool withListeners);
 
         //! Unload plugin, if desired restart listeners
-        void unloadSimulatorPlugin(bool startListeners);
+        void unloadSimulatorPlugin();
 
         //! Find and catalog all simulator plugins
         void findSimulatorPlugins();

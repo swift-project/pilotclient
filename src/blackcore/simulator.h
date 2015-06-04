@@ -245,7 +245,7 @@ namespace BlackCore
         //! Constructor
         //! \sa ISimulatorFactory::createListener().
         //! \note msvc2015: use inherited constructor
-        ISimulatorListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info, QObject *parent);
+        ISimulatorListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
         //! Destructor
         virtual ~ISimulatorListener() = default;
@@ -289,8 +289,7 @@ namespace BlackCore
             BlackMisc::IPluginStorageProvider *pluginStorageProvider) = 0;
 
         //! Simulator listener instance
-        virtual ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info, QObject *parent = nullptr) = 0;
-
+        virtual ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) = 0;
     };
 } // namespace
 

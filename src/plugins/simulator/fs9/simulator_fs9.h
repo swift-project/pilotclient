@@ -128,7 +128,7 @@ namespace BlackSimPlugin
 
         public:
             //! Constructor
-            CSimulatorFs9Listener(const BlackMisc::Simulation::CSimulatorPluginInfo &info, QObject *parent);
+            CSimulatorFs9Listener(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
         public slots:
             //! \copydoc BlackCore::ISimulatorListener::start
@@ -167,7 +167,7 @@ namespace BlackSimPlugin
                 BlackMisc::IPluginStorageProvider *pluginStorageProvider) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::createListener
-            virtual BlackCore::ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info, QObject *parent = nullptr) override;
+            virtual BlackCore::ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) override;
 
         };
     } // namespace Fs9

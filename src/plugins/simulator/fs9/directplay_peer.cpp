@@ -265,11 +265,11 @@ namespace BlackSimPlugin
                                              CLSCTX_INPROC_SERVER,
                                              IID_IDirectPlay8Address,
                                              reinterpret_cast<void **>(&m_deviceAddress))))
-                return printDirectPlayError(hr);
+                return logDirectPlayError(hr);
 
             // Set the SP for our Device Address
             if (FAILED(hr = m_deviceAddress->SetSP(&CLSID_DP8SP_TCPIP)))
-                return printDirectPlayError(hr);
+                return logDirectPlayError(hr);
 
             return S_OK;
         }

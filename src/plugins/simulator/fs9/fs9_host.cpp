@@ -43,7 +43,7 @@ namespace BlackSimPlugin
                 ZeroMemory( addresses.data(), dwNumAddresses * sizeof(LPDIRECTPLAY8ADDRESS) );
                 if (FAILED (hr = m_directPlayPeer->GetLocalHostAddresses(addresses.data(), &dwNumAddresses, 0)))
                 {
-                    printDirectPlayError(hr);
+                    logDirectPlayError(hr);
                     return address;
                 }
 
@@ -121,7 +121,7 @@ namespace BlackSimPlugin
             player.pwszName = wszPlayername.data();
             if (FAILED(hr = m_directPlayPeer->SetPeerInfo(&player, nullptr, nullptr, DPNSETPEERINFO_SYNC)))
             {
-                printDirectPlayError(hr);
+                logDirectPlayError(hr);
                 return hr;
             }
 
@@ -139,7 +139,7 @@ namespace BlackSimPlugin
                                                    nullptr,                          // Player Context
                                                    0)))                              // dwFlags
             {
-                printDirectPlayError(hr);
+                logDirectPlayError(hr);
                 return hr;
             }
             else
@@ -177,12 +177,12 @@ namespace BlackSimPlugin
             BlackMisc::CLogMessage(this).info("Hosting terminated!");
             if (FAILED(hr = m_directPlayPeer->TerminateSession(nullptr, 0, 0)))
             {
-                return printDirectPlayError(hr);
+                return logDirectPlayError(hr);
             }
 
             if (FAILED(hr = m_directPlayPeer->Close(0)))
             {
-                return printDirectPlayError(hr);
+                return logDirectPlayError(hr);
             }
 
             m_hostStatus = Terminated;

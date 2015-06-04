@@ -141,9 +141,6 @@ namespace BlackSimPlugin
             //! Dispatch SimConnect messages
             void ps_dispatch();
 
-            //! Called when asynchronous connection to Simconnect has finished
-            void ps_connectToFinished();
-
         private:
             //! Called when sim has started
             void onSimRunning();
@@ -202,7 +199,6 @@ namespace BlackSimPlugin
             int  m_dispatchErrors = 0;          //!< numer of dispatched failed, \sa ps_dispatch
             HANDLE  m_hSimConnect = nullptr;    //!< Handle to SimConnect object
             QHash<BlackMisc::Aviation::CCallsign, CSimConnectObject> m_simConnectObjects;
-            QFutureWatcher<bool> m_watcherConnect;
 
             // statistics
             qint64 m_statsUpdateAircraftTimeTotal = 0;
@@ -217,7 +213,7 @@ namespace BlackSimPlugin
 
         public:
             //! Constructor
-            CSimulatorFsxListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info, QObject *parent);
+            CSimulatorFsxListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
         public slots:
             //! \copydoc BlackCore::ISimulatorListener::start
@@ -225,6 +221,10 @@ namespace BlackSimPlugin
 
             //! \copydoc BlackCore::ISimulatorListener::stop
             virtual void stop() override;
+
+        private slots:
+            //! Test if connection can be established
+            void ps_checkConnection();
 
         private:
             QTimer *m_timer { nullptr };

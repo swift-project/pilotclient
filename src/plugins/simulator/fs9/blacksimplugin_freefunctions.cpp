@@ -166,7 +166,7 @@ namespace BlackSimPlugin
             return positionSlewMode;
         }
 
-        HRESULT printDirectPlayError(HRESULT error)
+        HRESULT logDirectPlayError(HRESULT error)
         {
             QString errorMessage;
             switch(error)
@@ -210,7 +210,6 @@ namespace BlackSimPlugin
 
             errorMessage = "DirectPlay: " + errorMessage;
             BlackMisc::CLogMessage("swift.fs9.freefunctions").error(errorMessage);
-
             return error;
         }
     }

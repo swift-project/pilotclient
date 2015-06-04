@@ -22,21 +22,6 @@ namespace BlackMisc
         //! Describing a simulator plugin
         class BLACKMISC_EXPORT CSimulatorPluginInfo : public BlackMisc::CValueObject<CSimulatorPluginInfo>
         {
-            //! The _identifier_ property identifies the plugin itself and must be uniqe.
-            Q_PROPERTY(QString identifier READ getIdentifier)
-
-            //! The _name_ property is a human-readable plugin name.
-            Q_PROPERTY(QString same READ getName)
-
-            //! The _simulator_ property specifies which simulator the plugin handles.
-            //! There cannot be two plugins loaded for the same simulator.
-            //! swift enables some features for particular simulators. Currently recognized are:
-            //!   fsx, fs9, xplane
-            Q_PROPERTY(QString simulator READ getSimulator)
-
-            //! The _description_ property provides a short, human-readable description of the plugin.
-            Q_PROPERTY(QString description READ getDescription)
-
         public:
             //! Default constructor
             CSimulatorPluginInfo() = default;

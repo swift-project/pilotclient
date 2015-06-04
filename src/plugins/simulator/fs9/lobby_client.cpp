@@ -64,14 +64,14 @@ namespace BlackSimPlugin
                                              CLSCTX_INPROC_SERVER,
                                              IID_IDirectPlay8Peer,
                                              (LPVOID *) &m_directPlayPeer)))
-                return printDirectPlayError(hr);
+                return logDirectPlayError(hr);
 
             // Turn off parameter validation in release builds
             const DWORD dwInitFlags = 0;
             // const DWORD dwInitFlags = DPNINITIALIZE_DISABLEPARAMVAL;
 
             if (FAILED(hr = m_directPlayPeer->Initialize(&m_callbackWrapper, m_callbackWrapper.messageHandler, dwInitFlags)))
-                return printDirectPlayError(hr);
+                return logDirectPlayError(hr);
 
 
             // Create and init IDirectPlay8LobbyClient
@@ -79,10 +79,10 @@ namespace BlackSimPlugin
                                              CLSCTX_INPROC_SERVER,
                                              IID_IDirectPlay8LobbyClient,
                                              (LPVOID *) &m_dpLobbyClient)))
-                return printDirectPlayError(hr);
+                return logDirectPlayError(hr);
 
             if (FAILED(hr = m_dpLobbyClient->Initialize(&m_lobbyCallbackWrapper, m_lobbyCallbackWrapper.messageHandler, dwInitFlags)))
-                return printDirectPlayError(hr);
+                return logDirectPlayError(hr);
 
             return S_OK;
         }
@@ -171,31 +171,31 @@ namespace BlackSimPlugin
             if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Address, nullptr, CLSCTX_INPROC_SERVER,
                                              IID_IDirectPlay8Address, reinterpret_cast<void **>(&pHostAddress))))
             {
-                return printDirectPlayError(hr);
+                return logDirectPlayError(hr);
             }
 
             // Set the SP to pHostAddress
             if (FAILED(hr = pHostAddress->SetSP(pSPGuid.data())))
             {
-                return printDirectPlayError(hr);
+                return logDirectPlayError(hr);
             }
 
             // Create a device address to specify which device we are using
             if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Address, NULL, CLSCTX_INPROC_SERVER,
                                              IID_IDirectPlay8Address, reinterpret_cast<void **>(&pDeviceAddress))))
             {
-                return printDirectPlayError(hr);
+                return logDirectPlayError(hr);
             }
 
             // Set the SP to pDeviceAddress
             if (FAILED(hr = pDeviceAddress->SetSP(&CLSID_DP8SP_TCPIP)))
             {
-                return printDirectPlayError(hr);
+                return logDirectPlayError(hr);
             }
 
             if (FAILED(hr = pHostAddress->BuildFromURLA(address.toLocal8Bit().data())))
             {
-                return printDirectPlayError(hr);
+                return logDirectPlayError(hr);
             }
 
             // Setup the DPL_CONNECTION_SETTINGS
