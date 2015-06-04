@@ -108,6 +108,7 @@ namespace BlackGui
                 QString s(
                     getIContextSimulator()->getSimulatorPluginInfo().getDescription() + ": " +
                     ISimulator::statusToString(status));
+
                 // at least connected
                 if (status & ISimulator::Paused)
                 {

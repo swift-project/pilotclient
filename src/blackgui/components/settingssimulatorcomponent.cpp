@@ -254,8 +254,8 @@ namespace BlackGui
             // disable / enable driver specific GUI parts
             bool hasFsxDriver = this->getIContextSimulator()->getAvailableSimulatorPlugins().supportsSimulator(QStringLiteral("fsx"));
 
-            // combobox
-            setCurrentPluginInComboBox(info);
+            // I intentionally to not set the selected plugin combobox here
+            // as this would cause undesired rountrips
 
             // other GUI values
             if (!info.isUnspecified())
