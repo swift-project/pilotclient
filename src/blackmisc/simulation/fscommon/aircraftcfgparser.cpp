@@ -49,9 +49,9 @@ namespace BlackMisc
                         bool ok;
                         auto aircraftCfgEntriesList = parseImpl(rootDirectory, excludedDirectories, &ok);
                         if (!ok) { return; }
-                        bool c = QMetaObject::invokeMethod(this, "ps_updateCfgEntriesList",
+                        bool c = QMetaObject::invokeMethod(this, "updateCfgEntriesList",
                                                            Q_ARG(BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList, aircraftCfgEntriesList));
-                        Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot invoke ps_updateCfgEntriesList");
+                        Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot invoke updateCfgEntriesList");
                         Q_UNUSED(c);
                     });
                 }
@@ -63,7 +63,7 @@ namespace BlackMisc
                 }
             }
 
-            void CAircraftCfgParser::ps_updateCfgEntriesList(const CAircraftCfgEntriesList &cfgEntriesList)
+            void CAircraftCfgParser::updateCfgEntriesList(const CAircraftCfgEntriesList &cfgEntriesList)
             {
                 m_parsedCfgEntriesList = cfgEntriesList;
                 emit parsingFinished(true);

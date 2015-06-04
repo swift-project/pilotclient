@@ -66,12 +66,15 @@ namespace BlackMisc
                 //! Get parsed aircraft cfg entries list
                 CAircraftCfgEntriesList getAircraftCfgEntriesList() const { return m_parsedCfgEntriesList; }
 
+            public slots:
+                //! Parsed or injected entires
+                void updateCfgEntriesList(const BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList &cfgEntriesList);
+
             signals:
                 //! Parsing is finished
                 void parsingFinished(bool success);
 
             private slots:
-                void ps_updateCfgEntriesList(const BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList &cfgEntriesList);
                 CAircraftCfgEntriesList parseImpl(const QString &directory, const QStringList &excludeDirectories, bool *ok);
 
             private:

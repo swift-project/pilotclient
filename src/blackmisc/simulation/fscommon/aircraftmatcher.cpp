@@ -11,6 +11,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/worker.h"
 #include <utility>
+#include <atomic>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -31,12 +32,13 @@ namespace BlackMisc
 
             CAircraftMatcher::~CAircraftMatcher()
             {
-                gracefulShutdown();
+                cancelInit();
+                if (this->m_initWorker) { this->m_initWorker->waitForFinished(); }
             }
 
             void CAircraftMatcher::init()
             {
-                if (m_initWorker) { return; }
+                if (m_initState != NotInitialized) { return; }
                 m_initWorker = BlackMisc::CWorker::fromTask(this, "CAircraftMatcher::initImpl", [this]()
                 {
                     initImpl();
@@ -45,7 +47,7 @@ namespace BlackMisc
 
             bool CAircraftMatcher::isInitialized() const
             {
-                return m_initialized;
+                return m_initState == InitFinished;
             }
 
             void CAircraftMatcher::setModelMappingProvider(std::unique_ptr<IModelMappingsProvider> mappings)
@@ -122,16 +124,10 @@ namespace BlackMisc
                 return synchronizeWithExistingModels(m_installedModels.getSortedModelStrings());
             }
 
-            void CAircraftMatcher::gracefulShutdown()
+            void CAircraftMatcher::cancelInit()
             {
                 // when running, force re-init
-                this->m_initInProgress = false;
-                this->m_initialized = false;
-            }
-
-            void CAircraftMatcher::markUninitialized()
-            {
-                this->m_initialized = false;
+                this->m_initState = NotInitialized;
             }
 
             const CAircraftModel &CAircraftMatcher::getDefaultModel()
@@ -144,11 +140,16 @@ namespace BlackMisc
                 m_defaultModel = defaultModel;
             }
 
+            void CAircraftMatcher::ps_setModelMappingRules(const CAircraftMappingList &mappings)
+            {
+                m_modelMappings = mappings;
+            }
+
             void CAircraftMatcher::initImpl()
             {
-                if (m_initialized) { return; }
-                if (m_initInProgress) { return; }
-                m_initInProgress = true;
+                InitState e = NotInitialized;
+                InitState d = InitInProgress;
+                if (!m_initState.compare_exchange_weak(e, d)) { return; }
 
                 // sync
                 this->synchronize();
@@ -156,9 +157,8 @@ namespace BlackMisc
 
                 // finish
                 CLogMessage(this).info("Mapping system: %1 definitions for %2 installed models") << m_modelMappings.size()
-                                                                                                 << m_installedModels.size();
-                m_initInProgress = false;
-                m_initialized = true;
+                        << m_installedModels.size();
+                m_initState = InitFinished;
                 emit initializationFinished();
             }
 
@@ -231,6 +231,7 @@ namespace BlackMisc
                 CAircraftMappingList newList;
                 for (const CAircraftMapping &mapping : m_modelMappings)
                 {
+                    if (this->m_initState != InitInProgress) { return 0; } // canceled
                     QString modelString = mapping.getModel().getModelString();
                     if (modelString.isEmpty()) { continue; }
                     if (modelNames.contains(modelString, cs))

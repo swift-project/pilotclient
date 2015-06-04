@@ -68,8 +68,14 @@ namespace BlackMisc
                 //! Init completed?
                 bool isInitialized() const;
 
+                //! Get all models
+                const CAircraftModelList &getInstalledModelsList() const { return m_installedModels; }
+
                 //! Set the list of installed models
                 void setInstalledModels(const CAircraftModelList &models) { m_installedModels = models; }
+
+                //! Number of models
+                int countInstalledModels() const { return m_installedModels.size(); }
 
                 //! Set the model mapping provider. The CAircraftMatcher will move the object and take over ownership
                 void setModelMappingProvider(std::unique_ptr<IModelMappingsProvider> mappings);
@@ -96,10 +102,7 @@ namespace BlackMisc
                 int synchronize();
 
                 //! Shutdown
-                void gracefulShutdown();
-
-                //! To force reload
-                void markUninitialized();
+                void cancelInit();
 
                 //! default model
                 const BlackMisc::Simulation::CAircraftModel &getDefaultModel();
@@ -108,13 +111,17 @@ namespace BlackMisc
                 void setDefaultModel(const BlackMisc::Simulation::CAircraftModel &defaultModel);
 
             private slots:
-
-                void ps_setModelMappingRules(const BlackMisc::Network::CAircraftMappingList &mappings)
-                {
-                    m_modelMappings = mappings;
-                }
+                //! Set the mapping rules
+                void ps_setModelMappingRules(const BlackMisc::Network::CAircraftMappingList &mappings);
 
             private:
+                //! Init state
+                enum InitState
+                {
+                    NotInitialized,
+                    InitInProgress,
+                    InitFinished
+                };
 
                 void initImpl();
                 void initMappings();
@@ -130,9 +137,8 @@ namespace BlackMisc
                 void reverseLookupIcaoData(BlackMisc::Simulation::CAircraftModel &model);
 
                 std::unique_ptr<BlackMisc::Simulation::IModelMappingsProvider> m_mappingsProvider; //!< Provides all mapping definitions
-                std::atomic<bool> m_initialized = { false };
-                std::atomic<bool> m_initInProgress = { false };
-                BlackMisc::CWorker *m_initWorker = { nullptr };
+                std::atomic<InitState> m_initState = NotInitialized;
+                QPointer<BlackMisc::CWorker> m_initWorker;
                 MatchingMode m_matchingMode = ModelMatching;
                 CAircraftModelList m_installedModels;
                 BlackMisc::Network::CAircraftMappingList m_modelMappings;

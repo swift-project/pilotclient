@@ -43,20 +43,20 @@ namespace BlackSimPlugin
             auto modelMappingsProvider = std::unique_ptr<IModelMappingsProvider> { BlackMisc::make_unique<CModelMappingsProviderVPilot>(true) };
             m_modelMatcher.setModelMappingProvider(std::move(modelMappingsProvider));
 
+            connect(&m_aircraftCfgParser, &CAircraftCfgParser::parsingFinished, this, &CSimulatorFsCommon::ps_aircraftCfgParsingFinished);
             CVariant aircraftCfg = getPluginData(this, "aircraft_cfg");
             if (aircraftCfg.isValid())
             {
-                m_modelMatcher.setInstalledModels(aircraftCfg.value<CAircraftCfgEntriesList>().toAircraftModelList());
-                m_modelMatcher.init();
+                // will behave like parsing was finished
+                m_aircraftCfgParser.updateCfgEntriesList(aircraftCfg.value<CAircraftCfgEntriesList>());
             }
-            //
-            // reading from settings would go here
-            //
             else
             {
-                connect(&m_aircraftCfgParser, &CAircraftCfgParser::parsingFinished, this, &CSimulatorFsCommon::ps_aircraftCfgParsingFinished);
-                m_aircraftCfgParser.parse();
+                m_aircraftCfgParser.parse(CAircraftCfgParser::ModeAsync);
             }
+            //
+            // reading from cache / settings would go here
+            //
         }
 
         CSimulatorFsCommon::~CSimulatorFsCommon() { }
@@ -135,7 +135,7 @@ namespace BlackSimPlugin
 
         CAircraftModelList CSimulatorFsCommon::getInstalledModels() const
         {
-            return m_aircraftCfgParser.getAircraftCfgEntriesList().toAircraftModelList();
+            return m_modelMatcher.getInstalledModelsList();
         }
 
         CAircraftIcaoData CSimulatorFsCommon::getIcaoForModelString(const QString &modelString) const
@@ -215,6 +215,7 @@ namespace BlackSimPlugin
         void CSimulatorFsCommon::unload()
         {
             this->m_aircraftCfgParser.cancelParsing();
+            this->m_modelMatcher.cancelInit();
             CSimulatorCommon::unload();
         }
 
