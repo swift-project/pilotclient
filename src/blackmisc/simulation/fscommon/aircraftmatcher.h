@@ -137,7 +137,7 @@ namespace BlackMisc
                 void reverseLookupIcaoData(BlackMisc::Simulation::CAircraftModel &model);
 
                 std::unique_ptr<BlackMisc::Simulation::IModelMappingsProvider> m_mappingsProvider; //!< Provides all mapping definitions
-                std::atomic<InitState> m_initState = NotInitialized;
+                std::atomic<InitState> m_initState { NotInitialized };
                 QPointer<BlackMisc::CWorker> m_initWorker;
                 MatchingMode m_matchingMode = ModelMatching;
                 CAircraftModelList m_installedModels;
