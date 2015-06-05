@@ -7,14 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "originator.h"
+#include "identifier.h"
 #include <QCoreApplication>
 #include <QDBusConnection>
 #include <QHostInfo>
 
 namespace BlackMisc
 {
-    COriginator::COriginator(const QString &name)
+    CIdentifier::CIdentifier(const QString &name)
         : m_name(name.trimmed()),
           m_machineIdBase64(QDBusConnection::localMachineId().toBase64()),
           m_machineName(QHostInfo::localHostName()),
@@ -22,27 +22,27 @@ namespace BlackMisc
           m_processId(QCoreApplication::applicationPid())
     { }
 
-    QByteArray COriginator::getMachineId() const
+    QByteArray CIdentifier::getMachineId() const
     {
         return QByteArray::fromBase64(m_machineIdBase64.toLocal8Bit());
     }
 
-    bool COriginator::isFromLocalMachine() const
+    bool CIdentifier::isFromLocalMachine() const
     {
         return QDBusConnection::localMachineId() == getMachineId();
     }
 
-    bool COriginator::isFromSameProcess() const
+    bool CIdentifier::isFromSameProcess() const
     {
         return QCoreApplication::applicationPid() == getProcessId() && isFromLocalMachine();
     }
 
-    bool COriginator::isFromSameProcessName() const
+    bool CIdentifier::isFromSameProcessName() const
     {
         return QCoreApplication::applicationName() == getProcessName();
     }
 
-    QString COriginator::convertToQString(bool i18n) const
+    QString CIdentifier::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
         QString s(m_name);
@@ -53,7 +53,7 @@ namespace BlackMisc
         return s;
     }
 
-    CVariant COriginator::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+    CVariant CIdentifier::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
     {
         if (index.isMyself()) { return CVariant::from(*this); }
 
@@ -85,7 +85,7 @@ namespace BlackMisc
         }
     }
 
-    void COriginator::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+    void CIdentifier::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
     {
         CValueObject::setPropertyByIndex(variant, index);
     }

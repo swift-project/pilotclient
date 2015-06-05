@@ -20,7 +20,7 @@
 #include "statusmessagelist.h"
 #include "pixmap.h"
 #include "iconlist.h"
-#include "originator.h"
+#include "identifier.h"
 #include "eventallclasses.h"
 #include <QtNetwork/QHostInfo>
 #include <QProcessEnvironment>
@@ -105,7 +105,7 @@ void BlackMisc::registerMetadata()
     CLogCategory::registerMetadata();
     CLogCategoryList::registerMetadata();
     CPixmap::registerMetadata();
-    COriginator::registerMetadata();
+    CIdentifier::registerMetadata();
 
     // sub namespaces
     PhysicalQuantities::registerMetadata();

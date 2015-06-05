@@ -13,7 +13,7 @@
 #define BLACKGUI_COMMANDINPUT_H
 
 #include "blackguiexport.h"
-#include "blackmisc/originatoraware.h"
+#include "blackmisc/identifiable.h"
 #include <QLineEdit>
 #include <QString>
 
@@ -22,7 +22,7 @@ namespace BlackGui
     //! Specialized LineEdit for command inputs
     class BLACKGUI_EXPORT CCommandInput :
         public QLineEdit,
-        public BlackMisc::COriginatorAware
+        public BlackMisc::CIdentifiable
     {
         Q_OBJECT
 
@@ -35,7 +35,7 @@ namespace BlackGui
 
     signals:
         //! Command was entered
-        void commandEntered(const QString &command, const BlackMisc::COriginator &originator);
+        void commandEntered(const QString &command, const BlackMisc::CIdentifier &originator);
 
     private slots:
         //! Basic command validation

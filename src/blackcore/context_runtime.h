@@ -14,7 +14,7 @@
 
 #include "blackcoreexport.h"
 #include "blackcore/context_runtime_config.h"
-#include "blackmisc/originator.h"
+#include "blackmisc/identifier.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 
@@ -153,7 +153,7 @@ namespace BlackCore
 
     public slots:
         //! Parse command line in all contexts
-        bool parseCommandLine(const QString &commandLine, const BlackMisc::COriginator &originator);
+        bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator);
 
     private:
         bool m_init = false; //!< flag

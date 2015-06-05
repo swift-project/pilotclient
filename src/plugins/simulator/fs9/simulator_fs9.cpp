@@ -118,8 +118,8 @@ namespace BlackSimPlugin
             // matched models
             CAircraftModel aircraftModel = getClosestMatch(newRemoteAircraftCopy);
             Q_ASSERT(newRemoteAircraft.getCallsign() == aircraftModel.getCallsign());
-            updateAircraftModel(newRemoteAircraft.getCallsign(), aircraftModel, originator());
-            updateAircraftRendered(newRemoteAircraft.getCallsign(), true, originator());
+            updateAircraftModel(newRemoteAircraft.getCallsign(), aircraftModel, identifier());
+            updateAircraftRendered(newRemoteAircraft.getCallsign(), true, identifier());
             CSimulatedAircraft aircraftAfterModelApplied(getAircraftInRangeForCallsign(newRemoteAircraft.getCallsign()));
             aircraftAfterModelApplied.setRendered(true);
             emit modelMatchingCompleted(aircraftAfterModelApplied);
@@ -130,7 +130,7 @@ namespace BlackSimPlugin
 
             client->start();
             m_hashFs9Clients.insert(callsign, client);
-            updateAircraftRendered(callsign, true, this->originator());
+            updateAircraftRendered(callsign, true, this->identifier());
             CLogMessage(this).info("FS9: Added aircraft %1") << callsign.toQString();
             return true;
         }
@@ -142,7 +142,7 @@ namespace BlackSimPlugin
             auto fs9Client = m_hashFs9Clients.value(callsign);
             fs9Client->quit();
             m_hashFs9Clients.remove(callsign);
-            updateAircraftRendered(callsign, false, this->originator());
+            updateAircraftRendered(callsign, false, this->identifier());
             CLogMessage(this).info("FS9: Removed aircraft %1") << callsign.toQString();
             return true;
         }
@@ -165,9 +165,9 @@ namespace BlackSimPlugin
             return CCollection<CCallsign>(this->m_hashFs9Clients.keys());
         }
 
-        bool CSimulatorFs9::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const COriginator &originator)
+        bool CSimulatorFs9::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const CIdentifier &originator)
         {
-            if (originator == this->originator()) { return false; }
+            if (originator == this->identifier()) { return false; }
             if (!this->isSimulating()) { return false; }
 
             // actually those data should be the same as ownAircraft
@@ -301,7 +301,7 @@ namespace BlackSimPlugin
                 simDataOwnAircraft.getCom1System(),
                 simDataOwnAircraft.getCom2System(),
                 simDataOwnAircraft.getTransponder(),
-                this->originator());
+                this->identifier());
         }
 
         void CSimulatorFs9::disconnectAllClients()

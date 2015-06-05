@@ -17,7 +17,7 @@ namespace BlackGui
 
     CCommandInput::CCommandInput(QWidget *parent) :
         QLineEdit(parent),
-        COriginatorAware(this)
+        CIdentifiable(this)
     {
         connect(this, &CCommandInput::returnPressed, this, &CCommandInput::ps_validateCommand);
     }
@@ -28,7 +28,7 @@ namespace BlackGui
         this->setText(QString());
         if (commandLine.startsWith('.'))
         {
-            emit commandEntered(commandLine, originator());
+            emit commandEntered(commandLine, identifier());
         }
     }
 } // ns

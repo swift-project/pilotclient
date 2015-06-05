@@ -7,14 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "originatorlist.h"
+#include "identifierlist.h"
 #include "predicates.h"
 
 namespace BlackMisc
 {
-    COriginatorList::COriginatorList() { }
+    CIdentifierList::CIdentifierList() { }
 
-    COriginatorList::COriginatorList(const CSequence<BlackMisc::COriginator> &other) :
-        CSequence<BlackMisc::COriginator>(other)
+    CIdentifierList::CIdentifierList(const CSequence<BlackMisc::CIdentifier> &other) :
+        CSequence<BlackMisc::CIdentifier>(other)
     { }
 } // namespace

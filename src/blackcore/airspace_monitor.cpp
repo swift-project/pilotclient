@@ -154,7 +154,7 @@ namespace BlackCore
         return QList<QMetaObject::Connection>({ c1, c2, c3, c4});
     }
 
-    bool CAirspaceMonitor::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRedering, const BlackMisc::COriginator &originator)
+    bool CAirspaceMonitor::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRedering, const BlackMisc::CIdentifier &originator)
     {
         Q_UNUSED(originator);
         CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexEnabled, CVariant::fromValue(enabledForRedering));
@@ -163,7 +163,7 @@ namespace BlackCore
         return c > 0;
     }
 
-    bool CAirspaceMonitor::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const BlackMisc::COriginator &originator)
+    bool CAirspaceMonitor::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const BlackMisc::CIdentifier &originator)
     {
         Q_UNUSED(originator);
         QWriteLocker l(&m_lockAircraft);
@@ -172,7 +172,7 @@ namespace BlackCore
         return c > 0;
     }
 
-    bool CAirspaceMonitor::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositonUpdates, const BlackMisc::COriginator &originator)
+    bool CAirspaceMonitor::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositonUpdates, const BlackMisc::CIdentifier &originator)
     {
         //! \fixme CAirspaceMonitor: If in the long term originator is not used, remove from signature
         Q_UNUSED(originator);
@@ -182,7 +182,7 @@ namespace BlackCore
         return c > 0;
     }
 
-    bool CAirspaceMonitor::updateAircraftRendered(const CCallsign &callsign, bool rendered, const BlackMisc::COriginator &originator)
+    bool CAirspaceMonitor::updateAircraftRendered(const CCallsign &callsign, bool rendered, const BlackMisc::CIdentifier &originator)
     {
         //! \fixme CAirspaceMonitor: If in the long term originator is not used, remove from signature
         Q_UNUSED(originator);
@@ -192,7 +192,7 @@ namespace BlackCore
         return c > 0;
     }
 
-    void CAirspaceMonitor::updateMarkAllAsNotRendered(const BlackMisc::COriginator &originator)
+    void CAirspaceMonitor::updateMarkAllAsNotRendered(const BlackMisc::CIdentifier &originator)
     {
         //! \fixme CAirspaceMonitor: If in the long term originator is not used, remove from signature
         Q_UNUSED(originator);

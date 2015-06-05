@@ -110,7 +110,7 @@ namespace BlackCore
         virtual bool isAudioLoopbackEnabled() const override;
 
         //! \copydoc IContextOwnAircraft::parseCommandLine
-        virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::COriginator &originator) override;
+        virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
 
     };
 }

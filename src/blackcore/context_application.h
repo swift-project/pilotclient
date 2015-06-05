@@ -17,7 +17,7 @@
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/eveventhotkeyfunction.h"
-#include "blackmisc/originatorlist.h"
+#include "blackmisc/identifierlist.h"
 #include <QObject>
 #include <QReadWriteLock>
 
@@ -76,7 +76,7 @@ namespace BlackCore
 
         //! A log message was logged
         //! \note Used with CLogMessage, do not use directly
-        void messageLogged(const BlackMisc::CStatusMessage &message, const BlackMisc::COriginator &origin);
+        void messageLogged(const BlackMisc::CStatusMessage &message, const BlackMisc::CIdentifier &origin);
 
         //! Work around for audio context, #382
         void fakedSetComVoiceRoom(const BlackMisc::Audio::CVoiceRoomList &requestedRooms);
@@ -85,16 +85,16 @@ namespace BlackCore
         //! Log a log message
         //! \note Not pure because it can be called from the base class constructor.
         //! \note this is the function which relays CLogMessage via DBus
-        virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::COriginator &origin) { Q_UNUSED(message); Q_UNUSED(origin); }
+        virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::CIdentifier &origin) { Q_UNUSED(message); Q_UNUSED(origin); }
 
         //! Register application, can also be used for ping
-        virtual BlackMisc::COriginator registerApplication(const BlackMisc::COriginator &application) = 0;
+        virtual BlackMisc::CIdentifier registerApplication(const BlackMisc::CIdentifier &application) = 0;
 
         //! Unregister application
-        virtual void unregisterApplication(const BlackMisc::COriginator &application) = 0;
+        virtual void unregisterApplication(const BlackMisc::CIdentifier &application) = 0;
 
         //! All registered applications
-        virtual BlackMisc::COriginatorList getRegisteredApplications() const = 0;
+        virtual BlackMisc::CIdentifierList getRegisteredApplications() const = 0;
 
         //! Remote enabled version of writing a text file
         virtual bool writeToFile(const QString &fileName, const QString &content) = 0;

@@ -83,11 +83,11 @@ namespace BlackCore
 
         //! \copydoc IRemoteAircraftProvider::updateAircraftRendered
         //! \ingroup remoteaircraftprovider
-        virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered, const BlackMisc::COriginator &originator) override;
+        virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered, const BlackMisc::CIdentifier &originator) override;
 
         //! \copydoc IRemoteAircraftProvider::updateMarkAllAsNotRendered
         //! \ingroup remoteaircraftprovider
-        virtual void updateMarkAllAsNotRendered(const BlackMisc::COriginator &originator) override;
+        virtual void updateMarkAllAsNotRendered(const BlackMisc::CIdentifier &originator) override;
 
         //! \copydoc IRemoteAircraftProvider::getLatestAirspaceAircraftSnapshot
         //! \ingroup remoteaircraftprovider
@@ -99,15 +99,15 @@ namespace BlackCore
     public slots:
         //! \copydoc IContextNetwork::updateAircraftEnabled
         //! \ingroup remoteaircraftprovider
-        virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const BlackMisc::COriginator &originator) override;
+        virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const BlackMisc::CIdentifier &originator) override;
 
         //! \copydoc IContextNetwork::updateAircraftModel
         //! \ingroup remoteaircraftprovider
-        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::COriginator &originator) override;
+        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
 
         //! \copydoc IContextNetwork::updateFastPositionEnabled
         //! \ingroup remoteaircraftprovider
-        virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates, const BlackMisc::COriginator &originator) override;
+        virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates, const BlackMisc::CIdentifier &originator) override;
 
         //! \copydoc IContextNetwork::readAtcBookingsFromSource()
         virtual void readAtcBookingsFromSource() const override;
@@ -157,7 +157,7 @@ namespace BlackCore
         //! </pre>
         //! @}
         //! \copydoc IContextNetwork::parseCommandLine
-        virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::COriginator &originator) override;
+        virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
 
         //! \copydoc IContextNetwork::sendTextMessages()
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;

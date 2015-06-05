@@ -26,7 +26,7 @@
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/network/client.h"
 #include "blackmisc/pixmap.h"
-#include "blackmisc/originatoraware.h"
+#include "blackmisc/identifiable.h"
 #include <QObject>
 
 namespace BlackCore
@@ -35,7 +35,7 @@ namespace BlackCore
     //! Interface to a simulator.
     class BLACKCORE_EXPORT ISimulator :
         public QObject,
-        public BlackMisc::COriginatorAware
+        public BlackMisc::CIdentifiable
     {
         Q_OBJECT
 
@@ -85,13 +85,13 @@ namespace BlackCore
         virtual bool logicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
         //! Change remote aircraft per property
-        virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::COriginator &originator) = 0;
+        virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) = 0;
 
         //! Aircraft got enabled / disabled
-        virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::COriginator &originator) = 0;
+        virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) = 0;
 
         //! Update own aircraft cockpit (usually from context)
-        virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const BlackMisc::COriginator &originator) = 0;
+        virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const BlackMisc::CIdentifier &originator) = 0;
 
         //! ICAO data for model string
         virtual BlackMisc::Aviation::CAircraftIcaoData getIcaoForModelString(const QString &modelString) const = 0;
@@ -202,7 +202,7 @@ namespace BlackCore
         //! Default constructor
         ISimulator(QObject *parent = nullptr) :
             QObject(parent),
-            BlackMisc::COriginatorAware(this)
+            BlackMisc::CIdentifiable(this)
         {}
 
         //! Are we connected to the simulator?

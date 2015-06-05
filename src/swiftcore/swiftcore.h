@@ -16,7 +16,7 @@
 #include "blackgui/systemtraywindow.h"
 #include "blackgui/components/enableforruntime.h"
 #include "blackmisc/statusmessage.h"
-#include "blackmisc/originatoraware.h"
+#include "blackmisc/identifiable.h"
 
 #include <QScopedPointer>
 
@@ -25,7 +25,7 @@ namespace Ui { class CSwiftCore; }
 //! swift core control
 class CSwiftCore :
     public BlackGui::CSystemTrayWindow,
-    public BlackMisc::COriginatorAware,
+    public BlackMisc::CIdentifiable,
     public BlackGui::Components::CEnableForRuntime
 {
     Q_OBJECT

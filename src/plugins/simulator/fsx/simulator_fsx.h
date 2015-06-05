@@ -103,7 +103,7 @@ namespace BlackSimPlugin
             virtual int physicallyRemoveAllRemoteAircraft() override;
 
             //! \copydoc ISimulator::updateOwnCockpit
-            virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &ownAircraft, const BlackMisc::COriginator &originator) override;
+            virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &ownAircraft, const BlackMisc::CIdentifier &originator) override;
 
             //! \copydoc ISimulator::displayStatusMessage
             virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const override;

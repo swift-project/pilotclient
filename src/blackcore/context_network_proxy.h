@@ -88,7 +88,7 @@ namespace BlackCore
         virtual BlackMisc::Network::CServer getConnectedServer() const override;
 
         //! \copydoc IContextNetwork::parseCommandLine
-        virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::COriginator &originator) override;
+        virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
 
         //! \copydoc IContextNetwork::sendTextMessages()
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;
@@ -136,13 +136,13 @@ namespace BlackCore
         virtual void requestAtisUpdates() override;
 
         //! \copydoc IContextNetwork::updateAircraftEnabled
-        virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const BlackMisc::COriginator &originator) override;
+        virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const BlackMisc::CIdentifier &originator) override;
 
         //! \copydoc IContextNetwork::updateAircraftModel
-        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::COriginator &originator) override;
+        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
 
         //! \copydoc IContextNetwork::updateFastPositionEnabled
-        virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending, const BlackMisc::COriginator &originator) override;
+        virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending, const BlackMisc::CIdentifier &originator) override;
 
         //! \copydoc IContextNetwork::isFastPositionSendingEnabled
         virtual bool isFastPositionSendingEnabled() const override;

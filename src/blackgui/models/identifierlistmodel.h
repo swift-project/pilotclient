@@ -9,11 +9,11 @@
 
 //! \file
 
-#ifndef BLACKGUI_ORIGINATORLISTMODEL_H
-#define BLACKGUI_ORIGINATORLISTMODEL_H
+#ifndef BLACKGUI_IDENTIFIERLISTMODEL_H
+#define BLACKGUI_IDENTIFIERLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/originatorlist.h"
+#include "blackmisc/identifierlist.h"
 #include "blackgui/models/listmodelbase.h"
 #include <QAbstractItemModel>
 
@@ -22,15 +22,15 @@ namespace BlackGui
     namespace Models
     {
         //! Originator list model
-        class BLACKGUI_EXPORT COriginatorListModel : public CListModelBase<BlackMisc::COriginator, BlackMisc::COriginatorList>
+        class BLACKGUI_EXPORT CIdentifierListModel : public CListModelBase<BlackMisc::CIdentifier, BlackMisc::CIdentifierList>
         {
         public:
 
             //! Constructor
-            explicit COriginatorListModel(QObject *parent = nullptr);
+            explicit CIdentifierListModel(QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~COriginatorListModel() {}
+            virtual ~CIdentifierListModel() {}
         };
     } // ns
 } // ns

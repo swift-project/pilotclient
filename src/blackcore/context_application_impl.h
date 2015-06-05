@@ -14,7 +14,7 @@
 #include "context_application.h"
 #include "context_runtime.h"
 #include "dbus_server.h"
-#include "blackmisc/originatorlist.h"
+#include "blackmisc/identifierlist.h"
 
 namespace BlackCore
 {
@@ -30,19 +30,19 @@ namespace BlackCore
 
     public slots:
         //! \copydoc IContextApplication::logMessage
-        virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::COriginator &origin) override;
+        virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::CIdentifier &origin) override;
 
         //! \copydoc IContextApplication::writeToFile
         virtual bool writeToFile(const QString &fileName, const QString &content) override;
 
         //! \copydoc IContextApplication::registerApplication
-        virtual BlackMisc::COriginator registerApplication(const BlackMisc::COriginator &application) override;
+        virtual BlackMisc::CIdentifier registerApplication(const BlackMisc::CIdentifier &application) override;
 
         //! \copydoc IContextApplication::unRegisterApplication
-        virtual void unregisterApplication(const BlackMisc::COriginator &application) override;
+        virtual void unregisterApplication(const BlackMisc::CIdentifier &application) override;
 
         //! \copydoc IContextApplication::getRegisteredApplications
-        virtual BlackMisc::COriginatorList getRegisteredApplications() const override;
+        virtual BlackMisc::CIdentifierList getRegisteredApplications() const override;
 
         //! \copydoc IContextApplication::readFromFile
         virtual QString readFromFile(const QString &fileName) const override;
@@ -64,7 +64,7 @@ namespace BlackCore
         CContextApplication *registerWithDBus(CDBusServer *server);
 
     private:
-        BlackMisc::COriginatorList m_registeredApplications;
+        BlackMisc::CIdentifierList m_registeredApplications;
     };
 } // namespace
 

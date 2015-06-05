@@ -14,7 +14,7 @@
 
 #include "blackcore/network.h"
 #include "blackmisc/simulation/ownaircraftproviderdummy.h"
-#include "blackmisc/originatoraware.h"
+#include "blackmisc/identifiable.h"
 #include <QObject>
 #include <QTextStream>
 #include <QMap>
@@ -23,7 +23,7 @@
 class Client :
     public QObject,
     public BlackMisc::Simulation::COwnAircraftAware,
-    public BlackMisc::COriginatorAware
+    public BlackMisc::CIdentifiable
 {
     Q_OBJECT
 

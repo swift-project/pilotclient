@@ -156,11 +156,11 @@ namespace BlackGui
         {
             QString c(this->ui->le_CommandLineInput->text().trimmed().simplified());
             if (c.isEmpty()) { return; }
-            emit this->commandEntered(c, keypadOriginator());
+            emit this->commandEntered(c, keypadIdentifier());
             this->ui->le_CommandLineInput->clear();
         }
 
-        void CMainKeypadAreaComponent::ps_ownAircraftCockpitChanged(const CAircraft &aircraft, const COriginator &originator)
+        void CMainKeypadAreaComponent::ps_ownAircraftCockpitChanged(const CAircraft &aircraft, const CIdentifier &originator)
         {
             Q_UNUSED(originator);
             bool ident = aircraft.getTransponder().getTransponderMode() == CTransponder::StateIdent;
@@ -238,12 +238,12 @@ namespace BlackGui
             ui->pb_MainWeather->setChecked(false);
         }
 
-        COriginator CMainKeypadAreaComponent::keypadOriginator()
+        CIdentifier CMainKeypadAreaComponent::keypadIdentifier()
         {
-            if (m_originator.getName().isEmpty())
-                m_originator = COriginator(QStringLiteral("KEYPADAREACOMPONENT"));
+            if (m_identifier.getName().isEmpty())
+                m_identifier = CIdentifier(QStringLiteral("KEYPADAREACOMPONENT"));
 
-            return m_originator;
+            return m_identifier;
         }
 
     } // namespace

@@ -7,33 +7,33 @@
  * contained in the LICENSE file.
  */
 
-#include "testoriginator.h"
+#include "testidentifier.h"
 #include "blackmisc/blackmiscfreefunctions.h"
-#include "blackmisc/originatorlist.h"
+#include "blackmisc/identifierlist.h"
 
 using namespace BlackMisc;
 
 namespace BlackMiscTest
 {
 
-    void CTestOriginator::originatorBasics()
+    void CTestIdentifier::identifierBasics()
     {
-        COriginator o1;
-        COriginator o2;
-        COriginator o3("foobar");
-        QVERIFY2(o1 == o2, "Two default originators shall be equal");
-        QVERIFY2(o1 != o3, "Those originators shall be unequal");
+        CIdentifier o1;
+        CIdentifier o2;
+        CIdentifier o3("foobar");
+        QVERIFY2(o1 == o2, "Two default identifiers shall be equal");
+        QVERIFY2(o1 != o3, "Those identifiers shall be unequal");
 
         // test object name change
         QObject q;
         q.setObjectName("foo");
-        CTestOriginatorAware oa(&q);
-        QVERIFY2(oa.originator().getName() == q.objectName(), "Names shall be equal");
+        CTestIdentifiable oa(&q);
+        QVERIFY2(oa.identifier().getName() == q.objectName(), "Names shall be equal");
         q.setObjectName("bar");
-        QVERIFY2(oa.originator().getName() == q.objectName(), "Names shall be equal");
+        QVERIFY2(oa.identifier().getName() == q.objectName(), "Names shall be equal");
     }
 
-    CTestOriginatorAware::CTestOriginatorAware(QObject *nameObject) : COriginatorAware(nameObject)
+    CTestIdentifiable::CTestIdentifiable(QObject *nameObject) : CIdentifiable(nameObject)
     { }
 
 } //namespace

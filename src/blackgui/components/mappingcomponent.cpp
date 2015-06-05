@@ -156,7 +156,7 @@ namespace BlackGui
                 bool enabled = sa.propertyByIndex(index).toBool();
                 if (saFromBackend.isEnabled() == enabled) { return; }
                 CLogMessage(this).info("Request to %1 aircraft %2") << (enabled ? "enable" : "disable") << saFromBackend.getCallsign().toQString();
-                this->getIContextNetwork()->updateAircraftEnabled(saFromBackend.getCallsign(), enabled, mappingtOriginator());
+                this->getIContextNetwork()->updateAircraftEnabled(saFromBackend.getCallsign(), enabled, mappingIdentifier());
             }
             else
             {
@@ -256,12 +256,12 @@ namespace BlackGui
                 CAircraftModel model(models.front());
                 model.setModelType(CAircraftModel::TypeManuallySet);
                 CLogMessage(this).info("Requesting changes for %1") << callsign.asString();
-                this->getIContextNetwork()->updateAircraftModel(aircraftFromBackend.getCallsign(), model, mappingtOriginator());
+                this->getIContextNetwork()->updateAircraftModel(aircraftFromBackend.getCallsign(), model, mappingIdentifier());
                 changed = true;
             }
             if (aircraftFromBackend.isEnabled() != enabled)
             {
-                this->getIContextNetwork()->updateAircraftEnabled(aircraftFromBackend.getCallsign(), enabled, mappingtOriginator());
+                this->getIContextNetwork()->updateAircraftEnabled(aircraftFromBackend.getCallsign(), enabled, mappingIdentifier());
                 changed = true;
             }
 
@@ -308,21 +308,21 @@ namespace BlackGui
             this->ui->le_AircraftModel->setCompleter(this->m_modelCompleter);
         }
 
-        void CMappingComponent::ps_onRemoteAircraftModelChanged(const CSimulatedAircraft &aircraft, const COriginator &originator)
+        void CMappingComponent::ps_onRemoteAircraftModelChanged(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
             this->updateSimulatedAircraftView();
             Q_UNUSED(originator);
             Q_UNUSED(aircraft);
         }
 
-        void CMappingComponent::ps_onChangedAircraftEnabled(const CSimulatedAircraft &aircraft, const COriginator &originator)
+        void CMappingComponent::ps_onChangedAircraftEnabled(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
             this->updateSimulatedAircraftView();
             Q_UNUSED(originator);
             Q_UNUSED(aircraft);
         }
 
-        void CMappingComponent::ps_onFastPositionUpdatesEnabled(const CSimulatedAircraft &aircraft, const COriginator &originator)
+        void CMappingComponent::ps_onFastPositionUpdatesEnabled(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
             this->updateSimulatedAircraftView();
             Q_UNUSED(originator);
@@ -349,7 +349,7 @@ namespace BlackGui
         {
             if (getIContextNetwork())
             {
-                getIContextNetwork()->updateFastPositionEnabled(aircraft.getCallsign(), aircraft.fastPositionUpdates(), mappingtOriginator());
+                getIContextNetwork()->updateFastPositionEnabled(aircraft.getCallsign(), aircraft.fastPositionUpdates(), mappingIdentifier());
             }
         }
 
@@ -365,7 +365,7 @@ namespace BlackGui
         {
             if (getIContextNetwork())
             {
-                getIContextNetwork()->updateAircraftEnabled(aircraft.getCallsign(), aircraft.isEnabled(), mappingtOriginator());
+                getIContextNetwork()->updateAircraftEnabled(aircraft.getCallsign(), aircraft.isEnabled(), mappingIdentifier());
             }
         }
 
@@ -378,12 +378,12 @@ namespace BlackGui
             }
         }
 
-        COriginator CMappingComponent::mappingtOriginator()
+        CIdentifier CMappingComponent::mappingIdentifier()
         {
-            if (m_originator.getName().isEmpty())
-                m_originator = COriginator(QStringLiteral("MAPPINGCOMPONENT"));
+            if (m_identifier.getName().isEmpty())
+                m_identifier = CIdentifier(QStringLiteral("MAPPINGCOMPONENT"));
 
-            return m_originator;
+            return m_identifier;
         }
 
         void CMappingComponent::updateSimulatedAircraftView(bool forceUpdate)

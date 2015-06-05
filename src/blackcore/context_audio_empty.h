@@ -168,7 +168,7 @@ namespace BlackCore
         }
 
         //! \copydoc IContextAudio::parseCommandLine
-        virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::COriginator &originator) override
+        virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override
         {
             Q_UNUSED(commandLine);
             Q_UNUSED(originator);

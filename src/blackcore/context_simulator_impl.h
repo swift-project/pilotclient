@@ -168,14 +168,14 @@ namespace BlackCore
         void ps_cockpitChangedFromSimulator(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
 
         //! Changed remote aircraft model
-        void ps_changedRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::COriginator &originator);
+        void ps_changedRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
         //! Enable / disable aircraft
-        void ps_changedRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::COriginator &originator);
+        void ps_changedRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
         //! Update simulator cockpit from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
         //! \remarks set by runtime, only to be used locally (not via DBus)
-        void ps_updateSimulatorCockpitFromContext(const BlackMisc::Aviation::CAircraft &ownAircraft, const BlackMisc::COriginator &originator);
+        void ps_updateSimulatorCockpitFromContext(const BlackMisc::Aviation::CAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
 
     private:
         //! A simple struct containing all info about the plugin.

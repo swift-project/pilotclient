@@ -31,7 +31,7 @@ namespace BlackCore
         return this;
     }
 
-    void CContextApplication::logMessage(const CStatusMessage &message, const COriginator &origin)
+    void CContextApplication::logMessage(const CStatusMessage &message, const CIdentifier &origin)
     {
         if (!origin.isFromSameProcess())
         {
@@ -57,7 +57,7 @@ namespace BlackCore
         }
     }
 
-    COriginator CContextApplication::registerApplication(const COriginator &application)
+    CIdentifier CContextApplication::registerApplication(const CIdentifier &application)
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << application; }
         this->m_registeredApplications.replaceOrAdd(application, application);
@@ -65,14 +65,14 @@ namespace BlackCore
         return application;
     }
 
-    void CContextApplication::unregisterApplication(const COriginator &application)
+    void CContextApplication::unregisterApplication(const CIdentifier &application)
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << application; }
         int r = this->m_registeredApplications.remove(application);
         if (r > 0) { emit registrationChanged(); }
     }
 
-    COriginatorList CContextApplication::getRegisteredApplications() const
+    CIdentifierList CContextApplication::getRegisteredApplications() const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         return m_registeredApplications;

@@ -149,7 +149,7 @@ namespace BlackSimPlugin
             CAircraftModel aircraftModel = getClosestMatch(newRemoteAircraft);
             Q_ASSERT_X(newRemoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "mismatching callsigns");
 
-            this->updateAircraftModel(callsign, aircraftModel, originator());
+            this->updateAircraftModel(callsign, aircraftModel, identifier());
             CSimulatedAircraft aircraftAfterModelApplied(getAircraftInRangeForCallsign(newRemoteAircraft.getCallsign()));
 
             // create AI
@@ -173,15 +173,15 @@ namespace BlackSimPlugin
             }
 
             aircraftAfterModelApplied.setRendered(rendered);
-            this->updateAircraftRendered(callsign, rendered, originator());
+            this->updateAircraftRendered(callsign, rendered, identifier());
             emit modelMatchingCompleted(aircraftAfterModelApplied);
 
             return rendered;
         }
 
-        bool CSimulatorFsx::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const COriginator &originator)
+        bool CSimulatorFsx::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const CIdentifier &originator)
         {
-            if (originator == this->originator()) { return false; }
+            if (originator == this->identifier()) { return false; }
             if (!this->isSimulating()) { return false; }
 
             // actually those data should be the same as ownAircraft
@@ -419,7 +419,7 @@ namespace BlackSimPlugin
 
                 if (changedCom1 || changedCom2 || changedXpr)
                 {
-                    this->updateCockpit(com1, com2, transponder, originator());
+                    this->updateCockpit(com1, com2, transponder, identifier());
                 }
             }
             else
@@ -444,7 +444,7 @@ namespace BlackSimPlugin
             if (!changed) { return; }
             CTransponder xpdr = myAircraft.getTransponder();
             xpdr.setTransponderMode(newMode);
-            this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), xpdr, this->originator());
+            this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), xpdr, this->identifier());
         }
 
         void CSimulatorFsx::setSimConnectObjectID(DWORD requestID, DWORD objectID)
@@ -529,7 +529,7 @@ namespace BlackSimPlugin
             CCallsign callsign(simObject.getCallsign());
             m_simConnectObjects.remove(callsign);
             SimConnect_AIRemoveObject(m_hSimConnect, static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), static_cast<SIMCONNECT_DATA_REQUEST_ID>(simObject.getRequestId()));
-            updateAircraftRendered(callsign, false, originator());
+            updateAircraftRendered(callsign, false, identifier());
             CLogMessage(this).info("FSX: Removed aircraft %1") << simObject.getCallsign().toQString();
             return true;
         }

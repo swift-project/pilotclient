@@ -13,7 +13,7 @@
 #define BLACKMISC_SIMULATION_REMOTEAIRCRAFTPROVIDER_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/originator.h"
+#include "blackmisc/identifier.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
@@ -79,23 +79,23 @@ namespace BlackMisc
 
             //! Enable/disable rendering
             //! \threadsafe
-            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering, const BlackMisc::COriginator &originator) = 0;
+            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering, const BlackMisc::CIdentifier &originator) = 0;
 
             //! Rendered?
             //! \threadsafe
-            virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered, const BlackMisc::COriginator &originator) = 0;
+            virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered, const BlackMisc::CIdentifier &originator) = 0;
 
             //! Mark all as not rendered
             //! \threadsafe
-            virtual void updateMarkAllAsNotRendered(const BlackMisc::COriginator &originator) = 0;
+            virtual void updateMarkAllAsNotRendered(const BlackMisc::CIdentifier &originator) = 0;
 
             //! Change model string
             //! \threadsafe
-            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::COriginator &originator) = 0;
+            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) = 0;
 
             //! Change fast position updates
             //! \threadsafe
-            virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates, const BlackMisc::COriginator &originator) = 0;
+            virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates, const BlackMisc::CIdentifier &originator) = 0;
 
             //! Destructor
             virtual ~IRemoteAircraftProvider() {}
@@ -144,16 +144,16 @@ namespace BlackMisc
             virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftEnabled
-            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const BlackMisc::COriginator &originator);
+            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const BlackMisc::CIdentifier &originator);
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftModel
-            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::COriginator &originator);
+            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator);
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftRendered
-            virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered, const BlackMisc::COriginator &originator);
+            virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered, const BlackMisc::CIdentifier &originator);
 
             //! \copydoc IRemoteAircraftProvider::updateMarkAllAsNotRendered
-            virtual void updateMarkAllAsNotRendered(const COriginator &originator);
+            virtual void updateMarkAllAsNotRendered(const CIdentifier &originator);
 
             //! Destructor
             virtual ~CRemoteAircraftAware() {}

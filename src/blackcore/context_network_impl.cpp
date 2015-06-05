@@ -249,7 +249,7 @@ namespace BlackCore
         return INetwork::isPendingStatus(this->m_currentStatus);
     }
 
-    bool CContextNetwork::parseCommandLine(const QString &commandLine, const COriginator &originator)
+    bool CContextNetwork::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
     {
         Q_UNUSED(originator;)
         if (commandLine.isEmpty()) { return false; }
@@ -563,7 +563,7 @@ namespace BlackCore
         this->m_airspace->requestAtisUpdates();
     }
 
-    bool CContextNetwork::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRedering, const BlackMisc::COriginator &originator)
+    bool CContextNetwork::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRedering, const BlackMisc::CIdentifier &originator)
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << enabledForRedering << originator; }
         bool c = this->m_airspace->updateAircraftEnabled(callsign, enabledForRedering, originator);
@@ -575,7 +575,7 @@ namespace BlackCore
         return c;
     }
 
-    bool CContextNetwork::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const BlackMisc::COriginator &originator)
+    bool CContextNetwork::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const BlackMisc::CIdentifier &originator)
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << model << originator; }
         bool c = this->m_airspace->updateAircraftModel(callsign, model, originator);
@@ -587,7 +587,7 @@ namespace BlackCore
         return c;
     }
 
-    bool CContextNetwork::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositonUpdates, const BlackMisc::COriginator &originator)
+    bool CContextNetwork::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositonUpdates, const BlackMisc::CIdentifier &originator)
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << enableFastPositonUpdates << originator; }
         bool c = this->m_airspace->updateFastPositionEnabled(callsign, enableFastPositonUpdates, originator);
@@ -600,14 +600,14 @@ namespace BlackCore
         return c;
     }
 
-    bool CContextNetwork::updateAircraftRendered(const CCallsign &callsign, bool rendered, const COriginator &originator)
+    bool CContextNetwork::updateAircraftRendered(const CCallsign &callsign, bool rendered, const CIdentifier &originator)
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << rendered << originator; }
         bool c = this->m_airspace->updateAircraftRendered(callsign, rendered, originator);
         return c;
     }
 
-    void CContextNetwork::updateMarkAllAsNotRendered(const COriginator &originator)
+    void CContextNetwork::updateMarkAllAsNotRendered(const CIdentifier &originator)
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << originator; }
         this->m_airspace->updateMarkAllAsNotRendered(originator);

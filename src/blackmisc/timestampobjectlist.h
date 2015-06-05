@@ -100,14 +100,14 @@ namespace BlackMisc
 
     class CStatusMessage;
     class CStatusMessageList;
-    class COriginator;
-    class COriginatorList;
+    class CIdentifier;
+    class CIdentifierList;
 
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList>;
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList>;
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>;
-    extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::COriginator, BlackMisc::COriginatorList>;
+    extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::CIdentifier, BlackMisc::CIdentifierList>;
     //! \endcond
 
 } //namespace

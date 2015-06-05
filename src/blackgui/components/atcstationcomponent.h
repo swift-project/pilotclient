@@ -16,7 +16,7 @@
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/updatetimer.h"
-#include "blackmisc/originatoraware.h"
+#include "blackmisc/identifiable.h"
 #include "blackmisc/aviation/atcstation.h"
 #include <QTabWidget>
 #include <QModelIndex>
@@ -33,7 +33,7 @@ namespace BlackGui
             public QTabWidget,
             public CEnableForDockWidgetInfoArea,
             public CEnableForRuntime,
-            public BlackMisc::COriginatorAware
+            public BlackMisc::CIdentifiable
         {
             Q_OBJECT
 

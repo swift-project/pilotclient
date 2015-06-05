@@ -17,7 +17,7 @@
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/updatetimer.h"
 #include "blackgui/views/checkboxdelegate.h"
-#include "blackmisc/originator.h"
+#include "blackmisc/identifier.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include <QTabWidget>
@@ -95,13 +95,13 @@ namespace BlackGui
             void ps_onModelsUpdateRequested();
 
             //! Rendered aircraft changed in backend
-            void ps_onRemoteAircraftModelChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::COriginator &originator);
+            void ps_onRemoteAircraftModelChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
             //! Aircraft enabled, disabled in backend
-            void ps_onChangedAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::COriginator &originator);
+            void ps_onChangedAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
             //! Fast position updates on/off in backend
-            void ps_onFastPositionUpdatesEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::COriginator &originator);
+            void ps_onFastPositionUpdatesEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
             //! Connection status has been changed
             void ps_onConnectionStatusChanged(uint from, uint to);
@@ -122,14 +122,14 @@ namespace BlackGui
             void ps_onMenuHighlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
         private:
-            BlackMisc::COriginator mappingtOriginator();
+            BlackMisc::CIdentifier mappingIdentifier();
             void updateSimulatedAircraftView(bool forceUpdate = false);
             QScopedPointer<Ui::CMappingComponent> ui;
             QScopedPointer<CUpdateTimer> m_updateTimer;
             QCompleter *m_modelCompleter = nullptr;
             bool m_missedSimulatedAircraftUpdate = true;
             BlackGui::Views::CCheckBoxDelegate *m_currentMappingsViewDelegate = nullptr;
-            BlackMisc::COriginator m_originator;
+            BlackMisc::CIdentifier m_identifier;
 
         private slots:
             void ps_backgroundUpdate();

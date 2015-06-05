@@ -7,29 +7,29 @@
  * contained in the LICENSE file.
  */
 
-#include "originatoraware.h"
+#include "identifiable.h"
 
 namespace BlackMisc
 {
-    COriginator COriginatorAware::getCurrentTimestampOriginator() const
+    CIdentifier CIdentifiable::getCurrentTimestampIdentifier() const
     {
-        COriginator o(m_originator);
+        CIdentifier o(m_identifier);
         o.setCurrentUtcTime();
         return o;
     }
 
-    COriginatorAware::COriginatorAware(QObject *object) : m_originator(object->objectName())
+    CIdentifiable::CIdentifiable(QObject *object) : m_identifier(object->objectName())
     {
         // if the object name changes we update our origiginator
-        this->m_originatorConnection = QObject::connect(object, &QObject::objectNameChanged, [this, object]()
+        this->m_connection = QObject::connect(object, &QObject::objectNameChanged, [this, object]()
         {
-            this->m_originator = COriginator(object->objectName());
+            this->m_identifier = CIdentifier(object->objectName());
         });
     }
 
-    COriginatorAware::~COriginatorAware()
+    CIdentifiable::~CIdentifiable()
     {
-        QObject::disconnect(m_originatorConnection);
+        QObject::disconnect(m_connection);
     }
 
 } // ns

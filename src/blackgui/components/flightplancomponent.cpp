@@ -324,7 +324,7 @@ namespace BlackGui
         {
             if (!this->getIContextOwnAircraft()) return;
             if (!this->ui->frp_SelcalCode->hasValidCode()) return;
-            this->getIContextOwnAircraft()->updateSelcal(this->ui->frp_SelcalCode->getSelcal(), flightPlanOriginator());
+            this->getIContextOwnAircraft()->updateSelcal(this->ui->frp_SelcalCode->getSelcal(), flightPlanIdentifier());
         }
 
         void CFlightPlanComponent::ps_loadFlightPlanFromNetwork()
@@ -417,12 +417,12 @@ namespace BlackGui
             this->setCurrentWidget(this->ui->tb_RemarksGenerator);
         }
 
-        COriginator CFlightPlanComponent::flightPlanOriginator()
+        CIdentifier CFlightPlanComponent::flightPlanIdentifier()
         {
-            if (m_originator.getName().isEmpty())
-                m_originator = COriginator(QStringLiteral("FLIGHTPLANCOMPONENT"));
+            if (m_identifier.getName().isEmpty())
+                m_identifier = CIdentifier(QStringLiteral("FLIGHTPLANCOMPONENT"));
 
-            return m_originator;
+            return m_identifier;
         }
 
     } // namespace

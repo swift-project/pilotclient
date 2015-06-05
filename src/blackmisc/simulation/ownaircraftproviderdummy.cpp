@@ -37,7 +37,7 @@ namespace BlackMisc
             return m_ownAircraft.calculateGreatCircleDistance(position);
         }
 
-        bool COwnAircraftProviderDummy::updateCockpit(const Aviation::CComSystem &com1, const Aviation::CComSystem &com2, const Aviation::CTransponder &transponder, const COriginator &originator)
+        bool COwnAircraftProviderDummy::updateCockpit(const Aviation::CComSystem &com1, const Aviation::CComSystem &com2, const Aviation::CTransponder &transponder, const CIdentifier &originator)
         {
             m_ownAircraft.setCom1System(com1);
             m_ownAircraft.setCom2System(com2);
@@ -46,7 +46,7 @@ namespace BlackMisc
             return true;
         }
 
-        bool COwnAircraftProviderDummy::updateActiveComFrequency(const PhysicalQuantities::CFrequency &frequency, int comUnit, const BlackMisc::COriginator &originator)
+        bool COwnAircraftProviderDummy::updateActiveComFrequency(const PhysicalQuantities::CFrequency &frequency, int comUnit, const BlackMisc::CIdentifier &originator)
         {
             if (!CComSystem::isValidComFrequency(frequency)) { return false; }
             CComSystem::ComUnit comUnitEnum = static_cast<CComSystem::ComUnit>(comUnit);
@@ -57,7 +57,7 @@ namespace BlackMisc
             return true;
         }
 
-        bool COwnAircraftProviderDummy::updateSelcal(const CSelcal &selcal, const BlackMisc::COriginator &originator)
+        bool COwnAircraftProviderDummy::updateSelcal(const CSelcal &selcal, const BlackMisc::CIdentifier &originator)
         {
             m_ownAircraft.setSelcal(selcal);
             Q_UNUSED(originator);

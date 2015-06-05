@@ -14,7 +14,7 @@
 
 #include "blackmiscexport.h"
 #include "valueobject.h"
-#include "originator.h"
+#include "identifier.h"
 #include "hotkeyfunction.h"
 #include "blackmiscfreefunctions.h"
 
@@ -33,7 +33,7 @@ namespace BlackMisc
             CEventHotkeyFunction(CHotkeyFunction func, bool argument);
 
             //! Get the event originator
-            const COriginator &getEventOriginator() const {return m_eventOriginator;}
+            const CIdentifier &getEventOriginator() const {return m_eventOriginator;}
 
             //! Get the event key
             const BlackMisc::CHotkeyFunction &getFunction() const {return m_hotkeyFunc;}
@@ -46,7 +46,7 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CEventHotkeyFunction)
-            COriginator m_eventOriginator;
+            CIdentifier m_eventOriginator;
             CHotkeyFunction m_hotkeyFunc;
 
             // This is the required argument to call a registered function per CHotkeyFunction

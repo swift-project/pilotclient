@@ -9,7 +9,6 @@
 
 #include "client.h"
 #include "blackcore/network_vatlib.h"
-#include "blackmisc/originator.h"
 #include <iostream>
 #include <QStringList>
 
@@ -23,7 +22,7 @@ using namespace BlackMisc::Geo;
 Client::Client(QObject *parent)
     : QObject(parent),
       COwnAircraftAware(COwnAircraftProviderDummy::instance()),
-      COriginatorAware("samples:cmdClient"),
+      CIdentifiable("samples:cmdClient"),
       m_net(new BlackCore::CNetworkVatlib(COwnAircraftProviderDummy::instance(), this))
 {
     connect(m_net, &INetwork::atcPositionUpdate,                this, &Client::atcPositionUpdate);
@@ -340,7 +339,7 @@ void Client::setOwnAircraftCmd(QTextStream &args)
         BlackMisc::Aviation::CComSystem("COM1", BlackMisc::PhysicalQuantities::CFrequency(com1, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())),
         BlackMisc::Aviation::CComSystem("COM2", BlackMisc::PhysicalQuantities::CFrequency(com2, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())),
         BlackMisc::Aviation::CTransponder(xpdrCode, xpdrMode),
-        originator());
+        identifier());
     Q_UNUSED(aircraft);
 }
 

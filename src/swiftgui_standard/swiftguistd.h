@@ -32,7 +32,7 @@
 #include "blackgui/managedstatusbar.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/loghandler.h"
-#include "blackmisc/originatoraware.h"
+#include "blackmisc/identifiable.h"
 #include "blacksound/soundgenerator.h"
 #include <QMainWindow>
 #include <QTextEdit>
@@ -46,7 +46,7 @@ namespace Ui { class SwiftGuiStd; }
 //! swift GUI
 class SwiftGuiStd :
     public QMainWindow,
-    public BlackMisc::COriginatorAware,
+    public BlackMisc::CIdentifiable,
     public BlackGui::CEnableForFramelessWindow,
     public BlackGui::Components::CEnableForRuntime
 {

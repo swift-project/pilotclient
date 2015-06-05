@@ -16,7 +16,7 @@
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/textmessagetextedit.h"
-#include "blackmisc/originator.h"
+#include "blackmisc/identifier.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/network/textmessagelist.h"
@@ -60,7 +60,7 @@ namespace BlackGui
             void displayInInfoWindow(const BlackMisc::CVariant &message, int displayDurationMs) const;
 
             //! Command line was entered
-            void commandEntered(const QString commandLine, const BlackMisc::COriginator &orignator);
+            void commandEntered(const QString commandLine, const BlackMisc::CIdentifier &orignator);
 
         public slots:
             //! Text messages received
@@ -70,7 +70,7 @@ namespace BlackGui
             void onTextMessageSent(const BlackMisc::Network::CTextMessage &sentMessage);
 
             //! Used to allow direct input from global command line when visible
-            bool handleGlobalCommandLine(const QString &commandLine, const BlackMisc::COriginator &originator);
+            bool handleGlobalCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator);
 
             //! Display the tab for given callsign
             void showCorrespondingTab(const BlackMisc::Aviation::CCallsign &callsign);
@@ -81,7 +81,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CTextMessageComponent> ui;
-            BlackMisc::COriginator m_originator;
+            BlackMisc::CIdentifier m_identifier;
 
             //! Enum to widget
             QWidget *getTabWidget(Tab tab) const;
@@ -124,8 +124,8 @@ namespace BlackGui
             //! \copydoc IContextOwnAircraft::parseCommandLine
             QString textMessageToCommand(const QString &enteredLine);
 
-            //! Originator
-            BlackMisc::COriginator componentOriginator();
+            //! Identifier
+            BlackMisc::CIdentifier componentIdentifier();
 
             //! Handle a text message entered
             void handleEnteredTextMessage(const QString &textMessage);

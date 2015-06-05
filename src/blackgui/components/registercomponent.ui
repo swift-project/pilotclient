@@ -33,7 +33,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="BlackGui::Views::COriginatorView" name="tvp_RegisteredComponents">
+    <widget class="BlackGui::Views::CIdentifierView" name="tvp_RegisteredComponents">
      <attribute name="verticalHeaderVisible">
       <bool>false</bool>
      </attribute>
@@ -43,9 +43,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Views::COriginatorView</class>
+   <class>BlackGui::Views::CIdentifierView</class>
    <extends>QTableView</extends>
-   <header>blackgui/views/originatorview.h</header>
+   <header>blackgui/views/identifierview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

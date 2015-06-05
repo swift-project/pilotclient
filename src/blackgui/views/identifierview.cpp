@@ -7,28 +7,19 @@
  * contained in the LICENSE file.
  */
 
-//! \file
+#include "identifierview.h"
+#include <QHeaderView>
 
-#ifndef BLACKGUI_ORIGINATORVIEW_H
-#define BLACKGUI_ORIGINATORVIEW_H
-
-#include "blackgui/blackguiexport.h"
-#include "viewbase.h"
-#include "../models/originatorlistmodel.h"
+using namespace BlackMisc;
+using namespace BlackGui::Models;
 
 namespace BlackGui
 {
     namespace Views
     {
-        //! Originator servers
-        class BLACKGUI_EXPORT COriginatorView : public CViewBase<Models::COriginatorListModel, BlackMisc::COriginatorList, BlackMisc::COriginator>
+        CIdentifierView::CIdentifierView(QWidget *parent) : CViewBase(parent)
         {
-
-        public:
-
-            //! Constructor
-            explicit COriginatorView(QWidget *parent = nullptr);
-        };
+            this->standardInit(new CIdentifierListModel(this));
+        }
     }
-}
-#endif // guard
+} // namespace

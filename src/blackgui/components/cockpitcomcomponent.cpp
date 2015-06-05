@@ -33,7 +33,7 @@ namespace BlackGui
     {
         CCockpitComComponent::CCockpitComComponent(QWidget *parent) :
             QFrame(parent),
-            BlackMisc::COriginatorAware(this),
+            BlackMisc::CIdentifiable(this),
             ui(new Ui::CCockpitMainComponent)
         {
             ui->setupUi(this);
@@ -63,7 +63,7 @@ namespace BlackGui
 
             // init from aircraft
             CAircraft ownAircraft = this->getOwnAircraft();
-            this->ps_updateCockpitFromContext(ownAircraft, COriginator("dummyInitialValues")); // intentionally different name here
+            this->ps_updateCockpitFromContext(ownAircraft, CIdentifier("dummyInitialValues")); // intentionally different name here
 
             // SELCAL pairs in cockpit
             this->ui->frp_ComPanelSelcalBottom->clear();
@@ -112,12 +112,12 @@ namespace BlackGui
 
         void CCockpitComComponent::ps_guiChangedSelcal()
         {
-            this->getIContextOwnAircraft()->updateSelcal(this->getSelcal(), originator());
+            this->getIContextOwnAircraft()->updateSelcal(this->getSelcal(), identifier());
         }
 
-        void CCockpitComComponent::ps_updateCockpitFromContext(const CAircraft &ownAircraft, const COriginator &originator)
+        void CCockpitComComponent::ps_updateCockpitFromContext(const CAircraft &ownAircraft, const CIdentifier &originator)
         {
-            if (isMyOriginator(originator)) { return; } // comes from myself
+            if (isMyIdentifier(originator)) { return; } // comes from myself
 
             // update GUI elements
             // avoid unnecessary change events as far as possible
@@ -183,9 +183,9 @@ namespace BlackGui
             }
         }
 
-        void CCockpitComComponent::ps_onChangedSelcal(const CSelcal &selcal, const COriginator &originator)
+        void CCockpitComComponent::ps_onChangedSelcal(const CSelcal &selcal, const CIdentifier &originator)
         {
-            if (isMyOriginator(originator)) { return; } // comes from myself
+            if (isMyIdentifier(originator)) { return; } // comes from myself
             this->ui->frp_ComPanelSelcalBottom->setSelcalCode(selcal);
         }
 
@@ -247,7 +247,7 @@ namespace BlackGui
 
         bool CCockpitComComponent::updateOwnCockpitInContext(const CAircraft &ownAircraft)
         {
-            return this->getIContextOwnAircraft()->updateCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), ownAircraft.getTransponder(), originator());
+            return this->getIContextOwnAircraft()->updateCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), ownAircraft.getTransponder(), identifier());
         }
 
         void CCockpitComComponent::updateFrequencyDisplaysFromComSystems(const CComSystem &com1, const CComSystem &com2)

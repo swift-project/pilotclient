@@ -27,7 +27,7 @@ using namespace BlackGui::Components;
 
 CSwiftCore::CSwiftCore(const SetupInfo &info, QWidget *parent) :
     CSystemTrayWindow(CIcons::swiftNova24(), parent),
-    COriginatorAware(this),
+    CIdentifiable(this),
     ui(new Ui::CSwiftCore)
 {
     ui->setupUi(this);

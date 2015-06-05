@@ -43,7 +43,7 @@ using namespace BlackMisc::Hardware;
  */
 SwiftGuiStd::SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowMode, QWidget *parent) :
     QMainWindow(parent, CEnableForFramelessWindow::modeToWindowFlags(windowMode)),
-    COriginatorAware(this),
+    CIdentifiable(this),
     CEnableForFramelessWindow(windowMode, true, "framelessMainWindow", this),
     ui(new Ui::SwiftGuiStd)
 {
@@ -115,7 +115,7 @@ void SwiftGuiStd::performGracefulShutdown()
     // tell context GUI is going down
     if (this->getIContextApplication())
     {
-        this->getIContextApplication()->unregisterApplication(originator());
+        this->getIContextApplication()->unregisterApplication(identifier());
     }
 
     // allow some other parts to react
@@ -313,7 +313,7 @@ void SwiftGuiStd::setContextAvailability()
     }
     else
     {
-        this->m_coreAvailable = isMyOriginator(this->getIContextApplication()->registerApplication(getCurrentTimestampOriginator()));
+        this->m_coreAvailable = isMyIdentifier(this->getIContextApplication()->registerApplication(getCurrentTimestampIdentifier()));
     }
     this->m_contextNetworkAvailable = this->m_coreAvailable || this->getIContextNetwork()->isUsingImplementingObject();
     this->m_contextAudioAvailable = this->m_coreAvailable || this->getIContextAudio()->isUsingImplementingObject();

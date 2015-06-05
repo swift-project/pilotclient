@@ -29,7 +29,7 @@ namespace BlackGui
     {
         CAtcStationComponent::CAtcStationComponent(QWidget *parent) :
             QTabWidget(parent),
-            COriginatorAware(this),
+            CIdentifiable(this),
             ui(new Ui::CAtcStationComponent),
             m_updateTimer(new CUpdateTimer("CAtcStationComponent", &CAtcStationComponent::update, this))
         {
@@ -257,7 +257,7 @@ namespace BlackGui
         {
             if (unit != CComSystem::Com1 && unit != CComSystem::Com2) { return; }
             if (!CComSystem::isValidComFrequency(frequency)) { return; }
-            this->getIContextOwnAircraft()->updateActiveComFrequency(frequency, static_cast<int>(unit), originator());
+            this->getIContextOwnAircraft()->updateActiveComFrequency(frequency, static_cast<int>(unit), identifier());
         }
 
         void CAtcStationComponent::updateTreeView()

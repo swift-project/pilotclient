@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKMISC_ORIGINATOR_H
-#define BLACKMISC_ORIGINATOR_H
+#ifndef BLACKMISC_IDENTIFIER_H
+#define BLACKMISC_IDENTIFIER_H
 
 //! \file
 
@@ -21,16 +21,18 @@
 
 namespace BlackMisc
 {
-    //! Value object encapsulating information about the originiator
-    class BLACKMISC_EXPORT COriginator :
-        public CValueObject<COriginator>,
+    /*!
+     * Value object encapsulating information identifying a component of a modular distributed swift process (core, GUI, audio)
+     */
+    class BLACKMISC_EXPORT CIdentifier :
+        public CValueObject<CIdentifier>,
         public ITimestampBased
     {
     public:
         //! Properties by index
         enum ColumnIndex
         {
-            IndexName = BlackMisc::CPropertyIndex::GlobalIndexOriginator,
+            IndexName = BlackMisc::CPropertyIndex::GlobalIndexIdentifier,
             IndexMachineId,
             IndexMachineIdBase64,
             IndexMachineName,
@@ -42,7 +44,7 @@ namespace BlackMisc
         };
 
         //! Constructor.
-        COriginator(const QString &name = QString());
+        CIdentifier(const QString &name = QString());
 
         //! Name
         QString getName() const { return m_name; }
@@ -84,16 +86,16 @@ namespace BlackMisc
         void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
     private:
-        BLACK_ENABLE_TUPLE_CONVERSION(COriginator)
-        QString m_name;            //!< originator name
+        BLACK_ENABLE_TUPLE_CONVERSION(CIdentifier)
+        QString m_name;            //!< object name
         QString m_machineIdBase64; //!< base 64 encoded machine id
         QString m_machineName;     //!< human readable machine name
-        QString m_processName;
-        qint64 m_processId;
+        QString m_processName;     //!< process name
+        qint64 m_processId;        //!< PID
     };
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::COriginator, (
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CIdentifier, (
                                    attr(o.m_name),
                                    attr(o.m_machineIdBase64),
                                    attr(o.m_machineName, flags <DisabledForComparison | DisabledForHashing> ()),
@@ -102,6 +104,6 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::COriginator, (
                                    attr(o.m_timestampMSecsSinceEpoch, flags <DisabledForComparison | DisabledForHashing> ())
                                ))
 
-Q_DECLARE_METATYPE(BlackMisc::COriginator)
+Q_DECLARE_METATYPE(BlackMisc::CIdentifier)
 
 #endif // guard

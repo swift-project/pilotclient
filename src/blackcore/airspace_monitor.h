@@ -82,23 +82,23 @@ namespace BlackCore
 
         //! \copydoc IRemoteAircraftProvider::updateAircraftEnabled
         //! \ingroup remoteaircraftprovider
-        virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const BlackMisc::COriginator &originator) override;
+        virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const BlackMisc::CIdentifier &originator) override;
 
         //! \copydoc IRemoteAircraftProvider::updateAircraftModel
         //! \ingroup remoteaircraftprovider
-        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::COriginator &originator) override;
+        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
 
         //! \copydoc IRemoteAircraftProvider::updateFastPositionEnabled
         //! \ingroup remoteaircraftprovider
-        virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates, const BlackMisc::COriginator &originator) override;
+        virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates, const BlackMisc::CIdentifier &originator) override;
 
         //! \copydoc IRemoteAircraftProvider::updateAircraftRendered
         //! \ingroup remoteaircraftprovider
-        virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered, const BlackMisc::COriginator &originator) override;
+        virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered, const BlackMisc::CIdentifier &originator) override;
 
         //! \copydoc IRemoteAircraftProvider::updateMarkAllAsNotRendered
         //! \ingroup remoteaircraftprovider
-        virtual void updateMarkAllAsNotRendered(const BlackMisc::COriginator &originator) override;
+        virtual void updateMarkAllAsNotRendered(const BlackMisc::CIdentifier &originator) override;
 
         //! Returns the list of users we know about
         BlackMisc::Network::CUserList getUsers() const;

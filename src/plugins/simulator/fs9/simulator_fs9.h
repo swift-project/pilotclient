@@ -71,7 +71,7 @@ namespace BlackSimPlugin
             virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
             //! \copydoc ISimulator::updateOwnSimulatorCockpit()
-            virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &ownAircraft, const BlackMisc::COriginator &originator) override;
+            virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &ownAircraft, const BlackMisc::CIdentifier &originator) override;
 
             //! \copydoc ISimulator::displayStatusMessage()
             virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const override;

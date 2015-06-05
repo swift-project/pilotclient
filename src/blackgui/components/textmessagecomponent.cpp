@@ -148,12 +148,12 @@ namespace BlackGui
             }
         }
 
-        COriginator CTextMessageComponent::componentOriginator()
+        CIdentifier CTextMessageComponent::componentIdentifier()
         {
-            if (m_originator.getName().isEmpty())
-                m_originator = COriginator(QStringLiteral("TEXTMESSAGECOMPONENT"));
+            if (m_identifier.getName().isEmpty())
+                m_identifier = CIdentifier(QStringLiteral("TEXTMESSAGECOMPONENT"));
 
-            return m_originator;
+            return m_identifier;
         }
 
         void CTextMessageComponent::ps_onChangedAircraftCockpit()
@@ -366,7 +366,7 @@ namespace BlackGui
 
             // relay the command
             if (cl.isEmpty()) { return; }
-            emit commandEntered(cl, componentOriginator());
+            emit commandEntered(cl, componentIdentifier());
         }
 
         QString CTextMessageComponent::textMessageToCommand(const QString &enteredLine)
@@ -433,9 +433,9 @@ namespace BlackGui
             this->displayTextMessage(sentMessage);
         }
 
-        bool CTextMessageComponent::handleGlobalCommandLine(const QString &commandLine, const COriginator &originator)
+        bool CTextMessageComponent::handleGlobalCommandLine(const QString &commandLine, const CIdentifier &originator)
         {
-            if (originator == componentOriginator()) { return false; }
+            if (originator == componentIdentifier()) { return false; }
             if (commandLine.isEmpty() || commandLine.startsWith(".")) { return false; }
 
             // non command input

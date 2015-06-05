@@ -11,7 +11,7 @@
 #include "blackcore/input_manager.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/loghandler.h"
-#include "blackmisc/originatorlist.h"
+#include "blackmisc/identifierlist.h"
 #include <QObject>
 #include <QMetaEnum>
 #include <QDBusConnection>
@@ -32,7 +32,7 @@ namespace BlackCore
         connect(inputManager, &CInputManager::hotkeyFuncEvent, this, &CContextApplicationProxy::processHotkeyFuncEvent);
         inputManager->setEventForwarding(true);
 
-        connect(this, &IContextApplication::messageLogged, this, [](const CStatusMessage & message, const COriginator & origin)
+        connect(this, &IContextApplication::messageLogged, this, [](const CStatusMessage & message, const CIdentifier & origin)
         {
             if (!origin.isFromSameProcess())
             {
@@ -45,7 +45,7 @@ namespace BlackCore
     {
         // signals originating from impl side
         bool s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                                    "messageLogged", this, SIGNAL(messageLogged(BlackMisc::CStatusMessage, BlackMisc::COriginator)));
+                                    "messageLogged", this, SIGNAL(messageLogged(BlackMisc::CStatusMessage, BlackMisc::CIdentifier)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
                                "registrationChanged", this, SIGNAL(registrationChanged()));
@@ -56,24 +56,24 @@ namespace BlackCore
         Q_UNUSED(s);
     }
 
-    void CContextApplicationProxy::logMessage(const CStatusMessage &message, const COriginator &origin)
+    void CContextApplicationProxy::logMessage(const CStatusMessage &message, const CIdentifier &origin)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("logMessage"), message, origin);
     }
 
-    BlackMisc::COriginator CContextApplicationProxy::registerApplication(const COriginator &application)
+    BlackMisc::CIdentifier CContextApplicationProxy::registerApplication(const CIdentifier &application)
     {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::COriginator>(QLatin1Literal("registerApplication"), application);
+        return this->m_dBusInterface->callDBusRet<BlackMisc::CIdentifier>(QLatin1Literal("registerApplication"), application);
     }
 
-    void CContextApplicationProxy::unregisterApplication(const COriginator &application)
+    void CContextApplicationProxy::unregisterApplication(const CIdentifier &application)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("unregisterApplication"), application);
     }
 
-    BlackMisc::COriginatorList CContextApplicationProxy::getRegisteredApplications() const
+    BlackMisc::CIdentifierList CContextApplicationProxy::getRegisteredApplications() const
     {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::COriginatorList>(QLatin1Literal("getRegisteredApplications"));
+        return this->m_dBusInterface->callDBusRet<BlackMisc::CIdentifierList>(QLatin1Literal("getRegisteredApplications"));
     }
 
     bool CContextApplicationProxy::writeToFile(const QString &fileName, const QString &content)

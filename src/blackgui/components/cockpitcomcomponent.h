@@ -13,7 +13,7 @@
 #include "blackgui/blackguiexport.h"
 #include "enablefordockwidgetinfoarea.h"
 #include "enableforruntime.h"
-#include "blackmisc/originatoraware.h"
+#include "blackmisc/identifiable.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/aviation/transponder.h"
 #include "blackmisc/audio/voiceroomlist.h"
@@ -29,7 +29,7 @@ namespace BlackGui
         //! The main cockpit area
         class BLACKGUI_EXPORT CCockpitComComponent :
             public QFrame,
-            public BlackMisc::COriginatorAware,
+            public BlackMisc::CIdentifiable,
             public CEnableForDockWidgetInfoArea,
             public CEnableForRuntime
         {
@@ -68,13 +68,13 @@ namespace BlackGui
             void ps_guiChangedSelcal();
 
             //! Update cockpit from context
-            void ps_updateCockpitFromContext(const BlackMisc::Aviation::CAircraft &ownAircraft, const BlackMisc::COriginator &originator);
+            void ps_updateCockpitFromContext(const BlackMisc::Aviation::CAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
 
             //! Cockpit values have been changed in GUI
             void ps_testSelcal();
 
             //! SELCAL was changed
-            void ps_onChangedSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::COriginator &originator);
+            void ps_onChangedSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator);
 
             //! Update voice room related information
             void ps_onChangedVoiceRoomStatus(const BlackMisc::Audio::CVoiceRoomList &selectedVoiceRooms, bool connected);

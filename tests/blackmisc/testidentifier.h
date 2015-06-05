@@ -9,33 +9,33 @@
 
 //! \file
 
-#ifndef BLACKMISCTEST_TESTORIGINATOR_H
-#define BLACKMISCTEST_TESTORIGINATOR_H
+#ifndef BLACKMISCTEST_TESTIDENTIFIER_H
+#define BLACKMISCTEST_TESTIDENTIFIER_H
 
-#include "blackmisc/originatoraware.h"
+#include "blackmisc/identifiable.h"
 #include <QtTest/QtTest>
 
 namespace BlackMiscTest
 {
-    //! Testing orignator
-    class CTestOriginator : public QObject
+    //! Testing object identifier
+    class CTestIdentifier : public QObject
     {
         Q_OBJECT
 
     public:
         //! Constructor
-        explicit CTestOriginator(QObject *parent = nullptr) : QObject(parent) {}
+        explicit CTestIdentifier(QObject *parent = nullptr) : QObject(parent) {}
 
     private slots:
-        void originatorBasics();
+        void identifierBasics();
     };
 
-    //! Test originator aware
-    class CTestOriginatorAware : public BlackMisc::COriginatorAware
+    //! Test identifiable object
+    class CTestIdentifiable : public BlackMisc::CIdentifiable
     {
     public:
         //! Constructor
-        CTestOriginatorAware(QObject *nameObject);
+        CTestIdentifiable(QObject *nameObject);
     };
 
 } // namespace

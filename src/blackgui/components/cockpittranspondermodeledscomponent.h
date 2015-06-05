@@ -15,7 +15,7 @@
 #include "blackgui/blackguiexport.h"
 #include "enableforruntime.h"
 #include "../led.h"
-#include "blackmisc/originatoraware.h"
+#include "blackmisc/identifiable.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/aviation/transponder.h"
 #include <QFrame>
@@ -29,7 +29,7 @@ namespace BlackGui
         class BLACKGUI_EXPORT CCockpitTransponderModeLedsComponent :
             public QFrame,
             public CEnableForRuntime,
-            public BlackMisc::COriginatorAware
+            public BlackMisc::CIdentifiable
         {
             Q_OBJECT
 
@@ -43,7 +43,7 @@ namespace BlackGui
 
         private slots:
             //! \copydoc IContextOwnAircraft::changedAircraftCockpit
-            void ps_onAircraftCockpitChanged(const BlackMisc::Aviation::CAircraft &aircraft, const BlackMisc::COriginator &originator);
+            void ps_onAircraftCockpitChanged(const BlackMisc::Aviation::CAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
             //! LED clicked
             void ps_onLedClicked();

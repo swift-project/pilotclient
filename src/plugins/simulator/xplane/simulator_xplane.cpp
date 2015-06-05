@@ -110,7 +110,7 @@ namespace BlackSimPlugin
                     Aviation::CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() }),
                     Aviation::CComSystem::getCom2System({ m_xplaneData.com2Active, CFrequencyUnit::kHz() }, { m_xplaneData.com2Standby, CFrequencyUnit::kHz() }),
                     Aviation::CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent)),
-                    originator()
+                    identifier()
                 );
             }
         }
@@ -307,10 +307,10 @@ namespace BlackSimPlugin
             return getAircraftInRangeForCallsign(callsign).isRendered();
         }
 
-        bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const COriginator &originator)
+        bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const CIdentifier &originator)
         {
             Q_ASSERT(isConnected());
-            if (originator == this->originator()) { return false; }
+            if (originator == this->identifier()) { return false; }
             auto com1 = Aviation::CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() });
             auto com2 = Aviation::CComSystem::getCom2System({ m_xplaneData.com2Active, CFrequencyUnit::kHz() }, { m_xplaneData.com2Standby, CFrequencyUnit::kHz() });
             auto xpdr = Aviation::CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent));
@@ -344,7 +344,7 @@ namespace BlackSimPlugin
             // Is there any model matching required ????
             CAircraftIcaoData icao = newRemoteAircraft.getIcaoInfo();
             m_traffic->addPlane(newRemoteAircraft.getCallsign().asString(), icao.getAircraftDesignator(), icao.getAirlineDesignator(), icao.getLivery());
-            updateAircraftRendered(newRemoteAircraft.getCallsign(), true, originator());
+            updateAircraftRendered(newRemoteAircraft.getCallsign(), true, identifier());
             CLogMessage(this).info("XP: Added aircraft %1") << newRemoteAircraft.getCallsign().toQString();
             return true;
         }
@@ -379,7 +379,7 @@ namespace BlackSimPlugin
         {
             Q_ASSERT(isConnected());
             m_traffic->removePlane(callsign.asString());
-            updateAircraftRendered(callsign, false, originator());
+            updateAircraftRendered(callsign, false, identifier());
             CLogMessage(this).info("XP: Removed aircraft %1") << callsign.toQString();
             return true;
         }
@@ -389,7 +389,7 @@ namespace BlackSimPlugin
             //! \todo XP driver obtain number of removed aircraft
             int r = getAircraftInRangeCount();
             m_traffic->removeAllPlanes();
-            updateMarkAllAsNotRendered(originator());
+            updateMarkAllAsNotRendered(identifier());
             CLogMessage(this).info("XP: Removed all aircraft");
             return r;
         }
@@ -400,7 +400,7 @@ namespace BlackSimPlugin
             return getAircraftInRange().findByRendered(true).getCallsigns(); // just a poor workaround
         }
 
-        bool CSimulatorXPlane::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft, const COriginator &originator)
+        bool CSimulatorXPlane::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
             return this->changeRemoteAircraftEnabled(aircraft, originator);
         }
@@ -411,9 +411,9 @@ namespace BlackSimPlugin
             return CAircraftIcaoData();
         }
 
-        bool CSimulatorXPlane::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft, const COriginator &originator)
+        bool CSimulatorXPlane::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
-            if (originator == this->originator()) { return false; }
+            if (originator == this->identifier()) { return false; }
             if (aircraft.isEnabled())
             {
                 this->physicallyAddRemoteAircraft(aircraft);

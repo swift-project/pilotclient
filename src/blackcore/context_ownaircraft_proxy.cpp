@@ -30,7 +30,7 @@ namespace BlackCore
     void CContextOwnAircraftProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
         bool s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
-                                    "changedAircraftCockpit", this, SIGNAL(changedAircraftCockpit(BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::COriginator)));
+                                    "changedAircraftCockpit", this, SIGNAL(changedAircraftCockpit(BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::CIdentifier)));
         Q_ASSERT(s);
         Q_UNUSED(s);
     }
@@ -40,12 +40,12 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraft>(QLatin1Literal("getOwnAircraft"));
     }
 
-    bool CContextOwnAircraftProxy::updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const COriginator &originator)
+    bool CContextOwnAircraftProxy::updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const CIdentifier &originator)
     {
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateCockpit"), com1, com2, transponder, originator);
     }
 
-    bool CContextOwnAircraftProxy::updateActiveComFrequency(const PhysicalQuantities::CFrequency &frequency, int comUnit, const COriginator &originator)
+    bool CContextOwnAircraftProxy::updateActiveComFrequency(const PhysicalQuantities::CFrequency &frequency, int comUnit, const CIdentifier &originator)
     {
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateActiveComFrequency"), frequency, comUnit, originator);
     }
@@ -55,7 +55,7 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateOwnAircraftPilot"), pilot);
     }
 
-    bool CContextOwnAircraftProxy::updateSelcal(const CSelcal &selcal, const COriginator &originator)
+    bool CContextOwnAircraftProxy::updateSelcal(const CSelcal &selcal, const CIdentifier &originator)
     {
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateSelcal"), selcal, originator);
     }
@@ -90,7 +90,7 @@ namespace BlackCore
         this->m_dBusInterface->callDBus(QLatin1Literal("enableAutomaticVoiceRoomResolution"), enable);
     }
 
-    bool CContextOwnAircraftProxy::parseCommandLine(const QString &commandLine, const COriginator &originator)
+    bool CContextOwnAircraftProxy::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
     {
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("parseCommandLine"), commandLine, originator);
     }

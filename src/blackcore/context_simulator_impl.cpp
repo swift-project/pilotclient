@@ -616,19 +616,19 @@ namespace BlackCore
         getIContextOwnAircraft()->changedAircraftCockpit(ownAircraft, IContextSimulator::InterfaceName());
     }
 
-    void CContextSimulator::ps_changedRemoteAircraftModel(const CSimulatedAircraft &aircraft, const COriginator &originator)
+    void CContextSimulator::ps_changedRemoteAircraftModel(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
     {
         Q_ASSERT(this->m_simulatorPlugin);
         this->m_simulatorPlugin->simulator->changeRemoteAircraftModel(aircraft, originator);
     }
 
-    void CContextSimulator::ps_changedRemoteAircraftEnabled(const CSimulatedAircraft &aircraft, const COriginator &originator)
+    void CContextSimulator::ps_changedRemoteAircraftEnabled(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
     {
         Q_ASSERT(this->m_simulatorPlugin);
         this->m_simulatorPlugin->simulator->changeRemoteAircraftEnabled(aircraft, originator);
     }
 
-    void CContextSimulator::ps_updateSimulatorCockpitFromContext(const CAircraft &ownAircraft, const COriginator &originator)
+    void CContextSimulator::ps_updateSimulatorCockpitFromContext(const CAircraft &ownAircraft, const CIdentifier &originator)
     {
         // todo:
         // This was previously an assert and it should be one again in the future.
