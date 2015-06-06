@@ -149,7 +149,7 @@ namespace BlackMisc
             {
                 InitState e = NotInitialized;
                 InitState d = InitInProgress;
-                if (!m_initState.compare_exchange_weak(e, d)) { return; }
+                if (!m_initState.compare_exchange_strong(e, d)) { return; }
 
                 // sync
                 this->synchronize();
