@@ -20,7 +20,6 @@
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/pixmap.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/pluginstorageprovider.h"
 #include "blackmisc/variant.h"
 #include <QTimer>
 #include <QDir>
@@ -28,10 +27,11 @@
 
 namespace BlackCore
 {
+    class CPluginManagerSimulator;
+
     //! Network simulator concrete implementation
     class BLACKCORE_EXPORT CContextSimulator :
-        public IContextSimulator,
-        public BlackMisc::IPluginStorageProvider
+        public IContextSimulator
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME)
@@ -41,12 +41,6 @@ namespace BlackCore
     public:
         //! Destructor
         virtual ~CContextSimulator();
-
-        //! \copydoc IPluginStorageProvider::getPluginData
-        virtual BlackMisc::CVariant getPluginData(const QObject *obj, const QString &key) const;
-
-        //! \copydoc IPluginStorageProvider::setPluginData
-        virtual void setPluginData(const QObject *obj, const QString &key, const BlackMisc::CVariant &value);
 
         //! Gracefully shut down, e.g. for plugin unloading
         void gracefulShutdown();
@@ -178,33 +172,11 @@ namespace BlackCore
         void ps_updateSimulatorCockpitFromContext(const BlackMisc::Aviation::CAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
 
     private:
-        //! A simple struct containing all info about the plugin.
-        //! \todo Would we want to use m_member style here?
-        struct PluginData
-        {
-            PluginData(const BlackMisc::Simulation::CSimulatorPluginInfo &info, ISimulatorFactory *factory, ISimulatorListener *listener, ISimulator *simulator, const QString &identifier) :
-                info(info), factory(factory), listener(listener), simulator(simulator), identifier(identifier) {}
-
-            BlackMisc::Simulation::CSimulatorPluginInfo info;
-            ISimulatorFactory *factory = nullptr;   //!< Lazy-loaded, nullptr by default
-            ISimulatorListener *listener = nullptr; //!< Listener instance, nullptr by default
-            ISimulator *simulator = nullptr;        //!< The simulator itself (always nullptr unless it is the currently working one)
-            QString identifier = QString();         //!< The plugin identifier
-            QHash<QString, BlackMisc::CVariant> m_storage; //!< Permanent plugin storage - data stored here will be kept even when plugin is unloaded
-        };
-
-        //! Lazy-loads the driver, instantiates the factory and returns it.
-        //! \return nullptr if no corresponding driver was found or an error occured during loading it.
-        ISimulatorFactory *getSimulatorFactory(const BlackMisc::Simulation::CSimulatorPluginInfo &simulator);
-
         //! Load plugin, if required start listeners before
         bool loadSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo, bool withListeners);
 
         //! Unload plugin, if desired restart listeners
         void unloadSimulatorPlugin();
-
-        //! Find and catalog all simulator plugins
-        void findSimulatorPlugins();
 
         //! Load plugin from settings
         bool loadSimulatorPluginFromSettings();
@@ -218,12 +190,8 @@ namespace BlackCore
         //! Call stop() on all loaded listeners
         void stopSimulatorListeners();
 
-        //! Locate PluginData (linear search)
-        PluginData *findPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
-
-        QDir m_pluginsDir;
-        QList<PluginData> m_simulatorPlugins;
-        PluginData *m_simulatorPlugin = nullptr; //!< Currently loaded simulator plugin
+        QPair<BlackMisc::Simulation::CSimulatorPluginInfo, ISimulator *> m_simulatorPlugin; //!< Currently loaded simulator plugin
+        CPluginManagerSimulator *m_plugins = nullptr;
         BlackMisc::CRegularThread m_listenersThread;
     };
 

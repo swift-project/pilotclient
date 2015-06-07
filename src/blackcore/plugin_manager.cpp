@@ -17,14 +17,93 @@
 
 using namespace BlackMisc;
 
-namespace BlackCore {
+namespace BlackCore
+{
 
-    BlackMisc::CSequence<QJsonObject> CPluginManager::plugins(const QString &iid) const
+    IPluginManager::IPluginManager(QObject *parent) : QObject(parent)
     {
-        return m_metadatas.values(iid);
+
     }
 
-    QObject *CPluginManager::getPluginById(const QString &identifier)
+    void IPluginManager::collectPlugins()
+    {
+        QDir pluginDir(pluginDirectory());
+        if (!pluginDir.exists())
+        {
+            CLogMessage(this).warning("No such directory: %1") << pluginDir.path();
+            return;
+        }
+
+        QDirIterator it(pluginDir, QDirIterator::FollowSymlinks);
+        while (it.hasNext())
+        {
+            if (!QLibrary::isLibrary(it.next()))
+            {
+                continue;
+            }
+
+            CLogMessage(this).debug() << "Loading plugin: " << it.filePath();
+            QPluginLoader loader(it.filePath());
+            QJsonObject json = loader.metaData();
+            if (!isValid(json))
+            {
+                CLogMessage(this).warning("Plugin %1 invalid, not loading it") << it.filePath();
+                continue;
+            }
+
+            QString identifier = pluginIdentifier(json);
+            m_paths.insert(identifier, it.filePath());
+            m_metadatas.push_back(json);
+        }
+    }
+
+    QString IPluginManager::pluginDirectory() const
+    {
+        return qApp->applicationDirPath() % QStringLiteral("/plugins");
+    }
+
+    bool IPluginManager::isValid(const QJsonObject &metadata) const
+    {
+        if (!metadata.contains("IID") || !metadata["IID"].isString())
+        {
+            return false;
+        }
+
+        if (!metadata["MetaData"].isObject())
+        {
+            return false;
+        }
+
+        QJsonObject data = metadata["MetaData"].toObject();
+        if (!data.contains("identifier") || !data["identifier"].isString())
+        {
+            return false;
+        }
+
+        auto iids = acceptedIids();
+        for (const QString &iid : iids)
+        {
+            if (metadata["IID"].toString() == iid)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    QString IPluginManager::pluginIdentifier(const QJsonObject &metadata) const
+    {
+        Q_ASSERT(isValid(metadata));
+        return metadata.value("MetaData").toObject().value("identifier").toString();
+    }
+
+    QString IPluginManager::getIdByPlugin(const QObject *instance) const
+    {
+        return m_instanceIds.value(instance, QString());
+    }
+
+    QObject *IPluginManager::getPluginByIdImpl(const QString &identifier)
     {
         if (m_instances.contains(identifier))
         {
@@ -43,6 +122,7 @@ namespace BlackCore {
         if (instance)
         {
             m_instances.insert(identifier, instance);
+            m_instanceIds.insert(instance, identifier);
             return instance;
         }
         else
@@ -50,82 +130,6 @@ namespace BlackCore {
             CLogMessage(this).error(loader.errorString());
             return nullptr;
         }
-    }
-
-    CPluginManager *CPluginManager::getInstance()
-    {
-        static CPluginManager *instance = nullptr;
-        if (!instance)
-        {
-            instance = new CPluginManager();
-        }
-        return instance;
-    }
-
-    CPluginManager::CPluginManager(QObject *parent) : QObject(parent)
-    {
-        collectPlugins();
-
-        connect(qApp, &QCoreApplication::aboutToQuit, this, &CPluginManager::deleteLater);
-    }
-
-    void CPluginManager::collectPlugins()
-    {
-        QDir pluginDir(qApp->applicationDirPath().append("/plugins"));
-        if (!pluginDir.exists())
-        {
-            CLogMessage(this).warning("No plugins directory: %1") << pluginDir.path();
-            return;
-        }
-
-        QDirIterator it(pluginDir, QDirIterator::Subdirectories);
-        while (it.hasNext())
-        {
-            if (!QLibrary::isLibrary(it.next()))
-            {
-                continue;
-            }
-
-            CLogMessage(this).debug() << "Loading plugin: " << it.filePath();
-            QPluginLoader loader(it.filePath());
-            QJsonObject json = loader.metaData();
-            QString identifier = pluginIdentifier(json);
-            if (identifier.isEmpty())
-            {
-                CLogMessage(this).warning("Plugin %1 invalid, not loading it") << it.filePath();
-                continue;
-            }
-
-            m_paths.insert(identifier, it.filePath());
-            m_metadatas.insert(json["IID"].toString(), json);
-        }
-    }
-
-    QString CPluginManager::pluginIdentifier(const QJsonObject &metadata)
-    {
-        if (!metadata.contains("IID") || !metadata["IID"].isString())
-        {
-            return QString();
-        }
-
-        if (!metadata["MetaData"].isObject())
-        {
-            return QString();
-        }
-
-        QJsonObject data = metadata["MetaData"].toObject();
-        if (!data.contains("identifier"))
-        {
-            return QString();
-        }
-
-        QJsonValue identifier = data["identifier"];
-        if (!identifier.isString())
-        {
-            return QString();
-        }
-
-        return identifier.toString();
     }
 
 } // namespace

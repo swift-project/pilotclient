@@ -9,9 +9,10 @@
 
 //! \file
 
-#ifndef CPLUGINMANAGER_H
-#define CPLUGINMANAGER_H
+#ifndef BLACKCORE_PLUGIN_MANAGER_H
+#define BLACKCORE_PLUGIN_MANAGER_H
 
+#include "blackcoreexport.h"
 #include "blackmisc/sequence.h"
 #include <QObject>
 #include <QMultiMap>
@@ -21,45 +22,67 @@ namespace BlackCore
 {
 
     /*!
-     * \brief Manages all installed plugins, provides easy access to all of them.
-     * Plugin loading works as follows:
-     *  1. Collect all interesting plugins by their IID (\ref plugins());
-     *      all plugins are guaranteed to be valid, i.e. they have valid IID and identifier.
-     *  2. Load specified plugin (\ref getPluginById()).
+     * Base class for all contexts that provide plugin support.
+     * It is responsible for locating, validating and loading plugins.
      */
-    class CPluginManager : public QObject
+    class BLACKCORE_EXPORT IPluginManager : public QObject
     {
         Q_OBJECT
 
     public:
-        //! Retrieves plugin metadata list for the given IID.
-        //! If no implementations are found, the empty list is returned.
-        BlackMisc::CSequence<QJsonObject> plugins(const QString &iid) const;
+        //! Constructor
+        IPluginManager(QObject *parent = nullptr);
 
-        //! Loads the given plugin (if necessary) and returns its instance.
-        //! Returns _nullptr_ on failure.
-        QObject *getPluginById(const QString &identifier);
-
-        //! Gets the singleton
-        static CPluginManager *getInstance();
+        //! Looks for all available plugins
+        virtual void collectPlugins();
 
     protected:
-        //! Constructor
-        explicit CPluginManager(QObject *parent = nullptr);
+        //! Returns the list of valid IIDs for the implementation
+        virtual BlackMisc::CSequence<QString> acceptedIids() const = 0;
+
+        //! Where to look for plugins, absolute path.
+        //! Default implementation returns `plugins` in the application dir.
+        virtual QString pluginDirectory() const;
+
+        //! Defines whether the given plugin is valid or not, based on its metadata.
+        //! The default implementation checks if all values common for all plugins
+        //! (i.e. MetaData and identifier) are present and valid. It also checks
+        //! if each plugin meets one of the specified in \ref acceptedIids() IIDs.
+        //! Override custom plugin validation in the subclass if needed.
+        virtual bool isValid(const QJsonObject &metadata) const;
+
+        //! Gets the plugin identifier from the metadata.
+        QString pluginIdentifier(const QJsonObject &metadata) const;
+
+        //! Gets plugin identifier by its instance
+        QString getIdByPlugin(const QObject *instance) const;
+
+        //! Loads the given plugin (if necessary), casts it to the desired
+        //! type and returns its instance. Returns `nullptr` on failure.
+        template <class T>
+        T *getPluginById(const QString &identifier)
+        {
+            return qobject_cast<T *>(getPluginByIdImpl(identifier));
+        }
+
+        //! Gets direct access to all plugins' metadata
+        const BlackMisc::CSequence<QJsonObject> &getPlugins()
+        {
+            return m_metadatas;
+        }
 
     private:
-        //! Looks (recursively) for all installed plugins
-        void collectPlugins();
 
-        //! Checks whether the provided metadata is valid
-        //! \return The plugin identifier
-        QString pluginIdentifier(const QJsonObject &metadata);
+        //! Loads the given plugin (if necessary) and returns its instance.
+        //! Returns `nullptr` on failure.
+        QObject *getPluginByIdImpl(const QString &identifier);
 
-        QMultiMap<QString, QJsonObject> m_metadatas; //!< IID <-> metadata pairs
+        BlackMisc::CSequence<QJsonObject> m_metadatas;
         QMap<QString, QString> m_paths; //!< identifier <-> file path pairs
-        QMap<QString, QObject*> m_instances; //!< identifier <-> instance pairs
+        QMap<QString, QObject *> m_instances; //!< identifier <-> instance pairs
+        QMap<const QObject *, QString> m_instanceIds; //!< instance <-> identifier pairs
 
     };
 }
 
-#endif // CPLUGINMANAGER_H
+#endif // BLACKCORE_PLUGIN_MANAGER_H
