@@ -13,6 +13,7 @@
 #include "context_settings.h"
 #include "context_application.h"
 #include "context_network_impl.h"
+#include "plugin_manager.h"
 #include "context_runtime.h"
 #include "blackcore/blackcorefreefunctions.h"
 #include "blackmisc/propertyindexvariantmap.h"
@@ -53,21 +54,12 @@ namespace BlackCore
 
         if (!plugin->factory)
         {
-            QPluginLoader loader(plugin->fileName);
-            QObject *instance = loader.instance();
-            if (instance)
+            CPluginManager *pm = CPluginManager::getInstance();
+            ISimulatorFactory *factory = qobject_cast<ISimulatorFactory *>(pm->getPluginById(plugin->identifier));
+            if (factory)
             {
-                ISimulatorFactory *factory = qobject_cast<ISimulatorFactory *>(instance);
-                if (factory)
-                {
-                    plugin->factory = factory;
-                    CLogMessage(this).info("Loaded driver: %1") << plugin->info.toQString();
-                }
-            }
-            else
-            {
-                QString errorMsg = loader.errorString().append(" ").append("Also check if required dll/libs of plugin exists");
-                CLogMessage(this).error(errorMsg);
+                plugin->factory = factory;
+                CLogMessage(this).info("Loaded driver: %1") << plugin->info.toQString();
             }
         }
 
@@ -692,39 +684,25 @@ namespace BlackCore
 
     void CContextSimulator::findSimulatorPlugins()
     {
-        const QString path = qApp->applicationDirPath().append("/plugins/simulator");
-        m_pluginsDir = QDir(path);
-        if (!m_pluginsDir.exists())
-        {
-            CLogMessage(this).error("No plugin directory: %1") << m_pluginsDir.currentPath();
-            return;
-        }
+        CPluginManager *pm = CPluginManager::getInstance();
+        auto plugins = pm->plugins("org.swift-project.blackcore.simulatorinterface");
 
-        QStringList fileNames = m_pluginsDir.entryList(QDir::Files);
-        fileNames.sort(Qt::CaseInsensitive); // give a certain order, rather than random file order
-        for (const auto &fileName : fileNames)
+        std::for_each(plugins.begin(), plugins.end(), [this](const QJsonObject &json)
         {
-            if (!QLibrary::isLibrary(fileName))
+            QString identifier = json.value("MetaData").toObject().value("identifier").toString();
+            Q_ASSERT(!identifier.isEmpty());
+            CSimulatorPluginInfo info;
+            info.convertFromJson(json);
+            if (info.isValid())
             {
-                continue;
-            }
-
-            CLogMessage(this).debug() << "Try to load plugin: " << fileName;
-            QString pluginPath = m_pluginsDir.absoluteFilePath(fileName);
-            QPluginLoader loader(pluginPath);
-            QJsonObject json = loader.metaData();
-            CSimulatorPluginInfo simulatorPluginInfo;
-            simulatorPluginInfo.convertFromJson(json);
-            if (simulatorPluginInfo.isValid())
-            {
-                m_simulatorPlugins << PluginData { simulatorPluginInfo, nullptr, nullptr, nullptr, pluginPath};
-                CLogMessage(this).debug() << "Found simulator driver: " << simulatorPluginInfo.toQString();
+                m_simulatorPlugins << PluginData { info, nullptr, nullptr, nullptr, identifier };
+                CLogMessage(this).debug() << "Found simulator driver: " << info.toQString();
             }
             else
             {
-                CLogMessage(this).warning("Simulator driver in %1 is invalid") << pluginPath;
+                CLogMessage(this).warning("Simulator driver in %1 is invalid") << identifier;
             }
-        }
+        });
     }
 
     void CContextSimulator::stopSimulatorListeners()

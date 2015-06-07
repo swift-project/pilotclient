@@ -182,14 +182,14 @@ namespace BlackCore
         //! \todo Would we want to use m_member style here?
         struct PluginData
         {
-            PluginData(const BlackMisc::Simulation::CSimulatorPluginInfo &info, ISimulatorFactory *factory, ISimulatorListener *listener, ISimulator *simulator, const QString &fileName) :
-                info(info), factory(factory), listener(listener), simulator(simulator), fileName(fileName) {}
+            PluginData(const BlackMisc::Simulation::CSimulatorPluginInfo &info, ISimulatorFactory *factory, ISimulatorListener *listener, ISimulator *simulator, const QString &identifier) :
+                info(info), factory(factory), listener(listener), simulator(simulator), identifier(identifier) {}
 
             BlackMisc::Simulation::CSimulatorPluginInfo info;
             ISimulatorFactory *factory = nullptr;   //!< Lazy-loaded, nullptr by default
             ISimulatorListener *listener = nullptr; //!< Listener instance, nullptr by default
             ISimulator *simulator = nullptr;        //!< The simulator itself (always nullptr unless it is the currently working one)
-            QString fileName;                       //!< Plugin file name (relative to plugins/simulator)
+            QString identifier = QString();         //!< The plugin identifier
             QHash<QString, BlackMisc::CVariant> m_storage; //!< Permanent plugin storage - data stored here will be kept even when plugin is unloaded
         };
 
