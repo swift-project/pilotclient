@@ -39,13 +39,14 @@ namespace BlackGui
             Q_ASSERT_X(this->getIContextSimulator(), Q_FUNC_INFO, "missing simulator");
 
             // set values
-            for (const auto &p : getAvailablePlugins(true))
+            for (const auto &p : getAvailablePlugins())
             {
-                ui->cb_Plugins->addItem(p.toQString(), QVariant::fromValue(p));
+                ui->ps_EnabledSimulators->addPlugin(p.getIdentifier(), p.getName(), false);
             }
 
             // connects
-            connect(this->ui->cb_Plugins, static_cast<void (QComboBox::*)(int)> (&QComboBox::currentIndexChanged), this, &CSettingsSimulatorComponent::ps_pluginHasBeenSelectedInComboBox);
+            connect(this->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CSettingsSimulatorComponent::ps_simulatorPluginChanged);
+            connect(this->ui->ps_EnabledSimulators, &CPluginSelector::pluginStateChanged, this, &CSettingsSimulatorComponent::ps_pluginStateChanged);
             connect(this->ui->pb_ApplyMaxAircraft, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedAircraft);
             connect(this->ui->pb_ApplyTimeSync, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyTimeSync);
             connect(this->ui->pb_ApplyMaxDistance, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedDistance);
@@ -56,29 +57,6 @@ namespace BlackGui
 
             // values
             this->ps_simulatorPluginChanged(getIContextSimulator()->getSimulatorPluginInfo());
-        }
-
-        void CSettingsSimulatorComponent::setCurrentPluginInComboBox(const CSimulatorPluginInfo &plugin)
-        {
-            if (plugin.isUnspecified())
-            {
-                ui->cb_Plugins->setCurrentIndex(0);
-                return;
-            }
-
-            for (int i = 0; i < this->ui->cb_Plugins->count(); ++i)
-            {
-                QVariant data = this->ui->cb_Plugins->itemData(i);
-                Q_ASSERT(data.canConvert<CSimulatorPluginInfo>());
-                CSimulatorPluginInfo p = data.value<CSimulatorPluginInfo>();
-
-                if (p.getIdentifier() == plugin.getIdentifier())
-                {
-                    if (i == this->ui->cb_Plugins->currentIndex()) { return; }
-                    this->ui->cb_Plugins->setCurrentIndex(i);
-                    break;
-                }
-            }
         }
 
         void CSettingsSimulatorComponent::setGuiValues()
@@ -125,33 +103,37 @@ namespace BlackGui
             }
         }
 
-        CSimulatorPluginInfoList CSettingsSimulatorComponent::getAvailablePlugins(bool plusAuto) const
+        CSimulatorPluginInfoList CSettingsSimulatorComponent::getAvailablePlugins() const
         {
-            CSimulatorPluginInfoList l(getIContextSimulator()->getAvailableSimulatorPlugins());
-            if (plusAuto) { l.push_front(CSimulatorPluginInfo::autoPlugin()); }
-            return l;
+            return getIContextSimulator()->getAvailableSimulatorPlugins();
         }
 
-        void CSettingsSimulatorComponent::ps_pluginHasBeenSelectedInComboBox(int index)
+        void CSettingsSimulatorComponent::ps_pluginStateChanged(const QString &identifier, bool enabled)
         {
-            Q_ASSERT(this->getIContextSimulator());
-            if (!this->getIContextSimulator()) { return; }
+            Q_ASSERT(getIContextSimulator());
 
-            CSimulatorPluginInfoList simDrivers(getAvailablePlugins(true));
-            if (simDrivers.isEmpty())
+            CSimulatorPluginInfoList simDrivers(getAvailablePlugins());
+            auto selected = std::find_if(simDrivers.begin(), simDrivers.end(),
+                                         [&identifier](const CSimulatorPluginInfo &info)
+                {
+                    return info.getIdentifier() == identifier;
+                });
+
+            if (selected->isUnspecified())
             {
-                CLogMessage(this).error("No drivers available");
-                return;
-            }
-            if (simDrivers.size() <= index)
-            {
-                CLogMessage(this).error("Wrong driver index");
-                return;
+                CLogMessage(this).error("Simulator plugin does not exist: %1") << identifier;
             }
 
-            // update
-            CSimulatorPluginInfo selectedPlugin = simDrivers[index];
-            this->getIContextSimulator()->startSimulatorPlugin(selectedPlugin);
+            if (enabled)
+            {
+                getIContextSimulator()->startSimulatorPlugin(*selected);
+                CLogMessage(this).info("Started listening for %1") << selected->getSimulator();
+            }
+            else
+            {
+                getIContextSimulator()->stopSimulatorPlugin(*selected);
+                CLogMessage(this).info("Stopped listening for %1") << selected->getSimulator();
+            }
 
             // changing of GUI state will be done via received signal
         }

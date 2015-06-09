@@ -39,8 +39,9 @@ namespace BlackGui
             virtual void runtimeHasBeenSet() override;
 
         private slots:
-            //! Driver changed
-            void ps_pluginHasBeenSelectedInComboBox(int index);
+            //! Driver plugin enabled/disabled
+            //! \todo Unload plugin if user disables it while running
+            void ps_pluginStateChanged(const QString &identifier, bool enabled);
 
             //! Apply max.aircraft
             void ps_onApplyMaxRenderedAircraft();
@@ -62,14 +63,11 @@ namespace BlackGui
 
         private:
 
-            //! Smarter way to set current driver, avoids unnecessary signals and less formatting dependend
-            void setCurrentPluginInComboBox(const BlackMisc::Simulation::CSimulatorPluginInfo &plugin);
-
             //! Set the GUI values
             void setGuiValues();
 
             //! Available plugins, auto pseudo plugin added
-            BlackMisc::Simulation::CSimulatorPluginInfoList getAvailablePlugins(bool plusAuto) const;
+            BlackMisc::Simulation::CSimulatorPluginInfoList getAvailablePlugins() const;
 
             QScopedPointer<Ui::CSettingsSimulatorComponent> ui; //!< UI
             bool m_pluginLoaded = false; //!< plugin loaded

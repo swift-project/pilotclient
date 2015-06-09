@@ -176,7 +176,6 @@ namespace BlackCore
                 Q_ASSERT(c);
             }
             times.insert("Post setup, sim.connects", time.restart());
-            this->m_contextSimulator->startSimulatorPlugin(CSimulatorPluginInfo::autoPlugin());
         }
 
         // only where network and(!) own aircraft run locally

@@ -54,7 +54,7 @@ namespace BlackCore
         virtual bool startSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
 
         //! \copydoc IContextSimulator::stopSimulatorPlugin()
-        virtual void stopSimulatorPlugin() override;
+        virtual void stopSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
 
         //! \copydoc IContextSimulator::getSimulatorStatus()
         virtual int getSimulatorStatus() const override;

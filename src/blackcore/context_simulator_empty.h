@@ -50,17 +50,18 @@ namespace BlackCore
             return false;
         }
 
-        //! \copydoc IContextSimulator::stopSimulatorPlugin()
-        virtual void stopSimulatorPlugin() override
-        {
-            logEmptyContextWarning(Q_FUNC_INFO);
-        }
-
         //! \copydoc IContextSimulator::getSimulatorStatus()
         virtual int getSimulatorStatus() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             return 0;
+        }
+
+        //! \copydoc IContextSimulator::stopSimulatorPlugin()
+        virtual void stopSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override
+        {
+            Q_UNUSED(simulatorInfo);
+            logEmptyContextWarning(Q_FUNC_INFO);
         }
 
         //! \copydoc IContextSimulator::getAirportsInRange()

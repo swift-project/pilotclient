@@ -48,7 +48,7 @@ namespace BlackCore
     void CContextSimulator::gracefulShutdown()
     {
         this->disconnect();
-        this->stopSimulatorPlugin();
+        this->unloadSimulatorPlugin();
     }
 
     CSimulatorPluginInfoList CContextSimulator::getAvailableSimulatorPlugins() const
@@ -61,9 +61,15 @@ namespace BlackCore
         return this->loadSimulatorPlugin(simulatorInfo, true);
     }
 
-    void CContextSimulator::stopSimulatorPlugin()
+    void CContextSimulator::stopSimulatorPlugin(const CSimulatorPluginInfo &simulatorInfo)
     {
-        this->unloadSimulatorPlugin();
+        if (!m_simulatorPlugin.first.isUnspecified() && m_simulatorPlugin.first == simulatorInfo)
+        {
+            this->unloadSimulatorPlugin();
+        }
+
+        ISimulatorListener *listener = m_plugins->getListener(simulatorInfo.getIdentifier());
+        QMetaObject::invokeMethod(listener, "stop");
     }
 
     int CContextSimulator::getSimulatorStatus() const
@@ -281,28 +287,24 @@ namespace BlackCore
         Q_ASSERT(!simulatorInfo.isUnspecified());
         Q_ASSERT(CThreadUtils::isCurrentThreadApplicationThread()); // only run in main thread
 
+        if (!simulatorInfo.isValid())
+        {
+            CLogMessage(this).error("Illegal plugin");
+            return false;
+        }
+
         // Is the plugin already loaded?
-        if (!m_simulatorPlugin.first.isUnspecified() &&
-                (m_simulatorPlugin.first == simulatorInfo || simulatorInfo.isAuto()))
+        if (!m_simulatorPlugin.first.isUnspecified())
         {
             return true;
         }
 
-        stopSimulatorListeners(); // we make sure all listeners are stopped and restart those we need
         unloadSimulatorPlugin(); // old plugin unloaded
 
         // now we have a state where no driver is loaded
         if (withListener)
         {
-            // hand over to listeners, when listener is done, it will call this function again
-            if (simulatorInfo.isAuto())
-            {
-                this->listenForAllSimulators();
-            }
-            else
-            {
-                this->listenForSimulator(simulatorInfo);
-            }
+            this->listenForSimulator(simulatorInfo);
             return false; // not a plugin yet, just listener
         }
 

@@ -53,26 +53,6 @@
       <property name="verticalSpacing">
        <number>6</number>
       </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="lbl_Plugin">
-        <property name="text">
-         <string>Driver</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="cb_Plugins">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToMinimumContentsLength</enum>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="lbl_LoadedPlugin">
         <property name="text">
@@ -380,6 +360,9 @@
         </item>
        </layout>
       </item>
+      <item row="0" column="0" colspan="2">
+       <widget class="BlackGui::CPluginSelector" name="ps_EnabledSimulators" native="true"/>
+      </item>
      </layout>
     </widget>
    </item>
@@ -422,6 +405,12 @@
    <class>BlackGui::CLedWidget</class>
    <extends>QWidget</extends>
    <header>blackgui/led.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CPluginSelector</class>
+   <extends>QWidget</extends>
+   <header>blackgui/pluginselector.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -56,14 +56,8 @@ namespace BlackMisc
             //! Description
             const QString &getDescription() const { return m_description; }
 
-            //! Special info of type auto?
-            bool isAuto() const;
-
             //! \copydoc CValueObject::convertToQString
             QString convertToQString(bool i18n = false) const;
-
-            //! Info representing a entry representing automatic plugin selection
-            static const CSimulatorPluginInfo &autoPlugin();
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CSimulatorPluginInfo)

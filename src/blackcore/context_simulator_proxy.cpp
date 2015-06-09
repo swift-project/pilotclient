@@ -166,9 +166,9 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("startSimulatorPlugin"), simulatorInfo);
     }
 
-    void CContextSimulatorProxy::stopSimulatorPlugin()
+    void CContextSimulatorProxy::stopSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo)
     {
-        m_dBusInterface->callDBus(QLatin1Literal("stopSimulatorPlugin"));
+        m_dBusInterface->callDBus(QLatin1Literal("stopSimulatorPlugin"), simulatorInfo);
     }
 
     CPixmap CContextSimulatorProxy::iconForModel(const QString &modelString) const

@@ -99,8 +99,8 @@ namespace BlackCore
         //! Load and start specific simulator plugin
         virtual bool startSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) = 0;
 
-        //! Stop and unload simulator plugin and listeners
-        virtual void stopSimulatorPlugin() = 0;
+        //! Stop listener or unload the given plugin (if currently loaded)
+        virtual void stopSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) = 0;
 
         //! Simulator combined status
         virtual int getSimulatorStatus() const = 0;
