@@ -347,6 +347,25 @@ const char *	XPMPLoadCSLPackage(
 void			XPMPLoadPlanesIfNecessary(void);
 
 /*
+ * XPMPGetNumberOfInstalledModels
+ *
+ * This routine returns the number of found models.
+ *
+ */
+int XPMPGetNumberOfInstalledModels(void);
+
+/*
+ * XPMPGetModelInfo
+ *
+ * Call this routine with an index to get all available info for this model. Valid
+ * index is between 0 and XPMPGetNumberOfInstalledModels(). If you pass an index
+ * out of this range, the out parameters are unchanged.
+ * Make sure the size of all char arrays is big enough.
+ *
+ */
+void XPMPGetModelInfo(int inIndex, const char **outModelName, const char **outIcao, const char **outAirline, const char **outLivery);
+
+/*
  * XPMPCreatePlane
  *
  * This function creates a new plane for a plug-in and returns it.  Pass in an ICAO aircraft ID code,

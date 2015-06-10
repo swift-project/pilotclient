@@ -44,6 +44,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <set>
+#include <cassert>
 
 // This prints debug info on our process of loading Austin's planes.
 #define	DEBUG_MANUAL_LOADING	0
@@ -279,6 +280,37 @@ void	XPMPLoadPlanesIfNecessary(void)
 		}
 	}
 
+}
+
+int XPMPGetNumberOfInstalledModels(void)
+{
+    int number = 0;
+    for (const auto& package : gPackages)
+    {
+        number += package.planes.size();
+    }
+    return number;
+}
+
+void XPMPGetModelInfo(int inIndex, const char** outModelName, const char** outIcao, const char** outAirline, const char** outLivery)
+{
+    int counter = 0;
+    for (const auto& package : gPackages)
+    {
+
+        if (counter + static_cast<int>(package.planes.size()) < inIndex + 1)
+        {
+            counter += package.planes.size();
+            continue;
+        }
+
+        int positionInPackage =  inIndex - counter;
+        *outModelName = package.planes[positionInPackage].modelName.c_str();
+        *outIcao = package.planes[positionInPackage].icao.c_str();
+        *outAirline = package.planes[positionInPackage].airline.c_str();
+        *outLivery = package.planes[positionInPackage].livery.c_str();
+        break;
+    }
 }
 
 /********************************************************************************
