@@ -100,7 +100,7 @@ namespace BlackMisc
 #else
         T &dereference() { Q_ASSERT(m_isValid); return *reinterpret_cast<T *>(m_bytes); }
         const T &dereference() const { Q_ASSERT(m_isValid); return *reinterpret_cast<const T *>(m_bytes); }
-        char m_bytes[sizeof(T)];
+        typename std::aligned_storage<sizeof(T)>::type m_bytes[1];
 #endif
     };
 
