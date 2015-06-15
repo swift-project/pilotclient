@@ -36,7 +36,6 @@ int 							gEnableCount = 1;
 
 vector<CSLPackage_t>			gPackages;
 map<string, string>				gGroupings;
-map<string, string>				gPackageNames;
 
 string							gDefaultPlane;
 map<string, CSLAircraftCode_t>	gAircraftCodes;
