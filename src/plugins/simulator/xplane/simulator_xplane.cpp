@@ -151,6 +151,23 @@ namespace BlackSimPlugin
             }
         }
 
+        void CSimulatorXPlane::ps_installedModelsUpdated(const QStringList &modelStrings, const QStringList &icaos, const QStringList &airlines, const QStringList &liveries)
+        {
+            m_installedModels.clear();
+            auto modelStringsIt = modelStrings.begin();
+            auto icaosIt = icaos.begin();
+            auto airlinesIt = airlines.begin();
+            auto liveriesIt = liveries.begin();
+            for (; modelStringsIt != modelStrings.end() && icaosIt != icaos.end() && airlinesIt != airlines.end() && liveriesIt != liveries.end(); ++modelStringsIt, ++icaosIt, ++airlinesIt, ++liveriesIt)
+            {
+                using namespace BlackMisc::Simulation;
+                CAircraftIcaoData icaoData {*icaosIt, *airlinesIt};
+                icaoData.setLivery(*liveriesIt);
+                CAircraftModel aircraftModel { *modelStringsIt, CAircraftModel::TypeModelMapping, QString(), icaoData };
+                m_installedModels.push_back(aircraftModel);
+            }
+        }
+
         bool CSimulatorXPlane::isConnected() const
         {
             return m_service && m_traffic;
@@ -168,7 +185,9 @@ namespace BlackSimPlugin
                 // FIXME duplication
                 connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::ps_emitOwnAircraftModelChanged);
                 connect(m_service, &CXBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::ps_setAirportsInRange);
+                connect(m_traffic, &CXBusTrafficProxy::installedModelsUpdated, this, &CSimulatorXPlane::ps_installedModelsUpdated);
                 m_service->updateAirportsInRange();
+                m_traffic->updateInstalledModels();
                 m_watcher->setConnection(m_conn);
                 emitSimulatorCombinedStatus();
                 return true;
@@ -243,12 +262,10 @@ namespace BlackSimPlugin
             Q_UNUSED(message);
         }
 
-        BlackMisc::Simulation::CAircraftModelList CSimulatorXPlane::getInstalledModels() const
+        CAircraftModelList CSimulatorXPlane::getInstalledModels() const
         {
             Q_ASSERT(isConnected());
-            //! \todo XP driver, function not available
-            CLogMessage(this).error("Function not avialable");
-            return {};
+            return m_installedModels;
         }
 
         void CSimulatorXPlane::reloadInstalledModels()

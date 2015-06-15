@@ -53,6 +53,10 @@ namespace BlackSimPlugin
 
             void relaySignals();
 
+        signals:
+            //! \copydoc XBus::CTraffic::installedModelsUpdated
+            void installedModelsUpdated(const QStringList &modelStrings, const QStringList &icaos, const QStringList &airlines, const QStringList &liveries);
+
         public slots:
             //! \copydoc XBus::CTraffic::initialize
             bool initialize();
@@ -71,6 +75,9 @@ namespace BlackSimPlugin
 
             //! \copydoc XBus::CTraffic::isDrawingLabels
             bool isDrawingLabels() const;
+
+            //! \copydoc XBus::CTraffic::updateInstalledModels
+            void updateInstalledModels() const;
 
             //! \copydoc XBus::CTraffic::addPlane
             void addPlane(const QString &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);

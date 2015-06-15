@@ -14,6 +14,7 @@
 
 #include "blackcore/simulator_common.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/pixmap.h"
 #include <QDBusConnection>
 
@@ -129,6 +130,7 @@ namespace BlackSimPlugin
             void ps_emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao);
             void ps_fastTimerTimeout();
             void ps_slowTimerTimeout();
+            void ps_installedModelsUpdated(const QStringList &modelStrings, const QStringList &icaos, const QStringList &airlines, const QStringList &liveries);
 
         private:
             QDBusConnection m_conn { "default" };
@@ -138,6 +140,7 @@ namespace BlackSimPlugin
             QTimer *m_fastTimer { nullptr };
             QTimer *m_slowTimer { nullptr };
             BlackMisc::Aviation::CAirportList m_airportsInRange;   //!< aiports in range of own aircraft
+            BlackMisc::Simulation::CAircraftModelList m_installedModels;
 
             //! \todo Add units to members? pitchDeg?, altitudeFt?
             struct // data is written by DBus async method callbacks

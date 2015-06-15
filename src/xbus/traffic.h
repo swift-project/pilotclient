@@ -11,6 +11,8 @@
 #include "datarefs.h"
 #include <QObject>
 #include <QHash>
+#include <QVector>
+#include <QStringList>
 #include "XPMPMultiplayer.h"
 
 //! \cond PRIVATE
@@ -53,6 +55,10 @@ namespace XBus
         //! Called by XPluginStart
         static void initLegacyData();
 
+    signals:
+        //! Installed models updated.
+        void installedModelsUpdated(const QStringList &modelStrings, const QStringList &icaos, const QStringList &airlines, const QStringList &liveries);
+
     public slots:
         //! Initialize the multiplayer planes rendering and return true if successful
         bool initialize();
@@ -71,6 +77,9 @@ namespace XBus
 
         //! Get whether the plugin draws type and callsign labels above aircraft
         bool isDrawingLabels() const;
+
+        //! Called by newly connected client to cause installedModelsUpdated to be emitted.
+        void updateInstalledModels();
 
         //! Introduce a new traffic aircraft
         void addPlane(const QString &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);
