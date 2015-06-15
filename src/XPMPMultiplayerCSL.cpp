@@ -24,12 +24,16 @@
 #include "XPMPMultiplayerCSL.h"
 #include "XPLMUtilities.h"
 #include "XPMPMultiplayerObj.h"
+#include "XStringUtils.h"
 #include "XOGLUtils.h"
 #include <stdio.h>
 #include <algorithm>
 //#include "PlatformUtils.h"
 #include <errno.h>
 #include <string.h>
+#include <fstream>
+#include <sstream>
+#include <functional>
 
 using std::max;
 
@@ -125,6 +129,18 @@ struct XPLMDump {
 		XPLMDebugString(line);
 		XPLMDebugString(".\n");
 	}
+
+    XPLMDump(const string& inFileName, int lineNum, const string& line) {
+        XPLMDebugString("xbus WARNING: Parse Error in file ");
+        XPLMDebugString(inFileName.c_str());
+        XPLMDebugString(" line ");
+        char buf[32];
+        sprintf(buf,"%d", lineNum);
+        XPLMDebugString(buf);
+        XPLMDebugString(".\n             ");
+        XPLMDebugString(line.c_str());
+        XPLMDebugString(".\n");
+    }
 	
 	XPLMDump& operator<<(const char * rhs) {
 		XPLMDebugString(rhs);
@@ -155,16 +171,16 @@ static	bool			DoPackageSub(std::string& ioPath);
 
 bool			DoPackageSub(std::string& ioPath)
 {
-	for (std::map<string, string>::iterator i = gPackageNames.begin(); i != gPackageNames.end(); ++i)
-	{
-		if (strncmp(i->first.c_str(), ioPath.c_str(), i->first.size()) == 0)
-		{
-			ioPath.erase(0, i->first.size());
-			ioPath.insert(0, i->second);
- 			return true;
-		}
-	}
-	return false;
+    for (auto i = gPackages.begin(); i != gPackages.end(); ++i)
+    {
+        if (strncmp(i->name.c_str(), ioPath.c_str(), i->name.size()) == 0)
+        {
+            ioPath.erase(0, i->name.size());
+            ioPath.insert(0, i->path);
+            return true;
+        }
+    }
+    return false;
 }
 
 
@@ -270,6 +286,477 @@ bool			CSL_Init(
 	if (!ok)
 		XPLMDump() << "xbus WARNING: we failed to find xpmp's custom lighting texture at " << inTexturePath << ".\n";
 	return ok;
+}
+
+bool ParseExportCommand(const std::vector<std::string> &tokens, CSLPackage_t &package, const string& path, int lineNum, const string& line)
+{
+    if (tokens.size() != 2)
+    {
+        XPLMDump(path, lineNum, line)  << "xbus WARNING: EXPORT_NAME command requires 1 argument.\n";
+        return false;
+    }
+
+    auto p = std::find_if(gPackages.begin(), gPackages.end(), [&tokens](CSLPackage_t p) { return p.name == tokens[1]; } );
+    if (p == gPackages.end())
+    {
+        package.path = path;
+        package.name = tokens[1];
+        return true;
+    }
+    else
+    {
+        XPLMDump(path, lineNum, line)  << "xbus WARNING: Package name " << tokens[1].c_str() << " already in use by " << p->path.c_str() << " reqested by use by " << path.c_str() << "'\n";
+        return false;
+    }
+}
+
+bool ParseDependencyCommand(const std::vector<std::string> &tokens, CSLPackage_t &/*package*/, const string& path, int lineNum, const string& line)
+{
+    if (tokens.size() != 2)
+    {
+        XPLMDump(path, lineNum, line) << "xbus WARNING: DEPENDENCY command needs 1 argument.\n";
+        return false;
+    }
+
+    if (std::count_if(gPackages.begin(), gPackages.end(), [&tokens](CSLPackage_t p) { return p.name == tokens[1]; }) == 0)
+    {
+        XPLMDump(path, lineNum, line) << "xbus WARNING: required package " << tokens[1] << " not found. Aborting processing of this package.\n";
+        return false;
+    }
+
+    return true;
+}
+
+bool ParseObjectCommand(const std::vector<std::string> &tokens, CSLPackage_t &package, const string& path, int lineNum, const string& line)
+{
+    std::vector<std::string> dupTokens = tokens;
+    BreakStringPvt(line.c_str(), dupTokens, 2, " \t\r\n");
+    if (tokens.size() != 2)
+    {
+        XPLMDump(path, lineNum, line) << "xbus WARNING: OBJECT command takes 1 argument.\n";
+        return false;
+    }
+    std::string relativePath(tokens[1]);
+    MakePartialPathNativeObj(relativePath);
+    std::string fullPath(relativePath);
+    if (!DoPackageSub(fullPath))
+    {
+        XPLMDump(path, lineNum, line) << "xbus WARNING: package not found.\n";
+        return false;
+    }
+
+    package.planes.push_back(CSLPlane_t());
+    package.planes.back().modelName = relativePath;
+    package.planes.back().plane_type = plane_Obj;
+    package.planes.back().file_path = fullPath;
+    package.planes.back().moving_gear = true;
+    package.planes.back().texID = 0;
+    package.planes.back().texLitID = 0;
+    package.planes.back().obj_idx = OBJ_LoadModel(fullPath.c_str());
+    if (package.planes.back().obj_idx == -1)
+    {
+        XPLMDump(path, lineNum, line) << "xbus WARNING: the model " << fullPath << " failed to load.\n";
+    }
+#if DEBUG_CSL_LOADING
+    XPLMDebugString("      Got Object: ");
+    XPLMDebugString(fullPath.c_str());
+    XPLMDebugString("\n");
+#endif
+
+    return true;
+}
+
+bool ParseTextureCommand(const std::vector<std::string> &tokens, CSLPackage_t &package, const string& path, int lineNum, const string& line)
+{
+    if(tokens.size() != 2)
+    {
+        XPLMDump(path, lineNum, line) << "xbus WARNING: TEXTURE command takes 1 argument.\n";
+        return false;
+    }
+
+    // Load regular texture
+    string relativeTexPath = tokens[1];
+    MakePartialPathNativeObj(relativeTexPath);
+    string absoluteTexPath(relativeTexPath);
+
+    if (!DoPackageSub(absoluteTexPath))
+    {
+        XPLMDump(path, lineNum, line) << "xbus WARNING: package not found.\n";
+        return false;
+    }
+
+    package.planes.back().modelName += " ";
+    package.planes.back().modelName += relativeTexPath;
+    package.planes.back().texID = OBJ_LoadTexture(absoluteTexPath.c_str(), false);
+    if (package.planes.back().texID == -1)
+    {
+        XPLMDump(path, lineNum, line) << "Texture " << absoluteTexPath << " failed to load.\n";
+        return false;
+    }
+    // Load the lit texture
+    string texLitPath = absoluteTexPath;
+    string::size_type pos2 = texLitPath.find_last_of(".");
+    if(pos2 != string::npos)
+    {
+        texLitPath.insert(pos2, "LIT");
+        package.planes.back().texLitID = OBJ_LoadTexture(texLitPath.c_str(), false);
+    }
+
+#if DEBUG_CSL_LOADING
+    XPLMDebugString("      Got texture: ");
+    XPLMDebugString(absoluteTexPath.c_str());
+    XPLMDebugString("\n");
+#endif
+
+    return true;
+}
+
+bool ParseAircraftCommand(const std::vector<std::string> &tokens, CSLPackage_t &package, const string& path, int lineNum, const string& line)
+{
+    // AIRCAFT <min> <max> <path>
+    if (tokens.size() != 4)
+    {
+        XPLMDump(path, lineNum, line) << "xbus WARNING: AIRCRAFT command takes 3 arguments.\n";
+    }
+
+    int sim, xplm;
+    XPLMHostApplicationID 	host;
+    XPLMGetVersions(&sim, &xplm, &host);
+
+    if (sim >= atoi(tokens[1].c_str()) && sim <= atoi(tokens[2].c_str()))
+    {
+        string relativePath = tokens[3];
+        MakePartialPathNativeObj(relativePath);
+        string absolutePath(relativePath);
+        if (!DoPackageSub(absolutePath))
+        {
+            XPLMDump(path, lineNum, line) << "xbus WARNING: package not found.\n";
+            return false;
+        }
+        package.planes.push_back(CSLPlane_t());
+        package.planes.back().modelName = relativePath;
+        package.planes.back().plane_type = plane_Austin;
+        package.planes.back().file_path = absolutePath;
+        package.planes.back().moving_gear = true;
+        package.planes.back().austin_idx = -1;
+#if DEBUG_CSL_LOADING
+        XPLMDebugString("      Got Airplane: ");
+        XPLMDebugString(absolutePath.c_str());
+        XPLMDebugString("\n");
+#endif
+
+    }
+
+    return true;
+}
+
+bool ParseObj8AircraftCommand(const std::vector<std::string> &tokens, CSLPackage_t &package, const string& path, int lineNum, const string& line)
+{
+    // OBJ8_AIRCRAFT <path>
+    if (tokens.size() != 2)
+    {
+        XPLMDump(path, lineNum, line) << "xbus WARNING: OBJ8_AIRCARFT command takes 1 argument.\n";
+    }
+
+    package.planes.push_back(CSLPlane_t());
+    package.planes.back().plane_type = plane_Obj8;
+    package.planes.back().file_path = tokens[1];
+    package.planes.back().moving_gear = true;
+    package.planes.back().texID = 0;
+    package.planes.back().texLitID = 0;
+    package.planes.back().obj_idx = -1;
+    return true;
+}
+
+bool ParseObj8Command(const std::vector<std::string> &tokens, CSLPackage_t &package, const string& path, int lineNum, const string& line)
+{
+    // OBJ8 <group> <animate YES|NO> <filename>
+    if (tokens.size() != 4)
+    {
+        XPLMDump(path, lineNum, line) << "xbus WARNING: OBJ8_AIRCARFT command takes 1 argument.\n";
+    }
+
+    // err - obj8 record at stupid place in file
+    if(package.planes.empty() || package.planes.back().plane_type != plane_Obj8) return false;
+
+    obj_for_acf		att;
+
+    if(tokens[1] == "GLASS")
+        att.draw_type = draw_glass;
+    else if(tokens[1] == "LIGHTS")
+        att.draw_type = draw_lights;
+    else if(tokens[1] == "LOW_LOD")
+        att.draw_type = draw_low_lod;
+    else if(tokens[1] == "SOLID")
+        att.draw_type = draw_solid;
+    else {
+        // err crap enum
+    }
+
+    if(tokens[2] == "YES")
+        att.needs_animation = true;
+    else if(tokens[2] == "NO")
+        att.needs_animation = false;
+    else
+    {
+        // crap flag
+    }
+
+    string relativePath = tokens[3];
+    MakePartialPathNativeObj(relativePath);
+    package.planes.back().modelName = relativePath;
+    string absolutePath(relativePath);
+    if (!DoPackageSub(absolutePath))
+    {
+        XPLMDump(path, lineNum, line) << "xbus WARNING: package not found.\n";
+        return false;
+    }
+
+    char xsystem[1024];
+    XPLMGetSystemPath(xsystem);
+
+    #if APL
+        HFS2PosixPath(xsystem, xsystem, 1024);
+    #endif
+
+    size_t sys_len = strlen(xsystem);
+    if(absolutePath.size() > sys_len)
+        absolutePath.erase(absolutePath.begin(),absolutePath.begin() + sys_len);
+    else
+    {
+        // should probaby freak out here.
+    }
+
+    att.handle = NULL;
+    att.file = absolutePath;
+
+    package.planes.back().attachments.push_back(att);
+
+    return true;
+}
+
+bool ParseHasGearCommand(const std::vector<std::string> &tokens, CSLPackage_t &package, const string& path, int lineNum, const string& line)
+{
+    // HASGEAR YES|NO
+    if (tokens.size() != 2 || (tokens[1] != "YES" && tokens[1] != "NO"))
+    {
+        XPLMDump(path, lineNum, line) << "xbus WARNING: HASGEAR takes one argument that must be YES or NO.\n";
+        return false;
+    }
+
+    if (tokens[1] == "YES")
+    {
+        package.planes.back().moving_gear = true;
+        return true;
+    }
+    else if (tokens[1] == "NO")
+    {
+        package.planes.back().moving_gear = false;
+        return true;
+    }
+    else
+    {
+        XPLMDump(path, lineNum, line) << "xbus WARNING: HASGEAR must have a YES or NO argument, but we got " << tokens[1] << ".\n";
+        return false;
+    }
+}
+
+bool ParseIcaoCommand(const std::vector<std::string> &tokens, CSLPackage_t &package, const string& path, int lineNum, const string& line)
+{
+    // ICAO <code>
+    if (tokens.size() != 2)
+    {
+        XPLMDump(path, lineNum, line) << "xbus WARNING: ICAO command takes 1 argument.\n";
+        return false;
+    }
+
+    std::string icao = tokens[1];
+    package.planes.back().icao = icao;
+    std::string group = gGroupings[icao];
+    if (package.matches[match_icao].count(icao) == 0)
+        package.matches[match_icao]	   [icao] = static_cast<int>(package.planes.size()) - 1;
+    if (!group.empty())
+    if (package.matches[match_group].count(group) == 0)
+        package.matches[match_group]      [group] = static_cast<int>(package.planes.size()) - 1;
+
+    return true;
+}
+
+bool ParseAirlineCommand(const std::vector<std::string> &tokens, CSLPackage_t &package, const string& path, int lineNum, const string& line)
+{
+    // AIRLINE <code> <airline>
+    if (tokens.size() != 3)
+    {
+        XPLMDump(path, lineNum, line) << "xbus WARNING: AIRLINE command takes two arguments.\n";
+        return false;
+    }
+
+    std::string icao = tokens[1];
+    package.planes.back().icao = icao;
+    std::string airline = tokens[2];
+    package.planes.back().airline = airline;
+    std::string group = gGroupings[icao];
+    if (package.matches[match_icao_airline].count(icao + " " + airline) == 0)
+        package.matches[match_icao_airline]      [icao + " " + airline] = static_cast<int>(package.planes.size()) - 1;
+#if USE_DEFAULTING
+    if (package.matches[match_icao		].count(icao				) == 0)
+        package.matches[match_icao		]      [icao				] = package.planes.size() - 1;
+#endif
+    if (!group.empty())
+    {
+#if USE_DEFAULTING
+        if (package.matches[match_group	     ].count(group				  ) == 0)
+            package.matches[match_group	     ]		[group				  ] = package.planes.size() - 1;
+#endif
+        if (package.matches[match_group_airline].count(group + " " + airline) == 0)
+            package.matches[match_group_airline]		[group + " " + airline] = static_cast<int>(package.planes.size()) - 1;
+    }
+
+    return true;
+}
+
+bool ParseLiveryCommand(const std::vector<std::string> &tokens, CSLPackage_t &package, const string& path, int lineNum, const string& line)
+{
+    // LIVERY <code> <airline> <livery>
+    if (tokens.size() != 4)
+    {
+        XPLMDump(path, lineNum, line) << "xbus WARNING: LIVERY command takes two arguments.\n";
+        return false;
+    }
+
+    std::string icao = tokens[1];
+    package.planes.back().icao = icao;
+    std::string airline = tokens[2];
+    package.planes.back().airline = airline;
+    std::string livery = tokens[3];
+    package.planes.back().livery = livery;
+    std::string group = gGroupings[icao];
+#if USE_DEFAULTING
+    if (package.matches[match_icao				].count(icao							   ) == 0)
+        package.matches[match_icao				]	   [icao							   ] = package.planes.size() - 1;
+    if (package.matches[match_icao				].count(icao							   ) == 0)
+        package.matches[match_icao_airline 		]	   [icao + " " + airline			   ] = package.planes.size() - 1;
+#endif
+    if (package.matches[match_icao_airline_livery ].count(icao + " " + airline + " " + livery) == 0)
+        package.matches[match_icao_airline_livery ]	   [icao + " " + airline + " " + livery] = static_cast<int>(package.planes.size()) - 1;
+    if (!group.empty())
+    {
+#if USE_DEFAULTING
+        if (package.matches[match_group		 		 ].count(group							     ) == 0)
+            package.matches[match_group		 		 ]		[group							     ] = package.planes.size() - 1;
+        if (package.matches[match_group_airline		 ].count(group + " " + airline			     ) == 0)
+            package.matches[match_group_airline		 ]		[group + " " + airline			     ] = package.planes.size() - 1;
+#endif
+        if (package.matches[match_group_airline_livery ].count(group + " " + airline + " " + livery) == 0)
+            package.matches[match_group_airline_livery ]		[group + " " + airline + " " + livery] = static_cast<int>(package.planes.size()) - 1;
+    }
+
+    return true;
+}
+
+bool ParseDummyCommand(const std::vector<std::string> & /* tokens */, CSLPackage_t & /* package */, const string& /* path */, int /*lineNum*/, const string& /*line*/)
+{
+    return true;
+}
+
+std::string GetFileContent(const std::string &filename)
+{
+    std::string content;
+    std::ifstream in(filename, std::ios::in | std::ios::binary);
+    if (in)
+    {
+        content = std::string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+    }
+    return content;
+}
+
+CSLPackage_t ParsePackageHeader(const string& path, const string& content)
+{
+    using command = std::function<bool(const std::vector<std::string> &, CSLPackage_t &, const string&, int, const string&)>;
+
+    static const std::map<std::string, command> commands
+    {
+        { "EXPORT_NAME", &ParseExportCommand }
+    };
+
+    CSLPackage_t package;
+    stringstream sin(content);
+    if (!sin.good()) { return package; }
+
+    std::string line;
+    int lineNum = 0;
+
+    while (std::getline(sin, line))
+    {
+        ++lineNum;
+        auto tokens = tokenize(line, " \t\r\n");
+        if (!tokens.empty())
+        {
+            auto it = commands.find(tokens[0]);
+            if (it != commands.end())
+            {
+                bool result = it->second(tokens, package, path, lineNum, line);
+                // Stop loop once we found EXPORT command
+                if (result) break;
+            }
+        }
+    }
+
+    return package;
+}
+
+
+void ParseFullPackage(const std::string &content, CSLPackage_t &package)
+{
+    using command = std::function<bool(const std::vector<std::string> &, CSLPackage_t &, const string&, int, const string&)>;
+
+    static const std::map<std::string, command> commands
+    {
+        { "EXPORT_NAME", &ParseDummyCommand },
+        { "DEPENDENCY", &ParseDependencyCommand },
+        { "OBJECT", &ParseObjectCommand },
+        { "TEXTURE", &ParseTextureCommand },
+        { "AIRCRAFT", &ParseAircraftCommand },
+        { "OBJ8_AIRCRAFT", &ParseObj8AircraftCommand },
+        { "OBJ8", &ParseObj8Command },
+        { "HASGEAR", &ParseHasGearCommand },
+        { "ICAO", &ParseIcaoCommand },
+        { "AIRLINE", &ParseAirlineCommand },
+        { "LIVERY", &ParseLiveryCommand },
+    };
+
+    stringstream sin(content);
+    if (!sin.good()) { return; } // exit if file not found
+
+    std::string line;
+    int lineNum = 0;
+    while (std::getline(sin, line))
+    {
+        ++lineNum;
+        auto tokens = tokenize(line, " \t\r\n");
+        if (!tokens.empty())
+        {
+            auto it = commands.find(tokens[0]);
+            if (it != commands.end())
+            {
+                bool result = it->second(tokens, package, package.path, lineNum, line);
+                if (!result)
+                {
+                    XPLMDebugString("xbus WARNING: Ignoring CSL package!");
+                    XPLMDebugString(tokens[0].c_str());
+                    XPLMDebugString("\n");
+                    break;
+                }
+            }
+            else
+            {
+                XPLMDebugString("xbus WARNING: Unrecognized command in xsb_aircraft.txt: ");
+                XPLMDebugString(tokens[0].c_str());
+                XPLMDebugString("\n");
+                break;
+            }
+        }
+    }
 }
 
 // This routine loads one CSL package.
@@ -834,13 +1321,27 @@ bool CSL_LoadCSL(const char * inFolderPath, const char * inRelatedFile, const ch
 	}
 	free(name_buf);
 	free(index_buf);
-	
-	for (int pass = 0; pass < pass_Count; ++pass)
-	for (size_t n = 0; n < pckgs.size(); ++n)
-	{
-		if (LoadOnePackage(pckgs[n], pass))
-			ok = false;
-	}
+
+    // First read all headers. This is required to resolve the DEPENDENCIES
+    for (const auto &packagePath : pckgs)
+    {
+        std::string packageFile(packagePath);
+        packageFile += "/"; //XPLMGetDirectorySeparator();
+        packageFile += "xsb_aircraft.txt";
+        std::string packageContent = GetFileContent(packageFile);
+        auto package = ParsePackageHeader(packagePath, packageContent);
+        if (package.hasValidHeader()) gPackages.push_back(package);
+    }
+
+    // Now we do a full run
+    for (auto &package : gPackages)
+    {
+        std::string packageFile(package.path);
+        packageFile += "/"; //XPLMGetDirectorySeparator();
+        packageFile += "xsb_aircraft.txt";
+        std::string packageContent = GetFileContent(packageFile);
+        ParseFullPackage(packageContent, package);
+    }
 
 #if 0
 	::Microseconds((UnsignedWide*) &t2);

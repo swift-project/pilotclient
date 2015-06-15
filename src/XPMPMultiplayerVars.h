@@ -77,6 +77,12 @@ enum {
 // It has a type, a single file path for whatever we have to load,
 // and then implementation-specifc stuff.
 struct	CSLPlane_t {
+
+    string                      modelName;       // Unique model name
+    string                      icao;           // Icao type of this model
+    string                      airline;        // Airline identifier. Can be empty.
+    string                      livery;         // Livery identifier. Can be empty.
+
 	int							plane_type;		// What kind are we?
 	string						file_path;		// Where do we load from (oz and obj, debug-use-only for OBJ8)
 	bool						moving_gear;	// Does gear retract?
@@ -111,7 +117,13 @@ enum {
 // keys to the internal index of the plane.
 struct	CSLPackage_t {
 
+    bool hasValidHeader() const
+    {
+        return !name.empty() && !path.empty();
+    }
+
 	string						name;
+    string                      path;
 	vector<CSLPlane_t>			planes;
 	map<string, int>			matches[match_count];
 
@@ -120,9 +132,6 @@ struct	CSLPackage_t {
 extern vector<CSLPackage_t>		gPackages;
 
 extern map<string, string>		gGroupings;
-
-extern map<string, string>		gPackageNames;
-
 
 /**************** Model matching using ICAO doc 8643
 		(http://www.icao.int/anb/ais/TxtFiles/Doc8643.txt) ***********/
