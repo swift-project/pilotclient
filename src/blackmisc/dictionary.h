@@ -368,6 +368,12 @@ namespace BlackMisc
         //! Move assignment
         CDictionary &operator =(CDictionary && other) { m_impl = std::move(other.m_impl); return *this; }
 
+        //! Return reference to the internal implementation object.
+        friend impl_type &implementationOf(CDictionary &dict) { return dict.m_impl; }
+
+        //! Return reference to the internal implementation object.
+        friend const impl_type &implementationOf(const CDictionary &dict) { return dict.m_impl; }
+
         /*!
          * \brief Access an element by its key.
          * \note
@@ -419,9 +425,34 @@ namespace BlackMisc
         }
 
     private:
-
         Impl<Key,Value> m_impl;
     };
+
+    //! Identity function for API consistency with CDictionary::implementationOf.
+    template <class Key, class Value>
+    QMap<Key, Value> &implementationOf(QMap<Key, Value> &dict) { return dict; }
+
+    //! Identity function for API consistency with CDictionary::implementationOf.
+    template <class Key, class Value>
+    const QMap<Key, Value> &implementationOf(const QMap<Key, Value> &dict) { return dict; }
+
+    //! Call a functor for each {key,value1,value2} triple in the keywise intersection of two maps.
+    template <class Map1, class Map2, class F>
+    void forEachIntersection(const Map1 &map1, const Map2 &map2, F functor)
+    {
+        static_assert(std::is_same<typename Map1::key_type, typename Map2::key_type>::value, "Maps must have the same key type");
+        if (map1.empty() || map2.empty()) { return; }
+        auto it1 = implementationOf(map1).lowerBound(map2.cbegin().key());
+        auto end1 = implementationOf(map1).upperBound((map2.cend() - 1).key());
+        auto it2 = implementationOf(map2).lowerBound(map1.cbegin().key());
+        auto end2 = implementationOf(map2).upperBound((map1.cend() - 1).key());
+        while (it1 != end1 && it2 != end2)
+        {
+            if (it1.key() < it2.key()) { ++it1; }
+            else if (it2.key() < it1.key()) { ++it2; }
+            else { functor(it1.key(), it1.value(), it2.value()); ++it1; ++it2; }
+        }
+    }
 
 } // namespace BlackMisc
 
