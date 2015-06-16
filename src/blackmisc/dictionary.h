@@ -351,7 +351,7 @@ namespace BlackMisc
         int	size() const { return m_impl.size(); }
 
         //! Swaps hash other with this hash. This operation is very fast and never fails.
-        void swap(CDictionary &other) { m_impl.swap(other); }
+        void swap(CDictionary &other) { m_impl.swap(other.m_impl); }
 
         //! Returns the value associated with the key.
         const Value	value(const Key &key) const { return m_impl.value(key); }
@@ -385,10 +385,10 @@ namespace BlackMisc
         const Value	operator [](const Key &key) const { return m_impl[key]; }
 
         //! Test for equality.
-        bool operator ==(const CDictionary &other) const { return m_impl == other.m_impl; }
+        friend bool operator ==(const CDictionary &a, const CDictionary &b) { return a.m_impl == b.m_impl; }
 
         //! Test for inequality.
-        bool operator !=(const CDictionary &other) const { return !(*this == other); }
+        friend bool operator !=(const CDictionary &a, const CDictionary &b) { return !(a == b); }
 
         //! \copydoc BlackMisc::CValueObject::convertToQString
         //! \todo Fix brackets
