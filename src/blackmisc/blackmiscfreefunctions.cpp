@@ -17,6 +17,7 @@
 #include "propertyindexvariantmap.h"
 #include "namevariantpairlist.h"
 #include "variantlist.h"
+#include "variantmap.h"
 #include "statusmessagelist.h"
 #include "pixmap.h"
 #include "iconlist.h"
@@ -92,6 +93,7 @@ void BlackMisc::registerMetadata()
     CPropertyIndex::registerMetadata();
     CVariant::registerMetadata();
     CVariantList::registerMetadata();
+    CVariantMap::registerMetadata();
     CPropertyIndex::registerMetadata();
     CPropertyIndexList::registerMetadata();
     CPropertyIndexVariantMap::registerMetadata();
