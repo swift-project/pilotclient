@@ -66,11 +66,6 @@ namespace BlackCore
 
     bool IPluginManager::isValid(const QJsonObject &metadata) const
     {
-        if (!metadata.contains("IID") || !metadata["IID"].isString())
-        {
-            return false;
-        }
-
         if (!metadata["MetaData"].isObject())
         {
             return false;
@@ -133,5 +128,6 @@ namespace BlackCore
             return nullptr;
         }
     }
+
 
 } // namespace
