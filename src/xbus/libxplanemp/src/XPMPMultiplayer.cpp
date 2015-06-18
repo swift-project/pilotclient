@@ -27,6 +27,7 @@
 #include "XPMPMultiplayerCSL.h"
 
 #include <algorithm>
+#include <cctype>
 #include <vector>
 #include <string>
 #include <string.h>
@@ -345,7 +346,50 @@ XPMPPlaneID		XPMPCreatePlane(
 			iter->first.first(plane, xpmp_PlaneNotification_Created, iter->first.second);
 	}
 	return plane;
-}							
+}
+
+bool CompareCaseInsensitive(string strFirst, string strSecond)
+{
+    // Convert both strings to upper case by transfrom() before compare.
+    transform(strFirst.begin(), strFirst.end(), strFirst.begin(), static_cast<int (*)(int)>(std::toupper));
+    transform(strSecond.begin(), strSecond.end(), strSecond.begin(), static_cast<int (*)(int)>(std::toupper));
+    return strFirst == strSecond;
+}
+
+XPMPPlaneID     XPMPCreatePlaneWithModelName(const char *inModelName, const char *inICAOCode, const char *inAirline, const char *inLivery, XPMPPlaneData_f inDataFunc, void *inRefcon)
+{
+    XPMPPlanePtr	plane = new XPMPPlane_t;
+    plane->icao = inICAOCode;
+    plane->livery = inLivery;
+    plane->airline = inAirline;
+    plane->dataFunc = inDataFunc;
+    plane->ref = inRefcon;
+
+    // Find the model
+    for (auto &package : gPackages)
+    {
+        auto cslPlane = std::find_if(package.planes.begin(), package.planes.end(), [inModelName](CSLPlane_t p) { return CompareCaseInsensitive(p.modelName, inModelName); });
+        if (cslPlane != package.planes.end())
+        {
+            plane->model = &(*cslPlane);
+        }
+    }
+    if (!plane->model) return nullptr;
+
+    plane->pos.size = sizeof(plane->pos);
+    plane->surface.size = sizeof(plane->surface);
+    plane->radar.size = sizeof(plane->radar);
+    plane->posAge = plane->radarAge = plane->surfaceAge = -1;
+
+    gPlanes.push_back(plane);
+
+    for (XPMPPlaneNotifierVector::iterator iter = gObservers.begin(); iter !=
+        gObservers.end(); ++iter)
+    {
+            iter->first.first(plane, xpmp_PlaneNotification_Created, iter->first.second);
+    }
+    return plane;
+}
 
 void			XPMPDestroyPlane(XPMPPlaneID inID)
 {
