@@ -379,6 +379,14 @@ void XPMPGetModelInfo(int inIndex, const char **outModelName, const char **outIc
 							XPMPPlaneData_f			inDataFunc,
 							void *					inRefcon);
 
+ XPMPPlaneID	XPMPCreatePlaneWithModelName(
+                            const char *			inModelName,
+                            const char *			inICAOCode,
+                            const char *			inAirline,
+                            const char *			inLivery,
+                            XPMPPlaneData_f			inDataFunc,
+                            void *                  inRefcon);
+
 /*
  * XPMPDestroyPlane
  *

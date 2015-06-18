@@ -154,12 +154,12 @@ struct	XPMPPlane_t {
 	string					icao;
 	string					airline;
 	string					livery;
-	CSLPlane_t *			model;			// May be null if no good match
+    CSLPlane_t *			model = nullptr; // May be null if no good match
 	bool					good_livery;	// is our paint correctly matched?
 	
 	// This callback is used to pull data from the client for posiitons, etc.
 	XPMPPlaneData_f			dataFunc;
-	void *					ref;
+    void *					ref = nullptr;
 	
 	// This is last known data we got for the plane, with timestamps.
 	int						posAge;
