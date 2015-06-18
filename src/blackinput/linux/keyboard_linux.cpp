@@ -5,6 +5,7 @@
 
 #include "keyboard_linux.h"
 #include "keymapping_linux.h"
+#include "blackmisc/logmessage.h"
 #include <QDebug>
 #include <QFileSystemWatcher>
 #include <QDir>
@@ -63,7 +64,7 @@ namespace BlackInput
         foreach (QFileInfo fileInfo, eventFiles.entryInfoList())
         {
             QString path = fileInfo.absoluteFilePath();
-            if (!m_hashInputDevices.contains(path))
+            if(!m_keyboardDevices.contains(path) )
                 addRawInputDevice(path);
         }
     }
@@ -104,8 +105,7 @@ namespace BlackInput
             int version = 0;
             if ((ioctl(fd, EVIOCGVERSION, &version) < 0) || (((version >> 16) & 0xFF) < 1)) {
                 qWarning("CKeyboardLinux: Removing dead input device %s", qPrintable(fileInput->fileName()));
-                m_hashInputDevices.remove(fileInput->fileName());
-                fileInput->deleteLater();
+                m_keyboardDevices.remove(fileInput->fileName());
             }
         }
     }
@@ -118,40 +118,54 @@ namespace BlackInput
             emit keySelectionChanged(key);
     }
 
-    #define test_bit(bit, array)    (array[bit/8] & (1<<(bit%8)))
-
     void CKeyboardLinux::addRawInputDevice(const QString &filePath)
     {
-        QFile *inputFile = new QFile(filePath, this);
+        QSharedPointer<QFile> inputFile(new QFile(filePath));
         if (inputFile->open(QIODevice::ReadOnly))
         {
             int fd = inputFile->handle();
-            int version;
-            char name[256];
-            quint8 events[EV_MAX/8 + 1];
-            memset(events, 0, sizeof(events));
+            if (fd < 0) { return; }
 
-            if ((ioctl(fd, EVIOCGVERSION, &version) >= 0) && (ioctl(fd, EVIOCGNAME(sizeof(name)), name)>=0) && (ioctl(fd, EVIOCGBIT(0,sizeof(events)), &events) >= 0) && test_bit(EV_KEY, events) && !test_bit(EV_SYN, events) && (((version >> 16) & 0xFF) > 0)) {
-                name[255]=0;
-                qDebug() << "CKeyboardLinux: " << qPrintable(inputFile->fileName()) << " " << name;
-                // Is it grabbed by someone else?
-                if ((ioctl(fd, EVIOCGRAB, 1) < 0)) {
-                    qWarning("CKeyboardLinux: Device exclusively grabbed by someone else (X11 using exclusive-mode evdev?)");
-                    inputFile->deleteLater();
-                } else {
-                    ioctl(fd, EVIOCGRAB, 0);
+            int version = 0;
+            if (ioctl(fd, EVIOCGVERSION, &version) < 0) { return; }
 
-                    fcntl(inputFile->handle(), F_SETFL, O_NONBLOCK);
-                    connect(new QSocketNotifier(inputFile->handle(), QSocketNotifier::Read, inputFile), SIGNAL(activated(int)), this, SLOT(inputReadyRead(int)));
+            char deviceName[255];
+            if (ioctl(fd, EVIOCGNAME(sizeof(deviceName)), deviceName) < 0) { return; }
 
-                    m_hashInputDevices.insert(inputFile->fileName(), inputFile);
-                }
+            uint8_t bitmask[EV_MAX/8 + 1];
+            memset(bitmask, 0, sizeof(bitmask));
+            if (ioctl(fd, EVIOCGBIT(0,sizeof(bitmask)), &bitmask) < 0) { return; }
+
+            // Keyboards support EV_SYN and EV_KEY
+            // but do NOT support EV_REL and EV_ABS
+            if (!(bitmask[EV_SYN / 8] & (1 << (EV_SYN % 8))) &&
+                !(bitmask[EV_KEY / 8] & (1 << (EV_KEY % 8))) &&
+                (bitmask[EV_REL / 8] & (1 << (EV_REL % 8))) &&
+                (bitmask[EV_ABS / 8] & (1 << (EV_ABS % 8))))
+            {
+                return;
+            }
+
+            // Is it grabbed by someone else?
+            if ((ioctl(fd, EVIOCGRAB, 1) < 0))
+            {
+                BlackMisc::CLogMessage(this).warning("Device exclusively grabbed by someone else (X11 using exclusive-mode evdev?)") << deviceName;
             }
             else
-                inputFile->deleteLater();
+            {
+                ioctl(fd, EVIOCGRAB, 0);
+                uint8_t keys[KEY_MAX/8 + 1];
+                if ((ioctl(fd, EVIOCGBIT(EV_KEY, sizeof(keys)), &keys) >= 0) && (keys[KEY_SPACE / 8] & (1 << (KEY_SPACE % 8))))
+                {
+                    BlackMisc::CLogMessage(this).info("Found keyboard: %1") << deviceName;
+
+                    fcntl(inputFile->handle(), F_SETFL, O_NONBLOCK);
+                    connect(new QSocketNotifier(inputFile->handle(), QSocketNotifier::Read, inputFile.data()), &QSocketNotifier::activated, this, &CKeyboardLinux::inputReadyRead);
+
+                    m_keyboardDevices.insert(filePath, inputFile);
+                }
+            }
         }
-        else
-            inputFile->deleteLater();
     }
 
     void CKeyboardLinux::keyEvent(int virtualKeyCode, bool isPressed)

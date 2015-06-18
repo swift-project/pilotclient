@@ -91,7 +91,7 @@ namespace BlackInput
         Mode m_mode;                            //!< Operation mode
 
         QFileSystemWatcher *m_devInputWatcher; //!< Watches the device file system for input devices
-        QHash<QString, QFile *> m_hashInputDevices; //!< Hash map containing all known input devices
+        QHash<QString, QSharedPointer<QFile>> m_keyboardDevices; //!< All known input devices
     };
 }
 
