@@ -14,7 +14,7 @@
 
 #include "blackcore/simulator_common.h"
 #include "blackcore/interpolator.h"
-#include "blackmisc/simulation/fscommon/aircraftmatcher.h"
+#include "blackmisc/simulation/aircraftmatcher.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "fsuipc.h"
 
@@ -104,7 +104,7 @@ namespace BlackSimPlugin
 
             // parser / matcher
             BlackMisc::Simulation::FsCommon::CAircraftCfgParser m_aircraftCfgParser; //!< aircraft.cfg parser
-            BlackMisc::Simulation::FsCommon::CAircraftMatcher m_modelMatcher; //!< Model matcher
+            BlackMisc::Simulation::CAircraftMatcher m_modelMatcher; //!< Model matcher
 
             //! Set own model
             void setOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model);

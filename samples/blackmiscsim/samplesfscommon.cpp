@@ -10,8 +10,8 @@
 #include "samplesfscommon.h"
 #include "blackmisc/sampleutils.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
-#include "blackmisc/simulation/fscommon/aircraftmatcher.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
+#include "blackmisc/simulation/aircraftmatcher.h"
 
 #include <QDebug>
 #include <QFuture>
