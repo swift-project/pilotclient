@@ -28,10 +28,10 @@ namespace BlackInput
     public:
 
         //! \brief Copy Constructor
-        CKeyboardLinux(CKeyboardLinux const&) = delete;
+        CKeyboardLinux(CKeyboardLinux const &) = delete;
 
         //! \brief Assignment operator
-        CKeyboardLinux &operator=(CKeyboardLinux const&) = delete;
+        CKeyboardLinux &operator=(CKeyboardLinux const &) = delete;
 
         //! \brief Destructor
         virtual ~CKeyboardLinux();

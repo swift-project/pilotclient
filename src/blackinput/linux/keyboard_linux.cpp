@@ -53,7 +53,7 @@ namespace BlackInput
 
     void CKeyboardLinux::triggerKey(const CKeyboardKey &key, bool isPressed)
     {
-        if(!isPressed) emit keyUp(key);
+        if (!isPressed) emit keyUp(key);
         else emit keyDown(key);
     }
 
@@ -61,10 +61,10 @@ namespace BlackInput
     {
         QDir eventFiles(dir, QLatin1String("event*"), 0, QDir::System);
 
-        foreach (QFileInfo fileInfo, eventFiles.entryInfoList())
+        foreach(QFileInfo fileInfo, eventFiles.entryInfoList())
         {
             QString path = fileInfo.absoluteFilePath();
-            if(!m_keyboardDevices.contains(path) )
+            if (!m_keyboardDevices.contains(path))
                 addRawInputDevice(path);
         }
     }
@@ -73,7 +73,7 @@ namespace BlackInput
     {
         struct input_event eventInput;
 
-        QFile *fileInput=qobject_cast<QFile *>(sender()->parent());
+        QFile *fileInput = qobject_cast<QFile *>(sender()->parent());
         if (!fileInput)
             return;
 
@@ -87,23 +87,25 @@ namespace BlackInput
             bool isPressed = false;
             switch (eventInput.value)
             {
-                case 0:
-                    isPressed = false;
-                    break;
-                case 1:
-                    isPressed = true;
-                    break;
-                default:
-                    continue;
+            case 0:
+                isPressed = false;
+                break;
+            case 1:
+                isPressed = true;
+                break;
+            default:
+                continue;
             }
             int keyCode = eventInput.code;
             keyEvent(keyCode, isPressed);
         }
 
-        if (!found) {
+        if (!found)
+        {
             int fd = fileInput->handle();
             int version = 0;
-            if ((ioctl(fd, EVIOCGVERSION, &version) < 0) || (((version >> 16) & 0xFF) < 1)) {
+            if ((ioctl(fd, EVIOCGVERSION, &version) < 0) || (((version >> 16) & 0xFF) < 1))
+            {
                 qWarning("CKeyboardLinux: Removing dead input device %s", qPrintable(fileInput->fileName()));
                 m_keyboardDevices.remove(fileInput->fileName());
             }
@@ -132,16 +134,16 @@ namespace BlackInput
             char deviceName[255];
             if (ioctl(fd, EVIOCGNAME(sizeof(deviceName)), deviceName) < 0) { return; }
 
-            uint8_t bitmask[EV_MAX/8 + 1];
+            uint8_t bitmask[EV_MAX / 8 + 1];
             memset(bitmask, 0, sizeof(bitmask));
-            if (ioctl(fd, EVIOCGBIT(0,sizeof(bitmask)), &bitmask) < 0) { return; }
+            if (ioctl(fd, EVIOCGBIT(0, sizeof(bitmask)), &bitmask) < 0) { return; }
 
             // Keyboards support EV_SYN and EV_KEY
             // but do NOT support EV_REL and EV_ABS
             if (!(bitmask[EV_SYN / 8] & (1 << (EV_SYN % 8))) &&
-                !(bitmask[EV_KEY / 8] & (1 << (EV_KEY % 8))) &&
-                (bitmask[EV_REL / 8] & (1 << (EV_REL % 8))) &&
-                (bitmask[EV_ABS / 8] & (1 << (EV_ABS % 8))))
+                    !(bitmask[EV_KEY / 8] & (1 << (EV_KEY % 8))) &&
+                    (bitmask[EV_REL / 8] & (1 << (EV_REL % 8))) &&
+                    (bitmask[EV_ABS / 8] & (1 << (EV_ABS % 8))))
             {
                 return;
             }
@@ -154,7 +156,7 @@ namespace BlackInput
             else
             {
                 ioctl(fd, EVIOCGRAB, 0);
-                uint8_t keys[KEY_MAX/8 + 1];
+                uint8_t keys[KEY_MAX / 8 + 1];
                 if ((ioctl(fd, EVIOCGBIT(EV_KEY, sizeof(keys)), &keys) >= 0) && (keys[KEY_SPACE / 8] & (1 << (KEY_SPACE % 8))))
                 {
                     BlackMisc::CLogMessage(this).info("Found keyboard: %1") << deviceName;
