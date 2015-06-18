@@ -82,7 +82,7 @@ namespace XBus
         void updateInstalledModels();
 
         //! Introduce a new traffic aircraft
-        void addPlane(const QString &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);
+        void addPlane(const QString &callsign, const QString &modelName, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);
 
         //! Remove a traffic aircraft
         void removePlane(const QString &callsign);

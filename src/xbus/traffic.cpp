@@ -173,12 +173,24 @@ namespace XBus
         emit installedModelsUpdated(modelNames, icaos, airlines, liveries);
     }
 
-    void CTraffic::addPlane(const QString &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery)
+    void CTraffic::addPlane(const QString &callsign, const QString &modelName, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery)
     {
-        auto id = XPMPCreatePlane(qPrintable(aircraftIcao), qPrintable(airlineIcao), qPrintable(livery), getPlaneData, static_cast<void *>(this));
-        auto plane = new Plane(id, callsign, aircraftIcao, airlineIcao, livery);
-        m_planesByCallsign[callsign] = plane;
-        m_planesById[id] = plane;
+        XPMPPlaneID id = nullptr;
+        if (modelName.isEmpty())
+        {
+            id = XPMPCreatePlane(qPrintable(aircraftIcao), qPrintable(airlineIcao), qPrintable(livery), getPlaneData, static_cast<void *>(this));
+        }
+        else
+        {
+            id = XPMPCreatePlaneWithModelName(qPrintable(modelName), qPrintable(aircraftIcao), qPrintable(airlineIcao), qPrintable(livery), getPlaneData, static_cast<void *>(this));
+        }
+
+        if (id)
+        {
+            auto plane = new Plane(id, callsign, aircraftIcao, airlineIcao, livery);
+            m_planesByCallsign[callsign] = plane;
+            m_planesById[id] = plane;
+        }
     }
 
     void CTraffic::removePlane(const QString &callsign)

@@ -11,6 +11,8 @@
 #include "xbus_service_proxy.h"
 #include "xbus_traffic_proxy.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/simulation/modelmappingsprovider.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include <QDBusServiceWatcher>
 #include <QTimer>
@@ -58,6 +60,15 @@ namespace BlackSimPlugin
             connect(m_slowTimer, &QTimer::timeout, this, &CSimulatorXPlane::ps_slowTimerTimeout);
             m_fastTimer->start(100);
             m_slowTimer->start(1000);
+
+            m_modelMatcher.setModelMappingProvider(BlackMisc::make_unique<CModelMappingsProviderDummy>());
+            m_modelMatcher.setDefaultModel(CAircraftModel(
+                                               "__A319/A319_CFM.obj __A319/DAL.png",
+                                               CAircraftModel::TypeModelMatchingDefaultModel,
+                                               "A319 CFM DAL",
+                                               CAircraftIcaoData(CAircraftIcaoCode("A319", "L2J"), CAirlineIcaoCode(), "FFFFFF")
+                                           ));
+
             resetData();
         }
 
@@ -166,6 +177,9 @@ namespace BlackSimPlugin
                 CAircraftModel aircraftModel { *modelStringsIt, CAircraftModel::TypeModelMapping, QString(), icaoData };
                 m_installedModels.push_back(aircraftModel);
             }
+
+            m_modelMatcher.setInstalledModels(m_installedModels);
+            m_modelMatcher.init();
         }
 
         bool CSimulatorXPlane::isConnected() const
@@ -357,13 +371,26 @@ namespace BlackSimPlugin
             Q_ASSERT(isConnected());
             //! \todo XPlane driver check if already exists, how?
             //! \todo XPlane driver set correct return value
-            // KB: from what I can see here all data are available
-            // Is there any model matching required ????
+
+            // matched models
+            CAircraftModel aircraftModel = m_modelMatcher.getClosestMatch(newRemoteAircraft);
+            Q_ASSERT_X(newRemoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "mismatching callsigns");
+
+            CCallsign callsign(newRemoteAircraft.getCallsign());
+            this->updateAircraftModel(callsign, aircraftModel, identifier());
+            CSimulatedAircraft aircraftAfterModelApplied(getAircraftInRangeForCallsign(newRemoteAircraft.getCallsign()));
+
             CAircraftIcaoData icao = newRemoteAircraft.getIcaoInfo();
-            m_traffic->addPlane(newRemoteAircraft.getCallsign().asString(), icao.getAircraftDesignator(), icao.getAirlineDesignator(), icao.getLivery());
+            m_traffic->addPlane(newRemoteAircraft.getCallsign().asString(), aircraftModel.getModelString(), icao.getAircraftDesignator(), icao.getAirlineDesignator(), icao.getLivery());
             updateAircraftRendered(newRemoteAircraft.getCallsign(), true, identifier());
             CLogMessage(this).info("XP: Added aircraft %1") << newRemoteAircraft.getCallsign().toQString();
-            return true;
+
+            bool rendered = true;
+            aircraftAfterModelApplied.setRendered(rendered);
+            this->updateAircraftRendered(callsign, rendered, identifier());
+            emit modelMatchingCompleted(aircraftAfterModelApplied);
+
+            return rendered;
         }
 
         void CSimulatorXPlane::ps_remoteProviderAddAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
@@ -419,6 +446,10 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
+            if (originator == this->identifier()) { return false; }
+
+            // remove upfront, and then enable / disable again
+            this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
             return this->changeRemoteAircraftEnabled(aircraft, originator);
         }
 

@@ -42,6 +42,20 @@ namespace BlackMisc
         protected:
             BlackMisc::Network::CAircraftMappingList m_mappings; //!< Mappings
         };
+
+        //! Model mappings dummy
+        class BLACKMISC_EXPORT CModelMappingsProviderDummy : public IModelMappingsProvider
+        {
+        public:
+            //! Constructor
+            CModelMappingsProviderDummy(QObject *parent = nullptr) : IModelMappingsProvider(parent) {}
+
+            //! Destructor
+            virtual ~CModelMappingsProviderDummy() {}
+
+            //! Load data
+            virtual bool read() override { return true; }
+        };
     } // ns
 } // ns
 

@@ -80,7 +80,7 @@ namespace BlackSimPlugin
             void updateInstalledModels() const;
 
             //! \copydoc XBus::CTraffic::addPlane
-            void addPlane(const QString &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);
+            void addPlane(const QString &callsign, const QString &modelName, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);
 
             //! \copydoc XBus::CTraffic::removePlane
             void removePlane(const QString &callsign);

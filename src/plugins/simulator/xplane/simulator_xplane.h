@@ -13,6 +13,7 @@
 #define BLACKSIMPLUGIN_SIMULATOR_XPLANE_H
 
 #include "blackcore/simulator_common.h"
+#include "blackmisc/simulation/aircraftmatcher.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/pixmap.h"
@@ -141,6 +142,7 @@ namespace BlackSimPlugin
             QTimer *m_slowTimer { nullptr };
             BlackMisc::Aviation::CAirportList m_airportsInRange;   //!< aiports in range of own aircraft
             BlackMisc::Simulation::CAircraftModelList m_installedModels;
+            BlackMisc::Simulation::CAircraftMatcher m_modelMatcher { BlackMisc::Simulation::CAircraftMatcher::AllModes, this }; //!< Model matcher
 
             //! \todo Add units to members? pitchDeg?, altitudeFt?
             struct // data is written by DBus async method callbacks
