@@ -31,9 +31,6 @@ using namespace BlackMisc::Hardware;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 
-/*
- * Init data
- */
 void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
 {
     // POST(!) GUI init
@@ -45,6 +42,7 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     this->setWindowIcon(CIcons::swift24());
     this->setWindowTitle(CProject::systemNameAndVersion());
     this->setObjectName("SwiftGuiStd");
+    this->initStyleSheet();
     QPoint pos = CGuiUtility::introWindowPosition();
     this->move(pos);
 
@@ -141,9 +139,18 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     this->m_init = true;
 }
 
-/*
- * GUI signals
- */
+void SwiftGuiStd::initStyleSheet()
+{
+    const QString s = CStyleSheetUtility::instance().styles(
+    {
+        CStyleSheetUtility::fileNameFonts(),
+        CStyleSheetUtility::fileNameStandardWidget(),
+        CStyleSheetUtility::fileNameSwiftStandardGui()
+    }
+    );
+    this->setStyleSheet(s);
+}
+
 void SwiftGuiStd::initGuiSignals()
 {
     // Remark: With new style, only methods of same signature can be connected
@@ -209,9 +216,6 @@ void SwiftGuiStd::initGuiSignals()
     connect(this->ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedWholeInfoAreaFloating, this, &SwiftGuiStd::ps_onChangedMainInfoAreaFloating);
 }
 
-/*
- * Init data when started
- */
 void SwiftGuiStd::initialDataReads()
 {
     this->setContextAvailability();
@@ -226,9 +230,6 @@ void SwiftGuiStd::initialDataReads()
     CLogMessage(this).info("Initial data read");
 }
 
-/*
- * Start update timers
- */
 void SwiftGuiStd::startUpdateTimersWhenConnected()
 {
     this->ui->comp_MainInfoArea->getAtcStationComponent()->setUpdateIntervalSeconds(this->ui->comp_MainInfoArea->getSettingsComponent()->getAtcUpdateIntervalSeconds());
@@ -236,9 +237,6 @@ void SwiftGuiStd::startUpdateTimersWhenConnected()
     this->ui->comp_MainInfoArea->getUserComponent()->setUpdateIntervalSeconds(this->ui->comp_MainInfoArea->getSettingsComponent()->getUsersUpdateIntervalSeconds());
 }
 
-/*
- * Stop udate timers
- */
 void SwiftGuiStd::stopUpdateTimersWhenDisconnected()
 {
     this->ui->comp_MainInfoArea->getAtcStationComponent()->stopTimer();
@@ -246,9 +244,6 @@ void SwiftGuiStd::stopUpdateTimersWhenDisconnected()
     this->ui->comp_MainInfoArea->getUserComponent()->stopTimer();
 }
 
-/*
- * Stop all timers
- */
 void SwiftGuiStd::stopAllTimers(bool disconnectSignalSlots)
 {
     this->m_timerContextWatchdog->stop();

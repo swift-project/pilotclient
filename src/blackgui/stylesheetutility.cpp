@@ -134,7 +134,7 @@ namespace BlackGui
     QString CStyleSheetUtility::styles(const QStringList &fileNames) const
     {
         QString style;
-        foreach(QString fileName, fileNames)
+        for (const QString &fileName : fileNames)
         {
             if (!this->containsStyle(fileName)) { continue; }
             QString s = this->m_styleSheets[fileName.toLower()].trimmed();
@@ -232,9 +232,9 @@ namespace BlackGui
         return f;
     }
 
-    const QString &CStyleSheetUtility::fileNameMainWindow()
+    const QString &CStyleSheetUtility::fileNameSwiftStandardGui()
     {
-        static const QString f("mainwindow.qss");
+        static const QString f("swiftstdgui.qss");
         return f;
     }
 
@@ -253,6 +253,12 @@ namespace BlackGui
     const QString &CStyleSheetUtility::fileNameDockWidgetTab()
     {
         static const QString f("dockwidgettab.qss");
+        return f;
+    }
+
+    const QString &CStyleSheetUtility::fileNameStandardWidget()
+    {
+        static const QString f("stdwidget.qss");
         return f;
     }
 
@@ -277,6 +283,12 @@ namespace BlackGui
     const QString &CStyleSheetUtility::fileNameSwiftCore()
     {
         static const QString f("swiftcore.qss");
+        return f;
+    }
+
+    const QString &CStyleSheetUtility::fileNameSwiftData()
+    {
+        static const QString f("swiftdata.qss");
         return f;
     }
 

@@ -66,9 +66,6 @@ namespace BlackGui
         //! File name fonts.qss
         static const QString &fileNameFonts();
 
-        //! File name mainwindow.qss
-        static const QString &fileNameMainWindow();
-
         //! File name infobar.qss
         static const QString &fileNameInfoBar();
 
@@ -77,6 +74,9 @@ namespace BlackGui
 
         //! File name dockwidgettab.qss
         static const QString &fileNameDockWidgetTab();
+
+        //! File name for standard widgets
+        static const QString &fileNameStandardWidget();
 
         //! File name maininfoarea.qss
         static const QString &fileNameInfoWindow();
@@ -87,8 +87,14 @@ namespace BlackGui
         //! File name maininfoarea.qss
         static const QString &fileNameFilterDialog();
 
+        //! File name swift standard GUI
+        static const QString &fileNameSwiftStandardGui();
+
         //! File name swiftcore.qss
         static const QString &fileNameSwiftCore();
+
+        //! File name swiftcore.qss
+        static const QString &fileNameSwiftData();
 
         //! File name ini file
         static const QString &fileNameIniFile();

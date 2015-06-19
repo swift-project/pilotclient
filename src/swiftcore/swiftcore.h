@@ -63,6 +63,7 @@ private:
     void startCore(const SetupInfo &setup);
     void stopCore();
     QString getDBusAddress() const;
+    void initStyleSheet();
 
     QScopedPointer<Ui::CSwiftCore> ui;
 };

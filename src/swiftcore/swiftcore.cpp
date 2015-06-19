@@ -40,8 +40,20 @@ CSwiftCore::CSwiftCore(const SetupInfo &info, QWidget *parent) :
     setWindowIconText(name);
     setupLogDisplay();
     connectSlots();
-    ps_onStyleSheetsChanged();
+    initStyleSheet();
     startCore(info);
+}
+
+void CSwiftCore::initStyleSheet()
+{
+    const QString s = CStyleSheetUtility::instance().styles(
+    {
+        CStyleSheetUtility::fileNameFonts(),
+        CStyleSheetUtility::fileNameStandardWidget(),
+        CStyleSheetUtility::fileNameSwiftCore()
+    }
+    );
+    this->setStyleSheet(s);
 }
 
 CSwiftCore::~CSwiftCore()
@@ -79,13 +91,7 @@ void CSwiftCore::ps_p2pModeToggled(bool checked)
 
 void CSwiftCore::ps_onStyleSheetsChanged()
 {
-    const QString s = CStyleSheetUtility::instance().styles(
-    {
-        CStyleSheetUtility::fileNameFonts(),
-        CStyleSheetUtility::fileNameSwiftCore()
-    }
-    );
-    setStyleSheet(s);
+    this->initStyleSheet();
 }
 
 void CSwiftCore::connectSlots()

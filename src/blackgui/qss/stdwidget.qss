@@ -67,72 +67,8 @@ BlackGui--CInfoArea {
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
-/** fix scroll areas **/
-
-/** in flight plan **/
-QAbstractScrollArea #qw_FlightPlanTabMain { background-color: black; background-image: url(:/textures/icons/textures/texture-inner.jpg); }
-QAbstractScrollArea #qw_RemarksGenerator  { background-color: transparent; background-image: url(:/textures/icons/textures/texture-inner.jpg); }
-
-/** in log component **/
-QAbstractScrollArea #pg_StatusPageMessages { background-color: black; }
-QAbstractScrollArea #pg_StatusPageCons	ole  { background-color: black; }
-
-/** main GUI parts **/
-
-/** style when main window is frameless **/
-#wi_CentralWidgetOutside[framelessMainWindow="true"] {
-  background-image: url(:/textures/icons/textures/texture-outer.jpg);
-  background-color: darkslategray;
-  margin: 0px;
-  border: 2px solid green;
-  border-radius: 20px;
-}
-
-/** dw_InfoBarStatus has its own style sheet **/
-
-#fr_CentralFrameInside {
-  margin-right: 5px;
-  margin-left: 5px;
-  margin-top: 2px;
-  margin-bottom: 5px;
-}
-
-#gb_AtcStationsOnlineInfo {
-  border-style: none;
-}
-
-#sw_MainMiddle {
-  padding: 3px;
-  border: 1px solid green;
-  border-radius: 10px;
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
-}
-
-#sw_MainMiddle QPushButton {
-  background-color: rgba(0, 0, 255, 128);
-  border-style: none;
-  border-radius:3px;
-  color: yellow;
-  padding: 3px;
-  margin-right: 5px;
-}
-
-/** close button with frameless windows **/
-#pb_FramelessCloseButton {
-  background: transparent;
-  padding: 0px 10px 0px 0px;
-  margin: 0px;
-}
-
-/** for FontDialog etc. **/
-#comp_Settings QToolButton {
-  background-color: rgba(0, 0, 255, 128);
-  border-style: none;
-  border-radius:3px;
-  color: yellow;
-}
-
-#wi_MainKeypadArea QPushButton {
+/** default for buttons **/
+QPushButton {
   /** background-image: url(:/textures/icons/textures/texture-inner.jpg); **/
   /** need to fix pressed button first **/
   background: black;
@@ -145,53 +81,15 @@ QAbstractScrollArea #pg_StatusPageCons	ole  { background-color: black; }
   min-height:20px;
 }
 
-#wi_MainKeypadArea QPushButton::checked {
-  /** background-image: url(:/textures/icons/textures/texture-inner.jpg); **/
-  /** need to fix pressed button first **/
+QPushButton::disabled {
+  background-color: grey;
   border-style: solid;
-  border-color: yellow;
-  font: bold;
-  color: yellow;
-}
-
-/** cockpit needs to come after sw_MainMiddle **/
-#comp_CockpitComComponent QPushButton {
-  background-color: transparent;
-  border-style: solid;
-  border-radius:3px;
-  border-width: 0px;
-  border-color: blue;
-  color: yellow;
-  padding: 1px;
-  margin: 2px;
-}
-
-/** fixes scroll area for audio setup and inner background **/
-#sa_AudioSetup { background-color: black; }
-#sa_AudioComponentInner {
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
-  background-color: black;
-}
-
-/** volume buttons **/
-#wi_AudioSoundButtons QPushButton {
-  background-color: transparent;
-}
-
-/** COM panel **/
-#wip_CockpitComPanelShowHideBar QPushButton {
-  background-color: transparent;
-  border-style: solid;
-  border-radius:3px;
-  border-width: 0px;
-  border-color: blue;
-}
-
-#le_CommandLineInput {
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
-  margin-bottom: 5px;
-  padding: 3px;
-  border-radius: 5px;
+  border-width: 1px;
+  border-radius:6px;
+  border-color: green;
+  max-height:20px;
+  min-width:60px;
+  min-height:20px;
 }
 
 QProgressBar {

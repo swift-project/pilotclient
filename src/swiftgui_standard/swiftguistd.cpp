@@ -397,15 +397,8 @@ void SwiftGuiStd::ps_registerHotkeyFunctions()
 
 void SwiftGuiStd::ps_onStyleSheetsChanged()
 {
-    const QString s = CStyleSheetUtility::instance().styles(
-    {
-        CStyleSheetUtility::fileNameFonts(),
-        CStyleSheetUtility::fileNameMainWindow()
-    }
-    );
-    this->setStyleSheet(s);
+    this->initStyleSheet();
 }
-
 
 void SwiftGuiStd::ps_onCurrentMainWidgetChanged(int currentIndex)
 {

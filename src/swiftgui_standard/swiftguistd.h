@@ -53,7 +53,6 @@ class SwiftGuiStd :
     Q_OBJECT
 
 public:
-
     //! Main page indexes
     //! \remarks keep the values in sync with the real tab indexes
     enum MainPageIndex
@@ -132,6 +131,9 @@ private:
 
     //! GUI status update
     void updateGuiStatusInformation();
+
+    //! Set style sheet
+    void initStyleSheet();
 
     //! 1st data reads
     void initialDataReads();
