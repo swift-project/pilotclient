@@ -13,6 +13,7 @@
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/blackcorefreefunctions.h"
 #include "blackcore/context_runtime_config.h"
+#include "blackgui/guiutility.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/icons.h"
@@ -28,60 +29,17 @@ using namespace BlackGui;
 using namespace BlackMisc;
 using namespace BlackCore;
 
-/*!
- * \brief Main
- * \param argc
- * \param argv
- * \return
- */
 int main(int argc, char *argv[])
 {
-    // register
-    BlackMisc::initResources();
-    BlackMisc::registerMetadata();
-    BlackMisc::Simulation::registerMetadata();
-    BlackCore::registerMetadata();
-    // BlackMisc::displayAllUserMetatypesTypes();
-
-    // application
     QApplication a(argc, argv);
-    CLogHandler::instance()->install();
-    CLogHandler::instance()->enableConsoleOutput(true);
-    CLogHandler::instance()->handlerForPattern(
-        CLogPattern::anyOf({ CLogCategory::contextSlot(), CLogCategory::context() })
-    )->enableConsoleOutput(false);
-    CLogHandler::instance()->handlerForPattern(
-        CLogPattern::anyOf({ CLogCategory::contextSlot(), CLogCategory::context() }).withSeverityAtOrAbove(CStatusMessage::SeverityInfo)
-    )->enableConsoleOutput(true);
-    CFileLogger fileLogger(QStringLiteral("swiftgui_std"), QString(), &a);
-    fileLogger.changeLogPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityDebug));
-
-    // Translations
-    QFile file(":blackmisc/translations/blackmisc_i18n_de.qm");
-    CLogMessage("swift.standardgui.main").debug() << (file.exists() ? "Found translations in resources" : "No translations in resources");
-    QTranslator translator;
-    if (translator.load("blackmisc_i18n_de", ":blackmisc/translations/"))
-    {
-        CLogMessage("swift.standardgui.main").debug() << "Translator loaded";
-    }
-
-    QIcon icon(BlackMisc::CIcons::swift24());
-    QApplication::setWindowIcon(icon);
-    const QString s = CStyleSheetUtility::instance().styles(
-    {
-        CStyleSheetUtility::fileNameFonts(),
-        CStyleSheetUtility::fileNameMainWindow()
-    }
-    );
-    a.installTranslator(&translator);
-    a.setStyleSheet(s);
+    CGuiUtility::initSwiftGuiApplication(a, "swiftgui", CIcons::swift24());
 
     // modes
     BlackGui::CEnableForFramelessWindow::WindowMode windowMode;
 
     // Dialog to decide external or internal core
     CIntroWindow intro;
-    intro.setWindowIcon(icon);
+    intro.setWindowIcon(CIcons::swift24());
     BlackCore::CRuntimeConfig runtimeConfig;
     if (intro.exec() == QDialog::Rejected)
     {

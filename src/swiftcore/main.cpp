@@ -1,5 +1,13 @@
-#include "swiftcore.h"
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
+#include "swiftcore.h"
 #include "blackcore/context_runtime.h"
 #include "blackcore/context_settings.h"
 #include "blackcore/context_application.h"
@@ -12,6 +20,7 @@
 #include "blackmisc/project.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/filelogger.h"
+#include "blackgui/guiutility.h"
 #include "blackgui/stylesheetutility.h"
 
 #include <QApplication>
@@ -34,9 +43,7 @@ CommandLineParseResult parseCommandLine(QCommandLineParser &parser, CSwiftCore::
     parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
     parser.addOption({{"s", "session"}, QCoreApplication::translate("main", "Use session bus.")});
     parser.addOption({{"y", "system"}, QCoreApplication::translate("main", "Use system bus.")});
-    parser.addOption({{"p", "p2p"}, QCoreApplication::translate("main", "Use P2P bus with <address>."),
-        QCoreApplication::translate("main", "address")
-    });
+    parser.addOption({{"p", "p2p"}, QCoreApplication::translate("main", "Use P2P bus with <address>."), QCoreApplication::translate("main", "address") });
     parser.addOption({{"m", "minimized"}, QCoreApplication::translate("main", "Start minimized in system tray.")});
 
     if (!parser.parse(QCoreApplication::arguments()))
@@ -68,6 +75,7 @@ CommandLineParseResult parseCommandLine(QCommandLineParser &parser, CSwiftCore::
     if (parser.isSet("p2p"))
     {
         const QString address = CDBusServer::fixAddressToDBusAddress(parser.value("p2p"));
+        Q_UNUSED(address);
 
         if (parser.isSet("session") || parser.isSet("system"))
         {
@@ -80,21 +88,15 @@ CommandLineParseResult parseCommandLine(QCommandLineParser &parser, CSwiftCore::
     {
         setup->m_minimzed = true;
     }
-
     return CommandLineOk;
 }
 
 int main(int argc, char *argv[])
 {
-    CRuntime::registerMetadata(); // register metadata
     QApplication a(argc, argv);
-    QApplication::setApplicationName("swiftcore");
-    QApplication::setApplicationVersion(CProject::version());
-    CFileLogger fileLogger(QStringLiteral("swiftcore"), QString(), &a);
-    fileLogger.changeLogPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityDebug));
-
+    CGuiUtility::initSwiftGuiApplication(a, "swiftcore", CIcons::swiftNova24());
     QCommandLineParser parser;
-    parser.setApplicationDescription("swiftcore control");
+    parser.setApplicationDescription("swiftcore");
     parser.addHelpOption();
     parser.addVersionOption();
 
@@ -105,66 +107,23 @@ int main(int argc, char *argv[])
     case CommandLineOk:
         break;
     case CommandLineError:
-#ifdef Q_OS_WIN
-        QMessageBox::warning(0, QGuiApplication::applicationDisplayName(),
-                             "<html><head/><body><h2>" + errorMessage + "</h2><pre>"
-                             + parser.helpText() + "</pre></body></html>");
-#else
-        fputs(qPrintable(errorMessage), stderr);
-        fputs("\n\n", stderr);
-        fputs(qPrintable(parser.helpText()), stderr);
-#endif
+        CGuiUtility::commandLineErrorMessage(errorMessage, parser);
         return 1;
     case CommandLineVersionRequested:
-#ifdef Q_OS_WIN
-        QMessageBox::information(0, QGuiApplication::applicationDisplayName(),
-                                 QGuiApplication::applicationDisplayName() + ' '+ QCoreApplication::applicationVersion());
-#else
-        printf("%s %s\n", qPrintable(QCoreApplication::applicationName()),
-               qPrintable(QCoreApplication::applicationVersion()));
-#endif
+        CGuiUtility::commandLineVersionRequested();
         return 0;
     case CommandLineHelpRequested:
-#ifdef Q_OS_WIN
-        QMessageBox::warning(0, QGuiApplication::applicationDisplayName(),
-                             "<html><head/><body><pre>"
-                             + parser.helpText() + "</pre></body></html>");
+        CGuiUtility::commandLineHelpRequested(parser);
         return 0;
-#else
-        parser.showHelp();
-        Q_UNREACHABLE();
-#endif
     }
 
     if (!QSystemTrayIcon::isSystemTrayAvailable())
     {
-        QMessageBox::critical(0, QObject::tr("Systray"),
-                              QObject::tr("I couldn't detect any system tray on this system."));
+        QMessageBox::critical(0, QObject::tr("Systray"), QObject::tr("I couldn't detect any system tray on this system."));
         return 1;
     }
 
-    // Translations
-    QFile file(":blackmisc/translations/blackmisc_i18n_de.qm");
-    CLogMessage("swift.standardgui.main").debug() << (file.exists() ? "Found translations in resources" : "No translations in resources");
-    QTranslator translator;
-    if (translator.load("blackmisc_i18n_de", ":blackmisc/translations/"))
-    {
-        CLogMessage("swift.standardgui.main").debug() << "Translator loaded";
-    }
-
-    QIcon icon(BlackMisc::CIcons::swift24());
-    QApplication::setWindowIcon(icon);
-    const QString s = CStyleSheetUtility::instance().styles(
-    {
-        CStyleSheetUtility::fileNameFonts(),
-        CStyleSheetUtility::fileNameSwiftCore()
-    }
-    );
-    a.installTranslator(&translator);
-    a.setStyleSheet(s);
-
     CSwiftCore w(setup);
-    if (!setup.m_minimzed) w.show();
-
+    if (!setup.m_minimzed) { w.show(); }
     return a.exec();
 }

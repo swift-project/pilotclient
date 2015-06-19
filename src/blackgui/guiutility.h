@@ -13,8 +13,10 @@
 #define BLACKGUI_GUIUTILITY_H
 
 #include "blackgui/blackguiexport.h"
-#include <QWidgetList>
+#include "blackmisc/icon.h"
 #include "enableforframelesswindow.h"
+#include <QWidgetList>
+#include <QCommandLineParser>
 
 namespace BlackGui
 {
@@ -23,7 +25,6 @@ namespace BlackGui
     {
 
     public:
-
         //! Main application window
         static CEnableForFramelessWindow *mainApplicationWindow();
 
@@ -51,11 +52,22 @@ namespace BlackGui
         //! Delete hierarchy of layouts
         static void deleteLayout(QLayout *layout, bool deleteWidgets);
 
+        //! Message box or command line warning (depending on OS)
+        static void commandLineErrorMessage(const QString &errorMessage, const QCommandLineParser &parser);
+
+        //! Message box or command line version info
+        static void commandLineVersionRequested();
+
+        //! Message box or command line version info
+        static void commandLineHelpRequested(QCommandLineParser &parser);
+
+        //! Standard initialization for a swift GUI application
+        static void initSwiftGuiApplication(QApplication &a, const QString &applicationName, const QPixmap &icon = BlackMisc::CIcons::swift24());
+
     private:
         //! Constructor, use static methods only
         CGuiUtility() {}
     };
-
-}
+} // ns
 
 #endif // guard

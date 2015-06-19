@@ -8,12 +8,20 @@
  */
 
 #include "guiutility.h"
+#include "blackcore/context_runtime.h"
+#include "blackmisc/filelogger.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/project.h"
 #include <QWidget>
 #include <QApplication>
+#include <QGuiApplication>
+#include <QMessageBox>
+
+using namespace BlackCore;
+using namespace BlackMisc;
 
 namespace BlackGui
 {
-
     CEnableForFramelessWindow *CGuiUtility::mainApplicationWindow()
     {
         QWidgetList tlw = topLevelApplicationWidgetsWithName();
@@ -37,6 +45,35 @@ namespace BlackGui
         CEnableForFramelessWindow *mw = mainApplicationWindow();
         Q_ASSERT(mw); // there should be a main window
         return (mw && mw->isFrameless());
+    }
+
+    void CGuiUtility::initSwiftGuiApplication(QApplication &a, const QString &applicationName, const QPixmap &icon)
+    {
+        CRuntime::registerMetadata(); // register metadata
+        CLogHandler::instance()->install(); // make sure we have a log handler!
+
+        QApplication::setApplicationName(applicationName);
+        QApplication::setApplicationVersion(CProject::version());
+        QApplication::setWindowIcon(icon);
+
+        // Logging
+        QString category("swift." + applicationName);
+
+        // Translations
+        QFile file(":blackmisc/translations/blackmisc_i18n_de.qm");
+        CLogMessage(category).debug() << (file.exists() ? "Found translations in resources" : "No translations in resources");
+        QTranslator translator;
+        if (translator.load("blackmisc_i18n_de", ":blackmisc/translations/"))
+        {
+            CLogMessage(category).debug() << "Translator loaded";
+        }
+
+        // File logger
+        CFileLogger fileLogger(applicationName, QString(), &a);
+        fileLogger.changeLogPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityDebug));
+
+        // GUI icon
+        a.installTranslator(&translator);
     }
 
     QWidgetList CGuiUtility::topLevelApplicationWidgetsWithName()
@@ -110,5 +147,35 @@ namespace BlackGui
 
         // then finally
         delete layout;
+    }
+
+    void CGuiUtility::commandLineErrorMessage(const QString &errorMessage, const QCommandLineParser &parser)
+    {
+#   ifdef Q_OS_WIN
+        QMessageBox::warning(0, QGuiApplication::applicationDisplayName(), "<html><head/><body><h2>" + errorMessage + "</h2><pre>" + parser.helpText() + "</pre></body></html>");
+#   else
+        fputs(qPrintable(errorMessage), stderr);
+        fputs("\n\n", stderr);
+        fputs(qPrintable(parser.helpText()), stderr);
+#   endif
+    }
+
+    void CGuiUtility::commandLineVersionRequested()
+    {
+#   ifdef Q_OS_WIN
+        QMessageBox::information(0, QGuiApplication::applicationDisplayName(), QGuiApplication::applicationDisplayName() + ' ' + QCoreApplication::applicationVersion());
+#   else
+        printf("%s %s\n", qPrintable(QCoreApplication::applicationName()), qPrintable(QCoreApplication::applicationVersion()));
+#   endif
+    }
+
+    void CGuiUtility::commandLineHelpRequested(QCommandLineParser &parser)
+    {
+#   ifdef Q_OS_WIN
+        QMessageBox::warning(0, QGuiApplication::applicationDisplayName(), "<html><head/><body><pre>" + parser.helpText() + "</pre></body></html>");
+#   else
+        parser.showHelp(); // terminates
+        Q_UNREACHABLE();
+#   endif
     }
 } // ns
