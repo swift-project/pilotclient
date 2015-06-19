@@ -42,7 +42,7 @@ namespace BlackMisc
         static CLogHandler *instance();
 
         //! Tell the CLogHandler to install itself with qInstallMessageHandler.
-        void install();
+        void install(bool skipIfAlreadyInstalled = false);
 
         //! Return a pattern handler for subscribing to all messages which match the given pattern.
         //! \warning This must only be called from the main thread.
@@ -74,11 +74,7 @@ namespace BlackMisc
         void logRemoteMessage(const BlackMisc::CStatusMessage &message);
 
         //! Enable or disable the default Qt handler.
-        void enableConsoleOutput(bool enable)
-        {
-            Q_ASSERT(thread() == QThread::currentThread());
-            m_enableFallThrough = enable;
-        }
+        void enableConsoleOutput(bool enable);
 
     private:
         void logMessage(const BlackMisc::CStatusMessage &message);

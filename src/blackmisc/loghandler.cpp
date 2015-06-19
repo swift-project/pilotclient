@@ -29,8 +29,10 @@ namespace BlackMisc
         QMetaObject::invokeMethod(CLogHandler::instance(), "logLocalMessage", Q_ARG(BlackMisc::CStatusMessage, statusMessage));
     }
 
-    void CLogHandler::install()
+    void CLogHandler::install(bool skipIfAlreadyInstalled)
     {
+        if (skipIfAlreadyInstalled && m_oldHandler) { return; }
+        Q_ASSERT_X(!m_oldHandler, Q_FUNC_INFO, "Re-installing the log handler should be avoided");
         m_oldHandler = qInstallMessageHandler(messageHandler);
     }
 
@@ -107,6 +109,13 @@ namespace BlackMisc
         emit remoteMessageLogged(statusMessage);
     }
 
+    void BlackMisc::CLogHandler::enableConsoleOutput(bool enable)
+    {
+        Q_ASSERT_X(m_oldHandler, Q_FUNC_INFO, "Install the log handler before using it");
+        Q_ASSERT_X(thread() == QThread::currentThread(), Q_FUNC_INFO, "Wrong thread");
+        m_enableFallThrough = enable;
+    }
+
     void CLogHandler::logMessage(const CStatusMessage &statusMessage)
     {
         collectGarbage();
@@ -115,6 +124,7 @@ namespace BlackMisc
 
         if (isFallThroughEnabled(handlers))
         {
+            Q_ASSERT_X(m_oldHandler, Q_FUNC_INFO, "Handler must be installed");
             QtMsgType type;
             QString category;
             QString message;
