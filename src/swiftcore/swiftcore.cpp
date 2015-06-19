@@ -104,7 +104,7 @@ void CSwiftCore::connectSlots()
 
 void CSwiftCore::setupLogDisplay()
 {
-    CLogHandler::instance()->install();
+    CLogHandler::instance()->install(true);
     CLogHandler::instance()->enableConsoleOutput(false); // default disable
     auto logHandler = CLogHandler::instance()->handlerForPattern(
                           CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo)
@@ -120,6 +120,7 @@ void CSwiftCore::startCore(const SetupInfo &setup)
     ui->pb_StartCore->setEnabled(false);
     ui->pb_StopCore->setEnabled(true);
     ui->gb_DBusMode->setDisabled(true);
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 
     // context
     createRuntime(CRuntimeConfig::forCoreAllLocalInDBus(setup.m_dbusAddress), this);
@@ -130,11 +131,13 @@ void CSwiftCore::startCore(const SetupInfo &setup)
 void CSwiftCore::stopCore()
 {
     if (!getRuntime()) { return; }
-    getRuntime()->gracefulShutdown();
 
     ui->pb_StartCore->setEnabled(true);
     ui->pb_StopCore->setEnabled(false);
     ui->gb_DBusMode->setDisabled(false);
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+
+    getRuntime()->gracefulShutdown();
 
     // Force quit, since we cannot close the runtime
     qApp->quit();
