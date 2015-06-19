@@ -351,6 +351,18 @@ namespace BlackMisc
         return pm;
     }
 
+    const QPixmap &CIcons::swiftDatabase24()
+    {
+        static const QPixmap pm(":/own/icons/own/swift/swiftDatabase24.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftDatabase48()
+    {
+        static const QPixmap pm(":/own/icons/own/swift/swiftDatabase48.png");
+        return pm;
+    }
+
     const QPixmap &CIcons::appWeather16()
     {
         return weatherCloudy16();

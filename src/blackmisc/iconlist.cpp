@@ -125,6 +125,8 @@ namespace BlackMisc
             CIcon(CIcons::StandardIconStatusBar16, "status bar"),
             CIcon(CIcons::StandardIconSwift24, "swift"),
             CIcon(CIcons::StandardIconSwift48, "swift"),
+            CIcon(CIcons::StandardIconSwiftDatabase24, "swift"),
+            CIcon(CIcons::StandardIconSwiftDatabase48, "swift"),
             CIcon(CIcons::StandardIconSwiftNova24, "swift"),
             CIcon(CIcons::StandardIconSwiftNova48, "swift"),
             CIcon(CIcons::StandardIconTableRelationship16, "relationship"),

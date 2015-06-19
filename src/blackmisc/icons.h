@@ -117,6 +117,8 @@ namespace BlackMisc
             StandardIconStatusBar16,
             StandardIconSwift24,
             StandardIconSwift48,
+            StandardIconSwiftDatabase24,
+            StandardIconSwiftDatabase48,
             StandardIconSwiftNova24,
             StandardIconSwiftNova48,
             StandardIconTableRelationship16,
@@ -305,6 +307,12 @@ namespace BlackMisc
         //! swift icon
         static const QPixmap &swift48();
 
+        //! swift icon / database
+        static const QPixmap &swiftDatabase24();
+
+        //! swift icon / database
+        static const QPixmap &swiftDatabase48();
+
         //! swift icon (nova)
         static const QPixmap &swiftNova24();
 
@@ -475,7 +483,6 @@ namespace BlackMisc
 
         //! Change image background color
         static QImage changeImageBackgroundColor(const QImage &imgSource, Qt::GlobalColor backgroundColor);
-
     };
 }
 #endif // guard

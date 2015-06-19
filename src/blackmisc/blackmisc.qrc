@@ -336,6 +336,12 @@
         <file>icons/own/arrowWide300x10up.png</file>
         <file>icons/own/gripdown42x15.png</file>
         <file>icons/own/gripup42x15.png</file>
+        <file>icons/own/swift/swift128Database.xcf</file>
+        <file>icons/own/swift/swift32Database.png</file>
+        <file>icons/own/swift/swift48Database.png</file>
+        <file>icons/own/swift/swift64Database.png</file>
+        <file>icons/own/swift/swift128Database.png</file>
+        <file>icons/own/swift/swift24Database.png</file>
     </qresource>
     <qresource prefix="/qled">
         <file>icons/qled/circle_black.svg</file>
