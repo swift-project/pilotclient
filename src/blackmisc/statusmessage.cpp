@@ -8,6 +8,7 @@
  */
 
 #include "statusmessage.h"
+#include "statusexception.h"
 #include "blackmiscfreefunctions.h"
 #include "propertyindex.h"
 #include "iconlist.h"
@@ -88,6 +89,19 @@ namespace BlackMisc
         case SeverityError:
             *o_type = QtCriticalMsg;
             break;
+        }
+    }
+
+    CStatusException CStatusMessage::asException() const
+    {
+        return CStatusException(*this);
+    }
+
+    void CStatusMessage::maybeThrow() const
+    {
+        if (! this->isEmpty())
+        {
+            throw this->asException();
         }
     }
 

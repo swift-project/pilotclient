@@ -21,6 +21,8 @@
 namespace BlackMisc
 {
 
+    class CStatusException;
+
     /*!
      * Streamable status message, e.g. from Core -> GUI
      */
@@ -67,6 +69,12 @@ namespace BlackMisc
         //! Convert to a Qt logging triple
         //! \sa QtMessageHandler
         void toQtLogTriple(QtMsgType *o_type, QString *o_category, QString *o_message) const;
+
+        //! Return a throwable exception object containing this status message.
+        CStatusException asException() const;
+
+        //! If message is empty then do nothing, otherwise throw a CStatusException.
+        void maybeThrow() const;
 
         //! Message category
         const CLogCategoryList &getCategories() const { return this->m_categories; }
