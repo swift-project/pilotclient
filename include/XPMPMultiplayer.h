@@ -442,6 +442,7 @@ typedef	void (* XPMPPlaneNotifier_f)(
  *
  */
 typedef	void (* XPMPRenderPlanes_f)(
+					int							inIsBlend,
 					void * 						inRef);
 
 /*

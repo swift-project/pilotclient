@@ -256,6 +256,7 @@ static	bool			LoadOnePackage(const string& inPath, int pass);
 bool			CSL_Init(
 						const char* inTexturePath)
 {
+	obj_init();
 	bool ok = OBJ_Init(inTexturePath);
 	if (!ok)
 		XPLMDump() << "XSB WARNING: we failed to find XSB's custom lighting texture at " << inTexturePath << ".\n";
@@ -326,6 +327,10 @@ bool	LoadOnePackage(const string& inPath, int pass)
 
 			BreakStringPvt(line, tokens, 4, " \t\r\n");			
 
+			//----------------------------------------------------------------------------------------------------
+			// PACKAGE MANAGEMENT
+			//----------------------------------------------------------------------------------------------------			
+
 			// EXPORT_NAME <package name>
 			if (!tokens.empty() && tokens[0] == "EXPORT_NAME" && pass == pass_Depend)
 			{
@@ -362,6 +367,9 @@ bool	LoadOnePackage(const string& inPath, int pass)
 				}
 			} 
 			
+			//----------------------------------------------------------------------------------------------------
+			// AUSTIN OLD SCHOOL ACFS
+			//----------------------------------------------------------------------------------------------------
 			
 			// AIRCAFT <min> <max> <path>
 			if (!tokens.empty() && tokens[0] == "AIRCRAFT" && pass == pass_Load)
@@ -395,6 +403,10 @@ bool	LoadOnePackage(const string& inPath, int pass)
 					XPLMDump(path, lineNum, line) << "XSB WARNING: AIRCRAFT command takes 3 arguments.\n";
 				}
 			}
+
+			//----------------------------------------------------------------------------------------------------
+			// OBJ7 DRAWN WITH OUR CODE
+			//----------------------------------------------------------------------------------------------------
 			
 			// OBJECT <filename>
 			if (!tokens.empty() && tokens[0] == "OBJECT" && pass == pass_Load)
@@ -432,7 +444,6 @@ bool	LoadOnePackage(const string& inPath, int pass)
 				}
 			}
 			
-			
 			// TEXTURE
 			if (!tokens.empty() && tokens[0] == "TEXTURE" && pass == pass_Load)
 			{
@@ -466,6 +477,109 @@ bool	LoadOnePackage(const string& inPath, int pass)
 					}
 				}
 			}
+			
+			//----------------------------------------------------------------------------------------------------
+			// OBJ8 MULTI-OBJ WITH SIM RENDERING
+			//----------------------------------------------------------------------------------------------------
+
+			// OBJ8_AIRCRAFT
+			if (!tokens.empty() && tokens[0] == "OBJ8_AIRCRAFT" && pass == pass_Load)
+			{
+				BreakStringPvt(line, tokens, 2, " \t\r\n");			
+				
+				if(tokens.size() == 2)
+				{
+					pckg->planes.push_back(CSLPlane_t());
+					pckg->planes.back().plane_type = plane_Obj8;
+					pckg->planes.back().file_path = tokens[1];		// debug str
+					pckg->planes.back().moving_gear = true;
+					pckg->planes.back().texID = 0;
+					pckg->planes.back().texLitID = 0;
+					pckg->planes.back().obj_idx = -1;
+				}
+				else
+				{
+					parse_err = true;
+					XPLMDump(path, lineNum, line) << "XSB WARNING: OBJ8_AIRCARFT command takes 1 argument.\n";				
+				}
+			}
+			
+			// OBJ8 <group> <animate YES|NO> <filename>
+			if (!tokens.empty() && tokens[0] == "OBJ8" && pass == pass_Load)
+			{
+				BreakStringPvt(line, tokens, 4, " \t\r\n");			
+				
+				if(tokens.size() == 4)
+				{
+					if(pckg->planes.empty() || pckg->planes.back().plane_type != plane_Obj8)
+					{
+						// err - obj8 record at stupid place in file
+					}
+					else
+					{
+
+						obj_for_acf		att;
+
+						if(tokens[1] == "GLASS")
+							att.draw_type = draw_glass;
+						else if(tokens[1] == "LIGHTS")
+							att.draw_type = draw_lights;
+						else if(tokens[1] == "LOW_LOD")
+							att.draw_type = draw_low_lod;
+						else if(tokens[1] == "SOLID")
+							att.draw_type = draw_solid;
+						else {
+							// err crap enum
+						}
+					
+						if(tokens[2] == "YES")
+							att.needs_animation = true;
+						else if(tokens[2] == "NO")
+							att.needs_animation = false;
+						else
+						{
+							// crap flag
+						}
+						std::string fullPath = tokens[3];
+												
+						MakePartialPathNativeObj(fullPath);
+						if (!DoPackageSub(fullPath))
+						{
+							XPLMDump(path, lineNum, line) << "XSB WARNING: package not found.\n";
+							parse_err = true;
+						}
+						
+						char xsystem[1024];
+						XPLMGetSystemPath(xsystem);
+						
+						#if APL
+							HFS2PosixPath(xsystem, xsystem, 1024);
+						#endif
+						
+						int sys_len = strlen(xsystem);
+						if(fullPath.size() > sys_len)
+							fullPath.erase(fullPath.begin(),fullPath.begin() + sys_len);
+						else
+						{
+							// should probaby freak out here.
+						}
+						
+						att.handle = NULL;
+						att.file = fullPath;
+						
+						pckg->planes.back().attachments.push_back(att);
+					}					
+				}
+				else
+				{
+					// err - f---ed line.
+				}
+			}
+			
+			//----------------------------------------------------------------------------------------------------
+			// MATCHING CRAP AND OTHER COMMON META-DATA
+			//----------------------------------------------------------------------------------------------------
+			
 
 			// HASGEAR YES|NO
 			// This line specifies whether the previous plane has retractable gear. 
@@ -487,7 +601,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 					}
 				}
 			}
-			
+
 			// ICAO <code>
 			// This line maps one ICAO code to the previous airline, without 
 			// specifying an airline or livery.
@@ -978,7 +1092,7 @@ void			CSL_DrawObject(
 							XPLMPlaneDrawState_t *	state)
 {
 	// Setup OpenGL for this plane render
-	if(type < plane_Count)
+	if(type != plane_Obj8)
 	{
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
@@ -1012,7 +1126,21 @@ void			CSL_DrawObject(
 						x, y ,z, pitch, roll, heading, lights);
 						
 			break;
+		case plane_Obj8:
+			obj_schedule_one_aircraft(
+						model,
+						x,
+						y,
+						z,
+						pitch,
+						roll,
+						heading,
+						full,		// 
+						lights,
+						state);
+			break;
 	}
 
-	glPopMatrix();
+	if(type != plane_Obj8)
+		glPopMatrix();
 }

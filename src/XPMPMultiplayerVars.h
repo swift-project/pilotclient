@@ -40,6 +40,7 @@
 using namespace std;
 
 #include "XPMPMultiplayer.h"
+#include "XPMPMultiplayerObj8.h"	// for obj8 attachment info
 
 template <class T>
 inline
@@ -68,6 +69,7 @@ enum {
 	plane_Austin,
 	plane_Obj,
 	plane_Lights,
+	plane_Obj8,
 	plane_Count
 };
 
@@ -76,16 +78,20 @@ enum {
 // and then implementation-specifc stuff.
 struct	CSLPlane_t {
 	int							plane_type;		// What kind are we?
-	string						file_path;		// Where do we load from
+	string						file_path;		// Where do we load from (oz and obj, debug-use-only for OBJ8)
 	bool						moving_gear;	// Does gear retract?
+
 	// plane_Austin
 	int							austin_idx;
+
 	// plane_Obj
 	int							obj_idx;
-	// Optional Texture
-	int							texID;
-	// Optional Lit Texture
-	int							texLitID;
+	int							texID;			// can be 0 for no customization
+	int							texLitID;		// can be 0 for no customization
+
+	// plane_Obj8
+	vector<obj_for_acf>			attachments;
+	
 };
 
 // These enums define the six levels of matching we might possibly

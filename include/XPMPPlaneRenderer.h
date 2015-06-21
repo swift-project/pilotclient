@@ -29,6 +29,6 @@
 // These functions do "the drawing" once per frame.
 
 void 			XPMPInitDefaultPlaneRenderer(void);
-void			XPMPDefaultPlaneRenderer(void);
+void			XPMPDefaultPlaneRenderer(int is_blend);
 
 #endif
