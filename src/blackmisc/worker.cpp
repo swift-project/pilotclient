@@ -8,7 +8,7 @@
  */
 
 #include "worker.h"
-#include <QWaitCondition>
+#include <future>
 
 namespace BlackMisc
 {
@@ -44,15 +44,9 @@ namespace BlackMisc
 
     void CWorkerBase::waitForFinished() Q_DECL_NOEXCEPT
     {
-        QMutex mutex;
-        QMutexLocker waitCondLock(&mutex);
-        QWaitCondition waitCond;
-        {
-            QMutexLocker finishedLock(&m_finishedMutex);
-            if (m_finished) { return; }
-            then([ & ] { mutex.lock(); mutex.unlock(); waitCond.wakeAll(); });
-        }
-        waitCond.wait(&mutex);
+        std::promise<void> promise;
+        then([ & ] { promise.set_value(); });
+        promise.get_future().wait();
     }
 
     void CContinuousWorker::start(QThread::Priority priority)
