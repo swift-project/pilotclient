@@ -16,6 +16,8 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
 	add_definitions(-DAPL=1)
 	#set(XPMP_PLATFORM_SOURCES
 	#	src/PlatformUtils.mac.cpp)
+	find_library(OPENGL OpenGL)
+	set(XPMP_PLATFORM_LIBRARIES ${OPENGL})
 endif()
 if(PNG_FOUND)
 	add_definitions(-DBITMAP_USE_PNG=1)
@@ -45,5 +47,8 @@ target_include_directories(xplanemp
 		${CMAKE_CURRENT_SOURCE_DIR}/src
 		${PNG_INCLUDE_DIRS})
 target_link_libraries(xplanemp
-	PUBLIC ${XPSDK_XPLM_LIBRARIES} ${PNG_LIBRARIES})
+	PUBLIC ${XPSDK_XPLM_LIBRARIES}
+	${PNG_LIBRARIES}
+	${XPMP_PLATFORM_LIBRARIES})
 set_target_properties(xplanemp PROPERTIES POSITION_INDEPENDENT_CODE ON)
+target_compile_definitions(xplanemp PUBLIC XUTILS_EXCLUDE_MAC_CRAP=1)
