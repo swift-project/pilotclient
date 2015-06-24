@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.0)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules" ${CMAKE_MODULE_PATH})
-
 find_package(XPSDK REQUIRED)
+
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 	add_definitions(-DLIN=1)
+	find_package(PNG)
 	#set(XPMP_PLATFORM_SOURCES
 	#	src/PlatformUtils.lin.cpp)
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
@@ -15,6 +16,9 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
 	add_definitions(-DAPL=1)
 	#set(XPMP_PLATFORM_SOURCES
 	#	src/PlatformUtils.mac.cpp)
+endif()
+if(PNG_FOUND)
+	add_definitions(-DBITMAP_USE_PNG=1)
 endif()
 
 add_definitions(-DXPLM200=1 -DXPLM210=1)
@@ -36,9 +40,10 @@ add_library(xplanemp
 	src/XUtils.cpp)
 target_include_directories(xplanemp
 	PUBLIC 
+		${XPSDK_INCLUDE_DIRS}
 		${CMAKE_CURRENT_SOURCE_DIR}/include
-		${XPSDK_XPLM_INCLUDE_DIRS}
-	PRIVATE
-		${CMAKE_CURRENT_SOURCE_DIR}/src)
+		${CMAKE_CURRENT_SOURCE_DIR}/src
+		${PNG_INCLUDE_DIRS})
 target_link_libraries(xplanemp
-	PUBLIC ${XPSDK_XPLM_LIBRARIES})
+	PUBLIC ${XPSDK_XPLM_LIBRARIES} ${PNG_LIBRARIES})
+set_target_properties(xplanemp PROPERTIES POSITION_INDEPENDENT_CODE ON)
