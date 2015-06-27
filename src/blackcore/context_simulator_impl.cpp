@@ -409,7 +409,7 @@ namespace BlackCore
         ISimulatorListener *listener = m_plugins->getListener(simulatorInfo.getIdentifier());
         Q_ASSERT_X(listener, Q_FUNC_INFO, "No listener");
 
-        if (!listener->property("isInitialized").isValid() || listener->property("isInitialized").toBool() == false)
+        if (listener->thread() != &m_listenersThread)
         {
             bool c = connect(listener, &ISimulatorListener::simulatorStarted, this, &CContextSimulator::ps_simulatorStarted);
             if (!c)
@@ -417,10 +417,9 @@ namespace BlackCore
                 CLogMessage(this).error("Unable to use '%1'") << simulatorInfo.toQString();
                 return;
             }
+
             Q_ASSERT_X(!listener->parent(), Q_FUNC_INFO, "Objects with parent cannot be moved to thread");
             listener->moveToThread(&m_listenersThread);
-
-            listener->setProperty("isInitialized", true);
         }
 
         bool s = QMetaObject::invokeMethod(listener, "start", Qt::QueuedConnection);
