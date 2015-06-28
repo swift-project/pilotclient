@@ -3,9 +3,19 @@
 
 //! \file
 
-/**
- * @namespace BlackCore
+/*!
+ * \namespace BlackCore
  * Backend services of the swift project, like dealing with the network or the simulators.
+ */
+
+/*!
+ * \namespace BlackCore::Settings
+ * Core settings traits.
+ */
+
+/*!
+ * \namespace BlackCore::Settings::Network
+ * Network settings traits.
  */
 
 /**
