@@ -9,6 +9,7 @@
 
 #include "blackcore/context_application_proxy.h"
 #include "blackcore/input_manager.h"
+#include "blackcore/settingscache.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/identifierlist.h"
@@ -59,6 +60,11 @@ namespace BlackCore
     void CContextApplicationProxy::logMessage(const CStatusMessage &message, const CIdentifier &origin)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("logMessage"), message, origin);
+    }
+
+    void CContextApplicationProxy::changeSettings(const CVariantMap &settings, const CIdentifier &origin)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("changeSettings"), settings, origin);
     }
 
     BlackMisc::CIdentifier CContextApplicationProxy::registerApplication(const CIdentifier &application)

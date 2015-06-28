@@ -12,6 +12,7 @@
 #include "blackcore/context_application_proxy.h"
 #include "blackcore/context_settings.h"
 #include "blackcore/input_manager.h"
+#include "blackcore/settingscache.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/loghandler.h"
 #include <QCoreApplication>
@@ -46,7 +47,24 @@ namespace BlackCore
             this->logMessage(message, {});
         });
 
+        connect(CSettingsCache::instance(), &CSettingsCache::valuesChangedByLocal, [this](const CVariantMap &settings)
+        {
+            this->changeSettings(settings, {});
+        });
+        connect(this, &IContextApplication::settingsChanged, [](const CVariantMap &settings, const CIdentifier &origin)
+        {
+            // Intentionally don't check for round trip here
+            CSettingsCache::instance()->changeValuesFromRemote(settings, origin);
+        });
+
         changeSettings(IContextSettings::SettingsHotKeys);
+    }
+
+    void IContextApplication::changeSettings(const CVariantMap &settings, const CIdentifier &origin)
+    {
+        Q_UNUSED(settings);
+        Q_UNUSED(origin);
+        qFatal("Not implemented"); // avoid losing a change during context interface construction
     }
 
     void IContextApplication::changeSettings(uint typeValue)

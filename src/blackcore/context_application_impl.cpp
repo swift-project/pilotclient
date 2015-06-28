@@ -10,6 +10,7 @@
 #include "context_application_impl.h"
 #include "context_runtime.h"
 #include "input_manager.h"
+#include "settingscache.h"
 #include "blackmisc/settingutilities.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/loghandler.h"
@@ -38,6 +39,12 @@ namespace BlackCore
             CLogHandler::instance()->logRemoteMessage(message);
         }
         emit this->messageLogged(message, origin);
+    }
+
+    void CContextApplication::changeSettings(const CVariantMap &settings, const CIdentifier &origin)
+    {
+        // Intentionally don't check for round trip here
+        emit this->settingsChanged(settings, origin);
     }
 
     bool CContextApplication::writeToFile(const QString &fileName, const QString &content)

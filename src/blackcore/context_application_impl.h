@@ -32,6 +32,9 @@ namespace BlackCore
         //! \copydoc IContextApplication::logMessage
         virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::CIdentifier &origin) override;
 
+        //! \copydoc IContextApplication::changeSettings
+        virtual void changeSettings(const BlackMisc::CVariantMap &settings, const BlackMisc::CIdentifier &origin) override;
+
         //! \copydoc IContextApplication::writeToFile
         virtual bool writeToFile(const QString &fileName, const QString &content) override;
 
@@ -55,6 +58,10 @@ namespace BlackCore
 
         //! \copydoc IContextApplication::processHotkeyFuncEvent
         virtual void processHotkeyFuncEvent(const BlackMisc::Event::CEventHotkeyFunction &event) override;
+
+    public:
+        //! \todo Remove with old settings
+        using IContextApplication::changeSettings;
 
     protected:
         //! Constructor

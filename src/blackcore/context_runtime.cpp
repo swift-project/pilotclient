@@ -148,8 +148,9 @@ namespace BlackCore
 
         if (this->m_contextSettings && this->m_contextApplication)
         {
+            // \todo Remove with old settings
             c = connect(this->m_contextSettings, &IContextSettings::changedSettings,
-                        this->getIContextApplication(), &IContextApplication::changeSettings);
+                        this->getIContextApplication(), static_cast<void (IContextApplication::*)(uint)>(&IContextApplication::changeSettings));
             Q_ASSERT(c);
         }
         times.insert("Post setup, connects first", time.restart());

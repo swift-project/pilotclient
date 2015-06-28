@@ -18,6 +18,7 @@
 #include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/eveventhotkeyfunction.h"
 #include "blackmisc/identifierlist.h"
+#include "blackmisc/variantmap.h"
 #include <QObject>
 #include <QReadWriteLock>
 
@@ -78,6 +79,10 @@ namespace BlackCore
         //! \note Used with CLogMessage, do not use directly
         void messageLogged(const BlackMisc::CStatusMessage &message, const BlackMisc::CIdentifier &origin);
 
+        //! One or more settings were changed
+        //! \note Used for cache relay, do not use directly
+        void settingsChanged(const BlackMisc::CVariantMap &settings, const BlackMisc::CIdentifier &origin);
+
         //! Work around for audio context, #382
         void fakedSetComVoiceRoom(const BlackMisc::Audio::CVoiceRoomList &requestedRooms);
 
@@ -86,6 +91,11 @@ namespace BlackCore
         //! \note Not pure because it can be called from the base class constructor.
         //! \note this is the function which relays CLogMessage via DBus
         virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::CIdentifier &origin) { Q_UNUSED(message); Q_UNUSED(origin); }
+
+        //! Ratify some settings changed by another process
+        //! \note Not pure because it can be called from the base class constructor.
+        //! \note This is the function which relays cache changes via DBus.
+        virtual void changeSettings(const BlackMisc::CVariantMap &settings, const BlackMisc::CIdentifier &origin);
 
         //! Register application, can also be used for ping
         virtual BlackMisc::CIdentifier registerApplication(const BlackMisc::CIdentifier &application) = 0;
