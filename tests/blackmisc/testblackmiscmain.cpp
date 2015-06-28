@@ -14,6 +14,7 @@
 #include "testcontainers.h"
 #include "testvariantandmap.h"
 #include "testhardware.h"
+#include "testvaluecache.h"
 #include "testblackmiscmain.h"
 
 namespace BlackMiscTest
@@ -32,6 +33,7 @@ namespace BlackMiscTest
             CTestVariantAndMap variantAndMap;
             CTestHardware hardwareTests;
             CTestIdentifier identifierTests;
+            CTestValueCache valueCacheTests;
             status |= QTest::qExec(&pqBaseTests, argc, argv);
             status |= QTest::qExec(&avBaseTests, argc, argv);
             status |= QTest::qExec(&geoTests, argc, argv);
@@ -39,7 +41,7 @@ namespace BlackMiscTest
             status |= QTest::qExec(&containerTests, argc, argv);
             status |= QTest::qExec(&variantAndMap, argc, argv);
             status |= QTest::qExec(&hardwareTests, argc, argv);
-            status |= QTest::qExec(&hardwareTests, argc, argv);
+            status |= QTest::qExec(&valueCacheTests, argc, argv);
         }
         return status;
     }
