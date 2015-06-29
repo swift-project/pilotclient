@@ -16,6 +16,7 @@
 #include "testhardware.h"
 #include "testvaluecache.h"
 #include "testblackmiscmain.h"
+#include "testweather.h"
 
 namespace BlackMiscTest
 {
@@ -34,6 +35,7 @@ namespace BlackMiscTest
             CTestHardware hardwareTests;
             CTestIdentifier identifierTests;
             CTestValueCache valueCacheTests;
+            CTestWeather weatherTests;
             status |= QTest::qExec(&pqBaseTests, argc, argv);
             status |= QTest::qExec(&avBaseTests, argc, argv);
             status |= QTest::qExec(&geoTests, argc, argv);
@@ -42,6 +44,7 @@ namespace BlackMiscTest
             status |= QTest::qExec(&variantAndMap, argc, argv);
             status |= QTest::qExec(&hardwareTests, argc, argv);
             status |= QTest::qExec(&valueCacheTests, argc, argv);
+            status |= QTest::qExec(&weatherTests, argc, argv);
         }
         return status;
     }
