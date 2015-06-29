@@ -100,6 +100,7 @@ void BlackMisc::registerMetadata()
     Audio::registerMetadata();
     Hardware::registerMetadata();
     Event::registerMetadata();
+    Weather::registerMetadata();
 
     // needed by XBus proxy class
     qRegisterMetaType<CSequence<double>>();

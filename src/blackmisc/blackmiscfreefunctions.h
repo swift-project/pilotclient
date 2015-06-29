@@ -108,6 +108,12 @@ namespace BlackMisc
         BLACKMISC_EXPORT void registerMetadata();
     }
 
+    namespace Weather
+    {
+        //! Register metadata for Simulation
+        BLACKMISC_EXPORT void registerMetadata();
+    }
+
     //! Register all relevant metadata in BlackMisc
     BLACKMISC_EXPORT void registerMetadata();
 

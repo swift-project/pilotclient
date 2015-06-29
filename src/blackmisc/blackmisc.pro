@@ -37,7 +37,8 @@ HEADERS +=  *.h \
             $$PWD/audio/*.h \
             $$PWD/simulation/*.h \
             $$PWD/simulation/fscommon/*.h \
-            $$PWD/simulation/fsx/*.h
+            $$PWD/simulation/fsx/*.h \
+            $$PWD/weather/*.h
 
 SOURCES +=  *.cpp \
             $$PWD/pq/*.cpp \
@@ -49,7 +50,8 @@ SOURCES +=  *.cpp \
             $$PWD/audio/*.cpp \
             $$PWD/simulation/*.cpp \
             $$PWD/simulation/fscommon/*.cpp \
-            $$PWD/simulation/fsx/*.cpp
+            $$PWD/simulation/fsx/*.cpp \
+            $$PWD/weather/*.cpp
 
 DESTDIR = $$BuildRoot/lib
 DLLDESTDIR = $$BuildRoot/bin
