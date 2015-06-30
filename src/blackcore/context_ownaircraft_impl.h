@@ -17,6 +17,7 @@
 #include "blackcore/context_settings.h"
 #include "blackcore/context_runtime.h"
 #include "blackcore/dbus_server.h"
+#include "blackcore/settings/network.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/identifiable.h"
@@ -144,6 +145,8 @@ namespace BlackCore
         QString m_voiceRoom1UrlOverride;             //!< overridden voice room url
         QString m_voiceRoom2UrlOverride;             //!< overridden voice room url
         mutable QReadWriteLock m_lockAircraft;       //!< lock aircraft
+
+        CSetting<Settings::Network::CurrentTrafficServer> m_currentNetworkServer { this };
 
         //! Init my very own aircraft with some defaults, before overridden by simulator
         void initOwnAircraft();

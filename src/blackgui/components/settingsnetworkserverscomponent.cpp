@@ -50,11 +50,8 @@ namespace BlackGui
 
         void CSettingsNetworkServersComponent::reloadSettings()
         {
-            // local copy
-            CSettingsNetwork nws = this->getIContextSettings()->getNetworkSettings();
-
             // update servers
-            this->ui->tvp_SettingsTnServers->updateContainer(nws.getTrafficNetworkServers());
+            this->ui->tvp_SettingsTnServers->updateContainer(m_trafficNetworkServers.get());
         }
 
         void CSettingsNetworkServersComponent::ps_networkServerSelected(QModelIndex index)
@@ -75,16 +72,17 @@ namespace BlackGui
                 return;
             }
 
-            const QString path = CSettingUtilities::appendPaths(IContextSettings::PathNetworkSettings(), CSettingsNetwork::ValueTrafficServers());
+            CServerList serverList = m_trafficNetworkServers.get();
             QObject *sender = QObject::sender();
             if (sender == this->ui->pb_SettingsTnServersRemoveServer)
             {
-                this->getIContextSettings()->value(path, CSettingUtilities::CmdRemove(), CVariant::from(server));
+                serverList.removeIf(&CServer::getName, server.getName());
             }
             else if (sender == this->ui->pb_SettingsTnServersSaveServer)
             {
-                this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), CVariant::from(server));
+                serverList.replaceOrAdd(&CServer::getName, server.getName(), server);
             }
+            m_trafficNetworkServers.set(serverList);
         }
 
         void CSettingsNetworkServersComponent::ps_changedSettings(uint typeValue)

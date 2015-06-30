@@ -45,16 +45,9 @@ namespace BlackCore
         // upfront reading of settings, as DBus server already relies on settings
         QString dbusAddress;
 
-        //! \todo Change when settings ready RW: We are allocating a full settings context in order to get the DBus address. I wonder if this can be done cleaner.
+        //! \todo Change when settings ready RW: I wonder if this can be done cleaner.
         if (config.hasDBusAddress()) { dbusAddress = config.getDBusAddress(); } // bootstrap / explicit
-        if (config.hasLocalSettings())
-        {
-            auto *settings = new CContextSettings(config.getModeSettings(), this);
-            if (settings) settings->read();
-            if (dbusAddress.isEmpty()) dbusAddress = settings->getNetworkSettings().getDBusServerAddress();
-
-            settings->deleteLater();
-        }
+        else { dbusAddress = m_dbusServerAddress.get(); }
 
         // DBus
         if (config.requiresDBusSever()) { this->initDBusServer(dbusAddress); }

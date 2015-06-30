@@ -14,6 +14,7 @@
 
 #include "blackcoreexport.h"
 #include "blackcore/context_runtime_config.h"
+#include "blackcore/settings/network.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
@@ -157,6 +158,8 @@ namespace BlackCore
 
     private:
         bool m_init = false; //!< flag
+
+        CSetting<Settings::Network::DBusServerAddress> m_dbusServerAddress { this };
 
         // DBus
         CDBusServer *m_dbusServer = nullptr;

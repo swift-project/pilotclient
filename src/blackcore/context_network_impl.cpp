@@ -53,7 +53,7 @@ namespace BlackCore
         connect(this->m_network, &INetwork::textMessageSent, this, &CContextNetwork::textMessageSent);
 
         // 2. VATSIM bookings
-        this->m_vatsimBookingReader = new CVatsimBookingReader(this, this->getRuntime()->getIContextSettings()->getNetworkSettings().getBookingServiceUrl());
+        this->m_vatsimBookingReader = new CVatsimBookingReader(this);
         connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CContextNetwork::ps_receivedBookings);
         this->m_vatsimBookingReader->start();
         this->m_vatsimBookingReader->setInterval(180 * 1000);

@@ -141,7 +141,7 @@ namespace BlackGui
             ps_validateAircraftValues();
             ps_validateVatsimValues();
             ps_onVatsimDataFileLoaded();
-            CServerList otherServers = this->getIContextSettings()->getNetworkSettings().getTrafficNetworkServers();
+            CServerList otherServers = this->m_trafficNetworkServers.get();
             this->ui->cbp_OtherServers->setServers(otherServers);
         }
 
@@ -447,7 +447,7 @@ namespace BlackGui
         void CLoginComponent::ps_onSettingsChanged(uint settingsType)
         {
             if (settingsType != static_cast<uint>(IContextSettings::SettingsNetwork)) { return; }
-            CServerList otherServers = this->getIContextSettings()->getNetworkSettings().getTrafficNetworkServers();
+            CServerList otherServers = this->m_trafficNetworkServers.get();
             this->ui->cbp_OtherServers->setServers(otherServers);
         }
 

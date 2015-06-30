@@ -14,6 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "enableforruntime.h"
+#include "blackcore/settings/network.h"
 #include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/network/server.h"
 #include <QFrame>
@@ -150,6 +151,8 @@ namespace BlackGui
             QScopedPointer<Ui::CLoginComponent> ui;
             const int LogoffIntervalSeconds = 10;
             QTimer *m_logoffCountdownTimer = nullptr;
+
+            BlackCore::CSetting<BlackCore::Settings::Network::TrafficServers> m_trafficNetworkServers { this };
         };
 
     } // namespace
