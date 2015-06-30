@@ -14,6 +14,7 @@
 
 #include "blackcoreexport.h"
 #include "network.h"
+#include "settings/network.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "token_bucket.h"
 #include <vatlib/vatlib2.h>
@@ -181,12 +182,13 @@ namespace BlackCore
         static int const c_processingIntervalMsec = 100;
         static int const c_updateIntervalMsec = 5000;
         static int const c_logoffTimeoutSec = 5;
-        QTextCodec *m_fsdTextCodec;
+
+        CSetting<Settings::Network::WireTextCodec> m_fsdTextCodecSetting { this };
+        QTextCodec *m_fsdTextCodec = nullptr;
 
         BlackMisc::Aviation::CAircraftParts m_sentAircraftConfig;
         QTimer m_scheduledConfigUpdate;
         CTokenBucket m_tokenBucket;
-
     };
 
 } //namespace BlackCore

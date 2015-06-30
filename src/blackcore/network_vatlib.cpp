@@ -40,7 +40,7 @@ namespace BlackCore
         : INetwork(parent), COwnAircraftAware(ownAircraft),
           m_loginMode(LoginNormal),
           m_status(vatStatusIdle),
-          m_fsdTextCodec(QTextCodec::codecForName("latin1")),
+          m_fsdTextCodec(QTextCodec::codecForName(m_fsdTextCodecSetting.get().toLocal8Bit())),
           m_tokenBucket(10, CTime(5, CTimeUnit::s()), 1)
     {
         connect(this, &CNetworkVatlib::terminate, this, &INetwork::terminateConnection, Qt::QueuedConnection);
@@ -48,7 +48,6 @@ namespace BlackCore
 
         Q_ASSERT_X(m_fsdTextCodec, "CNetworkVatlib", "Missing default wire text encoding");
         Q_ASSERT_X(Vat_GetVersion() == VAT_LIBVATLIB_VERSION, "swift.network", "Wrong vatlib shared library installed");
-        //TODO reinit m_fsdTextCodec from WireTextEncoding config setting if present
 
         Vat_SetNetworkLogHandler(SeverityError, CNetworkVatlib::networkLogHandler);
 

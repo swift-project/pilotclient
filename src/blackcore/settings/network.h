@@ -14,6 +14,7 @@
 
 #include "blackcore/settingscache.h"
 #include "blackmisc/network/serverlist.h"
+#include <QTextCodec>
 
 namespace BlackCore
 {
@@ -21,6 +22,19 @@ namespace BlackCore
     {
         namespace Network
         {
+            //! Name of text codec to use with text in FSD protocol
+            struct WireTextCodec : public CSettingTrait<QString>
+            {
+                //! \copydoc BlackCore::CSetting::key
+                static const char *key() { return "network/wiretextcodec"; }
+
+                //! \copydoc BlackCore::CSetting::defaultValue
+                static const QString &defaultValue() { static const QString dv("latin1"); return dv; }
+
+                //! \copydoc BlackCore::CSetting::isValid
+                static bool isValid(const QString &value) { return QTextCodec::codecForName(qPrintable(value)); }
+            };
+
             //! Virtual air traffic servers
             struct TrafficServers : public CSettingTrait<BlackMisc::Network::CServerList>
             {
