@@ -80,18 +80,18 @@ namespace BlackMisc
 
         switch (m_v.type())
         {
-        case QVariant::Int:         json.insert("value", m_v.toInt());
-        case QVariant::UInt:        json.insert("value", m_v.toInt());
-        case QVariant::Bool:        json.insert("value", m_v.toBool());
-        case QVariant::Double:      json.insert("value", m_v.toDouble());
-        case QVariant::LongLong:    json.insert("value", m_v.toLongLong());
-        case QVariant::ULongLong:   json.insert("value", m_v.toLongLong());
-        case QVariant::String:      json.insert("value", m_v.toString());
-        case QVariant::Char:        json.insert("value", m_v.toString());
-        case QVariant::ByteArray:   json.insert("value", m_v.toString());
-        case QVariant::DateTime:    json.insert("value", m_v.toDateTime().toString(Qt::ISODate));
-        case QVariant::Date:        json.insert("value", m_v.toDate().toString(Qt::ISODate));
-        case QVariant::Time:        json.insert("value", m_v.toTime().toString(Qt::ISODate));
+        case QVariant::Int:         json.insert("value", m_v.toInt()); break;
+        case QVariant::UInt:        json.insert("value", m_v.toInt()); break;
+        case QVariant::Bool:        json.insert("value", m_v.toBool()); break;
+        case QVariant::Double:      json.insert("value", m_v.toDouble()); break;
+        case QVariant::LongLong:    json.insert("value", m_v.toLongLong()); break;
+        case QVariant::ULongLong:   json.insert("value", m_v.toLongLong()); break;
+        case QVariant::String:      json.insert("value", m_v.toString()); break;
+        case QVariant::Char:        json.insert("value", m_v.toString()); break;
+        case QVariant::ByteArray:   json.insert("value", m_v.toString()); break;
+        case QVariant::DateTime:    json.insert("value", m_v.toDateTime().toString(Qt::ISODate)); break;
+        case QVariant::Date:        json.insert("value", m_v.toDate().toString(Qt::ISODate)); break;
+        case QVariant::Time:        json.insert("value", m_v.toTime().toString(Qt::ISODate)); break;
         default:
             try
             {
@@ -124,18 +124,18 @@ namespace BlackMisc
 
         switch (typeId)
         {
-        case QVariant::Int:         m_v.setValue(json.value("value").toInt());
-        case QVariant::UInt:        m_v.setValue<uint>(json.value("value").toInt());
-        case QVariant::Bool:        m_v.setValue(json.value("value").toBool());
-        case QVariant::Double:      m_v.setValue(json.value("value").toDouble());
-        case QVariant::LongLong:    m_v.setValue<qlonglong>(json.value("value").toInt()); // QJsonValue has no toLongLong() method???
-        case QVariant::ULongLong:   m_v.setValue<qulonglong>(json.value("value").toInt());
-        case QVariant::String:      m_v.setValue(json.value("value").toString());
-        case QVariant::Char:        m_v.setValue(json.value("value").toString().size() > 0 ? json.value("value").toString().at(0) : '\0');
-        case QVariant::ByteArray:   m_v.setValue(json.value("value").toString().toLatin1());
-        case QVariant::DateTime:    m_v.setValue(QDateTime::fromString(json.value("value").toString(), Qt::ISODate));
-        case QVariant::Date:        m_v.setValue(QDate::fromString(json.value("value").toString(), Qt::ISODate));
-        case QVariant::Time:        m_v.setValue(QTime::fromString(json.value("value").toString(), Qt::ISODate));
+        case QVariant::Int:         m_v.setValue(json.value("value").toInt()); break;
+        case QVariant::UInt:        m_v.setValue<uint>(json.value("value").toInt()); break;
+        case QVariant::Bool:        m_v.setValue(json.value("value").toBool()); break;
+        case QVariant::Double:      m_v.setValue(json.value("value").toDouble()); break;
+        case QVariant::LongLong:    m_v.setValue<qlonglong>(json.value("value").toInt()); break; // QJsonValue has no toLongLong() method???
+        case QVariant::ULongLong:   m_v.setValue<qulonglong>(json.value("value").toInt()); break;
+        case QVariant::String:      m_v.setValue(json.value("value").toString()); break;
+        case QVariant::Char:        m_v.setValue(json.value("value").toString().size() > 0 ? json.value("value").toString().at(0) : '\0'); break;
+        case QVariant::ByteArray:   m_v.setValue(json.value("value").toString().toLatin1()); break;
+        case QVariant::DateTime:    m_v.setValue(QDateTime::fromString(json.value("value").toString(), Qt::ISODate)); break;
+        case QVariant::Date:        m_v.setValue(QDate::fromString(json.value("value").toString(), Qt::ISODate)); break;
+        case QVariant::Time:        m_v.setValue(QTime::fromString(json.value("value").toString(), Qt::ISODate)); break;
         default:
             try
             {
