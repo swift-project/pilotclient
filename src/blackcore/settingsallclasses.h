@@ -7,6 +7,5 @@
 #define BLACKCORE_SETTINGSALLCLASSES_H
 
 #include "blackmisc/settingsblackmiscclasses.h"
-#include "blackmisc/simulation/setsimulator.h"
 
 #endif // guard

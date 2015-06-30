@@ -94,13 +94,6 @@ namespace BlackCore
             return s;
         }
 
-        //! Path for simulator settings
-        static const QString &PathSimulatorSettings()
-        {
-            static QString s("simulator");
-            return s;
-        }
-
         //! Root path
         static const QString &PathRoot()
         {
@@ -135,9 +128,6 @@ namespace BlackCore
 
         //! Audio settings
         virtual BlackMisc::Settings::CSettingsAudio getAudioSettings() const = 0;
-
-        //! Audio settings
-        virtual BlackMisc::Simulation::Settings::CSettingsSimulator getSimulatorSettings() const = 0;
 
         //! Hotkeys
         virtual BlackMisc::Settings::CSettingKeyboardHotkeyList getHotkeys() const = 0;

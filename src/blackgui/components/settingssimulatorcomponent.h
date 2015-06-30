@@ -11,7 +11,6 @@
 #define BLACKGUI_SETTINGSSIMULATORCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/setsimulator.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "enableforruntime.h"
 #include "enableforruntime.h"
@@ -42,9 +41,6 @@ namespace BlackGui
         private slots:
             //! Driver changed
             void ps_pluginHasBeenSelectedInComboBox(int index);
-
-            //! Settings have been changed
-            void ps_settingsHaveChanged(uint settingsType);
 
             //! Apply max.aircraft
             void ps_onApplyMaxRenderedAircraft();

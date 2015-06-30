@@ -16,7 +16,6 @@ using namespace BlackMisc;
 using namespace BlackMisc::Settings;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Hardware;
-using namespace BlackMisc::Simulation::Settings;
 
 namespace BlackCore
 {
@@ -69,18 +68,6 @@ namespace BlackCore
         else
         {
             this->m_settingsAudio.initDefaultValues();
-        }
-
-        // init simulator
-        if (jsonObject.contains(IContextSettings::PathSimulatorSettings()))
-        {
-            this->m_settingsSimulator.convertFromJson(
-                jsonObject.value(IContextSettings::PathSimulatorSettings()).toObject()
-            );
-        }
-        else
-        {
-            this->m_settingsSimulator.initDefaultValues();
         }
 
         // init own members
@@ -137,7 +124,6 @@ namespace BlackCore
         this->m_hotkeys.initAsHotkeyList(true);
         this->m_settingsNetwork.initDefaultValues();
         this->m_settingsAudio.initDefaultValues();
-        this->m_settingsSimulator.initDefaultValues();
         this->emitCompletelyChanged();
         if (write)
         {
@@ -163,7 +149,6 @@ namespace BlackCore
         QJsonObject jsonObject;
         jsonObject.insert(IContextSettings::PathNetworkSettings(), this->m_settingsNetwork.toJson());
         jsonObject.insert(IContextSettings::PathAudioSettings(), this->m_settingsAudio.toJson());
-        jsonObject.insert(IContextSettings::PathSimulatorSettings(), this->m_settingsSimulator.toJson());
         jsonObject.insert(IContextSettings::PathHotkeys(), this->m_hotkeys.toJson());
         QJsonDocument doc(jsonObject);
         return doc;
@@ -202,14 +187,6 @@ namespace BlackCore
     CSettingsAudio CContextSettings::getAudioSettings() const
     {
         return this->m_settingsAudio;
-    }
-
-    /*
-     * Simulator settings
-     */
-    CSettingsSimulator CContextSettings::getSimulatorSettings() const
-    {
-        return this->m_settingsSimulator;
     }
 
     /*
@@ -255,15 +232,6 @@ namespace BlackCore
             {
                 msgs.push_back(this->write());
                 emit this->changedSettings(static_cast<uint>(SettingsAudio));
-            }
-        }
-        else if (path.startsWith(IContextSettings::PathSimulatorSettings()))
-        {
-            msgs.push_back(this->m_settingsSimulator.value(nextLevelPath, command, value, changed));
-            if (changed)
-            {
-                msgs.push_back(this->write());
-                emit this->changedSettings(static_cast<uint>(SettingsSimulator));
             }
         }
         else

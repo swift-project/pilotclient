@@ -1,11 +1,9 @@
 #include "settingssimulatorcomponent.h"
 #include "ui_settingssimulatorcomponent.h"
 
-#include "blackcore/context_settings.h"
 #include "blackcore/context_simulator.h"
 #include "blackcore/context_network.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
-#include "blackmisc/simulation/setsimulator.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/variant.h"
@@ -41,7 +39,6 @@ namespace BlackGui
         void CSettingsSimulatorComponent::runtimeHasBeenSet()
         {
             Q_ASSERT_X(this->getIContextSimulator(), Q_FUNC_INFO, "missing simulator");
-            Q_ASSERT_X(this->getIContextSettings(), Q_FUNC_INFO, "missing settings");
 
             // set values
             for (const auto &p : getAvailablePlugins(true))
@@ -51,8 +48,6 @@ namespace BlackGui
 
             // connects
             connect(this->ui->cb_Plugins, static_cast<void (QComboBox::*)(int)> (&QComboBox::currentIndexChanged), this, &CSettingsSimulatorComponent::ps_pluginHasBeenSelectedInComboBox);
-            connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &CSettingsSimulatorComponent::ps_settingsHaveChanged);
-            connect(this->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CSettingsSimulatorComponent::ps_simulatorPluginChanged);
             connect(this->ui->pb_ApplyMaxAircraft, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedAircraft);
             connect(this->ui->pb_ApplyTimeSync, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyTimeSync);
             connect(this->ui->pb_ApplyMaxDistance, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedDistance);
@@ -142,8 +137,7 @@ namespace BlackGui
         void CSettingsSimulatorComponent::ps_pluginHasBeenSelectedInComboBox(int index)
         {
             Q_ASSERT(this->getIContextSimulator());
-            Q_ASSERT(this->getIContextSettings());
-            if (!this->getIContextSimulator() || !this->getIContextSettings()) { return; }
+            if (!this->getIContextSimulator()) { return; }
 
             CSimulatorPluginInfoList simDrivers(getAvailablePlugins(true));
             if (simDrivers.isEmpty())
@@ -162,12 +156,6 @@ namespace BlackGui
             this->getIContextSimulator()->startSimulatorPlugin(selectedPlugin);
 
             // changing of GUI state will be done via received signal
-        }
-
-        void CSettingsSimulatorComponent::ps_settingsHaveChanged(uint settingsType)
-        {
-            Q_ASSERT(this->getIContextSettings());
-            Q_UNUSED(settingsType);
         }
 
         void CSettingsSimulatorComponent::ps_onApplyMaxRenderedAircraft()
