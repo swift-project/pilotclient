@@ -44,14 +44,6 @@ namespace BlackCore
     /*
      * Relay to DBus
      */
-    CSettingsNetwork CContextSettingsProxy::getNetworkSettings() const
-    {
-        return this->m_dBusInterface->callDBusRet<CSettingsNetwork>(QLatin1Literal("getNetworkSettings"));
-    }
-
-    /*
-     * Relay to DBus
-     */
     CSettingsAudio CContextSettingsProxy::getAudioSettings() const
     {
         return this->m_dBusInterface->callDBusRet<CSettingsAudio>(QLatin1Literal("getAudioSettings"));

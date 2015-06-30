@@ -42,12 +42,6 @@ namespace BlackGui
         CSettingsNetworkServersComponent::~CSettingsNetworkServersComponent()
         { }
 
-        void CSettingsNetworkServersComponent::runtimeHasBeenSet()
-        {
-            Q_ASSERT_X(this->getIContextSettings(), Q_FUNC_INFO, "Missing settings");
-            this->connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &CSettingsNetworkServersComponent::ps_changedSettings);
-        }
-
         void CSettingsNetworkServersComponent::reloadSettings()
         {
             // update servers
@@ -84,13 +78,6 @@ namespace BlackGui
             }
             m_trafficNetworkServers.set(serverList);
         }
-
-        void CSettingsNetworkServersComponent::ps_changedSettings(uint typeValue)
-        {
-            IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(typeValue);
-            Q_UNUSED(type);
-        }
-
 
     } // namespace
 } // namespace

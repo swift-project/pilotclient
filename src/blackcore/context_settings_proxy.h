@@ -12,7 +12,6 @@
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/genericdbusinterface.h"
 #include "blackmisc/settingutilities.h"
-#include "blackmisc/setnetwork.h"
 #include "blackmisc/hardware/keyboardkeylist.h"
 
 namespace BlackCore
@@ -44,9 +43,6 @@ namespace BlackCore
         CContextSettingsProxy(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextSettings(mode, runtime), m_dBusInterface(nullptr) {}
 
     public slots:
-        //! \copydoc IContextSettings::getNetworkSettings()
-        virtual BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const override;
-
         //! \copydoc IContextSettings::getAudioSettings()
         virtual BlackMisc::Settings::CSettingsAudio getAudioSettings() const override;
 

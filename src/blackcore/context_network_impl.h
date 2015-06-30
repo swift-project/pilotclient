@@ -21,7 +21,6 @@
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
-#include "blackmisc/setnetwork.h"
 #include "blackmisc/network/clientlist.h"
 #include "blackmisc/digestsignal.h"
 #include "blackmisc/logmessage.h"
@@ -247,14 +246,6 @@ namespace BlackCore
         CVatsimDataFileReader *m_vatsimDataFileReader = nullptr;
         CIcaoDataReader       *m_icaoDataReader       = nullptr;
         QTimer *m_dataUpdateTimer = nullptr; //!< general updates such as ATIS, frequencies, see requestDataUpdates()
-
-        //! Get network settings
-        BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const
-        {
-            Q_ASSERT(this->getRuntime());
-            Q_ASSERT(this->getRuntime()->getIContextSettings());
-            return this->getRuntime()->getIContextSettings()->getNetworkSettings();
-        }
 
         //! Own aircraft from \sa CContextOwnAircraft
         const BlackMisc::Simulation::CSimulatedAircraft ownAircraft() const;

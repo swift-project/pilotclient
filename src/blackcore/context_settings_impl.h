@@ -54,9 +54,6 @@ namespace BlackCore
         virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const BlackMisc::CVariant &value) override;
 
     public slots:
-        //! \copydoc IContextSettings::getNetworkSettings()
-        virtual BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const override;
-
         //! \copydoc IContextSettings::getAudioSettings()
         virtual BlackMisc::Settings::CSettingsAudio getAudioSettings() const override;
 
@@ -82,7 +79,6 @@ namespace BlackCore
         //! settings directory
         const QString &getSettingsDirectory() const { return BlackMisc::Settings::CSettingUtilities::getSettingsDirectory(); }
 
-        BlackMisc::Settings::CSettingsNetwork m_settingsNetwork;
         BlackMisc::Settings::CSettingsAudio m_settingsAudio;
         BlackMisc::Settings::CSettingKeyboardHotkeyList m_hotkeys;
         QJsonDocument toJsonDocument() const;

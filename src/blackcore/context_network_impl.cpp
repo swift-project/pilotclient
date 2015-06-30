@@ -41,7 +41,6 @@ namespace BlackCore
         IContextNetwork(mode, runtime)
     {
         Q_ASSERT(this->getRuntime());
-        Q_ASSERT(this->getIContextSettings());
         Q_ASSERT(this->getIContextOwnAircraft());
         Q_ASSERT(this->getIContextOwnAircraft()->isUsingImplementingObject());
 

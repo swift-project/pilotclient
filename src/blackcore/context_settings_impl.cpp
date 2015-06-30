@@ -14,7 +14,6 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Settings;
-using namespace BlackMisc::Network;
 using namespace BlackMisc::Hardware;
 
 namespace BlackCore
@@ -45,18 +44,6 @@ namespace BlackCore
             ok = true;
         }
         jsonFile.close();
-
-        // init network
-        if (jsonObject.contains(IContextSettings::PathNetworkSettings()))
-        {
-            this->m_settingsNetwork.convertFromJson(
-                jsonObject.value(IContextSettings::PathNetworkSettings()).toObject()
-            );
-        }
-        else
-        {
-            this->m_settingsNetwork.initDefaultValues();
-        }
 
         // init audio
         if (jsonObject.contains(IContextSettings::PathAudioSettings()))
@@ -122,7 +109,6 @@ namespace BlackCore
     CStatusMessage CContextSettings::reset(bool write)
     {
         this->m_hotkeys.initAsHotkeyList(true);
-        this->m_settingsNetwork.initDefaultValues();
         this->m_settingsAudio.initDefaultValues();
         this->emitCompletelyChanged();
         if (write)
@@ -147,7 +133,6 @@ namespace BlackCore
     QJsonDocument CContextSettings::toJsonDocument() const
     {
         QJsonObject jsonObject;
-        jsonObject.insert(IContextSettings::PathNetworkSettings(), this->m_settingsNetwork.toJson());
         jsonObject.insert(IContextSettings::PathAudioSettings(), this->m_settingsAudio.toJson());
         jsonObject.insert(IContextSettings::PathHotkeys(), this->m_hotkeys.toJson());
         QJsonDocument doc(jsonObject);
@@ -171,14 +156,6 @@ namespace BlackCore
     CSettingKeyboardHotkeyList CContextSettings::getHotkeys() const
     {
         return this->m_hotkeys;
-    }
-
-    /*
-     * Network settings
-     */
-    CSettingsNetwork CContextSettings::getNetworkSettings() const
-    {
-        return this->m_settingsNetwork;
     }
 
     /*
@@ -215,18 +192,9 @@ namespace BlackCore
 
         // next level
         QString nextLevelPath = CSettingUtilities::removeLeadingPath(path);
-        bool changed = false;
-        if (path.startsWith(IContextSettings::PathNetworkSettings()))
+        if (path.startsWith(IContextSettings::PathAudioSettings()))
         {
-            msgs.push_back(this->m_settingsNetwork.value(nextLevelPath, command, value, changed));
-            if (changed)
-            {
-                msgs.push_back(this->write());
-                emit this->changedSettings(static_cast<uint>(SettingsNetwork));
-            }
-        }
-        else if (path.startsWith(IContextSettings::PathAudioSettings()))
-        {
+            bool changed = false;
             msgs.push_back(this->m_settingsAudio.value(nextLevelPath, command, value, changed));
             if (changed)
             {

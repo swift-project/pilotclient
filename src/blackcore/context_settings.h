@@ -77,16 +77,6 @@ namespace BlackCore
         //! \copydoc CContext::getPathAndContextId()
         virtual QString getPathAndContextId() const { return this->buildPathAndContextId(ObjectPath()); }
 
-        /*!
-         * \brief Path for network settings
-         * \remarks no to be confused with DBus paths
-         */
-        static const QString &PathNetworkSettings()
-        {
-            static QString s("network");
-            return s;
-        }
-
         //! Path for audio settings
         static const QString &PathAudioSettings()
         {
@@ -122,9 +112,6 @@ namespace BlackCore
     public slots:
         //! Handle value
         virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const BlackMisc::CVariant &value) = 0;
-
-        //! Network settings
-        virtual BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const = 0;
 
         //! Audio settings
         virtual BlackMisc::Settings::CSettingsAudio getAudioSettings() const = 0;

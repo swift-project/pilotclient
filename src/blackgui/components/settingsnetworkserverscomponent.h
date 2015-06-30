@@ -38,10 +38,6 @@ namespace BlackGui
             //! Destructor
             ~CSettingsNetworkServersComponent();
 
-        protected:
-            //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
-            virtual void runtimeHasBeenSet() override;
-
         public slots:
             //! Reload settings
             void reloadSettings();
@@ -52,9 +48,6 @@ namespace BlackGui
 
             //! Alter traffic server
             void ps_alterTrafficServer();
-
-            //! Changed settings
-            void ps_changedSettings(uint typeValue);
 
         private:
             QScopedPointer<Ui::CSettingsNetworkServersComponent> ui;
