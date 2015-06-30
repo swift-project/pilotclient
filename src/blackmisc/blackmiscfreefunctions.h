@@ -22,6 +22,7 @@
 #include <QMetaType>
 #include <QDBusArgument>
 #include <QTextStream>
+#include <QDataStream>
 
 #include <memory>
 
