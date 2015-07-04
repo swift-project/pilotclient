@@ -25,6 +25,7 @@
 #include <QSharedDataPointer>
 #include <QHash>
 #include <cstddef>
+#include <cmath>
 
 namespace BlackMisc
 {
@@ -117,9 +118,11 @@ namespace BlackMisc
                 virtual double fromDefault(double factor) const override
                 {
                     using BlackMisc::Math::CMathUtils;
-                    factor /= FactorPolicy::factor();
-                    double part2 = CMathUtils::fract(factor) * SubdivPolicy::subfactor();
-                    return CMathUtils::trunc(factor) + part2 / SubdivPolicy::fraction();
+                    double part1 = CMathUtils::trunc(factor / FactorPolicy::factor());
+                    double remaining = std::fmod(factor, FactorPolicy::factor());
+                    double part2 = CMathUtils::trunc(remaining / SubdivPolicy::subfactor());
+                    remaining = std::fmod(remaining, SubdivPolicy::subfactor());
+                    return part1 + (part2 + remaining) / SubdivPolicy::fraction();
                 }
             };
 
@@ -142,10 +145,13 @@ namespace BlackMisc
                 virtual double fromDefault(double factor) const override
                 {
                     using BlackMisc::Math::CMathUtils;
-                    factor /= FactorPolicy::factor();
-                    double part2 = CMathUtils::fract(factor) * SubdivPolicy::subfactor();
-                    double part3 = CMathUtils::fract(part2) * SubdivPolicy::subfactor();
-                    return CMathUtils::trunc(factor) + (CMathUtils::trunc(part2) + part3 / SubdivPolicy::fraction()) / SubdivPolicy::fraction();
+                    double part1 = CMathUtils::trunc(factor / FactorPolicy::factor());
+                    double remaining = std::fmod(factor, FactorPolicy::factor());
+                    double part2 = CMathUtils::trunc(remaining / SubdivPolicy::subfactor());
+                    remaining = std::fmod(remaining, SubdivPolicy::subfactor());
+                    double part3 = CMathUtils::trunc(remaining / SubdivPolicy::subfactor());
+                    remaining = std::fmod(remaining, SubdivPolicy::subfactor());
+                    return part1 + part2 / SubdivPolicy::fraction() + (part3 + remaining) / (SubdivPolicy::fraction() * SubdivPolicy::fraction());
                 }
             };
 
