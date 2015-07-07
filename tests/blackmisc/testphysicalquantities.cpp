@@ -160,10 +160,20 @@ namespace BlackMiscTest
         CTime t2(1.5, CTimeUnit::h());
         CTime t3(1.25, CTimeUnit::min());
         CTime t4(1.0101, CTimeUnit::hms());
+        CTime t5(26, 35, 40);
+        CTime t6(3661, CTimeUnit::s());
+        CTime t7;
         QVERIFY2(CMathUtils::epsilonEqual(t1.value(CTimeUnit::defaultUnit()), 3600), "1hour shall be 3600s");
         QVERIFY2(CMathUtils::epsilonEqual(t2.value(CTimeUnit::hrmin()), 1.3), "1.5hour shall be 1h30m");
         QVERIFY2(CMathUtils::epsilonEqual(t3.value(CTimeUnit::minsec()), 1.15), "1.25min shall be 1m15s");
         QVERIFY2(CMathUtils::epsilonEqual(t4.value(CTimeUnit::s()), 3661), "1h01m01s shall be 3661s");
+        QVERIFY2(CMathUtils::epsilonEqual(t5.value(CTimeUnit::s()), 95740), "Time greater than 24h failed");
+        QVERIFY2(t6.formattedHrsMinSec() == "01:01:01", "Formatted output hh:mm:ss failed");
+        QVERIFY2(t6.formattedHrsMin() == "01:01", "Formatted output hh:mm failed");
+        t6.switchUnit(CTimeUnit::hms());
+        QVERIFY2(CMathUtils::epsilonEqual(t6.value(), 1.0101), "Switching the unit produced a wrong a value");
+        t7.parseFromString("27:30:55");
+        QVERIFY2(t7.formattedHrsMinSec() == "27:30:55", "Parsed time greater than 24h failed");
     }
 
     /*

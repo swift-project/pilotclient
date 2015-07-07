@@ -46,7 +46,6 @@ namespace BlackMisc
 
         void CTime::parseFromString(const QString &time)
         {
-            QTime t;
             QString ts = time.trimmed();
 
             // deal with sign
@@ -63,11 +62,11 @@ namespace BlackMisc
 
             if (ts.contains(":") && (ts.length() == 8 || ts.length() == 5))
             {
-                if (ts.length() == 5)
-                    t = QTime::fromString(ts, "hh:mm");
-                else if (ts.length() == 8)
-                    t = QTime::fromString(ts, "hh:mm:ss");
-                (*this) = CTime(t);
+                const int hour = ts.mid(0, 2).toInt();
+                const int minute = ts.mid(3, 2).toInt();
+                int second = 0;
+                if (ts.length() == 8) second = ts.mid(6, 2).toInt();
+                (*this) = CTime(hour, minute, second);
 
                 // fix sign if required
                 if (factor < 0)
@@ -85,28 +84,22 @@ namespace BlackMisc
             Q_UNUSED(mode);
         }
 
-        QTime CTime::toQTime() const
-        {
-            CTime copy(*this);
-            copy.switchUnit(CTimeUnit::hms());
-
-            // QTime is not defined for negative numbers
-            // so we use the absolute value here
-            copy.makePositive();
-
-            // convert
-            QString s = copy.toQString(false).replace('h', ':').replace('m', ':').replace('s', "");
-            QTime t = s.length() == 8 ?
-                      QTime::fromString(s, "hh:mm:ss") :
-                      QTime::fromString(s, "hh:mm");
-            return t;
-        }
-
         QList<int> CTime::getHrsMinSecParts() const
         {
-            QTime t = this->toQTime();
+            using BlackMisc::Math::CMathUtils;
+            CTime copy(*this);
+
+            copy.switchUnit(CTimeUnit::s());
+
+            using BlackMisc::Math::CMathUtils;
+            double currentValue = copy.value();
+            double hr = CMathUtils::trunc(currentValue / 3600);
+            double remaining = std::fmod(currentValue, 3600);
+            double mi = CMathUtils::trunc(remaining / 60);
+            double se = std::fmod(remaining, 60);
+
             QList<int> parts;
-            parts << t.hour() << t.minute() << t.second();
+            parts << hr << mi << se;
             return parts;
         }
 

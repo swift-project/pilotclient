@@ -55,10 +55,6 @@ namespace BlackMisc
             //! From string hh:mm, or hh:mm:ss, or time units such as s, min
             void parseFromString(const QString &time, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode);
 
-            //! To Qt time
-            //! \warning sign not considered
-            QTime toQTime() const;
-
             //! Parts hh, mm, ss
             //! \warning sign not considered
             QList<int> getHrsMinSecParts() const;
