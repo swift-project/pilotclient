@@ -11,9 +11,11 @@
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/variant.h"
-
+#include "blackmisc/datastoreutility.h"
 #include <tuple>
 #include <QRegularExpression>
+
+using namespace BlackMisc;
 
 namespace BlackMisc
 {
@@ -23,9 +25,9 @@ namespace BlackMisc
             m_designator(designator), m_combinedType(combinedType)
         {}
 
-        CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &combinedType, const QString &manufacturer, const QString &model, const QString &wtc, bool military, bool realworld, bool legacy)
+        CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &combinedType, const QString &manufacturer, const QString &model, const QString &wtc, bool realworld, bool legacy, bool military)
             : m_designator(icao.trimmed().toUpper()), m_combinedType(combinedType.trimmed().toUpper()), m_manufacturer(manufacturer.trimmed()),
-              m_modelDescription(model.trimmed()), m_wtc(wtc.trimmed().toUpper()), m_military(military), m_realworld(realworld), m_legacy(legacy)
+              m_modelDescription(model.trimmed()), m_wtc(wtc.trimmed().toUpper()), m_realworld(realworld), m_legacy(legacy), m_military(military)
         {}
 
         QString CAircraftIcaoCode::convertToQString(bool i18n) const
@@ -77,9 +79,15 @@ namespace BlackMisc
             return false;
         }
 
+        bool CAircraftIcaoCode::hasCompleteData() const
+        {
+            return hasCombinedType() && hasDesignator() && hasValidWtc();
+        }
+
         CVariant CAircraftIcaoCode::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
+            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -109,6 +117,7 @@ namespace BlackMisc
         void CAircraftIcaoCode::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself()) { (*this) = variant.to<CAircraftIcaoCode>(); return; }
+            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(variant, index); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -156,23 +165,68 @@ namespace BlackMisc
         CAircraftIcaoCode CAircraftIcaoCode::fromDatabaseJson(const QJsonObject &json)
         {
             QJsonArray inner = json["cell"].toArray();
+            Q_ASSERT_X(!inner.isEmpty(), Q_FUNC_INFO, "Missing JSON");
             if (inner.isEmpty()) { return CAircraftIcaoCode(); }
-            QString combined(
-                inner.at(4).toString() +
-                inner.at(6).toString() +
-                inner.at(5).toString()
-            );
+
+            int i = 0;
+            int dbKey(inner.at(i++).toInt(-1));
+            QString designator(inner.at(i++).toString());
+            QString manufacturer(inner.at(i++).toString());
+            QString model(inner.at(i++).toString());
+            QString type(inner.at(i++).toString());
+            QString engine(inner.at(i++).toString());
+            QString engineCount(inner.at(i++).toString());
+            QString combined(createdCombinedString(type, engineCount, engine));
+            QString wtc(inner.at(i++).toString());
+            if (wtc.length() > 1 && wtc.contains("/"))
+            {
+                // "L/M" -> "M"
+                wtc = wtc.right(1);
+            }
+            bool real = CDatastoreUtility::dbBoolStringToBool(inner.at(i++).toString());
+            bool legacy = CDatastoreUtility::dbBoolStringToBool(inner.at(i++).toString());
+            bool military = CDatastoreUtility::dbBoolStringToBool(inner.at(i++).toString());
+
+            Q_ASSERT_X(wtc.length() < 2, Q_FUNC_INFO, "WTC too long");
+
             CAircraftIcaoCode code(
-                inner.at(1).toString(),
+                designator,
                 combined,
-                inner.at(2).toString(), // manufacturer
-                inner.at(3).toString(), // model
-                inner.at(7).toString(), // WTC
-                false, // mil
-                inner.at(8).toString().startsWith("Y"), // real
-                inner.at(9).toString().startsWith("Y") // legacy
+                manufacturer,
+                model,
+                wtc,
+                real,
+                legacy,
+                military
             );
+            code.setDbKey(dbKey);
             return code;
+        }
+
+        QString CAircraftIcaoCode::createdCombinedString(const QString &type, const QString &engineCount, const QString &engine)
+        {
+            Q_ASSERT_X(engineCount.length() < 2, Q_FUNC_INFO, "Wrong engine count");
+
+            QString c(type.trimmed().toUpper().left(1));
+            if (c.isEmpty()) { c.append("-"); }
+            if (engineCount.isEmpty())
+            {
+                c.append("-");
+            }
+            else
+            {
+                c.append(engineCount);
+            }
+            if (engine.isEmpty())
+            {
+                c.append("-");
+            }
+            else
+            {
+                c.append(engine.left(1));
+            }
+            Q_ASSERT_X(c.length() == 3, Q_FUNC_INFO, "Wrong combined length");
+            return c;
         }
 
     } // namespace

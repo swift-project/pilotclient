@@ -17,12 +17,14 @@ namespace BlackMisc
             CSequence<CAirlineIcaoCode>(other)
         { }
 
-        CAirlineIcaoCodeList CAirlineIcaoCodeList::fromDatabaseJson(const QJsonArray &array)
+        CAirlineIcaoCodeList CAirlineIcaoCodeList::fromDatabaseJson(const QJsonArray &array,  bool ignoreIncomplete)
         {
             CAirlineIcaoCodeList codes;
             for (const QJsonValue &value : array)
             {
-                codes.push_back(CAirlineIcaoCode::fromDatabaseJson(value.toObject()));
+                CAirlineIcaoCode icao(CAirlineIcaoCode::fromDatabaseJson(value.toObject()));
+                if (ignoreIncomplete && !icao.hasCompleteData()) { continue; }
+                codes.push_back(icao);
             }
             return codes;
         }

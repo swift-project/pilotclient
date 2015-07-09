@@ -28,17 +28,11 @@
 #include <QSysInfo>
 #include <QProcess>
 
-/*
- * Metadata for Math
- */
 void BlackMisc::Math::registerMetadata()
 {
     // void
 }
 
-/*
- * Metadata for Geo
- */
 void BlackMisc::Geo::registerMetadata()
 {
     CCoordinateGeodetic::registerMetadata();
@@ -46,9 +40,6 @@ void BlackMisc::Geo::registerMetadata()
     CLongitude::registerMetadata();
 }
 
-/*
- * Metadata for Settings
- */
 void BlackMisc::Settings::registerMetadata()
 {
     CSettingsAudio::registerMetadata();
@@ -56,9 +47,6 @@ void BlackMisc::Settings::registerMetadata()
     CSettingKeyboardHotkeyList::registerMetadata();
 }
 
-/*
- * Metadata for Audio
- */
 void BlackMisc::Audio::registerMetadata()
 {
     CAudioDeviceInfo::registerMetadata();
@@ -67,9 +55,6 @@ void BlackMisc::Audio::registerMetadata()
     CVoiceRoomList::registerMetadata();
 }
 
-/*
- * Metadata for Hardware
- */
 void BlackMisc::Hardware::registerMetadata()
 {
     CKeyboardKey::registerMetadata();
@@ -77,17 +62,11 @@ void BlackMisc::Hardware::registerMetadata()
     CJoystickButton::registerMetadata();
 }
 
-/*
- * Metadata for Event
- */
 void BlackMisc::Event::registerMetadata()
 {
     CEventHotkeyFunction::registerMetadata();
 }
 
-/*
- * Metadata for Blackmisc
- */
 void BlackMisc::registerMetadata()
 {
     CPropertyIndex::registerMetadata();
@@ -128,17 +107,11 @@ void BlackMisc::registerMetadata()
     qDBusRegisterMetaType<CSequence<double>>();
 }
 
-/*
- * Init resources
- */
 void BlackMisc::initResources()
 {
     initBlackMiscResources();
 }
 
-/*
- * Add hash values
- */
 uint BlackMisc::calculateHash(const QList<uint> &values, const char *className)
 {
     // http://stackoverflow.com/questions/113511/hash-code-implementation/113600#113600
@@ -157,9 +130,6 @@ uint BlackMisc::calculateHash(const QList<uint> &values, const char *className)
     return hash;
 }
 
-/*
- * Add hash values
- */
 uint BlackMisc::calculateHash(const QList<int> &values, const char *className)
 {
     QList<uint> list;
@@ -181,9 +151,6 @@ uint BlackMisc::calculateHash(const QList<int> &values, const char *className)
 }
 
 
-/*
- * Fix QVariant if it comes from DBus and contains QDBusArgument
- */
 QVariant BlackMisc::fixQVariantFromDbusArgument(const QVariant &variant, int localUserType)
 {
     // my business?
@@ -212,9 +179,6 @@ QVariant BlackMisc::fixQVariantFromDbusArgument(const QVariant &variant, int loc
     }
 }
 
-/*
- * Return QVariant based on QDBusArgument
- */
 QVariant BlackMisc::complexQtTypeFromDbusArgument(const QDBusArgument &argument, int type)
 {
     // QDate = 14, QTime = 15, QDateTime = 16, QUrl = 17,
@@ -251,9 +215,6 @@ QVariant BlackMisc::complexQtTypeFromDbusArgument(const QDBusArgument &argument,
 #ifdef Q_CC_MSVC
 #include <crtdbg.h>
 
-/*
- * Heap size of an object
- */
 size_t BlackMisc::heapSizeOf(const QMetaType &metaType)
 {
     metaType.destroy(metaType.create()); // ignore one-off allocations of a class being instantiated for the first time
@@ -268,9 +229,6 @@ size_t BlackMisc::heapSizeOf(const QMetaType &metaType)
     return diff.lSizes[_NORMAL_BLOCK];
 }
 
-/*
- * Heap size of an object
- */
 size_t BlackMisc::heapSizeOf(const QMetaObject &metaObject)
 {
     delete metaObject.newInstance(); //ignore one-off allocations of a class being instantiated for the first time
@@ -287,17 +245,12 @@ size_t BlackMisc::heapSizeOf(const QMetaObject &metaObject)
 
 #else //!Q_CC_MSVC
 
-/*
- * Heap size of an object
- */
 size_t BlackMisc::heapSizeOf(const QMetaType &)
 {
     qDebug() << "heapSizeOf not supported by your compiler toolchain";
     return 0;
 }
-/*
- * Heap size of an object
- */
+
 size_t BlackMisc::heapSizeOf(const QMetaObject &)
 {
     qDebug() << "heapSizeOf not supported by your compiler toolchain";
@@ -306,9 +259,6 @@ size_t BlackMisc::heapSizeOf(const QMetaObject &)
 
 #endif //!Q_CC_MSVC
 
-/*
- * Dump all user types
- */
 void BlackMisc::displayAllUserMetatypesTypes(QTextStream &out)
 {
 
@@ -321,27 +271,18 @@ void BlackMisc::displayAllUserMetatypesTypes(QTextStream &out)
     }
 }
 
-/*
- * Local host name
- */
 const QString &BlackMisc::localHostName()
 {
     static const QString hostName = QHostInfo::localHostName();
     return hostName;
 }
 
-/*
- * Local host name
- */
 const QString &BlackMisc::localHostNameEnvVariable()
 {
     static const QString hostName = QProcessEnvironment::systemEnvironment().value("COMPUTERNAME", QProcessEnvironment::systemEnvironment().value("HOSTNAME"));
     return hostName;
 }
 
-/*
- * Window mixer
- */
 bool BlackMisc::Audio::startWindowsMixer()
 {
     QStringList parameterlist;
@@ -404,4 +345,15 @@ QString BlackMisc::boolToTrueFalse(bool v, bool i18n)
 {
     Q_UNUSED(i18n);
     return v ? "true" : "false";
+}
+
+bool BlackMisc::stringToBool(const QString &string)
+{
+    if (string.isEmpty()) { return false; }
+    QChar c = string.at(0).toLower();
+
+    // explicit values
+    if (c == '1' || c == 't' || c == 'y' || c == 'x') { return true; }
+    if (c == '0' || c == 'f' || c == 'n' || c == ' ') { return false; }
+    return false;
 }

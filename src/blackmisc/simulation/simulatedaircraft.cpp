@@ -18,7 +18,6 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-
         CSimulatedAircraft::CSimulatedAircraft()
         {
             init();
@@ -33,9 +32,11 @@ namespace BlackMisc
         void CSimulatedAircraft::init()
         {
             // sync some values, order here is crucial
+            // set get/set thing here updates the redundant data (e.g. livery / model.livery)
             this->setCallsign(this->getCallsign());
             this->setIcaoInfo(this->getIcaoInfo());
-            this->setModel(this->getModel()); // fix internal values
+            this->setLivery(this->getLivery());
+            this->setModel(this->getModel());
             this->setPilot(this->hasValidRealName() ? this->getPilot() : this->getClient().getUser());
         }
 
@@ -123,6 +124,12 @@ namespace BlackMisc
             // now we have a superset of ICAO data
             this->m_model.setIcao(newIcao);
             CAircraft::setIcaoInfo(newIcao);
+        }
+
+        void CSimulatedAircraft::setLivery(const CLivery &livery)
+        {
+            this->m_model.setLivery(livery);
+            CAircraft::setLivery(livery);
         }
 
         void CSimulatedAircraft::setPilot(const CUser &user)

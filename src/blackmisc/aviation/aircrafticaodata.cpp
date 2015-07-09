@@ -20,12 +20,12 @@ namespace BlackMisc
     namespace Aviation
     {
 
-        CAircraftIcaoData::CAircraftIcaoData(const QString &icao, const QString &airline)
-            : m_aircraftIcao(icao), m_airlineIcao(airline)
+        CAircraftIcaoData::CAircraftIcaoData(const QString &aircraftIcao, const QString &airlineIcao)
+            : m_aircraftIcao(aircraftIcao), m_airlineIcao(airlineIcao)
         {}
 
-        CAircraftIcaoData::CAircraftIcaoData(const CAircraftIcaoCode &icaoAircraft, const CAirlineIcaoCode &icaoAirline, const QString &color)
-            : m_aircraftIcao(icaoAircraft), m_airlineIcao(icaoAirline), m_aircraftColor(color)
+        CAircraftIcaoData::CAircraftIcaoData(const CAircraftIcaoCode &aircraftIcao, const CAirlineIcaoCode &airlineIcao)
+            : m_aircraftIcao(aircraftIcao), m_airlineIcao(airlineIcao)
         {}
 
         QString CAircraftIcaoData::convertToQString(bool i18n) const
@@ -33,8 +33,6 @@ namespace BlackMisc
             Q_UNUSED(i18n);
             QString s(this->m_aircraftIcao.toQString(i18n));
             s.append(" ").append(this->m_airlineIcao.toQString(i18n));
-            if (this->hasLivery()) { s.append(" ").append(this->m_livery); }
-            if (this->hasAircraftColor()) { s.append(" ").append(this->m_aircraftColor); }
             return s;
         }
 
@@ -47,11 +45,6 @@ namespace BlackMisc
                 s.append(" (").append(this->getAirlineDesignator()).append(")");
                 return s;
             }
-            if (!this->m_aircraftColor.isEmpty())
-            {
-                s.append(" (").append(this->m_aircraftColor).append(")");
-                return s;
-            }
             return s;
         }
 
@@ -60,18 +53,14 @@ namespace BlackMisc
             if (!this->hasAircraftDesignator()) { this->setAircraftDesignator(icao.getAircraftDesignator()); }
             if (!this->hasAirlineDesignator()) { this->setAirlineDesignator(icao.getAirlineDesignator()); }
             if (!this->hasAircraftCombinedType()) { this->setAircraftCombinedType(icao.getAircraftCombinedType()); }
-            if (this->m_aircraftColor.isEmpty()) { this->setAircraftColor(icao.getAircraftColor()); }
-            if (this->m_livery.isEmpty()) { this->setLivery(icao.getLivery()); }
         }
 
         bool CAircraftIcaoData::matchesWildcardIcao(const CAircraftIcaoData &otherIcao) const
         {
-            if ((*this) == otherIcao) return true;
+            if ((*this) == otherIcao) { return true; }
             if (otherIcao.hasAircraftDesignator() && otherIcao.getAircraftDesignator() != this->getAircraftDesignator()) { return false; }
             if (otherIcao.hasAirlineDesignator() && otherIcao.getAirlineDesignator() != this->getAirlineDesignator()) { return false; }
             if (otherIcao.hasAircraftCombinedType() && otherIcao.getAircraftCombinedType() != this->getAircraftCombinedType()) { return false; }
-            if (otherIcao.hasLivery() && otherIcao.getLivery() != this->getLivery()) { return false; }
-            if (otherIcao.hasAircraftColor() && otherIcao.getAircraftColor() != this->getAircraftColor()) { return false; }
             return true;
         }
 
@@ -85,8 +74,6 @@ namespace BlackMisc
                 return CVariant::fromValue(this->m_aircraftIcao);
             case IndexAirlineIcao:
                 return CVariant::fromValue(this->m_airlineIcao);
-            case IndexAircraftColor:
-                return CVariant::fromValue(this->m_aircraftColor);
             case IndexAsString:
                 return CVariant::fromValue(this->asString());
             default:
@@ -105,9 +92,6 @@ namespace BlackMisc
                 break;
             case IndexAirlineIcao:
                 this->m_airlineIcao.setPropertyByIndex(variant, index.copyFrontRemoved());
-                break;
-            case IndexAircraftColor:
-                this->setAircraftColor(variant.value<QString>());
                 break;
             default:
                 CValueObject::setPropertyByIndex(variant, index);

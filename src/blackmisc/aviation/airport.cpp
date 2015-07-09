@@ -37,18 +37,15 @@ namespace BlackMisc
 
         QString CAirport::convertToQString(bool i18n) const
         {
-            QString s = i18n ?
-                        QCoreApplication::translate("Aviation", "Airport") :
-                        "Airport";
-            if (!this->m_icao.isEmpty())
-                s.append(' ').append(this->m_icao.toQString(i18n));
+            QString s = i18n ? QCoreApplication::translate("Aviation", "Airport") : "Airport";
+            if (!this->m_icao.isEmpty()) { s.append(' ').append(this->m_icao.toQString(i18n)); }
 
             // position
             s.append(' ').append(this->m_position.toQString(i18n));
             return s;
 
             // force strings for translation in resource files
-            (void)QT_TRANSLATE_NOOP("Aviation", "ATC station");
+            (void)QT_TRANSLATE_NOOP("Aviation", "Airport");
         }
 
         CVariant CAirport::propertyByIndex(const BlackMisc::CPropertyIndex &index) const

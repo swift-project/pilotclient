@@ -45,7 +45,7 @@ namespace BlackMisc
         //! Global index, make sure the indexes are unqiue (for using them in class hierarchy)
         enum GlobalIndex
         {
-            GlobalIndexCValueObject           =   10, // GlobalIndexCValueObject needs to be set manually in CValueObject
+            GlobalIndexCValueObject           =   10, // avoid circular dependencies, GlobalIndexCValueObject needs to be set manually in CValueObject
             GlobalIndexCPhysicalQuantity      =   100,
             GlobalIndexCStatusMessage         =   200,
             GlobalIndexCNameVariantPair       =   300,
@@ -58,6 +58,7 @@ namespace BlackMisc
             GlobalIndexCAirport               =  1400,
             GlobalIndexCAircraftParts         =  1500,
             GlobalIndexCAircraftLights        =  1600,
+            GlobalIndexCLivery                =  1700,
             GlobalIndexCModulator             =  2000,
             GlobalIndexCTransponder           =  2100,
             GlobalIndexCAircraftIcaoData      =  2500,
@@ -75,9 +76,13 @@ namespace BlackMisc
             GlobalIndexCTextMessage           =  4600,
             GlobalIndexCSimulatorSetup        =  4700,
             GlobalIndexCAircraftCfgEntries    =  4800,
+            GlobalIndexCDistributor           =  4900,
+            GlobalIndexVPilotModelRule        =  5000,
             GlobalIndexCVoiceRoom             =  6000,
             GlobalIndexCSettingKeyboardHotkey =  7000,
-            GlobalIndexAbuseMode              = 20000 // property index abused as map key or otherwise, do be removed if no longer needed
+            GlobalIndexIDatastoreInteger      =  8000,
+            GlobalIndexIDatastoreString       =  8100,
+            GlobalIndexAbuseMode              = 20000  // property index abused as map key or otherwise, to be removed if no longer needed
         };
 
         //! Default constructor.

@@ -15,6 +15,9 @@
 #include <tuple>
 #include <QRegularExpression>
 
+
+using namespace BlackMisc;
+
 namespace BlackMisc
 {
     namespace Aviation
@@ -24,9 +27,20 @@ namespace BlackMisc
             : m_designator(airlineDesignator.trimmed().toUpper())
         {}
 
-        CAirlineIcaoCode::CAirlineIcaoCode(const QString &airlineDesignator, const QString &airlineName, const QString &country, const QString &telephony, bool virtualAirline)
-            : m_designator(airlineDesignator), m_name(airlineName), m_country(country), m_telephonyDesignator(telephony), m_isVa(virtualAirline)
+        CAirlineIcaoCode::CAirlineIcaoCode(const QString &airlineDesignator, const QString &airlineName, const QString &countryIso, const QString &country, const QString &telephony, bool virtualAirline)
+            : m_designator(airlineDesignator.trimmed().toUpper()), m_name(airlineName), m_countryIso(countryIso.trimmed().toUpper()), m_country(country), m_telephonyDesignator(telephony), m_isVa(virtualAirline)
         {}
+
+        const QString CAirlineIcaoCode::getVDesignator() const
+        {
+            if (!isVirtualAirline()) { return this->m_designator; }
+            return QString("V").append(this->m_designator);
+        }
+
+        bool CAirlineIcaoCode::hasCompleteData() const
+        {
+            return this->hasDesignator() && this->hasCountryIso() && this->hasName();
+        }
 
         QString CAirlineIcaoCode::convertToQString(bool i18n) const
         {
@@ -38,11 +52,14 @@ namespace BlackMisc
         CVariant CAirlineIcaoCode::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
+            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexAirlineDesignator:
                 return CVariant::fromValue(this->m_designator);
+            case IndexAirlineCountryIso:
+                return CVariant::fromValue(this->m_countryIso);
             case IndexAirlineCountry:
                 return CVariant::fromValue(this->m_country);
             case IndexAirlineName:
@@ -59,11 +76,15 @@ namespace BlackMisc
         void CAirlineIcaoCode::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself()) { (*this) = variant.to<CAirlineIcaoCode>(); return; }
+            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(variant, index); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexAirlineDesignator:
                 this->setDesignator(variant.value<QString>());
+                break;
+            case IndexAirlineCountryIso:
+                this->setCountryIso(variant.value<QString>());
                 break;
             case IndexAirlineCountry:
                 this->setCountry(variant.value<QString>());
@@ -92,15 +113,25 @@ namespace BlackMisc
 
         CAirlineIcaoCode CAirlineIcaoCode::fromDatabaseJson(const QJsonObject &json)
         {
+            // https://ubuntu12/vatrep/public/service/allairlineicao.php?rows=10
             QJsonArray inner = json["cell"].toArray();
+            Q_ASSERT_X(!inner.isEmpty(), Q_FUNC_INFO, "Missing JSON");
             if (inner.isEmpty()) { return CAirlineIcaoCode(); }
+
+            int i = 0;
+            int dbKey = inner.at(i++).toInt(-1);
+            QString designator(inner.at(i++).toString());
+            QString vDesignator(inner.at(i++).toString());
+            Q_UNUSED(vDesignator);
+            QString telephony(inner.at(i++).toString());
+            QString name(inner.at(i++).toString());
+            QString countryIso(inner.at(i++).toString());
+            QString country(inner.at(i++).toString());
+            bool va = inner.at(i++).toString().startsWith("Y", Qt::CaseInsensitive); // VA
             CAirlineIcaoCode code(
-                inner.at(1).toString(),
-                inner.at(3).toString(), // name
-                inner.at(4).toString(), // country
-                inner.at(2).toString(), // telephony
-                inner.at(5).toString().startsWith("Y") // VA
+                designator, name, countryIso, country, telephony, va
             );
+            code.setDbKey(dbKey);
             return code;
         }
 

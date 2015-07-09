@@ -16,13 +16,16 @@
 #include "blackmisc/valueobject.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/datastore.h"
 
 namespace BlackMisc
 {
     namespace Aviation
     {
         //! Value object for ICAO classification
-        class BLACKMISC_EXPORT CAircraftIcaoCode : public CValueObject<CAircraftIcaoCode>
+        class BLACKMISC_EXPORT CAircraftIcaoCode :
+            public CValueObject<CAircraftIcaoCode>,
+            public BlackMisc::IDatastoreObjectWithIntegerKey
         {
         public:
             //! Properties by index
@@ -36,7 +39,7 @@ namespace BlackMisc
                 IndexIsRealworld,
                 IndexIsMilitary,
                 IndexIsLegacy,
-                IndexIsVtol
+                IndexIsVtol,
             };
 
             //! Default constructor.
@@ -47,7 +50,7 @@ namespace BlackMisc
 
             //! Constructor
             CAircraftIcaoCode(const QString &icao, const QString &combinedType, const QString &manufacturer,
-                              const QString &model, const QString &wtc, bool military, bool realworld, bool legacy);
+                              const QString &model, const QString &wtc, bool realworld, bool legacy, bool military);
 
             //! Get ICAO designator, e.g. "B737"
             const QString &getDesignator() const { return m_designator; }
@@ -97,6 +100,9 @@ namespace BlackMisc
             //! Is VTOL aircraft (helicopter, tilt wing)
             bool isVtol() const;
 
+            //! All data set?
+            bool hasCompleteData() const;
+
             //! \copydoc CValueObject::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
@@ -122,9 +128,12 @@ namespace BlackMisc
             QString m_manufacturer;       //!< "Airbus"
             QString m_modelDescription;   //!< "A-330-200"
             QString m_wtc;                //!< wake turbulence "M","H" "L/M", "L"
-            bool m_military = false;
             bool m_realworld = true;      //!< real world aircraft
             bool m_legacy = false;        //!< legacy code
+            bool m_military = false;      //!< military aircraft?
+
+            //! Create a combined string like L2J
+            static QString createdCombinedString(const QString &type, const QString &engineCount, const QString &engine);
 
         };
     } // namespace
@@ -132,6 +141,7 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftIcaoCode)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftIcaoCode, (
+                                   o.m_dbKey,
                                    o.m_designator,
                                    o.m_combinedType,
                                    o.m_manufacturer,

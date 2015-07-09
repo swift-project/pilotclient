@@ -69,6 +69,9 @@ namespace BlackMisc
             //! \copydoc CAircraft::setIcaoInfo
             virtual void setIcaoInfo(const BlackMisc::Aviation::CAircraftIcaoData &icao) override;
 
+            //! \copydoc CAircraft::setLivery
+            virtual void setLivery(const BlackMisc::Aviation::CLivery &livery) override;
+
             //! \copydoc CAircraft::setPilot
             virtual void setPilot(const BlackMisc::Network::CUser &user) override;
 
@@ -115,8 +118,9 @@ namespace BlackMisc
             bool m_enabled = true;              //!< to be displayed in sim
             bool m_rendered = false;            //!< really shown in simulator
             bool m_partsSynchronized = false;   //!< sync.parts
-            bool m_fastPositionUpdates =false;  //!<use fast position updates
+            bool m_fastPositionUpdates = false; //!<use fast position updates
 
+            //! Init, which syncronizes some denormalized values
             void init();
 
         };

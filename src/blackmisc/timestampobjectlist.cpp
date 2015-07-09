@@ -11,7 +11,10 @@
 #include "blackmisc/predicates.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
+#include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/network/textmessagelist.h"
+#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/identifierlist.h"
 #include <algorithm>
@@ -171,7 +174,13 @@ namespace BlackMisc
     // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
     template class ITimestampObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
     template class ITimestampObjectList<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList>;
+    template class ITimestampObjectList<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList>;
+
+    template class ITimestampObjectList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
+    template class ITimestampObjectList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;
+
     template class ITimestampObjectList<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList>;
+
     template class ITimestampObjectList<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>;
     template class ITimestampObjectList<BlackMisc::CIdentifier, BlackMisc::CIdentifierList>;
 

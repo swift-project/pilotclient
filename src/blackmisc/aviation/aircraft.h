@@ -21,6 +21,7 @@
 #include "blackmisc/aviation/transponder.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/aircraftparts.h"
+#include "blackmisc/aviation/livery.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/namevariantpairlist.h"
 #include "blackmisc/propertyindex.h"
@@ -47,6 +48,7 @@ namespace BlackMisc
                 IndexTransponder,
                 IndexSituation,
                 IndexIcao,
+                IndexLivery,
                 IndexParts,
                 IndexIsVtol
             };
@@ -92,6 +94,12 @@ namespace BlackMisc
 
             //! Set ICAO info
             virtual void setIcaoInfo(const CAircraftIcaoData &icao) { m_icao = icao; }
+
+            //! Get livery
+            const BlackMisc::Aviation::CLivery &getLivery() const { return m_livery; }
+
+            //! Livery
+            virtual void setLivery(const BlackMisc::Aviation::CLivery &livery) { this->m_livery = livery; }
 
             //! Set aircraft ICAO designator
             virtual void setAircraftIcaoDesignator(const QString &designator) { m_icao.setAircraftDesignator(designator); }
@@ -289,6 +297,7 @@ namespace BlackMisc
             CAircraftParts            m_parts;
             CSelcal                   m_selcal;
             CAircraftIcaoData         m_icao;
+            CLivery                   m_livery;
         };
     } // namespace
 } // namespace
@@ -302,6 +311,7 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraft, (
                                    o.m_transponder,
                                    o.m_parts,
                                    o.m_icao,
+                                   o.m_livery,
                                    o.m_distanceToOwnAircraft,
                                    o.m_bearingToOwnAircraft
                                ))

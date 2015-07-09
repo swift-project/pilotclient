@@ -23,7 +23,7 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        //! Value object for ICAO classification (airline ICAO, aircraft ICAO, livery ..)
+        //! Value object for ICAO classification (airline ICAO, aircraft ICAO)
         class BLACKMISC_EXPORT CAircraftIcaoData : public CValueObject<CAircraftIcaoData>
         {
         public:
@@ -32,7 +32,6 @@ namespace BlackMisc
             {
                 IndexAircraftIcao = BlackMisc::CPropertyIndex::GlobalIndexCAircraftIcaoData,
                 IndexAirlineIcao,
-                IndexAircraftColor,
                 IndexAsString,
             };
 
@@ -40,12 +39,12 @@ namespace BlackMisc
             CAircraftIcaoData() = default;
 
             //! Constructor.
-            //! \param icao "B737"
-            //! \param airline "DLH"
-            CAircraftIcaoData(const QString &icao, const QString &airline = "");
+            //! \param aircraftIcao "B737"
+            //! \param airlineIcao "DLH"
+            CAircraftIcaoData(const QString &aircraftIcao, const QString &airlineIcao = "");
 
-            //! Constructor.
-            CAircraftIcaoData(const BlackMisc::Aviation::CAircraftIcaoCode &icaoAircraft, const BlackMisc::Aviation::CAirlineIcaoCode &icaoAirline, const QString &color = "");
+            //! Constructor
+            CAircraftIcaoData(const CAircraftIcaoCode &aircraftIcao, const CAirlineIcaoCode &airlineIcao);
 
             //! Get ICAO designator, e.g. "B737"
             const QString &getAircraftDesignator() const { return m_aircraftIcao.getDesignator(); }
@@ -76,27 +75,6 @@ namespace BlackMisc
 
             //! Airline and Aircraft designator?
             bool hasAircraftAndAirlineDesignator() const { return this->hasAirlineDesignator() && this->hasAircraftDesignator(); }
-
-            //! Get livery
-            const QString &getLivery() const { return this->m_livery; }
-
-            //! Set livery
-            void setLivery(const QString &livery) { this->m_livery = livery.trimmed().toUpper(); }
-
-            //! has livery?
-            bool hasLivery() const { return !this->m_livery.isEmpty(); }
-
-            //! Get livery or color
-            const QString &getLiveryOrColor() const { return this->hasLivery() ? this->m_livery : this->m_aircraftColor; }
-
-            //! Get color (RGB hex)
-            const QString &getAircraftColor() const { return this->m_aircraftColor; }
-
-            //! Set color (RGB hex)
-            void setAircraftColor(const QString &color) { this->m_aircraftColor = color.trimmed().toUpper(); }
-
-            //! Color available?
-            bool hasAircraftColor() const { return !this->m_aircraftColor.isEmpty(); }
 
             //! Get type, e.g. "L2J"
             const QString &getAircraftCombinedType() const { return this->m_aircraftIcao.getCombinedType(); }
@@ -136,8 +114,6 @@ namespace BlackMisc
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftIcaoData)
             BlackMisc::Aviation::CAircraftIcaoCode m_aircraftIcao;   //!< "B737", ...
             BlackMisc::Aviation::CAirlineIcaoCode  m_airlineIcao;    //!< "DLH", ...
-            QString m_livery;
-            QString m_aircraftColor;                                 //!< RGB Hex "330044"
         };
     } // namespace
 } // namespace
@@ -145,9 +121,7 @@ namespace BlackMisc
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftIcaoData)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftIcaoData, (
                                    o.m_aircraftIcao,
-                                   o.m_airlineIcao,
-                                   o.m_livery,
-                                   o.m_aircraftColor
+                                   o.m_airlineIcao
                                ))
 
 #endif // guard

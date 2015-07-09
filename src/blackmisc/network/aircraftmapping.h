@@ -71,10 +71,10 @@ namespace BlackMisc
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftMapping)
 
-            QString                            m_source;         //!< source, e.g. database, vPilot
-            QString                            m_packageName;    //!< something like WoA, ..
-            BlackMisc::Aviation::CAircraftIcaoData m_icao;       //!< ICAO code
-            BlackMisc::Simulation::CAircraftModel m_model;       //!< aircraft model
+            QString m_source;         //!< source, e.g. database, vPilot
+            QString m_packageName;    //!< something like WoA, ..
+            BlackMisc::Aviation::CAircraftIcaoData m_icao;  //!< ICAO code
+            BlackMisc::Simulation::CAircraftModel  m_model; //!< aircraft model
 
             // BlackMisc::Simulation::CSimulatorPluginInfo m_simulatorInfo; //!< Mapping is for simulator
         };

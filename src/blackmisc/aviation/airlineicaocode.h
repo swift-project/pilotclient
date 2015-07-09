@@ -13,6 +13,7 @@
 #define BLACKMISC_AVIATION_AIRLINEICAOCODE_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/datastore.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/blackmiscfreefunctions.h"
@@ -22,7 +23,9 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object for ICAO classification
-        class BLACKMISC_EXPORT CAirlineIcaoCode : public CValueObject<CAirlineIcaoCode>
+        class BLACKMISC_EXPORT CAirlineIcaoCode :
+            public CValueObject<CAirlineIcaoCode>,
+            public BlackMisc::IDatastoreObjectWithIntegerKey
         {
         public:
             //! Properties by index
@@ -30,6 +33,7 @@ namespace BlackMisc
             {
                 IndexAirlineDesignator = BlackMisc::CPropertyIndex::GlobalIndexCAirlineIcaoCode,
                 IndexAirlineName,
+                IndexAirlineCountryIso,
                 IndexAirlineCountry,
                 IndexTelephonyDesignator,
                 IndexIsVirtualAirline
@@ -42,16 +46,25 @@ namespace BlackMisc
             CAirlineIcaoCode(const QString &airlineDesignator);
 
             //! Constructor.
-            CAirlineIcaoCode(const QString &airlineDesignator, const QString &airlineName, const QString &country, const QString &telephony, bool virtualAirline);
+            CAirlineIcaoCode(const QString &airlineDesignator, const QString &airlineName, const QString &countryIso, const QString &country, const QString &telephony, bool virtualAirline);
 
             //! Get airline, e.g. "DLH"
             const QString &getDesignator() const { return this->m_designator; }
 
+            //! Get airline, e.g. "DLH", but "VMVA" for virtual airlines
+            const QString getVDesignator() const;
+
             //! Set airline, e.g. "DLH"
             void setDesignator(const QString &icaoDesignator) { this->m_designator = icaoDesignator.trimmed().toUpper(); }
 
-            //! Get country, e.g. "France"
+            //! Get country, e.g. "FR"
+            const QString &getCountryIso() const { return this->m_countryIso; }
+
+            //! Get country, e.g. "FRANCE"
             const QString &getCountry() const { return this->m_country; }
+
+            //! Set country ISO
+            void setCountryIso(const QString &country) { this->m_countryIso = country.trimmed().toUpper(); }
 
             //! Set country
             void setCountry(const QString &country) { this->m_country = country.trimmed(); }
@@ -74,8 +87,20 @@ namespace BlackMisc
             //! Virtual airline
             void setVirtualAirline(bool va) { m_isVa = va; }
 
+            //! Country?
+            bool hasCountryIso() const { return !this->m_countryIso.isEmpty(); }
+
             //! Airline available?
             bool hasDesignator() const { return !this->m_designator.isEmpty(); }
+
+            //! Telephony designator?
+            bool hasTelephonyDesignator() const { return !this->m_telephonyDesignator.isEmpty(); }
+
+            //! Has (airline) name?
+            bool hasName() const { return !m_name.isEmpty(); }
+
+            //! Complete data
+            bool hasCompleteData() const;
 
             //! \copydoc CValueObject::convertToQString
             QString convertToQString(bool i18n = false) const;
@@ -96,7 +121,8 @@ namespace BlackMisc
             BLACK_ENABLE_TUPLE_CONVERSION(CAirlineIcaoCode)
             QString m_designator;           //!< "DLH"
             QString m_name;                 //!< "Lufthansa"
-            QString m_country;              //!< "Poland"
+            QString m_countryIso;           //!< "FR"
+            QString m_country;              //!< clear text, "Germany"
             QString m_telephonyDesignator;  //!< "Speedbird"
             bool m_isVa = false;
         };
@@ -105,8 +131,10 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAirlineIcaoCode)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAirlineIcaoCode, (
+                                   o.m_dbKey,
                                    o.m_designator,
                                    o.m_name,
+                                   o.m_countryIso,
                                    o.m_country,
                                    o.m_telephonyDesignator,
                                    o.m_isVa

@@ -49,4 +49,6 @@ void BlackMisc::Aviation::registerMetadata()
     CAircraftLights::registerMetadata();
     CAircraftParts::registerMetadata();
     CAircraftPartsList::registerMetadata();
+    CLivery::registerMetadata();
+    CLiveryList::registerMetadata();
 }

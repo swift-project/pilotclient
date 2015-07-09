@@ -212,6 +212,8 @@ namespace BlackMisc
                 return this->m_situation.propertyByIndex(index.copyFrontRemoved());
             case IndexIcao:
                 return this->m_icao.propertyByIndex(index.copyFrontRemoved());
+            case IndexLivery:
+                return this->m_livery.propertyByIndex(index.copyFrontRemoved());
             case IndexParts:
                 return this->m_parts.propertyByIndex(index.copyFrontRemoved());
             case IndexIsVtol:
@@ -249,6 +251,9 @@ namespace BlackMisc
                 break;
             case IndexIcao:
                 this->m_icao.setPropertyByIndex(variant, index.copyFrontRemoved());
+                break;
+            case IndexLivery:
+                this->m_livery.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexSituation:
                 this->m_situation.setPropertyByIndex(variant, index.copyFrontRemoved());

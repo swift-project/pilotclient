@@ -37,7 +37,7 @@ namespace BlackMisc
             CAirlineIcaoCodeList(const CSequence<CAirlineIcaoCode> &other);
 
             //! From our DB JSON
-            static CAirlineIcaoCodeList fromDatabaseJson(const QJsonArray &array);
+            static CAirlineIcaoCodeList fromDatabaseJson(const QJsonArray &array, bool ignoreIncomplete = true);
         };
 
     } //namespace

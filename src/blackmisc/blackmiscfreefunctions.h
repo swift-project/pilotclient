@@ -300,6 +300,9 @@ namespace BlackMisc
     //! Bool to true / false
     BLACKMISC_EXPORT QString boolToTrueFalse(bool v, bool  i18n = false);
 
+    //! Convert string to bool
+    BLACKMISC_EXPORT bool stringToBool(const QString &boolString);
+
     //! Get local host name
     BLACKMISC_EXPORT const QString &localHostName();
 

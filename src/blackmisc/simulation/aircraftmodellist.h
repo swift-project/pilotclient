@@ -14,6 +14,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/datastoreobjectlist.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 
@@ -24,6 +25,7 @@ namespace BlackMisc
         //! Value object encapsulating a list of aircraft models
         class BLACKMISC_EXPORT CAircraftModelList :
             public CSequence<CAircraftModel>,
+            public IDatastoreObjectListWithIntegerKey<CAircraftModel, CAircraftModelList>,
             public BlackMisc::Mixin::MetaType<CAircraftModelList>
         {
         public:
@@ -49,7 +51,6 @@ namespace BlackMisc
 
             //! Model strings
             QStringList getSortedModelStrings() const;
-
         };
 
     } //namespace

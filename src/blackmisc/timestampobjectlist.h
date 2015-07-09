@@ -90,12 +90,22 @@ namespace BlackMisc
         class CAircraftSituationList;
         class CAircraftParts;
         class CAircraftPartsList;
+        class CLivery;
+        class CLiveryList;
     }
 
     namespace Network
     {
         class CTextMessage;
         class CTextMessageList;
+    }
+
+    namespace Simulation
+    {
+        class CDistributor;
+        class CDistributorList;
+        class CAircraftModel;
+        class CAircraftModelList;
     }
 
     class CStatusMessage;
@@ -105,7 +115,13 @@ namespace BlackMisc
 
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList>;
+    extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList>;
+
+    extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
+    extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;
+
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList>;
+
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>;
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::CIdentifier, BlackMisc::CIdentifierList>;
     //! \endcond
