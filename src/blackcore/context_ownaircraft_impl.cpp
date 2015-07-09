@@ -96,8 +96,7 @@ namespace BlackCore
             this->m_ownAircraft.setIcaoInfo(
                 CAircraftIcaoData(
                     CAircraftIcaoCode("C172", "L1P"),
-                    CAirlineIcaoCode(),
-                    "0000ff")
+                    CAirlineIcaoCode())
             );
         }
 

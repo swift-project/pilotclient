@@ -295,5 +295,6 @@ namespace BlackCore
 
 Q_DECLARE_INTERFACE(BlackCore::ISimulatorFactory, "org.swift-project.blackcore.simulatorinterface")
 Q_DECLARE_OPERATORS_FOR_FLAGS(BlackCore::ISimulator::SimulatorStatus)
+Q_DECLARE_INTERFACE(BlackCore::ISimulatorListener, "org.swift-project.blackcore.simulatorlistener")
 
 #endif // guard

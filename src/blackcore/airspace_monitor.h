@@ -14,8 +14,6 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/network.h"
-#include "blackcore/vatsimbookingreader.h"
-#include "blackcore/vatsimdatafilereader.h"
 #include "airspace_analyzer.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
@@ -29,6 +27,7 @@
 
 namespace BlackCore
 {
+    class CWebDataReader;
 
     //! Keeps track of other entities in the airspace: aircraft, ATC stations, etc.
     //! Central instance of data for \sa IRemoteAircraftProvider.
@@ -42,7 +41,7 @@ namespace BlackCore
 
     public:
         //! Constructor
-        CAirspaceMonitor(QObject *parent, BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, INetwork *network, CVatsimBookingReader *bookings, CVatsimDataFileReader *dataFile);
+        CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, INetwork *network, CWebDataReader *webDataReader, QObject *parent);
 
         //! \copydoc IRemoteAircraftProvider::getAircraftInRange
         //! \ingroup remoteaircraftprovider
@@ -212,12 +211,11 @@ namespace BlackCore
         BlackMisc::Aviation::CCallsignSet m_aircraftSupportingParts; //!< aircraft supporting parts
 
         QMap<BlackMisc::Aviation::CAirportIcaoCode, BlackMisc::Aviation::CInformationMessage> m_metarCache;
-        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan>            m_flightPlanCache;
+        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan>                m_flightPlanCache;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftIcaoData>          m_icaoCodeCache;
 
         INetwork              *m_network               = nullptr;
-        CVatsimBookingReader  *m_vatsimBookingReader   = nullptr;
-        CVatsimDataFileReader *m_vatsimDataFileReader  = nullptr;
+        CWebDataReader        *m_webDataReader         = nullptr;
         CAirspaceAnalyzer     *m_analyzer              = nullptr; //!< owned analyzer
         bool                   m_serverSupportsNameQuery = false; //!< not all servers support name query
         bool                   m_connected = false;               //!< retrieve data

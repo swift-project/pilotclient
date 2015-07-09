@@ -21,6 +21,7 @@
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
+#include "blackmisc/setnetwork.h"
 #include "blackmisc/network/clientlist.h"
 #include "blackmisc/digestsignal.h"
 #include "blackmisc/logmessage.h"
@@ -31,9 +32,7 @@
 namespace BlackCore
 {
     class CAirspaceMonitor;
-    class CVatsimBookingReader;
-    class CVatsimDataFileReader;
-    class CIcaoDataReader;
+    class CWebDataReader;
 
     //! Network context implementation
     class BLACKCORE_EXPORT CContextNetwork :
@@ -232,37 +231,22 @@ namespace BlackCore
         CContextNetwork *registerWithDBus(CDBusServer *server);
 
     private:
-        CAirspaceMonitor    *m_airspace = nullptr;
-        BlackCore::INetwork *m_network  = nullptr;
+        CAirspaceMonitor *m_airspace = nullptr;
+        INetwork         *m_network  = nullptr;
+        CWebDataReader   *m_webDataReader = nullptr; //!< web service readers
+        QList<QMetaObject::Connection> m_webReaderSignalConnections;
         INetwork::ConnectionStatus m_currentStatus = INetwork::Disconnected; //!< used to detect pending connections
+        QTimer *m_dataUpdateTimer = nullptr;                                 //!< general updates such as ATIS, frequencies, see requestDataUpdates()
 
         // Digest signals, only sending after some time
         BlackMisc::CDigestSignal m_dsAtcStationsBookedChanged { this, &IContextNetwork::changedAtcStationsBooked, &IContextNetwork::changedAtcStationsBookedDigest, 750, 2 };
         BlackMisc::CDigestSignal m_dsAtcStationsOnlineChanged { this, &IContextNetwork::changedAtcStationsOnline, &IContextNetwork::changedAtcStationsOnlineDigest, 750, 4 };
         BlackMisc::CDigestSignal m_dsAircraftsInRangeChanged  { this, &IContextNetwork::changedAircraftInRange, &IContextNetwork::changedAircraftInRangeDigest, 750, 4 };
 
-        // for reading XML and VATSIM data files
-        CVatsimBookingReader  *m_vatsimBookingReader  = nullptr;
-        CVatsimDataFileReader *m_vatsimDataFileReader = nullptr;
-        CIcaoDataReader       *m_icaoDataReader       = nullptr;
-        QTimer *m_dataUpdateTimer = nullptr; //!< general updates such as ATIS, frequencies, see requestDataUpdates()
-
         //! Own aircraft from \sa CContextOwnAircraft
         const BlackMisc::Simulation::CSimulatedAircraft ownAircraft() const;
 
     private slots:
-        //! ATC bookings received
-        void ps_receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
-
-        //! Data file has been read
-        void ps_dataFileRead(int lines);
-
-        //! Read ICAO codes
-        void ps_readAircraftIcaoCodes(int number);
-
-        //! Read ICAO codes
-        void ps_readAirlinesIcaoCodes(int number);
-
         //! Check if a supervisor message was received
         void ps_checkForSupervisiorTextMessage(const BlackMisc::Network::CTextMessageList &messages);
 
@@ -272,7 +256,6 @@ namespace BlackCore
         //! Render restrictions have been changed, used with analyzer
         //! \sa CAirspaceAnalyzer
         void ps_simulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance, const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary);
-
     };
 } // ns
 

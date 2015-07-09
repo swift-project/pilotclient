@@ -14,10 +14,8 @@
 #include "context_simulator.h"
 #include "context_ownaircraft_impl.h"
 #include "network_vatlib.h"
-#include "vatsimbookingreader.h"
-#include "vatsimdatafilereader.h"
-#include "icaodatareader.h"
 #include "airspace_monitor.h"
+#include "web_datareader.h"
 #include "blackmisc/networkutils.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/logmessage.h"
@@ -41,6 +39,7 @@ namespace BlackCore
         IContextNetwork(mode, runtime)
     {
         Q_ASSERT(this->getRuntime());
+        Q_ASSERT(this->getIContextSettings());
         Q_ASSERT(this->getIContextOwnAircraft());
         Q_ASSERT(this->getIContextOwnAircraft()->isUsingImplementingObject());
 
@@ -51,38 +50,31 @@ namespace BlackCore
         connect(this->m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::ps_checkForSupervisiorTextMessage);
         connect(this->m_network, &INetwork::textMessageSent, this, &CContextNetwork::textMessageSent);
 
-        // 2. VATSIM bookings
-        this->m_vatsimBookingReader = new CVatsimBookingReader(this);
-        connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CContextNetwork::ps_receivedBookings);
-        this->m_vatsimBookingReader->start();
-        this->m_vatsimBookingReader->setInterval(180 * 1000);
-        this->m_vatsimBookingReader->readInBackgroundThread(); // first read
-
-        // 3. VATSIM data file
-        const QStringList dataFileUrls = { "http://info.vroute.net/vatsim-data.txt" };
-        this->m_vatsimDataFileReader = new CVatsimDataFileReader(this, dataFileUrls);
-        connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CContextNetwork::ps_dataFileRead);
-        this->m_vatsimDataFileReader->start();
-        this->m_vatsimDataFileReader->readInBackgroundThread(); // first read
-        this->m_vatsimDataFileReader->setInterval(90 * 1000);
-
-        // 4. ICAO data reader
-        this->m_icaoDataReader = new CIcaoDataReader(this,
-                "http://vatrep.vatsim-germany.org/service/allaircrafticao.php?rows=20000&sord=asc",
-                "http://vatrep.vatsim-germany.org/service/allairlineicao.php?rows=20000&sord=asc");
-        connect(this->m_icaoDataReader, &CIcaoDataReader::readAircraftIcaoCodes, this, &CContextNetwork::ps_readAircraftIcaoCodes);
-        connect(this->m_icaoDataReader, &CIcaoDataReader::readAirlinesIcaoCodes, this, &CContextNetwork::ps_readAirlinesIcaoCodes);
-        this->m_icaoDataReader->start();
-        this->m_icaoDataReader->readInBackgroundThread();
-
-        // 5. Update timer for data (network data such as frequency)
+        // 2. Update timer for data (network data such as frequency)
         this->m_dataUpdateTimer = new QTimer(this);
         connect(this->m_dataUpdateTimer, &QTimer::timeout, this, &CContextNetwork::requestDataUpdates);
         this->m_dataUpdateTimer->start(30 * 1000);
 
-        // 6. Airspace contents
+        // 3. data reader
+        this->m_webDataReader = new CWebDataReader(CWebDataReader::AllReaders, this);
+        this->m_webReaderSignalConnections = this->m_webDataReader->connectVatsimDataSignals(
+                std::bind(&CContextNetwork::vatsimBookingsRead, this, std::placeholders::_1),
+                std::bind(&CContextNetwork::vatsimDataFileRead, this, std::placeholders::_1));
+        this->m_webReaderSignalConnections.append(
+            this->m_webDataReader->connectSwiftDatabaseSignals(
+                this, // the object here must be the same as in the bind
+                std::bind(&CContextNetwork::aircraftIcaoCodeRead, this, std::placeholders::_1),
+                std::bind(&CContextNetwork::airlineIcaoCodeRead, this, std::placeholders::_1),
+                std::bind(&CContextNetwork::liveriesRead, this, std::placeholders::_1),
+                std::bind(&CContextNetwork::distributorsRead, this, std::placeholders::_1),
+                std::bind(&CContextNetwork::modelsRead, this, std::placeholders::_1)
+            ));
+        this->m_webDataReader->readAllInBackground(1000);
+
+        // 4. Airspace contents
         Q_ASSERT_X(this->getRuntime()->getCContextOwnAircraft(), Q_FUNC_INFO, "this and own aircraft context must be local");
-        this->m_airspace = new CAirspaceMonitor(this, this->getRuntime()->getCContextOwnAircraft(), this->m_network, this->m_vatsimBookingReader, this->m_vatsimDataFileReader);
+        Q_ASSERT_X(this->m_webDataReader, Q_FUNC_INFO, "Missing reader");
+        this->m_airspace = new CAirspaceMonitor(this->getRuntime()->getCContextOwnAircraft(), this->m_network, this->m_webDataReader, this);
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationsOnline, this, &CContextNetwork::changedAtcStationsOnline);
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked);
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus);
@@ -147,8 +139,9 @@ namespace BlackCore
     void CContextNetwork::gracefulShutdown()
     {
         this->disconnect(); // all signals
-        if (this->m_vatsimBookingReader)  { this->m_vatsimBookingReader->requestStop();  this->m_vatsimBookingReader->quit(); }
-        if (this->m_vatsimDataFileReader) { this->m_vatsimDataFileReader->requestStop(); this->m_vatsimDataFileReader->quit(); }
+        this->m_webReaderSignalConnections.clear(); // disconnect
+        this->m_webDataReader->gracefulShutdown();
+
         if (this->isConnected()) { this->disconnectFromNetwork(); }
         if (this->m_airspace) { this->m_airspace->gracefulShutdown(); }
     }
@@ -203,14 +196,9 @@ namespace BlackCore
 
     CServer CContextNetwork::getConnectedServer() const
     {
-        if (this->isConnected())
-        {
-            return this->m_network->getPresetServer();
-        }
-        else
-        {
-            return CServer();
-        }
+        return this->isConnected() ?
+               this->m_network->getPresetServer() :
+               CServer();
     }
 
     CStatusMessage CContextNetwork::disconnectFromNetwork()
@@ -392,19 +380,16 @@ namespace BlackCore
 
     CServerList CContextNetwork::getVatsimFsdServers() const
     {
+        Q_ASSERT_X(this->m_webDataReader, Q_FUNC_INFO, "Missing data reader");
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        Q_ASSERT(this->m_vatsimDataFileReader);
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        return this->m_vatsimDataFileReader->getFsdServers();
+        return this->m_webDataReader->getVatsimFsdServers();
     }
 
     CServerList CContextNetwork::getVatsimVoiceServers() const
     {
+        Q_ASSERT_X(this->m_webDataReader, Q_FUNC_INFO, "Missing data reader");
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        Q_ASSERT(this->m_vatsimDataFileReader);
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        return this->m_vatsimDataFileReader->getVoiceServers();
+        return this->m_webDataReader->getVatsimVoiceServers();
     }
 
     void CContextNetwork::ps_fsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
@@ -455,25 +440,6 @@ namespace BlackCore
         m_airspace->analyzer()->setSimulatorRenderRestrictionsChanged(restricted, enabled, maxAircraft, maxRenderedDistance, maxRenderedBoundary);
     }
 
-    void CContextNetwork::ps_dataFileRead(int lines)
-    {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        CLogMessage(this).info("Read VATSIM data file, %1 lines") << lines;
-        emit vatsimDataFileRead();
-    }
-
-    void CContextNetwork::ps_readAircraftIcaoCodes(int number)
-    {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        CLogMessage(this).info("Read %1 aircraft ICAO codes") << number;
-    }
-
-    void CContextNetwork::ps_readAirlinesIcaoCodes(int number)
-    {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        CLogMessage(this).info("Read %1 airline ICAO codes") << number;
-    }
-
     void CContextNetwork::ps_checkForSupervisiorTextMessage(const CTextMessageList &messages)
     {
         if (messages.containsPrivateMessages())
@@ -491,13 +457,6 @@ namespace BlackCore
         Q_ASSERT(this->getRuntime());
         Q_ASSERT(this->getRuntime()->getCContextOwnAircraft());
         return this->getRuntime()->getCContextOwnAircraft()->getOwnAircraft();
-    }
-
-    void CContextNetwork::readAtcBookingsFromSource() const
-    {
-        Q_ASSERT(this->m_vatsimBookingReader);
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        this->m_vatsimBookingReader->readInBackgroundThread();
     }
 
     CAtcStationList CContextNetwork::getAtcStationsOnline() const
@@ -534,13 +493,6 @@ namespace BlackCore
     {
         if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
         return this->m_airspace->getAtcStationsOnline().findFirstByCallsign(callsign);
-    }
-
-    void CContextNetwork::ps_receivedBookings(const CAtcStationList &)
-    {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        CLogMessage(this).info("Read bookings from network");
-        emit vatsimBookingsRead();
     }
 
     void CContextNetwork::requestDataUpdates()
@@ -597,6 +549,13 @@ namespace BlackCore
             emit this->changedFastPositionUpdates(aircraft, originator);
         }
         return c;
+    }
+
+    void CContextNetwork::readAtcBookingsFromSource() const
+    {
+        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        Q_ASSERT_X(this->m_webDataReader, Q_FUNC_INFO, "missing reader");
+        this->m_webDataReader->readAtcBookingsInBackground();
     }
 
     bool CContextNetwork::updateAircraftRendered(const CCallsign &callsign, bool rendered, const CIdentifier &originator)

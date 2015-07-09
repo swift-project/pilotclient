@@ -13,7 +13,6 @@
 #define BLACKCORE_VATSIMBOOKINGREADER_H
 
 #include "blackcoreexport.h"
-#include "blackcore/settings/network.h"
 #include "blackmisc/threadedreader.h"
 #include "blackmisc/aviation/atcstationlist.h"
 
@@ -31,7 +30,7 @@ namespace BlackCore
 
     public:
         //! Constructor
-        explicit CVatsimBookingReader(QObject *owner);
+        explicit CVatsimBookingReader(QObject *owner, const QString &url);
 
         //! Read / re-read bookings
         void readInBackgroundThread();
@@ -45,7 +44,7 @@ namespace BlackCore
         void ps_read();
 
     private:
-        CSetting<Settings::Network::BookingService> m_serviceUrl { this };
+        QString m_serviceUrl; //!< URL of the service
         QNetworkAccessManager *m_networkManager = nullptr;
 
     signals:

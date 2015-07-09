@@ -116,12 +116,6 @@ namespace BlackCore
         //! Terminated connection
         void connectionTerminated();
 
-        //! VATSIM data file was read
-        void vatsimDataFileRead();
-
-        //! Bookings read
-        void vatsimBookingsRead();
-
         //! Connection status changed
         //! \param from  old status
         //! \param to    new status
@@ -138,8 +132,30 @@ namespace BlackCore
         //! Text message sent (by me)
         void textMessageSent(const BlackMisc::Network::CTextMessage &sentMessage);
 
-    public slots:
+        // --------------------------- data readers -------------------------------
 
+        //! Data file read
+        void vatsimDataFileRead(int lines);
+
+        //! Bookings read
+        void vatsimBookingsRead(int number);
+
+        //! ICAO codes read
+        void aircraftIcaoCodeRead(int number);
+
+        //! ICAO codes read
+        void airlineIcaoCodeRead(int number);
+
+        //! Liveries read
+        void liveriesRead(int number);
+
+        //! Distributors read
+        void distributorsRead(int number);
+
+        //! Number of models read
+        void modelsRead(int number);
+
+    public slots:
         //! Reload bookings from booking service
         virtual void readAtcBookingsFromSource() const = 0;
 

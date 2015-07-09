@@ -28,12 +28,8 @@ namespace BlackCore
         //! Destructor
         ~CContext() {}
 
-        //! Log category
-        static const BlackMisc::CLogCategoryList &getLogCategories()
-        {
-            static const BlackMisc::CLogCategoryList cats { BlackMisc::CLogCategory::context() };
-            return cats;
-        }
+        //! Log categories
+        static const BlackMisc::CLogCategoryList &getLogCategories();
 
         //! Using local implementing object?
         bool isUsingImplementingObject() const

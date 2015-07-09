@@ -9,6 +9,9 @@
 
 #include "airspace_monitor.h"
 #include "blackcore/blackcorefreefunctions.h"
+#include "blackcore/web_datareader.h"
+#include "blackcore/vatsimbookingreader.h"
+#include "blackcore/vatsimdatafilereader.h"
 #include "blackmisc/project.h"
 #include "blackmisc/testing.h"
 #include "blackmisc/logmessage.h"
@@ -26,10 +29,10 @@ using namespace BlackMisc::PhysicalQuantities;
 namespace BlackCore
 {
 
-    CAirspaceMonitor::CAirspaceMonitor(QObject *parent, BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider, INetwork *network, CVatsimBookingReader *bookings, CVatsimDataFileReader *dataFile)
+    CAirspaceMonitor::CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider, INetwork *network, CWebDataReader *webDataReader, QObject *parent)
         : QObject(parent),
           COwnAircraftAware(ownAircraftProvider),
-          m_network(network), m_vatsimBookingReader(bookings), m_vatsimDataFileReader(dataFile),
+          m_network(network), m_webDataReader(webDataReader),
           m_analyzer(new CAirspaceAnalyzer(ownAircraftProvider, this, network, this))
     {
         this->setObjectName("CAirspaceMonitor");
@@ -55,8 +58,8 @@ namespace BlackCore
         this->connect(&m_interimPositionUpdateTimer, &QTimer::timeout, this, &CAirspaceMonitor::ps_sendInterimPositions);
 
         // AutoConnection: this should also avoid race conditions by updating the bookings
-        this->connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CAirspaceMonitor::ps_receivedBookings);
-        this->connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CAirspaceMonitor::ps_receivedDataFile);
+        this->connect(this->m_webDataReader->getBookingReader(), &CVatsimBookingReader::dataRead, this, &CAirspaceMonitor::ps_receivedBookings);
+        this->connect(this->m_webDataReader->getDataFileReader(), &CVatsimDataFileReader::dataRead, this, &CAirspaceMonitor::ps_receivedDataFile);
 
         // Force snapshot in the main event loop
         this->connect(this->m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, this, &CAirspaceMonitor::airspaceAircraftSnapshot, Qt::QueuedConnection);
@@ -287,7 +290,7 @@ namespace BlackCore
         // those are the ones not in range
         for (const CCallsign &callsign : searchList)
         {
-            CUserList usersByCallsign = this->m_vatsimDataFileReader->getUsersForCallsign(callsign);
+            CUserList usersByCallsign = this->m_webDataReader->getDataFileReader()->getUsersForCallsign(callsign);
             if (usersByCallsign.isEmpty())
             {
                 CUser user;
@@ -438,13 +441,13 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_realNameReplyReceived(const CCallsign &callsign, const QString &realname)
     {
-        Q_ASSERT(this->m_vatsimDataFileReader);
+        Q_ASSERT(this->m_webDataReader->getDataFileReader());
         if (!this->m_connected || realname.isEmpty()) { return; }
         CPropertyIndexVariantMap vm({CAtcStation::IndexController, CUser::IndexRealName}, realname);
         this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
 
-        CVoiceCapabilities caps = this->m_vatsimDataFileReader->getVoiceCapabilityForCallsign(callsign);
+        CVoiceCapabilities caps = this->m_webDataReader->getDataFileReader()->getVoiceCapabilityForCallsign(callsign);
         vm = CPropertyIndexVariantMap({CAircraft::IndexPilot, CUser::IndexRealName}, realname);
         vm.addValue({ CSimulatedAircraft::IndexClient, CClient::IndexUser, CUser::IndexRealName }, realname);
         vm.addValue({ CSimulatedAircraft::IndexClient, CClient::IndexVoiceCapabilities }, caps);
@@ -472,7 +475,7 @@ namespace BlackCore
         capabilities.addValue(CClient::FsdWithAircraftConfig, (flags & INetwork::SupportsAircraftConfigs));
 
         CPropertyIndexVariantMap vm(CClient::IndexCapabilities, CVariant::from(capabilities));
-        CVoiceCapabilities caps = m_vatsimDataFileReader->getVoiceCapabilityForCallsign(callsign);
+        CVoiceCapabilities caps = m_webDataReader->getDataFileReader()->getVoiceCapabilityForCallsign(callsign);
         vm.addValue({CClient::IndexVoiceCapabilities}, caps);
         if (!this->m_otherClients.containsCallsign(callsign)) { this->m_otherClients.push_back(CClient(callsign)); }
         this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
@@ -634,7 +637,7 @@ namespace BlackCore
         for (auto client = this->m_otherClients.begin(); client != this->m_otherClients.end(); ++client)
         {
             if (client->hasSpecifiedVoiceCapabilities()) { continue; } // we already have voice caps
-            CVoiceCapabilities vc = this->m_vatsimDataFileReader->getVoiceCapabilityForCallsign(client->getCallsign());
+            CVoiceCapabilities vc = this->m_webDataReader->getDataFileReader()->getVoiceCapabilityForCallsign(client->getCallsign());
             if (vc.isUnknown()) { continue; }
             client->setVoiceCapabilities(vc);
         }
@@ -683,7 +686,7 @@ namespace BlackCore
         if (stationsWithCallsign.isEmpty())
         {
             // new station, init with data from data file
-            CAtcStation station(this->m_vatsimDataFileReader->getAtcStationsForCallsign(callsign).frontOrDefault());
+            CAtcStation station(this->m_webDataReader->getDataFileReader()->getAtcStationsForCallsign(callsign).frontOrDefault());
             station.setCallsign(callsign);
             station.setRange(range);
             station.setFrequency(frequency);
@@ -819,7 +822,7 @@ namespace BlackCore
         {
             // empty so far, try to fetch from data file
             CLogMessage(this).warning("Empty ICAO info for %1 %2") << callsign.toQString() << icaoData.toQString();
-            CAircraftIcaoData icaoDataFromDataFile = this->m_vatsimDataFileReader->getIcaoInfo(callsign);
+            CAircraftIcaoData icaoDataFromDataFile = this->m_webDataReader->getDataFileReader()->getIcaoInfo(callsign);
             if (!icaoDataFromDataFile.hasAircraftDesignator()) { return; } // give up!
             vm = CPropertyIndexVariantMap(CAircraft::IndexIcao, CVariant::from(icaoDataFromDataFile));
         }
@@ -873,7 +876,7 @@ namespace BlackCore
                 setIcao = true;
             }
 
-            this->m_vatsimDataFileReader->updateWithVatsimDataFileData(aircraft);
+            this->m_webDataReader->getDataFileReader()->updateWithVatsimDataFileData(aircraft);
 
             // only place where aircraft is added
             this->m_aircraftInRange.push_back(aircraft);

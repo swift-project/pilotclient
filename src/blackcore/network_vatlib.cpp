@@ -69,7 +69,7 @@ namespace BlackCore
             clientCapabilities |= vatCapsStealth;
         }
 
-        m_net.reset(Vat_CreateNetworkSession(vatServerLegacyFsd, CProject::systemNameAndVersionChar(),
+        m_net.reset(Vat_CreateNetworkSession(vatServerLegacyFsd, CProject::swiftVersionChar(),
                                              CProject::versionMajor(), CProject::versionMinor(),
                                              "None", CLIENT_PUBLIC_ID, CLIENT_PRIVATE_KEY,
                                              clientCapabilities));
@@ -553,7 +553,7 @@ namespace BlackCore
     {
         const QByteArray acTypeICAObytes = toFSD(m_icaoCode.getAircraftDesignator());
         const QByteArray airlineICAObytes = toFSD(m_icaoCode.getAirlineDesignator());
-        const QByteArray liverybytes = toFSD(m_icaoCode.getLivery());
+        const QByteArray liverybytes; //! \todo VATLIB: send livery
 
         VatAircraftInfo aircraftInfo {acTypeICAObytes, airlineICAObytes, liverybytes};
         Vat_SendModernPlaneInfo(m_net.data(), toFSD(callsign), &aircraftInfo);
@@ -1024,7 +1024,8 @@ namespace BlackCore
         BlackMisc::Aviation::CAircraftIcaoData icao;
         icao.setAircraftDesignator(aircraftInfo->aircraftType);
         icao.setAirlineDesignator(aircraftInfo->airline);
-        icao.setLivery(aircraftInfo->livery);
+
+        //! \todo use livery: aircraftInfo->livery;
         emit cbvar_cast(cbvar)->icaoCodesReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), icao);
     }
 

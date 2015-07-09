@@ -12,10 +12,10 @@
 #ifndef BLACKCORE_ICAODATAREADER_H
 #define BLACKCORE_ICAODATAREADER_H
 
-#include "blackcoreexport.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackcore/databasereader.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/threadedreader.h"
 
 #include <QObject>
 #include <QTimer>
@@ -24,14 +24,14 @@
 
 namespace BlackCore
 {
-    //! Read bookings from VATSIM
-    class BLACKCORE_EXPORT CIcaoDataReader : public BlackMisc::CThreadedReader
+    //! Read ICAO data from Database
+    class BLACKCORE_EXPORT CIcaoDataReader : public CDatabaseReader
     {
         Q_OBJECT
 
     public:
         //! Constructor
-        explicit CIcaoDataReader(QObject *owner, const QString &aircraftIcaoUrl, const QString &airlineIcaoUrl);
+        explicit CIcaoDataReader(QObject *owner, const QString &protocol, const QString &server, const QString &baseUrl);
 
         //! Get aircraft ICAO information
         //! \threadsafe
@@ -41,8 +41,13 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodes() const;
 
-        //! Start reading in own thread
-        void readInBackgroundThread();
+        //! Get aircraft ICAO information count
+        //! \threadsafe
+        int getAircraftIcaoCodesCount() const;
+
+        //! Get airline ICAO information count
+        //! \threadsafe
+        int getAirlineIcaoCodesCount() const;
 
     signals:
         //! Codes have been read
@@ -50,6 +55,9 @@ namespace BlackCore
 
         //! Codes have been read
         void readAirlinesIcaoCodes(int number);
+
+        //! Everything has been read
+        void readAll();
 
     private slots:
         //! Aircraft have been read
@@ -72,11 +80,11 @@ namespace BlackCore
         mutable QReadWriteLock m_lockAirline;
         mutable QReadWriteLock m_lockAircraft;
 
-        //! Check if terminated or error, otherwise split into array of objects
-        QJsonArray splitReplyIntoArray(QNetworkReply *nwReply) const;
+        //! URL
+        static QString getAircraftIcaoUrl(const QString &protocol, const QString &server, const QString &baseUrl);
 
-        //! Check if thread has been finished
-        bool checkIfFinished() const;
+        //! URL
+        static QString getAirlineIcaoUrl(const QString &protocol, const QString &server, const QString &baseUrl);
     };
 }
 

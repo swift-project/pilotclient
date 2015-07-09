@@ -418,6 +418,7 @@ namespace BlackCore
             }
 
             Q_ASSERT_X(!listener->parent(), Q_FUNC_INFO, "Objects with parent cannot be moved to thread");
+            listener->setProperty("isInitialized", true);
             listener->moveToThread(&m_listenersThread);
         }
 

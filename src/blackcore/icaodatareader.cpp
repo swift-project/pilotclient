@@ -18,9 +18,9 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackCore
 {
-    CIcaoDataReader::CIcaoDataReader(QObject *owner, const QString &aircraftIcaoUrl, const QString &airlineIcaoUrl) :
-        CThreadedReader(owner, "CIcaoDataReader"),
-        m_urlAircraftIcao(aircraftIcaoUrl), m_urlAirlineIcao(airlineIcaoUrl)
+    CIcaoDataReader::CIcaoDataReader(QObject *owner, const QString &protocol, const QString &server, const QString &baseUrl) :
+        CDatabaseReader(owner, "CIcaoDataReader"),
+        m_urlAircraftIcao(getAircraftIcaoUrl(protocol, server, baseUrl)), m_urlAirlineIcao(getAirlineIcaoUrl(protocol, server, baseUrl))
     {
         this->m_networkManagerAircraft = new QNetworkAccessManager(this);
         this->m_networkManagerAirlines = new QNetworkAccessManager(this);
@@ -41,11 +41,26 @@ namespace BlackCore
         return m_airlineIcaos;
     }
 
-    void CIcaoDataReader::readInBackgroundThread()
+    int CIcaoDataReader::getAircraftIcaoCodesCount() const
     {
-        bool s = QMetaObject::invokeMethod(this, "ps_read");
-        Q_ASSERT_X(s, Q_FUNC_INFO, "Invoke failed");
-        Q_UNUSED(s);
+        QReadLocker l(&m_lockAircraft);
+        return m_aircraftIcaos.size();
+    }
+
+    int CIcaoDataReader::getAirlineIcaoCodesCount() const
+    {
+        QReadLocker l(&m_lockAirline);
+        return m_airlineIcaos.size();
+    }
+
+    QString CIcaoDataReader::getAircraftIcaoUrl(const QString &protocol, const QString &server, const QString &baseUrl)
+    {
+        return buildUrl(protocol, server, baseUrl, "service/allaircrafticao.php?rows=20000&sord=asc");
+    }
+
+    QString CIcaoDataReader::getAirlineIcaoUrl(const QString &protocol, const QString &server, const QString &baseUrl)
+    {
+        return buildUrl(protocol, server, baseUrl, "service/allairlineicao.php?rows=20000&sord=asc");
     }
 
     void CIcaoDataReader::ps_read()
@@ -61,47 +76,12 @@ namespace BlackCore
         this->m_networkManagerAirlines->get(requestAirline);
     }
 
-    QJsonArray CIcaoDataReader::splitReplyIntoArray(QNetworkReply *nwReply) const
-    {
-        this->threadAssertCheck();
-        QJsonArray array;
-        if (this->isFinished())
-        {
-            CLogMessage(this).debug() << Q_FUNC_INFO;
-            CLogMessage(this).info("Terminated ICAO data parsing process"); // for users
-            return array; // stop, terminate straight away, ending thread
-        }
-
-        if (nwReply->error() == QNetworkReply::NoError)
-        {
-            const QString dataFileData = nwReply->readAll();
-            nwReply->close(); // close asap
-            if (dataFileData.isEmpty()) { return array; }
-
-            QJsonDocument jsonResponse = QJsonDocument::fromJson(dataFileData.toUtf8());
-            QJsonObject jsonObject = jsonResponse.object();
-            QJsonArray jsonArray = jsonObject["rows"].toArray();
-            return jsonArray;
-        }
-        CLogMessage(this).warning("Reading data failed %1 %2") << nwReply->errorString() << nwReply->url().toString();
-        nwReply->abort();
-        return array;
-    }
-
-    bool BlackCore::CIcaoDataReader::checkIfFinished() const
-    {
-        if (!this->isFinished()) { return false; }
-        CLogMessage(this).debug() << Q_FUNC_INFO;
-        CLogMessage(this).info("Terminated ICAO data parsing process"); // for users
-        return true;
-    }
-
     void CIcaoDataReader::ps_parseAircraftIcaoData(QNetworkReply *nwReplyPtr)
     {
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-        QJsonArray array = this->splitReplyIntoArray(nwReply.data());
+        QJsonArray array = this->transformReplyIntoJsonArray(nwReply.data());
         if (array.isEmpty()) { return; }
         CAircraftIcaoCodeList codes = CAircraftIcaoCodeList::fromDatabaseJson(array);
 
@@ -113,12 +93,13 @@ namespace BlackCore
             n = codes.size();
         }
         emit readAircraftIcaoCodes(n);
+        if (this->getAirlineIcaoCodesCount() > 0) { emit readAll(); }
     }
 
     void CIcaoDataReader::ps_parseAirlineIcaoData(QNetworkReply *nwReplyPtr)
     {
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-        QJsonArray array = this->splitReplyIntoArray(nwReply.data());
+        QJsonArray array = this->transformReplyIntoJsonArray(nwReply.data());
         if (array.isEmpty()) { return; }
         CAirlineIcaoCodeList codes = CAirlineIcaoCodeList::fromDatabaseJson(array);
 
@@ -130,6 +111,6 @@ namespace BlackCore
             n = codes.size();
         }
         emit readAirlinesIcaoCodes(n);
+        if (this->getAircraftIcaoCodesCount() > 0) { emit readAll(); }
     }
-
 } // namespace
