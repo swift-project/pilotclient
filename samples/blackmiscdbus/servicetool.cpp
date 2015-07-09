@@ -376,7 +376,6 @@ namespace BlackMiscTest
 
             CAircraftIcaoData icaoData("B737", "DLH");
             icaoData.setAircraftCombinedType("L2J");
-            icaoData.setAircraftColor("green");
             CAircraftIcaoData icaoReceived = testserviceInterface.pingIcaoData(icaoData);
             qDebug() << "Pinged ICAO data via interface"
                      << ((icaoData == icaoReceived) ? "OK" : "ERROR!") << icaoReceived;

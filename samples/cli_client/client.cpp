@@ -164,14 +164,10 @@ void Client::presetIcaoCodesCmd(QTextStream &args)
     QString acTypeICAO;
     QString combinedIcaoType; // e.g. "L2J"
     QString airlineICAO;
-    QString livery;
-    QString color;
-    args >> acTypeICAO >> combinedIcaoType >> airlineICAO >> livery >> color;
+    args >> acTypeICAO >> combinedIcaoType >> airlineICAO;
     BlackMisc::Aviation::CAircraftIcaoData icaoData(
         CAircraftIcaoCode(acTypeICAO, combinedIcaoType),
-        CAirlineIcaoCode(airlineICAO),
-        color);
-    icaoData.setLivery(livery);
+        CAirlineIcaoCode(airlineICAO));
     emit presetIcaoCodes(icaoData);
 }
 

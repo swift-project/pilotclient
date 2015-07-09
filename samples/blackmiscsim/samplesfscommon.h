@@ -21,7 +21,7 @@ namespace BlackSimTest
     {
     public:
         //! Run the samples
-        static int samples(QTextStream &streamOut, QTextStream &streamIn);
+        static void samples(QTextStream &streamOut, QTextStream &streamIn);
     };
 } // namespace
 

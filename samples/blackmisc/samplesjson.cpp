@@ -60,8 +60,7 @@ namespace BlackMiscTest
         aircraft.setTransponder(CTransponder::getStandardTransponder(7000, CTransponder::ModeC));
         aircraft.setIcaoInfo(CAircraftIcaoData(
                                  CAircraftIcaoCode("B737", "L2J"),
-                                 CAirlineIcaoCode("DLH"),
-                                 "CCDDFF"
+                                 CAirlineIcaoCode("DLH")
                              ));
 
         json = aircraft.toJson();

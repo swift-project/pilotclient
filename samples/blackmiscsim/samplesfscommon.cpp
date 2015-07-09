@@ -28,7 +28,7 @@ namespace BlackSimTest
     /*
      * Samples
      */
-    int CSamplesFsCommon::samples(QTextStream &streamOut, QTextStream &streamIn)
+    void CSamplesFsCommon::samples(QTextStream &streamOut, QTextStream &streamIn)
     {
         QString fsxDir = CSampleUtils::selectDirectory({"C:/Program Files (x86)/Microsoft Games/Microsoft Flight Simulator X/SimObjects",
                                                         "C:/Flight Simulator 9/Aircraft"}, streamOut, streamIn);
@@ -66,7 +66,6 @@ namespace BlackSimTest
         streamOut << "read JSON array with size " << jsonArray.size() << endl;
         streamOut << "read entries from disk: " << entriesList.size() << " in " << time.restart() << "ms" << endl;
         tempFile.close();
-        return 0;
     }
 
 } // namespace

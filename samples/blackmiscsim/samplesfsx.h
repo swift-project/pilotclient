@@ -21,11 +21,7 @@ namespace BlackSimTest
     {
     public:
         //! Run the misc. samples
-        static int samplesMisc(QTextStream &streamOut);
-
-        //! Driver test / SimConnect test
-        static int driverTest(QTextStream &streamOut);
-
+        static void samplesMisc(QTextStream &streamOut);
     };
 } // namespace
 

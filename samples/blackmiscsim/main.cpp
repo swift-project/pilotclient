@@ -11,6 +11,7 @@
 #include "samplesfscommon.h"
 #include "samplesfsx.h"
 #include "samplesmodelmapping.h"
+#include "samplesvpilotrules.h"
 
 #include <QCoreApplication>
 #include <QTextStream>
@@ -33,6 +34,7 @@ int main(int argc, char *argv[])
     streamOut << "1 .. FS common / Simulation (with cfg files reading)" << endl;
     streamOut << "2 .. FSX" << endl;
     streamOut << "3 .. Mappings" << endl;
+    streamOut << "4 .. vPilot rules" << endl;
     streamOut << "x .. exit" << endl;
     QString i = streamIn.readLine().toLower().trimmed();
 
@@ -50,14 +52,18 @@ int main(int argc, char *argv[])
     {
         BlackSimTest::CSamplesModelMapping::samples(streamOut, streamIn);
     }
+    else if (i.startsWith("4"))
+    {
+        BlackSimTest::CSamplesVPilotRules::samples(streamOut, streamIn);
+    }
     else if (i.startsWith("x"))
     {
-        return 0;
+        streamOut << "terminating" << endl;
     }
 
     streamOut << endl;
     streamOut << "time elapsed: " << t.elapsed() << "ms" << endl;
     streamOut << "press key to exit" << endl;
     streamIn.readLine();
-    return 0;
+    return EXIT_SUCCESS;
 }

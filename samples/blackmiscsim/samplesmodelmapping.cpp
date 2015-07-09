@@ -29,13 +29,13 @@ namespace BlackSimTest
     /*
      * Samples
      */
-    int CSamplesModelMapping::samples(QTextStream &streamOut, QTextStream &streamIn)
+    void CSamplesModelMapping::samples(QTextStream &streamOut, QTextStream &streamIn)
     {
         BlackMisc::registerMetadata();
 
         std::unique_ptr<IModelMappingsProvider> cvm(new CModelMappingsProviderVPilot(true));
         bool s = cvm->read();
-        streamOut << "directory: " << CModelMappingsProviderVPilot::standardMappingsDirectory() << endl;
+        streamOut << "directory: " << CVPilotRulesReader::standardMappingsDirectory() << endl;
         streamOut << "loaded: " << BlackMisc::boolToYesNo(s) << " size: " << cvm->getMappingList().size() << endl;
 
         // mapper with rule set, handing over ownership
@@ -47,7 +47,7 @@ namespace BlackSimTest
         if (!cfgParser.changeRootDirectory(fsxDir))
         {
             streamOut << "Wrong or empty directoy " << fsxDir << endl;
-            return 0;
+            return;
         }
 
         streamOut << "Start reading models" << endl;
@@ -66,8 +66,6 @@ namespace BlackSimTest
         CAircraftIcaoData icao("C172");
         streamOut << "Searching for " << icao << endl;
         streamOut << matcher.getAircraftMappingList().findByIcaoCodeExact(icao) << endl;
-
-        return 0;
     }
 
 } // namespace
