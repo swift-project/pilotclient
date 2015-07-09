@@ -38,8 +38,8 @@ CSwiftCore::CSwiftCore(const SetupInfo &info, QWidget *parent) :
     setWindowTitle(name);
     setWindowIcon(CIcons::swiftNova24());
     setWindowIconText(name);
-    setupLogDisplay();
-    connectSlots();
+    initLogDisplay();
+    initSlots();
     initStyleSheet();
     startCore(info);
 }
@@ -94,7 +94,7 @@ void CSwiftCore::ps_onStyleSheetsChanged()
     this->initStyleSheet();
 }
 
-void CSwiftCore::connectSlots()
+void CSwiftCore::initSlots()
 {
     connect(ui->pb_StartCore, &QPushButton::clicked, this, &CSwiftCore::ps_startCorePressed);
     connect(ui->pb_StopCore, &QPushButton::clicked, this, &CSwiftCore::ps_stopCorePressed);
@@ -102,7 +102,7 @@ void CSwiftCore::connectSlots()
     connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CSwiftCore::ps_onStyleSheetsChanged);
 }
 
-void CSwiftCore::setupLogDisplay()
+void CSwiftCore::initLogDisplay()
 {
     CLogHandler::instance()->install(true);
     CLogHandler::instance()->enableConsoleOutput(false); // default disable

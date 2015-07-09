@@ -38,9 +38,9 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     if (this->m_init) { return; }
     this->setVisible(false); // hide all, so no flashing windows during init
 
-    // icon, initial position where intro was before
+    // init window
     this->setWindowIcon(CIcons::swift24());
-    this->setWindowTitle(CProject::systemNameAndVersion());
+    this->setWindowTitle(CProject::swiftVersionString());
     this->setObjectName("SwiftGuiStd");
     this->initStyleSheet();
     QPoint pos = CGuiUtility::introWindowPosition();
@@ -121,9 +121,8 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     this->initDynamicMenus();
     this->initMenuIcons();
 
-
     // info
-    this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CProject::systemNameAndVersion());
+    this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CProject::swiftVersionString());
     this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CProject::compiledInfo());
 
     // hotkeys

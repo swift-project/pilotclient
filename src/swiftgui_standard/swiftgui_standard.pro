@@ -23,6 +23,7 @@ macx {
 DEPENDPATH += . $$SourceRoot/src/blackmisc \
                 $$SourceRoot/src/blacksound \
                 $$SourceRoot/src/blackcore \
+                $$SourceRoot/src/blackgui \
                 $$SourceRoot/src/blackinput
 
 INCLUDEPATH += . $$SourceRoot/src

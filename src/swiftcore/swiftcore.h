@@ -58,12 +58,12 @@ private slots:
     virtual void ps_onStyleSheetsChanged();
 
 private:
-    void connectSlots();
-    void setupLogDisplay();
+    void initSlots();
+    void initLogDisplay();
+    void initStyleSheet();
     void startCore(const SetupInfo &setup);
     void stopCore();
     QString getDBusAddress() const;
-    void initStyleSheet();
 
     QScopedPointer<Ui::CSwiftCore> ui;
 };

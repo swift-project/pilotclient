@@ -16,14 +16,17 @@ contains(BLACK_CONFIG, BlackInput) {
 
 contains(BLACK_CONFIG, BlackCore) {
     SUBDIRS += src/blackcore
-}
-
-contains(BLACK_CONFIG, BlackGui) {
-    SUBDIRS += src/blackgui
-    SUBDIRS += src/swiftgui_standard/swiftgui_standard.pro
-
-    contains(BLACK_CONFIG, BlackCore) {
-        SUBDIRS += src/swiftcore/swiftcore.pro
+    contains(BLACK_CONFIG, BlackGui) {
+        SUBDIRS += src/blackgui
+        contains(BLACK_CONFIG, SwiftGui) {
+            SUBDIRS += src/swiftgui_standard/swiftgui_standard.pro
+        }
+        contains(BLACK_CONFIG, SwiftCore) {
+            SUBDIRS += src/swiftcore/swiftcore.pro
+        }
+        contains(BLACK_CONFIG, SwiftData) {
+            SUBDIRS += src/swiftdata/swiftdata.pro
+        }
     }
 }
 
