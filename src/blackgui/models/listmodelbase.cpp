@@ -8,20 +8,7 @@
  */
 
 #include "listmodelbase.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/aircraftlist.h"
-#include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/network/serverlist.h"
-#include "blackmisc/network/userlist.h"
-#include "blackmisc/network/clientlist.h"
-#include "blackmisc/network/textmessagelist.h"
-#include "blackmisc/network/aircraftmappinglist.h"
-#include "blackmisc/setkeyboardhotkeylist.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/namevariantpairlist.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/identifierlist.h"
+#include "allmodelcontainers.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
@@ -465,13 +452,15 @@ namespace BlackGui
         template class CListModelBase<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
         template class CListModelBase<BlackMisc::Aviation::CAircraft, BlackMisc::Aviation::CAircraftList>;
         template class CListModelBase<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>;
+        template class CListModelBase<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList>;
         template class CListModelBase<BlackMisc::Network::CServer, BlackMisc::Network::CServerList>;
         template class CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList>;
         template class CListModelBase<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList>;
         template class CListModelBase<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>;
-        template class CListModelBase<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
         template class CListModelBase<BlackMisc::Network::CAircraftMapping, BlackMisc::Network::CAircraftMappingList>;
+        template class CListModelBase<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
         template class CListModelBase<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
+        template class CListModelBase<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;
         template class CListModelBase<BlackMisc::Settings::CSettingKeyboardHotkey, BlackMisc::Settings::CSettingKeyboardHotkeyList>;
 
     } // namespace

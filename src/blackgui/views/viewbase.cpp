@@ -8,19 +8,7 @@
  */
 
 #include "viewbase.h"
-#include "../models/statusmessagelistmodel.h"
-#include "../models/identifierlistmodel.h"
-#include "../models/namevariantpairlistmodel.h"
-#include "../models/atcstationlistmodel.h"
-#include "../models/aircraftmodellistmodel.h"
-#include "../models/textmessagelistmodel.h"
-#include "../models/airportlistmodel.h"
-#include "../models/airportlistmodel.h"
-#include "../models/serverlistmodel.h"
-#include "../models/userlistmodel.h"
-#include "../models/clientlistmodel.h"
-#include "../models/simulatedaircraftlistmodel.h"
-#include "../models/keyboardkeylistmodel.h"
+#include "blackgui/models/allmodels.h"
 #include "../guiutility.h"
 
 #include <QHeaderView>
@@ -406,12 +394,17 @@ namespace BlackGui
 
         template class CViewBase<BlackGui::Models::CAtcStationListModel, BlackMisc::Aviation::CAtcStationList, BlackMisc::Aviation::CAtcStation>;
         template class CViewBase<BlackGui::Models::CAirportListModel, BlackMisc::Aviation::CAirportList, BlackMisc::Aviation::CAirport>;
+        template class CViewBase<BlackGui::Models::CLiveryListModel, BlackMisc::Aviation::CLiveryList, BlackMisc::Aviation::CLivery>;
+
         template class CViewBase<BlackGui::Models::CServerListModel, BlackMisc::Network::CServerList, BlackMisc::Network::CServer>;
         template class CViewBase<BlackGui::Models::CUserListModel, BlackMisc::Network::CUserList, BlackMisc::Network::CUser>;
         template class CViewBase<BlackGui::Models::CClientListModel, BlackMisc::Network::CClientList, BlackMisc::Network::CClient>;
         template class CViewBase<BlackGui::Models::CTextMessageListModel, BlackMisc::Network::CTextMessageList, BlackMisc::Network::CTextMessage>;
+
         template class CViewBase<BlackGui::Models::CSimulatedAircraftListModel, BlackMisc::Simulation::CSimulatedAircraftList, BlackMisc::Simulation::CSimulatedAircraft>;
         template class CViewBase<BlackGui::Models::CAircraftModelListModel, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModel>;
+        template class CViewBase<BlackGui::Models::CDistributorListModel, BlackMisc::Simulation::CDistributorList, BlackMisc::Simulation::CDistributor>;
+
         template class CViewBase<BlackGui::Models::CKeyboardKeyListModel, BlackMisc::Settings::CSettingKeyboardHotkeyList, BlackMisc::Settings::CSettingKeyboardHotkey>;
 
     } // namespace
