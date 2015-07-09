@@ -57,7 +57,7 @@ namespace BlackSimPlugin
                                                "Boeing 737-800 Paint1",
                                                CAircraftModel::TypeModelMatchingDefaultModel,
                                                "B737-800 default model",
-                                               CAircraftIcaoData(CAircraftIcaoCode("B738", "L2J"), CAirlineIcaoCode(), "FFFFFF")
+                                               CAircraftIcaoData(CAircraftIcaoCode("B738", "L2J"), CAirlineIcaoCode())
                                            ));
         }
 
@@ -80,7 +80,7 @@ namespace BlackSimPlugin
         bool CSimulatorFsx::connectTo()
         {
             if (this->isConnected()) { return true; }
-            if (FAILED(SimConnect_Open(&m_hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0)))
+            if (FAILED(SimConnect_Open(&m_hSimConnect, BlackMisc::CProject::swiftVersionChar(), nullptr, 0, 0, 0)))
             {
                 // reset state as expected for unconnected
                 if (m_simconnectTimerId >= 0) { killTimer(m_simconnectTimerId); }
@@ -869,7 +869,7 @@ namespace BlackSimPlugin
         {
             Q_ASSERT_X(!BlackCore::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background");
             HANDLE hSimConnect;
-            HRESULT result = SimConnect_Open(&hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0);
+            HRESULT result = SimConnect_Open(&hSimConnect, BlackMisc::CProject::swiftVersionChar(), nullptr, 0, 0, 0);
             SimConnect_Close(hSimConnect);
             if (result == S_OK)
             {

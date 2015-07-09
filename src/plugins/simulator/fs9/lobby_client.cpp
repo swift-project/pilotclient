@@ -209,7 +209,7 @@ namespace BlackSimPlugin
             // Set the device addresses
             apDevAddress[0] = pDeviceAddress;
 
-            QString session = BlackMisc::CProject::systemNameAndVersion();
+            QString session = BlackMisc::CProject::swiftVersionString();
             QScopedArrayPointer<wchar_t> wstrSessionName(new wchar_t[session.size() + 1]);
             session.toWCharArray(wstrSessionName.data());
             wstrSessionName[session.size()] = 0;

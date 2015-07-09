@@ -43,7 +43,7 @@ namespace BlackSimPlugin
                                                      .arg(event->szApplicationName)
                                                      .arg(event->dwApplicationVersionMajor).arg(event->dwApplicationVersionMinor).arg(event->dwApplicationBuildMajor).arg(event->dwApplicationBuildMinor)
                                                      .arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
-                    CLogMessage(static_cast<CSimulatorFsx *>(nullptr)).info("Connect to FSX: %1") << CProject::systemNameAndVersion();
+                    CLogMessage(static_cast<CSimulatorFsx *>(nullptr)).info("Connect to FSX: %1") << CProject::swiftVersionString();
                     break;
                 }
             case SIMCONNECT_RECV_ID_EXCEPTION:

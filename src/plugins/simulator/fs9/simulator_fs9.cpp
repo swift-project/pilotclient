@@ -63,7 +63,7 @@ namespace BlackSimPlugin
                                                "Boeing 737-400",
                                                CAircraftModel::TypeModelMatchingDefaultModel,
                                                "B737-400 default model",
-                                               CAircraftIcaoData(CAircraftIcaoCode("B734", "L2J"), CAirlineIcaoCode(), "FFFFFF")
+                                               CAircraftIcaoData(CAircraftIcaoCode("B734", "L2J"), CAirlineIcaoCode())
                                            ));
         }
 

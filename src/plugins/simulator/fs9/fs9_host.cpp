@@ -25,7 +25,7 @@ namespace BlackSimPlugin
     namespace Fs9
     {
         CFs9Host::CFs9Host(QObject *owner) :
-            CDirectPlayPeer(owner, CProject::systemNameAndVersion())
+            CDirectPlayPeer(owner, CProject::swiftVersionString())
         {
         }
 
@@ -80,7 +80,7 @@ namespace BlackSimPlugin
         {
             initDirectPlay();
             createHostAddress();
-            startHosting(CProject::systemNameAndVersion(), m_callsign.toQString());
+            startHosting(CProject::swiftVersionString(), m_callsign.toQString());
         }
 
         void CFs9Host::cleanup()
