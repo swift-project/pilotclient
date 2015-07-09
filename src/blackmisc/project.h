@@ -59,10 +59,10 @@ namespace BlackMisc
         static const QString &version();
 
         //! System's name and version
-        static const QString &systemNameAndVersion();
+        static const QString &swiftVersionString();
 
         //! System's name and version
-        static const char *systemNameAndVersionChar();
+        static const char *swiftVersionChar();
 
         //! Version major
         static int versionMajor();

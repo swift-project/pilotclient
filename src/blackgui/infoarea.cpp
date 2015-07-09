@@ -27,10 +27,10 @@ using namespace BlackMisc;
 namespace BlackGui
 {
     CInfoArea::CInfoArea(QWidget *parent) :
-        QMainWindow(parent), CEnableForFramelessWindow(CEnableForFramelessWindow::WindowTool, false, "framelessInfoArea", this)
+        QMainWindow(parent),
+        CEnableForFramelessWindow(CEnableForFramelessWindow::WindowTool, false, "framelessInfoArea", this)
     {
         this->ps_setWholeInfoAreaFloating(this->m_infoAreaFloating);
-        this->setWindowIcon(CIcons::swift24());
     }
 
     CInfoArea::~CInfoArea()
@@ -704,13 +704,12 @@ namespace BlackGui
 
     void CInfoArea::setTabPixmaps()
     {
-        if (!this->m_tabBar) return;
+        if (!this->m_tabBar) { return; }
         for (int i = 0; i < this->m_tabBar->count(); i++)
         {
             const QString t(this->m_tabBar->tabText(i));
             int areaIndex = t.isEmpty() ? i : this->getAreaIndexByWindowTitle(t);
-            const QPixmap p = indexToPixmap(areaIndex);
-            this->m_tabBar->setTabIcon(i, p);
+            this->m_tabBar->setTabIcon(i, indexToPixmap(areaIndex));
         }
     }
 

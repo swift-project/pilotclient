@@ -124,15 +124,15 @@ namespace BlackMisc
         return v;
     }
 
-    const QString &CProject::systemNameAndVersion()
+    const QString &CProject::swiftVersionString()
     {
         static QString s = QString("swift %1").arg(version());
         return s;
     }
 
-    const char *CProject::systemNameAndVersionChar()
+    const char *CProject::swiftVersionChar()
     {
-        static const QByteArray a(systemNameAndVersion().toUtf8());
+        static const QByteArray a(swiftVersionString().toUtf8());
         return a.constData();
     }
 

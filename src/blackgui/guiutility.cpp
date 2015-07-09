@@ -12,7 +12,7 @@
 #include "blackmisc/filelogger.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/project.h"
-#include <QWidget>
+#include <QMainWindow>
 #include <QApplication>
 #include <QGuiApplication>
 #include <QMessageBox>
@@ -22,27 +22,42 @@ using namespace BlackMisc;
 
 namespace BlackGui
 {
-    CEnableForFramelessWindow *CGuiUtility::mainApplicationWindow()
+    CEnableForFramelessWindow *CGuiUtility::mainFramelessEnabledApplicationWindow()
     {
         QWidgetList tlw = topLevelApplicationWidgetsWithName();
-        foreach(QWidget * w, tlw)
+        for (QWidget *w : tlw)
         {
+            // best coice is to check on frameless window
             CEnableForFramelessWindow *mw = dynamic_cast<CEnableForFramelessWindow *>(w);
-            if (!mw) { continue; }
-            if (mw->isMainApplicationWindow()) { return mw; }
+            if (mw && mw->isMainApplicationWindow()) { return mw; }
+
         }
         return nullptr;
     }
 
     QWidget *CGuiUtility::mainApplicationWindowWidget()
     {
-        CEnableForFramelessWindow *mw = mainApplicationWindow();
-        return mw ? mw->getWidget() : nullptr;
+        CEnableForFramelessWindow *mw = mainFramelessEnabledApplicationWindow();
+        if (mw && mw->getWidget())
+        {
+            return mw->getWidget();
+        }
+
+        // second choice, try via QMainWindow
+        QWidgetList tlw = topLevelApplicationWidgetsWithName();
+        for (QWidget *w : tlw)
+        {
+            QMainWindow *qmw = qobject_cast<QMainWindow *>(w);
+            if (!qmw) { continue; }
+            if (!qmw->parentWidget()) { return qmw; }
+
+        }
+        return nullptr;
     }
 
     bool CGuiUtility::isMainWindowFrameless()
     {
-        CEnableForFramelessWindow *mw = mainApplicationWindow();
+        CEnableForFramelessWindow *mw = mainFramelessEnabledApplicationWindow();
         Q_ASSERT(mw); // there should be a main window
         return (mw && mw->isFrameless());
     }
@@ -90,7 +105,7 @@ namespace BlackGui
 
     QPoint CGuiUtility::mainWindowPosition()
     {
-        CEnableForFramelessWindow *mw = mainApplicationWindow();
+        CEnableForFramelessWindow *mw = mainFramelessEnabledApplicationWindow();
         return (mw) ? mw->getWidget()->pos() : QPoint();
     }
 

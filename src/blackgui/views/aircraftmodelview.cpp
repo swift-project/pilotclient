@@ -29,7 +29,7 @@ namespace BlackGui
 
             // filter
             QWidget *mainWindow = this->mainApplicationWindowWidget();
-            Q_ASSERT(mainWindow);
+            Q_ASSERT_X(mainWindow, Q_FUNC_INFO, "no main window found");
             this->setFilterDialog(new CAircraftModelFilterForm(mainWindow));
         }
 

@@ -69,7 +69,7 @@ namespace BlackGui
 
         CEnableForFramelessWindow *CEnableForDockWidgetInfoArea::mainApplicationWindow() const
         {
-            CEnableForFramelessWindow *mw = CGuiUtility::mainApplicationWindow();
+            CEnableForFramelessWindow *mw = CGuiUtility::mainFramelessEnabledApplicationWindow();
             return mw;
         }
 

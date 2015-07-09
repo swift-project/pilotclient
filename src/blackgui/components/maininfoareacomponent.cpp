@@ -13,10 +13,6 @@
 #include "../stylesheetutility.h"
 #include "../guiutility.h"
 #include "blackmisc/icons.h"
-#include <QMenu>
-#include <QListIterator>
-#include <QSignalMapper>
-#include <QCloseEvent>
 
 using namespace BlackMisc;
 using namespace BlackGui;
@@ -30,7 +26,8 @@ namespace BlackGui
             ui(new Ui::CMainInfoAreaComponent)
         {
             ui->setupUi(this);
-            initInfoArea();
+            initInfoArea(); // init base class
+            this->setWindowIcon(CIcons::swift24());
         }
 
         CMainInfoAreaComponent::~CMainInfoAreaComponent()
