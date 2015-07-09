@@ -16,13 +16,11 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-
         IModelMappingsProvider::IModelMappingsProvider(QObject *parent) : QObject(parent) {}
 
         const CAircraftMappingList &IModelMappingsProvider::getMappingList() const
         {
-            return this->m_mappings;
+            return m_mappings;
         }
-
     } // namespace
 } // namespace

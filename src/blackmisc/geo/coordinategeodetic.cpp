@@ -95,6 +95,12 @@ namespace BlackMisc
             return Geo::calculateBearing((*this), otherCoordinate);
         }
 
+        bool ICoordinateGeodetic::canHandleIndex(const CPropertyIndex &index)
+        {
+            int i = index.frontCasted<int>();
+            return (i >= static_cast<int>(IndexLatitude)) && (i <= static_cast<int>(IndexGeodeticHeightAsString));
+        }
+
         CVariant ICoordinateGeodetic::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (!index.isMyself())

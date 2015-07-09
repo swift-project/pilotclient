@@ -262,6 +262,7 @@ namespace BlackGui
 
         void CAtcStationComponent::updateTreeView()
         {
+            // EXPERIMENTAL CODE
             QAbstractItemModel *old = (this->ui->tvp_AtcStationsOnlineTree->model());
             this->ui->tvp_AtcStationsOnlineTree->setModel(
                 this->ui->tvp_AtcStationsOnline->derivedModel()->toAtcGroupModel()

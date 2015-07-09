@@ -74,12 +74,9 @@ namespace BlackMisc
             //! Initial bearing
             BlackMisc::PhysicalQuantities::CAngle bearing(const ICoordinateGeodetic &otherCoordinate) const;
 
-            //! Can given index be handled
-            static bool canHandleIndex(const BlackMisc::CPropertyIndex &index)
-            {
-                int i = index.frontCasted<int>();
-                return (i >= static_cast<int>(IndexLatitude)) && (i <= static_cast<int>(IndexGeodeticHeightAsString));
-            }
+        protected:
+            //! Can given index be handled?
+            static bool canHandleIndex(const BlackMisc::CPropertyIndex &index);
         };
 
         //! Great circle distance between points

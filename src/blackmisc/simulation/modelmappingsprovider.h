@@ -40,7 +40,7 @@ namespace BlackMisc
             const BlackMisc::Network::CAircraftMappingList &getMappingList() const;
 
         protected:
-            BlackMisc::Network::CAircraftMappingList m_mappings; //!< Mappings
+            BlackMisc::Network::CAircraftMappingList m_mappings; //!< mappings
         };
 
         //! Model mappings dummy

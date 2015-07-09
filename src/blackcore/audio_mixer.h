@@ -38,10 +38,7 @@ namespace BlackCore
             OutputVoiceChannel2,
         };
 
-        /*!
-         * \brief Default constructor with parent
-         * \param parent
-         */
+        //! Default constructor
         IAudioMixer(QObject *parent = nullptr);
 
         //! Virtual destructor.

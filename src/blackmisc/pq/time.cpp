@@ -88,7 +88,7 @@ namespace BlackMisc
         QTime CTime::toQTime() const
         {
             CTime copy(*this);
-            copy.setUnit(CTimeUnit::hms());
+            copy.switchUnit(CTimeUnit::hms());
 
             // QTime is not defined for negative numbers
             // so we use the absolute value here
