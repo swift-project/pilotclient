@@ -9,6 +9,7 @@
 
 #include "testblackcoremain.h"
 #include "testinterpolator.h"
+#include "testreaders.h"
 #include "testnetwork.h"
 
 namespace BlackCoreTest
@@ -23,6 +24,10 @@ namespace BlackCoreTest
         {
             CTestInterpolator interpolatorTests;
             status |= QTest::qExec(&interpolatorTests, argc, argv);
+        }
+        {
+            CTestReaders readersTests;
+            status |= QTest::qExec(&readersTests, argc, argv);
         }
         {
             CTestNetwork networkTests;

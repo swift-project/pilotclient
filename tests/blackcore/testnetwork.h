@@ -39,9 +39,9 @@ namespace BlackCoreTest
         //! Common part used by all tests.
         void networkTest(BlackCore::INetwork *);
 
-        BlackCore::CNetworkVatlib m_networkVatlib ;
+        BlackCore::CNetworkVatlib m_networkVatlib ; //!< vatlib instance
     };
 
-} //namespace BlackCoreTest
+} //namespace
 
 #endif // guard

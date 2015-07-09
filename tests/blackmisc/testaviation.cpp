@@ -165,8 +165,7 @@ namespace BlackMiscTest
 
         CAircraftIcaoData icao1(
             CAircraftIcaoCode("C172", "L1P"),
-            CAirlineIcaoCode("GA"),
-            "0000ff"
+            CAirlineIcaoCode("GA")
         );
         CAircraftIcaoData icao2(icao1);
         QVERIFY2(icao1 == icao2, "ICAOs shall be equal");

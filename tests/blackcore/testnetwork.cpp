@@ -29,7 +29,7 @@ void BlackCoreTest::CTestNetwork::networkTest(BlackCore::INetwork *net)
     .send(&INetwork::presetCallsign, "SWIFT")
     .send(&INetwork::presetIcaoCodes, CAircraftIcaoData(
               CAircraftIcaoCode("C172", "L1P"),
-              CAirlineIcaoCode("YYY"), "white"))
+              CAirlineIcaoCode("YYY")))
     .send(&INetwork::initiateConnection)
     .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus, INetwork::ConnectionStatus newStatus)
     {
@@ -38,6 +38,7 @@ void BlackCoreTest::CTestNetwork::networkTest(BlackCore::INetwork *net)
     })
     .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus, INetwork::ConnectionStatus newStatus)
     {
+        //! \todo verify how we want to handle the situation if the connect fails. On Jenkins that would cause a failed test case and hence a failed build
         QVERIFY(newStatus == INetwork::Connected);
         qDebug() << "CONNECTED";
     })
