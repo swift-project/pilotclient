@@ -14,7 +14,9 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/modelmappingsprovider.h"
+#include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
 #include <QStringList>
+#include <QScopedPointer>
 
 namespace BlackMisc
 {
@@ -32,29 +34,12 @@ namespace BlackMisc
                 //! Destructor
                 virtual ~CModelMappingsProviderVPilot() {}
 
-                //! File names
-                void addFilename(const QString &fileName);
-
-                //! Directory with .vmr files
-                void addDirectory(const QString &directory);
-
-                //! Loaded files (number)
-                int countFilesLoaded() const { return m_loadedFiles; }
-
-                //! The standard directory for vPilot mappings
-                static const QString &standardMappingsDirectory();
-
             public slots:
                 //! Load data
                 virtual bool read() override;
 
             private:
-                QStringList m_fileList;             //!< list of file names
-                QStringList m_fileListWithProblems; //!< problems during parsing
-                int m_loadedFiles = 0;              //!< loaded files
-
-                //! Single file read and parsing
-                bool loadFile(const QString &fileName);
+                QScopedPointer<CVPilotRulesReader> m_vPilotReader; //!< used vPilot model reader
             };
         } // namespace
     } // namespace
