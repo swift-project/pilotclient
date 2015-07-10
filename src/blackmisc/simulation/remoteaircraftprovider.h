@@ -104,6 +104,7 @@ namespace BlackMisc
             //! In order to disconnect a list of connections is provided, which have to be disconnected manually.
             //! \note connections are direct as functors have no parameter for connection type
             virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
+                QObject *receiver,
                 std::function<void(const BlackMisc::Aviation::CAircraftSituation &)>          addedSituationSlot,
                 std::function<void(const BlackMisc::Aviation::CAircraftParts &)>              addedPartsSlot,
                 std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,

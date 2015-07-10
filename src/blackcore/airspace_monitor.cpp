@@ -136,23 +136,27 @@ namespace BlackCore
     }
 
     QList<QMetaObject::Connection> CAirspaceMonitor::connectRemoteAircraftProviderSignals(
+        QObject *receiver,
         std::function<void(const CAircraftSituation &)>    situationSlot,
         std::function<void(const CAircraftParts &)>        partsSlot,
         std::function<void(const CCallsign &)>             removedAircraftSlot,
         std::function<void(const CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
     )
     {
-        // bind does not allow to define connection type
-        // so anything in its own thread will be sent with this thread affinity
-        QMetaObject::Connection c1 = connect(this, &CAirspaceMonitor::addedAircraftSituation, situationSlot);
+        Q_ASSERT_X(receiver, Q_FUNC_INFO, "Missing receiver");
+
+        // bind does not allow to define connection type, so we use receiver as workaround
+        QMetaObject::Connection c1 = connect(this, &CAirspaceMonitor::addedAircraftSituation, receiver, situationSlot);
         Q_ASSERT_X(c1, Q_FUNC_INFO, "connect failed");
-        QMetaObject::Connection c2 = connect(this, &CAirspaceMonitor::addedAircraftParts, partsSlot);
+        QMetaObject::Connection c2 = connect(this, &CAirspaceMonitor::addedAircraftParts, receiver, partsSlot);
         Q_ASSERT_X(c2, Q_FUNC_INFO, "connect failed");
-        QMetaObject::Connection c3 = connect(this, &CAirspaceMonitor::removedAircraft, removedAircraftSlot);
+        QMetaObject::Connection c3 = connect(this, &CAirspaceMonitor::removedAircraft, receiver, removedAircraftSlot);
         Q_ASSERT_X(c3, Q_FUNC_INFO, "connect failed");
+        //! \todo remove old workaround if new version with receiver works
         // trick is to use the Queued signal here
         // analyzer (own thread) -> airspaceAircraftSnapshot -> AirspaceMonitor -> airspaceAircraftSnapshot queued in main thread
-        QMetaObject::Connection c4 = this->connect(this, &CAirspaceMonitor::airspaceAircraftSnapshot, aircraftSnapshotSlot);
+        // QMetaObject::Connection c4 = this->connect(this, &CAirspaceMonitor::airspaceAircraftSnapshot, receiver, aircraftSnapshotSlot);
+        QMetaObject::Connection c4 = this->connect(this->m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, receiver, aircraftSnapshotSlot, Qt::QueuedConnection);
         Q_ASSERT_X(c4, Q_FUNC_INFO, "connect failed");
         return QList<QMetaObject::Connection>({ c1, c2, c3, c4});
     }

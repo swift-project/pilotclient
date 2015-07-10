@@ -36,6 +36,7 @@ namespace BlackCore
 
         // provider signals
         m_remoteAircraftProviderConnections = this->m_remoteAircraftProvider->connectRemoteAircraftProviderSignals(
+                this, // receiver must match object in bind
                 std::bind(&CSimulatorCommon::ps_remoteProviderAddAircraftSituation, this, std::placeholders::_1),
                 std::bind(&CSimulatorCommon::ps_remoteProviderAddAircraftParts, this, std::placeholders::_1),
                 std::bind(&CSimulatorCommon::ps_remoteProviderRemovedAircraft, this, std::placeholders::_1),

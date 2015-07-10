@@ -127,13 +127,14 @@ namespace BlackCore
     }
 
     QList<QMetaObject::Connection> CContextNetwork::connectRemoteAircraftProviderSignals(
+        QObject *receiver,
         std::function<void (const CAircraftSituation &)> situationSlot,
         std::function<void (const CAircraftParts &)> partsSlot,
         std::function<void (const CCallsign &)> removedAircraftSlot,
         std::function<void (const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot)
     {
-        Q_ASSERT(this->m_airspace);
-        return this->m_airspace->connectRemoteAircraftProviderSignals(situationSlot, partsSlot, removedAircraftSlot, aircraftSnapshotSlot);
+        Q_ASSERT_X(this->m_airspace, Q_FUNC_INFO, "Missing airspace");
+        return this->m_airspace->connectRemoteAircraftProviderSignals(receiver, situationSlot, partsSlot, removedAircraftSlot, aircraftSnapshotSlot);
     }
 
     void CContextNetwork::gracefulShutdown()
