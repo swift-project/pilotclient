@@ -16,6 +16,7 @@
 #include "blackcore/context_simulator.h"
 #include "blackcore/network.h"
 #include "blackcore/simulator.h"
+#include "blackcore/global_network_settings.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/aviation/aircrafticaodata.h"
 #include "../uppercasevalidator.h"
@@ -142,6 +143,12 @@ namespace BlackGui
             ps_validateVatsimValues();
             ps_onVatsimDataFileLoaded();
             CServerList otherServers = this->m_trafficNetworkServers.get();
+
+            // add a testserver when no servers can be loaded
+            if (otherServers.isEmpty() && CProject::isDebugBuild())
+            {
+                otherServers.push_back(CGlobalNetworkSettings::instance().swiftFSDTestServer());
+            }
             this->ui->cbp_OtherServers->setServers(otherServers);
         }
 

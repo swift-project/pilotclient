@@ -51,7 +51,6 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CSettingsNetworkServersComponent> ui;
-
             BlackCore::CSetting<BlackCore::Settings::Network::TrafficServers> m_trafficNetworkServers { this };
         };
     } // ns

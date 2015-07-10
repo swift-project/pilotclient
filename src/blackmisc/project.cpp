@@ -86,6 +86,7 @@ namespace BlackMisc
             if (isCompiledWithBlackSound()) sl << "BlackSound";
             if (isCompiledWithBlackInput()) sl << "BlackInput";
             if (isCompiledWithGui()) sl << "BlackGui";
+            if (isCompiledWithFs9Support()) sl << "FS9";
             if (isCompiledWithFsxSupport()) sl << "FSX";
             if (isCompiledWithXPlaneSupport()) sl << "XPlane";
             info = sl.join(", ");
@@ -102,6 +103,7 @@ namespace BlackMisc
             static QStringList sl;
             if (isCompiledWithFsxSupport()) sl << "FSX";
             if (isCompiledWithXPlaneSupport()) sl << "XPlane";
+            if (isCompiledWithFs9Support()) sl << "FS9";
             sims = sl.join(", ");
             if (sims.isEmpty()) sims = "<none>";
         }

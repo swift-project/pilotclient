@@ -11,7 +11,9 @@
 #include "ui_settingsnetworkserverscomponent.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_settings.h"
+#include "blackcore/global_network_settings.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/project.h"
 #include "blackmisc/settingsblackmiscclasses.h"
 
 using namespace BlackCore;
@@ -44,8 +46,15 @@ namespace BlackGui
 
         void CSettingsNetworkServersComponent::reloadSettings()
         {
-            // update servers
-            this->ui->tvp_SettingsTnServers->updateContainer(m_trafficNetworkServers.get());
+            CServerList serverList(m_trafficNetworkServers.get());
+
+            // add swift test server in case we have no servers
+            // this is debug/bootstrap feature we can continue to test when something goes wrong
+            if (serverList.isEmpty() && CProject::isDebugBuild())
+            {
+                serverList.push_back(CGlobalNetworkSettings::instance().swiftFSDTestServer());
+            }
+            this->ui->tvp_SettingsTnServers->updateContainer(serverList);
         }
 
         void CSettingsNetworkServersComponent::ps_networkServerSelected(QModelIndex index)
@@ -66,7 +75,7 @@ namespace BlackGui
                 return;
             }
 
-            CServerList serverList = m_trafficNetworkServers.get();
+            CServerList serverList(m_trafficNetworkServers.get());
             QObject *sender = QObject::sender();
             if (sender == this->ui->pb_SettingsTnServersRemoveServer)
             {

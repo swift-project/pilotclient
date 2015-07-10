@@ -37,7 +37,7 @@ namespace BlackMisc
             };
 
             //! Default constructor.
-            CServer() : m_port(-1), m_isAcceptingConnections(true) {}
+            CServer() {}
 
             //! Constructor.
             CServer(const QString &name, const QString &description, const QString &address, int port, const CUser &user, bool isAcceptingConnections = true)
@@ -73,10 +73,10 @@ namespace BlackMisc
             //! Set port
             void setPort(int port) { m_port = port; }
 
-            //! Server is accepting connections
+            //! Server is accepting connections (allows to disable server temporarily)
             bool isAcceptingConnections() const { return m_isAcceptingConnections; }
 
-            //! Set whether server is accepting connections
+            //! Set whether server is accepting connections (allows to disable server temporarily)
             void setIsAcceptingConnections(bool value) { m_isAcceptingConnections = value; }
 
             //! Is valid for login?
@@ -99,9 +99,9 @@ namespace BlackMisc
             QString m_name;
             QString m_description;
             QString m_address;
-            int     m_port;
+            int     m_port = -1;
             CUser   m_user;
-            bool    m_isAcceptingConnections;
+            bool    m_isAcceptingConnections = true; //!< temp. disable server
         };
     } // namespace
 } // namespace
