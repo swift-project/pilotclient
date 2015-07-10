@@ -7,22 +7,20 @@
  * contained in the LICENSE file.
  */
 
-#include "reader_settings.h"
+#include "global_reader_settings.h"
 
 namespace BlackCore
 {
-    CReaderSettings::CReaderSettings() :
-        // m_protocolIcaoReader("http"), m_serverIcaoReader("vatrep.vatsim-germany.org"),
-        // m_protocolModelReader("http"), m_serverModelReader("vatrep.vatsim-germany.org"),
+    CGlobalReaderSettings::CGlobalReaderSettings() :
         m_protocolIcaoReader("http"), m_serverIcaoReader("ubuntu12"),  m_baseUrlIcaoReader("vatrep/public"),
         m_protocolModelReader("http"), m_serverModelReader("ubuntu12"), m_baseUrlModelReader("vatrep/public"),
         m_bookingsUrl("http://vatbook.euroutepro.com/xml2.php"),
         m_vatsimDataFileUrls({ "http://info.vroute.net/vatsim-data.txt" })
     { }
 
-    const CReaderSettings &CReaderSettings::instance()
+    const CGlobalReaderSettings &CGlobalReaderSettings::instance()
     {
-        static const CReaderSettings rs;
+        static const CGlobalReaderSettings rs;
         return rs;
     }
 }

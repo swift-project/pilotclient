@@ -12,7 +12,7 @@
 #include "vatsimdatafilereader.h"
 #include "icaodatareader.h"
 #include "modeldatareader.h"
-#include "reader_settings.h"
+#include "global_reader_settings.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/worker.h"
 
@@ -151,7 +151,7 @@ namespace BlackCore
         // 1. VATSIM bookings
         if (flags.testFlag(VatsimBookingReader))
         {
-            this->m_vatsimBookingReader = new CVatsimBookingReader(this, CReaderSettings::instance().bookingsUrl());
+            this->m_vatsimBookingReader = new CVatsimBookingReader(this, CGlobalReaderSettings::instance().bookingsUrl());
             connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CWebDataReader::ps_receivedBookings);
             this->m_vatsimBookingReader->start();
             this->m_vatsimBookingReader->setInterval(3 * 60 * 1000);
@@ -160,7 +160,7 @@ namespace BlackCore
         // 2. VATSIM data file
         if (flags.testFlag(VatsimDataReader))
         {
-            this->m_vatsimDataFileReader = new CVatsimDataFileReader(this, CReaderSettings::instance().vatsimDataFileUrls());
+            this->m_vatsimDataFileReader = new CVatsimDataFileReader(this, CGlobalReaderSettings::instance().vatsimDataFileUrls());
             connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CWebDataReader::ps_dataFileRead);
             this->m_vatsimDataFileReader->start();
             this->m_vatsimDataFileReader->setInterval(90 * 1000);
@@ -169,7 +169,7 @@ namespace BlackCore
         // 3. ICAO data reader
         if (flags.testFlag(IcaoDataReader))
         {
-            this->m_icaoDataReader = new CIcaoDataReader(this, CReaderSettings::instance().protocolIcaoReader(), CReaderSettings::instance().serverIcaoReader(), CReaderSettings::instance().baseUrlIcaoReader());
+            this->m_icaoDataReader = new CIcaoDataReader(this, CGlobalReaderSettings::instance().protocolIcaoReader(), CGlobalReaderSettings::instance().serverIcaoReader(), CGlobalReaderSettings::instance().baseUrlIcaoReader());
             connect(this->m_icaoDataReader, &CIcaoDataReader::readAircraftIcaoCodes, this, &CWebDataReader::ps_readAircraftIcaoCodes);
             connect(this->m_icaoDataReader, &CIcaoDataReader::readAirlinesIcaoCodes, this, &CWebDataReader::ps_readAirlinesIcaoCodes);
             this->m_icaoDataReader->start();
@@ -178,7 +178,7 @@ namespace BlackCore
         // 4. Model reader
         if (flags.testFlag(ModelReader))
         {
-            this->m_modelDataReader = new CModelDataReader(this, CReaderSettings::instance().protocolModelReader(), CReaderSettings::instance().serverModelReader(), CReaderSettings::instance().baseUrlModelReader());
+            this->m_modelDataReader = new CModelDataReader(this, CGlobalReaderSettings::instance().protocolModelReader(), CGlobalReaderSettings::instance().serverModelReader(), CGlobalReaderSettings::instance().baseUrlModelReader());
             connect(this->m_modelDataReader, &CModelDataReader::readLiveries, this, &CWebDataReader::ps_readLiveries);
             connect(this->m_modelDataReader, &CModelDataReader::readDistributors, this, &CWebDataReader::ps_readDistributors);
             connect(this->m_modelDataReader, &CModelDataReader::readModels, this, &CWebDataReader::ps_readModels);

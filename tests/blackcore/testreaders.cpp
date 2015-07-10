@@ -9,7 +9,7 @@
 
 #include "testreaders.h"
 #include "expect.h"
-#include "blackcore/reader_settings.h"
+#include "blackcore/global_reader_settings.h"
 #include "blackmisc/networkutils.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airlineicaocode.h"
@@ -25,20 +25,20 @@ namespace BlackCoreTest
     CTestReaders::CTestReaders(QObject *parent) :
         QObject(parent),
         m_icaoReader(this,
-                     CReaderSettings::instance().protocolIcaoReader(),
-                     CReaderSettings::instance().serverIcaoReader(),
-                     CReaderSettings::instance().baseUrlIcaoReader()
+                     CGlobalReaderSettings::instance().protocolIcaoReader(),
+                     CGlobalReaderSettings::instance().serverIcaoReader(),
+                     CGlobalReaderSettings::instance().baseUrlIcaoReader()
                     ),
         m_modelReader(this,
-                      CReaderSettings::instance().protocolModelReader(),
-                      CReaderSettings::instance().serverModelReader(),
-                      CReaderSettings::instance().baseUrlModelReader()
+                      CGlobalReaderSettings::instance().protocolModelReader(),
+                      CGlobalReaderSettings::instance().serverModelReader(),
+                      CGlobalReaderSettings::instance().baseUrlModelReader()
                      )
     { }
 
     void CTestReaders::readIcaoData()
     {
-        QString server(CReaderSettings::instance().serverIcaoReader());
+        QString server(CGlobalReaderSettings::instance().serverIcaoReader());
         if (!pingServer(server)) { return; }
         m_icaoReader.start();
         Expect e(&this->m_icaoReader);
@@ -61,7 +61,7 @@ namespace BlackCoreTest
 
     void CTestReaders::readModelData()
     {
-        QString server(CReaderSettings::instance().serverModelReader());
+        QString server(CGlobalReaderSettings::instance().serverModelReader());
         if (!pingServer(server)) { return; }
         m_modelReader.start();
         Expect e(&this->m_modelReader);

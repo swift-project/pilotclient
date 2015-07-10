@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKCORE_READERSETTINGS_H
-#define BLACKCORE_READERSETTINGS_H
+#ifndef BLACKCORE_GLOBAL_READERSETTINGS_H
+#define BLACKCORE_GLOBAL_READERSETTINGS_H
 
 #include "blackcoreexport.h"
 #include <QStringList>
@@ -17,7 +17,7 @@
 namespace BlackCore
 {
     //! Settings for readers
-    class BLACKCORE_EXPORT CReaderSettings : public QObject
+    class BLACKCORE_EXPORT CGlobalReaderSettings : public QObject
     {
         Q_OBJECT
 
@@ -47,14 +47,14 @@ namespace BlackCore
         const QStringList &vatsimDataFileUrls() const { return m_vatsimDataFileUrls; }
 
         //! Singleton
-        static const CReaderSettings &instance();
+        static const CGlobalReaderSettings &instance();
 
     private:
         //! Default constructor
-        CReaderSettings();
+        CGlobalReaderSettings();
 
         //! Destructor.
-        ~CReaderSettings() {}
+        ~CGlobalReaderSettings() {}
 
         QString m_protocolIcaoReader;
         QString m_serverIcaoReader;
