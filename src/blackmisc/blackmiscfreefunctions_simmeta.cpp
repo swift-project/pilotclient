@@ -13,6 +13,7 @@
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/simulation/simulatorsetup.h"
+#include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include "blackmisc/simulation/fscommon/vpilotmodelruleset.h"
@@ -43,5 +44,6 @@ void BlackMisc::Simulation::registerMetadata()
     CVPilotModelRule::registerMetadata();
     CVPilotModelRuleSet::registerMetadata();
     CSimulatorSetup::registerMetadata();
+    CSimulatorInfo::registerMetadata();
     CAirspaceAircraftSnapshot::registerMetadata();
 }
