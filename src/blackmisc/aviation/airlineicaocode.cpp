@@ -106,8 +106,11 @@ namespace BlackMisc
 
         bool CAirlineIcaoCode::isValidAirlineDesignator(const QString &airline)
         {
-            static QRegularExpression regexp("^[A-Z]+[A-Z0-9]*$");
             if (airline.length() < 2 || airline.length() > 5) return false;
+
+            static QThreadStorage<QRegularExpression> tsRegex;
+            if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("^[A-Z]+[A-Z0-9]*$")); }
+            const QRegularExpression &regexp = tsRegex.localData();
             return (regexp.match(airline).hasMatch());
         }
 

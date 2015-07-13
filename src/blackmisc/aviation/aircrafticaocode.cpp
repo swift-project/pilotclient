@@ -150,15 +150,21 @@ namespace BlackMisc
 
         bool CAircraftIcaoCode::isValidDesignator(const QString &designator)
         {
-            static const QRegularExpression regexp("^[A-Z]+[A-Z0-9]*$");
             if (designator.length() < 2 || designator.length() > 5) { return false; }
+
+            static QThreadStorage<QRegularExpression> tsRegex;
+            if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("^[A-Z]+[A-Z0-9]*$")); }
+            const QRegularExpression &regexp = tsRegex.localData();
             return (regexp.match(designator).hasMatch());
         }
 
         bool CAircraftIcaoCode::isValidCombinedType(const QString &combinedType)
         {
-            static const QRegularExpression regexp("^[A-Z][0-9][A-Z]$");
-            if (combinedType.length() != 3) return false;
+            if (combinedType.length() != 3) { return false; }
+
+            static QThreadStorage<QRegularExpression> tsRegex;
+            if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("^[A-Z][0-9][A-Z]$")); }
+            const QRegularExpression &regexp = tsRegex.localData();
             return (regexp.match(combinedType).hasMatch());
         }
 

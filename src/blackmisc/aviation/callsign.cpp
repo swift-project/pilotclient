@@ -168,8 +168,11 @@ namespace BlackMisc
         bool CCallsign::isValidCallsign(const QString &callsign)
         {
             // We allow all number callsigns
-            static QRegularExpression regexp("^[A-Z0-9]*$");
             if (callsign.length() < 2 || callsign.length() > 10) { return false; }
+
+            static QThreadStorage<QRegularExpression> tsRegex;
+            if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("^[A-Z0-9]*$")); }
+            const QRegularExpression &regexp = tsRegex.localData();
             return (regexp.match(callsign).hasMatch());
         }
 
