@@ -150,14 +150,14 @@ namespace BlackMisc
 
         bool CAircraftIcaoCode::isValidDesignator(const QString &designator)
         {
-            static QRegularExpression regexp("^[A-Z]+[A-Z0-9]*$");
+            static const QRegularExpression regexp("^[A-Z]+[A-Z0-9]*$");
             if (designator.length() < 2 || designator.length() > 5) { return false; }
             return (regexp.match(designator).hasMatch());
         }
 
         bool CAircraftIcaoCode::isValidCombinedType(const QString &combinedType)
         {
-            static QRegularExpression regexp("^[A-Z][0-9][A-Z]$");
+            static const QRegularExpression regexp("^[A-Z][0-9][A-Z]$");
             if (combinedType.length() != 3) return false;
             return (regexp.match(combinedType).hasMatch());
         }

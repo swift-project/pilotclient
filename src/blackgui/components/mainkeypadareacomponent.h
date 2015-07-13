@@ -95,9 +95,6 @@ namespace BlackGui
             //! Main info area to corresponding button
             QPushButton *mainInfoAreaToButton(CMainInfoAreaComponent::InfoArea area) const;
 
-            //! Own aircraft
-            BlackMisc::Aviation::CAircraft getOwnAircraft() const;
-
             //! Info area buttons
             void unsetInfoAreaButtons();
 

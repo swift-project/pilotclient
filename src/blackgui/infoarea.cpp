@@ -649,7 +649,7 @@ namespace BlackGui
         Q_ASSERT_X(!title.isEmpty(), Q_FUNC_INFO, "No title");
         for (CDockWidgetInfoArea *dw : this->m_dockWidgetInfoAreas)
         {
-            if (dw->windowTitleOrBackup() == title) { return dw; }
+            if (CGuiUtility::lenientTitleComparison(dw->windowTitleOrBackup(), title)) { return dw; }
         }
         return nullptr;
     }
@@ -659,7 +659,7 @@ namespace BlackGui
         Q_ASSERT_X(!title.isEmpty(), Q_FUNC_INFO, "No title");
         for (int i = 0; i < m_dockWidgetInfoAreas.size(); i++)
         {
-            if (title == m_dockWidgetInfoAreas.at(i)->windowTitleOrBackup()) { return i; }
+            if (CGuiUtility::lenientTitleComparison(m_dockWidgetInfoAreas.at(i)->windowTitleOrBackup(), title)) { return i; }
         }
         Q_ASSERT_X(false, Q_FUNC_INFO, "No area for title");
         return -1;
@@ -671,7 +671,7 @@ namespace BlackGui
         if (m_tabBar->count() < 1) { return -1;}
         for (int i = 0; i < m_tabBar->count(); i++)
         {
-            if (m_tabBar->tabText(i) == title) { return i; }
+            if (CGuiUtility::lenientTitleComparison(m_tabBar->tabText(i), title)) { return i; }
         }
         Q_ASSERT_X(!title.isEmpty(), Q_FUNC_INFO, "Wrong title");
         return -1;

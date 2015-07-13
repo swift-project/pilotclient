@@ -91,6 +91,25 @@ namespace BlackGui
         a.installTranslator(&translator);
     }
 
+    bool CGuiUtility::lenientTitleComparison(const QString &title, const QString &comparison)
+    {
+        if (title == comparison) { return true; }
+
+        QString t(title.trimmed().toLower().simplified());
+        QString c(comparison.trimmed().toLower().simplified());
+        Q_ASSERT_X(!t.isEmpty(), Q_FUNC_INFO, "missing value");
+        Q_ASSERT_X(!c.isEmpty(), Q_FUNC_INFO, "missing value");
+        if (t == c) { return true; }
+
+        // further unify
+        static QThreadStorage<QRegularExpression> tsRegex;
+        if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("[^a-z0-9\\s]")); }
+        const QRegularExpression &regexp = tsRegex.localData();
+        t = t.remove(regexp);
+        c = c.remove(regexp);
+        return t == c;
+    }
+
     QWidgetList CGuiUtility::topLevelApplicationWidgetsWithName()
     {
         QWidgetList tlw = QApplication::topLevelWidgets();

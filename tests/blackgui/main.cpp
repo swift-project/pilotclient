@@ -1,5 +1,5 @@
-/* Copyright (C) 2013
- * swift project community / contributors
+/* Copyright (C) 2015
+ * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
  * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
@@ -7,14 +7,17 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKCORETEST_H
-#define BLACKCORETEST_H
+#include "testblackguimain.h"
+#include <QCoreApplication>
+#include <QDebug>
 
-/*!
- * \namespace BlackCoreTest
- * Unit tests for BlackCore. Unit tests do have their own namespace, so
- * the regular namespace BlackCore is completely free of unit tests.
- * Add any new tests to TestMain::unitMain as shown there.
- */
+using namespace BlackCoreTest;
 
-#endif // guard
+//! Starter for test cases
+int main(int argc, char *argv[])
+{
+    QCoreApplication a(argc, argv);
+    Q_UNUSED(a);
+
+    return CBlackGuiTestMain::unitMain(argc, argv);
+}

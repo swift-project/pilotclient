@@ -64,6 +64,9 @@ namespace BlackGui
         //! Standard initialization for a swift GUI application
         static void initSwiftGuiApplication(QApplication &a, const QString &applicationName, const QPixmap &icon = BlackMisc::CIcons::swift24());
 
+        //! Leninet / relaxed
+        static bool lenientTitleComparison(const QString &title, const QString &comparison);
+
     private:
         //! Constructor, use static methods only
         CGuiUtility() {}

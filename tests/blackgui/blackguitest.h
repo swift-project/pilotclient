@@ -7,13 +7,13 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKCORETEST_H
-#define BLACKCORETEST_H
+#ifndef BLACKGUITEST_H
+#define BLACKGUITEST_H
 
 /*!
- * \namespace BlackCoreTest
- * Unit tests for BlackCore. Unit tests do have their own namespace, so
- * the regular namespace BlackCore is completely free of unit tests.
+ * \namespace BlackGuiTest
+ * Unit tests for BlackGui. Unit tests do have their own namespace, so
+ * the regular namespace BlackGui is completely free of unit tests.
  * Add any new tests to TestMain::unitMain as shown there.
  */
 

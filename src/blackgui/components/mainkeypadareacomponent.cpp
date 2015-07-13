@@ -217,12 +217,6 @@ namespace BlackGui
             return nullptr;
         }
 
-        CAircraft CMainKeypadAreaComponent::getOwnAircraft() const
-        {
-            if (!this->getIContextOwnAircraft()) { return CAircraft(); }
-            return this->getIContextOwnAircraft()->getOwnAircraft();
-        }
-
         void CMainKeypadAreaComponent::unsetInfoAreaButtons()
         {
             ui->pb_MainAircrafts->setChecked(false);
@@ -241,8 +235,9 @@ namespace BlackGui
         CIdentifier CMainKeypadAreaComponent::keypadIdentifier()
         {
             if (m_identifier.getName().isEmpty())
+            {
                 m_identifier = CIdentifier(QStringLiteral("KEYPADAREACOMPONENT"));
-
+            }
             return m_identifier;
         }
 
