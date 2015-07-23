@@ -70,10 +70,10 @@ namespace BlackCore
                                "textMessageSent", this, SIGNAL(textMessageSent(BlackMisc::Network::CTextMessage)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "vatsimDataFileRead", this, SIGNAL(vatsimDataFileRead()));
+                               "vatsimDataFileRead", this, SIGNAL(vatsimDataFileRead(int)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "vatsimBookingsRead", this, SIGNAL(vatsimBookingsRead()));
+                               "vatsimBookingsRead", this, SIGNAL(vatsimBookingsRead(int)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "changedRemoteAircraftModel", this, SIGNAL(changedRemoteAircraftModel(BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::CIdentifier)));
