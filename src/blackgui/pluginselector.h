@@ -1,4 +1,4 @@
-/* Copyright (C) 2014
+/* Copyright (C) 2015
  * swift project Community / Contributors
  *
  * This file is part of swift Project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -9,18 +9,20 @@
 
 //! \file
 
-#ifndef PLUGINSELECTOR_H
-#define PLUGINSELECTOR_H
+#ifndef BLACKGUI_PLUGINSELECTOR_H
+#define BLACKGUI_PLUGINSELECTOR_H
 
 #include "blackgui/blackguiexport.h"
 
 #include <QWidget>
+#include <QSignalMapper>
 
-namespace BlackGui {
+namespace BlackGui
+{
 
     /*!
-     * \brief The CPluginSelector class is used to select which plugins are to be loaded
-     * and (optionally) configure them.
+     * Shows all available plugins in nice list and lets user enable, disable and configure
+     * each of them.
      */
     class BLACKGUI_EXPORT CPluginSelector : public QWidget
     {
@@ -28,7 +30,10 @@ namespace BlackGui {
 
     signals:
         //! Emitted when user enables/disables the particular plugin
-        void pluginStateChanged(QString identifier, bool enabled);
+        void pluginStateChanged(const QString &identifier, bool enabled);
+
+        //! Emitted when user clicks the "Details" button
+        void pluginDetailsRequested(const QString &identifier);
 
     public:
         //! Constructor
@@ -43,8 +48,11 @@ namespace BlackGui {
     private slots:
         void ps_handlePluginStateChange();
 
+    private:
+        QSignalMapper *m_mapper;
+
     };
 
 } // namespace BlackGui
 
-#endif // PLUGINSELECTOR_H
+#endif // BLACKGUI_PLUGINSELECTOR_H

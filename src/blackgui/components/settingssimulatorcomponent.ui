@@ -22,7 +22,7 @@
   <property name="lineWidth">
    <number>0</number>
   </property>
-  <layout class="QVBoxLayout" name="vl_SettingsSimulatorComponent">
+  <layout class="QVBoxLayout" name="vl_SettingsSimulatorComponent" stretch="0,0,1">
    <property name="leftMargin">
     <number>2</number>
    </property>
@@ -382,7 +382,7 @@
       <enum>Qt::Vertical</enum>
      </property>
      <property name="sizeType">
-      <enum>QSizePolicy::Maximum</enum>
+      <enum>QSizePolicy::MinimumExpanding</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>

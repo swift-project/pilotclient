@@ -1,3 +1,12 @@
+/* Copyright (C) 2015
+ * swift project Community / Contributors
+ *
+ * This file is part of swift Project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
 #include "pluginselector.h"
 
 #include <QCheckBox>
@@ -9,12 +18,15 @@
 namespace BlackGui
 {
 
-    CPluginSelector::CPluginSelector(QWidget *parent) : QWidget(parent)
+    CPluginSelector::CPluginSelector(QWidget *parent) : QWidget(parent),
+        m_mapper(new QSignalMapper(this))
     {
         setObjectName("CPluginSelector");
 
         QVBoxLayout *layout = new QVBoxLayout;
         setLayout(layout);
+
+        connect(m_mapper, static_cast<void (QSignalMapper::*)(const QString &)>(&QSignalMapper::mapped), this, &CPluginSelector::pluginDetailsRequested);
     }
 
     void CPluginSelector::addPlugin(const QString& identifier, const QString &name, bool enabled)
@@ -37,6 +49,14 @@ namespace BlackGui
         }
 
         pw->layout()->addWidget(cb);
+
+        QPushButton *details = new QPushButton("?");
+        m_mapper->setMapping(details, identifier);
+        connect(details, &QPushButton::clicked, m_mapper, static_cast<void (QSignalMapper::*)()>(&QSignalMapper::map));
+        pw->layout()->addWidget(details);
+
+        layout->setStretch(0, 1);
+        layout->setStretch(1, 0);
 
         /* Might be useful for #392 */
 #if 0

@@ -3,6 +3,7 @@
 
 #include "blackcore/context_simulator.h"
 #include "blackcore/context_network.h"
+#include "blackgui/plugindetailswindow.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/logmessage.h"
@@ -47,6 +48,7 @@ namespace BlackGui
             // connects
             connect(this->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CSettingsSimulatorComponent::ps_simulatorPluginChanged);
             connect(this->ui->ps_EnabledSimulators, &CPluginSelector::pluginStateChanged, this, &CSettingsSimulatorComponent::ps_pluginStateChanged);
+            connect(this->ui->ps_EnabledSimulators, &CPluginSelector::pluginDetailsRequested, this, &CSettingsSimulatorComponent::ps_showPluginDetails);
             connect(this->ui->pb_ApplyMaxAircraft, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedAircraft);
             connect(this->ui->pb_ApplyTimeSync, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyTimeSync);
             connect(this->ui->pb_ApplyMaxDistance, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedDistance);
@@ -122,6 +124,7 @@ namespace BlackGui
             if (selected->isUnspecified())
             {
                 CLogMessage(this).error("Simulator plugin does not exist: %1") << identifier;
+                return;
             }
 
             if (enabled)
@@ -221,6 +224,7 @@ namespace BlackGui
         {
             // disable / enable driver specific GUI parts
             bool hasFsxDriver = this->getIContextSimulator()->getAvailableSimulatorPlugins().supportsSimulator(QStringLiteral("fsx"));
+            this->ui->comp_SettingsSimulatorFsx->setVisible(hasFsxDriver);
 
             // I intentionally to not set the selected plugin combobox here
             // as this would cause undesired rountrips
@@ -229,7 +233,6 @@ namespace BlackGui
             if (!info.isUnspecified())
             {
                 m_pluginLoaded = true;
-                this->ui->comp_SettingsSimulatorFsx->setVisible(hasFsxDriver);
                 this->ui->lbl_PluginInfo->setText(info.getDescription());
             }
             else
@@ -238,6 +241,26 @@ namespace BlackGui
                 this->ui->lbl_PluginInfo->setText("No plugin loaded");
             }
             this->setGuiValues();
+        }
+
+        void CSettingsSimulatorComponent::ps_showPluginDetails(const QString &identifier)
+        {
+            CSimulatorPluginInfoList simDrivers(getAvailablePlugins());
+            auto selected = std::find_if(simDrivers.begin(), simDrivers.end(),
+                                         [&identifier](const CSimulatorPluginInfo &info)
+                {
+                    return info.getIdentifier() == identifier;
+                });
+
+            QWidget* aw = qApp->activeWindow();
+
+            CPluginDetailsWindow *w = new CPluginDetailsWindow(aw);
+            w->setAttribute(Qt::WA_DeleteOnClose);
+            w->setPluginIdentifier(selected->getIdentifier());
+            w->setPluginName(selected->getName());
+            w->setPluginDescription(selected->getDescription());
+
+            w->show();
         }
     }
 

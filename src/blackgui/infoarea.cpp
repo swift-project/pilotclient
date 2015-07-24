@@ -655,6 +655,7 @@ namespace BlackGui
     int CInfoArea::getAreaIndexByWindowTitle(const QString &title) const
     {
         Q_ASSERT_X(!title.isEmpty(), Q_FUNC_INFO, "No title");
+
         for (int i = 0; i < m_dockWidgetInfoAreas.size(); i++)
         {
             if (CGuiUtility::lenientTitleComparison(m_dockWidgetInfoAreas.at(i)->windowTitleOrBackup(), title)) { return i; }

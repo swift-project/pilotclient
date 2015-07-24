@@ -61,6 +61,9 @@ namespace BlackGui
             //! Simulator plugin changed
             void ps_simulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
+            //! Open plugin details window
+            void ps_showPluginDetails(const QString &identifier);
+
         private:
 
             //! Set the GUI values

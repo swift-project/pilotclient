@@ -111,6 +111,11 @@ BlackGui--Editors--CValidationIndicator {
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
+BlackGui--CPluginDetailsWindow {
+  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+  background-color: darkslategray;
+}
+
 /** default for buttons **/
 QPushButton {
   background-color: rgba(0, 0, 255, 128);
