@@ -235,8 +235,8 @@ QComboBox {
 
 /** drop down list **/
 QComboBox QAbstractItemView {
-  background-color: lightgray;
-  color: black;
+  background-color: black;
+  color: lightgray;
   qproperty-textElideMode: ElideMiddle;
 }
 
