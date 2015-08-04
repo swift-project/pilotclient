@@ -61,9 +61,15 @@ namespace BlackMisc
         //! \copydoc BlackMisc::CValueObject::compare
         friend int compare(const C<T> &a, const C<T> &b)
         {
+            for (auto i = a.cbegin(), j = b.cbegin(); i != a.cend() && j != b.cend(); ++i, ++j)
+            {
+                if (*i < *j) { return -1; }
+                if (*j < *i) { return 1; }
+            }
             if (a.size() < b.size()) { return -1; }
-            if (a.size() > b.size()) { return 1; }
-            return std::lexicographical_compare(a.cbegin(), a.cend(), b.cbegin(), b.cend());
+            if (b.size() < a.size()) { return 1; }
+            return 0;
+
         }
 
         /*!
