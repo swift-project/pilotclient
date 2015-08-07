@@ -84,8 +84,8 @@ namespace BlackGui
         }
 
         // File logger
-        CFileLogger fileLogger(applicationName, QString(), &a);
-        fileLogger.changeLogPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityDebug));
+        CFileLogger *fileLogger = new CFileLogger(applicationName, QString(), &a);
+        fileLogger->changeLogPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
 
         // GUI icon
         a.installTranslator(&translator);
