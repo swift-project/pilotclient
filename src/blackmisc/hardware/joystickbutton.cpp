@@ -16,11 +16,11 @@ namespace BlackMisc
 {
     namespace Hardware
     {
-        CJoystickButton::CJoystickButton(qint32 buttonIndex) :
+        CJoystickButton::CJoystickButton(int buttonIndex) :
             m_buttonIndex(buttonIndex)
         {}
 
-        void CJoystickButton::setButtonIndex(qint32 buttonIndex)
+        void CJoystickButton::setButtonIndex(int buttonIndex)
         {
             m_buttonIndex = buttonIndex;
         }

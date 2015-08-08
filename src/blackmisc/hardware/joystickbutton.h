@@ -37,16 +37,16 @@ namespace BlackMisc
             CJoystickButton() = default;
 
             //! Constructor
-            CJoystickButton(qint32 buttonIndex);
+            CJoystickButton(int buttonIndex);
 
             //! Get button index
-            qint32 getButtonIndex() const { return m_buttonIndex; }
+            int getButtonIndex() const { return m_buttonIndex; }
 
             //! Get button as String
             QString getButtonAsString() const { return buttonIndexToString(m_buttonIndex); }
 
             //! Set button index
-            void setButtonIndex(qint32 buttonIndex);
+            void setButtonIndex(int buttonIndex);
 
             //! Is valid?
             bool isValid() const { return m_buttonIndex >= 0 ? true : false; }
@@ -74,9 +74,9 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CJoystickButton)
-            qint32 m_buttonIndex = m_invalidIndex; //!< code similar to Qt::Key
+            int m_buttonIndex = m_invalidIndex; //!< code similar to Qt::Key
 
-            static const qint32 m_invalidIndex = -1;
+            static const int m_invalidIndex = -1;
         };
     }
 }
