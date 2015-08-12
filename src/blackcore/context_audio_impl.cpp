@@ -54,8 +54,8 @@ namespace BlackCore
         m_channel2 = m_voice->createVoiceChannel();
         m_channel2->setOwnAircraftCallsign(ownCallsign);
         connect(m_channel2.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_connectionStatusChanged);
-        connect(m_channel1.data(), &IVoiceChannel::userJoinedRoom, this, &CContextAudio::ps_userJoinedRoom);
-        connect(m_channel1.data(), &IVoiceChannel::userLeftRoom, this, &CContextAudio::ps_userLeftRoom);
+        connect(m_channel2.data(), &IVoiceChannel::userJoinedRoom, this, &CContextAudio::ps_userJoinedRoom);
+        connect(m_channel2.data(), &IVoiceChannel::userLeftRoom, this, &CContextAudio::ps_userLeftRoom);
 
         m_voiceInputDevice = m_voice->createInputDevice();
         m_voiceOutputDevice = m_voice->createOutputDevice();
