@@ -20,6 +20,7 @@
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/network/aircraftmappinglist.h"
 #include "blackmisc/setkeyboardhotkeylist.h"
+#include "blackmisc/input/actionhotkeylist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/distributorlist.h"

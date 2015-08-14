@@ -15,7 +15,7 @@
 #include "blackcore/context_network.h"
 #include "blackcore/context_settings.h"
 #include "blackcore/context_audio.h"
-#include "blackmisc/hardware/keyboardkeylist.h"
+#include "blackmisc/input/keyboardkeylist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/settingsblackmiscclasses.h"
 #include <QColorDialog>
@@ -29,7 +29,7 @@ using namespace BlackMisc::Audio;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Settings;
-using namespace BlackMisc::Hardware;
+using namespace BlackMisc::Input;
 
 namespace BlackGui
 {
@@ -80,7 +80,6 @@ namespace BlackGui
             //! \todo Settings are loaded twice, this here is for init but each component also consumes the signal changed slot
             this->ui->comp_AudioSetup->reloadSettings();
             this->ui->comp_SettingsServersComponent->reloadSettings();
-            this->ui->comp_SettingsHotkeysComponent->reloadSettings();
         }
 
         /*

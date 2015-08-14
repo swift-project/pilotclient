@@ -25,6 +25,6 @@
 #include "blackgui/models/liverylistmodel.h"
 #include "blackgui/models/distributorlistmodel.h"
 #include "blackgui/models/keyboardkeylistmodel.h"
-
+#include "blackgui/models/actionhotkeylistmodel.h"
 #endif // guard
 

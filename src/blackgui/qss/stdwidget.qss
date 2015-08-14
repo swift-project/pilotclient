@@ -29,6 +29,24 @@ QMainWindow::separator:hover {
   background: transparent;
 }
 
+/** Main window **/
+QDialog {
+  background-image: url(:/textures/icons/textures/texture-outer.jpg);
+  background-color: darkslategray;
+}
+
+/** separator between info areas and rest **/
+/** this hides them **/
+QDialog::separator {
+  background: transparent;
+  width: 0px;  /* when vertical */
+  height: 0px; /* when horizontal */
+}
+
+QDialog::separator:hover {
+  background: transparent;
+}
+
 /**
   Required when dock widget is floating
   1) background-image not working on QDockWidget, so I use direct children for that

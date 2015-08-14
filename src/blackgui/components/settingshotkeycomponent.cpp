@@ -9,13 +9,13 @@
 
 #include "settingshotkeycomponent.h"
 #include "ui_settingshotkeycomponent.h"
-#include "blackcore/context_settings.h"
-#include "blackmisc/settingutilities.h"
-#include "blackmisc/variant.h"
+#include "blackgui/hotkeydialog.h"
+#include "blackcore/context_application.h"
+#include <QMessageBox>
 
-using namespace BlackCore;
 using namespace BlackMisc;
-using namespace BlackMisc::Settings;
+using namespace BlackMisc::Input;
+using namespace BlackGui::Models;
 
 namespace BlackGui
 {
@@ -27,48 +27,111 @@ namespace BlackGui
             ui(new Ui::CSettingsHotkeyComponent)
         {
             ui->setupUi(this);
+            ui->tv_hotkeys->setModel(&m_model);
+
+            connect(ui->pb_addHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::ps_addEntry);
+            connect(ui->pb_editHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::ps_editEntry);
+            connect(ui->pb_removeHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::ps_removeEntry);
+
+            ui->tv_hotkeys->selectRow(0);
         }
 
-        CSettingsHotkeyComponent::~CSettingsHotkeyComponent() { }
-
-        void CSettingsHotkeyComponent::runtimeHasBeenSet()
+        CSettingsHotkeyComponent::~CSettingsHotkeyComponent()
         {
-            Q_ASSERT_X(this->getIContextSettings(), Q_FUNC_INFO, "Missing settings");
-            this->connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &CSettingsHotkeyComponent::ps_changedSettings);
-
-            // Settings hotkeys
-            this->connect(this->ui->pb_SettingsCancel, &QPushButton::clicked, this, &CSettingsHotkeyComponent::reloadSettings);
-            this->connect(this->ui->pb_SettingsSave, &QPushButton::clicked, this, &CSettingsHotkeyComponent::ps_saveHotkeys);
-            this->connect(this->ui->pb_SettingsRemove, &QPushButton::clicked, this, &CSettingsHotkeyComponent::ps_clearHotkey);
         }
 
-        void CSettingsHotkeyComponent::reloadSettings()
+        void CSettingsHotkeyComponent::ps_addEntry()
         {
-            // update hot keys
-            this->ui->tvp_SettingsMiscHotkeys->updateContainer(this->getIContextSettings()->getHotkeys());
+            BlackMisc::CIdentifierList registeredApps;
+            if (getIContextApplication()) registeredApps = getIContextApplication()->getRegisteredApplications();
+            // add local application
+            registeredApps.push_back(CIdentifier());
+            auto selectedActionHotkey = CHotkeyDialog::getActionHotkey(CActionHotkey(), registeredApps, this);
+            if (selectedActionHotkey.isValid() && checkAndConfirmConflicts(selectedActionHotkey))
+            {
+                addHotkeytoSettings(selectedActionHotkey);
+                int position = m_model.rowCount();
+                m_model.insertRows(position, 1, QModelIndex());
+                QModelIndex index = m_model.index(position, 0, QModelIndex());
+                m_model.setData(index, QVariant::fromValue(selectedActionHotkey), CActionHotkeyListModel::ActionHotkeyRole);
+            }
         }
 
-        void CSettingsHotkeyComponent::ps_changedSettings(uint typeValue)
+        void CSettingsHotkeyComponent::ps_editEntry()
         {
-            IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(typeValue);
-            this->reloadSettings();
-            Q_UNUSED(type);
+            auto index = ui->tv_hotkeys->selectionModel()->currentIndex();
+            if (!index.isValid()) return;
+
+            const auto model = ui->tv_hotkeys->model();
+            const QModelIndex indexHotkey = model->index(index.row(), 0, QModelIndex());
+            Q_ASSERT(indexHotkey.data(CActionHotkeyListModel::ActionHotkeyRole).canConvert<CActionHotkey>());
+            CActionHotkey actionHotkey = indexHotkey.data(CActionHotkeyListModel::ActionHotkeyRole).value<CActionHotkey>();
+            BlackMisc::CIdentifierList registeredApps;
+            if (getIContextApplication()) registeredApps = getIContextApplication()->getRegisteredApplications();
+            // add local application
+            registeredApps.push_back(CIdentifier());
+            auto selectedActionHotkey = CHotkeyDialog::getActionHotkey(actionHotkey, registeredApps, this);
+            if (selectedActionHotkey.isValid() && checkAndConfirmConflicts(selectedActionHotkey, { actionHotkey }))
+            {
+                updateHotkeyInSettings(actionHotkey, selectedActionHotkey);
+                m_model.setData(indexHotkey, QVariant::fromValue(selectedActionHotkey), CActionHotkeyListModel::ActionHotkeyRole);
+            }
         }
 
-        void CSettingsHotkeyComponent::ps_saveHotkeys()
+        void CSettingsHotkeyComponent::ps_removeEntry()
         {
-            const QString path = CSettingUtilities::appendPaths(IContextSettings::PathRoot(), IContextSettings::PathHotkeys());
-            this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), CVariant::from(this->ui->tvp_SettingsMiscHotkeys->derivedModel()->getContainer()));
+            QModelIndexList indexes = ui->tv_hotkeys->selectionModel()->selectedRows();
+            for (const auto &index : indexes)
+            {
+                CActionHotkey actionHotkey = index.data(CActionHotkeyListModel::ActionHotkeyRole).value<CActionHotkey>();
+                removeHotkeyFromSettings(actionHotkey);
+                m_model.removeRows(index.row(), 1, QModelIndex());
+            }
         }
 
-        void CSettingsHotkeyComponent::ps_clearHotkey()
+        void CSettingsHotkeyComponent::addHotkeytoSettings(const CActionHotkey &actionHotkey)
         {
-            QModelIndex i = this->ui->tvp_SettingsMiscHotkeys->currentIndex();
-            if (i.row() < 0 || i.row() >= this->ui->tvp_SettingsMiscHotkeys->rowCount()) return;
-            CSettingKeyboardHotkey hotkey = this->ui->tvp_SettingsMiscHotkeys->at(i);
-            CSettingKeyboardHotkey defaultHotkey;
-            defaultHotkey.setFunction(hotkey.getFunction());
-            this->ui->tvp_SettingsMiscHotkeys->derivedModel()->update(i, defaultHotkey);
+            CActionHotkeyList actionHotkeyList(m_actionHotkeys.get());
+            actionHotkeyList.push_back(actionHotkey);
+            m_actionHotkeys.set(actionHotkeyList);
+        }
+
+        void CSettingsHotkeyComponent::updateHotkeyInSettings(const CActionHotkey &oldValue, const CActionHotkey &newValue)
+        {
+            CActionHotkeyList actionHotkeyList(m_actionHotkeys.get());
+            actionHotkeyList.replace(oldValue, newValue);
+            m_actionHotkeys.set(actionHotkeyList);
+        }
+
+        void CSettingsHotkeyComponent::removeHotkeyFromSettings(const CActionHotkey &actionHotkey)
+        {
+            CActionHotkeyList actionHotkeyList(m_actionHotkeys.get());
+            actionHotkeyList.remove(actionHotkey);
+            m_actionHotkeys.set(actionHotkeyList);
+        }
+
+        bool CSettingsHotkeyComponent::checkAndConfirmConflicts(const CActionHotkey &actionHotkey, const CActionHotkeyList &ignore)
+        {
+            auto configuredHotkeys = m_actionHotkeys.get();
+            CActionHotkeyList conflicts = configuredHotkeys.findSupersetsOf(actionHotkey);
+            conflicts.push_back(configuredHotkeys.findSubsetsOf(actionHotkey));
+            conflicts.removeIfIn(ignore);
+
+            if (!conflicts.isEmpty())
+            {
+                QString message = QString("The selected combination conflicts with the following %1 combinations(s):\n\n").arg(conflicts.size());
+                for (const auto &conflict : conflicts)
+                {
+                    message += conflict.getCombination().toQString();
+                    message += "\n";
+                }
+                message += "\n Do you want to use it anway?";
+                auto reply = QMessageBox::warning(this, "SettingsHotkeyComponent",
+                                                  message,
+                                                  QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+                if (reply == QMessageBox::No) { return false; }
+            }
+            return true;
         }
 
     } // ns

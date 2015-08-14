@@ -12,18 +12,22 @@
 #ifndef BLACKGUI_COMPONENTS_SETTINGSHOTKEYCOMPONENT_H
 #define BLACKGUI_COMPONENTS_SETTINGSHOTKEYCOMPONENT_H
 
-#include "blackgui/blackguiexport.h"
+#include "blackgui/models/actionhotkeylistmodel.h"
 #include "blackgui/components/enableforruntime.h"
+#include "blackcore/settings/application.h"
+
 #include <QFrame>
 
-namespace Ui { class CSettingsHotkeyComponent; }
+namespace Ui {
+    class CSettingsHotkeyComponent;
+}
 
 namespace BlackGui
 {
     namespace Components
     {
 
-        //! Define hotkeys
+        //! Configure hotkeys
         class BLACKGUI_EXPORT CSettingsHotkeyComponent :
             public QFrame,
             public CEnableForRuntime
@@ -32,31 +36,27 @@ namespace BlackGui
 
         public:
             //! Constructor
-            explicit CSettingsHotkeyComponent(QWidget *parent = nullptr);
+            CSettingsHotkeyComponent(QWidget *parent = nullptr);
 
             //! Destructor
             ~CSettingsHotkeyComponent();
 
-            //! Reload settings
-            void reloadSettings();
-
-        protected:
-            //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
-            virtual void runtimeHasBeenSet() override;
-
         private slots:
-
-            //! Settings have been changed
-            void ps_changedSettings(uint typeValue);
-
-            //! Save the Hotkeys
-            void ps_saveHotkeys();
-
-            //! Clear single hotkey
-            void ps_clearHotkey();
+            void ps_addEntry();
+            void ps_editEntry();
+            void ps_removeEntry();
 
         private:
+            void addHotkeytoSettings(const BlackMisc::Input::CActionHotkey &actionHotkey);
+            void updateHotkeyInSettings(const BlackMisc::Input::CActionHotkey &oldValue, const BlackMisc::Input::CActionHotkey &newValue);
+            void removeHotkeyFromSettings(const BlackMisc::Input::CActionHotkey &actionHotkey);
+            bool checkAndConfirmConflicts(const BlackMisc::Input::CActionHotkey &actionHotkey, const BlackMisc::Input::CActionHotkeyList &ignore = {});
+
             QScopedPointer<Ui::CSettingsHotkeyComponent> ui;
+            BlackGui::Models::CActionHotkeyListModel m_model;
+            BlackCore::CSetting<BlackCore::Settings::Application::ActionHotkeys> m_actionHotkeys { this };
+
+            void ps_hotkeySlot(bool keyDown);
         };
 
     } // ns
