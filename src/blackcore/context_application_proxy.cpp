@@ -28,11 +28,6 @@ namespace BlackCore
         // this->m_dBusInterface = new CGenericDBusInterface(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(), connection, this);
         this->relaySignals(serviceName, connection);
 
-        // Enable event forwarding from GUI process to core
-        CInputManager *inputManager = CInputManager::getInstance();
-        connect(inputManager, &CInputManager::hotkeyFuncEvent, this, &CContextApplicationProxy::processHotkeyFuncEvent);
-        inputManager->setEventForwarding(true);
-
         connect(this, &IContextApplication::messageLogged, this, [](const CStatusMessage & message, const CIdentifier & origin)
         {
             if (!origin.isFromSameProcess())

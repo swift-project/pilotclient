@@ -13,13 +13,13 @@
 //! \file
 
 #include "blackinput/joystick.h"
-#include "blackmisc/hardware/joystickbutton.h"
+#include "blackmisc/input/joystickbutton.h"
 #include "blackmisc/collection.h"
-#include <QSet>
 
 namespace BlackInput
 {
-    //! Linux implemenation of IJoystick with DirectInput
+    //! OSX implemenation of IJoystick
+    //! \todo Not implmeneted yet
     class CJoystickMac : public IJoystick
     {
         Q_OBJECT
@@ -35,20 +35,11 @@ namespace BlackInput
         //! \brief Destructor
         virtual ~CJoystickMac();
 
-        //! \copydoc IJoystick::startCapture()
-        virtual void startCapture() override;
-
-        //! \copydoc IJoystick::triggerButton()
-        virtual void triggerButton(const BlackMisc::Hardware::CJoystickButton button, bool isPressed) override;
-
     private:
-
         friend class IJoystick;
 
         //! Destructor
         CJoystickMac(QObject *parent = nullptr);
-
-        IJoystick::Mode m_mode = ModeNominal; //!< Current working mode
     };
 
 } // namespace BlackInput

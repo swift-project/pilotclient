@@ -9,7 +9,7 @@
 
 #include "joystick_mac.h"
 
-using namespace BlackMisc::Hardware;
+using namespace BlackMisc::Input;
 
 namespace BlackInput
 {
@@ -20,16 +20,6 @@ namespace BlackInput
 
     CJoystickMac::~CJoystickMac()
     {
-    }
-
-    void CJoystickMac::startCapture()
-    {
-    }
-
-    void CJoystickMac::triggerButton(const CJoystickButton button, bool isPressed)
-    {
-        if(!isPressed) emit buttonUp(button);
-        else emit buttonDown(button);
     }
 
 } // namespace BlackInput

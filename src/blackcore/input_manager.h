@@ -7,15 +7,13 @@
 #define BLACKCORE_INPUTMANAGER_H
 
 #include "blackcoreexport.h"
+#include "blackcore/settings/application.h"
 #include "blackinput/keyboard.h"
 #include "blackinput/joystick.h"
-#include "blackmisc/hardware/keyboardkeylist.h"
-#include "blackmisc/hardware/joystickbutton.h"
-#include "blackmisc/hotkeyfunction.h"
-#include "blackmisc/setkeyboardhotkeylist.h"
-#include "blackmisc/eveventhotkeyfunction.h"
+#include "blackmisc/input/hotkeycombination.h"
 #include <QObject>
 #include <QHash>
+#include <QVector>
 #include <type_traits>
 #include <functional>
 
@@ -29,62 +27,67 @@ namespace BlackCore
         Q_OBJECT
 
     public:
+        //! Register new action
+        void registerAction(const QString &action);
 
-        //! \brief Handle to a registered hotkey function
-        struct RegistrationHandle
-        {
-            //! \brief Constructor
-            RegistrationHandle() {}
-
-            BlackMisc::CHotkeyFunction hotkeyFunction;  //!< Registered hotkey function
-            QPointer<QObject> m_receiver;           //!< Registered receiver
-            std::function<void(bool)> function;     //!< Registered function
-        };
+        //! Register remote actions
+        void registerRemoteActions(const QStringList &actions);
 
         //! Register a new hotkey function
-        RegistrationHandle registerHotkeyFunc(const BlackMisc::CHotkeyFunction &hotkeyFunction, QObject *receiver, const QByteArray &slotName)
-        {
-            auto function = [=](bool isKeyDown){ QMetaObject::invokeMethod(receiver, slotName, Q_ARG(bool, isKeyDown)); };
-            return registerHotkeyFuncImpl(hotkeyFunction, receiver, function);
-        }
-
-        //! Register a new hotkey function
-        template <class RecvObj>
-        RegistrationHandle registerHotkeyFunc(const BlackMisc::CHotkeyFunction &hotkeyFunction, RecvObj *receiver, void (RecvObj:: *slotPointer)(bool))
+        template <typename RecvObj>
+        int bind(const QString &action, RecvObj *receiver, void (RecvObj:: *slotPointer)(bool))
         {
             using namespace std::placeholders;
             auto function = std::bind(slotPointer, receiver, _1);
-            return registerHotkeyFuncImpl(hotkeyFunction, receiver, function);
+            return bindImpl(action, receiver, function);
         }
 
         //! Register a new hotkey function
-        template <class Func>
-        RegistrationHandle registerHotkeyFunc(const BlackMisc::CHotkeyFunction &hotkeyFunction, QObject *receiver, Func functionObject)
+        template <typename Func>
+        int bind(const QString &action, QObject *receiver, Func functionObject)
         {
-            return registerHotkeyFuncImpl(hotkeyFunction, receiver, functionObject);
+            return bindImpl(action, receiver, functionObject);
         }
 
+        //! Unbind a slot
+        void unbind(int index);
+
+        //!
+        //! Select a key combination as hotkey. This method returns immediatly.
+        //! Listen for signals combinationSelectionChanged and combinationSelectionFinished
+        //! to retrieve the user input.
+        void startCapture();
+
         //! Deletes all registered hotkeys. Be careful with this method!
-        void resetAllHotkeyFuncs() { m_hashRegisteredFunctions.clear(); }
+        void resetAllActions() { m_configuredActions.clear(); }
+
+        //! Get all available and known actions
+        QStringList allAvailableActions() const { return m_availableActions; }
 
         //! Enable event forwarding to core
-        void setEventForwarding(bool enabled) { m_eventForwardingEnabled = enabled; }
-
-        //! Creates a native keyboard handler object
-        static CInputManager *getInstance();
-
-    public slots:
-
-        //! Change hotkey settings
-        void changeHotkeySettings(BlackMisc::Settings::CSettingKeyboardHotkeyList hotkeys);
+        void setForwarding(bool enabled) { m_actionRelayingEnabled = enabled; }
 
         //! Call functions by hotkeyfunction
-        void callFunctionsBy(const BlackMisc::CHotkeyFunction &hotkeyFunction, bool isKeyDown);
+        void callFunctionsBy(const QString &action, bool isKeyDown);
+
+        //! Triggers a key event manually and calls the registered functions.
+        void triggerKey(const BlackMisc::Input::CHotkeyCombination &combination, bool isPressed);
+
+        //! Creates a native keyboard handler object
+        static CInputManager *instance();
 
     signals:
-
         //! Event hotkeyfunction occured
-        void hotkeyFuncEvent(const BlackMisc::Event::CEventHotkeyFunction &event);
+        void remoteActionFromLocal(const QString &action, bool argument);
+
+        //! Selected combination has changed
+        void combinationSelectionChanged(const BlackMisc::Input::CHotkeyCombination &combination);
+
+        //! Combination selection has finished
+        void combinationSelectionFinished(const BlackMisc::Input::CHotkeyCombination &combination);
+
+        //! New hotkey action is registered
+        void hotkeyActionRegistered(const QStringList &actions);
 
     protected:
         //! Constructor
@@ -92,28 +95,43 @@ namespace BlackCore
 
     private slots:
 
-        void ps_processKeyboardKeyDown(const BlackMisc::Hardware::CKeyboardKey &);
+        void ps_processKeyCombinationChanged(const BlackMisc::Input::CHotkeyCombination &combination);
 
-        void ps_processKeyboardKeyUp(const BlackMisc::Hardware::CKeyboardKey &);
+        void ps_processButtonCombinationChanged(const BlackMisc::Input::CHotkeyCombination &combination);
 
-        void ps_processJoystickButtonDown(const BlackMisc::Hardware::CJoystickButton &button);
-
-        void ps_processJoystickButtonUp(const BlackMisc::Hardware::CJoystickButton &button);
+        //! Change hotkey settings
+        void ps_changeHotkeySettings();
 
     private:
+        //! Handle to a bound action
+        struct BindInfo
+        {
+            // Using unique int intex for identification because std::function does not have a operator==
+            int m_index = 0;
+            QString m_action;
+            QPointer<QObject> m_receiver;
+            std::function<void(bool)> m_function;
+        };
 
-        RegistrationHandle registerHotkeyFuncImpl(const BlackMisc::CHotkeyFunction &hotkeyFunction, QObject *receiver, std::function<void(bool)> function);
+        int bindImpl(const QString &action, QObject *receiver, std::function<void(bool)> function);
+
+        void processCombination(const BlackMisc::Input::CHotkeyCombination &combination);
 
         static CInputManager *m_instance;
 
-        BlackInput::IKeyboard *m_keyboard = nullptr;
-        BlackInput::IJoystick *m_joystick = nullptr;
+        std::unique_ptr<BlackInput::IKeyboard> m_keyboard;
+        std::unique_ptr<BlackInput::IJoystick> m_joystick;
 
-        QHash<BlackMisc::CHotkeyFunction, std::function<void(bool)> > m_hashRegisteredFunctions;
-        QHash<BlackMisc::Hardware::CKeyboardKey, BlackMisc::CHotkeyFunction> m_hashKeyboardKeyFunctions;
-        QHash<BlackMisc::Hardware::CJoystickButton, BlackMisc::CHotkeyFunction> m_hashJoystickKeyFunctions;
+        QStringList m_availableActions;
+        QHash<BlackMisc::Input::CHotkeyCombination, QString> m_configuredActions;
+        QVector<BindInfo> m_boundActions;
 
-        bool m_eventForwardingEnabled = false;
+        bool m_actionRelayingEnabled = false;
+        bool m_captureActive = false;
+        BlackMisc::Input::CHotkeyCombination m_lastCombination;
+        BlackMisc::Input::CHotkeyCombination m_capturedCombination;
+
+        BlackCore::CSetting<BlackCore::Settings::Application::ActionHotkeys> m_actionHotkeys { this, &CInputManager::ps_changeHotkeySettings };
     };
 }
 

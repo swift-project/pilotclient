@@ -26,7 +26,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Audio;
-using namespace BlackMisc::Hardware;
+using namespace BlackMisc::Input;
 using namespace BlackSound;
 
 namespace BlackCore
@@ -41,10 +41,6 @@ namespace BlackCore
     {
         // own aircraft may or may not be available
         const CCallsign ownCallsign = (this->getIContextOwnAircraft()) ? getIContextOwnAircraft()->getOwnAircraft().getCallsign() : CCallsign();
-
-        // Register PTT hotkey function
-        m_inputManager = CInputManager::getInstance();
-        m_handlePtt = m_inputManager->registerHotkeyFunc(CHotkeyFunction::Ptt(), this, &CContextAudio::ps_setVoiceTransmission);
 
         m_channel1 = m_voice->createVoiceChannel();
         m_channel1->setOwnAircraftCallsign(ownCallsign);

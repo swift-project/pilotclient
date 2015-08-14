@@ -13,60 +13,32 @@
 #define BLACKINPUT_JOYSTICK_H
 
 #include "blackinputexport.h"
-#include "blackmisc/hardware/joystickbutton.h"
-#include <QMultiMap>
+#include "blackmisc/input/hotkeycombination.h"
 #include <QObject>
-#include <QPointer>
-#include <functional>
+#include <memory>
 
 namespace BlackInput
 {
     /*!
-     * \brief Abstract interface for native joystick handling.
-     * \todo Add implementation for Linux and OSX.
+     * Abstract interface for native joystick handling.
      */
     class BLACKINPUT_EXPORT IJoystick : public QObject
     {
         Q_OBJECT
 
     public:
-
-        //! Operation mode
-        enum Mode
-        {
-            ModeNominal,
-            ModeCapture
-        };
-
         //! Constructor
         IJoystick(QObject *parent = nullptr);
 
         //! Destructor
         virtual ~IJoystick() {}
 
-        //! Start joystick button selection for settings configuration
-        virtual void startCapture() = 0;
-
-        //! Simulating press/release of a joystick button
-        virtual void triggerButton(const BlackMisc::Hardware::CJoystickButton button, bool isPressed) = 0;
-
         //! Creates a native joystick handler object
-        static IJoystick *getInstance();
+        static std::unique_ptr<IJoystick> create(QObject *parent = nullptr);
 
     signals:
-
-        //! User has selected a joystick button
-        void buttonSelectionFinished(const BlackMisc::Hardware::CJoystickButton &button);
-
-        //! Button down
-        void buttonDown(const BlackMisc::Hardware::CJoystickButton &);
-
-        //! Button up
-        void buttonUp(const BlackMisc::Hardware::CJoystickButton &);
-
-    private:
-
-        static IJoystick *m_instance;
+        //! Joystick button combination has changed
+        void buttonCombinationChanged(const BlackMisc::Input::CHotkeyCombination &);
     };
 }
 

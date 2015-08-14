@@ -14,7 +14,7 @@
 
 #include "blackinput/blackinputexport.h"
 #include "blackinput/joystick.h"
-#include "blackmisc/hardware/joystickbutton.h"
+#include "blackmisc/input/joystickbutton.h"
 #include "blackmisc/collection.h"
 #include <QSet>
 
@@ -61,12 +61,6 @@ namespace BlackInput
 
         //! \brief Destructor
         virtual ~CJoystickWindows();
-
-        //! \copydoc IJoystick::startCapture()
-        virtual void startCapture() override;
-
-        //! \copydoc IJoystick::triggerButton()
-        virtual void triggerButton(const BlackMisc::Hardware::CJoystickButton button, bool isPressed) override;
 
     protected:
 
@@ -116,9 +110,8 @@ namespace BlackInput
         QList<CJoystickDeviceData> m_availableJoystickDevices; //!< List of found and available joystick devices
 
         QList<CJoystickDeviceInput> m_joystickDeviceInputs; //!< List of available device buttons
-        BlackMisc::CCollection<qint32> m_pressedButtons; //!< Collection of pressed buttons
 
-        IJoystick::Mode m_mode = ModeNominal; //!< Current working mode
+        BlackMisc::Input::CHotkeyCombination m_buttonCombination;
 
         static const WCHAR *m_helperWindowClassName; //!< Helper window class name
         static const WCHAR *m_helperWindowName; //!< Helper window name

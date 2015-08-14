@@ -4,107 +4,152 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "input_manager.h"
+#include "blackmisc/input/keyboardkeylist.h"
 
 using namespace BlackInput;
 using namespace BlackMisc;
-using namespace BlackMisc::Hardware;
+using namespace BlackMisc::Input;
 
 namespace BlackCore
 {
-    CInputManager *CInputManager::m_instance = nullptr;
 
     CInputManager::CInputManager(QObject *parent) :
         QObject(parent),
-        m_keyboard(IKeyboard::getInstance()),
-        m_joystick(IJoystick::getInstance())
+        m_keyboard(std::move(IKeyboard::create(this))),
+        m_joystick(std::move(IJoystick::create(this)))
     {
-        connect(m_keyboard, &IKeyboard::keyUp, this, &CInputManager::ps_processKeyboardKeyUp);
-        connect(m_keyboard, &IKeyboard::keyDown, this, &CInputManager::ps_processKeyboardKeyDown);
-        connect(m_joystick, &IJoystick::buttonUp, this, &CInputManager::ps_processJoystickButtonUp);
-        connect(m_joystick, &IJoystick::buttonDown, this, &CInputManager::ps_processJoystickButtonDown);
+        connect(m_keyboard.get(), &IKeyboard::keyCombinationChanged, this, &CInputManager::ps_processKeyCombinationChanged);
+        connect(m_joystick.get(), &IJoystick::buttonCombinationChanged, this, &CInputManager::ps_processButtonCombinationChanged);
     }
 
-    CInputManager *CInputManager::getInstance()
+    CInputManager *CInputManager::instance()
     {
-        if (!m_instance)
+        static CInputManager instance;
+        return &instance;
+    }
+
+    void CInputManager::registerAction(const QString &action)
+    {
+        if (!m_availableActions.contains(action))
         {
-            m_instance = new CInputManager();
+            m_availableActions.push_back(action);
+            emit hotkeyActionRegistered( { action } );
         }
-        return m_instance;
     }
 
-    void CInputManager::changeHotkeySettings(Settings::CSettingKeyboardHotkeyList hotkeys)
+    void CInputManager::registerRemoteActions(const QStringList &actions)
     {
-        CKeyboardKeyList keyList;
-        for (Settings::CSettingKeyboardHotkey settingHotkey : hotkeys)
+        for (const auto &action : actions)
         {
-            CKeyboardKey key = settingHotkey.getKey();
-            if (key.isEmpty()) continue;
-
-            m_hashKeyboardKeyFunctions.insert(key, settingHotkey.getFunction());
-            keyList.push_back(key);
+            if (!m_availableActions.contains(action))
+            {
+                m_availableActions.push_back(action);
+                emit hotkeyActionRegistered( { action } );
+            }
         }
-        m_keyboard->setKeysToMonitor(keyList);
     }
 
-    void CInputManager::ps_processKeyboardKeyDown(const CKeyboardKey &key)
+    void CInputManager::unbind(int index)
     {
-        if (!m_hashKeyboardKeyFunctions.contains(key)) return;
-
-        // Get configured hotkey function
-        CHotkeyFunction hotkeyFunc = m_hashKeyboardKeyFunctions.value(key);
-        callFunctionsBy(hotkeyFunc, true);
+        auto info = std::find_if (m_boundActions.begin(), m_boundActions.end(), [index] (const BindInfo &info) { return info.m_index == index; });
+        if (info != m_boundActions.end())
+        {
+            m_boundActions.erase(info);
+        }
     }
 
-    void CInputManager::ps_processKeyboardKeyUp(const CKeyboardKey &key)
+    void CInputManager::ps_changeHotkeySettings()
     {
-        if (!m_hashKeyboardKeyFunctions.contains(key)) return;
+        m_configuredActions.clear();
+        for (CActionHotkey actionHotkey : m_actionHotkeys.get())
+        {
+            CHotkeyCombination combination = actionHotkey.getCombination();
+            if (combination.isEmpty()) continue;
 
-        // Get configured hotkey function
-        CHotkeyFunction hotkeyFunc = m_hashKeyboardKeyFunctions.value(key);
-        callFunctionsBy(hotkeyFunc, false);
+            m_configuredActions.insert(combination, actionHotkey.getAction());
+        }
     }
 
-    void CInputManager::ps_processJoystickButtonDown(const CJoystickButton &button)
+    void CInputManager::ps_processKeyCombinationChanged(const CHotkeyCombination &combination)
     {
-        qDebug() << "Pressed Button" << button.getButtonIndex();
-        if (!m_hashJoystickKeyFunctions.contains(button)) return;
-
-        // Get configured hotkey function
-        CHotkeyFunction hotkeyFunc = m_hashJoystickKeyFunctions.value(button);
-        callFunctionsBy(hotkeyFunc, true);
+        // Merge in the joystick part
+        CHotkeyCombination copy(combination);
+        copy.setJoystickButtons(m_lastCombination.getJoystickButtons());
+        processCombination(copy);
     }
 
-    void CInputManager::ps_processJoystickButtonUp(const CJoystickButton &button)
+    void CInputManager::ps_processButtonCombinationChanged(const CHotkeyCombination &combination)
     {
-        qDebug() << "Released Button" << button.getButtonIndex();
-        if (!m_hashJoystickKeyFunctions.contains(button)) return;
-
-        // Get configured hotkey function
-        CHotkeyFunction hotkeyFunc = m_hashJoystickKeyFunctions.value(button);
-        callFunctionsBy(hotkeyFunc, false);
+        // Merge in the keyboard keys
+        CHotkeyCombination copy(combination);
+        copy.setKeyboardKeys(m_lastCombination.getKeyboardKeys());
+        processCombination(copy);
     }
 
-    void CInputManager::callFunctionsBy(const CHotkeyFunction &hotkeyFunction, bool isKeyDown)
+    void CInputManager::startCapture()
     {
-        BlackMisc::Event::CEventHotkeyFunction hotkeyEvent(hotkeyFunction, isKeyDown);
-        if(m_eventForwardingEnabled) emit hotkeyFuncEvent(hotkeyEvent);
-
-        if (!m_hashRegisteredFunctions.contains(hotkeyFunction)) return;
-        auto func = m_hashRegisteredFunctions.value(hotkeyFunction);
-        func(isKeyDown);
+        m_captureActive = true;
+        m_capturedCombination = {};
     }
 
-    CInputManager::RegistrationHandle CInputManager::registerHotkeyFuncImpl(const BlackMisc::CHotkeyFunction &hotkeyFunction,
-                                                                            QObject *receiver,
-                                                                            std::function<void (bool)> function)
+    void CInputManager::callFunctionsBy(const QString &action, bool isKeyDown)
     {
-        m_hashRegisteredFunctions.insert(hotkeyFunction, function);
+        if (action.isEmpty()) { return; }
+        if(m_actionRelayingEnabled) emit remoteActionFromLocal(action, isKeyDown);
 
-        RegistrationHandle handle;
-        handle.function = function;
-        handle.hotkeyFunction = hotkeyFunction;
-        handle.m_receiver = receiver;
-        return handle;
+        for (const auto &boundAction : m_boundActions)
+        {
+            if (boundAction.m_action == action)
+            {
+                boundAction.m_function(isKeyDown);
+            }
+        }
+    }
+
+    void CInputManager::triggerKey(const CHotkeyCombination &combination, bool isPressed)
+    {
+        Q_UNUSED(isPressed)
+        QString previousAction = m_configuredActions.value(m_lastCombination);
+        QString action = m_configuredActions.value(combination);
+        callFunctionsBy(previousAction, false);
+        callFunctionsBy(action, true);
+        m_lastCombination = combination;
+    }
+
+    int CInputManager::bindImpl(const QString &action, QObject *receiver, std::function<void (bool)> function)
+    {
+        static int index = 0;
+        Q_ASSERT(index < INT_MAX);
+        BindInfo info;
+        info.m_index = index;
+        ++index;
+        info.m_function = function;
+        info.m_action = action;
+        info.m_receiver = receiver;
+        m_boundActions.push_back(info);
+        return info.m_index;
+    }
+
+    void CInputManager::processCombination(const CHotkeyCombination &combination)
+    {
+        if (m_captureActive)
+        {
+            if (combination.size() < m_capturedCombination.size())
+            {
+                emit combinationSelectionFinished(m_capturedCombination);
+                m_captureActive = false;
+            }
+            else
+            {
+                emit combinationSelectionChanged(combination);
+                m_capturedCombination = combination;
+            }
+        }
+
+        QString previousAction = m_configuredActions.value(m_lastCombination);
+        QString action = m_configuredActions.value(combination);
+        m_lastCombination = combination;
+        callFunctionsBy(previousAction, false);
+        callFunctionsBy(action, true);
     }
 }

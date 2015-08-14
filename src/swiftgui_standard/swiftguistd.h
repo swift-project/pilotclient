@@ -18,7 +18,6 @@
 
 #include "guimodeenums.h"
 #include "blackcore/context_all_interfaces.h"
-#include "blackcore/input_manager.h"
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/infowindowcomponent.h"
 #include "blackgui/components/maininfoareacomponent.h"
@@ -113,7 +112,6 @@ private:
     bool m_init = false;
     BlackGui::Components::CInfoWindowComponent *m_compInfoWindow = nullptr; //!< the info window (popup
     BlackGui::CManagedStatusBar  m_statusBar;
-    BlackInput::IKeyboard       *m_keyboard = nullptr; //!< hotkeys
     BlackMisc::CLogSubscriber    m_logSubscriber { this, &SwiftGuiStd::ps_displayStatusMessageInGui };
 
     // contexts
@@ -238,9 +236,6 @@ private slots:
 
     //! Toggle window visibility
     void ps_toggleWindowVisibility();
-
-    //! Set the hotkey functions
-    void ps_registerHotkeyFunctions();
 
     //! Style sheet has been changed
     void ps_onStyleSheetsChanged();

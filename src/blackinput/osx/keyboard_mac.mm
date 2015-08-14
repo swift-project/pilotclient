@@ -8,22 +8,62 @@
  */
 
 #include "keyboard_mac.h"
-#include "keymapping_mac.h"
-#include <QDebug>
+#include <QHash>
 #include <QtWidgets/QMessageBox>
 #include <CoreFoundation/CoreFoundation.h>
 #include <ApplicationServices/ApplicationServices.h>
 #include <AppKit/NSEvent.h>
 #include <AppKit/NSAlert.h>
 #include <Foundation/NSString.h>
+#include <Carbon/Carbon.h>
 
-using namespace BlackMisc::Hardware;
+using namespace BlackMisc::Input;
 
 namespace BlackInput
 {
+
+    static QHash<int, KeyCode> keyMapping
+    {
+        { kVK_ANSI_0, Key_0 },
+        { kVK_ANSI_1, Key_1 },
+        { kVK_ANSI_2, Key_2 },
+        { kVK_ANSI_3, Key_3 },
+        { kVK_ANSI_4, Key_4 },
+        { kVK_ANSI_5, Key_5 },
+        { kVK_ANSI_6, Key_6 },
+        { kVK_ANSI_7, Key_7 },
+        { kVK_ANSI_8, Key_8 },
+        { kVK_ANSI_9, Key_9 },
+        { kVK_ANSI_A, Key_A },
+        { kVK_ANSI_B, Key_B },
+        { kVK_ANSI_C, Key_C },
+        { kVK_ANSI_D, Key_D },
+        { kVK_ANSI_E, Key_E },
+        { kVK_ANSI_F, Key_F },
+        { kVK_ANSI_G, Key_G },
+        { kVK_ANSI_H, Key_H },
+        { kVK_ANSI_I, Key_I },
+        { kVK_ANSI_J, Key_J },
+        { kVK_ANSI_K, Key_K },
+        { kVK_ANSI_L, Key_L },
+        { kVK_ANSI_M, Key_M },
+        { kVK_ANSI_N, Key_N },
+        { kVK_ANSI_O, Key_O },
+        { kVK_ANSI_P, Key_P },
+        { kVK_ANSI_Q, Key_Q },
+        { kVK_ANSI_R, Key_R },
+        { kVK_ANSI_S, Key_S },
+        { kVK_ANSI_T, Key_T },
+        { kVK_ANSI_U, Key_U },
+        { kVK_ANSI_V, Key_V },
+        { kVK_ANSI_W, Key_W },
+        { kVK_ANSI_X, Key_X },
+        { kVK_ANSI_Y, Key_Y },
+        { kVK_ANSI_Z, Key_Z },
+    };
+
     CKeyboardMac::CKeyboardMac(QObject *parent) :
-        IKeyboard(parent),
-        m_mode(Mode_Nominal)
+        IKeyboard(parent)
     {
     }
 
@@ -34,44 +74,47 @@ namespace BlackInput
     bool CKeyboardMac::init()
     {
         bool accessibilityEnabled = false;
-        if (AXIsProcessTrustedWithOptions != NULL) {
+        if (AXIsProcessTrustedWithOptions != NULL)
+        {
             // 10.9 and later
-            const void * keys[] = { kAXTrustedCheckOptionPrompt };
-            const void * values[] = { kCFBooleanTrue };
+            const void *keys[] = { kAXTrustedCheckOptionPrompt };
+            const void *values[] = { kCFBooleanTrue };
 
             CFDictionaryRef options = CFDictionaryCreate(
-                    kCFAllocatorDefault,
-                    keys,
-                    values,
-                    sizeof(keys) / sizeof(*keys),
-                    &kCFCopyStringDictionaryKeyCallBacks,
-                    &kCFTypeDictionaryValueCallBacks);
+                                          kCFAllocatorDefault,
+                                          keys,
+                                          values,
+                                          sizeof(keys) / sizeof(*keys),
+                                          &kCFCopyStringDictionaryKeyCallBacks,
+                                          &kCFTypeDictionaryValueCallBacks);
 
             accessibilityEnabled = AXIsProcessTrustedWithOptions(options);
         }
-        else {
+        else
+        {
             // 10.8 and older
             accessibilityEnabled = AXAPIEnabled();
         }
 
-        if (!accessibilityEnabled) {
+        if (!accessibilityEnabled)
+        {
             QMessageBox msgBox;
             msgBox.setText("In order to enable hotkeys first add Swift to the list of apps allowed to "
-               "control your computer in System Preferences / Security & Privacy / Privacy / Accessiblity and then restart Swift.");
+                           "control your computer in System Preferences / Security & Privacy / Privacy / Accessiblity and then restart Swift.");
             msgBox.exec();
 
             return false;
         }
 
 
-        CGEventMask eventMask = ((1 << kCGEventKeyDown) | (1 << kCGEventKeyUp) | (1 <<kCGEventFlagsChanged));
+        CGEventMask eventMask = ((1 << kCGEventKeyDown) | (1 << kCGEventKeyUp) | (1 << kCGEventFlagsChanged));
 
         // try creating an event tap just for keypresses. if it fails, we need Universal Access.
         CFMachPortRef eventTap = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, 0,
-                                                  eventMask, myCGEventCallback, NULL);
+                                 eventMask, myCGEventCallback, this);
 
         CFRunLoopSourceRef source = CFMachPortCreateRunLoopSource(kCFAllocatorDefault,
-                                                                  eventTap, 0);
+                                    eventTap, 0);
 
         CFRunLoopAddSource(CFRunLoopGetCurrent(), source, kCFRunLoopCommonModes);
         CGEventTapEnable(eventTap, true);
@@ -79,124 +122,98 @@ namespace BlackInput
         return true;
     }
 
-    void CKeyboardMac::setKeysToMonitor(const CKeyboardKeyList &keylist)
-    {
-        m_listMonitoredKeys = keylist;
-    }
-
-    void CKeyboardMac::startCapture(bool ignoreNextKey)
-    {
-        m_mode = Mode_Capture;
-        m_ignoreNextKey = ignoreNextKey;
-        m_pressedKey.setKeyObject(CKeyboardKey());
-    }
-
-    void CKeyboardMac::triggerKey(const CKeyboardKey &key, bool isPressed)
-    {
-        if(!isPressed) emit keyUp(key);
-        else emit keyDown(key);
-    }
-
     void CKeyboardMac::processKeyEvent(CGEventType type,
-                                           CGEventRef event)
+                                       CGEventRef event)
     {
-        BlackMisc::Hardware::CKeyboardKey lastPressedKey = m_pressedKey;
-        if (m_ignoreNextKey)
-        {
-            m_ignoreNextKey = false;
-            return;
-        }
+        BlackMisc::Input::CHotkeyCombination oldCombination(m_keyCombination);
 
         unsigned int vkcode = static_cast<unsigned int>(CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode));
 
-        bool isFinished = false;
-        if (type == kCGEventKeyDown) {
-            m_pressedKey.setKey(CKeyMappingMac::convertToKey(vkcode));
-        } else if (type == kCGEventKeyUp) {
-            m_pressedKey.setKey(Qt::Key_unknown);
-            isFinished = true;
-        } else if (type == kCGEventFlagsChanged) {
-
-            // m_pressedKey.removeAllModifiers();
-
-            CGEventFlags f = CGEventGetFlags(event);
-            qDebug() << "hier";
-
-            if ((f & kCGEventFlagMaskShift) == kCGEventFlagMaskShift) {
-                qDebug() << "shift";
-                if (vkcode == 56) {
-                    m_pressedKey.addModifier(CKeyboardKey::ModifierShiftLeft);
-                } else if (vkcode == 60) {
-                    m_pressedKey.addModifier(CKeyboardKey::ModifierShiftRight);
-                }
-            } else {
-                m_pressedKey.removeModifier(CKeyboardKey::ModifierShiftLeft);
-                m_pressedKey.removeModifier(CKeyboardKey::ModifierShiftRight);
-            }
-
-            if ((f & kCGEventFlagMaskControl) == kCGEventFlagMaskControl) {
-                qDebug() << "ctrl";
-                // at least on the mac wireless keyboard there is no right ctrl key
-                if (vkcode == 59) {
-                    m_pressedKey.addModifier(CKeyboardKey::ModifierCtrlLeft);
-                }
-            } else {
-                m_pressedKey.removeModifier(CKeyboardKey::ModifierCtrlLeft);
-            }
-
-            if ((f & kCGEventFlagMaskAlternate) == kCGEventFlagMaskAlternate) {
-                qDebug() << "alt";
-                if (vkcode == 58) {
-                    m_pressedKey.addModifier(CKeyboardKey::ModifierAltLeft);
-                } else if (vkcode == 61) {
-                    m_pressedKey.addModifier(CKeyboardKey::ModifierAltRight);
-                }
-            } else {
-                m_pressedKey.removeModifier(CKeyboardKey::ModifierAltLeft);
-                m_pressedKey.removeModifier(CKeyboardKey::ModifierAltRight);
-            }
-        }
-
-        if (lastPressedKey == m_pressedKey)
-            return;
-
-        if (m_mode == Mode_Capture)
+        if (type == kCGEventKeyDown)
         {
-            if (isFinished)
+            auto key = convertToKey(vkcode);
+            if (key == Key_Unknown) { return; }
+            m_keyCombination.addKeyboardKey(key);
+        }
+        else if (type == kCGEventKeyUp)
+        {
+            auto key = convertToKey(vkcode);
+            if (key == Key_Unknown) { return; }
+            m_keyCombination.removeKeyboardKey(key);
+        }
+        else if (type == kCGEventFlagsChanged)
+        {
+            CGEventFlags f = CGEventGetFlags(event);
+
+            if ((f & kCGEventFlagMaskShift) == kCGEventFlagMaskShift)
             {
-                sendCaptureNotification(lastPressedKey, true);
-                m_mode = Mode_Nominal;
+                if (vkcode == 56)
+                {
+                    m_keyCombination.addKeyboardKey(Key_ShiftLeft);
+                }
+                else if (vkcode == 60)
+                {
+                    m_keyCombination.addKeyboardKey(Key_ShiftRight);
+                }
             }
             else
             {
-                sendCaptureNotification(m_pressedKey, false);
+                m_keyCombination.removeKeyboardKey(Key_ShiftLeft);
+                m_keyCombination.removeKeyboardKey(Key_ShiftRight);
+            }
+
+            if ((f & kCGEventFlagMaskControl) == kCGEventFlagMaskControl)
+            {
+                // at least on the mac wireless keyboard there is no right ctrl key
+                if (vkcode == 59)
+                {
+                    m_keyCombination.addKeyboardKey(Key_ControlLeft);
+                }
+            }
+            else
+            {
+                m_keyCombination.removeKeyboardKey(Key_ControlLeft);
+            }
+
+            if ((f & kCGEventFlagMaskAlternate) == kCGEventFlagMaskAlternate)
+            {
+                if (vkcode == 58)
+                {
+                    m_keyCombination.addKeyboardKey(Key_AltLeft);
+                }
+                else if (vkcode == 61)
+                {
+                    m_keyCombination.addKeyboardKey(Key_AltRight);
+                }
+            }
+            else
+            {
+                m_keyCombination.removeKeyboardKey(Key_AltLeft);
+                m_keyCombination.removeKeyboardKey(Key_AltRight);
             }
         }
-        else
+
+        if (oldCombination == m_keyCombination)
         {
-            if (m_listMonitoredKeys.contains(lastPressedKey)) emit keyUp(lastPressedKey);
-            if (m_listMonitoredKeys.contains(m_pressedKey)) emit keyDown(m_pressedKey);
+            emit keyCombinationChanged(m_keyCombination);
         }
     }
 
-    void CKeyboardMac::sendCaptureNotification(const CKeyboardKey &key, bool isFinished)
+    KeyCode CKeyboardMac::convertToKey(int keyCode)
     {
-        if (isFinished)
-            emit keySelectionFinished(key);
-        else
-            emit keySelectionChanged(key);
+        return keyMapping.value(keyCode, Key_Unknown);
     }
 
     CGEventRef CKeyboardMac::myCGEventCallback(CGEventTapProxy,
-                                 CGEventType type,
-                                 CGEventRef event,
-                                 void *)
+            CGEventType type,
+            CGEventRef event,
+            void *refcon)
     {
 
-        CKeyboardMac *keyboardMac = qobject_cast<CKeyboardMac*>(IKeyboard::getInstance());
+        CKeyboardMac *keyboardMac = static_cast<CKeyboardMac*>(refcon);
         keyboardMac->processKeyEvent(type, event);
 
-       // send event to next application
-       return event;
+        // send event to next application
+        return event;
     }
 }

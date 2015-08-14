@@ -21,7 +21,6 @@
 #include "voice_channel.h"
 #include "audio_device.h"
 #include "audio_mixer.h"
-#include "input_manager.h"
 #include "blackinput/keyboard.h"
 #include "blackmisc/audio/voiceroomlist.h"
 
@@ -154,8 +153,6 @@ namespace BlackCore
 
         QSharedPointer<IVoiceChannel> getVoiceChannelBy(const BlackMisc::Audio::CVoiceRoom &voiceRoom);
 
-        CInputManager *m_inputManager = nullptr;
-        CInputManager::RegistrationHandle m_handlePtt;
 
         std::unique_ptr<IVoice> m_voice; //!< underlying voice lib
         std::unique_ptr<IAudioMixer> m_audioMixer;

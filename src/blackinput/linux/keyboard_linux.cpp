@@ -4,29 +4,79 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "keyboard_linux.h"
-#include "keymapping_linux.h"
 #include "blackmisc/logmessage.h"
 #include <QDebug>
 #include <QFileSystemWatcher>
 #include <QDir>
 #include <QFile>
+#include <QHash>
 #include <QSocketNotifier>
 #include <linux/input.h>
 #include <fcntl.h>
+#include <X11/keysym.h>
+#include <X11/XKBlib.h>
 
-using namespace BlackMisc::Hardware;
+using namespace BlackMisc;
+using namespace BlackMisc::Input;
 
 namespace BlackInput
 {
-    CKeyboardLinux::CKeyboardLinux(QObject *parent) :
-        IKeyboard(parent),
-        m_ignoreNextKey(false),
-        m_mode(Mode_Nominal)
+
+    static QHash<int, Input::KeyCode> keyMapping
     {
+        { XK_0, Key_0 },
+        { XK_1, Key_1 },
+        { XK_2, Key_2 },
+        { XK_3, Key_3 },
+        { XK_4, Key_4 },
+        { XK_5, Key_5 },
+        { XK_6, Key_6 },
+        { XK_7, Key_7 },
+        { XK_8, Key_8 },
+        { XK_9, Key_9 },
+        { XK_a, Key_A },
+        { XK_b, Key_B },
+        { XK_c, Key_C },
+        { XK_d, Key_D },
+        { XK_e, Key_E },
+        { XK_f, Key_F },
+        { XK_g, Key_G },
+        { XK_h, Key_H },
+        { XK_i, Key_I },
+        { XK_j, Key_J },
+        { XK_k, Key_K },
+        { XK_l, Key_L },
+        { XK_m, Key_M },
+        { XK_n, Key_N },
+        { XK_o, Key_O },
+        { XK_p, Key_P },
+        { XK_q, Key_Q },
+        { XK_r, Key_R },
+        { XK_s, Key_S },
+        { XK_t, Key_T },
+        { XK_u, Key_U },
+        { XK_v, Key_V },
+        { XK_w, Key_W },
+        { XK_x, Key_X },
+        { XK_y, Key_Y },
+        { XK_z, Key_Z },
+        { XK_Shift_L, Key_ShiftLeft },
+        { XK_Shift_R, Key_ShiftRight },
+        { XK_Control_L, Key_ControlLeft },
+        { XK_Control_R, Key_ControlRight },
+        { XK_Alt_L, Key_AltLeft },
+        { XK_Alt_R, Key_AltRight },
+    };
+
+    CKeyboardLinux::CKeyboardLinux(QObject *parent) :
+        IKeyboard(parent)
+    {
+        m_display = XOpenDisplay(nullptr);
     }
 
     CKeyboardLinux::~CKeyboardLinux()
     {
+        if (m_display) XCloseDisplay(m_display);
     }
 
     bool CKeyboardLinux::init()
@@ -37,24 +87,6 @@ namespace BlackInput
         deviceDirectoryChanged(dir);
 
         return true;
-    }
-
-    void CKeyboardLinux::setKeysToMonitor(const CKeyboardKeyList &keylist)
-    {
-        m_listMonitoredKeys = keylist;
-    }
-
-    void CKeyboardLinux::startCapture(bool ignoreNextKey)
-    {
-        m_mode = Mode_Capture;
-        m_ignoreNextKey = ignoreNextKey;
-        m_pressedKey.setKeyObject(CKeyboardKey());
-    }
-
-    void CKeyboardLinux::triggerKey(const CKeyboardKey &key, bool isPressed)
-    {
-        if (!isPressed) emit keyUp(key);
-        else emit keyDown(key);
     }
 
     void CKeyboardLinux::deviceDirectoryChanged(const QString &dir)
@@ -96,7 +128,9 @@ namespace BlackInput
             default:
                 continue;
             }
-            int keyCode = eventInput.code;
+
+            // The + 8 offset is required for XkbKeycodeToKeysym to output the correct Keysym
+            int keyCode = eventInput.code + 8;
             keyEvent(keyCode, isPressed);
         }
 
@@ -110,14 +144,6 @@ namespace BlackInput
                 m_keyboardDevices.remove(fileInput->fileName());
             }
         }
-    }
-
-    void CKeyboardLinux::sendCaptureNotification(const CKeyboardKey &key, bool isFinished)
-    {
-        if (isFinished)
-            emit keySelectionFinished(key);
-        else
-            emit keySelectionChanged(key);
     }
 
     void CKeyboardLinux::addRawInputDevice(const QString &filePath)
@@ -170,62 +196,73 @@ namespace BlackInput
         }
     }
 
-    void CKeyboardLinux::keyEvent(int virtualKeyCode, bool isPressed)
+    void CKeyboardLinux::keyEvent(int keyCode, bool isPressed)
     {
-        if (CKeyMappingLinux::isMouseButton(virtualKeyCode))
-            return;
+        if (isMouseButton(keyCode)) { return; }
 
-        BlackMisc::Hardware::CKeyboardKey lastPressedKey = m_pressedKey;
-        if (m_ignoreNextKey)
-        {
-            m_ignoreNextKey = false;
-            return;
-        }
-
-        bool isFinished = false;
+        BlackMisc::Input::CHotkeyCombination oldCombination(m_keyCombination);
         if (isPressed)
         {
-            if (CKeyMappingLinux::isModifier(virtualKeyCode))
-                m_pressedKey.addModifier(CKeyMappingLinux::convertToModifier(virtualKeyCode));
-            else
-            {
-                m_pressedKey.setKey(CKeyMappingLinux::convertToKey(virtualKeyCode));
-            }
+            auto key = convertToKey(keyCode);
+            if (key == Key_Unknown) { return; }
+
+            m_keyCombination.addKeyboardKey(key);
         }
         else
         {
-            if (CKeyMappingLinux::isModifier(virtualKeyCode))
-                m_pressedKey.removeModifier(CKeyMappingLinux::convertToModifier(virtualKeyCode));
-            else
-            {
-                m_pressedKey.setKey(Qt::Key_unknown);
-            }
+            auto key = convertToKey(keyCode);
+            if (key == Key_Unknown) { return; }
 
-            isFinished = true;
+            m_keyCombination.removeKeyboardKey(key);
         }
 
-        if (lastPressedKey == m_pressedKey)
-            return;
-
-#ifdef DEBUG_KEYBOARD
-        qDebug() << "Virtual key: " << virtualKeyCode;
-#endif
-        if (m_mode == Mode_Capture)
+        if (oldCombination != m_keyCombination)
         {
-            if (isFinished)
-            {
-                sendCaptureNotification(lastPressedKey, true);
-                m_mode = Mode_Nominal;
-            }
-            else
-            {
-                sendCaptureNotification(m_pressedKey, false);
-            }
+            emit keyCombinationChanged(m_keyCombination);
         }
-        else
+    }
+
+    BlackMisc::Input::KeyCode CKeyboardLinux::convertToKey(int keyCode)
+    {
+        // The keycode received from kernel does not take keyboard layouts into account.
+        // It always defaults to US keyboards. In contrast to kernel devices, X11 is aware
+        // of user keyboard layouts. The magic below translates the key code
+        // into the correct symbol via a X11 connection.
+        // Summary of translations:
+        // Kernel key code -> X11 key symbol -> swift key code
+
+        auto keySym = XkbKeycodeToKeysym(m_display, keyCode, 0, 0);
+        return keyMapping.value(keySym, Key_Unknown);
+    }
+
+    bool CKeyboardLinux::isModifier(int keyCode)
+    {
+        auto keySym = XkbKeycodeToKeysym(m_display, keyCode, 0, 0);
+        switch (keySym)
         {
-            if (m_listMonitoredKeys.contains(lastPressedKey)) emit keyUp(lastPressedKey);
-            if (m_listMonitoredKeys.contains(m_pressedKey)) emit keyDown(m_pressedKey);
+        case XK_Shift_L:
+        case XK_Shift_R:
+        case XK_Control_L:
+        case XK_Control_R:
+        case XK_Alt_L:
+        case XK_Alt_R:
+            return true;
+        default: return false;
+        }
+
+        return false;
+    }
+
+    bool CKeyboardLinux::isMouseButton(int keyCode)
+    {
+        switch (keyCode)
+        {
+            case BTN_LEFT:
+            case BTN_RIGHT:
+            case BTN_MIDDLE:
+                return true;
+            default:
+                return false;
         }
     }
 }

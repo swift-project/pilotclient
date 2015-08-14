@@ -11,8 +11,11 @@
 #define BLACKINPUT_KEYBOARD_LINUX_H
 
 #include "blackinput/keyboard.h"
-#include "blackmisc/hardware/keyboardkeylist.h"
+#include "blackmisc/input/hotkeycombination.h"
 #include <QHash>
+
+#include <X11/X.h>
+#include <X11/Xlib.h>
 
 class QFileSystemWatcher;
 class QFile;
@@ -20,7 +23,6 @@ class QFile;
 namespace BlackInput
 {
     //! \brief Linux implemenation of IKeyboard using hook procedure
-    //! \todo Change QHash to a CCollection object
     class CKeyboardLinux : public IKeyboard
     {
         Q_OBJECT
@@ -35,15 +37,6 @@ namespace BlackInput
 
         //! \brief Destructor
         virtual ~CKeyboardLinux();
-
-        //! Set the list of keys to monitor
-        virtual void setKeysToMonitor(const BlackMisc::Hardware::CKeyboardKeyList &keylist) override;
-
-        //! \copydoc IKeyboard::selectKey()
-        virtual void startCapture(bool ignoreNextKey = false) override;
-
-        //! \copydoc IKeyboard::triggerKey()
-        virtual void triggerKey(const BlackMisc::Hardware::CKeyboardKey &key, bool isPressed) override;
 
     protected:
 
@@ -65,33 +58,18 @@ namespace BlackInput
         //! \brief Constructor
         CKeyboardLinux(QObject *parent = nullptr);
 
-        /*!
-         * \brief Constructor
-         * \param keySet
-         * \param isFinished
-         */
-        void sendCaptureNotification(const BlackMisc::Hardware::CKeyboardKey &key, bool isFinished);
-
-        /*!
-         * \brief Add new raw input device
-         * \param filePath Path to device file
-         */
         void addRawInputDevice(const QString &filePath);
+        void keyEvent(int keyCode, bool isPressed);
+        BlackMisc::Input::KeyCode convertToKey(int keyCode);
+        bool isModifier(int keyCode);
+        bool isMouseButton(int keyCode);
 
-        /*!
-         * \brief Process new key event
-         * \param virtualKeyCode
-         * \param isPressed
-         */
-        void keyEvent(int virtualKeyCode, bool isPressed);
-
-        BlackMisc::Hardware::CKeyboardKeyList m_listMonitoredKeys; //!< Registered keys
-        BlackMisc::Hardware::CKeyboardKey m_pressedKey;    //!< Set of virtual keys pressed in the last cycle
-        bool m_ignoreNextKey;                   //!< Is true if the next key needs to be ignored
-        Mode m_mode;                            //!< Operation mode
+        BlackMisc::Input::CHotkeyCombination m_keyCombination;    //!< Current status of pressed keys;
 
         QFileSystemWatcher *m_devInputWatcher; //!< Watches the device file system for input devices
         QHash<QString, QSharedPointer<QFile>> m_keyboardDevices; //!< All known input devices
+
+        Display *m_display;
     };
 }
 

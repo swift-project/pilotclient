@@ -36,7 +36,7 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Settings;
 using namespace BlackMisc::Audio;
-using namespace BlackMisc::Hardware;
+using namespace BlackMisc::Input;
 
 /*
  * Constructor
@@ -373,26 +373,6 @@ void SwiftGuiStd::ps_toggleWindowVisibility()
     {
         this->show();
     }
-}
-
-void SwiftGuiStd::ps_registerHotkeyFunctions()
-{
-    CInputManager *m_inputManager = BlackCore::CInputManager::getInstance();
-
-    m_inputManager->registerHotkeyFunc(CHotkeyFunction::Opacity50(), this, [ this ](bool isPressed)
-    {
-        if (isPressed) this->ps_onChangedWindowOpacity(50);
-    });
-
-    m_inputManager->registerHotkeyFunc(CHotkeyFunction::Opacity100(), this, [ this ](bool isPressed)
-    {
-        if (isPressed) this->ps_onChangedWindowOpacity(100);
-    });
-
-    m_inputManager->registerHotkeyFunc(CHotkeyFunction::ToogleWindowsStayOnTop(), this, [ this ](bool isPressed)
-    {
-        if (isPressed) this->ps_toogleWindowStayOnTop();
-    });
 }
 
 void SwiftGuiStd::ps_onStyleSheetsChanged()

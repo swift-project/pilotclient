@@ -4,17 +4,63 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "keyboard_windows.h"
-#include "keymapping_windows.h"
-#include <QDebug>
 
-using namespace BlackMisc::Hardware;
+using namespace BlackMisc::Input;
 
 namespace BlackInput
 {
+
+    static QHash<int, KeyCode> keyMapping
+    {
+        { '0', Key_0 },
+        { '1', Key_1 },
+        { '2', Key_2 },
+        { '3', Key_3 },
+        { '4', Key_4 },
+        { '5', Key_5 },
+        { '6', Key_6 },
+        { '7', Key_7 },
+        { '8', Key_8 },
+        { '9', Key_9 },
+        { 'A', Key_A },
+        { 'B', Key_B },
+        { 'C', Key_C },
+        { 'D', Key_D },
+        { 'E', Key_E },
+        { 'F', Key_F },
+        { 'G', Key_G },
+        { 'H', Key_H },
+        { 'I', Key_I },
+        { 'J', Key_J },
+        { 'K', Key_K },
+        { 'L', Key_L },
+        { 'M', Key_M },
+        { 'N', Key_N },
+        { 'O', Key_O },
+        { 'P', Key_P },
+        { 'Q', Key_Q },
+        { 'R', Key_R },
+        { 'S', Key_S },
+        { 'T', Key_T },
+        { 'U', Key_U },
+        { 'V', Key_V },
+        { 'W', Key_W },
+        { 'X', Key_X },
+        { 'Y', Key_Y },
+        { 'Z', Key_Z },
+        { VK_LSHIFT, Key_ShiftLeft },
+        { VK_RSHIFT, Key_ShiftRight },
+        { VK_LCONTROL, Key_ControlLeft },
+        { VK_RCONTROL, Key_ControlRight },
+        { VK_LMENU, Key_AltLeft },
+        { VK_RMENU, Key_AltRight },
+    };
+
+    static CKeyboardWindows *g_keyboardWindows = nullptr;
+
     CKeyboardWindows::CKeyboardWindows(QObject *parent) :
         IKeyboard(parent),
-        m_keyboardHook(nullptr),
-        m_mode(Mode_Nominal)
+        m_keyboardHook(nullptr)
     {
     }
 
@@ -26,103 +72,42 @@ namespace BlackInput
 
     bool CKeyboardWindows::init()
     {
+        Q_ASSERT_X(g_keyboardWindows == nullptr, "CKeyboardWindows::init", "Windows supports only one keyboard instance. Cannot initialize a second one!");
+        g_keyboardWindows = this;
         m_keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, CKeyboardWindows::keyboardProc, GetModuleHandle(NULL), 0);
         return true;
     }
 
-    void CKeyboardWindows::setKeysToMonitor(const CKeyboardKeyList &keylist)
-    {
-        m_listMonitoredKeys = keylist;
-    }
-
-    void CKeyboardWindows::startCapture(bool ignoreNextKey)
-    {
-        m_mode = Mode_Capture;
-        m_ignoreNextKey = ignoreNextKey;
-        m_pressedKey.setKeyObject(CKeyboardKey());
-    }
-
-    void CKeyboardWindows::triggerKey(const CKeyboardKey &key, bool isPressed)
-    {
-        if(!isPressed) emit keyUp(key);
-        else emit keyDown(key);
-    }
-
     void CKeyboardWindows::processKeyEvent(WPARAM vkcode, uint event)
     {
-        BlackMisc::Hardware::CKeyboardKey lastPressedKey = m_pressedKey;
-        if (m_ignoreNextKey)
-        {
-            m_ignoreNextKey = false;
-            return;
-        }
-
-        bool isFinished = false;
+        BlackMisc::Input::CHotkeyCombination oldCombination(m_keyCombination);
         if ((event == WM_KEYDOWN) || (event == WM_SYSKEYDOWN))
         {
-            if (CKeyMappingWindows::isModifier(vkcode))
-                m_pressedKey.addModifier(CKeyMappingWindows::convertToModifier(vkcode));
-            else
-            {
-                m_pressedKey.setKey(CKeyMappingWindows::convertToKey(vkcode));
-            }
+            auto key = keyMapping.value(vkcode);
+            if (key == Key_Unknown) { return; }
+            m_keyCombination.addKeyboardKey(CKeyboardKey(key));
         }
         else if ((event == WM_KEYUP) || (event == WM_SYSKEYUP) )
         {
-            if (CKeyMappingWindows::isModifier(vkcode))
-                m_pressedKey.removeModifier(CKeyMappingWindows::convertToModifier(vkcode));
-            else
-            {
-                m_pressedKey.setKey(Qt::Key_unknown);
-            }
-
-            isFinished = true;
+            auto key = keyMapping.value(vkcode);
+            if (key == Key_Unknown) { return; }
+            m_keyCombination.removeKeyboardKey(CKeyboardKey(key));
         }
 
-        if (lastPressedKey == m_pressedKey)
-            return;
-
-#ifdef DEBUG_KEYBOARD_WINDOWS
-        qDebug() << "Virtual key: " << vkcode;
-#endif
-        if (m_mode == Mode_Capture)
+        if (oldCombination != m_keyCombination)
         {
-            if (isFinished)
-            {
-                sendCaptureNotification(lastPressedKey, true);
-                m_mode = Mode_Nominal;
-            }
-            else
-            {
-                sendCaptureNotification(m_pressedKey, false);
-            }
+            emit keyCombinationChanged(m_keyCombination);
         }
-        else
-        {
-            if (m_listMonitoredKeys.contains(lastPressedKey)) emit keyUp(lastPressedKey);
-            if (m_listMonitoredKeys.contains(m_pressedKey)) emit keyDown(m_pressedKey);
-        }
-    }
-
-    void CKeyboardWindows::sendCaptureNotification(const CKeyboardKey &key, bool isFinished)
-    {
-        if (isFinished)
-            emit keySelectionFinished(key);
-        else
-            emit keySelectionChanged(key);
     }
 
     LRESULT CALLBACK CKeyboardWindows::keyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
     {
-        // This is the reason why we have to use singleton pattern. We cannot pass a object pointer to
-        // keyboardProc.
-        CKeyboardWindows *keyboardWindows = qobject_cast<CKeyboardWindows*>(IKeyboard::getInstance());
         if (nCode == HC_ACTION)
         {
             KBDLLHOOKSTRUCT *keyboardEvent =reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
             WPARAM vkCode = keyboardEvent->vkCode;
-            keyboardWindows->processKeyEvent(vkCode, wParam);
+            g_keyboardWindows->processKeyEvent(vkCode, wParam);
         }
-        return CallNextHookEx(keyboardWindows->keyboardHook(), nCode, wParam, lParam);
+        return CallNextHookEx(g_keyboardWindows->keyboardHook(), nCode, wParam, lParam);
     }
 }

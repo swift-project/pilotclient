@@ -21,27 +21,23 @@
 
 namespace BlackInput
 {
-    IJoystick *IJoystick::m_instance = nullptr;
 
     IJoystick::IJoystick(QObject *parent) :
         QObject(parent)
     {
     }
 
-    IJoystick *IJoystick::getInstance()
+    std::unique_ptr<IJoystick> IJoystick::create(QObject *parent)
     {
-        if (!m_instance)
-        {
 #if defined(Q_OS_WIN)
-            m_instance = new CJoystickWindows;
+        std::unique_ptr<IJoystick> ptr(new CJoystickWindows(parent));
 #elif defined(Q_OS_LINUX)
-            m_instance = new CJoystickLinux;
+        std::unique_ptr<IJoystick> ptr(new CJoystickLinux(parent));
 #elif defined(Q_OS_OSX)
-            m_instance = new CJoystickMac;
+        std::unique_ptr<IJoystick> ptr(new CJoystickMac(parent));
 #endif
-            Q_ASSERT_X(m_instance, "IJoystick::getInstance", "Pointer to IJoystick is nullptr!");
-        }
-        return m_instance;
+
+        return ptr;
     }
 
 } // BlackInput

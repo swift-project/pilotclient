@@ -17,28 +17,20 @@
 
 namespace BlackInput
 {
-    IKeyboard *IKeyboard::m_instance = nullptr;
 
-    IKeyboard::IKeyboard(QObject *parent) :
-        QObject(parent)
-    {
-    }
+    IKeyboard::IKeyboard(QObject *parent) : QObject(parent) {}
 
-    IKeyboard *IKeyboard::getInstance()
+    std::unique_ptr<IKeyboard> IKeyboard::create(QObject *parent)
     {
-        if (!m_instance)
-        {
 #if defined(Q_OS_WIN)
-            m_instance = new CKeyboardWindows;
+        std::unique_ptr<IKeyboard> ptr(new CKeyboardWindows(parent));
 #elif defined(Q_OS_LINUX)
-            m_instance = new CKeyboardLinux;
+        std::unique_ptr<IKeyboard> ptr(new CKeyboardLinux(parent));
 #elif defined(Q_OS_OSX)
-            m_instance = new CKeyboardMac;
+        std::unique_ptr<IKeyboard> ptr(new CKeyboardMac(parent));
 #endif
-            Q_ASSERT_X(m_instance, "IKeyboard::getInstance", "Pointer to IKeyboard is NULL!");
-            m_instance->init();
-        }
-        return m_instance;
+        ptr->init();
+        return ptr;
     }
 
 } // BlackInput

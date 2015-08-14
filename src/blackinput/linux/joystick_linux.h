@@ -13,7 +13,7 @@
 //! \file
 
 #include "blackinput/joystick.h"
-#include "blackmisc/hardware/joystickbutton.h"
+#include "blackmisc/input/joystickbutton.h"
 #include "blackmisc/collection.h"
 #include <QMap>
 #include <QString>
@@ -41,12 +41,6 @@ namespace BlackInput
         //! \brief Destructor
         virtual ~CJoystickLinux() = default;
 
-        //! \copydoc IJoystick::startCapture()
-        virtual void startCapture() override;
-
-        //! \copydoc IJoystick::triggerButton()
-        virtual void triggerButton(const BlackMisc::Hardware::CJoystickButton button, bool isPressed) override;
-
     private:
 
         friend class IJoystick;
@@ -71,8 +65,7 @@ namespace BlackInput
         void ps_readInput(QObject *object);
 
     private:
-
-        IJoystick::Mode m_mode = ModeNominal; //!< Current working mode
+        BlackMisc::Input::CHotkeyCombination m_buttonCombination;
         QSignalMapper *m_mapper = nullptr; //!< Maps device handles
         QMap<QString, QFile *> m_joysticks; //!< All read joysticks, file path <-> file instance pairs
         QFileSystemWatcher *m_inputWatcher = nullptr;

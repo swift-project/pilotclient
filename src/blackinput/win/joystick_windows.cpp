@@ -17,13 +17,13 @@
 // handling in the second branch.
 
 using namespace BlackMisc;
-using namespace BlackMisc::Hardware;
+using namespace BlackMisc::Input;
 
 namespace BlackInput
 {
 
-    const TCHAR *CJoystickWindows::m_helperWindowClassName = TEXT("SDLHelperWindowInputCatcher");
-    const TCHAR *CJoystickWindows::m_helperWindowName = TEXT("SDLHelperWindowInputMsgWindow");
+    const TCHAR *CJoystickWindows::m_helperWindowClassName = TEXT("HelperWindow");
+    const TCHAR *CJoystickWindows::m_helperWindowName = TEXT("JoystickCatcherWindow");
     ATOM CJoystickWindows::m_helperWindowClass = 0;
     HWND CJoystickWindows::m_helperWindow = nullptr;
 
@@ -41,17 +41,6 @@ namespace BlackInput
     CJoystickWindows::~CJoystickWindows()
     {
         CoUninitialize();
-    }
-
-    void CJoystickWindows::startCapture()
-    {
-        // TODO
-    }
-
-    void CJoystickWindows::triggerButton(const CJoystickButton button, bool isPressed)
-    {
-        if (!isPressed) emit buttonUp(button);
-        else emit buttonDown(button);
     }
 
     void CJoystickWindows::timerEvent(QTimerEvent * /* event */)
@@ -207,23 +196,13 @@ namespace BlackInput
 
     void CJoystickWindows::updateAndSendButtonStatus(qint32 buttonIndex, bool isPressed)
     {
-        if (isPressed)
+        BlackMisc::Input::CHotkeyCombination oldCombination(m_buttonCombination);
+        if (isPressed) { m_buttonCombination.addJoystickButton(buttonIndex); }
+        else { m_buttonCombination.removeJoystickButton(buttonIndex); }
+
+        if (oldCombination != m_buttonCombination)
         {
-            if (!m_pressedButtons.contains(buttonIndex))
-            {
-                CJoystickButton joystickButton(buttonIndex);
-                emit buttonDown(joystickButton);
-                m_pressedButtons.push_back(buttonIndex);
-            }
-        }
-        else
-        {
-            if (m_pressedButtons.contains(buttonIndex))
-            {
-                CJoystickButton joystickButton(buttonIndex);
-                emit buttonUp(joystickButton);
-                m_pressedButtons.remove(buttonIndex);
-            }
+            emit buttonCombinationChanged(m_buttonCombination);
         }
     }
 
@@ -260,7 +239,7 @@ namespace BlackInput
                 m_directInputDevice->Acquire();
                 if (FAILED(hr = m_directInputDevice->Poll()))
                 {
-                    // FIXME: print error message
+                    CLogMessage(this).warning("DirectInput error code: ") << hr;
                     return hr;
                 }
             }
@@ -273,7 +252,7 @@ namespace BlackInput
                 m_directInputDevice->Acquire();
                 if (FAILED(hr = m_directInputDevice->GetDeviceState(sizeof(DIJOYSTATE2), &state)))
                 {
-                    // FIXME: print error message
+                    CLogMessage(this).warning("DirectInput error code: ") << hr;
                     return hr;
                 }
             }

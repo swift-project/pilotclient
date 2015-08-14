@@ -125,9 +125,6 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CProject::swiftVersionString());
     this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CProject::compiledInfo());
 
-    // hotkeys
-    this->ps_registerHotkeyFunctions();
-
     // update timers
     this->startUpdateTimersWhenConnected();
 

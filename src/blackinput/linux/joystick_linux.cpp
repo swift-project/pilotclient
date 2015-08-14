@@ -18,7 +18,7 @@
 #include <fcntl.h>
 
 using namespace BlackMisc;
-using namespace BlackMisc::Hardware;
+using namespace BlackMisc::Input;
 
 namespace
 {
@@ -40,17 +40,6 @@ namespace BlackInput
         m_inputWatcher->addPath(inputDevicesDir());
         connect(m_inputWatcher, &QFileSystemWatcher::directoryChanged, this, &CJoystickLinux::ps_directoryChanged);
         ps_directoryChanged(inputDevicesDir());
-    }
-
-    void CJoystickLinux::startCapture()
-    {
-
-    }
-
-    void CJoystickLinux::triggerButton(const CJoystickButton button, bool isPressed)
-    {
-        if (!isPressed) emit buttonUp(button);
-        else emit buttonDown(button);
     }
 
     void CJoystickLinux::cleanupJoysticks()
@@ -123,17 +112,27 @@ namespace BlackInput
         QFile *joystick = qobject_cast<QFile *>(object);
         Q_ASSERT(joystick);
 
+
         struct js_event event;
         while (joystick->read(reinterpret_cast<char *>(&event), sizeof(event)) == sizeof(event))
         {
+            BlackMisc::Input::CHotkeyCombination oldCombination(m_buttonCombination);
             switch (event.type & ~JS_EVENT_INIT)
             {
             case JS_EVENT_BUTTON:
                 if (event.value)
-                    emit buttonDown(CJoystickButton(event.number));
+                {
+                    m_buttonCombination.addJoystickButton(event.number);
+                }
                 else
-                    emit buttonUp(CJoystickButton(event.number));
+                {
+                    m_buttonCombination.removeJoystickButton(event.number);
+                }
 
+                if (oldCombination != m_buttonCombination)
+                {
+                    emit buttonCombinationChanged(m_buttonCombination);
+                }
                 break;
             }
         }
