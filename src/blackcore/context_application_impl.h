@@ -35,6 +35,12 @@ namespace BlackCore
         //! \copydoc IContextApplication::changeSettings
         virtual void changeSettings(const BlackMisc::CVariantMap &settings, const BlackMisc::CIdentifier &origin) override;
 
+        //! \copydoc IContextApplication::registerHotkeyActions
+        virtual void registerHotkeyActions(const QStringList &actions, const BlackMisc::CIdentifier &origin) override;
+
+        //! \copydoc IContextApplication::callHotkeyAction
+        virtual void callHotkeyAction(const QString &action, bool argument, const BlackMisc::CIdentifier &origin) override;
+
         //! \copydoc IContextApplication::writeToFile
         virtual bool writeToFile(const QString &fileName, const QString &content) override;
 
@@ -55,9 +61,6 @@ namespace BlackCore
 
         //! \copydoc IContextApplication::existsFile
         virtual bool existsFile(const QString &fileName) const override;
-
-        //! \copydoc IContextApplication::processHotkeyFuncEvent
-        virtual void processHotkeyFuncEvent(const BlackMisc::Event::CEventHotkeyFunction &event) override;
 
     public:
         //! \todo Remove with old settings

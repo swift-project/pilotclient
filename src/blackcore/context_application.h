@@ -16,7 +16,6 @@
 #include "blackcore/context.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/audio/voiceroomlist.h"
-#include "blackmisc/eveventhotkeyfunction.h"
 #include "blackmisc/identifierlist.h"
 #include "blackmisc/variantmap.h"
 #include <QObject>
@@ -83,6 +82,14 @@ namespace BlackCore
         //! \note Used for cache relay, do not use directly
         void settingsChanged(const BlackMisc::CVariantMap &settings, const BlackMisc::CIdentifier &origin);
 
+        //! New action was registered
+        //! \note Used to register hotkey action, do not use directly
+        void hotkeyActionsRegistered(const QStringList &actions, const BlackMisc::CIdentifier &origin);
+
+        //! Call a hotkey action on a remote process
+        //! \note Used for hotkey action, do not use directly
+        void remoteHotkeyAction(const QString &action, bool argument, const BlackMisc::CIdentifier &origin);
+
         //! Work around for audio context, #382
         void fakedSetComVoiceRoom(const BlackMisc::Audio::CVoiceRoomList &requestedRooms);
 
@@ -96,6 +103,16 @@ namespace BlackCore
         //! \note Not pure because it can be called from the base class constructor.
         //! \note This is the function which relays cache changes via DBus.
         virtual void changeSettings(const BlackMisc::CVariantMap &settings, const BlackMisc::CIdentifier &origin);
+
+        //! Register hotkey action implemented by another process
+        //! \note Not pure because it can be called from the base class constructor.
+        //! \note This is the function which relays action registrations via DBus
+        virtual void registerHotkeyActions(const QStringList &actions, const BlackMisc::CIdentifier &origin);
+
+        //! Call a hotkey action on a remote process
+        //! \note Not pure because it can be called from the base class constructor.
+        //! \note This is the function which relays action calls via DBus
+        virtual void callHotkeyAction(const QString &action, bool argument, const BlackMisc::CIdentifier &origin);
 
         //! Register application, can also be used for ping
         virtual BlackMisc::CIdentifier registerApplication(const BlackMisc::CIdentifier &application) = 0;
@@ -117,9 +134,6 @@ namespace BlackCore
 
         //!  Remote enabled version of file exists
         virtual bool existsFile(const QString &fileName) const = 0;
-
-        //! Process remote event
-        virtual void processHotkeyFuncEvent(const BlackMisc::Event::CEventHotkeyFunction &event) = 0;
 
         //! Change settings
         void changeSettings(uint typeValue);

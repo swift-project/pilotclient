@@ -49,6 +49,8 @@ namespace BlackCore
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
                                "fakedSetComVoiceRoom", this, SIGNAL(fakedSetComVoiceRoom(BlackMisc::Audio::CVoiceRoomList)));
         Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
+                               "hotkeyActionsRegistered", this, SIGNAL(hotkeyActionsRegistered(QStringList, BlackMisc::CIdentifier)));
         Q_UNUSED(s);
     }
 
@@ -60,6 +62,16 @@ namespace BlackCore
     void CContextApplicationProxy::changeSettings(const CVariantMap &settings, const CIdentifier &origin)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("changeSettings"), settings, origin);
+    }
+
+    void CContextApplicationProxy::registerHotkeyActions(const QStringList &actions, const CIdentifier &origin)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("registerHotkeyActions"), actions, origin);
+    }
+
+    void CContextApplicationProxy::callHotkeyAction(const QString &action, bool argument, const CIdentifier &origin)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("callHotkeyAction"), action, argument, origin);
     }
 
     BlackMisc::CIdentifier CContextApplicationProxy::registerApplication(const CIdentifier &application)
@@ -99,11 +111,6 @@ namespace BlackCore
     {
         if (fileName.isEmpty()) { return false; }
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("existsFile"), fileName);
-    }
-
-    void CContextApplicationProxy::processHotkeyFuncEvent(const BlackMisc::Event::CEventHotkeyFunction &event)
-    {
-        this->m_dBusInterface->callDBus(QLatin1Literal("processHotkeyFuncEvent"), event);
     }
 
 } // namespace

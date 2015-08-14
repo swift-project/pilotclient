@@ -15,9 +15,11 @@
 #include "blackcore/settingscache.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/loghandler.h"
+#include "blackmisc/logmessage.h"
 #include <QCoreApplication>
 #include <QThread>
 
+using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Settings;
 
@@ -58,6 +60,31 @@ namespace BlackCore
         });
 
         changeSettings(IContextSettings::SettingsHotKeys);
+        bool s = connect(CInputManager::instance(), &CInputManager::hotkeyActionRegistered, [this](const QStringList &actions)
+        {
+            this->registerHotkeyActions(actions, {});
+        });
+        Q_ASSERT(s);
+        s = connect(this, &IContextApplication::hotkeyActionsRegistered, [this](const QStringList &actions, const CIdentifier &origin)
+        {
+            if(origin.isFromSameProcess()) { return; }
+            CInputManager::instance()->registerRemoteActions(actions);
+        });
+        Q_ASSERT(s);
+
+        connect(CInputManager::instance(), &CInputManager::remoteActionFromLocal, [this](const QString &action, bool argument)
+        {
+            this->callHotkeyAction(action, argument, {});
+        });
+        connect(this, &IContextApplication::remoteHotkeyAction, [this](const QString &action, bool argument, const CIdentifier &origin)
+        {
+            if(origin.isFromLocalMachine()) { return; }
+            CInputManager::instance()->callFunctionsBy(action, argument);
+            CLogMessage(this, CLogCategory::contextSlot()).debug() << "Calling function" << action << "from origin" << origin.getMachineName();
+        });
+
+        // Enable event forwarding from GUI process to core
+        CInputManager::instance()->setForwarding(true);
     }
 
     void IContextApplication::changeSettings(const CVariantMap &settings, const CIdentifier &origin)
@@ -65,6 +92,20 @@ namespace BlackCore
         Q_UNUSED(settings);
         Q_UNUSED(origin);
         qFatal("Not implemented"); // avoid losing a change during context interface construction
+    }
+
+    void IContextApplication::registerHotkeyActions(const QStringList &actions, const BlackMisc::CIdentifier &origin)
+    {
+        Q_UNUSED(actions);
+        Q_UNUSED(origin);
+        qFatal("Not implemented"); // avoid losing a change during context interface construction
+    }
+
+    void IContextApplication::callHotkeyAction(const QString &action, bool argument, const BlackMisc::CIdentifier &origin)
+    {
+        Q_UNUSED(action);
+        Q_UNUSED(argument);
+        Q_UNUSED(origin);
     }
 
     void IContextApplication::changeSettings(uint typeValue)

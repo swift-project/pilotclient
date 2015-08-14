@@ -47,6 +47,18 @@ namespace BlackCore
         emit this->settingsChanged(settings, origin);
     }
 
+    void CContextApplication::registerHotkeyActions(const QStringList &actions, const CIdentifier &origin)
+    {
+        // Intentionally don't check for round trip here
+        emit this->hotkeyActionsRegistered(actions, origin);
+    }
+
+    void CContextApplication::callHotkeyAction(const QString &action, bool argument, const CIdentifier &origin)
+    {
+        // Intentionally don't check for round trip here
+        emit this->remoteHotkeyAction(action, argument, origin);
+    }
+
     bool CContextApplication::writeToFile(const QString &fileName, const QString &content)
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << fileName << content.left(25); }
@@ -67,8 +79,17 @@ namespace BlackCore
     CIdentifier CContextApplication::registerApplication(const CIdentifier &application)
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << application; }
-        this->m_registeredApplications.replaceOrAdd(application, application);
-        emit registrationChanged();
+        if (!m_registeredApplications.contains(application))
+        {
+            m_registeredApplications.push_back(application);
+            emit registrationChanged();
+            emit this->hotkeyActionsRegistered(CInputManager::instance()->allAvailableActions(), {});
+        }
+        else
+        {
+            m_registeredApplications.replace(application, application);
+        }
+
         return application;
     }
 
@@ -112,12 +133,6 @@ namespace BlackCore
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << fileName; }
         if (fileName.isEmpty()) return false;
         return QFile::exists(fileName);
-    }
-
-    void CContextApplication::processHotkeyFuncEvent(const BlackMisc::Event::CEventHotkeyFunction &event)
-    {
-        CInputManager::getInstance()->callFunctionsBy(event.getFunction(), event.getFunctionArgument());
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << "Calling function from origin" << event.getEventOriginator().toQString();
     }
 
 } // namespace
