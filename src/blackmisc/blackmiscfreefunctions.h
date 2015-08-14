@@ -90,9 +90,9 @@ namespace BlackMisc
         BLACKMISC_EXPORT bool startWindowsMixer();
     }
 
-    namespace Hardware
+    namespace Input
     {
-        //! Register metadata for Hardware
+        //! Register metadata for Input
         BLACKMISC_EXPORT void registerMetadata();
     }
 
@@ -327,7 +327,6 @@ namespace BlackMisc
 
     //! Merges an incremental json object into an existing one
     BLACKMISC_EXPORT QJsonObject applyIncrementalObject(const QJsonObject &previousObject, const QJsonObject &incrementalObject);
-
 
 } // BlackMisc
 

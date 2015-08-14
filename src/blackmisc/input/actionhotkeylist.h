@@ -1,0 +1,66 @@
+/* Copyright (C) 2015
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
+
+#ifndef BLACKMISC_INPUT_ACTIONHOTKEYLIST_H
+#define BLACKMISC_INPUT_ACTIONHOTKEYLIST_H
+
+#include "blackmisc/blackmiscexport.h"
+#include "actionhotkey.h"
+#include "blackmisc/collection.h"
+#include "blackmisc/sequence.h"
+
+namespace BlackMisc
+{
+    namespace Input
+    {
+        //! Value object encapsulating a list of hotkeys
+        class BLACKMISC_EXPORT CActionHotkeyList :
+            public CSequence<CActionHotkey>,
+            public BlackMisc::Mixin::MetaType<CActionHotkeyList>
+        {
+        public:
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CActionHotkeyList)
+
+            //! Default constructor
+            CActionHotkeyList() = default;
+
+            //! Construct from std::initializer_list<bool>
+            CActionHotkeyList(std::initializer_list<CActionHotkey> il) : CSequence<CActionHotkey>(il) {}
+
+            //! Construct from a base class object.
+            CActionHotkeyList(const CSequence<CActionHotkey> &baseClass);
+
+            //! Returns true if this list has a action hotkey with a combination which is a subset of other
+            //! Example:
+            //! List contains CTRL and other has combination CTRL-F
+            CActionHotkeyList findSubsetsOf(const CActionHotkey &other);
+
+            //! Returns true if this list has a hotkey with a combination for which other is a subset
+            //! Example:
+            //! List contains CTRL-F and other has combination CTRL
+            CActionHotkeyList findSupersetsOf(const CActionHotkey &other);
+
+            //! Compare two CHotkeyList
+            //! \todo Remove once https://dev.vatsim-germany.org/issues/459 is fixed
+            friend int compare(const CActionHotkeyList &a, const CActionHotkeyList &b)
+            {
+                return compare(static_cast<const CSequence<CActionHotkey> &>(a), static_cast<const CSequence<CActionHotkey> &>(b));
+            }
+        };
+
+    }
+} // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::Input::CActionHotkeyList)
+Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Input::CActionHotkey>)
+Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Input::CActionHotkey>)
+
+#endif // guard

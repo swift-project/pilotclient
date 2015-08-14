@@ -12,6 +12,7 @@
 #include "geo/geo.h"
 #include "audio/audio.h"
 #include "hardware/hardware.h"
+#include "input/input.h"
 #include "settingsblackmiscclasses.h"
 #include "propertyindexlist.h"
 #include "propertyindexvariantmap.h"
@@ -55,16 +56,15 @@ void BlackMisc::Audio::registerMetadata()
     CVoiceRoomList::registerMetadata();
 }
 
-void BlackMisc::Hardware::registerMetadata()
+void BlackMisc::Input::registerMetadata()
 {
     CKeyboardKey::registerMetadata();
     CKeyboardKeyList::registerMetadata();
     CJoystickButton::registerMetadata();
-}
-
-void BlackMisc::Event::registerMetadata()
-{
-    CEventHotkeyFunction::registerMetadata();
+    CJoystickButtonList::registerMetadata();
+    CActionHotkey::registerMetadata();
+    CActionHotkeyList::registerMetadata();
+    CHotkeyCombination::registerMetadata();
 }
 
 void BlackMisc::registerMetadata()
@@ -101,6 +101,7 @@ void BlackMisc::registerMetadata()
     Hardware::registerMetadata();
     Event::registerMetadata();
     Weather::registerMetadata();
+    Input::registerMetadata();
 
     // needed by XBus proxy class
     qRegisterMetaType<CSequence<double>>();
