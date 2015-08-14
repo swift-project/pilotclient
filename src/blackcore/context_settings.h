@@ -16,7 +16,6 @@
 #include "blackcore/context.h"
 #include "blackcore/dbus_server.h"
 #include "blackinput/keyboard.h"
-#include "blackmisc/setkeyboardhotkeylist.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/dbus.h"
 #include "blackmisc/variant.h"
@@ -48,7 +47,6 @@ namespace BlackCore
         //! Settings type
         enum SettingsType
         {
-            SettingsHotKeys,
             SettingsNetwork,
             SettingsAudio,
             SettingsSimulator
@@ -91,13 +89,6 @@ namespace BlackCore
             return s;
         }
 
-        //! Path for hotkeys
-        static const QString &PathHotkeys()
-        {
-            static QString s("hotkeys");
-            return s;
-        }
-
         //! Factory method
         static IContextSettings *create(CRuntime *parent, CRuntimeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &conn);
 
@@ -115,9 +106,6 @@ namespace BlackCore
 
         //! Audio settings
         virtual BlackMisc::Settings::CSettingsAudio getAudioSettings() const = 0;
-
-        //! Hotkeys
-        virtual BlackMisc::Settings::CSettingKeyboardHotkeyList getHotkeys() const = 0;
 
         //! Save settings
         virtual BlackMisc::CStatusMessage write() const = 0;

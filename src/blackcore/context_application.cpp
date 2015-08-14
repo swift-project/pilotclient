@@ -59,7 +59,6 @@ namespace BlackCore
             CSettingsCache::instance()->changeValuesFromRemote(settings, origin);
         });
 
-        changeSettings(IContextSettings::SettingsHotKeys);
         bool s = connect(CInputManager::instance(), &CInputManager::hotkeyActionRegistered, [this](const QStringList &actions)
         {
             this->registerHotkeyActions(actions, {});
@@ -110,18 +109,7 @@ namespace BlackCore
 
     void IContextApplication::changeSettings(uint typeValue)
     {
-        auto type = static_cast<IContextSettings::SettingsType>(typeValue);
-        switch (type)
-        {
-        case IContextSettings::SettingsHotKeys:
-        {
-            CSettingKeyboardHotkeyList hotkeys = getIContextSettings()->getHotkeys();
-            CInputManager::getInstance()->changeHotkeySettings(hotkeys);
-            break;
-        }
-        default:
-            break;
-        }
+        Q_UNUSED(typeValue);
     }
 
 } // namespace

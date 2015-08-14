@@ -262,12 +262,6 @@ void SwiftGuiStd::ps_displayStatusMessageInGui(const CStatusMessage &statusMessa
     }
 }
 
-void SwiftGuiStd::ps_onChangedSetttings(uint typeValue)
-{
-    IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(typeValue);
-    if (type == IContextSettings::SettingsHotKeys) this->ps_registerHotkeyFunctions();
-}
-
 void SwiftGuiStd::ps_onConnectionTerminated()
 {
     this->updateGuiStatusInformation();

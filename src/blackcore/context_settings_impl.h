@@ -19,7 +19,6 @@
 
 #include "blackcore/settingsallclasses.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackmisc/hardware/keyboardkeylist.h"
 
 namespace BlackCore
 {
@@ -57,9 +56,6 @@ namespace BlackCore
         //! \copydoc IContextSettings::getAudioSettings()
         virtual BlackMisc::Settings::CSettingsAudio getAudioSettings() const override;
 
-        //! \copydoc IContextSettings::getHotkeys()
-        virtual BlackMisc::Settings::CSettingKeyboardHotkeyList getHotkeys() const override;
-
         //! read settings
         virtual BlackMisc::CStatusMessage read() override;
 
@@ -80,7 +76,6 @@ namespace BlackCore
         const QString &getSettingsDirectory() const { return BlackMisc::Settings::CSettingUtilities::getSettingsDirectory(); }
 
         BlackMisc::Settings::CSettingsAudio m_settingsAudio;
-        BlackMisc::Settings::CSettingKeyboardHotkeyList m_hotkeys;
         QJsonDocument toJsonDocument() const;
         void emitCompletelyChanged();
     };

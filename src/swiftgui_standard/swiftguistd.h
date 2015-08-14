@@ -26,7 +26,6 @@
 #include "blackgui/models/serverlistmodel.h"
 #include "blackgui/models/userlistmodel.h"
 #include "blackgui/models/statusmessagelistmodel.h"
-#include "blackgui/models/keyboardkeylistmodel.h"
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/managedstatusbar.h"
 #include "blackmisc/network/textmessage.h"
@@ -194,9 +193,6 @@ private slots:
 
     //! Display status message
     void ps_displayStatusMessageInGui(const BlackMisc::CStatusMessage &);
-
-    //! Settings have been changed
-    void ps_onChangedSetttings(uint typeValue);
 
     //! Connection status changed
     //! \param from  old status, as int so it is compliant with DBus

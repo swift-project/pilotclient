@@ -14,7 +14,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Settings;
 using namespace BlackMisc::Network;
-using namespace BlackMisc::Hardware;
+using namespace BlackMisc::Input;
 
 namespace BlackCore
 {
@@ -47,14 +47,6 @@ namespace BlackCore
     CSettingsAudio CContextSettingsProxy::getAudioSettings() const
     {
         return this->m_dBusInterface->callDBusRet<CSettingsAudio>(QLatin1Literal("getAudioSettings"));
-    }
-
-    /*
-     * Relay to DBus
-     */
-    CSettingKeyboardHotkeyList CContextSettingsProxy::getHotkeys() const
-    {
-        return this->m_dBusInterface->callDBusRet<CSettingKeyboardHotkeyList>(QLatin1Literal("getHotkeys"));
     }
 
     /*

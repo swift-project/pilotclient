@@ -14,7 +14,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Settings;
-using namespace BlackMisc::Hardware;
+using namespace BlackMisc::Input;
 
 namespace BlackCore
 {
@@ -56,15 +56,6 @@ namespace BlackCore
         {
             this->m_settingsAudio.initDefaultValues();
         }
-
-        // init own members
-        if (jsonObject.contains(IContextSettings::PathHotkeys()))
-        {
-            this->m_hotkeys.convertFromJson(
-                jsonObject.value(IContextSettings::PathHotkeys()).toObject()
-            );
-        }
-        this->m_hotkeys.initAsHotkeyList(false); // update missing parts
 
         if (ok)
         {
@@ -108,7 +99,6 @@ namespace BlackCore
      */
     CStatusMessage CContextSettings::reset(bool write)
     {
-        this->m_hotkeys.initAsHotkeyList(true);
         this->m_settingsAudio.initDefaultValues();
         this->emitCompletelyChanged();
         if (write)
@@ -134,7 +124,6 @@ namespace BlackCore
     {
         QJsonObject jsonObject;
         jsonObject.insert(IContextSettings::PathAudioSettings(), this->m_settingsAudio.toJson());
-        jsonObject.insert(IContextSettings::PathHotkeys(), this->m_hotkeys.toJson());
         QJsonDocument doc(jsonObject);
         return doc;
     }
@@ -144,18 +133,9 @@ namespace BlackCore
      */
     void CContextSettings::emitCompletelyChanged()
     {
-        emit this->changedSettings(IContextSettings::SettingsHotKeys);
         emit this->changedSettings(IContextSettings::SettingsNetwork);
         emit this->changedSettings(IContextSettings::SettingsAudio);
         emit this->changedSettings(IContextSettings::SettingsSimulator);
-    }
-
-    /*
-     * Hotkeys
-     */
-    CSettingKeyboardHotkeyList CContextSettings::getHotkeys() const
-    {
-        return this->m_hotkeys;
     }
 
     /*
@@ -177,17 +157,6 @@ namespace BlackCore
         BlackMisc::CStatusMessageList msgs;
         if (path.contains(IContextSettings::PathRoot()))
         {
-            if (path.contains(IContextSettings::PathHotkeys()))
-            {
-                if (command == CSettingUtilities::CmdUpdate())
-                {
-                    auto hotkeys = value.value<BlackMisc::Settings::CSettingKeyboardHotkeyList>();
-                    this->m_hotkeys = hotkeys;
-                    msgs.push_back(this->write()); // write settings
-                    emit this->changedSettings(static_cast<uint>(SettingsHotKeys));
-                    return msgs;
-                }
-            }
         }
 
         // next level

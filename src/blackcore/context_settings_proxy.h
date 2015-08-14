@@ -12,7 +12,6 @@
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/genericdbusinterface.h"
 #include "blackmisc/settingutilities.h"
-#include "blackmisc/hardware/keyboardkeylist.h"
 
 namespace BlackCore
 {
@@ -45,9 +44,6 @@ namespace BlackCore
     public slots:
         //! \copydoc IContextSettings::getAudioSettings()
         virtual BlackMisc::Settings::CSettingsAudio getAudioSettings() const override;
-
-        //! \copydoc IContextSettings::getHotkeys()
-        virtual BlackMisc::Settings::CSettingKeyboardHotkeyList getHotkeys() const override;
 
         //! \copydoc IContextSettings::value
         virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const BlackMisc::CVariant &value) override;
