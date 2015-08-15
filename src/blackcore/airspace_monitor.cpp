@@ -25,6 +25,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Weather;
 
 namespace BlackCore
 {
@@ -60,6 +61,7 @@ namespace BlackCore
         // AutoConnection: this should also avoid race conditions by updating the bookings
         this->connect(this->m_webDataReader->getBookingReader(), &CVatsimBookingReader::dataRead, this, &CAirspaceMonitor::ps_receivedBookings);
         this->connect(this->m_webDataReader->getDataFileReader(), &CVatsimDataFileReader::dataRead, this, &CAirspaceMonitor::ps_receivedDataFile);
+        this->connect(this->m_webDataReader->getMetarReader(), &CVatsimMetarReader::metarUpdated, this, &CAirspaceMonitor::ps_updateMetars);
 
         // Force snapshot in the main event loop
         this->connect(this->m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, this, &CAirspaceMonitor::airspaceAircraftSnapshot, Qt::QueuedConnection);
@@ -322,31 +324,9 @@ namespace BlackCore
         return m_otherClients;
     }
 
-    BlackMisc::Aviation::CInformationMessage CAirspaceMonitor::getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode)
+    CMetar CAirspaceMonitor::getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode)
     {
-        CInformationMessage metar;
-        if (airportIcaoCode.isEmpty()) return metar;
-        if (this->m_metarCache.contains(airportIcaoCode)) metar = this->m_metarCache[airportIcaoCode];
-        if (metar.isEmpty() || metar.timeDiffReceivedMs() > 10 * 1000)
-        {
-            // outdated, or not in cache at all
-            this->m_network->sendMetarQuery(airportIcaoCode);
-
-            // with this little trick we try to make an asynchronous signal / slot
-            // based approach a synchronous return value
-            QTime waitForMetar = QTime::currentTime().addMSecs(1000);
-            while (QTime::currentTime() < waitForMetar)
-            {
-                // process some other events and hope network answer is received already
-                QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-                if (m_metarCache.contains(airportIcaoCode))
-                {
-                    metar = this->m_metarCache[airportIcaoCode];
-                    break;
-                }
-            }
-        }
-        return metar;
+        return m_metars.findFirstByOrDefault(&CMetar::getAirportIcaoCode, airportIcaoCode);
     }
 
     CAtcStation CAirspaceMonitor::getAtcStationForComUnit(const CComSystem &comSystem)
@@ -400,7 +380,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::clear()
     {
-        m_metarCache.clear();
+        m_metars.clear();
         m_flightPlanCache.clear();
         m_icaoCodeCache.clear();
 
@@ -548,21 +528,9 @@ namespace BlackCore
         this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
     }
 
-    void CAirspaceMonitor::ps_metarReceived(const QString &metarMessage)
+    void CAirspaceMonitor::ps_metarReceived(const QString & /** metarMessage **/)
     {
-        if (!this->m_connected || metarMessage.length() < 10) return; // invalid
-        const QString icaoCode = metarMessage.left(4).toUpper();
-        const QString icaoCodeTower = icaoCode + "_TWR";
-        CCallsign callsignTower(icaoCodeTower);
-        CInformationMessage metar(CInformationMessage::METAR, metarMessage);
-
-        // add METAR to existing stations
-        CPropertyIndexVariantMap vm(CAtcStation::IndexMetar, CVariant::from(metar));
-        this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsignTower, vm);
-        this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsignTower, vm);
-        this->m_metarCache.insert(icaoCode, metar);
-        if (this->m_atcStationsOnline.containsCallsign(callsignTower)) { emit this->changedAtcStationsOnline(); }
-        if (this->m_atcStationsBooked.containsCallsign(callsignTower)) { emit this->changedAtcStationsBooked(); }
+        // deprecated
     }
 
     void CAirspaceMonitor::ps_flightPlanReceived(const CCallsign &callsign, const CFlightPlan &flightPlan)
@@ -645,6 +613,12 @@ namespace BlackCore
             if (vc.isUnknown()) { continue; }
             client->setVoiceCapabilities(vc);
         }
+    }
+
+    void CAirspaceMonitor::ps_updateMetars(const CMetarSet &metars)
+    {
+        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
+        m_metars = metars;
     }
 
     void CAirspaceMonitor::ps_sendReadyForModelMatching(const CCallsign &callsign, int trial)

@@ -16,6 +16,7 @@
 #include "blackcore/context.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/weather/metar.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
@@ -140,6 +141,9 @@ namespace BlackCore
         //! Bookings read
         void vatsimBookingsRead(int number);
 
+        //! Metar read
+        void vatsimMetarsRead(int number);
+
         //! ICAO codes read
         void aircraftIcaoCodeRead(int number);
 
@@ -238,7 +242,7 @@ namespace BlackCore
         virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) = 0;
 
         //! Get METAR, if not available request it (code such as EDDF, KLAX)
-        virtual BlackMisc::Aviation::CInformationMessage getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) = 0;
+        virtual BlackMisc::Weather::CMetar getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) = 0;
 
         //! Use the selected COM1/2 frequencies, and get the corresponding voice room for it
         virtual BlackMisc::Audio::CVoiceRoomList getSelectedVoiceRooms() const = 0;

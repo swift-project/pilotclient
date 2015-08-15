@@ -12,6 +12,7 @@
 #include "ui_atcstationcomponent.h"
 #include "blackmisc/aviation/informationmessage.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/weather/metar.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_ownaircraft.h"
 
@@ -21,6 +22,7 @@ using namespace BlackGui::Views;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Weather;
 using namespace BlackCore;
 
 namespace BlackGui
@@ -135,7 +137,6 @@ namespace BlackGui
             {
                 this->ui->tvp_AtcStationsOnline->clear();
                 this->updateTreeView();
-                this->ui->le_AtcStationsOnlineMetar->clear();
             }
         }
 
@@ -146,24 +147,22 @@ namespace BlackGui
 
         void CAtcStationComponent::getMetar(const QString &airportIcaoCode)
         {
-            if (!this->getIContextNetwork()->isConnected())
-            {
-                this->ui->te_AtcStationsOnlineInfo->clear();
-                return;
-            }
             QString icao = airportIcaoCode.isEmpty() ? this->ui->le_AtcStationsOnlineMetar->text().trimmed().toUpper() : airportIcaoCode.trimmed().toUpper();
             this->ui->le_AtcStationsOnlineMetar->setText(icao);
             if (icao.length() != 4) { return; }
-            CInformationMessage metar = this->getIContextNetwork()->getMetar(icao);
-            if (metar.getType() != CInformationMessage::METAR) { return; }
-            if (metar.isEmpty())
+            CMetar metar = this->getIContextNetwork()->getMetar(icao);
+            if (metar == CMetar())
             {
                 this->ui->te_AtcStationsOnlineInfo->clear();
             }
             else
             {
-                this->ui->te_AtcStationsOnlineInfo->setText(metar.getMessage());
+                QString metarText = metar.getMessage();
+                metarText += "\n\n";
+                metarText += metar.getMetarText();
+                this->ui->te_AtcStationsOnlineInfo->setText(metarText);
             }
+            this->ui->le_AtcStationsOnlineMetar->clear();
         }
 
         void CAtcStationComponent::ps_reloadAtcStationsBooked()
@@ -210,7 +209,6 @@ namespace BlackGui
             {
                 this->ui->tvp_AtcStationsOnline->clear();
                 this->updateTreeView();
-                this->ui->le_AtcStationsOnlineMetar->clear();
             }
         }
 

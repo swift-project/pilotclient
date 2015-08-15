@@ -10,6 +10,7 @@
 #include "blackcore/web_datareader.h"
 #include "vatsimbookingreader.h"
 #include "vatsimdatafilereader.h"
+#include "vatsim_metar_reader.h"
 #include "icaodatareader.h"
 #include "modeldatareader.h"
 #include "global_reader_settings.h"
@@ -32,7 +33,9 @@ namespace BlackCore
         this->initReaders(readerFlags);
     }
 
-    QList<QMetaObject::Connection> CWebDataReader::connectVatsimDataSignals(std::function<void(int)> bookingsRead, std::function<void(int)> dataFileRead)
+    QList<QMetaObject::Connection> CWebDataReader::connectVatsimDataSignals(std::function<void(int)> bookingsRead,
+                                                                            std::function<void(int)> dataFileRead,
+                                                                            std::function<void(int)> metarRead)
     {
         // bind does not allow to define connection type
         // so anything in its own thread will be sent with this thread affinity
@@ -50,6 +53,13 @@ namespace BlackCore
             QMetaObject::Connection c2 = connect(this, &CWebDataReader::vatsimDataFileRead, dataFileRead);
             Q_ASSERT_X(c2, Q_FUNC_INFO, "connect failed");
             cl.append(c2);
+        }
+
+        if (m_readerFlags.testFlag(VatsimMetarReader))
+        {
+            QMetaObject::Connection c3 = connect(this, &CWebDataReader::vatsimMetarRead, metarRead);
+            Q_ASSERT_X(c3, Q_FUNC_INFO, "connect failed");
+            cl.append(c3);
         }
         return cl;
     }
@@ -138,6 +148,7 @@ namespace BlackCore
         this->disconnect(); // all signals
         if (this->m_vatsimBookingReader)  { this->m_vatsimBookingReader->requestStop();  this->m_vatsimBookingReader->quit(); }
         if (this->m_vatsimDataFileReader) { this->m_vatsimDataFileReader->requestStop(); this->m_vatsimDataFileReader->quit(); }
+        if (this->m_vatsimMetarReader) { this->m_vatsimMetarReader->requestStop(); this->m_vatsimMetarReader->quit(); }
     }
 
     const CLogCategoryList &CWebDataReader::getLogCategories()
@@ -166,7 +177,16 @@ namespace BlackCore
             this->m_vatsimDataFileReader->setInterval(90 * 1000);
         }
 
-        // 3. ICAO data reader
+        // 3. VATSIM metar
+        if (flags.testFlag(VatsimMetarReader))
+        {
+            this->m_vatsimMetarReader = new CVatsimMetarReader(this, CGlobalReaderSettings::instance().vatsimMetarUrl());
+            connect(this->m_vatsimMetarReader, &CVatsimMetarReader::metarUpdated, this, &CWebDataReader::ps_metarRead);
+            this->m_vatsimMetarReader->start();
+            this->m_vatsimMetarReader->setInterval(5 * 60 * 1000);
+        }
+
+        // 4. ICAO data reader
         if (flags.testFlag(IcaoDataReader))
         {
             this->m_icaoDataReader = new CIcaoDataReader(this, CGlobalReaderSettings::instance().protocolIcaoReader(), CGlobalReaderSettings::instance().serverIcaoReader(), CGlobalReaderSettings::instance().baseUrlIcaoReader());
@@ -175,7 +195,7 @@ namespace BlackCore
             this->m_icaoDataReader->start();
         }
 
-        // 4. Model reader
+        // 5. Model reader
         if (flags.testFlag(ModelReader))
         {
             this->m_modelDataReader = new CModelDataReader(this, CGlobalReaderSettings::instance().protocolModelReader(), CGlobalReaderSettings::instance().serverModelReader(), CGlobalReaderSettings::instance().baseUrlModelReader());
@@ -196,6 +216,12 @@ namespace BlackCore
     {
         CLogMessage(this).info("Read VATSIM data file, %1 lines") << lines;
         emit vatsimDataFileRead(lines);
+    }
+
+    void CWebDataReader::ps_metarRead(const BlackMisc::Weather::CMetarSet &metars)
+    {
+        CLogMessage(this).info("Read %1 VATSIM metar stations") << metars.size();
+        emit vatsimMetarRead(metars.size());
     }
 
     void CWebDataReader::ps_readAircraftIcaoCodes(int number)
@@ -241,6 +267,7 @@ namespace BlackCore
 
         if (this->m_vatsimBookingReader) {this->m_vatsimBookingReader->readInBackgroundThread(); }
         if (this->m_vatsimDataFileReader) this->m_vatsimDataFileReader->readInBackgroundThread();
+        if (this->m_vatsimMetarReader) this->m_vatsimMetarReader->readInBackgroundThread();
         if (this->m_icaoDataReader) { this->m_icaoDataReader->readInBackgroundThread(); }
         if (this->m_modelDataReader) { this->m_modelDataReader->readInBackgroundThread(); }
     }

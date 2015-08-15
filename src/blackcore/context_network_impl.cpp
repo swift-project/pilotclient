@@ -14,6 +14,7 @@
 #include "context_simulator.h"
 #include "context_ownaircraft_impl.h"
 #include "network_vatlib.h"
+#include "vatsim_metar_reader.h"
 #include "airspace_monitor.h"
 #include "web_datareader.h"
 #include "blackmisc/networkutils.h"
@@ -32,6 +33,7 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Weather;
 
 namespace BlackCore
 {
@@ -59,7 +61,8 @@ namespace BlackCore
         this->m_webDataReader = new CWebDataReader(CWebDataReader::AllReaders, this);
         this->m_webReaderSignalConnections = this->m_webDataReader->connectVatsimDataSignals(
                 std::bind(&CContextNetwork::vatsimBookingsRead, this, std::placeholders::_1),
-                std::bind(&CContextNetwork::vatsimDataFileRead, this, std::placeholders::_1));
+                std::bind(&CContextNetwork::vatsimDataFileRead, this, std::placeholders::_1),
+                std::bind(&CContextNetwork::vatsimMetarsRead, this, std::placeholders::_1));
         this->m_webReaderSignalConnections.append(
             this->m_webDataReader->connectSwiftDatabaseSignals(
                 this, // the object here must be the same as in the bind
@@ -441,6 +444,12 @@ namespace BlackCore
         m_airspace->analyzer()->setSimulatorRenderRestrictionsChanged(restricted, enabled, maxAircraft, maxRenderedDistance, maxRenderedBoundary);
     }
 
+    void CContextNetwork::ps_updateMetars(const BlackMisc::Weather::CMetarSet &metars)
+    {
+        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        CLogMessage(this).info("%1 METARs updated") << metars.size();
+    }
+
     void CContextNetwork::ps_checkForSupervisiorTextMessage(const CTextMessageList &messages)
     {
         if (messages.containsPrivateMessages())
@@ -617,7 +626,7 @@ namespace BlackCore
         this->m_airspace->testAddAircraftParts(parts, incremental);
     }
 
-    BlackMisc::Aviation::CInformationMessage CContextNetwork::getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode)
+    CMetar CContextNetwork::getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode)
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << airportIcaoCode; }
         return m_airspace->getMetar(airportIcaoCode);

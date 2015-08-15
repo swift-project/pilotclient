@@ -14,12 +14,14 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/network.h"
+#include "blackcore/vatsim_metar_reader.h"
 #include "airspace_analyzer.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
+#include "blackmisc/weather/metarset.h"
 #include "blackmisc/network/clientlist.h"
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/network/userlist.h"
@@ -116,7 +118,7 @@ namespace BlackCore
         BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const;
 
         //! Returns a METAR for the given airport, if available
-        BlackMisc::Aviation::CInformationMessage getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode);
+        BlackMisc::Weather::CMetar getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode);
 
         //! Returns the current online ATC stations
         BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const { return m_atcStationsOnline; }
@@ -205,13 +207,13 @@ namespace BlackCore
         BlackMisc::Aviation::CAtcStationList m_atcStationsBooked;
         BlackMisc::Network::CClientList      m_otherClients;
         BlackMisc::Simulation::CSimulatedAircraftList  m_aircraftInRange;
+        BlackMisc::Weather::CMetarSet m_metars;
 
         // hashs, because not sorted by key but keeping order
         CSituationsPerCallsign m_situationsByCallsign; //!< situations, for performance reasons per callsign
         CPartsPerCallsign      m_partsByCallsign;      //!< parts, for performance reasons per callsign
         BlackMisc::Aviation::CCallsignSet m_aircraftSupportingParts; //!< aircraft supporting parts
 
-        QMap<BlackMisc::Aviation::CAirportIcaoCode, BlackMisc::Aviation::CInformationMessage> m_metarCache;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan>                m_flightPlanCache;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftIcaoData>          m_icaoCodeCache;
 
@@ -277,6 +279,7 @@ namespace BlackCore
         void ps_frequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
         void ps_receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
         void ps_receivedDataFile();
+        void ps_updateMetars(const BlackMisc::Weather::CMetarSet &metars);
         void ps_aircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, bool isFull);
         void ps_aircraftInterimUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
         void ps_sendInterimPositions();

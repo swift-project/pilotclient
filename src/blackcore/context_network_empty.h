@@ -134,11 +134,11 @@ namespace BlackCore
         }
 
         //! \copydoc IContextNetwork::getMetar
-        virtual BlackMisc::Aviation::CInformationMessage getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) override
+        BlackMisc::Weather::CMetar getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) override
         {
             Q_UNUSED(airportIcaoCode);
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Aviation::CInformationMessage();
+            return {};
         }
 
         //! \copydoc IContextNetwork::getSelectedVoiceRooms()

@@ -20,6 +20,7 @@
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/weather/metarset.h"
 #include <QObject>
 
 namespace BlackCore
@@ -28,6 +29,7 @@ namespace BlackCore
     class CVatsimDataFileReader;
     class CIcaoDataReader;
     class CModelDataReader;
+    class CVatsimMetarReader;
 
     /**
      * Encapsulates reading data from web sources
@@ -43,9 +45,10 @@ namespace BlackCore
             None = 0,
             VatsimBookingReader  = 1 << 0,
             VatsimDataReader     = 1 << 1,
-            IcaoDataReader       = 1 << 2,
-            ModelReader          = 1 << 3,
-            AllVatsimReaders     = VatsimBookingReader | VatsimDataReader,
+            VatsimMetarReader    = 1 << 2,
+            IcaoDataReader       = 1 << 3,
+            ModelReader          = 1 << 4,
+            AllVatsimReaders     = VatsimBookingReader | VatsimDataReader | VatsimMetarReader,
             AllSwiftDbReaders    = IcaoDataReader | ModelReader,
             AllReaders           = 0xFFFF
         };
@@ -58,7 +61,9 @@ namespace BlackCore
         void gracefulShutdown();
 
         //! Relay signals for VATSIM data
-        QList<QMetaObject::Connection> connectVatsimDataSignals(std::function<void(int)> bookingsRead, std::function<void(int)> dataFileRead);
+        QList<QMetaObject::Connection> connectVatsimDataSignals(std::function<void(int)> bookingsRead,
+                                                                std::function<void(int)> dataFileRead,
+                                                                std::function<void(int)> metarRead);
 
         //! Relay signals for swift data
         QList<QMetaObject::Connection> connectSwiftDatabaseSignals(
@@ -100,6 +105,9 @@ namespace BlackCore
         //! Data file reader
         CVatsimDataFileReader *getDataFileReader() const { return m_vatsimDataFileReader; }
 
+        //! Metar reader
+        CVatsimMetarReader *getMetarReader() const { return m_vatsimMetarReader; }
+
         //! Reader flags
         WebReader getReaderFlags() const { return m_readerFlags; }
 
@@ -116,6 +124,9 @@ namespace BlackCore
 
         //! Bookings read
         void vatsimBookingsRead(int number);
+
+        //! Metars read
+        void vatsimMetarRead(int number);
 
         //! ICAO codes read
         void aircraftIcaoCodeRead(int number);
@@ -138,6 +149,9 @@ namespace BlackCore
 
         //! Data file has been read
         void ps_dataFileRead(int lines);
+
+        //! Metars have been read
+        void ps_metarRead(const BlackMisc::Weather::CMetarSet &metars);
 
         //! Read ICAO codes
         void ps_readAircraftIcaoCodes(int number);
@@ -163,6 +177,7 @@ namespace BlackCore
         // for reading XML and VATSIM data files
         CVatsimBookingReader  *m_vatsimBookingReader  = nullptr;
         CVatsimDataFileReader *m_vatsimDataFileReader = nullptr;
+        CVatsimMetarReader    *m_vatsimMetarReader    = nullptr;
         CIcaoDataReader       *m_icaoDataReader       = nullptr;
         CModelDataReader      *m_modelDataReader      = nullptr;
     };

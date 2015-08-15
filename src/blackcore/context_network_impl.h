@@ -21,6 +21,7 @@
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
+#include "blackmisc/weather/metarset.h"
 #include "blackmisc/setnetwork.h"
 #include "blackmisc/network/clientlist.h"
 #include "blackmisc/digestsignal.h"
@@ -33,6 +34,7 @@ namespace BlackCore
 {
     class CAirspaceMonitor;
     class CWebDataReader;
+    class CVatsimMetarReader;
 
     //! Network context implementation
     class BLACKCORE_EXPORT CContextNetwork :
@@ -168,7 +170,7 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
         //! \copydoc IContextNetwork::getMetar
-        virtual BlackMisc::Aviation::CInformationMessage getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) override;
+        BlackMisc::Weather::CMetar getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) override;
 
         //! \copydoc IContextNetwork::getSelectedVoiceRooms()
         virtual BlackMisc::Audio::CVoiceRoomList getSelectedVoiceRooms() const override;
@@ -244,10 +246,14 @@ namespace BlackCore
         BlackMisc::CDigestSignal m_dsAtcStationsOnlineChanged { this, &IContextNetwork::changedAtcStationsOnline, &IContextNetwork::changedAtcStationsOnlineDigest, 750, 4 };
         BlackMisc::CDigestSignal m_dsAircraftsInRangeChanged  { this, &IContextNetwork::changedAircraftInRange, &IContextNetwork::changedAircraftInRangeDigest, 750, 4 };
 
+
         //! Own aircraft from \sa CContextOwnAircraft
         const BlackMisc::Simulation::CSimulatedAircraft ownAircraft() const;
 
     private slots:
+        //! Update METAR collection
+        void ps_updateMetars(const BlackMisc::Weather::CMetarSet &metars);
+
         //! Check if a supervisor message was received
         void ps_checkForSupervisiorTextMessage(const BlackMisc::Network::CTextMessageList &messages);
 

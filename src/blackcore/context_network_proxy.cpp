@@ -16,6 +16,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Weather;
 
 namespace BlackCore
 {
@@ -74,6 +75,9 @@ namespace BlackCore
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "vatsimBookingsRead", this, SIGNAL(vatsimBookingsRead(int)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
+                               "vatsimMetarsRead", this, SIGNAL(vatsimMetarsRead(int)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "changedRemoteAircraftModel", this, SIGNAL(changedRemoteAircraftModel(BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::CIdentifier)));
@@ -268,9 +272,9 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CFlightPlan>(QLatin1Literal("loadFlightPlanFromNetwork"), callsign);
     }
 
-    CInformationMessage CContextNetworkProxy::getMetar(const CAirportIcaoCode &airportIcaoCode)
+    CMetar CContextNetworkProxy::getMetar(const CAirportIcaoCode &airportIcaoCode)
     {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CInformationMessage>(QLatin1Literal("getMetar"), airportIcaoCode);
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Weather::CMetar>(QLatin1Literal("getMetar"), airportIcaoCode);
     }
 
 } // namespace

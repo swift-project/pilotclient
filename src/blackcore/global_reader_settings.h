@@ -46,6 +46,9 @@ namespace BlackCore
         //! VATSIM data file URLs
         const QStringList &vatsimDataFileUrls() const { return m_vatsimDataFileUrls; }
 
+        //! VATSIM metar url
+        const QString &vatsimMetarUrl() const { return m_metarUrl; }
+
         //! Singleton
         static const CGlobalReaderSettings &instance();
 
@@ -64,6 +67,7 @@ namespace BlackCore
         QString m_baseUrlModelReader;
         QString m_bookingsUrl;
         QStringList m_vatsimDataFileUrls;
+        QString m_metarUrl;
     };
 }
 #endif // guard
