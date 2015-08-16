@@ -62,8 +62,7 @@ namespace BlackMisc
         QString CDistributor::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            QString s("Id: %1");
-            s.arg(m_dbKey);
+            QString s = QString("Id: %1").arg(m_dbKey);
             if (this->hasAlias1()) { s.append(" ").append(m_alias1); }
             if (this->hasAlias2()) { s.append(" ").append(m_alias2); }
             return s;
