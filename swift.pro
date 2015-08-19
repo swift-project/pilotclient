@@ -71,3 +71,5 @@ contains(BLACK_CONFIG, Unittests) {
 contains(BLACK_CONFIG, Doxygen) {
     SUBDIRS += docs/doxygen.pro
 }
+
+include(install.pri)

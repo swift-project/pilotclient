@@ -22,4 +22,11 @@ COPY_FILES += $$PWD/local.env.template/*.*
 COPY_FILES += $$PWD/local.env.template/bootstrap/*.*
 COPY_FILES += $$PWD/local.env.template/bootstrap/0.6/*.*
 
+package_resources.path = $$PREFIX
+package_resources.files += data
+package_resources.files += swiftDB
+package_resources.files += bootstrap
+package_resources.files += local.env.template
+INSTALLS += package_resources
+
 load(common_post)

@@ -17,4 +17,7 @@ DESTDIR = $$DestRoot/bin
 HEADERS += *.h
 SOURCES += *.cpp
 
+target.path = $$PREFIX/bin
+INSTALLS += target
+
 load(common_post)

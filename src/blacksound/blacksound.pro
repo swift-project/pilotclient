@@ -30,4 +30,17 @@ OTHER_FILES += ./sounds/*.wav sounds/readme.txt
 COPY_FILES += $$PWD/sounds/*
 RESOURCES +=
 
+win32 {
+    dlltarget.path = $$PREFIX/bin
+    INSTALLS += dlltarget
+} else {
+    target.path = $$PREFIX/lib
+    INSTALLS += target
+}
+
+package_sounds.path = $$PREFIX/sounds
+package_sounds.files += sounds/*.wav
+package_sounds.files += sounds/readme.txt
+INSTALLS += package_sounds
+
 load(common_post)

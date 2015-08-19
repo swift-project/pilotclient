@@ -17,4 +17,7 @@ HEADERS += *.h
 
 DESTDIR = $$DestRoot/bin
 
+target.path = $$PREFIX/bin
+INSTALLS += target
+
 load(common_post)

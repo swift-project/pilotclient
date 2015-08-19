@@ -48,4 +48,12 @@ DLLDESTDIR = $$DestRoot/bin
 OTHER_FILES +=
 RESOURCES +=
 
+win32 {
+    dlltarget.path = $$PREFIX/bin
+    INSTALLS += dlltarget
+} else {
+    target.path = $$PREFIX/lib
+    INSTALLS += target
+}
+
 load(common_post)

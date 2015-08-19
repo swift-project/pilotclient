@@ -19,4 +19,7 @@ SOURCES += *.cpp
 
 OTHER_FILES += *.txt *.xml
 
+target.path = $$PREFIX/bin
+INSTALLS += target
+
 load(common_post)

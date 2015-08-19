@@ -16,4 +16,12 @@ HEADERS += *.h
 
 DESTDIR = $$DestRoot/bin/plugins/simulator
 
+win32 {
+    dlltarget.path = $$PREFIX/bin/plugins/simulator
+    INSTALLS += dlltarget
+} else {
+    target.path = $$PREFIX/bin/plugins/simulator
+    INSTALLS += target
+}
+
 load(common_post)

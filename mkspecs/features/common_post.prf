@@ -16,41 +16,6 @@ macx:staticlib:isEmpty(SOURCES) {
 }
 
 ################################
-# Externals
-################################
-
-INCLUDEPATH *= $$EXTERNALDIR/common/include
-
-# and the library path depending on the used compiler
-win32-msvc2013 {
-    INCLUDEPATH *= $$EXTERNALDIR/win32-vs2013/include
-    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/win32-vs2013/lib64
-    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/win32-vs2013/lib32
-    equals(WORD_SIZE,32): LIBS += -luser32
-}
-win32-msvc2015 {
-    INCLUDEPATH *= $$EXTERNALDIR/win32-vs2015/include
-    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/win32-vs2015/lib64
-    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/win32-vs2015/lib32
-    equals(WORD_SIZE,32): LIBS += -luser32
-}
-win32-g++ {
-    INCLUDEPATH *= $$EXTERNALDIR/win32-g++/include
-    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/win32-g++/lib64
-    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/win32-g++/lib32
-    LIBS += -luser32
-}
-linux-g++* {
-    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/linux-g++/lib64
-    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/linux-g++/lib32
-}
-macx-clang {
-    INCLUDEPATH *= $$EXTERNALDIR/macx-clang/include
-    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/macx-clang/lib64 -F$$EXTERNALDIR/macx-clang/lib64
-    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/macx-clang/lib32 -F$$EXTERNALDIR/macx-clang/lib32
-}
-
-################################
 # Black libs
 ################################
 

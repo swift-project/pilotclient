@@ -110,3 +110,72 @@ isEmpty(EXTERNALDIR) {
 !exists("$$EXTERNALDIR/common/include") {
     error("Could not find externals in $$EXTERNALDIR. Please install it!")
 }
+
+################################
+# Externals
+################################
+
+INCLUDEPATH *= $$EXTERNALDIR/common/include
+
+# and the library path depending on the used compiler
+win32-msvc2013 {
+    INCLUDEPATH *= $$EXTERNALDIR/win32-vs2013/include
+    equals(WORD_SIZE,64) {
+        EXTERNALLIBS = $$EXTERNALDIR/win32-vs2013/lib64
+        LIBS *= -L$$EXTERNALLIBS
+    }
+    equals(WORD_SIZE,32) {
+        EXTERNALLIBS = $$EXTERNALDIR/win32-vs2013/lib32
+        LIBS *= -L$$EXTERNALLIBS
+    }
+    equals(WORD_SIZE,32): LIBS += -luser32
+}
+win32-g++ {
+    INCLUDEPATH *= $$EXTERNALDIR/win32-g++/include
+    equals(WORD_SIZE,64) {
+        EXTERNALLIBS = $$EXTERNALDIR/win32-g++/lib64
+        LIBS *= -L$$EXTERNALLIBS
+    }
+    equals(WORD_SIZE,32) {
+        EXTERNALLIBS = $$EXTERNALDIR/win32-g++/lib32
+        LIBS *= -L$$EXTERNALLIBS
+    }
+    LIBS += -luser32
+}
+linux-g++* {
+    equals(WORD_SIZE,64) {
+        EXTERNALLIBS = $$EXTERNALDIR/linux-g++/lib64
+        LIBS *= -L$$EXTERNALLIBS
+    }
+    equals(WORD_SIZE,32) {
+        EXTERNALLIBS = $$EXTERNALDIR/linux-g++/lib32
+        LIBS *= -L$$EXTERNALLIBS
+    }
+}
+macx-clang {
+    INCLUDEPATH *= $$EXTERNALDIR/macx-clang/include
+    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/macx-clang/lib64 -F$$EXTERNALDIR/macx-clang/lib64
+    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/macx-clang/lib32 -F$$EXTERNALDIR/macx-clang/lib32
+}
+
+################################
+# Platform extensions
+################################
+
+isEmpty(QMAKE_EXTENSION_SHLIB) {
+    mac|ios:   QMAKE_EXTENSION_SHLIB = dylib
+    else:win*: QMAKE_EXTENSION_SHLIB = dll
+    else:      QMAKE_EXTENSION_SHLIB = so
+}
+
+isEmpty(QMAKE_EXTENSION_EXE) {
+    win32: QMAKE_EXTENSION_EXE = exe
+}
+
+################################
+# Install prefix
+################################
+
+isEmpty(PREFIX) {
+    PREFIX = $$BuildRoot/dist
+}
