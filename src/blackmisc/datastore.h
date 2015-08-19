@@ -22,7 +22,7 @@ namespace BlackMisc
     /*!
      * Class from which a derived class can inherit datastore-related functions.
      */
-    class IDatastoreObjectWithIntegerKey : public ITimestampBased
+    class BLACKMISC_EXPORT IDatastoreObjectWithIntegerKey : public ITimestampBased
     {
     public:
         //! Property index
@@ -56,7 +56,7 @@ namespace BlackMisc
     /*!
      * Class from which a derived class can inherit datastore-related functions.
      */
-    class IDatastoreObjectWithStringKey : public ITimestampBased
+    class BLACKMISC_EXPORT IDatastoreObjectWithStringKey : public ITimestampBased
     {
     public:
         //! Property index
