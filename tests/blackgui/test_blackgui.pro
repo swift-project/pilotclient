@@ -9,6 +9,7 @@ TEMPLATE = app
 CONFIG   -= app_bundle
 CONFIG   += blackmisc blackcore blackgui
 CONFIG   += testcase
+CONFIG   += no_testcase_installs
 
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src

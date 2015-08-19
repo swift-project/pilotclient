@@ -9,6 +9,7 @@ CONFIG   += console
 CONFIG   -= app_bundle
 CONFIG   += blackmisc
 CONFIG   += testcase
+CONFIG   += no_testcase_installs
 
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src
