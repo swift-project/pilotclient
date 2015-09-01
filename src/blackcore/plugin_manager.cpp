@@ -39,24 +39,13 @@ namespace BlackCore
         QDirIterator it(pluginDir, QDirIterator::FollowSymlinks);
         while (it.hasNext())
         {
-            if (!QLibrary::isLibrary(it.next()))
-            {
-                continue;
-            }
-
-            CLogMessage(this).debug() << "Loading plugin: " << it.filePath();
-            QPluginLoader loader(it.filePath());
-            QJsonObject json = loader.metaData();
-            if (!isValid(json))
-            {
-                CLogMessage(this).warning("Plugin %1 invalid, not loading it") << it.filePath();
-                continue;
-            }
-
-            QString identifier = pluginIdentifier(json);
-            m_paths.insert(identifier, it.filePath());
-            m_metadatas.push_back(json);
+            tryLoad(it.next());
         }
+    }
+
+    QString IPluginManager::getPluginConfigId(const QString &identifier)
+    {
+        return m_configs.contains(identifier) ? m_configs.value(identifier) : QString();
     }
 
     QString IPluginManager::pluginDirectory() const
@@ -98,6 +87,35 @@ namespace BlackCore
     QString IPluginManager::getIdByPlugin(const QObject *instance) const
     {
         return m_instanceIds.value(instance, QString());
+    }
+
+    bool IPluginManager::tryLoad(QString path)
+    {
+        if (!QLibrary::isLibrary(path))
+        {
+            return false;
+        }
+
+        CLogMessage(this).debug() << "Loading plugin: " << path;
+        QPluginLoader loader(path);
+        QJsonObject json = loader.metaData();
+        if (!isValid(json))
+        {
+            CLogMessage(this).warning("Plugin %1 invalid, not loading it") << path;
+            return false;
+        }
+
+        QString identifier = pluginIdentifier(json);
+        m_paths.insert(identifier, path);
+        m_metadatas.push_back(json);
+
+        if (json.value("MetaData").toObject().contains("config")) {
+            QString configId = json.value("MetaData").toObject().value("config").toString();
+            if (!configId.isEmpty())
+                m_configs.insert(identifier, configId);
+        }
+
+        return true;
     }
 
     QObject *IPluginManager::getPluginByIdImpl(const QString &identifier)

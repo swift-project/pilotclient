@@ -19,17 +19,19 @@ namespace BlackGui
 {
 
     CPluginSelector::CPluginSelector(QWidget *parent) : QWidget(parent),
-        m_mapper(new QSignalMapper(this))
+        m_detailsButtonMapper(new QSignalMapper(this)),
+        m_configButtonMapper(new QSignalMapper(this))
     {
         setObjectName("CPluginSelector");
 
         QVBoxLayout *layout = new QVBoxLayout;
         setLayout(layout);
 
-        connect(m_mapper, static_cast<void (QSignalMapper::*)(const QString &)>(&QSignalMapper::mapped), this, &CPluginSelector::pluginDetailsRequested);
+        connect(m_detailsButtonMapper, static_cast<void (QSignalMapper::*)(const QString &)>(&QSignalMapper::mapped), this, &CPluginSelector::pluginDetailsRequested);
+        connect(m_configButtonMapper, static_cast<void (QSignalMapper::*)(const QString &)>(&QSignalMapper::mapped), this, &CPluginSelector::pluginConfigRequested);
     }
 
-    void CPluginSelector::addPlugin(const QString& identifier, const QString &name, bool enabled)
+    void CPluginSelector::addPlugin(const QString& identifier, const QString &name, bool hasConfig, bool enabled)
     {
         QWidget *pw = new QWidget;
         QHBoxLayout *layout = new QHBoxLayout;
@@ -51,21 +53,20 @@ namespace BlackGui
         pw->layout()->addWidget(cb);
 
         QPushButton *details = new QPushButton("?");
-        m_mapper->setMapping(details, identifier);
-        connect(details, &QPushButton::clicked, m_mapper, static_cast<void (QSignalMapper::*)()>(&QSignalMapper::map));
+        m_detailsButtonMapper->setMapping(details, identifier);
+        connect(details, &QPushButton::clicked, m_detailsButtonMapper, static_cast<void (QSignalMapper::*)()>(&QSignalMapper::map));
         pw->layout()->addWidget(details);
 
+        if (hasConfig) {
+            QPushButton *config = new QPushButton("...");
+            m_configButtonMapper->setMapping(config, identifier);
+            connect(config, &QPushButton::clicked, m_configButtonMapper, static_cast<void (QSignalMapper::*)()>(&QSignalMapper::map));
+            pw->layout()->addWidget(config);
+        }
+
         layout->setStretch(0, 1);
         layout->setStretch(1, 0);
-
-        /* Might be useful for #392 */
-#if 0
-        QPushButton *pb = new QPushButton("...");
-        pw->layout()->addWidget(pb);
-
-        layout->setStretch(0, 1);
-        layout->setStretch(1, 0);
-#endif
+        layout->setStretch(2, 0);
 
         this->layout()->addWidget(pw);
     }

@@ -36,6 +36,19 @@ namespace BlackCore
         //! Looks for all available plugins
         virtual void collectPlugins();
 
+        //! If the plugin specifies its config plugin, its identifier can be
+        //! obtained using this method. You can get the plugin config instance
+        //! later, using `getPluginById()`.
+        QString getPluginConfigId(const QString &identifier);
+
+        //! Loads the given plugin (if necessary), casts it to the desired
+        //! type and returns its instance. Returns `nullptr` on failure.
+        template <class T>
+        T *getPluginById(const QString &identifier)
+        {
+            return qobject_cast<T *>(getPluginByIdImpl(identifier));
+        }
+
     protected:
         //! Returns the list of valid IIDs for the implementation
         virtual BlackMisc::CSequence<QString> acceptedIids() const = 0;
@@ -57,14 +70,6 @@ namespace BlackCore
         //! Gets plugin identifier by its instance
         QString getIdByPlugin(const QObject *instance) const;
 
-        //! Loads the given plugin (if necessary), casts it to the desired
-        //! type and returns its instance. Returns `nullptr` on failure.
-        template <class T>
-        T *getPluginById(const QString &identifier)
-        {
-            return qobject_cast<T *>(getPluginByIdImpl(identifier));
-        }
-
         //! Gets direct access to all plugins' metadata
         const BlackMisc::CSequence<QJsonObject> &getPlugins()
         {
@@ -72,6 +77,8 @@ namespace BlackCore
         }
 
     private:
+        //! Tries to load the given plugin.
+        bool tryLoad(QString path);
 
         //! Loads the given plugin (if necessary) and returns its instance.
         //! Returns `nullptr` on failure.
@@ -80,6 +87,7 @@ namespace BlackCore
         BlackMisc::CSequence<QJsonObject> m_metadatas;
         QMap<QString, QString> m_paths; //!< identifier <-> file path pairs
         QMap<QString, QObject *> m_instances; //!< identifier <-> instance pairs
+        QMap<QString, QString> m_configs; //!< identifier <-> identifier pairs
         QMap<const QObject *, QString> m_instanceIds; //!< instance <-> identifier pairs
 
     };

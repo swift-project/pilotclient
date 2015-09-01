@@ -24,7 +24,6 @@ namespace BlackMisc
             if (json.contains("IID"))   // comes from the plugin
             {
                 // json data is already validated by CPluginManagerSimulator
-                Q_ASSERT(json["IID"].toString() == QStringLiteral("org.swift-project.blackcore.simulatorinterface"));
                 CValueObject::convertFromJson(json["MetaData"].toObject());
                 m_valid = true;
             }

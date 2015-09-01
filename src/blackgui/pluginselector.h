@@ -35,6 +35,9 @@ namespace BlackGui
         //! Emitted when user clicks the "Details" button
         void pluginDetailsRequested(const QString &identifier);
 
+        //! Emitted when user clicks the "Settings" button
+        void pluginConfigRequested(const QString &identifier);
+
     public:
         //! Constructor
         explicit CPluginSelector(QWidget *parent = 0);
@@ -43,13 +46,14 @@ namespace BlackGui
         //! \param identifier Identifier of the plugin.
         //! \param name Name of the plugin
         //! \param enabled Defines whether the plugin is initially enabled or not
-        void addPlugin(const QString &identifier, const QString &name, bool enabled = true);
+        void addPlugin(const QString &identifier, const QString &name, bool hasConfig = false, bool enabled = true);
 
     private slots:
         void ps_handlePluginStateChange();
 
     private:
-        QSignalMapper *m_mapper;
+        QSignalMapper *m_detailsButtonMapper;
+        QSignalMapper *m_configButtonMapper;
 
     };
 

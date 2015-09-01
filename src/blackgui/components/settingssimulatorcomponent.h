@@ -10,6 +10,7 @@
 #ifndef BLACKGUI_SETTINGSSIMULATORCOMPONENT_H
 #define BLACKGUI_SETTINGSSIMULATORCOMPONENT_H
 
+#include "blackcore/plugin_manager_simulator.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "enableforruntime.h"
@@ -64,6 +65,9 @@ namespace BlackGui
             //! Open plugin details window
             void ps_showPluginDetails(const QString &identifier);
 
+            //! Show plugin config
+            void ps_showPluginConfig(const QString &identifier);
+
         private:
 
             //! Set the GUI values
@@ -74,6 +78,8 @@ namespace BlackGui
 
             QScopedPointer<Ui::CSettingsSimulatorComponent> ui; //!< UI
             bool m_pluginLoaded = false; //!< plugin loaded
+            BlackCore::CPluginManagerSimulator* m_plugins = nullptr;
+
         };
     }
 } // namespace

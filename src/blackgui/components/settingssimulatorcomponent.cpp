@@ -3,6 +3,7 @@
 
 #include "blackcore/context_simulator.h"
 #include "blackcore/context_network.h"
+#include "blackgui/pluginconfig.h"
 #include "blackgui/plugindetailswindow.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
@@ -24,8 +25,10 @@ namespace BlackGui
         CSettingsSimulatorComponent::CSettingsSimulatorComponent(QWidget *parent) :
             QFrame(parent),
             CEnableForRuntime(nullptr, false),
-            ui(new Ui::CSettingsSimulatorComponent)
+            ui(new Ui::CSettingsSimulatorComponent),
+            m_plugins(new CPluginManagerSimulator(this))
         {
+            m_plugins->collectPlugins();
             ui->setupUi(this);
             CLedWidget::LedShape shape = CLedWidget::Circle;
             this->ui->led_RestrictedRendering->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Limited", "Unlimited", 14);
@@ -42,13 +45,15 @@ namespace BlackGui
             // set values
             for (const auto &p : getAvailablePlugins())
             {
-                ui->ps_EnabledSimulators->addPlugin(p.getIdentifier(), p.getName(), false);
+                QString config = m_plugins->getPluginConfigId(p.getIdentifier());
+                ui->ps_EnabledSimulators->addPlugin(p.getIdentifier(), p.getName(), !config.isEmpty(), false);
             }
 
             // connects
             connect(this->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CSettingsSimulatorComponent::ps_simulatorPluginChanged);
             connect(this->ui->ps_EnabledSimulators, &CPluginSelector::pluginStateChanged, this, &CSettingsSimulatorComponent::ps_pluginStateChanged);
             connect(this->ui->ps_EnabledSimulators, &CPluginSelector::pluginDetailsRequested, this, &CSettingsSimulatorComponent::ps_showPluginDetails);
+            connect(this->ui->ps_EnabledSimulators, &CPluginSelector::pluginConfigRequested, this, &CSettingsSimulatorComponent::ps_showPluginConfig);
             connect(this->ui->pb_ApplyMaxAircraft, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedAircraft);
             connect(this->ui->pb_ApplyTimeSync, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyTimeSync);
             connect(this->ui->pb_ApplyMaxDistance, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedDistance);
@@ -261,6 +266,24 @@ namespace BlackGui
             w->setPluginDescription(selected->getDescription());
 
             w->show();
+        }
+
+        void CSettingsSimulatorComponent::ps_showPluginConfig(const QString &identifier)
+        {
+            CSimulatorPluginInfoList simDrivers(getAvailablePlugins());
+            auto selected = std::find_if(simDrivers.begin(), simDrivers.end(),
+                                         [&identifier](const CSimulatorPluginInfo &info)
+                {
+                    return info.getIdentifier() == identifier;
+                });
+
+            QString configId = m_plugins->getPluginConfigId(selected->getIdentifier());
+            IPluginConfig *config = m_plugins->getPluginById<IPluginConfig>(configId);
+            QWidget *window = config->createConfigWindow();
+//            window->setParent(qApp->activeWindow());
+            window->setWindowFlags(Qt::Dialog);
+            window->setAttribute(Qt::WA_DeleteOnClose);
+            window->show();
         }
     }
 

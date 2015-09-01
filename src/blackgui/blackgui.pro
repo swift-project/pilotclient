@@ -1,7 +1,6 @@
 load(common_pre)
 
-QT       += network dbus gui svg
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT       += network dbus gui svg widgets
 
 TARGET = blackgui
 TEMPLATE = lib

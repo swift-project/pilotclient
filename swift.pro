@@ -51,6 +51,7 @@ win32 {
 contains(BLACK_CONFIG, XPlane) {
     SUBDIRS += src/xbus/xbus.pro
     SUBDIRS += src/plugins/simulator/xplane/plugin_xplane.pro
+    SUBDIRS += src/plugins/simulator/xplane_config/plugin_xplane_config.pro
 }
 
 contains(BLACK_CONFIG, Samples) {
