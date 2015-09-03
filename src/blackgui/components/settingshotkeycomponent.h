@@ -15,7 +15,7 @@
 #include "blackgui/models/actionhotkeylistmodel.h"
 #include "blackgui/components/enableforruntime.h"
 #include "blackcore/settings/application.h"
-
+#include "blackcore/actionbind.h"
 #include <QFrame>
 
 namespace Ui {
@@ -55,6 +55,7 @@ namespace BlackGui
             QScopedPointer<Ui::CSettingsHotkeyComponent> ui;
             BlackGui::Models::CActionHotkeyListModel m_model;
             BlackCore::CSetting<BlackCore::Settings::Application::ActionHotkeys> m_actionHotkeys { this };
+            BlackCore::CActionBind m_action { "/Test/Message", this, &CSettingsHotkeyComponent::ps_hotkeySlot };
 
             void ps_hotkeySlot(bool keyDown);
         };

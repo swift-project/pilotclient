@@ -134,5 +134,9 @@ namespace BlackGui
             return true;
         }
 
+        void CSettingsHotkeyComponent::ps_hotkeySlot(bool keyDown)
+        {
+            if (keyDown) QMessageBox::information(this, "Test", "Push-To-Talk");
+        }
     } // ns
 } // ns

@@ -21,6 +21,7 @@
 #include "voice_channel.h"
 #include "audio_device.h"
 #include "audio_mixer.h"
+#include "actionbind.h"
 #include "blackinput/keyboard.h"
 #include "blackmisc/audio/voiceroomlist.h"
 
@@ -153,6 +154,7 @@ namespace BlackCore
 
         QSharedPointer<IVoiceChannel> getVoiceChannelBy(const BlackMisc::Audio::CVoiceRoom &voiceRoom);
 
+        CActionBind m_actionPtt { "/Voice/Activate push-to-talk", this, &CContextAudio::ps_setVoiceTransmission };
 
         std::unique_ptr<IVoice> m_voice; //!< underlying voice lib
         std::unique_ptr<IAudioMixer> m_audioMixer;

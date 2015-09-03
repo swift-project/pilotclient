@@ -18,6 +18,7 @@
 
 #include "guimodeenums.h"
 #include "blackcore/context_all_interfaces.h"
+#include "blackcore/actionbind.h"
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/infowindowcomponent.h"
 #include "blackgui/components/maininfoareacomponent.h"
@@ -126,6 +127,10 @@ private:
     QString m_transponderResetValue;         //!< Temp. storage of XPdr mode to reset, req. until timer allows singleShoot with Lambdas
     QWidget *m_inputFocusedWidget = nullptr; //!< currently used widget for input, mainly used with cockpit
 
+    // actions
+    BlackCore::CActionBind m_action50 { "/swiftGui/Change opacity to 50%", this, &SwiftGuiStd::ps_onChangedWindowOpacityTo50 };
+    BlackCore::CActionBind m_action100 { "/swiftGui/Change opacity to 100%", this, &SwiftGuiStd::ps_onChangedWindowOpacityTo100 };
+
     //! GUI status update
     void updateGuiStatusInformation();
 
@@ -223,6 +228,12 @@ private slots:
 
     //! Update timer
     void ps_handleTimerBasedUpdates();
+
+    //! Change opacity 0-100
+    void ps_onChangedWindowOpacityTo50(bool) { ps_onChangedWindowOpacity(50); }
+
+    //! Change opacity 0-100
+    void ps_onChangedWindowOpacityTo100(bool) { ps_onChangedWindowOpacity(100); }
 
     //! Change opacity 0-100
     void ps_onChangedWindowOpacity(int opacity = -1);
