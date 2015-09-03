@@ -17,7 +17,6 @@
 #include "blacksound/soundgenerator.h"
 #include "blackmisc/notificationsounds.h"
 #include "blackmisc/audio/voiceroomlist.h"
-#include "blackmisc/hotkeyfunction.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/simplecommandparser.h"
 

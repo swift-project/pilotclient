@@ -11,7 +11,6 @@
 #include "math/math.h"
 #include "geo/geo.h"
 #include "audio/audio.h"
-#include "hardware/hardware.h"
 #include "input/input.h"
 #include "settingsblackmiscclasses.h"
 #include "propertyindexlist.h"
@@ -23,7 +22,6 @@
 #include "pixmap.h"
 #include "iconlist.h"
 #include "identifierlist.h"
-#include "eventallclasses.h"
 #include <QtNetwork/QHostInfo>
 #include <QProcessEnvironment>
 #include <QSysInfo>
@@ -44,8 +42,6 @@ void BlackMisc::Geo::registerMetadata()
 void BlackMisc::Settings::registerMetadata()
 {
     CSettingsAudio::registerMetadata();
-    CSettingKeyboardHotkey::registerMetadata();
-    CSettingKeyboardHotkeyList::registerMetadata();
 }
 
 void BlackMisc::Audio::registerMetadata()
@@ -82,7 +78,6 @@ void BlackMisc::registerMetadata()
     CStatusMessageList::registerMetadata();
     CIcon::registerMetadata();
     CIconList::registerMetadata();
-    CHotkeyFunction::registerMetadata();
     CLogCategory::registerMetadata();
     CLogCategoryList::registerMetadata();
     CPixmap::registerMetadata();
@@ -98,8 +93,6 @@ void BlackMisc::registerMetadata()
     Settings::registerMetadata();
     Simulation::registerMetadata();
     Audio::registerMetadata();
-    Hardware::registerMetadata();
-    Event::registerMetadata();
     Weather::registerMetadata();
     Input::registerMetadata();
 

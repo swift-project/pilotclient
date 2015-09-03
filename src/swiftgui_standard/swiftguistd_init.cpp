@@ -15,11 +15,9 @@
 #include "blackgui/guiutility.h"
 #include "blackgui/components/allmaininfoareacomponents.h"
 #include "blackgui/models/atcstationlistmodel.h"
-#include "blackgui/models/keyboardkeylistmodel.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/aviation/selcal.h"
 #include "blackmisc/project.h"
-#include "blackmisc/hotkeyfunction.h"
 #include "blackmisc/logmessage.h"
 #include <QSizeGrip>
 #include <QHBoxLayout>
@@ -27,7 +25,7 @@
 
 using namespace BlackCore;
 using namespace BlackMisc;
-using namespace BlackMisc::Hardware;
+using namespace BlackMisc::Input;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 
@@ -101,7 +99,6 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &SwiftGuiStd::ps_onConnectionStatusChanged);
     connect(this->getIContextNetwork(), &IContextNetwork::textMessagesReceived, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageReceived);
     connect(this->getIContextNetwork(), &IContextNetwork::textMessageSent, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageSent);
-    connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &SwiftGuiStd::ps_onChangedSetttings);
     connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &SwiftGuiStd::ps_handleTimerBasedUpdates);
 
     // log messages
