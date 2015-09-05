@@ -48,6 +48,9 @@ namespace BlackMiscTest
 
         //! Test Json serialization.
         void json();
+
+        //! Test saving to and loading from files.
+        void saveAndLoad();
     };
 
     /*!

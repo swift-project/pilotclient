@@ -59,6 +59,16 @@ namespace BlackMisc
         //! \threadsafe
         void loadFromJson(const QJsonObject &json);
 
+        //! Save values to Json files in a given directory.
+        //! If prefix is provided then only those values whose keys start with that prefix.
+        //! \threadsafe
+        CStatusMessage saveToFiles(const QString &directory, const QString &keyPrefix = {}) const;
+
+        //! Load all values from Json files in a given directory.
+        //! Values already in the cache will remain in the cache unless they are overwritten.
+        //! \threadsafe
+        CStatusMessage loadFromFiles(const QString &directory);
+
         //! Begins a batch of changes to be made through CCached instances owned by owner.
         //! \details All changes made through those CCached instances will be deferred until the returned RAII object is
         //! destroyed. If the destruction happens during stack unwinding due to an exception being thrown, the changes are

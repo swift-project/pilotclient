@@ -10,12 +10,15 @@
 #include "testvaluecache.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/identifier.h"
+#include "blackmisc/aviation/aircraftlist.h"
+#include "blackmisc/aviation/atcstationlist.h"
 #include <future>
 
 namespace BlackMiscTest
 {
 
     using namespace BlackMisc;
+    using namespace BlackMisc::Aviation;
 
     CTestValueCache::CTestValueCache(QObject *parent) : QObject(parent)
     {
@@ -193,6 +196,38 @@ namespace BlackMiscTest
         cache.loadFromJson(testJson);
         QVERIFY(cache.getAllValues() == testData);
         QVERIFY(cache.saveToJson() == testJson);
+    }
+
+    void CTestValueCache::saveAndLoad()
+    {
+        CAircraftList aircraft({ CAircraft("BAW001", {}, {}) });
+        CAtcStationList atcStations({ CAtcStation("EGLL_TWR" ) });
+        CVariantMap testData
+        {
+            { "namespace1/value1", CVariant::from(1) },
+            { "namespace1/value2", CVariant::from(2) },
+            { "namespace1/value3", CVariant::from(3) },
+            { "namespace2/aircraft", CVariant::from(aircraft) },
+            { "namespace2/atcstations", CVariant::from(atcStations) }
+        };
+        CValueCache cache(CValueCache::LocalOnly);
+        cache.insertValues(testData);
+
+        QDir dir(QDir::currentPath() + "/testcache");
+        if (dir.exists()) { dir.removeRecursively(); }
+
+        auto status = cache.saveToFiles(dir.absolutePath());
+        QVERIFY(status.isEmpty());
+
+        auto files = dir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot, QDir::Name);
+        QCOMPARE(files.size(), 2);
+        QCOMPARE(files[0].fileName(), QString("namespace1.json"));
+        QCOMPARE(files[1].fileName(), QString("namespace2.json"));
+
+        CValueCache cache2(CValueCache::LocalOnly);
+        status = cache2.loadFromFiles(dir.absolutePath());
+        QVERIFY(status.isEmpty());
+        QCOMPARE(cache2.getAllValues(), testData);
     }
 
     bool validator(int value)

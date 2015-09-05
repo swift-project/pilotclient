@@ -332,6 +332,9 @@ namespace BlackMisc
         //! Insert new item with key and value
         iterator insert(const Key &key, const Value &value) { return m_impl.insert(key, value); }
 
+        //! Insert all items of other dictionary into this dictionary
+        void insert(const CDictionary &other) { for (auto i = other.cbegin(); i != other.cend(); ++i) { insert(i.key(), i.value()); } }
+
         //! Returns true if dictionary is empty
         bool isEmpty() const { return m_impl.isEmpty(); }
 

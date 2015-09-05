@@ -144,6 +144,65 @@ namespace BlackMisc
         insertValues(map);
     }
 
+    CStatusMessage CValueCache::saveToFiles(const QString &dir, const QString &keyPrefix) const
+    {
+        auto values = getAllValues(keyPrefix);
+        QMap<QString, CVariantMap> namespaces;
+        for (auto it = values.cbegin(); it != values.cend(); ++it)
+        {
+            namespaces[it.key().section('/', 0, 0)].insert(it.key(), it.value());
+        }
+        if (! QDir::root().mkpath(dir))
+        {
+            return CLogMessage(this).error("Failed to create directory %1") << dir;
+        }
+        for (auto it = namespaces.cbegin(); it != namespaces.cend(); ++it)
+        {
+            QFile file(dir + "/" + it.key() + ".json");
+            if (! file.open(QFile::ReadWrite | QFile::Text))
+            {
+                return CLogMessage(this).error("Failed to open %1: %2") << file.fileName() << file.errorString();
+            }
+            auto json = QJsonDocument::fromJson(file.readAll());
+            if (json.isArray() || (json.isNull() && ! json.isEmpty()))
+            {
+                return CLogMessage(this).error("Invalid JSON format in %1") << file.fileName();
+            }
+            CVariantMap storedValues;
+            storedValues.convertFromJson(json.object());
+            storedValues.insert(*it);
+            json.setObject(storedValues.toJson());
+            if (! (file.seek(0) && file.resize(0) && file.write(json.toJson()) > 0))
+            {
+                return CLogMessage(this).error("Failed to write to %1: %2") << file.fileName() << file.errorString();
+            }
+        }
+        return {};
+    }
+
+    CStatusMessage CValueCache::loadFromFiles(const QString &dir)
+    {
+        if (! QDir(dir).isReadable())
+        {
+            return CLogMessage(this).error("Failed to read directory %1") << dir;
+        }
+        for (const auto &filename : QDir(dir).entryList({ "*.json" }, QDir::Files))
+        {
+            QFile file(dir + "/" + filename);
+            if (! file.open(QFile::ReadOnly | QFile::Text))
+            {
+                return CLogMessage(this).error("Failed to open %1 : %2") << file.fileName() << file.errorString();
+            }
+            auto json = QJsonDocument::fromJson(file.readAll());
+            if (json.isArray() || (json.isNull() && ! json.isEmpty()))
+            {
+                return CLogMessage(this).error("Invalid JSON format in %1") << file.fileName();
+            }
+            loadFromJson(json.object());
+        }
+        return {};
+    }
+
     CValueCache::BatchGuard CValueCache::batchChanges(QObject *owner)
     {
         Q_ASSERT(QThread::currentThread() == owner->thread());
