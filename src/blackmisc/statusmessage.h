@@ -105,6 +105,9 @@ namespace BlackMisc
             return std::all_of(classCategories.begin(), classCategories.end(), [this](const CLogCategory & cat) { return m_categories.contains(cat); });
         }
 
+        //! Mark the message as potentially already handled
+        void markAsRedundant() { this->m_redundant = true; }
+
         //! Mark the message as having been handled by the given object
         void markAsHandledBy(const QObject *object) const;
 

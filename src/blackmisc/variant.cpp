@@ -106,7 +106,7 @@ namespace BlackMisc
                 }
                 else
                 {
-                    qWarning() << "Unsupported CVariant type for toJson";
+                    qWarning() << "Unsupported CVariant type for toJson:" << m_v.typeName() << "(" << m_v.userType() << ")";
                 }
             }
             catch (const Private::CVariantException &ex)

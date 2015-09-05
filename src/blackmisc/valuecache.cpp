@@ -207,7 +207,11 @@ namespace BlackMisc
         element.m_value = m_cache->getValue(key);
 
         auto error = validate(element, element.m_value);
-        if (! error.isEmpty()) { element.m_value = defaultValue; }
+        if (! error.isEmpty())
+        {
+            CLogMessage::preformatted(error);
+            element.m_value = defaultValue;
+        }
         return element;
     }
 
@@ -239,6 +243,11 @@ namespace BlackMisc
                 element.m_value = value;
                 emit valuesWantToCache({ { element.m_key, value } });
             }
+        }
+        else
+        {
+            CLogMessage::preformatted(error);
+            error.markAsRedundant();
         }
         return error;
     }
@@ -314,15 +323,15 @@ namespace BlackMisc
     {
         if (! value.isValid())
         {
-            return CLogMessage(this).warning("Uninitialized value for %1") << element.m_key;
+            return CStatusMessage(this, CStatusMessage::SeverityWarning, "Uninitialized value for " + element.m_key);
         }
         else if (value.userType() != element.m_metaType)
         {
-            return CLogMessage(this).error("Expected %1, got %2 for %3") << QMetaType::typeName(element.m_metaType) << value.typeName() << element.m_key;
+            return CStatusMessage(this, CStatusMessage::SeverityError, QString("Expected ") + QMetaType::typeName(element.m_metaType) + " but got " + value.typeName() + " for " + element.m_key);
         }
         else if (element.m_validator && ! element.m_validator(value))
         {
-            return CLogMessage(this).error("%1 is not valid for %2") << value << element.m_key;
+            return CStatusMessage(this, CStatusMessage::SeverityError, value.toQString() + " is not valid for " + element.m_key);
         }
         else
         {
