@@ -44,6 +44,9 @@ namespace BlackCore
                                     "messageLogged", this, SIGNAL(messageLogged(BlackMisc::CStatusMessage, BlackMisc::CIdentifier)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
+                               "settingsChanged", this, SIGNAL(settingsChanged(BlackMisc::CVariantMap, BlackMisc::CIdentifier)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
                                "registrationChanged", this, SIGNAL(registrationChanged()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
