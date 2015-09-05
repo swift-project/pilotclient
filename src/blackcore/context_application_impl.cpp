@@ -47,6 +47,17 @@ namespace BlackCore
         emit this->settingsChanged(settings, origin);
     }
 
+    BlackMisc::CVariantMap CContextApplication::getAllSettings() const
+    {
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        return CSettingsCache::instance()->getAllValues();
+    }
+
+    void CContextApplication::synchronizeLocalSettings()
+    {
+        // no-op: proxy implements this method by calling getAllSettings
+    }
+
     BlackMisc::CStatusMessage CContextApplication::saveSettings(const QString &keyPrefix)
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << keyPrefix; }

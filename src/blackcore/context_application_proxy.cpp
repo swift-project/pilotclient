@@ -67,6 +67,17 @@ namespace BlackCore
         this->m_dBusInterface->callDBus(QLatin1Literal("changeSettings"), settings, origin);
     }
 
+    BlackMisc::CVariantMap CContextApplicationProxy::getAllSettings() const
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::CVariantMap>(QLatin1Literal("getAllSettings"));
+    }
+
+    void CContextApplicationProxy::synchronizeLocalSettings()
+    {
+        // note this proxy method does not call synchronizeLocalSettings in core
+        CSettingsCache::instance()->insertValues(this->getAllSettings());
+    }
+
     BlackMisc::CStatusMessage CContextApplicationProxy::saveSettings(const QString &keyPrefix)
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1Literal("saveSettings"), keyPrefix);

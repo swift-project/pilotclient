@@ -104,6 +104,12 @@ namespace BlackCore
         //! \note This is the function which relays cache changes via DBus.
         virtual void changeSettings(const BlackMisc::CVariantMap &settings, const BlackMisc::CIdentifier &origin);
 
+        //! Get all settings currently in core settings cache
+        virtual BlackMisc::CVariantMap getAllSettings() const = 0;
+
+        //! Update local settings with settings from core
+        virtual void synchronizeLocalSettings() = 0;
+
         //! Save core settings to disk
         virtual BlackMisc::CStatusMessage saveSettings(const QString &keyPrefix = {}) = 0;
 
