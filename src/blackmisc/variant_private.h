@@ -64,7 +64,9 @@ namespace BlackMisc
         {
         public:
             template <class T>
-            CVariantException(const T &, const QString &operationName) : std::invalid_argument((blurb<T>(operationName)).toStdString()), m_operationName(operationName) {}
+            CVariantException(const T &, const QString &opName) : CVariantException(qMetaTypeId<T>(), opName) {}
+
+            CVariantException(int typeId, const QString &opName) : std::invalid_argument((blurb(typeId, opName)).toStdString()), m_operationName(opName) {}
 
             const QString &operationName() const { return m_operationName; }
 
@@ -73,23 +75,28 @@ namespace BlackMisc
         private:
             QString m_operationName;
 
-            template <class T>
-            static QString blurb(const QString &operationName)
+            static QString blurb(int typeId, const QString &operationName)
             {
-                return QString("CVariant requested unsupported operation of contained ") + QMetaType::typeName(qMetaTypeId<T>()) + " object: " + operationName;
+                return QString("CVariant requested unsupported operation of contained ") + QMetaType::typeName(typeId) + " object: " + operationName;
             }
         };
 
         //! \private
         namespace Fallback
         {
+            //! \private Class with a conversion constructor template from any type.
+            struct FromAny
+            {
+                template <typename T>
+                FromAny(const T &) : m_type(qMetaTypeId<T>()) {}
+                int m_type;
+            };
+
             //! \private Fallback in case qHash is not defined for T.
-            template <typename T>
-            uint qHash(const T &object) { throw CVariantException(object, "qHash"); }
+            inline uint qHash(const FromAny &object) { throw CVariantException(object.m_type, "qHash"); }
 
             //! \private Fallback in case compare is not defined for T.
-            template <typename T>
-            int compare(const T &a, const T &) { throw CVariantException(a, "compare"); }
+            inline int compare(const FromAny &a, const FromAny &) { throw CVariantException(a.m_type, "compare"); }
         }
 
         //! \private Implementation of IValueObjectMetaInfo representing the set of operations supported by T.
