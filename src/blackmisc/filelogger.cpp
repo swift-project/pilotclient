@@ -26,6 +26,7 @@ namespace BlackMisc
         m_applicationName(applicationName),
         m_logPath(logPath)
     {
+        if (!m_logPath.isEmpty()) { QDir::root().mkpath(m_logPath); }
         removeOldLogFiles();
         if (!m_logPath.isEmpty() && !m_logPath.endsWith('/')) { m_logPath += '/'; }
         m_logFile.setFileName(getFullFileName());

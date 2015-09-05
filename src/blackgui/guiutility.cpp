@@ -84,7 +84,8 @@ namespace BlackGui
         }
 
         // File logger
-        CFileLogger *fileLogger = new CFileLogger(applicationName, QString(), &a);
+        static const QString logPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/org.swift-project/logs";
+        CFileLogger *fileLogger = new CFileLogger(applicationName, logPath, &a);
         fileLogger->changeLogPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
 
         // GUI icon
