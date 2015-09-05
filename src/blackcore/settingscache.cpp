@@ -8,6 +8,7 @@
  */
 
 #include "settingscache.h"
+#include <QStandardPaths>
 
 namespace BlackCore
 {
@@ -20,6 +21,22 @@ namespace BlackCore
     {
         static CSettingsCache cache;
         return &cache;
+    }
+
+    const QString &CSettingsCache::persistentStore()
+    {
+        static const QString dir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/org.swift-project/settings/core";
+        return dir;
+    }
+
+    BlackMisc::CStatusMessage CSettingsCache::saveToStore(const QString &keyPrefix) const
+    {
+        return saveToFiles(persistentStore(), keyPrefix);
+    }
+
+    BlackMisc::CStatusMessage CSettingsCache::loadFromStore()
+    {
+        return loadFromFiles(persistentStore());
     }
 
 }

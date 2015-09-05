@@ -47,6 +47,18 @@ namespace BlackCore
         emit this->settingsChanged(settings, origin);
     }
 
+    BlackMisc::CStatusMessage CContextApplication::saveSettings(const QString &keyPrefix)
+    {
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << keyPrefix; }
+        return CSettingsCache::instance()->saveToStore(keyPrefix);
+    }
+
+    BlackMisc::CStatusMessage CContextApplication::loadSettings()
+    {
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        return CSettingsCache::instance()->loadFromStore();
+    }
+
     void CContextApplication::registerHotkeyActions(const QStringList &actions, const CIdentifier &origin)
     {
         // Intentionally don't check for round trip here

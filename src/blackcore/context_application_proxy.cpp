@@ -67,6 +67,16 @@ namespace BlackCore
         this->m_dBusInterface->callDBus(QLatin1Literal("changeSettings"), settings, origin);
     }
 
+    BlackMisc::CStatusMessage CContextApplicationProxy::saveSettings(const QString &keyPrefix)
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1Literal("saveSettings"), keyPrefix);
+    }
+
+    BlackMisc::CStatusMessage CContextApplicationProxy::loadSettings()
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1Literal("loadSettings"));
+    }
+
     void CContextApplicationProxy::registerHotkeyActions(const QStringList &actions, const CIdentifier &origin)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("registerHotkeyActions"), actions, origin);

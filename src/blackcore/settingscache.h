@@ -27,6 +27,15 @@ namespace BlackCore
         //! Return the singleton instance.
         static CSettingsCache *instance();
 
+        //! The directory where core settings are stored.
+        static const QString &persistentStore();
+
+        //! Save core settings to disk.
+        BlackMisc::CStatusMessage saveToStore(const QString &keyPrefix = {}) const;
+
+        //! Load core settings from disk.
+        BlackMisc::CStatusMessage loadFromStore();
+
     private:
         CSettingsCache();
     };

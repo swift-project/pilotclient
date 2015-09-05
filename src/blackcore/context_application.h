@@ -104,6 +104,12 @@ namespace BlackCore
         //! \note This is the function which relays cache changes via DBus.
         virtual void changeSettings(const BlackMisc::CVariantMap &settings, const BlackMisc::CIdentifier &origin);
 
+        //! Save core settings to disk
+        virtual BlackMisc::CStatusMessage saveSettings(const QString &keyPrefix = {}) = 0;
+
+        //! Load core settings from disk
+        virtual BlackMisc::CStatusMessage loadSettings() = 0;
+
         //! Register hotkey action implemented by another process
         //! \note Not pure because it can be called from the base class constructor.
         //! \note This is the function which relays action registrations via DBus

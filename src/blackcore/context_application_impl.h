@@ -35,6 +35,12 @@ namespace BlackCore
         //! \copydoc IContextApplication::changeSettings
         virtual void changeSettings(const BlackMisc::CVariantMap &settings, const BlackMisc::CIdentifier &origin) override;
 
+        //! \copydoc IContextApplication::saveSettings
+        virtual BlackMisc::CStatusMessage saveSettings(const QString &keyPrefix = {}) override;
+
+        //! \copydoc IContextApplication::loadSettings
+        virtual BlackMisc::CStatusMessage loadSettings() override;
+
         //! \copydoc IContextApplication::registerHotkeyActions
         virtual void registerHotkeyActions(const QStringList &actions, const BlackMisc::CIdentifier &origin) override;
 
