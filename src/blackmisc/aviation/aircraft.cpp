@@ -52,6 +52,7 @@ namespace BlackMisc
             s.append(" ").append(this->m_com1system.toQString(i18n));
             s.append(" ").append(this->m_com2system.toQString(i18n));
             s.append(" ").append(this->m_transponder.toQString(i18n));
+            s.append(" ").append(this->m_parts.toQString(i18n));
             return s;
         }
 

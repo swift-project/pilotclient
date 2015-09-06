@@ -35,17 +35,17 @@ namespace BlackMisc
         {
             QString s;
             s += " strobe: ";
-            s += m_strobeOn;
+            s += boolToYesNo(m_strobeOn);
             s += " landing: ";
-            s += m_landingOn;
+            s += boolToYesNo(m_landingOn);
             s += " taxi: ";
-            s += m_taxiOn;
+            s += boolToYesNo(m_taxiOn);
             s += " beacon: ";
-            s += m_beaconOn;
+            s += boolToYesNo(m_beaconOn);
             s += " nav: ";
-            s += m_navOn;
+            s += boolToYesNo(m_navOn);
             s += " logo: ";
-            s += m_logoOn;
+            s += boolToYesNo(m_logoOn);
             return s;
         }
 
