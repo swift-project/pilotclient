@@ -13,13 +13,13 @@ const QJsonValue &operator >>(const QJsonValue &json, int &value)
 
 const QJsonValue &operator >>(const QJsonValue &json, qlonglong &value)
 {
-    value = static_cast<qlonglong>(json.toInt());
+    value = static_cast<qlonglong>(json.toDouble());
     return json;
 }
 
 const QJsonValue &operator >>(const QJsonValue &json, qulonglong &value)
 {
-    value = static_cast<qulonglong>(json.toInt());
+    value = static_cast<qulonglong>(json.toDouble());
     return json;
 }
 
@@ -67,13 +67,13 @@ const QJsonValueRef &operator >>(const QJsonValueRef &json, int &value)
 
 const QJsonValueRef &operator >>(const QJsonValueRef &json, qlonglong &value)
 {
-    value = static_cast<qlonglong>(json.toInt());
+    value = static_cast<qlonglong>(json.toDouble());
     return json;
 }
 
 const QJsonValueRef &operator >>(const QJsonValueRef &json, qulonglong &value)
 {
-    value = static_cast<qulonglong>(json.toInt());
+    value = static_cast<qulonglong>(json.toDouble());
     return json;
 }
 
