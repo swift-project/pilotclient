@@ -227,9 +227,9 @@ namespace BlackCore
         this->m_dBusInterface->callDBus(QLatin1Literal("testCreateDummyOnlineAtcStations"), number);
     }
 
-    void CContextNetworkProxy::testAddAircraftParts(const CAircraftParts &parts, bool incremental)
+    void CContextNetworkProxy::testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftParts &parts, bool incremental)
     {
-        this->m_dBusInterface->callDBus(QLatin1Literal("testAddAircraftParts"), parts, incremental);
+        this->m_dBusInterface->callDBus(QLatin1Literal("testAddAircraftParts"), callsign, parts, incremental);
     }
 
     CStatusMessage CContextNetworkProxy::connectToNetwork(const CServer &server, int loginMode)

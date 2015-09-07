@@ -98,8 +98,7 @@ namespace BlackGui
                 this->ps_guiToJson();
             }
 
-            parts.setCallsign(callsign);
-            this->getIContextNetwork()->testAddAircraftParts(parts, this->ui->cb_AircraftPartsIncremental->isChecked());
+            this->getIContextNetwork()->testAddAircraftParts(callsign, parts, this->ui->cb_AircraftPartsIncremental->isChecked());
             CLogMessage(this).info("Added parts for %1") << callsign.toQString();
         }
 

@@ -269,7 +269,7 @@ namespace BlackCore
         virtual void testCreateDummyOnlineAtcStations(int number) = 0;
 
         //! Inject aircraft parts for testing
-        virtual void testAddAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) = 0;
+        virtual void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) = 0;
 
     protected:
         //! Constructor

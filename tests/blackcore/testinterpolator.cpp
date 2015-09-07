@@ -42,8 +42,8 @@ namespace BlackCoreTest
 
         for (int i = 0; i < IRemoteAircraftProvider::MaxPartsPerCallsign; i++)
         {
-            CAircraftParts p(getTestParts(cs, i, ts, deltaT));
-            provider->insertNewAircraftParts(p);
+            CAircraftParts p(getTestParts(i, ts, deltaT));
+            provider->insertNewAircraftParts(cs, p);
         }
 
         // make sure signals are processed, if the interpolator depends on those signals
@@ -138,11 +138,11 @@ namespace BlackCoreTest
         return s;
     }
 
-    CAircraftParts CTestInterpolator::getTestParts(const CCallsign &callsign, int number, qint64 ts, qint64 deltaT)
+    CAircraftParts CTestInterpolator::getTestParts(int number, qint64 ts, qint64 deltaT)
     {
         CAircraftLights l(true, false, true, false, true, false);
         CAircraftEngineList e({ CAircraftEngine(1, true), CAircraftEngine(2, false), CAircraftEngine(3, true) });
-        CAircraftParts p(callsign, l, true, 20, true, e, false);
+        CAircraftParts p(l, true, 20, true, e, false);
         p.setMSecsSinceEpoch(ts - deltaT * number); // values in past
         return p;
     }

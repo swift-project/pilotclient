@@ -145,13 +145,13 @@ namespace BlackCore
         void testCreateDummyOnlineAtcStations(int number);
 
         //! Test injected aircraft parts
-        void testAddAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts, bool incremental);
+        void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental);
 
         //! \copydoc IRemoteAircraftProvider::connectRemoteAircraftProviderSignals
         virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
             QObject *receiver,
             std::function<void(const BlackMisc::Aviation::CAircraftSituation &)>          addedSituationSlot,
-            std::function<void(const BlackMisc::Aviation::CAircraftParts &)>              addedPartsSlot,
+            std::function<void(const BlackMisc::Aviation::CCallsign &, const BlackMisc::Aviation::CAircraftParts &)>   addedPartsSlot,
             std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,
             std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
         ) override;
@@ -188,7 +188,7 @@ namespace BlackCore
         void addedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
 
         //! Parts added
-        void addedAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
+        void addedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
 
         //! Situation added
         void addedAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
@@ -251,7 +251,7 @@ namespace BlackCore
 
         //! Store an aircraft part
         //! \threadsafe
-        void storeAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
+        void storeAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
 
     private slots:
         //! Create aircraft in range, this is the only place where a new aircraft should be added

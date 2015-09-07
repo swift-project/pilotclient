@@ -26,7 +26,6 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CAircraftPartsList :
             public CSequence<CAircraftParts>,
             public ITimestampObjectList<CAircraftParts, CAircraftPartsList>,
-            public ICallsignObjectList<CAircraftParts, CAircraftPartsList>,
             public BlackMisc::Mixin::MetaType<CAircraftPartsList>
         {
         public:

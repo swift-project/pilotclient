@@ -77,7 +77,7 @@ namespace BlackCore
         virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
             QObject *receiver,
             std::function<void(const BlackMisc::Aviation::CAircraftSituation &)>          addedSituationSlot,
-            std::function<void(const BlackMisc::Aviation::CAircraftParts &)>              addedPartsSlot,
+            std::function<void(const BlackMisc::Aviation::CCallsign &, const BlackMisc::Aviation::CAircraftParts &)>    addedPartsSlot,
             std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,
             std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
         ) override;
@@ -221,7 +221,7 @@ namespace BlackCore
         virtual void testCreateDummyOnlineAtcStations(int number) override;
 
         //! \copydoc IContextNetwork::testAddAircraftParts
-        virtual void testAddAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) override;
+        virtual void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) override;
 
         //! Gracefully shut down, e.g. for thread safety
         void gracefulShutdown();

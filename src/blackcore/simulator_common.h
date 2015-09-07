@@ -108,7 +108,7 @@ namespace BlackCore
         virtual void ps_remoteProviderAddAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
         //! Provider added parts
-        virtual void ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
+        virtual void ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
 
         //! Provider removed aircraft
         virtual void ps_remoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign);

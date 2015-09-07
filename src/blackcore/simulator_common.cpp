@@ -38,7 +38,7 @@ namespace BlackCore
         m_remoteAircraftProviderConnections = this->m_remoteAircraftProvider->connectRemoteAircraftProviderSignals(
                 this, // receiver must match object in bind
                 std::bind(&CSimulatorCommon::ps_remoteProviderAddAircraftSituation, this, std::placeholders::_1),
-                std::bind(&CSimulatorCommon::ps_remoteProviderAddAircraftParts, this, std::placeholders::_1),
+                std::bind(&CSimulatorCommon::ps_remoteProviderAddAircraftParts, this, std::placeholders::_1, std::placeholders::_2),
                 std::bind(&CSimulatorCommon::ps_remoteProviderRemovedAircraft, this, std::placeholders::_1),
                 std::bind(&CSimulatorCommon::ps_recalculateRenderedAircraft, this, std::placeholders::_1));
 
@@ -356,8 +356,9 @@ namespace BlackCore
         Q_UNUSED(situation);
     }
 
-    void CSimulatorCommon::ps_remoteProviderAddAircraftParts(const CAircraftParts &parts)
+    void CSimulatorCommon::ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftParts &parts)
     {
+        Q_UNUSED(callsign);
         Q_UNUSED(parts);
     }
 

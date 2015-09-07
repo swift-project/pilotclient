@@ -63,7 +63,7 @@ namespace BlackMisc
             virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
                 QObject *receiver,
                 std::function<void(const BlackMisc::Aviation::CAircraftSituation &)>          addedSituationSlot,
-                std::function<void(const BlackMisc::Aviation::CAircraftParts &)>              addedPartsSlot,
+                std::function<void(const BlackMisc::Aviation::CCallsign &, const BlackMisc::Aviation::CAircraftParts &)>    addedPartsSlot,
                 std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,
                 std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
             ) override;
@@ -87,7 +87,7 @@ namespace BlackMisc
             void insertNewSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
             //! For testing, add new parts and fire signals
-            void insertNewAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
+            void insertNewAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
 
             //! Clear all data
             void clear();
@@ -97,7 +97,7 @@ namespace BlackMisc
             void addedRemoteAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
             //! Added parts
-            void addedRemoteAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
+            void addedRemoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
 
             //! Added aircraft
             void removedRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign);
@@ -108,7 +108,7 @@ namespace BlackMisc
         private:
             BlackMisc::Simulation::CSimulatedAircraftList m_aircraft;
             BlackMisc::Aviation::CAircraftSituationList m_situations;
-            BlackMisc::Aviation::CAircraftPartsList m_parts;
+            CPartsPerCallsign m_parts;
         };
 
     } // namespace

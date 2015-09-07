@@ -140,7 +140,7 @@ namespace BlackCore
     QList<QMetaObject::Connection> CAirspaceMonitor::connectRemoteAircraftProviderSignals(
         QObject *receiver,
         std::function<void(const CAircraftSituation &)>    situationSlot,
-        std::function<void(const CAircraftParts &)>        partsSlot,
+        std::function<void(const BlackMisc::Aviation::CCallsign &, const CAircraftParts &)> partsSlot,
         std::function<void(const CCallsign &)>             removedAircraftSlot,
         std::function<void(const CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
     )
@@ -373,9 +373,9 @@ namespace BlackCore
         emit this->changedAtcStationsOnline();
     }
 
-    void CAirspaceMonitor::testAddAircraftParts(const CAircraftParts &parts, bool incremental)
+    void CAirspaceMonitor::testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftParts &parts, bool incremental)
     {
-        this->ps_aircraftConfigReceived(parts.getCallsign(), parts.toJson(), !incremental);
+        this->ps_aircraftConfigReceived(callsign, parts.toJson(), !incremental);
     }
 
     void CAirspaceMonitor::clear()
@@ -1011,18 +1011,17 @@ namespace BlackCore
         else
         {
             // incremental update
-            parts = this->remoteAircraftParts(callsign).findFirstByCallsign(callsign);
+            parts = this->remoteAircraftParts(callsign).frontOrDefault();
             QJsonObject config = applyIncrementalObject(parts.toJson(), jsonObject);
             parts.convertFromJson(config);
         }
 
-        // make sure in any case right time / callsign
+        // make sure in any case right time
         parts.setCurrentUtcTime();
-        parts.setCallsign(callsign);
 
         // store part history (parts always absolute)
-        this->storeAircraftParts(parts);
-        emit this->addedAircraftParts(parts);
+        this->storeAircraftParts(callsign, parts);
+        emit this->addedAircraftParts(callsign, parts);
 
         // here I expect always a changed value
         QWriteLocker l(&m_lockAircraft);
@@ -1052,10 +1051,8 @@ namespace BlackCore
         Q_ASSERT_X(l.size() < 2 || l[0].getMSecsSinceEpoch() >= l[1].getMSecsSinceEpoch(), Q_FUNC_INFO, "wrong sort order");
     }
 
-    void CAirspaceMonitor::storeAircraftParts(const CAircraftParts &parts)
+    void CAirspaceMonitor::storeAircraftParts(const CCallsign &callsign, const CAircraftParts &parts)
     {
-        const CCallsign callsign(parts.getCallsign());
-        Q_ASSERT_X(!callsign.isEmpty(), "storeAircraftParts", "empty callsign");
         if (callsign.isEmpty()) { return; }
 
         // list sorted from new to old

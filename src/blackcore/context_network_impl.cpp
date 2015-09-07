@@ -132,7 +132,7 @@ namespace BlackCore
     QList<QMetaObject::Connection> CContextNetwork::connectRemoteAircraftProviderSignals(
         QObject *receiver,
         std::function<void (const CAircraftSituation &)> situationSlot,
-        std::function<void (const CAircraftParts &)> partsSlot,
+        std::function<void (const BlackMisc::Aviation::CCallsign &, const CAircraftParts &)> partsSlot,
         std::function<void (const CCallsign &)> removedAircraftSlot,
         std::function<void (const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot)
     {
@@ -620,10 +620,10 @@ namespace BlackCore
         this->m_airspace->testCreateDummyOnlineAtcStations(number);
     }
 
-    void CContextNetwork::testAddAircraftParts(const CAircraftParts &parts, bool incremental)
+    void CContextNetwork::testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftParts &parts, bool incremental)
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << parts << incremental; }
-        this->m_airspace->testAddAircraftParts(parts, incremental);
+        this->m_airspace->testAddAircraftParts(callsign, parts, incremental);
     }
 
     CMetar CContextNetwork::getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode)

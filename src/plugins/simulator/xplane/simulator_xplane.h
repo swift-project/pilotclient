@@ -106,7 +106,7 @@ namespace BlackSimPlugin
             virtual void ps_remoteProviderAddAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
 
             //! \copydoc CSimulatorCommon::ps_remoteProvideraddAircraftParts
-            virtual void ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts) override;
+            virtual void ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts) override;
 
             //! \copydoc CSimulatorCommon::ps_remoteProviderRemovedAircraft
             virtual void ps_remoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;

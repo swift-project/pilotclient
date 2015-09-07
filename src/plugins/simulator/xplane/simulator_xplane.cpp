@@ -410,11 +410,12 @@ namespace BlackSimPlugin
                                         situation.getHeading().value(CAngleUnit::deg()));
         }
 
-        void CSimulatorXPlane::ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts)
+        void CSimulatorXPlane::ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts)
         {
             Q_ASSERT(isConnected());
-            m_traffic->setPlaneSurfaces(parts.getCallsign().asString(), true, 0, 0, 0, 0, 0, 0, 0, 0, 0, true, true, true, true, 0); // TODO landing gear, lights, control surfaces
-            m_traffic->setPlaneTransponder(parts.getCallsign().asString(), 2000, true, false); // TODO transponder
+            m_traffic->setPlaneSurfaces(callsign.asString(), true, 0, 0, 0, 0, 0, 0, 0, 0, 0, true, true, true, true, 0); // TODO landing gear, lights, control surfaces
+            m_traffic->setPlaneTransponder(callsign.asString(), 2000, true, false); // TODO transponder
+            Q_UNUSED(parts); // TODO
         }
 
         void CSimulatorXPlane::ps_remoteProviderRemovedAircraft(const CCallsign &callsign)

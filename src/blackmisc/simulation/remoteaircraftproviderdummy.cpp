@@ -41,8 +41,8 @@ namespace BlackMisc
 
         CAircraftPartsList CRemoteAircraftProviderDummy::remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeBefore) const
         {
-            if (cutoffTimeBefore < 0) { return m_parts.findByCallsign(callsign); }
-            return m_parts.findByCallsign(callsign).findBefore(cutoffTimeBefore);
+            if (cutoffTimeBefore < 0) { return m_parts.value(callsign); }
+            return m_parts.value(callsign).findBefore(cutoffTimeBefore);
         }
 
         CAircraftSituationList CRemoteAircraftProviderDummy::remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const
@@ -57,7 +57,7 @@ namespace BlackMisc
 
         CCallsignSet CRemoteAircraftProviderDummy::remoteAircraftSupportingParts() const
         {
-            return m_parts.getCallsigns();
+            return CCollection<CCallsign>(m_parts.keys());
         }
 
         bool CRemoteAircraftProviderDummy::isRemoteAircraftSupportingParts(const CCallsign &callsign) const
@@ -68,7 +68,7 @@ namespace BlackMisc
         QList<QMetaObject::Connection> CRemoteAircraftProviderDummy::connectRemoteAircraftProviderSignals(
             QObject *receiver,
             std::function<void (const CAircraftSituation &)>        situationSlot,
-            std::function<void (const CAircraftParts &)>            partsSlot,
+            std::function<void (const BlackMisc::Aviation::CCallsign &, const CAircraftParts &)>    partsSlot,
             std::function<void (const CCallsign &)>                 removedAircraftSlot,
             std::function<void (const CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
         )
@@ -129,11 +129,11 @@ namespace BlackMisc
             emit addedRemoteAircraftSituation(situation);
         }
 
-        void CRemoteAircraftProviderDummy::insertNewAircraftParts(const CAircraftParts &parts)
+        void CRemoteAircraftProviderDummy::insertNewAircraftParts(const CCallsign &callsign, const CAircraftParts &parts)
         {
-            this->m_parts.push_front(parts);
-            this->m_parts.sortLatestFirst(); // like in real world, latest should be first
-            emit addedRemoteAircraftParts(parts);
+            this->m_parts[callsign].push_front(parts);
+            this->m_parts[callsign].sortLatestFirst(); // like in real world, latest should be first
+            emit addedRemoteAircraftParts(callsign, parts);
         }
 
         void CRemoteAircraftProviderDummy::clear()

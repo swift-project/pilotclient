@@ -214,8 +214,9 @@ namespace BlackCore
         }
 
         //! \copydoc IContextNetwork::testAddAircraftParts
-        virtual void testAddAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) override
+        virtual void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) override
         {
+            Q_UNUSED(callsign);
             Q_UNUSED(parts);
             Q_UNUSED(incremental);
             logEmptyContextWarning(Q_FUNC_INFO);

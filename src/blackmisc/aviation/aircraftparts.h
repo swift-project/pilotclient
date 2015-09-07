@@ -13,7 +13,6 @@
 #define BLACKMISC_AVIATION_AIRCRAFTPARTS_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/propertyindex.h"
@@ -38,8 +37,7 @@ namespace BlackMisc
                 IndexFlapsPercentage,
                 IndexSpoilersOut,
                 IndexEngines,
-                IndexOnGround,
-                IndexCallsign
+                IndexOnGround
             };
 
             //! Default constructor
@@ -49,13 +47,6 @@ namespace BlackMisc
             CAircraftParts(const CAircraftLights &lights, bool gearDown, int flapsPercent, bool spoilersOut,
                            const CAircraftEngineList &engines, bool onGround)
                 : m_lights(lights), m_engines(engines), m_flapsPercentage(flapsPercent), m_gearDown(gearDown),
-                  m_spoilersOut(spoilersOut), m_isOnGround(onGround)
-            {}
-
-            //! Constructor
-            CAircraftParts(const CCallsign &callsign, const CAircraftLights &lights, bool gearDown, int flapsPercent, bool spoilersOut,
-                           const CAircraftEngineList &engines, bool onGround)
-                : m_correspondingCallsign(callsign), m_lights(lights), m_engines(engines), m_flapsPercentage(flapsPercent), m_gearDown(gearDown),
                   m_spoilersOut(spoilersOut), m_isOnGround(onGround)
             {}
 
@@ -113,18 +104,11 @@ namespace BlackMisc
             //! Set aircraft on ground
             void setOnGround(bool onGround) { m_isOnGround = onGround; }
 
-            //! Corresponding callsign
-            const BlackMisc::Aviation::CCallsign &getCallsign() const { return this->m_correspondingCallsign; }
-
-            //! Corresponding callsign
-            void setCallsign(const BlackMisc::Aviation::CCallsign &callsign) { this->m_correspondingCallsign = callsign; }
-
             //! \copydoc CValueObject::convertToQString
             QString convertToQString(bool i18n = false) const;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftParts)
-            BlackMisc::Aviation::CCallsign m_correspondingCallsign;
             CAircraftLights m_lights;
             CAircraftEngineList m_engines;
             int m_flapsPercentage  = 0;
@@ -137,7 +121,6 @@ namespace BlackMisc
 } // namespace
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftParts, (
-                                   attr(o.m_correspondingCallsign, flags < DisabledForJson > ()),
                                    attr(o.m_lights, "lights"),
                                    attr(o.m_gearDown, "gear_down"),
                                    attr(o.m_flapsPercentage, "flaps_pct"),

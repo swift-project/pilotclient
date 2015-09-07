@@ -203,7 +203,6 @@ namespace BlackMisc
         template class ICallsignObjectList<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
         template class ICallsignObjectList<BlackMisc::Aviation::CAircraft, BlackMisc::Aviation::CAircraftList>;
         template class ICallsignObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
-        template class ICallsignObjectList<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList>;
         template class ICallsignObjectList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
         template class ICallsignObjectList<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>;
 

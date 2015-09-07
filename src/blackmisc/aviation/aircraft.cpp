@@ -41,7 +41,6 @@ namespace BlackMisc
             this->m_callsign.setTypeHint(CCallsign::Aircraft);
             this->m_pilot.setCallsign(this->m_callsign);
             this->m_situation.setCallsign(this->m_callsign);
-            this->m_parts.setCallsign(this->m_callsign);
         }
 
         QString CAircraft::convertToQString(bool i18n) const
@@ -168,7 +167,6 @@ namespace BlackMisc
         void CAircraft::setParts(const CAircraftParts &parts)
         {
             m_parts = parts;
-            m_parts.setCallsign(this->getCallsign());
         }
 
         void CAircraft::setLights(CAircraftLights &lights)

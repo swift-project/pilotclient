@@ -42,8 +42,6 @@ namespace BlackMisc
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexCallsign:
-                return m_correspondingCallsign.propertyByIndex(index.copyFrontRemoved());
             case IndexEngines:
                 return CVariant::fromValue(this->m_engines);
             case IndexFlapsPercentage:
@@ -85,9 +83,6 @@ namespace BlackMisc
                 break;
             case IndexSpoilersOut:
                 this->m_spoilersOut = variant.toBool();
-                break;
-            case IndexCallsign:
-                this->m_correspondingCallsign.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             default:
                 CValueObject::setPropertyByIndex(variant, index);
