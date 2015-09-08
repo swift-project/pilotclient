@@ -3,13 +3,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "hotkey.h"
+#include "blackgui/components/settingshotkeycomponent.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    HotkeyDialog w;
+
+    BlackMisc::registerMetadata();
+    BlackGui::Components::CSettingsHotkeyComponent w;
     w.show();
 
     return a.exec();

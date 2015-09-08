@@ -9,13 +9,12 @@ TARGET = sample_hotkey
 TEMPLATE = app
 
 CONFIG   -= app_bundle
-CONFIG   += blackmisc blackinput blackcore
+CONFIG   += blackmisc blackinput blackcore blackgui
 
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src
 
 SOURCES += *.cpp
-HEADERS += *.h
 
 DESTDIR = $$BuildRoot/bin
 
