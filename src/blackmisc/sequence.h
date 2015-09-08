@@ -389,6 +389,20 @@ namespace BlackMisc
         }
 
         /*!
+         * \brief Remove all elements if they are in other
+         * \pre The sequence must be initialized.
+         * \return The number of elements removed.
+         */
+        int removeIfIn(const CSequence &other)
+        {
+            auto newEnd = std::remove_if(begin(), end(), [&other](const T &v) { return other.contains(v); });
+            int count = std::distance(newEnd, end());
+            erase(newEnd, end());
+            return count;
+        }
+
+
+        /*!
          * \brief Replace elements matching the given element with a replacement.
          * \return The number of elements replaced.
          */
