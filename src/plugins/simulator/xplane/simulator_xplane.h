@@ -17,6 +17,7 @@
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/pixmap.h"
+#include "plugins/simulator/xplane_config/simulatorxplaneconfig.h"
 #include <QDBusConnection>
 
 class QDBusServiceWatcher;
@@ -98,6 +99,9 @@ namespace BlackSimPlugin
 
             //! \copydoc ISimulator::iconForModel
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
+
+            //! Creates an appropriate dbus connection from the string describing it
+            static QDBusConnection connectionFromString(const QString &str);
 
         protected slots:
             //! \copydoc CSimulatorCommon::ps_remoteProviderAddAircraftSituation
@@ -205,10 +209,13 @@ namespace BlackSimPlugin
 
         private slots:
             void ps_serviceRegistered(const QString &serviceName);
+            void ps_xbusServerSettingChanged();
 
         private:
             QDBusConnection m_conn { "default" };
             QDBusServiceWatcher *m_watcher { nullptr };
+            BlackCore::CSetting<XBusServer> m_xbusServerSetting { this, &CSimulatorXPlaneListener::ps_xbusServerSettingChanged };
+
         };
 
         //! Factory for creating CSimulatorXPlane instance

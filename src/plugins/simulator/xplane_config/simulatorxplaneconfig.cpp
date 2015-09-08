@@ -11,11 +11,10 @@ namespace BlackSimPlugin
 
         }
 
-        QWidget *CSimulatorXPlaneConfig::createConfigWindow()
+        BlackGui::CPluginConfigWindow *CSimulatorXPlaneConfig::createConfigWindow()
         {
             CSimulatorXPlaneConfigWindow* w = new CSimulatorXPlaneConfigWindow();
             return w;
         }
-
     }
 }

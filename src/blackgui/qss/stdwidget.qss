@@ -111,9 +111,9 @@ BlackGui--Editors--CValidationIndicator {
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
-BlackGui--CPluginDetailsWindow {
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
-  background-color: darkslategray;
+BlackGui--CPluginDetailsWindow,
+BlackGui--CPluginConfigWindow {
+  background: black;
 }
 
 /** default for buttons **/

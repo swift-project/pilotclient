@@ -11,6 +11,7 @@
 #include "xbus_service_proxy.h"
 #include "xbus_traffic_proxy.h"
 #include "xbus_weather_proxy.h"
+#include "blackcore/dbus_server.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/simulation/modelmappingsprovider.h"
@@ -351,6 +352,22 @@ namespace BlackSimPlugin
             return CPixmap();
         }
 
+        QDBusConnection CSimulatorXPlane::connectionFromString(const QString &str)
+        {
+            if (str == BlackCore::CDBusServer::sessionDBusServer())
+            {
+                return QDBusConnection::sessionBus();
+            }
+            else if (str == BlackCore::CDBusServer::systemDBusServer())
+            {
+                return QDBusConnection::systemBus();
+            }
+            else
+            {
+                Q_UNREACHABLE();
+            }
+        }
+
         bool CSimulatorXPlane::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
         {
             //! \todo XP implement isRenderedAircraft correctly. This work around, but not really telling me if callsign is really(!) visible in SIM
@@ -510,7 +527,7 @@ namespace BlackSimPlugin
             }
             else
             {
-                m_conn = QDBusConnection::sessionBus(); // TODO make this configurable
+                m_conn = CSimulatorXPlane::connectionFromString(m_xbusServerSetting.get());
                 m_watcher = new QDBusServiceWatcher(xbusServiceName(), m_conn, QDBusServiceWatcher::WatchForRegistration, this);
                 connect(m_watcher, &QDBusServiceWatcher::serviceRegistered, this, &CSimulatorXPlaneListener::ps_serviceRegistered);
             }
@@ -527,7 +544,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlaneListener::isXBusRunning() const
         {
-            QDBusConnection conn = QDBusConnection::sessionBus(); // TODO make this configurable
+            QDBusConnection conn = CSimulatorXPlane::connectionFromString(m_xbusServerSetting.get());
             CXBusServiceProxy *service = new CXBusServiceProxy(conn);
             CXBusTrafficProxy *traffic = new CXBusTrafficProxy(conn);
 
@@ -544,6 +561,16 @@ namespace BlackSimPlugin
             if (serviceName == xbusServiceName())
             {
                 emit simulatorStarted(getPluginInfo());
+            }
+        }
+
+        void CSimulatorXPlaneListener::ps_xbusServerSettingChanged()
+        {
+            // user changed settings, restart the listener
+            if (m_watcher) {
+                CLogMessage(this).debug() << "XP: Restarting listener";
+                stop();
+                start();
             }
         }
 

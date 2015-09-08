@@ -4,6 +4,7 @@
 #include "blackcore/context_simulator.h"
 #include "blackcore/context_network.h"
 #include "blackgui/pluginconfig.h"
+#include "blackgui/pluginconfigwindow.h"
 #include "blackgui/plugindetailswindow.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
@@ -279,8 +280,8 @@ namespace BlackGui
 
             QString configId = m_plugins->getPluginConfigId(selected->getIdentifier());
             IPluginConfig *config = m_plugins->getPluginById<IPluginConfig>(configId);
-            QWidget *window = config->createConfigWindow();
-//            window->setParent(qApp->activeWindow());
+            CPluginConfigWindow *window = config->createConfigWindow();
+            window->setParent(qApp->activeWindow());
             window->setWindowFlags(Qt::Dialog);
             window->setAttribute(Qt::WA_DeleteOnClose);
             window->show();

@@ -5,14 +5,12 @@
  * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
  * including this file, may be copied, modified, propagated, or distributed except according to the terms
  * contained in the LICENSE file.
- *
- * Class based on qLed: Copyright (C) 2010 by P. Sereno, http://www.sereno-online.com
  */
 
 //! \file
 
 #ifndef BLACKGUI_PLUGINCONFIG_H
-#define BCLAKGUI_PLUGINCONFIG_H
+#define BLACKGUI_PLUGINCONFIG_H
 
 #include "blackgui/blackguiexport.h"
 #include <QtWidgets/QWidget>
@@ -20,13 +18,24 @@
 
 namespace BlackGui
 {
+    class CPluginConfigWindow;
+
+    /**
+     * The interface for the plugin config.
+     * The plugin config plugin is always called from the GUI process in order
+     * to make it possible to create a config window.
+     *
+     * \sa BlackCore::ISimulator.
+     */
     class BLACKGUI_EXPORT IPluginConfig
     {
 
     public:
+        //! Dtor.
         virtual ~IPluginConfig() = default;
 
-        virtual QWidget *createConfigWindow() = 0;
+        //! Creates a new config window and returns its pointer.
+        virtual CPluginConfigWindow *createConfigWindow() = 0;
 
     };
 }

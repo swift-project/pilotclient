@@ -12,6 +12,8 @@
 #ifndef BLACKSIMPLUGIN_SIMULATOR_XPLANE_CONFIG_WINDOW_H
 #define BLACKSIMPLUGIN_SIMULATOR_XPLANE_CONFIG_WINDOW_H
 
+#include "simulatorxplaneconfig.h"
+#include "blackgui/pluginconfigwindow.h"
 #include <QWidget>
 #include <QScopedPointer>
 
@@ -26,7 +28,7 @@ namespace BlackSimPlugin
         /**
          * A window that shows all the X-Plane plugin options.
          */
-        class CSimulatorXPlaneConfigWindow : public QWidget
+        class CSimulatorXPlaneConfigWindow : public BlackGui::CPluginConfigWindow
         {
             Q_OBJECT
 
@@ -37,8 +39,13 @@ namespace BlackSimPlugin
             //! Dtor.
             virtual ~CSimulatorXPlaneConfigWindow();
 
+        private slots:
+            void ps_storeSettings();
+
         private:
             QScopedPointer<Ui::CSimulatorXPlaneConfigWindow> ui;
+
+            BlackCore::CSetting<XBusServer> m_xbusServerSetting { this };
 
         };
     }
