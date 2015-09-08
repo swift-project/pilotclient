@@ -518,10 +518,7 @@ namespace BlackMisc
         //! Less than operator.
         friend bool operator <(const CSequence &a, const CSequence &b)
         {
-            auto mm = std::mismatch(a.begin(), a.begin() + std::max(a.size(), b.size()), b.begin());
-            if (mm.first == a.end()) { return mm.second != b.end(); }
-            if (mm.second == b.end()) { return false; }
-            return *mm.first < *mm.second;
+            return std::lexicographical_compare(a.begin(), a.end(), b.begin(), b.end());
         }
 
         //! Greater than operator.
