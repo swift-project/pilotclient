@@ -13,7 +13,7 @@
 namespace BlackMisc
 {
 
-    CWorker *CWorker::fromTask(QObject *owner, const QString &name, std::function<void()> task)
+    CWorker *CWorker::fromTaskImpl(QObject *owner, const QString &name, std::function<CVariant()> task)
     {
         auto *thread = new CRegularThread(owner);
         auto *worker = new CWorker(task);
@@ -32,7 +32,7 @@ namespace BlackMisc
 
     void CWorker::ps_runTask()
     {
-        m_task();
+        m_result = m_task();
 
         setFinished();
 

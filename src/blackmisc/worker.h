@@ -13,6 +13,7 @@
 #define BLACKMISC_WORKER_H
 
 #include "blackmiscexport.h"
+#include "variant.h"
 #include <QThread>
 #include <QMutex>
 #include <QTimer>
@@ -207,17 +208,42 @@ namespace BlackMisc
          * \param owner Will be the parent of the new thread (the worker has no parent).
          * \param name A name for the task, which will be used to create a name for the thread.
          * \param task A function object which will be run by the worker in its thread.
+         * \todo An MSVC bug prevents perfect-forwarding of task.
          */
-        static CWorker *fromTask(QObject *owner, const QString &name, std::function<void()> task);
+        template <typename F>
+        static CWorker *fromTask(QObject *owner, const QString &name, F task)
+        {
+            return fromTaskImpl(owner, name, [task]() { return CVariant::fromResultOf(task); });
+        }
+
+        //! Connects to a functor to which will be passed the result when the task is finished.
+        //! \tparam R The return type of the task.
+        //! \threadsafe
+        template <typename R, typename F>
+        void thenWithResult(F functor) { then([this, functor]() { functor(result<R>()); }); }
+
+        //! Connects to a functor or method to which will be passed the result when the task is finished.
+        //! \tparam R The return type of the task.
+        //! \threadsafe
+        template <typename R, typename T, typename F>
+        void thenWithResult(T *context, F functor) { then(context, [this, context, functor]() { invoke(context, functor, result<R>()); }); }
+
+        //! Returns the result of the task, waiting for it to finish if necessary.
+        //! \tparam R The return type of the task.
+        //! \threadsafe
+        template <typename R>
+        R result() { waitForFinished(); Q_ASSERT(m_result.canConvert<R>()); return m_result.value<R>(); }
 
     private slots:
         //! Called when the worker has been moved into its new thread.
         void ps_runTask();
 
     private:
-        CWorker(std::function<void()> task) : m_task(task) {}
+        CWorker(std::function<CVariant()> task) : m_task(task) {}
+        static CWorker *fromTaskImpl(QObject *owner, const QString &name, std::function<CVariant()> task);
 
-        std::function<void()> m_task;
+        std::function<CVariant()> m_task;
+        CVariant m_result;
     };
 
     /*!
