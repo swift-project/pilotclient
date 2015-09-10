@@ -47,13 +47,6 @@ namespace BlackMisc
             //! Example:
             //! List contains CTRL-F and other has combination CTRL
             CActionHotkeyList findSupersetsOf(const CActionHotkey &other);
-
-            //! Compare two CHotkeyList
-            //! \todo Remove once https://dev.vatsim-germany.org/issues/459 is fixed
-            friend int compare(const CActionHotkeyList &a, const CActionHotkeyList &b)
-            {
-                return compare(static_cast<const CSequence<CActionHotkey> &>(a), static_cast<const CSequence<CActionHotkey> &>(b));
-            }
         };
 
     }
