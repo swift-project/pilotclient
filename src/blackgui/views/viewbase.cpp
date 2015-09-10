@@ -220,14 +220,17 @@ namespace BlackGui
 
         template <class ModelClass, class ContainerType, class ObjectType> BlackMisc::CWorker *CViewBase<ModelClass, ContainerType, ObjectType>::updateContainerAsync(const ContainerType &container, bool sort, bool resize)
         {
+            Q_UNUSED(sort);
             ModelClass *model = this->derivedModel();
             auto sortColumn = model->getSortColumn();
             auto sortOrder = model->getSortOrder();
-            BlackMisc::CWorker *worker = BlackMisc::CWorker::fromTask(this, "ViewSort", [this, model, container, sort, resize, sortColumn, sortOrder]()
+            BlackMisc::CWorker *worker = BlackMisc::CWorker::fromTask(this, "ViewSort", [model, container, sortColumn, sortOrder]()
             {
-                ContainerType sortedContainer = model->sortContainerByColumn(container, sortColumn, sortOrder);
-                QMetaObject::invokeMethod(this, "ps_updateContainer",
-                                          Q_ARG(BlackMisc::CVariant, CVariant::from(sortedContainer)), Q_ARG(bool, false), Q_ARG(bool, resize));
+                return model->sortContainerByColumn(container, sortColumn, sortOrder);
+            });
+            worker->thenWithResult<ContainerType>(this, [this, resize](const ContainerType &sortedContainer)
+            {
+                this->ps_updateContainer(CVariant::from(sortedContainer), false, resize);
             });
             worker->then(this, &CViewBase::asyncUpdateFinished);
             return worker;

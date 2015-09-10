@@ -48,11 +48,11 @@ namespace BlackMisc
                     {
                         bool ok;
                         auto aircraftCfgEntriesList = parseImpl(rootDirectory, excludedDirectories, &ok);
-                        if (!ok) { return; }
-                        bool c = QMetaObject::invokeMethod(this, "updateCfgEntriesList",
-                                                           Q_ARG(BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList, aircraftCfgEntriesList));
-                        Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot invoke updateCfgEntriesList");
-                        Q_UNUSED(c);
+                        return std::make_pair(aircraftCfgEntriesList, ok);
+                    });
+                    m_parserWorker->thenWithResult<std::pair<CAircraftCfgEntriesList, bool>>(this, [this](const std::pair<CAircraftCfgEntriesList, bool> &pair)
+                    {
+                        if (pair.second) { this->updateCfgEntriesList(pair.first); }
                     });
                 }
                 else if (mode == ModeBlocking)
