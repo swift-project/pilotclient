@@ -97,26 +97,15 @@ namespace BlackMisc
         Q_OBJECT
 
     public:
-        //! Connects to a slot which will be called when the task is finished.
+        //! Connects to a functor or method which will be called when the task is finished.
         //! \threadsafe
         template <typename T, typename F>
-        auto then(T *receiver, F slot) -> typename std::enable_if<std::is_member_function_pointer<F>::value>::type
-        {
-            Q_ASSERT(receiver->thread() == QThread::currentThread());
-            QMutexLocker lock(&m_finishedMutex);
-            connect(this, &CWorkerBase::finished, receiver, slot);
-            if (m_finished) { (receiver->*slot)(); }
-        }
-
-        //! Connects to a functor which will be called when the task is finished.
-        //! \threadsafe
-        template <typename T, typename F>
-        auto then(T *context, F functor) -> typename std::enable_if<! std::is_member_function_pointer<F>::value>::type
+        void then(T *context, F functor)
         {
             Q_ASSERT(context->thread() == QThread::currentThread());
             QMutexLocker lock(&m_finishedMutex);
             connect(this, &CWorkerBase::finished, context, functor);
-            if (m_finished) { functor(); }
+            if (m_finished) { invoke(context, functor); }
         }
 
         //! Connects to a functor which will be called when the task is finished.
@@ -179,6 +168,20 @@ namespace BlackMisc
             QMutexLocker lock(&m_finishedMutex);
             m_finished = true;
             emit finished();
+        }
+
+        //! Uniform way to invoke either a functor or a method.
+        template <typename T, typename F, typename... Ts>
+        static auto invoke(T *object, F func, Ts &&... args) -> typename std::enable_if<std::is_member_function_pointer<F>::value>::type
+        {
+            return (object->*func)(std::forward<Ts>(args)...);
+        }
+
+        //! Uniform way to invoke either a functor or a method.
+        template <typename T, typename F, typename... Ts>
+        static auto invoke(T *, F func, Ts &&... args) -> typename std::enable_if<! std::is_member_function_pointer<F>::value>::type
+        {
+            return func(std::forward<Ts>(args)...);
         }
 
     private:
