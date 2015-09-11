@@ -39,7 +39,7 @@ namespace BlackMisc
             if (m_initState != NotInitialized) { return; }
             m_initWorker = BlackMisc::CWorker::fromTask(this, "CAircraftMatcher::initImpl", [this]()
             {
-                initImpl();
+                this->initImpl();
             });
         }
 

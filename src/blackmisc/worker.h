@@ -220,13 +220,13 @@ namespace BlackMisc
         //! \tparam R The return type of the task.
         //! \threadsafe
         template <typename R, typename F>
-        void thenWithResult(F functor) { then([this, functor]() { functor(result<R>()); }); }
+        void thenWithResult(F functor) { then([this, functor]() { functor(this->result<R>()); }); }
 
         //! Connects to a functor or method to which will be passed the result when the task is finished.
         //! \tparam R The return type of the task.
         //! \threadsafe
         template <typename R, typename T, typename F>
-        void thenWithResult(T *context, F functor) { then(context, [this, context, functor]() { invoke(context, functor, result<R>()); }); }
+        void thenWithResult(T *context, F functor) { then(context, [this, context, functor]() { invoke(context, functor, this->result<R>()); }); }
 
         //! Returns the result of the task, waiting for it to finish if necessary.
         //! \tparam R The return type of the task.
