@@ -46,6 +46,9 @@ namespace BlackMisc
         //! Constructor.
         CIdentifier(const QString &name = QString());
 
+        //! Returns an anonymous identifier.
+        static CIdentifier anonymous();
+
         //! Name
         QString getName() const { return m_name; }
 

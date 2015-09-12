@@ -22,6 +22,19 @@ namespace BlackMisc
           m_processId(QCoreApplication::applicationPid())
     { }
 
+    CIdentifier CIdentifier::anonymous()
+    {
+        static CIdentifier id;
+        if (id.m_processId)
+        {
+            id.m_processId = 0;
+            id.m_processName = "";
+            id.m_machineName = "";
+            id.m_machineIdBase64 = "";
+        }
+        return id;
+    }
+
     QByteArray CIdentifier::getMachineId() const
     {
         return QByteArray::fromBase64(m_machineIdBase64.toLocal8Bit());

@@ -75,7 +75,7 @@ namespace BlackCore
     void CContextApplicationProxy::synchronizeLocalSettings()
     {
         // note this proxy method does not call synchronizeLocalSettings in core
-        CSettingsCache::instance()->insertValues(this->getAllSettings());
+        CSettingsCache::instance()->changeValuesFromRemote(this->getAllSettings(), CIdentifier::anonymous());
     }
 
     BlackMisc::CStatusMessage CContextApplicationProxy::saveSettings(const QString &keyPrefix)
