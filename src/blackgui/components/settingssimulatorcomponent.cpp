@@ -280,9 +280,7 @@ namespace BlackGui
 
             QString configId = m_plugins->getPluginConfigId(selected->getIdentifier());
             IPluginConfig *config = m_plugins->getPluginById<IPluginConfig>(configId);
-            CPluginConfigWindow *window = config->createConfigWindow();
-            window->setParent(qApp->activeWindow());
-            window->setWindowFlags(Qt::Dialog);
+            CPluginConfigWindow *window = config->createConfigWindow(qApp->activeWindow());
             window->setAttribute(Qt::WA_DeleteOnClose);
             window->show();
         }

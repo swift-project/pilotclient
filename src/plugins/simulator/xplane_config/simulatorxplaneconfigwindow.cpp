@@ -1,6 +1,10 @@
 #include "simulatorxplaneconfigwindow.h"
 #include "ui_simulatorxplaneconfigwindow.h"
 #include "blackcore/dbus_server.h"
+#include "blackmisc/simulation/xplane/xplaneutil.h"
+#include <QStringBuilder>
+#include <QFileDialog>
+#include <QMessageBox>
 
 using namespace BlackGui;
 
@@ -9,7 +13,8 @@ namespace BlackSimPlugin
     namespace XPlane
     {
 
-        CSimulatorXPlaneConfigWindow::CSimulatorXPlaneConfigWindow() :
+        CSimulatorXPlaneConfigWindow::CSimulatorXPlaneConfigWindow(QWidget *parent) :
+            CPluginConfigWindow(parent),
             ui(new Ui::CSimulatorXPlaneConfigWindow)
         {
             ui->setupUi(this);
@@ -22,6 +27,8 @@ namespace BlackSimPlugin
             connect(ui->bb_OkCancel, &QDialogButtonBox::rejected, this, &CSimulatorXPlaneConfigWindow::close);
 
             ui->cp_XBusServer->setCurrentText(m_xbusServerSetting.get());
+
+            connect(ui->pb_InstallXBus, &QPushButton::clicked, this, &CSimulatorXPlaneConfigWindow::ps_installXBus);
         }
 
         CSimulatorXPlaneConfigWindow::~CSimulatorXPlaneConfigWindow()
@@ -37,5 +44,32 @@ namespace BlackSimPlugin
             }
         }
 
+        void CSimulatorXPlaneConfigWindow::ps_installXBus()
+        {
+            QString xPlaneLocation = BlackMisc::Simulation::XPlane::CXPlaneUtil::xplane10Dir();
+            if (xPlaneLocation.isEmpty())
+                xPlaneLocation = BlackMisc::Simulation::XPlane::CXPlaneUtil::xplane9Dir();
+
+            QString path = QFileDialog::getExistingDirectory(parentWidget(),
+                           tr("Choose your X-Plane install directory"),
+                           xPlaneLocation,
+                           QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+            path.append("/Resources/plugins/xbus/64/");
+            QDir xbusDir(path);
+            if (!xbusDir.exists())
+            {
+                if (!xbusDir.mkpath("."))
+                {
+                    return;
+                }
+            }
+
+            QString origin = QCoreApplication::applicationDirPath() % QStringLiteral("/../xbus/64/lin.xpl");
+            QString destination = path % "/lin.xpl";
+            QFile::copy(origin, destination);
+
+            QMessageBox::information(this, tr("XBus installed"), tr("You may now launch your X-Plane and start using XBus!"));
+        }
     }
 }

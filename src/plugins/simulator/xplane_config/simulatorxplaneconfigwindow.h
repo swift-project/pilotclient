@@ -34,17 +34,17 @@ namespace BlackSimPlugin
 
         public:
             //! Ctor.
-            CSimulatorXPlaneConfigWindow();
+            CSimulatorXPlaneConfigWindow(QWidget *parent);
 
             //! Dtor.
             virtual ~CSimulatorXPlaneConfigWindow();
 
         private slots:
             void ps_storeSettings();
+            void ps_installXBus();
 
         private:
             QScopedPointer<Ui::CSimulatorXPlaneConfigWindow> ui;
-
             BlackCore::CSetting<XBusServer> m_xbusServerSetting { this };
 
         };

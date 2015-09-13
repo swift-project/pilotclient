@@ -22,7 +22,10 @@ namespace BlackGui
         Q_OBJECT
     public:
         //! No parent
-        explicit CPluginConfigWindow();
+        explicit CPluginConfigWindow(QWidget *parent);
+
+    protected:
+        virtual void showEvent(QShowEvent *event) override;
 
     };
 }

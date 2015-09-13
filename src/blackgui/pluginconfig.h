@@ -32,10 +32,10 @@ namespace BlackGui
 
     public:
         //! Dtor.
-        virtual ~IPluginConfig() = default;
+        virtual ~IPluginConfig() {}
 
         //! Creates a new config window and returns its pointer.
-        virtual CPluginConfigWindow *createConfigWindow() = 0;
+        virtual CPluginConfigWindow *createConfigWindow(QWidget *parent) = 0;
 
     };
 }

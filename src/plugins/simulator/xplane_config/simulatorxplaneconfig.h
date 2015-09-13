@@ -41,11 +41,14 @@ namespace BlackSimPlugin
             //! Ctor
             CSimulatorXPlaneConfig(QObject *parent = nullptr);
 
+            //! Dtor
+            virtual ~CSimulatorXPlaneConfig() {}
+
             //! \copydoc BlackGui::IPluginConfig::createConfigWindow()
-            BlackGui::CPluginConfigWindow *createConfigWindow() override;
+            BlackGui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;
 
         };
     }
 }
 
-#endif // SIMULATORXPLANECONFIG_H
+#endif // guard
