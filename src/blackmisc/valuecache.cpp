@@ -146,7 +146,14 @@ namespace BlackMisc
 
     CStatusMessage CValueCache::saveToFiles(const QString &dir, const QString &keyPrefix) const
     {
+        QMutexLocker lock(&m_mutex);
         auto values = getAllValues(keyPrefix);
+        return saveToFiles(dir, values);
+    }
+
+    CStatusMessage CValueCache::saveToFiles(const QString &dir, const CVariantMap &values) const
+    {
+        QMutexLocker lock(&m_mutex);
         QMap<QString, CVariantMap> namespaces;
         for (auto it = values.cbegin(); it != values.cend(); ++it)
         {
@@ -182,10 +189,21 @@ namespace BlackMisc
 
     CStatusMessage CValueCache::loadFromFiles(const QString &dir)
     {
+        QMutexLocker lock(&m_mutex);
+        CVariantMap values;
+        auto status = loadFromFiles(dir, values);
+        insertValues(values);
+        return status;
+    }
+
+    CStatusMessage CValueCache::loadFromFiles(const QString &dir, CVariantMap &o_values) const
+    {
+        QMutexLocker lock(&m_mutex);
         if (! QDir(dir).isReadable())
         {
             return CLogMessage(this).error("Failed to read directory %1") << dir;
         }
+        auto currentValues = getAllValues();
         for (const auto &filename : QDir(dir).entryList({ "*.json" }, QDir::Files))
         {
             QFile file(dir + "/" + filename);
@@ -198,7 +216,10 @@ namespace BlackMisc
             {
                 return CLogMessage(this).error("Invalid JSON format in %1") << file.fileName();
             }
-            loadFromJson(json.object());
+            CVariantMap temp;
+            temp.convertFromJson(json.object());
+            temp.removeDuplicates(currentValues);
+            o_values.insert(temp);
         }
         return {};
     }

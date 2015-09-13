@@ -91,13 +91,22 @@ namespace BlackMisc
         //! of CValueCache instances in all processes including this one. The slot will do its own round-trip detection.
         void valuesChangedByLocal(const BlackMisc::CVariantMap &values);
 
+    protected:
+        //! Save specific values to Json files in a given directory.
+        CStatusMessage saveToFiles(const QString &directory, const CVariantMap &values) const;
+
+        //! Load from Json files in a given directory any values which differ from the current ones, and insert them in o_values.
+        CStatusMessage loadFromFiles(const QString &directory, CVariantMap &o_values) const;
+
+        //! Mutex protecting operations which are critical on m_elements.
+        mutable QMutex m_mutex { QMutex::Recursive };
+
     private:
         friend class Private::CValuePage;
         struct Element;
         using ElementPtr = QSharedPointer<Element>; // QMap doesn't support move-only types
 
         QMap<QString, ElementPtr> m_elements;
-        mutable QMutex m_mutex { QMutex::Recursive };
 
         Element &getElement(const QString &key);
         Element &getElement(const QString &key, QMap<QString, ElementPtr>::const_iterator pos);

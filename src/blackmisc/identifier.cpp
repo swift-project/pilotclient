@@ -35,6 +35,17 @@ namespace BlackMisc
         return id;
     }
 
+    QUuid CIdentifier::toUuid() const
+    {
+        static const QUuid ns = QUuid::createUuid();
+        QByteArray baseData;
+        baseData.append(getMachineId());
+        baseData.append(reinterpret_cast<const char *>(&m_processId), sizeof(m_processId));
+        baseData.append(reinterpret_cast<const char *>(&m_timestampMSecsSinceEpoch), sizeof(m_timestampMSecsSinceEpoch));
+        baseData.append(getName());
+        return QUuid::createUuidV5(ns, baseData);
+    }
+
     QByteArray CIdentifier::getMachineId() const
     {
         return QByteArray::fromBase64(m_machineIdBase64.toLocal8Bit());

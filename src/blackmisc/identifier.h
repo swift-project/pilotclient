@@ -49,6 +49,9 @@ namespace BlackMisc
         //! Returns an anonymous identifier.
         static CIdentifier anonymous();
 
+        //! Produces a UUID generated from the identifier.
+        QUuid toUuid() const;
+
         //! Name
         QString getName() const { return m_name; }
 

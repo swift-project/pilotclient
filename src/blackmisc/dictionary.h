@@ -220,6 +220,17 @@ namespace BlackMisc
             removeByValueIf(BlackMisc::Predicates::MemberEqual(membFunc, returnValue));
         }
 
+        //! Remove elements for which the same key/value pair is present in an other dictionary.
+        void removeDuplicates(const CDictionary &other)
+        {
+            for (auto it = begin(); it != end();)
+            {
+                auto it2 = other.find(it.key());
+                if (it2 != other.end() && it.value() == it2.value()) { it = erase(it); }
+                else { ++it; }
+            }
+        }
+
         //! \copydoc CValueObject::toJson
         QJsonObject toJson() const
         {
