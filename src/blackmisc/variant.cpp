@@ -37,6 +37,23 @@ namespace BlackMisc
         return m_v.toString();
     }
 
+    bool CVariant::isIntegral() const
+    {
+        switch (type())
+        {
+        case QMetaType::Bool: case QMetaType::Char: case QMetaType::UChar: case QMetaType::SChar: case QMetaType::Short: case QMetaType::UShort:
+        case QMetaType::Int: case QMetaType::UInt: case QMetaType::Long: case QMetaType::ULong: case QMetaType::LongLong: case QMetaType::ULongLong:
+            return true;
+        default:
+            return false;
+        }
+    }
+
+    bool CVariant::isArithmetic() const
+    {
+        return isIntegral() || type() == QMetaType::Float || type() == QMetaType::Double;
+    }
+
     int CVariant::compareImpl(const CVariant &a, const CVariant &b)
     {
         if (a.userType() < b.userType()) { return -1; }

@@ -231,6 +231,12 @@ namespace BlackMisc
         //! \copydoc CValueObject::convertToQString
         QString convertToQString(bool i18n = false) const;
 
+        //! True if this variant's type is an integral type.
+        bool isIntegral() const;
+
+        //! True if this variant's type is an integral or floating-point type.
+        bool isArithmetic() const;
+
         //! Convert this variant to a bool.
         bool toBool() const { return m_v.toBool(); }
 

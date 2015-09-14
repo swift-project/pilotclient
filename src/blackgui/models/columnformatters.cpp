@@ -186,10 +186,9 @@ namespace BlackGui
                 QTime t = dateTime.value<QTime>();
                 return t.toString(m_formatString);
             }
-            else if (static_cast<QMetaType::Type>(dateTime.type()) == QMetaType::Int)
+            else if (dateTime.isIntegral())
             {
-                //! \todo potential risk if int is not qint64
-                QDateTime t = QDateTime::fromMSecsSinceEpoch(dateTime.toInt());
+                QDateTime t = QDateTime::fromMSecsSinceEpoch(dateTime.value<qint64>());
                 return t.toString(m_formatString);
             }
             else
