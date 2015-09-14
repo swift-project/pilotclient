@@ -248,7 +248,21 @@ namespace BlackMisc
     QString CLogPattern::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
-        return {}; //TODO
+        QString strategy;
+        QString categories = QStringList(m_strings.toList()).join("|");
+        switch (m_strategy)
+        {
+        case Everything: strategy = "none"; break;
+        case ExactMatch: strategy = "exact match:" + categories; break;
+        case AnyOf: strategy = "any of:" + categories; break;
+        case AllOf: strategy = "all of:" + categories; break;
+        case StartsWith: strategy = "starts with:" + categories; break;
+        case EndsWith: strategy = "ends with:" + categories; break;
+        case Contains: strategy = "contains:" + categories; break;
+        case Nothing: strategy = "none"; break;
+        default: strategy = "<invalid>"; break;
+        }
+        return "{" + CStatusMessage::severitiesToString(m_severities) + "," + strategy + "}";
     }
 
     void CLogPattern::marshallToDbus(QDBusArgument &argument) const

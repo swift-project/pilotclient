@@ -9,6 +9,7 @@
 
 #include "logmessage.h"
 #include "blackmiscfreefunctions.h"
+#include "index_sequence.h"
 
 namespace BlackMisc
 {
@@ -76,8 +77,8 @@ namespace BlackMisc
     {
         // ostream(encodedCategory()) << message(); // QDebug::operator<<(QString) puts quote characters around the message
 
-        // FIXME hack to avoid putting quote characters around the message
-        // should be safe, but still it's horrible, we could directly call qt_message_output instead
+        // hack to avoid putting quote characters around the message
+        // should be safe, we could directly call qt_message_output instead, but it's undocumented
         QByteArray category = qtCategory();
         QDebug debug = ostream(category);
         auto &stream = **reinterpret_cast<QTextStream **>(&debug); // should be safe because it is relying on Qt's guarantee of ABI compatibility
@@ -125,6 +126,12 @@ namespace BlackMisc
         }
     }
 
+    namespace Private
+    {
+        template <size_t... Is> QString arg(index_sequence<Is...>, const QString &format, const QStringList &args) { return format.arg(args[Is]...); }
+        QString arg(index_sequence<>, const QString &format, const QStringList &) { return format; }
+    }
+
     QString CLogMessage::message() const
     {
         if (m_message.isEmpty())
@@ -133,20 +140,19 @@ namespace BlackMisc
         }
         else
         {
-            // TODO would like to have a QString::arg(QStringList) overload
             switch (m_args.size())
             {
-            case 0: return m_message;
-            case 1: return m_message.arg(m_args[0]);
-            case 2: return m_message.arg(m_args[0], m_args[1]);
-            case 3: return m_message.arg(m_args[0], m_args[1], m_args[2]);
-            case 4: return m_message.arg(m_args[0], m_args[1], m_args[2], m_args[3]);
-            case 5: return m_message.arg(m_args[0], m_args[1], m_args[2], m_args[3], m_args[4]);
-            case 6: return m_message.arg(m_args[0], m_args[1], m_args[2], m_args[3], m_args[4], m_args[5]);
-            case 7: return m_message.arg(m_args[0], m_args[1], m_args[2], m_args[3], m_args[4], m_args[5], m_args[6]);
-            case 8: return m_message.arg(m_args[0], m_args[1], m_args[2], m_args[3], m_args[4], m_args[5], m_args[6], m_args[7]);
-            default: qWarning("Too many arguments");
-            case 9: return m_message.arg(m_args[0], m_args[1], m_args[2], m_args[3], m_args[4], m_args[5], m_args[6], m_args[7], m_args[8]);
+            case 0: return Private::arg(Private::make_index_sequence<0>(), m_message, m_args);
+            case 1: return Private::arg(Private::make_index_sequence<1>(), m_message, m_args);
+            case 2: return Private::arg(Private::make_index_sequence<2>(), m_message, m_args);
+            case 3: return Private::arg(Private::make_index_sequence<3>(), m_message, m_args);
+            case 4: return Private::arg(Private::make_index_sequence<4>(), m_message, m_args);
+            case 5: return Private::arg(Private::make_index_sequence<5>(), m_message, m_args);
+            case 6: return Private::arg(Private::make_index_sequence<6>(), m_message, m_args);
+            case 7: return Private::arg(Private::make_index_sequence<7>(), m_message, m_args);
+            case 8: return Private::arg(Private::make_index_sequence<8>(), m_message, m_args);
+            default: qWarning("Too many arguments"); // intentional fall-through
+            case 9: return Private::arg(Private::make_index_sequence<9>(), m_message, m_args);
             }
         }
     }

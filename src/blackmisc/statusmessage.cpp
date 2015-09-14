@@ -236,6 +236,30 @@ namespace BlackMisc
         }
     }
 
+    QString CStatusMessage::severitiesToString(const QSet<CStatusMessage::StatusSeverity> &severities)
+    {
+        auto minmax = std::minmax_element(severities.begin(), severities.end());
+        auto min = *minmax.first;
+        auto max = *minmax.second;
+        if (min == SeverityDebug && max == SeverityError)
+        {
+            return "all severities";
+        }
+        if (min == SeverityDebug)
+        {
+            return "at or below " + severityToString(max);
+        }
+        if (max == SeverityError)
+        {
+            return "at or above " + severityToString(min);
+        }
+        auto list = severities.toList();
+        std::sort(list.begin(), list.end());
+        QStringList ret;
+        std::transform(list.cbegin(), list.cend(), std::back_inserter(ret), severityToString);
+        return ret.join("|");
+    }
+
     const QString &CStatusMessage::getSeverityAsString() const
     {
         return severityToString(this->m_severity);
