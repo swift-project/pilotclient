@@ -17,6 +17,7 @@
 #include <QScopedPointer>
 #include <algorithm>
 #include <type_traits>
+#include <typeindex>
 #include <iterator>
 #include <utility>
 #include <initializer_list>
@@ -356,13 +357,11 @@ namespace BlackMisc
 
         /*!
          * \brief Test for equality.
-         * \todo Improve inefficient implementation.
          */
-        bool operator ==(const CCollection &other) const { return (empty() && other.empty()) ? true : (size() != other.size() ? false : *pimpl() == *other.pimpl()); }
+        bool operator ==(const CCollection &other) const { return *pimpl() == *other.pimpl(); }
 
         /*!
          * \brief Test for inequality.
-         * \todo Improve inefficient implementation.
          */
         bool operator !=(const CCollection &other) const { return !(*this == other); }
 
@@ -397,6 +396,8 @@ namespace BlackMisc
             virtual const_iterator find(const T &value) const = 0;
             virtual bool operator ==(const PimplBase &other) const = 0;
             virtual void *impl() = 0;
+            virtual const void *impl() const = 0;
+            virtual std::type_index implType() const = 0;
         };
 
         template <class C> class Pimpl : public PimplBase
@@ -422,10 +423,14 @@ namespace BlackMisc
             iterator erase(iterator it1, iterator it2) override { while (it1 != it2) { it1 = iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(it1.getImpl()))); } return it1; }
             iterator find(const T &value) override { return iterator::fromImpl(m_impl.find(value)); }
             const_iterator find(const T &value) const override { return const_iterator::fromImpl(m_impl.find(value)); }
-            bool operator ==(const PimplBase &other) const override { Pimpl copy = C(); for (auto i = other.cbegin(); i != other.cend(); ++i) copy.insert(*i); return m_impl == copy.m_impl; }
+            bool operator ==(const PimplBase &other) const override { return implType() == other.implType() ? m_impl == *static_cast<const C *>(other.impl()) : size() == other.size() && std::equal(begin(), end(), other.begin()); }
             void *impl() override { return &m_impl; }
+            const void *impl() const override { return &m_impl; }
+            std::type_index implType() const override { return typeid(C); }
         private:
             C m_impl;
+            bool implEquals(const PimplBase &other) const { return m_impl == *static_cast<const C *>(other.impl()); }
+            bool equals(const PimplBase &other) const { return size() == other.size() && std::equal(begin(), end(), other.begin()); }
             // insertHelper: QOrderedSet::insert returns an iterator, but std::set::insert returns a std::pair<interator, bool>
             template <class I> static I insertHelper(I i) { return i; }
             template <class I> static I insertHelper(std::pair<I, bool> p) { return p.first; }

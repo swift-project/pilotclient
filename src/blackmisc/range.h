@@ -187,6 +187,9 @@ namespace BlackMisc
         bool isEmpty() const { return empty(); }
         //! @}
 
+        //! Returns the number of elements in the range.
+        difference_type size() const { return std::distance(begin(), end()); }
+
         //! Returns the element at the beginning of the range. Undefined if the range is empty.
         const_reference front() const { Q_ASSERT(!empty()); return *begin(); }
 

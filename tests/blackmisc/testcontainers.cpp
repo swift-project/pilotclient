@@ -235,23 +235,23 @@ namespace BlackMiscTest
         QVERIFY2(ms == ts, "Latest value not first");
 
         // split in half
-        situations.sortOldestFirst(); // check that we really get latest first
-        QList<CAircraftSituationList> split = situations.splitByTime(ts - ((no / 2) * 10) + 1);
-        CAircraftSituationList before = split[0];
-        CAircraftSituationList after = split[1];
-
-        int beforeSize = before.size();
-        int afterSize = after.size();
-
-        QVERIFY(beforeSize == no / 2);
-        QVERIFY(afterSize == no / 2);
-
-        // check sort order, latest should
-        for (int i = 0; i < no; ++i)
+        for (bool sortLatestFirst : { false, true })
         {
-            CAircraftSituation s = (i < no / 2) ? before[i] : after[i - no / 2];
-            ms = s.getMSecsSinceEpoch();
-            QVERIFY2(ms == ts - 10 * i, "time does not match");
+            sortLatestFirst ? situations.sortLatestFirst() : situations.sortOldestFirst();
+            qint64 splitTime = ts - ((no / 2) * 10) + 1;
+            QList<CAircraftSituationList> split = situations.splitByTime(splitTime);
+            CAircraftSituationList before = split[0];
+            CAircraftSituationList after = split[1];
+
+            int beforeSize = before.size();
+            int afterSize = after.size();
+            QVERIFY(beforeSize == no / 2);
+            QVERIFY(afterSize == no / 2);
+
+            // check partitioning
+            auto isNewer = [splitTime](const CAircraftSituation &as) { return as.isNewerThan(splitTime); };
+            QVERIFY2(std::none_of(before.cbegin(), before.cend(), isNewer), "before contains a time which is after");
+            QVERIFY2(std::all_of(after.cbegin(), after.cend(), isNewer), "after contains a time which is before");
         }
 
         // test shifting

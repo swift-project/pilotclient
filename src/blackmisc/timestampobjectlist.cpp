@@ -80,24 +80,29 @@ namespace BlackMisc
     }
 
     template <class OBJ, class CONTAINER>
-    QList<CONTAINER> ITimestampObjectList<OBJ, CONTAINER>::splitByTime(qint64 msSinceEpoch, bool alreadySortedLatestFirst) const
+    QList<CONTAINER> ITimestampObjectList<OBJ, CONTAINER>::splitByTime(qint64 msSinceEpoch, bool sortedLatestFirst) const
     {
-        // fixme: Split by time is one of the most frequently called functions in interpolator, so any performance improvement here counts
-        CONTAINER newer(this->container());
-        if (!alreadySortedLatestFirst) { newer.sortLatestFirst(); }
-        CONTAINER older;
-        for (auto it = newer.begin(); it != newer.end(); ++it)
+        QList<CONTAINER> result { {}, {} };
+        const auto &c = this->container();
+        if (sortedLatestFirst)
         {
-            if (it->isOlderThan(msSinceEpoch))
+            // O(log n) comparisons and O(n) copies
+            struct Comparator
             {
-                older.insert(CRange<typename CONTAINER::iterator>(it, newer.end()));
-                newer.erase(it, newer.end());
-                break;
-            }
+                bool operator()(const OBJ &a, qint64 b) const { return a.isNewerThan(b); }
+                bool operator()(qint64 a, const OBJ &b) const { return b.isOlderThan(a); }
+            };
+            auto it = std::upper_bound(c.begin(), c.end(), msSinceEpoch, Comparator());
+            std::copy(c.begin(), it, std::back_inserter(result[0]));
+            std::copy(it, c.end(), std::back_inserter(result[1]));
         }
-
-        // before / after
-        return QList<CONTAINER>({newer, older});
+        else
+        {
+            // O(n) comparisons and O(n) copies
+            std::partition_copy(c.begin(), c.end(), std::back_inserter(result[0]), std::back_inserter(result[1]),
+                [msSinceEpoch](const OBJ & obj) { return ! obj.isNewerThan(msSinceEpoch); });
+        }
+        return result;
     }
 
     template <class OBJ, class CONTAINER>

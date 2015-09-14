@@ -44,9 +44,9 @@ namespace BlackMisc
         //! List of objects after msSinceEpoch
         CONTAINER findAfter(qint64 msSinceEpoch) const;
 
-        //! Split into 2 containers, [0] >= msSinceEpoch ("newer") [b] < msSinceEpoch ("older")
-        //! \note Sort order: latest elements first
-        QList<CONTAINER> splitByTime(qint64 msSinceEpoch, bool alreadySortedLatestFirst = false) const;
+        //! Partition into two containers, first [0,msSinceEpoch] and second (msSinceEpoch,LLONG_MAX].
+        //! Within each of the two parts, the original relative ordering of the elements is preserved.
+        QList<CONTAINER> splitByTime(qint64 msSinceEpoch, bool sortedLatestFirst = false) const;
 
         //! Latest value
         OBJ latestValue() const;

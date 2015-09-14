@@ -411,18 +411,16 @@ namespace BlackMisc
         friend bool operator !=(const CDictionary &a, const CDictionary &b) { return !(a == b); }
 
         //! \copydoc BlackMisc::CValueObject::convertToQString
-        //! \todo Fix brackets
         QString convertToQString(bool i18n = false) const
         {
-            QString str = "{";
+            QString str;
             for (auto it = m_impl.cbegin(); it != m_impl.end(); ++it)
             {
                 str += "{";
                 str += CContainerHelper::stringify(it.key(), i18n) + "," + CContainerHelper::stringify(it.value(), i18n);
                 str += "}";
             }
-            if (str.isEmpty()) { str = "{"; }
-            return str += "}";
+            return "{" + str + "}";
         }
 
     public:
