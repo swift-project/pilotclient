@@ -63,16 +63,6 @@ namespace BlackCore
         return make_unique<CAudioMixerVatlib>(this);
     }
 
-    /* FIXME:
-       Can the following methods be more general somehow?
-       E.g.:
-       template <typename Input, typename Output>
-       connectVoice(Input input, Output output)
-       {
-           ...
-       }
-     */
-
     void CVoiceVatlib::connectVoice(IAudioInputDevice *device, IAudioMixer *mixer, IAudioMixer::InputPort inputPort)
     {
         auto audioInputVatlib = qobject_cast<CAudioInputDeviceVatlib*>(device);

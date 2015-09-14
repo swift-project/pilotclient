@@ -146,7 +146,7 @@ namespace BlackMisc
         template <class Derived>
         struct AttributeComparable<Derived, false, false>
         {
-            template <class T> using isCValueObject = typename std::is_base_of<CEmpty, T>::type; // FIXME use TemplateIsBaseOf
+            template <class T> using isCValueObject = typename std::is_base_of<CEmpty, T>::type; // historical use case, may need tweaking in future
             friend int compare(const Derived &a, const Derived &b) { return compareHelper(a.m_obj, b.m_obj, isCValueObject<Derived>()); }
             friend bool operator ==(const Derived &a, const Derived &b) { return a.m_obj == b.m_obj; }
             friend bool operator !=(const Derived &a, const Derived &b) { return a.m_obj != b.m_obj; }

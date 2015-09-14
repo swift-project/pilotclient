@@ -235,13 +235,6 @@ namespace BlackMisc
                 : m_name(name), m_symbol(symbol), m_epsilon(0.0), m_displayDigits(0)
             {}
 
-            //! \copydoc CValueObject::stringForStreaming
-            // todo: Causes build error. Ask KB is still required.
-//            virtual QString stringForStreaming() const override
-//            {
-//                return this->getName(false);
-//            }
-
         public:
             //! Destructor
             virtual ~CMeasurementUnit() = default;

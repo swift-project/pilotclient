@@ -151,6 +151,8 @@ uint BlackMisc::calculateHash(const QList<int> &values, const char *className)
     return calculateHash(list, className);
 }
 
+QVariant complexQtTypeFromDbusArgument(const QDBusArgument &argument, int type);
+
 QVariant BlackMisc::fixQVariantFromDbusArgument(const QVariant &variant, int localUserType)
 {
     // my business?
@@ -163,7 +165,7 @@ QVariant BlackMisc::fixQVariantFromDbusArgument(const QVariant &variant, int loc
     if (localUserType < userType)
     {
         // complex Qt type, e.g. QDateTime
-        return BlackMisc::complexQtTypeFromDbusArgument(arg, localUserType);
+        return complexQtTypeFromDbusArgument(arg, localUserType);
     }
     else
     {
@@ -179,7 +181,7 @@ QVariant BlackMisc::fixQVariantFromDbusArgument(const QVariant &variant, int loc
     }
 }
 
-QVariant BlackMisc::complexQtTypeFromDbusArgument(const QDBusArgument &argument, int type)
+QVariant complexQtTypeFromDbusArgument(const QDBusArgument &argument, int type)
 {
     // QDate = 14, QTime = 15, QDateTime = 16, QUrl = 17,
 

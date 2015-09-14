@@ -254,17 +254,6 @@ namespace BlackMisc
      */
     BLACKMISC_EXPORT QVariant fixQVariantFromDbusArgument(const QVariant &variant, int localUserType);
 
-    /*!
-     * Convert a QDBusArgument back to a concrete type if required
-     * This is a workaround if a QVariant is sent via DBus, QDBusArgument is
-     * received and Qt is not able to get the original QVariant back
-     * \param argument  send via DBus
-     * \param type      Metatype
-     * \return          QVariant generated from the above
-     * \todo To be removed if a better solution is found
-     */
-    BLACKMISC_EXPORT QVariant complexQtTypeFromDbusArgument(const QDBusArgument &argument, int type);
-
     //! Display all user metatypes
     //! \remarks Used in order to debug code, do not remove
     BLACKMISC_EXPORT void displayAllUserMetatypesTypes(QTextStream &out);
