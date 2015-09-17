@@ -118,8 +118,6 @@ namespace BlackMisc
 
     void CLogHandler::logMessage(const CStatusMessage &statusMessage)
     {
-        collectGarbage();
-
         auto handlers = handlersForMessage(statusMessage);
 
         if (isFallThroughEnabled(handlers))
@@ -138,14 +136,38 @@ namespace BlackMisc
         }
     }
 
-    void CLogHandler::collectGarbage()
+    void CLogHandler::removePatternHandler(CLogPatternHandler *handler)
     {
-        auto newEnd = std::stable_partition(m_patternHandlers.begin(), m_patternHandlers.end(), [](const PatternPair &pair)
+        auto it = std::find_if(m_patternHandlers.begin(), m_patternHandlers.end(), [handler](const PatternPair &pair)
         {
-            return ! pair.second->canBeDeleted();
+            return pair.second == handler;
         });
-        std::for_each(newEnd, m_patternHandlers.end(), [](const PatternPair &pair) { pair.second->deleteLater(); });
-        m_patternHandlers.erase(newEnd, m_patternHandlers.end());
+        if (it != m_patternHandlers.end())
+        {
+            it->second->deleteLater();
+            m_patternHandlers.erase(it);
+        }
+    }
+
+    CLogPatternHandler::CLogPatternHandler(CLogHandler *parent) :
+        QObject(parent), m_parent(parent)
+    {
+        connect(&m_subscriptionUpdateTimer, &QTimer::timeout, this, &CLogPatternHandler::updateSubscription);
+        m_subscriptionUpdateTimer.start(1);
+    }
+
+    void CLogPatternHandler::updateSubscription()
+    {
+        if (m_subscriptionNeedsUpdate)
+        {
+            m_subscriptionNeedsUpdate = false;
+            bool isSubscribed = isSignalConnected(QMetaMethod::fromSignal(&CLogPatternHandler::messageLogged));
+
+            if (m_inheritFallThrough && ! isSubscribed)
+            {
+                m_parent->removePatternHandler(this);
+            }
+        }
     }
 
     void CLogSubscriber::changeSubscription(const CLogPattern &pattern)

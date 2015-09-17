@@ -20,6 +20,8 @@
 #include <QPointer>
 #include <QThread>
 #include <QMetaMethod>
+#include <QTimer>
+#include <atomic>
 
 namespace BlackMisc
 {
@@ -79,14 +81,15 @@ namespace BlackMisc
         void enableConsoleOutput(bool enable);
 
     private:
+        friend class CLogPatternHandler;
         void logMessage(const BlackMisc::CStatusMessage &message);
-        void collectGarbage();
         QtMessageHandler m_oldHandler = nullptr;
         bool m_enableFallThrough = true;
         bool isFallThroughEnabled(const QList<CLogPatternHandler *> &handlers) const;
         using PatternPair = std::pair<CLogPattern, CLogPatternHandler *>;
         QList<PatternPair> m_patternHandlers;
         QList<CLogPatternHandler *> handlersForMessage(const CStatusMessage &message) const;
+        void removePatternHandler(CLogPatternHandler *);
     };
 
     /*!
@@ -110,6 +113,7 @@ namespace BlackMisc
             Q_ASSERT(thread() == QThread::currentThread());
             m_inheritFallThrough = false;
             m_enableFallThrough = enable;
+            m_subscriptionNeedsUpdate = true;
         }
 
         /*!
@@ -123,6 +127,7 @@ namespace BlackMisc
         {
             Q_ASSERT(thread() == QThread::currentThread());
             m_inheritFallThrough = true;
+            m_subscriptionNeedsUpdate = true;
         }
 
     signals:
@@ -158,18 +163,28 @@ namespace BlackMisc
             return connect(this, &CLogPatternHandler::messageLogged, slot);
         }
 
+    protected:
+        //! \copydoc QObject::connectNotify
+        virtual void connectNotify(const QMetaMethod &signal) override
+        {
+            if (signal == QMetaMethod::fromSignal(&CLogPatternHandler::messageLogged)) { m_subscriptionNeedsUpdate = true; }
+        }
+
+        //! \copydoc QObject::disconnectNotify
+        virtual void disconnectNotify(const QMetaMethod &signal) override
+        {
+            if (signal == QMetaMethod::fromSignal(&CLogPatternHandler::messageLogged)) { m_subscriptionNeedsUpdate = true; }
+        }
+
     private:
         friend class CLogHandler;
-        CLogPatternHandler(QObject *parent) : QObject(parent) {}
+        CLogPatternHandler(CLogHandler *parent);
+        CLogHandler *m_parent = nullptr;
         bool m_inheritFallThrough = true;
         bool m_enableFallThrough = true;
-
-        bool canBeDeleted()
-        {
-            if (! m_inheritFallThrough) { return false; }
-            static const auto signal = QMetaMethod::fromSignal(&CLogPatternHandler::messageLogged);
-            return ! isSignalConnected(signal);
-        }
+        std::atomic<bool> m_subscriptionNeedsUpdate = false;
+        QTimer m_subscriptionUpdateTimer;
+        void updateSubscription();
     };
 
     /*!
