@@ -64,7 +64,6 @@ Client::Client(QObject *parent)
     connect(this, &Client::setOwnAircraftCockpit,               COwnAircraftProviderDummy::instance(), &COwnAircraftProviderDummy::updateCockpit);
     connect(this, &Client::sendPing,                            m_net, &INetwork::sendPing);
     connect(this, &Client::sendMetarQuery,                      m_net, &INetwork::sendMetarQuery);
-    connect(this, &Client::sendWeatherDataQuery,                m_net, &INetwork::sendWeatherDataQuery);
     connect(this, &Client::sendCustomPacket,                    m_net, &INetwork::sendCustomPacket);
 
     using namespace std::placeholders;
@@ -95,7 +94,6 @@ Client::Client(QObject *parent)
     m_commands["setcockpit"]        = std::bind(&Client::setOwnAircraftCockpitCmd, this, _1);
     m_commands["ping"]              = std::bind(&Client::sendPingCmd, this, _1);
     m_commands["metar"]             = std::bind(&Client::sendMetarQueryCmd, this, _1);
-    m_commands["weather"]           = std::bind(&Client::sendWeatherDataQueryCmd, this, _1);
     m_commands["custom"]            = std::bind(&Client::sendCustomPacketCmd, this, _1);
 }
 
@@ -398,13 +396,6 @@ void Client::sendMetarQueryCmd(QTextStream &args)
     QString airportICAO;
     args >> airportICAO;
     emit sendMetarQuery(airportICAO);
-}
-
-void Client::sendWeatherDataQueryCmd(QTextStream &args)
-{
-    QString airportICAO;
-    args >> airportICAO;
-    emit sendWeatherDataQuery(airportICAO);
 }
 
 void Client::sendCustomPacketCmd(QTextStream &args)

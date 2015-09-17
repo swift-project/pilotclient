@@ -66,7 +66,6 @@ private: //commands
     void setOwnAircraftCockpitCmd(QTextStream &args);
     void sendPingCmd(QTextStream &args);
     void sendMetarQueryCmd(QTextStream &args);
-    void sendWeatherDataQueryCmd(QTextStream &args);
     void sendCustomPacketCmd(QTextStream &args);
 
 signals: //to send to INetwork
@@ -93,7 +92,6 @@ signals: //to send to INetwork
                                const BlackMisc::Aviation::CTransponder &xpdr, const QString &originator);
     void sendPing(const BlackMisc::Aviation::CCallsign &callsign);
     void sendMetarQuery(const QString &airportICAO);
-    void sendWeatherDataQuery(const QString &airportICAO);
     void sendCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
 
 public slots: //to receive from INetwork

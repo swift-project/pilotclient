@@ -29,7 +29,6 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {
@@ -91,9 +90,6 @@ namespace BlackCore
         Vat_SetControllerAtisHandler(m_net.data(), onAtisReplyReceived, this);
         Vat_SetFlightPlanHandler(m_net.data(), onFlightPlanReceived, this);
         Vat_SetServerErrorHandler(m_net.data(), onErrorReceived, this);
-        Vat_SetTemperatureDataHandler(m_net.data(), onTemperatureDataReceived, this);
-        Vat_SetWindDataHandler(m_net.data(), onWindDataReceived, this);
-        Vat_SetCloudDataHandler(m_net.data(), onCloudDataReceived, this);
         Vat_SetAircraftInfoRequestHandler(m_net.data(), onPilotInfoRequestReceived, this);
         Vat_SetAircraftInfoHandler(m_net.data(), onPilotInfoReceived, this);
         Vat_SetCustomPilotPacketHandler(m_net.data(), onCustomPacketReceived, this);
@@ -303,7 +299,8 @@ namespace BlackCore
         Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "Can't change ICAO codes while still connected");
         m_ownAircraftIcaoCode = ownAircraft.getAircraftIcaoCode();
         m_ownAirlineIcaoCode = ownAircraft.getAirlineIcaoCode();
-        updateOwnIcaoCodes(m_ownAircraftIcaoCode, m_ownAirlineIcaoCode);
+        m_ownLiveryDescription = ownAircraft.getLivery().getDescription();
+        updateOwnIcaoCodes(m_ownAircraftIcaoCode, m_ownAirlineIcaoCode); // \todo livery?
     }
 
     void CNetworkVatlib::presetLoginMode(LoginMode mode)
@@ -426,7 +423,6 @@ namespace BlackCore
         if (this->m_loginMode == LoginNormal)
         {
             VatInterimPilotPosition pos;
-            // TODO: we need to distinguish true and pressure altitude
             pos.altitudeTrue = myAircraft.getAltitude().value(CLengthUnit::ft());
             pos.heading      = myAircraft.getHeading().value(CAngleUnit::deg());
             pos.pitch        = myAircraft.getPitch().value(CAngleUnit::deg());
@@ -533,13 +529,9 @@ namespace BlackCore
 
     void CNetworkVatlib::replyToConfigQuery(const CCallsign &callsign)
     {
-        QJsonObject currentConfig(getOwnAircraftParts().toJson());
-        // Fixme: Use QJsonObject with std::initializer_list once 5.4 is baseline
-        currentConfig.insert("is_full_data", true);
-        QJsonObject packet;
-        packet.insert("config", currentConfig);
-        QJsonDocument doc(packet);
-        QString data { doc.toJson(QJsonDocument::Compact) };
+        QJsonObject config = getOwnAircraftParts().toJson();
+        config.insert("is_full_data", true);
+        QString data = QJsonDocument(QJsonObject { { "config", config } }).toJson(QJsonDocument::Compact);
         data = convertToUnicodeEscaped(data);
         Vat_SendAircraftConfig(m_net.data(), toFSD(callsign), toFSD(data));
     }
@@ -554,7 +546,7 @@ namespace BlackCore
     {
         const QByteArray acTypeICAObytes = toFSD(m_ownAircraftIcaoCode.getDesignator());
         const QByteArray airlineICAObytes = toFSD(m_ownAirlineIcaoCode.getDesignator());
-        const QByteArray liverybytes; //! \todo VATLIB: send livery
+        const QByteArray liverybytes = toFSD(m_ownLiveryDescription);
 
         VatAircraftInfo aircraftInfo {acTypeICAObytes, airlineICAObytes, liverybytes};
         Vat_SendModernPlaneInfo(m_net.data(), toFSD(callsign), &aircraftInfo);
@@ -597,12 +589,6 @@ namespace BlackCore
         Vat_RequestMetar(m_net.data(), toFSD(airportIcao.asString()));
     }
 
-    void CNetworkVatlib::sendWeatherDataQuery(const BlackMisc::Aviation::CAirportIcaoCode &airportIcao)
-    {
-        Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
-        Vat_RequestWeather(m_net.data(), toFSD(airportIcao.asString()));
-    }
-
     void CNetworkVatlib::sendCustomFsinnQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
@@ -639,11 +625,7 @@ namespace BlackCore
 
     void CNetworkVatlib::broadcastAircraftConfig(const QJsonObject &config)
     {
-        // Fixme: Use QJsonObject with std::initializer_list once 5.4 is baseline
-        QJsonObject packet;
-        packet.insert("config", config);
-        QJsonDocument doc(packet);
-        QString data { doc.toJson(QJsonDocument::Compact) };
+        QString data = QJsonDocument(QJsonObject { { "config", config } }).toJson(QJsonDocument::Compact);
         data = convertToUnicodeEscaped(data);
         Vat_SendAircraftConfigBroadcast(m_net.data(), toFSD(data));
     }
@@ -684,12 +666,17 @@ namespace BlackCore
 
     void CNetworkVatlib::onRadioMessageReceived(VatSessionID, const char *from, int numFreq, int *freqList, const char *msg, void *cbvar)
     {
-        // FIXME: This method forwards radio message for EVERY frequency. We should only forward those to which our COM's are listening to.
+        int com1 = cbvar_cast(cbvar)->getOwnAircraft().getCom1System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
+        int com2 = cbvar_cast(cbvar)->getOwnAircraft().getCom2System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
         QList<CFrequency> frequencies;
         for (int i = 0; i < numFreq; ++i)
         {
-            frequencies.push_back(CFrequency(freqList[i], CFrequencyUnit::kHz()));
+            if (freqList[i] == com1 || freqList[i] == com2)
+            {
+                frequencies.push_back(CFrequency(freqList[i], CFrequencyUnit::kHz()));
+            }
         }
+        if (frequencies.isEmpty()) { return; }
         BlackMisc::Network::CTextMessageList messages(cbvar_cast(cbvar)->fromFSD(msg), frequencies, CCallsign(cbvar_cast(cbvar)->fromFSD(from)));
         emit cbvar_cast(cbvar)->textMessagesReceived(messages);
     }
@@ -971,11 +958,6 @@ namespace BlackCore
         emit cbvar_cast(cbvar)->flightPlanReplyReceived(CCallsign(callsign, CCallsign::Atc), flightPlan);
     }
 
-    void CNetworkVatlib::onTemperatureDataReceived(VatSessionID, const VatTempLayer /** layer **/ [4], int /** pressure **/, void * /** cbvar **/)
-    {
-        //TODO
-    }
-
     void CNetworkVatlib::onErrorReceived(VatSessionID, VatServerError error, const char *msg, const char *data, void *cbvar)
     {
         auto *self = cbvar_cast(cbvar);
@@ -1006,16 +988,6 @@ namespace BlackCore
         }
     }
 
-    void CNetworkVatlib::onWindDataReceived(VatSessionID, const VatWindLayer /** layer **/ [4], void * /** cbvar **/)
-    {
-        //TODO
-    }
-
-    void CNetworkVatlib::onCloudDataReceived(VatSessionID, const VatCloudLayer /** layers **/ [2], VatThunderStormLayer /** storm **/, float /** vis **/, void * /** cbvar **/)
-    {
-        //TODO
-    }
-
     void CNetworkVatlib::onPilotInfoRequestReceived(VatSessionID, const char *callsignString, void *cbvar)
     {
         auto timer = new QTimer(cbvar_cast(cbvar));
@@ -1043,10 +1015,7 @@ namespace BlackCore
 
     QJsonObject CNetworkVatlib::JsonPackets::aircraftConfigRequest()
     {
-        // Fixme: Use static QJsonObject with std::initializer_list once 5.4 is baseline
-        QJsonObject request;
-        request.insert("request", "full");
-        return request;
+        return { { "request", "full" } };
     }
 
 } // namespace

@@ -364,15 +364,6 @@ namespace BlackCore
          */
         virtual void sendMetarQuery(const BlackMisc::Aviation::CAirportIcaoCode &airportIcao) = 0;
 
-        /*!
-         * Send a message querying the weather data for the airport with a specific ICAO code.
-         * \pre Network must be connected when calling this function.
-         * \sa temperatureDataReplyReceived
-         * \sa windDataReplyReceived
-         * \sa cloudDataReplyReceived
-         */
-        virtual void sendWeatherDataQuery(const BlackMisc::Aviation::CAirportIcaoCode &airportIcao) = 0;
-
     signals:
         //! @}
         ////////////////////////////////////////////////////////////////
@@ -457,8 +448,6 @@ namespace BlackCore
          */
         void frequencyReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq);
 
-        // TODO void aircraftInterimPositionUpdate(...);
-
         //! @}
         ////////////////////////////////////////////////////////////////
         //! \name Network signals
@@ -542,10 +531,6 @@ namespace BlackCore
          * \sa sendMetarQuery
          */
         void metarReplyReceived(const QString &data);
-
-        // TODO void temperatureDataReplyReceived(...);
-        // TODO void windDataReplyReceived(...);
-        // TODO void cloudDataReplyReceived(...);
 
         //! @}
     };

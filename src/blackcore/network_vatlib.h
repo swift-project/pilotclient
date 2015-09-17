@@ -89,7 +89,6 @@ namespace BlackCore
         //! \name Weather functions
         //! @{
         virtual void sendMetarQuery(const BlackMisc::Aviation::CAirportIcaoCode &airportIcao) override;
-        virtual void sendWeatherDataQuery(const BlackMisc::Aviation::CAirportIcaoCode &airportIcao) override;
         //! @}
 
     private slots:
@@ -116,9 +115,6 @@ namespace BlackCore
         static void onCapabilitiesReplyReceived(VatSessionID, const char *callsign, int capabilityFlags, void *cbvar);
         static void onAtisReplyReceived(VatSessionID, const char *callsign, const VatControllerAtis *atis, void *cbvar);
         static void onFlightPlanReceived(VatSessionID, const char *callsign, const VatFlightPlan *fp, void *cbvar);
-        static void onTemperatureDataReceived(VatSessionID, const VatTempLayer layer[4], int pressure, void *cbvar);
-        static void onWindDataReceived(VatSessionID, const VatWindLayer layer[4], void *cbvar);
-        static void onCloudDataReceived(VatSessionID, const VatCloudLayer cloudLayer[2], VatThunderStormLayer thunderStormLayer, float visibility, void *cbvar);
         static void onErrorReceived(VatSessionID, VatServerError error, const char *msg, const char *data, void *cbvar);
         static void onPilotDisconnected(VatSessionID, const char *callsign, void *cbvar);
         static void onPilotInfoRequestReceived(VatSessionID, const char *callsign, void *cbvar);
@@ -177,6 +173,7 @@ namespace BlackCore
         BlackMisc::Aviation::CCallsign m_ownCallsign;                 //!< "buffered callsign", as this must not change when connected
         BlackMisc::Aviation::CAircraftIcaoCode m_ownAircraftIcaoCode; //!< "buffered icao", as this must not change when connected
         BlackMisc::Aviation::CAirlineIcaoCode m_ownAirlineIcaoCode;   //!< "buffered icao", as this must not change when connected
+        QString m_ownLiveryDescription;                               //!< "buffered livery", as this must not change when connected
 
         QTimer m_processingTimer;
         QTimer m_positionUpdateTimer;
