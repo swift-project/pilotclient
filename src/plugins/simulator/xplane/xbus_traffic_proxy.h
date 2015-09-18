@@ -51,8 +51,6 @@ namespace BlackSimPlugin
         private:
             BlackMisc::CGenericDBusInterface *m_dbusInterface = nullptr;
 
-            void relaySignals();
-
         signals:
             //! \copydoc XBus::CTraffic::installedModelsUpdated
             void installedModelsUpdated(const QStringList &modelStrings, const QStringList &icaos, const QStringList &airlines, const QStringList &liveries);

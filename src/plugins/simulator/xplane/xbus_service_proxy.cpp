@@ -17,21 +17,7 @@ namespace BlackSimPlugin
         CXBusServiceProxy::CXBusServiceProxy(QDBusConnection &connection, QObject *parent, bool dummy) : QObject(parent)
         {
             m_dbusInterface = new BlackMisc::CGenericDBusInterface(XBUS_SERVICE_SERVICENAME, ObjectPath(), InterfaceName(), connection, this);
-            if (! dummy) { relaySignals(); }
-        }
-
-        void CXBusServiceProxy::relaySignals()
-        {
-            // TODO can this be refactored into CGenericDBusInterface?
-            for (int i = 0, count = metaObject()->methodCount(); i < count; ++i)
-            {
-                auto method = metaObject()->method(i);
-                if (method.methodType() == QMetaMethod::Signal)
-                {
-                    m_dbusInterface->connection().connect(m_dbusInterface->service(), m_dbusInterface->path(), m_dbusInterface->interface(),
-                        method.name(), this, method.methodSignature().prepend("2"));
-                }
-            }
+            if (! dummy) { m_dbusInterface->relayParentSignals(); }
         }
 
         void CXBusServiceProxy::updateAirportsInRange()

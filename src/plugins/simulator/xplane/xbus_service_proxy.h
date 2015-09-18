@@ -56,8 +56,6 @@ namespace BlackSimPlugin
         private:
             BlackMisc::CGenericDBusInterface *m_dbusInterface = nullptr;
 
-            void relaySignals();
-
             // Returns a function object which can be passed to CGenericDBusInterface::callDBusAsync.
             template <typename T>
             std::function<void(QDBusPendingCallWatcher *)> setterCallback(T *obj)
