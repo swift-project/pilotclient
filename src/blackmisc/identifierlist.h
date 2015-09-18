@@ -36,6 +36,9 @@ namespace BlackMisc
 
         //! Construct from a base class object.
         CIdentifierList(const CSequence<BlackMisc::CIdentifier> &other);
+
+        //! This list contains an identifier which is not contained in other.
+        bool containsAnyNotIn(const CIdentifierList &other) const;
     };
 } //namespace
 
