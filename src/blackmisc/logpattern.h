@@ -15,6 +15,7 @@
 #include "blackmiscexport.h"
 #include "statusmessage.h"
 #include <QExplicitlySharedDataPointer>
+#include <numeric>
 
 namespace BlackMisc
 {
@@ -85,6 +86,15 @@ namespace BlackMisc
         //! \copydoc CValueObject::marshallFromDbus()
         void unmarshallFromDbus(const QDBusArgument &argument);
 
+        //! \copydoc CValueObject::qHash
+        //! \todo Use Mixin::HashByTuple when Qt 5.5 is baseline (qHash(QSet<T>) was added in Qt 5.5).
+        friend uint qHash(const CLogPattern &p, uint seed = 0)
+        {
+            seed = std::accumulate(p.m_severities.begin(), p.m_severities.end(), seed, [](uint i, CStatusMessage::StatusSeverity s) { return i + (1 << static_cast<int>(s)); });
+            seed ^= std::accumulate(p.m_strings.begin(), p.m_strings.end(), 0, [](uint i, const QString &s) { return i + qHash(s); });
+            return qHash(static_cast<int>(p.m_strategy), seed);
+        }
+
     private:
         bool checkInvariants() const;
 
@@ -116,9 +126,9 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::CLogPattern)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CLogPattern, (
-    attr(o.m_severities, flags<DisabledForHashing>()),
+    attr(o.m_severities),
     attr(o.m_strategy),
-    attr(o.m_strings, flags<DisabledForHashing>())
+    attr(o.m_strings)
 ))
 
 #endif
