@@ -206,7 +206,14 @@ namespace BlackMisc
 
     void CVariant::marshallToDbus(QDBusArgument &arg) const
     {
-        arg << QString(typeName()) << QDBusVariant(getQVariant());
+        if (isValid())
+        {
+            arg << QString(typeName()) << QDBusVariant(getQVariant());
+        }
+        else
+        {
+            arg << QString() << QDBusVariant(QVariant(0));
+        }
     }
 
     void CVariant::unmarshallFromDbus(const QDBusArgument &arg)
@@ -215,7 +222,14 @@ namespace BlackMisc
         QDBusVariant dbusVar;
         arg >> typeName >> dbusVar;
 
-        *this = fixQVariantFromDbusArgument(dbusVar.variant(), QMetaType::type(qPrintable(typeName)));
+        if (typeName.isEmpty())
+        {
+            *this = CVariant();
+        }
+        else
+        {
+            *this = fixQVariantFromDbusArgument(dbusVar.variant(), QMetaType::type(qPrintable(typeName)));
+        }
     }
 
     void CVariant::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
