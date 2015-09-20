@@ -21,7 +21,6 @@ namespace BlackMisc
 
     CFileLogger::CFileLogger(const QString &applicationName, const QString &logPath, QObject *parent) :
         QObject(parent),
-        m_logSubscriber(this, &CFileLogger::ps_writeStatusMessageToFile),
         m_logFile(this),
         m_applicationName(applicationName),
         m_logPath(logPath)
@@ -34,6 +33,9 @@ namespace BlackMisc
         m_stream.setDevice(&m_logFile);
         m_stream.setCodec("UTF-8");
         writeHeaderToFile();
+
+        connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, this, &CFileLogger::ps_writeStatusMessageToFile);
+        connect(CLogHandler::instance(), &CLogHandler::remoteMessageLogged, this, &CFileLogger::ps_writeStatusMessageToFile);
     }
 
     CFileLogger::~CFileLogger()
@@ -45,13 +47,10 @@ namespace BlackMisc
         }
     }
 
-    void CFileLogger::changeLogPattern(const CLogPattern &pattern)
-    {
-        m_logSubscriber.changeSubscription(pattern);
-    }
-
     void CFileLogger::ps_writeStatusMessageToFile(const BlackMisc::CStatusMessage &statusMessage)
     {
+        if (! m_logPattern.match(statusMessage)) { return; }
+
         QString finalContent = QDateTime::currentDateTime().toString(QStringLiteral("hh:mm:ss "));
         finalContent += statusMessage.getHumanReadableCategory();
         finalContent += " ";

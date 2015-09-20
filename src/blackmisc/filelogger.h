@@ -45,8 +45,8 @@ namespace BlackMisc
         //! Destructor.
         ~CFileLogger();
 
-        //! Change the log pattern. Call this method at least once to start logging
-        void changeLogPattern(const CLogPattern &pattern);
+        //! Change the log pattern. Default is to log all messages.
+        void changeLogPattern(const CLogPattern &pattern) { m_logPattern = pattern; }
 
     private slots:
 
@@ -60,7 +60,7 @@ namespace BlackMisc
         void writeHeaderToFile();
         void writeContentToFile(const QString &content);
 
-        CLogSubscriber m_logSubscriber;
+        CLogPattern m_logPattern;
         QFile m_logFile;
         QTextStream m_stream;
         QString m_applicationName;
