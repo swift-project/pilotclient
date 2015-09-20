@@ -92,7 +92,7 @@ namespace BlackGui
         // File logger
         static const QString logPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/org.swift-project/logs";
         CFileLogger *fileLogger = new CFileLogger(applicationName, logPath, &a);
-        fileLogger->changeLogPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
+        fileLogger->changeLogPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityDebug));
 
         // GUI icon
         a.installTranslator(&translator);
