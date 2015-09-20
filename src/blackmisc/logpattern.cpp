@@ -267,18 +267,24 @@ namespace BlackMisc
 
     void CLogPattern::marshallToDbus(QDBusArgument &argument) const
     {
-        auto begin = Iterators::makeTransformIterator(m_severities.begin(), [](CStatusMessage::StatusSeverity s) { return static_cast<int>(s); });
-        QList<int> severities = makeRange(begin, m_severities.end());
+        // a bug in QtDBus prevents us from marshalling m_severities as a list
+        quint8 severities = 0;
+        for (auto s : m_severities) { severities |= (1 << static_cast<int>(s)); }
+
         argument << severities << m_strategy << m_strings.toList();
     }
 
     void CLogPattern::unmarshallFromDbus(const QDBusArgument &argument)
     {
-        QList<int> severities;
+        quint8 severities;
         QStringList strings;
         argument >> severities >> m_strategy >> strings;
-        auto begin = Iterators::makeTransformIterator(severities.begin(), [](int i) { return static_cast<CStatusMessage::StatusSeverity>(i); });
-        m_severities = QSet<CStatusMessage::StatusSeverity>::fromList(makeRange(begin, severities.end()));
         m_strings = strings.toSet();
+
+        m_severities.clear();
+        for (int s : { 0, 1, 2, 3 })
+        {
+            if (severities & (1 << s)) { m_severities.insert(static_cast<CStatusMessage::StatusSeverity>(s)); }
+        }
     }
 }
