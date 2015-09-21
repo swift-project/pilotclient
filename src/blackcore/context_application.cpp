@@ -48,6 +48,22 @@ namespace BlackCore
         {
             this->logMessage(message, {});
         });
+        connect(CLogHandler::instance(), &CLogHandler::subscriptionAdded, this, [this](const CLogPattern &pattern)
+        {
+            this->addLogSubscription({}, pattern);
+        });
+        connect(CLogHandler::instance(), &CLogHandler::subscriptionRemoved, this, [this](const CLogPattern &pattern)
+        {
+            this->removeLogSubscription({}, pattern);
+        });
+        connect(this, &IContextApplication::logSubscriptionAdded, this, [this](const CIdentifier &subscriber, const CLogPattern &pattern)
+        {
+            this->m_logSubscriptions[subscriber].push_back(pattern);
+        });
+        connect(this, &IContextApplication::logSubscriptionRemoved, this, [this](const CIdentifier &subscriber, const CLogPattern &pattern)
+        {
+            this->m_logSubscriptions[subscriber].removeAll(pattern);
+        });
 
         connect(CSettingsCache::instance(), &CSettingsCache::valuesChangedByLocal, [this](const CVariantMap &settings)
         {
@@ -122,3 +138,18 @@ namespace BlackCore
     }
 
 } // namespace
+
+QDBusArgument &operator <<(QDBusArgument &arg, const BlackCore::CLogSubscriptionHash &hash)
+{
+    QList<CLogSubscriptionPair> listOfPairs;
+    for (auto it = hash.begin(); it != hash.end(); ++it) { listOfPairs.push_back({ it.key(), it.value() }); }
+    return arg << listOfPairs;
+}
+
+const QDBusArgument &operator >>(const QDBusArgument &arg, BlackCore::CLogSubscriptionHash &hash)
+{
+    QList<CLogSubscriptionPair> listOfPairs;
+    arg >> listOfPairs;
+    for (const auto &pair : listOfPairs) { hash.insert(pair.first, pair.second); }
+    return arg;
+}

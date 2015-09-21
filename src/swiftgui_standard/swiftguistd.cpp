@@ -319,6 +319,7 @@ void SwiftGuiStd::setContextAvailability()
         if (this->m_coreAvailable)
         {
             // core has just become available
+            this->getIContextApplication()->synchronizeLogSubscriptions();
             this->getIContextApplication()->synchronizeLocalSettings();
         }
         else

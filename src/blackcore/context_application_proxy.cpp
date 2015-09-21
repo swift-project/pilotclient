@@ -44,6 +44,12 @@ namespace BlackCore
                                     "messageLogged", this, SIGNAL(messageLogged(BlackMisc::CStatusMessage, BlackMisc::CIdentifier)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
+                               "logSubscriptionAdded", this, SIGNAL(logSubscriptionAdded(BlackMisc::CIdentifier, BlackMisc::CLogPattern)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
+                               "logSubscriptionRemoved", this, SIGNAL(logSubscriptionRemoved(BlackMisc::CIdentifier, BlackMisc::CLogPattern)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
                                "settingsChanged", this, SIGNAL(settingsChanged(BlackMisc::CVariantMap, BlackMisc::CIdentifier)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
@@ -60,6 +66,28 @@ namespace BlackCore
     void CContextApplicationProxy::logMessage(const CStatusMessage &message, const CIdentifier &origin)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("logMessage"), message, origin);
+    }
+
+    void CContextApplicationProxy::addLogSubscription(const CIdentifier &subscriber, const CLogPattern &pattern)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("addLogSubscription"), subscriber, pattern);
+    }
+
+    void CContextApplicationProxy::removeLogSubscription(const CIdentifier &subscriber, const CLogPattern &pattern)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("removeLogSubscription"), subscriber, pattern);
+    }
+
+    CLogSubscriptionHash CContextApplicationProxy::getAllLogSubscriptions() const
+    {
+        return this->m_dBusInterface->callDBusRet<CLogSubscriptionHash>(QLatin1Literal("getAllLogSubscriptions"));
+    }
+
+    void CContextApplicationProxy::synchronizeLogSubscriptions()
+    {
+        // note this proxy method does not call synchronizeLogSubscriptions in core
+        m_logSubscriptions = getAllLogSubscriptions();
+        for (const auto &pattern : CLogHandler::instance()->getAllSubscriptions()) { this->addLogSubscription({}, pattern); }
     }
 
     void CContextApplicationProxy::changeSettings(const CVariantMap &settings, const CIdentifier &origin)

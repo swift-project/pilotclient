@@ -32,6 +32,18 @@ namespace BlackCore
         //! \copydoc IContextApplication::logMessage
         virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::CIdentifier &origin) override;
 
+        //! \copydoc IContextApplication::addLogSubscription
+        virtual void addLogSubscription(const BlackMisc::CIdentifier &subscriber, const BlackMisc::CLogPattern &pattern) override;
+
+        //! \copydoc IContextApplication::removeLogSubscription
+        virtual void removeLogSubscription(const BlackMisc::CIdentifier &subscriber, const BlackMisc::CLogPattern &pattern) override;
+
+        //! \copydoc IContextApplication::getAllLogSubscriptions
+        virtual CLogSubscriptionHash getAllLogSubscriptions() const;
+
+        //! \copydoc IContextApplication::synchronizeLogSubscriptions
+        virtual void synchronizeLogSubscriptions();
+
         //! \copydoc IContextApplication::changeSettings
         virtual void changeSettings(const BlackMisc::CVariantMap &settings, const BlackMisc::CIdentifier &origin) override;
 

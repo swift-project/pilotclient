@@ -9,6 +9,7 @@
 #include "voice_channel.h"
 #include "network.h"
 #include "simulator.h"
+#include "context_application.h"
 #include <QThread>
 
 namespace BlackCore
@@ -19,6 +20,8 @@ namespace BlackCore
         qRegisterMetaType<BlackCore::INetwork::ConnectionStatus>();
         qRegisterMetaType<BlackCore::CWebReaderFlags::WebReaderFlag>();
         qRegisterMetaType<BlackCore::CWebReaderFlags::WebReader>();
+        qDBusRegisterMetaType<BlackCore::CLogSubscriptionHash>();
+        qDBusRegisterMetaType<BlackCore::CLogSubscriptionPair>();
     }
 
     bool isCurrentThreadObjectThread(QObject *toBeTested)

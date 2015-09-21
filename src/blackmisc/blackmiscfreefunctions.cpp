@@ -24,6 +24,7 @@
 #include "pixmap.h"
 #include "iconlist.h"
 #include "identifierlist.h"
+#include "logpattern.h"
 #include <QtNetwork/QHostInfo>
 #include <QProcessEnvironment>
 #include <QSysInfo>
@@ -83,6 +84,7 @@ void BlackMisc::registerMetadata()
     CIconList::registerMetadata();
     CLogCategory::registerMetadata();
     CLogCategoryList::registerMetadata();
+    CLogPattern::registerMetadata();
     CPixmap::registerMetadata();
     CIdentifier::registerMetadata();
     CIdentifierList::registerMetadata();

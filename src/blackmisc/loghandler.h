@@ -63,12 +63,21 @@ namespace BlackMisc
             return handlerForPattern(CLogPattern::exactMatch(CLogCategory::validation()).withSeverityAtOrAbove(CStatusMessage::SeverityWarning));
         }
 
+        //! Returns all log patterns for which there are currently subscribed log pattern handlers.
+        QList<CLogPattern> getAllSubscriptions() const;
+
     signals:
         //! Emitted when a message is logged in this process.
         void localMessageLogged(const BlackMisc::CStatusMessage &message);
 
         //! Emitted when a log message is relayed from a different process.
         void remoteMessageLogged(const BlackMisc::CStatusMessage &message);
+
+        //! Emitted when an object subscribes to a pattern of log messages.
+        void subscriptionAdded(const BlackMisc::CLogPattern &pattern);
+
+        //! Emitted when an object unsubscribes from a pattern of log messages.
+        void subscriptionRemoved(const BlackMisc::CLogPattern &pattern);
 
     public slots:
         //! Called by our QtMessageHandler to log a message.
@@ -178,11 +187,13 @@ namespace BlackMisc
 
     private:
         friend class CLogHandler;
-        CLogPatternHandler(CLogHandler *parent);
+        CLogPatternHandler(CLogHandler *parent, const CLogPattern &pattern);
         CLogHandler *m_parent = nullptr;
+        CLogPattern m_pattern;
         bool m_inheritFallThrough = true;
         bool m_enableFallThrough = true;
-        std::atomic<bool> m_subscriptionNeedsUpdate = false;
+        bool m_isSubscribed = false;
+        std::atomic<bool> m_subscriptionNeedsUpdate { false };
         QTimer m_subscriptionUpdateTimer;
         void updateSubscription();
     };

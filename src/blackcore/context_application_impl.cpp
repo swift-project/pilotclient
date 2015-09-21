@@ -41,6 +41,29 @@ namespace BlackCore
         emit this->messageLogged(message, origin);
     }
 
+    void CContextApplication::addLogSubscription(const CIdentifier &subscriber, const CLogPattern &pattern)
+    {
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        emit this->logSubscriptionAdded(subscriber, pattern);
+    }
+
+    void CContextApplication::removeLogSubscription(const CIdentifier &subscriber, const CLogPattern &pattern)
+    {
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        emit this->logSubscriptionRemoved(subscriber, pattern);
+    }
+
+    CLogSubscriptionHash CContextApplication::getAllLogSubscriptions() const
+    {
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        return m_logSubscriptions;
+    }
+
+    void CContextApplication::synchronizeLogSubscriptions()
+    {
+        // no-op: proxy implements this method by calling getAllLogSubscriptions
+    }
+
     void CContextApplication::changeSettings(const CVariantMap &settings, const CIdentifier &origin)
     {
         // Intentionally don't check for round trip here

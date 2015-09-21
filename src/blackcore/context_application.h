@@ -18,6 +18,7 @@
 #include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/identifierlist.h"
 #include "blackmisc/variantmap.h"
+#include "blackmisc/logpattern.h"
 #include <QObject>
 #include <QReadWriteLock>
 
@@ -35,6 +36,12 @@
 namespace BlackCore
 {
     class CInputManager;
+
+    //! Used by application context to track which processes are subscribed to which patterns of log message
+    using CLogSubscriptionHash = QHash<BlackMisc::CIdentifier, QList<BlackMisc::CLogPattern>>;
+
+    //! Used when marshalling CLogSubscriptionHash, as a QHash with CIdentifier keys can't be marshalled
+    using CLogSubscriptionPair = QPair<BlackMisc::CIdentifier, QList<BlackMisc::CLogPattern>>;
 
     //! Application context interface
     class BLACKCORE_EXPORT IContextApplication : public CContext
@@ -78,6 +85,14 @@ namespace BlackCore
         //! \note Used with CLogMessage, do not use directly
         void messageLogged(const BlackMisc::CStatusMessage &message, const BlackMisc::CIdentifier &origin);
 
+        //! A process subscribed to a particular pattern of log messages
+        //! \note Used with CLogMessage, do not use directly
+        void logSubscriptionAdded(const BlackMisc::CIdentifier &subscriber, const BlackMisc::CLogPattern &pattern);
+
+        //! A process unsubscribed from a particular pattern of log messages
+        //! \note Used with CLogMessage, do not use directly
+        void logSubscriptionRemoved(const BlackMisc::CIdentifier &subscriber, const BlackMisc::CLogPattern &pattern);
+
         //! One or more settings were changed
         //! \note Used for cache relay, do not use directly
         void settingsChanged(const BlackMisc::CVariantMap &settings, const BlackMisc::CIdentifier &origin);
@@ -93,11 +108,29 @@ namespace BlackCore
         //! Work around for audio context, #382
         void fakedSetComVoiceRoom(const BlackMisc::Audio::CVoiceRoomList &requestedRooms);
 
+    protected:
+        //! Tracks which processes are subscribed to which patterns of log messages.
+        CLogSubscriptionHash m_logSubscriptions;
+
     public slots:
         //! Log a log message
         //! \note Not pure because it can be called from the base class constructor.
         //! \note this is the function which relays CLogMessage via DBus
         virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::CIdentifier &origin) { Q_UNUSED(message); Q_UNUSED(origin); }
+
+        //! Subscribe a process to a particular pattern of log messages
+        //! \note This is the function which relays subscription changes via DBus
+        virtual void addLogSubscription(const BlackMisc::CIdentifier &subscriber, const BlackMisc::CLogPattern &pattern) = 0;
+
+        //! Unsubscribe a process from a particular pattern of log messages
+        //! \note This is the function which relays subscription changes via DBus
+        virtual void removeLogSubscription(const BlackMisc::CIdentifier &subscriber, const BlackMisc::CLogPattern &pattern) = 0;
+
+        //! Returns hash identifying which processes are subscribed to which patterns of log message
+        virtual BlackCore::CLogSubscriptionHash getAllLogSubscriptions() const = 0;
+
+        //! Update log subscriptions hash from core
+        virtual void synchronizeLogSubscriptions() = 0;
 
         //! Ratify some settings changed by another process
         //! \note Not pure because it can be called from the base class constructor.
@@ -153,5 +186,14 @@ namespace BlackCore
 
     };
 }
+
+//! DBus marshalling for CLogSubscriptionHash, needed because QtDBus can't marshal a QHash with CIdentifier keys.
+QDBusArgument &operator <<(QDBusArgument &arg, const BlackCore::CLogSubscriptionHash &);
+
+//! DBus unmarshalling for CLogSubscriptionHash, needed because QtDBus can't marshal a QHash with CIdentifier keys.
+const QDBusArgument &operator >>(const QDBusArgument &arg, BlackCore::CLogSubscriptionHash &);
+
+Q_DECLARE_METATYPE(BlackCore::CLogSubscriptionHash)
+Q_DECLARE_METATYPE(BlackCore::CLogSubscriptionPair)
 
 #endif // guard

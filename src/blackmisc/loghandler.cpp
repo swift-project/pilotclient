@@ -57,7 +57,7 @@ namespace BlackMisc
         auto it = std::find_if(m_patternHandlers.begin(), m_patternHandlers.end(), finder);
         if (it == m_patternHandlers.end())
         {
-            auto *handler = new CLogPatternHandler(this);
+            auto *handler = new CLogPatternHandler(this, pattern);
             topologicallySortedInsert(m_patternHandlers, PatternPair(pattern, handler), comparator);
             return handler;
         }
@@ -149,8 +149,21 @@ namespace BlackMisc
         }
     }
 
-    CLogPatternHandler::CLogPatternHandler(CLogHandler *parent) :
-        QObject(parent), m_parent(parent)
+    QList<CLogPattern> CLogHandler::getAllSubscriptions() const
+    {
+        QList<CLogPattern> result;
+        for (const auto &pair : m_patternHandlers)
+        {
+            if (pair.second->isSignalConnected(QMetaMethod::fromSignal(&CLogPatternHandler::messageLogged)))
+            {
+                result.push_back(pair.first);
+            }
+        }
+        return result;
+    }
+
+    CLogPatternHandler::CLogPatternHandler(CLogHandler *parent, const CLogPattern &pattern) :
+        QObject(parent), m_parent(parent), m_pattern(pattern)
     {
         connect(&m_subscriptionUpdateTimer, &QTimer::timeout, this, &CLogPatternHandler::updateSubscription);
         m_subscriptionUpdateTimer.start(1);
@@ -163,7 +176,20 @@ namespace BlackMisc
             m_subscriptionNeedsUpdate = false;
             bool isSubscribed = isSignalConnected(QMetaMethod::fromSignal(&CLogPatternHandler::messageLogged));
 
-            if (m_inheritFallThrough && ! isSubscribed)
+            if (isSubscribed != m_isSubscribed)
+            {
+                m_isSubscribed = isSubscribed;
+                if (m_isSubscribed)
+                {
+                    emit m_parent->subscriptionAdded(m_pattern);
+                }
+                else
+                {
+                    emit m_parent->subscriptionRemoved(m_pattern);
+                }
+            }
+
+            if (m_inheritFallThrough && ! m_isSubscribed)
             {
                 m_parent->removePatternHandler(this);
             }
