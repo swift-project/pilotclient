@@ -9,6 +9,7 @@
 //! \file
 
 #include <XPLM/XPLMDataAccess.h>
+#include <XPLM/XPLMUtilities.h>
 #include <vector>
 #include <string>
 #include <cassert>
@@ -24,7 +25,11 @@ namespace XBus
     public:
         DataRefImpl(char const* name) : m_ref(XPLMFindDataRef(name))
         {
-            //TODO warn if m_ref is NULL
+            if (! m_ref)
+            {
+                XPLMDebugString("Missing dataref:");
+                XPLMDebugString(name);
+            }
         }
 
         template <typename T>
@@ -43,7 +48,11 @@ namespace XBus
     public:
         ArrayDataRefImpl(char const* name, size_t size) : m_ref(XPLMFindDataRef(name)), m_size(size)
         {
-            //TODO warn if m_ref is NULL
+            if (! m_ref)
+            {
+                XPLMDebugString("Missing dataref:");
+                XPLMDebugString(name);
+            }
         }
 
         template <typename T>
@@ -131,7 +140,11 @@ namespace XBus
         //! Constructor
         StringDataRef() : m_ref(XPLMFindDataRef(DataRefTraits::name()))
         {
-            //TODO warn if m_ref is NULL
+            if (! m_ref)
+            {
+                XPLMDebugString("Missing dataref:");
+                XPLMDebugString(DataRefTraits::name());
+            }
         }
 
         //! Set the value of the whole string (if it is writable)

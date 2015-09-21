@@ -97,6 +97,24 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBusAsync(QLatin1String("getXPlanePreferencesPath"), setterCallback(o_prefsPath));
         }
 
+        bool CXBusServiceProxy::isPaused() const
+        {
+            return m_dbusInterface->callDBusRet<bool>(QLatin1String("isPaused"));
+        }
+        void CXBusServiceProxy::isPausedAsync(bool *o_paused)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("isPaused"), setterCallback(o_paused));
+        }
+
+        bool CXBusServiceProxy::isUsingRealTime() const
+        {
+            return m_dbusInterface->callDBusRet<bool>(QLatin1String("isUsingRealTime"));
+        }
+        void CXBusServiceProxy::isUsingRealTimeAsync(bool *o_isRealTime)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("isUsingRealTime"), setterCallback(o_isRealTime));
+        }
+
         double CXBusServiceProxy::getLatitude() const
         {
             return m_dbusInterface->callDBusRet<double>(QLatin1String("getLatitude"));

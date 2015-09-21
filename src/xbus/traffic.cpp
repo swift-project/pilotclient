@@ -101,19 +101,24 @@ namespace XBus
         }
     }
 
+    int g_maxPlanes = 100;
+    float g_drawDistance = 50.0f;
+
     int CTraffic::preferences(const char *section, const char *name, int def)
     {
-        Q_UNUSED(name);
-        Q_UNUSED(section);
-        // TODO [planes] max_full_count
+        if (strcmp(section, "planes") == 0 && strcmp(name, "max_full_count") == 0)
+        {
+            return g_maxPlanes;
+        }
         return def;
     }
 
     float CTraffic::preferences(const char *section, const char *name, float def)
     {
-        // TODO [planes] full_distance
-        Q_UNUSED(name);
-        Q_UNUSED(section);
+        if (strcmp(section, "planes") == 0 && strcmp(name, "full_distance") == 0)
+        {
+            return g_drawDistance;
+        }
         return def;
     }
 
@@ -171,6 +176,16 @@ namespace XBus
         }
 
         emit installedModelsUpdated(modelNames, icaos, airlines, liveries);
+    }
+
+    void CTraffic::setMaxPlanes(int planes)
+    {
+        g_maxPlanes = planes;
+    }
+
+    void CTraffic::setMaxDrawDistance(float nauticalMiles)
+    {
+        g_drawDistance = nauticalMiles;
     }
 
     void CTraffic::addPlane(const QString &callsign, const QString &modelName, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery)

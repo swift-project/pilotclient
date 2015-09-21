@@ -130,6 +130,18 @@ namespace BlackSimPlugin
             void getXPlanePreferencesPathAsync(QString *o_prefsPath);
             //! @}
 
+            //! \copydoc XBus::CService::isPaused
+            //! @{
+            bool isPaused() const;
+            void isPausedAsync(bool *o_paused);
+            //! @}
+
+            //! \copydoc XBus::CService::isUsingRealTime
+            //! @{
+            bool isUsingRealTime() const;
+            void isUsingRealTimeAsync(bool *o_isRealTime);
+            //! @}
+
             //! \copydoc XBus::CService::getLatitude
             //! @{
             double getLatitude() const;

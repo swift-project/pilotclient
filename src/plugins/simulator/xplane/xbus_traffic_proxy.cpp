@@ -55,6 +55,16 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBus(QLatin1String("updateInstalledModels"));
         }
 
+        void CXBusTrafficProxy::setMaxPlanes(int planes)
+        {
+            m_dbusInterface->callDBus(QLatin1String("setMaxPlanes"), planes);
+        }
+
+        void CXBusTrafficProxy::setDrawDistance(float nauticalMiles)
+        {
+            m_dbusInterface->callDBus(QLatin1String("setDrawDistance"), nauticalMiles);
+        }
+
         void CXBusTrafficProxy::addPlane(const QString &callsign, const QString &modelName, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery)
         {
             m_dbusInterface->callDBus(QLatin1String("addPlane"), callsign, modelName, aircraftIcao, airlineIcao, livery);

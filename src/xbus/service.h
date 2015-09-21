@@ -98,6 +98,12 @@ namespace XBus
         //! Get full path to X-Plane preferences file
         QString getXPlanePreferencesPath() const;
 
+        //! True if sim is paused
+        bool isPaused() const { return m_paused.get(); }
+
+        //! True if sim time is tracking operating system time
+        bool isUsingRealTime() const { return m_useSystemTime.get(); }
+
         //! Get aircraft latitude in degrees
         double getLatitude() const { return m_latitude.get(); }
 
@@ -217,6 +223,8 @@ namespace XBus
 
         StringDataRef<xplane::data::sim::aircraft::view::acf_livery_path> m_liveryPath;
         StringDataRef<xplane::data::sim::aircraft::view::acf_ICAO> m_icao;
+        DataRef<xplane::data::sim::time::paused> m_paused;
+        DataRef<xplane::data::sim::time::use_system_time> m_useSystemTime;
         DataRef<xplane::data::sim::flightmodel::position::latitude> m_latitude;
         DataRef<xplane::data::sim::flightmodel::position::longitude> m_longitude;
         DataRef<xplane::data::sim::flightmodel::position::elevation> m_elevation;
