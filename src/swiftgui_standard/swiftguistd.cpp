@@ -301,6 +301,8 @@ void SwiftGuiStd::ps_handleTimerBasedUpdates()
 
 void SwiftGuiStd::setContextAvailability()
 {
+    bool corePreviouslyAvailable = this->m_coreAvailable;
+
     if (this->getIContextApplication()->isUsingImplementingObject())
     {
         this->m_coreAvailable = true;
@@ -311,6 +313,20 @@ void SwiftGuiStd::setContextAvailability()
     }
     this->m_contextNetworkAvailable = this->m_coreAvailable || this->getIContextNetwork()->isUsingImplementingObject();
     this->m_contextAudioAvailable = this->m_coreAvailable || this->getIContextAudio()->isUsingImplementingObject();
+
+    // react to a change in core's availability
+    if (this->m_coreAvailable != corePreviouslyAvailable)
+    {
+        if (this->m_coreAvailable)
+        {
+            // core has just become available
+            this->getIContextApplication()->synchronizeLocalSettings();
+        }
+        else
+        {
+            // core has just become unavailable...
+        }
+    }
 }
 
 void SwiftGuiStd::updateGuiStatusInformation()

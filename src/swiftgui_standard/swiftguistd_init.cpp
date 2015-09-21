@@ -211,8 +211,6 @@ void SwiftGuiStd::initGuiSignals()
 
 void SwiftGuiStd::initialDataReads()
 {
-    this->getIContextApplication()->synchronizeLocalSettings();
-
     this->setContextAvailability();
     if (!this->m_coreAvailable)
     {
