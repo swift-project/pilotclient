@@ -38,7 +38,10 @@ namespace BlackCore
         {
             CLogHandler::instance()->logRemoteMessage(message);
         }
-        emit this->messageLogged(message, origin);
+        if (subscribersOf(message).containsAnyNotIn(CIdentifierList({ origin, {} })))
+        {
+            emit this->messageLogged(message, origin);
+        }
     }
 
     void CContextApplication::addLogSubscription(const CIdentifier &subscriber, const CLogPattern &pattern)

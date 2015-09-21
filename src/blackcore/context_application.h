@@ -109,6 +109,9 @@ namespace BlackCore
         void fakedSetComVoiceRoom(const BlackMisc::Audio::CVoiceRoomList &requestedRooms);
 
     protected:
+        //! Compute which process' subscriptions match a given log message.
+        BlackMisc::CIdentifierList subscribersOf(const BlackMisc::CStatusMessage &message) const;
+
         //! Tracks which processes are subscribed to which patterns of log messages.
         CLogSubscriptionHash m_logSubscriptions;
 

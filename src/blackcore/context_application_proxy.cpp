@@ -65,7 +65,10 @@ namespace BlackCore
 
     void CContextApplicationProxy::logMessage(const CStatusMessage &message, const CIdentifier &origin)
     {
-        this->m_dBusInterface->callDBus(QLatin1Literal("logMessage"), message, origin);
+        if (subscribersOf(message).containsAnyNotIn(CIdentifierList({ origin, {} })))
+        {
+            this->m_dBusInterface->callDBus(QLatin1Literal("logMessage"), message, origin);
+        }
     }
 
     void CContextApplicationProxy::addLogSubscription(const CIdentifier &subscriber, const CLogPattern &pattern)

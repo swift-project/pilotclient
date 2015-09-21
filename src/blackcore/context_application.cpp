@@ -111,6 +111,17 @@ namespace BlackCore
         CInputManager::instance()->setForwarding(true);
     }
 
+    CIdentifierList IContextApplication::subscribersOf(const CStatusMessage &message) const
+    {
+        CIdentifierList result;
+        for (auto it = m_logSubscriptions.begin(); it != m_logSubscriptions.end(); ++it)
+        {
+            bool match = std::any_of(it->begin(), it->end(), [&message](const CLogPattern &pattern) { return pattern.match(message); });
+            if (match) { result.push_back(it.key()); }
+        }
+        return result;
+    }
+
     void IContextApplication::changeSettings(const CVariantMap &settings, const CIdentifier &origin)
     {
         Q_UNUSED(settings);
