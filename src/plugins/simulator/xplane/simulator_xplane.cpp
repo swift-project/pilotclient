@@ -10,6 +10,7 @@
 #include "simulator_xplane.h"
 #include "xbus_service_proxy.h"
 #include "xbus_traffic_proxy.h"
+#include "xbus_weather_proxy.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/simulation/modelmappingsprovider.h"

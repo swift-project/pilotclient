@@ -29,6 +29,7 @@ namespace XBus
 {
     class CService;
     class CTraffic;
+    class CWeather;
 
     /*!
      * Main plugin class
@@ -51,6 +52,7 @@ namespace XBus
         BlackCore::CDBusServer *m_server = nullptr;
         CService *m_service = nullptr;
         CTraffic *m_traffic = nullptr;
+        CWeather *m_weather = nullptr;
         CMenu m_menu;
         QVector<CMenuItem> m_startServerMenuItems;
 

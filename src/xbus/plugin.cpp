@@ -6,6 +6,7 @@
 #include "plugin.h"
 #include "service.h"
 #include "traffic.h"
+#include "weather.h"
 
 namespace {
     inline QString xbusServiceName() {
@@ -32,8 +33,10 @@ namespace XBus
         m_server = new BlackCore::CDBusServer(xbusServiceName(), address, this);
         m_service = new CService(this);
         m_traffic = new CTraffic(this);
+        m_weather = new CWeather(this);
         m_server->addObject(CService::ObjectPath(), m_service);
         m_server->addObject(CTraffic::ObjectPath(), m_traffic);
+        m_server->addObject(CWeather::ObjectPath(), m_weather);
     }
 
     void CPlugin::onAircraftModelChanged()

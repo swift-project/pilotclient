@@ -27,6 +27,7 @@ namespace BlackSimPlugin
     {
         class CXBusServiceProxy;
         class CXBusTrafficProxy;
+        class CXBusWeatherProxy;
 
         //! X-Plane ISimulator implementation
         class CSimulatorXPlane : public BlackCore::CSimulatorCommon
@@ -135,6 +136,7 @@ namespace BlackSimPlugin
             QDBusServiceWatcher *m_watcher { nullptr };
             CXBusServiceProxy *m_service { nullptr };
             CXBusTrafficProxy *m_traffic { nullptr };
+            CXBusWeatherProxy *m_weather { nullptr };
             QTimer *m_fastTimer { nullptr };
             QTimer *m_slowTimer { nullptr };
             BlackMisc::Aviation::CAirportList m_airportsInRange;   //!< aiports in range of own aircraft
