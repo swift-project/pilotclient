@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>262</width>
+    <height>313</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -55,7 +55,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="vl_StatusPageMessages">
        <property name="spacing">
-        <number>0</number>
+        <number>4</number>
        </property>
        <property name="leftMargin">
         <number>0</number>
@@ -80,6 +80,34 @@
          <attribute name="verticalHeaderVisible">
           <bool>false</bool>
          </attribute>
+        </widget>
+       </item>
+       <item>
+        <widget class="BlackGui::CStatusMessageForm" name="form_StatusMessage">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>100</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>100</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
         </widget>
        </item>
       </layout>
@@ -138,6 +166,12 @@
    <class>BlackGui::Views::CStatusMessageView</class>
    <extends>QTableView</extends>
    <header>blackgui/views/statusmessageview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CStatusMessageForm</class>
+   <extends>QFrame</extends>
+   <header>blackgui/statusmessageform.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

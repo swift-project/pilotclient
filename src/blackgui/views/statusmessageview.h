@@ -21,13 +21,26 @@ namespace BlackGui
     namespace Views
     {
         //! Status message view
-        class BLACKGUI_EXPORT CStatusMessageView : public CViewBase<Models::CStatusMessageListModel, BlackMisc::CStatusMessageList, BlackMisc::CStatusMessage>
+        class BLACKGUI_EXPORT CStatusMessageView :
+            public CViewBase<Models::CStatusMessageListModel, BlackMisc::CStatusMessageList, BlackMisc::CStatusMessage>
         {
+            Q_OBJECT
 
         public:
             //! Constructor
             explicit CStatusMessageView(QWidget *parent = nullptr);
+
+            //! Set mode
+            void setMode(BlackGui::Models::CStatusMessageListModel::Mode mode);
+
+        signals:
+            //! Message has been selected
+            void messageSelected(const BlackMisc::CStatusMessage &statusMessage);
+
+        private:
+            //! Message selected
+            void ps_messageSelected(const QModelIndex &index);
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard

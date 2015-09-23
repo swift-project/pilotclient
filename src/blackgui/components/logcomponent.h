@@ -15,7 +15,7 @@
 #include "blackgui/blackguiexport.h"
 #include "enableforruntime.h"
 #include "blackmisc/statusmessagelist.h"
-
+#include "blackgui/menudelegate.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -25,7 +25,6 @@ namespace BlackGui
 {
     namespace Components
     {
-
         //! GUI displaying log and status messages
         class BLACKGUI_EXPORT CLogComponent :
             public QFrame,
@@ -52,7 +51,19 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CLogComponent> ui;
+
+            //! Custom menu for the log component
+            class CLogMenu : public BlackGui::IMenuDelegate
+            {
+            public:
+                //! Constructor
+                CLogMenu(CLogComponent *parent) : IMenuDelegate(parent) {}
+
+                //! \copydoc IMenuDelegate::customMenu
+                virtual void customMenu(QMenu &menu) const override;
+            };
+
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard

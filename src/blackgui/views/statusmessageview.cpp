@@ -18,13 +18,24 @@ namespace BlackGui
 {
     namespace Views
     {
-        /*
-         * Constructor
-         */
         CStatusMessageView::CStatusMessageView(QWidget *parent) : CViewBase(parent)
         {
             m_withMenuItemClear = true;
             this->standardInit(new CStatusMessageListModel(this));
+            connect(this, &CStatusMessageView::clicked, this, &CStatusMessageView::ps_messageSelected);
+        }
+
+        void CStatusMessageView::setMode(CStatusMessageListModel::Mode mode)
+        {
+            this->derivedModel()->setMode(mode);
+        }
+
+        void CStatusMessageView::ps_messageSelected(const QModelIndex &index)
+        {
+            if (!index.isValid()) { return; }
+            emit messageSelected(
+                this->at(index)
+            );
         }
 
     } // namespace

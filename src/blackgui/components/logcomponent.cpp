@@ -13,17 +13,20 @@
 
 using namespace BlackMisc;
 using namespace BlackGui;
+using namespace BlackGui::Views;
 
 namespace BlackGui
 {
     namespace Components
     {
-
         CLogComponent::CLogComponent(QWidget *parent) :
             QFrame(parent), ui(new Ui::CLogComponent)
         {
             ui->setupUi(this);
             this->ui->tvp_StatusMessages->setAutoResizeFrequency(3);
+            connect(this->ui->tvp_StatusMessages, &CStatusMessageView::messageSelected,
+                    this->ui->form_StatusMessage, &CStatusMessageForm::setValue);
+            this->ui->tvp_StatusMessages->setCustomMenu(new CLogMenu(this));
         }
 
         CLogComponent::~CLogComponent()
@@ -44,6 +47,18 @@ namespace BlackGui
         {
             if (statusMessage.isEmpty()) return;
             this->ui->tvp_StatusMessages->insert(statusMessage);
+        }
+
+        void CLogComponent::CLogMenu::customMenu(QMenu &menu) const
+        {
+            CLogComponent *logComp = qobject_cast<CLogComponent *>(this->parent());
+            Q_ASSERT_X(logComp, Q_FUNC_INFO, "Missing parent");
+
+            bool v = logComp->ui->form_StatusMessage->isVisible();
+            QString formString(v ? "Hide details" : "Show details");
+            QAction *a = menu.addAction(BlackMisc::CIcons::databaseTable16(), formString, logComp->ui->form_StatusMessage, SLOT(toggleVisibility()));
+            a->setCheckable(true);
+            a->setChecked(v);
         }
     }
 } // namespace
