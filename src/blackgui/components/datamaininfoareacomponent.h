@@ -14,6 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/infoarea.h"
+#include "blackmisc/network/webdataservicesprovider.h"
 #include <QMainWindow>
 #include <QScopedPointer>
 
@@ -24,12 +25,16 @@ namespace BlackGui
     namespace Components
     {
         class CLogComponent;
-        class CDataMappingComponent;
+        class CDbMappingComponent;
+        class CDbStashComponent;
+        class CDataInfoAreaComponent;
 
         /**
          * Main info area for data entry tool
          */
-        class BLACKGUI_EXPORT CDataMainInfoAreaComponent : public BlackGui::CInfoArea
+        class BLACKGUI_EXPORT CDataMainInfoAreaComponent :
+            public BlackGui::CInfoArea,
+            public BlackMisc::Network::CWebDataServicesAware
         {
             Q_OBJECT
 
@@ -38,9 +43,11 @@ namespace BlackGui
             enum InfoArea
             {
                 // index must match tab index!
-                InfoAreaMapping       = 0,
-                InfoAreaLog           = 1,
-                InfoAreaSettings      = 2,
+                InfoAreaData          = 0,
+                InfoAreaMapping       = 1,
+                InfoAreaStash         = 2,
+                InfoAreaSettings      = 3,
+                InfoAreaLog           = 4,
                 InfoAreaNone          = -1
             };
 
@@ -51,10 +58,19 @@ namespace BlackGui
             ~CDataMainInfoAreaComponent();
 
             //! Log component
-            BlackGui::Components::CLogComponent *getLogComponent() const;
+            CLogComponent *getLogComponent() const;
 
-            //! Model component
-            BlackGui::Components::CDataMappingComponent *getMappingComponent() const;
+            //! Mapping component
+            CDbMappingComponent *getMappingComponent() const;
+
+            //! Mapping component
+            CDataInfoAreaComponent *getDataInfoAreaComponent() const;
+
+            //! Stash component
+            CDbStashComponent *getStashComponent() const;
+
+            //! Set data reader
+            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *provider) override;
 
         protected:
             //! \copydoc CInfoArea::getPreferredSizeWhenFloating

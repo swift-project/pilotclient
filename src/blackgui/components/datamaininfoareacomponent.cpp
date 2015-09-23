@@ -8,8 +8,10 @@
  */
 
 #include "blackgui/components/logcomponent.h"
-#include "blackgui/components/datamappingcomponent.h"
 #include "blackgui/components/datamaininfoareacomponent.h"
+#include "blackgui/components/dbliverycomponent.h"
+#include "blackgui/components/dbaircrafticaocomponent.h"
+#include "blackgui/components/dbstashcomponent.h"
 #include "ui_datamaininfoareacomponent.h"
 #include "blackmisc/icons.h"
 
@@ -28,6 +30,9 @@ namespace BlackGui
             ui->setupUi(this);
             initInfoArea(); // init base class
             this->setWindowIcon(CIcons::swiftDatabase24());
+
+            connect(ui->comp_Mapping, &CDbMappingComponent::filterByLivery, ui->comp_DataInfoArea->getLiveryComponent(), &CDbLiveryComponent::filter);
+            connect(ui->comp_Mapping, &CDbMappingComponent::filterByAircraftIcao, ui->comp_DataInfoArea->getAircraftComponent(), &CDbAircraftIcaoComponent::filter);
         }
 
         CDataMainInfoAreaComponent::~CDataMainInfoAreaComponent()
@@ -38,9 +43,27 @@ namespace BlackGui
             return this->ui->comp_Log;
         }
 
-        CDataMappingComponent *CDataMainInfoAreaComponent::getMappingComponent() const
+        CDbMappingComponent *CDataMainInfoAreaComponent::getMappingComponent() const
         {
             return this->ui->comp_Mapping;
+        }
+
+        CDataInfoAreaComponent *CDataMainInfoAreaComponent::getDataInfoAreaComponent() const
+        {
+            return this->ui->comp_DataInfoArea;
+        }
+
+        CDbStashComponent *CDataMainInfoAreaComponent::getStashComponent() const
+        {
+            return this->ui->comp_Stash;
+        }
+
+        void CDataMainInfoAreaComponent::setProvider(BlackMisc::Network::IWebDataServicesProvider *provider)
+        {
+            Q_ASSERT_X(provider, Q_FUNC_INFO, "Missing provider");
+            this->ui->comp_DataInfoArea->setProvider(provider);
+            this->ui->comp_Mapping->setProvider(provider);
+            this->ui->comp_Stash->setProvider(provider);
         }
 
         QSize CDataMainInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
@@ -48,8 +71,10 @@ namespace BlackGui
             InfoArea area = static_cast<InfoArea>(areaIndex);
             switch (area)
             {
+            case InfoAreaData:
             case InfoAreaMapping:
             case InfoAreaSettings:
+            case InfoAreaStash:
             case InfoAreaLog:
             default:
                 return QSize(800, 600);
@@ -61,12 +86,16 @@ namespace BlackGui
             InfoArea area = static_cast<InfoArea>(areaIndex);
             switch (area)
             {
+            case InfoAreaData:
+                return CIcons::appDatabase16();
             case InfoAreaMapping:
                 return CIcons::appMappings16();
             case InfoAreaSettings:
                 return CIcons::appSettings16();
             case InfoAreaLog:
                 return CIcons::appLog16();
+            case InfoAreaStash:
+                return CIcons::appDbStash16();
             default:
                 return CIcons::empty();
             }
