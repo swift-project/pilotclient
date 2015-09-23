@@ -18,7 +18,8 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/worker.h"
 #include <QObject>
-#include <QScopedPointer>
+#include <QPointer>
+#include <QThread>
 #include <memory>
 #include <atomic>
 
@@ -44,8 +45,8 @@ namespace BlackMisc
             //! Enabled matching mode flags
             enum MatchingModeFlag
             {
-                ExactMatch = 1 << 0,
-                ModelMapping = 1 << 1,
+                ExactMatch    = 1 << 0,
+                ModelMapping  = 1 << 1,
                 ModelMatching = 1 << 2,
                 AllModes = ExactMatch | ModelMapping | ModelMatching
             };
@@ -84,13 +85,10 @@ namespace BlackMisc
             CAircraftModel getClosestMatch(const CSimulatedAircraft &remoteAircraft);
 
             //! Get all mappings
-            const BlackMisc::Network::CAircraftMappingList &getAircraftMappingList() const { return m_mappingsProvider->getMappingList(); }
-
-            //! Inverse lookup
-            BlackMisc::Aviation::CAircraftIcaoData getIcaoForModelString(const QString &modelString) const;
+            const BlackMisc::Simulation::CAircraftModelList &getDatastoreModels() const { return m_mappingsProvider->getDatastoreModels(); }
 
             //! Number of mapping definitions
-            int countMappingRules() const { return m_modelMappings.size(); }
+            int countMappingRules() const { return m_modelsDatastore.size(); }
 
             //! Synchronize models and mappings
             //! \remarks after this step, we only have mappings for which we have models
@@ -106,8 +104,8 @@ namespace BlackMisc
             void setDefaultModel(const BlackMisc::Simulation::CAircraftModel &defaultModel);
 
         private slots:
-            //! Set the mapping rules
-            void ps_setModelMappingRules(const BlackMisc::Network::CAircraftMappingList &mappings);
+            //! Set the datatstore models
+            void ps_setDatastoreModels(const CAircraftModelList &mappings);
 
         private:
             //! Init state
@@ -128,15 +126,12 @@ namespace BlackMisc
             //! Synchronize with existing model names, remove unneeded models
             int synchronizeWithExistingModels(const QStringList &modelNames, Qt::CaseSensitivity cs = Qt::CaseInsensitive);
 
-            //! Reverse lookup
-            void reverseLookupIcaoData(BlackMisc::Simulation::CAircraftModel &model);
-
             std::unique_ptr<BlackMisc::Simulation::IModelMappingsProvider> m_mappingsProvider; //!< Provides all mapping definitions
             std::atomic<InitState> m_initState { NotInitialized };
             QPointer<BlackMisc::CWorker> m_initWorker;
             MatchingMode m_matchingMode = ModelMatching;
             CAircraftModelList m_installedModels;
-            BlackMisc::Network::CAircraftMappingList m_modelMappings;
+            CAircraftModelList m_modelsDatastore;
             BlackMisc::Simulation::CAircraftModel m_defaultModel;
         };
 
