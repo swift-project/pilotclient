@@ -9,6 +9,7 @@
 #include <QCoreApplication>
 #include <QHostAddress>
 #include <QAbstractSocket>
+#include <QUrl>
 
 namespace BlackMisc
 {
@@ -48,7 +49,7 @@ namespace BlackMisc
     }
 
     /*
-     * my IP
+     * My IP
      */
     QStringList CNetworkUtils::getKnownIpAddresses()
     {
@@ -104,6 +105,44 @@ namespace BlackMisc
     }
 
     /*
+     * Can connect url?
+     */
+    bool CNetworkUtils::canConnect(const QString &url, QString &message, int timeoutMs)
+    {
+        if (url.isEmpty())
+        {
+            message = QObject::tr("Missing URL", "BlackMisc");
+            return false;
+        }
+        return canConnect(QUrl(url), message, timeoutMs);
+    }
+
+    /*
+     * Can connect url?
+     */
+    bool CNetworkUtils::canConnect(const QUrl &url, QString &message, int timeoutMs)
+    {
+        if (!url.isValid())
+        {
+            message = QObject::tr("Invalid URL: %1", "BlackMisc").arg(url.toString());
+            return false;
+        }
+
+        if (url.isRelative())
+        {
+            message = QObject::tr("Relative URL cannot be tested: %1", "BlackMisc").arg(url.toString());
+            return false;
+        }
+
+        QString scheme(url.scheme().toLower());
+        int p = scheme.contains("https") ? 443 : 80;
+        p = url.port(80);
+
+        QString host(url.host());
+        return canConnect(host, p, message, timeoutMs);
+    }
+
+    /*
      * Valid IPv4 address
      */
     bool CNetworkUtils::isValidIPv4Address(const QString &candidate)
@@ -130,5 +169,24 @@ namespace BlackMisc
         int p = port.toInt(&success);
         if (!success) return false;
         return (p >= 1 && p <= 65535);
+    }
+
+    /*
+     * Build  URL
+     */
+    QString CNetworkUtils::buildUrl(const QString &protocol, const QString &server, const QString &baseUrl, const QString &serviceUrl)
+    {
+        Q_ASSERT_X(protocol.length() > 3, Q_FUNC_INFO, "worng protocol");
+        Q_ASSERT_X(!server.isEmpty(), Q_FUNC_INFO, "missing server");
+        Q_ASSERT_X(!serviceUrl.isEmpty(), Q_FUNC_INFO, "missing service URL");
+
+        QString url(server);
+        if (!baseUrl.isEmpty())
+        {
+            url.append("/").append(baseUrl);
+        }
+        url.append("/").append(serviceUrl);
+        url.replace("//", "/");
+        return protocol + "://" + url;
     }
 } // namespace
