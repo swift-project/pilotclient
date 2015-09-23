@@ -119,6 +119,8 @@ namespace BlackMisc
 
     void CVariant::convertFromJson(const QJsonObject &json)
     {
+        // Remark: Names "type" and "value" are also used for drag and drop
+        // Changing the names here requires the change for drag and drop too
         QString typeName = json.value("type").toString();
         int typeId = QMetaType::type(qPrintable(typeName));
 

@@ -50,10 +50,17 @@ namespace BlackMisc
                 Private::MetaTypeHelper<Derived>::maybeRegisterMetaType();
             }
 
-            //! Returns the Qt meta type ID of this object.
+            //! Returns the Qt meta type ID of this object
+            //! \remark for CVariant this returns the id of CVariant, not of the encapsulated object. valueVariant.userType()` returns metatype of the contained object
             int getMetaTypeId() const
             {
                 return Private::MetaTypeHelper<Derived>::maybeGetMetaTypeId();
+            }
+
+            //! Class name
+            QString getClassName() const
+            {
+                return QMetaType::typeName(getMetaTypeId());
             }
 
             //! Returns true if this object is an instance of the class with the given meta type ID, or one of its subclasses.
@@ -79,6 +86,7 @@ namespace BlackMisc
 #       define BLACKMISC_DECLARE_USING_MIXIN_METATYPE(DERIVED)                  \
             using ::BlackMisc::Mixin::MetaType<DERIVED>::registerMetadata;      \
             using ::BlackMisc::Mixin::MetaType<DERIVED>::getMetaTypeId;         \
+            using ::BlackMisc::Mixin::MetaType<DERIVED>::getClassName;          \
             using ::BlackMisc::Mixin::MetaType<DERIVED>::isA;
 
     } // Mixin
