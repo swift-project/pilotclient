@@ -14,6 +14,7 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/databasereader.h"
+#include "blackmisc/network/webdataservicesprovider.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
@@ -38,6 +39,18 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Aviation::CLiveryList getLiveries() const;
 
+        //! Get aircraft livery for code
+        //! \threadsafe
+        BlackMisc::Aviation::CLivery getLiveryForCombinedCode(const QString &combinedCode) const;
+
+        //! Get aircraft livery for id
+        //! \threadsafe
+        BlackMisc::Aviation::CLivery getLiveryForDbKey(int id) const;
+
+        //! Best match specified by livery
+        //! \threadsafe
+        BlackMisc::Aviation::CLivery smartLiverySelector(const BlackMisc::Aviation::CLivery &livery) const;
+
         //! Get distributors (of models)
         //! \threadsafe
         BlackMisc::Simulation::CDistributorList getDistributors() const;
@@ -45,6 +58,14 @@ namespace BlackCore
         //! Get models
         //! \threadsafe
         BlackMisc::Simulation::CAircraftModelList getModels() const;
+
+        //! Get model for string
+        //! \threadsafe
+        BlackMisc::Simulation::CAircraftModel getModelForModelString(const QString &modelString) const;
+
+        //! Get model for designator/combined code
+        //! \threadsafe
+        BlackMisc::Simulation::CAircraftModelList getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode);
 
         //! Get aircraft liveries count
         //! \threadsafe
@@ -54,25 +75,27 @@ namespace BlackCore
         //! \threadsafe
         int getDistributorsCount() const;
 
+        //! Best match specified by distributor
+        //! \threadsafe
+        BlackMisc::Simulation::CDistributor smartDistributorSelector(const BlackMisc::Simulation::CDistributor &distributor) const;
+
         //! Get models count
         //! \threadsafe
         int getModelsCount() const;
 
-        //! All data read
-        bool allRead() const;
+        //! All data read?
+        //! \threadsafe
+        bool areAllDataRead() const;
+
+        //! Can connect?
+        virtual bool canConnect(QString &message) const override;
+
+        //! \copydoc CDatabaseReader::canConnect()
+        using CDatabaseReader::canConnect;
 
     signals:
-        //! Liveries have been read
-        void readLiveries(int number);
-
-        //! Distributors have been read
-        void readDistributors(int number);
-
-        //! Models have been read
-        void readModels(int number);
-
-        //! All data read
-        void readAll();
+        //! Combined read signal
+        void readData(BlackMisc::Network::CDbFlags::Entity entity, BlackMisc::Network::CDbFlags::ReadState state, int number);
 
     private slots:
         //! Liveries have been read
@@ -85,7 +108,7 @@ namespace BlackCore
         void ps_parseModelData(QNetworkReply *nwReply);
 
         //! Read / re-read data file
-        void ps_read();
+        void ps_read(BlackMisc::Network::CDbFlags::Entity entity = BlackMisc::Network::CDbFlags::DistributorLiveryModel);
 
     private:
         QNetworkAccessManager *m_networkManagerLivery = nullptr;

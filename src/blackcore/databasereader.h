@@ -14,8 +14,10 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/threadedreader.h"
+#include "blackmisc/network/dbflags.h"
 #include <QNetworkReply>
 #include <QJsonArray>
+#include <QDateTime>
 
 namespace BlackCore
 {
@@ -26,19 +28,47 @@ namespace BlackCore
         Q_OBJECT
 
     public:
+        //!  Response from our database
+        struct JsonDatastoreResponse
+        {
+            QJsonArray jsonArray;  //!< JSON array data
+            QDateTime updated;     //!< when updated
+
+            //! Any data?
+            bool isEmpty() const { return jsonArray.isEmpty(); }
+
+            //! Number of elements
+            int size() const { return jsonArray.size(); }
+
+            //! Any timestamp?
+            bool hasTimestamp() const { return updated.isValid(); }
+
+            //! Is response newer?
+            bool isNewer(const QDateTime &ts) const { return updated.toMSecsSinceEpoch() > ts.toMSecsSinceEpoch(); }
+
+            //! Is response newer?
+            bool isNewer(qint64 mSecsSinceEpoch) const { return updated.toMSecsSinceEpoch() > mSecsSinceEpoch; }
+
+            //! Implicit conversion
+            operator QJsonArray() const { return jsonArray; }
+        };
+
         //! Start reading in own thread
-        void readInBackgroundThread();
+        void readInBackgroundThread(BlackMisc::Network::CDbFlags::Entity entities);
+
+        //! Can connect to DB
+        bool canConnect() const;
+
+        //! Can connect to server?
+        //! \return message why connect failed
+        virtual bool canConnect(QString &message) const = 0;
 
     protected:
         //! Constructor
         CDatabaseReader(QObject *owner, const QString &name);
 
         //! Check if terminated or error, otherwise split into array of objects
-        QJsonArray transformReplyIntoJsonArray(QNetworkReply *nwReply) const;
-
-        //! Build service URL
-        static QString buildUrl(const QString &protocol, const QString &server, const QString &baseUrl, const QString &serviceUrl);
-
+        JsonDatastoreResponse transformReplyIntoDatastoreResponse(QNetworkReply *nwReply) const;
     };
 } // namespace
 

@@ -9,8 +9,11 @@
 
 #include "databasereader.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/datastoreutility.h"
+#include <QJsonDocument>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Network;
 
 namespace BlackCore
 {
@@ -18,54 +21,61 @@ namespace BlackCore
         BlackMisc::CThreadedReader(owner, name)
     { }
 
-    void CDatabaseReader::readInBackgroundThread()
+    void CDatabaseReader::readInBackgroundThread(CDbFlags::Entity entities)
     {
-        bool s = QMetaObject::invokeMethod(this, "ps_read");
+        if (m_shutdown) { return; }
+        bool s = QMetaObject::invokeMethod(this, "ps_read", Q_ARG(BlackMisc::Network::CDbFlags::Entity, entities));
         Q_ASSERT_X(s, Q_FUNC_INFO, "Invoke failed");
         Q_UNUSED(s);
     }
 
-    QJsonArray CDatabaseReader::transformReplyIntoJsonArray(QNetworkReply *nwReply) const
+    CDatabaseReader::JsonDatastoreResponse CDatabaseReader::transformReplyIntoDatastoreResponse(QNetworkReply *nwReply) const
     {
         this->threadAssertCheck();
-        QJsonArray array;
-        if (this->isFinished())
+        JsonDatastoreResponse datastoreResponse;
+        if (m_shutdown || this->isFinished())
         {
             CLogMessage(this).debug() << Q_FUNC_INFO;
             CLogMessage(this).info("Terminated data parsing process"); // for users
-            return array; // stop, terminate straight away, ending thread
+            nwReply->abort();
+            return datastoreResponse; // stop, terminate straight away, ending thread
         }
 
         if (nwReply->error() == QNetworkReply::NoError)
         {
-            const QString dataFileData = nwReply->readAll();
+            const QString dataFileData = nwReply->readAll().trimmed();
             nwReply->close(); // close asap
-            if (dataFileData.isEmpty()) { return array; }
+            if (dataFileData.isEmpty()) { datastoreResponse.updated = QDateTime::currentDateTimeUtc(); return datastoreResponse; }
 
             QJsonDocument jsonResponse = QJsonDocument::fromJson(dataFileData.toUtf8());
-            QJsonObject jsonObject = jsonResponse.object();
-            QJsonArray jsonArray = jsonObject["rows"].toArray();
-            return jsonArray;
+            if (jsonResponse.isArray())
+            {
+                // directly an array, no further info
+                datastoreResponse.jsonArray = jsonResponse.array();
+                datastoreResponse.updated = QDateTime::currentDateTimeUtc();
+            }
+            else
+            {
+                QJsonObject responseObject(jsonResponse.object());
+                datastoreResponse.jsonArray = responseObject["data"].toArray();
+                QString ts(responseObject["latest"].toString());
+                datastoreResponse.updated = ts.isEmpty() ? QDateTime::currentDateTimeUtc() : CDatastoreUtility::parseTimestamp(ts);
+            }
+            return datastoreResponse;
         }
-        CLogMessage(this).warning("Reading data failed %1 %2") << nwReply->errorString() << nwReply->url().toString();
+
+        // no valid response
+        QString error(nwReply->errorString());
+        QString url(nwReply->url().toString());
+        CLogMessage(this).warning("Reading data failed %1 %2") << error << url;
         nwReply->abort();
-        return array;
+        return datastoreResponse;
     }
 
-    QString CDatabaseReader::buildUrl(const QString &protocol, const QString &server, const QString &baseUrl, const QString &serviceUrl)
+    bool CDatabaseReader::canConnect() const
     {
-        Q_ASSERT_X(protocol.length() > 3, Q_FUNC_INFO, "worng protocol");
-        Q_ASSERT_X(!server.isEmpty(), Q_FUNC_INFO, "missing server");
-        Q_ASSERT_X(!serviceUrl.isEmpty(), Q_FUNC_INFO, "missing service URL");
-
-        QString url(server);
-        if (!baseUrl.isEmpty())
-        {
-            url.append("/").append(baseUrl);
-        }
-        url.append("/").append(serviceUrl);
-        url.replace("//", "/");
-        return protocol + "://" + url;
+        QString m;
+        return canConnect(m);
     }
 
 } // namespace

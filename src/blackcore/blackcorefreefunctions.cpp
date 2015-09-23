@@ -4,6 +4,8 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "blackcorefreefunctions.h"
+#include "blackcore/webreaderflags.h"
+
 #include "voice_channel.h"
 #include "network.h"
 #include "simulator.h"
@@ -13,8 +15,15 @@ namespace BlackCore
 {
     void registerMetadata()
     {
-        qRegisterMetaType<BlackCore::IVoiceChannel::ConnectionStatus>();
-        qRegisterMetaType<BlackCore::INetwork::ConnectionStatus>();
+        int id;
+        id = qRegisterMetaType<BlackCore::IVoiceChannel::ConnectionStatus>();
+        Q_ASSERT_X(id >= 1024, Q_FUNC_INFO, "wrong id for metatype");
+        id = qRegisterMetaType<BlackCore::INetwork::ConnectionStatus>();
+        Q_ASSERT_X(id >= 1024, Q_FUNC_INFO, "wrong id for metatype");
+        id = qRegisterMetaType<BlackCore::CWebReaderFlags::WebReaderFlags>();
+        Q_ASSERT_X(id >= 1024, Q_FUNC_INFO, "wrong id for metatype");
+        id = qRegisterMetaType<BlackCore::CWebReaderFlags::WebReader>();
+        Q_UNUSED(id);
     }
 
     bool isCurrentThreadObjectThread(QObject *toBeTested)
