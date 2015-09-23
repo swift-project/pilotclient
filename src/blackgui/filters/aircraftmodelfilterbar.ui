@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CAircraftModelFilterBar</class>
+ <widget class="QFrame" name="CAircraftModelFilterBar">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>658</width>
+    <height>44</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <property name="frameShape">
+   <enum>QFrame::StyledPanel</enum>
+  </property>
+  <property name="frameShadow">
+   <enum>QFrame::Raised</enum>
+  </property>
+  <layout class="QGridLayout" name="gl_FilterBarAircraftModel">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <property name="horizontalSpacing">
+    <number>4</number>
+   </property>
+   <property name="verticalSpacing">
+    <number>2</number>
+   </property>
+   <item row="0" column="11">
+    <widget class="QLineEdit" name="le_AircraftManufacturer">
+     <property name="placeholderText">
+      <string>manufacturer</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="10">
+    <widget class="QLineEdit" name="le_AircraftIcao">
+     <property name="maximumSize">
+      <size>
+       <width>50</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="placeholderText">
+      <string>ICAO</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="6">
+    <widget class="QLabel" name="lbl_Model">
+     <property name="text">
+      <string>Model:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="10">
+    <widget class="QLineEdit" name="le_AirlineIcao">
+     <property name="maximumSize">
+      <size>
+       <width>50</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="maxLength">
+      <number>4</number>
+     </property>
+     <property name="placeholderText">
+      <string>ICAO</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="7">
+    <widget class="QLineEdit" name="le_LiveryCode">
+     <property name="placeholderText">
+      <string>code</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="11">
+    <widget class="QLineEdit" name="le_AirlineName">
+     <property name="placeholderText">
+      <string>airline name</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="6">
+    <widget class="QLabel" name="lbl_Livery">
+     <property name="text">
+      <string>Livery:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="9">
+    <widget class="QLabel" name="lbl_Airline">
+     <property name="text">
+      <string>Airline:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="8">
+    <widget class="QLineEdit" name="le_ModelDescription">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="placeholderText">
+      <string>description</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="7">
+    <widget class="QLineEdit" name="le_ModelKey">
+     <property name="placeholderText">
+      <string>key</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="9">
+    <widget class="QLabel" name="lbl_Aircraft">
+     <property name="text">
+      <string>Aircraft:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1" colspan="4" alignment="Qt::AlignLeft">
+    <widget class="BlackGui::Filters::CFilterBarButtons" name="filter_Buttons">
+     <property name="minimumSize">
+      <size>
+       <width>50</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="5">
+    <spacer name="hs_FilterButtons">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Fixed</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>60</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="0" colspan="6">
+    <widget class="BlackGui::CSimulatorSelector" name="frp_SimulatorSelector"/>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::Filters::CFilterBarButtons</class>
+   <extends>QFrame</extends>
+   <header>blackgui/filters/filterbarbuttons.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CSimulatorSelector</class>
+   <extends>QFrame</extends>
+   <header>blackgui/simulatorselector.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>le_ModelKey</tabstop>
+  <tabstop>le_ModelDescription</tabstop>
+  <tabstop>le_AircraftIcao</tabstop>
+  <tabstop>le_AircraftManufacturer</tabstop>
+  <tabstop>le_LiveryCode</tabstop>
+  <tabstop>le_AirlineIcao</tabstop>
+  <tabstop>le_AirlineName</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

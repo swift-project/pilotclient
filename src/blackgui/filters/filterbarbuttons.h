@@ -1,0 +1,71 @@
+/* Copyright (C) 2015
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
+
+#ifndef BLACKGUI_FILTERS_FILTERBARBUTTONS_H
+#define BLACKGUI_FILTERS_FILTERBARBUTTONS_H
+
+#include "blackgui/blackguiexport.h"
+#include <QFrame>
+#include <QScopedPointer>
+
+namespace Ui { class CFilterBarButtons; }
+
+namespace BlackGui
+{
+    namespace Filters
+    {
+        /*!
+         * Filter bar buttons
+         */
+        class BLACKGUI_EXPORT CFilterBarButtons : public QFrame
+        {
+            Q_OBJECT
+
+        public:
+            //! Buttons
+            enum FilterButton
+            {
+                ClearForm,
+                Filter,
+                RemoveFilter
+            };
+
+            //! Constructor
+            explicit CFilterBarButtons(QWidget *parent = nullptr);
+
+            //! Destructor
+            ~CFilterBarButtons();
+
+        signals:
+            //! Filter button clicked
+            void buttonClicked(FilterButton filterButton);
+
+        public slots:
+            //! Row count has been changed
+            void onRowCountChanged(int count, bool withFilter);
+
+            //! Trigger button
+            void clickButton(FilterButton filterButton);
+
+        private slots:
+            //! Button was clicked
+            void ps_buttonClicked();
+
+        private:
+            QScopedPointer<Ui::CFilterBarButtons> ui;
+        };
+
+    } // ns
+} // ns
+
+Q_DECLARE_METATYPE(BlackGui::Filters::CFilterBarButtons::FilterButton)
+
+#endif // guard
