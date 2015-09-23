@@ -8,7 +8,8 @@
  */
 
 #include "blackmiscfreefunctions.h"
-#include "network/network.h"
+#include "blackmisc/network/network.h"
+#include "blackmisc/network/dbflags.h"
 
 /*
  * Metadata for Network
@@ -27,4 +28,12 @@ void BlackMisc::Network::registerMetadata()
     CClient::registerMetadata();
     CClientList::registerMetadata();
     CVoiceCapabilities::registerMetadata();
+
+    int id = qRegisterMetaType<CDbFlags::Entity>();
+    Q_ASSERT_X(id >= 1024, Q_FUNC_INFO, "wrong id for metatype");
+    id = qRegisterMetaType<CDbFlags::EntityFlags>();
+    Q_ASSERT_X(id >= 1024, Q_FUNC_INFO, "wrong id for metatype");
+    id = qRegisterMetaType<CDbFlags::ReadState>();
+    Q_ASSERT_X(id >= 1024, Q_FUNC_INFO, "wrong id for metatype");
+    Q_UNUSED(id);
 }
