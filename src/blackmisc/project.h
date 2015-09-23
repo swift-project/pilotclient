@@ -11,6 +11,7 @@
 #define BLACKMISC_CPROJECT_H
 
 #include "blackmiscexport.h"
+#include "blackmisc/simulation/simulatorinfo.h"
 #include <QString>
 
 namespace BlackMisc
@@ -37,6 +38,12 @@ namespace BlackMisc
         //! with FSX support?
         static bool isCompiledWithFsxSupport();
 
+        //! with P3D support
+        static bool isCompiledWithP3DSupport();
+
+        //! Compiled with any MS Flight Simulator support (P3D, FSX, FS9)
+        static bool isCompiledWithMsFlightSimulatorSupport();
+
         //! with XPlane support?
         static bool isCompiledWithXPlaneSupport();
 
@@ -50,7 +57,7 @@ namespace BlackMisc
         static const QString &compiledInfo();
 
         //! Simulator String info
-        static const QString &simulators();
+        static const BlackMisc::Simulation::CSimulatorInfo &simulators();
 
         //! Simulator String info
         static const char *simulatorsChar();

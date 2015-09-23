@@ -1,6 +1,7 @@
 #include "project.h"
 #include <QStringList>
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/simulation/simulatorinfo.h"
 
 #define BLACK_VERSION_STR_X(v) #v
 #define BLACK_VERSION_STR(v) BLACK_VERSION_STR_X(v)
@@ -53,6 +54,16 @@ namespace BlackMisc
 #endif
     }
 
+    bool CProject::isCompiledWithP3DSupport()
+    {
+        return isCompiledWithFsxSupport();
+    }
+
+    bool CProject::isCompiledWithMsFlightSimulatorSupport()
+    {
+        return isCompiledWithFs9Support() || isCompiledWithFsxSupport() || isCompiledWithP3DSupport();
+    }
+
     bool CProject::isCompiledWithXPlaneSupport()
     {
 #ifdef WITH_XPLANE
@@ -95,25 +106,20 @@ namespace BlackMisc
         return info;
     }
 
-    const QString &CProject::simulators()
+    const BlackMisc::Simulation::CSimulatorInfo &CProject::simulators()
     {
-        static QString sims;
-        if (sims.isEmpty())
-        {
-            static QStringList sl;
-            if (isCompiledWithFsxSupport()) sl << "FSX";
-            if (isCompiledWithXPlaneSupport()) sl << "XPlane";
-            if (isCompiledWithFs9Support()) sl << "FS9";
-            sims = sl.join(", ");
-            if (sims.isEmpty()) sims = "<none>";
-        }
-        return sims;
+        static const BlackMisc::Simulation::CSimulatorInfo simInfo(
+            isCompiledWithFsxSupport(),
+            isCompiledWithFs9Support(),
+            isCompiledWithXPlaneSupport(),
+            isCompiledWithP3DSupport()
+        );
+        return simInfo;
     }
 
     const char *CProject::simulatorsChar()
     {
-        static const QByteArray a(simulators().toUtf8());
-        return a.constData();
+        return simulators().toQString().toUtf8().constData();
     }
 
     const QString &CProject::version()
