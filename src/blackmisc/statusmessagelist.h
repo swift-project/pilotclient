@@ -43,12 +43,23 @@ namespace BlackMisc
         //! Find by severity
         CStatusMessageList findBySeverity(CStatusMessage::StatusSeverity severity) const;
 
+        //! Error messages
+        bool hasErrorMessages() const;
+
+        //! Warning messages
+        bool hasWarningMessages() const;
+
+        //! Warning or error messages
+        bool hasWarningOrErrorMessages() const;
+
         //! Add a category to all messages in the list
         void addCategory(const CLogCategory &category);
 
         //! Add some categories to all messages in the list
         void addCategories(const CLogCategoryList &categories);
 
+        //! From our database JSON format
+        static CStatusMessageList fromDatabaseJson(const QJsonArray &array);
     };
 } // ns
 

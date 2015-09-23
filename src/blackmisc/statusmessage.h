@@ -147,11 +147,17 @@ namespace BlackMisc
         //! To HTML
         QString toHtml() const;
 
+        //! \copydoc CValueObject::convertToQString
+        QString convertToQString(bool i18n = false) const;
+
         //! Representing icon
         static const CIcon &convertToIcon(const CStatusMessage &statusMessage);
 
-        //! \copydoc CValueObject::convertToQString
-        QString convertToQString(bool i18n = false) const;
+        //! Representing icon
+        static const CIcon &convertToIcon(CStatusMessage::StatusSeverity severity);
+
+        //! Object from JSON
+        static CStatusMessage fromDatabaseJson(const QJsonObject &json);
 
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CStatusMessage)

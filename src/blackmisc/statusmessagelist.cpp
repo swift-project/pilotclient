@@ -12,32 +12,35 @@
 
 namespace BlackMisc
 {
-    /*
-     * Construct from base class object
-     */
     CStatusMessageList::CStatusMessageList(const CSequence<CStatusMessage> &other) :
         CSequence<CStatusMessage>(other)
     { }
 
-    /*
-     * Messages by type
-     */
     CStatusMessageList CStatusMessageList::findByCategory(const CLogCategory &category) const
     {
-        return this->findBy([ & ](const CStatusMessage &msg) { return msg.getCategories().contains(category); });
+        return this->findBy([ & ](const CStatusMessage & msg) { return msg.getCategories().contains(category); });
     }
 
-    /*
-     * Messages by severity
-     */
     CStatusMessageList CStatusMessageList::findBySeverity(CStatusMessage::StatusSeverity severity) const
     {
         return this->findBy(&CStatusMessage::getSeverity, severity);
     }
 
-    /*
-     * Add category
-     */
+    bool CStatusMessageList::hasErrorMessages() const
+    {
+        return findBySeverity(CStatusMessage::SeverityError).size() > 0;
+    }
+
+    bool CStatusMessageList::hasWarningMessages() const
+    {
+        return findBySeverity(CStatusMessage::SeverityWarning).size() > 0;
+    }
+
+    bool CStatusMessageList::hasWarningOrErrorMessages() const
+    {
+        return hasErrorMessages() || hasWarningMessages();
+    }
+
     void CStatusMessageList::addCategory(const CLogCategory &category)
     {
         for (auto &msg : *this)
@@ -46,14 +49,21 @@ namespace BlackMisc
         }
     }
 
-    /*
-     * Add categories
-     */
     void CStatusMessageList::addCategories(const CLogCategoryList &categories)
     {
         for (auto &msg : *this)
         {
             msg.addCategories(categories);
         }
+    }
+
+    CStatusMessageList CStatusMessageList::fromDatabaseJson(const QJsonArray &array)
+    {
+        CStatusMessageList messages;
+        for (const QJsonValue &value : array)
+        {
+            messages.push_back(CStatusMessage::fromDatabaseJson(value.toObject()));
+        }
+        return messages;
     }
 } // ns

@@ -18,10 +18,6 @@
 
 namespace BlackMisc
 {
-
-    /*
-     * Constructors
-     */
     CStatusMessage::CStatusMessage(const QString &message)
         : m_message(message)
     {}
@@ -58,9 +54,6 @@ namespace BlackMisc
         }
     }
 
-    /*
-     * Conversion
-     */
     void CStatusMessage::toQtLogTriple(QtMsgType *o_type, QString *o_category, QString *o_message) const
     {
         auto category = m_categories.toQString();
@@ -107,6 +100,7 @@ namespace BlackMisc
 
     QString CStatusMessage::getHumanReadableCategory() const
     {
+        //! \todo This should me not hardcoded
         if (this->m_humanReadableCategory.isEmpty())
         {
             const QString cat(this->m_categories.toQString().toLower());
@@ -133,9 +127,6 @@ namespace BlackMisc
         return this->m_humanReadableCategory;
     }
 
-    /*
-     * Handled by
-     */
     void CStatusMessage::markAsHandledBy(const QObject *object) const
     {
         this->m_handledByObjects.push_back(quintptr(object));
@@ -145,9 +136,6 @@ namespace BlackMisc
         return this->m_handledByObjects.contains(quintptr(object));
     }
 
-    /*
-     * To string
-     */
     QString CStatusMessage::convertToQString(bool /** i18n */) const
     {
 
@@ -164,12 +152,14 @@ namespace BlackMisc
         return s;
     }
 
-    /*
-     *  Pixmap
-     */
     const CIcon &CStatusMessage::convertToIcon(const CStatusMessage &statusMessage)
     {
-        switch (statusMessage.getSeverity())
+        return convertToIcon(statusMessage.getSeverity());
+    }
+
+    const CIcon &CStatusMessage::convertToIcon(CStatusMessage::StatusSeverity severity)
+    {
+        switch (severity)
         {
         case SeverityDebug: return CIconList::iconByIndex(CIcons::StandardIconUnknown16); // TODO
         case SeverityInfo: return CIconList::iconByIndex(CIcons::StandardIconInfo16);
@@ -179,9 +169,20 @@ namespace BlackMisc
         }
     }
 
-    /*
-     *  Severity
-     */
+    CStatusMessage CStatusMessage::fromDatabaseJson(const QJsonObject &json)
+    {
+        CLogCategory cat("swift.db");
+        QString msgText(json.value("text").toString());
+        QString severityText(json.value("severity").toString());
+        QString typeText(json.value("type").toString());
+        StatusSeverity severity = stringToSeverity(severityText);
+
+        typeText = "swift.db.type." + typeText.toLower().remove(' ');
+
+        CStatusMessage m({ cat, CLogCategory(typeText)}, severity, msgText);
+        return m;
+    }
+
     CStatusMessage::StatusSeverity CStatusMessage::stringToSeverity(const QString &severity)
     {
         // pre-check
@@ -204,9 +205,6 @@ namespace BlackMisc
         return SeverityInfo;
     }
 
-    /*
-     *  Severity
-     */
     const QString &CStatusMessage::severityToString(CStatusMessage::StatusSeverity severity)
     {
         switch (severity)
@@ -238,26 +236,17 @@ namespace BlackMisc
         }
     }
 
-    /*
-     *  Severity
-     */
     const QString &CStatusMessage::getSeverityAsString() const
     {
         return severityToString(this->m_severity);
     }
 
-    /*
-     *  Severity
-     */
     const QStringList &CStatusMessage::allSeverityStrings()
     {
         static const QStringList all { severityToString(SeverityDebug), severityToString(SeverityInfo), severityToString(SeverityWarning), severityToString(SeverityError) };
         return all;
     }
 
-    /*
-     * Property by index
-     */
     CVariant CStatusMessage::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
     {
         if (index.isMyself()) { return CVariant::from(*this); }
@@ -280,9 +269,6 @@ namespace BlackMisc
         }
     }
 
-    /*
-     * Set property as index
-     */
     void CStatusMessage::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
     {
         if (index.isMyself()) { (*this) = variant.to<CStatusMessage>(); return; }
@@ -305,9 +291,6 @@ namespace BlackMisc
         }
     }
 
-    /*
-     * Message as HTML
-     */
     QString CStatusMessage::toHtml() const
     {
         QString html;
