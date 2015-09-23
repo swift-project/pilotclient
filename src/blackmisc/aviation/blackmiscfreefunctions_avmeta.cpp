@@ -30,8 +30,6 @@ void BlackMisc::Aviation::registerMetadata()
     CCallsignSet::registerMetadata();
     CAtcStation::registerMetadata();
     CAtcStationList::registerMetadata();
-    CAircraft::registerMetadata();
-    CAircraftList::registerMetadata();
     CAirport::registerMetadata();
     CAirportList::registerMetadata();
     CAirportIcaoCode::registerMetadata();
@@ -39,7 +37,6 @@ void BlackMisc::Aviation::registerMetadata()
     CAircraftSituationList::registerMetadata();
     CAircraftIcaoCode::registerMetadata();
     CAircraftIcaoCodeList::registerMetadata();
-    CAircraftIcaoData::registerMetadata();
     CAirlineIcaoCode::registerMetadata();
     CAirlineIcaoCodeList::registerMetadata();
     CSelcal::registerMetadata();

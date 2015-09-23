@@ -10,7 +10,6 @@
 #include "blackmisc/geo/geoobjectlist.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/aircraftlist.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 
@@ -97,12 +96,10 @@ namespace BlackMisc
         // see here for the reason of thess forward instantiations
         // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
         template class IGeoObjectList<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
-        template class IGeoObjectList<BlackMisc::Aviation::CAircraft, BlackMisc::Aviation::CAircraftList>;
         template class IGeoObjectList<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>;
         template class IGeoObjectList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
 
         template class IGeoObjectWithRelativePositionList<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
-        template class IGeoObjectWithRelativePositionList<BlackMisc::Aviation::CAircraft, BlackMisc::Aviation::CAircraftList>;
         template class IGeoObjectWithRelativePositionList<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>;
         template class IGeoObjectWithRelativePositionList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
 

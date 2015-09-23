@@ -14,7 +14,7 @@
 
 /*!
  * \namespace BlackMisc::Network
- * \brief Classes related to the traffic network such as VATSIM user etc.
+ * \brief Classes related to the traffic network and swift DB, such as VATSIM user etc.
  */
 
 #include "blackmisc/network/user.h"
@@ -24,7 +24,5 @@
 #include "blackmisc/network/client.h"
 #include "blackmisc/network/clientlist.h"
 #include "blackmisc/network/voicecapabilities.h"
-#include "blackmisc/network/aircraftmapping.h"
-#include "blackmisc/network/aircraftmappinglist.h"
 
 #endif // guard

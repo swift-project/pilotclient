@@ -10,7 +10,6 @@
 #include "blackmisc/aviation/callsignobjectlist.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/aircraftlist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/network/clientlist.h"
@@ -201,7 +200,6 @@ namespace BlackMisc
         // see here for the reason of thess forward instantiations
         // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
         template class ICallsignObjectList<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
-        template class ICallsignObjectList<BlackMisc::Aviation::CAircraft, BlackMisc::Aviation::CAircraftList>;
         template class ICallsignObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
         template class ICallsignObjectList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
         template class ICallsignObjectList<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>;
