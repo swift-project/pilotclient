@@ -393,15 +393,19 @@ namespace BlackGui
         if (!this->m_allowStatusBar) { return; }
         this->m_statusBar.initStatusBar();
 
-        // we expect the following hierarchy
-        // QDockWidget (CDockWidget/CDockWidgetInfoArea) -> QWidget (outer widget) -> QFrame (inner widget)
-        // Structure used for frameless floating windows
-
-        QWidget *outerWidget = this->widget(); // the inner widget containing the layout
+        // Typical reasons for asserts here
+        // 1) Check the structwe, we expect the following hierarchy
+        //    QDockWidget (CDockWidget/CDockWidgetInfoArea) -> QWidget (outer widget) -> QFrame (inner widget)
+        //    Structure used for frameless floating windows
+        // 2) Check if the "floating" flag is accidentally set for the dock widget in the GUI builder
+        // 3) Is the dock widget promoted BlackGui::CDockWidgetInfoArea?
+        QWidget *outerWidget = this->widget(); // the outer widget containing the layout
         Q_ASSERT_X(outerWidget, "CDockWidget::initStatusBar", "No outer widget");
+        if (!outerWidget) { return; }
         Q_ASSERT_X(outerWidget->layout(), "CDockWidget::initStatusBar", "No outer widget layout");
+        if (!outerWidget->layout()) { return; }
         Q_ASSERT_X(outerWidget->layout()->itemAt(0) && outerWidget->layout()->itemAt(0)->widget(), "CDockWidget::initStatusBar", "No outer widget layout item");
-        if (!outerWidget || !outerWidget->layout() || !outerWidget->layout()->itemAt(0) ||  !outerWidget->layout()->itemAt(0)->widget()) { this->m_allowStatusBar = false; return; }
+        if (!outerWidget->layout()->itemAt(0) ||  !outerWidget->layout()->itemAt(0)->widget()) { this->m_allowStatusBar = false; return; }
 
         // Inner widget is supposed to be a QFrame / promoted QFrame
         QFrame *innerWidget = qobject_cast<QFrame *>(outerWidget->layout()->itemAt(0)->widget()); // the inner widget containing the layout
