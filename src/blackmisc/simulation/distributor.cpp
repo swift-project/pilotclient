@@ -16,10 +16,22 @@ namespace BlackMisc
     {
         CDistributor::CDistributor() { }
 
+        CDistributor::CDistributor(const QString &id)
+        {
+            this->setDbKey(id);
+        }
+
         CDistributor::CDistributor(const QString &id, const QString &description, const QString &alias1, const QString &alias2) :
             m_description(description), m_alias1(alias1.trimmed().toUpper()), m_alias2(alias2.trimmed().toUpper())
         {
             this->setDbKey(id);
+        }
+
+        bool CDistributor::matchesIdOrAlias(const QString &idOrAlias) const
+        {
+            QString s(idOrAlias.trimmed().toUpper());
+            if (s.isEmpty()) { return false; }
+            return (getId() == s || getAlias1() == s || getAlias2() == s);
         }
 
         CVariant CDistributor::propertyByIndex(const CPropertyIndex &index) const
@@ -73,20 +85,36 @@ namespace BlackMisc
             return !this->m_description.isEmpty() && !this->m_dbKey.isEmpty();
         }
 
-        CDistributor CDistributor::fromDatabaseJson(const QJsonObject &json)
+        CStatusMessageList CDistributor::validate() const
         {
-            QJsonArray inner = json["cell"].toArray();
-            Q_ASSERT_X(!inner.isEmpty(), Q_FUNC_INFO, "Missing JSON");
-            if (inner.isEmpty()) { return CDistributor(); }
+            static const CLogCategoryList cats( { CLogCategory(this->getClassName()), CLogCategory::validation()});
+            CStatusMessageList msgs;
+            if (!hasValidDbKey()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Distributor: missing id")); }
+            if (!hasDescription()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, "Distributor: missing description")); }
+            return msgs;
+        }
 
-            int i = 0;
-            QString dbKey(inner.at(i++).toString());
-            QString description(inner.at(i++).toString());
-            QString alias1(inner.at(i++).toString());
-            QString alias2(inner.at(i++).toString());
-            Q_ASSERT_X(!dbKey.isEmpty(), Q_FUNC_INFO, "Missing key");
+        void CDistributor::updateMissingParts(const CDistributor &otherDistributor)
+        {
+            if (!this->hasAlias1()) { this->setAlias1(otherDistributor.getAlias1()); }
+            if (!this->hasAlias2()) { this->setAlias1(otherDistributor.getAlias2()); }
+            if (!this->hasDescription()) { this->setDescription(otherDistributor.getDescription()); }
+        }
+
+        CDistributor CDistributor::fromDatabaseJson(const QJsonObject &json, const QString &prefix)
+        {
+            if (!existsKey(json, prefix))
+            {
+                // when using relationship, this can be null
+                return CDistributor();
+            }
+
+            QString description(json.value(prefix + "description").toString());
+            QString alias1(json.value(prefix + "alias1").toString());
+            QString alias2(json.value(prefix + "alias2").toString());
             Q_ASSERT_X(!description.isEmpty(), Q_FUNC_INFO, "Missing description");
-            CDistributor distributor(dbKey, description, alias1, alias2);
+            CDistributor distributor("", description, alias1, alias2);
+            distributor.setKeyAndTimestampFromDatabaseJson(json, prefix);
             return distributor;
         }
 

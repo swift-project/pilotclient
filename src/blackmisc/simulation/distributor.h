@@ -15,6 +15,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/datastore.h"
+#include "blackmisc/statusmessagelist.h"
 #include <QJsonObject>
 
 namespace BlackMisc
@@ -39,6 +40,9 @@ namespace BlackMisc
             CDistributor();
 
             //! Constructor
+            CDistributor(const QString &id);
+
+            //! Constructor
             CDistributor(const QString &id, const QString &description, const QString &alias1, const QString &alias2);
 
             //! Id
@@ -46,6 +50,12 @@ namespace BlackMisc
 
             //! Get description
             const QString &getDescription() const { return this->m_description;}
+
+            //! Set description
+            void setDescription(const QString &description) { this->m_description = description.trimmed(); }
+
+            //! Has description
+            bool hasDescription() const { return !this->m_description.isEmpty(); }
 
             //! Get alias1
             const QString &getAlias1() const { return this->m_alias1;}
@@ -65,6 +75,9 @@ namespace BlackMisc
             //! Alias 2?
             bool hasAlias2() const { return !this->m_alias2.isEmpty(); }
 
+            //! Matches id or alias
+            bool matchesIdOrAlias(const QString &idOrAlias) const;
+
             //! \copydoc CValueObject::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
@@ -77,8 +90,14 @@ namespace BlackMisc
             //! Complete data?
             bool hasCompleteData() const;
 
+            //! Validate data
+            BlackMisc::CStatusMessageList validate() const;
+
+            //! Update missing parts
+            void updateMissingParts(const CDistributor &otherDistributor);
+
             //! Object from JSON
-            static CDistributor fromDatabaseJson(const QJsonObject &json);
+            static CDistributor fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CDistributor)
@@ -93,6 +112,7 @@ namespace BlackMisc
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CDistributor)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Simulation::CDistributor, (
                                    attr(o.m_dbKey, flags <CaseInsensitiveComparison> ()),
+                                   attr(o.m_timestampMSecsSinceEpoch),
                                    attr(o.m_description),
                                    attr(o.m_alias1, flags <CaseInsensitiveComparison> ()),
                                    attr(o.m_alias2, flags <CaseInsensitiveComparison> ())

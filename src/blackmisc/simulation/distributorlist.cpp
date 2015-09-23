@@ -20,5 +20,15 @@ namespace BlackMisc
             CSequence<CDistributor>(other)
         { }
 
+        CDistributor CDistributorList::findByIdOrAlias(const QString &idOrAlias)
+        {
+            if (idOrAlias.isEmpty()) { return CDistributor(); }
+            for (const CDistributor &distributor : (*this))
+            {
+                if (distributor.matchesIdOrAlias(idOrAlias)) { return distributor; }
+            }
+            return CDistributor();
+        }
+
     } // namespace
 } // namespace

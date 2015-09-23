@@ -39,6 +39,10 @@ namespace BlackMisc
 
             //! Construct from a base class object.
             CDistributorList(const CSequence<CDistributor> &other);
+
+            //! Find by id or alias
+            CDistributor findByIdOrAlias(const QString &name);
+
         };
     } //namespace
 } // namespace
