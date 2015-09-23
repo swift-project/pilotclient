@@ -20,7 +20,6 @@
 #include <iterator>
 #include <utility>
 #include <initializer_list>
-#include <QtConcurrent/QtConcurrent>
 
 namespace BlackMisc
 {
@@ -517,6 +516,23 @@ namespace BlackMisc
         CSequence sortedBy(K1 key1, Keys... keys) const
         {
             return sorted(BlackMisc::Predicates::MemberLess(key1, keys...));
+        }
+
+        /*!
+         * \brief Return some random elements from container
+         * \param elements how many elements
+         */
+        CSequence randomElements(int elements) const
+        {
+            if (this->isEmpty() || elements < 1) { return CSequence(); }
+            int high = this->size();
+            CSequence r;
+            for (int i = 0; i < elements; i++)
+            {
+                int randomIndex = qrand() % high;
+                r.push_back(this->operator [](randomIndex));
+            }
+            return r;
         }
 
         //! Equals operator.

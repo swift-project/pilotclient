@@ -98,6 +98,12 @@ namespace BlackMisc
 
             //! Normalize: 0≤ degrees <360
             static double normalizeDegrees(double degrees);
+
+            //! Random number between low and high
+            static int randomIntger(int low, int high)
+            {
+                return qrand() % ((high + 1) - low) + low;
+            }
         };
 
     } // namespace
