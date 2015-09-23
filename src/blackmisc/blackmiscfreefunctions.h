@@ -35,6 +35,11 @@ inline void initBlackMiscResources()
     // cannot be declared within namespace, see docu
     // hence BlackMisc::initResources() calls this inline function
     Q_INIT_RESOURCE(blackmisc);
+
+    // set seed for random number if ever used
+    // that is needed only once on application startup
+    QTime time = QTime::currentTime();
+    qsrand((uint)time.msec());
 }
 
 //! Free functions in BlackMisc
@@ -327,6 +332,33 @@ namespace BlackMisc
 
     //! Merges an incremental json object into an existing one
     BLACKMISC_EXPORT QJsonObject applyIncrementalObject(const QJsonObject &previousObject, const QJsonObject &incrementalObject);
+
+    //! Int to hex value
+    BLACKMISC_EXPORT QString intToHex(int value, int digits = 2);
+
+    //! Int to hex value (per byte, 2 digits)
+    BLACKMISC_EXPORT QString bytesToHexString(const QByteArray &bytes);
+
+    //! Byte array from hex value string per byte, 2 digits
+    BLACKMISC_EXPORT QByteArray byteArrayFromHexString(const QString &hexString);
+
+    //! Pixmap to PNG byte array
+    BLACKMISC_EXPORT bool pixmapToPngByteArray(const QPixmap &pixmap, QByteArray &array);
+
+    //! Pixmap from PNG byte array
+    BLACKMISC_EXPORT QPixmap pngByteArrayToPixmap(const QByteArray &array);
+
+    //! Pixmap from PNG byte array
+    BLACKMISC_EXPORT bool pngByteArrayToPixmapRef(const QByteArray &array, QPixmap &pixmap);
+
+    //! Pixmap as HEX string (for PNG image)
+    BLACKMISC_EXPORT QString pixmapToPngHexString(const QPixmap &pixmap);
+
+    //! Hex encoded pixmap string to Pixmap
+    BLACKMISC_EXPORT QPixmap pngHexStringToPixmap(const QString &hexString);
+
+    //! Hex encoded pixmap string to Pixmap
+    BLACKMISC_EXPORT bool pngHexStringToPixmapRef(const QString &hexString, QPixmap &pixmap);
 
 } // BlackMisc
 

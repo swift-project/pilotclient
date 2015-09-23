@@ -357,3 +357,86 @@ bool BlackMisc::stringToBool(const QString &string)
     if (c == '0' || c == 'f' || c == 'n' || c == ' ') { return false; }
     return false;
 }
+
+QString BlackMisc::intToHex(int value, int digits)
+{
+    QString hex(QString::number(value, 16).toUpper());
+    int l = hex.length();
+    if (l >= digits) { return hex.right(digits); }
+    int d = digits - l;
+    return QString(d, '0') + hex;
+}
+
+bool BlackMisc::pixmapToPngByteArray(const QPixmap &pixmap, QByteArray &array)
+{
+    QBuffer buffer(&array);
+    buffer.open(QIODevice::WriteOnly);
+    bool s = pixmap.save(&buffer, "PNG");
+    buffer.close();
+    return s;
+}
+
+QString BlackMisc::bytesToHexString(const QByteArray &bytes)
+{
+    QString h;
+    for (int i = 0; i < bytes.size(); i++)
+    {
+        h.append(static_cast<int>(bytes.at(i)));
+    }
+    return h;
+}
+
+QByteArray BlackMisc::byteArrayFromHexString(const QString &hexString)
+{
+    QByteArray ba;
+    int pos = 0;
+    while (pos + 1 < hexString.length())
+    {
+        bool ok;
+        QString h = hexString.mid(pos, 2);
+        int hex = h.toInt(&ok, 16);
+        Q_ASSERT_X(ok, Q_FUNC_INFO, "Invalid hex");
+        if (!ok) { return QByteArray(); }
+        ba.push_back(static_cast<char>(hex));
+        pos += 2;
+    }
+    return ba;
+}
+
+QPixmap BlackMisc::pngByteArrayToPixmap(const QByteArray &array)
+{
+    if (array.isEmpty()) { return QPixmap(); }
+    QPixmap p;
+    bool s = p.loadFromData(array, "PNG");
+    return s ? p : QPixmap();
+}
+
+bool BlackMisc::pngByteArrayToPixmapRef(const QByteArray &array, QPixmap &pixmap)
+{
+    if (array.isEmpty()) { return false; }
+    bool s = pixmap.loadFromData(array, "PNG");
+    return s;
+}
+
+
+QString BlackMisc::pixmapToPngHexString(const QPixmap &pixmap)
+{
+    QByteArray ba;
+    bool s = pixmapToPngByteArray(pixmap, ba);
+    if (!s) { return QString(); }
+    return bytesToHexString(ba);
+}
+
+QPixmap BlackMisc::pngHexStringToPixmap(const QString &hexString)
+{
+    if (hexString.isEmpty()) { return QPixmap(); }
+    QByteArray ba(byteArrayFromHexString(hexString));
+    return pngByteArrayToPixmap(ba);
+}
+
+bool BlackMisc::pngHexStringToPixmapRef(const QString &hexString, QPixmap &pixmap)
+{
+    if (hexString.isEmpty()) { return false; }
+    QByteArray ba(byteArrayFromHexString(hexString));
+    return pngByteArrayToPixmapRef(ba, pixmap);
+}
