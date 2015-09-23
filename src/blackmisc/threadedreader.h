@@ -54,11 +54,16 @@ namespace BlackMisc
         //! \threadsafe
         int interval() const;
 
+        //! Graceful shutdown
+        void gracefulShutdown();
+
     protected:
         //! Constructor
         CThreadedReader(QObject *owner, const QString &name);
 
-        QTimer *m_updateTimer = nullptr;         //!< update timer
+        QTimer *m_updateTimer = nullptr;  //!< update timer
+        bool m_shutdown = false;          //!< in shutdown process
+
         mutable QReadWriteLock m_lock {QReadWriteLock::Recursive}; //!< lock
 
         //! Make sure everthing runs correctly in own thread

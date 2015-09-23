@@ -34,6 +34,12 @@ namespace BlackMisc
         QMetaObject::invokeMethod(m_updateTimer, "stop");
     }
 
+    void CThreadedReader::gracefulShutdown()
+    {
+        this->m_shutdown = true;
+        this->requestStop();
+    }
+
     CThreadedReader::~CThreadedReader()
     {
         cleanup();
