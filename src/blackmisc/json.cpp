@@ -1,9 +1,15 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2014
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 #include "json.h"
+#include "blackmiscfreefunctions.h"
+#include <QJsonDocument>
 
 const QJsonValue &operator >>(const QJsonValue &json, int &value)
 {
@@ -113,6 +119,20 @@ const QJsonValueRef &operator >>(const QJsonValueRef &json, QDateTime &value)
     return json;
 }
 
+const QJsonValueRef &operator >>(const QJsonValueRef &json, QPixmap &value)
+{
+    const QString hex(json.toString());
+    BlackMisc::pngHexStringToPixmapRef(hex, value);
+    return json;
+}
+
+const QJsonValue &operator >>(const QJsonValue &json, QPixmap &value)
+{
+    const QString hex(json.toString());
+    BlackMisc::pngHexStringToPixmapRef(hex, value);
+    return json;
+}
+
 QJsonArray &operator<<(QJsonArray &json, const int value)
 {
     json.append(QJsonValue(value));
@@ -164,6 +184,13 @@ QJsonArray &operator<<(QJsonArray &json, const bool value)
 QJsonArray &operator<<(QJsonArray &json, const QDateTime &value)
 {
     json.append(QJsonValue(value.toString()));
+    return json;
+}
+
+QJsonArray &operator<<(QJsonArray &json, const QPixmap &value)
+{
+    QString pm(BlackMisc::pixmapToPngHexString(value));
+    json.append(QJsonValue(pm));
     return json;
 }
 
@@ -219,4 +246,36 @@ QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QDateT
 {
     json.insert(value.first, QJsonValue(value.second.toString()));
     return json;
+}
+
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QPixmap &> &value)
+{
+    QString pm(BlackMisc::pixmapToPngHexString(value.second));
+    json.insert(value.first, pm);
+    return json;
+}
+
+QJsonObject BlackMisc::Json::jsonObjectFromString(const QString &json)
+{
+    if (json.isEmpty()) { return QJsonObject();}
+    QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
+    return jsonDoc.object();
+}
+
+QJsonArray BlackMisc::Json::jsonArrayFromString(const QString &json)
+{
+    if (json.isEmpty()) { return QJsonArray();}
+    QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
+    return jsonDoc.array();
+}
+
+QJsonObject &BlackMisc::Json::appendJsonObject(QJsonObject &target, const QJsonObject &toBeAppended)
+{
+    if (toBeAppended.isEmpty()) return target;
+    QStringList keys = toBeAppended.keys();
+    foreach(const QString & key, keys)
+    {
+        target.insert(key, toBeAppended.value(key));
+    }
+    return target;
 }

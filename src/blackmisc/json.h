@@ -7,9 +7,7 @@
  * contained in the LICENSE file.
  */
 
-/*!
-    \file
-*/
+//! \file
 
 #ifndef BLACKMISC_JSON_H
 #define BLACKMISC_JSON_H
@@ -23,6 +21,7 @@
 #include <QJsonArray>
 #include <QDateTime>
 #include <QStringList>
+#include <QPixmap>
 #include <utility>
 
 /*!
@@ -41,6 +40,7 @@ BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, QString &
 BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, double &value);
 BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, bool &value);
 BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, QDateTime &value);
+BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, QPixmap &value);
 BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, int &value);
 BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, qlonglong &value);
 BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, qulonglong &value);
@@ -50,6 +50,8 @@ BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, QSt
 BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, double &value);
 BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, bool &value);
 BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, QDateTime &value);
+BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, QPixmap &value);
+
 //! @}
 
 //! \brief Specialized JSON serialization for enum
@@ -95,6 +97,7 @@ BLACKMISC_EXPORT QJsonArray &operator<<(QJsonArray &json, const QString &value);
 BLACKMISC_EXPORT QJsonArray &operator<<(QJsonArray &json, const double value);
 BLACKMISC_EXPORT QJsonArray &operator<<(QJsonArray &json, const bool value);
 BLACKMISC_EXPORT QJsonArray &operator<<(QJsonArray &json, const QDateTime &value);
+BLACKMISC_EXPORT QJsonArray &operator<<(QJsonArray &json, const QPixmap &value);
 //! @}
 
 //! \name Streaming operators for QJsonObject (from value)
@@ -109,31 +112,29 @@ BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QStr
 BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const double &> &value);
 BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const bool &> &value);
 BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QDateTime &> &value);
+BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QPixmap &> &value);
 //! @}
 
 namespace BlackMisc
 {
     namespace Json
     {
-
-        //! \brief Append to first JSON object (concatenate)
+        //! Append to first JSON object (concatenate)
         //! \ingroup JSON
-        inline QJsonObject &appendJsonObject(QJsonObject &target, const QJsonObject &toBeAppended)
-        {
-            if (toBeAppended.isEmpty()) return target;
-            QStringList keys = toBeAppended.keys();
-            foreach(const QString & key, keys)
-            {
-                target.insert(key, toBeAppended.value(key));
-            }
-            return target;
-        }
+        BLACKMISC_EXPORT QJsonObject &appendJsonObject(QJsonObject &target, const QJsonObject &toBeAppended);
+
+        //! JSON Object from string
+        //! \ingroup JSON
+        BLACKMISC_EXPORT QJsonObject jsonObjectFromString(const QString &json);
+
+        //! JSON Array from string
+        //! \ingroup JSON
+        BLACKMISC_EXPORT QJsonArray jsonArrayFromString(const QString &json);
 
     } // Json
 
     namespace Mixin
     {
-
         /*!
          * CRTP class template which will generate marshalling operators for a derived class with its own marshalling implementation.
          *
