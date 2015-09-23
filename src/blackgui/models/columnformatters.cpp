@@ -10,6 +10,7 @@
 #include "columnformatters.h"
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/aviation/altitude.h"
+#include "blackmisc/rgbcolor.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/icons.h"
@@ -302,7 +303,7 @@ namespace BlackGui
         CVariant CBoolLedFormatter::displayRole(const CVariant &dataCVariant) const
         {
             Q_UNUSED(dataCVariant);
-            Q_ASSERT_X(false, "CBoolLedFormatter", "this role should be disabled with led boolean");
+            Q_ASSERT_X(false, Q_FUNC_INFO, "this role should be disabled with led boolean");
             return CVariant();
         }
 
@@ -364,6 +365,31 @@ namespace BlackGui
             CAltitude alt(altitude.to<CAltitude>());
             if (m_flightLevel) { alt.toFlightLevel(); }
             return alt.toQString(this->m_useI18n);
+        }
+
+        CColorFormatter::CColorFormatter(int alignment, bool i18n) : CDefaultFormatter(alignment, i18n, rolesDecorationAndToolTip())
+        {}
+
+        CVariant CColorFormatter::displayRole(const CVariant &dataCVariant) const
+        {
+            Q_UNUSED(dataCVariant);
+            Q_ASSERT_X(false, Q_FUNC_INFO, "this role should be disabled with RGB color");
+            return CVariant();
+        }
+
+        CVariant CColorFormatter::decorationRole(const CVariant &dataCVariant) const
+        {
+            static const CVariant empty(CVariant::fromValue(QPixmap()));
+            CRgbColor rgbColor(dataCVariant.to<CRgbColor>());
+            if (!rgbColor.isValid())  { return empty; }
+            return CVariant::fromValue(rgbColor.toPixmap());
+        }
+
+        CVariant CColorFormatter::tooltipRole(const CVariant &dataCVariant) const
+        {
+            CRgbColor rgbColor(dataCVariant.to<CRgbColor>());
+            if (!rgbColor.isValid())  { return ""; }
+            return rgbColor.hex(true);
         }
 
     } // namespace

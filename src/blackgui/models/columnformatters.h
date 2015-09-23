@@ -282,6 +282,23 @@ namespace BlackGui
             bool m_flightLevel = false;
         };
 
+        //! Formatter when column contains a color
+        class CColorFormatter : public CDefaultFormatter
+        {
+        public:
+            //! Constructor
+            CColorFormatter(int alignment = alignCentered(), bool i18n = true);
+
+            //! \copydoc CDefaultFormatter::displayRole
+            virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
+
+            //! Display the icon
+            virtual BlackMisc::CVariant decorationRole(const BlackMisc::CVariant &dataCVariant) const override;
+
+            //! \copydoc CDefaultFormatter::tooltipRole
+            virtual BlackMisc::CVariant tooltipRole(const BlackMisc::CVariant &dataCVariant) const override;
+        };
+
         //! Formatter for physical quantities
         template<class MU, class PQ> class CPhysiqalQuantiyFormatter : public CValueObjectFormatter
         {
@@ -361,7 +378,7 @@ namespace BlackGui
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
         };
 
-        //! Airspace distance
+        //! Airspeed
         class CAircraftSpeedFormatter : public CPhysiqalQuantiyFormatter<BlackMisc::PhysicalQuantities::CSpeedUnit, BlackMisc::PhysicalQuantities::CSpeed>
         {
         public:
