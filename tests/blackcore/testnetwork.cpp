@@ -13,6 +13,7 @@
 using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
@@ -23,13 +24,13 @@ void BlackCoreTest::CTestNetwork::networkTest(BlackCore::INetwork *net)
     QVERIFY(string == "Connected");
 
     Expect e(net);
+    CSimulatedAircraft aircraft;
+    aircraft.setIcaoCodes(CAircraftIcaoCode("C172", "L1P"), CAirlineIcaoCode("YYY"));
 
     EXPECT_UNIT(e)
     .send(&INetwork::presetServer, CServer("", "", "vatsim-germany.org", 6809, CUser("1234567", "", "", "123456")))
     .send(&INetwork::presetCallsign, "SWIFT")
-    .send(&INetwork::presetIcaoCodes, CAircraftIcaoData(
-              CAircraftIcaoCode("C172", "L1P"),
-              CAirlineIcaoCode("YYY")))
+    .send(&INetwork::presetIcaoCodes, aircraft)
     .send(&INetwork::initiateConnection)
     .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus, INetwork::ConnectionStatus newStatus)
     {

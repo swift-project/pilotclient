@@ -12,11 +12,12 @@
 #include "blackmisc/aviation/heading.h"
 #include "blackmisc/aviation/informationmessage.h"
 #include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/aviation/aircrafticaodata.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/navsystem.h"
 #include "blackmisc/aviation/transponder.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/network/server.h"
@@ -163,12 +164,13 @@ namespace BlackMiscTest
         CAircraftSituation situation2(situation1);
         QVERIFY2(situation1 == situation2, "situations shall be equal");
 
-        CAircraftIcaoData icao1(
-            CAircraftIcaoCode("C172", "L1P"),
-            CAirlineIcaoCode("GA")
-        );
-        CAircraftIcaoData icao2(icao1);
-        QVERIFY2(icao1 == icao2, "ICAOs shall be equal");
+        CAircraftIcaoCode aircraftIcao1("C172", "L1P");
+        CAircraftIcaoCode aircraftIcao2(aircraftIcao1);
+        QVERIFY2(aircraftIcao1 == aircraftIcao2, "aircraft ICAOs shall be equal");
+
+        CAirlineIcaoCode airlineIcao1("GA");
+        CAirlineIcaoCode airlineIcao2(airlineIcao1);
+        QVERIFY2(airlineIcao1 == airlineIcao2, "airline ICAOs shall be equal");
 
         CCallsign call1("EDDS_N_APP", CCallsign::Atc);
         CCallsign call2("edds_n_app", CCallsign::Atc);

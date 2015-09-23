@@ -9,12 +9,13 @@
 
 #include "samplesjson.h"
 #include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/aircraft.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include <QJsonDocument>
 #include <QTextStream>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
@@ -54,21 +55,18 @@ namespace BlackMiscTest
                                      CHeading(10, CHeading::True, CAngleUnit::deg()),
                                      CAngle(12, CAngleUnit::deg()), CAngle(5, CAngleUnit::deg()),
                                      CSpeed(111, CSpeedUnit::km_h()));
-        CAircraft aircraft(CCallsign("DAMBZ"), CUser("123456", "Joe Pilot"), situation);
+        CSimulatedAircraft aircraft(CCallsign("DAMBZ"), CUser("123456", "Joe Pilot"), situation);
         aircraft.setCom1System(CComSystem::getCom1System(122.8, 118.75));
         aircraft.setCom2System(CComSystem::getCom2System(123.8, 124.00));
         aircraft.setTransponder(CTransponder::getStandardTransponder(7000, CTransponder::ModeC));
-        aircraft.setIcaoInfo(CAircraftIcaoData(
-                                 CAircraftIcaoCode("B737", "L2J"),
-                                 CAirlineIcaoCode("DLH")
-                             ));
+        aircraft.setIcaoCodes(CAircraftIcaoCode("B737", "L2J"), CAirlineIcaoCode("DLH"));
 
         json = aircraft.toJson();
         doc = QJsonDocument(json);
         qDebug() << doc.toJson(QJsonDocument::Indented);
         qDebug() << "-------";
 
-        aircraft = CAircraft();
+        aircraft = CSimulatedAircraft();
         aircraft.convertFromJson(json);
         qDebug() << aircraft;
         qDebug() << "------- Enter -----";

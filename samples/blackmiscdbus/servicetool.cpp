@@ -374,9 +374,8 @@ namespace BlackMiscTest
             qDebug() << "Pinged ATC station via interface"
                      << ((station == stationReceived) ? "OK" : "ERROR!") << stationReceived;
 
-            CAircraftIcaoData icaoData("B737", "DLH");
-            icaoData.setAircraftCombinedType("L2J");
-            CAircraftIcaoData icaoReceived = testserviceInterface.pingIcaoData(icaoData);
+            CAircraftIcaoCode icaoData("B737", "L2J");
+            CAircraftIcaoCode icaoReceived = testserviceInterface.pingAircraftIcaoData(icaoData);
             qDebug() << "Pinged ICAO data via interface"
                      << ((icaoData == icaoReceived) ? "OK" : "ERROR!") << icaoReceived;
 
@@ -394,14 +393,14 @@ namespace BlackMiscTest
             qDebug() << "Pinged transponder via interface"
                      << ((transponderReceived == transponder) ? "OK" : "ERROR!") << transponderReceived;
 
-            CAircraft aircraft(callsign, CUser("123456", "Joe Pilot"), situation);
+            CSimulatedAircraft aircraft(callsign, CUser("123456", "Joe Pilot"), situation);
             aircraft.setTransponder(transponder);
-            CAircraft aircraftReceived = testserviceInterface.pingAircraft(aircraft);
+            CSimulatedAircraft aircraftReceived(testserviceInterface.pingAircraft(aircraft));
             qDebug() << "Pinged aircraft via interface"
                      << ((aircraft == aircraftReceived) ? "OK" : "ERROR!") << aircraftReceived;
 
             CSimulatedAircraft simAircraft(aircraft);
-            CAircraftModel model("foobar", CAircraftModel::TypeModelMapping);
+            CAircraftModel model("foobar", CAircraftModel::TypeManuallySet);
             simAircraft.setModel(model);
             CSimulatedAircraft simAircraftReceived = testserviceInterface.pingSimulatedAircraft(simAircraft);
             qDebug() << "Pinged simulated aircraft via interface"

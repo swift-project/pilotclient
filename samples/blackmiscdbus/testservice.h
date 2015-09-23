@@ -19,7 +19,7 @@
 #include "blackmisc/aviation/aviation.h"
 #include "blackmisc/network/network.h"
 #include "blackmisc/pq/pq.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/math/math.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
@@ -118,7 +118,7 @@ namespace BlackMiscTest
         BlackMisc::Aviation::CTransponder pingTransponder(const BlackMisc::Aviation::CTransponder &transponder);
 
         //! Ping aircraft
-        BlackMisc::Aviation::CAircraft pingAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
+        BlackMisc::Simulation::CSimulatedAircraft pingAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
         //! Ping simulated aircraft
         BlackMisc::Simulation::CSimulatedAircraft pingSimulatedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
@@ -126,8 +126,8 @@ namespace BlackMiscTest
         //! Ping ATC list
         BlackMisc::Aviation::CAtcStationList pingAtcStationList(const BlackMisc::Aviation::CAtcStationList &atcStationList) const;
 
-        //! Ping aircrafts list
-        BlackMisc::Aviation::CAircraftList pingAircraftList(const BlackMisc::Aviation::CAircraftList &aircraftList);
+        //! Ping aircraft list
+        BlackMisc::Simulation::CSimulatedAircraftList pingAircraftList(const BlackMisc::Simulation::CSimulatedAircraftList &aircraftList);
 
         //! Ping airports list
         BlackMisc::Aviation::CAirportList pingAirportList(const BlackMisc::Aviation::CAirportList &airportList);
@@ -148,7 +148,7 @@ namespace BlackMiscTest
         BlackMisc::Simulation::CSimulatorPluginInfo pingPluginInfo(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
         //! Ping ICAO data object
-        BlackMisc::Aviation::CAircraftIcaoData pingIcaoData(const BlackMisc::Aviation::CAircraftIcaoData &icao);
+        BlackMisc::Aviation::CAircraftIcaoCode pingAircraftIcaoData(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
 
         //! Ping CVariant
         BlackMisc::CVariant pingCVariant(const BlackMisc::Network::CClient &client);

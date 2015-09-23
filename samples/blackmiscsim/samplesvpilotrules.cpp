@@ -29,7 +29,7 @@ namespace BlackSimTest
     {
         BlackMisc::registerMetadata();
         QScopedPointer<CVPilotRulesReader> vPilotReader(new CVPilotRulesReader());
-        bool s = vPilotReader->read();
+        bool s = vPilotReader->read(false);
         streamOut << "Read success: " << BlackMisc::boolToYesNo(s) << endl;
         streamOut << "Read " << vPilotReader->countRulesLoaded() << " rules from " << vPilotReader->countFilesLoaded() << " files" << endl;
         streamOut << "Distributors: " << vPilotReader->getRules().getSortedDistributors().join(", ");

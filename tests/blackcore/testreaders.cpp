@@ -9,15 +9,17 @@
 
 #include "testreaders.h"
 #include "expect.h"
-#include "blackcore/global_reader_settings.h"
+#include "blackcore/settings/global_reader_settings.h"
 #include "blackmisc/networkutils.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 
 using namespace BlackCore;
+using namespace BlackCore::Settings;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Network;
 
 namespace BlackCoreTest
 {
@@ -43,8 +45,8 @@ namespace BlackCoreTest
         m_icaoReader.start();
         Expect e(&this->m_icaoReader);
         EXPECT_UNIT(e)
-        .send(&CIcaoDataReader::readInBackgroundThread)
-        .expect(&CIcaoDataReader::readAll, [server]()
+        .send(&CIcaoDataReader::readInBackgroundThread, CDbFlags::AllIcaoEntities)
+        .expect(&CIcaoDataReader::readData, [server]()
         {
             qDebug() << "Read ICAO data from" << server;
         })
@@ -66,10 +68,11 @@ namespace BlackCoreTest
         m_modelReader.start();
         Expect e(&this->m_modelReader);
         EXPECT_UNIT(e)
-        .send(&CModelDataReader::readInBackgroundThread)
-        .expect(&CModelDataReader::readAll, [server]()
+        .send(&CModelDataReader::readInBackgroundThread, CDbFlags::AllIcaoEntities)
+        .expect(&CModelDataReader::readData, [server]()
         {
-            qDebug() << "Read model data from" << server;
+            //  CDbFlags::flagToString(entity) << CDbFlags::flagToString(state) << number
+            qDebug() << "Read model data " << server;
         })
         .wait(10);
 

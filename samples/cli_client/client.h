@@ -73,7 +73,7 @@ signals: //to send to INetwork
     void presetServer(const BlackMisc::Network::CServer &server);
     void presetCallsign(const BlackMisc::Aviation::CCallsign &callsign);
     void presetRealName(const QString &name);
-    void presetIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoData &icao);
+    void presetIcaoCodes(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
     void presetLoginMode(BlackCore::INetwork::LoginMode mode);
     void initiateConnection();
     void terminateConnection();
@@ -112,7 +112,7 @@ public slots: //to receive from INetwork
     void metarReplyReceived(const QString &data);
     void flightPlanReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);
     void pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
-    void icaoCodesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcaoData &icaoData);
+    void icaoCodesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery);
     void pongReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CTime &elapsedTime);
     void textMessagesReceived(const BlackMisc::Network::CTextMessageList &messages);
     void customPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);

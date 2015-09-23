@@ -165,10 +165,10 @@ void Client::presetIcaoCodesCmd(QTextStream &args)
     QString combinedIcaoType; // e.g. "L2J"
     QString airlineICAO;
     args >> acTypeICAO >> combinedIcaoType >> airlineICAO;
-    BlackMisc::Aviation::CAircraftIcaoData icaoData(
-        CAircraftIcaoCode(acTypeICAO, combinedIcaoType),
-        CAirlineIcaoCode(airlineICAO));
-    emit presetIcaoCodes(icaoData);
+
+    CSimulatedAircraft aircraft;
+    aircraft.setIcaoCodes(CAircraftIcaoCode(acTypeICAO, combinedIcaoType), CAirlineIcaoCode(airlineICAO));
+    emit presetIcaoCodes(aircraft);
 }
 
 void Client::presetLoginModeCmd(QTextStream &args)
@@ -323,7 +323,7 @@ void Client::setOwnAircraftCmd(QTextStream &args)
     int xpdrCode;
     QString xpdrMode;
     args >> lat >> lon >> alt >> hdg >> pitch >> bank >> gs >> com1 >> com2 >> xpdrCode >> xpdrMode;
-    BlackMisc::Aviation::CAircraft aircraft("", BlackMisc::Network::CUser(), BlackMisc::Aviation::CAircraftSituation(
+    BlackMisc::Simulation::CSimulatedAircraft aircraft("", BlackMisc::Network::CUser(), BlackMisc::Aviation::CAircraftSituation(
             BlackMisc::Geo::CCoordinateGeodetic(lat, lon, 0),
             BlackMisc::Aviation::CAltitude(alt, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()),
             BlackMisc::Aviation::CHeading(hdg, BlackMisc::Aviation::CHeading::True, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
@@ -531,9 +531,9 @@ void Client::pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign)
     std::cout << "PILOT_DISCONNECTED " << callsign << std::endl;
 }
 
-void Client::icaoCodesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcaoData &icaoData)
+void Client::icaoCodesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery)
 {
-    std::cout << "PLANE_INFO_REPLY " << callsign << " " << icaoData.toStdString();
+    std::cout << "PLANE_INFO_REPLY " << callsign << " " << aircraftIcaoDesignator.toStdString() << " " << airlineIcaoDesignator.toStdString() << " " << livery.toStdString();
 }
 
 void Client::pongReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CTime &elapsedTime)

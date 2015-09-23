@@ -18,6 +18,7 @@
 #include <QTime>
 #include <QTextStream>
 #include <QTemporaryFile>
+#include <QJsonDocument>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation::FsCommon;
@@ -44,7 +45,7 @@ namespace BlackSimTest
         QTime time;
         time.start();
         streamOut << "reading " << parser.getRootDirectory() << endl;
-        parser.parse();
+        parser.startLoading();
         streamOut << "read entries: " << parser.getAircraftCfgEntriesList().size() << " in " << time.restart() << "ms" << endl;
 
         CAircraftCfgEntriesList entriesList = parser.getAircraftCfgEntriesList();

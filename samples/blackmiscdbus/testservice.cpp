@@ -241,7 +241,7 @@ namespace BlackMiscTest
     /*
      * Ping aircraft
      */
-    CAircraftList Testservice::pingAircraftList(const CAircraftList &aircraftList)
+    CSimulatedAircraftList Testservice::pingAircraftList(const CSimulatedAircraftList &aircraftList)
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "ping aircrafts:" << aircraftList;
         return aircraftList;
@@ -340,7 +340,7 @@ namespace BlackMiscTest
     /*
      * Ping aircraft
      */
-    CAircraft Testservice::pingAircraft(const CAircraft &aircraft)
+    CSimulatedAircraft Testservice::pingAircraft(const CSimulatedAircraft &aircraft)
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "ping aircraft:" << aircraft;
         return aircraft;
@@ -358,7 +358,7 @@ namespace BlackMiscTest
     /*
      * Ping ICAO data
      */
-    CAircraftIcaoData Testservice::pingIcaoData(const CAircraftIcaoData &icao)
+    CAircraftIcaoCode Testservice::pingAircraftIcaoData(const CAircraftIcaoCode &icao)
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "ping ICAO data:" << icao;
         return icao;

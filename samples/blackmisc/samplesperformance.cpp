@@ -17,6 +17,8 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 
+#include <QRegularExpression>
+
 namespace BlackMiscTest
 {
 

@@ -15,7 +15,6 @@
 #include "blackmisc/aviation/transponder.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/flightplan.h"
-#include "blackmisc/aviation/aircrafticaodata.h"
 #include "blackmisc/aviation/airporticaocode.h"
 
 

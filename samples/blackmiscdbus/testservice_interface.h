@@ -16,10 +16,9 @@
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/track.h"
 #include "blackmisc/aviation/transponder.h"
-#include "blackmisc/aviation/aircraftlist.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/network/clientlist.h"
 #include "blackmisc/variantlist.h"
@@ -123,14 +122,14 @@ namespace BlackMiscTest
             return asyncCallWithArgumentList(QLatin1String("pingAtcStation"), argumentList);
         }
 
-        inline QDBusPendingReply<BlackMisc::Aviation::CAircraftIcaoData> pingIcaoData(BlackMisc::Aviation::CAircraftIcaoData icaoData)
+        inline QDBusPendingReply<BlackMisc::Aviation::CAircraftIcaoCode> pingAircraftIcaoData(BlackMisc::Aviation::CAircraftIcaoCode icaoData)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(icaoData);
             return asyncCallWithArgumentList(QLatin1String("pingIcaoData"), argumentList);
         }
 
-        inline QDBusPendingReply<BlackMisc::Aviation::CAircraft> pingAircraft(BlackMisc::Aviation::CAircraft aircraft)
+        inline QDBusPendingReply<BlackMisc::Simulation::CSimulatedAircraft> pingAircraft(BlackMisc::Simulation::CSimulatedAircraft aircraft)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(aircraft);
@@ -165,7 +164,7 @@ namespace BlackMiscTest
             return asyncCallWithArgumentList(QLatin1String("pingSpeed"), argumentList);
         }
 
-        inline QDBusPendingReply<BlackMisc::Aviation::CAircraftList> pingAircraftList(BlackMisc::Aviation::CAircraftList aircraftList)
+        inline QDBusPendingReply<BlackMisc::Simulation::CSimulatedAircraftList> pingAircraftList(BlackMisc::Simulation::CSimulatedAircraftList aircraftList)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(aircraftList);
