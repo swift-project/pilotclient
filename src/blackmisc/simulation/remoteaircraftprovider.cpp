@@ -34,6 +34,12 @@ namespace BlackMisc
             return this->m_remoteAircraftProvider->getAircraftInRangeForCallsign(callsign);
         }
 
+        CAircraftModel CRemoteAircraftAware::getAircraftinRangeModelForCallsign(const CCallsign &callsign) const
+        {
+            Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            return this->m_remoteAircraftProvider->getAircraftInRangeModelForCallsign(callsign);
+        }
+
         CAirspaceAircraftSnapshot CRemoteAircraftAware::getLatestAirspaceAircraftSnapshot() const
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");

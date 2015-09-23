@@ -34,6 +34,11 @@ namespace BlackMisc
             return m_aircraft.findFirstByCallsign(callsign);
         }
 
+        CAircraftModel CRemoteAircraftProviderDummy::getAircraftInRangeModelForCallsign(const CCallsign &callsign) const
+        {
+            return getAircraftInRangeForCallsign(callsign).getModel();
+        }
+
         CAirspaceAircraftSnapshot CRemoteAircraftProviderDummy::getLatestAirspaceAircraftSnapshot() const
         {
             return CAirspaceAircraftSnapshot(m_aircraft);

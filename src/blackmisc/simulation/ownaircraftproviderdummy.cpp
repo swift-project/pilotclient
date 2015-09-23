@@ -88,9 +88,9 @@ namespace BlackMisc
             return true;
         }
 
-        bool COwnAircraftProviderDummy::updateOwnIcaoData(const CAircraftIcaoData &icaoData)
+        bool COwnAircraftProviderDummy::updateOwnIcaoCodes(const CAircraftIcaoCode &aircraftIcaoCode, const CAirlineIcaoCode &airlineIcaoCode)
         {
-            m_ownAircraft.setIcaoInfo(icaoData);
+            m_ownAircraft.setIcaoCodes(aircraftIcaoCode, airlineIcaoCode);
             return true;
         }
 

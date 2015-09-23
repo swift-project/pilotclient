@@ -8,9 +8,9 @@
  */
 
 #include "ownaircraftprovider.h"
-#include "blackmisc/aviation/aircraft.h"
 
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
@@ -24,7 +24,7 @@ namespace BlackMisc
             return this->m_ownAircraftProvider->getOwnAircraft();
         }
 
-        Geo::CCoordinateGeodetic COwnAircraftAware::getOwnAircraftPosition() const
+        CCoordinateGeodetic COwnAircraftAware::getOwnAircraftPosition() const
         {
             Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
             return this->m_ownAircraftProvider->getOwnAircraftPosition();
@@ -90,10 +90,10 @@ namespace BlackMisc
             return this->m_ownAircraftProvider->updateOwnCallsign(callsign);
         }
 
-        bool COwnAircraftAware::updateOwnIcaoData(const CAircraftIcaoData &icaoData)
+        bool COwnAircraftAware::updateOwnIcaoCodes(const CAircraftIcaoCode &aircraftIcaoData, const CAirlineIcaoCode &airlineIcaoCode)
         {
             Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_ownAircraftProvider->updateOwnIcaoData(icaoData);
+            return this->m_ownAircraftProvider->updateOwnIcaoCodes(aircraftIcaoData, airlineIcaoCode);
         }
 
     } // namespace

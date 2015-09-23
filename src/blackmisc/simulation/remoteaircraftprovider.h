@@ -57,6 +57,10 @@ namespace BlackMisc
             //! \threadsafe
             virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
+            //! Aircraft model for callsign
+            //! \threadsafe
+            virtual BlackMisc::Simulation::CAircraftModel getAircraftInRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+
             //! Rendered aircraft situations (per callsign, time history)
             //! \threadsafe
             virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
@@ -102,7 +106,7 @@ namespace BlackMisc
 
             //! Connect signals to slot receiver. As the interface is no QObject, slots can not be connected directly.
             //! In order to disconnect a list of connections is provided, which have to be disconnected manually.
-            //! \note connections are direct as functors have no parameter for connection type
+            //! \note receiver is required for connection type
             virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
                 QObject *receiver,
                 std::function<void(const BlackMisc::Aviation::CAircraftSituation &)>          addedSituationSlot,
@@ -125,6 +129,9 @@ namespace BlackMisc
 
             //! \copydoc IRemoteAircraftProvider::getAircraftInRangeForCallsign
             virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const Aviation::CCallsign &callsign) const;
+
+            //! \copydoc IRemoteAircraftProvider::getAircraftinRangeModelForCallsign
+            virtual BlackMisc::Simulation::CAircraftModel getAircraftinRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! \copydoc IRemoteAircraftProvider::getLatestAirspaceAircraftSnapshot
             virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const;
@@ -168,6 +175,6 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-Q_DECLARE_INTERFACE(BlackMisc::Simulation::IRemoteAircraftProvider, "BlackMisc::Simulation::IRemoteAircraftProvider:IRemoteAircraftProvider")
+Q_DECLARE_INTERFACE(BlackMisc::Simulation::IRemoteAircraftProvider, "BlackMisc::Simulation::IRemoteAircraftProvider")
 
 #endif // guard

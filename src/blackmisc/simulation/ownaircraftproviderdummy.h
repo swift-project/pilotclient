@@ -64,8 +64,8 @@ namespace BlackMisc
             //! \copydoc IOwnAircraftProvider::updateOwnModel
             virtual bool updateOwnModel(const BlackMisc::Simulation::CAircraftModel &model) override;
 
-            //! \copydoc IOwnAircraftProvider::updateOwnIcaoData
-            virtual bool updateOwnIcaoData(const BlackMisc::Aviation::CAircraftIcaoData &icaoData) override;
+            //! \copydoc IOwnAircraftProvider::updateOwnIcaoCodes
+            virtual bool updateOwnIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode, const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcaoCode) override;
 
             //! \copydoc IOwnAircraftProvider::updateOwnSituation
             virtual bool updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;

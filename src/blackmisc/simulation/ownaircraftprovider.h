@@ -20,7 +20,6 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-
         //! Direct threadsafe in memory access to own aircraft
         class BLACKMISC_EXPORT IOwnAircraftProvider
         {
@@ -52,7 +51,7 @@ namespace BlackMisc
 
             //! Update ICAO data
             //! \threadsafe
-            virtual bool updateOwnIcaoData(const BlackMisc::Aviation::CAircraftIcaoData &icaoData) = 0;
+            virtual bool updateOwnIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode, const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcaoCode) = 0;
 
             //! Update model
             //! \threadsafe
@@ -114,8 +113,8 @@ namespace BlackMisc
             //! \copydoc IOwnAircraftProvider::updateOwnCallsign
             virtual bool updateOwnCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
-            //! \copydoc IOwnAircraftProvider::updateOwnIcaoData
-            virtual bool updateOwnIcaoData(const BlackMisc::Aviation::CAircraftIcaoData &icaoData);
+            //! \copydoc IOwnAircraftProvider::updateOwnIcaoCodes
+            virtual bool updateOwnIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoData, const Aviation::CAirlineIcaoCode &airlineIcaoCode);
 
             //! \copydoc IOwnAircraftProvider::updateOwnModel
             virtual bool updateOwnModel(const BlackMisc::Simulation::CAircraftModel &model);
@@ -134,5 +133,7 @@ namespace BlackMisc
 
     } // namespace
 } // namespace
+
+Q_DECLARE_INTERFACE(BlackMisc::Simulation::IOwnAircraftProvider, "BlackMisc::Simulation::IOwnAircraftProvider")
 
 #endif // guard

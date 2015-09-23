@@ -41,6 +41,9 @@ namespace BlackMisc
             //! IRemoteAircraftProvider::getAircraftInRangeForCallsign
             virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
+            //! IRemoteAircraftProvider::getAircraftInRangeModelForCallsign
+            virtual BlackMisc::Simulation::CAircraftModel getAircraftInRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+
             //! \copydoc IRemoteAircraftProvider::getLatestAirspaceAircraftSnapshot
             virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
 
