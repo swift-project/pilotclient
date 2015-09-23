@@ -19,6 +19,7 @@
 #include <QWidget>
 #include <QSvgRenderer>
 #include <QColor>
+#include <QTimer>
 
 namespace BlackGui
 {
@@ -31,9 +32,8 @@ namespace BlackGui
         Q_ENUMS(LedShape)
 
     public:
-
         //! Colors
-        //! \remarks None has to be last entry
+        //! \remarks NoColor has to be last entry
         enum LedColor { Red = 0, Green, Yellow, Grey, Orange, Purple, Blue, Black, NoColor};
 
         //! Shapes
@@ -55,10 +55,10 @@ namespace BlackGui
         bool value() const { return m_value; }
 
         //! Allows to set the led value {true, false}
-        void setOn(bool on);
+        void setOn(bool on, int resetTimeMs = -1);
 
         //! Sets the 3rd state
-        void setTriState();
+        void setTriState(int resetTimeMs = -1);
 
         //! Toggle on / off
         void toggleValue();
@@ -134,11 +134,15 @@ namespace BlackGui
         int m_widthTarget = -1;      //!< desired width
         int m_heightCalculated = 1;  //!< calculated height
 
-        QString m_tooltipOn = "on";        //!< tooltip when on
-        QString m_tooltipOff = "off";      //!< tooltip when off
+        QString m_tooltipOn = "on";              //!< tooltip when on
+        QString m_tooltipOff = "off";            //!< tooltip when off
         QString m_tooltipTriState = "tri-state"; //!< tooltip tri state
-        QString m_currentToolTip = "off";  //!< currently used tooltip
+        QString m_currentToolTip = "off";        //!< currently used tooltip
         QScopedPointer<QSvgRenderer> m_renderer; //!< Renderer
+        QTimer m_resetTimer {this};              //!< reset state
+
+        //! Init
+        void init();
 
         //! Paint event
         virtual void paintEvent(QPaintEvent *event) override;
@@ -155,15 +159,18 @@ namespace BlackGui
         //! All shapes
         static const QStringList &shapes();
 
-        //! All colors
-        static const QStringList &colors();
+        //! All color files
+        static const QStringList &colorFiles();
 
         //! All target widths
         static const QList<int> &widths();
 
         //! Color string
-        static const QString &colorString(LedColor color); //!<Color string
+        static const QString &colorString(LedColor color); //!< Color string
 
+    private slots:
+        //! Reset state
+        void ps_resetState();
     };
 }
 #endif

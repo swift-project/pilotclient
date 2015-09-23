@@ -24,26 +24,37 @@ namespace BlackGui
     CLedWidget::CLedWidget(QWidget *parent) : QWidget(parent), m_renderer(new QSvgRenderer)
     {
         this->setLed();
+        this->init();
     }
 
     CLedWidget::CLedWidget(bool on, LedColor onColor, LedColor offColor, LedShape shape, const QString &onName, const QString &offName, int targetWidth, QWidget *parent) :
+        QWidget(parent),
         m_value(on ? On : Off), m_colorOn(onColor), m_colorOff(offColor),
         m_shape(shape), m_widthTarget(targetWidth), m_tooltipOn(onName), m_tooltipOff(offName),
-        m_renderer(new QSvgRenderer(parent))
+        m_renderer(new QSvgRenderer(this))
     {
         this->setLed();
+        this->init();
+    }
+
+    void CLedWidget::init()
+    {
+        m_resetTimer.setSingleShot(true);
+        m_resetTimer.setObjectName(this->objectName().isEmpty() ? "CLedWidget::ResetTimer" : this->objectName() + "::ResetTimer");
     }
 
     CLedWidget::~CLedWidget()
-    { }
+    {
+        m_resetTimer.stop();
+    }
 
     void CLedWidget::setLed(LedColor ledColor)
     {
-        Q_ASSERT(!this->m_renderer.isNull());
+        Q_ASSERT_X(!this->m_renderer.isNull(), Q_FUNC_INFO, "no renderer");
+        if (!this->m_renderer) { return; }
 
         // load image, init renderer
-        QString ledShapeAndColor;
-        ledShapeAndColor = shapes().at(static_cast<int>(this->m_shape));
+        QString ledShapeAndColor(shapes().at(static_cast<int>(this->m_shape)));
         if (ledColor == NoColor)
         {
             switch (m_value)
@@ -84,7 +95,7 @@ namespace BlackGui
         this->setToolTip(this->m_currentToolTip); // for widget
 
         // init renderer, load led.
-        m_renderer->load(ledShapeAndColor);
+        m_renderer->load(ledShapeAndColor); // load by filename
 
         // original size
         QSize s = m_renderer->defaultSize();
@@ -117,8 +128,13 @@ namespace BlackGui
     const QString &CLedWidget::colorString(CLedWidget::LedColor color)
     {
         static const QString empty;
-        if (color == NoColor) return empty;
-        return colors().at(static_cast<int>(color));
+        if (color == NoColor) { return empty; }
+        return colorFiles().at(static_cast<int>(color));
+    }
+
+    void CLedWidget::ps_resetState()
+    {
+        this->setOn(false);
     }
 
     void CLedWidget::setToolTips(const QString &on, const QString &off, const QString &triState)
@@ -199,23 +215,32 @@ namespace BlackGui
         setLed();
     }
 
-
     QPixmap CLedWidget::asPixmap() const
     {
         return this->renderToPixmap();
     }
 
-    void CLedWidget::setOn(bool on)
+    void CLedWidget::setOn(bool on, int resetTimeMs)
     {
         State s = on ? On : Off;
-        if (m_value == s) return;
+        if (resetTimeMs < 0 && m_resetTimer.isActive()) { m_resetTimer.stop();}
+        if (resetTimeMs > 0)
+        {
+            m_resetTimer.singleShot(resetTimeMs, this, &CLedWidget::ps_resetState);
+        }
+        if (m_value == s) { return; }
         m_value = s;
         setLed();
     }
 
-    void CLedWidget::setTriState()
+    void CLedWidget::setTriState(int resetTimeMs)
     {
-        if (m_value == TriState) return;
+        if (resetTimeMs < 0 && m_resetTimer.isActive()) { m_resetTimer.stop();}
+        if (resetTimeMs > 0)
+        {
+            m_resetTimer.singleShot(resetTimeMs, this, &CLedWidget::ps_resetState);
+        }
+        if (m_value == TriState) { return; }
         m_value = TriState;
         setLed();
     }
@@ -258,7 +283,7 @@ namespace BlackGui
         return shapes;
     }
 
-    const QStringList &CLedWidget::colors()
+    const QStringList &CLedWidget::colorFiles()
     {
         static const QStringList colors( { "red.svg", "green.svg", "yellow.svg", "grey.svg", "orange.svg", "purple.svg", "blue.svg", "black.svg" });
         return colors;
@@ -269,4 +294,4 @@ namespace BlackGui
         static const QList<int> widths({ 16, 16, 16, 16});
         return widths;
     }
-}
+} // ns
