@@ -18,6 +18,7 @@ namespace BlackGui
     {
         CDistributorView::CDistributorView(QWidget *parent) : CViewBase(parent)
         {
+            this->m_withMenuItemBackend = true;
             this->standardInit(new CDistributorListModel(this));
         }
     }

@@ -16,23 +16,24 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackgui/models/listmodelbase.h"
 #include <QAbstractItemModel>
-#include <QDBusConnection>
 
 namespace BlackGui
 {
     namespace Models
     {
-
         //! Aircraft model list model
         class BLACKGUI_EXPORT CAircraftModelListModel : public CListModelBase<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>
         {
-
         public:
             //! How to display
-            enum AircraftModelMode {
+            //! \sa BlackMisc::Simulation::CAircraftModel::ModelType
+            enum AircraftModelMode
+            {
                 NotSet,
-                ModelOnly,
-                MappedModel
+                OwnSimulatorModel, ///< model existing with my sim
+                MappedModel,       ///< Model based on mapping operation
+                Database,          ///< Database entry
+                VPilotRuleModel    ///< vPilot rule turned into model
             };
 
             //! Constructor
@@ -44,10 +45,23 @@ namespace BlackGui
             //! Mode
             void setAircraftModelMode(CAircraftModelListModel::AircraftModelMode stationMode);
 
+            //! Mode
+            AircraftModelMode getModelMode() const { return m_mode; }
+
+            //! Highlight the DB models
+            bool highlightDbData() const { return m_highlightDbData; }
+
+            //! Highlight the DB models
+            void setHighlightDbData(bool highlightDbData) { m_highlightDbData = highlightDbData; }
+
+        protected:
+            //! \copydoc QAbstractItemModel::data
+            virtual QVariant data(const QModelIndex &index, int role) const override;
+
         private:
             AircraftModelMode m_mode = NotSet; //!< current mode
-
+            bool m_highlightDbData = false;
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard

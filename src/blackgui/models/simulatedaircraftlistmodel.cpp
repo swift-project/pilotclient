@@ -53,7 +53,7 @@ namespace BlackGui
                 this->m_columns.addColumn(CColumn("dist.", "distance", CSimulatedAircraft::IndexDistanceToOwnAircraft, new CAirspaceDistanceFormatter()));
                 this->m_columns.addColumn(CColumn("altitude", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexAltitude }, new CAltitudeFormatter()));
                 this->m_columns.addColumn(CColumn("gs.", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexGroundspeed }, new CAircraftSpeedFormatter()));
-                this->m_columns.addColumn(CColumn::standardString("icao", { CSimulatedAircraft::IndexIcao, CAircraftIcaoData::IndexAsString}));
+                this->m_columns.addColumn(CColumn::standardString("icao", { CSimulatedAircraft::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexAircraftDesignator}));
                 this->m_columns.addColumn(CColumn("frequency", { CSimulatedAircraft::IndexCom1System, CComSystem::IndexActiveFrequency }, new CComFrequencyFormatter()));
                 this->m_columns.addColumn(CColumn::standardString("transponder", { CSimulatedAircraft::IndexTransponder, CTransponder::IndexTransponderCodeAndModeFormatted }));
                 this->m_columns.addColumn(CColumn("latitude", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexLatitude }, new CLatLonFormatter()));
@@ -74,7 +74,7 @@ namespace BlackGui
                 this->m_columns.addColumn(CColumn("p.", "parts", CSimulatedAircraft::IndexPartsSynchronized, new CBoolIconFormatter("parts", "no parts"), true));
                 this->m_columns.addColumn(CColumn("fp.", "fast position updates", CSimulatedAircraft::IndexFastPositionUpdates, new CBoolIconFormatter("enabled", "disabled"), true));
                 this->m_columns.addColumn(CColumn::standardString("realname", "pilot's real name", { CSimulatedAircraft::IndexPilot, CUser::IndexRealName }));
-                this->m_columns.addColumn(CColumn::standardString("icao", { CSimulatedAircraft::IndexIcao, CAircraftIcaoData::IndexAsString}));
+                this->m_columns.addColumn(CColumn::standardString("icao", CSimulatedAircraft::IndexCombinedIcaoLiveryString));
                 this->m_columns.addColumn(CColumn::standardString("model", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexModelString}));
                 this->m_columns.addColumn(CColumn::standardString("desc.", "description", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexDescription}));
                 this->m_columns.addColumn(CColumn::standardString("type", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexModelTypeAsString}));

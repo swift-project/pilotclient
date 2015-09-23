@@ -21,7 +21,7 @@ namespace BlackGui
     namespace Models
     {
         CAirportListModel::CAirportListModel(QObject *parent) :
-            CListModelBase<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>("ViewAirportList", parent)
+            CListModelBase<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>("AirportListModel", parent)
         {
             this->m_columns.addColumn(CColumn::standardValueObject("ICAO", CAirport::IndexIcao));
             this->m_columns.addColumn(CColumn("distance", CAirport::IndexDistanceToOwnAircraft, new CAirspaceDistanceFormatter()));
@@ -36,11 +36,11 @@ namespace BlackGui
             this->m_sortOrder = Qt::AscendingOrder;
 
             // force strings for translation in resource files
-            (void)QT_TRANSLATE_NOOP("ViewAirportList", "ICAO");
-            (void)QT_TRANSLATE_NOOP("ViewAirportList", "distance");
-            (void)QT_TRANSLATE_NOOP("ViewAirportList", "name");
-            (void)QT_TRANSLATE_NOOP("ViewAirportList", "elevation");
-            (void)QT_TRANSLATE_NOOP("ViewAirportList", "bearing");
+            (void)QT_TRANSLATE_NOOP("ModelAirportList", "ICAO");
+            (void)QT_TRANSLATE_NOOP("ModelAirportList", "distance");
+            (void)QT_TRANSLATE_NOOP("ModelAirportList", "name");
+            (void)QT_TRANSLATE_NOOP("ModelAirportList", "elevation");
+            (void)QT_TRANSLATE_NOOP("ModelAirportList", "bearing");
         }
     } // ns
 } // ns

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013
+/* Copyright (C) 2015
  * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -9,11 +9,11 @@
 
 //! \file
 
-#ifndef BLACKGUI_AIRPORTLISTMODEL_H
-#define BLACKGUI_AIRPORTLISTMODEL_H
+#ifndef BLACKGUI_COUNTRYLISTMODEL_H
+#define BLACKGUI_COUNTRYLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/aviation/airportlist.h"
+#include "blackmisc/countrylist.h"
 #include "blackgui/models/listmodelbase.h"
 #include <QAbstractItemModel>
 
@@ -21,15 +21,16 @@ namespace BlackGui
 {
     namespace Models
     {
-        //! Airport list model
-        class BLACKGUI_EXPORT CAirportListModel : public CListModelBase<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>
+        //! Country list model
+        class BLACKGUI_EXPORT CCountryListModel : public CListModelBase<BlackMisc::CCountry, BlackMisc::CCountryList>
         {
+
         public:
             //! Constructor
-            explicit CAirportListModel(QObject *parent = nullptr);
+            explicit CCountryListModel(QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CAirportListModel() {}
+            virtual ~CCountryListModel() {}
         };
     }
 }

@@ -12,9 +12,9 @@
 #ifndef BLACKGUI_LIVERYVIEW_H
 #define BLACKGUI_LIVERYVIEW_H
 
-#include "blackgui/blackguiexport.h"
 #include "viewbase.h"
-#include "../models/liverylistmodel.h"
+#include "blackgui/blackguiexport.h"
+#include "blackgui/models/liverylistmodel.h"
 
 namespace BlackGui
 {

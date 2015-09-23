@@ -25,6 +25,7 @@ namespace BlackGui
             this->m_columns.addColumn(CColumn::standardString("description", CDistributor::IndexDescription));
             this->m_columns.addColumn(CColumn::standardString("alias1", CDistributor::IndexAlias1));
             this->m_columns.addColumn(CColumn::standardString("alias2", CDistributor::IndexAlias2));
+            this->m_columns.addColumn(CColumn::standardString("changed", CDistributor::IndexUtcTimestampFormattedYmdhms));
 
             // force strings for translation in resource files
             (void)QT_TRANSLATE_NOOP("ModelDistributorList", "key");

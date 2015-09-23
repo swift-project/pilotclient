@@ -13,16 +13,17 @@
 #define BLACKGUI_AIRCRAFTMODELVIEW_H
 
 #include "blackgui/blackguiexport.h"
-#include "aircraftmodelfilterform.h"
+#include "blackgui/filters/aircraftmodelfilterdialog.h"
+#include "blackgui/models/aircraftmodellistmodel.h"
 #include "viewbase.h"
-#include "../models/aircraftmodellistmodel.h"
 
 namespace BlackGui
 {
     namespace Views
     {
         //! Aircraft view
-        class BLACKGUI_EXPORT CAircraftModelView : public CViewBase<Models::CAircraftModelListModel, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModel>
+        class BLACKGUI_EXPORT CAircraftModelView :
+            public CViewBase<Models::CAircraftModelListModel, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModel>
         {
             Q_OBJECT
 
@@ -36,13 +37,12 @@ namespace BlackGui
             //! Display automatically (when models are loaded)
             bool displayAutomatically() const;
 
-        signals:
-            //! Request reloading of backend models
-            void requestModelReload();
+            //! Display automatically (when models are loaded)
+            void setDisplayAutomatically(bool automatically) { m_displayAutomatically = automatically; }
 
-        protected slots:
-            //! \copydoc CViewBaseNonTemplate::ps_filterDialogFinished
-            virtual bool ps_filterDialogFinished(int status) override;
+        signals:
+            //! Request to load VPilot data
+            void requestVPilotRules();
 
         protected:
             //! \copydoc CViewBase::customMenu
@@ -52,10 +52,11 @@ namespace BlackGui
             //! Toggle auto display
             void ps_toggleAutoDisplay();
 
+            //! Highlight DB models
+            void ps_toggleHighlightDbModels();
+
         private:
-            //! Filter form
-            CAircraftModelFilterForm *getFilterForm() const;
-            bool m_displayAutomatically = false;
+            bool m_displayAutomatically = false; //!< display automatically (when models are loaded)
         };
     } // ns
 } // ns

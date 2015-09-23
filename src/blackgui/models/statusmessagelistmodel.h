@@ -29,13 +29,22 @@ namespace BlackGui
         {
 
         public:
+            //! Mode
+            enum Mode
+            {
+                Detailed,
+                Simplified
+            };
 
             //! Constructor
             explicit CStatusMessageListModel(QObject *parent = nullptr);
 
             //! Destructor
             virtual ~CStatusMessageListModel() {}
+
+            //! Set mode
+            void setMode(Mode mode);
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013
+/* Copyright (C) 2015
  * swift project Community / Contributors
  *
  * This file is part of swift Project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -13,7 +13,7 @@
 #define BLACKGUI_AIRCRAFTMODELFILTER_H
 
 #include "blackgui/blackguiexport.h"
-#include "listmodelfilter.h"
+#include "modelfilter.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 
 namespace BlackGui
@@ -26,7 +26,11 @@ namespace BlackGui
         {
         public:
             //! Constructor
-            CAircraftModelFilter(const QString &modelString, const QString &description);
+            CAircraftModelFilter(const QString &modelKey, const QString &description,
+                                 const QString &aircraftIcao, const QString &aircraftManufacturer,
+                                 const QString &airlineIcao, const QString &airlineName,
+                                 const QString &liveryCode,
+                                 const BlackMisc::Simulation::CSimulatorInfo &simInfo = BlackMisc::Simulation::CSimulatorInfo::allSimulators());
 
             //! \copydoc IModelFilter::filter
             virtual BlackMisc::Simulation::CAircraftModelList filter(const BlackMisc::Simulation::CAircraftModelList &inContainer) const override;
@@ -35,13 +39,17 @@ namespace BlackGui
             virtual bool isValid() const override;
 
         private:
-            QString m_model;
+            QString m_modelKey;
             QString m_description;
-
+            QString m_aircraftIcao;
+            QString m_aircraftManufacturer;
+            QString m_airlineIcao;
+            QString m_airlineName;
+            QString m_liveryCode;
+            BlackMisc::Simulation::CSimulatorInfo m_simulatorInfo;
         };
 
     } // namespace
 } // namespace
-
 
 #endif // guard

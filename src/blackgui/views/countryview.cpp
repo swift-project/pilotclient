@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "liveryview.h"
+#include "countryview.h"
 #include <QHeaderView>
 
 using namespace BlackGui::Models;
@@ -16,10 +16,10 @@ namespace BlackGui
 {
     namespace Views
     {
-        CLiveryView::CLiveryView(QWidget *parent) : CViewBase(parent)
+        CCountryView::CCountryView(QWidget *parent) : CViewBase(parent)
         {
             this->m_withMenuItemBackend = true;
-            this->standardInit(new CLiveryListModel(this));
+            this->standardInit(new CCountryListModel(this));
         }
     }
 } // namespace
