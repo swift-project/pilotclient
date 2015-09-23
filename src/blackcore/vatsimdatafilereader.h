@@ -14,12 +14,12 @@
 
 #include "blackcoreexport.h"
 #include "blackmisc/threadedreader.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/aircraftlist.h"
+#include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/network/voicecapabilities.h"
-#include "blackmisc/aviation/callsignset.h"
 
 #include <QObject>
 #include <QTimer>
@@ -39,7 +39,7 @@ namespace BlackCore
 
         //! Get aircraft
         //! \threadsafe
-        BlackMisc::Aviation::CAircraftList getAircraft() const;
+        BlackMisc::Simulation::CSimulatedAircraftList getAircraft() const;
 
         //! Get ATC station
         //! \threadsafe
@@ -85,9 +85,13 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Network::CUserList getPilotsForCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
-        //! ICAO info for callsign
+        //! Aircraft ICAO info for callsign
         //! \threadsafe
-        BlackMisc::Aviation::CAircraftIcaoData getIcaoInfo(const BlackMisc::Aviation::CCallsign &callsign);
+        BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCode(const BlackMisc::Aviation::CCallsign &callsign);
+
+        //! Airline ICAO info for callsign
+        //! \threadsafe
+        BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCode(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Voice capability for callsign
         //! \threadsafe
@@ -95,10 +99,14 @@ namespace BlackCore
 
         //! Update aircraft with VATSIM aircraft data from data file
         //! \threadsafe
-        void updateWithVatsimDataFileData(BlackMisc::Aviation::CAircraft &aircraftToBeUdpated) const;
+        void updateWithVatsimDataFileData(BlackMisc::Simulation::CSimulatedAircraft &aircraftToBeUdpated) const;
 
         //! Start reading in own thread
         void readInBackgroundThread();
+
+    signals:
+        //! Data have been read
+        void dataRead(int lines);
 
     private slots:
         //! Data have been read, parse VATSIM file
@@ -111,10 +119,10 @@ namespace BlackCore
         QNetworkAccessManager *m_networkManager = nullptr;
         QStringList m_serviceUrls; //!< URL of the service
         int m_currentUrlIndex;
-        BlackMisc::Network::CServerList      m_voiceServers;
-        BlackMisc::Network::CServerList      m_fsdServers;
-        BlackMisc::Aviation::CAtcStationList m_atcStations;
-        BlackMisc::Aviation::CAircraftList   m_aircraft;
+        BlackMisc::Network::CServerList               m_voiceServers;
+        BlackMisc::Network::CServerList               m_fsdServers;
+        BlackMisc::Aviation::CAtcStationList          m_atcStations;
+        BlackMisc::Simulation::CSimulatedAircraftList m_aircraft;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Network::CVoiceCapabilities> m_voiceCapabilities;
 
         //! Split line and assign values to their corresponding attribute names
@@ -133,9 +141,6 @@ namespace BlackCore
         //! Get current section
         static Section currentLineToSection(const QString &currentLine);
 
-    signals:
-        //! Data have been read
-        void dataRead(int lines);
     };
 }
 

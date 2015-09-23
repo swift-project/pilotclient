@@ -20,6 +20,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
+using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackCore
@@ -33,7 +34,7 @@ namespace BlackCore
         this->connect(this->m_updateTimer, &QTimer::timeout, this, &CVatsimDataFileReader::ps_read);
     }
 
-    CAircraftList CVatsimDataFileReader::getAircraft() const
+    CSimulatedAircraftList CVatsimDataFileReader::getAircraft() const
     {
         QReadLocker rl(&this->m_lock);
         return this->m_aircraft;
@@ -70,7 +71,7 @@ namespace BlackCore
 
     CUserList CVatsimDataFileReader::getPilotsForCallsigns(const CCallsignSet &callsigns)
     {
-        return this->getAircraft().findByCallsigns(callsigns).transform(Predicates::MemberTransform(&CAircraft::getPilot));
+        return this->getAircraft().findByCallsigns(callsigns).transform(Predicates::MemberTransform(&CSimulatedAircraft::getPilot));
     }
 
     CUserList CVatsimDataFileReader::getPilotsForCallsign(const CCallsign &callsign)
@@ -79,10 +80,16 @@ namespace BlackCore
         return this->getPilotsForCallsigns(callsigns);
     }
 
-    CAircraftIcaoData CVatsimDataFileReader::getIcaoInfo(const CCallsign &callsign)
+    CAirlineIcaoCode CVatsimDataFileReader::getAirlineIcaoCode(const CCallsign &callsign)
     {
-        CAircraft aircraft = this->getAircraft().findFirstByCallsign(callsign);
-        return aircraft.getIcaoInfo();
+        CSimulatedAircraft aircraft = this->getAircraft().findFirstByCallsign(callsign);
+        return aircraft.getAirlineIcaoCode();
+    }
+
+    CAircraftIcaoCode CVatsimDataFileReader::getAircraftIcaoCode(const CCallsign &callsign)
+    {
+        CSimulatedAircraft aircraft = this->getAircraft().findFirstByCallsign(callsign);
+        return aircraft.getAircraftIcaoCode();
     }
 
     CVoiceCapabilities CVatsimDataFileReader::getVoiceCapabilityForCallsign(const CCallsign &callsign)
@@ -98,7 +105,7 @@ namespace BlackCore
         }
     }
 
-    void CVatsimDataFileReader::updateWithVatsimDataFileData(CAircraft &aircraftToBeUdpated) const
+    void CVatsimDataFileReader::updateWithVatsimDataFileData(CSimulatedAircraft &aircraftToBeUdpated) const
     {
         this->getAircraft().updateWithVatsimDataFileData(aircraftToBeUdpated);
     }
@@ -187,7 +194,7 @@ namespace BlackCore
             CServerList     voiceServers;
             CServerList     fsdServers;
             CAtcStationList atcStations;
-            CAircraftList   aircraft;
+            CSimulatedAircraftList   aircraft;
             QMap<CCallsign, CVoiceCapabilities> voiceCapabilities;
             QDateTime updateTimestampFromFile;
 
@@ -258,7 +265,7 @@ namespace BlackCore
                             double groundspeed = clientPartsMap["groundspeed"].toDouble();
                             CAircraftSituation situation(position, altitude);
                             situation.setGroundspeed(CSpeed(groundspeed, CSpeedUnit::kts()));
-                            CAircraft currentAircraft(user.getCallsign().getStringAsSet(), user, situation);
+                            CSimulatedAircraft currentAircraft(user.getCallsign().getStringAsSet(), user, situation);
 
                             QString aircraftIcaoCode = clientPartsMap["planned_aircraft"];
                             if (!aircraftIcaoCode.isEmpty())

@@ -35,6 +35,10 @@ namespace BlackCore
         //! Read / re-read bookings
         void readInBackgroundThread();
 
+    signals:
+        //! Bookings have been read and converted to BlackMisc::Aviation::CAtcStationList
+        void dataRead(const BlackMisc::Aviation::CAtcStationList &bookedStations);
+
     private slots:
         //! Bookings have been read
         //! \threadsafe
@@ -47,9 +51,6 @@ namespace BlackCore
         QString m_serviceUrl; //!< URL of the service
         QNetworkAccessManager *m_networkManager = nullptr;
 
-    signals:
-        //! Bookings have been read and converted to BlackMisc::Aviation::CAtcStationList
-        void dataRead(const BlackMisc::Aviation::CAtcStationList &bookedStations);
     };
 }
 #endif // guard
