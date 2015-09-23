@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CValidationIndicator</class>
+ <widget class="QFrame" name="CValidationIndicator">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>18</width>
+    <height>18</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>10</width>
+    <height>10</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>25</width>
+    <height>16777215</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Validation Indicator</string>
+  </property>
+  <property name="frameShape">
+   <enum>QFrame::StyledPanel</enum>
+  </property>
+  <property name="frameShadow">
+   <enum>QFrame::Raised</enum>
+  </property>
+  <layout class="QVBoxLayout" name="vl_ValidationIndicator">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QLabel" name="lbl_Icon">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="../../blackmisc/blackmisc.qrc">:/diagona/icons/diagona/icons/tick.png</pixmap>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../../blackmisc/blackmisc.qrc"/>
+ </resources>
+ <connections/>
+</ui>
