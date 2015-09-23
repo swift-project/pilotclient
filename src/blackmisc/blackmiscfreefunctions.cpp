@@ -18,6 +18,8 @@
 #include "namevariantpairlist.h"
 #include "variantlist.h"
 #include "variantmap.h"
+#include "rgbcolor.h"
+#include "countrylist.h"
 #include "statusmessagelist.h"
 #include "pixmap.h"
 #include "iconlist.h"
@@ -26,6 +28,7 @@
 #include <QProcessEnvironment>
 #include <QSysInfo>
 #include <QProcess>
+#include <QBuffer>
 
 void BlackMisc::Math::registerMetadata()
 {
@@ -83,6 +86,9 @@ void BlackMisc::registerMetadata()
     CPixmap::registerMetadata();
     CIdentifier::registerMetadata();
     CIdentifierList::registerMetadata();
+    CRgbColor::registerMetadata();
+    CCountry::registerMetadata();
+    CCountryList::registerMetadata();
 
     // sub namespaces
     PhysicalQuantities::registerMetadata();
@@ -144,7 +150,6 @@ uint BlackMisc::calculateHash(const QList<int> &values, const char *className)
     }
     return calculateHash(list, className);
 }
-
 
 QVariant BlackMisc::fixQVariantFromDbusArgument(const QVariant &variant, int localUserType)
 {
