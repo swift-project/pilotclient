@@ -33,8 +33,8 @@
 namespace BlackCore
 {
     class CAirspaceMonitor;
-    class CWebDataReader;
     class CVatsimMetarReader;
+    class CWebDataServices;
 
     //! Network context implementation
     class BLACKCORE_EXPORT CContextNetwork :
@@ -130,6 +130,10 @@ namespace BlackCore
         //! \copydoc IContextNetwork::getAircraftInRangeForCallsign
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+
+        //! \copydoc IContextNetwork::getAircraftinRangeModelForCallsign
+        //! \ingroup remoteaircraftprovider
+        virtual BlackMisc::Simulation::CAircraftModel getAircraftInRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
         //! \copydoc IContextNetwork::getOnlineStationForCallsign
         virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
@@ -236,7 +240,7 @@ namespace BlackCore
     private:
         CAirspaceMonitor *m_airspace = nullptr;
         INetwork         *m_network  = nullptr;
-        CWebDataReader   *m_webDataReader = nullptr; //!< web service readers
+        CWebDataServices   *m_webDataReader = nullptr; //!< web service readers
         QList<QMetaObject::Connection> m_webReaderSignalConnections;
         INetwork::ConnectionStatus m_currentStatus = INetwork::Disconnected; //!< used to detect pending connections
         QTimer *m_dataUpdateTimer = nullptr;                                 //!< general updates such as ATIS, frequencies, see requestDataUpdates()
@@ -249,6 +253,9 @@ namespace BlackCore
 
         //! Own aircraft from \sa CContextOwnAircraft
         const BlackMisc::Simulation::CSimulatedAircraft ownAircraft() const;
+
+        //! Disconnect all signals from swift DB readers
+        void disconnectReaderSignals();
 
     private slots:
         //! Update METAR collection

@@ -20,6 +20,7 @@
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/network/dbflags.h"
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/network/clientlist.h"
@@ -39,7 +40,6 @@
 
 namespace BlackCore
 {
-
     //! Network context proxy
     class BLACKCORE_EXPORT IContextNetwork : public CContext
     {
@@ -144,20 +144,8 @@ namespace BlackCore
         //! Metar read
         void vatsimMetarsRead(int number);
 
-        //! ICAO codes read
-        void aircraftIcaoCodeRead(int number);
-
-        //! ICAO codes read
-        void airlineIcaoCodeRead(int number);
-
-        //! Liveries read
-        void liveriesRead(int number);
-
-        //! Distributors read
-        void distributorsRead(int number);
-
-        //! Number of models read
-        void modelsRead(int number);
+        //! swift DB data read
+        void swiftDbDataRead(BlackMisc::Network::CDbFlags::Entity entity, BlackMisc::Network::CDbFlags::ReadState, int number);
 
     public slots:
         //! Reload bookings from booking service

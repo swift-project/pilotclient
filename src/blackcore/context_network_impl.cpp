@@ -16,7 +16,7 @@
 #include "network_vatlib.h"
 #include "vatsim_metar_reader.h"
 #include "airspace_monitor.h"
-#include "web_datareader.h"
+#include "webdataservices.h"
 #include "blackmisc/networkutils.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/logmessage.h"
@@ -58,20 +58,18 @@ namespace BlackCore
         this->m_dataUpdateTimer->start(30 * 1000);
 
         // 3. data reader
-        this->m_webDataReader = new CWebDataReader(CWebDataReader::AllReaders, this);
+        this->m_webDataReader = new CWebDataServices(CWebReaderFlags::AllReaders, this);
         this->m_webReaderSignalConnections = this->m_webDataReader->connectVatsimDataSignals(
+                this, // the object here must be the same as in the bind
                 std::bind(&CContextNetwork::vatsimBookingsRead, this, std::placeholders::_1),
                 std::bind(&CContextNetwork::vatsimDataFileRead, this, std::placeholders::_1),
                 std::bind(&CContextNetwork::vatsimMetarsRead, this, std::placeholders::_1));
         this->m_webReaderSignalConnections.append(
             this->m_webDataReader->connectSwiftDatabaseSignals(
                 this, // the object here must be the same as in the bind
-                std::bind(&CContextNetwork::aircraftIcaoCodeRead, this, std::placeholders::_1),
-                std::bind(&CContextNetwork::airlineIcaoCodeRead, this, std::placeholders::_1),
-                std::bind(&CContextNetwork::liveriesRead, this, std::placeholders::_1),
-                std::bind(&CContextNetwork::distributorsRead, this, std::placeholders::_1),
-                std::bind(&CContextNetwork::modelsRead, this, std::placeholders::_1)
-            ));
+                std::bind(&CContextNetwork::swiftDbDataRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
+            )
+        );
         this->m_webDataReader->readAllInBackground(1000);
 
         // 4. Airspace contents
@@ -143,7 +141,7 @@ namespace BlackCore
     void CContextNetwork::gracefulShutdown()
     {
         this->disconnect(); // all signals
-        this->m_webReaderSignalConnections.clear(); // disconnect
+        this->disconnectReaderSignals(); // disconnect
         this->m_webDataReader->gracefulShutdown();
 
         if (this->isConnected()) { this->disconnectFromNetwork(); }
@@ -158,7 +156,7 @@ namespace BlackCore
         {
             return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Invalid user credentials");
         }
-        else if (!this->ownAircraft().getIcaoInfo().hasAircraftDesignator())
+        else if (!this->ownAircraft().getAircraftIcaoCode().hasDesignator())
         {
             return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Invalid ICAO data for own aircraft");
         }
@@ -180,11 +178,11 @@ namespace BlackCore
             this->m_airspace->setConnected(true);
             INetwork::LoginMode mode = static_cast<INetwork::LoginMode>(loginMode);
             this->getIContextOwnAircraft()->updateOwnAircraftPilot(server.getUser());
-            const CAircraft ownAircraft = this->ownAircraft();
+            const CSimulatedAircraft ownAircraft(this->ownAircraft());
             this->m_network->presetServer(server);
             this->m_network->presetLoginMode(mode);
             this->m_network->presetCallsign(ownAircraft.getCallsign());
-            this->m_network->presetIcaoCodes(ownAircraft.getIcaoInfo());
+            this->m_network->presetIcaoCodes(ownAircraft);
             if (getIContextSimulator())
             {
                 this->m_network->presetSimulatorInfo(getIContextSimulator()->getSimulatorPluginInfo());
@@ -469,6 +467,15 @@ namespace BlackCore
         return this->getRuntime()->getCContextOwnAircraft()->getOwnAircraft();
     }
 
+    void CContextNetwork::disconnectReaderSignals()
+    {
+        for (QMetaObject::Connection c : m_webReaderSignalConnections)
+        {
+            QObject::disconnect(c);
+        }
+        m_webReaderSignalConnections.clear();
+    }
+
     CAtcStationList CContextNetwork::getAtcStationsOnline() const
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
@@ -496,7 +503,13 @@ namespace BlackCore
     CSimulatedAircraft CContextNetwork::getAircraftInRangeForCallsign(const CCallsign &callsign) const
     {
         if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
-        return this->m_airspace->getAircraftInRange().findFirstByCallsign(callsign);
+        return this->m_airspace->getAircraftInRangeForCallsign(callsign);
+    }
+
+    CAircraftModel CContextNetwork::getAircraftInRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const
+    {
+        if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+        return this->m_airspace->getAircraftInRangeModelForCallsign(callsign);
     }
 
     CAtcStation CContextNetwork::getOnlineStationForCallsign(const CCallsign &callsign) const

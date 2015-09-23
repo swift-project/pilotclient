@@ -20,7 +20,6 @@ using namespace BlackMisc::Weather;
 
 namespace BlackCore
 {
-
     /*
      * Constructor for DBus
      */
