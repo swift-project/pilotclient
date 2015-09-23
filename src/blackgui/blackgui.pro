@@ -26,15 +26,23 @@ HEADERS += *.h
 SOURCES += *.cpp
 HEADERS += $$PWD/models/*.h
 SOURCES += $$PWD/models/*.cpp
+
 HEADERS += $$PWD/views/*.h
 SOURCES += $$PWD/views/*.cpp
+
 HEADERS += $$PWD/components/*.h
 SOURCES += $$PWD/components/*.cpp
-
 FORMS   += $$PWD/components/*.ui
-FORMS   += $$PWD/*.ui
-FORMS   += $$PWD/views/*.ui
 
+HEADERS += $$PWD/filters/*.h
+SOURCES += $$PWD/filters/*.cpp
+FORMS   += $$PWD/filters/*.ui
+
+HEADERS += $$PWD/editors/*.h
+SOURCES += $$PWD/editors/*.cpp
+FORMS   += $$PWD/editors/*.ui
+
+FORMS   += $$PWD/*.ui
 
 win32 {
     HEADERS += $$PWD/win/*.h
