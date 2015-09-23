@@ -14,14 +14,18 @@ using namespace BlackMisc::Network;
 
 namespace BlackCore
 {
-    CGlobalNetworkSettings::CGlobalNetworkSettings() :
-        m_fsdSwiftServer("swift", "swift Testserver", "vatsim-germany.org", 6809,
-                         CUser("1234567", "swift Test User", "", "123456"), true)
-    { }
-
-    const CGlobalNetworkSettings &CGlobalNetworkSettings::instance()
+    namespace Settings
     {
-        static const CGlobalNetworkSettings rs;
-        return rs;
-    }
-}
+
+        CGlobalNetworkSettings::CGlobalNetworkSettings() :
+            m_fsdSwiftServer("swift", "swift Testserver", "vatsim-germany.org", 6809,
+                             CUser("1234567", "swift Test User", "", "123456"), true)
+        { }
+
+        const CGlobalNetworkSettings &CGlobalNetworkSettings::instance()
+        {
+            static const CGlobalNetworkSettings rs;
+            return rs;
+        }
+    } // ns
+} // ns
