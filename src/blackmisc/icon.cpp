@@ -13,34 +13,66 @@
 
 namespace BlackMisc
 {
+    CIcon::CIcon(CIcons::IconIndex index, const QString &descriptiveText) :
+        m_index(static_cast<int>(index)), m_descriptiveText(descriptiveText) {}
 
-    /*
-     * Pixmap
-     */
-    QPixmap CIcon::toPixmap() const
+    CIcon::CIcon(const QPixmap &pixmap, const QString &descriptiveText) :
+        m_index(static_cast<int>(CIcons::IconIsGenerated)), m_descriptiveText(descriptiveText), m_pixmap(pixmap)
+    { }
+
+    CIcon::CIcon(const QString &resourceFilePath, const QString &descriptiveText) :
+        m_index(static_cast<int>(CIcons::IconIsFile)), m_descriptiveText(descriptiveText), m_pixmap(CIcons::pixmapByResourceFileName(resourceFilePath))
+    {}
+
+    CIcons::IconIndex CIcon::getIndex() const
     {
-        return CIcons::pixmapByIndex(getIndex(), this->m_rotateDegrees);
+        return static_cast<CIcons::IconIndex>(this->m_index);
     }
 
-    /*
-     * Icon
-     */
+    bool CIcon::isIndexBased() const
+    {
+        return m_index >= 0 && m_index < static_cast<int>(CIcons::IconIsGenerated);
+    }
+
+    bool CIcon::isGenerated() const
+    {
+        return getIndex() == CIcons::IconIsGenerated;
+    }
+
+    bool CIcon::isFileBased() const
+    {
+        return getIndex() == CIcons::IconIsFile;
+    }
+
+    bool CIcon::isSet() const
+    {
+        return (this->m_index != static_cast<int>(CIcons::NotSet));
+    }
+
+    QPixmap CIcon::toPixmap() const
+    {
+        if (this->isSet())
+        {
+            if (this->isGenerated()) { return m_pixmap; }
+            if (this->isFileBased()) { return m_pixmap; }
+            return CIcons::pixmapByIndex(getIndex(), this->m_rotateDegrees);
+        }
+        else
+        {
+            return CIcons::pixmapByIndex(getIndex());
+        }
+    }
+
     QIcon CIcon::toQIcon() const
     {
         return QIcon(toPixmap());
     }
 
-    /*
-     * Rotate
-     */
     void CIcon::setRotation(const PhysicalQuantities::CAngle &rotate)
     {
         this->m_rotateDegrees = rotate.valueRounded(PhysicalQuantities::CAngleUnit::deg(), 0);
     }
 
-    /*
-     * String
-     */
     QString CIcon::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
@@ -60,5 +92,4 @@ namespace BlackMisc
         Q_ASSERT_X(index >= 0 && index < CIconList::allIcons().size(), "iconForIndex", "wrong index");
         return CIconList::allIcons()[index];
     }
-
 } // namespace

@@ -11,6 +11,7 @@
 #include <QImage>
 #include <QIcon>
 #include <QPainter>
+#include <QCoreApplication>
 
 namespace BlackMisc
 {
@@ -36,6 +37,24 @@ namespace BlackMisc
     const QPixmap &CIcons::close16()
     {
         static const QPixmap pm(":/diagona/icons/diagona/icons/cross-button.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::color16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/color.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::colorPicker16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/ui-color-picker.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::colorSwatch16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/color-swatches.png");
         return pm;
     }
 
@@ -189,6 +208,12 @@ namespace BlackMisc
         return pm;
     }
 
+    const QPixmap &CIcons::paintCan16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/paintcan.png");
+        return pm;
+    }
+
     const QPixmap &CIcons::plugin16()
     {
         static const QPixmap pm(":/pastel/icons/pastel/16/plugin.png");
@@ -204,6 +229,12 @@ namespace BlackMisc
     const QPixmap &CIcons::dockBottom16()
     {
         static const QPixmap pm(":/diagona/icons/diagona/icons/application-dock-270.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::dragAndDrop16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/document-insert.png");
         return pm;
     }
 
@@ -327,6 +358,78 @@ namespace BlackMisc
         return pm;
     }
 
+    const QPixmap &CIcons::database16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/database.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::databaseAdd16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/database-add.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::databaseConnect16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/database-conenct.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::databaseDelete16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/database-delete.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::databaseEdit16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/database-edit.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::databaseError16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/database-error.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::databaseKey16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/database-key.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::databaseTable16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/database-table.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::preloader64()
+    {
+        static const QPixmap pm(":/preloaders/icons/preloaders/FillingRing64.gif");
+        return pm;
+    }
+
+    const QPixmap &CIcons::preloader32()
+    {
+        static const QPixmap pm(":/preloaders/icons/preloaders/FillingRing32.gif");
+        return pm;
+    }
+
+    const QPixmap &CIcons::preloader16()
+    {
+        static const QPixmap pm(":/preloaders/icons/preloaders/FillingRing16.gif");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swift16()
+    {
+        static const QPixmap pm(swift48().scaled(16, 16));
+        return pm;
+    }
+
     const QPixmap &CIcons::swift24()
     {
         static const QPixmap pm(":/own/icons/own/swift/swift24.png");
@@ -351,6 +454,12 @@ namespace BlackMisc
         return pm;
     }
 
+    const QPixmap &CIcons::swiftDatabase16()
+    {
+        static const QPixmap pm(":/own/icons/own/swift/swiftDatabase16.png");
+        return pm;
+    }
+
     const QPixmap &CIcons::swiftDatabase24()
     {
         static const QPixmap pm(":/own/icons/own/swift/swiftDatabase24.png");
@@ -360,6 +469,12 @@ namespace BlackMisc
     const QPixmap &CIcons::swiftDatabase48()
     {
         static const QPixmap pm(":/own/icons/own/swift/swiftDatabase48.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftNova16()
+    {
+        static const QPixmap pm(swiftNova48().scaled(16, 16));
         return pm;
     }
 
@@ -403,7 +518,7 @@ namespace BlackMisc
         return radar16();
     }
 
-    const QPixmap &CIcons::appAircrafts16()
+    const QPixmap &CIcons::appAircraft16()
     {
         return paperPlane16();
     }
@@ -426,6 +541,46 @@ namespace BlackMisc
     const QPixmap &CIcons::appVoiceRooms16()
     {
         return tableRelationship16();
+    }
+
+    const QPixmap &CIcons::appDatabase16()
+    {
+        return database16();
+    }
+
+    const QPixmap &CIcons::appAircraftIcao16()
+    {
+        return paperPlane16();
+    }
+
+    const QPixmap &CIcons::appAirlineIcao16()
+    {
+        return paperPlane16();
+    }
+
+    const QPixmap &CIcons::appLiveries16()
+    {
+        return paintCan16();
+    }
+
+    const QPixmap &CIcons::appModels16()
+    {
+        return appMappings16();
+    }
+
+    const QPixmap &CIcons::appCountries16()
+    {
+        return globe16();
+    }
+
+    const QPixmap &CIcons::appDistributors16()
+    {
+        return users16();
+    }
+
+    const QPixmap &CIcons::appDbStash16()
+    {
+        return databaseAdd16();
     }
 
     const QPixmap &CIcons::roleC1()
@@ -624,127 +779,301 @@ namespace BlackMisc
     {
         switch (index)
         {
-        case ApplicationIconAircrafts: return appAircrafts16();
-        case ApplicationIconAtc: return appAtc16();
-        case ApplicationIconAudio: return appAudio16();
-        case ApplicationIconCockpit: return appCockpit16();
-        case ApplicationIconFlightPlan: return appFlightPlan16();
-        case ApplicationIconLog: return appLog16();
-        case ApplicationIconMappings: return appMappings16();
-        case ApplicationIconSettings: return appSettings16();
-        case ApplicationIconSimulator: return appSimulator16();
-        case ApplicationIconTextMessages: return appTextMessages16();
-        case ApplicationIconWeather: return appWeather16();
-        case AviationAtis: return atis();
-        case AviationAttitudeIndicator: return attitudeIndicator16();
-        case AviationMetar: return metar();
-        case GeoPosition: return geoPosition16();
-        case NetworkCapabilityTextOnly: return capabilityTextOnly();
-        case NetworkCapabilityUnknown: return capabilityUnknown();
-        case NetworkCapabilityVoice: return capabilityVoice();
-        case NetworkCapabilityVoiceBackground: return capabilityVoiceBackground();
-        case NetworkCapabilityVoiceReceiveOnly: return capabilityVoiceReceiveOnly();
-        case NetworkCapabilityVoiceReceiveOnlyBackground: return capabilityVoiceReceiveOnlyBackground();
-        case NetworkRoleApproach: return roleApproach();
-        case NetworkRoleC1: return roleC1();
-        case NetworkRoleC3: return roleC3();
-        case NetworkRoleCenter: return roleCenter();
-        case NetworkRoleDelivery: return roleDelivery();
-        case NetworkRoleFss: return roleFss();
-        case NetworkRoleGround: return roleGround();
-        case NetworkRoleI1: return roleI1();
-        case NetworkRoleI3: return roleI3();
-        case NetworkRoleMnt: return roleMnt();
-        case NetworkRoleObs: return roleObs();
-        case NetworkRolePilot: return rolePilot();
-        case NetworkRoleS1: return roleS1();
-        case NetworkRoleS2: return roleS2();
-        case NetworkRoleS3: return roleS3();
-        case NetworkRoleSup: return roleSup();
-        case NetworkRoleTower: return roleTower();
-        case NetworkRoleUnknown: return roleUnknown();
-        case NetworkVatsimLogo: return vatsimLogo16();
-        case NetworkVatsimLogoWhite: return vatsimLogoWhite16();
-        case NotSet: return empty();
-        case StandardIconAppAircrafts16: return appAircrafts16();
-        case StandardIconAppAtc16: return appAtc16();
-        case StandardIconAppFlightPlan16: return appFlightPlan16();
-        case StandardIconAppLog16: return appLog16();
-        case StandardIconAppMappings16: return appMappings16();
-        case StandardIconAppSettings16: return appSettings16();
-        case StandardIconAppSimulator16: return appSimulator16();
-        case StandardIconAppTextMessages16: return appTextMessages16();
-        case StandardIconAppUsers16: return appUsers16();
-        case StandardIconAppWeather16: return appWeather16();
-        case StandardIconArrowMediumEast16: return arrowMediumEast16();
-        case StandardIconArrowMediumNorth16: return arrowMediumNorth16();
-        case StandardIconArrowMediumSouth16: return arrowMediumSouth16();
-        case StandardIconArrowMediumWest16: return arrowMediumWest16();
-        case StandardIconClose16: return close16();
-        case StandardIconCross16: return cross16();
-        case StandardIconCrossCircle16: return crossCircle16();
-        case StandardIconCrossSmall16: return crossSmall16();
-        case StandardIconCrossWhite16: return crossWhite16();
-        case StandardIconDelete16: return delete16();
-        case StandardIconDockBottom16: return dockBottom16();
-        case StandardIconDockTop16: return dockTop16();
-        case StandardIconEmpty16: return empty16();
-        case StandardIconEmpty: return empty();
-        case StandardIconError16: return error16();
-        case StandardIconFloatAll16: return floatAll16();
-        case StandardIconFloatOne16: return floatOne16();
-        case StandardIconGlobe16: return globe16();
-        case StandardIconHeadingOne16: return headingOne16();
-        case StandardIconInfo16: return info16();
-        case StandardIconJoystick16: return joystick16();
-        case StandardIconMonitorError16: return monitorError16();
-        case StandardIconPaperPlane16: return paperPlane16();
-        case StandardIconPlugin16: return plugin16();
-        case StandardIconRadar16: return radar16();
-        case StandardIconRadio16: return radio16();
-        case StandardIconRefresh16: return refresh16();
-        case StandardIconResize16: return resize16();
-        case StandardIconResizeHorizontal16: return resizeHorizontal16();
-        case StandardIconResizeVertical16: return resizeVertical16();
-        case StandardIconSpeakerNetwork16: return speakerNetwork16();
-        case StandardIconStatusBar16: return statusBar16();
-        case StandardIconSwift24: return swift24();
-        case StandardIconSwift48: return swift48();
-        case StandardIconSwiftNova24: return swiftNova24();
-        case StandardIconSwiftNova48: return swiftNova48();
-        case StandardIconTableRelationship16: return tableRelationship16();
-        case StandardIconTableSheet16: return tableSheet16();
-        case StandardIconText16: return text16();
-        case StandardIconTick16: return tick16();
-        case StandardIconTickRed16: return tickRed16();
-        case StandardIconTickSmall16: return tickSmall16();
-        case StandardIconTickWhite16: return tickWhite16();
-        case StandardIconUnknown16: return unknown16();
-        case StandardIconUser16: return user16();
-        case StandardIconUsers16: return users16();
-        case StandardIconViewMulticolumn16: return viewMultiColumn();
-        case StandardIconViewTile16: return viewTile();
-        case StandardIconVolumeHigh16: return volumeHigh16();
-        case StandardIconVolumeLow16: return volumeLow16();
-        case StandardIconVolumeMuted16: return volumeMuted16();
-        case StandardIconWarning16: return warning16();
-        case StandardIconWeatherCloudy16: return weatherCloudy16();
-        case StandardIconWrench16: return wrench16();
-        default: return empty();
+        case ApplicationAircraft:
+            return appAircraft16();
+        case ApplicationAircraftIcao:
+            return appAircraftIcao16();
+        case ApplicationAirlineIcao:
+            return appAirlineIcao16();
+        case ApplicationAtc:
+            return appAtc16();
+        case ApplicationAudio:
+            return appAudio16();
+        case ApplicationCockpit:
+            return appCockpit16();
+        case ApplicationCountries:
+            return appCountries16();
+        case ApplicationDatabase:
+            return appDatabase16();
+        case ApplicationDbStash:
+            return appDbStash16();
+        case ApplicationDistributors:
+            return appDistributors16();
+        case ApplicationFlightPlan:
+            return appFlightPlan16();
+        case ApplicationLiveries:
+            return appLiveries16();
+        case ApplicationLog:
+            return appLog16();
+        case ApplicationMappings:
+            return appMappings16();
+        case ApplicationModels:
+            return appModels16();
+        case ApplicationSettings:
+            return appSettings16();
+        case ApplicationSimulator:
+            return appSimulator16();
+        case ApplicationTextMessages:
+            return appTextMessages16();
+        case ApplicationWeather:
+            return appWeather16();
+        case AviationAtis:
+            return atis();
+        case AviationAttitudeIndicator:
+            return attitudeIndicator16();
+        case AviationMetar:
+            return metar();
+        case GeoPosition:
+            return geoPosition16();
+        case NetworkCapabilityTextOnly:
+            return capabilityTextOnly();
+        case NetworkCapabilityUnknown:
+            return capabilityUnknown();
+        case NetworkCapabilityVoice:
+            return capabilityVoice();
+        case NetworkCapabilityVoiceBackground:
+            return capabilityVoiceBackground();
+        case NetworkCapabilityVoiceReceiveOnly:
+            return capabilityVoiceReceiveOnly();
+        case NetworkCapabilityVoiceReceiveOnlyBackground:
+            return capabilityVoiceReceiveOnlyBackground();
+        case NetworkRoleApproach:
+            return roleApproach();
+        case NetworkRoleC1:
+            return roleC1();
+        case NetworkRoleC3:
+            return roleC3();
+        case NetworkRoleCenter:
+            return roleCenter();
+        case NetworkRoleDelivery:
+            return roleDelivery();
+        case NetworkRoleFss:
+            return roleFss();
+        case NetworkRoleGround:
+            return roleGround();
+        case NetworkRoleI1:
+            return roleI1();
+        case NetworkRoleI3:
+            return roleI3();
+        case NetworkRoleMnt:
+            return roleMnt();
+        case NetworkRoleObs:
+            return roleObs();
+        case NetworkRolePilot:
+            return rolePilot();
+        case NetworkRoleS1:
+            return roleS1();
+        case NetworkRoleS2:
+            return roleS2();
+        case NetworkRoleS3:
+            return roleS3();
+        case NetworkRoleSup:
+            return roleSup();
+        case NetworkRoleTower:
+            return roleTower();
+        case NetworkRoleUnknown:
+            return roleUnknown();
+        case NetworkVatsimLogo:
+            return vatsimLogo16();
+        case NetworkVatsimLogoWhite:
+            return vatsimLogoWhite16();
+        case NotSet:
+            return empty();
+        case StandardIconAppAircrafts16:
+            return appAircraft16();
+        case StandardIconAppAtc16:
+            return appAtc16();
+        case StandardIconAppFlightPlan16:
+            return appFlightPlan16();
+        case StandardIconAppLog16:
+            return appLog16();
+        case StandardIconAppMappings16:
+            return appMappings16();
+        case StandardIconAppSettings16:
+            return appSettings16();
+        case StandardIconAppSimulator16:
+            return appSimulator16();
+        case StandardIconAppTextMessages16:
+            return appTextMessages16();
+        case StandardIconAppUsers16:
+            return appUsers16();
+        case StandardIconAppWeather16:
+            return appWeather16();
+        case StandardIconArrowMediumEast16:
+            return arrowMediumEast16();
+        case StandardIconArrowMediumNorth16:
+            return arrowMediumNorth16();
+        case StandardIconArrowMediumSouth16:
+            return arrowMediumSouth16();
+        case StandardIconArrowMediumWest16:
+            return arrowMediumWest16();
+        case StandardIconClose16:
+            return close16();
+        case StandardIconColor16:
+            return color16();
+        case StandardIconColorPicker16:
+            return colorPicker16();
+        case StandardIconColorSwatch16:
+            return colorSwatch16();
+        case StandardIconCross16:
+            return cross16();
+        case StandardIconCrossCircle16:
+            return crossCircle16();
+        case StandardIconCrossSmall16:
+            return crossSmall16();
+        case StandardIconCrossWhite16:
+            return crossWhite16();
+        case StandardIconDatabase16:
+            return database16();
+        case StandardIconDatabaseAdd16:
+            return databaseAdd16();
+        case StandardIconDatabaseConnect16:
+            return databaseConnect16();
+        case StandardIconDatabaseDelete16:
+            return databaseDelete16();
+        case StandardIconDatabaseEdit16:
+            return databaseEdit16();
+        case StandardIconDatabaseError16:
+            return databaseError16();
+        case StandardIconDatabaseKey16:
+            return databaseKey16();
+        case StandardIconDatabaseTable16:
+            return databaseTable16();
+        case StandardIconDelete16:
+            return delete16();
+        case StandardIconDockBottom16:
+            return dockBottom16();
+        case StandardIconDockTop16:
+            return dockTop16();
+        case StandardIconDragAndDrop16:
+            return dragAndDrop16();
+        case StandardIconEmpty16:
+            return empty16();
+        case StandardIconEmpty:
+            return empty();
+        case StandardIconError16:
+            return error16();
+        case StandardIconFloatAll16:
+            return floatAll16();
+        case StandardIconFloatOne16:
+            return floatOne16();
+        case StandardIconGlobe16:
+            return globe16();
+        case StandardIconHeadingOne16:
+            return headingOne16();
+        case StandardIconInfo16:
+            return info16();
+        case StandardIconJoystick16:
+            return joystick16();
+        case StandardIconMonitorError16:
+            return monitorError16();
+        case StandardIconPaperPlane16:
+            return paperPlane16();
+        case StandardIconPaintCan16:
+            return paintCan16();
+        case StandardIconPlugin16:
+            return plugin16();
+        case StandardIconRadar16:
+            return radar16();
+        case StandardIconRadio16:
+            return radio16();
+        case StandardIconRefresh16:
+            return refresh16();
+        case StandardIconResize16:
+            return resize16();
+        case StandardIconResizeHorizontal16:
+            return resizeHorizontal16();
+        case StandardIconResizeVertical16:
+            return resizeVertical16();
+        case StandardIconSpeakerNetwork16:
+            return speakerNetwork16();
+        case StandardIconStatusBar16:
+            return statusBar16();
+        case StandardIconTableRelationship16:
+            return tableRelationship16();
+        case StandardIconTableSheet16:
+            return tableSheet16();
+        case StandardIconText16:
+            return text16();
+        case StandardIconTick16:
+            return tick16();
+        case StandardIconTickRed16:
+            return tickRed16();
+        case StandardIconTickSmall16:
+            return tickSmall16();
+        case StandardIconTickWhite16:
+            return tickWhite16();
+        case StandardIconUnknown16:
+            return unknown16();
+        case StandardIconUser16:
+            return user16();
+        case StandardIconUsers16:
+            return users16();
+        case StandardIconViewMulticolumn16:
+            return viewMultiColumn();
+        case StandardIconViewTile16:
+            return viewTile();
+        case StandardIconVolumeHigh16:
+            return volumeHigh16();
+        case StandardIconVolumeLow16:
+            return volumeLow16();
+        case StandardIconVolumeMuted16:
+            return volumeMuted16();
+        case StandardIconWarning16:
+            return warning16();
+        case StandardIconWeatherCloudy16:
+            return weatherCloudy16();
+        case StandardIconWrench16:
+            return wrench16();
+        case Swift16:
+            return swift16();
+        case Swift24:
+            return swift24();
+        case Swift48:
+            return swift48();
+        case SwiftNova16:
+            return swiftNova16();
+        case SwiftNova24:
+            return swiftNova24();
+        case SwiftNova48:
+            return swiftNova48();
+        case SwiftDatabase16:
+            return swiftDatabase16();
+        case SwiftDatabase24:
+            return swiftDatabase24();
+        case SwiftDatabase48:
+            return swiftDatabase48();
+        default:
+            return empty();
         }
     }
 
     QPixmap CIcons::pixmapByIndex(CIcons::IconIndex index, int rotateDegrees)
     {
-        const QPixmap original = pixmapByIndex(index);
-        if (rotateDegrees == 0) return original;
-        QMatrix rm;
-        rm.rotate(rotateDegrees);
-        QPixmap rotated = original.transformed(rm);
-        int xoffset = (rotated.width() - original.width()) / 2;
-        int yoffset = (rotated.height() - original.height()) / 2;
-        rotated = rotated.copy(xoffset, yoffset, original.width(), original.height());
-        return rotated;
+        if (rotateDegrees == 0) { return pixmapByIndex(index); }
+        return rotate(rotateDegrees, pixmapByIndex(index));
+    }
+
+    const QPixmap &CIcons::pixmapByResourceFileName(const QString &fileName)
+    {
+        Q_ASSERT_X(!fileName.isEmpty(), Q_FUNC_INFO, "missing filename");
+        if (!getResourceFileCache().contains(fileName))
+        {
+            QString path = fileName.contains("resources") ?
+                           QCoreApplication::applicationDirPath().append("/").append(fileName) :
+                           QCoreApplication::applicationDirPath().append("/resources/").append(fileName);
+            QPixmap pm;
+            bool s = pm.load(path);
+            if (s)
+            {
+                getResourceFileCache().insert(fileName, pm);
+            }
+            else
+            {
+                getResourceFileCache().insert(fileName, CIcons::empty());
+            }
+        }
+        return getResourceFileCache()[fileName];
     }
 
     QImage CIcons::changeImageBackgroundColor(const QImage &imgSource, Qt::GlobalColor backgroundColor)
@@ -755,6 +1084,23 @@ namespace BlackMisc
         p.setCompositionMode(QPainter::CompositionMode_SourceAtop);
         p.drawImage(0, 0, imgSource);
         return destBackgroundImg;
+    }
+
+    QPixmap CIcons::rotate(int rotateDegrees, const QPixmap &original)
+    {
+        QMatrix rm;
+        rm.rotate(rotateDegrees);
+        QPixmap rotated = original.transformed(rm);
+        int xoffset = (rotated.width() - original.width()) / 2;
+        int yoffset = (rotated.height() - original.height()) / 2;
+        rotated = rotated.copy(xoffset, yoffset, original.width(), original.height());
+        return rotated;
+    }
+
+    QMap<QString, QPixmap> &CIcons::getResourceFileCache()
+    {
+        static QMap<QString, QPixmap> cache;
+        return cache;
     }
 
     QPixmap CIcons::changeResourceBackgroundColor(const QString &resource, Qt::GlobalColor backgroundColor)

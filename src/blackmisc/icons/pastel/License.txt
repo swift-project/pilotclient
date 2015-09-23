@@ -1,0 +1,13 @@
+License
+
+The Pastel SVG icon set Created by Michael Buckley is licensed under the
+
+Creative Commons Attribution NonCommercial Share Alike 4.0 http://creativecommons.org/licenses/by-nc-sa/4.0/
+
+However additionally I would kindly ask that:
+
+For non commercial use a link back to the home page is very appreciated but in no way required.
+If you put Pastel SVG package on another web host in modified form that you provide a link back to the Pastel SVG home page as part of the attribution. http://codefisher.org/pastel-svg/
+For those that want to use the icons commercially, I ask that you first make a donation and then you may use it under following license.
+
+Creative Commons Attribution Share Alike 4.0 http://creativecommons.org/licenses/by-sa/4.0/

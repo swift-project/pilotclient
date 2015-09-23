@@ -71,6 +71,16 @@
         <file>icons/pastel/16/lock-edit.png</file>
         <file>icons/pastel/16/lock-go.png</file>
         <file>icons/pastel/16/lock-open.png</file>
+        <file>icons/pastel/16/database.png</file>
+        <file>icons/pastel/16/database-add.png</file>
+        <file>icons/pastel/16/database-connect.png</file>
+        <file>icons/pastel/16/database-delete.png</file>
+        <file>icons/pastel/16/database-edit.png</file>
+        <file>icons/pastel/16/database-error.png</file>
+        <file>icons/pastel/16/database-key.png</file>
+        <file>icons/pastel/16/database-lightning.png</file>
+        <file>icons/pastel/16/database-table.png</file>
+        <file>icons/pastel/16/paintcan.png</file>
     </qresource>
     <qresource prefix="/vatsim">
         <file>icons/vatsim/C1.png</file>
@@ -312,6 +322,38 @@
         <file>icons/diagona/icons/toggle-expand.png</file>
         <file>icons/diagona/icons/toggle-small.png</file>
         <file>icons/diagona/icons/toggle-small-expand.png</file>
+        <file>icons/diagona/icons/color.png</file>
+        <file>icons/diagona/icons/color-adjustment.png</file>
+        <file>icons/diagona/icons/color-adjustment-green.png</file>
+        <file>icons/diagona/icons/color-adjustment-red.png</file>
+        <file>icons/diagona/icons/color--arrow.png</file>
+        <file>icons/diagona/icons/color--exclamation.png</file>
+        <file>icons/diagona/icons/color--minus.png</file>
+        <file>icons/diagona/icons/color--pencil.png</file>
+        <file>icons/diagona/icons/color--plus.png</file>
+        <file>icons/diagona/icons/color-small.png</file>
+        <file>icons/diagona/icons/color-swatch.png</file>
+        <file>icons/diagona/icons/color-swatches.png</file>
+        <file>icons/diagona/icons/color-swatch-small.png</file>
+        <file>icons/diagona/icons/ui-color-picker.png</file>
+        <file>icons/diagona/icons/ui-color-picker-default.png</file>
+        <file>icons/diagona/icons/ui-color-picker-switch.png</file>
+        <file>icons/diagona/icons/ui-color-picker-transparent.png</file>
+        <file>icons/diagona/icons/blue-document-hf-insert.png</file>
+        <file>icons/diagona/icons/blue-document-hf-insert-footer.png</file>
+        <file>icons/diagona/icons/blue-document-insert.png</file>
+        <file>icons/diagona/icons/calendar-insert.png</file>
+        <file>icons/diagona/icons/database-insert.png</file>
+        <file>icons/diagona/icons/document-hf-insert.png</file>
+        <file>icons/diagona/icons/document-hf-insert-footer.png</file>
+        <file>icons/diagona/icons/document-insert.png</file>
+        <file>icons/diagona/icons/node-insert.png</file>
+        <file>icons/diagona/icons/node-insert-child.png</file>
+        <file>icons/diagona/icons/node-insert-next.png</file>
+        <file>icons/diagona/icons/node-insert-previous.png</file>
+        <file>icons/diagona/icons/table-insert.png</file>
+        <file>icons/diagona/icons/table-insert-column.png</file>
+        <file>icons/diagona/icons/table-insert-row.png</file>
     </qresource>
     <qresource prefix="/own">
         <file>icons/own/app.jpg</file>
@@ -342,6 +384,7 @@
         <file>icons/own/swift/swift64Database.png</file>
         <file>icons/own/swift/swift128Database.png</file>
         <file>icons/own/swift/swift24Database.png</file>
+        <file>icons/own/swift/swift16Database.png</file>
     </qresource>
     <qresource prefix="/qled">
         <file>icons/qled/circle_black.svg</file>
@@ -385,5 +428,13 @@
     <qresource prefix="/textures">
         <file>icons/textures/texture-inner.jpg</file>
         <file>icons/textures/texture-outer.jpg</file>
+    </qresource>
+    <qresource prefix="/preloaders">
+        <file>icons/preloaders/FillingRing64.gif</file>
+        <file>icons/preloaders/FloatingRays64.gif</file>
+        <file>icons/preloaders/FillingRing16.gif</file>
+        <file>icons/preloaders/FillingRing32.gif</file>
+        <file>icons/preloaders/FloatingRays16.gif</file>
+        <file>icons/preloaders/FloatingRays32.gif</file>
     </qresource>
 </RCC>

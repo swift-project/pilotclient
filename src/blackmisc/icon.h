@@ -53,8 +53,8 @@ namespace BlackMisc
          * the derived class uses this macro to disambiguate the inherited members.
          */
 #       define BLACKMISC_DECLARE_USING_MIXIN_ICON(DERIVED)      \
-            using ::BlackMisc::Mixin::Icon<DERIVED>::toIcon;    \
-            using ::BlackMisc::Mixin::Icon<DERIVED>::toPixmap;
+    using ::BlackMisc::Mixin::Icon<DERIVED>::toIcon;    \
+    using ::BlackMisc::Mixin::Icon<DERIVED>::toPixmap;
     } // Mixin
 
     //! Value object for icons. An icon is stored in the global icon repository and
@@ -75,23 +75,37 @@ namespace BlackMisc
         CIcon() = default;
 
         //! Constructor.
-        CIcon(CIcons::IconIndex index, const QString &descriptiveText) :
-            m_index(static_cast<int>(index)), m_descriptiveText(descriptiveText) {}
+        CIcon(CIcons::IconIndex index, const QString &descriptiveText);
+
+        //! Constructor for generated icon
+        CIcon(const QPixmap &pixmap, const QString &descriptiveText);
+
+        //! Construcror for file icons
+        CIcon(const QString &resourceFilePath, const QString &descriptiveText);
 
         //! Get descriptive text
         const QString &getDescriptiveText() const { return this->m_descriptiveText; }
 
         //! Index
-        CIcons::IconIndex getIndex() const { return static_cast< CIcons::IconIndex>(this->m_index);}
+        CIcons::IconIndex getIndex() const;
+
+        //! Index based
+        bool isIndexBased() const;
+
+        //! Generated icon
+        bool isGenerated() const;
+
+        //! File based?
+        bool isFileBased() const;
+
+        //! Icon set?
+        bool isSet() const;
 
         //! Corresponding pixmap
         QPixmap toPixmap() const;
 
         //! A QIcon
         QIcon toQIcon() const;
-
-        //! Icon set?
-        bool isSet() const { return (this->m_index != static_cast<int>(CIcons::NotSet));}
 
         //! Rotate by n degrees
         void setRotation(int degrees) { this->m_rotateDegrees = degrees; }
@@ -117,8 +131,9 @@ namespace BlackMisc
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CIcon)
         int m_index = static_cast<int>(CIcons::NotSet);
-        int m_rotateDegrees = 0;
-        QString m_descriptiveText;
+        int m_rotateDegrees = 0;    //!< Rotation
+        QString m_descriptiveText;  //!< what does it represent?
+        QPixmap m_pixmap;           //!< Used with generated pixmaps, when not used with index
     };
 
     namespace Private
@@ -142,7 +157,12 @@ namespace BlackMisc
     }
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CIcon, (o.m_index, o.m_descriptiveText))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CIcon, (
+                                   attr(o.m_index),
+                                   attr(o.m_rotateDegrees, flags < DisabledForComparison | DisabledForHashing > ()),
+                                   attr(o.m_descriptiveText)
+                               ))
+
 Q_DECLARE_METATYPE(BlackMisc::CIcon)
 
 #endif // guard

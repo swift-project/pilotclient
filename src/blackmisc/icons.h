@@ -14,6 +14,7 @@
 
 #include "blackmiscexport.h"
 #include <QPixmap>
+#include <QMap>
 
 namespace BlackMisc
 {
@@ -29,17 +30,25 @@ namespace BlackMisc
         enum IconIndex
         {
             // !! keep indexes alphabetically sorted and in sync with CIconList
-            ApplicationIconAircrafts,
-            ApplicationIconAtc,
-            ApplicationIconAudio,
-            ApplicationIconCockpit,
-            ApplicationIconFlightPlan,
-            ApplicationIconLog,
-            ApplicationIconMappings,
-            ApplicationIconSettings,
-            ApplicationIconSimulator,
-            ApplicationIconTextMessages,
-            ApplicationIconWeather,
+            ApplicationAircraft = 0,
+            ApplicationAircraftIcao,
+            ApplicationAirlineIcao,
+            ApplicationAtc,
+            ApplicationAudio,
+            ApplicationCockpit,
+            ApplicationCountries,
+            ApplicationDatabase,
+            ApplicationDbStash,
+            ApplicationDistributors,
+            ApplicationFlightPlan,
+            ApplicationLiveries,
+            ApplicationLog,
+            ApplicationMappings,
+            ApplicationModels,
+            ApplicationSettings,
+            ApplicationSimulator,
+            ApplicationTextMessages,
+            ApplicationWeather,
             AviationAttitudeIndicator,
             AviationAtis,
             AviationMetar,
@@ -86,13 +95,25 @@ namespace BlackMisc
             StandardIconArrowMediumSouth16,
             StandardIconArrowMediumWest16,
             StandardIconClose16,
+            StandardIconColor16,
+            StandardIconColorPicker16,
+            StandardIconColorSwatch16,
             StandardIconCross16,
             StandardIconCrossCircle16,
             StandardIconCrossSmall16,
             StandardIconCrossWhite16,
+            StandardIconDatabase16,
+            StandardIconDatabaseAdd16,
+            StandardIconDatabaseConnect16,
+            StandardIconDatabaseDelete16,
+            StandardIconDatabaseEdit16,
+            StandardIconDatabaseError16,
+            StandardIconDatabaseKey16,
+            StandardIconDatabaseTable16,
             StandardIconDelete16,
             StandardIconDockBottom16,
             StandardIconDockTop16,
+            StandardIconDragAndDrop16,
             StandardIconEmpty,
             StandardIconEmpty16,
             StandardIconError16,
@@ -106,6 +127,7 @@ namespace BlackMisc
             StandardIconLockOpen16,
             StandardIconMonitorError16,
             StandardIconPaperPlane16,
+            StandardIconPaintCan16,
             StandardIconPlugin16,
             StandardIconRadar16,
             StandardIconRadio16,
@@ -115,12 +137,6 @@ namespace BlackMisc
             StandardIconResizeVertical16,
             StandardIconSpeakerNetwork16,
             StandardIconStatusBar16,
-            StandardIconSwift24,
-            StandardIconSwift48,
-            StandardIconSwiftDatabase24,
-            StandardIconSwiftDatabase48,
-            StandardIconSwiftNova24,
-            StandardIconSwiftNova48,
             StandardIconTableRelationship16,
             StandardIconTableSheet16,
             StandardIconText16,
@@ -138,7 +154,26 @@ namespace BlackMisc
             StandardIconVolumeMuted16,
             StandardIconWarning16,
             StandardIconWeatherCloudy16,
-            StandardIconWrench16
+            StandardIconWrench16,
+            Swift16,
+            Swift24,
+            Swift48,
+            SwiftDatabase16,
+            SwiftDatabase24,
+            SwiftDatabase48,
+            SwiftNova16,
+            SwiftNova24,
+            SwiftNova48,
+
+            // ---------------------------
+            // Icon is not from resources, but generated at runtime
+            // ---------------------------
+            IconIsGenerated,
+
+            // ---------------------------
+            // Icon is not from resources, but a file
+            // ---------------------------
+            IconIsFile
         };
 
         // -------------------------------------------------------------
@@ -156,6 +191,15 @@ namespace BlackMisc
 
         //! Close
         static const QPixmap &close16();
+
+        //! Color
+        static const QPixmap &color16();
+
+        //! Color picker
+        static const QPixmap &colorPicker16();
+
+        //! Color swatch
+        static const QPixmap &colorSwatch16();
 
         //! Resize
         static const QPixmap &resize16();
@@ -232,6 +276,9 @@ namespace BlackMisc
         //! Lock
         static const QPixmap &lockClosed16();
 
+        //! Paint can
+        static const QPixmap &paintCan16();
+
         //! Plugin
         static const QPixmap &plugin16();
 
@@ -240,6 +287,9 @@ namespace BlackMisc
 
         //! Docking
         static const QPixmap &dockBottom16();
+
+        //! Drag and drop
+        static const QPixmap &dragAndDrop16();
 
         //! Float all
         static const QPixmap &floatAll16();
@@ -301,11 +351,62 @@ namespace BlackMisc
         //! Arrow
         static const QPixmap &arrowMediumWest16();
 
+        // --------------------------------------------------
+        // -- Database
+        // --------------------------------------------------
+
+        //! Database
+        static const QPixmap &database16();
+
+        //! Database add
+        static const QPixmap &databaseAdd16();
+
+        //! Database connect
+        static const QPixmap &databaseConnect16();
+
+        //! Database delete
+        static const QPixmap &databaseDelete16();
+
+        //! Database edit
+        static const QPixmap &databaseEdit16();
+
+        //! Database error
+        static const QPixmap &databaseError16();
+
+        //! Database key
+        static const QPixmap &databaseKey16();
+
+        //! Database table
+        static const QPixmap &databaseTable16();
+
+        // --------------------------------------------------
+        // -- Preloader icons
+        // --------------------------------------------------
+
+        //! Preloader
+        static const QPixmap &preloader64();
+
+        //! Preloader
+        static const QPixmap &preloader32();
+
+        //! Preloader
+        static const QPixmap &preloader16();
+
+        // --------------------------------------------------
+        // -- swift
+        // --------------------------------------------------
+
+        //! swift icon
+        static const QPixmap &swift16();
+
         //! swift icon
         static const QPixmap &swift24();
 
         //! swift icon
         static const QPixmap &swift48();
+
+        //! swift icon / database
+        static const QPixmap &swiftDatabase16();
 
         //! swift icon / database
         static const QPixmap &swiftDatabase24();
@@ -314,10 +415,17 @@ namespace BlackMisc
         static const QPixmap &swiftDatabase48();
 
         //! swift icon (nova)
+        static const QPixmap &swiftNova16();
+
+        //! swift icon (nova)
         static const QPixmap &swiftNova24();
 
         //! swift icon (nova)
         static const QPixmap &swiftNova48();
+
+        // --------------------------------------------------
+        // -- application icons
+        // --------------------------------------------------
 
         //! Application weather
         static const QPixmap &appWeather16();
@@ -344,7 +452,7 @@ namespace BlackMisc
         static const QPixmap &appAtc16();
 
         //! Application aircrafts
-        static const QPixmap &appAircrafts16();
+        static const QPixmap &appAircraft16();
 
         //! Application mappings
         static const QPixmap &appMappings16();
@@ -357,6 +465,30 @@ namespace BlackMisc
 
         //! Voice rooms
         static const QPixmap &appVoiceRooms16();
+
+        //! App.database
+        static const QPixmap &appDatabase16();
+
+        //! Aircraft ICAO
+        static const QPixmap &appAircraftIcao16();
+
+        //! Airline ICAO
+        static const QPixmap &appAirlineIcao16();
+
+        //! Liveries
+        static const QPixmap &appLiveries16();
+
+        //! Models
+        static const QPixmap &appModels16();
+
+        //! Countries
+        static const QPixmap &appCountries16();
+
+        //! Distributors
+        static const QPixmap &appDistributors16();
+
+        //! Stash
+        static const QPixmap &appDbStash16();
 
         // -------------------------------------------------------------
         // Network and aviation
@@ -472,6 +604,13 @@ namespace BlackMisc
         static QPixmap pixmapByIndex(IconIndex index, int rotateDegrees);
 
         // -------------------------------------------------------------
+        // By file from swift resource directory
+        // -------------------------------------------------------------
+
+        //! Pixmap by given index
+        static const QPixmap &pixmapByResourceFileName(const QString &fileName);
+
+        // -------------------------------------------------------------
         // Utility functions
         // -------------------------------------------------------------
 
@@ -483,6 +622,13 @@ namespace BlackMisc
 
         //! Change image background color
         static QImage changeImageBackgroundColor(const QImage &imgSource, Qt::GlobalColor backgroundColor);
+
+        //! Rotate by pixmap
+        static QPixmap rotate(int rotateDegrees, const QPixmap &original);
+
+    private:
+        //! File cache for the loaded
+        static QMap<QString, QPixmap> &getResourceFileCache();
     };
 }
 #endif // guard
