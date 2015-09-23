@@ -36,10 +36,14 @@ namespace BlackMisc
             //! Simulator
             enum SimulatorFlags
             {
-                None   = 0,
-                FSX    = 1 << 0,
-                FS9    = 1 << 1,
-                XP     = 1 << 2
+                None    = 0,
+                FSX     = 1 << 0,
+                FS9     = 1 << 1,
+                XPLANE  = 1 << 2,
+                P3D     = 1 << 3,
+                FSX_P3D = FSX | P3D,
+                AllMS   = FSX | FS9 | P3D,
+                All     = FSX | FS9 | XPLANE | P3D
             };
             Q_DECLARE_FLAGS(Simulator, SimulatorFlags)
 
@@ -47,13 +51,46 @@ namespace BlackMisc
             CSimulatorInfo();
 
             //! Constructor
+            CSimulatorInfo(const QString &identifierString);
+
+            //! Constructor
             CSimulatorInfo(Simulator s);
 
             //! Constructor
-            CSimulatorInfo(bool fsx, bool fs9, bool xp);
+            CSimulatorInfo(int flagsAsInt);
+
+            //! Constructor
+            CSimulatorInfo(bool fsx, bool fs9, bool xp, bool p3d);
 
             //! Unspecified simulator
             bool isUnspecified() const;
+
+            //! FSX?
+            bool fsx() const;
+
+            //! FS9?
+            bool fs9() const;
+
+            //! XPlane
+            bool xplane() const;
+
+            //! P3D?
+            bool p3d() const;
+
+            //! Any simulator?
+            bool isAnySimulator() const;
+
+            //! No simulator?
+            bool isNoSimulator() const;
+
+            //! Is all simulators?
+            bool isAllSimulators() const;
+
+            //! Matches all simulators
+            bool matchesAll(const CSimulatorInfo &otherInfo) const;
+
+            //! Matches any simulator
+            bool matchesAny(const CSimulatorInfo &otherInfo) const;
 
             //! Simulator
             Simulator getSimulator() const { return static_cast<Simulator>(m_simulator); }
@@ -61,14 +98,26 @@ namespace BlackMisc
             //! Simulator
             void setSimulator(Simulator s) { m_simulator = static_cast<int>(s); }
 
+            //! All simulators
+            void setAllSimulators() { setSimulator(All); }
+
             //! \copydoc CValueObject::convertToQString
             QString convertToQString(bool i18n = false) const;
 
+            //! Add simulator
+            void add(const CSimulatorInfo &other);
+
             //! Bool flags to enum
-            static Simulator boolToFlag(bool fsx, bool fs9, bool xp);
+            static Simulator boolToFlag(bool fsx, bool fs9, bool xp, bool p3d);
 
             //! Identifer, as provided by plugin
             static Simulator identifierToFlag(const QString &identifier);
+
+            //! All simulators
+            static const CSimulatorInfo &allSimulators();
+
+            //! Locally installed simulators
+            static const CSimulatorInfo getLocallyInstalledSimulators();
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CSimulatorInfo)
@@ -81,6 +130,7 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Simulation::CSimulatorInfo, (
                                    attr(o.m_simulator)
                                ))
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorInfo)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorInfo::SimulatorFlags)
 Q_DECLARE_OPERATORS_FOR_FLAGS(BlackMisc::Simulation::CSimulatorInfo::Simulator)
 
 #endif // guard
