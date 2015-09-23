@@ -70,9 +70,9 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateOwnCallsign"), callsign);
     }
 
-    bool CContextOwnAircraftProxy::updateOwnIcaoData(const CAircraftIcaoData &icaoData)
+    bool CContextOwnAircraftProxy::updateOwnIcaoCodes(const CAircraftIcaoCode &aircraftIcaoCode, const CAirlineIcaoCode &airlineIcaoCode)
     {
-        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateOwnIcaoData"), icaoData);
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateOwnIcaoCodes"), aircraftIcaoCode, airlineIcaoCode);
     }
 
     void CContextOwnAircraftProxy::setAudioOutputVolume(int outputVolume)

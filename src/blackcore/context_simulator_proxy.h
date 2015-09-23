@@ -74,9 +74,6 @@ namespace BlackCore
         //! \copydoc IContextSimulator::reloadInstalledModels
         virtual void reloadInstalledModels() override;
 
-        //! \copydoc IContextSimulator::getIcaoForModelString
-        virtual BlackMisc::Aviation::CAircraftIcaoData getIcaoForModelString(const QString &modelString) const override;
-
         //! \copydoc IContextSimulator::getSimulatorSetup
         virtual BlackMisc::Simulation::CSimulatorSetup getSimulatorSetup() const override;
 

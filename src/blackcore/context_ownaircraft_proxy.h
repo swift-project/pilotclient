@@ -15,7 +15,6 @@
 #include "blackcoreexport.h"
 #include "blackcore/context_ownaircraft.h"
 #include "blackmisc/genericdbusinterface.h"
-#include "blackmisc/aviation/aircrafticaodata.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 
 namespace BlackCore
@@ -56,8 +55,8 @@ namespace BlackCore
         //! \copydoc IContextOwnAircraft::updateOwnCallsign
         virtual bool updateOwnCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
 
-        //! \copydoc IContextOwnAircraft::updateOwnIcaoData
-        virtual bool updateOwnIcaoData(const BlackMisc::Aviation::CAircraftIcaoData &icaoData) override;
+        //! \copydoc IContextOwnAircraft::updateOwnIcaoCodes
+        virtual bool updateOwnIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode, const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcaoCode) override;
 
         //! \copydoc IContextOwnAircraft::setAudioOutputVolumes
         virtual void setAudioOutputVolume(int outputVolume) override;

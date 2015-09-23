@@ -91,11 +91,6 @@ namespace BlackCore
         m_dBusInterface->callDBus(QLatin1Literal("reloadInstalledModels"));
     }
 
-    CAircraftIcaoData CContextSimulatorProxy::getIcaoForModelString(const QString &modelString) const
-    {
-        return m_dBusInterface->callDBusRet<CAircraftIcaoData>(QLatin1Literal("getIcaoForModelString"), modelString);
-    }
-
     BlackMisc::Simulation::CSimulatorPluginInfo CContextSimulatorProxy::getSimulatorPluginInfo() const
     {
         return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorPluginInfo>(QLatin1Literal("getSimulatorPluginInfo"));

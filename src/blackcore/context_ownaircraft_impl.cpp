@@ -93,10 +93,9 @@ namespace BlackCore
             this->m_ownAircraft.setCallsign(CCallsign("SWIFT")); // would come from settings
 
             //! \todo Own aircraft ICAO default data, this would need to come from somewhere (mappings) -> Own callsign, plane ICAO status, model used
-            this->m_ownAircraft.setIcaoInfo(
-                CAircraftIcaoData(
-                    CAircraftIcaoCode("C172", "L1P"),
-                    CAirlineIcaoCode())
+            this->m_ownAircraft.setIcaoCodes(
+                CAircraftIcaoCode("C172", "L1P"),
+                CAirlineIcaoCode()
             );
         }
 
@@ -234,15 +233,13 @@ namespace BlackCore
         return true;
     }
 
-    bool CContextOwnAircraft::updateOwnIcaoData(const CAircraftIcaoData &icaoData)
+    bool CContextOwnAircraft::updateOwnIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode, const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcaoCode)
     {
         {
             QWriteLocker l(&m_lockAircraft);
-            if (this->m_ownAircraft.getIcaoInfo() == icaoData) { return false; }
-            this->m_ownAircraft.setIcaoInfo(icaoData);
+            return this->m_ownAircraft.setIcaoCodes(aircraftIcaoCode, airlineIcaoCode);
         }
-        emit changedIcaoData(icaoData);
-        return true;
+        emit changedAircraftIcaoCodes(aircraftIcaoCode, airlineIcaoCode);
     }
 
     bool CContextOwnAircraft::updateSelcal(const CSelcal &selcal, const CIdentifier &originator)
@@ -273,15 +270,9 @@ namespace BlackCore
 
     void CContextOwnAircraft::ps_changedSimulatorModel(const CSimulatedAircraft &ownAircraft)
     {
+        CAircraftModel model(ownAircraft.getModel());
         QWriteLocker l(&m_lockAircraft);
-        this->m_ownAircraft.setModel(ownAircraft.getModel());
-        CAircraftIcaoData icao(ownAircraft.getIcaoInfo());
-        if (icao.hasAircraftDesignator())
-        {
-            // if the model knows its ICAO, cool
-            // otherwise we ignore it and will use an ICAO elsewhere set
-            this->m_ownAircraft.setIcaoInfo(icao);
-        }
+        this->m_ownAircraft.setModel(model);
     }
 
     void CContextOwnAircraft::setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url)
@@ -312,7 +303,7 @@ namespace BlackCore
         parser.parse(commandLine);
         if (!parser.isKnownCommand()) { return false; }
 
-        CAircraft myAircraft(this->getOwnAircraft());
+        CSimulatedAircraft myAircraft(this->getOwnAircraft());
         if (parser.matchesCommand(".x", ".xpdr")  && parser.countParts() > 1)
         {
             CTransponder transponder = myAircraft.getTransponder();
@@ -352,8 +343,7 @@ namespace BlackCore
                 {
                     return false;
                 }
-                // todo RW: replace originator
-                this->updateCockpit(com1, com2, myAircraft.getTransponder(), CIdentifier("commandline"));
+                this->updateCockpit(com1, com2, myAircraft.getTransponder(), identifier());
                 return true;
             }
         }

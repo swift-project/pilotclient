@@ -34,6 +34,7 @@ namespace BlackCore
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTOWNAIRCRAFT_INTERFACENAME)
+        Q_INTERFACES(BlackMisc::Simulation::IOwnAircraftProvider)
         friend class CRuntime;
         friend class IContextOwnAircraft;
 
@@ -79,9 +80,9 @@ namespace BlackCore
         //! \ingroup ownaircraftprovider
         virtual bool updateOwnCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
 
-        //! \copydoc IContextOwnAircraft::updateOwnIcaoData
+        //! \copydoc IContextOwnAircraft::updateOwnIcaoCodes
         //! \ingroup ownaircraftprovider
-        virtual bool updateOwnIcaoData(const BlackMisc::Aviation::CAircraftIcaoData &icaoData) override;
+        virtual bool updateOwnIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode, const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcaoCode) override;
 
         //! \copydoc IContextOwnAircraft::updatePosition
         virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) override;

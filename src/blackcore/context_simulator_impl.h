@@ -15,11 +15,11 @@
 #include "blackcoreexport.h"
 #include "blackcore/context_simulator.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/worker.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
-#include "blackmisc/network/textmessagelist.h"
-#include "blackmisc/pixmap.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/network/textmessagelist.h"
+#include "blackmisc/worker.h"
+#include "blackmisc/pixmap.h"
 #include "blackmisc/variant.h"
 #include <QTimer>
 #include <QDir>
@@ -78,9 +78,6 @@ namespace BlackCore
 
         //! \copydoc IContextSimulator::reloadInstalledModels
         virtual void reloadInstalledModels() override;
-
-        //! \copydoc IContextSimulator::getIcaoForModelString
-        virtual BlackMisc::Aviation::CAircraftIcaoData getIcaoForModelString(const QString &modelString) const override;
 
         //! \copydoc IContextSimulator::setTimeSynchronization
         virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
@@ -169,7 +166,7 @@ namespace BlackCore
 
         //! Update simulator cockpit from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
         //! \remarks set by runtime, only to be used locally (not via DBus)
-        void ps_updateSimulatorCockpitFromContext(const BlackMisc::Aviation::CAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
+        void ps_updateSimulatorCockpitFromContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
 
     private:
         //! Load plugin, if required start listeners before

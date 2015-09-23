@@ -156,15 +156,6 @@ namespace BlackCore
         m_simulatorPlugin.second->reloadInstalledModels();
     }
 
-    CAircraftIcaoData CContextSimulator::getIcaoForModelString(const QString &modelString) const
-    {
-        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << modelString; }
-        if (m_simulatorPlugin.first.isUnspecified()) { return CAircraftIcaoData(); }
-
-        Q_ASSERT(m_simulatorPlugin.second);
-        return m_simulatorPlugin.second->getIcaoForModelString(modelString);
-    }
-
     bool CContextSimulator::setTimeSynchronization(bool enable, const CTime &offset)
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
@@ -542,7 +533,7 @@ namespace BlackCore
         m_simulatorPlugin.second->changeRemoteAircraftEnabled(aircraft, originator);
     }
 
-    void CContextSimulator::ps_updateSimulatorCockpitFromContext(const CAircraft &ownAircraft, const CIdentifier &originator)
+    void CContextSimulator::ps_updateSimulatorCockpitFromContext(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
     {
         // todo:
         // This was previously an assert and it should be one again in the future.
@@ -572,23 +563,15 @@ namespace BlackCore
 
     CPixmap CContextSimulator::iconForModel(const QString &modelString) const
     {
-        if (m_simulatorPlugin.first.isUnspecified())
-        {
-            return CPixmap();
-        }
-
-        Q_ASSERT(m_simulatorPlugin.second);
+        if (m_simulatorPlugin.first.isUnspecified()) { return CPixmap(); }
+        Q_ASSERT_X(m_simulatorPlugin.second, Q_FUNC_INFO, "Missing simulator");
         return m_simulatorPlugin.second->iconForModel(modelString);
     }
 
     void CContextSimulator::enableDebugMessages(bool driver, bool interpolator)
     {
-        if (m_simulatorPlugin.first.isUnspecified())
-        {
-            return;
-        }
-
-        Q_ASSERT(m_simulatorPlugin.second);
+        if (m_simulatorPlugin.first.isUnspecified()) { return; }
+        Q_ASSERT_X(m_simulatorPlugin.second, Q_FUNC_INFO, "Missing simulator");
         return m_simulatorPlugin.second->enableDebugMessages(driver, interpolator);
     }
 
@@ -606,7 +589,7 @@ namespace BlackCore
 
     void CContextSimulator::stopSimulatorListeners()
     {
-        for (const auto &info: getAvailableSimulatorPlugins())
+        for (const auto &info : getAvailableSimulatorPlugins())
         {
             ISimulatorListener *listener = m_plugins->getListener(info.getIdentifier());
             QMetaObject::invokeMethod(listener, "stop");
