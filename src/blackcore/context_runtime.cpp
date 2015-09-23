@@ -13,7 +13,6 @@
 #include "blackcore/blackcorefreefunctions.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/logmessage.h"
 #include "blackcore/context_runtime.h"
@@ -111,7 +110,6 @@ namespace BlackCore
     {
         BlackMisc::registerMetadata();
         BlackMisc::initResources();
-        BlackMisc::Simulation::registerMetadata();
         BlackCore::registerMetadata();
     }
 
