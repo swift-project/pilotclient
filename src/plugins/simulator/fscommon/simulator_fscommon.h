@@ -58,9 +58,6 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::getInstalledModels
             virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override;
 
-            //! \copydoc ISimulator::getIcaoForModelString
-            virtual BlackMisc::Aviation::CAircraftIcaoData getIcaoForModelString(const QString &modelString) const override;
-
             //! \copydoc ISimulator::reloadInstalledModels
             virtual void reloadInstalledModels() override;
 
@@ -82,12 +79,10 @@ namespace BlackSimPlugin
         protected:
             //! Constructor
             CSimulatorFsCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
-                BlackMisc::IPluginStorageProvider *pluginStorageProvider,
-                QString simRootDirectory,
-                QStringList excludedDirectories,
-                QObject *parent = nullptr);
+                               BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                               BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
+                               BlackMisc::IPluginStorageProvider *pluginStorageProvider,
+                               QObject *parent = nullptr);
 
             QString simulatorDetails;                       //!< describes version etc.
             QScopedPointer<FsCommon::CFsuipc> m_fsuipc;     //!< FSUIPC
@@ -103,7 +98,7 @@ namespace BlackSimPlugin
             BlackMisc::Aviation::CTransponder m_simTransponder; //!< cockpit xpdr state in simulator
 
             // parser / matcher
-            BlackMisc::Simulation::FsCommon::CAircraftCfgParser m_aircraftCfgParser; //!< aircraft.cfg parser
+            QScopedPointer<BlackMisc::Simulation::FsCommon::CAircraftCfgParser> m_aircraftCfgParser; //!< aircraft.cfg parser
             BlackMisc::Simulation::CAircraftMatcher m_modelMatcher; //!< Model matcher
 
             //! Set own model
@@ -111,9 +106,6 @@ namespace BlackSimPlugin
 
             //! Set own model
             void setOwnAircraftModel(const QString &modelName);
-
-            //! Reverse lookup
-            void reverseLookupIcaoData(BlackMisc::Simulation::CAircraftModel &model);
 
         protected slots:
             //! Mapper has been initialized

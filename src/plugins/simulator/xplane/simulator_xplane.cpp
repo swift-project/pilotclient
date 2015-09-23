@@ -66,7 +66,7 @@ namespace BlackSimPlugin
                                                "__A319/A319_CFM.obj __A319/DAL.png",
                                                CAircraftModel::TypeModelMatchingDefaultModel,
                                                "A319 CFM DAL",
-                                               CAircraftIcaoData(CAircraftIcaoCode("A319", "L2J"), CAirlineIcaoCode())
+                                               CAircraftIcaoCode("A319", "L2J")
                                            ));
 
             resetData();
@@ -115,7 +115,7 @@ namespace BlackSimPlugin
                 situation.setGroundspeed({ m_xplaneData.groundspeed, CSpeedUnit::m_s() });
 
                 // updates
-                updateOwnIcaoData(Aviation::CAircraftIcaoData { m_xplaneData.aircraftIcaoCode });
+                updateOwnIcaoCodes(m_xplaneData.aircraftIcaoCode, CAirlineIcaoCode());
                 updateOwnSituation(situation);
                 updateCockpit(
                     Aviation::CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() }),
@@ -171,12 +171,12 @@ namespace BlackSimPlugin
             auto liveriesIt = liveries.begin();
             for (; modelStringsIt != modelStrings.end() && icaosIt != icaos.end() && airlinesIt != airlines.end() && liveriesIt != liveries.end(); ++modelStringsIt, ++icaosIt, ++airlinesIt, ++liveriesIt)
             {
-                using namespace BlackMisc::Simulation;
-                CAircraftIcaoData icaoData {*icaosIt, *airlinesIt};
-                CLivery livery; //! \todo resolve livery
                 Q_UNUSED(liveriesIt);
-                CAircraftModel aircraftModel { *modelStringsIt, CAircraftModel::TypeModelMapping, QString(), icaoData };
-                aircraftModel.setLivery(livery);
+                using namespace BlackMisc::Simulation;
+                CAircraftIcaoCode aircraftIcao(*icaosIt);
+                CLivery livery;   //! \todo resolve livery
+                livery.setAirlineIcaoCode(CAirlineIcaoCode(*airlinesIt));
+                CAircraftModel aircraftModel(*modelStringsIt, CAircraftModel::TypeDatabaseEntry, QString(), aircraftIcao, livery);
                 m_installedModels.push_back(aircraftModel);
             }
 
@@ -246,18 +246,19 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::ps_emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao)
         {
+            Q_UNUSED(icao);
+
             //! \todo XP, change as appropriate, add resolution of own livery
             // try to set correct model and ICAO values here
             // thy show up in GUI
             CAircraftModel model(getOwnAircraftModel());
-            CAirlineIcaoCode airlineIcao(model.getAirlineIcaoCode());
+            CAirlineIcaoCode airlineIcaoCode(model.getAirlineIcaoCode());
             model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
             model.setFileName(path + "/" + filename);
-            model.setLivery(CLivery("XPLANE." + livery, airlineIcao, "XP livery", "", "", false));
-            CAircraftIcaoData aircraftIcao(icao);
+            model.setLivery(CLivery("XPLANE." + livery, airlineIcaoCode, "XP livery", "", "", false));
 
             // updates
-            updateOwnIcaoData(aircraftIcao);
+            updateOwnIcaoCodes(model.getAircraftIcaoCode(), airlineIcaoCode);
             updateOwnModel(model);
             emit ownAircraftModelChanged(getOwnAircraft());
         }
@@ -341,7 +342,7 @@ namespace BlackSimPlugin
             return getAircraftInRangeForCallsign(callsign).isRendered();
         }
 
-        bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const CIdentifier &originator)
+        bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
             Q_ASSERT(isConnected());
             if (originator == this->identifier()) { return false; }
@@ -383,9 +384,11 @@ namespace BlackSimPlugin
             this->updateAircraftModel(callsign, aircraftModel, identifier());
             CSimulatedAircraft aircraftAfterModelApplied(getAircraftInRangeForCallsign(newRemoteAircraft.getCallsign()));
 
-            CAircraftIcaoData icao = newRemoteAircraft.getIcaoInfo();
             QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
-            m_traffic->addPlane(newRemoteAircraft.getCallsign().asString(), aircraftModel.getModelString(), icao.getAircraftDesignator(), icao.getAirlineDesignator(), livery);
+            m_traffic->addPlane(newRemoteAircraft.getCallsign().asString(), aircraftModel.getModelString(),
+                                newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
+                                newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
+                                livery);
             updateAircraftRendered(newRemoteAircraft.getCallsign(), true, identifier());
             CLogMessage(this).info("XP: Added aircraft %1") << newRemoteAircraft.getCallsign().toQString();
 
@@ -456,12 +459,6 @@ namespace BlackSimPlugin
             // remove upfront, and then enable / disable again
             this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
             return this->changeRemoteAircraftEnabled(aircraft, originator);
-        }
-
-        CAircraftIcaoData CSimulatorXPlane::getIcaoForModelString(const QString &modelString) const
-        {
-            Q_UNUSED(modelString);
-            return CAircraftIcaoData();
         }
 
         bool CSimulatorXPlane::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft, const CIdentifier &originator)

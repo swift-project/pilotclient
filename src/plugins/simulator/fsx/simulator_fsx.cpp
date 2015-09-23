@@ -18,7 +18,6 @@
 #include "blackmisc/project.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/network/aircraftmappinglist.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 
 #include <QTimer>
@@ -44,8 +43,7 @@ namespace BlackSimPlugin
                                      IRemoteAircraftProvider *remoteAircraftProvider,
                                      IPluginStorageProvider *pluginStorageProvider,
                                      QObject *parent) :
-            CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider,
-                               simObjectsDir(), excludeDirectories(), parent)
+            CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, parent)
         {
             Q_ASSERT(ownAircraftProvider);
             Q_ASSERT(remoteAircraftProvider);
@@ -57,7 +55,7 @@ namespace BlackSimPlugin
                                                "Boeing 737-800 Paint1",
                                                CAircraftModel::TypeModelMatchingDefaultModel,
                                                "B737-800 default model",
-                                               CAircraftIcaoData(CAircraftIcaoCode("B738", "L2J"), CAirlineIcaoCode())
+                                               CAircraftIcaoCode("B738", "L2J")
                                            ));
         }
 
@@ -179,7 +177,7 @@ namespace BlackSimPlugin
             return rendered;
         }
 
-        bool CSimulatorFsx::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const CIdentifier &originator)
+        bool CSimulatorFsx::updateOwnSimulatorCockpit(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
         {
             if (originator == this->identifier()) { return false; }
             if (!this->isSimulating()) { return false; }
@@ -823,26 +821,6 @@ namespace BlackSimPlugin
                 m_syncDeferredCounter = 5; // allow some time to sync
                 CLogMessage(this).info("Synchronized time to UTC: %1") << myTime.toString();
             }
-        }
-
-        QString CSimulatorFsx::simObjectsDir()
-        {
-            QString dir = CFsCommonUtil::fsxSimObjectsDirFromRegistry();
-            if (!dir.isEmpty()) { return dir; }
-            return "P:/FlightSimulatorX (MSI)/SimObjects";
-            // "p:/temp/SimObjects"
-        }
-
-        const QStringList &CSimulatorFsx::excludeDirectories()
-        {
-            static const QStringList exclude
-            {
-                "SimObjects/Animals",
-                "SimObjects/Misc",
-                "SimObjects/GroundVehicles",
-                "SimObjects/Boats"
-            };
-            return exclude;
         }
 
         CSimulatorFsxListener::CSimulatorFsxListener(const CSimulatorPluginInfo &info) :

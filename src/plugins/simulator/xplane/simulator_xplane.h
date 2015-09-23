@@ -44,9 +44,6 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::isTimeSynchronized
             virtual bool isTimeSynchronized() const override { return false; } // TODO: Can we query the XP intrinisc feature?
 
-            //! \copydoc BlackCore::ISimulator::getIcaoForModelString
-            virtual BlackMisc::Aviation::CAircraftIcaoData getIcaoForModelString(const QString &modelString) const override;
-
             //! \copydoc BlackCore::ISimulator::connectTo
             virtual bool connectTo() override;
 
@@ -75,7 +72,7 @@ namespace BlackSimPlugin
             virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) override;
 
             //! \copydoc BlackCore::ISimulator::updateOwnSimulatorCockpit
-            virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) override;
 
             //! \copydoc BlackCore::ISimulator::displayStatusMessage
             virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const override;

@@ -18,8 +18,7 @@
 #include "../fscommon/simulator_fscommon.h"
 #include "blackcore/simulator.h"
 #include "blackcore/interpolator.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/aviation/aircraft.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/pixmap.h"
 #include <QObject>
@@ -71,7 +70,7 @@ namespace BlackSimPlugin
             virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
             //! \copydoc ISimulator::updateOwnSimulatorCockpit()
-            virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &ownAircraft, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator) override;
 
             //! \copydoc ISimulator::displayStatusMessage()
             virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const override;
@@ -100,16 +99,9 @@ namespace BlackSimPlugin
         private:
 
             //! Called when data about our own aircraft are received
-            void updateOwnAircraftFromSimulator(const BlackMisc::Aviation::CAircraft &ownAircraft);
+            void updateOwnAircraftFromSimulator(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
 
             void disconnectAllClients();
-
-            //! Aircraft object directory
-            //! \todo Read from settings if registry fails
-            static QString aircraftObjectsDir();
-
-            //! Do not include the following directories for FS
-            static const QStringList &excludeDirectories();
 
             QHash<BlackMisc::Aviation::CCallsign, QPointer<CFs9Client>> m_hashFs9Clients;
             QMetaObject::Connection m_connectionHostMessages;

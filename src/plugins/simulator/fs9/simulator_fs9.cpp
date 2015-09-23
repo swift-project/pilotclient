@@ -35,7 +35,6 @@ using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackSimPlugin::Fs9;
 using namespace BlackSimPlugin::FsCommon;
 
-
 namespace
 {
     /* These instances should be global, as they are shared between all classes
@@ -54,8 +53,7 @@ namespace BlackSimPlugin
             IRemoteAircraftProvider *remoteAircraftProvider,
             IPluginStorageProvider *pluginStorageProvider,
             QObject *parent) :
-            CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider,
-                               aircraftObjectsDir(), excludeDirectories(), parent)
+            CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, parent)
         {
             connect(lobbyClient.data(), &CLobbyClient::disconnected, this, std::bind(&CSimulatorFs9::simulatorStatusChanged, this, 0));
             this->m_interpolator = new BlackCore::CInterpolatorLinear(remoteAircraftProvider, this);
@@ -63,7 +61,7 @@ namespace BlackSimPlugin
                                                "Boeing 737-400",
                                                CAircraftModel::TypeModelMatchingDefaultModel,
                                                "B737-400 default model",
-                                               CAircraftIcaoData(CAircraftIcaoCode("B734", "L2J"), CAirlineIcaoCode())
+                                               CAircraftIcaoCode("B734", "L2J")
                                            ));
         }
 
@@ -165,7 +163,7 @@ namespace BlackSimPlugin
             return CCollection<CCallsign>(this->m_hashFs9Clients.keys());
         }
 
-        bool CSimulatorFs9::updateOwnSimulatorCockpit(const CAircraft &ownAircraft, const CIdentifier &originator)
+        bool CSimulatorFs9::updateOwnSimulatorCockpit(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
         {
             if (originator == this->identifier()) { return false; }
             if (!this->isSimulating()) { return false; }
@@ -295,7 +293,7 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorFs9::updateOwnAircraftFromSimulator(const CAircraft &simDataOwnAircraft)
+        void CSimulatorFs9::updateOwnAircraftFromSimulator(const CSimulatedAircraft &simDataOwnAircraft)
         {
             this->updateCockpit(
                 simDataOwnAircraft.getCom1System(),
@@ -311,21 +309,6 @@ namespace BlackSimPlugin
             {
                 physicallyRemoveRemoteAircraft(fs9Client);
             }
-        }
-
-        QString CSimulatorFs9::aircraftObjectsDir()
-        {
-            QString dir = CFsCommonUtil::fs9AircraftDirFromRegistry();
-            if (!dir.isEmpty()) { return dir; }
-            return "C:/Flight Simulator 9/Aircraft";
-        }
-
-        const QStringList &CSimulatorFs9::excludeDirectories()
-        {
-            static const QStringList exclude
-            {
-            };
-            return exclude;
         }
 
         CSimulatorFs9Listener::CSimulatorFs9Listener(const CSimulatorPluginInfo &info) :

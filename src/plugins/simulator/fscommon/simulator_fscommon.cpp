@@ -30,12 +30,10 @@ namespace BlackSimPlugin
             IOwnAircraftProvider *ownAircraftProvider,
             IRemoteAircraftProvider *renderedAircraftProvider,
             IPluginStorageProvider *pluginStorageProvider,
-            QString simRootDirectory,
-            QStringList excludedDirectories,
             QObject *parent) :
             CSimulatorCommon(info, ownAircraftProvider, renderedAircraftProvider, pluginStorageProvider, parent),
             m_fsuipc(new CFsuipc()),
-            m_aircraftCfgParser(simRootDirectory, excludedDirectories),
+            m_aircraftCfgParser(CAircraftCfgParser::createModelLoader(CSimulatorInfo(info.getIdentifier()))),
             m_modelMatcher(CAircraftMatcher::AllModes, this)
         {
             // hack to init mapper
@@ -43,16 +41,19 @@ namespace BlackSimPlugin
             auto modelMappingsProvider = std::unique_ptr<IModelMappingsProvider> { BlackMisc::make_unique<CModelMappingsProviderVPilot>(true) };
             m_modelMatcher.setModelMappingProvider(std::move(modelMappingsProvider));
 
-            connect(&m_aircraftCfgParser, &CAircraftCfgParser::parsingFinished, this, &CSimulatorFsCommon::ps_aircraftCfgParsingFinished);
+            bool c = connect(m_aircraftCfgParser.data(), &CAircraftCfgParser::loadingFinished, this, &CSimulatorFsCommon::ps_aircraftCfgParsingFinished);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect signal");
+            Q_UNUSED(c);
+
             CVariant aircraftCfg = getPluginData(this, "aircraft_cfg");
             if (aircraftCfg.isValid())
             {
                 // will behave like parsing was finished
-                m_aircraftCfgParser.updateCfgEntriesList(aircraftCfg.value<CAircraftCfgEntriesList>());
+                m_aircraftCfgParser->updateCfgEntriesList(aircraftCfg.value<CAircraftCfgEntriesList>());
             }
             else
             {
-                m_aircraftCfgParser.parse(CAircraftCfgParser::ModeAsync);
+                m_aircraftCfgParser->startLoading(CAircraftCfgParser::ModeBackground);
             }
             //
             // reading from cache / settings would go here
@@ -111,20 +112,8 @@ namespace BlackSimPlugin
             {
                 CAircraftModel newModel(model);
                 newModel.setModelType(CAircraftModel::TypeOwnSimulatorModel);
-                CSimulatorFsCommon::reverseLookupIcaoData(newModel);
                 updateOwnModel(newModel);
                 emit ownAircraftModelChanged(getOwnAircraft());
-            }
-        }
-
-        void CSimulatorFsCommon::reverseLookupIcaoData(CAircraftModel &model)
-        {
-            if (m_modelMatcher.isInitialized())
-            {
-                // reverse lookup of ICAO
-                CAircraftIcaoData icao =  m_modelMatcher.getIcaoForModelString(model.getModelString());
-                icao.updateMissingParts(model.getIcao());
-                model.setIcao(icao); // now best ICAO info in model
             }
         }
 
@@ -138,46 +127,17 @@ namespace BlackSimPlugin
             return m_modelMatcher.getInstalledModelsList();
         }
 
-        CAircraftIcaoData CSimulatorFsCommon::getIcaoForModelString(const QString &modelString) const
-        {
-            if (!m_modelMatcher.isInitialized()) { return CAircraftIcaoData(); }
-            return m_modelMatcher.getIcaoForModelString(modelString);
-        }
-
         void CSimulatorFsCommon::reloadInstalledModels()
         {
-            m_aircraftCfgParser.parse();
+            m_aircraftCfgParser->startLoading();
         }
 
         CPixmap CSimulatorFsCommon::iconForModel(const QString &modelString) const
         {
-            static const CPixmap empty;
-            if (modelString.isEmpty()) { return empty; }
-            CAircraftCfgEntriesList cfgEntries = m_aircraftCfgParser.getAircraftCfgEntriesList().findByTitle(modelString);
-            if (cfgEntries.isEmpty())
-            {
-                CLogMessage(this).warning("No .cfg entry for '%1'") << modelString;
-                return empty;
-            }
-
-            // normally we should have only one entry
-            if (cfgEntries.size() > 1)
-            {
-                CLogMessage(this).warning("Multiple FSX .cfg entries for '%1'") << modelString;
-            }
-
-            // use first with icon
-            for (const CAircraftCfgEntries &entry : cfgEntries)
-            {
-                const QString thumbnail = entry.getThumbnailFileName();
-                if (thumbnail.isEmpty()) { continue; }
-                QPixmap pm;
-                if (pm.load(thumbnail))
-                {
-                    return CPixmap(pm);
-                }
-            }
-            return empty;
+            CStatusMessage msg;
+            CPixmap pm(m_aircraftCfgParser->iconForModel(modelString, msg));
+            if (!msg.isEmpty()) { CLogMessage(this).preformatted(msg);}
+            return pm;
         }
 
         bool CSimulatorFsCommon::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
@@ -214,7 +174,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsCommon::unload()
         {
-            this->m_aircraftCfgParser.cancelParsing();
+            this->m_aircraftCfgParser->cancelLoading();
             this->m_modelMatcher.cancelInit();
             CSimulatorCommon::unload();
         }
@@ -222,8 +182,8 @@ namespace BlackSimPlugin
         void CSimulatorFsCommon::ps_aircraftCfgParsingFinished(bool success)
         {
             if (!success) { return; }
-            setPluginData(this, "aircraft_cfg", CVariant::from(m_aircraftCfgParser.getAircraftCfgEntriesList()));
-            m_modelMatcher.setInstalledModels(m_aircraftCfgParser.getAircraftCfgEntriesList().toAircraftModelList());
+            setPluginData(this, "aircraft_cfg", CVariant::from(m_aircraftCfgParser->getAircraftCfgEntriesList()));
+            m_modelMatcher.setInstalledModels(m_aircraftCfgParser->getAircraftCfgEntriesList().toAircraftModelList());
 
             // Now the matcher has all required information to be initialized
             m_modelMatcher.init();
