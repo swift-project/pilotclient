@@ -1,0 +1,68 @@
+/* Copyright (C) 2015
+ * swift project Community / Contributors
+ *
+ * This file is part of swift Project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+#ifndef BLACKGUI_DROPSITE_H
+#define BLACKGUI_DROPSITE_H
+
+#include "blackmisc/variant.h"
+#include "blackgui/dropbase.h"
+#include <QLabel>
+#include <QMimeData>
+
+namespace BlackGui
+{
+    /*!
+     * Area where items can be dropped
+     * \remark inspired by Qt example: http://doc.qt.io/qt-4.8/qt-draganddrop-dropsite-example.html
+     */
+    class CDropSite :
+        public QLabel,
+        public CDropBase
+    {
+        Q_OBJECT
+
+    public:
+        //! Constructor
+        CDropSite(QWidget *parent = nullptr);
+
+        //! Set text for drop site
+        void setInfoText(const QString &dropSiteText);
+
+        //! Drop allowed
+        void allowDrop(bool allowed);
+
+    signals:
+        //! Dropped value object
+        void droppedValueObject(const BlackMisc::CVariant &droppedObject);
+
+    protected:
+        //! \copydoc QWidget::dragEnterEvent
+        virtual void dragEnterEvent(QDragEnterEvent *event) override;
+
+        //! \copydoc QWidget::dragMoveEvent
+        virtual void dragMoveEvent(QDragMoveEvent *event) override;
+
+        //! \copydoc QWidget::dragLeaveEvent
+        virtual void dragLeaveEvent(QDragLeaveEvent *event) override;
+
+        //! \copydoc QWidget::dropEvent
+        virtual void dropEvent(QDropEvent *event) override;
+
+    private:
+        //! Clear
+        void resetText();
+
+        QString    m_infoText;           //!< text displayed for drop site
+        bool       m_allowDrop = true;   //!< dropping allowed?
+        QList<int> m_acceptedMetaTypes;  //!< accepted meta types
+    };
+
+} // ns
+
+#endif // guard

@@ -16,6 +16,7 @@
 #include "blackmisc/icon.h"
 #include "enableforframelesswindow.h"
 #include <QWidgetList>
+#include <QComboBox>
 #include <QCommandLineParser>
 
 namespace BlackGui
@@ -66,6 +67,24 @@ namespace BlackGui
 
         //! Leninet / relaxed
         static bool lenientTitleComparison(const QString &title, const QString &comparison);
+
+        //! Find best match in comboBox
+        static bool setComboBoxValueByStartingString(QComboBox *box, const QString &candidate, const QString &unspecified = QString());
+
+        //! Mime data with swift type
+        static bool hasSwiftVariantMimeType(const QMimeData *mime);
+
+        //! From text dropped
+        static BlackMisc::CVariant fromSwiftDragAndDropData(const QMimeData *mime);
+
+        //! From text dropped
+        static BlackMisc::CVariant fromSwiftDragAndDropData(const QByteArray &utf8Data);
+
+        //! Meta type id from dropped data
+        static int metaTypeIdFromSwiftDragAndDropData(const QMimeData *mime);
+
+        //! Metatype
+        static const QString &swiftJsonDragAndDropMimeType();
 
     private:
         //! Constructor, use static methods only

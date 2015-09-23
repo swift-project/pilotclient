@@ -16,6 +16,11 @@
 #include <QApplication>
 #include <QGuiApplication>
 #include <QMessageBox>
+#include <QRegularExpression>
+#include <QThreadStorage>
+#include <QMimeData>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 using namespace BlackCore;
 using namespace BlackMisc;
@@ -109,6 +114,86 @@ namespace BlackGui
         t = t.remove(regexp);
         c = c.remove(regexp);
         return t == c;
+    }
+
+    bool CGuiUtility::setComboBoxValueByStartingString(QComboBox *box, const QString &candidate, const QString &unspecified)
+    {
+        if (!box) { return false; }
+        if (!candidate.isEmpty())
+        {
+            for (int i = 0; i < box->count(); i++)
+            {
+                QString t(box->itemText(i));
+                if (t.startsWith(candidate, Qt::CaseInsensitive))
+                {
+                    box->setCurrentIndex(i);
+                    return true;
+                }
+            }
+        }
+
+        // not found
+        if (unspecified.isEmpty()) { return false; }
+        for (int i = 0; i < box->count(); i++)
+        {
+            QString t(box->itemText(i));
+            if (t.startsWith(unspecified, Qt::CaseInsensitive))
+            {
+                box->setCurrentIndex(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool CGuiUtility::hasSwiftVariantMimeType(const QMimeData *mime)
+    {
+        return mime && mime->hasFormat(swiftJsonDragAndDropMimeType());
+    }
+
+    CVariant CGuiUtility::fromSwiftDragAndDropData(const QMimeData *mime)
+    {
+        if (hasSwiftVariantMimeType(mime))
+        {
+            return fromSwiftDragAndDropData(mime->data(swiftJsonDragAndDropMimeType()));
+        }
+        return CVariant();
+    }
+
+    CVariant CGuiUtility::fromSwiftDragAndDropData(const QByteArray &utf8Data)
+    {
+        if (utf8Data.isEmpty()) { return CVariant(); }
+        QJsonDocument jsonDoc(QJsonDocument::fromJson(utf8Data));
+        QJsonObject jsonObj(jsonDoc.object());
+        QString typeName(jsonObj.value("type").toString());
+        int typeId = QMetaType::type(qPrintable(typeName));
+
+        // check if a potential valid value object
+        if (typeName.isEmpty() || typeId == QMetaType::UnknownType) { return CVariant(); }
+
+        CVariant valueVariant;
+        valueVariant.convertFromJson(jsonObj);
+        return valueVariant;
+    }
+
+    int CGuiUtility::metaTypeIdFromSwiftDragAndDropData(const QMimeData *mime)
+    {
+        static const int Unknown = static_cast<int>(QMetaType::UnknownType);
+
+        if (!hasSwiftVariantMimeType(mime)) { return Unknown; }
+        QJsonDocument jsonDoc(QJsonDocument::fromJson(mime->data(swiftJsonDragAndDropMimeType())));
+        QJsonObject jsonObj(jsonDoc.object());
+        if (jsonObj.isEmpty()) { return Unknown; }
+        QString typeName(jsonObj.value("type").toString());
+        if (typeName.isEmpty()) { return Unknown; }
+        int typeId = QMetaType::type(qPrintable(typeName));
+        return typeId;
+    }
+
+    const QString &CGuiUtility::swiftJsonDragAndDropMimeType()
+    {
+        static const QString m("text/json/swift");
+        return m;
     }
 
     QWidgetList CGuiUtility::topLevelApplicationWidgetsWithName()
