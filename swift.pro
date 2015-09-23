@@ -5,6 +5,7 @@ TEMPLATE = subdirs
 CONFIG += ordered
 
 SUBDIRS += src/blackmisc
+SUBDIRS += resources/swift_resources.pro
 
 contains(BLACK_CONFIG, BlackSound) {
     SUBDIRS += src/blacksound
@@ -31,7 +32,6 @@ contains(BLACK_CONFIG, BlackCore) {
 }
 
 win32 {
-
     if (contains(BLACK_CONFIG, FSX) | contains(BLACK_CONFIG, FS9)) {
         SUBDIRS += src/plugins/simulator/fscommon/plugin_fscommon.pro
     }

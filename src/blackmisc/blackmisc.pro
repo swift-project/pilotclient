@@ -1,5 +1,6 @@
 include ($$SourceRoot/config.pri)
 include ($$SourceRoot/build.pri)
+include ($$SourceRoot/resources/swift_resources.pri)
 
 QT       += network dbus xml
 
