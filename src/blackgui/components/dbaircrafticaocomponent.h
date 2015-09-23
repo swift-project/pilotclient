@@ -1,0 +1,64 @@
+/* Copyright (C) 2015
+ * swift project Community / Contributors
+ *
+ * This file is part of swift Project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
+
+#ifndef BLACKGUI_COMPONENTS_DBAIRCRAFTICAOCOMPONENT_H
+#define BLACKGUI_COMPONENTS_DBAIRCRAFTICAOCOMPONENT_H
+
+#include "blackgui/blackguiexport.h"
+#include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackmisc/network/webdataservicesprovider.h"
+#include <QFrame>
+#include <QScopedPointer>
+
+namespace Ui { class CDbAircraftIcaoComponent; }
+
+namespace BlackGui
+{
+    namespace Components
+    {
+        /**
+         * DB aircraft ICAO data
+         */
+        class BLACKGUI_EXPORT CDbAircraftIcaoComponent :
+            public QFrame,
+            public CEnableForDockWidgetInfoArea,
+            public BlackMisc::Network::CWebDataServicesAware
+        {
+            Q_OBJECT
+
+        public:
+            //! Constructor
+            explicit CDbAircraftIcaoComponent(QWidget *parent = nullptr);
+
+            //! Destructor
+            ~CDbAircraftIcaoComponent();
+
+            //! Set the provider
+            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
+
+        public slots:
+            //! Filter by ICAO as default
+            void filter(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+
+        private slots:
+            //! ICAO codes have been read
+            void ps_icaoRead(BlackMisc::Network::CDbFlags::Entity entity, BlackMisc::Network::CDbFlags::ReadState readState, int count);
+
+            //! Reload models
+            void ps_reload();
+
+        private:
+            QScopedPointer<Ui::CDbAircraftIcaoComponent> ui;
+        };
+    } // ns
+} // ns
+
+#endif // guard
