@@ -7,10 +7,17 @@
  * contained in the LICENSE file.
  */
 
+// Drag and drop docu:
+// http://doc.qt.io/qt-5/model-view-programming.html#using-drag-and-drop-with-item-views
+
 #include "listmodelbase.h"
 #include "allmodelcontainers.h"
+#include "blackgui/guiutility.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/json.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include <QMimeData>
+#include <QJsonDocument>
 
 using namespace BlackMisc;
 
@@ -27,10 +34,19 @@ namespace BlackGui
 
         QVariant CListModelBaseNonTemplate::headerData(int section, Qt::Orientation orientation, int role) const
         {
-            if (orientation != Qt::Horizontal) { return QVariant(); }
+            if (orientation != Qt::Horizontal)
+            {
+                return QVariant();
+            }
             bool handled = (role == Qt::DisplayRole || role == Qt::ToolTipRole || role == Qt::InitialSortOrderRole);
-            if (!handled) {return QVariant();}
-            if (section < 0 || section >= this->m_columns.size()) { return QVariant(); }
+            if (!handled)
+            {
+                return QVariant();
+            }
+            if (section < 0 || section >= this->m_columns.size())
+            {
+                return QVariant();
+            }
 
             if (role == Qt::DisplayRole)
             {
@@ -90,13 +106,14 @@ namespace BlackGui
             if (!index.isValid()) { return f; }
             bool editable = this->m_columns.isEditable(index);
             f = editable ? (f | Qt::ItemIsEditable) : (f ^ Qt::ItemIsEditable);
-            const CDefaultFormatter *formatter = this->m_columns.getFormatter(index);
-            if (formatter)
-            {
-                return formatter->flags(f, editable);
-            }
 
-            // fallback behaviour with no formatter
+            // flags from formatter
+            const CDefaultFormatter *formatter = this->m_columns.getFormatter(index);
+            if (formatter) { f = formatter->flags(f, editable); }
+
+            // drag and rop
+            f = f | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
+
             return f;
         }
 
@@ -105,9 +122,42 @@ namespace BlackGui
             return m_columns.getTranslationContext();
         }
 
+        Qt::DropActions CListModelBaseNonTemplate::supportedDragActions() const
+        {
+            return Qt::CopyAction;
+        }
+
+        Qt::DropActions CListModelBaseNonTemplate::supportedDropActions() const
+        {
+            return QAbstractItemModel::supportedDropActions();
+        }
+
+        QStringList CListModelBaseNonTemplate::mimeTypes() const
+        {
+            static const QStringList mimes( { "application/swift.container.json" });
+            return mimes;
+        }
+
+        void CListModelBaseNonTemplate::markDestroyed()
+        {
+            this->m_modelDestroyed = true;
+        }
+
+        bool CListModelBaseNonTemplate::isModelDestroyed()
+        {
+            return m_modelDestroyed;
+        }
+
         int CListModelBaseNonTemplate::ps_updateContainer(const CVariant &variant, bool sort)
         {
             return this->performUpdateContainer(variant, sort);
+        }
+
+        CListModelBaseNonTemplate::CListModelBaseNonTemplate(const QString &translationContext, QObject *parent)
+            : QAbstractItemModel(parent), m_columns(translationContext), m_sortedColumn(-1), m_sortOrder(Qt::AscendingOrder)
+        {
+            // non unique default name, set translation context as default
+            this->setObjectName(translationContext);
         }
 
         template <typename ObjectType, typename ContainerType>
@@ -144,14 +194,26 @@ namespace BlackGui
         bool CListModelBase<ObjectType, ContainerType>::setData(const QModelIndex &index, const QVariant &value, int role)
         {
             Qt::ItemDataRole dataRole = static_cast<Qt::ItemDataRole>(role);
-            if (!(dataRole == Qt::UserRole || dataRole == Qt::EditRole)) { return false; }
+            if (!(dataRole == Qt::UserRole || dataRole == Qt::EditRole))
+            {
+                return false;
+            }
 
             // check / init
-            if (!this->isValidIndex(index)) { return false; }
-            if (!this->m_columns.isEditable(index)) { return false; }
+            if (!this->isValidIndex(index))
+            {
+                return false;
+            }
+            if (!this->m_columns.isEditable(index))
+            {
+                return false;
+            }
             const CDefaultFormatter *formatter = this->m_columns.getFormatter(index);
             Q_ASSERT(formatter);
-            if (!formatter) { return false; }
+            if (!formatter)
+            {
+                return false;
+            }
 
             ObjectType obj = this->m_container[index.row()];
             ObjectType currentObject(obj);
@@ -175,6 +237,8 @@ namespace BlackGui
         template <typename ObjectType, typename ContainerType>
         int CListModelBase<ObjectType, ContainerType>::update(const ContainerType &container, bool sort)
         {
+            if (m_modelDestroyed) { return 0; }
+
             // Keep sorting out of begin/end reset model
             ContainerType sortedContainer;
             int oldSize = this->m_container.size();
@@ -191,13 +255,17 @@ namespace BlackGui
             this->endResetModel();
 
             int newSize = this->m_container.size();
-            if (oldSize != newSize) {  this->emitRowCountChanged(); }
+            if (oldSize != newSize)
+            {
+                this->emitRowCountChanged();
+            }
             return newSize;
         }
 
         template <typename ObjectType, typename ContainerType>
         void CListModelBase<ObjectType, ContainerType>::update(const QModelIndex &index, const ObjectType &object)
         {
+            if (m_modelDestroyed) { return; }
             if (index.row() >= this->m_container.size()) { return; }
             this->m_container[index.row()] = object;
 
@@ -216,6 +284,7 @@ namespace BlackGui
         CWorker *CListModelBase<ObjectType, ContainerType>::updateAsync(const ContainerType &container, bool sort)
         {
             Q_UNUSED(sort);
+            if (m_modelDestroyed) { return nullptr; }
             auto sortColumn = this->getSortColumn();
             auto sortOrder = this->getSortOrder();
             CWorker *worker = BlackMisc::CWorker::fromTask(this, "ModelSort", [this, container, sortColumn, sortOrder]()
@@ -224,6 +293,7 @@ namespace BlackGui
             });
             worker->thenWithResult<ContainerType>(this, [this](const ContainerType &sortedContainer)
             {
+                if (this->m_modelDestroyed) { return;  }
                 this->ps_updateContainer(CVariant::from(sortedContainer), false);
             });
             worker->then(this, &CListModelBase::asyncUpdateFinished);
@@ -233,6 +303,7 @@ namespace BlackGui
         template <typename ObjectType, typename ContainerType>
         void CListModelBase<ObjectType, ContainerType>::updateContainerMaybeAsync(const ContainerType &container, bool sort)
         {
+            if (m_modelDestroyed) { return; }
             if (container.size() > asyncThreshold && sort)
             {
                 // larger container with sorting
@@ -247,7 +318,7 @@ namespace BlackGui
         template <typename ObjectType, typename ContainerType>
         bool CListModelBase<ObjectType, ContainerType>::hasFilter() const
         {
-            return m_filter ? true : false;
+            return m_filter && m_filter->isValid() ? true : false;
         }
 
         template <typename ObjectType, typename ContainerType>
@@ -262,9 +333,13 @@ namespace BlackGui
         }
 
         template <typename ObjectType, typename ContainerType>
-        void CListModelBase<ObjectType, ContainerType>::setFilter(std::unique_ptr<IModelFilter<ContainerType> > &filter)
+        void CListModelBase<ObjectType, ContainerType>::takeFilterOwnership(std::unique_ptr<IModelFilter<ContainerType> > &filter)
         {
-            if (!filter) { this->removeFilter(); return; } // empty filter
+            if (!filter)
+            {
+                this->removeFilter();    // empty filter
+                return;
+            }
             if (filter->isValid())
             {
                 this->m_filter = std::move(filter);
@@ -371,7 +446,10 @@ namespace BlackGui
         template <typename ObjectType, typename ContainerType>
         const ContainerType &CListModelBase<ObjectType, ContainerType>::getContainerOrFilteredContainer() const
         {
-            if (!this->hasFilter()) { return this->m_container; }
+            if (!this->hasFilter())
+            {
+                return this->m_container;
+            }
             return m_containerFiltered;
         }
 
@@ -409,7 +487,10 @@ namespace BlackGui
             // new order
             this->m_sortedColumn = column;
             this->m_sortOrder    = order;
-            if (this->m_container.size() < 2) { return; } // nothing to do
+            if (this->m_container.size() < 2)
+            {
+                return; // nothing to do
+            }
 
             // sort the values
             this->updateContainerMaybeAsync(this->m_container, true);
@@ -419,7 +500,10 @@ namespace BlackGui
         void CListModelBase<ObjectType, ContainerType>::truncate(int maxNumber, bool forceSort)
         {
             if (this->rowCount() <= maxNumber) { return; }
-            if (forceSort) { this->sort(); } // make sure container is sorted
+            if (forceSort)
+            {
+                this->sort();    // make sure container is sorted
+            }
             ContainerType container(this->getContainer());
             container.truncate(maxNumber);
             this->updateContainerMaybeAsync(container, false);
@@ -428,12 +512,19 @@ namespace BlackGui
         template <typename ObjectType, typename ContainerType>
         ContainerType CListModelBase<ObjectType, ContainerType>::sortContainerByColumn(const ContainerType &container, int column, Qt::SortOrder order) const
         {
-            if (container.size() < 2 || !this->m_columns.isSortable(column)) { return container; } // nothing to do
+            if (m_modelDestroyed) { return container; }
+            if (container.size() < 2 || !this->m_columns.isSortable(column))
+            {
+                return container;    // nothing to do
+            }
 
             // this is the only part not really thread safe, but columns do not change so far
             BlackMisc::CPropertyIndex propertyIndex = this->m_columns.columnToSortPropertyIndex(column);
             Q_ASSERT(!propertyIndex.isEmpty());
-            if (propertyIndex.isEmpty()) { return container; } // at release build do nothing
+            if (propertyIndex.isEmpty())
+            {
+                return container;    // at release build do nothing
+            }
 
             // sort the values
             const auto p = [ = ](const ObjectType & a, const ObjectType & b) -> bool
@@ -447,20 +538,48 @@ namespace BlackGui
             return sorted;
         }
 
+        template <typename ObjectType, typename ContainerType>
+        QMimeData *CListModelBase<ObjectType, ContainerType>::mimeData(const QModelIndexList &indexes) const
+        {
+            QMimeData *mimeData = new QMimeData();
+            if (indexes.isEmpty()) { return mimeData; }
+
+            ContainerType container;
+            QList<int> rows; // avoid redundant objects
+
+            // Indexes are per row and column
+            for (const QModelIndex &index : indexes)
+            {
+                if (!index.isValid()) { continue; }
+                int r = index.row();
+                if (rows.contains(r)) { continue; }
+                container.push_back(this->at(index));
+                rows.append(r);
+            }
+
+            // to JSON via CVariant
+            const QJsonDocument containerJson(CVariant::fromValue(container).toJson());
+            const QString jsonString(containerJson.toJson(QJsonDocument::Compact));
+
+            mimeData->setData(CGuiUtility::swiftJsonDragAndDropMimeType(), jsonString.toUtf8());
+            return mimeData;
+        }
+
         // see here for the reason of thess forward instantiations
         // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
         template class CListModelBase<BlackMisc::CIdentifier, BlackMisc::CIdentifierList>;
         template class CListModelBase<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>;
         template class CListModelBase<BlackMisc::CNameVariantPair, BlackMisc::CNameVariantPairList>;
+        template class CListModelBase<BlackMisc::CCountry, BlackMisc::CCountryList>;
         template class CListModelBase<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
-        template class CListModelBase<BlackMisc::Aviation::CAircraft, BlackMisc::Aviation::CAircraftList>;
         template class CListModelBase<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>;
         template class CListModelBase<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList>;
+        template class CListModelBase<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList>;
+        template class CListModelBase<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList>;
         template class CListModelBase<BlackMisc::Network::CServer, BlackMisc::Network::CServerList>;
         template class CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList>;
         template class CListModelBase<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList>;
         template class CListModelBase<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>;
-        template class CListModelBase<BlackMisc::Network::CAircraftMapping, BlackMisc::Network::CAircraftMappingList>;
         template class CListModelBase<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
         template class CListModelBase<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
         template class CListModelBase<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;

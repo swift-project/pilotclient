@@ -14,7 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/columns.h"
-#include "blackgui/models/listmodelfilter.h"
+#include "blackgui/models/modelfilter.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/propertyindex.h"
 #include <QAbstractItemModel>
@@ -75,11 +75,26 @@ namespace BlackGui
             //! Get sort order
             virtual Qt::SortOrder getSortOrder() const { return this->m_sortOrder; }
 
-            //! \copydoc QAbstractTableModel::flags
-            Qt::ItemFlags flags(const QModelIndex &index) const override;
-
             //! Translation context
             virtual const QString &getTranslationContext() const;
+
+            //! \copydoc QAbstractItemModel::flags
+            virtual Qt::ItemFlags flags(const QModelIndex &index) const override;
+
+            //! \copydoc QAbstractItemModel::supportedDragActions
+            virtual Qt::DropActions supportedDragActions() const override;
+
+            //! \copydoc QAbstractItemModel::supportedDropActions
+            virtual Qt::DropActions supportedDropActions() const override;
+
+            //! \copydoc QAbstractItemModel::supportedDropActions
+            virtual QStringList mimeTypes() const override;
+
+            //! Mark as about to be destroyed, normally marked from view
+            void markDestroyed();
+
+            //! Model about to be destroyed?
+            bool isModelDestroyed();
 
         signals:
             //! Asynchronous update finished
@@ -101,19 +116,15 @@ namespace BlackGui
             //! Constructor
             //! \param translationContext    I18N context
             //! \param parent
-            CListModelBaseNonTemplate(const QString &translationContext, QObject *parent = nullptr)
-                : QAbstractItemModel(parent), m_columns(translationContext), m_sortedColumn(-1), m_sortOrder(Qt::AscendingOrder)
-            {
-                // non unique default name, set translation context as default
-                this->setObjectName(translationContext);
-            }
+            CListModelBaseNonTemplate(const QString &translationContext, QObject *parent = nullptr);
 
             //! Helper method with template free signature
             virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort) = 0;
 
-            CColumns m_columns;        //!< columns metadata
-            int m_sortedColumn;        //!< current sort column
-            Qt::SortOrder m_sortOrder; //!< sort order (asc/desc)
+            CColumns m_columns;            //!< columns metadata
+            int m_sortedColumn;            //!< current sort column
+            Qt::SortOrder m_sortOrder;     //!< sort order (asc/desc)
+            bool m_modelDestroyed = false; //!< model is about to be destroyed
         };
 
         //! List model
@@ -201,6 +212,9 @@ namespace BlackGui
             //! Empty?
             virtual bool isEmpty() const;
 
+            //! \copydoc QAbstractItemModel::mimeData
+            virtual QMimeData *mimeData(const QModelIndexList &indexes) const override;
+
             //! Filter available
             bool hasFilter() const;
 
@@ -208,7 +222,7 @@ namespace BlackGui
             void removeFilter();
 
             //! Set the filter
-            void setFilter(std::unique_ptr<IModelFilter<ContainerType> > &filter);
+            void takeFilterOwnership(std::unique_ptr<IModelFilter<ContainerType> > &filter);
 
         protected:
             std::unique_ptr<IModelFilter<ContainerType> > m_filter; //!< Used filter
@@ -233,7 +247,6 @@ namespace BlackGui
             void emitRowCountChanged();
             ContainerType m_container;         //!< used container
             ContainerType m_containerFiltered; //!< cache for filtered container data
-
         };
 
     } // namespace
