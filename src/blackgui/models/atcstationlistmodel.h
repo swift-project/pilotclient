@@ -17,7 +17,6 @@
 #include "blackgui/models/listmodelbase.h"
 #include <QAbstractItemModel>
 #include <QStandardItemModel>
-#include <QDBusConnection>
 
 namespace BlackGui
 {
@@ -26,7 +25,6 @@ namespace BlackGui
         //! ATC list model
         class BLACKGUI_EXPORT CAtcStationListModel : public CListModelBase<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>
         {
-
         public:
             //! What kind of stations
             enum AtcStationMode

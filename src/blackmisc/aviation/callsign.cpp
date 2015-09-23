@@ -10,6 +10,9 @@
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/iconlist.h"
 
+#include <QThreadStorage>
+#include <QRegularExpression>
+
 namespace BlackMisc
 {
     namespace Aviation

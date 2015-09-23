@@ -18,6 +18,8 @@
 #include <QObject>
 #include <QMap>
 #include <QPointer>
+#include <QThread>
+#include <QMetaMethod>
 
 namespace BlackMisc
 {

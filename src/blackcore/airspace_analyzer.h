@@ -22,6 +22,7 @@
 #include "blackmisc/aviation/callsign.h"
 #include <QObject>
 #include <QHash>
+#include <QReadWriteLock>
 
 namespace BlackCore
 {

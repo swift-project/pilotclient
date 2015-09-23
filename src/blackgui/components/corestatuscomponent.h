@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_COMPONENTS_CORESTATUSCOMPONENT_H
 #define BLACKGUI_COMPONENTS_CORESTATUSCOMPONENT_H
 

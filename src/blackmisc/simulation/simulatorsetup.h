@@ -25,7 +25,6 @@ namespace BlackMisc
         //! Those are set up at runtime and represent information about the simulator (like a small registry)
         class BLACKMISC_EXPORT CSimulatorSetup : public CValueObject<CSimulatorSetup>
         {
-
         public:
             //! Specific values
             enum ColumnIndex

@@ -8,6 +8,7 @@
  */
 
 #include "airspaceaircraftsnapshot.h"
+#include <QThread>
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;

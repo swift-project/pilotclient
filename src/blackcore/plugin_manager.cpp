@@ -14,6 +14,8 @@
 #include <QDir>
 #include <QDirIterator>
 #include <QLibrary>
+#include <QPluginLoader>
+#include <QStringBuilder>
 
 using namespace BlackMisc;
 

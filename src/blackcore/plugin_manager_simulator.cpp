@@ -9,6 +9,7 @@
 
 #include "plugin_manager_simulator.h"
 #include "simulator.h"
+#include <QStringBuilder>
 
 namespace BlackCore
 {
