@@ -14,7 +14,8 @@
 #include <QDebug>
 #include <QRegExp>
 #include <QStyleOption>
-#include <QPainter>
+#include <QStylePainter>
+#include <QAbstractScrollArea>
 
 namespace BlackGui
 {
@@ -324,16 +325,28 @@ namespace BlackGui
         return dirPath;
     }
 
-    void CStyleSheetUtility::useStyleSheetInDerivedWidget(QWidget *usedWidget, QStyle::PrimitiveElement element)
+    bool CStyleSheetUtility::useStyleSheetInDerivedWidget(QWidget *usedWidget, QStyle::PrimitiveElement element)
     {
         Q_ASSERT(usedWidget);
-        if (!usedWidget) { return; }
+        if (!usedWidget) { return false; }
+
         Q_ASSERT(usedWidget->style());
-        if (!usedWidget->style()) { return; }
+        QStyle *style = usedWidget->style();
+        if (!style) { return false; }
+
+        // 1) QStylePainter: modern version of
+        //    usedWidget->style()->drawPrimitive(element, &opt, &p, usedWidget);
+        // 2) With viewport based widgets viewport has to be used
+        QAbstractScrollArea *sa = qobject_cast<QAbstractScrollArea *>(usedWidget);
+        QStylePainter p(
+            sa ? sa->viewport() :
+            usedWidget);
+        if (!p.isActive()) { return false; }
+
         QStyleOption opt;
         opt.initFrom(usedWidget);
-        QPainter p(usedWidget);
-        usedWidget->style()->drawPrimitive(element, &opt, &p, usedWidget);
+        p.drawPrimitive(element, opt);
+        return true;
     }
 
     QString CStyleSheetUtility::styleForIconCheckBox(const QString &checkedIcon, const QString &uncheckedIcon, const QString &width, const QString &height)
@@ -343,5 +356,17 @@ namespace BlackGui
 
         static const QString st = "QCheckBox::indicator { width: %1; height: %2; } QCheckBox::indicator:checked { image: url(%3); } QCheckBox::indicator:unchecked { image: url(%4); }";
         return st.arg(width).arg(height).arg(checkedIcon).arg(uncheckedIcon);
+    }
+
+    QString CStyleSheetUtility::concatStyles(const QString &style1, const QString &style2)
+    {
+        QString s1(style1.trimmed());
+        QString s2(style2.trimmed());
+        if (s1.isEmpty()) { return s2; }
+        if (s2.isEmpty()) { return s1; }
+        if (!s1.endsWith(";")) { s1 = s1.append("; "); }
+        s1.append(s2);
+        if (!s1.endsWith(";")) { s1 = s1.append(";"); }
+        return s1;
     }
 }
