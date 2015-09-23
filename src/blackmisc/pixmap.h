@@ -19,8 +19,8 @@
 
 namespace BlackMisc
 {
-    //! Value object for icons. An icon is stored in the global icon repository and
-    //! identified by its index. It contains no(!) pyhsical data for the icon itself.
+    //! Pixmap which can be transferred via DBus.
+    //! \remark: Use, when a pixmap cannot be stored in the resources
     class BLACKMISC_EXPORT CPixmap : public CValueObject<CPixmap>
     {
     public:
@@ -54,7 +54,7 @@ namespace BlackMisc
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(BlackMisc::CPixmap)
 
-        //!
+        //! Init the byte array with data
         void fillByteArray();
 
         mutable QPixmap m_pixmap;               //!< cached pixmap, mutable because of lazy initialization
