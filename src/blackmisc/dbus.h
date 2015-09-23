@@ -115,4 +115,14 @@ operator>>(const QDBusArgument &argument, ENUM &enumType)
     return argument;
 }
 
+/*!
+ * Non member non-friend streaming for QPixmap
+ */
+const QDBusArgument &operator>>(const QDBusArgument &argument, QPixmap &pixmap);
+
+/*!
+ * Non member non-friend streaming for QPixmap
+ */
+QDBusArgument &operator<<(QDBusArgument &argument, const QPixmap &pixmap);
+
 #endif // guard
