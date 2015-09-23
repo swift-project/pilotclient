@@ -22,28 +22,30 @@
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/weather/metarset.h"
+#include "blackmisc/network/webdataservicesprovider.h"
 #include "blackmisc/network/clientlist.h"
-#include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/network/userlist.h"
+#include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/aviation/callsignset.h"
 
 namespace BlackCore
 {
-    class CWebDataReader;
+    class CWebDataServices;
 
     //! Keeps track of other entities in the airspace: aircraft, ATC stations, etc.
     //! Central instance of data for \sa IRemoteAircraftProvider.
     class BLACKCORE_EXPORT CAirspaceMonitor :
         public QObject,
         public BlackMisc::Simulation::IRemoteAircraftProvider,  // those data will be provided from the class CAirspaceMonitor
-        public BlackMisc::Simulation::COwnAircraftAware // used to obtain in memory inofmration about own aircraft
+        public BlackMisc::Simulation::COwnAircraftAware, // used to obtain in memory infomation about own aircraft
+        public BlackMisc::Network::CWebDataServicesAware // used to get web service data
     {
         Q_OBJECT
         Q_INTERFACES(BlackMisc::Simulation::IRemoteAircraftProvider)
 
     public:
         //! Constructor
-        CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, INetwork *network, CWebDataReader *webDataReader, QObject *parent);
+        CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, INetwork *network, CWebDataServices *webDataReader, QObject *parent);
 
         //! \copydoc IRemoteAircraftProvider::getAircraftInRange
         //! \ingroup remoteaircraftprovider
@@ -52,6 +54,10 @@ namespace BlackCore
         //! \copydoc IRemoteAircraftProvider::getAircraftInRangeForCallsign
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+
+        //! \copydoc IRemoteAircraftProvider::getAircraftInRangeForCallsign
+        //! \ingroup remoteaircraftprovider
+        virtual BlackMisc::Simulation::CAircraftModel getAircraftInRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
         //! \copydoc IRemoteAircraftProvider::getAircraftInRangeCount
         //! \ingroup remoteaircraftprovider
@@ -203,22 +209,21 @@ namespace BlackCore
         void airspaceAircraftSnapshot(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
 
     private:
-        BlackMisc::Aviation::CAtcStationList m_atcStationsOnline;
-        BlackMisc::Aviation::CAtcStationList m_atcStationsBooked;
-        BlackMisc::Network::CClientList      m_otherClients;
-        BlackMisc::Simulation::CSimulatedAircraftList  m_aircraftInRange;
-        BlackMisc::Weather::CMetarSet m_metars;
+        BlackMisc::Aviation::CAtcStationList           m_atcStationsOnline;
+        BlackMisc::Aviation::CAtcStationList           m_atcStationsBooked;
+        BlackMisc::Network::CClientList                m_otherClients;
+        BlackMisc::Simulation::CSimulatedAircraftList  m_aircraftInRange; //!< aircraft, thread safe access required
+        BlackMisc::Weather::CMetarSet                  m_metars;
 
         // hashs, because not sorted by key but keeping order
-        CSituationsPerCallsign m_situationsByCallsign; //!< situations, for performance reasons per callsign
-        CPartsPerCallsign      m_partsByCallsign;      //!< parts, for performance reasons per callsign
-        BlackMisc::Aviation::CCallsignSet m_aircraftSupportingParts; //!< aircraft supporting parts
+        CSituationsPerCallsign m_situationsByCallsign; //!< situations, for performance reasons per callsign, thread safe access required
+        CPartsPerCallsign      m_partsByCallsign;      //!< parts, for performance reasons per callsign, thread safe access required
+        BlackMisc::Aviation::CCallsignSet m_aircraftSupportingParts; //!< aircraft supporting parts, thread safe access required
 
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan>                m_flightPlanCache;
-        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftIcaoData>          m_icaoCodeCache;
+        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CAircraftModel>           m_modelCache;
 
         INetwork              *m_network               = nullptr;
-        CWebDataReader        *m_webDataReader         = nullptr;
         CAirspaceAnalyzer     *m_analyzer              = nullptr; //!< owned analyzer
         bool                   m_serverSupportsNameQuery = false; //!< not all servers support name query
         bool                   m_connected = false;               //!< retrieve data
@@ -266,7 +271,7 @@ namespace BlackCore
 
         void ps_realNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
         void ps_capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
-        void ps_customFSinnPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &p1, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &model);
+        void ps_customFSinnPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &model);
         void ps_serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server);
         void ps_metarReceived(const QString &metarMessage);
         void ps_flightPlanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);
@@ -274,7 +279,7 @@ namespace BlackCore
         void ps_atisReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atisMessage);
         void ps_atisVoiceRoomReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
         void ps_atisLogoffTimeReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
-        void ps_icaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcaoData &icaoData);
+        void ps_icaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery);
         void ps_pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
         void ps_frequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
         void ps_receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
