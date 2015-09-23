@@ -119,7 +119,7 @@ private:
     bool m_contextNetworkAvailable = false;
     bool m_contextAudioAvailable   = false;
     QTimer *m_timerContextWatchdog = nullptr;     //!< core available?
-    BlackMisc::Aviation::CAircraft m_ownAircraft; //!< own aircraft's state
+    BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< own aircraft's state
     QSize m_windowMinSizeWithMainPageShown;
     QSize m_windowMinSizeWithMainPageHidden;
 

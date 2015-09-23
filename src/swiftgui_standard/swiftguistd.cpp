@@ -19,7 +19,6 @@
 #include "blackcore/context_application.h"
 #include "blackcore/context_ownaircraft.h"
 #include "blackcore/network.h"
-#include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/notificationsounds.h"
 #include <QMouseEvent>

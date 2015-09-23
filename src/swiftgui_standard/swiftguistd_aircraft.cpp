@@ -17,6 +17,7 @@ using namespace BlackMisc;
 using namespace BlackGui;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Settings;
@@ -31,7 +32,7 @@ bool SwiftGuiStd::ps_reloadOwnAircraft()
 
     // check for changed aircraft
     bool changed = false;
-    CAircraft loadedAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
+    CSimulatedAircraft loadedAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
     if (loadedAircraft != this->m_ownAircraft)
     {
         this->m_ownAircraft = loadedAircraft;

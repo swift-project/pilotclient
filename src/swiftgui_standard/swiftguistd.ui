@@ -312,14 +312,14 @@
     <addaction name="menu_FileResetSettings"/>
     <addaction name="menu_FileReloadStyleSheets"/>
     <addaction name="separator"/>
-    <addaction name="menu_FileClose"/>
+    <addaction name="menu_FileExit"/>
    </widget>
    <widget class="QMenu" name="menu_InfoAreas">
     <property name="title">
      <string>Info areas</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menuWindow">
+   <widget class="QMenu" name="menu_Window">
     <property name="title">
      <string>Window</string>
     </property>
@@ -329,7 +329,7 @@
     <addaction name="menu_WindowToggleNavigator"/>
    </widget>
    <addaction name="menu_File"/>
-   <addaction name="menuWindow"/>
+   <addaction name="menu_Window"/>
    <addaction name="menu_InfoAreas"/>
    <addaction name="menu_Help"/>
    <addaction name="menu_Test"/>
@@ -418,9 +418,9 @@
     <string>Position EDNX (Schleißheim, GER)</string>
    </property>
   </action>
-  <action name="menu_FileClose">
+  <action name="menu_FileExit">
    <property name="text">
-    <string>Close</string>
+    <string>Exit</string>
    </property>
   </action>
   <action name="menu_FileSettingsDirectory">
