@@ -127,7 +127,7 @@ namespace BlackGui
             case InfoAreaAtc:
                 return CIcons::appAtc16();
             case InfoAreaAircraft:
-                return CIcons::appAircrafts16();
+                return CIcons::appAircraft16();
             case InfoAreaSettings:
                 return CIcons::appSettings16();
             case InfoAreaFlightPlan:

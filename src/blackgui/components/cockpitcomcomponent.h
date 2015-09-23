@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_COCKPITCOMCOMPONENT_H
 #define BLACKGUI_COCKPITCOMCOMPONENT_H
 
@@ -14,7 +16,6 @@
 #include "enablefordockwidgetinfoarea.h"
 #include "enableforruntime.h"
 #include "blackmisc/identifiable.h"
-#include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/aviation/transponder.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include <QFrame>
@@ -68,7 +69,7 @@ namespace BlackGui
             void ps_guiChangedSelcal();
 
             //! Update cockpit from context
-            void ps_updateCockpitFromContext(const BlackMisc::Aviation::CAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
+            void ps_updateCockpitFromContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
 
             //! Cockpit values have been changed in GUI
             void ps_testSelcal();
@@ -84,16 +85,16 @@ namespace BlackGui
             void initLeds();
 
             //! Cockpit values to aircraft
-            BlackMisc::Aviation::CAircraft cockpitValuesToAircraftObject();
+            BlackMisc::Simulation::CSimulatedAircraft cockpitValuesToAircraftObject();
 
             //! Get own aircraft
-            BlackMisc::Aviation::CAircraft getOwnAircraft() const;
+            BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const;
 
             //! Current SELCAL code
             BlackMisc::Aviation::CSelcal getSelcal() const;
 
             //! Cockpit updates
-            bool updateOwnCockpitInContext(const BlackMisc::Aviation::CAircraft &ownAircraft);
+            bool updateOwnCockpitInContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
 
             //! COM frequencies displayed
             void updateFrequencyDisplaysFromComSystems(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);

@@ -16,7 +16,7 @@
 #include "enableforruntime.h"
 #include "../led.h"
 #include "blackmisc/identifiable.h"
-#include "blackmisc/aviation/aircraft.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/transponder.h"
 #include <QFrame>
 
@@ -43,7 +43,7 @@ namespace BlackGui
 
         private slots:
             //! \copydoc IContextOwnAircraft::changedAircraftCockpit
-            void ps_onAircraftCockpitChanged(const BlackMisc::Aviation::CAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+            void ps_onAircraftCockpitChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
             //! LED clicked
             void ps_onLedClicked();
@@ -61,7 +61,7 @@ namespace BlackGui
             BlackMisc::Aviation::CTransponder getOwnTransponder() const;
 
             //! Own Aircraft
-            BlackMisc::Aviation::CAircraft getOwnAircraft() const;
+            BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const;
 
             QScopedPointer<BlackGui::CLedWidget> m_ledStandby;
             QScopedPointer<BlackGui::CLedWidget> m_ledModes;

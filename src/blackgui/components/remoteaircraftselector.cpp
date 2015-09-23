@@ -87,10 +87,10 @@ namespace BlackGui
             {
                 if (aircraft.getCallsign().isEmpty()) { continue; }
                 QString i(aircraft.getCallsign().toQString());
-                if (aircraft.hasValidAircraftDesignator())
+                if (aircraft.hasAircraftDesignator())
                 {
                     i += " (";
-                    i += aircraft.getIcaoInfo().toQString(false);
+                    i += aircraft.getAircraftIcaoCode().toQString(false);
                     i += ")";
                 }
                 if (aircraft.hasValidRealName())

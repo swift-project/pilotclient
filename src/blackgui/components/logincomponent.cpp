@@ -16,9 +16,8 @@
 #include "blackcore/context_simulator.h"
 #include "blackcore/network.h"
 #include "blackcore/simulator.h"
-#include "blackcore/global_network_settings.h"
+#include "blackcore/settings/global_network_settings.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/aviation/aircrafticaodata.h"
 #include "../uppercasevalidator.h"
 #include <QIntValidator>
 
@@ -27,6 +26,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore;
+using namespace BlackCore::Settings;
 using namespace BlackGui;
 
 namespace BlackGui
@@ -183,18 +183,35 @@ namespace BlackGui
                     return;
                 }
 
+                // sync values with GUI values
                 CGuiAircraftValues aircraftValues = this->getAircraftValuesFromGui();
-                CAircraft ownAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
-                CAircraftIcaoData icao = ownAircraft.getIcaoInfo();
-                icao.setAircraftDesignator(aircraftValues.ownAircraftIcaoTypeDesignator);
-                icao.setAirlineDesignator(aircraftValues.ownAircraftIcaoAirline);
-                icao.setAircraftCombinedType(aircraftValues.ownAircraftCombinedType);
-                ownAircraft.setIcaoInfo(icao);
-                ownAircraft.setCallsign(aircraftValues.ownCallsign);
+                CSimulatedAircraft ownAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
+                CAircraftIcaoCode aircraftCode(ownAircraft.getAircraftIcaoCode());
+                CAirlineIcaoCode airlineCode(ownAircraft.getAirlineIcaoCode());
 
-                // set latest ICAO, callsign
-                this->getIContextOwnAircraft()->updateOwnIcaoData(ownAircraft.getIcaoInfo());
-                this->getIContextOwnAircraft()->updateOwnCallsign(ownAircraft.getCallsign());
+                bool setIcaoCodes = false;
+                if (!ownAircraft.hasAircraftDesignator() && !aircraftValues.ownAircraftIcaoTypeDesignator.isEmpty())
+                {
+                    aircraftCode = CAircraftIcaoCode(aircraftValues.ownAircraftIcaoTypeDesignator, aircraftValues.ownAircraftCombinedType);
+                    setIcaoCodes = true;
+                }
+                if (!ownAircraft.hasAircraftDesignator() && !aircraftValues.ownAircraftIcaoAirline.isEmpty())
+                {
+                    airlineCode = CAirlineIcaoCode(aircraftValues.ownAircraftIcaoAirline);
+                    setIcaoCodes = true;
+                }
+
+                if (ownAircraft.getCallsign().asString() != aircraftValues.ownCallsign)
+                {
+                    ownAircraft.setCallsign(aircraftValues.ownCallsign);
+                    this->getIContextOwnAircraft()->updateOwnCallsign(ownAircraft.getCallsign());
+                }
+
+                if (setIcaoCodes)
+                {
+                    ownAircraft.setIcaoCodes(aircraftCode, airlineCode);
+                    this->getIContextOwnAircraft()->updateOwnIcaoCodes(ownAircraft.getAircraftIcaoCode(), ownAircraft.getAirlineIcaoCode());
+                }
 
                 // Login mode
                 INetwork::LoginMode mode = ui->gbp_LoginMode->getLoginMode();
@@ -258,13 +275,13 @@ namespace BlackGui
             this->ui->cbp_VatsimServer->setServers(vatsimFsdServers);
         }
 
-        void CLoginComponent::setGuiValuesFromAircraft(const CAircraft &ownAircraft)
+        void CLoginComponent::setGuiValuesFromAircraft(const CSimulatedAircraft &ownAircraft)
         {
-            CAircraftIcaoData icao = ownAircraft.getIcaoInfo();
+            CAircraftIcaoCode aircraftIcao = ownAircraft.getAircraftIcaoCode();
             this->ui->le_Callsign->setText(ownAircraft.getCallsignAsString());
-            this->ui->le_AircraftIcaoDesignator->setText(icao.getAircraftDesignator());
-            this->ui->le_AircraftIcaoAirline->setText(icao.getAirlineDesignator());
-            this->ui->le_AircraftCombinedType->setText(icao.getAircraftCombinedType());
+            this->ui->le_AircraftIcaoDesignator->setText(aircraftIcao.getDesignator());
+            this->ui->le_AircraftIcaoAirline->setText(ownAircraft.getAirlineIcaoCodeDesignator());
+            this->ui->le_AircraftCombinedType->setText(aircraftIcao.getCombinedType());
         }
 
         void CLoginComponent::loadFromSettings()
@@ -286,15 +303,6 @@ namespace BlackGui
             values.ownAircraftCombinedType = this->ui->le_AircraftCombinedType->text().trimmed().toUpper();
             values.ownAircraftSimulatorModel = this->ui->le_SimulatorModel->text().trimmed().toUpper();
             return values;
-        }
-
-        void CLoginComponent::mergeGuiIcaoValues(CAircraftIcaoData &icao) const
-        {
-            CGuiAircraftValues values = getAircraftValuesFromGui();
-            CAircraftIcaoData guiIcao(
-                CAircraftIcaoCode(values.ownAircraftIcaoTypeDesignator, values.ownAircraftCombinedType),
-                CAirlineIcaoCode(values.ownAircraftIcaoAirline));
-            icao.updateMissingParts(guiIcao);
         }
 
         CLoginComponent::CVatsimValues CLoginComponent::getVatsimValuesFromGui() const
@@ -356,55 +364,46 @@ namespace BlackGui
             Q_ASSERT(this->getIContextOwnAircraft());
             Q_ASSERT(this->getIContextSimulator());
 
-            static const CAircraftIcaoData defaultIcao(
-                CAircraftIcaoCode("C172", "L1P"),
-                CAirlineIcaoCode()
-            ); // default values
+            static const CAircraftModel defaultModel(
+                "", CAircraftModel::TypeOwnSimulatorModel, "default model",
+                CAircraftIcaoCode("C172", "L1P", "Cessna", "172", "L", true, false, false, 0));
 
-            CAircraftIcaoData icao;
-
+            CAircraftModel model;
             bool simulating = this->getIContextSimulator() &&
                               (this->getIContextSimulator()->getSimulatorStatus() & ISimulator::Simulating);
             if (simulating)
             {
-                CAircraftModel model = this->getIContextOwnAircraft()->getOwnAircraft().getModel();
+                model = this->getIContextOwnAircraft()->getOwnAircraft().getModel();
                 this->ui->le_SimulatorModel->setText(model.getModelString());
-
-                icao = model.getIcao();
-                if (!icao.hasAircraftDesignator())
-                {
-                    // not valid, reverse lookup
-                    this->getIContextSimulator()->getIcaoForModelString(model.getModelString());
-                }
             }
             else
             {
                 // Set observer mode without simulator
                 //! \todo Currently not working in OBS mode
+                model = CAircraftModel(defaultModel);
                 this->ui->gbp_LoginMode->setLoginMode(INetwork::LoginNormal);
                 this->ui->le_SimulatorModel->setText("No simulator");
-                icao = defaultIcao;
             }
 
-            if (icao.hasAircraftDesignator())
+            if (model.hasAircraftDesignator())
             {
-                this->setGuiIcaoValues(icao, false);
+                this->setGuiIcaoValues(model, false);
             }
         }
 
-        void CLoginComponent::setGuiIcaoValues(const CAircraftIcaoData &icao, bool onlyIfEmpty)
+        void CLoginComponent::setGuiIcaoValues(const CAircraftModel &model, bool onlyIfEmpty)
         {
             if (!onlyIfEmpty || this->ui->le_AircraftIcaoDesignator->text().trimmed().isEmpty())
             {
-                this->ui->le_AircraftIcaoDesignator->setText(icao.getAircraftDesignator());
+                this->ui->le_AircraftIcaoDesignator->setText(model.getAircraftIcaoCode().getDesignator());
             }
             if (!onlyIfEmpty || this->ui->le_AircraftIcaoAirline->text().trimmed().isEmpty())
             {
-                this->ui->le_AircraftIcaoAirline->setText(icao.getAirlineDesignator());
+                this->ui->le_AircraftIcaoAirline->setText(model.getAirlineIcaoCode().getDesignator());
             }
             if (!onlyIfEmpty || this->ui->le_AircraftCombinedType->text().trimmed().isEmpty())
             {
-                this->ui->le_AircraftCombinedType->setText(icao.getAircraftCombinedType());
+                this->ui->le_AircraftCombinedType->setText(model.getAircraftIcaoCode().getCombinedType());
             }
             this->ps_validateAircraftValues();
         }
@@ -477,17 +476,12 @@ namespace BlackGui
             Q_ASSERT(getIContextSimulator());
 
             CAircraftModel model(this->getIContextOwnAircraft()->getOwnAircraft().getModel());
-            CAircraftIcaoData icao = this->getIContextSimulator()->getIcaoForModelString(model.getModelString());
-            if (icao.hasAircraftDesignator())
+            if (model.getAircraftIcaoCode().hasDesignator())
             {
                 CLogMessage(this).validationInfo("Reverse lookup for %1") << model.getModelString();
 
-                // set value in backend
-                this->mergeGuiIcaoValues(icao);
-                this->getIContextOwnAircraft()->updateOwnIcaoData(icao);
-
                 // update GUI
-                this->setGuiIcaoValues(icao, false);
+                this->setGuiIcaoValues(model, false);
             }
             else
             {

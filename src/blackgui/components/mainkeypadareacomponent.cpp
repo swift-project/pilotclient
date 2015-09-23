@@ -15,6 +15,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Simulation;
 using namespace BlackCore;
 
 namespace BlackGui
@@ -160,7 +161,7 @@ namespace BlackGui
             this->ui->le_CommandLineInput->clear();
         }
 
-        void CMainKeypadAreaComponent::ps_ownAircraftCockpitChanged(const CAircraft &aircraft, const CIdentifier &originator)
+        void CMainKeypadAreaComponent::ps_ownAircraftCockpitChanged(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
             Q_UNUSED(originator);
             bool ident = aircraft.getTransponder().getTransponderMode() == CTransponder::StateIdent;

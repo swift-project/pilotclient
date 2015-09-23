@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_COCKPITCOMPONENT_H
 #define BLACKGUI_COCKPITCOMPONENT_H
 

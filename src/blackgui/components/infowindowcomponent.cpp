@@ -22,10 +22,6 @@ namespace BlackGui
 {
     namespace Components
     {
-
-        /*
-         * Constructor
-         */
         CInfoWindowComponent::CInfoWindowComponent(QWidget *parent) :
             QWizardPage(parent),
             ui(new Ui::InfoWindow)
@@ -34,21 +30,15 @@ namespace BlackGui
             this->hide();
             this->m_hideTimer = new QTimer(this);
             this->m_hideTimer->setSingleShot(true);
-            this->onStyleSheetsChanged();
+            this->ps_onStyleSheetsChanged();
 
             connect(this->m_hideTimer, &QTimer::timeout, this, &CInfoWindowComponent::hide);
             connect(this->ui->pb_Close, &QPushButton::pressed, this, &CInfoWindowComponent::hide);
-            connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CInfoWindowComponent::onStyleSheetsChanged);
+            connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CInfoWindowComponent::ps_onStyleSheetsChanged);
         }
 
-        /*
-         * Destructor
-         */
         CInfoWindowComponent::~CInfoWindowComponent() { }
 
-        /*
-         * Info message for some time
-         */
         void CInfoWindowComponent::displayStringMessage(const QString &message, int displayTimeMs)
         {
             if (message.isEmpty())
@@ -63,9 +53,6 @@ namespace BlackGui
             this->showWindow(displayTimeMs);
         }
 
-        /*
-         * Info message for some time
-         */
         void CInfoWindowComponent::displayTextMessage(const CTextMessage &textMessage, int displayTimeMs)
         {
             if (textMessage.isEmpty())
@@ -84,9 +71,6 @@ namespace BlackGui
             this->showWindow(displayTimeMs);
         }
 
-        /*
-         * Display status message
-         */
         void CInfoWindowComponent::displayStatusMessage(const CStatusMessage &statusMessage, int displayTimeMs)
         {
             if (statusMessage.isEmpty())
@@ -104,9 +88,6 @@ namespace BlackGui
             this->showWindow(displayTimeMs);
         }
 
-        /*
-         * Display
-         */
         void CInfoWindowComponent::display(const BlackMisc::CVariant &variant, int displayTimeMs)
         {
             if (variant.isNull())
@@ -128,9 +109,6 @@ namespace BlackGui
             }
         }
 
-        /*
-         * Init this window
-         */
         void CInfoWindowComponent::initWindow()
         {
             // center
@@ -143,9 +121,6 @@ namespace BlackGui
             this->show();
         }
 
-        /*
-         * Show window
-         */
         void CInfoWindowComponent::showWindow(int displayTimeMs)
         {
             this->initWindow();
@@ -154,18 +129,12 @@ namespace BlackGui
             this->m_hideTimer->start(displayTimeMs);
         }
 
-        /*
-         * Set current widget
-         */
         void CInfoWindowComponent::setCurrentPage(QWidget *widget)
         {
             this->ui->sw_DifferentModes->setCurrentWidget(widget);
         }
 
-        /*
-         * Style sheet changed
-         */
-        void CInfoWindowComponent::onStyleSheetsChanged()
+        void CInfoWindowComponent::ps_onStyleSheetsChanged()
         {
             QString st = CStyleSheetUtility::instance().style(CStyleSheetUtility::fileNameInfoWindow());
             this->setStyleSheet(st);

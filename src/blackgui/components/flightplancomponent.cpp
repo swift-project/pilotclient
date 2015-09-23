@@ -16,6 +16,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackGui;
 
@@ -69,16 +70,16 @@ namespace BlackGui
             this->prefillWithAircraftData(this->getIContextOwnAircraft()->getOwnAircraft());
         }
 
-        void CFlightPlanComponent::prefillWithAircraftData(const BlackMisc::Aviation::CAircraft &ownAircraft)
+        void CFlightPlanComponent::prefillWithAircraftData(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft)
         {
             // only override with valid values
             if (CCallsign::isValidCallsign(ownAircraft.getCallsignAsString()))
             {
                 this->ui->le_Callsign->setText(ownAircraft.getCallsign().asString());
             }
-            if (CAircraftIcaoCode::isValidDesignator(ownAircraft.getIcaoInfo().getAircraftDesignator()))
+            if (CAircraftIcaoCode::isValidDesignator(ownAircraft.getAircraftIcaoCodeDesignator()))
             {
-                this->ui->le_AircraftType->setText(ownAircraft.getIcaoInfo().getAircraftDesignator());
+                this->ui->le_AircraftType->setText(ownAircraft.getAircraftIcaoCodeDesignator());
             }
             if (ownAircraft.hasValidRealName())
             {
@@ -340,7 +341,7 @@ namespace BlackGui
                 return;
             }
 
-            CAircraft ownAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
+            CSimulatedAircraft ownAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
             CFlightPlan loadedPlan = this->getIContextNetwork()->loadFlightPlanFromNetwork(ownAircraft.getCallsign());
             if (loadedPlan.wasSentOrLoaded())
             {
@@ -419,9 +420,7 @@ namespace BlackGui
 
         CIdentifier CFlightPlanComponent::flightPlanIdentifier()
         {
-            if (m_identifier.getName().isEmpty())
-                m_identifier = CIdentifier(QStringLiteral("FLIGHTPLANCOMPONENT"));
-
+            if (m_identifier.getName().isEmpty()) { m_identifier = CIdentifier(QStringLiteral("FLIGHTPLANCOMPONENT")); }
             return m_identifier;
         }
 

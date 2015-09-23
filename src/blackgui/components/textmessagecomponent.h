@@ -18,7 +18,6 @@
 #include "blackgui/textmessagetextedit.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/network/textmessage.h"
-#include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/network/textmessagelist.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_ownaircraft.h"
@@ -107,7 +106,7 @@ namespace BlackGui
             void addPrivateChannelTextMessage(const BlackMisc::Network::CTextMessage &textMessage);
 
             //! own aircraft
-            const BlackMisc::Aviation::CAircraft getOwnAircraft() const;
+            const BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const;
 
             //! For this text message's recepient, is the current tab selected?
             bool isCorrespondingTextMessageTabSelected(BlackMisc::Network::CTextMessage textMessage) const;

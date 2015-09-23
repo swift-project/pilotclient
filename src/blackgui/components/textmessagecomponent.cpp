@@ -192,7 +192,7 @@ namespace BlackGui
             else
             {
                 // frequency message
-                const CAircraft ownAircraft = this->getOwnAircraft();
+                const CSimulatedAircraft ownAircraft = this->getOwnAircraft();
                 if (this->ui->tw_TextMessages->currentWidget() == this->ui->tb_TextMessagesAll) { return true; }
                 if (textMessage.isSendToFrequency(ownAircraft.getCom1System().getFrequencyActive()))
                 {
@@ -213,7 +213,7 @@ namespace BlackGui
 
         void CTextMessageComponent::showCurrentFrequenciesFromCockpit()
         {
-            const CAircraft ownAircraft = this->getOwnAircraft();
+            const CSimulatedAircraft ownAircraft = this->getOwnAircraft();
             QString f1n, f2n;
             f1n.sprintf("%03.3f", ownAircraft.getCom1System().getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3));
             f2n.sprintf("%03.3f", ownAircraft.getCom2System().getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3));
@@ -276,7 +276,7 @@ namespace BlackGui
             }
         }
 
-        const CAircraft CTextMessageComponent::getOwnAircraft() const
+        const CSimulatedAircraft CTextMessageComponent::getOwnAircraft() const
         {
             Q_ASSERT(this->getIContextOwnAircraft());
             return this->getIContextOwnAircraft()->getOwnAircraft();

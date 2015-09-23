@@ -11,12 +11,14 @@
 #include "ui_settingsnetworkserverscomponent.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_settings.h"
-#include "blackcore/global_network_settings.h"
+#include "blackcore/settings/global_network_settings.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/project.h"
 #include "blackmisc/settingsblackmiscclasses.h"
+#include <QModelIndex>
 
 using namespace BlackCore;
+using namespace BlackCore::Settings;
 using namespace BlackMisc;
 using namespace BlackGui;
 using namespace BlackMisc::Network;
@@ -57,7 +59,7 @@ namespace BlackGui
             this->ui->tvp_SettingsTnServers->updateContainer(serverList);
         }
 
-        void CSettingsNetworkServersComponent::ps_networkServerSelected(QModelIndex index)
+        void CSettingsNetworkServersComponent::ps_networkServerSelected(const QModelIndex &index)
         {
             const CServer clickedServer = this->ui->tvp_SettingsTnServers->at(index);
             this->ui->frp_ServerForm->setServer(clickedServer);

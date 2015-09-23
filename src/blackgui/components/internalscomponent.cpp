@@ -10,6 +10,7 @@
 #include "internalscomponent.h"
 #include "ui_internalscomponent.h"
 #include "blackcore/context_all_interfaces.h"
+#include <QJsonParseError>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

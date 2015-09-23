@@ -26,7 +26,6 @@ namespace BlackGui
 {
     namespace Components
     {
-
         /*!
          * Multi purpose info window (like pop up window)
          */
@@ -44,7 +43,6 @@ namespace BlackGui
             ~CInfoWindowComponent();
 
         public slots:
-
             //! Info message, pure string
             void displayStringMessage(const QString &message, int displayTimeMs = DefaultDisplayTimeMs);
 
@@ -72,7 +70,7 @@ namespace BlackGui
 
         private slots:
             //! Style sheet changed
-            void onStyleSheetsChanged();
+            void ps_onStyleSheetsChanged();
         };
     } // namespace
 } // namespace

@@ -32,14 +32,14 @@
   <property name="dockOptions">
    <set>QMainWindow::AllowTabbedDocks|QMainWindow::ForceTabbedDocks</set>
   </property>
-  <widget class="QWidget" name="qw_centralWidgetEmpty">
+  <widget class="QWidget" name="qw_centralWidgetEmptyUsedAsPadding">
    <property name="enabled">
     <bool>false</bool>
    </property>
    <property name="maximumSize">
     <size>
      <width>0</width>
-     <height>0</height>
+     <height>3</height>
     </size>
    </property>
   </widget>
@@ -104,8 +104,8 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="BlackGui::Components::CLogComponent" name="comp_Log" native="true">
-          <property name="lineWidth" stdset="0">
+         <widget class="BlackGui::Components::CLogComponent" name="comp_Log">
+          <property name="lineWidth">
            <number>0</number>
           </property>
          </widget>
@@ -195,15 +195,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Components::CLogComponent</class>
-   <extends>QWidget</extends>
-   <header>blackgui/components/logcomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::CDockWidgetInfoArea</class>
    <extends>QDockWidget</extends>
    <header>blackgui/dockwidgetinfoarea.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CLogComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/logcomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

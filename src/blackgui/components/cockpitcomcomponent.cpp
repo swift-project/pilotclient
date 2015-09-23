@@ -13,7 +13,6 @@
 #include "blackcore/context_network.h"
 #include "blackcore/context_ownaircraft.h"
 #include "blackcore/context_audio.h"
-#include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/logmessage.h"
 
@@ -25,6 +24,7 @@ using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackGui
@@ -62,7 +62,7 @@ namespace BlackGui
             Q_ASSERT(this->getIContextAudio());
 
             // init from aircraft
-            CAircraft ownAircraft = this->getOwnAircraft();
+            CSimulatedAircraft ownAircraft = this->getOwnAircraft();
             this->ps_updateCockpitFromContext(ownAircraft, CIdentifier("dummyInitialValues")); // intentionally different name here
 
             // SELCAL pairs in cockpit
@@ -106,7 +106,7 @@ namespace BlackGui
                 this->ui->ds_ComPanelCom2Standby->setValue(f);
             }
 
-            const CAircraft ownAircraft = this->cockpitValuesToAircraftObject();
+            const CSimulatedAircraft ownAircraft = this->cockpitValuesToAircraftObject();
             this->updateOwnCockpitInContext(ownAircraft);
         }
 
@@ -115,7 +115,7 @@ namespace BlackGui
             this->getIContextOwnAircraft()->updateSelcal(this->getSelcal(), identifier());
         }
 
-        void CCockpitComComponent::ps_updateCockpitFromContext(const CAircraft &ownAircraft, const CIdentifier &originator)
+        void CCockpitComComponent::ps_updateCockpitFromContext(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
         {
             if (isMyIdentifier(originator)) { return; } // comes from myself
 
@@ -201,9 +201,9 @@ namespace BlackGui
             this->ui->led_ComPanelCom2->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 connected", "COM2 disconnected", 14);
         }
 
-        CAircraft CCockpitComComponent::cockpitValuesToAircraftObject()
+        CSimulatedAircraft CCockpitComComponent::cockpitValuesToAircraftObject()
         {
-            CAircraft ownAircraft = this->getOwnAircraft();
+            CSimulatedAircraft ownAircraft = this->getOwnAircraft();
             CTransponder transponder = ownAircraft.getTransponder();
             CComSystem com1 = ownAircraft.getCom1System();
             CComSystem com2 = ownAircraft.getCom2System();
@@ -238,14 +238,14 @@ namespace BlackGui
             return ownAircraft;
         }
 
-        CAircraft CCockpitComComponent::getOwnAircraft() const
+        CSimulatedAircraft CCockpitComComponent::getOwnAircraft() const
         {
             Q_ASSERT(this->getIContextOwnAircraft());
-            if (!this->getIContextOwnAircraft()) return CAircraft();
+            if (!this->getIContextOwnAircraft()) return CSimulatedAircraft();
             return this->getIContextOwnAircraft()->getOwnAircraft();
         }
 
-        bool CCockpitComComponent::updateOwnCockpitInContext(const CAircraft &ownAircraft)
+        bool CCockpitComComponent::updateOwnCockpitInContext(const CSimulatedAircraft &ownAircraft)
         {
             return this->getIContextOwnAircraft()->updateCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), ownAircraft.getTransponder(), identifier());
         }

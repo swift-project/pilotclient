@@ -44,7 +44,7 @@ namespace BlackGui
 
         private slots:
             //! Network server selected
-            void ps_networkServerSelected(QModelIndex index);
+            void ps_networkServerSelected(const QModelIndex &index);
 
             //! Alter traffic server
             void ps_alterTrafficServer();

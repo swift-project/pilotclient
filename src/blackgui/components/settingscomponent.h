@@ -15,7 +15,6 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enableforruntime.h"
 #include "blackmisc/network/server.h"
-#include "blackmisc/aviation/aircrafticaodata.h"
 #include <QTabWidget>
 #include <QModelIndex>
 #include <QTimer>

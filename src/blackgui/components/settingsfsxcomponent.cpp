@@ -20,6 +20,7 @@
 #include <QDesktopServices>
 #include <QFile>
 #include <QDir>
+#include <QUrl>
 #include <QFileInfo>
 
 using namespace BlackMisc;

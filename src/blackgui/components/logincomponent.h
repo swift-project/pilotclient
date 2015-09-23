@@ -15,7 +15,6 @@
 #include "blackgui/blackguiexport.h"
 #include "enableforruntime.h"
 #include "blackcore/settings/network.h"
-#include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/network/server.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -106,7 +105,7 @@ namespace BlackGui
             };
 
             //! GUI values from aircraft
-            void setGuiValuesFromAircraft(const BlackMisc::Aviation::CAircraft &ownAircraft);
+            void setGuiValuesFromAircraft(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
 
             //! Load from settings
             void loadFromSettings();
@@ -142,16 +141,12 @@ namespace BlackGui
             void setOwnModel();
 
             //! Set ICAO values
-            void setGuiIcaoValues(const BlackMisc::Aviation::CAircraftIcaoData &icao, bool onlyIfEmpty);
-
-            //! Merge with GUI icao values
-            void mergeGuiIcaoValues(BlackMisc::Aviation::CAircraftIcaoData &icao) const;
+            void setGuiIcaoValues(const BlackMisc::Simulation::CAircraftModel &model, bool onlyIfEmpty);
 
             bool m_visible = false; //!< is this component selected?
             QScopedPointer<Ui::CLoginComponent> ui;
             const int LogoffIntervalSeconds = 10;
-            QTimer *m_logoffCountdownTimer = nullptr;
-
+            QTimer *m_logoffCountdownTimer { nullptr };
             BlackCore::CSetting<BlackCore::Settings::Network::TrafficServers> m_trafficNetworkServers { this };
         };
 

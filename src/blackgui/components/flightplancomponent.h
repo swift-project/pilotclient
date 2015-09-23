@@ -15,7 +15,6 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enableforruntime.h"
 #include "blackmisc/identifier.h"
-#include "blackmisc/aviation/aircraft.h"
 #include "blackmisc/aviation/flightplan.h"
 
 #include <QTabWidget>
@@ -45,7 +44,7 @@ namespace BlackGui
             void loginDataSet();
 
             //! Prefill with aircraft data
-            void prefillWithAircraftData(const BlackMisc::Aviation::CAircraft &ownAircraft);
+            void prefillWithAircraftData(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
 
             //! Prefill with aircraft dara
             void fillWithFlightPlanData(const BlackMisc::Aviation::CFlightPlan &flightPlan);
@@ -70,10 +69,10 @@ namespace BlackGui
             BlackMisc::CIdentifier m_identifier;
 
             //! Default value for airport ICAO airports
-            static const QString &defaultIcao() { static QString d("ICAO"); return d; }
+            static const QString &defaultIcao() { static const QString d("ICAO"); return d; }
 
             //! Default value for time
-            static const QString &defaultTime() { static QString t("00:00"); return t; }
+            static const QString &defaultTime() { static const  QString t("00:00"); return t; }
 
             //! Identifier
             BlackMisc::CIdentifier flightPlanIdentifier();

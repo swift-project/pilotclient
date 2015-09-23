@@ -18,8 +18,6 @@
 #include <QCloseEvent>
 #include <QStatusBar>
 #include <QAction>
-#include <QShortcut>
-#include <QKeySequence>
 #include <QIcon>
 
 using namespace BlackMisc;
@@ -240,7 +238,7 @@ namespace BlackGui
     void CInfoArea::paintEvent(QPaintEvent *event)
     {
         CStyleSheetUtility::useStyleSheetInDerivedWidget(this, QStyle::PE_FrameWindow);
-        QMainWindow::paintEvent(event);
+        Q_UNUSED(event);
     }
 
     void CInfoArea::keyPressEvent(QKeyEvent *event)
@@ -793,7 +791,7 @@ namespace BlackGui
 
     void CInfoArea::ps_setTabBarPosition(QTabWidget::TabPosition position)
     {
-        Q_ASSERT(position == QTabWidget::North || position == QTabWidget::South);
+        Q_ASSERT_X(position == QTabWidget::North || position == QTabWidget::South, Q_FUNC_INFO, "Wrong tabbar position");
         this->setTabPosition(Qt::TopDockWidgetArea, position);
     }
 

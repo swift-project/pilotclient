@@ -16,7 +16,6 @@
 #include "maininfoareacomponent.h"
 #include "enableforruntime.h"
 #include "blackmisc/identifier.h"
-#include "blackmisc/aviation/aircraft.h"
 
 #include <QFrame>
 #include <QPushButton>
@@ -83,7 +82,7 @@ namespace BlackGui
             void ps_commandEntered();
 
             //! \copydoc BlackCore::IContextOwnAircraft::changedAircraftCockpit
-            void ps_ownAircraftCockpitChanged(const BlackMisc::Aviation::CAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+            void ps_ownAircraftCockpitChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
             //! \copydoc BlackCore::IContextAudio::changedMute
             void ps_muteChanged(bool muted);

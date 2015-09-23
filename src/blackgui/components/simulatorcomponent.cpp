@@ -14,10 +14,10 @@
 #include "blackcore/context_ownaircraft.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/iconlist.h"
-#include "blackmisc/aviation/aircraft.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Simulation;
 using namespace BlackCore;
 
 namespace BlackGui
@@ -90,7 +90,7 @@ namespace BlackGui
                 this->clear();
             }
 
-            CAircraft ownAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
+            CSimulatedAircraft ownAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
             CAircraftSituation s = ownAircraft.getSituation();
             CComSystem c1 = ownAircraft.getCom1System();
             CComSystem c2 = ownAircraft.getCom2System();

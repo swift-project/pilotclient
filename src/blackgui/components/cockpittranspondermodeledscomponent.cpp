@@ -14,6 +14,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Simulation;
 using namespace BlackCore;
 
 namespace BlackGui
@@ -37,7 +38,7 @@ namespace BlackGui
             this->setMode(getOwnTransponder().getTransponderMode());
         }
 
-        void CCockpitTransponderModeLedsComponent::ps_onAircraftCockpitChanged(const CAircraft &aircraft, const BlackMisc::CIdentifier &originator)
+        void CCockpitTransponderModeLedsComponent::ps_onAircraftCockpitChanged(const CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator)
         {
             if (isMyIdentifier(originator)) { return; }
             this->setMode(aircraft.getTransponderMode());
@@ -65,7 +66,7 @@ namespace BlackGui
             {
                 return;
             }
-            CAircraft ownAircraft = this->getOwnAircraft();
+            CSimulatedAircraft ownAircraft(this->getOwnAircraft());
             if (ownAircraft.getTransponderMode() == mode) { return; }
 
             this->setMode(mode);
@@ -128,7 +129,7 @@ namespace BlackGui
             return getIContextOwnAircraft()->getOwnAircraft().getTransponder();
         }
 
-        CAircraft CCockpitTransponderModeLedsComponent::getOwnAircraft() const
+        CSimulatedAircraft CCockpitTransponderModeLedsComponent::getOwnAircraft() const
         {
             Q_ASSERT(getIContextOwnAircraft());
             return getIContextOwnAircraft()->getOwnAircraft();
