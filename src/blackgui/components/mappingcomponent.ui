@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>CMappingComponent</class>
  <widget class="QFrame" name="CMappingComponent">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>400</width>
-    <height>300</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Frame</string>
   </property>

@@ -11,7 +11,7 @@
 #include "blackcore/context_network.h"
 #include "blackcore/network.h"
 #include "blackgui/views/aircraftmodelview.h"
-#include "blackgui/views/aircraftmodelfilterform.h"
+#include "blackgui/filters/aircraftmodelfilterdialog.h"
 #include "blackgui/models/aircraftmodellistmodel.h"
 #include "blackgui/guiutility.h"
 #include "blackmisc/propertyindexlist.h"
@@ -19,6 +19,7 @@
 #include "blackmisc/pixmap.h"
 #include "mappingcomponent.h"
 #include "ui_mappingcomponent.h"
+#include <QStringListModel>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -29,19 +30,19 @@ using namespace BlackCore;
 using namespace BlackGui;
 using namespace BlackGui::Views;
 using namespace BlackGui::Models;
+using namespace BlackGui::Filters;
 
 namespace BlackGui
 {
     namespace Components
     {
-
         CMappingComponent::CMappingComponent(QWidget *parent) :
             QFrame(parent),
             ui(new Ui::CMappingComponent),
             m_updateTimer(new CUpdateTimer("CMappingComponent", &CMappingComponent::ps_backgroundUpdate, this))
         {
             ui->setupUi(this);
-            this->ui->tvp_AircraftModels->setAircraftModelMode(CAircraftModelListModel::ModelOnly);
+            this->ui->tvp_AircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnSimulatorModel);
             this->ui->tvp_SimulatedAircraft->setAircraftMode(CSimulatedAircraftListModel::ModelMode);
             this->ui->tvp_SimulatedAircraft->setResizeMode(CAircraftModelView::ResizingOnce);
             this->ui->tvp_AircraftModels->setResizeMode(CAircraftModelView::ResizingOff);
@@ -49,7 +50,7 @@ namespace BlackGui
             connect(this->ui->tvp_AircraftModels, &CAircraftModelView::requestUpdate, this, &CMappingComponent::ps_onModelsUpdateRequested);
             connect(this->ui->tvp_AircraftModels, &CAircraftModelView::rowCountChanged, this, &CMappingComponent::ps_onRowCountChanged);
             connect(this->ui->tvp_AircraftModels, &CAircraftModelView::clicked, this, &CMappingComponent::ps_onModelSelectedInView);
-            connect(this->ui->tvp_AircraftModels, &CAircraftModelView::requestModelReload, this, &CMappingComponent::ps_onMenuRequestModelReload);
+            connect(this->ui->tvp_AircraftModels, &CAircraftModelView::requestNewBackendData, this, &CMappingComponent::ps_onMenuRequestModelReload);
 
             connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::rowCountChanged, this, &CMappingComponent::ps_onRowCountChanged);
             connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::clicked, this, &CMappingComponent::ps_onAircraftSelectedInView);
