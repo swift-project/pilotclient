@@ -20,7 +20,6 @@ namespace BlackMisc
     {
         namespace FsCommon
         {
-
             using FsRegistryPathPair = QList<QPair<QString, QString>>;
 
             QString CFsCommonUtil::fsxDirFromRegistry()
@@ -28,7 +27,6 @@ namespace BlackMisc
                 QString fsxPath;
                 if (CProject::isCompiledWithFsxSupport())
                 {
-
                     FsRegistryPathPair fsxRegistryPathPairs =
                     {
                         { QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0"), QStringLiteral("AppPath") },
@@ -46,12 +44,59 @@ namespace BlackMisc
                 return fsxPath;
             }
 
+            QString CFsCommonUtil::fsxDir()
+            {
+                QString dir(fsxDirFromRegistry());
+                if (!dir.isEmpty()) { return dir; }\
+
+                //! \todo allow to read a user defined value from settings
+                return "P:/FlightSimulatorX (MSI)";
+            }
+
+            QString CFsCommonUtil::p3dDir()
+            {
+                //! \todo P3D resolution
+                return fsxDir();
+            }
+
             QString CFsCommonUtil::fsxSimObjectsDirFromRegistry()
             {
                 QString fsxPath = fsxDirFromRegistry();
                 if (fsxPath.isEmpty()) { return ""; }
                 fsxPath = QDir(fsxPath).filePath("SimObjects");
                 return fsxPath;
+            }
+
+            QString CFsCommonUtil::fsxSimObjectsDir()
+            {
+                QString dir(fsxSimObjectsDirFromRegistry());
+                if (!dir.isEmpty()) { return dir; }
+
+                //! \todo allow to read a user defined value from settings
+                return "P:/FlightSimulatorX (MSI)/SimObjects"; // "p:/temp/SimObjects"
+            }
+
+            const QStringList &CFsCommonUtil::fsxSimObjectsExcludeDirectories()
+            {
+                static const QStringList exclude
+                {
+                    "SimObjects/Animals",
+                    "SimObjects/Misc",
+                    "SimObjects/GroundVehicles",
+                    "SimObjects/Boats"
+                };
+                return exclude;
+            }
+
+            QString CFsCommonUtil::p3dSimObjectsDir()
+            {
+                //! \todo P3D resolution
+                return fsxSimObjectsDir();
+            }
+
+            const QStringList &CFsCommonUtil::p3dSimObjectsExcludeDirectories()
+            {
+                return fsxSimObjectsExcludeDirectories();
             }
 
             QString CFsCommonUtil::fs9DirFromRegistry()
@@ -76,12 +121,35 @@ namespace BlackMisc
                 return fs9Path;
             }
 
+            QString CFsCommonUtil::fs9Dir()
+            {
+                QString dir(fs9DirFromRegistry());
+                if (!dir.isEmpty()) { return dir; }
+
+                //! \todo hardcoded sim parts should come from settings
+                return "C:/Flight Simulator 9";
+            }
+
             QString CFsCommonUtil::fs9AircraftDirFromRegistry()
             {
                 QString fs9Path = fs9DirFromRegistry();
                 if (fs9Path.isEmpty()) { return ""; }
                 fs9Path = QDir(fs9Path).filePath("Aircraft");
                 return fs9Path;
+            }
+
+            QString CFsCommonUtil::fs9AircraftDir()
+            {
+                QString dir(fs9AircraftDirFromRegistry());
+                if (!dir.isEmpty()) { return dir; }
+                //! \todo hardcoded sim parts should come from settings
+                return "C:/Flight Simulator 9/Aircraft";
+            }
+
+            const QStringList &CFsCommonUtil::fs9AircraftObjectsExcludeDirectories()
+            {
+                static const QStringList exclude;
+                return exclude;
             }
 
         } // namespace

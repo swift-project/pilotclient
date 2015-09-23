@@ -70,6 +70,18 @@ namespace BlackMisc
                 return ml;
             }
 
+            CAircraftModelList CAircraftCfgEntriesList::toAircraftModelList(const CSimulatorInfo &simInfo) const
+            {
+                CAircraftModelList ml;
+                for (auto it = this->begin() ; it != this->end(); ++it)
+                {
+                    CAircraftModel m(it->toAircraftModel());
+                    m.setSimulatorInfo(simInfo);
+                    ml.push_back(m);
+                }
+                return ml;
+            }
+
             CAircraftCfgEntriesList CAircraftCfgEntriesList::findByTitle(const QString &title, Qt::CaseSensitivity caseSensitivity) const
             {
                 return this->findBy([ = ](const CAircraftCfgEntries & entries) -> bool

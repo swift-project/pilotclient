@@ -13,7 +13,7 @@
 #define BLACKMISC_SIMULATION_MODELMAPPINGS_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/network/aircraftmappinglist.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include <QObject>
 
 namespace BlackMisc
@@ -37,10 +37,10 @@ namespace BlackMisc
             virtual bool read() = 0;
 
             //! Get list
-            const BlackMisc::Network::CAircraftMappingList &getMappingList() const;
+            const CAircraftModelList &getDatastoreModels() const;
 
         protected:
-            BlackMisc::Network::CAircraftMappingList m_mappings; //!< mappings
+            BlackMisc::Simulation::CAircraftModelList m_datastoreModels; //!< models
         };
 
         //! Model mappings dummy

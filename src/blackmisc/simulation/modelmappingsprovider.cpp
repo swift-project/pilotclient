@@ -10,7 +10,7 @@
 #include "modelmappingsprovider.h"
 
 using namespace BlackMisc;
-using namespace BlackMisc::Network;
+using namespace BlackMisc::Simulation;
 
 namespace BlackMisc
 {
@@ -18,9 +18,9 @@ namespace BlackMisc
     {
         IModelMappingsProvider::IModelMappingsProvider(QObject *parent) : QObject(parent) {}
 
-        const CAircraftMappingList &IModelMappingsProvider::getMappingList() const
+        const CAircraftModelList &IModelMappingsProvider::getDatastoreModels() const
         {
-            return m_mappings;
+            return m_datastoreModels;
         }
     } // namespace
 } // namespace

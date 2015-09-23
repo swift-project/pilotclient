@@ -8,11 +8,13 @@
  */
 
 #include "aircraftcfgparser.h"
+#include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/logmessage.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Network;
 
 namespace BlackMisc
@@ -21,6 +23,43 @@ namespace BlackMisc
     {
         namespace FsCommon
         {
+            CAircraftCfgParser::CAircraftCfgParser() { }
+
+            CAircraftCfgParser::CAircraftCfgParser(const CSimulatorInfo &simInfo, const QString &rootDirectory, const QStringList &exludes) :
+                IAircraftModelLoader(simInfo),
+                m_rootDirectory(rootDirectory),
+                m_excludedDirectories(exludes)
+            { }
+
+            CAircraftCfgParser *CAircraftCfgParser::createModelLoader(const CSimulatorInfo &simInfo)
+            {
+                if (simInfo.fsx())
+                {
+                    return new CAircraftCfgParser(
+                               CSimulatorInfo(CSimulatorInfo::FSX),
+                               CFsCommonUtil::fsxSimObjectsDir(),
+                               CFsCommonUtil::fsxSimObjectsExcludeDirectories());
+
+                }
+                else if (simInfo.fs9())
+                {
+                    return new CAircraftCfgParser(
+                               CSimulatorInfo(CSimulatorInfo::FS9),
+                               CFsCommonUtil::fs9AircraftDir(),
+                               CFsCommonUtil::fs9AircraftObjectsExcludeDirectories());
+
+                }
+                else if (simInfo.p3d())
+                {
+                    return new CAircraftCfgParser(
+                               CSimulatorInfo(CSimulatorInfo::P3D),
+                               CFsCommonUtil::p3dSimObjectsDir(),
+                               CFsCommonUtil::p3dSimObjectsExcludeDirectories());
+                }
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Illegal simulator info");
+                return nullptr;
+            }
+
             CAircraftCfgParser::~CAircraftCfgParser()
             {
                 // that should be safe as long as the worker uses deleteLater (which it does)
@@ -36,9 +75,37 @@ namespace BlackMisc
                 return true;
             }
 
-            void CAircraftCfgParser::parse(ParserMode mode)
+            CPixmap CAircraftCfgParser::iconForModel(const QString &modelString, CStatusMessage &statusMessage) const
             {
-                if (mode == ModeAsync)
+                static const CPixmap empty;
+                if (modelString.isEmpty()) { return empty; }
+                CAircraftCfgEntriesList cfgEntries = this->getAircraftCfgEntriesList().findByTitle(modelString);
+                if (cfgEntries.isEmpty())
+                {
+                    statusMessage = CStatusMessage(CStatusMessage::SeverityWarning, QString("No .cfg entry for '%1'").arg(modelString));
+                    return empty;
+                }
+
+                // normally we should have only one entry
+                if (cfgEntries.size() > 1)
+                {
+                    statusMessage = CStatusMessage(CStatusMessage::SeverityWarning, QString("Multiple FSX .cfg entries for '%1'").arg(modelString));
+                }
+
+                // use first with icon
+                for (const CAircraftCfgEntries &entry : cfgEntries)
+                {
+                    const QString thumbnail = entry.getThumbnailFileName();
+                    if (thumbnail.isEmpty()) { continue; }
+                    QPixmap pm;
+                    if (pm.load(thumbnail)) { return CPixmap(pm); }
+                }
+                return empty;
+            }
+
+            void CAircraftCfgParser::startLoading(LoadMode mode)
+            {
+                if (mode == ModeBackground)
                 {
                     if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
                     auto rootDirectory = m_rootDirectory;
@@ -47,7 +114,7 @@ namespace BlackMisc
                                      [this, rootDirectory, excludedDirectories]()
                     {
                         bool ok;
-                        auto aircraftCfgEntriesList = this->parseImpl(rootDirectory, excludedDirectories, &ok);
+                        auto aircraftCfgEntriesList = this->performParsing(rootDirectory, excludedDirectories, &ok);
                         return std::make_pair(aircraftCfgEntriesList, ok);
                     });
                     m_parserWorker->thenWithResult<std::pair<CAircraftCfgEntriesList, bool>>(this, [this](const std::pair<CAircraftCfgEntriesList, bool> &pair)
@@ -58,26 +125,41 @@ namespace BlackMisc
                 else if (mode == ModeBlocking)
                 {
                     bool ok;
-                    m_parsedCfgEntriesList = parseImpl(m_rootDirectory, m_excludedDirectories, &ok);
-                    emit parsingFinished(ok);
+                    m_parsedCfgEntriesList = performParsing(m_rootDirectory, m_excludedDirectories, &ok);
+                    emit loadingFinished(ok);
                 }
             }
+
+            bool CAircraftCfgParser::isLoadingFinished() const
+            {
+                return !m_parserWorker || m_parserWorker->isFinished();
+            }
+
+            CAircraftModelList CAircraftCfgParser::getAircraftModels() const
+            {
+                return getAircraftCfgEntriesList().toAircraftModelList(this->m_simulatorInfo);
+            }
+
 
             void CAircraftCfgParser::updateCfgEntriesList(const CAircraftCfgEntriesList &cfgEntriesList)
             {
                 m_parsedCfgEntriesList = cfgEntriesList;
-                emit parsingFinished(true);
+                emit loadingFinished(true);
             }
 
-            CAircraftCfgEntriesList CAircraftCfgParser::parseImpl(const QString &directory, const QStringList &excludeDirectories, bool *ok)
+            CAircraftCfgEntriesList CAircraftCfgParser::performParsing(const QString &directory, const QStringList &excludeDirectories, bool *ok)
             {
+                //
+                // function has to be thread safe
+                //
+
                 *ok = false;
-                if (m_cancelParsing) { return CAircraftCfgEntriesList(); }
+                if (m_cancelLoading) { return CAircraftCfgEntriesList(); }
 
                 // excluded?
                 for (const auto &excludeDir : excludeDirectories)
                 {
-                    if (m_cancelParsing) { return CAircraftCfgEntriesList(); }
+                    if (m_cancelLoading) { return CAircraftCfgEntriesList(); }
                     if (directory.contains(excludeDir, Qt::CaseInsensitive))
                     {
                         CLogMessage(this).debug() << "Skipping directory " << directory;
@@ -101,7 +183,7 @@ namespace BlackMisc
                 QFileInfoList files = dir.entryInfoList(QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot, QDir::DirsLast);
                 for (const auto &file : files)
                 {
-                    if (m_cancelParsing) { return CAircraftCfgEntriesList(); }
+                    if (m_cancelLoading) { return CAircraftCfgEntriesList(); }
                     if (file.isDir())
                     {
                         QString nextDir = file.absoluteFilePath();
@@ -109,7 +191,7 @@ namespace BlackMisc
                         if (dir == currentDir) { continue; } // do not recursively call same directory
 
                         bool dirOk;
-                        const CAircraftCfgEntriesList subList(parseImpl(nextDir, excludeDirectories, &dirOk));
+                        const CAircraftCfgEntriesList subList(performParsing(nextDir, excludeDirectories, &dirOk));
                         if (dirOk)
                         {
                             result.push_back(subList);
@@ -186,6 +268,10 @@ namespace BlackMisc
                                     {
                                         e.setAtcParkingCode(getFixedIniLineContent(lineFixed));
                                     }
+                                    else if (lineFixed.startsWith("atc_airline", Qt::CaseInsensitive))
+                                    {
+                                        e.setAtcAirline(getFixedIniLineContent(lineFixed));
+                                    }
                                     else if (lineFixed.startsWith("description", Qt::CaseInsensitive))
                                     {
                                         e.setDescription(getFixedIniLineContent(lineFixed));
@@ -206,6 +292,14 @@ namespace BlackMisc
                                     else if (lineFixed.startsWith("texture", Qt::CaseInsensitive))
                                     {
                                         e.setTexture(getFixedIniLineContent(lineFixed));
+                                    }
+                                    else if (lineFixed.startsWith("createdBy", Qt::CaseInsensitive))
+                                    {
+                                        e.setCreatedBy(getFixedIniLineContent(lineFixed));
+                                    }
+                                    else if (lineFixed.startsWith("sim", Qt::CaseInsensitive))
+                                    {
+                                        e.setSimName(getFixedIniLineContent(lineFixed));
                                     }
                                     else if (lineFixed.startsWith("title", Qt::CaseInsensitive))
                                     {

@@ -8,7 +8,6 @@
  */
 
 #include "modelmappingsprovidervpilot.h"
-#include "blackmisc/network/aircraftmapping.h"
 
 #include <QtXml/QDomElement>
 #include <QFile>
@@ -33,10 +32,10 @@ namespace BlackMisc
             bool CModelMappingsProviderVPilot::read()
             {
                 Q_ASSERT_X(this->m_vPilotReader, Q_FUNC_INFO, "missing reader");
-                bool success = this->m_vPilotReader->read();
+                bool success = this->m_vPilotReader->read(false);
                 if (success)
                 {
-                    this->m_mappings =  this->m_vPilotReader->getRules().toMappings();
+                    this->m_datastoreModels =  this->m_vPilotReader->getRules().toAircraftModels();
                 }
                 return success;
             }

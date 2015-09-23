@@ -12,6 +12,7 @@
 #include "blackmisc/variant.h"
 
 using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Network;
 
@@ -83,11 +84,57 @@ namespace BlackMisc
                 this->m_atcParkingCode = parkingCode.trimmed();
             }
 
+            void CAircraftCfgEntries::setAtcAirline(const QString &airline)
+            {
+                this->m_atcAirline = airline.trimmed();
+            }
+
+            void CAircraftCfgEntries::setSimName(const QString &simName)
+            {
+                this->m_simName = simName.trimmed();
+            }
+
+            void CAircraftCfgEntries::setDescription(const QString &description)
+            {
+                this->m_description = description.trimmed();
+            }
+
+            void CAircraftCfgEntries::setCreatedBy(const QString &createdBy)
+            {
+                this->m_createdBy = createdBy.trimmed();
+            }
+
+            void CAircraftCfgEntries::setTexture(const QString &texture)
+            {
+                this->m_texture = texture.trimmed();
+            }
+
+            void CAircraftCfgEntries::setUiType(const QString &type)
+            {
+                this->m_uiType = type.trimmed();
+            }
+
             CAircraftModel CAircraftCfgEntries::toAircraftModel() const
             {
-                CAircraftModel model(this->getTitle(), CAircraftModel::TypeModelMapping);
-                model.setDescription(this->getUiCombinedDescription());
+                CAircraftModel model(this->getTitle(), CAircraftModel::TypeOwnSimulatorModel);
+                model.setDescription(this->getUiCombinedDescription()); // Manufacturer and type
                 model.setFileName(this->getFileName());
+                model.setName(this->getSimName());
+
+                CAircraftIcaoCode aircraft(getAtcModel());
+                aircraft.setManufacturer(this->getUiManufacturer());
+                model.setAircraftIcaoCode(aircraft);
+
+                CLivery livery;
+                livery.setCombinedCode(this->getTexture());
+                CAirlineIcaoCode airline;
+                airline.setName(this->getAtcAirline());
+                livery.setAirlineIcaoCode(airline);
+                model.setLivery(livery);
+
+                CDistributor distributor(this->getCreatedBy());
+                model.setDistributor(distributor);
+
                 return model;
             }
 

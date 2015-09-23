@@ -25,20 +25,47 @@ namespace BlackMisc
             class BLACKMISC_EXPORT CFsCommonUtil
             {
             public:
-                CFsCommonUtil();
+                //! Constructor
+                CFsCommonUtil() = delete;
 
                 //! FSX directory obtained from registry
                 static QString fsxDirFromRegistry();
 
+                //! FSX directory from different sources
+                static QString fsxDir();
+
+                //! P3D directory from different sources
+                static QString p3dDir();
+
                 //! FSX's simObject directory from registry
                 static QString fsxSimObjectsDirFromRegistry();
+
+                //! FSX's sim object dir, resolved from multiple sources
+                static QString fsxSimObjectsDir();
+
+                //! Exclude directories for simObjects
+                static const QStringList &fsxSimObjectsExcludeDirectories();
+
+                //! P3D's sim object dir, resolved from multiple sources
+                static QString p3dSimObjectsDir();
+
+                //! Exclude directories for simObjects
+                static const QStringList &p3dSimObjectsExcludeDirectories();
 
                 //! FS9 directory obtained from registry
                 static QString fs9DirFromRegistry();
 
+                //! FS9 directory obtained from multiple sources
+                static QString fs9Dir();
+
                 //! FS9's aircraft directory from registry
                 static QString fs9AircraftDirFromRegistry();
 
+                //! FS9's aircraft directory
+                static QString fs9AircraftDir();
+
+                //! Exclude directories for aircraft objects
+                static const QStringList &fs9AircraftObjectsExcludeDirectories();
             };
 
         } // namespace

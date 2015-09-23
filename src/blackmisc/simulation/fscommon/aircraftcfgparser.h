@@ -14,9 +14,11 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/worker.h"
+#include "blackmisc/pixmap.h"
+#include "blackmisc/simulation/aircraftmodelloader.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 
-#include <atomic>
+#include <QPointer>
 
 namespace BlackMisc
 {
@@ -25,25 +27,16 @@ namespace BlackMisc
         namespace FsCommon
         {
             //! Utility, parsing the aircraft.cfg files
-            class BLACKMISC_EXPORT CAircraftCfgParser : public QObject
+            class BLACKMISC_EXPORT CAircraftCfgParser : public BlackMisc::Simulation::IAircraftModelLoader
             {
                 Q_OBJECT
 
             public:
-                //! Parser mode
-                enum ParserMode
-                {
-                    ModeBlocking,
-                    ModeAsync
-                };
-
-                CAircraftCfgParser() { }
+                //! Destructor
+                CAircraftCfgParser();
 
                 //! Constructor
-                CAircraftCfgParser(const QString &rootDirectory, const QStringList &exludes = {}) :
-                    m_rootDirectory(rootDirectory),
-                    m_excludedDirectories(exludes)
-                { }
+                CAircraftCfgParser(const BlackMisc::Simulation::CSimulatorInfo &simInfo, const QString &rootDirectory, const QStringList &exludes = {});
 
                 //! Virtual destructor
                 virtual ~CAircraftCfgParser();
@@ -51,31 +44,30 @@ namespace BlackMisc
                 //! Change the directory
                 bool changeRootDirectory(const QString &directory);
 
-                //! Parse all cfg files
-                void parse(ParserMode mode = ModeAsync);
-
-                //! Has current directory been parsed?
-                bool isParsingFinished() const { return m_parserWorker->isFinished(); }
-
-                //! Cancel read
-                void cancelParsing() { m_cancelParsing = true; }
-
                 //! Current root directory
-                QString getRootDirectory() const {  return this->m_rootDirectory; }
+                QString getRootDirectory() const { return this->m_rootDirectory; }
 
                 //! Get parsed aircraft cfg entries list
-                CAircraftCfgEntriesList getAircraftCfgEntriesList() const { return m_parsedCfgEntriesList; }
+                const CAircraftCfgEntriesList &getAircraftCfgEntriesList() const { return m_parsedCfgEntriesList; }
+
+                //! \copydoc IAircraftModelLoader::getPixmapForModel
+                virtual BlackMisc::CPixmap iconForModel(const QString &modelName, BlackMisc::CStatusMessage &statusMessage) const override;
+
+                //! \copydoc IAircraftModelLoader::startLoading
+                virtual void startLoading(LoadMode mode = ModeBackground) override;
+
+                //! \copydoc IAircraftModelLoader::isLoadingFinished
+                virtual bool isLoadingFinished() const override;
+
+                //! \copydoc IAircraftModelLoader::getAircraftModels
+                virtual BlackMisc::Simulation::CAircraftModelList getAircraftModels() const override;
+
+                //! Create an parser object for given simulator
+                static CAircraftCfgParser *createModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
 
             public slots:
                 //! Parsed or injected entires
                 void updateCfgEntriesList(const BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList &cfgEntriesList);
-
-            signals:
-                //! Parsing is finished
-                void parsingFinished(bool success);
-
-            private slots:
-                CAircraftCfgEntriesList parseImpl(const QString &directory, const QStringList &excludeDirectories, bool *ok);
 
             private:
                 //! Section within file
@@ -89,6 +81,10 @@ namespace BlackMisc
                 //! Does the directory exist?
                 bool existsDir(const QString &directory = "") const;
 
+                //! Perform the parsing
+                //! \threadsafe
+                CAircraftCfgEntriesList performParsing(const QString &directory, const QStringList &excludeDirectories, bool *ok);
+
                 //! Fix the content read
                 static QString fixedStringContent(const QVariant &qv);
 
@@ -98,15 +94,13 @@ namespace BlackMisc
                 //! Content after "="
                 static QString getFixedIniLineContent(const QString &line);
 
-                QString m_rootDirectory;    //!< root directory parsing aircraft.cfg files
-                QStringList m_excludedDirectories;
-                CAircraftCfgEntriesList m_parsedCfgEntriesList;
-                QPointer<BlackMisc::CWorker> m_parserWorker; //!< worker will destroy itself, so weak pointer
-                std::atomic<bool> m_cancelParsing = { false };
+                QString m_rootDirectory;                        //!< root directory parsing aircraft.cfg files
+                QStringList m_excludedDirectories;              //!< directories not to be parsed
+                CAircraftCfgEntriesList m_parsedCfgEntriesList; //!< parsed entries
+                QPointer<BlackMisc::CWorker> m_parserWorker;    //!< worker will destroy itself, so weak pointer
             };
         } // namespace
     } // namespace
 } // namespace
-
 
 #endif // guard

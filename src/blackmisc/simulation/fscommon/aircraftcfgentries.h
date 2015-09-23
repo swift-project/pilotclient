@@ -52,37 +52,46 @@ namespace BlackMisc
                 CAircraftCfgEntries(const QString &filePath, int index, const QString &title, const QString &atcType, const QString &atcModel, const QString &atcParkingCode, const QString &description);
 
                 //! File name
-                QString getFileName() const { return this->m_fileName; }
+                const QString &getFileName() const { return this->m_fileName; }
 
                 //! Directory of entry
                 QString getFileDirectory() const;
 
                 //! Title
-                QString getTitle() const { return this->m_title; }
+                const QString &getTitle() const { return this->m_title; }
 
                 //! Index
                 int getIndex() const { return this->m_index; }
 
                 //! ATC model
-                QString getAtcModel() const { return this->m_atcModel; }
+                const QString &getAtcModel() const { return this->m_atcModel; }
 
                 //! ATC type
-                QString getAtcType() const { return this->m_atcType; }
+                const QString &getAtcType() const { return this->m_atcType; }
+
+                //! ATC airline
+                const QString &getAtcAirline() const { return this->m_atcAirline; }
+
+                //! Sim name
+                const QString &getSimName() const { return this->m_simName; }
 
                 //! Description
-                QString getDescription() const { return this->m_description; }
+                const QString &getDescription() const { return this->m_description; }
 
                 //! ATC parking code
-                QString getAtcParkingCode() const { return this->m_atcParkingCode; }
+                const QString &getAtcParkingCode() const { return this->m_atcParkingCode; }
 
                 //! UI type (e.g. A321-231 IAE)
-                QString getUiType() const { return this->m_uiType; }
+                const QString &getUiType() const { return this->m_uiType; }
 
                 //! UI manufacturer (e.g. Airbus)
-                QString getUiManufacturer() const { return this->m_uiManufacturer; }
+                const QString &getUiManufacturer() const { return this->m_uiManufacturer; }
 
                 //! Texture
-                QString getTexture() const { return this->m_texture; }
+                const QString &getTexture() const { return this->m_texture; }
+
+                //! Created by
+                const QString &getCreatedBy() const { return this->m_createdBy; }
 
                 //! Is Rotorcraft?
                 bool isRotorcraft() const { return m_rotorcraft; }
@@ -108,14 +117,23 @@ namespace BlackMisc
                 //! Parking code
                 void setAtcParkingCode(const QString &parkingCode);
 
+                //! Airline
+                void setAtcAirline(const QString &airline);
+
+                //! Simulator name
+                void setSimName(const QString &simName);
+
                 //! Description
-                void setDescription(const QString &description) { this->m_description = description.trimmed(); }
+                void setDescription(const QString &description);
+
+                //! Created by
+                void setCreatedBy(const QString &createdBy);
 
                 //! Texture
-                void setTexture(const QString &texture) { this->m_texture = texture; }
+                void setTexture(const QString &texture);
 
                 //! UI type (e.g. A321-231 IAE)
-                void setUiType(const QString &type) { this->m_uiType = type.trimmed(); }
+                void setUiType(const QString &type);
 
                 //! UI manufacturer (e.g. Airbus)
                 void setUiManufacturer(const QString &manufacturer) { this->m_uiManufacturer = manufacturer.trimmed(); }
@@ -145,11 +163,14 @@ namespace BlackMisc
                 QString m_title;           //!< Title in .cfg
                 QString m_atcType;         //!< ATC type
                 QString m_atcModel;        //!< ATC model
+                QString m_atcAirline;      //!< ATC airline
                 QString m_atcParkingCode;  //!< ATC parking code
                 QString m_description;     //!< descriptive text
                 QString m_uiType;          //!< e.g. A321-231 IAE
                 QString m_uiManufacturer;  //!< e.g. Airbus
                 QString m_texture;         //!< texture, needed to identify thumbnail.jpg
+                QString m_simName;         //!< name in simulator
+                QString m_createdBy;       //!< created by, "distributor"
                 bool m_rotorcraft = false; //!< hint if rotorcraft
             };
         } // ns

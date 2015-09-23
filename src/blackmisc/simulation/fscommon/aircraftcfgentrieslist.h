@@ -51,6 +51,9 @@ namespace BlackMisc
                 //! As aircraft models
                 BlackMisc::Simulation::CAircraftModelList toAircraftModelList() const;
 
+                //! As aircraft models for simulator
+                BlackMisc::Simulation::CAircraftModelList toAircraftModelList(const BlackMisc::Simulation::CSimulatorInfo &simInfo) const;
+
                 //! Ambiguous titles
                 QStringList detectAmbiguousTitles() const;
 
@@ -58,7 +61,6 @@ namespace BlackMisc
                 CAircraftCfgEntriesList findByTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive) const;
 
             private:
-
                 //! Section within file
                 enum FileSection
                 {
@@ -66,7 +68,6 @@ namespace BlackMisc
                     Fltsim,
                     Unknown
                 };
-
             };
         } // namespace
     } // namespace
