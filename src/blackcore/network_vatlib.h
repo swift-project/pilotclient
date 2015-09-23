@@ -48,7 +48,7 @@ namespace BlackCore
         virtual void presetLoginMode(LoginMode mode) override;
         virtual void presetServer(const BlackMisc::Network::CServer &server) override;
         virtual void presetCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
-        virtual void presetIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoData &icao) override;
+        virtual void presetIcaoCodes(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft) override;
         virtual void presetSimulatorInfo(const BlackMisc::Simulation::CSimulatorPluginInfo &simInfo) override;
         virtual void initiateConnection() override;
         virtual void terminateConnection() override;
@@ -170,12 +170,13 @@ namespace BlackCore
 
     private:
         QScopedPointer<PCSBClient, VatlibQScopedPointerDeleter> m_net;
-        LoginMode                          m_loginMode;
-        VatConnectionStatus                m_status;
-        BlackMisc::Network::CServer        m_server;
-        BlackMisc::Simulation::CSimulatorPluginInfo           m_simulatorInfo;
-        BlackMisc::Aviation::CCallsign     m_callsign; //!< "buffered callsign", as this must not change when connected
-        BlackMisc::Aviation::CAircraftIcaoData m_icaoCode; //!< "buffered icao", as this must not change when connected
+        LoginMode                      m_loginMode;
+        VatConnectionStatus            m_status;
+        BlackMisc::Network::CServer    m_server;
+        BlackMisc::Simulation::CSimulatorPluginInfo m_simulatorInfo;
+        BlackMisc::Aviation::CCallsign m_ownCallsign;                 //!< "buffered callsign", as this must not change when connected
+        BlackMisc::Aviation::CAircraftIcaoCode m_ownAircraftIcaoCode; //!< "buffered icao", as this must not change when connected
+        BlackMisc::Aviation::CAirlineIcaoCode m_ownAirlineIcaoCode;   //!< "buffered icao", as this must not change when connected
 
         QTimer m_processingTimer;
         QTimer m_positionUpdateTimer;

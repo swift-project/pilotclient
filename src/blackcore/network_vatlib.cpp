@@ -294,15 +294,16 @@ namespace BlackCore
     void CNetworkVatlib::presetCallsign(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "Can't change callsign while still connected");
-        m_callsign = callsign;
+        m_ownCallsign = callsign;
         updateOwnCallsign(callsign);
     }
 
-    void CNetworkVatlib::presetIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoData &icao)
+    void CNetworkVatlib::presetIcaoCodes(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft)
     {
         Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "Can't change ICAO codes while still connected");
-        m_icaoCode = icao;
-        updateOwnIcaoData(icao);
+        m_ownAircraftIcaoCode = ownAircraft.getAircraftIcaoCode();
+        m_ownAirlineIcaoCode = ownAircraft.getAirlineIcaoCode();
+        updateOwnIcaoCodes(m_ownAircraftIcaoCode, m_ownAirlineIcaoCode);
     }
 
     void CNetworkVatlib::presetLoginMode(LoginMode mode)
@@ -317,8 +318,8 @@ namespace BlackCore
         Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "Can't connect while still connected");
         if (!m_net) { initializeSession(); }
         QByteArray callsign = toFSD(m_loginMode == LoginAsObserver ?
-                                    m_callsign.getAsObserverCallsignString() :
-                                    m_callsign.asString());
+                                    m_ownCallsign.getAsObserverCallsignString() :
+                                    m_ownCallsign.asString());
         QByteArray name = toFSD(m_server.getUser().getRealName());
 
         if (this->m_loginMode == LoginAsObserver)
@@ -551,8 +552,8 @@ namespace BlackCore
 
     void CNetworkVatlib::sendAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign) // private
     {
-        const QByteArray acTypeICAObytes = toFSD(m_icaoCode.getAircraftDesignator());
-        const QByteArray airlineICAObytes = toFSD(m_icaoCode.getAirlineDesignator());
+        const QByteArray acTypeICAObytes = toFSD(m_ownAircraftIcaoCode.getDesignator());
+        const QByteArray airlineICAObytes = toFSD(m_ownAirlineIcaoCode.getDesignator());
         const QByteArray liverybytes; //! \todo VATLIB: send livery
 
         VatAircraftInfo aircraftInfo {acTypeICAObytes, airlineICAObytes, liverybytes};
@@ -606,12 +607,15 @@ namespace BlackCore
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
         CSimulatedAircraft myAircraft(getOwnAircraft());
-        CAircraftIcaoData icao = myAircraft.getIcaoInfo();
         QString modelString = myAircraft.getModel().getModelString();
         if (modelString.isEmpty()) { modelString = defaultModelString(); }
 
-        QStringList data { { "0" }, icao.getAirlineDesignator(), icao.getAircraftDesignator(),
-            { "" }, { "" }, { "" }, { "" }, icao.getAircraftCombinedType(), modelString
+        QStringList data { { "0" },
+            myAircraft.getAirlineIcaoCodeDesignator(),
+            myAircraft.getAircraftIcaoCodeDesignator(),
+            { "" }, { "" }, { "" }, { "" },
+            myAircraft.getAircraftIcaoCombinedType(),
+            modelString
         };
         sendCustomPacket(callsign, "FSIPIR", data);
     }
@@ -620,12 +624,15 @@ namespace BlackCore
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
         CSimulatedAircraft myAircraft(getOwnAircraft());
-        CAircraftIcaoData icao = myAircraft.getIcaoInfo();
         QString modelString = myAircraft.getModel().getModelString();
         if (modelString.isEmpty()) { modelString = defaultModelString(); }
 
-        QStringList data { { "0" }, icao.getAirlineDesignator(), icao.getAircraftDesignator(),
-            { "" }, { "" }, { "" }, { "" }, icao.getAircraftCombinedType(), modelString
+        QStringList data { { "0" },
+            myAircraft.getAirlineIcaoCodeDesignator(),
+            myAircraft.getAircraftIcaoCodeDesignator(),
+            { "" }, { "" }, { "" }, { "" },
+            myAircraft.getAircraftIcaoCombinedType(),
+            modelString
         };
         sendCustomPacket(callsign, "FSIPI", data);
     }
@@ -1021,12 +1028,12 @@ namespace BlackCore
 
     void CNetworkVatlib::onPilotInfoReceived(VatSessionID, const char *callsign, const VatAircraftInfo *aircraftInfo, void *cbvar)
     {
-        BlackMisc::Aviation::CAircraftIcaoData icao;
-        icao.setAircraftDesignator(aircraftInfo->aircraftType);
-        icao.setAirlineDesignator(aircraftInfo->airline);
-
-        //! \todo use livery: aircraftInfo->livery;
-        emit cbvar_cast(cbvar)->icaoCodesReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), icao);
+        emit cbvar_cast(cbvar)->icaoCodesReplyReceived(
+            cbvar_cast(cbvar)->fromFSD(callsign),
+            QString(aircraftInfo->aircraftType).trimmed().toUpper(),
+            QString(aircraftInfo->airline).trimmed().toUpper(),
+            QString(aircraftInfo->livery).trimmed().toUpper()
+        );
     }
 
     void CNetworkVatlib::networkLogHandler(SeverityLevel /** severity **/, const char *message)

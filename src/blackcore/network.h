@@ -14,7 +14,7 @@
 
 #include "blackcoreexport.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/aviation/aircraft.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/pq/length.h"
@@ -175,7 +175,7 @@ namespace BlackCore
          * Set our own aircraft ICAO codes before connecting.
          * \pre Network must be disconnected when calling this function.
          */
-        virtual void presetIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoData &icao) = 0;
+        virtual void presetIcaoCodes(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft) = 0;
 
         /*!
          * Select a login mode before connecting.
@@ -436,7 +436,7 @@ namespace BlackCore
          * We received a reply to one of our queries.
          * \sa sendIcaoCodesQuery
          */
-        void icaoCodesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcaoData &icao);
+        void icaoCodesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery);
 
         /*!
          * We received a notification of the state of another aircraft on the network.
