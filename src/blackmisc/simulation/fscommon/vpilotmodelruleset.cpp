@@ -9,6 +9,7 @@
 
 #include "vpilotmodelruleset.h"
 #include "blackmisc/predicates.h"
+#include <QStringList>
 
 using namespace BlackMisc::Network;
 
@@ -40,16 +41,6 @@ namespace BlackMisc
                 {
                     return rule.getModelName().startsWith(mn, Qt::CaseInsensitive);
                 });
-            }
-
-            CAircraftMappingList CVPilotModelRuleSet::toMappings() const
-            {
-                CAircraftMappingList mappings;
-                for (const CVPilotModelRule &rule : (*this))
-                {
-                    mappings.push_back(rule.toMapping());
-                }
-                return mappings;
             }
 
             QStringList CVPilotModelRuleSet::toUpper(const QStringList &stringList)
@@ -118,6 +109,33 @@ namespace BlackMisc
                     c += this->removeIf(&CVPilotModelRule::getModelName, model);
                 }
                 return c;
+            }
+
+            CAircraftModelList CVPilotModelRuleSet::toAircraftModels() const
+            {
+                QStringList modelNames;
+                CAircraftModelList models;
+                for (const CVPilotModelRule &rule : *this)
+                {
+                    QString m(rule.getModelName());
+                    if (m.isEmpty()) { continue; }
+                    if (modelNames.contains(m, Qt::CaseInsensitive))
+                    {
+                        CAircraftModel model(rule.toAircraftModel());
+                        for (CAircraftModel &exisitingModel : models)
+                        {
+                            if (!exisitingModel.matchesModelString(m, Qt::CaseInsensitive)) { continue; }
+                            exisitingModel.updateMissingParts(model);
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        models.push_back(rule.toAircraftModel());
+                        modelNames.append(m);
+                    }
+                }
+                return models;
             }
 
         } // namespace

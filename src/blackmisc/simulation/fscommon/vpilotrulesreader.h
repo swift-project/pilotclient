@@ -13,9 +13,12 @@
 #define BLACKMISC_SIMULATION_FSCOMMON_VPILOTRULESREADER_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/worker.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/fscommon/vpilotmodelruleset.h"
 #include <QStringList>
 #include <QObject>
+#include <QReadWriteLock>
 
 namespace BlackMisc
 {
@@ -33,22 +36,42 @@ namespace BlackMisc
                 CVPilotRulesReader(bool standardDirectory = true, QObject *parent = nullptr);
 
                 //! Destructor
-                virtual ~CVPilotRulesReader() {}
+                virtual ~CVPilotRulesReader();
+
+                //! Files
+                //! \threadsafe
+                QStringList getFiles() const;
 
                 //! File names
+                //! \threadsafe
                 void addFilename(const QString &fileName);
 
                 //! Directory with .vmr files
+                //! \threadsafe
                 void addDirectory(const QString &directory);
 
                 //! Loaded files (number)
-                int countFilesLoaded() const { return m_loadedFiles; }
+                //! \threadsafe
+                int countFilesLoaded() const;
 
                 //! Loaded rules
-                const CVPilotModelRuleSet &getRules() const { return m_rules; }
+                //! \threadsafe
+                CVPilotModelRuleSet getRules() const;
+
+                //! Get as models
+                //! \threadsafe
+                BlackMisc::Simulation::CAircraftModelList getAsModels() const;
+
+                //! Get model count
+                //! \threadsafe
+                int getModelsCount() const;
 
                 //! Loaded rules
+                //! \threadsafe
                 int countRulesLoaded() const;
+
+                //! Graceful shutdown
+                void gracefulShutdown();
 
                 //! The standard directory for vPilot mappings
                 static const QString &standardMappingsDirectory();
@@ -59,18 +82,32 @@ namespace BlackMisc
 
             public slots:
                 //! Load data
-                bool read();
+                //! \threadsafe
+                bool read(bool convertToModels);
+
+                //! Load data in background thread
+                //! \threadsafe
+                BlackMisc::CWorker *readASync(bool convertToModels);
+
+            private slots:
+                //! Asyncronous read finished
+                void ps_readASyncFinished();
 
             private:
-                QStringList m_fileList;             //!< list of file names
-                QStringList m_fileListWithProblems; //!< problems during parsing
-                int m_loadedFiles = 0;              //!< loaded files
-                CVPilotModelRuleSet m_rules;        //!< rules list
+                QStringList m_fileList;              //!< list of file names
+                QStringList m_fileListWithProblems;  //!< problems during parsing
+                int m_loadedFiles = 0;               //!< loaded files
+                CVPilotModelRuleSet m_rules;         //!< rules list
+                bool m_asyncLoadInProgress = false;  //!< Asynchronous load in progress
+                bool m_shutdown = false;             //!< Shutdown
+                mutable BlackMisc::Simulation::CAircraftModelList m_models; //!< converted to models
+                mutable QReadWriteLock m_lockData;
 
                 //! Read single file and do parsing
-                bool loadFile(const QString &fileName);
+                //! \threadsafe
+                bool loadFile(const QString &fileName, CVPilotModelRuleSet &ruleSet);
 
-           };
+            };
         } // namespace
     } // namespace
 } // namespace

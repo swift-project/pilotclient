@@ -13,9 +13,10 @@
 #define BLACKMISC_SIMULATION_FSCOMMON_VPILOTMODELRULE_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/network/aircraftmapping.h"
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/datastore.h"
+#include "blackmisc/timestampbased.h"
 #include <QJsonObject>
 
 namespace BlackMisc
@@ -26,7 +27,8 @@ namespace BlackMisc
         {
             //! Value object encapsulating information of software distributor.
             class BLACKMISC_EXPORT CVPilotModelRule :
-                public BlackMisc::CValueObject<CVPilotModelRule>
+                public BlackMisc::CValueObject<CVPilotModelRule>,
+                public ITimestampBased
             {
             public:
                 //! Property indexes
@@ -35,9 +37,7 @@ namespace BlackMisc
                     IndexModelName = CPropertyIndex::GlobalIndexVPilotModelRule,
                     IndexFolder,
                     IndexTypeCode,
-                    IndexCallsignPrefix,
-                    IndexUpdatedTimestamp,
-                    IndexUpdatedMsSinceEpoch
+                    IndexCallsignPrefix
                 };
 
                 //! Default constructor
@@ -52,7 +52,7 @@ namespace BlackMisc
                 //! Get folder
                 const QString &getFolder() const { return this->m_folder;}
 
-                //! Distributor derived from folder
+                //! Distributor derived from folder (hardcoded)
                 const QString getDistributor() const;
 
                 //! Get type code
@@ -60,12 +60,6 @@ namespace BlackMisc
 
                 //! Get callsign prefix
                 const QString &getCallsignPrefix() const { return this->m_callsignPrefix;}
-
-                //! Update timestamp
-                QDateTime getUpdateTimestamp() const { return QDateTime::fromMSecsSinceEpoch(this->m_updatedMsSinceEpoch); }
-
-                //! Updated when
-                qint64 getUpdateMsSinceEpoch() const { return m_updatedMsSinceEpoch; }
 
                 //! Model name
                 void setModelName(const QString &name) { this->m_modelName = name.trimmed().toUpper(); }
@@ -79,12 +73,6 @@ namespace BlackMisc
                 //! Callsign prefix
                 void setCallsignPrefix(const QString &callsign) { this->m_callsignPrefix = callsign.trimmed().toUpper(); }
 
-                //! Set update timestamp
-                void setUpdateTimestamp(qint64 timestamp) { this->m_updatedMsSinceEpoch = timestamp; }
-
-                //! Set update timestamp
-                void setUpdateTimestamp(const QDateTime &timestamp) { this->m_updatedMsSinceEpoch = timestamp.toMSecsSinceEpoch(); }
-
                 //! \copydoc CValueObject::propertyByIndex
                 CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
@@ -94,8 +82,8 @@ namespace BlackMisc
                 //! \copydoc CValueObject::convertToQString
                 QString convertToQString(bool i18n = false) const;
 
-                //! Convert to mapping
-                BlackMisc::Network::CAircraftMapping toMapping() const;
+                //! Convert into aircraft model
+                CAircraftModel toAircraftModel() const;
 
             private:
                 BLACK_ENABLE_TUPLE_CONVERSION(CVPilotModelRule)

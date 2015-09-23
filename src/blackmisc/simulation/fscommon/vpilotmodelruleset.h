@@ -14,7 +14,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/fscommon/vpilotmodelrule.h"
-#include "blackmisc/network/aircraftmappinglist.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 
@@ -59,8 +59,8 @@ namespace BlackMisc
                 //! Keep given models (if in list)
                 int keepModels(const QStringList &modelsToBeKept);
 
-                //! Convert to mappings
-                BlackMisc::Network::CAircraftMappingList toMappings() const;
+                //! To aircraft models
+                BlackMisc::Simulation::CAircraftModelList toAircraftModels() const;
 
             private:
                 //! Convert values to upper case

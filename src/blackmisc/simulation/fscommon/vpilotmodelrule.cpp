@@ -8,8 +8,14 @@
  */
 
 #include "vpilotmodelrule.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/livery.h"
+#include "blackmisc/simulation/distributor.h"
 
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Simulation;
 
 namespace BlackMisc
 {
@@ -20,6 +26,7 @@ namespace BlackMisc
             CVPilotModelRule::CVPilotModelRule() { }
 
             CVPilotModelRule::CVPilotModelRule(const QString &modelName, const QString &folder, const QString &typeCode, const QString &callsignPrefix, qint64 updated) :
+                ITimestampBased(updated),
                 m_modelName(modelName.trimmed().toUpper()), m_folder(folder.trimmed().toUpper()),
                 m_typeCode(typeCode.trimmed().toUpper()), m_callsignPrefix(callsignPrefix.trimmed().toUpper()), m_updatedMsSinceEpoch(updated)
             { }
@@ -44,6 +51,7 @@ namespace BlackMisc
             CVariant CVPilotModelRule::propertyByIndex(const CPropertyIndex &index) const
             {
                 if (index.isMyself()) { return CVariant::from(*this); }
+                if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
                 ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
@@ -51,8 +59,6 @@ namespace BlackMisc
                 case IndexFolder: return CVariant::from(this->m_folder);
                 case IndexTypeCode: return CVariant::from(this->m_typeCode);
                 case IndexCallsignPrefix: return CVariant::from(this->m_callsignPrefix);
-                case IndexUpdatedTimestamp: return CVariant::from(this->getUpdateTimestamp());
-                case IndexUpdatedMsSinceEpoch: return CVariant::from(this->m_updatedMsSinceEpoch);
                 default:
                     return CValueObject::propertyByIndex(index);
                 }
@@ -61,6 +67,7 @@ namespace BlackMisc
             void CVPilotModelRule::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
             {
                 if (index.isMyself()) { (*this) = variant.to<CVPilotModelRule>(); return; }
+                if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(variant, index); return; }
                 ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
@@ -68,8 +75,6 @@ namespace BlackMisc
                 case IndexFolder: this->setFolder(variant.value<QString>()); break;
                 case IndexTypeCode: this->setTypeCode(variant.value<QString>()); break;
                 case IndexCallsignPrefix: this->setCallsignPrefix(variant.value<QString>()); break;
-                case IndexUpdatedTimestamp: this->setUpdateTimestamp(variant.value<QDateTime>()); break;
-                case IndexUpdatedMsSinceEpoch: this->setUpdateTimestamp(variant.value<qint64>()); break;
                 default:
                     CValueObject::setPropertyByIndex(variant, index);
                     break;
@@ -83,10 +88,34 @@ namespace BlackMisc
                 return s;
             }
 
-            CAircraftMapping CVPilotModelRule::toMapping() const
+            CAircraftModel CVPilotModelRule::toAircraftModel() const
             {
-                return CAircraftMapping("vpilot", this->getDistributor(), this->getTypeCode(), this->getCallsignPrefix(), this->getModelName());
+                QString al(m_callsignPrefix);
+                if (al.length() > 3)
+                {
+                    // some known hardcoded fixes
+                    if (al.startsWith("USAF")) { al = "AIO"; }
+                }
+                QString liveryPseudoCode(
+                    al.length() != 3 ?
+                    "" :
+                    al +  "." + CLivery::standardLiveryMarker());
+                CAircraftIcaoCode aircraftIcao(m_typeCode);
+                CAirlineIcaoCode airlineIcao(al);
+                CLivery livery(liveryPseudoCode, airlineIcao, "vPilot rule based");
+                CDistributor distributor(getDistributor(), "vPilot based", "", "");
+                CAircraftModel model(
+                    this->m_modelName, CAircraftModel::TypeVPilotRuleBased,
+                    "vPilot auto generated",
+                    aircraftIcao, livery
+                );
+                CSimulatorInfo sim(CSimulatorInfo::FSX_P3D);
+                model.setMSecsSinceEpoch(m_timestampMSecsSinceEpoch);
+                model.setDistributor(distributor);
+                model.setSimulatorInfo(sim);
+                return model;
             }
+
         } // namespace
     } // namespace
 } // namespace

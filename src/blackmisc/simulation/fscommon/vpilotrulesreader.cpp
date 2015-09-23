@@ -8,13 +8,13 @@
  */
 
 #include "vpilotrulesreader.h"
-#include "blackmisc/network/aircraftmapping.h"
 
 #include <QtXml/QDomElement>
 #include <QFile>
 #include <QDir>
 #include <QStandardPaths>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Network;
 
 namespace BlackMisc
@@ -29,9 +29,21 @@ namespace BlackMisc
                 if (standardDirectory) { this->addDirectory(CVPilotRulesReader::standardMappingsDirectory()); }
             }
 
+            CVPilotRulesReader::~CVPilotRulesReader()
+            {
+                gracefulShutdown();
+            }
+
+            QStringList CVPilotRulesReader::getFiles() const
+            {
+                QReadLocker l(&m_lockData);
+                return m_fileList;
+            }
+
             void CVPilotRulesReader::addFilename(const QString &fileName)
             {
-                if (this->m_fileList.contains(fileName)) return;
+                QWriteLocker l(&m_lockData);
+                if (this->m_fileList.contains(fileName)) { return; }
                 this->m_fileList.append(fileName);
             }
 
@@ -47,9 +59,51 @@ namespace BlackMisc
                 }
             }
 
+            int CVPilotRulesReader::countFilesLoaded() const
+            {
+                QReadLocker l(&m_lockData);
+                return m_loadedFiles;
+            }
+
+            CVPilotModelRuleSet CVPilotRulesReader::getRules() const
+            {
+                QReadLocker l(&m_lockData);
+                return m_rules;
+            }
+
+            int CVPilotRulesReader::getModelsCount() const
+            {
+                QReadLocker l(&m_lockData);
+                return m_models.size();
+            }
+
+            CAircraftModelList CVPilotRulesReader::getAsModels() const
+            {
+                // already cached?
+                {
+                    QReadLocker l(&m_lockData);
+                    if (!m_models.isEmpty() || m_rules.isEmpty()) return m_models;
+                }
+
+                // important: that can take a while and should normally
+                // run in background
+                if (m_shutdown) { return CAircraftModelList(); }
+                CVPilotModelRuleSet rules(getRules()); // thread safe copy
+                CAircraftModelList models(rules.toAircraftModels()); // long lasting operation
+                QWriteLocker l(&m_lockData);
+                m_models = models;
+                return m_models;
+            }
+
             int CVPilotRulesReader::countRulesLoaded() const
             {
+                QReadLocker l(&m_lockData);
                 return m_rules.size();
+            }
+
+            void CVPilotRulesReader::gracefulShutdown()
+            {
+                m_shutdown = true;
             }
 
             const QString &CVPilotRulesReader::standardMappingsDirectory()
@@ -64,23 +118,62 @@ namespace BlackMisc
                 return directory;
             }
 
-            bool CVPilotRulesReader::read()
+            bool CVPilotRulesReader::read(bool convertToModels)
             {
                 bool success = true;
-                this->m_loadedFiles = 0;
-                this->m_fileListWithProblems.clear();
-                for (const QString &fn : this->m_fileList)
+                int loadedFiles = 0;
+                QStringList filesWithProblems;
+                CVPilotModelRuleSet rules;
+                QStringList fileList(getFiles());
+
+                for (const QString &fn : fileList)
                 {
-                    this->m_loadedFiles++;
-                    bool s = this->loadFile(fn);
+                    if (m_shutdown) { return false; }
+                    loadedFiles++;
+                    bool s = this->loadFile(fn, rules);
                     if (!s) { this->m_fileListWithProblems.append(fn); }
                     success = s && success;
                 }
+
+                {
+                    QWriteLocker l(&m_lockData);
+                    this->m_loadedFiles = loadedFiles;
+                    this->m_fileListWithProblems = filesWithProblems;
+                    this->m_rules = rules;
+                    if (convertToModels)
+                    {
+                        if (m_shutdown) { return false; }
+                        this->m_models = rules.toAircraftModels(); // long lasting operation
+                    }
+                }
+
                 emit readFinished(success);
                 return success;
             }
 
-            bool CVPilotRulesReader::loadFile(const QString &fileName)
+            CWorker *CVPilotRulesReader::readASync(bool convertToModels)
+            {
+                // set a thread safe flag
+                {
+                    QWriteLocker l(&m_lockData);
+                    if (m_asyncLoadInProgress) { return nullptr; }
+                    m_asyncLoadInProgress = true;
+                }
+                BlackMisc::CWorker *worker = BlackMisc::CWorker::fromTask(this, "CVPilotRulesReader", [this, convertToModels]()
+                {
+                    this->read(convertToModels);
+                });
+                worker->then(this, &CVPilotRulesReader::ps_readASyncFinished);
+                return worker;
+            }
+
+            void CVPilotRulesReader::ps_readASyncFinished()
+            {
+                QWriteLocker l(&m_lockData);
+                m_asyncLoadInProgress = false;
+            }
+
+            bool CVPilotRulesReader::loadFile(const QString &fileName, CVPilotModelRuleSet &ruleSet)
             {
                 QFile f(fileName);
                 if (!f.exists()) { return  false; }
@@ -101,8 +194,10 @@ namespace BlackMisc
                 {
                     folder = QFileInfo(fileName).fileName().replace(".vmr", "");
                 }
+
+                // "2/1/2014 12:00:00 AM", "5/26/2014 2:00:00 PM"
                 QString updated = attributes.namedItem("UpdatedOn").nodeValue();
-                QDateTime qt = QDateTime::fromString(updated);
+                QDateTime qt = QDateTime::fromString(updated, "M/d/yyyy h:mm:ss AP");
                 qint64 updatedTimestamp = qt.toMSecsSinceEpoch();
 
                 int rulesSize = rules.size();
@@ -124,14 +219,14 @@ namespace BlackMisc
                         {
                             if (model.isEmpty()) { continue; }
                             CVPilotModelRule rule(model, folder, typeCode, callsignPrefix, updatedTimestamp);
-                            this->m_rules.push_back(rule);
+                            ruleSet.push_back(rule);
                         }
                     }
                     else
                     {
                         // single model
                         CVPilotModelRule rule(modelName, folder, typeCode, callsignPrefix, updatedTimestamp);
-                        this->m_rules.push_back(rule);
+                        ruleSet.push_back(rule);
                     }
                 }
                 return true;
