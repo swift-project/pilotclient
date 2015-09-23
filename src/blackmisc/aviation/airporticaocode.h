@@ -62,8 +62,8 @@ namespace BlackMisc
 } // namespace
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAirportIcaoCode, (
-    attr(o.m_icaoCode, flags<CaseInsensitiveComparison>())
-))
+                                   attr(o.m_icaoCode, flags<CaseInsensitiveComparison>())
+                               ))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAirportIcaoCode)
 
 #endif // guard

@@ -27,7 +27,9 @@ namespace BlackMisc
         enum ColumnIndex
         {
             IndexUtcTimestamp = BlackMisc::CPropertyIndex::GlobalIndexTimestampBased,
-            IndexUtcTimestampFormatted,
+            IndexUtcTimestampFormattedYmdhms,
+            IndexUtcTimestampFormattedYmdhmsz,
+            IndexUtcTimestampFormattedDhms,
             IndexUtcTimestampFormattedHms,
             IndexUtcTimestampFormattedHm,
             IndexMSecsSinceEpoch // keep this as last item
@@ -73,7 +75,7 @@ namespace BlackMisc
         void setCurrentUtcTime();
 
         //! Formatted timestamp
-        QString getFormattedUtcTimestamp() const;
+        QString getFormattedUtcTimestampDhms() const;
 
         //! As hh:mm:ss
         QString getFormattedUtcTimestampHms() const;
@@ -91,14 +93,20 @@ namespace BlackMisc
         static bool canHandleIndex(const BlackMisc::CPropertyIndex &index);
 
     protected:
-        //! Destructor
-        virtual ~ITimestampBased() {}
+        //! Constructor
+        ITimestampBased();
+
+        //! Constructor
+        ITimestampBased(qint64 msSincePoch);
+
+        //! Constructor
+        ITimestampBased(const QDateTime &timestamp);
 
         //! \copydoc CValueObject::propertyByIndex
-        virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+        CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
         //! \copydoc CValueObject::setPropertyByIndex
-        virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
+        void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
         qint64 m_timestampMSecsSinceEpoch = QDateTime::currentMSecsSinceEpoch(); //!< timestamp value
     };

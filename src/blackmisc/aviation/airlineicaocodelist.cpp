@@ -17,6 +17,24 @@ namespace BlackMisc
             CSequence<CAirlineIcaoCode>(other)
         { }
 
+        CAirlineIcaoCodeList CAirlineIcaoCodeList::findByDesignator(const QString &designator)
+        {
+            if (CAirlineIcaoCode::isValidAirlineDesignator(designator)) { return CAirlineIcaoCodeList(); }
+            return this->findBy([&](const CAirlineIcaoCode & code)
+            {
+                return code.matchesDesignator(designator);
+            });
+        }
+
+        CAirlineIcaoCode CAirlineIcaoCodeList::findByVDesignator(const QString &designator)
+        {
+            if (CAirlineIcaoCode::isValidAirlineDesignator(designator)) { return CAirlineIcaoCode(); }
+            return this->findFirstBy([&](const CAirlineIcaoCode & code)
+            {
+                return code.matchesVDesignator(designator);
+            });
+        }
+
         CAirlineIcaoCodeList CAirlineIcaoCodeList::fromDatabaseJson(const QJsonArray &array,  bool ignoreIncomplete)
         {
             CAirlineIcaoCodeList codes;
@@ -28,5 +46,17 @@ namespace BlackMisc
             }
             return codes;
         }
+
+        QStringList CAirlineIcaoCodeList::toCompleterStrings() const
+        {
+            QStringList c;
+            for (const CAirlineIcaoCode &icao : *this)
+            {
+                QString cs(icao.getCombinedStringWithKey());
+                c.append(cs);
+            }
+            return c;
+        }
+
     } // namespace
 } // namespace

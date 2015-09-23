@@ -56,7 +56,6 @@ namespace BlackMisc
             clear();
             for (const auto &e : json.keys())
             {
-
                 CAircraftEngine engine;
                 int number = e.toInt();
                 engine.convertFromJson(json.value(e).toObject());

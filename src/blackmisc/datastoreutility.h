@@ -12,7 +12,8 @@
 #ifndef BLACKMISC_DATASTOREUTILITY_H
 #define BLACKMISC_DATASTOREUTILITY_H
 
-#include "blackmiscexport.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/statusmessagelist.h"
 #include "timestampbased.h"
 #include "propertyindex.h"
 #include "variant.h"
@@ -29,10 +30,16 @@ namespace BlackMisc
         CDatastoreUtility() = delete;
 
         //! DB Bool value to bool
-        static bool dbBoolStringToBool(const QString &dbBool);
+        BLACKMISC_EXPORT static bool dbBoolStringToBool(const QString &dbBool);
 
         //! Extract key from string like "MyAircraft (33)"
-        static int extractIntegerKey(const QString &stringWithKey);
+        BLACKMISC_EXPORT static int extractIntegerKey(const QString &stringWithKey);
+
+        //! Parse a timestamp object
+        BLACKMISC_EXPORT static QDateTime parseTimestamp(const QString &timestamp);
+
+        //! Get id from a DB response
+        BLACKMISC_EXPORT static bool parseSwiftWriteResponse(const QString &jsonResponse, BlackMisc::CStatusMessageList &messages, BlackMisc::CVariant &key);
     };
 
 } // namespace

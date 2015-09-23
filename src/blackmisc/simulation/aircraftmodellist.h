@@ -49,6 +49,29 @@ namespace BlackMisc
             //! Find models starting with
             CAircraftModelList findModelsStartingWith(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
+            //! Find by a given list of models by strings
+            CAircraftModelList findByModelStrings(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity) const;
+
+            //! Find by a given list of models trings
+            CAircraftModelList findByNotInModelStrings(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity) const;
+
+            //! Find by model string
+            CAircraftModelList findByIcaoDesignators(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode, const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcaoCode) const;
+
+            //! Find by model string
+            CAircraftModelList findByAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const;
+
+            //! Set simulator for all elements
+            void setSimulatorInfo(const BlackMisc::Simulation::CSimulatorInfo &info);
+
+            //! Keep only those models with given model strings
+            //! \return number of elements removed
+            int keepModelsWithString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity);
+
+            //! Remove those models with given model strings
+            //! \return number of elements removed
+            int removeModelsWithString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity);
+
             //! Model strings
             QStringList getSortedModelStrings() const;
         };

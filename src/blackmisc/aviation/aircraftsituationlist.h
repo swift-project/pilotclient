@@ -14,8 +14,8 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/timestampobjectlist.h"
 #include "blackmisc/aviation/callsignobjectlist.h"
+#include "blackmisc/timestampobjectlist.h"
 #include "blackmisc/sequence.h"
 
 namespace BlackMisc

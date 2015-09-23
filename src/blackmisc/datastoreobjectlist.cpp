@@ -9,7 +9,10 @@
 
 #include "blackmisc/datastoreobjectlist.h"
 #include "blackmisc/predicates.h"
+#include "blackmisc/countrylist.h"
 #include "blackmisc/aviation/liverylist.h"
+#include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include <algorithm>
@@ -26,7 +29,7 @@ namespace BlackMisc
     { }
 
     template <class OBJ, class CONTAINER>
-    OBJ IDatastoreObjectListWithIntegerKey<OBJ, CONTAINER>::findByKey(int key, const OBJ &notFound ) const
+    OBJ IDatastoreObjectListWithIntegerKey<OBJ, CONTAINER>::findByKey(int key, const OBJ &notFound) const
     {
         return this->container().findFirstByOrDefault(&OBJ::getDbKey, key, notFound);
     }
@@ -47,6 +50,17 @@ namespace BlackMisc
     void IDatastoreObjectListWithStringKey<OBJ, CONTAINER>::sortByKey()
     {
         this->container().sort(BlackMisc::Predicates::MemberLess(&OBJ::getDbKey));
+    }
+
+    template <class OBJ, class CONTAINER>
+    QStringList IDatastoreObjectListWithStringKey<OBJ, CONTAINER>::toDbKeyList() const
+    {
+        QStringList keys;
+        for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
+        {
+            keys.append(obj.getDbKey());
+        }
+        return keys;
     }
 
     template <class OBJ, class CONTAINER>
@@ -74,7 +88,10 @@ namespace BlackMisc
     // see here for the reason of thess forward instantiations
     // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
     template class IDatastoreObjectListWithIntegerKey<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList>;
+    template class IDatastoreObjectListWithIntegerKey<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList>;
+    template class IDatastoreObjectListWithIntegerKey<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList>;
     template class IDatastoreObjectListWithIntegerKey<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
     template class IDatastoreObjectListWithStringKey<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;
+    template class IDatastoreObjectListWithStringKey<BlackMisc::CCountry, BlackMisc::CCountryList>;
 
 } // namespace

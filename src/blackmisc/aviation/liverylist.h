@@ -36,9 +36,14 @@ namespace BlackMisc
             //! Construct from a base class object.
             CLiveryList(const CSequence<CLivery> &other);
 
-            //! Find 0..n liveries by combined code
-            CLiveryList findByCombinedCode(const QString &combinedCode) const;
+            //! Find livery by airline
+            CLiveryList findByAirlineIcaoDesignator(const QString &icao) const;
 
+            //! Find livery by airline
+            CLivery findByAirlineIcaoDesignatorStdLivery(const QString &icao) const;
+
+            //! Find livery by combined code
+            CLivery findByCombinedCode(const QString &combinedCode) const;
         };
     } //namespace
 } // namespace

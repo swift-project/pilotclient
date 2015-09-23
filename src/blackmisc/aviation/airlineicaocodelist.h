@@ -14,6 +14,7 @@
 
 #include "airlineicaocode.h"
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/datastoreobjectlist.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 #include <initializer_list>
@@ -25,6 +26,8 @@ namespace BlackMisc
         //! Value object encapsulating a list of ICAO codes.
         class BLACKMISC_EXPORT CAirlineIcaoCodeList :
             public CSequence<CAirlineIcaoCode>,
+            public BlackMisc::IDatastoreObjectListWithIntegerKey<CAirlineIcaoCode, CAirlineIcaoCodeList>,
+
             public BlackMisc::Mixin::MetaType<CAirlineIcaoCodeList>
         {
         public:
@@ -35,6 +38,16 @@ namespace BlackMisc
 
             //! Construct from a base class object.
             CAirlineIcaoCodeList(const CSequence<CAirlineIcaoCode> &other);
+
+            //! Find by designator
+            //! Not unique because of virtual airlines
+            CAirlineIcaoCodeList findByDesignator(const QString &designator);
+
+            //! Find by v-designator, this should be unique
+            CAirlineIcaoCode findByVDesignator(const QString &designator);
+
+            //! String list for completion
+            QStringList toCompleterStrings() const;
 
             //! From our DB JSON
             static CAirlineIcaoCodeList fromDatabaseJson(const QJsonArray &array, bool ignoreIncomplete = true);

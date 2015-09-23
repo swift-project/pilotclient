@@ -25,24 +25,65 @@ namespace BlackMisc
         CLivery::CLivery()
         { }
 
+        CLivery::CLivery(const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description) :
+            CLivery(-1, combinedCode, airline, description, "", "", false)
+        { }
+
         CLivery::CLivery(const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description, const QString &colorFuselage, const QString &colorTail, bool isMilitary) :
             CLivery(-1, combinedCode, airline, description, colorFuselage, colorTail, isMilitary)
         { }
 
+        CLivery::CLivery(const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description, const CRgbColor &colorFuselage, const CRgbColor &colorTail, bool isMilitary) :
+            CLivery(-1, combinedCode, airline, description, colorFuselage, colorTail, isMilitary)
+        { }
+
         CLivery::CLivery(int dbKey, const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description, const QString &colorFuselage, const QString &colorTail, bool isMilitary) :
-            m_dbKey(dbKey), m_airline(airline),
+            IDatastoreObjectWithIntegerKey(dbKey),
+            m_airline(airline),
             m_combinedCode(combinedCode.trimmed().toUpper()), m_description(description.trimmed()),
-            m_colorFuselage(normalizeHexColor(colorFuselage)), m_colorTail(normalizeHexColor(colorTail)),
+            m_colorFuselage(CRgbColor(colorFuselage)), m_colorTail(CRgbColor(colorTail)),
             m_military(isMilitary)
         { }
+
+        CLivery::CLivery(int dbKey, const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description, const CRgbColor &colorFuselage, const CRgbColor &colorTail, bool isMilitary) :
+            IDatastoreObjectWithIntegerKey(dbKey),
+            m_airline(airline),
+            m_combinedCode(combinedCode.trimmed().toUpper()), m_description(description.trimmed()),
+            m_colorFuselage(colorFuselage), m_colorTail(colorTail),
+            m_military(isMilitary)
+        { }
+
+        bool CLivery::setAirlineIcaoCode(const CAirlineIcaoCode &airlineIcao)
+        {
+            if (m_airline == airlineIcao) { return false; }
+            m_airline = airlineIcao;
+            return true;
+        }
+
+        bool CLivery::hasColorFuselage() const
+        {
+            return m_colorFuselage.isValid();
+        }
+
+        bool CLivery::hasColorTail() const
+        {
+            return m_colorTail.isValid();
+        }
+
+        bool CLivery::matchesCombinedCode(const QString &candidate) const
+        {
+            if (candidate.isEmpty() || !this->hasCombinedCode()) { return false; }
+            QString c(candidate.trimmed().toUpper());
+            return c == this->m_combinedCode;
+        }
 
         QString CLivery::convertToQString(bool i18n) const
         {
             QString s(i18n ? QCoreApplication::translate("Aviation", "Livery") : "Livery");
             s.append(m_combinedCode);
             if (!this->m_description.isEmpty()) { s.append(' ').append(this->m_description); }
-            if (!this->m_colorFuselage.isEmpty()) { s.append(" F: ").append(this->m_colorFuselage); }
-            if (!this->m_colorTail.isEmpty()) { s.append(" T: ").append(this->m_colorTail); }
+            if (this->m_colorFuselage.isValid()) { s.append(" F: ").append(this->m_colorFuselage.hex()); }
+            if (this->m_colorTail.isValid()) { s.append(" T: ").append(this->m_colorTail.hex()); }
             if (this->isMilitary()) { s.append(" Military");}
             return s;
 
@@ -55,38 +96,81 @@ namespace BlackMisc
             return !m_description.isEmpty() && !m_combinedCode.isEmpty();
         }
 
-        CLivery CLivery::fromDatabaseJson(const QJsonObject &json)
+        CStatusMessageList CLivery::validate() const
         {
-            QJsonArray inner = json["cell"].toArray();
-            Q_ASSERT_X(!inner.isEmpty(), Q_FUNC_INFO, "Missing JSON");
-            if (inner.isEmpty()) { return CLivery(); }
+            static const CLogCategoryList cats( { CLogCategory(this->getClassName()), CLogCategory::validation()});
+            CStatusMessageList msg;
+            if (!hasCombinedCode()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Livery: missing livery code")); }
+            if (!hasColorFuselage()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, "Livery: no fuselage color")); }
+            if (!hasColorTail()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, "Livery: no tail color")); }
+            if (!getAirlineIcaoCodeDesignator().isEmpty()) { msg.push_back(m_airline.validate()); }
+            return msg;
+        }
 
-            int i = 0;
-            int dbKey = inner.at(i++).toInt(-1);
-            QString code(inner.at(i++).toString());
-            QString combinedCode(inner.at(i++).toString());
-            QString airlineWithId(inner.at(i++).toString());
-            QString airlineName(inner.at(i++).toString());
-            QString description(inner.at(i++).toString());
-            QString colorFuselage(normalizeHexColor(inner.at(i++).toString()));
-            QString colorTail(normalizeHexColor(inner.at(i++).toString()));
-            bool military = CDatastoreUtility::dbBoolStringToBool(inner.at(i++).toString());
+        bool CLivery::hasValidAirlineDesignator() const
+        {
+            return m_airline.hasValidDesignator();
+        }
 
-            int airlineId(CDatastoreUtility::extractIntegerKey(airlineWithId));
-            CAirlineIcaoCode airline;
-            airline.setDbKey(airlineId);
-            airline.setName(airlineName);
-            Q_ASSERT_X(code.length() > 0, Q_FUNC_INFO, "Missing code");
+        bool CLivery::hasCombinedCode() const
+        {
+            Q_ASSERT_X(!m_combinedCode.startsWith("." + standardLiveryMarker()), Q_FUNC_INFO, "illegal combined code");
+            return !m_combinedCode.isEmpty();
+        }
+
+        bool CLivery::isAirlineLivery() const
+        {
+            return (this->m_airline.hasValidDesignator());
+        }
+
+        bool CLivery::isAirlineStandardLivery() const
+        {
+            if (isColorLivery()) { return false; }
+            return (this->m_airline.hasValidDesignator() && this->m_combinedCode.endsWith(standardLiveryMarker()));
+        }
+
+        bool CLivery::isColorLivery() const
+        {
+            return m_combinedCode.startsWith(colorLiveryMarker());
+        }
+
+        CLivery CLivery::fromDatabaseJson(const QJsonObject &json, const QString &prefix)
+        {
+            if (!existsKey(json,  prefix))
+            {
+                // when using relationship, this can be null
+                return CLivery();
+            }
+
+            QString combinedCode(json.value(prefix + "combinedcode").toString());
+            QString description(json.value(prefix + "description").toString());
+            CRgbColor colorFuselage(json.value(prefix + "colorfuselage").toString());
+            CRgbColor colorTail(json.value(prefix + "colortail").toString());
+            bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "military").toString());
+            CAirlineIcaoCode airline(CAirlineIcaoCode::fromDatabaseJson(json, "al_"));
             Q_ASSERT_X(description.length() > 0, Q_FUNC_INFO, "require description");
-            CLivery livery(dbKey, combinedCode, airline, description, colorFuselage, colorTail, military);
+            CLivery livery(combinedCode, airline, description, colorFuselage, colorTail, military);
+            livery.setKeyAndTimestampFromDatabaseJson(json, prefix);
             return livery;
         }
 
-        QString CLivery::normalizeHexColor(const QString &color)
+        bool CLivery::isValidCombinedCode(const QString &candidate)
         {
-            if (color.isEmpty()) { return ""; }
-            QString c = color.trimmed().replace('#', "").toUpper();
-            return c;
+            if (candidate.isEmpty()) { return false; }
+            if (candidate.count('.') != 1) { return false; }
+            return candidate.length() > 2;
+        }
+
+        const QString &CLivery::standardLiveryMarker()
+        {
+            static const QString s("_STD");
+            return s;
+        }
+
+        const QString &CLivery::colorLiveryMarker()
+        {
+            static const QString s("_CC");
+            return s;
         }
 
         CVariant CLivery::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -98,10 +182,12 @@ namespace BlackMisc
             {
             case IndexDescription:
                 return CVariant::fromValue(m_description);
+            case IndexAirlineIcaoCode:
+                return m_airline.propertyByIndex(index.copyFrontRemoved());
             case IndexColorFuselage:
-                return CVariant::fromValue(this->m_colorFuselage);
+                return this->m_colorFuselage.propertyByIndex(index.copyFrontRemoved());;
             case IndexColorTail:
-                return CVariant::fromValue(this->m_colorTail);
+                return this->m_colorTail.propertyByIndex(index.copyFrontRemoved());
             case IndexCombinedCode:
                 return CVariant::fromValue(this->m_combinedCode);
             case IndexIsMilitary:
@@ -121,11 +207,14 @@ namespace BlackMisc
             case IndexDescription:
                 this->m_description = variant.toQString(false);
                 break;
+            case IndexAirlineIcaoCode:
+                this->m_airline.setPropertyByIndex(variant, index.copyFrontRemoved());
+                break;
             case IndexColorFuselage:
-                this->setColorFuselage(variant.toQString(false));
+                this->m_colorFuselage.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexColorTail:
-                this->setColorTail(variant.toQString(false));
+                this->m_colorTail.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexCombinedCode:
                 this->setCombinedCode(variant.toQString(false));
@@ -136,6 +225,21 @@ namespace BlackMisc
             default:
                 CValueObject::setPropertyByIndex(variant, index);
                 break;
+            }
+        }
+
+        void CLivery::updateMissingParts(const CLivery &otherLivery)
+        {
+            if (!this->m_colorFuselage.isValid()) { this->setColorFuselage(otherLivery.getColorFuselage()); }
+            if (!this->m_colorTail.isValid()) { this->setColorTail(otherLivery.getColorTail()); }
+            if (this->m_combinedCode.isEmpty()) { this->setCombinedCode(otherLivery.getCombinedCode());}
+            if (this->m_description.isEmpty()) { this->setDescription(otherLivery.getDescription());}
+
+            this->m_airline.updateMissingParts(otherLivery.getAirlineIcaoCode());
+            if (!this->hasValidDbKey())
+            {
+                this->setDbKey(otherLivery.getDbKey());
+                this->setUtcTimestamp(otherLivery.getUtcTimestamp());
             }
         }
 

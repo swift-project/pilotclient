@@ -14,11 +14,12 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/simulatorinfo.h"
-#include "blackmisc/aviation/aircraft.h"
-#include "blackmisc/aviation/aircrafticaodata.h"
+#include "blackmisc/simulation/distributor.h"
 #include "blackmisc/aviation/livery.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/propertyindex.h"
+#include <QUrlQuery>
 
 namespace BlackMisc
 {
@@ -36,11 +37,20 @@ namespace BlackMisc
             {
                 TypeUnknown,
                 TypeQueriedFromNetwork,        //!< model was queried by network protocol
+                TypeFsdData,                   //!< model based on FSD ICAO data
                 TypeModelMatching,             //!< model is result of model matching
                 TypeModelMatchingDefaultModel, //!< a default model assigned by model matching
-                TypeModelMapping,              //!< used along with mapping definition
+                TypeDatabaseEntry,             //!< used along with mapping definition
                 TypeManuallySet,               //!< manually set, e.g. from GUI
-                TypeOwnSimulatorModel          //!< represents own simulator model
+                TypeOwnSimulatorModel,         //!< represents own simulator model
+                TypeVPilotRuleBased            //!< based on a vPilot rule
+            };
+
+            //! Mode
+            enum ModelMode
+            {
+                Include,
+                Exclude
             };
 
             //! Indexes
@@ -48,12 +58,18 @@ namespace BlackMisc
             {
                 IndexModelString = BlackMisc::CPropertyIndex::GlobalIndexCAircraftModel,
                 IndexCallsign,
+                IndexName,
                 IndexDescription,
-                IndexIcao,
+                IndexSimulatorInfo,
+                IndexSimulatorInfoAsString,
+                IndexAircraftIcaoCode,
                 IndexLivery,
+                IndexDistributor,
                 IndexFileName,
                 IndexModelType,
                 IndexModelTypeAsString,
+                IndexModelMode,
+                IndexModelModeAsString,
                 IndexHasQueriedModelString
             };
 
@@ -64,10 +80,10 @@ namespace BlackMisc
             CAircraftModel(const QString &model, ModelType type);
 
             //! Constructor.
-            CAircraftModel(const QString &model, ModelType type, const QString &description, const BlackMisc::Aviation::CAircraftIcaoData &icao, const BlackMisc::Aviation::CLivery &livery = BlackMisc::Aviation::CLivery());
+            CAircraftModel(const QString &model, ModelType type, const QString &description, const BlackMisc::Aviation::CAircraftIcaoCode &icao, const BlackMisc::Aviation::CLivery &livery = BlackMisc::Aviation::CLivery());
 
-            //! Constructor
-            CAircraftModel(const BlackMisc::Aviation::CAircraft &aircraft);
+            //! Constructor.
+            CAircraftModel(const QString &model, ModelType type, CSimulatorInfo &simulator, const QString &name, const QString &description, const BlackMisc::Aviation::CAircraftIcaoCode &icao, const BlackMisc::Aviation::CLivery &livery = BlackMisc::Aviation::CLivery());
 
             //! \copydoc CValueObject::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -88,7 +104,7 @@ namespace BlackMisc
             const QString &getModelString() const { return this->m_modelString; }
 
             //! Model string
-            void setModelString(const QString &modelString) { this->m_modelString = modelString; }
+            void setModelString(const QString &modelString) { this->m_modelString = modelString.trimmed().toUpper(); }
 
             //! Descriptive text
             const QString &getDescription() const { return this->m_description; }
@@ -99,23 +115,35 @@ namespace BlackMisc
             //! Set queried model string
             void setQueriedModelString(const QString &model) { this->m_modelString = model; this->m_modelType = TypeQueriedFromNetwork; }
 
-            //! ICAO code
-            BlackMisc::Aviation::CAircraftIcaoData getIcao() const { return this->m_icao; }
-
-            //! Set ICAO info
-            void setIcao(const BlackMisc::Aviation::CAircraftIcaoData &icao) { this->m_icao = icao; }
-
-            //! \copydoc CAircraftIcaoData::hasAircraftAndAirlineDesignator
-            bool hasAircraftAndAirlineDesignator() const { return this->m_icao.hasAircraftAndAirlineDesignator(); }
-
-            //! \copydoc CAircraftIcaoData::hasAircraftDesignator
-            bool hasAircraftDesignator() const { return this->m_icao.hasAircraftDesignator(); }
-
             //! Aircraft ICAO code
-            const BlackMisc::Aviation::CAircraftIcaoCode &getAircraftIcaoCode() const;
+            const BlackMisc::Aviation::CAircraftIcaoCode &getAircraftIcaoCode() const { return this->m_aircraftIcao; }
+
+            //! Aircraft ICAO code designator
+            const QString &getAircraftIcaoCodeDesignator() const { return this->m_aircraftIcao.getDesignator(); }
 
             //! Airline ICAO code
-            const BlackMisc::Aviation::CAirlineIcaoCode &getAirlineIcaoCode() const;
+            const BlackMisc::Aviation::CAirlineIcaoCode &getAirlineIcaoCode() const { return this->m_livery.getAirlineIcaoCode(); }
+
+            //! Airline ICAO code designator
+            const QString &getAirlineIcaoCodeDesignator() const { return this->m_livery.getAirlineIcaoCode().getDesignator(); }
+
+            //! Set aircraft ICAO code
+            bool setAircraftIcaoCode(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode);
+
+            //! Set aircraft ICAO code designator
+            void setAircraftIcaoDesignator(const QString &designator);
+
+            //! Set ICAO codes
+            void setAircraftIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode, const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcaoCode);
+
+            //! Airline and aircraft designator?
+            bool hasAircraftAndAirlineDesignator() const;
+
+            //! Has aircraft designator?
+            bool hasAircraftDesignator() const;
+
+            //! Airline designator?
+            bool hasAirlineDesignator() const;
 
             //! Get livery
             const BlackMisc::Aviation::CLivery &getLivery() const { return m_livery; }
@@ -126,6 +154,18 @@ namespace BlackMisc
             //! Livery available?
             bool hasLivery() const { return m_livery.hasCompleteData();}
 
+            //! Get distributor
+            const CDistributor &getDistributor() const { return m_distributor; }
+
+            //! Set distributor
+            void setDistributor(const CDistributor &distributor) { m_distributor = distributor; }
+
+            //! Name
+            const QString &getName() const { return this->m_modelName; }
+
+            //! Name
+            void setName(const QString &name) { this->m_modelName = name.trimmed(); }
+
             //! Model type
             ModelType getModelType() const { return m_modelType; }
 
@@ -134,6 +174,15 @@ namespace BlackMisc
 
             //! Set type
             void setModelType(ModelType type) { this->m_modelType = type; }
+
+            //! Model mode
+            ModelMode getModelMode() const { return m_modelMode; }
+
+            //! Model mode as string
+            QString getModelModeAsString() const { return modelModeToString(getModelMode()); }
+
+            //! Set model mode
+            void setModelMode(ModelMode mode) { m_modelMode = mode; }
 
             //! Simulator info
             CSimulatorInfo getSimulatorInfo() const { return this->m_simulator; }
@@ -162,8 +211,17 @@ namespace BlackMisc
             //! Non empty model string
             bool hasModelString() const { return !m_modelString.isEmpty(); }
 
+            //! Description
+            bool hasDescription() const { return !m_description.isEmpty(); }
+
+            //! Valid simulator
+            bool hasValidSimulator() const;
+
             //! Matches model string?
             bool matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const;
+
+            //! Validate
+            BlackMisc::CStatusMessageList validate(bool withNestedObjects) const;
 
             //! \copydoc CValueObject::convertToQString
             QString convertToQString(bool i18n = false) const;
@@ -171,32 +229,47 @@ namespace BlackMisc
             //! Model type
             static QString modelTypeToString(ModelType type);
 
+            //! Model mode
+            static ModelMode modelModeFromString(const QString &mode);
+
+            //! Model mode
+            static QString modelModeToString(ModelMode mode);
+
             //! From swift DB JSON
-            static CAircraftModel fromDatabaseJson(const QJsonObject &json);
+            static CAircraftModel fromDatabaseJson(const QJsonObject &json, const QString prefix = QString("mod_"));
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftModel)
-            BlackMisc::Aviation::CCallsign m_callsign;        //!< aircraft's callsign if any
-            BlackMisc::Aviation::CAircraftIcaoData m_icao;    //!< ICAO data if available
-            BlackMisc::Aviation::CLivery m_livery;            //!< livery information
-            CSimulatorInfo m_simulator;                       //!< model for given simulator
-            QString m_modelString;                            //!< Simulator model string
-            QString m_description;                            //!< descriptive text
-            QString m_fileName;                               //!< file name
-            ModelType m_modelType = TypeUnknown;              //!< model string is coming from ...?
+            BlackMisc::Aviation::CCallsign m_callsign;             //!< aircraft's callsign if any
+            BlackMisc::Aviation::CAircraftIcaoCode m_aircraftIcao; //!< ICAO code if available
+            BlackMisc::Aviation::CLivery m_livery;                 //!< livery information
+            CSimulatorInfo m_simulator;                            //!< model for given simulator
+            CDistributor m_distributor;                            //!< who designed or distributed the model
+            QString m_modelString;                                 //!< Simulator model string
+            QString m_modelName;                                   //!< Model name
+            QString m_description;                                 //!< descriptive text
+            QString m_fileName;                                    //!< file name
+            ModelType m_modelType = TypeUnknown;                   //!< model string is coming representing ...?
+            ModelMode m_modelMode = Include;                       //!< model mode (include / exclude)
         };
     } // namespace
 } // namespace
 
 BLACK_DECLARE_TUPLE_CONVERSION(
     BlackMisc::Simulation::CAircraftModel, (
+        attr(o.m_dbKey),
+        attr(o.m_timestampMSecsSinceEpoch),
         attr(o.m_callsign),
-        attr(o.m_icao),
+        attr(o.m_aircraftIcao),
+        attr(o.m_livery),
         attr(o.m_simulator),
+        attr(o.m_distributor),
         attr(o.m_modelString, flags<CaseInsensitiveComparison>()),
+        attr(o.m_modelName),
         attr(o.m_description, flags<DisabledForComparison>()),
         attr(o.m_fileName, flags <DisabledForComparison> ()),
-        attr(o.m_modelType)
+        attr(o.m_modelType),
+        attr(o.m_modelMode)
     ))
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftModel)
 

@@ -124,11 +124,11 @@ namespace BlackMisc
             //! \copydoc CValueObject::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
-            /*!
-             * This and another user exchange missing data.
-             * This user has priority and overrides first.
-             */
+            //! This and another user exchange missing data, This user has priority and overrides first.
             void syncronizeData(CUser &otherUser);
+
+            //! Update missing parts in this object
+            void updateMissingParts(const CUser &otherUser);
 
             //! Valid VATSIM id
             static bool isValidVatsimId(const QString &id);

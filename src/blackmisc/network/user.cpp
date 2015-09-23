@@ -14,7 +14,7 @@
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
 #include <tuple>
-#include <QRegExp>
+#include <QRegularExpression>
 
 using namespace BlackMisc::Aviation;
 
@@ -116,45 +116,20 @@ namespace BlackMisc
             return msgs;
         }
 
+        void CUser::updateMissingParts(const CUser &otherUser)
+        {
+            if (this == &otherUser) { return; }
+            if (!this->hasValidRealName()) { this->setRealName(otherUser.getRealName()); }
+            if (!this->hasValidId()) { this->setId(otherUser.getId()); }
+            if (!this->hasValidEmail()) { this->setEmail(otherUser.getEmail()); }
+            if (!this->hasValidCallsign()) { this->setCallsign(otherUser.getCallsign()); }
+        }
+
         void CUser::syncronizeData(CUser &otherUser)
         {
-            if (otherUser == (*this)) { return; }
-
-            if (this->hasValidRealName())
-            {
-                otherUser.setRealName(this->getRealName());
-            }
-            else if (otherUser.hasValidRealName())
-            {
-                this->setRealName(otherUser.getRealName());
-            }
-
-            if (this->hasValidId())
-            {
-                otherUser.setId(this->getId());
-            }
-            else if (otherUser.hasValidId())
-            {
-                this->setId(otherUser.getId());
-            }
-
-            if (this->hasValidEmail())
-            {
-                otherUser.setEmail(this->getEmail());
-            }
-            else if (otherUser.hasValidEmail())
-            {
-                this->setEmail(otherUser.getEmail());
-            }
-
-            if (this->hasValidCallsign())
-            {
-                otherUser.setCallsign(this->getCallsign());
-            }
-            else if (otherUser.hasValidCallsign())
-            {
-                this->setCallsign(otherUser.getCallsign());
-            }
+            if (this == &otherUser) { return; }
+            this->updateMissingParts(otherUser);
+            otherUser.updateMissingParts(*this);
         }
 
         bool CUser::isValidVatsimId(const QString &id)

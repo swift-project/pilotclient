@@ -12,6 +12,14 @@
 
 namespace BlackMisc
 {
+    ITimestampBased::ITimestampBased()
+    { }
+
+    ITimestampBased::ITimestampBased(qint64 msSincePoch) : m_timestampMSecsSinceEpoch(msSincePoch)
+    { }
+
+    ITimestampBased::ITimestampBased(const QDateTime &timestamp) : m_timestampMSecsSinceEpoch(timestamp.toMSecsSinceEpoch())
+    { }
 
     QDateTime ITimestampBased::getUtcTimestamp() const
     {
@@ -70,7 +78,7 @@ namespace BlackMisc
         this->m_timestampMSecsSinceEpoch = QDateTime::currentMSecsSinceEpoch();
     }
 
-    QString ITimestampBased::getFormattedUtcTimestamp() const
+    QString ITimestampBased::getFormattedUtcTimestampDhms() const
     {
         return this->getUtcTimestamp().toString("dd hh:mm:ss");
     }
@@ -87,7 +95,7 @@ namespace BlackMisc
 
     QString ITimestampBased::getFormattedUtcTimestampYmdhms() const
     {
-        return this->getUtcTimestamp().toString("yyyy-MM-dd HH:mm::ss");
+        return this->getUtcTimestamp().toString("yyyy-MM-dd HH:mm:ss");
     }
 
     QString ITimestampBased::getFormattedUtcTimestampYmdhmsz() const
@@ -112,12 +120,16 @@ namespace BlackMisc
                 return CVariant::fromValue(this->getUtcTimestamp());
             case IndexMSecsSinceEpoch:
                 return CVariant::fromValue(this->getMSecsSinceEpoch());
-            case IndexUtcTimestampFormatted:
-                return CVariant::fromValue(this->getFormattedUtcTimestamp());
+            case IndexUtcTimestampFormattedDhms:
+                return CVariant::fromValue(this->getFormattedUtcTimestampDhms());
             case IndexUtcTimestampFormattedHm:
                 return CVariant::fromValue(this->getFormattedUtcTimestampHm());
             case IndexUtcTimestampFormattedHms:
                 return CVariant::fromValue(this->getFormattedUtcTimestampHms());
+            case IndexUtcTimestampFormattedYmdhms:
+                return CVariant::fromValue(this->getFormattedUtcTimestampYmdhms());
+            case IndexUtcTimestampFormattedYmdhmsz:
+                return CVariant::fromValue(this->getFormattedUtcTimestampYmdhmsz());
             default:
                 break;
             }
@@ -140,7 +152,15 @@ namespace BlackMisc
             case IndexMSecsSinceEpoch:
                 this->setMSecsSinceEpoch(variant.toInt());
                 return;
-            case IndexUtcTimestampFormatted:
+            case IndexUtcTimestampFormattedYmdhms:
+            case IndexUtcTimestampFormattedYmdhmsz:
+            case IndexUtcTimestampFormattedHm:
+            case IndexUtcTimestampFormattedHms:
+            case IndexUtcTimestampFormattedDhms:
+                {
+                    QDateTime dt = QDateTime::fromString(variant.toQString());
+                    this->m_timestampMSecsSinceEpoch = dt.toMSecsSinceEpoch();
+                }
             default:
                 break;
             }

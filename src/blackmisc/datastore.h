@@ -28,19 +28,40 @@ namespace BlackMisc
         //! Property index
         enum ColumnIndex
         {
-            IndexDbIntergerKey = CPropertyIndex::GlobalIndexIDatastoreInteger
+            IndexDbIntegerKey = CPropertyIndex::GlobalIndexIDatastoreInteger
         };
 
         //! Get DB key.
         int getDbKey() const { return m_dbKey; }
 
+        //! DB key as string
+        QString getDbKeyAsString() const;
+
+        //! Db ley in parentheses, e.g. "(3)"
+        QString getDbKeyAsStringInParentheses() const;
+
         //! Set the DB key
         void setDbKey(int key) { m_dbKey = key; }
+
+        //! DB key passed as string
+        void setDbKey(const QString &key);
 
         //! Has valid DB key
         bool hasValidDbKey() const { return m_dbKey >= 0; }
 
     protected:
+        //! Constructor
+        IDatastoreObjectWithIntegerKey() {}
+
+        //! Constructor
+        IDatastoreObjectWithIntegerKey(int key) : m_dbKey(key) {}
+
+        //! Set key and timestamp values
+        void setKeyAndTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
+
+        //! Is a key available?
+        static bool existsKey(const QJsonObject &json, const QString &prefix = QString());
+
         //! \copydoc CValueObject::propertyByIndex
         CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
@@ -75,6 +96,18 @@ namespace BlackMisc
         bool hasValidDbKey() const { return !m_dbKey.isEmpty(); }
 
     protected:
+        //! Constructor
+        IDatastoreObjectWithStringKey() {}
+
+        //! Constructor
+        IDatastoreObjectWithStringKey(const QString &key) : m_dbKey(key) {}
+
+        //! Set key and timestamp values
+        void setKeyAndTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
+
+        //! Is a key available?
+        static bool existsKey(const QJsonObject &json, const QString &prefix = QString());
+
         //! \copydoc CValueObject::propertyByIndex
         CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 

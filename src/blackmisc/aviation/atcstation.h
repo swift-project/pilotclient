@@ -241,17 +241,17 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAtcStation)
-            CCallsign m_callsign;
-            BlackMisc::Network::CUser m_controller;
+            CCallsign                                 m_callsign;
+            BlackMisc::Network::CUser                 m_controller;
             BlackMisc::PhysicalQuantities::CFrequency m_frequency;
-            BlackMisc::Geo::CCoordinateGeodetic m_position;
-            BlackMisc::PhysicalQuantities::CLength m_range;
-            bool m_isOnline = false;
-            QDateTime m_bookedFromUtc;
-            QDateTime m_bookedUntilUtc;
+            BlackMisc::Geo::CCoordinateGeodetic       m_position;
+            BlackMisc::PhysicalQuantities::CLength    m_range;
+            bool                                      m_isOnline = false;
+            QDateTime                                 m_bookedFromUtc;
+            QDateTime                                 m_bookedUntilUtc;
             CInformationMessage m_atis  { CInformationMessage::ATIS };
             CInformationMessage m_metar { CInformationMessage::METAR };
-            BlackMisc::Audio::CVoiceRoom m_voiceRoom;
+            BlackMisc::Audio::CVoiceRoom              m_voiceRoom;
         };
     } // namespace
 } // namespace

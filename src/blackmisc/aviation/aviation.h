@@ -28,7 +28,6 @@
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
-#include "blackmisc/aviation/aircraftlist.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/airlineicaocode.h"

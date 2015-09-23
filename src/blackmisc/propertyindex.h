@@ -51,6 +51,8 @@ namespace BlackMisc
             GlobalIndexCNameVariantPair       =   300,
             GlobalIndexTimestampBased         =   400,
             GlobalIndexIdentifier             =   500,
+            GlobalIndexRgbColor               =   600,
+            GlobalIndexCountry                =   700,
             GlobalIndexCCallsign              =  1000,
             GlobalIndexCAircraftSituation     =  1200,
             GlobalIndexCAtcStation            =  1300,

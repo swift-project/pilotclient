@@ -50,6 +50,9 @@ namespace BlackMisc
         //! Sort by timestamp
         void sortByKey();
 
+        //! All keys as string list
+        QStringList toDbKeyList() const;
+
         //! From DB JSON
         static CONTAINER fromDatabaseJson(const QJsonArray &array);
 

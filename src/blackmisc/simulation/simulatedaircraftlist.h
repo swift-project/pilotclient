@@ -15,7 +15,6 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/callsignobjectlist.h"
-#include "blackmisc/aviation/aircraftlist.h"
 #include "blackmisc/geo/geoobjectlist.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/collection.h"
@@ -59,11 +58,18 @@ namespace BlackMisc
             //! Callsigns of aircraft with synchronized parts
             BlackMisc::Aviation::CCallsignSet getCallsignsWithSyncronizedParts() const;
 
+            //! Update aircraft with data from VATSIM data file
+            //! \remarks The list used ("this") needs to contain the VATSIM data file objects
+            bool updateWithVatsimDataFileData(CSimulatedAircraft &aircraftToBeUpdated) const;
+
             //! Mark all aircraft as unrendered
             void markAllAsNotRendered();
 
             //! Mark given callsign as rendered
             int setRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered);
+
+            //! Set model
+            int setAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftModel &model);
 
             //! Set aircraft parts
             int setAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
@@ -73,9 +79,6 @@ namespace BlackMisc
 
             //! Rendered?
             bool isRendered(const BlackMisc::Aviation::CCallsign &callsign) const;
-
-            //! To aircraft list
-            BlackMisc::Aviation::CAircraftList toAircraftList() const;
 
         };
 

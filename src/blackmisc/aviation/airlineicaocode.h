@@ -13,9 +13,11 @@
 #define BLACKMISC_AVIATION_AIRLINEICAOCODE_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/country.h"
 #include "blackmisc/datastore.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
 namespace BlackMisc
@@ -36,7 +38,9 @@ namespace BlackMisc
                 IndexAirlineCountryIso,
                 IndexAirlineCountry,
                 IndexTelephonyDesignator,
-                IndexIsVirtualAirline
+                IndexIsVirtualAirline,
+                IndexIsOperating,
+                IndexDesignatorNameCountry,
             };
 
             //! Default constructor.
@@ -46,7 +50,7 @@ namespace BlackMisc
             CAirlineIcaoCode(const QString &airlineDesignator);
 
             //! Constructor.
-            CAirlineIcaoCode(const QString &airlineDesignator, const QString &airlineName, const QString &countryIso, const QString &country, const QString &telephony, bool virtualAirline);
+            CAirlineIcaoCode(const QString &airlineDesignator, const QString &airlineName, const BlackMisc::CCountry &country, const QString &telephony, bool virtualAirline, bool operating);
 
             //! Get airline, e.g. "DLH"
             const QString &getDesignator() const { return this->m_designator; }
@@ -58,16 +62,16 @@ namespace BlackMisc
             void setDesignator(const QString &icaoDesignator) { this->m_designator = icaoDesignator.trimmed().toUpper(); }
 
             //! Get country, e.g. "FR"
-            const QString &getCountryIso() const { return this->m_countryIso; }
+            const QString &getCountryIso() const { return this->m_country.getIsoCode(); }
 
             //! Get country, e.g. "FRANCE"
-            const QString &getCountry() const { return this->m_country; }
+            const BlackMisc::CCountry &getCountry() const { return this->m_country; }
 
-            //! Set country ISO
-            void setCountryIso(const QString &country) { this->m_countryIso = country.trimmed().toUpper(); }
+            //! Combined string designator, name, country
+            QString getDesignatorNameCountry() const;
 
             //! Set country
-            void setCountry(const QString &country) { this->m_country = country.trimmed(); }
+            void setCountry(const BlackMisc::CCountry &country) { this->m_country = country; }
 
             //! Get name, e.g. "Lufthansa"
             const QString &getName() const { return this->m_name; }
@@ -87,11 +91,23 @@ namespace BlackMisc
             //! Virtual airline
             void setVirtualAirline(bool va) { m_isVa = va; }
 
-            //! Country?
-            bool hasCountryIso() const { return !this->m_countryIso.isEmpty(); }
+            //! Operating?
+            bool isOperating() const { return m_isOperating; }
 
-            //! Airline available?
-            bool hasDesignator() const { return !this->m_designator.isEmpty(); }
+            //! Operating airline?
+            void setOperating(bool operating) { m_isOperating = operating; }
+
+            //! Country?
+            bool hasValidCountry() const;
+
+            //! Airline designator available?
+            bool hasValidDesignator() const;
+
+            //! Matches designator string?
+            bool matchesDesignator(const QString &designator) const;
+
+            //! Matches v-designator string?
+            bool matchesVDesignator(const QString &designator) const;
 
             //! Telephony designator?
             bool hasTelephonyDesignator() const { return !this->m_telephonyDesignator.isEmpty(); }
@@ -102,6 +118,12 @@ namespace BlackMisc
             //! Complete data
             bool hasCompleteData() const;
 
+            //! Comined string with key
+            QString getCombinedStringWithKey() const;
+
+            //! \copydoc CValueObject::toIcon
+            CIcon toIcon() const;
+
             //! \copydoc CValueObject::convertToQString
             QString convertToQString(bool i18n = false) const;
 
@@ -111,20 +133,26 @@ namespace BlackMisc
             //! \copydoc CValueObject::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
+            //! Validate data
+            BlackMisc::CStatusMessageList validate() const;
+
+            //! Update missing parts
+            void updateMissingParts(const CAirlineIcaoCode &otherIcaoCode);
+
             //! Valid designator?
             static bool isValidAirlineDesignator(const QString &airline);
 
             //! From our DB JSON
-            static CAirlineIcaoCode fromDatabaseJson(const QJsonObject &json);
+            static CAirlineIcaoCode fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAirlineIcaoCode)
             QString m_designator;           //!< "DLH"
             QString m_name;                 //!< "Lufthansa"
-            QString m_countryIso;           //!< "FR"
-            QString m_country;              //!< clear text, "Germany"
+            BlackMisc::CCountry m_country;  //!< Country
             QString m_telephonyDesignator;  //!< "Speedbird"
-            bool m_isVa = false;
+            bool m_isVa = false;            //!< virtual airline
+            bool m_isOperating = true;      //!< still operating?
         };
     } // namespace
 } // namespace
@@ -132,12 +160,13 @@ namespace BlackMisc
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAirlineIcaoCode)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAirlineIcaoCode, (
                                    o.m_dbKey,
+                                   o.m_timestampMSecsSinceEpoch,
                                    o.m_designator,
                                    o.m_name,
-                                   o.m_countryIso,
                                    o.m_country,
                                    o.m_telephonyDesignator,
-                                   o.m_isVa
+                                   o.m_isVa,
+                                   o.m_isOperating
                                ))
 
 #endif // guard

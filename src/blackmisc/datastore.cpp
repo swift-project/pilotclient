@@ -8,10 +8,45 @@
  */
 
 #include "blackmisc/datastore.h"
+#include "blackmisc/datastoreutility.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
 namespace BlackMisc
 {
+
+    QString IDatastoreObjectWithIntegerKey::getDbKeyAsString() const
+    {
+        if (this->m_dbKey < 0) { return ""; }
+        return QString::number(this->m_dbKey);
+    }
+
+    QString IDatastoreObjectWithIntegerKey::getDbKeyAsStringInParentheses() const
+    {
+        if (this->m_dbKey < 0) { return ""; }
+        return "(" + QString::number(this->m_dbKey) + ")";
+    }
+
+    void IDatastoreObjectWithIntegerKey::setDbKey(const QString &key)
+    {
+        bool ok;
+        int k = key.toInt(&ok);
+        if (!ok) { k = -1; }
+        this->m_dbKey = k;
+    }
+
+    void IDatastoreObjectWithIntegerKey::setKeyAndTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix)
+    {
+        int dbKey = json.value(prefix + "id").toInt(-1);
+        QString timestampString(json.value(prefix + "lastupdated").toString());
+        QDateTime ts(CDatastoreUtility::parseTimestamp(timestampString));
+        this->setDbKey(dbKey);
+        this->setUtcTimestamp(ts);
+    }
+
+    bool IDatastoreObjectWithIntegerKey::existsKey(const QJsonObject &json, const QString &prefix)
+    {
+        return !json.value(prefix + "id").isNull();
+    }
 
     CVariant IDatastoreObjectWithIntegerKey::propertyByIndex(const CPropertyIndex &index) const
     {
@@ -19,7 +54,7 @@ namespace BlackMisc
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexDbIntergerKey: return CVariant::from(this->m_dbKey);
+        case IndexDbIntegerKey: return CVariant::from(this->m_dbKey);
         default:
             break;
         }
@@ -37,7 +72,7 @@ namespace BlackMisc
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexDbIntergerKey:
+        case IndexDbIntegerKey:
             this->m_dbKey = variant.toInt();
             break;
         default:
@@ -49,7 +84,20 @@ namespace BlackMisc
     {
         if (ITimestampBased::canHandleIndex(index)) { return true;}
         int i = index.frontCasted<int>();
-        return (i >= static_cast<int>(IndexDbIntergerKey)) && (i <= static_cast<int>(IndexDbIntergerKey));
+        return (i >= static_cast<int>(IndexDbIntegerKey)) && (i <= static_cast<int>(IndexDbIntegerKey));
+    }
+
+    void IDatastoreObjectWithStringKey::setKeyAndTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix)
+    {
+        QString dbKey = json.value(prefix + "id").toString();
+        QDateTime ts(CDatastoreUtility::parseTimestamp(json.value(prefix + "lastupdated").toString()));
+        this->setDbKey(dbKey);
+        this->setUtcTimestamp(ts);
+    }
+
+    bool IDatastoreObjectWithStringKey::existsKey(const QJsonObject &json, const QString &prefix)
+    {
+        return !json.value(prefix + "id").isNull();
     }
 
     CVariant IDatastoreObjectWithStringKey::propertyByIndex(const CPropertyIndex &index) const

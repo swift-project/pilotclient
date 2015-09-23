@@ -23,11 +23,32 @@ namespace BlackMisc
             CSequence<CLivery>(other)
         { }
 
-        CLiveryList CLiveryList::findByCombinedCode(const QString &combinedCode) const
+        CLiveryList CLiveryList::findByAirlineIcaoDesignator(const QString &icao) const
         {
-            QString cc(combinedCode.trimmed().toUpper());
-            if (cc.isEmpty()) { return CLiveryList();}
-            return this->findBy(&CLivery::getCombinedCode, cc);
+            QString i(icao.trimmed().toUpper());
+            if (i.isEmpty()) { return CLiveryList(); }
+            return this->findBy(&CLivery::getAirlineIcaoCodeDesignator, i);
+        }
+
+        CLivery CLiveryList::findByAirlineIcaoDesignatorStdLivery(const QString &icao) const
+        {
+            QString i(icao.trimmed().toUpper());
+            if (i.isEmpty()) { return CLivery(); }
+            return this->findFirstByOrDefault([&](const CLivery & livery)
+            {
+                return livery.getAirlineIcaoCodeDesignator() == icao &&
+                       livery.isAirlineStandardLivery();
+
+            });
+        }
+
+        CLivery CLiveryList::findByCombinedCode(const QString &combinedCode) const
+        {
+            if (!CLivery::isValidCombinedCode(combinedCode)) { return CLivery(); }
+            return this->findFirstByOrDefault([&](const CLivery & livery)
+            {
+                return livery.matchesCombinedCode(combinedCode);
+            });
         }
 
     } // namespace

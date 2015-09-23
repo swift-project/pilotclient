@@ -12,11 +12,14 @@
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/liverylist.h"
+#include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/identifierlist.h"
+#include "blackmisc/countrylist.h"
 #include <algorithm>
 #include <iterator>
 
@@ -175,6 +178,8 @@ namespace BlackMisc
     template class ITimestampObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
     template class ITimestampObjectList<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList>;
     template class ITimestampObjectList<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList>;
+    template class ITimestampObjectList<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList>;
+    template class ITimestampObjectList<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList>;
 
     template class ITimestampObjectList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
     template class ITimestampObjectList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;
@@ -183,5 +188,6 @@ namespace BlackMisc
 
     template class ITimestampObjectList<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>;
     template class ITimestampObjectList<BlackMisc::CIdentifier, BlackMisc::CIdentifierList>;
+    template class ITimestampObjectList<BlackMisc::CCountry, BlackMisc::CCountryList>;
 
 } // namespace

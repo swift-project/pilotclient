@@ -21,7 +21,6 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-
         CSimulatedAircraftList::CSimulatedAircraftList() { }
 
         CSimulatedAircraftList::CSimulatedAircraftList(const CSequence<CSimulatedAircraft> &other) :
@@ -59,6 +58,26 @@ namespace BlackMisc
             return csl;
         }
 
+        bool CSimulatedAircraftList::updateWithVatsimDataFileData(CSimulatedAircraft &aircraftToBeUpdated) const
+        {
+            if (this->isEmpty()) return false;
+            if (aircraftToBeUpdated.hasValidRealName() && aircraftToBeUpdated.hasValidId() && aircraftToBeUpdated.hasAircraftAndAirlineDesignator()) { return false; }
+
+            CSimulatedAircraft currentDataFileAircraft = this->findFirstByCallsign(aircraftToBeUpdated.getCallsign());
+            if (currentDataFileAircraft.getCallsign().isEmpty()) return false;
+
+            CUser user = aircraftToBeUpdated.getPilot();
+            user.updateMissingParts(currentDataFileAircraft.getPilot());
+            aircraftToBeUpdated.setPilot(user);
+
+            CAircraftIcaoCode aircraftIcao = aircraftToBeUpdated.getAircraftIcaoCode();
+            CAirlineIcaoCode airlineIcao = aircraftToBeUpdated.getAirlineIcaoCode();
+            aircraftIcao.updateMissingParts(currentDataFileAircraft.getAircraftIcaoCode());
+            airlineIcao.updateMissingParts(currentDataFileAircraft.getAirlineIcaoCode());
+            aircraftToBeUpdated.setIcaoCodes(aircraftIcao, airlineIcao);
+            return true;
+        }
+
         void CSimulatedAircraftList::markAllAsNotRendered()
         {
             for (CSimulatedAircraft &aircraft : (*this))
@@ -75,6 +94,18 @@ namespace BlackMisc
             {
                 if (aircraft.getCallsign() != callsign) { continue; }
                 aircraft.setRendered(rendered);
+                c++;
+            }
+            return c;
+        }
+
+        int CSimulatedAircraftList::setAircraftModel(const CCallsign &callsign, const CAircraftModel &model)
+        {
+            int c = 0;
+            for (CSimulatedAircraft &aircraft : (*this))
+            {
+                if (aircraft.getCallsign() != callsign) { continue; }
+                aircraft.setModel(model);
                 c++;
             }
             return c;
@@ -111,16 +142,6 @@ namespace BlackMisc
                 return aircraft.isRendered();
             }
             return false;
-        }
-
-        CAircraftList CSimulatedAircraftList::toAircraftList() const
-        {
-            CAircraftList al;
-            for (const CSimulatedAircraft &aircraft : (*this))
-            {
-                al.push_back(aircraft);
-            }
-            return al;
         }
 
     } // namespace
