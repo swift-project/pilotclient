@@ -295,7 +295,6 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::ps_setAirportsInRange(const QStringList &icaos, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts)
         {
-            qDebug() << alts;
             m_airportsInRange.clear();
             auto icaoIt = icaos.begin();
             auto nameIt = names.begin();

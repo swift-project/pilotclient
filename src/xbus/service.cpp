@@ -126,7 +126,6 @@ namespace XBus
             lons.push_back(lon);
             alts.push_back(alt);
         }
-        qDebug() << alts;
         emit airportsInRangeUpdated(icaos, names, lats, lons, alts);
     }
 
