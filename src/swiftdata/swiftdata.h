@@ -14,20 +14,20 @@
 
 #include "blackcore/context_runtime.h"
 #include "blackgui/systemtraywindow.h"
-#include "blackgui/components/enableforruntime.h"
 #include "blackgui/managedstatusbar.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/identifiable.h"
 #include <QScopedPointer>
 
 namespace Ui { class CSwiftData; }
-namespace BlackCore { class CWebDataReader; }
+namespace BlackCore { class CWebDataServices; }
 
-//! swift data entry control
+/*!
+ * swift data entry control (aka mapping tool)
+ */
 class CSwiftData :
     public QMainWindow,
-    public BlackMisc::CIdentifiable,
-    public BlackGui::Components::CEnableForRuntime
+    public BlackMisc::CIdentifiable
 {
     Q_OBJECT
 
@@ -38,6 +38,10 @@ public:
     //! Destructor
     ~CSwiftData();
 
+protected:
+    //! \copydoc QMainWindow::closeEvent
+    virtual void closeEvent(QCloseEvent *event) override;
+
 private slots:
     //! Append log message
     void ps_appendLogMessage(const BlackMisc::CStatusMessage &message);
@@ -45,14 +49,21 @@ private slots:
     //! Style sheet has changed
     void ps_onStyleSheetsChanged();
 
+    //! Menu clicked
+    void ps_onMenuClicked();
+
 private:
     void init();
     void initLogDisplay();
     void initStyleSheet();
     void initReaders();
+    void initMenu();
+    void initDynamicMenus();
+    void performGracefulShutdown();
+
     QScopedPointer<Ui::CSwiftData> ui;
     BlackGui::CManagedStatusBar    m_statusBar;
-    BlackCore::CWebDataReader     *m_webDataReader = nullptr;
+    BlackCore::CWebDataServices     *m_webDataReader = nullptr;
 };
 
 #endif // guard

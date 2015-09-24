@@ -2,24 +2,22 @@
 <ui version="4.0">
  <class>CSwiftData</class>
  <widget class="QMainWindow" name="CSwiftData">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>800</width>
-    <height>600</height>
-   </rect>
-  </property>
   <property name="minimumSize">
    <size>
-    <width>800</width>
-    <height>600</height>
+    <width>900</width>
+    <height>700</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>swiftdata</string>
   </property>
   <widget class="QWidget" name="qw_CentralWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <layout class="QVBoxLayout" name="vl_CentralWidget">
     <property name="leftMargin">
      <number>2</number>
@@ -34,6 +32,16 @@
      <number>2</number>
     </property>
     <item>
+     <widget class="BlackGui::Components::CInfoBarWebReadersStatusComponent" name="comp_InfoBar">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QStackedWidget" name="sw_CentralWidget">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -44,13 +52,8 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="pq_MainInfoArea">
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <widget class="BlackGui::Components::CDataMainInfoAreaComponent" name="comp_MainInfoArea" native="true"/>
-        </item>
-       </layout>
-      </widget>
+      <widget class="BlackGui::Components::CDataMainInfoAreaComponent" name="comp_MainInfoArea"/>
+      <widget class="QWidget" name="emptyPage"/>
      </widget>
     </item>
    </layout>
@@ -60,22 +63,130 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1024</width>
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile">
+   <widget class="QMenu" name="menu_File">
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionExit"/>
+    <addaction name="menu_FileSettingsDirectory"/>
+    <addaction name="menu_FileResetSettings"/>
+    <addaction name="menu_FileReloadStyleSheets"/>
+    <addaction name="separator"/>
+    <addaction name="menu_FileExit"/>
    </widget>
-   <addaction name="menuFile"/>
+   <widget class="QMenu" name="menu_Window">
+    <property name="title">
+     <string>Window</string>
+    </property>
+    <addaction name="menu_WindowFont"/>
+    <addaction name="menu_WindowMinimize"/>
+   </widget>
+   <widget class="QMenu" name="menu_InfoAreas">
+    <property name="title">
+     <string>Info areas</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menu_Mapping">
+    <property name="title">
+     <string>Mapping</string>
+    </property>
+    <addaction name="menu_MappingMaxData"/>
+    <addaction name="menu_MappingMaxMapping"/>
+   </widget>
+   <widget class="QMenu" name="menu_Internals">
+    <property name="title">
+     <string>Test</string>
+    </property>
+    <widget class="QMenu" name="menu_Debugging">
+     <property name="title">
+      <string>Debug</string>
+     </property>
+     <addaction name="menu_DebugMetaTypes"/>
+    </widget>
+    <addaction name="menu_TestInternals"/>
+    <addaction name="separator"/>
+    <addaction name="menu_Debugging"/>
+   </widget>
+   <widget class="QMenu" name="menu_Help">
+    <property name="title">
+     <string>Help</string>
+    </property>
+   </widget>
+   <addaction name="menu_File"/>
+   <addaction name="menu_Window"/>
+   <addaction name="menu_InfoAreas"/>
+   <addaction name="menu_Help"/>
+   <addaction name="menu_Mapping"/>
+   <addaction name="menu_Internals"/>
   </widget>
   <widget class="QStatusBar" name="sb_SwiftData"/>
-  <action name="actionExit">
+  <action name="menu_FileExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="menu_FileSettingsDirectory">
+   <property name="text">
+    <string>Settings directory</string>
+   </property>
+  </action>
+  <action name="menu_FileResetSettings">
+   <property name="text">
+    <string>Reset settings</string>
+   </property>
+  </action>
+  <action name="menu_FileReloadStyleSheets">
+   <property name="text">
+    <string>Reload style sheets</string>
+   </property>
+  </action>
+  <action name="menu_WindowFont">
+   <property name="text">
+    <string>Font</string>
+   </property>
+  </action>
+  <action name="menu_WindowMinimize">
+   <property name="text">
+    <string>Minimize</string>
+   </property>
+  </action>
+  <action name="menu_TestInternals">
+   <property name="text">
+    <string>Internals</string>
+   </property>
+  </action>
+  <action name="menu_MappingMaxMapping">
+   <property name="text">
+    <string>Max. mapping area</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+M, M</string>
+   </property>
+  </action>
+  <action name="menu_MappingMaxData">
+   <property name="text">
+    <string>Max. data area</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+M, D</string>
+   </property>
+  </action>
+  <action name="menu_WindowToggleOnTop">
+   <property name="text">
+    <string>Toggle stay on top</string>
+   </property>
+  </action>
+  <action name="actionNavigator">
+   <property name="text">
+    <string>Navigator</string>
+   </property>
+  </action>
+  <action name="menu_DebugMetaTypes">
+   <property name="text">
+    <string>Debug metatypes (to console)</string>
    </property>
   </action>
  </widget>
@@ -85,6 +196,12 @@
    <class>BlackGui::Components::CDataMainInfoAreaComponent</class>
    <extends>QWidget</extends>
    <header>blackgui/components/datamaininfoareacomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CInfoBarWebReadersStatusComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/infobarwebreadersstatuscomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

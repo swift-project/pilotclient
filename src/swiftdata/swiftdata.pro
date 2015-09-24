@@ -2,6 +2,7 @@ include ($$SourceRoot/config.pri)
 include ($$SourceRoot/build.pri)
 
 QT       += core dbus network xml multimedia gui svg
+CONFIG   += console
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
