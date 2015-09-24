@@ -266,19 +266,38 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::displayStatusMessage(const BlackMisc::CStatusMessage &message) const
         {
+            // avoid infinite recursion in case this function is called due to a message caused by this very function
+            static bool isInFunction = false;
+            if (isInFunction) { return; }
+            isInFunction = true;
+
             /* We do not assert here as status message may come because of network problems */
             if (!isConnected()) { return; }
 
-            //! \todo XP driver, display text message: XPLMSpeakString()? http://www.xsquawkbox.net/xpsdk/mediawiki/XPLMSpeakString
-            Q_UNUSED(message);
+            QColor color;
+            switch (message.getSeverity())
+            {
+            case CStatusMessage::SeverityDebug: color = "teal"; break;
+            case CStatusMessage::SeverityInfo: color = "cyan"; break;
+            case CStatusMessage::SeverityWarning: color = "orange"; break;
+            case CStatusMessage::SeverityError: color = "red"; break;
+            }
+
+            m_service->addTextMessage("swift: " + message.getMessage(), color.redF(), color.greenF(), color.blueF());
+            isInFunction = false;
         }
 
         void CSimulatorXPlane::displayTextMessage(const BlackMisc::Network::CTextMessage &message) const
         {
             if (!isConnected()) { return; }
 
-            //! \todo XP driver, display text message: XPLMSpeakString()? http://www.xsquawkbox.net/xpsdk/mediawiki/XPLMSpeakString
-            Q_UNUSED(message);
+            QColor color;
+            if (message.isServerMessage()) { color = "orchid"; }
+            else if (message.isSupervisorMessage()) { color = "yellow"; }
+            else if (message.isPrivateMessage()) { color = "magenta"; }
+            else { color = "lime"; }
+
+            m_service->addTextMessage(message.getSenderCallsign().toQString() + ": " + message.getMessage(), color.redF(), color.greenF(), color.blueF());
         }
 
         CAircraftModelList CSimulatorXPlane::getInstalledModels() const

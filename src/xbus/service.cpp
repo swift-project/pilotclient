@@ -28,6 +28,30 @@ namespace XBus
         emit aircraftModelChanged(path, filename, getAircraftLivery(), getAircraftIcaoCode());
     }
 
+    void CService::addTextMessage(const QString &text, double red, double green, double blue)
+    {
+        if (text.isEmpty()) { return; }
+        int lineLength = m_messages.maxLineLength() - 1;
+        QStringList wrappedLines;
+        for (int i = 0; i < text.size(); i += lineLength)
+        {
+            static const QChar ellipsis = 0x2026;
+            wrappedLines.push_back(text.mid(i, lineLength) + ellipsis);
+        }
+        wrappedLines.back().chop(1);
+        if (wrappedLines.back().isEmpty()) { wrappedLines.pop_back(); }
+        else if (wrappedLines.back().size() == 1 && wrappedLines.size() > 1)
+        {
+            (wrappedLines.end() - 2)->chop(1);
+            (wrappedLines.end() - 2)->append(wrappedLines.back());
+            wrappedLines.pop_back();
+        }
+        for (const auto &line : wrappedLines)
+        {
+            m_messages.addMessage({ line.toStdString(), static_cast<float>(red), static_cast<float>(green), static_cast<float>(blue) });
+        }
+    }
+
     QString CService::getAircraftModelPath() const
     {
         char filename[256];

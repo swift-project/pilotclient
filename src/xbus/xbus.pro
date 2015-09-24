@@ -9,11 +9,12 @@ CONFIG += shared plugin
 CONFIG += blackmisc blackcore
 
 win32 {
-    equals(WORD_SIZE,64): LIBS += -lXPLM_64
-    equals(WORD_SIZE,32): LIBS += -lXPLM
+    equals(WORD_SIZE,64): LIBS += -lXPLM_64 -lXPWidgets_64
+    equals(WORD_SIZE,32): LIBS += -lXPLM -lXPWidgets
 }
 else:macx {
-    LIBS += -framework XPLM -framework Cocoa -framework CoreFoundation
+    LIBS += -framework XPLM -framework XPWidgets \
+            -framework Cocoa -framework CoreFoundation
     DEFINES += XUTILS_EXCLUDE_MAC_CRAP=1
 }
 else:unix {

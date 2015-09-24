@@ -79,6 +79,9 @@ namespace BlackSimPlugin
             void airportsInRangeUpdated(const QStringList &icaoCodes, const QStringList &names, const QList<double> &lats, const QList<double> &lons, const QList<double> &alts);
 
         public slots:
+            //! \copydoc XBus::CService::addTextMessage
+            void addTextMessage(const QString &text, double red, double green, double blue);
+
             //! \copydoc XBus::CService::updateAirportsInRange
             void updateAirportsInRange();
 

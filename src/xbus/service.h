@@ -12,6 +12,7 @@
 #define NOMINMAX
 #endif
 #include "datarefs.h"
+#include "messages.h"
 #include "blackmisc/geo/geodesicgrid.h"
 #include <XPLM/XPLMNavigation.h>
 #include <QStringList>
@@ -71,6 +72,9 @@ namespace XBus
         void airportsInRangeUpdated(const QStringList &icaoCodes, const QStringList &names, const QDoubleList &lats, const QDoubleList &lons, const QDoubleList &alts);
 
     public slots:
+        //! Add a text message to the on-screen display, with RGB components in the range [0,1]
+        void addTextMessage(const QString &text, double red, double green, double blue);
+
         //! Called by newly connected client to cause airportsInRangeUpdated to be emitted.
         void updateAirportsInRange();
 
@@ -217,6 +221,7 @@ namespace XBus
         double getSpeedBrakeRatio() const { return m_speedBrakeRatio.get(); }
 
     private:
+        CMessageBoxControl m_messages;
         BlackMisc::Geo::CGeodesicGrid<128, XPLMNavRef> m_airports;
         QTimer *m_airportUpdater = nullptr;
         void readAirportsDatabase();

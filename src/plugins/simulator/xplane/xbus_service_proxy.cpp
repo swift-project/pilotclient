@@ -20,6 +20,11 @@ namespace BlackSimPlugin
             if (! dummy) { m_dbusInterface->relayParentSignals(); }
         }
 
+        void CXBusServiceProxy::addTextMessage(const QString &text, double red, double green, double blue)
+        {
+            m_dbusInterface->callDBus(QLatin1String("addTextMessage"), text, red, green, blue);
+        }
+
         void CXBusServiceProxy::updateAirportsInRange()
         {
             m_dbusInterface->callDBus(QLatin1String("updateAirportsInRange"));
