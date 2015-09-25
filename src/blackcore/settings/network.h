@@ -57,16 +57,6 @@ namespace BlackCore
                 }
             };
 
-            //! Booking service URL
-            struct BookingService : public CSettingTrait<QString>
-            {
-                //! \copydoc BlackCore::CSetting::key
-                static const char *key() { return "network/bookingservice"; }
-
-                //! \copydoc BlackCore::CSetting::defaultValue
-                static const QString &defaultValue() { static const QString dv("http://vatbook.euroutepro.com/xml2.php"); return dv; }
-            };
-
             //! DBus server address
             struct DBusServerAddress : public CSettingTrait<QString>
             {
@@ -76,8 +66,8 @@ namespace BlackCore
                 //! \copydoc BlackCore::CSetting::defaultValue
                 static const QString &defaultValue() { static const QString dv("session"); return dv; }
             };
-        }
-    }
-}
+        } // ns
+    } // ns
+} // ns
 
 #endif

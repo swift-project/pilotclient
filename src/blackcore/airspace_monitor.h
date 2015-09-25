@@ -14,7 +14,7 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/network.h"
-#include "blackcore/vatsim_metar_reader.h"
+#include "blackcore/vatsimmetarreader.h"
 #include "airspace_analyzer.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"

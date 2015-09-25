@@ -17,13 +17,19 @@ namespace BlackCore
             m_protocolIcaoReader("http"), m_serverIcaoReader("ubuntu12"),  m_baseUrlIcaoReader("vatrep/public"),
             m_protocolModelReader("http"), m_serverModelReader("ubuntu12"), m_baseUrlModelReader("vatrep/public"),
             m_bookingsUrl("http://vatbook.euroutepro.com/xml2.php"),
+            m_metarUrl("http://metar.vatsim.net/metar.php"),
             m_vatsimDataFileUrls({ "http://info.vroute.net/vatsim-data.txt" })
         { }
+
+        QString CGlobalReaderSettings::urlVatsimMetars() const
+        {
+            return m_metarUrl + "?id=all";
+        }
 
         const CGlobalReaderSettings &CGlobalReaderSettings::instance()
         {
             static const CGlobalReaderSettings rs;
             return rs;
         }
-    }
-}
+    } // ns
+} // ns

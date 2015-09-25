@@ -42,11 +42,17 @@ namespace BlackCore
             //! Model Reader server
             const QString &baseUrlModelReader() const { return m_baseUrlModelReader; }
 
-            //! URL to read bookings
+            //! URL to read VATSIM bookings
             const QString &bookingsUrl() const { return m_bookingsUrl; }
 
             //! VATSIM data file URLs
             const QStringList &vatsimDataFileUrls() const { return m_vatsimDataFileUrls; }
+
+            //! VATSIM METAR URL
+            const QString &baseUrlVatsimMetars() const { return m_metarUrl; }
+
+            //! VATSIM METAR URL (with query string)
+            QString urlVatsimMetars() const;
 
             //! Singleton
             static const CGlobalReaderSettings &instance();
@@ -65,6 +71,7 @@ namespace BlackCore
             QString m_serverModelReader;
             QString m_baseUrlModelReader;
             QString m_bookingsUrl;
+            QString m_metarUrl;
             QStringList m_vatsimDataFileUrls;
         };
     }

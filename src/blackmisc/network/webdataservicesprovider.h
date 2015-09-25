@@ -173,9 +173,13 @@ namespace BlackMisc
             //! Connect signals to slot receiver. As the interface is no QObject, slots can not be connected directly.
             //! In order to disconnect a list of connections is provided, which have to be disconnected manually.
             //! \note receiver is required for connection type
-            virtual QList<QMetaObject::Connection> connectVatsimDataSignals(QObject *receiver, std::function<void(int)> bookingsRead, std::function<void(int)> dataFileRead) = 0;
+            //! \todo currently still used, will be replaced by abstract connection by entity
+            virtual QList<QMetaObject::Connection> connectVatsimDataSignals(
+                QObject *receiver,
+                std::function<void(int)> bookingsRead, std::function<void(int)> dataFileRead, std::function<void(int)> metarsRead) = 0;
 
             //! Relay signals for swift data
+            //! \todo currently still used, will be replaced by abstract connection by entity
             virtual QList<QMetaObject::Connection> connectSwiftDatabaseSignals(
                 QObject *receiver,
                 std::function<void(BlackMisc::Network::CDbFlags::Entity, BlackMisc::Network::CDbFlags::ReadState, int)> dataRead) = 0;

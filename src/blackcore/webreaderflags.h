@@ -31,9 +31,10 @@ namespace BlackCore
             None = 0,  ///< no reader at all
             VatsimBookingReader  = 1 << 0,  ///< reader for VATSIM booking data
             VatsimDataReader     = 1 << 1,  ///< reader for VATSIM data
-            IcaoDataReader       = 1 << 2,  ///< reader for ICAO data
-            ModelReader          = 1 << 3,  ///< reader for model data such as liveries, models, ..
-            AllVatsimReaders     = VatsimBookingReader | VatsimDataReader, ///< all readers
+            VatsimMetarReader    = 1 << 2,  ///< reader for VATSIM metar data
+            IcaoDataReader       = 1 << 3,  ///< reader for ICAO data
+            ModelReader          = 1 << 4,  ///< reader for model data such as liveries, models, ..
+            AllVatsimReaders     = VatsimBookingReader | VatsimDataReader | VatsimMetarReader, ///< all readers
             AllSwiftDbReaders    = IcaoDataReader | ModelReader,           ///< all swift data
             AllReaders           = AllSwiftDbReaders | AllVatsimReaders    ///< everything
         };

@@ -37,16 +37,16 @@ namespace BlackCore
         void readInBackgroundThread();
 
     signals:
-        //! Bookings have been read and converted to BlackMisc::Aviation::CAtcStationList
-        void metarUpdated(const BlackMisc::Weather::CMetarSet &metars);
+        //! METARs have been read and converted to BlackMisc::Weather::CMetarSet
+        void dataRead(const BlackMisc::Weather::CMetarSet &metars);
 
     private slots:
-        //! Decode metar
+        //! Decode METARs
         //! \threadsafe
-        void ps_decodeMetar(QNetworkReply *nwReply);
+        void ps_decodeMetars(QNetworkReply *nwReply);
 
         //! Do reading
-        void ps_readMetar();
+        void ps_readMetars();
 
     private:
         QString m_metarUrl; //!< URL of the service

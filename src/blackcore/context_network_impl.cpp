@@ -14,7 +14,7 @@
 #include "context_simulator.h"
 #include "context_ownaircraft_impl.h"
 #include "network_vatlib.h"
-#include "vatsim_metar_reader.h"
+#include "vatsimmetarreader.h"
 #include "airspace_monitor.h"
 #include "webdataservices.h"
 #include "blackmisc/networkutils.h"

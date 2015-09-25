@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "vatsim_metar_reader.h"
+#include "vatsimmetarreader.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/logmessage.h"
 #include <QTextStream>
@@ -23,18 +23,18 @@ namespace BlackCore
         m_metarUrl(url)
     {
         this->m_networkManager = new QNetworkAccessManager(this);
-        this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CVatsimMetarReader::ps_decodeMetar);
-        this->connect(this->m_updateTimer, &QTimer::timeout, this, &CVatsimMetarReader::ps_readMetar);
+        this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CVatsimMetarReader::ps_decodeMetars);
+        this->connect(this->m_updateTimer, &QTimer::timeout, this, &CVatsimMetarReader::ps_readMetars);
     }
 
     void CVatsimMetarReader::readInBackgroundThread()
     {
         bool s = QMetaObject::invokeMethod(this, "ps_readMetar");
-        Q_ASSERT(s);
+        Q_ASSERT_X(s, Q_FUNC_INFO, "Cannot invoke");
         Q_UNUSED(s);
     }
 
-    void CVatsimMetarReader::ps_readMetar()
+    void CVatsimMetarReader::ps_readMetars()
     {
         this->threadAssertCheck();
         QUrl url(this->m_metarUrl);
@@ -44,7 +44,7 @@ namespace BlackCore
         this->m_networkManager->get(request);
     }
 
-    void CVatsimMetarReader::ps_decodeMetar(QNetworkReply *nwReplyPtr)
+    void CVatsimMetarReader::ps_decodeMetars(QNetworkReply *nwReplyPtr)
     {
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
@@ -56,7 +56,7 @@ namespace BlackCore
         if (this->isFinished())
         {
             CLogMessage(this).debug() << Q_FUNC_INFO;
-            CLogMessage(this).info("terminated metar decoding process"); // for users
+            CLogMessage(this).info("terminated METAR decoding process"); // for users
             return; // stop, terminate straight away, ending thread
         }
 
@@ -64,21 +64,14 @@ namespace BlackCore
         {
             QString metarData = nwReply->readAll();
             nwReply->close(); // close asap
-
             CMetarSet metars;
-            QFile outFile ("invalid_metar.txt");
-            if (!outFile.open(QIODevice::WriteOnly | QIODevice::Text)) { return; }
-            QTextStream out(&outFile);
 
+            QString invalidMetars;
+            int invalidLineCount = 0;
             QTextStream lineReader(&metarData);
             while (!lineReader.atEnd())
             {
                 QString line = lineReader.readLine();
-                if (line.startsWith("MSV 291130Z"))
-                {
-                    qDebug() << "now!";
-                }
-
                 CMetar metar = m_metarDecoder.decode(line);
                 if (metar != CMetar())
                 {
@@ -86,18 +79,24 @@ namespace BlackCore
                 }
                 else
                 {
-                    out << line << endl;
+                    invalidMetars += line;
+                    invalidMetars += "\n";
+                    invalidLineCount++;
                 }
             }
-            outFile.flush();
-            outFile.close();
 
-            emit metarUpdated(metars);
+            // I could use those for logging, etc.
+            Q_UNUSED(invalidMetars);
+            if (invalidLineCount > 0)
+            {
+                CLogMessage(this).warning("Reading METARs failed for %1 entries") << invalidLineCount;
+            }
+            emit dataRead(metars);
         }
         else
         {
             // network error
-            CLogMessage(this).warning("Reading METARS failed %1 %2") << nwReply->errorString() << nwReply->url().toString();
+            CLogMessage(this).warning("Reading METARs failed %1 %2") << nwReply->errorString() << nwReply->url().toString();
             nwReply->abort();
         }
     } // method

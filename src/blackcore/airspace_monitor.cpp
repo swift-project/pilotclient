@@ -60,9 +60,13 @@ namespace BlackCore
         this->connect(&m_interimPositionUpdateTimer, &QTimer::timeout, this, &CAirspaceMonitor::ps_sendInterimPositions);
 
         // AutoConnection: this should also avoid race conditions by updating the bookings
-        this->connect(this->m_webDataReader->getBookingReader(), &CVatsimBookingReader::dataRead, this, &CAirspaceMonitor::ps_receivedBookings);
-        this->connect(this->m_webDataReader->getDataFileReader(), &CVatsimDataFileReader::dataRead, this, &CAirspaceMonitor::ps_receivedDataFile);
-        this->connect(this->m_webDataReader->getMetarReader(), &CVatsimMetarReader::metarUpdated, this, &CAirspaceMonitor::ps_updateMetars);
+        Q_ASSERT_X(webDataReader, Q_FUNC_INFO, "Missing data reader");
+        if (webDataReader)
+        {
+            this->connect(webDataReader->getBookingReader(), &CVatsimBookingReader::dataRead, this, &CAirspaceMonitor::ps_receivedBookings);
+            this->connect(webDataReader->getDataFileReader(), &CVatsimDataFileReader::dataRead, this, &CAirspaceMonitor::ps_receivedDataFile);
+            this->connect(webDataReader->getMetarReader(), &CVatsimMetarReader::dataRead, this, &CAirspaceMonitor::ps_updateMetars);
+        }
 
         // Force snapshot in the main event loop
         this->connect(this->m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, this, &CAirspaceMonitor::airspaceAircraftSnapshot, Qt::QueuedConnection);

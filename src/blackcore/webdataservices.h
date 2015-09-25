@@ -22,6 +22,7 @@
 #include "blackmisc/network/voicecapabilities.h"
 #include "blackmisc/network/webdataservicesprovider.h"
 #include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/weather/metarset.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/countrylist.h"
 #include <QObject>
@@ -30,6 +31,7 @@ namespace BlackCore
 {
     class CVatsimBookingReader;
     class CVatsimDataFileReader;
+    class CVatsimMetarReader;
     class CIcaoDataReader;
     class CModelDataReader;
     class CDatabaseWriter;
@@ -60,6 +62,9 @@ namespace BlackCore
         //! Data file reader
         CVatsimDataFileReader *getDataFileReader() const { return m_vatsimDataFileReader; }
 
+        //! Metar reader
+        CVatsimMetarReader *getMetarReader() const { return m_vatsimMetarReader; }
+
         //! Reader flags
         CWebReaderFlags::WebReader getReaderFlags() const { return m_readerFlags; }
 
@@ -72,7 +77,7 @@ namespace BlackCore
         //! \ingroup webdatareaderprovider
         virtual QList<QMetaObject::Connection> connectVatsimDataSignals(
             QObject *receiver,
-            std::function<void(int)> bookingsRead, std::function<void(int)> dataFileRead) override;
+            std::function<void(int)> bookingsRead, std::function<void(int)> dataFileRead, std::function<void(int)> metarsRead) override;
 
         //! \copydoc IWebDataReaderProvider::connectSwiftDatabaseSignals
         //! \ingroup webdatareaderprovider
@@ -227,6 +232,9 @@ namespace BlackCore
         //! Bookings read
         void vatsimBookingsRead(int number);
 
+        //! METARs read
+        void vatsimMetarsRead(int number);
+
         //! Combined read signal
         void readSwiftDbData(BlackMisc::Network::CDbFlags::Entity entity, BlackMisc::Network::CDbFlags::ReadState state, int number);
 
@@ -236,6 +244,9 @@ namespace BlackCore
     private slots:
         //! ATC bookings received
         void ps_receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
+
+        //! Received METAR data
+        void ps_receivedMetars(const BlackMisc::Weather::CMetarSet &metars);
 
         //! Data file has been read
         void ps_dataFileRead(int lines);
@@ -255,6 +266,7 @@ namespace BlackCore
         // for reading XML and VATSIM data files
         CVatsimBookingReader  *m_vatsimBookingReader  = nullptr;
         CVatsimDataFileReader *m_vatsimDataFileReader = nullptr;
+        CVatsimMetarReader    *m_vatsimMetarReader    = nullptr;
         CIcaoDataReader       *m_icaoDataReader       = nullptr;
         CModelDataReader      *m_modelDataReader      = nullptr;
 
