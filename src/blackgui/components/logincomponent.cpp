@@ -147,7 +147,7 @@ namespace BlackGui
             // add a testserver when no servers can be loaded
             if (otherServers.isEmpty() && CProject::isDebugBuild())
             {
-                otherServers.push_back(CGlobalNetworkSettings::instance().swiftFSDTestServer());
+                otherServers.push_back(CGlobalNetworkSettings::instance().swiftFsdTestServer());
             }
             this->ui->cbp_OtherServers->setServers(otherServers);
         }

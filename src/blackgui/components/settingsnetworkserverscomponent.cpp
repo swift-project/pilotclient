@@ -19,8 +19,8 @@
 
 using namespace BlackCore;
 using namespace BlackCore::Settings;
-using namespace BlackMisc;
 using namespace BlackGui;
+using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Audio;
@@ -54,7 +54,7 @@ namespace BlackGui
             // this is debug/bootstrap feature we can continue to test when something goes wrong
             if (serverList.isEmpty() && CProject::isDebugBuild())
             {
-                serverList.push_back(CGlobalNetworkSettings::instance().swiftFSDTestServer());
+                serverList.push_back(CGlobalNetworkSettings::instance().swiftFsdTestServer());
             }
             this->ui->tvp_SettingsTnServers->updateContainer(serverList);
         }

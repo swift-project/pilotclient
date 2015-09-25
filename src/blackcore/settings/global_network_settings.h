@@ -26,7 +26,7 @@ namespace BlackCore
 
         public:
             //! FSD Server
-            const BlackMisc::Network::CServer &swiftFSDTestServer() const { return m_fsdSwiftServer; }
+            const BlackMisc::Network::CServer &swiftFsdTestServer() const { return m_fsdSwiftServer; }
 
             //! Singleton
             static const CGlobalNetworkSettings &instance();
