@@ -348,12 +348,9 @@ XPMPPlaneID		XPMPCreatePlane(
 	return plane;
 }
 
-bool CompareCaseInsensitive(string strFirst, string strSecond)
+bool CompareCaseInsensitive(const string &a, const string &b)
 {
-    // Convert both strings to upper case by transfrom() before compare.
-    transform(strFirst.begin(), strFirst.end(), strFirst.begin(), static_cast<int (*)(int)>(std::toupper));
-    transform(strSecond.begin(), strSecond.end(), strSecond.begin(), static_cast<int (*)(int)>(std::toupper));
-    return strFirst == strSecond;
+    return a.size() == b.size() && std::equal(a.begin(), a.end(), b.begin(), [](char aa, char bb) { return toupper(aa) == toupper(bb); });
 }
 
 XPMPPlaneID     XPMPCreatePlaneWithModelName(const char *inModelName, const char *inICAOCode, const char *inAirline, const char *inLivery, XPMPPlaneData_f inDataFunc, void *inRefcon)
