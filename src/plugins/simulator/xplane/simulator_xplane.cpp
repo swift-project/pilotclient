@@ -64,10 +64,10 @@ namespace BlackSimPlugin
 
             m_modelMatcher.setModelMappingProvider(BlackMisc::make_unique<CModelMappingsProviderDummy>());
             m_modelMatcher.setDefaultModel(CAircraftModel(
-                                               "__A319/A319_CFM.obj __A319/DAL.png",
+                                               "__XPFW_Jets/A320_a/A320_a_Austrian_Airlines.obj __XPFW_Jets/A320_a/A320_a_Austrian_Airlines.png",
                                                CAircraftModel::TypeModelMatchingDefaultModel,
-                                               "A319 CFM DAL",
-                                               CAircraftIcaoCode("A319", "L2J")
+                                               "A320 AUA",
+                                               CAircraftIcaoCode("A320", "L2J")
                                            ));
 
             resetData();
