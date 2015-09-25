@@ -14,6 +14,8 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/valuecache.h"
+#include <QUuid>
+#include <QTimer>
 
 namespace BlackCore
 {

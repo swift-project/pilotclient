@@ -11,6 +11,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/identifier.h"
 #include <QStandardPaths>
+#include <QLockFile>
 
 using namespace BlackMisc;
 

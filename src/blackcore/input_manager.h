@@ -14,6 +14,7 @@
 #include <QObject>
 #include <QHash>
 #include <QVector>
+#include <QPointer>
 #include <type_traits>
 #include <functional>
 

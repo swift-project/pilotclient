@@ -18,6 +18,7 @@
 #include "blackmiscfreefunctions.h"
 #include <QByteArray>
 #include <QString>
+#include <QUuid>
 
 namespace BlackMisc
 {

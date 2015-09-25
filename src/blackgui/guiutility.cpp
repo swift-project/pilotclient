@@ -21,6 +21,7 @@
 #include <QMimeData>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QStandardPaths>
 
 using namespace BlackCore;
 using namespace BlackMisc;

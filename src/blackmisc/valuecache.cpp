@@ -12,6 +12,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/algorithm.h"
 #include <QThread>
+#include <QJsonDocument>
 
 namespace BlackMisc
 {

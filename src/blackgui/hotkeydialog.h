@@ -19,6 +19,7 @@
 #include "blackmisc/identifierlist.h"
 #include <QDialog>
 #include <QComboBox>
+#include <QItemSelection>
 
 namespace Ui
 {
@@ -87,7 +88,6 @@ namespace BlackGui
         void ps_combinationSelectionFinished(const BlackMisc::Input::CHotkeyCombination &combination);
         void ps_changeSelectedAction(const QItemSelection &selected, const QItemSelection &deselected);
         void ps_accept();
-
 
         void synchronize();
         void synchronizeSimpleSelection();
