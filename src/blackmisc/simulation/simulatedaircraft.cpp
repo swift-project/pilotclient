@@ -202,7 +202,6 @@ namespace BlackMisc
         void CSimulatedAircraft::setParts(const CAircraftParts &parts)
         {
             m_parts = parts;
-            m_parts.setCallsign(this->getCallsign());
         }
 
         void CSimulatedAircraft::setLights(CAircraftLights &lights)

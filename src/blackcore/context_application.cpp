@@ -53,6 +53,7 @@ namespace BlackCore
         {
             this->changeSettings(settings, {});
         });
+
         connect(this, &IContextApplication::settingsChanged, [](const CVariantMap &settings, const CIdentifier &origin)
         {
             // Intentionally don't check for round trip here
@@ -63,24 +64,32 @@ namespace BlackCore
         {
             this->registerHotkeyActions(actions, {});
         });
-        Q_ASSERT(s);
+        Q_ASSERT_X(s, Q_FUNC_INFO, "Connect hotkey action failed");
+        Q_UNUSED(s);
+
         s = connect(this, &IContextApplication::hotkeyActionsRegistered, [this](const QStringList &actions, const CIdentifier &origin)
         {
             if(origin.isFromSameProcess()) { return; }
             CInputManager::instance()->registerRemoteActions(actions);
         });
-        Q_ASSERT(s);
+        Q_ASSERT_X(s, Q_FUNC_INFO, "Connect hotkey actions failed");
+        Q_UNUSED(s);
 
-        connect(CInputManager::instance(), &CInputManager::remoteActionFromLocal, [this](const QString &action, bool argument)
+        s = connect(CInputManager::instance(), &CInputManager::remoteActionFromLocal, [this](const QString &action, bool argument)
         {
             this->callHotkeyAction(action, argument, {});
         });
-        connect(this, &IContextApplication::remoteHotkeyAction, [this](const QString &action, bool argument, const CIdentifier &origin)
+        Q_ASSERT_X(s, Q_FUNC_INFO, "Connect remote action failed");
+        Q_UNUSED(s);
+
+        s = connect(this, &IContextApplication::remoteHotkeyAction, [this](const QString &action, bool argument, const CIdentifier &origin)
         {
             if(origin.isFromLocalMachine()) { return; }
             CInputManager::instance()->callFunctionsBy(action, argument);
             CLogMessage(this, CLogCategory::contextSlot()).debug() << "Calling function" << action << "from origin" << origin.getMachineName();
         });
+        Q_ASSERT_X(s, Q_FUNC_INFO, "Connect remote hotkey action failed");
+        Q_UNUSED(s);
 
         // Enable event forwarding from GUI process to core
         CInputManager::instance()->setForwarding(true);

@@ -82,7 +82,5 @@ namespace BlackGui
         template class IModelFilter<BlackMisc::Simulation::CAircraftModelList>;
         template class IModelFilter<BlackMisc::Simulation::CDistributorList>;
 
-        template class IModelFilter<BlackMisc::Settings::CSettingKeyboardHotkeyList>;
-
     } // namespace
 } // namespace

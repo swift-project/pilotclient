@@ -21,7 +21,6 @@
 #include "blackgui/models/countrylistmodel.h"
 #include "blackgui/models/distributorlistmodel.h"
 #include "blackgui/models/identifierlistmodel.h"
-#include "blackgui/models/keyboardkeylistmodel.h"
 #include "blackgui/models/liverylistmodel.h"
 #include "blackgui/models/namevariantpairlistmodel.h"
 #include "blackgui/models/serverlistmodel.h"

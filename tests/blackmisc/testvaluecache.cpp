@@ -10,15 +10,16 @@
 #include "testvaluecache.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/identifier.h"
-#include "blackmisc/aviation/aircraftlist.h"
 #include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
+
 #include <future>
 
 namespace BlackMiscTest
 {
-
     using namespace BlackMisc;
     using namespace BlackMisc::Aviation;
+    using namespace BlackMisc::Simulation;
 
     CTestValueCache::CTestValueCache(QObject *parent) : QObject(parent)
     {
@@ -200,8 +201,8 @@ namespace BlackMiscTest
 
     void CTestValueCache::saveAndLoad()
     {
-        CAircraftList aircraft({ CAircraft("BAW001", {}, {}) });
-        CAtcStationList atcStations({ CAtcStation("EGLL_TWR" ) });
+        CSimulatedAircraftList aircraft({ CSimulatedAircraft("BAW001", {}, {}) });
+        CAtcStationList atcStations({ CAtcStation("EGLL_TWR") });
         CVariantMap testData
         {
             { "namespace1/value1", CVariant::from(1) },
@@ -251,10 +252,11 @@ namespace BlackMiscTest
         m_slotFired = std::promise<void>();
         switch (status)
         {
-        case std::future_status::deferred: default: QTEST_ASSERT(false);
         case std::future_status::ready: return true;
         case std::future_status::timeout: return false;
+        case std::future_status::deferred:
+        default: QTEST_ASSERT(false);
         }
+        return false;
     }
-
-}
+} // ns
