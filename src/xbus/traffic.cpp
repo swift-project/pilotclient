@@ -22,6 +22,9 @@ namespace XBus
     CTraffic::Plane::Plane(void *id_, QString callsign_, QString aircraftIcao_, QString airlineIcao_, QString livery_)
         : id(id_), callsign(callsign_), aircraftIcao(aircraftIcao_), airlineIcao(airlineIcao_), livery(livery_)
     {
+        std::memset(static_cast<void*>(&surfaces), 0, sizeof(surfaces));
+        surfaces.lights.bcnLights = surfaces.lights.landLights = surfaces.lights.navLights = surfaces.lights.strbLights = 1;
+
         position0.size = sizeof(position0);
         position1.size = sizeof(position1);
         surfaces.size = sizeof(surfaces);
@@ -359,7 +362,14 @@ namespace XBus
                 }
                 else { return xpmpData_Unchanged; }
             }
-            else { return xpmpData_Unavailable; }
+            else
+            {
+                // hack because we need to provide xpmp_LightStatus::timeOffset even if we don't have surfaces
+                const auto io_surfaces = static_cast<XPMPPlaneSurfaces_t *>(io_data);
+                std::memcpy(io_surfaces, &plane->surfaces, sizeof(*io_surfaces));
+                plane->hasSurfaces = true;
+                return xpmpData_NewData;
+            }
 
         case xpmpDataType_Radar:
             if (plane->hasXpdr)
