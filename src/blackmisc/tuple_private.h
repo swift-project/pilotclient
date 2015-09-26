@@ -320,6 +320,8 @@ namespace BlackMisc
             }
             template <class T, typename std::enable_if<std::is_base_of<CEmpty, T>::value, int>::type = 0>
             static void marshallHelper(QDBusArgument &arg, const T &val, int) { static_cast<const typename T::CValueObject &>(val).marshallToDbus(arg); }
+            template <class T, typename std::enable_if<std::is_enum<T>::value, int>::type = 0>
+            static void marshallHelper(QDBusArgument &arg, const T &val, int) { arg << static_cast<int>(val); }
             template <class T>
             static void marshallHelper(QDBusArgument &arg, const T &val, ...) { arg << val; }
 
@@ -332,6 +334,8 @@ namespace BlackMisc
             }
             template <class T, typename std::enable_if<std::is_base_of<CEmpty, T>::value, int>::type = 0>
             static void unmarshallHelper(const QDBusArgument &arg, T &val, int) { static_cast<typename T::CValueObject &>(val).unmarshallFromDbus(arg); }
+            template <class T, typename std::enable_if<std::is_enum<T>::value, int>::type = 0>
+            static void unmarshallHelper(const QDBusArgument &arg, T &val, int) { int i; arg >> i; val = static_cast<T>(i); }
             template <class T>
             static void unmarshallHelper(const QDBusArgument &arg, T &val, ...) { arg >> val; }
 

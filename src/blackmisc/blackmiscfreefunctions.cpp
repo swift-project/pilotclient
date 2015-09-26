@@ -169,6 +169,19 @@ QVariant BlackMisc::fixQVariantFromDbusArgument(const QVariant &variant, int loc
         // complex Qt type, e.g. QDateTime
         return complexQtTypeFromDbusArgument(arg, localUserType);
     }
+    else if (QMetaType(localUserType).flags() & QMetaType::IsEnumeration)
+    {
+        arg.beginStructure();
+        int i;
+        arg >> i;
+        arg.endStructure();
+
+        QVariant valueVariant = QVariant::fromValue(i);
+        bool ok = valueVariant.convert(localUserType);
+        Q_ASSERT_X(ok, Q_FUNC_INFO, "int could not be converted to enum");
+        Q_UNUSED(ok);
+        return valueVariant;
+    }
     else
     {
         QVariant valueVariant(localUserType, nullptr);

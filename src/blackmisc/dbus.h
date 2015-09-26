@@ -99,20 +99,29 @@ namespace BlackMisc
 } // BlackMisc
 
 /*!
- * Non-member non-friend operator for streaming enums to QDBusArgument.
- *
- * \param argument
- * \param enumType
- * \return
- * \remarks Currently outside namespace for OSX build, see https://dev.vatsim-germany.org/issues/184
+ * Operator for streaming enums to QDBusArgument.
  */
-template <class ENUM> typename std::enable_if<std::is_enum<ENUM>::value, QDBusArgument>::type const &
-operator>>(const QDBusArgument &argument, ENUM &enumType)
+template <class E, typename std::enable_if<std::is_enum<E>::value, int>::type = 0>
+QDBusArgument &operator <<(QDBusArgument &arg, const E &value)
 {
-    uint e;
-    argument >> e;
-    enumType = static_cast<ENUM>(e);
-    return argument;
+    arg.beginStructure();
+    arg << static_cast<int>(value);
+    arg.endStructure();
+    return arg;
+}
+
+/*!
+ * Operator for streaming enums from QDBusArgument.
+ */
+template <class E, typename std::enable_if<std::is_enum<E>::value, int>::type = 0>
+const QDBusArgument &operator >>(const QDBusArgument &arg, E &value)
+{
+    int temp;
+    arg.beginStructure();
+    arg >> temp;
+    arg.endStructure();
+    value = static_cast<E>(temp);
+    return arg;
 }
 
 /*!
