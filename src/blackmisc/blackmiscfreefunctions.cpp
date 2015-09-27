@@ -54,6 +54,8 @@ void BlackMisc::Audio::registerMetadata()
     CAudioDeviceInfoList::registerMetadata();
     CVoiceRoom::registerMetadata();
     CVoiceRoomList::registerMetadata();
+    qDBusRegisterMetaType<BlackSound::CNotificationSounds::PlayMode>();
+    qDBusRegisterMetaType<BlackSound::CNotificationSounds::Notification>();
 }
 
 void BlackMisc::Input::registerMetadata()
@@ -65,6 +67,7 @@ void BlackMisc::Input::registerMetadata()
     CActionHotkey::registerMetadata();
     CActionHotkeyList::registerMetadata();
     CHotkeyCombination::registerMetadata();
+    qDBusRegisterMetaType<KeyCode>();
 }
 
 void BlackMisc::registerMetadata()

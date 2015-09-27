@@ -20,6 +20,12 @@ namespace BlackMisc
 {
     namespace Simulation
     {
+        void CAircraftModel::registerMetadata()
+        {
+            CValueObject<CAircraftModel>::registerMetadata();
+            qRegisterMetaType<ModelType>();
+        }
+
         CAircraftModel::CAircraftModel(const QString &model, CAircraftModel::ModelType type) :
             m_modelString(model.trimmed().toUpper()), m_modelType(type)
         {}
@@ -59,11 +65,11 @@ namespace BlackMisc
             case IndexHasQueriedModelString:
                 return CVariant::fromValue(this->hasQueriedModelString());
             case IndexModelType:
-                return CVariant::fromValue(static_cast<int>(this->m_modelType));
+                return CVariant::fromValue(this->m_modelType);
             case IndexModelTypeAsString:
                 return CVariant(this->getModelTypeAsString());
             case IndexModelMode:
-                return CVariant::fromValue(static_cast<int>(this->m_modelMode));
+                return CVariant::fromValue(this->m_modelMode);
             case IndexModelModeAsString:
                 return CVariant(this->getModelModeAsString());
             case IndexDistributor:
@@ -123,10 +129,10 @@ namespace BlackMisc
                 this->m_fileName = variant.toQString();
                 break;
             case IndexModelType:
-                this->m_modelType = static_cast<ModelType>(variant.toInt());
+                this->m_modelType = variant.value<ModelType>();
                 break;
             case IndexModelMode:
-                this->m_modelMode = static_cast<ModelMode>(variant.toInt());
+                this->m_modelMode = variant.value<ModelMode>();
                 break;
             default:
                 CValueObject::setPropertyByIndex(variant, index);
@@ -173,7 +179,7 @@ namespace BlackMisc
             if (this->m_description.isEmpty()) { this->setDescription(model.getDescription()); }
             if (this->m_fileName.isEmpty())    { this->setFileName(model.getFileName()); }
             if (this->m_callsign.isEmpty())    { this->setCallsign(model.getCallsign()); }
-            if (this->m_modelType == static_cast<int>(TypeUnknown)) { this->m_modelType = model.getModelType(); }
+            if (this->m_modelType == TypeUnknown) { this->m_modelType = model.getModelType(); }
             if (this->m_simulator.isUnspecified())
             {
                 this->setSimulatorInfo(model.getSimulatorInfo());

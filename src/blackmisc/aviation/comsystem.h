@@ -49,6 +49,9 @@ namespace BlackMisc
                 Com2
             };
 
+            //! \copydoc BlackMisc::CValueObject::registerMetadata
+            static void registerMetadata();
+
             //! Default constructor
             CComSystem() {}
 
@@ -171,5 +174,7 @@ namespace BlackMisc
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CComSystem, (o.m_channelSpacing))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CComSystem)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CComSystem::ChannelSpacing)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CComSystem::ComUnit)
 
 #endif // guard

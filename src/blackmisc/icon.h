@@ -130,7 +130,7 @@ namespace BlackMisc
 
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CIcon)
-        int m_index = static_cast<int>(CIcons::NotSet);
+        CIcons::IconIndex m_index = CIcons::NotSet;
         int m_rotateDegrees = 0;    //!< Rotation
         QString m_descriptiveText;  //!< what does it represent?
         QPixmap m_pixmap;           //!< Used with generated pixmaps, when not used with index

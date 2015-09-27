@@ -46,13 +46,12 @@ namespace BlackMisc
             return true;
         }
 
-        bool COwnAircraftProviderDummy::updateActiveComFrequency(const PhysicalQuantities::CFrequency &frequency, int comUnit, const BlackMisc::CIdentifier &originator)
+        bool COwnAircraftProviderDummy::updateActiveComFrequency(const PhysicalQuantities::CFrequency &frequency, CComSystem::ComUnit comUnit, const BlackMisc::CIdentifier &originator)
         {
             if (!CComSystem::isValidComFrequency(frequency)) { return false; }
-            CComSystem::ComUnit comUnitEnum = static_cast<CComSystem::ComUnit>(comUnit);
-            CComSystem com = m_ownAircraft.getComSystem(comUnitEnum);
+            CComSystem com = m_ownAircraft.getComSystem(comUnit);
             com.setFrequencyActive(frequency);
-            m_ownAircraft.setComSystem(com, comUnitEnum);
+            m_ownAircraft.setComSystem(com, comUnit);
             Q_UNUSED(originator);
             return true;
         }

@@ -45,6 +45,9 @@ namespace BlackMisc
                 IndexTransponderCodeAndModeFormatted
             };
 
+            //! \copydoc BlackMisc::CValueObject::registerMetadata
+            static void registerMetadata();
+
             //! Default constructor
             CTransponder() : m_transponderCode(0), m_transponderMode(StateStandby) {}
 
@@ -184,5 +187,6 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CTransponder, (
                                ))
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CTransponder)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CTransponder::TransponderMode)
 
 #endif // guard

@@ -14,24 +14,24 @@
 namespace BlackMisc
 {
     CIcon::CIcon(CIcons::IconIndex index, const QString &descriptiveText) :
-        m_index(static_cast<int>(index)), m_descriptiveText(descriptiveText) {}
+        m_index(index), m_descriptiveText(descriptiveText) {}
 
     CIcon::CIcon(const QPixmap &pixmap, const QString &descriptiveText) :
-        m_index(static_cast<int>(CIcons::IconIsGenerated)), m_descriptiveText(descriptiveText), m_pixmap(pixmap)
+        m_index(CIcons::IconIsGenerated), m_descriptiveText(descriptiveText), m_pixmap(pixmap)
     { }
 
     CIcon::CIcon(const QString &resourceFilePath, const QString &descriptiveText) :
-        m_index(static_cast<int>(CIcons::IconIsFile)), m_descriptiveText(descriptiveText), m_pixmap(CIcons::pixmapByResourceFileName(resourceFilePath))
+        m_index(CIcons::IconIsFile), m_descriptiveText(descriptiveText), m_pixmap(CIcons::pixmapByResourceFileName(resourceFilePath))
     {}
 
     CIcons::IconIndex CIcon::getIndex() const
     {
-        return static_cast<CIcons::IconIndex>(this->m_index);
+        return this->m_index;
     }
 
     bool CIcon::isIndexBased() const
     {
-        return m_index >= 0 && m_index < static_cast<int>(CIcons::IconIsGenerated);
+        return m_index >= 0 && m_index < CIcons::IconIsGenerated;
     }
 
     bool CIcon::isGenerated() const
@@ -46,7 +46,7 @@ namespace BlackMisc
 
     bool CIcon::isSet() const
     {
-        return (this->m_index != static_cast<int>(CIcons::NotSet));
+        return (this->m_index != CIcons::NotSet);
     }
 
     QPixmap CIcon::toPixmap() const

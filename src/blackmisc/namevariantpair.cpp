@@ -54,11 +54,11 @@ namespace BlackMisc
 
         // special case, handle icon and allow to set it
         // doing this in the switch gives gcc warning as IndexIcon is no member of ColumnIndex
-        if (i == static_cast<int>(IndexIcon))
+        if (static_cast<int>(i) == static_cast<int>(IndexIcon))
         {
             if (static_cast<QMetaType::Type>(variant.type()) == QMetaType::Int)
             {
-                CIcons::IconIndex index = static_cast<CIcons::IconIndex>(variant.toInt());
+                CIcons::IconIndex index = variant.value<CIcons::IconIndex>();
                 this->m_icon = CIconList::iconByIndex(index);
             }
             else

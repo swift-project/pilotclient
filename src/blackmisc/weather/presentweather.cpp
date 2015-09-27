@@ -17,6 +17,13 @@ namespace BlackMisc
     namespace Weather
     {
 
+        void CPresentWeather::registerMetadata()
+        {
+            CValueObject<CPresentWeather>::registerMetadata();
+            qRegisterMetaType<Intensity>();
+            qRegisterMetaType<Descriptor>();
+        }
+
         CPresentWeather::CPresentWeather(Intensity intensity, Descriptor descriptor, int weatherPhenomena) :
             m_intensity(intensity), m_descriptor(descriptor), m_weatherPhenomena(weatherPhenomena)
         { }
@@ -28,9 +35,9 @@ namespace BlackMisc
             switch (i)
             {
             case IndexIntensity:
-                return CVariant::fromValue<int>(static_cast<int>(m_intensity));
+                return CVariant::fromValue(m_intensity);
             case IndexDescriptor:
-                return CVariant::fromValue<int>(static_cast<int>(m_descriptor));
+                return CVariant::fromValue(m_descriptor);
             case IndexWeatherPhenomena:
                 return CVariant::fromValue(m_weatherPhenomena);
             default:
@@ -45,10 +52,10 @@ namespace BlackMisc
             switch (i)
             {
             case IndexIntensity:
-                setIntensity(static_cast<Intensity>(variant.toInt()));
+                setIntensity(variant.value<Intensity>());
                 break;
             case IndexDescriptor:
-                setDescriptor(static_cast<Descriptor>(variant.toInt()));
+                setDescriptor(variant.value<Descriptor>());
                 break;
             case IndexWeatherPhenomena:
                 setWeatherPhenomena(variant.toInt());

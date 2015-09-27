@@ -50,6 +50,9 @@ namespace BlackMisc
             IndexMessage
         };
 
+        //! \copydoc BlackMisc::CValueObject::registerMetadata
+        static void registerMetadata();
+
         //! Constructor
         CStatusMessage() = default;
 
@@ -184,5 +187,6 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CStatusMessage, (
                                    attr(o.m_handledByObjects, flags < DisabledForHashing | DisabledForJson | DisabledForComparison | DisabledForMarshalling > ())
                                ))
 Q_DECLARE_METATYPE(BlackMisc::CStatusMessage)
+Q_DECLARE_METATYPE(BlackMisc::CStatusMessage::StatusSeverity)
 
 #endif // guard

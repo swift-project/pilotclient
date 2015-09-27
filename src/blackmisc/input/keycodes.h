@@ -12,6 +12,8 @@
 #ifndef BLACKMISC_INPUT_KEYCODES_H
 #define BLACKMISC_INPUT_KEYCODES_H
 
+#include <QMetaType>
+
 namespace BlackMisc
 {
     namespace Input
@@ -69,5 +71,7 @@ namespace BlackMisc
 
     } //namespace
 } // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::Input::KeyCode)
 
 #endif //guard

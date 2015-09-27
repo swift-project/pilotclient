@@ -12,6 +12,8 @@
 #ifndef BLACKMISC_NOTIFICATIONSOUNDS_H
 #define BLACKMISC_NOTIFICATIONSOUNDS_H
 
+#include <QMetaType>
+
 namespace BlackSound
 {
 
@@ -43,5 +45,8 @@ namespace BlackSound
         };
     };
 } // ns
+
+Q_DECLARE_METATYPE(BlackSound::CNotificationSounds::PlayMode)
+Q_DECLARE_METATYPE(BlackSound::CNotificationSounds::Notification)
 
 #endif // guard

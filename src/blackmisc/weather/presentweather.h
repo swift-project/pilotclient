@@ -88,6 +88,9 @@ namespace BlackMisc
                 IndexWeatherPhenomena
             };
 
+            //! \copydoc BlackMisc::CValueObject::registerMetadata
+            static void registerMetadata();
+
             //! Default constructor.
             CPresentWeather() = default;
 
@@ -132,6 +135,8 @@ namespace BlackMisc
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CPresentWeather)
+Q_DECLARE_METATYPE(BlackMisc::Weather::CPresentWeather::Intensity)
+Q_DECLARE_METATYPE(BlackMisc::Weather::CPresentWeather::Descriptor)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Weather::CPresentWeather, (
                                    attr(o.m_intensity),
                                    attr(o.m_descriptor),

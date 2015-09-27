@@ -73,6 +73,9 @@ namespace BlackMisc
                 IndexHasQueriedModelString
             };
 
+            //! \copydoc BlackMisc::CValueObject::registerMetadata
+            static void registerMetadata();
+
             //! Default constructor.
             CAircraftModel() {}
 
@@ -272,5 +275,7 @@ BLACK_DECLARE_TUPLE_CONVERSION(
         attr(o.m_modelMode)
     ))
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftModel)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftModel::ModelType)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftModel::ModelMode)
 
 #endif // guard

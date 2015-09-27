@@ -37,16 +37,16 @@ namespace BlackMisc
             CVoiceCapabilities() = default;
 
             //! Constructor by callsign
-            CVoiceCapabilities(VoiceCapabilities capabilities) : m_voiceCapabilities(static_cast<int>(capabilities)) {}
+            CVoiceCapabilities(VoiceCapabilities capabilities) : m_voiceCapabilities(capabilities) {}
 
             //! Constructor.
             CVoiceCapabilities(const QString &flightPlanRemarks);
 
             //! Get capabilities
-            VoiceCapabilities getCapabilities() const { return static_cast<VoiceCapabilities>(m_voiceCapabilities); }
+            VoiceCapabilities getCapabilities() const { return m_voiceCapabilities; }
 
             //! Set capabilites
-            void setCapabilities(VoiceCapabilities capabilites) { m_voiceCapabilities = static_cast<int>(capabilites); }
+            void setCapabilities(VoiceCapabilities capabilites) { m_voiceCapabilities = capabilites; }
 
             //! Is capability known
             bool isUnknown() const { return m_voiceCapabilities == Unknown; }
@@ -71,7 +71,7 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CVoiceCapabilities)
-            int m_voiceCapabilities = Unknown;
+            VoiceCapabilities m_voiceCapabilities = Unknown;
 
             //! Capabilites from flight plans remarks such as "/V/"
             void setFromFlightPlanRemarks(const QString &flightPlanRemarks);

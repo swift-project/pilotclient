@@ -642,4 +642,7 @@ namespace BlackMisc
         static QMap<QString, QPixmap> &getResourceFileCache();
     };
 }
+
+Q_DECLARE_METATYPE(BlackMisc::CIcons::IconIndex)
+
 #endif // guard

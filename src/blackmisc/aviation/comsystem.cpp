@@ -18,6 +18,13 @@ namespace BlackMisc
     namespace Aviation
     {
 
+        void CComSystem::registerMetadata()
+        {
+            Mixin::MetaType<CComSystem>::registerMetadata();
+            qDBusRegisterMetaType<ChannelSpacing>();
+            qDBusRegisterMetaType<ComUnit>();
+        }
+
         bool CComSystem::validValues() const
         {
             if (this->isDefaultValue()) return true; // special case

@@ -75,7 +75,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexKey:
-                return CVariant::from(static_cast<int>(this->m_keyCode));
+                return CVariant::from(this->m_keyCode);
             case IndexKeyAsString:
                 return CVariant::from(getKeyAsString());
             default:

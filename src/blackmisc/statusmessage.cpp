@@ -18,6 +18,12 @@
 
 namespace BlackMisc
 {
+    void CStatusMessage::registerMetadata()
+    {
+        CValueObject<CStatusMessage>::registerMetadata();
+        qRegisterMetaType<StatusSeverity>();
+    }
+
     CStatusMessage::CStatusMessage(const QString &message)
         : m_message(message)
     {}
@@ -281,7 +287,7 @@ namespace BlackMisc
         case IndexMessage:
             return CVariant::from(this->m_message);
         case IndexSeverity:
-            return CVariant::from(static_cast<uint>(this->m_severity));
+            return CVariant::from(this->m_severity);
         case IndexSeverityAsString:
             return CVariant::from(this->getSeverityAsString());
         case IndexCategories:
@@ -304,7 +310,7 @@ namespace BlackMisc
             this->m_message = variant.value<QString>();
             break;
         case IndexSeverity:
-            this->m_severity = static_cast<StatusSeverity>(variant.value<uint>());
+            this->m_severity = variant.value<StatusSeverity>();
             break;
         case IndexCategories:
             this->m_categories = variant.value<CLogCategoryList>();

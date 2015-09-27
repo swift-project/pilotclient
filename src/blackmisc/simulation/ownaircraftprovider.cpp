@@ -54,7 +54,7 @@ namespace BlackMisc
             return this->m_ownAircraftProvider->updateCockpit(com1, com2, transponder, originator);
         }
 
-        bool COwnAircraftAware::updateActiveComFrequency(const CFrequency &frequency, int comUnit, const CIdentifier &originator)
+        bool COwnAircraftAware::updateActiveComFrequency(const CFrequency &frequency, CComSystem::ComUnit comUnit, const CIdentifier &originator)
         {
             Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
             return this->m_ownAircraftProvider->updateActiveComFrequency(frequency, comUnit, originator);

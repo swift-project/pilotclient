@@ -17,6 +17,12 @@ namespace BlackMisc
     namespace Aviation
     {
 
+        void CTransponder::registerMetadata()
+        {
+            CValueObject<CTransponder>::registerMetadata();
+            qRegisterMetaType<TransponderMode>();
+        }
+
         bool CTransponder::validValues() const
         {
             if (this->isDefaultValue()) return true; // special case
@@ -151,7 +157,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexMode:
-                return CVariant::from(static_cast<int>(this->getTransponderMode()));
+                return CVariant::from(this->getTransponderMode());
             case IndexModeAsString:
                 return CVariant::from(this->getModeAsString());
             case IndexTransponderCode:
@@ -176,7 +182,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexMode:
-                this->setTransponderMode(static_cast<TransponderMode>(variant.toInt()));
+                this->setTransponderMode(variant.value<TransponderMode>());
                 break;
             case IndexModeAsString:
                 this->setTransponderMode(modeFromString(variant.toQString()));
