@@ -143,7 +143,7 @@ namespace BlackCore
         if (this->m_airspace) { this->m_airspace->gracefulShutdown(); }
     }
 
-    CStatusMessage CContextNetwork::connectToNetwork(const CServer &server, int loginMode)
+    CStatusMessage CContextNetwork::connectToNetwork(const CServer &server, INetwork::LoginMode mode)
     {
         if (this->isDebugEnabled()) {CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         QString msg;
@@ -171,7 +171,6 @@ namespace BlackCore
         {
             this->m_currentStatus = INetwork::Connecting; // as semaphore we are going to connect
             this->m_airspace->setConnected(true);
-            INetwork::LoginMode mode = static_cast<INetwork::LoginMode>(loginMode);
             this->getIContextOwnAircraft()->updateOwnAircraftPilot(server.getUser());
             const CSimulatedAircraft ownAircraft(this->ownAircraft());
             this->m_network->presetServer(server);

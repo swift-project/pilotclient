@@ -94,7 +94,7 @@ namespace BlackCore
         virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator) override;
 
         //! \copydoc IContextOwnAircraft::updateComFrequency
-        virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const BlackMisc::CIdentifier &originator) override;
+        virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit comUnit, const BlackMisc::CIdentifier &originator) override;
 
         //! \copydoc IContextOwnAircraft::updatePilot
         virtual bool updateOwnAircraftPilot(const BlackMisc::Network::CUser &pilot) override;

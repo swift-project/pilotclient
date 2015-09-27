@@ -266,14 +266,13 @@ void SwiftGuiStd::ps_onConnectionTerminated()
     this->updateGuiStatusInformation();
 }
 
-void SwiftGuiStd::ps_onConnectionStatusChanged(int from, int to)
+void SwiftGuiStd::ps_onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
 {
     Q_UNUSED(from);
     this->updateGuiStatusInformation();
-    INetwork::ConnectionStatus newStatus = static_cast<INetwork::ConnectionStatus>(to);
 
     // sounds
-    switch (newStatus)
+    switch (to)
     {
     case INetwork::Connected:
         this->playNotifcationSound(BlackSound::CNotificationSounds::NotificationLogin);
@@ -418,5 +417,5 @@ void SwiftGuiStd::playNotifcationSound(CNotificationSounds::Notification notific
 {
     if (!this->m_contextAudioAvailable) { return; }
     if (!this->ui->comp_MainInfoArea->getSettingsComponent()->playNotificationSounds()) { return; }
-    this->getIContextAudio()->playNotification(static_cast<uint>(notification), true);
+    this->getIContextAudio()->playNotification(notification, true);
 }

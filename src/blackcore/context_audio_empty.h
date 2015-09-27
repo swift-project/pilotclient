@@ -45,7 +45,7 @@ namespace BlackCore
         }
 
         //! \copydoc IContextAudio::getVoiceRoom
-        virtual BlackMisc::Audio::CVoiceRoom getVoiceRoom(int comUnitValue, bool withAudioStatus) const override
+        virtual BlackMisc::Audio::CVoiceRoom getVoiceRoom(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue, bool withAudioStatus) const override
         {
             Q_UNUSED(comUnitValue);
             Q_UNUSED(withAudioStatus);
@@ -68,7 +68,7 @@ namespace BlackCore
         }
 
         //! \copydoc IContextAudio::getRoomCallsigns()
-        virtual BlackMisc::Aviation::CCallsignSet getRoomCallsigns(int comUnitValue) const override
+        virtual BlackMisc::Aviation::CCallsignSet getRoomCallsigns(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const override
         {
             Q_UNUSED(comUnitValue);
             logEmptyContextWarning(Q_FUNC_INFO);
@@ -76,7 +76,7 @@ namespace BlackCore
         }
 
         //! \copydoc IContextAudio::getRoomUsers()
-        virtual BlackMisc::Network::CUserList getRoomUsers(int comUnitValue) const override
+        virtual BlackMisc::Network::CUserList getRoomUsers(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const override
         {
             Q_UNUSED(comUnitValue);
             logEmptyContextWarning(Q_FUNC_INFO);
@@ -146,7 +146,7 @@ namespace BlackCore
         }
 
         //! \copydoc IContextAudio::playNotification()
-        virtual void playNotification(uint notification, bool considerSettings) const override
+        virtual void playNotification(BlackSound::CNotificationSounds::Notification notification, bool considerSettings) const override
         {
             Q_UNUSED(notification);
             Q_UNUSED(considerSettings);

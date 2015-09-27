@@ -118,11 +118,7 @@ namespace BlackCore
         void connectionTerminated();
 
         //! Connection status changed
-        //! \param from  old status
-        //! \param to    new status
-        //! \remarks If I use the enum, adaptor / interface are not created correctly
-        //! \see INetwork::ConnectionStatus
-        void connectionStatusChanged(int from, int to);
+        void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
         //! Text messages received (also private chat messages, rfaio channel messages)
         void textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);
@@ -199,8 +195,7 @@ namespace BlackCore
 
         //! Connect to Network
         //! \return messages generated during connecting
-        //! \see INetwork::LoginMode
-        virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, int loginMode) = 0;
+        virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, BlackCore::INetwork::LoginMode loginMode) = 0;
 
         //! Server which is connected, if not connected empty default object.
         virtual BlackMisc::Network::CServer getConnectedServer() const = 0;

@@ -330,12 +330,10 @@ namespace BlackGui
             Q_UNUSED(aircraft);
         }
 
-        void CMappingComponent::ps_onConnectionStatusChanged(uint from, uint to)
+        void CMappingComponent::ps_onConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
         {
-            INetwork::ConnectionStatus fromStatus = static_cast<INetwork::ConnectionStatus>(from);
-            INetwork::ConnectionStatus toStatus = static_cast<INetwork::ConnectionStatus>(to);
-            Q_UNUSED(fromStatus);
-            if (INetwork::isDisconnectedStatus(toStatus))
+            Q_UNUSED(from);
+            if (INetwork::isDisconnectedStatus(to))
             {
                 this->ui->tvp_SimulatedAircraft->clear();
             }

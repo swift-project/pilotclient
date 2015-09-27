@@ -91,12 +91,10 @@ namespace BlackGui
             this->tabBar()->setTabText(ic, c);
         }
 
-        void CUserComponent::ps_connectionStatusChanged(uint from, uint to)
+        void CUserComponent::ps_connectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
         {
-            INetwork::ConnectionStatus fromStatus = static_cast<INetwork::ConnectionStatus>(from);
-            INetwork::ConnectionStatus toStatus = static_cast<INetwork::ConnectionStatus>(to);
-            Q_UNUSED(fromStatus);
-            if (INetwork::isDisconnectedStatus(toStatus))
+            Q_UNUSED(from);
+            if (INetwork::isDisconnectedStatus(to))
             {
                 this->ui->tvp_AllUsers->clear();
                 this->ui->tvp_Clients->clear();

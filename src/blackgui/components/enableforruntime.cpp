@@ -118,7 +118,7 @@ namespace BlackGui
         void CEnableForRuntime::playNotifcationSound(BlackSound::CNotificationSounds::Notification notification) const
         {
             if (!this->getIContextAudio()) return;
-            this->getIContextAudio()->playNotification(static_cast<uint>(notification), true);
+            this->getIContextAudio()->playNotification(notification, true);
         }
     }
 }

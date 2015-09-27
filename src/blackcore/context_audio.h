@@ -14,6 +14,7 @@
 
 #include "blackcoreexport.h"
 #include "blackcore/context.h"
+#include "blackmisc/notificationsounds.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/genericdbusinterface.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
@@ -48,14 +49,6 @@ namespace BlackCore
         IContextAudio(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : CContext(mode, runtime) {}
 
     public:
-
-        //! ComUnit number
-        enum ComUnit
-        {
-            Com1,
-            Com2
-        };
-
         //! Interface name
         static const QString &InterfaceName()
         {
@@ -109,7 +102,7 @@ namespace BlackCore
         virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRooms() const = 0;
 
         //! Get voice room per com unit
-        virtual BlackMisc::Audio::CVoiceRoom getVoiceRoom(int comUnit, bool withAudioStatus) const = 0;
+        virtual BlackMisc::Audio::CVoiceRoom getVoiceRoom(BlackMisc::Aviation::CComSystem::ComUnit comUnit, bool withAudioStatus) const = 0;
 
         //! Set voice rooms
         virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms) = 0;
@@ -121,10 +114,10 @@ namespace BlackCore
         virtual void leaveAllVoiceRooms() = 0;
 
         //! Room user callsigns
-        virtual BlackMisc::Aviation::CCallsignSet getRoomCallsigns(int comUnit) const = 0;
+        virtual BlackMisc::Aviation::CCallsignSet getRoomCallsigns(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const = 0;
 
         //! Room users
-        virtual BlackMisc::Network::CUserList getRoomUsers(int comUnit) const = 0;
+        virtual BlackMisc::Network::CUserList getRoomUsers(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const = 0;
 
         //! Audio devices
         virtual BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const = 0;
@@ -155,7 +148,7 @@ namespace BlackCore
         //! Play notification sound
         //! \param notification CSoundGenerator::Notification
         //! \param considerSettings consider settings (notification on/off), false means settings ignored
-        virtual void playNotification(uint notification, bool considerSettings) const = 0;
+        virtual void playNotification(BlackSound::CNotificationSounds::Notification notification, bool considerSettings) const = 0;
 
         //! Enable audio loopback
         virtual void enableAudioLoopback(bool enable = true) = 0;

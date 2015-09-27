@@ -61,7 +61,7 @@ namespace BlackCore
     /*
      * COM1 callsigns
      */
-    BlackMisc::Aviation::CCallsignSet CContextAudioProxy::getRoomCallsigns(int comUnitValue) const
+    BlackMisc::Aviation::CCallsignSet CContextAudioProxy::getRoomCallsigns(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CCallsignSet>(QLatin1Literal("getRoomCallsigns"), comUnitValue);
     }
@@ -69,7 +69,7 @@ namespace BlackCore
     /*
      * COM1 users
      */
-    BlackMisc::Network::CUserList CContextAudioProxy::getRoomUsers(int comUnitValue) const
+    BlackMisc::Network::CUserList CContextAudioProxy::getRoomUsers(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1Literal("getRoomUsers"), comUnitValue);
     }
@@ -117,7 +117,7 @@ namespace BlackCore
     /*
      * Voice room
      */
-    CVoiceRoom CContextAudioProxy::getVoiceRoom(int comUnitValue, bool withAudioStatus) const
+    CVoiceRoom CContextAudioProxy::getVoiceRoom(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue, bool withAudioStatus) const
     {
         return this->m_dBusInterface->callDBusRet<CVoiceRoom>(QLatin1Literal("getVoiceRoom"), comUnitValue, withAudioStatus);
     }
@@ -149,7 +149,7 @@ namespace BlackCore
     /*
      * Notification sound
      */
-    void CContextAudioProxy::playNotification(uint notification, bool considerSettings) const
+    void CContextAudioProxy::playNotification(BlackSound::CNotificationSounds::Notification notification, bool considerSettings) const
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("playNotification"), notification, considerSettings);
     }

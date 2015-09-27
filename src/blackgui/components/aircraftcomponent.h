@@ -16,6 +16,7 @@
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/updatetimer.h"
+#include "blackcore/network.h"
 
 #include <QTabWidget>
 #include <QScopedPointer>
@@ -72,7 +73,7 @@ namespace BlackGui
             void ps_onRowCountChanged(int count, bool withFilter);
 
             //! Connection status has been changed
-            void ps_connectionStatusChanged(int from, int to);
+            void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
             //! Highlight in simulator
             void ps_onMenuHighlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);

@@ -92,7 +92,7 @@ namespace BlackCore
         virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const BlackMisc::CIdentifier &originator) = 0;
 
         //! Tune in a com frequency
-        virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, int comUnit, const BlackMisc::CIdentifier &originator) = 0;
+        virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit comUnit, const BlackMisc::CIdentifier &originator) = 0;
 
         //! Set current pilot
         virtual bool updateOwnAircraftPilot(const BlackMisc::Network::CUser &pilot) = 0;

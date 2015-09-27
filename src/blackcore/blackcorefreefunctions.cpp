@@ -16,8 +16,9 @@ namespace BlackCore
 {
     void registerMetadata()
     {
-        qRegisterMetaType<IVoiceChannel::ConnectionStatus>();
-        qRegisterMetaType<BlackCore::INetwork::ConnectionStatus>();
+        qDBusRegisterMetaType<BlackCore::IVoiceChannel::ConnectionStatus>();
+        qDBusRegisterMetaType<BlackCore::INetwork::ConnectionStatus>();
+        qDBusRegisterMetaType<BlackCore::INetwork::LoginMode>();
         qRegisterMetaType<BlackCore::CWebReaderFlags::WebReaderFlag>();
         qRegisterMetaType<BlackCore::CWebReaderFlags::WebReader>();
         qDBusRegisterMetaType<BlackCore::CLogSubscriptionHash>();

@@ -48,9 +48,7 @@ namespace BlackCore
         Q_ASSERT(c);
 
         // network
-        // If I do not explicitly set Qt::QueuedConnection here, I get a warning message when such a signal is sent:
-        // "INetwork::NetworkConenctionStatus is not registered" (similar to https://forum.qt.io/topic/27083/signal-slot-between-threads-qt-5/9)
-        c = connect(network, &INetwork::connectionStatusChanged, this, &CAirspaceAnalyzer::ps_onConnectionStatusChanged, Qt::QueuedConnection);
+        c = connect(network, &INetwork::connectionStatusChanged, this, &CAirspaceAnalyzer::ps_onConnectionStatusChanged);
         Q_ASSERT(c);
         Q_UNUSED(c);
 

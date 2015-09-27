@@ -16,6 +16,7 @@
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/updatetimer.h"
+#include "blackcore/network.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/aviation/atcstation.h"
 #include <QTabWidget>
@@ -94,7 +95,7 @@ namespace BlackGui
             void ps_changedAtcStationsOnline();
 
             //! Connection status has been changed
-            void ps_connectionStatusChanged(uint from, uint to);
+            void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
             //! Request dummy ATC online stations
             void ps_testCreateDummyOnlineAtcStations(int number);

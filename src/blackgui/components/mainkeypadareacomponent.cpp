@@ -133,15 +133,12 @@ namespace BlackGui
             }
         }
 
-        void CMainKeypadAreaComponent::ps_connectionStatusChanged(uint from, uint to)
+        void CMainKeypadAreaComponent::ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
         {
-            INetwork::ConnectionStatus statusFrom = static_cast<INetwork::ConnectionStatus>(from);
-            INetwork::ConnectionStatus statusTo = static_cast<INetwork::ConnectionStatus>(to);
-
-            Q_UNUSED(statusFrom);
+            Q_UNUSED(from);
 
             // Connected button
-            if (statusTo == INetwork::Connected)
+            if (to == INetwork::Connected)
             {
                 this->ui->pb_Connect->setText("Disconnect");
                 this->ui->pb_Connect->setStyleSheet("background-color: green");

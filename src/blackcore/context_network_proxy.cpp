@@ -37,7 +37,7 @@ namespace BlackCore
     void CContextNetworkProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
         bool s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                                    "connectionStatusChanged", this, SIGNAL(connectionStatusChanged(int, int)));
+                                    "connectionStatusChanged", this, SIGNAL(connectionStatusChanged(BlackCore::INetwork::ConnectionStatus, BlackCore::INetwork::ConnectionStatus)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "changedAtcStationsBooked", this, SIGNAL(changedAtcStationsBooked()));
@@ -225,7 +225,7 @@ namespace BlackCore
         this->m_dBusInterface->callDBus(QLatin1Literal("testAddAircraftParts"), callsign, parts, incremental);
     }
 
-    CStatusMessage CContextNetworkProxy::connectToNetwork(const CServer &server, int loginMode)
+    CStatusMessage CContextNetworkProxy::connectToNetwork(const CServer &server, INetwork::LoginMode loginMode)
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1Literal("connectToNetwork"), server, loginMode);
     }

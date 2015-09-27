@@ -82,7 +82,7 @@ namespace BlackGui
             if (room1.isConnected())
             {
                 this->ui->le_CockpitVoiceRoomCom1->setStyleSheet("background: green");
-                if (this->getIContextAudio()) this->ui->tvp_CockpitVoiceRoom1->updateContainer(this->getIContextAudio()->getRoomUsers(IContextAudio::Com1));
+                if (this->getIContextAudio()) this->ui->tvp_CockpitVoiceRoom1->updateContainer(this->getIContextAudio()->getRoomUsers(BlackMisc::Aviation::CComSystem::Com1));
             }
             else
             {
@@ -111,7 +111,7 @@ namespace BlackGui
                     CNotificationSounds::Notification sound = connected ?
                             CNotificationSounds::NotificationVoiceRoomJoined :
                             CNotificationSounds::NotificationVoiceRoomLeft;
-                    this->getIContextAudio()->playNotification(static_cast<uint>(sound), true);
+                    this->getIContextAudio()->playNotification(sound, true);
                 }
             }
         }
@@ -121,7 +121,7 @@ namespace BlackGui
             if (!this->getIContextAudio()) { return; }
             if (!this->ui->le_CockpitVoiceRoomCom1->text().trimmed().isEmpty())
             {
-                this->ui->tvp_CockpitVoiceRoom1->updateContainer(this->getIContextAudio()->getRoomUsers(IContextAudio::Com1));
+                this->ui->tvp_CockpitVoiceRoom1->updateContainer(this->getIContextAudio()->getRoomUsers(BlackMisc::Aviation::CComSystem::Com1));
             }
             else
             {
@@ -130,7 +130,7 @@ namespace BlackGui
 
             if (!this->ui->le_CockpitVoiceRoomCom2->text().trimmed().isEmpty())
             {
-                this->ui->tvp_CockpitVoiceRoom2->updateContainer(this->getIContextAudio()->getRoomUsers(IContextAudio::Com2));
+                this->ui->tvp_CockpitVoiceRoom2->updateContainer(this->getIContextAudio()->getRoomUsers(BlackMisc::Aviation::CComSystem::Com2));
             }
             else
             {

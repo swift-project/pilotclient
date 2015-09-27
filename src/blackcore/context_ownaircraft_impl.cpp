@@ -187,9 +187,8 @@ namespace BlackCore
         return changed;
     }
 
-    bool CContextOwnAircraft::updateActiveComFrequency(const CFrequency &frequency, int comUnit, const CIdentifier &originator)
+    bool CContextOwnAircraft::updateActiveComFrequency(const CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit unit, const CIdentifier &originator)
     {
-        CComSystem::ComUnit unit = static_cast<CComSystem::ComUnit>(comUnit);
         if (unit != CComSystem::Com1 && unit != CComSystem::Com2) { return false; }
         if (!CComSystem::isValidComFrequency(frequency)) { return false; }
         CComSystem com1, com2;

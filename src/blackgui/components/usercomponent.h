@@ -16,7 +16,7 @@
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/updatetimer.h"
-
+#include "blackcore/network.h"
 #include <QTabWidget>
 #include <QTimer>
 #include <QScopedPointer>
@@ -67,7 +67,7 @@ namespace BlackGui
             void ps_onCountChanged(int count, bool withFilter);
 
             //! Connection status
-            void ps_connectionStatusChanged(uint from, uint to);
+            void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
         private:
             QScopedPointer<Ui::CUserComponent> ui;

@@ -202,7 +202,7 @@ private slots:
     //! Connection status changed
     //! \param from  old status, as int so it is compliant with DBus
     //! \param to    new status, as int so it is compliant with DBus
-    void ps_onConnectionStatusChanged(int from, int to);
+    void ps_onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
     //
     // GUI related slots

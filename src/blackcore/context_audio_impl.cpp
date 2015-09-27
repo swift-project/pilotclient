@@ -96,12 +96,12 @@ namespace BlackCore
     /*
      * Voice rooms for COM
      */
-    CVoiceRoom CContextAudio::getVoiceRoom(int comUnitValue, bool withAudioStatus) const
+    CVoiceRoom CContextAudio::getVoiceRoom(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue, bool withAudioStatus) const
     {
         Q_ASSERT(this->m_voice);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << withAudioStatus;
 
-        auto voiceChannel = m_voiceChannelMapping.value(static_cast<ComUnit>(comUnitValue));
+        auto voiceChannel = m_voiceChannelMapping.value(comUnitValue);
 
         if (voiceChannel)
             return voiceChannel->getVoiceRoom();
@@ -118,7 +118,7 @@ namespace BlackCore
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         CVoiceRoomList voiceRoomList;
 
-        auto voiceChannelCom1 = m_voiceChannelMapping.value(Com1);
+        auto voiceChannelCom1 = m_voiceChannelMapping.value(BlackMisc::Aviation::CComSystem::Com1);
         if (voiceChannelCom1)
         {
             CVoiceRoom room = voiceChannelCom1->getVoiceRoom();
@@ -129,7 +129,7 @@ namespace BlackCore
             voiceRoomList.push_back(CVoiceRoom());
         }
 
-        auto voiceChannelCom2 = m_voiceChannelMapping.value(Com2);
+        auto voiceChannelCom2 = m_voiceChannelMapping.value(BlackMisc::Aviation::CComSystem::Com2);
         if (voiceChannelCom2)
         {
             CVoiceRoom room = voiceChannelCom2->getVoiceRoom();
@@ -296,10 +296,10 @@ namespace BlackCore
         // changed rooms?  But only compare on "URL",  not status as connected etc.
         if (currentRoomCom1.getVoiceRoomUrl() != newRoomCom1.getVoiceRoomUrl())
         {
-            auto oldVoiceChannel = m_voiceChannelMapping.value(Com1);
+            auto oldVoiceChannel = m_voiceChannelMapping.value(BlackMisc::Aviation::CComSystem::Com1);
             if (oldVoiceChannel)
             {
-                m_voiceChannelMapping.remove(Com1);
+                m_voiceChannelMapping.remove(BlackMisc::Aviation::CComSystem::Com1);
 
                 // If the voice channel is not used by anybody else
                 if (!m_voiceChannelMapping.values().contains(oldVoiceChannel))
@@ -318,7 +318,7 @@ namespace BlackCore
                 auto newVoiceChannel = getVoiceChannelBy(newRoomCom1);
                 newVoiceChannel->setOwnAircraftCallsign(ownCallsign);
                 bool inUse = m_voiceChannelMapping.values().contains(newVoiceChannel);
-                m_voiceChannelMapping.insert(Com1, newVoiceChannel);
+                m_voiceChannelMapping.insert(BlackMisc::Aviation::CComSystem::Com1, newVoiceChannel);
 
                 // If the voice channel is not used by anybody else
                 if (!inUse)
@@ -336,10 +336,10 @@ namespace BlackCore
         // changed rooms?  But only compare on "URL",  not status as connected etc.
         if (currentRoomCom2.getVoiceRoomUrl() != newRoomCom2.getVoiceRoomUrl())
         {
-            auto oldVoiceChannel = m_voiceChannelMapping.value(Com2);
+            auto oldVoiceChannel = m_voiceChannelMapping.value(BlackMisc::Aviation::CComSystem::Com2);
             if (oldVoiceChannel)
             {
-                m_voiceChannelMapping.remove(Com2);
+                m_voiceChannelMapping.remove(BlackMisc::Aviation::CComSystem::Com2);
 
                 // If the voice channel is not used by anybody else
                 if (!m_voiceChannelMapping.values().contains(oldVoiceChannel))
@@ -358,7 +358,7 @@ namespace BlackCore
                 auto newVoiceChannel = getVoiceChannelBy(newRoomCom2);
                 newVoiceChannel->setOwnAircraftCallsign(ownCallsign);
                 bool inUse = m_voiceChannelMapping.values().contains(newVoiceChannel);
-                m_voiceChannelMapping.insert(Com2, newVoiceChannel);
+                m_voiceChannelMapping.insert(BlackMisc::Aviation::CComSystem::Com2, newVoiceChannel);
 
                 // If the voice channel is not used by anybody else
                 if (!inUse)
@@ -384,26 +384,25 @@ namespace BlackCore
         if (m_channel2) { m_channel2->setOwnAircraftCallsign(callsign); }
     }
 
-    CCallsignSet CContextAudio::getRoomCallsigns(int comUnitValue) const
+    CCallsignSet CContextAudio::getRoomCallsigns(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const
     {
         Q_ASSERT(this->m_voice);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
 
-        auto voiceChannel = m_voiceChannelMapping.value(static_cast<ComUnit>(comUnitValue));
+        auto voiceChannel = m_voiceChannelMapping.value(comUnitValue);
         if (voiceChannel)
             return voiceChannel->getVoiceRoomCallsigns();
         else
             return CCallsignSet();
     }
 
-    Network::CUserList CContextAudio::getRoomUsers(int comUnitValue) const
+    Network::CUserList CContextAudio::getRoomUsers(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const
     {
         Q_ASSERT(this->m_voice);
         Q_ASSERT(this->getRuntime());
         if (!this->getRuntime()->getIContextNetwork()) return Network::CUserList();
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
 
-        auto comUnit = static_cast<ComUnit>(comUnitValue);
         return this->getIContextNetwork()->getUsersForCallsigns(this->getRoomCallsigns(comUnit));
     }
 
@@ -421,19 +420,18 @@ namespace BlackCore
     /*
      * Notification
      */
-    void CContextAudio::playNotification(uint notification, bool considerSettings) const
+    void CContextAudio::playNotification(BlackSound::CNotificationSounds::Notification notification, bool considerSettings) const
     {
         Q_ASSERT(this->m_voice);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << notification;
 
-        auto notificationSound = static_cast<BlackSound::CNotificationSounds::Notification>(notification);
         if (considerSettings)
         {
             Q_ASSERT(this->getIContextSettings());
-            bool play = this->getIContextSettings()->getAudioSettings().getNotificationFlag(notificationSound);
+            bool play = this->getIContextSettings()->getAudioSettings().getNotificationFlag(notification);
             if (!play) return;
         }
-        BlackSound::CSoundGenerator::playNotificationSound(90, notificationSound);
+        BlackSound::CSoundGenerator::playNotificationSound(90, notification);
     }
 
     /*

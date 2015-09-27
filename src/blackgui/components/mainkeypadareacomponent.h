@@ -15,6 +15,7 @@
 #include "blackgui/blackguiexport.h"
 #include "maininfoareacomponent.h"
 #include "enableforruntime.h"
+#include "blackcore/network.h"
 #include "blackmisc/identifier.h"
 
 #include <QFrame>
@@ -76,7 +77,7 @@ namespace BlackGui
             void ps_buttonSelected();
 
             //! \copydoc BlackCore::IContextNetwork::connectionStatusChanged
-            void ps_connectionStatusChanged(uint from, uint to);
+            void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
             //! Command line entered
             void ps_commandEntered();

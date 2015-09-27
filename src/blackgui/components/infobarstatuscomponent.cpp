@@ -133,13 +133,11 @@ namespace BlackGui
             }
         }
 
-        void CInfoBarStatusComponent::ps_onNetworkConnectionChanged(int from, int to)
+        void CInfoBarStatusComponent::ps_onNetworkConnectionChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
         {
-            INetwork::ConnectionStatus fromStatus = static_cast<INetwork::ConnectionStatus>(from);
-            INetwork::ConnectionStatus toStatus = static_cast<INetwork::ConnectionStatus>(to);
-            Q_UNUSED(fromStatus);
+            Q_UNUSED(from);
 
-            switch (toStatus)
+            switch (to)
             {
             case INetwork::Disconnected:
             case INetwork::DisconnectedError:

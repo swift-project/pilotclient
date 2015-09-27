@@ -117,12 +117,10 @@ namespace BlackGui
             this->tabBar()->setTabText(ap, aps);
         }
 
-        void CAircraftComponent::ps_connectionStatusChanged(int from, int to)
+        void CAircraftComponent::ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
         {
-            INetwork::ConnectionStatus fromStatus = static_cast<INetwork::ConnectionStatus>(from);
-            INetwork::ConnectionStatus toStatus = static_cast<INetwork::ConnectionStatus>(to);
-            Q_UNUSED(fromStatus);
-            if (INetwork::isDisconnectedStatus(toStatus))
+            Q_UNUSED(from);
+            if (INetwork::isDisconnectedStatus(to))
             {
                 this->ui->tvp_AircraftInRange->clear();
             }

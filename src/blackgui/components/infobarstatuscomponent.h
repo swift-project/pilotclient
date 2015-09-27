@@ -14,6 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "enableforruntime.h"
+#include "blackcore/network.h"
 #include "../led.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -58,7 +59,7 @@ namespace BlackGui
             void ps_onSimulatorStatusChanged(int status);
 
             //! Network connection has been changed
-            void ps_onNetworkConnectionChanged(int from, int to);
+            void ps_onNetworkConnectionChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
             //! Context menu requested
             void ps_customAudioContextMenuRequested(const QPoint &position);

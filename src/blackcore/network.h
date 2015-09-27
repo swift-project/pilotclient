@@ -181,7 +181,7 @@ namespace BlackCore
          * Select a login mode before connecting.
          * \pre Network must be disconnected when calling this function.
          */
-        virtual void presetLoginMode(LoginMode mode) = 0;
+        virtual void presetLoginMode(BlackCore::INetwork::LoginMode mode) = 0;
 
         /*!
          * Set simulator info before connecting.
@@ -462,7 +462,7 @@ namespace BlackCore
         /*!
          * The status of our connection has changed.
          */
-        void connectionStatusChanged(ConnectionStatus oldStatus, ConnectionStatus newStatus);
+        void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus);
 
         /*!
          * We received a reply to one of our pings.
@@ -538,5 +538,6 @@ namespace BlackCore
 } // namespace
 
 Q_DECLARE_METATYPE(BlackCore::INetwork::ConnectionStatus)
+Q_DECLARE_METATYPE(BlackCore::INetwork::LoginMode)
 
 #endif // guard

@@ -17,6 +17,7 @@
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/updatetimer.h"
 #include "blackgui/views/checkboxdelegate.h"
+#include "blackcore/network.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
@@ -104,7 +105,7 @@ namespace BlackGui
             void ps_onFastPositionUpdatesEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
             //! Connection status has been changed
-            void ps_onConnectionStatusChanged(uint from, uint to);
+            void ps_onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
             //! Simulator has handled airspace snapshot
             void ps_onAirspaceSnapshotHandled();

@@ -58,7 +58,7 @@ namespace BlackCore
         virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const override;
 
         //! \copydoc IContextAudio::getVoiceRoom
-        virtual BlackMisc::Audio::CVoiceRoom getVoiceRoom(int comUnitValue, bool withAudioStatus) const override;
+        virtual BlackMisc::Audio::CVoiceRoom getVoiceRoom(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue, bool withAudioStatus) const override;
 
         //! \copydoc IContextAudio::setComVoiceRooms()
         virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms) override;
@@ -67,10 +67,10 @@ namespace BlackCore
         virtual void setOwnCallsignForRooms(const BlackMisc::Aviation::CCallsign &callsign) override;
 
         //! \copydoc IContextAudio::getRoomCallsigns()
-        virtual BlackMisc::Aviation::CCallsignSet getRoomCallsigns(int comUnitValue) const override;
+        virtual BlackMisc::Aviation::CCallsignSet getRoomCallsigns(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const override;
 
         //! \copydoc IContextAudio::getRoomUsers()
-        virtual BlackMisc::Network::CUserList getRoomUsers(int comUnitValue) const override;
+        virtual BlackMisc::Network::CUserList getRoomUsers(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const override;
 
         //! \copydoc IContextAudio::leaveAllVoiceRooms
         virtual void leaveAllVoiceRooms() override;
@@ -100,7 +100,7 @@ namespace BlackCore
         virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) const override;
 
         //! \copydoc IContextAudio::playNotification
-        virtual void playNotification(uint notification, bool considerSettings) const override;
+        virtual void playNotification(BlackSound::CNotificationSounds::Notification notification, bool considerSettings) const override;
 
         //! \copydoc IContextAudio::enableAudioLoopback()
         virtual void enableAudioLoopback(bool enable = true) override;

@@ -200,12 +200,10 @@ namespace BlackGui
             this->m_timestampBookedStationsChanged = QDateTime::currentDateTimeUtc();
         }
 
-        void CAtcStationComponent::ps_connectionStatusChanged(uint from, uint to)
+        void CAtcStationComponent::ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
         {
-            INetwork::ConnectionStatus fromStatus = static_cast<INetwork::ConnectionStatus>(from);
-            INetwork::ConnectionStatus toStatus = static_cast<INetwork::ConnectionStatus>(to);
-            Q_UNUSED(fromStatus);
-            if (INetwork::isDisconnectedStatus(toStatus))
+            Q_UNUSED(from);
+            if (INetwork::isDisconnectedStatus(to))
             {
                 this->ui->tvp_AtcStationsOnline->clear();
                 this->updateTreeView();
@@ -255,7 +253,7 @@ namespace BlackGui
         {
             if (unit != CComSystem::Com1 && unit != CComSystem::Com2) { return; }
             if (!CComSystem::isValidComFrequency(frequency)) { return; }
-            this->getIContextOwnAircraft()->updateActiveComFrequency(frequency, static_cast<int>(unit), identifier());
+            this->getIContextOwnAircraft()->updateActiveComFrequency(frequency, unit, identifier());
         }
 
         void CAtcStationComponent::updateTreeView()

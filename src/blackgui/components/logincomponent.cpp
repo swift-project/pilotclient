@@ -244,7 +244,7 @@ namespace BlackGui
                 this->getIContextOwnAircraft()->updateOwnAircraftPilot(currentServer.getUser());
 
                 // Login
-                msg = this->getIContextNetwork()->connectToNetwork(currentServer, static_cast<uint>(mode));
+                msg = this->getIContextNetwork()->connectToNetwork(currentServer, mode);
             }
             else
             {
