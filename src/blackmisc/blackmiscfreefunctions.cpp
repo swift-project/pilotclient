@@ -381,7 +381,8 @@ QString BlackMisc::bytesToHexString(const QByteArray &bytes)
     QString h;
     for (int i = 0; i < bytes.size(); i++)
     {
-        h.append(static_cast<int>(bytes.at(i)));
+        int b = static_cast<int>(bytes.at(i));
+        h.append(intToHex(b, 2));
     }
     return h;
 }

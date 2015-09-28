@@ -762,7 +762,7 @@ namespace BlackCore
         }
     }
 
-    void CAirspaceMonitor::ps_icaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery)
+    void CAirspaceMonitor::ps_icaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery)
     {
         Q_ASSERT_X(BlackCore::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "not in main thread");
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "no callsign");

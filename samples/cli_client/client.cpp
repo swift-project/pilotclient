@@ -531,7 +531,7 @@ void Client::pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign)
     std::cout << "PILOT_DISCONNECTED " << callsign << std::endl;
 }
 
-void Client::icaoCodesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery)
+void Client::icaoCodesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery)
 {
     std::cout << "PLANE_INFO_REPLY " << callsign << " " << aircraftIcaoDesignator.toStdString() << " " << airlineIcaoDesignator.toStdString() << " " << livery.toStdString();
 }

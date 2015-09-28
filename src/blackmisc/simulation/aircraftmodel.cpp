@@ -218,7 +218,7 @@ namespace BlackMisc
 
         CStatusMessageList CAircraftModel::validate(bool withNestedObjects) const
         {
-            static const CLogCategoryList cats( { CLogCategory(this->getClassName()), CLogCategory::validation()});
+            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation() }));
             CStatusMessageList msgs;
             if (!hasModelString()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Model: missing model string (aka key)")); }
             if (!hasValidSimulator()) {msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Model: no simulator set")); }

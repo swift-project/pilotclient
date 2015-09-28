@@ -155,7 +155,7 @@ namespace BlackMisc
 
         CStatusMessageList CAirlineIcaoCode::validate() const
         {
-            static const CLogCategoryList cats( { CLogCategory(this->getClassName()), CLogCategory::validation()});
+            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation() }));
             CStatusMessageList msgs;
             if (!hasValidDesignator()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Airline: missing designator")); }
             if (!hasValidCountry()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Airline: missing country")); }

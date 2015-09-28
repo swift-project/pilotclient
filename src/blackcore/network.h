@@ -436,7 +436,7 @@ namespace BlackCore
          * We received a reply to one of our queries.
          * \sa sendIcaoCodesQuery
          */
-        void icaoCodesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery);
+        void icaoCodesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery);
 
         /*!
          * We received a notification of the state of another aircraft on the network.

@@ -37,7 +37,7 @@ namespace BlackCore
     class BLACKCORE_EXPORT CAirspaceMonitor :
         public QObject,
         public BlackMisc::Simulation::IRemoteAircraftProvider,  // those data will be provided from the class CAirspaceMonitor
-        public BlackMisc::Simulation::COwnAircraftAware, // used to obtain in memory infomation about own aircraft
+        public BlackMisc::Simulation::COwnAircraftAware, // used to obtain in memory information about own aircraft
         public BlackMisc::Network::CWebDataServicesAware // used to get web service data
     {
         Q_OBJECT
@@ -219,11 +219,11 @@ namespace BlackCore
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan>                m_flightPlanCache;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CAircraftModel>           m_modelCache;
 
-        INetwork              *m_network               = nullptr;
-        CAirspaceAnalyzer     *m_analyzer              = nullptr; //!< owned analyzer
-        bool                   m_serverSupportsNameQuery = false; //!< not all servers support name query
-        bool                   m_connected = false;               //!< retrieve data
-        bool                   m_sendInterimPositions = false;
+        INetwork              *m_network                 = nullptr;
+        CAirspaceAnalyzer     *m_analyzer                = nullptr; //!< owned analyzer
+        bool                   m_serverSupportsNameQuery = false;   //!< not all servers support name query
+        bool                   m_connected               = false;   //!< retrieve data
+        bool                   m_sendInterimPositions    = false;
         QTimer                 m_interimPositionUpdateTimer;
 
         // locks
@@ -275,7 +275,7 @@ namespace BlackCore
         void ps_atisReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atisMessage);
         void ps_atisVoiceRoomReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
         void ps_atisLogoffTimeReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
-        void ps_icaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery);
+        void ps_icaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery);
         void ps_pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
         void ps_frequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
         void ps_receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);

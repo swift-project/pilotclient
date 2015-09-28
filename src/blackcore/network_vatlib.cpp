@@ -1030,9 +1030,9 @@ namespace BlackCore
     {
         emit cbvar_cast(cbvar)->icaoCodesReplyReceived(
             cbvar_cast(cbvar)->fromFSD(callsign),
-            QString(aircraftInfo->aircraftType).trimmed().toUpper(),
-            QString(aircraftInfo->airline).trimmed().toUpper(),
-            QString(aircraftInfo->livery).trimmed().toUpper()
+            cbvar_cast(cbvar)->fromFSD(aircraftInfo->aircraftType).trimmed().toUpper(),
+            cbvar_cast(cbvar)->fromFSD(aircraftInfo->airline).trimmed().toUpper(),
+            cbvar_cast(cbvar)->fromFSD(aircraftInfo->livery).trimmed().toUpper()
         );
     }
 
