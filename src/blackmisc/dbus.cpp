@@ -13,16 +13,19 @@
 const QDBusArgument &operator>>(const QDBusArgument &argument, QPixmap &pixmap)
 {
     QByteArray ba;
+    argument.beginStructure();
     argument >> ba;
     BlackMisc::pngByteArrayToPixmapRef(ba, pixmap);
+    argument.endStructure();
     return argument;
 }
-
 
 QDBusArgument &operator<<(QDBusArgument &argument, const QPixmap &pixmap)
 {
     QByteArray ba;
     BlackMisc::pixmapToPngByteArray(pixmap, ba);
+    argument.beginStructure();
     argument << ba;
+    argument.endStructure();
     return argument;
 }
