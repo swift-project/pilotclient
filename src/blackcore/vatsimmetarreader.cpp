@@ -8,12 +8,16 @@
  */
 
 #include "vatsimmetarreader.h"
+#include "blackmisc/network/entityflags.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/logmessage.h"
 #include <QTextStream>
 #include <QFile>
+#include <QReadLocker>
+#include <QWriteLocker>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Weather;
 
 namespace BlackCore
@@ -32,6 +36,24 @@ namespace BlackCore
         bool s = QMetaObject::invokeMethod(this, "ps_readMetar");
         Q_ASSERT_X(s, Q_FUNC_INFO, "Cannot invoke");
         Q_UNUSED(s);
+    }
+
+    CMetarSet CVatsimMetarReader::getMetars() const
+    {
+        QReadLocker l(&m_lock);
+        return m_metars;
+    }
+
+    CMetar CVatsimMetarReader::getMetarForAirport(const Aviation::CAirportIcaoCode &icao) const
+    {
+        QReadLocker l(&m_lock);
+        return m_metars.getMetarForAirport(icao);
+    }
+
+    int CVatsimMetarReader::getMetarsCount() const
+    {
+        QReadLocker l(&m_lock);
+        return m_metars.size();
     }
 
     void CVatsimMetarReader::ps_readMetars()
@@ -85,19 +107,26 @@ namespace BlackCore
                 }
             }
 
+            {
+                QWriteLocker l(&m_lock);
+                m_metars = metars;
+            }
+
             // I could use those for logging, etc.
             Q_UNUSED(invalidMetars);
             if (invalidLineCount > 0)
             {
                 CLogMessage(this).warning("Reading METARs failed for %1 entries") << invalidLineCount;
             }
-            emit dataRead(metars);
+            emit metarsRead(metars);
+            emit dataRead(CEntityFlags::MetarEntity, CEntityFlags::ReadFinished, metars.size());
         }
         else
         {
             // network error
             CLogMessage(this).warning("Reading METARs failed %1 %2") << nwReply->errorString() << nwReply->url().toString();
             nwReply->abort();
+            emit dataRead(CEntityFlags::MetarEntity, CEntityFlags::ReadFailed, 0);
         }
     } // method
 

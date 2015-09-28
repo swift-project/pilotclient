@@ -123,9 +123,6 @@ namespace BlackCore
         //! Returns a list of other clients corresponding to the given callsigns
         BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const;
 
-        //! Returns a METAR for the given airport, if available
-        BlackMisc::Weather::CMetar getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode);
-
         //! Returns the current online ATC stations
         BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const { return m_atcStationsOnline; }
 
@@ -213,7 +210,6 @@ namespace BlackCore
         BlackMisc::Aviation::CAtcStationList           m_atcStationsBooked;
         BlackMisc::Network::CClientList                m_otherClients;
         BlackMisc::Simulation::CSimulatedAircraftList  m_aircraftInRange; //!< aircraft, thread safe access required
-        BlackMisc::Weather::CMetarSet                  m_metars;
 
         // hashs, because not sorted by key but keeping order
         CSituationsPerCallsign m_situationsByCallsign; //!< situations, for performance reasons per callsign, thread safe access required
@@ -284,7 +280,6 @@ namespace BlackCore
         void ps_frequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
         void ps_receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
         void ps_receivedDataFile();
-        void ps_updateMetars(const BlackMisc::Weather::CMetarSet &metars);
         void ps_aircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, bool isFull);
         void ps_aircraftInterimUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
         void ps_sendInterimPositions();

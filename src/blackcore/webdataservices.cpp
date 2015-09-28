@@ -18,6 +18,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/worker.h"
 
+using namespace BlackCore;
 using namespace BlackCore::Settings;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -35,40 +36,7 @@ namespace BlackCore
         this->initWriters();
     }
 
-    QList<QMetaObject::Connection> CWebDataServices::connectVatsimDataSignals(QObject *receiver,
-            std::function<void(int)> bookingsRead,
-            std::function<void(int)> dataFileRead,
-            std::function<void(int)> metarsRead)
-    {
-        // bind does not allow to define connection type
-        // so anything in its own thread will be sent with this thread affinity
-        Q_ASSERT_X(receiver, Q_FUNC_INFO, "Missing receiver");
-        QList<QMetaObject::Connection> cl;
-
-        if (m_readerFlags.testFlag(CWebReaderFlags::WebReaderFlags::VatsimBookingReader))
-        {
-            QMetaObject::Connection c1 = connect(this, &CWebDataServices::vatsimBookingsRead, receiver, bookingsRead);
-            Q_ASSERT_X(c1, Q_FUNC_INFO, "connect failed (bookings)");
-            cl.append(c1);
-        }
-
-        if (m_readerFlags.testFlag(CWebReaderFlags::WebReaderFlags::VatsimDataReader))
-        {
-            QMetaObject::Connection c2 = connect(this, &CWebDataServices::vatsimDataFileRead, receiver, dataFileRead);
-            Q_ASSERT_X(c2, Q_FUNC_INFO, "connect failed (data)");
-            cl.append(c2);
-        }
-
-        if (m_readerFlags.testFlag(CWebReaderFlags::WebReaderFlags::VatsimMetarReader))
-        {
-            QMetaObject::Connection c3 = connect(this, &CWebDataServices::vatsimMetarsRead, receiver, metarsRead);
-            Q_ASSERT_X(c3, Q_FUNC_INFO, "connect failed (METARs)");
-            cl.append(c3);
-        }
-        return cl;
-    }
-
-    QList<QMetaObject::Connection> CWebDataServices::connectSwiftDatabaseSignals(QObject *receiver, std::function<void(CDbFlags::Entity, CDbFlags::ReadState, int)> dataRead)
+    QList<QMetaObject::Connection> CWebDataServices::connectDataReadSignal(QObject *receiver, std::function<void(CEntityFlags::Entity, CEntityFlags::ReadState, int)> dataRead)
     {
         Q_ASSERT_X(receiver, Q_FUNC_INFO, "Missing receiver");
 
@@ -76,19 +44,43 @@ namespace BlackCore
         // so anything in its own thread will be sent with this thread affinity
         QList<QMetaObject::Connection> cl;
 
-        if (m_readerFlags.testFlag(CWebReaderFlags::WebReaderFlags::IcaoDataReader))
+        if (m_readerFlags.testFlag(CWebReaderFlags::WebReaderFlag::IcaoDataReader))
         {
             Q_ASSERT_X(this->m_icaoDataReader, Q_FUNC_INFO, "Missing reader ICAO");
-            QMetaObject::Connection con = connect(this->m_icaoDataReader, &CIcaoDataReader::readData, receiver, dataRead);
+            QMetaObject::Connection con = connect(this->m_icaoDataReader, &CIcaoDataReader::dataRead, receiver, dataRead);
             Q_ASSERT_X(con, Q_FUNC_INFO, "connect failed ICAO");
             cl.append(con);
         }
 
-        if (m_readerFlags.testFlag(CWebReaderFlags::WebReaderFlags::ModelReader))
+        if (m_readerFlags.testFlag(CWebReaderFlags::WebReaderFlag::ModelReader))
         {
             Q_ASSERT_X(this->m_modelDataReader, Q_FUNC_INFO, "Missing reader models");
-            QMetaObject::Connection con = connect(this->m_modelDataReader, &CModelDataReader::readData, receiver, dataRead);
+            QMetaObject::Connection con = connect(this->m_modelDataReader, &CModelDataReader::dataRead, receiver, dataRead);
             Q_ASSERT_X(con, Q_FUNC_INFO, "connect failed models");
+            cl.append(con);
+        }
+
+        if (m_readerFlags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimBookingReader))
+        {
+            Q_ASSERT_X(this->m_modelDataReader, Q_FUNC_INFO, "Missing reader bookings");
+            QMetaObject::Connection con = connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, receiver, dataRead);
+            Q_ASSERT_X(con, Q_FUNC_INFO, "connect failed bookings");
+            cl.append(con);
+        }
+
+        if (m_readerFlags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimDataReader))
+        {
+            Q_ASSERT_X(this->m_vatsimDataFileReader, Q_FUNC_INFO, "Missing reader data file");
+            QMetaObject::Connection con = connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, receiver, dataRead);
+            Q_ASSERT_X(con, Q_FUNC_INFO, "connect failed VATSIM data file");
+            cl.append(con);
+        }
+
+        if (m_readerFlags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimMetarReader))
+        {
+            Q_ASSERT_X(this->m_vatsimMetarReader, Q_FUNC_INFO, "Missing reader bookings");
+            QMetaObject::Connection con = connect(this->m_vatsimMetarReader, &CVatsimMetarReader::dataRead, receiver, dataRead);
+            Q_ASSERT_X(con, Q_FUNC_INFO, "connect failed VATSIM METAR");
             cl.append(con);
         }
         return cl;
@@ -149,32 +141,32 @@ namespace BlackCore
         return true;
     }
 
-    CDbFlags::Entity CWebDataServices::triggerRead(CDbFlags::Entity whatToRead)
+    CEntityFlags::Entity CWebDataServices::triggerRead(CEntityFlags::Entity whatToRead)
     {
-        CDbFlags::Entity triggeredRead = CDbFlags::NoEntity;
+        CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
         if (m_vatsimDataFileReader)
         {
-            if (whatToRead.testFlag(CDbFlags::VatsimDataFile))
+            if (whatToRead.testFlag(CEntityFlags::VatsimDataFile))
             {
                 m_vatsimDataFileReader->readInBackgroundThread();
-                triggeredRead |= CDbFlags::VatsimDataFile;
+                triggeredRead |= CEntityFlags::VatsimDataFile;
             }
         }
 
         if (m_vatsimBookingReader)
         {
-            if (whatToRead.testFlag(CDbFlags::VatsimBookings))
+            if (whatToRead.testFlag(CEntityFlags::BookingEntity))
             {
                 m_vatsimBookingReader->readInBackgroundThread();
-                triggeredRead |= CDbFlags::VatsimBookings;
+                triggeredRead |= CEntityFlags::BookingEntity;
             }
         }
 
         if (m_icaoDataReader)
         {
-            if (whatToRead.testFlag(CDbFlags::AircraftIcaoEntity) || whatToRead.testFlag(CDbFlags::AirlineIcaoEntity) || whatToRead.testFlag(CDbFlags::CountryEntity))
+            if (whatToRead.testFlag(CEntityFlags::AircraftIcaoEntity) || whatToRead.testFlag(CEntityFlags::AirlineIcaoEntity) || whatToRead.testFlag(CEntityFlags::CountryEntity))
             {
-                CDbFlags::Entity icaoEntities = whatToRead & CDbFlags::AllIcaoAndCountries;
+                CEntityFlags::Entity icaoEntities = whatToRead & CEntityFlags::AllIcaoAndCountries;
                 m_icaoDataReader->readInBackgroundThread(icaoEntities);
                 triggeredRead |= icaoEntities;
             }
@@ -182,9 +174,9 @@ namespace BlackCore
 
         if (m_modelDataReader)
         {
-            if (whatToRead.testFlag(CDbFlags::LiveryEntity) || whatToRead.testFlag(CDbFlags::DistributorEntity) || whatToRead.testFlag(CDbFlags::ModelEntity))
+            if (whatToRead.testFlag(CEntityFlags::LiveryEntity) || whatToRead.testFlag(CEntityFlags::DistributorEntity) || whatToRead.testFlag(CEntityFlags::ModelEntity))
             {
-                CDbFlags::Entity modelEntities = whatToRead & CDbFlags::DistributorLiveryModel;
+                CEntityFlags::Entity modelEntities = whatToRead & CEntityFlags::DistributorLiveryModel;
                 m_modelDataReader->readInBackgroundThread(modelEntities);
                 triggeredRead |= modelEntities;
             }
@@ -336,6 +328,24 @@ namespace BlackCore
         return CCountry();
     }
 
+    CMetarSet CWebDataServices::getMetars() const
+    {
+        if (m_vatsimMetarReader) { return m_vatsimMetarReader->getMetars(); }
+        return CMetarSet();
+    }
+
+    CMetar CWebDataServices::getMetarForAirport(const CAirportIcaoCode &icao) const
+    {
+        if (m_vatsimMetarReader) { return m_vatsimMetarReader->getMetarForAirport(icao); }
+        return CMetar();
+    }
+
+    int CWebDataServices::getMetarsCount() const
+    {
+        if (m_vatsimMetarReader) { return m_vatsimMetarReader->getMetarsCount(); }
+        return 0;
+    }
+
     CAirlineIcaoCode CWebDataServices::getAirlineIcaoCodeForDesignator(const QString &designator) const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getAirlineIcaoCodeForDesignator(designator); }
@@ -361,10 +371,10 @@ namespace BlackCore
     void CWebDataServices::initReaders(CWebReaderFlags::WebReader flags)
     {
         // 1. VATSIM bookings
-        if (flags.testFlag(CWebReaderFlags::WebReaderFlags::VatsimBookingReader))
+        if (flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimBookingReader))
         {
             this->m_vatsimBookingReader = new CVatsimBookingReader(this, CGlobalReaderSettings::instance().bookingsUrl());
-            bool c = connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CWebDataServices::ps_receivedBookings);
+            bool c = connect(this->m_vatsimBookingReader, &CVatsimBookingReader::atcBookingsRead, this, &CWebDataServices::ps_receivedBookings);
             Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM booking reader signals");
             Q_UNUSED(c);
             this->m_vatsimBookingReader->start(QThread::LowPriority);
@@ -372,10 +382,10 @@ namespace BlackCore
         }
 
         // 2. VATSIM data file
-        if (flags.testFlag(CWebReaderFlags::WebReaderFlags::VatsimDataReader))
+        if (flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimDataReader))
         {
             this->m_vatsimDataFileReader = new CVatsimDataFileReader(this, CGlobalReaderSettings::instance().vatsimDataFileUrls());
-            bool c = connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CWebDataServices::ps_dataFileRead);
+            bool c = connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataFileRead, this, &CWebDataServices::ps_dataFileRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM data reader signals");
             Q_UNUSED(c);
             this->m_vatsimDataFileReader->start(QThread::LowPriority);
@@ -383,10 +393,10 @@ namespace BlackCore
         }
 
         // 3. VATSIM metar data
-        if (flags.testFlag(CWebReaderFlags::WebReaderFlags::VatsimMetarReader))
+        if (flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimMetarReader))
         {
             this->m_vatsimMetarReader = new CVatsimMetarReader(this, CGlobalReaderSettings::instance().urlVatsimMetars());
-            bool c = connect(this->m_vatsimMetarReader, &CVatsimMetarReader::dataRead, this, &CWebDataServices::ps_receivedMetars);
+            bool c = connect(this->m_vatsimMetarReader, &CVatsimMetarReader::metarsRead, this, &CWebDataServices::ps_receivedMetars);
             Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM METAR reader signals");
             Q_UNUSED(c);
             this->m_vatsimMetarReader->start(QThread::LowPriority);
@@ -394,21 +404,21 @@ namespace BlackCore
         }
 
         // 4. ICAO data reader
-        if (flags.testFlag(CWebReaderFlags::WebReaderFlags::IcaoDataReader))
+        if (flags.testFlag(CWebReaderFlags::WebReaderFlag::IcaoDataReader))
         {
             bool c;
             this->m_icaoDataReader = new CIcaoDataReader(this, CGlobalReaderSettings::instance().protocolIcaoReader(), CGlobalReaderSettings::instance().serverIcaoReader(), CGlobalReaderSettings::instance().baseUrlIcaoReader());
-            c = connect(this->m_icaoDataReader, &CIcaoDataReader::readData, this, &CWebDataServices::ps_readFromSwiftDb);
+            c = connect(this->m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::ps_readFromSwiftDb);
             Q_ASSERT_X(c, Q_FUNC_INFO, "ICAO reader signals");
             Q_UNUSED(c);
             this->m_icaoDataReader->start();
         }
 
         // 5. Model reader
-        if (flags.testFlag(CWebReaderFlags::WebReaderFlags::ModelReader))
+        if (flags.testFlag(CWebReaderFlags::WebReaderFlag::ModelReader))
         {
             this->m_modelDataReader = new CModelDataReader(this, CGlobalReaderSettings::instance().protocolModelReader(), CGlobalReaderSettings::instance().serverModelReader(), CGlobalReaderSettings::instance().baseUrlModelReader());
-            bool c = connect(this->m_modelDataReader, &CModelDataReader::readData, this, &CWebDataServices::ps_readFromSwiftDb);
+            bool c = connect(this->m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::ps_readFromSwiftDb);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Model reader signals");
             Q_UNUSED(c);
             this->m_modelDataReader->start();
@@ -427,25 +437,22 @@ namespace BlackCore
     void CWebDataServices::ps_receivedBookings(const CAtcStationList &stations)
     {
         CLogMessage(this).info("Read %1 ATC bookings from network") << stations.size();
-        emit vatsimBookingsRead(stations.size());
     }
 
     void CWebDataServices::ps_receivedMetars(const CMetarSet &metars)
     {
         CLogMessage(this).info("Read %1 METARs") << metars.size();
-        emit vatsimDataFileRead(metars.size());
     }
 
     void CWebDataServices::ps_dataFileRead(int lines)
     {
         CLogMessage(this).info("Read VATSIM data file, %1 lines") << lines;
-        emit vatsimDataFileRead(lines);
     }
 
-    void CWebDataServices::ps_readFromSwiftDb(CDbFlags::Entity entity, CDbFlags::ReadState state, int number)
+    void CWebDataServices::ps_readFromSwiftDb(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
     {
-        CLogMessage(this).info("Read data %1 %3 %2") << CDbFlags::flagToString(entity) << number << CDbFlags::flagToString(state);
-        emit readSwiftDbData(entity, state, number);
+        CLogMessage(this).info("Read data %1 %3 %2") << CEntityFlags::flagToString(entity) << number << CEntityFlags::flagToString(state);
+        // emit readSwiftDbData(entity, state, number);
     }
 
     void CWebDataServices::readAllInBackground(int delayMs)
@@ -462,8 +469,8 @@ namespace BlackCore
             // only readers requested will be read
             if (this->m_vatsimBookingReader) {this->m_vatsimBookingReader->readInBackgroundThread(); }
             if (this->m_vatsimDataFileReader) this->m_vatsimDataFileReader->readInBackgroundThread();
-            if (this->m_icaoDataReader) { this->m_icaoDataReader->readInBackgroundThread(CDbFlags::AllIcaoAndCountries); }
-            if (this->m_modelDataReader) { this->m_modelDataReader->readInBackgroundThread(CDbFlags::DistributorLiveryModel); }
+            if (this->m_icaoDataReader) { this->m_icaoDataReader->readInBackgroundThread(CEntityFlags::AllIcaoAndCountries); }
+            if (this->m_modelDataReader) { this->m_modelDataReader->readInBackgroundThread(CEntityFlags::DistributorLiveryModel); }
         }
     }
 

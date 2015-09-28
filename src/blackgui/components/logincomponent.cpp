@@ -135,13 +135,13 @@ namespace BlackGui
         {
             Q_ASSERT(getIContextNetwork());
             Q_ASSERT(getIContextSettings());
-            connect(getIContextNetwork(), &IContextNetwork::vatsimDataFileRead, this, &CLoginComponent::ps_onVatsimDataFileLoaded);
+            connect(getIContextNetwork(), &IContextNetwork::webServiceDataRead, this, &CLoginComponent::ps_onWebServiceDataRead);
             connect(getIContextSettings(), &IContextSettings::changedSettings, this, &CLoginComponent::ps_onSettingsChanged);
 
             // inital setup, if data already available
             ps_validateAircraftValues();
             ps_validateVatsimValues();
-            ps_onVatsimDataFileLoaded();
+            ps_onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1);
             CServerList otherServers = this->m_trafficNetworkServers.get();
 
             // add a testserver when no servers can be loaded
@@ -266,10 +266,14 @@ namespace BlackGui
             }
         }
 
-        void CLoginComponent::ps_onVatsimDataFileLoaded()
+        void CLoginComponent::ps_onWebServiceDataRead(int entityI, int stateI, int number)
+        // void CLoginComponent::ps_onWebServiceDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState, int number)
         {
-            Q_ASSERT(getIContextNetwork());
-            Q_ASSERT(getIContextSettings());
+            CEntityFlags::EntityFlag entity = static_cast<CEntityFlags::EntityFlag>(entityI);
+            CEntityFlags::ReadState state = static_cast<CEntityFlags::ReadState>(stateI);
+            if (entity != CEntityFlags::VatsimDataFile || state != CEntityFlags::ReadFinished) { return; }
+            Q_UNUSED(number);
+            Q_ASSERT_X(getIContextNetwork(), Q_FUNC_INFO, "Missing context");
             CServerList vatsimFsdServers = this->getIContextNetwork()->getVatsimFsdServers();
             if (vatsimFsdServers.isEmpty()) { return; }
             this->ui->cbp_VatsimServer->setServers(vatsimFsdServers);

@@ -39,7 +39,7 @@ namespace BlackGui
         void CDbLiveryComponent::setProvider(IWebDataServicesProvider *webDataReaderProvider)
         {
             CWebDataServicesAware::setProvider(webDataReaderProvider);
-            connectSwiftDatabaseSignals(
+            connectDataReadSignal(
                 this,
                 std::bind(&CDbLiveryComponent::ps_liveriesRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
             );

@@ -36,9 +36,24 @@ namespace BlackCore
         //! Read / re-read bookings
         void readInBackgroundThread();
 
+        //! Get METARs
+        //! \threadsafe
+        virtual BlackMisc::Weather::CMetarSet getMetars() const;
+
+        //! Get METAR for airport
+        //! \threadsafe
+        virtual BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &icao) const;
+
+        //! Get METARs count
+        //! \threadsafe
+        virtual int getMetarsCount() const;
+
     signals:
         //! METARs have been read and converted to BlackMisc::Weather::CMetarSet
-        void dataRead(const BlackMisc::Weather::CMetarSet &metars);
+        void metarsRead(const BlackMisc::Weather::CMetarSet &metars);
+
+        //! Data have been read
+        void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
     private slots:
         //! Decode METARs
@@ -49,9 +64,10 @@ namespace BlackCore
         void ps_readMetars();
 
     private:
-        QString m_metarUrl; //!< URL of the service
-        QNetworkAccessManager *m_networkManager = nullptr;
+        QString                           m_metarUrl; //!< URL of the service
+        QNetworkAccessManager            *m_networkManager = nullptr;
         BlackMisc::Weather::CMetarDecoder m_metarDecoder;
+        BlackMisc::Weather::CMetarSet     m_metars;
     };
 }
 #endif // guard

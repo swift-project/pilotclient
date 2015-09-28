@@ -40,7 +40,7 @@ namespace BlackGui
         void CDbCountryComponent::setProvider(IWebDataServicesProvider *webDataReaderProvider)
         {
             CWebDataServicesAware::setProvider(webDataReaderProvider);
-            connectSwiftDatabaseSignals(
+            connectDataReadSignal(
                 this,
                 std::bind(&CDbCountryComponent::ps_countriesRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
             );

@@ -73,19 +73,13 @@ namespace BlackCore
 
         // ------------------------ provider functionality ------------------------------
 
-        //! \copydoc IWebDataReaderProvider::connectVatsimDataSignals
+        //! \copydoc IWebDataReaderProvider::connectDataReadSignal
         //! \ingroup webdatareaderprovider
-        virtual QList<QMetaObject::Connection> connectVatsimDataSignals(
+        virtual QList<QMetaObject::Connection> connectDataReadSignal(
             QObject *receiver,
-            std::function<void(int)> bookingsRead, std::function<void(int)> dataFileRead, std::function<void(int)> metarsRead) override;
+            std::function<void (BlackMisc::Network::CEntityFlags::Entity, BlackMisc::Network::CEntityFlags::ReadState, int)> dataRead) override;
 
-        //! \copydoc IWebDataReaderProvider::connectSwiftDatabaseSignals
-        //! \ingroup webdatareaderprovider
-        virtual QList<QMetaObject::Connection> connectSwiftDatabaseSignals(
-            QObject *receiver,
-            std::function<void (BlackMisc::Network::CDbFlags::Entity, BlackMisc::Network::CDbFlags::ReadState, int)> dataRead) override;
-
-        //! \copydoc IWebDataReaderProvider::connectSwiftDatabaseSignals
+        //! \copydoc IWebDataReaderProvider::triggerRead
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Network::CEntityFlags::Entity triggerRead(BlackMisc::Network::CEntityFlags::Entity whatToRead) override;
 
@@ -197,6 +191,18 @@ namespace BlackCore
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::CCountry getCountryForIsoCode(const QString &iso) const override;
 
+        //! \copydoc IWebDataReaderProvider::getMetars
+        //! \ingroup webdatareaderprovider
+        virtual BlackMisc::Weather::CMetarSet getMetars() const override;
+
+        //! \copydoc IWebDataReaderProvider::getMetarForAirport
+        //! \ingroup webdatareaderprovider
+        virtual BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &icao) const override;
+
+        //! \copydoc IWebDataReaderProvider::getMetarForAirport
+        //! \ingroup webdatareaderprovider
+        virtual int getMetarsCount() const override;
+
         //! \copydoc IWebDataReaderProvider::getUsersForCallsign
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Network::CUserList getUsersForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
@@ -226,17 +232,9 @@ namespace BlackCore
         void readAllInBackground(int delayMs);
 
     signals:
-        //! Data file read
-        void vatsimDataFileRead(int lines);
-
-        //! Bookings read
-        void vatsimBookingsRead(int number);
-
-        //! METARs read
-        void vatsimMetarsRead(int number);
-
-        //! Combined read signal
-        void readSwiftDbData(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+        //
+        // Consider to use the connect method of the provider to connect by entity
+        //
 
         //! Model has been written
         void modelWritten(const BlackMisc::Simulation::CAircraftModel &model);

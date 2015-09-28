@@ -106,7 +106,10 @@ namespace BlackCore
 
     signals:
         //! Data have been read
-        void dataRead(int lines);
+        void dataFileRead(int lines);
+
+        //! Data have been read
+        void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
     private slots:
         //! Data have been read, parse VATSIM file
@@ -142,6 +145,6 @@ namespace BlackCore
         static Section currentLineToSection(const QString &currentLine);
 
     };
-}
+} // ns
 
 #endif // guard

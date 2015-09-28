@@ -63,9 +63,8 @@ namespace BlackCore
         Q_ASSERT_X(webDataReader, Q_FUNC_INFO, "Missing data reader");
         if (webDataReader)
         {
-            this->connect(webDataReader->getBookingReader(), &CVatsimBookingReader::dataRead, this, &CAirspaceMonitor::ps_receivedBookings);
-            this->connect(webDataReader->getDataFileReader(), &CVatsimDataFileReader::dataRead, this, &CAirspaceMonitor::ps_receivedDataFile);
-            this->connect(webDataReader->getMetarReader(), &CVatsimMetarReader::dataRead, this, &CAirspaceMonitor::ps_updateMetars);
+            this->connect(webDataReader->getBookingReader(), &CVatsimBookingReader::atcBookingsRead, this, &CAirspaceMonitor::ps_receivedBookings);
+            this->connect(webDataReader->getDataFileReader(), &CVatsimDataFileReader::dataFileRead, this, &CAirspaceMonitor::ps_receivedDataFile);
         }
 
         // Force snapshot in the main event loop
@@ -335,11 +334,6 @@ namespace BlackCore
         return m_otherClients;
     }
 
-    CMetar CAirspaceMonitor::getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode)
-    {
-        return m_metars.findFirstByOrDefault(&CMetar::getAirportIcaoCode, airportIcaoCode);
-    }
-
     CAtcStation CAirspaceMonitor::getAtcStationForComUnit(const CComSystem &comSystem)
     {
         CAtcStation station;
@@ -391,7 +385,6 @@ namespace BlackCore
 
     void CAirspaceMonitor::clear()
     {
-        m_metars.clear();
         m_flightPlanCache.clear();
         m_modelCache.clear();
 
@@ -604,12 +597,6 @@ namespace BlackCore
             if (vc.isUnknown()) { continue; }
             client->setVoiceCapabilities(vc);
         }
-    }
-
-    void CAirspaceMonitor::ps_updateMetars(const CMetarSet &metars)
-    {
-        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
-        m_metars = metars;
     }
 
     void CAirspaceMonitor::ps_sendReadyForModelMatching(const CCallsign &callsign, int trial)

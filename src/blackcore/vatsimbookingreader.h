@@ -37,7 +37,10 @@ namespace BlackCore
 
     signals:
         //! Bookings have been read and converted to BlackMisc::Aviation::CAtcStationList
-        void dataRead(const BlackMisc::Aviation::CAtcStationList &bookedStations);
+        void atcBookingsRead(const BlackMisc::Aviation::CAtcStationList &bookedStations);
+
+        //! Data have been read
+        void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
     private slots:
         //! Bookings have been read
@@ -50,7 +53,7 @@ namespace BlackCore
     private:
         QString m_serviceUrl; //!< URL of the service
         QNetworkAccessManager *m_networkManager = nullptr;
-
     };
 }
+
 #endif // guard

@@ -17,13 +17,14 @@
 #include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/network/dbflags.h"
+#include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/network/voicecapabilities.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/weather/metarset.h"
 #include "blackmisc/countrylist.h"
 
 #include <functional>
@@ -166,26 +167,31 @@ namespace BlackMisc
             //! \threadsafe
             virtual BlackMisc::CCountry getCountryForName(const QString &name) const = 0;
 
+            //! Get METARs
+            //! \threadsafe
+            virtual BlackMisc::Weather::CMetarSet getMetars() const = 0;
+
+            //! Get METAR for airport
+            //! \threadsafe
+            virtual BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &icao) const = 0;
+
+            //! Get METARs count
+            //! \threadsafe
+            virtual int getMetarsCount() const = 0;
+
             //! Write directly to database
             virtual BlackMisc::CStatusMessageList asyncWriteModel(BlackMisc::Simulation::CAircraftModel &model) const = 0;
 
-            //! Relay signals for VATSIM data
+            //! Relay signals for swift data
             //! Connect signals to slot receiver. As the interface is no QObject, slots can not be connected directly.
             //! In order to disconnect a list of connections is provided, which have to be disconnected manually.
             //! \note receiver is required for connection type
-            //! \todo currently still used, will be replaced by abstract connection by entity
-            virtual QList<QMetaObject::Connection> connectVatsimDataSignals(
+            virtual QList<QMetaObject::Connection> connectDataReadSignal(
                 QObject *receiver,
-                std::function<void(int)> bookingsRead, std::function<void(int)> dataFileRead, std::function<void(int)> metarsRead) = 0;
-
-            //! Relay signals for swift data
-            //! \todo currently still used, will be replaced by abstract connection by entity
-            virtual QList<QMetaObject::Connection> connectSwiftDatabaseSignals(
-                QObject *receiver,
-                std::function<void(BlackMisc::Network::CDbFlags::Entity, BlackMisc::Network::CDbFlags::ReadState, int)> dataRead) = 0;
+                std::function<void(BlackMisc::Network::CEntityFlags::Entity, BlackMisc::Network::CEntityFlags::ReadState, int)> dataRead) = 0;
 
             //! Trigger read of new data
-            virtual BlackMisc::Network::CDbFlags::Entity triggerRead(BlackMisc::Network::CDbFlags::Entity whatToRead) = 0;
+            virtual BlackMisc::Network::CEntityFlags::Entity triggerRead(BlackMisc::Network::CEntityFlags::Entity whatToRead) = 0;
 
             //! Can connect to swift DB?
             virtual bool canConnectSwiftDb() const = 0;
@@ -285,6 +291,15 @@ namespace BlackMisc
             //! \copydoc IWebDataReaderProvider::getCountryForName
             BlackMisc::CCountry getCountryForName(const QString &name) const;
 
+            //! \copydoc IWebDataReaderProvider::getMetars
+            BlackMisc::Weather::CMetarSet getMetars() const;
+
+            //! \copydoc IWebDataReaderProvider::getMetarForAirport
+            BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &icao) const;
+
+            //! \copydoc IWebDataReaderProvider::getMetarCount
+            int getMetarCount() const;
+
             //! \copydoc IWebDataReaderProvider::updateWithWebData
             void updateWithVatsimDataFileData(BlackMisc::Simulation::CSimulatedAircraft &aircraftToBeUdpated) const;
 
@@ -300,13 +315,13 @@ namespace BlackMisc
             //! Called when provider should no longer be used
             void gracefulShutdown();
 
-            //! \copydoc IWebDataReaderProvider::connectSwiftDatabaseSignals
-            void connectSwiftDatabaseSignals(
+            //! \copydoc IWebDataReaderProvider::connectDataReadSignal
+            void connectDataReadSignal(
                 QObject *receiver,
-                std::function<void(BlackMisc::Network::CDbFlags::Entity, BlackMisc::Network::CDbFlags::ReadState, int)> dataRead);
+                std::function<void(BlackMisc::Network::CEntityFlags::Entity, BlackMisc::Network::CEntityFlags::ReadState, int)> dataRead);
 
             //! \copydoc IWebDataReaderProvider::triggerRead
-            BlackMisc::Network::CDbFlags::Entity triggerRead(BlackMisc::Network::CDbFlags::Entity whatToRead);
+            BlackMisc::Network::CEntityFlags::Entity triggerRead(BlackMisc::Network::CEntityFlags::Entity whatToRead);
 
             //! \copydoc IWebDataReaderProvider::canConnectSwiftDb
             bool canConnectSwiftDb() const;

@@ -11,6 +11,7 @@
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/network/server.h"
+#include "blackmisc/network/entityflags.h"
 #include "blackmisc/logmessage.h"
 #include "vatsimdatafilereader.h"
 
@@ -362,13 +363,15 @@ namespace BlackCore
             }
 
             // data read finished
-            emit this->dataRead(lines.count());
+            emit this->dataFileRead(lines.count());
+            emit this->dataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, lines.count());
         }
         else
         {
             // network error
             CLogMessage(this).warning("Reading VATSIM data file failed %1 %2") << nwReply->errorString() << nwReply->url().toString();
             nwReply->abort();
+            emit this->dataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFailed, 0);
         }
     }
 

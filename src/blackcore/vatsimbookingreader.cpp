@@ -10,6 +10,7 @@
 #include "blackmisc/sequence.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/network/user.h"
+#include "blackmisc/network/entityflags.h"
 #include "blackmisc/logmessage.h"
 #include "vatsimbookingreader.h"
 
@@ -146,7 +147,8 @@ namespace BlackCore
                     bookedStations.push_back(bookedStation);
                 }
                 this->setUpdateTimestamp(updateTimestamp); // thread safe update
-                emit this->dataRead(bookedStations);
+                emit this->atcBookingsRead(bookedStations);
+                emit this->dataRead(CEntityFlags::BookingEntity, CEntityFlags::ReadFinished, bookedStations.size());
             } // node
         }
         else
@@ -154,6 +156,7 @@ namespace BlackCore
             // network error
             CLogMessage(this).warning("Reading bookings failed %1 %2") << nwReply->errorString() << nwReply->url().toString();
             nwReply->abort();
+            emit this->dataRead(CEntityFlags::BookingEntity, CEntityFlags::ReadFailed, 0);
         }
     } // method
 

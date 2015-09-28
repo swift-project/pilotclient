@@ -54,7 +54,7 @@ namespace BlackGui
         void CInfoBarWebReadersStatusComponent::setProvider(IWebDataServicesProvider *webDataReaderProvider)
         {
             CWebDataServicesAware::setProvider(webDataReaderProvider);
-            connectSwiftDatabaseSignals(
+            connectDataReadSignal(
                 this,
                 std::bind(&CInfoBarWebReadersStatusComponent::ps_dataRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
             );

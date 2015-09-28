@@ -13,9 +13,10 @@
 #define BLACKGUI_LOGINCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "enableforruntime.h"
+#include "blackgui/components/enableforruntime.h"
 #include "blackcore/settings/network.h"
 #include "blackmisc/network/server.h"
+#include "blackmisc/network/entityflags.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -25,7 +26,6 @@ namespace BlackGui
 {
     namespace Components
     {
-
         //! Login component
         class BLACKGUI_EXPORT CLoginComponent :
             public QFrame,
@@ -66,7 +66,7 @@ namespace BlackGui
             void ps_toggleNetworkConnection();
 
             //! VATSIM data file was loaded
-            void ps_onVatsimDataFileLoaded();
+            void ps_onWebServiceDataRead(int entity, int state, int number);
 
             //! Validate aircaft
             bool ps_validateAircraftValues();

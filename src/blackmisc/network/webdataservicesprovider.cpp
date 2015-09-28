@@ -13,6 +13,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Weather;
 
 namespace BlackMisc
 {
@@ -218,6 +219,27 @@ namespace BlackMisc
             return this->m_webDataReaderProvider->getCountryForName(name);
         }
 
+        CMetarSet CWebDataServicesAware::getMetars() const
+        {
+            Q_ASSERT_X(this->m_webDataReaderProvider, Q_FUNC_INFO, "Missing provider");
+            if (!hasProvider()) { return CMetarSet(); }
+            return this->m_webDataReaderProvider->getMetars();
+        }
+
+        Weather::CMetar CWebDataServicesAware::getMetarForAirport(const CAirportIcaoCode &icao) const
+        {
+            Q_ASSERT_X(this->m_webDataReaderProvider, Q_FUNC_INFO, "Missing provider");
+            if (!hasProvider()) { return CMetar(); }
+            return this->m_webDataReaderProvider->getMetarForAirport(icao);
+        }
+
+        int CWebDataServicesAware::getMetarCount() const
+        {
+            Q_ASSERT_X(this->m_webDataReaderProvider, Q_FUNC_INFO, "Missing provider");
+            if (!hasProvider()) { return 0; }
+            return this->m_webDataReaderProvider->getMetarsCount();
+        }
+
         CCountry CWebDataServicesAware::getCountryForIsoCode(const QString &iso) const
         {
             Q_ASSERT_X(this->m_webDataReaderProvider, Q_FUNC_INFO, "Missing provider");
@@ -257,20 +279,20 @@ namespace BlackMisc
             this->m_webDataReaderProvider = nullptr;
         }
 
-        void CWebDataServicesAware::connectSwiftDatabaseSignals(QObject *receiver, std::function<void (CDbFlags::Entity, CDbFlags::ReadState, int)> dataRead)
+        void CWebDataServicesAware::connectDataReadSignal(QObject *receiver, std::function<void (CEntityFlags::Entity, CEntityFlags::ReadState, int)> dataRead)
         {
             Q_ASSERT_X(this->m_webDataReaderProvider, Q_FUNC_INFO, "Missing provider");
             if (!hasProvider()) { return; }
             if (receiver)
             {
-                this->m_swiftConnections.append(this->m_webDataReaderProvider->connectSwiftDatabaseSignals(receiver, dataRead));
+                this->m_swiftConnections.append(this->m_webDataReaderProvider->connectDataReadSignal(receiver, dataRead));
             }
         }
 
-        CDbFlags::Entity CWebDataServicesAware::triggerRead(CDbFlags::Entity whatToRead)
+        CEntityFlags::Entity CWebDataServicesAware::triggerRead(CEntityFlags::Entity whatToRead)
         {
             Q_ASSERT_X(this->m_webDataReaderProvider, Q_FUNC_INFO, "Missing provider");
-            if (!hasProvider()) { return CDbFlags::NoEntity; }
+            if (!hasProvider()) { return CEntityFlags::NoEntity; }
             return this->m_webDataReaderProvider->triggerRead(whatToRead);
         }
 

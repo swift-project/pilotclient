@@ -41,7 +41,7 @@ namespace BlackGui
         void CDbDistributorSelectorComponent::setProvider(Network::IWebDataServicesProvider *webDataReaderProvider)
         {
             CWebDataServicesAware::setProvider(webDataReaderProvider);
-            connectSwiftDatabaseSignals(
+            connectDataReadSignal(
                 this,
                 std::bind(&CDbDistributorSelectorComponent::ps_distributorsRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
             );

@@ -40,7 +40,7 @@ namespace BlackGui
         {
             CWebDataServicesAware::setProvider(webDataReaderProvider);
             this->ui->filter_AirlineIcao->setProvider(webDataReaderProvider);
-            webDataReaderProvider->connectSwiftDatabaseSignals(
+            webDataReaderProvider->connectDataReadSignal(
                 this,
                 std::bind(&CDbAirlineIcaoComponent::ps_icaoRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
             );
