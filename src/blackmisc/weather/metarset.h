@@ -34,6 +34,9 @@ namespace BlackMisc
 
             //! Construct from a base class object.
             CMetarSet(const CCollection<CMetar> &other);
+
+            //! METAR for ICAO code
+            CMetar getMetarForAirport(const Aviation::CAirportIcaoCode &icao) const;
         };
 
     } //namespace

@@ -17,5 +17,10 @@ namespace BlackMisc
             CCollection<CMetar>(other)
         { }
 
+        CMetar CMetarSet::getMetarForAirport(const Aviation::CAirportIcaoCode &icao) const
+        {
+            return this->findFirstByOrDefault(&CMetar::getAirportIcaoCode, icao);
+        }
+
     } // namespace
 } // namespace
