@@ -46,7 +46,7 @@ namespace BlackGui
 
         private slots:
             //! Models have been read
-            void ps_modelsRead(BlackMisc::Network::CDbFlags::Entity entity, BlackMisc::Network::CDbFlags::ReadState readState, int count);
+            void ps_modelsRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
 
             //! Reload models
             void ps_reload();

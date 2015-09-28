@@ -60,9 +60,9 @@ namespace BlackGui
             );
         }
 
-        void CInfoBarWebReadersStatusComponent::ps_dataRead(CDbFlags::Entity entity, CDbFlags::ReadState readState, int count)
+        void CInfoBarWebReadersStatusComponent::ps_dataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
-            if (readState == CDbFlags::ReadFinished)
+            if (readState == CEntityFlags::ReadFinished)
             {
                 bool swift = CWebReaderFlags::isFromSwiftDb(entity);
                 if (swift && count > 0)
@@ -88,7 +88,7 @@ namespace BlackGui
             this->ui->led_DataReady->setOn(allData);
         }
 
-        void CInfoBarWebReadersStatusComponent::setLedReadStates(const QList<CLedWidget *> &leds, CDbFlags::ReadState readState)
+        void CInfoBarWebReadersStatusComponent::setLedReadStates(const QList<CLedWidget *> &leds, CEntityFlags::ReadState readState)
         {
             for (CLedWidget *led : leds)
             {
@@ -96,33 +96,33 @@ namespace BlackGui
             }
         }
 
-        void CInfoBarWebReadersStatusComponent::setLedReadState(CLedWidget *led, CDbFlags::ReadState readState)
+        void CInfoBarWebReadersStatusComponent::setLedReadState(CLedWidget *led, CEntityFlags::ReadState readState)
         {
             Q_ASSERT_X(led, Q_FUNC_INFO, "no LED");
             int blinkTime = 2.5 * 1000;
             switch (readState)
             {
-            case CDbFlags::ReadFinished:
+            case CEntityFlags::ReadFinished:
                 led->setOn(true, blinkTime);
                 break;
-            case CDbFlags::StartRead:
+            case CEntityFlags::StartRead:
                 led->setOn(true);
                 break;
-            case CDbFlags::ReadFailed:
+            case CEntityFlags::ReadFailed:
                 led->setTriState(2 * blinkTime);
                 break;
             }
         }
 
-        QList<CLedWidget *> CInfoBarWebReadersStatusComponent::entityToLeds(CDbFlags::Entity entity) const
+        QList<CLedWidget *> CInfoBarWebReadersStatusComponent::entityToLeds(CEntityFlags::Entity entity) const
         {
             QList<CLedWidget *> leds;
-            if (entity.testFlag(CDbFlags::CountryEntity)) { leds << ui->led_Countries; }
-            if (entity.testFlag(CDbFlags::DistributorEntity)) { leds << ui->led_Distributors; }
-            if (entity.testFlag(CDbFlags::AircraftIcaoEntity)) { leds << ui->led_IcaoAircraft; }
-            if (entity.testFlag(CDbFlags::AirlineIcaoEntity)) { leds << ui->led_IcaoAirline; }
-            if (entity.testFlag(CDbFlags::LiveryEntity)) { leds << ui->led_Liveries; }
-            if (entity.testFlag(CDbFlags::ModelEntity)) { leds << ui->led_Models; }
+            if (entity.testFlag(CEntityFlags::CountryEntity)) { leds << ui->led_Countries; }
+            if (entity.testFlag(CEntityFlags::DistributorEntity)) { leds << ui->led_Distributors; }
+            if (entity.testFlag(CEntityFlags::AircraftIcaoEntity)) { leds << ui->led_IcaoAircraft; }
+            if (entity.testFlag(CEntityFlags::AirlineIcaoEntity)) { leds << ui->led_IcaoAirline; }
+            if (entity.testFlag(CEntityFlags::LiveryEntity)) { leds << ui->led_Liveries; }
+            if (entity.testFlag(CEntityFlags::ModelEntity)) { leds << ui->led_Models; }
             return leds;
         }
 

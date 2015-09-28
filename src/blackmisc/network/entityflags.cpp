@@ -7,19 +7,21 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/network/dbflags.h"
+#include "blackmisc/network/entityflags.h"
+#include "blackmisc/dbus.h"
+#include <QtDBus/QDBusMetaType>
 #include <QStringList>
 
 namespace BlackMisc
 {
     namespace Network
     {
-        QString CDbFlags::flagToString(CDbFlags::EntityFlags flag)
+        QString CEntityFlags::flagToString(CEntityFlags::EntityFlag flag)
         {
             switch (flag)
             {
             case NoEntity: return "no data";
-            case VatsimBookings: return "VATSIM bookings";
+            case BookingEntity: return "VATSIM bookings";
             case VatsimDataFile: return "VATSIM data file";
             case AircraftIcaoEntity: return "Aircraft ICAO";
             case AirlineIcaoEntity: return "Airline ICAO";
@@ -36,11 +38,11 @@ namespace BlackMisc
             }
         }
 
-        QString CDbFlags::flagToString(Entity flag)
+        QString CEntityFlags::flagToString(Entity flag)
         {
             QStringList list;
             if (flag.testFlag(NoEntity)) list << "no data";
-            if (flag.testFlag(VatsimBookings)) list << "VATSIM bookings";
+            if (flag.testFlag(BookingEntity)) list << "VATSIM bookings";
             if (flag.testFlag(VatsimDataFile)) list << "VATSIM data file";
             if (flag.testFlag(AircraftIcaoEntity)) list << "Aircraft ICAO";
             if (flag.testFlag(AirlineIcaoEntity)) list << "Airline ICAO";
@@ -51,7 +53,7 @@ namespace BlackMisc
             return list.join(',');
         }
 
-        QString CDbFlags::flagToString(CDbFlags::ReadState flag)
+        QString CEntityFlags::flagToString(CEntityFlags::ReadState flag)
         {
             switch (flag)
             {
@@ -62,6 +64,26 @@ namespace BlackMisc
                 Q_ASSERT_X(false, Q_FUNC_INFO, "wrong flags");
                 return "wrong flags";
             }
+        }
+
+        void CEntityFlags::registerMetadata()
+        {
+            // this is no value class and I register enums here,
+            // that's why I do not use the Mixins
+            int id = qRegisterMetaType<CEntityFlags::Entity>();
+            // int idb = qDBusRegisterMetaType<CEntityFlags::Entity>();
+            // Q_ASSERT_X(id >= 1024 && id == idb, Q_FUNC_INFO, "wrong id for metatype");
+            Q_ASSERT_X(id >= 1024, Q_FUNC_INFO, "wrong id for metatype");
+
+            id = qRegisterMetaType<CEntityFlags::EntityFlag>();
+            // idb = qDBusRegisterMetaType<CEntityFlags::EntityFlag>();
+            Q_ASSERT_X(id >= 1024, Q_FUNC_INFO, "wrong id for metatype");
+
+            id = qRegisterMetaType<CEntityFlags::ReadState>();
+            // idb = qDBusRegisterMetaType<CEntityFlags::ReadState>();
+            Q_ASSERT_X(id >= 1024, Q_FUNC_INFO, "wrong id for metatype");
+            Q_UNUSED(id);
+            // Q_UNUSED(idb);
         }
     } // namespace
 } // namespace

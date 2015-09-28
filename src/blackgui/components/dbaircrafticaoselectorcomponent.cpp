@@ -47,7 +47,7 @@ namespace BlackGui
             int c = this->getAircraftIcaoCodesCount();
             if (c > 0)
             {
-                this->ps_codesRead(CDbFlags::AircraftIcaoEntity, CDbFlags::ReadFinished, c);
+                this->ps_codesRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, c);
             }
         }
 
@@ -141,10 +141,10 @@ namespace BlackGui
             }
         }
 
-        void CDbAircraftIcaoSelectorComponent::ps_codesRead(CDbFlags::Entity entity, CDbFlags::ReadState readState, int count)
+        void CDbAircraftIcaoSelectorComponent::ps_codesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             if (!hasProvider()) { return; }
-            if (entity.testFlag(CDbFlags::AircraftIcaoEntity) && readState == CDbFlags::ReadFinished)
+            if (entity.testFlag(CEntityFlags::AircraftIcaoEntity) && readState == CEntityFlags::ReadFinished)
             {
                 if (count > 0)
                 {

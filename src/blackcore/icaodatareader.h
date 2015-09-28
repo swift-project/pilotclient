@@ -17,7 +17,7 @@
 #include "blackmisc/countrylist.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/network/dbflags.h"
+#include "blackmisc/network/entityflags.h"
 
 #include <QObject>
 #include <QTimer>
@@ -103,7 +103,7 @@ namespace BlackCore
 
     signals:
         //! Combined read signal
-        void readData(BlackMisc::Network::CDbFlags::Entity entity, BlackMisc::Network::CDbFlags::ReadState state, int number);
+        void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
     private slots:
         //! Aircraft have been read
@@ -116,7 +116,7 @@ namespace BlackCore
         void ps_parseCountryData(QNetworkReply *nwReply);
 
         //! Read / re-read data file
-        void ps_read(BlackMisc::Network::CDbFlags::Entity entities);
+        void ps_read(BlackMisc::Network::CEntityFlags::Entity entities);
 
     private:
         QNetworkAccessManager *m_networkManagerAircraft = nullptr;

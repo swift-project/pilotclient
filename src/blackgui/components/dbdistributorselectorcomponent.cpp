@@ -48,7 +48,7 @@ namespace BlackGui
             int c = getDistributorsCount();
             if (c > 0)
             {
-                ps_distributorsRead(CDbFlags::DistributorEntity, CDbFlags::ReadFinished, c);
+                ps_distributorsRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, c);
             }
         }
 
@@ -146,10 +146,10 @@ namespace BlackGui
             }
         }
 
-        void CDbDistributorSelectorComponent::ps_distributorsRead(CDbFlags::Entity entity, CDbFlags::ReadState readState, int count)
+        void CDbDistributorSelectorComponent::ps_distributorsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             if (!hasProvider()) { return; }
-            if (entity.testFlag(CDbFlags::DistributorEntity) && readState == CDbFlags::ReadFinished)
+            if (entity.testFlag(CEntityFlags::DistributorEntity) && readState == CEntityFlags::ReadFinished)
             {
                 if (count > 0)
                 {

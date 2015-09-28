@@ -95,7 +95,7 @@ namespace BlackCore
 
     signals:
         //! Combined read signal
-        void readData(BlackMisc::Network::CDbFlags::Entity entity, BlackMisc::Network::CDbFlags::ReadState state, int number);
+        void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
     private slots:
         //! Liveries have been read
@@ -108,7 +108,7 @@ namespace BlackCore
         void ps_parseModelData(QNetworkReply *nwReply);
 
         //! Read / re-read data file
-        void ps_read(BlackMisc::Network::CDbFlags::Entity entity = BlackMisc::Network::CDbFlags::DistributorLiveryModel);
+        void ps_read(BlackMisc::Network::CEntityFlags::Entity entity = BlackMisc::Network::CEntityFlags::DistributorLiveryModel);
 
     private:
         QNetworkAccessManager *m_networkManagerLivery = nullptr;

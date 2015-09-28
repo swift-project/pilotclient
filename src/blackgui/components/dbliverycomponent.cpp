@@ -46,7 +46,7 @@ namespace BlackGui
             int c = getLiveriesCount();
             if (c > 0)
             {
-                ps_liveriesRead(CDbFlags::LiveryEntity, CDbFlags::ReadFinished, c);
+                ps_liveriesRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, c);
             }
         }
 
@@ -55,10 +55,10 @@ namespace BlackGui
             this->ui->filter_Livery->filter(livery);
         }
 
-        void CDbLiveryComponent::ps_liveriesRead(CDbFlags::Entity entity, CDbFlags::ReadState readState, int count)
+        void CDbLiveryComponent::ps_liveriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);
-            if (entity.testFlag(CDbFlags::LiveryEntity) && readState == CDbFlags::ReadFinished)
+            if (entity.testFlag(CEntityFlags::LiveryEntity) && readState == CEntityFlags::ReadFinished)
             {
                 this->ui->tvp_Liveries->updateContainerMaybeAsync(this->getLiveries());
             }
@@ -67,7 +67,7 @@ namespace BlackGui
         void CDbLiveryComponent::ps_reload()
         {
             if (!hasProvider()) { return; }
-            triggerRead(CDbFlags::LiveryEntity);
+            triggerRead(CEntityFlags::LiveryEntity);
         }
 
     } // ns

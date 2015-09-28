@@ -13,36 +13,41 @@ using namespace BlackMisc::Network;
 
 namespace BlackCore
 {
-    CWebReaderFlags::WebReader CWebReaderFlags::entityToReader(CDbFlags::Entity entity)
+    CWebReaderFlags::WebReader CWebReaderFlags::entityToReader(CEntityFlags::Entity entity)
     {
         WebReader f = None;
-        if (entity.testFlag(CDbFlags::AircraftIcaoEntity) ||
-                entity.testFlag(CDbFlags::AirlineIcaoEntity) ||
-                entity.testFlag(CDbFlags::CountryEntity))
+        if (entity.testFlag(CEntityFlags::AircraftIcaoEntity) ||
+                entity.testFlag(CEntityFlags::AirlineIcaoEntity) ||
+                entity.testFlag(CEntityFlags::CountryEntity))
         {
             f |= IcaoDataReader;
         }
 
-        if (entity.testFlag(CDbFlags::ModelEntity) ||
-                entity.testFlag(CDbFlags::DistributorEntity) ||
-                entity.testFlag(CDbFlags::LiveryEntity))
+        if (entity.testFlag(CEntityFlags::ModelEntity) ||
+                entity.testFlag(CEntityFlags::DistributorEntity) ||
+                entity.testFlag(CEntityFlags::LiveryEntity))
         {
             f |= ModelReader;
         }
 
-        if (entity.testFlag(CDbFlags::VatsimBookings))
+        if (entity.testFlag(CEntityFlags::BookingEntity))
         {
             f |= VatsimBookingReader;
         }
 
-        if (entity.testFlag(CDbFlags::VatsimDataFile))
+        if (entity.testFlag(CEntityFlags::VatsimDataFile))
         {
             f |= VatsimDataReader;
+        }
+
+        if (entity.testFlag(CEntityFlags::MetarEntity))
+        {
+            f |= VatsimMetarReader;
         }
         return f;
     }
 
-    bool CWebReaderFlags::isFromSwiftDb(CDbFlags::Entity entity)
+    bool CWebReaderFlags::isFromSwiftDb(CEntityFlags::Entity entity)
     {
         return isFromSwiftDb(entityToReader(entity));
     }

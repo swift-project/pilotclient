@@ -14,7 +14,7 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/threadedreader.h"
-#include "blackmisc/network/dbflags.h"
+#include "blackmisc/network/entityflags.h"
 #include <QNetworkReply>
 #include <QJsonArray>
 #include <QDateTime>
@@ -54,7 +54,7 @@ namespace BlackCore
         };
 
         //! Start reading in own thread
-        void readInBackgroundThread(BlackMisc::Network::CDbFlags::Entity entities);
+        void readInBackgroundThread(BlackMisc::Network::CEntityFlags::Entity entities);
 
         //! Can connect to DB
         bool canConnect() const;

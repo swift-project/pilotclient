@@ -162,7 +162,7 @@ namespace BlackCore
         return cm;
     }
 
-    void CModelDataReader::ps_read(CDbFlags::Entity entity)
+    void CModelDataReader::ps_read(CEntityFlags::Entity entity)
     {
         this->threadAssertCheck();
         Q_ASSERT(this->m_networkManagerLivery);
@@ -171,29 +171,29 @@ namespace BlackCore
         Q_ASSERT(!m_urlLiveries.isEmpty());
         Q_ASSERT(!m_urlDistributors.isEmpty());
 
-        CDbFlags::Entity triggeredRead = CDbFlags::NoEntity;
-        if (entity.testFlag(CDbFlags::LiveryEntity))
+        CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
+        if (entity.testFlag(CEntityFlags::LiveryEntity))
         {
             QNetworkRequest requestLivery(m_urlLiveries);
             this->m_networkManagerLivery->get(requestLivery);
-            triggeredRead |= CDbFlags::LiveryEntity;
+            triggeredRead |= CEntityFlags::LiveryEntity;
         }
 
-        if (entity.testFlag(CDbFlags::DistributorEntity))
+        if (entity.testFlag(CEntityFlags::DistributorEntity))
         {
             QNetworkRequest requestDistributor(m_urlDistributors);
             this->m_networkManagerDistributor->get(requestDistributor);
-            triggeredRead |= CDbFlags::DistributorEntity;
+            triggeredRead |= CEntityFlags::DistributorEntity;
         }
 
-        if (entity.testFlag(CDbFlags::ModelEntity))
+        if (entity.testFlag(CEntityFlags::ModelEntity))
         {
             QNetworkRequest requestModel(m_urlModels);
             this->m_networkManagerModel->get(requestModel);
-            triggeredRead |= CDbFlags::ModelEntity;
+            triggeredRead |= CEntityFlags::ModelEntity;
         }
 
-        emit readData(triggeredRead, CDbFlags::StartRead, 0);
+        emit dataRead(triggeredRead, CEntityFlags::StartRead, 0);
     }
 
     void CModelDataReader::ps_parseLiveryData(QNetworkReply *nwReplyPtr)
@@ -204,7 +204,7 @@ namespace BlackCore
         QJsonArray array = this->transformReplyIntoDatastoreResponse(nwReply.data());
         if (array.isEmpty())
         {
-            emit readData(CDbFlags::LiveryEntity, CDbFlags::ReadFailed, 0);
+            emit dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFailed, 0);
             return;
         }
         CLiveryList liveries = CLiveryList::fromDatabaseJson(array);
@@ -216,7 +216,7 @@ namespace BlackCore
             this->m_liveries = liveries;
             n = liveries.size();
         }
-        emit readData(CDbFlags::LiveryEntity, CDbFlags::ReadFinished, n);
+        emit dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, n);
     }
 
     void CModelDataReader::ps_parseDistributorData(QNetworkReply *nwReplyPtr)
@@ -225,7 +225,7 @@ namespace BlackCore
         QJsonArray array = this->transformReplyIntoDatastoreResponse(nwReply.data());
         if (array.isEmpty())
         {
-            emit readData(CDbFlags::DistributorEntity, CDbFlags::ReadFailed, 0);
+            emit dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFailed, 0);
             return;
         }
         CDistributorList distributors = CDistributorList::fromDatabaseJson(array);
@@ -237,7 +237,7 @@ namespace BlackCore
             this->m_distributors = distributors;
             n = distributors.size();
         }
-        emit readData(CDbFlags::DistributorEntity, CDbFlags::ReadFinished, n);
+        emit dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, n);
     }
 
     void CModelDataReader::ps_parseModelData(QNetworkReply *nwReplyPtr)
@@ -246,7 +246,7 @@ namespace BlackCore
         QJsonArray array = this->transformReplyIntoDatastoreResponse(nwReply.data());
         if (array.isEmpty())
         {
-            emit readData(CDbFlags::ModelEntity, CDbFlags::ReadFailed, 0);
+            emit dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFailed, 0);
             return;
         }
         CAircraftModelList models = CAircraftModelList::fromDatabaseJson(array);
@@ -258,7 +258,7 @@ namespace BlackCore
             this->m_models = models;
             n = models.size();
         }
-        emit readData(CDbFlags::ModelEntity, CDbFlags::ReadFinished, n);
+        emit dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, n);
     }
 
     QString CModelDataReader::getLiveryUrl(const QString &protocol, const QString &server, const QString &baseUrl)

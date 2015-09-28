@@ -43,14 +43,14 @@ namespace BlackGui
             int c = getDistributorsCount();
             if (c > 0)
             {
-                ps_distributorsRead(CDbFlags::DistributorEntity, CDbFlags::ReadFinished, c);
+                ps_distributorsRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, c);
             }
         }
 
-        void CDbDistributorComponent::ps_distributorsRead(CDbFlags::Entity entity, CDbFlags::ReadState readState, int count)
+        void CDbDistributorComponent::ps_distributorsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);
-            if (entity.testFlag(CDbFlags::DistributorEntity) && readState == CDbFlags::ReadFinished)
+            if (entity.testFlag(CEntityFlags::DistributorEntity) && readState == CEntityFlags::ReadFinished)
             {
                 this->ui->tvp_Distributors->updateContainer(this->getDistributors());
             }
@@ -59,7 +59,7 @@ namespace BlackGui
         void CDbDistributorComponent::ps_reload()
         {
             if (!hasProvider()) { return; }
-            triggerRead(CDbFlags::DistributorEntity);
+            triggerRead(CEntityFlags::DistributorEntity);
         }
     } // ns
 } // ns

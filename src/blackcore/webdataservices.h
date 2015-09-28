@@ -87,7 +87,7 @@ namespace BlackCore
 
         //! \copydoc IWebDataReaderProvider::connectSwiftDatabaseSignals
         //! \ingroup webdatareaderprovider
-        virtual BlackMisc::Network::CDbFlags::Entity triggerRead(BlackMisc::Network::CDbFlags::Entity whatToRead) override;
+        virtual BlackMisc::Network::CEntityFlags::Entity triggerRead(BlackMisc::Network::CEntityFlags::Entity whatToRead) override;
 
         //! \copydoc IWebDataReaderProvider::getVatsimFsdServers
         //! \ingroup webdatareaderprovider
@@ -236,7 +236,7 @@ namespace BlackCore
         void vatsimMetarsRead(int number);
 
         //! Combined read signal
-        void readSwiftDbData(BlackMisc::Network::CDbFlags::Entity entity, BlackMisc::Network::CDbFlags::ReadState state, int number);
+        void readSwiftDbData(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
         //! Model has been written
         void modelWritten(const BlackMisc::Simulation::CAircraftModel &model);
@@ -252,7 +252,7 @@ namespace BlackCore
         void ps_dataFileRead(int lines);
 
         //! Read from model reader
-        void ps_readFromSwiftDb(BlackMisc::Network::CDbFlags::Entity entity, BlackMisc::Network::CDbFlags::ReadState state, int number);
+        void ps_readFromSwiftDb(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
     private:
         //! Init the readers
@@ -261,7 +261,7 @@ namespace BlackCore
         //! Init the writers
         void initWriters();
 
-        CWebReaderFlags::WebReader m_readerFlags = CWebReaderFlags::WebReaderFlags::None; //!< which readers are available
+        CWebReaderFlags::WebReader m_readerFlags = CWebReaderFlags::WebReaderFlag::None; //!< which readers are available
 
         // for reading XML and VATSIM data files
         CVatsimBookingReader  *m_vatsimBookingReader  = nullptr;

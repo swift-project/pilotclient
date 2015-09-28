@@ -47,14 +47,14 @@ namespace BlackGui
             int c = getCountriesCount();
             if (c > 0)
             {
-                ps_countriesRead(CDbFlags::CountryEntity, CDbFlags::ReadFinished, c);
+                ps_countriesRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, c);
             }
         }
 
-        void CDbCountryComponent::ps_countriesRead(CDbFlags::Entity entity, CDbFlags::ReadState readState, int count)
+        void CDbCountryComponent::ps_countriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);
-            if (entity.testFlag(CDbFlags::CountryEntity) && readState == CDbFlags::ReadFinished)
+            if (entity.testFlag(CEntityFlags::CountryEntity) && readState == CEntityFlags::ReadFinished)
             {
                 this->ui->tvp_Countries->updateContainerMaybeAsync(this->getCountries());
             }
@@ -63,7 +63,7 @@ namespace BlackGui
         void CDbCountryComponent::ps_reload()
         {
             if (!hasProvider()) { return; }
-            triggerRead(CDbFlags::CountryEntity);
+            triggerRead(CEntityFlags::CountryEntity);
         }
     } // ns
 } // ns

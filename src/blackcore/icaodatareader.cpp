@@ -157,7 +157,7 @@ namespace BlackCore
         return m_countries.size();
     }
 
-    void CIcaoDataReader::ps_read(BlackMisc::Network::CDbFlags::Entity entities)
+    void CIcaoDataReader::ps_read(BlackMisc::Network::CEntityFlags::Entity entities)
     {
         this->threadAssertCheck();
         Q_ASSERT(this->m_networkManagerAircraft);
@@ -167,29 +167,29 @@ namespace BlackCore
         Q_ASSERT(!m_urlAirlineIcao.isEmpty());
         Q_ASSERT(!m_urlCountry.isEmpty());
 
-        CDbFlags::Entity entitiesTriggered = CDbFlags::NoEntity;
-        if (entities.testFlag(CDbFlags::AircraftIcaoEntity))
+        CEntityFlags::Entity entitiesTriggered = CEntityFlags::NoEntity;
+        if (entities.testFlag(CEntityFlags::AircraftIcaoEntity))
         {
             QNetworkRequest requestAircraft(m_urlAircraftIcao);
             this->m_networkManagerAircraft->get(requestAircraft);
-            entitiesTriggered |= CDbFlags::AircraftIcaoEntity;
+            entitiesTriggered |= CEntityFlags::AircraftIcaoEntity;
         }
 
-        if (entities.testFlag(CDbFlags::AirlineIcaoEntity))
+        if (entities.testFlag(CEntityFlags::AirlineIcaoEntity))
         {
             QNetworkRequest requestAirline(m_urlAirlineIcao);
             this->m_networkManagerAirlines->get(requestAirline);
-            entitiesTriggered |= CDbFlags::AirlineIcaoEntity;
+            entitiesTriggered |= CEntityFlags::AirlineIcaoEntity;
         }
 
-        if (entities.testFlag(CDbFlags::CountryEntity))
+        if (entities.testFlag(CEntityFlags::CountryEntity))
         {
             QNetworkRequest requestCountry(m_urlCountry);
             this->m_networkManagerCountries->get(requestCountry);
-            entitiesTriggered |= CDbFlags::CountryEntity;
+            entitiesTriggered |= CEntityFlags::CountryEntity;
         }
 
-        emit readData(entitiesTriggered, CDbFlags::StartRead, 0);
+        emit dataRead(entitiesTriggered, CEntityFlags::StartRead, 0);
     }
 
     void CIcaoDataReader::ps_parseAircraftIcaoData(QNetworkReply *nwReplyPtr)
@@ -200,7 +200,7 @@ namespace BlackCore
         QJsonArray array = this->transformReplyIntoDatastoreResponse(nwReply.data());
         if (array.isEmpty())
         {
-            emit readData(CDbFlags::AircraftIcaoEntity, CDbFlags::ReadFailed, 0);
+            emit dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFailed, 0);
             return;
         }
         CAircraftIcaoCodeList codes = CAircraftIcaoCodeList::fromDatabaseJson(array);
@@ -212,7 +212,7 @@ namespace BlackCore
             this->m_aircraftIcaos = codes;
             n = codes.size();
         }
-        emit readData(CDbFlags::AircraftIcaoEntity, CDbFlags::ReadFinished, n);
+        emit dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, n);
     }
 
     void CIcaoDataReader::ps_parseAirlineIcaoData(QNetworkReply *nwReplyPtr)
@@ -221,7 +221,7 @@ namespace BlackCore
         QJsonArray array = this->transformReplyIntoDatastoreResponse(nwReply.data());
         if (array.isEmpty())
         {
-            emit readData(CDbFlags::AirlineIcaoEntity, CDbFlags::ReadFailed, 0);
+            emit dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFailed, 0);
             return;
         }
         CAirlineIcaoCodeList codes = CAirlineIcaoCodeList::fromDatabaseJson(array);
@@ -233,7 +233,7 @@ namespace BlackCore
             this->m_airlineIcaos = codes;
             n = codes.size();
         }
-        emit readData(CDbFlags::AirlineIcaoEntity, CDbFlags::ReadFinished, n);
+        emit dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, n);
     }
 
     void CIcaoDataReader::ps_parseCountryData(QNetworkReply *nwReplyPtr)
@@ -242,7 +242,7 @@ namespace BlackCore
         QJsonArray array = this->transformReplyIntoDatastoreResponse(nwReply.data());
         if (array.isEmpty())
         {
-            emit readData(CDbFlags::CountryEntity, CDbFlags::ReadFailed, 0);
+            emit dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFailed, 0);
             return;
         }
         CCountryList countries = CCountryList::fromDatabaseJson(array);
@@ -254,7 +254,7 @@ namespace BlackCore
             this->m_countries = countries;
             n = m_countries.size();
         }
-        emit readData(CDbFlags::CountryEntity, CDbFlags::ReadFinished, n);
+        emit dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, n);
     }
 
     bool CIcaoDataReader::canConnect(QString &message) const

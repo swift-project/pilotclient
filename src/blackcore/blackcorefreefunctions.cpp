@@ -20,7 +20,7 @@ namespace BlackCore
         Q_ASSERT_X(id >= 1024, Q_FUNC_INFO, "wrong id for metatype");
         id = qRegisterMetaType<BlackCore::INetwork::ConnectionStatus>();
         Q_ASSERT_X(id >= 1024, Q_FUNC_INFO, "wrong id for metatype");
-        id = qRegisterMetaType<BlackCore::CWebReaderFlags::WebReaderFlags>();
+        id = qRegisterMetaType<BlackCore::CWebReaderFlags::WebReaderFlag>();
         Q_ASSERT_X(id >= 1024, Q_FUNC_INFO, "wrong id for metatype");
         id = qRegisterMetaType<BlackCore::CWebReaderFlags::WebReader>();
         Q_UNUSED(id);

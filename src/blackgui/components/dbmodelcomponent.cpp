@@ -51,14 +51,14 @@ namespace BlackGui
             int c = getModelsCount();
             if (c > 0)
             {
-                ps_modelsRead(CDbFlags::ModelEntity, CDbFlags::ReadFinished, c);
+                ps_modelsRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, c);
             }
         }
 
-        void CDbModelComponent::ps_modelsRead(CDbFlags::Entity entity, CDbFlags::ReadState readState, int count)
+        void CDbModelComponent::ps_modelsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);
-            if (entity.testFlag(CDbFlags::ModelEntity) && readState == CDbFlags::ReadFinished)
+            if (entity.testFlag(CEntityFlags::ModelEntity) && readState == CEntityFlags::ReadFinished)
             {
                 this->ui->tvp_AircraftModel->updateContainer(this->getModels());
             }
@@ -67,7 +67,7 @@ namespace BlackGui
         void CDbModelComponent::ps_reload()
         {
             if (!hasProvider()) { return; }
-            triggerRead(CDbFlags::ModelEntity);
+            triggerRead(CEntityFlags::ModelEntity);
         }
 
         void CDbModelComponent::ps_onStyleSheetChanged()

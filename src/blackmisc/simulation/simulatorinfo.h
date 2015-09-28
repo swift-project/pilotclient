@@ -34,7 +34,7 @@ namespace BlackMisc
         public:
 
             //! Simulator
-            enum SimulatorFlags
+            enum SimulatorFlag
             {
                 None    = 0,
                 FSX     = 1 << 0,
@@ -45,7 +45,7 @@ namespace BlackMisc
                 AllMS   = FSX | FS9 | P3D,
                 All     = FSX | FS9 | XPLANE | P3D
             };
-            Q_DECLARE_FLAGS(Simulator, SimulatorFlags)
+            Q_DECLARE_FLAGS(Simulator, SimulatorFlag)
 
             //! Default constructor
             CSimulatorInfo();
@@ -130,7 +130,7 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Simulation::CSimulatorInfo, (
                                    attr(o.m_simulator)
                                ))
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorInfo)
-Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorInfo::SimulatorFlags)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorInfo::SimulatorFlag)
 Q_DECLARE_OPERATORS_FOR_FLAGS(BlackMisc::Simulation::CSimulatorInfo::Simulator)
 
 #endif // guard

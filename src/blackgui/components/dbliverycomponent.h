@@ -50,7 +50,7 @@ namespace BlackGui
 
         private slots:
             //! Liveries codes have been read
-            void ps_liveriesRead(BlackMisc::Network::CDbFlags::Entity entity, BlackMisc::Network::CDbFlags::ReadState readState, int count);
+            void ps_liveriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
 
             //! Reload models
             void ps_reload();

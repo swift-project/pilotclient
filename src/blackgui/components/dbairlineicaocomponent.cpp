@@ -47,14 +47,14 @@ namespace BlackGui
             int c = this->getAirlineIcaoCodesCount();
             if (c > 0)
             {
-                this->ps_icaoRead(CDbFlags::AirlineIcaoEntity, CDbFlags::ReadFinished, c);
+                this->ps_icaoRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, c);
             }
         }
 
-        void CDbAirlineIcaoComponent::ps_icaoRead(CDbFlags::Entity entity, CDbFlags::ReadState readState, int count)
+        void CDbAirlineIcaoComponent::ps_icaoRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);
-            if (entity.testFlag(CDbFlags::AirlineIcaoEntity) && readState == CDbFlags::ReadFinished)
+            if (entity.testFlag(CEntityFlags::AirlineIcaoEntity) && readState == CEntityFlags::ReadFinished)
             {
                 this->ui->tvp_AirlineIcao->updateContainerMaybeAsync(this->getAirlineIcaoCodes());
             }
@@ -63,7 +63,7 @@ namespace BlackGui
         void CDbAirlineIcaoComponent::ps_reload()
         {
             if (!hasProvider()) { return; }
-            triggerRead(CDbFlags::AirlineIcaoEntity);
+            triggerRead(CEntityFlags::AirlineIcaoEntity);
         }
 
     } // ns

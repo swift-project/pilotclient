@@ -50,7 +50,7 @@ namespace BlackGui
             int c = this->getCountriesCount();
             if (c > 0)
             {
-                this->ps_CountriesRead(CDbFlags::CountryEntity, CDbFlags::ReadFinished, c);
+                this->ps_CountriesRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, c);
             }
         }
 
@@ -147,10 +147,10 @@ namespace BlackGui
             }
         }
 
-        void CDbCountrySelectorComponent::ps_CountriesRead(CDbFlags::Entity entity, CDbFlags::ReadState readState, int count)
+        void CDbCountrySelectorComponent::ps_CountriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             if (!hasProvider()) { return; }
-            if (entity.testFlag(CDbFlags::DistributorEntity) && readState == CDbFlags::ReadFinished)
+            if (entity.testFlag(CEntityFlags::DistributorEntity) && readState == CEntityFlags::ReadFinished)
             {
                 if (count > 0)
                 {

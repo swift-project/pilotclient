@@ -10,7 +10,7 @@
 //! \file
 
 #include "blackcoreexport.h"
-#include "blackmisc/network/dbflags.h"
+#include "blackmisc/network/entityflags.h"
 #include <QFlags>
 #include <QMetaType>
 
@@ -26,7 +26,7 @@ namespace BlackCore
     {
     public:
         //! Which readers to init
-        enum WebReaderFlags
+        enum WebReaderFlag
         {
             None = 0,  ///< no reader at all
             VatsimBookingReader  = 1 << 0,  ///< reader for VATSIM booking data
@@ -38,20 +38,20 @@ namespace BlackCore
             AllSwiftDbReaders    = IcaoDataReader | ModelReader,           ///< all swift data
             AllReaders           = AllSwiftDbReaders | AllVatsimReaders    ///< everything
         };
-        Q_DECLARE_FLAGS(WebReader, WebReaderFlags)
+        Q_DECLARE_FLAGS(WebReader, WebReaderFlag)
 
         //! Relationship between reader and entity
-        static WebReader entityToReader(BlackMisc::Network::CDbFlags::Entity entity);
+        static WebReader entityToReader(BlackMisc::Network::CEntityFlags::Entity entity);
 
         //! Read from swift DB
-        static bool isFromSwiftDb(BlackMisc::Network::CDbFlags::Entity entity);
+        static bool isFromSwiftDb(BlackMisc::Network::CEntityFlags::Entity entity);
 
         //! Read from swift DB
         static bool isFromSwiftDb(WebReader reader);
     };
 } // namespace
 
-Q_DECLARE_METATYPE(BlackCore::CWebReaderFlags::WebReaderFlags)
+Q_DECLARE_METATYPE(BlackCore::CWebReaderFlags::WebReaderFlag)
 Q_DECLARE_METATYPE(BlackCore::CWebReaderFlags::WebReader)
 Q_DECLARE_OPERATORS_FOR_FLAGS(BlackCore::CWebReaderFlags::WebReader)
 

@@ -46,7 +46,7 @@ namespace BlackGui
             int c = getAircraftIcaoCodesCount();
             if (c > 0)
             {
-                ps_icaoRead(CDbFlags::AircraftIcaoEntity, CDbFlags::ReadFinished, c);
+                ps_icaoRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, c);
             }
         }
 
@@ -55,10 +55,10 @@ namespace BlackGui
             this->ui->filter_AircraftIcao->filter(icao);
         }
 
-        void CDbAircraftIcaoComponent::ps_icaoRead(CDbFlags::Entity entity, CDbFlags::ReadState readState, int count)
+        void CDbAircraftIcaoComponent::ps_icaoRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);
-            if (entity.testFlag(CDbFlags::AircraftIcaoEntity) && readState == CDbFlags::ReadFinished)
+            if (entity.testFlag(CEntityFlags::AircraftIcaoEntity) && readState == CEntityFlags::ReadFinished)
             {
                 this->ui->tvp_AircraftIcao->updateContainerMaybeAsync(this->getAircraftIcaoCodes());
             }
@@ -67,7 +67,7 @@ namespace BlackGui
         void CDbAircraftIcaoComponent::ps_reload()
         {
             if (!hasProvider()) { return; }
-            triggerRead(CDbFlags::AircraftIcaoEntity);
+            triggerRead(CEntityFlags::AircraftIcaoEntity);
         }
 
     } // ns

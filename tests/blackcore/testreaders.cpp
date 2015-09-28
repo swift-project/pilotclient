@@ -45,8 +45,8 @@ namespace BlackCoreTest
         m_icaoReader.start();
         Expect e(&this->m_icaoReader);
         EXPECT_UNIT(e)
-        .send(&CIcaoDataReader::readInBackgroundThread, CDbFlags::AllIcaoEntities)
-        .expect(&CIcaoDataReader::readData, [server]()
+        .send(&CIcaoDataReader::readInBackgroundThread, CEntityFlags::AllIcaoEntities)
+        .expect(&CIcaoDataReader::dataRead, [server]()
         {
             qDebug() << "Read ICAO data from" << server;
         })
@@ -68,8 +68,8 @@ namespace BlackCoreTest
         m_modelReader.start();
         Expect e(&this->m_modelReader);
         EXPECT_UNIT(e)
-        .send(&CModelDataReader::readInBackgroundThread, CDbFlags::AllIcaoEntities)
-        .expect(&CModelDataReader::readData, [server]()
+        .send(&CModelDataReader::readInBackgroundThread, CEntityFlags::AllIcaoEntities)
+        .expect(&CModelDataReader::dataRead, [server]()
         {
             //  CDbFlags::flagToString(entity) << CDbFlags::flagToString(state) << number
             qDebug() << "Read model data " << server;

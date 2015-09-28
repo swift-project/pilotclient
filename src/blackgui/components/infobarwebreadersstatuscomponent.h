@@ -46,7 +46,7 @@ namespace BlackGui
 
         private slots:
             //! Data have been read
-            void ps_dataRead(BlackMisc::Network::CDbFlags::Entity entity, BlackMisc::Network::CDbFlags::ReadState readState, int count);
+            void ps_dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
 
             //! Check server status
             void ps_checkServerAndData();
@@ -56,13 +56,13 @@ namespace BlackGui
             QTimer m_timer { this };
 
             //! Set LED states
-            void setLedReadStates(const QList<CLedWidget *> &leds, BlackMisc::Network::CDbFlags::ReadState readState);
+            void setLedReadStates(const QList<CLedWidget *> &leds, BlackMisc::Network::CEntityFlags::ReadState readState);
 
             //! Set the LED read state
-            void setLedReadState(CLedWidget *led, BlackMisc::Network::CDbFlags::ReadState readState);
+            void setLedReadState(CLedWidget *led, BlackMisc::Network::CEntityFlags::ReadState readState);
 
             //! Maps entity to its id
-            QList<CLedWidget *> entityToLeds(BlackMisc::Network::CDbFlags::Entity entity) const;
+            QList<CLedWidget *> entityToLeds(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
             //! All data read
             bool hasAllData() const;

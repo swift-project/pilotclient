@@ -21,10 +21,10 @@ namespace BlackCore
         BlackMisc::CThreadedReader(owner, name)
     { }
 
-    void CDatabaseReader::readInBackgroundThread(CDbFlags::Entity entities)
+    void CDatabaseReader::readInBackgroundThread(CEntityFlags::Entity entities)
     {
         if (m_shutdown) { return; }
-        bool s = QMetaObject::invokeMethod(this, "ps_read", Q_ARG(BlackMisc::Network::CDbFlags::Entity, entities));
+        bool s = QMetaObject::invokeMethod(this, "ps_read", Q_ARG(BlackMisc::Network::CEntityFlags::Entity, entities));
         Q_ASSERT_X(s, Q_FUNC_INFO, "Invoke failed");
         Q_UNUSED(s);
     }

@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_NETWORK_ENTITREADERFLAGS_H
-#define BLACKMISC_NETWORK_ENTITREADERFLAGS_H
+#ifndef BLACKMISC_NETWORK_ENTITRFLAGS_H
+#define BLACKMISC_NETWORK_ENTITRFLAGS_H
 
 #include "blackmisc/blackmiscexport.h"
 #include <QObject>
@@ -20,29 +20,30 @@ namespace BlackMisc
     namespace Network
     {
         /*!
-         * What and state of reading from DB
+         * What and state of reading from web services
          */
-        class BLACKMISC_EXPORT CDbFlags
+        class BLACKMISC_EXPORT CEntityFlags
         {
         public:
             //! Which data to read, requires corresponding readers
-            enum EntityFlags
+            enum EntityFlag
             {
                 NoEntity               = 0,      ///< no data at all
-                VatsimBookings         = 1 << 0, ///< bookings
-                VatsimDataFile         = 1 << 1, ///< the VATSIM data file
-                AircraftIcaoEntity     = 1 << 2, ///< ICAO codes for aircraft
-                AirlineIcaoEntity      = 1 << 3, ///< ICAO codes for airlines
-                CountryEntity          = 1 << 4, ///< Country codes
-                DistributorEntity      = 1 << 5, ///< distributors
-                LiveryEntity           = 1 << 6, ///< liveries
-                ModelEntity            = 1 << 7, ///< models
+                VatsimDataFile         = 1 << 0, ///< the VATSIM data file (multiple data entities)
+                BookingEntity          = 1 << 1, ///< bookings
+                MetarEntity            = 1 << 2,
+                AircraftIcaoEntity     = 1 << 3, ///< ICAO codes for aircraft
+                AirlineIcaoEntity      = 1 << 4, ///< ICAO codes for airlines
+                CountryEntity          = 1 << 5, ///< country codes
+                DistributorEntity      = 1 << 6, ///< distributors
+                LiveryEntity           = 1 << 7, ///< liveries
+                ModelEntity            = 1 << 8, ///< models
                 AllIcaoEntities        = AircraftIcaoEntity | AirlineIcaoEntity, ///< all ICAO codes
                 AllIcaoAndCountries    = AircraftIcaoEntity | AirlineIcaoEntity | CountryEntity, ///< all ICAO codes and countries
                 DistributorLiveryModel = DistributorEntity | LiveryEntity | ModelEntity, ///< Combinded
                 AllEntities            = 0xFFFF  ///< everything
             };
-            Q_DECLARE_FLAGS(Entity, EntityFlags)
+            Q_DECLARE_FLAGS(Entity, EntityFlag)
 
             //! State of operation
             enum ReadState
@@ -53,20 +54,23 @@ namespace BlackMisc
             };
 
             //! Convert to string
-            static QString flagToString(EntityFlags flag);
+            static QString flagToString(EntityFlag flag);
 
             //! Convert to string
-            static QString flagToString(BlackMisc::Network::CDbFlags::Entity flag);
+            static QString flagToString(BlackMisc::Network::CEntityFlags::Entity flag);
 
             //! Convert to string
             static QString flagToString(ReadState flag);
+
+            //! Register metadata
+            static void registerMetadata();
         };
     } // namespace
 } // namespace
 
-Q_DECLARE_METATYPE(BlackMisc::Network::CDbFlags::EntityFlags)
-Q_DECLARE_METATYPE(BlackMisc::Network::CDbFlags::Entity)
-Q_DECLARE_METATYPE(BlackMisc::Network::CDbFlags::ReadState)
-Q_DECLARE_OPERATORS_FOR_FLAGS(BlackMisc::Network::CDbFlags::Entity)
+Q_DECLARE_METATYPE(BlackMisc::Network::CEntityFlags::EntityFlag)
+Q_DECLARE_METATYPE(BlackMisc::Network::CEntityFlags::Entity)
+Q_DECLARE_METATYPE(BlackMisc::Network::CEntityFlags::ReadState)
+Q_DECLARE_OPERATORS_FOR_FLAGS(BlackMisc::Network::CEntityFlags::Entity)
 
 #endif // guard
