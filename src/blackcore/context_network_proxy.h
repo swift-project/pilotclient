@@ -99,8 +99,8 @@ namespace BlackCore
         //! \copydoc IContextNetwork::loadFlightPlanFromNetwork()
         virtual BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
-        //! \copydoc IContextNetwork::getMetar
-        BlackMisc::Weather::CMetar getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) override;
+        //! \copydoc IContextNetwork::getMetarForAirport
+        BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) const override;
 
         //! \copydoc IContextNetwork::getSelectedVoiceRooms()
         virtual BlackMisc::Audio::CVoiceRoomList getSelectedVoiceRooms() const override;

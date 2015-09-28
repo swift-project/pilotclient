@@ -150,7 +150,7 @@ namespace BlackGui
             QString icao = airportIcaoCode.isEmpty() ? this->ui->le_AtcStationsOnlineMetar->text().trimmed().toUpper() : airportIcaoCode.trimmed().toUpper();
             this->ui->le_AtcStationsOnlineMetar->setText(icao);
             if (icao.length() != 4) { return; }
-            CMetar metar = this->getIContextNetwork()->getMetar(icao);
+            CMetar metar(this->getIContextNetwork()->getMetarForAirport(icao));
             if (metar == CMetar())
             {
                 this->ui->te_AtcStationsOnlineInfo->clear();

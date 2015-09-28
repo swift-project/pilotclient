@@ -59,15 +59,10 @@ namespace BlackCore
 
         // 3. data reader
         this->m_webDataReader = new CWebDataServices(CWebReaderFlags::AllReaders, this);
-        this->m_webReaderSignalConnections = this->m_webDataReader->connectVatsimDataSignals(
-                this, // the object here must be the same as in the bind
-                std::bind(&CContextNetwork::vatsimBookingsRead, this, std::placeholders::_1),
-                std::bind(&CContextNetwork::vatsimDataFileRead, this, std::placeholders::_1),
-                std::bind(&CContextNetwork::vatsimMetarsRead, this, std::placeholders::_1));
         this->m_webReaderSignalConnections.append(
-            this->m_webDataReader->connectSwiftDatabaseSignals(
+            this->m_webDataReader->connectDataReadSignal(
                 this, // the object here must be the same as in the bind
-                std::bind(&CContextNetwork::swiftDbDataRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
+                std::bind(&CContextNetwork::webServiceDataRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
             )
         );
         this->m_webDataReader->readAllInBackground(1000);
@@ -639,10 +634,10 @@ namespace BlackCore
         this->m_airspace->testAddAircraftParts(callsign, parts, incremental);
     }
 
-    CMetar CContextNetwork::getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode)
+    CMetar CContextNetwork::getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) const
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << airportIcaoCode; }
-        return m_airspace->getMetar(airportIcaoCode);
+        return m_airspace->getMetarForAirport(airportIcaoCode);
     }
 
     CAtcStationList CContextNetwork::getSelectedAtcStations() const

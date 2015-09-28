@@ -20,7 +20,7 @@
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackmisc/network/dbflags.h"
+#include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/network/clientlist.h"
@@ -135,17 +135,9 @@ namespace BlackCore
 
         // --------------------------- data readers -------------------------------
 
-        //! Data file read
-        void vatsimDataFileRead(int lines);
-
-        //! Bookings read
-        void vatsimBookingsRead(int number);
-
-        //! Metar read
-        void vatsimMetarsRead(int number);
-
-        //! swift DB data read
-        void swiftDbDataRead(BlackMisc::Network::CDbFlags::Entity entity, BlackMisc::Network::CDbFlags::ReadState, int number);
+        //! Web serice data read
+        // void webServiceDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+        void webServiceDataRead(int entity, int state, int number);
 
     public slots:
         //! Reload bookings from booking service
@@ -165,6 +157,9 @@ namespace BlackCore
 
         //! Aircraft count
         virtual int getAircraftInRangeCount() const = 0;
+
+        //! Get METAR, if not available request it (code such as EDDF, KLAX)
+        virtual BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) const = 0;
 
         //! Online station for callsign
         virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
@@ -228,9 +223,6 @@ namespace BlackCore
 
         //! Command line was entered
         virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) = 0;
-
-        //! Get METAR, if not available request it (code such as EDDF, KLAX)
-        virtual BlackMisc::Weather::CMetar getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) = 0;
 
         //! Use the selected COM1/2 frequencies, and get the corresponding voice room for it
         virtual BlackMisc::Audio::CVoiceRoomList getSelectedVoiceRooms() const = 0;

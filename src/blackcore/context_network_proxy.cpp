@@ -69,17 +69,11 @@ namespace BlackCore
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "textMessageSent", this, SIGNAL(textMessageSent(BlackMisc::Network::CTextMessage)));
         Q_ASSERT(s);
+//        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
+//                               "webServiceDataRead", this, SIGNAL(webServiceDataRead(BlackMisc::Network::CEntityFlags::Entity, BlackMisc::Network::CEntityFlags::ReadState, int)));
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "vatsimDataFileRead", this, SIGNAL(vatsimDataFileRead(int)));
-        Q_ASSERT(s);
-        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "vatsimBookingsRead", this, SIGNAL(vatsimBookingsRead(int)));
-        Q_ASSERT(s);
-        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "vatsimMetarsRead", this, SIGNAL(vatsimMetarsRead(int)));
-        Q_ASSERT(s);
-        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "changedRemoteAircraftModel", this, SIGNAL(changedRemoteAircraftModel(BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::CIdentifier)));
+                               "webServiceDataRead", this, SIGNAL(webServiceDataRead(int, int, int)));
+
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "changedRemoteAircraftEnabled", this, SIGNAL(changedRemoteAircraftEnabled(BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::CIdentifier)));
@@ -271,9 +265,9 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CFlightPlan>(QLatin1Literal("loadFlightPlanFromNetwork"), callsign);
     }
 
-    CMetar CContextNetworkProxy::getMetar(const CAirportIcaoCode &airportIcaoCode)
+    CMetar CContextNetworkProxy::getMetarForAirport(const CAirportIcaoCode &airportIcaoCode) const
     {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::Weather::CMetar>(QLatin1Literal("getMetar"), airportIcaoCode);
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Weather::CMetar>(QLatin1Literal("getMetarForAirport"), airportIcaoCode);
     }
 
 } // namespace

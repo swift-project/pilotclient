@@ -173,8 +173,8 @@ namespace BlackCore
         //! \copydoc IContextNetwork::loadFlightPlanFromNetwork()
         virtual BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
-        //! \copydoc IContextNetwork::getMetar
-        BlackMisc::Weather::CMetar getMetar(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) override;
+        //! \copydoc IContextNetwork::getMetarForAirport
+        BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) const override;
 
         //! \copydoc IContextNetwork::getSelectedVoiceRooms()
         virtual BlackMisc::Audio::CVoiceRoomList getSelectedVoiceRooms() const override;
@@ -238,12 +238,12 @@ namespace BlackCore
         CContextNetwork *registerWithDBus(CDBusServer *server);
 
     private:
-        CAirspaceMonitor *m_airspace = nullptr;
-        INetwork         *m_network  = nullptr;
-        CWebDataServices   *m_webDataReader = nullptr; //!< web service readers
+        CAirspaceMonitor              *m_airspace = nullptr;
+        INetwork                      *m_network  = nullptr;
+        CWebDataServices              *m_webDataReader = nullptr;                //!< web service readers
         QList<QMetaObject::Connection> m_webReaderSignalConnections;
-        INetwork::ConnectionStatus m_currentStatus = INetwork::Disconnected; //!< used to detect pending connections
-        QTimer *m_dataUpdateTimer = nullptr;                                 //!< general updates such as ATIS, frequencies, see requestDataUpdates()
+        INetwork::ConnectionStatus     m_currentStatus = INetwork::Disconnected; //!< used to detect pending connections
+        QTimer                        *m_dataUpdateTimer = nullptr;              //!< general updates such as ATIS, frequencies, see requestDataUpdates()
 
         // Digest signals, only sending after some time
         BlackMisc::CDigestSignal m_dsAtcStationsBookedChanged { this, &IContextNetwork::changedAtcStationsBooked, &IContextNetwork::changedAtcStationsBookedDigest, 750, 2 };
