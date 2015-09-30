@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKMISC_CPROJECT_H
 #define BLACKMISC_CPROJECT_H
 
@@ -68,6 +70,9 @@ namespace BlackMisc
         //! System's name and version
         static const QString &swiftVersionString();
 
+        //! System's name and version + info if dev.environemnt
+        static const QString &swiftVersionStringDevInfo();
+
         //! System's name and version
         static const char *swiftVersionChar();
 
@@ -85,6 +90,18 @@ namespace BlackMisc
 
         //! Running on Windows NT platform?
         static bool isRunningOnWindowsNtPlatform();
+
+        //! Running in dev.environment, so on a programmers machine
+        static bool isRunningInDeveloperEnvironment();
+
+        //! Application directory where current application is located
+        static QString getApplicationDir();
+
+        //! Where resource files (static DB files, ...) etc are located
+        static QString getSwiftResourceDir();
+
+        //! Where resource files (static DB files, ...) etc are located
+        static QString getSwiftStaticDbFilesDir();
 
     private:
         //! Constructor
