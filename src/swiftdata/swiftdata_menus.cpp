@@ -10,10 +10,12 @@
 #include "swiftdata.h"
 #include "ui_swiftdata.h"
 #include "blackgui/components/dbmappingcomponent.h"
+#include "blackgui/components/datainfoareacomponent.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/project.h"
 #include <QPoint>
 #include <QMenu>
 #include <QDesktopServices>
@@ -81,4 +83,16 @@ void CSwiftData::initDynamicMenus()
     Q_ASSERT(this->ui->menu_InfoAreas);
     Q_ASSERT(this->ui->comp_MainInfoArea);
     this->ui->menu_InfoAreas->addActions(this->ui->comp_MainInfoArea->getInfoAreaSelectActions(this->ui->menu_InfoAreas));
+
+    QString resourceDir(CProject::getSwiftResourceDir());
+    if (!resourceDir.isEmpty())
+    {
+        Q_ASSERT_X(this->ui->comp_MainInfoArea, Q_FUNC_INFO, "Missing main info area");
+        Q_ASSERT_X(this->ui->comp_MainInfoArea->getDataInfoAreaComponent(), Q_FUNC_INFO, "Missing DB info area");
+        this->ui->menu_Mapping->addAction(CIcons::load16(), "Load DB data", this->ui->comp_MainInfoArea->getDataInfoAreaComponent(), SLOT(readDbDataFromResourceDir()));
+        if (CProject::isRunningInDeveloperEnvironment() && this->ui->comp_MainInfoArea->getDataInfoAreaComponent()->canConnectSwiftDb())
+        {
+            this->ui->menu_Mapping->addAction(CIcons::save16(), "Save DB data", this->ui->comp_MainInfoArea->getDataInfoAreaComponent(), SLOT(writeDbDataToResourceDir()));
+        }
+    }
 }

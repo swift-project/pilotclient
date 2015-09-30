@@ -28,7 +28,7 @@ CIntroWindow::CIntroWindow(QWidget *parent) :
     ui(new Ui::CIntroWindow)
 {
     ui->setupUi(this);
-    this->setWindowTitle(BlackMisc::CProject::swiftVersionString());
+    this->setWindowTitle(BlackMisc::CProject::swiftVersionStringDevInfo());
     this->layout()->setSizeConstraint(QLayout::SetFixedSize);
     this->ui->cb_DBusServer->addItem(BlackCore::CDBusServer::sessionDBusServer());
     this->ui->cb_DBusServer->addItem(BlackCore::CDBusServer::systemDBusServer());
