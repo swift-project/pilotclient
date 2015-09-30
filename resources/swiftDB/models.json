@@ -1,0 +1,1246 @@
+{
+    "containerbase": [
+        {
+            "aircraftIcao": {
+                "combinedType": "L2J",
+                "dbKey": 3712,
+                "designator": "A10",
+                "legacy": false,
+                "manufacturer": "FAIRCHILD (1)",
+                "military": false,
+                "modelDescription": "OA-10 Thunderbolt 2",
+                "rank": 10,
+                "realWorld": true,
+                "timestampMSecsSinceEpoch": 1435692850000,
+                "wtc": ""
+            },
+            "callsign": {
+                "callsign": "",
+                "callsignAsSet": "",
+                "telephonyDesignator": "",
+                "typeHint": 0
+            },
+            "dbKey": 45,
+            "description": "vPilot auto generated",
+            "distributor": {
+                "alias1": "MY TRAFFIC",
+                "alias2": "",
+                "dbKey": "MYTRAFFIC",
+                "description": "My Traffic",
+                "timestampMSecsSinceEpoch": 1441392993000
+            },
+            "fileName": "",
+            "livery": {
+                "airline": {
+                    "country": {
+                        "dbKey": "",
+                        "name": "",
+                        "timestampMSecsSinceEpoch": 1443574342454
+                    },
+                    "dbKey": -1,
+                    "designator": "",
+                    "isOperating": true,
+                    "isVa": false,
+                    "name": "",
+                    "telephonyDesignator": "",
+                    "timestampMSecsSinceEpoch": 1443574342454
+                },
+                "colorFuselage": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "colorTail": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "combinedCode": "",
+                "dbKey": -1,
+                "description": "",
+                "timestampMSecsSinceEpoch": 1443574342454
+            },
+            "modelMode": 0,
+            "modelName": "",
+            "modelString": "A10 MYPAINT04",
+            "modelType": 5,
+            "simulator": {
+                "simulator": 9
+            },
+            "timestampMSecsSinceEpoch": 1441820208000
+        },
+        {
+            "aircraftIcao": {
+                "combinedType": "L2J",
+                "dbKey": 3712,
+                "designator": "A10",
+                "legacy": false,
+                "manufacturer": "FAIRCHILD (1)",
+                "military": false,
+                "modelDescription": "OA-10 Thunderbolt 2",
+                "rank": 10,
+                "realWorld": true,
+                "timestampMSecsSinceEpoch": 1435692850000,
+                "wtc": ""
+            },
+            "callsign": {
+                "callsign": "",
+                "callsignAsSet": "",
+                "telephonyDesignator": "",
+                "typeHint": 0
+            },
+            "dbKey": 37,
+            "description": "vPilot auto generated",
+            "distributor": {
+                "alias1": "MY TRAFFIC",
+                "alias2": "",
+                "dbKey": "MYTRAFFIC",
+                "description": "My Traffic",
+                "timestampMSecsSinceEpoch": 1441392993000
+            },
+            "fileName": "",
+            "livery": {
+                "airline": {
+                    "country": {
+                        "dbKey": "US",
+                        "name": "",
+                        "timestampMSecsSinceEpoch": 1443574342470
+                    },
+                    "dbKey": 5817,
+                    "designator": "A1F",
+                    "isOperating": true,
+                    "isVa": false,
+                    "name": "Atifly",
+                    "telephonyDesignator": "",
+                    "timestampMSecsSinceEpoch": 1434615059000
+                },
+                "colorFuselage": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "colorTail": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "combinedCode": "A1F._STD",
+                "dbKey": 517,
+                "description": "Standard Atifly",
+                "timestampMSecsSinceEpoch": 1440117589000
+            },
+            "modelMode": 0,
+            "modelName": "",
+            "modelString": "A10 MYPAINT03",
+            "modelType": 5,
+            "simulator": {
+                "simulator": 9
+            },
+            "timestampMSecsSinceEpoch": 1441500039000
+        },
+        {
+            "aircraftIcao": {
+                "combinedType": "L2J",
+                "dbKey": 1780,
+                "designator": "B732",
+                "legacy": false,
+                "manufacturer": "BOEING",
+                "military": false,
+                "modelDescription": "737-200",
+                "rank": 10,
+                "realWorld": true,
+                "timestampMSecsSinceEpoch": 1435692850000,
+                "wtc": ""
+            },
+            "callsign": {
+                "callsign": "",
+                "callsignAsSet": "",
+                "telephonyDesignator": "",
+                "typeHint": 0
+            },
+            "dbKey": 40,
+            "description": "vPilot auto generated",
+            "distributor": {
+                "alias1": "MY TRAFFIC",
+                "alias2": "",
+                "dbKey": "MYTRAFFIC",
+                "description": "My Traffic",
+                "timestampMSecsSinceEpoch": 1441392993000
+            },
+            "fileName": "",
+            "livery": {
+                "airline": {
+                    "country": {
+                        "dbKey": "US",
+                        "name": "",
+                        "timestampMSecsSinceEpoch": 1443574342470
+                    },
+                    "dbKey": 5817,
+                    "designator": "A1F",
+                    "isOperating": true,
+                    "isVa": false,
+                    "name": "Atifly",
+                    "telephonyDesignator": "",
+                    "timestampMSecsSinceEpoch": 1434615059000
+                },
+                "colorFuselage": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "colorTail": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "combinedCode": "A1F._STD",
+                "dbKey": 517,
+                "description": "Standard Atifly",
+                "timestampMSecsSinceEpoch": 1440117589000
+            },
+            "modelMode": 0,
+            "modelName": "",
+            "modelString": "B737-200 MYPAINT201",
+            "modelType": 5,
+            "simulator": {
+                "simulator": 9
+            },
+            "timestampMSecsSinceEpoch": 1441501723000
+        },
+        {
+            "aircraftIcao": {
+                "combinedType": "L2J",
+                "dbKey": 3712,
+                "designator": "A10",
+                "legacy": false,
+                "manufacturer": "FAIRCHILD (1)",
+                "military": false,
+                "modelDescription": "OA-10 Thunderbolt 2",
+                "rank": 10,
+                "realWorld": true,
+                "timestampMSecsSinceEpoch": 1435692850000,
+                "wtc": ""
+            },
+            "callsign": {
+                "callsign": "",
+                "callsignAsSet": "",
+                "telephonyDesignator": "",
+                "typeHint": 0
+            },
+            "dbKey": 34,
+            "description": "vPilot auto generated",
+            "distributor": {
+                "alias1": "MY TRAFFIC",
+                "alias2": "",
+                "dbKey": "MYTRAFFIC",
+                "description": "My Traffic",
+                "timestampMSecsSinceEpoch": 1441392993000
+            },
+            "fileName": "",
+            "livery": {
+                "airline": {
+                    "country": {
+                        "dbKey": "US",
+                        "name": "",
+                        "timestampMSecsSinceEpoch": 1443574342470
+                    },
+                    "dbKey": 5817,
+                    "designator": "A1F",
+                    "isOperating": true,
+                    "isVa": false,
+                    "name": "Atifly",
+                    "telephonyDesignator": "",
+                    "timestampMSecsSinceEpoch": 1434615059000
+                },
+                "colorFuselage": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "colorTail": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "combinedCode": "A1F._STD",
+                "dbKey": 517,
+                "description": "Standard Atifly",
+                "timestampMSecsSinceEpoch": 1440117589000
+            },
+            "modelMode": 0,
+            "modelName": "",
+            "modelString": "A10 MYPAINT02",
+            "modelType": 5,
+            "simulator": {
+                "simulator": 9
+            },
+            "timestampMSecsSinceEpoch": 1441408195000
+        },
+        {
+            "aircraftIcao": {
+                "combinedType": "L2J",
+                "dbKey": 1782,
+                "designator": "B733",
+                "legacy": false,
+                "manufacturer": "BOEING",
+                "military": false,
+                "modelDescription": "737-300",
+                "rank": 10,
+                "realWorld": true,
+                "timestampMSecsSinceEpoch": 1435692850000,
+                "wtc": ""
+            },
+            "callsign": {
+                "callsign": "",
+                "callsignAsSet": "",
+                "telephonyDesignator": "",
+                "typeHint": 0
+            },
+            "dbKey": 38,
+            "description": "vPilot auto generated",
+            "distributor": {
+                "alias1": "IVAO",
+                "alias2": "",
+                "dbKey": "MTL",
+                "description": "MTL library",
+                "timestampMSecsSinceEpoch": 1440896303000
+            },
+            "fileName": "",
+            "livery": {
+                "airline": {
+                    "country": {
+                        "dbKey": "US",
+                        "name": "",
+                        "timestampMSecsSinceEpoch": 1443574342470
+                    },
+                    "dbKey": 5817,
+                    "designator": "A1F",
+                    "isOperating": true,
+                    "isVa": false,
+                    "name": "Atifly",
+                    "telephonyDesignator": "",
+                    "timestampMSecsSinceEpoch": 1434615059000
+                },
+                "colorFuselage": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "colorTail": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "combinedCode": "A1F._STD",
+                "dbKey": 517,
+                "description": "Standard Atifly",
+                "timestampMSecsSinceEpoch": 1440117589000
+            },
+            "modelMode": 0,
+            "modelName": "",
+            "modelString": "B733ONY",
+            "modelType": 5,
+            "simulator": {
+                "simulator": 9
+            },
+            "timestampMSecsSinceEpoch": 1441501401000
+        },
+        {
+            "aircraftIcao": {
+                "combinedType": "L2J",
+                "dbKey": 1663,
+                "designator": "B762",
+                "legacy": false,
+                "manufacturer": "BOEING",
+                "military": false,
+                "modelDescription": "KC-767",
+                "rank": 10,
+                "realWorld": true,
+                "timestampMSecsSinceEpoch": 1435692850000,
+                "wtc": ""
+            },
+            "callsign": {
+                "callsign": "",
+                "callsignAsSet": "",
+                "telephonyDesignator": "",
+                "typeHint": 0
+            },
+            "dbKey": 41,
+            "description": "vPilot auto generated",
+            "distributor": {
+                "alias1": "MY TRAFFIC",
+                "alias2": "",
+                "dbKey": "MYTRAFFIC",
+                "description": "My Traffic",
+                "timestampMSecsSinceEpoch": 1441392993000
+            },
+            "fileName": "",
+            "livery": {
+                "airline": {
+                    "country": {
+                        "dbKey": "IN",
+                        "name": "",
+                        "timestampMSecsSinceEpoch": 1443574342470
+                    },
+                    "dbKey": 129,
+                    "designator": "AIC",
+                    "isOperating": true,
+                    "isVa": false,
+                    "name": "Air India Limited",
+                    "telephonyDesignator": "AIRINDIA",
+                    "timestampMSecsSinceEpoch": 1433787757000
+                },
+                "colorFuselage": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "colorTail": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "combinedCode": "AIC._STD",
+                "dbKey": 765,
+                "description": "Standard Air India Limited",
+                "timestampMSecsSinceEpoch": 1440117589000
+            },
+            "modelMode": 0,
+            "modelName": "",
+            "modelString": "B767-200 MYPAINT29",
+            "modelType": 5,
+            "simulator": {
+                "simulator": 9
+            },
+            "timestampMSecsSinceEpoch": 1441502320000
+        },
+        {
+            "aircraftIcao": {
+                "combinedType": "L2J",
+                "dbKey": 3712,
+                "designator": "A10",
+                "legacy": false,
+                "manufacturer": "FAIRCHILD (1)",
+                "military": false,
+                "modelDescription": "OA-10 Thunderbolt 2",
+                "rank": 10,
+                "realWorld": true,
+                "timestampMSecsSinceEpoch": 1435692850000,
+                "wtc": ""
+            },
+            "callsign": {
+                "callsign": "",
+                "callsignAsSet": "",
+                "telephonyDesignator": "",
+                "typeHint": 0
+            },
+            "dbKey": 35,
+            "description": "vPilot auto generated",
+            "distributor": {
+                "alias1": "MY TRAFFIC",
+                "alias2": "",
+                "dbKey": "MYTRAFFIC",
+                "description": "My Traffic",
+                "timestampMSecsSinceEpoch": 1441392993000
+            },
+            "fileName": "",
+            "livery": {
+                "airline": {
+                    "country": {
+                        "dbKey": "US",
+                        "name": "",
+                        "timestampMSecsSinceEpoch": 1443574342470
+                    },
+                    "dbKey": 5384,
+                    "designator": "AIO",
+                    "isOperating": true,
+                    "isVa": false,
+                    "name": "United States Air Force",
+                    "telephonyDesignator": "AIR CHIEF",
+                    "timestampMSecsSinceEpoch": 1433786655000
+                },
+                "colorFuselage": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "colorTail": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "combinedCode": "AIO._STD",
+                "dbKey": 776,
+                "description": "Standard United States Air Force",
+                "timestampMSecsSinceEpoch": 1440117589000
+            },
+            "modelMode": 0,
+            "modelName": "",
+            "modelString": "A10 MYPAINT00",
+            "modelType": 5,
+            "simulator": {
+                "simulator": 9
+            },
+            "timestampMSecsSinceEpoch": 1441497704000
+        },
+        {
+            "aircraftIcao": {
+                "combinedType": "L2J",
+                "dbKey": 669,
+                "designator": "A318",
+                "legacy": false,
+                "manufacturer": "AIRBUS",
+                "military": false,
+                "modelDescription": "A-318",
+                "rank": 10,
+                "realWorld": true,
+                "timestampMSecsSinceEpoch": 1435692850000,
+                "wtc": ""
+            },
+            "callsign": {
+                "callsign": "",
+                "callsignAsSet": "",
+                "telephonyDesignator": "",
+                "typeHint": 0
+            },
+            "dbKey": 47,
+            "description": "vPilot auto generated",
+            "distributor": {
+                "alias1": "MY TRAFFIC",
+                "alias2": "",
+                "dbKey": "MYTRAFFIC",
+                "description": "My Traffic",
+                "timestampMSecsSinceEpoch": 1441392993000
+            },
+            "fileName": "",
+            "livery": {
+                "airline": {
+                    "country": {
+                        "dbKey": "GB",
+                        "name": "",
+                        "timestampMSecsSinceEpoch": 1443574342470
+                    },
+                    "dbKey": 1299,
+                    "designator": "BAW",
+                    "isOperating": true,
+                    "isVa": false,
+                    "name": "British Airways",
+                    "telephonyDesignator": "SPEEDBIRD",
+                    "timestampMSecsSinceEpoch": 1433786773000
+                },
+                "colorFuselage": {
+                    "b": 255,
+                    "g": 255,
+                    "r": 255
+                },
+                "colorTail": {
+                    "b": 0,
+                    "g": 0,
+                    "r": 255
+                },
+                "combinedCode": "BAW._STD",
+                "dbKey": 1163,
+                "description": "Standard British Airways",
+                "timestampMSecsSinceEpoch": 1441048580000
+            },
+            "modelMode": 0,
+            "modelName": "",
+            "modelString": "A319 MYPAINT09",
+            "modelType": 5,
+            "simulator": {
+                "simulator": 9
+            },
+            "timestampMSecsSinceEpoch": 1441984962000
+        },
+        {
+            "aircraftIcao": {
+                "combinedType": "L1P",
+                "dbKey": 6207,
+                "designator": "Z42",
+                "legacy": false,
+                "manufacturer": "MORAVAN",
+                "military": false,
+                "modelDescription": "Zlin Z-42",
+                "rank": 10,
+                "realWorld": true,
+                "timestampMSecsSinceEpoch": 1435692850000,
+                "wtc": ""
+            },
+            "callsign": {
+                "callsign": "",
+                "callsignAsSet": "",
+                "telephonyDesignator": "",
+                "typeHint": 0
+            },
+            "dbKey": 43,
+            "description": "vPilot auto generated",
+            "distributor": {
+                "alias1": "IVAO",
+                "alias2": "",
+                "dbKey": "MTL",
+                "description": "MTL library",
+                "timestampMSecsSinceEpoch": 1440896303000
+            },
+            "fileName": "",
+            "livery": {
+                "airline": {
+                    "country": {
+                        "dbKey": "CZ",
+                        "name": "",
+                        "timestampMSecsSinceEpoch": 1443574342470
+                    },
+                    "dbKey": 1863,
+                    "designator": "CEF",
+                    "isOperating": true,
+                    "isVa": false,
+                    "name": "Czech Air Force",
+                    "telephonyDesignator": "CZECH AIR FORCE",
+                    "timestampMSecsSinceEpoch": 1433787757000
+                },
+                "colorFuselage": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "colorTail": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "combinedCode": "CEF._STD",
+                "dbKey": 1512,
+                "description": "Standard Czech Air Force",
+                "timestampMSecsSinceEpoch": 1440117589000
+            },
+            "modelMode": 0,
+            "modelName": "",
+            "modelString": "Z42 CEF",
+            "modelType": 5,
+            "simulator": {
+                "simulator": 9
+            },
+            "timestampMSecsSinceEpoch": 1441676893000
+        },
+        {
+            "aircraftIcao": {
+                "combinedType": "L2T",
+                "dbKey": 1308,
+                "designator": "BE20",
+                "legacy": false,
+                "manufacturer": "BEECH",
+                "military": false,
+                "modelDescription": "RC-12 Huron",
+                "rank": 10,
+                "realWorld": true,
+                "timestampMSecsSinceEpoch": 1435692850000,
+                "wtc": ""
+            },
+            "callsign": {
+                "callsign": "",
+                "callsignAsSet": "",
+                "telephonyDesignator": "",
+                "typeHint": 0
+            },
+            "dbKey": 61,
+            "description": "vPilot auto generated",
+            "distributor": {
+                "alias1": "IVAO",
+                "alias2": "",
+                "dbKey": "MTL",
+                "description": "MTL library",
+                "timestampMSecsSinceEpoch": 1440896303000
+            },
+            "fileName": "",
+            "livery": {
+                "airline": {
+                    "country": {
+                        "dbKey": "CA",
+                        "name": "",
+                        "timestampMSecsSinceEpoch": 1443574342470
+                    },
+                    "dbKey": 1589,
+                    "designator": "CJT",
+                    "isOperating": true,
+                    "isVa": false,
+                    "name": "Cargojet Airways",
+                    "telephonyDesignator": "CARGOJET",
+                    "timestampMSecsSinceEpoch": 1433786817000
+                },
+                "colorFuselage": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "colorTail": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "combinedCode": "CJT._STD",
+                "dbKey": 1610,
+                "description": "Standard Cargojet Airways",
+                "timestampMSecsSinceEpoch": 1440117589000
+            },
+            "modelMode": 0,
+            "modelName": "",
+            "modelString": "BE20CJT",
+            "modelType": 5,
+            "simulator": {
+                "simulator": 9
+            },
+            "timestampMSecsSinceEpoch": 1441992208000
+        },
+        {
+            "aircraftIcao": {
+                "combinedType": "",
+                "dbKey": -1,
+                "designator": "",
+                "legacy": false,
+                "manufacturer": "",
+                "military": false,
+                "modelDescription": "",
+                "rank": 10,
+                "realWorld": true,
+                "timestampMSecsSinceEpoch": 1443574342470,
+                "wtc": ""
+            },
+            "callsign": {
+                "callsign": "",
+                "callsignAsSet": "",
+                "telephonyDesignator": "",
+                "typeHint": 0
+            },
+            "dbKey": 46,
+            "description": "vPilot auto generated",
+            "distributor": {
+                "alias1": "MY TRAFFIC",
+                "alias2": "",
+                "dbKey": "MYTRAFFIC",
+                "description": "My Traffic",
+                "timestampMSecsSinceEpoch": 1441392993000
+            },
+            "fileName": "",
+            "livery": {
+                "airline": {
+                    "country": {
+                        "dbKey": "DE",
+                        "name": "",
+                        "timestampMSecsSinceEpoch": 1443574342470
+                    },
+                    "dbKey": 3221,
+                    "designator": "DLH",
+                    "isOperating": true,
+                    "isVa": false,
+                    "name": "Lufthansa",
+                    "telephonyDesignator": "LUFTHANSA",
+                    "timestampMSecsSinceEpoch": 1433786672000
+                },
+                "colorFuselage": {
+                    "b": 255,
+                    "g": 255,
+                    "r": 255
+                },
+                "colorTail": {
+                    "b": 102,
+                    "g": 0,
+                    "r": 1
+                },
+                "combinedCode": "DLH._STD",
+                "dbKey": 1928,
+                "description": "Standard Lufthansa",
+                "timestampMSecsSinceEpoch": 1441047616000
+            },
+            "modelMode": 0,
+            "modelName": "",
+            "modelString": "A310-300 MYPAINT01",
+            "modelType": 5,
+            "simulator": {
+                "simulator": 9
+            },
+            "timestampMSecsSinceEpoch": 1441934927000
+        },
+        {
+            "aircraftIcao": {
+                "combinedType": "L2J",
+                "dbKey": 680,
+                "designator": "A306",
+                "legacy": false,
+                "manufacturer": "AIRBUS",
+                "military": false,
+                "modelDescription": "A-300F4-600",
+                "rank": 10,
+                "realWorld": true,
+                "timestampMSecsSinceEpoch": 1435692850000,
+                "wtc": ""
+            },
+            "callsign": {
+                "callsign": "",
+                "callsignAsSet": "",
+                "telephonyDesignator": "",
+                "typeHint": 0
+            },
+            "dbKey": 44,
+            "description": "vPilot auto generated",
+            "distributor": {
+                "alias1": "IVAO",
+                "alias2": "",
+                "dbKey": "MTL",
+                "description": "MTL library",
+                "timestampMSecsSinceEpoch": 1440896303000
+            },
+            "fileName": "",
+            "livery": {
+                "airline": {
+                    "country": {
+                        "dbKey": "DE",
+                        "name": "",
+                        "timestampMSecsSinceEpoch": 1443574342485
+                    },
+                    "dbKey": 3221,
+                    "designator": "DLH",
+                    "isOperating": true,
+                    "isVa": false,
+                    "name": "Lufthansa",
+                    "telephonyDesignator": "LUFTHANSA",
+                    "timestampMSecsSinceEpoch": 1433786672000
+                },
+                "colorFuselage": {
+                    "b": 255,
+                    "g": 255,
+                    "r": 255
+                },
+                "colorTail": {
+                    "b": 102,
+                    "g": 0,
+                    "r": 1
+                },
+                "combinedCode": "DLH._STD",
+                "dbKey": 1928,
+                "description": "Standard Lufthansa",
+                "timestampMSecsSinceEpoch": 1441047616000
+            },
+            "modelMode": 0,
+            "modelName": "",
+            "modelString": "A306DLH",
+            "modelType": 5,
+            "simulator": {
+                "simulator": 9
+            },
+            "timestampMSecsSinceEpoch": 1441762973000
+        },
+        {
+            "aircraftIcao": {
+                "combinedType": "L2T",
+                "dbKey": 1308,
+                "designator": "BE20",
+                "legacy": false,
+                "manufacturer": "BEECH",
+                "military": false,
+                "modelDescription": "RC-12 Huron",
+                "rank": 10,
+                "realWorld": true,
+                "timestampMSecsSinceEpoch": 1435692850000,
+                "wtc": ""
+            },
+            "callsign": {
+                "callsign": "",
+                "callsignAsSet": "",
+                "telephonyDesignator": "",
+                "typeHint": 0
+            },
+            "dbKey": 53,
+            "description": "vPilot auto generated",
+            "distributor": {
+                "alias1": "IVAO",
+                "alias2": "",
+                "dbKey": "MTL",
+                "description": "MTL library",
+                "timestampMSecsSinceEpoch": 1440896303000
+            },
+            "fileName": "",
+            "livery": {
+                "airline": {
+                    "country": {
+                        "dbKey": "GB",
+                        "name": "",
+                        "timestampMSecsSinceEpoch": 1443574342485
+                    },
+                    "dbKey": 761,
+                    "designator": "EUK",
+                    "isOperating": true,
+                    "isVa": false,
+                    "name": "Air Atlanta Europe",
+                    "telephonyDesignator": "SNOWBIRD",
+                    "timestampMSecsSinceEpoch": 1433786773000
+                },
+                "colorFuselage": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "colorTail": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "combinedCode": "EUK._STD",
+                "dbKey": 2217,
+                "description": "Standard Air Atlanta Europe",
+                "timestampMSecsSinceEpoch": 1440117589000
+            },
+            "modelMode": 0,
+            "modelName": "",
+            "modelString": "BE20EUK",
+            "modelType": 5,
+            "simulator": {
+                "simulator": 9
+            },
+            "timestampMSecsSinceEpoch": 1441991286000
+        },
+        {
+            "aircraftIcao": {
+                "combinedType": "L2T",
+                "dbKey": 1308,
+                "designator": "BE20",
+                "legacy": false,
+                "manufacturer": "BEECH",
+                "military": false,
+                "modelDescription": "RC-12 Huron",
+                "rank": 10,
+                "realWorld": true,
+                "timestampMSecsSinceEpoch": 1435692850000,
+                "wtc": ""
+            },
+            "callsign": {
+                "callsign": "",
+                "callsignAsSet": "",
+                "telephonyDesignator": "",
+                "typeHint": 0
+            },
+            "dbKey": 54,
+            "description": "vPilot auto generated",
+            "distributor": {
+                "alias1": "IVAO",
+                "alias2": "",
+                "dbKey": "MTL",
+                "description": "MTL library",
+                "timestampMSecsSinceEpoch": 1440896303000
+            },
+            "fileName": "",
+            "livery": {
+                "airline": {
+                    "country": {
+                        "dbKey": "ES",
+                        "name": "",
+                        "timestampMSecsSinceEpoch": 1443574342485
+                    },
+                    "dbKey": 2392,
+                    "designator": "FAM",
+                    "isOperating": true,
+                    "isVa": false,
+                    "name": "Fumigación Aérea Andaluza",
+                    "telephonyDesignator": "FAASA",
+                    "timestampMSecsSinceEpoch": 1433787757000
+                },
+                "colorFuselage": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "colorTail": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "combinedCode": "FAM._STD",
+                "dbKey": 2272,
+                "description": "Standard Fumigación Aérea Andaluza",
+                "timestampMSecsSinceEpoch": 1440117589000
+            },
+            "modelMode": 0,
+            "modelName": "",
+            "modelString": "BE20FAM",
+            "modelType": 5,
+            "simulator": {
+                "simulator": 9
+            },
+            "timestampMSecsSinceEpoch": 1441991332000
+        },
+        {
+            "aircraftIcao": {
+                "combinedType": "L2T",
+                "dbKey": 1308,
+                "designator": "BE20",
+                "legacy": false,
+                "manufacturer": "BEECH",
+                "military": false,
+                "modelDescription": "RC-12 Huron",
+                "rank": 10,
+                "realWorld": true,
+                "timestampMSecsSinceEpoch": 1435692850000,
+                "wtc": ""
+            },
+            "callsign": {
+                "callsign": "",
+                "callsignAsSet": "",
+                "telephonyDesignator": "",
+                "typeHint": 0
+            },
+            "dbKey": 60,
+            "description": "vPilot auto generated",
+            "distributor": {
+                "alias1": "IVAO",
+                "alias2": "",
+                "dbKey": "MTL",
+                "description": "MTL library",
+                "timestampMSecsSinceEpoch": 1440896303000
+            },
+            "fileName": "",
+            "livery": {
+                "airline": {
+                    "country": {
+                        "dbKey": "CL",
+                        "name": "",
+                        "timestampMSecsSinceEpoch": 1443574342485
+                    },
+                    "dbKey": 2647,
+                    "designator": "HAA",
+                    "isOperating": true,
+                    "isVa": false,
+                    "name": "Helicopteros Agroforestal",
+                    "telephonyDesignator": "AGROFORESTAL",
+                    "timestampMSecsSinceEpoch": 1433787757000
+                },
+                "colorFuselage": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "colorTail": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "combinedCode": "HAA._STD",
+                "dbKey": 2731,
+                "description": "Standard Helicopteros Agroforestal",
+                "timestampMSecsSinceEpoch": 1440117589000
+            },
+            "modelMode": 0,
+            "modelName": "",
+            "modelString": "BE20HAA",
+            "modelType": 5,
+            "simulator": {
+                "simulator": 9
+            },
+            "timestampMSecsSinceEpoch": 1441992155000
+        },
+        {
+            "aircraftIcao": {
+                "combinedType": "L2J",
+                "dbKey": 3931,
+                "designator": "F100",
+                "legacy": false,
+                "manufacturer": "FOKKER",
+                "military": false,
+                "modelDescription": "100",
+                "rank": 10,
+                "realWorld": true,
+                "timestampMSecsSinceEpoch": 1435692850000,
+                "wtc": ""
+            },
+            "callsign": {
+                "callsign": "",
+                "callsignAsSet": "",
+                "telephonyDesignator": "",
+                "typeHint": 0
+            },
+            "dbKey": 42,
+            "description": "vPilot auto generated",
+            "distributor": {
+                "alias1": "SB3",
+                "alias2": "",
+                "dbKey": "VIP",
+                "description": "VIP models (SquawkBox3)",
+                "timestampMSecsSinceEpoch": 1440895984000
+            },
+            "fileName": "",
+            "livery": {
+                "airline": {
+                    "country": {
+                        "dbKey": "GB",
+                        "name": "",
+                        "timestampMSecsSinceEpoch": 1443574342485
+                    },
+                    "dbKey": 6406,
+                    "designator": "JHB",
+                    "isOperating": true,
+                    "isVa": false,
+                    "name": "JHB Airlines",
+                    "telephonyDesignator": "DIAMOND",
+                    "timestampMSecsSinceEpoch": 1440634049000
+                },
+                "colorFuselage": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "colorTail": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "combinedCode": "JHB._STD",
+                "dbKey": 6685,
+                "description": "Standard JHB Airlines",
+                "timestampMSecsSinceEpoch": 1441063046000
+            },
+            "modelMode": 0,
+            "modelName": "",
+            "modelString": "VIP_F100JHB",
+            "modelType": 5,
+            "simulator": {
+                "simulator": 9
+            },
+            "timestampMSecsSinceEpoch": 1441572901000
+        },
+        {
+            "aircraftIcao": {
+                "combinedType": "L2J",
+                "dbKey": 1780,
+                "designator": "B732",
+                "legacy": false,
+                "manufacturer": "BOEING",
+                "military": false,
+                "modelDescription": "737-200",
+                "rank": 10,
+                "realWorld": true,
+                "timestampMSecsSinceEpoch": 1435692850000,
+                "wtc": ""
+            },
+            "callsign": {
+                "callsign": "",
+                "callsignAsSet": "",
+                "telephonyDesignator": "",
+                "typeHint": 0
+            },
+            "dbKey": 39,
+            "description": "vPilot auto generated",
+            "distributor": {
+                "alias1": "MY TRAFFIC",
+                "alias2": "",
+                "dbKey": "MYTRAFFIC",
+                "description": "My Traffic",
+                "timestampMSecsSinceEpoch": 1441392993000
+            },
+            "fileName": "",
+            "livery": {
+                "airline": {
+                    "country": {
+                        "dbKey": "PE",
+                        "name": "",
+                        "timestampMSecsSinceEpoch": 1443574342501
+                    },
+                    "dbKey": 4324,
+                    "designator": "SRU",
+                    "isOperating": true,
+                    "isVa": false,
+                    "name": "Star Up",
+                    "telephonyDesignator": "STAR-UP",
+                    "timestampMSecsSinceEpoch": 1433787757000
+                },
+                "colorFuselage": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "colorTail": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "combinedCode": "SRU._STD",
+                "dbKey": 5311,
+                "description": "Standard Star Up",
+                "timestampMSecsSinceEpoch": 1440117589000
+            },
+            "modelMode": 0,
+            "modelName": "",
+            "modelString": "B737-200 MYPAINT200",
+            "modelType": 5,
+            "simulator": {
+                "simulator": 9
+            },
+            "timestampMSecsSinceEpoch": 1441501707000
+        },
+        {
+            "aircraftIcao": {
+                "combinedType": "L4J",
+                "dbKey": 1719,
+                "designator": "B744",
+                "legacy": false,
+                "manufacturer": "BOEING",
+                "military": false,
+                "modelDescription": "YAL-1",
+                "rank": 10,
+                "realWorld": true,
+                "timestampMSecsSinceEpoch": 1435692850000,
+                "wtc": ""
+            },
+            "callsign": {
+                "callsign": "",
+                "callsignAsSet": "",
+                "telephonyDesignator": "",
+                "typeHint": 0
+            },
+            "dbKey": 62,
+            "description": "vPilot auto generated",
+            "distributor": {
+                "alias1": "SB3",
+                "alias2": "",
+                "dbKey": "VIP",
+                "description": "VIP models (SquawkBox3)",
+                "timestampMSecsSinceEpoch": 1440895984000
+            },
+            "fileName": "",
+            "livery": {
+                "airline": {
+                    "country": {
+                        "dbKey": "GB",
+                        "name": "",
+                        "timestampMSecsSinceEpoch": 1443574342501
+                    },
+                    "dbKey": 5144,
+                    "designator": "VIR",
+                    "isOperating": true,
+                    "isVa": false,
+                    "name": "Virgin Atlantic Airways",
+                    "telephonyDesignator": "VIRGIN",
+                    "timestampMSecsSinceEpoch": 1433786773000
+                },
+                "colorFuselage": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "colorTail": {
+                    "b": -1,
+                    "g": -1,
+                    "r": -1
+                },
+                "combinedCode": "VIR._STD",
+                "dbKey": 6016,
+                "description": "Standard Virgin Atlantic Airways",
+                "timestampMSecsSinceEpoch": 1440117589000
+            },
+            "modelMode": 0,
+            "modelName": "",
+            "modelString": "VIP_B744VIR",
+            "modelType": 5,
+            "simulator": {
+                "simulator": 9
+            },
+            "timestampMSecsSinceEpoch": 1442607061000
+        }
+    ]
+}
