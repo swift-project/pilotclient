@@ -16,7 +16,11 @@
 #include "blackcore/vatsimmetarreader.h"
 #include "settings/global_reader_settings.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/fileutilities.h"
 #include "blackmisc/worker.h"
+#include "blackmisc/json.h"
+#include <QJsonObject>
+#include <QJsonDocument>
 
 using namespace BlackCore;
 using namespace BlackCore::Settings;
@@ -472,6 +476,80 @@ namespace BlackCore
             if (this->m_icaoDataReader) { this->m_icaoDataReader->readInBackgroundThread(CEntityFlags::AllIcaoAndCountries); }
             if (this->m_modelDataReader) { this->m_modelDataReader->readInBackgroundThread(CEntityFlags::DistributorLiveryModel); }
         }
+    }
+
+    bool CWebDataServices::writeDbDataToDisk(const QString &dir) const
+    {
+        if (dir.isEmpty()) { return false; }
+        QDir directory(dir);
+        if (!directory.exists())
+        {
+            bool s = directory.mkpath(dir);
+            if (!s) { return false; }
+        }
+
+        if (this->getModelsCount() > 0)
+        {
+            QString json(QJsonDocument(this->getModels().toJson()).toJson());
+            bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "models.json"));
+            if (!s) { return false; }
+        }
+
+        if (this->getLiveriesCount() > 0)
+        {
+            QString json(QJsonDocument(this->getLiveries().toJson()).toJson());
+            bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "liveries.json"));
+            if (!s) { return false; }
+        }
+
+        if (m_icaoDataReader)
+        {
+            bool s = m_icaoDataReader->writeToJsonFiles(directory.absolutePath());
+            if (!s) { return false; }
+        }
+        if (m_modelDataReader)
+        {
+            bool s = m_modelDataReader->writeToJsonFiles(directory.absolutePath());
+            if (!s) { return false; }
+        }
+
+        return true;
+    }
+
+    bool CWebDataServices::readDbDataFromDisk(const QString &dir, bool inBackground)
+    {
+        if (dir.isEmpty()) { return false; }
+        QDir directory(dir);
+        if (!directory.exists()) { return false; }
+
+        if (this->m_icaoDataReader)
+        {
+            bool s = false;
+            if (inBackground)
+            {
+                s = (this->m_icaoDataReader->readFromJsonFilesInBackground(dir) != nullptr);
+            }
+            else
+            {
+                s = this->m_icaoDataReader->readFromJsonFiles(dir);
+            }
+            if (!s) { return false; }
+        }
+        if (this->m_modelDataReader)
+        {
+            bool s = false;
+            if (inBackground)
+            {
+                s = (this->m_modelDataReader->readFromJsonFilesInBackground(dir) != nullptr);
+            }
+            else
+            {
+                s = this->m_modelDataReader->readFromJsonFiles(dir);
+            }
+            if (!s) { return false; }
+        }
+
+        return true;
     }
 
     void CWebDataServices::readAtcBookingsInBackground() const

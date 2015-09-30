@@ -10,9 +10,12 @@
 #include "blackmisc/sequence.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/networkutils.h"
+#include "blackmisc/fileutilities.h"
 #include "modeldatareader.h"
 
 #include <QRegularExpression>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -210,12 +213,12 @@ namespace BlackCore
         CLiveryList liveries = CLiveryList::fromDatabaseJson(array);
 
         // this part needs to be synchronized
-        int n = 0;
+        int n = liveries.size();
         {
             QWriteLocker wl(&this->m_lockLivery);
             this->m_liveries = liveries;
-            n = liveries.size();
         }
+        // never emit when lcok is held -> deadlock
         emit dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, n);
     }
 
@@ -231,11 +234,10 @@ namespace BlackCore
         CDistributorList distributors = CDistributorList::fromDatabaseJson(array);
 
         // this part needs to be synchronized
-        int n = 0;
+        int n = distributors.size();
         {
             QWriteLocker wl(&this->m_lockDistributor);
             this->m_distributors = distributors;
-            n = distributors.size();
         }
         emit dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, n);
     }
@@ -252,13 +254,110 @@ namespace BlackCore
         CAircraftModelList models = CAircraftModelList::fromDatabaseJson(array);
 
         // this part needs to be synchronized
-        int n = 0;
+        int n = models.size();
         {
             QWriteLocker wl(&this->m_lockModels);
             this->m_models = models;
-            n = models.size();
         }
         emit dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, n);
+    }
+
+    bool CModelDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead)
+    {
+        QDir directory(dir);
+        if (!directory.exists()) { return false; }
+        BlackMisc::Network::CEntityFlags::Entity reallyRead = CEntityFlags::NoEntity;
+
+        if (whatToRead.testFlag(CEntityFlags::LiveryEntity))
+        {
+            QString liveriesJson(CFileUtils::readFileToString(CFileUtils::appendFilePaths(directory.absolutePath(), "liveries.json")));
+            if (!liveriesJson.isEmpty())
+            {
+                CLiveryList liveries;
+                liveries.convertFromJson(Json::jsonObjectFromString(liveriesJson));
+                int c = liveries.size();
+                {
+                    QWriteLocker l(&m_lockLivery);
+                    m_liveries = liveries;
+                }
+                // never emit when lcok is held -> deadlock
+                emit dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, c);
+                reallyRead |= CEntityFlags::LiveryEntity;
+            }
+        }
+
+        if (whatToRead.testFlag(CEntityFlags::ModelEntity))
+        {
+            QString modelsJson(CFileUtils::readFileToString(CFileUtils::appendFilePaths(directory.absolutePath(), "models.json")));
+            if (!modelsJson.isEmpty())
+            {
+                CAircraftModelList models;
+                models.convertFromJson(Json::jsonObjectFromString(modelsJson));
+                int c = models.size();
+                {
+                    QWriteLocker l(&m_lockModels);
+                    m_models = models;
+                }
+                emit dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, c);
+                reallyRead |= CEntityFlags::ModelEntity;
+            }
+        }
+
+        if (whatToRead.testFlag(CEntityFlags::DistributorEntity))
+        {
+            QString distributorsJson(CFileUtils::readFileToString(CFileUtils::appendFilePaths(directory.absolutePath(), "distributors.json")));
+            if (!distributorsJson.isEmpty())
+            {
+                CDistributorList distributors;
+                distributors.convertFromJson(Json::jsonObjectFromString(distributorsJson));
+                int c = distributors.size();
+                {
+                    QWriteLocker l(&m_lockDistributor);
+                    m_distributors = distributors;
+                }
+                reallyRead |= CEntityFlags::DistributorEntity;
+                emit dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, c);
+            }
+        }
+
+        return (reallyRead & CEntityFlags::DistributorLiveryModel) == whatToRead;
+    }
+
+    CWorker *CModelDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead)
+    {
+        CWorker *worker = BlackMisc::CWorker::fromTask(this, "CModelDataReader::readFromJsonFilesInBackground", [this, dir, whatToRead]()
+        {
+            bool s = this->readFromJsonFiles(dir, whatToRead);
+            Q_UNUSED(s);
+        });
+        return worker;
+    }
+
+    bool CModelDataReader::writeToJsonFiles(const QString &dir) const
+    {
+        QDir directory(dir);
+        if (!directory.exists()) { return false; }
+        if (this->getLiveriesCount() > 0)
+        {
+            QString json(QJsonDocument(this->getLiveries().toJson()).toJson());
+            bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "liveries.json"));
+            if (!s) { return false; }
+        }
+
+        if (this->getModelsCount() > 0)
+        {
+            QString json(QJsonDocument(this->getModels().toJson()).toJson());
+            bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "models.json"));
+            if (!s) { return false; }
+        }
+
+        if (this->getDistributorsCount() > 0)
+        {
+            QString json(QJsonDocument(this->getDistributors().toJson()).toJson());
+            bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "distributors.json"));
+            if (!s) { return false; }
+        }
+        return true;
     }
 
     QString CModelDataReader::getLiveryUrl(const QString &protocol, const QString &server, const QString &baseUrl)

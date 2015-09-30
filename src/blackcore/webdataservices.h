@@ -25,6 +25,7 @@
 #include "blackmisc/weather/metarset.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/countrylist.h"
+#include "blackmisc/project.h"
 #include <QObject>
 
 namespace BlackCore
@@ -226,6 +227,12 @@ namespace BlackCore
         //! \copydoc IWebDataReaderProvider::canConnectSwiftDb
         //! \ingroup webdatareaderprovider
         virtual bool canConnectSwiftDb() const override;
+
+        //! Save all DB data to JSON files
+        virtual bool writeDbDataToDisk(const QString &dir) const override;
+
+        //! Load DB data from JSON files
+        virtual bool readDbDataFromDisk(const QString &dir, bool inBackground) override;
 
     public slots:
         //! First read (allows to immediately read in background)

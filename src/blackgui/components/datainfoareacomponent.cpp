@@ -7,11 +7,12 @@
  * contained in the LICENSE file.
  */
 
+#include "ui_datainfoareacomponent.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/datainfoareacomponent.h"
 #include "blackcore/webdataservices.h"
-#include "ui_datainfoareacomponent.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/logmessage.h"
 
 using namespace BlackMisc;
 using namespace BlackGui;
@@ -73,6 +74,37 @@ namespace BlackGui
             this->ui->comp_DbLiveries->setProvider(provider);
             this->ui->comp_DbModels->setProvider(provider);
             this->ui->comp_Countries->setProvider(provider);
+            CWebDataServicesAware::setProvider(provider);
+        }
+
+        bool CDataInfoAreaComponent::writeDbDataToResourceDir() const
+        {
+            bool s = hasProvider() &&
+                     this->writeDbDataToDisk(CProject::getSwiftStaticDbFilesDir());
+            if (s)
+            {
+                CLogMessage(this).info("Written DB data");
+            }
+            else
+            {
+                CLogMessage(this).error("Cannot write DB data");
+            }
+            return s;
+        }
+
+        bool CDataInfoAreaComponent::readDbDataFromResourceDir()
+        {
+            bool s = hasProvider() &&
+                     this->readDbDataFromDisk(CProject::getSwiftStaticDbFilesDir());
+            if (s)
+            {
+                CLogMessage(this).info("Read DB data");
+            }
+            else
+            {
+                CLogMessage(this).error("Failed to load DB data");
+            }
+            return s;
         }
 
         QSize CDataInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const

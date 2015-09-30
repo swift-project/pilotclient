@@ -62,17 +62,7 @@ namespace BlackGui
 
         void CInfoBarWebReadersStatusComponent::ps_dataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
-            if (readState == CEntityFlags::ReadFinished)
-            {
-                bool swift = CWebReaderFlags::isFromSwiftDb(entity);
-                if (swift && count > 0)
-                {
-                    // avoids unnecessary checks
-                    this->ui->led_SwiftDb->setOn(true);
-                    this->m_timer.start(); // restart
-                }
-            }
-
+            Q_UNUSED(count);
             QList<CLedWidget *> leds = this->entityToLeds(entity);
             if (!leds.isEmpty()) { this->setLedReadStates(leds, readState); }
         }

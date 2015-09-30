@@ -10,9 +10,12 @@
 #include "blackmisc/sequence.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/networkutils.h"
+#include "blackmisc/fileutilities.h"
+#include "blackmisc/json.h"
 #include "icaodatareader.h"
-
 #include <QRegularExpression>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -206,11 +209,10 @@ namespace BlackCore
         CAircraftIcaoCodeList codes = CAircraftIcaoCodeList::fromDatabaseJson(array);
 
         // this part needs to be synchronized
-        int n;
+        int n = codes.size();
         {
             QWriteLocker wl(&this->m_lockAircraft);
             this->m_aircraftIcaos = codes;
-            n = codes.size();
         }
         emit dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, n);
     }
@@ -227,11 +229,10 @@ namespace BlackCore
         CAirlineIcaoCodeList codes = CAirlineIcaoCodeList::fromDatabaseJson(array);
 
         // this part needs to be synchronized
-        int n;
+        int n = codes.size();
         {
             QWriteLocker wl(&this->m_lockAirline);
             this->m_airlineIcaos = codes;
-            n = codes.size();
         }
         emit dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, n);
     }
@@ -248,11 +249,10 @@ namespace BlackCore
         CCountryList countries = CCountryList::fromDatabaseJson(array);
 
         // this part needs to be synchronized
-        int n;
+        int n = m_countries.size();
         {
             QWriteLocker wl(&this->m_lockCountry);
             this->m_countries = countries;
-            n = m_countries.size();
         }
         emit dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, n);
     }
@@ -264,6 +264,103 @@ namespace BlackCore
 
         // currently only testing one URL, might be changed in the future
         return cm;
+    }
+
+    bool CIcaoDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead)
+    {
+        QDir directory(dir);
+        if (!directory.exists()) { return false; }
+
+        CEntityFlags::Entity reallyRead = CEntityFlags::NoEntity;
+        if (whatToRead.testFlag(CEntityFlags::CountryEntity))
+        {
+            QString countriesJson(CFileUtils::readFileToString(CFileUtils::appendFilePaths(directory.absolutePath(), "countries.json")));
+            if (!countriesJson.isEmpty())
+            {
+                CCountryList countries;
+                countries.convertFromJson(Json::jsonObjectFromString(countriesJson));
+                int c = countries.size();
+                {
+                    QWriteLocker l(&m_lockCountry);
+                    m_countries = countries;
+                }
+                // Do not emit while locked -> deadlock
+                reallyRead |= CEntityFlags::CountryEntity;
+                emit dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, c);
+            }
+        }
+
+        if (whatToRead.testFlag(CEntityFlags::AircraftIcaoEntity))
+        {
+            QString aircraftJson(CFileUtils::readFileToString(CFileUtils::appendFilePaths(directory.absolutePath(), "aircrafticao.json")));
+            if (!aircraftJson.isEmpty())
+            {
+                CAircraftIcaoCodeList aircraftIcaos;
+                aircraftIcaos.convertFromJson(Json::jsonObjectFromString(aircraftJson));
+                int c = aircraftIcaos.size();
+                {
+                    QWriteLocker l(&m_lockAircraft);
+                    m_aircraftIcaos = aircraftIcaos;
+                }
+                reallyRead |= CEntityFlags::AircraftIcaoEntity;
+                emit dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, c);
+            }
+        }
+
+        if (whatToRead.testFlag(CEntityFlags::AirlineIcaoEntity))
+        {
+            QString airlineJson(CFileUtils::readFileToString(CFileUtils::appendFilePaths(directory.absolutePath(), "airlineicao.json")));
+            if (!airlineJson.isEmpty())
+            {
+                CAirlineIcaoCodeList airlineIcaos;
+                airlineIcaos.convertFromJson(Json::jsonObjectFromString(airlineJson));
+                int c = airlineIcaos.size();
+                {
+                    QWriteLocker l(&m_lockAirline);
+                    m_airlineIcaos = airlineIcaos;
+                }
+                reallyRead |= CEntityFlags::AirlineIcaoEntity;
+                emit dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, c);
+            }
+        }
+        return (whatToRead & CEntityFlags::AllIcaoAndCountries) == reallyRead;
+    }
+
+    CWorker *CIcaoDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead)
+    {
+        CWorker *worker = BlackMisc::CWorker::fromTask(this, "CIcaoDataReader::readFromJsonFilesInBackground", [this, dir, whatToRead]()
+        {
+            bool s = this->readFromJsonFiles(dir, whatToRead);
+            Q_UNUSED(s);
+        });
+        return worker;
+    }
+
+    bool CIcaoDataReader::writeToJsonFiles(const QString &dir) const
+    {
+        QDir directory(dir);
+        if (!directory.exists()) { return false; }
+        if (this->getCountriesCount() > 0)
+        {
+            QString json(QJsonDocument(this->getCountries().toJson()).toJson());
+            bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "countries.json"));
+            if (!s) { return false; }
+        }
+
+        if (this->getAircraftIcaoCodesCount() > 0)
+        {
+            QString json(QJsonDocument(this->getAircraftIcaoCodes().toJson()).toJson());
+            bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "aircrafticao.json"));
+            if (!s) { return false; }
+        }
+
+        if (this->getAirlineIcaoCodesCount() > 0)
+        {
+            QString json(QJsonDocument(this->getAirlineIcaoCodes().toJson()).toJson());
+            bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "airlineicao.json"));
+            if (!s) { return false; }
+        }
+        return true;
     }
 
     QString CIcaoDataReader::getAircraftIcaoUrl(const QString &protocol, const QString &server, const QString &baseUrl)

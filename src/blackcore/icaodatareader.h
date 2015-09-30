@@ -101,6 +101,15 @@ namespace BlackCore
         //! \copydoc CDatabaseReader::canConnect()
         using CDatabaseReader::canConnect;
 
+        //! Read from static DB data file
+        bool readFromJsonFiles(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead = BlackMisc::Network::CEntityFlags::AllIcaoAndCountries);
+
+        //! Read from static DB data file
+        BlackMisc::CWorker *readFromJsonFilesInBackground(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead = BlackMisc::Network::CEntityFlags::AllIcaoAndCountries);
+
+        //! Write to static DB data file
+        bool writeToJsonFiles(const QString &dir) const;
+
     signals:
         //! Combined read signal
         void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);

@@ -195,6 +195,12 @@ namespace BlackMisc
 
             //! Can connect to swift DB?
             virtual bool canConnectSwiftDb() const = 0;
+
+            //! Write data to disk
+            virtual bool writeDbDataToDisk(const QString &dir) const = 0;
+
+            //! Load DB data from disk
+            virtual bool readDbDataFromDisk(const QString &dir, bool inBackground) = 0;
         };
 
         //! Class which can be directly used to access an \sa IWebDataReaderProvider object
@@ -325,6 +331,12 @@ namespace BlackMisc
 
             //! \copydoc IWebDataReaderProvider::canConnectSwiftDb
             bool canConnectSwiftDb() const;
+
+            //! \copydoc IWebDataReaderProvider::writeDbDataToDisk
+            bool writeDbDataToDisk(const QString &dir) const;
+
+            //! \copydoc IWebDataReaderProvider::readDbDataFromDisk
+            bool readDbDataFromDisk(const QString &dir, bool inBackround);
 
         protected:
             //! Constructor

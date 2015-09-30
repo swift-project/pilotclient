@@ -82,6 +82,13 @@ namespace BlackGui
             //! Set data reader
             virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReader) override;
 
+        public slots:
+            //! Write to resource dir
+            bool writeDbDataToResourceDir() const;
+
+            //! Load from resource dir
+            bool readDbDataFromResourceDir();
+
         protected:
             //! \copydoc CInfoArea::getPreferredSizeWhenFloating
             virtual QSize getPreferredSizeWhenFloating(int areaIndex) const override;

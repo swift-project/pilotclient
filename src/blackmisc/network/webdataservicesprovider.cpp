@@ -303,6 +303,20 @@ namespace BlackMisc
             return this->m_webDataReaderProvider->canConnectSwiftDb();
         }
 
+        bool CWebDataServicesAware::writeDbDataToDisk(const QString &dir) const
+        {
+            Q_ASSERT_X(this->m_webDataReaderProvider, Q_FUNC_INFO, "Missing provider");
+            if (!hasProvider()) { return false; }
+            return this->m_webDataReaderProvider->writeDbDataToDisk(dir);
+        }
+
+        bool CWebDataServicesAware::readDbDataFromDisk(const QString &dir, bool inBackround)
+        {
+            Q_ASSERT_X(this->m_webDataReaderProvider, Q_FUNC_INFO, "Missing provider");
+            if (!hasProvider()) { return false; }
+            return this->m_webDataReaderProvider->readDbDataFromDisk(dir, inBackround);
+        }
+
         void CWebDataServicesAware::disconnectSignals()
         {
             for (QMetaObject::Connection &c : m_swiftConnections)
