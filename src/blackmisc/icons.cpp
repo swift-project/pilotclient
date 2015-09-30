@@ -46,6 +46,22 @@ namespace BlackMisc
         return pm;
     }
 
+    const QPixmap &CIcons::disk16()
+    {
+        static const QPixmap pm(":/pastel/icons/pastel/16/disk.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::load16()
+    {
+        return disk16();
+    }
+
+    const QPixmap &CIcons::save16()
+    {
+        return disk16();
+    }
+
     const QPixmap &CIcons::colorPicker16()
     {
         static const QPixmap pm(":/diagona/icons/diagona/icons/ui-color-picker.png");
@@ -965,6 +981,8 @@ namespace BlackMisc
             return info16();
         case StandardIconJoystick16:
             return joystick16();
+        case StandardIconLoad16:
+            return load16();
         case StandardIconMonitorError16:
             return monitorError16();
         case StandardIconPaperPlane16:
@@ -985,6 +1003,8 @@ namespace BlackMisc
             return resizeHorizontal16();
         case StandardIconResizeVertical16:
             return resizeVertical16();
+        case StandardIconSave16:
+            return save16();
         case StandardIconSpeakerNetwork16:
             return speakerNetwork16();
         case StandardIconStatusBar16:

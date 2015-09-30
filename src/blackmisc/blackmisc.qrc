@@ -81,6 +81,7 @@
         <file>icons/pastel/16/database-lightning.png</file>
         <file>icons/pastel/16/database-table.png</file>
         <file>icons/pastel/16/paintcan.png</file>
+        <file>icons/pastel/16/disk.png</file>
     </qresource>
     <qresource prefix="/vatsim">
         <file>icons/vatsim/C1.png</file>

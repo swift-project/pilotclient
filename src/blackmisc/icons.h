@@ -123,6 +123,7 @@ namespace BlackMisc
             StandardIconHeadingOne16,
             StandardIconInfo16,
             StandardIconJoystick16,
+            StandardIconLoad16,
             StandardIconLockClosed16,
             StandardIconLockOpen16,
             StandardIconMonitorError16,
@@ -135,6 +136,7 @@ namespace BlackMisc
             StandardIconResize16,
             StandardIconResizeHorizontal16,
             StandardIconResizeVertical16,
+            StandardIconSave16,
             StandardIconSpeakerNetwork16,
             StandardIconStatusBar16,
             StandardIconTableRelationship16,
@@ -191,6 +193,15 @@ namespace BlackMisc
 
         //! Close
         static const QPixmap &close16();
+
+        //! Disk
+        static const QPixmap &disk16();
+
+        //! Load
+        static const QPixmap &load16();
+
+        //! Save
+        static const QPixmap &save16();
 
         //! Color
         static const QPixmap &color16();
