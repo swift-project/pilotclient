@@ -18,33 +18,49 @@
 
 namespace BlackMisc
 {
-
     /*!
      * Utility class, deleting files when it is destroyed
      */
     class BLACKMISC_EXPORT CFileDeleter
     {
-
-    private:
-        QStringList m_fileNames;
-
+    public:
         //! File deleter
         CFileDeleter() {}
 
-        //! add given file for deletion
-        void addFile(const QString &file);
-
-    public:
-
-        //! file deleter
-        static CFileDeleter &fileDeleter() { static CFileDeleter f; return f;}
-
         //! add a file (name)
-        static void addFileForDeletion(const QString &file);
+        void addFileForDeletion(const QString &file);
+
+        //! Add files (names)
+        void addFilesForDeletion(const QStringList &files);
 
         //! Destructor
         ~CFileDeleter();
+
+        //! Delete files
+        void deleteFiles();
+
+    private:
+        QStringList m_fileNames;
     };
-}
+
+    /*!
+     * Utility class, deleting files after time
+     */
+    class BLACKMISC_EXPORT CTimedFileDeleter : public QObject
+    {
+    public:
+        //! Constructor
+        CTimedFileDeleter(const QString &file, int deleteAfterMs, QObject *parent = nullptr);
+
+    protected:
+        //! \copydoc QObject::timerEvent
+        virtual void timerEvent(QTimerEvent *event) override;
+
+    private:
+        CFileDeleter m_fileDeleter;
+        int m_timerId = -1;
+    };
+
+} // ns
 
 #endif // guard

@@ -7,28 +7,57 @@
  * contained in the LICENSE file.
  */
 
-#include <QFile>
 #include "filedeleter.h"
+#include <QFile>
 
 namespace BlackMisc
 {
-    void CFileDeleter::addFile(const QString &file)
+    void CFileDeleter::addFileForDeletion(const QString &file)
     {
-        if (file.isEmpty()) return;
+        if (file.isEmpty()) { return; }
         if (!this->m_fileNames.contains(file)) this->m_fileNames.append(file);
     }
 
-    void CFileDeleter::addFileForDeletion(const QString &file)
+    void CFileDeleter::addFilesForDeletion(const QStringList &files)
     {
-        CFileDeleter::fileDeleter().addFile(file);
+        if (files.isEmpty()) { return; }
+        this->m_fileNames.append(files);
     }
 
     CFileDeleter::~CFileDeleter()
     {
-        foreach(const QString fn, this->m_fileNames)
+        this->deleteFiles();
+    }
+
+    void CFileDeleter::deleteFiles()
+    {
+        const QStringList files(m_fileNames);
+        m_fileNames.clear();
+
+        for (const QString &fn : files)
         {
+            if (fn.isEmpty()) { continue; }
             QFile f(fn);
             f.remove();
         }
     }
-}
+
+    CTimedFileDeleter::CTimedFileDeleter(const QString &file, int deleteAfterMs, QObject *parent) :
+        QObject(parent)
+    {
+        Q_ASSERT_X(!file.isEmpty(), Q_FUNC_INFO, "No file name");
+        if (deleteAfterMs < 100) { deleteAfterMs = 100; } // makes sure timer is started properly
+        this->m_fileDeleter.addFileForDeletion(file);
+        m_timerId = startTimer(deleteAfterMs);
+    }
+
+    void CTimedFileDeleter::timerEvent(QTimerEvent *event)
+    {
+        Q_UNUSED(event);
+        if (m_timerId > 0) { this->killTimer(m_timerId); }
+        m_timerId = -1;
+        m_fileDeleter.deleteFiles();
+        this->deleteLater();
+    }
+
+} // ns

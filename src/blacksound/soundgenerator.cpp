@@ -22,6 +22,7 @@
 #include <QFile>
 #include <QDir>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Audio;
@@ -35,7 +36,7 @@ namespace BlackSound
             m_tones(tones), m_position(0), m_playMode(mode), m_endReached(false), m_oneCycleDurationMs(calculateDurationMs(tones)),
             m_device(device), m_audioFormat(format), m_audioOutput(new QAudioOutput(format))
     {
-        Q_ASSERT(tones.size() > 0);
+        Q_ASSERT_X(tones.size() > 0, Q_FUNC_INFO, "No tones");
     }
 
     CSoundGenerator::CSoundGenerator(const QList<Tone> &tones, CNotificationSounds::PlayMode mode, QObject *parent)
@@ -44,7 +45,7 @@ namespace BlackSound
             m_device(QAudioDeviceInfo::defaultOutputDevice()), m_audioFormat(CSoundGenerator::defaultAudioFormat()),
             m_audioOutput(new QAudioOutput(CSoundGenerator::defaultAudioFormat()))
     {
-        Q_ASSERT(tones.size() > 0);
+        Q_ASSERT_X(tones.size() > 0, Q_FUNC_INFO, "No tones");
     }
 
     CSoundGenerator::~CSoundGenerator()
@@ -92,7 +93,9 @@ namespace BlackSound
 
         // in auto delete mode force deleteLater when thread is finished
         if (this->m_playMode == CNotificationSounds::SingleWithAutomaticDeletion)
+        {
             connect(this->m_ownThread, &QThread::finished, this, &CSoundGenerator::deleteLater);
+        }
 
         // start thread and begin processing by calling start via signal startThread
         this->m_ownThread->start();
@@ -517,7 +520,7 @@ namespace BlackSound
         mediaPlayer->setVolume(volume); // 0-100
         mediaPlayer->play();
         // I cannot delete the file here, only after it has been played
-        if (removeFileAfterPlaying) BlackMisc::CFileDeleter::addFileForDeletion(file);
+        if (removeFileAfterPlaying) { new CTimedFileDeleter(file, 1000 * 60, QCoreApplication::instance()); }
     }
 
     void CSoundGenerator::printAllQtSoundDevices(QTextStream &out)

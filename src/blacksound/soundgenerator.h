@@ -1,4 +1,4 @@
-/* Copyright (C) 2015
+/* Copyright (C) 2013
  * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -179,6 +179,9 @@ namespace BlackSound
         //! \remarks With singleShot the signal indicates that sound sequence has finished
         void stopped();
 
+        //! Generator is stopping
+        void stopping();
+
     public slots:
         //! Play sound, open device
         //! \param volume 0..100
@@ -190,10 +193,6 @@ namespace BlackSound
         //! \param volume 0..100
         void startInOwnThread(int volume);
 
-    signals:
-        //! Generator is stopping
-        void stopping();
-
     private slots:
         //! Push mode, timer expired
         void pushTimerExpired();
@@ -203,18 +202,18 @@ namespace BlackSound
         void generateData();
 
     private:
-        QList<Tone> m_tones; //!< tones to be played
-        qint64 m_position;   //!< position in buffer
+        QList<Tone> m_tones;                      //!< tones to be played
+        qint64 m_position;                        //!< position in buffer
         CNotificationSounds::PlayMode m_playMode; //!< end data provisioning after playing all tones, play endless loop
-        bool m_endReached;           //!< indicates end in combination with single play
-        qint64 m_oneCycleDurationMs; //!< how long is one cycle of tones
-        QByteArray m_buffer;         //!< generated buffer for data
-        QAudioDeviceInfo m_device;   //!< audio device
-        QAudioFormat m_audioFormat;  //!< used format
+        bool m_endReached;                        //!< indicates end in combination with single play
+        qint64 m_oneCycleDurationMs;              //!< how long is one cycle of tones
+        QByteArray m_buffer;                      //!< generated buffer for data
+        QAudioDeviceInfo m_device;                //!< audio device
+        QAudioFormat m_audioFormat;               //!< used format
         QScopedPointer<QAudioOutput> m_audioOutput;
-        QTimer *m_pushTimer = nullptr;           //!< Push mode timer
-        QIODevice *m_pushModeIODevice = nullptr; //!< IO device when used in push mode
-        QThread   *m_ownThread = nullptr;
+        QTimer    *m_pushTimer        = nullptr;  //!< Push mode timer
+        QIODevice *m_pushModeIODevice = nullptr;  //!< IO device when used in push mode
+        QThread   *m_ownThread        = nullptr;
         static QDateTime s_selcalStarted;
 
         //! Header for saving .wav files
