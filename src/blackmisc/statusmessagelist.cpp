@@ -28,17 +28,18 @@ namespace BlackMisc
 
     bool CStatusMessageList::hasErrorMessages() const
     {
-        return findBySeverity(CStatusMessage::SeverityError).size() > 0;
+        return this->contains(&CStatusMessage::getSeverity, CStatusMessage::SeverityError);
     }
 
     bool CStatusMessageList::hasWarningMessages() const
     {
-        return findBySeverity(CStatusMessage::SeverityWarning).size() > 0;
+        return this->contains(&CStatusMessage::getSeverity, CStatusMessage::SeverityWarning);
     }
 
     bool CStatusMessageList::hasWarningOrErrorMessages() const
     {
-        return hasErrorMessages() || hasWarningMessages();
+        return this->containsBy
+        ([ = ](const CStatusMessage & m) { return m.getSeverity() == CStatusMessage::SeverityWarning || m.getSeverity() == CStatusMessage::SeverityError; });
     }
 
     void CStatusMessageList::addCategory(const CLogCategory &category)

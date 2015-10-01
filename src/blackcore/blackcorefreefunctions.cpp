@@ -15,15 +15,10 @@ namespace BlackCore
 {
     void registerMetadata()
     {
-        int id;
-        id = qRegisterMetaType<BlackCore::IVoiceChannel::ConnectionStatus>();
-        Q_ASSERT_X(id >= 1024, Q_FUNC_INFO, "wrong id for metatype");
-        id = qRegisterMetaType<BlackCore::INetwork::ConnectionStatus>();
-        Q_ASSERT_X(id >= 1024, Q_FUNC_INFO, "wrong id for metatype");
-        id = qRegisterMetaType<BlackCore::CWebReaderFlags::WebReaderFlag>();
-        Q_ASSERT_X(id >= 1024, Q_FUNC_INFO, "wrong id for metatype");
-        id = qRegisterMetaType<BlackCore::CWebReaderFlags::WebReader>();
-        Q_UNUSED(id);
+        qRegisterMetaType<IVoiceChannel::ConnectionStatus>();
+        qRegisterMetaType<BlackCore::INetwork::ConnectionStatus>();
+        qRegisterMetaType<BlackCore::CWebReaderFlags::WebReaderFlag>();
+        qRegisterMetaType<BlackCore::CWebReaderFlags::WebReader>();
     }
 
     bool isCurrentThreadObjectThread(QObject *toBeTested)
