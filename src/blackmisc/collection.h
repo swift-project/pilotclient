@@ -339,23 +339,6 @@ namespace BlackMisc
         void remove(const CCollection &other) { *this = CCollection(*this).difference(other); }
 
         /*!
-         * \brief Return some random elements from container
-         * \param elements how many elements
-         */
-        CCollection randomElements(int elements) const
-        {
-            if (this->isEmpty() || elements < 1) { return CCollection(); }
-            int high = this->size();
-            CCollection r;
-            for (int i = 0; i < elements; i++)
-            {
-                int randomIndex = qrand() % high;
-                r.push_back(*(this->begin()+ randomIndex));
-            }
-            return r;
-        }
-
-        /*!
          * \brief Test for equality.
          */
         bool operator ==(const CCollection &other) const { return *pimpl() == *other.pimpl(); }

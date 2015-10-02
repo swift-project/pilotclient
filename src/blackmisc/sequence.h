@@ -518,23 +518,6 @@ namespace BlackMisc
             return sorted(BlackMisc::Predicates::MemberLess(key1, keys...));
         }
 
-        /*!
-         * \brief Return some random elements from container
-         * \param elements how many elements
-         */
-        CSequence randomElements(int elements) const
-        {
-            if (this->isEmpty() || elements < 1) { return CSequence(); }
-            int high = this->size();
-            CSequence r;
-            for (int i = 0; i < elements; i++)
-            {
-                int randomIndex = qrand() % high;
-                r.push_back(this->operator [](randomIndex));
-            }
-            return r;
-        }
-
         //! Equals operator.
         friend bool operator ==(const CSequence &a, const CSequence &b)
         {
