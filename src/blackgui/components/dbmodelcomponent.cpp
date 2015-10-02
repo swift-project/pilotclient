@@ -23,10 +23,10 @@ namespace BlackGui
     {
         CDbModelComponent::CDbModelComponent(QWidget *parent) :
             QFrame(parent),
-            CWebDataServicesAware(nullptr), // provider not yet available
             ui(new Ui::CDbModelComponent)
         {
             ui->setupUi(this);
+            this->setViewWithIndicator(this->ui->tvp_AircraftModel);
             this->ui->tvp_AircraftModel->setAircraftModelMode(CAircraftModelListModel::Database);
             connect(this->ui->tvp_AircraftModel, &CAircraftModelView::requestNewBackendData, this, &CDbModelComponent::ps_reload);
             connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CDbModelComponent::ps_onStyleSheetChanged);

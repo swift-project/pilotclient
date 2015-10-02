@@ -22,10 +22,10 @@ namespace BlackGui
     {
         CDbAirlineIcaoComponent::CDbAirlineIcaoComponent(QWidget *parent) :
             QFrame(parent),
-            CWebDataServicesAware(nullptr),
             ui(new Ui::CDbAirlineIcaoComponent)
         {
             ui->setupUi(this);
+            this->setViewWithIndicator(this->ui->tvp_AirlineIcao);
             this->ui->tvp_AirlineIcao->setResizeMode(CViewBaseNonTemplate::ResizingOff);
             this->ui->tvp_AirlineIcao->setResizeMode(CViewBaseNonTemplate::ResizingOff);
             this->ui->tvp_AirlineIcao->allowDragDropValueObjects(true, false);

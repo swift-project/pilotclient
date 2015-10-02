@@ -21,10 +21,10 @@ namespace BlackGui
     {
         CDbDistributorComponent::CDbDistributorComponent(QWidget *parent) :
             QFrame(parent),
-            CWebDataServicesAware(nullptr),
             ui(new Ui::CDbDistributorComponent)
         {
             ui->setupUi(this);
+            this->setViewWithIndicator(this->ui->tvp_Distributors);
             this->ui->tvp_Distributors->setResizeMode(CViewBaseNonTemplate::ResizingAuto);
             this->ui->tvp_Distributors->allowDragDropValueObjects(true, false);
             connect(this->ui->tvp_Distributors, &CDistributorView::requestNewBackendData, this, &CDbDistributorComponent::ps_reload);

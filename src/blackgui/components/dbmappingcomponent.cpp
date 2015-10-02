@@ -13,6 +13,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/project.h"
 #include "blackgui/guiutility.h"
+#include "blackgui/roles.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -54,10 +55,11 @@ namespace BlackGui
 
         void CDbMappingComponent::initVPilotLoading()
         {
-            if (CProject::isRunningOnWindowsNtPlatform() && CProject::isCompiledWithMsFlightSimulatorSupport())
+            if (CRoles::roles().isAdmin() &&
+                    CProject::isRunningOnWindowsNtPlatform() &&
+                    CProject::isCompiledWithMsFlightSimulatorSupport())
             {
                 this->m_withVPilot = true;
-                this->ui->tab_VPilot->setEnabled(true);
                 this->ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CMappingVPilotMenu(this));
                 this->ui->tvp_AircraftModelsForVPilot->setDisplayAutomatically(true);
                 connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
@@ -67,8 +69,10 @@ namespace BlackGui
             else
             {
                 this->m_withVPilot = false;
-                this->ui->tab_VPilot->setEnabled(false);
             }
+            this->ui->tab_VPilot->setEnabled(m_withVPilot);
+            this->ui->tab_VPilot->setVisible(m_withVPilot);
+            this->ui->tw_ModelsToBeMapped->removeTab(1);
         }
 
         bool CDbMappingComponent::initModelLoader(const CSimulatorInfo &simInfo)
@@ -365,8 +369,11 @@ namespace BlackGui
             CDbMappingComponent *mapComp = qobject_cast<CDbMappingComponent *>(this->parent());
             Q_ASSERT_X(mapComp, Q_FUNC_INFO, "Cannot access parent");
 
-            menu.addAction(CIcons::appMappings16(), "Load vPilot Rules", mapComp, SLOT(ps_loadVPilotData()));
-            menu.addSeparator();
+            if (CRoles::roles().isAdmin())
+            {
+                menu.addAction(CIcons::appMappings16(), "Load vPilot Rules", mapComp, SLOT(ps_loadVPilotData()));
+                menu.addSeparator();
+            }
         }
 
     } // ns

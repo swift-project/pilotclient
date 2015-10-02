@@ -13,6 +13,7 @@
 #define BLACKGUI_COMPONENTS_DBCOUNTRYCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackmisc/network/webdataservicesprovider.h"
 #include <QFrame>
@@ -30,6 +31,7 @@ namespace BlackGui
         class BLACKGUI_EXPORT CDbCountryComponent :
             public QFrame,
             public CEnableForDockWidgetInfoArea,
+            public BlackGui::CEnableForViewBasedIndicator,
             public BlackMisc::Network::CWebDataServicesAware
         {
             Q_OBJECT

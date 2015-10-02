@@ -15,6 +15,7 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/menudelegate.h"
+#include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
 #include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
@@ -35,6 +36,7 @@ namespace BlackGui
         class BLACKGUI_EXPORT CDbMappingComponent :
             public BlackGui::COverlayMessagesFrame,
             public CEnableForDockWidgetInfoArea,
+            public BlackGui::CEnableForViewBasedIndicator,
             public BlackMisc::Network::CWebDataServicesAware
         {
             Q_OBJECT

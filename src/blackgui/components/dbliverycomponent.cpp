@@ -26,6 +26,7 @@ namespace BlackGui
             ui(new Ui::CDbLiveryComponent)
         {
             ui->setupUi(this);
+            this->setViewWithIndicator(this->ui->tvp_Liveries);
             connect(this->ui->tvp_Liveries, &CLiveryView::requestNewBackendData, this, &CDbLiveryComponent::ps_reload);
 
             // filter and drag and drop

@@ -25,6 +25,7 @@ namespace BlackGui
             ui(new Ui::CDbAircraftIcaoComponent)
         {
             ui->setupUi(this);
+            this->setViewWithIndicator(this->ui->tvp_AircraftIcao);
             this->ui->tvp_AircraftIcao->setResizeMode(CViewBaseNonTemplate::ResizingOff);
             connect(this->ui->tvp_AircraftIcao, &CAircraftIcaoCodeView::requestNewBackendData, this, &CDbAircraftIcaoComponent::ps_reload);
 

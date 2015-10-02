@@ -22,10 +22,10 @@ namespace BlackGui
     {
         CDbCountryComponent::CDbCountryComponent(QWidget *parent) :
             QFrame(parent),
-            CWebDataServicesAware(nullptr),
             ui(new Ui::CDbCountryComponent)
         {
             ui->setupUi(this);
+            this->setViewWithIndicator(this->ui->tvp_Countries);
             this->ui->tvp_Countries->setResizeMode(CViewBaseNonTemplate::ResizingOnce);
             connect(this->ui->tvp_Countries, &CCountryView::requestNewBackendData, this, &CDbCountryComponent::ps_reload);
 
