@@ -15,6 +15,7 @@
 #include "blackmiscexport.h"
 #include "iterator.h"
 #include "predicates.h"
+#include "algorithm.h"
 #include <QtGlobal>
 #include <QDebug>
 #include <algorithm>
@@ -126,6 +127,22 @@ namespace BlackMisc
         bool contains(K0 k0, V0 v0, KeysValues... keysValues) const
         {
             return containsBy(BlackMisc::Predicates::MemberEqual(k0, v0, keysValues...));
+        }
+
+        //! Copy n elements from the container at random.
+        Derived randomElements(int n) const
+        {
+            Derived result;
+            BlackMisc::copyRandomElements(derived().begin(), derived().end(), std::inserter(result, result.end()), n);
+            return result;
+        }
+
+        //! Copy n elements from the container, randomly selected but evenly distributed.
+        Derived sampleElements(int n) const
+        {
+            Derived result;
+            BlackMisc::copySampleElements(derived().begin(), derived().end(), std::inserter(result, result.end()), n);
+            return result;
         }
 
     private:

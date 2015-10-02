@@ -12,12 +12,75 @@
 #ifndef BLACKMISC_ALGORITHM_H
 #define BLACKMISC_ALGORITHM_H
 
+#include <QThreadStorage>
 #include <QtGlobal>
 #include <algorithm>
 #include <iterator>
+#include <random>
 
 namespace BlackMisc
 {
+    namespace Private
+    {
+        //! \private A high quality deterministic pseudo-random number generator.
+        //! \threadsafe
+        inline std::mt19937 &defaultRandomGenerator()
+        {
+            static QThreadStorage<std::mt19937> rng;
+            if (rng.hasLocalData()) { rng.setLocalData(std::mt19937(qrand())); }
+            return rng.localData();
+        }
+    }
+
+    /*!
+     * Use the random number generator rng to choose n elements from the range [in,end) and copy them to out.
+     */
+    template <typename ForwardIt, typename OutputIt, typename Generator>
+    void copyRandomElements(ForwardIt in, ForwardIt end, OutputIt out, int n, Generator &&rng)
+    {
+        for (auto size = std::distance(in, end); in != end && n > 0; ++in, --size)
+        {
+            if (std::uniform_int_distribution<>(0, size - 1)(rng) < n)
+            {
+                *out++ = *in;
+                --n;
+            }
+        }
+    }
+
+    /*!
+     * Randomly choose n elements from the range [in,end) and copy them to out.
+     */
+    template <typename ForwardIt, typename OutputIt>
+    void copyRandomElements(ForwardIt in, ForwardIt end, OutputIt out, int n)
+    {
+        copyRandomElements(in, end, out, n, Private::defaultRandomGenerator());
+    }
+
+    /*!
+     * Split the range [in,end) into n equal chunks and use the random number generator rng to choose one element from each.
+     */
+    template <typename ForwardIt, typename OutputIt, typename Generator>
+    void copySampleElements(ForwardIt in, ForwardIt end, OutputIt out, const int n, Generator &&rng)
+    {
+        for (const auto size = std::distance(in, end); in != end && n > 0; )
+        {
+            const auto index = std::uniform_int_distribution<>(0, size / n - 1)(rng);
+            std::advance(in, index);
+            *out++ = *in;
+            std::advance(in, size / n - index);
+        }
+    }
+
+    /*!
+     * Split the range [in,end) into n equal chunks and randomly choose one element from each.
+     */
+    template <typename ForwardIt, typename OutputIt>
+    void copySampleElements(ForwardIt in, ForwardIt end, OutputIt out, int n)
+    {
+        copySampleElements(in, end, out, n, Private::defaultRandomGenerator());
+    }
+
     /*!
      * Topological sorting algorithm.
      *
