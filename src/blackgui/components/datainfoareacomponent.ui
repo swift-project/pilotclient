@@ -286,7 +286,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="BlackGui::Components::CDbAircraftIcaoComponent" name="comp_AircraftIcao">
+         <widget class="BlackGui::Components::CDbAircraftIcaoComponent" name="comp_DbAircraftIcao">
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
           </property>
@@ -353,7 +353,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="BlackGui::Components::CDbAirlineIcaoComponent" name="comp_AirlineIcao">
+         <widget class="BlackGui::Components::CDbAirlineIcaoComponent" name="comp_DbAirlineIcao">
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
           </property>
@@ -420,7 +420,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="BlackGui::Components::CDbCountryComponent" name="comp_Countries">
+         <widget class="BlackGui::Components::CDbCountryComponent" name="comp_DbCountries">
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
           </property>

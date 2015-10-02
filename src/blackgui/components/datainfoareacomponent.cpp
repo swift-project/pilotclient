@@ -52,28 +52,28 @@ namespace BlackGui
 
         CDbAircraftIcaoComponent *CDataInfoAreaComponent::getAircraftComponent() const
         {
-            return this->ui->comp_AircraftIcao;
+            return this->ui->comp_DbAircraftIcao;
         }
 
         CDbAirlineIcaoComponent *CDataInfoAreaComponent::getAirlineComponent() const
         {
-            return this->ui->comp_AirlineIcao;
+            return this->ui->comp_DbAirlineIcao;
         }
 
         CDbCountryComponent *CDataInfoAreaComponent::getCountryComponent() const
         {
-            return this->ui->comp_Countries;
+            return this->ui->comp_DbCountries;
         }
 
         void CDataInfoAreaComponent::setProvider(BlackMisc::Network::IWebDataServicesProvider *provider)
         {
             Q_ASSERT_X(provider, Q_FUNC_INFO, "Missing provider");
-            this->ui->comp_AircraftIcao->setProvider(provider);
-            this->ui->comp_AirlineIcao->setProvider(provider);
+            this->ui->comp_DbAircraftIcao->setProvider(provider);
+            this->ui->comp_DbAirlineIcao->setProvider(provider);
             this->ui->comp_DbDistributors->setProvider(provider);
             this->ui->comp_DbLiveries->setProvider(provider);
             this->ui->comp_DbModels->setProvider(provider);
-            this->ui->comp_Countries->setProvider(provider);
+            this->ui->comp_DbCountries->setProvider(provider);
             CWebDataServicesAware::setProvider(provider);
         }
 
@@ -95,10 +95,18 @@ namespace BlackGui
         bool CDataInfoAreaComponent::readDbDataFromResourceDir()
         {
             bool s = hasProvider() &&
-                     this->readDbDataFromDisk(CProject::getSwiftStaticDbFilesDir());
+                     this->readDbDataFromDisk(CProject::getSwiftStaticDbFilesDir(), true);
+
+            // info
             if (s)
             {
                 CLogMessage(this).info("Read DB data");
+                this->ui->comp_DbAircraftIcao->showLoadIndicator();
+                this->ui->comp_DbAirlineIcao->showLoadIndicator();
+                this->ui->comp_DbCountries->showLoadIndicator();
+                this->ui->comp_DbDistributors->showLoadIndicator();
+                this->ui->comp_DbLiveries->showLoadIndicator();
+                this->ui->comp_DbModels->showLoadIndicator();
             }
             else
             {
