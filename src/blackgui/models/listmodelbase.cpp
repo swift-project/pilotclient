@@ -289,7 +289,7 @@ namespace BlackGui
             auto sortOrder = this->getSortOrder();
             CWorker *worker = BlackMisc::CWorker::fromTask(this, "ModelSort", [this, container, sortColumn, sortOrder]()
             {
-                ContainerType sortedContainer = this->sortContainerByColumn(container, sortColumn, sortOrder);
+                return this->sortContainerByColumn(container, sortColumn, sortOrder);
             });
             worker->thenWithResult<ContainerType>(this, [this](const ContainerType &sortedContainer)
             {
