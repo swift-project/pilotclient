@@ -158,6 +158,16 @@ namespace BlackGui
             // CStyleSheetUtility::useStyleSheetInDerivedWidget(this, QStyle::PE_Widget);
         }
 
+        void CViewBaseNonTemplate::showEvent(QShowEvent *event)
+        {
+            if (this->isShowingLoadIndicator())
+            {
+                // re-center
+                this->centerLoadIndicator();
+            }
+            QTableView::showEvent(event);
+        }
+
         void CViewBaseNonTemplate::allowDragDropValueObjects(bool allowDrag, bool allowDrop)
         {
             // see model for implementing logic of drag
@@ -246,17 +256,21 @@ namespace BlackGui
 
             if (!this->m_loadIndicator)
             {
-                this->m_loadIndicator = new CLoadIndicator(64, 64, this->viewport());
-                // connect(this->m_loadIndicator, &CLoadIndicator::updatedAnimation, this, &CViewBaseNonTemplate::ps_updatedIndicator);
-
+                this->m_loadIndicator = new CLoadIndicator(64, 64, this);
             }
-            QPoint middle = this->geometry().center();
+            this->centerLoadIndicator();
+            this->m_loadIndicator->startAnimation();
+        }
+
+        void CViewBaseNonTemplate::centerLoadIndicator()
+        {
+            if (!m_loadIndicator) { return; }
+            QPoint middle = this->viewport()->geometry().center();
             int w = m_loadIndicator->width();
             int h = m_loadIndicator->height();
             int x = middle.x() - w / 2;
             int y = middle.y() - h / 2;
             this->m_loadIndicator->setGeometry(x, y, w, h);
-            this->m_loadIndicator->startAnimation();
         }
 
         void CViewBaseNonTemplate::hideLoadIndicator()
@@ -379,7 +393,7 @@ namespace BlackGui
             {
                 return model->sortContainerByColumn(container, sortColumn, sortOrder);
             });
-            worker->thenWithResult<ContainerType>(this, [this, resize](const ContainerType &sortedContainer)
+            worker->thenWithResult<ContainerType>(this, [this, resize](const ContainerType & sortedContainer)
             {
                 this->ps_updateContainer(CVariant::from(sortedContainer), false, resize);
             });

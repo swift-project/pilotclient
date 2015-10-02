@@ -103,10 +103,17 @@ namespace BlackGui
         this->paint(p);
     }
 
+    bool CLoadIndicator::isParentVisible() const
+    {
+        if (this->parentWidget()) { return parentWidget()->isVisible(); }
+        return false;
+    }
+
     void CLoadIndicator::paint(QPainter &painter) const
     {
         if (!m_displayedWhenStopped && !isAnimated()) { return; }
         if (!this->isVisible() || !this->isEnabled()) { return; }
+        if (!isParentVisible()) { return; }
 
         int width = qMin(this->width(), this->height());
         painter.setRenderHint(QPainter::Antialiasing);

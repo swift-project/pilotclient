@@ -160,6 +160,9 @@ namespace BlackGui
             //! \copydoc QTableView::paintEvent
             virtual void paintEvent(QPaintEvent *event) override;
 
+            //! \copydoc QTableView::showEvent
+            virtual void showEvent(QShowEvent *event) override;
+
             //! Perform resizing / non slot method for template
             virtual void performModeBasedResizeToContent() = 0;
 
@@ -174,6 +177,9 @@ namespace BlackGui
 
             //! Resize or skip resize?
             virtual bool isResizeConditionMet(int containerSize = -1) const;
+
+            //! Center / re-center load indicator
+            void centerLoadIndicator();
 
             //! Init default values
             void init();
