@@ -13,6 +13,7 @@
 #include "blackgui/components/datainfoareacomponent.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/stylesheetutility.h"
+#include "blackgui/roles.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/project.h"
@@ -38,8 +39,8 @@ void CSwiftData::ps_onMenuClicked()
     }
     else if (sender == this->ui->menu_WindowFont)
     {
-//        this->ps_setMainPageToInfoArea();
-//        this->ui->comp_MainInfoArea->selectSettingsTab(BlackGui::Components::CSettingsComponent::SettingTabGui);
+        // this->ps_setMainPageToInfoArea();
+        // this->ui->comp_MainInfoArea->selectSettingsTab(BlackGui::Components::CSettingsComponent::SettingTabGui);
     }
     else if (sender == this->ui->menu_WindowMinimize)
     {
@@ -76,6 +77,17 @@ void CSwiftData::ps_onMenuClicked()
         CDbMappingComponent *mappingComponent = this->ui->comp_MainInfoArea->getMappingComponent();
         mappingComponent->resizeForMapping();
     }
+    else
+    {
+        QAction *a = qobject_cast<QAction *>(sender);
+        if (a)
+        {
+            if (a->data() == "admin")
+            {
+                CRoles::roles().setAdmin(true);
+            }
+        }
+    }
 }
 
 void CSwiftData::initDynamicMenus()
@@ -94,5 +106,11 @@ void CSwiftData::initDynamicMenus()
         {
             this->ui->menu_Mapping->addAction(CIcons::save16(), "Save DB data", this->ui->comp_MainInfoArea->getDataInfoAreaComponent(), SLOT(writeDbDataToResourceDir()));
         }
+    }
+
+    if (CProject::isRunningInDeveloperEnvironment() && !CRoles::roles().isAdmin())
+    {
+        QAction *a = this->ui->menu_Internals->addAction(CIcons::user16(), "Set administrator");
+        a->setData("admin");
     }
 }

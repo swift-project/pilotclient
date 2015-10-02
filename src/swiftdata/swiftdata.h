@@ -63,7 +63,7 @@ private:
 
     QScopedPointer<Ui::CSwiftData> ui;
     BlackGui::CManagedStatusBar    m_statusBar;
-    BlackCore::CWebDataServices     *m_webDataReader = nullptr;
+    BlackCore::CWebDataServices   *m_webDataReader = nullptr;
 };
 
 #endif // guard
