@@ -77,7 +77,7 @@ namespace BlackMisc
 
             CPixmap CAircraftCfgParser::iconForModel(const QString &modelString, CStatusMessage &statusMessage) const
             {
-                static const CPixmap empty;
+                static const CPixmap empty {};
                 if (modelString.isEmpty()) { return empty; }
                 CAircraftCfgEntriesList cfgEntries = this->getAircraftCfgEntriesList().findByTitle(modelString);
                 if (cfgEntries.isEmpty())

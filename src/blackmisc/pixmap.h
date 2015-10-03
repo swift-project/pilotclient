@@ -25,7 +25,7 @@ namespace BlackMisc
     {
     public:
         //! Default constructor.
-        CPixmap() = default;
+        CPixmap();
 
         //! Constructor.
         CPixmap(const QPixmap &pixmap);
