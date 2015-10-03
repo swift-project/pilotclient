@@ -77,8 +77,11 @@ namespace BlackMisc
     }
 
     extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectListWithIntegerKey<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList>;
+    extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectListWithIntegerKey<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList>;
+    extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectListWithIntegerKey<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList>;
     extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectListWithIntegerKey<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
     extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectListWithStringKey<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;
+    extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectListWithStringKey<BlackMisc::CCountry, BlackMisc::CCountryList>;
     //! \endcond
 
 } //namespace
