@@ -18,13 +18,13 @@ namespace BlackMisc
 
     QDateTime CThreadedReader::getUpdateTimestamp() const
     {
-        QReadLocker(&this->m_lock);
+        QReadLocker lock(&this->m_lock);
         return this->m_updateTimestamp;
     }
 
     void CThreadedReader::setUpdateTimestamp(const QDateTime &updateTimestamp)
     {
-        QWriteLocker(&this->m_lock);
+        QWriteLocker lock(&this->m_lock);
         this->m_updateTimestamp = updateTimestamp;
     }
 

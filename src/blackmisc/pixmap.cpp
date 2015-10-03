@@ -32,7 +32,7 @@ namespace BlackMisc
 
     const QPixmap &CPixmap::pixmap() const
     {
-        QWriteLocker(&this->m_lock);
+        QWriteLocker lock(&this->m_lock);
         if (this->m_hasCachedPixmap) { return this->m_pixmap; }
 
         // this part here becomes relevant when marshalling via DBus is used
@@ -47,7 +47,7 @@ namespace BlackMisc
 
     bool CPixmap::isNull() const
     {
-        QReadLocker(&this->m_lock);
+        QReadLocker lock(&this->m_lock);
         if (this->m_hasCachedPixmap) { return false; }
         return (this->m_array.isEmpty() || this->m_array.isNull());
     }
