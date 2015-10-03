@@ -21,13 +21,22 @@ namespace BlackMisc
         this->fillByteArray();
     }
 
-    CPixmap::CPixmap(const CPixmap &other) : CValueObject(), m_pixmap(other.m_pixmap), m_hasCachedPixmap(other.m_hasCachedPixmap), m_array(other.m_array)
-    {}
+    CPixmap::CPixmap(const CPixmap &other) : CValueObject()
+    {
+        *this = other;
+    }
 
     CPixmap &CPixmap::operator =(const CPixmap &other)
     {
-        std::tie(m_pixmap, m_hasCachedPixmap, m_array) = std::tie(other.m_pixmap, other.m_hasCachedPixmap, other.m_array);
-        return (*this);
+        if (this == &other) { return *this; }
+
+        QReadLocker readLock(&other.m_lock);
+        auto tuple = std::make_tuple(other.m_pixmap, other.m_hasCachedPixmap, other.m_array);
+        readLock.unlock(); // avoid deadlock
+
+        QWriteLocker writeLock(&this->m_lock);
+        std::tie(m_pixmap, m_hasCachedPixmap, m_array) = tuple;
+        return *this;
     }
 
     const QPixmap &CPixmap::pixmap() const
@@ -70,6 +79,7 @@ namespace BlackMisc
 
     void CPixmap::fillByteArray()
     {
+        // no lock needed because this is a private method only called from a constructor
         QBuffer buffer(&this->m_array);
         buffer.open(QIODevice::WriteOnly);
         this->m_pixmap.save(&buffer, "PNG");
