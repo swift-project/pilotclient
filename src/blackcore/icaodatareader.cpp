@@ -16,6 +16,7 @@
 #include <QRegularExpression>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QTimer>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -326,14 +327,15 @@ namespace BlackCore
         return (whatToRead & CEntityFlags::AllIcaoAndCountries) == reallyRead;
     }
 
-    CWorker *CIcaoDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead)
+    bool CIcaoDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead)
     {
-        CWorker *worker = BlackMisc::CWorker::fromTask(this, "CIcaoDataReader::readFromJsonFilesInBackground", [this, dir, whatToRead]()
+        if (dir.isEmpty() || whatToRead == CEntityFlags::NoEntity) { return false; }
+        QTimer::singleShot(0, this, [this, dir, whatToRead]()
         {
             bool s = this->readFromJsonFiles(dir, whatToRead);
             Q_UNUSED(s);
         });
-        return worker;
+        return true;
     }
 
     bool CIcaoDataReader::writeToJsonFiles(const QString &dir) const
