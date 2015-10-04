@@ -66,7 +66,7 @@ namespace BlackCore
 
         if (m_readerFlags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimBookingReader))
         {
-            Q_ASSERT_X(this->m_modelDataReader, Q_FUNC_INFO, "Missing reader bookings");
+            Q_ASSERT_X(this->m_vatsimBookingReader, Q_FUNC_INFO, "Missing reader bookings");
             QMetaObject::Connection con = connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, receiver, dataRead);
             Q_ASSERT_X(con, Q_FUNC_INFO, "connect failed bookings");
             cl.append(con);
@@ -82,7 +82,7 @@ namespace BlackCore
 
         if (m_readerFlags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimMetarReader))
         {
-            Q_ASSERT_X(this->m_vatsimMetarReader, Q_FUNC_INFO, "Missing reader bookings");
+            Q_ASSERT_X(this->m_vatsimMetarReader, Q_FUNC_INFO, "Missing reader metars");
             QMetaObject::Connection con = connect(this->m_vatsimMetarReader, &CVatsimMetarReader::dataRead, receiver, dataRead);
             Q_ASSERT_X(con, Q_FUNC_INFO, "connect failed VATSIM METAR");
             cl.append(con);
