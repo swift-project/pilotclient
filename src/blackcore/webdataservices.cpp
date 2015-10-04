@@ -166,6 +166,15 @@ namespace BlackCore
             }
         }
 
+        if (m_vatsimMetarReader)
+        {
+            if (whatToRead.testFlag(CEntityFlags::MetarEntity))
+            {
+                m_vatsimMetarReader->readInBackgroundThread();
+                triggeredRead |= CEntityFlags::MetarEntity;
+            }
+        }
+
         if (m_icaoDataReader)
         {
             if (whatToRead.testFlag(CEntityFlags::AircraftIcaoEntity) || whatToRead.testFlag(CEntityFlags::AirlineIcaoEntity) || whatToRead.testFlag(CEntityFlags::CountryEntity))
@@ -471,8 +480,9 @@ namespace BlackCore
         else
         {
             // only readers requested will be read
-            if (this->m_vatsimBookingReader) {this->m_vatsimBookingReader->readInBackgroundThread(); }
-            if (this->m_vatsimDataFileReader) this->m_vatsimDataFileReader->readInBackgroundThread();
+            if (this->m_vatsimBookingReader) { this->m_vatsimBookingReader->readInBackgroundThread(); }
+            if (this->m_vatsimDataFileReader) { this->m_vatsimDataFileReader->readInBackgroundThread(); }
+            if (this->m_vatsimMetarReader) { this->m_vatsimMetarReader->readInBackgroundThread(); }
             if (this->m_icaoDataReader) { this->m_icaoDataReader->readInBackgroundThread(CEntityFlags::AllIcaoAndCountries); }
             if (this->m_modelDataReader) { this->m_modelDataReader->readInBackgroundThread(CEntityFlags::DistributorLiveryModel); }
         }

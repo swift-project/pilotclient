@@ -33,7 +33,7 @@ namespace BlackCore
 
     void CVatsimMetarReader::readInBackgroundThread()
     {
-        bool s = QMetaObject::invokeMethod(this, "ps_readMetar");
+        bool s = QMetaObject::invokeMethod(this, "ps_readMetars");
         Q_ASSERT_X(s, Q_FUNC_INFO, "Cannot invoke");
         Q_UNUSED(s);
     }
