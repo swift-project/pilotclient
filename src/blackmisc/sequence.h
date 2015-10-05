@@ -518,6 +518,46 @@ namespace BlackMisc
             return sorted(BlackMisc::Predicates::MemberLess(key1, keys...));
         }
 
+        /*!
+         * \brief In-place move the smallest n elements to the beginning and sort them.
+         */
+        template <class Predicate> void partiallySort(size_type n, Predicate p)
+        {
+            std::partial_sort(begin(), begin() + n, end(), p);
+        }
+
+        /*!
+         * \brief In-place partially sort by some particular key(s).
+         * \param key1 A pointer to a member function of T.
+         * \param keys Zero or more additional pointers to member functions of T.
+         */
+        template <class K1, class... Keys> void partiallySortBy(size_type n, K1 key1, Keys... keys)
+        {
+            partiallySort(n, BlackMisc::Predicates::MemberLess(key1, keys...));
+        }
+
+        /*!
+         * \brief Return a copy with the smallest n elements at the beginning and sorted.
+         */
+        template <class Predicate>
+        CSequence partiallySorted(size_type n, Predicate p) const
+        {
+            CSequence result = *this;
+            result.partiallySort(n, p);
+            return result;
+        }
+
+        /*!
+         * \brief Return a copy partially sorted by some particular key(s).
+         * \param key1 A pointer to a member function of T.
+         * \param keys Zero or more additional pointers to member functions of T.
+         */
+        template <class K1, class... Keys>
+        CSequence partiallySortedBy(size_type n, K1 key1, Keys... keys) const
+        {
+            return partiallySorted(n, BlackMisc::Predicates::MemberLess(key1, keys...));
+        }
+
         //! Equals operator.
         friend bool operator ==(const CSequence &a, const CSequence &b)
         {
