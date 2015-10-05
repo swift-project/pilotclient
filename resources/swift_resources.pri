@@ -8,7 +8,9 @@ win32 {
                       $$shell_path($$OUT_PWD/../../bin/resources/swiftDB)
 }
 else {
-    QMAKE_PRE_LINK += mkdir -p $$shell_path($$OUT_PWD/../../bin)                  \
-                   && $$COPY $$shell_path($$PWD/data) $$shell_path($$PWD/swiftDB) \
-                      $$shell_path($$OUT_PWD/../../bin)
+    QMAKE_PRE_LINK += mkdir -p $$shell_path($$OUT_PWD/../../bin/resources)  \
+                   && $$COPY $$shell_path($$PWD/data)                       \
+                      $$shell_path($$OUT_PWD/../../bin/resources)           \
+                   && $$COPY $$shell_path($$PWD/swiftDB)                    \
+                      $$shell_path($$OUT_PWD/../../bin/resources/swiftDB)
 }
