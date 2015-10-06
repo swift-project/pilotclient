@@ -321,7 +321,7 @@ namespace BlackGui
     {
         QString dirPath = QCoreApplication::applicationDirPath();
         if (!dirPath.endsWith('/')) dirPath.append('/');
-        dirPath.append("qss");
+        dirPath.append("../qss");
         return dirPath;
     }
 

@@ -233,7 +233,7 @@ namespace BlackMisc
     QString CProject::getSwiftResourceDir()
     {
         QDir dir(getApplicationDir());
-        if (dir.cd("resources")) { return dir.absolutePath(); }
+        if (dir.cdUp()) { return dir.absolutePath(); }
         return "";
     }
 
