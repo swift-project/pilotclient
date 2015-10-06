@@ -22,7 +22,7 @@
   <property name="lineWidth">
    <number>0</number>
   </property>
-  <layout class="QVBoxLayout" name="vl_SettingsSimulatorComponent" stretch="0,0,1">
+  <layout class="QVBoxLayout" name="vl_SettingsSimulatorComponent" stretch="0,1">
    <property name="leftMargin">
     <number>2</number>
    </property>
@@ -367,16 +367,6 @@
     </widget>
    </item>
    <item>
-    <widget class="BlackGui::Components::CSettingsFsxComponent" name="comp_SettingsSimulatorFsx">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-    </widget>
-   </item>
-   <item>
     <spacer name="vs_SettingsSimulator">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -395,12 +385,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>BlackGui::Components::CSettingsFsxComponent</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/settingsfsxcomponent.h</header>
-   <container>1</container>
-  </customwidget>
   <customwidget>
    <class>BlackGui::CLedWidget</class>
    <extends>QWidget</extends>

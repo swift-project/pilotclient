@@ -1,40 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CSettingsFsxComponent</class>
- <widget class="QFrame" name="CSettingsFsxComponent">
+ <class>CSimConnectSettingsComponent</class>
+ <widget class="QWidget" name="CSimConnectSettingsComponent">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>317</width>
-    <height>141</height>
+    <width>400</width>
+    <height>158</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>FSX SimConnect Settings</string>
+   <string>Form</string>
   </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
-  </property>
-  <layout class="QVBoxLayout" name="vl_SettingsFsxComponent">
-   <property name="spacing">
-    <number>0</number>
-   </property>
-   <property name="leftMargin">
-    <number>0</number>
-   </property>
-   <property name="topMargin">
-    <number>0</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
-    <number>0</number>
-   </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QGroupBox" name="gb_FsxSimConnectConfigFile">
      <property name="title">
@@ -262,16 +241,6 @@
    </item>
   </layout>
  </widget>
- <tabstops>
-  <tabstop>le_SettingsFsxAddress</tabstop>
-  <tabstop>le_SettingsFsxPort</tabstop>
-  <tabstop>le_SettingsFsxExistsSimconncetCfg</tabstop>
-  <tabstop>pb_SettingsFsxExistsSimconncetCfg</tabstop>
-  <tabstop>pb_SettingsFsxOpenSimconnectCfg</tabstop>
-  <tabstop>pb_SettingsFsxDeleteSimconnectCfg</tabstop>
-  <tabstop>pb_SettingsFsxSaveSimconnectCfg</tabstop>
-  <tabstop>pb_SettingsFsxTestConnection</tabstop>
- </tabstops>
  <resources/>
  <connections/>
 </ui>

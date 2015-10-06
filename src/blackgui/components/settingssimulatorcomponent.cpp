@@ -228,10 +228,6 @@ namespace BlackGui
 
         void CSettingsSimulatorComponent::ps_simulatorPluginChanged(const CSimulatorPluginInfo &info)
         {
-            // disable / enable driver specific GUI parts
-            bool hasFsxDriver = this->getIContextSimulator()->getAvailableSimulatorPlugins().supportsSimulator(QStringLiteral("fsx"));
-            this->ui->comp_SettingsSimulatorFsx->setVisible(hasFsxDriver);
-
             // I intentionally to not set the selected plugin combobox here
             // as this would cause undesired rountrips
 
@@ -281,6 +277,7 @@ namespace BlackGui
             QString configId = m_plugins->getPluginConfigId(selected->getIdentifier());
             IPluginConfig *config = m_plugins->getPluginById<IPluginConfig>(configId);
             CPluginConfigWindow *window = config->createConfigWindow(qApp->activeWindow());
+            CEnableForRuntime::setRuntimeForComponents(getRuntime(), window);
             window->setAttribute(Qt::WA_DeleteOnClose);
             window->show();
         }

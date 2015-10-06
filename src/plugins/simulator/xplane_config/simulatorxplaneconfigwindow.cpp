@@ -5,6 +5,8 @@
 #include <QStringBuilder>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QStandardPaths>
+#include <QStringBuilder>
 
 using namespace BlackGui;
 

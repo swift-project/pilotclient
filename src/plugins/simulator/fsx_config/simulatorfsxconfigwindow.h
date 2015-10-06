@@ -9,43 +9,38 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_SIMULATOR_XPLANE_CONFIG_WINDOW_H
-#define BLACKSIMPLUGIN_SIMULATOR_XPLANE_CONFIG_WINDOW_H
+#ifndef BLACKSIMPLUGIN_SIMULATOR_FSX_CONFIG_WINDOW_H
+#define BLACKSIMPLUGIN_SIMULATOR_FSX_CONFIG_WINDOW_H
 
-#include "simulatorxplaneconfig.h"
+#include "simulatorfsxconfig.h"
 #include "blackgui/pluginconfigwindow.h"
 #include <QScopedPointer>
 
 namespace Ui {
-class CSimulatorXPlaneConfigWindow;
+class CSimulatorFsxConfigWindow;
 }
 
 namespace BlackSimPlugin
 {
-    namespace XPlane
+    namespace Fsx
     {
+
         /**
-         * A window that shows all the X-Plane plugin options.
+         * A window the lets user set up the FSX plugin.
          */
-        class CSimulatorXPlaneConfigWindow : public BlackGui::CPluginConfigWindow
+        class CSimulatorFsxConfigWindow : public BlackGui::CPluginConfigWindow
         {
             Q_OBJECT
 
         public:
             //! Ctor.
-            CSimulatorXPlaneConfigWindow(QWidget *parent);
+            CSimulatorFsxConfigWindow(QWidget *parent);
 
             //! Dtor.
-            virtual ~CSimulatorXPlaneConfigWindow();
-
-        private slots:
-            void ps_storeSettings();
-            void ps_installXBus();
+            virtual ~CSimulatorFsxConfigWindow();
 
         private:
-            QScopedPointer<Ui::CSimulatorXPlaneConfigWindow> ui;
-            BlackCore::CSetting<XBusServer> m_xbusServerSetting { this };
-
+            QScopedPointer<Ui::CSimulatorFsxConfigWindow> ui;
         };
     }
 }

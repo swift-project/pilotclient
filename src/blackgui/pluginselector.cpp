@@ -52,17 +52,17 @@ namespace BlackGui
 
         pw->layout()->addWidget(cb);
 
-        QPushButton *details = new QPushButton("?");
-        m_detailsButtonMapper->setMapping(details, identifier);
-        connect(details, &QPushButton::clicked, m_detailsButtonMapper, static_cast<void (QSignalMapper::*)()>(&QSignalMapper::map));
-        pw->layout()->addWidget(details);
-
         if (hasConfig) {
             QPushButton *config = new QPushButton("...");
             m_configButtonMapper->setMapping(config, identifier);
             connect(config, &QPushButton::clicked, m_configButtonMapper, static_cast<void (QSignalMapper::*)()>(&QSignalMapper::map));
             pw->layout()->addWidget(config);
         }
+
+        QPushButton *details = new QPushButton("?");
+        m_detailsButtonMapper->setMapping(details, identifier);
+        connect(details, &QPushButton::clicked, m_detailsButtonMapper, static_cast<void (QSignalMapper::*)()>(&QSignalMapper::map));
+        pw->layout()->addWidget(details);
 
         layout->setStretch(0, 1);
         layout->setStretch(1, 0);
