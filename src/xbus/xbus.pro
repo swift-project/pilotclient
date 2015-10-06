@@ -76,6 +76,9 @@ macx {
     equals(WORD_SIZE,32): XBUS_DESTDIR = $$DestRoot/xbus
 }
 
+# Default MSVC project name is $$TARGET, so use a better name
+QMAKE_PROJECT_NAME = xbus
+
 # QMake ignores TARGET_EXT on Unix
      macx: QMAKE_POST_LINK += mkdir -p $${XBUS_DESTDIR} && cp $$OUT_PWD/lib$${TARGET}.dylib $$XBUS_DESTDIR/$${TARGET}.xpl
 else:unix: QMAKE_POST_LINK += mkdir -p $${XBUS_DESTDIR} && cp $$OUT_PWD/lib$${TARGET}.so    $$XBUS_DESTDIR/$${TARGET}.xpl
