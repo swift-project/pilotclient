@@ -1,5 +1,4 @@
-include ($$SourceRoot/config.pri)
-include ($$SourceRoot/build.pri)
+load(common_pre)
 
 QT       += core dbus network xml multimedia gui svg
 
@@ -19,9 +18,11 @@ DEPENDPATH += . $$SourceRoot/src/blackmisc \
                 $$SourceRoot/src/blackinput
 
 INCLUDEPATH += . $$SourceRoot/src
-DESTDIR = $$BuildRoot/bin
+
 OTHER_FILES += *.qss *.ico *.rc
 RC_FILE = swiftcore.rc
 DISTFILES += swiftcore.rc
 
-include ($$SourceRoot/libraries.pri)
+DESTDIR = $$DestRoot/bin
+
+load(common_post)

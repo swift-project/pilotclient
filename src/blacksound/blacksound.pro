@@ -1,5 +1,4 @@
-include ($$SourceRoot/config.pri)
-include ($$SourceRoot/build.pri)
+load(common_pre)
 
 QT       += network dbus gui multimedia
 
@@ -24,8 +23,8 @@ DEFINES += LOG_IN_FILE BUILD_BLACKSOUND_LIB
 HEADERS += *.h
 SOURCES += *.cpp
 
-DESTDIR = $$BuildRoot/lib
-DLLDESTDIR = $$BuildRoot/bin
+DESTDIR = $$DestRoot/lib
+DLLDESTDIR = $$DestRoot/bin
 
 OTHER_FILES += ./sounds/*.wav sounds/readme.txt
 RESOURCES +=
@@ -34,13 +33,13 @@ win32:isEmpty(MINGW_IN_SHELL):  COPY = xcopy /yi
 else:                           COPY = cp -r
 
 win32 {
-    QMAKE_POST_LINK += $$COPY $$shell_path($$PWD/sounds) \
-                          $$shell_path($$OUT_PWD/../../bin/sounds)
+    QMAKE_POST_LINK += $$COPY $$shell_path($$PWD/sounds)          \
+                              $$shell_path($$DestRoot/bin/sounds)
 }
 else {
-    QMAKE_POST_LINK += mkdir -p $$shell_path($$OUT_PWD/../../bin) && \
-                          $$COPY $$shell_path($$PWD/sounds) \
-                          $$shell_path($$OUT_PWD/../../bin)
+    QMAKE_POST_LINK += mkdir -p $$shell_path($$DestRoot/bin) &&   \
+                       $$COPY $$shell_path($$PWD/sounds)          \
+                              $$shell_path($$DestRoot/bin)
 }
 
-include ($$SourceRoot/libraries.pri)
+load(common_post)

@@ -1,5 +1,4 @@
-include ($$SourceRoot/config.pri)
-include ($$SourceRoot/build.pri)
+load(common_pre)
 
 QT       += core dbus concurrent xml
 
@@ -20,5 +19,6 @@ INCLUDEPATH += . $$SourceRoot/src
 SOURCES += *.cpp
 HEADERS += *.h
 
-DESTDIR = $$BuildRoot/lib
-include ($$SourceRoot/libraries.pri)
+DESTDIR = $$DestRoot/lib
+
+load(common_post)

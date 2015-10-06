@@ -1,5 +1,4 @@
-include ($$SourceRoot/config.pri)
-include ($$SourceRoot/build.pri)
+load(common_pre)
 
 # GUI is required for the matrix classes
 # Network for host info etc.
@@ -31,9 +30,9 @@ SOURCES += $$PWD/settings/*.cpp
 
 LIBS *= -lvatlib2
 
-DESTDIR = $$BuildRoot/lib
-DLLDESTDIR = $$BuildRoot/bin
+DESTDIR = $$DestRoot/lib
+DLLDESTDIR = $$DestRoot/bin
 
 OTHER_FILES += readme.txt *.xml
 
-include ($$SourceRoot/libraries.pri)
+load(common_post)

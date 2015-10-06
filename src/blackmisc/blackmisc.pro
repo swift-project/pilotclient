@@ -1,6 +1,4 @@
-include ($$SourceRoot/config.pri)
-include ($$SourceRoot/build.pri)
-include ($$SourceRoot/resources/swift_resources.pri)
+load(common_pre)
 
 QT       += network dbus xml
 
@@ -54,9 +52,26 @@ SOURCES +=  *.cpp \
             $$PWD/simulation/fsx/*.cpp \
             $$PWD/weather/*.cpp
 
-DESTDIR = $$BuildRoot/lib
-DLLDESTDIR = $$BuildRoot/bin
+DESTDIR = $$DestRoot/lib
+DLLDESTDIR = $$DestRoot/bin
 
 OTHER_FILES += $$TRANSLATIONS readme.txt
 
-include ($$SourceRoot/libraries.pri)
+win32:isEmpty(MINGW_IN_SHELL):  COPY = xcopy /yis
+else:                           COPY = cp -r
+
+win32 {
+    QMAKE_PRE_LINK += $$COPY $$shell_path($$SourceRoot/resources/data)    \
+                      $$shell_path($$DestRoot/resources)                  \
+                    & $$COPY $$shell_path($$SourceRoot/resources/swiftDB) \
+                      $$shell_path($$DestRoot/resources/swiftDB)
+}
+else {
+    QMAKE_PRE_LINK += mkdir -p $$shell_path($$DestRoot/resources)         \
+                   && $$COPY $$shell_path($$SourceRoot/resources/data)    \
+                      $$shell_path($$DestRoot/resources)                  \
+                   && $$COPY $$shell_path($$SourceRoot/resources/swiftDB) \
+                      $$shell_path($$DestRoot/resources/swiftDB)
+}
+
+load(common_post)

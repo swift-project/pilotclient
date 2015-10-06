@@ -1,5 +1,4 @@
-include ($$SourceRoot/config.pri)
-include ($$SourceRoot/build.pri)
+load(common_pre)
 
 QT       += core testlib dbus network
 
@@ -17,6 +16,6 @@ INCLUDEPATH += . $$SourceRoot/src
 HEADERS += *.h
 SOURCES += *.cpp
 
-DESTDIR = $$BuildRoot/bin
+DESTDIR = $$DestRoot/bin
 
-include ($$SourceRoot/libraries.pri)
+load(common_post)

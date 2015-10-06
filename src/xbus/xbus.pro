@@ -1,5 +1,4 @@
-include ($$SourceRoot/config.pri)
-include ($$SourceRoot/build.pri)
+load(common_pre)
 
 QT       += core gui widgets dbus network
 
@@ -7,6 +6,8 @@ TEMPLATE = lib
 
 CONFIG += shared plugin
 CONFIG += blackmisc blackcore
+
+INCLUDEPATH += $$EXTERNALDIR/common/include/XPLM
 
 win32 {
     equals(WORD_SIZE,64): LIBS += -lXPLM_64 -lXPWidgets_64
@@ -69,10 +70,10 @@ linux:TARGET = lin
 macx:TARGET = mac
 macx {
     # a single dylib file contains both 32bit and 64bit binaries
-    XBUS_DESTDIR = $$BuildRoot/xbus
+    XBUS_DESTDIR = $$DestRoot/xbus
 } else {
-    equals(WORD_SIZE,64): XBUS_DESTDIR = $$BuildRoot/xbus/64
-    equals(WORD_SIZE,32): XBUS_DESTDIR = $$BuildRoot/xbus
+    equals(WORD_SIZE,64): XBUS_DESTDIR = $$DestRoot/xbus/64
+    equals(WORD_SIZE,32): XBUS_DESTDIR = $$DestRoot/xbus
 }
 
 # QMake ignores TARGET_EXT on Unix
@@ -80,8 +81,4 @@ macx {
 else:unix: QMAKE_POST_LINK += mkdir -p $${XBUS_DESTDIR} && cp $$OUT_PWD/lib$${TARGET}.so    $$XBUS_DESTDIR/$${TARGET}.xpl
 else:      DESTDIR = $$XBUS_DESTDIR
 
-include ($$SourceRoot/libraries.pri)
-
-# TODO refactor .pri files into common_pre.pri and common_post.pri
-# to sort out this include order fiasco
-INCLUDEPATH += $$EXTERNALDIR/common/include/XPLM
+load(common_post)

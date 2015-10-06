@@ -1,5 +1,4 @@
-include ($$SourceRoot/config.pri)
-include ($$SourceRoot/build.pri)
+load(common_pre)
 
 QT       += network dbus gui svg
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -51,8 +50,8 @@ win32 {
 
 RESOURCES +=
 
-DESTDIR = $$BuildRoot/lib
-DLLDESTDIR = $$BuildRoot/bin
+DESTDIR = $$DestRoot/lib
+DLLDESTDIR = $$DestRoot/bin
 
 OTHER_FILES += ./qss/*.qss ./qss/*.css ./qss/*.ini *.ico *.rc
 
@@ -60,13 +59,13 @@ win32:isEmpty(MINGW_IN_SHELL):  COPY = xcopy /yi
 else:                           COPY = cp -r
 
 win32 {
-    QMAKE_POST_LINK += $$COPY $$shell_path($$PWD/qss) \
-                          $$shell_path($$OUT_PWD/../../bin/qss)
+    QMAKE_POST_LINK += $$COPY $$shell_path($$PWD/qss)           \
+                              $$shell_path($$DestRoot/bin/qss)
 }
 else {
-    QMAKE_POST_LINK += mkdir -p $$shell_path($$OUT_PWD/../../bin) && \
-                          $$COPY $$shell_path($$PWD/qss) \
-                          $$shell_path($$OUT_PWD/../../bin)
+    QMAKE_POST_LINK += mkdir -p $$shell_path($$DestRoot/bin) && \
+                       $$COPY $$shell_path($$PWD/qss)           \
+                              $$shell_path($$DestRoot/bin)
 }
 
-include ($$SourceRoot/libraries.pri)
+load(common_post)

@@ -1,5 +1,4 @@
-include ($$SourceRoot/config.pri)
-include ($$SourceRoot/build.pri)
+load(common_pre)
 
 QT       += core dbus network
 
@@ -13,11 +12,11 @@ CONFIG   += blackmisc
 DEPENDPATH += . $$SourceRoot/src/blackmisc
 INCLUDEPATH += . $$SourceRoot/src
 
-DESTDIR = $$BuildRoot/bin
+DESTDIR = $$DestRoot/bin
 
 HEADERS += *.h
 SOURCES += *.cpp
 
 OTHER_FILES +=
 
-include ($$SourceRoot/libraries.pri)
+load(common_post)

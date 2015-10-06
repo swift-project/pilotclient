@@ -1,5 +1,4 @@
-include ($$SourceRoot/config.pri)
-include ($$SourceRoot/build.pri)
+load(common_pre)
 
 QT       += core dbus network
 
@@ -15,5 +14,6 @@ INCLUDEPATH += . $$SourceRoot/src
 SOURCES += *.cpp
 HEADERS += *.h
 
-DESTDIR = $$BuildRoot/bin/plugins/simulator
-include ($$SourceRoot/libraries.pri)
+DESTDIR = $$DestRoot/bin/plugins/simulator
+
+load(common_post)

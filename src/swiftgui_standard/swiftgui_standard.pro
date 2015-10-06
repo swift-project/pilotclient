@@ -1,7 +1,7 @@
-include ($$SourceRoot/config.pri)
-include ($$SourceRoot/build.pri)
+load(common_pre)
 
 QT       += core dbus gui svg network xml multimedia
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = swiftgui_std
@@ -27,9 +27,11 @@ DEPENDPATH += . $$SourceRoot/src/blackmisc \
                 $$SourceRoot/src/blackinput
 
 INCLUDEPATH += . $$SourceRoot/src
-DESTDIR = $$BuildRoot/bin
+
 OTHER_FILES += *.qss *.ico *.rc
 RC_FILE = swift.rc
 DISTFILES += swift.rc
 
-include ($$SourceRoot/libraries.pri)
+DESTDIR = $$DestRoot/bin
+
+load(common_post)

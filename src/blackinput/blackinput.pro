@@ -1,5 +1,4 @@
-include ($$SourceRoot/config.pri)
-include ($$SourceRoot/build.pri)
+load(common_pre)
 
 QT       += network dbus gui widgets multimedia
 
@@ -43,10 +42,10 @@ macx {
     LIBS += -framework CoreFoundation -framework ApplicationServices -framework Foundation -framework AppKit
 }
 
-DESTDIR = $$BuildRoot/lib
-DLLDESTDIR = $$BuildRoot/bin
+DESTDIR = $$DestRoot/lib
+DLLDESTDIR = $$DestRoot/bin
 
 OTHER_FILES +=
 RESOURCES +=
 
-include ($$SourceRoot/libraries.pri)
+load(common_post)
