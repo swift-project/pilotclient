@@ -1,0 +1,39 @@
+################################
+# Externals
+################################
+
+INCLUDEPATH *= $$EXTERNALDIR/common/include
+
+# and the library path depending on the used compiler
+win32-msvc2010 {
+    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/vs2010_64/lib
+    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/vs2010_32/lib
+    equals(WORD_SIZE,32): LIBS += -luser32
+}
+win32-msvc2013 {
+    INCLUDEPATH *= $$EXTERNALDIR/win32-vs2013/include
+    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/win32-vs2013/lib64
+    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/win32-vs2013/lib32
+    equals(WORD_SIZE,32): LIBS += -luser32
+}
+win32-g++ {
+    INCLUDEPATH *= $$EXTERNALDIR/win32-g++/include
+    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/win32-g++/lib64
+    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/win32-g++/lib32
+    LIBS += -luser32
+}
+linux-g++* {
+    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/linux-g++/lib64
+    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/linux-g++/lib32
+}
+macx-clang {
+    INCLUDEPATH *= $$EXTERNALDIR/macx-clang/include
+    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/macx-clang/lib64 -F$$EXTERNALDIR/macx-clang/lib64
+    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/macx-clang/lib32 -F$$EXTERNALDIR/macx-clang/lib32
+}
+
+################################
+# Black libs
+################################
+
+include(libraries.pri)

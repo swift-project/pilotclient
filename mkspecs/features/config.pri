@@ -1,0 +1,15 @@
+BLACK_CONFIG    += BlackCore
+BLACK_CONFIG    += BlackGui
+BLACK_CONFIG    += BlackSound
+BLACK_CONFIG    += BlackInput
+BLACK_CONFIG    += Samples
+BLACK_CONFIG    += Unittests
+BLACK_CONFIG    += SwiftData
+BLACK_CONFIG    += SwiftCore
+BLACK_CONFIG    += SwiftGui
+BLACK_CONFIG    += FS9
+BLACK_CONFIG    += FSX
+BLACK_CONFIG    += XPlane
+BLACK_CONFIG    += ProfileRelease
+#BLACK_CONFIG    += Static
+#BLACK_CONFIG    += Doxygen

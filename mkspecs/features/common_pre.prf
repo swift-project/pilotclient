@@ -1,0 +1,112 @@
+# Copyright (C) 2015
+# swift project Community / Contributors
+#
+# This file is part of swift project. It is subject to the license terms in
+# the LICENSE file found in the top-level directory of this distribution and
+# at http://www.swift-project.org/license.html. No part of swift project,
+# including this file, may be copied, modified, propagated, or distributed
+# except according to the terms contained in the LICENSE file.
+
+################################
+# Version number
+################################
+
+include(version.pri)
+
+!win32 {
+    VER_MAJ = $${BLACK_VER_MAJ}
+    VER_MIN = $${BLACK_VER_MIN}
+    VER_PAT = $${BLACK_VER_PAT}
+    VERSION = $${BLACK_VERSION}
+}
+
+################################
+# Destination tree
+################################
+
+CONFIG(debug, debug|release): DestRoot = $$DestRootDebug
+else:                         DestRoot = $$DestRootRelease
+
+################################
+# Build configuration
+################################
+
+include(config.pri)
+
+################################
+# QMake options
+################################
+
+CONFIG += qt
+CONFIG += warn_on
+CONFIG += c++11
+
+################################
+# Detect 32 or 64 bit
+################################
+
+include(wordsize.pri)
+
+################################
+# Profile build
+################################
+
+contains(BLACK_CONFIG, ProfileRelease) {
+    win32-msvc* {
+        QMAKE_CXXFLAGS_RELEASE *= /Zi
+        QMAKE_LFLAGS_RELEASE *= /DEBUG /PROFILE /INCREMENTAL:NO /OPT:REF /OPT:ICF
+    }
+}
+
+# Needed to workaround C1128 error
+# TODO check whether this is still needed after CValueObject refactoring
+win32-msvc*: QMAKE_CXXFLAGS *= /bigobj
+
+################################
+# No incremental build
+################################
+
+# win32-msvc*:QMAKE_LFLAGS_DEBUG *= /INCREMENTAL:NO
+
+################################
+# No gigantic MinGW obj files
+################################
+
+win32-g++: QMAKE_CXXFLAGS_DEBUG += -Og
+
+################################
+# No FSX or FS9 for 64 bit
+################################
+
+equals(WORD_SIZE,64): BLACK_CONFIG -= FSX FS9
+
+################################
+# Suppress stupid warnings
+################################
+
+include(warnings.pri)
+
+################################
+# Preprocessor defines
+################################
+
+include(defines.pri)
+
+################################
+# Path to external dependencies
+################################
+
+# If you want to manually set the external path, uncomment the following line
+# EXTERNALDIR = /path/to/externals
+
+isEmpty(EXTERNALDIR) {
+    EXTERNALDIR = $$(VATSIM_EXTERNAL_DIR)
+}
+
+isEmpty(EXTERNALDIR) {
+    EXTERNALDIR = $$SourceRoot/externals
+}
+
+!exists("$$EXTERNALDIR/common/include") {
+    error("Could not find externals in $$EXTERNALDIR. Please install it!")
+}
