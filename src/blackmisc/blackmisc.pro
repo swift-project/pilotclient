@@ -37,6 +37,7 @@ HEADERS +=  *.h \
             $$PWD/simulation/*.h \
             $$PWD/simulation/fscommon/*.h \
             $$PWD/simulation/fsx/*.h \
+            $$PWD/simulation/xplane/*.h \
             $$PWD/weather/*.h
 
 SOURCES +=  *.cpp \
@@ -50,7 +51,12 @@ SOURCES +=  *.cpp \
             $$PWD/simulation/*.cpp \
             $$PWD/simulation/fscommon/*.cpp \
             $$PWD/simulation/fsx/*.cpp \
+            $$PWD/simulation/xplane/*.cpp \
             $$PWD/weather/*.cpp
+
+win32 {
+    LIBS *= -lShell32
+}
 
 DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin

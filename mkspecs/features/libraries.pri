@@ -78,4 +78,8 @@ blackmisc {
         macx-clang:     PRE_TARGETDEPS += $$DestRoot/lib/libblackmisc.dylib
     }
     LIBS *= -lblackmisc
+
+    win32 {
+        LIBS *= -lShell32
+    }
 }
