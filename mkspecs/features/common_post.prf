@@ -5,6 +5,17 @@
 include(copyfiles.pri)
 
 ################################
+# Allow "empty" projects on OSX
+################################
+
+macx:staticlib:isEmpty(SOURCES) {
+    QMAKE_AR = touch
+    QMAKE_RANLIB = touch
+    QMAKE_MAC_SDK.$$basename(QMAKESPEC).$${QMAKE_MAC_SDK}.QMAKE_AR = $$QMAKE_AR
+    QMAKE_MAC_SDK.$$basename(QMAKESPEC).$${QMAKE_MAC_SDK}.QMAKE_RANLIB = $$QMAKE_RANLIB
+}
+
+################################
 # Externals
 ################################
 
