@@ -299,8 +299,8 @@ namespace BlackGui
             }
 
             CLogMessage(this).info("Starting loading for %1") << simInfo.toQString();
-            this->m_modelLoader->startLoading();
             this->ui->tvp_OwnAircraftModels->showLoadIndicator();
+            this->m_modelLoader->startLoading();
         }
 
         void CDbMappingComponent::ps_onInstalledModelLoadingFinished(bool success)
