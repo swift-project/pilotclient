@@ -41,7 +41,7 @@ namespace BlackSimPlugin
             auto modelMappingsProvider = std::unique_ptr<IModelMappingsProvider> { BlackMisc::make_unique<CModelMappingsProviderVPilot>(true) };
             m_modelMatcher.setModelMappingProvider(std::move(modelMappingsProvider));
 
-            bool c = connect(m_aircraftCfgParser.data(), &CAircraftCfgParser::loadingFinished, this, &CSimulatorFsCommon::ps_aircraftCfgParsingFinished);
+            bool c = connect(m_aircraftCfgParser.get(), &CAircraftCfgParser::loadingFinished, this, &CSimulatorFsCommon::ps_aircraftCfgParsingFinished);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect signal");
             Q_UNUSED(c);
 

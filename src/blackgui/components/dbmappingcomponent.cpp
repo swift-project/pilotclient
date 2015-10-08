@@ -83,8 +83,7 @@ namespace BlackGui
             // unload old
             if (this->m_modelLoader) { this->m_modelLoader->cancelLoading(); }
 
-            //! \todo appropriate model loader or loaders via factory?
-            this->m_modelLoader.reset(IAircraftModelLoader::createModelLoader(simInfo));
+            this->m_modelLoader = IAircraftModelLoader::createModelLoader(simInfo);
             if (!this->m_modelLoader || !this->m_modelLoader->supportsSimulator(simInfo))
             {
                 CLogMessage(this).error("Failed to init model loader %1") << simInfo.toQString();
@@ -93,7 +92,7 @@ namespace BlackGui
             }
             else
             {
-                bool c = connect(this->m_modelLoader.data(), &IAircraftModelLoader::loadingFinished, this, &CDbMappingComponent::ps_onInstalledModelLoadingFinished);
+                bool c = connect(this->m_modelLoader.get(), &IAircraftModelLoader::loadingFinished, this, &CDbMappingComponent::ps_onInstalledModelLoadingFinished);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect for model loader");
                 Q_UNUSED(c);
                 return true;

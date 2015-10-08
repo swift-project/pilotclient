@@ -63,7 +63,7 @@ namespace BlackMisc
                 virtual BlackMisc::Simulation::CAircraftModelList getAircraftModels() const override;
 
                 //! Create an parser object for given simulator
-                static CAircraftCfgParser *createModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
+                static std::unique_ptr<CAircraftCfgParser> createModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
 
             public slots:
                 //! Parsed or injected entires

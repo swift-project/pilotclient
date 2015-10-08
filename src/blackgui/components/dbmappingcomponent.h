@@ -105,7 +105,7 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CDbMappingComponent> ui;
             BlackMisc::Simulation::FsCommon::CVPilotRulesReader m_vPilotReader;
-            QScopedPointer<BlackMisc::Simulation::IAircraftModelLoader> m_modelLoader;
+            std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader> m_modelLoader;
             bool m_withVPilot = false;
 
             //! Consolidated aircraft model

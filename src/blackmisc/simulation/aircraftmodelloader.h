@@ -69,8 +69,7 @@ namespace BlackMisc
             void gracefulShutdown();
 
             //! Create a loader
-            //! \todo just a hack, needs to be replaced
-            static IAircraftModelLoader *createModelLoader(const BlackMisc::Simulation::CSimulatorInfo &info);
+            static std::unique_ptr<IAircraftModelLoader> createModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
 
         signals:
             //! Parsing is finished

@@ -10,6 +10,8 @@
 #include "aircraftmodelloader.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 
+using namespace BlackMisc::Simulation::FsCommon;
+
 namespace BlackMisc
 {
     namespace Simulation
@@ -48,13 +50,17 @@ namespace BlackMisc
             this->cancelLoading();
         }
 
-        IAircraftModelLoader *IAircraftModelLoader::createModelLoader(const CSimulatorInfo &info)
+        std::unique_ptr<IAircraftModelLoader> IAircraftModelLoader::createModelLoader(const CSimulatorInfo &simInfo)
         {
-            //! \todo hack, remove later and replace by factory
-            IAircraftModelLoader *ml = BlackMisc::Simulation::FsCommon::CAircraftCfgParser::createModelLoader(info);
-            if (ml) { return ml; }
-            Q_ASSERT_X(false, Q_FUNC_INFO, "No model model loader for simulator");
-            return nullptr;
+            if (simInfo.xplane())
+            {
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Not yet implemented.");
+                return nullptr;
+            }
+            else
+            {
+                return CAircraftCfgParser::createModelLoader(simInfo);
+            }
         }
     } // ns
 } // ns

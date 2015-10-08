@@ -98,7 +98,7 @@ namespace BlackSimPlugin
             BlackMisc::Aviation::CTransponder m_simTransponder; //!< cockpit xpdr state in simulator
 
             // parser / matcher
-            QScopedPointer<BlackMisc::Simulation::FsCommon::CAircraftCfgParser> m_aircraftCfgParser; //!< aircraft.cfg parser
+            std::unique_ptr<BlackMisc::Simulation::FsCommon::CAircraftCfgParser> m_aircraftCfgParser; //!< aircraft.cfg parser
             BlackMisc::Simulation::CAircraftMatcher m_modelMatcher; //!< Model matcher
 
             //! Set own model

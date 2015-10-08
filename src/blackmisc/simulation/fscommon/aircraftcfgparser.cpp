@@ -8,6 +8,7 @@
  */
 
 #include "aircraftcfgparser.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/logmessage.h"
@@ -31,33 +32,31 @@ namespace BlackMisc
                 m_excludedDirectories(exludes)
             { }
 
-            CAircraftCfgParser *CAircraftCfgParser::createModelLoader(const CSimulatorInfo &simInfo)
+            std::unique_ptr<CAircraftCfgParser> CAircraftCfgParser::createModelLoader(const CSimulatorInfo &simInfo)
             {
                 if (simInfo.fsx())
                 {
-                    return new CAircraftCfgParser(
+                    return make_unique<CAircraftCfgParser>(
                                CSimulatorInfo(CSimulatorInfo::FSX),
                                CFsCommonUtil::fsxSimObjectsDir(),
                                CFsCommonUtil::fsxSimObjectsExcludeDirectories());
-
                 }
                 else if (simInfo.fs9())
                 {
-                    return new CAircraftCfgParser(
+                    return make_unique<CAircraftCfgParser>(
                                CSimulatorInfo(CSimulatorInfo::FS9),
                                CFsCommonUtil::fs9AircraftDir(),
                                CFsCommonUtil::fs9AircraftObjectsExcludeDirectories());
-
                 }
                 else if (simInfo.p3d())
                 {
-                    return new CAircraftCfgParser(
+                    return make_unique<CAircraftCfgParser>(
                                CSimulatorInfo(CSimulatorInfo::P3D),
                                CFsCommonUtil::p3dSimObjectsDir(),
                                CFsCommonUtil::p3dSimObjectsExcludeDirectories());
                 }
                 Q_ASSERT_X(false, Q_FUNC_INFO, "Illegal simulator info");
-                return nullptr;
+                return {};
             }
 
             CAircraftCfgParser::~CAircraftCfgParser()
