@@ -8,9 +8,14 @@
  */
 
 #include "aircraftmodelloader.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
+#include "blackmisc/simulation/xplane/aircraftmodelloaderxplane.h"
+#include "blackmisc/simulation/xplane/xplaneutil.h"
+
 
 using namespace BlackMisc::Simulation::FsCommon;
+using namespace BlackMisc::Simulation::XPlane;
 
 namespace BlackMisc
 {
@@ -54,8 +59,9 @@ namespace BlackMisc
         {
             if (simInfo.xplane())
             {
-                Q_ASSERT_X(false, Q_FUNC_INFO, "Not yet implemented.");
-                return nullptr;
+                return make_unique<CAircraftModelLoaderXPlane>(
+                           CSimulatorInfo(CSimulatorInfo::XPLANE),
+                           CXPlaneUtil::xbusLegacyDir());
             }
             else
             {
