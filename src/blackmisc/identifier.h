@@ -33,7 +33,7 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexName = BlackMisc::CPropertyIndex::GlobalIndexIdentifier,
+            IndexName = BlackMisc::CPropertyIndex::GlobalIndexCIdentifier,
             IndexMachineId,
             IndexMachineIdBase64,
             IndexMachineName,

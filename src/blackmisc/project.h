@@ -88,11 +88,17 @@ namespace BlackMisc
         //! Release build?
         static bool isReleaseBuild();
 
+        //! Beta test?
+        static bool isBetaTest();
+
         //! Running on Windows NT platform?
         static bool isRunningOnWindowsNtPlatform();
 
         //! Running in dev.environment, so on a programmers machine
         static bool isRunningInDeveloperEnvironment();
+
+        //! Beta / dev.environment?
+        static bool isRunningInBetaOrDeveloperEnvironment();
 
         //! Application directory where current application is located
         static QString getApplicationDir();

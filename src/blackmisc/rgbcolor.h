@@ -27,7 +27,7 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexRed = BlackMisc::CPropertyIndex::GlobalIndexRgbColor,
+            IndexRed = BlackMisc::CPropertyIndex::GlobalIndexCRgbColor,
             IndexGreen,
             IndexBlue,
             IndexWebHex

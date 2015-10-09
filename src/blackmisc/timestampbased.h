@@ -26,7 +26,7 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexUtcTimestamp = BlackMisc::CPropertyIndex::GlobalIndexTimestampBased,
+            IndexUtcTimestamp = BlackMisc::CPropertyIndex::GlobalIndexITimestampBased,
             IndexUtcTimestampFormattedYmdhms,
             IndexUtcTimestampFormattedYmdhmsz,
             IndexUtcTimestampFormattedDhms,

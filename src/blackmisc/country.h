@@ -30,7 +30,7 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexIsoCode = BlackMisc::CPropertyIndex::GlobalIndexCountry,
+            IndexIsoCode = BlackMisc::CPropertyIndex::GlobalIndexCCountry,
             IndexName,
             IndexNameIso,
             IndexIsoName

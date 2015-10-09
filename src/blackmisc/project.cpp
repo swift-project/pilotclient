@@ -190,6 +190,12 @@ namespace BlackMisc
 #endif
     }
 
+    bool CProject::isBetaTest()
+    {
+        //! \todo however we do it
+        return false;
+    }
+
     bool CProject::isRunningOnWindowsNtPlatform()
     {
 #ifdef Q_OS_WIN
@@ -212,6 +218,11 @@ namespace BlackMisc
         if (!hasSrc) { return false; }
         p.cdUp();
         return p.cd("samples");
+    }
+
+    bool CProject::isRunningInBetaOrDeveloperEnvironment()
+    {
+        return isBetaTest() || isRunningInDeveloperEnvironment();
     }
 
     int CProject::getMajorMinor(int index)
