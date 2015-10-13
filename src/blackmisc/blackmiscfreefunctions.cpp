@@ -267,13 +267,13 @@ size_t BlackMisc::heapSizeOf(const QMetaObject &metaObject)
 
 size_t BlackMisc::heapSizeOf(const QMetaType &)
 {
-    qDebug() << "heapSizeOf not supported by your compiler toolchain";
+    // qDebug() << "heapSizeOf not supported by your compiler toolchain";
     return 0;
 }
 
 size_t BlackMisc::heapSizeOf(const QMetaObject &)
 {
-    qDebug() << "heapSizeOf not supported by your compiler toolchain";
+    // qDebug() << "heapSizeOf not supported by your compiler toolchain";
     return 0;
 }
 
@@ -281,14 +281,31 @@ size_t BlackMisc::heapSizeOf(const QMetaObject &)
 
 void BlackMisc::displayAllUserMetatypesTypes(QTextStream &out)
 {
+    out << getAllUserMetatypesTypes();
+}
 
+QString BlackMisc::getAllUserMetatypesTypes(const QString &separator)
+{
+    int fails = 0;
+    QString meta;
     for (int mt = QMetaType::User; mt < QMetaType::User + 1000; mt++)
     {
-        if (!QMetaType::isRegistered(mt)) { continue; }
+        if (!QMetaType::isRegistered(mt))
+        {
+            fails++;
+            // normally a consecutive order of metatypes, we allow a space before we break
+            if (fails > 3) { return meta; }
+            continue;
+        }
         QMetaType metaType(mt);
-        out << "type: " << mt << " name:" << QMetaType::typeName(mt) << " | "
-            << QMetaType::sizeOf(mt) << " / " << BlackMisc::heapSizeOf(metaType) << endl;
+        meta = meta.
+               append("type: ").append(QString::number(mt)).
+               append(" name: ").append(QMetaType::typeName(mt)).
+               append(" | ").append(QString::number(QMetaType::sizeOf(mt))).
+               append(" / ").append(QString::number(BlackMisc::heapSizeOf(metaType))).
+               append(separator);
     }
+    return meta;
 }
 
 const QString &BlackMisc::localHostName()
@@ -369,12 +386,13 @@ QString BlackMisc::boolToTrueFalse(bool v, bool i18n)
 
 bool BlackMisc::stringToBool(const QString &string)
 {
-    if (string.isEmpty()) { return false; }
-    QChar c = string.at(0).toLower();
+    QString s(string.trimmed().toLower());
+    if (s.isEmpty()) { return false; }
+    QChar c = s.at(0);
 
     // explicit values
     if (c == '1' || c == 't' || c == 'y' || c == 'x') { return true; }
-    if (c == '0' || c == 'f' || c == 'n' || c == ' ') { return false; }
+    if (c == '0' || c == 'f' || c == 'n' || c == '_') { return false; }
     return false;
 }
 
@@ -438,7 +456,6 @@ bool BlackMisc::pngByteArrayToPixmapRef(const QByteArray &array, QPixmap &pixmap
     bool s = pixmap.loadFromData(array, "PNG");
     return s;
 }
-
 
 QString BlackMisc::pixmapToPngHexString(const QPixmap &pixmap)
 {

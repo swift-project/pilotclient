@@ -13,7 +13,6 @@
 
 namespace BlackMisc
 {
-
     CPixmap::CPixmap() = default;
 
     CPixmap::CPixmap(const QPixmap &pixmap) : m_pixmap(pixmap), m_hasCachedPixmap(true)

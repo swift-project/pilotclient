@@ -21,7 +21,6 @@ namespace BlackMisc
 {
     namespace Mixin
     {
-
         /*!
          * CRTP class template which will generate marshalling operators for a derived class with its own marshalling implementation.
          *
@@ -123,15 +122,5 @@ const QDBusArgument &operator >>(const QDBusArgument &arg, E &value)
     value = static_cast<E>(temp);
     return arg;
 }
-
-/*!
- * Non member non-friend streaming for QPixmap
- */
-const QDBusArgument &operator>>(const QDBusArgument &argument, QPixmap &pixmap);
-
-/*!
- * Non member non-friend streaming for QPixmap
- */
-QDBusArgument &operator<<(QDBusArgument &argument, const QPixmap &pixmap);
 
 #endif // guard

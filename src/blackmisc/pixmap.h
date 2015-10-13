@@ -66,7 +66,7 @@ namespace BlackMisc
 } // namespace
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CPixmap, (
-                                   attr(o.m_array, flags<DisabledForJson>())
+                                   attr(o.m_array)
                                ))
 Q_DECLARE_METATYPE(BlackMisc::CPixmap)
 

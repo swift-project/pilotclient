@@ -100,10 +100,7 @@ namespace BlackMisc
             static double normalizeDegrees(double degrees);
 
             //! Random number between low and high
-            static int randomInteger(int low, int high)
-            {
-                return qrand() % ((high + 1) - low) + low;
-            }
+            static int randomInteger(int low, int high);
         };
 
     } // namespace

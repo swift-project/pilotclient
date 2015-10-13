@@ -30,6 +30,9 @@ namespace BlackMisc
         //! Read file into string
         static QString readFileToString(const QString &fileNameAndPath);
 
+        //! Read file into string
+        static QString readFileToString(const QString &filePath, const QString &fileName);
+
         //! Write string to text file in background
         static bool writeStringToFileInBackground(const QString &content, const QString &fileNameAndPath);
 

@@ -112,6 +112,9 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::JsonByTuple::toJson
         using Mixin::JsonByTuple<Derived>::toJson;
 
+        //! \copydoc BlackMisc::Mixin::JsonByTuple::toJsonString
+        using Mixin::JsonByTuple<Derived>::toJsonString;
+
         //! \copydoc BlackMisc::Mixin::JsonByTuple::convertFromJson
         using Mixin::JsonByTuple<Derived>::convertFromJson;
 

@@ -8,6 +8,8 @@
  */
 
 #include "blackmisc/math/mathutils.h"
+#include <QThreadStorage>
+#include <QTime>
 #include <algorithm>
 #include <cmath>
 
@@ -75,6 +77,20 @@ namespace BlackMisc
         {
             double result = std::fmod(degrees, 360.0);
             return (result >= 0.0) ? result : result + 360.0;
+        }
+
+        int CMathUtils::randomInteger(int low, int high)
+        {
+            static QThreadStorage<uint> seeds;
+            if (!seeds.hasLocalData())
+            {
+                // seed is per thread!
+                uint seed = static_cast<uint>(QTime::currentTime().msec());
+                qsrand(seed);
+                seeds.setLocalData(seed);
+            }
+            int r(qrand());
+            return r % ((high + 1) - low) + low;
         }
 
     } // namespace

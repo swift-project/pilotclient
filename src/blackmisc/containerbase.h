@@ -131,6 +131,13 @@ namespace BlackMisc
             return json;
         }
 
+        //! Convenience function JSON as string
+        QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented) const
+        {
+            QJsonDocument jsonDoc(toJson());
+            return jsonDoc.toJson(format);
+        }
+
         //! \copydoc CValueObject::convertFromJson
         void convertFromJson(const QJsonObject &json)
         {
@@ -142,6 +149,12 @@ namespace BlackMisc
                 ref >> value;
                 derived().insert(value);
             }
+        }
+
+        //! Assign from JSON object string
+        void convertFromJson(const QString &jsonString)
+        {
+            convertFromJson(BlackMisc::Json::jsonObjectFromString(jsonString));
         }
 
         //! \copydoc BlackMisc::CValueObject::convertToQString

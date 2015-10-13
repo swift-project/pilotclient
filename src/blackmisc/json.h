@@ -16,12 +16,14 @@
 #include "blackmisc/tuple.h"
 #include "blackmisc/inheritance_traits.h"
 #include <QJsonObject>
+#include <QJsonDocument>
 #include <QJsonValue>
 #include <QJsonValueRef>
 #include <QJsonArray>
 #include <QDateTime>
 #include <QStringList>
 #include <QPixmap>
+#include <QByteArray>
 #include <utility>
 
 /*!
@@ -41,6 +43,7 @@ BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, double &v
 BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, bool &value);
 BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, QDateTime &value);
 BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, QPixmap &value);
+BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, QByteArray &value);
 BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, int &value);
 BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, qlonglong &value);
 BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, qulonglong &value);
@@ -51,6 +54,7 @@ BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, dou
 BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, bool &value);
 BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, QDateTime &value);
 BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, QPixmap &value);
+BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, QByteArray &value);
 
 //! @}
 
@@ -98,6 +102,7 @@ BLACKMISC_EXPORT QJsonArray &operator<<(QJsonArray &json, const double value);
 BLACKMISC_EXPORT QJsonArray &operator<<(QJsonArray &json, const bool value);
 BLACKMISC_EXPORT QJsonArray &operator<<(QJsonArray &json, const QDateTime &value);
 BLACKMISC_EXPORT QJsonArray &operator<<(QJsonArray &json, const QPixmap &value);
+BLACKMISC_EXPORT QJsonArray &operator<<(QJsonArray &json, const QByteArray &value);
 //! @}
 
 //! \name Streaming operators for QJsonObject (from value)
@@ -113,6 +118,7 @@ BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QStr
 BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const bool &> &value);
 BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QDateTime &> &value);
 BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QPixmap &> &value);
+BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QByteArray &> &value);
 //! @}
 
 namespace BlackMisc
@@ -198,11 +204,24 @@ namespace BlackMisc
                 return Json::appendJsonObject(json, baseToJson(static_cast<const BaseOfT<Derived> *>(derived())));
             }
 
+            //! Convenience function JSON as string
+            QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented) const
+            {
+                QJsonDocument jsonDoc(toJson());
+                return jsonDoc.toJson(format);
+            }
+
             //! Assign from JSON object
             void convertFromJson(const QJsonObject &json)
             {
                 baseConvertFromJson(static_cast<BaseOfT<Derived> *>(derived()), json);
                 BlackMisc::deserializeJson(json, Private::EncapsulationBreaker::toMetaTuple(*derived()));
+            }
+
+            //! Assign from JSON object string
+            void convertFromJson(const QString &jsonString)
+            {
+                convertFromJson(BlackMisc::Json::jsonObjectFromString(jsonString));
             }
 
         private:

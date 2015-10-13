@@ -65,6 +65,20 @@ const QJsonValue &operator >>(const QJsonValue &json, QDateTime &value)
     return json;
 }
 
+const QJsonValue &operator >>(const QJsonValue &json, QPixmap &value)
+{
+    const QString hex(json.toString());
+    BlackMisc::pngHexStringToPixmapRef(hex, value);
+    return json;
+}
+
+const QJsonValue &operator >>(const QJsonValue &json, QByteArray &value)
+{
+    const QString hex(json.toString());
+    value = BlackMisc::byteArrayFromHexString(hex);
+    return json;
+}
+
 const QJsonValueRef &operator >>(const QJsonValueRef &json, int &value)
 {
     value = json.toInt();
@@ -126,10 +140,10 @@ const QJsonValueRef &operator >>(const QJsonValueRef &json, QPixmap &value)
     return json;
 }
 
-const QJsonValue &operator >>(const QJsonValue &json, QPixmap &value)
+const QJsonValueRef &operator >>(const QJsonValueRef &json, QByteArray &value)
 {
     const QString hex(json.toString());
-    BlackMisc::pngHexStringToPixmapRef(hex, value);
+    value = BlackMisc::byteArrayFromHexString(hex);
     return json;
 }
 
@@ -194,6 +208,13 @@ QJsonArray &operator<<(QJsonArray &json, const QPixmap &value)
     return json;
 }
 
+QJsonArray &operator<<(QJsonArray &json, const QByteArray &value)
+{
+    QString pm(BlackMisc::byteArrayFromHexString(value));
+    json.append(QJsonValue(pm));
+    return json;
+}
+
 QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const int &> &value)
 {
     json.insert(value.first, QJsonValue(value.second));
@@ -251,6 +272,13 @@ QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QDateT
 QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QPixmap &> &value)
 {
     QString pm(BlackMisc::pixmapToPngHexString(value.second));
+    json.insert(value.first, pm);
+    return json;
+}
+
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QByteArray &> &value)
+{
+    QString pm(BlackMisc::bytesToHexString(value.second));
     json.insert(value.first, pm);
     return json;
 }

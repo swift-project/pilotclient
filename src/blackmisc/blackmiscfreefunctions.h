@@ -35,11 +35,6 @@ inline void initBlackMiscResources()
     // cannot be declared within namespace, see docu
     // hence BlackMisc::initResources() calls this inline function
     Q_INIT_RESOURCE(blackmisc);
-
-    // set seed for random number if ever used
-    // that is needed only once on application startup
-    QTime time = QTime::currentTime();
-    qsrand((uint)time.msec());
 }
 
 //! Free functions in BlackMisc
@@ -257,6 +252,9 @@ namespace BlackMisc
     //! Display all user metatypes
     //! \remarks Used in order to debug code, do not remove
     BLACKMISC_EXPORT void displayAllUserMetatypesTypes(QTextStream &out);
+
+    //! Get all user metatypes
+    BLACKMISC_EXPORT QString getAllUserMetatypesTypes(const QString &separator = "\n");
 
     /*!
      * \brief Calculate a single hash value based on a list of individual hash values

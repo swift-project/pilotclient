@@ -36,6 +36,11 @@ namespace BlackMisc
         return content;
     }
 
+    QString CFileUtils::readFileToString(const QString &filePath, const QString &fileName)
+    {
+        return readFileToString(appendFilePaths(filePath, fileName));
+    }
+
     bool CFileUtils::writeStringToFileInBackground(const QString &content, const QString &fileNameAndPath)
     {
         if (fileNameAndPath.isEmpty()) { return false; }
