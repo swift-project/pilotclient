@@ -1,0 +1,242 @@
+/* Copyright (C) 2015
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+#include "blackmisc/network/url.h"
+#include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/network/networkutils.h"
+#include "blackmisc/propertyindex.h"
+
+namespace BlackMisc
+{
+    namespace Network
+    {
+        CUrl::CUrl(const QString &fullUrl)
+        {
+            if (!fullUrl.isEmpty())
+            {
+                setFullUrl(fullUrl);
+            }
+        }
+
+        CUrl::CUrl(const QUrl &url)
+        {
+            this->setQUrl(url);
+        }
+
+        CUrl::CUrl(const QString &address, int port) :
+            CUrl("", address, port, "")
+        { }
+
+        CUrl::CUrl(const QString &scheme, const QString &address, int port, const QString &path)
+            : m_host(address.trimmed()), m_port(port), m_path(path.trimmed())
+        {
+            this->setScheme(scheme);
+        }
+
+        void CUrl::setScheme(const QString &protocol)
+        {
+            m_scheme = protocol.trimmed().toLower().replace("://", "");
+        }
+
+        void CUrl::setPath(const QString &path)
+        {
+            m_path = path.simplified();
+        }
+
+        QString CUrl::appendPath(const QString &pathToAppend)
+        {
+            QString p(getPath());
+            p = p.append("/").append(pathToAppend.trimmed()).replace("//", "/");
+            this->setPath(p);
+            return m_path;
+        }
+
+        bool CUrl::hasPort() const
+        {
+            return m_port >= 0;
+        }
+
+        bool CUrl::isEmpty() const
+        {
+            return m_host.isEmpty();
+        }
+
+        bool CUrl::hasDefaultPort() const
+        {
+            return isDefaultPort(m_scheme, m_port);
+        }
+
+        void CUrl::setQuery(const QString &query)
+        {
+            QString q(stripQueryString(query));
+            m_query = q;
+        }
+
+        bool CUrl::hasQuery() const
+        {
+            return !m_query.isEmpty();
+        }
+
+        QString CUrl::appendQuery(const QString &queryToAppend)
+        {
+            QString q(stripQueryString(queryToAppend));
+            if (q.isEmpty()) { return m_query;  }
+            if (!hasQuery())
+            {
+                this->setQuery(q);
+            }
+            else
+            {
+                m_query = m_query + "&" + q;
+            }
+            return m_query;
+        }
+
+        QString CUrl::getFullUrl() const
+        {
+            Q_ASSERT_X(!m_host.isEmpty(), Q_FUNC_INFO, "missing address");
+            if (m_host.isEmpty()) { return ""; }
+
+            QString qn(m_host);
+            if (!hasDefaultPort() && hasPort()) { qn = qn.append(":").append(QString::number(m_port)); }
+            if (hasPath()) { qn = qn.append("/").append(m_path).replace("//", "/"); }
+            if (hasQuery()) { qn = qn.append("?").append(m_query); }
+            if (hasScheme()) { qn = QString(this->getScheme()).append("://").append(qn); }
+            return qn;
+        }
+
+        void CUrl::setFullUrl(const QString &fullUrl)
+        {
+            setQUrl(QUrl(fullUrl));
+        }
+
+        QUrl CUrl::toQUrl() const
+        {
+            return QUrl(getFullUrl());
+        }
+
+        void CUrl::setQUrl(const QUrl &url)
+        {
+            this->setPort(url.port());
+            this->setHost(url.host());
+            this->setScheme(url.scheme());
+            this->setPath(url.path());
+            this->setQuery(url.query());
+        }
+
+        CUrl CUrl::withAppendedPath(const QString &path) const
+        {
+            if (path.isEmpty()) { return *this; }
+            CUrl url(*this);
+            url.appendPath(path);
+            return url;
+        }
+
+        CUrl CUrl::withAppendedQuery(const QString &query) const
+        {
+            if (query.isEmpty()) { return *this; }
+            CUrl url(*this);
+            url.appendQuery(query);
+            return url;
+        }
+
+        QString CUrl::convertToQString(bool i18n) const
+        {
+            Q_UNUSED(i18n);
+            return getFullUrl();
+        }
+
+        QJsonObject CUrl::toJson() const
+        {
+            QPair<QString, QJsonValue> v("url", getFullUrl());
+            QJsonObject json({ v });
+            return json;
+        }
+
+        void CUrl::convertFromJson(const QJsonObject &json)
+        {
+            QString url(json.value("url").toString());
+            this->setFullUrl(url);
+        }
+
+        int CUrl::protocolToDefaultPort(const QString &protocol)
+        {
+            const QString p(protocol.trimmed().toLower());
+            if (p == "ftp") return 20;
+            if (p == "https") return 443;
+            if (p == "http") return 80;
+            return -1;
+        }
+
+        bool CUrl::isDefaultPort(const QString &protocol, int port)
+        {
+            int p = protocolToDefaultPort(protocol);
+            if (p < 0) { return false; }
+            return port == p;
+        }
+
+        QString CUrl::stripQueryString(const QString query)
+        {
+            QString q(query.trimmed());
+            if (q.startsWith("?") || q.startsWith("&"))
+            {
+                q = q.mid(1);
+            }
+            if (q.endsWith("?") || q.endsWith("&"))
+            {
+                q = q.left(q.size() - 1);
+            }
+            return q;
+        }
+
+        CVariant CUrl::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        {
+            if (index.isMyself()) { return CVariant::from(*this); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexHost:
+                return CVariant::fromValue(this->m_host);
+            case IndexPort:
+                return CVariant::fromValue(this->m_port);
+            case IndexScheme:
+                return CVariant::fromValue(this->m_scheme);
+            case IndexPath:
+                return CVariant::fromValue(this->m_path);
+            default:
+                return CValueObject::propertyByIndex(index);
+            }
+        }
+
+        void CUrl::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        {
+            if (index.isMyself()) { (*this) = variant.to<CUrl>(); return; }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexHost:
+                this->setHost(variant.value<QString>());
+                break;
+            case IndexPort:
+                this->setPort(variant.value<qint32>());
+                break;
+            case IndexPath:
+                this->setPath(variant.value<QString>());
+                break;
+            case IndexScheme:
+                this->setScheme(variant.value<QString>());
+                break;
+            default:
+                CValueObject::setPropertyByIndex(variant, index);
+                break;
+            }
+        }
+
+    } // namespace
+} // namespace

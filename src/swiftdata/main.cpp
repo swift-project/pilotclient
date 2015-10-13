@@ -10,7 +10,7 @@
 #include "swiftdata.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/worker.h"
-#include "blackmisc/networkutils.h"
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/project.h"
 #include "blackmisc/loghandler.h"

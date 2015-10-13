@@ -17,7 +17,7 @@
 #include "vatsimmetarreader.h"
 #include "airspace_monitor.h"
 #include "webdataservices.h"
-#include "blackmisc/networkutils.h"
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/simplecommandparser.h"

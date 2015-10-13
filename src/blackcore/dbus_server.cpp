@@ -8,12 +8,13 @@
  */
 
 #include "blackmisc/logmessage.h"
-#include "blackmisc/networkutils.h"
+#include "blackmisc/network/networkutils.h"
 #include "dbus_server.h"
 #include <QDebug>
 #include <QMetaClassInfo>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Network;
 
 namespace BlackCore
 {
@@ -270,7 +271,7 @@ namespace BlackCore
         }
 
         // todo: Replace assert with input validation
-        Q_ASSERT_X(BlackMisc::CNetworkUtils::isValidIPv4Address(p), "p2pAdress", "Wrong IP in String");
+        Q_ASSERT_X(CNetworkUtils::isValidIPv4Address(p), "p2pAdress", "Wrong IP in String");
         QString p2p = QString("tcp:host=%1,port=%2").arg(h).arg(p);
         return p2p;
     }

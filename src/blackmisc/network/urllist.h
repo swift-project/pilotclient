@@ -1,0 +1,66 @@
+/* Copyright (C) 2015
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
+
+#ifndef BLACKMISC_NETWORK_NETWORKLOCATIONLIST_H
+#define BLACKMISC_NETWORK_NETWORKLOCATIONLIST_H
+
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/network/url.h"
+#include "blackmisc/collection.h"
+#include "blackmisc/sequence.h"
+
+namespace BlackMisc
+{
+    namespace Network
+    {
+        //! Value object encapsulating a list of servers.
+        class BLACKMISC_EXPORT CUrlList :
+            public CSequence<CUrl>,
+            public BlackMisc::Mixin::MetaType<CUrlList>
+        {
+        public:
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CUrlList)
+
+            //! Default constructor.
+            CUrlList();
+
+            //! By list of URLs
+            explicit CUrlList(const QStringList &listOfUrls);
+
+            //! Construct from a base class object.
+            CUrlList(const CSequence<CUrl> &other);
+
+            //! Random location for distributed load
+            CUrl getRandomUrl() const;
+
+            //! Random location for distributed load
+            CUrl getRandomWithout(const CUrlList &exclude) const;
+
+            //! Round robin with random start point
+            CUrl getNextUrl(bool randomStart = true) const;
+
+            //! Round robin with random start point
+            CUrl getNextUrlWithout(const CUrlList &exclude, bool randomStart = true) const;
+
+            //! Append path to all URLs
+            CUrlList appendPath(const QString &path) const;
+
+        private:
+            mutable int m_currentIndexDistributedLoad = -1;
+        };
+    } //namespace
+} // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::Network::CUrlList)
+Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Network::CUrl>)
+Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Network::CUrl>)
+
+#endif //guard

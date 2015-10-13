@@ -14,7 +14,7 @@
 
 /*!
  * \namespace BlackMisc::Network
- * \brief Classes related to the traffic network and swift DB, such as VATSIM user etc.
+ * \brief Classes related to the traffic network, swift DB, such as VATSIM user, utilities, URL etc.
  */
 
 #include "blackmisc/network/user.h"

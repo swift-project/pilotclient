@@ -12,7 +12,7 @@
 #include "blackcore/context_simulator.h"
 #include "blackcore/context_application.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
-#include "blackmisc/networkutils.h"
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/simulation/fsx/fsxsimulatorsetup.h"
