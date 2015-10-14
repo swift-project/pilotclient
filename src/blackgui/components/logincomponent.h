@@ -14,6 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enableforruntime.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackcore/settings/network.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/entityflags.h"
@@ -148,6 +149,7 @@ namespace BlackGui
             const int LogoffIntervalSeconds = 10;
             QTimer *m_logoffCountdownTimer { nullptr };
             BlackCore::CSetting<BlackCore::Settings::Network::TrafficServers> m_trafficNetworkServers { this };
+            BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
         };
 
     } // namespace

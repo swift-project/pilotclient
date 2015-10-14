@@ -16,9 +16,9 @@
 #include "blackcore/context_simulator.h"
 #include "blackcore/network.h"
 #include "blackcore/simulator.h"
-#include "blackcore/settings/global_network_settings.h"
+#include "blackcore/setupreader.h"
 #include "blackmisc/logmessage.h"
-#include "../uppercasevalidator.h"
+#include "blackgui/uppercasevalidator.h"
 #include <QIntValidator>
 
 using namespace BlackMisc;
@@ -26,7 +26,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore;
-using namespace BlackCore::Settings;
+using namespace BlackCore::Data;
 using namespace BlackGui;
 
 namespace BlackGui
@@ -145,9 +145,9 @@ namespace BlackGui
             CServerList otherServers = this->m_trafficNetworkServers.get();
 
             // add a testserver when no servers can be loaded
-            if (otherServers.isEmpty() && CProject::isDebugBuild())
+            if (otherServers.isEmpty() && CProject::isRunningInBetaOrDeveloperEnvironment())
             {
-                otherServers.push_back(CGlobalNetworkSettings::instance().swiftFsdTestServer());
+                otherServers.push_back(m_setup.get().fsdTestServers());
             }
             this->ui->cbp_OtherServers->setServers(otherServers);
         }

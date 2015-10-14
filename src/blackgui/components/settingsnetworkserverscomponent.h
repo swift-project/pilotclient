@@ -14,6 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enableforruntime.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackcore/settings/network.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -52,6 +53,7 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CSettingsNetworkServersComponent> ui;
             BlackCore::CSetting<BlackCore::Settings::Network::TrafficServers> m_trafficNetworkServers { this };
+            BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
         };
     } // ns
 } // ns

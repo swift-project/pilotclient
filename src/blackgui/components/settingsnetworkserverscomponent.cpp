@@ -11,14 +11,14 @@
 #include "ui_settingsnetworkserverscomponent.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_settings.h"
-#include "blackcore/settings/global_network_settings.h"
+#include "blackcore/setupreader.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/project.h"
 #include "blackmisc/settingsblackmiscclasses.h"
 #include <QModelIndex>
 
 using namespace BlackCore;
-using namespace BlackCore::Settings;
+using namespace BlackCore::Data;
 using namespace BlackGui;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
@@ -50,11 +50,11 @@ namespace BlackGui
         {
             CServerList serverList(m_trafficNetworkServers.get());
 
-            // add swift test server in case we have no servers
+            // add swift test server in case we have no servers:
             // this is debug/bootstrap feature we can continue to test when something goes wrong
-            if (serverList.isEmpty() && CProject::isDebugBuild())
+            if (serverList.isEmpty() && CProject::isRunningInBetaOrDeveloperEnvironment())
             {
-                serverList.push_back(CGlobalNetworkSettings::instance().swiftFsdTestServer());
+                serverList.push_back(m_setup.get().fsdTestServers());
             }
             this->ui->tvp_SettingsTnServers->updateContainer(serverList);
         }
