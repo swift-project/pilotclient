@@ -44,6 +44,9 @@ namespace BlackMisc
         //! Timestamp as ms value
         void setMSecsSinceEpoch(qint64 mSecsSinceEpoch) { m_timestampMSecsSinceEpoch = mSecsSinceEpoch; }
 
+        //! Set by value such as "20141003231045"
+        void setByYearMonthDayHourMinute(const QString &yyyyMMddhhmmss);
+
         //! Set timestamp
         void setUtcTimestamp(const QDateTime &timestamp);
 
@@ -83,10 +86,10 @@ namespace BlackMisc
         //! As hh:mm
         QString getFormattedUtcTimestampHm() const;
 
-        //! As YYYY mm dd hh ss
+        //! As yyyy MM dd HH mm ss
         QString getFormattedUtcTimestampYmdhms() const;
 
-        //! As YYYY mm dd hh ss.zzz
+        //! As yyyy MM dd HH mm ss.zzz
         QString getFormattedUtcTimestampYmdhmsz() const;
 
         //! Can given index be handled
@@ -108,7 +111,7 @@ namespace BlackMisc
         //! \copydoc CValueObject::setPropertyByIndex
         void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
-        qint64 m_timestampMSecsSinceEpoch = QDateTime::currentMSecsSinceEpoch(); //!< timestamp value
+        qint64 m_timestampMSecsSinceEpoch; //!< timestamp value
     };
 
 } // namespace

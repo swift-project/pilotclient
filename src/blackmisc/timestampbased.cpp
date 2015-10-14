@@ -12,7 +12,7 @@
 
 namespace BlackMisc
 {
-    ITimestampBased::ITimestampBased()
+    ITimestampBased::ITimestampBased() : m_timestampMSecsSinceEpoch(QDateTime::currentMSecsSinceEpoch())
     { }
 
     ITimestampBased::ITimestampBased(qint64 msSincePoch) : m_timestampMSecsSinceEpoch(msSincePoch)
@@ -24,6 +24,39 @@ namespace BlackMisc
     QDateTime ITimestampBased::getUtcTimestamp() const
     {
         return QDateTime::fromMSecsSinceEpoch(this->m_timestampMSecsSinceEpoch, Qt::UTC);
+    }
+
+    void ITimestampBased::setByYearMonthDayHourMinute(const QString &yyyyMMddhhmmsszzz)
+    {
+        // yyyy MM dd hh mm ss zzz
+        // 0123 45 67 89 01 23 456
+        // 1234 56 78 90 12 34 567
+
+        QString s(yyyyMMddhhmmsszzz);
+        s.remove(':').remove(' ').remove('-').remove('.'); // plain vanilla string
+        int year(s.left(4).toInt());
+        int month(s.mid(4, 2).toInt());
+        int day(s.mid(6, 2).toInt());
+        QDate date;
+        date.setDate(year, month, day);
+        QDateTime dt;
+        dt.setOffsetFromUtc(0);
+        dt.setDate(date);
+        if (s.length() < 12)
+        {
+            this->setUtcTimestamp(dt);
+            return;
+        }
+
+        QTime t;
+        int hour(s.mid(8, 2).toInt());
+        int minute(s.mid(10, 2).toInt());
+        int second(s.length() < 14 ? 0 : s.mid(12, 2).toInt());
+        int ms(s.length() < 17 ? 0 : s.right(3).toInt());
+
+        t.setHMS(hour, minute, second, ms);
+        dt.setTime(t);
+        this->setUtcTimestamp(dt);
     }
 
     void ITimestampBased::setUtcTimestamp(const QDateTime &timestamp)
