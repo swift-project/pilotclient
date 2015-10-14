@@ -11,6 +11,8 @@
 #include "ui_statusmessageform.h"
 #include <QLabel>
 
+using namespace BlackMisc;
+
 namespace BlackGui
 {
     CStatusMessageForm::CStatusMessageForm(QWidget *parent) :
@@ -23,9 +25,14 @@ namespace BlackGui
     CStatusMessageForm::~CStatusMessageForm()
     { }
 
-    void CStatusMessageForm::setValue(const BlackMisc::CStatusMessage &message)
+    void CStatusMessageForm::setVariant(const CVariant &messageVariant)
     {
         if (!this->isVisible()) { return; }
+        this->setValue(messageVariant.value<CStatusMessage>());
+    }
+
+    void CStatusMessageForm::setValue(const CStatusMessage &message)
+    {
         ui->te_Message->setPlainText(message.getMessage());
         ui->lbl_SeverityIcon->setPixmap(message.toPixmap());
         ui->le_Categories->setText(message.getCategories().toQString(true));

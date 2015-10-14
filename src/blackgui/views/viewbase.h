@@ -108,6 +108,15 @@ namespace BlackGui
             //! Showing load indicator
             bool isShowingLoadIndicator() const;
 
+            //! Accept click selection
+            void acceptClickSelection(bool accept) { m_acceptClickSelection = accept; }
+
+            //! Accept double click selection
+            void acceptDoubleClickSelection(bool accept) { m_acceptDoubleClickSelection = accept; }
+
+            //! \copydoc QTableView::setSelectionModel();
+            virtual void setSelectionModel(QItemSelectionModel *model) override;
+
             //! Main application window widget if any
             QWidget *mainApplicationWindowWidget() const;
 
@@ -129,6 +138,15 @@ namespace BlackGui
 
             //! Single object was changed in model
             void objectChanged(const BlackMisc::CVariant &object, const BlackMisc::CPropertyIndex &changedIndex);
+
+            //! Object has been clicked
+            void objectClicked(const BlackMisc::CVariant &object);
+
+            //! Object has been double clicked
+            void objectDoubleClicked(const BlackMisc::CVariant &object);
+
+            //! Object has been double clicked
+            void objectSelected(const BlackMisc::CVariant &object);
 
         public slots:
             //! Resize to contents, strategy depends on container size
@@ -190,14 +208,17 @@ namespace BlackGui
             int m_skipResizeThreshold = 40;                      //!< when to skip resize (rows count)
             int m_resizeAutoNthTime   = 1;                       //!< with ResizeAuto, resize every n-th time
             bool m_forceStretchLastColumnWhenResized = false;    //!< a small table might (few columns) might to fail stretching, force again
-            bool m_withMenuItemClear        = false;             //!< allow clearing the view via menu
-            bool m_withMenuItemRefresh      = false;             //!< allow refreshing the view via menu
-            bool m_withMenuItemBackend      = false;             //!< allow to request data from backend
-            bool m_withMenuFilter           = false;             //!< filter can be opened
-            bool m_showingLoadIndicator     = false;             //!< showing loading indicator
-            bool m_enabledLoadIndicator     = true;              //!< loading indicator enabled/disabled
-            QWidget *m_filterWidget         = nullptr;           //!< filter widget if any
-            BlackGui::IMenuDelegate *m_menu = nullptr;           //!< custom menu if any
+            bool m_withMenuItemClear          = false;           //!< allow clearing the view via menu
+            bool m_withMenuItemRefresh        = false;           //!< allow refreshing the view via menu
+            bool m_withMenuItemBackend        = false;           //!< allow to request data from backend
+            bool m_withMenuFilter             = false;           //!< filter can be opened
+            bool m_showingLoadIndicator       = false;           //!< showing loading indicator
+            bool m_enabledLoadIndicator       = true;            //!< loading indicator enabled/disabled
+            bool m_acceptClickSelection       = false;           //!< clicked
+            bool m_acceptRowSelected     = false;           //!< selection changed
+            bool m_acceptDoubleClickSelection = false;           //!< double clicked
+            QWidget *m_filterWidget           = nullptr;         //!< filter widget if any
+            BlackGui::IMenuDelegate *m_menu   = nullptr;         //!< custom menu if any
             BlackGui::CLoadIndicator *m_loadIndicator = nullptr; //!< load indicator if neeeded
 
         protected slots:
@@ -215,6 +236,15 @@ namespace BlackGui
 
             //! Filter changed in filter widget
             virtual bool ps_filterWidgetChangedFilter(bool enabled) = 0;
+
+            //! Index clicked
+            virtual void ps_clicked(const QModelIndex &index) = 0;
+
+            //! Index double clicked
+            virtual void ps_doubleClicked(const QModelIndex &index) = 0;
+
+            //! Row selected
+            virtual void ps_rowSelected(const QModelIndex &index) = 0;
 
         private slots:
             //! Custom menu was requested
@@ -323,6 +353,18 @@ namespace BlackGui
             //! \copydoc CViewBaseNonTemplate::ps_removeFilter
             //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
             virtual void ps_removeFilter() override;
+
+            //! \copydoc CViewBaseNonTemplate::ps_clicked
+            //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
+            virtual void ps_clicked(const QModelIndex &index) override;
+
+            //! \copydoc CViewBaseNonTemplate::ps_doubleClicked
+            //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
+            virtual void ps_doubleClicked(const QModelIndex &index) override;
+
+            //! \copydoc CViewBaseNonTemplate::ps_doubleClicked
+            //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
+            virtual void ps_rowSelected(const QModelIndex &index) override;
         };
     } // namespace
 } // namespace

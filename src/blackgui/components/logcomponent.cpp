@@ -19,28 +19,52 @@ namespace BlackGui
 {
     namespace Components
     {
+        CConsoleTextEdit::CConsoleTextEdit(QWidget *parent) : QPlainTextEdit(parent)
+        {
+            bool c = connect(this, &CConsoleTextEdit::customContextMenuRequested, this, &CConsoleTextEdit::ps_customMenuRequested);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Custom menu");
+            Q_UNUSED(c);
+            this->setContextMenuPolicy(Qt::CustomContextMenu);
+        }
+
+        void CConsoleTextEdit::ps_customMenuRequested(const QPoint &pos)
+        {
+            QMenu *menu = QPlainTextEdit::createStandardContextMenu();
+            menu->addAction(CIcons::delete16(), "Clear console", this, SLOT(clear()));
+            menu->exec(this->mapToGlobal(pos));
+        }
+
         CLogComponent::CLogComponent(QWidget *parent) :
             QFrame(parent), ui(new Ui::CLogComponent)
         {
             ui->setupUi(this);
             this->ui->tvp_StatusMessages->setAutoResizeFrequency(3);
-            connect(this->ui->tvp_StatusMessages, &CStatusMessageView::messageSelected,
-                    this->ui->form_StatusMessage, &CStatusMessageForm::setValue);
+            connect(this->ui->tvp_StatusMessages, &CStatusMessageView::objectSelected, this->ui->form_StatusMessage, &CStatusMessageForm::setVariant);
             this->ui->tvp_StatusMessages->setCustomMenu(new CLogMenu(this));
         }
 
         CLogComponent::~CLogComponent()
         { }
 
+        void CLogComponent::displayLog()
+        {
+            this->ui->tw_StatusPage->setCurrentIndex(0);
+        }
+
+        void CLogComponent::displayConsole()
+        {
+            this->ui->tw_StatusPage->setCurrentIndex(1);
+        }
+
         void CLogComponent::appendStatusMessageToConsole(const CStatusMessage &statusMessage)
         {
             if (statusMessage.isEmpty()) return;
-            this->ui->te_StatusPageConsole->appendHtml(statusMessage.toHtml());
+            this->ui->tep_StatusPageConsole->appendHtml(statusMessage.toHtml());
         }
 
         void CLogComponent::appendPlainTextToConsole(const QString &text)
         {
-            this->ui->te_StatusPageConsole->appendPlainText(text);
+            this->ui->tep_StatusPageConsole->appendPlainText(text);
         }
 
         void CLogComponent::appendStatusMessageToList(const CStatusMessage &statusMessage)
@@ -55,7 +79,7 @@ namespace BlackGui
             Q_ASSERT_X(logComp, Q_FUNC_INFO, "Missing parent");
 
             bool v = logComp->ui->form_StatusMessage->isVisible();
-            QString formString(v ? "Hide details" : "Show details");
+            QString formString(v ? "Hide log details" : "Show log details");
             QAction *a = menu.addAction(BlackMisc::CIcons::databaseTable16(), formString, logComp->ui->form_StatusMessage, SLOT(toggleVisibility()));
             a->setCheckable(true);
             a->setChecked(v);

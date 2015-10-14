@@ -36,6 +36,8 @@ namespace BlackGui
         {
             this->setContextMenuPolicy(Qt::CustomContextMenu);
             connect(this, &QWidget::customContextMenuRequested, this, &CViewBaseNonTemplate::ps_customMenuRequested);
+            connect(this, &QTableView::clicked, this, &CViewBaseNonTemplate::ps_clicked);
+            connect(this, &QTableView::doubleClicked, this, &CViewBaseNonTemplate::ps_doubleClicked);
 
             // scroll modes
             this->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
@@ -98,6 +100,16 @@ namespace BlackGui
         bool CViewBaseNonTemplate::isShowingLoadIndicator() const
         {
             return m_enabledLoadIndicator && m_showingLoadIndicator;
+        }
+
+        void CViewBaseNonTemplate::setSelectionModel(QItemSelectionModel *model)
+        {
+            if (this->selectionModel()) { disconnect(this->selectionModel()); }
+            QTableView::setSelectionModel(model);
+            if (this->selectionModel())
+            {
+                connect(this->selectionModel(), &QItemSelectionModel::currentRowChanged, this, &CViewBaseNonTemplate::ps_rowSelected);
+            }
         }
 
         QWidget *CViewBaseNonTemplate::mainApplicationWindowWidget() const
@@ -599,6 +611,30 @@ namespace BlackGui
         void CViewBase<ModelClass, ContainerType, ObjectType>::ps_removeFilter()
         {
             this->derivedModel()->removeFilter();
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::ps_clicked(const QModelIndex &index)
+        {
+            if (!m_acceptClickSelection) { return; }
+            if (!index.isValid()) { return; }
+            emit objectClicked(CVariant::fromValue(at(index)));
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::ps_doubleClicked(const QModelIndex &index)
+        {
+            if (!m_acceptDoubleClickSelection) { return; }
+            if (!index.isValid()) { return; }
+            emit objectDoubleClicked(CVariant::fromValue(at(index)));
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::ps_rowSelected(const QModelIndex &index)
+        {
+            if (!m_acceptRowSelected) { return; }
+            if (!index.isValid()) { return; }
+            emit objectSelected(CVariant::fromValue(at(index)));
         }
 
         // see here for the reason of thess forward instantiations

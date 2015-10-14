@@ -46,7 +46,6 @@ namespace BlackGui
                     col.setSortPropertyIndex(CStatusMessage::IndexSeverityAsString);
                     this->m_columns.addColumn(col);
                     this->m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
-                    this->m_columns.addColumn(CColumn::standardString("all categories", CStatusMessage::IndexCategories));
 
                     this->m_sortedColumn = CStatusMessage::IndexUtcTimestamp;
                     this->m_sortOrder = Qt::DescendingOrder;

@@ -36,6 +36,9 @@ namespace BlackGui
 
     public slots:
         //! Set message
+        void setVariant(const BlackMisc::CVariant &messageVariant);
+
+        //! Set message
         void setValue(const BlackMisc::CStatusMessage &message);
 
         //! Toggle visibility

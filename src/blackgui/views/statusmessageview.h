@@ -32,14 +32,6 @@ namespace BlackGui
 
             //! Set mode
             void setMode(BlackGui::Models::CStatusMessageListModel::Mode mode);
-
-        signals:
-            //! Message has been selected
-            void messageSelected(const BlackMisc::CStatusMessage &statusMessage);
-
-        private:
-            //! Message selected
-            void ps_messageSelected(const QModelIndex &index);
         };
     } // ns
 } // ns

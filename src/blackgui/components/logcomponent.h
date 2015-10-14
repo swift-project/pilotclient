@@ -16,6 +16,7 @@
 #include "enableforruntime.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackgui/menudelegate.h"
+#include <QPlainTextEdit>
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -25,6 +26,20 @@ namespace BlackGui
 {
     namespace Components
     {
+        //! Text edit for our log component
+        class BLACKGUI_EXPORT CConsoleTextEdit : public QPlainTextEdit
+        {
+            Q_OBJECT
+
+        public:
+            //! Constructor
+            CConsoleTextEdit(QWidget *parent = nullptr);
+
+        protected slots:
+            //! Custom menu
+            void ps_customMenuRequested(const QPoint &pos);
+        };
+
         //! GUI displaying log and status messages
         class BLACKGUI_EXPORT CLogComponent :
             public QFrame,
@@ -38,6 +53,12 @@ namespace BlackGui
 
             //! Destructor
             ~CLogComponent();
+
+            //! Display log
+            void displayLog();
+
+            //! Display console
+            void displayConsole();
 
         public slots:
             //! Append status message to console
@@ -62,7 +83,6 @@ namespace BlackGui
                 //! \copydoc IMenuDelegate::customMenu
                 virtual void customMenu(QMenu &menu) const override;
             };
-
         };
     } // ns
 } // ns
