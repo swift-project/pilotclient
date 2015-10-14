@@ -10,6 +10,7 @@
 #include "project.h"
 #include <QStringList>
 #include <QCoreApplication>
+#include <QProcessEnvironment>
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 
@@ -94,26 +95,6 @@ namespace BlackMisc
 #else
         return false;
 #endif
-    }
-
-    const QString &CProject::compiledInfo()
-    {
-        static QString info;
-        if (info.isEmpty())
-        {
-            static QStringList sl;
-            if (isCompiledWithBlackCore()) { sl << "BlackCore"; }
-            if (isCompiledWithBlackSound()) { sl << "BlackSound"; }
-            if (isCompiledWithBlackInput()) { sl << "BlackInput"; }
-            if (isCompiledWithGui()) { sl << "BlackGui"; }
-            if (isCompiledWithFs9Support()) { sl << "FS9"; }
-            if (isCompiledWithFsxSupport()) { sl << "FSX"; }
-            if (isCompiledWithXPlaneSupport()) { sl << "XPlane"; }
-            if (isCompiledWithP3DSupport()) { sl << "P3D"; }
-            info = sl.join(", ");
-            if (info.isEmpty()) info = "<none>";
-        }
-        return info;
     }
 
     const BlackMisc::Simulation::CSimulatorInfo &CProject::simulators()
@@ -208,16 +189,22 @@ namespace BlackMisc
 
     bool CProject::isRunningInDeveloperEnvironment()
     {
-        if (!isDebugBuild()) { return false; }
-        QFileInfo executable(QCoreApplication::applicationFilePath());
-        QDir p(executable.dir());
+        static const bool dev = BlackMisc::stringToBool(envVarDevelopmentValue());
+        return dev;
+    }
 
-        // search for typical developer dirs, feel free to improve the "algortithm"
-        if (!p.cdUp()) { return false; }
-        bool hasSrc = p.cd("src");
-        if (!hasSrc) { return false; }
-        p.cdUp();
-        return p.cd("samples");
+    bool CProject::useDevelopmentSetup()
+    {
+        static const QString v(envVarDevelopmentValue());
+        if (v.isEmpty())
+        {
+            // no explicit value
+            return isRunningInBetaOrDeveloperEnvironment();
+        }
+        else
+        {
+            return stringToBool(v);
+        }
     }
 
     bool CProject::isRunningInBetaOrDeveloperEnvironment()
@@ -234,6 +221,39 @@ namespace BlackMisc
         return ok ? vi : -1;
     }
 
+    const QString &CProject::envVarDevelopment()
+    {
+        static const QString s("SWIFT_DEV");
+        return s;
+    }
+
+    QString CProject::envVarDevelopmentValue()
+    {
+        return QProcessEnvironment::systemEnvironment().value(envVarDevelopment());
+    }
+
+    const QString &CProject::envDevelopmentSetup()
+    {
+        static const QString s("SWIFT_DEV_SETUP");
+        return s;
+    }
+
+    QString CProject::envDevelopmentSetupValue()
+    {
+        return QProcessEnvironment::systemEnvironment().value(envDevelopmentSetup());
+    }
+
+    const QString &CProject::envVarPrivateSetupDir()
+    {
+        static const QString s("SWIFT_SETUP_DIR");
+        return s;
+    }
+
+    QString CProject::envVarPrivateSetupDirValue()
+    {
+        return QProcessEnvironment::systemEnvironment().value(envVarPrivateSetupDir());
+    }
+
     QString CProject::getApplicationDir()
     {
         QFileInfo executable(QCoreApplication::applicationFilePath());
@@ -248,6 +268,12 @@ namespace BlackMisc
         return "";
     }
 
+    QString CProject::getSwiftPrivateResourceDir()
+    {
+        static const QString dir(envVarPrivateSetupDirValue());
+        return dir;
+    }
+
     QString CProject::getSwiftStaticDbFilesDir()
     {
         QString d(getSwiftResourceDir());
@@ -255,6 +281,82 @@ namespace BlackMisc
         QDir dir(d);
         if (dir.cd("swiftDB")) { return dir.absolutePath(); }
         return "";
+    }
+
+    QString CProject::getEnvironmentVariables(const QString &separator)
+    {
+        QString e(envDevelopmentSetup());
+        e = e.append(": ").append(envDevelopmentSetupValue());
+        e = e.append(separator);
+
+        e = e.append(envVarDevelopment());
+        e = e.append(": ").append(envVarDevelopmentValue());
+        e = e.append(separator);
+
+        e = e.append(envVarPrivateSetupDir());
+        e = e.append(": ").append(envVarPrivateSetupDirValue());
+        return e;
+    }
+
+    const QString &CProject::compiledWithInfo(bool shortVersion)
+    {
+        if (shortVersion)
+        {
+            static QString infoShort;
+            if (infoShort.isEmpty())
+            {
+                QStringList sl;
+                if (isCompiledWithBlackCore())     { sl << "BlackCore"; }
+                if (isCompiledWithBlackSound())    { sl << "BlackSound"; }
+                if (isCompiledWithBlackInput())    { sl << "BlackInput"; }
+                if (isCompiledWithGui())           { sl << "BlackGui"; }
+                if (isCompiledWithFs9Support())    { sl << "FS9"; }
+                if (isCompiledWithFsxSupport())    { sl << "FSX"; }
+                if (isCompiledWithXPlaneSupport()) { sl << "XPlane"; }
+                if (isCompiledWithP3DSupport())    { sl << "P3D"; }
+                infoShort = sl.join(", ");
+                if (infoShort.isEmpty()) { infoShort = "<none>"; }
+            }
+            return infoShort;
+        }
+        else
+        {
+            static QString infoLong;
+            if (infoLong.isEmpty())
+            {
+                infoLong = infoLong.append("BlackCore: ").append(BlackMisc::boolToYesNo(isCompiledWithBlackCore()));
+                infoLong = infoLong.append(" BlackInput: ").append(BlackMisc::boolToYesNo(isCompiledWithBlackInput()));
+                infoLong = infoLong.append(" BlackSound: ").append(BlackMisc::boolToYesNo(isCompiledWithBlackSound()));
+                infoLong = infoLong.append(" GUI: ").append(BlackMisc::boolToYesNo(isCompiledWithGui()));
+
+                infoLong = infoLong.append(" FS9: ").append(BlackMisc::boolToYesNo(isCompiledWithFs9Support()));
+                infoLong = infoLong.append(" FSX: ").append(BlackMisc::boolToYesNo(isCompiledWithFsxSupport()));
+                infoLong = infoLong.append(" P3D: ").append(BlackMisc::boolToYesNo(isCompiledWithP3DSupport()));
+                infoLong = infoLong.append(" XPlane: ").append(BlackMisc::boolToYesNo(isCompiledWithXPlaneSupport()));
+            }
+            return infoLong;
+        }
+    }
+
+    QString CProject::environmentInfo(const QString &separator)
+    {
+        QString env("Beta: ");
+        env.append(boolToYesNo(isBetaTest()));
+        env = env.append(" dev.env,: ").append(boolToYesNo(isRunningInDeveloperEnvironment()));
+        env = env.append(separator);
+        env.append("Windows: ").append(boolToYesNo(isRunningOnWindowsNtPlatform()));
+        return env;
+    }
+
+    QString CProject::convertToQString(const QString &separator)
+    {
+        QString str(version());
+        str = str.append(" ").append(isReleaseBuild() ? "Release build" : "Debug build");
+        str = str.append(separator);
+        str = str.append(environmentInfo(separator));
+        str = str.append(separator);
+        str.append(compiledWithInfo(false));
+        return str;
     }
 } // ns
 

@@ -18,7 +18,6 @@
 
 namespace BlackMisc
 {
-
     /*!
      * Metadata about the project
      */
@@ -54,9 +53,6 @@ namespace BlackMisc
 
         //! with GUI?
         static bool isCompiledWithGui();
-
-        //! Info string about compilation
-        static const QString &compiledInfo();
 
         //! Simulator String info
         static const BlackMisc::Simulation::CSimulatorInfo &simulators();
@@ -97,6 +93,9 @@ namespace BlackMisc
         //! Running in dev.environment, so on a programmers machine
         static bool isRunningInDeveloperEnvironment();
 
+        //! Use development setup?
+        static bool useDevelopmentSetup();
+
         //! Beta / dev.environment?
         static bool isRunningInBetaOrDeveloperEnvironment();
 
@@ -106,8 +105,23 @@ namespace BlackMisc
         //! Where resource files (static DB files, ...) etc are located
         static QString getSwiftResourceDir();
 
+        //! Private resource dir for developer's own resource files
+        static QString getSwiftPrivateResourceDir();
+
         //! Where resource files (static DB files, ...) etc are located
         static QString getSwiftStaticDbFilesDir();
+
+        //! Dump all env.variables
+        static QString getEnvironmentVariables(const QString &separator = QString("\n"));
+
+        //! Info string about compilation
+        static const QString &compiledWithInfo(bool shortVersion = true);
+
+        //! Env.information
+        static QString environmentInfo(const QString &separator = QString("\n"));
+
+        //! Whole info
+        static QString convertToQString(const QString &separator = QString("\n"));
 
     private:
         //! Constructor
@@ -115,7 +129,33 @@ namespace BlackMisc
 
         //! Split version
         static int getMajorMinor(int index);
+
+        // --------------- env.vars. -------------
+        // centralized in one place here so we have an overview
+
+        //! Environment variable indicating "dev.environment"
+        static const QString &envVarDevelopment();
+
+        //! Value
+        //! //! \value true|false
+        static QString envVarDevelopmentValue();
+
+        //! Read data from productive or development setupnding on dev. environment yes/no
+        static const QString &envDevelopmentSetup();
+
+        //! Value
+        //! \value true|false
+        //! \remarks If this is set, the explicit value will be used.
+        //!          If not set, default will be used depe
+        static QString envDevelopmentSetupValue();
+
+        //! Environment variable private resources
+        static const QString &envVarPrivateSetupDir();
+
+        //! Value
+        //! \value directory path
+        static QString envVarPrivateSetupDirValue();
     };
-}
+} // ns
 
 #endif // guard
