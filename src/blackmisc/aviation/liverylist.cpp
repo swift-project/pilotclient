@@ -51,5 +51,32 @@ namespace BlackMisc
             });
         }
 
+        CLivery CLiveryList::smartLiverySelector(const CLivery &liveryPattern) const
+        {
+            // first try on id, that would be perfect
+            if (liveryPattern.hasValidDbKey())
+            {
+                int k = liveryPattern.getDbKey();
+                CLivery l(this->findByKey(k));
+                if (l.hasCompleteData()) { return l; }
+            }
+
+            // by combined code
+            if (liveryPattern.hasCombinedCode())
+            {
+                QString cc(liveryPattern.getCombinedCode());
+                CLivery l(this->findByCombinedCode(cc));
+                if (l.hasCompleteData()) { return l; }
+            }
+
+            if (liveryPattern.hasValidAirlineDesignator())
+            {
+                QString icao(liveryPattern.getAirlineIcaoCodeDesignator());
+                CLivery l(this->findByAirlineIcaoDesignatorStdLivery(icao));
+                if (l.hasCompleteData()) { return l; }
+            }
+            return CLivery();
+        }
+
     } // namespace
 } // namespace

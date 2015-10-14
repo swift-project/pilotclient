@@ -43,6 +43,8 @@ namespace BlackMisc
             //! Find by id or alias
             CDistributor findByIdOrAlias(const QString &name);
 
+            //! Best match by given pattern
+            CDistributor smartDistributorSelector(const CDistributor &distributorPattern);
         };
     } //namespace
 } // namespace

@@ -60,48 +60,10 @@ namespace BlackCore
         return m_airlineIcaos;
     }
 
-    CAircraftIcaoCode CIcaoDataReader::smartAircraftIcaoSelector(const CAircraftIcaoCode &icao) const
+    CAircraftIcaoCode CIcaoDataReader::smartAircraftIcaoSelector(const CAircraftIcaoCode &icaoPattern) const
     {
         CAircraftIcaoCodeList codes(getAircraftIcaoCodes()); // thread safe copy
-        if (icao.hasValidDbKey())
-        {
-            int k = icao.getDbKey();
-            CAircraftIcaoCode c(codes.findByKey(k));
-            if (c.hasCompleteData()) { return c; }
-        }
-
-        if (icao.hasKnownDesignator())
-        {
-            const QString d(icao.getDesignator());
-            codes = codes.findByDesignator(d);
-            if (codes.size() == 1) { return codes.front(); }
-            if (codes.isEmpty()) { return icao; }
-            codes.sortByRank();
-
-            // intentionally continue here
-        }
-
-        // further reduce by manufacturer
-        if (icao.hasManufacturer())
-        {
-            const QString m(icao.getManufacturer());
-            codes = codes.findByManufacturer(m);
-            if (codes.size() == 1) { return codes.front(); }
-            if (codes.isEmpty()) { return icao; }
-
-            // intentionally continue here
-        }
-
-        // lucky punch on description?
-        if (icao.hasModelDescription())
-        {
-            // do not affect codes here, it might return no results
-            const QString d(icao.getModelDescription());
-            CAircraftIcaoCodeList cm(codes.findByDescription(d));
-            if (cm.size() == 1) { return cm.front(); }
-            if (cm.size() > 1 && cm.size() < codes.size()) { return codes.front(); }
-        }
-        return codes.frontOrDefault(); // sorted by rank
+        return codes.smartAircraftIcaoSelector(icaoPattern); // sorted by rank
     }
 
     CCountryList CIcaoDataReader::getCountries() const
@@ -132,9 +94,10 @@ namespace BlackCore
         return getAirlineIcaoCodes().findByKey(key);
     }
 
-    CAirlineIcaoCode CIcaoDataReader::smartAirlineIcaoSelector(const CAirlineIcaoCode &icao) const
+    CAirlineIcaoCode CIcaoDataReader::smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern) const
     {
-        return icao;
+        CAirlineIcaoCodeList codes(this->getAirlineIcaoCodes()); // thread safe copy
+        return codes.smartAirlineIcaoSelector(icaoPattern);
     }
 
     int CIcaoDataReader::getAircraftIcaoCodesCount() const
@@ -210,6 +173,7 @@ namespace BlackCore
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+        QString urlString(nwReply->url().toString());
         QJsonArray array = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (array.isEmpty())
         {
@@ -225,11 +189,13 @@ namespace BlackCore
             this->m_aircraftIcaos = codes;
         }
         emit dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, n);
+        CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::AircraftIcaoEntity) << urlString;
     }
 
     void CIcaoDataReader::ps_parseAirlineIcaoData(QNetworkReply *nwReplyPtr)
     {
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+        QString urlString(nwReply->url().toString());
         QJsonArray array = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (array.isEmpty())
         {
@@ -245,11 +211,13 @@ namespace BlackCore
             this->m_airlineIcaos = codes;
         }
         emit dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, n);
+        CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::AirlineIcaoEntity) << urlString;
     }
 
     void CIcaoDataReader::ps_parseCountryData(QNetworkReply *nwReplyPtr)
     {
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+        QString urlString(nwReply->url().toString());
         QJsonArray array = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (array.isEmpty())
         {
@@ -265,6 +233,7 @@ namespace BlackCore
             this->m_countries = countries;
         }
         emit dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, n);
+        CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::CountryEntity) << urlString;
     }
 
     bool CIcaoDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead)

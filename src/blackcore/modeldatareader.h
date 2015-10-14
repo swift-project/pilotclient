@@ -78,7 +78,7 @@ namespace BlackCore
 
         //! Best match specified by distributor
         //! \threadsafe
-        BlackMisc::Simulation::CDistributor smartDistributorSelector(const BlackMisc::Simulation::CDistributor &distributor) const;
+        BlackMisc::Simulation::CDistributor smartDistributorSelector(const BlackMisc::Simulation::CDistributor &distributorPattern) const;
 
         //! Get models count
         //! \threadsafe

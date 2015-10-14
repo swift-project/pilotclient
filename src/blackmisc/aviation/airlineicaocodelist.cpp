@@ -26,6 +26,19 @@ namespace BlackMisc
             });
         }
 
+        CAirlineIcaoCode CAirlineIcaoCodeList::smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern) const
+        {
+            if (icaoPattern.hasValidDbKey())
+            {
+                return this->findByKey(icaoPattern.getDbKey(), icaoPattern);
+            }
+
+            if (!icaoPattern.hasValidDesignator()) { return CAirlineIcaoCode(); }
+
+            //! \todo smart airline selector, further criteria
+            return icaoPattern;
+        }
+
         CAirlineIcaoCode CAirlineIcaoCodeList::findByVDesignator(const QString &designator)
         {
             if (CAirlineIcaoCode::isValidAirlineDesignator(designator)) { return CAirlineIcaoCode(); }

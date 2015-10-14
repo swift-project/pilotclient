@@ -54,7 +54,7 @@ namespace BlackCore
 
         //! Get best match for incomplete aircraft ICAO code
         //! \threadsafe
-        BlackMisc::Aviation::CAircraftIcaoCode smartAircraftIcaoSelector(const BlackMisc::Aviation::CAircraftIcaoCode &icao) const;
+        BlackMisc::Aviation::CAircraftIcaoCode smartAircraftIcaoSelector(const BlackMisc::Aviation::CAircraftIcaoCode &icaoPattern) const;
 
         //! Get countries
         //! \threadsafe
@@ -82,7 +82,7 @@ namespace BlackCore
 
         //! Get best match for incomplete airline ICAO code
         //! \threadsafe
-        BlackMisc::Aviation::CAirlineIcaoCode smartAirlineIcaoSelector(const BlackMisc::Aviation::CAirlineIcaoCode &icao) const;
+        BlackMisc::Aviation::CAirlineIcaoCode smartAirlineIcaoSelector(const BlackMisc::Aviation::CAirlineIcaoCode &icaoPattern) const;
 
         //! Get aircraft ICAO information count
         //! \threadsafe

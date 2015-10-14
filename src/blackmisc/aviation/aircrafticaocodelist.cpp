@@ -82,5 +82,49 @@ namespace BlackMisc
             return codes;
         }
 
+        CAircraftIcaoCode CAircraftIcaoCodeList::smartAircraftIcaoSelector(const CAircraftIcaoCode &icaoPattern) const
+        {
+            if (icaoPattern.hasValidDbKey())
+            {
+                int k = icaoPattern.getDbKey();
+                CAircraftIcaoCode c(this->findByKey(k));
+                if (c.hasCompleteData()) { return c; }
+            }
+
+            CAircraftIcaoCodeList codes(*this); // copy and reduce
+            if (icaoPattern.hasKnownDesignator())
+            {
+                const QString d(icaoPattern.getDesignator());
+                codes = codes.findByDesignator(d);
+                if (codes.size() == 1) { return codes.front(); }
+                if (codes.isEmpty()) { return icaoPattern; }
+                codes.sortByRank();
+
+                // intentionally continue here
+            }
+
+            // further reduce by manufacturer
+            if (icaoPattern.hasManufacturer())
+            {
+                const QString m(icaoPattern.getManufacturer());
+                codes = codes.findByManufacturer(m);
+                if (codes.size() == 1) { return codes.front(); }
+                if (codes.isEmpty()) { return icaoPattern; }
+
+                // intentionally continue here
+            }
+
+            // lucky punch on description?
+            if (icaoPattern.hasModelDescription())
+            {
+                // do not affect codes here, it might return no results
+                const QString d(icaoPattern.getModelDescription());
+                CAircraftIcaoCodeList cm(codes.findByDescription(d));
+                if (cm.size() == 1) { return cm.front(); }
+                if (cm.size() > 1 && cm.size() < codes.size()) { return codes.front(); }
+            }
+            return codes.frontOrDefault(); // sorted by rank
+        }
+
     } // namespace
 } // namespace

@@ -30,5 +30,19 @@ namespace BlackMisc
             return CDistributor();
         }
 
+        CDistributor CDistributorList::smartDistributorSelector(const CDistributor &distributorPattern)
+        {
+            if (distributorPattern.hasValidDbKey())
+            {
+                QString k(distributorPattern.getDbKey());
+                CDistributor d(this->findByKey(k));
+                if (d.hasCompleteData()) { return d; }
+
+                // more lenient search
+                return this->findByIdOrAlias(k);
+            }
+            return CDistributor();
+        }
+
     } // namespace
 } // namespace

@@ -44,6 +44,10 @@ namespace BlackMisc
 
             //! Find livery by combined code
             CLivery findByCombinedCode(const QString &combinedCode) const;
+
+            //! Find
+            CLivery smartLiverySelector(const CLivery &liveryPattern) const;
+
         };
     } //namespace
 } // namespace

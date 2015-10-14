@@ -43,6 +43,9 @@ namespace BlackMisc
             //! Not unique because of virtual airlines
             CAirlineIcaoCodeList findByDesignator(const QString &designator);
 
+            //! Best selection by given pattern
+            CAirlineIcaoCode smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern) const;
+
             //! Find by v-designator, this should be unique
             CAirlineIcaoCode findByVDesignator(const QString &designator);
 

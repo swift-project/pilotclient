@@ -59,34 +59,10 @@ namespace BlackCore
         return liveries.findByKey(id);
     }
 
-    CLivery CModelDataReader::smartLiverySelector(const CLivery &livery) const
+    CLivery CModelDataReader::smartLiverySelector(const CLivery &liveryPattern) const
     {
         CLiveryList liveries(getLiveries()); // thread safe copy
-
-        // first try on id, that would be perfect
-        if (livery.hasValidDbKey())
-        {
-            int k = livery.getDbKey();
-            CLivery l(liveries.findByKey(k));
-            if (l.hasCompleteData()) { return l; }
-        }
-
-        // by combined code
-        if (livery.hasCombinedCode())
-        {
-            QString cc(livery.getCombinedCode());
-            CLivery l(liveries.findByCombinedCode(cc));
-            if (l.hasCompleteData()) { return l; }
-        }
-
-        if (livery.hasValidAirlineDesignator())
-        {
-            QString icao(livery.getAirlineIcaoCodeDesignator());
-            CLivery l(liveries.findByAirlineIcaoDesignatorStdLivery(icao));
-            if (l.hasCompleteData()) { return l; }
-        }
-
-        return CLivery();
+        return liveries.smartLiverySelector(liveryPattern);
     }
 
     CDistributorList CModelDataReader::getDistributors() const
@@ -127,19 +103,10 @@ namespace BlackCore
         return m_distributors.size();
     }
 
-    CDistributor CModelDataReader::smartDistributorSelector(const CDistributor &distributor) const
+    CDistributor CModelDataReader::smartDistributorSelector(const CDistributor &distributorPattern) const
     {
         CDistributorList distributors(getDistributors()); // thread safe copy
-        if (distributor.hasValidDbKey())
-        {
-            QString k(distributor.getDbKey());
-            CDistributor d(distributors.findByKey(k));
-            if (d.hasCompleteData()) { return d; }
-
-            // more lenient search
-            return distributors.findByIdOrAlias(k);
-        }
-        return CDistributor();
+        return distributors.smartDistributorSelector(distributorPattern);
     }
 
     int CModelDataReader::getModelsCount() const
@@ -196,6 +163,7 @@ namespace BlackCore
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+        QString urlString(nwReply->url().toString());
         QJsonArray array = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (array.isEmpty())
         {
@@ -210,13 +178,15 @@ namespace BlackCore
             QWriteLocker wl(&this->m_lockLivery);
             this->m_liveries = liveries;
         }
-        // never emit when lcok is held -> deadlock
+        // never emit when lock is held -> deadlock
         emit dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, n);
+        CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::LiveryEntity) << urlString;
     }
 
     void CModelDataReader::ps_parseDistributorData(QNetworkReply *nwReplyPtr)
     {
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+        QString urlString(nwReply->url().toString());
         QJsonArray array = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (array.isEmpty())
         {
@@ -232,11 +202,13 @@ namespace BlackCore
             this->m_distributors = distributors;
         }
         emit dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, n);
+        CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::DistributorEntity) << urlString;
     }
 
     void CModelDataReader::ps_parseModelData(QNetworkReply *nwReplyPtr)
     {
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+        QString urlString(nwReply->url().toString());
         QJsonArray array = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (array.isEmpty())
         {
@@ -252,6 +224,7 @@ namespace BlackCore
             this->m_models = models;
         }
         emit dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, n);
+        CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::ModelEntity) << urlString;
     }
 
     bool CModelDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead)

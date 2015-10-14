@@ -50,6 +50,9 @@ namespace BlackMisc
             //! Find by designator, then best match by rank
             CAircraftIcaoCode findFirstByDesignatorAndRank(const QString &designator);
 
+            //! Best selection by given pattern
+            CAircraftIcaoCode smartAircraftIcaoSelector(const CAircraftIcaoCode &icaoPattern) const;
+
             //! Sort by rank
             void sortByRank();
 
