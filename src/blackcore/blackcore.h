@@ -14,6 +14,11 @@
  */
 
 /*!
+ * \namespace BlackCore::Data
+ * Core data traits (aka cached values) and classes.
+ */
+
+/*!
  * \namespace BlackCore::Settings::Network
  * Network settings traits.
  */

@@ -22,11 +22,13 @@ precompile_header:!isEmpty(PRECOMPILED_HEADER) {
 
 DEFINES += LOG_IN_FILE BUILD_BLACKCORE_LIB
 
-HEADERS += *.h
-HEADERS += $$PWD/settings/*.h
+HEADERS += *.h \
+            $$PWD/settings/*.h \
+            $$PWD/data/*.h
 
-SOURCES += *.cpp
-SOURCES += $$PWD/settings/*.cpp
+SOURCES += *.cpp \
+#           $$PWD/settings/*.cpp \
+            $$PWD/data/*.cpp
 
 LIBS *= -lvatlib2
 

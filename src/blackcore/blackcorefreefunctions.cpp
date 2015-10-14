@@ -5,6 +5,7 @@
 
 #include "blackcorefreefunctions.h"
 #include "blackcore/webreaderflags.h"
+#include "blackcore/data/globalsetup.h"
 
 #include "voice_channel.h"
 #include "network.h"
@@ -23,6 +24,8 @@ namespace BlackCore
         qRegisterMetaType<BlackCore::CWebReaderFlags::WebReader>();
         qDBusRegisterMetaType<BlackCore::CLogSubscriptionHash>();
         qDBusRegisterMetaType<BlackCore::CLogSubscriptionPair>();
+
+        BlackCore::Data::CGlobalSetup::registerMetadata();
     }
 
     bool isCurrentThreadObjectThread(QObject *toBeTested)
