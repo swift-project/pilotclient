@@ -7,9 +7,10 @@
  * contained in the LICENSE file.
  */
 
+#include "blackcore/setupreader.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/networkutils.h"
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/fileutilities.h"
 #include "blackmisc/json.h"
 #include "icaodatareader.h"
@@ -21,14 +22,12 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
+using namespace BlackCore::Data;
 
 namespace BlackCore
 {
-    CIcaoDataReader::CIcaoDataReader(QObject *owner, const QString &protocol, const QString &server, const QString &baseUrl) :
-        CDatabaseReader(owner, "CIcaoDataReader"),
-        m_urlAircraftIcao(getAircraftIcaoUrl(protocol, server, baseUrl)),
-        m_urlAirlineIcao(getAirlineIcaoUrl(protocol, server, baseUrl)),
-        m_urlCountry(getCountryUrl(protocol, server, baseUrl))
+    CIcaoDataReader::CIcaoDataReader(QObject *owner) :
+        CDatabaseReader(owner, "CIcaoDataReader")
     {
         this->m_networkManagerAircraft = new QNetworkAccessManager(this);
         this->m_networkManagerAirlines = new QNetworkAccessManager(this);
@@ -167,28 +166,31 @@ namespace BlackCore
         Q_ASSERT(this->m_networkManagerAircraft);
         Q_ASSERT(this->m_networkManagerAirlines);
         Q_ASSERT(this->m_networkManagerCountries);
-        Q_ASSERT(!m_urlAircraftIcao.isEmpty());
-        Q_ASSERT(!m_urlAirlineIcao.isEmpty());
-        Q_ASSERT(!m_urlCountry.isEmpty());
 
         CEntityFlags::Entity entitiesTriggered = CEntityFlags::NoEntity;
         if (entities.testFlag(CEntityFlags::AircraftIcaoEntity))
         {
-            QNetworkRequest requestAircraft(m_urlAircraftIcao);
+            QUrl url(getAircraftIcaoUrl());
+            QNetworkRequest requestAircraft(url);
+            CNetworkUtils::ignoreSslVerification(requestAircraft);
             this->m_networkManagerAircraft->get(requestAircraft);
             entitiesTriggered |= CEntityFlags::AircraftIcaoEntity;
         }
 
         if (entities.testFlag(CEntityFlags::AirlineIcaoEntity))
         {
-            QNetworkRequest requestAirline(m_urlAirlineIcao);
+            QUrl url(getAirlineIcaoUrl());
+            QNetworkRequest requestAirline(url);
+            CNetworkUtils::ignoreSslVerification(requestAirline);
             this->m_networkManagerAirlines->get(requestAirline);
             entitiesTriggered |= CEntityFlags::AirlineIcaoEntity;
         }
 
         if (entities.testFlag(CEntityFlags::CountryEntity))
         {
-            QNetworkRequest requestCountry(m_urlCountry);
+            QUrl url(getCountryUrl());
+            QNetworkRequest requestCountry(url);
+            CNetworkUtils::ignoreSslVerification(requestCountry);
             this->m_networkManagerCountries->get(requestCountry);
             entitiesTriggered |= CEntityFlags::CountryEntity;
         }
@@ -196,12 +198,19 @@ namespace BlackCore
         emit dataRead(entitiesTriggered, CEntityFlags::StartRead, 0);
     }
 
+    CUrl CIcaoDataReader::getBaseUrl() const
+    {
+        CUrl baseUrl(this->m_setup.get().dbIcaoReader());
+        Q_ASSERT_X(!baseUrl.isEmpty(), Q_FUNC_INFO, "No URL");
+        return baseUrl;
+    }
+
     void CIcaoDataReader::ps_parseAircraftIcaoData(QNetworkReply *nwReplyPtr)
     {
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-        QJsonArray array = this->transformReplyIntoDatastoreResponse(nwReply.data());
+        QJsonArray array = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (array.isEmpty())
         {
             emit dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFailed, 0);
@@ -221,7 +230,7 @@ namespace BlackCore
     void CIcaoDataReader::ps_parseAirlineIcaoData(QNetworkReply *nwReplyPtr)
     {
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-        QJsonArray array = this->transformReplyIntoDatastoreResponse(nwReply.data());
+        QJsonArray array = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (array.isEmpty())
         {
             emit dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFailed, 0);
@@ -241,7 +250,7 @@ namespace BlackCore
     void CIcaoDataReader::ps_parseCountryData(QNetworkReply *nwReplyPtr)
     {
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-        QJsonArray array = this->transformReplyIntoDatastoreResponse(nwReply.data());
+        QJsonArray array = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (array.isEmpty())
         {
             emit dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFailed, 0);
@@ -256,15 +265,6 @@ namespace BlackCore
             this->m_countries = countries;
         }
         emit dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, n);
-    }
-
-    bool CIcaoDataReader::canConnect(QString &message) const
-    {
-        if (m_urlAircraftIcao.isEmpty() || m_urlAirlineIcao.isEmpty()) { return false; }
-        bool cm = CNetworkUtils::canConnect(m_urlAircraftIcao, message);
-
-        // currently only testing one URL, might be changed in the future
-        return cm;
     }
 
     bool CIcaoDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead)
@@ -365,19 +365,19 @@ namespace BlackCore
         return true;
     }
 
-    QString CIcaoDataReader::getAircraftIcaoUrl(const QString &protocol, const QString &server, const QString &baseUrl)
+    CUrl CIcaoDataReader::getAircraftIcaoUrl() const
     {
-        return CNetworkUtils::buildUrl(protocol, server, baseUrl, "service/jsonaircrafticao.php");
+        return getBaseUrl().withAppendedPath("service/jsonaircrafticao.php");
     }
 
-    QString CIcaoDataReader::getAirlineIcaoUrl(const QString &protocol, const QString &server, const QString &baseUrl)
+    CUrl CIcaoDataReader::getAirlineIcaoUrl() const
     {
-        return CNetworkUtils::buildUrl(protocol, server, baseUrl, "service/jsonairlineicao.php");
+        return getBaseUrl().withAppendedPath("service/jsonairlineicao.php");
     }
 
-    QString CIcaoDataReader::getCountryUrl(const QString &protocol, const QString &server, const QString &baseUrl)
+    CUrl CIcaoDataReader::getCountryUrl() const
     {
-        return CNetworkUtils::buildUrl(protocol, server, baseUrl, "service/jsoncountry.php");
+        return getBaseUrl().withAppendedPath("service/jsoncountry.php");
     }
 
 } // namespace

@@ -18,6 +18,8 @@
 #include <QNetworkReply>
 #include <QJsonArray>
 #include <QDateTime>
+#include <QTimer>
+
 
 namespace BlackCore
 {
@@ -57,18 +59,46 @@ namespace BlackCore
         void readInBackgroundThread(BlackMisc::Network::CEntityFlags::Entity entities);
 
         //! Can connect to DB
+        //! \threadsafe
         bool canConnect() const;
 
         //! Can connect to server?
         //! \return message why connect failed
-        virtual bool canConnect(QString &message) const = 0;
+        //! \threadsafe
+        bool canConnect(QString &message) const;
 
     protected:
+        BlackMisc::Network::CUrl m_watchdogUrl;              //!< URL for checking if alive
+        QTimer                   m_watchdogTimer { this };   //!< Timer for watchdog
+        QString                  m_watchdogMessage;          //!< Returned status message
+        bool                     m_canConnect = false;       //!< Successful connection?
+        mutable QReadWriteLock   m_watchdogLock;             //!< Lock
+
         //! Constructor
         CDatabaseReader(QObject *owner, const QString &name);
 
+        //! Watchdog URL, empty means no checking
+        //! \threadsafe
+        void setWatchdogUrl(const BlackMisc::Network::CUrl &url);
+
+        //! Check if terminated or error, otherwise split into array of objects
+        CDatabaseReader::JsonDatastoreResponse setStatusAndTransformReplyIntoDatastoreResponse(QNetworkReply *nwReply);
+
+    private slots:
+        //! Watchdog
+        void ps_watchdog();
+
+    private:
         //! Check if terminated or error, otherwise split into array of objects
         JsonDatastoreResponse transformReplyIntoDatastoreResponse(QNetworkReply *nwReply) const;
+
+        //! Feedback about connection status
+        //! \threadsafe
+        void setConnectionStatus(bool ok, const QString &message = "");
+
+        //! Feedback about connection status
+        //! \threadsafe
+        void setConnectionStatus(QNetworkReply *nwReply);
     };
 } // namespace
 

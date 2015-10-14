@@ -7,7 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "vatsimmetarreader.h"
+#include "blackcore/setupreader.h"
+#include "blackcore/vatsimmetarreader.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/logmessage.h"
@@ -19,12 +20,12 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Weather;
+using namespace BlackCore::Data;
 
 namespace BlackCore
 {
-    CVatsimMetarReader::CVatsimMetarReader(QObject *owner, const QString &url) :
-        CThreadedReader(owner, "CVatsimMetarReader"),
-        m_metarUrl(url)
+    CVatsimMetarReader::CVatsimMetarReader(QObject *owner) :
+        CThreadedReader(owner, "CVatsimMetarReader")
     {
         this->m_networkManager = new QNetworkAccessManager(this);
         this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CVatsimMetarReader::ps_decodeMetars);
@@ -59,9 +60,9 @@ namespace BlackCore
     void CVatsimMetarReader::ps_readMetars()
     {
         this->threadAssertCheck();
-        QUrl url(this->m_metarUrl);
-        if (url.isEmpty()) return;
-        Q_ASSERT(this->m_networkManager);
+        QUrl url(m_setup.get().vatsimMetars());
+        if (url.isEmpty()) { return; }
+        Q_ASSERT_X(this->m_networkManager, Q_FUNC_INFO, "No network manager");
         QNetworkRequest request(url);
         this->m_networkManager->get(request);
     }
@@ -74,7 +75,7 @@ namespace BlackCore
 
         this->threadAssertCheck();
 
-        // Worker thread, make sure to write no members here!
+        // Worker thread, make sure to write thread safe!
         if (this->isFinished())
         {
             CLogMessage(this).debug() << Q_FUNC_INFO;

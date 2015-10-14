@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackcore/setupreader.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/modeldatareader.h"
 #include "blackcore/icaodatareader.h"
@@ -14,16 +15,17 @@
 #include "blackcore/vatsimbookingreader.h"
 #include "blackcore/vatsimdatafilereader.h"
 #include "blackcore/vatsimmetarreader.h"
-#include "settings/global_reader_settings.h"
+#include "data/globalsetup.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/fileutilities.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/json.h"
+#include "blackmisc/network/networkutils.h"
 #include <QJsonObject>
 #include <QJsonDocument>
 
 using namespace BlackCore;
-using namespace BlackCore::Settings;
+using namespace BlackCore::Data;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Network;
@@ -134,15 +136,17 @@ namespace BlackCore
     bool CWebDataServices::canConnectSwiftDb() const
     {
         if (!m_icaoDataReader && !m_modelDataReader) { return false; }
+
+        // use the first one to test
         if (m_icaoDataReader)
         {
-            if (!m_icaoDataReader->canConnect()) { return false; }
+            return m_icaoDataReader->canConnect();
         }
-        if (m_modelDataReader)
+        else if (m_modelDataReader)
         {
-            if (!m_modelDataReader->canConnect()) { return false; }
+            return m_modelDataReader->canConnect();
         }
-        return true;
+        return false;
     }
 
     CEntityFlags::Entity CWebDataServices::triggerRead(CEntityFlags::Entity whatToRead)
@@ -386,7 +390,7 @@ namespace BlackCore
         // 1. VATSIM bookings
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimBookingReader))
         {
-            this->m_vatsimBookingReader = new CVatsimBookingReader(this, CGlobalReaderSettings::instance().bookingsUrl());
+            this->m_vatsimBookingReader = new CVatsimBookingReader(this);
             bool c = connect(this->m_vatsimBookingReader, &CVatsimBookingReader::atcBookingsRead, this, &CWebDataServices::ps_receivedBookings);
             Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM booking reader signals");
             Q_UNUSED(c);
@@ -397,7 +401,7 @@ namespace BlackCore
         // 2. VATSIM data file
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimDataReader))
         {
-            this->m_vatsimDataFileReader = new CVatsimDataFileReader(this, CGlobalReaderSettings::instance().vatsimDataFileUrls());
+            this->m_vatsimDataFileReader = new CVatsimDataFileReader(this);
             bool c = connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataFileRead, this, &CWebDataServices::ps_dataFileRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM data reader signals");
             Q_UNUSED(c);
@@ -408,7 +412,7 @@ namespace BlackCore
         // 3. VATSIM metar data
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimMetarReader))
         {
-            this->m_vatsimMetarReader = new CVatsimMetarReader(this, CGlobalReaderSettings::instance().urlVatsimMetars());
+            this->m_vatsimMetarReader = new CVatsimMetarReader(this);
             bool c = connect(this->m_vatsimMetarReader, &CVatsimMetarReader::metarsRead, this, &CWebDataServices::ps_receivedMetars);
             Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM METAR reader signals");
             Q_UNUSED(c);
@@ -420,7 +424,7 @@ namespace BlackCore
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::IcaoDataReader))
         {
             bool c;
-            this->m_icaoDataReader = new CIcaoDataReader(this, CGlobalReaderSettings::instance().protocolIcaoReader(), CGlobalReaderSettings::instance().serverIcaoReader(), CGlobalReaderSettings::instance().baseUrlIcaoReader());
+            this->m_icaoDataReader = new CIcaoDataReader(this);
             c = connect(this->m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::ps_readFromSwiftDb);
             Q_ASSERT_X(c, Q_FUNC_INFO, "ICAO reader signals");
             Q_UNUSED(c);
@@ -430,7 +434,7 @@ namespace BlackCore
         // 5. Model reader
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::ModelReader))
         {
-            this->m_modelDataReader = new CModelDataReader(this, CGlobalReaderSettings::instance().protocolModelReader(), CGlobalReaderSettings::instance().serverModelReader(), CGlobalReaderSettings::instance().baseUrlModelReader());
+            this->m_modelDataReader = new CModelDataReader(this);
             bool c = connect(this->m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::ps_readFromSwiftDb);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Model reader signals");
             Q_UNUSED(c);
@@ -441,9 +445,7 @@ namespace BlackCore
     void CWebDataServices::initWriters()
     {
         this->m_databaseWriter = new CDatabaseWriter(
-            CGlobalReaderSettings::instance().protocolModelReader(),
-            CGlobalReaderSettings::instance().serverModelReader(),
-            CGlobalReaderSettings::instance().baseUrlModelReader(),
+            m_setup.get().dbModelReader(),
             this);
     }
 
@@ -464,8 +466,7 @@ namespace BlackCore
 
     void CWebDataServices::ps_readFromSwiftDb(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
     {
-        CLogMessage(this).info("Read data %1 %3 %2") << CEntityFlags::flagToString(entity) << number << CEntityFlags::flagToString(state);
-        // emit readSwiftDbData(entity, state, number);
+        CLogMessage(this).info("Read data %1 entries: %2 state: %3") << CEntityFlags::flagToString(entity) << number << CEntityFlags::flagToString(state);
     }
 
     void CWebDataServices::readAllInBackground(int delayMs)
@@ -532,34 +533,20 @@ namespace BlackCore
         QDir directory(dir);
         if (!directory.exists()) { return false; }
 
+        bool s = false;
         if (this->m_icaoDataReader)
         {
-            bool s = false;
-            if (inBackground)
-            {
-                s = (this->m_icaoDataReader->readFromJsonFilesInBackground(dir) != nullptr);
-            }
-            else
-            {
-                s = this->m_icaoDataReader->readFromJsonFiles(dir);
-            }
-            if (!s) { return false; }
+            s = inBackground ?
+                this->m_icaoDataReader->readFromJsonFilesInBackground(dir) :
+                this->m_icaoDataReader->readFromJsonFiles(dir);
         }
-        if (this->m_modelDataReader)
+        if (s && this->m_modelDataReader)
         {
-            bool s = false;
-            if (inBackground)
-            {
-                s = (this->m_modelDataReader->readFromJsonFilesInBackground(dir) != nullptr);
-            }
-            else
-            {
-                s = this->m_modelDataReader->readFromJsonFiles(dir);
-            }
-            if (!s) { return false; }
+            s = inBackground ?
+                this->m_modelDataReader->readFromJsonFilesInBackground(dir) :
+                this->m_modelDataReader->readFromJsonFiles(dir);
         }
-
-        return true;
+        return s;
     }
 
     void CWebDataServices::readAtcBookingsInBackground() const

@@ -10,7 +10,8 @@
 #include "databasewriter.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/datastoreutility.h"
-#include "blackmisc/networkutils.h"
+#include "blackmisc/network/networkutils.h"
+#include "blackmisc/project.h"
 #include <QUrlQuery>
 #include <QJsonDocument>
 #include <QHttpPart>
@@ -21,9 +22,9 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {
-    CDatabaseWriter::CDatabaseWriter(const QString &protocol, const QString &server, const QString &baseUrl, QObject *parent) :
+    CDatabaseWriter::CDatabaseWriter(const Network::CUrl &baseUrl, QObject *parent) :
         QObject(parent),
-        m_modelUrl(getModelWriteUrl(protocol, server, baseUrl))
+        m_modelUrl(getModelWriteUrl(baseUrl))
     {
         this->m_networkManager = new QNetworkAccessManager(this);
         this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CDatabaseWriter::ps_postResponse);
@@ -44,7 +45,7 @@ namespace BlackCore
             return msg;
         }
 
-        QUrl url(m_modelUrl);
+        QUrl url(m_modelUrl.toQUrl());
         QNetworkRequest request(url);
         const QByteArray jsonData(QJsonDocument(model.toJson()).toJson(QJsonDocument::Compact));
         QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
@@ -54,7 +55,7 @@ namespace BlackCore
         textPart.setBody(jsonData);
         multiPart->append(textPart);
 
-        if (m_phpDebug)
+        if (m_phpDebug && CProject::isRunningInDeveloperEnvironment())
         {
             QHttpPart textPartDebug;
             textPartDebug.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"XDEBUG_SESSION_START\""));
@@ -113,9 +114,9 @@ namespace BlackCore
         }
     }
 
-    QString CDatabaseWriter::getModelWriteUrl(const QString &protocol, const QString &server, const QString &baseUrl)
+    Network::CUrl CDatabaseWriter::getModelWriteUrl(const Network::CUrl &baseUrl)
     {
-        return CNetworkUtils::buildUrl(protocol, server, baseUrl, "service/swiftwritemodel.php");
+        return baseUrl.withAppendedPath("service/swiftwritemodel.php");
     }
 
     QList<QByteArray> CDatabaseWriter::splitData(const QByteArray &data, int size)

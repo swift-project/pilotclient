@@ -7,9 +7,10 @@
  * contained in the LICENSE file.
  */
 
+#include "blackcore/setupreader.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/networkutils.h"
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/fileutilities.h"
 #include "modeldatareader.h"
 
@@ -22,14 +23,12 @@ using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Network;
+using namespace BlackCore::Data;
 
 namespace BlackCore
 {
-    CModelDataReader::CModelDataReader(QObject *owner, const QString &protocol, const QString &server, const QString &baseUrl) :
-        CDatabaseReader(owner, "CModelDataReader"),
-        m_urlLiveries(getLiveryUrl(protocol, server, baseUrl)),
-        m_urlDistributors(getDistributorUrl(protocol, server, baseUrl)),
-        m_urlModels(getModelUrl(protocol, server, baseUrl))
+    CModelDataReader::CModelDataReader(QObject *owner) :
+        CDatabaseReader(owner, "CModelDataReader")
     {
         this->m_networkManagerLivery = new QNetworkAccessManager(this);
         this->m_networkManagerDistributor = new QNetworkAccessManager(this);
@@ -157,42 +156,34 @@ namespace BlackCore
             getDistributorsCount() > 0;
     }
 
-    bool CModelDataReader::canConnect(QString &message) const
-    {
-        if (m_urlDistributors.isEmpty() || m_urlLiveries.isEmpty() || m_urlModels.isEmpty()) { return false; }
-        bool cm = CNetworkUtils::canConnect(m_urlModels, message);
-
-        // currently only testing one URL, might be changed in the future
-        return cm;
-    }
-
     void CModelDataReader::ps_read(CEntityFlags::Entity entity)
     {
         this->threadAssertCheck();
         Q_ASSERT(this->m_networkManagerLivery);
         Q_ASSERT(this->m_networkManagerDistributor);
         Q_ASSERT(this->m_networkManagerModel);
-        Q_ASSERT(!m_urlLiveries.isEmpty());
-        Q_ASSERT(!m_urlDistributors.isEmpty());
 
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
         if (entity.testFlag(CEntityFlags::LiveryEntity))
         {
-            QNetworkRequest requestLivery(m_urlLiveries);
+            QNetworkRequest requestLivery(getLiveryUrl());
+            CNetworkUtils::ignoreSslVerification(requestLivery);
             this->m_networkManagerLivery->get(requestLivery);
             triggeredRead |= CEntityFlags::LiveryEntity;
         }
 
         if (entity.testFlag(CEntityFlags::DistributorEntity))
         {
-            QNetworkRequest requestDistributor(m_urlDistributors);
+            QNetworkRequest requestDistributor(getDistributorUrl());
+            CNetworkUtils::ignoreSslVerification(requestDistributor);
             this->m_networkManagerDistributor->get(requestDistributor);
             triggeredRead |= CEntityFlags::DistributorEntity;
         }
 
         if (entity.testFlag(CEntityFlags::ModelEntity))
         {
-            QNetworkRequest requestModel(m_urlModels);
+            QNetworkRequest requestModel(getModelUrl());
+            CNetworkUtils::ignoreSslVerification(requestModel);
             this->m_networkManagerModel->get(requestModel);
             triggeredRead |= CEntityFlags::ModelEntity;
         }
@@ -205,7 +196,7 @@ namespace BlackCore
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-        QJsonArray array = this->transformReplyIntoDatastoreResponse(nwReply.data());
+        QJsonArray array = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (array.isEmpty())
         {
             emit dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFailed, 0);
@@ -226,7 +217,7 @@ namespace BlackCore
     void CModelDataReader::ps_parseDistributorData(QNetworkReply *nwReplyPtr)
     {
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-        QJsonArray array = this->transformReplyIntoDatastoreResponse(nwReply.data());
+        QJsonArray array = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (array.isEmpty())
         {
             emit dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFailed, 0);
@@ -246,7 +237,7 @@ namespace BlackCore
     void CModelDataReader::ps_parseModelData(QNetworkReply *nwReplyPtr)
     {
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-        QJsonArray array = this->transformReplyIntoDatastoreResponse(nwReply.data());
+        QJsonArray array = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (array.isEmpty())
         {
             emit dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFailed, 0);
@@ -362,19 +353,26 @@ namespace BlackCore
         return true;
     }
 
-    QString CModelDataReader::getLiveryUrl(const QString &protocol, const QString &server, const QString &baseUrl)
+    CUrl CModelDataReader::getBaseUrl() const
     {
-        return CNetworkUtils::buildUrl(protocol, server, baseUrl, "service/jsonlivery.php");
+        CUrl baseUrl(m_setup.get().dbModelReader());
+        Q_ASSERT_X(!baseUrl.isEmpty(), Q_FUNC_INFO, "No URL");
+        return baseUrl;
     }
 
-    QString CModelDataReader::getDistributorUrl(const QString &protocol, const QString &server, const QString &baseUrl)
+    CUrl CModelDataReader::getLiveryUrl() const
     {
-        return CNetworkUtils::buildUrl(protocol, server, baseUrl, "service/jsondistributor.php");
+        return getBaseUrl().withAppendedPath("service/jsonlivery.php");
     }
 
-    QString CModelDataReader::getModelUrl(const QString &protocol, const QString &server, const QString &baseUrl)
+    CUrl CModelDataReader::getDistributorUrl() const
     {
-        return CNetworkUtils::buildUrl(protocol, server, baseUrl, "service/jsonaircraftmodel.php");
+        return getBaseUrl().withAppendedPath("service/jsondistributor.php");
+    }
+
+    CUrl CModelDataReader::getModelUrl() const
+    {
+        return getBaseUrl().withAppendedPath("service/jsonaircraftmodel.php");
     }
 
 } // namespace

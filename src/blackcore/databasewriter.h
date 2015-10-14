@@ -29,7 +29,7 @@ namespace BlackCore
 
     public:
         //! Constructor
-        CDatabaseWriter(const QString &protocol, const QString &server, const QString &baseUrl, QObject *parent);
+        CDatabaseWriter(const BlackMisc::Network::CUrl &baseUrl, QObject *parent);
 
         //! Write model to DB
         BlackMisc::CStatusMessageList asyncWriteModel(const BlackMisc::Simulation::CAircraftModel &model);
@@ -42,14 +42,14 @@ namespace BlackCore
         void ps_postResponse(QNetworkReply *nwReplyPtr);
 
     private:
-        QString m_modelUrl;
+        BlackMisc::Network::CUrl m_modelUrl;
         QNetworkAccessManager *m_networkManager = nullptr;
         QNetworkReply *m_pendingReply = nullptr;
         bool m_shutdown = false;
         bool m_phpDebug = true;
 
         //! URL model web service
-        static QString getModelWriteUrl(const QString &protocol, const QString &server, const QString &baseUrl);
+        static BlackMisc::Network::CUrl getModelWriteUrl(const BlackMisc::Network::CUrl &baseUrl);
 
         //! Split data array
         static QList<QByteArray> splitData(const QByteArray &data, int size);

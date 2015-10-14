@@ -13,6 +13,7 @@
 #define BLACKCORE_VATSIMDATAFILEREADER_H
 
 #include "blackcoreexport.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackmisc/threadedreader.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/aviation/atcstationlist.h"
@@ -35,7 +36,7 @@ namespace BlackCore
 
     public:
         //! Constructor
-        explicit CVatsimDataFileReader(QObject *owner, const QStringList &urls);
+        explicit CVatsimDataFileReader(QObject *owner);
 
         //! Get aircraft
         //! \threadsafe
@@ -120,13 +121,12 @@ namespace BlackCore
 
     private:
         QNetworkAccessManager *m_networkManager = nullptr;
-        QStringList m_serviceUrls; //!< URL of the service
-        int m_currentUrlIndex;
         BlackMisc::Network::CServerList               m_voiceServers;
         BlackMisc::Network::CServerList               m_fsdServers;
         BlackMisc::Aviation::CAtcStationList          m_atcStations;
         BlackMisc::Simulation::CSimulatedAircraftList m_aircraft;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Network::CVoiceCapabilities> m_voiceCapabilities;
+        BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
 
         //! Split line and assign values to their corresponding attribute names
         static const QMap<QString, QString> clientPartsToMap(const QString &currentLine, const QStringList &clientSectionAttributes);

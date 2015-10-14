@@ -11,9 +11,11 @@
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/network/server.h"
+#include "blackmisc/network/urllist.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/logmessage.h"
-#include "vatsimdatafilereader.h"
+#include "blackcore/vatsimdatafilereader.h"
+#include "blackcore/setupreader.h"
 
 #include <QRegularExpression>
 
@@ -23,12 +25,12 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackCore::Data;
 
 namespace BlackCore
 {
-    CVatsimDataFileReader::CVatsimDataFileReader(QObject *owner, const QStringList &urls) :
-        CThreadedReader(owner, "CVatsimDataFileReader"),
-        m_serviceUrls(urls), m_currentUrlIndex(0)
+    CVatsimDataFileReader::CVatsimDataFileReader(QObject *owner) :
+        CThreadedReader(owner, "CVatsimDataFileReader")
     {
         this->m_networkManager = new QNetworkAccessManager(this);
         this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CVatsimDataFileReader::ps_parseVatsimFile);
@@ -150,17 +152,14 @@ namespace BlackCore
     void CVatsimDataFileReader::ps_read()
     {
         this->threadAssertCheck();
-        if (this->m_serviceUrls.isEmpty()) { return; }
+        if (m_setup.get().vatsimDataFile().size() < 1) { return; }
 
-        // round robin for load distribution
-        this->m_currentUrlIndex++;
-        if (this->m_serviceUrls.size() >= this->m_currentUrlIndex) this->m_currentUrlIndex = 0;
-
+        // round robin for load balancing
         // remark: Don't use QThread to run network operations in the background
         // see http://qt-project.org/doc/qt-4.7/qnetworkaccessmanager.html
-        QUrl url(this->m_serviceUrls.at(this->m_currentUrlIndex));
+        QUrl url(m_setup.get().vatsimDataFile().getNextUrl());
         if (url.isEmpty()) { return; }
-        Q_ASSERT(this->m_networkManager);
+        Q_ASSERT_X(this->m_networkManager, Q_FUNC_INFO, "Missing network manager");
         QNetworkRequest request(url);
         this->m_networkManager->get(request);
     }

@@ -13,6 +13,7 @@
 //! \file
 
 #include "blackmiscexport.h"
+#include "blackmisc/network/urllist.h"
 #include "blackmisc/network/entityflags.h"
 #include "worker.h"
 #include <QReadWriteLock>
@@ -63,14 +64,14 @@ namespace BlackMisc
         CThreadedReader(QObject *owner, const QString &name);
 
         QTimer *m_updateTimer = nullptr;  //!< update timer
-        bool m_shutdown       = false;    //!< in shutdown process
+        bool    m_shutdown    = false;    //!< in shutdown process
         mutable QReadWriteLock m_lock {QReadWriteLock::Recursive}; //!< lock which can be used from the derived classes
 
         //! Make sure everthing runs correctly in own thread
         void threadAssertCheck() const;
 
     private:
-        QDateTime m_updateTimestamp; //!< when was file / resource read
+        QDateTime m_updateTimestamp; //!< when file/resource was read
     };
 } // namespace
 

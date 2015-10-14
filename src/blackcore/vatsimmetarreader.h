@@ -13,6 +13,7 @@
 #define BLACKCORE_VATSIMMETARREADER_H
 
 #include "blackcoreexport.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackmisc/threadedreader.h"
 #include "blackmisc/weather/metardecoder.h"
 #include "blackmisc/weather/metarset.h"
@@ -31,7 +32,7 @@ namespace BlackCore
 
     public:
         //! Constructor
-        explicit CVatsimMetarReader(QObject *owner, const QString &url);
+        explicit CVatsimMetarReader(QObject *owner);
 
         //! Read / re-read bookings
         void readInBackgroundThread();
@@ -64,10 +65,10 @@ namespace BlackCore
         void ps_readMetars();
 
     private:
-        QString                           m_metarUrl; //!< URL of the service
         QNetworkAccessManager            *m_networkManager = nullptr;
         BlackMisc::Weather::CMetarDecoder m_metarDecoder;
         BlackMisc::Weather::CMetarSet     m_metars;
+        BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
     };
 }
 #endif // guard

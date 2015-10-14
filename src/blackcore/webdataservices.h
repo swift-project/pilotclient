@@ -14,6 +14,8 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/webreaderflags.h"
+#include "blackcore/setupreader.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
@@ -267,6 +269,7 @@ namespace BlackCore
         void initWriters();
 
         CWebReaderFlags::WebReader m_readerFlags = CWebReaderFlags::WebReaderFlag::None; //!< which readers are available
+        BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
 
         // for reading XML and VATSIM data files
         CVatsimBookingReader  *m_vatsimBookingReader  = nullptr;
@@ -277,6 +280,9 @@ namespace BlackCore
 
         // writing objects directly into DB
         CDatabaseWriter       *m_databaseWriter       = nullptr;
+
+        // Setup
+        CSetupReader m_setupReader { this };
     };
 } // namespace
 

@@ -22,9 +22,8 @@ using namespace BlackMisc::Network;
 
 namespace BlackCore
 {
-    CVatsimBookingReader::CVatsimBookingReader(QObject *owner, const QString &url) :
-        CThreadedReader(owner, "CVatsimBookingReader"),
-        m_serviceUrl(url)
+    CVatsimBookingReader::CVatsimBookingReader(QObject *owner) :
+        CThreadedReader(owner, "CVatsimBookingReader")
     {
         this->m_networkManager = new QNetworkAccessManager(this);
         this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CVatsimBookingReader::ps_parseBookings);
@@ -41,9 +40,10 @@ namespace BlackCore
     void CVatsimBookingReader::ps_read()
     {
         this->threadAssertCheck();
-        QUrl url(this->m_serviceUrl);
-        if (url.isEmpty()) return;
-        Q_ASSERT(this->m_networkManager);
+        Q_ASSERT_X(this->m_networkManager, Q_FUNC_INFO, "No network manager");
+        QUrl url(m_setup.get().vatsimBookings());
+        if (url.isEmpty()) { return; }
+
         QNetworkRequest request(url);
         this->m_networkManager->get(request);
     }

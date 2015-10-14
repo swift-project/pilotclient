@@ -8,6 +8,7 @@
  */
 
 #include "databasereader.h"
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/datastoreutility.h"
 #include <QJsonDocument>
@@ -19,11 +20,14 @@ namespace BlackCore
 {
     CDatabaseReader::CDatabaseReader(QObject *owner, const QString &name) :
         BlackMisc::CThreadedReader(owner, name)
-    { }
+    {
+        connect(&m_watchdogTimer, &QTimer::timeout, this, &CDatabaseReader::ps_watchdog);
+    }
 
     void CDatabaseReader::readInBackgroundThread(CEntityFlags::Entity entities)
     {
         if (m_shutdown) { return; }
+        this->m_watchdogTimer.stop();
         bool s = QMetaObject::invokeMethod(this, "ps_read", Q_ARG(BlackMisc::Network::CEntityFlags::Entity, entities));
         Q_ASSERT_X(s, Q_FUNC_INFO, "Invoke failed");
         Q_UNUSED(s);
@@ -35,7 +39,6 @@ namespace BlackCore
         JsonDatastoreResponse datastoreResponse;
         if (m_shutdown || this->isFinished())
         {
-            CLogMessage(this).debug() << Q_FUNC_INFO;
             CLogMessage(this).info("Terminated data parsing process"); // for users
             nwReply->abort();
             return datastoreResponse; // stop, terminate straight away, ending thread
@@ -72,10 +75,85 @@ namespace BlackCore
         return datastoreResponse;
     }
 
+    CDatabaseReader::JsonDatastoreResponse CDatabaseReader::setStatusAndTransformReplyIntoDatastoreResponse(QNetworkReply *nwReply)
+    {
+        setConnectionStatus(nwReply);
+        return transformReplyIntoDatastoreResponse(nwReply);
+    }
+
+    void CDatabaseReader::setWatchdogUrl(const CUrl &url)
+    {
+        bool start;
+        {
+            QWriteLocker wl(&this->m_watchdogLock);
+            m_watchdogUrl = url;
+            start = url.isEmpty();
+        }
+        if (start)
+        {
+            m_watchdogTimer.start(30 * 1000);
+        }
+        else
+        {
+            m_watchdogTimer.stop();
+        }
+    }
+
     bool CDatabaseReader::canConnect() const
     {
+        QReadLocker rl(&this->m_watchdogLock);
+        return m_canConnect;
+    }
+
+    bool CDatabaseReader::canConnect(QString &message) const
+    {
+        QReadLocker rl(&this->m_watchdogLock);
+        message = m_watchdogMessage;
+        return m_canConnect;
+    }
+
+    void CDatabaseReader::setConnectionStatus(bool ok, const QString &message)
+    {
+        {
+            QWriteLocker wl(&this->m_watchdogLock);
+            this->m_watchdogMessage = message;
+            this->m_canConnect = ok;
+            if (this->m_watchdogUrl.isEmpty()) { return; }
+        }
+        this->m_updateTimer->start(); // restart
+    }
+
+    void CDatabaseReader::setConnectionStatus(QNetworkReply *nwReply)
+    {
+        Q_ASSERT_X(nwReply, Q_FUNC_INFO, "Missing network reply");
+        if (nwReply->isFinished())
+        {
+            if (nwReply->error() == QNetworkReply::NoError)
+            {
+                setConnectionStatus(true);
+            }
+            else
+            {
+                setConnectionStatus(false, nwReply->errorString());
+            }
+        }
+    }
+
+    void CDatabaseReader::ps_watchdog()
+    {
+        CUrl url;
+        {
+            QReadLocker rl(&this->m_watchdogLock);
+            url = this->m_watchdogUrl;
+        }
+        if (url.isEmpty())
+        {
+            this->m_watchdogTimer.stop();
+            return;
+        }
         QString m;
-        return canConnect(m);
+        bool ok = CNetworkUtils::canConnect(url, m);
+        this->setConnectionStatus(ok, m);
     }
 
 } // namespace

@@ -14,6 +14,7 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/databasereader.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackmisc/countrylist.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
@@ -33,7 +34,7 @@ namespace BlackCore
 
     public:
         //! Constructor
-        explicit CIcaoDataReader(QObject *owner, const QString &protocol, const QString &server, const QString &baseUrl);
+        explicit CIcaoDataReader(QObject *owner);
 
         //! Get aircraft ICAO information
         //! \threadsafe
@@ -95,12 +96,6 @@ namespace BlackCore
         //! \threadsafe
         bool areAllDataRead() const;
 
-        //! Can connect to server?
-        virtual bool canConnect(QString &message) const override;
-
-        //! \copydoc CDatabaseReader::canConnect()
-        using CDatabaseReader::canConnect;
-
         //! Read from static DB data file
         bool readFromJsonFiles(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead = BlackMisc::Network::CEntityFlags::AllIcaoAndCountries);
 
@@ -128,28 +123,30 @@ namespace BlackCore
         void ps_read(BlackMisc::Network::CEntityFlags::Entity entities);
 
     private:
-        QNetworkAccessManager *m_networkManagerAircraft = nullptr;
-        QNetworkAccessManager *m_networkManagerAirlines = nullptr;
+        QNetworkAccessManager *m_networkManagerAircraft  = nullptr;
+        QNetworkAccessManager *m_networkManagerAirlines  = nullptr;
         QNetworkAccessManager *m_networkManagerCountries = nullptr;
         BlackMisc::Aviation::CAircraftIcaoCodeList m_aircraftIcaos;
-        BlackMisc::Aviation::CAirlineIcaoCodeList m_airlineIcaos;
-        BlackMisc::CCountryList m_countries;
-        QString m_urlAircraftIcao;
-        QString m_urlAirlineIcao;
-        QString m_urlCountry;
+        BlackMisc::Aviation::CAirlineIcaoCodeList  m_airlineIcaos;
+        BlackMisc::CCountryList                    m_countries;
 
         mutable QReadWriteLock m_lockAirline;
         mutable QReadWriteLock m_lockAircraft;
         mutable QReadWriteLock m_lockCountry;
 
-        //! URL
-        static QString getAircraftIcaoUrl(const QString &protocol, const QString &server, const QString &baseUrl);
+        BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
+
+        //! Base URL
+        BlackMisc::Network::CUrl getBaseUrl() const;
 
         //! URL
-        static QString getAirlineIcaoUrl(const QString &protocol, const QString &server, const QString &baseUrl);
+        BlackMisc::Network::CUrl getAircraftIcaoUrl() const;
 
         //! URL
-        static QString getCountryUrl(const QString &protocol, const QString &server, const QString &baseUrl);
+        BlackMisc::Network::CUrl getAirlineIcaoUrl() const;
+
+        //! URL
+        BlackMisc::Network::CUrl getCountryUrl() const;
     };
 }
 

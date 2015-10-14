@@ -9,6 +9,9 @@
 
 #include "threadedreader.h"
 
+using namespace BlackMisc;
+using namespace BlackMisc::Network;
+
 namespace BlackMisc
 {
     CThreadedReader::CThreadedReader(QObject *owner, const QString &name) :

@@ -14,6 +14,7 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/databasereader.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackmisc/network/webdataservicesprovider.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/simulation/distributorlist.h"
@@ -33,7 +34,7 @@ namespace BlackCore
 
     public:
         //! Constructor
-        explicit CModelDataReader(QObject *owner, const QString &protocol, const QString &server, const QString &baseUrl);
+        explicit CModelDataReader(QObject *owner);
 
         //! Get aircraft liveries
         //! \threadsafe
@@ -87,13 +88,7 @@ namespace BlackCore
         //! \threadsafe
         bool areAllDataRead() const;
 
-        //! Can connect?
-        virtual bool canConnect(QString &message) const override;
-
-        //! \copydoc CDatabaseReader::canConnect()
-        using CDatabaseReader::canConnect;
-
-        //! Write to JSON file
+        //! Read to JSON file
         bool readFromJsonFiles(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead = BlackMisc::Network::CEntityFlags::DistributorLiveryModel);
 
         //! Read from static DB data file
@@ -126,22 +121,27 @@ namespace BlackCore
         BlackMisc::Aviation::CLiveryList m_liveries;
         BlackMisc::Simulation::CDistributorList m_distributors;
         BlackMisc::Simulation::CAircraftModelList m_models;
-        QString m_urlLiveries;
-        QString m_urlDistributors;
-        QString m_urlModels;
+        BlackMisc::Network::CUrl m_urlLiveries;
+        BlackMisc::Network::CUrl m_urlDistributors;
+        BlackMisc::Network::CUrl m_urlModels;
 
         mutable QReadWriteLock m_lockDistributor;
         mutable QReadWriteLock m_lockLivery;
         mutable QReadWriteLock m_lockModels;
 
+        BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
+
+        //! Base URL
+        BlackMisc::Network::CUrl getBaseUrl() const;
+
         //! URL livery web service
-        static QString getLiveryUrl(const QString &protocol, const QString &server, const QString &baseUrl);
+        BlackMisc::Network::CUrl getLiveryUrl() const;
 
         //! URL distributor web service
-        static QString getDistributorUrl(const QString &protocol, const QString &server, const QString &baseUrl);
+        BlackMisc::Network::CUrl getDistributorUrl() const;
 
         //! URL model web service
-        static QString getModelUrl(const QString &protocol, const QString &server, const QString &baseUrl);
+        BlackMisc::Network::CUrl getModelUrl() const;
     };
 } // ns
 
