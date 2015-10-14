@@ -83,6 +83,16 @@ namespace BlackGui
             return this->ui->comp_TextMessages;
         }
 
+        void CMainInfoAreaComponent::displayLog()
+        {
+            this->ui->comp_Log->displayLog();
+        }
+
+        void CMainInfoAreaComponent::displayConsole()
+        {
+            this->ui->comp_Log->displayConsole();
+        }
+
         QSize CMainInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
         {
             InfoArea area = static_cast<InfoArea>(areaIndex);

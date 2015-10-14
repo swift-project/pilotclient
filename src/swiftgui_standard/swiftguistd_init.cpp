@@ -120,7 +120,7 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
 
     // info
     this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CProject::swiftVersionString());
-    this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CProject::compiledInfo());
+    this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CProject::compiledWithInfo());
 
     // update timers
     this->startUpdateTimersWhenConnected();
@@ -166,7 +166,6 @@ void SwiftGuiStd::initGuiSignals()
     connect(this->ui->menu_TestLocationsEDDM, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_TestLocationsEDNX, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_TestLocationsEDRY, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_TestInternals, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_FileExit, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_FileSettingsDirectory, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_FileResetSettings, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
@@ -175,7 +174,13 @@ void SwiftGuiStd::initGuiSignals()
     connect(this->ui->menu_WindowMinimize, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_WindowToggleOnTop, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_WindowToggleNavigator, &QAction::triggered, this->ui->comp_InvisibleInfoArea, &CInvisibleInfoAreaComponent::toggleNavigator);
-    connect(this->ui->menu_DebugMetaTypes, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+
+    connect(this->ui->menu_InternalsCompileInfo, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_InternalsEnvVars, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_InternalsMetatypes, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_InternalsSetup, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_InternalsDeleteCachedFiles, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_InternalsDisplayCachedFiles, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
 
     // command line / text messages
     connect(this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::displayInInfoWindow, this->m_compInfoWindow, &CInfoWindowComponent::display);

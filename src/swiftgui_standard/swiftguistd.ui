@@ -124,7 +124,7 @@
           <enum>QFrame::NoFrame</enum>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="pg_MainInfoArea">
           <layout class="QVBoxLayout" name="vl_MainInfoArea">
@@ -287,17 +287,22 @@
      </property>
      <addaction name="menu_ReloadSettings"/>
     </widget>
-    <widget class="QMenu" name="menu_Debug">
+    <widget class="QMenu" name="menu_InternalsItem">
      <property name="title">
-      <string>Debug</string>
+      <string>Internals</string>
      </property>
-     <addaction name="menu_DebugMetaTypes"/>
+     <addaction name="menu_Internals"/>
+     <addaction name="menu_InternalsMetatypes"/>
+     <addaction name="menu_InternalsEnvVars"/>
+     <addaction name="menu_InternalsSetup"/>
+     <addaction name="menu_InternalsCompileInfo"/>
+     <addaction name="menu_InternalsDeleteCachedFiles"/>
+     <addaction name="menu_InternalsDisplayCachedFiles"/>
     </widget>
-    <addaction name="menu_TestInternals"/>
+    <addaction name="menu_InternalsItem"/>
     <addaction name="separator"/>
     <addaction name="menu_PlanePositions"/>
     <addaction name="menu_Reload"/>
-    <addaction name="menu_Debug"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -453,11 +458,6 @@
     <string>Position LOWW (Vienna, AUT)</string>
    </property>
   </action>
-  <action name="menu_TestInternals">
-   <property name="text">
-    <string>Internals</string>
-   </property>
-  </action>
   <action name="menu_WindowMinimize">
    <property name="text">
     <string>Minimize</string>
@@ -485,6 +485,41 @@
   <action name="menu_NavigatorHorizontal">
    <property name="text">
     <string>Horizontal navigator</string>
+   </property>
+  </action>
+  <action name="menu_InternalsMetatypes">
+   <property name="text">
+    <string>Metatypes</string>
+   </property>
+  </action>
+  <action name="menu_InternalsEnvVars">
+   <property name="text">
+    <string>Env.variables</string>
+   </property>
+  </action>
+  <action name="menu_InternalsSetup">
+   <property name="text">
+    <string>Setup</string>
+   </property>
+  </action>
+  <action name="menu_InternalsCompileInfo">
+   <property name="text">
+    <string>Compile info</string>
+   </property>
+  </action>
+  <action name="menu_Internals">
+   <property name="text">
+    <string>Internal page</string>
+   </property>
+  </action>
+  <action name="menu_InternalsDeleteCachedFiles">
+   <property name="text">
+    <string>Delete cached files</string>
+   </property>
+  </action>
+  <action name="menu_InternalsDisplayCachedFiles">
+   <property name="text">
+    <string>Display cached files</string>
    </property>
   </action>
  </widget>

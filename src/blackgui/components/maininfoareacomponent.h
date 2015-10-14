@@ -96,6 +96,12 @@ namespace BlackGui
             //! Text messages
             CTextMessageComponent *getTextMessageComponent();
 
+            //! Display the log
+            void displayLog();
+
+            //! Display console
+            void displayConsole();
+
         public slots:
             //! Toggle floating of given area
             void toggleFloating(InfoArea infoArea) { CInfoArea::toggleFloatingByIndex(static_cast<int>(infoArea)); }

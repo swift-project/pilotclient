@@ -72,6 +72,12 @@ namespace BlackGui
             //! Set data reader
             virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *provider) override;
 
+            //! Display the log
+            void displayLog();
+
+            //! Display console
+            void displayConsole();
+
         protected:
             //! \copydoc CInfoArea::getPreferredSizeWhenFloating
             virtual QSize getPreferredSizeWhenFloating(int areaIndex) const override;

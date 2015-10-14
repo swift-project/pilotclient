@@ -19,6 +19,7 @@
 #include "guimodeenums.h"
 #include "blackcore/context_all_interfaces.h"
 #include "blackcore/actionbind.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/infowindowcomponent.h"
 #include "blackgui/components/maininfoareacomponent.h"
@@ -109,16 +110,17 @@ protected:
 
 private:
     QScopedPointer<Ui::SwiftGuiStd> ui;
-    bool m_init = false;
-    BlackGui::Components::CInfoWindowComponent *m_compInfoWindow = nullptr; //!< the info window (popup
-    BlackGui::CManagedStatusBar  m_statusBar;
-    BlackMisc::CLogSubscriber    m_logSubscriber { this, &SwiftGuiStd::ps_displayStatusMessageInGui };
+    bool                                           m_init = false;
+    BlackGui::Components::CInfoWindowComponent    *m_compInfoWindow = nullptr; //!< the info window (popup
+    BlackGui::CManagedStatusBar                    m_statusBar;
+    BlackMisc::CLogSubscriber                      m_logSubscriber { this, &SwiftGuiStd::ps_displayStatusMessageInGui };
+    BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this};             //!< setup cache
 
     // contexts
     bool m_coreAvailable           = false;
     bool m_contextNetworkAvailable = false;
     bool m_contextAudioAvailable   = false;
-    QTimer *m_timerContextWatchdog = nullptr;     //!< core available?
+    QTimer *m_timerContextWatchdog = nullptr;                //!< core available?
     BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< own aircraft's state
     QSize m_windowMinSizeWithMainPageShown;
     QSize m_windowMinSizeWithMainPageHidden;
@@ -187,8 +189,13 @@ private:
     //! Play notifcation sound
     void playNotifcationSound(BlackSound::CNotificationSounds::Notification notification) const;
 
-private slots:
+    //! Display console
+    void displayConsole();
 
+    //! Display log
+    void displayLog();
+
+private slots:
     //
     // Data received related slots
     //

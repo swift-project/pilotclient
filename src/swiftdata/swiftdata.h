@@ -13,6 +13,7 @@
 #define SWIFTDATA_H
 
 #include "blackcore/context_runtime.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackgui/systemtraywindow.h"
 #include "blackgui/managedstatusbar.h"
 #include "blackmisc/statusmessage.h"
@@ -61,9 +62,13 @@ private:
     void initDynamicMenus();
     void performGracefulShutdown();
 
+    void displayConsole();
+    void displayLog();
+
     QScopedPointer<Ui::CSwiftData> ui;
     BlackGui::CManagedStatusBar    m_statusBar;
     BlackCore::CWebDataServices   *m_webDataReader = nullptr;
+    BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
 };
 
 #endif // guard

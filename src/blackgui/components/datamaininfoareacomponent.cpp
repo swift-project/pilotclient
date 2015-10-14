@@ -66,6 +66,18 @@ namespace BlackGui
             this->ui->comp_Stash->setProvider(provider);
         }
 
+        void CDataMainInfoAreaComponent::displayLog()
+        {
+            this->selectArea(InfoAreaLog);
+            this->getLogComponent()->displayLog();
+        }
+
+        void CDataMainInfoAreaComponent::displayConsole()
+        {
+            this->selectArea(InfoAreaLog);
+            this->getLogComponent()->displayConsole();
+        }
+
         QSize CDataMainInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
         {
             InfoArea area = static_cast<InfoArea>(areaIndex);

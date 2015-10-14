@@ -10,7 +10,7 @@
 #include "introwindow.h"
 #include "ui_introwindow.h"
 #include "blackcore/dbus_server.h"
-#include "blackmisc/networkutils.h"
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/settingutilities.h"
 #include "blackmisc/project.h"
 #include <QDesktopServices>
@@ -18,6 +18,11 @@
 #include <QDir>
 #include <QProcess>
 #include <QFileInfo>
+
+using namespace BlackMisc;
+using namespace BlackMisc::Network;
+using namespace BlackCore;
+using namespace BlackGui;
 
 /*
  * Constructor
@@ -28,11 +33,11 @@ CIntroWindow::CIntroWindow(QWidget *parent) :
     ui(new Ui::CIntroWindow)
 {
     ui->setupUi(this);
-    this->setWindowTitle(BlackMisc::CProject::swiftVersionStringDevInfo());
+    this->setWindowTitle(CProject::swiftVersionStringDevInfo());
     this->layout()->setSizeConstraint(QLayout::SetFixedSize);
-    this->ui->cb_DBusServer->addItem(BlackCore::CDBusServer::sessionDBusServer());
-    this->ui->cb_DBusServer->addItem(BlackCore::CDBusServer::systemDBusServer());
-    this->ui->cb_DBusServer->addItems(BlackMisc::CNetworkUtils::getKnownIpAddresses());
+    this->ui->cb_DBusServer->addItem(CDBusServer::sessionDBusServer());
+    this->ui->cb_DBusServer->addItem(CDBusServer::systemDBusServer());
+    this->ui->cb_DBusServer->addItems(CNetworkUtils::getKnownIpAddresses());
     this->ui->cb_DBusServer->setCurrentIndex(0);
 }
 
@@ -47,9 +52,9 @@ CIntroWindow::~CIntroWindow() { }
 BlackGui::CEnableForFramelessWindow::WindowMode CIntroWindow::getWindowMode() const
 {
     if (this->ui->rb_WindowFrameless->isChecked())
-        return BlackGui::CEnableForFramelessWindow::WindowFrameless;
+        return CEnableForFramelessWindow::WindowFrameless;
     else
-        return BlackGui::CEnableForFramelessWindow::WindowTool;
+        return CEnableForFramelessWindow::WindowTool;
 }
 
 /*

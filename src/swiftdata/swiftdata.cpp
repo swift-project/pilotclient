@@ -98,7 +98,6 @@ void CSwiftData::initLogDisplay()
     logHandler->subscribe(this, &CSwiftData::ps_appendLogMessage);
 }
 
-
 void CSwiftData::initReaders()
 {
     Q_ASSERT_X(this->m_webDataReader, Q_FUNC_INFO, "Missing reader");
@@ -112,7 +111,6 @@ void CSwiftData::initMenu()
     // menu
     this->initDynamicMenus();
     this->ui->menu_WindowMinimize->setIcon(this->style()->standardIcon(QStyle::SP_TitleBarMinButton));
-    connect(this->ui->menu_TestInternals, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_FileExit, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_FileSettingsDirectory, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_FileResetSettings, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
@@ -120,9 +118,17 @@ void CSwiftData::initMenu()
     connect(this->ui->menu_WindowFont, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_WindowMinimize, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_WindowToggleOnTop, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_DebugMetaTypes, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_MappingMaxData, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_MappingMaxMapping, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+
+    connect(this->ui->menu_InternalsCompileInfo, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+    connect(this->ui->menu_InternalsEnvVars, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+    connect(this->ui->menu_InternalsMetatypes, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+    connect(this->ui->menu_InternalsSetup, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+    connect(this->ui->menu_InternalsDeleteCachedFiles, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+    connect(this->ui->menu_InternalsDisplayCachedFiles, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+
+    connect(this->ui->menu_InternalsJsonBootstrapTemplate, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
 }
 
 void CSwiftData::performGracefulShutdown()
@@ -132,4 +138,14 @@ void CSwiftData::performGracefulShutdown()
         m_webDataReader->gracefulShutdown();
         m_webDataReader = nullptr;
     }
+}
+
+void CSwiftData::displayConsole()
+{
+    this->ui->comp_MainInfoArea->displayConsole();
+}
+
+void CSwiftData::displayLog()
+{
+    this->ui->comp_MainInfoArea->displayLog();
 }

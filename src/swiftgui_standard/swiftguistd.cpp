@@ -419,3 +419,14 @@ void SwiftGuiStd::playNotifcationSound(CNotificationSounds::Notification notific
     if (!this->ui->comp_MainInfoArea->getSettingsComponent()->playNotificationSounds()) { return; }
     this->getIContextAudio()->playNotification(notification, true);
 }
+
+void SwiftGuiStd::displayConsole()
+{
+    this->ui->comp_MainInfoArea->displayConsole();
+}
+
+void SwiftGuiStd::displayLog()
+{
+    this->ui->comp_MainInfoArea->displayLog();
+}
+

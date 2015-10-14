@@ -32,7 +32,7 @@
    <item>
     <widget class="QTabWidget" name="tw_Internals">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tb_Debug">
       <attribute name="title">

@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>CSwiftData</class>
  <widget class="QMainWindow" name="CSwiftData">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>900</width>
+    <height>700</height>
+   </rect>
+  </property>
   <property name="minimumSize">
    <size>
     <width>900</width>
@@ -63,7 +71,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1024</width>
+     <width>900</width>
      <height>21</height>
     </rect>
    </property>
@@ -96,19 +104,24 @@
     <addaction name="menu_MappingMaxData"/>
     <addaction name="menu_MappingMaxMapping"/>
    </widget>
-   <widget class="QMenu" name="menu_Internals">
+   <widget class="QMenu" name="menu_Test">
     <property name="title">
      <string>Test</string>
     </property>
-    <widget class="QMenu" name="menu_Debugging">
+    <widget class="QMenu" name="menu_Internals">
      <property name="title">
-      <string>Debug</string>
+      <string>Internals</string>
      </property>
-     <addaction name="menu_DebugMetaTypes"/>
+     <addaction name="menu_InternalsJsonBootstrapTemplate"/>
+     <addaction name="menu_InternalsMetatypes"/>
+     <addaction name="menu_InternalsEnvVars"/>
+     <addaction name="menu_InternalsSetup"/>
+     <addaction name="menu_InternalsCompileInfo"/>
+     <addaction name="menu_InternalsDisplayCachedFiles"/>
+     <addaction name="menu_InternalsDeleteCachedFiles"/>
     </widget>
-    <addaction name="menu_TestInternals"/>
+    <addaction name="menu_Internals"/>
     <addaction name="separator"/>
-    <addaction name="menu_Debugging"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -120,7 +133,7 @@
    <addaction name="menu_InfoAreas"/>
    <addaction name="menu_Help"/>
    <addaction name="menu_Mapping"/>
-   <addaction name="menu_Internals"/>
+   <addaction name="menu_Test"/>
   </widget>
   <widget class="QStatusBar" name="sb_SwiftData"/>
   <action name="menu_FileExit">
@@ -153,11 +166,6 @@
     <string>Minimize</string>
    </property>
   </action>
-  <action name="menu_TestInternals">
-   <property name="text">
-    <string>Internals</string>
-   </property>
-  </action>
   <action name="menu_MappingMaxMapping">
    <property name="text">
     <string>Max. mapping area</string>
@@ -187,6 +195,41 @@
   <action name="menu_DebugMetaTypes">
    <property name="text">
     <string>Debug metatypes (to console)</string>
+   </property>
+  </action>
+  <action name="menu_InternalsJsonBootstrapTemplate">
+   <property name="text">
+    <string>JSON bootstrap template</string>
+   </property>
+  </action>
+  <action name="menu_InternalsEnvVars">
+   <property name="text">
+    <string>Env.variables</string>
+   </property>
+  </action>
+  <action name="menu_InternalsMetatypes">
+   <property name="text">
+    <string>Metatypes</string>
+   </property>
+  </action>
+  <action name="menu_InternalsSetup">
+   <property name="text">
+    <string>Setup</string>
+   </property>
+  </action>
+  <action name="menu_InternalsCompileInfo">
+   <property name="text">
+    <string>Compile info</string>
+   </property>
+  </action>
+  <action name="menu_InternalsDisplayCachedFiles">
+   <property name="text">
+    <string>All cache files</string>
+   </property>
+  </action>
+  <action name="menu_InternalsDeleteCachedFiles">
+   <property name="text">
+    <string>Delete cached fies</string>
    </property>
   </action>
  </widget>

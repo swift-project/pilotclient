@@ -57,10 +57,6 @@ void SwiftGuiStd::ps_onMenuClicked()
         this->ui->comp_MainInfoArea->getSettingsComponent()->reloadSettings();
         CLogMessage(this).info("Settings reloaded");
     }
-    else if (sender == this->ui->menu_TestInternals)
-    {
-        this->ui->sw_MainMiddle->setCurrentIndex(MainPageInternals);
-    }
     else if (sender == this->ui->menu_FileReloadStyleSheets)
     {
         CStyleSheetUtility::instance().read();
@@ -93,12 +89,43 @@ void SwiftGuiStd::ps_onMenuClicked()
         Q_ASSERT(this->getIContextSettings());
         this->getIContextSettings()->reset(true);
     }
-    else if (sender == this->ui->menu_DebugMetaTypes)
+    else if (sender == this->ui->menu_Internals)
     {
-        QString metadata;
-        QTextStream stream(&metadata);
-        BlackMisc::displayAllUserMetatypesTypes(stream);
+        this->ui->sw_MainMiddle->setCurrentIndex(MainPageInternals);
+    }
+    else if (sender == this->ui->menu_InternalsMetatypes)
+    {
+        QString metadata(getAllUserMetatypesTypes());
         this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(metadata);
+        this->displayConsole();
+    }
+    else if (sender == this->ui->menu_InternalsSetup)
+    {
+        QString setup(this->m_setup.get().convertToQString("\n", true));
+        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(setup);
+        this->displayConsole();
+    }
+    else if (sender == this->ui->menu_InternalsCompileInfo)
+    {
+        QString project(CProject::convertToQString("\n"));
+        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(project);
+        this->displayConsole();
+    }
+    else if (sender == this->ui->menu_InternalsEnvVars)
+    {
+        QString project(CProject::getEnvironmentVariables());
+        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(project);
+        this->displayConsole();
+    }
+    else if (sender == this->ui->menu_InternalsDisplayCachedFiles)
+    {
+        //! \todo
+        this->displayConsole();
+    }
+    else if (sender == this->ui->menu_InternalsDeleteCachedFiles)
+    {
+        //! \todo
+        this->displayConsole();
     }
 }
 
@@ -113,4 +140,3 @@ void SwiftGuiStd::initMenuIcons()
 {
     this->ui->menu_WindowMinimize->setIcon(this->style()->standardIcon(QStyle::SP_TitleBarMinButton));
 }
-

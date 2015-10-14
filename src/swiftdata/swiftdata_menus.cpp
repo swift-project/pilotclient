@@ -60,13 +60,6 @@ void CSwiftData::ps_onMenuClicked()
     {
         // !\todo reset settings
     }
-    else if (sender == this->ui->menu_DebugMetaTypes)
-    {
-        QString metadata;
-        QTextStream stream(&metadata);
-        BlackMisc::displayAllUserMetatypesTypes(stream);
-        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(metadata);
-    }
     else if (sender == this->ui->menu_MappingMaxData)
     {
         CDbMappingComponent *mappingComponent = this->ui->comp_MainInfoArea->getMappingComponent();
@@ -76,6 +69,46 @@ void CSwiftData::ps_onMenuClicked()
     {
         CDbMappingComponent *mappingComponent = this->ui->comp_MainInfoArea->getMappingComponent();
         mappingComponent->resizeForMapping();
+    }
+    else if (sender == this->ui->menu_InternalsJsonBootstrapTemplate)
+    {
+        QString json(m_setup.get().toJsonString());
+        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(json);
+        this->displayConsole();
+    }
+    else if (sender == this->ui->menu_InternalsMetatypes)
+    {
+        QString metadata(getAllUserMetatypesTypes());
+        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(metadata);
+        this->displayConsole();
+    }
+    else if (sender == this->ui->menu_InternalsSetup)
+    {
+        QString setup(this->m_setup.get().convertToQString("\n", true));
+        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(setup);
+        this->displayConsole();
+    }
+    else if (sender == this->ui->menu_InternalsCompileInfo)
+    {
+        QString project(CProject::convertToQString("\n"));
+        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(project);
+        this->displayConsole();
+    }
+    else if (sender == this->ui->menu_InternalsEnvVars)
+    {
+        QString project(CProject::getEnvironmentVariables());
+        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(project);
+        this->displayConsole();
+    }
+    else if (sender == this->ui->menu_InternalsDisplayCachedFiles)
+    {
+        //! \todo
+        this->displayConsole();
+    }
+    else if (sender == this->ui->menu_InternalsDeleteCachedFiles)
+    {
+        //! \todo
+        this->displayConsole();
     }
     else
     {
@@ -110,7 +143,7 @@ void CSwiftData::initDynamicMenus()
 
     if (CProject::isRunningInDeveloperEnvironment() && !CRoles::roles().isAdmin())
     {
-        QAction *a = this->ui->menu_Internals->addAction(CIcons::user16(), "Set administrator");
+        QAction *a = this->ui->menu_Test->addAction(CIcons::user16(), "Set administrator");
         a->setData("admin");
     }
 }

@@ -1,7 +1,6 @@
 load(common_pre)
 
 QT       += core dbus network xml multimedia gui svg
-CONFIG   += console
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
