@@ -9,8 +9,8 @@
 
 #include "testreaders.h"
 #include "expect.h"
-#include "blackcore/settings/global_reader_settings.h"
-#include "blackmisc/networkutils.h"
+#include "blackcore/data/globalsetup.h"
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 
@@ -23,32 +23,23 @@ using namespace BlackMisc::Network;
 
 namespace BlackCoreTest
 {
-
     CTestReaders::CTestReaders(QObject *parent) :
         QObject(parent),
-        m_icaoReader(this,
-                     CGlobalReaderSettings::instance().protocolIcaoReader(),
-                     CGlobalReaderSettings::instance().serverIcaoReader(),
-                     CGlobalReaderSettings::instance().baseUrlIcaoReader()
-                    ),
-        m_modelReader(this,
-                      CGlobalReaderSettings::instance().protocolModelReader(),
-                      CGlobalReaderSettings::instance().serverModelReader(),
-                      CGlobalReaderSettings::instance().baseUrlModelReader()
-                     )
+        m_icaoReader(this),
+        m_modelReader(this)
     { }
 
     void CTestReaders::readIcaoData()
     {
-        QString server(CGlobalReaderSettings::instance().serverIcaoReader());
-        if (!pingServer(server)) { return; }
+        CUrl url(m_setup.get().dbIcaoReader());
+        if (!this->pingServer(url)) { return; }
         m_icaoReader.start();
         Expect e(&this->m_icaoReader);
         EXPECT_UNIT(e)
         .send(&CIcaoDataReader::readInBackgroundThread, CEntityFlags::AllIcaoEntities)
-        .expect(&CIcaoDataReader::dataRead, [server]()
+        .expect(&CIcaoDataReader::dataRead, [url]()
         {
-            qDebug() << "Read ICAO data from" << server;
+            qDebug() << "Read ICAO data from" << url.getFullUrl();
         })
         .wait(10);
 
@@ -63,16 +54,15 @@ namespace BlackCoreTest
 
     void CTestReaders::readModelData()
     {
-        QString server(CGlobalReaderSettings::instance().serverModelReader());
-        if (!pingServer(server)) { return; }
+        CUrl url(m_setup.get().dbModelReader());
+        if (!this->pingServer(url)) { return; }
         m_modelReader.start();
         Expect e(&this->m_modelReader);
         EXPECT_UNIT(e)
         .send(&CModelDataReader::readInBackgroundThread, CEntityFlags::AllIcaoEntities)
-        .expect(&CModelDataReader::dataRead, [server]()
+        .expect(&CModelDataReader::dataRead, [url]()
         {
-            //  CDbFlags::flagToString(entity) << CDbFlags::flagToString(state) << number
-            qDebug() << "Read model data " << server;
+            qDebug() << "Read model data " << url;
         })
         .wait(10);
 
@@ -85,12 +75,12 @@ namespace BlackCoreTest
         QVERIFY2(distributor.hasCompleteData(), "Missing data for distributor");
     }
 
-    bool CTestReaders::pingServer(const QString &server)
+    bool CTestReaders::pingServer(const CUrl &url)
     {
         QString m;
-        if (!CNetworkUtils::canConnect(server, 80, m, 2500))
+        if (!CNetworkUtils::canConnect(url, m, 2500))
         {
-            qWarning() << "Skipping unit test as" << server << "cannot be connected";
+            qWarning() << "Skipping unit test as" << url.getFullUrl() << "cannot be connected";
             return false;
         }
         return true;

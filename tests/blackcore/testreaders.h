@@ -38,11 +38,12 @@ namespace BlackCoreTest
         void readModelData();
 
     private:
-        BlackCore::CIcaoDataReader m_icaoReader;
+        BlackCore::CIcaoDataReader  m_icaoReader;
         BlackCore::CModelDataReader m_modelReader;
+        BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
 
         //! Test if server is available
-        static bool pingServer(const QString &server);
+        static bool pingServer(const BlackMisc::Network::CUrl &url);
     };
 
 } //namespace
