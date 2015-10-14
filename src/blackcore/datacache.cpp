@@ -67,7 +67,7 @@ namespace BlackCore
     {
         QMutexLocker lock(&m_mutex);
 
-        QLockFile revisionFileLock(m_revisionFileName);
+        QLockFile revisionFileLock(m_revisionFileName + ".lock");
         if (! revisionFileLock.lock())
         {
             CLogMessage(this).error("Failed to lock %1: %2") << m_revisionFileName << lockFileError(revisionFileLock);
@@ -93,7 +93,7 @@ namespace BlackCore
     {
         QMutexLocker lock(&m_mutex);
 
-        QLockFile revisionFileLock(m_revisionFileName);
+        QLockFile revisionFileLock(m_revisionFileName + ".lock");
         if (revLock && ! revisionFileLock.lock())
         {
             CLogMessage(this).error("Failed to lock %1: %2") << m_revisionFileName << lockFileError(revisionFileLock);
