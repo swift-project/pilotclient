@@ -8,6 +8,7 @@
  */
 
 #include "project.h"
+#include "blackmisc/fileutilities.h"
 #include <QStringList>
 #include <QCoreApplication>
 #include <QProcessEnvironment>
@@ -254,18 +255,30 @@ namespace BlackMisc
         return QProcessEnvironment::systemEnvironment().value(envVarPrivateSetupDir());
     }
 
-    QString CProject::getApplicationDir()
+    QString getApplicationDir_()
     {
         QFileInfo executable(QCoreApplication::applicationFilePath());
         QDir p(executable.dir());
         return p.absolutePath();
     }
 
-    QString CProject::getSwiftResourceDir()
+    const QString &CProject::getApplicationDir()
     {
-        QDir dir(getApplicationDir());
+        static const QString s(getApplicationDir_());
+        return s;
+    }
+
+    QString getSwiftResourceDir_()
+    {
+        QDir dir(CProject::getApplicationDir());
         if (dir.cdUp()) { return dir.absolutePath(); }
         return "";
+    }
+
+    const QString &CProject::getSwiftResourceDir()
+    {
+        static const QString s(getSwiftResourceDir_());
+        return s;
     }
 
     QString CProject::getSwiftPrivateResourceDir()
@@ -274,13 +287,32 @@ namespace BlackMisc
         return dir;
     }
 
-    QString CProject::getSwiftStaticDbFilesDir()
+    QString getSwiftStaticDbFilesDir_()
     {
-        QString d(getSwiftResourceDir());
+        QString d(CProject::getSwiftResourceDir());
         if (d.isEmpty()) { return ""; }
         QDir dir(d);
         if (dir.cd("swiftDB")) { return dir.absolutePath(); }
         return "";
+    }
+
+    const QString &CProject::getSwiftStaticDbFilesDir()
+    {
+        static QString s(getSwiftResourceDir_());
+        return s;
+    }
+
+    QString getImagesDir_()
+    {
+        QString d(CProject::getSwiftResourceDir());
+        if (d.isEmpty()) return "";
+        return CFileUtils::appendFilePaths(d, "data/images");
+    }
+
+    const QString &CProject::getImagesDir()
+    {
+        static const QString s(getImagesDir_());
+        return s;
     }
 
     QString CProject::getEnvironmentVariables(const QString &separator)

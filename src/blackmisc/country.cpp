@@ -22,7 +22,8 @@ namespace BlackMisc
     {
         if (this->m_dbKey.length() == 2)
         {
-            return CIcon("images/flags/" + m_dbKey.toLower() + ".png",
+            // relative to images
+            return CIcon("flags/" + m_dbKey.toLower() + ".png",
                          this->convertToQString());
         }
         else

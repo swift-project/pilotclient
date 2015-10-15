@@ -100,16 +100,19 @@ namespace BlackMisc
         static bool isRunningInBetaOrDeveloperEnvironment();
 
         //! Application directory where current application is located
-        static QString getApplicationDir();
+        static const QString &getApplicationDir();
 
         //! Where resource files (static DB files, ...) etc are located
-        static QString getSwiftResourceDir();
+        static const QString &getSwiftResourceDir();
 
         //! Private resource dir for developer's own resource files
         static QString getSwiftPrivateResourceDir();
 
-        //! Where resource files (static DB files, ...) etc are located
-        static QString getSwiftStaticDbFilesDir();
+        //! Where static DB files are located
+        static const QString &getSwiftStaticDbFilesDir();
+
+        //! Where images are located
+        static const QString &getImagesDir();
 
         //! Dump all env.variables
         static QString getEnvironmentVariables(const QString &separator = QString("\n"));

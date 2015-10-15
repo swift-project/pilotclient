@@ -8,6 +8,8 @@
  */
 
 #include "icons.h"
+#include "blackmisc/project.h"
+#include "blackmisc/fileutilities.h"
 #include <QImage>
 #include <QIcon>
 #include <QPainter>
@@ -1079,9 +1081,7 @@ namespace BlackMisc
         Q_ASSERT_X(!fileName.isEmpty(), Q_FUNC_INFO, "missing filename");
         if (!getResourceFileCache().contains(fileName))
         {
-            QString path = fileName.contains("resources") ?
-                           QCoreApplication::applicationDirPath().append("/").append(fileName) :
-                           QCoreApplication::applicationDirPath().append("/resources/").append(fileName);
+            QString path = CFileUtils::appendFilePaths(CProject::getImagesDir(), fileName);
             QPixmap pm;
             bool s = pm.load(path);
             if (s)

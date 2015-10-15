@@ -76,7 +76,8 @@ namespace BlackMisc
         {
             if (this->m_designator.length() > 2)
             {
-                return CIcon("images/airlines/" + m_designator.toLower() + ".png",
+                // relative to images
+                return CIcon("airlines/" + m_designator.toLower() + ".png",
                              this->convertToQString());
             }
             else
