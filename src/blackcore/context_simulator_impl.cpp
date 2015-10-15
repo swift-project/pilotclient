@@ -10,7 +10,6 @@
 #include "context_simulator_impl.h"
 #include "context_ownaircraft_impl.h"
 #include "context_ownaircraft.h"
-#include "context_settings.h"
 #include "context_application.h"
 #include "context_network_impl.h"
 #include "plugin_manager_simulator.h"
@@ -19,12 +18,10 @@
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/loghandler.h"
-#include "blackmisc/settingutilities.h"
 #include <QPluginLoader>
 #include <QLibrary>
 
 using namespace BlackMisc;
-using namespace BlackMisc::Settings;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
@@ -551,14 +548,6 @@ namespace BlackCore
 
         // update
         m_simulatorPlugin.second->updateOwnSimulatorCockpit(ownAircraft, originator);
-    }
-
-    void CContextSimulator::settingsChanged(uint type)
-    {
-        auto settingsType = static_cast<IContextSettings::SettingsType>(type);
-        if (settingsType != IContextSettings::SettingsSimulator) { return; }
-
-        // simulator code would go here
     }
 
     CPixmap CContextSimulator::iconForModel(const QString &modelString) const

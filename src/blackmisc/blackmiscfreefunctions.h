@@ -23,7 +23,6 @@
 #include <QDBusArgument>
 #include <QTextStream>
 #include <QDataStream>
-
 #include <memory>
 
 /*!
@@ -72,12 +71,6 @@ namespace BlackMisc
     namespace Network
     {
         //! Register metadata for network (server, user)
-        BLACKMISC_EXPORT void registerMetadata();
-    }
-
-    namespace Settings
-    {
-        //! Register metadata for settings
         BLACKMISC_EXPORT void registerMetadata();
     }
 

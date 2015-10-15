@@ -11,7 +11,6 @@
 #include "context_runtime.h"
 #include "input_manager.h"
 #include "settingscache.h"
-#include "blackmisc/settingutilities.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/loghandler.h"
 #include <QtMsgHandler>

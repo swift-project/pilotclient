@@ -39,11 +39,10 @@ namespace BlackGui
             //! Destructor
             ~CSettingsNetworkServersComponent();
 
-        public slots:
-            //! Reload settings
-            void reloadSettings();
-
         private slots:
+            //! Reload settings
+            void ps_reloadSettings();
+
             //! Network server selected
             void ps_networkServerSelected(const QModelIndex &index);
 
@@ -52,7 +51,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CSettingsNetworkServersComponent> ui;
-            BlackCore::CSetting<BlackCore::Settings::Network::TrafficServers> m_trafficNetworkServers { this };
+            BlackCore::CSetting<BlackCore::Settings::Network::TrafficServers> m_trafficNetworkServers { this, &CSettingsNetworkServersComponent::ps_reloadSettings };
             BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
         };
     } // ns

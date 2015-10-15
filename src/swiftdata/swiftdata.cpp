@@ -113,11 +113,14 @@ void CSwiftData::initMenu()
     this->ui->menu_WindowMinimize->setIcon(this->style()->standardIcon(QStyle::SP_TitleBarMinButton));
     connect(this->ui->menu_FileExit, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_FileSettingsDirectory, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+    connect(this->ui->menu_FileCacheDirectory, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_FileResetSettings, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_FileReloadStyleSheets, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+
     connect(this->ui->menu_WindowFont, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_WindowMinimize, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_WindowToggleOnTop, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+
     connect(this->ui->menu_MappingMaxData, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_MappingMaxMapping, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
 
@@ -127,7 +130,6 @@ void CSwiftData::initMenu()
     connect(this->ui->menu_InternalsSetup, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_InternalsDeleteCachedFiles, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_InternalsDisplayCachedFiles, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-
     connect(this->ui->menu_InternalsJsonBootstrapTemplate, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
 }
 

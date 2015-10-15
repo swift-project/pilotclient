@@ -9,7 +9,6 @@
 
 #include "swiftcore.h"
 #include "blackcore/context_runtime.h"
-#include "blackcore/context_settings.h"
 #include "blackcore/context_application.h"
 #include "blackcore/context_application_impl.h"
 #include "blackcore/dbus_server.h"

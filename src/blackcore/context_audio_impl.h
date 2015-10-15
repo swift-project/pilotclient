@@ -12,17 +12,17 @@
 #ifndef BLACKCORE_CONTEXTAUDIO_IMPL_H
 #define BLACKCORE_CONTEXTAUDIO_IMPL_H
 
-#include "blackcoreexport.h"
-#include "context_audio.h"
-#include "context_settings.h"
-#include "context_runtime.h"
-#include "dbus_server.h"
-#include "voice.h"
-#include "voice_channel.h"
-#include "audio_device.h"
-#include "audio_mixer.h"
-#include "actionbind.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackcore/context_audio.h"
+#include "blackcore/context_runtime.h"
+#include "blackcore/dbus_server.h"
+#include "blackcore/voice.h"
+#include "blackcore/voice_channel.h"
+#include "blackcore/audio_device.h"
+#include "blackcore/audio_mixer.h"
+#include "blackcore/actionbind.h"
 #include "blackinput/keyboard.h"
+#include "blackcore/settings/audio.h"
 #include "blackmisc/audio/voiceroomlist.h"
 
 #include <QThread>
@@ -98,7 +98,7 @@ namespace BlackCore
         virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) const override;
 
         //! \copydoc IContextAudio::playNotification()
-        virtual void playNotification(BlackSound::CNotificationSounds::Notification notification, bool considerSettings) const override;
+        virtual void playNotification(BlackMisc::Audio::CNotificationSounds::Notification notification, bool considerSettings) const override;
 
         //! \copydoc IContextAudio::enableAudioLoopback()
         virtual void enableAudioLoopback(bool enable = true) override;
@@ -147,15 +147,14 @@ namespace BlackCore
         void ps_userLeftRoom(const BlackMisc::Aviation::CCallsign &callsign);
 
     private:
-        const int MinUnmuteVolume = 20; //!< minimum volume when unmuted
-
         //! Connection in transition
         bool inTransitionState() const;
 
+        //! Voice channel by room
         QSharedPointer<IVoiceChannel> getVoiceChannelBy(const BlackMisc::Audio::CVoiceRoom &voiceRoom);
 
+        const int MinUnmuteVolume = 20; //!< minimum volume when unmuted
         CActionBind m_actionPtt { "/Voice/Activate push-to-talk", this, &CContextAudio::ps_setVoiceTransmission };
-
         std::unique_ptr<IVoice> m_voice; //!< underlying voice lib
         std::unique_ptr<IAudioMixer> m_audioMixer;
         int m_outVolumeBeforeMute = 90;
@@ -168,6 +167,9 @@ namespace BlackCore
 
         QList<QSharedPointer<IVoiceChannel>> m_unusedVoiceChannels;
         QHash<BlackMisc::Aviation::CComSystem::ComUnit, QSharedPointer<IVoiceChannel>> m_voiceChannelMapping;
+
+        // settings
+        CSetting<BlackCore::Settings::Audio::AudioSettings> m_audioSettings { this };
     };
 } // namespace
 

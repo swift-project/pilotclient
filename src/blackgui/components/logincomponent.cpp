@@ -10,7 +10,6 @@
 #include "logincomponent.h"
 #include "ui_logincomponent.h"
 #include "blackcore/context_network.h"
-#include "blackcore/context_settings.h"
 #include "blackcore/context_ownaircraft.h"
 #include "blackcore/context_audio.h"
 #include "blackcore/context_simulator.h"
@@ -134,15 +133,13 @@ namespace BlackGui
         void CLoginComponent::runtimeHasBeenSet()
         {
             Q_ASSERT(getIContextNetwork());
-            Q_ASSERT(getIContextSettings());
             connect(getIContextNetwork(), &IContextNetwork::webServiceDataRead, this, &CLoginComponent::ps_onWebServiceDataRead);
-            connect(getIContextSettings(), &IContextSettings::changedSettings, this, &CLoginComponent::ps_onSettingsChanged);
 
             // inital setup, if data already available
             ps_validateAircraftValues();
             ps_validateVatsimValues();
             ps_onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1);
-            CServerList otherServers = this->m_trafficNetworkServers.get();
+            CServerList otherServers(this->m_trafficNetworkServers.get());
 
             // add a testserver when no servers can be loaded
             if (otherServers.isEmpty() && CProject::isRunningInBetaOrDeveloperEnvironment())
@@ -454,10 +451,9 @@ namespace BlackGui
             return validVatsimId && validHomeAirport && validVatsimPassword && validRealUserName;
         }
 
-        void CLoginComponent::ps_onSettingsChanged(uint settingsType)
+        void CLoginComponent::ps_reloadSettings()
         {
-            if (settingsType != static_cast<uint>(IContextSettings::SettingsNetwork)) { return; }
-            CServerList otherServers = this->m_trafficNetworkServers.get();
+            CServerList otherServers(this->m_trafficNetworkServers.get());
             this->ui->cbp_OtherServers->setServers(otherServers);
         }
 

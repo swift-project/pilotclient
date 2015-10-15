@@ -61,16 +61,6 @@ namespace BlackCore
         return this->getRuntime()->getIContextOwnAircraft();
     }
 
-    IContextSettings *CContext::getIContextSettings()
-    {
-        return this->getRuntime()->getIContextSettings();
-    }
-
-    const IContextSettings *CContext::getIContextSettings() const
-    {
-        return this->getRuntime()->getIContextSettings();
-    }
-
     IContextSimulator *CContext::getIContextSimulator()
     {
         return this->getRuntime()->getIContextSimulator();

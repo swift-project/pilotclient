@@ -14,7 +14,7 @@
 
 #include "blackcoreexport.h"
 #include "blackcore/context.h"
-#include "blackmisc/notificationsounds.h"
+#include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/genericdbusinterface.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
@@ -148,7 +148,7 @@ namespace BlackCore
         //! Play notification sound
         //! \param notification CSoundGenerator::Notification
         //! \param considerSettings consider settings (notification on/off), false means settings ignored
-        virtual void playNotification(BlackSound::CNotificationSounds::Notification notification, bool considerSettings) const = 0;
+        virtual void playNotification(BlackMisc::Audio::CNotificationSounds::Notification notification, bool considerSettings) const = 0;
 
         //! Enable audio loopback
         virtual void enableAudioLoopback(bool enable = true) = 0;

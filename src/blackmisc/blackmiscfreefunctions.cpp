@@ -12,7 +12,6 @@
 #include "geo/geo.h"
 #include "audio/audio.h"
 #include "input/input.h"
-#include "settingsblackmiscclasses.h"
 #include "propertyindexlist.h"
 #include "propertyindexvariantmap.h"
 #include "namevariantpairlist.h"
@@ -43,19 +42,15 @@ void BlackMisc::Geo::registerMetadata()
     CLongitude::registerMetadata();
 }
 
-void BlackMisc::Settings::registerMetadata()
-{
-    CSettingsAudio::registerMetadata();
-}
-
 void BlackMisc::Audio::registerMetadata()
 {
     CAudioDeviceInfo::registerMetadata();
     CAudioDeviceInfoList::registerMetadata();
     CVoiceRoom::registerMetadata();
     CVoiceRoomList::registerMetadata();
-    qDBusRegisterMetaType<BlackSound::CNotificationSounds::PlayMode>();
-    qDBusRegisterMetaType<BlackSound::CNotificationSounds::Notification>();
+    Settings::CSettingsAudio::registerMetadata();
+    qDBusRegisterMetaType<BlackMisc::Audio::CNotificationSounds::PlayMode>();
+    qDBusRegisterMetaType<BlackMisc::Audio::CNotificationSounds::Notification>();
 }
 
 void BlackMisc::Input::registerMetadata()
@@ -101,7 +96,6 @@ void BlackMisc::registerMetadata()
     Math::registerMetadata();
     Geo::registerMetadata();
     Network::registerMetadata();
-    Settings::registerMetadata();
     Simulation::registerMetadata();
     Audio::registerMetadata();
     Weather::registerMetadata();

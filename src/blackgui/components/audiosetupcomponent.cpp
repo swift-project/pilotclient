@@ -9,9 +9,7 @@
 
 #include "audiosetupcomponent.h"
 #include "ui_audiosetupcomponent.h"
-#include "blackcore/context_settings.h"
 #include "blackcore/context_audio.h"
-#include "blackmisc/setaudio.h"
 #include "blackmisc/logmessage.h"
 
 using namespace BlackCore;
@@ -19,8 +17,8 @@ using namespace BlackMisc;
 using namespace BlackGui;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Audio;
+using namespace BlackMisc::Audio::Settings;
 using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Settings;
 
 namespace BlackGui
 {
@@ -44,9 +42,6 @@ namespace BlackGui
 
         void CAudioSetupComponent::runtimeHasBeenSet()
         {
-            Q_ASSERT_X(this->getIContextSettings(), Q_FUNC_INFO, "missing settings");
-            this->connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &CAudioSetupComponent::ps_changedSettings);
-
             // based on audio context
             Q_ASSERT_X(this->getIContextAudio(), Q_FUNC_INFO, "missing audio");
             if (this->getIContextAudio())
@@ -67,26 +62,16 @@ namespace BlackGui
                 this->connect(this->getIContextAudio(), &IContextAudio::changedAudioDevices, this, &CAudioSetupComponent::ps_onAudioDevicesChanged);
                 this->connect(this->getIContextAudio(), &IContextAudio::changedSelectedAudioDevices, this, &CAudioSetupComponent::ps_onCurrentAudioDevicesChanged);
             }
-            this->reloadSettings();
+            this->ps_reloadSettings();
             this->ui->tb_ExpandNotificationSounds->setChecked(false); // collapse
         }
 
-        void CAudioSetupComponent::ps_changedSettings(uint typeValue)
+        void CAudioSetupComponent::ps_reloadSettings()
         {
-            IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(typeValue);
-            this->reloadSettings();
-            Q_UNUSED(type);
-        }
-
-        void CAudioSetupComponent::reloadSettings()
-        {
-            // local copy
-            CSettingsAudio as = this->getIContextSettings()->getAudioSettings();
-
-            // fake setting for sound notifications
+            CSettingsAudio as(m_audioSettings.get());
             this->ui->cb_SetupAudioPlayNotificationSounds->setChecked(true);
-            this->ui->cb_SetupAudioNotificationTextMessage->setChecked(as.getNotificationFlag(BlackSound::CNotificationSounds::NotificationTextMessagePrivate));
-            this->ui->cb_SetupAudioNotificationVoiceRoom->setChecked(as.getNotificationFlag(BlackSound::CNotificationSounds::NotificationVoiceRoomJoined));
+            this->ui->cb_SetupAudioNotificationTextMessage->setChecked(as.getNotificationFlag(CNotificationSounds::NotificationTextMessagePrivate));
+            this->ui->cb_SetupAudioNotificationVoiceRoom->setChecked(as.getNotificationFlag(CNotificationSounds::NotificationVoiceRoomJoined));
         }
 
         void CAudioSetupComponent::ps_onToggleNotificationSoundsVisibility(bool checked)

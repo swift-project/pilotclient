@@ -14,7 +14,6 @@
 
 #include "blackcoreexport.h"
 #include "blackcore/context_network.h"
-#include "blackcore/context_settings.h"
 #include "blackcore/context_runtime.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/network.h"
@@ -22,7 +21,6 @@
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/weather/metarset.h"
-#include "blackmisc/setnetwork.h"
 #include "blackmisc/network/clientlist.h"
 #include "blackmisc/digestsignal.h"
 #include "blackmisc/logmessage.h"

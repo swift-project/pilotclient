@@ -33,13 +33,11 @@ namespace BlackCore
     class CContextAudio;
     class CContextNetwork;
     class CContextOwnAircraft;
-    class CContextSettings;
     class CContextSimulator;
     class IContextApplication;
     class IContextAudio;
     class IContextNetwork;
     class IContextOwnAircraft;
-    class IContextSettings;
     class IContextSimulator;
 
     //! The Context runtime class
@@ -88,12 +86,6 @@ namespace BlackCore
 
         //! Context for own aircraft
         const IContextOwnAircraft *getIContextOwnAircraft() const;
-
-        //! Context for settings
-        IContextSettings *getIContextSettings();
-
-        //! Context for settings
-        const IContextSettings *getIContextSettings() const;
 
         //! Context for simulator
         IContextSimulator *getIContextSimulator();
@@ -158,13 +150,12 @@ namespace BlackCore
 
     private:
         bool m_init = false; //!< flag
-
         CSetting<Settings::Network::DBusServerAddress> m_dbusServerAddress { this };
 
         // DBus
-        CDBusServer *m_dbusServer = nullptr;
+        CDBusServer *m_dbusServer        = nullptr;
         QDBusConnection m_dbusConnection = QDBusConnection("default");
-        bool m_initDBusConnection   = false;
+        bool m_initDBusConnection        = false;
 
         // contexts:
         // There is a reason why we do not use smart pointers here. When the context is deleted
@@ -173,7 +164,6 @@ namespace BlackCore
         IContextAudio       *m_contextAudio       = nullptr;
         IContextNetwork     *m_contextNetwork     = nullptr;
         IContextOwnAircraft *m_contextOwnAircraft = nullptr;
-        IContextSettings    *m_contextSettings    = nullptr;
         IContextSimulator   *m_contextSimulator   = nullptr;
 
         //! initialization of DBus connection (where applicable)

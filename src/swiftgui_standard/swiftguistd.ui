@@ -314,6 +314,7 @@
      <string>File</string>
     </property>
     <addaction name="menu_FileSettingsDirectory"/>
+    <addaction name="menu_FileCacheDirectory"/>
     <addaction name="menu_FileResetSettings"/>
     <addaction name="menu_FileReloadStyleSheets"/>
     <addaction name="separator"/>
@@ -520,6 +521,11 @@
   <action name="menu_InternalsDisplayCachedFiles">
    <property name="text">
     <string>Display cached files</string>
+   </property>
+  </action>
+  <action name="menu_FileCacheDirectory">
+   <property name="text">
+    <string>Cache directory</string>
    </property>
   </action>
  </widget>

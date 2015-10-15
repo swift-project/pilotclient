@@ -13,7 +13,6 @@
 #include "context_audio.h"
 #include "context_application.h"
 #include "context_runtime.h"
-#include "context_settings.h"
 #include "blackmisc/simplecommandparser.h"
 #include "blackmisc/logmessage.h"
 
@@ -32,7 +31,6 @@ namespace BlackCore
         CIdentifiable(this)
     {
         Q_ASSERT(this->getRuntime());
-        Q_ASSERT(this->getRuntime()->getIContextSettings());
         this->setObjectName("CContextOwnAircraft");
 
         // Init own aircraft
@@ -74,7 +72,6 @@ namespace BlackCore
     void CContextOwnAircraft::initOwnAircraft()
     {
         Q_ASSERT(this->getRuntime());
-        Q_ASSERT(this->getRuntime()->getIContextSettings());
         {
             QWriteLocker l(&m_lockAircraft);
             this->m_ownAircraft.initComSystems();

@@ -5,8 +5,6 @@
 #include "context_audio_proxy.h"
 #include "context_network_proxy.h"
 #include "context_ownaircraft_proxy.h"
-#include "context_settings_proxy.h"
 #include "context_simulator_proxy.h"
-
 
 #endif // guard

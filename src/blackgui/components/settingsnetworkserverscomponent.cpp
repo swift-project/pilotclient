@@ -10,11 +10,9 @@
 #include "settingsnetworkserverscomponent.h"
 #include "ui_settingsnetworkserverscomponent.h"
 #include "blackcore/context_network.h"
-#include "blackcore/context_settings.h"
 #include "blackcore/setupreader.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/project.h"
-#include "blackmisc/settingsblackmiscclasses.h"
 #include <QModelIndex>
 
 using namespace BlackCore;
@@ -24,7 +22,6 @@ using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Audio;
-using namespace BlackMisc::Settings;
 
 namespace BlackGui
 {
@@ -46,7 +43,7 @@ namespace BlackGui
         CSettingsNetworkServersComponent::~CSettingsNetworkServersComponent()
         { }
 
-        void CSettingsNetworkServersComponent::reloadSettings()
+        void CSettingsNetworkServersComponent::ps_reloadSettings()
         {
             CServerList serverList(m_trafficNetworkServers.get());
 

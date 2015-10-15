@@ -14,7 +14,6 @@
 
 #include "blackcoreexport.h"
 #include "blackcore/context_ownaircraft.h"
-#include "blackcore/context_settings.h"
 #include "blackcore/context_runtime.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/settings/network.h"

@@ -9,7 +9,6 @@
 
 #include "context_network_impl.h"
 #include "context_runtime.h"
-#include "context_settings.h"
 #include "context_application.h"
 #include "context_simulator.h"
 #include "context_ownaircraft_impl.h"
@@ -41,7 +40,6 @@ namespace BlackCore
         IContextNetwork(mode, runtime)
     {
         Q_ASSERT(this->getRuntime());
-        Q_ASSERT(this->getIContextSettings());
         Q_ASSERT(this->getIContextOwnAircraft());
         Q_ASSERT(this->getIContextOwnAircraft()->isUsingImplementingObject());
 

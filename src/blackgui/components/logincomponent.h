@@ -76,7 +76,7 @@ namespace BlackGui
             bool ps_validateVatsimValues();
 
             //! Settings have been changed
-            void ps_onSettingsChanged(uint settingsType);
+            void ps_reloadSettings();
 
             //! Logoff countdown
             void ps_logoffCountdown();
@@ -85,7 +85,6 @@ namespace BlackGui
             void ps_reverseLookupModel();
 
         private:
-
             //! GUI aircraft values, formatted
             struct CGuiAircraftValues
             {
@@ -148,7 +147,7 @@ namespace BlackGui
             QScopedPointer<Ui::CLoginComponent> ui;
             const int LogoffIntervalSeconds = 10;
             QTimer *m_logoffCountdownTimer { nullptr };
-            BlackCore::CSetting<BlackCore::Settings::Network::TrafficServers> m_trafficNetworkServers { this };
+            BlackCore::CSetting<BlackCore::Settings::Network::TrafficServers> m_trafficNetworkServers { this, &CLoginComponent::ps_reloadSettings };
             BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
         };
 

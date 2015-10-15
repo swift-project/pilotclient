@@ -5,7 +5,6 @@
 #include "context_audio.h"
 #include "context_network.h"
 #include "context_ownaircraft.h"
-#include "context_settings.h"
 #include "context_simulator.h"
 
 #endif // guard

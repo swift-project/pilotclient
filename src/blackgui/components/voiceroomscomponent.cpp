@@ -11,10 +11,9 @@
 #include "ui_voiceroomscomponent.h"
 #include "blackcore/context_audio.h"
 #include "blackcore/context_ownaircraft.h"
-#include "blackmisc/notificationsounds.h"
+#include "blackmisc/audio/notificationsounds.h"
 
 using namespace BlackCore;
-using namespace BlackSound;
 using namespace BlackMisc::Audio;
 
 namespace BlackGui

@@ -11,7 +11,7 @@
 #include "ui_textmessagecomponent.h"
 #include "blackcore/context_audio.h"
 #include "blackmisc/network/user.h"
-#include "blackmisc/notificationsounds.h"
+#include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/simplecommandparser.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
@@ -24,9 +24,9 @@ using namespace BlackMisc;
 using namespace BlackGui;
 using namespace BlackGui::Views;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Audio;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Settings;
 using namespace BlackMisc::Simulation;
 
 namespace BlackGui
@@ -272,7 +272,7 @@ namespace BlackGui
             // sound
             if (this->getIContextAudio())
             {
-                this->getIContextAudio()->playNotification(BlackSound::CNotificationSounds::NotificationTextMessagePrivate, true);
+                this->getIContextAudio()->playNotification(CNotificationSounds::NotificationTextMessagePrivate, true);
             }
         }
 

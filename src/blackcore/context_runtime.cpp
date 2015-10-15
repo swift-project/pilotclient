@@ -65,9 +65,6 @@ namespace BlackCore
         times.insert("DBus", time.restart());
 
         // contexts
-        this->m_contextSettings = IContextSettings::create(this, config.getModeSettings(), this->m_dbusServer, this->m_dbusConnection);
-        times.insert("Settings", time.restart());
-
         this->m_contextApplication = IContextApplication::create(this, config.getModeApplication(), this->m_dbusServer, this->m_dbusConnection);
         times.insert("Application", time.restart());
 
@@ -137,13 +134,6 @@ namespace BlackCore
         QTime time;
         time.start();
 
-        if (this->m_contextSettings && this->m_contextApplication)
-        {
-            // \todo Remove with old settings
-            c = connect(this->m_contextSettings, &IContextSettings::changedSettings,
-                        this->getIContextApplication(), static_cast<void (IContextApplication::*)(uint)>(&IContextApplication::changeSettings));
-            Q_ASSERT(c);
-        }
         times.insert("Post setup, connects first", time.restart());
 
         // local simulator?
@@ -186,13 +176,6 @@ namespace BlackCore
                 Q_ASSERT(c);
             }
             times.insert("Post setup, sim.connects", time.restart());
-
-            // connect local simulator and settings and load plugin
-            if (this->m_contextSettings)
-            {
-                connect(this->m_contextSettings, &IContextSettings::changedSettings, this->m_contextSimulator, &IContextSimulator::settingsChanged);
-                times.insert("Post setup, load sim. listener(s)", time.restart());
-            }
             this->m_contextSimulator->startSimulatorPlugin(CSimulatorPluginInfo::autoPlugin());
         }
 
@@ -275,13 +258,6 @@ namespace BlackCore
             this->m_contextOwnAircraft = nullptr;
         }
 
-        if (this->getIContextSettings())
-        {
-            disconnect(this->getIContextSettings());
-            this->getIContextSettings()->deleteLater();
-            this->m_contextSettings = nullptr;
-        }
-
         if (this->getIContextApplication())
         {
             disconnect(this->getIContextApplication());
@@ -345,16 +321,6 @@ namespace BlackCore
     const IContextOwnAircraft *CRuntime::getIContextOwnAircraft() const
     {
         return this->m_contextOwnAircraft;
-    }
-
-    IContextSettings *CRuntime::getIContextSettings()
-    {
-        return this->m_contextSettings;
-    }
-
-    const IContextSettings *CRuntime::getIContextSettings() const
-    {
-        return this->m_contextSettings;
     }
 
     const IContextSimulator *CRuntime::getIContextSimulator() const
@@ -446,7 +412,6 @@ namespace BlackCore
                 this->m_audio == Remote ||
                 this->m_network == Remote ||
                 this->m_ownAircraft == Remote ||
-                this->m_settings == Remote ||
                 this->m_simulator == Remote);
     }
 

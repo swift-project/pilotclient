@@ -26,7 +26,6 @@ namespace BlackGui
 {
     namespace Components
     {
-
         //! Settings component
         class BLACKGUI_EXPORT CSettingsComponent :
             public QTabWidget,
@@ -82,9 +81,6 @@ namespace BlackGui
             void changedUsersUpdateInterval(int seconds);
 
         public slots:
-            //! Reload settings
-            void reloadSettings();
-
             //! Set the tab
             void setSettingsTab(SettingTab tab);
 
@@ -93,10 +89,6 @@ namespace BlackGui
             virtual void runtimeHasBeenSet() override;
 
         private slots:
-
-            //! Settings have been changed
-            void ps_changedSettings(uint typeValue);
-
             //! Font has been changed
             void ps_fontChanged();
 

@@ -7,11 +7,9 @@
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/variant.h"
-
 #include <QComboBox>
 
 using namespace BlackMisc;
-using namespace BlackMisc::Settings;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;

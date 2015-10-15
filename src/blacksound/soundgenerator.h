@@ -16,7 +16,7 @@
 #include "blackmisc/aviation/selcal.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/pq/time.h"
-#include "blackmisc/notificationsounds.h"
+#include "blackmisc/audio/notificationsounds.h"
 #include <QIODevice>
 #include <QThread>
 #include <QDateTime>
@@ -64,14 +64,14 @@ namespace BlackSound
         //! \param mode          play once?
         //! \param parent
         //! \see PlayMode
-        CSoundGenerator(const QAudioDeviceInfo &device, const QAudioFormat &format, const QList<Tone> &tones, CNotificationSounds::PlayMode mode, QObject *parent = nullptr);
+        CSoundGenerator(const QAudioDeviceInfo &device, const QAudioFormat &format, const QList<Tone> &tones, BlackMisc::Audio::CNotificationSounds::PlayMode mode, QObject *parent = nullptr);
 
         //! Constructor
         //! \param tones         list of Tones
         //! \param mode          play once?
         //! \param parent
         //! \see PlayMode
-        CSoundGenerator(const QList<Tone> &tones, CNotificationSounds::PlayMode mode, QObject *parent = nullptr);
+        CSoundGenerator(const QList<Tone> &tones, BlackMisc::Audio::CNotificationSounds::PlayMode mode, QObject *parent = nullptr);
 
         //! Destructor
         ~CSoundGenerator();
@@ -169,7 +169,7 @@ namespace BlackSound
         //! Play notification
         //! \param volume    0-100
         //! \param notification
-        static void playNotificationSound(int volume, CNotificationSounds::Notification notification);
+        static void playNotificationSound(int volume, BlackMisc::Audio::CNotificationSounds::Notification notification);
 
         //! For debugging purposes
         void static printAllQtSoundDevices(QTextStream &qtout);
@@ -202,17 +202,17 @@ namespace BlackSound
         void generateData();
 
     private:
-        QList<Tone> m_tones;                      //!< tones to be played
-        qint64 m_position;                        //!< position in buffer
-        CNotificationSounds::PlayMode m_playMode; //!< end data provisioning after playing all tones, play endless loop
-        bool m_endReached;                        //!< indicates end in combination with single play
-        qint64 m_oneCycleDurationMs;              //!< how long is one cycle of tones
-        QByteArray m_buffer;                      //!< generated buffer for data
-        QAudioDeviceInfo m_device;                //!< audio device
-        QAudioFormat m_audioFormat;               //!< used format
+        QList<Tone> m_tones;                          //!< tones to be played
+        qint64 m_position;                            //!< position in buffer
+        BlackMisc::Audio::CNotificationSounds::PlayMode m_playMode; //!< end data provisioning after playing all tones, play endless loop
+        bool m_endReached;                            //!< indicates end in combination with single play
+        qint64 m_oneCycleDurationMs;                  //!< how long is one cycle of tones
+        QByteArray m_buffer;                          //!< generated buffer for data
+        QAudioDeviceInfo m_device;                    //!< audio device
+        QAudioFormat m_audioFormat;                   //!< used format
         QScopedPointer<QAudioOutput> m_audioOutput;
-        QTimer    *m_pushTimer        = nullptr;  //!< Push mode timer
-        QIODevice *m_pushModeIODevice = nullptr;  //!< IO device when used in push mode
+        QTimer    *m_pushTimer        = nullptr;      //!< Push mode timer
+        QIODevice *m_pushModeIODevice = nullptr;      //!< IO device when used in push mode
         QThread   *m_ownThread        = nullptr;
         static QDateTime s_selcalStarted;
 
@@ -226,8 +226,8 @@ namespace BlackSound
         //! Header for saving .wav files
         struct RiffHeader
         {
-            chunk       descriptor;     // "RIFF"
-            char        type[4];        // "WAVE"
+            chunk       descriptor;     //!< "RIFF"
+            char        type[4];        //!< "WAVE"
         };
 
         //! Header for saving .wav files

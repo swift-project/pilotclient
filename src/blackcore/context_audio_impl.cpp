@@ -15,7 +15,7 @@
 #include "voice_vatlib.h"
 
 #include "blacksound/soundgenerator.h"
-#include "blackmisc/notificationsounds.h"
+#include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/simplecommandparser.h"
@@ -26,14 +26,11 @@ using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Input;
+using namespace BlackMisc::Audio;
 using namespace BlackSound;
 
 namespace BlackCore
 {
-
-    /*
-     * Init this context
-     */
     CContextAudio::CContextAudio(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
         IContextAudio(mode, runtime),
         m_voice(new CVoiceVatlib())
@@ -75,17 +72,11 @@ namespace BlackCore
         m_unusedVoiceChannels.push_back(m_channel2);
     }
 
-    /*
-     * Cleanup
-     */
     CContextAudio::~CContextAudio()
     {
         this->leaveAllVoiceRooms();
     }
 
-    /*
-     * Voice rooms for COM
-     */
     CVoiceRoomList CContextAudio::getComVoiceRoomsWithAudioStatus() const
     {
         Q_ASSERT(this->m_voice);
@@ -93,9 +84,6 @@ namespace BlackCore
         return getComVoiceRooms();
     }
 
-    /*
-     * Voice rooms for COM
-     */
     CVoiceRoom CContextAudio::getVoiceRoom(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue, bool withAudioStatus) const
     {
         Q_ASSERT(this->m_voice);
@@ -109,9 +97,6 @@ namespace BlackCore
             return CVoiceRoom();
     }
 
-    /*
-     * Voice rooms for COM (const)
-     */
     CVoiceRoomList CContextAudio::getComVoiceRooms() const
     {
         Q_ASSERT(this->m_voice);
@@ -143,9 +128,6 @@ namespace BlackCore
         return voiceRoomList;
     }
 
-    /*
-     * Leave all voice rooms
-     */
     void CContextAudio::leaveAllVoiceRooms()
     {
         Q_ASSERT(this->m_voice);
@@ -157,9 +139,6 @@ namespace BlackCore
         m_unusedVoiceChannels.push_back(m_channel2);
     }
 
-    /*
-     * Audio devices
-     */
     CAudioDeviceInfoList CContextAudio::getAudioDevices() const
     {
         Q_ASSERT(this->m_voice);
@@ -169,9 +148,6 @@ namespace BlackCore
         return devices;
     }
 
-    /*
-     * Audio default devices
-     */
     CAudioDeviceInfoList CContextAudio::getCurrentAudioDevices() const
     {
         Q_ASSERT(this->m_voice);
@@ -182,9 +158,6 @@ namespace BlackCore
         return devices;
     }
 
-    /*
-     * Set current device
-     */
     void CContextAudio::setCurrentAudioDevice(const CAudioDeviceInfo &audioDevice)
     {
         Q_ASSERT(this->m_voice);
@@ -265,18 +238,12 @@ namespace BlackCore
         emit changedMute(muted);
     }
 
-    /*
-     * Muted?
-     */
     bool CContextAudio::isMuted() const
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         return m_voiceOutputDevice->getOutputVolume() < 1;
     }
 
-    /*
-     * Set voice rooms
-     */
     void CContextAudio::setComVoiceRooms(const CVoiceRoomList &newRooms)
     {
         Q_ASSERT(this->m_voice);
@@ -414,24 +381,22 @@ namespace BlackCore
         Q_ASSERT(this->m_voice);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << selcal;
         CAudioDeviceInfo outputDevice = m_voiceOutputDevice->getCurrentOutputDevice();
-        BlackSound::CSoundGenerator::playSelcal(90, selcal, outputDevice);
+        CSoundGenerator::playSelcal(90, selcal, outputDevice);
     }
 
     /*
      * Notification
      */
-    void CContextAudio::playNotification(BlackSound::CNotificationSounds::Notification notification, bool considerSettings) const
+    void CContextAudio::playNotification(CNotificationSounds::Notification notification, bool considerSettings) const
     {
         Q_ASSERT(this->m_voice);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << notification;
 
-        if (considerSettings)
+        bool play = !considerSettings || m_audioSettings.get().getNotificationFlag(notification);
+        if (play)
         {
-            Q_ASSERT(this->getIContextSettings());
-            bool play = this->getIContextSettings()->getAudioSettings().getNotificationFlag(notification);
-            if (!play) return;
+            CSoundGenerator::playNotificationSound(90, notification);
         }
-        BlackSound::CSoundGenerator::playNotificationSound(90, notification);
     }
 
     /*
@@ -513,7 +478,7 @@ namespace BlackCore
      * Connection status changed
      */
     void CContextAudio::ps_connectionStatusChanged(BlackCore::IVoiceChannel::ConnectionStatus oldStatus,
-                                                   BlackCore::IVoiceChannel::ConnectionStatus newStatus)
+            BlackCore::IVoiceChannel::ConnectionStatus newStatus)
     {
         Q_UNUSED(oldStatus);
 

@@ -13,11 +13,9 @@
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
-#include "blackcore/context_settings.h"
 #include "blackcore/context_audio.h"
 #include "blackmisc/input/keyboardkeylist.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/settingsblackmiscclasses.h"
 #include <QColorDialog>
 
 using namespace BlackCore;
@@ -28,7 +26,6 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
-using namespace BlackMisc::Settings;
 using namespace BlackMisc::Input;
 
 namespace BlackGui
@@ -72,17 +69,6 @@ namespace BlackGui
         }
 
         /*
-         * Reload settings
-         */
-        void CSettingsComponent::reloadSettings()
-        {
-            // reload components
-            //! \todo Settings are loaded twice, this here is for init but each component also consumes the signal changed slot
-            this->ui->comp_AudioSetup->reloadSettings();
-            this->ui->comp_SettingsServersComponent->reloadSettings();
-        }
-
-        /*
          * Set tab
          */
         void CSettingsComponent::setSettingsTab(CSettingsComponent::SettingTab tab)
@@ -95,9 +81,6 @@ namespace BlackGui
          */
         void CSettingsComponent::runtimeHasBeenSet()
         {
-            Q_ASSERT_X(this->getIContextSettings(), Q_FUNC_INFO, "Missing settings");
-            this->connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &CSettingsComponent::ps_changedSettings);
-
             // Opacity, intervals
             this->connect(this->ui->hs_SettingsGuiOpacity, &QSlider::valueChanged, this, &CSettingsComponent::changedWindowsOpacity);
             this->connect(this->ui->hs_SettingsGuiAircraftRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedAircraftUpdateInterval);
@@ -119,16 +102,6 @@ namespace BlackGui
             Q_ASSERT(connected);
             this->connect(this->ui->tb_SettingsGuiFontColor, &QToolButton::clicked, this, &CSettingsComponent::ps_fontColorDialog);
             Q_UNUSED(connected);
-        }
-
-        /*
-         * Settings did change
-         */
-        void CSettingsComponent::ps_changedSettings(uint typeValue)
-        {
-            IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(typeValue);
-            this->reloadSettings();
-            Q_UNUSED(type);
         }
 
         /*

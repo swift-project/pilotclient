@@ -14,7 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackcore/context_runtime.h"
-#include "blackmisc/notificationsounds.h"
+#include "blackmisc/audio/notificationsounds.h"
 #include <QTimer>
 
 namespace BlackCore
@@ -95,12 +95,6 @@ namespace BlackGui
             //! Context for own aircraft
             BlackCore::IContextOwnAircraft *getIContextOwnAircraft();
 
-            //! Context for settings
-            BlackCore::IContextSettings *getIContextSettings();
-
-            //! Context for settings
-            const BlackCore::IContextSettings *getIContextSettings() const;
-
             //! Context for simulator
             const BlackCore::IContextSimulator *getIContextSimulator() const;
 
@@ -118,7 +112,7 @@ namespace BlackGui
             bool hasRemoteApplicationContext() const { return this->m_runtime->hasRemoteApplicationContext(); }
 
             //! Play a given notification sound
-            void playNotifcationSound(BlackSound::CNotificationSounds::Notification notification) const;
+            void playNotifcationSound(BlackMisc::Audio::CNotificationSounds::Notification notification) const;
 
         private:
             BlackCore::CRuntime *m_runtime;

@@ -34,6 +34,7 @@ HEADERS +=  *.h \
             $$PWD/geo/*.h \
             $$PWD/input/*.h \
             $$PWD/audio/*.h \
+            $$PWD/audio/settings/*.h \
             $$PWD/simulation/*.h \
             $$PWD/simulation/fscommon/*.h \
             $$PWD/simulation/fsx/*.h \
@@ -48,6 +49,7 @@ SOURCES +=  *.cpp \
             $$PWD/input/*.cpp \
             $$PWD/geo/*.cpp \
             $$PWD/audio/*.cpp \
+            $$PWD/audio/settings/*.cpp \
             $$PWD/simulation/*.cpp \
             $$PWD/simulation/fscommon/*.cpp \
             $$PWD/simulation/fsx/*.cpp \

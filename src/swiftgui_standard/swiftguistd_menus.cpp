@@ -9,6 +9,8 @@
 
 #include "swiftguistd.h"
 #include "ui_swiftguistd.h"
+#include "blackcore/datacache.h"
+#include "blackcore/settingscache.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/components/settingscomponent.h"
 #include "blackgui/components/logcomponent.h"
@@ -21,7 +23,9 @@
 #include <QProcess>
 #include <QFontDialog>
 
+
 using namespace BlackGui;
+using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
@@ -52,11 +56,6 @@ void SwiftGuiStd::ps_onMenuClicked()
     {
         this->setTestPosition("N 40° 7′ 6.3588", "E 16° 33′ 39.924", CAltitude(100, CAltitude::MeanSeaLevel, CLengthUnit::m()));
     }
-    else if (sender == this->ui->menu_ReloadSettings)
-    {
-        this->ui->comp_MainInfoArea->getSettingsComponent()->reloadSettings();
-        CLogMessage(this).info("Settings reloaded");
-    }
     else if (sender == this->ui->menu_FileReloadStyleSheets)
     {
         CStyleSheetUtility::instance().read();
@@ -81,13 +80,17 @@ void SwiftGuiStd::ps_onMenuClicked()
     }
     else if (sender == this->ui->menu_FileSettingsDirectory)
     {
-        QString path = QDir::toNativeSeparators(BlackMisc::Settings::CSettingUtilities::getSettingsDirectory());
+        QString path(QDir::toNativeSeparators(CSettingsCache::persistentStore()));
+        QDesktopServices::openUrl(QUrl("file:///" + path));
+    }
+    else if (sender == this->ui->menu_FileCacheDirectory)
+    {
+        QString path(QDir::toNativeSeparators(CDataCache::persistentStore()));
         QDesktopServices::openUrl(QUrl("file:///" + path));
     }
     else if (sender == this->ui->menu_FileResetSettings)
     {
-        Q_ASSERT(this->getIContextSettings());
-        this->getIContextSettings()->reset(true);
+        //! \todo
     }
     else if (sender == this->ui->menu_Internals)
     {

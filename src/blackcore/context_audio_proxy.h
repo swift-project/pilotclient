@@ -100,7 +100,7 @@ namespace BlackCore
         virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) const override;
 
         //! \copydoc IContextAudio::playNotification
-        virtual void playNotification(BlackSound::CNotificationSounds::Notification notification, bool considerSettings) const override;
+        virtual void playNotification(BlackMisc::Audio::CNotificationSounds::Notification notification, bool considerSettings) const override;
 
         //! \copydoc IContextAudio::enableAudioLoopback()
         virtual void enableAudioLoopback(bool enable = true) override;

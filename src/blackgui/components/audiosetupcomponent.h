@@ -13,7 +13,8 @@
 #define BLACKGUI_AUDIOSETUPCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "enableforruntime.h"
+#include "blackgui/components/enableforruntime.h"
+#include "blackcore/settings/audio.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -41,18 +42,13 @@ namespace BlackGui
             //! Play notification sounds (at all)
             bool playNotificationSounds() const;
 
-        public slots:
-            //! Reload settings
-            void reloadSettings();
-
         protected:
             //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
             virtual void runtimeHasBeenSet() override;
 
         private slots:
-
-            //! Settings have been changed
-            void ps_changedSettings(uint typeValue);
+            //! Reload settings
+            void ps_reloadSettings();
 
             /*!
              * \brief Audio device selected
@@ -77,6 +73,8 @@ namespace BlackGui
             void initAudioDeviceLists();
 
             QScopedPointer<Ui::CAudioSetupComponent> ui;
+            BlackCore::CSetting<BlackCore::Settings::Audio::AudioSettings> m_audioSettings { this, &CAudioSetupComponent::ps_reloadSettings };
+
         };
     } // namespace
 } // namespace

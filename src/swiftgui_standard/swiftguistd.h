@@ -187,7 +187,7 @@ private:
     void stopAllTimers(bool disconnectSignalSlots);
 
     //! Play notifcation sound
-    void playNotifcationSound(BlackSound::CNotificationSounds::Notification notification) const;
+    void playNotifcationSound(BlackMisc::Audio::CNotificationSounds::Notification notification) const;
 
     //! Display console
     void displayConsole();

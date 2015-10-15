@@ -11,6 +11,8 @@
 #include "blackcore/context_all_interfaces.h"
 #include <QWidget>
 
+using namespace BlackMisc::Audio;
+
 namespace BlackGui
 {
     namespace Components
@@ -91,18 +93,6 @@ namespace BlackGui
             return this->m_runtime->getIContextOwnAircraft();
         }
 
-        BlackCore::IContextSettings *CEnableForRuntime::getIContextSettings()
-        {
-            if (!this->m_runtime) return nullptr;
-            return this->m_runtime->getIContextSettings();
-        }
-
-        const BlackCore::IContextSettings *CEnableForRuntime::getIContextSettings() const
-        {
-            if (!this->m_runtime) return nullptr;
-            return this->m_runtime->getIContextSettings();
-        }
-
         const BlackCore::IContextSimulator *CEnableForRuntime::getIContextSimulator() const
         {
             if (!this->m_runtime) return nullptr;
@@ -115,7 +105,7 @@ namespace BlackGui
             return this->m_runtime->getIContextSimulator();
         }
 
-        void CEnableForRuntime::playNotifcationSound(BlackSound::CNotificationSounds::Notification notification) const
+        void CEnableForRuntime::playNotifcationSound(CNotificationSounds::Notification notification) const
         {
             if (!this->getIContextAudio()) return;
             this->getIContextAudio()->playNotification(notification, true);

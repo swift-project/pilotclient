@@ -20,7 +20,6 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
-using namespace BlackMisc::Settings;
 using namespace BlackMisc::Audio;
 
 /*

@@ -10,8 +10,8 @@
 #include "introwindow.h"
 #include "ui_introwindow.h"
 #include "blackcore/dbus_server.h"
+#include "blackcore/settingscache.h"
 #include "blackmisc/network/networkutils.h"
-#include "blackmisc/settingutilities.h"
 #include "blackmisc/project.h"
 #include <QDesktopServices>
 #include <QUrl>
@@ -100,7 +100,7 @@ void CIntroWindow::buttonClicked() const
     }
     else if (sender == this->ui->pb_SettingsDir)
     {
-        QString path = QDir::toNativeSeparators(BlackMisc::Settings::CSettingUtilities::getSettingsDirectory());
+        QString path(QDir::toNativeSeparators(CSettingsCache::persistentStore()));
         QDesktopServices::openUrl(QUrl("file:///" + path));
     }
     else if (sender == this->ui->pb_CoreStart)

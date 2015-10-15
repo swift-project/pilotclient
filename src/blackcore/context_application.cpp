@@ -10,7 +10,6 @@
 #include "blackcore/context_application.h"
 #include "blackcore/context_application_impl.h"
 #include "blackcore/context_application_proxy.h"
-#include "blackcore/context_settings.h"
 #include "blackcore/input_manager.h"
 #include "blackcore/settingscache.h"
 #include "blackmisc/statusmessage.h"
@@ -21,7 +20,6 @@
 
 using namespace BlackCore;
 using namespace BlackMisc;
-using namespace BlackMisc::Settings;
 
 namespace BlackCore
 {

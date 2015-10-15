@@ -97,12 +97,6 @@ namespace BlackCore
         //! Context for own aircraft
         const IContextOwnAircraft *getIContextOwnAircraft() const;
 
-        //! Settings
-        IContextSettings *getIContextSettings();
-
-        //! Settings
-        const IContextSettings *getIContextSettings() const;
-
         //! Context for simulator
         const IContextSimulator *getIContextSimulator() const;
 
@@ -119,13 +113,14 @@ namespace BlackCore
         virtual QString getPathAndContextId() const = 0;
 
     protected:
+        CRuntimeConfig::ContextMode m_mode; //!< How context is used
+        qint64 m_contextId;                 //!< unique identifer, avoid redirection rountrips
+        bool m_debugEnabled = false;        //!< debug messages enabled
+
         //! Constructor
         CContext(CRuntimeConfig::ContextMode mode, QObject *parent) :
             QObject(parent), m_mode(mode), m_contextId(QDateTime::currentMSecsSinceEpoch())
         {}
-
-        CRuntimeConfig::ContextMode m_mode; //!< How context is used
-        qint64 m_contextId; //!< unique identifer, avoid redirection rountrips
 
         //! Path and context id
         QString buildPathAndContextId(const QString &path) const
@@ -138,8 +133,6 @@ namespace BlackCore
         {
             BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).warning("Empty context called, details: %1") << functionName;
         }
-
-        bool m_debugEnabled = false; //!< debug messages enabled
 
         //! Standard message when status message is returned in empty context
         static const BlackMisc::CStatusMessage &statusMessageEmptyContext();

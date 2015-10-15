@@ -14,6 +14,8 @@
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/roles.h"
+#include "blackcore/datacache.h"
+#include "blackcore/settingscache.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/project.h"
@@ -24,6 +26,7 @@
 #include <QFontDialog>
 
 using namespace BlackGui;
+using namespace BlackCore;
 using namespace BlackGui::Components;
 using namespace BlackMisc;
 
@@ -53,7 +56,12 @@ void CSwiftData::ps_onMenuClicked()
     }
     else if (sender == this->ui->menu_FileSettingsDirectory)
     {
-        QString path;
+        QString path(QDir::toNativeSeparators(CSettingsCache::persistentStore()));
+        QDesktopServices::openUrl(QUrl("file:///" + path));
+    }
+    else if (sender == this->ui->menu_FileCacheDirectory)
+    {
+        QString path(QDir::toNativeSeparators(CDataCache::persistentStore()));
         QDesktopServices::openUrl(QUrl("file:///" + path));
     }
     else if (sender == this->ui->menu_FileResetSettings)

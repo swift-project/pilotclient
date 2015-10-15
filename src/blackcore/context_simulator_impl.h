@@ -115,9 +115,6 @@ namespace BlackCore
         //! \copydoc IContextSimulator::getTimeSynchronizationOffset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
 
-        //! \copydoc IContextSimulator::settingsChanged
-        virtual void settingsChanged(uint type) override;
-
         //! \copydoc IContextSimulator::iconForModel
         virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
 

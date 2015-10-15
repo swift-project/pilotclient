@@ -166,10 +166,13 @@ void SwiftGuiStd::initGuiSignals()
     connect(this->ui->menu_TestLocationsEDDM, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_TestLocationsEDNX, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_TestLocationsEDRY, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+
     connect(this->ui->menu_FileExit, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_FileSettingsDirectory, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_FileCacheDirectory, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_FileResetSettings, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_FileReloadStyleSheets, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+
     connect(this->ui->menu_WindowFont, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_WindowMinimize, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_WindowToggleOnTop, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
@@ -223,7 +226,6 @@ void SwiftGuiStd::initialDataReads()
         return;
     }
 
-    this->ui->comp_MainInfoArea->getSettingsComponent()->reloadSettings(); // init read
     this->ps_reloadOwnAircraft(); // init read, independent of traffic network
     CLogMessage(this).info("Initial data read");
 }

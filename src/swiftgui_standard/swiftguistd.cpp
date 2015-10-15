@@ -20,7 +20,7 @@
 #include "blackcore/context_ownaircraft.h"
 #include "blackcore/network.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/notificationsounds.h"
+#include "blackmisc/audio/notificationsounds.h"
 #include <QMouseEvent>
 #include <QMainWindow>
 
@@ -33,7 +33,6 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
-using namespace BlackMisc::Settings;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Input;
 
@@ -275,13 +274,13 @@ void SwiftGuiStd::ps_onConnectionStatusChanged(BlackCore::INetwork::ConnectionSt
     switch (to)
     {
     case INetwork::Connected:
-        this->playNotifcationSound(BlackSound::CNotificationSounds::NotificationLogin);
+        this->playNotifcationSound(CNotificationSounds::NotificationLogin);
         break;
     case INetwork::Disconnected:
-        this->playNotifcationSound(BlackSound::CNotificationSounds::NotificationLogoff);
+        this->playNotifcationSound(CNotificationSounds::NotificationLogoff);
         break;
     case INetwork::DisconnectedError:
-        this->playNotifcationSound(BlackSound::CNotificationSounds::NotificationError);
+        this->playNotifcationSound(CNotificationSounds::NotificationError);
         break;
     default:
         break;
