@@ -57,6 +57,7 @@ namespace BlackMisc
             Element &createElement(const QString &key, int metaType, Validator validator, const CVariant &defaultValue, NotifySlot slot);
 
             //! Read the currently paged value corresponding to the element's key.
+            //! \threadsafe
             const CVariant &getValue(const Element &element) const;
 
             //! Write the value corresponding to the element's key and begin synchronizing it to any other pages.

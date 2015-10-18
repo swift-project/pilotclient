@@ -11,6 +11,7 @@
 #include "blackmisc/identifier.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/algorithm.h"
+#include "blackmisc/lockfree.h"
 #include <QThread>
 #include <QJsonDocument>
 
@@ -270,7 +271,7 @@ namespace BlackMisc
             m_key(key), m_metaType(metaType), m_validator(validator), m_default(defaultValue), m_notifySlot(slot)
         {}
         const QString m_key;
-        CVariant m_value;
+        LockFree<CVariant> m_value;
         const int m_metaType = QMetaType::UnknownType;
         const Validator m_validator;
         const CVariant m_default;
@@ -285,29 +286,27 @@ namespace BlackMisc
         Q_ASSERT_X(defaultValue.isValid() && validator ? validator(defaultValue) : true, "CValuePage", "Validator rejects default value");
 
         auto &element = *(m_elements[key] = ElementPtr(new Element(key, metaType, validator, defaultValue, slot)));
-        element.m_value = m_cache->getValue(key);
+        element.m_value.uniqueWrite() = m_cache->getValue(key);
 
-        auto error = validate(element, element.m_value);
+        auto error = validate(element, element.m_value.read());
         if (! error.isEmpty())
         {
             CLogMessage::preformatted(error);
-            element.m_value = defaultValue;
+            element.m_value.uniqueWrite() = defaultValue;
         }
         return element;
     }
 
     const CVariant &CValuePage::getValue(const Element &element) const
     {
-        Q_ASSERT(QThread::currentThread() == thread());
-
-        return element.m_value;
+        return element.m_value.read();
     }
 
     CStatusMessage CValuePage::setValue(Element &element, const CVariant &value)
     {
         Q_ASSERT(QThread::currentThread() == thread());
 
-        if (element.m_value == value) { return {}; }
+        if (element.m_value.read() == value) { return {}; }
 
         auto error = validate(element, value);
         if (error.isEmpty())
@@ -321,7 +320,7 @@ namespace BlackMisc
                 Q_ASSERT(isSafeToIncrement(element.m_pendingChanges));
                 element.m_pendingChanges++;
 
-                element.m_value = value;
+                element.m_value.uniqueWrite() = value;
                 emit valuesWantToCache({ { element.m_key, value } });
             }
         }
@@ -351,7 +350,7 @@ namespace BlackMisc
                 auto error = validate(*element, value);
                 if (error.isEmpty())
                 {
-                    element->m_value = value;
+                    element->m_value.uniqueWrite() = value;
                     if (element->m_notifySlot && ! notifySlots.contains(element->m_notifySlot)) { notifySlots.push_back(element->m_notifySlot); }
                 }
                 else
@@ -394,7 +393,7 @@ namespace BlackMisc
             {
                 Q_ASSERT(isSafeToIncrement(element->m_pendingChanges));
                 element->m_pendingChanges++;
-                element->m_value = value;
+                element->m_value.uniqueWrite() = value;
             });
             emit valuesWantToCache(m_batchedValues);
         }

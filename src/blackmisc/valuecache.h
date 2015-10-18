@@ -156,7 +156,8 @@ namespace BlackMisc
             m_element(m_page.createElement(key, qMetaTypeId<T>(), wrap(validator), CVariant::from(defaultValue), slot_cast(slot)))
         {}
 
-        //! Read the current value. Must be called from the thread in which the owner lives.
+        //! Read the current value.
+        //! \threadsafe
         const T &get() const { static const T empty {}; return *(isValid() ? static_cast<const T *>(getVariant().data()) : &empty); }
 
         //! Write a new value. Must be called from the thread in which the owner lives.
