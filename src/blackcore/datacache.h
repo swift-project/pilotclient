@@ -15,7 +15,7 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/valuecache.h"
 #include <QUuid>
-#include <QTimer>
+#include <QFileSystemWatcher>
 
 namespace BlackCore
 {
@@ -46,7 +46,7 @@ namespace BlackCore
         //! \param defer Whether to defer applying the changes. Used when called by saveToStore.
         void loadFromStore(bool lock = true, bool defer = false);
 
-        QTimer m_reloadTimer;
+        QFileSystemWatcher m_watcher;
         QUuid m_revision;
         const QString m_revisionFileName { persistentStore() + "/.rev" };
         BlackMisc::CVariantMap m_deferredChanges;

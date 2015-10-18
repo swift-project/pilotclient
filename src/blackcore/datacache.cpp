@@ -27,9 +27,10 @@ namespace BlackCore
         }
 
         connect(this, &CValueCache::valuesChangedByLocal, this, &CDataCache::saveToStore);
+        connect(&m_watcher, &QFileSystemWatcher::fileChanged, this, [this] { loadFromStore(); });
 
-        connect(&m_reloadTimer, &QTimer::timeout, this, [this]() { loadFromStore(); });
-        m_reloadTimer.start(1000);
+        if (! QFile::exists(m_revisionFileName)) { QFile(m_revisionFileName).open(QFile::WriteOnly); }
+        m_watcher.addPath(m_revisionFileName);
         loadFromStore();
     }
 
