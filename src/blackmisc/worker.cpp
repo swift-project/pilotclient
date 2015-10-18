@@ -13,10 +13,12 @@
 namespace BlackMisc
 {
 
-    CWorker *CWorker::fromTaskImpl(QObject *owner, const QString &name, std::function<CVariant()> task)
+    CWorker *CWorker::fromTaskImpl(QObject *owner, const QString &name, int typeId, std::function<CVariant()> task)
     {
         auto *thread = new CRegularThread(owner);
         auto *worker = new CWorker(task);
+
+        if (typeId != QMetaType::Void) { worker->m_result = CVariant(typeId, nullptr); }
 
         QString ownerName = owner->objectName().isEmpty() ? owner->metaObject()->className() : owner->objectName();
         thread->setObjectName(ownerName + ":" + name);

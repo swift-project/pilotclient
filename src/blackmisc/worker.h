@@ -213,20 +213,29 @@ namespace BlackMisc
         template <typename F>
         static CWorker *fromTask(QObject *owner, const QString &name, F task)
         {
-            return fromTaskImpl(owner, name, [task]() { return CVariant::fromResultOf(task); });
+            int typeId = qMetaTypeId<typename std::decay<decltype(task())>::type>();
+            return fromTaskImpl(owner, name, typeId, [task]() { return CVariant::fromResultOf(task); });
         }
 
         //! Connects to a functor to which will be passed the result when the task is finished.
         //! \tparam R The return type of the task.
         //! \threadsafe
         template <typename R, typename F>
-        void thenWithResult(F functor) { then([this, functor]() { functor(this->result<R>()); }); }
+        void thenWithResult(F functor)
+        {
+            Q_ASSERT_X(m_result.canConvert<R>(), Q_FUNC_INFO, "Type in thenWithResult must match return type of task");
+            then([this, functor]() { functor(this->result<R>()); });
+        }
 
         //! Connects to a functor or method to which will be passed the result when the task is finished.
         //! \tparam R The return type of the task.
         //! \threadsafe
         template <typename R, typename T, typename F>
-        void thenWithResult(T *context, F functor) { then(context, [this, context, functor]() { invoke(context, functor, this->result<R>()); }); }
+        void thenWithResult(T *context, F functor)
+        {
+            Q_ASSERT_X(m_result.canConvert<R>(), Q_FUNC_INFO, "Type in thenWithResult must match return type of task");
+            then(context, [this, context, functor]() { invoke(context, functor, this->result<R>()); });
+        }
 
         //! Returns the result of the task, waiting for it to finish if necessary.
         //! \tparam R The return type of the task.
@@ -240,7 +249,7 @@ namespace BlackMisc
 
     private:
         CWorker(std::function<CVariant()> task) : m_task(task) {}
-        static CWorker *fromTaskImpl(QObject *owner, const QString &name, std::function<CVariant()> task);
+        static CWorker *fromTaskImpl(QObject *owner, const QString &name, int typeId, std::function<CVariant()> task);
 
         std::function<CVariant()> m_task;
         CVariant m_result;
