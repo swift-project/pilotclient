@@ -66,24 +66,38 @@ namespace BlackMisc
             }
         }
 
+        CStatusMessage::StatusSeverity CEntityFlags::flagToSeverity(CEntityFlags::ReadState state)
+        {
+            switch (state)
+            {
+            case ReadFinished:
+            case StartRead:
+            default:
+                return CStatusMessage::SeverityInfo;
+            case ReadFailed:
+                return CStatusMessage::SeverityWarning;
+            }
+        }
+
+        bool CEntityFlags::isWarningOrAbove(CEntityFlags::ReadState state)
+        {
+            CStatusMessage::StatusSeverity s = flagToSeverity(state);
+            switch (s) {
+            case CStatusMessage::SeverityError:
+            case CStatusMessage::SeverityWarning:
+                return true;
+            default:
+                return false;
+            }
+        }
+
         void CEntityFlags::registerMetadata()
         {
             // this is no value class and I register enums here,
             // that's why I do not use the Mixins
-            int id = qRegisterMetaType<CEntityFlags::Entity>();
-            // int idb = qDBusRegisterMetaType<CEntityFlags::Entity>();
-            // Q_ASSERT_X(id >= 1024 && id == idb, Q_FUNC_INFO, "wrong id for metatype");
-            Q_ASSERT_X(id >= 1024, Q_FUNC_INFO, "wrong id for metatype");
-
-            id = qRegisterMetaType<CEntityFlags::EntityFlag>();
-            // idb = qDBusRegisterMetaType<CEntityFlags::EntityFlag>();
-            Q_ASSERT_X(id >= 1024, Q_FUNC_INFO, "wrong id for metatype");
-
-            id = qRegisterMetaType<CEntityFlags::ReadState>();
-            // idb = qDBusRegisterMetaType<CEntityFlags::ReadState>();
-            Q_ASSERT_X(id >= 1024, Q_FUNC_INFO, "wrong id for metatype");
-            Q_UNUSED(id);
-            // Q_UNUSED(idb);
+            qRegisterMetaType<CEntityFlags::Entity>();
+            qRegisterMetaType<CEntityFlags::EntityFlag>();
+            qRegisterMetaType<CEntityFlags::ReadState>();
         }
     } // namespace
 } // namespace

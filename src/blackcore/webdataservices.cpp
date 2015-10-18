@@ -466,7 +466,14 @@ namespace BlackCore
 
     void CWebDataServices::ps_readFromSwiftDb(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
     {
-        CLogMessage(this).info("Read data %1 entries: %2 state: %3") << CEntityFlags::flagToString(entity) << number << CEntityFlags::flagToString(state);
+        if (CEntityFlags::isWarningOrAbove(state))
+        {
+            CLogMessage(this).warning("Read data %1 entries: %2 state: %3") << CEntityFlags::flagToString(entity) << number << CEntityFlags::flagToString(state);
+        }
+        else
+        {
+            CLogMessage(this).info("Read data %1 entries: %2 state: %3") << CEntityFlags::flagToString(entity) << number << CEntityFlags::flagToString(state);
+        }
     }
 
     void CWebDataServices::readAllInBackground(int delayMs)

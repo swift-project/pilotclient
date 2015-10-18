@@ -13,6 +13,7 @@
 #define BLACKMISC_NETWORK_ENTITRFLAGS_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/statusmessage.h"
 #include <QObject>
 
 namespace BlackMisc
@@ -61,6 +62,12 @@ namespace BlackMisc
 
             //! Convert to string
             static QString flagToString(ReadState flag);
+
+            //! Flag to severity
+            static BlackMisc::CStatusMessage::StatusSeverity flagToSeverity(ReadState state);
+
+            //! Read state representing warning or above?
+            static bool isWarningOrAbove(ReadState state);
 
             //! Register metadata
             static void registerMetadata();
