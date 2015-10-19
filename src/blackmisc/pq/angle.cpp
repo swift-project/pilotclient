@@ -31,5 +31,20 @@ namespace BlackMisc
         {
             return BlackMisc::Math::CMathUtils::PI();
         }
+
+        double CAngle::sin() const
+        {
+            return std::sin(this->value(CAngleUnit::rad()));
+        }
+
+        double CAngle::cos() const
+        {
+            return std::cos(this->value(CAngleUnit::rad()));
+        }
+
+        double CAngle::tan() const
+        {
+            return std::tan(this->value(CAngleUnit::rad()));
+        }
     }
 }

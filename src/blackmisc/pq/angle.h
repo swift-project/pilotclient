@@ -60,6 +60,15 @@ namespace BlackMisc
 
             //! PI as convenience method
             static const double &PI();
+
+            //! Sine of angle
+            double sin() const;
+
+            //! Cosine of angle
+            double cos() const;
+
+            //! Tangent of angle
+            double tan() const;
         };
     }
 }
