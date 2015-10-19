@@ -85,16 +85,19 @@ namespace BlackMisc
             bool hasValidIcaoCode() const { return !this->getIcao().isEmpty(); }
 
             //! \copydoc ICoordinateGeodetic::latitude
-            virtual const BlackMisc::Geo::CLatitude &latitude() const override
+            virtual BlackMisc::Geo::CLatitude latitude() const override
             {
                 return this->getPosition().latitude();
             }
 
             //! \copydoc ICoordinateGeodetic::longitude
-            virtual const BlackMisc::Geo::CLongitude &longitude() const override
+            virtual BlackMisc::Geo::CLongitude longitude() const override
             {
                 return this->getPosition().longitude();
             }
+
+            //! \copydoc ICoordinateGeodetic::normalVector
+            virtual QVector3D normalVector() const override { return this->getPosition().normalVector(); }
 
             //! \copydoc CValueObject::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;

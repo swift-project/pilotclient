@@ -17,6 +17,7 @@
 #include "blackmisc/geo/longitude.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/propertyindex.h"
+#include <QVector3D>
 
 namespace BlackMisc
 {
@@ -38,23 +39,29 @@ namespace BlackMisc
                 IndexLatitudeAsString,
                 IndexLongitudeAsString,
                 IndexGeodeticHeight,
-                IndexGeodeticHeightAsString
+                IndexGeodeticHeightAsString,
+                IndexNormalVector
             };
 
             //! Destructor
             virtual ~ICoordinateGeodetic() {}
 
             //! Latitude
-            virtual const CLatitude &latitude() const = 0;
+            virtual CLatitude latitude() const = 0;
 
             //! Longitude
-            virtual const CLongitude &longitude() const = 0;
+            virtual CLongitude longitude() const = 0;
 
             //! Height, ellipsoidal or geodetic height (used in GPS)
             //! This is approximately MSL (orthometric) height, aka elevation.
             //! \sa see http://www.gmat.unsw.edu.au/snap/gps/clynch_pdfs/coordcvt.pdf page 5
             //! \sa http://www.esri.com/news/arcuser/0703/geoid1of3.html
             virtual const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const = 0;
+
+            //! Normal vector
+            //! \sa https://en.wikipedia.org/wiki/N-vector
+            //! \sa http://www.movable-type.co.uk/scripts/latlong-vectors.html
+            virtual QVector3D normalVector() const = 0;
 
             //! \copydoc CValueObject::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -84,6 +91,12 @@ namespace BlackMisc
 
         //! Initial bearing
         BLACKMISC_EXPORT BlackMisc::PhysicalQuantities::CAngle calculateBearing(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
+
+        //! Euclidean distance between normal vectors
+        BLACKMISC_EXPORT double calculateEuclideanDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
+
+        //! Euclidean distance squared between normal vectors, use for more efficient sorting by distance
+        BLACKMISC_EXPORT double calculateEuclideanDistanceSquared(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
 
         //! Interface (actually more an abstract class) of coordinate and
         //! relative position to own aircraft
@@ -131,22 +144,27 @@ namespace BlackMisc
             //! Default constructor
             CCoordinateGeodetic() = default;
 
+            //! Constructor by normal vector
+            CCoordinateGeodetic(const QVector3D &normal) : m_x(normal.x()), m_y(normal.y()), m_z(normal.z()) {}
+
             //! Constructor by values
-            CCoordinateGeodetic(CLatitude latitude, CLongitude longitude, BlackMisc::PhysicalQuantities::CLength height) :
-                m_latitude(latitude), m_longitude(longitude), m_geodeticHeight(height) {}
+            CCoordinateGeodetic(CLatitude latitude, CLongitude longitude, BlackMisc::PhysicalQuantities::CLength height);
 
             //! Constructor by values
             CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees, double heightMeters) :
-                m_latitude(latitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg()), m_longitude(longitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg()), m_geodeticHeight(heightMeters, BlackMisc::PhysicalQuantities::CLengthUnit::m()) {}
+                CCoordinateGeodetic({ latitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg() }, { longitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg() }, { heightMeters, BlackMisc::PhysicalQuantities::CLengthUnit::m() }) {}
 
             //! \copydoc ICoordinateGeodetic::latitude
-            virtual const CLatitude &latitude() const override { return this->m_latitude; }
+            virtual CLatitude latitude() const override;
 
             //! \copydoc ICoordinateGeodetic::longitude
-            virtual const CLongitude &longitude() const override { return this->m_longitude; }
+            virtual CLongitude longitude() const override;
 
             //! \copydoc ICoordinateGeodetic::geodeticHeight
             virtual const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override { return this->m_geodeticHeight; }
+
+            //! \copydoc ICoordinateGeodetic::normalVector
+            virtual QVector3D normalVector() const;
 
             //! \copydoc CValueObject::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -154,20 +172,23 @@ namespace BlackMisc
             //! \copydoc CValueObject::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
-            //! Switch unit of latitude / longitude
-            CCoordinateGeodetic &switchUnit(const BlackMisc::PhysicalQuantities::CAngleUnit &unit);
-
             //! Switch unit of height
             CCoordinateGeodetic &switchUnit(const BlackMisc::PhysicalQuantities::CLengthUnit &unit);
 
             //! Set latitude
-            void setLatitude(const CLatitude &latitude) { this->m_latitude = latitude; }
+            void setLatitude(const CLatitude &latitude);
 
             //! Set longitude
-            void setLongitude(const CLongitude &longitude) { this->m_longitude = longitude; }
+            void setLongitude(const CLongitude &longitude);
+
+            //! Set latitude and longitude
+            void setLatLong(const CLatitude &latitude, const CLongitude &longitude);
 
             //! Set height (ellipsoidal or geodetic height)
             void setGeodeticHeight(const BlackMisc::PhysicalQuantities::CLength &height) { this->m_geodeticHeight = height; }
+
+            //! Set normal vector
+            void setNormalVector(const QVector3D &normal) { this->m_x = normal.x(); this->m_y = normal.y(); this->m_z = normal.z(); }
 
             //! Coordinate by WGS84 position data
             static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const BlackMisc::PhysicalQuantities::CLength &geodeticHeight = {});
@@ -177,15 +198,16 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CCoordinateGeodetic)
-            BlackMisc::Geo::CLatitude  m_latitude;  //!< Latitude
-            BlackMisc::Geo::CLongitude m_longitude; //!< Longitude
+            double m_x = 0; //!< normal vector
+            double m_y = 0; //!< normal vector
+            double m_z = 0; //!< normal vector
             BlackMisc::PhysicalQuantities::CLength m_geodeticHeight { 0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit() }; //!< height, ellipsoidal or geodetic height
         };
 
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Geo::CCoordinateGeodetic, (o.m_latitude, o.m_longitude, o.m_geodeticHeight))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Geo::CCoordinateGeodetic, (o.m_x, o.m_y, o.m_z, o.m_geodeticHeight))
 Q_DECLARE_METATYPE(BlackMisc::Geo::CCoordinateGeodetic)
 
 #endif // guard

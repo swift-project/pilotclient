@@ -221,14 +221,17 @@ namespace BlackMisc
             void setBookedUntilUtc(const QDateTime &until) { this->m_bookedUntilUtc = until; }
 
             //! \copydoc ICoordinateGeodetic::latitude
-            virtual const BlackMisc::Geo::CLatitude &latitude() const override;
+            virtual BlackMisc::Geo::CLatitude latitude() const override;
 
             //! \copydoc ICoordinateGeodetic::longitude
-            virtual const BlackMisc::Geo::CLongitude &longitude() const override;
+            virtual BlackMisc::Geo::CLongitude longitude() const override;
 
             //! \copydoc ICoordinateGeodetic::geodeticHeight
             //! \remarks this should be used for elevation as depicted here: http://en.wikipedia.org/wiki/Altitude#mediaviewer/File:Vertical_distances.svg
             const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override;
+
+            //! \copydoc ICoordinateGeodetic::normalVector
+            virtual QVector3D normalVector() const override;
 
             //! \copydoc CValueObject::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;

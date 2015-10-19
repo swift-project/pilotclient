@@ -318,12 +318,12 @@ namespace BlackMisc
             }
         }
 
-        const CLatitude &CAtcStation::latitude() const
+        CLatitude CAtcStation::latitude() const
         {
             return this->getPosition().latitude();
         }
 
-        const CLongitude &CAtcStation::longitude() const
+        CLongitude CAtcStation::longitude() const
         {
             return this->getPosition().longitude();
         }
@@ -331,6 +331,11 @@ namespace BlackMisc
         const CLength &CAtcStation::geodeticHeight() const
         {
             return this->m_position.geodeticHeight();
+        }
+
+        QVector3D CAtcStation::normalVector() const
+        {
+            return this->m_position.normalVector();
         }
 
         CVariant CAtcStation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const

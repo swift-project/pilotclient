@@ -158,14 +158,17 @@ namespace BlackMisc
             const BlackMisc::PhysicalQuantities::CSpeed &getGroundSpeed() const { return this->m_situation.getGroundSpeed(); }
 
             //! \copydoc ICoordinateGeodetic::latitude
-            virtual const BlackMisc::Geo::CLatitude &latitude() const override { return this->m_situation.latitude(); }
+            virtual BlackMisc::Geo::CLatitude latitude() const override { return this->m_situation.latitude(); }
 
             //! \copydoc ICoordinateGeodetic::longitude
-            virtual const BlackMisc::Geo::CLongitude &longitude() const override { return this->m_situation.longitude(); }
+            virtual BlackMisc::Geo::CLongitude longitude() const override { return this->m_situation.longitude(); }
 
             //! \copydoc ICoordinateGeodetic::geodeticHeight
             //! \remarks this should be used for elevation as depicted here: http://en.wikipedia.org/wiki/Altitude#mediaviewer/File:Vertical_distances.svg
             const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override { return this->m_situation.geodeticHeight(); }
+
+            //! \copydoc ICoordinateGeodetic::normalVector
+            virtual QVector3D normalVector() const override { return this->m_situation.normalVector(); }
 
             //! Elevation
             //! \sa geodeticHeight

@@ -25,7 +25,7 @@ namespace BlackMisc
         QString CCoordinateGeodetic::convertToQString(bool i18n) const
         {
             QString s = "Geodetic: {%1, %2, %3}";
-            return s.arg(this->m_latitude.valueRoundedWithUnit(6, i18n)).arg(this->m_longitude.valueRoundedWithUnit(6, i18n)).arg(this->m_geodeticHeight.valueRoundedWithUnit(6, i18n));
+            return s.arg(this->latitude().valueRoundedWithUnit(6, i18n)).arg(this->longitude().valueRoundedWithUnit(6, i18n)).arg(this->m_geodeticHeight.valueRoundedWithUnit(6, i18n));
         }
 
         CCoordinateGeodetic CCoordinateGeodetic::fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const CLength &geodeticHeight)
@@ -37,52 +37,33 @@ namespace BlackMisc
 
         PhysicalQuantities::CLength calculateGreatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
         {
-            // same coordinates results in 0 distance
-            if (coordinate1.latitude() == coordinate2.latitude() && coordinate1.longitude() == coordinate2.longitude())
-            {
-                return CLength(0, CLengthUnit::m());
-            }
-
-            // first, prelimary distance calculation
-            // http://www.movable-type.co.uk/scripts/latlong.html
-            double earthRadiusM = 6371000.8;
-            double lon1rad = coordinate1.longitude().value(CAngleUnit::rad());
-            double lon2rad = coordinate2.longitude().value(CAngleUnit::rad());
-            double lat1rad = coordinate1.latitude().value(CAngleUnit::rad());
-            double lat2rad = coordinate2.latitude().value(CAngleUnit::rad());
-
-            double dLat = lat2rad - lat1rad;
-            double dLon = lon2rad - lon1rad;
-            double a = qSin(dLat / 2.0) * qSin(dLat / 2.0) +
-                       qCos(lat1rad) * qCos(lat2rad) * qSin(dLon / 2.0) * qSin(dLon / 2.0);
-            double c = 2.0 * qAtan(qSqrt(a) / qSqrt(1.0 - a));
-            double distance = earthRadiusM * c;
-
-            Q_ASSERT_X(distance >= 0, Q_FUNC_INFO, "distance should never calculate to negative values");
-            return CLength(distance, CLengthUnit::m());
+            static const float earthRadiusMeters = 6371000.8f;
+            const QVector3D v1 = coordinate1.normalVector();
+            const QVector3D v2 = coordinate2.normalVector();
+            const float d = earthRadiusMeters * std::atan2(QVector3D::crossProduct(v1, v2).length(), QVector3D::dotProduct(v1, v2));
+            return { d, PhysicalQuantities::CLengthUnit::m() };
         }
 
         PhysicalQuantities::CAngle calculateBearing(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
         {
-            // same coordinate results in 0 distance
-            if (coordinate1.latitude() == coordinate2.latitude() && coordinate1.longitude() == coordinate2.longitude())
-            {
-                return CAngle(0, CAngleUnit::deg());
-            }
+            static const QVector3D northPole { 0, 0, 1 };
+            const QVector3D c1 = QVector3D::crossProduct(coordinate1.normalVector(), coordinate2.normalVector());
+            const QVector3D c2 = QVector3D::crossProduct(coordinate1.normalVector(), northPole);
+            const QVector3D cross = QVector3D::crossProduct(c1, c2);
+            const float sinTheta = std::copysign(cross.length(), QVector3D::dotProduct(cross, coordinate1.normalVector()));
+            const float cosTheta = QVector3D::dotProduct(c1, c2);
+            const float theta = std::atan2(sinTheta, cosTheta);
+            return { theta, PhysicalQuantities::CAngleUnit::rad() };
+        }
 
-            // http://www.yourhomenow.com/house/haversine.html
-            double lon1rad = coordinate1.longitude().value(CAngleUnit::rad());
-            double lon2rad = coordinate2.longitude().value(CAngleUnit::rad());
-            double lat1rad = coordinate1.latitude().value(CAngleUnit::rad());
-            double lat2rad = coordinate2.latitude().value(CAngleUnit::rad());
-            double dLon = lon1rad - lon2rad;
-            double y = qSin(dLon) * qCos(lat2rad);
-            double x = qCos(lat1rad) * qSin(lat2rad) -
-                       qSin(lat1rad) * qCos(lat2rad) * qCos(dLon);
-            double bearing = qAtan2(y, x);
-            bearing = CMathUtils::rad2deg(bearing); // now in deg
-            bearing = CMathUtils::normalizeDegrees(bearing); // normalize
-            return CAngle(bearing, CAngleUnit::deg());
+        double calculateEuclideanDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
+        {
+            return coordinate1.normalVector().distanceToPoint(coordinate2.normalVector());
+        }
+
+        double calculateEuclideanDistanceSquared(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
+        {
+            return (coordinate1.normalVector() - coordinate2.normalVector()).lengthSquared();
         }
 
         CLength ICoordinateGeodetic::calculateGreatCircleDistance(const ICoordinateGeodetic &otherCoordinate) const
@@ -98,7 +79,7 @@ namespace BlackMisc
         bool ICoordinateGeodetic::canHandleIndex(const CPropertyIndex &index)
         {
             int i = index.frontCasted<int>();
-            return (i >= static_cast<int>(IndexLatitude)) && (i <= static_cast<int>(IndexGeodeticHeightAsString));
+            return (i >= static_cast<int>(IndexLatitude)) && (i <= static_cast<int>(IndexNormalVector));
         }
 
         CVariant ICoordinateGeodetic::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -120,6 +101,8 @@ namespace BlackMisc
                     return this->geodeticHeight().propertyByIndex(index.copyFrontRemoved());
                 case IndexGeodeticHeightAsString:
                     return CVariant(this->geodeticHeightAsString());
+                case IndexNormalVector:
+                    return CVariant::fromValue(this->normalVector());
                 default:
                     break;
                 }
@@ -153,10 +136,10 @@ namespace BlackMisc
                 this->m_geodeticHeight.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexLatitude:
-                this->m_latitude.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->setLatitude(variant.value<CLatitude>());
                 break;
             case IndexLongitude:
-                this->m_longitude.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->setLongitude(variant.value<CLongitude>());
                 break;
             case IndexLatitudeAsString:
                 this->setLatitude(CLatitude::fromWgs84(variant.toQString()));
@@ -167,17 +150,59 @@ namespace BlackMisc
             case IndexGeodeticHeightAsString:
                 this->m_geodeticHeight.parseFromString(variant.toQString());
                 break;
+            case IndexNormalVector:
+                this->setNormalVector(variant.value<QVector3D>());
+                break;
             default:
                 CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
         }
 
-        CCoordinateGeodetic &CCoordinateGeodetic::switchUnit(const CAngleUnit &unit)
+        CCoordinateGeodetic::CCoordinateGeodetic(CLatitude latitude, CLongitude longitude, BlackMisc::PhysicalQuantities::CLength height) :
+            m_x(latitude.cos() * longitude.cos()),
+            m_y(latitude.cos() * longitude.sin()),
+            m_z(latitude.sin()),
+            m_geodeticHeight(height)
+        {}
+
+        CLatitude CCoordinateGeodetic::latitude() const
         {
-            this->m_latitude.switchUnit(unit);
-            this->m_longitude.switchUnit(unit);
-            return *this;
+            const QVector3D v = this->normalVector();
+            return { std::atan2(v.z(), std::hypot(v.x(), v.y())), PhysicalQuantities::CAngleUnit::rad() };
+        }
+
+        CLongitude CCoordinateGeodetic::longitude() const
+        {
+            const QVector3D v = this->normalVector();
+            return { std::atan2(v.y(), v.x()), PhysicalQuantities::CAngleUnit::rad() };
+        }
+
+        QVector3D CCoordinateGeodetic::normalVector() const
+        {
+            return
+            {
+                static_cast<float>(this->m_x),
+                static_cast<float>(this->m_y),
+                static_cast<float>(this->m_z)
+            };
+        }
+
+        void CCoordinateGeodetic::setLatitude(const CLatitude &latitude)
+        {
+            this->setLatLong(latitude, this->longitude());
+        }
+
+        void CCoordinateGeodetic::setLongitude(const CLongitude &longitude)
+        {
+            this->setLatLong(this->latitude(), longitude);
+        }
+
+        void CCoordinateGeodetic::setLatLong(const CLatitude &latitude, const CLongitude &longitude)
+        {
+            this->m_x = latitude.cos() * longitude.cos();
+            this->m_y = latitude.cos() * longitude.sin();
+            this->m_z = latitude.sin();
         }
 
         CCoordinateGeodetic &CCoordinateGeodetic::switchUnit(const CLengthUnit &unit)
