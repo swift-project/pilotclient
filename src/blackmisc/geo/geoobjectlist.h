@@ -32,6 +32,12 @@ namespace BlackMisc
     {
         class CSimulatedAircraft;
         class CSimulatedAircraftList;
+
+        namespace XPlane
+        {
+            class CNavDataReference;
+            class CNavDataReferenceList;
+        }
     }
 
     namespace Geo
@@ -41,7 +47,6 @@ namespace BlackMisc
         class IGeoObjectList
         {
         public:
-
             /*!
              * Find 0..n objects within range of given coordinate
              * \param coordinate    other position
@@ -71,6 +76,7 @@ namespace BlackMisc
         extern template class BLACKMISC_EXPORT_TEMPLATE IGeoObjectList<BlackMisc::Aviation::CAircraft, BlackMisc::Aviation::CAircraftList>;
         extern template class BLACKMISC_EXPORT_TEMPLATE IGeoObjectList<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>;
         extern template class BLACKMISC_EXPORT_TEMPLATE IGeoObjectList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
+        extern template class BLACKMISC_EXPORT_TEMPLATE IGeoObjectList<BlackMisc::Simulation::XPlane::CNavDataReference, BlackMisc::Simulation::XPlane::CNavDataReferenceList>;
         //! \endcond
 
         //! List of objects with geo coordinates.
