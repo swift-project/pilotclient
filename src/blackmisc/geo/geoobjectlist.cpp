@@ -49,6 +49,17 @@ namespace BlackMisc
         }
 
         template <class OBJ, class CONTAINER>
+        CONTAINER IGeoObjectList<OBJ, CONTAINER>::findClosest(int number, const ICoordinateGeodetic &coordinate) const
+        {
+            CONTAINER closest = this->container().partiallySorted(number, [ & ](const OBJ & a, const OBJ & b)
+            {
+                return calculateEuclideanDistanceSquared(a, coordinate) < calculateEuclideanDistanceSquared(b, coordinate);
+            });
+            closest.truncate(number);
+            return closest;
+        }
+
+        template <class OBJ, class CONTAINER>
         void IGeoObjectWithRelativePositionList<OBJ, CONTAINER>::calculcateDistanceAndBearingToPosition(const ICoordinateGeodetic &position)
         {
             for (OBJ &geoObj : this->container())
@@ -83,12 +94,18 @@ namespace BlackMisc
         }
 
         template <class OBJ, class CONTAINER>
+        void IGeoObjectWithRelativePositionList<OBJ, CONTAINER>::partiallySortByDistanceToOwnAircraft(int number)
+        {
+            this->container().partiallySort(number, [ & ](const OBJ & a, const OBJ & b) { return a.getDistanceToOwnAircraft() < b.getDistanceToOwnAircraft(); });
+        }
+
+        template <class OBJ, class CONTAINER>
         CONTAINER IGeoObjectWithRelativePositionList<OBJ, CONTAINER>::getClosestObjects(int number) const
         {
             if (number < 1) { return CONTAINER(); }
             if (this->container().size() >= number) { return (this->container()); }
             CONTAINER closest(this->container());
-            closest.sortByDistanceToOwnAircraft();
+            closest.partiallySortByDistanceToOwnAircraft(number);
             closest.truncate(number);
             return closest;
         }

@@ -50,6 +50,11 @@ namespace BlackMisc
              */
             CONTAINER findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const BlackMisc::PhysicalQuantities::CLength &range) const;
 
+            /*!
+             * Find 0..n objects closest to the given coordinate.
+             */
+            CONTAINER findClosest(int number, const BlackMisc::Geo::ICoordinateGeodetic &coordinate) const;
+
         protected:
             //! Constructor
             IGeoObjectList();
@@ -78,6 +83,9 @@ namespace BlackMisc
 
             //! If distance is already set, just sort
             void sortByDistanceToOwnAircraft();
+
+            //! Sort the first n closest objects
+            void partiallySortByDistanceToOwnAircraft(int number);
 
             //! Get n closest objects
             CONTAINER getClosestObjects(int number) const;
