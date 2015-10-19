@@ -332,11 +332,8 @@ namespace BlackSimPlugin
 
         BlackMisc::Aviation::CAirportList CSimulatorXPlane::getAirportsInRange() const
         {
-            auto copy = m_airportsInRange;
             //! \todo XP driver: Check if units match, xPlaneData has now hints what the values are
-            copy.sortByRange(CCoordinateGeodetic(m_xplaneData.latitude, m_xplaneData.longitude, 0), true);
-            copy.truncate(20);
-            return copy;
+            return m_airportsInRange;
         }
 
         bool CSimulatorXPlane::setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset)

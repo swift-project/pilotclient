@@ -13,7 +13,7 @@
 #endif
 #include "datarefs.h"
 #include "messages.h"
-#include "blackmisc/geo/geodesicgrid.h"
+#include "blackmisc/simulation/xplane/navdatareference.h"
 #include <XPLM/XPLMNavigation.h>
 #include <QStringList>
 #include <QObject>
@@ -222,7 +222,7 @@ namespace XBus
 
     private:
         CMessageBoxControl m_messages;
-        BlackMisc::Geo::CGeodesicGrid<128, XPLMNavRef> m_airports;
+        BlackMisc::Simulation::XPlane::CNavDataReferenceList m_airports;
         QTimer *m_airportUpdater = nullptr;
         void readAirportsDatabase();
 
