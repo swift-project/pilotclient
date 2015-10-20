@@ -327,7 +327,6 @@ namespace BlackSimPlugin
 
                 m_airportsInRange.push_back({ *icaoIt, { CLatitude(*latIt, CAngleUnit::deg()), CLongitude(*lonIt, CAngleUnit::deg()), CLength(*altIt, CLengthUnit::ft()) }, *nameIt });
             }
-            using namespace BlackMisc::Math;
         }
 
         BlackMisc::Aviation::CAirportList CSimulatorXPlane::getAirportsInRange() const
