@@ -18,7 +18,6 @@
 #include "blackmisc/geo/earthangle.h"
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
-#include "blackmisc/geo/geodesicgrid.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 
 #endif // guard
