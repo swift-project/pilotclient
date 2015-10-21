@@ -20,10 +20,8 @@
 
 namespace BlackMisc
 {
-
     namespace Network
     {
-
         /*!
          * Value object encapsulating information of a user.
          */

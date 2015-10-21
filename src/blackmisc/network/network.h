@@ -19,6 +19,9 @@
 
 #include "blackmisc/network/user.h"
 #include "blackmisc/network/userlist.h"
+#include "blackmisc/network/authenticateduser.h"
+#include "blackmisc/network/role.h"
+#include "blackmisc/network/rolelist.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/network/client.h"

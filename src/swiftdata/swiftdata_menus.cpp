@@ -13,7 +13,6 @@
 #include "blackgui/components/datainfoareacomponent.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/stylesheetutility.h"
-#include "blackgui/roles.h"
 #include "blackcore/datacache.h"
 #include "blackcore/settingscache.h"
 #include "blackmisc/statusmessagelist.h"
@@ -118,17 +117,6 @@ void CSwiftData::ps_onMenuClicked()
         //! \todo
         this->displayConsole();
     }
-    else
-    {
-        QAction *a = qobject_cast<QAction *>(sender);
-        if (a)
-        {
-            if (a->data() == "admin")
-            {
-                CRoles::roles().setAdmin(true);
-            }
-        }
-    }
 }
 
 void CSwiftData::initDynamicMenus()
@@ -147,11 +135,5 @@ void CSwiftData::initDynamicMenus()
         {
             this->ui->menu_Mapping->addAction(CIcons::save16(), "Save DB data", this->ui->comp_MainInfoArea->getDataInfoAreaComponent(), SLOT(writeDbDataToResourceDir()));
         }
-    }
-
-    if (CProject::isRunningInDeveloperEnvironment() && !CRoles::roles().isAdmin())
-    {
-        QAction *a = this->ui->menu_Test->addAction(CIcons::user16(), "Set administrator");
-        a->setData("admin");
     }
 }

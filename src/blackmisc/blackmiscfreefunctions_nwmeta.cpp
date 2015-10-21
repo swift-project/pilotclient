@@ -21,6 +21,9 @@ void BlackMisc::Network::registerMetadata()
 {
     CUser::registerMetadata();
     CUserList::registerMetadata();
+    CAuthenticatedUser::registerMetadata();
+    CRole::registerMetadata();
+    CRoleList::registerMetadata();
     CServer::registerMetadata();
     CServerList::registerMetadata();
     CTextMessage::registerMetadata();
