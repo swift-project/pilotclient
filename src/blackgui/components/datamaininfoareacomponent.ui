@@ -244,7 +244,7 @@
     <set>Qt::TopDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string>Settings</string>
+    <string>Settings and login</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>4</number>
@@ -291,7 +291,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QFrame" name="comp_Settings">
+         <widget class="BlackGui::Components::CDataSettingsComponent" name="comp_Settings">
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
           </property>
@@ -409,6 +409,12 @@
    <class>BlackGui::Components::CDbStashComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/dbstashcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CDataSettingsComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/datasettingscomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
