@@ -35,6 +35,8 @@ namespace BlackCore
             {
                 IndexDbIcaoReader = BlackMisc::CPropertyIndex::GlobalIndexCGlobalSetup,
                 IndexDbModelReader,
+                IndexDbHomePage,
+                IndexDbLoginService,
                 IndexVatsimBookings,
                 IndexVatsimMetars,
                 IndexVatsimData,
@@ -54,8 +56,23 @@ namespace BlackCore
             //! Model Reader protocol
             const BlackMisc::Network::CUrl &dbModelReader() const { return m_dbModelReader; }
 
+            //! Home page url
+            BlackMisc::Network::CUrl dbHomePage() const;
+
+            //! Login service
+            BlackMisc::Network::CUrl dbLoginService() const;
+
             //! URL to read VATSIM bookings
             const BlackMisc::Network::CUrl &vatsimBookings() const { return m_vatsimBookings; }
+
+            //! Type (development, productive)?
+            const QString &getType() const { return m_type; }
+
+            //! Set type
+            void setType(const QString &type) { m_type = type.trimmed().toUpper(); }
+
+            //! Same type?
+            bool hasSameType(const QString &type) const;
 
             //! VATSIM METAR URL
             BlackMisc::Network::CUrl vatsimMetars() const;
@@ -87,6 +104,7 @@ namespace BlackCore
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(BlackCore::Data::CGlobalSetup)
 
+            QString                         m_type;             //!< dev./productive?
             BlackMisc::Network::CUrl        m_dbIcaoReader;     //!< direct DB ICAO reader
             BlackMisc::Network::CUrl        m_dbModelReader;    //!< direct DB model reader
             BlackMisc::Network::CUrl        m_vatsimBookings;   //!< ATC bookings
@@ -117,6 +135,7 @@ namespace BlackCore
 Q_DECLARE_METATYPE(BlackCore::Data::CGlobalSetup)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackCore::Data::CGlobalSetup, (
                                    attr(o.m_timestampMSecsSinceEpoch),
+                                   attr(o.m_type),
                                    attr(o.m_dbIcaoReader),
                                    attr(o.m_dbModelReader),
                                    attr(o.m_vatsimBookings),

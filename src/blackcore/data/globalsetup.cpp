@@ -31,6 +31,21 @@ namespace BlackCore
             m_fsdTestServers({ CServer("swift", "swift Testserver", "vatsim-germany.org", 6809, CUser("1234567", "swift Test User", "", "123456"), true) })
         { }
 
+        CUrl CGlobalSetup::dbHomePage() const
+        {
+            return dbModelReader().withAppendedPath("/page/index.php");
+        }
+
+        CUrl CGlobalSetup::dbLoginService() const
+        {
+            return dbModelReader().withAppendedPath("/service/index.php");
+        }
+
+        bool CGlobalSetup::hasSameType(const QString &type) const
+        {
+            return getType() == type.trimmed().toUpper();
+        }
+
         CUrl CGlobalSetup::vatsimMetars() const
         {
             return this->m_vatsimMetars.withAppendedQuery("id=all");
@@ -51,6 +66,12 @@ namespace BlackCore
             s.append(separator);
             s.append("Model DB reader: ");
             s.append(dbModelReader().convertToQString(i18n));
+            s.append(separator);
+            s.append("DB home page: ");
+            s.append(dbHomePage().convertToQString(i18n));
+            s.append(separator);
+            s.append("DB login service: ");
+            s.append(dbLoginService().convertToQString(i18n));
             s.append(separator);
             s.append("VATSIM bookings: ");
             s.append(vatsimBookings().convertToQString(i18n));
@@ -84,6 +105,10 @@ namespace BlackCore
                 return CVariant::fromValue(this->m_dbIcaoReader);
             case IndexDbModelReader:
                 return CVariant::fromValue(this->m_dbModelReader);
+            case IndexDbHomePage:
+                return CVariant::fromValue(this->dbHomePage());
+            case IndexDbLoginService:
+                return CVariant::fromValue(this->dbLoginService());
             case IndexVatsimData:
                 return CVariant::fromValue(this->m_vatsimDataFile);
             case IndexVatsimBookings:
@@ -116,6 +141,9 @@ namespace BlackCore
                 break;
             case IndexDbModelReader:
                 this->m_dbModelReader.setPropertyByIndex(variant, index.copyFrontRemoved());
+                break;
+            case IndexDbHomePage:
+            case IndexDbLoginService:
                 break;
             case IndexVatsimData:
                 this->m_vatsimDataFile = variant.value<CUrlList>();
