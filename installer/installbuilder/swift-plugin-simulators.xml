@@ -1,0 +1,74 @@
+<componentGroup>
+    <name>simulators</name>
+    <description>Simulators</description>
+    <canBeEdited>1</canBeEdited>
+    <selected>1</selected>
+    <show>1</show>
+    <componentList>
+        <component>
+            <name>fs2004</name>
+            <description>MS Flight Simulator 2004</description>
+            <canBeEdited>1</canBeEdited>
+            <detailedDescription>MS Flight Simulator 2004 Simulator Plugin</detailedDescription>
+            <selected>1</selected>
+            <show>1</show>
+            <folderList>
+                <folder>
+                    <description>bin/plugins/simulator</description>
+                    <destination>${installdir}/bin/plugins/simulator</destination>
+                    <name>bin_plugins_simulator</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>../../dist/bin/plugins/simulator/simulator_fs9.dll</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+        </component>
+        <component>
+            <name>fsx</name>
+            <description>MS Flight Simulator X</description>
+            <canBeEdited>1</canBeEdited>
+            <detailedDescription>MS Flight Simulator X Simulator Plugin
+This plugin acts as the interface between swift and FSX.</detailedDescription>
+            <selected>1</selected>
+            <show>1</show>
+            <folderList>
+                <folder>
+                    <description>bin/plugins/simulator</description>
+                    <destination>${installdir}/bin/plugins/simulator</destination>
+                    <name>bin_plugins_simulator</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>../../dist/bin/plugins/simulator/simulator_fsx.dll</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+        </component>
+        <component>
+            <name>xplane</name>
+            <description>X-Plane</description>
+            <canBeEdited>1</canBeEdited>
+            <detailedDescription>X-Plane Simulator Plugin
+This plugin acts as the interface between swift and X-Plane</detailedDescription>
+            <selected>1</selected>
+            <show>1</show>
+            <folderList>
+                <folder>
+                    <description>bin/plugins/simulator</description>
+                    <destination>${installdir}/bin/plugins/simulator</destination>
+                    <name>bin_plugins_simulator</name>
+                    <platforms>all</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>../../dist/bin/plugins/simulator/simulator_xplane.dll</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+        </component>
+    </componentList>
+</componentGroup>

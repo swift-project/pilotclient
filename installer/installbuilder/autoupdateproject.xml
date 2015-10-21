@@ -1,0 +1,9 @@
+<autoUpdateProject>
+	<fullName>swift</fullName>
+	<shortName>swift</shortName>
+	<vendor>swift project</vendor>
+	<version>0.6.1</version>
+	<singleInstanceCheck>1</singleInstanceCheck>
+	<requireInstallationByRootUser>1</requireInstallationByRootUser>
+	<outputDirectory>../../dist</outputDirectory>
+</autoUpdateProject>

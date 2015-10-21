@@ -1,0 +1,57 @@
+<component>
+    <name>vcruntime</name>
+    <description>Visual Studio 2013 Redistributables</description>
+    <canBeEdited>0</canBeEdited>
+    <selected>1</selected>
+    <show>1</show>
+    <folderList>
+        <folder>
+            <description>bin</description>
+            <destination>${installdir}/vcredist</destination>
+            <name>share_windows</name>
+            <platforms>windows</platforms>
+            <actionList>
+                <runProgram>
+                    <program>${installdir}/vcredist_x86.exe</program>
+                    <programArguments>/install /quiet /norestart</programArguments>
+                    <progressText>Installing VC++ 2013 runtime</progressText>
+                    <ruleList>
+                        <registryTest>
+                            <key>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\12.0\VC\Runtimes\x86</key>
+                            <logic>exists</logic>
+                            <name>Installed</name>
+                            <type>REG_DWORD</type>
+                            <wowMode>32</wowMode>
+                        </registryTest>
+                        <fileExists>
+                            <path>${installdir}/vcredist_x86.exe</path>
+                        </fileExists>
+                    </ruleList>
+                </runProgram>
+                <runProgram>
+                    <program>${installdir}/vcredist_x64.exe</program>
+                    <programArguments>/install /quiet /norestart</programArguments>
+                    <progressText>Installing VC++ 2013 runtime</progressText>
+                    <ruleList>
+                        <registryTest>
+                            <key>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\12.0\VC\Runtimes\x64</key>
+                            <logic>exists</logic>
+                            <name>Installed</name>
+                            <type>REG_DWORD</type>
+                            <wowMode>64</wowMode>
+                        </registryTest>
+                        <fileExists>
+                            <path>${installdir}/vcredist_x64.exe</path>
+                        </fileExists>
+                    </ruleList>
+                </runProgram>
+            </actionList>
+            <distributionFileList>
+                <distributionFile>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/vcredist/vcredist_*.exe</origin>
+                </distributionFile>
+            </distributionFileList>
+        </folder>
+    </folderList>
+</component>

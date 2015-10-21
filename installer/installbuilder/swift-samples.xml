@@ -1,0 +1,22 @@
+<component>
+    <name>samples</name>
+    <description>Samples</description>
+    <canBeEdited>1</canBeEdited>
+    <detailedDescription>swift sample binaries</detailedDescription>
+    <selected>1</selected>
+    <show>1</show>
+    <folderList>
+        <folder>
+            <description>bin</description>
+            <destination>${installdir}/bin</destination>
+            <name>bin_windows</name>
+            <platforms>windows</platforms>
+            <distributionFileList>
+                <distributionFile>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/sample_*.exe</origin>
+                </distributionFile>
+            </distributionFileList>
+        </folder>
+    </folderList>
+</component>

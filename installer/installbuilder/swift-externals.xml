@@ -1,0 +1,38 @@
+<component>
+    <name>externals</name>
+    <description>Externals</description>
+    <canBeEdited>1</canBeEdited>
+    <detailedDescription>External libraries:
+- vatlib
+- speex
+- speexdsp
+- opus
+- portaudio</detailedDescription>
+    <selected>1</selected>
+    <show>1</show>
+    <folderList>
+        <folder>
+            <description>bin</description>
+            <destination>${installdir}/bin</destination>
+            <name>bin_windows</name>
+            <platforms>windows</platforms>
+            <distributionFileList>
+                <distributionFile>
+                    <origin>../../dist/bin/vatlib2.dll</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/bin/portaudio.dll</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/bin/SimConnect.dll</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/bin/speex.dll</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/bin/speexdsp.dll</origin>
+                </distributionFile>
+            </distributionFileList>
+        </folder>
+    </folderList>
+</component>

@@ -1,0 +1,21 @@
+<componentGroup>
+    <name>swift</name>
+    <description>swift</description>
+    <canBeEdited>1</canBeEdited>
+    <selected>1</selected>
+    <show>1</show>
+    <componentList>
+        <include>
+            <file>swift-pilotclient.xml</file>
+        </include>
+        <include>
+            <file>swift-plugin-simulators.xml</file>
+        </include>
+        <include>
+            <file>swift-externals.xml</file>
+        </include>
+        <include>
+            <file>swift-samples.xml</file>
+        </include>
+    </componentList>
+</componentGroup>

@@ -1,0 +1,36 @@
+<component>
+    <name>autoupdater</name>
+    <description>includes tool to perform updates</description>
+    <canBeEdited>0</canBeEdited>
+    <selected>1</selected>
+    <show>0</show>
+    <folderList>
+        <folder>
+            <destination>${installdir}</destination>
+            <name>autoupdaterwin</name>
+            <platforms>windows</platforms>
+            <distributionFileList>
+                <distributionFile origin="../../dist/autoupdate-windows.exe"/>
+</distributionFileList>
+        </folder>
+        <folder>
+            <destination>${installdir}</destination>
+            <name>autoupdaterlinux</name>
+            <platforms>linux</platforms>
+            <distributionFileList>
+                <distributionFile origin="../../dist/autoupdate-linux.run"/>
+            </distributionFileList>
+        </folder>
+    </folderList>
+    <postInstallationActionList>
+        <writeFile>
+            <path>${installdir}/update.ini</path>
+            <text>[Update]
+url = http://127.0.0.1:8080/update.xml
+version_id = 061
+update_download_location = ${system_temp_directory}
+check_for_updates = 1
+</text>
+        </writeFile>
+    </postInstallationActionList>
+</component>

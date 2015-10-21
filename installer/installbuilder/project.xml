@@ -1,0 +1,117 @@
+<project>
+    <shortName>swift</shortName>
+    <fullName>swift</fullName>
+    <version>0.6.1</version>
+    <readmeFile>../../dist/bin/README.md</readmeFile>
+    <licenseFile>../../dist/bin/LICENSE</licenseFile>
+    <leftImage>../images/leftimage.png</leftImage>
+    <logoImage>../images/logo.png</logoImage>
+    <splashImage>../images/splashscreen.png</splashImage>
+    <outputDirectory>.</outputDirectory>
+    <componentList>
+        <include>
+            <file>swift.xml</file>
+        </include>
+        <include>
+            <file>qt5-binaries.xml</file>
+        </include>
+        <include>
+            <file>autoupdater.xml</file>
+        </include>
+        <include>
+            <file>vcredist.xml</file>
+        </include>
+    </componentList>
+    <postInstallationActionList>
+        <writeFile>
+            <path>${installdir}/update.ini</path>
+            <text>[Update]
+url = http://127.0.0.1:8080/update.xml
+version_id = 061
+update_download_location = ${system_temp_directory}
+check_for_updates = 1
+</text>
+        </writeFile>
+    </postInstallationActionList>
+    <preUninstallationActionList>
+        <deleteFile>
+            <path>${installdir}/update.ini</path>
+        </deleteFile>
+    </preUninstallationActionList>
+    <allowComponentSelection>1</allowComponentSelection>
+    <compressionAlgorithm>lzma</compressionAlgorithm>
+
+    <!-- Generate a DMG for OSX Installer -->
+    <createOsxBundleDmg>1</createOsxBundleDmg>
+
+    <!--  <allowedLanguages>en fr es it de ja nl ru zh_CN no pt_BR</allowedLanguages> -->
+    <enableRollback>0</enableRollback>
+    <enableTimestamp>1</enableTimestamp>
+
+    <!-- <osxApplicationBundleIcon>TODO</osxApplicationBundleIcon>  
+  <wmImage>TODO</wmImage>  -->
+    <osxApplicationBundleIdentifier>org.swift-project.macinstaller</osxApplicationBundleIdentifier>
+    <productDisplayIcon>../images/icon.ico</productDisplayIcon>
+    <saveRelativePaths>1</saveRelativePaths>
+    <vendor>swift Project</vendor>
+    <windowsExecutableIcon>../images/icon.ico</windowsExecutableIcon>
+
+    <!-- <windowsResourceOriginalFilename>TODO</windowsResourceOriginalFilename>  
+ <windowsResourceFileDescription>TODO</windowsResourceFileDescription>  
+ Code signing parameters -->
+    <windowsSigningTimestampServer>http://timestamp.digicert.com</windowsSigningTimestampServer>
+    <customLanguageFileList>
+        <!-- <language> 
+        <code>en</code> 
+        <encoding>utf-8</encoding>
+        <file>${build_project_directory}/lang/alf-en.po</file>
+    </language> -->
+    </customLanguageFileList>
+    <finalPageActionList>
+        <runProgram>
+            <program>${installdir}/bin/swiftguistd.exe</program>
+            <programArguments></programArguments>
+            <progressText>Run swift launcher</progressText>
+        </runProgram>
+    </finalPageActionList>
+    <licenseFileList>
+        <licenseFile>
+            <code>en</code>
+            <encoding>utf-8</encoding>
+            <file>../../dist/bin/LICENSE</file>
+        </licenseFile>
+    </licenseFileList>
+    <parameterList>
+        <directoryParameter>
+            <name>installdir</name>
+            <description>Installer.Parameter.installdir.description</description>
+            <explanation>Installer.Parameter.installdir.explanation</explanation>
+            <value></value>
+            <default>${platform_install_prefix}/${product_shortname}-${product_version}</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <cliOptionName>prefix</cliOptionName>
+            <mustBeWritable>1</mustBeWritable>
+            <mustExist>0</mustExist>
+            <width>30</width>
+        </directoryParameter>
+    </parameterList>
+    <platformOptionsList>
+        <platformOptions>
+            <height>430</height>
+            <platform>osx</platform>
+        </platformOptions>
+        <platformOptions>
+            <height>430</height>
+            <platform>linux</platform>
+        </platformOptions>
+        <platformOptions>
+            <height>430</height>
+            <platform>linux-x64</platform>
+        </platformOptions>
+        <platformOptions>
+            <height>430</height>
+            <platform>linux-ia64</platform>
+        </platformOptions>
+    </platformOptionsList>
+</project>
+
