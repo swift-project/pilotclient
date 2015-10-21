@@ -12,7 +12,9 @@
 #ifndef BLACKGUI_OVERLAYMESSAGES_H
 #define BLACKGUI_OVERLAYMESSAGES_H
 
+#include "blackmisc/network/textmessage.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/variant.h"
 #include <QFrame>
 #include <QScopedPointer>
 #include <QTimer>
@@ -44,11 +46,20 @@ namespace BlackGui
         //! Show single message
         void showMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1);
 
+        //! Info message, based on text message
+        void showTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int timeOutMs = -1);
+
+        //! Display one of the supported types
+        void showVariant(const BlackMisc::CVariant &variant, int timeOutMs = -1);
+
         //! Messages mode
         void setModeToMessages();
 
         //! Single Message mode
         void setModeToMessage();
+
+        //! Single Text message mode
+        void setModeToTextMessage();
 
         //! Set header text
         void setHeaderText(const QString &header);
@@ -70,7 +81,7 @@ namespace BlackGui
     private:
         QScopedPointer<Ui::COverlayMessages> ui;
         QString m_header;
-        QTimer m_autoCloseTimer { this };
+        QTimer  m_autoCloseTimer { this };
 
         //! Init widget
         void init(int w, int h);

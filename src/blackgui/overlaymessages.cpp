@@ -12,6 +12,8 @@
 #include "ui_overlaymessages.h"
 #include <QKeyEvent>
 
+using namespace BlackMisc;
+using namespace BlackMisc::Network;
 using namespace BlackGui::Models;
 
 namespace BlackGui
@@ -73,6 +75,37 @@ namespace BlackGui
         this->display(timeOutMs);
     }
 
+    void COverlayMessages::showTextMessage(const CTextMessage &textMessage, int timeOutMs)
+    {
+        if (textMessage.isEmpty()) { return; }
+        this->setModeToTextMessage();
+
+        // message and display
+        this->ui->le_TmFrom->setText(textMessage.getSenderCallsign().asString());
+        this->ui->le_TmTo->setText(textMessage.getRecipientCallsign().asString());
+        this->ui->le_TmReceived->setText(textMessage.getFormattedUtcTimestampHms());
+        this->ui->te_TmText->setText(textMessage.getMessage());
+
+        this->display(timeOutMs);
+    }
+
+    void COverlayMessages::showVariant(const BlackMisc::CVariant &variant, int timeOutMs)
+    {
+        if (variant.canConvert<CStatusMessageList>())
+        {
+            showMessages(variant.value<CStatusMessageList>(), timeOutMs);
+        }
+        else if (variant.canConvert<CStatusMessage>())
+        {
+            showMessage(variant.value<CStatusMessage>(), timeOutMs);
+        }
+        else if (variant.canConvert<CTextMessage>())
+        {
+            showTextMessage(variant.value<CTextMessage>(), timeOutMs);
+        }
+        Q_ASSERT_X(false, Q_FUNC_INFO, "Unsupported type");
+    }
+
     void COverlayMessages::setModeToMessages()
     {
         this->ui->sw_StatusMessagesComponent->setCurrentWidget(this->ui->pg_StatusMessages);
@@ -83,6 +116,12 @@ namespace BlackGui
     {
         this->ui->sw_StatusMessagesComponent->setCurrentWidget(this->ui->pg_StatusMessage);
         this->setHeader("Message");
+    }
+
+    void COverlayMessages::setModeToTextMessage()
+    {
+        this->ui->sw_StatusMessagesComponent->setCurrentWidget(this->ui->pg_TextMessage);
+        this->setHeader("Text message");
     }
 
     void COverlayMessages::keyPressEvent(QKeyEvent *event)
