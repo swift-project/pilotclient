@@ -13,6 +13,7 @@
 #define BLACKGUI_COMPONENTS_DBLOGINCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackcore/databaseauthentication.h"
 #include "blackcore/data/globalsetup.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -39,17 +40,28 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CDbLoginComponent> ui;
-            BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< data cache
+            BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this, &CDbLoginComponent::ps_setupChanged};   //!< data cache
+            BlackCore::CDatabaseAuthenticationService m_loginService {this}; //!< login service
 
             //! Overlay messages
             void displayOverlayMessages(const BlackMisc::CStatusMessageList &msgs);
+
+            //! Mode login
+            void setModeLogin(bool modeLogin);
 
         private slots:
             //! Login
             void ps_onLoginClicked();
 
-        };
+            //! Logoff
+            void ps_onLogoffClicked();
 
+            //! User authentication completed
+            void ps_AuthenticationFinished(const BlackMisc::Network::CAuthenticatedUser &user, const BlackMisc::CStatusMessageList &status);
+
+            //! Setup changed
+            void ps_setupChanged();
+        };
     } // ns
 } // ns
 

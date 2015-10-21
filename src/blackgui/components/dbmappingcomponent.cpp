@@ -13,8 +13,8 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/project.h"
 #include "blackgui/guiutility.h"
-#include "blackgui/roles.h"
 
+using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
@@ -32,6 +32,8 @@ namespace BlackGui
             COverlayMessagesFrame(parent),
             ui(new Ui::CDbMappingComponent)
         {
+            m_authenticationService = new CDatabaseAuthenticationService(this);
+
             ui->setupUi(this);
             this->ui->tvp_AircraftModelsForVPilot->setAircraftModelMode(CAircraftModelListModel::VPilotRuleModel);
             connect(ui->editor_Model, &CModelMappingForm::requestSave, this, &CDbMappingComponent::save);
@@ -55,7 +57,7 @@ namespace BlackGui
 
         void CDbMappingComponent::initVPilotLoading()
         {
-            if (CRoles::roles().isAdmin() &&
+            if (m_authenticationService->getUser().isAdmin() &&
                     CProject::isRunningOnWindowsNtPlatform() &&
                     CProject::isCompiledWithMsFlightSimulatorSupport())
             {
@@ -112,6 +114,7 @@ namespace BlackGui
             this->disconnect();
             CWebDataServicesAware::gracefulShutdown();
             this->m_vPilotReader.gracefulShutdown();
+            this->m_authenticationService->gracefulShutdown();
             if (this->m_modelLoader) { this->m_modelLoader->gracefulShutdown(); }
         }
 
@@ -368,11 +371,16 @@ namespace BlackGui
             CDbMappingComponent *mapComp = qobject_cast<CDbMappingComponent *>(this->parent());
             Q_ASSERT_X(mapComp, Q_FUNC_INFO, "Cannot access parent");
 
-            if (CRoles::roles().isAdmin())
+            if (this->mappingComponent()->m_authenticationService->getUser().isAdmin())
             {
                 menu.addAction(CIcons::appMappings16(), "Load vPilot Rules", mapComp, SLOT(ps_loadVPilotData()));
                 menu.addSeparator();
             }
+        }
+
+        CDbMappingComponent *CDbMappingComponent::CMappingVPilotMenu::mappingComponent() const
+        {
+            return qobject_cast<CDbMappingComponent *>(this->parent());
         }
 
     } // ns

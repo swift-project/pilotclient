@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_DBMAPPINGCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DBMAPPINGCOMPONENT_H
 
+#include "blackcore/databaseauthentication.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/menudelegate.h"
@@ -106,6 +107,7 @@ namespace BlackGui
             QScopedPointer<Ui::CDbMappingComponent> ui;
             BlackMisc::Simulation::FsCommon::CVPilotRulesReader m_vPilotReader;
             std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader> m_modelLoader;
+            BlackCore::CDatabaseAuthenticationService *m_authenticationService = nullptr;
             bool m_withVPilot = false;
 
             //! Consolidated aircraft model
@@ -117,7 +119,7 @@ namespace BlackGui
             //! Init model loader
             bool initModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
 
-            // -------------------- component specifi menus --------------------------
+            // -------------------- component specific menus --------------------------
 
             //! The menu for loading and handling own models for mapping
             //! \note This is specific for that very component
@@ -145,6 +147,9 @@ namespace BlackGui
 
                 //! \copydoc IMenuDelegate::customMenu
                 virtual void customMenu(QMenu &menu) const override;
+
+            private:
+                CDbMappingComponent *mappingComponent() const;
             };
         };
 

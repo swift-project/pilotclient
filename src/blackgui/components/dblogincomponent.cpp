@@ -13,6 +13,7 @@
 #include "blackmisc/network/url.h"
 #include "blackmisc/logmessage.h"
 
+using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 
@@ -25,13 +26,12 @@ namespace BlackGui
             ui(new Ui::CDbLoginComponent)
         {
             ui->setupUi(this);
-            CUrl url(m_setup.get().dbHomePage());
-            ui->lbl_SwiftDB->setText("<a href=\"" + url.getFullUrl() + "\">swift DB@" + url.getHost() + "</a>");
-            ui->lbl_SwiftDB->setTextFormat(Qt::RichText);
-            ui->lbl_SwiftDB->setTextInteractionFlags(Qt::TextBrowserInteraction);
-            ui->lbl_SwiftDB->setOpenExternalLinks(true);
+            this->setModeLogin(true);
+            this->ps_setupChanged();
 
             connect(ui->pb_Login, &QPushButton::clicked, this, &CDbLoginComponent::ps_onLoginClicked);
+            connect(ui->pb_Logoff, &QPushButton::clicked, this, &CDbLoginComponent::ps_onLogoffClicked);
+            connect(&m_loginService, &CDatabaseAuthenticationService::userAuthenticationFinished, this, &CDbLoginComponent::ps_AuthenticationFinished);
         }
 
         CDbLoginComponent::~CDbLoginComponent()
@@ -48,19 +48,59 @@ namespace BlackGui
 
         void CDbLoginComponent::ps_onLoginClicked()
         {
-            CStatusMessageList msgs;
-            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
-
             QString un(ui->le_Username->text().trimmed());
             QString pw(ui->le_Password->text().trimmed());
-            if (un.isEmpty()) { msgs.push_back(CStatusMessage::CStatusMessage(cats, CStatusMessage::SeverityError, "No user name")); }
-            if (pw.isEmpty()) { msgs.push_back(CStatusMessage::CStatusMessage(cats, CStatusMessage::SeverityError, "No password")); }
+            CStatusMessageList msgs = m_loginService.login(un, pw);
+
             if (msgs.hasWarningOrErrorMessages())
             {
                 CLogMessage::preformatted(msgs);
                 displayOverlayMessages(msgs);
                 return;
             }
+            else if (!msgs.empty())
+            {
+                CLogMessage::preformatted(msgs);
+            }
+        }
+
+        void CDbLoginComponent::ps_onLogoffClicked()
+        {
+            this->m_loginService.logoff();
+            this->setModeLogin(true);
+        }
+
+        void CDbLoginComponent::ps_AuthenticationFinished(const CAuthenticatedUser &user, const CStatusMessageList &status)
+        {
+            bool ok = !status.hasErrorMessages();
+            if (ok)
+            {
+                CLogMessage(this).info("User authenticated: %1") << user.toQString();
+                this->setModeLogin(false);
+                this->ui->le_Name->setText(user.getRealNameAndId());
+                this->ui->te_Roles->setPlainText(user.getRolesAsString());
+            }
+            else
+            {
+                this->setModeLogin(true);
+                this->displayOverlayMessages(status);
+                CLogMessage(this).preformatted(status);
+            }
+        }
+
+        void CDbLoginComponent::ps_setupChanged()
+        {
+            CUrl url(m_setup.get().dbHomePage());
+            ui->lbl_SwiftDB->setText("<a href=\"" + url.getFullUrl() + "\">swift DB@" + url.getHost() + "</a>");
+            ui->lbl_SwiftDB->setTextFormat(Qt::RichText);
+            ui->lbl_SwiftDB->setTextInteractionFlags(Qt::TextBrowserInteraction);
+            ui->lbl_SwiftDB->setOpenExternalLinks(true);
+        }
+
+        void CDbLoginComponent::setModeLogin(bool modeLogin)
+        {
+            this->ui->fr_Login->setVisible(modeLogin);
+            this->ui->fr_Logoff->setVisible(!modeLogin);
         }
 
     } // ns
