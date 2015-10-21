@@ -145,38 +145,43 @@ namespace BlackCore
             }
             else
             {
-                CGlobalSetup gs;
-                gs.convertFromJson(Json::jsonObjectFromString(setupJson));
-                if (gs.getMSecsSinceEpoch() == 0 && lastModified > 0) { gs.setMSecsSinceEpoch(lastModified); }
-                qint64 currentVersionTimestamp = m_setup.get().getMSecsSinceEpoch();
-                qint64 newVersionTimestamp = gs.getMSecsSinceEpoch();
-                bool newVersionLoaded = (newVersionTimestamp - currentVersionTimestamp) > 0;
-                bool sameVersionLoaded = newVersionTimestamp  == currentVersionTimestamp;
+                QString type(urlString.toLower().contains("develop") ? "DEV" : "PRODUCTIVE");
+                CGlobalSetup currentSetup(m_setup.get());
+                CGlobalSetup loadedSetup;
+                loadedSetup.convertFromJson(Json::jsonObjectFromString(setupJson));
+                loadedSetup.setType(type);
+                if (loadedSetup.getMSecsSinceEpoch() == 0 && lastModified > 0) { loadedSetup.setMSecsSinceEpoch(lastModified); }
+                bool sameType = loadedSetup.hasSameType(currentSetup.getType());
+                qint64 currentVersionTimestamp = currentSetup.getMSecsSinceEpoch();
+                qint64 newVersionTimestamp = loadedSetup.getMSecsSinceEpoch();
+                bool sameVersionLoaded = sameType && (newVersionTimestamp  == currentVersionTimestamp);
                 if (sameVersionLoaded)
                 {
                     CLogMessage(this).info("Same version loaded from %1 as already in data cache %2") << urlString << CDataCache::persistentStore();
                     return; // success
                 }
 
-                CStatusMessage m = m_setup.set(gs);
-                if (!m.isEmpty())
+                bool outdatedVersionLoaded = sameType && (newVersionTimestamp  < currentVersionTimestamp);
+                if (outdatedVersionLoaded)
                 {
-                    CLogMessage(this).preformatted(m);
-                    return; // issue with cache
+                    CLogMessage(this).info("Version loaded from %1 outdated, older than version in data cache %2") << urlString << CDataCache::persistentStore();
+                    // try next URL
                 }
                 else
                 {
-                    if (newVersionLoaded)
+                    CStatusMessage m = m_setup.set(loadedSetup);
+                    if (!m.isEmpty())
                     {
-                        CLogMessage(this).info("Updated data cache in %1") << CDataCache::persistentStore();
-                        return; // success
+                        CLogMessage(this).preformatted(m);
+                        return; // issue with cache
                     }
                     else
                     {
-                        CLogMessage(this).warning("Local bootstrap file in %1 newer than URL %2") << CDataCache::persistentStore() << urlString;
-                        // try next URL
-                    }
-                } // cache
+                        CLogMessage(this).info("Updated data cache in %1") << CDataCache::persistentStore();
+                        return; // success
+                    } // cache
+                } // outdated?
+
             } // json empty
         } // no error
         else
