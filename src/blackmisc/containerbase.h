@@ -42,6 +42,8 @@ namespace BlackMisc
         static QString stringify(double n, bool i18n) { return i18n ? QLocale().toString(n) : QString::number(n); }
         //! Stringify QString
         static QString stringify(QString str, bool /*i18n*/) { return str; }
+        //! Stringify pair
+        template <class A, class B> static QString stringify(const std::pair<A, B> &pair, bool i18n) { return stringify(pair.first, i18n) + ":" + stringify(pair.second, i18n); }
     };
 
     /*!

@@ -18,6 +18,54 @@ namespace BlackMisc
 {
 
     /*!
+     * Value class used for signalling changed values in the cache.
+     */
+    class BLACKMISC_EXPORT CValueCachePacket :
+        public CDictionary<QString, std::pair<CVariant, qint64>, QMap>,
+        public Mixin::MetaType<CValueCachePacket>
+    {
+    public:
+        //! Default constructor.
+        CValueCachePacket() {}
+
+        //! Construct from CVariantMap and a timestamp.
+        CValueCachePacket(const CVariantMap &values, qint64 timestamp);
+
+        //! Insert a key/value pair with a timestamp.
+        void insert(const QString &key, const CVariant &value, qint64 timestamp);
+
+        //! Insert a CVariantMap with a timestamp.
+        void insert(const CVariantMap &values, qint64 timestamp);
+
+        //! Insert values from another packet.
+        void insert(const CValueCachePacket &other) { CDictionary::insert(other); }
+
+        //! Discard timestamps and return as variant map.
+        CVariantMap toVariantMap() const;
+
+        //! \private Iterator behaves like a CVariantMap::const_iterator with an additional timestamp() method.
+        struct const_iterator : public CDictionary::const_iterator
+        {
+            using value_type = CVariant;
+            using pointer = const value_type *;
+            using reference = const value_type &;
+            const_iterator(CDictionary::const_iterator base) : CDictionary::const_iterator(base) {}
+            reference value() const { return CDictionary::const_iterator::value().first; }
+            reference operator *() const { return value(); }
+            pointer operator ->() const { return &value(); }
+            qint64 timestamp() const { return CDictionary::const_iterator::value().second; }
+        };
+
+        //! Iterators.
+        //! @{
+        const_iterator cbegin() const { return CDictionary::cbegin(); }
+        const_iterator cend() const { return CDictionary::cend(); }
+        const_iterator begin() const { return CDictionary::cbegin(); }
+        const_iterator end() const { return CDictionary::cend(); }
+        //! @}
+    };
+
+    /*!
      * Manages a map of { QString, CVariant } pairs, which can be distributed among multiple processes.
      */
     class BLACKMISC_EXPORT CValueCache : public QObject
@@ -212,5 +260,7 @@ namespace BlackMisc
     };
 
 } // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::CValueCachePacket)
 
 #endif

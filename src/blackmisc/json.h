@@ -89,6 +89,24 @@ const &operator>>(const QJsonValueRef &json, ENUM &value)
     return json;
 }
 
+//! \brief Specialized JSON deserialization for pair
+//! \ingroup JSON
+template<class FIRST, class SECOND>
+const QJsonValueRef &operator>>(const QJsonValueRef &json, std::pair<FIRST, SECOND> &pair)
+{
+    json.toArray() >> pair.first >> pair.second;
+    return json;
+}
+
+//! \brief Specialized JSON serialization for pair
+//! \ingroup JSON
+template<class FIRST, class SECOND>
+QJsonArray &operator<<(QJsonArray &json, const std::pair<FIRST, SECOND> &pair)
+{
+    QJsonArray array;
+    return json << QJsonValue(array << pair.first << pair.second);
+}
+
 //! \name Streaming operators for QJsonArray (from value)
 //! \ingroup JSON
 //! @{

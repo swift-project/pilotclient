@@ -17,6 +17,7 @@
 #include "namevariantpairlist.h"
 #include "variantlist.h"
 #include "variantmap.h"
+#include "valuecache.h"
 #include "rgbcolor.h"
 #include "countrylist.h"
 #include "statusmessagelist.h"
@@ -71,6 +72,7 @@ void BlackMisc::registerMetadata()
     CVariant::registerMetadata();
     CVariantList::registerMetadata();
     CVariantMap::registerMetadata();
+    CValueCachePacket::registerMetadata();
     CPropertyIndex::registerMetadata();
     CPropertyIndexList::registerMetadata();
     CPropertyIndexVariantMap::registerMetadata();

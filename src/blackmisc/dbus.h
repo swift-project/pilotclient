@@ -123,4 +123,38 @@ const QDBusArgument &operator >>(const QDBusArgument &arg, E &value)
     return arg;
 }
 
+/*!
+ * Operator for streaming pairs to QDBusArgument.
+ */
+template <class A, class B>
+QDBusArgument &operator <<(QDBusArgument &arg, const std::pair<A, B> &pair)
+{
+    arg.beginStructure();
+    arg << pair.first << pair.second;
+    arg.endStructure();
+    return arg;
+}
+
+/*!
+ * Operator for streaming pairs from QDBusArgument.
+ */
+template <class A, class B>
+const QDBusArgument &operator >>(const QDBusArgument &arg, std::pair<A, B> &pair)
+{
+    arg.beginStructure();
+    arg >> pair.first >> pair.second;
+    arg.endStructure();
+    return arg;
+}
+
+/*!
+ * Non member non-friend streaming for QPixmap
+ */
+const QDBusArgument &operator>>(const QDBusArgument &argument, QPixmap &pixmap);
+
+/*!
+ * Non member non-friend streaming for QPixmap
+ */
+QDBusArgument &operator<<(QDBusArgument &argument, const QPixmap &pixmap);
+
 #endif // guard

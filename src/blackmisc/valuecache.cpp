@@ -26,6 +26,42 @@ namespace BlackMisc
 
 
     ////////////////////////////////
+    // CValueCachePacket
+    ////////////////////////////////
+
+    CValueCachePacket::CValueCachePacket(const CVariantMap &values, qint64 timestamp)
+    {
+        for (auto it = values.cbegin(); it != values.cend(); ++it)
+        {
+            implementationOf(*this).insert(CDictionary::cend(), it.key(), std::make_pair(it.value(), timestamp));
+        }
+    }
+
+    void CValueCachePacket::insert(const QString &key, const CVariant &value, qint64 timestamp)
+    {
+        CDictionary::insert(key, std::make_pair(value, timestamp));
+    }
+
+    void CValueCachePacket::insert(const CVariantMap &values, qint64 timestamp)
+    {
+        for (auto it = values.cbegin(); it != values.cend(); ++it)
+        {
+            CDictionary::insert(it.key(), std::make_pair(it.value(), timestamp));
+        }
+    }
+
+    CVariantMap CValueCachePacket::toVariantMap() const
+    {
+        CVariantMap result;
+        for (auto it = cbegin(); it != cend(); ++it)
+        {
+            implementationOf(result).insert(result.cend(), it.key(), it.value());
+        }
+        return result;
+    }
+
+
+    ////////////////////////////////
     // CValueCache
     ////////////////////////////////
 
