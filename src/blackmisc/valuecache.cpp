@@ -278,6 +278,14 @@ namespace BlackMisc
         return {};
     }
 
+    void CValueCache::clearAllValues(const QString &keyPrefix)
+    {
+        QMutexLocker lock(&m_mutex);
+        auto values = getAllValues(keyPrefix);
+        for (auto it = values.begin(); it != values.end(); ++it) { it.value() = CVariant(); }
+        changeValues({ values, QDateTime::currentMSecsSinceEpoch() });
+    }
+
     CValueCache::BatchGuard CValueCache::batchChanges(QObject *owner)
     {
         Q_ASSERT(QThread::currentThread() == owner->thread());
@@ -464,7 +472,7 @@ namespace BlackMisc
     {
         if (! value.isValid())
         {
-            return CStatusMessage(this, CStatusMessage::SeverityWarning, "Uninitialized value for " + element.m_key);
+            return CStatusMessage(this, CStatusMessage::SeverityDebug, "Uninitialized value for " + element.m_key);
         }
         else if (value.userType() != element.m_metaType)
         {

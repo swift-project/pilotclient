@@ -121,6 +121,10 @@ namespace BlackMisc
         //! \threadsafe
         CStatusMessage loadFromFiles(const QString &directory);
 
+        //! Clear all values from the cache.
+        //! \threadsafe
+        void clearAllValues(const QString &keyPrefix = {});
+
         //! Begins a batch of changes to be made through CCached instances owned by owner.
         //! \details All changes made through those CCached instances will be deferred until the returned RAII object is
         //! destroyed. If the destruction happens during stack unwinding due to an exception being thrown, the changes are
