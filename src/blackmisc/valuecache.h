@@ -121,6 +121,16 @@ namespace BlackMisc
         //! \threadsafe
         CStatusMessage loadFromFiles(const QString &directory);
 
+        //! Return the (relative) filename that may is (or would be) used to save the value with the given key.
+        //! The file may or may not exist (because it might not have been saved yet).
+        //! \threadsafe
+        static QString filenameForKey(const QString &key);
+
+        //! List the Json files which are (or would be) used to save the current values.
+        //! The files may or may not exist (because they might not have been saved yet).
+        //! \threadsafe
+        QStringList enumerateFiles(const QString &directory) const;
+
         //! Clear all values from the cache.
         //! \threadsafe
         void clearAllValues(const QString &keyPrefix = {});
@@ -218,6 +228,9 @@ namespace BlackMisc
 
         //! Write a new value. Must be called from the thread in which the owner lives.
         CStatusMessage set(const T &value) { return m_page.setValue(m_element, CVariant::from(value)); }
+
+        //! Get the key string of this value.
+        const QString &getKey() const { return m_page.getKey(m_element); }
 
         //! Return the time when this value was updated.
         QDateTime getTimestamp() const { return m_page.getTimestamp(m_element); }

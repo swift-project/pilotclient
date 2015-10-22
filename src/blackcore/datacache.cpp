@@ -46,6 +46,16 @@ namespace BlackCore
         return dir;
     }
 
+    QString CDataCache::filenameForKey(const QString &key)
+    {
+        return persistentStore() + "/" + CValueCache::filenameForKey(key);
+    }
+
+    QStringList CDataCache::enumerateStore() const
+    {
+        return enumerateFiles(persistentStore());
+    }
+
     QString lockFileError(const QLockFile &lock)
     {
         switch (lock.error())

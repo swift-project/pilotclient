@@ -39,4 +39,14 @@ namespace BlackCore
         return loadFromFiles(persistentStore());
     }
 
+    QString CSettingsCache::filenameForKey(const QString &key)
+    {
+        return persistentStore() + "/" + CValueCache::filenameForKey(key);
+    }
+
+    QStringList CSettingsCache::enumerateStore() const
+    {
+        return enumerateFiles(persistentStore());
+    }
+
 }

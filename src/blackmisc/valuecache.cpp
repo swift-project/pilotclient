@@ -278,6 +278,19 @@ namespace BlackMisc
         return {};
     }
 
+    QString CValueCache::filenameForKey(const QString &key)
+    {
+        return key.section('/', 0, 0) + ".json";
+    }
+
+    QStringList CValueCache::enumerateFiles(const QString &dir) const
+    {
+        auto values = getAllValues();
+        QSet<QString> files;
+        for (auto it = values.begin(); it != values.end(); ++it) { files.insert(dir + "/" + filenameForKey(it.key())); }
+        return files.toList();
+    }
+
     void CValueCache::clearAllValues(const QString &keyPrefix)
     {
         QMutexLocker lock(&m_mutex);
@@ -391,6 +404,11 @@ namespace BlackMisc
             error.markAsRedundant();
         }
         return error;
+    }
+
+    const QString &CValuePage::getKey(const Element &element) const
+    {
+        return element.m_key;
     }
 
     qint64 CValuePage::getTimestamp(const Element &element) const

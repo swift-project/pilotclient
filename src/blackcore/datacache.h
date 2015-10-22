@@ -34,6 +34,12 @@ namespace BlackCore
         //! The directory where core data are stored.
         static const QString &persistentStore();
 
+        //! Return the filename where the value with the given key may be stored.
+        static QString filenameForKey(const QString &key);
+
+        //! Return all files where data may be stored.
+        QStringList enumerateStore() const;
+
     private:
         CDataCache();
 
@@ -75,6 +81,9 @@ namespace BlackCore
 
         //! Reset the data to its default value.
         void setDefault() { this->set(Trait::defaultValue()); }
+
+        //! Return the file that is used for persistence for this value.
+        QString getFilename() const { return CDataCache::filenameForKey(this->getKey()); }
     };
 
     /*!

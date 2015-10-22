@@ -64,6 +64,9 @@ namespace BlackMisc
             //! Write the value corresponding to the element's key and begin synchronizing it to any other pages.
             CStatusMessage setValue(Element &element, const CVariant &value);
 
+            //! Get the key string corresponding to the element.
+            const QString &getKey(const Element &element) const;
+
             //! Get the timestamp corresponding to the element.
             qint64 getTimestamp(const Element &element) const;
 
