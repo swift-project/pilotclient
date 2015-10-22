@@ -255,7 +255,7 @@ namespace BlackMisc
         return QProcessEnvironment::systemEnvironment().value(envVarPrivateSetupDir());
     }
 
-    QString getApplicationDir_()
+    QString getApplicationDirImpl()
     {
         QFileInfo executable(QCoreApplication::applicationFilePath());
         QDir p(executable.dir());
@@ -264,11 +264,11 @@ namespace BlackMisc
 
     const QString &CProject::getApplicationDir()
     {
-        static const QString s(getApplicationDir_());
+        static const QString s(getApplicationDirImpl());
         return s;
     }
 
-    QString getSwiftResourceDir_()
+    QString getSwiftResourceDirImpl()
     {
         QDir dir(CProject::getApplicationDir());
         if (dir.cdUp()) { return dir.absolutePath(); }
@@ -277,7 +277,7 @@ namespace BlackMisc
 
     const QString &CProject::getSwiftResourceDir()
     {
-        static const QString s(getSwiftResourceDir_());
+        static const QString s(getSwiftResourceDirImpl());
         return s;
     }
 
@@ -287,7 +287,7 @@ namespace BlackMisc
         return dir;
     }
 
-    QString getSwiftStaticDbFilesDir_()
+    QString getSwiftStaticDbFilesDirImpl()
     {
         QString d(CProject::getSwiftResourceDir());
         if (d.isEmpty()) { return ""; }
@@ -298,11 +298,11 @@ namespace BlackMisc
 
     const QString &CProject::getSwiftStaticDbFilesDir()
     {
-        static QString s(getSwiftResourceDir_());
+        static QString s(getSwiftResourceDirImpl());
         return s;
     }
 
-    QString getImagesDir_()
+    QString getImagesDirImpl()
     {
         QString d(CProject::getSwiftResourceDir());
         if (d.isEmpty()) return "";
@@ -311,7 +311,7 @@ namespace BlackMisc
 
     const QString &CProject::getImagesDir()
     {
-        static const QString s(getImagesDir_());
+        static const QString s(getImagesDirImpl());
         return s;
     }
 
