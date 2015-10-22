@@ -73,10 +73,11 @@ namespace BlackMisc
     CVariantMap CValueCache::getAllValues(const QString &keyPrefix) const
     {
         QMutexLocker lock(&m_mutex);
-        auto begin = m_elements.lowerBound(keyPrefix);
-        auto end = m_elements.lowerBound(keyPrefix + QChar(QChar::LastValidCodePoint));
         CVariantMap map;
-        for (auto it = begin; it != end; ++it) { implementationOf(map).insert(map.cend(), it.key(), it.value()->m_value); }
+        for (const auto &element : makeRange(m_elements.lowerBound(keyPrefix), m_elements.lowerBound(keyPrefix + QChar(QChar::LastValidCodePoint))))
+        {
+            implementationOf(map).insert(map.cend(), element->m_key, element->m_value);
+        }
         return map;
     }
 
