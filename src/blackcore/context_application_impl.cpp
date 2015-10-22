@@ -66,16 +66,16 @@ namespace BlackCore
         // no-op: proxy implements this method by calling getAllLogSubscriptions
     }
 
-    void CContextApplication::changeSettings(const CVariantMap &settings, const CIdentifier &origin)
+    void CContextApplication::changeSettings(const CValueCachePacket &settings, const CIdentifier &origin)
     {
         // Intentionally don't check for round trip here
         emit this->settingsChanged(settings, origin);
     }
 
-    BlackMisc::CVariantMap CContextApplication::getAllSettings() const
+    BlackMisc::CValueCachePacket CContextApplication::getAllSettings() const
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        return CSettingsCache::instance()->getAllValues();
+        return CSettingsCache::instance()->getAllValuesWithTimestamps();
     }
 
     void CContextApplication::synchronizeLocalSettings()

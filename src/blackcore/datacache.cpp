@@ -26,7 +26,7 @@ namespace BlackCore
             CLogMessage(this).error("Failed to create directory %1") << persistentStore();
         }
 
-        connect(this, &CValueCache::valuesChangedByLocal, this, &CDataCache::saveToStore);
+        connect(this, &CValueCache::valuesChangedByLocal, this, [this](const CValueCachePacket &values) { saveToStore(values.toVariantMap()); });
         connect(&m_watcher, &QFileSystemWatcher::fileChanged, this, [this] { loadFromStore(); });
 
         if (! QFile::exists(m_revisionFileName)) { QFile(m_revisionFileName).open(QFile::WriteOnly); }
@@ -116,7 +116,7 @@ namespace BlackCore
         if (m_revision != newRevision)
         {
             m_revision = newRevision;
-            CVariantMap newValues;
+            CValueCachePacket newValues;
             loadFromFiles(persistentStore(), newValues);
             m_deferredChanges.insert(newValues);
         }

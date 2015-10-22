@@ -49,7 +49,7 @@ namespace BlackCore
         QFileSystemWatcher m_watcher;
         QUuid m_revision;
         const QString m_revisionFileName { persistentStore() + "/.rev" };
-        BlackMisc::CVariantMap m_deferredChanges;
+        BlackMisc::CValueCachePacket m_deferredChanges;
     };
 
     /*!

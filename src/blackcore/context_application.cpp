@@ -63,12 +63,12 @@ namespace BlackCore
             this->m_logSubscriptions[subscriber].removeAll(pattern);
         });
 
-        connect(CSettingsCache::instance(), &CSettingsCache::valuesChangedByLocal, [this](const CVariantMap &settings)
+        connect(CSettingsCache::instance(), &CSettingsCache::valuesChangedByLocal, [this](const CValueCachePacket &settings)
         {
             this->changeSettings(settings, {});
         });
 
-        connect(this, &IContextApplication::settingsChanged, [](const CVariantMap &settings, const CIdentifier &origin)
+        connect(this, &IContextApplication::settingsChanged, [](const CValueCachePacket &settings, const CIdentifier &origin)
         {
             // Intentionally don't check for round trip here
             CSettingsCache::instance()->changeValuesFromRemote(settings, origin);
@@ -120,7 +120,7 @@ namespace BlackCore
         return result;
     }
 
-    void IContextApplication::changeSettings(const CVariantMap &settings, const CIdentifier &origin)
+    void IContextApplication::changeSettings(const CValueCachePacket &settings, const CIdentifier &origin)
     {
         Q_UNUSED(settings);
         Q_UNUSED(origin);

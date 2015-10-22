@@ -71,7 +71,7 @@ namespace BlackMisc
         if (mode == LocalOnly)
         {
             // loopback signal to own slot for local operation
-            connect(this, &CValueCache::valuesChangedByLocal, this, [ = ](const CVariantMap &values)
+            connect(this, &CValueCache::valuesChangedByLocal, this, [ = ](const CValueCachePacket &values)
             {
                 changeValuesFromRemote(values, CIdentifier());
             });
@@ -84,6 +84,7 @@ namespace BlackMisc
         const QString m_key;
         CVariant m_value;
         int m_pendingChanges = 0;
+        std::atomic<qint64> m_timestamp { QDateTime::currentMSecsSinceEpoch() };
     };
 
     CValueCache::Element &CValueCache::getElement(const QString &key)
@@ -100,10 +101,11 @@ namespace BlackMisc
         return **m_elements.insert(pos, key, ElementPtr(new Element(key)));
     }
 
-    CVariant CValueCache::getValue(const QString &key)
+    std::pair<CVariant, qint64> CValueCache::getValue(const QString &key)
     {
         QMutexLocker lock(&m_mutex);
-        return getElement(key).m_value;
+        const auto &element = getElement(key);
+        return std::make_pair(element.m_value, element.m_timestamp.load());
     }
 
     CVariantMap CValueCache::getAllValues(const QString &keyPrefix) const
@@ -117,13 +119,24 @@ namespace BlackMisc
         return map;
     }
 
-    void CValueCache::insertValues(const CVariantMap &values)
+    CValueCachePacket CValueCache::getAllValuesWithTimestamps(const QString &keyPrefix) const
+    {
+        QMutexLocker lock(&m_mutex);
+        CValueCachePacket map;
+        for (const auto &element : makeRange(m_elements.lowerBound(keyPrefix), m_elements.lowerBound(keyPrefix + QChar(QChar::LastValidCodePoint))))
+        {
+            map.insert(element->m_key, element->m_value, element->m_timestamp);
+        }
+        return map;
+    }
+
+    void CValueCache::insertValues(const CValueCachePacket &values)
     {
         QMutexLocker lock(&m_mutex);
         changeValues(values);
     }
 
-    void CValueCache::changeValues(const CVariantMap &values)
+    void CValueCache::changeValues(const CValueCachePacket &values)
     {
         QMutexLocker lock(&m_mutex);
         if (values.empty()) { return; }
@@ -137,16 +150,17 @@ namespace BlackMisc
             Q_ASSERT(isSafeToIncrement(element.m_pendingChanges));
             element.m_pendingChanges++;
             element.m_value = in.value();
+            element.m_timestamp = in.timestamp();
         }
         emit valuesChanged(values, sender());
         emit valuesChangedByLocal(values);
     }
 
-    void CValueCache::changeValuesFromRemote(const CVariantMap &values, const CIdentifier &originator)
+    void CValueCache::changeValuesFromRemote(const CValueCachePacket &values, const CIdentifier &originator)
     {
         QMutexLocker lock(&m_mutex);
         if (values.empty()) { return; }
-        CVariantMap ratifiedChanges;
+        CValueCachePacket ratifiedChanges;
         auto out = m_elements.lowerBound(values.cbegin().key());
         auto end = m_elements.upperBound((values.cend() - 1).key());
         for (auto in = values.cbegin(); in != values.cend(); ++in)
@@ -162,7 +176,8 @@ namespace BlackMisc
             else if (element.m_pendingChanges == 0) // ratify a change only if own change is not pending, to ensure consistency
             {
                 element.m_value = in.value();
-                ratifiedChanges.insert(in.key(), in.value());
+                element.m_timestamp = in.timestamp();
+                ratifiedChanges.insert(in.key(), in.value(), in.timestamp());
             }
         }
         if (! ratifiedChanges.empty())
@@ -180,7 +195,7 @@ namespace BlackMisc
     {
         CVariantMap map;
         map.convertFromJson(json);
-        insertValues(map);
+        insertValues({ map, QDateTime::currentMSecsSinceEpoch() });
     }
 
     CStatusMessage CValueCache::saveToFiles(const QString &dir, const QString &keyPrefix) const
@@ -229,13 +244,13 @@ namespace BlackMisc
     CStatusMessage CValueCache::loadFromFiles(const QString &dir)
     {
         QMutexLocker lock(&m_mutex);
-        CVariantMap values;
+        CValueCachePacket values;
         auto status = loadFromFiles(dir, values);
         insertValues(values);
         return status;
     }
 
-    CStatusMessage CValueCache::loadFromFiles(const QString &dir, CVariantMap &o_values) const
+    CStatusMessage CValueCache::loadFromFiles(const QString &dir, CValueCachePacket &o_values) const
     {
         QMutexLocker lock(&m_mutex);
         if (! QDir(dir).isReadable())
@@ -258,7 +273,7 @@ namespace BlackMisc
             CVariantMap temp;
             temp.convertFromJson(json.object());
             temp.removeDuplicates(currentValues);
-            o_values.insert(temp);
+            o_values.insert(temp, QFileInfo(file).lastModified().toMSecsSinceEpoch());
         }
         return {};
     }
@@ -309,6 +324,7 @@ namespace BlackMisc
         {}
         const QString m_key;
         LockFree<CVariant> m_value;
+        std::atomic<qint64> m_timestamp { QDateTime::currentMSecsSinceEpoch() };
         const int m_metaType = QMetaType::UnknownType;
         const Validator m_validator;
         const CVariant m_default;
@@ -323,7 +339,7 @@ namespace BlackMisc
         Q_ASSERT_X(defaultValue.isValid() && validator ? validator(defaultValue) : true, "CValuePage", "Validator rejects default value");
 
         auto &element = *(m_elements[key] = ElementPtr(new Element(key, metaType, validator, defaultValue, slot)));
-        element.m_value.uniqueWrite() = m_cache->getValue(key);
+        std::forward_as_tuple(element.m_value.uniqueWrite(), element.m_timestamp) = m_cache->getValue(key);
 
         auto error = validate(element, element.m_value.read());
         if (! error.isEmpty())
@@ -358,7 +374,7 @@ namespace BlackMisc
                 element.m_pendingChanges++;
 
                 element.m_value.uniqueWrite() = value;
-                emit valuesWantToCache({ { element.m_key, value } });
+                emit valuesWantToCache({ { { element.m_key, value } }, QDateTime::currentMSecsSinceEpoch() });
             }
         }
         else
@@ -369,13 +385,18 @@ namespace BlackMisc
         return error;
     }
 
-    void CValuePage::setValuesFromCache(const CVariantMap &values, QObject *changedBy)
+    qint64 CValuePage::getTimestamp(const Element &element) const
+    {
+        return element.m_timestamp;
+    }
+
+    void CValuePage::setValuesFromCache(const CValueCachePacket &values, QObject *changedBy)
     {
         Q_ASSERT(QThread::currentThread() == thread());
 
         QList<NotifySlot> notifySlots;
 
-        forEachIntersection(m_elements, values, [changedBy, this, &notifySlots](const QString &, const ElementPtr &element, const CVariant &value)
+        forEachIntersection(m_elements, values, [changedBy, this, &notifySlots](const QString &, const ElementPtr &element, CValueCachePacket::const_iterator it)
         {
             if (changedBy == this) // round trip
             {
@@ -384,10 +405,11 @@ namespace BlackMisc
             }
             else if (element->m_pendingChanges == 0) // ratify a change only if own change is not pending, to ensure consistency
             {
-                auto error = validate(*element, value);
+                auto error = validate(*element, it.value());
                 if (error.isEmpty())
                 {
-                    element->m_value.uniqueWrite() = value;
+                    element->m_value.uniqueWrite() = it.value();
+                    element->m_timestamp = it.timestamp();
                     if (element->m_notifySlot && ! notifySlots.contains(element->m_notifySlot)) { notifySlots.push_back(element->m_notifySlot); }
                 }
                 else
@@ -426,13 +448,15 @@ namespace BlackMisc
 
         if (m_batchMode <= 0 && ! m_batchedValues.empty())
         {
-            forEachIntersection(m_elements, m_batchedValues, [](const QString &, const ElementPtr &element, const CVariant &value)
+            qint64 timestamp = QDateTime::currentMSecsSinceEpoch();
+            forEachIntersection(m_elements, m_batchedValues, [timestamp](const QString &, const ElementPtr &element, CVariantMap::const_iterator it)
             {
                 Q_ASSERT(isSafeToIncrement(element->m_pendingChanges));
                 element->m_pendingChanges++;
-                element->m_value.uniqueWrite() = value;
+                element->m_value.uniqueWrite() = it.value();
+                element->m_timestamp = timestamp;
             });
-            emit valuesWantToCache(m_batchedValues);
+            emit valuesWantToCache({ m_batchedValues, timestamp });
         }
     }
 

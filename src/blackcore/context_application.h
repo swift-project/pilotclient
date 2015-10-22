@@ -95,7 +95,7 @@ namespace BlackCore
 
         //! One or more settings were changed
         //! \note Used for cache relay, do not use directly
-        void settingsChanged(const BlackMisc::CVariantMap &settings, const BlackMisc::CIdentifier &origin);
+        void settingsChanged(const BlackMisc::CValueCachePacket &settings, const BlackMisc::CIdentifier &origin);
 
         //! New action was registered
         //! \note Used to register hotkey action, do not use directly
@@ -138,10 +138,10 @@ namespace BlackCore
         //! Ratify some settings changed by another process
         //! \note Not pure because it can be called from the base class constructor.
         //! \note This is the function which relays cache changes via DBus.
-        virtual void changeSettings(const BlackMisc::CVariantMap &settings, const BlackMisc::CIdentifier &origin);
+        virtual void changeSettings(const BlackMisc::CValueCachePacket &settings, const BlackMisc::CIdentifier &origin);
 
         //! Get all settings currently in core settings cache
-        virtual BlackMisc::CVariantMap getAllSettings() const = 0;
+        virtual BlackMisc::CValueCachePacket getAllSettings() const = 0;
 
         //! Update local settings with settings from core
         virtual void synchronizeLocalSettings() = 0;

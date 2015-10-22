@@ -50,7 +50,7 @@ namespace BlackCore
                                "logSubscriptionRemoved", this, SIGNAL(logSubscriptionRemoved(BlackMisc::CIdentifier, BlackMisc::CLogPattern)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                               "settingsChanged", this, SIGNAL(settingsChanged(BlackMisc::CVariantMap, BlackMisc::CIdentifier)));
+                               "settingsChanged", this, SIGNAL(settingsChanged(BlackMisc::CValueCachePacket, BlackMisc::CIdentifier)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
                                "registrationChanged", this, SIGNAL(registrationChanged()));
@@ -93,14 +93,14 @@ namespace BlackCore
         for (const auto &pattern : CLogHandler::instance()->getAllSubscriptions()) { this->addLogSubscription({}, pattern); }
     }
 
-    void CContextApplicationProxy::changeSettings(const CVariantMap &settings, const CIdentifier &origin)
+    void CContextApplicationProxy::changeSettings(const CValueCachePacket &settings, const CIdentifier &origin)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("changeSettings"), settings, origin);
     }
 
-    BlackMisc::CVariantMap CContextApplicationProxy::getAllSettings() const
+    BlackMisc::CValueCachePacket CContextApplicationProxy::getAllSettings() const
     {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::CVariantMap>(QLatin1Literal("getAllSettings"));
+        return this->m_dBusInterface->callDBusRet<BlackMisc::CValueCachePacket>(QLatin1Literal("getAllSettings"));
     }
 
     void CContextApplicationProxy::synchronizeLocalSettings()

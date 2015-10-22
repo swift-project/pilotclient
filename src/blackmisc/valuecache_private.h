@@ -22,6 +22,7 @@ namespace BlackMisc
 {
     class CIdentifier;
     class CValueCache;
+    class CValueCachePacket;
 
     namespace Private
     {
@@ -63,11 +64,14 @@ namespace BlackMisc
             //! Write the value corresponding to the element's key and begin synchronizing it to any other pages.
             CStatusMessage setValue(Element &element, const CVariant &value);
 
+            //! Get the timestamp corresponding to the element.
+            qint64 getTimestamp(const Element &element) const;
+
             //! Synchronize with a change caused by another page.
             //! Connected to signal CValueCache::valuesChanged.
             //! \param values The new values.
             //! \param changedBy Pointer to the CValuePage which caused the change. Null if it was changed by another process.
-            void setValuesFromCache(const BlackMisc::CVariantMap &values, QObject *changedBy);
+            void setValuesFromCache(const BlackMisc::CValueCachePacket &values, QObject *changedBy);
 
             //! Put this page into batching mode.
             void beginBatch();
@@ -81,7 +85,7 @@ namespace BlackMisc
         signals:
             //! Synchronize this page's changes to other pages.
             //! Connected to slot CValueCache::changeValues.
-            void valuesWantToCache(const BlackMisc::CVariantMap &values);
+            void valuesWantToCache(const BlackMisc::CValueCachePacket &values);
 
         private:
             using ElementPtr = QSharedPointer<Element>; // QMap doesn't support move-only types

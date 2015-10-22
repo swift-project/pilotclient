@@ -41,10 +41,10 @@ namespace BlackCore
         virtual void synchronizeLogSubscriptions();
 
         //! \copydoc IContextApplication::changeSettings
-        virtual void changeSettings(const BlackMisc::CVariantMap &settings, const BlackMisc::CIdentifier &origin) override;
+        virtual void changeSettings(const BlackMisc::CValueCachePacket &settings, const BlackMisc::CIdentifier &origin) override;
 
         //! \copydoc IContextApplication::getAllSettings
-        virtual BlackMisc::CVariantMap getAllSettings() const override;
+        virtual BlackMisc::CValueCachePacket getAllSettings() const override;
 
         //! \copydoc IContextApplication::synchronizeLocalSettings
         virtual void synchronizeLocalSettings() override;

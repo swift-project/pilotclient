@@ -92,10 +92,14 @@ namespace BlackMisc
         //! \threadsafe
         BlackMisc::CVariantMap getAllValues(const QString &keyPrefix = {}) const;
 
+        //! Return map containing all values in the cache, and timestamps when they were modified.
+        //! \threadsafe
+        BlackMisc::CValueCachePacket getAllValuesWithTimestamps(const QString &keyPrefix = {}) const;
+
         //! Add some values to the cache.
         //! Values already in the cache will remain in the cache unless they are overwritten.
         //! \threadsafe
-        void insertValues(const BlackMisc::CVariantMap &values);
+        void insertValues(const BlackMisc::CValueCachePacket &values);
 
         //! Save values in Json format.
         //! If prefix is provided then only those values whose keys start with that prefix.
@@ -131,20 +135,20 @@ namespace BlackMisc
         //! \see BlackMisc::CValueCache::valuesChangedByLocal.
         //! \param values The values that were changed.
         //! \param originator Identifier of the process which made the change. Can be this very process, or a different one.
-        void changeValuesFromRemote(const BlackMisc::CVariantMap &values, const BlackMisc::CIdentifier &originator);
+        void changeValuesFromRemote(const BlackMisc::CValueCachePacket &values, const BlackMisc::CIdentifier &originator);
 
     signals:
         //! Emitted when values in the cache are changed by an object in this very process.
         //! The interprocess communication (e.g. DBus) should arrange for this signal to call the slot changeValueFromRemote
         //! of CValueCache instances in all processes including this one. The slot will do its own round-trip detection.
-        void valuesChangedByLocal(const BlackMisc::CVariantMap &values);
+        void valuesChangedByLocal(const BlackMisc::CValueCachePacket &values);
 
     protected:
         //! Save specific values to Json files in a given directory.
         CStatusMessage saveToFiles(const QString &directory, const CVariantMap &values) const;
 
         //! Load from Json files in a given directory any values which differ from the current ones, and insert them in o_values.
-        CStatusMessage loadFromFiles(const QString &directory, CVariantMap &o_values) const;
+        CStatusMessage loadFromFiles(const QString &directory, CValueCachePacket &o_values) const;
 
         //! Mutex protecting operations which are critical on m_elements.
         mutable QMutex m_mutex { QMutex::Recursive };
@@ -158,14 +162,14 @@ namespace BlackMisc
 
         Element &getElement(const QString &key);
         Element &getElement(const QString &key, QMap<QString, ElementPtr>::const_iterator pos);
-        CVariant getValue(const QString &key);
+        std::pair<CVariant, qint64> getValue(const QString &key);
 
     signals:
         //! \private
-        void valuesChanged(const BlackMisc::CVariantMap &values, QObject *changedBy);
+        void valuesChanged(const BlackMisc::CValueCachePacket &values, QObject *changedBy);
 
     private slots:
-        void changeValues(const BlackMisc::CVariantMap &values);
+        void changeValues(const BlackMisc::CValueCachePacket &values);
     };
 
     /*!
@@ -210,6 +214,9 @@ namespace BlackMisc
 
         //! Write a new value. Must be called from the thread in which the owner lives.
         CStatusMessage set(const T &value) { return m_page.setValue(m_element, CVariant::from(value)); }
+
+        //! Return the time when this value was updated.
+        QDateTime getTimestamp() const { return m_page.getTimestamp(m_element); }
 
         //! Deleted copy constructor.
         CCached(const CCached &) = delete;

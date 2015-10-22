@@ -462,7 +462,7 @@ namespace BlackMisc
         {
             if (it1.key() < it2.key()) { ++it1; }
             else if (it2.key() < it1.key()) { ++it2; }
-            else { functor(it1.key(), it1.value(), it2.value()); ++it1; ++it2; }
+            else { functor(it1.key(), it1.value(), it2); ++it1; ++it2; }
         }
     }
 
