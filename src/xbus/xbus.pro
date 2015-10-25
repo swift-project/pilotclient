@@ -48,6 +48,7 @@ win32-msvc* {
     CONFIG(debug, debug|release): LIBS += -lpngd -lzd -lopengl32 -lglu32
     CONFIG(release, debug|release): LIBS += -lpng -lz -lopengl32 -lglu32
 }
+else:win32: LIBS += -lpng -lz -lopengl32 -lglu32
 else: LIBS += -lpng -lz
 
 win32-msvc*: DEFINES += _CRT_SECURE_NO_WARNINGS
