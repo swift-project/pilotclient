@@ -113,6 +113,9 @@ namespace BlackCore
         QMap<QString, QObject *> m_objects;      //!< Mapping of all exposed objects, for P2P registration when connection establishes, also to later unregister objects
         QMap<QString, QDBusConnection> m_DBusConnections; //!< Mapping of all DBusConnection objects
 
+        //! Manually launch our shipped dbus daemon
+        void launchDbusDaemon();
+
         //! Check if address means a real server with P2P connection
         static bool isP2P(const QString &address);
 

@@ -10,7 +10,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/networkutils.h"
 #include "dbus_server.h"
-#include <QDebug>
+#include <QProcess>
 #include <QMetaClassInfo>
 
 using namespace BlackMisc;
@@ -35,6 +35,12 @@ namespace BlackCore
                 // we use a session bus connection instead of a real P2P connection
                 this->m_serverMode = CDBusServer::SERVERMODE_SESSIONBUS;
                 QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SessionBus, ServiceName());
+                if (!connection.isConnected())
+                {
+                    launchDbusDaemon();
+                    connection = QDBusConnection::connectToBus(QDBusConnection::SessionBus, ServiceName());
+                }
+
                 if (!connection.registerService(service))
                 {
                     // registration fails can either mean something wrong with DBus or service already exists
@@ -48,6 +54,12 @@ namespace BlackCore
                 // we use a system bus connection instead of a real P2P connection
                 this->m_serverMode = CDBusServer::SERVERMODE_SYSTEMBUS;
                 QDBusConnection connection = QDBusConnection::systemBus();
+                if (!connection.isConnected())
+                {
+                    launchDbusDaemon();
+                    connection = QDBusConnection::systemBus();
+                }
+
                 if (!connection.registerService(service))
                 {
                     // registration fails can either mean something wrong with DBus or service already exists
@@ -89,6 +101,14 @@ namespace BlackCore
     {
         static const QString sn(BLACKCORE_RUNTIME_SERVICENAME);
         return sn;
+    }
+
+    void CDBusServer::launchDbusDaemon()
+    {
+        const QString program = QStringLiteral("dbus-daemon");
+        const QStringList arguments = { QStringLiteral("--config-file=../share/dbus-1/session.conf") };
+        bool success = QProcess::startDetached(program, arguments);
+        if (!success) { CLogMessage(this).warning("Failed to launch dbus-daemon!"); }
     }
 
     /*
