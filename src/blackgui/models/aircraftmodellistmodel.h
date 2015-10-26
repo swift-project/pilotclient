@@ -22,7 +22,8 @@ namespace BlackGui
     namespace Models
     {
         //! Aircraft model list model
-        class BLACKGUI_EXPORT CAircraftModelListModel : public CListModelBase<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>
+        class BLACKGUI_EXPORT CAircraftModelListModel :
+                public CListModelBase<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList, true>
         {
         public:
             //! How to display

@@ -101,6 +101,9 @@ namespace BlackMisc
             //! All simulators
             void setAllSimulators() { setSimulator(All); }
 
+            //! Compare for index
+            int comparePropertyByIndex(const CSimulatorInfo &compareValue, const CPropertyIndex &index) const;
+
             //! \copydoc CValueObject::convertToQString
             QString convertToQString(bool i18n = false) const;
 

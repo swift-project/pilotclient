@@ -54,6 +54,9 @@ namespace BlackMisc
             //! \copydoc CValueObject::convertToQString()
             QString convertToQString(bool i18n = false) const;
 
+            //! Compare for index
+            int comparePropertyByIndex(const CAirportIcaoCode &compareValue, const CPropertyIndex &index) const;
+
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAirportIcaoCode)
             QString m_icaoCode;

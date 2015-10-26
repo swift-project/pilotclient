@@ -24,9 +24,9 @@ namespace BlackGui
         /*!
          * User list model
          */
-        class BLACKGUI_EXPORT CUserListModel : public CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList>
+        class BLACKGUI_EXPORT CUserListModel :
+            public CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList, true>
         {
-
         public:
 
             //! What level of detail

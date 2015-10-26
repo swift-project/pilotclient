@@ -68,6 +68,9 @@ namespace BlackMisc
         //! \copydoc CValueObject::setPropertyByIndex
         void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
+        //! Compare by index
+        int comparePropertyByIndex(const IDatastoreObjectWithIntegerKey &compareValue, const CPropertyIndex &index) const;
+
         //! Can given index be handled?
         static bool canHandleIndex(const BlackMisc::CPropertyIndex &index);
 
@@ -113,6 +116,9 @@ namespace BlackMisc
 
         //! \copydoc CValueObject::setPropertyByIndex
         void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
+
+        //! Compare by index
+        int comparePropertyByIndex(const IDatastoreObjectWithStringKey &compareValue, const BlackMisc::CPropertyIndex &index) const;
 
         //! Can given index be handled
         static bool canHandleIndex(const BlackMisc::CPropertyIndex &index);

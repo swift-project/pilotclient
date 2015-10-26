@@ -22,7 +22,8 @@ namespace BlackGui
     namespace Models
     {
         //! Distributor list model
-        class BLACKGUI_EXPORT CLiveryListModel : public CListModelBase<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList>
+        class BLACKGUI_EXPORT CLiveryListModel :
+                public CListModelBase<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList, true>
         {
         public:
 

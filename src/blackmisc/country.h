@@ -81,6 +81,9 @@ namespace BlackMisc
         //! \copydoc CValueObject::setPropertyByIndex
         void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
+        //! Compare for index
+        int comparePropertyByIndex(const CCountry &compareValue, const CPropertyIndex &index) const;
+
         //! From our database JSON format
         static CCountry fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
 

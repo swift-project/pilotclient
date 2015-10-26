@@ -24,9 +24,9 @@ namespace BlackGui
     {
 
         //! Aircraft list model
-        class BLACKGUI_EXPORT CSimulatedAircraftListModel : public CListModelBase<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>
+        class BLACKGUI_EXPORT CSimulatedAircraftListModel :
+            public CListModelBase<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList, true>
         {
-
         public:
             //! Model modes
             enum AircraftMode

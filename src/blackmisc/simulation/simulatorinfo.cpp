@@ -9,6 +9,7 @@
 
 #include "simulatorinfo.h"
 #include "blackmisc/project.h"
+#include "blackmisc/comparefunctions.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 
 using namespace BlackMisc;
@@ -83,6 +84,12 @@ namespace BlackMisc
         bool CSimulatorInfo::matchesAny(const CSimulatorInfo &otherInfo) const
         {
             return (this->m_simulator & otherInfo.m_simulator) > 0;
+        }
+
+        int CSimulatorInfo::comparePropertyByIndex(const CSimulatorInfo &compareValue, const CPropertyIndex &index) const
+        {
+            Q_UNUSED(index);
+            return Compare::compare(this->m_simulator, compareValue.m_simulator);
         }
 
         QString CSimulatorInfo::convertToQString(bool i18n) const

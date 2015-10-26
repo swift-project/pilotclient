@@ -10,10 +10,12 @@
 #include "aircraftmodel.h"
 #include "distributor.h"
 #include "blackmisc/datastoreutility.h"
+#include "blackmisc/comparefunctions.h"
 #include <QString>
 #include <QJsonDocument>
 #include <QJsonObject>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 
 namespace BlackMisc
@@ -138,6 +140,42 @@ namespace BlackMisc
                 CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
+        }
+
+        int CAircraftModel::comparePropertyByIndex(const CAircraftModel &compareValue, const CPropertyIndex &index) const
+        {
+            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(compareValue, index);}
+            if (index.isMyself()) { return this->m_modelString.compare(compareValue.getModelString(), Qt::CaseInsensitive); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexModelString:
+                return this->m_modelString.compare(compareValue.getModelString(), Qt::CaseInsensitive);
+            case IndexAircraftIcaoCode:
+                return this->m_aircraftIcao.comparePropertyByIndex(compareValue.getAircraftIcaoCode(), index.copyFrontRemoved());
+            case IndexLivery:
+                return this->m_livery.comparePropertyByIndex(compareValue.getLivery(), index.copyFrontRemoved());
+            case IndexDistributor:
+                return this->m_distributor.comparePropertyByIndex(compareValue.getDistributor(), index.copyFrontRemoved());
+            case IndexDescription:
+                return this->m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
+            case IndexSimulatorInfo:
+                return this->m_simulator.comparePropertyByIndex(compareValue.getSimulatorInfo(), index.copyFrontRemoved());
+            case IndexName:
+                return this->m_modelName.compare(compareValue.getName(), Qt::CaseInsensitive);
+            case IndexCallsign:
+                break;
+            case IndexFileName:
+                return this->m_fileName.compare(compareValue.getFileName(), Qt::CaseInsensitive);
+            case IndexModelType:
+                return Compare::compare(this->m_modelType, compareValue.getModelType());
+            case IndexModelMode:
+                return Compare::compare(this->m_modelMode, compareValue.getModelMode());
+            default:
+                break;
+            }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison");
+            return 0;
         }
 
         bool CAircraftModel::setAircraftIcaoCode(const CAircraftIcaoCode &aircraftIcaoCode)

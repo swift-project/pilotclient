@@ -94,6 +94,9 @@ namespace BlackMisc
             //! \copydoc CValueObject::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
+            //! Compare for index
+            int comparePropertyByIndex(const CAircraftModel &compareValue, const CPropertyIndex &index) const;
+
             //! Corresponding callsign if applicable
             const BlackMisc::Aviation::CCallsign &getCallsign() const { return this->m_callsign; }
 

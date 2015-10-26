@@ -9,7 +9,9 @@
 
 #include "simulatedaircraft.h"
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/comparefunctions.h"
 
+using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
@@ -315,7 +317,8 @@ namespace BlackMisc
                 this->m_transponder.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexAircraftIcaoCode:
-                this->m_livery.setPropertyByIndex(variant, index); // intentionally not removing front, delegating
+                // intentionally not removing front, delegating
+                this->m_livery.setPropertyByIndex(variant, index);
                 break;
             case IndexLivery:
                 this->m_livery.setPropertyByIndex(variant, index.copyFrontRemoved());
@@ -346,6 +349,46 @@ namespace BlackMisc
                 CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
+        }
+
+        int CSimulatedAircraft::comparePropertyByIndex(const CSimulatedAircraft &compareValue, const CPropertyIndex &index) const
+        {
+            if (index.isMyself()) { return this->m_callsign.comparePropertyByIndex(compareValue.getCallsign(), index.copyFrontRemoved()); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexCallsign:
+                return this->m_callsign.comparePropertyByIndex(compareValue.getCallsign(), index.copyFrontRemoved());
+            case IndexPilot:
+                return this->m_pilot.comparePropertyByIndex(compareValue.getPilot(), index.copyFrontRemoved());
+            case IndexSituation:
+            case IndexDistanceToOwnAircraft:
+                return this->m_distanceToOwnAircraft.comparePropertyByIndex(compareValue.getDistanceToOwnAircraft(), index.copyFrontRemoved());
+            case IndexCom1System:
+                return m_com1system.getFrequencyActive().comparePropertyByIndex(compareValue.getCom1System().getFrequencyActive(), index.copyFrontRemoved());
+            case IndexCom2System:
+                return m_com2system.getFrequencyActive().comparePropertyByIndex(compareValue.getCom2System().getFrequencyActive(), index.copyFrontRemoved());
+            case IndexTransponder:
+                return Compare::compare(m_transponder.getTransponderCode(), compareValue.getTransponder().getTransponderCode());
+            case IndexLivery:
+                return this->m_livery.comparePropertyByIndex(compareValue.getLivery(), index.copyFrontRemoved());
+            case IndexParts:
+                return this->m_parts.comparePropertyByIndex(compareValue.getParts(), index.copyFrontRemoved());
+            case IndexModel:
+                return m_model.comparePropertyByIndex(compareValue.getModel(), index.copyFrontRemoved());
+            case IndexEnabled:
+                return Compare::compare(this->m_enabled, compareValue.isEnabled());
+            case IndexRendered:
+                return Compare::compare(this->m_rendered, compareValue.isRendered());
+            case IndexPartsSynchronized:
+                return Compare::compare(this->m_partsSynchronized, compareValue.isPartsSynchronized());
+            case IndexFastPositionUpdates:
+                return Compare::compare(this->m_fastPositionUpdates, compareValue.fastPositionUpdates());
+            default:
+                break;
+            }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Comapre failed");
+            return 0;
         }
 
         void CSimulatedAircraft::setModel(const CAircraftModel &model)

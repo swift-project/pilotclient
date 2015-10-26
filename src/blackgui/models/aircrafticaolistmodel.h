@@ -21,13 +21,11 @@ namespace BlackGui
 {
     namespace Models
     {
-
         //! Airport list model
-        class BLACKGUI_EXPORT CAircraftIcaoCodeListModel : public CListModelBase<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList>
+        class BLACKGUI_EXPORT CAircraftIcaoCodeListModel :
+            public CListModelBase<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList, true>
         {
-
         public:
-
             //! Constructor
             explicit CAircraftIcaoCodeListModel(QObject *parent = nullptr);
 

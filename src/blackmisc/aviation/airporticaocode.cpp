@@ -10,6 +10,12 @@ namespace BlackMisc
             return this->m_icaoCode;
         }
 
+        int CAirportIcaoCode::comparePropertyByIndex(const CAirportIcaoCode &compareValue, const CPropertyIndex &index) const
+        {
+            Q_UNUSED(index);
+            return this->m_icaoCode.compare(compareValue.getIcaoCode(), Qt::CaseInsensitive);
+        }
+
         bool CAirportIcaoCode::equalsString(const QString &icaoCode) const
         {
             CAirportIcaoCode other(icaoCode);

@@ -36,12 +36,11 @@ namespace BlackMisc
 
     CPropertyIndex CPropertyIndex::copyFrontRemoved() const
     {
-        Q_ASSERT(!this->isEmpty());
+        Q_ASSERT_X(!this->isEmpty(), Q_FUNC_INFO, "Empty index");
         if (this->isEmpty()) { return CPropertyIndex(); }
-        QList<int> l = this->indexList();
-        l.removeAt(0);
-        CPropertyIndex pi(l);
-        return pi;
+        int p = this->m_indexString.indexOf(';');
+        if (p < 0) { return CPropertyIndex(); }
+        return CPropertyIndex(this->m_indexString.mid(p + 1));
     }
 
     bool CPropertyIndex::isNested() const
@@ -102,7 +101,7 @@ namespace BlackMisc
         QList<int> list;
         if (this->m_indexString.isEmpty()) { return list; }
         QStringList indexes = this->m_indexString.split(';');
-        foreach(QString index, indexes)
+        for (const QString &index : indexes)
         {
             if (index.isEmpty()) { continue; }
             bool ok;
@@ -124,6 +123,24 @@ namespace BlackMisc
     bool CPropertyIndex::contains(int index) const
     {
         return this->indexList().contains(index);
+    }
+
+    int CPropertyIndex::frontToInt() const
+    {
+        Q_ASSERT_X(!this->isEmpty(), Q_FUNC_INFO, "No index");
+        int f = -1;
+        bool ok;
+        int p = this->m_indexString.indexOf(';');
+        if (p < 0)
+        {
+            f = this->m_indexString.toInt(&ok);
+        }
+        else
+        {
+            f = this->m_indexString.left(p).toInt(&ok);
+        }
+        Q_ASSERT_X(ok && f >= 0, Q_FUNC_INFO, "Invalid index");
+        return f;
     }
 
 } // namespace

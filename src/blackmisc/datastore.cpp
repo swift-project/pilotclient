@@ -10,6 +10,7 @@
 #include "blackmisc/datastore.h"
 #include "blackmisc/datastoreutility.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/comparefunctions.h"
 
 namespace BlackMisc
 {
@@ -80,6 +81,21 @@ namespace BlackMisc
         }
     }
 
+    int IDatastoreObjectWithIntegerKey::comparePropertyByIndex(const IDatastoreObjectWithIntegerKey &compareValue, const CPropertyIndex &index) const
+    {
+        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(compareValue, index); }
+        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
+        {
+        case IndexDbIntegerKey:
+            return Compare::compare(this->m_dbKey, compareValue.getDbKey());
+        default:
+            break;
+        }
+        Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
+        return 0;
+    }
+
     bool IDatastoreObjectWithIntegerKey::canHandleIndex(const BlackMisc::CPropertyIndex &index)
     {
         if (ITimestampBased::canHandleIndex(index)) { return true;}
@@ -132,8 +148,24 @@ namespace BlackMisc
         }
     }
 
+    int IDatastoreObjectWithStringKey::comparePropertyByIndex(const IDatastoreObjectWithStringKey &compareValue, const CPropertyIndex &index) const
+    {
+        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(compareValue, index); }
+        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
+        {
+        case IndexDbStringKey:
+            return this->m_dbKey.compare(compareValue.getDbKey());
+        default:
+            break;
+        }
+        Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
+        return 0;
+    }
+
     bool IDatastoreObjectWithStringKey::canHandleIndex(const CPropertyIndex &index)
     {
+        if (index.isEmpty()) { return false; }
         if (ITimestampBased::canHandleIndex(index)) { return true;}
         int i = index.frontCasted<int>();
         return (i >= static_cast<int>(IndexDbStringKey)) && (i <= static_cast<int>(IndexDbStringKey));

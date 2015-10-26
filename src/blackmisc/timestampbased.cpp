@@ -8,7 +8,8 @@
  */
 
 #include "timestampbased.h"
-#include "variant.h"
+#include "blackmisc/comparefunctions.h"
+#include "blackmisc/variant.h"
 
 namespace BlackMisc
 {
@@ -138,6 +139,7 @@ namespace BlackMisc
 
     bool ITimestampBased::canHandleIndex(const CPropertyIndex &index)
     {
+        if (index.isEmpty()) { return false; }
         int i = index.frontCasted<int>();
         return (i >= static_cast<int>(IndexUtcTimestamp)) && (i <= static_cast<int>(IndexMSecsSinceEpoch));
     }
@@ -168,7 +170,7 @@ namespace BlackMisc
             }
         }
         const QString m = QString("Cannot handle index %1").arg(index.toQString());
-        Q_ASSERT_X(false, "propertyByIndex", m.toLocal8Bit().constData());
+        Q_ASSERT_X(false, Q_FUNC_INFO, m.toLocal8Bit().constData());
         return CVariant::fromValue(m);
     }
 
@@ -199,7 +201,13 @@ namespace BlackMisc
             }
         }
         const QString m = QString("Cannot handle index %1").arg(index.toQString());
-        Q_ASSERT_X(false, "setPropertyByIndex", m.toLocal8Bit().constData());
+        Q_ASSERT_X(false, Q_FUNC_INFO, m.toLocal8Bit().constData());
+    }
+
+    int ITimestampBased::comparePropertyByIndex(const ITimestampBased &compareValue, const CPropertyIndex &index) const
+    {
+        Q_UNUSED(index);
+        return Compare::compare(this->m_timestampMSecsSinceEpoch, compareValue.m_timestampMSecsSinceEpoch);
     }
 
 } // namespace

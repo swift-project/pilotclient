@@ -22,7 +22,8 @@ namespace BlackGui
     namespace Models
     {
         //! Distributor list model
-        class BLACKGUI_EXPORT CDistributorListModel : public CListModelBase<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>
+        class BLACKGUI_EXPORT CDistributorListModel :
+            public CListModelBase<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList, true>
         {
         public:
 

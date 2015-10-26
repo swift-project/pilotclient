@@ -106,6 +106,9 @@ namespace BlackMisc
         //! \copydoc CValueObject::setPropertyByIndex
         void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
+        //! Compare for index
+        int comparePropertyByIndex(const CRgbColor &compareValue, const CPropertyIndex &index) const;
+
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CRgbColor)
         int m_r = -1;

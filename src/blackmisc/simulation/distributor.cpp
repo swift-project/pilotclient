@@ -71,6 +71,25 @@ namespace BlackMisc
             }
         }
 
+        int CDistributor::comparePropertyByIndex(const CDistributor &compareValue, const CPropertyIndex &index) const
+        {
+            if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { return IDatastoreObjectWithStringKey::comparePropertyByIndex(compareValue, index); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexAlias1:
+                return this->m_alias1.compare(compareValue.m_alias1, Qt::CaseInsensitive);
+            case IndexAlias2:
+                return this->m_alias2.compare(compareValue.m_alias2, Qt::CaseInsensitive);
+            case IndexDescription:
+                return this->m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
+            default:
+                break;
+            }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
+            return 0;
+        }
+
         QString CDistributor::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);

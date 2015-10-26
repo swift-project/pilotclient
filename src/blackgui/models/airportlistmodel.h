@@ -22,7 +22,8 @@ namespace BlackGui
     namespace Models
     {
         //! Airport list model
-        class BLACKGUI_EXPORT CAirportListModel : public CListModelBase<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>
+        class BLACKGUI_EXPORT CAirportListModel :
+            public CListModelBase<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList, true>
         {
         public:
             //! Constructor

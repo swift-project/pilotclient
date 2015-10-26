@@ -218,5 +218,30 @@ namespace BlackMisc
                 break;
             }
         }
+
+        int CUser::comparePropertyByIndex(const CUser &compareValue, const CPropertyIndex &index) const
+        {
+            if (index.isMyself()) { return this->getRealName().compare(compareValue.getRealName(), Qt::CaseInsensitive); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexEmail:
+                return this->m_email.compare(compareValue.getEmail(), Qt::CaseInsensitive);
+            case IndexId:
+                return this->m_id.compare(compareValue.getId(), Qt::CaseInsensitive);
+            case IndexPassword:
+                break;
+            case IndexRealName:
+                return this->m_realname.compare(compareValue.getRealName(), Qt::CaseInsensitive);
+            case IndexHomebase:
+                return this->m_homebase.comparePropertyByIndex(compareValue.getHomebase(), index.copyFrontRemoved());
+            case IndexCallsign:
+                return this->m_callsign.comparePropertyByIndex(compareValue.getCallsign(), index.copyFrontRemoved());
+            default:
+                break;
+            }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "compare failed");
+            return 0;
+        }
     } // namespace
 } // namespace

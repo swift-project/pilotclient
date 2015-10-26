@@ -18,7 +18,7 @@ namespace BlackGui
     namespace Models
     {
         CCountryListModel::CCountryListModel(QObject *parent) :
-            CListModelBase<BlackMisc::CCountry, BlackMisc::CCountryList>("CountryListModel", parent)
+            CListModelBase("CountryListModel", parent)
         {
             CColumn col("country", CCountry::IndexIcon);
             col.setSortPropertyIndex(CCountry::IndexIsoCode);

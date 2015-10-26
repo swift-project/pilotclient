@@ -20,7 +20,8 @@ namespace BlackGui
 {
     namespace Models
     {
-        CAircraftModelListModel::CAircraftModelListModel(AircraftModelMode mode, QObject *parent) : CListModelBase("CAircraftModelListModel", parent)
+        CAircraftModelListModel::CAircraftModelListModel(AircraftModelMode mode, QObject *parent) :
+            CListModelBase("CAircraftModelListModel", parent)
         {
             this->setAircraftModelMode(mode);
 

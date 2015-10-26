@@ -23,7 +23,7 @@ namespace BlackGui
          * Constructor
          */
         CUserListModel::CUserListModel(UserMode userMode, QObject *parent) :
-            CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList>("ModelUserList", parent), m_userMode(NotSet)
+            CListModelBase("ModelUserList", parent), m_userMode(NotSet)
         {
             this->setUserMode(userMode);
 

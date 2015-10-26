@@ -56,6 +56,9 @@ namespace BlackMisc
             //! \copydoc CValueObject::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
+            //! Compare for index
+            int comparePropertyByIndex(const CAircraftParts &compareValue, const CPropertyIndex &index) const;
+
             //! Get aircraft lights
             CAircraftLights getLights() const { return m_lights; }
 
@@ -91,6 +94,9 @@ namespace BlackMisc
 
             //! Engine with number
             CAircraftEngine getEngine(int number) const;
+
+            //! Number of engines
+            int getEnginesCount() const { return m_engines.size(); }
 
             //! Is engine with number 1..n on?
             bool isEngineOn(int number) const;

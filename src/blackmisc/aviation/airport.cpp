@@ -100,5 +100,27 @@ namespace BlackMisc
             }
         }
 
+        int CAirport::comparePropertyByIndex(const CAirport &compareValue, const CPropertyIndex &index) const
+        {
+            if (index.isMyself()) { return this->m_icao.comparePropertyByIndex(compareValue.getIcao(), index.copyFrontRemoved()); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexIcao:
+                return this->m_icao.comparePropertyByIndex(compareValue.getIcao(), index.copyFrontRemoved());
+            case IndexDescriptiveName:
+                return this->m_descriptiveName.compare(compareValue.getDescriptiveName(), Qt::CaseInsensitive);
+            case IndexBearing:
+                return this->m_bearingToOwnAircraft.comparePropertyByIndex(compareValue.getBearingToOwnAircraft(), index.copyFrontRemoved());
+            case IndexPosition:
+            case IndexDistanceToOwnAircraft:
+                return this->m_distanceToOwnAircraft.comparePropertyByIndex(compareValue.getDistanceToOwnAircraft(), index.copyFrontRemoved());
+            default:
+                break;
+            }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
+            return 0;
+        }
+
     } // namespace
 } // namespace

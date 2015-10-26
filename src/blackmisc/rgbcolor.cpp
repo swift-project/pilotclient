@@ -9,11 +9,13 @@
 
 #include "blackmisc/rgbcolor.h"
 #include "blackmiscfreefunctions.h"
+#include "comparefunctions.h"
 #include <QPainter>
+
+using namespace BlackMisc;
 
 namespace BlackMisc
 {
-
     CRgbColor::CRgbColor(const QString &color, bool isName)
     {
         this->setByString(color, isName);
@@ -215,6 +217,28 @@ namespace BlackMisc
             CValueObject::setPropertyByIndex(variant, index);
             break;
         }
+    }
+
+    int CRgbColor::comparePropertyByIndex(const CRgbColor &compareValue, const CPropertyIndex &index) const
+    {
+        if (index.isMyself()) { return this->hex().compare(compareValue.hex(), Qt::CaseInsensitive); }
+        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
+        {
+        case IndexBlue:
+            return Compare::compare(this->m_b, compareValue.m_b);
+        case IndexRed:
+            return Compare::compare(this->m_r, compareValue.m_r);
+        case IndexGreen:
+            return Compare::compare(this->m_g, compareValue.m_g);
+        case IndexWebHex:
+            this->hex().compare(compareValue.hex(), Qt::CaseInsensitive);
+            break;
+        default:
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Missing compare");
+            break;
+        }
+        return 0;
     }
 
     double CRgbColor::colorRange() const

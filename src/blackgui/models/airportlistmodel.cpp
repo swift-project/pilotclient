@@ -21,7 +21,7 @@ namespace BlackGui
     namespace Models
     {
         CAirportListModel::CAirportListModel(QObject *parent) :
-            CListModelBase<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>("AirportListModel", parent)
+            CListModelBase("AirportListModel", parent)
         {
             this->m_columns.addColumn(CColumn::standardValueObject("ICAO", CAirport::IndexIcao));
             this->m_columns.addColumn(CColumn("distance", CAirport::IndexDistanceToOwnAircraft, new CAirspaceDistanceFormatter()));

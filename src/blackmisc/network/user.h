@@ -122,6 +122,9 @@ namespace BlackMisc
             //! \copydoc CValueObject::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
+            //! Compare by index
+            int comparePropertyByIndex(const CUser &compareValue, const CPropertyIndex &index) const;
+
             //! This and another user exchange missing data, This user has priority and overrides first.
             void syncronizeData(CUser &otherUser);
 

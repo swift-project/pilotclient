@@ -11,6 +11,7 @@
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/comparefunctions.h"
 
 #include <tuple>
 #include <QThreadStorage>
@@ -152,6 +153,32 @@ namespace BlackMisc
                 CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
+        }
+
+        int CAirlineIcaoCode::comparePropertyByIndex(const CAirlineIcaoCode &compareValue, const CPropertyIndex &index) const
+        {
+            if (index.isMyself()) { return m_designator.compare(compareValue.getDesignator(), Qt::CaseInsensitive); }
+            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(compareValue, index);}
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexAirlineDesignator:
+                return this->m_designator.compare(compareValue.getDesignator());
+            case IndexAirlineCountry:
+                return this->m_country.comparePropertyByIndex(compareValue.getCountry(), index.copyFrontRemoved());
+            case IndexAirlineName:
+                return this->m_name.compare(compareValue.getName(), Qt::CaseInsensitive);
+            case IndexTelephonyDesignator:
+                return this->m_telephonyDesignator.compare(compareValue.getTelephonyDesignator(), Qt::CaseInsensitive);
+            case IndexIsVirtualAirline:
+                return Compare::compare(this->isVirtualAirline(), compareValue.isVirtualAirline());
+            case IndexIsOperating:
+                return Compare::compare(this->isOperating(), compareValue.isOperating());
+            default:
+                break;
+            }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "No compare function");
+            return 0;
         }
 
         CStatusMessageList CAirlineIcaoCode::validate() const

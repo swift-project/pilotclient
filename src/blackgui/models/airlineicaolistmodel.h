@@ -22,7 +22,7 @@ namespace BlackGui
     namespace Models
     {
         //! Airport list model
-        class BLACKGUI_EXPORT CAirlineIcaoCodeListModel : public CListModelBase<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList>
+        class BLACKGUI_EXPORT CAirlineIcaoCodeListModel : public CListModelBase<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList, true>
         {
         public:
             //! Constructor

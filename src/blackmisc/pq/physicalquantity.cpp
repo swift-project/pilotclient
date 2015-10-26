@@ -8,6 +8,7 @@
  */
 
 #include "blackmisc/pq/pq.h"
+#include "blackmisc/comparefunctions.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <QCoreApplication>
 
@@ -15,7 +16,6 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-
         template <class MU, class PQ>
         MU CPhysicalQuantity<MU, PQ>::getUnit() const
         {
@@ -392,6 +392,22 @@ namespace BlackMisc
                 Mixin::Index<PQ>::setPropertyByIndex(variant, index);
                 break;
             }
+        }
+
+        template <class MU, class PQ>
+        int CPhysicalQuantity<MU, PQ>::comparePropertyByIndex(const PQ &pq, const CPropertyIndex &index) const
+        {
+            if (index.isMyself()) { return compareImpl(*derived(), pq); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexValue:
+                return Compare::compare(this->m_value, pq.m_value);
+            default:
+                break;
+            }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison");
+            return 0;
         }
 
         template <class MU, class PQ>

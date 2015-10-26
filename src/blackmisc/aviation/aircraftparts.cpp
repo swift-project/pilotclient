@@ -8,12 +8,14 @@
  */
 
 #include "aircraftparts.h"
+#include "blackmisc/comparefunctions.h"
+
+using namespace BlackMisc;
 
 namespace BlackMisc
 {
     namespace Aviation
     {
-
         QString CAircraftParts::convertToQString(bool i18n) const
         {
             QString s;
@@ -34,10 +36,7 @@ namespace BlackMisc
         CVariant CAircraftParts::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            if (ITimestampBased::canHandleIndex(index))
-            {
-                return ITimestampBased::propertyByIndex(index);
-            }
+            if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
 
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -60,11 +59,7 @@ namespace BlackMisc
         void CAircraftParts::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself()) { (*this) = variant.to<CAircraftParts>(); return; }
-            if (ITimestampBased::canHandleIndex(index))
-            {
-                ITimestampBased::setPropertyByIndex(variant, index);
-                return;
-            }
+            if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(variant, index); return; }
 
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -88,6 +83,31 @@ namespace BlackMisc
                 CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
+        }
+
+        int CAircraftParts::comparePropertyByIndex(const CAircraftParts &compareValue, const CPropertyIndex &index) const
+        {
+            if (index.isMyself()) { return ITimestampBased::comparePropertyByIndex(compareValue, CPropertyIndex()); }
+            if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(compareValue, index); }
+
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexEngines:
+                return Compare::compare(this->getEnginesCount(), compareValue.getEnginesCount());
+            case IndexFlapsPercentage:
+                return Compare::compare(this->m_flapsPercentage, compareValue.getFlapsPercent());
+            case IndexGearDown:
+                return Compare::compare(this->m_gearDown, compareValue.isGearDown());
+            case IndexLights:
+                break;
+            case IndexSpoilersOut:
+                return Compare::compare(this->m_spoilersOut, compareValue.isSpoilersOut());
+            default:
+                break;
+            }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison");
+            return 0;
         }
 
         void CAircraftParts::setAllLightsOn()

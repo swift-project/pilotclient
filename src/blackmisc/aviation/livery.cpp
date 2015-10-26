@@ -12,7 +12,7 @@
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
-
+#include "blackmisc/comparefunctions.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
@@ -226,6 +226,30 @@ namespace BlackMisc
                 CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
+        }
+
+        int CLivery::comparePropertyByIndex(const CLivery &compareValue, const CPropertyIndex &index) const
+        {
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexDescription:
+                return this->m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
+            case IndexAirlineIcaoCode:
+                return this->m_airline.comparePropertyByIndex(compareValue.getAirlineIcaoCode(), index.copyFrontRemoved());
+            case IndexColorFuselage:
+                return this->m_colorFuselage.comparePropertyByIndex(compareValue.getColorFuselage(), index.copyFrontRemoved());
+            case IndexColorTail:
+                return this->m_colorTail.comparePropertyByIndex(compareValue.getColorTail(), index.copyFrontRemoved());
+            case IndexCombinedCode:
+                return this->getCombinedCode().compare(compareValue.getCombinedCode());
+            case IndexIsMilitary:
+                return Compare::compare(this->isMilitary(), compareValue.isMilitary());
+            default:
+                break;
+            }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "No compare function");
+            return 0;
         }
 
         void CLivery::updateMissingParts(const CLivery &otherLivery)

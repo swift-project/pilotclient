@@ -13,6 +13,7 @@
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/datastoreutility.h"
+#include "blackmisc/comparefunctions.h"
 #include <tuple>
 #include <QThreadStorage>
 #include <QRegularExpression>
@@ -278,6 +279,36 @@ namespace BlackMisc
                 CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
+        }
+
+        int CAircraftIcaoCode::comparePropertyByIndex(const CAircraftIcaoCode &compareValue, const CPropertyIndex &index) const
+        {
+            if (index.isMyself()) { return m_designator.compare(compareValue.getDesignator(), Qt::CaseInsensitive); }
+            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(compareValue, index);}
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexAircraftDesignator:
+                return m_designator.compare(compareValue.getDesignator(), Qt::CaseInsensitive);
+            case IndexCombinedAircraftType:
+                return m_combinedType.compare(compareValue.getCombinedType(), Qt::CaseInsensitive);
+            case IndexModelDescription:
+                return m_modelDescription.compare(compareValue.getModelDescription(), Qt::CaseInsensitive);
+            case IndexManufacturer:
+                return m_manufacturer.compare(compareValue.getManufacturer(), Qt::CaseInsensitive);
+            case IndexWtc:
+                return m_wtc.compare(compareValue.getWtc(), Qt::CaseInsensitive);
+            case IndexIsLegacy:
+                return Compare::compare(m_legacy, compareValue.isLegacyAircraft());
+            case IndexIsMilitary:
+                return Compare::compare(m_military, compareValue.isMilitary());
+            case IndexRank:
+                return Compare::compare(m_rank, compareValue.getRank());
+            default:
+                break;
+            }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison");
+            return 0;
         }
 
         bool CAircraftIcaoCode::isValidDesignator(const QString &designator)

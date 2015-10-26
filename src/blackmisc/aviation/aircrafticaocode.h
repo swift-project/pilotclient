@@ -168,6 +168,9 @@ namespace BlackMisc
             //! \copydoc CValueObject::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
+            //! Compare for index
+            int comparePropertyByIndex(const CAircraftIcaoCode &compareValue, const CPropertyIndex &index) const;
+
             //! \copydoc CValueObject::convertToQString
             QString convertToQString(bool i18n = false) const;
 

@@ -22,7 +22,6 @@
 
 namespace BlackMisc
 {
-
     /*!
      * Property index. The index can be nested, that's why it is a sequence
      * (e.g. PropertyIndexPilot, PropertyIndexRealname).
@@ -136,13 +135,14 @@ namespace BlackMisc
             return contains(static_cast<int>(ev));
         }
 
-        //! First element casted to given type, usually then PropertIndex enum
+        //! Front to integer
+        int frontToInt() const;
+
+        //! First element casted to given type, usually the PropertIndex enum
         template<class CastType> CastType frontCasted() const
         {
-            QList<int> l = indexList();
-            Q_ASSERT(!l.isEmpty());
-            int f = l.isEmpty() ? 0 : l.first();
-            return static_cast<CastType>(f);
+            static_assert(std::is_enum<CastType>::value || std::is_integral<CastType>::value, "CastType must be an enum or integer");
+            return static_cast<CastType>(frontToInt());
         }
 
         //! Compare with index given by enum

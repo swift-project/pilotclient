@@ -130,6 +130,23 @@ namespace BlackMisc
         }
     }
 
+    int CCountry::comparePropertyByIndex(const CCountry &compareValue, const CPropertyIndex &index) const
+    {
+        if (index.isMyself()) { return getIsoCode().compare(compareValue.getIsoCode(), Qt::CaseInsensitive); }
+        if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { return IDatastoreObjectWithStringKey::comparePropertyByIndex(compareValue, index);}
+        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
+        {
+        case IndexIsoCode:
+            return getIsoCode().compare(compareValue.getIsoCode(), Qt::CaseInsensitive);
+        case IndexName:
+            return getName().compare(compareValue.getName(), Qt::CaseInsensitive);
+        default:
+            Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison possible");
+        }
+        return 0;
+    }
+
     CCountry CCountry::fromDatabaseJson(const QJsonObject &json, const QString &prefix)
     {
         if (!existsKey(json, prefix))

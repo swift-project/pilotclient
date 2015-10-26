@@ -22,9 +22,9 @@ namespace BlackGui
     namespace Models
     {
         //! Country list model
-        class BLACKGUI_EXPORT CCountryListModel : public CListModelBase<BlackMisc::CCountry, BlackMisc::CCountryList>
+        class BLACKGUI_EXPORT CCountryListModel :
+            public CListModelBase<BlackMisc::CCountry, BlackMisc::CCountryList, true>
         {
-
         public:
             //! Constructor
             explicit CCountryListModel(QObject *parent = nullptr);
@@ -32,6 +32,6 @@ namespace BlackGui
             //! Destructor
             virtual ~CCountryListModel() {}
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard

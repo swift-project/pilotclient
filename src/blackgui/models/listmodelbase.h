@@ -16,11 +16,11 @@
 #include "blackgui/models/columns.h"
 #include "blackgui/models/modelfilter.h"
 #include "blackmisc/worker.h"
-#include "blackmisc/propertyindex.h"
 #include <QAbstractItemModel>
 #include <QThread>
 #include <memory>
 #include <iostream>
+#include <type_traits>
 
 namespace BlackGui
 {
@@ -128,9 +128,8 @@ namespace BlackGui
         };
 
         //! List model
-        template <typename ObjectType, typename ContainerType> class CListModelBase : public CListModelBaseNonTemplate
+        template <typename ObjectType, typename ContainerType, bool UseCompare = false> class CListModelBase : public CListModelBaseNonTemplate
         {
-
         public:
             //! Destructor
             virtual ~CListModelBase() {}
@@ -249,6 +248,28 @@ namespace BlackGui
             ContainerType m_containerFiltered; //!< cache for filtered container data
         };
 
+        namespace Private
+        {
+            //! Sort with compare function
+            template<class ObjectType>
+            bool compareForModelSort(const ObjectType &a, const ObjectType &b, Qt::SortOrder order, const BlackMisc::CPropertyIndex &index, std::true_type)
+            {
+                int c = a.comparePropertyByIndex(b, index);
+                if (c == 0) { return false; }
+                return (order == Qt::AscendingOrder) ? (c > 0) : (c < 0);
+            }
+
+            //! Sort without compare function
+            template <typename ObjectType>
+            bool compareForModelSort(const ObjectType &a, const ObjectType &b, Qt::SortOrder order, const BlackMisc::CPropertyIndex &index, std::false_type)
+            {
+                Q_UNUSED(index);
+                BlackMisc::CVariant aQv = a.propertyByIndex(index);
+                BlackMisc::CVariant bQv = b.propertyByIndex(index);
+                return (order == Qt::AscendingOrder) ? (aQv < bQv) : (bQv < aQv);
+            }
+
+        } // namespace
     } // namespace
 } // namespace
 #endif // guard

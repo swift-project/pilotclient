@@ -168,6 +168,25 @@ namespace BlackMisc
             }
         }
 
+        int CCallsign::comparePropertyByIndex(const CCallsign &compareValue, const CPropertyIndex &index) const
+        {
+            if (index.isMyself()) { return this->m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexCallsignString:
+                return this->m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive);
+            case IndexCallsignStringAsSet:
+                return this->m_callsignAsSet.compare(compareValue.m_callsignAsSet, Qt::CaseInsensitive);
+            case IndexTelephonyDesignator:
+                return this->m_telephonyDesignator.compare(compareValue.m_telephonyDesignator, Qt::CaseInsensitive);
+            default:
+                break;
+            }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
+            return 0;
+        }
+
         bool CCallsign::isValidCallsign(const QString &callsign)
         {
             // We allow all number callsigns

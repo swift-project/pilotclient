@@ -111,6 +111,9 @@ namespace BlackMisc
         //! \copydoc CValueObject::setPropertyByIndex
         void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
+        //! Compare for index
+        int comparePropertyByIndex(const ITimestampBased &compareValue, const CPropertyIndex &index) const;
+
         qint64 m_timestampMSecsSinceEpoch; //!< timestamp value
     };
 
