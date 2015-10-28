@@ -329,7 +329,6 @@ namespace BlackCore
     CUrl CModelDataReader::getBaseUrl() const
     {
         CUrl baseUrl(m_setup.get().dbModelReader());
-        Q_ASSERT_X(!baseUrl.isEmpty(), Q_FUNC_INFO, "No URL");
         return baseUrl;
     }
 

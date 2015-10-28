@@ -54,6 +54,9 @@ namespace BlackCore
         //! Remaining URLs failed one excluded
         BlackMisc::Network::CUrlList getRemainingUrls() const;
 
+        //! Read for development environment?
+        static bool isForDevelopment();
+
         //! Bootstrap URL
         static QString appendPathAndFile();
     };

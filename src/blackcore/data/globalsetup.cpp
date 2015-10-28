@@ -9,6 +9,7 @@
 
 #include "globalsetup.h"
 #include "blackmisc/math/mathutils.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include <QStringList>
 
 using namespace BlackMisc;
@@ -21,29 +22,55 @@ namespace BlackCore
     {
         CGlobalSetup::CGlobalSetup() :
             ITimestampBased(0),
-            m_dbIcaoReader("http://ubuntu12/vatrep/public"),
-            m_dbModelReader("http://ubuntu12/vatrep/public"),
+            m_dbRootDirectory("http://ubuntu12/swiftdatastore/public"),
+            m_dbHttpPort(80),
+            m_dbHttpsPort(443),
             m_vatsimBookings("http://vatbook.euroutepro.com/xml2.php"),
             m_vatsimMetars("http://metar.vatsim.net/metar.php"),
             m_vatsimDataFile(QStringList({ "http://info.vroute.net/vatsim-data.txt" })),
             m_bootstrap(QStringList({ "https://vatsim-germany.org:50443/mapping/public/bootstrap", "http://ubuntu12/public/bootstrap"})),
-            m_swiftDbDataFiles(QStringList({  })),
+            m_swiftDbDataFiles(QStringList({})),
             m_fsdTestServers({ CServer("swift", "swift Testserver", "vatsim-germany.org", 6809, CUser("1234567", "swift Test User", "", "123456"), true) })
         { }
 
+        CUrl CGlobalSetup::dbIcaoReader() const
+        {
+            return dbRootDirectory();
+        }
+
+        CUrl CGlobalSetup::dbModelReader() const
+        {
+            return dbRootDirectory();
+        }
+
         CUrl CGlobalSetup::dbHomePage() const
         {
-            return dbModelReader().withAppendedPath("/page/index.php");
+            return dbRootDirectory().withAppendedPath("/page/index.php");
         }
 
         CUrl CGlobalSetup::dbLoginService() const
         {
-            return dbModelReader().withAppendedPath("/service/index.php");
+            return dbRootDirectory().
+                   withAppendedPath("/service/jsonauthenticate.php").
+                   withSwitchedScheme("https", m_dbHttpsPort);
         }
 
-        bool CGlobalSetup::hasSameType(const QString &type) const
+        bool CGlobalSetup::dbDebugFlag() const
         {
-            return getType() == type.trimmed().toUpper();
+            if (!m_dbDebugFlag) { return false; }
+
+            // further checks could go here
+            return isDevelopment();
+        }
+
+        void CGlobalSetup::setServerDebugFlag(bool debug)
+        {
+            m_dbDebugFlag = debug;
+        }
+
+        bool CGlobalSetup::hasSameType(CGlobalSetup &otherSetup) const
+        {
+            return this->isDevelopment() == otherSetup.isDevelopment();
         }
 
         CUrl CGlobalSetup::vatsimMetars() const
@@ -61,12 +88,19 @@ namespace BlackCore
             QString s("timestamp: ");
             s.append(this->getFormattedUtcTimestampYmdhms());
             s.append(separator);
+            s.append("For development: ");
+            s.append(boolToYesNo(isDevelopment()));
+            s.append(separator);
+            s.append("DB root directory: ");
+            s.append(dbRootDirectory().convertToQString(i18n));
+            s.append(separator);
             s.append("ICAO DB reader: ");
             s.append(dbIcaoReader().convertToQString(i18n));
             s.append(separator);
             s.append("Model DB reader: ");
             s.append(dbModelReader().convertToQString(i18n));
             s.append(separator);
+
             s.append("DB home page: ");
             s.append(dbHomePage().convertToQString(i18n));
             s.append(separator);
@@ -101,12 +135,12 @@ namespace BlackCore
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDbIcaoReader:
-                return CVariant::fromValue(this->m_dbIcaoReader);
-            case IndexDbModelReader:
-                return CVariant::fromValue(this->m_dbModelReader);
-            case IndexDbHomePage:
-                return CVariant::fromValue(this->dbHomePage());
+            case IndexDbRootDirectory:
+                return CVariant::fromValue(this->m_dbRootDirectory);
+            case IndexDbHttpPort:
+                return CVariant::fromValue(this->m_dbHttpPort);
+            case IndexDbHttpsPort:
+                return CVariant::fromValue(this->m_dbHttpsPort);
             case IndexDbLoginService:
                 return CVariant::fromValue(this->dbLoginService());
             case IndexVatsimData:
@@ -136,13 +170,15 @@ namespace BlackCore
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDbIcaoReader:
-                this->m_dbIcaoReader.setPropertyByIndex(variant, index.copyFrontRemoved());
+            case IndexDbRootDirectory:
+                this->m_dbRootDirectory.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
-            case IndexDbModelReader:
-                this->m_dbModelReader.setPropertyByIndex(variant, index.copyFrontRemoved());
+            case IndexDbHttpPort:
+                this->m_dbHttpPort = variant.toInt();
                 break;
-            case IndexDbHomePage:
+            case IndexDbHttpsPort:
+                this->m_dbHttpsPort = variant.toInt();
+                break;
             case IndexDbLoginService:
                 break;
             case IndexVatsimData:
@@ -164,6 +200,12 @@ namespace BlackCore
                 CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
+        }
+
+        const QString &CGlobalSetup::versionString()
+        {
+            static const QString v("0.6");
+            return v;
         }
     } // ns
 } // ns

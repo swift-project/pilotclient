@@ -5,15 +5,14 @@
                 "url": "https://vatsim-germany.org:50443/mapping/public/bootstrap"
             },
             {
-                "url": "http://ubuntu12/public/bootstrap"
+                "url": "http://ubuntu12/swiftdatastore/public/bootstrap"
             }
         ]
     },
-    "dbIcaoReader": {
-        "url": "http://ubuntu12/vatrep/public"
-    },
-    "dbModelReader": {
-        "url": "http://ubuntu12/vatrep/public"
+    "dbHttpPort": 5080,
+    "dbHttpsPort": 50443,
+    "dbRootDirectory": {
+        "url": "https://vatsim-germany.org:50443/mapping/public"
     },
     "fsdTestServers": {
         "containerbase": [
@@ -45,7 +44,7 @@
         "containerbase": [
         ]
     },
-    "timestampMSecsSinceEpoch": 0,
+    "timestampMSecsSinceEpoch": 1445201830000,
     "vatsimBookings": {
         "url": "http://vatbook.euroutepro.com/xml2.php"
     },

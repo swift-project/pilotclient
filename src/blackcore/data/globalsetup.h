@@ -33,9 +33,9 @@ namespace BlackCore
             //! Properties by index
             enum ColumnIndex
             {
-                IndexDbIcaoReader = BlackMisc::CPropertyIndex::GlobalIndexCGlobalSetup,
-                IndexDbModelReader,
-                IndexDbHomePage,
+                IndexDbRootDirectory = BlackMisc::CPropertyIndex::GlobalIndexCGlobalSetup,
+                IndexDbHttpPort,
+                IndexDbHttpsPort,
                 IndexDbLoginService,
                 IndexVatsimBookings,
                 IndexVatsimMetars,
@@ -50,11 +50,20 @@ namespace BlackCore
             //! Destructor.
             ~CGlobalSetup() {}
 
+            //! Root directory of DB
+            const BlackMisc::Network::CUrl &dbRootDirectory() const { return m_dbRootDirectory; }
+
             //! ICAO Reader location
-            const BlackMisc::Network::CUrl &dbIcaoReader() const { return m_dbIcaoReader; }
+            BlackMisc::Network::CUrl dbIcaoReader() const;
 
             //! Model Reader protocol
-            const BlackMisc::Network::CUrl &dbModelReader() const { return m_dbModelReader; }
+            BlackMisc::Network::CUrl dbModelReader() const;
+
+            //! Http port
+            int dbHttpPort() const { return m_dbHttpPort; }
+
+            //! Https port
+            int dbHttpsPort() const { return m_dbHttpsPort; }
 
             //! Home page url
             BlackMisc::Network::CUrl dbHomePage() const;
@@ -62,17 +71,17 @@ namespace BlackCore
             //! Login service
             BlackMisc::Network::CUrl dbLoginService() const;
 
+            //! Debug flag
+            bool dbDebugFlag() const;
+
+            //! Set debug flag
+            void setServerDebugFlag(bool debug);
+
             //! URL to read VATSIM bookings
             const BlackMisc::Network::CUrl &vatsimBookings() const { return m_vatsimBookings; }
 
-            //! Type (development, productive)?
-            const QString &getType() const { return m_type; }
-
-            //! Set type
-            void setType(const QString &type) { m_type = type.trimmed().toUpper(); }
-
             //! Same type?
-            bool hasSameType(const QString &type) const;
+            bool hasSameType(CGlobalSetup &otherSetup) const;
 
             //! VATSIM METAR URL
             BlackMisc::Network::CUrl vatsimMetars() const;
@@ -89,6 +98,12 @@ namespace BlackCore
             //! FSD test servers
             const BlackMisc::Network::CServerList &fsdTestServers() const { return m_fsdTestServers; }
 
+            //! Productive settings?
+            bool isDevelopment() const { return m_development; }
+
+            //! Productive settings?
+            void setDevelopment(bool development) { m_development  = development; }
+
             //! \copydoc CValueObject::convertToQString
             QString convertToQString(bool i18n = false) const;
 
@@ -101,18 +116,25 @@ namespace BlackCore
             //! \copydoc CValueObject::setPropertyByIndex
             void setPropertyByIndex(const BlackMisc::CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
+            //! Schema version
+            static const QString &versionString();
+
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(BlackCore::Data::CGlobalSetup)
 
-            QString                         m_type;             //!< dev./productive?
-            BlackMisc::Network::CUrl        m_dbIcaoReader;     //!< direct DB ICAO reader
-            BlackMisc::Network::CUrl        m_dbModelReader;    //!< direct DB model reader
-            BlackMisc::Network::CUrl        m_vatsimBookings;   //!< ATC bookings
-            BlackMisc::Network::CUrl        m_vatsimMetars;     //!< METAR data
-            BlackMisc::Network::CUrlList    m_vatsimDataFile;   //!< Overall VATSIM data file
-            BlackMisc::Network::CUrlList    m_bootstrap;        //!< where we can obtain downloads of these data
-            BlackMisc::Network::CUrlList    m_swiftDbDataFiles; //!< alternative locations of the DB files, if DB is not available
-            BlackMisc::Network::CServerList m_fsdTestServers;   //!< FSD test servers
+            BlackMisc::Network::CUrl        m_dbRootDirectory;   //!< Root directory
+            int                             m_dbHttpPort = 80;   //!< port
+            int                             m_dbHttpsPort = 443; //!< SSL port
+            BlackMisc::Network::CUrl        m_vatsimBookings;    //!< ATC bookings
+            BlackMisc::Network::CUrl        m_vatsimMetars;      //!< METAR data
+            BlackMisc::Network::CUrlList    m_vatsimDataFile;    //!< Overall VATSIM data file
+            BlackMisc::Network::CUrlList    m_bootstrap;         //!< where we can obtain downloads of these data
+            BlackMisc::Network::CUrlList    m_swiftDbDataFiles;  //!< alternative locations of the DB files, if DB is not available
+            BlackMisc::Network::CServerList m_fsdTestServers;    //!< FSD test servers
+            bool m_development = false;                          //!< dev. version?
+
+            // transient members, to be switched on/off via GUI or set from reader
+            bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know hat you are doing
         };
 
         //! Trait for for global setup data
@@ -135,15 +157,16 @@ namespace BlackCore
 Q_DECLARE_METATYPE(BlackCore::Data::CGlobalSetup)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackCore::Data::CGlobalSetup, (
                                    attr(o.m_timestampMSecsSinceEpoch),
-                                   attr(o.m_type),
-                                   attr(o.m_dbIcaoReader),
-                                   attr(o.m_dbModelReader),
+                                   attr(o.m_dbRootDirectory),
+                                   attr(o.m_dbHttpPort),
+                                   attr(o.m_dbHttpsPort),
                                    attr(o.m_vatsimBookings),
                                    attr(o.m_vatsimMetars),
                                    attr(o.m_vatsimDataFile),
                                    attr(o.m_bootstrap),
                                    attr(o.m_swiftDbDataFiles),
-                                   attr(o.m_fsdTestServers)
+                                   attr(o.m_fsdTestServers),
+                                   attr(o.m_development),
+                                   attr(o.m_dbDebugFlag, flags < DisabledForJson > ())
                                ))
-
 #endif // guard

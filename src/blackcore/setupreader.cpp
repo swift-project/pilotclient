@@ -85,13 +85,19 @@ namespace BlackCore
         QString dir(CProject::getSwiftPrivateResourceDir());
         if (dir.isEmpty()) { return false; }
 
-        fileName = CFileUtils::appendFilePaths(dir, "bootstrap/setup.json");
+        fileName = CFileUtils::appendFilePaths(dir, "bootstrap/" + CGlobalSetup::versionString() + "/bootstrap.json");
         QString content(CFileUtils::readFileToString(fileName));
         if (content.isEmpty()) { return false; }
         CGlobalSetup s;
         s.convertFromJson(content);
+        s.setDevelopment(true);
         m_setup.set(s);
         return true;
+    }
+
+    bool CSetupReader::isForDevelopment()
+    {
+        return CProject::useDevelopmentSetup();
     }
 
     CUrlList CSetupReader::getRemainingUrls() const
@@ -103,9 +109,9 @@ namespace BlackCore
 
     QString CSetupReader::appendPathAndFile()
     {
-        return CProject::useDevelopmentSetup() ?
-               "development/bootstrap.json" :
-               "productive/bootstrap.json";
+        return isForDevelopment() ?
+               CGlobalSetup::versionString() + "/development/bootstrap.json" :
+               CGlobalSetup::versionString() + "/productive/bootstrap.json";
     }
 
     void CSetupReader::ps_parseSetupFile(QNetworkReply *nwReplyPtr)
@@ -145,13 +151,12 @@ namespace BlackCore
             }
             else
             {
-                QString type(urlString.toLower().contains("develop") ? "DEV" : "PRODUCTIVE");
-                CGlobalSetup currentSetup(m_setup.get());
+                CGlobalSetup currentSetup(m_setup.get()); // from cache
                 CGlobalSetup loadedSetup;
                 loadedSetup.convertFromJson(Json::jsonObjectFromString(setupJson));
-                loadedSetup.setType(type);
+                loadedSetup.setDevelopment(isForDevelopment()); // always update, regardless what persistent setting says
                 if (loadedSetup.getMSecsSinceEpoch() == 0 && lastModified > 0) { loadedSetup.setMSecsSinceEpoch(lastModified); }
-                bool sameType = loadedSetup.hasSameType(currentSetup.getType());
+                bool sameType = loadedSetup.hasSameType(currentSetup);
                 qint64 currentVersionTimestamp = currentSetup.getMSecsSinceEpoch();
                 qint64 newVersionTimestamp = loadedSetup.getMSecsSinceEpoch();
                 bool sameVersionLoaded = sameType && (newVersionTimestamp  == currentVersionTimestamp);

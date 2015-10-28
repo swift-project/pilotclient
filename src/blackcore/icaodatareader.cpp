@@ -164,7 +164,6 @@ namespace BlackCore
     CUrl CIcaoDataReader::getBaseUrl() const
     {
         CUrl baseUrl(this->m_setup.get().dbIcaoReader());
-        Q_ASSERT_X(!baseUrl.isEmpty(), Q_FUNC_INFO, "No URL");
         return baseUrl;
     }
 
