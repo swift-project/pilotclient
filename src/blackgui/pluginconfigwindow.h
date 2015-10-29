@@ -17,6 +17,9 @@
 
 namespace BlackGui
 {
+    /**
+     * Base class for plugin config window.
+     */
     class BLACKGUI_EXPORT CPluginConfigWindow : public QWidget
     {
         Q_OBJECT

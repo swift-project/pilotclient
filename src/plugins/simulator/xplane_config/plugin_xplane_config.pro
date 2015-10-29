@@ -15,6 +15,6 @@ HEADERS += *.h
 FORMS += *.ui
 DISTFILES += simulator_xplane_config.json
 
-DESTDIR = $$BuildRoot/bin/plugins/simulator
+DESTDIR = $$DestRoot/bin/plugins/simulator
 
 load(common_post)

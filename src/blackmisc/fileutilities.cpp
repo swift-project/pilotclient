@@ -59,4 +59,32 @@ namespace BlackMisc
         return QDir::cleanPath(path1 + QDir::separator() + path2);
     }
 
+    bool CFileUtils::copyRecursively(const QString &sourceDir, const QString &destinationDir)
+    {
+        QFileInfo sourceFileInfo(sourceDir);
+        if (sourceFileInfo.isDir())
+        {
+            QDir targetDir(destinationDir);
+            if (!targetDir.mkpath("."))
+            {
+                return false;
+            }
+
+            QDir originDir(sourceFileInfo.absoluteFilePath());
+            auto fileNames = originDir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System);
+            for (const QString &fileName: fileNames)
+            {
+                if (!copyRecursively(originDir.absoluteFilePath(fileName), targetDir.absoluteFilePath(fileName)))
+                    return false;
+            }
+        }
+        else
+        {
+            if (!QFile::copy(sourceDir, destinationDir))
+                return false;
+        }
+
+        return true;
+    }
+
 } // ns

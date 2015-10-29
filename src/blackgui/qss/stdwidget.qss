@@ -47,6 +47,14 @@ QDialog::separator:hover {
   background: transparent;
 }
 
+QFileDialog #sidebar {
+  background: black;
+}
+
+QFileDialog QToolButton {
+  background: inherit;
+}
+
 /**
   Required when dock widget is floating
   1) background-image not working on QDockWidget, so I use direct children for that

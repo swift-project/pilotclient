@@ -38,6 +38,10 @@ namespace BlackSimPlugin
             //! Dtor.
             virtual ~CSimulatorXPlaneConfigWindow();
 
+        private:
+            //! Checks whether xbus is present in the distributed directory.
+            bool xBusAvailable();
+
         private slots:
             void ps_storeSettings();
             void ps_installXBus();
