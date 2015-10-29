@@ -13,6 +13,7 @@
 //! \file
 
 #include "blackcore/blackcoreexport.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackmisc/threadedreader.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 
@@ -42,11 +43,11 @@ namespace BlackCore
         void ps_postResponse(QNetworkReply *nwReplyPtr);
 
     private:
-        BlackMisc::Network::CUrl m_modelUrl;
-        QNetworkAccessManager *m_networkManager = nullptr;
-        QNetworkReply *m_pendingReply = nullptr;
-        bool m_shutdown = false;
-        bool m_phpDebug = true;
+        CData<BlackCore::Data::GlobalSetup>    m_setup {this}; //!< data cache
+        BlackMisc::Network::CUrl               m_modelUrl;
+        QNetworkAccessManager                 *m_networkManager = nullptr;
+        QNetworkReply                         *m_pendingReply = nullptr;
+        bool                                   m_shutdown = false;
 
         //! URL model web service
         static BlackMisc::Network::CUrl getModelWriteUrl(const BlackMisc::Network::CUrl &baseUrl);

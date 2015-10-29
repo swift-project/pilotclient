@@ -100,7 +100,6 @@ namespace BlackMisc
 
         QString CUrl::getFullUrl() const
         {
-            Q_ASSERT_X(!m_host.isEmpty(), Q_FUNC_INFO, "missing address");
             if (m_host.isEmpty()) { return ""; }
 
             QString qn(m_host);
@@ -135,6 +134,16 @@ namespace BlackMisc
             if (path.isEmpty()) { return *this; }
             CUrl url(*this);
             url.appendPath(path);
+            return url;
+        }
+
+        CUrl CUrl::withSwitchedScheme(const QString &scheme, int port) const
+        {
+            if (getPort() == port && getScheme() == scheme) { return *this; }
+            QUrl qurl(this->toQUrl());
+            qurl.setPort(port);
+            qurl.setScheme(scheme);
+            CUrl url(qurl);
             return url;
         }
 

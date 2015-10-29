@@ -119,6 +119,9 @@ namespace BlackMisc
             //! Append path
             CUrl withAppendedQuery(const QString &query) const;
 
+            //! Switch protocol
+            CUrl withSwitchedScheme(const QString &protocol, int port) const;
+
             //! \copydoc CValueObject::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 

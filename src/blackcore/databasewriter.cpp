@@ -18,6 +18,7 @@
 #include <QHttpMultiPart>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 
 namespace BlackCore
@@ -47,21 +48,9 @@ namespace BlackCore
 
         QUrl url(m_modelUrl.toQUrl());
         QNetworkRequest request(url);
-        const QByteArray jsonData(QJsonDocument(model.toJson()).toJson(QJsonDocument::Compact));
-        QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
-        QHttpPart textPart;
-        QString name("form-data; name=\"swiftjson\"");
-        textPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant(name));
-        textPart.setBody(jsonData);
-        multiPart->append(textPart);
-
-        if (m_phpDebug && CProject::isRunningInDeveloperEnvironment())
-        {
-            QHttpPart textPartDebug;
-            textPartDebug.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"XDEBUG_SESSION_START\""));
-            textPartDebug.setBody(QString("ECLIPSE_DBGP").toUtf8());
-            multiPart->append(textPartDebug);
-        }
+        QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType, this);
+        multiPart->append(CNetworkUtils::getJsonTextMutlipart(model.toJson()));
+        if (m_setup.get().dbDebugFlag()) { multiPart->append(CNetworkUtils::getMultipartWithDebugFlag()); }
 
         m_pendingReply = this->m_networkManager->post(request, multiPart);
         multiPart->setParent(m_pendingReply);

@@ -181,5 +181,44 @@ namespace BlackMisc
             conf.setPeerVerifyMode(QSslSocket::VerifyNone);
             request.setSslConfiguration(conf);
         }
+
+        QHttpPart CNetworkUtils::getMultipartWithDebugFlag()
+        {
+            QHttpPart textPartDebug;
+            textPartDebug.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"XDEBUG_SESSION_START\""));
+            textPartDebug.setBody(QString("ECLIPSE_DBGP").toUtf8());
+            return textPartDebug;
+        }
+
+        void CNetworkUtils::addDebugFlag(QUrlQuery &qurl)
+        {
+            qurl.addQueryItem("XDEBUG_SESSION_START", "ECLIPSE_DBGP");
+        }
+
+        QHttpPart CNetworkUtils::getJsonTextMutlipart(const QJsonObject &json)
+        {
+            const QByteArray jsonData(QJsonDocument(json).toJson(QJsonDocument::Compact));
+            QHttpPart textPart;
+            QString name("form-data; name=\"swiftjson\"");
+            textPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant(name));
+            textPart.setBody(jsonData);
+            return textPart;
+        }
+
+        QNetworkRequest CNetworkUtils::getNetworkRequest(const CUrl &url, RequestType type)
+        {
+            QNetworkRequest request(url.toQUrl());
+            switch (type)
+            {
+            case PostUrlEncoded:
+                request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+                break;
+            default:
+                break;
+            }
+            CNetworkUtils::ignoreSslVerification(request);
+            return request;
+        }
+
     } // namespace
 } // namespacee

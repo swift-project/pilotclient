@@ -16,8 +16,11 @@
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/url.h"
 #include <QUrl>
+#include <QHttpPart>
 #include <QStringList>
+#include <QUrlQuery>
 #include <QNetworkRequest>
+#include <QJsonObject>
 
 namespace BlackMisc
 {
@@ -27,6 +30,15 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CNetworkUtils
         {
         public:
+
+            //! Request type
+            enum RequestType
+            {
+                Get,
+                PostUrlEncoded,
+                Multipart
+            };
+
             //! Is a connected interface available?
             //! \param withDebugOutput enables some debugging output
             //! \return
@@ -73,6 +85,18 @@ namespace BlackMisc
 
             //! Ignore SSL verification such as self signed certificates
             static void ignoreSslVerification(QNetworkRequest &request);
+
+            //! Multipart with DEBUG FLAG for server
+            static QHttpPart getMultipartWithDebugFlag();
+
+            //! Add debug flag
+            static void addDebugFlag(QUrlQuery &qurl);
+
+            //! Multipart for JSON
+            static QHttpPart getJsonTextMutlipart(const QJsonObject &json);
+
+            //! Our tweakes network request
+            static QNetworkRequest getNetworkRequest(const CUrl &url, RequestType type = Get);
 
         private:
             //! Deleted constructor
