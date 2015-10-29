@@ -43,13 +43,6 @@ namespace BlackMisc
             return cat;
         }
 
-        //! Settings updates
-        static const CLogCategory &settingsUpdate()
-        {
-            static const CLogCategory cat { "swift.settings.update" };
-            return cat;
-        }
-
         //! Contexts
         static const CLogCategory &context()
         {
@@ -71,6 +64,13 @@ namespace BlackMisc
             return cat;
         }
 
+        //! Downloading
+        static const CLogCategory &download()
+        {
+            static const CLogCategory cat { "swift.download" };
+            return cat;
+        }
+
         //! All predefined special categories
         static const QList<CLogCategory> &allSpecialCategories()
         {
@@ -78,10 +78,10 @@ namespace BlackMisc
             {
                 uncategorized(),
                 validation(),
-                settingsUpdate(),
                 context(),
                 contextSlot(),
-                guiComponent()
+                guiComponent(),
+                download()
             };
             return cats;
         }
