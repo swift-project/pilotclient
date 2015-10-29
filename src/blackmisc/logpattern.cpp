@@ -12,6 +12,35 @@
 
 namespace BlackMisc
 {
+    const QHash<QString, CLogPattern> &CLogPattern::allHumanReadablePatterns()
+    {
+        static const QHash<QString, CLogPattern> patterns
+        {
+            { "uncategorized (swift)",  exactMatch(CLogCategory::uncategorized()) },
+            { "validation",             exactMatch(CLogCategory::validation()) },
+            { "swift contexts",         exactMatch(CLogCategory::context()) },
+            { "swift context slots",    exactMatch(CLogCategory::contextSlot()) },
+            { "swift GUI",              exactMatch(CLogCategory::guiComponent()) },
+            { "swift downloads",        exactMatch(CLogCategory::download()) },
+            { "Qt library",             startsWith("qt.") },
+            { "uncategorized (other)",  empty() }
+        };
+        return patterns;
+    }
+
+    const QStringList &CLogPattern::allHumanReadableNames()
+    {
+        static const QStringList names = allHumanReadablePatterns().keys();
+        return names;
+    }
+
+    const CLogPattern &CLogPattern::fromHumanReadableName(const QString &name)
+    {
+        static const CLogPattern empty {};
+        auto it = allHumanReadablePatterns().find(name);
+        return it == allHumanReadablePatterns().end() ? empty : *it;
+    }
+
     CLogPattern::CLogPattern(Strategy strategy, const QSet<QString> &strings)
         : m_strategy(strategy), m_strings(strings)
     {

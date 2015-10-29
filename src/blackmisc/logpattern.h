@@ -34,6 +34,12 @@ namespace BlackMisc
         public Mixin::Icon<CLogPattern>
     {
     public:
+        //! Get a list of human-readable names of predefined log patterns.
+        static const QStringList &allHumanReadableNames();
+
+        //! Return a predefined CLogPattern corresponding to the given human-readable name.
+        static const CLogPattern &fromHumanReadableName(const QString &name);
+
         //! Default constructed CLogPattern will match any message.
         CLogPattern();
 
@@ -121,6 +127,8 @@ namespace BlackMisc
         const QString &getPrefix() const { Q_ASSERT(m_strategy == StartsWith && m_strings.size() == 1); return *m_strings.begin(); }
         const QString &getSuffix() const { Q_ASSERT(m_strategy == EndsWith && m_strings.size() == 1); return *m_strings.begin(); }
         const QString &getSubstring() const { Q_ASSERT(m_strategy == Contains && m_strings.size() == 1); return *m_strings.begin(); }
+
+        static const QHash<QString, CLogPattern> &allHumanReadablePatterns();
     };
 }
 
