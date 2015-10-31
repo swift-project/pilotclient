@@ -21,7 +21,7 @@ namespace BlackMisc
     {
         CWebDataServicesAware::~CWebDataServicesAware()
         {
-            disconnectSignals();
+            this->m_swiftConnections.disconnectAll();
         }
 
         CServerList CWebDataServicesAware::getVatsimFsdServers() const
@@ -264,7 +264,7 @@ namespace BlackMisc
         void CWebDataServicesAware::setProvider(IWebDataServicesProvider *webDataReaderProvider)
         {
             Q_ASSERT_X(webDataReaderProvider, Q_FUNC_INFO, "missing provider");
-            disconnectSignals();
+            this->m_swiftConnections.disconnectAll();
             m_webDataReaderProvider = webDataReaderProvider;
         }
 
@@ -275,7 +275,7 @@ namespace BlackMisc
 
         void CWebDataServicesAware::gracefulShutdown()
         {
-            disconnectSignals();
+            this->m_swiftConnections.disconnectAll();
             this->m_webDataReaderProvider = nullptr;
         }
 
@@ -317,13 +317,5 @@ namespace BlackMisc
             return this->m_webDataReaderProvider->readDbDataFromDisk(dir, inBackround);
         }
 
-        void CWebDataServicesAware::disconnectSignals()
-        {
-            for (QMetaObject::Connection &c : m_swiftConnections)
-            {
-                QObject::disconnect(c);
-            }
-            m_swiftConnections.clear();
-        }
     } // namespace
 } // namespace

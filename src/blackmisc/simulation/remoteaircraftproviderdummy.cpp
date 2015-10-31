@@ -72,10 +72,10 @@ namespace BlackMisc
 
         QList<QMetaObject::Connection> CRemoteAircraftProviderDummy::connectRemoteAircraftProviderSignals(
             QObject *receiver,
-            std::function<void (const CAircraftSituation &)>        situationSlot,
-            std::function<void (const BlackMisc::Aviation::CCallsign &, const CAircraftParts &)>    partsSlot,
-            std::function<void (const CCallsign &)>                 removedAircraftSlot,
-            std::function<void (const CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
+            std::function<void (const CAircraftSituation &)>                                      situationSlot,
+            std::function<void (const BlackMisc::Aviation::CCallsign &, const CAircraftParts &)>  partsSlot,
+            std::function<void (const CCallsign &)>                                               removedAircraftSlot,
+            std::function<void (const CAirspaceAircraftSnapshot &)>                               aircraftSnapshotSlot
         )
         {
             Q_ASSERT_X(receiver, Q_FUNC_INFO, "Missing receiver");

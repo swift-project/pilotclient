@@ -27,6 +27,7 @@
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/network/client.h"
 #include "blackmisc/pixmap.h"
+#include "blackmisc/connectionguard.h"
 #include <QObject>
 
 namespace BlackCore
@@ -137,7 +138,7 @@ namespace BlackCore
         bool setInitialAircraftSituation(BlackMisc::Simulation::CSimulatedAircraft &aircraft) const;
 
     protected:
-        IInterpolator *m_interpolator = nullptr;  //!< interpolator instance
+        IInterpolator *m_interpolator = nullptr;      //!< interpolator instance
         bool m_pausedSimFreezesInterpolation = false; //!< paused simulator will also pause interpolation (so AI aircraft will hold)
 
     private:
@@ -152,7 +153,7 @@ namespace BlackCore
         BlackMisc::Aviation::CCallsignSet m_callsignsToBeRendered;           //!< callsigns which will be rendered
         int m_maxRenderedAircraft = MaxAircraftInfinite;                     //!< max.rendered aircraft
         BlackMisc::PhysicalQuantities::CLength m_maxRenderedDistance { 0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()}; //!< max.distance for rendering
-        QList<QMetaObject::Connection> m_remoteAircraftProviderConnections;  //!< connected signal/slots
+        BlackMisc::CConnectionGuard m_remoteAircraftProviderConnections;     //!< connected signal/slots
     };
 } // namespace
 

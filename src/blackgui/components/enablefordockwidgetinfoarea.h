@@ -16,7 +16,7 @@
 #include "blackgui/dockwidgetinfoarea.h"
 #include "blackgui/infoarea.h"
 #include "blackgui/enableforframelesswindow.h"
-#include "blackmisc/qtconnectionlist.h"
+#include "blackmisc/connectionguard.h"
 #include <QWidget>
 
 namespace BlackGui
@@ -69,6 +69,7 @@ namespace BlackGui
 
         private:
             BlackGui::CDockWidgetInfoArea *m_parentDockableInfoArea = nullptr; //!< my parent dockable widget
+            BlackMisc::CConnectionGuard    m_connections;
         };
     }
 } // namespace

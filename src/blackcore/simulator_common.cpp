@@ -35,12 +35,14 @@ namespace BlackCore
         this->setObjectName("Simulator:" + info.getIdentifier());
 
         // provider signals
-        m_remoteAircraftProviderConnections = this->m_remoteAircraftProvider->connectRemoteAircraftProviderSignals(
+        m_remoteAircraftProviderConnections.append(
+            this->m_remoteAircraftProvider->connectRemoteAircraftProviderSignals(
                 this, // receiver must match object in bind
                 std::bind(&CSimulatorCommon::ps_remoteProviderAddAircraftSituation, this, std::placeholders::_1),
                 std::bind(&CSimulatorCommon::ps_remoteProviderAddAircraftParts, this, std::placeholders::_1, std::placeholders::_2),
                 std::bind(&CSimulatorCommon::ps_remoteProviderRemovedAircraft, this, std::placeholders::_1),
-                std::bind(&CSimulatorCommon::ps_recalculateRenderedAircraft, this, std::placeholders::_1));
+                std::bind(&CSimulatorCommon::ps_recalculateRenderedAircraft, this, std::placeholders::_1))
+        );
 
         // timer
         this->m_oneSecondTimer.setObjectName(this->objectName().append(":m_oneSecondTimer"));
@@ -219,14 +221,7 @@ namespace BlackCore
     void CSimulatorCommon::unload()
     {
         this->disconnectFrom(); // disconnect from simulator
-
-        // disconnect as many signals as possible
-        for (const QMetaObject::Connection &c : m_remoteAircraftProviderConnections)
-        {
-            QObject::disconnect(c);
-        }
-        m_remoteAircraftProviderConnections.clear();
-        this->disconnect();
+        this->m_remoteAircraftProviderConnections.disconnectAll();
         CLogHandler::instance()->disconnect();
     }
 

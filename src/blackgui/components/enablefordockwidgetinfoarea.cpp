@@ -42,6 +42,7 @@ namespace BlackGui
                 this->m_parentDockableInfoArea = nullptr;
             });
             Q_ASSERT_X(con, Q_FUNC_INFO, "Connection failed");
+            this->m_connections.append(con);
             return true;
         }
 

@@ -26,6 +26,7 @@
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/weather/metarset.h"
 #include "blackmisc/countrylist.h"
+#include "blackmisc/connectionguard.h"
 
 #include <functional>
 
@@ -343,8 +344,8 @@ namespace BlackMisc
             CWebDataServicesAware(IWebDataServicesProvider *webDataReaderProvider = nullptr) : m_webDataReaderProvider(webDataReaderProvider) { }
 
         private:
-            IWebDataServicesProvider *m_webDataReaderProvider = nullptr; //!< access to object
-            QList<QMetaObject::Connection> m_swiftConnections; //!< signal connection with swift
+            IWebDataServicesProvider    *m_webDataReaderProvider = nullptr; //!< access to object
+            BlackMisc::CConnectionGuard m_swiftConnections;                 //!< signal connection with swift
 
             //! Disconnect all signals
             void disconnectSignals();
