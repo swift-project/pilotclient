@@ -16,13 +16,13 @@
 #include "blackgui/dockwidgetinfoarea.h"
 #include "blackgui/infoarea.h"
 #include "blackgui/enableforframelesswindow.h"
+#include "blackmisc/qtconnectionlist.h"
 #include <QWidget>
 
 namespace BlackGui
 {
     namespace Components
     {
-
         //! Helper class: If a component is residing in an dockable widget.
         //! This class provides access to its info area and dockable widget.
         class BLACKGUI_EXPORT CEnableForDockWidgetInfoArea
@@ -33,6 +33,9 @@ namespace BlackGui
 
             //! Corresponding dockable widget in info area
             const BlackGui::CDockWidgetInfoArea *getDockWidgetInfoArea() const { return m_parentDockableInfoArea; }
+
+            //! Has dock area?
+            bool hasDockWidgetArea() const { return m_parentDockableInfoArea; }
 
             //! Corresponding dockable widget in info area
             //! \remarks Usually set from CDockWidgetInfoArea when it is fully initialized

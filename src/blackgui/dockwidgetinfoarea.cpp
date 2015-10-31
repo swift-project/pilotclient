@@ -97,10 +97,6 @@ namespace BlackGui
         foreach(CEnableForDockWidgetInfoArea * dwia, infoAreaDockWidgets)
         {
             Q_ASSERT_X(dwia, Q_FUNC_INFO, "Missing info area");
-
-            // KWB: potentially a risk when this object is deleted
-            //      but under normal situations the child object will be deleted as well, and we have
-            //      no multi-threaded GUI
             dwia->setParentDockWidgetInfoArea(this);
         }
     }

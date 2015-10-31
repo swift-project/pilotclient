@@ -61,7 +61,6 @@ namespace BlackGui
 
         //! The parent info areas
         const QList<const CInfoArea *> findParentInfoAreas() const;
-
     };
 
 } // namespace

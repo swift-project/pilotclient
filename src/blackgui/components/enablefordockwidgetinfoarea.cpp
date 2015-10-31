@@ -9,6 +9,7 @@
 
 #include "enablefordockwidgetinfoarea.h"
 #include "blackgui/guiutility.h"
+#include <QDockWidget>
 
 using namespace BlackGui;
 
@@ -16,7 +17,6 @@ namespace BlackGui
 {
     namespace Components
     {
-
         CEnableForDockWidgetInfoArea::CEnableForDockWidgetInfoArea(CDockWidgetInfoArea *parentInfoArea)
         {
             // it the parent is already an info area at this time, we keep it
@@ -36,6 +36,12 @@ namespace BlackGui
             }
 
             m_parentDockableInfoArea = parentDockableWidget;
+            QMetaObject::Connection con = QDockWidget::connect(parentDockableWidget, &QDockWidget::destroyed, [this]
+            {
+                // break dependency to dockable widget
+                this->m_parentDockableInfoArea = nullptr;
+            });
+            Q_ASSERT_X(con, Q_FUNC_INFO, "Connection failed");
             return true;
         }
 

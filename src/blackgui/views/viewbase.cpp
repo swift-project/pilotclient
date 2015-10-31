@@ -257,6 +257,11 @@ namespace BlackGui
         {
             if (!m_enabledLoadIndicator) { return; }
             if (this->m_showingLoadIndicator) { return; }
+            if (this->hasDockWidgetArea())
+            {
+                if (!this->isVisibleWidget()) { return; }
+            }
+
             if (containerSizeDependent >= 0)
             {
                 // really with indicator?

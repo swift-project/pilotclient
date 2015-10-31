@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_VIEWBASE_H
 #define BLACKGUI_VIEWBASE_H
 
+#include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/filters/filterdialog.h"
 #include "blackgui/filters/filterwidget.h"
 #include "blackgui/models/modelfilter.h"
@@ -35,7 +36,8 @@ namespace BlackGui
     namespace Views
     {
         //! Non templated base class, allows Q_OBJECT and signals / slots to be used
-        class BLACKGUI_EXPORT CViewBaseNonTemplate : public QTableView
+        class BLACKGUI_EXPORT CViewBaseNonTemplate :
+            public QTableView, public BlackGui::Components::CEnableForDockWidgetInfoArea
         {
             Q_OBJECT
 
