@@ -99,7 +99,7 @@ namespace BlackMisc
             static QNetworkRequest getNetworkRequest(const CUrl &url, RequestType type = Get);
 
         private:
-            //! Deleted constructor
+            //! Hidden constructor
             CNetworkUtils() {}
 
         };

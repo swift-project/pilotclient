@@ -35,7 +35,7 @@ namespace BlackMisc
                 bool success = this->m_vPilotReader->read(false);
                 if (success)
                 {
-                    this->m_datastoreModels =  this->m_vPilotReader->getRules().toAircraftModels();
+                    this->m_datastoreModels = this->m_vPilotReader->getRules().toAircraftModels();
                 }
                 return success;
             }

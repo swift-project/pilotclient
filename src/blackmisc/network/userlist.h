@@ -37,7 +37,6 @@ namespace BlackMisc
 
             //! Construct from a base class object.
             CUserList(const CSequence &other);
-
         };
 
     } //namespace

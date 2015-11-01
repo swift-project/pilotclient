@@ -33,10 +33,9 @@ namespace BlackGui
         QWidgetList tlw = topLevelApplicationWidgetsWithName();
         for (QWidget *w : tlw)
         {
-            // best coice is to check on frameless window
+            // best choice is to check on frameless window
             CEnableForFramelessWindow *mw = dynamic_cast<CEnableForFramelessWindow *>(w);
             if (mw && mw->isMainApplicationWindow()) { return mw; }
-
         }
         return nullptr;
     }

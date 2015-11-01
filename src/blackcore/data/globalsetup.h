@@ -137,7 +137,7 @@ namespace BlackCore
             bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know hat you are doing
         };
 
-        //! Trait for for global setup data
+        //! Trait for global setup data
         struct GlobalSetup : public BlackCore::CDataTrait<CGlobalSetup>
         {
             //! Key in data cache
@@ -146,8 +146,8 @@ namespace BlackCore
             //! Default value
             static const CGlobalSetup &defaultValue()
             {
-                static const CGlobalSetup urls;
-                return urls;
+                static const CGlobalSetup gs;
+                return gs;
             }
         };
 

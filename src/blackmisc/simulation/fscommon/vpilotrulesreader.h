@@ -99,7 +99,7 @@ namespace BlackMisc
                 int m_loadedFiles = 0;               //!< loaded files
                 CVPilotModelRuleSet m_rules;         //!< rules list
                 bool m_asyncLoadInProgress = false;  //!< Asynchronous load in progress
-                bool m_shutdown = false;             //!< Shutdown
+                bool m_shutdown            = false;  //!< Shutdown
                 mutable BlackMisc::Simulation::CAircraftModelList m_models; //!< converted to models
                 mutable QReadWriteLock m_lockData;
 

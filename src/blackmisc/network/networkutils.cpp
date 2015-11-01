@@ -219,6 +219,5 @@ namespace BlackMisc
             CNetworkUtils::ignoreSslVerification(request);
             return request;
         }
-
     } // namespace
 } // namespacee
