@@ -21,7 +21,6 @@
 #include "blackcore/actionbind.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackgui/components/enableforruntime.h"
-#include "blackgui/components/infowindowcomponent.h"
 #include "blackgui/components/maininfoareacomponent.h"
 #include "blackgui/transpondermodeselector.h"
 #include "blackgui/models/atcstationlistmodel.h"
@@ -30,6 +29,7 @@
 #include "blackgui/models/statusmessagelistmodel.h"
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/managedstatusbar.h"
+#include "blackgui/overlaymessagesframe.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/identifiable.h"
@@ -111,7 +111,6 @@ protected:
 private:
     QScopedPointer<Ui::SwiftGuiStd> ui;
     bool                                           m_init = false;
-    BlackGui::Components::CInfoWindowComponent    *m_compInfoWindow = nullptr; //!< the info window (popup
     BlackGui::CManagedStatusBar                    m_statusBar;
     BlackMisc::CLogSubscriber                      m_logSubscriber { this, &SwiftGuiStd::ps_displayStatusMessageInGui };
     BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this};             //!< setup cache

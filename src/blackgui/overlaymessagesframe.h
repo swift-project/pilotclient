@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_OVERLAYMESSAGES_FRAME_H
 #define BLACKGUI_OVERLAYMESSAGES_FRAME_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackgui/overlaymessages.h"
 #include <QFrame>
 
@@ -20,7 +21,7 @@ namespace BlackGui
     /*!
      * Display status messages (nested in another widget)
      */
-    class COverlayMessagesFrame : public QFrame
+    class BLACKGUI_EXPORT COverlayMessagesFrame : public QFrame
     {
         Q_OBJECT
 
@@ -37,11 +38,18 @@ namespace BlackGui
         //! Hide the inner frame
         void hideStatusMessagesFrame();
 
-        //! Show multiple messages
-        void showMessages(const BlackMisc::CStatusMessageList &messages);
+    public slots:
+        //! \copydoc COverlayMessages::showMessages
+        void showMessages(const BlackMisc::CStatusMessageList &messages, int timeOutMs = -1);
 
-        //! Show single message
-        void showMessage(const BlackMisc::CStatusMessage &message);
+        //! \copydoc COverlayMessages::showMessage
+        void showMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1);
+
+        //! \copydoc COverlayMessages::showTextMessage
+        void showTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int timeOutMs = -1);
+
+        //! \copydoc COverlayMessages::showVariant
+        void showVariant(const BlackMisc::CVariant &variant, int timeOutMs = -1);
 
     protected:
         //! \copydoc QFrame::paintEvent
@@ -50,7 +58,7 @@ namespace BlackGui
         //! \copydoc QFrame::keyPressEvent
         virtual void keyPressEvent(QKeyEvent *event) override;
 
-        COverlayMessages *m_statusMessages = nullptr; //!< embedded QFrame with Status messages
+        COverlayMessages *m_overlayMessages = nullptr; //!< embedded QFrame with Status messages
 
     private:
         //! Calculate inner frame size
@@ -59,7 +67,6 @@ namespace BlackGui
         //! Init the inner frame (if not yet initialized)
         void initInnerFrame();
     };
-
 } // ns
 
 #endif // guard

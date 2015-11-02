@@ -28,22 +28,37 @@ namespace BlackGui
 
     void COverlayMessagesFrame::hideStatusMessagesFrame()
     {
-        if (!m_statusMessages) { return; }
+        if (!m_overlayMessages) { return; }
     }
 
-    void COverlayMessagesFrame::showMessages(const BlackMisc::CStatusMessageList &messages)
-    {
-        if (messages.isEmpty()) { return; }
-        this->initInnerFrame();
-        this->m_statusMessages->showMessages(messages);
-        this->repaint();
-    }
-
-    void COverlayMessagesFrame::showMessage(const BlackMisc::CStatusMessage &message)
+    void COverlayMessagesFrame::showMessage(const BlackMisc::CStatusMessage &message, int timeOutMs)
     {
         if (message.isEmpty()) { return; }
         this->initInnerFrame();
-        this->m_statusMessages->showMessage(message);
+        this->m_overlayMessages->showMessage(message, timeOutMs);
+        this->repaint();
+    }
+
+    void COverlayMessagesFrame::showMessages(const BlackMisc::CStatusMessageList &messages, int timeOutMs)
+    {
+        if (messages.isEmpty()) { return; }
+        this->initInnerFrame();
+        this->m_overlayMessages->showMessages(messages, timeOutMs);
+        this->repaint();
+    }
+
+    void COverlayMessagesFrame::showTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int timeOutMs)
+    {
+        if (textMessage.isEmpty()) { return; }
+        this->initInnerFrame();
+        this->m_overlayMessages->showTextMessage(textMessage, timeOutMs);
+        this->repaint();
+    }
+
+    void COverlayMessagesFrame::showVariant(const BlackMisc::CVariant &variant, int timeOutMs)
+    {
+        this->initInnerFrame();
+        this->m_overlayMessages->showVariant(variant, timeOutMs);
         this->repaint();
     }
 
@@ -56,10 +71,9 @@ namespace BlackGui
 
     void COverlayMessagesFrame::keyPressEvent(QKeyEvent *event)
     {
-        if (!m_statusMessages) { QFrame::keyPressEvent(event); }
-        if (event->key() == Qt::Key_Escape)
+        if (m_overlayMessages && event->key() == Qt::Key_Escape)
         {
-            m_statusMessages->close();
+            m_overlayMessages->close();
             event->setAccepted(true);
         }
         else
@@ -80,9 +94,9 @@ namespace BlackGui
     void COverlayMessagesFrame::initInnerFrame()
     {
         QSize inner(innerFrameSize());
-        if (!this->m_statusMessages)
+        if (!this->m_overlayMessages)
         {
-            this->m_statusMessages = new COverlayMessages(inner.width(), inner.height(), this);
+            this->m_overlayMessages = new COverlayMessages(inner.width(), inner.height(), this);
         }
 
         QPoint middle = this->geometry().center();
@@ -90,6 +104,6 @@ namespace BlackGui
         int h = inner.height();
         int x = middle.x() - w / 2;
         int y = middle.y() - h / 2;
-        this->m_statusMessages->setGeometry(x, y, w, h);
+        this->m_overlayMessages->setGeometry(x, y, w, h);
     }
 } // ns

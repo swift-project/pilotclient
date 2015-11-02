@@ -113,6 +113,9 @@
       </item>
       <item>
        <widget class="QStackedWidget" name="sw_StatusMessagesComponent">
+        <property name="currentIndex">
+         <number>2</number>
+        </property>
         <widget class="QWidget" name="pg_StatusMessages">
          <layout class="QVBoxLayout" name="vl_PgStatusMessages">
           <property name="spacing">
@@ -164,6 +167,35 @@
           </property>
           <item>
            <widget class="BlackGui::CStatusMessageForm" name="form_StatusMessage">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="pg_StatusMessageSmall">
+         <layout class="QVBoxLayout" name="vl_StatusMessageSmall">
+          <property name="spacing">
+           <number>4</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="BlackGui::CStatusMessageFormSmall" name="form_StatusMessageSmall">
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -255,6 +287,12 @@
    <class>BlackGui::CStatusMessageForm</class>
    <extends>QFrame</extends>
    <header>blackgui/statusmessageform.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CStatusMessageFormSmall</class>
+   <extends>QFrame</extends>
+   <header>blackgui/statusmessageformsmall.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

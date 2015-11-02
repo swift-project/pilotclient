@@ -186,7 +186,7 @@ void SwiftGuiStd::initGuiSignals()
     connect(this->ui->menu_InternalsDisplayCachedFiles, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
 
     // command line / text messages
-    connect(this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::displayInInfoWindow, this->m_compInfoWindow, &CInfoWindowComponent::display);
+    connect(this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::displayInInfoWindow, this->ui->fr_CentralFrameInside, &COverlayMessagesFrame::showVariant);
 
     // settings (GUI component), styles
     connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedWindowsOpacity, this, &SwiftGuiStd::ps_onChangedWindowOpacity);

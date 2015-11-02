@@ -48,7 +48,6 @@ SwiftGuiStd::SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowM
     // GUI
     ui->setupUi(this);
     this->setDynamicProperties(windowMode == CEnableForFramelessWindow::WindowFrameless);
-    this->m_compInfoWindow = new CInfoWindowComponent(this); // setupUi has to be first!
 }
 
 SwiftGuiStd::~SwiftGuiStd()
@@ -96,13 +95,6 @@ void SwiftGuiStd::performGracefulShutdown()
     // clean up GUI
     this->ui->comp_MainInfoArea->dockAllWidgets();
     this->ui->comp_InvisibleInfoArea->dockAllWidgets();
-
-    // close info window
-    if (this->m_compInfoWindow)
-    {
-        this->m_compInfoWindow->close();
-        this->m_compInfoWindow = nullptr;
-    }
 
     // allow some other parts to react
     QApplication::processEvents(QEventLoop::AllEvents, 100);
@@ -256,7 +248,7 @@ void SwiftGuiStd::ps_displayStatusMessageInGui(const CStatusMessage &statusMessa
     // display overlay for errors, but not for validation
     if (statusMessage.getSeverity() == CStatusMessage::SeverityError && ! statusMessage.getCategories().contains(CLogCategory::validation()))
     {
-        this->m_compInfoWindow->displayStatusMessage(statusMessage);
+        this->ui->fr_CentralFrameInside->showMessage(statusMessage);
     }
 }
 

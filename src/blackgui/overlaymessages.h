@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_OVERLAYMESSAGES_H
 #define BLACKGUI_OVERLAYMESSAGES_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/variant.h"
@@ -26,7 +27,7 @@ namespace BlackGui
     /*!
      * Display status messages (nested in another widget)
      */
-    class COverlayMessages : public QFrame
+    class BLACKGUI_EXPORT COverlayMessages : public QFrame
     {
         Q_OBJECT
 
@@ -40,6 +41,22 @@ namespace BlackGui
         //! Destructor
         ~COverlayMessages();
 
+        //! Messages mode
+        void setModeToMessages();
+
+        //! Single Message mode
+        void setModeToMessage();
+
+        //! Single Message mode
+        void setModeToMessageSmall();
+
+        //! Single Text message mode
+        void setModeToTextMessage();
+
+        //! Set header text
+        void setHeaderText(const QString &header);
+
+    public slots:
         //! Show multiple messages
         void showMessages(const BlackMisc::CStatusMessageList &messages, int timeOutMs = -1);
 
@@ -52,19 +69,6 @@ namespace BlackGui
         //! Display one of the supported types
         void showVariant(const BlackMisc::CVariant &variant, int timeOutMs = -1);
 
-        //! Messages mode
-        void setModeToMessages();
-
-        //! Single Message mode
-        void setModeToMessage();
-
-        //! Single Text message mode
-        void setModeToTextMessage();
-
-        //! Set header text
-        void setHeaderText(const QString &header);
-
-    public slots:
         //! Close button clicked
         void close();
 
@@ -77,6 +81,13 @@ namespace BlackGui
 
         //! \copydoc QFrame::paintEvent
         virtual void paintEvent(QPaintEvent *event) override;
+
+    private slots:
+        //! Stylesheet changed
+        void ps_onStyleSheetsChanged();
+
+        //! Small
+        bool useSmall() const;
 
     private:
         QScopedPointer<Ui::COverlayMessages> ui;

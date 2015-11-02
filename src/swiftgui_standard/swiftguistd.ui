@@ -76,7 +76,7 @@
      <number>2</number>
     </property>
     <item>
-     <widget class="QFrame" name="fr_CentralFrameInside">
+     <widget class="BlackGui::COverlayMessagesFrame" name="fr_CentralFrameInside">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
@@ -571,6 +571,12 @@
    <class>BlackGui::Components::CInvisibleInfoAreaComponent</class>
    <extends>QWidget</extends>
    <header>blackgui/components/invisibleinfoareacomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::COverlayMessagesFrame</class>
+   <extends>QFrame</extends>
+   <header>blackgui/overlaymessagesframe.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

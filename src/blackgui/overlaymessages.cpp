@@ -23,6 +23,7 @@ namespace BlackGui
         ui(new Ui::COverlayMessages)
     {
         this->init(w, h);
+        connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &COverlayMessages::ps_onStyleSheetsChanged);
     }
 
     COverlayMessages::COverlayMessages(const QString &headerText, int w, int h, QWidget *parent) :
@@ -56,6 +57,16 @@ namespace BlackGui
         }
     }
 
+    void COverlayMessages::ps_onStyleSheetsChanged()
+    {
+        // stlye sheet
+    }
+
+    bool COverlayMessages::useSmall() const
+    {
+        return (this->width() < 400);
+    }
+
     COverlayMessages::~COverlayMessages()
     {}
 
@@ -70,8 +81,16 @@ namespace BlackGui
     void COverlayMessages::showMessage(const BlackMisc::CStatusMessage &message, int timeOutMs)
     {
         if (message.isEmpty()) { return; }
-        this->setModeToMessage();
-        this->ui->form_StatusMessage->setValue(message);
+        if (this->useSmall())
+        {
+            this->setModeToMessageSmall();
+            this->ui->form_StatusMessageSmall->setValue(message);
+        }
+        else
+        {
+            this->setModeToMessage();
+            this->ui->form_StatusMessage->setValue(message);
+        }
         this->display(timeOutMs);
     }
 
@@ -118,6 +137,12 @@ namespace BlackGui
         this->setHeader("Message");
     }
 
+    void COverlayMessages::setModeToMessageSmall()
+    {
+        this->ui->sw_StatusMessagesComponent->setCurrentWidget(this->ui->pg_StatusMessageSmall);
+        this->setHeader("Message");
+    }
+
     void COverlayMessages::setModeToTextMessage()
     {
         this->ui->sw_StatusMessagesComponent->setCurrentWidget(this->ui->pg_TextMessage);
@@ -126,10 +151,14 @@ namespace BlackGui
 
     void COverlayMessages::keyPressEvent(QKeyEvent *event)
     {
-        if (event->key() ==  Qt::Key_Escape)
+        if (this->isVisible() && event->key() ==  Qt::Key_Escape)
         {
             this->close();
             event->setAccepted(true);
+        }
+        else
+        {
+            QFrame::keyPressEvent(event);
         }
     }
 
