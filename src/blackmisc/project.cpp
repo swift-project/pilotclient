@@ -233,17 +233,6 @@ namespace BlackMisc
         return QProcessEnvironment::systemEnvironment().value(envVarDevelopment());
     }
 
-    const QString &CProject::envDevelopmentSetup()
-    {
-        static const QString s("SWIFT_DEV_SETUP");
-        return s;
-    }
-
-    QString CProject::envDevelopmentSetupValue()
-    {
-        return QProcessEnvironment::systemEnvironment().value(envDevelopmentSetup());
-    }
-
     const QString &CProject::envVarPrivateSetupDir()
     {
         static const QString s("SWIFT_SETUP_DIR");
@@ -317,11 +306,7 @@ namespace BlackMisc
 
     QString CProject::getEnvironmentVariables(const QString &separator)
     {
-        QString e(envDevelopmentSetup());
-        e = e.append(": ").append(envDevelopmentSetupValue());
-        e = e.append(separator);
-
-        e = e.append(envVarDevelopment());
+        QString e(envVarDevelopment());
         e = e.append(": ").append(envVarDevelopmentValue());
         e = e.append(separator);
 
@@ -390,6 +375,7 @@ namespace BlackMisc
         str.append(compiledWithInfo(false));
         return str;
     }
+
 } // ns
 
 #undef BLACK_VERSION_STR

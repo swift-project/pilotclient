@@ -140,23 +140,14 @@ namespace BlackMisc
         static const QString &envVarDevelopment();
 
         //! Value
-        //! //! \value true|false
+        //! \return true|false
         static QString envVarDevelopmentValue();
 
-        //! Read data from productive or development setupnding on dev. environment yes/no
-        static const QString &envDevelopmentSetup();
-
-        //! Value
-        //! \value true|false
-        //! \remarks If this is set, the explicit value will be used.
-        //!          If not set, default will be used depe
-        static QString envDevelopmentSetupValue();
-
-        //! Environment variable private resources
+        //! Environment variable private resources directory
         static const QString &envVarPrivateSetupDir();
 
         //! Value
-        //! \value directory path
+        //! \return directory path
         static QString envVarPrivateSetupDirValue();
     };
 } // ns
