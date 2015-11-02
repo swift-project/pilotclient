@@ -34,6 +34,9 @@ namespace BlackMisc
 
             //! Construct from a base class object.
             CServerList(const CSequence<CServer> &other);
+
+            //! Contains name
+            bool containsName(const QString &name) const;
         };
 
     } //namespace

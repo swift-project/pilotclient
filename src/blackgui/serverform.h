@@ -52,6 +52,7 @@ namespace BlackGui
 
     private:
         QScopedPointer<Ui::CNetworkServerForm> ui;
+        QString m_passwordNameLabel;
     };
 }
 

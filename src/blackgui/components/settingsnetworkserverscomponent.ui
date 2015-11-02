@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>260</width>
-    <height>273</height>
+    <height>334</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -53,16 +53,10 @@
    </item>
    <item>
     <widget class="BlackGui::CServerForm" name="frp_ServerForm">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>140</height>
+       <height>80</height>
       </size>
      </property>
      <property name="frameShape">
@@ -156,15 +150,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Views::CServerView</class>
-   <extends>QTableView</extends>
-   <header>blackgui/views/serverview.h</header>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::CServerForm</class>
    <extends>QFrame</extends>
    <header>blackgui/serverform.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Views::CServerView</class>
+   <extends>QTableView</extends>
+   <header>blackgui/views/serverview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

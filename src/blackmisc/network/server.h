@@ -61,6 +61,9 @@ namespace BlackMisc
             //! Set name
             void setName(const QString &name) { m_name = name.trimmed(); }
 
+            //! Matches server name?
+            bool matchesName(const QString &name) const;
+
             //! Get description
             const QString &getDescription() const { return m_description; }
 

@@ -29,6 +29,12 @@ namespace BlackMisc
             return s;
         }
 
+        bool CServer::matchesName(const QString &name) const
+        {
+            return  m_name.length() == name.length() &&
+                    m_name.startsWith(name, Qt::CaseInsensitive);
+        }
+
         bool CServer::isValidForLogin() const
         {
             return this->m_user.hasValidCredentials() && this->m_port > 0 && !this->m_address.isEmpty() && this->isAcceptingConnections();

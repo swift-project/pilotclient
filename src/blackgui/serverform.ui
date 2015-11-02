@@ -6,15 +6,9 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>313</width>
-    <height>164</height>
+    <width>347</width>
+    <height>126</height>
    </rect>
-  </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Frame</string>
@@ -44,32 +38,131 @@
    <item>
     <layout class="QGridLayout" name="gl_ServerForm">
      <property name="leftMargin">
-      <number>6</number>
+      <number>4</number>
      </property>
      <property name="topMargin">
-      <number>6</number>
+      <number>4</number>
      </property>
      <property name="rightMargin">
-      <number>6</number>
+      <number>4</number>
      </property>
      <property name="bottomMargin">
-      <number>6</number>
+      <number>4</number>
      </property>
      <property name="spacing">
-      <number>6</number>
+      <number>4</number>
      </property>
-     <item row="0" column="0">
-      <widget class="QLabel" name="lbl_Name">
-       <property name="text">
-        <string>Name</string>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="0">
       <widget class="QLabel" name="lbl_Address">
        <property name="text">
-        <string>Addr./ port</string>
+        <string>Addr./ port:</string>
        </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="lbl_Name">
+       <property name="text">
+        <string>Name:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="lbl_RealName">
+       <property name="text">
+        <string>Real name:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="lbl_Description">
+       <property name="text">
+        <string>Description:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1" colspan="2">
+      <widget class="QLineEdit" name="le_Name">
+       <property name="placeholderText">
+        <string>server name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1" colspan="2">
+      <widget class="QLineEdit" name="le_Description">
+       <property name="placeholderText">
+        <string>server description</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1" colspan="2">
+      <widget class="QLineEdit" name="le_RealName">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="placeholderText">
+        <string>your name if required</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="lbl_IdPassword">
+       <property name="text">
+        <string>Id/Password:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="le_Address">
+       <property name="placeholderText">
+        <string>e.g. &quot;server.foo.com&quot;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1" colspan="2">
+      <widget class="QWidget" name="wi_NanePassword" native="true">
+       <layout class="QHBoxLayout" name="hl_NamePassword">
+        <property name="spacing">
+         <number>3</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QLineEdit" name="le_NetworkId">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="placeholderText">
+           <string>id</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="le_Password">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="maxLength">
+           <number>32</number>
+          </property>
+          <property name="echoMode">
+           <enum>QLineEdit::Password</enum>
+          </property>
+          <property name="placeholderText">
+           <string>password</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
      <item row="2" column="2">
@@ -100,74 +193,6 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="lbl_Description">
-       <property name="text">
-        <string>Description</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="lbl_RealName">
-       <property name="text">
-        <string>Real name</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="lbl_Password">
-       <property name="text">
-        <string>Password</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="lbl_NetworkId">
-       <property name="text">
-        <string>Id:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLineEdit" name="le_Address"/>
-     </item>
-     <item row="4" column="1" colspan="2">
-      <widget class="QLineEdit" name="le_NetworkId">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1" colspan="2">
-      <widget class="QLineEdit" name="le_Password">
-       <property name="text">
-        <string/>
-       </property>
-       <property name="maxLength">
-        <number>32</number>
-       </property>
-       <property name="echoMode">
-        <enum>QLineEdit::Password</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1" colspan="2">
-      <widget class="QLineEdit" name="le_RealName">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1" colspan="2">
-      <widget class="QLineEdit" name="le_Description"/>
-     </item>
-     <item row="0" column="1" colspan="2">
-      <widget class="QLineEdit" name="le_Name">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
   </layout>
@@ -178,8 +203,6 @@
   <tabstop>le_Address</tabstop>
   <tabstop>le_Port</tabstop>
   <tabstop>le_RealName</tabstop>
-  <tabstop>le_NetworkId</tabstop>
-  <tabstop>le_Password</tabstop>
  </tabstops>
  <resources/>
  <connections/>

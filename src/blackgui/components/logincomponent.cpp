@@ -139,12 +139,13 @@ namespace BlackGui
             ps_validateAircraftValues();
             ps_validateVatsimValues();
             ps_onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1);
-            CServerList otherServers(this->m_trafficNetworkServers.get());
+            CServerList otherServers(this->m_otherTrafficNetworkServers.get());
 
             // add a testserver when no servers can be loaded
             if (otherServers.isEmpty() && CProject::isRunningInBetaOrDeveloperEnvironment())
             {
                 otherServers.push_back(m_setup.get().fsdTestServers());
+                CLogMessage(this).info("Added servers (other) for testing");
             }
             this->ui->cbp_OtherServers->setServers(otherServers);
         }
@@ -453,7 +454,7 @@ namespace BlackGui
 
         void CLoginComponent::ps_reloadSettings()
         {
-            CServerList otherServers(this->m_trafficNetworkServers.get());
+            CServerList otherServers(this->m_otherTrafficNetworkServers.get());
             this->ui->cbp_OtherServers->setServers(otherServers);
         }
 

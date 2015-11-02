@@ -20,5 +20,14 @@ namespace BlackMisc
             CSequence<CServer>(other)
         { }
 
+        bool CServerList::containsName(const QString &name) const
+        {
+            for (const CServer &s : *this)
+            {
+                if (s.matchesName(name)) { return true; }
+            }
+            return false;
+        }
+
     } // namespace
 } // namespace

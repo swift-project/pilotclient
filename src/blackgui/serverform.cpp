@@ -69,7 +69,16 @@ namespace BlackGui
 
     void CServerForm::showPasswordField(bool show)
     {
-        this->ui->lbl_Password->setVisible(show);
+        if (this->ui->le_Password->isVisible() == show) { return; }
+        if (m_passwordNameLabel.isEmpty()) { m_passwordNameLabel = ui->lbl_IdPassword->text(); }
+        if (show)
+        {
+            ui->lbl_IdPassword->setText(m_passwordNameLabel);
+        }
+        else
+        {
+            ui->lbl_IdPassword->setText("Id");
+        }
         this->ui->le_Password->setVisible(show);
     }
 
