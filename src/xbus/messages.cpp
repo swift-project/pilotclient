@@ -25,13 +25,15 @@ namespace XBus
 
     void CMessageBox::draw()
     {
+        const int messageCount = static_cast<int>(m_messages.size());
+
         static int lineHeight = 0;
         if (! lineHeight)
         {
             XPLMGetFontDimensions(xplmFont_Basic, nullptr, &lineHeight, nullptr);
         }
         static const int lineSpace = lineHeight / 3;
-        const int boxBottom = c_boxTop - lineSpace * 2 - (lineHeight + lineSpace) * m_messages.size();
+        const int boxBottom = c_boxTop - lineSpace * 2 - (lineHeight + lineSpace) * messageCount;
         XPLMDrawTranslucentDarkBox(c_boxLeft, c_boxTop, c_boxRight, boxBottom);
 
         static int arrowWidth = 0, arrowHeight = 0;
@@ -48,10 +50,10 @@ namespace XBus
         }
         if (m_downArrow)
         {
-            const int y = c_boxTop - (lineHeight + lineSpace) * m_messages.size();
+            const int y = c_boxTop - (lineHeight + lineSpace) * messageCount;
             XPDrawElement(x, y, x + arrowWidth, y + arrowHeight, xpElement_LittleDownArrow, 0);
         }
-        for (size_t i = 0; i < m_messages.size(); ++i)
+        for (int i = 0; i < messageCount; ++i)
         {
             const int y = c_boxTop - (lineHeight + lineSpace) * (i + 1);
             XPLMDrawString(m_messages[i].m_rgb.data(), x + arrowWidth + arrowWidth / 2, y, const_cast<char*>(m_messages[i].m_text.c_str()), nullptr, xplmFont_Basic);
