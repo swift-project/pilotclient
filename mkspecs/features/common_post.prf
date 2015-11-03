@@ -22,11 +22,6 @@ macx:staticlib:isEmpty(SOURCES) {
 INCLUDEPATH *= $$EXTERNALDIR/common/include
 
 # and the library path depending on the used compiler
-win32-msvc2010 {
-    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/vs2010_64/lib
-    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/vs2010_32/lib
-    equals(WORD_SIZE,32): LIBS += -luser32
-}
 win32-msvc2013 {
     INCLUDEPATH *= $$EXTERNALDIR/win32-vs2013/include
     equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/win32-vs2013/lib64
