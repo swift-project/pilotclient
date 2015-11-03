@@ -6,7 +6,7 @@ XPCAircraft::XPCAircraft(
 					const char *			inLivery)
 {
 	mPlane = XPMPCreatePlane(inICAOCode, inAirline, inLivery, AircraftCB,
-					reinterpret_cast<void *>(this));
+					static_cast<void *>(this));
 }
 					
 XPCAircraft::~XPCAircraft()
@@ -20,7 +20,7 @@ XPMPPlaneCallbackResult	XPCAircraft::AircraftCB(
 										void *				ioData,
 										void *				inRefcon)
 {
-	XPCAircraft * me = reinterpret_cast<XPCAircraft *>(inRefcon);
+	XPCAircraft * me = static_cast<XPCAircraft *>(inRefcon);
 	switch(inDataType) {
 	case xpmpDataType_Position:
 		return me->GetPlanePosition((XPMPPlanePosition_t *) ioData);
