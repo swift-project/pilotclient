@@ -25,7 +25,7 @@ namespace BlackMisc
         Optional() : m_isValid(false) {}
 
         //! Construct from a value.
-        Optional(T value) : m_isValid(true) { new (m_bytes) T(std::move(value)); }
+        Optional(T value) : m_isValid(true) { new (m_data.bytes) T(std::move(value)); }
 
         //! Construct from a nullptr, equivalent to default constructor.
         Optional(std::nullptr_t) : m_isValid(false) {}
@@ -33,13 +33,13 @@ namespace BlackMisc
         //! Copy constructor.
         Optional(const Optional &other) : m_isValid(other.m_isValid)
         {
-            if (other.m_isValid) { new (m_bytes) T(*other); }
+            if (other.m_isValid) { new (m_data.bytes) T(*other); }
         }
 
         //! Move constructor.
         Optional(Optional &&other) : m_isValid(other.m_isValid)
         {
-            if (other.m_isValid) { new (m_bytes) T(std::move(*other)); }
+            if (other.m_isValid) { new (m_data.bytes) T(std::move(*other)); }
         }
 
         //! Assign a nullptr.
@@ -54,7 +54,7 @@ namespace BlackMisc
         Optional &operator =(const Optional &other)
         {
             if (m_isValid) { (*this)->~T(); }
-            if (other.m_isValid) { new (m_bytes) T(*other); }
+            if (other.m_isValid) { new (m_data.bytes) T(*other); }
             m_isValid = other.m_isValid;
             return *this;
         }
@@ -63,7 +63,7 @@ namespace BlackMisc
         Optional &operator =(Optional &&other)
         {
             if (m_isValid) { (*this)->~T(); }
-            if (other.m_isValid) { new (m_bytes) T(std::move(*other)); }
+            if (other.m_isValid) { new (m_data.bytes) T(std::move(*other)); }
             m_isValid = other.m_isValid;
             return *this;
         }
@@ -90,13 +90,16 @@ namespace BlackMisc
         bool m_isValid;
 
 #if defined(Q_COMPILER_UNRESTRICTED_UNIONS)
-        T &dereference() { Q_ASSERT(m_isValid); return m_obj; }
-        const T &dereference() const { Q_ASSERT(m_isValid); return m_obj; }
-        union
+        T &dereference() { Q_ASSERT(m_isValid); return m_data.object; }
+        const T &dereference() const { Q_ASSERT(m_isValid); return m_data.object; }
+        union Data
         {
-            char m_bytes[sizeof(T)];
-            T m_obj;
+            Data() {}
+            ~Data() {}
+            char bytes[sizeof(T)];
+            T object;
         };
+        Data m_data;
 #else
         T &dereference() { Q_ASSERT(m_isValid); return *reinterpret_cast<T *>(m_bytes); }
         const T &dereference() const { Q_ASSERT(m_isValid); return *reinterpret_cast<const T *>(m_bytes); }
