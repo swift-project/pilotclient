@@ -171,7 +171,7 @@ void	obj_init()
 		NULL, NULL, 
 		NULL, NULL, 
 		obj_get_float_array, NULL, 
-		NULL, NULL, reinterpret_cast<void *>(i), NULL);
+		NULL, NULL, reinterpret_cast<void *>(static_cast<intptr_t>(i)), NULL);
 	}	
 }
 
