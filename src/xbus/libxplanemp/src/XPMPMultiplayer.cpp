@@ -285,12 +285,12 @@ void	XPMPLoadPlanesIfNecessary(void)
 
 int XPMPGetNumberOfInstalledModels(void)
 {
-    int number = 0;
+    size_t number = 0;
     for (const auto& package : gPackages)
     {
         number += package.planes.size();
     }
-    return number;
+    return static_cast<int>(number);
 }
 
 void XPMPGetModelInfo(int inIndex, const char** outModelName, const char** outIcao, const char** outAirline, const char** outLivery)
@@ -301,7 +301,7 @@ void XPMPGetModelInfo(int inIndex, const char** outModelName, const char** outIc
 
         if (counter + static_cast<int>(package.planes.size()) < inIndex + 1)
         {
-            counter += package.planes.size();
+            counter += static_cast<int>(package.planes.size());
             continue;
         }
 
