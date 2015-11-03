@@ -28,6 +28,12 @@ win32-msvc2013 {
     equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/win32-vs2013/lib32
     equals(WORD_SIZE,32): LIBS += -luser32
 }
+win32-msvc2015 {
+    INCLUDEPATH *= $$EXTERNALDIR/win32-vs2015/include
+    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/win32-vs2015/lib64
+    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/win32-vs2015/lib32
+    equals(WORD_SIZE,32): LIBS += -luser32
+}
 win32-g++ {
     INCLUDEPATH *= $$EXTERNALDIR/win32-g++/include
     equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/win32-g++/lib64
