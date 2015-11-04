@@ -32,8 +32,6 @@ namespace BlackGui
             COverlayMessagesFrame(parent),
             ui(new Ui::CDbMappingComponent)
         {
-            m_authenticationService = new CDatabaseAuthenticationService(this);
-
             ui->setupUi(this);
             this->ui->tvp_AircraftModelsForVPilot->setAircraftModelMode(CAircraftModelListModel::VPilotRuleModel);
             connect(ui->editor_Model, &CModelMappingForm::requestSave, this, &CDbMappingComponent::save);
@@ -47,7 +45,7 @@ namespace BlackGui
             ui->editor_Distributor->setMappingMode();
             ui->editor_Livery->setMappingMode();
 
-            initVPilotLoading();
+            this->initVPilotLoading();
         }
 
         CDbMappingComponent::~CDbMappingComponent()
@@ -57,24 +55,31 @@ namespace BlackGui
 
         void CDbMappingComponent::initVPilotLoading()
         {
-            if (m_authenticationService->getUser().isAdmin() &&
-                    CProject::isRunningOnWindowsNtPlatform() &&
-                    CProject::isCompiledWithMsFlightSimulatorSupport())
+            bool canUseVPilot = CProject::isRunningOnWindowsNtPlatform() && CProject::isCompiledWithMsFlightSimulatorSupport();
+            bool withVPilotRights = canUseVPilot && this->m_user.get().isMappingAdmin();
+            this->m_withVPilot = withVPilotRights;
+            static const QString tabName(this->ui->tw_ModelsToBeMapped->tabText(1));
+
+            if (this->m_vPilot1stInit && canUseVPilot)
             {
-                this->m_withVPilot = true;
-                this->ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CMappingVPilotMenu(this));
-                this->ui->tvp_AircraftModelsForVPilot->setDisplayAutomatically(true);
                 connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
                 connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::rowCountChanged, this, &CDbMappingComponent::ps_onVPilotCountChanged);
                 connect(&m_vPilotReader, &CVPilotRulesReader::readFinished, this, &CDbMappingComponent::ps_onLoadVPilotDataFinished);
+                this->ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CMappingVPilotMenu(this));
+                this->ui->tvp_AircraftModelsForVPilot->setDisplayAutomatically(true);
+            }
+            this->m_vPilot1stInit = false;
+
+            this->ui->tab_VPilot->setEnabled(withVPilotRights);
+            this->ui->tab_VPilot->setVisible(withVPilotRights);
+            if (withVPilotRights)
+            {
+                this->ui->tw_ModelsToBeMapped->addTab(this->ui->tab_VPilot, tabName);
             }
             else
             {
-                this->m_withVPilot = false;
+                this->ui->tw_ModelsToBeMapped->removeTab(1);
             }
-            this->ui->tab_VPilot->setEnabled(m_withVPilot);
-            this->ui->tab_VPilot->setVisible(m_withVPilot);
-            this->ui->tw_ModelsToBeMapped->removeTab(1);
         }
 
         bool CDbMappingComponent::initModelLoader(const CSimulatorInfo &simInfo)
@@ -114,7 +119,6 @@ namespace BlackGui
             this->disconnect();
             CWebDataServicesAware::gracefulShutdown();
             this->m_vPilotReader.gracefulShutdown();
-            this->m_authenticationService->gracefulShutdown();
             if (this->m_modelLoader) { this->m_modelLoader->gracefulShutdown(); }
         }
 
@@ -250,6 +254,11 @@ namespace BlackGui
             this->ps_loadInstalledModels(sim);
         }
 
+        void CDbMappingComponent::ps_userChanged()
+        {
+            this->initVPilotLoading();
+        }
+
         void CDbMappingComponent::ps_onModelRowSelected(const QModelIndex &index)
         {
             QObject *sender = QObject::sender();
@@ -371,7 +380,8 @@ namespace BlackGui
             CDbMappingComponent *mapComp = qobject_cast<CDbMappingComponent *>(this->parent());
             Q_ASSERT_X(mapComp, Q_FUNC_INFO, "Cannot access parent");
 
-            if (this->mappingComponent()->m_authenticationService->getUser().isAdmin())
+            bool canUseVPilot = mappingComponent()->withVPilot();
+            if (canUseVPilot)
             {
                 menu.addAction(CIcons::appMappings16(), "Load vPilot Rules", mapComp, SLOT(ps_loadVPilotData()));
                 menu.addSeparator();

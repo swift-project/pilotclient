@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_DBMAPPINGCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DBMAPPINGCOMPONENT_H
 
-#include "blackcore/databaseauthentication.h"
+#include "blackcore/data/authenticateduser.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/menudelegate.h"
@@ -54,6 +54,9 @@ namespace BlackGui
 
             //! Graceful shutdown
             void gracefulShutdown();
+
+            //! With vPilot rules
+            bool withVPilot() const { return m_withVPilot; }
 
         signals:
             //! Request to filter by livery
@@ -103,17 +106,21 @@ namespace BlackGui
             //! Request simulator models
             void ps_requestSimulatorModels();
 
+            //! User object changed
+            void ps_userChanged();
+
         private:
             QScopedPointer<Ui::CDbMappingComponent> ui;
-            BlackMisc::Simulation::FsCommon::CVPilotRulesReader m_vPilotReader;
-            std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader> m_modelLoader;
-            BlackCore::CDatabaseAuthenticationService *m_authenticationService = nullptr;
-            bool m_withVPilot = false;
+            BlackMisc::Simulation::FsCommon::CVPilotRulesReader           m_vPilotReader;
+            std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>  m_modelLoader;
+            BlackCore::CData<BlackCore::Data::AuthenticatedUser>          m_user {this, &CDbMappingComponent::ps_userChanged};
+            bool m_vPilot1stInit = true;
+            bool m_withVPilot    = false;
 
             //! Consolidated aircraft model
             BlackMisc::Simulation::CAircraftModel getAircraftModel() const;
 
-            //! Init vPilot loading is suitable
+            //! Init vPilot if rights and suitable
             void initVPilotLoading();
 
             //! Init model loader
