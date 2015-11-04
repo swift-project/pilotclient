@@ -18,6 +18,9 @@ namespace BlackMisc
 {
     namespace Network
     {
+        CAuthenticatedUser::CAuthenticatedUser()
+        { }
+
         CAuthenticatedUser::CAuthenticatedUser(int id, const QString &realname)
             : IDatastoreObjectWithIntegerKey(id), m_realname(realname.trimmed())
         { }
@@ -85,6 +88,11 @@ namespace BlackMisc
         bool CAuthenticatedUser::isAdmin() const
         {
             return this->hasRole("ADMIN");
+        }
+
+        bool CAuthenticatedUser::isMappingAdmin() const
+        {
+            return this->hasRole("MAPPINGADMIN") || this->isAdmin();
         }
 
         CIcon CAuthenticatedUser::toIcon() const

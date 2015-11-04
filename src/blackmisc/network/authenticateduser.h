@@ -41,7 +41,7 @@ namespace BlackMisc
             };
 
             //! Default constructor.
-            CAuthenticatedUser() = default;
+            CAuthenticatedUser();
 
             //! Constructor.
             CAuthenticatedUser(int id, const QString &realname);
@@ -100,8 +100,11 @@ namespace BlackMisc
             //! Roles
             void setRoles(const CRoleList &roles) { m_roles = roles; }
 
-            //! Has roles?
+            //! Has role?
             bool hasRole(const QString &roleName) const { return m_roles.hasRole(roleName); }
+
+            //! Has any role?
+            bool hasAnyRole(const QStringList &roles) const { return m_roles.hasAnyRole(roles); }
 
             //! Country
             const BlackMisc::CCountry &getCountry() const { return m_country; }
@@ -111,6 +114,9 @@ namespace BlackMisc
 
             //! Admin?
             bool isAdmin() const;
+
+            //! Admin?
+            bool isMappingAdmin() const;
 
             //! Authenticated
             void setAuthenticated(bool authenticated) { m_authenticated = authenticated; }

@@ -38,6 +38,9 @@ namespace BlackMisc
             //! Has role?
             bool hasRole(const CRole &role) const;
 
+            //! Has any role?
+            bool hasAnyRole(const QStringList &roles) const;
+
             //! Construct from a base class object.
             CRoleList(const CSequence<CRole> &other);
 

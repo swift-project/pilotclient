@@ -25,6 +25,15 @@ namespace BlackMisc
             return hasRole(role.getName());
         }
 
+        bool CRoleList::hasAnyRole(const QStringList &roles) const
+        {
+            for (const QString &r : roles)
+            {
+                if (this->hasRole(r)) { return true; }
+            }
+            return false;
+        }
+
         CRoleList::CRoleList(const CSequence<CRole> &other) :
             CSequence<CRole>(other)
         { }
