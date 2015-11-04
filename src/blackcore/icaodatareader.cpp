@@ -8,7 +8,9 @@
  */
 
 #include "blackcore/setupreader.h"
+#include "blackcore/cookiemanager.h"
 #include "blackmisc/sequence.h"
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/fileutilities.h"
@@ -17,6 +19,7 @@
 #include <QRegularExpression>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QNetworkCookieJar>
 #include <QTimer>
 
 using namespace BlackMisc;
@@ -30,8 +33,11 @@ namespace BlackCore
         CDatabaseReader(owner, "CIcaoDataReader")
     {
         this->m_networkManagerAircraft = new QNetworkAccessManager(this);
+        CCookieManager::setToAccessManager(this->m_networkManagerAircraft);
         this->m_networkManagerAirlines = new QNetworkAccessManager(this);
+        CCookieManager::setToAccessManager(this->m_networkManagerAirlines);
         this->m_networkManagerCountries = new QNetworkAccessManager(this);
+        CCookieManager::setToAccessManager(this->m_networkManagerCountries);
 
         this->connect(this->m_networkManagerAircraft, &QNetworkAccessManager::finished, this, &CIcaoDataReader::ps_parseAircraftIcaoData);
         this->connect(this->m_networkManagerAirlines, &QNetworkAccessManager::finished, this, &CIcaoDataReader::ps_parseAirlineIcaoData);
@@ -125,7 +131,7 @@ namespace BlackCore
 
     void CIcaoDataReader::ps_read(BlackMisc::Network::CEntityFlags::Entity entities)
     {
-        this->threadAssertCheck();
+        this->threadAssertCheck(); // runs in background thread
         Q_ASSERT(this->m_networkManagerAircraft);
         Q_ASSERT(this->m_networkManagerAirlines);
         Q_ASSERT(this->m_networkManagerCountries);
@@ -134,8 +140,7 @@ namespace BlackCore
         if (entities.testFlag(CEntityFlags::AircraftIcaoEntity))
         {
             QUrl url(getAircraftIcaoUrl());
-            QNetworkRequest requestAircraft(url);
-            CNetworkUtils::ignoreSslVerification(requestAircraft);
+            QNetworkRequest requestAircraft(CNetworkUtils::getNetworkRequest(url));
             this->m_networkManagerAircraft->get(requestAircraft);
             entitiesTriggered |= CEntityFlags::AircraftIcaoEntity;
         }
@@ -143,8 +148,7 @@ namespace BlackCore
         if (entities.testFlag(CEntityFlags::AirlineIcaoEntity))
         {
             QUrl url(getAirlineIcaoUrl());
-            QNetworkRequest requestAirline(url);
-            CNetworkUtils::ignoreSslVerification(requestAirline);
+            QNetworkRequest requestAirline(CNetworkUtils::getNetworkRequest(url));
             this->m_networkManagerAirlines->get(requestAirline);
             entitiesTriggered |= CEntityFlags::AirlineIcaoEntity;
         }
@@ -152,8 +156,7 @@ namespace BlackCore
         if (entities.testFlag(CEntityFlags::CountryEntity))
         {
             QUrl url(getCountryUrl());
-            QNetworkRequest requestCountry(url);
-            CNetworkUtils::ignoreSslVerification(requestCountry);
+            QNetworkRequest requestCountry(CNetworkUtils::getNetworkRequest(url));
             this->m_networkManagerCountries->get(requestCountry);
             entitiesTriggered |= CEntityFlags::CountryEntity;
         }

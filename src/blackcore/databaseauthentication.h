@@ -7,18 +7,21 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKCORE_DATABASE_USER_H
-#define BLACKCORE_DATABASE_USER_H
+#ifndef BLACKCORE_DATABASE_CDATABASEUATHENTICATIONSERVICE_H
+#define BLACKCORE_DATABASE_CDATABASEUATHENTICATIONSERVICE_H
 
 //! \file
 
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/network/authenticateduser.h"
 #include "blackcore/data/globalsetup.h"
+#include "blackcore/data/authenticateduser.h"
 #include "blackmisc/statusmessagelist.h"
 
 #include <QString>
 #include <QNetworkReply>
+#include <QNetworkCookieJar>
+#include <QSharedPointer>
 
 namespace BlackCore
 {
@@ -30,9 +33,6 @@ namespace BlackCore
     public:
         //! Constructor
         CDatabaseAuthenticationService(QObject *parent = nullptr);
-
-        //! Get the user
-        const BlackMisc::Network::CAuthenticatedUser &getUser() const;
 
         //! Shutdown
         void gracefulShutdown();
@@ -55,11 +55,15 @@ namespace BlackCore
         //! Parse login answer
         void ps_parseServerResponse(QNetworkReply *nwReplyPtr);
 
+        //! User object changed
+        void ps_userChanged();
+
     private:
-        BlackMisc::Network::CAuthenticatedUser m_user;
-        CData<BlackCore::Data::GlobalSetup>    m_setup {this}; //!< data cache
-        QNetworkAccessManager                 *m_networkManager = nullptr;
-        bool                                   m_shutdown = false;
+        CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< data cache
+        BlackCore::CData<BlackCore::Data::AuthenticatedUser> m_user {this, &CDatabaseAuthenticationService::ps_userChanged};
+
+        QNetworkAccessManager  *m_networkManager = nullptr;
+        bool                    m_shutdown = false;
     };
 } // namespace
 

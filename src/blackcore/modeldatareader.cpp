@@ -8,6 +8,7 @@
  */
 
 #include "blackcore/setupreader.h"
+#include "blackcore/cookiemanager.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/networkutils.h"
@@ -31,8 +32,11 @@ namespace BlackCore
         CDatabaseReader(owner, "CModelDataReader")
     {
         this->m_networkManagerLivery = new QNetworkAccessManager(this);
+        CCookieManager::setToAccessManager(this->m_networkManagerLivery);
         this->m_networkManagerDistributor = new QNetworkAccessManager(this);
+        CCookieManager::setToAccessManager(this->m_networkManagerDistributor);
         this->m_networkManagerModel = new QNetworkAccessManager(this);
+        CCookieManager::setToAccessManager(this->m_networkManagerModel);
 
         this->connect(this->m_networkManagerLivery, &QNetworkAccessManager::finished, this, &CModelDataReader::ps_parseLiveryData);
         this->connect(this->m_networkManagerDistributor, &QNetworkAccessManager::finished, this, &CModelDataReader::ps_parseDistributorData);

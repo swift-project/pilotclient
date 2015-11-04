@@ -8,6 +8,7 @@
  */
 
 #include "databaseauthentication.h"
+#include "blackcore/cookiemanager.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/logmessage.h"
@@ -17,6 +18,7 @@
 #include <QJsonDocument>
 #include <QHttpPart>
 #include <QHttpMultiPart>
+#include <QCoreApplication>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
@@ -28,11 +30,7 @@ namespace BlackCore
         m_networkManager(new QNetworkAccessManager(this))
     {
         this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CDatabaseAuthenticationService::ps_parseServerResponse);
-    }
-
-    const Network::CAuthenticatedUser &CDatabaseAuthenticationService::getUser() const
-    {
-        return m_user;
+        CCookieManager::setToAccessManager(this->m_networkManager);
     }
 
     void CDatabaseAuthenticationService::gracefulShutdown()
@@ -42,7 +40,7 @@ namespace BlackCore
         this->logoff();
     }
 
-    BlackMisc::CStatusMessageList CDatabaseAuthenticationService::login(const QString &username, const QString &password)
+    CStatusMessageList CDatabaseAuthenticationService::login(const QString &username, const QString &password)
     {
         CStatusMessageList msgs;
         static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
@@ -90,6 +88,7 @@ namespace BlackCore
         url.setQuery("logoff=true");
         QNetworkRequest request(CNetworkUtils::getNetworkRequest(url));
         this->m_networkManager->get(request);
+        this->m_user.set(CAuthenticatedUser());
     }
 
     void CDatabaseAuthenticationService::ps_parseServerResponse(QNetworkReply *nwReplyPtr)
@@ -101,6 +100,7 @@ namespace BlackCore
         QString urlString(nwReply->url().toString());
         if (urlString.toLower().contains("logoff"))
         {
+            CCookieManager::instance()->deleteAllCookies();
             emit logoffFinished();
             return;
         }
@@ -134,6 +134,7 @@ namespace BlackCore
                     msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "User has no roles"));
                 }
             }
+            this->m_user.set(user);
             emit userAuthenticationFinished(user, msgs);
         }
         else
@@ -141,6 +142,11 @@ namespace BlackCore
             CLogMessage(this).error("Authentication failed, %1") << nwReply->errorString();
             return;
         }
+    }
+
+    void CDatabaseAuthenticationService::ps_userChanged()
+    {
+        // code goes here
     }
 
 } // namespace
