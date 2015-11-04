@@ -18,6 +18,7 @@
 #include "blackmisc/project.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/threadutilities.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 
 #include <QTimer>
@@ -128,7 +129,7 @@ namespace BlackSimPlugin
         bool CSimulatorFsx::physicallyAddRemoteAircraft(const Simulation::CSimulatedAircraft &newRemoteAircraft)
         {
             CCallsign callsign(newRemoteAircraft.getCallsign());
-            Q_ASSERT_X(BlackCore::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");
+            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");
             Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
             if (callsign.isEmpty()) { return false; }
 
@@ -505,7 +506,7 @@ namespace BlackSimPlugin
         bool CSimulatorFsx::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
         {
             // only remove from sim
-            Q_ASSERT_X(BlackCore::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "wrong thred");
+            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "wrong thred");
             if (!m_simConnectObjects.contains(callsign)) { return false; }
             return physicallyRemoveRemoteAircraft(m_simConnectObjects.value(callsign));
         }
@@ -614,7 +615,7 @@ namespace BlackSimPlugin
         {
             static_assert(sizeof(DataDefinitionRemoteAircraftParts) == 120, "DataDefinitionRemoteAircraftParts has an incorrect size.");
             Q_ASSERT_X(this->m_interpolator, Q_FUNC_INFO, "missing interpolator");
-            Q_ASSERT_X(BlackCore::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "thread");
+            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "thread");
 
             // nothing to do, reset request id and exit
             if (this->isPaused() && this->m_pausedSimFreezesInterpolation) { return; } // no interpolation while paused
@@ -845,7 +846,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxListener::ps_checkConnection()
         {
-            Q_ASSERT_X(!BlackCore::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background");
+            Q_ASSERT_X(!CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background");
             HANDLE hSimConnect;
             HRESULT result = SimConnect_Open(&hSimConnect, BlackMisc::CProject::swiftVersionChar(), nullptr, 0, 0, 0);
             SimConnect_Close(hSimConnect);

@@ -17,6 +17,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindexallclasses.h"
+#include "blackmisc/threadutilities.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -569,7 +570,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_receivedBookings(const CAtcStationList &bookedStations)
     {
-        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
+        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
         if (bookedStations.isEmpty())
         {
             this->m_atcStationsBooked.clear();
@@ -589,7 +590,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_receivedDataFile()
     {
-        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
+        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
         for (auto client = this->m_otherClients.begin(); client != this->m_otherClients.end(); ++client)
         {
             if (client->hasSpecifiedVoiceCapabilities()) { continue; } // we already have voice caps
@@ -632,7 +633,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_atcPositionUpdate(const CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range)
     {
-        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
+        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
         if (!this->m_connected) { return; }
         CAtcStationList stationsWithCallsign = this->m_atcStationsOnline.findByCallsign(callsign);
         if (stationsWithCallsign.isEmpty())
@@ -682,7 +683,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_atcControllerDisconnected(const CCallsign &callsign)
     {
-        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
+        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
 
         this->m_otherClients.removeByCallsign(callsign);
         if (this->m_atcStationsOnline.containsCallsign(callsign))
@@ -699,7 +700,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_atisReceived(const CCallsign &callsign, const CInformationMessage &atisMessage)
     {
-        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
+        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
         if (!this->m_connected || callsign.isEmpty()) return;
         CPropertyIndexVariantMap vm(CAtcStation::IndexAtis, CVariant::from(atisMessage));
         int changedOnline = this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
@@ -713,7 +714,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_atisVoiceRoomReceived(const CCallsign &callsign, const QString &url)
     {
-        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
+        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
         if (!this->m_connected) { return; }
         QString trimmedUrl = url.trimmed();
         CPropertyIndexVariantMap vm({ CAtcStation::IndexVoiceRoom, CVoiceRoom::IndexUrl }, trimmedUrl);
@@ -740,7 +741,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_atisLogoffTimeReceived(const CCallsign &callsign, const QString &zuluTime)
     {
-        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
+        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
         if (!this->m_connected) { return; }
         if (zuluTime.length() == 4)
         {
@@ -764,7 +765,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_icaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery)
     {
-        Q_ASSERT_X(BlackCore::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "not in main thread");
+        Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "not in main thread");
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "no callsign");
         if (!this->m_connected) { return; }
 
@@ -844,7 +845,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_aircraftUpdateReceived(const CAircraftSituation &situation, const CTransponder &transponder)
     {
-        Q_ASSERT_X(BlackCore::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Called in different thread");
+        Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Called in different thread");
         if (!this->m_connected) { return; }
 
         CCallsign callsign(situation.getCallsign());
@@ -934,7 +935,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_aircraftInterimUpdateReceived(const CAircraftSituation &situation)
     {
-        Q_ASSERT_X(BlackCore::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Called in different thread");
+        Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Called in different thread");
         if (!this->m_connected) { return; }
 
         CCallsign callsign(situation.getCallsign());
@@ -975,7 +976,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_pilotDisconnected(const CCallsign &callsign)
     {
-        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
+        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
 
         // in case of inconsistencies I always remove here
         this->m_otherClients.removeByCallsign(callsign);
@@ -1001,7 +1002,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_frequencyReceived(const CCallsign &callsign, const CFrequency &frequency)
     {
-        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
+        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
 
         // update
         int changed;
@@ -1015,7 +1016,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_aircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, bool isFull)
     {
-        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
+        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
 
         CSimulatedAircraft simAircraft(getAircraftInRangeForCallsign(callsign));
 
@@ -1050,7 +1051,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_sendInterimPositions()
     {
-        Q_ASSERT(BlackCore::isCurrentThreadObjectThread(this));
+        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
         if (!this->m_connected || !m_sendInterimPositions) { return; }
         CSimulatedAircraftList aircrafts = m_aircraftInRange.findBy(&CSimulatedAircraft::fastPositionUpdates, true);
         m_network->sendInterimPositions(aircrafts.getCallsigns());

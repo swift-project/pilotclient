@@ -13,6 +13,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/collection.h"
+#include "blackmisc/threadutilities.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -305,7 +306,7 @@ namespace BlackCore
         // when changing back from restricted->unrestricted an one time update is required
         if (!snapshot.isRestricted() && !snapshot.isRestrictionChanged()) { return; }
 
-        Q_ASSERT_X(BlackCore::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Needs to run in object thread");
+        Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Needs to run in object thread");
         Q_ASSERT_X(snapshot.generatingThreadName() != QThread::currentThread()->objectName(), Q_FUNC_INFO, "Expect snapshot from background thread");
 
         // restricted snapshot values?

@@ -18,6 +18,7 @@
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/loghandler.h"
+#include "blackmisc/threadutilities.h"
 #include <QPluginLoader>
 #include <QLibrary>
 
@@ -278,7 +279,7 @@ namespace BlackCore
         Q_ASSERT(getIContextApplication());
         Q_ASSERT(getIContextApplication()->isUsingImplementingObject());
         Q_ASSERT(!simulatorInfo.isUnspecified());
-        Q_ASSERT(BlackCore::isCurrentThreadApplicationThread()); // only run in main thread
+        Q_ASSERT(CThreadUtils::isCurrentThreadApplicationThread()); // only run in main thread
 
         // Is the plugin already loaded?
         if (!m_simulatorPlugin.first.isUnspecified() &&

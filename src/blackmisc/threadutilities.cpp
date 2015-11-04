@@ -1,0 +1,37 @@
+/* Copyright (C) 2015
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+#include "threadutilities.h"
+#include <QThread>
+#include <QCoreApplication>
+
+namespace BlackMisc
+{
+    bool CThreadUtils::isCurrentThreadObjectThread(QObject *toBeTested)
+    {
+        Q_ASSERT_X(toBeTested, Q_FUNC_INFO, "missing QObject");
+        if (!toBeTested) { return false; }
+        if (!toBeTested->thread()) { return false; }
+        return (QThread::currentThread() == toBeTested->thread());
+    }
+
+    bool CThreadUtils::isApplicationThreadObjectThread(QObject *toBeTested)
+    {
+        Q_ASSERT_X(toBeTested, Q_FUNC_INFO, "missing QObject");
+        if (!toBeTested) { return false; }
+        if (!toBeTested->thread()) { return false; }
+        return (QCoreApplication::instance()->thread() == toBeTested->thread());
+    }
+
+    bool CThreadUtils::isCurrentThreadApplicationThread()
+    {
+        return (QCoreApplication::instance()->thread() == QThread::currentThread());
+    }
+
+} // ns

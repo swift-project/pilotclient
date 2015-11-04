@@ -10,6 +10,7 @@
 #include "blackcore/airspace_analyzer.h"
 #include "blackcore/blackcorefreefunctions.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/threadutilities.h"
 #include <QDateTime>
 
 using namespace BlackMisc;
@@ -173,8 +174,8 @@ namespace BlackCore
 
     void CAirspaceAnalyzer::analyzeAirspace()
     {
-        Q_ASSERT_X(!isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background thread");
-        Q_ASSERT_X(!isApplicationThreadObjectThread(this), Q_FUNC_INFO, "Expect to run in background thread affinity");
+        Q_ASSERT_X(!CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background thread");
+        Q_ASSERT_X(!CThreadUtils::isApplicationThreadObjectThread(this), Q_FUNC_INFO, "Expect to run in background thread affinity");
 
         bool restricted, enabled;
         int maxAircraft;
