@@ -31,52 +31,52 @@ namespace BlackCoreTest
             return;
         }
 
-    QString string = net->connectionStatusToString(INetwork::Connected);
-    QVERIFY(string == "Connected");
+        QString string = net->connectionStatusToString(INetwork::Connected);
+        QVERIFY(string == "Connected");
 
-    Expect e(net);
-    CSimulatedAircraft aircraft;
-    aircraft.setIcaoCodes(CAircraftIcaoCode("C172", "L1P"), CAirlineIcaoCode("YYY"));
+        Expect e(net);
+        CSimulatedAircraft aircraft;
+        aircraft.setIcaoCodes(CAircraftIcaoCode("C172", "L1P"), CAirlineIcaoCode("YYY"));
 
-    EXPECT_UNIT(e)
+        EXPECT_UNIT(e)
         .send(&INetwork::presetServer, fsdServer)
-    .send(&INetwork::presetCallsign, "SWIFT")
-    .send(&INetwork::presetIcaoCodes, aircraft)
-    .send(&INetwork::initiateConnection)
-    .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus, INetwork::ConnectionStatus newStatus)
-    {
-        QVERIFY(newStatus == INetwork::Connecting);
-        qDebug() << "CONNECTING";
-    })
-    .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus, INetwork::ConnectionStatus newStatus)
-    {
-        //! \todo verify how we want to handle the situation if the connect fails. On Jenkins that would cause a failed test case and hence a failed build
-        QVERIFY(newStatus == INetwork::Connected);
-        qDebug() << "CONNECTED";
-    })
-    .wait(10);
+        .send(&INetwork::presetCallsign, "SWIFT")
+        .send(&INetwork::presetIcaoCodes, aircraft)
+        .send(&INetwork::initiateConnection)
+        .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus, INetwork::ConnectionStatus newStatus)
+        {
+            QVERIFY(newStatus == INetwork::Connecting);
+            qDebug() << "CONNECTING";
+        })
+        .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus, INetwork::ConnectionStatus newStatus)
+        {
+            //! \todo verify how we want to handle the situation if the connect fails. On Jenkins that would cause a failed test case and hence a failed build
+            QVERIFY(newStatus == INetwork::Connected);
+            qDebug() << "CONNECTED";
+        })
+        .wait(10);
 
-    EXPECT_UNIT(e)
-    .send(&INetwork::sendPing, "server")
-    .expect(&INetwork::pongReceived, [](CCallsign callsign, PhysicalQuantities::CTime elapsedTime)
-    {
-        qDebug() << "PONG" << callsign << elapsedTime;
-    })
-    .wait(10);
+        EXPECT_UNIT(e)
+        .send(&INetwork::sendPing, "server")
+        .expect(&INetwork::pongReceived, [](CCallsign callsign, PhysicalQuantities::CTime elapsedTime)
+        {
+            qDebug() << "PONG" << callsign << elapsedTime;
+        })
+        .wait(10);
 
-    EXPECT_UNIT(e)
-    .send(&INetwork::terminateConnection)
-    .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus, INetwork::ConnectionStatus newStatus)
-    {
-        QVERIFY(newStatus == INetwork::Disconnecting);
-        qDebug() << "DISCONNECTING";
-    })
-    .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus, INetwork::ConnectionStatus newStatus)
-    {
-        QVERIFY(newStatus == INetwork::Disconnected);
-        qDebug() << "DISCONNECTED";
-    })
-    .wait(10);
+        EXPECT_UNIT(e)
+        .send(&INetwork::terminateConnection)
+        .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus, INetwork::ConnectionStatus newStatus)
+        {
+            QVERIFY(newStatus == INetwork::Disconnecting);
+            qDebug() << "DISCONNECTING";
+        })
+        .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus, INetwork::ConnectionStatus newStatus)
+        {
+            QVERIFY(newStatus == INetwork::Disconnected);
+            qDebug() << "DISCONNECTED";
+        })
+        .wait(10);
     }
 
     bool CTestNetwork::pingServer(const CServer &server)
@@ -89,4 +89,5 @@ namespace BlackCoreTest
         }
         return true;
     }
+
 }
