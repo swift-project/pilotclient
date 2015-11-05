@@ -9,6 +9,7 @@
 
 #include "testnetwork.h"
 #include "expect.h"
+#include "blackmisc/network/networkutils.h"
 
 using namespace BlackCore;
 using namespace BlackMisc;
@@ -18,8 +19,18 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 
-void BlackCoreTest::CTestNetwork::networkTest(BlackCore::INetwork *net)
+namespace BlackCoreTest
 {
+
+    void CTestNetwork::networkTest(BlackCore::INetwork *net)
+    {
+        CServer fsdServer("", "", "vatsim-germany.org", 6809, CUser("1234567", "", "", "123456"));
+        if (!this->pingServer(fsdServer))
+        {
+            qWarning() << "Skipping unit test because fsd server is not reachable.";
+            return;
+        }
+
     QString string = net->connectionStatusToString(INetwork::Connected);
     QVERIFY(string == "Connected");
 
@@ -28,7 +39,7 @@ void BlackCoreTest::CTestNetwork::networkTest(BlackCore::INetwork *net)
     aircraft.setIcaoCodes(CAircraftIcaoCode("C172", "L1P"), CAirlineIcaoCode("YYY"));
 
     EXPECT_UNIT(e)
-    .send(&INetwork::presetServer, CServer("", "", "vatsim-germany.org", 6809, CUser("1234567", "", "", "123456")))
+        .send(&INetwork::presetServer, fsdServer)
     .send(&INetwork::presetCallsign, "SWIFT")
     .send(&INetwork::presetIcaoCodes, aircraft)
     .send(&INetwork::initiateConnection)
@@ -66,4 +77,16 @@ void BlackCoreTest::CTestNetwork::networkTest(BlackCore::INetwork *net)
         qDebug() << "DISCONNECTED";
     })
     .wait(10);
+    }
+
+    bool CTestNetwork::pingServer(const CServer &server)
+    {
+        QString m;
+        CUrl url(server.getAddress(), server.getPort());
+        if (!CNetworkUtils::canConnect(url, m, 2500))
+        {
+            return false;
+        }
+        return true;
+    }
 }

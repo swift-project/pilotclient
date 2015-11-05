@@ -13,6 +13,7 @@
 #define BLACKCORETEST_TESTNETWORK_H
 
 #include "blackcore/network_vatlib.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackmisc/simulation/ownaircraftproviderdummy.h"
 #include <QtTest/QtTest>
 
@@ -40,6 +41,9 @@ namespace BlackCoreTest
         void networkTest(BlackCore::INetwork *);
 
         BlackCore::CNetworkVatlib m_networkVatlib ; //!< vatlib instance
+
+        //! Test if server is available
+        static bool pingServer(const BlackMisc::Network::CServer &server);
     };
 
 } //namespace
