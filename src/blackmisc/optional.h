@@ -101,9 +101,9 @@ namespace BlackMisc
         };
         Data m_data;
 #else
-        T &dereference() { Q_ASSERT(m_isValid); return *reinterpret_cast<T *>(m_bytes); }
-        const T &dereference() const { Q_ASSERT(m_isValid); return *reinterpret_cast<const T *>(m_bytes); }
-        typename std::aligned_storage<sizeof(T)>::type m_bytes[1];
+        T &dereference() { Q_ASSERT(m_isValid); return *reinterpret_cast<T *>(m_data.bytes); }
+        const T &dereference() const { Q_ASSERT(m_isValid); return *reinterpret_cast<const T *>(m_data.bytes); }
+        struct { typename std::aligned_storage<sizeof(T)>::type bytes[1]; } m_data;
 #endif
     };
 
