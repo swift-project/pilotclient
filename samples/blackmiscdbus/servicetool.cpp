@@ -14,8 +14,6 @@
 
 #include <QTextStream>
 #include <QString>
-#include <QFuture>
-#include <QtConcurrent/QtConcurrent>
 #include <QElapsedTimer>
 
 using namespace BlackMisc;

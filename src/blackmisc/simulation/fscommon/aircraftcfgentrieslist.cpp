@@ -10,8 +10,6 @@
 #include "aircraftcfgentrieslist.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/logmessage.h"
-#include <QFuture>
-#include <QtConcurrent/QtConcurrent>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;

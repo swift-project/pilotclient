@@ -12,7 +12,6 @@
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/project.h"
 #include <QTimer>
-#include <QtConcurrent>
 
 namespace BlackSimPlugin
 {

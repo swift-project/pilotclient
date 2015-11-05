@@ -9,7 +9,6 @@
 
 #include "modelmappingsprovidervpilot.h"
 
-#include <QtXml/QDomElement>
 #include <QFile>
 #include <QDir>
 #include <QStandardPaths>

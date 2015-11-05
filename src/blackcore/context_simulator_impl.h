@@ -23,7 +23,6 @@
 #include "blackmisc/variant.h"
 #include <QTimer>
 #include <QDir>
-#include <QtConcurrent/QtConcurrent>
 
 namespace BlackCore
 {
