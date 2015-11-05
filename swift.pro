@@ -4,7 +4,9 @@ TEMPLATE = subdirs
 CONFIG += ordered
 
 SUBDIRS += src/blackmisc
-SUBDIRS += resources/swift_resources.pro
+SUBDIRS += resources/swiftresources.pro
+OTHER_FILES += mkspecs/features/*.prf
+OTHER_FILES += mkspecs/features/*.pri
 
 contains(BLACK_CONFIG, BlackSound) {
     SUBDIRS += src/blacksound
@@ -19,13 +21,16 @@ contains(BLACK_CONFIG, BlackCore) {
     contains(BLACK_CONFIG, BlackGui) {
         SUBDIRS += src/blackgui
         contains(BLACK_CONFIG, SwiftGui) {
-            SUBDIRS += src/swiftgui_standard/swiftgui_standard.pro
+            SUBDIRS += src/swiftguistandard/swiftguistandard.pro
         }
         contains(BLACK_CONFIG, SwiftCore) {
             SUBDIRS += src/swiftcore/swiftcore.pro
         }
         contains(BLACK_CONFIG, SwiftData) {
             SUBDIRS += src/swiftdata/swiftdata.pro
+        }
+        contains(BLACK_CONFIG, SwiftLauncher) {
+            SUBDIRS += src/swiftlauncher/swiftlauncher.pro
         }
     }
 }

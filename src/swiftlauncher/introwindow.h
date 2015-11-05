@@ -12,7 +12,7 @@
 #ifndef STDGUI_INTROWINDOW_H
 #define STDGUI_INTROWINDOW_H
 
-#include "guimodeenums.h"
+#include "swiftguistandard/guimodeenums.h"
 #include "blackgui/enableforframelesswindow.h"
 #include <QDialog>
 #include <QScopedPointer>

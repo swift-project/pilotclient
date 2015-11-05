@@ -126,6 +126,12 @@ namespace BlackMisc
         //! Whole info
         static QString convertToQString(const QString &separator = QString("\n"));
 
+        //! Environment variable indicating "dev.environment"
+        static const QString &envVarDevelopment();
+
+        //! Environment variable private resources directory
+        static const QString &envVarPrivateSetupDir();
+
     private:
         //! Constructor
         CProject() {}
@@ -136,15 +142,9 @@ namespace BlackMisc
         // --------------- env.vars. -------------
         // centralized in one place here so we have an overview
 
-        //! Environment variable indicating "dev.environment"
-        static const QString &envVarDevelopment();
-
         //! Value
         //! \return true|false
         static QString envVarDevelopmentValue();
-
-        //! Environment variable private resources directory
-        static const QString &envVarPrivateSetupDir();
 
         //! Value
         //! \return directory path

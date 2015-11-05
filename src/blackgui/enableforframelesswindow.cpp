@@ -41,6 +41,28 @@ namespace BlackGui
         setMode(frameless ? WindowFrameless : WindowTool);
     }
 
+    CEnableForFramelessWindow::WindowMode CEnableForFramelessWindow::stringToWindowMode(const QString &s)
+    {
+        QString ws(s.trimmed().toLower());
+        if (ws.isEmpty()) { return WindowNormal; }
+        if (ws.contains("frameless") || ws.startsWith("f")) { return WindowFrameless; }
+        if (ws.contains("tool") || ws.startsWith("t")) { return WindowTool; }
+        return WindowNormal;
+    }
+
+    QString CEnableForFramelessWindow::windowModeToString(CEnableForFramelessWindow::WindowMode m)
+    {
+        switch (m)
+        {
+        case WindowFrameless: return "frameless";
+        case WindowNormal: return "normal";
+        case WindowTool: return "tool";
+        default:
+            break;
+        }
+        return "normal";
+    }
+
     void CEnableForFramelessWindow::setWindowAttributes(CEnableForFramelessWindow::WindowMode mode)
     {
         Q_ASSERT_X(this->m_widget, "CEnableForFramelessWindow::setWindowAttributes", "Missing widget representing window");

@@ -7,6 +7,7 @@ BLACK_CONFIG    += Unittests
 BLACK_CONFIG    += SwiftData
 BLACK_CONFIG    += SwiftCore
 BLACK_CONFIG    += SwiftGui
+BLACK_CONFIG    += SwiftLauncher
 BLACK_CONFIG    += FS9
 BLACK_CONFIG    += FSX
 BLACK_CONFIG    += XPlane

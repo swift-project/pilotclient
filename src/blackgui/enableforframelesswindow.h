@@ -33,8 +33,8 @@ namespace BlackGui
         //! Window modes
         enum WindowMode
         {
-            WindowFrameless,
             WindowNormal,
+            WindowFrameless,
             WindowTool
         };
 
@@ -55,6 +55,12 @@ namespace BlackGui
 
         //! Corresponding QMainWindow
         QWidget *getWidget() const { return m_widget; }
+
+        //! String to window mode
+        static WindowMode stringToWindowMode(const QString &s);
+
+        //! String to window mode
+        static QString windowModeToString(WindowMode m);
 
     protected:
         //! Resize grip handle
@@ -86,7 +92,7 @@ namespace BlackGui
 
         QPoint       m_framelessDragPosition;          //!< position, if moving is handled with frameless window */
         QPushButton *m_framelessCloseButton = nullptr; //!< close button
-        WindowMode   m_windowMode = WindowTool;      //!< Window mode, \sa WindowMode
+        WindowMode   m_windowMode = WindowTool;        //!< Window mode, \sa WindowMode
         bool         m_mainApplicationWindow = false;  //!< is the main application window (only 1)
         QWidget     *m_widget = nullptr;               //!< corresponding main window or dock widget
         QSizeGrip   *m_framelessSizeGrip = nullptr;    //!< size grip object
@@ -97,7 +103,6 @@ namespace BlackGui
 
         //! Mouse moving, required for frameless window
         bool handleMouseMoveEvent(QMouseEvent *event);
-
     };
 
 } // namespace

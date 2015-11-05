@@ -4,7 +4,7 @@ QT       += core dbus gui svg network xml multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = swiftgui_std
+TARGET = swiftlauncher
 TEMPLATE = app
 
 SOURCES += *.cpp
