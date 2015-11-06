@@ -67,7 +67,7 @@ void SwiftGuiStd::ps_onMenuClicked()
     }
     else if (sender == this->ui->menu_WindowMinimize)
     {
-        this->showMinimized();
+        this->ps_showMinimized();
     }
     else if (sender == this->ui->menu_WindowToggleOnTop)
     {

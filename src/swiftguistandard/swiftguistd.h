@@ -57,8 +57,8 @@ public:
     //! \remarks keep the values in sync with the real tab indexes
     enum MainPageIndex
     {
-        MainPageInfoArea = 0,
-        MainPageLogin  = 1,
+        MainPageInfoArea  = 0,
+        MainPageLogin     = 1,
         MainPageInternals = 2,
         MainPageInvisible = 3
     };
@@ -113,7 +113,7 @@ private:
     bool                                           m_init = false;
     BlackGui::CManagedStatusBar                    m_statusBar;
     BlackMisc::CLogSubscriber                      m_logSubscriber { this, &SwiftGuiStd::ps_displayStatusMessageInGui };
-    BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this};             //!< setup cache
+    BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this};  //!< setup cache
 
     // contexts
     bool m_coreAvailable           = false;

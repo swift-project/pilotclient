@@ -124,6 +124,8 @@ void SwiftGuiStd::changeEvent(QEvent *event)
     if (event->type() == QEvent::WindowStateChange)
     {
         // make sure a tool window is changed to Normal window so it is show in taskbar
+        // here we are already in transition state, so isMinimized means will be minimize right now
+        // this check here is needed if minimized is called from somewhere else than ps_showMinimized
         if (!this->isFrameless())
         {
             bool toolWindow(this->isToolWindow());
@@ -394,13 +396,13 @@ void SwiftGuiStd::ps_onChangedMainInfoAreaFloating(bool floating)
 
 void SwiftGuiStd::ps_showMinimized()
 {
-    if (!this->isFrameless()) { toolToNormalWindow(); }
+    if (m_windowMode == CEnableForFramelessWindow::WindowTool) { this->toolToNormalWindow(); }
     this->showMinimized();
 }
 
 void SwiftGuiStd::ps_showNormal()
 {
-    if (!this->isFrameless()) { normalToToolWindow(); }
+    if (m_windowMode == CEnableForFramelessWindow::WindowTool) { this->normalToToolWindow(); }
     this->showNormal();
 }
 
