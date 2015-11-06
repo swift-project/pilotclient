@@ -528,6 +528,7 @@ namespace BlackMisc
 
         /*!
          * \brief In-place partially sort by some particular key(s).
+         * \param n    size.
          * \param key1 A pointer to a member function of T.
          * \param keys Zero or more additional pointers to member functions of T.
          */
@@ -549,6 +550,7 @@ namespace BlackMisc
 
         /*!
          * \brief Return a copy partially sorted by some particular key(s).
+         * \param n    size
          * \param key1 A pointer to a member function of T.
          * \param keys Zero or more additional pointers to member functions of T.
          */
