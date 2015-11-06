@@ -112,10 +112,14 @@ void CSwiftData::initMenu()
     this->initDynamicMenus();
     this->ui->menu_WindowMinimize->setIcon(this->style()->standardIcon(QStyle::SP_TitleBarMinButton));
     connect(this->ui->menu_FileExit, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_FileSettingsDirectory, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_FileCacheDirectory, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_FileResetSettings, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_FileReloadStyleSheets, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+
+    connect(this->ui->menu_SettingsDirectory, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+    connect(this->ui->menu_SettingsFiles, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+    connect(this->ui->menu_SettingsReset, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+    connect(this->ui->menu_CacheDirectory, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+    connect(this->ui->menu_CacheFiles, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+    connect(this->ui->menu_CacheReset, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
 
     connect(this->ui->menu_WindowFont, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_WindowMinimize, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
@@ -128,8 +132,6 @@ void CSwiftData::initMenu()
     connect(this->ui->menu_InternalsEnvVars, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_InternalsMetatypes, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_InternalsSetup, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_InternalsDeleteCachedFiles, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_InternalsDisplayCachedFiles, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_InternalsJsonBootstrapTemplate, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
 }
 

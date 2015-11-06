@@ -53,19 +53,45 @@ void CSwiftData::ps_onMenuClicked()
         CLogMessage(this).info("Closing");
         this->close(); // graceful shutdown in close event
     }
-    else if (sender == this->ui->menu_FileSettingsDirectory)
+    else if (sender == this->ui->menu_SettingsDirectory)
     {
         QString path(QDir::toNativeSeparators(CSettingsCache::persistentStore()));
-        QDesktopServices::openUrl(QUrl("file:///" + path));
+        if (QDir(path).exists())
+        {
+            QDesktopServices::openUrl(QUrl("file:///" + path));
+        }
     }
-    else if (sender == this->ui->menu_FileCacheDirectory)
+    else if (sender == this->ui->menu_SettingsReset)
+    {
+        CSettingsCache::instance()->clearAllValues();
+        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole("Cleared all settings!");
+        this->displayConsole();
+    }
+    else if (sender == this->ui->menu_SettingsFiles)
+    {
+        QStringList cachedFiles(CSettingsCache::instance()->enumerateStore());
+        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(cachedFiles.join("\n"));
+        this->displayConsole();
+    }
+    else if (sender == this->ui->menu_CacheDirectory)
     {
         QString path(QDir::toNativeSeparators(CDataCache::persistentStore()));
-        QDesktopServices::openUrl(QUrl("file:///" + path));
+        if (QDir(path).exists())
+        {
+            QDesktopServices::openUrl(QUrl("file:///" + path));
+        }
     }
-    else if (sender == this->ui->menu_FileResetSettings)
+    else if (sender == this->ui->menu_CacheFiles)
     {
-        // !\todo reset settings
+        QStringList cachedFiles(CDataCache::instance()->enumerateStore());
+        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(cachedFiles.join("\n"));
+        this->displayConsole();
+    }
+    else if (sender == this->ui->menu_CacheReset)
+    {
+        CDataCache::instance()->clearAllValues();
+        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole("Cleared all cached values!");
+        this->displayConsole();
     }
     else if (sender == this->ui->menu_MappingMaxData)
     {
@@ -105,16 +131,6 @@ void CSwiftData::ps_onMenuClicked()
     {
         QString project(CProject::getEnvironmentVariables());
         this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(project);
-        this->displayConsole();
-    }
-    else if (sender == this->ui->menu_InternalsDisplayCachedFiles)
-    {
-        //! \todo
-        this->displayConsole();
-    }
-    else if (sender == this->ui->menu_InternalsDeleteCachedFiles)
-    {
-        //! \todo
         this->displayConsole();
     }
 }

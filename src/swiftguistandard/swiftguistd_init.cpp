@@ -168,10 +168,14 @@ void SwiftGuiStd::initGuiSignals()
     connect(this->ui->menu_TestLocationsEDRY, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
 
     connect(this->ui->menu_FileExit, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_FileSettingsDirectory, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_FileCacheDirectory, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_FileResetSettings, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_FileReloadStyleSheets, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+
+    connect(this->ui->menu_SettingsDirectory, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_SettingsFiles, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_SettingsReset, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_CacheDirectory, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_CacheFiles, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_CacheReset, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
 
     connect(this->ui->menu_WindowFont, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_WindowMinimize, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);

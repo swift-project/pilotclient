@@ -61,7 +61,7 @@
        <number>0</number>
       </property>
       <widget class="BlackGui::Components::CDataMainInfoAreaComponent" name="comp_MainInfoArea"/>
-      <widget class="QWidget" name="emptyPage"/>
+      <widget class="QWidget" name="comp_EmptyPage"/>
      </widget>
     </item>
    </layout>
@@ -79,9 +79,24 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="menu_FileSettingsDirectory"/>
-    <addaction name="menu_FileCacheDirectory"/>
-    <addaction name="menu_FileResetSettings"/>
+    <widget class="QMenu" name="menu_Settings">
+     <property name="title">
+      <string>Settings</string>
+     </property>
+     <addaction name="menu_SettingsDirectory"/>
+     <addaction name="menu_SettingsFiles"/>
+     <addaction name="menu_SettingsReset"/>
+    </widget>
+    <widget class="QMenu" name="menuCache">
+     <property name="title">
+      <string>Cache</string>
+     </property>
+     <addaction name="menu_CacheDirectory"/>
+     <addaction name="menu_CacheFiles"/>
+     <addaction name="menu_CacheReset"/>
+    </widget>
+    <addaction name="menu_Settings"/>
+    <addaction name="menuCache"/>
     <addaction name="menu_FileReloadStyleSheets"/>
     <addaction name="separator"/>
     <addaction name="menu_FileExit"/>
@@ -118,8 +133,6 @@
      <addaction name="menu_InternalsEnvVars"/>
      <addaction name="menu_InternalsSetup"/>
      <addaction name="menu_InternalsCompileInfo"/>
-     <addaction name="menu_InternalsDisplayCachedFiles"/>
-     <addaction name="menu_InternalsDeleteCachedFiles"/>
     </widget>
     <addaction name="menu_Internals"/>
     <addaction name="separator"/>
@@ -233,9 +246,34 @@
     <string>Delete cached fies</string>
    </property>
   </action>
-  <action name="menu_FileCacheDirectory">
+  <action name="menu_SettingsDirectory">
    <property name="text">
-    <string>Cache directory</string>
+    <string>Directory</string>
+   </property>
+  </action>
+  <action name="menu_SettingsReset">
+   <property name="text">
+    <string>Reset</string>
+   </property>
+  </action>
+  <action name="menu_SettingsFiles">
+   <property name="text">
+    <string>Files</string>
+   </property>
+  </action>
+  <action name="menu_CacheDirectory">
+   <property name="text">
+    <string>Directory</string>
+   </property>
+  </action>
+  <action name="menu_CacheFiles">
+   <property name="text">
+    <string>Files</string>
+   </property>
+  </action>
+  <action name="menu_CacheReset">
+   <property name="text">
+    <string>Reset</string>
    </property>
   </action>
  </widget>

@@ -86,11 +86,13 @@ namespace BlackGui
         void CMainInfoAreaComponent::displayLog()
         {
             this->ui->comp_Log->displayLog();
+            this->selectArea(InfoAreaLog);
         }
 
         void CMainInfoAreaComponent::displayConsole()
         {
             this->ui->comp_Log->displayConsole();
+            this->selectArea(InfoAreaLog);
         }
 
         QSize CMainInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
