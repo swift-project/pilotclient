@@ -97,6 +97,7 @@ namespace BlackMisc
 
         switch (m_v.type())
         {
+        case QVariant::Invalid:     json.insert("value", 0); break;
         case QVariant::Int:         json.insert("value", m_v.toInt()); break;
         case QVariant::UInt:        json.insert("value", m_v.toInt()); break;
         case QVariant::Bool:        json.insert("value", m_v.toBool()); break;
@@ -143,6 +144,7 @@ namespace BlackMisc
 
         switch (typeId)
         {
+        case QVariant::Invalid:     m_v.clear(); break;
         case QVariant::Int:         m_v.setValue(json.value("value").toInt()); break;
         case QVariant::UInt:        m_v.setValue<uint>(json.value("value").toInt()); break;
         case QVariant::Bool:        m_v.setValue(json.value("value").toBool()); break;
@@ -188,6 +190,7 @@ namespace BlackMisc
     {
         switch (m_v.type())
         {
+        case QVariant::Invalid:     return 0;
         case QVariant::Int:         return qHash(m_v.toInt());
         case QVariant::UInt:        return qHash(m_v.toUInt());
         case QVariant::Bool:        return qHash(m_v.toUInt());
