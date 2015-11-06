@@ -19,17 +19,19 @@
  */
 void BlackMisc::Network::registerMetadata()
 {
-    CUser::registerMetadata();
-    CUserList::registerMetadata();
     CAuthenticatedUser::registerMetadata();
+    CClient::registerMetadata();
+    CClientList::registerMetadata();
+    CEntityFlags::registerMetadata();
     CRole::registerMetadata();
     CRoleList::registerMetadata();
     CServer::registerMetadata();
     CServerList::registerMetadata();
     CTextMessage::registerMetadata();
     CTextMessageList::registerMetadata();
-    CClient::registerMetadata();
-    CClientList::registerMetadata();
+    CUrl::registerMetadata();
+    CUrlList::registerMetadata();
+    CUser::registerMetadata();
+    CUserList::registerMetadata();
     CVoiceCapabilities::registerMetadata();
-    CEntityFlags::registerMetadata();
 }

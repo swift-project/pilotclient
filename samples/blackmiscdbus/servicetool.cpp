@@ -30,10 +30,6 @@ using namespace BlackMiscTest;
 
 namespace BlackMiscTest
 {
-
-    /*
-     * Start a new process
-     */
     QProcess *ServiceTool::startNewProcess(const QString &executable, const QStringList &arguments, QObject *parent)
     {
         QProcess *process = new QProcess(parent);
@@ -41,9 +37,6 @@ namespace BlackMiscTest
         return process;
     }
 
-    /*
-     * Display DBus arguments
-     */
     void ServiceTool::displayQDBusArgument(const QDBusArgument &arg, qint32 level)
     {
         arg.beginArray();
@@ -68,9 +61,6 @@ namespace BlackMiscTest
         arg.endArray();
     }
 
-    /*
-     * Server side on testserver
-     */
     void ServiceTool::dataTransferTestServer(BlackCore::CDBusServer *dBusServer)
     {
         QDBusConnection sessionBusConnection = QDBusConnection::sessionBus();
@@ -84,9 +74,6 @@ namespace BlackMiscTest
         dBusServer->addObject(Testservice::ServicePath, testservice);
     }
 
-    /*
-     * Client side on testserver
-     */
     void ServiceTool::dataTransferTestClient(const QString &address)
     {
         // send data as P2P to server (this can be session bus, too, but usually is P2P)
@@ -104,9 +91,6 @@ namespace BlackMiscTest
         ServiceTool::sendDataToTestservice(p2pConnection);
     }
 
-    /*
-     * Get callsign
-     */
     CCallsign ServiceTool::getRandomAtcCallsign()
     {
         static QList<CCallsign> callsigns;
@@ -124,9 +108,6 @@ namespace BlackMiscTest
         return cs;
     }
 
-    /*
-     * Stations
-     */
     CAtcStationList ServiceTool::getStations(int number)
     {
         QElapsedTimer timer;
@@ -148,9 +129,6 @@ namespace BlackMiscTest
         return list;
     }
 
-    /*
-     * Aircraft cfg entries
-     */
     CAircraftCfgEntriesList ServiceTool::getAircraftCfgEntries(int number)
     {
         QElapsedTimer timer;
@@ -173,9 +151,6 @@ namespace BlackMiscTest
         return list;
     }
 
-    /*
-     * Airports
-     */
     CAirportList ServiceTool::getAirports(int number)
     {
         BlackMisc::Aviation::CAirportList list;
@@ -209,9 +184,6 @@ namespace BlackMiscTest
         return list;
     }
 
-    /*
-     * Register testservice (server side)
-     */
     Testservice *ServiceTool::registerTestservice(QDBusConnection &connection, QObject *parent)
     {
         Testservice *pTestservice = new Testservice(parent);  // just a QObject with signals / slots and  Q_CLASSINFO("D-Bus Interface", some service name)
@@ -247,9 +219,6 @@ namespace BlackMiscTest
         return pTestservice;
     }
 
-    /*
-     * Send data to testservice, this sends data to the slots on the server
-     */
     void ServiceTool::sendDataToTestservice(const QDBusConnection &connection)
     {
         // on the client's side
