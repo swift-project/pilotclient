@@ -275,7 +275,7 @@ namespace BlackGui
     void CGuiUtility::commandLineErrorMessage(const QString &errorMessage, const QCommandLineParser &parser)
     {
 #   ifdef Q_OS_WIN
-        QMessageBox::warning(0, QGuiApplication::applicationDisplayName(), "<html><head/><body><h2>" + errorMessage + "</h2><pre>" + parser.helpText() + "</pre></body></html>");
+        QMessageBox::warning(nullptr, QGuiApplication::applicationDisplayName(), "<html><head/><body><h2>" + errorMessage + "</h2><pre>" + parser.helpText() + "</pre></body></html>");
 #   else
         fputs(qPrintable(errorMessage), stderr);
         fputs("\n\n", stderr);
@@ -286,7 +286,7 @@ namespace BlackGui
     void CGuiUtility::commandLineVersionRequested()
     {
 #   ifdef Q_OS_WIN
-        QMessageBox::information(0, QGuiApplication::applicationDisplayName(), QGuiApplication::applicationDisplayName() + ' ' + QCoreApplication::applicationVersion());
+        QMessageBox::information(nullptr, QGuiApplication::applicationDisplayName(), QGuiApplication::applicationDisplayName() + ' ' + QCoreApplication::applicationVersion());
 #   else
         printf("%s %s\n", qPrintable(QCoreApplication::applicationName()), qPrintable(QCoreApplication::applicationVersion()));
 #   endif
@@ -295,7 +295,7 @@ namespace BlackGui
     void CGuiUtility::commandLineHelpRequested(QCommandLineParser &parser)
     {
 #   ifdef Q_OS_WIN
-        QMessageBox::warning(0, QGuiApplication::applicationDisplayName(), "<html><head/><body><pre>" + parser.helpText() + "</pre></body></html>");
+        QMessageBox::information(nullptr, QGuiApplication::applicationDisplayName(), "<html><head/><body><pre>" + parser.helpText() + "</pre></body></html>");
 #   else
         parser.showHelp(); // terminates
         Q_UNREACHABLE();

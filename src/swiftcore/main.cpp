@@ -42,14 +42,21 @@ CommandLineParseResult parseCommandLine(QCommandLineParser &parser, CSwiftCore::
     parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
     parser.addOption({{"s", "session"}, QCoreApplication::translate("main", "Use session bus.")});
     parser.addOption({{"y", "system"}, QCoreApplication::translate("main", "Use system bus.")});
-    parser.addOption({{"p", "p2p"}, QCoreApplication::translate("main", "Use P2P bus with <address>."), QCoreApplication::translate("main", "address") });
+    parser.addOption({{"p", "p2p"}, QCoreApplication::translate("main", "Use P2P bus with address.")});
     parser.addOption({{"m", "minimized"}, QCoreApplication::translate("main", "Start minimized in system tray.")});
+
+    QCommandLineOption helpOption = parser.addHelpOption();
+    QCommandLineOption versionOption = parser.addVersionOption();
 
     if (!parser.parse(QCoreApplication::arguments()))
     {
         *errorMessage = parser.errorText();
         return CommandLineError;
     }
+
+    // help/version
+    if (parser.isSet(helpOption)) { return CommandLineHelpRequested; }
+    if (parser.isSet(versionOption)) { return CommandLineVersionRequested; }
 
     if (parser.isSet("session"))
     {
@@ -93,11 +100,9 @@ CommandLineParseResult parseCommandLine(QCommandLineParser &parser, CSwiftCore::
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    CGuiUtility::initSwiftGuiApplication(a, "swiftcore", CIcons::swiftNova24());
+    const QString appName("swiftcore");
     QCommandLineParser parser;
-    parser.setApplicationDescription("swiftcore");
-    parser.addHelpOption();
-    parser.addVersionOption();
+    parser.setApplicationDescription(appName);
 
     CSwiftCore::SetupInfo setup;
     QString errorMessage;
@@ -122,6 +127,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    CGuiUtility::initSwiftGuiApplication(a, appName, CIcons::swiftNova24());
     CSwiftCore w(setup);
     if (!setup.m_minimzed) { w.show(); }
     return a.exec();
