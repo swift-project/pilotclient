@@ -10,10 +10,10 @@
 #include "context_ownaircraft.h"
 #include "context_ownaircraft_impl.h"
 #include "context_ownaircraft_proxy.h"
+#include "context_ownaircraft_empty.h"
 
 namespace BlackCore
 {
-
     IContextOwnAircraft *IContextOwnAircraft::create(CRuntime *parent, CRuntimeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &conn)
     {
         switch (mode)
@@ -22,10 +22,10 @@ namespace BlackCore
         case CRuntimeConfig::LocalInDbusServer:
             return (new CContextOwnAircraft(mode, parent))->registerWithDBus(server);
         case CRuntimeConfig::Remote:
-            return new BlackCore::CContextOwnAircraftProxy(BlackCore::CDBusServer::ServiceName(), conn, mode, parent);
+            return new CContextOwnAircraftProxy(BlackCore::CDBusServer::ServiceName(), conn, mode, parent);
+        case CRuntimeConfig::NotUsed:
         default:
-            qFatal("Always initialize an ownAircraft context");
-            return nullptr;
+            return new CContextOwnAircraftEmpty(parent);
         }
     }
 } // namespace

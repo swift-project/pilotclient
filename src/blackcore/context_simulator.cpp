@@ -10,12 +10,12 @@
 #include "context_simulator.h"
 #include "context_simulator_impl.h"
 #include "context_simulator_proxy.h"
+#include "context_simulator_empty.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackCore
 {
-
     const QString &IContextSimulator::InterfaceName()
     {
         static const QString s(BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME);
@@ -42,9 +42,10 @@ namespace BlackCore
         case CRuntimeConfig::LocalInDbusServer:
             return (new CContextSimulator(mode, parent))->registerWithDBus(server);
         case CRuntimeConfig::Remote:
-            return new BlackCore::CContextSimulatorProxy(BlackCore::CDBusServer::ServiceName(), conn, mode, parent);
+            return new CContextSimulatorProxy(BlackCore::CDBusServer::ServiceName(), conn, mode, parent);
+        case CRuntimeConfig::NotUsed:
         default:
-            return nullptr; // simulator not mandatory
+            return new CContextSimulatorEmpty(parent);
         }
     }
 

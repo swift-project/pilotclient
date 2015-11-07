@@ -224,7 +224,8 @@ namespace BlackCore
                 this->getCContextSimulator()->gracefulShutdown();
             }
             this->getIContextSimulator()->deleteLater();
-            this->m_contextSimulator = nullptr;
+            QDBusConnection defaultConnection("default");
+            this->m_contextSimulator = IContextSimulator::create(this, CRuntimeConfig::NotUsed, nullptr, defaultConnection);
         }
 
         // log off from network, if connected
@@ -255,14 +256,16 @@ namespace BlackCore
         {
             disconnect(this->getIContextOwnAircraft());
             this->getIContextOwnAircraft()->deleteLater();
-            this->m_contextOwnAircraft = nullptr;
+            QDBusConnection defaultConnection("default");
+            this->m_contextOwnAircraft = IContextOwnAircraft::create(this, CRuntimeConfig::NotUsed, nullptr, defaultConnection);
         }
 
         if (this->getIContextApplication())
         {
             disconnect(this->getIContextApplication());
             this->getIContextApplication()->deleteLater();
-            this->m_contextApplication = nullptr;
+            QDBusConnection defaultConnection("default");
+            this->m_contextApplication = IContextApplication::create(this, CRuntimeConfig::NotUsed, nullptr, defaultConnection);
         }
     }
 
