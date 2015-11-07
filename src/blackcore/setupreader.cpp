@@ -124,7 +124,7 @@ namespace BlackCore
         QString replyMessage(nwReply->errorString());
 
         this->threadAssertCheck();
-        if (this->isFinished())
+        if (this->isFinishedOrShutdown())
         {
             CLogMessage(this).debug() << Q_FUNC_INFO;
             CLogMessage(this).info("Terminated loading bootstrap files");

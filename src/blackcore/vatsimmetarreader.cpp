@@ -76,7 +76,7 @@ namespace BlackCore
         this->threadAssertCheck();
 
         // Worker thread, make sure to write thread safe!
-        if (this->isFinished())
+        if (this->isFinishedOrShutdown())
         {
             CLogMessage(this).debug() << Q_FUNC_INFO;
             CLogMessage(this).info("terminated METAR decoding process"); // for users
@@ -94,6 +94,7 @@ namespace BlackCore
             QTextStream lineReader(&metarData);
             while (!lineReader.atEnd())
             {
+                if (this->isFinishedOrShutdown()) { return; }
                 QString line = lineReader.readLine();
                 CMetar metar = m_metarDecoder.decode(line);
                 if (metar != CMetar())
@@ -117,7 +118,8 @@ namespace BlackCore
             Q_UNUSED(invalidMetars);
             if (invalidLineCount > 0)
             {
-                CLogMessage(this).warning("Reading METARs failed for %1 entries") << invalidLineCount;
+                // Regular issue, log it, but do not show to user
+                CLogMessage(this).debug() << "Reading METARs failed for entries" << invalidLineCount;
             }
             emit metarsRead(metars);
             emit dataRead(CEntityFlags::MetarEntity, CEntityFlags::ReadFinished, metars.size());

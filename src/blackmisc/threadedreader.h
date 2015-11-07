@@ -21,6 +21,7 @@
 #include <QTimer>
 #include <QNetworkReply>
 #include <QCoreApplication>
+#include <atomic>
 
 namespace BlackMisc
 {
@@ -57,15 +58,19 @@ namespace BlackMisc
         int interval() const;
 
         //! Graceful shutdown
+        //! \threadsafe
         void gracefulShutdown();
 
     protected:
         //! Constructor
         CThreadedReader(QObject *owner, const QString &name);
 
-        QTimer *m_updateTimer = nullptr;  //!< update timer
-        bool    m_shutdown    = false;    //!< in shutdown process
+        QTimer *m_updateTimer        = nullptr;  //!< update timer
+        std::atomic<bool> m_shutdown { false };  //!< in shutdown process
         mutable QReadWriteLock m_lock {QReadWriteLock::Recursive}; //!< lock which can be used from the derived classes
+
+        //! Shutdown in progress or finished
+        bool isFinishedOrShutdown() const;
 
         //! Make sure everthing runs correctly in own thread
         void threadAssertCheck() const;

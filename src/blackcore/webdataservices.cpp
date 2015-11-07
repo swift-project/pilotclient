@@ -374,9 +374,10 @@ namespace BlackCore
         this->disconnect(); // all signals
         if (this->m_vatsimBookingReader)  { this->m_vatsimBookingReader->gracefulShutdown(); }
         if (this->m_vatsimDataFileReader) { this->m_vatsimDataFileReader->gracefulShutdown(); }
-        if (this->m_modelDataReader) { this->m_modelDataReader->gracefulShutdown(); }
-        if (this->m_icaoDataReader) { this->m_icaoDataReader->gracefulShutdown(); }
-        if (this->m_databaseWriter) { this->m_databaseWriter->gracefulShutdown(); }
+        if (this->m_vatsimMetarReader)    { this->m_vatsimMetarReader->gracefulShutdown(); }
+        if (this->m_modelDataReader)      { this->m_modelDataReader->gracefulShutdown(); }
+        if (this->m_icaoDataReader)       { this->m_icaoDataReader->gracefulShutdown(); }
+        if (this->m_databaseWriter)       { this->m_databaseWriter->gracefulShutdown(); }
     }
 
     const CLogCategoryList &CWebDataServices::getLogCategories()

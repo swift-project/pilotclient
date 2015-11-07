@@ -19,6 +19,11 @@ namespace BlackMisc
         m_updateTimer(new QTimer(this))
     {  }
 
+    bool CThreadedReader::isFinishedOrShutdown() const
+    {
+        return m_shutdown || isFinished();
+    }
+
     QDateTime CThreadedReader::getUpdateTimestamp() const
     {
         QReadLocker lock(&this->m_lock);

@@ -37,7 +37,7 @@ namespace BlackCore
     {
         this->threadAssertCheck();
         JsonDatastoreResponse datastoreResponse;
-        if (m_shutdown || this->isFinished())
+        if (this->isFinishedOrShutdown())
         {
             CLogMessage(this).info("Terminated data parsing process"); // for users
             nwReply->abort();
