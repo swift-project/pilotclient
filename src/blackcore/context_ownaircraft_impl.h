@@ -154,6 +154,6 @@ namespace BlackCore
         //! Resolve voice rooms
         void resolveVoiceRooms();
     };
-}
+} // ns
 
 #endif // guard

@@ -25,7 +25,6 @@ namespace BlackCore
     class BLACKCORE_EXPORT CContextAudioEmpty : public IContextAudio
     {
     public:
-
         //! Constructor
         CContextAudioEmpty(CRuntime *runtime) : IContextAudio(CRuntimeConfig::NotUsed, runtime) {}
 
@@ -175,8 +174,7 @@ namespace BlackCore
             logEmptyContextWarning(Q_FUNC_INFO);
             return false;
         }
-
-    };
+        };
 } // namespace
 
 #endif // guard

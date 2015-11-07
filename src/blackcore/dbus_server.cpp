@@ -301,7 +301,7 @@ namespace BlackCore
      */
     QString CDBusServer::fixAddressToDBusAddress(const QString &address)
     {
-        if (address.isEmpty() || address == sessionDBusServer() || address == systemDBusServer()) return address;
+        if (address.isEmpty() || address == sessionDBusServer() || address == systemDBusServer()) { return address; }
         if (address.startsWith("tcp:") || address.startsWith("unix:")) return address;
         return p2pAddress(address);
     }

@@ -45,17 +45,13 @@ namespace BlackMisc
         class IGeoObjectList
         {
         public:
-            /*!
-             * Find 0..n objects within range of given coordinate
-             * \param coordinate    other position
-             * \param range         within range of other position
-             * \return
-             */
+            //! Find 0..n objects within range of given coordinate
+            //! \param coordinate    other position
+            //! \param range         within range of other position
+            //! \return
             CONTAINER findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const BlackMisc::PhysicalQuantities::CLength &range) const;
 
-            /*!
-             * Find 0..n objects closest to the given coordinate.
-             */
+            //! Find 0..n objects closest to the given coordinate.
             CONTAINER findClosest(int number, const BlackMisc::Geo::ICoordinateGeodetic &coordinate) const;
 
         protected:
@@ -102,7 +98,6 @@ namespace BlackMisc
         protected:
             //! Constructor
             IGeoObjectWithRelativePositionList();
-
         };
 
         //! \cond PRIVATE

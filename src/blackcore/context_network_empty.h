@@ -25,7 +25,6 @@ namespace BlackCore
         Q_OBJECT
 
     public:
-
         //! Constructor
         CContextNetworkEmpty(CRuntime *runtime) : IContextNetwork(CRuntimeConfig::NotUsed, runtime) {}
 

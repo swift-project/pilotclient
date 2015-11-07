@@ -21,9 +21,6 @@ namespace BlackGui
 {
     namespace Models
     {
-        /*
-         * Constructor
-         */
         CAtcStationListModel::CAtcStationListModel(AtcStationMode stationMode, QObject *parent) :
             CListModelBase("ModelAtcList", parent), m_stationMode(NotSet)
         {

@@ -24,7 +24,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         CAtcStation::CAtcStation()
         { }
 

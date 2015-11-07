@@ -28,12 +28,10 @@ namespace BlackCore
         friend class IContextOwnAircraft;
 
     public:
-
         //! Destructor
         virtual ~CContextOwnAircraftProxy() {}
 
-    public slots: // IContextOwnAircraft overrides
-
+    public slots:
         //! \copydoc IContextOwnAircraft::getOwnAircraft()
         virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const override;
 
@@ -82,9 +80,7 @@ namespace BlackCore
 
         //! \brief Relay connection signals to local signals.
         void relaySignals(const QString &serviceName, QDBusConnection &connection);
-
-
     };
-}
+} // ns
 
 #endif // guard
