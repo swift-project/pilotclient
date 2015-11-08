@@ -65,7 +65,7 @@ namespace BlackMisc
                 }
                 while (isRepeatable());
 
-                if (!isValid) { CLogMessage(this).warning("Failed to match %1 in remaining metar: %2") << getDecoderType() << metarString; }
+                if (!isValid) { CLogMessage(this).debug() << "Failed to match" << getDecoderType() << "in remaining metar:" << metarString; }
                 return isValid;
             }
         };
@@ -78,11 +78,7 @@ namespace BlackMisc
             bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const override
             {
                 QString reportTypeAsString = match.captured("reporttype");
-                if (reportTypeAsString.isEmpty() || !getReportTypeHash().contains(reportTypeAsString))
-                {
-                    CLogMessage(this).warning("Invalid metar report type %1 in metar: %2") << match.captured(0);
-                    return true;
-                }
+                if (reportTypeAsString.isEmpty() || !getReportTypeHash().contains(reportTypeAsString)) { return false; }
 
                 metar.setReportType(getReportTypeHash().value(reportTypeAsString));
                 return true;
@@ -826,7 +822,7 @@ namespace BlackMisc
             {
                 if (!decoder->parse(metarStringCopy, metar))
                 {
-                    CLogMessage(this).info("Invalid metar: %1") << metarString;
+                    CLogMessage(this).debug() << "Invalid metar:" << metarString;
                     return CMetar();
                 }
             }
