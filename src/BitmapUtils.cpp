@@ -872,10 +872,10 @@ int		CreateBitmapFromPNG(const char * inFilePath, struct ImageInfo * outImageInf
 	png_structp		pngPtr = NULL;
 	png_infop		infoPtr = NULL;
 	unsigned char *	volatile buffer = NULL;
-	FILE *			file = NULL;
+	FILE * volatile	file = NULL;
 	size_t			fileLength = 0;
 	outImageInfo->data = NULL;
-	char** 			rows = NULL;
+	char** volatile	rows = NULL;
 	double lcl_gamma;			// This will be the gamma of the file if it has one.
 #if APL							// Macs and PCs have different gamma responses.
 	double screen_gamma=1.8;	// Darks look darker and brights brighter on the PC.
