@@ -78,9 +78,6 @@ namespace BlackGui
         //! File name for standard widgets
         static const QString &fileNameStandardWidget();
 
-        //! File name maininfoarea.qss
-        static const QString &fileNameInfoWindow();
-
         //! File name textmessage.qss
         static const QString &fileNameTextMessage();
 
@@ -95,6 +92,9 @@ namespace BlackGui
 
         //! File name swiftcore.qss
         static const QString &fileNameSwiftData();
+
+        //! File name swiftlauncher.qss
+        static const QString &fileNameSwiftLauncher();
 
         //! File name ini file
         static const QString &fileNameIniFile();

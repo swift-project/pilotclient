@@ -1,0 +1,18 @@
+/** special effects for start buttons **/
+#pg_Start QToolButton {
+  border: 1px solid green;
+  border-radius: 5px;
+}
+
+#pg_Start QToolButton:hover {
+  border: 5px solid green;
+  border-radius: 5px;
+  min-width: 30px;
+  min-height: 30px;
+}
+
+#pg_start QToolTip {
+  color: #ffffff;
+  background-color: #2a82da;
+  border: 1px solid white;
+}

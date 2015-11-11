@@ -29,7 +29,7 @@ QMainWindow::separator:hover {
   background: transparent;
 }
 
-/** Main window **/
+/** Dialog, sometime main window **/
 QDialog {
   background-image: url(:/textures/icons/textures/texture-outer.jpg);
   background-color: darkslategray;
@@ -113,27 +113,23 @@ BlackGui--Editors--CValidationIndicator {
 
 /** default for buttons **/
 QPushButton {
-  /** background-image: url(:/textures/icons/textures/texture-inner.jpg); **/
-  /** need to fix pressed button first **/
-  background: black;
-  border-style: solid;
-  border-width: 1px;
-  border-radius:6px;
-  border-color: green;
-  max-height:20px;
+  background-color: rgba(0, 0, 255, 128);
+  border-style: 1px solid yellow;
+  border-radius:3px;
+  color: yellow;
+  padding: 0px;
+  margin-right: 5px;
   min-width:60px;
   min-height:20px;
 }
 
 QPushButton::disabled {
   background-color: grey;
-  border-style: solid;
-  border-width: 1px;
-  border-radius:6px;
-  border-color: green;
-  max-height:20px;
-  min-width:60px;
-  min-height:20px;
+  border-style: none;
+  border-radius:3px;
+  color: white;
+  padding: 0px;
+  margin-right: 5px;
 }
 
 QProgressBar {
@@ -215,6 +211,7 @@ QLabel {
 
 QToolButton {
   background-color: transparent; /* transparent tool buttons */
+  border: 0px;
 }
 
 QLineEdit {
@@ -267,6 +264,10 @@ QToolBox::tab {
 
 QToolBox::tab::selected {
   background-color: rgba(0, 0, 255, 128);
+}
+
+QToolBox::tab::!selected {
+  background-color: rgba(0, 0, 255, 48);
 }
 
 /** no border on page */

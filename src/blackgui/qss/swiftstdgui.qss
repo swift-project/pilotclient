@@ -52,15 +52,6 @@ QAbstractScrollArea #pg_StatusPageCons	ole  { background-color: black; }
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
-#sw_MainMiddle QPushButton {
-  background-color: rgba(0, 0, 255, 128);
-  border-style: none;
-  border-radius:3px;
-  color: yellow;
-  padding: 0px;
-  margin-right: 5px;
-}
-
 /** close button with frameless windows **/
 #pb_FramelessCloseButton {
   background: transparent;
@@ -79,23 +70,20 @@ QAbstractScrollArea #pg_StatusPageCons	ole  { background-color: black; }
 }
 
 #wi_MainKeypadArea QPushButton {
-  /** background-image: url(:/textures/icons/textures/texture-inner.jpg); **/
-  /** need to fix pressed button first **/
-  background: black;
+  background-color: black;
+  color: white;
   border-style: solid;
   border-width: 1px;
   border-radius:6px;
   border-color: green;
   max-height:20px;
-  min-width:60px;
+  min-width: 60px;
   min-height:20px;
 }
 
 #wi_MainKeypadArea QPushButton::checked {
-  /** background-image: url(:/textures/icons/textures/texture-inner.jpg); **/
-  /** need to fix pressed button first **/
   border-style: solid;
-  border-color: yellow;
+  border-color: green;
   font: bold;
   color: yellow;
 }

@@ -1,10 +1,3 @@
-#le_CommandLineInput {
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
-  margin-bottom: 5px;
-  padding: 3px;
-  border-radius: 5px;
-}
-
 #comp_Log {
   background: transparent; /** background is background color here **/
 }

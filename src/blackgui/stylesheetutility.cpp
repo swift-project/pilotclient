@@ -263,12 +263,6 @@ namespace BlackGui
         return f;
     }
 
-    const QString &CStyleSheetUtility::fileNameInfoWindow()
-    {
-        static const QString f("stylesheetinfo.qss");
-        return f;
-    }
-
     const QString &CStyleSheetUtility::fileNameTextMessage()
     {
         static const QString f("textmessage.css");
@@ -290,6 +284,12 @@ namespace BlackGui
     const QString &CStyleSheetUtility::fileNameSwiftData()
     {
         static const QString f("swiftdata.qss");
+        return f;
+    }
+
+    const QString &CStyleSheetUtility::fileNameSwiftLauncher()
+    {
+        static const QString f("swiftlauncher.qss");
         return f;
     }
 
