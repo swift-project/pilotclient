@@ -37,8 +37,10 @@ public:
     {
         SetupInfo() {}
 
-        bool m_minimzed = false; //!< Start minimized to tray
-        QString m_dbusAddress;   //!< DBus address (session, system, p2p)
+        bool m_minimzed = false;  //!< Start minimized to tray
+        bool m_start = false;     //!< Start server when core is started
+        bool m_coreAudio = false; //!< Audio in core
+        QString m_dbusAddress;    //!< DBus address (session, system, p2p)
     };
 
     //! Constructor
@@ -61,6 +63,8 @@ private:
     void initSlots();
     void initLogDisplay();
     void initStyleSheet();
+    void initDBusMode(const SetupInfo &setup);
+
     void startCore(const SetupInfo &setup);
     void stopCore();
     QString getDBusAddress() const;

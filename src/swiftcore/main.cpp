@@ -40,10 +40,10 @@ enum CommandLineParseResult
 CommandLineParseResult parseCommandLine(QCommandLineParser &parser, CSwiftCore::SetupInfo *setup, QString *errorMessage)
 {
     parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
-    parser.addOption({{"s", "session"}, QCoreApplication::translate("main", "Use session bus.")});
-    parser.addOption({{"y", "system"}, QCoreApplication::translate("main", "Use system bus.")});
-    parser.addOption({{"p", "p2p"}, QCoreApplication::translate("main", "Use P2P bus with address.")});
+    parser.addOption({{"d", "dbus"}, QCoreApplication::translate("main", "DBus options: session, system, p2p."), "dbus"});
     parser.addOption({{"m", "minimized"}, QCoreApplication::translate("main", "Start minimized in system tray.")});
+    parser.addOption({{"r", "start"}, QCoreApplication::translate("main", "Start the server.")});
+    parser.addOption({{"c", "coreaudio"}, QCoreApplication::translate("main", "Audio in core.")});
 
     QCommandLineOption helpOption = parser.addHelpOption();
     QCommandLineOption versionOption = parser.addVersionOption();
@@ -58,49 +58,33 @@ CommandLineParseResult parseCommandLine(QCommandLineParser &parser, CSwiftCore::
     if (parser.isSet(helpOption)) { return CommandLineHelpRequested; }
     if (parser.isSet(versionOption)) { return CommandLineVersionRequested; }
 
-    if (parser.isSet("session"))
+    setup->m_dbusAddress = CDBusServer::sessionDBusServer(); // default
+    if (parser.isSet("dbus"))
     {
-        if (parser.isSet("system") || parser.isSet("p2p"))
+        QString v(parser.value("dbus").trimmed().toLower());
+        if (v.startsWith("p2p") || v.contains("peer") || v.contains("tcp:") || v.contains("host"))
         {
-            *errorMessage = "Multiple DBus types set at the same time.";
-            return CommandLineError;
+            setup->m_dbusAddress = CDBusServer::p2pAddress();
         }
-        setup->m_dbusAddress = CDBusServer::sessionDBusServer();
-    }
-
-    if (parser.isSet("system"))
-    {
-        if (parser.isSet("session") || parser.isSet("p2p"))
+        else if (v.contains("sys"))
         {
-            *errorMessage = "Multiple DBus types set at the same time.";
-            return CommandLineError;
-        }
-        setup->m_dbusAddress = CDBusServer::systemDBusServer();
-    }
-
-    if (parser.isSet("p2p"))
-    {
-        const QString address = CDBusServer::fixAddressToDBusAddress(parser.value("p2p"));
-        Q_UNUSED(address);
-
-        if (parser.isSet("session") || parser.isSet("system"))
-        {
-            *errorMessage = "Multiple DBus types set at the same time.";
-            return CommandLineError;
+            setup->m_dbusAddress = CDBusServer::systemDBusServer(); // default
         }
     }
 
-    if (parser.isSet("minimized"))
-    {
-        setup->m_minimzed = true;
-    }
+    if (parser.isSet("minimized")) { setup->m_minimzed = true; }
+    if (parser.isSet("start")) { setup->m_start = true; }
+    if (parser.isSet("coreaudio")) { setup->m_coreAudio = true; }
+
     return CommandLineOk;
 }
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    const QString appName("swiftcore");
+    const QString appName("swift core");
+    a.setApplicationVersion(CProject::version());
+    a.setApplicationName(appName);
     QCommandLineParser parser;
     parser.setApplicationDescription(appName);
 

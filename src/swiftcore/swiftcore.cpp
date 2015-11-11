@@ -31,17 +31,19 @@ CSwiftCore::CSwiftCore(const SetupInfo &info, QWidget *parent) :
     ui(new Ui::CSwiftCore)
 {
     ui->setupUi(this);
-    const QString name("swiftcore " + CProject::version());
-    SystemTrayMode mode = MinimizeToTray | QuitOnClose;
-    setSystemTrayMode(mode);
-    setToolTip(name);
+    const QString name(QCoreApplication::instance()->applicationName() + " " + CProject::version());
+    setSystemTrayMode(MinimizeToTray | QuitOnClose);
+    setSystemTrayToolTip(name);
     setWindowTitle(name);
     setWindowIcon(CIcons::swiftNova24());
     setWindowIconText(name);
+
     initLogDisplay();
     initSlots();
     initStyleSheet();
-    startCore(info);
+    initDBusMode(info);
+
+    if (info.m_start) { startCore(info); }
 }
 
 void CSwiftCore::initStyleSheet()
@@ -54,6 +56,23 @@ void CSwiftCore::initStyleSheet()
     }
     );
     this->setStyleSheet(s);
+}
+
+void CSwiftCore::initDBusMode(const CSwiftCore::SetupInfo &setup)
+{
+    if (setup.m_dbusAddress.startsWith(CDBusServer::sessionDBusServer()))
+    {
+        this->ui->rb_SessionBus->setChecked(true);
+    }
+    else if (setup.m_dbusAddress.startsWith(CDBusServer::systemDBusServer()))
+    {
+        this->ui->rb_SystemBus->setChecked(true);
+    }
+    else
+    {
+        this->ui->rb_P2PBus->setChecked(true);
+        this->ui->le_P2PAddress->setText(setup.m_dbusAddress);
+    }
 }
 
 CSwiftCore::~CSwiftCore()
@@ -123,7 +142,10 @@ void CSwiftCore::startCore(const SetupInfo &setup)
     QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 
     // context
-    createRuntime(CRuntimeConfig::forCoreAllLocalInDBus(setup.m_dbusAddress), this);
+    this->createRuntime(setup.m_coreAudio ?
+                        CRuntimeConfig::forCoreAllLocalInDBus(setup.m_dbusAddress) :
+                        CRuntimeConfig::forCoreAllLocalInDBusNoAudio(setup.m_dbusAddress),
+                        this);
     CEnableForRuntime::setRuntimeForComponents(this->getRuntime(), this);
     connect(ui->le_CommandLineInput, &CCommandInput::commandEntered, getRuntime(), &CRuntime::parseCommandLine);
 }
@@ -149,6 +171,6 @@ QString CSwiftCore::getDBusAddress() const
     if (ui->rb_SystemBus->isChecked()) { return CDBusServer::systemDBusServer(); }
     if (ui->rb_P2PBus->isChecked()) { return CDBusServer::fixAddressToDBusAddress(ui->le_P2PAddress->text()); }
 
-    Q_ASSERT_X(false, Q_FUNC_INFO, "The impossible happend!");
+    Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong DBus address");
     return "";
 }
