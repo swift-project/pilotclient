@@ -127,15 +127,28 @@ namespace BlackMisc
 
     const QString &CProject::swiftVersionString()
     {
-        static const QString s(QString("swift %1").arg(version()));
+        static const QString s(QString("swift %1").arg(versionStringDevBetaInfo()));
         return s;
     }
 
-    const QString &CProject::swiftVersionStringDevInfo()
+    const QString &CProject::versionStringDevBetaInfo()
     {
-        if (!isRunningInDeveloperEnvironment()) { return swiftVersionString(); }
-        static const QString s(swiftVersionString() + " [DEV]");
-        return s;
+        if (isRunningInDeveloperEnvironment() && isBetaTest())
+        {
+            static const QString s(version() + " [DEV, BETA]");
+            return s;
+        }
+        if (isRunningInDeveloperEnvironment())
+        {
+            static const QString s(version() + " [DEV]");
+            return s;
+        }
+        if (isBetaTest())
+        {
+            static const QString s(version() + " [BETA]");
+            return s;
+        }
+        return version();
     }
 
     const char *CProject::swiftVersionChar()
@@ -152,6 +165,20 @@ namespace BlackMisc
     int CProject::versionMinor()
     {
         return getMajorMinor(1);
+    }
+
+    bool CProject::isNewerVersion(const QString &versionString)
+    {
+        if (versionString.isEmpty()) { return false; }
+        QList<int> newer(getVersionParts(versionString));
+        QList<int> current(getVersionParts(version()));
+        for (int i = 0; i < current.length(); i++)
+        {
+            if (newer.length() <= i) { return false; }
+            if (current.at(i) > newer.at(i)) { return false; }
+            if (current.at(i) < newer.at(i)) { return true; }
+        }
+        return true;
     }
 
     bool CProject::isDebugBuild()
@@ -213,13 +240,24 @@ namespace BlackMisc
         return isBetaTest() || isRunningInDeveloperEnvironment();
     }
 
+    QList<int> CProject::getVersionParts(const QString &versionString)
+    {
+        QStringList parts = versionString.split('.');
+        QList<int> partsInt;
+        for (const QString &p : parts)
+        {
+            bool ok = false;
+            int pInt = p.toInt(&ok);
+            partsInt.append(ok ? pInt : -1);
+        }
+        return partsInt;
+    }
+
     int CProject::getMajorMinor(int index)
     {
-        QString v = version();
-        if (v.isEmpty() || !v.contains(".")) return -1;
-        bool ok;
-        int vi = v.split(".")[index].toInt(&ok);
-        return ok ? vi : -1;
+        QList<int> partsInt(getVersionParts(version()));
+        if (index >= partsInt.length()) { return -1; }
+        return partsInt[index];
     }
 
     const QString &CProject::envVarDevelopment()
@@ -236,6 +274,24 @@ namespace BlackMisc
     const QString &CProject::envVarPrivateSetupDir()
     {
         static const QString s("SWIFT_SETUP_DIR");
+        return s;
+    }
+
+    const QString &CProject::swiftGuiExecutableName()
+    {
+        static const QString s("swiftguistd");
+        return s;
+    }
+
+    const QString &CProject::swiftCoreExecutableName()
+    {
+        static const QString s("swiftcore");
+        return s;
+    }
+
+    const QString &CProject::swiftDataExecutableName()
+    {
+        static const QString s("swiftdata");
         return s;
     }
 

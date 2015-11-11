@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     const QString appName("swift pilot client GUI");
-    a.setApplicationVersion(CProject::swiftVersionString());
+    a.setApplicationVersion(CProject::version());
     a.setApplicationName(appName);
 
     // Process the actual command line arguments given by the user

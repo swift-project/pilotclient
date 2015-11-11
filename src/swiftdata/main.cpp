@@ -28,7 +28,7 @@ using namespace BlackGui;
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    CGuiUtility::initSwiftGuiApplication(a, "swiftdata", CIcons::swiftDatabase24());
+    CGuiUtility::initSwiftGuiApplication(a, "swift mapping tool", CIcons::swiftDatabase24());
 
     CSwiftData w;
     w.show();

@@ -38,7 +38,7 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
 
     // init window
     this->setWindowIcon(CIcons::swift24());
-    this->setWindowTitle(CProject::swiftVersionStringDevInfo());
+    this->setWindowTitle(CProject::versionStringDevBetaInfo());
     this->setObjectName("SwiftGuiStd");
     this->initStyleSheet();
     QPoint pos = CGuiUtility::introWindowPosition();

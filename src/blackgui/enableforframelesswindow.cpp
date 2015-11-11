@@ -10,8 +10,10 @@
 #include "enableforframelesswindow.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/worker.h"
 #include <QStatusBar>
 #include <QPushButton>
+#include <QThread>
 
 using namespace BlackMisc;
 
@@ -39,6 +41,20 @@ namespace BlackGui
     void CEnableForFramelessWindow::setFrameless(bool frameless)
     {
         setMode(frameless ? WindowFrameless : WindowTool);
+    }
+
+    void CEnableForFramelessWindow::alwaysOnTop(bool onTop)
+    {
+        Qt::WindowFlags flags = this->m_widget->windowFlags();
+        if (onTop)
+        {
+            flags |= Qt::WindowStaysOnTopHint;
+        }
+        else
+        {
+            flags &= ~Qt::WindowStaysOnTopHint;
+        }
+        this->m_widget->setWindowFlags(flags);
     }
 
     CEnableForFramelessWindow::WindowMode CEnableForFramelessWindow::stringToWindowMode(const QString &s)
@@ -96,16 +112,16 @@ namespace BlackGui
         }
     }
 
-    bool CEnableForFramelessWindow::handleMouseMoveEvent(QMouseEvent *event)
+    void CEnableForFramelessWindow::showMinimizedModeChecked()
     {
-        Q_ASSERT(this->m_widget);
-        if (this->m_windowMode == WindowFrameless && event->buttons() & Qt::LeftButton)
-        {
-            this->m_widget->move(event->globalPos() - this->m_framelessDragPosition);
-            event->accept();
-            return true;
-        }
-        return false;
+        if (m_windowMode == CEnableForFramelessWindow::WindowTool) { this->toolToNormalWindow(); }
+        this->m_widget->showMinimized();
+    }
+
+    void CEnableForFramelessWindow::showNormalModeChecked()
+    {
+        if (m_windowMode == CEnableForFramelessWindow::WindowTool) { this->normalToToolWindow(); }
+        this->m_widget->showMinimized();
     }
 
     bool CEnableForFramelessWindow::handleMousePressEvent(QMouseEvent *event)
@@ -118,6 +134,48 @@ namespace BlackGui
             return true;
         }
         return false;
+    }
+
+    bool CEnableForFramelessWindow::handleMouseMoveEvent(QMouseEvent *event)
+    {
+        Q_ASSERT(this->m_widget);
+        if (this->m_windowMode == WindowFrameless && event->buttons() & Qt::LeftButton)
+        {
+            this->m_widget->move(event->globalPos() - this->m_framelessDragPosition);
+            event->accept();
+            return true;
+        }
+        return false;
+    }
+
+    bool CEnableForFramelessWindow::handleChangeEvent(QEvent *event)
+    {
+        if (event->type() != QEvent::WindowStateChange) { return false; }
+        if (m_windowMode != WindowTool) { return false; }
+
+        // make sure a tool window is changed to Normal window so it is show in taskbar
+        // here we are already in transition state, so isMinimized means will be minimize right now
+        // this check here is needed if minimized is called from somewhere else than ps_showMinimized
+        if (m_widget->isMinimized())
+        {
+            // still tool, force normal window
+            // decouple, otherwise we end up in infinite loop as it triggers a new changeEvent
+            BlackMisc::singleShot(0, QThread::currentThread(), [ = ]()
+            {
+                this->showMinimizedModeChecked();
+            });
+        }
+        else
+        {
+            // not tool, force tool window
+            // decouple, otherwise we end up in infinite loop as it triggers a new changeEvent
+            BlackMisc::singleShot(0, QThread::currentThread(), [ = ]()
+            {
+                this->showNormalModeChecked();
+            });
+        }
+        event->accept();
+        return true;
     }
 
     void CEnableForFramelessWindow::addFramelessSizeGripToStatusBar(QStatusBar *statusBar)
@@ -183,14 +241,14 @@ namespace BlackGui
         switch (mode)
         {
         case WindowFrameless:
-            return (Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+            return (Qt::Window | Qt::FramelessWindowHint);
         case WindowTool:
-            // tool window and minimized not supported on windows
-            // tool window always with close button on windows
-            return (Qt::Tool | Qt::WindowStaysOnTopHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+            // tool window and minimized not supported on Windows
+            // tool window always with close button on Windows
+            return (Qt::Tool | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
         case WindowNormal:
         default:
-            return (Qt::Window | Qt::WindowStaysOnTopHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+            return (Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
         }
     }
 

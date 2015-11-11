@@ -77,7 +77,7 @@ void CSwiftData::ps_onStyleSheetsChanged()
 void CSwiftData::init()
 {
     this->setWindowIcon(CIcons::swiftDatabase24());
-    this->setWindowTitle(QString("Mapping tool %1").arg(CProject::swiftVersionStringDevInfo()));
+    this->setWindowTitle(QCoreApplication::instance()->applicationName() + " " + CProject::versionStringDevBetaInfo());
     this->setObjectName("CSwiftData");
     this->initStyleSheet();
     this->initLogDisplay();

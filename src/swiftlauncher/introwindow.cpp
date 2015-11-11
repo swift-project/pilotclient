@@ -33,7 +33,7 @@ CIntroWindow::CIntroWindow(QWidget *parent) :
     ui(new Ui::CIntroWindow)
 {
     ui->setupUi(this);
-    this->setWindowTitle(CProject::swiftVersionStringDevInfo());
+    this->setWindowTitle(CProject::versionStringDevBetaInfo());
     this->layout()->setSizeConstraint(QLayout::SetFixedSize);
     this->ui->cb_DBusServer->addItem(CDBusServer::sessionDBusServer());
     this->ui->cb_DBusServer->addItem(CDBusServer::systemDBusServer());

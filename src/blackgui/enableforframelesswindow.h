@@ -53,6 +53,9 @@ namespace BlackGui
         //! The main application
         bool isMainApplicationWindow() const { return m_mainApplicationWindow; }
 
+        //! Always on top?
+        void alwaysOnTop(bool onTop);
+
         //! Corresponding QMainWindow
         QWidget *getWidget() const { return m_widget; }
 
@@ -63,6 +66,14 @@ namespace BlackGui
         static QString windowModeToString(WindowMode m);
 
     protected:
+        QPoint       m_framelessDragPosition;          //!< position, if moving is handled with frameless window */
+        QPushButton *m_framelessCloseButton = nullptr; //!< close button
+        WindowMode   m_windowMode = WindowNormal;      //!< Window mode, \sa WindowMode
+        bool         m_mainApplicationWindow = false;  //!< is the main application window (only 1)
+        QWidget     *m_widget = nullptr;               //!< corresponding main window or dock widget
+        QSizeGrip   *m_framelessSizeGrip = nullptr;    //!< size grip object
+        QByteArray   m_framelessPropertyName;          //!< property name for frameless widgets
+
         //! Resize grip handle
         void addFramelessSizeGripToStatusBar(QStatusBar *statusBar);
 
@@ -87,24 +98,24 @@ namespace BlackGui
         //! Tool window
         bool isToolWindow() const;
 
-        //! Translate mode
-        static Qt::WindowFlags modeToWindowFlags(WindowMode mode);
-
-        QPoint       m_framelessDragPosition;          //!< position, if moving is handled with frameless window */
-        QPushButton *m_framelessCloseButton = nullptr; //!< close button
-        WindowMode   m_windowMode = WindowTool;        //!< Window mode, \sa WindowMode
-        bool         m_mainApplicationWindow = false;  //!< is the main application window (only 1)
-        QWidget     *m_widget = nullptr;               //!< corresponding main window or dock widget
-        QSizeGrip   *m_framelessSizeGrip = nullptr;    //!< size grip object
-        QByteArray   m_framelessPropertyName;          //!< property name for frameless widgets
-
         //! Mouse press, required for frameless window
         bool handleMousePressEvent(QMouseEvent *event);
 
         //! Mouse moving, required for frameless window
         bool handleMouseMoveEvent(QMouseEvent *event);
-    };
 
+        //! Mouse window change event
+        bool handleChangeEvent(QEvent *event);
+
+        //! Check mode and then show minimized
+        void showMinimizedModeChecked();
+
+        //! Check mode and then show normal
+        void showNormalModeChecked();
+
+        //! Translate mode
+        static Qt::WindowFlags modeToWindowFlags(WindowMode mode);
+    };
 } // namespace
 
 #endif // guard

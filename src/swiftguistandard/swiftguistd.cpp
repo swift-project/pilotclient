@@ -55,18 +55,12 @@ SwiftGuiStd::~SwiftGuiStd()
 
 void SwiftGuiStd::mouseMoveEvent(QMouseEvent *event)
 {
-    if (!handleMouseMoveEvent(event))
-    {
-        QMainWindow::mouseMoveEvent(event);
-    }
+    if (!handleMousePressEvent(event)) { QMainWindow::mouseMoveEvent(event); }
 }
 
 void SwiftGuiStd::mousePressEvent(QMouseEvent *event)
 {
-    if (!handleMousePressEvent(event))
-    {
-        QMainWindow::mousePressEvent(event);
-    }
+    if (!handleMousePressEvent(event)) { QMainWindow::mousePressEvent(event); }
 }
 
 void SwiftGuiStd::performGracefulShutdown()
@@ -121,39 +115,7 @@ void SwiftGuiStd::closeEvent(QCloseEvent *event)
 
 void SwiftGuiStd::changeEvent(QEvent *event)
 {
-    if (event->type() == QEvent::WindowStateChange)
-    {
-        // make sure a tool window is changed to Normal window so it is show in taskbar
-        // here we are already in transition state, so isMinimized means will be minimize right now
-        // this check here is needed if minimized is called from somewhere else than ps_showMinimized
-        if (!this->isFrameless())
-        {
-            bool toolWindow(this->isToolWindow());
-            if (isMinimized())
-            {
-                if (toolWindow)
-                {
-                    // still tool, force normal window
-                    BlackMisc::singleShot(0, QThread::currentThread(), [ = ]()
-                    {
-                        this->ps_showMinimized();
-                    });
-                }
-            }
-            else
-            {
-                if (!toolWindow)
-                {
-                    // not tool, force tool window
-                    BlackMisc::singleShot(0, QThread::currentThread(), [ = ]()
-                    {
-                        this->ps_showNormal();
-                    });
-                }
-            }
-        } // frameless?
-    }
-    QMainWindow::changeEvent(event);
+    if (!CEnableForFramelessWindow::handleChangeEvent(event)) { QMainWindow::changeEvent(event); }
 }
 
 QAction *SwiftGuiStd::getWindowMinimizeAction(QObject *parent)
@@ -396,14 +358,12 @@ void SwiftGuiStd::ps_onChangedMainInfoAreaFloating(bool floating)
 
 void SwiftGuiStd::ps_showMinimized()
 {
-    if (m_windowMode == CEnableForFramelessWindow::WindowTool) { this->toolToNormalWindow(); }
-    this->showMinimized();
+    this->showMinimizedModeChecked();
 }
 
 void SwiftGuiStd::ps_showNormal()
 {
-    if (m_windowMode == CEnableForFramelessWindow::WindowTool) { this->normalToToolWindow(); }
-    this->showNormal();
+    this->showNormalModeChecked();
 }
 
 void SwiftGuiStd::playNotifcationSound(CNotificationSounds::Notification notification) const

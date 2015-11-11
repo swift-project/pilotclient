@@ -66,17 +66,20 @@ namespace BlackMisc
         //! System's name and version
         static const QString &swiftVersionString();
 
-        //! System's name and version + info if dev.environemnt
-        static const QString &swiftVersionStringDevInfo();
-
         //! System's name and version
         static const char *swiftVersionChar();
+
+        //! System's name and version + info if dev.environment / beta
+        static const QString &versionStringDevBetaInfo();
 
         //! Version major
         static int versionMajor();
 
         //! Version minor
         static int versionMinor();
+
+        //! Is the given string representing a newer version?
+        static bool isNewerVersion(const QString &versionString);
 
         //! Debug build?
         static bool isDebugBuild();
@@ -132,9 +135,21 @@ namespace BlackMisc
         //! Environment variable private resources directory
         static const QString &envVarPrivateSetupDir();
 
+        //! Executable name for swift GUI, no(!) appendix
+        static const QString &swiftGuiExecutableName();
+
+        //! Executable name for swift core, no(!) appendix
+        static const QString &swiftCoreExecutableName();
+
+        //! Executable name for swift data, no(!) appendix
+        static const QString &swiftDataExecutableName();
+
     private:
         //! Constructor
         CProject() {}
+
+        //! Parts of version string 1.0.2
+        static QList<int> getVersionParts(const QString &versionString);
 
         //! Split version
         static int getMajorMinor(int index);
