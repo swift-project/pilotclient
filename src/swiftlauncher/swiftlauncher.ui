@@ -1,0 +1,734 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CSwiftLauncher</class>
+ <widget class="QDialog" name="CSwiftLauncher">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>365</width>
+    <height>625</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>swift launcher</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_SwiftLauncher">
+   <property name="spacing">
+    <number>4</number>
+   </property>
+   <property name="leftMargin">
+    <number>3</number>
+   </property>
+   <property name="topMargin">
+    <number>3</number>
+   </property>
+   <property name="rightMargin">
+    <number>3</number>
+   </property>
+   <property name="bottomMargin">
+    <number>3</number>
+   </property>
+   <item>
+    <widget class="QStackedWidget" name="sw_SwiftLauncher">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QWidget" name="pg_SwiftLauncherMain">
+      <layout class="QVBoxLayout" name="wl_SwiftLauncherMainPage">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="BlackGui::COverlayMessagesFrame" name="fr_SwiftLauncherMain">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QVBoxLayout" name="vl_SwiftLauncherMain">
+          <property name="spacing">
+           <number>25</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QToolBox" name="tb_Launcher">
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
+            <property name="tabSpacing">
+             <number>6</number>
+            </property>
+            <widget class="QWidget" name="pg_LatestNews">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>355</width>
+               <height>306</height>
+              </rect>
+             </property>
+             <attribute name="label">
+              <string>Latest news</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="vl_LatestNews"/>
+            </widget>
+            <widget class="QWidget" name="pg_WindowType">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>355</width>
+               <height>306</height>
+              </rect>
+             </property>
+             <attribute name="label">
+              <string>Window type</string>
+             </attribute>
+             <layout class="QGridLayout" name="gl_WindowType">
+              <item row="1" column="1" alignment="Qt::AlignHCenter">
+               <widget class="QRadioButton" name="rb_WindowFrameless">
+                <property name="text">
+                 <string>Frameless</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0" alignment="Qt::AlignHCenter">
+               <widget class="QRadioButton" name="rb_WindowNormal">
+                <property name="text">
+                 <string>Normal window</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0" colspan="2">
+               <spacer name="vs_WindowType">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="2" column="1" alignment="Qt::AlignHCenter">
+               <widget class="QLabel" name="lbl_WindowFrameless">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="pixmap">
+                 <pixmap resource="swiftlauncher.qrc">:/launcher/icons/swiftFrameless125x203.png</pixmap>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0" alignment="Qt::AlignHCenter">
+               <widget class="QLabel" name="lbl_WindowNormal">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="pixmap">
+                 <pixmap resource="swiftlauncher.qrc">:/launcher/icons/swiftNormal125x206.png</pixmap>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="pg_CoreMode">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>355</width>
+               <height>306</height>
+              </rect>
+             </property>
+             <attribute name="label">
+              <string>Core mode</string>
+             </attribute>
+             <layout class="QGridLayout" name="gl_CoreMode" columnstretch="10,14,14">
+              <property name="leftMargin">
+               <number>4</number>
+              </property>
+              <property name="topMargin">
+               <number>4</number>
+              </property>
+              <property name="rightMargin">
+               <number>4</number>
+              </property>
+              <property name="bottomMargin">
+               <number>4</number>
+              </property>
+              <property name="spacing">
+               <number>4</number>
+              </property>
+              <item row="3" column="1" colspan="2">
+               <widget class="QGroupBox" name="gb_DBusServer">
+                <property name="title">
+                 <string>DBus</string>
+                </property>
+                <layout class="QVBoxLayout" name="vl_DBusGroupBox">
+                 <property name="spacing">
+                  <number>4</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>4</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>4</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>4</number>
+                 </property>
+                 <item>
+                  <widget class="QRadioButton" name="rb_DBusSession">
+                   <property name="text">
+                    <string>DBus session server</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="rb_DBusSystem">
+                   <property name="text">
+                    <string>DBus system server</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="rb_DBusP2P">
+                   <property name="text">
+                    <string>DBus peer to peer server (P2P)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="fr_DBusServerAddress">
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QGridLayout" name="gl_DBusServerAddressDetails">
+                    <property name="leftMargin">
+                     <number>20</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>20</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>0</number>
+                    </property>
+                    <item row="0" column="2">
+                     <widget class="QComboBox" name="cb_DBusServerAddress">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="editable">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="0">
+                     <widget class="QLabel" name="lbl_DBusServerAddress">
+                      <property name="text">
+                       <string>Address:</string>
+                      </property>
+                      <property name="textInteractionFlags">
+                       <set>Qt::LinksAccessibleByMouse</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="0">
+                     <widget class="QLabel" name="lbl_DBusServerPort">
+                      <property name="text">
+                       <string>Port:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="2">
+                     <widget class="QLineEdit" name="le_DBusServerPort">
+                      <property name="maximumSize">
+                       <size>
+                        <width>80</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>45000</string>
+                      </property>
+                      <property name="maxLength">
+                       <number>5</number>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="0" column="1" alignment="Qt::AlignHCenter">
+               <widget class="QRadioButton" name="rb_SwiftCoreGuiAudio">
+                <property name="text">
+                 <string>GUI and core</string>
+                </property>
+                <attribute name="buttonGroup">
+                 <string notr="true">bg_CoreMode</string>
+                </attribute>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLabel" name="lbl_SwiftCoreIcon">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="pixmap">
+                 <pixmap resource="swiftlauncher.qrc">:/launcher/icons/swiftGUIandCore115x85.png</pixmap>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2" alignment="Qt::AlignHCenter">
+               <widget class="QRadioButton" name="rb_SwiftCoreAudio">
+                <property name="text">
+                 <string>GUI and core</string>
+                </property>
+                <attribute name="buttonGroup">
+                 <string notr="true">bg_CoreMode</string>
+                </attribute>
+               </widget>
+              </item>
+              <item row="2" column="2">
+               <widget class="QLabel" name="lbl_SwiftCoreAudioIcon">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="pixmap">
+                 <pixmap resource="swiftlauncher.qrc">:/launcher/icons/swiftGUIandCore115x85.png</pixmap>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0" alignment="Qt::AlignHCenter">
+               <widget class="QRadioButton" name="rb_SwiftStandalone">
+                <property name="text">
+                 <string>standalone</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+                <attribute name="buttonGroup">
+                 <string notr="true">bg_CoreMode</string>
+                </attribute>
+               </widget>
+              </item>
+              <item row="1" column="1" alignment="Qt::AlignHCenter">
+               <widget class="QLabel" name="lbl_AudioGui">
+                <property name="text">
+                 <string>Audio on GUI side</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0" alignment="Qt::AlignHCenter">
+               <widget class="QLabel" name="lbl_SwiftStandaloneIcon">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="pixmap">
+                 <pixmap resource="swiftlauncher.qrc">:/launcher/icons/swiftNormal61x100.png</pixmap>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2" alignment="Qt::AlignHCenter">
+               <widget class="QLabel" name="lbl_AudioCore">
+                <property name="text">
+                 <string>Audio on core side</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="pg_Updates">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>355</width>
+               <height>306</height>
+              </rect>
+             </property>
+             <attribute name="label">
+              <string>Check for updates</string>
+             </attribute>
+             <layout class="QGridLayout" name="gl_Updates">
+              <item row="5" column="1">
+               <widget class="QWidget" name="wi_NoNewVersion" native="true">
+                <layout class="QVBoxLayout" name="verticalLayout_3">
+                 <item>
+                  <widget class="QLabel" name="blb_NoNewVersion">
+                   <property name="text">
+                    <string>You are running the latest version!</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QWidget" name="wi_NewVersionAvailable" native="true">
+                <layout class="QVBoxLayout" name="verticalLayout_2">
+                 <item>
+                  <widget class="QLabel" name="lbl_NewVersionText">
+                   <property name="text">
+                    <string>A new version is available here:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="lbl_NewVersionUrl">
+                   <property name="text">
+                    <string>http://www.foobar.com</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="le_CurrentVersion">
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="lbl_LatestVersion">
+                <property name="text">
+                 <string>Latest version:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="lbl_CurrentVersion">
+                <property name="text">
+                 <string>This version:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QPushButton" name="pb_CheckForUpdates">
+                <property name="text">
+                 <string>check for updates</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="le_LatestVersion">
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="7" column="1">
+               <spacer name="vs_Updates">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="pg_CreditsLicense">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>355</width>
+               <height>306</height>
+              </rect>
+             </property>
+             <attribute name="label">
+              <string>Credits and License</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="vl_Credits">
+              <item>
+               <widget class="QTextEdit" name="te_CreditsLicense">
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="html">
+                 <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Credits will go here&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolBox" name="tb_Start">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>140</height>
+             </size>
+            </property>
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
+            <widget class="QWidget" name="pg_Start">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>355</width>
+               <height>113</height>
+              </rect>
+             </property>
+             <attribute name="label">
+              <string>Start application</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout">
+              <item row="1" column="2" alignment="Qt::AlignHCenter">
+               <widget class="QLabel" name="lbl_SwiftData">
+                <property name="text">
+                 <string>mapping tool</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="4" alignment="Qt::AlignHCenter">
+               <widget class="QLabel" name="lbl_Database">
+                <property name="text">
+                 <string>goto swift DB</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QToolButton" name="tb_SwiftCore">
+                <property name="toolTip">
+                 <string>start swift core</string>
+                </property>
+                <property name="text">
+                 <string>swift core</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="../blackmisc/blackmisc.qrc">
+                  <normaloff>:/own/icons/own/swift/swiftNova64.png</normaloff>:/own/icons/own/swift/swiftNova64.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>64</width>
+                  <height>64</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QToolButton" name="tb_SwiftGui">
+                <property name="toolTip">
+                 <string>start swift GUI</string>
+                </property>
+                <property name="text">
+                 <string>swift GUI</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="../blackmisc/blackmisc.qrc">
+                  <normaloff>:/own/icons/own/swift/swift64.png</normaloff>:/own/icons/own/swift/swift64.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>64</width>
+                  <height>64</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="4">
+               <widget class="QToolButton" name="tb_Database">
+                <property name="toolTip">
+                 <string>open browser for swift database</string>
+                </property>
+                <property name="text">
+                 <string>goto swift database</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="../blackmisc/blackmisc.qrc">
+                  <normaloff>:/own/icons/own/swift/swift64Database.png</normaloff>:/own/icons/own/swift/swift64Database.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>64</width>
+                  <height>64</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QToolButton" name="tb_SwiftData">
+                <property name="toolTip">
+                 <string>start swift data (the mapping tool)</string>
+                </property>
+                <property name="text">
+                 <string>mapping tool</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="../blackmisc/blackmisc.qrc">
+                  <normaloff>:/own/icons/own/swift/swift64Database.png</normaloff>:/own/icons/own/swift/swift64Database.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>64</width>
+                  <height>64</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0" alignment="Qt::AlignHCenter">
+               <widget class="QLabel" name="lbl_SwiftGui">
+                <property name="text">
+                 <string>GUI</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1" alignment="Qt::AlignHCenter">
+               <widget class="QLabel" name="lbl_SwiftCore">
+                <property name="text">
+                 <string>core</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="3">
+               <spacer name="hs_Start">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>25</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="pg_SwiftLauncherLog">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="BlackGui::Components::CLogComponent" name="fr_SwiftLauncherLog">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="tb_BackToMain">
+         <property name="text">
+          <string>back to main</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../blackmisc/blackmisc.qrc">
+           <normaloff>:/diagona/icons/diagona/icons/arrow-180.png</normaloff>:/diagona/icons/diagona/icons/arrow-180.png</iconset>
+         </property>
+         <property name="shortcut">
+          <string>Ctrl+M</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::COverlayMessagesFrame</class>
+   <extends>QFrame</extends>
+   <header>blackgui/overlaymessagesframe.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CLogComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/logcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="swiftlauncher.qrc"/>
+  <include location="../blackmisc/blackmisc.qrc"/>
+ </resources>
+ <connections/>
+ <buttongroups>
+  <buttongroup name="bg_CoreMode"/>
+ </buttongroups>
+</ui>

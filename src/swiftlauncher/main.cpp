@@ -8,7 +8,7 @@
  */
 
 #include "swiftguistandard/guimodeenums.h"
-#include "introwindow.h"
+#include "swiftlauncher.h"
 #include "blackcore/blackcorefreefunctions.h"
 #include "blackgui/guiutility.h"
 #include "blackmisc/blackmiscfreefunctions.h"
@@ -27,28 +27,75 @@ using namespace BlackGui;
 using namespace BlackMisc;
 using namespace BlackCore;
 
+enum CommandLineParseResult
+{
+    CommandLineOk,
+    CommandLineError,
+    CommandLineVersionRequested,
+    CommandLineHelpRequested
+};
+
+CommandLineParseResult parseCommandLine(QCommandLineParser &parser, bool &installer, QString &errorMessage)
+{
+    parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
+    parser.addOption({{"i", "installer"}, QCoreApplication::translate("main", "Installer setup.")});
+
+    QCommandLineOption helpOption = parser.addHelpOption();
+    QCommandLineOption versionOption = parser.addVersionOption();
+
+    if (!parser.parse(QCoreApplication::arguments()))
+    {
+        errorMessage = parser.errorText();
+        return CommandLineError;
+    }
+
+    // help/version
+    if (parser.isSet(helpOption)) { return CommandLineHelpRequested; }
+    if (parser.isSet(versionOption)) { return CommandLineVersionRequested; }
+
+    installer = parser.isSet("installer");
+    return CommandLineOk;
+}
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    CGuiUtility::initSwiftGuiApplication(a, "swiftgui", CIcons::swift24());
+    const QString appName("swift launcher");
+    a.setApplicationVersion(CProject::version());
+    a.setApplicationName(appName);
+    CGuiUtility::initSwiftGuiApplication(a, appName, CIcons::swift24());
+
+    // Process the actual command line arguments given by the user
+    QCommandLineParser parser;
+    parser.setApplicationDescription(appName);
+    QString errorMessage;
+    bool installer = false;
+    switch (parseCommandLine(parser, installer, errorMessage))
+    {
+    case CommandLineOk:
+        break;
+    case CommandLineError:
+        CGuiUtility::commandLineErrorMessage(errorMessage, parser);
+        return 1;
+    case CommandLineVersionRequested:
+        CGuiUtility::commandLineVersionRequested();
+        return 0;
+    case CommandLineHelpRequested:
+        CGuiUtility::commandLineHelpRequested(parser);
+        return 0;
+    }
 
     // Dialog to decide external or internal core
-    CIntroWindow intro;
-    intro.setWindowIcon(CIcons::swift24());
-    if (intro.exec() == QDialog::Rejected) { return 0; }
+    CSwiftLauncher launcher;
+    launcher.setWindowIcon(CIcons::swift24());
+    if (launcher.exec() == QDialog::Rejected) { return 0; }
+    launcher.close();
 
-    GuiModes::CoreMode coreMode = intro.getCoreMode();
-    CEnableForFramelessWindow::WindowMode windowMode = intro.getWindowMode();
-    QString dBusAddress(intro.getDBusAddress());
-    intro.close();
-
-    QString args(" --core %1 --dbus %2 --window %3");
-    QString exe = QDir::currentPath() + "/swiftguistd.exe" +
-                  args.arg(GuiModes::coreModeToString(coreMode)).arg(dBusAddress).arg(CEnableForFramelessWindow::windowModeToString(windowMode));
-    QProcess *process = new QProcess(QCoreApplication::instance());
-    Q_ASSERT_X(process, Q_FUNC_INFO, "Cannot start process");
-    Q_UNUSED(process);
-    process->startDetached(exe);
+    QString exe(launcher.getExecutable());
+    QStringList exeArgs(launcher.getExecutableArgs());
+    Q_ASSERT_X(!exe.isEmpty(), Q_FUNC_INFO, "Missing executable");
+    CLogMessage(QCoreApplication::instance()).debug() << launcher.getCmdLine();
+    QProcess::startDetached(exe, exeArgs);
 
     return 0;
 }

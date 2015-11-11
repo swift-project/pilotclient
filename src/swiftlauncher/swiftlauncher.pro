@@ -1,6 +1,6 @@
 load(common_pre)
 
-QT       += core dbus gui svg network xml multimedia
+QT       += core dbus gui svg network xml multimedia webenginewidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -29,6 +29,7 @@ DEPENDPATH += . $$SourceRoot/src/blackmisc \
 INCLUDEPATH += . $$SourceRoot/src
 
 OTHER_FILES += *.qss *.ico *.rc
+RESOURCES += swiftlauncher.qrc
 RC_FILE = swift.rc
 DISTFILES += swift.rc
 
