@@ -60,6 +60,11 @@ namespace BlackMisc
         return result;
     }
 
+    void CValueCachePacket::registerMetadata()
+    {
+        MetaType::registerMetadata();
+        qDBusRegisterMetaType<value_type>();
+    }
 
     ////////////////////////////////
     // CValueCache

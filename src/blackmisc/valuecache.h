@@ -43,6 +43,9 @@ namespace BlackMisc
         //! Discard timestamps and return as variant map.
         CVariantMap toVariantMap() const;
 
+        //! \copydoc CValueObject::registerMetadata`
+        static void registerMetadata();
+
         //! \private Iterator behaves like a CVariantMap::const_iterator with an additional timestamp() method.
         struct const_iterator : public CDictionary::const_iterator
         {
