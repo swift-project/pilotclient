@@ -41,8 +41,6 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     this->setWindowTitle(CProject::versionStringDevBetaInfo());
     this->setObjectName("SwiftGuiStd");
     this->initStyleSheet();
-    QPoint pos = CGuiUtility::introWindowPosition();
-    this->move(pos);
 
     // with frameless window, we shift menu and statusbar into central widget
     // http://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5

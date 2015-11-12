@@ -55,7 +55,7 @@ SwiftGuiStd::~SwiftGuiStd()
 
 void SwiftGuiStd::mouseMoveEvent(QMouseEvent *event)
 {
-    if (!handleMousePressEvent(event)) { QMainWindow::mouseMoveEvent(event); }
+    if (!handleMouseMoveEvent(event)) { QMainWindow::mouseMoveEvent(event); }
 }
 
 void SwiftGuiStd::mousePressEvent(QMouseEvent *event)

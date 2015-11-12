@@ -217,23 +217,6 @@ namespace BlackGui
         return (mw) ? mw->getWidget()->pos() : QPoint();
     }
 
-    QPoint CGuiUtility::introWindowPosition()
-    {
-        QWidgetList tlw = topLevelApplicationWidgetsWithName();
-        foreach(QWidget * w, tlw)
-        {
-            QString n = w->objectName().toLower();
-            if (n.contains("intro")) { return w->pos(); }
-        }
-        return QPoint(0, 0);
-    }
-
-    QPoint CGuiUtility::assumedMainWindowPosition()
-    {
-        QPoint p = mainWindowPosition();
-        return (p.isNull()) ? introWindowPosition() : p;
-    }
-
     QString CGuiUtility::replaceTabCountValue(const QString &oldName, int count)
     {
         const QString v = QString(" (").append(QString::number(count)).append(")");

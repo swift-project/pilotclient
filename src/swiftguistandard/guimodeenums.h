@@ -20,8 +20,8 @@ public:
     enum CoreMode
     {
         CoreInGuiProcess,
-        CoreExternal,
-        CoreExternalAudioLocal
+        CoreExternalCoreAudio,
+        CoreExternalAudioGui
     };
 
     //! String to core mode
@@ -29,14 +29,14 @@ public:
     {
         QString cm(m.toLower().trimmed());
         if (cm.isEmpty()) { return CoreInGuiProcess; }
-        if (m == coreModeToString(CoreExternal)) { return CoreExternal; }
+        if (m == coreModeToString(CoreExternalCoreAudio)) { return CoreExternalCoreAudio; }
         if (m == coreModeToString(CoreInGuiProcess)) { return CoreInGuiProcess; }
-        if (m == coreModeToString(CoreExternalAudioLocal)) { return CoreExternalAudioLocal; }
+        if (m == coreModeToString(CoreExternalAudioGui)) { return CoreExternalAudioGui; }
 
         // some alternative names
-        if (cm.contains("audiolocal")) { return CoreExternalAudioLocal; }
-        if (cm.contains("localaudio")) { return CoreExternalAudioLocal; }
-        if (cm.contains("external")) { return CoreExternal; }
+        if (cm.contains("audiolocal")) { return CoreExternalAudioGui; }
+        if (cm.contains("localaudio")) { return CoreExternalAudioGui; }
+        if (cm.contains("external")) { return CoreExternalCoreAudio; }
         if (cm.contains("gui")) { return CoreInGuiProcess; }
         return CoreInGuiProcess;
     }
@@ -47,8 +47,8 @@ public:
         switch (mode)
         {
         case CoreInGuiProcess: return "coreinguiprocess";
-        case CoreExternal: return "coreexternal";
-        case CoreExternalAudioLocal: return "coreexternalaudiolocal";
+        case CoreExternalCoreAudio: return "coreexternal";
+        case CoreExternalAudioGui: return "coreexternalaudiogui";
         }
         return "";
     }

@@ -130,13 +130,13 @@ int main(int argc, char *argv[])
     BlackCore::CRuntimeConfig runtimeConfig;
     switch (coreMode)
     {
-    case GuiModes::CoreExternal:
+    case GuiModes::CoreExternalCoreAudio:
         runtimeConfig = CRuntimeConfig::remote(dBusAddress);
         break;
     case GuiModes::CoreInGuiProcess:
         runtimeConfig = CRuntimeConfig::local(dBusAddress);
         break;
-    case GuiModes::CoreExternalAudioLocal:
+    case GuiModes::CoreExternalAudioGui:
         runtimeConfig = CRuntimeConfig::remoteLocalAudio(dBusAddress);
         break;
     }

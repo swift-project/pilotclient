@@ -41,12 +41,6 @@ namespace BlackGui
         //! Position of main window
         static QPoint mainWindowPosition();
 
-        //! Position of intro window
-        static QPoint introWindowPosition();
-
-        //! During initialization, when main window position might not be set set
-        static QPoint assumedMainWindowPosition();
-
         //! Replace count in name such as "stations (4)"
         static QString replaceTabCountValue(const QString &oldName, int count);
 
