@@ -170,6 +170,8 @@ namespace BlackMisc
     bool CProject::isNewerVersion(const QString &versionString)
     {
         if (versionString.isEmpty()) { return false; }
+        if (CProject::version() == versionString) { return false; }
+
         QList<int> newer(getVersionParts(versionString));
         QList<int> current(getVersionParts(version()));
         for (int i = 0; i < current.length(); i++)
@@ -178,7 +180,7 @@ namespace BlackMisc
             if (current.at(i) > newer.at(i)) { return false; }
             if (current.at(i) < newer.at(i)) { return true; }
         }
-        return true;
+        return false;
     }
 
     bool CProject::isDebugBuild()
@@ -292,6 +294,12 @@ namespace BlackMisc
     const QString &CProject::swiftDataExecutableName()
     {
         static const QString s("swiftdata");
+        return s;
+    }
+
+    const QStringList &CProject::swiftTeamDefaultServers()
+    {
+        static const QStringList s( { "https://vatsim-germany.org:50443/mapping/public/shared", "http://ubuntu12/public/bootstrap/shared"});
         return s;
     }
 

@@ -140,33 +140,57 @@ namespace BlackCore
         if (entities.testFlag(CEntityFlags::AircraftIcaoEntity))
         {
             QUrl url(getAircraftIcaoUrl());
-            QNetworkRequest requestAircraft(CNetworkUtils::getNetworkRequest(url));
-            this->m_networkManagerAircraft->get(requestAircraft);
-            entitiesTriggered |= CEntityFlags::AircraftIcaoEntity;
+            if (!url.isEmpty())
+            {
+                QNetworkRequest requestAircraft(CNetworkUtils::getNetworkRequest(url));
+                this->m_networkManagerAircraft->get(requestAircraft);
+                entitiesTriggered |= CEntityFlags::AircraftIcaoEntity;
+            }
+            else
+            {
+                CLogMessage(this).error("No URL for %1") << CEntityFlags::flagToString(CEntityFlags::AircraftIcaoEntity);
+            }
         }
 
         if (entities.testFlag(CEntityFlags::AirlineIcaoEntity))
         {
             QUrl url(getAirlineIcaoUrl());
-            QNetworkRequest requestAirline(CNetworkUtils::getNetworkRequest(url));
-            this->m_networkManagerAirlines->get(requestAirline);
-            entitiesTriggered |= CEntityFlags::AirlineIcaoEntity;
+            if (!url.isEmpty())
+            {
+                QNetworkRequest requestAirline(CNetworkUtils::getNetworkRequest(url));
+                this->m_networkManagerAirlines->get(requestAirline);
+                entitiesTriggered |= CEntityFlags::AirlineIcaoEntity;
+            }
+            else
+            {
+                CLogMessage(this).error("No URL for %1") << CEntityFlags::flagToString(CEntityFlags::AirlineIcaoEntity);
+            }
         }
 
         if (entities.testFlag(CEntityFlags::CountryEntity))
         {
             QUrl url(getCountryUrl());
-            QNetworkRequest requestCountry(CNetworkUtils::getNetworkRequest(url));
-            this->m_networkManagerCountries->get(requestCountry);
-            entitiesTriggered |= CEntityFlags::CountryEntity;
+            if (!url.isEmpty())
+            {
+                QNetworkRequest requestCountry(CNetworkUtils::getNetworkRequest(url));
+                this->m_networkManagerCountries->get(requestCountry);
+                entitiesTriggered |= CEntityFlags::CountryEntity;
+            }
+            else
+            {
+                CLogMessage(this).error("No URL for %1") << CEntityFlags::flagToString(CEntityFlags::CountryEntity);
+            }
         }
 
-        emit dataRead(entitiesTriggered, CEntityFlags::StartRead, 0);
+        if (entitiesTriggered != CEntityFlags::NoEntity)
+        {
+            emit dataRead(entitiesTriggered, CEntityFlags::StartRead, 0);
+        }
     }
 
     CUrl CIcaoDataReader::getBaseUrl() const
     {
-        CUrl baseUrl(this->m_setup.get().dbIcaoReader());
+        CUrl baseUrl(this->m_setup.get().dbIcaoReaderUrl());
         return baseUrl;
     }
 

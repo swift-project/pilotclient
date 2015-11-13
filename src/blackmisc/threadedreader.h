@@ -42,6 +42,10 @@ namespace BlackMisc
         //! \threadsafe
         void requestStop();
 
+        //! Request new reading
+        //! \note override as required, default is to call initialize()
+        virtual void requestReload();
+
         //! Destructor
         virtual ~CThreadedReader();
 
@@ -62,12 +66,15 @@ namespace BlackMisc
         void gracefulShutdown();
 
     protected:
-        //! Constructor
-        CThreadedReader(QObject *owner, const QString &name);
-
         QTimer *m_updateTimer        = nullptr;  //!< update timer
         std::atomic<bool> m_shutdown { false };  //!< in shutdown process
         mutable QReadWriteLock m_lock {QReadWriteLock::Recursive}; //!< lock which can be used from the derived classes
+
+        //! Constructor
+        CThreadedReader(QObject *owner, const QString &name);
+
+        //! When was reply last modified, -1 if N/A
+        qint64 lastModifiedMsSinceEpoch(QNetworkReply *nwReply) const;
 
         //! Shutdown in progress or finished
         bool isFinishedOrShutdown() const;

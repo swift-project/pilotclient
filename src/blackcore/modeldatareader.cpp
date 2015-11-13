@@ -137,29 +137,56 @@ namespace BlackCore
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
         if (entity.testFlag(CEntityFlags::LiveryEntity))
         {
-            QNetworkRequest requestLivery(getLiveryUrl());
-            CNetworkUtils::ignoreSslVerification(requestLivery);
-            this->m_networkManagerLivery->get(requestLivery);
-            triggeredRead |= CEntityFlags::LiveryEntity;
+            CUrl url(getLiveryUrl());
+            if (!url.isEmpty())
+            {
+                QNetworkRequest requestLivery(url);
+                CNetworkUtils::ignoreSslVerification(requestLivery);
+                this->m_networkManagerLivery->get(requestLivery);
+                triggeredRead |= CEntityFlags::LiveryEntity;
+            }
+            else
+            {
+                CLogMessage(this).error("No URL for %1") << CEntityFlags::flagToString(CEntityFlags::LiveryEntity);
+            }
         }
 
         if (entity.testFlag(CEntityFlags::DistributorEntity))
         {
-            QNetworkRequest requestDistributor(getDistributorUrl());
-            CNetworkUtils::ignoreSslVerification(requestDistributor);
-            this->m_networkManagerDistributor->get(requestDistributor);
-            triggeredRead |= CEntityFlags::DistributorEntity;
+            CUrl url(getDistributorUrl());
+            if (!url.isEmpty())
+            {
+                QNetworkRequest requestDistributor(url);
+                CNetworkUtils::ignoreSslVerification(requestDistributor);
+                this->m_networkManagerDistributor->get(requestDistributor);
+                triggeredRead |= CEntityFlags::DistributorEntity;
+            }
+            else
+            {
+                CLogMessage(this).error("No URL for %1") << CEntityFlags::flagToString(CEntityFlags::DistributorEntity);
+            }
         }
 
         if (entity.testFlag(CEntityFlags::ModelEntity))
         {
-            QNetworkRequest requestModel(getModelUrl());
-            CNetworkUtils::ignoreSslVerification(requestModel);
-            this->m_networkManagerModel->get(requestModel);
-            triggeredRead |= CEntityFlags::ModelEntity;
+            CUrl url(getModelUrl());
+            if (!url.isEmpty())
+            {
+                QNetworkRequest requestModel(url);
+                CNetworkUtils::ignoreSslVerification(requestModel);
+                this->m_networkManagerModel->get(requestModel);
+                triggeredRead |= CEntityFlags::ModelEntity;
+            }
+            else
+            {
+                CLogMessage(this).error("No URL for %1") << CEntityFlags::flagToString(CEntityFlags::ModelEntity);
+            }
         }
 
-        emit dataRead(triggeredRead, CEntityFlags::StartRead, 0);
+        if (triggeredRead != CEntityFlags::NoEntity)
+        {
+            emit dataRead(triggeredRead, CEntityFlags::StartRead, 0);
+        }
     }
 
     void CModelDataReader::ps_parseLiveryData(QNetworkReply *nwReplyPtr)
@@ -332,7 +359,7 @@ namespace BlackCore
 
     CUrl CModelDataReader::getBaseUrl() const
     {
-        CUrl baseUrl(m_setup.get().dbModelReader());
+        CUrl baseUrl(m_setup.get().dbModelReaderUrl());
         return baseUrl;
     }
 

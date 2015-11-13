@@ -41,7 +41,9 @@ namespace BlackCore
                 IndexVatsimMetars,
                 IndexVatsimData,
                 IndexSwiftDbFiles,
-                IndexBootstrap
+                IndexBootstrap,
+                IndexDownload,
+                IndexShared
             };
 
             //! Default constructor
@@ -50,26 +52,11 @@ namespace BlackCore
             //! Destructor.
             ~CGlobalSetup() {}
 
-            //! Root directory of DB
-            const BlackMisc::Network::CUrl &dbRootDirectory() const { return m_dbRootDirectory; }
-
-            //! ICAO Reader location
-            BlackMisc::Network::CUrl dbIcaoReader() const;
-
-            //! Model Reader protocol
-            BlackMisc::Network::CUrl dbModelReader() const;
-
             //! Http port
             int dbHttpPort() const { return m_dbHttpPort; }
 
             //! Https port
             int dbHttpsPort() const { return m_dbHttpsPort; }
-
-            //! Home page url
-            BlackMisc::Network::CUrl dbHomePage() const;
-
-            //! Login service
-            BlackMisc::Network::CUrl dbLoginService() const;
 
             //! Debug flag
             bool dbDebugFlag() const;
@@ -77,23 +64,44 @@ namespace BlackCore
             //! Set debug flag
             void setServerDebugFlag(bool debug);
 
-            //! URL to read VATSIM bookings
-            const BlackMisc::Network::CUrl &vatsimBookings() const { return m_vatsimBookings; }
-
             //! Same type?
-            bool hasSameType(CGlobalSetup &otherSetup) const;
+            bool hasSameType(const CGlobalSetup &otherSetup) const;
+
+            //! Home page url
+            BlackMisc::Network::CUrl dbHomePageUrl() const;
+
+            //! Login service
+            BlackMisc::Network::CUrl dbLoginServiceUrl() const;
+
+            //! Root directory of DB
+            const BlackMisc::Network::CUrl &dbRootDirectoryUrl() const { return m_dbRootDirectoryUrl; }
+
+            //! ICAO Reader location
+            BlackMisc::Network::CUrl dbIcaoReaderUrl() const;
+
+            //! Model Reader protocol
+            BlackMisc::Network::CUrl dbModelReaderUrl() const;
+
+            //! URL to read VATSIM bookings
+            const BlackMisc::Network::CUrl &vatsimBookingsUrl() const { return m_vatsimBookingsUrl; }
 
             //! VATSIM METAR URL
-            BlackMisc::Network::CUrl vatsimMetars() const;
+            BlackMisc::Network::CUrl vatsimMetarsUrl() const;
 
             //! VATSIM data file URLs
-            const BlackMisc::Network::CUrlList &vatsimDataFile() const { return m_vatsimDataFile; }
+            const BlackMisc::Network::CUrlList &vatsimDataFileUrls() const { return m_vatsimDataFileUrls; }
 
             //! Bootstrap URLs (where the data for the setup itself can be downloaded)
-            const BlackMisc::Network::CUrlList &bootstrapUrls() const { return m_bootstrap; }
+            BlackMisc::Network::CUrlList bootstrapUrls() const;
+
+            //! Version files and download locations
+            BlackMisc::Network::CUrlList downloadInfoUrls() const;
 
             //! Alternative locations of swift DB data files
-            const BlackMisc::Network::CUrlList &swiftDbDataFileLocations() const { return m_swiftDbDataFiles; }
+            BlackMisc::Network::CUrlList swiftDbDataFileLocationUrls() const;
+
+            //! Locations of swift DB news
+            const BlackMisc::Network::CUrlList &swiftLatestNewsUrls() const { return m_newsUrls; }
 
             //! FSD test servers
             const BlackMisc::Network::CServerList &fsdTestServers() const { return m_fsdTestServers; }
@@ -122,19 +130,19 @@ namespace BlackCore
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(BlackCore::Data::CGlobalSetup)
 
-            BlackMisc::Network::CUrl        m_dbRootDirectory;   //!< Root directory
-            int                             m_dbHttpPort = 80;   //!< port
-            int                             m_dbHttpsPort = 443; //!< SSL port
-            BlackMisc::Network::CUrl        m_vatsimBookings;    //!< ATC bookings
-            BlackMisc::Network::CUrl        m_vatsimMetars;      //!< METAR data
-            BlackMisc::Network::CUrlList    m_vatsimDataFile;    //!< Overall VATSIM data file
-            BlackMisc::Network::CUrlList    m_bootstrap;         //!< where we can obtain downloads of these data
-            BlackMisc::Network::CUrlList    m_swiftDbDataFiles;  //!< alternative locations of the DB files, if DB is not available
-            BlackMisc::Network::CServerList m_fsdTestServers;    //!< FSD test servers
-            bool m_development = false;                          //!< dev. version?
+            int                             m_dbHttpPort = 80;      //!< port
+            int                             m_dbHttpsPort = 443;    //!< SSL port
+            bool                            m_development = false;  //!< dev. version?
+            BlackMisc::Network::CUrl        m_dbRootDirectoryUrl;   //!< Root directory of DB
+            BlackMisc::Network::CUrl        m_vatsimBookingsUrl;    //!< ATC bookings
+            BlackMisc::Network::CUrl        m_vatsimMetarsUrl;      //!< METAR data
+            BlackMisc::Network::CUrlList    m_vatsimDataFileUrls;   //!< Overall VATSIM data file
+            BlackMisc::Network::CUrlList    m_sharedUrls;           //!< where we can obtain shared info files such as bootstrap, ..
+            BlackMisc::Network::CUrlList    m_newsUrls;             //!< where we can obtain latest news
+            BlackMisc::Network::CServerList m_fsdTestServers;       //!< FSD test servers
 
             // transient members, to be switched on/off via GUI or set from reader
-            bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know hat you are doing
+            bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know what you are doing
         };
 
         //! Trait for global setup data
@@ -157,14 +165,14 @@ namespace BlackCore
 Q_DECLARE_METATYPE(BlackCore::Data::CGlobalSetup)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackCore::Data::CGlobalSetup, (
                                    attr(o.m_timestampMSecsSinceEpoch),
-                                   attr(o.m_dbRootDirectory),
+                                   attr(o.m_dbRootDirectoryUrl),
                                    attr(o.m_dbHttpPort),
                                    attr(o.m_dbHttpsPort),
-                                   attr(o.m_vatsimBookings),
-                                   attr(o.m_vatsimMetars),
-                                   attr(o.m_vatsimDataFile),
-                                   attr(o.m_bootstrap),
-                                   attr(o.m_swiftDbDataFiles),
+                                   attr(o.m_vatsimBookingsUrl),
+                                   attr(o.m_vatsimMetarsUrl),
+                                   attr(o.m_vatsimDataFileUrls),
+                                   attr(o.m_sharedUrls),
+                                   attr(o.m_newsUrls),
                                    attr(o.m_fsdTestServers),
                                    attr(o.m_development),
                                    attr(o.m_dbDebugFlag, flags < DisabledForJson > ())

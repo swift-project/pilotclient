@@ -14,7 +14,9 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/threadedreader.h"
+#include "blackmisc/lockfree.h"
 #include "blackcore/data/globalsetup.h"
+#include "blackcore/data/download.h"
 
 #include <QObject>
 #include <QTimer>
@@ -28,8 +30,12 @@ namespace BlackCore
         Q_OBJECT
 
     public:
-        //! Constructor
-        explicit CSetupReader(QObject *owner);
+        //! Single instance
+        static CSetupReader &instance();
+
+    signals:
+        //! Setup has been read
+        void setupSynchronized(bool success);
 
     protected slots:
         //! \copydoc CThreadedReader::initialize
@@ -40,25 +46,35 @@ namespace BlackCore
         //! \threadsafe
         void ps_parseSetupFile(QNetworkReply *nwReply);
 
+        //! Download has been read
+        //! \threadsafe
+        void ps_parseDownloadFile(QNetworkReply *nwReplyPtr);
+
         //! Do reading
-        void ps_read();
+        void ps_readSetup();
+
+        //! Do reading
+        void ps_readDownload();
+
+        //! Setup has beem syncronized
+        void ps_setupSyncronized(bool success);
 
     private:
-        QNetworkAccessManager              *m_networkManager = nullptr;
-        BlackMisc::Network::CUrlList        m_failedUrls;
-        CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< data cache
+        QNetworkAccessManager              *m_networkManagerBootstrap = nullptr;
+        QNetworkAccessManager              *m_networkManagerDownload = nullptr;
+        BlackMisc::LockFree<BlackMisc::Network::CFailoverUrlList> m_bootstrapUrls;
+        BlackMisc::LockFree<BlackMisc::Network::CFailoverUrlList> m_downloadUrls;
+        CData<BlackCore::Data::GlobalSetup> m_setup {this};    //!< data cache setup
+        CData<BlackCore::Data::Download>    m_download {this}; //!< data cache downloads
+
+        //! Constructor
+        explicit CSetupReader(QObject *owner);
 
         //! Read by local individual file
-        bool localFile(QString &fileName);
-
-        //! Remaining URLs failed one excluded
-        BlackMisc::Network::CUrlList getRemainingUrls() const;
+        bool localBootstrapFile(QString &fileName);
 
         //! Read for development environment?
         static bool isForDevelopment();
-
-        //! Bootstrap URL
-        static QString appendPathAndFile();
     };
 } // ns
 

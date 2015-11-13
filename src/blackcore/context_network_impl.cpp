@@ -55,15 +55,14 @@ namespace BlackCore
         connect(this->m_dataUpdateTimer, &QTimer::timeout, this, &CContextNetwork::requestDataUpdates);
         this->m_dataUpdateTimer->start(30 * 1000);
 
-        // 3. data reader
-        this->m_webDataReader = new CWebDataServices(CWebReaderFlags::AllReaders, this);
+        // 3. data reader, start reading when setup is synced with xx delay
+        this->m_webDataReader = new CWebDataServices(CWebReaderFlags::AllReaders, 1000, this);
         this->m_webReaderSignalConnections.append(
             this->m_webDataReader->connectDataReadSignal(
                 this, // the object here must be the same as in the bind
                 std::bind(&CContextNetwork::webServiceDataRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
             )
         );
-        this->m_webDataReader->readAllInBackground(1000);
 
         // 4. Airspace contents
         Q_ASSERT_X(this->getRuntime()->getCContextOwnAircraft(), Q_FUNC_INFO, "this and own aircraft context must be local");
@@ -570,7 +569,7 @@ namespace BlackCore
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         Q_ASSERT_X(this->m_webDataReader, Q_FUNC_INFO, "missing reader");
-        this->m_webDataReader->readAtcBookingsInBackground();
+        this->m_webDataReader->readInBackground(BlackMisc::Network::CEntityFlags::BookingEntity);
     }
 
     bool CContextNetwork::updateAircraftRendered(const CCallsign &callsign, bool rendered, const CIdentifier &originator)

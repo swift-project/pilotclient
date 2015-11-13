@@ -19,6 +19,19 @@ namespace BlackMisc
         m_updateTimer(new QTimer(this))
     {  }
 
+    qint64 CThreadedReader::lastModifiedMsSinceEpoch(QNetworkReply *nwReply) const
+    {
+        if (nwReply)
+        {
+            QVariant lastModifiedQv = nwReply->header(QNetworkRequest::LastModifiedHeader);
+            if (lastModifiedQv.isValid() && lastModifiedQv.canConvert<QDateTime>())
+            {
+                return lastModifiedQv.value<QDateTime>().toMSecsSinceEpoch();
+            }
+        }
+        return -1;
+    }
+
     bool CThreadedReader::isFinishedOrShutdown() const
     {
         return m_shutdown || isFinished();
@@ -38,14 +51,20 @@ namespace BlackMisc
 
     void CThreadedReader::requestStop()
     {
-        setFinished();
         QMetaObject::invokeMethod(m_updateTimer, "stop");
+    }
+
+    void CThreadedReader::requestReload()
+    {
+        // default implementation, subclasses shall override as required
+        this->initialize();
     }
 
     void CThreadedReader::gracefulShutdown()
     {
         this->m_shutdown = true;
         this->requestStop();
+        this->quit();
     }
 
     CThreadedReader::~CThreadedReader()

@@ -31,7 +31,7 @@ namespace BlackCoreTest
 
     void CTestReaders::readIcaoData()
     {
-        CUrl url(m_setup.get().dbIcaoReader());
+        CUrl url(m_setup.get().dbIcaoReaderUrl());
         if (!this->pingServer(url)) { return; }
         m_icaoReader.start();
         Expect e(&this->m_icaoReader);
@@ -54,7 +54,7 @@ namespace BlackCoreTest
 
     void CTestReaders::readModelData()
     {
-        CUrl url(m_setup.get().dbModelReader());
+        CUrl url(m_setup.get().dbModelReaderUrl());
         if (!this->pingServer(url)) { return; }
         m_modelReader.start();
         Expect e(&this->m_modelReader);

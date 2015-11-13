@@ -23,8 +23,7 @@
 
 namespace BlackCore
 {
-    //! Support for threaded based reading and parsing tasks such
-    //! as data files via http, or file system and parsing (such as FSX models)
+    //! Specialized version of threaded reader for DB data
     class BLACKCORE_EXPORT CDatabaseReader : public BlackMisc::CThreadedReader
     {
         Q_OBJECT
@@ -69,7 +68,7 @@ namespace BlackCore
 
     protected:
         BlackMisc::Network::CUrl m_watchdogUrl;              //!< URL for checking if alive
-        QTimer                   m_watchdogTimer { this };   //!< Timer for watchdog
+        QTimer                   m_watchdogTimer { this };   //!< Timer for watchdog (DB available?)
         QString                  m_watchdogMessage;          //!< Returned status message
         bool                     m_canConnect = false;       //!< Successful connection?
         mutable QReadWriteLock   m_watchdogLock;             //!< Lock
@@ -85,7 +84,7 @@ namespace BlackCore
         CDatabaseReader::JsonDatastoreResponse setStatusAndTransformReplyIntoDatastoreResponse(QNetworkReply *nwReply);
 
     private slots:
-        //! Watchdog
+        //! Watchdog checking if DB is available
         void ps_watchdog();
 
     private:

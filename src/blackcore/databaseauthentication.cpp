@@ -53,7 +53,7 @@ namespace BlackCore
         if (pw.isEmpty()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "No password")); }
         if (!msgs.isEmpty()) { return msgs; }
 
-        CUrl url(this->m_setup.get().dbLoginService());
+        CUrl url(this->m_setup.get().dbLoginServiceUrl());
         QString msg;
         if (!CNetworkUtils::canConnect(url, msg))
         {
@@ -84,7 +84,7 @@ namespace BlackCore
 
     void CDatabaseAuthenticationService::logoff()
     {
-        CUrl url(this->m_setup.get().dbLoginService());
+        CUrl url(this->m_setup.get().dbLoginServiceUrl());
         url.setQuery("logoff=true");
         QNetworkRequest request(CNetworkUtils::getNetworkRequest(url));
         this->m_networkManager->get(request);

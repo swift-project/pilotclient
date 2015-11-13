@@ -13,6 +13,7 @@
 #include "network.h"
 #include "simulator.h"
 #include "context_application.h"
+#include "setupreader.h"
 #include <QThread>
 
 namespace BlackCore
@@ -29,5 +30,6 @@ namespace BlackCore
 
         BlackCore::Data::CGlobalSetup::registerMetadata();
         BlackCore::Data::CDownload::registerMetadata();
+        BlackCore::CSetupReader::instance(); // kick off reader
     }
 } // namespace

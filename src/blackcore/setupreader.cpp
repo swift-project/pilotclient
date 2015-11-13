@@ -29,63 +29,95 @@ namespace BlackCore
     CSetupReader::CSetupReader(QObject *owner) :
         CThreadedReader(owner, "CSetupReader")
     {
+        connect(this, &CSetupReader::setupSynchronized, this, &CSetupReader::ps_setupSyncronized);
         QString localFileName;
-        if (localFile(localFileName))
+        if (this->localBootstrapFile(localFileName))
         {
             // initialized by local file for testing
             // I do not even need to start in background here
             CLogMessage(this).info("Using local bootstrap file: %1") << localFileName;
+            emit this->setupSynchronized(true);
         }
         else
         {
-            this->m_networkManager = new QNetworkAccessManager(this);
-            this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CSetupReader::ps_parseSetupFile);
+            this->m_bootstrapUrls.uniqueWrite()->push_back(m_setup.get().bootstrapUrls());
+            this->m_downloadUrls.uniqueWrite()->push_back(m_setup.get().downloadInfoUrls());
+
+            this->m_networkManagerBootstrap = new QNetworkAccessManager(this);
+            this->connect(this->m_networkManagerBootstrap, &QNetworkAccessManager::finished, this, &CSetupReader::ps_parseSetupFile);
+
+            this->m_networkManagerDownload = new QNetworkAccessManager(this);
+            this->connect(this->m_networkManagerDownload, &QNetworkAccessManager::finished, this, &CSetupReader::ps_parseDownloadFile);
+
             this->start(QThread::LowPriority);
         }
     }
 
+    CSetupReader &CSetupReader::instance()
+    {
+        static CSetupReader reader(QCoreApplication::instance());
+        return reader;
+    }
+
     void CSetupReader::initialize()
     {
+        // start to read by myself
         CThreadedReader::initialize();
-        QTimer::singleShot(500, this, &CSetupReader::ps_read);
+        QTimer::singleShot(500, this, &CSetupReader::ps_readSetup);
     }
 
-    void CSetupReader::ps_read()
+    void CSetupReader::ps_readSetup()
     {
         this->threadAssertCheck();
-        Q_ASSERT_X(this->m_networkManager, Q_FUNC_INFO, "Missing network manager");
-        CUrlList urls(getRemainingUrls());
-        if (urls.isEmpty()) { return; }
-        int urlsSize = urls.size();
-
-        QUrl url(urls.getNextUrl(false));
-        if (urlsSize > 1)
+        Q_ASSERT_X(this->m_networkManagerBootstrap, Q_FUNC_INFO, "Missing network manager");
+        CUrl url(this->m_bootstrapUrls.uniqueWrite()->getNextWorkingUrl());
+        if (url.isEmpty())
         {
-            // more than one URL one, quick check if this can be contacted
-            QString m;
-            if (!CNetworkUtils::canConnect(url, m))
-            {
-                m_failedUrls.push_back(url);
-                CLogMessage(this).warning("Cannot connect to %1") << url.toString();
-                url = urls.getNextUrl();
-            }
+            CLogMessage(this).warning("Cannot read setup, failed URLs: %1") << this->m_bootstrapUrls.read()->getFailedUrls();
+            emit setupSynchronized(false);
+            return;
         }
-
-        // now I have the first or second URL for reading
-        if (url.isEmpty()) { return; }
         QNetworkRequest request(url);
         CNetworkUtils::ignoreSslVerification(request);
-
-        // request
-        this->m_networkManager->get(request);
+        this->m_networkManagerBootstrap->get(request);
     }
 
-    bool CSetupReader::localFile(QString &fileName)
+    void CSetupReader::ps_readDownload()
+    {
+        this->threadAssertCheck();
+        Q_ASSERT_X(this->m_networkManagerDownload, Q_FUNC_INFO, "Missing network manager");
+        CUrl url(this->m_downloadUrls.uniqueWrite()->getNextWorkingUrl());
+        if (url.isEmpty())
+        {
+            CLogMessage(this).warning("Cannot read download (info), failed URLs: %1") << this->m_downloadUrls.read()->getFailedUrls();
+            return;
+        }
+        QNetworkRequest request(url);
+        CNetworkUtils::ignoreSslVerification(request);
+        this->m_networkManagerDownload->get(request);
+    }
+
+    void CSetupReader::ps_setupSyncronized(bool success)
+    {
+        // trigger
+        if (success)
+        {
+            CLogMessage(this).info("Setup synchronized, will trigger read of download information");
+            QTimer::singleShot(500, this, &CSetupReader::ps_readDownload);
+        }
+        else
+        {
+            CLogMessage(this).error("Setup reading failed, hence version info will not be loaded");
+        }
+    }
+
+    bool CSetupReader::localBootstrapFile(QString &fileName)
     {
         QString dir(CProject::getSwiftPrivateResourceDir());
         if (dir.isEmpty()) { return false; }
 
-        fileName = CFileUtils::appendFilePaths(dir, "bootstrap/" + CGlobalSetup::versionString() + "/bootstrap.json");
+        // no version for local files, as those come withe the current code
+        fileName = CFileUtils::appendFilePaths(dir, "bootstrap/bootstrap.json");
         QString content(CFileUtils::readFileToString(fileName));
         if (content.isEmpty()) { return false; }
         CGlobalSetup s;
@@ -100,53 +132,33 @@ namespace BlackCore
         return CProject::useDevelopmentSetup();
     }
 
-    CUrlList CSetupReader::getRemainingUrls() const
-    {
-        CUrlList urls(m_setup.get().bootstrapUrls().appendPath(appendPathAndFile()));
-        urls.removeIfIn(m_failedUrls);
-        return urls;
-    }
-
-    QString CSetupReader::appendPathAndFile()
-    {
-        return isForDevelopment() ?
-               CGlobalSetup::versionString() + "/development/bootstrap.json" :
-               CGlobalSetup::versionString() + "/productive/bootstrap.json";
-    }
-
     void CSetupReader::ps_parseSetupFile(QNetworkReply *nwReplyPtr)
     {
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+        this->threadAssertCheck();
         QUrl url(nwReply->url());
         QString urlString(url.toString());
         QString replyMessage(nwReply->errorString());
 
-        this->threadAssertCheck();
         if (this->isFinishedOrShutdown())
         {
             CLogMessage(this).debug() << Q_FUNC_INFO;
             CLogMessage(this).info("Terminated loading bootstrap files");
             nwReply->abort();
+            emit setupSynchronized(false);
             return; // stop, terminate straight away, ending thread
         }
 
         if (nwReply->error() == QNetworkReply::NoError)
         {
-            qint64 lastModified = -1;
-            QVariant lastModifiedQv = nwReply->header(QNetworkRequest::LastModifiedHeader);
-            if (lastModifiedQv.isValid() && lastModifiedQv.canConvert<QDateTime>())
-            {
-                lastModified = lastModifiedQv.value<QDateTime>().toMSecsSinceEpoch();
-            }
-
+            qint64 lastModified = this->lastModifiedMsSinceEpoch(nwReply.data());
             QString setupJson(nwReplyPtr->readAll());
             nwReplyPtr->close();
             if (setupJson.isEmpty())
             {
-                CLogMessage(this).info("No bootstrap setup file");
-                m_failedUrls.push_back(url);
+                CLogMessage(this).info("No bootstrap setup file at %1") << urlString;
                 // try next URL
             }
             else
@@ -156,20 +168,21 @@ namespace BlackCore
                 loadedSetup.convertFromJson(Json::jsonObjectFromString(setupJson));
                 loadedSetup.setDevelopment(isForDevelopment()); // always update, regardless what persistent setting says
                 if (loadedSetup.getMSecsSinceEpoch() == 0 && lastModified > 0) { loadedSetup.setMSecsSinceEpoch(lastModified); }
-                bool sameType = loadedSetup.hasSameType(currentSetup);
                 qint64 currentVersionTimestamp = currentSetup.getMSecsSinceEpoch();
                 qint64 newVersionTimestamp = loadedSetup.getMSecsSinceEpoch();
-                bool sameVersionLoaded = sameType && (newVersionTimestamp  == currentVersionTimestamp);
+                bool sameVersionLoaded = (loadedSetup == currentSetup);
                 if (sameVersionLoaded)
                 {
-                    CLogMessage(this).info("Same version loaded from %1 as already in data cache %2") << urlString << CDataCache::persistentStore();
+                    CLogMessage(this).info("Same setup version loaded from %1 as already in data cache %2") << urlString << m_setup.getFilename();
+                    emit setupSynchronized(true);
                     return; // success
                 }
 
+                bool sameType = loadedSetup.hasSameType(currentSetup);
                 bool outdatedVersionLoaded = sameType && (newVersionTimestamp  < currentVersionTimestamp);
                 if (outdatedVersionLoaded)
                 {
-                    CLogMessage(this).info("Version loaded from %1 outdated, older than version in data cache %2") << urlString << CDataCache::persistentStore();
+                    CLogMessage(this).info("Setup loaded from %1 outdated, older than version in data cache %2") << urlString << m_setup.getFilename();
                     // try next URL
                 }
                 else
@@ -178,11 +191,13 @@ namespace BlackCore
                     if (!m.isEmpty())
                     {
                         CLogMessage(this).preformatted(m);
+                        emit setupSynchronized(false);
                         return; // issue with cache
                     }
                     else
                     {
-                        CLogMessage(this).info("Updated data cache in %1") << CDataCache::persistentStore();
+                        CLogMessage(this).info("Setup: Updated data cache in %1") << this->m_setup.getFilename();
+                        emit setupSynchronized(true);
                         return; // success
                     } // cache
                 } // outdated?
@@ -197,14 +212,95 @@ namespace BlackCore
         }
 
         // try next one if any
-        const int maxTrials = 2;
-        m_failedUrls.push_back(url);
-        if (m_failedUrls.size() >= maxTrials) { return; }
-
-        int urlsNo = getRemainingUrls().size();
-        if (urlsNo >= 0)
+        if (this->m_bootstrapUrls.uniqueWrite()->addFailedUrl(url))
         {
-            QTimer::singleShot(500, this, &CSetupReader::ps_read);
+            QTimer::singleShot(500, this, &CSetupReader::ps_readSetup);
+        }
+        else
+        {
+            emit setupSynchronized(false);
+        }
+    }
+
+    void CSetupReader::ps_parseDownloadFile(QNetworkReply *nwReplyPtr)
+    {
+        // wrap pointer, make sure any exit cleans up reply
+        // required to use delete later as object is created in a different thread
+        QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+        this->threadAssertCheck();
+        QUrl url(nwReply->url());
+        QString urlString(url.toString());
+        QString replyMessage(nwReply->errorString());
+
+        if (this->isFinishedOrShutdown())
+        {
+            CLogMessage(this).debug() << Q_FUNC_INFO;
+            CLogMessage(this).info("Terminated loading download info");
+            nwReply->abort();
+            return; // stop, terminate straight away, ending thread
+        }
+
+        if (nwReply->error() == QNetworkReply::NoError)
+        {
+            qint64 lastModified = this->lastModifiedMsSinceEpoch(nwReply.data());
+            QString setupJson(nwReplyPtr->readAll());
+            nwReplyPtr->close();
+            if (setupJson.isEmpty())
+            {
+                CLogMessage(this).info("No download (info) file");
+                // try next URL
+            }
+            else
+            {
+                CDownload currentDownload(m_download.get()); // from cache
+                CDownload loadedDownload;
+                loadedDownload.convertFromJson(Json::jsonObjectFromString(setupJson));
+                loadedDownload.setDevelopment(isForDevelopment()); // always update, regardless what persistent setting says
+                if (loadedDownload.getMSecsSinceEpoch() == 0 && lastModified > 0) { loadedDownload.setMSecsSinceEpoch(lastModified); }
+                qint64 currentVersionTimestamp = currentDownload.getMSecsSinceEpoch();
+                qint64 newVersionTimestamp = loadedDownload.getMSecsSinceEpoch();
+                bool sameVersionLoaded = (loadedDownload == currentDownload);
+                if (sameVersionLoaded)
+                {
+                    CLogMessage(this).info("Same download info loaded from %1 as already in data cache %2") << urlString << m_download.getFilename();
+                    return; // success
+                }
+
+                bool sameType = loadedDownload.hasSameType(currentDownload);
+                bool outdatedVersionLoaded = sameType && (newVersionTimestamp  < currentVersionTimestamp);
+                if (outdatedVersionLoaded)
+                {
+                    CLogMessage(this).info("Download loaded from %1 outdated, older than version in data cache %2") << urlString << m_download.getFilename();
+                    // try next URL
+                }
+                else
+                {
+                    CStatusMessage m = m_download.set(loadedDownload);
+                    if (!m.isEmpty())
+                    {
+                        CLogMessage(this).preformatted(m);
+                        return; // issue with cache
+                    }
+                    else
+                    {
+                        CLogMessage(this).info("Download info: Updated data cache in %1") << m_download.getFilename();
+                        return; // success
+                    } // cache
+                } // outdated?
+
+            } // json empty
+        } // no error
+        else
+        {
+            // network error
+            CLogMessage(this).warning("Reading download info failed %1 %2") << replyMessage << urlString;
+            nwReply->abort();
+        }
+
+        // try next one if any
+        if (this->m_downloadUrls.uniqueWrite()->addFailedUrl(url))
+        {
+            QTimer::singleShot(500, this, &CSetupReader::ps_readSetup);
         }
     } // method
 

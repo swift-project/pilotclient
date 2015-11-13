@@ -248,7 +248,6 @@ namespace BlackCore
         BlackMisc::CDigestSignal m_dsAtcStationsOnlineChanged { this, &IContextNetwork::changedAtcStationsOnline, &IContextNetwork::changedAtcStationsOnlineDigest, 750, 4 };
         BlackMisc::CDigestSignal m_dsAircraftsInRangeChanged  { this, &IContextNetwork::changedAircraftInRange, &IContextNetwork::changedAircraftInRangeDigest, 750, 4 };
 
-
         //! Own aircraft from \sa CContextOwnAircraft
         const BlackMisc::Simulation::CSimulatedAircraft ownAircraft() const;
 

@@ -152,12 +152,11 @@ namespace BlackCore
     void CVatsimDataFileReader::ps_read()
     {
         this->threadAssertCheck();
-        if (m_setup.get().vatsimDataFile().size() < 1) { return; }
 
         // round robin for load balancing
         // remark: Don't use QThread to run network operations in the background
         // see http://qt-project.org/doc/qt-4.7/qnetworkaccessmanager.html
-        QUrl url(m_setup.get().vatsimDataFile().getNextUrl());
+        QUrl url(m_setup.get().vatsimDataFileUrls().getNextUrl());
         if (url.isEmpty()) { return; }
         Q_ASSERT_X(this->m_networkManager, Q_FUNC_INFO, "Missing network manager");
         QNetworkRequest request(url);

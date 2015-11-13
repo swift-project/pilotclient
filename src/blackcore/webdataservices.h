@@ -23,6 +23,7 @@
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/voicecapabilities.h"
 #include "blackmisc/network/webdataservicesprovider.h"
+#include "blackmisc/network/entityflags.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/weather/metarset.h"
 #include "blackmisc/logcategorylist.h"
@@ -51,12 +52,13 @@ namespace BlackCore
 
     public:
         //! Constructor
-        CWebDataServices(CWebReaderFlags::WebReader readerFlags, QObject *parent = nullptr);
+        CWebDataServices(CWebReaderFlags::WebReader readerFlags,
+                         int autoReadAfterSetupSynchronized, QObject *parent = nullptr);
 
         //! Shutdown
         void gracefulShutdown();
 
-        //! Read ATC bookings
+        //! Read ATC bookings (used to re-read)
         void readAtcBookingsInBackground() const;
 
         //! Booking reader
@@ -74,7 +76,7 @@ namespace BlackCore
         //! Log categories
         static const BlackMisc::CLogCategoryList &getLogCategories();
 
-        // ------------------------ provider functionality ------------------------------
+        // ------------------------ provider functionality start ------------------------------
 
         //! \copydoc IWebDataReaderProvider::connectDataReadSignal
         //! \ingroup webdatareaderprovider
@@ -231,22 +233,22 @@ namespace BlackCore
         virtual bool canConnectSwiftDb() const override;
 
         //! Save all DB data to JSON files
+        //! \ingroup webdatareaderprovider
         virtual bool writeDbDataToDisk(const QString &dir) const override;
 
         //! Load DB data from JSON files
+        //! \ingroup webdatareaderprovider
         virtual bool readDbDataFromDisk(const QString &dir, bool inBackground) override;
+
+        // ------------------------ provider functionality end ----------------------------
+
+        // ---------------------------------------------
+        // Consider to use the connect method of the provider to connect by entity
+        // ---------------------------------------------
 
     public slots:
         //! First read (allows to immediately read in background)
-        void readAllInBackground(int delayMs);
-
-    signals:
-        //
-        // Consider to use the connect method of the provider to connect by entity
-        //
-
-        //! Model has been written
-        void modelWritten(const BlackMisc::Simulation::CAircraftModel &model);
+        void readInBackground(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::AllEntities, int delayMs = 0);
 
     private slots:
         //! ATC bookings received
@@ -261,6 +263,12 @@ namespace BlackCore
         //! Read from model reader
         void ps_readFromSwiftDb(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
+        //! Setup has been read
+        void ps_setupRead(bool success);
+
+        //! Setup has been changed
+        void ps_setupChanged();
+
     private:
         //! Init the readers
         void initReaders(CWebReaderFlags::WebReader flags);
@@ -269,7 +277,8 @@ namespace BlackCore
         void initWriters();
 
         CWebReaderFlags::WebReader m_readerFlags = CWebReaderFlags::WebReaderFlag::None; //!< which readers are available
-        BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
+        int m_autoReadAfterSetupMs = -1; //!< directly read all known readers after setup was syncronized
+        BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this, &CWebDataServices::ps_setupChanged}; //!< setup cache
 
         // for reading XML and VATSIM data files
         CVatsimBookingReader  *m_vatsimBookingReader  = nullptr;
@@ -280,9 +289,6 @@ namespace BlackCore
 
         // writing objects directly into DB
         CDatabaseWriter       *m_databaseWriter       = nullptr;
-
-        // Setup
-        CSetupReader m_setupReader { this };
     };
 } // namespace
 

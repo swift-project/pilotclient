@@ -41,7 +41,7 @@ namespace BlackCore
     {
         this->threadAssertCheck();
         Q_ASSERT_X(this->m_networkManager, Q_FUNC_INFO, "No network manager");
-        QUrl url(m_setup.get().vatsimBookings());
+        QUrl url(m_setup.get().vatsimBookingsUrl());
         if (url.isEmpty()) { return; }
 
         QNetworkRequest request(url);

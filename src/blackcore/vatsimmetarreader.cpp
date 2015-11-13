@@ -60,7 +60,7 @@ namespace BlackCore
     void CVatsimMetarReader::ps_readMetars()
     {
         this->threadAssertCheck();
-        QUrl url(m_setup.get().vatsimMetars());
+        QUrl url(m_setup.get().vatsimMetarsUrl());
         if (url.isEmpty()) { return; }
         Q_ASSERT_X(this->m_networkManager, Q_FUNC_INFO, "No network manager");
         QNetworkRequest request(url);

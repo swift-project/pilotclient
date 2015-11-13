@@ -8,6 +8,7 @@
  */
 
 #include "globalsetup.h"
+#include "blackmisc/project.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <QStringList>
@@ -22,35 +23,35 @@ namespace BlackCore
     {
         CGlobalSetup::CGlobalSetup() :
             ITimestampBased(0),
-            m_dbRootDirectory("http://ubuntu12/swiftdatastore/public"),
             m_dbHttpPort(80),
             m_dbHttpsPort(443),
-            m_vatsimBookings("http://vatbook.euroutepro.com/xml2.php"),
-            m_vatsimMetars("http://metar.vatsim.net/metar.php"),
-            m_vatsimDataFile(QStringList({ "http://info.vroute.net/vatsim-data.txt" })),
-            m_bootstrap(QStringList({ "https://vatsim-germany.org:50443/mapping/public/bootstrap", "http://ubuntu12/public/bootstrap"})),
-            m_swiftDbDataFiles(QStringList({})),
+            m_dbRootDirectoryUrl("http://ubuntu12/swiftdatastore/public"),
+            m_vatsimBookingsUrl("http://vatbook.euroutepro.com/xml2.php"),
+            m_vatsimMetarsUrl("http://metar.vatsim.net/metar.php"),
+            m_vatsimDataFileUrls(QStringList({ "http://info.vroute.net/vatsim-data.txt" })),
+            m_sharedUrls(CProject::swiftTeamDefaultServers()),
+            m_newsUrls(QStringList({ "http://swift-project.org/" })),
             m_fsdTestServers({ CServer("swift", "swift Testserver", "vatsim-germany.org", 6809, CUser("1234567", "swift Test User", "", "123456"), true) })
         { }
 
-        CUrl CGlobalSetup::dbIcaoReader() const
+        CUrl CGlobalSetup::dbIcaoReaderUrl() const
         {
-            return dbRootDirectory();
+            return dbRootDirectoryUrl();
         }
 
-        CUrl CGlobalSetup::dbModelReader() const
+        CUrl CGlobalSetup::dbModelReaderUrl() const
         {
-            return dbRootDirectory();
+            return dbRootDirectoryUrl();
         }
 
-        CUrl CGlobalSetup::dbHomePage() const
+        CUrl CGlobalSetup::dbHomePageUrl() const
         {
-            return dbRootDirectory().withAppendedPath("/page/index.php");
+            return dbRootDirectoryUrl().withAppendedPath("/page/index.php");
         }
 
-        CUrl CGlobalSetup::dbLoginService() const
+        CUrl CGlobalSetup::dbLoginServiceUrl() const
         {
-            return dbRootDirectory().
+            return dbRootDirectoryUrl().
                    withAppendedPath("/service/jsonauthenticate.php").
                    withSwitchedScheme("https", m_dbHttpsPort);
         }
@@ -68,14 +69,38 @@ namespace BlackCore
             m_dbDebugFlag = debug;
         }
 
-        bool CGlobalSetup::hasSameType(CGlobalSetup &otherSetup) const
+        bool CGlobalSetup::hasSameType(const CGlobalSetup &otherSetup) const
         {
             return this->isDevelopment() == otherSetup.isDevelopment();
         }
 
-        CUrl CGlobalSetup::vatsimMetars() const
+        CUrl CGlobalSetup::vatsimMetarsUrl() const
         {
-            return this->m_vatsimMetars.withAppendedQuery("id=all");
+            return this->m_vatsimMetarsUrl.withAppendedQuery("id=all");
+        }
+
+        CUrlList CGlobalSetup::bootstrapUrls() const
+        {
+            CUrlList urls(m_sharedUrls);
+            return urls.appendPath(isDevelopment() ?
+                                   CGlobalSetup::versionString() + "/development/bootstrap/bootstrap.json" :
+                                   CGlobalSetup::versionString() + "/productive/bootstrap/bootstrap.json");
+        }
+
+        CUrlList CGlobalSetup::downloadInfoUrls() const
+        {
+            CUrlList urls(m_sharedUrls);
+            return urls.appendPath(isDevelopment() ?
+                                   CGlobalSetup::versionString() + "/development/download/download.json" :
+                                   CGlobalSetup::versionString() + "/productive/download/download.json");
+        }
+
+        CUrlList CGlobalSetup::swiftDbDataFileLocationUrls() const
+        {
+            CUrlList urls(m_sharedUrls);
+            return urls.appendPath(isDevelopment() ?
+                                   CGlobalSetup::versionString() + "/development/dbdata/" :
+                                   CGlobalSetup::versionString() + "/productive/dbdata/");
         }
 
         QString CGlobalSetup::convertToQString(bool i18n) const
@@ -91,39 +116,48 @@ namespace BlackCore
             s.append("For development: ");
             s.append(boolToYesNo(isDevelopment()));
             s.append(separator);
-            s.append("DB root directory: ");
-            s.append(dbRootDirectory().convertToQString(i18n));
-            s.append(separator);
-            s.append("ICAO DB reader: ");
-            s.append(dbIcaoReader().convertToQString(i18n));
-            s.append(separator);
-            s.append("Model DB reader: ");
-            s.append(dbModelReader().convertToQString(i18n));
-            s.append(separator);
 
-            s.append("DB home page: ");
-            s.append(dbHomePage().convertToQString(i18n));
-            s.append(separator);
-            s.append("DB login service: ");
-            s.append(dbLoginService().convertToQString(i18n));
-            s.append(separator);
-            s.append("VATSIM bookings: ");
-            s.append(vatsimBookings().convertToQString(i18n));
-            s.append(separator);
-            s.append("VATSIM METARs: ");
-            s.append(vatsimMetars().convertToQString(i18n));
-            s.append(separator);
-            s.append("VATSIM data file: ");
-            s.append(vatsimDataFile().convertToQString(i18n));
+            s.append("Download URLs: ");
+            s.append(downloadInfoUrls().toQString(i18n));
             s.append(separator);
             s.append("Bootstrap URLs: ");
-            s.append(bootstrapUrls().convertToQString(i18n));
+            s.append(bootstrapUrls().toQString(i18n));
+            s.append(separator);
+            s.append("News URLs: ");
+            s.append(swiftLatestNewsUrls().toQString(i18n));
+            s.append(separator);
+
+            s.append("DB root directory: ");
+            s.append(dbRootDirectoryUrl().toQString(i18n));
+            s.append(separator);
+            s.append("ICAO DB reader: ");
+            s.append(dbIcaoReaderUrl().toQString(i18n));
+            s.append(separator);
+            s.append("Model DB reader: ");
+            s.append(dbModelReaderUrl().toQString(i18n));
+            s.append(separator);
+            s.append("DB home page: ");
+            s.append(dbHomePageUrl().toQString(i18n));
+            s.append(separator);
+            s.append("DB login service: ");
+            s.append(dbLoginServiceUrl().toQString(i18n));
             s.append(separator);
             s.append("swift DB datafile locations: ");
-            s.append(swiftDbDataFileLocations().convertToQString(i18n));
+            s.append(swiftDbDataFileLocationUrls().toQString(i18n));
             s.append(separator);
+
+            s.append("VATSIM bookings: ");
+            s.append(vatsimBookingsUrl().toQString(i18n));
+            s.append(separator);
+            s.append("VATSIM METARs: ");
+            s.append(vatsimMetarsUrl().toQString(i18n));
+            s.append(separator);
+            s.append("VATSIM data file: ");
+            s.append(vatsimDataFileUrls().toQString(i18n));
+            s.append(separator);
+
             s.append("FSD test servers: ");
-            s.append(fsdTestServers().convertToQString(i18n));
+            s.append(fsdTestServers().toQString(i18n));
             return s;
         }
 
@@ -136,23 +170,27 @@ namespace BlackCore
             switch (i)
             {
             case IndexDbRootDirectory:
-                return CVariant::fromValue(this->m_dbRootDirectory);
+                return CVariant::fromValue(this->m_dbRootDirectoryUrl);
             case IndexDbHttpPort:
                 return CVariant::fromValue(this->m_dbHttpPort);
             case IndexDbHttpsPort:
                 return CVariant::fromValue(this->m_dbHttpsPort);
             case IndexDbLoginService:
-                return CVariant::fromValue(this->dbLoginService());
+                return CVariant::fromValue(this->dbLoginServiceUrl());
             case IndexVatsimData:
-                return CVariant::fromValue(this->m_vatsimDataFile);
+                return CVariant::fromValue(this->m_vatsimDataFileUrls);
             case IndexVatsimBookings:
-                return CVariant::fromValue(this->m_vatsimDataFile);
+                return CVariant::fromValue(this->m_vatsimDataFileUrls);
             case IndexVatsimMetars:
-                return CVariant::fromValue(this->m_vatsimMetars);
+                return CVariant::fromValue(this->m_vatsimMetarsUrl);
+            case IndexDownload:
+                return CVariant::fromValue(this->downloadInfoUrls());
             case IndexBootstrap:
-                return CVariant::fromValue(this->m_bootstrap);
+                return CVariant::fromValue(this->bootstrapUrls());
             case IndexSwiftDbFiles:
-                return CVariant::fromValue(this->m_swiftDbDataFiles);
+                return CVariant::fromValue(this->swiftDbDataFileLocationUrls());
+            case IndexShared:
+                return CVariant::fromValue(this->m_sharedUrls);
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -171,7 +209,7 @@ namespace BlackCore
             switch (i)
             {
             case IndexDbRootDirectory:
-                this->m_dbRootDirectory.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_dbRootDirectoryUrl.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexDbHttpPort:
                 this->m_dbHttpPort = variant.toInt();
@@ -182,19 +220,16 @@ namespace BlackCore
             case IndexDbLoginService:
                 break;
             case IndexVatsimData:
-                this->m_vatsimDataFile = variant.value<CUrlList>();
+                this->m_vatsimDataFileUrls = variant.value<CUrlList>();
                 break;
             case IndexVatsimBookings:
-                this->m_vatsimBookings.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_vatsimBookingsUrl.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexVatsimMetars:
-                this->m_vatsimMetars.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_vatsimMetarsUrl.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
-            case IndexBootstrap:
-                this->m_bootstrap = variant.value<CUrlList>();
-                break;
-            case IndexSwiftDbFiles:
-                this->m_swiftDbDataFiles = variant.value<CUrlList>();
+            case IndexShared:
+                this->m_sharedUrls = variant.value<CUrlList>();
                 break;
             default:
                 CValueObject::setPropertyByIndex(variant, index);
@@ -204,7 +239,7 @@ namespace BlackCore
 
         const QString &CGlobalSetup::versionString()
         {
-            static const QString v("0.6");
+            static const QString v("0.6.1");
             return v;
         }
     } // ns

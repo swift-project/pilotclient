@@ -16,11 +16,11 @@
 #include "blackcore/vatsimdatafilereader.h"
 #include "blackcore/vatsimmetarreader.h"
 #include "data/globalsetup.h"
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/fileutilities.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/json.h"
-#include "blackmisc/network/networkutils.h"
 #include <QJsonObject>
 #include <QJsonDocument>
 
@@ -34,10 +34,12 @@ using namespace BlackMisc::Weather;
 
 namespace BlackCore
 {
-    CWebDataServices::CWebDataServices(CWebReaderFlags::WebReader readerFlags, QObject *parent) :
-        QObject(parent), m_readerFlags(readerFlags)
+    CWebDataServices::CWebDataServices(
+        CWebReaderFlags::WebReader readerFlags, int autoReadAfterSetupSynchronized, QObject *parent) :
+        QObject(parent), m_readerFlags(readerFlags), m_autoReadAfterSetupMs(autoReadAfterSetupSynchronized)
     {
         this->setObjectName("CWebDataReader");
+        connect(&CSetupReader::instance(), &CSetupReader::setupSynchronized, this, &CWebDataServices::ps_setupRead);
         this->initReaders(readerFlags);
         this->initWriters();
     }
@@ -429,7 +431,7 @@ namespace BlackCore
             c = connect(this->m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::ps_readFromSwiftDb);
             Q_ASSERT_X(c, Q_FUNC_INFO, "ICAO reader signals");
             Q_UNUSED(c);
-            this->m_icaoDataReader->start();
+            this->m_icaoDataReader->start(QThread::LowPriority);
         }
 
         // 5. Model reader
@@ -439,14 +441,14 @@ namespace BlackCore
             bool c = connect(this->m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::ps_readFromSwiftDb);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Model reader signals");
             Q_UNUSED(c);
-            this->m_modelDataReader->start();
+            this->m_modelDataReader->start(QThread::LowPriority);
         }
     }
 
     void CWebDataServices::initWriters()
     {
         this->m_databaseWriter = new CDatabaseWriter(
-            m_setup.get().dbModelReader(),
+            m_setup.get().dbModelReaderUrl(),
             this);
     }
 
@@ -477,23 +479,40 @@ namespace BlackCore
         }
     }
 
-    void CWebDataServices::readAllInBackground(int delayMs)
+    void CWebDataServices::ps_setupRead(bool success)
+    {
+        // setup has been changed
+        if (success)
+        {
+            if (m_autoReadAfterSetupMs >= 0)
+            {
+                CLogMessage(this).info("Setup synchronized, will trigger read of web service data");
+                this->readInBackground(CEntityFlags::AllEntities, m_autoReadAfterSetupMs);
+            }
+        }
+        else
+        {
+            CLogMessage(this).error("Failed to read setup, will not(!) triggrr web data read");
+        }
+    }
+
+    void CWebDataServices::ps_setupChanged()
+    {
+        CLogMessage(this).debug() << "Setup changed";
+    }
+
+    void CWebDataServices::readInBackground(CEntityFlags::Entity entities, int delayMs)
     {
         if (delayMs > 100)
         {
             BlackMisc::singleShot(delayMs, QThread::currentThread(), [ = ]()
             {
-                this->readAllInBackground(0);
+                this->readInBackground(entities, 0);
             });
         }
         else
         {
-            // only readers requested will be read
-            if (this->m_vatsimBookingReader) { this->m_vatsimBookingReader->readInBackgroundThread(); }
-            if (this->m_vatsimDataFileReader) { this->m_vatsimDataFileReader->readInBackgroundThread(); }
-            if (this->m_vatsimMetarReader) { this->m_vatsimMetarReader->readInBackgroundThread(); }
-            if (this->m_icaoDataReader) { this->m_icaoDataReader->readInBackgroundThread(CEntityFlags::AllIcaoAndCountries); }
-            if (this->m_modelDataReader) { this->m_modelDataReader->readInBackgroundThread(CEntityFlags::DistributorLiveryModel); }
+            this->triggerRead(entities);
         }
     }
 
@@ -555,12 +574,6 @@ namespace BlackCore
                 this->m_modelDataReader->readFromJsonFiles(dir);
         }
         return s;
-    }
-
-    void CWebDataServices::readAtcBookingsInBackground() const
-    {
-        if (!this->m_vatsimBookingReader) { return; }
-        this->m_vatsimBookingReader->readInBackgroundThread();
     }
 
 } // ns
