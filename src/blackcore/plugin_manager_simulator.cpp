@@ -69,7 +69,11 @@ namespace BlackCore
         if (!plugin.listener)
         {
             ISimulatorFactory *factory = getPluginById<ISimulatorFactory>(pluginId);
-            Q_ASSERT(factory);
+            if (!factory)
+            {
+                m_plugins.remove(pluginId);
+                return nullptr;
+            }
 
             ISimulatorListener *listener = factory->createListener(plugin.info);
             connect(qApp, &QCoreApplication::aboutToQuit, listener, &QObject::deleteLater);
