@@ -41,6 +41,9 @@ namespace BlackMisc
             //! Random location for distributed load
             CUrl getRandomUrl() const;
 
+            //! Random location for distributed load, tested
+            CUrl getRandomWorkingUrl(int maxTrials = 2) const;
+
             //! Random location for distributed load
             CUrl getRandomWithout(const CUrlList &exclude) const;
 
@@ -53,9 +56,46 @@ namespace BlackMisc
             //! Append path to all URLs
             CUrlList appendPath(const QString &path) const;
 
+            //! To formatted String
+            QString convertToQString(const QString &separator, bool i18n = false) const;
+
         private:
             mutable int m_currentIndexDistributedLoad = -1;
         };
+
+        //! URL list with fail support
+        class BLACKMISC_EXPORT CFailoverUrlList : public CUrlList
+        {
+        public:
+            //! Default constructor.
+            CFailoverUrlList(int maxTrials = 2);
+
+            //! By list of URLs
+            explicit CFailoverUrlList(const QStringList &listOfUrls, int maxTrials = 2);
+
+            //! Construct from a base class object.
+            CFailoverUrlList(const CSequence<CUrl> &other, int maxTrials = 2);
+
+            //! All failed URLs
+            const CUrlList &getFailedUrls() const { return m_failedUrls; }
+
+            //! Get without the failed URLs
+            CUrlList getWithoutFailed() const;
+
+            //! Failed URL
+            bool addFailedUrl(const CUrl &failedUrl);
+
+            //! More URLs to try
+            bool hasMoreUrlsToTry() const;
+
+            //! Next working URL, test if it can be connected
+            CUrl getNextWorkingUrl(const CUrl &failedUrl = CUrl(), bool random = true);
+
+        private:
+            int m_maxTrials = 2; //!< number of max trials
+            CUrlList m_failedUrls;
+        };
+
     } //namespace
 } // namespace
 

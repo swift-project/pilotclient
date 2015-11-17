@@ -74,25 +74,13 @@ namespace BlackCore
         void unregisterAllObjects();
 
         //! Default connection
-        static const QDBusConnection &defaultConnection()
-        {
-            static QDBusConnection defaultConnection("default");
-            return defaultConnection;
-        }
+        static const QDBusConnection &defaultConnection();
 
         //! Denotes a session DBus server
-        static const QString &sessionDBusServer()
-        {
-            static QString session("session");
-            return session;
-        }
+        static const QString &sessionDBusServer();
 
         //! Denotes a session DBus server
-        static const QString &systemDBusServer()
-        {
-            static QString system("system");
-            return system;
-        }
+        static const QString &systemDBusServer();
 
         //! Denotes a P2P DBus server, e.g. "tcp:host=192.168.3.3,port=45000"
         //! \remarks it is valid to pass only one string as host:port
@@ -107,6 +95,27 @@ namespace BlackCore
         //! Qt DBus address, e.g. "unix:tmpdir=/tmp", "tcp:host=127.0.0.1,port=45000"
         static bool isQtDBusAddress(const QString &address);
 
+        //! Session or system DBus address
+        static bool isSessionOrSystemAddress(const QString &address);
+
+        //! Check if address means a real server with P2P connection
+        static bool isP2PAddress(const QString &address);
+
+        //! Split DBus address into host and port
+        static bool splitDBusAddressIntoHostAndPort(const QString &dbusAddress, QString &host, int &port);
+
+        //! Is DBus available?
+        static bool isDBusAvailable(const QString &address, int port, int timeoutMs = 1500);
+
+        //! Is DBus available?
+        static bool isDBusAvailable(const QString &address, int port, QString &message, int timeoutMs = 1500);
+
+        //! Is DBus available?
+        static bool isDBusAvailable(const QString &dbusAddress, QString &message, int timeoutMs = 1500);
+
+        //! Is DBus available?
+        static bool isDBusAvailable(const QString &dbusAddress, int timeoutMs = 1500);
+
     private:
         ServerMode m_serverMode = SERVERMODE_P2P;
         QScopedPointer<QDBusServer> m_busServer; //!< QDBusServer implementation
@@ -115,9 +124,6 @@ namespace BlackCore
 
         //! Manually launch our shipped dbus daemon
         void launchDbusDaemon();
-
-        //! Check if address means a real server with P2P connection
-        static bool isP2P(const QString &address);
 
         //! Get the class info
         static const QString getClassInfo(QObject *object);

@@ -134,9 +134,21 @@ namespace BlackMisc
             return canConnect(host, p, message, timeoutMs);
         }
 
-        bool CNetworkUtils::canConnect(const CUrl &location, QString &message, int timeoutMs)
+        bool CNetworkUtils::canConnect(const QUrl &url, int timeoutMs)
         {
-            return canConnect(location.getHost(), location.getPort(), message, timeoutMs);
+            QString m;
+            return canConnect(url, m, timeoutMs);
+        }
+
+        bool CNetworkUtils::canConnect(const CUrl &url, QString &message, int timeoutMs)
+        {
+            return canConnect(url.getHost(), url.getPort(), message, timeoutMs);
+        }
+
+        bool CNetworkUtils::canConnect(const CUrl &url, int timeoutMs)
+        {
+            QString m;
+            return canConnect(url, m, timeoutMs);
         }
 
         bool CNetworkUtils::isValidIPv4Address(const QString &candidate)

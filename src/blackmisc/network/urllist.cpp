@@ -8,6 +8,7 @@
  */
 
 #include "blackmisc/network/urllist.h"
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/math/mathutils.h"
 
 using namespace BlackMisc::Math;
@@ -36,6 +37,22 @@ namespace BlackMisc
             if (this->size() == 1) { return this->front();}
             int i = CMathUtils::randomInteger(0, this->size() - 1);
             return (*this)[i];
+        }
+
+        CUrl CUrlList::getRandomWorkingUrl(int maxTrials) const
+        {
+            if (this->isEmpty()) { return CUrl(); }
+            if (maxTrials < 1) { return CUrl();}
+            CUrlList trials;
+
+            for (int t = 0; t < maxTrials && t < this->size(); t++)
+            {
+                CUrl url(getRandomWithout(trials));
+                trials.push_back(url);
+                QString message;
+                if (CNetworkUtils::canConnect(url, message)) { return url; }
+            }
+            return CUrl();
         }
 
         CUrl CUrlList::getRandomWithout(const CUrlList &exclude) const
@@ -87,5 +104,51 @@ namespace BlackMisc
             return urls;
         }
 
+        QString CUrlList::convertToQString(const QString &separator, bool i18n) const
+        {
+            const QStringList sl(toStringList(i18n));
+            return sl.join(separator);
+        }
+
+        CFailoverUrlList::CFailoverUrlList(int maxTrials) :
+            m_maxTrials(maxTrials)
+        { }
+
+        CFailoverUrlList::CFailoverUrlList(const QStringList &listOfUrls, int maxTrials) :
+            CUrlList(listOfUrls), m_maxTrials(maxTrials)
+        { }
+
+        CFailoverUrlList::CFailoverUrlList(const CSequence<CUrl> &other, int maxTrials) :
+            CUrlList(other), m_maxTrials(maxTrials)
+        { }
+
+        CUrlList CFailoverUrlList::getWithoutFailed() const
+        {
+            CUrlList urls(*this);
+            urls.removeIfIn(m_failedUrls);
+            return urls;
+        }
+
+        bool CFailoverUrlList::addFailedUrl(const CUrl &failedUrl)
+        {
+            this->m_failedUrls.push_back(failedUrl);
+            return hasMoreUrlsToTry();
+        }
+
+        bool CFailoverUrlList::hasMoreUrlsToTry() const
+        {
+            if (this->isEmpty()) { return false; }
+            return (m_failedUrls.size() < this->size() && m_failedUrls.size() < m_maxTrials);
+        }
+
+        CUrl CFailoverUrlList::getNextWorkingUrl(const CUrl &failedUrl, bool random)
+        {
+            if (!failedUrl.isEmpty()) { this->addFailedUrl(failedUrl); }
+            if (!hasMoreUrlsToTry()) { return CUrl(); }
+            CUrl url(this->getNextUrl(random));
+            if (CNetworkUtils::canConnect(url)) { return url; }
+            if (addFailedUrl(url)) { return getNextUrl(); }
+            return CUrl();
+        }
     } // namespace
 } // namespace

@@ -18,7 +18,6 @@ using namespace BlackMisc::Network;
 
 namespace BlackCore
 {
-
     /*
      * Constructor
      * Remark, without the default "unix:tmpdir=/tmp" any refereal to address crashes
@@ -71,10 +70,13 @@ namespace BlackCore
         case SERVERMODE_P2P:
         default:
             {
+                QString dbusAddress(CDBusServer::isQtDBusAddress(address) ? address : "tcp:host=127.0.0.1,port=45000");
+                dbusAddress = dbusAddress.toLower().trimmed().replace(' ', "");
+                if (!dbusAddress.contains("bind=")) { dbusAddress = dbusAddress.append(",bind=*"); }
                 this->m_serverMode = CDBusServer::SERVERMODE_P2P;
                 this->m_busServer.reset(
                     new QDBusServer(
-                        CDBusServer::isQtDBusAddress(address) ? address : "tcp:host=127.0.0.1,port=45000", // "unix:tmpdir=/tmp"
+                        dbusAddress, // "unix:tmpdir=/tmp"
                         parent)
                 );
                 m_busServer->setAnonymousAuthenticationAllowed(true);
@@ -94,9 +96,6 @@ namespace BlackCore
         } // switch
     }
 
-    /*
-     * Name of service
-     */
     const QString &CDBusServer::ServiceName()
     {
         static const QString sn(BLACKCORE_RUNTIME_SERVICENAME);
@@ -111,28 +110,58 @@ namespace BlackCore
         if (!success) { CLogMessage(this).warning("Failed to launch dbus-daemon!"); }
     }
 
-    /*
-     * Check for P2P address
-     */
-    bool CDBusServer::isP2P(const QString &address)
+    bool CDBusServer::isP2PAddress(const QString &address)
     {
         return CDBusServer::addressToDBusMode(address) == SERVERMODE_P2P;
     }
 
-    /*
-     * Is Qt DBus address
-     */
+    bool CDBusServer::splitDBusAddressIntoHostAndPort(const QString &dbusAddress, QString &host, int &port)
+    {
+        bool ok = false;
+        QString dbus(dbusAddress.trimmed().toLower().replace(' ', ""));
+        if (dbus.contains("host=") || dbus.contains("port="))
+        {
+            // "tcp:host=foo.com,port=123"
+            QStringList parts(dbus.split(','));
+            for (const QString &p : parts)
+            {
+                if (p.contains("host="))
+                {
+                    host = p.mid(p.lastIndexOf("=") + 1).trimmed();
+                }
+                else if (p.contains("port="))
+                {
+                    bool ok;
+                    port = p.mid(p.lastIndexOf("=") + 1).trimmed().toInt(&ok);
+                    if (!ok) { port = -1; }
+                }
+            }
+            if (port < 0) { port = 45000; }
+            if (host.isEmpty()) { host = "127.0.0.1"; }
+            ok = true;
+        }
+
+        if (!ok)
+        {
+            host = "";
+            port = -1;
+        }
+        return ok;
+    }
+
     bool CDBusServer::isQtDBusAddress(const QString &address)
     {
         return
-            (address.startsWith("tcp:") ||
-             address.startsWith("unix:")
+            (address.contains("tcp:") ||
+             address.contains("unix:")
             );
     }
 
-    /*
-     * Class info
-     */
+    bool CDBusServer::isSessionOrSystemAddress(const QString &address)
+    {
+        return address == sessionDBusServer() || address == systemDBusServer();
+    }
+
     const QString CDBusServer::getClassInfo(QObject *object)
     {
         if (!object) return "";
@@ -147,9 +176,6 @@ namespace BlackCore
         return "";
     }
 
-    /*
-     * Connection established
-     */
     bool CDBusServer::ps_registerObjectsWithP2PConnection(const QDBusConnection &connection)
     {
         Q_ASSERT(!this->m_objects.isEmpty());
@@ -170,9 +196,6 @@ namespace BlackCore
         return success;
     }
 
-    /*
-     * Add the objects
-     */
     void CDBusServer::addObject(const QString &path, QObject *object)
     {
         if (!object) { return; }
@@ -217,9 +240,6 @@ namespace BlackCore
         }
     }
 
-    /*
-     * Last error
-     */
     QDBusError CDBusServer::lastQDBusServerError() const
     {
         if (!hasQDBusServer()) { return QDBusError(); }
@@ -231,17 +251,11 @@ namespace BlackCore
         return this->m_busServer.data();
     }
 
-    /*
-     * Real server?
-     */
     bool CDBusServer::hasQDBusServer() const
     {
         return !this->m_busServer.isNull();
     }
 
-    /*
-     * Unregister all objects
-     */
     void CDBusServer::unregisterAllObjects()
     {
         if (this->m_objects.isEmpty()) return;
@@ -267,13 +281,31 @@ namespace BlackCore
         } // all paths
     }
 
-    /*
-     * p2pDBusServer
-     */
+    const QDBusConnection &CDBusServer::defaultConnection()
+    {
+        static QDBusConnection defaultConnection("default");
+        return defaultConnection;
+    }
+
+    const QString &CDBusServer::sessionDBusServer()
+    {
+        static QString session("session");
+        return session;
+    }
+
+    const QString &CDBusServer::systemDBusServer()
+    {
+        static QString system("system");
+        return system;
+    }
+
     QString CDBusServer::p2pAddress(const QString &host, const QString &port)
     {
         QString h = host.isEmpty() ? "127.0.0.1" : host.trimmed();
         QString p = port;
+
+        // can handle host and port separately or combined
+        // such as "myHost::1234"
         if (port.isEmpty())
         {
             if (h.contains(":"))
@@ -296,9 +328,6 @@ namespace BlackCore
         return p2p;
     }
 
-    /*
-     * Fix address
-     */
     QString CDBusServer::fixAddressToDBusAddress(const QString &address)
     {
         if (address.isEmpty() || address == sessionDBusServer() || address == systemDBusServer()) { return address; }
@@ -306,15 +335,63 @@ namespace BlackCore
         return p2pAddress(address);
     }
 
-    /*
-     * Convert address to mode
-     */
     CDBusServer::ServerMode CDBusServer::addressToDBusMode(const QString &address)
     {
         QString a = address.toLower();
         if (a == CDBusServer::systemDBusServer())       { return SERVERMODE_SYSTEMBUS; }
         else if (a == CDBusServer::sessionDBusServer()) { return SERVERMODE_SESSIONBUS; }
         else { return SERVERMODE_P2P; }
+    }
+
+    bool CDBusServer::isDBusAvailable(const QString &address, int port, int timeoutMs)
+    {
+        QString m;
+        return CNetworkUtils::canConnect(address, port, m, timeoutMs);
+    }
+
+    bool CDBusServer::isDBusAvailable(const QString &address, int port, QString &message, int timeoutMs)
+    {
+        return CNetworkUtils::canConnect(address, port, message, timeoutMs);
+    }
+
+    bool CDBusServer::isDBusAvailable(const QString &dbusAddress, QString &message, int timeoutMs)
+    {
+        if (dbusAddress.isEmpty()) { message = "no address"; return false; }
+        if (isP2PAddress(dbusAddress))
+        {
+            QString host;
+            int port = -1;
+            if (splitDBusAddressIntoHostAndPort(dbusAddress, host, port))
+            {
+                return isDBusAvailable(host, port, message, timeoutMs);
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            QDBusConnection connection(
+                (dbusAddress == systemDBusServer()) ?
+                QDBusConnection::systemBus() :
+                QDBusConnection::connectToBus(QDBusConnection::SessionBus, ServiceName())
+            );
+            bool success = connection.isConnected();
+
+            // further checks would need to go here
+            // failing session bus not detected yet
+
+            message = connection.lastError().message();
+            connection.disconnectFromBus(ServiceName());
+            return success;
+        }
+    }
+
+    bool CDBusServer::isDBusAvailable(const QString &dbusAddress, int timeoutMs)
+    {
+        QString m;
+        return isDBusAvailable(dbusAddress, m, timeoutMs);
     }
 
 } // namespace

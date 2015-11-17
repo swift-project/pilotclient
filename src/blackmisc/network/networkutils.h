@@ -66,7 +66,13 @@ namespace BlackMisc
             static bool canConnect(const QUrl &url, QString &message, int timeoutMs = 1500);
 
             //! Can connect to URL?
-            static bool canConnect(const BlackMisc::Network::CUrl &location, QString &message, int timeoutMs = 1500);
+            static bool canConnect(const QUrl &url, int timeoutMs = 1500);
+
+            //! Can connect to URL?
+            static bool canConnect(const BlackMisc::Network::CUrl &url, QString &message, int timeoutMs = 1500);
+
+            //! Can connect to URL?
+            static bool canConnect(const BlackMisc::Network::CUrl &url, int timeoutMs = 1500);
 
             //! Find out my IPv4 address, empty if not possible
             static QStringList getKnownIpAddresses();

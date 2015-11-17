@@ -81,6 +81,11 @@ CommandLineParseResult parseCommandLine(QCommandLineParser &parser,
     {
         QString v(parser.value(dBusOption).trimmed());
         dBusAddress = CDBusServer::fixAddressToDBusAddress(v);
+        if (!CDBusServer::isDBusAvailable(dBusAddress))
+        {
+            errorMessage = "DBus server at " + dBusAddress + " can not be reached";
+            return CommandLineError;
+        }
     }
 
     if (parser.isSet(windowOption))
