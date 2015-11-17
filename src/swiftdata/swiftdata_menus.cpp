@@ -145,12 +145,12 @@ void CSwiftData::ps_setupChanged()
 
 void CSwiftData::initDynamicMenus()
 {
-    Q_ASSERT(this->ui->menu_InfoAreas);
-    Q_ASSERT(this->ui->comp_MainInfoArea);
+    Q_ASSERT_X(this->ui->menu_InfoAreas, Q_FUNC_INFO, "missing info areas");
+    Q_ASSERT_X(this->ui->comp_MainInfoArea, Q_FUNC_INFO, "missing main area");
     this->ui->menu_InfoAreas->addActions(this->ui->comp_MainInfoArea->getInfoAreaSelectActions(this->ui->menu_InfoAreas));
 
     QString resourceDir(CProject::getSwiftResourceDir());
-    if (!resourceDir.isEmpty())
+    if (!resourceDir.isEmpty() && QDir(resourceDir).exists())
     {
         Q_ASSERT_X(this->ui->comp_MainInfoArea, Q_FUNC_INFO, "Missing main info area");
         Q_ASSERT_X(this->ui->comp_MainInfoArea->getDataInfoAreaComponent(), Q_FUNC_INFO, "Missing DB info area");

@@ -1,0 +1,22 @@
+{
+    "development": false,
+    "downloadsBetaUrls": {
+        "containerbase": [
+            {
+                "url": "http://swift-project.org/"
+            }
+        ]
+    },
+    "downloadsStableUrls": {
+        "containerbase": [
+            {
+                "url": "http://swift-project.org/"
+            }
+        ]
+    },
+    "lastSupportedVersionBeta": "0.6",
+    "lastSupportedVersionStable": "0.6",
+    "latestVersionBeta": "0.6.1",
+    "latestVersionStable": "0.6.1",
+    "timestampMSecsSinceEpoch": 0
+}

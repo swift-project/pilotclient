@@ -100,7 +100,7 @@ namespace BlackGui
             // info
             if (s)
             {
-                CLogMessage(this).info("Read DB data");
+                CLogMessage(this).info("Read DB data: %1") << CProject::getSwiftStaticDbFilesDir();
                 this->ui->comp_DbAircraftIcao->showLoadIndicator();
                 this->ui->comp_DbAirlineIcao->showLoadIndicator();
                 this->ui->comp_DbCountries->showLoadIndicator();

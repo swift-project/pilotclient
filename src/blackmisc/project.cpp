@@ -324,7 +324,12 @@ namespace BlackMisc
     QString getSwiftResourceDirImpl()
     {
         QDir dir(CProject::getApplicationDir());
-        if (dir.cdUp()) { return dir.absolutePath(); }
+        if (dir.cdUp())
+        {
+            Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
+            return dir.absolutePath();
+        }
+        Q_ASSERT_X(false, Q_FUNC_INFO, "missing dir");
         return "";
     }
 
@@ -344,22 +349,23 @@ namespace BlackMisc
     {
         QString d(CProject::getSwiftResourceDir());
         if (d.isEmpty()) { return ""; }
-        QDir dir(d);
-        if (dir.cd("swiftDB")) { return dir.absolutePath(); }
-        return "";
+        QDir dir(CFileUtils::appendFilePaths(d, "shared/dbdata"));
+        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
+        return dir.absolutePath();
     }
 
     const QString &CProject::getSwiftStaticDbFilesDir()
     {
-        static QString s(getSwiftResourceDirImpl());
+        static QString s(getSwiftStaticDbFilesDirImpl());
         return s;
     }
 
     QString getImagesDirImpl()
     {
         QString d(CProject::getSwiftResourceDir());
-        if (d.isEmpty()) return "";
-        return CFileUtils::appendFilePaths(d, "data/images");
+        QDir dir(CFileUtils::appendFilePaths(d, "data/images"));
+        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
+        return dir.absolutePath();
     }
 
     const QString &CProject::getImagesDir()
