@@ -15,6 +15,7 @@
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/webdataservices.h"
+#include "blackmisc/network/entityflags.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/project.h"
@@ -23,6 +24,7 @@
 #include <QCloseEvent>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Network;
 using namespace BlackCore;
 using namespace BlackGui;
 using namespace BlackGui::Components;
@@ -31,7 +33,7 @@ CSwiftData::CSwiftData(QWidget *parent) :
     QMainWindow(parent),
     CIdentifiable(this),
     ui(new Ui::CSwiftData),
-    m_webDataReader(new CWebDataServices(CWebReaderFlags::AllSwiftDbReaders))
+    m_webDataReader(new CWebDataServices(CWebReaderFlags::AllSwiftDbReaders, 500))
 {
     ui->setupUi(this);
     this->init();
@@ -103,7 +105,7 @@ void CSwiftData::initReaders()
     Q_ASSERT_X(this->m_webDataReader, Q_FUNC_INFO, "Missing reader");
     this->ui->comp_MainInfoArea->setProvider(this->m_webDataReader);
     this->ui->comp_InfoBar->setProvider(this->m_webDataReader);
-    this->m_webDataReader->readAllInBackground(1000); // kick of readers a little delayed
+    // web data will be read automatically when setup is syncronized
 }
 
 void CSwiftData::initMenu()
@@ -113,6 +115,7 @@ void CSwiftData::initMenu()
     this->ui->menu_WindowMinimize->setIcon(this->style()->standardIcon(QStyle::SP_TitleBarMinButton));
     connect(this->ui->menu_FileExit, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_FileReloadStyleSheets, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+    connect(this->ui->menu_FileResetSettings, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
 
     connect(this->ui->menu_SettingsDirectory, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_SettingsFiles, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
@@ -132,7 +135,8 @@ void CSwiftData::initMenu()
     connect(this->ui->menu_InternalsEnvVars, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_InternalsMetatypes, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_InternalsSetup, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_InternalsJsonBootstrapTemplate, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+    connect(this->ui->menu_JsonBootstrapTemplate, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+    connect(this->ui->menu_JsonDownloadTemplate, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
 }
 
 void CSwiftData::performGracefulShutdown()

@@ -128,7 +128,14 @@
      <property name="title">
       <string>Internals</string>
      </property>
-     <addaction name="menu_InternalsJsonBootstrapTemplate"/>
+     <widget class="QMenu" name="menuTemplates">
+      <property name="title">
+       <string>Templates</string>
+      </property>
+      <addaction name="menu_JsonBootstrapTemplate"/>
+      <addaction name="menu_JsonDownloadTemplate"/>
+     </widget>
+     <addaction name="menuTemplates"/>
      <addaction name="menu_InternalsMetatypes"/>
      <addaction name="menu_InternalsEnvVars"/>
      <addaction name="menu_InternalsSetup"/>
@@ -211,7 +218,7 @@
     <string>Debug metatypes (to console)</string>
    </property>
   </action>
-  <action name="menu_InternalsJsonBootstrapTemplate">
+  <action name="menu_JsonBootstrapTemplate">
    <property name="text">
     <string>JSON bootstrap template</string>
    </property>
@@ -274,6 +281,11 @@
   <action name="menu_CacheReset">
    <property name="text">
     <string>Reset</string>
+   </property>
+  </action>
+  <action name="menu_JsonDownloadTemplate">
+   <property name="text">
+    <string>JSON download template</string>
    </property>
   </action>
  </widget>

@@ -29,9 +29,6 @@ using namespace BlackCore;
 using namespace BlackGui::Components;
 using namespace BlackMisc;
 
-/*
- * Menu clicked
- */
 void CSwiftData::ps_onMenuClicked()
 {
     QObject *sender = QObject::sender();
@@ -103,9 +100,15 @@ void CSwiftData::ps_onMenuClicked()
         CDbMappingComponent *mappingComponent = this->ui->comp_MainInfoArea->getMappingComponent();
         mappingComponent->resizeForMapping();
     }
-    else if (sender == this->ui->menu_InternalsJsonBootstrapTemplate)
+    else if (sender == this->ui->menu_JsonBootstrapTemplate)
     {
         QString json(m_setup.get().toJsonString());
+        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(json);
+        this->displayConsole();
+    }
+    else if (sender == this->ui->menu_JsonDownloadTemplate)
+    {
+        QString json(m_download.get().toJsonString());
         this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(json);
         this->displayConsole();
     }
@@ -133,6 +136,11 @@ void CSwiftData::ps_onMenuClicked()
         this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(project);
         this->displayConsole();
     }
+}
+
+void CSwiftData::ps_setupChanged()
+{
+    CLogMessage(this).debug() << "Setup changed";
 }
 
 void CSwiftData::initDynamicMenus()

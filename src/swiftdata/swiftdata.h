@@ -14,6 +14,8 @@
 
 #include "blackcore/context_runtime.h"
 #include "blackcore/data/globalsetup.h"
+#include "blackcore/data/download.h"
+#include "blackcore/setupreader.h"
 #include "blackgui/systemtraywindow.h"
 #include "blackgui/managedstatusbar.h"
 #include "blackmisc/statusmessage.h"
@@ -53,6 +55,9 @@ private slots:
     //! Menu clicked
     void ps_onMenuClicked();
 
+    //! Setup has been changed
+    void ps_setupChanged();
+
 private:
     void init();
     void initLogDisplay();
@@ -68,7 +73,8 @@ private:
     QScopedPointer<Ui::CSwiftData> ui;
     BlackGui::CManagedStatusBar    m_statusBar;
     BlackCore::CWebDataServices   *m_webDataReader = nullptr;
-    BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
+    BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this, &CSwiftData::ps_setupChanged}; //!< setup cache
+    BlackCore::CData<BlackCore::Data::Download> m_download { this }; // download data
 };
 
 #endif // guard
