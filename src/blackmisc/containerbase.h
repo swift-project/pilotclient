@@ -20,6 +20,7 @@
 #include "dbus.h"
 #include "icon.h"
 #include <algorithm>
+#include <QStringList>
 
 namespace BlackMisc
 {
@@ -167,6 +168,15 @@ namespace BlackMisc
             for (const auto &value : derived()) { str += (str.isEmpty() ? "{" : ", ") + CContainerHelper::stringify(value, i18n); }
             if (str.isEmpty()) { str = "{"; }
             return str += "}";
+        }
+
+        //! To string list
+        QStringList toStringList(bool i18n = false) const {
+            QStringList sl;
+            for (const T &obj : this->derived()) {
+                sl.append(obj.toQString(i18n));
+            }
+            return sl;
         }
 
     protected:
