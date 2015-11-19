@@ -42,7 +42,7 @@ using std::max;
 #endif
 
 // Set this to 1 to get TONS of diagnostics on what the lib is doing.
-#define 	DEBUG_CSL_LOADING 1
+#define 	DEBUG_CSL_LOADING 0
 
 // Set this to 1 to cause AIRLINE and LIVERY to create ICAO codes automatically
 #define USE_DEFAULTING 0

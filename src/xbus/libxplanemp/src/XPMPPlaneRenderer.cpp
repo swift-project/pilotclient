@@ -26,6 +26,7 @@
 #include "XPMPMultiplayerCSL.h"
 #include "XPMPMultiplayerVars.h"
 #include "XPMPMultiplayerObj.h"
+#include "XPMPMultiplayerObj8.h"
 
 #include "XPLMGraphics.h"
 #include "XPLMDisplay.h"

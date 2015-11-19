@@ -42,7 +42,7 @@ Multiplayer as it existed on X-IvAp SourceForge:
 git checkout -b &lt;new branch name&gt; last_xivap_subversion
 
 Multiplayer as it existed on XSB/VATSIM git repository:
-git checkout -b &lt;<new branch name&gt; last_xivap_xsb
+git checkout -b &lt;new branch name&gt; last_xivap_xsb
 
 ##License
 

@@ -482,14 +482,17 @@ void			XPMPUnregisterPlaneNotifierFunc(
 		gObservers.erase(iter);
 }					
 
-int			XPMPGetPlaneData(
+XPMPPlaneCallbackResult			XPMPGetPlaneData(
 					XPMPPlaneID					inPlane,
 					XPMPPlaneDataType			inDataType,
 					void *						outData)
 {
 	XPMPPlanePtr	plane = XPMPPlaneIsValid(inPlane, NULL);
+	
+	XPMPPlaneCallbackResult result = xpmpData_Unavailable;
+	
 	if (plane == NULL)
-		return -1;
+		return result;
 	
 	int now = XPLMGetCycleNumber();
 		
@@ -498,47 +501,49 @@ int			XPMPGetPlaneData(
 		{
 			if (plane->posAge != now)
 			{
-				XPMPPlaneCallbackResult result = 
-					plane->dataFunc(plane, inDataType, &plane->pos, plane->ref);
+				result = plane->dataFunc(plane, inDataType, &plane->pos, plane->ref);
 				if (result == xpmpData_NewData)
 					plane->posAge = now;
 			}
 			
 			XPMPPlanePosition_t *	posD = (XPMPPlanePosition_t *) outData;
 			memcpy(posD, &plane->pos, XPMP_TMIN(posD->size, plane->pos.size));
+			result = xpmpData_Unchanged;
 
-			return plane->posAge;
+			break;
 		}
 	case xpmpDataType_Surfaces:
 		{
 			if (plane->surfaceAge != now)
 			{
-				XPMPPlaneCallbackResult result = 
-					plane->dataFunc(plane, inDataType, &plane->surface, plane->ref);
+				result = plane->dataFunc(plane, inDataType, &plane->surface, plane->ref);
 				if (result == xpmpData_NewData)
 					plane->surfaceAge = now;
 			}
 			
 			XPMPPlaneSurfaces_t *	surfD = (XPMPPlaneSurfaces_t *) outData;
 			memcpy(surfD, &plane->surface, XPMP_TMIN(surfD->size, plane->surface.size));
-			return plane->surfaceAge;
+			result = xpmpData_Unchanged;
+
+			break;
 		}
 	case xpmpDataType_Radar:
 		{
 			if (plane->radarAge != now)
 			{
-				XPMPPlaneCallbackResult result = 
-					plane->dataFunc(plane, inDataType, &plane->radar, plane->ref);
+				result = plane->dataFunc(plane, inDataType, &plane->radar, plane->ref);
 				if (result == xpmpData_NewData)
 					plane->radarAge = now;
 			}
 			
 			XPMPPlaneRadar_t *	radD = (XPMPPlaneRadar_t *) outData;
 			memcpy(radD, &plane->radar, XPMP_TMIN(radD->size, plane->radar.size));
-			return plane->radarAge;
+			result = xpmpData_Unchanged;
+
+			break;
 		}
 	}
-	return -1;
+	return result;
 }
 
 XPMPPlanePtr	XPMPPlaneIsValid(XPMPPlaneID inID, XPMPPlaneVector::iterator * outIter)
