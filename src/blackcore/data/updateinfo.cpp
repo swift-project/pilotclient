@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "download.h"
+#include "updateinfo.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/project.h"
 #include <QStringList>
@@ -19,7 +19,7 @@ namespace BlackCore
 {
     namespace Data
     {
-        CDownload::CDownload() :
+        CUpdateInfo::CUpdateInfo() :
             ITimestampBased(0),
             m_downloadsStableUrls(QStringList {"http://swift-project.org/"}),
             m_downloadsBetaUrls(QStringList {"http://swift-project.org/"}),
@@ -29,27 +29,27 @@ namespace BlackCore
             m_lastSupportedVersionBeta("0.6")
         { }
 
-        CUrlList CDownload::getDownloadUrls() const
+        CUrlList CUpdateInfo::getDownloadUrls() const
         {
             return CProject::isBetaTest() ? getDownloadUrlsBeta() : getDownloadUrlsStable();
         }
 
-        QString CDownload::getLatestVersion() const
+        QString CUpdateInfo::getLatestVersion() const
         {
             return CProject::isBetaTest() ? getLatestVersionBeta() : getLatestVersionStable();
         }
 
-        bool CDownload::hasSameType(const CDownload &otherDownload) const
+        bool CUpdateInfo::hasSameType(const CUpdateInfo &otherDownload) const
         {
             return this->isDevelopment() == otherDownload.isDevelopment();
         }
 
-        QString CDownload::convertToQString(bool i18n) const
+        QString CUpdateInfo::convertToQString(bool i18n) const
         {
             return convertToQString(", ", i18n);
         }
 
-        QString CDownload::convertToQString(const QString &separator, bool i18n) const
+        QString CUpdateInfo::convertToQString(const QString &separator, bool i18n) const
         {
             QString s("timestamp: ");
             s.append(this->getFormattedUtcTimestampYmdhms());
@@ -75,7 +75,7 @@ namespace BlackCore
             return s;
         }
 
-        CVariant CDownload::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CUpdateInfo::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
@@ -100,9 +100,9 @@ namespace BlackCore
             }
         }
 
-        void CDownload::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CUpdateInfo::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
-            if (index.isMyself()) { (*this) = variant.to<CDownload>(); return; }
+            if (index.isMyself()) { (*this) = variant.to<CUpdateInfo>(); return; }
             if (ITimestampBased::canHandleIndex(index))
             {
                 ITimestampBased::setPropertyByIndex(variant, index);

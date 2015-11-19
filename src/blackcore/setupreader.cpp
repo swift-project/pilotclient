@@ -41,13 +41,13 @@ namespace BlackCore
         else
         {
             this->m_bootstrapUrls.uniqueWrite()->push_back(m_setup.get().bootstrapUrls());
-            this->m_downloadUrls.uniqueWrite()->push_back(m_setup.get().downloadInfoUrls());
+            this->m_updateInfoUrls.uniqueWrite()->push_back(m_setup.get().updateInfoUrls());
 
             this->m_networkManagerBootstrap = new QNetworkAccessManager(this);
             this->connect(this->m_networkManagerBootstrap, &QNetworkAccessManager::finished, this, &CSetupReader::ps_parseSetupFile);
 
-            this->m_networkManagerDownload = new QNetworkAccessManager(this);
-            this->connect(this->m_networkManagerDownload, &QNetworkAccessManager::finished, this, &CSetupReader::ps_parseDownloadFile);
+            this->m_networkManagerUpdateInfo = new QNetworkAccessManager(this);
+            this->connect(this->m_networkManagerUpdateInfo, &QNetworkAccessManager::finished, this, &CSetupReader::ps_parseUpdateInfoFile);
 
             this->start(QThread::LowPriority);
         }
@@ -82,19 +82,19 @@ namespace BlackCore
         this->m_networkManagerBootstrap->get(request);
     }
 
-    void CSetupReader::ps_readDownload()
+    void CSetupReader::ps_readUpdateInfo()
     {
         this->threadAssertCheck();
-        Q_ASSERT_X(this->m_networkManagerDownload, Q_FUNC_INFO, "Missing network manager");
-        CUrl url(this->m_downloadUrls.uniqueWrite()->getNextWorkingUrl());
+        Q_ASSERT_X(this->m_networkManagerUpdateInfo, Q_FUNC_INFO, "Missing network manager");
+        CUrl url(this->m_updateInfoUrls.uniqueWrite()->getNextWorkingUrl());
         if (url.isEmpty())
         {
-            CLogMessage(this).warning("Cannot read download (info), failed URLs: %1") << this->m_downloadUrls.read()->getFailedUrls();
+            CLogMessage(this).warning("Cannot read update info, failed URLs: %1") << this->m_updateInfoUrls.read()->getFailedUrls();
             return;
         }
         QNetworkRequest request(url);
         CNetworkUtils::ignoreSslVerification(request);
-        this->m_networkManagerDownload->get(request);
+        this->m_networkManagerUpdateInfo->get(request);
     }
 
     void CSetupReader::ps_setupSyncronized(bool success)
@@ -102,8 +102,8 @@ namespace BlackCore
         // trigger
         if (success)
         {
-            CLogMessage(this).info("Setup synchronized, will trigger read of download information");
-            QTimer::singleShot(500, this, &CSetupReader::ps_readDownload);
+            CLogMessage(this).info("Setup synchronized, will trigger read of update information");
+            QTimer::singleShot(500, this, &CSetupReader::ps_readUpdateInfo);
         }
         else
         {
@@ -222,7 +222,7 @@ namespace BlackCore
         }
     }
 
-    void CSetupReader::ps_parseDownloadFile(QNetworkReply *nwReplyPtr)
+    void CSetupReader::ps_parseUpdateInfoFile(QNetworkReply *nwReplyPtr)
     {
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
@@ -235,7 +235,7 @@ namespace BlackCore
         if (this->isFinishedOrShutdown())
         {
             CLogMessage(this).debug() << Q_FUNC_INFO;
-            CLogMessage(this).info("Terminated loading download info");
+            CLogMessage(this).info("Terminated loading of update info");
             nwReply->abort();
             return; // stop, terminate straight away, ending thread
         }
@@ -247,35 +247,35 @@ namespace BlackCore
             nwReplyPtr->close();
             if (setupJson.isEmpty())
             {
-                CLogMessage(this).info("No download (info) file");
+                CLogMessage(this).info("No update info file");
                 // try next URL
             }
             else
             {
-                CDownload currentDownload(m_download.get()); // from cache
-                CDownload loadedDownload;
-                loadedDownload.convertFromJson(Json::jsonObjectFromString(setupJson));
-                loadedDownload.setDevelopment(isForDevelopment()); // always update, regardless what persistent setting says
-                if (loadedDownload.getMSecsSinceEpoch() == 0 && lastModified > 0) { loadedDownload.setMSecsSinceEpoch(lastModified); }
-                qint64 currentVersionTimestamp = currentDownload.getMSecsSinceEpoch();
-                qint64 newVersionTimestamp = loadedDownload.getMSecsSinceEpoch();
-                bool sameVersionLoaded = (loadedDownload == currentDownload);
+                CUpdateInfo currentUpdateInfo(m_updateInfo.get()); // from cache
+                CUpdateInfo loadedUpdateInfo;
+                loadedUpdateInfo.convertFromJson(Json::jsonObjectFromString(setupJson));
+                loadedUpdateInfo.setDevelopment(isForDevelopment()); // always update, regardless what persistent setting says
+                if (loadedUpdateInfo.getMSecsSinceEpoch() == 0 && lastModified > 0) { loadedUpdateInfo.setMSecsSinceEpoch(lastModified); }
+                qint64 currentVersionTimestamp = currentUpdateInfo.getMSecsSinceEpoch();
+                qint64 newVersionTimestamp = loadedUpdateInfo.getMSecsSinceEpoch();
+                bool sameVersionLoaded = (loadedUpdateInfo == currentUpdateInfo);
                 if (sameVersionLoaded)
                 {
-                    CLogMessage(this).info("Same download info loaded from %1 as already in data cache %2") << urlString << m_download.getFilename();
+                    CLogMessage(this).info("Same update info loaded from %1 as already in data cache %2") << urlString << m_updateInfo.getFilename();
                     return; // success
                 }
 
-                bool sameType = loadedDownload.hasSameType(currentDownload);
+                bool sameType = loadedUpdateInfo.hasSameType(currentUpdateInfo);
                 bool outdatedVersionLoaded = sameType && (newVersionTimestamp  < currentVersionTimestamp);
                 if (outdatedVersionLoaded)
                 {
-                    CLogMessage(this).info("Download loaded from %1 outdated, older than version in data cache %2") << urlString << m_download.getFilename();
+                    CLogMessage(this).info("Update info loaded from %1 outdated, older than version in data cache %2") << urlString << m_updateInfo.getFilename();
                     // try next URL
                 }
                 else
                 {
-                    CStatusMessage m = m_download.set(loadedDownload);
+                    CStatusMessage m = m_updateInfo.set(loadedUpdateInfo);
                     if (!m.isEmpty())
                     {
                         CLogMessage(this).preformatted(m);
@@ -283,7 +283,7 @@ namespace BlackCore
                     }
                     else
                     {
-                        CLogMessage(this).info("Download info: Updated data cache in %1") << m_download.getFilename();
+                        CLogMessage(this).info("Update info: Updated data cache in %1") << m_updateInfo.getFilename();
                         return; // success
                     } // cache
                 } // outdated?
@@ -293,12 +293,12 @@ namespace BlackCore
         else
         {
             // network error
-            CLogMessage(this).warning("Reading download info failed %1 %2") << replyMessage << urlString;
+            CLogMessage(this).warning("Reading update info failed %1 %2") << replyMessage << urlString;
             nwReply->abort();
         }
 
         // try next one if any
-        if (this->m_downloadUrls.uniqueWrite()->addFailedUrl(url))
+        if (this->m_updateInfoUrls.uniqueWrite()->addFailedUrl(url))
         {
             QTimer::singleShot(500, this, &CSetupReader::ps_readSetup);
         }

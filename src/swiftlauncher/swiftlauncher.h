@@ -59,7 +59,7 @@ protected:
 private:
     QScopedPointer<Ui::CSwiftLauncher>             ui;
     BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup    { this, &CSwiftLauncher::ps_loadedSetup }; //!< setup cache
-    BlackCore::CData<BlackCore::Data::Download>    m_download { this, &CSwiftLauncher::ps_loadedSetup };
+    BlackCore::CData<BlackCore::Data::UpdateInfo>  m_updateInfo { this, &CSwiftLauncher::ps_loadedSetup };
     QString     m_executable;
     QStringList m_executableArgs;
 

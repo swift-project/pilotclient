@@ -87,12 +87,12 @@ namespace BlackCore
                                    CGlobalSetup::versionString() + "/productive/bootstrap/bootstrap.json");
         }
 
-        CUrlList CGlobalSetup::downloadInfoUrls() const
+        CUrlList CGlobalSetup::updateInfoUrls() const
         {
             CUrlList urls(m_sharedUrls);
             return urls.appendPath(isDevelopment() ?
-                                   CGlobalSetup::versionString() + "/development/download/download.json" :
-                                   CGlobalSetup::versionString() + "/productive/download/download.json");
+                                   CGlobalSetup::versionString() + "/development/updateinfo/updateinfo.json" :
+                                   CGlobalSetup::versionString() + "/productive/updateinfo/updateinfo.json");
         }
 
         CUrlList CGlobalSetup::swiftDbDataFileLocationUrls() const
@@ -117,8 +117,8 @@ namespace BlackCore
             s.append(boolToYesNo(isDevelopment()));
             s.append(separator);
 
-            s.append("Download URLs: ");
-            s.append(downloadInfoUrls().toQString(i18n));
+            s.append("Update info URLs: ");
+            s.append(updateInfoUrls().toQString(i18n));
             s.append(separator);
             s.append("Bootstrap URLs: ");
             s.append(bootstrapUrls().toQString(i18n));
@@ -183,8 +183,8 @@ namespace BlackCore
                 return CVariant::fromValue(this->m_vatsimDataFileUrls);
             case IndexVatsimMetars:
                 return CVariant::fromValue(this->m_vatsimMetarsUrl);
-            case IndexDownload:
-                return CVariant::fromValue(this->downloadInfoUrls());
+            case IndexUpdateInfo:
+                return CVariant::fromValue(this->updateInfoUrls());
             case IndexBootstrap:
                 return CVariant::fromValue(this->bootstrapUrls());
             case IndexSwiftDbFiles:

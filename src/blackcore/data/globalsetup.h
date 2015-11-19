@@ -24,7 +24,7 @@ namespace BlackCore
 {
     namespace Data
     {
-        //! Settings for readers
+        //! Global settings for readers, debug flags, etc.
         class BLACKCORE_EXPORT CGlobalSetup :
             public BlackMisc::CValueObject<CGlobalSetup>,
             public BlackMisc::ITimestampBased
@@ -42,7 +42,7 @@ namespace BlackCore
                 IndexVatsimData,
                 IndexSwiftDbFiles,
                 IndexBootstrap,
-                IndexDownload,
+                IndexUpdateInfo,
                 IndexShared
             };
 
@@ -94,8 +94,8 @@ namespace BlackCore
             //! Bootstrap URLs (where the data for the setup itself can be downloaded)
             BlackMisc::Network::CUrlList bootstrapUrls() const;
 
-            //! Version files and download locations
-            BlackMisc::Network::CUrlList downloadInfoUrls() const;
+            //! Version and download locations
+            BlackMisc::Network::CUrlList updateInfoUrls() const;
 
             //! Alternative locations of swift DB data files
             BlackMisc::Network::CUrlList swiftDbDataFileLocationUrls() const;
@@ -149,7 +149,7 @@ namespace BlackCore
         struct GlobalSetup : public BlackCore::CDataTrait<CGlobalSetup>
         {
             //! Key in data cache
-            static const char *key() { return "readers/global/bootstrap"; }
+            static const char *key() { return "readers/global/setup"; }
 
             //! Default value
             static const CGlobalSetup &defaultValue()

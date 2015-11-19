@@ -89,7 +89,7 @@ namespace BlackMisc
             GlobalIndexIDatastoreInteger      = 11000,
             GlobalIndexIDatastoreString       = 11100,
             GlobalIndexCGlobalSetup           = 12000,
-            GlobalIndexCDownload              = 12100,
+            GlobalIndexCUpdateInfo            = 12100,
             GlobalIndexAbuseMode              = 20000  // property index abused as map key or otherwise, to be removed if no longer needed
         };
 

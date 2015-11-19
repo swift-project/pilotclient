@@ -16,7 +16,7 @@
 #include "blackmisc/threadedreader.h"
 #include "blackmisc/lockfree.h"
 #include "blackcore/data/globalsetup.h"
-#include "blackcore/data/download.h"
+#include "blackcore/data/updateinfo.h"
 
 #include <QObject>
 #include <QTimer>
@@ -46,26 +46,26 @@ namespace BlackCore
         //! \threadsafe
         void ps_parseSetupFile(QNetworkReply *nwReply);
 
-        //! Download has been read
+        //! Update info has been read
         //! \threadsafe
-        void ps_parseDownloadFile(QNetworkReply *nwReplyPtr);
+        void ps_parseUpdateInfoFile(QNetworkReply *nwReplyPtr);
 
         //! Do reading
         void ps_readSetup();
 
         //! Do reading
-        void ps_readDownload();
+        void ps_readUpdateInfo();
 
         //! Setup has beem syncronized
         void ps_setupSyncronized(bool success);
 
     private:
         QNetworkAccessManager              *m_networkManagerBootstrap = nullptr;
-        QNetworkAccessManager              *m_networkManagerDownload = nullptr;
+        QNetworkAccessManager              *m_networkManagerUpdateInfo = nullptr;
         BlackMisc::LockFree<BlackMisc::Network::CFailoverUrlList> m_bootstrapUrls;
-        BlackMisc::LockFree<BlackMisc::Network::CFailoverUrlList> m_downloadUrls;
-        CData<BlackCore::Data::GlobalSetup> m_setup {this};    //!< data cache setup
-        CData<BlackCore::Data::Download>    m_download {this}; //!< data cache downloads
+        BlackMisc::LockFree<BlackMisc::Network::CFailoverUrlList> m_updateInfoUrls;
+        CData<BlackCore::Data::GlobalSetup> m_setup {this};      //!< data cache setup
+        CData<BlackCore::Data::UpdateInfo>  m_updateInfo {this}; //!< data cache update info
 
         //! Constructor
         explicit CSetupReader(QObject *owner);

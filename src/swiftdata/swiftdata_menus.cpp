@@ -108,7 +108,7 @@ void CSwiftData::ps_onMenuClicked()
     }
     else if (sender == this->ui->menu_JsonDownloadTemplate)
     {
-        QString json(m_download.get().toJsonString());
+        QString json(m_updateInfo.get().toJsonString());
         this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(json);
         this->displayConsole();
     }

@@ -11,7 +11,7 @@
 #include "ui_swiftlauncher.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/dbus_server.h"
-#include "blackcore/data/download.h"
+#include "blackcore/data/updateinfo.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/project.h"
@@ -259,9 +259,9 @@ void CSwiftLauncher::ps_loadSetup()
 
 void CSwiftLauncher::ps_loadedSetup()
 {
-    CDownload download(this->m_download.get());
-    QString latestVersion(download.getLatestVersion()) ; // need to get this from somewhere
-    CUrlList downloadUrls(download.getDownloadUrls());
+    CUpdateInfo updateInfo(this->m_updateInfo.get());
+    QString latestVersion(updateInfo.getLatestVersion()) ; // need to get this from somewhere
+    CUrlList downloadUrls(updateInfo.getDownloadUrls());
     bool newVersionAvailable = CProject::isNewerVersion(latestVersion) && !downloadUrls.isEmpty();
     this->ui->wi_NewVersionAvailable->setVisible(newVersionAvailable);
     this->ui->wi_NoNewVersion->setVisible(!newVersionAvailable);

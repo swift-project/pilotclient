@@ -6,7 +6,7 @@
 #include "blackcorefreefunctions.h"
 #include "blackcore/webreaderflags.h"
 #include "blackcore/data/globalsetup.h"
-#include "blackcore/data/download.h"
+#include "blackcore/data/updateinfo.h"
 
 
 #include "voice_channel.h"
@@ -29,7 +29,7 @@ namespace BlackCore
         qDBusRegisterMetaType<BlackCore::CLogSubscriptionPair>();
 
         BlackCore::Data::CGlobalSetup::registerMetadata();
-        BlackCore::Data::CDownload::registerMetadata();
+        BlackCore::Data::CUpdateInfo::registerMetadata();
         BlackCore::CSetupReader::instance(); // kick off reader
     }
 } // namespace

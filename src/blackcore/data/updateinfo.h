@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKCORE_DATA_DOWNLOAD_H
-#define BLACKCORE_DATA_DOWNLOAD_H
+#ifndef BLACKCORE_DATA_UPDATEINFO_H
+#define BLACKCORE_DATA_UPDATEINFO_H
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/datacache.h"
@@ -23,15 +23,15 @@ namespace BlackCore
     namespace Data
     {
         //! Download locations and versions
-        class BLACKCORE_EXPORT CDownload :
-            public BlackMisc::CValueObject<CDownload>,
+        class BLACKCORE_EXPORT CUpdateInfo :
+            public BlackMisc::CValueObject<CUpdateInfo>,
             public BlackMisc::ITimestampBased
         {
         public:
             //! Properties by index
             enum ColumnIndex
             {
-                IndexDownloadUrlsStable = BlackMisc::CPropertyIndex::GlobalIndexCDownload,
+                IndexDownloadUrlsStable = BlackMisc::CPropertyIndex::GlobalIndexCUpdateInfo,
                 IndexDownloadUrlsBeta,
                 IndexLatestVersionStable,
                 IndexLastSupportedVersionStable,
@@ -40,10 +40,10 @@ namespace BlackCore
             };
 
             //! Default constructor
-            CDownload();
+            CUpdateInfo();
 
             //! Destructor.
-            ~CDownload() {}
+            ~CUpdateInfo() {}
 
             //! Download URLs, ie here one can download installer
             const BlackMisc::Network::CUrlList &getDownloadUrlsBeta() const { return m_downloadsBetaUrls; }
@@ -73,7 +73,7 @@ namespace BlackCore
             bool isDevelopment() const { return m_development; }
 
             //! Same type
-            bool hasSameType(const CDownload &otherDownload) const;
+            bool hasSameType(const CUpdateInfo &otherDownload) const;
 
             //! Productive settings?
             void setDevelopment(bool development) { m_development  = development; }
@@ -91,7 +91,7 @@ namespace BlackCore
             void setPropertyByIndex(const BlackMisc::CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(BlackCore::Data::CDownload)
+            BLACK_ENABLE_TUPLE_CONVERSION(BlackCore::Data::CUpdateInfo)
 
             bool                            m_development = false;        //!< for development
             BlackMisc::Network::CUrlList    m_downloadsStableUrls;        //!< Download URLs, here I get the installer
@@ -103,15 +103,15 @@ namespace BlackCore
         };
 
         //! Trait for global setup data
-        struct Download : public BlackCore::CDataTrait<CDownload>
+        struct UpdateInfo : public BlackCore::CDataTrait<CUpdateInfo>
         {
             //! Key in data cache
-            static const char *key() { return "readers/global/download"; }
+            static const char *key() { return "readers/global/updateinfo"; }
 
             //! Default value
-            static const CDownload &defaultValue()
+            static const CUpdateInfo &defaultValue()
             {
-                static const CDownload defaultValue;
+                static const CUpdateInfo defaultValue;
                 return defaultValue;
             }
         };
@@ -119,8 +119,8 @@ namespace BlackCore
     } // ns
 } // ns
 
-Q_DECLARE_METATYPE(BlackCore::Data::CDownload)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackCore::Data::CDownload, (
+Q_DECLARE_METATYPE(BlackCore::Data::CUpdateInfo)
+BLACK_DECLARE_TUPLE_CONVERSION(BlackCore::Data::CUpdateInfo, (
                                    attr(o.m_timestampMSecsSinceEpoch),
                                    attr(o.m_development),
                                    attr(o.m_downloadsStableUrls),

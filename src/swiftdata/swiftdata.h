@@ -14,7 +14,7 @@
 
 #include "blackcore/context_runtime.h"
 #include "blackcore/data/globalsetup.h"
-#include "blackcore/data/download.h"
+#include "blackcore/data/updateinfo.h"
 #include "blackcore/setupreader.h"
 #include "blackgui/systemtraywindow.h"
 #include "blackgui/managedstatusbar.h"
@@ -74,7 +74,7 @@ private:
     BlackGui::CManagedStatusBar    m_statusBar;
     BlackCore::CWebDataServices   *m_webDataReader = nullptr;
     BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this, &CSwiftData::ps_setupChanged}; //!< setup cache
-    BlackCore::CData<BlackCore::Data::Download> m_download { this }; // download data
+    BlackCore::CData<BlackCore::Data::UpdateInfo>  m_updateInfo { this };                        //!< download / version data
 };
 
 #endif // guard
