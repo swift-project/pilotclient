@@ -347,10 +347,11 @@ int		OBJ_LoadModel(const char * inFilePath)
 	tex_path += ".png";
 	sObjects.back().texnum = OBJ_LoadTexture(tex_path.c_str(), false);
 	if(sObjects.back().texnum == 0) {
-		char	debug[500];
-		snprintf(debug, 500, "WARNING: %s failed to load for %s.\n", tex_path.c_str(),inFilePath);
-		debug[499] = '\0';
-		XPLMDebugString(debug);
+        XPLMDebugString("WARNING: ");
+        XPLMDebugString(tex_path.c_str());
+        XPLMDebugString(" failed to load for ");
+        XPLMDebugString(inFilePath);
+        XPLMDebugString("\n");
 	}
 
 	tex_path = path;
