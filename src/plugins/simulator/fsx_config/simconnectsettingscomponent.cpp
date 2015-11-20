@@ -9,6 +9,7 @@
 #include <QFileInfo>
 #include <QDesktopServices>
 #include <QMessageBox>
+#include <QStringBuilder>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation::Fsx;
