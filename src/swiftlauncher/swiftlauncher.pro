@@ -1,6 +1,9 @@
 load(common_pre)
 
-QT       += core dbus gui svg network xml multimedia webenginewidgets
+QT       += core dbus gui svg network xml multimedia
+
+# QWebEngine is not supported for MinGW
+!win32-g++: QT += webenginewidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

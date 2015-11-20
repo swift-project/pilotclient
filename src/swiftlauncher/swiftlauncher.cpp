@@ -23,7 +23,11 @@
 #include <QProcess>
 #include <QDesktopServices>
 #include <QShortcut>
+#include <qcompilerdetection.h>
+
+#ifndef Q_CC_MINGW
 #include <QtWebEngineWidgets/QWebEngineView>
+#endif
 
 using namespace BlackGui;
 using namespace BlackCore;
@@ -123,6 +127,7 @@ void CSwiftLauncher::initStyleSheet()
 
 void CSwiftLauncher::displayLatestNews()
 {
+#ifndef Q_CC_MINGW
     CUrlList newsUrls(this->m_setup.get().swiftLatestNewsUrls());
     QUrl newUrl(newsUrls.getNextUrl());
 
@@ -135,7 +140,7 @@ void CSwiftLauncher::displayLatestNews()
     }
     view->show();
     **/
-
+#endif
 }
 
 void CSwiftLauncher::initDBusGui()
