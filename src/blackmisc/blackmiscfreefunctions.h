@@ -17,12 +17,8 @@
 #include "blackmisc/inheritance_traits.h"
 #include <QDir> // for Q_INIT_RESOURCE
 #include <QList>
-#include <QMap>
 #include <QVariant>
 #include <QMetaType>
-#include <QDBusArgument>
-#include <QTextStream>
-#include <QDataStream>
 #include <memory>
 
 /*!
@@ -39,83 +35,17 @@ inline void initBlackMiscResources()
 //! Free functions in BlackMisc
 namespace BlackMisc
 {
-    namespace PhysicalQuantities
-    {
-        //! Register all metadata for PQs
-        BLACKMISC_EXPORT void registerMetadata();
-
-    } // PQ
-
-    namespace Aviation
-    {
-        //! Register metadata for aviation
-        BLACKMISC_EXPORT void registerMetadata();
-
-    } // Aviation
-
-    namespace Math
-    {
-        //! Register metadata for math (matrices, vectors)
-        BLACKMISC_EXPORT void registerMetadata();
-
-    } // Math
-
-    namespace Geo
-    {
-
-        //! Register metadata for geo (coordinates)
-        BLACKMISC_EXPORT void registerMetadata();
-
-    } // Geo
-
-    namespace Network
-    {
-        //! Register metadata for network (server, user)
-        BLACKMISC_EXPORT void registerMetadata();
-    }
-
     namespace Audio
     {
-        //! Register metadata for audio / voice
-        BLACKMISC_EXPORT void registerMetadata();
-
         //! Start the Windows mixer
         BLACKMISC_EXPORT bool startWindowsMixer();
     }
-
-    namespace Input
-    {
-        //! Register metadata for Input
-        BLACKMISC_EXPORT void registerMetadata();
-    }
-
-    namespace Event
-    {
-        //! Register metadata for Event
-        BLACKMISC_EXPORT void registerMetadata();
-    }
-
-    namespace Simulation
-    {
-        //! Register metadata for Simulation
-        BLACKMISC_EXPORT void registerMetadata();
-    }
-
-    namespace Weather
-    {
-        //! Register metadata for Simulation
-        BLACKMISC_EXPORT void registerMetadata();
-    }
-
-    //! Register all relevant metadata in BlackMisc
-    BLACKMISC_EXPORT void registerMetadata();
 
     //! Init resources
     BLACKMISC_EXPORT void initResources();
 
     namespace Mixin
     {
-
         /*!
          * CRTP class template from which a derived class can inherit common methods dealing with hashing instances by metatuple.
          *
@@ -216,39 +146,6 @@ namespace BlackMisc
 
     } // Mixin
 
-    //! Checked version from QVariant
-    template <class T> void setFromQVariant(T *value, const QVariant &variant)
-    {
-        if (variant.canConvert<T>())
-        {
-            (*value) = variant.value<T>();
-        }
-        else
-        {
-            const QString m = QString("Target type: %1 Variant type: %2 %3 %4").
-                              arg(qMetaTypeId<T>()).
-                              arg(static_cast<int>(variant.type())).arg(variant.userType()).arg(variant.typeName());
-            Q_ASSERT_X(false, "setFromQVariant", m.toLocal8Bit().constData());
-            Q_UNUSED(m);
-        }
-    }
-
-    /*!
-     * Fix variant. Required if a variant "comes in" via DBus,
-     * and represents a QDBusArgument rather than the real type.
-     * \param variant
-     * \param localUserType
-     * \return
-     */
-    BLACKMISC_EXPORT QVariant fixQVariantFromDbusArgument(const QVariant &variant, int localUserType);
-
-    //! Display all user metatypes
-    //! \remarks Used in order to debug code, do not remove
-    BLACKMISC_EXPORT void displayAllUserMetatypesTypes(QTextStream &out);
-
-    //! Get all user metatypes
-    BLACKMISC_EXPORT QString getAllUserMetatypesTypes(const QString &separator = "\n");
-
     /*!
      * \brief Calculate a single hash value based on a list of individual hash values
      * \param values
@@ -259,40 +156,6 @@ namespace BlackMisc
 
     //! Hash value, but with int list
     BLACKMISC_EXPORT uint calculateHash(const QList<int> &values, const char *className);
-
-    //! Real heap size of an object
-    BLACKMISC_EXPORT size_t heapSizeOf(const QMetaType &type);
-
-    //! Real heap size of an object
-    BLACKMISC_EXPORT size_t heapSizeOf(const QMetaObject &objectType);
-
-    //! A map converted to string
-    template<class K, class V> QString qmapToString(const QMap<K, V> &map)
-    {
-        QString s;
-        const QString kv("%1: %2 ");
-        QMapIterator<K, V> i(map);
-        while (i.hasNext())
-        {
-            i.next();
-            s.append(
-                kv.arg(i.key()).arg(i.value())
-            );
-        }
-        return s.trimmed();
-    }
-
-    //! Bool to on/off
-    BLACKMISC_EXPORT QString boolToOnOff(bool v, bool  i18n = false);
-
-    //! Bool to yes / no
-    BLACKMISC_EXPORT QString boolToYesNo(bool v, bool  i18n = false);
-
-    //! Bool to true / false
-    BLACKMISC_EXPORT QString boolToTrueFalse(bool v, bool  i18n = false);
-
-    //! Convert string to bool
-    BLACKMISC_EXPORT bool stringToBool(const QString &boolString);
 
     //! Get local host name
     BLACKMISC_EXPORT const QString &localHostName();
@@ -306,40 +169,6 @@ namespace BlackMisc
     {
         return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
     }
-
-    //! Creates an incremental json object from two existing objects
-    BLACKMISC_EXPORT QJsonObject getIncrementalObject(const QJsonObject &previousObject, const QJsonObject &currentObject);
-
-    //! Merges an incremental json object into an existing one
-    BLACKMISC_EXPORT QJsonObject applyIncrementalObject(const QJsonObject &previousObject, const QJsonObject &incrementalObject);
-
-    //! Int to hex value
-    BLACKMISC_EXPORT QString intToHex(int value, int digits = 2);
-
-    //! Int to hex value (per byte, 2 digits)
-    BLACKMISC_EXPORT QString bytesToHexString(const QByteArray &bytes);
-
-    //! Byte array from hex value string per byte, 2 digits
-    BLACKMISC_EXPORT QByteArray byteArrayFromHexString(const QString &hexString);
-
-    //! Pixmap to PNG byte array
-    BLACKMISC_EXPORT bool pixmapToPngByteArray(const QPixmap &pixmap, QByteArray &array);
-
-    //! Pixmap from PNG byte array
-    BLACKMISC_EXPORT QPixmap pngByteArrayToPixmap(const QByteArray &array);
-
-    //! Pixmap from PNG byte array
-    BLACKMISC_EXPORT bool pngByteArrayToPixmapRef(const QByteArray &array, QPixmap &pixmap);
-
-    //! Pixmap as HEX string (for PNG image)
-    BLACKMISC_EXPORT QString pixmapToPngHexString(const QPixmap &pixmap);
-
-    //! Hex encoded pixmap string to Pixmap
-    BLACKMISC_EXPORT QPixmap pngHexStringToPixmap(const QString &hexString);
-
-    //! Hex encoded pixmap string to Pixmap
-    BLACKMISC_EXPORT bool pngHexStringToPixmapRef(const QString &hexString, QPixmap &pixmap);
-
-} // BlackMisc
+} // ns
 
 #endif // guard

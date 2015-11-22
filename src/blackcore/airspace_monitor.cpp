@@ -8,7 +8,7 @@
  */
 
 #include "airspace_monitor.h"
-#include "blackcore/blackcorefreefunctions.h"
+#include "blackcore/registermetadata.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/vatsimbookingreader.h"
 #include "blackcore/vatsimdatafilereader.h"
@@ -17,15 +17,16 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindexallclasses.h"
-#include "blackmisc/threadutilities.h"
+#include "blackmisc/threadutils.h"
 
 using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Audio;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Network;
+using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
+using namespace BlackMisc::Json;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Weather;
 
 namespace BlackCore

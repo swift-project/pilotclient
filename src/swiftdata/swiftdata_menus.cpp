@@ -18,6 +18,7 @@
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/project.h"
+#include "blackmisc/metadatautils.h"
 #include <QPoint>
 #include <QMenu>
 #include <QDesktopServices>

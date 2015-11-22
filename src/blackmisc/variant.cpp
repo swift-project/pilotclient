@@ -238,6 +238,10 @@ namespace BlackMisc
         }
     }
 
+    // 2 functions required for unmarshallFromDbus
+    QVariant fixQVariantFromDbusArgument(const QVariant &variant, int localUserType);
+    QVariant complexQtTypeFromDbusArgument(const QDBusArgument &argument, int type);
+
     void CVariant::unmarshallFromDbus(const QDBusArgument &arg)
     {
         QString typeName;
@@ -335,6 +339,80 @@ namespace BlackMisc
     QPixmap CVariant::toPixmap() const
     {
         return toIcon().toPixmap();
+    }
+
+    QVariant fixQVariantFromDbusArgument(const QVariant &variant, int localUserType)
+    {
+        // my business?
+        if (!variant.canConvert<QDBusArgument>()) { return variant; }
+
+        // complex, user type
+        // it has to be made sure, that the cast works
+        const QDBusArgument arg = variant.value<QDBusArgument>();
+        const int userType = static_cast<int>(QVariant::UserType);
+        if (localUserType < userType)
+        {
+            // complex Qt type, e.g. QDateTime
+            return complexQtTypeFromDbusArgument(arg, localUserType);
+        }
+        else if (QMetaType(localUserType).flags() & QMetaType::IsEnumeration)
+        {
+            arg.beginStructure();
+            int i;
+            arg >> i;
+            arg.endStructure();
+
+            QVariant valueVariant = QVariant::fromValue(i);
+            bool ok = valueVariant.convert(localUserType);
+            Q_ASSERT_X(ok, Q_FUNC_INFO, "int could not be converted to enum");
+            Q_UNUSED(ok);
+            return valueVariant;
+        }
+        else
+        {
+            QVariant valueVariant(localUserType, nullptr);
+            auto *meta = Private::getValueObjectMetaInfo(valueVariant);
+            if (meta)
+            {
+                meta->unmarshall(arg, valueVariant.data());
+                return valueVariant;
+            }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "no meta");
+            return valueVariant;
+        }
+    }
+
+    QVariant complexQtTypeFromDbusArgument(const QDBusArgument &argument, int type)
+    {
+        // QDate = 14, QTime = 15, QDateTime = 16, QUrl = 17,
+
+        switch (type)
+        {
+        case QMetaType::QDateTime:
+            {
+                QDateTime dt;
+                argument >> dt;
+                return QVariant::fromValue(dt);
+            }
+        case QMetaType::QDate:
+            {
+                QDate date;
+                argument >> date;
+                return QVariant::fromValue(date);
+            }
+        case QMetaType::QTime:
+            {
+                QTime time;
+                argument >> time;
+                return QVariant::fromValue(time);
+            }
+        default:
+            {
+                const char *name = QMetaType::typeName(type);
+                qFatal("Type cannot be resolved: %s (%d)", name ? name : "", type);
+            }
+        }
+        return QVariant(); // suppress compiler warning
     }
 
 } // namespace

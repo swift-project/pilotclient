@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "blackgui/components/settingshotkeycomponent.h"
-#include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/registermetadata.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])

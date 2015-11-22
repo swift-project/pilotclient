@@ -14,11 +14,11 @@
 #include "context_network_impl.h"
 #include "plugin_manager_simulator.h"
 #include "context_runtime.h"
-#include "blackcore/blackcorefreefunctions.h"
+#include "blackcore/registermetadata.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/loghandler.h"
-#include "blackmisc/threadutilities.h"
+#include "blackmisc/threadutils.h"
 #include <QPluginLoader>
 #include <QLibrary>
 

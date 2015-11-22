@@ -8,12 +8,14 @@
  */
 
 #include "project.h"
-#include "blackmisc/fileutilities.h"
+#include "blackmisc/fileutils.h"
+#include "blackmisc/stringutils.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+
 #include <QStringList>
 #include <QCoreApplication>
 #include <QProcessEnvironment>
-#include "blackmisc/blackmiscfreefunctions.h"
-#include "blackmisc/simulation/simulatorinfo.h"
+
 
 #define BLACK_VERSION_STR_X(v) #v
 #define BLACK_VERSION_STR(v) BLACK_VERSION_STR_X(v)

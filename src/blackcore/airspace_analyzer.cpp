@@ -8,9 +8,9 @@
  */
 
 #include "blackcore/airspace_analyzer.h"
-#include "blackcore/blackcorefreefunctions.h"
+#include "blackcore/registermetadata.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/threadutilities.h"
+#include "blackmisc/threadutils.h"
 #include <QDateTime>
 
 using namespace BlackMisc;

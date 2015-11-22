@@ -8,6 +8,7 @@
  */
 
 #include "simulatedaircraft.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/comparefunctions.h"
 

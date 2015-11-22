@@ -8,6 +8,7 @@
  */
 
 #include "aircraftparts.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/comparefunctions.h"
 
 using namespace BlackMisc;

@@ -9,7 +9,7 @@
 
 #include "testcontainers.h"
 #include "testvalueobject.h"
-#include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/registermetadata.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/aviation/callsignset.h"

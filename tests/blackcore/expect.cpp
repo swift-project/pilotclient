@@ -108,4 +108,4 @@ void Expect::reportTimeout(const SourceLocation& srcloc, const QSet<const Expect
     QTest::qFail(qPrintable(msg), qPrintable(srcloc.file), srcloc.line);
 }
 
-} //namespace BlackCoreTest
+} //namespace

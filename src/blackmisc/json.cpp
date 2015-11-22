@@ -9,6 +9,8 @@
 
 #include "json.h"
 #include "blackmiscfreefunctions.h"
+#include "stringutils.h"
+#include "imageutils.h"
 #include <QJsonDocument>
 
 const QJsonValue &operator >>(const QJsonValue &json, int &value)
@@ -283,27 +285,72 @@ QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QByteA
     return json;
 }
 
-QJsonObject BlackMisc::Json::jsonObjectFromString(const QString &json)
+namespace BlackMisc
 {
-    if (json.isEmpty()) { return QJsonObject();}
-    QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
-    return jsonDoc.object();
-}
-
-QJsonArray BlackMisc::Json::jsonArrayFromString(const QString &json)
-{
-    if (json.isEmpty()) { return QJsonArray();}
-    QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
-    return jsonDoc.array();
-}
-
-QJsonObject &BlackMisc::Json::appendJsonObject(QJsonObject &target, const QJsonObject &toBeAppended)
-{
-    if (toBeAppended.isEmpty()) return target;
-    QStringList keys = toBeAppended.keys();
-    foreach(const QString & key, keys)
+    namespace Json
     {
-        target.insert(key, toBeAppended.value(key));
+        QJsonObject jsonObjectFromString(const QString &json)
+        {
+            if (json.isEmpty()) { return QJsonObject();}
+            QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
+            return jsonDoc.object();
+        }
+
+        QJsonArray jsonArrayFromString(const QString &json)
+        {
+            if (json.isEmpty()) { return QJsonArray();}
+            QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
+            return jsonDoc.array();
+        }
+
+        QJsonObject &appendJsonObject(QJsonObject &target, const QJsonObject &toBeAppended)
+        {
+            if (toBeAppended.isEmpty()) return target;
+            QStringList keys = toBeAppended.keys();
+            foreach(const QString & key, keys)
+            {
+                target.insert(key, toBeAppended.value(key));
+            }
+            return target;
+        }
+
+        QJsonObject getIncrementalObject(const QJsonObject &previousObject, const QJsonObject &currentObject)
+        {
+            QJsonObject incrementalObject = currentObject;
+            for (const auto &key : previousObject.keys())
+            {
+                if (previousObject.value(key).isObject())
+                {
+                    auto child = getIncrementalObject(previousObject.value(key).toObject(), currentObject.value(key).toObject());
+                    if (child.isEmpty()) incrementalObject.remove(key);
+                    else incrementalObject.insert(key, child);
+                }
+                else
+                {
+                    if (currentObject.value(key) == previousObject.value(key))
+                        incrementalObject.remove(key);
+                }
+            }
+            return incrementalObject;
+        }
+
+        QJsonObject applyIncrementalObject(const QJsonObject &previousObject, const QJsonObject &incrementalObject)
+        {
+            QJsonObject currentObject = previousObject;
+            for (const auto &key : incrementalObject.keys())
+            {
+                // If it is not an object, just insert the value
+                if (!incrementalObject.value(key).isObject())
+                {
+                    currentObject.insert(key, incrementalObject.value(key));
+                }
+                else
+                {
+                    auto child = applyIncrementalObject(currentObject.value(key).toObject(), incrementalObject.value(key).toObject());
+                    currentObject.insert(key, child);
+                }
+            }
+            return currentObject;
+        }
     }
-    return target;
 }

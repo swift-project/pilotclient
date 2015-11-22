@@ -8,7 +8,7 @@
  */
 
 #include "blackmisc/worker.h"
-#include "fileutilities.h"
+#include "fileutils.h"
 
 #include <QFile>
 #include <QCoreApplication>

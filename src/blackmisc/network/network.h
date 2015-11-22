@@ -20,6 +20,7 @@
 #include "blackmisc/network/authenticateduser.h"
 #include "blackmisc/network/client.h"
 #include "blackmisc/network/clientlist.h"
+#include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/role.h"
 #include "blackmisc/network/rolelist.h"
 #include "blackmisc/network/server.h"

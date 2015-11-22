@@ -9,7 +9,7 @@
 
 #include "swiftguistandard/guimodeenums.h"
 #include "swiftlauncher.h"
-#include "blackcore/blackcorefreefunctions.h"
+#include "blackcore/registermetadata.h"
 #include "blackgui/guiutility.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/logmessage.h"

@@ -8,7 +8,7 @@
  */
 
 #include "blackcore/cookiemanager.h"
-#include "blackmisc/threadutilities.h"
+#include "blackmisc/threadutils.h"
 #include <QCoreApplication>
 #include <QNetworkCookieJar>
 #include <QReadLocker>

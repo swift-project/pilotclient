@@ -2,7 +2,7 @@
 #include "ui_simulatorxplaneconfigwindow.h"
 #include "blackcore/dbus_server.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
-#include "blackmisc/fileutilities.h"
+#include "blackmisc/fileutils.h"
 #include <QStringBuilder>
 #include <QFileDialog>
 #include <QMessageBox>

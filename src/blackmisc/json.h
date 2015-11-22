@@ -155,6 +155,12 @@ namespace BlackMisc
         //! \ingroup JSON
         BLACKMISC_EXPORT QJsonArray jsonArrayFromString(const QString &json);
 
+        //! Creates an incremental json object from two existing objects
+        BLACKMISC_EXPORT QJsonObject getIncrementalObject(const QJsonObject &previousObject, const QJsonObject &currentObject);
+
+        //! Merges an incremental json object into an existing one
+        BLACKMISC_EXPORT QJsonObject applyIncrementalObject(const QJsonObject &previousObject, const QJsonObject &incrementalObject);
+
     } // Json
 
     namespace Mixin

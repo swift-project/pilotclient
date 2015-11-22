@@ -9,20 +9,20 @@
 
 //! \file
 
-#ifndef BLACKMISC_wEATHER_wEATHER_H
-#define BLACKMISC_wEATHER_wEATHER_H
+#ifndef BLACKMISC_WEATHER_WEATHER_H
+#define BLACKMISC_WEATHER_WEATHER_H
 
 /*!
  * \namespace BlackMisc::Weather
  * \brief Weather and Metar classes
  */
 
+#include "blackmisc/weather/cloudlayer.h"
+#include "blackmisc/weather/cloudlayerlist.h"
 #include "blackmisc/weather/metar.h"
 #include "blackmisc/weather/metarset.h"
 #include "blackmisc/weather/presentweather.h"
 #include "blackmisc/weather/presentweatherlist.h"
-#include "blackmisc/weather/cloudlayer.h"
-#include "blackmisc/weather/cloudlayerlist.h"
 #include "blackmisc/weather/windlayer.h"
 
 #endif // guard

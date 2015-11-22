@@ -21,12 +21,6 @@ namespace BlackSimPlugin
 {
     namespace Fs9
     {
-        void registerMetadata()
-        {
-            qRegisterMetaType<CFs9Host::HostStatus>();
-            qRegisterMetaType<CFs9Client::ClientStatus>();
-        }
-
         CAircraftSituation aircraftSituationfromFS9(const MPPositionVelocity &positionVelocity)
         {
             CAircraftSituation situation;

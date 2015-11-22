@@ -10,7 +10,7 @@
 #include "swiftguistd.h"
 #include "guimodeenums.h"
 #include "blackgui/stylesheetutility.h"
-#include "blackcore/blackcorefreefunctions.h"
+#include "blackcore/registermetadata.h"
 #include "blackcore/context_runtime_config.h"
 #include "blackgui/guiutility.h"
 #include "blackmisc/blackmiscfreefunctions.h"

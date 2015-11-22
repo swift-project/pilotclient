@@ -8,7 +8,7 @@
  */
 
 #include "blackmisc/rgbcolor.h"
-#include "blackmiscfreefunctions.h"
+#include "stringutils.h"
 #include "comparefunctions.h"
 #include <QPainter>
 

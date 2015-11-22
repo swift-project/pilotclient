@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "threadutilities.h"
+#include "threadutils.h"
 #include <QThread>
 #include <QCoreApplication>
 

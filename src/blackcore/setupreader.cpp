@@ -12,7 +12,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/json.h"
 #include "blackmisc/project.h"
-#include "blackmisc/fileutilities.h"
+#include "blackmisc/fileutils.h"
 #include "blackmisc/logmessage.h"
 #include "setupreader.h"
 #include <QJsonDocument>

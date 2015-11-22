@@ -9,11 +9,11 @@
 
 #include "simulator_common.h"
 #include "blackcore/interpolator.h"
-#include "blackcore/blackcorefreefunctions.h"
+#include "blackcore/registermetadata.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/collection.h"
-#include "blackmisc/threadutilities.h"
+#include "blackmisc/threadutils.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

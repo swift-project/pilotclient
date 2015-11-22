@@ -11,6 +11,7 @@
 #include "blackmisc/project.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/stringutils.h"
 #include <QStringList>
 
 using namespace BlackMisc;

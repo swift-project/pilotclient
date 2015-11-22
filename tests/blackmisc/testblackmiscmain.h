@@ -14,7 +14,6 @@
 
 namespace BlackMiscTest
 {
-
     //! Class firing all unit tests in this namespace.
     //! Avoids clashes with other main(..) functions and allows to fire the test cases
     //! simply from any other main.

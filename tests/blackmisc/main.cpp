@@ -8,7 +8,7 @@
  */
 
 #include "testblackmiscmain.h"
-#include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/registermetadata.h"
 #include <QCoreApplication>
 #include <QDebug>
 

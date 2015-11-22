@@ -12,7 +12,7 @@
 #include "blackmisc/sequence.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/networkutils.h"
-#include "blackmisc/fileutilities.h"
+#include "blackmisc/fileutils.h"
 #include "modeldatareader.h"
 
 #include <QTimer>

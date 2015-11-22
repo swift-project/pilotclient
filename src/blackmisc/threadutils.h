@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_CTHREADUTILITIES_H
-#define BLACKMISC_CTHREADUTILITIES_H
+#ifndef BLACKMISC_CTHREADUTILS_H
+#define BLACKMISC_CTHREADUTILS_H
 
 #include "blackmiscexport.h"
 #include <QObject>

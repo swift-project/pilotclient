@@ -23,12 +23,13 @@ static_assert(VAT_LIBVATLIB_VERSION == 904, "Wrong vatlib header installed");
 #define CLIENT_PUBLIC_ID 0xb9ba
 #define CLIENT_PRIVATE_KEY "727d1efd5cb9f8d2c28372469d922bb4"
 
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
 using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Geo;
+using namespace BlackMisc::Json;
+using namespace BlackMisc::Network;
+using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {

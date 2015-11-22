@@ -7,15 +7,17 @@
  * contained in the LICENSE file.
  */
 
+#include "blackcore/context_runtime.h"
 #include "blackcore/context_all_impl.h"
 #include "blackcore/context_all_proxies.h"
 #include "blackcore/context_all_empties.h"
-#include "blackcore/blackcorefreefunctions.h"
+#include "blackcore/registermetadata.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/registermetadata.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/logmessage.h"
-#include "blackcore/context_runtime.h"
 
 #include <QMap>
 #include <QDebug>
@@ -106,8 +108,8 @@ namespace BlackCore
     void CRuntime::registerMetadata()
     {
         BlackMisc::registerMetadata();
-        BlackMisc::initResources();
         BlackCore::registerMetadata();
+        BlackMisc::initResources();
     }
 
     bool CRuntime::parseCommandLine(const QString &commandLine, const CIdentifier &originator)

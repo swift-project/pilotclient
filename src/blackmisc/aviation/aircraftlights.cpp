@@ -9,6 +9,7 @@
 
 #include "aircraftlights.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/stringutils.h"
 
 using namespace BlackMisc;
 

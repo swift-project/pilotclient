@@ -14,6 +14,7 @@
 #include "fs9_client.h"
 #include "multiplayer_packets.h"
 #include "multiplayer_packet_parser.h"
+#include "registermetadata.h"
 #include "blackcore/interpolator_linear.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/logmessage.h"

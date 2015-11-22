@@ -11,7 +11,7 @@
 #include "blackgui/models/allmodels.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/guiutility.h"
-#include "blackcore/blackcorefreefunctions.h"
+#include "blackcore/registermetadata.h"
 
 #include <QHeaderView>
 #include <QModelIndex>

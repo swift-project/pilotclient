@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/registermetadata.h"
 #include "servicetool.h"
 #include "blackcore/dbus_server.h"
 #include <QDBusMetaType>

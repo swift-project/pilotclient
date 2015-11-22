@@ -15,6 +15,7 @@
 #include "blackgui/components/settingscomponent.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/metadatautils.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/logmessage.h"
 #include <QPoint>

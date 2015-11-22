@@ -10,6 +10,8 @@
 #include "samplesvpilotrules.h"
 #include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/registermetadata.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/sampleutils.h"
 
 #include <QDebug>

@@ -32,6 +32,23 @@ namespace BlackMisc
     template <typename T>
     void registerMetaValueType();
 
+    //! Checked version from QVariant
+    template <class T> void setFromQVariant(T *value, const QVariant &variant)
+    {
+        if (variant.canConvert<T>())
+        {
+            (*value) = variant.value<T>();
+        }
+        else
+        {
+            const QString m = QString("Target type: %1 Variant type: %2 %3 %4").
+                              arg(qMetaTypeId<T>()).
+                              arg(static_cast<int>(variant.type())).arg(variant.userType()).arg(variant.typeName());
+            Q_ASSERT_X(false, "setFromQVariant", m.toLocal8Bit().constData());
+            Q_UNUSED(m);
+        }
+    }
+
     namespace Private
     {
         //! \private Needed so we can copy forward-declared CVariant.

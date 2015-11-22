@@ -3,33 +3,30 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "blackcorefreefunctions.h"
+#include "registermetadata.h"
+#include "blackcore/context_application.h"
 #include "blackcore/webreaderflags.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
 
-
 #include "voice_channel.h"
 #include "network.h"
-#include "simulator.h"
-#include "context_application.h"
 #include "setupreader.h"
-#include <QThread>
 
 namespace BlackCore
 {
     void registerMetadata()
     {
-        qDBusRegisterMetaType<BlackCore::IVoiceChannel::ConnectionStatus>();
-        qDBusRegisterMetaType<BlackCore::INetwork::ConnectionStatus>();
-        qDBusRegisterMetaType<BlackCore::INetwork::LoginMode>();
-        qRegisterMetaType<BlackCore::CWebReaderFlags::WebReaderFlag>();
-        qRegisterMetaType<BlackCore::CWebReaderFlags::WebReader>();
         qDBusRegisterMetaType<BlackCore::CLogSubscriptionHash>();
         qDBusRegisterMetaType<BlackCore::CLogSubscriptionPair>();
+        qDBusRegisterMetaType<BlackCore::INetwork::ConnectionStatus>();
+        qDBusRegisterMetaType<BlackCore::INetwork::LoginMode>();
+        qDBusRegisterMetaType<BlackCore::IVoiceChannel::ConnectionStatus>();
+        qRegisterMetaType<BlackCore::CWebReaderFlags::WebReader>();
+        qRegisterMetaType<BlackCore::CWebReaderFlags::WebReaderFlag>();
 
         BlackCore::Data::CGlobalSetup::registerMetadata();
         BlackCore::Data::CUpdateInfo::registerMetadata();
-        BlackCore::CSetupReader::instance(); // kick off reader
+        BlackCore::CSetupReader::instance(); //! \todo will go into new runtime
     }
 } // namespace

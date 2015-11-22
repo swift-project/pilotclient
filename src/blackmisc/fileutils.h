@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_CFILEUTILITIES_H
-#define BLACKMISC_CFILEUTILITIES_H
+#ifndef BLACKMISC_CFILEUTILS_H
+#define BLACKMISC_CFILEUTILS_H
 
 #include "blackmiscexport.h"
 #include <QObject>

@@ -18,7 +18,7 @@
 #include "data/globalsetup.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/fileutilities.h"
+#include "blackmisc/fileutils.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/json.h"
 #include <QJsonObject>

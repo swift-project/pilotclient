@@ -19,8 +19,9 @@
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/simplecommandparser.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
+#include "blackmisc/simplecommandparser.h"
+#include "blackmisc/stringutils.h"
 
 #include <QtXml/QDomElement>
 #include <QNetworkReply>

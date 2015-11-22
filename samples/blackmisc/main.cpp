@@ -15,6 +15,7 @@
 #include "samplesperformance.h"
 #include "samplesalgorithm.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/registermetadata.h"
 #include "blackmisc/pq/pq.h"
 
 using namespace BlackMisc;

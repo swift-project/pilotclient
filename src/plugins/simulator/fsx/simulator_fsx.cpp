@@ -9,7 +9,7 @@
 
 #include "simulator_fsx.h"
 #include "blackcore/interpolator_linear.h"
-#include "blackcore/blackcorefreefunctions.h"
+#include "blackcore/registermetadata.h"
 #include "blackmisc/simulation/fscommon/bcdconversions.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
 #include "blackmisc/simulation/fsx/fsxsimulatorsetup.h"
@@ -18,7 +18,7 @@
 #include "blackmisc/project.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/threadutilities.h"
+#include "blackmisc/threadutils.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 
 #include <QTimer>

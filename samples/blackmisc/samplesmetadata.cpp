@@ -8,7 +8,8 @@
  */
 
 #include "samplesmetadata.h"
-#include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/registermetadata.h"
+#include "blackmisc/metadatautils.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include <QDebug>
 #include <QMetaType>

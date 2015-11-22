@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/registermetadata.h"
 #include "samplesfscommon.h"
 #include "samplesfsx.h"
 #include "samplesmodelmapping.h"

@@ -9,7 +9,7 @@
 
 #include "samplesfsx.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
-#include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/registermetadata.h"
 #include <QDebug>
 
 using namespace BlackMisc::Simulation::Fsx;

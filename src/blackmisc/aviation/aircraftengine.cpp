@@ -8,6 +8,7 @@
  */
 
 #include "aircraftengine.h"
+#include "blackmisc/stringutils.h"
 
 namespace BlackMisc
 {

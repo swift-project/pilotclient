@@ -10,6 +10,7 @@
 #include "enableforframelesswindow.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/worker.h"
 #include <QStatusBar>
 #include <QPushButton>

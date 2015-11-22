@@ -19,7 +19,6 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-
         /*!
          * Physical unit distance
          */
@@ -35,10 +34,9 @@ namespace BlackMisc
             //! \copydoc CPhysicalQuantity(const QString &unitString)
             CPressure(const QString &unitString) : CPhysicalQuantity(unitString) {}
         };
-
     }
 }
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CPressure)
 
-#endif // BLACKMISC_PQPRESSURE_H
+#endif // guard

@@ -9,7 +9,7 @@
 
 #include "icons.h"
 #include "blackmisc/project.h"
-#include "blackmisc/fileutilities.h"
+#include "blackmisc/fileutils.h"
 #include <QImage>
 #include <QIcon>
 #include <QPainter>

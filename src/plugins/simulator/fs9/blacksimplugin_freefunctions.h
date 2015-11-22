@@ -46,9 +46,6 @@ namespace BlackSimPlugin
             pT = nullptr;
         }
 
-        //! Register all relevant metadata in BlackMisc
-        void registerMetadata();
-
         //! Convert FS9 struct to aircraft situation
         BlackMisc::Aviation::CAircraftSituation aircraftSituationfromFS9(const MPPositionVelocity &positionVelocity);
 
@@ -63,7 +60,7 @@ namespace BlackSimPlugin
         //! Print the direct play error
         HRESULT logDirectPlayError(HRESULT error);
 
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard
