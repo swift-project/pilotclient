@@ -97,66 +97,34 @@ include(defines.pri)
 ################################
 
 # If you want to manually set the external path, uncomment the following line
-# EXTERNALDIR = /path/to/externals
+# EXTERNALSROOT = /path/to/externals
 
-isEmpty(EXTERNALDIR) {
-    EXTERNALDIR = $$(VATSIM_EXTERNAL_DIR)
+isEmpty(EXTERNALSROOT) {
+    EXTERNALSROOT = $$(VATSIM_EXTERNAL_DIR)
 }
 
-isEmpty(EXTERNALDIR) {
-    EXTERNALDIR = $$SourceRoot/externals
+isEmpty(EXTERNALSROOT) {
+    EXTERNALSROOT = $$SourceRoot/externals
 }
 
-!exists("$$EXTERNALDIR/common/include") {
-    error("Could not find externals in $$EXTERNALDIR. Please install it!")
+!exists("$$EXTERNALSROOT/common/include") {
+    error("Could not find externals in $$EXTERNALSROOT. Please install it!")
 }
 
 ################################
 # Externals
 ################################
 
-INCLUDEPATH *= $$EXTERNALDIR/common/include
+INCLUDEPATH *= $$EXTERNALSROOT/common/include
+INCLUDEPATH *= $$EXTERNALSROOT/$$basename(QMAKESPEC)/include
 
-# and the library path depending on the used compiler
-win32-msvc2013 {
-    INCLUDEPATH *= $$EXTERNALDIR/win32-vs2013/include
-    equals(WORD_SIZE,64) {
-        EXTERNALLIBS = $$EXTERNALDIR/win32-vs2013/lib64
-        LIBS *= -L$$EXTERNALLIBS
-    }
-    equals(WORD_SIZE,32) {
-        EXTERNALLIBS = $$EXTERNALDIR/win32-vs2013/lib32
-        LIBS *= -L$$EXTERNALLIBS
-    }
-    equals(WORD_SIZE,32): LIBS += -luser32
-}
-win32-g++ {
-    INCLUDEPATH *= $$EXTERNALDIR/win32-g++/include
-    equals(WORD_SIZE,64) {
-        EXTERNALLIBS = $$EXTERNALDIR/win32-g++/lib64
-        LIBS *= -L$$EXTERNALLIBS
-    }
-    equals(WORD_SIZE,32) {
-        EXTERNALLIBS = $$EXTERNALDIR/win32-g++/lib32
-        LIBS *= -L$$EXTERNALLIBS
-    }
-    LIBS += -luser32
-}
-linux-g++* {
-    equals(WORD_SIZE,64) {
-        EXTERNALLIBS = $$EXTERNALDIR/linux-g++/lib64
-        LIBS *= -L$$EXTERNALLIBS
-    }
-    equals(WORD_SIZE,32) {
-        EXTERNALLIBS = $$EXTERNALDIR/linux-g++/lib32
-        LIBS *= -L$$EXTERNALLIBS
-    }
-}
-macx-clang {
-    INCLUDEPATH *= $$EXTERNALDIR/macx-clang/include
-    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/macx-clang/lib64 -F$$EXTERNALDIR/macx-clang/lib64
-    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/macx-clang/lib32 -F$$EXTERNALDIR/macx-clang/lib32
-}
+equals(WORD_SIZE,64): EXTERNALSDIR = $$EXTERNALSROOT/$$basename(QMAKESPEC)/lib64
+equals(WORD_SIZE,32): EXTERNALSDIR = $$EXTERNALSROOT/$$basename(QMAKESPEC)/lib32
+
+LIBS *= -L$$EXTERNALSDIR
+win32: LIBS *= -luser32
+
+INCLUDEPATH *= $$EXTERNALDIR/common/include
 
 ################################
 # Platform extensions

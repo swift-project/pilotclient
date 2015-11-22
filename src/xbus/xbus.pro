@@ -7,7 +7,7 @@ TEMPLATE = lib
 CONFIG += shared plugin
 CONFIG += blackmisc blackcore
 
-INCLUDEPATH += $$EXTERNALDIR/common/include/XPLM
+INCLUDEPATH += $$EXTERNALSROOT/common/include/XPLM
 
 win32 {
     equals(WORD_SIZE,64): LIBS += -lXPLM_64 -lXPWidgets_64
