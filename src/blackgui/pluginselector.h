@@ -43,8 +43,9 @@ namespace BlackGui
         explicit CPluginSelector(QWidget *parent = 0);
 
         //! Adds the new plugin to the list.
-        //! \param identifier Identifier of the plugin.
+        //! \param identifier Identifier of the plugin
         //! \param name Name of the plugin
+        //! \param hasConfig Defines whether the plugin has the corresponding config plugin or not
         //! \param enabled Defines whether the plugin is initially enabled or not
         void addPlugin(const QString &identifier, const QString &name, bool hasConfig = false, bool enabled = true);
 

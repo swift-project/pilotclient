@@ -48,6 +48,7 @@ namespace BlackGui
         void setPluginAuthors(const QString &authors);
 
     protected:
+        //! \copydoc QWidget::showEvent()
         virtual void showEvent(QShowEvent *event) override;
 
     private:

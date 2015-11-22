@@ -20,6 +20,9 @@ namespace BlackSimPlugin
     namespace Fsx
     {
 
+        /*!
+         * Window for setting up the FSX plugin.
+         */
         class CSimulatorFsxConfig :  public QObject, public BlackGui::IPluginConfig
         {
             Q_OBJECT

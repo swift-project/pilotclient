@@ -28,6 +28,7 @@ namespace BlackGui
         explicit CPluginConfigWindow(QWidget *parent);
 
     protected:
+        //! \copydoc QWidget::showEvent()
         virtual void showEvent(QShowEvent *event) override;
 
     };

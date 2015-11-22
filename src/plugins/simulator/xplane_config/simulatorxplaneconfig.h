@@ -19,6 +19,10 @@ namespace BlackSimPlugin
 {
     namespace XPlane
     {
+
+        /*!
+         * Setting for XBus.
+         */
         struct XBusServer : public BlackCore::CSettingTrait<QString>
         {
             //! \copydoc BlackCore::CSetting::key
@@ -28,7 +32,7 @@ namespace BlackSimPlugin
             static QString defaultValue() { return QStringLiteral("session"); }
         };
 
-        /**
+        /*!
          * Config plugin for the X-Plane plugin.
          */
         class CSimulatorXPlaneConfig : public QObject, public BlackGui::IPluginConfig
