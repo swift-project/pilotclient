@@ -492,7 +492,7 @@ namespace BlackCore
         }
         else
         {
-            CLogMessage(this).error("Failed to read setup, will not(!) triggrr web data read");
+            CLogMessage(this).error("Failed to read setup, will not(!) trigger web data read");
         }
     }
 
