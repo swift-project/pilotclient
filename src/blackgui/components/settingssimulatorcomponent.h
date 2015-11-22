@@ -10,7 +10,7 @@
 #ifndef BLACKGUI_SETTINGSSIMULATORCOMPONENT_H
 #define BLACKGUI_SETTINGSSIMULATORCOMPONENT_H
 
-#include "blackcore/plugin_manager_simulator.h"
+#include "blackcore/pluginmanagersimulator.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "enableforruntime.h"

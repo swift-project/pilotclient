@@ -20,7 +20,7 @@ LIBS += -ldxguid -lole32
 
 SOURCES += *.cpp
 HEADERS += *.h
-DISTFILES += simulator_fsx.json
+DISTFILES += simulatorfsx.json
 
 DESTDIR = $$DestRoot/bin/plugins/simulator
 

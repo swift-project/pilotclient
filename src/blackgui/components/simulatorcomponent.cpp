@@ -9,8 +9,8 @@
 
 #include "simulatorcomponent.h"
 #include "ui_simulatorcomponent.h"
-#include "blackcore/context_simulator.h"
-#include "blackcore/context_ownaircraft.h"
+#include "blackcore/contextsimulator.h"
+#include "blackcore/contextownaircraft.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/iconlist.h"
 

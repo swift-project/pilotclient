@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/context_simulator.h"
-#include "blackcore/context_network.h"
+#include "blackcore/contextsimulator.h"
+#include "blackcore/contextnetwork.h"
 #include "blackcore/network.h"
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackgui/filters/aircraftmodelfilterdialog.h"

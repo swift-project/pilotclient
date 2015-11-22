@@ -9,7 +9,7 @@
 
 #include "audiosetupcomponent.h"
 #include "ui_audiosetupcomponent.h"
-#include "blackcore/context_audio.h"
+#include "blackcore/contextaudio.h"
 #include "blackmisc/logmessage.h"
 
 using namespace BlackCore;

@@ -9,8 +9,8 @@
 
 #include "voiceroomscomponent.h"
 #include "ui_voiceroomscomponent.h"
-#include "blackcore/context_audio.h"
-#include "blackcore/context_ownaircraft.h"
+#include "blackcore/contextaudio.h"
+#include "blackcore/contextownaircraft.h"
 #include "blackmisc/audio/notificationsounds.h"
 
 using namespace BlackCore;

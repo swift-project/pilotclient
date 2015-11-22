@@ -13,7 +13,7 @@ INCLUDEPATH += . $$SourceRoot/src
 SOURCES += *.cpp
 HEADERS += *.h
 FORMS += *.ui
-DISTFILES += simulator_fsx_config.json
+DISTFILES += simulatorfsxconfig.json
 
 DESTDIR = $$BuildRoot/bin/plugins/simulator
 

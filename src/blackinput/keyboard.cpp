@@ -8,7 +8,7 @@
 #if defined(Q_OS_WIN)
     #include "win/keyboard_windows.h"
 #elif defined(Q_OS_LINUX)
-    #include "linux/keyboard_linux.h"
+    #include "linux/keyboardlinux.h"
 #elif defined(Q_OS_OSX)
     #include "osx/keyboard_mac.h"
 #else

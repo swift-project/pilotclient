@@ -12,7 +12,7 @@
 #ifndef BLACKMISC_VARIANT_H
 #define BLACKMISC_VARIANT_H
 
-#include "variant_private.h"
+#include "variantprivate.h"
 #include "blackmiscexport.h"
 #include "blackmiscfreefunctions.h"
 #include "tuple.h"

@@ -9,7 +9,7 @@
 
 #include "actionmodel.h"
 #include "actionitem.h"
-#include "blackcore/input_manager.h"
+#include "blackcore/inputmanager.h"
 
 namespace BlackGui
 {

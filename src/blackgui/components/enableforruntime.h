@@ -13,7 +13,7 @@
 #define BLACKGUI_ENABLEFORRUNTIME_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackcore/context_runtime.h"
+#include "blackcore/contextruntime.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include <QTimer>
 

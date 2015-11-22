@@ -13,8 +13,8 @@
 #include "blackmisc/aviation/informationmessage.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/weather/metar.h"
-#include "blackcore/context_network.h"
-#include "blackcore/context_ownaircraft.h"
+#include "blackcore/contextnetwork.h"
+#include "blackcore/contextownaircraft.h"
 
 using namespace BlackGui;
 using namespace BlackGui::Models;

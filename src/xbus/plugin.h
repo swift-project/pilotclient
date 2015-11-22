@@ -20,7 +20,7 @@
 
 #pragma push_macro("interface")
 #undef interface
-#include "blackcore/dbus_server.h"
+#include "blackcore/dbusserver.h"
 #pragma pop_macro("interface")
 
 #include <QVector>

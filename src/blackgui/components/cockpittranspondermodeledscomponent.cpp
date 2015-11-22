@@ -8,7 +8,7 @@
  */
 
 #include "cockpittranspondermodeledscomponent.h"
-#include "blackcore/context_ownaircraft.h"
+#include "blackcore/contextownaircraft.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 

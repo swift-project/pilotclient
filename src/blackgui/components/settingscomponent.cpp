@@ -11,9 +11,9 @@
 #include "ui_settingscomponent.h"
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackgui/stylesheetutility.h"
-#include "blackcore/dbus_server.h"
-#include "blackcore/context_network.h"
-#include "blackcore/context_audio.h"
+#include "blackcore/dbusserver.h"
+#include "blackcore/contextnetwork.h"
+#include "blackcore/contextaudio.h"
 #include "blackmisc/input/keyboardkeylist.h"
 #include "blackmisc/logmessage.h"
 #include <QColorDialog>

@@ -9,7 +9,7 @@
 
 #include "blackmisc/registermetadata.h"
 #include "servicetool.h"
-#include "blackcore/dbus_server.h"
+#include "blackcore/dbusserver.h"
 #include <QDBusMetaType>
 #include <QtDBus/qdbusabstractinterface.h>
 #include <QtDBus/qdbusconnection.h>

@@ -4,12 +4,11 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "registermetadata.h"
-#include "blackcore/context_application.h"
+#include "blackcore/contextapplication.h"
 #include "blackcore/webreaderflags.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
-
-#include "voice_channel.h"
+#include "voicechannel.h"
 #include "network.h"
 #include "setupreader.h"
 

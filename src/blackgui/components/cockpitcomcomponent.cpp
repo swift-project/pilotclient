@@ -10,9 +10,9 @@
 #include "cockpitcomcomponent.h"
 #include "ui_cockpitcomcomponent.h"
 #include "../stylesheetutility.h"
-#include "blackcore/context_network.h"
-#include "blackcore/context_ownaircraft.h"
-#include "blackcore/context_audio.h"
+#include "blackcore/contextnetwork.h"
+#include "blackcore/contextownaircraft.h"
+#include "blackcore/contextaudio.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/logmessage.h"
 

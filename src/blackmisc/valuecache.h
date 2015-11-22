@@ -12,7 +12,7 @@
 #ifndef BLACKMISC_VALUECACHE_H
 #define BLACKMISC_VALUECACHE_H
 
-#include "blackmisc/valuecache_private.h"
+#include "blackmisc/valuecacheprivate.h"
 
 namespace BlackMisc
 {

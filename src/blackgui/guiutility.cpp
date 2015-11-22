@@ -8,7 +8,7 @@
  */
 
 #include "guiutility.h"
-#include "blackcore/context_runtime.h"
+#include "blackcore/contextruntime.h"
 #include "blackcore/cookiemanager.h"
 #include "blackmisc/filelogger.h"
 #include "blackmisc/logmessage.h"

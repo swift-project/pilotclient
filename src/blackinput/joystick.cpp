@@ -12,7 +12,7 @@
 #if defined(Q_OS_WIN)
     #include "win/joystick_windows.h"
 #elif defined(Q_OS_LINUX)
-    #include "linux/joystick_linux.h"
+    #include "linux/joysticklinux.h"
 #elif defined(Q_OS_OSX)
     #include "osx/joystick_mac.h"
 #else

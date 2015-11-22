@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "blackcore/network_vatlib.h"
+#include "blackcore/networkvatlib.h"
 #include "blackmisc/loghandler.h"
 #include "client.h"
 #include "reader.h"

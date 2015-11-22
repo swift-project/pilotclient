@@ -23,7 +23,7 @@ namespace BlackSimPlugin
         class CSimulatorFsxConfig :  public QObject, public BlackGui::IPluginConfig
         {
             Q_OBJECT
-            Q_PLUGIN_METADATA(IID "org.swift-project.blackgui.pluginconfiginterface" FILE "simulator_fsx_config.json")
+            Q_PLUGIN_METADATA(IID "org.swift-project.blackgui.pluginconfiginterface" FILE "simulatorfsxconfig.json")
             Q_INTERFACES(BlackGui::IPluginConfig)
 
         public:

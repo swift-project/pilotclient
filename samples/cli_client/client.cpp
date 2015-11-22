@@ -8,7 +8,7 @@
  */
 
 #include "client.h"
-#include "blackcore/network_vatlib.h"
+#include "blackcore/networkvatlib.h"
 #include <iostream>
 #include <QStringList>
 

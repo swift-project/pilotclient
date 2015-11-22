@@ -14,7 +14,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/tuple.h"
-#include "blackmisc/inheritance_traits.h"
+#include "blackmisc/inheritancetraits.h"
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonValue>

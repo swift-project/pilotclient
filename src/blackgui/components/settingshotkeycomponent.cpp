@@ -10,7 +10,7 @@
 #include "settingshotkeycomponent.h"
 #include "ui_settingshotkeycomponent.h"
 #include "blackgui/hotkeydialog.h"
-#include "blackcore/context_application.h"
+#include "blackcore/contextapplication.h"
 #include <QMessageBox>
 
 using namespace BlackMisc;

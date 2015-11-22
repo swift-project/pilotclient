@@ -12,7 +12,7 @@
 #ifndef SWIFTCORE_H
 #define SWIFTCORE_H
 
-#include "blackcore/context_runtime.h"
+#include "blackcore/contextruntime.h"
 #include "blackgui/systemtraywindow.h"
 #include "blackgui/components/enableforruntime.h"
 #include "blackmisc/statusmessage.h"

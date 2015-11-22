@@ -9,7 +9,7 @@
 
 #include "logmessage.h"
 #include "blackmiscfreefunctions.h"
-#include "index_sequence.h"
+#include "indexsequence.h"
 
 namespace BlackMisc
 {

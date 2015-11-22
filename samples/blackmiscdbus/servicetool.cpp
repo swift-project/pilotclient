@@ -10,7 +10,7 @@
 #include "servicetool.h"
 #include "testservice.h"
 #include "testservice_interface.h"
-#include "blackcore/dbus_server.h"
+#include "blackcore/dbusserver.h"
 
 #include <QTextStream>
 #include <QString>

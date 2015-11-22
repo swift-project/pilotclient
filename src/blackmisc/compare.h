@@ -13,7 +13,7 @@
 #define BLACKMISC_COMPARE_H
 
 #include "blackmisc/tuple.h"
-#include "blackmisc/inheritance_traits.h"
+#include "blackmisc/inheritancetraits.h"
 
 namespace BlackMisc
 {

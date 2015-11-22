@@ -1,0 +1,113 @@
+/*  Copyright (C) 2013 VATSIM Community / contributors
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#include "keyboardwindows.h"
+
+using namespace BlackMisc::Input;
+
+namespace BlackInput
+{
+
+    static QHash<int, KeyCode> keyMapping
+    {
+        { '0', Key_0 },
+        { '1', Key_1 },
+        { '2', Key_2 },
+        { '3', Key_3 },
+        { '4', Key_4 },
+        { '5', Key_5 },
+        { '6', Key_6 },
+        { '7', Key_7 },
+        { '8', Key_8 },
+        { '9', Key_9 },
+        { 'A', Key_A },
+        { 'B', Key_B },
+        { 'C', Key_C },
+        { 'D', Key_D },
+        { 'E', Key_E },
+        { 'F', Key_F },
+        { 'G', Key_G },
+        { 'H', Key_H },
+        { 'I', Key_I },
+        { 'J', Key_J },
+        { 'K', Key_K },
+        { 'L', Key_L },
+        { 'M', Key_M },
+        { 'N', Key_N },
+        { 'O', Key_O },
+        { 'P', Key_P },
+        { 'Q', Key_Q },
+        { 'R', Key_R },
+        { 'S', Key_S },
+        { 'T', Key_T },
+        { 'U', Key_U },
+        { 'V', Key_V },
+        { 'W', Key_W },
+        { 'X', Key_X },
+        { 'Y', Key_Y },
+        { 'Z', Key_Z },
+        { VK_LSHIFT, Key_ShiftLeft },
+        { VK_RSHIFT, Key_ShiftRight },
+        { VK_LCONTROL, Key_ControlLeft },
+        { VK_RCONTROL, Key_ControlRight },
+        { VK_LMENU, Key_AltLeft },
+        { VK_RMENU, Key_AltRight },
+    };
+
+    static CKeyboardWindows *g_keyboardWindows = nullptr;
+
+    CKeyboardWindows::CKeyboardWindows(QObject *parent) :
+        IKeyboard(parent),
+        m_keyboardHook(nullptr)
+    {
+    }
+
+    CKeyboardWindows::~CKeyboardWindows()
+    {
+        if (m_keyboardHook)
+            UnhookWindowsHookEx(m_keyboardHook);
+    }
+
+    bool CKeyboardWindows::init()
+    {
+        Q_ASSERT_X(g_keyboardWindows == nullptr, "CKeyboardWindows::init", "Windows supports only one keyboard instance. Cannot initialize a second one!");
+        g_keyboardWindows = this;
+        m_keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, CKeyboardWindows::keyboardProc, GetModuleHandle(NULL), 0);
+        return true;
+    }
+
+    void CKeyboardWindows::processKeyEvent(WPARAM vkcode, uint event)
+    {
+        BlackMisc::Input::CHotkeyCombination oldCombination(m_keyCombination);
+        if ((event == WM_KEYDOWN) || (event == WM_SYSKEYDOWN))
+        {
+            auto key = keyMapping.value(vkcode);
+            if (key == Key_Unknown) { return; }
+            m_keyCombination.addKeyboardKey(CKeyboardKey(key));
+        }
+        else if ((event == WM_KEYUP) || (event == WM_SYSKEYUP) )
+        {
+            auto key = keyMapping.value(vkcode);
+            if (key == Key_Unknown) { return; }
+            m_keyCombination.removeKeyboardKey(CKeyboardKey(key));
+        }
+
+        if (oldCombination != m_keyCombination)
+        {
+            emit keyCombinationChanged(m_keyCombination);
+        }
+    }
+
+    LRESULT CALLBACK CKeyboardWindows::keyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
+    {
+        if (nCode == HC_ACTION)
+        {
+            KBDLLHOOKSTRUCT *keyboardEvent =reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
+            WPARAM vkCode = keyboardEvent->vkCode;
+            g_keyboardWindows->processKeyEvent(vkCode, wParam);
+        }
+        return CallNextHookEx(g_keyboardWindows->keyboardHook(), nCode, wParam, lParam);
+    }
+}

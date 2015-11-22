@@ -12,7 +12,7 @@
 #ifndef BLACKCORETEST_TESTNETWORK_H
 #define BLACKCORETEST_TESTNETWORK_H
 
-#include "blackcore/network_vatlib.h"
+#include "blackcore/networkvatlib.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackmisc/simulation/ownaircraftproviderdummy.h"
 #include <QtTest/QtTest>

@@ -12,7 +12,7 @@
 #ifndef BLACKMISCTEST_SERVICETOOL_H
 #define BLACKMISCTEST_SERVICETOOL_H
 
-#include "blackcore/dbus_server.h"
+#include "blackcore/dbusserver.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/network/clientlist.h"

@@ -12,7 +12,7 @@
 #ifndef BLACKCORE_ACTIONBIND_H
 #define BLACKCORE_ACTIONBIND_H
 
-#include "blackcore/input_manager.h"
+#include "blackcore/inputmanager.h"
 
 namespace BlackCore
 {

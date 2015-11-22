@@ -9,7 +9,7 @@
 
 #include "internalscomponent.h"
 #include "ui_internalscomponent.h"
-#include "blackcore/context_all_interfaces.h"
+#include "blackcore/contextallinterfaces.h"
 #include <QJsonParseError>
 
 using namespace BlackMisc;

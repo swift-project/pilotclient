@@ -17,7 +17,7 @@
 #undef interface
 
 #include "guimodeenums.h"
-#include "blackcore/context_all_interfaces.h"
+#include "blackcore/contextallinterfaces.h"
 #include "blackcore/actionbind.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackgui/components/enableforruntime.h"

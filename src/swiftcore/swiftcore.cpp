@@ -14,7 +14,7 @@
 #include "blackmisc/project.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/enableforruntime.h"
-#include "blackcore/dbus_server.h"
+#include "blackcore/dbusserver.h"
 #include "blackgui/stylesheetutility.h"
 #include <QMenu>
 #include <QMessageBox>

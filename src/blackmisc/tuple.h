@@ -33,7 +33,7 @@ namespace BlackMisc
     };
 }
 
-#include "tuple_private.h"
+#include "tupleprivate.h"
 
 /*!
  * \brief   Macro to make a class available to TupleConverter.

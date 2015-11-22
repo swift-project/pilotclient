@@ -9,7 +9,7 @@
 
 #include "textmessagecomponent.h"
 #include "ui_textmessagecomponent.h"
-#include "blackcore/context_audio.h"
+#include "blackcore/contextaudio.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/logmessage.h"

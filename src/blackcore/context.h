@@ -13,8 +13,8 @@
 #define BLACKCORE_CONTEXT_H
 
 #include "blackcoreexport.h"
-#include "blackcore/context_runtime_config.h"
-#include "blackcore/context_runtime.h"
+#include "blackcore/contextruntimeconfig.h"
+#include "blackcore/contextruntime.h"
 #include "blackmisc/logmessage.h"
 #include <QObject>
 #include <QDateTime>

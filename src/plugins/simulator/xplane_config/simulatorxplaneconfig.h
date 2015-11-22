@@ -34,7 +34,7 @@ namespace BlackSimPlugin
         class CSimulatorXPlaneConfig : public QObject, public BlackGui::IPluginConfig
         {
             Q_OBJECT
-            Q_PLUGIN_METADATA(IID "org.swift-project.blackgui.pluginconfiginterface" FILE "simulator_xplane_config.json")
+            Q_PLUGIN_METADATA(IID "org.swift-project.blackgui.pluginconfiginterface" FILE "simulatorxplaneconfig.json")
             Q_INTERFACES(BlackGui::IPluginConfig)
 
         public:

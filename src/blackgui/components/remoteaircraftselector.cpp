@@ -9,7 +9,7 @@
 
 #include "remoteaircraftselector.h"
 #include "ui_remoteaircraftselector.h"
-#include "blackcore/context_network.h"
+#include "blackcore/contextnetwork.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

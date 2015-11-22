@@ -11,8 +11,8 @@
 #include "ui_aircraftcomponent.h"
 #include "enablefordockwidgetinfoarea.h"
 #include "../guiutility.h"
-#include "blackcore/context_network.h"
-#include "blackcore/context_simulator.h"
+#include "blackcore/contextnetwork.h"
+#include "blackcore/contextsimulator.h"
 #include "blackcore/network.h"
 
 using namespace BlackGui;

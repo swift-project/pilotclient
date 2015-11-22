@@ -20,6 +20,7 @@ LIBS += -ldxguid -lole32
 
 SOURCES += *.cpp
 HEADERS += *.h
+DISTFILES += simulatorfs9.json
 
 DESTDIR = $$DestRoot/bin/plugins/simulator
 

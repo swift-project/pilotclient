@@ -8,7 +8,7 @@
  */
 
 #include "testinterpolator.h"
-#include "blackcore/interpolator_linear.h"
+#include "blackcore/interpolatorlinear.h"
 #include "blackmisc/simulation/remoteaircraftproviderdummy.h"
 #include <QScopedPointer>
 

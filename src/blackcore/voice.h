@@ -7,9 +7,9 @@
 #define BLACKCORE_VOICE_H
 
 #include "blackcoreexport.h"
-#include "audio_device.h"
-#include "voice_channel.h"
-#include "audio_mixer.h"
+#include "audiodevice.h"
+#include "voicechannel.h"
+#include "audiomixer.h"
 
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/selcal.h"

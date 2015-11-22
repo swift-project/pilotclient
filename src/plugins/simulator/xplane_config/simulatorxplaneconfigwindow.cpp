@@ -1,6 +1,6 @@
 #include "simulatorxplaneconfigwindow.h"
 #include "ui_simulatorxplaneconfigwindow.h"
-#include "blackcore/dbus_server.h"
+#include "blackcore/dbusserver.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/fileutils.h"
 #include <QStringBuilder>

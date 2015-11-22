@@ -8,7 +8,7 @@
  */
 
 #include "enableforruntime.h"
-#include "blackcore/context_all_interfaces.h"
+#include "blackcore/contextallinterfaces.h"
 #include <QWidget>
 
 using namespace BlackMisc::Audio;

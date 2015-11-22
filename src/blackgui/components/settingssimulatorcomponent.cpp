@@ -1,8 +1,8 @@
 #include "settingssimulatorcomponent.h"
 #include "ui_settingssimulatorcomponent.h"
 
-#include "blackcore/context_simulator.h"
-#include "blackcore/context_network.h"
+#include "blackcore/contextsimulator.h"
+#include "blackcore/contextnetwork.h"
 #include "blackgui/pluginconfig.h"
 #include "blackgui/pluginconfigwindow.h"
 #include "blackgui/plugindetailswindow.h"

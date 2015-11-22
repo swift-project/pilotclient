@@ -9,7 +9,7 @@
 
 #include "settingsnetworkcomponent.h"
 #include "ui_settingsnetworkcomponent.h"
-#include "blackcore/context_network.h"
+#include "blackcore/contextnetwork.h"
 
 using namespace BlackCore;
 

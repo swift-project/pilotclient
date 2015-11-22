@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/context_audio.h"
+#include "blackcore/contextaudio.h"
 #include "audiovolumecomponent.h"
 #include "ui_audiovolumecomponent.h"
 

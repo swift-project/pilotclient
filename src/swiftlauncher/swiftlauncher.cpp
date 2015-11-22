@@ -10,7 +10,7 @@
 #include "swiftlauncher.h"
 #include "ui_swiftlauncher.h"
 #include "blackgui/stylesheetutility.h"
-#include "blackcore/dbus_server.h"
+#include "blackcore/dbusserver.h"
 #include "blackcore/data/updateinfo.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/icons.h"

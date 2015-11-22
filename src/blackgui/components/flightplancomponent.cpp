@@ -11,8 +11,8 @@
 #include "../stylesheetutility.h"
 #include "ui_flightplancomponent.h"
 #include "blackmisc/logmessage.h"
-#include "blackcore/context_network.h"
-#include "blackcore/context_ownaircraft.h"
+#include "blackcore/contextnetwork.h"
+#include "blackcore/contextownaircraft.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

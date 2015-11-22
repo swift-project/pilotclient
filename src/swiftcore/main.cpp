@@ -8,10 +8,10 @@
  */
 
 #include "swiftcore.h"
-#include "blackcore/context_runtime.h"
-#include "blackcore/context_application.h"
-#include "blackcore/context_application_impl.h"
-#include "blackcore/dbus_server.h"
+#include "blackcore/contextruntime.h"
+#include "blackcore/contextapplication.h"
+#include "blackcore/contextapplicationimpl.h"
+#include "blackcore/dbusserver.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/network/networkutils.h"

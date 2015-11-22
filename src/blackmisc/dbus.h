@@ -13,7 +13,7 @@
 #define BLACKMISC_DBUS_H
 
 #include "blackmisc/tuple.h"
-#include "blackmisc/inheritance_traits.h"
+#include "blackmisc/inheritancetraits.h"
 #include <QDBusArgument>
 #include <type_traits>
 

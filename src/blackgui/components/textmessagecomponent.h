@@ -19,8 +19,8 @@
 #include "blackmisc/identifier.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/network/textmessagelist.h"
-#include "blackcore/context_network.h"
-#include "blackcore/context_ownaircraft.h"
+#include "blackcore/contextnetwork.h"
+#include "blackcore/contextownaircraft.h"
 #include <QFrame>
 #include <QLineEdit>
 #include <QScopedPointer>

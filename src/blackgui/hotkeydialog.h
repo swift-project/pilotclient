@@ -13,7 +13,7 @@
 #define BLACKGUI_HOTKEYDIALOG_H
 
 #include "blackgui/models/actionmodel.h"
-#include "blackcore/input_manager.h"
+#include "blackcore/inputmanager.h"
 #include "blackmisc/input/hotkeycombination.h"
 #include "blackmisc/input/actionhotkeylist.h"
 #include "blackmisc/identifierlist.h"

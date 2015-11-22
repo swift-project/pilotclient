@@ -9,7 +9,7 @@
 
 #include "registercomponent.h"
 #include "ui_registercomponent.h"
-#include "blackcore/context_application.h"
+#include "blackcore/contextapplication.h"
 
 using namespace BlackCore;
 

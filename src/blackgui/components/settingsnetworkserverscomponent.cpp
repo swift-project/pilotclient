@@ -9,7 +9,7 @@
 
 #include "settingsnetworkserverscomponent.h"
 #include "ui_settingsnetworkserverscomponent.h"
-#include "blackcore/context_network.h"
+#include "blackcore/contextnetwork.h"
 #include "blackcore/setupreader.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/project.h"
