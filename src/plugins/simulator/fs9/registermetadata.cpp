@@ -8,8 +8,8 @@
  */
 
 #include "registermetadata.h"
-#include "fs9_host.h"
-#include "fs9_client.h"
+#include "fs9host.h"
+#include "fs9client.h"
 
 namespace BlackSimPlugin
 {

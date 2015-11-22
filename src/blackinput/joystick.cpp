@@ -10,11 +10,11 @@
 #include "joystick.h"
 
 #if defined(Q_OS_WIN)
-    #include "win/joystick_windows.h"
+    #include "win/joystickwindows.h"
 #elif defined(Q_OS_LINUX)
     #include "linux/joysticklinux.h"
 #elif defined(Q_OS_OSX)
-    #include "osx/joystick_mac.h"
+    #include "osx/joystickmac.h"
 #else
     #error "Platform is not supported!"
 #endif

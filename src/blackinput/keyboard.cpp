@@ -6,11 +6,11 @@
 #include "keyboard.h"
 
 #if defined(Q_OS_WIN)
-    #include "win/keyboard_windows.h"
+    #include "win/keyboardwindows.h"
 #elif defined(Q_OS_LINUX)
     #include "linux/keyboardlinux.h"
 #elif defined(Q_OS_OSX)
-    #include "osx/keyboard_mac.h"
+    #include "osx/keyboardmac.h"
 #else
     #error "Platform is not supported!"
 #endif

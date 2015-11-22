@@ -10,7 +10,7 @@
 #include "windowfinder.h"
 
 #if defined(Q_OS_WIN)
-    #include "win/windowfinder_win.h"
+    #include "win/windowfinderwindows.h"
 #elif defined(Q_OS_LINUX)
 #elif defined(Q_OS_OSX)
 #else
