@@ -31,7 +31,7 @@ blackcore {
         macx-clang:     PRE_TARGETDEPS += $$DestRoot/lib/libblackcore.dylib
     }
 
-    LIBS *= -lblackcore -lvatlib2
+    LIBS *= -lblackcore -lvatlib
 
     win32 {
         contains(BLACK_CONFIG, FSX) {

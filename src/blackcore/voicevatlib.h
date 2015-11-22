@@ -14,7 +14,7 @@
 
 #include "blackcoreexport.h"
 #include "voice.h"
-#include <vatlib/vatlib2.h>
+#include <vatlib/vatlib.h>
 
 #include <QString>
 #include <QScopedPointer>

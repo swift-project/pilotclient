@@ -17,7 +17,7 @@
 #include "settings/network.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "tokenbucket.h"
-#include <vatlib/vatlib2.h>
+#include <vatlib/vatlib.h>
 #include <QScopedPointer>
 #include <QTimer>
 #include <QTextCodec>

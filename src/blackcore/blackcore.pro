@@ -30,7 +30,7 @@ SOURCES += *.cpp
 # SOURCES += $$PWD/settings/*.cpp
 SOURCES += $$PWD/data/*.cpp
 
-LIBS *= -lvatlib2
+LIBS *= -lvatlib
 
 DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin

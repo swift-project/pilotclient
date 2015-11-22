@@ -30,7 +30,7 @@ namespace BlackCore
         : IAudioInputDevice(parent),
           m_audioService(audioService)
     {
-        m_inputCodec.reset(Vat_CreateLocalInputCodec(audioService));
+        m_inputCodec.reset(Vat_CreateLocalInputCodec(audioService, vatCodecLegacy));
         Vat_GetInputDeviceInfo(m_inputCodec.data(), onInputHardwareDeviceReceived, this, nullptr);
         m_currentDevice = getDefaultInputDevice();
     }
@@ -77,7 +77,7 @@ namespace BlackCore
          : IAudioOutputDevice(parent),
            m_audioService(audioService)
     {
-        m_outputCodec.reset(Vat_CreateLocalOutputCodec(m_audioService));
+        m_outputCodec.reset(Vat_CreateLocalOutputCodec(m_audioService, vatCodecLegacy));
         Vat_GetOutputDeviceInfo(m_outputCodec.data(), onOutputHardwareDeviceReceived, this, nullptr);
         m_currentDevice = getDefaultOutputDevice();
     }

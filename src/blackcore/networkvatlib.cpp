@@ -15,7 +15,7 @@
 #include <type_traits>
 
 static_assert(! std::is_abstract<BlackCore::CNetworkVatlib>::value, "Must implement all pure virtuals");
-static_assert(VAT_LIBVATLIB_VERSION == 904, "Wrong vatlib header installed");
+static_assert(VAT_LIBVATLIB_VERSION == 905, "Wrong vatlib header installed");
 
 // TODO just placeholders to allow this to compile
 // This is just a test key and is NOT valid on the live network.
