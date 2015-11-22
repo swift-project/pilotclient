@@ -23,9 +23,6 @@ DebugFastStatic/
 build/
 Makefile
 
-# Externals folder
-externals/
-
 # .log files (usually created by QtTest - thanks to VestniK)
 *.log
 
