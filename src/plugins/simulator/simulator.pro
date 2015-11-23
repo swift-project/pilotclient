@@ -21,3 +21,5 @@ contains(BLACK_CONFIG, XPlane) {
     SUBDIRS += xplane
     SUBDIRS += xplaneconfig
 }
+
+load(common_post)

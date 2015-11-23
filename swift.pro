@@ -22,3 +22,5 @@ contains(BLACK_CONFIG, Unittests) {
 }
 
 include(install.pri)
+
+load(common_post)

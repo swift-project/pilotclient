@@ -37,3 +37,5 @@ contains(BLACK_CONFIG, XPlane) {
 }
 
 SUBDIRS += plugins
+
+load(common_post)

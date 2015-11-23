@@ -9,3 +9,5 @@ SUBDIRS += blackmiscdbus
 SUBDIRS += blackmisc
 SUBDIRS += blackmiscsim
 SUBDIRS += hotkey
+
+load(common_post)
