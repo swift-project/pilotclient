@@ -75,10 +75,10 @@ win32-msvc*: QMAKE_CXXFLAGS *= /bigobj
 win32-g++: QMAKE_CXXFLAGS_DEBUG += -Og
 
 ################################
-# No FSX or FS9 for 64 bit
+# FSX or FS9 on 32bit Windows only
 ################################
 
-equals(WORD_SIZE,64): BLACK_CONFIG -= FSX FS9
+equals(WORD_SIZE,64)|!win32: BLACK_CONFIG -= FSX FS9
 
 ################################
 # Suppress stupid warnings
