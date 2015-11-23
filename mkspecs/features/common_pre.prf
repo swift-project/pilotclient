@@ -107,7 +107,7 @@ isEmpty(EXTERNALSROOT) {
     EXTERNALSROOT = $$SourceRoot/externals
 }
 
-!exists("$$EXTERNALSROOT/common/include") {
+!exists("$$EXTERNALSROOT/common/include"):in_full_qmake {
     error("Could not find externals in $$EXTERNALSROOT. Please install it!")
 }
 
