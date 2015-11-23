@@ -2,7 +2,7 @@ load(common_pre)
 
 QT       += core dbus network
 
-TARGET = sample_blackmisc_dbus
+TARGET = sampleblackmiscdbus
 TEMPLATE = app
 
 CONFIG   += console

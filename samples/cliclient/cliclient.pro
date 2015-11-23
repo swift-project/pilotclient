@@ -2,20 +2,20 @@ load(common_pre)
 
 QT       += core dbus network
 
-TARGET = sample_quantities_aviation
+TARGET = samplecliclient
 TEMPLATE = app
 
 CONFIG   += console
 CONFIG   -= app_bundle
-CONFIG   += blackmisc
+CONFIG   += blackmisc blackcore
 
-DEPENDPATH += . $$SourceRoot/src/blackmisc
+DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src
 
-DESTDIR = $$DestRoot/bin
-
-HEADERS += *.h
 SOURCES += *.cpp
+HEADERS += *.h
+
+DESTDIR = $$DestRoot/bin
 
 target.path = $$PREFIX/bin
 INSTALLS += target

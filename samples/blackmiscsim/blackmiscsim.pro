@@ -1,23 +1,21 @@
 load(common_pre)
 
-QT       += core dbus network
+QT       += core dbus network xml
 
-TARGET = sample_blackmisc
+TARGET = sampleblackmiscsim
 TEMPLATE = app
 
 CONFIG   += console
 CONFIG   -= app_bundle
-CONFIG   += blackmisc
+CONFIG   += blackmisc blacksim
 
-DEPENDPATH += . $$SourceRoot/src/blackmisc
-INCLUDEPATH += . $$SourceRoot/src
+DEPENDPATH += . ../../src/blackmisc
+INCLUDEPATH += . ../../src
 
 DESTDIR = $$DestRoot/bin
 
 HEADERS += *.h
 SOURCES += *.cpp
-
-OTHER_FILES +=
 
 target.path = $$PREFIX/bin
 INSTALLS += target

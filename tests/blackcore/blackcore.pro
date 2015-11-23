@@ -2,7 +2,7 @@ load(common_pre)
 
 QT       += core testlib dbus network
 
-TARGET = test_blackcore
+TARGET = testblackcore
 TEMPLATE = app
 
 CONFIG   += console

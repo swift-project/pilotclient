@@ -17,7 +17,7 @@
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/pixmap.h"
-#include "plugins/simulator/xplane_config/simulatorxplaneconfig.h"
+#include "plugins/simulator/xplaneconfig/simulatorxplaneconfig.h"
 #include <QDBusConnection>
 
 class QDBusServiceWatcher;

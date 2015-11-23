@@ -1,26 +1,20 @@
 load(common_pre)
 
-QT       += core dbus gui network concurrent xml
+QT       += core widgets dbus
 
-TARGET = simulator_fs9
+TARGET = simulatorxplaneconfig
 TEMPLATE = lib
 
 CONFIG += plugin shared
-CONFIG += blackmisc blackcore
-
-LIBS +=  -lsimulator_fscommon -lFSUIPC_User -luuid
-
-# required for FSUIPC
-win32:!win32-g++*: QMAKE_LFLAGS += /NODEFAULTLIB:LIBC.lib
+CONFIG += blackmisc blackcore blackgui
 
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src
 
-LIBS += -ldxguid -lole32
-
 SOURCES += *.cpp
 HEADERS += *.h
-DISTFILES += simulatorfs9.json
+FORMS += *.ui
+DISTFILES += simulatorxplaneconfig.json
 
 DESTDIR = $$DestRoot/bin/plugins/simulator
 

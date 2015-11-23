@@ -2,7 +2,7 @@ load(common_pre)
 
 QT       += core dbus concurrent xml
 
-TARGET = simulator_fscommon
+TARGET = simulatorfscommon
 TEMPLATE = lib
 
 CONFIG += staticlib

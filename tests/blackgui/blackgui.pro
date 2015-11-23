@@ -1,13 +1,13 @@
 load(common_pre)
 
-QT       += core testlib dbus network
+QT       += core testlib dbus network gui svg
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = test_blackmisc
+TARGET = testblackgui
 TEMPLATE = app
 
-CONFIG   += console
 CONFIG   -= app_bundle
-CONFIG   += blackmisc
+CONFIG   += blackmisc blackcore blackgui
 CONFIG   += testcase
 CONFIG   += no_testcase_installs
 

@@ -4,7 +4,7 @@ QT       += core gui dbus network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = sample_hotkey
+TARGET = samplehotkey
 TEMPLATE = app
 
 CONFIG   -= app_bundle

@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "testservice_interface.h"
+#include "testserviceinterface.h"
 
 namespace BlackMiscTest
 {

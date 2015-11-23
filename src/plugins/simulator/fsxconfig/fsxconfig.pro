@@ -1,10 +1,9 @@
 load(common_pre)
 
-QT       += core widgets dbus
+QT       += core widgets dbus network
 
-TARGET = simulator_xplane_config
+TARGET = simulatorfsxconfig
 TEMPLATE = lib
-
 CONFIG += plugin shared
 CONFIG += blackmisc blackcore blackgui
 
@@ -14,9 +13,9 @@ INCLUDEPATH += . $$SourceRoot/src
 SOURCES += *.cpp
 HEADERS += *.h
 FORMS += *.ui
-DISTFILES += simulatorxplaneconfig.json
+DISTFILES += simulatorfsxconfig.json
 
-DESTDIR = $$DestRoot/bin/plugins/simulator
+DESTDIR = $$BuildRoot/bin/plugins/simulator
 
 win32 {
     dlltarget.path = $$PREFIX/bin/plugins/simulator
