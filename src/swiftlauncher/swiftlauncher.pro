@@ -1,5 +1,7 @@
 load(common_pre)
 
+REQUIRES += contains(BLACK_CONFIG,SwiftLauncher)
+
 QT       += core dbus gui svg network xml multimedia
 
 # QWebEngine is not supported for MinGW

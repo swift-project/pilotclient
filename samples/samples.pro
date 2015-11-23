@@ -1,5 +1,7 @@
 load(common_pre)
 
+REQUIRES += contains(BLACK_CONFIG,Samples)
+
 TEMPLATE = subdirs
 CONFIG += ordered
 

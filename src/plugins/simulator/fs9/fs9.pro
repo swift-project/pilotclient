@@ -1,5 +1,7 @@
 load(common_pre)
 
+REQUIRES += contains(BLACK_CONFIG,FS9)
+
 QT       += core dbus gui network concurrent xml
 
 TARGET = simulatorfs9

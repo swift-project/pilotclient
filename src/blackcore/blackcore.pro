@@ -1,5 +1,7 @@
 load(common_pre)
 
+REQUIRES += contains(BLACK_CONFIG,BlackCore)
+
 # GUI is required for the matrix classes
 # Network for host info etc.
 QT       += network dbus xml multimedia

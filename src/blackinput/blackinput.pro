@@ -1,5 +1,7 @@
 load(common_pre)
 
+REQUIRES += contains(BLACK_CONFIG,BlackInput)
+
 QT       += network dbus gui widgets multimedia
 
 TARGET = blackinput

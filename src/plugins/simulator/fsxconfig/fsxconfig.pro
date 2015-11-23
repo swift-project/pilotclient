@@ -1,5 +1,7 @@
 load(common_pre)
 
+REQUIRES += contains(BLACK_CONFIG,FSX)
+
 QT       += core widgets dbus network
 
 TARGET = simulatorfsxconfig

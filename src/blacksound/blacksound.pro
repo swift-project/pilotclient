@@ -1,5 +1,7 @@
 load(common_pre)
 
+REQUIRES += contains(BLACK_CONFIG,BlackSound)
+
 QT       += network dbus gui multimedia
 
 TARGET = blacksound
