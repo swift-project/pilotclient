@@ -16,6 +16,12 @@ macx:staticlib:isEmpty(SOURCES) {
 }
 
 ################################
+# Workaround vcproj generator subdirs
+################################
+
+in_full_qmake: include(vcsubdirs.pri)
+
+################################
 # Black libs
 ################################
 
