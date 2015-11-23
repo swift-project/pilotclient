@@ -10,7 +10,7 @@ TEMPLATE = lib
 CONFIG += plugin shared
 CONFIG += blackmisc blackcore
 
-LIBS +=  -lsimulator_fscommon -lSimConnect -lFSUIPC_User
+LIBS +=  -lsimulatorfscommon -lSimConnect -lFSUIPC_User
 
 # required for FSUIPC
 win32:!win32-g++*: QMAKE_LFLAGS += /NODEFAULTLIB:LIBC.lib
