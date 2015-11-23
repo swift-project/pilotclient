@@ -31,12 +31,17 @@ equals(TEMPLATE, "vcsubdirs") {
         BASEDIR = $$2
         for(subdir, SUBDIRS) {
             SUBDIR_PROJECT = $$subdirToProjectFile($$subdir, $$BASEDIR)
-            INNER_TEMPLATE = $$fromfile($$SUBDIR_PROJECT, TEMPLATE)
-            equals(INNER_TEMPLATE, "vcsubdirs") {
-                INNER_SUBDIRS = $$fromfile($$SUBDIR_PROJECT, SUBDIRS)
-                SUBDIRS_FLAT += $$flattenSubdirs($$INNER_SUBDIRS, $$dirname(SUBDIR_PROJECT))
+            INNER_REQUIRES = $$fromfile($$SUBDIR_PROJECT, REQUIRES)
+            REQUIRES_OK = 1
+            for(req, INNER_REQUIRES): !if($${req}): REQUIRES_OK = 0
+            equals(REQUIRES_OK,1) {
+                INNER_TEMPLATE = $$fromfile($$SUBDIR_PROJECT, TEMPLATE)
+                equals(INNER_TEMPLATE, "vcsubdirs") {
+                    INNER_SUBDIRS = $$fromfile($$SUBDIR_PROJECT, SUBDIRS)
+                    SUBDIRS_FLAT += $$flattenSubdirs($$INNER_SUBDIRS, $$dirname(SUBDIR_PROJECT))
+                }
+                else: SUBDIRS_FLAT += $$SUBDIR_PROJECT
             }
-            else: SUBDIRS_FLAT += $$SUBDIR_PROJECT
         }
         return($$SUBDIRS_FLAT)
     }
