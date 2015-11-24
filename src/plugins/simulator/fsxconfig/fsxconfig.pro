@@ -17,7 +17,7 @@ HEADERS += *.h
 FORMS += *.ui
 DISTFILES += simulatorfsxconfig.json
 
-DESTDIR = $$BuildRoot/bin/plugins/simulator
+DESTDIR = $$DestRoot/bin/plugins/simulator
 
 win32 {
     dlltarget.path = $$PREFIX/bin/plugins/simulator
