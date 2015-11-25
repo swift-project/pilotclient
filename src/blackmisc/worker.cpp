@@ -51,6 +51,23 @@ namespace BlackMisc
         promise.get_future().wait();
     }
 
+    void CWorkerBase::abandon() Q_DECL_NOEXCEPT
+    {
+        thread()->requestInterruption();
+        quit();
+    }
+
+    void CWorkerBase::abandonAndWait() Q_DECL_NOEXCEPT
+    {
+        thread()->requestInterruption();
+        quitAndWait();
+    }
+
+    bool CWorkerBase::isAbandoned() const
+    {
+        return thread()->isInterruptionRequested();
+    }
+
     void CContinuousWorker::start(QThread::Priority priority)
     {
         if (m_name.isEmpty()) { m_name = metaObject()->className(); }
