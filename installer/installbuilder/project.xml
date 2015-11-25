@@ -69,7 +69,7 @@ check_for_updates = 1
     </customLanguageFileList>
     <finalPageActionList>
         <runProgram>
-            <program>${installdir}/bin/swiftguistd.exe</program>
+            <program>${installdir}/bin/swiftlauncher.exe</program>
             <programArguments></programArguments>
             <progressText>Run swift launcher</progressText>
         </runProgram>

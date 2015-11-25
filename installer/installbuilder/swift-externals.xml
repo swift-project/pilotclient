@@ -18,7 +18,7 @@
             <platforms>windows</platforms>
             <distributionFileList>
                 <distributionFile>
-                    <origin>../../dist/bin/vatlib2.dll</origin>
+                    <origin>../../dist/bin/vatlib.dll</origin>
                 </distributionFile>
                 <distributionFile>
                     <origin>../../dist/bin/portaudio.dll</origin>
@@ -31,6 +31,9 @@
                 </distributionFile>
                 <distributionFile>
                     <origin>../../dist/bin/speexdsp.dll</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/bin/opus.dll</origin>
                 </distributionFile>
             </distributionFileList>
         </folder>

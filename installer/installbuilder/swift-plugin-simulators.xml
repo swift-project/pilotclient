@@ -20,7 +20,7 @@
                     <platforms>windows</platforms>
                     <distributionFileList>
                         <distributionFile>
-                            <origin>../../dist/bin/plugins/simulator/simulator_fs9.dll</origin>
+                            <origin>../../dist/bin/plugins/simulator/simulatorfs9.dll</origin>
                         </distributionFile>
                     </distributionFileList>
                 </folder>
@@ -42,7 +42,10 @@ This plugin acts as the interface between swift and FSX.</detailedDescription>
                     <platforms>windows</platforms>
                     <distributionFileList>
                         <distributionFile>
-                            <origin>../../dist/bin/plugins/simulator/simulator_fsx.dll</origin>
+                            <origin>../../dist/bin/plugins/simulator/simulatorfsx.dll</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>../../dist/bin/plugins/simulator/simulatorfsxconfig.dll</origin>
                         </distributionFile>
                     </distributionFileList>
                 </folder>
@@ -64,7 +67,10 @@ This plugin acts as the interface between swift and X-Plane</detailedDescription
                     <platforms>all</platforms>
                     <distributionFileList>
                         <distributionFile>
-                            <origin>../../dist/bin/plugins/simulator/simulator_xplane.dll</origin>
+                            <origin>../../dist/bin/plugins/simulator/simulatorxplane.dll</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>../../dist/bin/plugins/simulator/simulatorxplaneconfig.dll</origin>
                         </distributionFile>
                     </distributionFileList>
                 </folder>

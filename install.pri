@@ -27,6 +27,8 @@ qt5_target.files *= $$[QT_INSTALL_BINS]/Qt5Widgets$${DLL_DEBUG_SUFFIX}.$${QMAKE_
 qt5_target.files *= $$[QT_INSTALL_BINS]/icudt54.$${QMAKE_EXTENSION_SHLIB}
 qt5_target.files *= $$[QT_INSTALL_BINS]/icuin54.$${QMAKE_EXTENSION_SHLIB}
 qt5_target.files *= $$[QT_INSTALL_BINS]/icuuc54.$${QMAKE_EXTENSION_SHLIB}
+qt5_target.files *= $$[QT_INSTALL_BINS]/libeay32.$${QMAKE_EXTENSION_SHLIB}
+qt5_target.files *= $$[QT_INSTALL_BINS]/ssleay32.$${QMAKE_EXTENSION_SHLIB}
 
 INSTALLS += qt5_target
 
@@ -101,7 +103,7 @@ win32-g++ {
 ############### Install externals ##############
 
 externals_target.path = $${PREFIX}/bin
-!win32-g++: externals_target.files *= $${EXTERNALLIBS}/*.$${QMAKE_EXTENSION_SHLIB}
+!win32-g++: externals_target.files *= $${EXTERNALSDIR}/*.$${QMAKE_EXTENSION_SHLIB}
 INSTALLS += externals_target
 
 # win32-g++ needs a workaround since copy does not accept a filepath with '+' in it
@@ -110,7 +112,7 @@ INSTALLS += externals_target
 win32-g++ {
     vc_runtime_target.depends += copy_externals
     copy_externals.target = copy_externals
-    source_path = $${EXTERNALLIBS}//*.dll
+    source_path = $${EXTERNALSDIR}//*.dll
     dest_path = $${externals_target.path}
     copy_externals.commands += xcopy /Y $$shell_path($$source_path) $$shell_path($$dest_path) $$escape_expand(\n\t)
     QMAKE_EXTRA_TARGETS += copy_externals

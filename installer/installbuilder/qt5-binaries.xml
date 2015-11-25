@@ -69,6 +69,12 @@
                 <distributionFile>
                     <origin>../../dist/bin/expat.dll</origin>
                 </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/bin/libeay32.dll</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/bin/ssleay32.dll</origin>
+                </distributionFile>
             </distributionFileList>
         </folder>
         <folder>

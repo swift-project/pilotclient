@@ -14,7 +14,7 @@
             <distributionFileList>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/sample_*.exe</origin>
+                    <origin>../../dist/bin/sample*.exe</origin>
                 </distributionFile>
             </distributionFileList>
         </folder>
