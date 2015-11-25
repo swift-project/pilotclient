@@ -19,9 +19,11 @@ namespace BlackMisc
     {
         CUrlList::CUrlList() { }
 
-        CUrlList::CUrlList(const QStringList &listOfUrls)
+        CUrlList::CUrlList(const QStringList &listOfUrls, bool removeDuplicates)
         {
-            for (const QString &url : listOfUrls)
+            QStringList urlList(listOfUrls);
+            if (removeDuplicates) { urlList.removeDuplicates(); }
+            for (const QString &url : urlList)
             {
                 this->push_back(CUrl(url));
             }
@@ -110,6 +112,27 @@ namespace BlackMisc
             return sl.join(separator);
         }
 
+        CUrlList CUrlList::getWithoutDuplicates() const
+        {
+            if (this->size() < 2) { return (*this); }
+            CUrlList withoutDuplicates;
+            for (const CUrl &url : (*this))
+            {
+                withoutDuplicates.replaceOrAdd(url, url);
+            }
+            return withoutDuplicates;
+        }
+
+        int CUrlList::removeDuplicates()
+        {
+            if (this->size() < 2) { return 0; }
+            CUrlList withoutDuplicates(getWithoutDuplicates());
+            if (this->size() == withoutDuplicates.size()) { return 0; }
+            int r = this->size() - withoutDuplicates.size();
+            (*this) = withoutDuplicates;
+            return r;
+        }
+
         CFailoverUrlList::CFailoverUrlList(int maxTrials) :
             m_maxTrials(maxTrials)
         { }
@@ -131,6 +154,7 @@ namespace BlackMisc
 
         bool CFailoverUrlList::addFailedUrl(const CUrl &failedUrl)
         {
+            Q_ASSERT_X(!failedUrl.isEmpty(), Q_FUNC_INFO, "empty URL as failed");
             this->m_failedUrls.push_back(failedUrl);
             return hasMoreUrlsToTry();
         }
@@ -145,10 +169,16 @@ namespace BlackMisc
         {
             if (!failedUrl.isEmpty()) { this->addFailedUrl(failedUrl); }
             if (!hasMoreUrlsToTry()) { return CUrl(); }
-            CUrl url(this->getNextUrl(random));
+            CUrl url(this->getNextUrlWithout(this->m_failedUrls, random));
             if (CNetworkUtils::canConnect(url)) { return url; }
-            if (addFailedUrl(url)) { return getNextUrl(); }
+            if (addFailedUrl(url)) { return getNextWorkingUrl(); }
             return CUrl();
+        }
+
+        void CFailoverUrlList::reset(int maxTrials)
+        {
+            this->m_failedUrls.clear();
+            if (maxTrials >= 0) { this->m_maxTrials = maxTrials; }
         }
     } // namespace
 } // namespace

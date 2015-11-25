@@ -33,7 +33,7 @@ namespace BlackMisc
             CUrlList();
 
             //! By list of URLs
-            explicit CUrlList(const QStringList &listOfUrls);
+            explicit CUrlList(const QStringList &listOfUrls, bool removeDuplicates = true);
 
             //! Construct from a base class object.
             CUrlList(const CSequence<CUrl> &other);
@@ -59,8 +59,14 @@ namespace BlackMisc
             //! To formatted String
             QString convertToQString(const QString &separator, bool i18n = false) const;
 
+            //! URLs without duplicates
+            CUrlList getWithoutDuplicates() const;
+
+            //! Remove duplicated URL and return number of removed elements
+            int removeDuplicates();
+
         private:
-            mutable int m_currentIndexDistributedLoad = -1;
+            mutable int m_currentIndexDistributedLoad = -1; //!< index for random access
         };
 
         //! URL list with fail support
@@ -90,6 +96,9 @@ namespace BlackMisc
 
             //! Next working URL, test if it can be connected
             CUrl getNextWorkingUrl(const CUrl &failedUrl = CUrl(), bool random = true);
+
+            //! Reset failed URL, allows to set an optional new number of max.trials
+            void reset(int maxTrials = -1);
 
         private:
             int m_maxTrials = 2; //!< number of max trials
