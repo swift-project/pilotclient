@@ -38,10 +38,6 @@ namespace BlackMisc
         //! \threadsafe
         void setUpdateTimestamp(const QDateTime &updateTimestamp);
 
-        //! Request to stop
-        //! \threadsafe
-        void requestStop();
-
         //! Request new reading
         //! \note override as required, default is to call initialize()
         virtual void requestReload();
@@ -65,7 +61,6 @@ namespace BlackMisc
 
     protected:
         QTimer *m_updateTimer        = nullptr;  //!< update timer
-        std::atomic<bool> m_shutdown { false };  //!< in shutdown process
         mutable QReadWriteLock m_lock {QReadWriteLock::Recursive}; //!< lock which can be used from the derived classes
 
         //! Constructor
@@ -73,9 +68,6 @@ namespace BlackMisc
 
         //! When was reply last modified, -1 if N/A
         qint64 lastModifiedMsSinceEpoch(QNetworkReply *nwReply) const;
-
-        //! Shutdown in progress or finished
-        bool isFinishedOrShutdown() const;
 
         //! Make sure everthing runs correctly in own thread
         void threadAssertCheck() const;

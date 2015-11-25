@@ -76,7 +76,7 @@ namespace BlackCore
         this->threadAssertCheck();
 
         // Worker thread, make sure to write thread safe!
-        if (this->isFinishedOrShutdown())
+        if (this->isAbandoned())
         {
             CLogMessage(this).debug() << Q_FUNC_INFO;
             CLogMessage(this).info("terminated METAR decoding process"); // for users
@@ -94,7 +94,7 @@ namespace BlackCore
             QTextStream lineReader(&metarData);
             while (!lineReader.atEnd())
             {
-                if (this->isFinishedOrShutdown()) { return; }
+                if (this->isAbandoned()) { return; }
                 QString line = lineReader.readLine();
                 CMetar metar = m_metarDecoder.decode(line);
                 if (metar != CMetar())

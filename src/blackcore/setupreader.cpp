@@ -143,7 +143,7 @@ namespace BlackCore
         QString urlString(url.toString());
         QString replyMessage(nwReply->errorString());
 
-        if (this->isFinishedOrShutdown())
+        if (this->isAbandoned())
         {
             CLogMessage(this).info("Terminated loading bootstrap files");
             nwReply->abort();
@@ -232,7 +232,7 @@ namespace BlackCore
         QString urlString(url.toString());
         QString replyMessage(nwReply->errorString());
 
-        if (this->isFinishedOrShutdown())
+        if (this->isAbandoned())
         {
             CLogMessage(this).info("Terminated loading of update info");
             nwReply->abort();

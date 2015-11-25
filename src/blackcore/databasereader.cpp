@@ -26,7 +26,7 @@ namespace BlackCore
 
     void CDatabaseReader::readInBackgroundThread(CEntityFlags::Entity entities)
     {
-        if (isFinishedOrShutdown()) { return; }
+        if (isAbandoned()) { return; }
         this->m_watchdogTimer.stop();
         bool s = QMetaObject::invokeMethod(this, "ps_read", Q_ARG(BlackMisc::Network::CEntityFlags::Entity, entities));
         Q_ASSERT_X(s, Q_FUNC_INFO, "Invoke failed");
@@ -37,7 +37,7 @@ namespace BlackCore
     {
         this->threadAssertCheck();
         JsonDatastoreResponse datastoreResponse;
-        if (this->isFinishedOrShutdown())
+        if (this->isAbandoned())
         {
             CLogMessage(this).info("Terminated data parsing process"); // for users
             nwReply->abort();

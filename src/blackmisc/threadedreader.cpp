@@ -36,11 +36,6 @@ namespace BlackMisc
         return -1;
     }
 
-    bool CThreadedReader::isFinishedOrShutdown() const
-    {
-        return m_shutdown || isFinished();
-    }
-
     QDateTime CThreadedReader::getUpdateTimestamp() const
     {
         QReadLocker lock(&this->m_lock);
@@ -53,14 +48,6 @@ namespace BlackMisc
         this->m_updateTimestamp = updateTimestamp;
     }
 
-    void CThreadedReader::requestStop()
-    {
-        if (m_updateTimer)
-        {
-            QMetaObject::invokeMethod(m_updateTimer, "stop");
-        }
-    }
-
     void CThreadedReader::requestReload()
     {
         // default implementation, subclasses shall override as required
@@ -69,15 +56,11 @@ namespace BlackMisc
 
     void CThreadedReader::gracefulShutdown()
     {
-        if (this->m_shutdown) { return; }
-        this->m_shutdown = true;
-        this->requestStop();
-        this->quit();
+        this->abandonAndWait();
     }
 
     CThreadedReader::~CThreadedReader()
     {
-        this->m_shutdown = true;
     }
 
     void CThreadedReader::setInterval(int updatePeriodMs)

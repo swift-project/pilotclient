@@ -57,7 +57,7 @@ namespace BlackCore
         this->threadAssertCheck();
 
         // Worker thread, make sure to write no members here!
-        if (this->isFinishedOrShutdown())
+        if (this->isAbandoned())
         {
             CLogMessage(this).debug() << Q_FUNC_INFO;
             CLogMessage(this).info("terminated booking parsing process"); // for users
@@ -93,7 +93,7 @@ namespace BlackCore
                 CAtcStationList bookedStations;
                 for (int i = 0; i < size; i++)
                 {
-                    if (this->isFinishedOrShutdown())
+                    if (this->isAbandoned())
                     {
                         CLogMessage(this).debug() << Q_FUNC_INFO;
                         CLogMessage(this).info("Terminated booking parsing process"); // for users

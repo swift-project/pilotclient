@@ -172,7 +172,7 @@ namespace BlackCore
         this->threadAssertCheck();
 
         // Worker thread, make sure to write only synced here!
-        if (this->isFinishedOrShutdown())
+        if (this->isAbandoned())
         {
             CLogMessage(this).debug() << Q_FUNC_INFO;
             CLogMessage(this).info("Terminated VATSIM file parsing process"); // for users
@@ -201,7 +201,7 @@ namespace BlackCore
             Section section = SectionNone;
             for (const QString &cl : lines)
             {
-                if (this->isFinishedOrShutdown())
+                if (this->isAbandoned())
                 {
                     CLogMessage(this).debug() << Q_FUNC_INFO;
                     CLogMessage(this).info("Terminated booking parsing process"); // for users
