@@ -11,6 +11,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/variant.h"
 #include <QComboBox>
+#include <QMessageBox>
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
@@ -276,6 +277,11 @@ namespace BlackGui
 
             QString configId = m_plugins->getPluginConfigId(selected->getIdentifier());
             IPluginConfig *config = m_plugins->getPluginById<IPluginConfig>(configId);
+            if (!config)
+            {
+                return;
+            }
+
             CPluginConfigWindow *window = config->createConfigWindow(qApp->activeWindow());
             CEnableForRuntime::setRuntimeForComponents(getRuntime(), window);
             window->setAttribute(Qt::WA_DeleteOnClose);
