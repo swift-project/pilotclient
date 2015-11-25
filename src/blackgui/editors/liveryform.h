@@ -43,7 +43,7 @@ namespace BlackGui
             virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *provider) override;
 
             //! Value
-            const BlackMisc::Aviation::CLivery &getValue() const;
+            BlackMisc::Aviation::CLivery getValue() const;
 
             //! Value
             void setValue(const BlackMisc::Aviation::CLivery &livery);
@@ -72,7 +72,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CLiveryForm> ui;
-            mutable BlackMisc::Aviation::CLivery m_livery; //!< object whose values will be overridden
+            BlackMisc::Aviation::CLivery    m_originalLivery; //!< object whose values will be overridden
         };
 
     } // ns

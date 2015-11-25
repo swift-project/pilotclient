@@ -41,7 +41,7 @@ namespace BlackGui
             ~CDistributorForm();
 
             //! Get value
-            const BlackMisc::Simulation::CDistributor &getValue() const;
+            BlackMisc::Simulation::CDistributor getValue() const;
 
             //! Validate, empty list means OK
             BlackMisc::CStatusMessageList validate() const;
@@ -74,7 +74,6 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CDistributorForm> ui;
-            mutable BlackMisc::Simulation::CDistributor m_distributor; // object allowing to override values
             bool m_readOnly = false;
         };
 

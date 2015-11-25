@@ -41,7 +41,7 @@ namespace BlackGui
             ~CAircraftIcaoForm();
 
             //! Get value
-            const BlackMisc::Aviation::CAircraftIcaoCode &getValue() const;
+            BlackMisc::Aviation::CAircraftIcaoCode getValue() const;
 
             //! Validate, empty list means OK
             BlackMisc::CStatusMessageList validate() const;
@@ -74,7 +74,6 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CAircraftIcaoForm> ui;
-            mutable BlackMisc::Aviation::CAircraftIcaoCode m_aircraft;
         };
 
     } // ns

@@ -41,18 +41,19 @@ namespace BlackGui
             this->ui->editor_AirlineIcao->setProvider(provider);
         }
 
-        const CLivery &CLiveryForm::getValue() const
+        CLivery CLiveryForm::getValue() const
         {
+            CLivery livery(this->m_originalLivery);
             CAirlineIcaoCode airline(this->ui->editor_AirlineIcao->getValue());
-            this->m_livery.setCombinedCode(this->ui->le_Code->text());
-            this->m_livery.setAirlineIcaoCode(airline);
-            this->m_livery.setDescription(this->ui->le_Description->text());
-            return m_livery;
+            livery.setAirlineIcaoCode(airline);
+            livery.setCombinedCode(this->ui->le_Code->text());
+            livery.setDescription(this->ui->le_Description->text());
+            return livery;
         }
 
         void CLiveryForm::setValue(const CLivery &livery)
         {
-            this->m_livery = livery;
+            this->m_originalLivery = livery;
             this->ui->le_Id->setText(livery.getDbKeyAsString());
             this->ui->le_Code->setText(livery.getCombinedCode());
             this->ui->le_Description->setText(livery.getDescription());

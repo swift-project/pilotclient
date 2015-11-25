@@ -42,7 +42,6 @@ namespace BlackGui
 
         void CDistributorForm::setValue(const BlackMisc::Simulation::CDistributor &distributor)
         {
-            this->m_distributor = distributor;
             this->ui->distributor_Selector->setDistributor(distributor);
             this->ui->le_Description->setText(distributor.getDescription());
             this->ui->le_Alias1->setText(distributor.getAlias1());
@@ -50,15 +49,13 @@ namespace BlackGui
             this->ui->le_Updated->setText(distributor.getFormattedUtcTimestampYmdhms());
         }
 
-        const CDistributor &CDistributorForm::getValue() const
+        CDistributor CDistributorForm::getValue() const
         {
-            CDistributor d(ui->distributor_Selector->getDistributor());
-            if (d.hasCompleteData()) { this->m_distributor = d;}
-
-            m_distributor.setAlias1(this->ui->le_Alias1->text());
-            m_distributor.setAlias2(this->ui->le_Alias2->text());
-            m_distributor.setDescription(this->ui->le_Description->text());
-            return m_distributor;
+            CDistributor distributor(ui->distributor_Selector->getDistributor());
+            distributor.setAlias1(this->ui->le_Alias1->text());
+            distributor.setAlias2(this->ui->le_Alias2->text());
+            distributor.setDescription(this->ui->le_Description->text());
+            return distributor;
         }
 
         CStatusMessageList CDistributorForm::validate() const

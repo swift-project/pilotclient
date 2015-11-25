@@ -44,7 +44,7 @@ namespace BlackGui
 
         void CAirlineIcaoForm::setValue(const BlackMisc::Aviation::CAirlineIcaoCode &icao)
         {
-            this->m_airline = icao;
+            this->m_originalCode = icao;
             this->ui->airline_Selector->setAirlineIcao(icao);
             this->ui->le_Id->setText(icao.getDbKeyAsString());
             this->ui->le_TelephonyDesignator->setText(icao.getTelephonyDesignator());
@@ -55,13 +55,14 @@ namespace BlackGui
             this->ui->lbl_AirlineIcon->setPixmap(icao.toPixmap());
         }
 
-        const CAirlineIcaoCode &CAirlineIcaoForm::getValue() const
+        CAirlineIcaoCode CAirlineIcaoForm::getValue() const
         {
-            m_airline.setVirtualAirline(this->ui->cb_Va->isChecked());
-            m_airline.setCountry(this->ui->country_Selector->getCountry());
-            m_airline.setName(this->ui->le_Name->text());
-            m_airline.setTelephonyDesignator(this->ui->le_TelephonyDesignator->text());
-            return m_airline;
+            CAirlineIcaoCode code(m_originalCode);
+            code.setVirtualAirline(this->ui->cb_Va->isChecked());
+            code.setCountry(this->ui->country_Selector->getCountry());
+            code.setName(this->ui->le_Name->text());
+            code.setTelephonyDesignator(this->ui->le_TelephonyDesignator->text());
+            return code;
         }
 
         CStatusMessageList CAirlineIcaoForm::validate() const

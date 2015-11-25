@@ -186,7 +186,7 @@ namespace BlackGui
 
         void CDbMappingComponent::ps_loadVPilotData()
         {
-            if (this->m_vPilotReader.readASync(true))
+            if (this->m_vPilotReader.readInBackground(true))
             {
                 CLogMessage(this).info("Start loading vPilot rulesets");
                 this->ui->tvp_AircraftModelsForVPilot->showLoadIndicator();

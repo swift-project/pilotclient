@@ -60,6 +60,7 @@ namespace BlackMisc
                 int keepModels(const QStringList &modelsToBeKept);
 
                 //! To aircraft models
+                //! \note slow operation, can take a while
                 BlackMisc::Simulation::CAircraftModelList toAircraftModels() const;
 
             private:

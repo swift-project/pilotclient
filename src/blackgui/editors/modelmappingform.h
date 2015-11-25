@@ -37,7 +37,7 @@ namespace BlackGui
             ~CModelMappingForm();
 
             //! Value
-            const BlackMisc::Simulation::CAircraftModel &getValue() const;
+            BlackMisc::Simulation::CAircraftModel getValue() const;
 
             //! Validate
             BlackMisc::CStatusMessageList validate(bool withNestedForms) const;
@@ -58,7 +58,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CModelMappingForm> ui;
-            mutable BlackMisc::Simulation::CAircraftModel m_model; //!< cached last value
+            BlackMisc::Simulation::CAircraftModel m_originalModel;
         };
 
     } // ns

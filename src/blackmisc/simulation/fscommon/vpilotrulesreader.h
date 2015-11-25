@@ -71,6 +71,7 @@ namespace BlackMisc
                 int countRulesLoaded() const;
 
                 //! Graceful shutdown
+                //! \threadsafe
                 void gracefulShutdown();
 
                 //! The standard directory for vPilot mappings
@@ -87,11 +88,12 @@ namespace BlackMisc
 
                 //! Load data in background thread
                 //! \threadsafe
-                BlackMisc::CWorker *readASync(bool convertToModels);
+                BlackMisc::CWorker *readInBackground(bool convertToModels);
 
             private slots:
                 //! Asyncronous read finished
-                void ps_readASyncFinished();
+                //! \threadsafe
+                void ps_readInBackgroundFinished();
 
             private:
                 QStringList m_fileList;              //!< list of file names

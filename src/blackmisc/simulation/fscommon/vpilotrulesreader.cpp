@@ -82,12 +82,12 @@ namespace BlackMisc
                 // already cached?
                 {
                     QReadLocker l(&m_lockData);
-                    if (!m_models.isEmpty() || m_rules.isEmpty()) return m_models;
+                    if (!m_models.isEmpty() || m_rules.isEmpty()) { return m_models; }
+                    if (m_shutdown) { return CAircraftModelList(); }
                 }
 
                 // important: that can take a while and should normally
                 // run in background
-                if (m_shutdown) { return CAircraftModelList(); }
                 CVPilotModelRuleSet rules(getRules()); // thread safe copy
                 CAircraftModelList models(rules.toAircraftModels()); // long lasting operation
                 QWriteLocker l(&m_lockData);
@@ -103,6 +103,7 @@ namespace BlackMisc
 
             void CVPilotRulesReader::gracefulShutdown()
             {
+                QWriteLocker l(&m_lockData);
                 m_shutdown = true;
             }
 
@@ -151,23 +152,23 @@ namespace BlackMisc
                 return success;
             }
 
-            CWorker *CVPilotRulesReader::readASync(bool convertToModels)
+            CWorker *CVPilotRulesReader::readInBackground(bool convertToModels)
             {
                 // set a thread safe flag
                 {
                     QWriteLocker l(&m_lockData);
-                    if (m_asyncLoadInProgress) { return nullptr; }
+                    if (m_asyncLoadInProgress || m_shutdown) { return nullptr; }
                     m_asyncLoadInProgress = true;
                 }
                 BlackMisc::CWorker *worker = BlackMisc::CWorker::fromTask(this, "CVPilotRulesReader", [this, convertToModels]()
                 {
                     this->read(convertToModels);
                 });
-                worker->then(this, &CVPilotRulesReader::ps_readASyncFinished);
+                worker->then(this, &CVPilotRulesReader::ps_readInBackgroundFinished);
                 return worker;
             }
 
-            void CVPilotRulesReader::ps_readASyncFinished()
+            void CVPilotRulesReader::ps_readInBackgroundFinished()
             {
                 QWriteLocker l(&m_lockData);
                 m_asyncLoadInProgress = false;

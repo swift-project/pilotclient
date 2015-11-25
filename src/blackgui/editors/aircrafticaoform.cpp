@@ -42,7 +42,6 @@ namespace BlackGui
 
         void CAircraftIcaoForm::setValue(const BlackMisc::Aviation::CAircraftIcaoCode &icao)
         {
-            this->m_aircraft = icao;
             this->ui->le_Id->setText(icao.getDbKeyAsString());
             this->ui->aircraft_Selector->setAircraftIcao(icao);
             this->ui->le_Manufacturer->setText(icao.getManufacturer());
@@ -61,13 +60,9 @@ namespace BlackGui
             this->ui->le_Updated->setText(icao.getFormattedUtcTimestampYmdhms());
         }
 
-        const CAircraftIcaoCode &CAircraftIcaoForm::getValue() const
+        CAircraftIcaoCode CAircraftIcaoForm::getValue() const
         {
             CAircraftIcaoCode icao(this->ui->aircraft_Selector->getAircraftIcao());
-            if (icao.hasCompleteData())
-            {
-                m_aircraft = icao;
-            }
             QString manufacturer(this->ui->le_Manufacturer->text().trimmed().toUpper());
             QString modelDescription(this->ui->le_ModelDescription->text());
             QString wtc(ui->cb_Wtc->currentText().left(1));
@@ -78,13 +73,13 @@ namespace BlackGui
             bool legacy = this->ui->cb_Legacy->isChecked();
             bool military = this->ui->cb_Military->isChecked();
             bool realWorld = this->ui->cb_RealWorld->isChecked();
-            m_aircraft.setManufacturer(manufacturer);
-            m_aircraft.setModelDescription(modelDescription);
-            m_aircraft.setWtc(wtc);
-            m_aircraft.setCodeFlags(military, legacy, realWorld);
-            m_aircraft.setRank(rank);
-            m_aircraft.setCombinedType(combined);
-            return m_aircraft;
+            icao.setManufacturer(manufacturer);
+            icao.setModelDescription(modelDescription);
+            icao.setWtc(wtc);
+            icao.setCodeFlags(military, legacy, realWorld);
+            icao.setRank(rank);
+            icao.setCombinedType(combined);
+            return icao;
         }
 
         CStatusMessageList CAircraftIcaoForm::validate() const

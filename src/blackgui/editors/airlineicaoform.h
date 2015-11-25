@@ -44,7 +44,7 @@ namespace BlackGui
             void setValue(const BlackMisc::Aviation::CAirlineIcaoCode &icao = BlackMisc::Aviation::CAirlineIcaoCode());
 
             //! Get value
-            const BlackMisc::Aviation::CAirlineIcaoCode &getValue() const;
+            BlackMisc::Aviation::CAirlineIcaoCode getValue() const;
 
             //! Validate, empty list means OK
             BlackMisc::CStatusMessageList validate() const;
@@ -69,8 +69,8 @@ namespace BlackGui
             void ps_droppedCode(const BlackMisc::CVariant &variantDropped);
 
         private:
-            QScopedPointer<Ui::CAirlineIcaoForm> ui;
-            mutable BlackMisc::Aviation::CAirlineIcaoCode m_airline; // object allowing to override values
+            QScopedPointer<Ui::CAirlineIcaoForm>  ui;
+            BlackMisc::Aviation::CAirlineIcaoCode m_originalCode; //!< object allowing to override values
         };
 
     } // ns

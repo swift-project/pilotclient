@@ -31,13 +31,14 @@ namespace BlackGui
         CModelMappingForm::~CModelMappingForm()
         { }
 
-        const BlackMisc::Simulation::CAircraftModel &CModelMappingForm::getValue() const
+        BlackMisc::Simulation::CAircraftModel CModelMappingForm::getValue() const
         {
-            m_model.setSimulatorInfo(this->ui->selector_Simulator->getValue());
-            m_model.setDescription(this->ui->le_Description->text());
-            m_model.setModelString(this->ui->le_ModelKey->text());
-            m_model.setName(this->ui->le_Name->text());
-            return m_model;
+            CAircraftModel model(m_originalModel);
+            model.setSimulatorInfo(this->ui->selector_Simulator->getValue());
+            model.setDescription(this->ui->le_Description->text());
+            model.setModelString(this->ui->le_ModelKey->text());
+            model.setName(this->ui->le_Name->text());
+            return model;
         }
 
         CStatusMessageList CModelMappingForm::validate(bool withNestedForms) const
@@ -63,6 +64,7 @@ namespace BlackGui
             ui->le_Description->setText(model.getDescription());
             ui->le_Name->setText(model.getName());
             ui->selector_Simulator->setValue(model.getSimulatorInfo());
+            m_originalModel = model;
         }
     } // ns
 } // ns
