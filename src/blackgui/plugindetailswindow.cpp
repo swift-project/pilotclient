@@ -21,6 +21,8 @@ namespace BlackGui
     {
         ui->setupUi(this);
 
+        setWindowModality(Qt::WindowModal);
+
         QFont font = ui->lbl_PluginName->font();
         font.setPointSize(font.pointSize() + 2);
         ui->lbl_PluginName->setFont(font);

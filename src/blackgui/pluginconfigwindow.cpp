@@ -7,7 +7,7 @@ namespace BlackGui {
 
     CPluginConfigWindow::CPluginConfigWindow(QWidget *parent) : QWidget(parent, Qt::Window)
     {
-
+        setWindowModality(Qt::WindowModal);
     }
 
     void CPluginConfigWindow::showEvent(QShowEvent *event)
