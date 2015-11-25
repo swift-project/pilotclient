@@ -102,7 +102,8 @@ win32-g++ {
 
 ############### Install externals ##############
 
-externals_target.path = $${PREFIX}/bin
+win32: externals_target.path = $${PREFIX}/bin
+else: externals_target.path = $${PREFIX}/lib
 !win32-g++: externals_target.files *= $${EXTERNALSDIR}/*.$${QMAKE_EXTENSION_SHLIB}
 INSTALLS += externals_target
 
