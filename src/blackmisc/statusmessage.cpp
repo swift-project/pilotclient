@@ -104,39 +104,33 @@ namespace BlackMisc
         }
     }
 
-    QString CStatusMessage::getHumanReadableCategory() const
+    QString CStatusMessage::getHumanReadablePattern() const
     {
         //! \todo This should me not hardcoded
         if (this->m_humanReadableCategory.isEmpty())
         {
-            const QString cat(this->m_categories.toQString().toLower());
-            // could als be subject of i18n
-            // from sepcific to unspecific
-            if (cat.isEmpty()) { this->m_humanReadableCategory = "None"; }
-            else if (cat.contains(CLogCategory::validation().toQString())) { this->m_humanReadableCategory = "Validation"; }
-            else if (cat.contains("contextaudio")) { this->m_humanReadableCategory = "Audio"; }
-            else if (cat.contains("contextsimulator")) { this->m_humanReadableCategory = "Simulator"; }
-            else if (cat.contains("contextnetwork")) { this->m_humanReadableCategory = "Network"; }
-            else if (cat.contains("vatlib")) { this->m_humanReadableCategory = "VATSIM library"; }
-            else if (cat.contains("blackmisc")) { this->m_humanReadableCategory = "Library"; }
-            else if (cat.contains("blackcore")) { this->m_humanReadableCategory = "Core"; }
-            else if (cat.contains("blackgui")) { this->m_humanReadableCategory = "GUI"; }
-            else if (cat.contains("blacksound")) { this->m_humanReadableCategory = "GUI"; }
-            else if (cat.contains("interpolator")) { this->m_humanReadableCategory = "Interpolator"; }
-            else if (cat.contains("xplane")) { this->m_humanReadableCategory = "XPlane"; }
-            else if (cat.contains("fsx")) { this->m_humanReadableCategory = "FSX"; }
-            else if (cat.contains("fs9")) { this->m_humanReadableCategory = "FS9"; }
-            else if (cat.contains("mapping") || cat.contains("matching")) { this->m_humanReadableCategory = "Model matching"; }
-
-            else this->m_humanReadableCategory = "Misc.";
+            QStringList patternNames(getHumanReadablePatterns());
+            this->m_humanReadableCategory = patternNames.isEmpty() ?
+                                            "None" : patternNames.join(", ");
         }
         return this->m_humanReadableCategory;
+    }
+
+    QStringList CStatusMessage::getHumanReadablePatterns() const
+    {
+        QStringList patternNames;
+        for (const QString &name : CLogPattern::allHumanReadableNames())
+        {
+            if (CLogPattern::fromHumanReadableName(name).match(*this)) { patternNames.push_back(name); }
+        }
+        return patternNames;
     }
 
     void CStatusMessage::markAsHandledBy(const QObject *object) const
     {
         this->m_handledByObjects.push_back(quintptr(object));
     }
+
     bool CStatusMessage::wasHandledBy(const QObject *object) const
     {
         return this->m_handledByObjects.contains(quintptr(object));
@@ -293,7 +287,7 @@ namespace BlackMisc
         case IndexCategories:
             return CVariant::from(this->m_categories.toQString());
         case IndexCategoryHumanReadable:
-            return CVariant::from(this->getHumanReadableCategory());
+            return CVariant::from(this->getHumanReadablePattern());
         default:
             return CValueObject::propertyByIndex(index);
         }

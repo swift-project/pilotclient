@@ -35,7 +35,7 @@ namespace BlackGui
     {
         ui->te_Message->setPlainText(message.getMessage());
         ui->lbl_SeverityIcon->setPixmap(message.toPixmap());
-        ui->le_Categories->setText(message.getCategories().toQString(true));
+        ui->le_Categories->setText(message.getHumanReadablePattern());
         ui->le_Severity->setText(message.getSeverityAsString());
         ui->le_Timestamp->setText(message.getFormattedUtcTimestampYmdhms());
     }

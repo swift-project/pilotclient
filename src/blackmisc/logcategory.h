@@ -72,6 +72,7 @@ namespace BlackMisc
         }
 
         //! All predefined special categories
+        //! \note Human readable patterns are defined in CLogPattern::allHumanReadablePatterns
         static const QList<CLogCategory> &allSpecialCategories()
         {
             static const QList<CLogCategory> cats

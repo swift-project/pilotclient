@@ -52,7 +52,7 @@ namespace BlackMisc
         if (! m_logPattern.match(statusMessage)) { return; }
 
         QString finalContent = QDateTime::currentDateTime().toString(QStringLiteral("hh:mm:ss "));
-        finalContent += statusMessage.getHumanReadableCategory();
+        finalContent += statusMessage.getHumanReadablePattern();
         finalContent += " ";
         finalContent += statusMessage.getSeverityAsString();
         finalContent += ": ";

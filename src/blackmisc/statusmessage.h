@@ -83,7 +83,10 @@ namespace BlackMisc
         const CLogCategoryList &getCategories() const { return this->m_categories; }
 
         //! Human readable category
-        QString getHumanReadableCategory() const;
+        QString getHumanReadablePattern() const;
+
+        //! All human readable categories
+        QStringList getHumanReadablePatterns() const;
 
         //! Message severity
         StatusSeverity getSeverity() const { return this->m_severity; }
