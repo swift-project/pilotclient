@@ -121,23 +121,23 @@ namespace BlackMisc
 
         CSimulatorInfo::Simulator CSimulatorInfo::identifierToFlag(const QString &identifier)
         {
-            QString i(identifier.toLower().trimmed());
+            QString i(identifier.toLower().trimmed().remove(' ').remove('-'));
             if (i.isEmpty()) { return None; }
 
             Simulator s = None;
-            if (i.contains("fsx") || i.contains(" sx"))
+            if (i.contains("fsx") || i.contains("fs10"))
             {
                 s |= FSX;
             }
-            if (i.contains("fs9"))
+            if (i.contains("fs9") || i.contains("2004"))
             {
                 s |= FS9;
             }
-            if (i.contains("xplane")  || i.contains("xp") || i.contains("x plane"))
+            if (i.contains("plane")  || i.contains("xp"))
             {
                 s |= XPLANE;
             }
-            if (i.contains("3d")  || i.contains("prepare"))
+            if (i.contains("3d")  || i.contains("prepare") || i.contains("martin") || i.contains("lm") || i.contains("lock"))
             {
                 s |= P3D;
             }

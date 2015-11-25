@@ -129,7 +129,7 @@ QPushButton {
   background-color: rgba(0, 0, 255, 128);
   border-style: 1px solid yellow;
   border-radius:3px;
-  color: yellow;
+  color: yellow;  /** font color **/
   padding: 0px;
   margin-right: 5px;
   min-width:60px;
@@ -137,12 +137,17 @@ QPushButton {
 }
 
 QPushButton::disabled {
-  background-color: grey;
+  background-color: rgba(77, 88, 99, 128); /** slated gray if a channel)
   border-style: none;
-  border-radius:3px;
+  border-radius: 3px;
   color: white;
   padding: 0px;
   margin-right: 5px;
+}
+
+QToolButton {
+  background-color: transparent; /* transparent tool buttons */
+  border: 0px;
 }
 
 QProgressBar {
@@ -220,11 +225,6 @@ QSplitter::handle:vertical {
 
 QLabel {
   background: transparent;
-}
-
-QToolButton {
-  background-color: transparent; /* transparent tool buttons */
-  border: 0px;
 }
 
 QLineEdit {
