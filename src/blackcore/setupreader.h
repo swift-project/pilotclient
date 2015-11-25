@@ -44,6 +44,9 @@ namespace BlackCore
         //! \copydoc CThreadedReader::initialize
         virtual void initialize() override;
 
+        //! \copydoc CThreadedReader::cleanup
+        virtual void cleanup() override;
+
     private slots:
         //! Setup has been read
         //! \threadsafe

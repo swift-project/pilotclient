@@ -57,6 +57,12 @@ namespace BlackCore
         return m_metars.size();
     }
 
+    void CVatsimMetarReader::cleanup()
+    {
+        delete this->m_networkManager;
+        this->m_networkManager = nullptr;
+    }
+
     void CVatsimMetarReader::ps_readMetars()
     {
         this->threadAssertCheck();

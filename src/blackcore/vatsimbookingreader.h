@@ -43,6 +43,10 @@ namespace BlackCore
         //! Data have been read
         void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
+    protected:
+        //! \copydoc CThreadedReader::cleanup
+        virtual void cleanup() override;
+
     private slots:
         //! Bookings have been read
         //! \threadsafe

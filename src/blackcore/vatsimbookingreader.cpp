@@ -37,6 +37,12 @@ namespace BlackCore
         Q_UNUSED(s);
     }
 
+    void CVatsimBookingReader::cleanup()
+    {
+        delete this->m_networkManager;
+        this->m_networkManager = nullptr;
+    }
+
     void CVatsimBookingReader::ps_read()
     {
         this->threadAssertCheck();

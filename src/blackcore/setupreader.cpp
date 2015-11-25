@@ -66,6 +66,15 @@ namespace BlackCore
         QTimer::singleShot(500, this, &CSetupReader::ps_readSetup);
     }
 
+    void CSetupReader::cleanup()
+    {
+        delete this->m_networkManagerBootstrap;
+        this->m_networkManagerBootstrap = nullptr;
+
+        delete this->m_networkManagerUpdateInfo;
+        this->m_networkManagerUpdateInfo = nullptr;
+    }
+
     void CSetupReader::ps_readSetup()
     {
         this->threadAssertCheck();

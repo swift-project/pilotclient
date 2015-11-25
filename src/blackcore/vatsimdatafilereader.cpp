@@ -149,6 +149,12 @@ namespace BlackCore
         Q_UNUSED(s);
     }
 
+    void CVatsimDataFileReader::cleanup()
+    {
+        delete this->m_networkManager;
+        this->m_networkManager = nullptr;
+    }
+
     void CVatsimDataFileReader::ps_read()
     {
         this->threadAssertCheck();
