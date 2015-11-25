@@ -49,9 +49,6 @@ namespace BlackMisc
         //! Destructor
         virtual ~CThreadedReader();
 
-        //! \copydoc CContinuousWorker::cleanup
-        virtual void cleanup() override;
-
         //! Set the update time
         //! \param updatePeriodMs <=0 stops the timer
         //! \threadsafe
@@ -61,6 +58,7 @@ namespace BlackMisc
         //! \threadsafe
         int interval() const;
 
+    public slots:
         //! Graceful shutdown
         //! \threadsafe
         void gracefulShutdown();

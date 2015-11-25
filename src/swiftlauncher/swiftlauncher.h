@@ -14,7 +14,8 @@
 
 #include <QDialog>
 #include <QScopedPointer>
-#include "blackcore/setupreader.h"
+#include "blackcore/data/globalsetup.h"
+#include "blackcore/data/updateinfo.h"
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "swiftguistandard/guimodeenums.h"
@@ -58,8 +59,8 @@ protected:
 
 private:
     QScopedPointer<Ui::CSwiftLauncher>             ui;
-    BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup    { this, &CSwiftLauncher::ps_loadedSetup }; //!< setup cache
-    BlackCore::CData<BlackCore::Data::UpdateInfo>  m_updateInfo { this, &CSwiftLauncher::ps_loadedSetup };
+    BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup    { this, &CSwiftLauncher::ps_changedCache };   //!< setup cache
+    BlackCore::CData<BlackCore::Data::UpdateInfo>  m_updateInfo { this, &CSwiftLauncher::ps_changedCache }; //!< version cache
     QString     m_executable;
     QStringList m_executableArgs;
 
@@ -113,7 +114,10 @@ private slots:
     void ps_loadSetup();
 
     //! Loaded latest version
-    void ps_loadedSetup();
+    void ps_loadedSetup(bool success);
+
+    //! Cache values have been changed
+    void ps_changedCache();
 
     //! Start button pressed
     void ps_startButtonPressed();

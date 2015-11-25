@@ -35,8 +35,8 @@ using namespace BlackMisc::Weather;
 namespace BlackCore
 {
     CWebDataServices::CWebDataServices(
-        CWebReaderFlags::WebReader readerFlags, int autoReadAfterSetupSynchronized, QObject *parent) :
-        QObject(parent), m_readerFlags(readerFlags), m_autoReadAfterSetupMs(autoReadAfterSetupSynchronized)
+        CWebReaderFlags::WebReader readerFlags, int autoReadAfterSetupSynchronizedMs, QObject *parent) :
+        QObject(parent), m_readerFlags(readerFlags), m_autoReadAfterSetupMs(autoReadAfterSetupSynchronizedMs)
     {
         this->setObjectName("CWebDataReader");
         connect(&CSetupReader::instance(), &CSetupReader::setupSynchronized, this, &CWebDataServices::ps_setupRead);

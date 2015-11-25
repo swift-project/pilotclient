@@ -14,7 +14,6 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/webreaderflags.h"
-#include "blackcore/setupreader.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/liverylist.h"
@@ -53,7 +52,7 @@ namespace BlackCore
     public:
         //! Constructor
         CWebDataServices(CWebReaderFlags::WebReader readerFlags,
-                         int autoReadAfterSetupSynchronized, QObject *parent = nullptr);
+                         int autoReadAfterSetupSynchronizedMs, QObject *parent = nullptr);
 
         //! Shutdown
         void gracefulShutdown();

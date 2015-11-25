@@ -11,7 +11,7 @@
 #include "ui_swiftlauncher.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/dbusserver.h"
-#include "blackcore/data/updateinfo.h"
+#include "blackcore/setupreader.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/project.h"
@@ -49,10 +49,12 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(ui->tb_SwiftGui, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
     connect(ui->tb_Database, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
     connect(ui->tb_BackToMain, &QToolButton::pressed, this, &CSwiftLauncher::ps_showMainPage);
+    connect(&CSetupReader::instance(), &CSetupReader::versionSynchronized, this, &CSwiftLauncher::ps_loadedSetup);
 
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_L), this, SLOT(ps_showLogPage()));
     this->ui->le_DBusServerPort->setValidator(new QIntValidator(0, 65535, this));
-    QTimer::singleShot(5000, this, &CSwiftLauncher::ps_loadedSetup); //deferred init of setup
+
+    // QTimer::singleShot(5000, this, &CSwiftLauncher::ps_loadedSetup); //deferred init of setup
 }
 
 CSwiftLauncher::~CSwiftLauncher()
@@ -254,11 +256,21 @@ QString CSwiftLauncher::toCmdLine(const QString &exe, const QStringList &exeArgs
 
 void CSwiftLauncher::ps_loadSetup()
 {
-    CSetupReader::instance().requestReload();
+    if (!this->ui->le_LatestVersion->text().isEmpty())
+    {
+        this->ui->le_LatestVersion->setText("");
+        CSetupReader::instance().requestReload();
+    }
 }
 
-void CSwiftLauncher::ps_loadedSetup()
+void CSwiftLauncher::ps_loadedSetup(bool success)
 {
+    if (!success)
+    {
+        CLogMessage(this).warning("Loading setup or version information failed");
+        return;
+    }
+
     CUpdateInfo updateInfo(this->m_updateInfo.get());
     QString latestVersion(updateInfo.getLatestVersion()) ; // need to get this from somewhere
     CUrlList downloadUrls(updateInfo.getDownloadUrls());
@@ -276,6 +288,11 @@ void CSwiftLauncher::ps_loadedSetup()
     }
 
     this->displayLatestNews();
+}
+
+void CSwiftLauncher::ps_changedCache()
+{
+    this->ps_loadedSetup(true);
 }
 
 void CSwiftLauncher::ps_startButtonPressed()

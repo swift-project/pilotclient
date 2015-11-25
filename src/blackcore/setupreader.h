@@ -37,6 +37,9 @@ namespace BlackCore
         //! Setup has been read
         void setupSynchronized(bool success);
 
+        //! Version bas been read
+        void versionSynchronized(bool success);
+
     protected slots:
         //! \copydoc CThreadedReader::initialize
         virtual void initialize() override;

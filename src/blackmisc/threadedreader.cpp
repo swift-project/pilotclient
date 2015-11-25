@@ -17,7 +17,11 @@ namespace BlackMisc
     CThreadedReader::CThreadedReader(QObject *owner, const QString &name) :
         CContinuousWorker(owner, name),
         m_updateTimer(new QTimer(this))
-    {  }
+    {
+        bool c = connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &CThreadedReader::gracefulShutdown);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+        Q_UNUSED(c);
+    }
 
     qint64 CThreadedReader::lastModifiedMsSinceEpoch(QNetworkReply *nwReply) const
     {
@@ -51,7 +55,10 @@ namespace BlackMisc
 
     void CThreadedReader::requestStop()
     {
-        QMetaObject::invokeMethod(m_updateTimer, "stop");
+        if (m_updateTimer)
+        {
+            QMetaObject::invokeMethod(m_updateTimer, "stop");
+        }
     }
 
     void CThreadedReader::requestReload()
@@ -62,6 +69,7 @@ namespace BlackMisc
 
     void CThreadedReader::gracefulShutdown()
     {
+        if (this->m_shutdown) { return; }
         this->m_shutdown = true;
         this->requestStop();
         this->quit();
@@ -69,12 +77,7 @@ namespace BlackMisc
 
     CThreadedReader::~CThreadedReader()
     {
-        cleanup();
-    }
-
-    void CThreadedReader::cleanup()
-    {
-        // cleanup code would go here
+        this->m_shutdown = true;
     }
 
     void CThreadedReader::setInterval(int updatePeriodMs)

@@ -90,6 +90,7 @@ namespace BlackCore
         if (url.isEmpty())
         {
             CLogMessage(this).warning("Cannot read update info, failed URLs: %1") << this->m_updateInfoUrls.read()->getFailedUrls();
+            emit versionSynchronized(false);
             return;
         }
         QNetworkRequest request(url);
@@ -144,7 +145,6 @@ namespace BlackCore
 
         if (this->isFinishedOrShutdown())
         {
-            CLogMessage(this).debug() << Q_FUNC_INFO;
             CLogMessage(this).info("Terminated loading bootstrap files");
             nwReply->abort();
             emit setupSynchronized(false);
@@ -234,9 +234,9 @@ namespace BlackCore
 
         if (this->isFinishedOrShutdown())
         {
-            CLogMessage(this).debug() << Q_FUNC_INFO;
             CLogMessage(this).info("Terminated loading of update info");
             nwReply->abort();
+            emit versionSynchronized(false);
             return; // stop, terminate straight away, ending thread
         }
 
@@ -263,6 +263,7 @@ namespace BlackCore
                 if (sameVersionLoaded)
                 {
                     CLogMessage(this).info("Same update info loaded from %1 as already in data cache %2") << urlString << m_updateInfo.getFilename();
+                    emit versionSynchronized(true);
                     return; // success
                 }
 
@@ -279,11 +280,13 @@ namespace BlackCore
                     if (!m.isEmpty())
                     {
                         CLogMessage(this).preformatted(m);
+                        emit versionSynchronized(false);
                         return; // issue with cache
                     }
                     else
                     {
                         CLogMessage(this).info("Update info: Updated data cache in %1") << m_updateInfo.getFilename();
+                        emit versionSynchronized(true);
                         return; // success
                     } // cache
                 } // outdated?
@@ -301,6 +304,10 @@ namespace BlackCore
         if (this->m_updateInfoUrls.uniqueWrite()->addFailedUrl(url))
         {
             QTimer::singleShot(500, this, &CSetupReader::ps_readSetup);
+        }
+        else
+        {
+            emit versionSynchronized(false);
         }
     } // method
 
