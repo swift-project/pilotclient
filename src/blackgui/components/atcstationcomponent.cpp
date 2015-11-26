@@ -126,7 +126,11 @@ namespace BlackGui
                 // update
                 if (this->m_timestampOnlineStationsChanged > this->m_timestampLastReadOnlineStations)
                 {
-                    this->ui->tvp_AtcStationsOnline->updateContainerMaybeAsync(this->getIContextNetwork()->getAtcStationsOnline().stationsWithValidVoiceRoom());
+                    this->ui->tvp_AtcStationsOnline->updateContainerMaybeAsync(
+                        // test: filter by frequency, see if this is better
+                        // this->getIContextNetwork()->getAtcStationsOnline().stationsWithValidVoiceRoom()
+                        this->getIContextNetwork()->getAtcStationsOnline().stationsWithValidFrequency()
+                    );
                     this->m_timestampLastReadOnlineStations = QDateTime::currentDateTimeUtc();
                     this->m_timestampOnlineStationsChanged = this->m_timestampLastReadOnlineStations;
 

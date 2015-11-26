@@ -37,6 +37,11 @@ namespace BlackMisc
             return this->findBy(&CAtcStation::hasValidVoiceRoom, true);
         }
 
+        CAtcStationList CAtcStationList::stationsWithValidFrequency() const
+        {
+            return this->findBy(&CAtcStation::hasValidFrequency, true);
+        }
+
         CUserList CAtcStationList::getControllers() const
         {
             return this->findBy(Predicates::MemberValid(&CAtcStation::getController)).transform(Predicates::MemberTransform(&CAtcStation::getController));
