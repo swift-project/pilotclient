@@ -82,6 +82,9 @@ namespace BlackMisc
         //! Convert each of the categories to a QString and return the result as a QStringList.
         QStringList toQStringList() const;
 
+        //! \copydoc BlackMisc::CValueObject::toQString
+        QString toQString(bool i18n = false) const;
+
         //! Convert a string list, such as that returned by toQStringList(), into a CLogCategoryList.
         static CLogCategoryList fromQStringList(const QStringList &stringList);
 

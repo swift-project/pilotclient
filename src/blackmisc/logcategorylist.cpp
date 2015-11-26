@@ -24,6 +24,11 @@ namespace BlackMisc
         return transform([](const CLogCategory &cat) { return cat.toQString(); });
     }
 
+    QString CLogCategoryList::toQString(bool i18n) const
+    {
+        return convertToQString(i18n);
+    }
+
     QString CLogCategoryList::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n); // log categories are always Latin-1
