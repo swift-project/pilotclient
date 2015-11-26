@@ -19,6 +19,24 @@ namespace BlackMisc
     {
         CUrlList::CUrlList() { }
 
+        CUrlList::CUrlList(const CUrlList &other) : CSequence<CUrl>(other)
+        {
+            *this = other;
+        }
+
+        CUrlList &CUrlList::operator =(const CUrlList &other)
+        {
+            if (this == &other) { return *this; }
+
+            QReadLocker readLock(&other.m_lock);
+            int index = other.m_currentIndexDistributedLoad;
+            readLock.unlock(); // avoid deadlock
+
+            QWriteLocker writeLock(&this->m_lock);
+            this->m_currentIndexDistributedLoad = index;
+            return *this;
+        }
+
         CUrlList::CUrlList(const QStringList &listOfUrls, bool removeDuplicates)
         {
             QStringList urlList(listOfUrls);

@@ -13,14 +13,12 @@
 
 namespace BlackMisc
 {
-    CPixmap::CPixmap() = default;
-
     CPixmap::CPixmap(const QPixmap &pixmap) : m_pixmap(pixmap), m_hasCachedPixmap(true)
     {
         this->fillByteArray();
     }
 
-    CPixmap::CPixmap(const CPixmap &other) : CValueObject()
+    CPixmap::CPixmap(const CPixmap &other) : CValueObject(other)
     {
         *this = other;
     }

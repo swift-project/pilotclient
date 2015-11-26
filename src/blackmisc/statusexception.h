@@ -1,5 +1,5 @@
 /* Copyright (C) 2015
- * Swift Project Community / Contributors
+ * swift Project Community / Contributors
  *
  * This file is part of Swift Project. It is subject to the license terms in the LICENSE file found in the top-level
  * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
@@ -17,7 +17,6 @@
 
 namespace BlackMisc
 {
-
     /*!
      * Throwable exception class containing a CStatusMessage.
      *
@@ -27,30 +26,28 @@ namespace BlackMisc
     {
     public:
         //! Constructor.
-        explicit CStatusException(const CStatusMessage &payload) :
-            m_payload(payload)
-        {}
+        explicit CStatusException(const CStatusMessage &payload);
+
+        //! Copy constructor (because of mutex)
+        CStatusException(const CStatusException &other);
+
+        //! Copy assignment (because of mutex)
+        CStatusException &operator=(const CStatusException &) = delete;
 
         //! Return null-terminated message string.
-        virtual const char *what() const Q_DECL_NOEXCEPT override
-        {
-            return m_temp = m_payload.getMessage().toLocal8Bit();
-        }
+        virtual const char *what() const Q_DECL_NOEXCEPT override;
 
         //! Return the contained status message.
-        const CStatusMessage &status() const
-        {
-            return m_payload;
-        }
+        const CStatusMessage &status() const { return m_payload; }
 
         //! Destructor.
         ~CStatusException() Q_DECL_NOEXCEPT {}
 
     private:
-        const CStatusMessage m_payload;
-        mutable QByteArray m_temp;
+        const CStatusMessage   m_payload;
+        mutable QByteArray     m_temp;
+        mutable QReadWriteLock m_lock;  //!< lock (because of mutable members)
     };
-
-}
+} // ns
 
 #endif

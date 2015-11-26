@@ -406,7 +406,6 @@ namespace BlackMisc
         else
         {
             CLogMessage::preformatted(error);
-            error.markAsRedundant();
         }
         return error;
     }

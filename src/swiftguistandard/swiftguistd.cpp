@@ -197,7 +197,6 @@ bool SwiftGuiStd::isContextAudioAvailableCheck()
 void SwiftGuiStd::ps_displayStatusMessageInGui(const CStatusMessage &statusMessage)
 {
     if (!this->m_init) { return; }
-    if (statusMessage.isRedundant()) { return; }
     if (statusMessage.wasHandledBy(this)) { return; }
     statusMessage.markAsHandledBy(this);
     this->m_statusBar.displayStatusMessage(statusMessage);

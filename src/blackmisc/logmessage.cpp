@@ -64,7 +64,6 @@ namespace BlackMisc
 
     CLogMessage::operator CStatusMessage()
     {
-        m_redundant = true;
         return { m_categories, m_severity, message() };
     }
 
@@ -95,7 +94,6 @@ namespace BlackMisc
         {
             QString category = m_categories.toQString();
             if (m_severity == CStatusMessage::SeverityDebug) { category = CLogMessageHelper::addDebugFlag(category); }
-            if (m_redundant) { category = CLogMessageHelper::addRedundantFlag(category); }
             return category.toLatin1();
         }
     }
@@ -167,10 +165,8 @@ namespace BlackMisc
         if (category.isEmpty() || hasFlag(category, flag)) return category;
         return category + "/" + flag;
     }
-    QString CLogMessageHelper::addRedundantFlag(const QString &category) { return addFlag(category, "redundant"); }
     QString CLogMessageHelper::addDebugFlag(const QString &category) { return addFlag(category, "debug"); }
     QString CLogMessageHelper::stripFlags(const QString &category) { return category.section("/", 0, 1); }
-    bool CLogMessageHelper::hasRedundantFlag(const QString &category) { return hasFlag(category, "redundant"); }
     bool CLogMessageHelper::hasDebugFlag(const QString &category)
     {
         return hasFlag(category, "debug") || category.isEmpty()
@@ -191,5 +187,4 @@ namespace BlackMisc
             preformatted(msg);
         }
     }
-
-}
+} // ns

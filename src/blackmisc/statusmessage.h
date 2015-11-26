@@ -17,10 +17,10 @@
 #include "propertyindex.h"
 #include "logcategorylist.h"
 #include "timestampbased.h"
+#include <QReadWriteLock>
 
 namespace BlackMisc
 {
-
     class CStatusException;
 
     /*!
@@ -50,11 +50,14 @@ namespace BlackMisc
             IndexMessage
         };
 
-        //! \copydoc BlackMisc::CValueObject::registerMetadata
-        static void registerMetadata();
-
         //! Constructor
         CStatusMessage() = default;
+
+        //! Copy constructor (because of mutex)
+        CStatusMessage(const CStatusMessage &other);
+
+        //! Copy assignment (because of mutex)
+        CStatusMessage &operator =(const CStatusMessage &other);
 
         //! Constructor
         CStatusMessage(const QString &message);
@@ -97,9 +100,6 @@ namespace BlackMisc
         //! Message empty
         bool isEmpty() const { return this->m_message.isEmpty(); }
 
-        //! Message may already have been handled directly
-        bool isRedundant() const { return this->m_redundant; }
-
         //! Info or debug, no warning or error
         bool isSeverityInfoOrLess() const { return this->m_severity == SeverityInfo || this->m_severity == SeverityDebug; }
 
@@ -110,9 +110,6 @@ namespace BlackMisc
             CLogCategoryList classCategories(pointer);
             return std::all_of(classCategories.begin(), classCategories.end(), [this](const CLogCategory & cat) { return m_categories.contains(cat); });
         }
-
-        //! Mark the message as potentially already handled
-        void markAsRedundant() { this->m_redundant = true; }
 
         //! Mark the message as having been handled by the given object
         void markAsHandledBy(const QObject *object) const;
@@ -168,15 +165,16 @@ namespace BlackMisc
         //! Object from JSON
         static CStatusMessage fromDatabaseJson(const QJsonObject &json);
 
+        //! \copydoc BlackMisc::CValueObject::registerMetadata
+        static void registerMetadata();
+
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CStatusMessage)
-        CLogCategoryList m_categories;
-        StatusSeverity   m_severity = SeverityDebug;
-        QString          m_message;
-        bool             m_redundant = false;
+        CLogCategoryList          m_categories;
+        StatusSeverity            m_severity = SeverityDebug;
+        QString                   m_message;
         mutable QVector<quintptr> m_handledByObjects;
-        mutable QString           m_humanReadableCategory; //!< human readable category cache
-
+        mutable QReadWriteLock    m_lock;  //!< lock (because of mutable members)
     };
 } // namespace
 
@@ -186,7 +184,6 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CStatusMessage, (
                                    o.m_severity,
                                    o.m_message,
                                    o.m_timestampMSecsSinceEpoch,
-                                   o.m_redundant,
                                    attr(o.m_handledByObjects, flags < DisabledForHashing | DisabledForJson | DisabledForComparison | DisabledForMarshalling > ())
                                ))
 Q_DECLARE_METATYPE(BlackMisc::CStatusMessage)

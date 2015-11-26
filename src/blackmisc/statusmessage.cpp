@@ -18,10 +18,24 @@
 
 namespace BlackMisc
 {
-    void CStatusMessage::registerMetadata()
+    CStatusMessage::CStatusMessage(const CStatusMessage &other) :
+        CValueObject(other),
+        ITimestampBased(other)
     {
-        CValueObject<CStatusMessage>::registerMetadata();
-        qRegisterMetaType<StatusSeverity>();
+        *this = other;
+    }
+
+    CStatusMessage &CStatusMessage::operator =(const CStatusMessage &other)
+    {
+        if (this == &other) { return *this; }
+
+        QReadLocker readLock(&other.m_lock);
+        auto tuple = std::make_tuple(other.m_categories, other.m_severity, other.m_message, other.m_handledByObjects);
+        readLock.unlock(); // avoid deadlock
+
+        QWriteLocker writeLock(&this->m_lock);
+        std::tie(m_categories, m_severity, m_message, m_handledByObjects) = tuple;
+        return *this;
     }
 
     CStatusMessage::CStatusMessage(const QString &message)
@@ -39,7 +53,6 @@ namespace BlackMisc
     CStatusMessage::CStatusMessage(QtMsgType type, const QMessageLogContext &context, const QString &message)
         : CStatusMessage(message)
     {
-        m_redundant = CLogMessageHelper::hasRedundantFlag(context.category);
         bool debug = CLogMessageHelper::hasDebugFlag(context.category);
         auto categories = CLogMessageHelper::stripFlags(context.category);
         m_categories = CLogCategoryList::fromQString(categories);
@@ -66,10 +79,6 @@ namespace BlackMisc
         if (this->m_severity == SeverityDebug && ! category.isEmpty())
         {
             category = CLogMessageHelper::addDebugFlag(category);
-        }
-        if (this->m_redundant)
-        {
-            category = CLogMessageHelper::addRedundantFlag(category);
         }
 
         *o_category = category;
@@ -106,14 +115,9 @@ namespace BlackMisc
 
     QString CStatusMessage::getHumanReadablePattern() const
     {
-        //! \todo This should me not hardcoded
-        if (this->m_humanReadableCategory.isEmpty())
-        {
-            QStringList patternNames(getHumanReadablePatterns());
-            this->m_humanReadableCategory = patternNames.isEmpty() ?
-                                            "None" : patternNames.join(", ");
-        }
-        return this->m_humanReadableCategory;
+        QStringList patternNames(getHumanReadablePatterns());
+        return patternNames.isEmpty() ?
+               "None" : patternNames.join(", ");
     }
 
     QStringList CStatusMessage::getHumanReadablePatterns() const
@@ -181,6 +185,12 @@ namespace BlackMisc
 
         CStatusMessage m({ cat, CLogCategory(typeText)}, severity, msgText);
         return m;
+    }
+
+    void CStatusMessage::registerMetadata()
+    {
+        CValueObject<CStatusMessage>::registerMetadata();
+        qRegisterMetaType<StatusSeverity>();
     }
 
     CStatusMessage::StatusSeverity CStatusMessage::stringToSeverity(const QString &severity)
@@ -339,4 +349,4 @@ namespace BlackMisc
         html.append("</font>");
         return html;
     }
-}
+} // ns

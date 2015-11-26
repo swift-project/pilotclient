@@ -67,17 +67,11 @@ namespace BlackMisc
         //! Returns an encoded category string with the debug flag appended.
         static QString addDebugFlag(const QString &category);
 
-        //! Returns an encoded category string with the redundant flag appended.
-        static QString addRedundantFlag(const QString &category);
-
         //! Strips all flags from an encoded category string, returning only the plain category string.
         static QString stripFlags(const QString &category);
 
         //! Returns true if the given encoded category string has the debug flag.
         static bool hasDebugFlag(const QString &category);
-
-        //! Returns true if the given encoded category string has the redundant flag.
-        static bool hasRedundantFlag(const QString &category);
     };
 
     /*!
@@ -173,7 +167,6 @@ namespace BlackMisc
         CLogCategoryList m_categories = CLogCategoryList { CLogCategory::uncategorized() };
         QString m_message;
         QStringList m_args;
-        bool m_redundant = false;
 
         CLogMessage &arg(QString value) { m_args.push_back(value); return *this; }
         QString message() const;

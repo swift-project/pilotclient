@@ -16,6 +16,7 @@
 #include "blackmisc/network/url.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
+#include <QReadWriteLock>
 
 namespace BlackMisc
 {
@@ -31,6 +32,12 @@ namespace BlackMisc
 
             //! Default constructor.
             CUrlList();
+
+            //! Copy constructor (because of mutex)
+            CUrlList(const CUrlList &other);
+
+            //! Copy assignment (because of mutex)
+            CUrlList &operator =(const CUrlList &other);
 
             //! By list of URLs
             explicit CUrlList(const QStringList &listOfUrls, bool removeDuplicates = true);
@@ -67,6 +74,7 @@ namespace BlackMisc
 
         private:
             mutable int m_currentIndexDistributedLoad = -1; //!< index for random access
+            mutable QReadWriteLock m_lock;  //!< lock (because of mutable members)
         };
 
         //! URL list with fail support

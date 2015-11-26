@@ -92,7 +92,6 @@ namespace BlackGui
         Q_ASSERT_X(this->m_statusBarIcon, Q_FUNC_INFO, "Missing status bar icon");
         Q_ASSERT_X(this->m_statusBar, Q_FUNC_INFO, "Missing status bar");
 
-        if (statusMessage.isRedundant()) { return; }
         if (statusMessage.wasHandledBy(this)) { return; }
         statusMessage.markAsHandledBy(this);
 
