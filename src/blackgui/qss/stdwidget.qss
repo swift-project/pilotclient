@@ -1,4 +1,4 @@
-/**
+/*
 Resources:
 http://qt-project.org/doc/qt-5.3/stylesheet-examples.html
 http://web.forret.com/tools/color.asp?RGB=2F4F4F&name=Dark+slate+gray
@@ -9,16 +9,16 @@ Remarks:
 
 Used dynamic properties
 framelessMainWindow (infobar.qss , here)
-**/
+*/
 
-/** Main window **/
+/* Main window */
 QMainWindow {
   background-image: url(:/textures/icons/textures/texture-outer.jpg);
   background-color: darkslategray;
 }
 
-/** separator between info areas and rest **/
-/** this hides them **/
+/* separator between info areas and rest */
+/* this hides them */
 QMainWindow::separator {
   background: transparent;
   width: 0px;  /* when vertical */
@@ -29,14 +29,14 @@ QMainWindow::separator:hover {
   background: transparent;
 }
 
-/** Dialog, sometime main window **/
+/* Dialog, sometime main window */
 QDialog {
   background-image: url(:/textures/icons/textures/texture-outer.jpg);
   background-color: darkslategray;
 }
 
-/** separator between info areas and rest **/
-/** this hides them **/
+/* separator between info areas and rest */
+/* this hides them */
 QDialog::separator {
   background: transparent;
   width: 0px;  /* when vertical */
@@ -55,23 +55,23 @@ QFileDialog QToolButton {
   background: inherit;
 }
 
-/**
+/*
   Required when dock widget is floating
   1) background-image not working on QDockWidget, so I use direct children for that
   2) seems to have only effect as normal (floating) window
   3) Borders between this widget and the inner child is the margin in gui.ini
-**/
+*/
 BlackGui--CDockWidgetInfoArea {
-  background-color: green; /** I use green here so I can adjust the borders in gui.ini **/
+  background-color: green; /* I use green here so I can adjust the borders in gui.ini */
 }
 
 BlackGui--CDockWidgetInfoArea > QWidget {
-  background: black; /** background is background color here **/
+  background: black; /* background is background color here */
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
-/** this is the first widget in the dock area **/
-/** all dock widgets shall have this QWidget as container **/
+/* this is the first widget in the dock area */
+/* all dock widgets shall have this QWidget as container */
 BlackGui--CDockWidgetInfoArea[framelessDockWidget="true"] > QWidget > QFrame {
   margin: 0px;
   padding: 3px;
@@ -79,7 +79,7 @@ BlackGui--CDockWidgetInfoArea[framelessDockWidget="true"] > QWidget > QFrame {
   border-radius: 10px;
 }
 
-/** fix the menu, which is overridden by the above QWidget **/
+/* fix the menu, which is overridden by the above QWidget */
 BlackGui--CDockWidgetInfoArea > QMenu {
   border: 1px solid darkslategray; /* reserve space for selection border */
   background: lightgray;
@@ -87,20 +87,20 @@ BlackGui--CDockWidgetInfoArea > QMenu {
   padding: 0px;
 }
 
-/** required when info area is not floating **/
+/* required when info area is not floating */
 BlackGui--CInfoArea {
-  background: black; /** background is background color here **/
+  background: black; /* background is background color here */
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
 BlackGui--COverlayMessages {
-  background: black; /** background is background color here **/
+  background: black; /* background is background color here */
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
   border: 2px solid yellow;
   border-radius: 10px;
 }
 
-/**
+/*
 QTableView[isShowingLoadIndicator="true"] {
   background-image: url(:/preloaders/icons/preloaders/FillingRing64.gif);
   background-repeat: no-repeat;
@@ -111,11 +111,11 @@ QTableView[isShowingLoadIndicator="false"] {
   background-repeat: no-repeat;
   background-position: center;
 }
-**/
+*/
 
-/** Validator bar **/
+/* Validator bar */
 BlackGui--Editors--CValidationIndicator {
-  background: black; /** background is background color here **/
+  background: black; /* background is background color here */
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
@@ -124,12 +124,17 @@ BlackGui--CPluginConfigWindow {
   background: black;
 }
 
-/** default for buttons **/
+/* default for buttons */
+QToolButton {
+  background-color: transparent; /* transparent tool buttons */
+  border: 0px;
+}
+
 QPushButton {
   background-color: rgba(0, 0, 255, 128);
   border-style: 1px solid yellow;
   border-radius:3px;
-  color: yellow;  /** font color **/
+  color: yellow;  /* font color */
   padding: 0px;
   margin-right: 5px;
   min-width:60px;
@@ -137,17 +142,12 @@ QPushButton {
 }
 
 QPushButton::disabled {
-  background-color: rgba(77, 88, 99, 128); /** slated gray if a channel)
+  background-color: rgba(77, 88, 99, 128); /* slated gray if a channel) */
   border-style: none;
   border-radius: 3px;
   color: white;
   padding: 0px;
   margin-right: 5px;
-}
-
-QToolButton {
-  background-color: transparent; /* transparent tool buttons */
-  border: 0px;
 }
 
 QProgressBar {
@@ -213,7 +213,7 @@ QSplitter::handle:pressed {
   background-color: rgba(0, 255, 255, 255);
 }
 
-/**
+/*
 QSplitter::handle:horizontal {
   width: 1px;
 }
@@ -221,7 +221,7 @@ QSplitter::handle:horizontal {
 QSplitter::handle:vertical {
   height: 1px;
 }
-**/
+*/
 
 QLabel {
   background: transparent;
@@ -238,7 +238,7 @@ QLineEdit[readOnly="true"] {
 }
 
 QCheckBox {
-  border: 0px solid green; /** also borders label **/
+  border: 0px solid green; /* also borders label */
   background: transparent;
 }
 
@@ -283,7 +283,7 @@ QToolBox::tab::!selected {
   background-color: rgba(0, 0, 255, 48);
 }
 
-/** no border on page */
+/* no border on page */
 QToolBox > QWidget {
   border: 0px;
 }
@@ -295,7 +295,7 @@ QComboBox {
   background: transparent;
 }
 
-/** drop down list **/
+/* drop down list */
 QComboBox QAbstractItemView {
   background-color: black;
   color: lightgray;
@@ -325,7 +325,7 @@ QMenuBar {
   background-image: url(:/textures/icons/textures/texture-outer.jpg);
   background-color: darkslategray;
   padding: 0px 0px 0px 10px;
-  margin: 0px 0px 20px 0px; /** removes overlapping bar in frameless mode, why bottom margin helps here, no idea, bug? **/
+  margin: 0px 0px 20px 0px; /* removes overlapping bar in frameless mode, why bottom margin helps here, no idea, bug? */
 }
 
 QMenuBar::item {
@@ -357,7 +357,7 @@ QScrollArea {
 
 /* have to set background on widget in scroll area, cannot set directly on scroll area */
 QScrollArea QWidget {
-  background: black; /** background is background color here **/
+  background: black; /* background is background color here */
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
@@ -420,7 +420,7 @@ QScrollBar::sub-line:vertical {
 QHeaderView::section {
   border: 1px solid black;
   background-color: darkslategray;
-  color: white; /** font **/
+  color: white; /* font */
   padding: 1px;
   margin: 0px;
 }
