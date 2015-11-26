@@ -137,12 +137,12 @@ namespace BlackGui
             if (enabled)
             {
                 getIContextSimulator()->startSimulatorPlugin(*selected);
-                CLogMessage(this).info("Started listening for %1") << selected->getSimulator();
+                CLogMessage(this).info("Started listening for %1") << selected->getName();
             }
             else
             {
                 getIContextSimulator()->stopSimulatorPlugin(*selected);
-                CLogMessage(this).info("Stopped listening for %1") << selected->getSimulator();
+                CLogMessage(this).info("Stopped listening for %1") << selected->getName();
             }
 
             // changing of GUI state will be done via received signal

@@ -1,6 +1,6 @@
 {
     "identifier" : "org.swift-project.plugins.simulator.xplane",
-    "name" : "X-Plane generic plugin",
+    "name" : "X-Plane",
     "simulator" : "xplane",
     "description" : "Support for the X-Plane simulator via the xbus plugin.",
     "config" : "org.swift-project.plugins.simulator.xplane.config"
