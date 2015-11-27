@@ -80,7 +80,8 @@ namespace BlackGui
         QApplication::setWindowIcon(icon);
 
         // Logging
-        QString category("swift." + applicationName);
+        QString executableName = QFileInfo(QCoreApplication::applicationFilePath()).completeBaseName();
+        QString category("swift." + executableName);
 
         // Translations
         QFile file(":blackmisc/translations/blackmisc_i18n_de.qm");
@@ -93,7 +94,7 @@ namespace BlackGui
 
         // File logger
         static const QString logPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/org.swift-project/logs";
-        CFileLogger *fileLogger = new CFileLogger(applicationName, logPath, &a);
+        CFileLogger *fileLogger = new CFileLogger(executableName, logPath, &a);
         fileLogger->changeLogPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityDebug));
 
         // GUI icon
