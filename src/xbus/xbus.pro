@@ -7,7 +7,7 @@ QT       += core gui widgets dbus network
 TEMPLATE = lib
 
 CONFIG += shared plugin
-CONFIG += blackmisc blackcore
+CONFIG += blackmisc
 
 INCLUDEPATH += $$EXTERNALSROOT/common/include/XPLM
 
