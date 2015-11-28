@@ -25,7 +25,7 @@ using namespace BlackMisc;
 namespace BlackCore
 {
 
-    IContextApplication *IContextApplication::create(CRuntime *parent, CRuntimeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &connection)
+    IContextApplication *IContextApplication::create(CRuntime *parent, CRuntimeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &connection)
     {
         switch (mode)
         {
@@ -33,7 +33,7 @@ namespace BlackCore
         case CRuntimeConfig::LocalInDbusServer:
             return (new CContextApplication(mode, parent))->registerWithDBus(server);
         case CRuntimeConfig::Remote:
-            return new BlackCore::CContextApplicationProxy(BlackCore::CDBusServer::ServiceName(), connection, mode, parent);
+            return new BlackCore::CContextApplicationProxy(BlackMisc::CDBusServer::ServiceName(), connection, mode, parent);
         case CRuntimeConfig::NotUsed:
         default:
             return new CContextApplicationEmpty(parent);

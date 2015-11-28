@@ -67,7 +67,7 @@ namespace BlackCore
         virtual QString getPathAndContextId() const { return this->buildPathAndContextId(ObjectPath()); }
 
         //! Factory method
-        static IContextAudio *create(CRuntime *runtime, CRuntimeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &conn);
+        static IContextAudio *create(CRuntime *runtime, CRuntimeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &conn);
 
         //! Destructor
         virtual ~IContextAudio() {}

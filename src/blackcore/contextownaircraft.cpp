@@ -14,7 +14,7 @@
 
 namespace BlackCore
 {
-    IContextOwnAircraft *IContextOwnAircraft::create(CRuntime *parent, CRuntimeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &conn)
+    IContextOwnAircraft *IContextOwnAircraft::create(CRuntime *parent, CRuntimeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &conn)
     {
         switch (mode)
         {
@@ -22,7 +22,7 @@ namespace BlackCore
         case CRuntimeConfig::LocalInDbusServer:
             return (new CContextOwnAircraft(mode, parent))->registerWithDBus(server);
         case CRuntimeConfig::Remote:
-            return new CContextOwnAircraftProxy(BlackCore::CDBusServer::ServiceName(), conn, mode, parent);
+            return new CContextOwnAircraftProxy(BlackMisc::CDBusServer::ServiceName(), conn, mode, parent);
         case CRuntimeConfig::NotUsed:
         default:
             return new CContextOwnAircraftEmpty(parent);

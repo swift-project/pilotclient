@@ -15,7 +15,7 @@
 namespace BlackCore
 {
 
-    IContextNetwork *IContextNetwork::create(CRuntime *runtime, CRuntimeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &connection)
+    IContextNetwork *IContextNetwork::create(CRuntime *runtime, CRuntimeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &connection)
     {
         switch (mode)
         {
@@ -23,7 +23,7 @@ namespace BlackCore
         case CRuntimeConfig::LocalInDbusServer:
             return (new CContextNetwork(mode, runtime))->registerWithDBus(server);
         case CRuntimeConfig::Remote:
-            return new CContextNetworkProxy(BlackCore::CDBusServer::ServiceName(), connection, mode, runtime);
+            return new CContextNetworkProxy(BlackMisc::CDBusServer::ServiceName(), connection, mode, runtime);
         case CRuntimeConfig::NotUsed:
         default:
             return new CContextNetworkEmpty(runtime);

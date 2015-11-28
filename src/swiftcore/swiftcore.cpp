@@ -12,9 +12,9 @@
 #include "blackmisc/icon.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/project.h"
+#include "blackmisc/dbusserver.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/enableforruntime.h"
-#include "blackcore/dbusserver.h"
 #include "blackgui/stylesheetutility.h"
 #include <QMenu>
 #include <QMessageBox>

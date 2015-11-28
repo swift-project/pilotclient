@@ -12,7 +12,7 @@
 #ifndef BLACKMISCTEST_SERVICETOOL_H
 #define BLACKMISCTEST_SERVICETOOL_H
 
-#include "blackcore/dbusserver.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/network/clientlist.h"
@@ -52,7 +52,7 @@ namespace BlackMiscTest
         /*!
          * \brief Server side of data transfer test
          */
-        static void dataTransferTestServer(BlackCore::CDBusServer *dBusServer);
+        static void dataTransferTestServer(BlackMisc::CDBusServer *dBusServer);
 
         /*!
          * \brief Start a new process

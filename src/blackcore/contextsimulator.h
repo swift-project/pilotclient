@@ -26,8 +26,8 @@
 #include "blackcoreexport.h"
 #include "context.h"
 #include "blackcore/simulator.h"
-#include "blackcore/dbusserver.h"
 #include "blackcore/contextruntime.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorsetup.h"
@@ -61,7 +61,7 @@ namespace BlackCore
         virtual QString getPathAndContextId() const { return this->buildPathAndContextId(ObjectPath()); }
 
         //! Factory method
-        static IContextSimulator *create(CRuntime *parent, CRuntimeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &conn);
+        static IContextSimulator *create(CRuntime *parent, CRuntimeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &conn);
 
         //! Destructor
         virtual ~IContextSimulator() {}

@@ -7,16 +7,15 @@
  * contained in the LICENSE file.
  */
 
+#include "dbusserver.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/networkutils.h"
-#include "dbusserver.h"
 #include <QProcess>
 #include <QMetaClassInfo>
 
-using namespace BlackMisc;
 using namespace BlackMisc::Network;
 
-namespace BlackCore
+namespace BlackMisc
 {
     /*
      * Constructor
@@ -98,7 +97,7 @@ namespace BlackCore
 
     const QString &CDBusServer::ServiceName()
     {
-        static const QString sn(BLACKCORE_RUNTIME_SERVICENAME);
+        static const QString sn(SWIFT_SERVICENAME);
         return sn;
     }
 

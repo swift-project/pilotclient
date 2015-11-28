@@ -1,6 +1,6 @@
 #include "simulatorxplaneconfigwindow.h"
 #include "ui_simulatorxplaneconfigwindow.h"
-#include "blackcore/dbusserver.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/fileutils.h"
 #include <QStringBuilder>
@@ -30,8 +30,8 @@ namespace BlackSimPlugin
         {
             ui->setupUi(this);
 
-            ui->cp_XBusServer->addItem(BlackCore::CDBusServer::sessionDBusServer());
-            ui->cp_XBusServer->addItem(BlackCore::CDBusServer::systemDBusServer());
+            ui->cp_XBusServer->addItem(BlackMisc::CDBusServer::sessionDBusServer());
+            ui->cp_XBusServer->addItem(BlackMisc::CDBusServer::systemDBusServer());
 
             connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CSimulatorXPlaneConfigWindow::ps_storeSettings);
             connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CSimulatorXPlaneConfigWindow::close);

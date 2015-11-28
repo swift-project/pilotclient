@@ -20,9 +20,9 @@ namespace XBus
     CPlugin::CPlugin()
         : m_menu(CMenu::mainMenu().subMenu("XBus"))
     {
-        m_startServerMenuItems.push_back(m_menu.item("Start server on session bus", [this]{ startServer(BlackCore::CDBusServer::sessionDBusServer()); }));
-        m_startServerMenuItems.push_back(m_menu.item("Start server on system bus", [this]{ startServer(BlackCore::CDBusServer::systemDBusServer()); }));
-        m_startServerMenuItems.push_back(m_menu.item("Start server on localhost P2P", [this]{ startServer(BlackCore::CDBusServer::p2pAddress()); }));
+        m_startServerMenuItems.push_back(m_menu.item("Start server on session bus", [this]{ startServer(BlackMisc::CDBusServer::sessionDBusServer()); }));
+        m_startServerMenuItems.push_back(m_menu.item("Start server on system bus", [this]{ startServer(BlackMisc::CDBusServer::systemDBusServer()); }));
+        m_startServerMenuItems.push_back(m_menu.item("Start server on localhost P2P", [this]{ startServer(BlackMisc::CDBusServer::p2pAddress()); }));
     }
 
     void CPlugin::startServer(const QString &address)
@@ -30,7 +30,7 @@ namespace XBus
         Q_ASSERT(! m_server);
         for (auto &item : m_startServerMenuItems) { item.setEnabled(false); }
 
-        m_server = new BlackCore::CDBusServer(xbusServiceName(), address, this);
+        m_server = new BlackMisc::CDBusServer(xbusServiceName(), address, this);
         m_service = new CService(this);
         m_traffic = new CTraffic(this);
         m_weather = new CWeather(this);

@@ -128,7 +128,7 @@ namespace BlackCore
         CContextSimulator(CRuntimeConfig::ContextMode, CRuntime *runtime);
 
         //! Register myself in DBus
-        CContextSimulator *registerWithDBus(CDBusServer *server)
+        CContextSimulator *registerWithDBus(BlackMisc::CDBusServer *server)
         {
             if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) return this;
             server->addObject(CContextSimulator::ObjectPath(), this);

@@ -11,7 +11,7 @@
 #include "blackcore/contextruntime.h"
 #include "blackcore/contextapplication.h"
 #include "blackcore/contextapplicationimpl.h"
-#include "blackcore/dbusserver.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/network/networkutils.h"

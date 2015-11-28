@@ -78,7 +78,7 @@ namespace BlackCore
         connect(this->m_airspace, &CAirspaceMonitor::addedAircraft, this, &CContextNetwork::addedAircraft);
     }
 
-    CContextNetwork *CContextNetwork::registerWithDBus(CDBusServer *server)
+    CContextNetwork *CContextNetwork::registerWithDBus(BlackMisc::CDBusServer *server)
     {
         if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) return this;
         server->addObject(IContextNetwork::ObjectPath(), this);

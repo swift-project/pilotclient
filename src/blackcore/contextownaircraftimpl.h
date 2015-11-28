@@ -15,8 +15,8 @@
 #include "blackcoreexport.h"
 #include "blackcore/contextownaircraft.h"
 #include "blackcore/contextruntime.h"
-#include "blackcore/dbusserver.h"
 #include "blackcore/settings/network.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/identifiable.h"
@@ -123,7 +123,7 @@ namespace BlackCore
         CContextOwnAircraft(CRuntimeConfig::ContextMode, CRuntime *runtime);
 
         //! Register myself in DBus
-        CContextOwnAircraft *registerWithDBus(CDBusServer *server)
+        CContextOwnAircraft *registerWithDBus(BlackMisc::CDBusServer *server)
         {
             if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) return this;
             server->addObject(IContextOwnAircraft::ObjectPath(), this);

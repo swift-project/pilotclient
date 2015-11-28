@@ -24,11 +24,12 @@
 #include <QMultiMap>
 #include <QReadWriteLock>
 
+namespace BlackMisc { class CDBusServer; }
+
 namespace BlackCore
 {
     // forward declaration, see review
     // https://dev.vatsim-germany.org/boards/22/topics/1350?r=1359#message-1359
-    class CDBusServer;
     class CContextApplication;
     class CContextAudio;
     class CContextNetwork;
@@ -53,7 +54,7 @@ namespace BlackCore
         virtual ~CRuntime() { this->gracefulShutdown(); }
 
         //! DBus server (if applicable)
-        const CDBusServer *getDBusServer() const { return this->m_dbusServer; }
+        const BlackMisc::CDBusServer *getDBusServer() const { return this->m_dbusServer; }
 
         //! DBus connection (if applicable)
         const QDBusConnection &getDBusConnection() const { return this->m_dbusConnection; }
@@ -153,7 +154,7 @@ namespace BlackCore
         CSetting<Settings::Network::DBusServerAddress> m_dbusServerAddress { this };
 
         // DBus
-        CDBusServer *m_dbusServer        = nullptr;
+        BlackMisc::CDBusServer *m_dbusServer = nullptr;
         QDBusConnection m_dbusConnection = QDBusConnection("default");
         bool m_initDBusConnection        = false;
 

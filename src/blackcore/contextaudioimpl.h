@@ -15,7 +15,6 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/contextaudio.h"
 #include "blackcore/contextruntime.h"
-#include "blackcore/dbusserver.h"
 #include "blackcore/voice.h"
 #include "blackcore/voicechannel.h"
 #include "blackcore/audiodevice.h"
@@ -23,6 +22,7 @@
 #include "blackcore/actionbind.h"
 #include "blackinput/keyboard.h"
 #include "blackcore/settings/audio.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/audio/voiceroomlist.h"
 
 #include <QThread>
@@ -122,7 +122,7 @@ namespace BlackCore
         CContextAudio(CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
         //! Register myself in DBus
-        CContextAudio *registerWithDBus(CDBusServer *server)
+        CContextAudio *registerWithDBus(BlackMisc::CDBusServer *server)
         {
             if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) { return this; }
             server->addObject(IContextAudio::ObjectPath(), this);

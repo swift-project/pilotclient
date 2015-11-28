@@ -10,7 +10,7 @@
 #include "servicetool.h"
 #include "testservice.h"
 #include "testserviceinterface.h"
-#include "blackcore/dbusserver.h"
+#include "blackmisc/dbusserver.h"
 
 #include <QTextStream>
 #include <QString>
@@ -59,7 +59,7 @@ namespace BlackMiscTest
         arg.endArray();
     }
 
-    void ServiceTool::dataTransferTestServer(BlackCore::CDBusServer *dBusServer)
+    void ServiceTool::dataTransferTestServer(BlackMisc::CDBusServer *dBusServer)
     {
         QDBusConnection sessionBusConnection = QDBusConnection::sessionBus();
         if (sessionBusConnection.interface()->isServiceRegistered(Testservice::ServiceName))

@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "xbusserviceproxy.h"
-#include "blackcore/dbusserver.h"
+#include "blackmisc/dbusserver.h"
 #include <QMetaMethod>
 
 #define XBUS_SERVICE_SERVICENAME "org.swift-project.xbus"

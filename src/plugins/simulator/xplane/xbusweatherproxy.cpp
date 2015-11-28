@@ -8,7 +8,7 @@
  */
 
 #include "xbusweatherproxy.h"
-#include "blackcore/dbusserver.h"
+#include "blackmisc/dbusserver.h"
 
 #define XBUS_SERVICENAME "org.swift-project.xbus"
 

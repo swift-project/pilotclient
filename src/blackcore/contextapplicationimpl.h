@@ -13,7 +13,7 @@
 #include "blackcoreexport.h"
 #include "contextapplication.h"
 #include "contextruntime.h"
-#include "dbusserver.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/identifierlist.h"
 
 namespace BlackCore
@@ -95,7 +95,7 @@ namespace BlackCore
         CContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
         //! Register myself in DBus, fail safe
-        CContextApplication *registerWithDBus(CDBusServer *server);
+        CContextApplication *registerWithDBus(BlackMisc::CDBusServer *server);
 
     private:
         BlackMisc::CIdentifierList m_registeredApplications;

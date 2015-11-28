@@ -15,8 +15,8 @@
 #include "blackcoreexport.h"
 #include "blackcore/contextnetwork.h"
 #include "blackcore/contextruntime.h"
-#include "blackcore/dbusserver.h"
 #include "blackcore/network.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
@@ -233,7 +233,7 @@ namespace BlackCore
         CContextNetwork(CRuntimeConfig::ContextMode, CRuntime *runtime);
 
         //! Register myself in DBus
-        CContextNetwork *registerWithDBus(CDBusServer *server);
+        CContextNetwork *registerWithDBus(BlackMisc::CDBusServer *server);
 
     private:
         CAirspaceMonitor              *m_airspace = nullptr;

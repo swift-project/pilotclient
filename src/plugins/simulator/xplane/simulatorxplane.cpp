@@ -11,7 +11,7 @@
 #include "xbusserviceproxy.h"
 #include "xbustrafficproxy.h"
 #include "xbusweatherproxy.h"
-#include "blackcore/dbusserver.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/simulation/modelmappingsprovider.h"
@@ -354,11 +354,11 @@ namespace BlackSimPlugin
 
         QDBusConnection CSimulatorXPlane::connectionFromString(const QString &str)
         {
-            if (str == BlackCore::CDBusServer::sessionDBusServer())
+            if (str == BlackMisc::CDBusServer::sessionDBusServer())
             {
                 return QDBusConnection::sessionBus();
             }
-            else if (str == BlackCore::CDBusServer::systemDBusServer())
+            else if (str == BlackMisc::CDBusServer::systemDBusServer())
             {
                 return QDBusConnection::systemBus();
             }

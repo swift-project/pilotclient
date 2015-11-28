@@ -24,7 +24,7 @@ namespace BlackCore
         IContextApplication(mode, runtime)
     {}
 
-    CContextApplication *CContextApplication::registerWithDBus(CDBusServer *server)
+    CContextApplication *CContextApplication::registerWithDBus(BlackMisc::CDBusServer *server)
     {
         if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) { return this; }
         server->addObject(IContextApplication::ObjectPath(), this);

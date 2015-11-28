@@ -20,7 +20,7 @@
 
 #pragma push_macro("interface")
 #undef interface
-#include "blackcore/dbusserver.h"
+#include "blackmisc/dbusserver.h"
 #pragma pop_macro("interface")
 
 #include <QVector>
@@ -49,7 +49,7 @@ namespace XBus
         void onAircraftRepositioned();
 
     private:
-        BlackCore::CDBusServer *m_server = nullptr;
+        BlackMisc::CDBusServer *m_server = nullptr;
         CService *m_service = nullptr;
         CTraffic *m_traffic = nullptr;
         CWeather *m_weather = nullptr;

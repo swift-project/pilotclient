@@ -9,7 +9,7 @@
 
 #include "blackmisc/registermetadata.h"
 #include "servicetool.h"
-#include "blackcore/dbusserver.h"
+#include "blackmisc/dbusserver.h"
 #include <QDBusMetaType>
 #include <QtDBus/qdbusabstractinterface.h>
 #include <QtDBus/qdbusconnection.h>
@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
         qDebug();
         qDebug("--------------------------------------------------------");
 
-        BlackCore::CDBusServer *dBusServer = new BlackCore::CDBusServer(useSessionBusForServer ? "session" : address);
+        BlackMisc::CDBusServer *dBusServer = new BlackMisc::CDBusServer(useSessionBusForServer ? "session" : address);
         if (dBusServer->hasQDBusServer())
         {
             qDebug() << "server" << dBusServer->qDBusServer()->address() << "connected:" << dBusServer->qDBusServer()->isConnected();

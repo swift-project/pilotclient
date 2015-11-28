@@ -9,12 +9,12 @@
 
 #include "swiftguistd.h"
 #include "ui_swiftguistd.h"
-#include "blackcore/dbusserver.h"
 #include "blackcore/contextallinterfaces.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/components/allmaininfoareacomponents.h"
 #include "blackgui/models/atcstationlistmodel.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/aviation/selcal.h"
 #include "blackmisc/project.h"

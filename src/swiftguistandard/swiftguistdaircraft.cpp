@@ -9,7 +9,7 @@
 
 #include "swiftguistd.h"
 #include "blackgui/models/atcstationlistmodel.h"
-#include "blackcore/dbusserver.h"
+#include "blackmisc/dbusserver.h"
 #include "blackcore/contextnetwork.h"
 
 using namespace BlackCore;

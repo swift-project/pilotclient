@@ -9,10 +9,10 @@
 
 //! \file
 
-#ifndef BLACKCORE_DBUSSERVER_H
-#define BLACKCORE_DBUSSERVER_H
+#ifndef BLACKMISC_DBUSSERVER_H
+#define BLACKMISC_DBUSSERVER_H
 
-#include "blackcoreexport.h"
+#include "blackmiscexport.h"
 #include "blackmisc/valueobject.h" // for qHash overload, include before Qt stuff due GCC issue
 #include <QObject>
 #include <QtDBus/QDBusServer>
@@ -22,9 +22,9 @@
 #include <QMap>
 
 //! Service name of DBus service
-#define BLACKCORE_RUNTIME_SERVICENAME "org.swift-project"
+#define SWIFT_SERVICENAME "org.swift-project"
 
-namespace BlackCore
+namespace BlackMisc
 {
 
     /*!
@@ -33,10 +33,10 @@ namespace BlackCore
      *           with session or system bus. For session / system bus this class represents no real server,
      *           but more a wrapper for \sa QDBusConnection and the registered objects
      */
-    class BLACKCORE_EXPORT CDBusServer : public QObject
+    class BLACKMISC_EXPORT CDBusServer : public QObject
     {
         Q_OBJECT
-        Q_CLASSINFO("D-Bus Interface", BLACKCORE_RUNTIME_SERVICENAME)
+        Q_CLASSINFO("D-Bus Interface", SWIFT_SERVICENAME)
 
     public:
         //! Service name of DBus server
