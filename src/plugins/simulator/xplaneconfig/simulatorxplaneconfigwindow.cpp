@@ -30,8 +30,8 @@ namespace BlackSimPlugin
         {
             ui->setupUi(this);
 
-            ui->cp_XBusServer->addItem(BlackMisc::CDBusServer::sessionDBusServer());
-            ui->cp_XBusServer->addItem(BlackMisc::CDBusServer::systemDBusServer());
+            ui->cp_XBusServer->addItem(BlackMisc::CDBusServer::sessionBusAddress());
+            ui->cp_XBusServer->addItem(BlackMisc::CDBusServer::systemBusAddress());
 
             connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CSimulatorXPlaneConfigWindow::ps_storeSettings);
             connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CSimulatorXPlaneConfigWindow::close);

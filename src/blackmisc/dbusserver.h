@@ -13,7 +13,7 @@
 #define BLACKMISC_DBUSSERVER_H
 
 #include "blackmiscexport.h"
-#include "blackmisc/valueobject.h" // for qHash overload, include before Qt stuff due GCC issue
+#include "blackmisc/valueobject.h"
 #include <QObject>
 #include <QtDBus/QDBusServer>
 #include <QtDBus/QDBusError>
@@ -28,10 +28,10 @@ namespace BlackMisc
 {
 
     /*!
-     *  Custom DBusServer
-     *  \details This class implements a custom DBusServer for DBus peer connections, but can also be used
-     *           with session or system bus. For session / system bus this class represents no real server,
-     *           but more a wrapper for \sa QDBusConnection and the registered objects
+     * Custom DBusServer
+     * \details This class implements a custom DBusServer for DBus peer connections, but can also be used
+     *          with session or system bus. For session/system bus this class represents no real server,
+     *          but more a wrapper for QDBusConnection and object registration.
      */
     class BLACKMISC_EXPORT CDBusServer : public QObject
     {
@@ -39,10 +39,10 @@ namespace BlackMisc
         Q_CLASSINFO("D-Bus Interface", SWIFT_SERVICENAME)
 
     public:
-        //! Service name of DBus server
-        static const QString &ServiceName();
+        //! Default service name
+        static const QString &coreServiceName();
 
-        //! Server mode, normally P2P, but can be changed for debugging / testing
+        //! Server mode
         enum ServerMode
         {
             SERVERMODE_P2P,
@@ -50,95 +50,84 @@ namespace BlackMisc
             SERVERMODE_SYSTEMBUS
         };
 
-        //! Construct a server for the BlackCore runtime
-        //! \remarks We are using address and not ServerMode, as on some systems we need to pass in some specific configuration string
-        //! \sa QDBusServer
-        CDBusServer(const QString &address, QObject *parent = nullptr) : CDBusServer(CDBusServer::ServiceName(), address, parent) {}
+        //! Construct a server for the core service
+        CDBusServer(const QString &address, QObject *parent = nullptr) : CDBusServer(coreServiceName(), address, parent) {}
 
         //! Construct a server for some arbitrary service
         CDBusServer(const QString &service, const QString &address, QObject *parent = nullptr);
 
-        //!! Adds a QObject to be exposed to DBus
+        //! Add a QObject to be exposed via DBus
         void addObject(const QString &name, QObject *object);
 
         //! Last error
         QDBusError lastQDBusServerError() const;
 
-        //! DBus server (if avaialable)
+        //! DBus server (if using P2P)
         const QDBusServer *qDBusServer() const;
 
-        //! With (P2P) DBus server
+        //! True if using P2P
         bool hasQDBusServer() const;
 
-        //! Unregister all objects
-        void unregisterAllObjects();
+        //! Remove all objects added with addObject
+        void removeAllObjects();
 
         //! Default connection
         static const QDBusConnection &defaultConnection();
 
-        //! Denotes a session DBus server
-        static const QString &sessionDBusServer();
+        //! Address denoting a session bus server
+        static const QString &sessionBusAddress();
 
-        //! Denotes a session DBus server
-        static const QString &systemDBusServer();
+        //! Address denoting a system bus server
+        static const QString &systemBusAddress();
 
-        //! Denotes a P2P DBus server, e.g. "tcp:host=192.168.3.3,port=45000"
-        //! \remarks it is valid to pass only one string as host:port
+        //! Address denoting a P2P server at the given host and port.
+        //! \remarks Port number may be embedding in the host string after a colon.
         static QString p2pAddress(const QString &host = "127.0.0.1", const QString &port = "");
 
         //! Turn something like 127.0.0.1:45000 into "tcp:host=127.0.0.1,port=45000"
-        static QString fixAddressToDBusAddress(const QString &address);
+        static QString normalizeAddress(const QString &address);
 
-        //! address to DBus server mode
-        static ServerMode addressToDBusMode(const QString &address);
+        //! Return the server mode of the given address
+        static ServerMode modeOfAddress(QString address);
 
-        //! Qt DBus address, e.g. "unix:tmpdir=/tmp", "tcp:host=127.0.0.1,port=45000"
+        //! True if a valid Qt DBus address, e.g. "unix:tmpdir=/tmp", "tcp:host=127.0.0.1,port=45000"
         static bool isQtDBusAddress(const QString &address);
 
-        //! Session or system DBus address
+        //! True if address is session or system bus address
         static bool isSessionOrSystemAddress(const QString &address);
 
-        //! Check if address means a real server with P2P connection
+        //! False if address is session or system bus address
         static bool isP2PAddress(const QString &address);
 
-        //! Split DBus address into host and port
-        static bool splitDBusAddressIntoHostAndPort(const QString &dbusAddress, QString &host, int &port);
+        //! Extract host and port from a DBus address
+        static bool dBusAddressToHostAndPort(QString dbusAddress, QString &o_host, int &o_port);
 
-        //! Is DBus available?
-        static bool isDBusAvailable(const QString &address, int port, int timeoutMs = 1500);
-
-        //! Is DBus available?
-        static bool isDBusAvailable(const QString &address, int port, QString &message, int timeoutMs = 1500);
-
-        //! Is DBus available?
-        static bool isDBusAvailable(const QString &dbusAddress, QString &message, int timeoutMs = 1500);
-
-        //! Is DBus available?
+        //! Is there a DBus server running at the given address?
+        //! @{
+        static bool isDBusAvailable(const QString &host, int port, int timeoutMs = 1500);
+        static bool isDBusAvailable(const QString &host, int port, QString &o_message, int timeoutMs = 1500);
+        static bool isDBusAvailable(const QString &dbusAddress, QString &o_message, int timeoutMs = 1500);
         static bool isDBusAvailable(const QString &dbusAddress, int timeoutMs = 1500);
+        //! @}
 
     private:
         ServerMode m_serverMode = SERVERMODE_P2P;
-        QScopedPointer<QDBusServer> m_busServer; //!< QDBusServer implementation
-        QMap<QString, QObject *> m_objects;      //!< Mapping of all exposed objects, for P2P registration when connection establishes, also to later unregister objects
-        QMap<QString, QDBusConnection> m_DBusConnections; //!< Mapping of all DBusConnection objects
+        QScopedPointer<QDBusServer> m_busServer;
+        QMap<QString, QObject *> m_objects;
+        QMap<QString, QDBusConnection> m_connections;
 
-        //! Manually launch our shipped dbus daemon
-        void launchDbusDaemon();
-
-        //! Get the class info
-        static const QString getClassInfo(QObject *object);
+        void launchDBusDaemon();
+        static QString getDBusInterfaceFromClassInfo(QObject *object);
 
         //! Register options with connection
-        static const QDBusConnection::RegisterOptions &RegisterOptions()
+        static QDBusConnection::RegisterOptions registerOptions()
         {
-            static QDBusConnection::RegisterOptions opt = QDBusConnection::ExportAdaptors | QDBusConnection::ExportAllSignals | QDBusConnection::ExportAllSlots;
-            return opt;
+            return QDBusConnection::ExportAdaptors | QDBusConnection::ExportAllSignals | QDBusConnection::ExportAllSlots;
         }
 
     private slots:
-
         //! Called when a new DBus client has connected in P2P mode
-        bool ps_registerObjectsWithP2PConnection(const QDBusConnection &connection);
+        bool ps_registerObjectsWithP2PConnection(QDBusConnection connection);
     };
 }
 

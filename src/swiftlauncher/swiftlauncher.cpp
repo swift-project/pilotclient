@@ -83,9 +83,9 @@ GuiModes::CoreMode CSwiftLauncher::getCoreMode() const
 
 QString CSwiftLauncher::getDBusAddress() const
 {
-    if (this->ui->rb_DBusSession->isChecked()) { return CDBusServer::sessionDBusServer(); }
-    if (this->ui->rb_DBusSystem->isChecked()) { return CDBusServer::systemDBusServer(); }
-    return CDBusServer::fixAddressToDBusAddress(
+    if (this->ui->rb_DBusSession->isChecked()) { return CDBusServer::sessionBusAddress(); }
+    if (this->ui->rb_DBusSystem->isChecked()) { return CDBusServer::systemBusAddress(); }
+    return CDBusServer::normalizeAddress(
                this->ui->cb_DBusServerAddress->currentText() + ":" +
                this->ui->le_DBusServerPort->text());
 }

@@ -212,7 +212,7 @@ namespace BlackCore
         disconnect(this);
 
         // unregister all from DBus
-        if (this->m_dbusServer) { this->m_dbusServer->unregisterAllObjects(); }
+        if (this->m_dbusServer) { this->m_dbusServer->removeAllObjects(); }
 
         // handle contexts
         if (this->getIContextSimulator())
@@ -272,11 +272,11 @@ namespace BlackCore
     void CRuntime::initDBusConnection(const QString &address)
     {
         if (this->m_initDBusConnection) { return; }
-        if (address.isEmpty() || address == CDBusServer::sessionDBusServer())
+        if (address.isEmpty() || address == CDBusServer::sessionBusAddress())
         {
             this->m_dbusConnection = QDBusConnection::sessionBus();
         }
-        else if (address == CDBusServer::systemDBusServer())
+        else if (address == CDBusServer::systemBusAddress())
         {
             this->m_dbusConnection = QDBusConnection::sessionBus();
         }

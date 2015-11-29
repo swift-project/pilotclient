@@ -60,11 +60,11 @@ void CSwiftCore::initStyleSheet()
 
 void CSwiftCore::initDBusMode(const CSwiftCore::SetupInfo &setup)
 {
-    if (setup.m_dbusAddress.startsWith(CDBusServer::sessionDBusServer()))
+    if (setup.m_dbusAddress.startsWith(CDBusServer::sessionBusAddress()))
     {
         this->ui->rb_SessionBus->setChecked(true);
     }
-    else if (setup.m_dbusAddress.startsWith(CDBusServer::systemDBusServer()))
+    else if (setup.m_dbusAddress.startsWith(CDBusServer::systemBusAddress()))
     {
         this->ui->rb_SystemBus->setChecked(true);
     }
@@ -167,9 +167,9 @@ void CSwiftCore::stopCore()
 
 QString CSwiftCore::getDBusAddress() const
 {
-    if (ui->rb_SessionBus->isChecked()) { return CDBusServer::sessionDBusServer(); }
-    if (ui->rb_SystemBus->isChecked()) { return CDBusServer::systemDBusServer(); }
-    if (ui->rb_P2PBus->isChecked()) { return CDBusServer::fixAddressToDBusAddress(ui->le_P2PAddress->text()); }
+    if (ui->rb_SessionBus->isChecked()) { return CDBusServer::sessionBusAddress(); }
+    if (ui->rb_SystemBus->isChecked()) { return CDBusServer::systemBusAddress(); }
+    if (ui->rb_P2PBus->isChecked()) { return CDBusServer::normalizeAddress(ui->le_P2PAddress->text()); }
 
     Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong DBus address");
     return "";

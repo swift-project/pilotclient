@@ -23,7 +23,7 @@ namespace BlackCore
         case CRuntimeConfig::LocalInDbusServer:
             return (new CContextAudio(mode, runtime))->registerWithDBus(server);
         case CRuntimeConfig::Remote:
-            return new CContextAudioProxy(BlackMisc::CDBusServer::ServiceName(), conn, mode, runtime);
+            return new CContextAudioProxy(BlackMisc::CDBusServer::coreServiceName(), conn, mode, runtime);
         default:
             return new CContextAudioEmpty(runtime); // audio not mandatory
         }

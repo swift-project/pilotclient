@@ -33,7 +33,7 @@ namespace BlackCore
         case CRuntimeConfig::LocalInDbusServer:
             return (new CContextApplication(mode, parent))->registerWithDBus(server);
         case CRuntimeConfig::Remote:
-            return new BlackCore::CContextApplicationProxy(BlackMisc::CDBusServer::ServiceName(), connection, mode, parent);
+            return new BlackCore::CContextApplicationProxy(BlackMisc::CDBusServer::coreServiceName(), connection, mode, parent);
         case CRuntimeConfig::NotUsed:
         default:
             return new CContextApplicationEmpty(parent);

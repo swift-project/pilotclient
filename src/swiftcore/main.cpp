@@ -58,7 +58,7 @@ CommandLineParseResult parseCommandLine(QCommandLineParser &parser, CSwiftCore::
     if (parser.isSet(helpOption)) { return CommandLineHelpRequested; }
     if (parser.isSet(versionOption)) { return CommandLineVersionRequested; }
 
-    setup->m_dbusAddress = CDBusServer::sessionDBusServer(); // default
+    setup->m_dbusAddress = CDBusServer::sessionBusAddress(); // default
     if (parser.isSet("dbus"))
     {
         QString v(parser.value("dbus").trimmed().toLower());
@@ -68,7 +68,7 @@ CommandLineParseResult parseCommandLine(QCommandLineParser &parser, CSwiftCore::
         }
         else if (v.contains("sys"))
         {
-            setup->m_dbusAddress = CDBusServer::systemDBusServer(); // default
+            setup->m_dbusAddress = CDBusServer::systemBusAddress(); // default
         }
     }
 
