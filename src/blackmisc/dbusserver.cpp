@@ -205,6 +205,19 @@ namespace BlackMisc
             }
             break;
         case SERVERMODE_P2P:
+            {
+                for (QDBusConnection connection : m_connections)
+                {
+                    if (connection.registerObject(path, object, registerOptions()))
+                    {
+                        CLogMessage(this).debug() << "Adding" << path << getDBusInterfaceFromClassInfo(object) << "to" << connection.name();
+                    }
+                    else
+                    {
+                        CLogMessage(this).error("Error, no success with %1 registration") << connection.name();
+                    }
+                }
+            }
             break;
         default:
             Q_ASSERT_X(false, "CDBusServer::addObject", "Wrong server mode");
