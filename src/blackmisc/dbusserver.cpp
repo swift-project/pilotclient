@@ -249,6 +249,7 @@ namespace BlackMisc
                 }
             }
         }
+        m_objects.clear();
     }
 
     const QDBusConnection &CDBusServer::defaultConnection()
