@@ -12,6 +12,7 @@ BLACK_CONFIG    += FS9
 BLACK_CONFIG    += FSX
 BLACK_CONFIG    += XPlane
 BLACK_CONFIG    += ProfileRelease
+BLACK_CONFIG    += AssertsInRelease
 BLACK_CONFIG    += PackageInstaller
 #BLACK_CONFIG    += Static
 #BLACK_CONFIG    += Doxygen

@@ -12,3 +12,4 @@ contains(BLACK_CONFIG, FSX) { DEFINES += WITH_FSX }
 contains(BLACK_CONFIG, FS9) { DEFINES += WITH_FS9 }
 contains(BLACK_CONFIG, XPlane) { DEFINES += WITH_XPLANE }
 contains(BLACK_CONFIG, Static) { DEFINES += WITH_STATIC }
+contains(BLACK_CONFIG, AssertsInRelease) { DEFINES += QT_FORCE_ASSERTS }
