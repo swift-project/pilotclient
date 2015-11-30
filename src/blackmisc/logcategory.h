@@ -36,6 +36,13 @@ namespace BlackMisc
             return cat;
         }
 
+        //! Verification
+        static const CLogCategory &verification()
+        {
+            static const CLogCategory cat { "swift.verification" };
+            return cat;
+        }
+
         //! Validation
         static const CLogCategory &validation()
         {

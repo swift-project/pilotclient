@@ -18,6 +18,7 @@ namespace BlackMisc
         {
             { "uncategorized (swift)",  exactMatch(CLogCategory::uncategorized()) },
             { "validation",             exactMatch(CLogCategory::validation()) },
+            { "verification",           exactMatch(CLogCategory::verification()) },
             { "swift contexts",         exactMatch(CLogCategory::context()) },
             { "swift context slots",    exactMatch(CLogCategory::contextSlot()) },
             { "swift GUI",              exactMatch(CLogCategory::guiComponent()) },
