@@ -166,10 +166,8 @@ namespace BlackCore
         Q_ASSERT_X(c2, Q_FUNC_INFO, "connect failed");
         QMetaObject::Connection c3 = connect(this, &CAirspaceMonitor::removedAircraft, receiver, removedAircraftSlot);
         Q_ASSERT_X(c3, Q_FUNC_INFO, "connect failed");
-        //! \todo remove old workaround if new version with receiver works
         // trick is to use the Queued signal here
         // analyzer (own thread) -> airspaceAircraftSnapshot -> AirspaceMonitor -> airspaceAircraftSnapshot queued in main thread
-        // QMetaObject::Connection c4 = this->connect(this, &CAirspaceMonitor::airspaceAircraftSnapshot, receiver, aircraftSnapshotSlot);
         QMetaObject::Connection c4 = this->connect(this->m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, receiver, aircraftSnapshotSlot, Qt::QueuedConnection);
         Q_ASSERT_X(c4, Q_FUNC_INFO, "connect failed");
         return QList<QMetaObject::Connection>({ c1, c2, c3, c4});
@@ -252,7 +250,7 @@ namespace BlackCore
     CUserList CAirspaceMonitor::getUsers() const
     {
         CUserList users;
-        foreach(CAtcStation station, this->m_atcStationsOnline)
+        foreach (CAtcStation station, this->m_atcStationsOnline)
         {
             CUser user = station.getController();
             users.push_back(user);
@@ -482,30 +480,6 @@ namespace BlackCore
         if (flags & INetwork::SupportsAircraftConfigs) m_network->sendAircraftConfigQuery(callsign);
     }
 
-    void CAirspaceMonitor::ps_customFSinnPacketReceived(const CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftIcaoDesignator, const QString &combinedAircraftType, const QString &model)
-    {
-        if (!this->m_connected || callsign.isEmpty() || model.isEmpty()) { return; }
-
-        // Request of other client, I can get the other's model from that
-        Q_UNUSED(combinedAircraftType);
-        CPropertyIndexVariantMap vm({ CClient::IndexModel, CAircraftModel::IndexModelString }, model);
-        vm.addValue({ CClient::IndexModel, CAircraftModel::IndexModelType }, static_cast<int>(CAircraftModel::TypeQueriedFromNetwork));
-        if (!this->m_otherClients.containsCallsign(callsign))
-        {
-            // with custom packets it can happen,
-            // the packet is received before any other packet
-            this->m_otherClients.push_back(CClient(callsign));
-        }
-        this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
-
-        // ICAO response from custom data
-        if (!aircraftIcaoDesignator.isEmpty())
-        {
-            // hand over, same functionality as would be needed here
-            this->ps_icaoCodesReceived(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, "");
-        }
-    }
-
     void CAirspaceMonitor::ps_serverReplyReceived(const CCallsign &callsign, const QString &server)
     {
         if (!this->m_connected || callsign.isEmpty() || server.isEmpty()) { return; }
@@ -563,6 +537,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::fireDelayedReadyForModelMatching(const CCallsign &callsign, int trial, int delayMs)
     {
+        Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
         BlackMisc::singleShot(delayMs, QThread::currentThread(), [ = ]()
         {
             this->ps_sendReadyForModelMatching(callsign, trial + 1);
@@ -603,22 +578,23 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_sendReadyForModelMatching(const CCallsign &callsign, int trial)
     {
+        Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
+
         // some checks for special conditions, e.g. logout -> empty list, but still signals pending
         CSimulatedAircraft remoteAircraft;
         {
             QReadLocker l(&m_lockAircraft);
-            if (!this->m_connected || this->m_aircraftInRange.isEmpty()) { return; }
-            if (!this->m_aircraftInRange.containsCallsign(callsign)) { return; }
+            if (!this->m_connected) { return; }
 
             // build simulated aircraft and crosscheck if all data are available
             remoteAircraft = CSimulatedAircraft(this->m_aircraftInRange.findFirstByCallsign(callsign));
-            Q_ASSERT_X(remoteAircraft.hasValidCallsign(), Q_FUNC_INFO, "Invalid callsign");
         }
 
-        // check if the name and ICAO query went properly through
-        bool dataComplete =
-            remoteAircraft.hasAircraftDesignator() &&
-            (!m_serverSupportsNameQuery || remoteAircraft.getModel().hasModelString());
+        // check if the name and ICAO query went properly through,
+        // those usually means the aircraft are in range and can be used
+        bool inRange = remoteAircraft.hasValidCallsign();
+        bool dataComplete = inRange && remoteAircraft.hasAircraftDesignator() &&
+                            (!m_serverSupportsNameQuery || remoteAircraft.getModel().hasModelString());
 
         if (trial < 3 && !dataComplete)
         {
@@ -627,8 +603,21 @@ namespace BlackCore
             return;
         }
 
-        Q_ASSERT(remoteAircraft.hasAircraftDesignator());
-        Q_ASSERT(!m_serverSupportsNameQuery || remoteAircraft.hasValidRealName());
+        if (!inRange)
+        {
+            // here we assume user has logged out, incomplete data because of traffic sim, etc.
+            CLogMessage(this).debug() << "Aircraft not in range anymore " << callsign.toQString();
+            return;
+        }
+
+        if (!dataComplete)
+        {
+            // even after all the trials, still no designator
+            // something is wrong here
+            CLogMessage(this).warning("Cannot retrieve model information for %1") << callsign.toQString();
+            return; // maybe we like to continue here, hard so say
+        }
+        Q_ASSERT_X(!m_serverSupportsNameQuery || remoteAircraft.hasValidRealName(), Q_FUNC_INFO, "invalid model data");
         emit this->readyForModelMatching(remoteAircraft);
     }
 
@@ -764,12 +753,40 @@ namespace BlackCore
         }
     }
 
+    void CAirspaceMonitor::ps_customFSinnPacketReceived(const CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftIcaoDesignator, const QString &combinedAircraftType, const QString &model)
+    {
+        if (!this->m_connected || callsign.isEmpty() || model.isEmpty()) { return; }
+
+        // Request of other client, I can get the other's model from that
+        Q_UNUSED(combinedAircraftType);
+        CPropertyIndexVariantMap vm({ CClient::IndexModel, CAircraftModel::IndexModelString }, model);
+        vm.addValue({ CClient::IndexModel, CAircraftModel::IndexModelType }, static_cast<int>(CAircraftModel::TypeQueriedFromNetwork));
+        if (!this->m_otherClients.containsCallsign(callsign))
+        {
+            // with custom packets it can happen that
+            // the packet is received before any other packet
+            this->m_otherClients.push_back(CClient(callsign));
+        }
+        this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm); // update client info
+
+        // ICAO response from custom data
+        if (!aircraftIcaoDesignator.isEmpty())
+        {
+            // hand over, same functionality as would be needed here
+            this->icaoOrFsdDataReceived(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, "", model,  CAircraftModel::TypeFsdData);
+        }
+    }
+
     void CAirspaceMonitor::ps_icaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery)
+    {
+        this->icaoOrFsdDataReceived(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery, "", CAircraftModel::TypeQueriedFromNetwork);
+    }
+
+    void CAirspaceMonitor::icaoOrFsdDataReceived(const CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery, const QString &modelString, CAircraftModel::ModelType type)
     {
         Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "not in main thread");
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "no callsign");
         if (!this->m_connected) { return; }
-
         if (aircraftIcaoDesignator.isEmpty() && airlineIcaoDesignator.isEmpty() && livery.isEmpty()) { return; }
 
         CSimulatedAircraft remoteAircraft(this->getAircraftInRangeForCallsign(callsign));
@@ -779,69 +796,97 @@ namespace BlackCore
         if (existingAircraft)
         {
             model = remoteAircraft.getModel();
-            m_modelCache.remove(callsign);
+            m_modelCache.remove(callsign); // normally already removed
         }
         else if (m_modelCache.contains(callsign))
         {
-            model  = m_modelCache[callsign];
+            model = m_modelCache[callsign];
         }
 
         // already matched with DB?
-        if (model.getModelType() != CAircraftModel::TypeQueriedFromNetwork && model.getModelType() != CAircraftModel::TypeFsdData) { return; }
+        if (!model.canInitializeFromFsd()) { return; }
+
+        // update model string if not yet existing
+        if (!model.hasModelString() && !modelString.isEmpty()) { model.setModelString(modelString); }
+        if (model.getModelType() == CAircraftModel::TypeUnknown || model.getModelType() == CAircraftModel::TypeQueriedFromNetwork)
+        {
+            model.setModelType(type); // update type if no type yet
+        }
 
         // we have no DB model yet, but do we have model string?
         if (model.hasModelString())
         {
+            // if we find the model here we have a fully defined DB model
             CAircraftModel modelFromDb(this->getModelForModelString(model.getModelString()));
             if (modelFromDb.hasValidDbKey()) { model = modelFromDb; }
         }
 
         // only if not yet matched with DB
-        if (!model.hasValidDbKey() && CLivery::isValidCombinedCode(livery))
+        if (!model.hasValidDbKey())
         {
-            CAircraftModelList models(this->getModelsForAircraftDesignatorAndLiveryCombinedCode(aircraftIcaoDesignator, livery));
-            if (models.isEmpty())
+            // try to match by livery
+            if (CLivery::isValidCombinedCode(livery))
             {
-                // no models for that livery
-                CLivery databaseLivery(this->getLiveryForCombinedCode(livery));
-                if (databaseLivery.hasValidDbKey())
+                // search DB model by livery
+                CAircraftModelList models(this->getModelsForAircraftDesignatorAndLiveryCombinedCode(aircraftIcaoDesignator, livery));
+                if (models.isEmpty())
                 {
-                    // we have found a livery in the DB
-                    model.setLivery(databaseLivery);
+                    // no models for that livery, search for livery only
+                    CLivery databaseLivery(this->getLiveryForCombinedCode(livery));
+                    if (databaseLivery.hasValidDbKey())
+                    {
+                        // we have found a livery in the DB
+                        model.setLivery(databaseLivery);
+                    }
                 }
                 else
                 {
-                    // create a pseudo livery, try to find airline first
-                    CAirlineIcaoCode airlineIcao(this->getAirlineIcaoCodeForDesignator(airlineIcaoDesignator));
-                    if (!airlineIcao.hasValidDbKey()) { airlineIcao = CAirlineIcaoCode(airlineIcaoDesignator); }
-                    CLivery liveryDummy(livery, airlineIcao, "Generated");
-                    model.setLivery(liveryDummy);
+                    // model by livery data found
+                    model = models.front();
                 }
+            }
 
+            // if no DB livery, create own dummy livery
+            if (!model.hasValidDbKey() && !model.getLivery().hasValidDbKey())
+            {
+                // create a pseudo livery, try to find airline first
+                CAirlineIcaoCode airlineIcao(this->getAirlineIcaoCodeForDesignator(airlineIcaoDesignator));
+                if (!airlineIcao.hasValidDbKey())
+                {
+                    // no DB data, we update as much as possible
+                    airlineIcao = model.getAirlineIcaoCode();
+                    airlineIcao.updateMissingParts(CAirlineIcaoCode(airlineIcaoDesignator));
+                }
+                CLivery liveryDummy(livery, airlineIcao, "Generated");
+                model.setLivery(liveryDummy);
+            }
+
+            if (!model.getAircraftIcaoCode().hasValidDbKey())
+            {
                 CAircraftIcaoCode aircraftIcao(this->getAircraftIcaoCodeForDesignator(aircraftIcaoDesignator));
-                if (!aircraftIcao.hasValidDbKey()) { aircraftIcao = CAircraftIcaoCode(aircraftIcaoDesignator); }
-                model.setModelType(CAircraftModel::TypeFsdData);
+                if (!aircraftIcao.hasValidDbKey())
+                {
+                    // no DB data, we update as much as possible
+                    aircraftIcao = model.getAircraftIcaoCode();
+                    aircraftIcao.updateMissingParts(CAircraftIcaoCode(aircraftIcaoDesignator));
+                }
+                model.setAircraftIcaoCode(aircraftIcao);
+            }
+        } // model from DB
+
+        {
+            QWriteLocker l(&m_lockAircraft);
+            if (this->m_aircraftInRange.containsCallsign(callsign))
+            {
+                // we know the aircraft, so we update it
+                this->m_aircraftInRange.setAircraftModel(callsign, model);
             }
             else
             {
-                // model by livery data
-                model = models.front();
-            }
-        }
-
-        int c = 0;
-        {
-            QWriteLocker l(&m_lockAircraft);
-            if (!this->m_aircraftInRange.containsCallsign(callsign))
-            {
+                // keep in cache, as aircraft is not already known
                 this->m_modelCache.insert(callsign, model);
-                return;
             }
-
-            // we know the aircraft, so we update
-            c = this->m_aircraftInRange.setAircraftModel(callsign, model);
-        }
-        if (c > 0) { ps_sendReadyForModelMatching(callsign, 1); }
+        } // lock
     }
 
     void CAirspaceMonitor::ps_aircraftUpdateReceived(const CAircraftSituation &situation, const CTransponder &transponder)
@@ -856,9 +901,8 @@ namespace BlackCore
         this->storeAircraftSituation(situation);
         emit this->addedAircraftSituation(situation);
 
-        QWriteLocker l(&m_lockAircraft);
-        bool exists = this->m_aircraftInRange.containsCallsign(callsign);
-        if (!exists)
+        bool existsInRange = this->m_aircraftInRange.containsCallsign(callsign);
+        if (!existsInRange)
         {
             // new aircraft
             CSimulatedAircraft aircraft;
@@ -869,23 +913,27 @@ namespace BlackCore
             this->updateWithVatsimDataFileData(aircraft);
 
             // ICAO from cache if avialable
-            bool setModel = false;
-            if (this->m_modelCache.contains(callsign))
+            bool setModelFromCache = false;
             {
-                CAircraftModel model = this->m_modelCache.value(callsign);
-                this->m_modelCache.remove(callsign);
-                aircraft.setModel(model);
-                setModel = true;
-            }
+                CAircraftModel model;
+                QWriteLocker l(&m_lockAircraft);
+                if (this->m_modelCache.contains(callsign))
+                {
+                    model = this->m_modelCache.value(callsign);
+                    this->m_modelCache.remove(callsign);
+                    aircraft.setModel(model);
+                    setModelFromCache = true;
+                }
 
-            // only place where aircraft is added
-            this->m_aircraftInRange.push_back(aircraft);
+                // only place where aircraft is added
+                this->m_aircraftInRange.push_back(aircraft);
 
-            // new client, there is a chance it has been already created by custom packet
-            if (!this->m_otherClients.containsCallsign(callsign))
-            {
-                CClient c(callsign);
-                this->m_otherClients.push_back(c); // initial, will be filled by data later
+                // new client, there is a chance it has been already created by custom packet
+                if (!this->m_otherClients.containsCallsign(callsign))
+                {
+                    CClient c(callsign);
+                    this->m_otherClients.push_back(c); // initial, will be filled by data later
+                }
             }
 
             // only if still connected
@@ -894,7 +942,11 @@ namespace BlackCore
                 // the order here makes some sense, as we hope to receive ICAO codes last, and everthing else already in place
 
                 // Send a custom FSinn query only if we don't have the exact model yet
-                CClient c = this->m_otherClients.findByCallsign(callsign).frontOrDefault();
+                CClient c;
+                {
+                    QReadLocker l(&m_lockAircraft);
+                    c = this->m_otherClients.findByCallsign(callsign).frontOrDefault();
+                }
                 CAircraftModel::ModelType modelType = c.getAircraftModel().getModelType();
                 if (modelType != CAircraftModel::TypeQueriedFromNetwork && modelType != CAircraftModel::TypeDatabaseEntry)
                 {
@@ -905,14 +957,19 @@ namespace BlackCore
                 this->m_network->sendCapabilitiesQuery(callsign);
                 this->m_network->sendServerQuery(callsign);
 
-                // keep as last
-                if (setModel)
+                // do this as last thing
+                if (setModelFromCache)
                 {
-                    this->fireDelayedReadyForModelMatching(callsign);
+                    // we have had at least some information,
+                    // means either ICAO codes or FSInn package has already been received
+                    this->ps_sendReadyForModelMatching(callsign, 1);
                 }
                 else
                 {
+                    // no info yet, query ICAO codes at least
+                    // allow some time for the data to arrive before ready for model matching
                     this->m_network->sendIcaoCodesQuery(callsign);
+                    this->fireDelayedReadyForModelMatching(callsign);
                 }
                 emit this->addedAircraft(aircraft);
             } // connected
@@ -928,7 +985,10 @@ namespace BlackCore
             vm.addValue(CSimulatedAircraft::IndexDistanceToOwnAircraft, distance);
 
             // here I expect always a changed value
-            this->m_aircraftInRange.applyIfCallsign(callsign, vm);
+            {
+                QWriteLocker l(&m_lockAircraft);
+                this->m_aircraftInRange.applyIfCallsign(callsign, vm);
+            }
         }
 
         emit this->changedAircraftInRange();
@@ -946,25 +1006,25 @@ namespace BlackCore
 
         // Interim packets do not have groundspeed, hence set the last known value.
         // If there is no full position available yet, throw this interim position away.
-        CAircraftSituation iterimSituation(situation);
+        CAircraftSituation interimSituation(situation);
         {
             QReadLocker l(&m_lockSituations);
             auto history = this->m_situationsByCallsign[callsign];
             if (history.empty()) { return; } // we need one full situation
-            iterimSituation.setCurrentUtcTime();
-            iterimSituation.setGroundspeed(history.latestValue().getGroundSpeed());
+            interimSituation.setCurrentUtcTime();
+            interimSituation.setGroundspeed(history.latestValue().getGroundSpeed());
         }
 
         // store situation history
-        this->storeAircraftSituation(iterimSituation);
-        emit this->addedAircraftSituation(iterimSituation);
+        this->storeAircraftSituation(interimSituation);
+        emit this->addedAircraftSituation(interimSituation);
 
         // update aircraft
         //! \todo skip aircraft updates for interim positions as for performance reasons
-        CLength distance = getOwnAircraft().calculateGreatCircleDistance(iterimSituation.getPosition());
+        CLength distance = getOwnAircraft().calculateGreatCircleDistance(interimSituation.getPosition());
         distance.switchUnit(CLengthUnit::NM()); // lloks nicer
         CPropertyIndexVariantMap vm;
-        vm.addValue(CSimulatedAircraft::IndexSituation, iterimSituation);
+        vm.addValue(CSimulatedAircraft::IndexSituation, interimSituation);
         vm.addValue(CSimulatedAircraft::IndexDistanceToOwnAircraft, distance);
 
         // here I expect always a changed value

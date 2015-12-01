@@ -41,8 +41,8 @@ namespace BlackMisc
 
         CAirlineIcaoCode CAirlineIcaoCodeList::findByVDesignator(const QString &designator)
         {
-            if (CAirlineIcaoCode::isValidAirlineDesignator(designator)) { return CAirlineIcaoCode(); }
-            return this->findFirstBy([&](const CAirlineIcaoCode & code)
+            if (!CAirlineIcaoCode::isValidAirlineDesignator(designator)) { return CAirlineIcaoCode(); }
+            return this->findFirstByOrDefault([&](const CAirlineIcaoCode & code)
             {
                 return code.matchesVDesignator(designator);
             });

@@ -48,7 +48,7 @@ namespace BlackMisc
 
         CAircraftModel CAircraftModelList::findFirstByModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
-            return this->findFirstBy([ = ](const CAircraftModel & model)
+            return this->findFirstByOrDefault([ = ](const CAircraftModel & model)
             {
                 return model.matchesModelString(modelString, sensitivity);
             });

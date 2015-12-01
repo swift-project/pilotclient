@@ -217,7 +217,7 @@ namespace BlackCore
         BlackMisc::Aviation::CCallsignSet m_aircraftSupportingParts; //!< aircraft supporting parts, thread safe access required
 
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan>                m_flightPlanCache;
-        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CAircraftModel>           m_modelCache;
+        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CAircraftModel>           m_modelCache; //!< any model information recevived from network temporarily stored until it is "completed". Will be removed when aircraft is moved to aircraft in range
 
         INetwork              *m_network                 = nullptr;
         CAirspaceAnalyzer     *m_analyzer                = nullptr; //!< owned analyzer
@@ -245,6 +245,9 @@ namespace BlackCore
 
         //! Schedule a ready for model matching
         void fireDelayedReadyForModelMatching(const BlackMisc::Aviation::CCallsign &callsign, int trial = 1, int delayMs = 2500);
+
+        //! FSD or icao query received
+        void icaoOrFsdDataReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery, const QString &modelString, BlackMisc::Simulation::CAircraftModel::ModelType type);
 
         //! Store an aircraft situation
         //! \threadsafe

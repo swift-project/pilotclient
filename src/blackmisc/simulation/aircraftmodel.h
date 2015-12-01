@@ -94,6 +94,9 @@ namespace BlackMisc
             //! \copydoc CValueObject::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
+            //! Can be initialized from FSD
+            bool canInitializeFromFsd() const;
+
             //! Compare for index
             int comparePropertyByIndex(const CAircraftModel &compareValue, const CPropertyIndex &index) const;
 
