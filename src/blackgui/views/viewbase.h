@@ -83,6 +83,12 @@ namespace BlackGui
             //! In \sa ResizingAuto mode, how often to update. "1" updates every time, "2" every 2nd time, ..
             void setAutoResizeFrequency(int updateEveryNthTime) { this->m_resizeAutoNthTime = updateEveryNthTime; }
 
+            //! Display automatically (when models are loaded)
+            bool displayAutomatically() const { return m_displayAutomatically; }
+
+            //! Display automatically (when models are loaded)
+            void setDisplayAutomatically(bool automatically) { m_displayAutomatically = automatically; }
+
             //! Header (horizontal) font
             const QFont &getHorizontalHeaderFont() const { Q_ASSERT(this->horizontalHeader()); return this->horizontalHeader()->font(); }
 
@@ -95,6 +101,15 @@ namespace BlackGui
             //! Selected rows if any
             QModelIndexList selectedRows() const;
 
+            //! Number of selected rows
+            int selectedRowsCount() const;
+
+            //! Single selected row
+            bool hasSingleSelectedRow() const;
+
+            //! Multiple selected rows
+            bool hasMultipleSelectedRows() const;
+
             //! Filter dialog
             void setFilterDialog(BlackGui::Filters::CFilterDialog *filterDialog);
 
@@ -102,7 +117,7 @@ namespace BlackGui
             void setFilterWidget(BlackGui::Filters::CFilterWidget *filterDialog);
 
             //! Set custom menu if applicable
-            void setCustomMenu(BlackGui::IMenuDelegate *menu);
+            void setCustomMenu(BlackGui::IMenuDelegate *menu, bool nestPreviousMenu = true);
 
             //! Enable loading indicator
             void enableLoadIndicator(bool enable);
@@ -126,11 +141,11 @@ namespace BlackGui
             //! Ask for new data from currently loaded data
             void requestUpdate();
 
-            //! Load indicator's visibility has been changed
-            void loadIndicatorVisibilityChanged(bool visible);
-
             //! Load data from backend (where it makes sense)
             void requestNewBackendData();
+
+            //! Load indicator's visibility has been changed
+            void loadIndicatorVisibilityChanged(bool visible);
 
             //! Asynchronous update finished
             void asyncUpdateFinished();
@@ -210,17 +225,20 @@ namespace BlackGui
             int m_skipResizeThreshold = 40;                      //!< when to skip resize (rows count)
             int m_resizeAutoNthTime   = 1;                       //!< with ResizeAuto, resize every n-th time
             bool m_forceStretchLastColumnWhenResized = false;    //!< a small table might (few columns) might to fail stretching, force again
-            bool m_withMenuItemClear          = false;           //!< allow clearing the view via menu
-            bool m_withMenuItemRefresh        = false;           //!< allow refreshing the view via menu
-            bool m_withMenuItemBackend        = false;           //!< allow to request data from backend
-            bool m_withMenuFilter             = false;           //!< filter can be opened
-            bool m_showingLoadIndicator       = false;           //!< showing loading indicator
-            bool m_enabledLoadIndicator       = true;            //!< loading indicator enabled/disabled
-            bool m_acceptClickSelection       = false;           //!< clicked
-            bool m_acceptRowSelected     = false;           //!< selection changed
-            bool m_acceptDoubleClickSelection = false;           //!< double clicked
+            bool m_withMenuItemClear                 = false;    //!< allow clearing the view via menu
+            bool m_withMenuItemRefresh               = false;    //!< allow refreshing the view via menu
+            bool m_withMenuItemBackend               = false;    //!< allow to request data from backend
+            bool m_withMenuDisplayAutomatically      = false;    //!< allow to switch display automatically
+            bool m_withMenuFilter                    = false;    //!< filter can be opened
+            bool m_showingLoadIndicator              = false;    //!< showing loading indicator
+            bool m_enabledLoadIndicator              = true;     //!< loading indicator enabled/disabled
+            bool m_acceptClickSelection              = false;    //!< clicked
+            bool m_acceptRowSelected                 = false;    //!< selection changed
+            bool m_acceptDoubleClickSelection        = false;    //!< double clicked
+            bool m_displayAutomatically              = true;     //!< display directly when loaded
+
             QWidget *m_filterWidget           = nullptr;         //!< filter widget if any
-            BlackGui::IMenuDelegate *m_menu   = nullptr;         //!< custom menu if any
+            BlackGui::IMenuDelegate  *m_menu  = nullptr;         //!< custom menu if any
             BlackGui::CLoadIndicator *m_loadIndicator = nullptr; //!< load indicator if neeeded
 
         protected slots:
@@ -258,6 +276,9 @@ namespace BlackGui
             //! Indicator has been updated
             void ps_updatedIndicator();
 
+            //! Toggle auto display flag
+            void ps_toggleAutoDisplay();
+
             //! Clear the model
             virtual void ps_clear() { this->clear(); }
         };
@@ -294,13 +315,16 @@ namespace BlackGui
             const ObjectType &at(const QModelIndex &index) const;
 
             //! Access to container
-            const ContainerType &getContainer() const;
+            const ContainerType &container() const;
 
             //! Selected objects
             ContainerType selectedObjects() const;
 
             //! Selected object (or default)
             ObjectType selectedObject() const;
+
+            //! Remove selected rows
+            int removeSelectedRows();
 
             //! Row count
             int rowCount() const;

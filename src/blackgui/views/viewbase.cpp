@@ -87,9 +87,24 @@ namespace BlackGui
             }
         }
 
-        void CViewBaseNonTemplate::setCustomMenu(IMenuDelegate *menu)
+        void CViewBaseNonTemplate::setCustomMenu(IMenuDelegate *menu, bool nestPreviousMenu)
         {
-            this->m_menu = menu;
+            if (menu && nestPreviousMenu)
+            {
+                // new menu with nesting
+                menu->setNestedDelegate(this->m_menu);
+                m_menu =  menu;
+            }
+            else if (!menu && nestPreviousMenu)
+            {
+                // nested new menu
+                m_menu = m_menu->getNestedDelegate();
+            }
+            else
+            {
+                // no nesting
+                m_menu = menu;
+            }
         }
 
         void CViewBaseNonTemplate::enableLoadIndicator(bool enable)
@@ -123,9 +138,18 @@ namespace BlackGui
             if (this->m_menu) { this->m_menu->customMenu(menu); }
 
             // standard menus
+            bool withStandardMenu = this->m_withMenuItemRefresh || this->m_withMenuItemBackend || this->m_withMenuItemClear || this->m_withMenuDisplayAutomatically;
             if (this->m_withMenuItemRefresh) { menu.addAction(BlackMisc::CIcons::refresh16(), "Update", this, SIGNAL(requestUpdate())); }
             if (this->m_withMenuItemBackend) { menu.addAction(BlackMisc::CIcons::refresh16(), "Reload from backend", this, SIGNAL(requestNewBackendData())); }
             if (this->m_withMenuItemClear) { menu.addAction(BlackMisc::CIcons::delete16(), "Clear", this, SLOT(ps_clear())); }
+            if (this->m_withMenuDisplayAutomatically)
+            {
+                QAction *a = menu.addAction(CIcons::appMappings16(), "Automatically display (when loaded)", this, SLOT(ps_toggleAutoDisplay()));
+                a->setCheckable(true);
+                a->setChecked(this->displayAutomatically());
+            }
+            if (withStandardMenu) { menu.addSeparator(); }
+
             if (this->m_withMenuFilter)
             {
                 menu.addAction(BlackMisc::CIcons::tableSheet16(), "Filter", this, SLOT(ps_displayFilterDialog()));
@@ -203,6 +227,22 @@ namespace BlackGui
         QModelIndexList CViewBaseNonTemplate::selectedRows() const
         {
             return this->selectionModel()->selectedRows();
+        }
+
+        int CViewBaseNonTemplate::selectedRowsCount() const
+        {
+            if (!this->hasSelection()) { return 0;}
+            return this->selectedRows().count();
+        }
+
+        bool CViewBaseNonTemplate::hasSingleSelectedRow() const
+        {
+            return this->selectedRowsCount() == 1;
+        }
+
+        bool CViewBaseNonTemplate::hasMultipleSelectedRows() const
+        {
+            return this->selectedRowsCount() > 1;
         }
 
         void CViewBaseNonTemplate::init()
@@ -347,6 +387,14 @@ namespace BlackGui
             }
         }
 
+        void CViewBaseNonTemplate::ps_toggleAutoDisplay()
+        {
+            QAction *a = qobject_cast<QAction *>(QObject::sender());
+            if (!a) { return; }
+            Q_ASSERT_X(a->isCheckable(), Q_FUNC_INFO, "object not checkable");
+            this->m_displayAutomatically = a->isChecked();
+        }
+
         void CViewBaseNonTemplate::ps_updatedIndicator()
         {
             this->update();
@@ -448,10 +496,10 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
-        const ContainerType &CViewBase<ModelClass, ContainerType, ObjectType>::getContainer() const
+        const ContainerType &CViewBase<ModelClass, ContainerType, ObjectType>::container() const
         {
             Q_ASSERT(this->m_model);
-            return this->m_model->getContainer();
+            return this->m_model->container();
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
@@ -472,6 +520,31 @@ namespace BlackGui
         {
             ContainerType c = this->selectedObjects();
             return c.frontOrDefault();
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        int CViewBase<ModelClass, ContainerType, ObjectType>::removeSelectedRows()
+        {
+            if (!this->hasSelection()) { return 0; }
+            if (this->isEmpty()) { return 0; }
+
+            int currentRows = this->rowCount();
+            if (currentRows == selectedRowsCount())
+            {
+                this->clear();
+                return currentRows;
+            }
+
+            ContainerType selected(selectedObjects());
+            ContainerType newObjects(container());
+            for (const ObjectType &obj : selected)
+            {
+                newObjects.remove(obj);
+            }
+
+            int delta = currentRows - newObjects.size();
+            this->updateContainerMaybeAsync(newObjects);
+            return delta;
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>

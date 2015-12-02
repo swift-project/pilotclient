@@ -34,29 +34,39 @@ namespace BlackGui
             //! Set display mode
             void setAircraftModelMode(Models::CAircraftModelListModel::AircraftModelMode mode);
 
-            //! Display automatically (when models are loaded)
-            bool displayAutomatically() const;
-
-            //! Display automatically (when models are loaded)
-            void setDisplayAutomatically(bool automatically) { m_displayAutomatically = automatically; }
-
         signals:
             //! Request to load VPilot data
             void requestVPilotRules();
 
-        protected:
-            //! \copydoc CViewBase::customMenu
-            virtual void customMenu(QMenu &menu) const override;
-
         private slots:
-            //! Toggle auto display
-            void ps_toggleAutoDisplay();
-
             //! Highlight DB models
             void ps_toggleHighlightDbModels();
 
+            //! Highlight stashed models
+            void ps_toggleHighlightStashedModels();
+
         private:
-            bool m_displayAutomatically = false; //!< display automatically (when models are loaded)
+            //! Custom menu for the models which have been loaded
+            class CHighlightDbModelsMenu : public BlackGui::IMenuDelegate
+            {
+            public:
+                //! Constructor
+                CHighlightDbModelsMenu(CAircraftModelView *parent, bool separatorAtEnd) : IMenuDelegate(parent, separatorAtEnd) {}
+
+                //! \copydoc IMenuDelegate::customMenu
+                virtual void customMenu(QMenu &menu) const override;
+            };
+
+            //! Custom menu for the models which have been loaded
+            class CHighlightStashedModelsMenu : public BlackGui::IMenuDelegate
+            {
+            public:
+                //! Constructor
+                CHighlightStashedModelsMenu(CAircraftModelView *parent, bool separatorAtEnd) : IMenuDelegate(parent, separatorAtEnd) {}
+
+                //! \copydoc IMenuDelegate::customMenu
+                virtual void customMenu(QMenu &menu) const override;
+            };
         };
     } // ns
 } // ns

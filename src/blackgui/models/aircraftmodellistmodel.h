@@ -14,7 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackgui/models/listmodelbase.h"
+#include "blackgui/models/modelswithdbkey.h"
 #include <QAbstractItemModel>
 
 namespace BlackGui
@@ -23,7 +23,7 @@ namespace BlackGui
     {
         //! Aircraft model list model
         class BLACKGUI_EXPORT CAircraftModelListModel :
-                public CListModelBase<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList, true>
+            public CModelsWithDbKeysBase<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList, int, true>
         {
         public:
             //! How to display
@@ -34,7 +34,8 @@ namespace BlackGui
                 OwnSimulatorModel, ///< model existing with my sim
                 MappedModel,       ///< Model based on mapping operation
                 Database,          ///< Database entry
-                VPilotRuleModel    ///< vPilot rule turned into model
+                VPilotRuleModel,   ///< vPilot rule turned into model
+                StashModel         ///< stashed models
             };
 
             //! Constructor
@@ -55,6 +56,12 @@ namespace BlackGui
             //! Highlight the DB models
             void setHighlightDbData(bool highlightDbData) { m_highlightDbData = highlightDbData; }
 
+            //! Highlight stashed models
+            bool highlightStashedModels() const { return m_highlightStashedData; }
+
+            //! Highlight stashed models
+            void setHighlightStashedModels(bool highlightStashedModels) { m_highlightStashedData = highlightStashedModels; }
+
         protected:
             //! \copydoc QAbstractItemModel::data
             virtual QVariant data(const QModelIndex &index, int role) const override;
@@ -62,6 +69,7 @@ namespace BlackGui
         private:
             AircraftModelMode m_mode = NotSet; //!< current mode
             bool m_highlightDbData = false;
+            bool m_highlightStashedData = false;
         };
     } // ns
 } // ns

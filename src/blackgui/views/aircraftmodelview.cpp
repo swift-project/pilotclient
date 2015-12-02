@@ -30,70 +30,78 @@ namespace BlackGui
             QWidget *mainWindow = this->mainApplicationWindowWidget();
             Q_ASSERT_X(mainWindow, Q_FUNC_INFO, "no main window found");
             this->setFilterDialog(new CAircraftModelFilterDialog(mainWindow));
+
+            // default mode
+            CAircraftModelListModel::AircraftModelMode mode = derivedModel()->getModelMode();
+            this->setAircraftModelMode(mode);
         }
 
         void CAircraftModelView::setAircraftModelMode(CAircraftModelListModel::AircraftModelMode mode)
         {
-            if (mode == CAircraftModelListModel::Database)
+            this->m_withMenuDisplayAutomatically = false;
+            this->setCustomMenu(nullptr, false); // delete everything
+            switch (mode)
             {
-                this->m_withMenuItemClear = false;
-                this->m_withMenuItemRefresh = false;
-                this->m_withMenuItemBackend = true;
-            }
-            else if (mode == CAircraftModelListModel::OwnSimulatorModel)
-            {
-                this->m_withMenuItemClear = false;
-                this->m_withMenuItemRefresh = false;
-                this->m_withMenuItemBackend = true;
-            }
-            else if (mode == CAircraftModelListModel::VPilotRuleModel)
-            {
+            case CAircraftModelListModel::StashModel:
                 this->m_withMenuItemClear = true;
                 this->m_withMenuItemRefresh = false;
                 this->m_withMenuItemBackend = false;
-            }
-            else
-            {
-                this->m_withMenuItemClear = true;
-                this->m_withMenuItemRefresh = true;
+                this->setCustomMenu(new CHighlightDbModelsMenu(this, true));
+                break;
+            case CAircraftModelListModel::Database:
+                this->m_withMenuItemClear = false;
+                this->m_withMenuItemRefresh = false;
                 this->m_withMenuItemBackend = true;
+                break;
+            case CAircraftModelListModel::VPilotRuleModel:
+                this->m_withMenuItemClear = false;
+                this->m_withMenuItemRefresh = false;
+                this->m_withMenuItemBackend = false;
+                this->setCustomMenu(new CHighlightDbModelsMenu(this, true));
+                this->setCustomMenu(new CHighlightStashedModelsMenu(this, true));
+                break;
+            case CAircraftModelListModel::OwnSimulatorModel:
+            default:
+                this->m_withMenuDisplayAutomatically = true;
+                this->m_withMenuItemClear = false;
+                this->m_withMenuItemRefresh = false;
+                this->m_withMenuItemBackend = false;
+                this->setCustomMenu(new CHighlightDbModelsMenu(this, true));
+                this->setCustomMenu(new CHighlightStashedModelsMenu(this, true));
+                break;
             }
-            this->m_model->setAircraftModelMode(mode);
-        }
-
-        bool CAircraftModelView::displayAutomatically() const
-        {
-            return m_displayAutomatically;
-        }
-
-        void CAircraftModelView::customMenu(QMenu &menu) const
-        {
-            CAircraftModelListModel::AircraftModelMode mode =  this->m_model->getModelMode();
-            if (mode == CAircraftModelListModel::VPilotRuleModel || mode == CAircraftModelListModel::OwnSimulatorModel)
-            {
-                QAction *a = menu.addAction(CIcons::appMappings16(), "Automatically display", this, SLOT(ps_toggleAutoDisplay()));
-                a->setCheckable(true);
-                a->setChecked(m_displayAutomatically);
-                menu.addSeparator();
-                a = menu.addAction(CIcons::database16(), "Highlight DB items", this, SLOT(ps_toggleHighlightDbModels()));
-                a->setCheckable(true);
-                a->setChecked(derivedModel()->highlightDbData());
-            }
-            CViewBase::customMenu(menu);
-        }
-
-        void CAircraftModelView::ps_toggleAutoDisplay()
-        {
-            QAction *a = qobject_cast<QAction *>(QObject::sender());
-            if (!a) { return; }
-            Q_ASSERT_X(a->isCheckable(), Q_FUNC_INFO, "object not checkable");
-            this->m_displayAutomatically = a->isChecked();
         }
 
         void CAircraftModelView::ps_toggleHighlightDbModels()
         {
             bool h = derivedModel()->highlightDbData();
             derivedModel()->setHighlightDbData(!h);
+        }
+
+        void CAircraftModelView::ps_toggleHighlightStashedModels()
+        {
+            bool h = derivedModel()->highlightStashedModels();
+            derivedModel()->setHighlightStashedModels(!h);
+        }
+
+        void CAircraftModelView::CHighlightDbModelsMenu::customMenu(QMenu &menu) const
+        {
+            const CAircraftModelView *mv = qobject_cast<const CAircraftModelView *>(parent());
+            Q_ASSERT_X(mv, Q_FUNC_INFO, "no view");
+            QAction *a = menu.addAction(CIcons::database16(), "Highlight DB models", mv, SLOT(ps_toggleHighlightDbModels()));
+            a->setCheckable(true);
+            a->setChecked(mv->derivedModel()->highlightDbData());
+            this->nestedCustomMenu(menu);
+        }
+
+        void CAircraftModelView::CHighlightStashedModelsMenu::customMenu(QMenu &menu) const
+        {
+            const CAircraftModelView *mv = qobject_cast<const CAircraftModelView *>(parent());
+            Q_ASSERT_X(mv, Q_FUNC_INFO, "no view");
+            QAction *a = menu.addAction(CIcons::appDbStash16(), "Highlight stashed models", mv, SLOT(ps_toggleHighlightStashedModels()));
+            a->setCheckable(true);
+            a->setChecked(mv->derivedModel()->highlightStashedModels());
+            this->nestedCustomMenu(menu);
         }
 
     } // namespace

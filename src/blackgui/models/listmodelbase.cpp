@@ -67,7 +67,7 @@ namespace BlackGui
         QModelIndex CListModelBaseNonTemplate::index(int row, int column, const QModelIndex &parent) const
         {
             Q_UNUSED(parent);
-            return QAbstractItemModel::createIndex(row, column);
+            return QStandardItemModel::createIndex(row, column);
         }
 
         QModelIndex CListModelBaseNonTemplate::parent(const QModelIndex &child) const
@@ -105,7 +105,7 @@ namespace BlackGui
 
         Qt::ItemFlags CListModelBaseNonTemplate::flags(const QModelIndex &index) const
         {
-            Qt::ItemFlags f = QAbstractItemModel::flags(index);
+            Qt::ItemFlags f = QStandardItemModel::flags(index);
             if (!index.isValid()) { return f; }
             bool editable = this->m_columns.isEditable(index);
             f = editable ? (f | Qt::ItemIsEditable) : (f ^ Qt::ItemIsEditable);
@@ -132,7 +132,7 @@ namespace BlackGui
 
         Qt::DropActions CListModelBaseNonTemplate::supportedDropActions() const
         {
-            return QAbstractItemModel::supportedDropActions();
+            return QStandardItemModel::supportedDropActions();
         }
 
         QStringList CListModelBaseNonTemplate::mimeTypes() const
@@ -157,11 +157,16 @@ namespace BlackGui
         }
 
         CListModelBaseNonTemplate::CListModelBaseNonTemplate(const QString &translationContext, QObject *parent)
-            : QAbstractItemModel(parent), m_columns(translationContext), m_sortedColumn(-1), m_sortOrder(Qt::AscendingOrder)
+            : QStandardItemModel(parent), m_columns(translationContext), m_sortedColumn(-1), m_sortOrder(Qt::AscendingOrder)
         {
             // non unique default name, set translation context as default
             this->setObjectName(translationContext);
         }
+
+        template <typename ObjectType, typename ContainerType, bool UseCompare>
+        CListModelBase<ObjectType, ContainerType, UseCompare>::CListModelBase(const QString &translationContext, QObject *parent)
+            : CListModelBaseNonTemplate(translationContext, parent)
+        { }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
         int CListModelBase<ObjectType, ContainerType, UseCompare>::rowCount(const QModelIndex &parentIndex) const

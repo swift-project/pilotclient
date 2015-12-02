@@ -26,12 +26,33 @@ namespace BlackGui
         //! Display custom menu
         virtual void customMenu(QMenu &menu) const = 0;
 
+        //! Set nested delegate
+        void setNestedDelegate(IMenuDelegate *nestedDelegate) { m_nestedDelegate = nestedDelegate; }
+
+        //! Nested delegate
+        IMenuDelegate *getNestedDelegate() const { return m_nestedDelegate; }
+
         //! Destructor
         virtual ~IMenuDelegate() {}
 
     protected:
         //! Constructor
-        IMenuDelegate(QWidget *parent = nullptr) :  QObject(parent) {}
+        IMenuDelegate(QWidget *parent = nullptr, bool separatorAtEnd = false) :
+            QObject(parent), m_separatorAtEnd(separatorAtEnd) {}
+
+        //! Delegate down one level
+        void nestedCustomMenu(QMenu &menu) const
+        {
+            if (!m_nestedDelegate)
+            {
+                if (m_separatorAtEnd) { menu.addSeparator(); }
+                return;
+            }
+            m_nestedDelegate->customMenu(menu);
+        }
+
+        IMenuDelegate *m_nestedDelegate = nullptr; //!< nested delegate if any
+        bool           m_separatorAtEnd = false;   //!< at end, terminate with seperator
     };
 
 } // ns

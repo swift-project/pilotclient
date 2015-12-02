@@ -16,7 +16,7 @@
 #include "blackgui/models/columns.h"
 #include "blackgui/models/modelfilter.h"
 #include "blackmisc/worker.h"
-#include <QAbstractItemModel>
+#include <QStandardItemModel>
 #include <QThread>
 #include <memory>
 #include <iostream>
@@ -27,7 +27,7 @@ namespace BlackGui
     namespace Models
     {
         //! Non templated base class, allows Q_OBJECT and signals to be used
-        class BLACKGUI_EXPORT CListModelBaseNonTemplate : public QAbstractItemModel
+        class BLACKGUI_EXPORT CListModelBaseNonTemplate : public QStandardItemModel
         {
             Q_OBJECT
 
@@ -38,16 +38,16 @@ namespace BlackGui
             //! Destructor
             virtual ~CListModelBaseNonTemplate() {}
 
-            //! \copydoc QAbstractItemModel::columnCount()
+            //! \copydoc QStandardItemModel::columnCount()
             virtual int columnCount(const QModelIndex &modelIndex = QModelIndex()) const override;
 
-            //! \copydoc QAbstractItemModel::headerData()
+            //! \copydoc QStandardItemModel::headerData()
             virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
-            //! \copydoc QAbstractItemModel::headerData()
+            //! \copydoc QStandardItemModel::headerData()
             virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
 
-            //! \copydoc QAbstractItemModel::parent()
+            //! \copydoc QStandardItemModel::parent()
             virtual QModelIndex parent(const QModelIndex &child) const override;
 
             //! Column to property index
@@ -78,16 +78,16 @@ namespace BlackGui
             //! Translation context
             virtual const QString &getTranslationContext() const;
 
-            //! \copydoc QAbstractItemModel::flags
+            //! \copydoc QStandardItemModel::flags
             virtual Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-            //! \copydoc QAbstractItemModel::supportedDragActions
+            //! \copydoc QStandardItemModel::supportedDragActions
             virtual Qt::DropActions supportedDragActions() const override;
 
-            //! \copydoc QAbstractItemModel::supportedDropActions
+            //! \copydoc QStandardItemModel::supportedDropActions
             virtual Qt::DropActions supportedDropActions() const override;
 
-            //! \copydoc QAbstractItemModel::supportedDropActions
+            //! \copydoc QStandardItemModel::supportedDropActions
             virtual QStringList mimeTypes() const override;
 
             //! Mark as about to be destroyed, normally marked from view
@@ -140,14 +140,14 @@ namespace BlackGui
             //! Used container data
             const ContainerType &container() const;
 
-            //! \copydoc QAbstractItemModel::data()
+            //! \copydoc QStandardItemModel::data()
             virtual QVariant data(const QModelIndex &index, int role) const override;
 
-            //! \copydoc QAbstractItemModel::setData()
+            //! \copydoc QStandardItemModel::setData()
             //! \sa CListModelBaseNonTemplate::flags
             virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
-            //! \copydoc QAbstractItemModel::rowCount()
+            //! \copydoc QStandardItemModel::rowCount()
             virtual int rowCount(const QModelIndex &parentIndex = QModelIndex()) const override;
 
             //! Update by new container
@@ -172,7 +172,7 @@ namespace BlackGui
             //! Sort by given sort order \sa getSortColumn() \sa getSortOrder()
             void sort();
 
-            //! \copydoc QAbstractItemModel::sort()
+            //! \copydoc QStandardItemModel::sort()
             virtual void sort(int column, Qt::SortOrder order) override;
 
             //! Truncate to given number
@@ -211,7 +211,7 @@ namespace BlackGui
             //! Empty?
             virtual bool isEmpty() const;
 
-            //! \copydoc QAbstractItemModel::mimeData
+            //! \copydoc QStandardItemModel::mimeData
             virtual QMimeData *mimeData(const QModelIndexList &indexes) const override;
 
             //! Filter available
@@ -227,9 +227,7 @@ namespace BlackGui
             std::unique_ptr<IModelFilter<ContainerType> > m_filter; //!< Used filter
 
             //! \copydoc CListModelBaseNonTemplate::CListModelBaseNonTemplate
-            CListModelBase(const QString &translationContext, QObject *parent = nullptr)
-                : CListModelBaseNonTemplate(translationContext, parent)
-            { }
+            CListModelBase(const QString &translationContext, QObject *parent = nullptr);
 
             //! \copydoc CModelBaseNonTemplate::performUpdateContainer
             virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort) override;

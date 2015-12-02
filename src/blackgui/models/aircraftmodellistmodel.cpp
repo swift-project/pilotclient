@@ -21,7 +21,7 @@ namespace BlackGui
     namespace Models
     {
         CAircraftModelListModel::CAircraftModelListModel(AircraftModelMode mode, QObject *parent) :
-            CListModelBase("CAircraftModelListModel", parent)
+            CModelsWithDbKeysBase("CAircraftModelListModel", parent)
         {
             this->setAircraftModelMode(mode);
 
@@ -40,6 +40,7 @@ namespace BlackGui
             {
             case NotSet:
             case OwnSimulatorModel:
+            case StashModel:
                 this->m_columns.addColumn(CColumn::standardString("model", { CAircraftModel::IndexModelString}));
                 this->m_columns.addColumn(CColumn::standardString("description", { CAircraftModel::IndexDescription}));
                 this->m_columns.addColumn(CColumn::standardString("name", { CAircraftModel::IndexName}));
