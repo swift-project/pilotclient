@@ -16,6 +16,7 @@
 #include <QScopedPointer>
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
+#include "blackcore/settings/network.h"
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "swiftguistandard/guimodeenums.h"
@@ -59,10 +60,11 @@ protected:
 
 private:
     QScopedPointer<Ui::CSwiftLauncher>             ui;
-    BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup    { this, &CSwiftLauncher::ps_changedCache };   //!< setup cache
+    BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup      { this, &CSwiftLauncher::ps_changedCache };   //!< setup cache
     BlackCore::CData<BlackCore::Data::UpdateInfo>  m_updateInfo { this, &CSwiftLauncher::ps_changedCache }; //!< version cache
     QString     m_executable;
     QStringList m_executableArgs;
+    BlackCore::CSetting<BlackCore::Settings::Network::DBusServerAddress> m_dbusServerAddress { this };
 
     //! Get core mode
     GuiModes::CoreMode getCoreMode() const;

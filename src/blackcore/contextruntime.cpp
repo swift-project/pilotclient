@@ -42,12 +42,17 @@ namespace BlackCore
 
         this->connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &CRuntime::gracefulShutdown);
 
-        // upfront reading of settings, as DBus server already relies on settings
+        // either use explicit setting or last value
         QString dbusAddress;
-
-        //! \todo Change when settings ready RW: I wonder if this can be done cleaner.
-        if (config.hasDBusAddress()) { dbusAddress = config.getDBusAddress(); } // bootstrap / explicit
-        else { dbusAddress = m_dbusServerAddress.get(); }
+        if (config.hasDBusAddress())
+        {
+            dbusAddress = config.getDBusAddress();
+            m_dbusServerAddress.set(dbusAddress);
+        }
+        else
+        {
+            dbusAddress = m_dbusServerAddress.get();
+        }
 
         // DBus
         if (config.requiresDBusSever()) { this->initDBusServer(dbusAddress); }

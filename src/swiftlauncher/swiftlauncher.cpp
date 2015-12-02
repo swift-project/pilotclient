@@ -54,7 +54,8 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_L), this, SLOT(ps_showLogPage()));
     this->ui->le_DBusServerPort->setValidator(new QIntValidator(0, 65535, this));
 
-    // QTimer::singleShot(5000, this, &CSwiftLauncher::ps_loadedSetup); //deferred init of setup
+    // default from settings
+    this->ui->cb_DBusServerAddress->setCurrentText(this->m_dbusServerAddress.get());
 }
 
 CSwiftLauncher::~CSwiftLauncher()
