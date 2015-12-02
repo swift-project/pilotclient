@@ -254,7 +254,7 @@ namespace BlackMisc
             return this->m_webDataReaderProvider->updateWithVatsimDataFileData(aircraftToBeUdpated);
         }
 
-        CStatusMessageList CWebDataServicesAware::asyncWriteModel(CAircraftModel &model) const
+        CStatusMessageList CWebDataServicesAware::asyncWriteModelToDb(CAircraftModel &model) const
         {
             Q_ASSERT_X(this->m_webDataReaderProvider, Q_FUNC_INFO, "Missing provider");
             if (!hasProvider()) { return CStatusMessageList(); }

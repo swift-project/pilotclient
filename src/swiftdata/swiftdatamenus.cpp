@@ -15,6 +15,7 @@
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/datacache.h"
 #include "blackcore/settingscache.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/project.h"
@@ -156,7 +157,7 @@ void CSwiftData::initDynamicMenus()
         Q_ASSERT_X(this->ui->comp_MainInfoArea, Q_FUNC_INFO, "Missing main info area");
         Q_ASSERT_X(this->ui->comp_MainInfoArea->getDataInfoAreaComponent(), Q_FUNC_INFO, "Missing DB info area");
         this->ui->menu_Mapping->addAction(CIcons::load16(), "Load DB data", this->ui->comp_MainInfoArea->getDataInfoAreaComponent(), SLOT(readDbDataFromResourceDir()));
-        if (CProject::isRunningInDeveloperEnvironment() && this->ui->comp_MainInfoArea->getDataInfoAreaComponent()->canConnectSwiftDb())
+        if (CProject::isRunningInDeveloperEnvironment() && this->m_webDataReader && this->m_webDataReader->canConnectSwiftDb())
         {
             this->ui->menu_Mapping->addAction(CIcons::save16(), "Save DB data", this->ui->comp_MainInfoArea->getDataInfoAreaComponent(), SLOT(writeDbDataToResourceDir()));
         }

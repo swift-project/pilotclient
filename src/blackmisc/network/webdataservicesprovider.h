@@ -211,6 +211,14 @@ namespace BlackMisc
             //! Destructor
             ~CWebDataServicesAware();
 
+        public:
+            //! \copydoc IWebDataReaderProvider::getMetarForAirport
+            BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &icao) const;
+
+        protected:
+            //! Constructor
+            CWebDataServicesAware(IWebDataServicesProvider *webDataReaderProvider = nullptr) : m_webDataReaderProvider(webDataReaderProvider) { }
+
             //! \copydoc IWebDataReaderProvider::getVatsimFsdServers
             BlackMisc::Network::CServerList getVatsimFsdServers() const;
 
@@ -301,9 +309,6 @@ namespace BlackMisc
             //! \copydoc IWebDataReaderProvider::getMetars
             BlackMisc::Weather::CMetarSet getMetars() const;
 
-            //! \copydoc IWebDataReaderProvider::getMetarForAirport
-            BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &icao) const;
-
             //! \copydoc IWebDataReaderProvider::getMetarCount
             int getMetarCount() const;
 
@@ -311,7 +316,7 @@ namespace BlackMisc
             void updateWithVatsimDataFileData(BlackMisc::Simulation::CSimulatedAircraft &aircraftToBeUdpated) const;
 
             //! \copydoc IWebDataReaderProvider::asyncWriteModel
-            BlackMisc::CStatusMessageList asyncWriteModel(BlackMisc::Simulation::CAircraftModel &model) const;
+            BlackMisc::CStatusMessageList asyncWriteModelToDb(BlackMisc::Simulation::CAircraftModel &model) const;
 
             //! Set the provider
             virtual void setProvider(IWebDataServicesProvider *webDataReaderProvider);
@@ -338,10 +343,6 @@ namespace BlackMisc
 
             //! \copydoc IWebDataReaderProvider::readDbDataFromDisk
             bool readDbDataFromDisk(const QString &dir, bool inBackround);
-
-        protected:
-            //! Constructor
-            CWebDataServicesAware(IWebDataServicesProvider *webDataReaderProvider = nullptr) : m_webDataReaderProvider(webDataReaderProvider) { }
 
         private:
             IWebDataServicesProvider    *m_webDataReaderProvider = nullptr; //!< access to object
