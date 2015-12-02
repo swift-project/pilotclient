@@ -13,6 +13,8 @@
 #define BLACKGUI_COMPONENTS_DBSTASHCOMPONENT_H
 
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/menudelegate.h"
+#include "blackgui/views/aircraftmodelview.h"
 #include "blackmisc/network/webdataservicesprovider.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -46,10 +48,43 @@ namespace BlackGui
             //! Graceful shutdown
             void gracefulShutdown();
 
+            //! Test the given model if it can be stashed
+            BlackMisc::CStatusMessage validateStashModel(const BlackMisc::Simulation::CAircraftModel &model) const;
+
+            //! Stash given model
+            BlackMisc::CStatusMessage stashModel(const BlackMisc::Simulation::CAircraftModel &model);
+
+            //! Stash given models
+            BlackMisc::CStatusMessageList stashModels(const BlackMisc::Simulation::CAircraftModelList &models);
+
+            //! The embedded view
+            const BlackGui::Views::CAircraftModelView *getView() const;
+
+        signals:
+            //! Unstash
+            void unstashed(BlackMisc::Simulation::CAircraftModel &model);
+
+        private slots:
+            //! Unstash pressed
+            void ps_onUnstashPressed();
+
+            //! Validate pressed
+            void ps_onValidatePressed();
+
         private:
             QScopedPointer<Ui::CDbStashComponent> ui;
-        };
 
+            //! Custom menu for the stashed models
+            class CStashModelsMenu : public BlackGui::IMenuDelegate
+            {
+            public:
+                //! Constructor
+                CStashModelsMenu(CDbStashComponent *parent, bool separatorAtEnd) : IMenuDelegate(parent, separatorAtEnd) {}
+
+                //! \copydoc IMenuDelegate::customMenu
+                virtual void customMenu(QMenu &menu) const override;
+            };
+        };
     } // ns
 } // ns
 

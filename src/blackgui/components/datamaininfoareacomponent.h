@@ -26,7 +26,6 @@ namespace BlackGui
     {
         class CLogComponent;
         class CDbMappingComponent;
-        class CDbStashComponent;
         class CDataInfoAreaComponent;
 
         /**
@@ -43,11 +42,10 @@ namespace BlackGui
             enum InfoArea
             {
                 // index must match tab index!
-                InfoAreaData          = 0,
-                InfoAreaMapping       = 1,
-                InfoAreaStash         = 2,
-                InfoAreaSettings      = 3,
-                InfoAreaLog           = 4,
+                InfoAreaData          =  0,
+                InfoAreaMapping       =  1,
+                InfoAreaSettings      =  2,
+                InfoAreaLog           =  3,
                 InfoAreaNone          = -1
             };
 
@@ -65,9 +63,6 @@ namespace BlackGui
 
             //! Mapping component
             CDataInfoAreaComponent *getDataInfoAreaComponent() const;
-
-            //! Stash component
-            CDbStashComponent *getStashComponent() const;
 
             //! Set data reader
             virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *provider) override;

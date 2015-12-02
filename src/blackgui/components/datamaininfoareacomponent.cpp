@@ -53,17 +53,11 @@ namespace BlackGui
             return this->ui->comp_DataInfoArea;
         }
 
-        CDbStashComponent *CDataMainInfoAreaComponent::getStashComponent() const
-        {
-            return this->ui->comp_Stash;
-        }
-
         void CDataMainInfoAreaComponent::setProvider(BlackMisc::Network::IWebDataServicesProvider *provider)
         {
             Q_ASSERT_X(provider, Q_FUNC_INFO, "Missing provider");
             this->ui->comp_DataInfoArea->setProvider(provider);
             this->ui->comp_Mapping->setProvider(provider);
-            this->ui->comp_Stash->setProvider(provider);
         }
 
         void CDataMainInfoAreaComponent::displayLog()
@@ -86,7 +80,6 @@ namespace BlackGui
             case InfoAreaData:
             case InfoAreaMapping:
             case InfoAreaSettings:
-            case InfoAreaStash:
             case InfoAreaLog:
             default:
                 return QSize(800, 600);
@@ -106,8 +99,6 @@ namespace BlackGui
                 return CIcons::appSettings16();
             case InfoAreaLog:
                 return CIcons::appLog16();
-            case InfoAreaStash:
-                return CIcons::appDbStash16();
             default:
                 return CIcons::empty();
             }

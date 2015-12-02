@@ -13,6 +13,7 @@
 #define BLACKGUI_COMPONENTS_DBMAPPINGCOMPONENT_H
 
 #include "blackcore/data/authenticateduser.h"
+#include "blackcore/data/aircraftmodels.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/menudelegate.h"
@@ -43,6 +44,16 @@ namespace BlackGui
             Q_OBJECT
 
         public:
+            //! Tab index
+            //! Must match real tab index
+            enum TabIndex
+            {
+                NoValidTab   = -1,
+                TabStash     =  0,
+                TabOwnModels =  1,
+                TabVPliot    =  2
+            };
+
             //! Constructor
             explicit CDbMappingComponent(QWidget *parent = nullptr);
 
@@ -57,6 +68,15 @@ namespace BlackGui
 
             //! With vPilot rules
             bool withVPilot() const { return m_withVPilot; }
+
+            //! And models which can be stashed
+            bool hasModelsForStash() const;
+
+            //! The model to be stashed
+            BlackMisc::Simulation::CAircraftModelList getModelsForStash() const;
+
+            //! Current tab index
+            TabIndex currentTabIndex() const;
 
         signals:
             //! Request to filter by livery
@@ -73,13 +93,16 @@ namespace BlackGui
             BlackMisc::CStatusMessageList validate(bool withNestedForms) const;
 
             //! Save
-            void save();
+            void saveSingleModelToDb();
 
             //! Resize so that selection is easy (larger table view)
             void resizeForSelect();
 
             //! Resize so that mapping is easier
             void resizeForMapping();
+
+            //! Stash models
+            void stashSelectedModels();
 
         private slots:
             //! Load the vPilot rules
@@ -90,6 +113,9 @@ namespace BlackGui
 
             //! Row count for vPilot data changed
             void ps_onVPilotCountChanged(int count, bool withFilter);
+
+            //! Stash count has been changed
+            void ps_onStashCountChanged(int count, bool withFilter);
 
             //! Row has been selected
             void ps_onModelRowSelected(const QModelIndex &index);
@@ -111,8 +137,10 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CDbMappingComponent> ui;
-            BlackMisc::Simulation::FsCommon::CVPilotRulesReader           m_vPilotReader;
-            std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>  m_modelLoader;
+            BlackMisc::Simulation::FsCommon::CVPilotRulesReader           m_vPilotReader;                //!< read vPilot rules
+            BlackCore::CData<BlackCore::Data::VPilotAircraftModels>       m_cachedVPilotModels { this }; //!< cache for latest vPilot rules
+            std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>  m_modelLoader;                 //!< read own aircraft models
+            BlackCore::CData<BlackCore::Data::OwnSimulatorAircraftModels> m_cachedOwnModels { this };    //!< cache for latest models
             BlackCore::CData<BlackCore::Data::AuthenticatedUser>          m_user {this, &CDbMappingComponent::ps_userChanged};
             bool m_vPilot1stInit = true;
             bool m_withVPilot    = false;
@@ -143,13 +171,13 @@ namespace BlackGui
             };
 
             //! The menu for loading and handling VPilot rules for mapping
-            //! \note This is specific for that very component
+            //! \note This is a specific menu for that very component
             class CMappingVPilotMenu : public BlackGui::IMenuDelegate
             {
             public:
                 //! Constructor
-                CMappingVPilotMenu(CDbMappingComponent *mappingComponent) :
-                    BlackGui::IMenuDelegate(mappingComponent)
+                CMappingVPilotMenu(CDbMappingComponent *mappingComponent, bool separatorAtEnd) :
+                    BlackGui::IMenuDelegate(mappingComponent, separatorAtEnd)
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu
@@ -158,8 +186,23 @@ namespace BlackGui
             private:
                 CDbMappingComponent *mappingComponent() const;
             };
-        };
 
+            //! The menu for stashing models
+            //! \note This is a specific menu for that very component
+            class CStashMenu : public BlackGui::IMenuDelegate
+            {
+            public:
+                //! Constructor
+                CStashMenu(CDbMappingComponent *mappingComponent, bool separatorAtEnd) :
+                    BlackGui::IMenuDelegate(mappingComponent, separatorAtEnd)
+                {}
+
+                //! \copydoc IMenuDelegate::customMenu
+                virtual void customMenu(QMenu &menu) const override;
+
+                CDbMappingComponent *mappingComponent() const;
+            };
+        };
     } // ns
 } // ns
 #endif // guard

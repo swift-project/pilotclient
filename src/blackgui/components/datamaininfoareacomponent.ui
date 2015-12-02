@@ -172,73 +172,6 @@
     </layout>
    </widget>
   </widget>
-  <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Stash">
-   <property name="allowedAreas">
-    <set>Qt::TopDockWidgetArea</set>
-   </property>
-   <property name="windowTitle">
-    <string>Stash</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>4</number>
-   </attribute>
-   <widget class="QWidget" name="qw_StashOuter">
-    <layout class="QVBoxLayout" name="vl_StashOuter">
-     <property name="spacing">
-      <number>0</number>
-     </property>
-     <property name="leftMargin">
-      <number>0</number>
-     </property>
-     <property name="topMargin">
-      <number>0</number>
-     </property>
-     <property name="rightMargin">
-      <number>0</number>
-     </property>
-     <property name="bottomMargin">
-      <number>0</number>
-     </property>
-     <item>
-      <widget class="QFrame" name="fr_StashInner">
-       <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
-       </property>
-       <layout class="QVBoxLayout" name="vl_StashInner">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>2</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="BlackGui::Components::CDbStashComponent" name="comp_Stash">
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
   <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Settings">
    <property name="allowedAreas">
     <set>Qt::TopDockWidgetArea</set>
@@ -403,12 +336,6 @@
    <class>BlackGui::Components::CDbMappingComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/dbmappingcomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Components::CDbStashComponent</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/dbstashcomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

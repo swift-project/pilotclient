@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>266</width>
-    <height>618</height>
+    <width>264</width>
+    <height>616</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -62,6 +62,38 @@
          <property name="currentIndex">
           <number>0</number>
          </property>
+         <widget class="QWidget" name="tab_StashAircraftModels">
+          <attribute name="title">
+           <string>Stashed aircraft</string>
+          </attribute>
+          <layout class="QHBoxLayout" name="hl_StashedAircraft">
+           <property name="spacing">
+            <number>4</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>2</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="BlackGui::Components::CDbStashComponent" name="comp_StashAircraft">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
          <widget class="QWidget" name="tab_OwnModels">
           <attribute name="title">
            <string>Own models</string>
@@ -91,7 +123,7 @@
               </sizepolicy>
              </property>
              <property name="selectionMode">
-              <enum>QAbstractItemView::SingleSelection</enum>
+              <enum>QAbstractItemView::MultiSelection</enum>
              </property>
              <property name="selectionBehavior">
               <enum>QAbstractItemView::SelectRows</enum>
@@ -132,7 +164,7 @@
               </sizepolicy>
              </property>
              <property name="selectionMode">
-              <enum>QAbstractItemView::SingleSelection</enum>
+              <enum>QAbstractItemView::MultiSelection</enum>
              </property>
              <property name="selectionBehavior">
               <enum>QAbstractItemView::SelectRows</enum>
@@ -194,7 +226,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>245</width>
+            <width>243</width>
             <height>375</height>
            </rect>
           </property>
@@ -368,6 +400,12 @@
    <class>BlackGui::COverlayMessagesFrame</class>
    <extends>QFrame</extends>
    <header>blackgui/overlaymessagesframe.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CDbStashComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/dbstashcomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
