@@ -36,7 +36,10 @@ namespace BlackCore
             // initialized by local file for testing
             // I do not even need to start in background here
             CLogMessage(this).info("Using local bootstrap file: %1") << localFileName;
-            emit this->setupSynchronized(true);
+            BlackMisc::singleShot(1000, QThread::currentThread(), [ = ]()
+            {
+                emit this->setupSynchronized(true);
+            });
         }
         else
         {
@@ -272,6 +275,7 @@ namespace BlackCore
                 if (sameVersionLoaded)
                 {
                     CLogMessage(this).info("Same update info loaded from %1 as already in data cache %2") << urlString << m_updateInfo.getFilename();
+                    this->setUpdateTimestamp();
                     emit versionSynchronized(true);
                     return; // success
                 }
@@ -295,6 +299,7 @@ namespace BlackCore
                     else
                     {
                         CLogMessage(this).info("Update info: Updated data cache in %1") << m_updateInfo.getFilename();
+                        this->setUpdateTimestamp();
                         emit versionSynchronized(true);
                         return; // success
                     } // cache

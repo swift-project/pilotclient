@@ -8,6 +8,7 @@
  */
 
 #include "threadedreader.h"
+#include "blackmisc/threadutils.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
@@ -48,6 +49,14 @@ namespace BlackMisc
         this->m_updateTimestamp = updateTimestamp;
     }
 
+    bool CThreadedReader::updatedWithinLastMs(qint64 timeLastMs)
+    {
+        QDateTime dt(getUpdateTimestamp());
+        if (dt.isNull() || !dt.isValid()) { return false; }
+        qint64 delta = QDateTime::currentMSecsSinceEpoch() - dt.toMSecsSinceEpoch();
+        return delta <= timeLastMs;
+    }
+
     void CThreadedReader::requestReload()
     {
         // default implementation, subclasses shall override as required
@@ -56,11 +65,16 @@ namespace BlackMisc
 
     void CThreadedReader::gracefulShutdown()
     {
-        this->abandonAndWait();
+        // if not in main thread stop, otherwise it makes no sense to abandon
+        if (!CThreadUtils::isCurrentThreadObjectThread(this))
+        {
+            this->abandonAndWait();
+        }
     }
 
     CThreadedReader::~CThreadedReader()
     {
+        gracefulShutdown();
     }
 
     void CThreadedReader::setInterval(int updatePeriodMs)

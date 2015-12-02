@@ -268,6 +268,9 @@ namespace BlackCore
         //! Setup has been changed
         void ps_setupChanged();
 
+        //! Setup timed out
+        void ps_setupTimedOut();
+
     private:
         //! Init the readers
         void initReaders(CWebReaderFlags::WebReader flags);
@@ -276,7 +279,8 @@ namespace BlackCore
         void initWriters();
 
         CWebReaderFlags::WebReader m_readerFlags = CWebReaderFlags::WebReaderFlag::None; //!< which readers are available
-        int m_autoReadAfterSetupMs = -1; //!< directly read all known readers after setup was syncronized
+        int m_autoReadAfterSetupMs               = -1;                                   //!< directly read all known readers after setup was syncronized
+        bool m_initialRead                       = false;                                //!< Initial read conducted
         BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this, &CWebDataServices::ps_setupChanged}; //!< setup cache
 
         // for reading XML and VATSIM data files

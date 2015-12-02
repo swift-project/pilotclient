@@ -39,9 +39,22 @@ namespace BlackCore
         QObject(parent), m_readerFlags(readerFlags), m_autoReadAfterSetupMs(autoReadAfterSetupSynchronizedMs)
     {
         this->setObjectName("CWebDataReader");
-        connect(&CSetupReader::instance(), &CSetupReader::setupSynchronized, this, &CWebDataServices::ps_setupRead);
         this->initReaders(readerFlags);
         this->initWriters();
+        if (autoReadAfterSetupSynchronizedMs >= 0)
+        {
+            // wait for setup read completion
+            // in case this was already fired or will never be fired set a time out
+            if (CSetupReader::instance().updatedWithinLastMs(10 * 1000))
+            {
+                QTimer::singleShot(500, this, &CWebDataServices::ps_setupTimedOut);
+            }
+            else
+            {
+                connect(&CSetupReader::instance(), &CSetupReader::setupSynchronized, this, &CWebDataServices::ps_setupRead);
+                QTimer::singleShot(10 * 1000, this, &CWebDataServices::ps_setupTimedOut);
+            }
+        }
     }
 
     QList<QMetaObject::Connection> CWebDataServices::connectDataReadSignal(QObject *receiver, std::function<void(CEntityFlags::Entity, CEntityFlags::ReadState, int)> dataRead)
@@ -153,6 +166,7 @@ namespace BlackCore
 
     CEntityFlags::Entity CWebDataServices::triggerRead(CEntityFlags::Entity whatToRead)
     {
+        m_initialRead = true;
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
         if (m_vatsimDataFileReader)
         {
@@ -486,6 +500,7 @@ namespace BlackCore
         {
             if (m_autoReadAfterSetupMs >= 0)
             {
+                if (m_initialRead) { return; }
                 CLogMessage(this).info("Setup synchronized, will trigger read of web service data");
                 this->readInBackground(CEntityFlags::AllEntities, m_autoReadAfterSetupMs);
             }
@@ -501,8 +516,15 @@ namespace BlackCore
         CLogMessage(this).debug() << "Setup changed";
     }
 
+    void CWebDataServices::ps_setupTimedOut()
+    {
+        if (this->m_initialRead) { return; }
+        this->ps_setupRead(true);
+    }
+
     void CWebDataServices::readInBackground(CEntityFlags::Entity entities, int delayMs)
     {
+        m_initialRead = true;
         if (delayMs > 100)
         {
             BlackMisc::singleShot(delayMs, QThread::currentThread(), [ = ]()

@@ -30,20 +30,24 @@ namespace BlackMisc
     class BLACKMISC_EXPORT CThreadedReader : public CContinuousWorker
     {
     public:
+        //! Destructor
+        virtual ~CThreadedReader();
+
         //! Thread safe, set update timestamp
         //! \threadsafe
         QDateTime getUpdateTimestamp() const;
 
         //! Thread safe, set update timestamp
         //! \threadsafe
-        void setUpdateTimestamp(const QDateTime &updateTimestamp);
+        void setUpdateTimestamp(const QDateTime &updateTimestamp = QDateTime::currentDateTimeUtc());
+
+        //! Was setup read within last xx milliseconds
+        //! \threadsafe
+        bool updatedWithinLastMs(qint64 timeLastMs);
 
         //! Request new reading
         //! \note override as required, default is to call initialize()
         virtual void requestReload();
-
-        //! Destructor
-        virtual ~CThreadedReader();
 
         //! Set the update time
         //! \param updatePeriodMs <=0 stops the timer
