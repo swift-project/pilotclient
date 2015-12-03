@@ -158,7 +158,7 @@ namespace BlackMisc
         //! Assign from JSON object string
         void convertFromJson(const QString &jsonString)
         {
-            convertFromJson(BlackMisc::Json::jsonObjectFromString(jsonString));
+            this->convertFromJson(BlackMisc::Json::jsonObjectFromString(jsonString));
         }
 
         //! \copydoc BlackMisc::CValueObject::convertToQString

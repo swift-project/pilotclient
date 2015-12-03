@@ -186,7 +186,7 @@ namespace BlackMisc
         /*!
          * \brief Access the last element, or a default value if the sequence is empty.
          */
-        const_reference backOrDefault() const { static const value_type def; return empty() ? def : back(); }
+        const_reference backOrDefault() const { static const value_type def {}; return empty() ? def : back(); }
 
         /*!
          * \brief Access the last element, or a default value if the sequence is empty.
