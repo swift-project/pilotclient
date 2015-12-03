@@ -150,7 +150,8 @@ namespace BlackMisc
         for (int i = 0; i < mo->classInfoCount(); i++)
         {
             QMetaClassInfo ci = mo->classInfo(i);
-            if (ci.name() == "D-Bus Interface") { return QString(ci.value()); }
+            QString name(ci.name());
+            if (name == "D-Bus Interface") { return QString(ci.value()); }
         }
         return "";
     }
@@ -254,7 +255,7 @@ namespace BlackMisc
                 break;
             case SERVERMODE_P2P:
                 {
-                    for(QDBusConnection connection : m_connections)
+                    for (QDBusConnection connection : m_connections)
                     {
                         connection.unregisterObject(path);
                     }
