@@ -23,6 +23,7 @@
 #include "blackmisc/json.h"
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QSslSocket>
 
 using namespace BlackCore;
 using namespace BlackCore::Data;
@@ -38,6 +39,7 @@ namespace BlackCore
         CWebReaderFlags::WebReader readerFlags, int autoReadAfterSetupSynchronizedMs, QObject *parent) :
         QObject(parent), m_readerFlags(readerFlags), m_autoReadAfterSetupMs(autoReadAfterSetupSynchronizedMs)
     {
+        Q_ASSERT_X(QSslSocket::supportsSsl(), Q_FUNC_INFO, "missing SSL support");
         this->setObjectName("CWebDataReader");
         this->initReaders(readerFlags);
         this->initWriters();
