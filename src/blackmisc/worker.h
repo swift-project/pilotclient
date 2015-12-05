@@ -14,6 +14,7 @@
 
 #include "blackmiscexport.h"
 #include "variant.h"
+#include "stacktrace.h"
 #include <QThread>
 #include <QMutex>
 #include <QTimer>
@@ -53,8 +54,10 @@ namespace BlackMisc
         auto *timer = new QTimer;
         timer->setSingleShot(true);
         timer->moveToThread(target);
+        auto trace = getStackTrace();
         QObject::connect(timer, &QTimer::timeout, [ = ]()
         {
+            static_cast<void>(trace);
             task();
             timer->deleteLater();
         });

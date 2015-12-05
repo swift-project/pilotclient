@@ -57,7 +57,7 @@ SOURCES +=  *.cpp \
             $$PWD/weather/*.cpp
 
 win32 {
-    LIBS *= -lShell32
+    LIBS *= -lShell32 -lDbghelp
 }
 
 DESTDIR = $$DestRoot/lib

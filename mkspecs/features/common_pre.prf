@@ -87,6 +87,12 @@ win32-g++: QMAKE_CXXFLAGS_DEBUG += -Og
 equals(WORD_SIZE,64)|!win32: BLACK_CONFIG -= FSX FS9
 
 ################################
+# For BlackMisc::getStackTrace
+################################
+
+linux-g++: QMAKE_LFLAGS_DEBUG *= -rdynamic
+
+################################
 # Suppress stupid warnings
 ################################
 
