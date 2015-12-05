@@ -20,7 +20,6 @@ namespace BlackGui
 {
     namespace Models
     {
-
         class ActionItem;
 
         /*!
@@ -31,7 +30,6 @@ namespace BlackGui
             Q_OBJECT
 
         public:
-
             //! User roles
             enum ItemRole
             {
@@ -63,12 +61,12 @@ namespace BlackGui
             int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
         private:
+            //! Init model data
             void setupModelData();
 
             QScopedPointer<ActionItem> m_rootItem;
         };
-
     }
-}
+} // ns
 
 #endif // guard

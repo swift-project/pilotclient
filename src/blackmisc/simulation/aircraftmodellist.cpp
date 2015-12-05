@@ -28,6 +28,16 @@ namespace BlackMisc
             return false;
         }
 
+        bool CAircraftModelList::containsModelStringOrId(const CAircraftModel &model, Qt::CaseSensitivity sensitivity) const
+        {
+            for (const CAircraftModel &m : (*this))
+            {
+                if (m.hasValidDbKey() && m.getDbKey() == model.getDbKey()) { return true; }
+                if (m.matchesModelString(model.getModelString(), sensitivity)) { return true; }
+            }
+            return false;
+        }
+
         CAircraftModelList CAircraftModelList::findByModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
             return this->findBy([ = ](const CAircraftModel & model)

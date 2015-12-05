@@ -94,14 +94,14 @@ namespace BlackGui
             QStandardItemModel *model = new QStandardItemModel();
             if (this->isEmpty()) { return model; }
             model->setColumnCount(4);
-            QMap<QString, int> types = this->getContainer().getSuffixes();
+            QMap<QString, int> types = this->container().getSuffixes();
             for (const QString &type : types.keys())
             {
                 // ownership of QStandardItem is taken by model
                 QStandardItem *typeFolderFirstColumn = new QStandardItem(CCallsign::atcSuffixToIcon(type).toQIcon(), type);
                 QList<QStandardItem *> typeFolderRow { typeFolderFirstColumn };
                 model->invisibleRootItem()->appendRow(typeFolderRow);
-                CAtcStationList stations = this->getContainer().findBySuffix(type);
+                CAtcStationList stations = this->container().findBySuffix(type);
                 for (const CAtcStation &station : stations)
                 {
                     QList<QStandardItem *> stationRow;

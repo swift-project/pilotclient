@@ -184,7 +184,7 @@ namespace BlackGui
             // check / init
             if (!this->isValidIndex(index)) { return QVariant(); }
             const CDefaultFormatter *formatter = this->m_columns.getFormatter(index);
-            Q_ASSERT(formatter);
+            Q_ASSERT_X(formatter, Q_FUNC_INFO, "Missing formatter");
             if (!formatter) { return QVariant(); }
 
             //! Formatted data
@@ -372,7 +372,7 @@ namespace BlackGui
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
-        const ContainerType &CListModelBase<ObjectType, ContainerType, UseCompare>::getContainer() const
+        const ContainerType &CListModelBase<ObjectType, ContainerType, UseCompare>::container() const
         {
             return this->m_container;
         }
@@ -507,7 +507,7 @@ namespace BlackGui
             {
                 this->sort();    // make sure container is sorted
             }
-            ContainerType container(this->getContainer());
+            ContainerType container(this->container());
             container.truncate(maxNumber);
             this->updateContainerMaybeAsync(container, false);
         }

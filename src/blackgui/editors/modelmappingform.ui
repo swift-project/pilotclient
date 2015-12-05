@@ -181,6 +181,15 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>le_Id</tabstop>
+  <tabstop>le_ModelKey</tabstop>
+  <tabstop>le_Name</tabstop>
+  <tabstop>le_Description</tabstop>
+  <tabstop>ph_Stash</tabstop>
+  <tabstop>pb_Save</tabstop>
+  <tabstop>le_LastUpdated</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

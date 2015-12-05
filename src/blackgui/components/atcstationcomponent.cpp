@@ -53,21 +53,20 @@ namespace BlackGui
             this->ui->tvp_AtcStationsOnlineTree->setHeaderHidden(true);
 
             // Signal / Slots
-            bool connected = this->connect(this->ui->le_AtcStationsOnlineMetar, SIGNAL(returnPressed()), this, SLOT(getMetar()));
-            Q_ASSERT(connected);
-            connected = this->connect(this->ui->pb_AtcStationsLoadMetar, SIGNAL(clicked()), this, SLOT(getMetar()));
-            Q_ASSERT(connected);
-            Q_UNUSED(connected);
+            connect(this->ui->le_AtcStationsOnlineMetar, &QLineEdit::returnPressed, this, &CAtcStationComponent::ps_getMetarAsEntered);
+            connect(this->ui->pb_AtcStationsLoadMetar, &QPushButton::clicked, this, &CAtcStationComponent::ps_getMetarAsEntered);
             connect(this, &QTabWidget::currentChanged, this, &CAtcStationComponent::ps_atcStationsTabChanged); // "local" tab changed (booked, online)
             connect(this->ui->tvp_AtcStationsOnline, &QTableView::clicked, this, &CAtcStationComponent::ps_onlineAtcStationSelected);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::testRequestDummyAtcOnlineStations, this, &CAtcStationComponent::ps_testCreateDummyOnlineAtcStations);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::ps_requestOnlineStationsUpdate);
+            connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::requestNewBackendData, this, &CAtcStationComponent::ps_requestOnlineStationsUpdate);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::rowCountChanged, this, &CAtcStationComponent::ps_onCountChanged);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::rowCountChanged, this, &CAtcStationComponent::ps_onCountChanged);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::requestComFrequency, this, &CAtcStationComponent::ps_setComFrequency);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::requestTextMessageWidget, this, &CAtcStationComponent::requestTextMessageWidget);
 
             connect(this->ui->tvp_AtcStationsBooked, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::ps_reloadAtcStationsBooked);
+            connect(this->ui->tvp_AtcStationsBooked, &CAtcStationView::requestNewBackendData, this, &CAtcStationComponent::ps_reloadAtcStationsBooked);
             connect(this->ui->tvp_AtcStationsBooked, &CAtcStationView::rowCountChanged, this, &CAtcStationComponent::ps_onCountChanged);
 
             connect(this->ui->pb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::ps_requestAtis);
@@ -133,7 +132,6 @@ namespace BlackGui
                     );
                     this->m_timestampLastReadOnlineStations = QDateTime::currentDateTimeUtc();
                     this->m_timestampOnlineStationsChanged = this->m_timestampLastReadOnlineStations;
-
                     this->updateTreeView();
                 }
             }
@@ -151,7 +149,7 @@ namespace BlackGui
 
         void CAtcStationComponent::getMetar(const QString &airportIcaoCode)
         {
-            QString icao = airportIcaoCode.isEmpty() ? this->ui->le_AtcStationsOnlineMetar->text().trimmed().toUpper() : airportIcaoCode.trimmed().toUpper();
+            QString icao(airportIcaoCode.isEmpty() ? this->ui->le_AtcStationsOnlineMetar->text().trimmed().toUpper() : airportIcaoCode.trimmed().toUpper());
             this->ui->le_AtcStationsOnlineMetar->setText(icao);
             if (icao.length() != 4) { return; }
             CMetar metar(this->getIContextNetwork()->getMetarForAirport(icao));
@@ -183,7 +181,7 @@ namespace BlackGui
             }
             else
             {
-                this->ui->tvp_AtcStationsBooked->updateContainer(this->getIContextNetwork()->getAtcStationsBooked());
+                this->ui->tvp_AtcStationsBooked->updateContainerMaybeAsync(this->getIContextNetwork()->getAtcStationsBooked());
                 this->m_timestampLastReadBookedStations = QDateTime::currentDateTimeUtc();
             }
         }
@@ -235,7 +233,7 @@ namespace BlackGui
             if (this->isParentDockWidgetFloating()) { return; }
 
             // here I know I am the selected widget, update, but keep GUI responsive (-> timer)
-            QTimer::singleShot(1000, this, SLOT(update()));
+            QTimer::singleShot(1000, this, &CAtcStationComponent::update);
             Q_UNUSED(index);
         }
 
@@ -263,6 +261,7 @@ namespace BlackGui
         void CAtcStationComponent::updateTreeView()
         {
             // EXPERIMENTAL CODE
+            //! \todo change model so we can directly use hierarchies
             QAbstractItemModel *old = (this->ui->tvp_AtcStationsOnlineTree->model());
             this->ui->tvp_AtcStationsOnlineTree->setModel(
                 this->ui->tvp_AtcStationsOnline->derivedModel()->toAtcGroupModel()

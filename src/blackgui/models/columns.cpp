@@ -200,7 +200,7 @@ namespace BlackGui
 
         const CDefaultFormatter *CColumns::getFormatter(const QModelIndex &index) const
         {
-            if (!isValidColumn(index)) return nullptr;
+            if (!isValidColumn(index)) { return nullptr; }
             return this->m_columns.at(index.column()).getFormatter();
         }
 

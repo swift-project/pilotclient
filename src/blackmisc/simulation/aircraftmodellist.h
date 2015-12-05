@@ -40,6 +40,9 @@ namespace BlackMisc
             //! Contains model string
             bool containsModelString(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
+            //! Contains model with model string or id
+            bool containsModelStringOrId(const BlackMisc::Simulation::CAircraftModel &model, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
+
             //! Find by model string
             CAircraftModelList findByModelString(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 

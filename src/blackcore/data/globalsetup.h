@@ -149,7 +149,7 @@ namespace BlackCore
         struct GlobalSetup : public BlackCore::CDataTrait<CGlobalSetup>
         {
             //! Key in data cache
-            static const char *key() { return "readers/global/setup"; }
+            static const char *key() { return "readers/setup"; }
 
             //! Default value
             static const CGlobalSetup &defaultValue()

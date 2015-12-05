@@ -166,6 +166,8 @@ namespace BlackMisc
                 return this->m_designator.compare(compareValue.getDesignator());
             case IndexAirlineCountry:
                 return this->m_country.comparePropertyByIndex(compareValue.getCountry(), index.copyFrontRemoved());
+            case IndexDesignatorNameCountry:
+                return this->m_country.getName().compare(compareValue.getCountry().getName(), Qt::CaseInsensitive);
             case IndexAirlineName:
                 return this->m_name.compare(compareValue.getName(), Qt::CaseInsensitive);
             case IndexTelephonyDesignator:

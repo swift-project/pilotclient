@@ -24,13 +24,15 @@ namespace BlackMisc
     bool CThreadUtils::isApplicationThreadObjectThread(QObject *toBeTested)
     {
         Q_ASSERT_X(toBeTested, Q_FUNC_INFO, "missing QObject");
-        if (!toBeTested) { return false; }
-        if (!toBeTested->thread()) { return false; }
+        if (!toBeTested || !toBeTested->thread()) { return false; }
+        if (!QCoreApplication::instance() || !QCoreApplication::instance()->thread()) { return false; }
         return (QCoreApplication::instance()->thread() == toBeTested->thread());
     }
 
     bool CThreadUtils::isCurrentThreadApplicationThread()
     {
+        if (!QCoreApplication::instance()) { return false; }
+        if (!QCoreApplication::instance()->thread()) { return false; }
         return (QCoreApplication::instance()->thread() == QThread::currentThread());
     }
 

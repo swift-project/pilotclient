@@ -49,6 +49,9 @@ namespace BlackMisc
         //! Has valid DB key
         bool hasValidDbKey() const { return m_dbKey >= 0; }
 
+        //! Invalid key
+        static int invalidDbKey() { return -1; }
+
     protected:
         //! Constructor
         IDatastoreObjectWithIntegerKey() {}
@@ -97,6 +100,9 @@ namespace BlackMisc
 
         //! Has valid DB key
         bool hasValidDbKey() const { return !m_dbKey.isEmpty(); }
+
+        //! Invalid key
+        static QString invalidDbKey() { return ""; }
 
     protected:
         //! Constructor

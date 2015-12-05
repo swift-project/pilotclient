@@ -70,7 +70,6 @@ namespace BlackCore
         virtual bool updateOwnParts(const BlackMisc::Aviation::CAircraftParts &parts) override;
 
     public slots:
-
         //! \copydoc IContextOwnAircraft::getOwnAircraft()
         //! \ingroup ownaircraftprovider
         virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const override;

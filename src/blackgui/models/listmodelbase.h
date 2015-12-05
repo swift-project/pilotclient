@@ -138,7 +138,7 @@ namespace BlackGui
             virtual bool isValidIndex(const QModelIndex &index) const;
 
             //! Used container data
-            virtual const ContainerType &getContainer() const;
+            const ContainerType &container() const;
 
             //! \copydoc QAbstractItemModel::data()
             virtual QVariant data(const QModelIndex &index, int role) const override;
@@ -226,9 +226,7 @@ namespace BlackGui
         protected:
             std::unique_ptr<IModelFilter<ContainerType> > m_filter; //!< Used filter
 
-            //! Constructor
-            //! \param translationContext    I18N context
-            //! \param parent
+            //! \copydoc CListModelBaseNonTemplate::CListModelBaseNonTemplate
             CListModelBase(const QString &translationContext, QObject *parent = nullptr)
                 : CListModelBaseNonTemplate(translationContext, parent)
             { }
@@ -268,7 +266,6 @@ namespace BlackGui
                 BlackMisc::CVariant bQv = b.propertyByIndex(index);
                 return (order == Qt::AscendingOrder) ? (aQv < bQv) : (bQv < aQv);
             }
-
         } // namespace
     } // namespace
 } // namespace

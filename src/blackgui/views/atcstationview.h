@@ -27,7 +27,6 @@ namespace BlackGui
             Q_OBJECT
 
         public:
-
             //! Constructor
             explicit CAtcStationView(QWidget *parent = nullptr);
 

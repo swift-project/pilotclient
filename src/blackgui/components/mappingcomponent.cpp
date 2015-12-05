@@ -71,6 +71,7 @@ namespace BlackGui
             this->ui->lbl_AircraftIconDisplayed->setText("Icon displayed here");
 
             // Updates
+            this->ui->tvp_AircraftModels->setDisplayAutomatically(false);
             this->m_updateTimer->setUpdateInterval(10 * 1000);
         }
 
@@ -92,7 +93,7 @@ namespace BlackGui
         CAircraftModelList CMappingComponent::findModelsStartingWith(const QString modelName, Qt::CaseSensitivity cs)
         {
             Q_ASSERT(this->ui->tvp_AircraftModels);
-            return this->ui->tvp_AircraftModels->getContainer().findModelsStartingWith(modelName, cs);
+            return this->ui->tvp_AircraftModels->container().findModelsStartingWith(modelName, cs);
         }
 
         void CMappingComponent::runtimeHasBeenSet()
@@ -217,7 +218,7 @@ namespace BlackGui
             }
 
             const CCallsign callsign(cs);
-            bool hasCallsign = this->ui->tvp_SimulatedAircraft->getContainer().containsCallsign(callsign);
+            bool hasCallsign = this->ui->tvp_SimulatedAircraft->container().containsCallsign(callsign);
             if (!hasCallsign)
             {
                 CLogMessage(this).validationError("Unmapped callsign %1 for mapping") << callsign.asString();
@@ -231,7 +232,7 @@ namespace BlackGui
                 return;
             }
 
-            bool hasModel = this->ui->tvp_AircraftModels->getContainer().containsModelString(modelString);
+            bool hasModel = this->ui->tvp_AircraftModels->container().containsModelString(modelString);
             if (!hasModel)
             {
                 CLogMessage(this).validationError("Invalid model for mapping");
@@ -297,7 +298,7 @@ namespace BlackGui
         void CMappingComponent::ps_onModelsUpdateRequested()
         {
             Q_ASSERT(getIContextSimulator());
-            CAircraftModelList ml = getIContextSimulator()->getInstalledModels();
+            CAircraftModelList ml(getIContextSimulator()->getInstalledModels());
             this->ui->tvp_AircraftModels->updateContainer(ml);
 
             // model completer

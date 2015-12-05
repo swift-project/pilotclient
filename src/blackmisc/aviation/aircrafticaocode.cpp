@@ -302,8 +302,14 @@ namespace BlackMisc
                 return Compare::compare(m_legacy, compareValue.isLegacyAircraft());
             case IndexIsMilitary:
                 return Compare::compare(m_military, compareValue.isMilitary());
+            case IndexIsVtol:
+                return Compare::compare(isVtol(), compareValue.isVtol());
+            case IndexIsRealworld:
+                return Compare::compare(m_realWorld, compareValue.isRealWorld());
             case IndexRank:
                 return Compare::compare(m_rank, compareValue.getRank());
+            case IndexDesignatorManufacturer:
+                return getDesignatorManufacturer().compare(compareValue.getDesignatorManufacturer(), Qt::CaseInsensitive);
             default:
                 break;
             }

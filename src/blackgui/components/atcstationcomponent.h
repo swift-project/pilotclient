@@ -66,7 +66,7 @@ namespace BlackGui
             void stopTimer() { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->stopTimer(); }
 
             //! Get METAR for given ICAO airport code
-            void getMetar(const QString &airportIcaoCode = "");
+            void getMetar(const QString &airportIcaoCode);
 
             //! \copydoc CAtcStationListModel::changedAtcStationConnectionStatus
             void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
@@ -76,6 +76,9 @@ namespace BlackGui
             void runtimeHasBeenSet() override;
 
         private slots:
+            //! Get all METARs
+            void ps_getMetarAsEntered() { this->getMetar(""); }
+
             //! Request new ATIS
             void ps_requestAtis();
 

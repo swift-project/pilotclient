@@ -241,7 +241,7 @@ namespace BlackCore
         CWebDataServices              *m_webDataReader = nullptr;                //!< web service readers
         QList<QMetaObject::Connection> m_webReaderSignalConnections;
         INetwork::ConnectionStatus     m_currentStatus = INetwork::Disconnected; //!< used to detect pending connections
-        QTimer                        *m_dataUpdateTimer = nullptr;              //!< general updates such as ATIS, frequencies, see requestDataUpdates()
+        QTimer                        *m_networkDataUpdateTimer = nullptr;       //!< general updates such as ATIS, frequencies, see requestDataUpdates()
 
         // Digest signals, only sending after some time
         BlackMisc::CDigestSignal m_dsAtcStationsBookedChanged { this, &IContextNetwork::changedAtcStationsBooked, &IContextNetwork::changedAtcStationsBookedDigest, 750, 2 };

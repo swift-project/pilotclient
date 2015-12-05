@@ -52,9 +52,9 @@ namespace BlackCore
         connect(this->m_network, &INetwork::textMessageSent, this, &CContextNetwork::textMessageSent);
 
         // 2. Update timer for data (network data such as frequency)
-        this->m_dataUpdateTimer = new QTimer(this);
-        connect(this->m_dataUpdateTimer, &QTimer::timeout, this, &CContextNetwork::requestDataUpdates);
-        this->m_dataUpdateTimer->start(30 * 1000);
+        this->m_networkDataUpdateTimer = new QTimer(this);
+        connect(this->m_networkDataUpdateTimer, &QTimer::timeout, this, &CContextNetwork::requestDataUpdates);
+        this->m_networkDataUpdateTimer->start(30 * 1000);
 
         // 3. data reader, start reading when setup is synced with xx delay
         this->m_webDataReader = new CWebDataServices(CWebReaderFlags::AllReaders, 1000, this);

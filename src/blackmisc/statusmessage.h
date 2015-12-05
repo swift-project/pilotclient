@@ -94,14 +94,17 @@ namespace BlackMisc
         //! Message severity
         StatusSeverity getSeverity() const { return this->m_severity; }
 
+        //! Info or debug, no warning or error
+        bool isSeverityInfoOrLess() const { return this->m_severity == SeverityInfo || this->m_severity == SeverityDebug; }
+
+        //! Warning or above
+        bool isWarningOrAbove() const { return this->m_severity == SeverityWarning || this->m_severity == SeverityError; }
+
         //! Message
         QString getMessage() const { return this->m_message; }
 
         //! Message empty
         bool isEmpty() const { return this->m_message.isEmpty(); }
-
-        //! Info or debug, no warning or error
-        bool isSeverityInfoOrLess() const { return this->m_severity == SeverityInfo || this->m_severity == SeverityDebug; }
 
         //! Returns true if this message was sent by an instance of class T.
         template <class T>

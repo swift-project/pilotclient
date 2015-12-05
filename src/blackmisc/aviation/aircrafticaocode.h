@@ -44,7 +44,7 @@ namespace BlackMisc
                 IndexIsLegacy,
                 IndexIsVtol,
                 IndexRank,
-                IndexDesignatorManufacturer
+                IndexDesignatorManufacturer    //!< designator and manufacturer
             };
 
             //! Default constructor.
