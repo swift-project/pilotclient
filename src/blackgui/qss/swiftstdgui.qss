@@ -1,4 +1,4 @@
-/**
+/*
 Resources:
 http://qt-project.org/doc/qt-5.3/stylesheet-examples.html
 http://web.forret.com/tools/color.asp?RGB=2F4F4F&name=Dark+slate+gray
@@ -9,21 +9,25 @@ Remarks:
 
 Used dynamic properties
 framelessMainWindow (infobar.qss , here)
+*/
+
+/* fix scroll areas */
+
+/* in flight plan */
+/**
+QAbstractScrollArea #qw_FlightPlanTabMain { background-color: transparent; background-image: url(:/textures/icons/textures/texture-inner.jpg); }
+QAbstractScrollArea #qw_RemarksGenerator  { background-color: transparent; background-image: url(:/textures/icons/textures/texture-inner.jpg); }
 **/
 
-/** fix scroll areas **/
-
-/** in flight plan **/
-QAbstractScrollArea #qw_FlightPlanTabMain { background-color: black; background-image: url(:/textures/icons/textures/texture-inner.jpg); }
-QAbstractScrollArea #qw_RemarksGenerator  { background-color: transparent; background-image: url(:/textures/icons/textures/texture-inner.jpg); }
-
-/** in log component **/
+/* in log component */
+/**
 QAbstractScrollArea #pg_StatusPageMessages { background-color: black; }
 QAbstractScrollArea #pg_StatusPageCons	ole  { background-color: black; }
+**/
 
-/** main GUI parts **/
+/* main GUI parts */
 
-/** style when main window is frameless **/
+/* style when main window is frameless */
 #wi_CentralWidgetOutside[framelessMainWindow="true"] {
   background-image: url(:/textures/icons/textures/texture-outer.jpg);
   background-color: darkslategray;
@@ -32,7 +36,7 @@ QAbstractScrollArea #pg_StatusPageCons	ole  { background-color: black; }
   border-radius: 20px;
 }
 
-/** dw_InfoBarStatus has its own style sheet **/
+/* dw_InfoBarStatus has its own style sheet */
 
 #fr_CentralFrameInside {
   margin-right: 5px;
@@ -52,7 +56,7 @@ QAbstractScrollArea #pg_StatusPageCons	ole  { background-color: black; }
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
-/** close button with frameless windows **/
+/* close button with frameless windows */
 #pb_FramelessCloseButton {
   background: transparent;
   padding: 0px 0px 0px 0px;
@@ -61,7 +65,7 @@ QAbstractScrollArea #pg_StatusPageCons	ole  { background-color: black; }
   border: 0px;
 }
 
-/** for FontDialog etc. **/
+/* for FontDialog etc. */
 #comp_Settings QToolButton {
   background-color: rgba(0, 0, 255, 128);
   border-style: none;
@@ -88,7 +92,7 @@ QAbstractScrollArea #pg_StatusPageCons	ole  { background-color: black; }
   color: yellow;
 }
 
-/** cockpit needs to come after sw_MainMiddle **/
+/* cockpit needs to come after sw_MainMiddle */
 #comp_CockpitComComponent QPushButton {
   background-color: transparent;
   border-style: solid;
@@ -100,19 +104,19 @@ QAbstractScrollArea #pg_StatusPageCons	ole  { background-color: black; }
   margin: 2px;
 }
 
-/** fixes scroll area for audio setup and inner background **/
+/* fixes scroll area for audio setup and inner background */
 #sa_AudioSetup { background-color: black; }
 #sa_AudioComponentInner {
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
   background-color: black;
 }
 
-/** volume buttons **/
+/* volume buttons */
 #wi_AudioSoundButtons QPushButton {
   background-color: transparent;
 }
 
-/** COM panel **/
+/* COM panel */
 #wip_CockpitComPanelShowHideBar QPushButton {
   background-color: transparent;
   border-style: solid;
