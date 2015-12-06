@@ -55,7 +55,7 @@ void SwiftGuiStd::ps_onMenuClicked()
     }
     else if (sender == this->ui->menu_TestLocationsLOWW)
     {
-        this->setTestPosition("N 40° 7′ 6.3588", "E 16° 33′ 39.924", CAltitude(100, CAltitude::MeanSeaLevel, CLengthUnit::m()));
+        this->setTestPosition("N 48° 7′ 6.3588", "E 16° 33′ 39.924", CAltitude(100, CAltitude::MeanSeaLevel, CLengthUnit::m()));
     }
     else if (sender == this->ui->menu_FileReloadStyleSheets)
     {

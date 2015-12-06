@@ -164,6 +164,7 @@ void SwiftGuiStd::initGuiSignals()
     connect(this->ui->menu_TestLocationsEDDM, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_TestLocationsEDNX, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_TestLocationsEDRY, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_TestLocationsLOWW, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
 
     connect(this->ui->menu_FileExit, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_FileReloadStyleSheets, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
