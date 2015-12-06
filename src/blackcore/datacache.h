@@ -27,6 +27,8 @@ namespace BlackCore
      */
     class BLACKCORE_EXPORT CDataCache : public BlackMisc::CValueCache
     {
+        Q_OBJECT
+
     public:
         //! Return the singleton instance.
         static CDataCache *instance();
