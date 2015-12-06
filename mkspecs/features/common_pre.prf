@@ -48,6 +48,12 @@ CONFIG += c++11
 include(wordsize.pri)
 
 ################################
+# Multithreaded build in VS IDE
+################################
+
+contains(TEMPLATE, "vc.*"): QMAKE_CXXFLAGS *= /MP
+
+################################
 # Profile build
 ################################
 
