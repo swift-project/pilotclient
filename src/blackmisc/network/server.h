@@ -64,6 +64,12 @@ namespace BlackMisc
             //! Matches server name?
             bool matchesName(const QString &name) const;
 
+            //! Same address and port?
+            bool matchesAddressPort(const CServer &server) const;
+
+            //! Same address?
+            bool matchesAddress(const QString &address) const;
+
             //! Get description
             const QString &getDescription() const { return m_description; }
 
@@ -84,6 +90,9 @@ namespace BlackMisc
 
             //! Is valid for login?
             bool isValidForLogin() const;
+
+            //! Address and port?
+            bool hasAddressAndPort() const;
 
             //! Validate, provide details about issues
             BlackMisc::CStatusMessageList validate() const;

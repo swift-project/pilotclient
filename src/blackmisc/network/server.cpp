@@ -35,19 +35,38 @@ namespace BlackMisc
                     m_name.startsWith(name, Qt::CaseInsensitive);
         }
 
+        bool CServer::matchesAddressPort(const CServer &server) const
+        {
+            return server.getPort() == this->getPort() &&
+                   server.matchesAddress(this->getAddress());
+        }
+
+        bool CServer::matchesAddress(const QString &address) const
+        {
+            return  m_address.length() == address.length() &&
+                    m_address.startsWith(address, Qt::CaseInsensitive);
+        }
+
         bool CServer::isValidForLogin() const
         {
-            return this->m_user.hasValidCredentials() && this->m_port > 0 && !this->m_address.isEmpty() && this->isAcceptingConnections();
+            return this->m_user.hasValidCredentials() && this->hasAddressAndPort() && this->isAcceptingConnections();
+        }
+
+        bool CServer::hasAddressAndPort() const
+        {
+            return m_port > 0 && !m_address.isEmpty();
         }
 
         CStatusMessageList CServer::validate() const
         {
+            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
             CStatusMessageList msgs;
             if (this->getName().isEmpty()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Missing name")); }
             if (this->getAddress().isEmpty()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Missing address")); }
             if (this->getDescription().isEmpty()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Missing description")); }
             if (this->getPort() < 1 || this->getPort() > 65535) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Wrong port")); }
             msgs.push_back(this->getUser().validate());
+            msgs.addCategories(cats);
             return msgs;
         }
 

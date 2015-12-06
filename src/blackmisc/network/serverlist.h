@@ -37,8 +37,16 @@ namespace BlackMisc
 
             //! Contains name
             bool containsName(const QString &name) const;
-        };
 
+            //! Contains server with same address/port
+            bool containsAddressPort(const CServer &server);
+
+            //! Add if address not already exists
+            void addIfAddressNotExists(const CServer &server);
+
+            //! Add if address not already exists
+            void addIfAddressNotExists(const CServerList &servers);
+        };
     } //namespace
 } // namespace
 

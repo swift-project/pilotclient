@@ -13,7 +13,6 @@ namespace BlackMisc
 {
     namespace Network
     {
-
         CServerList::CServerList() { }
 
         CServerList::CServerList(const CSequence<CServer> &other) :
@@ -29,5 +28,30 @@ namespace BlackMisc
             return false;
         }
 
+        bool CServerList::containsAddressPort(const CServer &server)
+        {
+            for (const CServer &s : *this)
+            {
+                if (s.matchesAddressPort(server)) { return true; }
+            }
+            return false;
+        }
+
+        void CServerList::addIfAddressNotExists(const CServer &server)
+        {
+            if (!server.hasAddressAndPort() || server.getName().isEmpty()) { return; }
+            if (!this->containsAddressPort(server))
+            {
+                this->push_back(server);
+            }
+        }
+
+        void CServerList::addIfAddressNotExists(const CServerList &servers)
+        {
+            for (const CServer &s : servers)
+            {
+                this->addIfAddressNotExists(s);
+            }
+        }
     } // namespace
 } // namespace

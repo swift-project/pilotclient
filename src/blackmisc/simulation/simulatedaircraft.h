@@ -139,8 +139,11 @@ namespace BlackMisc
             //! Valid designators?
             bool hasAircraftAndAirlineDesignator() const;
 
-            //! Valid callsign
+            //! Valid callsign?
             bool hasValidCallsign() const { return BlackMisc::Aviation::CCallsign::isValidCallsign(this->getCallsign().asString()); }
+
+            //! Callsign not empty, no further checks
+            bool hasCallsign() const { return !getCallsign().isEmpty(); }
 
             //! Get position
             BlackMisc::Geo::CCoordinateGeodetic getPosition() const { return this->m_situation.getPosition(); }

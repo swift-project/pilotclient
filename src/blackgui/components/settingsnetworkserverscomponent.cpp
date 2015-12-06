@@ -38,6 +38,8 @@ namespace BlackGui
             this->connect(this->ui->pb_SettingsTnServersRemoveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
             this->connect(this->ui->pb_SettingsTnServersSaveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
             this->connect(this->ui->tvp_SettingsTnServers, &QTableView::clicked, this, &CSettingsNetworkServersComponent::ps_networkServerSelected);
+
+            this->ps_reloadSettings();
         }
 
         CSettingsNetworkServersComponent::~CSettingsNetworkServersComponent()
@@ -47,11 +49,11 @@ namespace BlackGui
         {
             CServerList serverList(m_trafficNetworkServers.get());
 
-            // add swift test server in case we have no servers:
+            // add swift test servers in case we have no servers:
             // this is debug/bootstrap feature we can continue to test when something goes wrong
             if (serverList.isEmpty() && CProject::isRunningInBetaOrDeveloperEnvironment())
             {
-                serverList.push_back(m_setup.get().fsdTestServers());
+                serverList.push_back(m_setup.get().fsdTestServersPlusHardcodedServers());
             }
             this->ui->tvp_SettingsTnServers->updateContainer(serverList);
         }
@@ -69,7 +71,6 @@ namespace BlackGui
             if (!msgs.isEmpty())
             {
                 msgs.addCategories(this);
-                msgs.addCategory(CLogCategory::validation());
                 CLogMessage::preformatted(msgs);
                 return;
             }
@@ -84,7 +85,13 @@ namespace BlackGui
             {
                 serverList.replaceOrAdd(&CServer::getName, server.getName(), server);
             }
-            m_trafficNetworkServers.set(serverList);
+
+            CStatusMessage msg = m_trafficNetworkServers.set(serverList);
+            if (msg.isWarningOrAbove())
+            {
+                msg.addCategories(this);
+                CLogMessage::preformatted(msg);
+            }
         }
 
     } // namespace
