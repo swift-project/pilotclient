@@ -26,13 +26,13 @@ namespace BlackCore
             ITimestampBased(0),
             m_dbHttpPort(80),
             m_dbHttpsPort(443),
+            m_development(CProject::isRunningInDeveloperEnvironment()),
             m_dbRootDirectoryUrl("http://ubuntu12/swiftdatastore/public"),
             m_vatsimBookingsUrl("http://vatbook.euroutepro.com/xml2.php"),
             m_vatsimMetarsUrl("http://metar.vatsim.net/metar.php"),
-            m_vatsimDataFileUrls(QStringList({ "http://info.vroute.net/vatsim-data.txt" })),
+            m_vatsimDataFileUrls(QStringList( { "http://info.vroute.net/vatsim-data.txt" })),
             m_sharedUrls(CProject::swiftTeamDefaultServers()),
-            m_newsUrls(QStringList({ "http://swift-project.org/" })),
-            m_fsdTestServers({ CServer("swift", "swift Testserver", "vatsim-germany.org", 6809, CUser("1234567", "swift Test User", "", "123456"), true) })
+            m_newsUrls(QStringList({ "http://swift-project.org/" }))
         { }
 
         CUrl CGlobalSetup::dbIcaoReaderUrl() const
@@ -102,6 +102,14 @@ namespace BlackCore
             return urls.appendPath(isDevelopment() ?
                                    CGlobalSetup::versionString() + "/development/dbdata/" :
                                    CGlobalSetup::versionString() + "/productive/dbdata/");
+        }
+
+        CServerList CGlobalSetup::fsdTestServersPlusHardcodedServers() const
+        {
+            static const CServerList hardcoded({ CServer("swift", "swift Testserver", "vatsim-germany.org", 6809, CUser("1234567", "swift Test User", "", "123456"), true) });
+            CServerList testServers(m_fsdTestServers);
+            testServers.addIfAddressNotExists(hardcoded);
+            return testServers;
         }
 
         QString CGlobalSetup::convertToQString(bool i18n) const

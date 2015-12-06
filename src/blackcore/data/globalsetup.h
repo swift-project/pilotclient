@@ -106,6 +106,9 @@ namespace BlackCore
             //! FSD test servers
             const BlackMisc::Network::CServerList &fsdTestServers() const { return m_fsdTestServers; }
 
+            //! FSD test servers plus hardcoded
+            BlackMisc::Network::CServerList fsdTestServersPlusHardcodedServers() const;
+
             //! Productive settings?
             bool isDevelopment() const { return m_development; }
 
