@@ -14,11 +14,49 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/valuecache.h"
+#include "blackmisc/worker.h"
 #include <QUuid>
 #include <QFileSystemWatcher>
 
 namespace BlackCore
 {
+
+    class CDataCache;
+
+    /*!
+     * Worker which performs (de)serialization on behalf of CDataCache, in a separate thread
+     * so that the main thread is not blocked by (de)serialization of large objects.
+     */
+    class BLACKCORE_EXPORT CDataCacheSerializer : public BlackMisc::CContinuousWorker
+    {
+        Q_OBJECT
+
+    public:
+        //! Constructor.
+        CDataCacheSerializer(CDataCache *owner, const QString &revisionFileName);
+
+        //! Save values to persistent store. Called whenever a value is changed locally.
+        void saveToStore(const BlackMisc::CVariantMap &values, const BlackMisc::CVariantMap &baseline);
+
+        //! Load values from persistent store. Called once per second.
+        //! Also called by saveToStore, to ensure that remote changes to unrelated values are not lost.
+        //! \param baseline A snapshot of the currently loaded values, taken when the load is queued.
+        //! \param lock Whether to acquire the revision file lock. Used when called by saveToStore.
+        //! \param defer Whether to defer applying the changes. Used when called by saveToStore.
+        void loadFromStore(const BlackMisc::CVariantMap &baseline, bool lock = true, bool defer = false);
+
+    signals:
+        //! Signal back to the cache when values have been loaded.
+        void valuesLoadedFromStore(const BlackMisc::CValueCachePacket &values, const BlackMisc::CIdentifier &originator);
+
+    private:
+        const QString &persistentStore() const;
+
+        const CDataCache *const m_cache = nullptr;
+        QUuid m_revision;
+        const QString m_revisionFileName;
+        BlackMisc::CValueCachePacket m_deferredChanges;
+    };
 
     /*!
      * Singleton derived class of CValueCache, for core dynamic data.
@@ -45,19 +83,14 @@ namespace BlackCore
     private:
         CDataCache();
 
-        //! Save values to persistent store. Called whenever a value is changed locally.
-        void saveToStore(const BlackMisc::CVariantMap &values);
-
-        //! Load values from persistent store. Called once per second.
-        //! Also called by saveToStore, to ensure that remote changes to unrelated values are not lost.
-        //! \param lock Whether to acquire the revision file lock. Used when called by saveToStore.
-        //! \param defer Whether to defer applying the changes. Used when called by saveToStore.
-        void loadFromStore(bool lock = true, bool defer = false);
+        void saveToStoreAsync(const BlackMisc::CValueCachePacket &values);
+        void loadFromStoreAsync();
 
         QFileSystemWatcher m_watcher;
-        QUuid m_revision;
         const QString m_revisionFileName { persistentStore() + "/.rev" };
-        BlackMisc::CValueCachePacket m_deferredChanges;
+
+        CDataCacheSerializer m_serializer { this, m_revisionFileName };
+        friend class CDataCacheSerializer; // to access protected members of CValueCache
     };
 
     /*!

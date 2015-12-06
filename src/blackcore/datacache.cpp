@@ -26,12 +26,14 @@ namespace BlackCore
             CLogMessage(this).error("Failed to create directory %1") << persistentStore();
         }
 
-        connect(this, &CValueCache::valuesChangedByLocal, this, [this](const CValueCachePacket &values) { saveToStore(values.toVariantMap()); });
-        connect(&m_watcher, &QFileSystemWatcher::fileChanged, this, [this] { loadFromStore(); });
+        connect(this, &CValueCache::valuesChangedByLocal, this, &CDataCache::saveToStoreAsync);
+        connect(&m_watcher, &QFileSystemWatcher::fileChanged, this, &CDataCache::loadFromStoreAsync);
+        connect(&m_serializer, &CDataCacheSerializer::valuesLoadedFromStore, this, &CDataCache::changeValuesFromRemote);
 
         if (! QFile::exists(m_revisionFileName)) { QFile(m_revisionFileName).open(QFile::WriteOnly); }
         m_watcher.addPath(m_revisionFileName);
-        loadFromStore();
+        m_serializer.start();
+        loadFromStoreAsync();
     }
 
     CDataCache *CDataCache::instance()
@@ -74,10 +76,37 @@ namespace BlackCore
         }
     }
 
-    void CDataCache::saveToStore(const BlackMisc::CVariantMap &values)
+    void CDataCache::saveToStoreAsync(const BlackMisc::CValueCachePacket &values)
     {
-        QMutexLocker lock(&m_mutex);
+        auto baseline = getAllValues();
+        QTimer::singleShot(0, &m_serializer, [this, baseline, values]
+        {
+            m_serializer.saveToStore(values.toVariantMap(), baseline);
+        });
+    }
 
+    void CDataCache::loadFromStoreAsync()
+    {
+        auto baseline = getAllValues();
+        QTimer::singleShot(0, &m_serializer, [this, baseline]
+        {
+            m_serializer.loadFromStore(baseline);
+        });
+    }
+
+    CDataCacheSerializer::CDataCacheSerializer(CDataCache *owner, const QString &revisionFileName) :
+        CContinuousWorker(owner),
+        m_cache(owner),
+        m_revisionFileName(revisionFileName)
+    {}
+
+    const QString &CDataCacheSerializer::persistentStore() const
+    {
+        return m_cache->persistentStore();
+    }
+
+    void CDataCacheSerializer::saveToStore(const BlackMisc::CVariantMap &values, const BlackMisc::CVariantMap &baseline)
+    {
         QLockFile revisionFileLock(m_revisionFileName + ".lock");
         if (! revisionFileLock.lock())
         {
@@ -85,7 +114,7 @@ namespace BlackCore
             return;
         }
 
-        loadFromStore(false, true); // last-minute check for remote changes before clobbering the revision file
+        loadFromStore(baseline, false, true); // last-minute check for remote changes before clobbering the revision file
         for (const auto &key : values.keys()) { m_deferredChanges.remove(key); } // ignore changes that we are about to overwrite
 
         QFile revisionFile(m_revisionFileName);
@@ -97,13 +126,17 @@ namespace BlackCore
         m_revision = CIdentifier().toUuid();
         revisionFile.write(m_revision.toByteArray());
 
-        saveToFiles(persistentStore(), values);
+        m_cache->saveToFiles(persistentStore(), values);
+
+        if (! m_deferredChanges.isEmpty()) // apply changes which we grabbed at the last minute above
+        {
+            emit valuesLoadedFromStore(m_deferredChanges, CIdentifier::anonymous());
+            m_deferredChanges.clear();
+        }
     }
 
-    void CDataCache::loadFromStore(bool revLock, bool defer)
+    void CDataCacheSerializer::loadFromStore(const BlackMisc::CVariantMap &baseline, bool revLock, bool defer)
     {
-        QMutexLocker lock(&m_mutex);
-
         QLockFile revisionFileLock(m_revisionFileName + ".lock");
         if (revLock && ! revisionFileLock.lock())
         {
@@ -127,13 +160,13 @@ namespace BlackCore
         {
             m_revision = newRevision;
             CValueCachePacket newValues;
-            loadFromFiles(persistentStore(), newValues);
+            m_cache->loadFromFiles(persistentStore(), baseline, newValues);
             m_deferredChanges.insert(newValues);
         }
 
         if (! (m_deferredChanges.isEmpty() || defer))
         {
-            changeValuesFromRemote(m_deferredChanges, CIdentifier::anonymous());
+            emit valuesLoadedFromStore(m_deferredChanges, CIdentifier::anonymous());
             m_deferredChanges.clear();
         }
     }

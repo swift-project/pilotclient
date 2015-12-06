@@ -162,10 +162,12 @@ namespace BlackMisc
 
     protected:
         //! Save specific values to Json files in a given directory.
+        //! \threadsafe
         CStatusMessage saveToFiles(const QString &directory, const CVariantMap &values) const;
 
         //! Load from Json files in a given directory any values which differ from the current ones, and insert them in o_values.
-        CStatusMessage loadFromFiles(const QString &directory, CValueCachePacket &o_values) const;
+        //! \threadsafe
+        CStatusMessage loadFromFiles(const QString &directory, const CVariantMap &current, CValueCachePacket &o_values) const;
 
         //! Mutex protecting operations which are critical on m_elements.
         mutable QMutex m_mutex { QMutex::Recursive };

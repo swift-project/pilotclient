@@ -249,19 +249,17 @@ namespace BlackMisc
     {
         QMutexLocker lock(&m_mutex);
         CValueCachePacket values;
-        auto status = loadFromFiles(dir, values);
+        auto status = loadFromFiles(dir, getAllValues(), values);
         insertValues(values);
         return status;
     }
 
-    CStatusMessage CValueCache::loadFromFiles(const QString &dir, CValueCachePacket &o_values) const
+    CStatusMessage CValueCache::loadFromFiles(const QString &dir, const CVariantMap &currentValues, CValueCachePacket &o_values) const
     {
-        QMutexLocker lock(&m_mutex);
         if (! QDir(dir).isReadable())
         {
             return CLogMessage(this).error("Failed to read directory %1") << dir;
         }
-        auto currentValues = getAllValues();
         for (const auto &filename : QDir(dir).entryList({ "*.json" }, QDir::Files))
         {
             QFile file(dir + "/" + filename);
