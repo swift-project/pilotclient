@@ -212,7 +212,6 @@ namespace BlackMisc
 
     CStatusMessage CValueCache::saveToFiles(const QString &dir, const CVariantMap &values) const
     {
-        QMutexLocker lock(&m_mutex);
         QMap<QString, CVariantMap> namespaces;
         for (auto it = values.cbegin(); it != values.cend(); ++it)
         {
