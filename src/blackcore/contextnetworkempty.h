@@ -65,7 +65,7 @@ namespace BlackCore
             return BlackMisc::Simulation::CSimulatedAircraft();
         }
 
-        //! \copydoc IRemoteAircraftProvider::getAircraftInRangeCount
+        //! \copydoc IContextNetwork::getAircraftInRangeCount
         virtual int getAircraftInRangeCount() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
@@ -132,7 +132,7 @@ namespace BlackCore
             return BlackMisc::Aviation::CFlightPlan();
         }
 
-        //! \copydoc IContextNetwork::getMetar
+        //! \copydoc IContextNetwork::getMetarForAirport
         BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) const override
         {
             Q_UNUSED(airportIcaoCode);
@@ -185,7 +185,7 @@ namespace BlackCore
             return BlackMisc::Network::CClientList();
         }
 
-        //! \copydoc IContextNetwork::getOtherClientForCallsigns
+        //! \copydoc IContextNetwork::getOtherClientsForCallsigns
         virtual BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override
         {
             Q_UNUSED(callsigns);

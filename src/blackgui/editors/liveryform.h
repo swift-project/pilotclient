@@ -39,7 +39,7 @@ namespace BlackGui
             //! Destructor
             ~CLiveryForm();
 
-            //! \copydoc CWebDataReaderAware::setProvider
+            //! \copydoc CWebDataServicesAware::setProvider
             virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *provider) override;
 
             //! Value
@@ -57,7 +57,7 @@ namespace BlackGui
             //! Is drop allowed?
             bool isDropAllowed() const;
 
-            //! \copydoc CEditor::setReadOnly
+            //! \copydoc CForm::setReadOnly
             virtual void setReadOnly(bool readOnly) override;
 
             //! Mapping mode

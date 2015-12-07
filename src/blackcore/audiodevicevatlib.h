@@ -34,7 +34,7 @@ namespace BlackCore
         //! Destructor
         virtual ~CAudioInputDeviceVatlib() = default;
 
-        //! \copydoc IAudioInputDevice::getOutputDevices
+        //! \copydoc IAudioInputDevice::getInputDevices
         virtual const BlackMisc::Audio::CAudioDeviceInfoList &getInputDevices() const override;
 
         //! \copydoc IAudioInputDevice::getDefaultInputDevice

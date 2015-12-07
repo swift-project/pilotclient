@@ -52,14 +52,14 @@ namespace BlackGui
             //! Update users
             void update();
 
-            //! \copydoc CTimerBasedComponent::setUpdateIntervalSeconds
+            //! \copydoc CUpdateTimer::setUpdateIntervalSeconds
             void setUpdateIntervalSeconds(int seconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateIntervalSeconds(seconds); }
 
-            //! \copydoc CTimerBasedComponent::stopTimer
+            //! \copydoc CUpdateTimer::stopTimer
             void stopTimer() { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->stopTimer(); }
 
         protected:
-            //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
+            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
             void runtimeHasBeenSet() override;
 
         private slots:

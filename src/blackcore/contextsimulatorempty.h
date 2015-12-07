@@ -129,7 +129,7 @@ namespace BlackCore
             return 0;
         }
 
-        //! \copydoc IContextSimulator::setMaxRenderedRemoteAircraft
+        //! \copydoc IContextSimulator::setMaxRenderedAircraft
         virtual void setMaxRenderedAircraft(int number) override
         {
             Q_UNUSED(number);
@@ -208,7 +208,7 @@ namespace BlackCore
             logEmptyContextWarning(Q_FUNC_INFO);
         }
 
-        //! \copydoc ISimulator::enableDebuggingMessages
+        //! \copydoc ISimulator::enableDebugMessages
         virtual void enableDebugMessages(bool driver, bool interpolator) override
         {
             Q_UNUSED(driver);

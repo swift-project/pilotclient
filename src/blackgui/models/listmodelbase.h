@@ -87,7 +87,7 @@ namespace BlackGui
             //! \copydoc QStandardItemModel::supportedDropActions
             virtual Qt::DropActions supportedDropActions() const override;
 
-            //! \copydoc QStandardItemModel::supportedDropActions
+            //! \copydoc QStandardItemModel::mimeTypes
             virtual QStringList mimeTypes() const override;
 
             //! Mark as about to be destroyed, normally marked from view

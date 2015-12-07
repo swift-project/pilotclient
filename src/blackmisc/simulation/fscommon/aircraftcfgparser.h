@@ -50,7 +50,7 @@ namespace BlackMisc
                 //! Get parsed aircraft cfg entries list
                 const CAircraftCfgEntriesList &getAircraftCfgEntriesList() const { return m_parsedCfgEntriesList; }
 
-                //! \copydoc IAircraftModelLoader::getPixmapForModel
+                //! \copydoc IAircraftModelLoader::iconForModel
                 virtual BlackMisc::CPixmap iconForModel(const QString &modelName, BlackMisc::CStatusMessage &statusMessage) const override;
 
                 //! \copydoc IAircraftModelLoader::startLoading

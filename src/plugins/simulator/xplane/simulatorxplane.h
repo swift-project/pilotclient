@@ -117,7 +117,7 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::isConnected
             virtual bool isConnected() const override;
 
-            //! \copydoc ISimulator::isSimPaused
+            //! \copydoc ISimulator::isPaused
             virtual bool isPaused() const override
             {
                 //! \todo XP: provide correct pause state

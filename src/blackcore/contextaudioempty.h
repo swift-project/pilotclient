@@ -109,21 +109,21 @@ namespace BlackCore
             logEmptyContextWarning(Q_FUNC_INFO);
         }
 
-        //! \copydoc IContext::setVoiceOutputVolume
+        //! \copydoc IContextAudio::setVoiceOutputVolume
         virtual void setVoiceOutputVolume(int volume) override
         {
             Q_UNUSED(volume);
             logEmptyContextWarning(Q_FUNC_INFO);
         }
 
-        //! \copydoc IContext::getVoiceOutputVolume
+        //! \copydoc IContextAudio::getVoiceOutputVolume
         virtual int getVoiceOutputVolume() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             return 0;
         }
 
-        //! \copydoc ICOntext::setMute
+        //! \copydoc IContextAudio::setMute
         virtual void setMute(bool muted) override
         {
             Q_UNUSED(muted);
@@ -159,7 +159,7 @@ namespace BlackCore
             logEmptyContextWarning(Q_FUNC_INFO);
         }
 
-        //! \copydoc ICOntextAudio::isAudioLoopbackEnabled
+        //! \copydoc IContextAudio::isAudioLoopbackEnabled
         virtual bool isAudioLoopbackEnabled() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);

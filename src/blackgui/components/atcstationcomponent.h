@@ -59,10 +59,10 @@ namespace BlackGui
             //! Update stations
             void update();
 
-            //! \copydoc CTimerBasedComponent::setUpdateIntervalSeconds
+            //! \copydoc CUpdateTimer::setUpdateIntervalSeconds
             void setUpdateIntervalSeconds(int seconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateIntervalSeconds(seconds); }
 
-            //! \copydoc CTimerBasedComponent::stopTimer
+            //! \copydoc CUpdateTimer::stopTimer
             void stopTimer() { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->stopTimer(); }
 
             //! Get METAR for given ICAO airport code
@@ -72,7 +72,7 @@ namespace BlackGui
             void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
 
         protected:
-            //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
+            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
             void runtimeHasBeenSet() override;
 
         private slots:

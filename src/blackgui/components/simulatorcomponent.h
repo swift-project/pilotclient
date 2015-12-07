@@ -59,13 +59,13 @@ namespace BlackGui
             //! Update simulator
             void update();
 
-            //! \copydoc CTimerBasedComponent::setUpdateIntervalSeconds
+            //! \copydoc CUpdateTimer::setUpdateIntervalSeconds
             void setUpdateIntervalSeconds(int seconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateIntervalSeconds(seconds); }
 
-            //! \copydoc CTimerBasedComponent::setUpdateInterval
+            //! \copydoc CUpdateTimer::setUpdateInterval
             void setUpdateInterval(int milliSeconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateInterval(milliSeconds); }
 
-            //! \copydoc CTimerBasedComponent::stopTimer
+            //! \copydoc CUpdateTimer::stopTimer
             void stopTimer() { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->stopTimer(); }
 
         protected:

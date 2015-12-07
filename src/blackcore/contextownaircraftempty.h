@@ -35,7 +35,7 @@ namespace BlackCore
             return BlackMisc::Simulation::CSimulatedAircraft();
         }
 
-        //! \copydoc IContextOwnAircraft::updatePosition
+        //! \copydoc IContextOwnAircraft::updateOwnPosition
         virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) override
         {
             Q_UNUSED(position);
@@ -55,7 +55,7 @@ namespace BlackCore
             return false;
         }
 
-        //! \copydoc IContextOwnAircraft::updateComFrequency
+        //! \copydoc IContextOwnAircraft::updateActiveComFrequency
         virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit comUnit, const BlackMisc::CIdentifier &originator) override
         {
             Q_UNUSED(frequency);
@@ -65,7 +65,7 @@ namespace BlackCore
             return false;
         }
 
-        //! \copydoc IContextOwnAircraft::updatePilot
+        //! \copydoc IContextOwnAircraft::updateOwnAircraftPilot
         virtual bool updateOwnAircraftPilot(const BlackMisc::Network::CUser &pilot) override
         {
             Q_UNUSED(pilot);
@@ -99,7 +99,7 @@ namespace BlackCore
             return false;
         }
 
-        //! \copydoc IContextOwnAircraft::setAudioOutputVolumes
+        //! \copydoc IContextOwnAircraft::setAudioOutputVolume
         virtual void setAudioOutputVolume(int outputVolume) override
         {
             Q_UNUSED(outputVolume);

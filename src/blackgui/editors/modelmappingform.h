@@ -42,7 +42,7 @@ namespace BlackGui
             //! Validate
             BlackMisc::CStatusMessageList validate(bool withNestedForms) const;
 
-            //! \copydoc CEditor::setReadOnly
+            //! \copydoc CForm::setReadOnly
             virtual void setReadOnly(bool readOnly) override;
 
         public slots:

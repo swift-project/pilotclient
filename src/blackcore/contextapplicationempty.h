@@ -135,7 +135,7 @@ namespace BlackCore
             return BlackMisc::CIdentifier();
         }
 
-        //! \copydoc IContextApplication::unRegisterApplication
+        //! \copydoc IContextApplication::unregisterApplication
         virtual void unregisterApplication(const BlackMisc::CIdentifier &application) override
         {
             Q_UNUSED(application);

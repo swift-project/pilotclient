@@ -356,13 +356,13 @@ namespace BlackGui
             //! Set the search indicator based on model
             void setSortIndicator();
 
-            //! \copydoc CViewBaseNonTemplate::standardInit
+            //! Standard initialization
             void standardInit(ModelClass *model = nullptr);
 
             //! \copydoc CViewBaseNonTemplate::reachedResizeThreshold
             virtual bool reachedResizeThreshold(int containrerSize = -1) const override;
 
-            //! \copydoc CViewBaseNonTemplate::performResizing
+            //! \copydoc CViewBaseNonTemplate::performModeBasedResizeToContent
             virtual void performModeBasedResizeToContent() override;
 
             //! \copydoc CViewBaseNonTemplate::performUpdateContainer
@@ -372,9 +372,9 @@ namespace BlackGui
             //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
             virtual bool ps_filterDialogFinished(int status) override;
 
-            //! \copydoc CViewBaseNonTemplate::ps_FilterWidgetChangedFilter
+            //! \copydoc CViewBaseNonTemplate::ps_filterWidgetChangedFilter(bool)
             //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
-            virtual bool ps_filterWidgetChangedFilter(bool enabled) override;
+           virtual bool ps_filterWidgetChangedFilter(bool enabled) override;
 
             //! \copydoc CViewBaseNonTemplate::ps_removeFilter
             //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT

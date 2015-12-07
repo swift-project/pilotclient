@@ -212,110 +212,110 @@ namespace BlackMisc
             ~CWebDataServicesAware();
 
         public:
-            //! \copydoc IWebDataReaderProvider::getMetarForAirport
+            //! \copydoc IWebDataServicesProvider::getMetarForAirport
             BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &icao) const;
 
         protected:
             //! Constructor
             CWebDataServicesAware(IWebDataServicesProvider *webDataReaderProvider = nullptr) : m_webDataReaderProvider(webDataReaderProvider) { }
 
-            //! \copydoc IWebDataReaderProvider::getVatsimFsdServers
+            //! \copydoc IWebDataServicesProvider::getVatsimFsdServers
             BlackMisc::Network::CServerList getVatsimFsdServers() const;
 
-            //! \copydoc IWebDataReaderProvider::getVatsimVoiceServers
+            //! \copydoc IWebDataServicesProvider::getVatsimVoiceServers
             BlackMisc::Network::CServerList getVatsimVoiceServers() const;
 
-            //! \copydoc IWebDataReaderProvider::getUsersForCallsign
+            //! \copydoc IWebDataServicesProvider::getUsersForCallsign
             BlackMisc::Network::CUserList getUsersForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
-            //! \copydoc IWebDataReaderProvider::getAtcStationsForCallsign
+            //! \copydoc IWebDataServicesProvider::getAtcStationsForCallsign
             BlackMisc::Aviation::CAtcStationList getAtcStationsForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
-            //! \copydoc IWebDataReaderProvider::getVoiceCapabilityForCallsign
+            //! \copydoc IWebDataServicesProvider::getVoiceCapabilityForCallsign
             BlackMisc::Network::CVoiceCapabilities getVoiceCapabilityForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
-            //! \copydoc IWebDataReaderProvider::getDistributors
+            //! \copydoc IWebDataServicesProvider::getDistributors
             BlackMisc::Simulation::CDistributorList getDistributors() const;
 
-            //! \copydoc IWebDataReaderProvider::smartDistributorSelector
+            //! \copydoc IWebDataServicesProvider::smartDistributorSelector
             BlackMisc::Simulation::CDistributor smartDistributorSelector(const BlackMisc::Simulation::CDistributor &distributor) const;
 
-            //! \copydoc IWebDataReaderProvider::getDistributorsCount
+            //! \copydoc IWebDataServicesProvider::getDistributorsCount
             int getDistributorsCount() const;
 
-            //! \copydoc IWebDataReaderProvider::getLiveries
+            //! \copydoc IWebDataServicesProvider::getLiveries
             BlackMisc::Aviation::CLiveryList getLiveries() const;
 
-            //! \copydoc IWebDataReaderProvider::getLiveries
+            //! \copydoc IWebDataServicesProvider::getLiveries
             int getLiveriesCount() const;
 
-            //! \copydoc IWebDataReaderProvider::getLiveryForCombinedCode
+            //! \copydoc IWebDataServicesProvider::getLiveryForCombinedCode
             BlackMisc::Aviation::CLivery getLiveryForCombinedCode(const QString &combinedCode) const;
 
-            //! \copydoc IWebDataReaderProvider::smartLiverySelector
+            //! \copydoc IWebDataServicesProvider::smartLiverySelector
             BlackMisc::Aviation::CLivery smartLiverySelector(const Aviation::CLivery &livery) const;
 
-            //! \copydoc IWebDataReaderProvider::getModels
+            //! \copydoc IWebDataServicesProvider::getModels
             BlackMisc::Simulation::CAircraftModelList getModels() const;
 
-            //! \copydoc IWebDataReaderProvider::getModelsCount
+            //! \copydoc IWebDataServicesProvider::getModelsCount
             int getModelsCount() const;
 
-            //! \copydoc IWebDataReaderProvider::getModelsForAircraftDesignatorAndLiveryCombinedCode
+            //! \copydoc IWebDataServicesProvider::getModelsForAircraftDesignatorAndLiveryCombinedCode
             BlackMisc::Simulation::CAircraftModelList getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const;
 
-            //! \copydoc IWebDataReaderProvider::getModelForModelString
+            //! \copydoc IWebDataServicesProvider::getModelForModelString
             BlackMisc::Simulation::CAircraftModel getModelForModelString(const QString &modelString) const;
 
-            //! \copydoc IWebDataReaderProvider::getAircraftIcaoCodes
+            //! \copydoc IWebDataServicesProvider::getAircraftIcaoCodes
             BlackMisc::Aviation::CAircraftIcaoCodeList getAircraftIcaoCodes() const;
 
-            //! \copydoc IWebDataReaderProvider::getAircraftIcaoCodesCount
+            //! \copydoc IWebDataServicesProvider::getAircraftIcaoCodesCount
             int getAircraftIcaoCodesCount() const;
 
-            //! \copydoc IWebDataReaderProvider::getAircraftIcaoCodeForDesignator
+            //! \copydoc IWebDataServicesProvider::getAircraftIcaoCodeForDesignator
             BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDesignator(const QString &designator) const;
 
-            //! \copydoc IWebDataReaderProvider::getAircraftIcaoCodeForId
+            //! \copydoc IWebDataServicesProvider::getAircraftIcaoCodeForDbKey
             BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDbKey(int id) const;
 
-            //! \copydoc IWebDataReaderProvider::getAirlineIcaoCodes
+            //! \copydoc IWebDataServicesProvider::getAirlineIcaoCodes
             BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodes() const;
 
-            //! \copydoc IWebDataReaderProvider::getAirlineIcaoCodesCount
+            //! \copydoc IWebDataServicesProvider::getAirlineIcaoCodesCount
             int getAirlineIcaoCodesCount() const;
 
-            //! \copydoc IWebDataReaderProvider::getAirlineIcaoCodeForDesignator
+            //! \copydoc IWebDataServicesProvider::getAirlineIcaoCodeForDesignator
             BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForDesignator(const QString &designator) const;
 
-            //! \copydoc IWebDataReaderProvider::getAirlineIcaoCodeForId
+            //! \copydoc IWebDataServicesProvider::getAirlineIcaoCodeForDbKey
             BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForDbKey(int id) const;
 
-            //! \copydoc IWebDataReaderProvider::smartAircraftIcaoSelector
+            //! \copydoc IWebDataServicesProvider::smartAircraftIcaoSelector
             BlackMisc::Aviation::CAircraftIcaoCode smartAircraftIcaoSelector(const BlackMisc::Aviation::CAircraftIcaoCode &icao) const;
 
-            //! \copydoc IWebDataReaderProvider::getCountries
+            //! \copydoc IWebDataServicesProvider::getCountries
             BlackMisc::CCountryList getCountries() const;
 
-            //! \copydoc IWebDataReaderProvider::getCountriesCount
+            //! \copydoc IWebDataServicesProvider::getCountriesCount
             int getCountriesCount() const;
 
-            //! \copydoc IWebDataReaderProvider::getCountryForIsoCode
+            //! \copydoc IWebDataServicesProvider::getCountryForIsoCode
             BlackMisc::CCountry getCountryForIsoCode(const QString &iso) const;
 
-            //! \copydoc IWebDataReaderProvider::getCountryForName
+            //! \copydoc IWebDataServicesProvider::getCountryForName
             BlackMisc::CCountry getCountryForName(const QString &name) const;
 
-            //! \copydoc IWebDataReaderProvider::getMetars
+            //! \copydoc IWebDataServicesProvider::getMetars
             BlackMisc::Weather::CMetarSet getMetars() const;
 
-            //! \copydoc IWebDataReaderProvider::getMetarCount
+            //! \copydoc IWebDataServicesProvider::getMetarCount
             int getMetarCount() const;
 
-            //! \copydoc IWebDataReaderProvider::updateWithWebData
+            //! \copydoc IWebDataServicesProvider::updateWithVatsimDataFileData
             void updateWithVatsimDataFileData(BlackMisc::Simulation::CSimulatedAircraft &aircraftToBeUdpated) const;
 
-            //! \copydoc IWebDataReaderProvider::asyncWriteModel
+            //! \copydoc IWebDataServicesProvider::asyncWriteModel
             BlackMisc::CStatusMessageList asyncWriteModelToDb(BlackMisc::Simulation::CAircraftModel &model) const;
 
             //! Set the provider
@@ -327,21 +327,21 @@ namespace BlackMisc
             //! Called when provider should no longer be used
             void gracefulShutdown();
 
-            //! \copydoc IWebDataReaderProvider::connectDataReadSignal
+            //! \copydoc IWebDataServicesProvider::connectDataReadSignal
             void connectDataReadSignal(
                 QObject *receiver,
                 std::function<void(BlackMisc::Network::CEntityFlags::Entity, BlackMisc::Network::CEntityFlags::ReadState, int)> dataRead);
 
-            //! \copydoc IWebDataReaderProvider::triggerRead
+            //! \copydoc IWebDataServicesProvider::triggerRead
             BlackMisc::Network::CEntityFlags::Entity triggerRead(BlackMisc::Network::CEntityFlags::Entity whatToRead);
 
-            //! \copydoc IWebDataReaderProvider::canConnectSwiftDb
+            //! \copydoc IWebDataServicesProvider::canConnectSwiftDb
             bool canConnectSwiftDb() const;
 
-            //! \copydoc IWebDataReaderProvider::writeDbDataToDisk
+            //! \copydoc IWebDataServicesProvider::writeDbDataToDisk
             bool writeDbDataToDisk(const QString &dir) const;
 
-            //! \copydoc IWebDataReaderProvider::readDbDataFromDisk
+            //! \copydoc IWebDataServicesProvider::readDbDataFromDisk
             bool readDbDataFromDisk(const QString &dir, bool inBackround);
 
         private:

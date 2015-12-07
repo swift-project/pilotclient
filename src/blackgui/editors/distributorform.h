@@ -52,7 +52,7 @@ namespace BlackGui
             //! Is drop allowed?
             bool isDropAllowed() const;
 
-            //! \copydoc CEditor::setReadOnly
+            //! \copydoc CForm::setReadOnly
             void setReadOnly(bool readOnly);
 
             //! Clear
