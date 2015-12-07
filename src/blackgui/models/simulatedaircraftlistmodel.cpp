@@ -53,7 +53,7 @@ namespace BlackGui
                 this->m_columns.addColumn(CColumn("dist.", "distance", CSimulatedAircraft::IndexDistanceToOwnAircraft, new CAirspaceDistanceFormatter()));
                 this->m_columns.addColumn(CColumn("altitude", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexAltitude }, new CAltitudeFormatter()));
                 this->m_columns.addColumn(CColumn("gs.", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexGroundspeed }, new CAircraftSpeedFormatter()));
-                this->m_columns.addColumn(CColumn::standardString("icao", { CSimulatedAircraft::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexAircraftDesignator}));
+                this->m_columns.addColumn(CColumn::standardString("icao", "icao and livery info",{ CSimulatedAircraft::IndexCombinedIcaoLiveryString}));
                 this->m_columns.addColumn(CColumn("frequency", { CSimulatedAircraft::IndexCom1System, CComSystem::IndexActiveFrequency }, new CComFrequencyFormatter()));
                 this->m_columns.addColumn(CColumn::standardString("transponder", { CSimulatedAircraft::IndexTransponder, CTransponder::IndexTransponderCodeAndModeFormatted }));
                 this->m_columns.addColumn(CColumn("latitude", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexLatitude }, new CLatLonFormatter()));

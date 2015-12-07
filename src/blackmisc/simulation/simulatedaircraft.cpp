@@ -119,7 +119,7 @@ namespace BlackMisc
 
         const QString &CSimulatedAircraft::getAirlineIcaoCodeDesignator() const
         {
-            return getAircraftIcaoCode().getDesignator();
+            return getAirlineIcaoCode().getDesignator();
         }
 
         void CSimulatedAircraft::setAircraftIcaoDesignator(const QString &designator)
@@ -231,19 +231,29 @@ namespace BlackMisc
         {
             if (this->hasAircraftAndAirlineDesignator())
             {
-                QString s("%1 (%2)");
-                return s.arg(getAircraftIcaoCodeDesignator()).arg(getAirlineIcaoCodeDesignator());
+                if (getLivery().hasCombinedCode())
+                {
+                    QString s("%1 (%2 %3)");
+                    return s.arg(getAircraftIcaoCodeDesignator()).arg(getAirlineIcaoCodeDesignator()).arg(getLivery().getCombinedCode());
+                }
+                else
+                {
+                    QString s("%1 (%2)");
+                    return s.arg(getAircraftIcaoCodeDesignator()).arg(getAirlineIcaoCodeDesignator());
+                }
             }
 
             if (!this->hasAircraftDesignator())
             {
                 return getLivery().getCombinedCode();
             }
-            else
+            else if (this->getLivery().hasCombinedCode())
             {
                 QString s("%1 (%2)");
                 return s.arg(getAircraftIcaoCodeDesignator()).arg(getLivery().getCombinedCode());
             }
+
+            return getAircraftIcaoCode().getDesignator();
         }
 
         CVariant CSimulatedAircraft::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
