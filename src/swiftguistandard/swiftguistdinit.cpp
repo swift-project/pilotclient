@@ -42,6 +42,7 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     this->setObjectName("SwiftGuiStd");
     this->initStyleSheet();
 
+
     // with frameless window, we shift menu and statusbar into central widget
     // http://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5
     if (this->isFrameless())
@@ -72,6 +73,7 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     // context
     this->createRuntime(runtimeConfig, this);
     CEnableForRuntime::setRuntimeForComponents(this->getRuntime(), this);
+    this->getIContextApplication()->loadSettings();
 
     // info bar and status bar
     this->m_statusBar.initStatusBar(this->ui->sb_MainStatusBar);

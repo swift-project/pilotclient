@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>260</width>
+    <width>282</width>
     <height>334</height>
    </rect>
   </property>
@@ -36,7 +36,7 @@
     <number>1</number>
    </property>
    <item>
-    <widget class="BlackGui::Views::CServerView" name="tvp_SettingsTnServers">
+    <widget class="BlackGui::Views::CServerView" name="tvp_Servers">
      <property name="editTriggers">
       <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
      </property>
@@ -102,7 +102,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pb_SettingsTnServersSaveServer">
+       <widget class="QPushButton" name="pb_SaveServer">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -110,12 +110,19 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Save</string>
+         <string>save</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pb_SettingsTnServersRemoveServer">
+       <widget class="QPushButton" name="pb_AddServer">
+        <property name="text">
+         <string>add</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_RemoveServer">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -123,7 +130,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Remove</string>
+         <string>remove</string>
         </property>
        </widget>
       </item>

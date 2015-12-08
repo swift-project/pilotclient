@@ -44,7 +44,7 @@ namespace BlackGui
             void ps_reloadSettings();
 
             //! Network server selected
-            void ps_networkServerSelected(const QModelIndex &index);
+            void ps_serverSelected(const QModelIndex &index);
 
             //! Alter traffic server
             void ps_alterTrafficServer();

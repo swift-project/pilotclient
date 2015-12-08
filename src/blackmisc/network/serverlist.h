@@ -38,6 +38,9 @@ namespace BlackMisc
             //! Contains name
             bool containsName(const QString &name) const;
 
+            //! Remove by name
+            bool removeByName(const QString &name);
+
             //! Contains server with same address/port
             bool containsAddressPort(const CServer &server);
 

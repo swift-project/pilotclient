@@ -11,6 +11,7 @@
 #include "ui_settingsnetworkserverscomponent.h"
 #include "blackcore/contextnetwork.h"
 #include "blackcore/setupreader.h"
+#include "blackcore/contextapplication.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/project.h"
 #include <QModelIndex>
@@ -35,10 +36,10 @@ namespace BlackGui
             ui->setupUi(this);
 
             // Settings server
-            this->connect(this->ui->pb_SettingsTnServersRemoveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
-            this->connect(this->ui->pb_SettingsTnServersSaveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
-            this->connect(this->ui->tvp_SettingsTnServers, &QTableView::clicked, this, &CSettingsNetworkServersComponent::ps_networkServerSelected);
-
+            this->connect(this->ui->pb_RemoveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
+            this->connect(this->ui->pb_SaveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
+            this->connect(this->ui->pb_AddServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
+            this->connect(this->ui->tvp_Servers, &QTableView::clicked, this, &CSettingsNetworkServersComponent::ps_serverSelected);
             this->ps_reloadSettings();
         }
 
@@ -55,44 +56,67 @@ namespace BlackGui
             {
                 serverList.push_back(m_setup.get().fsdTestServersPlusHardcodedServers());
             }
-            this->ui->tvp_SettingsTnServers->updateContainer(serverList);
+            this->ui->tvp_Servers->updateContainer(serverList);
         }
 
-        void CSettingsNetworkServersComponent::ps_networkServerSelected(const QModelIndex &index)
+        void CSettingsNetworkServersComponent::ps_serverSelected(const QModelIndex &index)
         {
-            const CServer clickedServer = this->ui->tvp_SettingsTnServers->at(index);
+            const CServer clickedServer = this->ui->tvp_Servers->at(index);
             this->ui->frp_ServerForm->setServer(clickedServer);
         }
 
         void CSettingsNetworkServersComponent::ps_alterTrafficServer()
         {
-            CServer server = this->ui->frp_ServerForm->getServer();
+            CServer server(this->ui->frp_ServerForm->getServer());
             CStatusMessageList  msgs = server.validate();
-            if (!msgs.isEmpty())
-            {
-                msgs.addCategories(this);
-                CLogMessage::preformatted(msgs);
-                return;
-            }
+            if (!msgs.isEmpty()) { msgs.addCategories(this); }
 
             CServerList serverList(m_trafficNetworkServers.get());
             QObject *sender = QObject::sender();
-            if (sender == this->ui->pb_SettingsTnServersRemoveServer)
+            CStatusMessage msg;
+            bool changed = false;
+            if (sender == this->ui->pb_RemoveServer)
             {
-                serverList.removeIf(&CServer::getName, server.getName());
+                // lenient name removal
+                serverList.removeByName(server.getName());
+                changed = true;
             }
-            else if (sender == this->ui->pb_SettingsTnServersSaveServer)
+            else if (sender == this->ui->pb_AddServer)
             {
+                if (!msgs.isEmpty())
+                {
+                    CLogMessage::preformatted(msgs);
+                    return;
+                }
                 serverList.replaceOrAdd(&CServer::getName, server.getName(), server);
+                changed = true;
+            }
+            else if (sender == this->ui->pb_SaveServer)
+            {
+                if (msgs.isEmpty() && server.hasAddressAndPort())
+                {
+                    // update in any case to list before saving if we have a valid form
+                    serverList.replaceOrAdd(&CServer::getName, server.getName(), server);
+                    changed = true;
+                }
             }
 
-            CStatusMessage msg = m_trafficNetworkServers.set(serverList);
-            if (msg.isWarningOrAbove())
+            if (changed)
+            {
+                msg = m_trafficNetworkServers.set(serverList);
+                this->ps_reloadSettings(); // call manually as local object
+            }
+
+            if (msgs.isEmpty() && sender == this->ui->pb_SaveServer)
+            {
+                msg = this->getIContextApplication()->saveSettings(m_trafficNetworkServers.getKey());
+            }
+
+            if (!msg.isEmpty())
             {
                 msg.addCategories(this);
                 CLogMessage::preformatted(msg);
             }
         }
-
     } // namespace
 } // namespace

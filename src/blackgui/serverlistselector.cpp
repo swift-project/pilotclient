@@ -34,15 +34,32 @@ namespace BlackGui
 
     void CServerListSelector::setItemStrings(const CServerList &servers)
     {
+        QString currentlySelected(this->currentText());
+        int index = -1;
         this->m_servers = servers;
         this->m_items.clear();
-        foreach(CServer server, servers)
+        for (const CServer &server : servers)
         {
             QString d(server.getName() + ": " + server.getDescription());
             m_items.append(d);
+            if (!currentlySelected.isEmpty() && index < 0 && d == currentlySelected)
+            {
+                index = m_items.size() - 1;
+            }
         }
         this->clear(); // ui
         this->addItems(m_items);
+
+        // reselect
+        if (this->m_items.isEmpty()) { return; }
+        if (this->m_items.size() == 1)
+        {
+            this->setCurrentIndex(0);
+        }
+        else if (index >= 0)
+        {
+            this->setCurrentIndex(index);
+        }
     }
 
 } // namespace

@@ -36,15 +36,12 @@ namespace BlackGui
         BlackMisc::Network::CServer currentServer() const;
 
     private:
-
         //! Build the item string descriptions
         void setItemStrings(const BlackMisc::Network::CServerList &servers);
 
         BlackMisc::Network::CServerList m_servers; //!< corresponding servers
-        QStringList m_items; //!< items strings
-
+        QStringList m_items;                       //!< items strings
     };
-
 } // namespace
 
 #endif // guard

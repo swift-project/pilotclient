@@ -28,6 +28,20 @@ namespace BlackMisc
             return false;
         }
 
+        bool CServerList::removeByName(const QString &name)
+        {
+            if (name.isEmpty()) { return false; }
+            const CServerList copy(*this);
+            bool removed = false;
+            for (const CServer &server : copy)
+            {
+                if (!server.matchesName(name)) { continue; }
+                this->remove(server);
+                removed = true;
+            }
+            return removed;
+        }
+
         bool CServerList::containsAddressPort(const CServer &server)
         {
             for (const CServer &s : *this)
