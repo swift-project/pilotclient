@@ -73,7 +73,7 @@ namespace BlackMisc
                 if (!dir.isEmpty()) { return dir; }
 
                 //! \todo allow to read a user defined value from settings
-                return "P:/FlightSimulatorX (MSI)/SimObjects"; // "p:/temp/SimObjects"
+                return "P:/FSX (MSI)/SimObjects"; // "p:/temp/SimObjects"
             }
 
             const QStringList &CFsCommonUtil::fsxSimObjectsExcludeDirectories()
