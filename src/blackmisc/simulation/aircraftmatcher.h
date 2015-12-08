@@ -27,7 +27,6 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-
         /*! Matcher for all models
          * \details Reads all the mapping rules and all the available flight simulator models.
          *          Then all rules for models not existing are eliminated ( \sa synchronize ).
@@ -88,7 +87,7 @@ namespace BlackMisc
             const BlackMisc::Simulation::CAircraftModelList &getDatastoreModels() const { return m_mappingsProvider->getDatastoreModels(); }
 
             //! Number of mapping definitions
-            int countMappingRules() const { return m_modelsDatastore.size(); }
+            int countMappingRules() const { return m_modelsFromDatastoreInstalled.size(); }
 
             //! Synchronize models and mappings
             //! \remarks after this step, we only have mappings for which we have models
@@ -119,8 +118,12 @@ namespace BlackMisc
             void initImpl();
             void initMappings();
 
+            //! Search in installed models by key (aka model string)
             CAircraftModel matchByExactModelName(const CSimulatedAircraft &remoteAircraft);
-            CAircraftModel matchByMapping(const CSimulatedAircraft &remoteAircraft);
+
+            //! Installed models by database ICAO data (requires DB entries)
+            CAircraftModel matchInstalledModelsByIcaoData(const CSimulatedAircraft &remoteAircraft);
+
             CAircraftModel matchByAlgorithm(const CSimulatedAircraft &remoteAircraft);
 
             //! Synchronize with existing model names, remove unneeded models
@@ -130,11 +133,10 @@ namespace BlackMisc
             std::atomic<InitState> m_initState { NotInitialized };
             QPointer<BlackMisc::CWorker> m_initWorker;
             MatchingMode m_matchingMode = ModelMatching;
-            CAircraftModelList m_installedModels;
-            CAircraftModelList m_modelsDatastore;
-            BlackMisc::Simulation::CAircraftModel m_defaultModel;
+            CAircraftModelList m_installedModels;                 //!< my simulator`s installed models
+            CAircraftModelList m_modelsFromDatastoreInstalled;    //!< models from datastore I do actually have installed
+            BlackMisc::Simulation::CAircraftModel m_defaultModel; //!< model to be used as default model
         };
-
     }
 } // namespace
 

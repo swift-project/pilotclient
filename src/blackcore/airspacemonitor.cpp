@@ -18,6 +18,7 @@
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindexallclasses.h"
 #include "blackmisc/threadutils.h"
+#include "blackmisc/verify.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;
@@ -606,7 +607,8 @@ namespace BlackCore
         if (!inRange)
         {
             // here we assume user has logged out, incomplete data because of traffic sim, etc.
-            CLogMessage(this).debug() << "Aircraft not in range anymore " << callsign.toQString();
+            // aircraft is no longer in range, or ws never added to range (no position updates)
+            CLogMessage(this).debug() << "Aircraft not in range anymore or never added to range " << callsign.toQString();
             return;
         }
 
@@ -618,6 +620,7 @@ namespace BlackCore
             return; // maybe we like to continue here, hard so say
         }
         Q_ASSERT_X(!m_serverSupportsNameQuery || remoteAircraft.hasValidRealName(), Q_FUNC_INFO, "invalid model data");
+        Q_ASSERT_X(remoteAircraft.getCallsign() == remoteAircraft.getModel().getCallsign(), Q_FUNC_INFO, "wrong model callsign");
         emit this->readyForModelMatching(remoteAircraft);
     }
 

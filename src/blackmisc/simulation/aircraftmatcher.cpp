@@ -57,7 +57,10 @@ namespace BlackMisc
         void CAircraftMatcher::setMatchingModes(MatchingMode matchingModes)
         {
             m_matchingMode = matchingModes;
-            if (m_matchingMode.testFlag(ModelMapping) && m_modelsDatastore.isEmpty()) initMappings();
+            if (m_matchingMode.testFlag(ModelMapping) && m_modelsFromDatastoreInstalled.isEmpty())
+            {
+                initMappings();
+            }
         }
 
         CAircraftModel CAircraftMatcher::getClosestMatch(const CSimulatedAircraft &remoteAircraft)
@@ -83,25 +86,42 @@ namespace BlackMisc
                 return aircraftModel;
             }
 
-            if (remoteAircraft.getModel().hasModelString())
+            do
             {
+                //! \todo this code here is partially nuts and needs to be adjusted
+                //!       as soon as we have real DB data
+                //! things to change:
+                //! 1) instead of keeping two lists (DB data + own models) just
+                //!    update / enhance the list of installed models with the DB metadata
+                //!    then there is only one search required
+                //! 2) Keep a cache of installed models enriched by the DB metadata (that will eliminate all
+                //!    sync processes and can be done offline
+                //! 3) drivers which can assign reliable ICAO codes should do this as much as possible
+                //!    the sync process with DB will improve those information (by livery details, but in case
+                //!    of now metadata from DB we have the best matching data we can get
+                //!    Also such data can be used in the mapping tool as default values (Less values to type in)
+
+                // try to find in installed models by model string
                 aircraftModel = matchByExactModelName(remoteAircraft);
-            }
+                if (aircraftModel.hasModelString()) { break; }
 
-            if (!aircraftModel.hasModelString())
-            {
-                aircraftModel = matchByMapping(remoteAircraft);
-            }
+                // ------------ start parts depending on swift DB data -------------------
 
-            if (!aircraftModel.hasModelString())
-            {
+                // by DB ICAO data
+                aircraftModel = matchInstalledModelsByIcaoData(remoteAircraft);
+                if (aircraftModel.hasModelString()) { break; }
+
+                // ------------ end parts depending on swift DB data -------------------
+
                 aircraftModel = matchByAlgorithm(remoteAircraft);
-            }
+                if (aircraftModel.hasModelString()) { break; }
 
-            if (!aircraftModel.hasModelString())
-            {
                 aircraftModel = getDefaultModel();
             }
+            while (false);
+
+            // copy over callsign
+            aircraftModel.setCallsign(remoteAircraft.getCallsign());
 
             Q_ASSERT_X(!aircraftModel.getCallsign().isEmpty(), Q_FUNC_INFO, "Missing callsign");
             Q_ASSERT_X(aircraftModel.hasModelString(), Q_FUNC_INFO, "Missing model string");
@@ -129,11 +149,12 @@ namespace BlackMisc
         void CAircraftMatcher::setDefaultModel(const BlackMisc::Simulation::CAircraftModel &defaultModel)
         {
             m_defaultModel = defaultModel;
+            m_defaultModel.setModelType(CAircraftModel::TypeModelMatchingDefaultModel);
         }
 
         void CAircraftMatcher::ps_setDatastoreModels(const CAircraftModelList &mappings)
         {
-            m_modelsDatastore = mappings;
+            m_modelsFromDatastoreInstalled = mappings;
         }
 
         void CAircraftMatcher::initImpl()
@@ -144,10 +165,10 @@ namespace BlackMisc
 
             // sync
             this->synchronize();
-            CLogMessage(this).debug() << "Mapping definitions after sync" << m_modelsDatastore.size();
+            CLogMessage(this).debug() << "Mapping definitions after sync" << m_modelsFromDatastoreInstalled.size();
 
             // finish
-            CLogMessage(this).info("Mapping system: %1 definitions for %2 installed models") << m_modelsDatastore.size()
+            CLogMessage(this).info("Mapping system: %1 definitions for %2 installed models") << m_modelsFromDatastoreInstalled.size()
                     << m_installedModels.size();
             m_initState = InitFinished;
             emit initializationFinished();
@@ -160,8 +181,8 @@ namespace BlackMisc
             if (mappingsSize < 1)
             {
                 m_mappingsProvider->read();
-                m_modelsDatastore = m_mappingsProvider->getDatastoreModels();
-                mappingsSize = m_modelsDatastore.size();
+                m_modelsFromDatastoreInstalled = m_mappingsProvider->getDatastoreModels();
+                mappingsSize = m_modelsFromDatastoreInstalled.size();
                 if (mappingsSize < 1)
                 {
                     CLogMessage(this).error("Reading mapping rules failed or empty!");
@@ -170,7 +191,7 @@ namespace BlackMisc
                     return;
                 }
             }
-            m_modelsDatastore = m_mappingsProvider->getDatastoreModels();
+            m_modelsFromDatastoreInstalled = m_mappingsProvider->getDatastoreModels();
             CLogMessage(this).debug() << "Mapping definitions" << mappingsSize;
         }
 
@@ -179,17 +200,14 @@ namespace BlackMisc
             return this->m_installedModels.findFirstByModelString(remoteAircraft.getModelString());
         }
 
-        CAircraftModel CAircraftMatcher::matchByMapping(const CSimulatedAircraft &remoteAircraft)
+        CAircraftModel CAircraftMatcher::matchInstalledModelsByIcaoData(const CSimulatedAircraft &remoteAircraft)
         {
             CAircraftModel aircraftModel;
-            BlackMisc::Simulation::CAircraftModelList datastoreModels = m_modelsDatastore.findByIcaoDesignators(remoteAircraft.getAircraftIcaoCode(), remoteAircraft.getAirlineIcaoCode());
+            if (m_modelsFromDatastoreInstalled.isEmpty()) { return aircraftModel; }
+            BlackMisc::Simulation::CAircraftModelList datastoreModels(m_modelsFromDatastoreInstalled.findByIcaoDesignators(remoteAircraft.getAircraftIcaoCode(), remoteAircraft.getAirlineIcaoCode()));
             if (!datastoreModels.isEmpty())
             {
-                CAircraftModel modelFromMappings = datastoreModels.front();
-                // now turn the model from the mapping rules into a model from the simulator which has more metadata
-                aircraftModel = m_installedModels.findFirstByModelString(modelFromMappings.getModelString());
-                Q_ASSERT(aircraftModel.getModelString() == modelFromMappings.getModelString());
-                aircraftModel.updateMissingParts(modelFromMappings); // update ICAO
+                CAircraftModel aircraftModel(datastoreModels.front());
                 aircraftModel.setModelType(CAircraftModel::TypeModelMatching);
             }
             return aircraftModel;
@@ -203,9 +221,9 @@ namespace BlackMisc
 
         int CAircraftMatcher::synchronizeWithExistingModels(const QStringList &modelNames, Qt::CaseSensitivity cs)
         {
-            if (modelNames.isEmpty() || m_modelsDatastore.isEmpty()) { return 0; }
+            if (modelNames.isEmpty() || m_modelsFromDatastoreInstalled.isEmpty()) { return 0; }
             CAircraftModelList newList;
-            for (const CAircraftModel &modelDatastore : m_modelsDatastore)
+            for (const CAircraftModel &modelDatastore : m_modelsFromDatastoreInstalled)
             {
                 if (this->m_initState != InitInProgress) { return 0; } // canceled
                 QString modelString(modelDatastore.getModelString());
@@ -215,8 +233,8 @@ namespace BlackMisc
                     newList.push_back(modelDatastore);
                 }
             }
-            this->m_modelsDatastore = newList;
-            return this->m_modelsDatastore.size();
+            this->m_modelsFromDatastoreInstalled = newList;
+            return this->m_modelsFromDatastoreInstalled.size();
         }
     }
 } // namespace
