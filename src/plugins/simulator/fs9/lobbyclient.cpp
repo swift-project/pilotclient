@@ -89,6 +89,7 @@ namespace BlackSimPlugin
 
         bool CLobbyClient::canLobbyConnect()
         {
+            if (!m_dpLobbyClient) { return false; }
             GUID appGuid = CFs9Sdk::guid();
             DWORD dwSize = 0;
             DWORD dwItems = 0;

@@ -92,7 +92,8 @@ namespace BlackSimPlugin
         {
             HRESULT hr = S_OK;
 
-            if (m_hostStatus == Hosting) return hr;
+            if (m_hostStatus == Hosting) { return hr; }
+            if (!m_directPlayPeer) { return S_FALSE; }
 
             DPN_APPLICATION_DESC dpAppDesc;
 
@@ -107,7 +108,6 @@ namespace BlackSimPlugin
             PLAYER_INFO_STRUCT playerInfo;
             ZeroMemory(&playerInfo, sizeof(PLAYER_INFO_STRUCT));
             strcpy(playerInfo.szAircraft, "Boeing 737-400");
-
 
             playerInfo.dwFlags = PLAYER_INFO_STRUCT::PARAMS_RECV | PLAYER_INFO_STRUCT::PARAMS_SEND;
 
