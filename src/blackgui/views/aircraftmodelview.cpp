@@ -24,6 +24,7 @@ namespace BlackGui
     {
         CAircraftModelView::CAircraftModelView(QWidget *parent) : CViewBase(parent)
         {
+            // default
             this->standardInit(new CAircraftModelListModel(CAircraftModelListModel::OwnSimulatorModel, this));
 
             // filter
@@ -60,14 +61,21 @@ namespace BlackGui
                 this->setCustomMenu(new CHighlightDbModelsMenu(this, true));
                 this->setCustomMenu(new CHighlightStashedModelsMenu(this, true));
                 break;
-            case CAircraftModelListModel::OwnSimulatorModel:
-            default:
+            case CAircraftModelListModel::OwnSimulatorModelMapping:
                 this->m_withMenuDisplayAutomatically = true;
                 this->m_withMenuItemClear = false;
                 this->m_withMenuItemRefresh = false;
                 this->m_withMenuItemBackend = false;
                 this->setCustomMenu(new CHighlightDbModelsMenu(this, true));
                 this->setCustomMenu(new CHighlightStashedModelsMenu(this, true));
+                break;
+            case CAircraftModelListModel::OwnSimulatorModel:
+            default:
+                this->m_withMenuDisplayAutomatically = true;
+                this->m_withMenuItemClear = false;
+                this->m_withMenuItemRefresh = true;
+                this->m_withMenuItemBackend = true;
+                this->setCustomMenu(new CHighlightDbModelsMenu(this, true));
                 break;
             }
         }

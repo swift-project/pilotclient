@@ -35,7 +35,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->ui->tvp_AircraftModelsForVPilot->setAircraftModelMode(CAircraftModelListModel::VPilotRuleModel);
-            this->ui->tvp_OwnAircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnSimulatorModel);
+            this->ui->tvp_OwnAircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnSimulatorModelMapping);
 
             connect(ui->editor_Model, &CModelMappingForm::requestSave, this, &CDbMappingComponent::saveSingleModelToDb);
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
