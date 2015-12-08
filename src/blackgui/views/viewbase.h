@@ -238,6 +238,7 @@ namespace BlackGui
             bool m_displayAutomatically              = true;     //!< display directly when loaded
 
             QWidget *m_filterWidget           = nullptr;         //!< filter widget if any
+            const QKeySequence FilterKey {Qt::CTRL + Qt::Key_F}; //!< shortcut filter
             BlackGui::IMenuDelegate  *m_menu  = nullptr;         //!< custom menu if any
             BlackGui::CLoadIndicator *m_loadIndicator = nullptr; //!< load indicator if neeeded
 
@@ -374,7 +375,7 @@ namespace BlackGui
 
             //! \copydoc CViewBaseNonTemplate::ps_filterWidgetChangedFilter(bool)
             //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
-           virtual bool ps_filterWidgetChangedFilter(bool enabled) override;
+            virtual bool ps_filterWidgetChangedFilter(bool enabled) override;
 
             //! \copydoc CViewBaseNonTemplate::ps_removeFilter
             //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT

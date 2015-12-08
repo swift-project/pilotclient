@@ -22,6 +22,7 @@
 #include <QLabel>
 #include <QMovie>
 #include <QPainter>
+#include <QShortcut>
 
 using namespace BlackMisc;
 using namespace BlackGui;
@@ -43,6 +44,11 @@ namespace BlackGui
             this->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
             this->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
             this->setWordWrap(true);
+
+            QShortcut *filter = new QShortcut(FilterKey, this);
+            bool c = connect(filter, &QShortcut::activated, this, &CViewBaseNonTemplate::ps_displayFilterDialog);
+            Q_ASSERT(c);
+            Q_UNUSED(c);
         }
 
         void CViewBaseNonTemplate::resizeToContents()
@@ -152,7 +158,7 @@ namespace BlackGui
 
             if (this->m_withMenuFilter)
             {
-                menu.addAction(BlackMisc::CIcons::tableSheet16(), "Filter", this, SLOT(ps_displayFilterDialog()));
+                menu.addAction(BlackMisc::CIcons::tableSheet16(), "Filter", this, SLOT(ps_displayFilterDialog()), FilterKey);
                 menu.addAction(BlackMisc::CIcons::tableSheet16(), "Remove Filter", this, SLOT(ps_removeFilter()));
             }
             if (!menu.isEmpty()) { menu.addSeparator(); }
