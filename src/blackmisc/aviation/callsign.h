@@ -78,7 +78,7 @@ namespace BlackMisc
             //! Supervisor?
             bool isSupervisorCallsign() const;
 
-            //! Get callsign.
+            //! Get callsign (normalized)
             const QString &asString() const { return this->m_callsign; }
 
             //! Get callsign.
@@ -121,7 +121,19 @@ namespace BlackMisc
             int comparePropertyByIndex(const CCallsign &compareValue, const CPropertyIndex &index) const;
 
             //! Valid callsign?
-            static bool isValidCallsign(const QString &callsign);
+            bool isValid() const;
+
+            //! Valid callsign?
+            static bool isValidAircraftCallsign(const QString &callsign);
+
+            //! Valid callsign?
+            static bool isValidAircraftCallsign(const CCallsign &callsign);
+
+            //! Valid callsign?
+            static bool isValidAtcCallsign(const QString &callsign);
+
+            //! Valid callsign?
+            static bool isValidAtcCallsign(const CCallsign &callsign);
 
             //! List of real ATC suffixes (e.g. TWR);
             static const QStringList &atcCallsignSuffixes();

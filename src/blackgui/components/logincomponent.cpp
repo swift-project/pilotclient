@@ -423,7 +423,7 @@ namespace BlackGui
             bool validIcaoDesignator = CAircraftIcaoCode::isValidDesignator(values.ownAircraftIcaoTypeDesignator);
             this->ui->lblp_AircraftIcaoDesignator->setTicked(validIcaoDesignator);
 
-            bool validCallsign = CCallsign::isValidCallsign(values.ownCallsign);
+            bool validCallsign = CCallsign::isValidAircraftCallsign(values.ownCallsign);
             this->ui->lblp_Callsign->setTicked(validCallsign);
 
             bool validSimulatorModel = !values.ownAircraftSimulatorModel.isEmpty();
@@ -486,7 +486,7 @@ namespace BlackGui
             }
             else
             {
-                CLogMessage(this).validationWarning("Reverse lookup for %1 failed") << model.getModelString();
+                CLogMessage(this).validationInfo("Reverse lookup for %1 failed, set data manually") << model.getModelString();
             }
         }
 

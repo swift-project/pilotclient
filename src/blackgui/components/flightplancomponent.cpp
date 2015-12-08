@@ -73,7 +73,7 @@ namespace BlackGui
         void CFlightPlanComponent::prefillWithAircraftData(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft)
         {
             // only override with valid values
-            if (CCallsign::isValidCallsign(ownAircraft.getCallsignAsString()))
+            if (CCallsign::isValidAircraftCallsign(ownAircraft.getCallsignAsString()))
             {
                 this->ui->le_Callsign->setText(ownAircraft.getCallsign().asString());
             }

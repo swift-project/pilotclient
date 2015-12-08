@@ -211,7 +211,7 @@ namespace BlackGui
         {
             Q_ASSERT(getIContextSimulator());
             QString cs = ui->le_Callsign->text().trimmed();
-            if (!CCallsign::isValidCallsign(cs))
+            if (!CCallsign::isValidAircraftCallsign(cs))
             {
                 CLogMessage(this).validationError("Invalid callsign for mapping");
                 return;

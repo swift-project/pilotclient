@@ -785,7 +785,9 @@ namespace BlackCore
     void CAirspaceMonitor::icaoOrFsdDataReceived(const CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery, const QString &modelString, CAircraftModel::ModelType type)
     {
         Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "not in main thread");
-        Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "no callsign");
+        BLACK_VERIFY_X(callsign.isValid(), Q_FUNC_INFO, "invalid callsign");
+        if (!callsign.isValid()) { return; }
+
         if (!this->m_connected) { return; }
         if (aircraftIcaoDesignator.isEmpty() && airlineIcaoDesignator.isEmpty() && livery.isEmpty()) { return; }
 

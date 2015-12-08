@@ -187,26 +187,60 @@ namespace BlackMisc
             return 0;
         }
 
-        bool CCallsign::isValidCallsign(const QString &callsign)
+        bool CCallsign::isValid() const
         {
-            // We allow all number callsigns
+            switch (m_typeHint)
+            {
+            case Atc:
+                return isValidAtcCallsign(*this);
+            case Aircraft:
+                return isValidAircraftCallsign(*this);
+            default:
+                return !this->isEmpty();
+            }
+        }
+
+        bool CCallsign::isValidAircraftCallsign(const QString &callsign)
+        {
             if (callsign.length() < 2 || callsign.length() > 10) { return false; }
 
+            // We allow all number callsigns
             static QThreadStorage<QRegularExpression> tsRegex;
             if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("^[A-Z0-9]*$")); }
             const QRegularExpression &regexp = tsRegex.localData();
             return (regexp.match(callsign).hasMatch());
         }
 
+        bool CCallsign::isValidAircraftCallsign(const CCallsign &callsign)
+        {
+            return isValidAircraftCallsign(callsign.asString());
+        }
+
+        bool CCallsign::isValidAtcCallsign(const QString &callsign)
+        {
+            if (callsign.length() < 2 || callsign.length() > 10) { return false; }
+
+            // We allow all number callsigns
+            static QThreadStorage<QRegularExpression> tsRegex;
+            if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("^[A-Z0-9_]*$")); }
+            const QRegularExpression &regexp = tsRegex.localData();
+            return (regexp.match(callsign).hasMatch());
+        }
+
+        bool CCallsign::isValidAtcCallsign(const CCallsign &callsign)
+        {
+            return isValidAtcCallsign(callsign.asString());
+        }
+
         const QStringList &CCallsign::atcCallsignSuffixes()
         {
-            static const QStringList a( { "APP", "GND", "TWR", "DEL", "CTR" });
+            static const QStringList a({ "APP", "GND", "TWR", "DEL", "CTR" });
             return a;
         }
 
         const QStringList &CCallsign::atcAlikeCallsignSuffixes()
         {
-            static const QStringList a( { "ATIS", "APP", "GND", "OBS", "TWR", "DEL", "CTR", "SUP", "FSS" });
+            static const QStringList a({ "ATIS", "APP", "GND", "OBS", "TWR", "DEL", "CTR", "SUP", "FSS" });
             return a;
         }
 

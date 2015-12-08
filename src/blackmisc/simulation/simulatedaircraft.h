@@ -140,7 +140,7 @@ namespace BlackMisc
             bool hasAircraftAndAirlineDesignator() const;
 
             //! Valid callsign?
-            bool hasValidCallsign() const { return BlackMisc::Aviation::CCallsign::isValidCallsign(this->getCallsign().asString()); }
+            bool hasValidCallsign() const { return BlackMisc::Aviation::CCallsign::isValidAircraftCallsign(this->getCallsign().asString()); }
 
             //! Callsign not empty, no further checks
             bool hasCallsign() const { return !getCallsign().isEmpty(); }
