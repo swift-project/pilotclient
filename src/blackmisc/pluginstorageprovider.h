@@ -17,44 +17,39 @@
 
 namespace BlackMisc
 {
-
     //! Interface for a plugin storage provider.
     //! It allows plugins to store any arbitrary data which can be packed into a \sa CVariant
     //! Every plugin shall have its own data area. This means mulitple plugins can store
     //! data under the same key without overwriting each other.
     class IPluginStorageProvider
     {
-
     public:
-
         //! Destructor
         virtual ~IPluginStorageProvider() {}
 
         //! Get plugin data stored for object and identified by key
-        virtual CVariant getPluginData(const QObject *obj, const QString& key) const = 0;
+        virtual CVariant getPluginData(const QObject *obj, const QString &key) const = 0;
 
         //! Store plugin data for object, identified by key and packed into value
-        virtual void setPluginData(const QObject *obj, const QString& key, const CVariant &value) = 0;
+        virtual void setPluginData(const QObject *obj, const QString &key, const CVariant &value) = 0;
     };
 
     //! Delegating class which can be directly used to access an \sa IPluginStorageProvider instance
     class CPluginStorageAware
     {
-    public:
+    protected:
         //! \copydoc IPluginStorageProvider::getPluginData
-        virtual CVariant getPluginData(const QObject *obj, const QString& key) const
+        virtual CVariant getPluginData(const QObject *obj, const QString &key) const
         {
             return m_pluginStorageProvider->getPluginData(obj, key);
         }
 
         //! \copydoc IOwnAircraftProvider::ownAircraft
-        virtual void setPluginData(const QObject *obj, const QString& key, const CVariant &value)
+        virtual void setPluginData(const QObject *obj, const QString &key, const CVariant &value)
         {
             m_pluginStorageProvider->setPluginData(obj, key, value);
         }
 
-
-    protected:
         //! Constructor
         CPluginStorageAware(IPluginStorageProvider *pluginStorageProvider) :
             m_pluginStorageProvider(pluginStorageProvider)
@@ -63,7 +58,6 @@ namespace BlackMisc
         }
         IPluginStorageProvider *m_pluginStorageProvider = nullptr; //!< access to object
     };
-
 } // namespace
 
 #endif

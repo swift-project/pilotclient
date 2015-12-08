@@ -33,7 +33,7 @@ namespace BlackCore
           CPluginStorageAware(pluginStorageProvider),
           m_simulatorPluginInfo(info)
     {
-        this->setObjectName("Simulator:" + info.getIdentifier());
+        this->setObjectName("Simulator: " + info.getIdentifier());
 
         // provider signals
         m_remoteAircraftProviderConnections.append(
@@ -222,8 +222,7 @@ namespace BlackCore
     void CSimulatorCommon::unload()
     {
         this->disconnectFrom(); // disconnect from simulator
-        this->m_remoteAircraftProviderConnections.disconnectAll();
-        CLogHandler::instance()->disconnect();
+        this->m_remoteAircraftProviderConnections.disconnectAll(); // disconnect signals from provider
     }
 
     CLength CSimulatorCommon::getRenderedDistanceBoundary() const

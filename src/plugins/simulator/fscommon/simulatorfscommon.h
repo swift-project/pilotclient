@@ -84,18 +84,18 @@ namespace BlackSimPlugin
                                BlackMisc::IPluginStorageProvider *pluginStorageProvider,
                                QObject *parent = nullptr);
 
-            QString simulatorDetails;                       //!< describes version etc.
-            QScopedPointer<FsCommon::CFsuipc> m_fsuipc;     //!< FSUIPC
-            bool m_useFsuipc = true;                        //!< use FSUIPC
-            bool m_simPaused = false;                       //!< Simulator paused?
-            bool m_simTimeSynced = false;                   //!< Time synchronized?
-            BlackMisc::PhysicalQuantities::CTime m_syncTimeOffset; //!< time offset
-            BlackMisc::Aviation::CAirportList m_airportsInRange;   //!< aiports in range of own aircraft
+            QString simulatorDetails;                               //!< describes version etc.
+            QScopedPointer<FsCommon::CFsuipc> m_fsuipc;             //!< FSUIPC
+            bool m_useFsuipc = true;                                //!< use FSUIPC
+            bool m_simPaused = false;                               //!< Simulator paused?
+            bool m_simTimeSynced = false;                           //!< Time synchronized?
+            BlackMisc::PhysicalQuantities::CTime m_syncTimeOffset;  //!< time offset
+            BlackMisc::Aviation::CAirportList m_airportsInRange;    //!< aiports in range of own aircraft
 
             // cockpit as set in SIM
-            BlackMisc::Aviation::CComSystem  m_simCom1;  //!< cockpit COM1 state in simulator
-            BlackMisc::Aviation::CComSystem  m_simCom2;  //!< cockpit COM2 state in simulator
-            BlackMisc::Aviation::CTransponder m_simTransponder; //!< cockpit xpdr state in simulator
+            BlackMisc::Aviation::CComSystem  m_simCom1;             //!< cockpit COM1 state in simulator
+            BlackMisc::Aviation::CComSystem  m_simCom2;             //!< cockpit COM2 state in simulator
+            BlackMisc::Aviation::CTransponder m_simTransponder;     //!< cockpit xpdr state in simulator
 
             // parser / matcher
             std::unique_ptr<BlackMisc::Simulation::FsCommon::CAircraftCfgParser> m_aircraftCfgParser; //!< aircraft.cfg parser

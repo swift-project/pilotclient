@@ -32,15 +32,13 @@
 
 namespace BlackCore
 {
-
     //! Common base class with providers, interface and some base functionality
     class BLACKCORE_EXPORT CSimulatorCommon :
         public BlackCore::ISimulator,
-        public BlackMisc::Simulation::COwnAircraftAware,   // gain access to in memory own aircraft data
+        public BlackMisc::Simulation::COwnAircraftAware,    // gain access to in memory own aircraft data
         public BlackMisc::Simulation::CRemoteAircraftAware, // gain access to in memory remote aircraft data
-        public BlackMisc::CPluginStorageAware // gain access to in memory plugin storage
+        public BlackMisc::CPluginStorageAware               // gain access to in memory plugin storage
     {
-
         Q_OBJECT
 
     public:
@@ -138,8 +136,9 @@ namespace BlackCore
         bool setInitialAircraftSituation(BlackMisc::Simulation::CSimulatedAircraft &aircraft) const;
 
     protected:
-        IInterpolator *m_interpolator = nullptr;      //!< interpolator instance
-        bool m_pausedSimFreezesInterpolation = false; //!< paused simulator will also pause interpolation (so AI aircraft will hold)
+        IInterpolator *m_interpolator = nullptr;                 //!< interpolator instance
+        bool m_pausedSimFreezesInterpolation = false;            //!< paused simulator will also pause interpolation (so AI aircraft will hold)
+        BlackMisc::Simulation::CSimulatorSetup m_simulatorSetup; //!< setup object
 
     private:
         bool m_debugMessages = false;             //!< Display debug messages
@@ -148,7 +147,6 @@ namespace BlackCore
         int m_timerCounter = 0;                   //!< allows to calculate n seconds
         QTimer m_oneSecondTimer {this};           //!< timer
         BlackMisc::Simulation::CSimulatorPluginInfo m_simulatorPluginInfo;   //!< info object
-        BlackMisc::Simulation::CSimulatorSetup m_simulatorSetup;             //!< setup object
         BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft; //!< all other aircraft are to be ignored
         BlackMisc::Aviation::CCallsignSet m_callsignsToBeRendered;           //!< callsigns which will be rendered
         int m_maxRenderedAircraft = MaxAircraftInfinite;                     //!< max.rendered aircraft

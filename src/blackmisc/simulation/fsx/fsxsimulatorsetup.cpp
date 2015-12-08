@@ -40,7 +40,6 @@ namespace BlackMisc
                     }
                 }
                 return s;
-
             }
 
             const QString &CFsxSimulatorSetup::KeyLocalSimConnectCfgFilename()

@@ -48,7 +48,7 @@ namespace BlackSimPlugin
         {
             Q_ASSERT(ownAircraftProvider);
             Q_ASSERT(remoteAircraftProvider);
-            CSimulatorSetup setup(CFsxSimulatorSetup::getInitialSetup());
+            this->m_simulatorSetup = CFsxSimulatorSetup::getInitialSetup();
 
             m_useFsuipc = false; // do not use FSUIPC at the moment with FSX
             this->m_interpolator = new CInterpolatorLinear(remoteAircraftProvider, this);
