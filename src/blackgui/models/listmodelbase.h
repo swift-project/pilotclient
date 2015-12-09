@@ -252,7 +252,7 @@ namespace BlackGui
             {
                 int c = a.comparePropertyByIndex(b, index);
                 if (c == 0) { return false; }
-                return (order == Qt::AscendingOrder) ? (c > 0) : (c < 0);
+                return (order == Qt::AscendingOrder) ? (c < 0) : (c > 0);
             }
 
             //! Sort without compare function

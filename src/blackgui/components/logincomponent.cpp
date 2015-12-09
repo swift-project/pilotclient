@@ -476,17 +476,19 @@ namespace BlackGui
             Q_ASSERT(getIContextOwnAircraft());
             Q_ASSERT(getIContextSimulator());
 
+            if (!this->getIContextSimulator()->isSimulatorAvailable()) { return; }
             CAircraftModel model(this->getIContextOwnAircraft()->getOwnAircraft().getModel());
+            QString modelStr(model.hasModelString() ? model.getModelString() : "<unknown>");
             if (model.getAircraftIcaoCode().hasDesignator())
             {
-                CLogMessage(this).validationInfo("Reverse lookup for %1") << model.getModelString();
+                CLogMessage(this).validationInfo("Reverse lookup for %1") << modelStr;
 
                 // update GUI
                 this->setGuiIcaoValues(model, false);
             }
             else
             {
-                CLogMessage(this).validationInfo("Reverse lookup for %1 failed, set data manually") << model.getModelString();
+                CLogMessage(this).validationInfo("Reverse lookup for %1 failed, set data manually") << modelStr;
             }
         }
 
