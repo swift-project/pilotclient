@@ -100,7 +100,7 @@ namespace BlackCore
         //! Slow timer used to highlight aircraft, can be used for other things too
         virtual void ps_oneSecondTimer();
 
-        //! Recalculate the rendered aircraft
+        //! Recalculate the rendered aircraft, this happens when restrictions are applied (max. aircraft, range)
         virtual void ps_recalculateRenderedAircraft(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
 
         //! Provider added situation

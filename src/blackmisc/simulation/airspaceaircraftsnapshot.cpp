@@ -33,15 +33,23 @@ namespace BlackMisc
 
             CSimulatedAircraftList aircraft(allAircraft);
             aircraft.sortByDistanceToOwnAircraft();
+            int numberAll = aircraft.size();
+            Q_ASSERT_X(numberAll == allAircraft.size(), Q_FUNC_INFO, "aircraft got lost");
             CSimulatedAircraftList vtolAircraft(aircraft.findByVtol(true));
+            int numberVtol = vtolAircraft.size();
             m_aircraftCallsignsByDistance = aircraft.getCallsigns();
+            Q_ASSERT_X(m_aircraftCallsignsByDistance.size() == allAircraft.size(), Q_FUNC_INFO, "redundant or missing callsigns");
             m_vtolAircraftCallsignsByDistance = vtolAircraft.getCallsigns();
+            Q_ASSERT_X(m_vtolAircraftCallsignsByDistance.size() == numberVtol, Q_FUNC_INFO, "redundant or missing callsigns");
 
             // no restrictions, just find by attributes
             if (!restricted)
             {
                 m_enabledAircraftCallsignsByDistance = aircraft.findByEnabled(true).getCallsigns();
                 m_disabledAircraftCallsignsByDistance = aircraft.findByEnabled(false).getCallsigns();
+                int numberEnabled = m_enabledAircraftCallsignsByDistance.size();
+                int numberDisabled = m_disabledAircraftCallsignsByDistance.size();
+                Q_ASSERT_X(numberEnabled + numberDisabled == numberAll, Q_FUNC_INFO, "Mismatch in enabled/disabled/all");
                 m_enabledVtolAircraftCallsignsByDistance = vtolAircraft.findByEnabled(true).getCallsigns();
                 return;
             }

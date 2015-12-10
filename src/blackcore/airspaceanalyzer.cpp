@@ -189,7 +189,8 @@ namespace BlackCore
             maxRenderedBoundary = this->m_simulatorMaxRenderedBoundary;
         }
 
-        //! \fixme Analyzer: generate only when restricted?
+        // remark for simulation snapshot is used when there are restrictions
+        // nevertheless we calculate all the time as the snapshot could be used in other scenarios
 
         CSimulatedAircraftList aircraftInRange(getAircraftInRange()); // thread safe copy from provider
         CAirspaceAircraftSnapshot snapshot(

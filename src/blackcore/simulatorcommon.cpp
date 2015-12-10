@@ -35,7 +35,7 @@ namespace BlackCore
     {
         this->setObjectName("Simulator: " + info.getIdentifier());
 
-        // provider signals
+        // provider signals, hook up with remote aircraft provider
         m_remoteAircraftProviderConnections.append(
             this->m_remoteAircraftProvider->connectRemoteAircraftProviderSignals(
                 this, // receiver must match object in bind
@@ -339,7 +339,7 @@ namespace BlackCore
             changed = r > 0;
         }
 
-        // we handled snapshot
+        // we have handled snapshot
         if (changed)
         {
             emit airspaceSnapshotHandled();

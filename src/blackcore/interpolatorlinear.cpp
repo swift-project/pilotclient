@@ -33,7 +33,7 @@ namespace BlackCore
 
         // data, split situations by time
         if (currentTimeMsSinceEpoc < 0) { currentTimeMsSinceEpoc = QDateTime::currentMSecsSinceEpoch(); }
-        qint64 splitTimeMsSinceEpoch = currentTimeMsSinceEpoc - TimeOffsetMs;
+        qint64 splitTimeMsSinceEpoch = currentTimeMsSinceEpoc - TimeOffsetMs; // \todo needs to be variable in the future with interim positions
 
         QList<CAircraftSituationList> splitSituations(remoteAircraftSituations(callsign).splitByTime(splitTimeMsSinceEpoch, true));
         CAircraftSituationList &situationsNewer = splitSituations[0]; // newer part
@@ -87,7 +87,8 @@ namespace BlackCore
         // < 0 should not happen due to the split, > 1 can happen if new values are delayed beyond split time
         // 1) values > 1 mean extrapolation
         // 2) values > 2 mean no new situations coming in
-        double simulationTimeFraction = 1 - ((newSituation.getMSecsSinceEpoch() - splitTimeMsSinceEpoch) / deltaTime);
+        double distanceToSplitTime = newSituation.getMSecsSinceEpoch() - splitTimeMsSinceEpoch;
+        double simulationTimeFraction = 1 - (distanceToSplitTime / deltaTime);
         if (simulationTimeFraction > 2.0)
         {
             if (this->m_withDebugMsg)

@@ -32,9 +32,9 @@ namespace BlackMisc
             //! Constructor
             CAirspaceAircraftSnapshot(
                 const BlackMisc::Simulation::CSimulatedAircraftList &allAircraft,
-                bool restricted = false,
+                bool restricted       = false,
                 bool renderingEnabled = true,
-                int maxAircraft = 100,
+                int maxAircraft       = 100,
                 const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance = BlackMisc::PhysicalQuantities::CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()),
                 const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary = BlackMisc::PhysicalQuantities::CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit())
             );
@@ -103,9 +103,7 @@ namespace BlackMisc
 
             BlackMisc::Aviation::CCallsignSet m_vtolAircraftCallsignsByDistance;
             BlackMisc::Aviation::CCallsignSet m_enabledVtolAircraftCallsignsByDistance;
-
         };
-
     } // namespace
 } // namespace
 
