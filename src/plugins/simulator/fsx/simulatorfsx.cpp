@@ -776,11 +776,11 @@ namespace BlackSimPlugin
         SIMCONNECT_DATA_INITPOSITION CSimulatorFsx::aircraftSituationToFsxInitPosition(const CAircraftSituation &situation)
         {
             SIMCONNECT_DATA_INITPOSITION position;
-            position.Latitude = situation.latitude().value();
-            position.Longitude = situation.longitude().value();
+            position.Latitude = situation.latitude().value(CAngleUnit::deg());
+            position.Longitude = situation.longitude().value(CAngleUnit::deg());
             position.Altitude = situation.getAltitude().value(CLengthUnit::ft());
-            position.Pitch = situation.getPitch().value();
-            position.Bank = situation.getBank().value();
+            position.Pitch = situation.getPitch().value(CAngleUnit::deg());
+            position.Bank = situation.getBank().value(CAngleUnit::deg());
             position.Heading = situation.getHeading().value(CAngleUnit::deg());
             position.Airspeed = situation.getGroundSpeed().value(CSpeedUnit::kts());
             return position;
