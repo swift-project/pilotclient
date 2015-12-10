@@ -267,13 +267,13 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::displayStatusMessage(const BlackMisc::CStatusMessage &message) const
         {
+            // No assert here as status message may come because of network problems
+            if (!isConnected()) { return; }
+
             // avoid infinite recursion in case this function is called due to a message caused by this very function
             static bool isInFunction = false;
             if (isInFunction) { return; }
             isInFunction = true;
-
-            /* We do not assert here as status message may come because of network problems */
-            if (!isConnected()) { return; }
 
             QColor color;
             switch (message.getSeverity())
