@@ -100,6 +100,10 @@ BlackGui--COverlayMessages {
   border-radius: 10px;
 }
 
+BlackGui--CDropSite {
+  background: black; /* background is background color here */
+}
+
 /*
 QTableView[isShowingLoadIndicator="true"] {
   background-image: url(:/preloaders/icons/preloaders/FillingRing64.gif);

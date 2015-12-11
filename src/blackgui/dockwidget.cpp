@@ -442,6 +442,7 @@ namespace BlackGui
 
     void CDockWidget::ps_onStyleSheetsChanged()
     {
+        // style sheet changes go here
     }
 
     void CDockWidget::forceStyleSheetUpdate()
