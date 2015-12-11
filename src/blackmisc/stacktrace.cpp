@@ -9,6 +9,7 @@
 
 #include "blackmisc/stacktrace.h"
 #include <QMutex>
+#include <QStringBuilder>
 #include <array>
 #if defined(Q_OS_WIN32)
 #   include <windows.h>
@@ -18,6 +19,8 @@
 #   pragma warning(pop)
 #elif defined(Q_CC_GNU)
 #   include <execinfo.h>
+#   include <cxxabi.h>
+#   include <cstring>
 #endif
 
 namespace BlackMisc
@@ -69,17 +72,30 @@ namespace BlackMisc
         auto *symbols = backtrace_symbols(stack.data(), frames);
 
         QStringList result;
-        QString symbol;
         char *demangled = nullptr;
         size_t size = 0;
         for (int i = 0; i < frames; ++i)
         {
-            symbol = symbols[i];
-            int end = symbol.indexOf(' ');
-            if (end > 0) { symbol.truncate(end); }
+            // Using C string functions to avoid unnecessary dynamic memory allocation
+            auto *basename = std::strrchr(symbols[i], '/');
+            if (! basename) { continue; }
+            basename++;
+            auto *symbol = std::strchr(basename, '(');
+            if (! symbol) { continue; }
+            auto *basenameEnd = symbol++;
+            auto *end = std::strrchr(symbol, ')');
+            if (! end) { continue; }
+            auto *offset = std::strrchr(symbol, '+');
+            auto *symbolEnd = offset ? offset++ : end;
 
-            demangled = abi::__cxa_demangle(qPrintable(symbol), demangled, &size, nullptr);
-            result.push_back(demangled);
+            auto *temp = demangled; // avoid leaking memory if __cxa_demangle returns nullptr
+
+            demangled = abi::__cxa_demangle(QByteArray(symbol, symbolEnd - symbol).constData(), demangled, &size, nullptr);
+
+            auto details = '(' % QLatin1String(basename, basenameEnd - basename) % ' ' % QLatin1String(symbol, end - symbol) % ')';
+            result.push_back(demangled ? QLatin1String(demangled) % ' ' % details : QString(details));
+
+            if (! demangled) { demangled = temp; }
         }
         free(symbols);
         free(demangled);
