@@ -59,6 +59,7 @@ namespace BlackMisc
             virtual const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const = 0;
 
             //! Normal vector
+            //! \note QVector3D uses floats, so don't use if double precision is needed
             //! \sa https://en.wikipedia.org/wiki/N-vector
             //! \sa http://www.movable-type.co.uk/scripts/latlong-vectors.html
             virtual QVector3D normalVector() const = 0;

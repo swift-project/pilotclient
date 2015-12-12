@@ -53,11 +53,11 @@ namespace BlackMisc
                 /*!
                  * Convert from this unit to default unit.
                  */
-                virtual double toDefault(double factor) const = 0;
+                virtual double toDefault(double value) const = 0;
                 /*!
                  * Convert from default unit to this unit.
                  */
-                virtual double fromDefault(double factor) const = 0;
+                virtual double fromDefault(double value) const = 0;
             };
 
             /*!
@@ -74,8 +74,8 @@ namespace BlackMisc
              */
             struct IdentityConverter : public Converter
             {
-                virtual double toDefault(double factor) const override { return factor; }
-                virtual double fromDefault(double factor) const override { return factor; }
+                virtual double toDefault(double value) const override { return value; }
+                virtual double fromDefault(double value) const override { return value; }
             };
 
             /*!
@@ -85,8 +85,8 @@ namespace BlackMisc
             template <class Policy>
             struct LinearConverter : public Converter
             {
-                virtual double toDefault(double factor) const override { return factor * Policy::factor(); }
-                virtual double fromDefault(double factor) const override { return factor / Policy::factor(); }
+                virtual double toDefault(double value) const override { return value * Policy::factor(); }
+                virtual double fromDefault(double value) const override { return value / Policy::factor(); }
             };
 
             /*!
@@ -96,8 +96,8 @@ namespace BlackMisc
             template <class Policy>
             struct AffineConverter : public Converter
             {
-                virtual double toDefault(double factor) const override { return (factor - Policy::offset()) * Policy::factor(); }
-                virtual double fromDefault(double factor) const override { return factor / Policy::factor() + Policy::offset(); }
+                virtual double toDefault(double value) const override { return (value - Policy::offset()) * Policy::factor(); }
+                virtual double fromDefault(double value) const override { return value / Policy::factor() + Policy::offset(); }
             };
 
             /*!
@@ -108,18 +108,18 @@ namespace BlackMisc
             template <class FactorPolicy, class SubdivPolicy>
             struct SubdivisionConverter : public Converter
             {
-                virtual double toDefault(double factor) const override
+                virtual double toDefault(double value) const override
                 {
                     using BlackMisc::Math::CMathUtils;
-                    double part2 = CMathUtils::fract(factor) * SubdivPolicy::fraction();
-                    factor = CMathUtils::trunc(factor) + part2 / SubdivPolicy::subfactor();
-                    return factor * FactorPolicy::factor();
+                    double part2 = CMathUtils::fract(value) * SubdivPolicy::fraction();
+                    value = CMathUtils::trunc(value) + part2 / SubdivPolicy::subfactor();
+                    return value * FactorPolicy::factor();
                 }
-                virtual double fromDefault(double factor) const override
+                virtual double fromDefault(double value) const override
                 {
                     using BlackMisc::Math::CMathUtils;
-                    double part1 = CMathUtils::trunc(factor / FactorPolicy::factor());
-                    double remaining = std::fmod(factor / FactorPolicy::factor(), 1.0);
+                    double part1 = CMathUtils::trunc(value / FactorPolicy::factor());
+                    double remaining = std::fmod(value / FactorPolicy::factor(), 1.0);
                     double part2 = remaining * SubdivPolicy::subfactor();
                     return part1 + part2 / SubdivPolicy::fraction();
                 }
@@ -133,19 +133,19 @@ namespace BlackMisc
             template <class FactorPolicy, class SubdivPolicy>
             struct SubdivisionConverter2 : public Converter
             {
-                virtual double toDefault(double factor) const override
+                virtual double toDefault(double value) const override
                 {
                     using BlackMisc::Math::CMathUtils;
-                    double part2 = CMathUtils::fract(factor) * SubdivPolicy::fraction();
+                    double part2 = CMathUtils::fract(value) * SubdivPolicy::fraction();
                     double part3 = CMathUtils::fract(part2) * SubdivPolicy::fraction();
-                    factor = CMathUtils::trunc(factor) + (CMathUtils::trunc(part2) + part3 / SubdivPolicy::subfactor()) / SubdivPolicy::subfactor();
-                    return factor * FactorPolicy::factor();
+                    value = CMathUtils::trunc(value) + (CMathUtils::trunc(part2) + part3 / SubdivPolicy::subfactor()) / SubdivPolicy::subfactor();
+                    return value * FactorPolicy::factor();
                 }
-                virtual double fromDefault(double factor) const override
+                virtual double fromDefault(double value) const override
                 {
                     using BlackMisc::Math::CMathUtils;
-                    double part1 = CMathUtils::trunc(factor / FactorPolicy::factor());
-                    double remaining = std::fmod(factor / FactorPolicy::factor(), 1.0);
+                    double part1 = CMathUtils::trunc(value / FactorPolicy::factor());
+                    double remaining = std::fmod(value / FactorPolicy::factor(), 1.0);
                     double part2 = CMathUtils::trunc(remaining * SubdivPolicy::subfactor());
                     remaining = std::fmod(remaining * SubdivPolicy::subfactor(), 1.0);
                     double part3 = remaining * SubdivPolicy::subfactor();
