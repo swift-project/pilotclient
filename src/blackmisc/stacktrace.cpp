@@ -60,7 +60,7 @@ namespace BlackMisc
             SymFromAddr(process, reinterpret_cast<quintptr>(stack[i]), nullptr, &symbol.info);
             SymGetLineFromAddr64(process, reinterpret_cast<quintptr>(stack[i]), &displacement, &line);
 
-            result.push_back(QString(symbol.info.Name) + " line " + QString::number(line.LineNumber));
+            result.push_back(QLatin1String(symbol.info.Name) % " line " % QString::number(line.LineNumber));
         }
         return result;
     }
