@@ -2018,13 +2018,22 @@ SKIP_FUNCTION_MACROS   = YES
 # the path). If a tag file is not located in the directory in which doxygen is
 # run, you must also specify the path to the tagfile here.
 
-TAGFILES               =
+# http://stackoverflow.com/questions/22244779/doxygen-generated-documentation-with-auto-generated-links-to-qt-project
+# https://blog.qt.io/blog/2014/08/13/qt-weekly-17-linking-qt-classes-in-documentation-generated-with-doxygen/
+
+TAGFILES = qtcore.tags=http://doc.qt.io/qt-5/ qtgui.tags=http://doc.qt.io/qt-5/ \
+           qtwidgets.tags=http://doc.qt.io/qt-5/ qtxml.tags=http://doc.qt.io/qt-5/ \
+           qtnetwork.tags=http://doc.qt.io/qt-5/
+
+# TAGFILES = qtcore.tags=qthelp://org.qt-project.qtcore/qtcore/ \
+#            qtgui.tags=qthelp://org.qt-project.qtgui/qtgui/ \
+#            qtxml.tags=qthelp://org.qt-project.qtxml/qtxml/
 
 # When a file name is specified after GENERATE_TAGFILE, doxygen will create a
 # tag file that is based on the input files it reads. See section "Linking to
 # external documentation" for more information about the usage of tag files.
 
-GENERATE_TAGFILE       =
+GENERATE_TAGFILE       = swifttags
 
 # If the ALLEXTERNALS tag is set to YES all external class will be listed in the
 # class index. If set to NO only the inherited external classes will be listed.
