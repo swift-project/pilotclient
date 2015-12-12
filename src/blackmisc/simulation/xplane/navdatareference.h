@@ -44,6 +44,7 @@ namespace BlackMisc
                 virtual Geo::CLongitude longitude() const override { return m_position.longitude(); }
                 virtual const PhysicalQuantities::CLength &geodeticHeight() const override { return m_position.geodeticHeight(); }
                 virtual QVector3D normalVector() const override { return m_position.normalVector(); }
+                virtual std::array<double, 3> normalVectorDouble() const override { return this->m_position.normalVectorDouble(); }
 
                 //! \copydoc CValueObject::propertyByIndex
                 CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;

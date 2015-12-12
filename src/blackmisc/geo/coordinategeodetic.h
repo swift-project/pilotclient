@@ -18,6 +18,7 @@
 #include "blackmisc/pq/length.h"
 #include "blackmisc/propertyindex.h"
 #include <QVector3D>
+#include <array>
 
 namespace BlackMisc
 {
@@ -63,6 +64,9 @@ namespace BlackMisc
             //! \sa https://en.wikipedia.org/wiki/N-vector
             //! \sa http://www.movable-type.co.uk/scripts/latlong-vectors.html
             virtual QVector3D normalVector() const = 0;
+
+            //! Normal vector with double precision
+            virtual std::array<double, 3> normalVectorDouble() const = 0;
 
             //! \copydoc CValueObject::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -167,6 +171,9 @@ namespace BlackMisc
             //! \copydoc ICoordinateGeodetic::normalVector
             virtual QVector3D normalVector() const;
 
+            //! \copydoc ICoordinateGeodetic::normalVectorDouble
+            virtual std::array<double, 3> normalVectorDouble() const;
+
             //! \copydoc CValueObject::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
@@ -190,6 +197,9 @@ namespace BlackMisc
 
             //! Set normal vector
             void setNormalVector(const QVector3D &normal) { this->m_x = normal.x(); this->m_y = normal.y(); this->m_z = normal.z(); }
+
+            //! Set normal vector
+            void setNormalVector(double x, double y, double z) { this->m_x = x; this->m_y = y; this->m_z = z; }
 
             //! Coordinate by WGS84 position data
             static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const BlackMisc::PhysicalQuantities::CLength &geodeticHeight = {});

@@ -186,6 +186,11 @@ namespace BlackMisc
             };
         }
 
+        std::array<double, 3> CCoordinateGeodetic::normalVectorDouble() const
+        {
+            return { this->m_x, this->m_y, this->m_z };
+        }
+
         void CCoordinateGeodetic::setLatitude(const CLatitude &latitude)
         {
             this->setLatLong(latitude, this->longitude());

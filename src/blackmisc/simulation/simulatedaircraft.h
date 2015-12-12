@@ -173,6 +173,9 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Geo::ICoordinateGeodetic::normalVector
             virtual QVector3D normalVector() const override { return this->m_situation.normalVector(); }
 
+            //! \copydoc BlackMisc::Geo::ICoordinateGeodetic::normalVectorDouble
+            virtual std::array<double, 3> normalVectorDouble() const override { return this->m_situation.normalVectorDouble(); }
+
             //! Elevation
             //! \sa geodeticHeight
             const BlackMisc::PhysicalQuantities::CLength getElevation() const { return this->geodeticHeight(); }

@@ -337,6 +337,11 @@ namespace BlackMisc
             return this->m_position.normalVector();
         }
 
+        std::array<double, 3> CAtcStation::normalVectorDouble() const
+        {
+            return this->m_position.normalVectorDouble();
+        }
+
         CVariant CAtcStation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }

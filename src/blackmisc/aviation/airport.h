@@ -99,6 +99,9 @@ namespace BlackMisc
             //! \copydoc ICoordinateGeodetic::normalVector
             virtual QVector3D normalVector() const override { return this->getPosition().normalVector(); }
 
+            //! \copydoc ICoordinateGeodetic::normalVectorDouble
+            virtual std::array<double, 3> normalVectorDouble() const override { return this->getPosition().normalVectorDouble(); }
+
             //! \copydoc CValueObject::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
