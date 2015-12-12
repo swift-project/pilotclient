@@ -15,10 +15,6 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMiscTest
 {
-
-    /*
-     * Running the quantities
-     */
     int CSamplesPhysicalQuantities::samples(QTextStream &out)
     {
         // standard tests

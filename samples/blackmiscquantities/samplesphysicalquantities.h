@@ -13,7 +13,6 @@
 #define BLACKMISCTEST_SAMPLESPHYSICALQUANTITIES_H
 
 #include "blackmisc/pq/constants.h"
-#include <QDebug>
 #include <QTextStream>
 
 namespace BlackMiscTest

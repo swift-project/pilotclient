@@ -28,10 +28,6 @@ using namespace BlackMisc::Network;
 
 namespace BlackMiscTest
 {
-
-    /*
-     * Samples
-     */
     int CSamplesAviation::samples(QTextStream &out)
     {
         CHeading h1(180, CHeading::Magnetic, CAngleUnit::deg());
