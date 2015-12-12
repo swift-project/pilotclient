@@ -111,6 +111,10 @@ namespace BlackMiscTest
         CAngle a7(a6);
         a7.switchUnit(CAngleUnit::rad());
         QVERIFY2(CMathUtils::epsilonEqual(a6.value(CAngleUnit::sexagesimalDeg()), a7.value(CAngleUnit::sexagesimalDeg())), "Conversion via radians yields same answer");
+        CAngle a8(48.07063588, CAngleUnit::sexagesimalDegMin());
+        CAngle a9(a8);
+        a9.switchUnit(CAngleUnit::rad());
+        QVERIFY2(CMathUtils::epsilonEqual(a8.value(CAngleUnit::sexagesimalDegMin()), a9.value(CAngleUnit::sexagesimalDegMin())), "Conversion via radians yields same answer");
     }
 
     /*

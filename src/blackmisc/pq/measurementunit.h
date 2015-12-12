@@ -119,10 +119,9 @@ namespace BlackMisc
                 {
                     using BlackMisc::Math::CMathUtils;
                     double part1 = CMathUtils::trunc(factor / FactorPolicy::factor());
-                    double remaining = std::fmod(factor, FactorPolicy::factor());
-                    double part2 = CMathUtils::trunc(remaining / SubdivPolicy::subfactor());
-                    remaining = std::fmod(remaining, SubdivPolicy::subfactor());
-                    return part1 + (part2 + remaining) / SubdivPolicy::fraction();
+                    double remaining = std::fmod(factor / FactorPolicy::factor(), 1.0);
+                    double part2 = remaining * SubdivPolicy::subfactor();
+                    return part1 + part2 / SubdivPolicy::fraction();
                 }
             };
 
