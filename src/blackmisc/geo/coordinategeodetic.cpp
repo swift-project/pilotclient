@@ -168,14 +168,12 @@ namespace BlackMisc
 
         CLatitude CCoordinateGeodetic::latitude() const
         {
-            const QVector3D v = this->normalVector();
-            return { std::atan2(v.z(), std::hypot(v.x(), v.y())), PhysicalQuantities::CAngleUnit::rad() };
+            return { std::atan2(m_z, std::hypot(m_x, m_y)), PhysicalQuantities::CAngleUnit::rad() };
         }
 
         CLongitude CCoordinateGeodetic::longitude() const
         {
-            const QVector3D v = this->normalVector();
-            return { std::atan2(v.y(), v.x()), PhysicalQuantities::CAngleUnit::rad() };
+            return { std::atan2(m_y, m_x), PhysicalQuantities::CAngleUnit::rad() };
         }
 
         QVector3D CCoordinateGeodetic::normalVector() const
