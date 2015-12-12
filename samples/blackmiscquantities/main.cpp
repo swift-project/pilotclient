@@ -9,6 +9,7 @@
 
 #include "samplesphysicalquantities.h"
 #include "samplesaviation.h"
+#include "samplesgeo.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <QTextStream>
 
@@ -37,6 +38,7 @@ int main(int argc, char *argv[])
 
     CSamplesPhysicalQuantities::samples(out);
     CSamplesAviation::samples(out);
+    CSamplesGeo::samples(out);
 
     return 0;
 }
