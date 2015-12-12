@@ -77,157 +77,157 @@ namespace BlackCore
 
         // ------------------------ provider functionality start ------------------------------
 
-        //! \copydoc IWebDataServicesProvider::connectDataReadSignal
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::connectDataReadSignal
         //! \ingroup webdatareaderprovider
         virtual QList<QMetaObject::Connection> connectDataReadSignal(
             QObject *receiver,
             std::function<void (BlackMisc::Network::CEntityFlags::Entity, BlackMisc::Network::CEntityFlags::ReadState, int)> dataRead) override;
 
-        //! \copydoc IWebDataServicesProvider::triggerRead
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::triggerRead
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Network::CEntityFlags::Entity triggerRead(BlackMisc::Network::CEntityFlags::Entity whatToRead) override;
 
-        //! \copydoc IWebDataServicesProvider::getVatsimFsdServers
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getVatsimFsdServers
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Network::CServerList getVatsimFsdServers() const override;
 
-        //! \copydoc IWebDataServicesProvider::getVatsimVoiceServers
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getVatsimVoiceServers
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Network::CServerList getVatsimVoiceServers() const override;
 
-        //! \copydoc IWebDataServicesProvider::getDistributors
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getDistributors
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Simulation::CDistributorList getDistributors() const override;
 
-        //! \copydoc IWebDataServicesProvider::getDistributorsCount
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getDistributorsCount
         //! \ingroup webdatareaderprovider
         virtual int getDistributorsCount() const override;
 
-        //! \copydoc IWebDataServicesProvider::smartDistributorSelector
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::smartDistributorSelector
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Simulation::CDistributor smartDistributorSelector(const BlackMisc::Simulation::CDistributor &distributor) const override;
 
-        //! \copydoc IWebDataServicesProvider::getLiveries
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getLiveries
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Aviation::CLiveryList getLiveries() const override;
 
-        //! \copydoc IWebDataServicesProvider::getLiveriesCount
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getLiveriesCount
         //! \ingroup webdatareaderprovider
         virtual int getLiveriesCount() const override;
 
-        //! \copydoc IWebDataServicesProvider::getLiveryForCombinedCode
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getLiveryForCombinedCode
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Aviation::CLivery getLiveryForCombinedCode(const QString &combinedCode) const override;
 
-        //! \copydoc IWebDataServicesProvider::getLiveryForDbKey
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getLiveryForDbKey
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Aviation::CLivery getLiveryForDbKey(int id) const override;
 
-        //! \copydoc IWebDataServicesProvider::smartLiverySelector
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::smartLiverySelector
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Aviation::CLivery smartLiverySelector(const BlackMisc::Aviation::CLivery &livery) const override;
 
-        //! \copydoc IWebDataServicesProvider::getModels
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getModels
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Simulation::CAircraftModelList getModels() const override;
 
-        //! \copydoc IWebDataServicesProvider::getModelsCount
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getModelsCount
         //! \ingroup webdatareaderprovider
         virtual int getModelsCount() const override;
 
-        //! \copydoc IWebDataServicesProvider::getModelsForAircraftDesignatorAndLiveryCombinedCode
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getModelsForAircraftDesignatorAndLiveryCombinedCode
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Simulation::CAircraftModelList getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const override;
 
-        //! \copydoc IWebDataServicesProvider::getModelForModelString
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getModelForModelString
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Simulation::CAircraftModel getModelForModelString(const QString &modelString) const override;
 
-        //! \copydoc IWebDataServicesProvider::getAircraftIcaoCodes
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getAircraftIcaoCodes
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Aviation::CAircraftIcaoCodeList getAircraftIcaoCodes() const override;
 
-        //! \copydoc IWebDataServicesProvider::getAircraftIcaoCodesCount
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getAircraftIcaoCodesCount
         //! \ingroup webdatareaderprovider
         virtual int getAircraftIcaoCodesCount() const override;
 
-        //! \copydoc IWebDataServicesProvider::getAircraftIcaoCodeForDesignator
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getAircraftIcaoCodeForDesignator
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDesignator(const QString &designator) const override;
 
-        //! \copydoc IWebDataServicesProvider::getAircraftIcaoCodeForDbKey
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getAircraftIcaoCodeForDbKey
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDbKey(int key) const override;
 
-        //! \copydoc IWebDataServicesProvider::getAircraftIcaoCodeForDbKey
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getAircraftIcaoCodeForDbKey
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Aviation::CAircraftIcaoCode smartAircraftIcaoSelector(const BlackMisc::Aviation::CAircraftIcaoCode &icao) const override;
 
-        //! \copydoc IWebDataServicesProvider::getAirlineIcaoCodes
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getAirlineIcaoCodes
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodes() const override;
 
-        //! \copydoc IWebDataServicesProvider::getAirlineIcaoCodesCount
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getAirlineIcaoCodesCount
         //! \ingroup webdatareaderprovider
         virtual int getAirlineIcaoCodesCount() const override;
 
-        //! \copydoc IWebDataServicesProvider::getAirlineIcaoCodeForDbKey
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getAirlineIcaoCodeForDbKey
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForDbKey(int key) const override;
 
-        //! \copydoc IWebDataServicesProvider::getAirlineIcaoCodeForDesignator
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getAirlineIcaoCodeForDesignator
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForDesignator(const QString &designator) const override;
 
-        //! \copydoc IWebDataServicesProvider::getCountries
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getCountries
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::CCountryList getCountries() const override;
 
-        //! \copydoc IWebDataServicesProvider::getCountries
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getCountries
         //! \ingroup webdatareaderprovider
         virtual int getCountriesCount() const override;
 
-        //! \copydoc IWebDataServicesProvider::getCountryForName
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getCountryForName
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::CCountry getCountryForName(const QString &name) const override;
 
-        //! \copydoc IWebDataServicesProvider::getCountryForIsoCode
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getCountryForIsoCode
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::CCountry getCountryForIsoCode(const QString &iso) const override;
 
-        //! \copydoc IWebDataServicesProvider::getMetars
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getMetars
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Weather::CMetarSet getMetars() const override;
 
-        //! \copydoc IWebDataServicesProvider::getMetarForAirport
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getMetarForAirport
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &icao) const override;
 
-        //! \copydoc IWebDataServicesProvider::getMetarForAirport
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getMetarForAirport
         //! \ingroup webdatareaderprovider
         virtual int getMetarsCount() const override;
 
-        //! \copydoc IWebDataServicesProvider::getUsersForCallsign
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getUsersForCallsign
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Network::CUserList getUsersForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
-        //! \copydoc IWebDataServicesProvider::getAtcStationsForCallsign
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getAtcStationsForCallsign
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Aviation::CAtcStationList getAtcStationsForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
-        //! \copydoc IWebDataServicesProvider::getVoiceCapabilityForCallsign
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getVoiceCapabilityForCallsign
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Network::CVoiceCapabilities getVoiceCapabilityForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
-        //! \copydoc IWebDataServicesProvider::updateWithWebData
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::updateWithWebData
         //! \ingroup webdatareaderprovider
         virtual void updateWithVatsimDataFileData(BlackMisc::Simulation::CSimulatedAircraft &aircraftToBeUdpated) const override;
 
-        //! \copydoc IWebDataServicesProvider::asyncWriteModel
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::asyncWriteModel
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::CStatusMessageList asyncWriteModel(BlackMisc::Simulation::CAircraftModel &model) const override;
 
-        //! \copydoc IWebDataServicesProvider::canConnectSwiftDb
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::canConnectSwiftDb
         //! \ingroup webdatareaderprovider
         virtual bool canConnectSwiftDb() const override;
 

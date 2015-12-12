@@ -61,7 +61,7 @@ namespace BlackGui
             //! Mapping mode
             void setMappingMode();
 
-            //! \copydoc CWebDataReaderAware::setProvider
+            //! \copydoc CWebDataServicesAware::setProvider
             virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
         public slots:

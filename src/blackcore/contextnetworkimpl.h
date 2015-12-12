@@ -50,27 +50,27 @@ namespace BlackCore
         //! Destructor
         virtual ~CContextNetwork();
 
-        //! \copydoc IRemoteAircraftProvider::remoteAircraftSituations
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::remoteAircraftSituations
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
-        //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationsCount
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::remoteAircraftSituationsCount
         //! \ingroup remoteaircraftprovider
         virtual int remoteAircraftSituationsCount(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
-        //! \copydoc IRemoteAircraftProvider::remoteAircraftParts
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::remoteAircraftParts
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const override;
 
-        //! \copydoc IRemoteAircraftProvider::isRemoteAircraftSupportingParts
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::isRemoteAircraftSupportingParts
         //! \ingroup remoteaircraftprovider
         virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const;
 
-        //! \copydoc IRemoteAircraftProvider::remoteAircraftSupportingParts
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::remoteAircraftSupportingParts
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
 
-        //! \copydoc IRemoteAircraftProvider::connectSignals
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::connectSignals
         //! \ingroup remoteaircraftprovider
         virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
             QObject *receiver,
@@ -80,15 +80,15 @@ namespace BlackCore
             std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
         ) override;
 
-        //! \copydoc IRemoteAircraftProvider::updateAircraftRendered
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::updateAircraftRendered
         //! \ingroup remoteaircraftprovider
         virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered, const BlackMisc::CIdentifier &originator) override;
 
-        //! \copydoc IRemoteAircraftProvider::updateMarkAllAsNotRendered
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::updateMarkAllAsNotRendered
         //! \ingroup remoteaircraftprovider
         virtual void updateMarkAllAsNotRendered(const BlackMisc::CIdentifier &originator) override;
 
-        //! \copydoc IRemoteAircraftProvider::getLatestAirspaceAircraftSnapshot
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getLatestAirspaceAircraftSnapshot
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
 
@@ -121,7 +121,7 @@ namespace BlackCore
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;
 
-        //! \copydoc IRemoteAircraftProvider::getAircraftInRangeCount
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftInRangeCount
         //! \ingroup remoteaircraftprovider
         virtual int getAircraftInRangeCount() const override;
 

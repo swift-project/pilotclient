@@ -29,7 +29,7 @@ namespace BlackMisc
         //! Value object encapsulating information of an aircraft's situation
         class BLACKMISC_EXPORT CAircraftSituation :
             public CValueObject<CAircraftSituation>,
-            public Geo::ICoordinateGeodetic, public BlackMisc::ITimestampBased
+            public BlackMisc::Geo::ICoordinateGeodetic, public BlackMisc::ITimestampBased
         {
         public:
             //! Properties by index

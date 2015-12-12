@@ -24,10 +24,10 @@ namespace BlackCore
             //! User configured hotkeys
             struct ActionHotkeys : public CSettingTrait<BlackMisc::Input::CActionHotkeyList>
             {
-                //! \copydoc BlackCore::CSetting::key
+                //! \copydoc BlackCore::CSettingTrait::key
                 static const char *key() { return "application/actionhotkeys"; }
 
-                //! \copydoc BlackCore::CSetting::isValid
+                //! \copydoc BlackCore::CSettingTrait::isValid
                 static bool isValid(const BlackMisc::Input::CActionHotkeyList &value)
                 {
                     for (const auto &actionHotkey : value)

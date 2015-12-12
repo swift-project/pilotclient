@@ -25,30 +25,30 @@ namespace BlackCore
             //! Name of text codec to use with text in FSD protocol
             struct WireTextCodec : public CSettingTrait<QString>
             {
-                //! \copydoc BlackCore::CSetting::key
+                //! \copydoc BlackCore::CSettingTrait::key
                 static const char *key() { return "network/wiretextcodec"; }
 
-                //! \copydoc BlackCore::CSetting::defaultValue
+                //! \copydoc BlackCore::CSettingTrait::defaultValue
                 static const QString &defaultValue() { static const QString dv("latin1"); return dv; }
 
-                //! \copydoc BlackCore::CSetting::isValid
+                //! \copydoc BlackCore::CSettingTrait::isValid
                 static bool isValid(const QString &value) { return QTextCodec::codecForName(qPrintable(value)); }
             };
 
             //! Virtual air traffic servers
             struct TrafficServers : public CSettingTrait<BlackMisc::Network::CServerList>
             {
-                //! \copydoc BlackCore::CSetting::key
+                //! \copydoc BlackCore::CSettingTrait::key
                 static const char *key() { return "network/trafficservers"; }
             };
 
             //! Currently selected virtual air traffic server
             struct CurrentTrafficServer : public CSettingTrait<BlackMisc::Network::CServer>
             {
-                //! \copydoc BlackCore::CSetting::key
+                //! \copydoc BlackCore::CSettingTrait::key
                 static const char *key() { return "network/currenttrafficserver"; }
 
-                //! \copydoc BlackCore::CSetting::defaultValue
+                //! \copydoc BlackCore::CSettingTrait::defaultValue
                 static const BlackMisc::Network::CServer &defaultValue()
                 {
                     using namespace BlackMisc::Network;
@@ -60,10 +60,10 @@ namespace BlackCore
             //! DBus server address
             struct DBusServerAddress : public CSettingTrait<QString>
             {
-                //! \copydoc BlackCore::CSetting::key
+                //! \copydoc BlackCore::CSettingTrait::key
                 static const char *key() { return "network/dbusserver"; }
 
-                //! \copydoc BlackCore::CSetting::defaultValue
+                //! \copydoc BlackCore::CSettingTrait::defaultValue
                 static const QString &defaultValue() { static const QString dv("session"); return dv; }
             };
         } // ns

@@ -297,7 +297,7 @@ namespace BlackGui
             //! Model
             const ModelClass *derivedModel() const { return this->m_model; }
 
-            //! \copydoc CViewBaseNonTemplate::clear
+            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::clear
             virtual void clear() override { Q_ASSERT(this->m_model); this->m_model->clear(); }
 
             //! Update whole container
@@ -360,36 +360,36 @@ namespace BlackGui
             //! Standard initialization
             void standardInit(ModelClass *model = nullptr);
 
-            //! \copydoc CViewBaseNonTemplate::reachedResizeThreshold
+            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::reachedResizeThreshold
             virtual bool reachedResizeThreshold(int containrerSize = -1) const override;
 
-            //! \copydoc CViewBaseNonTemplate::performModeBasedResizeToContent
+            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::performModeBasedResizeToContent
             virtual void performModeBasedResizeToContent() override;
 
-            //! \copydoc CViewBaseNonTemplate::performUpdateContainer
+            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::performUpdateContainer
             virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize) override;
 
-            //! \copydoc CViewBaseNonTemplate::ps_filterDialogFinished
+            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::ps_filterDialogFinished
             //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
             virtual bool ps_filterDialogFinished(int status) override;
 
-            //! \copydoc CViewBaseNonTemplate::ps_filterWidgetChangedFilter(bool)
+            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::ps_filterWidgetChangedFilter(bool)
             //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
             virtual bool ps_filterWidgetChangedFilter(bool enabled) override;
 
-            //! \copydoc CViewBaseNonTemplate::ps_removeFilter
+            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::ps_removeFilter
             //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
             virtual void ps_removeFilter() override;
 
-            //! \copydoc CViewBaseNonTemplate::ps_clicked
+            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::ps_clicked
             //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
             virtual void ps_clicked(const QModelIndex &index) override;
 
-            //! \copydoc CViewBaseNonTemplate::ps_doubleClicked
+            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::ps_doubleClicked
             //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
             virtual void ps_doubleClicked(const QModelIndex &index) override;
 
-            //! \copydoc CViewBaseNonTemplate::ps_doubleClicked
+            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::ps_rowSelected
             //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
             virtual void ps_rowSelected(const QModelIndex &index) override;
         };

@@ -87,34 +87,34 @@ namespace BlackSimPlugin
             //! SimConnect Callback
             static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
 
-            //! \copydoc ISimulator::connectTo()
+            //! \copydoc BlackCore::ISimulator::connectTo()
             virtual bool connectTo() override;
 
-            //! \copydoc ISimulator::disconnectFrom()
+            //! \copydoc BlackCore::ISimulator::disconnectFrom()
             virtual bool disconnectFrom() override;
 
-            //! \copydoc ISimulator::physicallyAddRemoteAircraft()
+            //! \copydoc BlackCore::ISimulator::physicallyAddRemoteAircraft()
             virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
 
-            //! \copydoc ISimulator::physicallyRemoveRemoteAircraft()
+            //! \copydoc BlackCore::ISimulator::physicallyRemoveRemoteAircraft()
             virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 
             //! \copydoc BlackCore::ISimulator::physicallyRemoveAllRemoteAircraft
             virtual int physicallyRemoveAllRemoteAircraft() override;
 
-            //! \copydoc ISimulator::updateOwnCockpit
+            //! \copydoc BlackCore::ISimulator::updateOwnSimulatorCockpit
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator) override;
 
-            //! \copydoc ISimulator::displayStatusMessage
+            //! \copydoc BlackCore::ISimulator::displayStatusMessage
             virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const override;
 
-            //! \copydoc ISimulator::displayTextMessage()
+            //! \copydoc BlackCore::ISimulator::displayTextMessage()
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
 
-            //! \copydoc ISimulator::isPhysicallyRenderedAircraft
+            //! \copydoc BlackCore::ISimulator::isPhysicallyRenderedAircraft
             virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
-            //! \copydoc ISimulator::physicallyRenderedAircraft
+            //! \copydoc BlackCore::ISimulator::physicallyRenderedAircraft
             virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
 
             //! Called when data about our own aircraft are received
@@ -127,10 +127,10 @@ namespace BlackSimPlugin
             void setSimConnectObjectID(DWORD requestID, DWORD objectID);
 
         protected:
-            //! \copydoc ISimulator::isConnected()
+            //! \copydoc BlackCore::ISimulator::isConnected()
             virtual bool isConnected() const override;
 
-            //! \copydoc ISimulator::isSimulating
+            //! \copydoc BlackCore::ISimulator::isSimulating
             virtual bool isSimulating() const override;
 
             //! Timer event (our SimConnect event loop), runs \sa ps_dispatch

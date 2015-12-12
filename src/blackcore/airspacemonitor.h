@@ -47,63 +47,63 @@ namespace BlackCore
         //! Constructor
         CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, INetwork *network, CWebDataServices *webDataReader, QObject *parent);
 
-        //! \copydoc IRemoteAircraftProvider::getAircraftInRange
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftInRange
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;
 
-        //! \copydoc IRemoteAircraftProvider::getAircraftInRangeForCallsign
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftInRangeForCallsign
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
-        //! \copydoc IRemoteAircraftProvider::getAircraftInRangeForCallsign
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftInRangeForCallsign
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Simulation::CAircraftModel getAircraftInRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
-        //! \copydoc IRemoteAircraftProvider::getAircraftInRangeCount
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftInRangeCount
         //! \ingroup remoteaircraftprovider
         virtual int getAircraftInRangeCount() const override;
 
-        //! \copydoc IRemoteAircraftProvider::getLatestAirspaceAircraftSnapshot
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getLatestAirspaceAircraftSnapshot
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
 
-        //! \copydoc IRemoteAircraftProvider::remoteAircraftSituations
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::remoteAircraftSituations
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
-        //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationsCount
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::remoteAircraftSituationsCount
         //! \ingroup remoteaircraftprovider
         virtual int remoteAircraftSituationsCount(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
-        //! \copydoc IRemoteAircraftProvider::remoteAircraftParts
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::remoteAircraftParts
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeValuesBefore = -1) const override;
 
-        //! \copydoc IRemoteAircraftProvider::isRemoteAircraftSupportingParts
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::isRemoteAircraftSupportingParts
         //! \ingroup remoteaircraftprovider
         virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
-        //! \copydoc IRemoteAircraftProvider::remoteAircraftSupportingParts
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::remoteAircraftSupportingParts
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
 
-        //! \copydoc IRemoteAircraftProvider::updateAircraftEnabled
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::updateAircraftEnabled
         //! \ingroup remoteaircraftprovider
         virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const BlackMisc::CIdentifier &originator) override;
 
-        //! \copydoc IRemoteAircraftProvider::updateAircraftModel
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::updateAircraftModel
         //! \ingroup remoteaircraftprovider
         virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
 
-        //! \copydoc IRemoteAircraftProvider::updateFastPositionEnabled
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::updateFastPositionEnabled
         //! \ingroup remoteaircraftprovider
         virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates, const BlackMisc::CIdentifier &originator) override;
 
-        //! \copydoc IRemoteAircraftProvider::updateAircraftRendered
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::updateAircraftRendered
         //! \ingroup remoteaircraftprovider
         virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered, const BlackMisc::CIdentifier &originator) override;
 
-        //! \copydoc IRemoteAircraftProvider::updateMarkAllAsNotRendered
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::updateMarkAllAsNotRendered
         //! \ingroup remoteaircraftprovider
         virtual void updateMarkAllAsNotRendered(const BlackMisc::CIdentifier &originator) override;
 
@@ -150,7 +150,7 @@ namespace BlackCore
         //! Test injected aircraft parts
         void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental);
 
-        //! \copydoc IRemoteAircraftProvider::connectRemoteAircraftProviderSignals
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::connectRemoteAircraftProviderSignals
         virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
             QObject *receiver,
             std::function<void(const BlackMisc::Aviation::CAircraftSituation &)>          addedSituationSlot,

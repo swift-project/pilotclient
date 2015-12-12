@@ -31,7 +31,7 @@ namespace BlackSimPlugin
             //! Destructor
             virtual ~CSimulatorFsCommon();
 
-            //! \copydoc ISimulator::disconnectFrom()
+            //! \copydoc BlackCore::ISimulator::disconnectFrom()
             virtual bool disconnectFrom() override;
 
             //! FSUIPC connected?
@@ -40,40 +40,40 @@ namespace BlackSimPlugin
             //! Experimental model matching
             BlackMisc::Simulation::CAircraftModel getClosestMatch(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
 
-            //! \copydoc ISimulator::isPaused
+            //! \copydoc BlackCore::ISimulator::isPaused
             virtual bool isPaused() const override { return m_simPaused; }
 
-            //! \copydoc ISimulator::isTimeSynchronized
+            //! \copydoc BlackCore::ISimulator::isTimeSynchronized
             virtual bool isTimeSynchronized() const override { return m_simTimeSynced; }
 
-            //! \copydoc ISimulator::getTimeSynchronizationOffset
+            //! \copydoc BlackCore::ISimulator::getTimeSynchronizationOffset
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
 
-            //! \copydoc ISimulator::setTimeSynchronization
+            //! \copydoc BlackCore::ISimulator::setTimeSynchronization
             virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
 
-            //! \copydoc ISimulator::getAirportsInRange
+            //! \copydoc BlackCore::ISimulator::getAirportsInRange
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
 
-            //! \copydoc ISimulator::getInstalledModels
+            //! \copydoc BlackCore::ISimulator::getInstalledModels
             virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override;
 
-            //! \copydoc ISimulator::reloadInstalledModels
+            //! \copydoc BlackCore::ISimulator::reloadInstalledModels
             virtual void reloadInstalledModels() override;
 
-            //! \copydoc IContextSimulator::iconForModel
+            //! \copydoc BlackCore::IContextSimulator::iconForModel
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
 
-            //! \copydoc ISimulator::changeRenderedAircraftModel
+            //! \copydoc BlackCore::ISimulator::changeRemoteAircraftModel
             virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) override;
 
-            //! \copydoc ISimulator::changeAircraftEnabled
+            //! \copydoc BlackCore::ISimulator::changeRemoteAircraftEnabled
             virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) override;
 
-            //! \copydoc ISimulator::enableDebuggingMessages
+            //! \copydoc BlackCore::ISimulator::enableDebugMessages
             virtual void enableDebugMessages(bool driver, bool interpolator) override;
 
-            //! \copydoc ISimulator::unload
+            //! \copydoc BlackCore::ISimulator::unload
             virtual void unload() override;
 
         protected:

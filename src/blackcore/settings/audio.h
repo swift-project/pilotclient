@@ -24,13 +24,13 @@ namespace BlackCore
             //! Name of text codec to use with text in FSD protocol
             struct AudioSettings : public CSettingTrait<BlackMisc::Audio::Settings::CSettingsAudio>
             {
-                //! \copydoc BlackCore::CSetting::key
+                //! \copydoc BlackCore::CSettingTrait::key
                 static const char *key() { return "audio/setup"; }
 
-                //! \copydoc BlackCore::CSetting::defaultValue
+                //! \copydoc BlackCore::CSettingTrait::defaultValue
                 static const BlackMisc::Audio::Settings::CSettingsAudio &defaultValue() { static const BlackMisc::Audio::Settings::CSettingsAudio a; return a; }
 
-                //! \copydoc BlackCore::CSetting::isValid
+                //! \copydoc BlackCore::CSettingTrait::isValid
                 static bool isValid(const BlackMisc::Audio::Settings::CSettingsAudio &value) { Q_UNUSED(value); return true; }
             };
 

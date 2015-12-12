@@ -238,7 +238,7 @@ namespace BlackGui
             //! \copydoc CDefaultFormatter::displayRole
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &valueObject) const override;
 
-            //! \copydoc CDefaultFormatter::asPixmap
+            //! \copydoc CDefaultFormatter::decorationRole
             virtual BlackMisc::CVariant decorationRole(const BlackMisc::CVariant &valueObject) const;
         };
 
@@ -306,7 +306,7 @@ namespace BlackGui
             //! Constructor
             CPhysiqalQuantiyFormatter(MU unit = MU::defaultUnit(), int digits = 2, int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true, QList<int> supportedRoles = roleDisplay()) : CValueObjectFormatter(alignment, i18n, supportedRoles), m_unit(unit), m_digits(digits), m_withUnit(withUnit) {}
 
-            //! \copydoc CDefaultFormatter::displayRole
+            //! \copydoc CValueObjectFormatter::displayRole
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &physicalQuantity) const override
             {
                 if (physicalQuantity.canConvert<PQ>())

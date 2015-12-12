@@ -195,7 +195,7 @@ namespace BlackGui
             //! Remove object
             virtual void remove(const ObjectType &object);
 
-            //! \copydoc ContainerBase::removeIf
+            //! \copydoc BlackMisc::ContainerBase::removeIf
             template <class K0, class V0, class... KeysValues>
             int removeIf(K0 k0, V0 v0, KeysValues... keysValues)
             {
