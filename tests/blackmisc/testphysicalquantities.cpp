@@ -105,6 +105,12 @@ namespace BlackMiscTest
         QVERIFY2(CMathUtils::epsilonEqual(a3.valueRounded(CAngleUnit::deg()), 35.73), "Expecting 35.73");
         QVERIFY2(CMathUtils::epsilonEqual(a4.valueRounded(CAngleUnit::deg()), 35.73), "Expecting 35.73");
         QVERIFY2(CMathUtils::epsilonEqual(a5.valueRounded(CAngleUnit::deg(), 4), -60.5042), "Expecting -60.5042");
+
+        // issue #552
+        CAngle a6(48.07063588, CAngleUnit::sexagesimalDeg());
+        CAngle a7(a6);
+        a7.switchUnit(CAngleUnit::rad());
+        QVERIFY2(CMathUtils::epsilonEqual(a6.value(CAngleUnit::sexagesimalDeg()), a7.value(CAngleUnit::sexagesimalDeg())), "Conversion via radians yields same answer");
     }
 
     /*
