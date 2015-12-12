@@ -97,20 +97,14 @@ namespace BlackCore
             }
         }
 
-        const CLatitude oldLat(oldSituation.latitude());
-        const CLatitude newLat(newSituation.latitude());
-        const CLongitude oldLng(oldSituation.longitude());
-        const CLongitude newLng(newSituation.longitude());
+        const std::array<double, 3> oldVec(oldSituation.getPosition().normalVectorDouble());
+        const std::array<double, 3> newVec(newSituation.getPosition().normalVectorDouble());
 
-        // Interpolate latitude: Lat = (LatB - LatA) * t + LatA
-        currentPosition.setLatitude((newLat - oldLat)
-                                    * simulationTimeFraction
-                                    + oldLat);
+        // Interpolate position: pos = (posB - posA) * t + posA
+        currentPosition.setNormalVector((newVec[0] - oldVec[0]) * simulationTimeFraction + oldVec[0],
+                                        (newVec[1] - oldVec[1]) * simulationTimeFraction + oldVec[1],
+                                        (newVec[2] - oldVec[2]) * simulationTimeFraction + oldVec[2]);
 
-        // Interpolate latitude: Lon = (LonB - LonA) * t + LonA
-        currentPosition.setLongitude((newLng - oldLng)
-                                     * simulationTimeFraction
-                                     + oldLng);
         currentSituation.setPosition(currentPosition);
 
         // Interpolate altitude: Alt = (AltB - AltA) * t + AltA
@@ -122,7 +116,7 @@ namespace BlackCore
                                                + oldAlt,
                                                oldAlt.getReferenceDatum()));
 
-        if (!vtolAiracraft && newLat == oldLat && newLng == oldLng && oldAlt == newAlt)
+        if (!vtolAiracraft && newVec == oldVec && oldAlt == newAlt)
         {
             // stop interpolation here, does not work for VTOL aircraft. We need a flag for VTOL aircraft
             return currentSituation;
