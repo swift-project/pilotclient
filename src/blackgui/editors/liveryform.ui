@@ -2,14 +2,16 @@
 <ui version="4.0">
  <class>CLiveryForm</class>
  <widget class="QFrame" name="CLiveryForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>221</width>
+    <height>416</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Livery editor</string>
-  </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
   </property>
   <layout class="QVBoxLayout" name="vl_LiveryForm">
    <property name="spacing">
@@ -111,11 +113,11 @@
       </item>
       <item row="6" column="0" colspan="2">
        <widget class="BlackGui::Editors::CAirlineIcaoForm" name="editor_AirlineIcao">
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>225</height>
+         </size>
         </property>
        </widget>
       </item>
@@ -207,12 +209,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::CColorSelector</class>
-   <extends>QFrame</extends>
-   <header>blackgui/colorselector.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::CDropSite</class>
    <extends>QLabel</extends>
    <header>blackgui/dropsite.h</header>
@@ -227,6 +223,12 @@
    <class>BlackGui::Editors::CValidationIndicator</class>
    <extends>QFrame</extends>
    <header>blackgui/editors/validationindicator.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CColorSelector</class>
+   <extends>QFrame</extends>
+   <header>blackgui/colorselector.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

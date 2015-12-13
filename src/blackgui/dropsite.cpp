@@ -82,8 +82,8 @@ namespace BlackGui
 
     void CDropSite::paintEvent(QPaintEvent *event)
     {
-        CStyleSheetUtility::useStyleSheetInDerivedWidget(this, QStyle::PE_FrameDockWidget);
-        QLabel::paintEvent(event);
+        Q_UNUSED(event);
+        CStyleSheetUtility::useStyleSheetInDerivedWidget(this, QStyle::PE_Widget);
     }
 
 } // ns
