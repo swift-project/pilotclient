@@ -78,6 +78,10 @@ namespace BlackGui
             //! Current tab index
             TabIndex currentTabIndex() const;
 
+            //! Unvalidated consolidated aircraft model from the subparts (icao, distributor)
+            //! \note not guaranteed to be valid, just snapshot of as it state
+            BlackMisc::Simulation::CAircraftModel getAircraftModel() const;
+
         signals:
             //! Request to filter by livery
             void filterByLivery(const BlackMisc::Aviation::CLivery &livery);
@@ -110,6 +114,9 @@ namespace BlackGui
 
             //! Data for vPilot have been loaded
             void ps_onLoadVPilotDataFinished(bool success);
+
+            //! Stashed models changed
+            void ps_onStashedModelsChanged();
 
             //! Row count for vPilot data changed
             void ps_onVPilotCountChanged(int count, bool withFilter);
@@ -144,9 +151,6 @@ namespace BlackGui
             BlackCore::CData<BlackCore::Data::AuthenticatedUser>          m_user {this, &CDbMappingComponent::ps_userChanged};
             bool m_vPilot1stInit = true;
             bool m_withVPilot    = false;
-
-            //! Consolidated aircraft model
-            BlackMisc::Simulation::CAircraftModel getAircraftModel() const;
 
             //! Init vPilot if rights and suitable
             void initVPilotLoading();

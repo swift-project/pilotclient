@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>616</width>
+    <height>221</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -72,21 +72,63 @@
       <item>
        <widget class="QPushButton" name="pb_Unstash">
         <property name="text">
-         <string>Unstash</string>
+         <string>unstash</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line_Sep1">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pb_Validate">
         <property name="text">
-         <string>Validate</string>
+         <string>validate</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pb_Save">
         <property name="text">
-         <string>Save</string>
+         <string>save</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line_Sep2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_Distributor">
+        <property name="text">
+         <string>distributor</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_AircraftIcao">
+        <property name="text">
+         <string>aircraft ICAO</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_Livery">
+        <property name="text">
+         <string>livery</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_AirlineIcao">
+        <property name="text">
+         <string>airline ICAO</string>
         </property>
        </widget>
       </item>

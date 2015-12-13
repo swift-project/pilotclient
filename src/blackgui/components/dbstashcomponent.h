@@ -18,6 +18,7 @@
 #include "blackmisc/network/webdataservicesprovider.h"
 #include <QFrame>
 #include <QScopedPointer>
+#include <QStringList>
 
 namespace Ui { class CDbStashComponent; }
 
@@ -25,6 +26,8 @@ namespace BlackGui
 {
     namespace Components
     {
+        class CDbMappingComponent;
+
         /*!
          * Stashed objects
          */
@@ -60,9 +63,33 @@ namespace BlackGui
             //! The embedded view
             const BlackGui::Views::CAircraftModelView *getView() const;
 
+            //! Corresponding mapping component
+            void setMappingComponent(CDbMappingComponent *mappingComponent) { m_mappingComponent = mappingComponent; }
+
+            //! Has stashed models
+            bool hasStashedModels() const;
+
+            //! Stashed model strings
+            QStringList getStashedModelStrings() const;
+
+            //! Apply object to select objects
+            void applyToSelected(const BlackMisc::Aviation::CLivery &livery, bool acceptWarnings = true);
+
+            //! Apply object to select objects
+            void applyToSelected(const BlackMisc::Aviation::CAircraftIcaoCode &icao, bool acceptWarnings = true);
+
+            //! Apply object to select objects
+            void applyToSelected(const BlackMisc::Aviation::CAirlineIcaoCode &icao, bool acceptWarnings = true);
+
+            //! Apply object to select objects
+            void applyToSelected(const BlackMisc::Simulation::CDistributor &distributor, bool acceptWarnings = true);
+
         signals:
             //! Unstash
             void unstashed(BlackMisc::Simulation::CAircraftModel &model);
+
+            //! Stashed models have been changed
+            void stashedModelChanged();
 
         private slots:
             //! Unstash pressed
@@ -71,8 +98,18 @@ namespace BlackGui
             //! Validate pressed
             void ps_onValidatePressed();
 
+            //! Copy over values
+            void ps_copyOverValues();
+
         private:
             QScopedPointer<Ui::CDbStashComponent> ui;
+            CDbMappingComponent *m_mappingComponent = nullptr; //!< corresponding mapping component
+
+            //! Display messages
+            bool showMessages(const BlackMisc::CStatusMessageList &msgs, bool onlyErrors = false);
+
+            //! Display message
+            bool showMessage(const BlackMisc::CStatusMessage &msg);
 
             //! Custom menu for the stashed models
             class CStashModelsMenu : public BlackGui::IMenuDelegate

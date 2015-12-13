@@ -13,7 +13,7 @@
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/project.h"
-
+#include <QShortcut>
 
 using namespace BlackCore;
 using namespace BlackMisc;
@@ -34,6 +34,7 @@ namespace BlackGui
             ui(new Ui::CDbMappingComponent)
         {
             ui->setupUi(this);
+            this->ui->comp_StashAircraft->setMappingComponent(this);
             this->ui->tvp_AircraftModelsForVPilot->setAircraftModelMode(CAircraftModelListModel::VPilotRuleModel);
             this->ui->tvp_OwnAircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnSimulatorModelMapping);
 
@@ -41,6 +42,7 @@ namespace BlackGui
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::rowCountChanged, this, &CDbMappingComponent::ps_onOwnModelsCountChanged);
             connect(ui->comp_StashAircraft->getView(), &CAircraftModelView::rowCountChanged, this, &CDbMappingComponent::ps_onStashCountChanged);
+            connect(ui->comp_StashAircraft, &CDbStashComponent::stashedModelChanged, this, &CDbMappingComponent::ps_onStashedModelsChanged);
 
             ui->tvp_OwnAircraftModels->setDisplayAutomatically(true);
             ui->tvp_OwnAircraftModels->setCustomMenu(new CMappingSimulatorModelMenu(this));
@@ -78,7 +80,10 @@ namespace BlackGui
                 connect(&m_vPilotReader, &CVPilotRulesReader::readFinished, this, &CDbMappingComponent::ps_onLoadVPilotDataFinished);
                 this->ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CMappingVPilotMenu(this, true));
                 this->ui->tvp_AircraftModelsForVPilot->setDisplayAutomatically(true);
-                this->ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(m_cachedVPilotModels.get());
+                const CAircraftModelList cachedModels(m_cachedVPilotModels.get());
+                this->ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(cachedModels);
+                int noModels = cachedModels.size();
+                CLogMessage(this).info("%1 cached vPilot models loaded") << noModels;
             }
             this->m_vPilot1stInit = false;
             this->ui->tab_VPilot->setEnabled(withVPilotRights);
@@ -123,6 +128,7 @@ namespace BlackGui
             this->ui->editor_Livery->setProvider(provider);
             this->ui->editor_Distributor->setProvider(provider);
             this->ui->editor_AircraftIcao->setProvider(provider);
+            this->ui->comp_StashAircraft->setProvider(provider);
         }
 
         void CDbMappingComponent::gracefulShutdown()
@@ -256,31 +262,38 @@ namespace BlackGui
                 {
                     this->ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(models);
                 }
-                QTime t;
-                t.start();
-                m_cachedVPilotModels.set(models);
-                qint64 e = t.elapsed();
-                qDebug() << e;
-                CLogMessage(this).info("Written %1 vPilot rules to cache") << models.size();
-
-                /**
-                t.start();
-                QString x = models.toJsonString();
-                e = t.elapsed();
-
-                t.start();
-                CAircraftModelList ml;
-                ml.convertFromJson(x);
-                e = t.elapsed();
-
-                t.start();
-                **/
+                CStatusMessage msg = m_cachedVPilotModels.set(models);
+                if (msg.isWarningOrAbove())
+                {
+                    CLogMessage(this).preformatted(msg);
+                }
+                else
+                {
+                    CLogMessage(this).info("Written %1 vPilot rules to cache") << models.size();
+                }
             }
             else
             {
                 CLogMessage(this).error("Loading vPilot ruleset failed");
             }
             this->ui->tvp_OwnAircraftModels->hideLoadIndicator();
+        }
+
+        void CDbMappingComponent::ps_onStashedModelsChanged()
+        {
+            bool hlvp = this->ui->tvp_AircraftModelsForVPilot->derivedModel()->highlightGivenModelStrings();
+            bool hlom = this->ui->tvp_OwnAircraftModels->derivedModel()->highlightGivenModelStrings();
+            bool highlight =  hlom || hlvp;
+            if (!highlight) { return; }
+            const QStringList stashedModels(this->ui->comp_StashAircraft->getStashedModelStrings());
+            if (hlvp)
+            {
+                this->ui->tvp_AircraftModelsForVPilot->derivedModel()->setHighlightModelsStrings(stashedModels);
+            }
+            if (hlom)
+            {
+                this->ui->tvp_OwnAircraftModels->derivedModel()->setHighlightModelsStrings(stashedModels);
+            }
         }
 
         void CDbMappingComponent::ps_onVPilotCountChanged(int count, bool withFilter)
@@ -496,7 +509,9 @@ namespace BlackGui
             Q_ASSERT_X(mapComp, Q_FUNC_INFO, "Cannot access mapping component");
             if (mapComp->hasModelsForStash())
             {
-                menu.addAction(CIcons::appMappings16(), "Stash", mapComp, SLOT(stashSelectedModels()));
+                QAction *a = menu.addAction(CIcons::appMappings16(), "Stash", mapComp, SLOT(stashSelectedModels()), Qt::ALT + Qt::Key_S);
+                a->setShortcut(Qt::ALT + Qt::Key_S);
+
             }
             this->nestedCustomMenu(menu);
         }
