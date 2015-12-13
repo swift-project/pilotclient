@@ -22,10 +22,9 @@ namespace BlackGui
 {
     namespace Models
     {
-
         Qt::ItemFlags CDefaultFormatter::flags(Qt::ItemFlags flags, bool editable) const
         {
-            return editable ? (flags | Qt::ItemIsEditable) : (flags ^ Qt::ItemIsEditable);
+            return editable ? (flags | Qt::ItemIsEditable) : (flags & ~Qt::ItemIsEditable);
         }
 
         CVariant CDefaultFormatter::displayRole(const CVariant &dataCVariant) const

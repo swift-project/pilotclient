@@ -13,6 +13,7 @@
 #include "listmodelbase.h"
 #include "allmodelcontainers.h"
 #include "blackgui/guiutility.h"
+#include "blackmisc/verify.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/json.h"
 #include "blackmisc/blackmiscfreefunctions.h"
@@ -108,13 +109,13 @@ namespace BlackGui
             Qt::ItemFlags f = QStandardItemModel::flags(index);
             if (!index.isValid()) { return f; }
             bool editable = this->m_columns.isEditable(index);
-            f = editable ? (f | Qt::ItemIsEditable) : (f ^ Qt::ItemIsEditable);
+            f = editable ? (f | Qt::ItemIsEditable) : (f & ~Qt::ItemIsEditable);
 
             // flags from formatter
             const CDefaultFormatter *formatter = this->m_columns.getFormatter(index);
             if (formatter) { f = formatter->flags(f, editable); }
 
-            // drag and rop
+            // drag and drop
             f = f | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
 
             return f;
@@ -137,7 +138,7 @@ namespace BlackGui
 
         QStringList CListModelBaseNonTemplate::mimeTypes() const
         {
-            static const QStringList mimes( { "application/swift.container.json" });
+            static const QStringList mimes({ "application/swift.container.json" });
             return mimes;
         }
 
@@ -149,6 +150,21 @@ namespace BlackGui
         bool CListModelBaseNonTemplate::isModelDestroyed()
         {
             return m_modelDestroyed;
+        }
+
+        void CListModelBaseNonTemplate::sendDataChanged(int startRowIndex, int endRowIndex)
+        {
+            BLACK_VERIFY_X(startRowIndex <= endRowIndex, Q_FUNC_INFO, "check rows");
+            BLACK_VERIFY_X(startRowIndex >= 0 &&  endRowIndex >= 0, Q_FUNC_INFO, "check rows");
+
+            int columns = columnCount();
+            int rows = rowCount();
+            if (columns < 1) { return; }
+            if (startRowIndex < 0) { startRowIndex = 0; }
+            if (endRowIndex >= rows) { endRowIndex = rows - 1; }
+            QModelIndex topLeft(createIndex(startRowIndex, 0));
+            QModelIndex bottomRight(createIndex(endRowIndex, columns - 1));
+            emit dataChanged(topLeft, bottomRight);
         }
 
         int CListModelBaseNonTemplate::ps_updateContainer(const CVariant &variant, bool sort)
@@ -240,6 +256,16 @@ namespace BlackGui
                 return true;
             }
             return false;
+        }
+
+        template <typename ObjectType, typename ContainerType, bool UseCompare>
+        bool CListModelBase<ObjectType, ContainerType, UseCompare>::setInContainer(const QModelIndex &index, const ObjectType &obj)
+        {
+            if (!index.isValid()) { return false; }
+            int row = index.row();
+            if (row < 0 || row >= this->container().size()) { return false; }
+            m_container[row] = obj;
+            return true;
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
@@ -479,6 +505,7 @@ namespace BlackGui
         {
             int n = this->getContainerOrFilteredContainer().size();
             emit this->rowCountChanged(n, this->hasFilter());
+            emit this->changed();
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>

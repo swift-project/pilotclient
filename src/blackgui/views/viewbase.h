@@ -153,6 +153,9 @@ namespace BlackGui
             //! Number of elements changed
             void rowCountChanged(int count, bool withFilter);
 
+            // Model changed
+            void modelChanged();
+
             //! Single object was changed in model
             void objectChanged(const BlackMisc::CVariant &object, const BlackMisc::CPropertyIndex &changedIndex);
 
@@ -320,6 +323,9 @@ namespace BlackGui
 
             //! Selected objects
             ContainerType selectedObjects() const;
+
+            //! Update selected objects
+            int updateSelected(const BlackMisc::CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! Selected object (or default)
             ObjectType selectedObject() const;

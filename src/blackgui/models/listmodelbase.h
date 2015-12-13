@@ -96,12 +96,19 @@ namespace BlackGui
             //! Model about to be destroyed?
             bool isModelDestroyed();
 
+            //! Send signal that data have been changed.
+            //! \note Meant for scenarios where the container is directly updated and a subsequent signal is required
+            void sendDataChanged(int startRowIndex, int endRowIndex);
+
         signals:
             //! Asynchronous update finished
             void asyncUpdateFinished();
 
             //! Number of elements changed
             void rowCountChanged(int count, bool withFilter);
+
+            //! Model has been changed
+            void changed();
 
             //! Template free information, that object changed
             void objectChanged(const BlackMisc::CVariant &object, const BlackMisc::CPropertyIndex &changedIndex);
@@ -146,6 +153,10 @@ namespace BlackGui
             //! \copydoc QStandardItemModel::setData()
             //! \sa CListModelBaseNonTemplate::flags
             virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+
+            //! Simple set of data in container, using class is responsible for firing signals etc.
+            //! \sa sendDataChanged
+            bool setInContainer(const QModelIndex &index, const ObjectType &obj);
 
             //! \copydoc QStandardItemModel::rowCount()
             virtual int rowCount(const QModelIndex &parentIndex = QModelIndex()) const override;

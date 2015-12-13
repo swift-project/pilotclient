@@ -269,6 +269,41 @@ namespace BlackGui
             }
         }
 
+        QString CViewBaseNonTemplate::getDefaultFilename() const
+        {
+            // some logic to find a useful default name
+            QStringList pathes(QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation));
+            QString name;
+            if (getDockWidgetInfoArea()) { name = getDockWidgetInfoArea()->windowTitle(); }
+            else if (!windowTitle().isEmpty()) { name = windowType(); }
+            else { name = this->metaObject()->className(); }
+            name += ".json";
+
+            if (!pathes.isEmpty())
+            {
+                QString p(CFileUtils::appendFilePaths(pathes.first(), "swift/" + name));
+                if (!QDir(p).exists())
+                {
+                    p = CFileUtils::appendFilePaths(pathes.first(), "swift " + name);
+                }
+                return p;
+            }
+            else
+            {
+                return name;
+            }
+        }
+
+        void CViewBaseNonTemplate::menuRemoveItems(Menu menusToRemove)
+        {
+            this->m_menus &= (~menusToRemove);
+        }
+
+        void CViewBaseNonTemplate::menuAddItems(Menu menusToAdd)
+        {
+            this->m_menus |= menusToAdd;
+        }
+
         int CViewBaseNonTemplate::ps_updateContainer(const CVariant &variant, bool sort, bool resize)
         {
             return this->performUpdateContainer(variant, sort, resize);
@@ -410,7 +445,10 @@ namespace BlackGui
         CViewBase<ModelClass, ContainerType, ObjectType>::CViewBase(QWidget *parent, ModelClass *model) : CViewBaseNonTemplate(parent), m_model(model)
         {
             this->setSortingEnabled(true);
-            if (model) { this->setModel(this->m_model); }
+            if (model)
+            {
+                this->setModel(this->m_model);
+            }
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
@@ -514,9 +552,38 @@ namespace BlackGui
             if (!this->hasSelection()) { return ContainerType(); }
             ContainerType c;
             QModelIndexList indexes = this->selectedRows();
-            for (QModelIndex &i : indexes)
+            for (const QModelIndex &i : indexes)
             {
                 c.push_back(this->at(i));
+            }
+            return c;
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        int CViewBase<ModelClass, ContainerType, ObjectType>::updateSelected(const CVariant &variant, const CPropertyIndex &index)
+        {
+            if (!hasSelection()) { return 0; }
+            QModelIndexList indexes = this->selectedRows();
+            int c = 0;
+            int lastRow = -1;
+            int firstRow = -1;
+
+            for (const QModelIndex &i : indexes)
+            {
+                if (i.row() == lastRow) { continue; }
+                lastRow = i.row();
+                if (firstRow < 0 || lastRow < firstRow) { firstRow = lastRow; }
+                ObjectType obj(this->at(i));
+                obj.setPropertyByIndex(variant, index);
+                if (this->derivedModel()->setInContainer(i, obj))
+                {
+                    c++;
+                }
+            }
+
+            if (c > 0)
+            {
+                this->derivedModel()->sendDataChanged(firstRow, lastRow);
             }
             return c;
         }
@@ -617,12 +684,13 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType>
         void CViewBase<ModelClass, ContainerType, ObjectType>::standardInit(ModelClass *model)
         {
-            Q_ASSERT(model || this->m_model);
+            Q_ASSERT_X(model || this->m_model, Q_FUNC_INFO, "Missing model");
             if (model)
             {
                 this->m_model = model;
                 connect(this->m_model, &ModelClass::rowCountChanged, this, &CViewBase::rowCountChanged);
                 connect(this->m_model, &ModelClass::objectChanged, this, &CViewBase::objectChanged);
+                connect(this->m_model, &ModelClass::changed, this, &CViewBase::modelChanged);
             }
 
             this->setModel(this->m_model); // via QTableView
