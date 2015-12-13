@@ -74,7 +74,7 @@ namespace BlackGui
         if (m_overlayMessages && event->key() == Qt::Key_Escape)
         {
             m_overlayMessages->close();
-            event->setAccepted(true);
+            event->accept();
         }
         else
         {

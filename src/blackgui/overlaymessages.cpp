@@ -154,7 +154,7 @@ namespace BlackGui
         if (this->isVisible() && event->key() ==  Qt::Key_Escape)
         {
             this->close();
-            event->setAccepted(true);
+            event->accept();
         }
         else
         {

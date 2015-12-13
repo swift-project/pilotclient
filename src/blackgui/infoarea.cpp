@@ -157,7 +157,7 @@ namespace BlackGui
         // which is the only visible one
         // selecting is tab text independent (can be hidden)
         if (!this->m_tabBar || this->m_tabBar->count() < 1) { return nullptr; }
-        foreach(const CDockWidgetInfoArea * ia, m_dockWidgetInfoAreas)
+        for (const CDockWidgetInfoArea *ia : m_dockWidgetInfoAreas)
         {
             if (ia->isFloating()) { continue; }
             if (ia->isWidgetVisible()) { return ia; }
@@ -177,7 +177,7 @@ namespace BlackGui
     QList<const CDockWidgetInfoArea *> CInfoArea::getDockWidgetInfoAreas() const
     {
         QList<const CDockWidgetInfoArea *> constDockWidgets;
-        foreach(const CDockWidgetInfoArea * dockWidgetInfoArea, m_dockWidgetInfoAreas)
+        for (const CDockWidgetInfoArea *dockWidgetInfoArea : m_dockWidgetInfoAreas)
         {
             constDockWidgets.append(dockWidgetInfoArea);
         }
@@ -246,10 +246,12 @@ namespace BlackGui
         if (event->key() == Qt::Key_Right)
         {
             this->selectRightTab();
+            event->accept();
         }
         else if (event->key() == Qt::Key_Left)
         {
             this->selectLeftTab();
+            event->accept();
         }
         else
         {
