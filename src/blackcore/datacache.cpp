@@ -19,7 +19,7 @@ namespace BlackCore
 {
 
     CDataCache::CDataCache() :
-        CValueCache(CValueCache::Distributed)
+        CValueCache(CValueCache::LocalOnly)
     {
         if (! QDir::root().mkpath(persistentStore()))
         {
