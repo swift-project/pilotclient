@@ -92,6 +92,8 @@ namespace BlackMisc
                 return m_livery.propertyByIndex(index.copyFrontRemoved());
             case IndexCallsign:
                 return m_callsign.propertyByIndex(index.copyFrontRemoved());
+            case IndexPartsDbStatus:
+                return getPartsDbStatus();
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -179,6 +181,8 @@ namespace BlackMisc
                 return Compare::compare(this->m_modelType, compareValue.getModelType());
             case IndexModelMode:
                 return Compare::compare(this->m_modelMode, compareValue.getModelMode());
+            case IndexPartsDbStatus:
+                return getPartsDbStatus().compare(compareValue.getPartsDbStatus());
             default:
                 break;
             }
@@ -253,6 +257,16 @@ namespace BlackMisc
         bool CAircraftModel::hasValidSimulator() const
         {
             return m_simulator.isAnySimulator();
+        }
+
+        QString CAircraftModel::getPartsDbStatus() const
+        {
+            QString s(hasValidDbKey() ? "M" : "m");
+            s = s.append(getDistributor().hasValidDbKey() ? 'D' : 'd');
+            s = s.append(getAircraftIcaoCode().hasValidDbKey() ? 'A' : 'a');
+            s = s.append(getLivery().hasValidDbKey() ? 'L' : 'l');
+            s = s.append(getLivery().getAirlineIcaoCode().hasValidDbKey() ? 'A' : 'a');
+            return s;
         }
 
         bool CAircraftModel::matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const

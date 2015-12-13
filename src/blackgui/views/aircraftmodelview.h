@@ -34,6 +34,15 @@ namespace BlackGui
             //! Set display mode
             void setAircraftModelMode(Models::CAircraftModelListModel::AircraftModelMode mode);
 
+            //! Apply to selected objects
+            void applyToSelected(const BlackMisc::Aviation::CLivery &livery);
+
+            //! Apply to selected objects
+            void applyToSelected(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+
+            //! Apply to selected objects
+            void applyToSelected(const BlackMisc::Simulation::CDistributor &distributor);
+
         signals:
             //! Request to load VPilot data
             void requestVPilotRules();

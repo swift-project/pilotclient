@@ -302,7 +302,7 @@ namespace BlackGui
             this->ui->tvp_AircraftModels->updateContainer(ml);
 
             // model completer
-            this->m_modelCompleter->setModel(new QStringListModel(ml.getSortedModelStrings(), this->m_modelCompleter));
+            this->m_modelCompleter->setModel(new QStringListModel(ml.getModelStrings(), this->m_modelCompleter));
             this->m_modelCompleter->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
             this->m_modelCompleter->setCaseSensitivity(Qt::CaseInsensitive);
             this->m_modelCompleter->setWrapAround(true);

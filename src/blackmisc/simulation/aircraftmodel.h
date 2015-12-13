@@ -70,7 +70,8 @@ namespace BlackMisc
                 IndexModelTypeAsString,
                 IndexModelMode,
                 IndexModelModeAsString,
-                IndexHasQueriedModelString
+                IndexHasQueriedModelString,
+                IndexPartsDbStatus
             };
 
             //! \copydoc BlackMisc::CValueObject::registerMetadata
@@ -199,7 +200,7 @@ namespace BlackMisc
             //! Set simulator info
             void setSimulatorInfo(const CSimulatorInfo &simulator) { this->m_simulator = simulator; }
 
-            //! File name (corresponding data for simulator, only available if representing simulator model=
+            //! File name (corresponding data for simulator, only available if representing simulator model
             QString getFileName() const { return m_fileName; }
 
             //! File name?
@@ -225,6 +226,9 @@ namespace BlackMisc
 
             //! Valid simulator
             bool hasValidSimulator() const;
+
+            //! Info, which parts/subparts (Livery, Aircraft ICAO, ...) are already based on DB data
+            QString getPartsDbStatus() const;
 
             //! Matches model string?
             bool matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const;

@@ -13,8 +13,9 @@
 #define BLACKGUI_AIRCRAFTMODELLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackgui/models/modelswithdbkey.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include <QStringList>
 #include <QAbstractItemModel>
 
 namespace BlackGui
@@ -33,7 +34,6 @@ namespace BlackGui
                 NotSet,
                 OwnSimulatorModel,        ///< models existing for my simulator
                 OwnSimulatorModelMapping, ///< models of my simulator, but in mapping mode
-                MappedModel,              ///< model based on mapping operation
                 Database,                 ///< Database entry
                 VPilotRuleModel,          ///< vPilot rule turned into model
                 StashModel                ///< stashed models
@@ -57,20 +57,30 @@ namespace BlackGui
             //! Highlight the DB models
             void setHighlightDbData(bool highlightDbData) { m_highlightDbData = highlightDbData; }
 
-            //! Highlight stashed models
-            bool highlightStashedModels() const { return m_highlightStashedData; }
+            //! Highlight models
+            bool highlightGivenModelStrings() const { return m_highlightModelStrings; }
 
-            //! Highlight stashed models
-            void setHighlightStashedModels(bool highlightStashedModels) { m_highlightStashedData = highlightStashedModels; }
+            //! Highlight models
+            void setHighlightModelsStrings(const QStringList &modelStrings = QStringList()) { m_highlightStrings = modelStrings; }
+
+            //! Highlight models
+            void setHighlightModelsStrings(bool highlightModelStrings) { m_highlightModelStrings = highlightModelStrings; }
+
+            //! Model strings
+            QStringList getModelStrings(bool sort) const;
+
+            //! Replace models with same model string, or just add
+            void replaceOrAddByModelString(const BlackMisc::Simulation::CAircraftModelList &models);
 
         protected:
             //! \copydoc QAbstractItemModel::data
             virtual QVariant data(const QModelIndex &index, int role) const override;
 
         private:
-            AircraftModelMode m_mode = NotSet; //!< current mode
-            bool m_highlightDbData = false;
-            bool m_highlightStashedData = false;
+            AircraftModelMode m_mode = NotSet;    //!< current mode
+            bool m_highlightDbData   = false;     //!< highlight if DB data entry (valid key)
+            bool m_highlightModelStrings = false; //!< highlight in in model strings
+            QStringList m_highlightStrings;       //!< model strings to highlight
         };
     } // ns
 } // ns

@@ -76,7 +76,16 @@ namespace BlackMisc
             int removeModelsWithString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity);
 
             //! Model strings
-            QStringList getSortedModelStrings() const;
+            QStringList getModelStrings(bool sort = true) const;
+
+            //! Update distributors
+            void updateDistributor(const CDistributor &distributor);
+
+            //! Update aircraft ICAO
+            void updateAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+
+            //! Update livery
+            void updateLivery(const BlackMisc::Aviation::CLivery &livery);
         };
 
     } //namespace

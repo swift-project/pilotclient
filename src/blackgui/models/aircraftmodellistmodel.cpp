@@ -42,20 +42,25 @@ namespace BlackGui
             case OwnSimulatorModel:
             case StashModel:
                 this->m_columns.addColumn(CColumn::standardString("model", { CAircraftModel::IndexModelString}));
+                this->m_columns.addColumn(CColumn::standardString("DB", "parts from DB", { CAircraftModel::IndexPartsDbStatus}));
                 this->m_columns.addColumn(CColumn::standardString("description", { CAircraftModel::IndexDescription}));
-                this->m_columns.addColumn(CColumn::standardString("name", { CAircraftModel::IndexName}));
-                this->m_columns.addColumn(CColumn::standardString("filename", { CAircraftModel::IndexFileName}));
                 this->m_columns.addColumn(CColumn::standardString("sim.", "simulator supported", CAircraftModel::IndexSimulatorInfoAsString));
 
+                this->m_columns.addColumn(CColumn::standardString("dist.", "distributor", { CAircraftModel::IndexDistributor, CDistributor::IndexDbStringKey}));
+
                 this->m_columns.addColumn(CColumn::standardString("aircraft", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexDesignatorManufacturer}));
+                this->m_columns.addColumn(CColumn::standardString("livery", { CAircraftModel::IndexLivery, CLivery::IndexCombinedCode}));
                 this->m_columns.addColumn(CColumn::standardString("airline", { CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexDesignatorNameCountry}));
+
+                this->m_columns.addColumn(CColumn::standardString("name", { CAircraftModel::IndexName}));
+                this->m_columns.addColumn(CColumn::standardString("filename", { CAircraftModel::IndexFileName}));
 
                 // default sort order
                 this->setSortColumnByPropertyIndex(CAircraftModel::IndexModelString);
                 this->m_sortOrder = Qt::AscendingOrder;
                 break;
 
-            case MappedModel:
+            case OwnSimulatorModelMapping:
                 this->m_columns.addColumn(CColumn::standardValueObject("call", "callsign", CAircraftModel::IndexCallsign));
                 this->m_columns.addColumn(CColumn::standardString("model", CAircraftModel::IndexModelString));
                 this->m_columns.addColumn(CColumn::standardString("ac", "aircraft ICAO", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexAircraftDesignator}));
@@ -120,19 +125,50 @@ namespace BlackGui
             }
         }
 
+        QStringList CAircraftModelListModel::getModelStrings(bool sort) const
+        {
+            if (this->isEmpty()) { return QStringList(); }
+            return this->container().getModelStrings(sort);
+        }
+
+        void CAircraftModelListModel::replaceOrAddByModelString(const CAircraftModelList &models)
+        {
+            if (models.isEmpty()) { return; }
+            CAircraftModelList currentModels(container());
+            currentModels.removeModelsWithString(models.getModelStrings(true), Qt::CaseInsensitive);
+            currentModels.push_back(models);
+            this->updateContainerMaybeAsync(currentModels);
+        }
+
         QVariant CAircraftModelListModel::data(const QModelIndex &index, int role) const
         {
-            if (!m_highlightDbData || role != Qt::BackgroundRole) { return CListModelBase::data(index, role); }
+            if (role != Qt::BackgroundRole) { return CListModelBase::data(index, role); }
+            bool db = highlightDbData();
+            bool ms = highlightGivenModelStrings() && !m_highlightStrings.isEmpty();
+            if (!db && !ms) { return CListModelBase::data(index, role); }
+
             CAircraftModel model(this->at(index));
-            if (model.hasValidDbKey())
+            // highlight stashed first
+            if (ms)
             {
-                static const QBrush b(Qt::green);
-                return b;
-            }
-            else
-            {
+                if (m_highlightStrings.contains(model.getModelString(), Qt::CaseInsensitive))
+                {
+                    static const QBrush b(Qt::yellow);
+                    return b;
+                }
                 return QVariant();
             }
+
+            // highlight DB models
+            if (db)
+            {
+                if (model.hasValidDbKey())
+                {
+                    static const QBrush b(Qt::green);
+                    return b;
+                }
+            }
+            return QVariant();
         }
     } // namespace
 } // namespace

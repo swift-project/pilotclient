@@ -138,15 +138,39 @@ namespace BlackMisc
             });
         }
 
-        QStringList CAircraftModelList::getSortedModelStrings() const
+        QStringList CAircraftModelList::getModelStrings(bool sort) const
         {
             QStringList ms;
             for (const CAircraftModel &model : (*this))
             {
                 ms.append(model.getModelString());
             }
-            ms.sort(Qt::CaseInsensitive);
+            if (sort) { ms.sort(Qt::CaseInsensitive); }
             return ms;
+        }
+
+        void CAircraftModelList::updateDistributor(const CDistributor &distributor)
+        {
+            for (CAircraftModel &model : *this)
+            {
+                model.setDistributor(distributor);
+            }
+        }
+
+        void CAircraftModelList::updateAircraftIcao(const CAircraftIcaoCode &icao)
+        {
+            for (CAircraftModel &model : *this)
+            {
+                model.setAircraftIcaoCode(icao);
+            }
+        }
+
+        void CAircraftModelList::updateLivery(const CLivery &livery)
+        {
+            for (CAircraftModel &model : *this)
+            {
+                model.setLivery(livery);
+            }
         }
 
     } // namespace

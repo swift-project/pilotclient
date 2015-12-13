@@ -15,6 +15,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Aviation;
 using namespace BlackGui::Models;
 using namespace BlackGui::Filters;
 
@@ -56,7 +57,7 @@ namespace BlackGui
                 break;
             case CAircraftModelListModel::VPilotRuleModel:
                 this->m_withMenuItemClear = false;
-                this->m_withMenuItemRefresh = false;
+                this->m_withMenuItemRefresh = true;
                 this->m_withMenuItemBackend = false;
                 this->setCustomMenu(new CHighlightDbModelsMenu(this, true));
                 this->setCustomMenu(new CHighlightStashedModelsMenu(this, true));
@@ -80,6 +81,25 @@ namespace BlackGui
             }
         }
 
+        void CAircraftModelView::applyToSelected(const CLivery &livery)
+        {
+            if (!hasSelection()) { return; }
+            int c = this->updateSelected(CVariant::from(livery), CAircraftModel::IndexLivery);
+            // this->updateContainer(models);
+        }
+
+        void CAircraftModelView::applyToSelected(const CAircraftIcaoCode &icao)
+        {
+            if (!hasSelection()) { return; }
+            int c = this->updateSelected(CVariant::from(icao), CAircraftModel::IndexAircraftIcaoCode);
+        }
+
+        void CAircraftModelView::applyToSelected(const CDistributor &distributor)
+        {
+            if (!hasSelection()) { return; }
+            int c = this->updateSelected(CVariant::from(distributor), CAircraftModel::IndexDistributor);
+        }
+
         void CAircraftModelView::ps_toggleHighlightDbModels()
         {
             bool h = derivedModel()->highlightDbData();
@@ -88,8 +108,8 @@ namespace BlackGui
 
         void CAircraftModelView::ps_toggleHighlightStashedModels()
         {
-            bool h = derivedModel()->highlightStashedModels();
-            derivedModel()->setHighlightStashedModels(!h);
+            bool h = derivedModel()->highlightGivenModelStrings();
+            derivedModel()->setHighlightModelsStrings(!h);
         }
 
         void CAircraftModelView::CHighlightDbModelsMenu::customMenu(QMenu &menu) const
@@ -108,7 +128,7 @@ namespace BlackGui
             Q_ASSERT_X(mv, Q_FUNC_INFO, "no view");
             QAction *a = menu.addAction(CIcons::appDbStash16(), "Highlight stashed models", mv, SLOT(ps_toggleHighlightStashedModels()));
             a->setCheckable(true);
-            a->setChecked(mv->derivedModel()->highlightStashedModels());
+            a->setChecked(mv->derivedModel()->highlightGivenModelStrings());
             this->nestedCustomMenu(menu);
         }
 

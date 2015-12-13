@@ -132,7 +132,7 @@ namespace BlackMisc
 
         int CAircraftMatcher::synchronize()
         {
-            return synchronizeWithExistingModels(m_installedModels.getSortedModelStrings());
+            return synchronizeWithExistingModels(m_installedModels.getModelStrings());
         }
 
         void CAircraftMatcher::cancelInit()
