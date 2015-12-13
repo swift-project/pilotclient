@@ -101,6 +101,13 @@ namespace BlackMisc
             return this->m_webDataReaderProvider->getLiveryForCombinedCode(combinedCode);
         }
 
+        CLivery CWebDataServicesAware::getStdLiveryForAirlineCode(const CAirlineIcaoCode &icao) const
+        {
+            Q_ASSERT_X(this->m_webDataReaderProvider, Q_FUNC_INFO, "Missing provider");
+            if (!hasProvider()) { return CLivery(); }
+            return this->m_webDataReaderProvider->getStdLiveryForAirlineCode(icao);
+        }
+
         CLivery CWebDataServicesAware::smartLiverySelector(const CLivery &livery) const
         {
             Q_ASSERT_X(this->m_webDataReaderProvider, Q_FUNC_INFO, "Missing provider");

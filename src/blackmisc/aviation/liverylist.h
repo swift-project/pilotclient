@@ -40,7 +40,10 @@ namespace BlackMisc
             CLiveryList findByAirlineIcaoDesignator(const QString &icao) const;
 
             //! Find livery by airline
-            CLivery findByAirlineIcaoDesignatorStdLivery(const QString &icao) const;
+            CLivery findStdLiveryByAirlineIcaoDesignator(const QString &icao) const;
+
+            //! Find livery by airline
+            CLivery findStdLiveryByAirlineIcaoDesignator(const CAirlineIcaoCode &icao) const;
 
             //! Find livery by combined code
             CLivery findByCombinedCode(const QString &combinedCode) const;

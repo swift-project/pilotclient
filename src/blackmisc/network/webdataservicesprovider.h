@@ -88,9 +88,13 @@ namespace BlackMisc
             //! \threadsafe
             virtual int getLiveriesCount() const = 0;
 
-            //! Liveries
+            //! Livery for its combined code
             //! \threadsafe
             virtual BlackMisc::Aviation::CLivery getLiveryForCombinedCode(const QString &combinedCode) const = 0;
+
+            //! Standard livery for airline code
+            //! \threadsafe
+            virtual BlackMisc::Aviation::CLivery getStdLiveryForAirlineCode(const BlackMisc::Aviation::CAirlineIcaoCode &icao) const = 0;
 
             //! Livery for id
             //! \threadsafe
@@ -251,6 +255,9 @@ namespace BlackMisc
 
             //! \copydoc IWebDataServicesProvider::getLiveryForCombinedCode
             BlackMisc::Aviation::CLivery getLiveryForCombinedCode(const QString &combinedCode) const;
+
+            //! \copydoc IWebDataServicesProvider::getStdLiveryForAirlineCode
+            BlackMisc::Aviation::CLivery getStdLiveryForAirlineCode(const BlackMisc::Aviation::CAirlineIcaoCode &icao) const;
 
             //! \copydoc IWebDataServicesProvider::smartLiverySelector
             BlackMisc::Aviation::CLivery smartLiverySelector(const Aviation::CLivery &livery) const;

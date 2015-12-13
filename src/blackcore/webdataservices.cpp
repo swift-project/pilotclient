@@ -255,6 +255,12 @@ namespace BlackCore
         return CLivery();
     }
 
+    CLivery CWebDataServices::getStdLiveryForAirlineCode(const CAirlineIcaoCode &icao) const
+    {
+        if (m_modelDataReader) { return m_modelDataReader->getStdLiveryForAirlineCode(icao); }
+        return CLivery();
+    }
+
     CLivery CWebDataServices::getLiveryForDbKey(int id) const
     {
         if (m_modelDataReader) { return m_modelDataReader->getLiveryForDbKey(id); }

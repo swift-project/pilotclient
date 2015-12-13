@@ -11,6 +11,7 @@
 #include "blackmisc/predicates.h"
 
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Aviation;
 
 namespace BlackMisc
 {
@@ -30,7 +31,7 @@ namespace BlackMisc
             return this->findBy(&CLivery::getAirlineIcaoCodeDesignator, i);
         }
 
-        CLivery CLiveryList::findByAirlineIcaoDesignatorStdLivery(const QString &icao) const
+        CLivery CLiveryList::findStdLiveryByAirlineIcaoDesignator(const QString &icao) const
         {
             QString i(icao.trimmed().toUpper());
             if (i.isEmpty()) { return CLivery(); }
@@ -40,6 +41,11 @@ namespace BlackMisc
                        livery.isAirlineStandardLivery();
 
             });
+        }
+
+        CLivery CLiveryList::findStdLiveryByAirlineIcaoDesignator(const CAirlineIcaoCode &icao) const
+        {
+            return this->findStdLiveryByAirlineIcaoDesignator(icao.getDesignator());
         }
 
         CLivery CLiveryList::findByCombinedCode(const QString &combinedCode) const
@@ -72,7 +78,7 @@ namespace BlackMisc
             if (liveryPattern.hasValidAirlineDesignator())
             {
                 QString icao(liveryPattern.getAirlineIcaoCodeDesignator());
-                CLivery l(this->findByAirlineIcaoDesignatorStdLivery(icao));
+                CLivery l(this->findStdLiveryByAirlineIcaoDesignator(icao));
                 if (l.hasCompleteData()) { return l; }
             }
             return CLivery();

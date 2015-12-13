@@ -119,6 +119,10 @@ namespace BlackCore
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Aviation::CLivery getLiveryForCombinedCode(const QString &combinedCode) const override;
 
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getStdLiveryForAirlineCode
+        //! \ingroup webdatareaderprovider
+        virtual BlackMisc::Aviation::CLivery getStdLiveryForAirlineCode(const BlackMisc::Aviation::CAirlineIcaoCode &icao) const override;
+
         //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getLiveryForDbKey
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Aviation::CLivery getLiveryForDbKey(int id) const override;

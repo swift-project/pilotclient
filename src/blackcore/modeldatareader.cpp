@@ -56,6 +56,13 @@ namespace BlackCore
         return liveries.findByCombinedCode(combinedCode);
     }
 
+    CLivery CModelDataReader::getStdLiveryForAirlineCode(const CAirlineIcaoCode &icao) const
+    {
+        if (!icao.hasValidDesignator()) { return CLivery(); }
+        CLiveryList liveries(getLiveries());
+        return liveries.findStdLiveryByAirlineIcaoDesignator(icao);
+    }
+
     CLivery CModelDataReader::getLiveryForDbKey(int id) const
     {
         if (id < 0) { return CLivery(); }

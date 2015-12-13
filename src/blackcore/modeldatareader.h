@@ -44,6 +44,10 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Aviation::CLivery getLiveryForCombinedCode(const QString &combinedCode) const;
 
+        //! Get aircraft livery for ICAO code
+        //! \threadsafe
+        BlackMisc::Aviation::CLivery getStdLiveryForAirlineCode(const BlackMisc::Aviation::CAirlineIcaoCode &icao) const;
+
         //! Get aircraft livery for id
         //! \threadsafe
         BlackMisc::Aviation::CLivery getLiveryForDbKey(int id) const;
