@@ -210,6 +210,19 @@ namespace BlackMisc
             return s.append(" ").append(getDbKeyAsStringInParentheses());
         }
 
+        QString CAirlineIcaoCode::getNameWithKey() const
+        {
+            if (!hasValidDbKey()) { return getName(); }
+            if (hasName())
+            {
+                return QString(getName()).append(" ").append(getDbKeyAsStringInParentheses());
+            }
+            else
+            {
+                return getDbKeyAsStringInParentheses();
+            }
+        }
+
         void CAirlineIcaoCode::updateMissingParts(const CAirlineIcaoCode &otherIcaoCode)
         {
             if (!this->hasValidDesignator()) { this->setDesignator(otherIcaoCode.getDesignator()); }

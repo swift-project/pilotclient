@@ -30,8 +30,9 @@ namespace BlackGui
             this->ui->le_Id->setReadOnly(true);
             this->ui->lai_Id->set(CIcons::appAirlineIcao16(), "Id:");
 
-            this->ui->airline_Selector->withIcaoDescription(false);
-            connect(this->ui->airline_Selector, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CAirlineIcaoForm::setValue);
+            this->ui->selector_AirlineDesignator->withIcaoDescription(false);
+            connect(this->ui->selector_AirlineName, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CAirlineIcaoForm::setValue);
+            connect(this->ui->selector_AirlineDesignator, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CAirlineIcaoForm::setValue);
 
             // drag and drop
             connect(this->ui->drop_DropData, &CDropSite::droppedValueObject, this, &CAirlineIcaoForm::ps_droppedCode);
@@ -45,10 +46,10 @@ namespace BlackGui
         void CAirlineIcaoForm::setValue(const BlackMisc::Aviation::CAirlineIcaoCode &icao)
         {
             this->m_originalCode = icao;
-            this->ui->airline_Selector->setAirlineIcao(icao);
+            this->ui->selector_AirlineDesignator->setAirlineIcao(icao);
+            this->ui->selector_AirlineName->setAirlineIcao(icao);
             this->ui->le_Id->setText(icao.getDbKeyAsString());
             this->ui->le_TelephonyDesignator->setText(icao.getTelephonyDesignator());
-            this->ui->le_Name->setText(icao.getName());
             this->ui->le_Updated->setText(icao.getFormattedUtcTimestampYmdhms());
             this->ui->cb_Va->setChecked(icao.isVirtualAirline());
             this->ui->country_Selector->setCountry(icao.getCountry());
@@ -60,7 +61,7 @@ namespace BlackGui
             CAirlineIcaoCode code(m_originalCode);
             code.setVirtualAirline(this->ui->cb_Va->isChecked());
             code.setCountry(this->ui->country_Selector->getCountry());
-            code.setName(this->ui->le_Name->text());
+            code.setName(this->ui->selector_AirlineName->getAirlineIcao().getName());
             code.setTelephonyDesignator(this->ui->le_TelephonyDesignator->text());
             return code;
         }
@@ -85,9 +86,9 @@ namespace BlackGui
 
         void CAirlineIcaoForm::setReadOnly(bool readOnly)
         {
-            this->ui->airline_Selector->setReadOnly(readOnly);
+            this->ui->selector_AirlineDesignator->setReadOnly(readOnly);
+            this->ui->selector_AirlineName->setReadOnly(readOnly);
             this->ui->le_TelephonyDesignator->setReadOnly(readOnly);
-            this->ui->le_Name->setReadOnly(readOnly);
             this->ui->country_Selector->setReadOnly(readOnly);
             this->ui->cb_Va->setEnabled(!readOnly);
         }
@@ -101,7 +102,8 @@ namespace BlackGui
         {
             CWebDataServicesAware::setProvider(webDataReaderProvider);
             this->ui->country_Selector->setProvider(webDataReaderProvider);
-            this->ui->airline_Selector->setProvider(webDataReaderProvider);
+            this->ui->selector_AirlineDesignator->setProvider(webDataReaderProvider);
+            this->ui->selector_AirlineName->setProvider(webDataReaderProvider);
         }
 
         void CAirlineIcaoForm::ps_droppedCode(const BlackMisc::CVariant &variantDropped)

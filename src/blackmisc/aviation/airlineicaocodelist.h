@@ -49,8 +49,11 @@ namespace BlackMisc
             //! Find by v-designator, this should be unique
             CAirlineIcaoCode findByVDesignator(const QString &designator);
 
-            //! String list for completion
-            QStringList toCompleterStrings() const;
+            //! String list for completion by ICAO designator
+            QStringList toIcaoDesignatorCompleterStrings() const;
+
+            //! String list for completion by name
+            QStringList toNameCompleterStrings() const;
 
             //! From our DB JSON
             static CAirlineIcaoCodeList fromDatabaseJson(const QJsonArray &array, bool ignoreIncomplete = true);

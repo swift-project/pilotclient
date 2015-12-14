@@ -60,16 +60,30 @@ namespace BlackMisc
             return codes;
         }
 
-        QStringList CAirlineIcaoCodeList::toCompleterStrings() const
+        QStringList CAirlineIcaoCodeList::toIcaoDesignatorCompleterStrings() const
         {
             QStringList c;
             for (const CAirlineIcaoCode &icao : *this)
             {
-                QString cs(icao.getCombinedStringWithKey());
+                if (!icao.hasValidDbKey()) { continue; }
+                const QString cs(icao.getCombinedStringWithKey());
+                if (cs.isEmpty()) { continue; }
                 c.append(cs);
             }
             return c;
         }
 
+        QStringList CAirlineIcaoCodeList::toNameCompleterStrings() const
+        {
+            QStringList c;
+            for (const CAirlineIcaoCode &icao : *this)
+            {
+                if (!icao.hasValidDbKey()) { continue; }
+                const QString cs(icao.getNameWithKey());
+                if (cs.isEmpty()) { continue; }
+                c.append(cs);
+            }
+            return c;
+        }
     } // namespace
 } // namespace

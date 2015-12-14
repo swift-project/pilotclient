@@ -9,43 +9,39 @@
 
 //! \file
 
-#ifndef BLACKGUI_COMPONENTS_DBAIRLINEICAOSELECTORCOMPONENT_H
-#define BLACKGUI_COMPONENTS_DBAIRLINEICAOSELECTORCOMPONENT_H
+#ifndef BLACKGUI_COMPONENTS_DBAIRLINENAMESELECTORCOMPONENT_H
+#define BLACKGUI_COMPONENTS_DBAIRLINENAMESELECTORCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
 #include "dbairlineicaoselectorbase.h"
-#include "blackmisc/aviation/airlineicaocode.h"
 #include <QScopedPointer>
 
-namespace Ui { class CDbAirlineIcaoSelectorComponent; }
+namespace Ui { class CDbAirlineNameSelectorComponent; }
 
 namespace BlackGui
 {
     namespace Components
     {
         /*!
-         * Airline ICAO selector
+         * Select airline by name
          */
-        class BLACKGUI_EXPORT CDbAirlineIcaoSelectorComponent : public CDbAirlineIcaoSelectorBase
+        class BLACKGUI_EXPORT CDbAirlineNameSelectorComponent : public CDbAirlineIcaoSelectorBase
         {
             Q_OBJECT
 
         public:
             //! Constructor
-            explicit CDbAirlineIcaoSelectorComponent(QWidget *parent = nullptr);
+            explicit CDbAirlineNameSelectorComponent(QWidget *parent = nullptr);
 
             //! Destructor
             //! \note needed for forward declared QScopedPointer and needs to be in .cpp
-            ~CDbAirlineIcaoSelectorComponent();
+            virtual ~CDbAirlineNameSelectorComponent();
 
-            //! \copydoc CDbAirlineIcaoSelectorBase::clear
+            //! \copydoc CDbAirlineIcaoSelectorBase::setReadOnly
             virtual void setReadOnly(bool readOnly) override;
 
             //! \copydoc CDbAirlineIcaoSelectorBase::setAirlineIcao
             virtual void setAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao) override;
-
-            //! Display distributor description
-            void withIcaoDescription(bool description);
 
             //! \copydoc CDbAirlineIcaoSelectorBase::clear
             virtual void clear() override;
@@ -54,13 +50,14 @@ namespace BlackGui
             //! \copydoc CDbAirlineIcaoSelectorBase::createCompleter
             virtual QCompleter *createCompleter() override;
 
-        private slots:
-            //! Data have been changed
-            void ps_dataChanged();
-
         private:
-            Ui::CDbAirlineIcaoSelectorComponent *ui;
+            QScopedPointer<Ui::CDbAirlineNameSelectorComponent> ui;
+
+        private slots:
+            //! Data changed
+            void ps_dataChanged();
         };
-    }
+    } // ns
 } // ns
+
 #endif // guard

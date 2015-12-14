@@ -2,14 +2,16 @@
 <ui version="4.0">
  <class>CAirlineIcaoForm</class>
  <widget class="QFrame" name="CAirlineIcaoForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>232</width>
+    <height>210</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Airline ICAO</string>
-  </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
   </property>
   <layout class="QVBoxLayout" name="vl_AirlineIcaoCode">
    <property name="spacing">
@@ -150,7 +152,7 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="BlackGui::Components::CDbAirlineIcaoSelectorComponent" name="airline_Selector">
+          <widget class="BlackGui::Components::CDbAirlineIcaoSelectorComponent" name="selector_AirlineDesignator">
            <property name="frameShape">
             <enum>QFrame::StyledPanel</enum>
            </property>
@@ -197,13 +199,6 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QLineEdit" name="le_Name">
-        <property name="placeholderText">
-         <string>Airline's name (e.g. Lufthansa)</string>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="1">
        <widget class="QLineEdit" name="le_TelephonyDesignator">
         <property name="placeholderText">
@@ -233,6 +228,16 @@
           <height>100</height>
          </size>
         </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="BlackGui::Components::CDbAirlineNameSelectorComponent" name="selector_AirlineName">
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
         </property>
@@ -276,12 +281,17 @@
    <header>blackgui/editors/validationindicator.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CDbAirlineNameSelectorComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/dbairlinenameselectorcomponent.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>le_Id</tabstop>
   <tabstop>cb_Va</tabstop>
   <tabstop>le_TelephonyDesignator</tabstop>
-  <tabstop>le_Name</tabstop>
   <tabstop>le_Updated</tabstop>
  </tabstops>
  <resources/>

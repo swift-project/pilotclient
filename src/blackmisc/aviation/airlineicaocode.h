@@ -76,6 +76,9 @@ namespace BlackMisc
             //! Get name, e.g. "Lufthansa"
             const QString &getName() const { return this->m_name; }
 
+            //! Name plus key, e.g. "Lufthansa (3421)"
+            QString getNameWithKey() const;
+
             //! Set name
             void setName(const QString &name) { this->m_name = name.trimmed(); }
 
