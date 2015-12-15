@@ -144,7 +144,7 @@ namespace BlackCore
         if (m_vatsimDataFileReader) { m_vatsimDataFileReader->updateWithVatsimDataFileData(aircraftToBeUdpated); }
     }
 
-    CStatusMessageList CWebDataServices::asyncWriteModel(CAircraftModel &model) const
+    CStatusMessageList CWebDataServices::asyncWriteModel(const CAircraftModel &model) const
     {
         if (m_databaseWriter) { return m_databaseWriter->asyncWriteModel(model);}
         return CStatusMessageList();

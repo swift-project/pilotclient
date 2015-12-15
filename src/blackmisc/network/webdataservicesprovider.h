@@ -185,7 +185,7 @@ namespace BlackMisc
             virtual int getMetarsCount() const = 0;
 
             //! Write directly to database
-            virtual BlackMisc::CStatusMessageList asyncWriteModel(BlackMisc::Simulation::CAircraftModel &model) const = 0;
+            virtual BlackMisc::CStatusMessageList asyncWriteModel(const BlackMisc::Simulation::CAircraftModel &model) const = 0;
 
             //! Relay signals for swift data
             //! Connect signals to slot receiver. As the interface is no QObject, slots can not be connected directly.
@@ -323,7 +323,7 @@ namespace BlackMisc
             void updateWithVatsimDataFileData(BlackMisc::Simulation::CSimulatedAircraft &aircraftToBeUdpated) const;
 
             //! \copydoc IWebDataServicesProvider::asyncWriteModel
-            BlackMisc::CStatusMessageList asyncWriteModelToDb(BlackMisc::Simulation::CAircraftModel &model) const;
+            BlackMisc::CStatusMessageList asyncWriteModel(const BlackMisc::Simulation::CAircraftModel &model) const;
 
             //! Set the provider
             virtual void setProvider(IWebDataServicesProvider *webDataReaderProvider);

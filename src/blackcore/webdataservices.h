@@ -229,7 +229,7 @@ namespace BlackCore
 
         //! \copydoc BlackMisc::Network::IWebDataServicesProvider::asyncWriteModel
         //! \ingroup webdatareaderprovider
-        virtual BlackMisc::CStatusMessageList asyncWriteModel(BlackMisc::Simulation::CAircraftModel &model) const override;
+        virtual BlackMisc::CStatusMessageList asyncWriteModel(const BlackMisc::Simulation::CAircraftModel &model) const override;
 
         //! \copydoc BlackMisc::Network::IWebDataServicesProvider::canConnectSwiftDb
         //! \ingroup webdatareaderprovider
