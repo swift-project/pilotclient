@@ -10,7 +10,6 @@
 #include "fs9.h"
 #include "blacksimpluginfreefunctions.h"
 #include "simulatorfs9.h"
-#include "fs9host.h"
 #include "fs9client.h"
 #include "multiplayerpackets.h"
 #include "multiplayerpacketparser.h"
@@ -36,25 +35,21 @@ using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackSimPlugin::Fs9;
 using namespace BlackSimPlugin::FsCommon;
 
-namespace
-{
-    /* These instances should be global, as they are shared between all classes
-     * this file contains. They are instantied by CFs9Factory. */
-    QSharedPointer<CFs9Host> fs9Host;
-    QSharedPointer<CLobbyClient> lobbyClient;
-}
-
 namespace BlackSimPlugin
 {
     namespace Fs9
     {
         CSimulatorFs9::CSimulatorFs9(
             const CSimulatorPluginInfo &info,
+            const QSharedPointer<CFs9Host> &fs9Host,
+            const QSharedPointer<CLobbyClient> &lobbyClient,
             IOwnAircraftProvider *ownAircraftProvider,
             IRemoteAircraftProvider *remoteAircraftProvider,
             IPluginStorageProvider *pluginStorageProvider,
             QObject *parent) :
-            CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, parent)
+            CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, parent),
+            m_fs9Host(fs9Host),
+            m_lobbyClient(lobbyClient)
         {
             connect(lobbyClient.data(), &CLobbyClient::disconnected, this, std::bind(&CSimulatorFs9::simulatorStatusChanged, this, 0));
             this->m_interpolator = new BlackCore::CInterpolatorLinear(remoteAircraftProvider, this);
@@ -73,11 +68,11 @@ namespace BlackSimPlugin
 
         bool CSimulatorFs9::connectTo()
         {
-            Q_ASSERT_X(fs9Host, Q_FUNC_INFO, "No FS9 host");
-            if (!fs9Host->isConnected()) { return false; } // host not available, we quit
+            Q_ASSERT_X(m_fs9Host, Q_FUNC_INFO, "No FS9 host");
+            if (!m_fs9Host->isConnected()) { return false; } // host not available, we quit
 
             Q_ASSERT_X(m_fsuipc,  Q_FUNC_INFO, "No FSUIPC");
-            m_connectionHostMessages = connect(fs9Host.data(), &CFs9Host::customPacketReceived, this, &CSimulatorFs9::ps_processFs9Message);
+            m_connectionHostMessages = connect(m_fs9Host.data(), &CFs9Host::customPacketReceived, this, &CSimulatorFs9::ps_processFs9Message);
 
             if (m_useFsuipc)
             {
@@ -124,8 +119,8 @@ namespace BlackSimPlugin
             emit modelMatchingCompleted(aircraftAfterModelApplied);
 
             CFs9Client *client = new CFs9Client(callsign, aircraftModel.getModelString(), m_interpolator, CTime(25, CTimeUnit::ms()), this);
-            client->setHostAddress(fs9Host->getHostAddress());
-            client->setPlayerUserId(fs9Host->getPlayerUserId());
+            client->setHostAddress(m_fs9Host->getHostAddress());
+            client->setPlayerUserId(m_fs9Host->getPlayerUserId());
 
             client->start();
             m_hashFs9Clients.insert(callsign, client);
@@ -221,7 +216,7 @@ namespace BlackSimPlugin
 
             if (message.getSeverity() != BlackMisc::CStatusMessage::SeverityDebug)
             {
-                QMetaObject::invokeMethod(fs9Host.data(), "sendTextMessage", Q_ARG(QString, message.toQString()));
+                QMetaObject::invokeMethod(m_fs9Host.data(), "sendTextMessage", Q_ARG(QString, message.toQString()));
             }
         }
 
@@ -312,30 +307,34 @@ namespace BlackSimPlugin
             }
         }
 
-        CSimulatorFs9Listener::CSimulatorFs9Listener(const CSimulatorPluginInfo &info) :
+        CSimulatorFs9Listener::CSimulatorFs9Listener(const CSimulatorPluginInfo &info,
+                                                     const QSharedPointer<CFs9Host> &fs9Host,
+                                                     const QSharedPointer<CLobbyClient> &lobbyClient) :
             BlackCore::ISimulatorListener(info),
-            m_timer(new QTimer(this))
+            m_timer(new QTimer(this)),
+            m_fs9Host(fs9Host),
+            m_lobbyClient(lobbyClient)
         {
             const int QueryInterval = 5 * 1000; // 5 seconds
             m_timer->setInterval(QueryInterval);
             m_timer->setObjectName(this->objectName() + ":m_timer");
 
             // Test whether we can lobby connect at all.
-            bool canLobbyConnect = lobbyClient->canLobbyConnect();
+            bool canLobbyConnect = m_lobbyClient->canLobbyConnect();
 
             connect(m_timer, &QTimer::timeout, [this, canLobbyConnect]()
             {
-                if (fs9Host->getHostAddress().isEmpty()) { return; } // host not yet set up
+                if (m_fs9Host->getHostAddress().isEmpty()) { return; } // host not yet set up
                 if (canLobbyConnect)
                 {
-                    if (m_isConnecting || lobbyClient->connectFs9ToHost(fs9Host->getHostAddress()) == S_OK)
+                    if (m_isConnecting || m_lobbyClient->connectFs9ToHost(m_fs9Host->getHostAddress()) == S_OK)
                     {
                         m_isConnecting = true;
                         CLogMessage(this).info("Swift is joining FS9 to the multiplayer session...");
                     }
                 }
 
-                if (!m_isStarted && fs9Host->isConnected())
+                if (!m_isStarted && m_fs9Host->isConnected())
                 {
                     emit simulatorStarted(getPluginInfo());
                     m_isStarted = true;
@@ -355,26 +354,26 @@ namespace BlackSimPlugin
             m_timer->stop();
         }
 
-        CSimulatorFs9Factory::CSimulatorFs9Factory(QObject *parent) :
-            QObject(parent)
+        static void cleanupFs9Host(CFs9Host *host)
         {
-            /* Nobody should have created the host before */
-            Q_ASSERT(!fs9Host);
+            host->quitAndWait();
+        }
 
+        CSimulatorFs9Factory::CSimulatorFs9Factory(QObject *parent) :
+            QObject(parent),
+            m_fs9Host(new CFs9Host(this), cleanupFs9Host),
+            m_lobbyClient(new CLobbyClient(this))
+        {
             registerMetadata();
 
-            fs9Host.reset(new CFs9Host(this));
-            lobbyClient.reset(new CLobbyClient(this));
-
             /* After FS9 is disconnected, reset its data stored in the host */
-            connect(lobbyClient.data(), &CLobbyClient::disconnected, fs9Host.data(), &CFs9Host::reset);
+            connect(m_lobbyClient.data(), &CLobbyClient::disconnected, m_fs9Host.data(), &CFs9Host::reset);
 
-            fs9Host->start();
+            m_fs9Host->start();
         }
 
         CSimulatorFs9Factory::~CSimulatorFs9Factory()
         {
-            fs9Host->quit();
         }
 
         BlackCore::ISimulator *CSimulatorFs9Factory::create(
@@ -383,12 +382,12 @@ namespace BlackSimPlugin
             IRemoteAircraftProvider *remoteAircraftProvider,
             IPluginStorageProvider *pluginStorageProvider)
         {
-            return new CSimulatorFs9(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, this);
+            return new CSimulatorFs9(info, m_fs9Host, m_lobbyClient, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, this);
         }
 
         BlackCore::ISimulatorListener *CSimulatorFs9Factory::createListener(const CSimulatorPluginInfo &info)
         {
-            return new CSimulatorFs9Listener(info);
+            return new CSimulatorFs9Listener(info, m_fs9Host, m_lobbyClient);
         }
 
     } // namespace

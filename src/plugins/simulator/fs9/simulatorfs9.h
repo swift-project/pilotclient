@@ -40,6 +40,8 @@ namespace BlackSimPlugin
             //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
             CSimulatorFs9(
                 const BlackMisc::Simulation::CSimulatorPluginInfo &info,
+                const QSharedPointer<CFs9Host> &fs9Host,
+                const QSharedPointer<CLobbyClient> &lobbyClient,
                 BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                 BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                 BlackMisc::IPluginStorageProvider *pluginStorageProvider,
@@ -106,8 +108,9 @@ namespace BlackSimPlugin
             QHash<BlackMisc::Aviation::CCallsign, QPointer<CFs9Client>> m_hashFs9Clients;
             QMetaObject::Connection m_connectionHostMessages;
             int m_dispatchTimerId = -1;
-
             bool m_simConnected = false; //!< Is simulator connected?
+            QSharedPointer<CFs9Host> m_fs9Host;
+            QSharedPointer<CLobbyClient> m_lobbyClient;
         };
 
         //! Listener for FS9
@@ -120,7 +123,9 @@ namespace BlackSimPlugin
 
         public:
             //! Constructor
-            CSimulatorFs9Listener(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
+            CSimulatorFs9Listener(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
+                                  const QSharedPointer<CFs9Host> &fs9Host,
+                                  const QSharedPointer<CLobbyClient> &lobbyClient);
 
         public slots:
             //! \copydoc BlackCore::ISimulatorListener::start
@@ -130,11 +135,11 @@ namespace BlackSimPlugin
             virtual void stop() override;
 
         private:
-
             QTimer *m_timer = nullptr;
             bool m_isConnecting = false;
             bool m_isStarted = false;
-
+            QSharedPointer<CFs9Host> m_fs9Host;
+            QSharedPointer<CLobbyClient> m_lobbyClient;
         };
 
         //! Factory implementation to create CSimulatorFs9 instances
@@ -161,6 +166,9 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulatorFactory::createListener
             virtual BlackCore::ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) override;
 
+        private:
+            QSharedPointer<CFs9Host> m_fs9Host;
+            QSharedPointer<CLobbyClient> m_lobbyClient;
         };
     } // namespace Fs9
 } // namespace BlackCore
