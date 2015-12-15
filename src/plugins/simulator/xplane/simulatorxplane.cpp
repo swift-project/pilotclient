@@ -527,7 +527,7 @@ namespace BlackSimPlugin
             }
             else
             {
-                CLogMessage(this).debug() << "Starting XBus on %1" << m_xbusServerSetting.get();
+                CLogMessage(this).debug() << "Starting XBus on" << m_xbusServerSetting.get();
                 m_conn = CSimulatorXPlane::connectionFromString(m_xbusServerSetting.get());
                 m_watcher = new QDBusServiceWatcher(xbusServiceName(), m_conn, QDBusServiceWatcher::WatchForRegistration, this);
                 connect(m_watcher, &QDBusServiceWatcher::serviceRegistered, this, &CSimulatorXPlaneListener::ps_serviceRegistered);
