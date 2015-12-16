@@ -80,27 +80,30 @@ namespace BlackCore
     CVoiceRoomList CContextAudio::getComVoiceRoomsWithAudioStatus() const
     {
         Q_ASSERT(this->m_voice);
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         return getComVoiceRooms();
     }
 
     CVoiceRoom CContextAudio::getVoiceRoom(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue, bool withAudioStatus) const
     {
         Q_ASSERT(this->m_voice);
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << withAudioStatus;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << withAudioStatus; }
 
         auto voiceChannel = m_voiceChannelMapping.value(comUnitValue);
-
         if (voiceChannel)
+        {
             return voiceChannel->getVoiceRoom();
+        }
         else
+        {
             return CVoiceRoom();
+        }
     }
 
     CVoiceRoomList CContextAudio::getComVoiceRooms() const
     {
         Q_ASSERT(this->m_voice);
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         CVoiceRoomList voiceRoomList;
 
         auto voiceChannelCom1 = m_voiceChannelMapping.value(BlackMisc::Aviation::CComSystem::Com1);
@@ -131,7 +134,7 @@ namespace BlackCore
     void CContextAudio::leaveAllVoiceRooms()
     {
         Q_ASSERT(this->m_voice);
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;}
         m_voiceChannelMapping.clear();
         m_channel1->leaveVoiceRoom();
         m_channel2->leaveVoiceRoom();
@@ -142,7 +145,7 @@ namespace BlackCore
     CAudioDeviceInfoList CContextAudio::getAudioDevices() const
     {
         Q_ASSERT(this->m_voice);
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         CAudioDeviceInfoList devices = this->m_voiceOutputDevice->getOutputDevices();
         devices = devices.join(this->m_voiceInputDevice->getInputDevices());
         return devices;
@@ -151,7 +154,7 @@ namespace BlackCore
     CAudioDeviceInfoList CContextAudio::getCurrentAudioDevices() const
     {
         Q_ASSERT(this->m_voice);
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         CAudioDeviceInfoList devices;
         devices.push_back(this->m_voiceInputDevice->getCurrentInputDevice());
         devices.push_back(this->m_voiceOutputDevice->getCurrentOutputDevice());
@@ -162,7 +165,7 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         Q_ASSERT(audioDevice.getType() != CAudioDeviceInfo::Unknown);
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << audioDevice;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << audioDevice; }
         bool changed = false;
         if (audioDevice.getType() == CAudioDeviceInfo::InputDevice)
         {
@@ -190,6 +193,8 @@ namespace BlackCore
     void CContextAudio::setVoiceOutputVolume(int volume)
     {
         Q_ASSERT(m_voiceOutputDevice);
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << volume; }
+
         bool wasMuted = isMuted();
         bool changed = m_voiceOutputDevice->getOutputVolume() != volume;
         if (!changed) { return; }
@@ -207,12 +212,14 @@ namespace BlackCore
     int CContextAudio::getVoiceOutputVolume() const
     {
         Q_ASSERT(m_voiceOutputDevice);
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         return m_voiceOutputDevice->getOutputVolume();
     }
 
     void CContextAudio::setMute(bool muted)
     {
         if (this->isMuted() == muted) { return; } // avoid roundtrips / unnecessary signals
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << muted; }
 
         int newVolume;
         if (muted)
@@ -240,7 +247,7 @@ namespace BlackCore
 
     bool CContextAudio::isMuted() const
     {
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         return m_voiceOutputDevice->getOutputVolume() < 1;
     }
 
@@ -249,7 +256,7 @@ namespace BlackCore
         Q_ASSERT(this->m_voice);
         Q_ASSERT(newRooms.size() == 2);
         Q_ASSERT(getIContextOwnAircraft());
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << newRooms;
+        if (m_debugEnabled) {CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << newRooms; }
 
         CVoiceRoomList currentRooms = getComVoiceRooms();
         CVoiceRoom currentRoomCom1 = currentRooms[0];
@@ -347,6 +354,8 @@ namespace BlackCore
 
     void CContextAudio::setOwnCallsignForRooms(const CCallsign &callsign)
     {
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+
         if (m_channel1) { m_channel1->setOwnAircraftCallsign(callsign); }
         if (m_channel2) { m_channel2->setOwnAircraftCallsign(callsign); }
     }
@@ -354,13 +363,17 @@ namespace BlackCore
     CCallsignSet CContextAudio::getRoomCallsigns(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const
     {
         Q_ASSERT(this->m_voice);
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
 
         auto voiceChannel = m_voiceChannelMapping.value(comUnitValue);
         if (voiceChannel)
+        {
             return voiceChannel->getVoiceRoomCallsigns();
+        }
         else
+        {
             return CCallsignSet();
+        }
     }
 
     Network::CUserList CContextAudio::getRoomUsers(BlackMisc::Aviation::CComSystem::ComUnit comUnit) const
@@ -368,29 +381,23 @@ namespace BlackCore
         Q_ASSERT(this->m_voice);
         Q_ASSERT(this->getRuntime());
         if (!this->getRuntime()->getIContextNetwork()) return Network::CUserList();
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
 
         return this->getIContextNetwork()->getUsersForCallsigns(this->getRoomCallsigns(comUnit));
     }
 
-    /*
-     * SELCAL tone
-     */
     void CContextAudio::playSelcalTone(const CSelcal &selcal) const
     {
         Q_ASSERT(this->m_voice);
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << selcal;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << selcal; }
         CAudioDeviceInfo outputDevice = m_voiceOutputDevice->getCurrentOutputDevice();
         CSoundGenerator::playSelcal(90, selcal, outputDevice);
     }
 
-    /*
-     * Notification
-     */
     void CContextAudio::playNotification(CNotificationSounds::Notification notification, bool considerSettings) const
     {
         Q_ASSERT(this->m_voice);
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << notification;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << notification; }
 
         bool play = !considerSettings || m_audioSettings.get().getNotificationFlag(notification);
         if (play)
@@ -399,22 +406,16 @@ namespace BlackCore
         }
     }
 
-    /*
-     * Notification
-     */
     void CContextAudio::ps_initNotificationSounds()
     {
         // not possible in own thread
         CSoundGenerator::playNotificationSound(0, CNotificationSounds::NotificationsLoadSounds);
     }
 
-    /*
-     * Audio loopback
-     */
     void CContextAudio::enableAudioLoopback(bool enable)
     {
         Q_ASSERT(this->m_audioMixer);
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         if (enable)
         {
             m_audioMixer->makeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputOutputDevice1);
@@ -474,9 +475,6 @@ namespace BlackCore
         else m_audioMixer->removeMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputVoiceChannel1);
     }
 
-    /*
-     * Connection status changed
-     */
     void CContextAudio::ps_connectionStatusChanged(BlackCore::IVoiceChannel::ConnectionStatus oldStatus,
             BlackCore::IVoiceChannel::ConnectionStatus newStatus)
     {
