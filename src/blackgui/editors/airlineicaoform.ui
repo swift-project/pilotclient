@@ -176,6 +176,9 @@
         <property name="text">
          <string>Country:</string>
         </property>
+        <property name="buddy">
+         <cstring>country_Selector</cstring>
+        </property>
        </widget>
       </item>
       <item row="1" column="0">
@@ -190,12 +193,18 @@
         <property name="text">
          <string>Name:</string>
         </property>
+        <property name="buddy">
+         <cstring>selector_AirlineName</cstring>
+        </property>
        </widget>
       </item>
       <item row="5" column="0">
        <widget class="QLabel" name="lbl_Timestamp">
         <property name="text">
          <string>Last updated</string>
+        </property>
+        <property name="buddy">
+         <cstring>le_Updated</cstring>
         </property>
        </widget>
       </item>
@@ -210,6 +219,9 @@
        <widget class="QLabel" name="lbl_TelephonyDesignator">
         <property name="text">
          <string>Telephony:</string>
+        </property>
+        <property name="buddy">
+         <cstring>le_TelephonyDesignator</cstring>
         </property>
        </widget>
       </item>
@@ -253,12 +265,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Components::CDbCountrySelectorComponent</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/dbcountryselectorcomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::CDropSite</class>
    <extends>QLabel</extends>
    <header>blackgui/dropsite.h</header>
@@ -270,15 +276,21 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CDbAirlineIcaoSelectorComponent</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/dbairlineicaoselectorcomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Editors::CValidationIndicator</class>
    <extends>QFrame</extends>
    <header>blackgui/editors/validationindicator.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CDbCountrySelectorComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/dbcountryselectorcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CDbAirlineIcaoSelectorComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/dbairlineicaoselectorcomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

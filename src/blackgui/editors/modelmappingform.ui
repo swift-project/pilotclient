@@ -73,6 +73,9 @@
         <property name="text">
          <string>Description:</string>
         </property>
+        <property name="buddy">
+         <cstring>le_Description</cstring>
+        </property>
        </widget>
       </item>
       <item row="1" column="6">
@@ -94,12 +97,18 @@
         <property name="text">
          <string>Last updated:</string>
         </property>
+        <property name="buddy">
+         <cstring>le_LastUpdated</cstring>
+        </property>
        </widget>
       </item>
       <item row="0" column="2">
        <widget class="QLabel" name="lbl_ModelKey">
         <property name="text">
          <string>Model key:</string>
+        </property>
+        <property name="buddy">
+         <cstring>le_ModelKey</cstring>
         </property>
        </widget>
       </item>
@@ -138,6 +147,9 @@
         <property name="text">
          <string>Name:</string>
         </property>
+        <property name="buddy">
+         <cstring>le_Name</cstring>
+        </property>
        </widget>
       </item>
       <item row="0" column="7" rowspan="2">
@@ -163,12 +175,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::CSimulatorSelector</class>
-   <extends>QFrame</extends>
-   <header>blackgui/simulatorselector.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::CLabelAndIcon</class>
    <extends>QFrame</extends>
    <header>blackgui/labelandicon.h</header>
@@ -178,6 +184,12 @@
    <class>BlackGui::Editors::CValidationIndicator</class>
    <extends>QFrame</extends>
    <header>blackgui/editors/validationindicator.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CSimulatorSelector</class>
+   <extends>QFrame</extends>
+   <header>blackgui/simulatorselector.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
