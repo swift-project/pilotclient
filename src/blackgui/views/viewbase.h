@@ -18,6 +18,7 @@
 #include "blackgui/models/modelfilter.h"
 #include "blackgui/menudelegate.h"
 #include "blackgui/loadindicator.h"
+#include "blackgui/dropbase.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/worker.h"
@@ -37,7 +38,9 @@ namespace BlackGui
     {
         //! Non templated base class, allows Q_OBJECT and signals / slots to be used
         class BLACKGUI_EXPORT CViewBaseNonTemplate :
-            public QTableView, public BlackGui::Components::CEnableForDockWidgetInfoArea
+            public QTableView,
+            public BlackGui::Components::CEnableForDockWidgetInfoArea,
+            public BlackGui::CDropBase
         {
             Q_OBJECT
 
@@ -73,6 +76,15 @@ namespace BlackGui
 
             //! Allow to drag and/or drop value objects
             virtual void allowDragDropValueObjects(bool allowDrag, bool allowDrop);
+
+            //! \copydoc CDockWidget::allowDrop
+            virtual void allowDrop(bool allow) override;
+
+            //! \copydoc CDockWidget::isDropAllowed
+            virtual bool isDropAllowed() const override;
+
+            //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
+            virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget);
 
             //! Resize mode
             ResizeMode getResizeMode() const { return m_resizeMode; }
@@ -153,7 +165,7 @@ namespace BlackGui
             //! Number of elements changed
             void rowCountChanged(int count, bool withFilter);
 
-            // Model changed
+            //! Model bas been changed
             void modelChanged();
 
             //! Single object was changed in model
@@ -201,6 +213,18 @@ namespace BlackGui
             //! \copydoc QTableView::showEvent
             virtual void showEvent(QShowEvent *event) override;
 
+            //! \copydoc QTableView::dragEnterEvent
+            virtual void dragEnterEvent(QDragEnterEvent *event) override;
+
+            //! \copydoc QTableView::dragMoveEvent
+            virtual void dragMoveEvent(QDragMoveEvent *event) override;
+
+            //! \copydoc QTableView::dragLeaveEvent
+            virtual void dragLeaveEvent(QDragLeaveEvent *event) override;
+
+            //! \copydoc QTableView::dropEvent
+            virtual void dropEvent(QDropEvent *event) override;
+
             //! Perform resizing / non slot method for template
             virtual void performModeBasedResizeToContent() = 0;
 
@@ -239,10 +263,8 @@ namespace BlackGui
             bool m_acceptRowSelected                 = false;    //!< selection changed
             bool m_acceptDoubleClickSelection        = false;    //!< double clicked
             bool m_displayAutomatically              = true;     //!< display directly when loaded
-
-            QWidget *m_filterWidget           = nullptr;         //!< filter widget if any
-            const QKeySequence FilterKey {Qt::CTRL + Qt::Key_F}; //!< shortcut filter
-            BlackGui::IMenuDelegate  *m_menu  = nullptr;         //!< custom menu if any
+            QWidget *m_filterWidget                  = nullptr;  //!< filter widget if any
+            BlackGui::IMenuDelegate  *m_menu         = nullptr;  //!< custom menu if any
             BlackGui::CLoadIndicator *m_loadIndicator = nullptr; //!< load indicator if neeeded
 
         protected slots:

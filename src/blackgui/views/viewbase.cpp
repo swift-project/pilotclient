@@ -11,6 +11,7 @@
 #include "blackgui/models/allmodels.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/guiutility.h"
+#include "blackgui/shortcut.h"
 #include "blackcore/registermetadata.h"
 
 #include <QHeaderView>
@@ -33,7 +34,8 @@ namespace BlackGui
 {
     namespace Views
     {
-        CViewBaseNonTemplate::CViewBaseNonTemplate(QWidget *parent) : QTableView(parent)
+        CViewBaseNonTemplate::CViewBaseNonTemplate(QWidget *parent) :
+            QTableView(parent)
         {
             this->setContextMenuPolicy(Qt::CustomContextMenu);
             connect(this, &QWidget::customContextMenuRequested, this, &CViewBaseNonTemplate::ps_customMenuRequested);
@@ -45,10 +47,17 @@ namespace BlackGui
             this->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
             this->setWordWrap(true);
 
-            QShortcut *filter = new QShortcut(FilterKey, this);
-            bool c = connect(filter, &QShortcut::activated, this, &CViewBaseNonTemplate::ps_displayFilterDialog);
-            Q_ASSERT(c);
-            Q_UNUSED(c);
+            QShortcut *filter = new QShortcut(CShortcut::keyDisplayFilter(), this, SLOT(ps_displayFilterDialog()), nullptr, Qt::WidgetShortcut);
+            filter->setObjectName("Filter shortcut for " + this->objectName());
+
+            QShortcut *clearSelection = new QShortcut(CShortcut::keyClearSelection(), this, SLOT(clearSelection()), nullptr, Qt::WidgetShortcut);
+            clearSelection->setObjectName("Cleat selection shortcut for " + this->objectName());
+        }
+
+        bool CViewBaseNonTemplate::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
+        {
+            bool c = CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(parentDockableWidget);
+            return c;
         }
 
         void CViewBaseNonTemplate::resizeToContents()
@@ -93,26 +102,6 @@ namespace BlackGui
             }
         }
 
-        void CViewBaseNonTemplate::setCustomMenu(IMenuDelegate *menu, bool nestPreviousMenu)
-        {
-            if (menu && nestPreviousMenu)
-            {
-                // new menu with nesting
-                menu->setNestedDelegate(this->m_menu);
-                m_menu =  menu;
-            }
-            else if (!menu && nestPreviousMenu)
-            {
-                // nested new menu
-                m_menu = m_menu->getNestedDelegate();
-            }
-            else
-            {
-                // no nesting
-                m_menu = menu;
-            }
-        }
-
         void CViewBaseNonTemplate::enableLoadIndicator(bool enable)
         {
             m_enabledLoadIndicator = enable;
@@ -138,6 +127,26 @@ namespace BlackGui
             return CGuiUtility::mainApplicationWindowWidget();
         }
 
+        void CViewBaseNonTemplate::setCustomMenu(IMenuDelegate *menu, bool nestPreviousMenu)
+        {
+            if (menu && nestPreviousMenu)
+            {
+                // new menu with nesting
+                menu->setNestedDelegate(this->m_menu);
+                m_menu =  menu;
+            }
+            else if (!menu && nestPreviousMenu)
+            {
+                // nested new menu
+                m_menu = m_menu->getNestedDelegate();
+            }
+            else
+            {
+                // no nesting
+                m_menu = menu;
+            }
+        }
+
         void CViewBaseNonTemplate::customMenu(QMenu &menu) const
         {
             // delegate?
@@ -158,9 +167,18 @@ namespace BlackGui
 
             if (this->m_withMenuFilter)
             {
-                menu.addAction(BlackMisc::CIcons::tableSheet16(), "Filter", this, SLOT(ps_displayFilterDialog()), FilterKey);
+                menu.addAction(BlackMisc::CIcons::tableSheet16(), "Filter", this, SLOT(ps_displayFilterDialog()), CShortcut::keyDisplayFilter());
                 menu.addAction(BlackMisc::CIcons::tableSheet16(), "Remove Filter", this, SLOT(ps_removeFilter()));
             }
+            if (!menu.isEmpty()) { menu.addSeparator(); }
+
+            // selection menus
+            SelectionMode sm = this->selectionMode();
+            if (sm == MultiSelection || sm == ExtendedSelection)
+            {
+                menu.addAction(BlackMisc::CIcons::empty16(), "Select all", this, SLOT(selectAll()), Qt::CTRL + Qt::Key_A);
+            }
+            menu.addAction(BlackMisc::CIcons::empty16(), "Clear selection", this, SLOT(clearSelection()), CShortcut::keyClearSelection());
             if (!menu.isEmpty()) { menu.addSeparator(); }
 
             // resizing
@@ -216,6 +234,17 @@ namespace BlackGui
             this->setAcceptDrops(allowDrop);
             this->setDragEnabled(allowDrag);
             this->setDropIndicatorShown(allowDrop);
+            CDropBase::allowDrop(allowDrop);
+        }
+
+        void CViewBaseNonTemplate::allowDrop(bool allow)
+        {
+            this->allowDragDropValueObjects(this->dragEnabled(), allow);
+        }
+
+        bool CViewBaseNonTemplate::isDropAllowed() const
+        {
+            return this->acceptDrops();
         }
 
         int CViewBaseNonTemplate::getHorizontalHeaderFontHeight() const
@@ -439,6 +468,30 @@ namespace BlackGui
         void CViewBaseNonTemplate::ps_updatedIndicator()
         {
             this->update();
+        }
+
+        void CViewBaseNonTemplate::dragEnterEvent(QDragEnterEvent *event)
+        {
+            if (!event || !acceptDrop(event->mimeData())) { return; }
+            setBackgroundRole(QPalette::Highlight);
+            event->acceptProposedAction();
+        }
+
+        void CViewBaseNonTemplate::dragMoveEvent(QDragMoveEvent *event)
+        {
+            if (!event || !acceptDrop(event->mimeData())) { return; }
+            event->acceptProposedAction();
+        }
+
+        void CViewBaseNonTemplate::dragLeaveEvent(QDragLeaveEvent *event)
+        {
+            if (!event) { return; }
+            event->accept();
+        }
+
+        void CViewBaseNonTemplate::dropEvent(QDropEvent *event)
+        {
+            Q_UNUSED(event);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>

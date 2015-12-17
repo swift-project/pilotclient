@@ -32,10 +32,10 @@ namespace BlackGui
         void addAcceptedMetaTypeId(int id);
 
         //! Drop allowed
-        bool isDropAllowed() const;
+        virtual bool isDropAllowed() const;
 
         //! Drop allowed
-        void allowDrop(bool allowed);
+        virtual void allowDrop(bool allowed);
 
         //! Mime data to CVariant (normally encapsulating a value object)
         BlackMisc::CVariant toCVariant(const QMimeData *mime) const;
