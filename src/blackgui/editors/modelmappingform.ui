@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>592</width>
-    <height>87</height>
+    <height>93</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -62,7 +62,7 @@
        </widget>
       </item>
       <item row="0" column="6">
-       <widget class="QPushButton" name="ph_Stash">
+       <widget class="QPushButton" name="pb_Stash">
         <property name="text">
          <string>Stash</string>
         </property>
@@ -79,9 +79,9 @@
        </widget>
       </item>
       <item row="1" column="6">
-       <widget class="QPushButton" name="pb_Save">
+       <widget class="QPushButton" name="pb_Publish">
         <property name="text">
-         <string>Save</string>
+         <string>Publish</string>
         </property>
        </widget>
       </item>
@@ -198,8 +198,8 @@
   <tabstop>le_ModelKey</tabstop>
   <tabstop>le_Name</tabstop>
   <tabstop>le_Description</tabstop>
-  <tabstop>ph_Stash</tabstop>
-  <tabstop>pb_Save</tabstop>
+  <tabstop>pb_Stash</tabstop>
+  <tabstop>pb_Publish</tabstop>
   <tabstop>le_LastUpdated</tabstop>
  </tabstops>
  <resources/>

@@ -25,7 +25,8 @@ namespace BlackGui
             ui->le_LastUpdated->setReadOnly(true);
             ui->le_Id->setReadOnly(true);
             ui->lai_Id->set(CIcons::appMappings16(), "Id:");
-            connect(ui->pb_Save, &QPushButton::clicked, this, &CModelMappingForm::requestSave);
+            connect(ui->pb_Publish, &QPushButton::clicked, this, &CModelMappingForm::requestPublish);
+            connect(ui->pb_Stash, &QPushButton::clicked, this, &CModelMappingForm::requestStash);
         }
 
         CModelMappingForm::~CModelMappingForm()

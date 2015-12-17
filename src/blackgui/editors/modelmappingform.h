@@ -53,8 +53,14 @@ namespace BlackGui
             //! Request validation
             void requestValidation();
 
-            //! Save
-            void requestSave();
+            //! Request to publish (DB)
+            void requestPublish();
+
+            //! Request stashing for model
+            void requestStash();
+
+        private slots:
+            //!
 
         private:
             QScopedPointer<Ui::CModelMappingForm> ui;

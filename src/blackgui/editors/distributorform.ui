@@ -200,6 +200,12 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>le_Description</tabstop>
+  <tabstop>le_Alias1</tabstop>
+  <tabstop>le_Alias2</tabstop>
+  <tabstop>le_Updated</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -72,7 +72,7 @@
       <item>
        <widget class="QPushButton" name="pb_Unstash">
         <property name="text">
-         <string>unstash</string>
+         <string>Unstash</string>
         </property>
        </widget>
       </item>
@@ -86,14 +86,14 @@
       <item>
        <widget class="QPushButton" name="pb_Validate">
         <property name="text">
-         <string>validate</string>
+         <string>Validate</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pb_Save">
+       <widget class="QPushButton" name="pb_Publish">
         <property name="text">
-         <string>save</string>
+         <string>Publish</string>
         </property>
        </widget>
       </item>
@@ -107,28 +107,28 @@
       <item>
        <widget class="QPushButton" name="pb_Distributor">
         <property name="text">
-         <string>distributor</string>
+         <string>Distributor</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pb_AircraftIcao">
         <property name="text">
-         <string>aircraft ICAO</string>
+         <string>Aircraft ICAO</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pb_Livery">
         <property name="text">
-         <string>livery</string>
+         <string>Livery</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pb_AirlineIcao">
         <property name="text">
-         <string>airline ICAO</string>
+         <string>Airline ICAO</string>
         </property>
        </widget>
       </item>
@@ -147,7 +147,7 @@
  <tabstops>
   <tabstop>pb_Unstash</tabstop>
   <tabstop>pb_Validate</tabstop>
-  <tabstop>pb_Save</tabstop>
+  <tabstop>pb_Publish</tabstop>
   <tabstop>tvp_StashAircraftModels</tabstop>
  </tabstops>
  <resources/>
