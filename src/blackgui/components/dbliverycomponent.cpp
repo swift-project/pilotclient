@@ -22,7 +22,6 @@ namespace BlackGui
     {
         CDbLiveryComponent::CDbLiveryComponent(QWidget *parent) :
             QFrame(parent),
-            CWebDataServicesAware(nullptr),
             ui(new Ui::CDbLiveryComponent)
         {
             ui->setupUi(this);
