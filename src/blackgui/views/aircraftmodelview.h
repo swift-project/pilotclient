@@ -35,17 +35,33 @@ namespace BlackGui
             void setAircraftModelMode(Models::CAircraftModelListModel::AircraftModelMode mode);
 
             //! Apply to selected objects
-            void applyToSelected(const BlackMisc::Aviation::CLivery &livery);
+            int applyToSelected(const BlackMisc::Aviation::CLivery &livery);
 
             //! Apply to selected objects
-            void applyToSelected(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+            int applyToSelected(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
 
             //! Apply to selected objects
-            void applyToSelected(const BlackMisc::Simulation::CDistributor &distributor);
+            int applyToSelected(const BlackMisc::Simulation::CDistributor &distributor);
+
+            //! Allow to stash
+            void setAllowStash(bool stash) { m_allowStash = stash; }
+
+            //! Has any models to stash amd is allowed to stash
+            bool hasModelsToStash() const;
+
+            //! Add the technically supported metatypes as allows
+            void setImplementedMetaTypeIds();
 
         signals:
-            //! Request to load VPilot data
-            void requestVPilotRules();
+            //! Request to stash if applicable
+            void requestStash();
+
+            //! Request further handling of drops I cannot handle on my own
+            void requestHandlingOfStashDrop(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao);
+
+        protected:
+            //! \copydoc QTableView::dropEvent
+            virtual void dropEvent(QDropEvent *event) override;
 
         private slots:
             //! Highlight DB models
@@ -54,7 +70,12 @@ namespace BlackGui
             //! Highlight stashed models
             void ps_toggleHighlightStashedModels();
 
+            //! Stash shortcut pressed
+            void ps_stashShortcut();
+
         private:
+            bool m_allowStash = false; //!< allow to stash
+
             //! Custom menu for the models which have been loaded
             class CHighlightDbModelsMenu : public BlackGui::IMenuDelegate
             {
