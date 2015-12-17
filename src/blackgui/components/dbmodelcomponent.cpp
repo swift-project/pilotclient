@@ -8,6 +8,7 @@
  */
 
 #include "dbmodelcomponent.h"
+#include "dbmappingcomponent.h"
 #include "blackgui/stylesheetutility.h"
 #include "ui_dbmodelcomponent.h"
 #include <functional>
@@ -23,6 +24,7 @@ namespace BlackGui
     {
         CDbModelComponent::CDbModelComponent(QWidget *parent) :
             QFrame(parent),
+            CDbMappingComponentAware(parent),
             ui(new Ui::CDbModelComponent)
         {
             ui->setupUi(this);

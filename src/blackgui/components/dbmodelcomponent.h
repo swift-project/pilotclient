@@ -15,6 +15,7 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/components/dbmappingcomponentaware.h"
 #include "blackmisc/network/webdataservicesprovider.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -30,6 +31,7 @@ namespace BlackGui
          */
         class BLACKGUI_EXPORT CDbModelComponent :
             public QFrame,
+            public CDbMappingComponentAware,
             public CEnableForDockWidgetInfoArea,
             public BlackGui::CEnableForViewBasedIndicator,
             public BlackMisc::Network::CWebDataServicesAware
