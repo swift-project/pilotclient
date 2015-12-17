@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>CDbMappingComponent</class>
  <widget class="BlackGui::COverlayMessagesFrame" name="CDbMappingComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>262</width>
+    <height>618</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Frame</string>
   </property>
@@ -214,6 +222,14 @@
           <bool>true</bool>
          </property>
          <widget class="QWidget" name="qw_EditorsScrollArea">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>244</width>
+            <height>425</height>
+           </rect>
+          </property>
           <property name="minimumSize">
            <size>
             <width>0</width>
@@ -281,7 +297,6 @@
                 <property name="frameShadow">
                  <enum>QFrame::Raised</enum>
                 </property>
-                <zorder>fr_EditorsRight</zorder>
                </widget>
               </item>
              </layout>

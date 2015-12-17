@@ -19,6 +19,7 @@
 #include "blackgui/menudelegate.h"
 #include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/views/aircraftmodelview.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
 #include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
 #include "blackmisc/network/webdataservicesprovider.h"
@@ -69,14 +70,23 @@ namespace BlackGui
             //! With vPilot rules
             bool withVPilot() const { return m_withVPilot; }
 
-            //! And models which can be stashed
-            bool hasModelsForStash() const;
+            //! Any models which can be stashed
+            bool hasModelsToStash() const;
 
-            //! The model to be stashed
-            BlackMisc::Simulation::CAircraftModelList getModelsForStash() const;
+            //! The models to be stashed
+            BlackMisc::Simulation::CAircraftModelList getModelsToStash() const;
+
+            //! Stashed models
+            const BlackMisc::Simulation::CAircraftModelList &getStashedModels() const;
+
+            //! Stashed models trings
+            QStringList getStashedModelStrings() const;
 
             //! Current tab index
             TabIndex currentTabIndex() const;
+
+            //! Is stashed view
+            bool isStashedView() const;
 
             //! Unvalidated consolidated aircraft model from the subparts (icao, distributor)
             //! \note not guaranteed to be valid, just snapshot of as it state
@@ -96,9 +106,6 @@ namespace BlackGui
             //! Validate, empty list means OK
             BlackMisc::CStatusMessageList validate(bool withNestedForms) const;
 
-            //! Save
-            void saveSingleModelToDb();
-
             //! Resize so that selection is easy (larger table view)
             void resizeForSelect();
 
@@ -115,8 +122,17 @@ namespace BlackGui
             //! Data for vPilot have been loaded
             void ps_onLoadVPilotDataFinished(bool success);
 
+            //! vPilot cached changed
+            void ps_onVPilotCacheChanged();
+
             //! Stashed models changed
             void ps_onStashedModelsChanged();
+
+            //! Publish
+            void ps_publishSingleModelToDb();
+
+            //! Stash drop request
+            void ps_handleStashDropRequest(const BlackMisc::Aviation::CAirlineIcaoCode &code) const;
 
             //! Row count for vPilot data changed
             void ps_onVPilotCountChanged(int count, bool withFilter);
@@ -142,10 +158,13 @@ namespace BlackGui
             //! User object changed
             void ps_userChanged();
 
+            //! Stash current model
+            void ps_stashCurrentModel();
+
         private:
             QScopedPointer<Ui::CDbMappingComponent> ui;
             BlackMisc::Simulation::FsCommon::CVPilotRulesReader           m_vPilotReader;                //!< read vPilot rules
-            BlackCore::CData<BlackCore::Data::VPilotAircraftModels>       m_cachedVPilotModels { this }; //!< cache for latest vPilot rules
+            BlackCore::CData<BlackCore::Data::VPilotAircraftModels>       m_cachedVPilotModels { this, &CDbMappingComponent::ps_onVPilotCacheChanged }; //!< cache for latest vPilot rules
             std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>  m_modelLoader;                 //!< read own aircraft models
             BlackCore::CData<BlackCore::Data::OwnSimulatorAircraftModels> m_cachedOwnModels { this };    //!< cache for latest models
             BlackCore::CData<BlackCore::Data::AuthenticatedUser>          m_user {this, &CDbMappingComponent::ps_userChanged};
@@ -157,6 +176,12 @@ namespace BlackGui
 
             //! Init model loader
             bool initModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
+
+            //! Model for given index from sender/current view
+            BlackMisc::Simulation::CAircraftModel getModelFromView(const QModelIndex &index) const;
+
+            //! Current model view
+            const BlackGui::Views::CAircraftModelView *currentModelView() const;
 
             // -------------------- component specific menus --------------------------
 
@@ -188,6 +213,7 @@ namespace BlackGui
                 virtual void customMenu(QMenu &menu) const override;
 
             private:
+                //! Mapping component
                 CDbMappingComponent *mappingComponent() const;
             };
 
@@ -204,6 +230,8 @@ namespace BlackGui
                 //! \copydoc IMenuDelegate::customMenu
                 virtual void customMenu(QMenu &menu) const override;
 
+            private:
+                //! Mapping component
                 CDbMappingComponent *mappingComponent() const;
             };
         };
