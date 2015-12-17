@@ -8,8 +8,8 @@
  */
 
 #include "dbstashcomponent.h"
-#include "ui_dbstashcomponent.h"
 #include "dbmappingcomponent.h"
+#include "ui_dbstashcomponent.h"
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/verify.h"
@@ -27,14 +27,17 @@ namespace BlackGui
     {
         CDbStashComponent::CDbStashComponent(QWidget *parent) :
             QFrame(parent),
+            CDbMappingComponentAware(parent),
             ui(new Ui::CDbStashComponent)
         {
             ui->setupUi(this);
             this->ui->tvp_StashAircraftModels->setAircraftModelMode(CAircraftModelListModel::StashModel);
+            this->ui->tvp_StashAircraftModels->allowDragDropValueObjects(false, true);
+            this->ui->tvp_StashAircraftModels->setImplementedMetaTypeIds();
 
             connect(this->ui->pb_Unstash, &QPushButton::pressed, this, &CDbStashComponent::ps_onUnstashPressed);
             connect(this->ui->pb_Validate, &QPushButton::pressed, this, &CDbStashComponent::ps_onValidatePressed);
-            connect(this->ui->tvp_StashAircraftModels, &CAircraftModelView::modelChanged, this, &CDbStashComponent::stashedModelChanged);
+            connect(this->ui->tvp_StashAircraftModels, &CAircraftModelView::modelChanged, this, &CDbStashComponent::stashedModelsChanged);
 
             // copy over buttons
             connect(this->ui->pb_AircraftIcao, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverValues);
@@ -43,14 +46,6 @@ namespace BlackGui
             connect(this->ui->pb_Distributor, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverValues);
 
             ui->tvp_StashAircraftModels->setCustomMenu(new CStashModelsMenu(this, true));
-
-
-            // set mapping component reference if it is parent
-            CDbMappingComponent *mapping = qobject_cast<CDbMappingComponent *>(parent);
-            if (mapping)
-            {
-                m_mappingComponent = mapping;
-            }
         }
 
         CDbStashComponent::~CDbStashComponent()
@@ -114,6 +109,11 @@ namespace BlackGui
             return this->ui->tvp_StashAircraftModels->derivedModel()->getModelStrings(false);
         }
 
+        const CAircraftModelList &CDbStashComponent::getStashedModels() const
+        {
+            return this->ui->tvp_StashAircraftModels->derivedModel()->container();
+        }
+
         void CDbStashComponent::applyToSelected(const CLivery &livery, bool acceptWarnings)
         {
             if (!this->ui->tvp_StashAircraftModels->hasSelection()) { return; }
@@ -172,11 +172,11 @@ namespace BlackGui
         void CDbStashComponent::ps_copyOverValues()
         {
             QObject *sender = QObject::sender();
-            BLACK_VERIFY_X(this->m_mappingComponent, Q_FUNC_INFO, "missing mapping component");
-            if (!this->m_mappingComponent) { return; }
+            BLACK_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
+            if (!this->getMappingComponent()) { return; }
             if (!this->ui->tvp_StashAircraftModels->hasSelection()) { return; }
 
-            CAircraftModel model(this->m_mappingComponent->getAircraftModel());
+            CAircraftModel model(this->getMappingComponent()->getAircraftModel());
             if (sender == this->ui->pb_AircraftIcao)
             {
                 this->applyToSelected(model.getAircraftIcaoCode());
@@ -199,18 +199,18 @@ namespace BlackGui
         {
             if (msgs.isEmpty()) { return false; }
             if (!msgs.hasErrorMessages() && onlyErrors) { return false; }
-            BLACK_VERIFY_X(this->m_mappingComponent, Q_FUNC_INFO, "missing mapping component");
-            if (!this->m_mappingComponent) { return false; }
-            this->m_mappingComponent->showMessages(msgs);
+            BLACK_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
+            if (!this->getMappingComponent()) { return false; }
+            this->getMappingComponent()->showMessages(msgs);
             return true;
         }
 
         bool CDbStashComponent::showMessage(const CStatusMessage &msg)
         {
             if (msg.isEmpty()) { return false; }
-            BLACK_VERIFY_X(this->m_mappingComponent, Q_FUNC_INFO, "missing mapping component");
-            if (!this->m_mappingComponent) { return false; }
-            this->m_mappingComponent->showMessage(msg);
+            BLACK_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
+            if (!this->getMappingComponent()) { return false; }
+            this->getMappingComponent()->showMessage(msg);
             return true;
         }
 

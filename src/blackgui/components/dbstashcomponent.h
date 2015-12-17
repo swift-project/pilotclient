@@ -13,6 +13,7 @@
 #define BLACKGUI_COMPONENTS_DBSTASHCOMPONENT_H
 
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/components/dbmappingcomponentaware.h"
 #include "blackgui/menudelegate.h"
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackmisc/network/webdataservicesprovider.h"
@@ -26,13 +27,12 @@ namespace BlackGui
 {
     namespace Components
     {
-        class CDbMappingComponent;
-
         /*!
          * Stashed objects
          */
         class BLACKGUI_EXPORT CDbStashComponent :
             public QFrame,
+            public CDbMappingComponentAware,
             public CEnableForDockWidgetInfoArea,
             public BlackMisc::Network::CWebDataServicesAware
         {
@@ -63,14 +63,14 @@ namespace BlackGui
             //! The embedded view
             const BlackGui::Views::CAircraftModelView *getView() const;
 
-            //! Corresponding mapping component
-            void setMappingComponent(CDbMappingComponent *mappingComponent) { m_mappingComponent = mappingComponent; }
-
             //! Has stashed models
             bool hasStashedModels() const;
 
             //! Stashed model strings
             QStringList getStashedModelStrings() const;
+
+            //! The stashed models
+            const BlackMisc::Simulation::CAircraftModelList &getStashedModels() const;
 
             //! Apply object to select objects
             void applyToSelected(const BlackMisc::Aviation::CLivery &livery, bool acceptWarnings = true);
@@ -89,7 +89,7 @@ namespace BlackGui
             void unstashed(BlackMisc::Simulation::CAircraftModel &model);
 
             //! Stashed models have been changed
-            void stashedModelChanged();
+            void stashedModelsChanged();
 
         private slots:
             //! Unstash pressed
@@ -103,7 +103,6 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CDbStashComponent> ui;
-            CDbMappingComponent *m_mappingComponent = nullptr; //!< corresponding mapping component
 
             //! Display messages
             bool showMessages(const BlackMisc::CStatusMessageList &msgs, bool onlyErrors = false);
