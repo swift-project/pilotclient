@@ -9,19 +9,18 @@
 
 //! \file
 
-#ifndef BLACKCORE_SETTINGSCACHE_H
-#define BLACKCORE_SETTINGSCACHE_H
+#ifndef BLACKMISC_SETTINGSCACHE_H
+#define BLACKMISC_SETTINGSCACHE_H
 
-#include "blackcore/blackcoreexport.h"
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valuecache.h"
 
-namespace BlackCore
+namespace BlackMisc
 {
-
     /*!
      * Singleton derived class of CValueCache, for core settings.
      */
-    class BLACKCORE_EXPORT CSettingsCache : public BlackMisc::CValueCache
+    class BLACKMISC_EXPORT CSettingsCache : public BlackMisc::CValueCache
     {
         Q_OBJECT
 
@@ -50,7 +49,7 @@ namespace BlackCore
 
     /*!
      * Class template for accessing a specific value in the CSettingsCache.
-     * \tparam Trait A subclass of BlackCore::CSettingTrait that identifies the value's key and other metadata.
+     * \tparam Trait A subclass of BlackMisc::CSettingTrait that identifies the value's key and other metadata.
      */
     template <typename Trait>
     class CSetting : public BlackMisc::CCached<typename Trait::type>
@@ -77,7 +76,7 @@ namespace BlackCore
     };
 
     /*!
-     * Base class for traits to be used as template argument to BlackCore::CSetting.
+     * Base class for traits to be used as template argument to BlackMisc::CSetting.
      */
     template <typename T>
     struct CSettingTrait
@@ -105,7 +104,6 @@ namespace BlackCore
         //! Deleted copy assignment operator.
         CSettingTrait &operator =(const CSettingTrait &) = delete;
     };
-
 }
 
 #endif

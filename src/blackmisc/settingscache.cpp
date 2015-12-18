@@ -10,9 +10,8 @@
 #include "settingscache.h"
 #include <QStandardPaths>
 
-namespace BlackCore
+namespace BlackMisc
 {
-
     CSettingsCache::CSettingsCache() :
         CValueCache(CValueCache::Distributed)
     {}
@@ -48,5 +47,4 @@ namespace BlackCore
     {
         return enumerateFiles(persistentStore());
     }
-
 }

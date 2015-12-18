@@ -13,13 +13,10 @@
 #include <QStandardPaths>
 #include <QLockFile>
 
-using namespace BlackMisc;
-
-namespace BlackCore
+namespace BlackMisc
 {
-
     CDataCache::CDataCache() :
-        CValueCache(CValueCache::LocalOnly)
+        CValueCache(CValueCache::LocalOnly) // for signal loopback
     {
         if (! QDir::root().mkpath(persistentStore()))
         {
@@ -170,5 +167,4 @@ namespace BlackCore
             m_deferredChanges.clear();
         }
     }
-
 }

@@ -9,25 +9,24 @@
 
 //! \file
 
-#ifndef BLACKCORE_DATACACHE_H
-#define BLACKCORE_DATACACHE_H
+#ifndef BLACKMISC_DATACACHE_H
+#define BLACKMISC_DATACACHE_H
 
-#include "blackcore/blackcoreexport.h"
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valuecache.h"
 #include "blackmisc/worker.h"
 #include <QUuid>
 #include <QFileSystemWatcher>
 
-namespace BlackCore
+namespace BlackMisc
 {
-
     class CDataCache;
 
     /*!
      * Worker which performs (de)serialization on behalf of CDataCache, in a separate thread
      * so that the main thread is not blocked by (de)serialization of large objects.
      */
-    class BLACKCORE_EXPORT CDataCacheSerializer : public BlackMisc::CContinuousWorker
+    class BLACKMISC_EXPORT CDataCacheSerializer : public BlackMisc::CContinuousWorker
     {
         Q_OBJECT
 
@@ -63,7 +62,7 @@ namespace BlackCore
      *
      * File-based distribution between processes is built-in to the class.
      */
-    class BLACKCORE_EXPORT CDataCache : public BlackMisc::CValueCache
+    class BLACKMISC_EXPORT CDataCache : public BlackMisc::CValueCache
     {
         Q_OBJECT
 
@@ -95,7 +94,7 @@ namespace BlackCore
 
     /*!
      * Class template for accessing a specific value in the CDataCache.
-     * \tparam Trait A subclass of BlackCore::CDataTrait that identifies the value's key and other metadata.
+     * \tparam Trait A subclass of BlackMisc::CDataTrait that identifies the value's key and other metadata.
      */
     template <typename Trait>
     class CData : public BlackMisc::CCached<typename Trait::type>
@@ -122,7 +121,7 @@ namespace BlackCore
     };
 
     /*!
-     * Base class for traits to be used as template argument to BlackCore::CData.
+     * Base class for traits to be used as template argument to BlackMisc::CData.
      */
     template <typename T>
     struct CDataTrait
@@ -150,7 +149,6 @@ namespace BlackCore
         //! Deleted copy assignment operator.
         CDataTrait &operator =(const CDataTrait &) = delete;
     };
-
 }
 
 #endif
