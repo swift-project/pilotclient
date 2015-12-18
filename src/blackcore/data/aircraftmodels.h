@@ -13,7 +13,7 @@
 #define BLACKCORE_DATA_AIRCRAFTMODELS_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackcore/datacache.h"
+#include "blackmisc/datacache.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/variant.h"
 
@@ -22,7 +22,7 @@ namespace BlackCore
     namespace Data
     {
         //! Trait for own simulator models
-        struct OwnSimulatorAircraftModels : public BlackCore::CDataTrait<BlackMisc::Simulation::CAircraftModelList>
+        struct OwnSimulatorAircraftModels : public BlackMisc::CDataTrait<BlackMisc::Simulation::CAircraftModelList>
         {
             //! Key in data cache
             static const char *key() { return "simulator/models"; }
@@ -36,7 +36,7 @@ namespace BlackCore
         };
 
         //! Trait for vPilot derived models
-        struct VPilotAircraftModels : public BlackCore::CDataTrait<BlackMisc::Simulation::CAircraftModelList>
+        struct VPilotAircraftModels : public BlackMisc::CDataTrait<BlackMisc::Simulation::CAircraftModelList>
         {
             //! Key in data cache
             static const char *key() { return "vpilot/models"; }

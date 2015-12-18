@@ -40,7 +40,7 @@ namespace BlackCoreTest
     private:
         BlackCore::CIcaoDataReader  m_icaoReader;
         BlackCore::CModelDataReader m_modelReader;
-        BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
+        BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
 
         //! Test if server is available
         static bool pingServer(const BlackMisc::Network::CUrl &url);

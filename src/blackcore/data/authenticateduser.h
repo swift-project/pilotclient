@@ -13,7 +13,7 @@
 #define BLACKCORE_DATA_AUTHENTICATEDUSER_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackcore/datacache.h"
+#include "blackmisc/datacache.h"
 #include "blackmisc/network/authenticateduser.h"
 
 namespace BlackCore
@@ -21,7 +21,7 @@ namespace BlackCore
     namespace Data
     {
         //! Trait for for global setup data
-        struct AuthenticatedUser : public BlackCore::CDataTrait<BlackMisc::Network::CAuthenticatedUser>
+        struct AuthenticatedUser : public BlackMisc::CDataTrait<BlackMisc::Network::CAuthenticatedUser>
         {
             //! Key in data cache
             static const char *key() { return "readers/global/user"; }

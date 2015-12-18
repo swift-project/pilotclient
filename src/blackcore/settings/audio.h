@@ -12,7 +12,7 @@
 #ifndef BLACKCORE_SETTINGS_AUDIO_H
 #define BLACKCORE_SETTINGS_AUDIO_H
 
-#include "blackcore/settingscache.h"
+#include "blackmisc/settingscache.h"
 #include "blackmisc/audio/settings/settingsaudio.h"
 
 namespace BlackCore
@@ -22,15 +22,15 @@ namespace BlackCore
         namespace Audio
         {
             //! Name of text codec to use with text in FSD protocol
-            struct AudioSettings : public CSettingTrait<BlackMisc::Audio::Settings::CSettingsAudio>
+            struct AudioSettings : public BlackMisc::CSettingTrait<BlackMisc::Audio::Settings::CSettingsAudio>
             {
-                //! \copydoc BlackCore::CSettingTrait::key
+                //! \copydoc BlackMisc::CSettingTrait::key
                 static const char *key() { return "audio/setup"; }
 
-                //! \copydoc BlackCore::CSettingTrait::defaultValue
+                //! \copydoc BlackMisc::CSettingTrait::defaultValue
                 static const BlackMisc::Audio::Settings::CSettingsAudio &defaultValue() { static const BlackMisc::Audio::Settings::CSettingsAudio a; return a; }
 
-                //! \copydoc BlackCore::CSettingTrait::isValid
+                //! \copydoc BlackMisc::CSettingTrait::isValid
                 static bool isValid(const BlackMisc::Audio::Settings::CSettingsAudio &value) { Q_UNUSED(value); return true; }
             };
 

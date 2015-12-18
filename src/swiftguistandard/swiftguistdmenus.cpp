@@ -9,8 +9,8 @@
 
 #include "swiftguistd.h"
 #include "ui_swiftguistd.h"
-#include "blackcore/datacache.h"
-#include "blackcore/settingscache.h"
+#include "blackmisc/datacache.h"
+#include "blackmisc/settingscache.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/components/settingscomponent.h"
 #include "blackgui/components/logcomponent.h"

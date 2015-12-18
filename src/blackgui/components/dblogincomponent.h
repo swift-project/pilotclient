@@ -40,8 +40,8 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CDbLoginComponent> ui;
-            BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this, &CDbLoginComponent::ps_setupChanged};   //!< data cache
-            BlackCore::CDatabaseAuthenticationService m_loginService {this}; //!< login service
+            BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this, &CDbLoginComponent::ps_setupChanged};   //!< data cache
+            BlackCore::CDatabaseAuthenticationService m_loginService {this};                                      //!< login service
 
             //! Overlay messages
             void displayOverlayMessages(const BlackMisc::CStatusMessageList &msgs);

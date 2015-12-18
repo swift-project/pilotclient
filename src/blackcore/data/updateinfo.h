@@ -13,7 +13,7 @@
 #define BLACKCORE_DATA_UPDATEINFO_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackcore/datacache.h"
+#include "blackmisc/datacache.h"
 #include "blackmisc/network/urllist.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
@@ -103,7 +103,7 @@ namespace BlackCore
         };
 
         //! Trait for global setup data
-        struct UpdateInfo : public BlackCore::CDataTrait<CUpdateInfo>
+        struct UpdateInfo : public BlackMisc::CDataTrait<CUpdateInfo>
         {
             //! Key in data cache
             static const char *key() { return "readers/updateinfo"; }

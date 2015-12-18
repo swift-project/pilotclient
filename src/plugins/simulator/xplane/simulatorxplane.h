@@ -214,7 +214,7 @@ namespace BlackSimPlugin
         private:
             QDBusConnection m_conn { "default" };
             QDBusServiceWatcher *m_watcher { nullptr };
-            BlackCore::CSetting<XBusServer> m_xbusServerSetting { this, &CSimulatorXPlaneListener::ps_xbusServerSettingChanged };
+            BlackMisc::CSetting<XBusServer> m_xbusServerSetting { this, &CSimulatorXPlaneListener::ps_xbusServerSettingChanged };
 
         };
 

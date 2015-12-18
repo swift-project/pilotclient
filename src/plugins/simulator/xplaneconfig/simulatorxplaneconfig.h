@@ -13,7 +13,7 @@
 #define BLACKSIMPLUGIN_SIMULATOR_XPLANE_CONFIG_H
 
 #include "blackgui/pluginconfig.h"
-#include "blackcore/settingscache.h"
+#include "blackmisc/settingscache.h"
 
 namespace BlackSimPlugin
 {
@@ -23,12 +23,12 @@ namespace BlackSimPlugin
         /*!
          * Setting for XBus.
          */
-        struct XBusServer : public BlackCore::CSettingTrait<QString>
+        struct XBusServer : public BlackMisc::CSettingTrait<QString>
         {
-            //! \copydoc BlackCore::CSetting::key
+            //! \copydoc BlackMisc::CSetting::key
             static const char *key() { return "xbus/server"; }
 
-            //! \copydoc BlackCore::CSetting::defaultValue
+            //! \copydoc BlackMisc::CSetting::defaultValue
             static QString defaultValue() { return QStringLiteral("session"); }
         };
 

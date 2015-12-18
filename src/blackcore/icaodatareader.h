@@ -134,7 +134,7 @@ namespace BlackCore
         mutable QReadWriteLock m_lockAircraft;
         mutable QReadWriteLock m_lockCountry;
 
-        BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
+        BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
 
         //! Base URL
         BlackMisc::Network::CUrl getBaseUrl() const;

@@ -51,8 +51,8 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CSettingsNetworkServersComponent> ui;
-            BlackCore::CSetting<BlackCore::Settings::Network::TrafficServers> m_trafficNetworkServers { this, &CSettingsNetworkServersComponent::ps_reloadSettings };
-            BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
+            BlackMisc::CSetting<BlackCore::Settings::Network::TrafficServers> m_trafficNetworkServers { this, &CSettingsNetworkServersComponent::ps_reloadSettings };
+            BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
         };
     } // ns
 } // ns

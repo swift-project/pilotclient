@@ -145,7 +145,7 @@ namespace BlackCore
         QString m_voiceRoom2UrlOverride;             //!< overridden voice room url
         mutable QReadWriteLock m_lockAircraft;       //!< lock aircraft
 
-        CSetting<Settings::Network::CurrentTrafficServer> m_currentNetworkServer { this };
+        BlackMisc::CSetting<Settings::Network::CurrentTrafficServer> m_currentNetworkServer { this };
 
         //! Init my very own aircraft with some defaults, before overridden by simulator
         void initOwnAircraft();

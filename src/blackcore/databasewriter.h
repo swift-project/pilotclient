@@ -43,11 +43,11 @@ namespace BlackCore
         void ps_postResponse(QNetworkReply *nwReplyPtr);
 
     private:
-        CData<BlackCore::Data::GlobalSetup>    m_setup {this}; //!< data cache
-        BlackMisc::Network::CUrl               m_modelUrl;
-        QNetworkAccessManager                 *m_networkManager = nullptr;
-        QNetworkReply                         *m_pendingReply = nullptr;
-        bool                                   m_shutdown = false;
+        BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< data cache
+        BlackMisc::Network::CUrl                       m_modelUrl;
+        QNetworkAccessManager                         *m_networkManager = nullptr;
+        QNetworkReply                                 *m_pendingReply = nullptr;
+        bool                                           m_shutdown = false;
 
         //! URL model web service
         static BlackMisc::Network::CUrl getModelWriteUrl(const BlackMisc::Network::CUrl &baseUrl);

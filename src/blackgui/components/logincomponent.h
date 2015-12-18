@@ -147,8 +147,8 @@ namespace BlackGui
             QScopedPointer<Ui::CLoginComponent> ui;
             const int LogoffIntervalSeconds = 10;
             QTimer *m_logoffCountdownTimer { nullptr };
-            BlackCore::CSetting<BlackCore::Settings::Network::TrafficServers> m_otherTrafficNetworkServers { this, &CLoginComponent::ps_reloadSettings };
-            BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
+            BlackMisc::CSetting<BlackCore::Settings::Network::TrafficServers> m_otherTrafficNetworkServers { this, &CLoginComponent::ps_reloadSettings };
+            BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
         };
 
     } // namespace

@@ -72,7 +72,7 @@ namespace BlackCore
         QNetworkAccessManager            *m_networkManager = nullptr;
         BlackMisc::Weather::CMetarDecoder m_metarDecoder;
         BlackMisc::Weather::CMetarSet     m_metars;
-        BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
+        BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
     };
 }
 #endif // guard

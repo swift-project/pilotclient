@@ -10,7 +10,7 @@
 #include "contextapplicationimpl.h"
 #include "contextruntime.h"
 #include "inputmanager.h"
-#include "settingscache.h"
+#include "blackmisc/settingscache.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/loghandler.h"
 #include <QtMsgHandler>

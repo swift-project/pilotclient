@@ -169,7 +169,7 @@ namespace BlackCore
         QHash<BlackMisc::Aviation::CComSystem::ComUnit, QSharedPointer<IVoiceChannel>> m_voiceChannelMapping;
 
         // settings
-        CSetting<BlackCore::Settings::Audio::AudioSettings> m_audioSettings { this };
+        BlackMisc::CSetting<BlackCore::Settings::Audio::AudioSettings> m_audioSettings { this };
     };
 } // namespace
 

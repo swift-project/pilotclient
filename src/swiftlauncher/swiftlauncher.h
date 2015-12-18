@@ -60,11 +60,11 @@ protected:
 
 private:
     QScopedPointer<Ui::CSwiftLauncher>             ui;
-    BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup      { this, &CSwiftLauncher::ps_changedCache };   //!< setup cache
-    BlackCore::CData<BlackCore::Data::UpdateInfo>  m_updateInfo { this, &CSwiftLauncher::ps_changedCache }; //!< version cache
+    BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup      { this, &CSwiftLauncher::ps_changedCache };   //!< setup cache
+    BlackMisc::CData<BlackCore::Data::UpdateInfo>  m_updateInfo { this, &CSwiftLauncher::ps_changedCache }; //!< version cache
     QString     m_executable;
     QStringList m_executableArgs;
-    BlackCore::CSetting<BlackCore::Settings::Network::DBusServerAddress> m_dbusServerAddress { this };
+    BlackMisc::CSetting<BlackCore::Settings::Network::DBusServerAddress> m_dbusServerAddress { this };
 
     //! Get core mode
     GuiModes::CoreMode getCoreMode() const;

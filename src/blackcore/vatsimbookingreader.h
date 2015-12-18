@@ -56,7 +56,7 @@ namespace BlackCore
         void ps_read();
 
     private:
-        BlackCore::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
+        BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
         QNetworkAccessManager *m_networkManager = nullptr;
     };
 }

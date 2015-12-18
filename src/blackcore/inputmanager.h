@@ -132,7 +132,7 @@ namespace BlackCore
         BlackMisc::Input::CHotkeyCombination m_lastCombination;
         BlackMisc::Input::CHotkeyCombination m_capturedCombination;
 
-        BlackCore::CSetting<BlackCore::Settings::Application::ActionHotkeys> m_actionHotkeys { this, &CInputManager::ps_changeHotkeySettings };
+        BlackMisc::CSetting<BlackCore::Settings::Application::ActionHotkeys> m_actionHotkeys { this, &CInputManager::ps_changeHotkeySettings };
     };
 }
 

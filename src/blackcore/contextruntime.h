@@ -151,7 +151,7 @@ namespace BlackCore
 
     private:
         bool m_init = false; //!< flag
-        CSetting<Settings::Network::DBusServerAddress> m_dbusServerAddress { this };
+        BlackMisc::CSetting<Settings::Network::DBusServerAddress> m_dbusServerAddress { this };
 
         // DBus
         BlackMisc::CDBusServer *m_dbusServer = nullptr;

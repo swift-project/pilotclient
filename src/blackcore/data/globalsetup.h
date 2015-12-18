@@ -13,7 +13,7 @@
 #define BLACKCORE_DATA_GLOBALSETUP_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackcore/datacache.h"
+#include "blackmisc/datacache.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/urllist.h"
 #include "blackmisc/valueobject.h"
@@ -149,7 +149,7 @@ namespace BlackCore
         };
 
         //! Trait for global setup data
-        struct GlobalSetup : public BlackCore::CDataTrait<CGlobalSetup>
+        struct GlobalSetup : public BlackMisc::CDataTrait<CGlobalSetup>
         {
             //! Key in data cache
             static const char *key() { return "readers/setup"; }

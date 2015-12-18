@@ -12,7 +12,7 @@
 #ifndef BLACKCORE_SETTINGS_APPLICATION_H
 #define BLACKCORE_SETTINGS_APPLICATION_H
 
-#include "blackcore/settingscache.h"
+#include "blackmisc/settingscache.h"
 #include "blackmisc/input/actionhotkeylist.h"
 
 namespace BlackCore
@@ -22,12 +22,12 @@ namespace BlackCore
         namespace Application
         {
             //! User configured hotkeys
-            struct ActionHotkeys : public CSettingTrait<BlackMisc::Input::CActionHotkeyList>
+            struct ActionHotkeys : public BlackMisc::CSettingTrait<BlackMisc::Input::CActionHotkeyList>
             {
-                //! \copydoc BlackCore::CSettingTrait::key
+                //! \copydoc BlackMisc::CSettingTrait::key
                 static const char *key() { return "application/actionhotkeys"; }
 
-                //! \copydoc BlackCore::CSettingTrait::isValid
+                //! \copydoc BlackMisc::CSettingTrait::isValid
                 static bool isValid(const BlackMisc::Input::CActionHotkeyList &value)
                 {
                     for (const auto &actionHotkey : value)
@@ -39,8 +39,8 @@ namespace BlackCore
                     return true;
                 }
             };
-        }
-    }
-}
+        } // ns
+    } // ns
+} // ns
 
 #endif

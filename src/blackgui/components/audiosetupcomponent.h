@@ -73,7 +73,7 @@ namespace BlackGui
             void initAudioDeviceLists();
 
             QScopedPointer<Ui::CAudioSetupComponent> ui;
-            BlackCore::CSetting<BlackCore::Settings::Audio::AudioSettings> m_audioSettings { this, &CAudioSetupComponent::ps_reloadSettings };
+            BlackMisc::CSetting<BlackCore::Settings::Audio::AudioSettings> m_audioSettings { this, &CAudioSetupComponent::ps_reloadSettings };
 
         };
     } // namespace

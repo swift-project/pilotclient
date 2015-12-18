@@ -181,7 +181,7 @@ namespace BlackCore
         static int const c_updateIntervalMsec = 5000;
         static int const c_logoffTimeoutSec = 5;
 
-        CSetting<Settings::Network::WireTextCodec> m_fsdTextCodecSetting { this };
+        BlackMisc::CSetting<Settings::Network::WireTextCodec> m_fsdTextCodecSetting { this };
         QTextCodec *m_fsdTextCodec = nullptr;
 
         BlackMisc::Aviation::CAircraftParts m_sentAircraftConfig;

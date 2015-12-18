@@ -164,10 +164,10 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CDbMappingComponent> ui;
             BlackMisc::Simulation::FsCommon::CVPilotRulesReader           m_vPilotReader;                //!< read vPilot rules
-            BlackCore::CData<BlackCore::Data::VPilotAircraftModels>       m_cachedVPilotModels { this, &CDbMappingComponent::ps_onVPilotCacheChanged }; //!< cache for latest vPilot rules
+            BlackMisc::CData<BlackCore::Data::VPilotAircraftModels>       m_cachedVPilotModels { this, &CDbMappingComponent::ps_onVPilotCacheChanged }; //!< cache for latest vPilot rules
             std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>  m_modelLoader;                 //!< read own aircraft models
-            BlackCore::CData<BlackCore::Data::OwnSimulatorAircraftModels> m_cachedOwnModels { this };    //!< cache for latest models
-            BlackCore::CData<BlackCore::Data::AuthenticatedUser>          m_user {this, &CDbMappingComponent::ps_userChanged};
+            BlackMisc::CData<BlackCore::Data::OwnSimulatorAircraftModels> m_cachedOwnModels { this };    //!< cache for latest models
+            BlackMisc::CData<BlackCore::Data::AuthenticatedUser>          m_user {this, &CDbMappingComponent::ps_userChanged};
             bool m_vPilot1stInit = true;
             bool m_withVPilot    = false;
 
