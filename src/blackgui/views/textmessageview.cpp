@@ -20,7 +20,7 @@ namespace BlackGui
         CTextMessageView::CTextMessageView(QWidget *parent) : CViewBase(parent)
         {
             this->standardInit(new CTextMessageListModel(CTextMessageListModel::FromTo, this));
-            this->m_withMenuItemClear = true;
+            this->m_menus |= MenuClear;
         }
 
         void CTextMessageView::setTextMessageMode(CTextMessageListModel::TextMessageMode mode)

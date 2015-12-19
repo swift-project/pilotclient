@@ -38,8 +38,10 @@ namespace BlackGui
 
             this->ui->tvp_AircraftModelsForVPilot->setAircraftModelMode(CAircraftModelListModel::VPilotRuleModel);
             this->ui->tvp_AircraftModelsForVPilot->setAllowStash(true);
+            this->ui->tvp_AircraftModelsForVPilot->addFilterDialog();
             this->ui->tvp_OwnAircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnSimulatorModelMapping);
             this->ui->tvp_OwnAircraftModels->setAllowStash(true);
+            this->ui->tvp_OwnAircraftModels->addFilterDialog();
 
             // connects
             connect(ui->editor_Model, &CModelMappingForm::requestPublish, this, &CDbMappingComponent::ps_publishSingleModelToDb);
@@ -91,6 +93,7 @@ namespace BlackGui
                 connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
                 this->ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CMappingVPilotMenu(this, true));
                 this->ui->tvp_AircraftModelsForVPilot->setDisplayAutomatically(true);
+                this->ui->tvp_AircraftModelsForVPilot->addFilterDialog();
                 const CAircraftModelList cachedModels(m_cachedVPilotModels.get());
                 this->ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(cachedModels);
                 int noModels = cachedModels.size();

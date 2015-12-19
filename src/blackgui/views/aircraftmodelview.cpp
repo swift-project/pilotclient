@@ -35,11 +35,6 @@ namespace BlackGui
             // default
             this->standardInit(new CAircraftModelListModel(CAircraftModelListModel::OwnSimulatorModel, this));
 
-            // filter
-            QWidget *mainWindow = this->mainApplicationWindowWidget();
-            Q_ASSERT_X(mainWindow, Q_FUNC_INFO, "no main window found");
-            this->setFilterDialog(new CAircraftModelFilterDialog(mainWindow));
-
             // shortcut
             new QShortcut(CShortcut::keyStash(), this, SLOT(ps_stashShortcut()), nullptr, Qt::WidgetShortcut);
 
@@ -50,43 +45,30 @@ namespace BlackGui
 
         void CAircraftModelView::setAircraftModelMode(CAircraftModelListModel::AircraftModelMode mode)
         {
-            this->m_withMenuDisplayAutomatically = false;
             this->setCustomMenu(nullptr, false); // delete everything
             derivedModel()->setAircraftModelMode(mode);
             switch (mode)
             {
             case CAircraftModelListModel::StashModel:
-                this->m_withMenuItemClear = true;
-                this->m_withMenuItemRefresh = false;
-                this->m_withMenuItemBackend = false;
+                this->m_menus = MenuClear;
                 this->setCustomMenu(new CHighlightDbModelsMenu(this, true));
                 break;
             case CAircraftModelListModel::Database:
-                this->m_withMenuItemClear = false;
-                this->m_withMenuItemRefresh = false;
-                this->m_withMenuItemBackend = true;
+                this->m_menus = MenuBackend;
                 break;
             case CAircraftModelListModel::VPilotRuleModel:
-                this->m_withMenuItemClear = false;
-                this->m_withMenuItemRefresh = true;
-                this->m_withMenuItemBackend = false;
+                this->m_menus = MenuRefresh;
                 this->setCustomMenu(new CHighlightDbModelsMenu(this, true));
                 this->setCustomMenu(new CHighlightStashedModelsMenu(this, true));
                 break;
             case CAircraftModelListModel::OwnSimulatorModelMapping:
-                this->m_withMenuDisplayAutomatically = true;
-                this->m_withMenuItemClear = false;
-                this->m_withMenuItemRefresh = false;
-                this->m_withMenuItemBackend = false;
+                this->m_menus = MenuDisplayAutomatically;
                 this->setCustomMenu(new CHighlightDbModelsMenu(this, true));
                 this->setCustomMenu(new CHighlightStashedModelsMenu(this, true));
                 break;
             case CAircraftModelListModel::OwnSimulatorModel:
             default:
-                this->m_withMenuDisplayAutomatically = true;
-                this->m_withMenuItemClear = false;
-                this->m_withMenuItemRefresh = true;
-                this->m_withMenuItemBackend = true;
+                this->m_menus = MenuDisplayAutomatically | MenuBackend | MenuRefresh;
                 this->setCustomMenu(new CHighlightDbModelsMenu(this, true));
                 break;
             }
@@ -128,6 +110,11 @@ namespace BlackGui
                 qMetaTypeId<CDistributor>(), qMetaTypeId<CDistributorList>(),
                 qMetaTypeId<CAircraftModel>(), qMetaTypeId<CAircraftModelList>(),
             });
+        }
+
+        void CAircraftModelView::addFilterDialog()
+        {
+            this->setFilterDialog(new CAircraftModelFilterDialog(this));
         }
 
         void CAircraftModelView::dropEvent(QDropEvent *event)

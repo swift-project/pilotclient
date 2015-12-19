@@ -22,7 +22,7 @@ namespace BlackGui
         CSimulatedAircraftView::CSimulatedAircraftView(QWidget *parent) : CViewBase(parent)
         {
             this->standardInit(new CSimulatedAircraftListModel(this));
-            this->m_withMenuItemRefresh = true;
+            this->m_menus |= MenuRefresh;
         }
 
         void CSimulatedAircraftView::setAircraftMode(CSimulatedAircraftListModel::AircraftMode mode)

@@ -20,7 +20,7 @@ namespace BlackGui
     {
         CStatusMessageView::CStatusMessageView(QWidget *parent) : CViewBase(parent)
         {
-            m_withMenuItemClear = true;
+            m_menus |= MenuClear;
             m_acceptRowSelected = true;
             this->standardInit(new CStatusMessageListModel(this));
         }

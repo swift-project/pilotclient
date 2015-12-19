@@ -43,9 +43,11 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->ui->tvp_AircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnSimulatorModel);
+            this->ui->tvp_AircraftModels->setResizeMode(CAircraftModelView::ResizingOff);
+            this->ui->tvp_AircraftModels->addFilterDialog();
+
             this->ui->tvp_SimulatedAircraft->setAircraftMode(CSimulatedAircraftListModel::ModelMode);
             this->ui->tvp_SimulatedAircraft->setResizeMode(CAircraftModelView::ResizingOnce);
-            this->ui->tvp_AircraftModels->setResizeMode(CAircraftModelView::ResizingOff);
 
             connect(this->ui->tvp_AircraftModels, &CAircraftModelView::requestUpdate, this, &CMappingComponent::ps_onModelsUpdateRequested);
             connect(this->ui->tvp_AircraftModels, &CAircraftModelView::rowCountChanged, this, &CMappingComponent::ps_onRowCountChanged);

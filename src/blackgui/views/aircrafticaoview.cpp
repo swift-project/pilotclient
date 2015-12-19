@@ -19,7 +19,7 @@ namespace BlackGui
     {
         CAircraftIcaoCodeView::CAircraftIcaoCodeView(QWidget *parent) : CViewBase(parent)
         {
-            this->m_withMenuItemBackend = true;
+            this->m_menus |= MenuBackend;
             this->standardInit(new CAircraftIcaoCodeListModel(this));
         }
     }

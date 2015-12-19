@@ -19,7 +19,7 @@ namespace BlackGui
     {
         CAirlineIcaoCodeView::CAirlineIcaoCodeView(QWidget *parent) : CViewBase(parent)
         {
-            this->m_withMenuItemBackend = true;
+            this->m_menus |= MenuBackend;
             this->standardInit(new CAirlineIcaoCodeListModel(this));
         }
     }

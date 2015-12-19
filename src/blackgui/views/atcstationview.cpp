@@ -23,8 +23,7 @@ namespace BlackGui
         CAtcStationView::CAtcStationView(QWidget *parent) : CViewBase(parent)
         {
             this->standardInit(new CAtcStationListModel(CAtcStationListModel::StationsOnline, this));
-            this->m_withMenuItemClear = true;
-            this->m_withMenuItemRefresh = true;
+            this->m_menus |= (MenuClear | MenuRefresh);
         }
 
         void CAtcStationView::setStationMode(CAtcStationListModel::AtcStationMode stationMode)

@@ -52,6 +52,9 @@ namespace BlackGui
             //! Add the technically supported metatypes as allows
             void setImplementedMetaTypeIds();
 
+            //! Add my own filter dialog
+            void addFilterDialog();
+
         signals:
             //! Request to stash if applicable
             void requestStash();

@@ -18,7 +18,7 @@ namespace BlackGui
     {
         CLiveryView::CLiveryView(QWidget *parent) : CViewBase(parent)
         {
-            this->m_withMenuItemBackend = true;
+            this->m_menus |= MenuBackend;
             this->standardInit(new CLiveryListModel(this));
         }
     }
