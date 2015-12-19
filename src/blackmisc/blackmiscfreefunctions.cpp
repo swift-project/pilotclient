@@ -60,7 +60,6 @@ uint BlackMisc::calculateHash(const QList<int> &values, const char *className)
     uint s = 0;
     foreach(int i, values)
     {
-
         if (i >= 0)
         {
             list.append(static_cast<uint>(i));
@@ -74,20 +73,8 @@ uint BlackMisc::calculateHash(const QList<int> &values, const char *className)
     return calculateHash(list, className);
 }
 
-const QString &BlackMisc::localHostName()
-{
-    static const QString hostName = QHostInfo::localHostName();
-    return hostName;
-}
-
 const QString &BlackMisc::localHostNameEnvVariable()
 {
     static const QString hostName = QProcessEnvironment::systemEnvironment().value("COMPUTERNAME", QProcessEnvironment::systemEnvironment().value("HOSTNAME"));
     return hostName;
-}
-
-bool BlackMisc::Audio::startWindowsMixer()
-{
-    QStringList parameterlist;
-    return QProcess::startDetached("SndVol.exe", parameterlist);
 }

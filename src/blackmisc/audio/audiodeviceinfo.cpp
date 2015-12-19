@@ -10,6 +10,7 @@
 #include "audiodeviceinfo.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <tuple>
+#include <QHostInfo>
 
 namespace BlackMisc
 {
@@ -18,12 +19,12 @@ namespace BlackMisc
 
         CAudioDeviceInfo::CAudioDeviceInfo() :
             m_type(Unknown), m_deviceIndex(invalidDeviceIndex()),
-            m_deviceName(""), m_hostName(BlackMisc::localHostName())
+            m_deviceName(""), m_hostName(QHostInfo::localHostName())
         { }
 
         CAudioDeviceInfo::CAudioDeviceInfo(DeviceType type, const int index, const QString &name) :
             m_type(type), m_deviceIndex(index),
-            m_deviceName(name), m_hostName(BlackMisc::localHostName())
+            m_deviceName(name), m_hostName(QHostInfo::localHostName())
         { }
 
         QString CAudioDeviceInfo::convertToQString(bool i18n) const

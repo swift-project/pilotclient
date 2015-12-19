@@ -22,7 +22,6 @@ namespace BlackGui
 {
     namespace Components
     {
-
         //! Audio volume, mixer
         class BLACKGUI_EXPORT CAudioVolumeComponent :
             public QFrame,
@@ -62,9 +61,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CAudioVolumeComponent> ui;
-
         };
-
     } // namespace
 } // namespace
 

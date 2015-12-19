@@ -53,11 +53,11 @@ namespace BlackGui
             bool m_enabled = true;
         };
 
-        //! Model filter interface for those who can generate such a filter (e.g. a widget dialog)
+        //! Model filter interface for those who can generate such a filter (e.g. a widget or dialog)
         template<class ContainerType> class IModelFilterProvider
         {
         public:
-            //! Get the filter
+            //! Get the filter, this is the filter itself, not its widget or dialog
             virtual std::unique_ptr<IModelFilter<ContainerType>> createModelFilter() const = 0;
         };
 

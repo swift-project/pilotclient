@@ -277,7 +277,7 @@ namespace BlackCore
             if (!liveriesJson.isEmpty())
             {
                 CLiveryList liveries;
-                liveries.convertFromJson(Json::jsonObjectFromString(liveriesJson));
+                liveries.convertFromJson(liveriesJson);
                 int c = liveries.size();
                 {
                     QWriteLocker l(&m_lockLivery);

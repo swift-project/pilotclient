@@ -8,6 +8,7 @@
  */
 
 #include "blackcore/contextaudio.h"
+#include "blackmisc/audio/audioutils.h"
 #include "audiovolumecomponent.h"
 #include "ui_audiovolumecomponent.h"
 

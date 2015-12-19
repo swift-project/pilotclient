@@ -37,11 +37,9 @@ namespace BlackMisc
                 Unknown
             };
 
-            /*!
-             * Default constructor.
-             * If m_deviceIndex is -1, default should be used. However on Windows this doesnt work. Needs
-             * to be checked in Vatlib.
-             */
+            //!
+            //! Default constructor.
+            //! \note If m_deviceIndex is -1, default should be used. However on Windows this doesnt work. Needs to be checked in Vatlib.
             CAudioDeviceInfo();
 
             //! Constructor.
@@ -85,17 +83,11 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAudioDeviceInfo)
-            //! Device type, @see CAudioDeviceInfo::DeviceType
-            DeviceType m_type;
-            /*!
-             * deviceIndex is the number is the reference for the VVL. The device is selected by this index.
-             * The managing class needs to take care, that indexes are valid.
-             */
-            int m_deviceIndex;
-            //! Device name
-            QString m_deviceName;
-            //! We use a DBus based system. Hence an audio device can reside on a differen computers, this here is its name
-            QString m_hostName;
+
+            DeviceType m_type;    //!< Device type, @see CAudioDeviceInfo::DeviceType
+            int m_deviceIndex;    //!< deviceIndex is the number is the reference for the VVL. The device is selected by this index. The managing class needs to take care, that indexes are valid.
+            QString m_deviceName; //!< Device name
+            QString m_hostName;   //!< We use a DBus based system. Hence an audio device can reside on a differen computers, this here is its name
         };
     } // namespace
 } // namespace

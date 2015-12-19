@@ -35,12 +35,6 @@ inline void initBlackMiscResources()
 //! Free functions in BlackMisc
 namespace BlackMisc
 {
-    namespace Audio
-    {
-        //! Start the Windows mixer
-        BLACKMISC_EXPORT bool startWindowsMixer();
-    }
-
     //! Init resources
     BLACKMISC_EXPORT void initResources();
 
@@ -156,9 +150,6 @@ namespace BlackMisc
 
     //! Hash value, but with int list
     BLACKMISC_EXPORT uint calculateHash(const QList<int> &values, const char *className);
-
-    //! Get local host name
-    BLACKMISC_EXPORT const QString &localHostName();
 
     //! Get local host name env.variable
     BLACKMISC_EXPORT const QString &localHostNameEnvVariable();

@@ -14,6 +14,7 @@
 #include "blackcore/contextapplication.h"
 #include "blackcore/contextaudio.h"
 #include "blackcore/simulator.h"
+#include "blackmisc/audio/audioutils.h"
 #include "blackmisc/project.h"
 #include "blackmisc/icons.h"
 
