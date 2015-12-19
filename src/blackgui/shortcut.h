@@ -38,6 +38,12 @@ namespace BlackGui
 
         //! Display filter
         static const QKeySequence &keyDisplayFilter();
+
+        //! Save depending on context
+        static const QKeySequence &keySave();
+
+        //! Save in views
+        static const QKeySequence &keySaveViews();
     };
 } // ns
-#endif // CSHORTCUT_H
+#endif // guard

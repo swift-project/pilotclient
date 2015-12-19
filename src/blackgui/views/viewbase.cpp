@@ -8,6 +8,7 @@
  */
 
 #include "viewbase.h"
+#include "blackmisc/fileutils.h"
 #include "blackgui/models/allmodels.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/guiutility.h"
@@ -24,6 +25,9 @@
 #include <QMovie>
 #include <QPainter>
 #include <QShortcut>
+#include <QFileDialog>
+#include <QStandardPaths>
+#include <QDir>
 
 using namespace BlackMisc;
 using namespace BlackGui;
@@ -49,9 +53,10 @@ namespace BlackGui
 
             QShortcut *filter = new QShortcut(CShortcut::keyDisplayFilter(), this, SLOT(ps_displayFilterDialog()), nullptr, Qt::WidgetShortcut);
             filter->setObjectName("Filter shortcut for " + this->objectName());
-
             QShortcut *clearSelection = new QShortcut(CShortcut::keyClearSelection(), this, SLOT(clearSelection()), nullptr, Qt::WidgetShortcut);
-            clearSelection->setObjectName("Cleat selection shortcut for " + this->objectName());
+            clearSelection->setObjectName("Clear selection shortcut for " + this->objectName());
+            QShortcut *saveJson = new QShortcut(CShortcut::keySaveViews(), this, SLOT(ps_saveJsonShortcut()), nullptr, Qt::WidgetShortcut);
+            saveJson->setObjectName("Save JSON for " + this->objectName());
         }
 
         bool CViewBaseNonTemplate::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
@@ -65,35 +70,39 @@ namespace BlackGui
             this->performModeBasedResizeToContent();
         }
 
-        void CViewBaseNonTemplate::setFilterDialog(CFilterDialog *filterDialog)
-        {
-            if (filterDialog)
-            {
-                this->m_withMenuFilter = true;
-                this->m_filterWidget = filterDialog;
-                connect(filterDialog, &CFilterDialog::finished, this, &CViewBaseNonTemplate::ps_filterDialogFinished);
-            }
-            else
-            {
-                if (this->m_filterWidget) { disconnect(this->m_filterWidget); }
-                this->m_withMenuFilter = false;
-                this->m_filterWidget->deleteLater();
-                this->m_filterWidget = nullptr;
-            }
-        }
-
-        void CViewBaseNonTemplate::setFilterWidget(CFilterWidget *filterWidget)
+        void CViewBaseNonTemplate::setFilterWidgetImpl(QWidget *filterWidget)
         {
             if (this->m_filterWidget)
             {
                 disconnect(this->m_filterWidget);
+                this->menuRemoveItems(MenuFilter);
+                if (m_filterWidget->parent() == this) { m_filterWidget->deleteLater(); }
                 m_filterWidget = nullptr;
             }
 
             if (filterWidget)
             {
-                this->m_withMenuFilter = false;
+                this->menuAddItems(MenuFilter);
                 this->m_filterWidget = filterWidget;
+            }
+        }
+
+        void CViewBaseNonTemplate::setFilterDialog(CFilterDialog *filterDialog)
+        {
+            this->setFilterWidgetImpl(filterDialog);
+            if (filterDialog)
+            {
+                bool s = connect(filterDialog, &CFilterDialog::finished, this, &CViewBaseNonTemplate::ps_filterDialogFinished);
+                Q_ASSERT_X(s, Q_FUNC_INFO, "filter dialog connect");
+                Q_UNUSED(s);
+            }
+        }
+
+        void CViewBaseNonTemplate::setFilterWidget(CFilterWidget *filterWidget)
+        {
+            this->setFilterWidgetImpl(filterWidget);
+            if (filterWidget)
+            {
                 bool s = connect(filterWidget, &CFilterWidget::changeFilter, this, &CViewBaseNonTemplate::ps_filterWidgetChangedFilter);
                 Q_ASSERT_X(s, Q_FUNC_INFO, "filter connect");
                 s = connect(this, &CViewBaseNonTemplate::rowCountChanged, filterWidget, &CFilterWidget::onRowCountChanged);
@@ -153,24 +162,25 @@ namespace BlackGui
             if (this->m_menu) { this->m_menu->customMenu(menu); }
 
             // standard menus
-            bool withStandardMenu = this->m_withMenuItemRefresh || this->m_withMenuItemBackend || this->m_withMenuItemClear || this->m_withMenuDisplayAutomatically;
-            if (this->m_withMenuItemRefresh) { menu.addAction(BlackMisc::CIcons::refresh16(), "Update", this, SIGNAL(requestUpdate())); }
-            if (this->m_withMenuItemBackend) { menu.addAction(BlackMisc::CIcons::refresh16(), "Reload from backend", this, SIGNAL(requestNewBackendData())); }
-            if (this->m_withMenuItemClear) { menu.addAction(BlackMisc::CIcons::delete16(), "Clear", this, SLOT(ps_clear())); }
-            if (this->m_withMenuDisplayAutomatically)
+            int items = menu.actions().size();
+            if (this->m_menus.testFlag(MenuRefresh)) { menu.addAction(BlackMisc::CIcons::refresh16(), "Update", this, SIGNAL(requestUpdate())); }
+            if (this->m_menus.testFlag(MenuBackend)) { menu.addAction(BlackMisc::CIcons::refresh16(), "Reload from backend", this, SIGNAL(requestNewBackendData())); }
+            if (this->m_menus.testFlag(MenuClear)) { menu.addAction(BlackMisc::CIcons::delete16(), "Clear", this, SLOT(ps_clear())); }
+            if (this->m_menus.testFlag(MenuDisplayAutomatically))
             {
                 QAction *a = menu.addAction(CIcons::appMappings16(), "Automatically display (when loaded)", this, SLOT(ps_toggleAutoDisplay()));
                 a->setCheckable(true);
                 a->setChecked(this->displayAutomatically());
             }
-            if (withStandardMenu) { menu.addSeparator(); }
+            if (menu.actions().size() > items) { menu.addSeparator(); }
 
-            if (this->m_withMenuFilter)
+            items = menu.actions().size();
+            if (this->m_menus.testFlag(MenuFilter))
             {
                 menu.addAction(BlackMisc::CIcons::tableSheet16(), "Filter", this, SLOT(ps_displayFilterDialog()), CShortcut::keyDisplayFilter());
                 menu.addAction(BlackMisc::CIcons::tableSheet16(), "Remove Filter", this, SLOT(ps_removeFilter()));
             }
-            if (!menu.isEmpty()) { menu.addSeparator(); }
+            if (menu.actions().size() > items) { menu.addSeparator(); }
 
             // selection menus
             SelectionMode sm = this->selectionMode();
@@ -179,7 +189,13 @@ namespace BlackGui
                 menu.addAction(BlackMisc::CIcons::empty16(), "Select all", this, SLOT(selectAll()), Qt::CTRL + Qt::Key_A);
             }
             menu.addAction(BlackMisc::CIcons::empty16(), "Clear selection", this, SLOT(clearSelection()), CShortcut::keyClearSelection());
-            if (!menu.isEmpty()) { menu.addSeparator(); }
+            menu.addSeparator();
+
+            // load/save
+            items = menu.actions().size();
+            if (m_menus.testFlag(MenuLoad)) { menu.addAction(CIcons::disk16(), "Load from file", this, SLOT(ps_loadJson())); }
+            if (m_menus.testFlag(MenuSave) && !isEmpty()) { menu.addAction(CIcons::disk16(), "Save data in file", this, SLOT(ps_saveJson()), CShortcut::keySaveViews()); }
+            if (menu.actions().size() > items) { menu.addSeparator(); }
 
             // resizing
             menu.addAction(BlackMisc::CIcons::resize16(), "Full resize", this, SLOT(fullResizeToContents()));
@@ -340,9 +356,16 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::ps_displayFilterDialog()
         {
-            if (!this->m_withMenuFilter) { return; }
+            if (!this->m_menus.testFlag(MenuFilter)) { return; }
             if (!this->m_filterWidget) { return; }
             this->m_filterWidget->show();
+        }
+
+        void CViewBaseNonTemplate::ps_saveJsonShortcut()
+        {
+            if (this->isEmpty()) { return; }
+            if (!this->m_menus.testFlag(MenuSave)) { return; }
+            this->ps_saveJson();
         }
 
         void CViewBaseNonTemplate::rowsResizeModeToInteractive()
@@ -695,6 +718,20 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
+        QJsonObject CViewBase<ModelClass, ContainerType, ObjectType>::toJson() const
+        {
+            Q_ASSERT(this->m_model);
+            return this->m_model->toJson();
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        QString CViewBase<ModelClass, ContainerType, ObjectType>::toJsonString(QJsonDocument::JsonFormat format) const
+        {
+            Q_ASSERT(this->m_model);
+            return this->m_model->toJsonString(format);
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
         void CViewBase<ModelClass, ContainerType, ObjectType>::setObjectName(const QString &name)
         {
             // then name here is mainly set for debugging purposes so each model can be identified
@@ -777,6 +814,45 @@ namespace BlackGui
         {
             ContainerType c(variant.to<ContainerType>());
             return this->updateContainer(c, sort, resize);
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::ps_loadJson()
+        {
+            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
+            QString fileName = QFileDialog::getOpenFileName(nullptr,
+                               tr("Load data file"), getDefaultFilename(),
+                               tr("swift (*.json *.txt)"));
+            if (fileName.isEmpty()) { return CStatusMessage(cats, CStatusMessage::SeverityDebug, "Load canceled"); }
+            QString json(CFileUtils::readFileToString(fileName));
+            if (json.isEmpty())
+            {
+                return CStatusMessage(cats, CStatusMessage::SeverityWarning, "Reading " + fileName + " yields no data");
+            }
+            ContainerType container;
+            container.convertFromJson(json);
+            this->updateContainerMaybeAsync(container);
+            return CStatusMessage(cats, CStatusMessage::SeverityInfo, "Reading " + fileName + " completed");
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::ps_saveJson() const
+        {
+            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
+            QString fileName = QFileDialog::getSaveFileName(nullptr,
+                               tr("Save data file"), getDefaultFilename(),
+                               tr("swift (*.json *.txt)"));
+            if (fileName.isEmpty()) { return CStatusMessage(cats, CStatusMessage::SeverityDebug, "Save canceled"); }
+            const QString json(this->toJsonString());
+            bool ok = CFileUtils::writeStringToFileInBackground(json, fileName);
+            if (ok)
+            {
+                return CStatusMessage(cats, CStatusMessage::SeverityInfo, "Writing " + fileName + " in progress");
+            }
+            else
+            {
+                return CStatusMessage(cats, CStatusMessage::SeverityError, "Writing " + fileName + " failed");
+            }
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>

@@ -41,6 +41,7 @@ namespace BlackGui
             this->ui->tvp_StatusMessages->setAutoResizeFrequency(3);
             connect(this->ui->tvp_StatusMessages, &CStatusMessageView::objectSelected, this->ui->form_StatusMessage, &CStatusMessageForm::setVariant);
             this->ui->tvp_StatusMessages->setCustomMenu(new CLogMenu(this));
+            this->ui->tvp_StatusMessages->menuAddItems(CStatusMessageView::MenuSave);
         }
 
         CLogComponent::~CLogComponent()

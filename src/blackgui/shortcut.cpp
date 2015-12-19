@@ -37,4 +37,17 @@ namespace BlackGui
         return k;
     }
 
+    const QKeySequence &CShortcut::keySave()
+    {
+        static const QKeySequence k(Qt::CTRL + Qt::Key_S);
+        return k;
+    }
+
+    const QKeySequence &CShortcut::keySaveViews()
+    {
+        // remark CTRL+S not working in views
+        static const QKeySequence k(Qt::SHIFT + Qt::Key_S);
+        return k;
+    }
+
 } // ns

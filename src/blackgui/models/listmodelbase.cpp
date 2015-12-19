@@ -604,6 +604,18 @@ namespace BlackGui
             return mimeData;
         }
 
+        template <typename ObjectType, typename ContainerType, bool UseCompare>
+        QJsonObject CListModelBase<ObjectType, ContainerType, UseCompare>::toJson() const
+        {
+            return container().toJson();
+        }
+
+        template <typename ObjectType, typename ContainerType, bool UseCompare>
+        QString CListModelBase<ObjectType, ContainerType, UseCompare>::toJsonString(QJsonDocument::JsonFormat format) const
+        {
+            return container().toJsonString(format);
+        }
+
         // see here for the reason of thess forward instantiations
         // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
         template class CListModelBase<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList, true>;

@@ -100,6 +100,12 @@ namespace BlackGui
             //! \note Meant for scenarios where the container is directly updated and a subsequent signal is required
             void sendDataChanged(int startRowIndex, int endRowIndex);
 
+            //! Convert to JSON
+            virtual QJsonObject toJson() const = 0;
+
+            //! Convert to JSON string
+            virtual QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented) const = 0;
+
         signals:
             //! Asynchronous update finished
             void asyncUpdateFinished();
@@ -224,6 +230,12 @@ namespace BlackGui
 
             //! \copydoc QStandardItemModel::mimeData
             virtual QMimeData *mimeData(const QModelIndexList &indexes) const override;
+
+            //! \copydoc CListModelBaseNonTemplate::toJosn
+            virtual QJsonObject toJson() const override;
+
+            //! \copydoc CListModelBaseNonTemplate::toJsonString
+            virtual QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented) const override;
 
             //! Filter available
             bool hasFilter() const;

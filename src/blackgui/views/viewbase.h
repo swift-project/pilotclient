@@ -65,6 +65,22 @@ namespace BlackGui
                 Content
             };
 
+            //! Menu flags
+            enum MenuFlag
+            {
+                MenuNone                 = 0,       ///< no menu
+                MenuClear                = 1 << 0,  ///< allow clearing the view via menu
+                MenuRefresh              = 1 << 1,  ///< allow refreshing the view via menu
+                MenuBackend              = 1 << 2,  ///< allow to request data from backend
+                MenuDisplayAutomatically = 1 << 3,  ///< allow to switch display automatically
+                MenuFilter               = 1 << 4,  ///< filter can be opened
+                MenuSave                 = 1 << 5,  ///< save as JSON
+                MenuLoad                 = 1 << 6,  ///< load from JSON
+                MenuLoadAndSave          = MenuLoad | MenuSave,
+                MenuDefault              = MenuClear | MenuDisplayAutomatically
+            };
+            Q_DECLARE_FLAGS(Menu, MenuFlag)
+
             //! When (row count) to use asynchronous updates
             static const int ASyncRowsCountThreshold = 50;
 
@@ -73,6 +89,9 @@ namespace BlackGui
 
             //! Clear data
             virtual void clear() = 0;
+
+            //! Empty?
+            virtual bool isEmpty() const = 0 ;
 
             //! Allow to drag and/or drop value objects
             virtual void allowDragDropValueObjects(bool allowDrag, bool allowDrop);
@@ -142,6 +161,12 @@ namespace BlackGui
 
             //! Accept double click selection
             void acceptDoubleClickSelection(bool accept) { m_acceptDoubleClickSelection = accept; }
+
+            //! Remove given menu items
+            void menuRemoveItems(Menu menusToRemove);
+
+            //! Add given menu items
+            void menuAddItems(Menu menusToRemove);
 
             //! \copydoc QTableView::setSelectionModel();
             virtual void setSelectionModel(QItemSelectionModel *model) override;
@@ -246,26 +271,25 @@ namespace BlackGui
             //! Init default values
             void init();
 
-            ResizeMode m_resizeMode   = ResizingOnceSubset;      //!< mode
-            RowsResizeMode m_rowResizeMode = Interactive;        //!< row resize mode for row height
-            int m_resizeCount         = 0;                       //!< flag / counter, how many resize activities
-            int m_skipResizeThreshold = 40;                      //!< when to skip resize (rows count)
-            int m_resizeAutoNthTime   = 1;                       //!< with ResizeAuto, resize every n-th time
-            bool m_forceStretchLastColumnWhenResized = false;    //!< a small table might (few columns) might to fail stretching, force again
-            bool m_withMenuItemClear                 = false;    //!< allow clearing the view via menu
-            bool m_withMenuItemRefresh               = false;    //!< allow refreshing the view via menu
-            bool m_withMenuItemBackend               = false;    //!< allow to request data from backend
-            bool m_withMenuDisplayAutomatically      = false;    //!< allow to switch display automatically
-            bool m_withMenuFilter                    = false;    //!< filter can be opened
-            bool m_showingLoadIndicator              = false;    //!< showing loading indicator
-            bool m_enabledLoadIndicator              = true;     //!< loading indicator enabled/disabled
-            bool m_acceptClickSelection              = false;    //!< clicked
-            bool m_acceptRowSelected                 = false;    //!< selection changed
-            bool m_acceptDoubleClickSelection        = false;    //!< double clicked
-            bool m_displayAutomatically              = true;     //!< display directly when loaded
-            QWidget *m_filterWidget                  = nullptr;  //!< filter widget if any
-            BlackGui::IMenuDelegate  *m_menu         = nullptr;  //!< custom menu if any
-            BlackGui::CLoadIndicator *m_loadIndicator = nullptr; //!< load indicator if neeeded
+            //! Default file for load/save operations
+            QString getDefaultFilename() const;
+
+            ResizeMode m_resizeMode = ResizingOnceSubset;            //!< mode
+            RowsResizeMode m_rowResizeMode            = Interactive; //!< row resize mode for row height
+            int m_resizeCount                         = 0;           //!< flag / counter, how many resize activities
+            int m_skipResizeThreshold                 = 40;          //!< when to skip resize (rows count)
+            int m_resizeAutoNthTime                   = 1;           //!< with ResizeAuto, resize every n-th time
+            bool m_forceStretchLastColumnWhenResized  = false;       //!< a small table might (few columns) might to fail stretching, force again
+            bool m_showingLoadIndicator               = false;       //!< showing loading indicator
+            bool m_enabledLoadIndicator               = true;        //!< loading indicator enabled/disabled
+            bool m_acceptClickSelection               = false;       //!< clicked
+            bool m_acceptRowSelected                  = false;       //!< selection changed
+            bool m_acceptDoubleClickSelection         = false;       //!< double clicked
+            bool m_displayAutomatically               = true;        //!< display directly when loaded
+            QWidget *m_filterWidget                   = nullptr;     //!< filter widget if any
+            Menu                      m_menus         = MenuDefault; //!< Default menu settings
+            BlackGui::IMenuDelegate  *m_menu          = nullptr;     //!< custom menu if any
+            BlackGui::CLoadIndicator *m_loadIndicator = nullptr;     //!< load indicator if neeeded
 
         protected slots:
             //! Helper method with template free signature serving as callback from threaded worker
@@ -292,6 +316,15 @@ namespace BlackGui
             //! Row selected
             virtual void ps_rowSelected(const QModelIndex &index) = 0;
 
+            //! Load JSON
+            virtual BlackMisc::CStatusMessage ps_loadJson() = 0;
+
+            //! Save JSON
+            virtual BlackMisc::CStatusMessage ps_saveJson() const = 0;
+
+            //! Save JSON called by shortcut
+            virtual void ps_saveJsonShortcut();
+
         private slots:
             //! Custom menu was requested
             void ps_customMenuRequested(QPoint pos);
@@ -307,7 +340,12 @@ namespace BlackGui
 
             //! Clear the model
             virtual void ps_clear() { this->clear(); }
+
+        private:
+            //! Set the filter widget internally
+            void setFilterWidgetImpl(QWidget *filterWidget);
         };
+        Q_DECLARE_OPERATORS_FOR_FLAGS(BlackGui::Views::CViewBaseNonTemplate::Menu)
 
         //! Base class for views
         template <class ModelClass, class ContainerType, class ObjectType> class CViewBase : public CViewBaseNonTemplate
@@ -361,8 +399,14 @@ namespace BlackGui
             //! Column count
             int columnCount() const;
 
-            //! Any data?
-            bool isEmpty() const;
+            //! \copydoc CViewBaseNonTemplate::isEmpty
+            virtual bool isEmpty() const override;
+
+            //! Convert to JSON
+            QJsonObject toJson() const;
+
+            //! Convert to JSON string
+            QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented) const;
 
             //! Set own name and the model's name
             virtual void setObjectName(const QString &name);
@@ -420,6 +464,14 @@ namespace BlackGui
             //! \copydoc BlackGui::Views::CViewBaseNonTemplate::ps_rowSelected
             //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
             virtual void ps_rowSelected(const QModelIndex &index) override;
+
+            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::ps_loadJson
+            //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
+            virtual BlackMisc::CStatusMessage ps_loadJson() override;
+
+            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::ps_saveJson
+            //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
+            virtual BlackMisc::CStatusMessage ps_saveJson() const override;
         };
     } // namespace
 } // namespace
