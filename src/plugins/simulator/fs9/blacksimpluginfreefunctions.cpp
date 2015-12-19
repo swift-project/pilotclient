@@ -199,6 +199,7 @@ namespace BlackSimPlugin
                 errorMessage = "The client attempted to connect to a nonhost computer. Additionally, this error value may be returned by a nonhost that tried to set the application description.";
                 break;
             default:
+                errorMessage = QString("Unknown error code %1").arg(error);
                 break;
             }
 
