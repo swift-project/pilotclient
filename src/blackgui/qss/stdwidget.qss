@@ -370,6 +370,13 @@ QScrollArea QWidget {
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
+QScrollArea QMenu {
+  border: 1px solid darkslategray; /* reserve space for selection border */
+  background: lightgray;
+  color: black;
+  padding: 0px;
+}
+
 QScrollBar:horizontal {
   border: 2px solid gray;
   background: slategray;
