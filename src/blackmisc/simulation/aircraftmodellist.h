@@ -89,6 +89,12 @@ namespace BlackMisc
 
             //! Validate for publishing
             CStatusMessageList validateForPublishing() const;
+
+            //! To database JSON
+            QJsonArray toDatabaseJson() const;
+
+            //! To database JSON
+            QString toDatabaseJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Compact) const;
         };
 
     } //namespace

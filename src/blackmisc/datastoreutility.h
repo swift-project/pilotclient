@@ -23,23 +23,26 @@ namespace BlackMisc
     /*!
      * Class with datastore related utilities
      */
-    class CDatastoreUtility
+    class BLACKMISC_EXPORT CDatastoreUtility
     {
     public:
         //! No constructor
         CDatastoreUtility() = delete;
 
         //! DB Bool value to bool
-        BLACKMISC_EXPORT static bool dbBoolStringToBool(const QString &dbBool);
+        static bool dbBoolStringToBool(const QString &dbBool);
+
+        //! Bool to DB yes/no
+        static const QString &boolToDbYN(bool v);
 
         //! Extract key from string like "MyAircraft (33)"
-        BLACKMISC_EXPORT static int extractIntegerKey(const QString &stringWithKey);
+        static int extractIntegerKey(const QString &stringWithKey);
 
         //! Parse a timestamp object
-        BLACKMISC_EXPORT static QDateTime parseTimestamp(const QString &timestamp);
+        static QDateTime parseTimestamp(const QString &timestamp);
 
         //! Get id from a DB response
-        BLACKMISC_EXPORT static bool parseSwiftWriteResponse(const QString &jsonResponse, BlackMisc::CStatusMessageList &messages, BlackMisc::CVariant &key);
+        static bool parseSwiftWriteResponse(const QString &jsonResponse, BlackMisc::CStatusMessageList &messages, BlackMisc::CVariant &key);
     };
 
 } // namespace

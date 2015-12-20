@@ -198,5 +198,21 @@ namespace BlackMisc
             }
             return msgs;
         }
+
+        QJsonArray CAircraftModelList::toDatabaseJson() const
+        {
+            QJsonArray array;
+            for (const CAircraftModel &model : *this)
+            {
+                QJsonValue v(model.toDatabaseJson());
+                array.append(v);
+            }
+            return array;
+        }
+
+        QString CAircraftModelList::toDatabaseJsonString(QJsonDocument::JsonFormat format) const
+        {
+            return QJsonDocument(toDatabaseJson()).toJson(format);
+        }
     } // namespace
 } // namespace

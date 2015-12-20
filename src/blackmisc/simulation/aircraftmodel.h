@@ -239,6 +239,12 @@ namespace BlackMisc
             //! \copydoc CValueObject::convertToQString
             QString convertToQString(bool i18n = false) const;
 
+            //! To database JSON
+            QJsonObject toDatabaseJson() const;
+
+            //! To database JSON
+            QString toDatabaseJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Compact) const;
+
             //! Model type
             static QString modelTypeToString(ModelType type);
 

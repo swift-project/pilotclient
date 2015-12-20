@@ -55,6 +55,41 @@ namespace BlackMisc
             return s;
         }
 
+        QJsonObject CAircraftModel::toDatabaseJson() const
+        {
+            QJsonObject obj;
+
+            // filename not in DB
+            obj.insert("id", this->getDbKeyAsJsonValue());
+            obj.insert("simkey", QJsonValue(this->m_modelString));
+            obj.insert("description", QJsonValue(this->m_description));
+            obj.insert("mode", QJsonValue(getModelModeAsString().left(1).toUpper()));
+
+            // sims
+            const CSimulatorInfo sim(getSimulatorInfo());
+            QString flag = CDatastoreUtility::boolToDbYN(sim.fsx());
+            obj.insert("simfsx", QJsonValue(flag));
+            flag = CDatastoreUtility::boolToDbYN(sim.p3d());
+            obj.insert("simp3d", QJsonValue(flag));
+            flag = CDatastoreUtility::boolToDbYN(sim.fs9());
+            obj.insert("simfs9", QJsonValue(flag));
+            flag = CDatastoreUtility::boolToDbYN(sim.xplane());
+            obj.insert("simxplane", QJsonValue(flag));
+
+            // foreign keys
+            obj.insert("iddistributor", this->getDistributor().getDbKeyAsJsonValue());
+            obj.insert("idaircrafticao", this->getAircraftIcaoCode().getDbKeyAsJsonValue());
+            obj.insert("idlivery", this->getLivery().getDbKeyAsJsonValue());
+            obj.insert("idairlineicao", this->getLivery().getAirlineIcaoCode().getDbKeyAsJsonValue()); // not really needed if livery is complete
+
+            return obj;
+        }
+
+        QString CAircraftModel::toDatabaseJsonString(QJsonDocument::JsonFormat format) const
+        {
+            return QJsonDocument(toDatabaseJson()).toJson(format);
+        }
+
         CVariant CAircraftModel::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }

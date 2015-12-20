@@ -20,6 +20,13 @@ namespace BlackMisc
         return BlackMisc::stringToBool(dbBool);
     }
 
+    const QString &CDatastoreUtility::boolToDbYN(bool v)
+    {
+        static const QString y("Y");
+        static const QString n("N");
+        return v ? y : n;
+    }
+
     int CDatastoreUtility::extractIntegerKey(const QString &stringWithKey)
     {
         QString ks(stringWithKey.trimmed());

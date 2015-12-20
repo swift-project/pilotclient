@@ -35,6 +35,13 @@ namespace BlackMisc
         this->m_dbKey = k;
     }
 
+    QJsonValue IDatastoreObjectWithIntegerKey::getDbKeyAsJsonValue() const
+    {
+        if (this->hasValidDbKey()) { return QJsonValue(this->m_dbKey); }
+        static const QJsonValue null;
+        return null;
+    }
+
     void IDatastoreObjectWithIntegerKey::setKeyAndTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix)
     {
         int dbKey = json.value(prefix + "id").toInt(-1);
@@ -101,6 +108,13 @@ namespace BlackMisc
         if (ITimestampBased::canHandleIndex(index)) { return true;}
         int i = index.frontCasted<int>();
         return (i >= static_cast<int>(IndexDbIntegerKey)) && (i <= static_cast<int>(IndexDbIntegerKey));
+    }
+
+    QJsonValue IDatastoreObjectWithStringKey::getDbKeyAsJsonValue() const
+    {
+        if (this->hasValidDbKey()) { return QJsonValue(this->m_dbKey); }
+        static const QJsonValue null;
+        return null;
     }
 
     void IDatastoreObjectWithStringKey::setKeyAndTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix)

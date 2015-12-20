@@ -37,6 +37,9 @@ namespace BlackMisc
         //! DB key as string
         QString getDbKeyAsString() const;
 
+        //! Key as JSON value, or null
+        QJsonValue getDbKeyAsJsonValue() const;
+
         //! Db ley in parentheses, e.g. "(3)"
         QString getDbKeyAsStringInParentheses() const;
 
@@ -94,6 +97,9 @@ namespace BlackMisc
 
         //! Get DB key.
         const QString &getDbKey() const { return m_dbKey; }
+
+        //! Key as JSON value, or null
+        QJsonValue getDbKeyAsJsonValue() const;
 
         //! Set the DB key
         void setDbKey(const QString &key) { m_dbKey = key.trimmed().toUpper(); }
