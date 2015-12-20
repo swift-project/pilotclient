@@ -173,5 +173,30 @@ namespace BlackMisc
             }
         }
 
+        CStatusMessageList CAircraftModelList::validateForPublishing() const
+        {
+            if (this->isEmpty()) { return CStatusMessageList(); }
+            CStatusMessageList msgs;
+            for (const CAircraftModel &model : *this)
+            {
+                const CStatusMessageList msgsModel(model.validate(false));
+                CStatusMessage msgModel(msgsModel.toSingleMessage());
+
+                QStringList subMsgs;
+                if (!model.getDistributor().hasValidDbKey()) { subMsgs << "No distributor from DB"; }
+                if (!model.getAircraftIcaoCode().hasValidDbKey()) { subMsgs << "No aircraft ICAO from DB"; }
+                if (!model.getLivery().hasValidDbKey()) { subMsgs << "No livery from DB"; }
+                if (!model.getLivery().getAirlineIcaoCode().hasValidDbKey()) { subMsgs << "No airline ICAO from DB"; }
+                CStatusMessage msgDb(CStatusMessage::SeverityError, subMsgs.join(", "));
+
+                CStatusMessage singleMsg(CStatusMessageList({msgModel, msgDb}).toSingleMessage());
+                if (model.hasModelString())
+                {
+                    singleMsg.prependMessage(model.getModelString() + ": ");
+                }
+                msgs.push_back(singleMsg);
+            }
+            return msgs;
+        }
     } // namespace
 } // namespace

@@ -86,6 +86,9 @@ namespace BlackMisc
 
             //! Update livery
             void updateLivery(const BlackMisc::Aviation::CLivery &livery);
+
+            //! Validate for publishing
+            CStatusMessageList validateForPublishing() const;
         };
 
     } //namespace

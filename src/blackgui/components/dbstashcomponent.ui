@@ -98,6 +98,16 @@
        </widget>
       </item>
       <item>
+       <widget class="QCheckBox" name="cb_SelectedOnly">
+        <property name="toolTip">
+         <string>selected models only</string>
+        </property>
+        <property name="text">
+         <string>selected</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="Line" name="line_Sep2">
         <property name="orientation">
          <enum>Qt::Vertical</enum>

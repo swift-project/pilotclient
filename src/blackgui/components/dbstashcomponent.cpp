@@ -39,6 +39,7 @@ namespace BlackGui
             connect(this->ui->pb_Unstash, &QPushButton::pressed, this, &CDbStashComponent::ps_onUnstashPressed);
             connect(this->ui->pb_Validate, &QPushButton::pressed, this, &CDbStashComponent::ps_onValidatePressed);
             connect(this->ui->tvp_StashAircraftModels, &CAircraftModelView::modelChanged, this, &CDbStashComponent::stashedModelsChanged);
+            connect(this->ui->tvp_StashAircraftModels, &CAircraftModelView::rowCountChanged, this, &CDbStashComponent::ps_onRowCountChanged);
 
             // copy over buttons
             connect(this->ui->pb_AircraftIcao, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverValues);
@@ -47,6 +48,7 @@ namespace BlackGui
             connect(this->ui->pb_Distributor, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverValues);
 
             ui->tvp_StashAircraftModels->setCustomMenu(new CStashModelsMenu(this, true));
+            this->enableButtonRow();
         }
 
         CDbStashComponent::~CDbStashComponent()
@@ -167,7 +169,36 @@ namespace BlackGui
 
         void CDbStashComponent::ps_onValidatePressed()
         {
-            if (this->ui->tvp_StashAircraftModels->isEmpty()) { return; }
+            if (this->ui->tvp_StashAircraftModels->isEmpty()) {return; }
+            const CStatusMessageList msgs(this->validate());
+            this->showMessages(msgs);
+        }
+
+        CStatusMessageList CDbStashComponent::validate() const
+        {
+            if (this->ui->tvp_StashAircraftModels->isEmpty()) {return CStatusMessageList(); }
+            bool selectedOnly = ui->cb_SelectedOnly->isChecked();
+            const CAircraftModelList models(selectedOnly ? this->ui->tvp_StashAircraftModels->selectedObjects() : this->ui->tvp_StashAircraftModels->container());
+            if (models.isEmpty()) { return CStatusMessageList(); }
+            const CStatusMessageList msgs(models.validateForPublishing());
+            if (!msgs.isEmpty()) { return msgs; }
+
+            return CStatusMessageList(
+            {
+                CStatusMessage(CStatusMessage::SeverityInfo, QString("No errors in %1 model(s)").arg(models.size()))
+            });
+        }
+
+        void CDbStashComponent::enableButtonRow()
+        {
+            bool e = !this->ui->tvp_StashAircraftModels->isEmpty();
+            this->ui->pb_AircraftIcao->setEnabled(e);
+            this->ui->pb_AirlineIcao->setEnabled(e);
+            this->ui->pb_Distributor->setEnabled(e);
+            this->ui->pb_Livery->setEnabled(e);
+            this->ui->pb_Publish->setEnabled(e);
+            this->ui->pb_Unstash->setEnabled(e);
+            this->ui->pb_Validate->setEnabled(e);
         }
 
         void CDbStashComponent::ps_copyOverValues()
@@ -194,6 +225,13 @@ namespace BlackGui
             {
                 this->applyToSelected(model.getLivery());
             }
+        }
+
+        void CDbStashComponent::ps_onRowCountChanged(int number, bool filter)
+        {
+            Q_UNUSED(number);
+            Q_UNUSED(filter);
+            this->enableButtonRow();
         }
 
         bool CDbStashComponent::showMessages(const CStatusMessageList &msgs, bool onlyErrors)

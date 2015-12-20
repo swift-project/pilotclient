@@ -101,6 +101,9 @@ namespace BlackGui
             //! Copy over values
             void ps_copyOverValues();
 
+            //! Row count changed
+            void ps_onRowCountChanged(int number, bool filter);
+
         private:
             QScopedPointer<Ui::CDbStashComponent> ui;
 
@@ -109,6 +112,12 @@ namespace BlackGui
 
             //! Display message
             bool showMessage(const BlackMisc::CStatusMessage &msg);
+
+            //! Validate
+            BlackMisc::CStatusMessageList validate() const;
+
+            //! Set the button row
+            void enableButtonRow();
 
             //! Custom menu for the stashed models
             class CStashModelsMenu : public BlackGui::IMenuDelegate

@@ -103,6 +103,12 @@ namespace BlackMisc
         //! Message
         QString getMessage() const { return this->m_message; }
 
+        //! Prepend message
+        void prependMessage(const QString &msg);
+
+        //! Append message
+        void appendMessage(const QString &msg);
+
         //! Message empty
         bool isEmpty() const { return this->m_message.isEmpty(); }
 

@@ -64,6 +64,12 @@ namespace BlackMisc
         //! Reset the categories of all messages in the list
         void setCategories(const CLogCategoryList &categories);
 
+        //! Find worst severity
+        CStatusMessage::StatusSeverity worstSeverity() const;
+
+        //! Merge into a single message
+        CStatusMessage toSingleMessage() const;
+
         //! From our database JSON format
         static CStatusMessageList fromDatabaseJson(const QJsonArray &array);
     };

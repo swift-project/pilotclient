@@ -9,6 +9,7 @@
 
 #include "statusmessagelist.h"
 #include "statusmessage.h"
+#include "logcategorylist.h"
 
 namespace BlackMisc
 {
@@ -72,6 +73,37 @@ namespace BlackMisc
         {
             msg.setCategories(categories);
         }
+
+	CStatusMessage::StatusSeverity CStatusMessageList::worstSeverity() const
+    {
+        CStatusMessage::StatusSeverity s = CStatusMessage::SeverityDebug;
+        for (const CStatusMessage &msg : *this)
+        {
+            CStatusMessage::StatusSeverity ms = msg.getSeverity();
+            if (ms == CStatusMessage::SeverityError) { return CStatusMessage::SeverityError; }
+            if (ms <= s) { continue; }
+            s = ms;
+        }
+        return s;
+    }
+
+    CStatusMessage CStatusMessageList::toSingleMessage() const
+    {
+        if (this->isEmpty()) { return CStatusMessage(); }
+        if (this->size() == 1) { return this->front(); }
+        QStringList newMsgs;
+        CStatusMessage::StatusSeverity s = CStatusMessage::SeverityDebug;
+        CLogCategoryList cats;
+        for (const CStatusMessage &msg : *this)
+        {
+            if (msg.isEmpty()) { continue; }
+            newMsgs.append(msg.getMessage());
+            CStatusMessage::StatusSeverity ms = msg.getSeverity();
+            if (s < ms) { s = ms; }
+            cats.join(msg.getCategories());
+        }
+        const CStatusMessage newMsg(cats, s, newMsgs.join(", "));
+        return newMsg;
     }
 
     CStatusMessageList CStatusMessageList::fromDatabaseJson(const QJsonArray &array)

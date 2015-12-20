@@ -130,6 +130,18 @@ namespace BlackMisc
         return patternNames;
     }
 
+    void CStatusMessage::prependMessage(const QString &msg)
+    {
+        if (msg.isEmpty()) { return; }
+        this->m_message = msg + this->m_message;
+    }
+
+    void CStatusMessage::appendMessage(const QString &msg)
+    {
+        if (msg.isEmpty()) { return; }
+        this->m_message += msg;
+    }
+
     void CStatusMessage::markAsHandledBy(const QObject *object) const
     {
         this->m_handledByObjects.push_back(quintptr(object));
