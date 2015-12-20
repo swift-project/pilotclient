@@ -70,6 +70,12 @@ namespace BlackMisc
             //! Get the timestamp corresponding to the element.
             qint64 getTimestamp(const Element &element) const;
 
+            //! Get whether this element is already saved to disk.
+            bool isSaved(const Element &element) const;
+
+            //! Get whether this element is currently being saved to disk.
+            bool isSaving(const Element &element) const;
+
             //! Synchronize with a change caused by another page.
             //! Connected to signal CValueCache::valuesChanged.
             //! \param values The new values.

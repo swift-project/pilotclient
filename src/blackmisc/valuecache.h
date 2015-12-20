@@ -221,7 +221,7 @@ namespace BlackMisc
 
         Element &getElement(const QString &key);
         Element &getElement(const QString &key, QMap<QString, ElementPtr>::const_iterator pos);
-        std::pair<CVariant, qint64> getValue(const QString &key);
+        std::tuple<CVariant, qint64, bool> getValue(const QString &key);
 
     signals:
         //! \private
@@ -279,6 +279,12 @@ namespace BlackMisc
 
         //! Return the time when this value was updated.
         QDateTime getTimestamp() const { return m_page.getTimestamp(m_element); }
+
+        //! Return true if this value was already saved.
+        bool isSaved() const { return m_page.isSaved(m_element); }
+
+        //! Return true if this value is currently saving.
+        bool isSaving() const { return m_page.isSaving(m_element); }
 
         //! Deleted copy constructor.
         CCached(const CCached &) = delete;
