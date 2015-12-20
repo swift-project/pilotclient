@@ -32,7 +32,7 @@ namespace BlackMisc
         static const QString &persistentStore();
 
         //! Save core settings to disk.
-        BlackMisc::CStatusMessage saveToStore(const QString &keyPrefix = {}) const;
+        BlackMisc::CStatusMessage saveToStore(const QString &keyPrefix = {});
 
         //! Load core settings from disk.
         BlackMisc::CStatusMessage loadFromStore();

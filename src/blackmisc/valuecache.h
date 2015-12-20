@@ -23,14 +23,29 @@ namespace BlackMisc
      */
     class BLACKMISC_EXPORT CValueCachePacket :
         public CDictionary<QString, std::pair<CVariant, qint64>, QMap>,
-        public Mixin::MetaType<CValueCachePacket>
+        public Mixin::MetaType<CValueCachePacket>,
+        public Mixin::DBusByTuple<CValueCachePacket>,
+        public Mixin::JsonByTuple<CValueCachePacket>,
+        public Mixin::EqualsByTuple<CValueCachePacket>
     {
     public:
-        //! Default constructor.
-        CValueCachePacket() {}
+        BLACKMISC_DECLARE_USING_MIXIN_DBUS(CValueCachePacket)
+        BLACKMISC_DECLARE_USING_MIXIN_JSON(CValueCachePacket)
+
+        //! \copydoc BlackMisc::CValueObject::base_type
+        using base_type = CDictionary;
+
+        //! Constructor.
+        CValueCachePacket(bool saved = false) : m_saved(saved) {}
 
         //! Construct from CVariantMap and a timestamp.
-        CValueCachePacket(const CVariantMap &values, qint64 timestamp);
+        CValueCachePacket(const CVariantMap &values, qint64 timestamp, bool saved = false);
+
+        //! Values are to be saved.
+        //! @{
+        bool isSaved() const { return m_saved; }
+        void setSaved(bool saved = true) { m_saved = saved; }
+        //! @}
 
         //! Insert a key/value pair with a timestamp.
         void insert(const QString &key, const CVariant &value, qint64 timestamp);
@@ -67,6 +82,10 @@ namespace BlackMisc
         const_iterator begin() const { return CDictionary::cbegin(); }
         const_iterator end() const { return CDictionary::cend(); }
         //! @}
+
+    private:
+        BLACK_ENABLE_TUPLE_CONVERSION(CValueCachePacket)
+        bool m_saved = false;
     };
 
     /*!
@@ -118,7 +137,7 @@ namespace BlackMisc
         //! Save values to Json files in a given directory.
         //! If prefix is provided then only those values whose keys start with that prefix.
         //! \threadsafe
-        CStatusMessage saveToFiles(const QString &directory, const QString &keyPrefix = {}) const;
+        CStatusMessage saveToFiles(const QString &directory, const QString &keyPrefix = {});
 
         //! Load all values from Json files in a given directory.
         //! Values already in the cache will remain in the cache unless they are overwritten.
@@ -185,6 +204,10 @@ namespace BlackMisc
         //! Load from Json files in a given directory any values which differ from the current ones, and insert them in o_values.
         //! \threadsafe
         CStatusMessage loadFromFiles(const QString &directory, const CVariantMap &current, CValueCachePacket &o_values) const;
+
+        //! Mark all values with keys that start with the given prefix as having been saved.
+        //! \threadsafe
+        void markAllAsSaved(const QString &keyPrefix);
 
         //! Mutex protecting operations which are critical on m_elements.
         mutable QMutex m_mutex { QMutex::Recursive };
@@ -308,5 +331,6 @@ namespace BlackMisc
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::CValueCachePacket)
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CValueCachePacket, (attr(o.m_saved)))
 
 #endif

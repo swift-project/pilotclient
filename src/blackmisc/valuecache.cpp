@@ -29,7 +29,8 @@ namespace BlackMisc
     // CValueCachePacket
     ////////////////////////////////
 
-    CValueCachePacket::CValueCachePacket(const CVariantMap &values, qint64 timestamp)
+    CValueCachePacket::CValueCachePacket(const CVariantMap &values, qint64 timestamp, bool saved) :
+        m_saved(saved)
     {
         for (auto it = values.cbegin(); it != values.cend(); ++it)
         {
@@ -89,6 +90,7 @@ namespace BlackMisc
         const QString m_key;
         CVariant m_value;
         int m_pendingChanges = 0;
+        bool m_saved = false;
         std::atomic<qint64> m_timestamp { QDateTime::currentMSecsSinceEpoch() };
     };
 
@@ -156,6 +158,7 @@ namespace BlackMisc
             element.m_pendingChanges++;
             element.m_value = in.value();
             element.m_timestamp = in.timestamp();
+            element.m_saved = values.isSaved();
         }
         emit valuesChanged(values, sender());
         emit valuesChangedByLocal(values);
@@ -182,6 +185,7 @@ namespace BlackMisc
             {
                 element.m_value = in.value();
                 element.m_timestamp = in.timestamp();
+                element.m_saved = values.isSaved();
                 ratifiedChanges.insert(in.key(), in.value(), in.timestamp());
             }
         }
@@ -203,11 +207,13 @@ namespace BlackMisc
         insertValues({ map, QDateTime::currentMSecsSinceEpoch() });
     }
 
-    CStatusMessage CValueCache::saveToFiles(const QString &dir, const QString &keyPrefix) const
+    CStatusMessage CValueCache::saveToFiles(const QString &dir, const QString &keyPrefix)
     {
         QMutexLocker lock(&m_mutex);
         auto values = getAllValues(keyPrefix);
-        return saveToFiles(dir, values);
+        auto status = saveToFiles(dir, values);
+        if (! status.isEmpty()) { markAllAsSaved(keyPrefix); }
+        return status;
     }
 
     CStatusMessage CValueCache::saveToFiles(const QString &dir, const CVariantMap &values) const
@@ -250,6 +256,7 @@ namespace BlackMisc
         QMutexLocker lock(&m_mutex);
         CValueCachePacket values;
         auto status = loadFromFiles(dir, getAllValues(), values);
+        values.setSaved();
         insertValues(values);
         return status;
     }
@@ -278,6 +285,15 @@ namespace BlackMisc
             o_values.insert(temp, QFileInfo(file).lastModified().toMSecsSinceEpoch());
         }
         return {};
+    }
+
+    void CValueCache::markAllAsSaved(const QString &keyPrefix)
+    {
+        QMutexLocker lock(&m_mutex);
+        for (const auto &element : elementsStartingWith(keyPrefix))
+        {
+            element->m_saved = true;
+        }
     }
 
     QString CValueCache::filenameForKey(const QString &key)

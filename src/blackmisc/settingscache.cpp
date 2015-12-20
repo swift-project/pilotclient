@@ -28,7 +28,7 @@ namespace BlackMisc
         return dir;
     }
 
-    BlackMisc::CStatusMessage CSettingsCache::saveToStore(const QString &keyPrefix) const
+    BlackMisc::CStatusMessage CSettingsCache::saveToStore(const QString &keyPrefix)
     {
         return saveToFiles(persistentStore(), keyPrefix);
     }

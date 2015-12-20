@@ -16,7 +16,7 @@
 namespace BlackMisc
 {
     CDataCache::CDataCache() :
-        CValueCache(CValueCache::LocalOnly) // for signal loopback
+        CValueCache(CValueCache::Distributed)
     {
         if (! QDir::root().mkpath(persistentStore()))
         {
@@ -24,6 +24,11 @@ namespace BlackMisc
         }
 
         connect(this, &CValueCache::valuesChangedByLocal, this, &CDataCache::saveToStoreAsync);
+        connect(this, &CValueCache::valuesChangedByLocal, this, [ = ](CValueCachePacket values)
+        {
+            values.setSaved();
+            changeValuesFromRemote(values, CIdentifier());
+        });
         connect(&m_watcher, &QFileSystemWatcher::fileChanged, this, &CDataCache::loadFromStoreAsync);
         connect(&m_serializer, &CDataCacheSerializer::valuesLoadedFromStore, this, &CDataCache::changeValuesFromRemote);
 
@@ -127,6 +132,7 @@ namespace BlackMisc
 
         if (! m_deferredChanges.isEmpty()) // apply changes which we grabbed at the last minute above
         {
+            m_deferredChanges.setSaved();
             emit valuesLoadedFromStore(m_deferredChanges, CIdentifier::anonymous());
             m_deferredChanges.clear();
         }
@@ -163,6 +169,7 @@ namespace BlackMisc
 
         if (! (m_deferredChanges.isEmpty() || defer))
         {
+            m_deferredChanges.setSaved();
             emit valuesLoadedFromStore(m_deferredChanges, CIdentifier::anonymous());
             m_deferredChanges.clear();
         }
