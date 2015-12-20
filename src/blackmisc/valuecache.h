@@ -13,6 +13,7 @@
 #define BLACKMISC_VALUECACHE_H
 
 #include "blackmisc/valuecacheprivate.h"
+#include "blackmisc/range.h"
 
 namespace BlackMisc
 {
@@ -160,7 +161,23 @@ namespace BlackMisc
         //! of CValueCache instances in all processes including this one. The slot will do its own round-trip detection.
         void valuesChangedByLocal(const BlackMisc::CValueCachePacket &values);
 
+    private:
+        struct Element; // remove forward declaration when elementsStartingWith uses C++14 auto deduced return type
+
     protected:
+        //! Returns a range referring to all elements which start with the given prefix.
+        //! \todo Use C++14 auto deduced return type.
+        //! @{
+        auto elementsStartingWith(const QString &keyPrefix) -> CRange<QMap<QString, QSharedPointer<Element>>::iterator>
+        {
+            return makeRange(m_elements.lowerBound(keyPrefix), m_elements.lowerBound(keyPrefix + QChar(QChar::LastValidCodePoint)));
+        }
+        auto elementsStartingWith(const QString &keyPrefix) const -> CRange<QMap<QString, QSharedPointer<Element>>::const_iterator>
+        {
+            return makeRange(m_elements.lowerBound(keyPrefix), m_elements.lowerBound(keyPrefix + QChar(QChar::LastValidCodePoint)));
+        }
+        //! @}
+
         //! Save specific values to Json files in a given directory.
         //! \threadsafe
         CStatusMessage saveToFiles(const QString &directory, const CVariantMap &values) const;

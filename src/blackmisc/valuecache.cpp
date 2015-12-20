@@ -117,7 +117,7 @@ namespace BlackMisc
     {
         QMutexLocker lock(&m_mutex);
         CVariantMap map;
-        for (const auto &element : makeRange(m_elements.lowerBound(keyPrefix), m_elements.lowerBound(keyPrefix + QChar(QChar::LastValidCodePoint))))
+        for (const auto &element : elementsStartingWith(keyPrefix))
         {
             implementationOf(map).insert(map.cend(), element->m_key, element->m_value);
         }
@@ -128,7 +128,7 @@ namespace BlackMisc
     {
         QMutexLocker lock(&m_mutex);
         CValueCachePacket map;
-        for (const auto &element : makeRange(m_elements.lowerBound(keyPrefix), m_elements.lowerBound(keyPrefix + QChar(QChar::LastValidCodePoint))))
+        for (const auto &element : elementsStartingWith(keyPrefix))
         {
             map.insert(element->m_key, element->m_value, element->m_timestamp);
         }
