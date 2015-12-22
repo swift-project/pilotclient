@@ -9,3 +9,6 @@ win32-msvc*:QMAKE_CXXFLAGS_WARN_ON *= /wd4351 /wd4661
 
 # elevated warnings
 # win32-msvc*:QMAKE_CXXFLAGS_WARN_ON *= /Wall /wd4640 /wd4619 /wd4350 /wd4351 /wd4946 /wd4510 /wd4820 /wd4571 /wd4625 /wd4626 /wd4127
+
+# noisy warning in std <functional> header of MSVC2015 (QTBUG-50108)
+win32-msvc2015:QMAKE_CXXFLAGS_WARN_ON -= -w34100
