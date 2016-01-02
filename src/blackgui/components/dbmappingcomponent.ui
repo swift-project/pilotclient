@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>262</width>
+    <width>600</width>
     <height>618</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>400</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Frame</string>
@@ -226,7 +232,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>244</width>
+            <width>582</width>
             <height>425</height>
            </rect>
           </property>

@@ -76,6 +76,5 @@ namespace BlackGui
         {
             // code goes here
         }
-
     } // ns
 } // ns

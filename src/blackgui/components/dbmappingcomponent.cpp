@@ -44,7 +44,6 @@ namespace BlackGui
             this->ui->tvp_OwnAircraftModels->addFilterDialog();
 
             // connects
-            connect(ui->editor_Model, &CModelMappingForm::requestPublish, this, &CDbMappingComponent::ps_publishSingleModelToDb);
             connect(ui->editor_Model, &CModelMappingForm::requestStash, this, &CDbMappingComponent::ps_stashCurrentModel);
 
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
@@ -244,7 +243,7 @@ namespace BlackGui
             return currentTabIndex() == TabStash;
         }
 
-        CStatusMessageList CDbMappingComponent::validate(bool withNestedForms) const
+        CStatusMessageList CDbMappingComponent::validateCurrentModel(bool withNestedForms) const
         {
             CStatusMessageList msgs(this->ui->editor_Model->validate(!withNestedForms));
             if (withNestedForms)
@@ -254,24 +253,6 @@ namespace BlackGui
                 msgs.push_back(ui->editor_Distributor->validate());
             }
             return msgs;
-        }
-
-        void CDbMappingComponent::ps_publishSingleModelToDb()
-        {
-            CStatusMessageList msgs(validate(true));
-            if (msgs.hasErrorMessages())
-            {
-                CLogMessage::preformatted(msgs);
-                this->showMessages(msgs);
-                return;
-            }
-
-            const CAircraftModel model(getAircraftModel());
-            msgs = this->asyncWriteModel(model);
-            if (!msgs.isEmpty())
-            {
-                CLogMessage(this).preformatted(msgs);
-            }
         }
 
         void CDbMappingComponent::ps_handleStashDropRequest(const CAirlineIcaoCode &code) const
@@ -284,13 +265,13 @@ namespace BlackGui
         void CDbMappingComponent::ps_stashCurrentModel()
         {
             const CAircraftModel model(getAircraftModel());
-            if (!model.hasModelString())
+            CStatusMessageList msgs(this->validateCurrentModel(true));
+            if (msgs.hasErrorMessages())
             {
-                CStatusMessage msg = CStatusMessage(CStatusMessage::SeverityError, "no model string, ignored");
-                this->showMessage(msg);
+                this->showMessages(msgs);
                 return;
             }
-            this->ui->comp_StashAircraft->stashModel(model);
+            this->ui->comp_StashAircraft->stashModel(model, true);
         }
 
         void CDbMappingComponent::resizeForSelect()

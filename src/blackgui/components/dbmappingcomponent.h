@@ -104,7 +104,7 @@ namespace BlackGui
 
         public slots:
             //! Validate, empty list means OK
-            BlackMisc::CStatusMessageList validate(bool withNestedForms) const;
+            BlackMisc::CStatusMessageList validateCurrentModel(bool withNestedForms) const;
 
             //! Resize so that selection is easy (larger table view)
             void resizeForSelect();
@@ -127,9 +127,6 @@ namespace BlackGui
 
             //! Stashed models changed
             void ps_onStashedModelsChanged();
-
-            //! Publish
-            void ps_publishSingleModelToDb();
 
             //! Stash drop request
             void ps_handleStashDropRequest(const BlackMisc::Aviation::CAirlineIcaoCode &code) const;

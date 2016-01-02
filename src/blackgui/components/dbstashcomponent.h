@@ -52,10 +52,10 @@ namespace BlackGui
             void gracefulShutdown();
 
             //! Test the given model if it can be stashed
-            BlackMisc::CStatusMessage validateStashModel(const BlackMisc::Simulation::CAircraftModel &model) const;
+            BlackMisc::CStatusMessage validateStashModel(const BlackMisc::Simulation::CAircraftModel &model, bool allowReplace) const;
 
             //! Stash given model
-            BlackMisc::CStatusMessage stashModel(const BlackMisc::Simulation::CAircraftModel &model);
+            BlackMisc::CStatusMessage stashModel(const BlackMisc::Simulation::CAircraftModel &model, bool replace = false);
 
             //! Stash given models
             BlackMisc::CStatusMessageList stashModels(const BlackMisc::Simulation::CAircraftModelList &models);
@@ -65,6 +65,9 @@ namespace BlackGui
 
             //! Has stashed models
             bool hasStashedModels() const;
+
+            //! Number of models
+            int getStashedModelsCount() const;
 
             //! Stashed model strings
             QStringList getStashedModelStrings() const;
@@ -98,8 +101,16 @@ namespace BlackGui
             //! Validate pressed
             void ps_onValidatePressed();
 
+            //! Publish pressed
+            void ps_onPublishPressed();
+
+            //! Publish response received
+            void ps_publishResponse(const BlackMisc::Simulation::CAircraftModelList &publishedModels,
+                                    const BlackMisc::Simulation::CAircraftModelList &skippedModels,
+                                    const BlackMisc::CStatusMessageList &msgs);
+
             //! Copy over values
-            void ps_copyOverValues();
+            void ps_copyOverPartsToSelected();
 
             //! Row count changed
             void ps_onRowCountChanged(int number, bool filter);
@@ -108,16 +119,25 @@ namespace BlackGui
             QScopedPointer<Ui::CDbStashComponent> ui;
 
             //! Display messages
-            bool showMessages(const BlackMisc::CStatusMessageList &msgs, bool onlyErrors = false);
+            bool showMessages(const BlackMisc::CStatusMessageList &msgs, bool onlyErrors = false, int timeoutMs = -1);
 
             //! Display message
-            bool showMessage(const BlackMisc::CStatusMessage &msg);
+            bool showMessage(const BlackMisc::CStatusMessage &msg, int timeoutMs = -1);
 
             //! Validate
             BlackMisc::CStatusMessageList validate() const;
 
+            //! Validate and display info messages
+            bool validateAndDisplay(bool displayInfo = false);
+
             //! Set the button row
             void enableButtonRow();
+
+            //! Validation categories
+            const BlackMisc::CLogCategoryList &validationCats() const;
+
+            //! Get the selected only models or all models depending on checkbox
+            BlackMisc::Simulation::CAircraftModelList getSelectedOrAllModels() const;
 
             //! Custom menu for the stashed models
             class CStashModelsMenu : public BlackGui::IMenuDelegate
