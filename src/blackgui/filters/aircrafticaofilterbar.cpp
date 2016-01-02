@@ -8,9 +8,11 @@
  */
 
 #include "aircrafticaofilterbar.h"
+#include "blackgui/uppercasevalidator.h"
 #include "ui_aircrafticaofilterbar.h"
 
 using namespace BlackMisc::Aviation;
+using namespace BlackGui;
 using namespace BlackGui::Models;
 
 namespace BlackGui
@@ -26,6 +28,10 @@ namespace BlackGui
             connect(ui->le_Designator, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_Manufacturer, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_Description, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+
+            CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
+            this->ui->le_Designator->setValidator(ucv);
+            this->ui->le_Manufacturer->setValidator(ucv);
         }
 
         CAircraftIcaoFilterBar::~CAircraftIcaoFilterBar()

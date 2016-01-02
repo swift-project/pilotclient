@@ -9,7 +9,9 @@
 
 #include "aircraftmodelfilterbar.h"
 #include "ui_aircraftmodelfilterbar.h"
+#include "blackgui/uppercasevalidator.h"
 
+using namespace BlackGui;
 using namespace BlackGui::Models;
 
 namespace BlackGui
@@ -30,6 +32,12 @@ namespace BlackGui
             connect(ui->le_LiveryCode, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_ModelDescription, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_ModelKey, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+
+            CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
+            this->ui->le_AircraftIcao->setValidator(ucv);
+            this->ui->le_AirlineIcao->setValidator(ucv);
+            this->ui->le_ModelKey->setValidator(ucv);
+            this->ui->le_AircraftManufacturer->setValidator(ucv);
         }
 
         CAircraftModelFilterBar::~CAircraftModelFilterBar()

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>140</width>
-    <height>24</height>
+    <height>25</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -69,23 +69,7 @@
      </property>
     </widget>
    </item>
-   <item>
-    <spacer name="hs_FilterBarButtons">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::Fixed</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>10</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item>
+   <item alignment="Qt::AlignLeft">
     <widget class="QToolButton" name="tb_Filter">
      <property name="toolTip">
       <string>filter</string>
@@ -113,7 +97,7 @@
      </property>
     </widget>
    </item>
-   <item>
+   <item alignment="Qt::AlignLeft">
     <widget class="QToolButton" name="tb_ClearForm">
      <property name="toolTip">
       <string>clear form</string>
@@ -129,6 +113,22 @@
       <string>Ctrl+S</string>
      </property>
     </widget>
+   </item>
+   <item>
+    <spacer name="hs_FilterBarButtons">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Fixed</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>10</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>
