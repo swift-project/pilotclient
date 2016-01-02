@@ -71,10 +71,24 @@ namespace BlackMisc
             return cat;
         }
 
-        //! Downloading
+        //! Generic downloads
         static const CLogCategory &download()
         {
             static const CLogCategory cat { "swift.download" };
+            return cat;
+        }
+
+        //! Webservice
+        static const CLogCategory &webservice()
+        {
+            static const CLogCategory cat { "swift.webservice" };
+            return cat;
+        }
+
+        //! Webservice with swift DB
+        static const CLogCategory &swiftDbWebservice()
+        {
+            static const CLogCategory cat { "swift.db.webservice" };
             return cat;
         }
 
@@ -89,7 +103,9 @@ namespace BlackMisc
                 context(),
                 contextSlot(),
                 guiComponent(),
-                download()
+                download(),
+                webservice(),
+                swiftDbWebservice(),
             };
             return cats;
         }

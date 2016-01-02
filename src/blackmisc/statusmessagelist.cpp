@@ -73,8 +73,23 @@ namespace BlackMisc
         {
             msg.setCategories(categories);
         }
+	}
+		
+    void CStatusMessageList::removeWarningsAndBelow()
+    {
+        if (this->isEmpty()) { return; }
+        this->removeIf(&CStatusMessage::getSeverity, CStatusMessage::SeverityWarning);
+        this->removeInfoAndBelow();
+    }
 
-	CStatusMessage::StatusSeverity CStatusMessageList::worstSeverity() const
+    void CStatusMessageList::removeInfoAndBelow()
+    {
+        if (this->isEmpty()) { return; }
+        this->removeIf(&CStatusMessage::getSeverity, CStatusMessage::SeverityDebug);
+        this->removeIf(&CStatusMessage::getSeverity, CStatusMessage::SeverityInfo);
+    }
+
+    CStatusMessage::StatusSeverity CStatusMessageList::worstSeverity() const
     {
         CStatusMessage::StatusSeverity s = CStatusMessage::SeverityDebug;
         for (const CStatusMessage &msg : *this)

@@ -22,7 +22,9 @@ namespace BlackMisc
             { "swift contexts",         exactMatch(CLogCategory::context()) },
             { "swift context slots",    exactMatch(CLogCategory::contextSlot()) },
             { "swift GUI",              exactMatch(CLogCategory::guiComponent()) },
-            { "swift downloads",        exactMatch(CLogCategory::download()) },
+            { "downloading data",       exactMatch(CLogCategory::download()) },
+            { "webservice related",     exactMatch(CLogCategory::webservice()) },
+            { "swift DB webservice related", exactMatch(CLogCategory::swiftDbWebservice()) },
             { "Qt library",             startsWith("qt.") },
             { "uncategorized (other)",  empty() }
         };

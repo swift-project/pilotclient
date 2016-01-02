@@ -64,6 +64,12 @@ namespace BlackMisc
         //! Reset the categories of all messages in the list
         void setCategories(const CLogCategoryList &categories);
 
+        //! Remove warnings and below
+        void removeWarningsAndBelow();
+
+        //! Remove info and below
+        void removeInfoAndBelow();
+
         //! Find worst severity
         CStatusMessage::StatusSeverity worstSeverity() const;
 
