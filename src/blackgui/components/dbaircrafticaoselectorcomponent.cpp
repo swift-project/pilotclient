@@ -75,8 +75,12 @@ namespace BlackGui
 
         CAircraftIcaoCode CDbAircraftIcaoSelectorComponent::getAircraftIcao() const
         {
-            int key = CDatastoreUtility::extractIntegerKey(this->ui->le_Aircraft->text());
-            if (key < 0) { return CAircraftIcaoCode(); }
+            QString text(this->ui->le_Aircraft->text().trimmed().toUpper());
+            int key = CDatastoreUtility::extractIntegerKey(text);
+            if (key < 0)
+            {
+                return CAircraftIcaoCode(text);
+            }
             CAircraftIcaoCode icao(getAircraftIcaoCodeForDbKey(key));
             return icao;
         }

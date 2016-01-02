@@ -23,8 +23,16 @@ namespace BlackGui
             ui(new Ui::CDbDebugDatabaseSetup)
         {
             ui->setupUi(this);
-            this->setEnabled(CProject::isRunningInDeveloperEnvironment());
-            connect(ui->cb_EnableServerDebugging, &QCheckBox::toggled, this, &CDbDebugDatabaseSetup::ps_debugChanged);
+            bool enabled = CProject::isRunningInDeveloperEnvironment();
+            this->setEnabled(enabled);
+            if (!enabled)
+            {
+                this->setToolTip("Disabled, cannot be set!");
+            }
+            else
+            {
+                connect(ui->cb_EnableServerDebugging, &QCheckBox::toggled, this, &CDbDebugDatabaseSetup::ps_debugChanged);
+            }
         }
 
         CDbDebugDatabaseSetup::~CDbDebugDatabaseSetup()
