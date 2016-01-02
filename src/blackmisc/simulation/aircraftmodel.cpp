@@ -37,7 +37,7 @@ namespace BlackMisc
         {}
 
         CAircraftModel::CAircraftModel(const QString &model, CAircraftModel::ModelType type, CSimulatorInfo &simulator, const QString &name, const QString &description, const CAircraftIcaoCode &icao, const CLivery &livery) :
-            m_aircraftIcao(icao), m_livery(livery), m_simulator(simulator), m_modelString(model.trimmed().toUpper()), m_modelName(name.trimmed()), m_description(description.trimmed()), m_modelType(type)
+            m_aircraftIcao(icao), m_livery(livery), m_simulator(simulator), m_modelString(model.trimmed().toUpper()), m_name(name.trimmed()), m_description(description.trimmed()), m_modelType(type)
         { }
 
         QString CAircraftModel::convertToQString(bool i18n) const
@@ -61,7 +61,7 @@ namespace BlackMisc
 
             // filename not in DB
             obj.insert("id", this->getDbKeyAsJsonValue());
-            obj.insert("simkey", QJsonValue(this->m_modelString));
+            obj.insert("modelstring", QJsonValue(this->m_modelString));
             obj.insert("description", QJsonValue(this->m_description));
             obj.insert("mode", QJsonValue(getModelModeAsString().left(1).toUpper()));
 
@@ -118,7 +118,7 @@ namespace BlackMisc
             case IndexDescription:
                 return CVariant(this->m_description);
             case IndexName:
-                return CVariant(this->m_modelName);
+                return CVariant(this->m_name);
             case IndexFileName:
                 return CVariant(this->m_fileName);
             case IndexAircraftIcaoCode:
@@ -159,7 +159,7 @@ namespace BlackMisc
                 this->m_simulator.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexName:
-                this->m_modelName = variant.toQString();
+                this->m_name = variant.toQString();
                 break;
             case IndexCallsign:
                 this->m_callsign.setPropertyByIndex(variant, index.copyFrontRemoved());
@@ -207,7 +207,7 @@ namespace BlackMisc
             case IndexSimulatorInfo:
                 return this->m_simulator.comparePropertyByIndex(compareValue.getSimulatorInfo(), index.copyFrontRemoved());
             case IndexName:
-                return this->m_modelName.compare(compareValue.getName(), Qt::CaseInsensitive);
+                return this->m_name.compare(compareValue.getName(), Qt::CaseInsensitive);
             case IndexCallsign:
                 break;
             case IndexFileName:
@@ -369,7 +369,7 @@ namespace BlackMisc
 
         CAircraftModel CAircraftModel::fromDatabaseJson(const QJsonObject &json, const QString prefix)
         {
-            QString modelString(json.value(prefix + "simkey").toString());
+            QString modelString(json.value(prefix + "modelstring").toString());
             QString modelDescription(json.value(prefix + "description").toString());
             QString modelName(json.value(prefix + "name").toString());
             QString modelMode(json.value(prefix + "mode").toString());

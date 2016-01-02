@@ -143,12 +143,17 @@ namespace BlackMisc
             }
 
             QString combinedCode(json.value(prefix + "combinedcode").toString());
+            if (combinedCode.isEmpty()) {
+                CLivery liveryStub; // only consists of id, maybe id and timestamp
+                liveryStub.setKeyAndTimestampFromDatabaseJson(json, prefix);
+                return liveryStub;
+            }
+
             QString description(json.value(prefix + "description").toString());
             CRgbColor colorFuselage(json.value(prefix + "colorfuselage").toString());
             CRgbColor colorTail(json.value(prefix + "colortail").toString());
             bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "military").toString());
             CAirlineIcaoCode airline(CAirlineIcaoCode::fromDatabaseJson(json, "al_"));
-            Q_ASSERT_X(description.length() > 0, Q_FUNC_INFO, "require description");
             CLivery livery(combinedCode, airline, description, colorFuselage, colorTail, military);
             livery.setKeyAndTimestampFromDatabaseJson(json, prefix);
             return livery;

@@ -129,6 +129,13 @@ namespace BlackMisc
             }
 
             QString description(json.value(prefix + "description").toString());
+            if (description.isEmpty()) {
+                // stub, only key, maybe also timestamps
+                CDistributor distributorStub;
+                distributorStub.setKeyAndTimestampFromDatabaseJson(json, prefix);
+                return distributorStub;
+            }
+
             QString alias1(json.value(prefix + "alias1").toString());
             QString alias2(json.value(prefix + "alias2").toString());
             Q_ASSERT_X(!description.isEmpty(), Q_FUNC_INFO, "Missing description");

@@ -110,7 +110,7 @@ namespace BlackMisc
             //! Callsign empty
             bool isCallsignEmpty() const { return this->m_callsign.isEmpty(); }
 
-            //! Model string, either queried or loaded from simulator model
+            //! Model key, either queried or loaded from simulator model
             const QString &getModelString() const { return this->m_modelString; }
 
             //! Model string
@@ -171,10 +171,10 @@ namespace BlackMisc
             void setDistributor(const CDistributor &distributor) { m_distributor = distributor; }
 
             //! Name
-            const QString &getName() const { return this->m_modelName; }
+            const QString &getName() const { return this->m_name; }
 
             //! Name
-            void setName(const QString &name) { this->m_modelName = name.trimmed(); }
+            void setName(const QString &name) { this->m_name = name.trimmed(); }
 
             //! Model type
             ModelType getModelType() const { return m_modelType; }
@@ -264,8 +264,8 @@ namespace BlackMisc
             BlackMisc::Aviation::CLivery m_livery;                 //!< livery information
             CSimulatorInfo m_simulator;                            //!< model for given simulator
             CDistributor m_distributor;                            //!< who designed or distributed the model
-            QString m_modelString;                                 //!< Simulator model string
-            QString m_modelName;                                   //!< Model name
+            QString m_modelString;                                 //!< Simulator model key, unique
+            QString m_name;                                        //!< Model name
             QString m_description;                                 //!< descriptive text
             QString m_fileName;                                    //!< file name
             ModelType m_modelType = TypeUnknown;                   //!< model string is coming representing ...?
@@ -284,7 +284,7 @@ BLACK_DECLARE_TUPLE_CONVERSION(
         attr(o.m_simulator),
         attr(o.m_distributor),
         attr(o.m_modelString, flags<CaseInsensitiveComparison>()),
-        attr(o.m_modelName),
+        attr(o.m_name),
         attr(o.m_description, flags<DisabledForComparison>()),
         attr(o.m_fileName, flags <DisabledForComparison> ()),
         attr(o.m_modelType),

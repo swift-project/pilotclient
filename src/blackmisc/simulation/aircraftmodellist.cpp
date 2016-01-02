@@ -190,6 +190,7 @@ namespace BlackMisc
                 CStatusMessage msgDb(CStatusMessage::SeverityError, subMsgs.join(", "));
 
                 CStatusMessage singleMsg(CStatusMessageList({msgModel, msgDb}).toSingleMessage());
+                if (!singleMsg.isWarningOrAbove()) { continue; }
                 if (model.hasModelString())
                 {
                     singleMsg.prependMessage(model.getModelString() + ": ");
