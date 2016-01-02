@@ -8,6 +8,7 @@
  */
 
 #include "databasewriter.h"
+#include "blackcore/cookiemanager.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/datastoreutility.h"
 #include "blackmisc/network/networkutils.h"
@@ -25,36 +26,40 @@ namespace BlackCore
 {
     CDatabaseWriter::CDatabaseWriter(const Network::CUrl &baseUrl, QObject *parent) :
         QObject(parent),
-        m_modelUrl(getModelWriteUrl(baseUrl))
+        m_modelPublishUrl(getModelPublishUrl(baseUrl))
     {
         this->m_networkManager = new QNetworkAccessManager(this);
+        CCookieManager::setToAccessManager(this->m_networkManager);
         this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CDatabaseWriter::ps_postResponse);
     }
 
-    CStatusMessageList CDatabaseWriter::asyncWriteModel(const CAircraftModel &model)
+    CStatusMessageList CDatabaseWriter::asyncPublishModels(const CAircraftModelList &models)
     {
-        CStatusMessageList msg;
+        CStatusMessageList msgs;
         if (m_shutdown)
         {
-            msg.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Database writer shuts down"));
-            return msg;
+            msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Database writer shuts down"));
+            return msgs;
         }
 
         if (m_pendingReply)
         {
-            msg.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Another write operation in progress"));
-            return msg;
+            msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Another write operation in progress"));
+            return msgs;
         }
 
-        QUrl url(m_modelUrl.toQUrl());
+        QUrl url(m_modelPublishUrl.toQUrl());
         QNetworkRequest request(url);
         QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType, this);
-        multiPart->append(CNetworkUtils::getJsonTextMutlipart(model.toJson()));
-        if (m_setup.get().dbDebugFlag()) { multiPart->append(CNetworkUtils::getMultipartWithDebugFlag()); }
+        multiPart->append(CNetworkUtils::getJsonTextMultipart(models.toDatabaseJson()));
+        if (m_setup.get().dbDebugFlag())
+        {
+            multiPart->append(CNetworkUtils::getMultipartWithDebugFlag());
+        }
 
         m_pendingReply = this->m_networkManager->post(request, multiPart);
         multiPart->setParent(m_pendingReply);
-        return msg;
+        return msgs;
     }
 
     void CDatabaseWriter::gracefulShutdown()
@@ -69,8 +74,11 @@ namespace BlackCore
 
     void CDatabaseWriter::ps_postResponse(QNetworkReply *nwReplyPtr)
     {
+        static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::swiftDbWebservice()}));
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
         m_pendingReply = nullptr;
+        QUrl url(nwReply->url());
+        QString urlString(url.toString());
 
         if (m_shutdown)
         {
@@ -82,30 +90,32 @@ namespace BlackCore
         {
             const QString dataFileData(nwReply->readAll().trimmed());
             nwReply->close(); // close asap
-
             if (dataFileData.isEmpty())
             {
-                CLogMessage(this).error("No response data");
+                const CStatusMessageList msgs({CStatusMessage(cats, CStatusMessage::SeverityError, "No response data from " + urlString)});
+                emit published(CAircraftModelList(), CAircraftModelList(), msgs);
                 return;
             }
 
+            CAircraftModelList modelsPublished;
+            CAircraftModelList modelsSkipped;
             CStatusMessageList msgs;
-            CVariant id;
-            bool success = CDatastoreUtility::parseSwiftWriteResponse(dataFileData, msgs, id);
-            CLogMessage(this).preformatted(msgs);
+            bool success = CDatastoreUtility::parseSwiftPublishResponse(dataFileData, modelsPublished, modelsSkipped, msgs);
+            emit published(modelsPublished, modelsSkipped, msgs);
             Q_UNUSED(success);
         }
         else
         {
             QString error = nwReply->errorString();
             nwReply->close(); // close asap
-            CLogMessage(this).error(error);
+            const CStatusMessageList msgs( {CStatusMessage(cats, CStatusMessage::SeverityError, "HTTP error: " + error)});
+            emit published(CAircraftModelList(), CAircraftModelList(), msgs);
         }
     }
 
-    Network::CUrl CDatabaseWriter::getModelWriteUrl(const Network::CUrl &baseUrl)
+    CUrl CDatabaseWriter::getModelPublishUrl(const Network::CUrl &baseUrl)
     {
-        return baseUrl.withAppendedPath("service/swiftwritemodel.php");
+        return baseUrl.withAppendedPath("service/publishmodels.php");
     }
 
     QList<QByteArray> CDatabaseWriter::splitData(const QByteArray &data, int size)
@@ -121,5 +131,4 @@ namespace BlackCore
         }
         return arrays;
     }
-
 } // namespace

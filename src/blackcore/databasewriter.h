@@ -15,7 +15,7 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackmisc/threadedreader.h"
-#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 
 #include <QNetworkReply>
 #include <QJsonArray>
@@ -33,10 +33,14 @@ namespace BlackCore
         CDatabaseWriter(const BlackMisc::Network::CUrl &baseUrl, QObject *parent);
 
         //! Write model to DB
-        BlackMisc::CStatusMessageList asyncWriteModel(const BlackMisc::Simulation::CAircraftModel &model);
+        BlackMisc::CStatusMessageList asyncPublishModels(const BlackMisc::Simulation::CAircraftModelList &models);
 
         //! Shutdown
         void gracefulShutdown();
+
+    signals:
+        //! Published models, the response to \sa asyncPublishModels
+        void published(const BlackMisc::Simulation::CAircraftModelList &modelsPublished, const BlackMisc::Simulation::CAircraftModelList &modelsSkipped, const BlackMisc::CStatusMessageList &messages);
 
     private slots:
         //! Post response
@@ -44,13 +48,13 @@ namespace BlackCore
 
     private:
         BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< data cache
-        BlackMisc::Network::CUrl                       m_modelUrl;
+        BlackMisc::Network::CUrl                       m_modelPublishUrl;
         QNetworkAccessManager                         *m_networkManager = nullptr;
         QNetworkReply                                 *m_pendingReply = nullptr;
         bool                                           m_shutdown = false;
 
         //! URL model web service
-        static BlackMisc::Network::CUrl getModelWriteUrl(const BlackMisc::Network::CUrl &baseUrl);
+        static BlackMisc::Network::CUrl getModelPublishUrl(const BlackMisc::Network::CUrl &baseUrl);
 
         //! Split data array
         static QList<QByteArray> splitData(const QByteArray &data, int size);
