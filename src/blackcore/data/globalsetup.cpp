@@ -62,7 +62,8 @@ namespace BlackCore
             if (!m_dbDebugFlag) { return false; }
 
             // further checks could go here
-            return isDevelopment();
+            bool f = isDevelopment();
+            return f;
         }
 
         void CGlobalSetup::setServerDebugFlag(bool debug)

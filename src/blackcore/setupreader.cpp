@@ -124,6 +124,11 @@ namespace BlackCore
         }
     }
 
+    void CSetupReader::ps_setupChanged()
+    {
+        // settings have changed on disk
+    }
+
     bool CSetupReader::localBootstrapFile(QString &fileName)
     {
         QString dir(CProject::getSwiftPrivateResourceDir());

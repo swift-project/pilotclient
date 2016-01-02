@@ -65,13 +65,16 @@ namespace BlackCore
         //! Setup has beem syncronized
         void ps_setupSyncronized(bool success);
 
+        //! Setup has been changed
+        void ps_setupChanged();
+
     private:
         QNetworkAccessManager              *m_networkManagerBootstrap = nullptr;
         QNetworkAccessManager              *m_networkManagerUpdateInfo = nullptr;
         BlackMisc::LockFree<BlackMisc::Network::CFailoverUrlList> m_bootstrapUrls;
         BlackMisc::LockFree<BlackMisc::Network::CFailoverUrlList> m_updateInfoUrls;
-        BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this};      //!< data cache setup
-        BlackMisc::CData<BlackCore::Data::UpdateInfo>  m_updateInfo {this}; //!< data cache update info
+        BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this, &CSetupReader::ps_setupChanged};  //!< data cache setup
+        BlackMisc::CData<BlackCore::Data::UpdateInfo>  m_updateInfo {this};                             //!< data cache update info
 
         //! Constructor
         explicit CSetupReader(QObject *owner);
