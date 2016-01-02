@@ -54,7 +54,7 @@ namespace BlackMisc
         {
             QStringList ips;
             if (!CNetworkUtils::hasConnectedInterface(false)) return ips;
-            foreach(const QHostAddress & address, QNetworkInterface::allAddresses())
+            foreach (const QHostAddress &address, QNetworkInterface::allAddresses())
             {
                 if (address.isLoopback() || address.isNull()) continue;
                 if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost))
@@ -207,13 +207,24 @@ namespace BlackMisc
             qurl.addQueryItem("XDEBUG_SESSION_START", "ECLIPSE_DBGP");
         }
 
-        QHttpPart CNetworkUtils::getJsonTextMutlipart(const QJsonObject &json)
+        QHttpPart CNetworkUtils::getJsonTextMultipart(const QJsonObject &json)
         {
-            const QByteArray jsonData(QJsonDocument(json).toJson(QJsonDocument::Compact));
+            const QByteArray bytes(QJsonDocument(json).toJson(QJsonDocument::Compact));
+            return getJsonTextMultipart(bytes);
+        }
+
+        QHttpPart CNetworkUtils::getJsonTextMultipart(const QJsonArray &json)
+        {
+            const QByteArray bytes(QJsonDocument(json).toJson(QJsonDocument::Compact));
+            return getJsonTextMultipart(bytes);
+        }
+
+        QHttpPart CNetworkUtils::getJsonTextMultipart(const QByteArray &bytes)
+        {
             QHttpPart textPart;
             QString name("form-data; name=\"swiftjson\"");
             textPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant(name));
-            textPart.setBody(jsonData);
+            textPart.setBody(bytes);
             return textPart;
         }
 

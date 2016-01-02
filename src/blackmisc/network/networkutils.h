@@ -99,7 +99,13 @@ namespace BlackMisc
             static void addDebugFlag(QUrlQuery &qurl);
 
             //! Multipart for JSON
-            static QHttpPart getJsonTextMutlipart(const QJsonObject &json);
+            static QHttpPart getJsonTextMultipart(const QJsonObject &json);
+
+            //! Multipart for JSON
+            static QHttpPart getJsonTextMultipart(const QJsonArray &json);
+
+            //! Multipart for JSON
+            static QHttpPart getJsonTextMultipart(const QByteArray &bytes);
 
             //! Our tweakes network request
             static QNetworkRequest getNetworkRequest(const CUrl &url, RequestType type = Get);

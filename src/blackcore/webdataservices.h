@@ -83,6 +83,12 @@ namespace BlackCore
             QObject *receiver,
             std::function<void (BlackMisc::Network::CEntityFlags::Entity, BlackMisc::Network::CEntityFlags::ReadState, int)> dataRead) override;
 
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::connectDataPublishSignal
+        //! \ingroup webdatareaderprovider
+        virtual QList<QMetaObject::Connection> connectDataPublishSignal(
+            QObject *receiver,
+            std::function<void (const BlackMisc::Simulation::CAircraftModelList &, const BlackMisc::Simulation::CAircraftModelList &, const BlackMisc::CStatusMessageList &)> dataPublished) override;
+
         //! \copydoc BlackMisc::Network::IWebDataServicesProvider::triggerRead
         //! \ingroup webdatareaderprovider
         virtual BlackMisc::Network::CEntityFlags::Entity triggerRead(BlackMisc::Network::CEntityFlags::Entity whatToRead) override;
@@ -227,15 +233,15 @@ namespace BlackCore
         //! \ingroup webdatareaderprovider
         virtual void updateWithVatsimDataFileData(BlackMisc::Simulation::CSimulatedAircraft &aircraftToBeUdpated) const override;
 
-        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::asyncWriteModel
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::asyncPublishModels
         //! \ingroup webdatareaderprovider
-        virtual BlackMisc::CStatusMessageList asyncWriteModel(const BlackMisc::Simulation::CAircraftModel &model) const override;
+        virtual BlackMisc::CStatusMessageList asyncPublishModels(const BlackMisc::Simulation::CAircraftModelList &models) const override;
 
         //! \copydoc BlackMisc::Network::IWebDataServicesProvider::canConnectSwiftDb
         //! \ingroup webdatareaderprovider
         virtual bool canConnectSwiftDb() const override;
 
-        //! Save all DB data to JSON files
+        //! Save all DB data to a JSON files
         //! \ingroup webdatareaderprovider
         virtual bool writeDbDataToDisk(const QString &dir) const override;
 

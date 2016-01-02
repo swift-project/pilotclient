@@ -109,6 +109,17 @@ namespace BlackCore
         return cl;
     }
 
+    QList<QMetaObject::Connection> CWebDataServices::connectDataPublishSignal(QObject *receiver, std::function<void (const CAircraftModelList &, const CAircraftModelList &, const CStatusMessageList &)> dataPublished)
+    {
+        Q_ASSERT_X(receiver, Q_FUNC_INFO, "Missing receiver");
+        QList<QMetaObject::Connection> cl;
+        if (!m_databaseWriter) { return cl; }
+        QMetaObject::Connection con = connect(this->m_databaseWriter, &CDatabaseWriter::published, receiver, dataPublished);
+        Q_ASSERT_X(con, Q_FUNC_INFO, "connect failed publishing signal");
+        cl.push_back(con);
+        return cl;
+    }
+
     CServerList CWebDataServices::getVatsimFsdServers() const
     {
         if (m_vatsimDataFileReader) { return m_vatsimDataFileReader->getFsdServers(); }
@@ -144,9 +155,9 @@ namespace BlackCore
         if (m_vatsimDataFileReader) { m_vatsimDataFileReader->updateWithVatsimDataFileData(aircraftToBeUdpated); }
     }
 
-    CStatusMessageList CWebDataServices::asyncWriteModel(const CAircraftModel &model) const
+    CStatusMessageList CWebDataServices::asyncPublishModels(const CAircraftModelList &models) const
     {
-        if (m_databaseWriter) { return m_databaseWriter->asyncWriteModel(model);}
+        if (m_databaseWriter) { return m_databaseWriter->asyncPublishModels(models);}
         return CStatusMessageList();
     }
 

@@ -55,6 +55,9 @@ namespace BlackMisc
         //! Invalid key
         static int invalidDbKey() { return -1; }
 
+        //! Convert string to DB key
+        static int stringToDbKey(const QString &candidate);
+
     protected:
         //! Constructor
         IDatastoreObjectWithIntegerKey() {}

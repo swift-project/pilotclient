@@ -261,11 +261,11 @@ namespace BlackMisc
             return this->m_webDataReaderProvider->updateWithVatsimDataFileData(aircraftToBeUdpated);
         }
 
-        CStatusMessageList CWebDataServicesAware::asyncWriteModel(const CAircraftModel &model) const
+        CStatusMessageList CWebDataServicesAware::asyncPublishModels(const CAircraftModelList &models) const
         {
             Q_ASSERT_X(this->m_webDataReaderProvider, Q_FUNC_INFO, "Missing provider");
             if (!hasProvider()) { return CStatusMessageList(); }
-            return this->m_webDataReaderProvider->asyncWriteModel(model);
+            return this->m_webDataReaderProvider->asyncPublishModels(models);
         }
 
         void CWebDataServicesAware::setProvider(IWebDataServicesProvider *webDataReaderProvider)
@@ -293,6 +293,16 @@ namespace BlackMisc
             if (receiver)
             {
                 this->m_swiftConnections.append(this->m_webDataReaderProvider->connectDataReadSignal(receiver, dataRead));
+            }
+        }
+
+        void CWebDataServicesAware::connectDataPublishSignal(QObject *receiver, std::function<void (const CAircraftModelList &, const CAircraftModelList &, const CStatusMessageList &)> dataPublished)
+        {
+            Q_ASSERT_X(this->m_webDataReaderProvider, Q_FUNC_INFO, "Missing provider");
+            if (!hasProvider()) { return; }
+            if (receiver)
+            {
+                this->m_swiftConnections.append(this->m_webDataReaderProvider->connectDataPublishSignal(receiver, dataPublished));
             }
         }
 

@@ -7,11 +7,15 @@
  * contained in the LICENSE file.
  */
 
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/datastoreutility.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/stringutils.h"
 #include <QJsonObject>
 #include <QJsonDocument>
+
+using namespace BlackMisc;
+using namespace BlackMisc::Simulation;
 
 namespace BlackMisc
 {
@@ -48,7 +52,6 @@ namespace BlackMisc
 
     QDateTime CDatastoreUtility::parseTimestamp(const QString &timestamp)
     {
-        Q_ASSERT_X(!timestamp.isEmpty(), Q_FUNC_INFO, "Missing timestamp");
         if (!timestamp.isEmpty())
         {
             QString ts(timestamp.trimmed().remove(' ').remove('-').remove(':')); // normalize
@@ -61,33 +64,76 @@ namespace BlackMisc
         }
     }
 
-    bool CDatastoreUtility::parseSwiftWriteResponse(const QString &jsonResponse, CStatusMessageList &messages, CVariant &key)
+    bool CDatastoreUtility::parseSwiftPublishResponse(const QString &jsonResponse, CAircraftModelList &publishedModels,  CAircraftModelList &skippedModels, CStatusMessageList &messages)
     {
-        if (jsonResponse.isEmpty()) { return ""; }
-        QJsonDocument jsonDoc(QJsonDocument::fromJson(jsonResponse.toUtf8()));
-        if (!jsonDoc.isObject()) { return ""; }
-        QJsonObject json(jsonDoc.object());
-        Q_ASSERT_X(!json.value("id").isNull(), Q_FUNC_INFO, "malformed response");
-        if (json.value("id").isNull()) { return false; }
-        QString id(json.value("id").toString().trimmed());
-        QJsonArray msgObject(json.value("messages").toArray());
-        messages.push_back(CStatusMessageList::fromDatabaseJson(msgObject));
-        bool success = false;
+        static const CLogCategoryList cats({ CLogCategory::swiftDbWebservice()});
+        if (jsonResponse.isEmpty())
+        {
+            messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Empty JSON data"));
+            return false;
+        }
 
-        int intKey;
-        bool isInt;
-        intKey = id.toInt(&isInt);
-        if (isInt)
+        QJsonDocument jsonDoc(QJsonDocument::fromJson(jsonResponse.toUtf8()));
+
+        // array of messages
+        if (jsonDoc.isArray())
         {
-            key.setValue(intKey);
-            success = (intKey >= 0);
+            CStatusMessageList msgs(CStatusMessageList::fromDatabaseJson(jsonDoc.array()));
+            messages.push_back(msgs);
+            return true;
         }
-        else
+
+        // no object -> most likely some fucked up HTML string with the PHP error
+        if (!jsonDoc.isObject())
         {
-            key.setValue(id);
-            success = !id.isEmpty();
+            QString phpError(jsonResponse);
+            phpError.remove(QRegExp("<[^>]*>"));
+            messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, phpError));
+            return false;
         }
-        return success;
+
+        // fully blown object
+        QJsonObject json(jsonDoc.object());
+        bool data = false;
+        if (json.contains("msgs"))
+        {
+            QJsonValue msgJson(json.take("msgs"));
+            CStatusMessageList msgs(CStatusMessageList::fromDatabaseJson(msgJson.toArray()));
+            if (!msgs.isEmpty())
+            {
+                messages.push_back(msgs);
+                data = true;
+            }
+        }
+
+        if (json.contains("publishedModels"))
+        {
+            QJsonValue publishedJson(json.take("publishedModels"));
+            CAircraftModelList published = CAircraftModelList::fromDatabaseJson(publishedJson.toArray());
+            if (!published.isEmpty())
+            {
+                publishedModels.push_back(published);
+                data = true;
+            }
+        }
+
+        if (json.contains("skippedModels"))
+        {
+            QJsonValue skippedJson(json.take("skippedModels"));
+            CAircraftModelList skipped = CAircraftModelList::fromDatabaseJson(skippedJson.toArray());
+            if (!skipped.isEmpty())
+            {
+                skippedModels.push_back(skipped);
+                data = true;
+            }
+        }
+
+        if (!data)
+        {
+            messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Received response, but no JSON data"));
+        }
+
+        return data;
     }
 
 } // namespace

@@ -35,6 +35,14 @@ namespace BlackMisc
         this->m_dbKey = k;
     }
 
+    int IDatastoreObjectWithIntegerKey::stringToDbKey(const QString &candidate)
+    {
+        if (candidate.isEmpty()) { return invalidDbKey(); }
+        bool ok;
+        int k = candidate.toInt(&ok);
+        return ok ? k : invalidDbKey();
+    }
+
     QJsonValue IDatastoreObjectWithIntegerKey::getDbKeyAsJsonValue() const
     {
         if (this->hasValidDbKey()) { return QJsonValue(this->m_dbKey); }
