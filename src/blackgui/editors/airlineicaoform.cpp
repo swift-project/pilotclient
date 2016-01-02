@@ -70,6 +70,12 @@ namespace BlackGui
         {
             CAirlineIcaoCode code(getValue());
             CStatusMessageList msgs(code.validate());
+            if (this->isReadOnly())
+            {
+                // in readonly I cannot change the data anyway, so skip warnings
+                msgs.removeWarningsAndBelow();
+            }
+
             this->ui->val_Indicator->setState(msgs);
             return msgs;
         }

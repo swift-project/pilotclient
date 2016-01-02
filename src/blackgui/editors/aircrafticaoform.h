@@ -74,8 +74,10 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CAircraftIcaoForm> ui;
-        };
 
+            //! Key from GUI
+            int getDbKeyFromGui() const;
+        };
     } // ns
 } // ns
 

@@ -10,6 +10,7 @@
 #include "blackgui/guiutility.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "aircrafticaoform.h"
+#include "blackmisc/datastore.h"
 #include "ui_aircrafticaoform.h"
 
 using namespace BlackMisc;
@@ -63,6 +64,22 @@ namespace BlackGui
         CAircraftIcaoCode CAircraftIcaoForm::getValue() const
         {
             CAircraftIcaoCode icao(this->ui->aircraft_Selector->getAircraftIcao());
+            if (!icao.hasValidDbKey())
+            {
+                // not based on DB yet, do we have a DB key
+                int k = this->getDbKeyFromGui();
+                if (k >= 0)
+                {
+                    // we got an id, we get the DB object for it
+                    CAircraftIcaoCode fromDb(this->getAircraftIcaoCodeForDbKey(k));
+                    if (fromDb.getDesignator() == icao.getDesignator())
+                    {
+                        // we replace by DB object
+                        icao = fromDb;
+                    }
+                }
+            }
+
             QString manufacturer(this->ui->le_Manufacturer->text().trimmed().toUpper());
             QString modelDescription(this->ui->le_ModelDescription->text());
             QString wtc(ui->cb_Wtc->currentText().left(1));
@@ -149,5 +166,10 @@ namespace BlackGui
             this->setValue(icao);
         }
 
+        int CAircraftIcaoForm::getDbKeyFromGui() const
+        {
+            QString key(this->ui->le_Id->text().trimmed());
+            return IDatastoreObjectWithIntegerKey::stringToDbKey(key);
+        }
     } // ns
 } // ns

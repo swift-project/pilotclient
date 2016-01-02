@@ -72,6 +72,11 @@ namespace BlackGui
             {
                 msgs.push_back(this->ui->editor_AirlineIcao->validate());
             }
+            if (this->isReadOnly())
+            {
+                // in readonly I cannot change the data anyway, so skip warnings
+                msgs.removeWarningsAndBelow();
+            }
             this->ui->val_Indicator->setState(msgs);
             return msgs;
         }
@@ -91,6 +96,8 @@ namespace BlackGui
             this->m_readOnly = readOnly;
             this->ui->le_Code->setReadOnly(readOnly);
             this->ui->le_Description->setReadOnly(readOnly);
+            this->ui->color_Fuselage->setReadOnly(readOnly);
+            this->ui->color_Tail->setReadOnly(readOnly);
         }
 
         void CLiveryForm::setMappingMode()

@@ -78,13 +78,6 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="6">
-       <widget class="QPushButton" name="pb_Publish">
-        <property name="text">
-         <string>Publish</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="3">
        <widget class="QLineEdit" name="le_Description">
         <property name="placeholderText">
@@ -199,7 +192,6 @@
   <tabstop>le_Name</tabstop>
   <tabstop>le_Description</tabstop>
   <tabstop>pb_Stash</tabstop>
-  <tabstop>pb_Publish</tabstop>
   <tabstop>le_LastUpdated</tabstop>
  </tabstops>
  <resources/>
