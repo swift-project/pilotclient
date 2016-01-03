@@ -39,6 +39,7 @@ namespace BlackGui
         pw->setLayout(layout);
 
         QCheckBox *cb = new QCheckBox(name);
+        cb->setObjectName(identifier);
         cb->setProperty("pluginIdentifier", identifier);
         connect(cb, &QCheckBox::stateChanged, this, &CPluginSelector::ps_handlePluginStateChange);
         if (enabled)
@@ -69,6 +70,13 @@ namespace BlackGui
         layout->setStretch(2, 0);
 
         this->layout()->addWidget(pw);
+    }
+
+    void CPluginSelector::setEnabled(const QString &identifier, bool enabled)
+    {
+        QCheckBox* cb = findChild<QCheckBox *>(identifier);
+        Q_ASSERT(cb);
+        cb->setChecked(enabled);
     }
 
     void CPluginSelector::ps_handlePluginStateChange()

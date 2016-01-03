@@ -425,6 +425,8 @@ namespace BlackCore
         bool s = QMetaObject::invokeMethod(listener, "start", Qt::QueuedConnection);
         Q_ASSERT_X(s, Q_FUNC_INFO, "cannot invoke method");
         Q_UNUSED(s);
+
+        CLogMessage(this).info("Listening for simulator %1") << simulatorInfo.getIdentifier();
     }
 
     void CContextSimulator::listenForAllSimulators()
@@ -558,6 +560,21 @@ namespace BlackCore
 
         // update
         m_simulatorPlugin.second->updateOwnSimulatorCockpit(ownAircraft, originator);
+    }
+
+    void CContextSimulator::restoreSimulatorPlugins()
+    {
+        stopSimulatorListeners();
+
+        auto enabledSimulators = m_enabledSimulators.get();
+        auto allSimulators = m_plugins->getAvailableSimulatorPlugins();
+        for (const CSimulatorPluginInfo& s: allSimulators)
+        {
+            if (enabledSimulators.contains(s.getIdentifier()))
+            {
+                startSimulatorPlugin(s);
+            }
+        }
     }
 
     CPixmap CContextSimulator::iconForModel(const QString &modelString) const

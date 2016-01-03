@@ -11,6 +11,7 @@
 #define BLACKGUI_SETTINGSSIMULATORCOMPONENT_H
 
 #include "blackcore/pluginmanagersimulator.h"
+#include "blackcore/settings/application.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include <QFrame>
@@ -62,6 +63,9 @@ namespace BlackGui
             //! Show plugin config
             void ps_showPluginConfig(const QString &identifier);
 
+            //! Select/deselect enabled/disabled plugins
+            void ps_reloadPluginConfig();
+
         private:
             //! Set the GUI values
             void setGuiValues();
@@ -72,6 +76,7 @@ namespace BlackGui
             QScopedPointer<Ui::CSettingsSimulatorComponent> ui; //!< UI
             bool m_pluginLoaded = false; //!< plugin loaded
             BlackCore::CPluginManagerSimulator* m_plugins = nullptr;
+            BlackMisc::CSetting<BlackCore::Settings::Application::EnabledSimulators> m_enabledSimulators { this, &CSettingsSimulatorComponent::ps_reloadPluginConfig };
 
         };
     }

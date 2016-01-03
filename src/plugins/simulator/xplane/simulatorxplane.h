@@ -185,7 +185,6 @@ namespace BlackSimPlugin
             QDBusConnection m_conn { "default" };
             QDBusServiceWatcher *m_watcher { nullptr };
             BlackMisc::CSetting<XBusServer> m_xbusServerSetting { this, &CSimulatorXPlaneListener::ps_xbusServerSettingChanged };
-
         };
 
         //! Factory for creating CSimulatorXPlane instance

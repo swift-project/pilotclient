@@ -14,6 +14,7 @@
 
 #include "blackmisc/settingscache.h"
 #include "blackmisc/input/actionhotkeylist.h"
+#include <QStringList>
 
 namespace BlackCore
 {
@@ -37,6 +38,27 @@ namespace BlackCore
                                 actionHotkey.getCombination().isEmpty()) { return false; }
                     }
                     return true;
+                }
+            };
+
+            //! Selected simulator plugins
+            struct EnabledSimulators : public BlackMisc::CSettingTrait<QStringList>
+            {
+                //! \copydoc BlackCore::CSettingTrait::key
+                static const char *key() { return "application/enabledsimulators"; }
+
+                //! \copydoc BlackCore::CSettingTrait::defaultValue
+                static const QStringList &defaultValue()
+                {
+                    // All default simulators
+                    static const QStringList enabledSimulators
+                    {
+                        QStringLiteral("org.swift-project.plugins.simulator.fs9"),
+                        QStringLiteral("org.swift-project.plugins.simulator.fsx"),
+                        QStringLiteral("org.swift-project.plugins.simulator.xplane")
+                    };
+
+                    return enabledSimulators;
                 }
             };
         } // ns

@@ -49,6 +49,9 @@ namespace BlackGui
         //! \param enabled Defines whether the plugin is initially enabled or not
         void addPlugin(const QString &identifier, const QString &name, bool hasConfig = false, bool enabled = true);
 
+        //! Enables/disabled the given plugin.
+        void setEnabled(const QString &identifier, bool enabled);
+
     private slots:
         void ps_handlePluginStateChange();
 

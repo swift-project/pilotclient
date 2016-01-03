@@ -16,6 +16,7 @@
 #include "blackcore/contextsimulator.h"
 #include "blackcore/simulator.h"
 #include "blackcore/weathermanager.h"
+#include "blackcore/settings/application.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/network/textmessagelist.h"
@@ -161,6 +162,9 @@ namespace BlackCore
         //! \remarks set by runtime, only to be used locally (not via DBus)
         void ps_updateSimulatorCockpitFromContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
 
+        //! Reads list of enabled simulators, starts listeners
+        void restoreSimulatorPlugins();
+
     private:
         //! Load plugin, if required start listeners before
         bool loadSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo, bool withListeners);
@@ -181,6 +185,7 @@ namespace BlackCore
         CPluginManagerSimulator *m_plugins = nullptr;
         BlackMisc::CRegularThread m_listenersThread;
         BlackCore::CWeatherManager m_weatherManager { this };
+        BlackMisc::CSetting<BlackCore::Settings::Application::EnabledSimulators> m_enabledSimulators { this, &CContextSimulator::restoreSimulatorPlugins };
     };
 
 } // namespace

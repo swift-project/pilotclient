@@ -1,6 +1,6 @@
 #include "settingssimulatorcomponent.h"
 #include "ui_settingssimulatorcomponent.h"
-
+#include "blackcore/contextapplication.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/pluginconfigwindow.h"
 #include "blackgui/plugindetailswindow.h"
@@ -36,13 +36,6 @@ namespace BlackGui
             this->ui->led_RestrictedRendering->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Limited", "Unlimited", 14);
             this->ui->led_RenderingEnabled->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Rendering enabled", "No aircraft will be rendered", 14);
 
-            // set values
-            for (const auto &p : getAvailablePlugins())
-            {
-                QString config = m_plugins->getPluginConfigId(p.getIdentifier());
-                ui->ps_EnabledSimulators->addPlugin(p.getIdentifier(), p.getName(), !config.isEmpty(), false);
-            }
-
             // connects
             connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CSettingsSimulatorComponent::ps_simulatorPluginChanged);
             connect(this->ui->ps_EnabledSimulators, &CPluginSelector::pluginStateChanged, this, &CSettingsSimulatorComponent::ps_pluginStateChanged);
@@ -56,12 +49,21 @@ namespace BlackGui
             connect(this->ui->sb_MaxAircraft, &QSpinBox::editingFinished, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedAircraft);
             connect(this->ui->sb_MaxDistance, &QSpinBox::editingFinished, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedDistance);
 
-            // values
-            this->ps_simulatorPluginChanged(sGui->getIContextSimulator()->getSimulatorPluginInfo());
+            // list all available simulators
+            for (const auto &p : getAvailablePlugins())
+            {
+                QString config = m_plugins->getPluginConfigId(p.getIdentifier());
+                ui->ps_EnabledSimulators->addPlugin(p.getIdentifier(), p.getName(), !config.isEmpty(), false);
+            }
+
+            ps_reloadPluginConfig();
         }
 
         CSettingsSimulatorComponent::~CSettingsSimulatorComponent()
-        { }
+        {
+            if (!m_enabledSimulators.isSaved())
+                sGui->getIContextApplication()->saveSettings(m_enabledSimulators.getKey());
+        }
 
         void CSettingsSimulatorComponent::setGuiValues()
         {
@@ -127,16 +129,17 @@ namespace BlackGui
                 return;
             }
 
-            if (enabled)
+            auto e = m_enabledSimulators.get();
+            if (enabled && !e.contains(selected->getIdentifier()))
             {
-                sGui->getIContextSimulator()->startSimulatorPlugin(*selected);
-                CLogMessage(this).info("Started listening for %1") << selected->getName();
+                e << selected->getIdentifier();
             }
-            else
+            else if (!enabled)
             {
-                sGui->getIContextSimulator()->stopSimulatorPlugin(*selected);
-                CLogMessage(this).info("Stopped listening for %1") << selected->getName();
+                e.removeAll(selected->getIdentifier());
             }
+
+            m_enabledSimulators.set(e);
 
             // changing of GUI state will be done via received signal
         }
@@ -272,6 +275,16 @@ namespace BlackGui
             CPluginConfigWindow *window = config->createConfigWindow(qApp->activeWindow());
             window->setAttribute(Qt::WA_DeleteOnClose);
             window->show();
+        }
+
+        void CSettingsSimulatorComponent::ps_reloadPluginConfig()
+        {
+            // list all available simulators
+            auto enabledSimulators = m_enabledSimulators.get();
+            for (const auto &p : getAvailablePlugins())
+            {
+                ui->ps_EnabledSimulators->setEnabled(p.getIdentifier(), enabledSimulators.contains(p.getIdentifier()));
+            }
         }
     }
 
