@@ -23,11 +23,95 @@ using namespace BlackCore;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Geo;
 
 namespace BlackSimPlugin
 {
     namespace Fs9
     {
+        MPPositionVelocity aircraftSituationToFS9(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, double updateInterval)
+        {
+            MPPositionVelocity positionVelocity;
+
+            // Latitude - integer and decimal places
+            double latitude = newSituation.getPosition().latitude().value(CAngleUnit::deg()) * 10001750.0 / 90.0;
+            positionVelocity.lat_i = static_cast<qint32>(latitude);
+            positionVelocity.lat_f = qAbs((latitude - positionVelocity.lat_i) * 65536);
+
+            // Longitude - integer and decimal places
+            double longitude = newSituation.getPosition().longitude().value(CAngleUnit::deg()) * ( 65536.0 * 65536.0) / 360.0;
+            positionVelocity.lon_hi = static_cast<qint32>(longitude);
+            positionVelocity.lon_lo = qAbs((longitude - positionVelocity.lon_hi) * 65536);
+
+            // Altitude - integer and decimal places
+            double altitude = newSituation.getAltitude().value(CLengthUnit::m());
+            positionVelocity.alt_i = static_cast<qint32>(altitude);
+            positionVelocity.alt_f = (altitude - positionVelocity.alt_i) * 65536;
+
+            // Pitch, Bank and Heading
+            FS_PBH pbhstrct;
+            pbhstrct.hdg = newSituation.getHeading().value(CAngleUnit::deg()) * CFs9Sdk::headingMultiplier();
+            pbhstrct.pitch = newSituation.getPitch().value(CAngleUnit::deg()) * CFs9Sdk::pitchMultiplier();
+            pbhstrct.bank = newSituation.getBank().value(CAngleUnit::deg()) * CFs9Sdk::bankMultiplier();
+            positionVelocity.pbh = pbhstrct.pbh;
+
+            // Ground velocity
+            positionVelocity.ground_velocity = newSituation.getGroundSpeed().value(CSpeedUnit::m_s());
+
+            // Altitude velocity
+            CCoordinateGeodetic oldPosition = oldSituation.getPosition();
+            CCoordinateGeodetic newPosition = newSituation.getPosition();
+            CCoordinateGeodetic helperPosition;
+
+            // We want the distance in Latitude direction. Longitude must be equal for old and new position.
+            helperPosition.setLatitude(newPosition.latitude());
+            helperPosition.setLongitude(oldPosition.longitude());
+            CLength distanceLatitudeObj = calculateGreatCircleDistance(oldPosition, helperPosition);
+
+
+            // Now we want the Longitude distance. Latitude must be equal for old and new position.
+            helperPosition.setLatitude(oldPosition.latitude());
+            helperPosition.setLongitude(newSituation.longitude());
+            CLength distanceLongitudeObj = calculateGreatCircleDistance(oldPosition, helperPosition);
+
+            // Latitude and Longitude velocity
+            positionVelocity.lat_velocity = distanceLatitudeObj.value(CLengthUnit::ft()) * 65536.0 / updateInterval;
+            if (oldPosition.latitude().value() > newSituation.latitude().value()) positionVelocity.lat_velocity *= -1;
+            positionVelocity.lon_velocity = distanceLongitudeObj.value(CLengthUnit::ft()) * 65536.0 / updateInterval;
+            if (oldPosition.longitude().value() > newSituation.longitude().value()) positionVelocity.lon_velocity *= -1;
+
+            return positionVelocity;
+        }
+
+        MPPositionSlewMode aircraftSituationToFS9(const CAircraftSituation &situation)
+        {
+            MPPositionSlewMode positionSlewMode;
+
+            // Latitude - integer and decimal places
+            double latitude = situation.getPosition().latitude().value(CAngleUnit::deg()) * 10001750.0 / 90.0;
+            positionSlewMode.lat_i = static_cast<qint32>(latitude);
+            positionSlewMode.lat_f = qAbs((latitude - positionSlewMode.lat_i) * 65536);
+
+            // Longitude - integer and decimal places
+            double longitude = situation.getPosition().longitude().value(CAngleUnit::deg()) * ( 65536.0 * 65536.0) / 360.0;
+            positionSlewMode.lon_hi = static_cast<qint32>(longitude);
+            positionSlewMode.lon_lo = qAbs((longitude - positionSlewMode.lon_hi) * 65536);
+
+            // Altitude - integer and decimal places
+            double altitude = situation.getAltitude().value(CLengthUnit::m());
+            positionSlewMode.alt_i = static_cast<qint32>(altitude);
+            positionSlewMode.alt_f = (altitude - positionSlewMode.alt_i) * 65536;
+
+            // Pitch, Bank and Heading
+            FS_PBH pbhstrct;
+            pbhstrct.hdg = situation.getHeading().value(CAngleUnit::deg()) * CFs9Sdk::headingMultiplier();
+            pbhstrct.pitch = situation.getPitch().value(CAngleUnit::deg()) * CFs9Sdk::pitchMultiplier();
+            pbhstrct.bank = situation.getBank().value(CAngleUnit::deg()) * CFs9Sdk::bankMultiplier();
+            positionSlewMode.pbh = pbhstrct.pbh;
+
+            return positionSlewMode;
+        }
+
         CFs9Client::CFs9Client(const CCallsign &callsign, const QString &modelName,
             BlackCore::IInterpolator *interpolator, const CTime &updateInterval, QObject *owner) :
             CDirectPlayPeer(owner, callsign),

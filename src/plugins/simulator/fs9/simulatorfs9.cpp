@@ -39,6 +39,60 @@ namespace BlackSimPlugin
 {
     namespace Fs9
     {
+        CAircraftSituation aircraftSituationfromFS9(const MPPositionVelocity &positionVelocity)
+        {
+            CAircraftSituation situation;
+
+            double dHigh = positionVelocity.lat_i;
+            double dLow = positionVelocity.lat_f;
+
+            dLow = dLow / 65536.0;
+            if (dHigh > 0)
+                dHigh = dHigh + dLow;
+            else
+                dHigh = dHigh - dLow;
+
+            CCoordinateGeodetic position;
+            position.setLatitude(CLatitude(dHigh * 90.0 / 10001750.0, CAngleUnit::deg()));
+
+            dHigh = positionVelocity.lon_hi;
+            dLow = positionVelocity.lon_lo;
+
+            dLow = dLow / 65536.0;
+            if (dHigh > 0)
+                dHigh = dHigh + dLow;
+            else
+                dHigh = dHigh - dLow;
+
+            position.setLongitude(CLongitude(dHigh * 360.0 / ( 65536.0 * 65536.0), CAngleUnit::deg()));
+
+            dHigh = positionVelocity.alt_i;
+            dLow = positionVelocity.alt_f;
+
+            dLow = dLow / 65536.0;
+
+            situation.setPosition(position);
+            situation.setAltitude(CAltitude(dHigh + dLow, CAltitude::MeanSeaLevel, CLengthUnit::m()));
+            double groundSpeed = positionVelocity.ground_velocity / 65536.0;
+            situation.setGroundspeed(CSpeed(groundSpeed, CSpeedUnit::m_s()));
+
+            FS_PBH pbhstrct;
+            pbhstrct.pbh = positionVelocity.pbh;
+            double pitch = pbhstrct.pitch / CFs9Sdk::pitchMultiplier();
+            if (pitch > 180.0)
+                pitch -= 360;
+
+            double bank = pbhstrct.bank / CFs9Sdk::bankMultiplier();
+            if (bank > 180.0)
+                bank -= 360;
+
+            situation.setPitch(CAngle(pitch, CAngleUnit::deg()));
+            situation.setBank(CAngle(bank, CAngleUnit::deg()));
+            situation.setHeading(CHeading(pbhstrct.hdg / CFs9Sdk::headingMultiplier(), CHeading::Magnetic, CAngleUnit::deg()));
+
+            return situation;
+        }
+
         CSimulatorFs9::CSimulatorFs9(
             const CSimulatorPluginInfo &info,
             const QSharedPointer<CFs9Host> &fs9Host,

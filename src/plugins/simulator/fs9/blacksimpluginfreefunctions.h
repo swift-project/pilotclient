@@ -12,8 +12,6 @@
 #ifndef BLACKSIMPLUGIN_FREEFUNCTIONS_H
 #define BLACKSIMPLUGIN_FREEFUNCTIONS_H
 
-#include "multiplayerpackets.h"
-#include "blackmisc/aviation/aircraftsituation.h"
 
 namespace BlackSimPlugin
 {
@@ -46,16 +44,6 @@ namespace BlackSimPlugin
             pT = nullptr;
         }
 
-        //! Convert FS9 struct to aircraft situation
-        BlackMisc::Aviation::CAircraftSituation aircraftSituationfromFS9(const MPPositionVelocity &positionVelocity);
-
-        //! Convert an aircraft situation to a FS9 struct
-        MPPositionVelocity aircraftSituationToFS9(const BlackMisc::Aviation::CAircraftSituation &oldSituation,
-                                 const BlackMisc::Aviation::CAircraftSituation &newSituation,
-                                 double updateInterval);
-
-        //! Convert an aircraft situation to a FS9 struct
-        MPPositionSlewMode aircraftSituationToFS9(const BlackMisc::Aviation::CAircraftSituation &situation);
 
         //! Print the direct play error
         HRESULT logDirectPlayError(HRESULT error);
