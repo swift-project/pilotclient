@@ -8,6 +8,7 @@
  */
 
 #include "hostnode.h"
+#include "directplayutils.h"
 
 namespace BlackSimPlugin
 {
@@ -25,10 +26,7 @@ namespace BlackSimPlugin
 
         CHostNode::~CHostNode()
         {
-            if (m_hostAddress)
-                m_hostAddress->Release();
-
-            m_hostAddress = nullptr;
+            SafeRelease(m_hostAddress);
         }
     }
 }

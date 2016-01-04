@@ -41,7 +41,7 @@ namespace BlackSimPlugin
                 m_directPlayPeer->Release();
             }
 
-            if (m_deviceAddress) m_deviceAddress->Release();
+            SafeRelease(m_deviceAddress);
 
             CoUninitialize();
         }

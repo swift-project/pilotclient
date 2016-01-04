@@ -56,10 +56,7 @@ namespace BlackSimPlugin
                 for (uint ii = 0; ii < dwNumAddresses; ++ii)
                 {
                     LPDIRECTPLAY8ADDRESS pAddress = addresses[ii];
-                    if (pAddress)
-                    {
-                        pAddress->Release();
-                    }
+                    SafeRelease(pAddress);
                 }
             }
             return address;

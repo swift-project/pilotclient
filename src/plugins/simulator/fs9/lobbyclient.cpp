@@ -41,11 +41,8 @@ namespace BlackSimPlugin
                 m_directPlayPeer->Release();
             }
 
-            if (m_deviceAddress)
-                m_deviceAddress->Release();
-
-            if (m_hostAddress)
-                m_hostAddress->Release();
+            SafeRelease(m_deviceAddress);
+            SafeRelease(m_hostAddress);
 
             if (m_dpLobbyClient)
             {

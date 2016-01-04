@@ -122,8 +122,7 @@ namespace BlackSimPlugin
 
         CFs9Client::~CFs9Client()
         {
-            if (m_hostAddress) m_hostAddress->Release();
-            m_hostAddress = nullptr;
+            SafeRelease(m_hostAddress);
         }
 
         void CFs9Client::sendTextMessage(const QString &textMessage)
