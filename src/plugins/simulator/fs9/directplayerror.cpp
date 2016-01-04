@@ -1,4 +1,4 @@
-/* Copyright (C) 2014
+/* Copyright (C) 2016
  * swift project community / contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -7,10 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blacksimpluginfreefunctions.h"
-#include "fs9host.h"
-#include "fs9client.h"
-#include "blackmisc/math/mathutils.h"
+#include "directplayerror.h"
 #include "blackmisc/logmessage.h"
 
 namespace BlackSimPlugin

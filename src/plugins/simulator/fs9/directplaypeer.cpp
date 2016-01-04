@@ -10,7 +10,7 @@
 #include "directplaypeer.h"
 #include "directplayutils.h"
 #include "multiplayerpacketparser.h"
-#include "blacksimpluginfreefunctions.h"
+#include "directplayerror.h"
 #include "blackmisc/logmessage.h"
 #include <QDebug>
 #include <QTimer>

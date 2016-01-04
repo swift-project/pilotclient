@@ -12,7 +12,7 @@
 #include "fs9client.h"
 #include "multiplayerpackets.h"
 #include "multiplayerpacketparser.h"
-#include "blacksimpluginfreefunctions.h"
+#include "directplayerror.h"
 #include "directplayutils.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/geo/coordinategeodetic.h"

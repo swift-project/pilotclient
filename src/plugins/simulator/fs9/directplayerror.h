@@ -1,4 +1,4 @@
-/* Copyright (C) 2014
+/* Copyright (C) 2016
  * swift project community / contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -9,9 +9,10 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_FREEFUNCTIONS_H
-#define BLACKSIMPLUGIN_FREEFUNCTIONS_H
+#ifndef BLACKSIMPLUGIN_FS9_DIRECTPLAYERROR_H
+#define BLACKSIMPLUGIN_FS9_DIRECTPLAYERROR_H
 
+#include <dplay8.h>
 
 namespace BlackSimPlugin
 {
@@ -19,8 +20,7 @@ namespace BlackSimPlugin
     {
         //! Print the direct play error
         HRESULT logDirectPlayError(HRESULT error);
+    }
+}
 
-    } // ns
-} // ns
-
-#endif // guard
+#endif

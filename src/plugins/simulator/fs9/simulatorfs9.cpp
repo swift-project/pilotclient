@@ -8,7 +8,7 @@
  */
 
 #include "fs9.h"
-#include "blacksimpluginfreefunctions.h"
+#include "directplayerror.h"
 #include "simulatorfs9.h"
 #include "fs9client.h"
 #include "multiplayerpackets.h"
