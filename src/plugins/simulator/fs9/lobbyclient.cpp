@@ -9,6 +9,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "blacksimpluginfreefunctions.h"
+#include "directplayutils.h"
 #include "blackmisc/project.h"
 #include "fs9.h"
 #include "lobbyclient.h"

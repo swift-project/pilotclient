@@ -13,6 +13,7 @@
 #include "multiplayerpackets.h"
 #include "multiplayerpacketparser.h"
 #include "blacksimpluginfreefunctions.h"
+#include "directplayutils.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/logmessage.h"

@@ -10,6 +10,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "blacksimpluginfreefunctions.h"
+#include "directplayutils.h"
 #include "fs9host.h"
 #include "multiplayerpacketparser.h"
 #include "multiplayerpackets.h"

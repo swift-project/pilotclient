@@ -8,6 +8,7 @@
  */
 
 #include "directplaypeer.h"
+#include "directplayutils.h"
 #include "multiplayerpacketparser.h"
 #include "blacksimpluginfreefunctions.h"
 #include "blackmisc/logmessage.h"
