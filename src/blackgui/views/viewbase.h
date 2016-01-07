@@ -70,14 +70,17 @@ namespace BlackGui
             {
                 MenuNone                 = 0,       ///< no menu
                 MenuClear                = 1 << 0,  ///< allow clearing the view via menu
-                MenuRefresh              = 1 << 1,  ///< allow refreshing the view via menu
-                MenuBackend              = 1 << 2,  ///< allow to request data from backend
-                MenuDisplayAutomatically = 1 << 3,  ///< allow to switch display automatically
-                MenuFilter               = 1 << 4,  ///< filter can be opened
-                MenuSave                 = 1 << 5,  ///< save as JSON
-                MenuLoad                 = 1 << 6,  ///< load from JSON
+                MenuRemoveSelectedRows   = 1 << 1,  ///< allow to remove selected rows
+                MenuRefresh              = 1 << 2,  ///< allow refreshing the view via menu
+                MenuBackend              = 1 << 3,  ///< allow to request data from backend
+                MenuDisplayAutomatically = 1 << 4,  ///< allow to switch display automatically
+                MenuFilter               = 1 << 5,  ///< filter can be opened
+                MenuSave                 = 1 << 6,  ///< save as JSON
+                MenuLoad                 = 1 << 7,  ///< load from JSON
                 MenuLoadAndSave          = MenuLoad | MenuSave,
-                MenuDefault              = MenuClear | MenuDisplayAutomatically
+                MenuDefault              = MenuClear | MenuDisplayAutomatically,
+                // special menu, should be in derived class but enums cannot be derived
+                MenuHighlightDbData      = 1 << 8, ///< highlight DB data
             };
             Q_DECLARE_FLAGS(Menu, MenuFlag)
 
@@ -224,6 +227,9 @@ namespace BlackGui
             //! Hide loading indicator
             void hideLoadIndicator();
 
+            //! Remove selected rows
+            virtual int removeSelectedRows() = 0;
+
         protected:
             //! Constructor
             CViewBaseNonTemplate(QWidget *parent);
@@ -286,6 +292,7 @@ namespace BlackGui
             bool m_acceptRowSelected                  = false;       //!< selection changed
             bool m_acceptDoubleClickSelection         = false;       //!< double clicked
             bool m_displayAutomatically               = true;        //!< display directly when loaded
+            bool m_enableDeleteSelectedRows           = false;       //!< selected rows can be deleted
             QWidget *m_filterWidget                   = nullptr;     //!< filter widget if any
             Menu                      m_menus         = MenuDefault; //!< Default menu settings
             BlackGui::IMenuDelegate  *m_menu          = nullptr;     //!< custom menu if any
@@ -341,6 +348,9 @@ namespace BlackGui
             //! Clear the model
             virtual void ps_clear() { this->clear(); }
 
+            //! Remove selected rows
+            void ps_removeSelectedRows();
+
         private:
             //! Set the filter widget internally
             void setFilterWidgetImpl(QWidget *filterWidget);
@@ -350,6 +360,9 @@ namespace BlackGui
         //! Base class for views
         template <class ModelClass, class ContainerType, class ObjectType> class CViewBase : public CViewBaseNonTemplate
         {
+            // I cannot use Q_OBJECT here, because error: Template classes not supported by Q_OBJECT
+            // Cannot declare slots as SLOT because I have no Q_OBJECT macro
+
         public:
             //! Destructor
             virtual ~CViewBase() { if (this->m_model) { this->m_model->markDestroyed(); }}
@@ -364,6 +377,7 @@ namespace BlackGui
             virtual void clear() override { Q_ASSERT(this->m_model); this->m_model->clear(); }
 
             //! Update whole container
+            //! \return int size after update
             int updateContainer(const ContainerType &container, bool sort = true, bool resize = true);
 
             //! Update whole container in background
@@ -381,17 +395,21 @@ namespace BlackGui
             //! Access to container
             const ContainerType &container() const;
 
+            //! \copydoc BlackGui::Models::ListModelBase::containerOrFilteredContainer
+            const ContainerType &containerOrFilteredContainer() const;
+
             //! Selected objects
             ContainerType selectedObjects() const;
+
+            //! \copydoc CViewBaseNonTemplate::removeSelectedRows
+            //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
+            virtual int removeSelectedRows() override;
 
             //! Update selected objects
             int updateSelected(const BlackMisc::CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! Selected object (or default)
             ObjectType selectedObject() const;
-
-            //! Remove selected rows
-            int removeSelectedRows();
 
             //! \copydoc BlackMisc::CContainerBase::removeIf
             template <class K0, class V0, class... KeysValues>

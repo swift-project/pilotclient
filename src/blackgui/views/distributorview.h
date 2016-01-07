@@ -13,7 +13,7 @@
 #define BLACKGUI_DISTRIBUTORVIEW_H
 
 #include "blackgui/blackguiexport.h"
-#include "viewbase.h"
+#include "viewdbobjects.h"
 #include "../models/distributorlistmodel.h"
 
 namespace BlackGui
@@ -21,13 +21,13 @@ namespace BlackGui
     namespace Views
     {
         //! Distributors
-        class BLACKGUI_EXPORT CDistributorView : public CViewBase<Models::CDistributorListModel, BlackMisc::Simulation::CDistributorList, BlackMisc::Simulation::CDistributor>
+        class BLACKGUI_EXPORT CDistributorView :
+            public CViewWithDbObjects<BlackGui::Models::CDistributorListModel, BlackMisc::Simulation::CDistributorList, BlackMisc::Simulation::CDistributor, QString>
         {
-
         public:
             //! Constructor
             explicit CDistributorView(QWidget *parent = nullptr);
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard

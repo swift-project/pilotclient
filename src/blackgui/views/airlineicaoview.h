@@ -13,7 +13,7 @@
 #define BLACKGUI_AIRLINEICAOVIEW_H
 
 #include "blackgui/blackguiexport.h"
-#include "viewbase.h"
+#include "viewdbobjects.h"
 #include "../models/airlineicaolistmodel.h"
 
 namespace BlackGui
@@ -21,9 +21,9 @@ namespace BlackGui
     namespace Views
     {
         //! Aircraft ICAO codes view
-        class BLACKGUI_EXPORT CAirlineIcaoCodeView : public CViewBase<Models::CAirlineIcaoCodeListModel, BlackMisc::Aviation::CAirlineIcaoCodeList, BlackMisc::Aviation::CAirlineIcaoCode>
+        class BLACKGUI_EXPORT CAirlineIcaoCodeView :
+            public CViewWithDbObjects<Models::CAirlineIcaoCodeListModel, BlackMisc::Aviation::CAirlineIcaoCodeList, BlackMisc::Aviation::CAirlineIcaoCode, int>
         {
-
         public:
             //! Constructor
             explicit CAirlineIcaoCodeView(QWidget *parent = nullptr);

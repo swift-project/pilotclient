@@ -44,6 +44,12 @@ namespace BlackGui
 
         //! Save in views
         static const QKeySequence &keySaveViews();
+
+        //! Delete, e.g. selected rows
+        static const QKeySequence &keyDelete();
+
+        //! Escape
+        static const QKeySequence &keyEscape();
     };
 } // ns
 #endif // guard

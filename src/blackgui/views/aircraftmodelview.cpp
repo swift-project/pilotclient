@@ -30,7 +30,7 @@ namespace BlackGui
 {
     namespace Views
     {
-        CAircraftModelView::CAircraftModelView(QWidget *parent) : CViewBase(parent)
+        CAircraftModelView::CAircraftModelView(QWidget *parent) : CViewWithDbObjects(parent)
         {
             // default
             this->standardInit(new CAircraftModelListModel(CAircraftModelListModel::OwnSimulatorModel, this));
@@ -50,26 +50,22 @@ namespace BlackGui
             switch (mode)
             {
             case CAircraftModelListModel::StashModel:
-                this->m_menus = MenuClear;
-                this->setCustomMenu(new CHighlightDbModelsMenu(this, true));
+                this->m_menus = MenuClear | MenuHighlightDbData;
                 break;
             case CAircraftModelListModel::Database:
                 this->m_menus = MenuBackend;
                 break;
             case CAircraftModelListModel::VPilotRuleModel:
-                this->m_menus = MenuRefresh;
-                this->setCustomMenu(new CHighlightDbModelsMenu(this, true));
+                this->m_menus = MenuRefresh | MenuHighlightDbData;;
                 this->setCustomMenu(new CHighlightStashedModelsMenu(this, true));
                 break;
             case CAircraftModelListModel::OwnSimulatorModelMapping:
-                this->m_menus = MenuDisplayAutomatically;
-                this->setCustomMenu(new CHighlightDbModelsMenu(this, true));
+                this->m_menus = MenuDisplayAutomatically | MenuHighlightDbData;
                 this->setCustomMenu(new CHighlightStashedModelsMenu(this, true));
                 break;
             case CAircraftModelListModel::OwnSimulatorModel:
             default:
-                this->m_menus = MenuDisplayAutomatically | MenuBackend | MenuRefresh;
-                this->setCustomMenu(new CHighlightDbModelsMenu(this, true));
+                this->m_menus = MenuDisplayAutomatically | MenuBackend | MenuRefresh | MenuHighlightDbData;
                 break;
             }
         }
@@ -95,7 +91,7 @@ namespace BlackGui
             return c;
         }
 
-        bool CAircraftModelView::hasModelsToStash() const
+        bool CAircraftModelView::hasSelectedModelsToStash() const
         {
             return m_allowStash && hasSelection();
         }
@@ -115,6 +111,18 @@ namespace BlackGui
         void CAircraftModelView::addFilterDialog()
         {
             this->setFilterDialog(new CAircraftModelFilterDialog(this));
+        }
+
+        int CAircraftModelView::removeModelsWithModelString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity)
+        {
+            if (modelStrings.isEmpty()) { return 0; }
+            CAircraftModelList copy(this->container());
+            int delta = copy.removeModelsWithString(modelStrings, sensitivity);
+            if (delta > 0)
+            {
+                this->updateContainerMaybeAsync(copy);
+            }
+            return delta;
         }
 
         void CAircraftModelView::dropEvent(QDropEvent *event)
@@ -207,12 +215,6 @@ namespace BlackGui
             } // valid mime?
         }
 
-        void CAircraftModelView::ps_toggleHighlightDbModels()
-        {
-            bool h = derivedModel()->highlightDbData();
-            derivedModel()->setHighlightDbData(!h);
-        }
-
         void CAircraftModelView::ps_toggleHighlightStashedModels()
         {
             bool h = derivedModel()->highlightGivenModelStrings();
@@ -223,16 +225,6 @@ namespace BlackGui
         {
             if (!m_allowStash) { return; }
             emit requestStash();
-        }
-
-        void CAircraftModelView::CHighlightDbModelsMenu::customMenu(QMenu &menu) const
-        {
-            const CAircraftModelView *mv = qobject_cast<const CAircraftModelView *>(parent());
-            Q_ASSERT_X(mv, Q_FUNC_INFO, "no view");
-            QAction *a = menu.addAction(CIcons::database16(), "Highlight DB models", mv, SLOT(ps_toggleHighlightDbModels()));
-            a->setCheckable(true);
-            a->setChecked(mv->derivedModel()->highlightDbData());
-            this->nestedCustomMenu(menu);
         }
 
         void CAircraftModelView::CHighlightStashedModelsMenu::customMenu(QMenu &menu) const

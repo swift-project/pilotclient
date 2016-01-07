@@ -15,7 +15,7 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/filters/aircraftmodelfilterdialog.h"
 #include "blackgui/models/aircraftmodellistmodel.h"
-#include "viewbase.h"
+#include "viewdbobjects.h"
 
 namespace BlackGui
 {
@@ -23,7 +23,7 @@ namespace BlackGui
     {
         //! Aircraft view
         class BLACKGUI_EXPORT CAircraftModelView :
-            public CViewBase<Models::CAircraftModelListModel, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModel>
+            public CViewWithDbObjects<Models::CAircraftModelListModel, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModel, int>
         {
             Q_OBJECT
 
@@ -46,14 +46,17 @@ namespace BlackGui
             //! Allow to stash
             void setAllowStash(bool stash) { m_allowStash = stash; }
 
-            //! Has any models to stash amd is allowed to stash
-            bool hasModelsToStash() const;
+            //! Has any models to stash and it is allowed to stash
+            bool hasSelectedModelsToStash() const;
 
-            //! Add the technically supported metatypes as allows
+            //! Add the technically supported metatypes allowed for drag and drop
             void setImplementedMetaTypeIds();
 
             //! Add my own filter dialog
             void addFilterDialog();
+
+            //! Remove models with model strings
+            int removeModelsWithModelString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive);
 
         signals:
             //! Request to stash if applicable
@@ -67,9 +70,6 @@ namespace BlackGui
             virtual void dropEvent(QDropEvent *event) override;
 
         private slots:
-            //! Highlight DB models
-            void ps_toggleHighlightDbModels();
-
             //! Highlight stashed models
             void ps_toggleHighlightStashedModels();
 
@@ -78,17 +78,6 @@ namespace BlackGui
 
         private:
             bool m_allowStash = false; //!< allow to stash
-
-            //! Custom menu for the models which have been loaded
-            class CHighlightDbModelsMenu : public BlackGui::IMenuDelegate
-            {
-            public:
-                //! Constructor
-                CHighlightDbModelsMenu(CAircraftModelView *parent, bool separatorAtEnd) : IMenuDelegate(parent, separatorAtEnd) {}
-
-                //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(QMenu &menu) const override;
-            };
 
             //! Custom menu for the models which have been loaded
             class CHighlightStashedModelsMenu : public BlackGui::IMenuDelegate

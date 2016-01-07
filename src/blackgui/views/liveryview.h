@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_LIVERYVIEW_H
 #define BLACKGUI_LIVERYVIEW_H
 
-#include "viewbase.h"
+#include "viewdbobjects.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/liverylistmodel.h"
 
@@ -21,13 +21,13 @@ namespace BlackGui
     namespace Views
     {
         //! Distributors
-        class BLACKGUI_EXPORT CLiveryView : public CViewBase<Models::CLiveryListModel, BlackMisc::Aviation::CLiveryList, BlackMisc::Aviation::CLivery>
+        class BLACKGUI_EXPORT CLiveryView :
+            public CViewWithDbObjects<Models::CLiveryListModel, BlackMisc::Aviation::CLiveryList, BlackMisc::Aviation::CLivery, int>
         {
-
         public:
             //! Constructor
             explicit CLiveryView(QWidget *parent = nullptr);
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard

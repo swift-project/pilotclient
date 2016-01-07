@@ -17,7 +17,7 @@ namespace BlackGui
 {
     namespace Views
     {
-        CAirlineIcaoCodeView::CAirlineIcaoCodeView(QWidget *parent) : CViewBase(parent)
+        CAirlineIcaoCodeView::CAirlineIcaoCodeView(QWidget *parent) : CViewWithDbObjects(parent)
         {
             this->m_menus |= MenuBackend;
             this->standardInit(new CAirlineIcaoCodeListModel(this));

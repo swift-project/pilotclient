@@ -50,4 +50,15 @@ namespace BlackGui
         return k;
     }
 
+    const QKeySequence &CShortcut::keyDelete()
+    {
+        static const QKeySequence k(Qt::Key_Delete);
+        return k;
+    }
+
+    const QKeySequence &CShortcut::keyEscape()
+    {
+        static const QKeySequence k(Qt::Key_Escape);
+        return k;
+    }
 } // ns

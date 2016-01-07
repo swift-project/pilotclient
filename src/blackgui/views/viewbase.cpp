@@ -57,6 +57,8 @@ namespace BlackGui
             clearSelection->setObjectName("Clear selection shortcut for " + this->objectName());
             QShortcut *saveJson = new QShortcut(CShortcut::keySaveViews(), this, SLOT(ps_saveJsonShortcut()), nullptr, Qt::WidgetShortcut);
             saveJson->setObjectName("Save JSON for " + this->objectName());
+            QShortcut *deleteRow = new QShortcut(CShortcut::keyDelete(), this, SLOT(ps_removeSelectedRows()), nullptr, Qt::WidgetShortcut);
+            deleteRow->setObjectName("Delete selected rows for " + this->objectName());
         }
 
         bool CViewBaseNonTemplate::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
@@ -166,6 +168,13 @@ namespace BlackGui
             if (this->m_menus.testFlag(MenuRefresh)) { menu.addAction(BlackMisc::CIcons::refresh16(), "Update", this, SIGNAL(requestUpdate())); }
             if (this->m_menus.testFlag(MenuBackend)) { menu.addAction(BlackMisc::CIcons::refresh16(), "Reload from backend", this, SIGNAL(requestNewBackendData())); }
             if (this->m_menus.testFlag(MenuClear)) { menu.addAction(BlackMisc::CIcons::delete16(), "Clear", this, SLOT(ps_clear())); }
+            if (this->m_menus.testFlag(MenuRemoveSelectedRows))
+            {
+                if (this->hasSelection())
+                {
+                    menu.addAction(BlackMisc::CIcons::delete16(), "Remove selected rows", this, SLOT(ps_removeSelectedRows()), CShortcut::keyDelete());
+                }
+            }
             if (this->m_menus.testFlag(MenuDisplayAutomatically))
             {
                 QAction *a = menu.addAction(CIcons::appMappings16(), "Automatically display (when loaded)", this, SLOT(ps_toggleAutoDisplay()));
@@ -347,6 +356,10 @@ namespace BlackGui
         void CViewBaseNonTemplate::menuAddItems(Menu menusToAdd)
         {
             this->m_menus |= menusToAdd;
+            if (menusToAdd.testFlag(MenuRemoveSelectedRows))
+            {
+                this->m_enableDeleteSelectedRows = true;
+            }
         }
 
         int CViewBaseNonTemplate::ps_updateContainer(const CVariant &variant, bool sort, bool resize)
@@ -488,6 +501,12 @@ namespace BlackGui
             this->m_displayAutomatically = a->isChecked();
         }
 
+        void CViewBaseNonTemplate::ps_removeSelectedRows()
+        {
+            if (!m_enableDeleteSelectedRows) { return; }
+            this->removeSelectedRows();
+        }
+
         void CViewBaseNonTemplate::ps_updatedIndicator()
         {
             this->update();
@@ -531,6 +550,14 @@ namespace BlackGui
         int CViewBase<ModelClass, ContainerType, ObjectType>::updateContainer(const ContainerType &container, bool sort, bool resize)
         {
             Q_ASSERT_X(this->m_model, Q_FUNC_INFO, "Missing model");
+            if (container.isEmpty())
+            {
+                // shortcut
+                this->clear();
+                return 0;
+            }
+
+            // we have data
             this->showLoadIndicator(container.size());
             bool reallyResize = resize && isResizeConditionMet(container.size()); // do we really perform resizing
             bool presize = (m_resizeMode == ResizingOnceSubset) &&
@@ -620,6 +647,13 @@ namespace BlackGui
         {
             Q_ASSERT(this->m_model);
             return this->m_model->container();
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        const ContainerType &CViewBase<ModelClass, ContainerType, ObjectType>::containerOrFilteredContainer() const
+        {
+            Q_ASSERT(this->m_model);
+            return this->m_model->containerOrFilteredContainer();
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
