@@ -15,14 +15,15 @@
 #include "blackgui/blackguiexport.h"
 #include <QAbstractItemModel>
 #include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackgui/models/listmodelbase.h"
+#include "blackgui/models/listmodeldbobjects.h"
 
 namespace BlackGui
 {
     namespace Models
     {
         //! Airport list model
-        class BLACKGUI_EXPORT CAirlineIcaoCodeListModel : public CListModelBase<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList, true>
+        class BLACKGUI_EXPORT CAirlineIcaoCodeListModel :
+            public CListModelDbObjects<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList, int, true>
         {
         public:
             //! Constructor

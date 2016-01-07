@@ -14,7 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/distributorlist.h"
-#include "blackgui/models/listmodelbase.h"
+#include "blackgui/models/listmodeldbobjects.h"
 #include <QAbstractItemModel>
 
 namespace BlackGui
@@ -23,10 +23,9 @@ namespace BlackGui
     {
         //! Distributor list model
         class BLACKGUI_EXPORT CDistributorListModel :
-            public CListModelBase<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList, true>
+            public CListModelDbObjects<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList, QString, true>
         {
         public:
-
             //! Constructor
             explicit CDistributorListModel(QObject *parent = nullptr);
 

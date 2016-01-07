@@ -20,7 +20,7 @@ namespace BlackGui
     namespace Models
     {
         CAirlineIcaoCodeListModel::CAirlineIcaoCodeListModel(QObject *parent) :
-            CListModelBase("AircraftIcaoListModel", parent)
+            CListModelDbObjects("AircraftIcaoListModel", parent)
         {
             this->m_columns.addColumn(CColumn::standardString("id", CAirlineIcaoCode::IndexDbIntegerKey, CDefaultFormatter::alignRightVCenter()));
             this->m_columns.addColumn(CColumn::standardValueObject("ICAO", CAirlineIcaoCode::IndexAirlineDesignator));

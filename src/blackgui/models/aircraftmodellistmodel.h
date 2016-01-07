@@ -13,7 +13,7 @@
 #define BLACKGUI_AIRCRAFTMODELLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/models/modelswithdbkey.h"
+#include "blackgui/models/listmodeldbobjects.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include <QStringList>
 #include <QAbstractItemModel>
@@ -24,7 +24,7 @@ namespace BlackGui
     {
         //! Aircraft model list model
         class BLACKGUI_EXPORT CAircraftModelListModel :
-            public CModelsWithDbKeysBase<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList, int, true>
+            public CListModelDbObjects<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList, int, true>
         {
         public:
             //! How to display
@@ -51,12 +51,6 @@ namespace BlackGui
             //! Mode
             AircraftModelMode getModelMode() const { return m_mode; }
 
-            //! Highlight the DB models
-            bool highlightDbData() const { return m_highlightDbData; }
-
-            //! Highlight the DB models
-            void setHighlightDbData(bool highlightDbData) { m_highlightDbData = highlightDbData; }
-
             //! Highlight models
             bool highlightGivenModelStrings() const { return m_highlightModelStrings; }
 
@@ -72,13 +66,11 @@ namespace BlackGui
             //! Replace models with same model string, or just add
             void replaceOrAddByModelString(const BlackMisc::Simulation::CAircraftModelList &models);
 
-        protected:
             //! \copydoc QAbstractItemModel::data
             virtual QVariant data(const QModelIndex &index, int role) const override;
 
         private:
             AircraftModelMode m_mode = NotSet;    //!< current mode
-            bool m_highlightDbData   = false;     //!< highlight if DB data entry (valid key)
             bool m_highlightModelStrings = false; //!< highlight in in model strings
             QStringList m_highlightStrings;       //!< model strings to highlight
         };

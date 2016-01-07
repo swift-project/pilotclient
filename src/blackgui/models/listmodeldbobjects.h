@@ -9,25 +9,32 @@
 
 //! \file
 
-#ifndef BLACKGUI_MODELSWITHDBKEY_H
-#define BLACKGUI_MODELSWITHDBKEY_H
+#ifndef BLACKGUI_LISTMODELDBOBJECTS_H
+#define BLACKGUI_LISTMODELDBOBJECTS_H
 
 #include "listmodelbase.h"
+#include "blackgui/blackguiexport.h"
 
 namespace BlackGui
 {
     namespace Models
     {
-        //! Base class for models with DB keys
-        template <typename ObjectType, typename ContainerType, typename KeyType = int, bool UseCompare = false>
-        class CModelsWithDbKeysBase : public CListModelBase<ObjectType, ContainerType, UseCompare>
+        //! List model for DB objects
+        template <typename ObjectType, typename ContainerType, typename KeyType, bool UseCompare = false> class CListModelDbObjects :
+            public CListModelBase<ObjectType, ContainerType, UseCompare>
         {
         public:
             //! Destructor
-            virtual ~CModelsWithDbKeysBase() {}
+            virtual ~CListModelDbObjects() {}
+
+            //! Highlight the DB models
+            bool highlightDbData() const { return m_highlightDbData; }
+
+            //! Highlight the DB models
+            void setHighlightDbData(bool highlightDbData) { m_highlightDbData = highlightDbData; }
 
             //! Keys to be highlighted
-            void setHighlightDbKeys(const QList<KeyType> &keys) { m_highlightIntKeys = keys; }
+            void setHighlightDbKeys(const QList<KeyType> &keys) { m_highlightKeys = keys; }
 
             //! Set color for highlighting
             void setHighlightColor(QColor color) { m_highlightColor = color; }
@@ -42,13 +49,15 @@ namespace BlackGui
             bool isHighlightIndex(const QModelIndex &index) const;
 
         protected:
-            //! \copydoc CListModelBase::CListModelBase
-            CModelsWithDbKeysBase(const QString &translationContext, QObject *parent = nullptr);
+            //! \copydoc CListModelDbObjectsNonTemplate::CListModelDbObjectsNonTemplate
+            CListModelDbObjects(const QString &translationContext, QObject *parent = nullptr);
 
         private:
-            QList<KeyType> m_highlightIntKeys; //!< keys to be highlighted
+            bool m_highlightDbData = false; //!< highlight if DB data entry (valid key)
+            QList<KeyType> m_highlightKeys; //!< keys to be highlighted
             QColor         m_highlightColor = Qt::green;
         };
+
     } // namespace
 } // namespace
 #endif // guard

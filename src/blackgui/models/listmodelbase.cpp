@@ -188,7 +188,7 @@ namespace BlackGui
         int CListModelBase<ObjectType, ContainerType, UseCompare>::rowCount(const QModelIndex &parentIndex) const
         {
             Q_UNUSED(parentIndex);
-            return this->getContainerOrFilteredContainer().size();
+            return this->containerOrFilteredContainer().size();
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
@@ -209,7 +209,7 @@ namespace BlackGui
             if (!formatter) { return QVariant(); }
 
             //! Formatted data
-            ObjectType obj = this->getContainerOrFilteredContainer()[index.row()];
+            ObjectType obj = this->containerOrFilteredContainer()[index.row()];
             BlackMisc::CPropertyIndex propertyIndex = this->columnToPropertyIndex(index.column());
             return formatter->data(role, obj.propertyByIndex(propertyIndex)).getQVariant();
         }
@@ -398,7 +398,7 @@ namespace BlackGui
             }
             else
             {
-                return this->getContainerOrFilteredContainer()[index.row()];
+                return this->containerOrFilteredContainer()[index.row()];
             }
         }
 
@@ -478,13 +478,16 @@ namespace BlackGui
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
-        const ContainerType &CListModelBase<ObjectType, ContainerType, UseCompare>::getContainerOrFilteredContainer() const
+        const ContainerType &CListModelBase<ObjectType, ContainerType, UseCompare>::containerOrFilteredContainer() const
         {
-            if (!this->hasFilter())
+            if (this->hasFilter())
+            {
+                return this->m_containerFiltered;
+            }
+            else
             {
                 return this->m_container;
             }
-            return m_containerFiltered;
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
@@ -503,7 +506,7 @@ namespace BlackGui
         template <typename ObjectType, typename ContainerType, bool UseCompare>
         void CListModelBase<ObjectType, ContainerType, UseCompare>::emitRowCountChanged()
         {
-            int n = this->getContainerOrFilteredContainer().size();
+            int n = this->containerOrFilteredContainer().size();
             emit this->rowCountChanged(n, this->hasFilter());
             emit this->changed();
         }

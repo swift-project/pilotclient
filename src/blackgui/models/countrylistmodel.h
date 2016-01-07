@@ -14,7 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/countrylist.h"
-#include "blackgui/models/listmodelbase.h"
+#include "blackgui/models/listmodeldbobjects.h"
 #include <QAbstractItemModel>
 
 namespace BlackGui
@@ -23,7 +23,7 @@ namespace BlackGui
     {
         //! Country list model
         class BLACKGUI_EXPORT CCountryListModel :
-            public CListModelBase<BlackMisc::CCountry, BlackMisc::CCountryList, true>
+            public CListModelDbObjects<BlackMisc::CCountry, BlackMisc::CCountryList, QString, true>
         {
         public:
             //! Constructor

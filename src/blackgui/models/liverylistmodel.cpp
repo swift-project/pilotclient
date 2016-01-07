@@ -21,7 +21,7 @@ namespace BlackGui
     namespace Models
     {
         CLiveryListModel::CLiveryListModel(QObject *parent) :
-            CListModelBase("ModelLiveryList", parent)
+            CListModelDbObjects("ModelLiveryList", parent)
         {
             this->m_columns.addColumn(CColumn::standardString("id", CLivery::IndexDbIntegerKey, CDefaultFormatter::alignRightVCenter()));
             this->m_columns.addColumn(CColumn::standardString("code", CLivery::IndexCombinedCode));

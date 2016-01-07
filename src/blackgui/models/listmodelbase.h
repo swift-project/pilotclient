@@ -153,6 +153,9 @@ namespace BlackGui
             //! Used container data
             const ContainerType &container() const;
 
+            //! Full container or cached filtered container as approproiate
+            const ContainerType &containerOrFilteredContainer() const;
+
             //! \copydoc QStandardItemModel::data()
             virtual QVariant data(const QModelIndex &index, int role) const override;
 
@@ -168,6 +171,7 @@ namespace BlackGui
             virtual int rowCount(const QModelIndex &parentIndex = QModelIndex()) const override;
 
             //! Update by new container
+            //! \return int size after update
             //! \remarks a sorting is performed only if a valid sort column is set
             virtual int update(const ContainerType &container, bool sort = true);
 
@@ -247,24 +251,21 @@ namespace BlackGui
             void takeFilterOwnership(std::unique_ptr<IModelFilter<ContainerType> > &filter);
 
         protected:
-            std::unique_ptr<IModelFilter<ContainerType> > m_filter; //!< Used filter
-
             //! \copydoc CListModelBaseNonTemplate::CListModelBaseNonTemplate
             CListModelBase(const QString &translationContext, QObject *parent = nullptr);
 
             //! \copydoc CModelBaseNonTemplate::performUpdateContainer
             virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort) override;
 
-            //! Full container or cached filtered container as approproiate
-            const ContainerType &getContainerOrFilteredContainer() const;
-
             //! Update filtered container
             void updateFilteredContainer();
 
             //! Row count changed
             void emitRowCountChanged();
-            ContainerType m_container;         //!< used container
-            ContainerType m_containerFiltered; //!< cache for filtered container data
+
+            std::unique_ptr<IModelFilter<ContainerType> > m_filter; //!< Used filter
+            ContainerType m_container;                              //!< used container
+            ContainerType m_containerFiltered;                      //!< cache for filtered container data
         };
 
         namespace Private

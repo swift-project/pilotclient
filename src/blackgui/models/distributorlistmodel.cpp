@@ -19,7 +19,7 @@ namespace BlackGui
     namespace Models
     {
         CDistributorListModel::CDistributorListModel(QObject *parent) :
-            CListModelBase("ModelDistributorList", parent)
+            CListModelDbObjects("ModelDistributorList", parent)
         {
             this->m_columns.addColumn(CColumn::standardString("key", CDistributor::IndexDbStringKey));
             this->m_columns.addColumn(CColumn::standardString("description", CDistributor::IndexDescription));

@@ -14,7 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/liverylist.h"
-#include "blackgui/models/listmodelbase.h"
+#include "blackgui/models/listmodeldbobjects.h"
 #include <QAbstractItemModel>
 
 namespace BlackGui
@@ -23,10 +23,9 @@ namespace BlackGui
     {
         //! Distributor list model
         class BLACKGUI_EXPORT CLiveryListModel :
-                public CListModelBase<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList, true>
+            public CListModelDbObjects<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList, int, true>
         {
         public:
-
             //! Constructor
             explicit CLiveryListModel(QObject *parent = nullptr);
 

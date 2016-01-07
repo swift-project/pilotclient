@@ -21,7 +21,7 @@ namespace BlackGui
     namespace Models
     {
         CAircraftModelListModel::CAircraftModelListModel(AircraftModelMode mode, QObject *parent) :
-            CModelsWithDbKeysBase("CAircraftModelListModel", parent)
+            CListModelDbObjects("CAircraftModelListModel", parent)
         {
             this->setAircraftModelMode(mode);
 
@@ -142,31 +142,16 @@ namespace BlackGui
 
         QVariant CAircraftModelListModel::data(const QModelIndex &index, int role) const
         {
-            if (role != Qt::BackgroundRole) { return CListModelBase::data(index, role); }
-            bool db = highlightDbData();
+            if (role != Qt::BackgroundRole) { return CListModelDbObjects::data(index, role); }
             bool ms = highlightGivenModelStrings() && !m_highlightStrings.isEmpty();
-            if (!db && !ms) { return CListModelBase::data(index, role); }
+            if (!ms) { return CListModelDbObjects::data(index, role); }
 
             CAircraftModel model(this->at(index));
             // highlight stashed first
-            if (ms)
+            if (m_highlightStrings.contains(model.getModelString(), Qt::CaseInsensitive))
             {
-                if (m_highlightStrings.contains(model.getModelString(), Qt::CaseInsensitive))
-                {
-                    static const QBrush b(Qt::yellow);
-                    return b;
-                }
-                return QVariant();
-            }
-
-            // highlight DB models
-            if (db)
-            {
-                if (model.hasValidDbKey())
-                {
-                    static const QBrush b(Qt::green);
-                    return b;
-                }
+                static const QBrush b(Qt::yellow);
+                return b;
             }
             return QVariant();
         }
