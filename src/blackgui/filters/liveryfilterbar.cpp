@@ -9,6 +9,7 @@
 
 #include "liveryfilterbar.h"
 #include "ui_liveryfilterbar.h"
+#include "blackgui/uppercasevalidator.h"
 
 using namespace BlackMisc::Aviation;
 using namespace BlackGui::Models;
@@ -32,6 +33,10 @@ namespace BlackGui
             connect(ui->cb_Airlines, &QCheckBox::released, this, &CFilterWidget::triggerFilter);
             connect(ui->cb_Colors, &QCheckBox::released, this, &CFilterWidget::triggerFilter);
             connect(ui->hs_ColorDistance, &QSlider::valueChanged, this, &CLiveryFilterBar::ps_colorDistanceChanged);
+
+            CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
+            ui->le_AirlineIcaoCode->setValidator(ucv);
+            ui->le_LiveryCode->setValidator(ucv);
         }
 
         CLiveryFilterBar::~CLiveryFilterBar()
