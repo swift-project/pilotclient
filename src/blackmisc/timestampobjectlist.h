@@ -49,10 +49,10 @@ namespace BlackMisc
         QList<CONTAINER> splitByTime(qint64 msSinceEpoch, bool sortedLatestFirst = false) const;
 
         //! Latest value
-        OBJ latestValue() const;
+        OBJ latestObject() const;
 
         //! Latest value
-        OBJ oldestValue() const;
+        OBJ oldestObject() const;
 
         //! Remove objects with timestamp before dateTime
         void removeBefore(const QDateTime &dateTime);

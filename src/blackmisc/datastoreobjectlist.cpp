@@ -47,6 +47,50 @@ namespace BlackMisc
     }
 
     template <class OBJ, class CONTAINER>
+    QList<int> IDatastoreObjectListWithIntegerKey<OBJ, CONTAINER>::toDbKeyList() const
+    {
+        QList<int> keys;
+        for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
+        {
+            if (!obj.hasValidDbKey()) { continue; }
+            keys.append(obj.getDbKey());
+        }
+        return keys;
+    }
+
+    template <class OBJ, class CONTAINER>
+    int IDatastoreObjectListWithIntegerKey<OBJ, CONTAINER>::removeObjectsWithKeys(const QList<int> &keys)
+    {
+        if (keys.isEmpty()) { return 0; }
+        if (this->container().isEmpty()) { return 0; }
+        CONTAINER newValues;
+        for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
+        {
+            if (keys.contains(obj.getDbKey())) { continue; }
+            newValues.push_back(obj);
+        }
+        int delta = this->container().size() - newValues.size();
+        *this = newValues;
+        return delta;
+    }
+
+    template <class OBJ, class CONTAINER>
+    int IDatastoreObjectListWithStringKey<OBJ, CONTAINER>::removeObjectsWithKeys(const QStringList &keys)
+    {
+        if (keys.isEmpty()) { return 0; }
+        if (this->container().isEmpty()) { return 0; }
+        CONTAINER newValues;
+        for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
+        {
+            if (keys.contains(obj.getDbKey(), Qt::CaseInsensitive)) { continue; }
+            newValues.push_back(obj);
+        }
+        int delta = this->container().size() - newValues.size();
+        *this = newValues;
+        return delta;
+    }
+
+    template <class OBJ, class CONTAINER>
     void IDatastoreObjectListWithStringKey<OBJ, CONTAINER>::sortByKey()
     {
         this->container().sort(BlackMisc::Predicates::MemberLess(&OBJ::getDbKey));
@@ -58,6 +102,7 @@ namespace BlackMisc
         QStringList keys;
         for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
         {
+            if (!obj.hasValidDbKey()) { continue; }
             keys.append(obj.getDbKey());
         }
         return keys;
@@ -75,12 +120,34 @@ namespace BlackMisc
     }
 
     template <class OBJ, class CONTAINER>
+    CONTAINER IDatastoreObjectListWithIntegerKey<OBJ, CONTAINER>::fromDatabaseJson(const QJsonArray &array, const QString &prefix)
+    {
+        CONTAINER container;
+        for (const QJsonValue &value : array)
+        {
+            container.push_back(OBJ::fromDatabaseJson(value.toObject(), prefix));
+        }
+        return container;
+    }
+
+    template <class OBJ, class CONTAINER>
     CONTAINER IDatastoreObjectListWithStringKey<OBJ, CONTAINER>::fromDatabaseJson(const QJsonArray &array)
     {
         CONTAINER container;
         for (const QJsonValue &value : array)
         {
             container.push_back(OBJ::fromDatabaseJson(value.toObject()));
+        }
+        return container;
+    }
+
+    template <class OBJ, class CONTAINER>
+    CONTAINER IDatastoreObjectListWithStringKey<OBJ, CONTAINER>::fromDatabaseJson(const QJsonArray &array, const QString &prefix)
+    {
+        CONTAINER container;
+        for (const QJsonValue &value : array)
+        {
+            container.push_back(OBJ::fromDatabaseJson(value.toObject(), prefix));
         }
         return container;
     }

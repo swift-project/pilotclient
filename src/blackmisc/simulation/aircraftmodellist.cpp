@@ -109,7 +109,7 @@ namespace BlackMisc
         int CAircraftModelList::removeModelsWithString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity)
         {
             int cs = this->size();
-            (*this) = (findByNotInModelStrings(modelStrings, sensitivity));
+            (*this) = (this->findByNotInModelStrings(modelStrings, sensitivity));
             int d = cs - this->size();
             return d;
         }
@@ -134,7 +134,8 @@ namespace BlackMisc
         {
             return this->findBy([ = ](const CAircraftModel & model)
             {
-                return !modelStrings.contains(model.getModelString(), sensitivity);
+                const bool c = modelStrings.contains(model.getModelString(), sensitivity);
+                return !c;
             });
         }
 
@@ -143,6 +144,7 @@ namespace BlackMisc
             QStringList ms;
             for (const CAircraftModel &model : (*this))
             {
+                if (!model.hasModelString()) { continue; }
                 ms.append(model.getModelString());
             }
             if (sort) { ms.sort(Qt::CaseInsensitive); }

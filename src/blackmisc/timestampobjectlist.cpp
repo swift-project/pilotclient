@@ -100,27 +100,25 @@ namespace BlackMisc
         {
             // O(n) comparisons and O(n) copies
             std::partition_copy(c.begin(), c.end(), std::back_inserter(result[0]), std::back_inserter(result[1]),
-                [msSinceEpoch](const OBJ & obj) { return ! obj.isNewerThan(msSinceEpoch); });
+            [msSinceEpoch](const OBJ & obj) { return ! obj.isNewerThan(msSinceEpoch); });
         }
         return result;
     }
 
     template <class OBJ, class CONTAINER>
-    OBJ ITimestampObjectList<OBJ, CONTAINER>::latestValue() const
+    OBJ ITimestampObjectList<OBJ, CONTAINER>::latestObject() const
     {
         if (this->container().isEmpty()) { return OBJ(); }
-        CONTAINER copy(container()); // copy
-        copy.sortLatestFirst();
-        return copy.front();
+        auto latest = std::max_element(container().begin(), container().end(), [](const OBJ & a, const OBJ & b) { return a.getMSecsSinceEpoch() < b.getMSecsSinceEpoch(); });
+        return *latest;
     }
 
     template <class OBJ, class CONTAINER>
-    OBJ ITimestampObjectList<OBJ, CONTAINER>::oldestValue() const
+    OBJ ITimestampObjectList<OBJ, CONTAINER>::oldestObject() const
     {
         if (this->container().isEmpty()) { return OBJ(); }
-        CONTAINER copy(container()); // copy
-        copy.sortLatestFirst();
-        return copy.back();
+        auto oldest = std::min_element(container().begin(), container().end(), [](const OBJ & a, const OBJ & b) { return a.getMSecsSinceEpoch() < b.getMSecsSinceEpoch(); });
+        return *oldest;
     }
 
     template <class OBJ, class CONTAINER>

@@ -31,8 +31,17 @@ namespace BlackMisc
         //! Sort by timestamp
         void sortByKey();
 
-        //! From DB JSON
+        //! All keys as list
+        QList<int> toDbKeyList() const;
+
+        //! Remove objects with key
+        int removeObjectsWithKeys(const QList<int> &keys);
+
+        //! From DB JSON with default prefixes
         static CONTAINER fromDatabaseJson(const QJsonArray &array);
+
+        //! From DB JSON
+        static CONTAINER fromDatabaseJson(const QJsonArray &array, const QString &prefix);
 
     protected:
         //! Constructor
@@ -53,8 +62,14 @@ namespace BlackMisc
         //! All keys as string list
         QStringList toDbKeyList() const;
 
-        //! From DB JSON
+        //! Remove objects with key
+        int removeObjectsWithKeys(const QStringList &keys);
+
+        //! From DB JSON with default prefixes
         static CONTAINER fromDatabaseJson(const QJsonArray &array);
+
+        //! From DB JSON
+        static CONTAINER fromDatabaseJson(const QJsonArray &array, const QString &prefix);
 
     protected:
         //! Constructor

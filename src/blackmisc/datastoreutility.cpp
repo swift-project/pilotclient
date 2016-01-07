@@ -109,7 +109,7 @@ namespace BlackMisc
         if (json.contains("publishedModels"))
         {
             QJsonValue publishedJson(json.take("publishedModels"));
-            CAircraftModelList published = CAircraftModelList::fromDatabaseJson(publishedJson.toArray());
+            CAircraftModelList published = CAircraftModelList::fromDatabaseJson(publishedJson.toArray(), "");
             if (!published.isEmpty())
             {
                 publishedModels.push_back(published);
@@ -120,7 +120,7 @@ namespace BlackMisc
         if (json.contains("skippedModels"))
         {
             QJsonValue skippedJson(json.take("skippedModels"));
-            CAircraftModelList skipped = CAircraftModelList::fromDatabaseJson(skippedJson.toArray());
+            CAircraftModelList skipped = CAircraftModelList::fromDatabaseJson(skippedJson.toArray(), "");
             if (!skipped.isEmpty())
             {
                 skippedModels.push_back(skipped);
