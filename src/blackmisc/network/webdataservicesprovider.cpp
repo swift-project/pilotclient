@@ -129,6 +129,20 @@ namespace BlackMisc
             return this->m_webDataReaderProvider->getModelsCount();
         }
 
+        QList<int> CWebDataServicesAware::getModelDbKeys() const
+        {
+            Q_ASSERT_X(this->m_webDataReaderProvider, Q_FUNC_INFO, "Missing provider");
+            if (!hasProvider()) { return QList<int>(); }
+            return this->m_webDataReaderProvider->getModelDbKeys();
+        }
+
+        QStringList CWebDataServicesAware::getModelStrings() const
+        {
+            Q_ASSERT_X(this->m_webDataReaderProvider, Q_FUNC_INFO, "Missing provider");
+            if (!hasProvider()) { return QStringList(); }
+            return this->m_webDataReaderProvider->getModelStrings();
+        }
+
         CAircraftModel CWebDataServicesAware::getModelForModelString(const QString &modelString) const
         {
             Q_ASSERT_X(this->m_webDataReaderProvider, Q_FUNC_INFO, "Missing provider");
@@ -306,11 +320,11 @@ namespace BlackMisc
             }
         }
 
-        CEntityFlags::Entity CWebDataServicesAware::triggerRead(CEntityFlags::Entity whatToRead)
+        CEntityFlags::Entity CWebDataServicesAware::triggerRead(CEntityFlags::Entity whatToRead, const QDateTime &newerThan)
         {
             Q_ASSERT_X(this->m_webDataReaderProvider, Q_FUNC_INFO, "Missing provider");
             if (!hasProvider()) { return CEntityFlags::NoEntity; }
-            return this->m_webDataReaderProvider->triggerRead(whatToRead);
+            return this->m_webDataReaderProvider->triggerRead(whatToRead, newerThan);
         }
 
         bool CWebDataServicesAware::canConnectSwiftDb() const

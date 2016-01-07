@@ -112,6 +112,14 @@ namespace BlackMisc
             //! \threadsafe
             virtual int getModelsCount() const = 0;
 
+            //! Model keys
+            //! \threadsafe
+            virtual QList<int> getModelDbKeys() const = 0;
+
+            //! Model strings
+            //! \threadsafe
+            virtual QStringList getModelStrings() const = 0;
+
             //! Models for combined code and aircraft designator
             //! \threadsafe
             virtual BlackMisc::Simulation::CAircraftModelList getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const = 0;
@@ -204,7 +212,7 @@ namespace BlackMisc
                 std::function<void(const BlackMisc::Simulation::CAircraftModelList &, const BlackMisc::Simulation::CAircraftModelList &, const BlackMisc::CStatusMessageList &)> dataPublished) = 0;
 
             //! Trigger read of new data
-            virtual BlackMisc::Network::CEntityFlags::Entity triggerRead(BlackMisc::Network::CEntityFlags::Entity whatToRead) = 0;
+            virtual BlackMisc::Network::CEntityFlags::Entity triggerRead(BlackMisc::Network::CEntityFlags::Entity whatToRead, const QDateTime &dateTime = QDateTime()) = 0;
 
             //! Can connect to swift DB?
             virtual bool canConnectSwiftDb() const = 0;
@@ -275,6 +283,12 @@ namespace BlackMisc
 
             //! \copydoc IWebDataServicesProvider::getModelsCount
             int getModelsCount() const;
+
+            //! \copydoc IWebDataServicesProvider::getModelDbKeys
+            QList<int> getModelDbKeys() const;
+
+            //! \copydoc IWebDataServicesProvider::getModelStrings
+            QStringList getModelStrings() const;
 
             //! \copydoc IWebDataServicesProvider::getModelsForAircraftDesignatorAndLiveryCombinedCode
             BlackMisc::Simulation::CAircraftModelList getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const;
@@ -353,7 +367,7 @@ namespace BlackMisc
                 std::function<void(const BlackMisc::Simulation::CAircraftModelList &, const BlackMisc::Simulation::CAircraftModelList &, const BlackMisc::CStatusMessageList &)> dataPublished);
 
             //! \copydoc IWebDataServicesProvider::triggerRead
-            BlackMisc::Network::CEntityFlags::Entity triggerRead(BlackMisc::Network::CEntityFlags::Entity whatToRead);
+            BlackMisc::Network::CEntityFlags::Entity triggerRead(BlackMisc::Network::CEntityFlags::Entity whatToRead, const QDateTime &newerThan);
 
             //! \copydoc IWebDataServicesProvider::canConnectSwiftDb
             bool canConnectSwiftDb() const;

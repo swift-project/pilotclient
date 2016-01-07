@@ -36,7 +36,7 @@ namespace BlackCoreTest
         m_icaoReader.start();
         Expect e(&this->m_icaoReader);
         EXPECT_UNIT(e)
-        .send(&CIcaoDataReader::readInBackgroundThread, CEntityFlags::AllIcaoEntities)
+        .send(&CIcaoDataReader::readInBackgroundThread, CEntityFlags::AllIcaoEntities, QDateTime())
         .expect(&CIcaoDataReader::dataRead, [url]()
         {
             qDebug() << "Read ICAO data from" << url.getFullUrl();
@@ -59,7 +59,7 @@ namespace BlackCoreTest
         m_modelReader.start();
         Expect e(&this->m_modelReader);
         EXPECT_UNIT(e)
-        .send(&CModelDataReader::readInBackgroundThread, CEntityFlags::AllIcaoEntities)
+        .send(&CModelDataReader::readInBackgroundThread, CEntityFlags::DistributorLiveryModel, QDateTime())
         .expect(&CModelDataReader::dataRead, [url]()
         {
             qDebug() << "Read model data " << url;

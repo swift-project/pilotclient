@@ -177,7 +177,7 @@ namespace BlackCore
         return false;
     }
 
-    CEntityFlags::Entity CWebDataServices::triggerRead(CEntityFlags::Entity whatToRead)
+    CEntityFlags::Entity CWebDataServices::triggerRead(CEntityFlags::Entity whatToRead, const QDateTime &newerThan)
     {
         m_initialRead = true;
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
@@ -213,7 +213,7 @@ namespace BlackCore
             if (whatToRead.testFlag(CEntityFlags::AircraftIcaoEntity) || whatToRead.testFlag(CEntityFlags::AirlineIcaoEntity) || whatToRead.testFlag(CEntityFlags::CountryEntity))
             {
                 CEntityFlags::Entity icaoEntities = whatToRead & CEntityFlags::AllIcaoAndCountries;
-                m_icaoDataReader->readInBackgroundThread(icaoEntities);
+                m_icaoDataReader->readInBackgroundThread(icaoEntities, newerThan);
                 triggeredRead |= icaoEntities;
             }
         }
@@ -223,7 +223,7 @@ namespace BlackCore
             if (whatToRead.testFlag(CEntityFlags::LiveryEntity) || whatToRead.testFlag(CEntityFlags::DistributorEntity) || whatToRead.testFlag(CEntityFlags::ModelEntity))
             {
                 CEntityFlags::Entity modelEntities = whatToRead & CEntityFlags::DistributorLiveryModel;
-                m_modelDataReader->readInBackgroundThread(modelEntities);
+                m_modelDataReader->readInBackgroundThread(modelEntities, newerThan);
                 triggeredRead |= modelEntities;
             }
         }
@@ -294,6 +294,18 @@ namespace BlackCore
     {
         if (m_modelDataReader) { return m_modelDataReader->getModelsCount(); }
         return 0;
+    }
+
+    QList<int> CWebDataServices::getModelDbKeys() const
+    {
+        if (m_modelDataReader) { return m_modelDataReader->getModelDbKeys(); }
+        return QList<int>();
+    }
+
+    QStringList CWebDataServices::getModelStrings() const
+    {
+        if (m_modelDataReader) { return m_modelDataReader->getModelStrings(); }
+        return QStringList();
     }
 
     CAircraftModelList CWebDataServices::getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const

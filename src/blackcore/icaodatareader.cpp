@@ -129,7 +129,7 @@ namespace BlackCore
         return m_countries.size();
     }
 
-    void CIcaoDataReader::ps_read(BlackMisc::Network::CEntityFlags::Entity entities)
+    void CIcaoDataReader::ps_read(BlackMisc::Network::CEntityFlags::Entity entities, const QDateTime &newerThan)
     {
         this->threadAssertCheck(); // runs in background thread
         Q_ASSERT(this->m_networkManagerAircraft);
@@ -139,9 +139,10 @@ namespace BlackCore
         CEntityFlags::Entity entitiesTriggered = CEntityFlags::NoEntity;
         if (entities.testFlag(CEntityFlags::AircraftIcaoEntity))
         {
-            QUrl url(getAircraftIcaoUrl());
+            CUrl url(getAircraftIcaoUrl());
             if (!url.isEmpty())
             {
+                if (!newerThan.isNull()) { url.appendQuery("newer=" + newerThan.toString(Qt::ISODate)); }
                 QNetworkRequest requestAircraft(CNetworkUtils::getNetworkRequest(url));
                 this->m_networkManagerAircraft->get(requestAircraft);
                 entitiesTriggered |= CEntityFlags::AircraftIcaoEntity;
@@ -154,9 +155,10 @@ namespace BlackCore
 
         if (entities.testFlag(CEntityFlags::AirlineIcaoEntity))
         {
-            QUrl url(getAirlineIcaoUrl());
+            CUrl url(getAirlineIcaoUrl());
             if (!url.isEmpty())
             {
+                if (!newerThan.isNull()) { url.appendQuery("newer=" + newerThan.toString(Qt::ISODate)); }
                 QNetworkRequest requestAirline(CNetworkUtils::getNetworkRequest(url));
                 this->m_networkManagerAirlines->get(requestAirline);
                 entitiesTriggered |= CEntityFlags::AirlineIcaoEntity;
@@ -169,9 +171,10 @@ namespace BlackCore
 
         if (entities.testFlag(CEntityFlags::CountryEntity))
         {
-            QUrl url(getCountryUrl());
+            CUrl url(getCountryUrl());
             if (!url.isEmpty())
             {
+                if (!newerThan.isNull()) { url.appendQuery("newer=" + newerThan.toString(Qt::ISODate)); }
                 QNetworkRequest requestCountry(CNetworkUtils::getNetworkRequest(url));
                 this->m_networkManagerCountries->get(requestCountry);
                 entitiesTriggered |= CEntityFlags::CountryEntity;

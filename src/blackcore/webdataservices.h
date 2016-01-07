@@ -91,7 +91,7 @@ namespace BlackCore
 
         //! \copydoc BlackMisc::Network::IWebDataServicesProvider::triggerRead
         //! \ingroup webdatareaderprovider
-        virtual BlackMisc::Network::CEntityFlags::Entity triggerRead(BlackMisc::Network::CEntityFlags::Entity whatToRead) override;
+        virtual BlackMisc::Network::CEntityFlags::Entity triggerRead(BlackMisc::Network::CEntityFlags::Entity whatToRead, const QDateTime &newerThan = QDateTime()) override;
 
         //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getVatsimFsdServers
         //! \ingroup webdatareaderprovider
@@ -144,6 +144,14 @@ namespace BlackCore
         //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getModelsCount
         //! \ingroup webdatareaderprovider
         virtual int getModelsCount() const override;
+
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getModelDbKeys
+        //! \ingroup webdatareaderprovider
+        virtual QList<int> getModelDbKeys() const override;
+
+        //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getModelStrings
+        //! \ingroup webdatareaderprovider
+        virtual QStringList getModelStrings() const override;
 
         //! \copydoc BlackMisc::Network::IWebDataServicesProvider::getModelsForAircraftDesignatorAndLiveryCombinedCode
         //! \ingroup webdatareaderprovider

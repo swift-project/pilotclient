@@ -120,7 +120,7 @@ namespace BlackCore
         void ps_parseCountryData(QNetworkReply *nwReply);
 
         //! Read / re-read data file
-        void ps_read(BlackMisc::Network::CEntityFlags::Entity entities);
+        void ps_read(BlackMisc::Network::CEntityFlags::Entity entities, const QDateTime &newerThan);
 
     private:
         QNetworkAccessManager *m_networkManagerAircraft  = nullptr;

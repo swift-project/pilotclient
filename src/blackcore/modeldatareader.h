@@ -88,6 +88,14 @@ namespace BlackCore
         //! \threadsafe
         int getModelsCount() const;
 
+        //! Get model keys
+        //! \threadsafe
+        QList<int> getModelDbKeys() const;
+
+        //! Get model keys
+        //! \threadsafe
+        QStringList getModelStrings() const;
+
         //! All data read?
         //! \threadsafe
         bool areAllDataRead() const;
@@ -116,7 +124,7 @@ namespace BlackCore
         void ps_parseModelData(QNetworkReply *nwReply);
 
         //! Read / re-read data file
-        void ps_read(BlackMisc::Network::CEntityFlags::Entity entity = BlackMisc::Network::CEntityFlags::DistributorLiveryModel);
+        void ps_read(BlackMisc::Network::CEntityFlags::Entity entity = BlackMisc::Network::CEntityFlags::DistributorLiveryModel, const QDateTime &newerThan = QDateTime());
 
     private:
         QNetworkAccessManager *m_networkManagerLivery = nullptr;

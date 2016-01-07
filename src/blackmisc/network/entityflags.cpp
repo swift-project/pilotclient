@@ -11,6 +11,7 @@
 #include "blackmisc/dbus.h"
 #include <QtDBus/QDBusMetaType>
 #include <QStringList>
+#include "blackmisc/verify.h"
 
 namespace BlackMisc
 {
@@ -33,7 +34,7 @@ namespace BlackMisc
             case AllIcaoAndCountries: return "All ICAO + country";
             case AllEntities: return "All";
             default:
-                Q_ASSERT_X(false, Q_FUNC_INFO, "wrong flags");
+                BLACK_VERIFY_X(false, Q_FUNC_INFO, "wrong flags");
                 return "wrong flags";
             }
         }
@@ -58,10 +59,11 @@ namespace BlackMisc
             switch (flag)
             {
             case ReadFinished: return "finished";
+            case ReadFinishedRestricted: return "finished (restricted)";
             case ReadFailed: return "failed";
             case StartRead: return "read started";
             default:
-                Q_ASSERT_X(false, Q_FUNC_INFO, "wrong flags");
+                BLACK_VERIFY_X(false, Q_FUNC_INFO, "wrong flags");
                 return "wrong flags";
             }
         }
@@ -71,18 +73,22 @@ namespace BlackMisc
             switch (state)
             {
             case ReadFinished:
+            case ReadFinishedRestricted:
             case StartRead:
-            default:
                 return CStatusMessage::SeverityInfo;
             case ReadFailed:
                 return CStatusMessage::SeverityWarning;
+            default:
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Missing state");
+                return CStatusMessage::SeverityInfo;
             }
         }
 
         bool CEntityFlags::isWarningOrAbove(CEntityFlags::ReadState state)
         {
             CStatusMessage::StatusSeverity s = flagToSeverity(state);
-            switch (s) {
+            switch (s)
+            {
             case CStatusMessage::SeverityError:
             case CStatusMessage::SeverityWarning:
                 return true;

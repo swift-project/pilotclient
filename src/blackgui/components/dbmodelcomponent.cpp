@@ -60,9 +60,12 @@ namespace BlackGui
         void CDbModelComponent::ps_modelsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);
-            if (entity.testFlag(CEntityFlags::ModelEntity) && readState == CEntityFlags::ReadFinished)
+            if (entity.testFlag(CEntityFlags::ModelEntity))
             {
-                this->ui->tvp_AircraftModel->updateContainer(this->getModels());
+                if (readState == CEntityFlags::ReadFinished || readState == CEntityFlags::ReadFinishedRestricted)
+                {
+                    this->ui->tvp_AircraftModel->updateContainer(this->getModels());
+                }
             }
         }
 

@@ -20,7 +20,6 @@
 #include <QDateTime>
 #include <QTimer>
 
-
 namespace BlackCore
 {
     //! Specialized version of threaded reader for DB data
@@ -32,8 +31,9 @@ namespace BlackCore
         //!  Response from our database
         struct JsonDatastoreResponse
         {
-            QJsonArray jsonArray;  //!< JSON array data
-            QDateTime updated;     //!< when updated
+            QJsonArray jsonArray;           //!< JSON array data
+            QDateTime  updated;             //!< when was the latest updated?
+            bool       restricted = false;  //!< restricted reponse, only data changed
 
             //! Any data?
             bool isEmpty() const { return jsonArray.isEmpty(); }
@@ -50,12 +50,15 @@ namespace BlackCore
             //! Is response newer?
             bool isNewer(qint64 mSecsSinceEpoch) const { return updated.toMSecsSinceEpoch() > mSecsSinceEpoch; }
 
+            //! Incremental data
+            bool isRestricted() const { return restricted; }
+
             //! Implicit conversion
             operator QJsonArray() const { return jsonArray; }
         };
 
         //! Start reading in own thread
-        void readInBackgroundThread(BlackMisc::Network::CEntityFlags::Entity entities);
+        void readInBackgroundThread(BlackMisc::Network::CEntityFlags::Entity entities, const QDateTime &newerThan);
 
         //! Can connect to DB
         //! \threadsafe
@@ -69,7 +72,7 @@ namespace BlackCore
     protected:
         BlackMisc::Network::CUrl m_watchdogUrl;              //!< URL for checking if alive
         QTimer                   m_watchdogTimer { this };   //!< Timer for watchdog (DB available?)
-        QString                  m_watchdogMessage;          //!< Returned status message
+        QString                  m_watchdogMessage;          //!< Returned status message from watchdog
         bool                     m_canConnect = false;       //!< Successful connection?
         mutable QReadWriteLock   m_watchdogLock;             //!< Lock
 

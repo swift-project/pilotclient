@@ -24,11 +24,14 @@ namespace BlackCore
         connect(&m_watchdogTimer, &QTimer::timeout, this, &CDatabaseReader::ps_watchdog);
     }
 
-    void CDatabaseReader::readInBackgroundThread(CEntityFlags::Entity entities)
+    void CDatabaseReader::readInBackgroundThread(CEntityFlags::Entity entities, const QDateTime &newerThan)
     {
         if (isAbandoned()) { return; }
         this->m_watchdogTimer.stop();
-        bool s = QMetaObject::invokeMethod(this, "ps_read", Q_ARG(BlackMisc::Network::CEntityFlags::Entity, entities));
+        // ps_read is implemented in the derived classes
+        bool s = QMetaObject::invokeMethod(this, "ps_read",
+                                           Q_ARG(BlackMisc::Network::CEntityFlags::Entity, entities),
+                                           Q_ARG(QDateTime, newerThan));
         Q_ASSERT_X(s, Q_FUNC_INFO, "Invoke failed");
         Q_UNUSED(s);
     }
@@ -63,6 +66,7 @@ namespace BlackCore
                 datastoreResponse.jsonArray = responseObject["data"].toArray();
                 QString ts(responseObject["latest"].toString());
                 datastoreResponse.updated = ts.isEmpty() ? QDateTime::currentDateTimeUtc() : CDatastoreUtility::parseTimestamp(ts);
+                datastoreResponse.restricted = responseObject["restricted"].toBool();
             }
             return datastoreResponse;
         }

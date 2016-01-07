@@ -126,6 +126,18 @@ namespace BlackCore
         return m_models.size();
     }
 
+    QList<int> CModelDataReader::getModelDbKeys() const
+    {
+        QReadLocker l(&m_lockModels);
+        return m_models.toDbKeyList();
+    }
+
+    QStringList CModelDataReader::getModelStrings() const
+    {
+        QReadLocker l(&m_lockModels);
+        return m_models.getModelStrings(false);
+    }
+
     bool CModelDataReader::areAllDataRead() const
     {
         return
@@ -134,7 +146,7 @@ namespace BlackCore
             getDistributorsCount() > 0;
     }
 
-    void CModelDataReader::ps_read(CEntityFlags::Entity entity)
+    void CModelDataReader::ps_read(CEntityFlags::Entity entity, const QDateTime &newerThan)
     {
         this->threadAssertCheck();
         Q_ASSERT(this->m_networkManagerLivery);
@@ -147,6 +159,11 @@ namespace BlackCore
             CUrl url(getLiveryUrl());
             if (!url.isEmpty())
             {
+                if (!newerThan.isNull())
+                {
+                    const QString tss(newerThan.toString(Qt::ISODate));
+                    url.appendQuery("newer=" + tss);
+                }
                 QNetworkRequest requestLivery(url);
                 CNetworkUtils::ignoreSslVerification(requestLivery);
                 this->m_networkManagerLivery->get(requestLivery);
@@ -163,6 +180,11 @@ namespace BlackCore
             CUrl url(getDistributorUrl());
             if (!url.isEmpty())
             {
+                if (!newerThan.isNull())
+                {
+                    const QString tss(newerThan.toString(Qt::ISODate));
+                    url.appendQuery("newer=" + tss);
+                }
                 QNetworkRequest requestDistributor(url);
                 CNetworkUtils::ignoreSslVerification(requestDistributor);
                 this->m_networkManagerDistributor->get(requestDistributor);
@@ -179,6 +201,11 @@ namespace BlackCore
             CUrl url(getModelUrl());
             if (!url.isEmpty())
             {
+                if (!newerThan.isNull())
+                {
+                    const QString tss(newerThan.toString(Qt::ISODate));
+                    url.appendQuery("newer=" + tss);
+                }
                 QNetworkRequest requestModel(url);
                 CNetworkUtils::ignoreSslVerification(requestModel);
                 this->m_networkManagerModel->get(requestModel);
@@ -202,13 +229,25 @@ namespace BlackCore
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
         QString urlString(nwReply->url().toString());
-        QJsonArray array = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
-        if (array.isEmpty())
+        CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+        if (res.isEmpty())
         {
             emit dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFailed, 0);
             return;
         }
-        CLiveryList liveries = CLiveryList::fromDatabaseJson(array);
+
+        // get all or incremental set of distributor
+        CLiveryList liveries;
+        if (res.isRestricted())
+        {
+            // create full list if it was just incremental
+            liveries = this->getLiveries();
+            liveries.replaceOrAddObjectsByKey(CLiveryList::fromDatabaseJson(res));
+        }
+        else
+        {
+            liveries  = CLiveryList::fromDatabaseJson(res);
+        }
 
         // this part needs to be synchronized
         int n = liveries.size();
@@ -216,8 +255,10 @@ namespace BlackCore
             QWriteLocker wl(&this->m_lockLivery);
             this->m_liveries = liveries;
         }
+
         // never emit when lock is held -> deadlock
-        emit dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, n);
+        emit dataRead(CEntityFlags::LiveryEntity,
+                      res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, n);
         CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::LiveryEntity) << urlString;
     }
 
@@ -225,13 +266,25 @@ namespace BlackCore
     {
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
         QString urlString(nwReply->url().toString());
-        QJsonArray array = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
-        if (array.isEmpty())
+        CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+        if (res.isEmpty())
         {
             emit dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFailed, 0);
             return;
         }
-        CDistributorList distributors = CDistributorList::fromDatabaseJson(array);
+
+        // get all or incremental set of distributor
+        CDistributorList distributors;
+        if (res.isRestricted())
+        {
+            // create full list if it was just incremental
+            distributors = this->getDistributors();
+            distributors.replaceOrAddObjectsByKey(CDistributorList::fromDatabaseJson(res));
+        }
+        else
+        {
+            distributors = CDistributorList::fromDatabaseJson(res);
+        }
 
         // this part needs to be synchronized
         int n = distributors.size();
@@ -239,7 +292,8 @@ namespace BlackCore
             QWriteLocker wl(&this->m_lockDistributor);
             this->m_distributors = distributors;
         }
-        emit dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, n);
+        emit dataRead(CEntityFlags::DistributorEntity,
+                      res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, n);
         CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::DistributorEntity) << urlString;
     }
 
@@ -247,21 +301,35 @@ namespace BlackCore
     {
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
         QString urlString(nwReply->url().toString());
-        QJsonArray array = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
-        if (array.isEmpty())
+        CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+        if (res.isEmpty())
         {
             emit dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFailed, 0);
             return;
         }
-        CAircraftModelList models = CAircraftModelList::fromDatabaseJson(array);
 
-        // this part needs to be synchronized
+        // get all or incremental set of models
+        CAircraftModelList models;
+        if (res.isRestricted())
+        {
+            // create full list if it was just incremental
+            models = this->getModels();
+            models.replaceOrAddObjectsByKey(CAircraftModelList::fromDatabaseJson(res));
+        }
+        else
+        {
+            models = CAircraftModelList::fromDatabaseJson(res);
+        }
+
+        // syncronized update
         int n = models.size();
         {
             QWriteLocker wl(&this->m_lockModels);
             this->m_models = models;
         }
-        emit dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, n);
+
+        emit dataRead(CEntityFlags::ModelEntity,
+                      res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, n);
         CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::ModelEntity) << urlString;
     }
 
