@@ -15,6 +15,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackGui::Models;
+using namespace BlackGui::Views;
 
 namespace BlackGui
 {
@@ -24,6 +25,12 @@ namespace BlackGui
     {
         this->init(w, h);
         connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &COverlayMessages::ps_onStyleSheetsChanged);
+        connect(this->ui->pb_Ok, &QPushButton::clicked, this, &COverlayMessages::ps_okClicked);
+        connect(this->ui->pb_Cancel, &QPushButton::clicked, this, &COverlayMessages::ps_cancelClicked);
+
+        this->ui->tvp_StatusMessages->setResizeMode(CStatusMessageView::ResizingAuto);
+        this->ui->fr_Confirmation->setVisible(false);
+        this->setDefaultConfirmationButton(QMessageBox::Cancel);
     }
 
     COverlayMessages::COverlayMessages(const QString &headerText, int w, int h, QWidget *parent) :
@@ -60,6 +67,22 @@ namespace BlackGui
     void COverlayMessages::ps_onStyleSheetsChanged()
     {
         // stlye sheet
+    }
+
+    void COverlayMessages::ps_okClicked()
+    {
+        this->m_lastConfirmation = QMessageBox::Ok;
+        if (this->m_okLambda)
+        {
+            this->m_okLambda();
+        }
+        this->close();
+    }
+
+    void COverlayMessages::ps_cancelClicked()
+    {
+        this->m_lastConfirmation = QMessageBox::Cancel;
+        this->close();
     }
 
     bool COverlayMessages::useSmall() const
@@ -149,9 +172,56 @@ namespace BlackGui
         this->setHeader("Text message");
     }
 
+    void COverlayMessages::setConfirmationMessage(const QString &message)
+    {
+        if (message.isEmpty())
+        {
+            this->ui->fr_Confirmation->setVisible(false);
+        }
+        else
+        {
+            this->ui->fr_Confirmation->setVisible(true);
+            this->ui->lbl_Confirmation->setText(message);
+        }
+    }
+
+    void COverlayMessages::showMessagesWithConfirmation(const CStatusMessageList &messages, const QString &confirmationMessage, std::function<void ()> okLambda, int defaultButton, int timeOutMs)
+    {
+        this->setConfirmationMessage(confirmationMessage);
+        this->showMessages(messages, timeOutMs);
+        this->m_okLambda = okLambda;
+        this->setDefaultConfirmationButton(defaultButton);
+    }
+
+    void COverlayMessages::setDefaultConfirmationButton(int button)
+    {
+        switch (button)
+        {
+        case QMessageBox::Ok:
+            this->ui->pb_Cancel->setDefault(false);
+            this->ui->pb_Cancel->setAutoDefault(false);
+            this->ui->pb_Ok->setDefault(true);
+            this->ui->pb_Ok->setAutoDefault(true);
+            this->m_lastConfirmation = QMessageBox::Ok;
+            this->ui->pb_Ok->setFocus();
+            break;
+        case QMessageBox::Cancel:
+            this->ui->pb_Ok->setDefault(false);
+            this->ui->pb_Ok->setAutoDefault(false);
+            this->ui->pb_Cancel->setDefault(true);
+            this->ui->pb_Cancel->setAutoDefault(true);
+            this->m_lastConfirmation = QMessageBox::Cancel;
+            this->ui->pb_Cancel->setFocus();
+            break;
+        default:
+            break;
+        }
+    }
+
     void COverlayMessages::keyPressEvent(QKeyEvent *event)
     {
-        if (this->isVisible() && event->key() ==  Qt::Key_Escape)
+        if (!this->isVisible()) { QFrame::keyPressEvent(event); }
+        if (event->key() ==  Qt::Key_Escape)
         {
             this->close();
             event->accept();
@@ -166,6 +236,9 @@ namespace BlackGui
     {
         this->hide();
         this->setEnabled(false);
+        this->ui->fr_Confirmation->setVisible(false);
+        this->m_lastConfirmation = QMessageBox::Cancel;
+        this->m_okLambda = nullptr;
     }
 
     void COverlayMessages::display(int timeOutMs)

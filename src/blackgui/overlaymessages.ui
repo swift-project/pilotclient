@@ -275,6 +275,54 @@
      </layout>
     </widget>
    </item>
+   <item>
+    <widget class="QFrame" name="fr_Confirmation">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="hl_ConfirmationFrame">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
+       <number>3</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="lbl_Confirmation">
+        <property name="text">
+         <string>Message goes here</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_Ok">
+        <property name="text">
+         <string>OK</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_Cancel">
+        <property name="text">
+         <string>Cancel</string>
+        </property>
+        <property name="default">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -296,6 +344,16 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>pb_Ok</tabstop>
+  <tabstop>pb_Cancel</tabstop>
+  <tabstop>tb_Close</tabstop>
+  <tabstop>tvp_StatusMessages</tabstop>
+  <tabstop>le_TmReceived</tabstop>
+  <tabstop>le_TmTo</tabstop>
+  <tabstop>le_TmFrom</tabstop>
+  <tabstop>te_TmText</tabstop>
+ </tabstops>
  <resources>
   <include location="../blackmisc/blackmisc.qrc"/>
  </resources>

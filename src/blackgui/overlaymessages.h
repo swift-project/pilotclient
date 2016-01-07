@@ -19,6 +19,8 @@
 #include <QFrame>
 #include <QScopedPointer>
 #include <QTimer>
+#include <QMessageBox>
+#include <functional>
 
 namespace Ui { class COverlayMessages; }
 
@@ -56,6 +58,19 @@ namespace BlackGui
         //! Set header text
         void setHeaderText(const QString &header);
 
+        //! Set the message and show the confirmation frame
+        void setConfirmationMessage(const QString &message);
+
+        //! Show multiple messages with confirmation bar
+        void showMessagesWithConfirmation(const BlackMisc::CStatusMessageList &messages,
+                                          const QString &confirmationMessage,
+                                          std::function<void()> okLambda,
+                                          int defaultButton = QMessageBox::Cancel,
+                                          int timeOutMs = -1);
+
+        //! Set the default confirmation button
+        void setDefaultConfirmationButton(int button = QMessageBox::Cancel);
+
     public slots:
         //! Show multiple messages
         void showMessages(const BlackMisc::CStatusMessageList &messages, int timeOutMs = -1);
@@ -86,21 +101,28 @@ namespace BlackGui
         //! Stylesheet changed
         void ps_onStyleSheetsChanged();
 
-        //! Small
-        bool useSmall() const;
+        //! OK clicked (only when confirmation bar is active)
+        void ps_okClicked();
+
+        //! Cancel clicked (only when confirmation bar is active)
+        void ps_cancelClicked();
 
     private:
         QScopedPointer<Ui::COverlayMessages> ui;
-        QString m_header;
-        QTimer  m_autoCloseTimer { this };
+        QString                              m_header;
+        int                                  m_lastConfirmation = QMessageBox::Cancel;
+        std::function<void()>                m_okLambda;
+        QTimer                               m_autoCloseTimer { this };
 
         //! Init widget
         void init(int w, int h);
 
         //! Set header text
         void setHeader(const QString &header);
-    };
 
+        //! Small
+        bool useSmall() const;
+    };
 } // ns
 
 #endif // guard

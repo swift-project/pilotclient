@@ -31,6 +31,14 @@ namespace BlackGui
         if (!m_overlayMessages) { return; }
     }
 
+    void COverlayMessagesFrame::showMessagesWithConfirmation(const BlackMisc::CStatusMessageList &messages, const QString &confirmationMessage, std::function<void ()> okLambda, int defaultButton, int timeOutMs)
+    {
+        if (messages.isEmpty()) { return; }
+        this->initInnerFrame();
+        this->m_overlayMessages->showMessagesWithConfirmation(messages, confirmationMessage, okLambda, defaultButton, timeOutMs);
+        this->repaint();
+    }
+
     void COverlayMessagesFrame::showMessage(const BlackMisc::CStatusMessage &message, int timeOutMs)
     {
         if (message.isEmpty()) { return; }

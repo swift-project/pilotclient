@@ -38,6 +38,13 @@ namespace BlackGui
         //! Hide the inner frame
         void hideStatusMessagesFrame();
 
+        //! \copydoc COverlayMessages::showMessagesWithConfirmation
+        void showMessagesWithConfirmation(const BlackMisc::CStatusMessageList &messages,
+                                          const QString &confirmationMessage,
+                                          std::function<void()> okLambda,
+                                          int defaultButton = QMessageBox::Cancel,
+                                          int timeOutMs = -1);
+
     public slots:
         //! \copydoc COverlayMessages::showMessages
         void showMessages(const BlackMisc::CStatusMessageList &messages, int timeOutMs = -1);
