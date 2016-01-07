@@ -13,6 +13,7 @@
 #include "blackmisc/stringutils.h"
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QTimeZone>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -56,6 +57,7 @@ namespace BlackMisc
         {
             QString ts(timestamp.trimmed().remove(' ').remove('-').remove(':')); // normalize
             QDateTime dt = QDateTime::fromString(ts, "yyyyMMddHHmmss");
+            dt.setTimeZone(QTimeZone::utc());
             return dt;
         }
         else

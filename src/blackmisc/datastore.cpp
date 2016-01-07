@@ -46,8 +46,7 @@ namespace BlackMisc
     QJsonValue IDatastoreObjectWithIntegerKey::getDbKeyAsJsonValue() const
     {
         if (this->hasValidDbKey()) { return QJsonValue(this->m_dbKey); }
-        static const QJsonValue null;
-        return null;
+        return QJsonValue();
     }
 
     void IDatastoreObjectWithIntegerKey::setKeyAndTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix)
