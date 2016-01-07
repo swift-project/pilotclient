@@ -23,6 +23,7 @@
 #include "blackmisc/simulation/aircraftmodelloader.h"
 #include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
 #include "blackmisc/network/webdataservicesprovider.h"
+#include "blackmisc/network/entityflags.h"
 #include "blackmisc/statusmessagelist.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -102,6 +103,9 @@ namespace BlackGui
             //! Request to filter by distributor
             void filterByDistributor(const BlackMisc::Simulation::CDistributor &distributor);
 
+            //! Request new data
+            void requestUpdatedData(BlackMisc::Network::CEntityFlags::Entity entities);
+
         public slots:
             //! Validate, empty list means OK
             BlackMisc::CStatusMessageList validateCurrentModel(bool withNestedForms) const;
@@ -122,11 +126,14 @@ namespace BlackGui
             //! Data for vPilot have been loaded
             void ps_onLoadVPilotDataFinished(bool success);
 
-            //! vPilot cached changed
+            //! vPilot cached models changed
             void ps_onVPilotCacheChanged();
 
             //! Stashed models changed
             void ps_onStashedModelsChanged();
+
+            //! Models have been published successfully
+            void ps_onModelsSuccessfullyPublished(const BlackMisc::Simulation::CAircraftModelList &models);
 
             //! Stash drop request
             void ps_handleStashDropRequest(const BlackMisc::Aviation::CAirlineIcaoCode &code) const;

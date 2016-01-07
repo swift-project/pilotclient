@@ -10,11 +10,13 @@
 #include "dbmodelcomponent.h"
 #include "dbmappingcomponent.h"
 #include "blackgui/stylesheetutility.h"
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "ui_dbmodelcomponent.h"
 #include <functional>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Simulation;
 using namespace BlackGui::Views;
 using namespace BlackGui::Models;
 
@@ -57,6 +59,17 @@ namespace BlackGui
             }
         }
 
+        void CDbModelComponent::requestUpdatedData()
+        {
+            QDateTime ts;
+            if (!this->ui->tvp_AircraftModel->isEmpty())
+            {
+                CAircraftModel model(this->ui->tvp_AircraftModel->container().latestObject());
+                ts = model.getUtcTimestamp();
+            }
+            this->triggerRead(CEntityFlags::ModelEntity, ts);
+        }
+
         void CDbModelComponent::ps_modelsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);
@@ -64,15 +77,15 @@ namespace BlackGui
             {
                 if (readState == CEntityFlags::ReadFinished || readState == CEntityFlags::ReadFinishedRestricted)
                 {
-                    this->ui->tvp_AircraftModel->updateContainer(this->getModels());
+                    this->ui->tvp_AircraftModel->updateContainerMaybeAsync(this->getModels());
                 }
             }
         }
 
         void CDbModelComponent::ps_reload()
         {
-            if (!hasProvider()) { return; }
-            triggerRead(CEntityFlags::ModelEntity);
+            if (!this->hasProvider()) { return; }
+            this->triggerRead(CEntityFlags::ModelEntity, QDateTime());
         }
 
         void CDbModelComponent::ps_onStyleSheetChanged()

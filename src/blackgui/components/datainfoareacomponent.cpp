@@ -10,11 +10,14 @@
 #include "ui_datainfoareacomponent.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/datainfoareacomponent.h"
+#include "blackmisc/network/entityflags.h"
 #include "blackcore/webdataservices.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/verify.h"
 
 using namespace BlackMisc;
+using namespace BlackMisc::Network;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 
@@ -150,6 +153,20 @@ namespace BlackGui
             default:
                 return CIcons::empty();
             }
+        }
+
+        void CDataInfoAreaComponent::requestUpdatedData(CEntityFlags::Entity entity)
+        {
+            bool requested = false;
+            if (entity.testFlag(CEntityFlags::ModelEntity))
+            {
+                this->ui->comp_DbModels->requestUpdatedData();
+                requested = true;
+            }
+
+            // sanity
+            BLACK_VERIFY_X(requested, Q_FUNC_INFO, "Entity not supported");
+            Q_UNUSED(requested);
         }
     } // ns
 } // ns

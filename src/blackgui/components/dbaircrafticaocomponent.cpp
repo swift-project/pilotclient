@@ -68,7 +68,7 @@ namespace BlackGui
         void CDbAircraftIcaoComponent::ps_reload()
         {
             if (!hasProvider()) { return; }
-            triggerRead(CEntityFlags::AircraftIcaoEntity);
+            triggerRead(CEntityFlags::AircraftIcaoEntity, QDateTime());
         }
 
     } // ns

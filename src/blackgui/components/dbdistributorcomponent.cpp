@@ -59,7 +59,7 @@ namespace BlackGui
         void CDbDistributorComponent::ps_reload()
         {
             if (!hasProvider()) { return; }
-            triggerRead(CEntityFlags::DistributorEntity);
+            triggerRead(CEntityFlags::DistributorEntity, QDateTime());
         }
     } // ns
 } // ns

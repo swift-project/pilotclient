@@ -33,7 +33,7 @@ namespace BlackGui
         class CDbCountryComponent;
 
         /**
-         * Main info area for data entry tool
+         * Info area containing the DB data (models, liveries ...)
          */
         class BLACKGUI_EXPORT CDataInfoAreaComponent :
             public BlackGui::CInfoArea,
@@ -88,6 +88,9 @@ namespace BlackGui
 
             //! Load from resource dir
             bool readDbDataFromResourceDir();
+
+            //! Load new data (based on timestamp, incremental)
+            void requestUpdatedData(BlackMisc::Network::CEntityFlags::Entity entity);
 
         protected:
             //! \copydoc CInfoArea::getPreferredSizeWhenFloating

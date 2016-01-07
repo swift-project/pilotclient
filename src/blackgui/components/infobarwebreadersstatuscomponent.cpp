@@ -11,6 +11,7 @@
 #include "ui_infobarwebreadersstatuscomponent.h"
 #include "blackcore/webreaderflags.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/verify.h"
 
 using namespace BlackGui;
 using namespace BlackMisc;
@@ -93,6 +94,7 @@ namespace BlackGui
             switch (readState)
             {
             case CEntityFlags::ReadFinished:
+            case CEntityFlags::ReadFinishedRestricted:
                 led->setOn(true, blinkTime);
                 break;
             case CEntityFlags::StartRead:
@@ -100,6 +102,9 @@ namespace BlackGui
                 break;
             case CEntityFlags::ReadFailed:
                 led->setTriState(2 * blinkTime);
+                break;
+            default:
+                BLACK_VERIFY_X(false, Q_FUNC_INFO, "read state not handled");
                 break;
             }
         }

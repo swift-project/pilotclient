@@ -18,6 +18,7 @@
 using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackGui;
@@ -53,6 +54,7 @@ namespace BlackGui
             connect(ui->comp_StashAircraft->getView(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
             connect(ui->comp_StashAircraft->getView(), &CAircraftModelView::requestHandlingOfStashDrop, this, &CDbMappingComponent::ps_handleStashDropRequest);
             connect(ui->comp_StashAircraft, &CDbStashComponent::stashedModelsChanged, this, &CDbMappingComponent::ps_onStashedModelsChanged);
+            connect(ui->comp_StashAircraft, &CDbStashComponent::modelsSuccessfullyPublished, this, &CDbMappingComponent::ps_onModelsSuccessfullyPublished);
 
             ui->tvp_OwnAircraftModels->setDisplayAutomatically(true);
             ui->tvp_OwnAircraftModels->setCustomMenu(new CMappingSimulatorModelMenu(this));
@@ -181,9 +183,9 @@ namespace BlackGui
             switch (tab)
             {
             case TabOwnModels:
-                return ui->tvp_OwnAircraftModels->hasModelsToStash();
+                return ui->tvp_OwnAircraftModels->hasSelectedModelsToStash();
             case TabVPliot:
-                return ui->tvp_AircraftModelsForVPilot->hasModelsToStash();
+                return ui->tvp_AircraftModelsForVPilot->hasSelectedModelsToStash();
             default:
                 break;
             }
@@ -266,12 +268,16 @@ namespace BlackGui
         {
             const CAircraftModel model(getAircraftModel());
             CStatusMessageList msgs(this->validateCurrentModel(true));
+            if (!msgs.hasErrorMessages())
+            {
+                msgs.push_back(
+                    this->ui->comp_StashAircraft->stashModel(model, true)
+                );
+            }
             if (msgs.hasErrorMessages())
             {
                 this->showMessages(msgs);
-                return;
             }
-            this->ui->comp_StashAircraft->stashModel(model, true);
         }
 
         void CDbMappingComponent::resizeForSelect()
@@ -372,6 +378,12 @@ namespace BlackGui
             }
         }
 
+        void CDbMappingComponent::ps_onModelsSuccessfullyPublished(const CAircraftModelList &models)
+        {
+            if (models.isEmpty()) { return; }
+            emit this->requestUpdatedData(CEntityFlags::ModelEntity);
+        }
+
         void CDbMappingComponent::ps_onVPilotCountChanged(int count, bool withFilter)
         {
             if (!m_withVPilot) { return; }
@@ -434,7 +446,7 @@ namespace BlackGui
                 );
             if (msgs.hasWarningOrErrorMessages())
             {
-                // maybe log, popup?
+                this->showMessages(msgs);
             }
         }
 

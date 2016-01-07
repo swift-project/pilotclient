@@ -12,7 +12,6 @@
 #include "ui_dbstashcomponent.h"
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackmisc/icons.h"
-#include "blackmisc/verify.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -48,7 +47,7 @@ namespace BlackGui
             connect(this->ui->pb_Livery, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
             connect(this->ui->pb_Distributor, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
 
-            ui->tvp_StashAircraftModels->setCustomMenu(new CStashModelsMenu(this, true));
+            ui->tvp_StashAircraftModels->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows);
             this->enableButtonRow();
         }
 
@@ -93,10 +92,6 @@ namespace BlackGui
                     this->ui->tvp_StashAircraftModels->insert(model);
                 }
             }
-            else
-            {
-                this->showMessage(m);
-            }
             return m;
         }
 
@@ -110,6 +105,18 @@ namespace BlackGui
                 if (m.isWarningOrAbove()) { msgs.push_back(m); }
             }
             return msgs;
+        }
+
+        int CDbStashComponent::unstashModels(QList<int> keys)
+        {
+            if (keys.isEmpty()) { return 0; }
+            return this->ui->tvp_StashAircraftModels->removeDbKeys(keys);
+        }
+
+        int CDbStashComponent::unstashModels(QStringList modelStrings)
+        {
+            if (modelStrings.isEmpty()) { return 0; }
+            return this->ui->tvp_StashAircraftModels->removeModelsWithModelString(modelStrings);
         }
 
         const Views::CAircraftModelView *CDbStashComponent::getView() const
@@ -208,9 +215,26 @@ namespace BlackGui
 
         void CDbStashComponent::ps_publishResponse(const CAircraftModelList &publishedModels, const CAircraftModelList &skippedModels, const CStatusMessageList &msgs)
         {
+            if (!publishedModels.isEmpty())
+            {
+                emit this->modelsSuccessfullyPublished(publishedModels);
+            }
+
             if (!msgs.isEmpty())
             {
-                this->showMessages(msgs);
+                if (publishedModels.isEmpty())
+                {
+                    this->showMessages(msgs);
+                }
+                else
+                {
+                    QString confirm("Remove %1 published models?");
+                    auto lambda = [this, publishedModels]()
+                    {
+                        this->unstashModels(publishedModels.getModelStrings(false));
+                    };
+                    this->showMessagesWithConfirmation(msgs, confirm.arg(publishedModels.size()), lambda, QMessageBox::Ok);
+                }
             }
 
             Q_UNUSED(publishedModels);
@@ -319,6 +343,16 @@ namespace BlackGui
             return true;
         }
 
+        bool CDbStashComponent::showMessagesWithConfirmation(const CStatusMessageList &msgs, const QString &confirmation, std::function<void ()> okLambda, int defaultButton, bool onlyErrors, int timeoutMs)
+        {
+            if (msgs.isEmpty()) { return false; }
+            if (!msgs.hasErrorMessages() && onlyErrors) { return false; }
+            BLACK_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
+            if (!this->getMappingComponent()) { return false; }
+            this->getMappingComponent()->showMessagesWithConfirmation(msgs, confirmation, okLambda, defaultButton, timeoutMs);
+            return true;
+        }
+
         bool CDbStashComponent::showMessage(const CStatusMessage &msg, int timeoutMs)
         {
             if (msg.isEmpty()) { return false; }
@@ -326,12 +360,6 @@ namespace BlackGui
             if (!this->getMappingComponent()) { return false; }
             this->getMappingComponent()->showMessage(msg, timeoutMs);
             return true;
-        }
-
-        void CDbStashComponent::CStashModelsMenu::customMenu(QMenu &menu) const
-        {
-            menu.addAction(CIcons::database16(), "Unstash", this->parent(), SLOT(ps_onUnstashPressed()));
-            nestedCustomMenu(menu);
         }
     } // ns
 } // ns

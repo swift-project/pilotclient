@@ -48,6 +48,13 @@ namespace BlackGui
             //! Set the provider
             virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
+            //! Get latest model if any
+            BlackMisc::Simulation::CAircraftModel getLatestModel() const;
+
+        public slots:
+            //! Load new data
+            void requestUpdatedData();
+
         private slots:
             //! Models have been read
             void ps_modelsRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);

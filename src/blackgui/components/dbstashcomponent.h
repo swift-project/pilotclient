@@ -16,6 +16,7 @@
 #include "blackgui/components/dbmappingcomponentaware.h"
 #include "blackgui/menudelegate.h"
 #include "blackgui/views/aircraftmodelview.h"
+#include "blackmisc/verify.h"
 #include "blackmisc/network/webdataservicesprovider.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -60,6 +61,12 @@ namespace BlackGui
             //! Stash given models
             BlackMisc::CStatusMessageList stashModels(const BlackMisc::Simulation::CAircraftModelList &models);
 
+            //! Unstash given models with keys
+            int unstashModels(QList<int> keys);
+
+            //! Unstash given models by model string
+            int unstashModels(QStringList modelStrings);
+
             //! The embedded view
             const BlackGui::Views::CAircraftModelView *getView() const;
 
@@ -94,6 +101,9 @@ namespace BlackGui
             //! Stashed models have been changed
             void stashedModelsChanged();
 
+            //! Models succesfully published
+            void modelsSuccessfullyPublished(const BlackMisc::Simulation::CAircraftModelList &publishedModels);
+
         private slots:
             //! Unstash pressed
             void ps_onUnstashPressed();
@@ -121,6 +131,9 @@ namespace BlackGui
             //! Display messages
             bool showMessages(const BlackMisc::CStatusMessageList &msgs, bool onlyErrors = false, int timeoutMs = -1);
 
+            //! Display messages with confirmation
+            bool showMessagesWithConfirmation(const BlackMisc::CStatusMessageList &msgs, const QString &confirmation, std::function<void()> okLambda, int defaultButton, bool onlyErrors = false, int timeoutMs = -1);
+
             //! Display message
             bool showMessage(const BlackMisc::CStatusMessage &msg, int timeoutMs = -1);
 
@@ -138,17 +151,6 @@ namespace BlackGui
 
             //! Get the selected only models or all models depending on checkbox
             BlackMisc::Simulation::CAircraftModelList getSelectedOrAllModels() const;
-
-            //! Custom menu for the stashed models
-            class CStashModelsMenu : public BlackGui::IMenuDelegate
-            {
-            public:
-                //! Constructor
-                CStashModelsMenu(CDbStashComponent *parent, bool separatorAtEnd) : IMenuDelegate(parent, separatorAtEnd) {}
-
-                //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(QMenu &menu) const override;
-            };
         };
     } // ns
 } // ns
