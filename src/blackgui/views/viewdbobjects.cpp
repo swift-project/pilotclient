@@ -71,20 +71,34 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
+        int CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::replaceOrAddObjectsByKey(const ContainerType &container)
+        {
+            if (container.isEmpty()) { return 0; }
+            ContainerType copy(this->container());
+            int c = copy.replaceOrAddObjectsByKey(container);
+            if (c == 0) { return 0; }
+            this->updateContainerMaybeAsync(copy);
+            return c;
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
         void CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::customMenu(QMenu &menu) const
         {
             CViewBase<ModelClass, ContainerType, ObjectType>::customMenu(menu);
             if (this->m_menus.testFlag(CViewBase<ModelClass, ContainerType, ObjectType>::MenuHighlightDbData))
             {
-                menu.addSeparator();
-                QAction *a = menu.addAction(CIcons::database16(), "Highlight DB data", this, SLOT(ps_toggleDbData()));
+                if (!menu.isEmpty())
+                {
+                    menu.addSeparator();
+                }
+                QAction *a = menu.addAction(CIcons::database16(), "Highlight DB data", this, SLOT(ps_toggleHighlightDbData()));
                 a->setCheckable(true);
                 a->setChecked(this->derivedModel()->highlightDbData());
             }
         }
 
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
-        void CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_toggleDbData()
+        void CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_toggleHighlightDbData()
         {
             bool h = this->derivedModel()->highlightDbData();
             this->derivedModel()->setHighlightDbData(!h);

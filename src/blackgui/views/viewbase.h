@@ -77,10 +77,14 @@ namespace BlackGui
                 MenuFilter               = 1 << 5,  ///< filter can be opened
                 MenuSave                 = 1 << 6,  ///< save as JSON
                 MenuLoad                 = 1 << 7,  ///< load from JSON
-                MenuLoadAndSave          = MenuLoad | MenuSave,
+                MenuLoadAndSave          = MenuLoad  | MenuSave,
                 MenuDefault              = MenuClear | MenuDisplayAutomatically,
-                // special menu, should be in derived class but enums cannot be derived
-                MenuHighlightDbData      = 1 << 8, ///< highlight DB data
+                // special menus, should be in derived classes, but enums cannot be inherited
+                // maybe shifted in the future to elsewhere
+                MenuHighlightDbData      = 1 << 8,  ///< highlight DB data
+                MenuHighlightStashed     = 1 << 9,  ///< highlight stashed models
+                MenuStashModels          = 1 << 10, ///< stash models
+                MenuStashing             = MenuHighlightStashed | MenuStashModels,
             };
             Q_DECLARE_FLAGS(Menu, MenuFlag)
 
@@ -332,6 +336,12 @@ namespace BlackGui
             //! Save JSON called by shortcut
             virtual void ps_saveJsonShortcut();
 
+            // ------------ slots of CViewDbObjects ----------------
+            // need to be declared here and overridden, as this is the only part with valid Q_OBJECT
+
+            //! Highlight DB data
+            virtual void ps_toggleHighlightDbData() {}
+
         private slots:
             //! Custom menu was requested
             void ps_customMenuRequested(QPoint pos);
@@ -479,6 +489,8 @@ namespace BlackGui
 
             //! \copydoc BlackGui::Views::CViewBaseNonTemplate::performUpdateContainer
             virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize) override;
+
+            // --------------------------------------------- SLOTS start here -----------------------------------------
 
             //! \copydoc BlackGui::Views::CViewBaseNonTemplate::ps_filterDialogFinished
             //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT

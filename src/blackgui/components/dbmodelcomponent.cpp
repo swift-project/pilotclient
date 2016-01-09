@@ -10,6 +10,7 @@
 #include "dbmodelcomponent.h"
 #include "dbmappingcomponent.h"
 #include "blackgui/stylesheetutility.h"
+#include "blackgui/shortcut.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "ui_dbmodelcomponent.h"
 #include <functional>
@@ -33,11 +34,13 @@ namespace BlackGui
             this->setViewWithIndicator(this->ui->tvp_AircraftModel);
             this->ui->tvp_AircraftModel->setAircraftModelMode(CAircraftModelListModel::Database);
             connect(this->ui->tvp_AircraftModel, &CAircraftModelView::requestNewBackendData, this, &CDbModelComponent::ps_reload);
+            connect(this->ui->tvp_AircraftModel, &CAircraftModelView::requestStash, this, &CDbModelComponent::requestStash);
             connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CDbModelComponent::ps_onStyleSheetChanged);
 
-            // filter and drag and drop
+            // configure view
             this->ui->tvp_AircraftModel->setFilterWidget(this->ui->filter_AircraftModelFilter);
             this->ui->tvp_AircraftModel->allowDragDropValueObjects(true, false);
+            this->ui->tvp_AircraftModel->menuAddItems(CAircraftModelView::MenuStashModels);
         }
 
         CDbModelComponent::~CDbModelComponent()
@@ -57,6 +60,11 @@ namespace BlackGui
             {
                 ps_modelsRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, c);
             }
+        }
+
+        bool CDbModelComponent::hasModels() const
+        {
+            return !this->ui->tvp_AircraftModel->isEmpty();
         }
 
         void CDbModelComponent::requestUpdatedData()
@@ -92,5 +100,32 @@ namespace BlackGui
         {
             // code goes here
         }
+
+        void CDbModelComponent::ps_stashSelectedModels()
+        {
+            if (!this->ui->tvp_AircraftModel->hasSelection()) { return; }
+            const CAircraftModelList models(this->ui->tvp_AircraftModel->selectedObjects());
+            if (!models.isEmpty())
+            {
+                emit requestStash(models);
+            }
+        }
+
+        void CDbModelComponent::CStashMenu::customMenu(QMenu &menu) const
+        {
+            CDbModelComponent *modelComponent = qobject_cast<CDbModelComponent *>(this->parent());
+            Q_ASSERT_X(modelComponent, Q_FUNC_INFO, "Cannot access model component");
+            if (modelComponent->hasModels())
+            {
+                menu.addAction(CIcons::appMappings16(), "Stash", modelComponent, SLOT(ps_stashSelectedModels()), CShortcut::keyStash());
+            }
+            this->nestedCustomMenu(menu);
+        }
+
+        CDbModelComponent *CDbModelComponent::CStashMenu::modelComponent() const
+        {
+            return qobject_cast<CDbModelComponent *>(this->parent());
+        }
+
     } // ns
 } // ns

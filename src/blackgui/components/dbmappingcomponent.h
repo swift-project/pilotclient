@@ -53,7 +53,7 @@ namespace BlackGui
                 NoValidTab   = -1,
                 TabStash     =  0,
                 TabOwnModels =  1,
-                TabVPliot    =  2
+                TabVPilot    =  2
             };
 
             //! Constructor
@@ -74,7 +74,7 @@ namespace BlackGui
             //! Any models which can be stashed
             bool hasModelsToStash() const;
 
-            //! The models to be stashed
+            //! The models to be stashed from currently activated tab (table view)
             BlackMisc::Simulation::CAircraftModelList getModelsToStash() const;
 
             //! Stashed models
@@ -92,6 +92,13 @@ namespace BlackGui
             //! Unvalidated consolidated aircraft model from the subparts (icao, distributor)
             //! \note not guaranteed to be valid, just snapshot of as it state
             BlackMisc::Simulation::CAircraftModel getAircraftModel() const;
+
+        public slots:
+            //! Stash model
+            BlackMisc::CStatusMessage stashModel(const BlackMisc::Simulation::CAircraftModel &model);
+
+            //! Stash models
+            BlackMisc::CStatusMessageList stashModels(const BlackMisc::Simulation::CAircraftModelList &models);
 
         signals:
             //! Request to filter by livery
@@ -210,24 +217,6 @@ namespace BlackGui
             public:
                 //! Constructor
                 CMappingVPilotMenu(CDbMappingComponent *mappingComponent, bool separatorAtEnd) :
-                    BlackGui::IMenuDelegate(mappingComponent, separatorAtEnd)
-                {}
-
-                //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(QMenu &menu) const override;
-
-            private:
-                //! Mapping component
-                CDbMappingComponent *mappingComponent() const;
-            };
-
-            //! The menu for stashing models
-            //! \note This is a specific menu for that very component
-            class CStashMenu : public BlackGui::IMenuDelegate
-            {
-            public:
-                //! Constructor
-                CStashMenu(CDbMappingComponent *mappingComponent, bool separatorAtEnd) :
                     BlackGui::IMenuDelegate(mappingComponent, separatorAtEnd)
                 {}
 

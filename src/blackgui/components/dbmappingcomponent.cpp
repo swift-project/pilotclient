@@ -38,10 +38,8 @@ namespace BlackGui
             this->ui->comp_StashAircraft->setMappingComponent(this);
 
             this->ui->tvp_AircraftModelsForVPilot->setAircraftModelMode(CAircraftModelListModel::VPilotRuleModel);
-            this->ui->tvp_AircraftModelsForVPilot->setAllowStash(true);
             this->ui->tvp_AircraftModelsForVPilot->addFilterDialog();
             this->ui->tvp_OwnAircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnSimulatorModelMapping);
-            this->ui->tvp_OwnAircraftModels->setAllowStash(true);
             this->ui->tvp_OwnAircraftModels->addFilterDialog();
 
             // connects
@@ -50,6 +48,8 @@ namespace BlackGui
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::rowCountChanged, this, &CDbMappingComponent::ps_onOwnModelsCountChanged);
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
+            connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::ps_onStashedModelsChanged);
+
             connect(ui->comp_StashAircraft->getView(), &CAircraftModelView::rowCountChanged, this, &CDbMappingComponent::ps_onStashCountChanged);
             connect(ui->comp_StashAircraft->getView(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
             connect(ui->comp_StashAircraft->getView(), &CAircraftModelView::requestHandlingOfStashDrop, this, &CDbMappingComponent::ps_handleStashDropRequest);
@@ -58,13 +58,12 @@ namespace BlackGui
 
             ui->tvp_OwnAircraftModels->setDisplayAutomatically(true);
             ui->tvp_OwnAircraftModels->setCustomMenu(new CMappingSimulatorModelMenu(this));
-            ui->tvp_OwnAircraftModels->setCustomMenu(new CStashMenu(this, true));
             ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(this->m_cachedOwnModels.get());
 
             // how to display forms
-            ui->editor_AircraftIcao->setMappingMode();
-            ui->editor_Distributor->setMappingMode();
-            ui->editor_Livery->setMappingMode();
+            ui->editor_AircraftIcao->setMappingMode(true);
+            ui->editor_Distributor->setMappingMode(true);
+            ui->editor_Livery->setMappingMode(true);
 
             this->ui->tw_ModelsToBeMapped->setTabIcon(TabStash, CIcons::appDbStash16());
             this->ui->tw_ModelsToBeMapped->setTabIcon(TabOwnModels, CIcons::appModels16());
@@ -83,15 +82,16 @@ namespace BlackGui
             bool canUseVPilot = true; // further restriction could go here
             bool withVPilotRights = canUseVPilot && this->m_user.get().isMappingAdmin();
             this->m_withVPilot = withVPilotRights;
-            static const QString tabName(this->ui->tw_ModelsToBeMapped->tabText(TabVPliot));
+            static const QString tabName(this->ui->tw_ModelsToBeMapped->tabText(TabVPilot));
 
             if (this->m_vPilot1stInit && canUseVPilot)
             {
-                this->ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CStashMenu(this, true));
                 connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
                 connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::rowCountChanged, this, &CDbMappingComponent::ps_onVPilotCountChanged);
                 connect(&m_vPilotReader, &CVPilotRulesReader::readFinished, this, &CDbMappingComponent::ps_onLoadVPilotDataFinished);
                 connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
+                connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::ps_onStashedModelsChanged);
+
                 this->ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CMappingVPilotMenu(this, true));
                 this->ui->tvp_AircraftModelsForVPilot->setDisplayAutomatically(true);
                 this->ui->tvp_AircraftModelsForVPilot->addFilterDialog();
@@ -109,7 +109,7 @@ namespace BlackGui
             }
             else
             {
-                this->ui->tw_ModelsToBeMapped->removeTab(TabVPliot);
+                this->ui->tw_ModelsToBeMapped->removeTab(TabVPilot);
             }
         }
 
@@ -184,7 +184,7 @@ namespace BlackGui
             {
             case TabOwnModels:
                 return ui->tvp_OwnAircraftModels->hasSelectedModelsToStash();
-            case TabVPliot:
+            case TabVPilot:
                 return ui->tvp_AircraftModelsForVPilot->hasSelectedModelsToStash();
             default:
                 break;
@@ -199,7 +199,7 @@ namespace BlackGui
             {
             case TabOwnModels:
                 return ui->tvp_OwnAircraftModels;
-            case TabVPliot:
+            case TabVPilot:
                 return ui->tvp_AircraftModelsForVPilot;
             case TabStash:
                 return ui->comp_StashAircraft->getView();
@@ -216,7 +216,7 @@ namespace BlackGui
             {
             case TabOwnModels:
                 return ui->tvp_OwnAircraftModels->selectedObjects();
-            case TabVPliot:
+            case TabVPilot:
                 return ui->tvp_AircraftModelsForVPilot->selectedObjects();
             default:
                 break;
@@ -524,6 +524,16 @@ namespace BlackGui
             return model;
         }
 
+        CStatusMessage CDbMappingComponent::stashModel(const CAircraftModel &model)
+        {
+            return this->ui->comp_StashAircraft->stashModel(model);
+        }
+
+        CStatusMessageList CDbMappingComponent::stashModels(const CAircraftModelList &models)
+        {
+            return this->ui->comp_StashAircraft->stashModels(models);
+        }
+
         void CDbMappingComponent::CMappingSimulatorModelMenu::customMenu(QMenu &menu) const
         {
             CSimulatorInfo sims = CSimulatorInfo::getLocallyInstalledSimulators();
@@ -575,22 +585,6 @@ namespace BlackGui
         }
 
         CDbMappingComponent *CDbMappingComponent::CMappingVPilotMenu::mappingComponent() const
-        {
-            return qobject_cast<CDbMappingComponent *>(this->parent());
-        }
-
-        void CDbMappingComponent::CStashMenu::customMenu(QMenu &menu) const
-        {
-            CDbMappingComponent *mapComp = qobject_cast<CDbMappingComponent *>(this->parent());
-            Q_ASSERT_X(mapComp, Q_FUNC_INFO, "Cannot access mapping component");
-            if (mapComp->hasModelsToStash())
-            {
-                menu.addAction(CIcons::appMappings16(), "Stash", mapComp, SLOT(stashSelectedModels()), CShortcut::keyStash());
-            }
-            this->nestedCustomMenu(menu);
-        }
-
-        CDbMappingComponent *CDbMappingComponent::CStashMenu::mappingComponent() const
         {
             return qobject_cast<CDbMappingComponent *>(this->parent());
         }

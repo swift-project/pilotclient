@@ -43,9 +43,6 @@ namespace BlackGui
             //! Apply to selected objects
             int applyToSelected(const BlackMisc::Simulation::CDistributor &distributor);
 
-            //! Allow to stash
-            void setAllowStash(bool stash) { m_allowStash = stash; }
-
             //! Has any models to stash and it is allowed to stash
             bool hasSelectedModelsToStash() const;
 
@@ -60,7 +57,10 @@ namespace BlackGui
 
         signals:
             //! Request to stash if applicable
-            void requestStash();
+            void requestStash(const BlackMisc::Simulation::CAircraftModelList &models);
+
+            //! Highligh stashed models has been toggled
+            void toggledHighlightStashedModels();
 
             //! Request further handling of drops I cannot handle on my own
             void requestHandlingOfStashDrop(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao);
@@ -69,26 +69,21 @@ namespace BlackGui
             //! \copydoc QTableView::dropEvent
             virtual void dropEvent(QDropEvent *event) override;
 
+            //! \copydoc CViewBaseNonTemplate::customMenu
+            virtual void customMenu(QMenu &menu) const override;
+
         private slots:
             //! Highlight stashed models
             void ps_toggleHighlightStashedModels();
 
+            //! Toggle if stashing unselects
+            void ps_stashingClearsSelection();
+
             //! Stash shortcut pressed
-            void ps_stashShortcut();
+            void ps_requestStash();
 
         private:
-            bool m_allowStash = false; //!< allow to stash
-
-            //! Custom menu for the models which have been loaded
-            class CHighlightStashedModelsMenu : public BlackGui::IMenuDelegate
-            {
-            public:
-                //! Constructor
-                CHighlightStashedModelsMenu(CAircraftModelView *parent, bool separatorAtEnd) : IMenuDelegate(parent, separatorAtEnd) {}
-
-                //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(QMenu &menu) const override;
-            };
+            bool m_stashingClearsSelection = true; //!< stashing unselects
         };
     } // ns
 } // ns

@@ -55,12 +55,6 @@ namespace BlackGui
             //! Test the given model if it can be stashed
             BlackMisc::CStatusMessage validateStashModel(const BlackMisc::Simulation::CAircraftModel &model, bool allowReplace) const;
 
-            //! Stash given model
-            BlackMisc::CStatusMessage stashModel(const BlackMisc::Simulation::CAircraftModel &model, bool replace = false);
-
-            //! Stash given models
-            BlackMisc::CStatusMessageList stashModels(const BlackMisc::Simulation::CAircraftModelList &models);
-
             //! Unstash given models with keys
             int unstashModels(QList<int> keys);
 
@@ -93,6 +87,13 @@ namespace BlackGui
 
             //! Apply object to select objects
             void applyToSelected(const BlackMisc::Simulation::CDistributor &distributor, bool acceptWarnings = true);
+
+        public slots:
+            //! Stash given model
+            BlackMisc::CStatusMessage stashModel(const BlackMisc::Simulation::CAircraftModel &model, bool replace = false);
+
+            //! Stash given models
+            BlackMisc::CStatusMessageList stashModels(const BlackMisc::Simulation::CAircraftModelList &models);
 
         signals:
             //! Unstash

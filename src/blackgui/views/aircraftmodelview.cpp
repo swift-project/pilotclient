@@ -36,7 +36,7 @@ namespace BlackGui
             this->standardInit(new CAircraftModelListModel(CAircraftModelListModel::OwnSimulatorModel, this));
 
             // shortcut
-            new QShortcut(CShortcut::keyStash(), this, SLOT(ps_stashShortcut()), nullptr, Qt::WidgetShortcut);
+            new QShortcut(CShortcut::keyStash(), this, SLOT(ps_requestStash()), nullptr, Qt::WidgetShortcut);
 
             // default mode
             CAircraftModelListModel::AircraftModelMode mode = derivedModel()->getModelMode();
@@ -56,12 +56,10 @@ namespace BlackGui
                 this->m_menus = MenuBackend;
                 break;
             case CAircraftModelListModel::VPilotRuleModel:
-                this->m_menus = MenuRefresh | MenuHighlightDbData;;
-                this->setCustomMenu(new CHighlightStashedModelsMenu(this, true));
+                this->m_menus = MenuRefresh | MenuStashing | MenuHighlightDbData;
                 break;
             case CAircraftModelListModel::OwnSimulatorModelMapping:
-                this->m_menus = MenuDisplayAutomatically | MenuHighlightDbData;
-                this->setCustomMenu(new CHighlightStashedModelsMenu(this, true));
+                this->m_menus = MenuDisplayAutomatically | MenuStashing | MenuHighlightDbData;
                 break;
             case CAircraftModelListModel::OwnSimulatorModel:
             default:
@@ -93,7 +91,7 @@ namespace BlackGui
 
         bool CAircraftModelView::hasSelectedModelsToStash() const
         {
-            return m_allowStash && hasSelection();
+            return m_menus.testFlag(MenuStashModels) && hasSelection();
         }
 
         void CAircraftModelView::setImplementedMetaTypeIds()
@@ -215,26 +213,50 @@ namespace BlackGui
             } // valid mime?
         }
 
+        void CAircraftModelView::customMenu(QMenu &menu) const
+        {
+            bool added = false;
+            if (this->m_menus.testFlag(MenuStashModels))
+            {
+                menu.addAction(CIcons::appDbStash16(), "Stash", this, SLOT(ps_requestStash()));
+                QAction *a = menu.addAction(CIcons::appDbStash16(), "Stashing clears selection", this, SLOT(ps_stashingClearsSelection()));
+                a->setCheckable(true);
+                a->setChecked(m_stashingClearsSelection);
+                added = true;
+            }
+            if (this->m_menus.testFlag(MenuHighlightStashed))
+            {
+                // this function requires someone provides the model strings to be highlighted
+                QAction *a = menu.addAction(CIcons::appDbStash16(), "Highlight stashed", this, SLOT(ps_toggleHighlightStashedModels()));
+                a->setCheckable(true);
+                a->setChecked(this->derivedModel()->highlightDbData());
+                added = true;
+            }
+            if (added) { menu.addSeparator(); }
+            CViewWithDbObjects::customMenu(menu);
+        }
+
         void CAircraftModelView::ps_toggleHighlightStashedModels()
         {
             bool h = derivedModel()->highlightGivenModelStrings();
             derivedModel()->setHighlightModelsStrings(!h);
+            emit toggledHighlightStashedModels();
         }
 
-        void CAircraftModelView::ps_stashShortcut()
+        void CAircraftModelView::ps_stashingClearsSelection()
         {
-            if (!m_allowStash) { return; }
-            emit requestStash();
+            this->m_stashingClearsSelection = !this->m_stashingClearsSelection;
         }
 
-        void CAircraftModelView::CHighlightStashedModelsMenu::customMenu(QMenu &menu) const
+        void CAircraftModelView::ps_requestStash()
         {
-            const CAircraftModelView *mv = qobject_cast<const CAircraftModelView *>(parent());
-            Q_ASSERT_X(mv, Q_FUNC_INFO, "no view");
-            QAction *a = menu.addAction(CIcons::appDbStash16(), "Highlight stashed models", mv, SLOT(ps_toggleHighlightStashedModels()));
-            a->setCheckable(true);
-            a->setChecked(mv->derivedModel()->highlightGivenModelStrings());
-            this->nestedCustomMenu(menu);
+            if (!m_menus.testFlag(MenuStashModels)) { return; }
+            if (!this->hasSelection()) { return; }
+            emit requestStash(this->selectedObjects());
+            if (this->m_stashingClearsSelection)
+            {
+                this->clearSelection();
+            }
         }
     } // namespace
 } // namespace

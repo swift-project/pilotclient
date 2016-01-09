@@ -37,6 +37,9 @@ namespace BlackGui
             //! Remove keys
             int removeDbKeys(const QList<KeyType> &keys);
 
+            //! Update or insert data (based on DB key)
+            int replaceOrAddObjectsByKey(const ContainerType &container);
+
         protected:
             //! Constructor
             explicit CViewWithDbObjects(QWidget *parent = nullptr);
@@ -44,9 +47,9 @@ namespace BlackGui
             //! \copydoc QWidget::customMenu
             virtual void customMenu(QMenu &menu) const override;
 
-        private slots:
-            //! Highlight DB data
-            void ps_toggleDbData();
+        protected slots:
+            //! \copydoc CViewBaseNonTemplate::ps_toggleHighlightDbData
+            virtual void ps_toggleHighlightDbData() override;
         };
     } // namespace
 } // namespace

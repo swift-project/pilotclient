@@ -16,6 +16,7 @@
 #include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/dbmappingcomponentaware.h"
+#include "blackgui/menudelegate.h"
 #include "blackmisc/network/webdataservicesprovider.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -51,6 +52,13 @@ namespace BlackGui
             //! Get latest model if any
             BlackMisc::Simulation::CAircraftModel getLatestModel() const;
 
+            //! Models loaded?
+            bool hasModels() const;
+
+        signals:
+            //! Request to stash the selected models
+            void requestStash(const BlackMisc::Simulation::CAircraftModelList &models);
+
         public slots:
             //! Load new data
             void requestUpdatedData();
@@ -65,8 +73,29 @@ namespace BlackGui
             //! Style sheet changed
             void ps_onStyleSheetChanged();
 
+            //! Stash the selected models
+            void ps_stashSelectedModels();
+
         private:
             QScopedPointer<Ui::CDbModelComponent> ui;
+
+            //! The menu for stashing models
+            //! \note This is a specific menu for that very component
+            class CStashMenu : public BlackGui::IMenuDelegate
+            {
+            public:
+                //! Constructor
+                CStashMenu(CDbModelComponent *modelComponent, bool separatorAtEnd) :
+                    BlackGui::IMenuDelegate(modelComponent, separatorAtEnd)
+                {}
+
+                //! \copydoc IMenuDelegate::customMenu
+                virtual void customMenu(QMenu &menu) const override;
+
+            private:
+                //! Mapping component
+                CDbModelComponent *modelComponent() const;
+            };
         };
     } // ns
 } // ns

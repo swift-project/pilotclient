@@ -11,6 +11,7 @@
 #include "blackgui/components/datamaininfoareacomponent.h"
 #include "blackgui/components/dbliverycomponent.h"
 #include "blackgui/components/dbaircrafticaocomponent.h"
+#include "blackgui/components/dbmodelcomponent.h"
 #include "blackgui/components/dbstashcomponent.h"
 #include "ui_datamaininfoareacomponent.h"
 #include "blackmisc/icons.h"
@@ -34,6 +35,8 @@ namespace BlackGui
             connect(ui->comp_Mapping, &CDbMappingComponent::filterByLivery, ui->comp_DataInfoArea->getLiveryComponent(), &CDbLiveryComponent::filter);
             connect(ui->comp_Mapping, &CDbMappingComponent::filterByAircraftIcao, ui->comp_DataInfoArea->getAircraftComponent(), &CDbAircraftIcaoComponent::filter);
             connect(ui->comp_Mapping, &CDbMappingComponent::requestUpdatedData, ui->comp_DataInfoArea, &CDataInfoAreaComponent::requestUpdatedData);
+
+            connect(ui->comp_DataInfoArea->getModelComponent(), &CDbModelComponent::requestStash, ui->comp_Mapping, &CDbMappingComponent::stashModels);
         }
 
         CDataMainInfoAreaComponent::~CDataMainInfoAreaComponent()

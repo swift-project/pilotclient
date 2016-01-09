@@ -208,24 +208,30 @@ namespace BlackGui
 
             // resizing
             menu.addAction(BlackMisc::CIcons::resize16(), "Full resize", this, SLOT(fullResizeToContents()));
-            if (m_rowResizeMode == Interactive)
-            {
-                menu.addAction(BlackMisc::CIcons::resizeVertical16(), "Resize rows to content", this, SLOT(rowsResizeModeToContent()));
-            }
-            else
-            {
-                menu.addAction(BlackMisc::CIcons::resizeVertical16(), "Resize rows interactive", this, SLOT(rowsResizeModeToInteractive()));
-            }
 
             // resize to content might decrease performance,
             // so I only allow changing to "content resizing" if size matches
             bool enabled = !this->reachedResizeThreshold();
+            bool autoResize = this->m_resizeMode == ResizingAuto;
+
+            // when not auto let set how we want to resize rows
+            if (m_rowResizeMode == Interactive)
+            {
+                QAction *a = menu.addAction(BlackMisc::CIcons::resizeVertical16(), " Resize rows to content (auto)", this, SLOT(rowsResizeModeToContent()));
+                a->setEnabled(enabled && !autoResize);
+            }
+            else
+            {
+                QAction *a = menu.addAction(BlackMisc::CIcons::resizeVertical16(), "Resize rows interactive", this, SLOT(rowsResizeModeToInteractive()));
+                a->setEnabled(!autoResize);
+            }
+
             QAction *actionInteractiveResize = new QAction(&menu);
             actionInteractiveResize->setObjectName(this->objectName().append("ActionResizing"));
             actionInteractiveResize->setIconText("Resize (auto)");
             actionInteractiveResize->setIcon(CIcons::viewMultiColumn());
             actionInteractiveResize->setCheckable(true);
-            actionInteractiveResize->setChecked(this->m_resizeMode == ResizingAuto);
+            actionInteractiveResize->setChecked(autoResize);
             actionInteractiveResize->setEnabled(enabled);
             menu.addAction(actionInteractiveResize);
             connect(actionInteractiveResize, &QAction::toggled, this, &CViewBaseNonTemplate::ps_toggleResizeMode);
