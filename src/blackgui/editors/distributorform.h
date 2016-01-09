@@ -59,7 +59,7 @@ namespace BlackGui
             void clear();
 
             //! Mapping mode
-            void setMappingMode();
+            void setMappingMode(bool mappingMode);
 
             //! \copydoc CWebDataReaderAware::setProvider
             virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider);

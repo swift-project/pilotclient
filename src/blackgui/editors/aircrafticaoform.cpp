@@ -134,10 +134,10 @@ namespace BlackGui
             setValue(CAircraftIcaoCode());
         }
 
-        void CAircraftIcaoForm::setMappingMode()
+        void CAircraftIcaoForm::setMappingMode(bool mappingMode)
         {
-            this->setReadOnly(true);
-            this->ui->aircraft_Selector->setReadOnly(false);
+            this->setReadOnly(mappingMode);
+            this->ui->aircraft_Selector->setReadOnly(!mappingMode);
         }
 
         void CAircraftIcaoForm::setProvider(Network::IWebDataServicesProvider *webDataReaderProvider)

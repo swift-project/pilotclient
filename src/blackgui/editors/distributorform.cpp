@@ -100,9 +100,9 @@ namespace BlackGui
             this->ui->distributor_Selector->setReadOnly(false);
         }
 
-        void CDistributorForm::setMappingMode()
+        void CDistributorForm::setMappingMode(bool mappingMode)
         {
-            this->setReadOnly(true);
+            this->setReadOnly(mappingMode);
         }
 
         void CDistributorForm::setProvider(Network::IWebDataServicesProvider *webDataReaderProvider)

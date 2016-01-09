@@ -100,9 +100,9 @@ namespace BlackGui
             this->ui->color_Tail->setReadOnly(readOnly);
         }
 
-        void CLiveryForm::setMappingMode()
+        void CLiveryForm::setMappingMode(bool mappingMode)
         {
-            this->setReadOnly(true);
+            this->setReadOnly(mappingMode);
         }
 
         void CLiveryForm::clear()

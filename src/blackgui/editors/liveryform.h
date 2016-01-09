@@ -61,7 +61,7 @@ namespace BlackGui
             virtual void setReadOnly(bool readOnly) override;
 
             //! Mapping mode
-            void setMappingMode();
+            void setMappingMode(bool mappingMode);
 
             //! Clear data
             void clear();
