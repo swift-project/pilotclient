@@ -578,6 +578,33 @@ namespace BlackMisc
             return partiallySorted(n, BlackMisc::Predicates::MemberLess(key1, keys...));
         }
 
+        /*!
+         * Split up the sequence into subsequences for which the given predicate returns the same value.
+         */
+        template <class Predicate>
+        auto separate(Predicate p) const -> QMap<decltype(p(std::declval<T>())), CSequence>
+        {
+            QMap<decltype(p(std::declval<T>())), CSequence> result;
+            auto copy = *this;
+            std::stable_sort(copy.begin(), copy.end(), [p](const T &a, const T &b) { return p(a) < p(b); });
+            for (auto it = copy.cbegin(); it != copy.cend(); )
+            {
+                auto mid = std::adjacent_find(it, copy.cend(), [p](const T &a, const T &b) { return p(a) != p(b); });
+                result.insert(p(*it), makeRange(it, mid));
+                it = mid;
+            }
+            return result;
+        }
+
+        /*!
+         * Split up the sequence into subsequences of elements having the same value for the given key.
+         */
+        template <class Key>
+        auto separateBy(Key k) const -> QMap<decltype(std::declval<T>().*k), CSequence>
+        {
+            return separateBy([k](const T &v) { return v.*k; });
+        }
+
         //! Equals operator.
         friend bool operator ==(const CSequence &a, const CSequence &b)
         {
