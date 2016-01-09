@@ -129,6 +129,12 @@ namespace BlackMisc
         //! Add categories
         void addCategories(const CLogCategoryList &categories) { this->m_categories.push_back(categories); }
 
+        //! Reset category
+        void setCategory(const CLogCategory &category) { this->m_categories = CLogCategoryList { category }; }
+
+        //! Reset categories
+        void setCategories(const CLogCategoryList &categories) { this->m_categories = categories; }
+
         //! Representing icon
         CIcon toIcon() const { return convertToIcon(*this); }
 

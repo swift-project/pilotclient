@@ -58,6 +58,12 @@ namespace BlackMisc
         //! Add some categories to all messages in the list
         void addCategories(const CLogCategoryList &categories);
 
+        //! Reset the category of all messages in the list
+        void setCategory(const CLogCategory &category);
+
+        //! Reset the categories of all messages in the list
+        void setCategories(const CLogCategoryList &categories);
+
         //! From our database JSON format
         static CStatusMessageList fromDatabaseJson(const QJsonArray &array);
     };

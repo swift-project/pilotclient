@@ -58,6 +58,22 @@ namespace BlackMisc
         }
     }
 
+    void CStatusMessageList::setCategory(const CLogCategory &category)
+    {
+        for (auto &msg : *this)
+        {
+            msg.setCategory(category);
+        }
+    }
+
+    void CStatusMessageList::setCategories(const CLogCategoryList &categories)
+    {
+        for (auto &msg : *this)
+        {
+            msg.setCategories(categories);
+        }
+    }
+
     CStatusMessageList CStatusMessageList::fromDatabaseJson(const QJsonArray &array)
     {
         CStatusMessageList messages;
