@@ -388,18 +388,36 @@ namespace BlackMisc
         }
 
         /*!
+         * \brief Remove elements for which a given predicate returns true.
+         * \pre The sequence must be initialized.
+         * \return The number of elements removed.
+         */
+        template <class Predicate>
+        int removeIf(Predicate p)
+        {
+            auto newEnd = std::remove_if(begin(), end(), p);
+            int count = std::distance(newEnd, end());
+            erase(newEnd, end());
+            return count;
+        }
+
+        //! \copydoc BlackMisc::CContainerBase::removeIf
+        template <class K0, class V0, class... KeysValues>
+        int removeIf(K0 k0, V0 v0, KeysValues... keysValues)
+        {
+            // using-declaration doesn't play nicely with injected template names
+            return CSequence::CContainerBase::removeIf(k0, v0, keysValues...);
+        }
+
+        /*!
          * \brief Remove all elements if they are in other
          * \pre The sequence must be initialized.
          * \return The number of elements removed.
          */
         int removeIfIn(const CSequence &other)
         {
-            auto newEnd = std::remove_if(begin(), end(), [&other](const T &v) { return other.contains(v); });
-            int count = std::distance(newEnd, end());
-            erase(newEnd, end());
-            return count;
+            return removeIf([&other](const T &v) { return other.contains(v); });
         }
-
 
         /*!
          * \brief Replace elements matching the given element with a replacement.

@@ -339,6 +339,31 @@ namespace BlackMisc
         void remove(const CCollection &other) { *this = CCollection(*this).difference(other); }
 
         /*!
+         * \brief Remove elements for which a given predicate returns true.
+         * \pre The collection must be initialized.
+         * \return The number of elements removed.
+         */
+        template <class Predicate>
+        int removeIf(Predicate p)
+        {
+            int count = 0;
+            for (auto it = begin(); it != end();)
+            {
+                if (p(*it)) { it = erase(it); count++; }
+                else { ++it; }
+            }
+            return count;
+        }
+
+        //! \copydoc BlackMisc::CContainerBase::removeIf
+        template <class K0, class V0, class... KeysValues>
+        int removeIf(K0 k0, V0 v0, KeysValues... keysValues)
+        {
+            // using-declaration doesn't play nicely with injected template names
+            return CCollection::CContainerBase::removeIf(k0, v0, keysValues...);
+        }
+
+        /*!
          * \brief Test for equality.
          */
         bool operator ==(const CCollection &other) const { return *pimpl() == *other.pimpl(); }
