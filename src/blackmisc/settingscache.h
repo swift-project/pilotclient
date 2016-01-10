@@ -34,6 +34,10 @@ namespace BlackMisc
         //! Save core settings to disk.
         BlackMisc::CStatusMessage saveToStore(const QString &keyPrefix = {});
 
+        //! Save individual settings to disk.
+        //! Core application context connects this slot to the valuesSaveRequested signal.
+        void saveToStoreByPacket(const CValueCachePacket &values);
+
         //! Load core settings from disk.
         BlackMisc::CStatusMessage loadFromStore();
 

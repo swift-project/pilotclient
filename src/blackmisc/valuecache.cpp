@@ -168,7 +168,7 @@ namespace BlackMisc
     {
         QMutexLocker lock(&m_mutex);
         if (values.empty()) { return; }
-        CValueCachePacket ratifiedChanges;
+        CValueCachePacket ratifiedChanges(values.isSaved());
         auto out = m_elements.lowerBound(values.cbegin().key());
         auto end = m_elements.upperBound((values.cend() - 1).key());
         for (auto in = values.cbegin(); in != values.cend(); ++in)
@@ -191,6 +191,7 @@ namespace BlackMisc
         }
         if (! ratifiedChanges.empty())
         {
+            if (ratifiedChanges.isSaved()) { emit valuesSaveRequested(ratifiedChanges); }
             emit valuesChanged(ratifiedChanges, nullptr);
         }
     }
@@ -395,7 +396,7 @@ namespace BlackMisc
         return element.m_value.read();
     }
 
-    CStatusMessage CValuePage::setValue(Element &element, const CVariant &value)
+    CStatusMessage CValuePage::setValue(Element &element, const CVariant &value, bool save)
     {
         Q_ASSERT(QThread::currentThread() == thread());
 
@@ -412,10 +413,10 @@ namespace BlackMisc
             {
                 Q_ASSERT(isSafeToIncrement(element.m_pendingChanges));
                 element.m_pendingChanges++;
-                element.m_saved = false;
+                element.m_saved = save;
 
                 element.m_value.uniqueWrite() = value;
-                emit valuesWantToCache({ { { element.m_key, value } }, QDateTime::currentMSecsSinceEpoch() });
+                emit valuesWantToCache({ { { element.m_key, value } }, QDateTime::currentMSecsSinceEpoch(), save });
             }
         }
         else

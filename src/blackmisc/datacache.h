@@ -148,6 +148,9 @@ namespace BlackMisc
 
         //! Deleted copy assignment operator.
         CDataTrait &operator =(const CDataTrait &) = delete;
+
+        //! Data cache doesn't support setAndSave (because set() already causes save anyway).
+        CStatusMessage setAndSave(const T &value) = delete;
     };
 }
 

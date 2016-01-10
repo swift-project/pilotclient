@@ -180,6 +180,10 @@ namespace BlackMisc
         //! of CValueCache instances in all processes including this one. The slot will do its own round-trip detection.
         void valuesChangedByLocal(const BlackMisc::CValueCachePacket &values);
 
+        //! Emitted when this cache has ratified a change which included a request to save (i.e. via CCaches::setAndSave).
+        //! If the derived class does not handle such requests, the signal can be ignored.
+        void valuesSaveRequested(const BlackMisc::CValueCachePacket &values);
+
     private:
         struct Element; // remove forward declaration when elementsStartingWith uses C++14 auto deduced return type
 
@@ -273,6 +277,9 @@ namespace BlackMisc
 
         //! Write a new value. Must be called from the thread in which the owner lives.
         CStatusMessage set(const T &value) { return m_page.setValue(m_element, CVariant::from(value)); }
+
+        //! Write and save in the same step. Must be called from the thread in which the owner lives.
+        CStatusMessage setAndSave(const T &value) { return m_page.setValue(m_element, CVariant::from(value), true); }
 
         //! Get the key string of this value.
         const QString &getKey() const { return m_page.getKey(m_element); }

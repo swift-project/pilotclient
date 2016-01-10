@@ -8,6 +8,7 @@
  */
 
 #include "settingscache.h"
+#include "logmessage.h"
 #include <QStandardPaths>
 
 namespace BlackMisc
@@ -31,6 +32,15 @@ namespace BlackMisc
     BlackMisc::CStatusMessage CSettingsCache::saveToStore(const QString &keyPrefix)
     {
         return saveToFiles(persistentStore(), keyPrefix);
+    }
+
+    void CSettingsCache::saveToStoreByPacket(const CValueCachePacket &values)
+    {
+        CStatusMessage status = saveToFiles(persistentStore(), values.toVariantMap());
+        if (! status.isEmpty())
+        {
+            CLogMessage(this).preformatted(status);
+        }
     }
 
     BlackMisc::CStatusMessage CSettingsCache::loadFromStore()

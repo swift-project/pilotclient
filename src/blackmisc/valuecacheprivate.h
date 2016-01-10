@@ -62,7 +62,7 @@ namespace BlackMisc
             const CVariant &getValue(const Element &element) const;
 
             //! Write the value corresponding to the element's key and begin synchronizing it to any other pages.
-            CStatusMessage setValue(Element &element, const CVariant &value);
+            CStatusMessage setValue(Element &element, const CVariant &value, bool save = false);
 
             //! Get the key string corresponding to the element.
             const QString &getKey(const Element &element) const;

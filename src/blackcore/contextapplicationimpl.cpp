@@ -22,7 +22,9 @@ namespace BlackCore
 {
     CContextApplication::CContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
         IContextApplication(mode, runtime)
-    {}
+    {
+        connect(CSettingsCache::instance(), &CSettingsCache::valuesSaveRequested, CSettingsCache::instance(), &CSettingsCache::saveToStoreByPacket);
+    }
 
     CContextApplication *CContextApplication::registerWithDBus(BlackMisc::CDBusServer *server)
     {
