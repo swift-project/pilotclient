@@ -47,7 +47,9 @@ namespace BlackGui
             connect(this->ui->pb_Livery, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
             connect(this->ui->pb_Distributor, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
 
-            ui->tvp_StashAircraftModels->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows);
+            ui->tvp_StashAircraftModels->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows | CAircraftModelView::MenuHighlightInvalid);
+            ui->tvp_StashAircraftModels->setHighlightModelStrings(true);
+            ui->tvp_StashAircraftModels->setHighlightModelStringsColor(Qt::red);
             this->enableButtonRow();
         }
 
@@ -241,30 +243,41 @@ namespace BlackGui
             Q_UNUSED(skippedModels);
         }
 
-        CStatusMessageList CDbStashComponent::validate() const
+        CStatusMessageList CDbStashComponent::validate(CAircraftModelList &invalidModels) const
         {
             if (this->ui->tvp_StashAircraftModels->isEmpty()) {return CStatusMessageList(); }
             CAircraftModelList models(getSelectedOrAllModels());
             if (models.isEmpty()) { return CStatusMessageList(); }
-            const CStatusMessageList msgs(models.validateForPublishing());
-            if (!msgs.isEmpty()) { return msgs; }
 
-            return CStatusMessageList(
+            const CStatusMessageList msgs(models.validateForPublishing(invalidModels));
+
+            // OK?
+            if (msgs.isEmpty())
             {
-                CStatusMessage(validationCats(), CStatusMessage::SeverityInfo, QString("No errors in %1 model(s)").arg(models.size()))
-            });
+                return CStatusMessageList(
+                {
+                    CStatusMessage(validationCats(), CStatusMessage::SeverityInfo, QString("No errors in %1 model(s)").arg(models.size()))
+                });
+            }
+            else
+            {
+                return msgs;
+            }
         }
 
         bool CDbStashComponent::validateAndDisplay(bool displayInfo)
         {
-            const CStatusMessageList msgs(this->validate());
+            CAircraftModelList invalidModels;
+            const CStatusMessageList msgs(this->validate(invalidModels));
             if (msgs.hasWarningOrErrorMessages())
             {
                 this->showMessages(msgs);
+                this->ui->tvp_StashAircraftModels->setHighlightModelStrings(invalidModels.getModelStrings(false));
                 return false;
             }
             else
             {
+                this->ui->tvp_StashAircraftModels->setHighlightModelStrings(QStringList());
                 if (displayInfo)
                 {
                     QString no = QString::number(this->getStashedModelsCount());

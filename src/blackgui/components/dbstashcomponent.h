@@ -139,7 +139,7 @@ namespace BlackGui
             bool showMessage(const BlackMisc::CStatusMessage &msg, int timeoutMs = -1);
 
             //! Validate
-            BlackMisc::CStatusMessageList validate() const;
+            BlackMisc::CStatusMessageList validate(BlackMisc::Simulation::CAircraftModelList &invalidModels) const;
 
             //! Validate and display info messages
             bool validateAndDisplay(bool displayInfo = false);

@@ -125,6 +125,22 @@ namespace BlackGui
             }
         }
 
+        void CAircraftModelListModel::setHighlightModelStrings(const QStringList &modelStrings)
+        {
+            this->beginResetModel();
+            m_highlightStrings = modelStrings;
+            this->endResetModel();
+        }
+
+        void CAircraftModelListModel::setHighlightModelStrings(bool highlightModelStrings)
+        {
+            if (m_highlightModelStrings == highlightModelStrings) { return; }
+
+            this->beginResetModel();
+            m_highlightModelStrings = highlightModelStrings;
+            this->endResetModel();
+        }
+
         QStringList CAircraftModelListModel::getModelStrings(bool sort) const
         {
             if (this->isEmpty()) { return QStringList(); }
@@ -143,15 +159,14 @@ namespace BlackGui
         QVariant CAircraftModelListModel::data(const QModelIndex &index, int role) const
         {
             if (role != Qt::BackgroundRole) { return CListModelDbObjects::data(index, role); }
-            bool ms = highlightGivenModelStrings() && !m_highlightStrings.isEmpty();
+            bool ms = highlightModelStrings() && !m_highlightStrings.isEmpty();
             if (!ms) { return CListModelDbObjects::data(index, role); }
 
             CAircraftModel model(this->at(index));
             // highlight stashed first
             if (m_highlightStrings.contains(model.getModelString(), Qt::CaseInsensitive))
             {
-                static const QBrush b(Qt::yellow);
-                return b;
+                return this->m_highlightColor;
             }
             return QVariant();
         }

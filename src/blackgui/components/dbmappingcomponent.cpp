@@ -363,18 +363,18 @@ namespace BlackGui
 
         void CDbMappingComponent::ps_onStashedModelsChanged()
         {
-            bool hlvp = this->ui->tvp_AircraftModelsForVPilot->derivedModel()->highlightGivenModelStrings();
-            bool hlom = this->ui->tvp_OwnAircraftModels->derivedModel()->highlightGivenModelStrings();
+            bool hlvp = this->ui->tvp_AircraftModelsForVPilot->derivedModel()->highlightModelStrings();
+            bool hlom = this->ui->tvp_OwnAircraftModels->derivedModel()->highlightModelStrings();
             bool highlight =  hlom || hlvp;
             if (!highlight) { return; }
             const QStringList stashedModels(this->ui->comp_StashAircraft->getStashedModelStrings());
             if (hlvp)
             {
-                this->ui->tvp_AircraftModelsForVPilot->derivedModel()->setHighlightModelsStrings(stashedModels);
+                this->ui->tvp_AircraftModelsForVPilot->derivedModel()->setHighlightModelStrings(stashedModels);
             }
             if (hlom)
             {
-                this->ui->tvp_OwnAircraftModels->derivedModel()->setHighlightModelsStrings(stashedModels);
+                this->ui->tvp_OwnAircraftModels->derivedModel()->setHighlightModelStrings(stashedModels);
             }
         }
 
@@ -537,9 +537,10 @@ namespace BlackGui
         void CDbMappingComponent::CMappingSimulatorModelMenu::customMenu(QMenu &menu) const
         {
             CSimulatorInfo sims = CSimulatorInfo::getLocallyInstalledSimulators();
-            bool empty = sims.isNoSimulator() || sims.isUnspecified();
-            if (!empty)
+            bool noSims = sims.isNoSimulator() || sims.isUnspecified();
+            if (!noSims)
             {
+                if (!menu.isEmpty()) { menu.addSeparator(); }
                 QMenu *load = menu.addMenu(CIcons::appModels16(), "Load installed models");
                 QAction *a = nullptr;
                 CDbMappingComponent *mapComp = qobject_cast<CDbMappingComponent *>(this->parent());
@@ -565,7 +566,6 @@ namespace BlackGui
                     a = load->addAction(CIcons::appModels16(), "XPlane models", mapComp, SLOT(ps_requestSimulatorModels()));
                     a->setData(QVariant(static_cast<int>(CSimulatorInfo::XPLANE)));
                 }
-                menu.addSeparator();
             }
             this->nestedCustomMenu(menu);
         }
@@ -578,8 +578,8 @@ namespace BlackGui
             bool canUseVPilot = mappingComponent()->withVPilot();
             if (canUseVPilot)
             {
+                if (!menu.isEmpty()) { menu.addSeparator(); }
                 menu.addAction(CIcons::appMappings16(), "Load vPilot Rules", mapComp, SLOT(ps_loadVPilotData()));
-                menu.addSeparator();
             }
             this->nestedCustomMenu(menu);
         }

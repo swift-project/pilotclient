@@ -45,14 +45,14 @@ namespace BlackGui
         {
             if (!m_nestedDelegate)
             {
-                if (m_separatorAtEnd) { menu.addSeparator(); }
+                if (m_separatorAtEnd && !menu.isEmpty()) { menu.addSeparator(); }
                 return;
             }
             m_nestedDelegate->customMenu(menu);
         }
 
         IMenuDelegate *m_nestedDelegate = nullptr; //!< nested delegate if any
-        bool           m_separatorAtEnd = false;   //!< at end, terminate with seperator
+        bool           m_separatorAtEnd = false;   //!< at end, terminate with separator
     };
 
 } // ns

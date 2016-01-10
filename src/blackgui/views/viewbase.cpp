@@ -163,6 +163,9 @@ namespace BlackGui
             // delegate?
             if (this->m_menu) { this->m_menu->customMenu(menu); }
 
+            // separator
+            if (!menu.isEmpty() && ((this->m_menus & MenuStandard) > 0)) { menu.addSeparator(); }
+
             // standard menus
             int items = menu.actions().size();
             if (this->m_menus.testFlag(MenuRefresh)) { menu.addAction(BlackMisc::CIcons::refresh16(), "Update", this, SIGNAL(requestUpdate())); }
@@ -192,13 +195,28 @@ namespace BlackGui
             if (menu.actions().size() > items) { menu.addSeparator(); }
 
             // selection menus
+            items = menu.actions().size();
             SelectionMode sm = this->selectionMode();
             if (sm == MultiSelection || sm == ExtendedSelection)
             {
-                menu.addAction(BlackMisc::CIcons::empty16(), "Select all", this, SLOT(selectAll()), Qt::CTRL + Qt::Key_A);
+                menu.addAction(QIcon(), "Select all", this, SLOT(selectAll()), Qt::CTRL + Qt::Key_A);
             }
-            menu.addAction(BlackMisc::CIcons::empty16(), "Clear selection", this, SLOT(clearSelection()), CShortcut::keyClearSelection());
-            menu.addSeparator();
+            if ((this->m_originalSelectionMode == MultiSelection || this->m_originalSelectionMode == ExtendedSelection) && this->m_menus.testFlag(MenuToggleSelectionMode))
+            {
+                if (sm == SingleSelection)
+                {
+                    menu.addAction(QIcon(), "Switch to multi selection", this, SLOT(ps_toggleSelectionMode()));
+                }
+                else if (sm == MultiSelection || sm == ExtendedSelection)
+                {
+                    menu.addAction(QIcon(), "Switch to single selection", this, SLOT(ps_toggleSelectionMode()));
+                }
+            }
+            if (sm != NoSelection)
+            {
+                menu.addAction(QIcon(), "Clear selection", this, SLOT(clearSelection()), CShortcut::keyClearSelection());
+            }
+            if (menu.actions().size() > items) { menu.addSeparator(); }
 
             // load/save
             items = menu.actions().size();
@@ -505,6 +523,21 @@ namespace BlackGui
             if (!a) { return; }
             Q_ASSERT_X(a->isCheckable(), Q_FUNC_INFO, "object not checkable");
             this->m_displayAutomatically = a->isChecked();
+        }
+
+        void CViewBaseNonTemplate::ps_toggleSelectionMode()
+        {
+            if (this->m_originalSelectionMode == ExtendedSelection || this->m_originalSelectionMode == MultiSelection)
+            {
+                if (this->selectionMode() == SingleSelection)
+                {
+                    this->setSelectionMode(this->m_originalSelectionMode);
+                }
+                else if (this->selectionMode() == MultiSelection)
+                {
+                    this->setSelectionMode(SingleSelection);
+                }
+            }
         }
 
         void CViewBaseNonTemplate::ps_removeSelectedRows()

@@ -177,6 +177,12 @@ namespace BlackMisc
 
         CStatusMessageList CAircraftModelList::validateForPublishing() const
         {
+            CAircraftModelList invalidModels;
+            return validateForPublishing(invalidModels);
+        }
+
+        CStatusMessageList CAircraftModelList::validateForPublishing(CAircraftModelList &invalidModels) const
+        {
             if (this->isEmpty()) { return CStatusMessageList(); }
             CStatusMessageList msgs;
             for (const CAircraftModel &model : *this)
@@ -198,6 +204,7 @@ namespace BlackMisc
                     singleMsg.prependMessage(model.getModelString() + ": ");
                 }
                 msgs.push_back(singleMsg);
+                invalidModels.push_back(model);
             }
             return msgs;
         }

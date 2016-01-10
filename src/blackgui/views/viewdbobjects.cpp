@@ -84,17 +84,13 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
         void CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::customMenu(QMenu &menu) const
         {
-            CViewBase<ModelClass, ContainerType, ObjectType>::customMenu(menu);
             if (this->m_menus.testFlag(CViewBase<ModelClass, ContainerType, ObjectType>::MenuHighlightDbData))
             {
-                if (!menu.isEmpty())
-                {
-                    menu.addSeparator();
-                }
                 QAction *a = menu.addAction(CIcons::database16(), "Highlight DB data", this, SLOT(ps_toggleHighlightDbData()));
                 a->setCheckable(true);
                 a->setChecked(this->derivedModel()->highlightDbData());
             }
+            CViewBase<ModelClass, ContainerType, ObjectType>::customMenu(menu);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>

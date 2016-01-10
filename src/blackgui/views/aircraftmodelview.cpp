@@ -56,10 +56,10 @@ namespace BlackGui
                 this->m_menus = MenuBackend;
                 break;
             case CAircraftModelListModel::VPilotRuleModel:
-                this->m_menus = MenuRefresh | MenuStashing | MenuHighlightDbData;
+                this->m_menus = MenuRefresh | MenuStashing | MenuToggleSelectionMode;
                 break;
             case CAircraftModelListModel::OwnSimulatorModelMapping:
-                this->m_menus = MenuDisplayAutomatically | MenuStashing | MenuHighlightDbData;
+                this->m_menus = MenuDisplayAutomatically | MenuStashing | MenuHighlightDbData | MenuToggleSelectionMode;
                 break;
             case CAircraftModelListModel::OwnSimulatorModel:
             default:
@@ -91,7 +91,7 @@ namespace BlackGui
 
         bool CAircraftModelView::hasSelectedModelsToStash() const
         {
-            return m_menus.testFlag(MenuStashModels) && hasSelection();
+            return m_menus.testFlag(MenuCanStashModels) && hasSelection();
         }
 
         void CAircraftModelView::setImplementedMetaTypeIds()
@@ -121,6 +121,26 @@ namespace BlackGui
                 this->updateContainerMaybeAsync(copy);
             }
             return delta;
+        }
+
+        void CAircraftModelView::setHighlightModelStrings(const QStringList &highlightModels)
+        {
+            this->derivedModel()->setHighlightModelStrings(highlightModels);
+        }
+
+        void CAircraftModelView::setHighlightModelStrings(bool highlight)
+        {
+            this->derivedModel()->setHighlightModelStrings(highlight);
+        }
+
+        void CAircraftModelView::setHighlightModelStringsColor(const QBrush &brush)
+        {
+            this->derivedModel()->setHighlightModelStringsColor(brush);
+        }
+
+        bool CAircraftModelView::highlightModelsStrings() const
+        {
+            return this->derivedModel()->highlightModelStrings();
         }
 
         void CAircraftModelView::dropEvent(QDropEvent *event)
@@ -215,32 +235,41 @@ namespace BlackGui
 
         void CAircraftModelView::customMenu(QMenu &menu) const
         {
-            bool added = false;
-            if (this->m_menus.testFlag(MenuStashModels))
+            if (this->m_menus.testFlag(MenuCanStashModels))
             {
                 menu.addAction(CIcons::appDbStash16(), "Stash", this, SLOT(ps_requestStash()));
                 QAction *a = menu.addAction(CIcons::appDbStash16(), "Stashing clears selection", this, SLOT(ps_stashingClearsSelection()));
                 a->setCheckable(true);
                 a->setChecked(m_stashingClearsSelection);
-                added = true;
             }
             if (this->m_menus.testFlag(MenuHighlightStashed))
             {
-                // this function requires someone provides the model strings to be highlighted
+                // this function requires that someone provides the model strings to be highlighted
                 QAction *a = menu.addAction(CIcons::appDbStash16(), "Highlight stashed", this, SLOT(ps_toggleHighlightStashedModels()));
                 a->setCheckable(true);
                 a->setChecked(this->derivedModel()->highlightDbData());
-                added = true;
             }
-            if (added) { menu.addSeparator(); }
+            if (this->m_menus.testFlag(MenuHighlightInvalid))
+            {
+                // this function requires that someone provides the model strings to be highlighted
+                QAction *a = menu.addAction(CIcons::appDbStash16(), "Highlight invalid models", this, SLOT(ps_to));
+                a->setCheckable(true);
+                a->setChecked(this->derivedModel()->highlightDbData());
+            }
             CViewWithDbObjects::customMenu(menu);
         }
 
         void CAircraftModelView::ps_toggleHighlightStashedModels()
         {
-            bool h = derivedModel()->highlightGivenModelStrings();
-            derivedModel()->setHighlightModelsStrings(!h);
+            bool h = derivedModel()->highlightModelStrings();
+            derivedModel()->setHighlightModelStrings(!h);
             emit toggledHighlightStashedModels();
+        }
+
+        void CAircraftModelView::ps_toogleHighlightInvalidModels()
+        {
+            bool h = this->highlightModelsStrings();
+            this->setHighlightModelStrings(!h);
         }
 
         void CAircraftModelView::ps_stashingClearsSelection()
@@ -250,7 +279,7 @@ namespace BlackGui
 
         void CAircraftModelView::ps_requestStash()
         {
-            if (!m_menus.testFlag(MenuStashModels)) { return; }
+            if (!m_menus.testFlag(MenuCanStashModels)) { return; }
             if (!this->hasSelection()) { return; }
             emit requestStash(this->selectedObjects());
             if (this->m_stashingClearsSelection)

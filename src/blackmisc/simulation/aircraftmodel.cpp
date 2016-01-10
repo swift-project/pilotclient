@@ -90,6 +90,14 @@ namespace BlackMisc
             return QJsonDocument(toDatabaseJson()).toJson(format);
         }
 
+        bool CAircraftModel::canInitializeFromFsd() const
+        {
+            bool nw = this->getModelType() == CAircraftModel::TypeQueriedFromNetwork ||
+                      this->getModelType() == CAircraftModel::TypeFsdData ||
+                      this->getModelType() == CAircraftModel::TypeUnknown;
+            return nw;
+        }
+
         CVariant CAircraftModel::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
@@ -179,14 +187,6 @@ namespace BlackMisc
             }
         }
 
-        bool CAircraftModel::canInitializeFromFsd() const
-        {
-            bool nw = this->getModelType() == CAircraftModel::TypeQueriedFromNetwork ||
-                      this->getModelType() == CAircraftModel::TypeFsdData ||
-                      this->getModelType() == CAircraftModel::TypeUnknown;
-            return nw;
-        }
-
         int CAircraftModel::comparePropertyByIndex(const CAircraftModel &compareValue, const CPropertyIndex &index) const
         {
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(compareValue, index);}
@@ -204,6 +204,7 @@ namespace BlackMisc
                 return this->m_distributor.comparePropertyByIndex(compareValue.getDistributor(), index.copyFrontRemoved());
             case IndexDescription:
                 return this->m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
+            case IndexSimulatorInfoAsString:
             case IndexSimulatorInfo:
                 return this->m_simulator.comparePropertyByIndex(compareValue.getSimulatorInfo(), index.copyFrontRemoved());
             case IndexName:

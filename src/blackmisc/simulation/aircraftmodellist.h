@@ -90,6 +90,9 @@ namespace BlackMisc
             //! Validate for publishing
             CStatusMessageList validateForPublishing() const;
 
+            //! Validate for publishing
+            CStatusMessageList validateForPublishing(CAircraftModelList &invalidModels) const;
+
             //! To database JSON
             QJsonArray toDatabaseJson() const;
 

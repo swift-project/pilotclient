@@ -55,6 +55,18 @@ namespace BlackGui
             //! Remove models with model strings
             int removeModelsWithModelString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive);
 
+            //! \copydoc BlackGui::Models::CAircraftModelListModel::setHighlightModelStrings(const QStringList &)
+            void setHighlightModelStrings(const QStringList &highlightModels);
+
+            //! \copydoc BlackGui::Models::CAircraftModelListModel::setHighlightModelsStrings(bool)
+            void setHighlightModelStrings(bool highlight);
+
+            //! \copydoc BlackGui::Models::CAircraftModelListModel::setHighlightModelStringsColor
+            void setHighlightModelStringsColor(const QBrush &brush);
+
+            //! \copydoc BlackGui::Models::CAircraftModelListModel::highlightModelsStrings
+            bool highlightModelsStrings() const;
+
         signals:
             //! Request to stash if applicable
             void requestStash(const BlackMisc::Simulation::CAircraftModelList &models);
@@ -75,6 +87,9 @@ namespace BlackGui
         private slots:
             //! Highlight stashed models
             void ps_toggleHighlightStashedModels();
+
+            //! Toggle highlight invalid models
+            void ps_toogleHighlightInvalidModels();
 
             //! Toggle if stashing unselects
             void ps_stashingClearsSelection();

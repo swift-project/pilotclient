@@ -17,6 +17,7 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include <QStringList>
 #include <QAbstractItemModel>
+#include <QBrush>
 
 namespace BlackGui
 {
@@ -52,13 +53,16 @@ namespace BlackGui
             AircraftModelMode getModelMode() const { return m_mode; }
 
             //! Highlight models
-            bool highlightGivenModelStrings() const { return m_highlightModelStrings; }
+            void setHighlightModelStrings(const QStringList &modelStrings = QStringList());
 
             //! Highlight models
-            void setHighlightModelsStrings(const QStringList &modelStrings = QStringList()) { m_highlightStrings = modelStrings; }
+            bool highlightModelStrings() const { return m_highlightModelStrings; }
 
             //! Highlight models
-            void setHighlightModelsStrings(bool highlightModelStrings) { m_highlightModelStrings = highlightModelStrings; }
+            void setHighlightModelStrings(bool highlightModelStrings);
+
+            //! The highlight color
+            void setHighlightModelStringsColor(const QBrush &brush) { m_highlightColor = brush; }
 
             //! Model strings
             QStringList getModelStrings(bool sort) const;
@@ -70,9 +74,10 @@ namespace BlackGui
             virtual QVariant data(const QModelIndex &index, int role) const override;
 
         private:
-            AircraftModelMode m_mode = NotSet;    //!< current mode
-            bool m_highlightModelStrings = false; //!< highlight in in model strings
-            QStringList m_highlightStrings;       //!< model strings to highlight
+            AircraftModelMode m_mode = NotSet;          //!< current mode
+            bool m_highlightModelStrings = false;       //!< highlight in in model strings
+            QStringList m_highlightStrings;             //!< model strings to highlight
+            QBrush      m_highlightColor{Qt::yellow};   //!< how to highlight
         };
     } // ns
 } // ns

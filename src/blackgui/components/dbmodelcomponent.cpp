@@ -40,7 +40,7 @@ namespace BlackGui
             // configure view
             this->ui->tvp_AircraftModel->setFilterWidget(this->ui->filter_AircraftModelFilter);
             this->ui->tvp_AircraftModel->allowDragDropValueObjects(true, false);
-            this->ui->tvp_AircraftModel->menuAddItems(CAircraftModelView::MenuStashModels);
+            this->ui->tvp_AircraftModel->menuAddItems(CAircraftModelView::MenuCanStashModels);
         }
 
         CDbModelComponent::~CDbModelComponent()

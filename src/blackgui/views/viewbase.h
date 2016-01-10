@@ -77,14 +77,18 @@ namespace BlackGui
                 MenuFilter               = 1 << 5,  ///< filter can be opened
                 MenuSave                 = 1 << 6,  ///< save as JSON
                 MenuLoad                 = 1 << 7,  ///< load from JSON
+                MenuToggleSelectionMode  = 1 << 8,  ///< allow to toggle selection mode
+                MenuStandard             = MenuClear | MenuRemoveSelectedRows | MenuRefresh | MenuBackend |
+                                           MenuDisplayAutomatically | MenuFilter | MenuSave | MenuLoad | MenuToggleSelectionMode,
                 MenuLoadAndSave          = MenuLoad  | MenuSave,
-                MenuDefault              = MenuClear | MenuDisplayAutomatically,
+                MenuDefault              = MenuClear | MenuDisplayAutomatically | MenuToggleSelectionMode,
                 // special menus, should be in derived classes, but enums cannot be inherited
                 // maybe shifted in the future to elsewhere
-                MenuHighlightDbData      = 1 << 8,  ///< highlight DB data
-                MenuHighlightStashed     = 1 << 9,  ///< highlight stashed models
-                MenuStashModels          = 1 << 10, ///< stash models
-                MenuStashing             = MenuHighlightStashed | MenuStashModels,
+                MenuHighlightDbData      = 1 << 9,  ///< highlight DB data
+                MenuHighlightStashed     = 1 << 10, ///< highlight stashed models
+                MenuCanStashModels       = 1 << 11, ///< stash models
+                MenuStashing             = MenuHighlightStashed | MenuCanStashModels,
+                MenuHighlightInvalid     = 1 << 12  ///< highlight invalid models
             };
             Q_DECLARE_FLAGS(Menu, MenuFlag)
 
@@ -284,8 +288,9 @@ namespace BlackGui
             //! Default file for load/save operations
             QString getDefaultFilename() const;
 
-            ResizeMode m_resizeMode = ResizingOnceSubset;            //!< mode
+            ResizeMode     m_resizeMode = ResizingOnceSubset;        //!< mode
             RowsResizeMode m_rowResizeMode            = Interactive; //!< row resize mode for row height
+            SelectionMode m_originalSelectionMode     = this->selectionMode(); //!< Selection mode set
             int m_resizeCount                         = 0;           //!< flag / counter, how many resize activities
             int m_skipResizeThreshold                 = 40;          //!< when to skip resize (rows count)
             int m_resizeAutoNthTime                   = 1;           //!< with ResizeAuto, resize every n-th time
@@ -354,6 +359,9 @@ namespace BlackGui
 
             //! Toggle auto display flag
             void ps_toggleAutoDisplay();
+
+            //! Toogle between single and multi selection
+            void ps_toggleSelectionMode();
 
             //! Clear the model
             virtual void ps_clear() { this->clear(); }
