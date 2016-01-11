@@ -5,6 +5,7 @@
 extern "C" {
 #endif
 
+#include<inttypes.h>
 #include<stdio.h>
 
 #define G2_VERSION "g2clib-1.5.0"
@@ -156,13 +157,8 @@ extern "C" {
 //                     that holds the data.
 */
 
-#ifdef __64BIT__
-typedef int g2int;
-typedef unsigned int g2intu;
-#else
-typedef long g2int;
-typedef unsigned long g2intu;
-#endif
+typedef int32_t g2int;
+typedef uint32_t g2intu;
 typedef float g2float;
 
 struct gtemplate {

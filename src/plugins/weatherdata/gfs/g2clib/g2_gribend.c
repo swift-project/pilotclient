@@ -1,3 +1,4 @@
+#include <inttypes.h>
 #include <stdio.h>
 #include "grib2.h"
 
@@ -97,7 +98,7 @@ g2int g2_gribend(unsigned char *cgrib)
 //
       if ( isecnum != 7 ) {
         printf("g2_gribend: Section 8 can only be added after Section 7.\n");
-        printf("g2_gribend: Section %ld was the last found in given GRIB message.\n",isecnum);
+        printf("g2_gribend: Section %"PRId32" was the last found in given GRIB message.\n",isecnum);
         ierr=-4;
         return (ierr);
       }

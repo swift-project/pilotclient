@@ -1,3 +1,4 @@
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "grib2.h"
@@ -345,12 +346,12 @@ g2int g2_getfld(unsigned char *cgrib,g2int ifldnum,g2int unpack,g2int expand,
         iofst=iofst+32;
         gbit(cgrib,&isecnum,iofst,8);         // Get Section number
         iofst=iofst+8;
-        //printf(" lensec= %ld    secnum= %ld \n",lensec,isecnum);
+        //printf(" lensec= %"PRId32"    secnum= %"PRId32" \n",lensec,isecnum);
         //
         //  Check to see if section number is valid
         //
         if ( isecnum<1 || isecnum>7 ) {
-          printf("g2_getfld: Unrecognized Section Encountered=%ld\n",isecnum);
+          printf("g2_getfld: Unrecognized Section Encountered=%"PRId32"\n",isecnum);
           ierr=8;
           return(ierr);
         }
@@ -543,8 +544,8 @@ g2int g2_getfld(unsigned char *cgrib,g2int ifldnum,g2int unpack,g2int expand,
 //  If exited from above loop, the end of the GRIB message was reached
 //  before the requested field was found.
 //
-      printf("g2_getfld: GRIB message contained %ld different fields.\n",numfld);
-      printf("g2_getfld: The request was for field %ld.\n",ifldnum);
+      printf("g2_getfld: GRIB message contained %"PRId32" different fields.\n",numfld);
+      printf("g2_getfld: The request was for field %"PRId32".\n",ifldnum);
       ierr=6;
 
       return(ierr);

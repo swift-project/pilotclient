@@ -1,3 +1,4 @@
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "grib2.h"
@@ -178,7 +179,7 @@ g2int g2_info(unsigned char *cgrib,g2int *listsec0,g2int *listsec1,
               (*numfields)++;
         }
         else {
-           printf("g2_info: Invalid section number found in GRIB message: %ld\n"                   ,isecnum);
+           printf("g2_info: Invalid section number found in GRIB message: %"PRId32"\n"                   ,isecnum);
            ierr=6;
            return(ierr);
         }
