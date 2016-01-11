@@ -1,5 +1,10 @@
 #ifndef _grib2_H
 #define _grib2_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include<stdio.h>
 
 #define G2_VERSION "g2clib-1.5.0"
@@ -244,6 +249,10 @@ int pack_gp(g2int *, g2int *, g2int *,
             g2int *, g2int *, g2int *, g2int *,
             g2int *, g2int *, g2int *, g2int *, g2int *,
             g2int *, g2int *, g2int *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /*  _grib2_H  */
 
