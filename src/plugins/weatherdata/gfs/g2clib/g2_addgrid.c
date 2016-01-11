@@ -183,6 +183,10 @@ g2int g2_addgrid(unsigned char *cgrib,g2int *igds,g2int *igdstmpl,g2int *ideflis
           mapgrid=extgridtemplate(igds[4],igdstmpl);
         }
       }
+      if (mapgrid==0)  {
+          ierr=-5;
+          return(ierr);
+      }
       //
       //   Pack up each input value in array igdstmpl into the
       //   the appropriate number of octets, which are specified in
