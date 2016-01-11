@@ -50,7 +50,6 @@
 *$$$*/
 
 {
-    int ier;
     g2int i,j,k;
     jas_image_t *image=0;
     jas_stream_t *jpcstream;
@@ -60,7 +59,6 @@
 
 //    jas_init();
 
-    ier=0;
 //   
 //     Create jas_stream_t containing input JPEG200 codestream in memory.
 //       
@@ -133,7 +131,7 @@
 //     Clean up JasPer work structures.
 //
     jas_matrix_destroy(data);
-    ier=jas_stream_close(jpcstream);
+    jas_stream_close(jpcstream);
     jas_image_destroy(image);
 
     return 0;

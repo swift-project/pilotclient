@@ -131,10 +131,16 @@ g2int g2_addfield(unsigned char *cgrib,g2int ipdsnum,g2int *ipdstmpl,
       g2int   lensec4,lensec5,lensec6,lensec7;
       g2int   issec3,isprevbmap,lpos3=0,JJ,KK,MM;
       g2int   *coordieee;
-      g2int   width,height,iscan,itemp;
+      g2int   width=0,height=0,iscan=0,itemp=0;
       g2float *pfld;
       gtemplate  *mappds,*mapdrs;
       unsigned int allones=4294967295u;
+
+      (void) width;
+      (void) height;
+      (void) iscan;
+      (void) itemp;
+      (void) allones;
  
       ierr=0;
 //

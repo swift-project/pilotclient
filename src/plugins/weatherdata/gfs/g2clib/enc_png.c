@@ -43,8 +43,6 @@ void user_flush_data(png_structp png_ptr)
         Dummy Custom flush function
 */
 {
-   int *do_nothing;
-   do_nothing=NULL;
 }
 
 

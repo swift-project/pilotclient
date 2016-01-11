@@ -40,7 +40,7 @@ g2int pngunpack(unsigned char *cpack,g2int len,g2int *idrstmpl,g2int ndpts,
 {
 
       g2int  *ifld;
-      g2int  j,nbits,iret,width,height;
+      g2int  j,nbits,width,height;
       g2float  ref,bscale,dscale;
       unsigned char *ctemp;
 
@@ -60,7 +60,7 @@ g2int pngunpack(unsigned char *cpack,g2int len,g2int *idrstmpl,g2int ndpts,
             fprintf(stderr,"Could not allocate space in jpcunpack.\n  Data field NOT upacked.\n");
             return(1);
          }
-         iret=(g2int)dec_png(cpack,&width,&height,ctemp);
+         dec_png(cpack,&width,&height,ctemp);
          gbits(ctemp,ifld,0,nbits,0,ndpts);
          for (j=0;j<ndpts;j++) {
            fld[j]=(((g2float)ifld[j]*bscale)+ref)*dscale;

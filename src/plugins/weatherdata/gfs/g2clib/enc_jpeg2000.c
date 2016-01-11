@@ -167,8 +167,8 @@ int enc_jpeg2000(unsigned char *cin,g2int width,g2int height,g2int nbits,
 //     Clean up JasPer work structures.
 //    
     rwcnt=jpcstream->rwcnt_;
-    ier=jas_stream_close(istream);
-    ier=jas_stream_close(jpcstream);
+    jas_stream_close(istream);
+    jas_stream_close(jpcstream);
 //
 //      Return size of jpeg2000 code stream
 //

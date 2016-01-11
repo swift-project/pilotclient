@@ -119,7 +119,6 @@ g2int g2_unpack3(unsigned char *cgrib,g2int *iofst,g2int **igds,g2int **igdstmpl
         //   corresponding entries in array mapgrid.
         //
         if (*mapgridlen > 0) {
-           ligdstmpl=0;
            ligdstmpl=(g2int *)calloc(*mapgridlen,sizeof(g2int));
            if (ligdstmpl == 0) {
               ierr=6;

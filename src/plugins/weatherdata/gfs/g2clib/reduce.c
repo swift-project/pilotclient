@@ -37,6 +37,8 @@ typedef g2float real;
 	     ntotbt[31], ntotpr, newboxt;
     integer *newbox, *newboxp;
 
+    (void) kfildo;
+    (void) nboxj;
 
 /*        NOVEMBER 2001   GLAHN   TDL   GRIB2 */
 /*        MARCH    2002   GLAHN   COMMENT IER = 715 */
