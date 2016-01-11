@@ -79,6 +79,7 @@ void compack(g2float *fld,g2int ndpts,g2int idrsnum,g2int *idrstmpl,
       static g2int simple_alg = 0;
       static g2float alog2=0.69314718;       //  ln(2.0)
       static g2int one=1;
+      ival1 = 0;
 
       bscale=int_power(2.0,-idrstmpl[1]);
       dscale=int_power(10.0,idrstmpl[2]);
