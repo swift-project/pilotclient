@@ -58,6 +58,8 @@ g2int pngunpack(unsigned char *cpack,g2int len,g2int *idrstmpl,g2int ndpts,
          ctemp=(unsigned char *)calloc(ndpts*4,1);
          if ( ifld == 0 || ctemp == 0) {
             fprintf(stderr,"Could not allocate space in jpcunpack.\n  Data field NOT upacked.\n");
+            if ( ctemp != 0 ) free(ctemp);
+            if ( ifld != 0 ) free(ifld);
             return(1);
          }
          dec_png(cpack,&width,&height,ctemp);

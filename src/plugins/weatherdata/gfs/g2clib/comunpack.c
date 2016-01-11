@@ -201,9 +201,15 @@ int comunpack(unsigned char *cpack,g2int lensec,g2int idrsnum,g2int *idrstmpl,g2
         totLen += glen[j];
       }
       if (totLen != ndpts) {
+        free(ifld);
+        free(gref);
+        free(gwidth);
         return 1;
       }
       if (totBit / 8. > lensec) {
+        free(ifld);
+        free(gref);
+        free(gwidth);
         return 1;
       }
 //
