@@ -49,7 +49,7 @@ g2int simunpack(unsigned char *cpack,g2int *idrstmpl,g2int ndpts,g2float *fld)
       nbits = idrstmpl[3];
       itype = idrstmpl[4];
 
-      ifld=(g2int *)calloc(ndpts,sizeof(g2int));
+      ifld=(g2int *)calloc((ndpts ? ndpts : 1),sizeof(g2int));
       if ( ifld == 0 ) {
          fprintf(stderr,"Could not allocate space in simunpack.\n  Data field NOT upacked.\n");
          return(1);
