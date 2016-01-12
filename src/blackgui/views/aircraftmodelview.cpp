@@ -41,12 +41,14 @@ namespace BlackGui
             // default mode
             CAircraftModelListModel::AircraftModelMode mode = derivedModel()->getModelMode();
             this->setAircraftModelMode(mode);
+            this->setSortIndicator();
         }
 
         void CAircraftModelView::setAircraftModelMode(CAircraftModelListModel::AircraftModelMode mode)
         {
             this->setCustomMenu(nullptr, false); // delete everything
             derivedModel()->setAircraftModelMode(mode);
+            this->setSortIndicator();
             switch (mode)
             {
             case CAircraftModelListModel::StashModel:

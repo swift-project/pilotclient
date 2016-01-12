@@ -45,12 +45,14 @@ namespace BlackGui
             connect(this, &QWidget::customContextMenuRequested, this, &CViewBaseNonTemplate::ps_customMenuRequested);
             connect(this, &QTableView::clicked, this, &CViewBaseNonTemplate::ps_clicked);
             connect(this, &QTableView::doubleClicked, this, &CViewBaseNonTemplate::ps_doubleClicked);
+            this->horizontalHeader()->setSortIndicatorShown(true);
 
             // scroll modes
             this->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
             this->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
             this->setWordWrap(true);
 
+            // shortcuts
             QShortcut *filter = new QShortcut(CShortcut::keyDisplayFilter(), this, SLOT(ps_displayFilterDialog()), nullptr, Qt::WidgetShortcut);
             filter->setObjectName("Filter shortcut for " + this->objectName());
             QShortcut *clearSelection = new QShortcut(CShortcut::keyClearSelection(), this, SLOT(clearSelection()), nullptr, Qt::WidgetShortcut);

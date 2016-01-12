@@ -441,6 +441,17 @@ QHeaderView::section {
   margin: 0px;
 }
 
+/* style the sort indicator */
+QHeaderView::down-arrow {
+  image: url(:/diagona/icons/diagona/icons/arrow-270-small.png);
+  subcontrol-position: bottom left;
+}
+
+QHeaderView::up-arrow {
+  image: url(:/diagona/icons/diagona/icons/arrow-090-small.png);
+  subcontrol-position: bottom left;
+}
+
 QTableView, QTreeView {
   border: 1px solid green;
   border-radius: 5px;
