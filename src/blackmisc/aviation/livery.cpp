@@ -143,7 +143,8 @@ namespace BlackMisc
             }
 
             QString combinedCode(json.value(prefix + "combinedcode").toString());
-            if (combinedCode.isEmpty()) {
+            if (combinedCode.isEmpty())
+            {
                 CLivery liveryStub; // only consists of id, maybe id and timestamp
                 liveryStub.setKeyAndTimestampFromDatabaseJson(json, prefix);
                 return liveryStub;
@@ -235,6 +236,8 @@ namespace BlackMisc
 
         int CLivery::comparePropertyByIndex(const CLivery &compareValue, const CPropertyIndex &index) const
         {
+            if (index.isMyself()) { return this->getCombinedCode().compare(compareValue.getCombinedCode()); }
+            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(compareValue, index);}
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -259,6 +262,16 @@ namespace BlackMisc
 
         void CLivery::updateMissingParts(const CLivery &otherLivery)
         {
+            if (!this->hasValidDbKey() && otherLivery.hasValidDbKey())
+            {
+                // we have no DB data, but the other one has
+                // so we change roles. We take the DB object as base, and update our parts
+                CLivery copy(otherLivery);
+                copy.updateMissingParts(*this);
+                *this = copy;
+                return;
+            }
+
             if (!this->m_colorFuselage.isValid()) { this->setColorFuselage(otherLivery.getColorFuselage()); }
             if (!this->m_colorTail.isValid()) { this->setColorTail(otherLivery.getColorTail()); }
             if (this->m_combinedCode.isEmpty()) { this->setCombinedCode(otherLivery.getCombinedCode());}

@@ -72,26 +72,29 @@ namespace BlackGui
             bool withVPilot() const { return m_withVPilot; }
 
             //! Any models which can be stashed
-            bool hasModelsToStash() const;
+            bool hasSelectedModelsToStash() const;
 
-            //! The models to be stashed from currently activated tab (table view)
-            BlackMisc::Simulation::CAircraftModelList getModelsToStash() const;
+            //! Models to be stashed from currently activated tab (table view)
+            BlackMisc::Simulation::CAircraftModelList getSelectedModelsToStash() const;
 
             //! Stashed models
             const BlackMisc::Simulation::CAircraftModelList &getStashedModels() const;
 
-            //! Stashed models trings
+            //! Stashed model strings
             QStringList getStashedModelStrings() const;
+
+            //! Own (installed) model for given model string
+            BlackMisc::Simulation::CAircraftModel getOwnModelForModelString(const QString &modelString);
 
             //! Current tab index
             TabIndex currentTabIndex() const;
 
             //! Is stashed view
-            bool isStashedView() const;
+            bool isStashedTab() const;
 
-            //! Unvalidated consolidated aircraft model from the subparts (icao, distributor)
-            //! \note not guaranteed to be valid, just snapshot of as it state
-            BlackMisc::Simulation::CAircraftModel getAircraftModel() const;
+            //! Unvalidated consolidated aircraft model from the editor subparts (icao, distributor)
+            //! \note not guaranteed to be valid, just a snapshot of its current editor state
+            BlackMisc::Simulation::CAircraftModel getEditorAircraftModel() const;
 
         public slots:
             //! Stash model
@@ -177,7 +180,7 @@ namespace BlackGui
             BlackMisc::Simulation::FsCommon::CVPilotRulesReader           m_vPilotReader;                //!< read vPilot rules
             BlackMisc::CData<BlackCore::Data::VPilotAircraftModels>       m_cachedVPilotModels { this, &CDbMappingComponent::ps_onVPilotCacheChanged }; //!< cache for latest vPilot rules
             std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>  m_modelLoader;                 //!< read own aircraft models
-            BlackMisc::CData<BlackCore::Data::OwnSimulatorAircraftModels> m_cachedOwnModels { this };    //!< cache for latest models
+            BlackMisc::CData<BlackCore::Data::OwnSimulatorAircraftModels> m_cachedOwnModels { this };    //!< cache for own installed models
             BlackMisc::CData<BlackCore::Data::AuthenticatedUser>          m_user {this, &CDbMappingComponent::ps_userChanged};
             bool m_vPilot1stInit = true;
             bool m_withVPilot    = false;

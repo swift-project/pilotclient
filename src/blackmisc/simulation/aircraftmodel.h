@@ -210,7 +210,7 @@ namespace BlackMisc
             void setFileName(const QString &fileName) { m_fileName = fileName; }
 
             //! Update missing parts from another model
-            void updateMissingParts(const CAircraftModel &model);
+            void updateMissingParts(const CAircraftModel &otherModel);
 
             //! Queried model string?
             bool hasQueriedModelString() const;

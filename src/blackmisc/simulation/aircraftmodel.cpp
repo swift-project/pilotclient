@@ -259,25 +259,35 @@ namespace BlackMisc
             return this->m_livery.hasValidAirlineDesignator();
         }
 
-        void CAircraftModel::updateMissingParts(const CAircraftModel &model)
+        void CAircraftModel::updateMissingParts(const CAircraftModel &otherModel)
         {
-            if (this->m_modelString.isEmpty()) { this->setModelString(model.getModelString()); }
-            if (this->m_description.isEmpty()) { this->setDescription(model.getDescription()); }
-            if (this->m_fileName.isEmpty())    { this->setFileName(model.getFileName()); }
-            if (this->m_callsign.isEmpty())    { this->setCallsign(model.getCallsign()); }
-            if (this->m_modelType == TypeUnknown) { this->m_modelType = model.getModelType(); }
+            if (!this->hasValidDbKey() && otherModel.hasValidDbKey())
+            {
+                // we have no DB data, but the other one has
+                // so we change roles. We take the DB object as base, and update our parts
+                CAircraftModel copy(otherModel);
+                copy.updateMissingParts(*this);
+                *this = copy;
+                return;
+            }
+
+            if (this->m_modelString.isEmpty()) { this->setModelString(otherModel.getModelString()); }
+            if (this->m_description.isEmpty()) { this->setDescription(otherModel.getDescription()); }
+            if (this->m_fileName.isEmpty())    { this->setFileName(otherModel.getFileName()); }
+            if (this->m_callsign.isEmpty())    { this->setCallsign(otherModel.getCallsign()); }
+            if (this->m_modelType == TypeUnknown) { this->m_modelType = otherModel.getModelType(); }
             if (this->m_simulator.isUnspecified())
             {
-                this->setSimulatorInfo(model.getSimulatorInfo());
+                this->setSimulatorInfo(otherModel.getSimulatorInfo());
             }
             else
             {
-                this->m_simulator.add(model.getSimulatorInfo());
+                this->m_simulator.add(otherModel.getSimulatorInfo());
             }
 
-            this->m_livery.updateMissingParts(model.getLivery());
-            this->m_aircraftIcao.updateMissingParts(model.getAircraftIcaoCode());
-            this->m_distributor.updateMissingParts(model.getDistributor());
+            this->m_livery.updateMissingParts(otherModel.getLivery());
+            this->m_aircraftIcao.updateMissingParts(otherModel.getAircraftIcaoCode());
+            this->m_distributor.updateMissingParts(otherModel.getDistributor());
         }
 
         bool CAircraftModel::hasQueriedModelString() const

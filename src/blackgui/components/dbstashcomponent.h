@@ -152,6 +152,12 @@ namespace BlackGui
 
             //! Get the selected only models or all models depending on checkbox
             BlackMisc::Simulation::CAircraftModelList getSelectedOrAllModels() const;
+
+            //! Consolidate with any DB data (if available).
+            BlackMisc::Simulation::CAircraftModel consolidateWithDbData(const BlackMisc::Simulation::CAircraftModel &model);
+
+            //! Consolidate with own models (if available).
+            BlackMisc::Simulation::CAircraftModel consolidateWithOwnModels(const BlackMisc::Simulation::CAircraftModel &model);
         };
     } // ns
 } // ns

@@ -177,7 +177,7 @@ namespace BlackGui
             if (this->m_modelLoader) { this->m_modelLoader->gracefulShutdown(); }
         }
 
-        bool CDbMappingComponent::hasModelsToStash() const
+        bool CDbMappingComponent::hasSelectedModelsToStash() const
         {
             TabIndex tab = currentTabIndex();
             switch (tab)
@@ -208,9 +208,9 @@ namespace BlackGui
             }
         }
 
-        CAircraftModelList CDbMappingComponent::getModelsToStash() const
+        CAircraftModelList CDbMappingComponent::getSelectedModelsToStash() const
         {
-            if (!hasModelsToStash()) { return CAircraftModelList(); }
+            if (!hasSelectedModelsToStash()) { return CAircraftModelList(); }
             TabIndex tab = currentTabIndex();
             switch (tab)
             {
@@ -234,13 +234,18 @@ namespace BlackGui
             return ui->comp_StashAircraft->getStashedModelStrings();
         }
 
+        CAircraftModel CDbMappingComponent::getOwnModelForModelString(const QString &modelString)
+        {
+            return m_cachedOwnModels.get().findFirstByModelString(modelString);
+        }
+
         CDbMappingComponent::TabIndex CDbMappingComponent::currentTabIndex() const
         {
             int t = ui->tw_ModelsToBeMapped->currentIndex();
             return static_cast<TabIndex>(t);
         }
 
-        bool CDbMappingComponent::isStashedView() const
+        bool CDbMappingComponent::isStashedTab() const
         {
             return currentTabIndex() == TabStash;
         }
@@ -266,7 +271,7 @@ namespace BlackGui
 
         void CDbMappingComponent::ps_stashCurrentModel()
         {
-            const CAircraftModel model(getAircraftModel());
+            const CAircraftModel model(getEditorAircraftModel());
             CStatusMessageList msgs(this->validateCurrentModel(true));
             if (!msgs.hasErrorMessages())
             {
@@ -439,10 +444,10 @@ namespace BlackGui
 
         void CDbMappingComponent::stashSelectedModels()
         {
-            if (!this->hasModelsToStash()) { return; }
+            if (!this->hasSelectedModelsToStash()) { return; }
             CStatusMessageList msgs =
                 this->ui->comp_StashAircraft->stashModels(
-                    this->getModelsToStash()
+                    this->getSelectedModelsToStash()
                 );
             if (msgs.hasWarningOrErrorMessages())
             {
@@ -515,7 +520,7 @@ namespace BlackGui
             this->ui->tvp_OwnAircraftModels->hideLoadIndicator();
         }
 
-        CAircraftModel CDbMappingComponent::getAircraftModel() const
+        CAircraftModel CDbMappingComponent::getEditorAircraftModel() const
         {
             CAircraftModel model(ui->editor_Model->getValue());
             model.setDistributor(ui->editor_Distributor->getValue());

@@ -225,6 +225,16 @@ namespace BlackMisc
 
         void CAirlineIcaoCode::updateMissingParts(const CAirlineIcaoCode &otherIcaoCode)
         {
+            if (!this->hasValidDbKey() && otherIcaoCode.hasValidDbKey())
+            {
+                // we have no DB data, but the other one has
+                // so we change roles. We take the DB object as base, and update our parts
+                CAirlineIcaoCode copy(otherIcaoCode);
+                copy.updateMissingParts(*this);
+                *this = copy;
+                return;
+            }
+
             if (!this->hasValidDesignator()) { this->setDesignator(otherIcaoCode.getDesignator()); }
             if (!this->hasValidCountry()) { this->setCountry(otherIcaoCode.getCountry()); }
             if (!this->hasName()) { this->setName(otherIcaoCode.getName()); }

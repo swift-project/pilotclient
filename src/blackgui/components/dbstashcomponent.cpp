@@ -12,6 +12,7 @@
 #include "ui_dbstashcomponent.h"
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/simulation/aircraftmodel.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -82,16 +83,30 @@ namespace BlackGui
 
         CStatusMessage CDbStashComponent::stashModel(const CAircraftModel &model, bool replace)
         {
-            CStatusMessage m(validateStashModel(model, replace));
+            CAircraftModel pushModel(model);
+
+            // merge with own models if any
+            if (pushModel.getModelType() != CAircraftModel::TypeOwnSimulatorModel)
+            {
+                pushModel = this->consolidateWithOwnModels(pushModel);
+            }
+
+            // merge with DB data if any
+            if (!pushModel.hasValidDbKey())
+            {
+                pushModel = this->consolidateWithDbData(pushModel);
+            }
+
+            CStatusMessage m(validateStashModel(pushModel, replace));
             if (!m.isWarningOrAbove())
             {
                 if (replace)
                 {
-                    this->ui->tvp_StashAircraftModels->replaceOrAdd(&CAircraftModel::getModelString, model.getModelString(), model);
+                    this->ui->tvp_StashAircraftModels->replaceOrAdd(&CAircraftModel::getModelString, pushModel.getModelString(), pushModel);
                 }
                 else
                 {
-                    this->ui->tvp_StashAircraftModels->insert(model);
+                    this->ui->tvp_StashAircraftModels->insert(pushModel);
                 }
             }
             return m;
@@ -313,6 +328,28 @@ namespace BlackGui
             return models;
         }
 
+        CAircraftModel CDbStashComponent::consolidateWithDbData(const CAircraftModel &model)
+        {
+            if (!model.hasModelString()) { return model; }
+            CAircraftModel dbModel(this->getModelForModelString(model.getModelString()));
+
+            if (!dbModel.hasValidDbKey()) { return model; }
+
+            // use DB model as base, update everything else
+            dbModel.updateMissingParts(model);
+            return dbModel;
+        }
+
+        CAircraftModel CDbStashComponent::consolidateWithOwnModels(const CAircraftModel &model)
+        {
+            if (!model.hasModelString()) { return model; }
+            if (model.getModelType() == CAircraftModel::TypeOwnSimulatorModel) { return model; }
+            CAircraftModel ownModel(this->getMappingComponent()->getOwnModelForModelString(model.getModelString()));
+            if (!ownModel.hasModelString()) { return model; }
+            ownModel.updateMissingParts(model);
+            return ownModel;
+        }
+
         void CDbStashComponent::ps_copyOverPartsToSelected()
         {
             QObject *sender = QObject::sender();
@@ -320,7 +357,7 @@ namespace BlackGui
             if (!this->getMappingComponent()) { return; }
             if (!this->ui->tvp_StashAircraftModels->hasSelection()) { return; }
 
-            CAircraftModel model(this->getMappingComponent()->getAircraftModel());
+            CAircraftModel model(this->getMappingComponent()->getEditorAircraftModel());
             if (sender == this->ui->pb_AircraftIcao)
             {
                 this->applyToSelected(model.getAircraftIcaoCode());

@@ -115,6 +115,16 @@ namespace BlackMisc
 
         void CDistributor::updateMissingParts(const CDistributor &otherDistributor)
         {
+            if (!this->hasValidDbKey() && otherDistributor.hasValidDbKey())
+            {
+                // we have no DB data, but the other one has
+                // so we change roles. We take the DB object as base, and update our parts
+                CDistributor copy(otherDistributor);
+                copy.updateMissingParts(*this);
+                *this = copy;
+                return;
+            }
+
             if (!this->hasAlias1()) { this->setAlias1(otherDistributor.getAlias1()); }
             if (!this->hasAlias2()) { this->setAlias1(otherDistributor.getAlias2()); }
             if (!this->hasDescription()) { this->setDescription(otherDistributor.getDescription()); }
@@ -129,7 +139,8 @@ namespace BlackMisc
             }
 
             QString description(json.value(prefix + "description").toString());
-            if (description.isEmpty()) {
+            if (description.isEmpty())
+            {
                 // stub, only key, maybe also timestamps
                 CDistributor distributorStub;
                 distributorStub.setKeyAndTimestampFromDatabaseJson(json, prefix);
