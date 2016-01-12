@@ -43,8 +43,8 @@ g2int simunpack(unsigned char *cpack,g2int *idrstmpl,g2int ndpts,g2float *fld)
       g2float ref,bscale,dscale;
       
       rdieee(idrstmpl+0,&ref,1);
-      bscale = int_power(2.0,idrstmpl[1]);
-      dscale = int_power(10.0,-idrstmpl[2]);
+      bscale = (g2float)int_power(2.0,idrstmpl[1]);
+      dscale = (g2float)int_power(10.0,-idrstmpl[2]);
       nbits = idrstmpl[3];
 
       ifld=(g2int *)calloc((ndpts ? ndpts : 1),sizeof(g2int));

@@ -60,17 +60,17 @@ void rdieee(g2int *rieee,g2float *a,g2int num)
         
         if ( (iexp > 0) && (iexp < 255) ) {
           temp=(g2float)int_power(2.0,(iexp-127));
-          a[j]=sign*temp*(1.0+(two23*(g2float)imant));
+          a[j]=sign*temp*(1.0f+(two23*(g2float)imant));
         }
         else if ( iexp == 0 ) {
           if ( imant != 0 )
             a[j]=sign*two126*two23*(g2float)imant;
           else
-            a[j]=sign*0.0;
+            a[j]=sign*0.0f;
           
         }
         else if ( iexp == 255 )
-           a[j]=sign*(1E+37);
+           a[j]=sign*(1E+37f);
 
 
       }

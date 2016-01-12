@@ -77,12 +77,12 @@ void compack(g2float *fld,g2int ndpts,g2int idrsnum,g2int *idrstmpl,
       g2int  missopt, miss1, miss2, ier;
       g2float  bscale,dscale,rmax,rmin,temp;
       static g2int simple_alg = 0;
-      static g2float alog2=0.69314718;       //  ln(2.0)
+      static g2float alog2=0.69314718f;       //  ln(2.0)
       static g2int one=1;
       ival1 = 0;
 
-      bscale=int_power(2.0,-idrstmpl[1]);
-      dscale=int_power(10.0,idrstmpl[2]);
+      bscale=(g2float)int_power(2.0,-idrstmpl[1]);
+      dscale=(g2float)int_power(10.0,idrstmpl[2]);
 //
 //  Find max and min values in the data
 //
@@ -151,7 +151,7 @@ void compack(g2float *fld,g2int ndpts,g2int idrsnum,g2int *idrstmpl,
            //   find num of bits need to store minsd and add 1 extra bit
            //   to indicate sign
            //
-           temp=log((double)(abs(minsd)+1))/alog2;
+           temp=(g2float)log((double)(abs(minsd)+1))/alog2;
            nbitsd=(g2int)ceil(temp)+1;
            //
            //   find num of bits need to store ifld[0] ( and ifld[1]
@@ -159,7 +159,7 @@ void compack(g2float *fld,g2int ndpts,g2int idrsnum,g2int *idrstmpl,
            //
            maxorig=ival1;
            if (idrstmpl[16]==2 && ival2>ival1) maxorig=ival2;
-           temp=log((double)(maxorig+1))/alog2;
+           temp=(g2float)log((double)(maxorig+1))/alog2;
            nbitorig=(g2int)ceil(temp)+1;
            if (nbitorig > nbitsd) nbitsd=nbitorig;
            //   increase number of bits to even multiple of 8 ( octet )
@@ -261,7 +261,7 @@ void compack(g2float *fld,g2int ndpts,g2int idrsnum,g2int *idrstmpl,
            }
            //   calc num of bits needed to hold data
            if ( gref[ng] != imax ) {
-              temp=log((double)(imax-gref[ng]+1))/alog2;
+              temp=(g2float)log((double)(imax-gref[ng]+1))/alog2;
               gwidth[ng]=(g2int)ceil(temp);
            }
            else 
@@ -283,7 +283,7 @@ void compack(g2float *fld,g2int ndpts,g2int idrsnum,g2int *idrstmpl,
         igmax=gref[0];
         for (j=1;j<ngroups;j++) if (gref[j] > igmax) igmax=gref[j];
         if (igmax != 0) {
-           temp=log((double)(igmax+1))/alog2;
+           temp=(g2float)log((double)(igmax+1))/alog2;
            nbitsgref=(g2int)ceil(temp);
            sbits(cpack,gref,iofst,nbitsgref,0,ngroups);
            itemp=nbitsgref*ngroups;
@@ -309,7 +309,7 @@ void compack(g2float *fld,g2int ndpts,g2int idrsnum,g2int *idrstmpl,
            if (gwidth[j] < ngwidthref) ngwidthref=gwidth[j];
         }
         if (iwmax != ngwidthref) {
-           temp=log((double)(iwmax-ngwidthref+1))/alog2;
+           temp=(g2float)log((double)(iwmax-ngwidthref+1))/alog2;
            nbitsgwidth=(g2int)ceil(temp);
            for (i=0;i<ngroups;i++) 
               gwidth[i]=gwidth[i]-ngwidthref;
@@ -341,7 +341,7 @@ void compack(g2float *fld,g2int ndpts,g2int idrsnum,g2int *idrstmpl,
         }
         nglenlast=glen[ngroups-1];
         if (ilmax != nglenref) {
-           temp=log((double)(ilmax-nglenref+1))/alog2;
+           temp=(g2float)log((double)(ilmax-nglenref+1))/alog2;
            nbitsglen=(g2int)ceil(temp);
            for (i=0;i<ngroups-1;i++)  glen[i]=glen[i]-nglenref;
            sbits(cpack,glen,iofst,nbitsglen,0,ngroups);
