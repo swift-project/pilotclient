@@ -16,9 +16,9 @@ namespace BlackMisc
     {
         CDistributor::CDistributor() { }
 
-        CDistributor::CDistributor(const QString &id)
+        CDistributor::CDistributor(const QString &key)
         {
-            this->setDbKey(id);
+            this->setDbKey(key);
         }
 
         CDistributor::CDistributor(const QString &id, const QString &description, const QString &alias1, const QString &alias2) :
@@ -27,11 +27,11 @@ namespace BlackMisc
             this->setDbKey(id);
         }
 
-        bool CDistributor::matchesIdOrAlias(const QString &idOrAlias) const
+        bool CDistributor::matchesKeyOrAlias(const QString &keyOrAlias) const
         {
-            QString s(idOrAlias.trimmed().toUpper());
+            QString s(keyOrAlias.trimmed().toUpper());
             if (s.isEmpty()) { return false; }
-            return (getId() == s || getAlias1() == s || getAlias2() == s);
+            return (getDbKey() == s || getAlias1() == s || getAlias2() == s);
         }
 
         CVariant CDistributor::propertyByIndex(const CPropertyIndex &index) const

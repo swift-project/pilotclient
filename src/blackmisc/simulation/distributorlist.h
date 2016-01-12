@@ -41,10 +41,13 @@ namespace BlackMisc
             CDistributorList(const CSequence<CDistributor> &other);
 
             //! Find by id or alias
-            CDistributor findByIdOrAlias(const QString &name);
+            CDistributor findByKeyOrAlias(const QString &keyOrAlias);
 
             //! Best match by given pattern
             CDistributor smartDistributorSelector(const CDistributor &distributorPattern);
+
+            //! All DB keys and aliases
+            QStringList getDbKeysAndAliases() const;
         };
     } //namespace
 } // namespace

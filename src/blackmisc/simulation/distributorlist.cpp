@@ -20,12 +20,12 @@ namespace BlackMisc
             CSequence<CDistributor>(other)
         { }
 
-        CDistributor CDistributorList::findByIdOrAlias(const QString &idOrAlias)
+        CDistributor CDistributorList::findByKeyOrAlias(const QString &keyOrAlias)
         {
-            if (idOrAlias.isEmpty()) { return CDistributor(); }
+            if (keyOrAlias.isEmpty()) { return CDistributor(); }
             for (const CDistributor &distributor : (*this))
             {
-                if (distributor.matchesIdOrAlias(idOrAlias)) { return distributor; }
+                if (distributor.matchesKeyOrAlias(keyOrAlias)) { return distributor; }
             }
             return CDistributor();
         }
@@ -39,9 +39,29 @@ namespace BlackMisc
                 if (d.hasCompleteData()) { return d; }
 
                 // more lenient search
-                return this->findByIdOrAlias(k);
+                return this->findByKeyOrAlias(k);
             }
             return CDistributor();
+        }
+
+        QStringList CDistributorList::getDbKeysAndAliases() const
+        {
+            if (this->isEmpty()) { return QStringList(); }
+            QStringList sl;
+            for (const CDistributor &d : *this)
+            {
+                if (!d.hasValidDbKey()) { continue; }
+                sl.append(d.getDbKey());
+                if (d.hasAlias1())
+                {
+                    sl.append(d.getAlias1());
+                }
+                if (d.hasAlias2())
+                {
+                    sl.append(d.getAlias2());
+                }
+            }
+            return sl;
         }
 
     } // namespace

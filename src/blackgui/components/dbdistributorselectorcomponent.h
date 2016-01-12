@@ -50,7 +50,7 @@ namespace BlackGui
             void setDistributor(const BlackMisc::Simulation::CDistributor &distributor);
 
             //! Current Distributor
-            void setDistributor(const QString &distributorKey);
+            void setDistributor(const QString &distributorKeyOrAlias);
 
             //! Distributor
             BlackMisc::Simulation::CDistributor getDistributor() const;
@@ -92,7 +92,7 @@ namespace BlackGui
             void ps_dataChanged();
 
             //! Data have been changed
-            void ps_completerActivated(const QString &distributorKey);
+            void ps_completerActivated(const QString &distributorKeyOrAlias);
 
         private:
             QScopedPointer<Ui::CDbDistributorSelectorComponent> ui;

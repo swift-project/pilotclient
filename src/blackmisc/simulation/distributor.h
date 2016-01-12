@@ -40,13 +40,10 @@ namespace BlackMisc
             CDistributor();
 
             //! Constructor
-            CDistributor(const QString &id);
+            CDistributor(const QString &key);
 
             //! Constructor
             CDistributor(const QString &id, const QString &description, const QString &alias1, const QString &alias2);
-
-            //! Id
-            const QString &getId() const { return this->getDbKey(); }
 
             //! Get description
             const QString &getDescription() const { return this->m_description;}
@@ -76,7 +73,7 @@ namespace BlackMisc
             bool hasAlias2() const { return !this->m_alias2.isEmpty(); }
 
             //! Matches id or alias
-            bool matchesIdOrAlias(const QString &idOrAlias) const;
+            bool matchesKeyOrAlias(const QString &keyOrAlias) const;
 
             //! \copydoc CValueObject::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;

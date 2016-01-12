@@ -54,27 +54,29 @@ namespace BlackGui
 
         void CDbDistributorSelectorComponent::setDistributor(const CDistributor &distributor)
         {
-            this->ui->le_Distributor->setText(distributor.getId());
-            ui->lbl_Description->setText(distributor.getDescription());
+            QString key(distributor.getDbKey());
+            if (key.isEmpty()) { return; }
             if (distributor != m_currentDistributor)
             {
+                this->ui->le_Distributor->setText(key);
                 m_currentDistributor = distributor;
                 emit changedDistributor(distributor);
             }
         }
 
-        void CDbDistributorSelectorComponent::setDistributor(const QString &distributorKey)
+        void CDbDistributorSelectorComponent::setDistributor(const QString &distributorKeyOrAlias)
         {
-            QString key(distributorKey.toUpper().trimmed());
-            CDistributor d(getDistributors().findByKey(key));
-            ui->lbl_Description->setText("");
+            QString keyOrAlias(distributorKeyOrAlias.toUpper().trimmed());
+            if (this->m_currentDistributor.matchesKeyOrAlias(keyOrAlias)) { return; }
+            CDistributor d(getDistributors().findByKeyOrAlias(keyOrAlias));
             if (d.hasCompleteData())
             {
                 this->setDistributor(d);
             }
             else
             {
-                this->ui->le_Distributor->setText(key);
+                this->ui->lbl_Description->setText("");
+                this->ui->le_Distributor->setText(keyOrAlias);
             }
         }
 
@@ -153,7 +155,9 @@ namespace BlackGui
             {
                 if (count > 0)
                 {
-                    QCompleter *c = new QCompleter(this->getDistributors().toDbKeyList(), this);
+                    QStringList keysAndAliases(this->getDistributors().getDbKeysAndAliases());
+                    keysAndAliases.sort(Qt::CaseInsensitive);
+                    QCompleter *c = new QCompleter(keysAndAliases, this);
                     c->setCaseSensitivity(Qt::CaseInsensitive);
                     c->setCompletionMode(QCompleter::PopupCompletion);
                     c->setMaxVisibleItems(10);
@@ -175,13 +179,14 @@ namespace BlackGui
         {
             if (!hasProvider()) { return; }
             QString key(this->ui->le_Distributor->text().trimmed().toUpper());
-            CDistributor d(this->getDistributors().findByKey(key));
+            if (key.isEmpty()) { return; }
+            CDistributor d(this->getDistributors().findByKeyOrAlias(key));
             this->setDistributor(d);
         }
 
-        void CDbDistributorSelectorComponent::ps_completerActivated(const QString &distributorKey)
+        void CDbDistributorSelectorComponent::ps_completerActivated(const QString &distributorKeyOrAlias)
         {
-            this->setDistributor(distributorKey);
+            this->setDistributor(distributorKeyOrAlias);
         }
 
     } // ns
