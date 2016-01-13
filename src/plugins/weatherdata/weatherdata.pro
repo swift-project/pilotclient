@@ -3,7 +3,6 @@ load(common_pre)
 TEMPLATE = subdirs
 CONFIG += ordered
 
-SUBDIRS += simulator
-SUBDIRS += weatherdata
+SUBDIRS += gfs
 
 load(common_post)

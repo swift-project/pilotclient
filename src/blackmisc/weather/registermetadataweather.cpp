@@ -25,6 +25,8 @@ namespace BlackMisc
             CPresentWeatherList::registerMetadata();
             CTemperatureLayer::registerMetadata();
             CTemperatureLayerList::registerMetadata();
+            CWeatherDataPluginInfo::registerMetadata();
+            CWeatherDataPluginInfoList::registerMetadata();
             CWeatherGrid::registerMetadata();
             CWindLayer::registerMetadata();
             CWindLayerList::registerMetadata();

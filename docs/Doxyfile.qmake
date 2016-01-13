@@ -804,7 +804,8 @@ RECURSIVE              = YES
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-EXCLUDE                = $(DOXY_SRC_ROOT)/xbus/libxplanemp
+EXCLUDE                = $(DOXY_SRC_ROOT)/xbus/libxplanemp \
+                         $(DOXY_SRC_ROOT)/plugins/weatherdata/gfs/g2clib
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded
