@@ -20,8 +20,8 @@ namespace BlackMisc
     namespace Weather
     {
 
-        CWindLayer::CWindLayer(const CAltitude &altitude, const CAngle &direction, const CSpeed &speed, const CSpeed &gustSpeed) :
-            m_altitude(altitude), m_directionMain(direction), m_speed(speed), m_gustSpeed(gustSpeed)
+        CWindLayer::CWindLayer(const CAltitude &level, const CAngle &direction, const CSpeed &speed, const CSpeed &gustSpeed) :
+            m_level(level), m_directionMain(direction), m_speed(speed), m_gustSpeed(gustSpeed)
         { }
 
         CVariant CWindLayer::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -30,8 +30,8 @@ namespace BlackMisc
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexAltitude:
-                return CVariant::fromValue(m_altitude);
+            case IndexLevel:
+                return CVariant::fromValue(m_level);
             case IndexDirection:
                 return CVariant::fromValue(m_directionMain);
             case IndexDirectionVariable:
@@ -51,8 +51,8 @@ namespace BlackMisc
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexAltitude:
-                setAltitude(variant.value<CAltitude>());
+            case IndexLevel:
+                setLevel(variant.value<CAltitude>());
                 break;
             case IndexDirection:
                 setDirection(variant.value<CAngle>());

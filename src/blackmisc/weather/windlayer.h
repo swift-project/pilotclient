@@ -34,7 +34,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexAltitude = BlackMisc::CPropertyIndex::GlobalIndexCWindLayer,
+                IndexLevel = BlackMisc::CPropertyIndex::GlobalIndexCWindLayer,
                 IndexDirection,
                 IndexDirectionVariable,
                 IndexSpeed,
@@ -45,14 +45,14 @@ namespace BlackMisc
             CWindLayer() = default;
 
             //! Constructor
-            CWindLayer(const BlackMisc::Aviation::CAltitude &altitude, const PhysicalQuantities::CAngle &direction,
+            CWindLayer(const BlackMisc::Aviation::CAltitude &level, const PhysicalQuantities::CAngle &direction,
                        const PhysicalQuantities::CSpeed &speed, const PhysicalQuantities::CSpeed &gustSpeed);
 
-            //! Set altitude
-            void setAltitude(const BlackMisc::Aviation::CAltitude &altitude) { m_altitude = altitude; }
+            //! Set level
+            void setLevel(const BlackMisc::Aviation::CAltitude &level) { m_level = level; }
 
-            //! Get altitude
-            BlackMisc::Aviation::CAltitude getAltitude() const { return m_altitude; }
+            //! Get level
+            BlackMisc::Aviation::CAltitude getLevel() const { return m_level; }
 
             //! Set direction
             void setDirection(const PhysicalQuantities::CAngle &main) { m_directionMain = main; }
@@ -111,7 +111,7 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CWindLayer)
-            BlackMisc::Aviation::CAltitude m_altitude;
+            BlackMisc::Aviation::CAltitude m_level;
             PhysicalQuantities::CAngle m_directionMain;
             PhysicalQuantities::CAngle m_directionFrom;
             PhysicalQuantities::CAngle m_directionTo;
@@ -126,7 +126,7 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CWindLayer)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Weather::CWindLayer, (
-                                   attr(o.m_altitude),
+                                   attr(o.m_level),
                                    attr(o.m_directionMain),
                                    attr(o.m_directionFrom),
                                    attr(o.m_directionTo),
