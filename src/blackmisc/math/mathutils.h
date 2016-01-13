@@ -101,6 +101,9 @@ namespace BlackMisc
 
             //! Random number between low and high
             static int randomInteger(int low, int high);
+
+            //! Round numToRound to the nearest multiple of multiple
+            static int roundToMultipleOf(int value, int divisor);
         };
 
     } // namespace

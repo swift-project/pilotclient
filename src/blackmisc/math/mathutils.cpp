@@ -93,5 +93,21 @@ namespace BlackMisc
             return r % ((high + 1) - low) + low;
         }
 
+        int CMathUtils::roundToMultipleOf(int value, int divisor)
+        {
+            Q_ASSERT(divisor != 0);
+            Q_ASSERT(divisor >= - std::numeric_limits<int>::max());
+            divisor = std::abs(divisor);
+            Q_ASSERT(std::abs(value) < std::numeric_limits<int>::max() - divisor / 2);
+
+            int multiplier = value / divisor;
+            int remainder = std::abs(value % divisor);
+            int shortfall = divisor - remainder;
+
+            if (shortfall < remainder) { multiplier += value < 0 ? -1 : 1; }
+
+            return multiplier * divisor;
+        }
+
     } // namespace
 } // namespace
