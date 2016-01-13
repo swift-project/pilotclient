@@ -69,6 +69,7 @@ namespace BlackMisc
             GlobalIndexCCloudLayer            =  4100,
             GlobalIndexCPresentWeather        =  4200,
             GlobalIndexCWindLayer             =  4300,
+            GlobalIndexCTemperatureLayer      =  4400,
             GlobalIndexICoordinateGeodetic    =  5000,
             GlobalIndexCCoordinateGeodetic    =  5100,
             GlobalIndexCClient                =  6000,

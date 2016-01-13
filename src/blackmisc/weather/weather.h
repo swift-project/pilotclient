@@ -23,6 +23,9 @@
 #include "blackmisc/weather/metarset.h"
 #include "blackmisc/weather/presentweather.h"
 #include "blackmisc/weather/presentweatherlist.h"
+#include "blackmisc/weather/temperaturelayer.h"
+#include "blackmisc/weather/temperaturelayerlist.h"
 #include "blackmisc/weather/windlayer.h"
+#include "blackmisc/weather/windlayerlist.h"
 
 #endif // guard

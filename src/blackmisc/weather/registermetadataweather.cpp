@@ -22,7 +22,10 @@ namespace BlackMisc
             CMetarSet::registerMetadata();
             CPresentWeather::registerMetadata();
             CPresentWeatherList::registerMetadata();
+            CTemperatureLayer::registerMetadata();
+            CTemperatureLayerList::registerMetadata();
             CWindLayer::registerMetadata();
+            CWindLayerList::registerMetadata();
         }
     } // ns
 } // ns
