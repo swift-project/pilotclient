@@ -26,7 +26,7 @@ namespace BlackMisc
         //! Value object encapsulating a list of ICAO codes.
         class BLACKMISC_EXPORT CAirlineIcaoCodeList :
             public CSequence<CAirlineIcaoCode>,
-            public BlackMisc::IDatastoreObjectListWithIntegerKey<CAirlineIcaoCode, CAirlineIcaoCodeList>,
+            public BlackMisc::IDatastoreObjectList<CAirlineIcaoCode, CAirlineIcaoCodeList, int>,
 
             public BlackMisc::Mixin::MetaType<CAirlineIcaoCodeList>
         {

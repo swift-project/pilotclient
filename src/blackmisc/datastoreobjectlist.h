@@ -21,21 +21,24 @@
 namespace BlackMisc
 {
     //! List of objects read from database.
-    //! Such objects should implement \sa ITimestampBased and \sa IDatastoreObjectWithIntegerKey
-    template<class OBJ, class CONTAINER> class IDatastoreObjectListWithIntegerKey : public ITimestampObjectList<OBJ, CONTAINER>
+    //! Such objects should implement \sa ITimestampBased and \sa IDatastoreObjectWithIntegerKey or \sa IDatastoreObjectWithStringKey
+    template<class OBJ, class CONTAINER, typename KEYTYPE> class IDatastoreObjectList : public ITimestampObjectList<OBJ, CONTAINER>
     {
     public:
         //! Object with key, notFound otherwise
-        OBJ findByKey(int key, const OBJ &notFound = OBJ()) const;
+        OBJ findByKey(KEYTYPE key, const OBJ &notFound = OBJ()) const;
 
         //! Sort by timestamp
         void sortByKey();
 
         //! All keys as list
-        QList<int> toDbKeyList() const;
+        QList<KEYTYPE> toDbKeyList() const;
 
         //! Remove objects with key
-        int removeObjectsWithKeys(const QList<int> &keys);
+        int removeObjectsWithKeys(const QList<KEYTYPE> &keys);
+
+        //! Update or insert data (based on DB key)
+        int replaceOrAddObjectsByKey(const CONTAINER &container);
 
         //! From DB JSON with default prefixes
         static CONTAINER fromDatabaseJson(const QJsonArray &array);
@@ -45,35 +48,7 @@ namespace BlackMisc
 
     protected:
         //! Constructor
-        IDatastoreObjectListWithIntegerKey();
-    };
-
-    //! List of objects read from database.
-    //! Such objects should implement \sa ITimestampBased and \sa IDatastoreObjectWithString
-    template<class OBJ, class CONTAINER> class IDatastoreObjectListWithStringKey : public ITimestampObjectList<OBJ, CONTAINER>
-    {
-    public:
-        //! Object with key, not found otherwise
-        OBJ findByKey(const QString &key, const OBJ &notFound = OBJ()) const;
-
-        //! Sort by timestamp
-        void sortByKey();
-
-        //! All keys as string list
-        QStringList toDbKeyList() const;
-
-        //! Remove objects with key
-        int removeObjectsWithKeys(const QStringList &keys);
-
-        //! From DB JSON with default prefixes
-        static CONTAINER fromDatabaseJson(const QJsonArray &array);
-
-        //! From DB JSON
-        static CONTAINER fromDatabaseJson(const QJsonArray &array, const QString &prefix);
-
-    protected:
-        //! Constructor
-        IDatastoreObjectListWithStringKey();
+        IDatastoreObjectList();
     };
 
     //! \cond PRIVATE
@@ -91,12 +66,12 @@ namespace BlackMisc
         class CAircraftModelList;
     }
 
-    extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectListWithIntegerKey<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList>;
-    extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectListWithIntegerKey<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList>;
-    extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectListWithIntegerKey<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList>;
-    extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectListWithIntegerKey<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
-    extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectListWithStringKey<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;
-    extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectListWithStringKey<BlackMisc::CCountry, BlackMisc::CCountryList>;
+    extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectList<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList, int>;
+    extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectList<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList, int>;
+    extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectList<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList, int>;
+    extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList, int>;
+    extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList, QString>;
+    extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectList<BlackMisc::CCountry, BlackMisc::CCountryList, QString>;
     //! \endcond
 
 } //namespace

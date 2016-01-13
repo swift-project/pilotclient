@@ -20,36 +20,26 @@
 
 namespace BlackMisc
 {
-    template <class OBJ, class CONTAINER>
-    IDatastoreObjectListWithIntegerKey<OBJ, CONTAINER>::IDatastoreObjectListWithIntegerKey()
+    template <class OBJ, class CONTAINER, typename KEYTYPE>
+    IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::IDatastoreObjectList()
     { }
 
-    template <class OBJ, class CONTAINER>
-    IDatastoreObjectListWithStringKey<OBJ, CONTAINER>::IDatastoreObjectListWithStringKey()
-    { }
-
-    template <class OBJ, class CONTAINER>
-    OBJ IDatastoreObjectListWithIntegerKey<OBJ, CONTAINER>::findByKey(int key, const OBJ &notFound) const
+    template <class OBJ, class CONTAINER, typename KEYTYPE>
+    OBJ IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::findByKey(KEYTYPE key, const OBJ &notFound) const
     {
         return this->container().findFirstByOrDefault(&OBJ::getDbKey, key, notFound);
     }
 
-    template <class OBJ, class CONTAINER>
-    OBJ IDatastoreObjectListWithStringKey<OBJ, CONTAINER>::findByKey(const QString &key, const OBJ &notFound) const
-    {
-        return this->container().findFirstByOrDefault(&OBJ::getDbKey, key, notFound);
-    }
-
-    template <class OBJ, class CONTAINER>
-    void IDatastoreObjectListWithIntegerKey<OBJ, CONTAINER>::sortByKey()
+    template <class OBJ, class CONTAINER, typename KEYTYPE>
+    void IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::sortByKey()
     {
         this->container().sort(BlackMisc::Predicates::MemberLess(&OBJ::getDbKey));
     }
 
-    template <class OBJ, class CONTAINER>
-    QList<int> IDatastoreObjectListWithIntegerKey<OBJ, CONTAINER>::toDbKeyList() const
+    template <class OBJ, class CONTAINER, typename KEYTYPE>
+    QList<KEYTYPE> IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::toDbKeyList() const
     {
-        QList<int> keys;
+        QList<KEYTYPE> keys;
         for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
         {
             if (!obj.hasValidDbKey()) { continue; }
@@ -58,8 +48,8 @@ namespace BlackMisc
         return keys;
     }
 
-    template <class OBJ, class CONTAINER>
-    int IDatastoreObjectListWithIntegerKey<OBJ, CONTAINER>::removeObjectsWithKeys(const QList<int> &keys)
+    template <class OBJ, class CONTAINER, typename KEYTYPE>
+    int IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::removeObjectsWithKeys(const QList<KEYTYPE> &keys)
     {
         if (keys.isEmpty()) { return 0; }
         if (this->container().isEmpty()) { return 0; }
@@ -70,46 +60,30 @@ namespace BlackMisc
             newValues.push_back(obj);
         }
         int delta = this->container().size() - newValues.size();
-        *this = newValues;
+        this->container() = newValues;
         return delta;
     }
 
-    template <class OBJ, class CONTAINER>
-    int IDatastoreObjectListWithStringKey<OBJ, CONTAINER>::removeObjectsWithKeys(const QStringList &keys)
+    template <class OBJ, class CONTAINER, typename KEYTYPE>
+    int IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::replaceOrAddObjectsByKey(const CONTAINER &container)
     {
-        if (keys.isEmpty()) { return 0; }
-        if (this->container().isEmpty()) { return 0; }
-        CONTAINER newValues;
-        for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
+        if (container.isEmpty()) { return 0; }
+        if (this->container().isEmpty())
         {
-            if (keys.contains(obj.getDbKey(), Qt::CaseInsensitive)) { continue; }
-            newValues.push_back(obj);
+            this->container() = container;
+            return this->container().size();
         }
-        int delta = this->container().size() - newValues.size();
-        *this = newValues;
+        CONTAINER newValues(this->container());
+        const QList<KEYTYPE> keys(container.toDbKeyList());
+        newValues.removeObjectsWithKeys(keys);
+        newValues.push_back(container);
+        int delta = newValues.size() - this->container().size();
+        this->container() = newValues;
         return delta;
     }
 
-    template <class OBJ, class CONTAINER>
-    void IDatastoreObjectListWithStringKey<OBJ, CONTAINER>::sortByKey()
-    {
-        this->container().sort(BlackMisc::Predicates::MemberLess(&OBJ::getDbKey));
-    }
-
-    template <class OBJ, class CONTAINER>
-    QStringList IDatastoreObjectListWithStringKey<OBJ, CONTAINER>::toDbKeyList() const
-    {
-        QStringList keys;
-        for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
-        {
-            if (!obj.hasValidDbKey()) { continue; }
-            keys.append(obj.getDbKey());
-        }
-        return keys;
-    }
-
-    template <class OBJ, class CONTAINER>
-    CONTAINER IDatastoreObjectListWithIntegerKey<OBJ, CONTAINER>::fromDatabaseJson(const QJsonArray &array)
+    template <class OBJ, class CONTAINER, typename KEYTYPE>
+    CONTAINER IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::fromDatabaseJson(const QJsonArray &array)
     {
         CONTAINER container;
         for (const QJsonValue &value : array)
@@ -119,30 +93,8 @@ namespace BlackMisc
         return container;
     }
 
-    template <class OBJ, class CONTAINER>
-    CONTAINER IDatastoreObjectListWithIntegerKey<OBJ, CONTAINER>::fromDatabaseJson(const QJsonArray &array, const QString &prefix)
-    {
-        CONTAINER container;
-        for (const QJsonValue &value : array)
-        {
-            container.push_back(OBJ::fromDatabaseJson(value.toObject(), prefix));
-        }
-        return container;
-    }
-
-    template <class OBJ, class CONTAINER>
-    CONTAINER IDatastoreObjectListWithStringKey<OBJ, CONTAINER>::fromDatabaseJson(const QJsonArray &array)
-    {
-        CONTAINER container;
-        for (const QJsonValue &value : array)
-        {
-            container.push_back(OBJ::fromDatabaseJson(value.toObject()));
-        }
-        return container;
-    }
-
-    template <class OBJ, class CONTAINER>
-    CONTAINER IDatastoreObjectListWithStringKey<OBJ, CONTAINER>::fromDatabaseJson(const QJsonArray &array, const QString &prefix)
+    template <class OBJ, class CONTAINER, typename KEYTYPE>
+    CONTAINER IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::fromDatabaseJson(const QJsonArray &array, const QString &prefix)
     {
         CONTAINER container;
         for (const QJsonValue &value : array)
@@ -154,11 +106,11 @@ namespace BlackMisc
 
     // see here for the reason of thess forward instantiations
     // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
-    template class IDatastoreObjectListWithIntegerKey<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList>;
-    template class IDatastoreObjectListWithIntegerKey<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList>;
-    template class IDatastoreObjectListWithIntegerKey<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList>;
-    template class IDatastoreObjectListWithIntegerKey<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
-    template class IDatastoreObjectListWithStringKey<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;
-    template class IDatastoreObjectListWithStringKey<BlackMisc::CCountry, BlackMisc::CCountryList>;
+    template class IDatastoreObjectList<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList, int>;
+    template class IDatastoreObjectList<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList, int>;
+    template class IDatastoreObjectList<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList, int>;
+    template class IDatastoreObjectList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList, int>;
+    template class IDatastoreObjectList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList, QString>;
+    template class IDatastoreObjectList<BlackMisc::CCountry, BlackMisc::CCountryList, QString>;
 
 } // namespace

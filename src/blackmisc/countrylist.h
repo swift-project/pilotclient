@@ -25,7 +25,7 @@ namespace BlackMisc
     //! \remark: I do not use CCollection as I want to sort per column
     class BLACKMISC_EXPORT CCountryList :
         public CSequence<CCountry>,
-        public BlackMisc::IDatastoreObjectListWithStringKey<CCountry, CCountryList>,
+        public BlackMisc::IDatastoreObjectList<CCountry, CCountryList, QString>,
         public BlackMisc::Mixin::MetaType<CCountryList>
     {
     public:

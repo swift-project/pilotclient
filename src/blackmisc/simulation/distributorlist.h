@@ -28,7 +28,7 @@ namespace BlackMisc
         //! Value object encapsulating a list of distributors.
         class BLACKMISC_EXPORT CDistributorList :
             public BlackMisc::CSequence<CDistributor>,
-            public BlackMisc::IDatastoreObjectListWithStringKey<CDistributor, CDistributorList>,
+            public BlackMisc::IDatastoreObjectList<CDistributor, CDistributorList, QString>,
             public BlackMisc::Mixin::MetaType<CDistributorList>
         {
         public:

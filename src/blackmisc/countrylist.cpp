@@ -19,7 +19,7 @@ namespace BlackMisc
     {
         QString iso(isoCode.trimmed().toUpper());
         if (!CCountry::isValidIsoCode(iso)) { return CCountry(); }
-        return IDatastoreObjectListWithStringKey::findByKey(isoCode);
+        return IDatastoreObjectList::findByKey(isoCode);
     }
 
     CCountry CCountryList::findBestMatchByCountryName(const QString &countryName) const
