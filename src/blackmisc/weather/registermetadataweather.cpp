@@ -18,12 +18,14 @@ namespace BlackMisc
         {
             CCloudLayer::registerMetadata();
             CCloudLayerList::registerMetadata();
+            CGridPoint::registerMetadata();
             CMetar::registerMetadata();
             CMetarSet::registerMetadata();
             CPresentWeather::registerMetadata();
             CPresentWeatherList::registerMetadata();
             CTemperatureLayer::registerMetadata();
             CTemperatureLayerList::registerMetadata();
+            CWeatherGrid::registerMetadata();
             CWindLayer::registerMetadata();
             CWindLayerList::registerMetadata();
         }

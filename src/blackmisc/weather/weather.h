@@ -19,12 +19,14 @@
 
 #include "blackmisc/weather/cloudlayer.h"
 #include "blackmisc/weather/cloudlayerlist.h"
+#include "blackmisc/weather/gridpoint.h"
 #include "blackmisc/weather/metar.h"
 #include "blackmisc/weather/metarset.h"
 #include "blackmisc/weather/presentweather.h"
 #include "blackmisc/weather/presentweatherlist.h"
 #include "blackmisc/weather/temperaturelayer.h"
 #include "blackmisc/weather/temperaturelayerlist.h"
+#include "blackmisc/weather/weathergrid.h"
 #include "blackmisc/weather/windlayer.h"
 #include "blackmisc/weather/windlayerlist.h"
 
