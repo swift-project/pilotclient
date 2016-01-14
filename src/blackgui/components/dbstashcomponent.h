@@ -64,6 +64,9 @@ namespace BlackGui
             //! The embedded view
             const BlackGui::Views::CAircraftModelView *getView() const;
 
+            //! The embedded view
+            Views::CAircraftModelView *getView();
+
             //! Has stashed models
             bool hasStashedModels() const;
 

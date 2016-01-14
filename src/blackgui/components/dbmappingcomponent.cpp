@@ -58,6 +58,7 @@ namespace BlackGui
 
             ui->tvp_OwnAircraftModels->setDisplayAutomatically(true);
             ui->tvp_OwnAircraftModels->setCustomMenu(new CMappingSimulatorModelMenu(this));
+            ui->tvp_OwnAircraftModels->setCustomMenu(new CRemoveDbModelsMenu(this));
             ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(this->m_cachedOwnModels.get());
 
             // how to display forms
@@ -93,6 +94,7 @@ namespace BlackGui
                 connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::ps_onStashedModelsChanged);
 
                 this->ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CMappingVPilotMenu(this, true));
+                this->ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CRemoveDbModelsMenu(this));
                 this->ui->tvp_AircraftModelsForVPilot->setDisplayAutomatically(true);
                 this->ui->tvp_AircraftModelsForVPilot->addFilterDialog();
                 const CAircraftModelList cachedModels(m_cachedVPilotModels.get());
@@ -208,6 +210,28 @@ namespace BlackGui
             }
         }
 
+        CAircraftModelView *CDbMappingComponent::currentModelView()
+        {
+            TabIndex tab = currentTabIndex();
+            switch (tab)
+            {
+            case TabOwnModels:
+                return ui->tvp_OwnAircraftModels;
+            case TabVPilot:
+                return ui->tvp_AircraftModelsForVPilot;
+            case TabStash:
+                return ui->comp_StashAircraft->getView();
+            default:
+                return nullptr;
+            }
+        }
+
+        QString CDbMappingComponent::currentTabText() const
+        {
+            int i = this->ui->tw_ModelsToBeMapped->currentIndex();
+            return this->ui->tw_ModelsToBeMapped->tabText(i);
+        }
+
         CAircraftModelList CDbMappingComponent::getSelectedModelsToStash() const
         {
             if (!hasSelectedModelsToStash()) { return CAircraftModelList(); }
@@ -282,6 +306,16 @@ namespace BlackGui
             if (msgs.hasErrorMessages())
             {
                 this->showMessages(msgs);
+            }
+        }
+
+        void CDbMappingComponent::ps_removeDbModelsFromView()
+        {
+            QStringList modelStrings(this->getModelStrings());
+            if (modelStrings.isEmpty()) { return; }
+            if (currentTabIndex() == TabVPilot || currentTabIndex() == TabOwnModels)
+            {
+                this->currentModelView()->removeModelsWithModelString(modelStrings);
             }
         }
 
@@ -545,7 +579,7 @@ namespace BlackGui
             bool noSims = sims.isNoSimulator() || sims.isUnspecified();
             if (!noSims)
             {
-                if (!menu.isEmpty()) { menu.addSeparator(); }
+                this->addSeparator(menu);
                 QMenu *load = menu.addMenu(CIcons::appModels16(), "Load installed models");
                 QAction *a = nullptr;
                 CDbMappingComponent *mapComp = qobject_cast<CDbMappingComponent *>(this->parent());
@@ -583,13 +617,37 @@ namespace BlackGui
             bool canUseVPilot = mappingComponent()->withVPilot();
             if (canUseVPilot)
             {
-                if (!menu.isEmpty()) { menu.addSeparator(); }
+                this->addSeparator(menu);
                 menu.addAction(CIcons::appMappings16(), "Load vPilot Rules", mapComp, SLOT(ps_loadVPilotData()));
             }
             this->nestedCustomMenu(menu);
         }
 
         CDbMappingComponent *CDbMappingComponent::CMappingVPilotMenu::mappingComponent() const
+        {
+            return qobject_cast<CDbMappingComponent *>(this->parent());
+        }
+
+        void CDbMappingComponent::CRemoveDbModelsMenu::customMenu(QMenu &menu) const
+        {
+            CDbMappingComponent *mapComp = mappingComponent();
+            Q_ASSERT_X(mapComp, Q_FUNC_INFO, "no mapping component");
+            int dbModels = mapComp->getModelsCount();
+            if (dbModels > 0)
+            {
+                if (!mapComp->currentModelView()->isEmpty())
+                {
+                    this->addSeparator(menu);
+
+                    // we have keys and data where we could delete them from
+                    QString m("Delete " + QString::number(dbModels) + " DB model(s) from " + mapComp->currentTabText());
+                    menu.addAction(CIcons::delete16(), m, mapComp, SLOT(ps_removeDbModelsFromView()));
+                }
+            }
+            this->nestedCustomMenu(menu);
+        }
+
+        CDbMappingComponent *CDbMappingComponent::CRemoveDbModelsMenu::mappingComponent() const
         {
             return qobject_cast<CDbMappingComponent *>(this->parent());
         }

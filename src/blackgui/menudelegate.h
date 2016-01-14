@@ -37,24 +37,26 @@ namespace BlackGui
 
     protected:
         //! Constructor
-        IMenuDelegate(QWidget *parent = nullptr, bool separatorAtEnd = false) :
-            QObject(parent), m_separatorAtEnd(separatorAtEnd) {}
+        IMenuDelegate(QWidget *parent = nullptr, bool separator = false) :
+            QObject(parent), m_separator(separator) {}
 
         //! Delegate down one level
         void nestedCustomMenu(QMenu &menu) const
         {
-            if (!m_nestedDelegate)
-            {
-                if (m_separatorAtEnd && !menu.isEmpty()) { menu.addSeparator(); }
-                return;
-            }
+            if (!m_nestedDelegate) { return; }
             m_nestedDelegate->customMenu(menu);
         }
 
-        IMenuDelegate *m_nestedDelegate = nullptr; //!< nested delegate if any
-        bool           m_separatorAtEnd = false;   //!< at end, terminate with separator
-    };
+        //! Add separator
+        void addSeparator(QMenu &menu) const
+        {
+            if (!m_separator || menu.isEmpty()) { return; }
+            menu.addSeparator();
+        }
 
+        IMenuDelegate *m_nestedDelegate = nullptr; //!< nested delegate if any
+        bool           m_separator      = false;   //!< at end, terminate with separator
+    };
 } // ns
 
 #endif // guard

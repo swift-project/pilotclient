@@ -113,7 +113,7 @@ namespace BlackGui
             //! Request to filter by distributor
             void filterByDistributor(const BlackMisc::Simulation::CDistributor &distributor);
 
-            //! Request new data
+            //! Request latest (incrementall) data from backend
             void requestUpdatedData(BlackMisc::Network::CEntityFlags::Entity entities);
 
         public slots:
@@ -175,6 +175,9 @@ namespace BlackGui
             //! Stash current model
             void ps_stashCurrentModel();
 
+            //! Remove DB models from current view
+            void ps_removeDbModelsFromView();
+
         private:
             QScopedPointer<Ui::CDbMappingComponent> ui;
             BlackMisc::Simulation::FsCommon::CVPilotRulesReader           m_vPilotReader;                //!< read vPilot rules
@@ -197,30 +200,54 @@ namespace BlackGui
             //! Current model view
             const BlackGui::Views::CAircraftModelView *currentModelView() const;
 
+            //! Current model view
+            BlackGui::Views::CAircraftModelView *currentModelView();
+
+            //! Current tab text
+            QString currentTabText() const;
+
             // -------------------- component specific menus --------------------------
 
-            //! The menu for loading and handling own models for mapping
+            //! The menu for loading and handling own models for mapping tasks
             //! \note This is specific for that very component
             class CMappingSimulatorModelMenu : public BlackGui::IMenuDelegate
             {
             public:
                 //! Constructor
-                CMappingSimulatorModelMenu(CDbMappingComponent *mappingComponent) :
-                    BlackGui::IMenuDelegate(mappingComponent)
+                CMappingSimulatorModelMenu(CDbMappingComponent *mappingComponent, bool separator = true) :
+                    BlackGui::IMenuDelegate(mappingComponent, separator)
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu
                 virtual void customMenu(QMenu &menu) const override;
             };
 
-            //! The menu for loading and handling VPilot rules for mapping
+            //! The menu for loading and handling VPilot rules for mapping tasks
             //! \note This is a specific menu for that very component
             class CMappingVPilotMenu : public BlackGui::IMenuDelegate
             {
             public:
                 //! Constructor
-                CMappingVPilotMenu(CDbMappingComponent *mappingComponent, bool separatorAtEnd) :
-                    BlackGui::IMenuDelegate(mappingComponent, separatorAtEnd)
+                CMappingVPilotMenu(CDbMappingComponent *mappingComponent, bool separator = true) :
+                    BlackGui::IMenuDelegate(mappingComponent, separator)
+                {}
+
+                //! \copydoc IMenuDelegate::customMenu
+                virtual void customMenu(QMenu &menu) const override;
+
+            private:
+                //! Mapping component
+                CDbMappingComponent *mappingComponent() const;
+            };
+
+            //! Menu for removing DB models from current view
+            //! \note This is a specific menu for that very component
+            class CRemoveDbModelsMenu : public BlackGui::IMenuDelegate
+            {
+            public:
+                //! Constructor
+                CRemoveDbModelsMenu(CDbMappingComponent *mappingComponent, bool separator = true) :
+                    BlackGui::IMenuDelegate(mappingComponent, separator)
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu

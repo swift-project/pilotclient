@@ -141,6 +141,11 @@ namespace BlackGui
             return ui->tvp_StashAircraftModels;
         }
 
+        Views::CAircraftModelView *CDbStashComponent::getView()
+        {
+            return ui->tvp_StashAircraftModels;
+        }
+
         bool CDbStashComponent::hasStashedModels() const
         {
             return !this->ui->tvp_StashAircraftModels->isEmpty();
