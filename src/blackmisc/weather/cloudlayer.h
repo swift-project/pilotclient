@@ -52,6 +52,12 @@ namespace BlackMisc
             //! Constructor
             CCloudLayer(BlackMisc::Aviation::CAltitude ceiling, Coverage coverage);
 
+            //! Set base
+            void setBase(const BlackMisc::Aviation::CAltitude &base) { m_base = base; }
+
+            //! Get base
+            BlackMisc::Aviation::CAltitude getBase() const { return m_base; }
+
             //! Set ceiling
             void setCeiling(BlackMisc::Aviation::CAltitude ceiling) { m_ceiling = ceiling; }
 
@@ -64,6 +70,12 @@ namespace BlackMisc
             //! Get coverage
             Coverage getCoverage() const { return m_coverage; }
 
+            //! Set coverage in %
+            void setCoveragePercent(int coverage) { m_coveragePercent = coverage; }
+
+            //! Get coverage in %
+            int getCoveragePercent() const { return m_coveragePercent; }
+
             //! \copydoc CValueObject::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
@@ -75,8 +87,10 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CCloudLayer)
+            BlackMisc::Aviation::CAltitude m_base;
             BlackMisc::Aviation::CAltitude m_ceiling;
             Coverage m_coverage;
+            int m_coveragePercent;
         };
     } // namespace
 } // namespace
