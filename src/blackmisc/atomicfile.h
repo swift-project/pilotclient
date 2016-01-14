@@ -30,7 +30,7 @@ namespace BlackMisc
         CAtomicFile(const QString &filename) : QFile(filename) {}
 
         //! \copydoc QFile::~QFile
-        ~CAtomicFile() { close(); }
+        ~CAtomicFile() { if (! std::uncaught_exception()) { close(); } }
 
         //! \copydoc QFile::open
         //! Just before opening the file, the filename is changed so we actually write to a temporary file.
@@ -42,6 +42,9 @@ namespace BlackMisc
 
         //! Calls close() and returns false if there was an error at any stage.
         bool checkedClose();
+
+        //! Closes the file without renaming it.
+        void abandon();
 
         //! \copydoc QFileDevice::error
         FileError error() const;

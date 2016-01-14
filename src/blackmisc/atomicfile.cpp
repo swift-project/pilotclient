@@ -50,6 +50,11 @@ namespace BlackMisc
         return error() == NoError;
     }
 
+    void CAtomicFile::abandon()
+    {
+        QFile::close();
+    }
+
     CAtomicFile::FileError CAtomicFile::error() const
     {
         if (m_renameError) { return RenameError; }
