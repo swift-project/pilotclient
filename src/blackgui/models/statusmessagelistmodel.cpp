@@ -21,7 +21,7 @@ namespace BlackGui
     namespace Models
     {
         CStatusMessageListModel::CStatusMessageListModel(QObject *parent) :
-            CListModelBase<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>("ViewStatusMessageList", parent)
+            CListModelBase<CStatusMessage, CStatusMessageList, true>("ViewStatusMessageList", parent)
         {
             setMode(Detailed);
 
@@ -41,7 +41,7 @@ namespace BlackGui
             case Detailed:
                 {
                     this->m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHms())));
-                    this->m_columns.addColumn(CColumn::standardString("category", CStatusMessage::IndexCategoryHumanReadable));
+                    this->m_columns.addColumn(CColumn::standardString("category", CStatusMessage::IndexCategoryHumanReadableOrTechnicalAsString));
                     CColumn col = CColumn("severity", CStatusMessage::IndexIcon);
                     col.setSortPropertyIndex(CStatusMessage::IndexSeverityAsString);
                     this->m_columns.addColumn(col);

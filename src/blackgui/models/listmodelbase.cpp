@@ -623,7 +623,7 @@ namespace BlackGui
         // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
         template class CListModelBase<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList, true>;
         template class CListModelBase<BlackMisc::CIdentifier, BlackMisc::CIdentifierList, false>;
-        template class CListModelBase<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList, false>;
+        template class CListModelBase<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList, true>;
         template class CListModelBase<BlackMisc::CNameVariantPair, BlackMisc::CNameVariantPairList, false>;
         template class CListModelBase<BlackMisc::CCountry, BlackMisc::CCountryList, true>;
         template class CListModelBase<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList, false>;

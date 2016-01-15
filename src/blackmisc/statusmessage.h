@@ -43,8 +43,9 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexCategories = BlackMisc::CPropertyIndex::GlobalIndexCStatusMessage,
-            IndexCategoryHumanReadable,
+            IndexCategoriesAsString = BlackMisc::CPropertyIndex::GlobalIndexCStatusMessage,
+            IndexCategoriesHumanReadableAsString,
+            IndexCategoryHumanReadableOrTechnicalAsString,
             IndexSeverity,
             IndexSeverityAsString,
             IndexMessage
@@ -82,14 +83,20 @@ namespace BlackMisc
         //! If message is empty then do nothing, otherwise throw a CStatusException.
         void maybeThrow() const;
 
-        //! Message category
+        //! Message categories
         const CLogCategoryList &getCategories() const { return this->m_categories; }
+
+        //! Message categories as string
+        QString getCategoriesAsString() const;
 
         //! Human readable category
         QString getHumanReadablePattern() const;
 
         //! All human readable categories
         QStringList getHumanReadablePatterns() const;
+
+        //! The human or technical categories
+        QString getHumanOrTechnicalCategoriesAsString() const;
 
         //! Message severity
         StatusSeverity getSeverity() const { return this->m_severity; }
@@ -164,6 +171,9 @@ namespace BlackMisc
 
         //! \copydoc CValueObject::setPropertyByIndex
         void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
+
+        //! Compare for index
+        int comparePropertyByIndex(const CStatusMessage &compareValue, const CPropertyIndex &index) const;
 
         //! To HTML
         QString toHtml() const;

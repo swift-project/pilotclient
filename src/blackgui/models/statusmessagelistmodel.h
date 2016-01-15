@@ -25,9 +25,8 @@ namespace BlackGui
         /*!
          * Server list model
          */
-        class BLACKGUI_EXPORT CStatusMessageListModel : public CListModelBase<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>
+        class BLACKGUI_EXPORT CStatusMessageListModel : public CListModelBase<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList, true>
         {
-
         public:
             //! Mode
             enum Mode

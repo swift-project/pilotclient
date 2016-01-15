@@ -14,6 +14,7 @@
 #include "iconlist.h"
 #include "loghandler.h"
 #include "logmessage.h"
+#include "comparefunctions.h"
 #include <QMetaEnum>
 
 namespace BlackMisc
@@ -39,19 +40,19 @@ namespace BlackMisc
     }
 
     CStatusMessage::CStatusMessage(const QString &message)
-        : m_message(message)
+        : m_message(message.trimmed())
     {}
 
     CStatusMessage::CStatusMessage(StatusSeverity severity, const QString &message)
-        : m_severity(severity), m_message(message)
+        : m_severity(severity), m_message(message.trimmed())
     {}
 
     CStatusMessage::CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const QString &message)
-        : m_categories(categories), m_severity(severity), m_message(message)
+        : m_categories(categories), m_severity(severity), m_message(message.trimmed())
     {}
 
     CStatusMessage::CStatusMessage(QtMsgType type, const QMessageLogContext &context, const QString &message)
-        : CStatusMessage(message)
+        : CStatusMessage(message.trimmed())
     {
         bool debug = CLogMessageHelper::hasDebugFlag(context.category);
         auto categories = CLogMessageHelper::stripFlags(context.category);
@@ -113,6 +114,11 @@ namespace BlackMisc
         }
     }
 
+    QString CStatusMessage::getCategoriesAsString() const
+    {
+        return this->m_categories.toQString();
+    }
+
     QString CStatusMessage::getHumanReadablePattern() const
     {
         QStringList patternNames(getHumanReadablePatterns());
@@ -127,6 +133,13 @@ namespace BlackMisc
             if (CLogPattern::fromHumanReadableName(name).match(*this)) { patternNames.push_back(name); }
         }
         return patternNames;
+    }
+
+    QString CStatusMessage::getHumanOrTechnicalCategoriesAsString() const
+    {
+        if (this->m_categories.isEmpty()) { return ""; }
+        QString c(getHumanReadablePattern());
+        return c.isEmpty() ? this->getCategoriesAsString() : c;
     }
 
     void CStatusMessage::prependMessage(const QString &msg)
@@ -303,10 +316,12 @@ namespace BlackMisc
             return CVariant::from(this->m_severity);
         case IndexSeverityAsString:
             return CVariant::from(this->getSeverityAsString());
-        case IndexCategories:
+        case IndexCategoriesAsString:
             return CVariant::from(this->m_categories.toQString());
-        case IndexCategoryHumanReadable:
+        case IndexCategoriesHumanReadableAsString:
             return CVariant::from(this->getHumanReadablePattern());
+        case IndexCategoryHumanReadableOrTechnicalAsString:
+            return CVariant::from(this->getHumanOrTechnicalCategoriesAsString());
         default:
             return CValueObject::propertyByIndex(index);
         }
@@ -325,13 +340,39 @@ namespace BlackMisc
         case IndexSeverity:
             this->m_severity = variant.value<StatusSeverity>();
             break;
-        case IndexCategories:
+        case IndexCategoriesAsString:
             this->m_categories = variant.value<CLogCategoryList>();
             break;
         default:
             CValueObject::setPropertyByIndex(variant, index);
             break;
         }
+    }
+
+    int CStatusMessage::comparePropertyByIndex(const CStatusMessage &compareValue, const CPropertyIndex &index) const
+    {
+        if (index.isMyself()) { return Compare::compare(this->getSeverity(), compareValue.getSeverity()); }
+        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(compareValue, index); }
+        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
+        {
+        case IndexMessage:
+            return this->getMessage().compare(compareValue.getMessage());
+        case IndexSeverity:
+            return Compare::compare(this->getSeverity(), compareValue.getSeverity());
+        case IndexSeverityAsString:
+            return this->getSeverityAsString().compare(compareValue.getSeverityAsString());
+        case IndexCategoriesAsString:
+            return this->getCategoriesAsString().compare(compareValue.getCategoriesAsString());
+        case IndexCategoriesHumanReadableAsString:
+            return this->getHumanReadablePattern().compare(compareValue.getHumanReadablePattern());
+        case IndexCategoryHumanReadableOrTechnicalAsString:
+            return this->getHumanOrTechnicalCategoriesAsString().compare(compareValue.getHumanOrTechnicalCategoriesAsString());
+        default:
+            break;
+        }
+        Q_ASSERT_X(false, Q_FUNC_INFO, "Comapre failed");
+        return 0;
     }
 
     QString CStatusMessage::toHtml() const
