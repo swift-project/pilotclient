@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>407</width>
-    <height>129</height>
+    <height>158</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,17 +35,17 @@
    <property name="spacing">
     <number>4</number>
    </property>
+   <item row="2" column="3" colspan="6">
+    <widget class="QLineEdit" name="le_Categories">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
    <item row="2" column="1" colspan="2">
     <widget class="QLabel" name="lbl_Categories">
      <property name="text">
       <string>Categories:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="6">
-    <widget class="QLabel" name="lbl_Timestamp">
-     <property name="text">
-      <string>Timestamp:</string>
      </property>
     </widget>
    </item>
@@ -62,6 +62,13 @@
      </property>
     </widget>
    </item>
+   <item row="0" column="6">
+    <widget class="QLabel" name="lbl_Timestamp">
+     <property name="text">
+      <string>Timestamp:</string>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="1">
     <widget class="QLabel" name="lbl_Severity">
      <property name="text">
@@ -69,40 +76,10 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="3" colspan="6">
-    <widget class="QLineEdit" name="le_Categories">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="3">
-    <widget class="QLineEdit" name="le_Severity">
-     <property name="maximumSize">
-      <size>
-       <width>200</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
    <item row="3" column="1" colspan="8">
     <widget class="QPlainTextEdit" name="te_Message">
      <property name="readOnly">
       <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="4">
-    <widget class="QLabel" name="lbl_SeverityIcon">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="../blackmisc/blackmisc.qrc">:/diagona/icons/diagona/icons/question.png</pixmap>
      </property>
     </widget>
    </item>
@@ -118,6 +95,29 @@
       </size>
      </property>
     </spacer>
+   </item>
+   <item row="0" column="3">
+    <widget class="QLineEdit" name="le_Severity">
+     <property name="maximumSize">
+      <size>
+       <width>200</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="4">
+    <widget class="QLabel" name="lbl_SeverityIcon">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="../blackmisc/blackmisc.qrc">:/diagona/icons/diagona/icons/question.png</pixmap>
+     </property>
+    </widget>
    </item>
    <item row="0" column="5">
     <spacer name="hs_Top1">

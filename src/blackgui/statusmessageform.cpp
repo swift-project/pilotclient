@@ -35,7 +35,17 @@ namespace BlackGui
     {
         ui->te_Message->setPlainText(message.getMessage());
         ui->lbl_SeverityIcon->setPixmap(message.toPixmap());
-        ui->le_Categories->setText(message.getHumanReadablePattern());
+        const QString hrc(message.getHumanReadablePattern());
+        if (hrc.isEmpty())
+        {
+            ui->le_Categories->setText(message.getCategories().toQString());
+            ui->le_Categories->setToolTip("");
+        }
+        else
+        {
+            ui->le_Categories->setText(hrc);
+            ui->le_Categories->setToolTip(message.getCategories().toQString());
+        }
         ui->le_Severity->setText(message.getSeverityAsString());
         ui->le_Timestamp->setText(message.getFormattedUtcTimestampYmdhms());
     }

@@ -116,8 +116,7 @@ namespace BlackMisc
     QString CStatusMessage::getHumanReadablePattern() const
     {
         QStringList patternNames(getHumanReadablePatterns());
-        return patternNames.isEmpty() ?
-               "None" : patternNames.join(", ");
+        return patternNames.isEmpty() ? "" : patternNames.join(", ");
     }
 
     QStringList CStatusMessage::getHumanReadablePatterns() const
