@@ -28,11 +28,17 @@ namespace BlackMisc
         //! Object with key, notFound otherwise
         OBJ findByKey(KEYTYPE key, const OBJ &notFound = OBJ()) const;
 
+        //! Object with max.key
+        OBJ maxKeyObject() const;
+
         //! Sort by timestamp
         void sortByKey();
 
         //! All keys as list
         QList<KEYTYPE> toDbKeyList() const;
+
+        //! Max.key value (making sense with integer key)
+        KEYTYPE getMaxKey(bool *ok = nullptr) const;
 
         //! Remove objects with key
         int removeObjectsWithKeys(const QList<KEYTYPE> &keys);

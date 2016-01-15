@@ -31,6 +31,23 @@ namespace BlackMisc
     }
 
     template <class OBJ, class CONTAINER, typename KEYTYPE>
+    OBJ IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::maxKeyObject() const
+    {
+        if (this->container().isEmpty()) { return OBJ(); }
+        const OBJ max = *std::max_element(this->container().begin(), this->container().end(), [](const OBJ & obj1, const OBJ & obj2)
+        {
+            bool v1 = obj1.hasValidDbKey();
+            bool v2 = obj2.hasValidDbKey();
+            if (v1 && v2)
+            {
+                return obj1.getDbKey() < obj2.getDbKey();
+            }
+            return v2;
+        });
+        return max;
+    }
+
+    template <class OBJ, class CONTAINER, typename KEYTYPE>
     void IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::sortByKey()
     {
         this->container().sort(BlackMisc::Predicates::MemberLess(&OBJ::getDbKey));
@@ -46,6 +63,20 @@ namespace BlackMisc
             keys.append(obj.getDbKey());
         }
         return keys;
+    }
+
+    template <class OBJ, class CONTAINER, typename KEYTYPE>
+    KEYTYPE IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::getMaxKey(bool *ok) const
+    {
+        QList<KEYTYPE> keys(this->toDbKeyList());
+        if (keys.isEmpty())
+        {
+            if (ok) { *ok = false; }
+            return KEYTYPE();
+        }
+        KEYTYPE max = *std::max_element(keys.begin(), keys.end());
+        if (ok) { *ok = true; }
+        return max;
     }
 
     template <class OBJ, class CONTAINER, typename KEYTYPE>
