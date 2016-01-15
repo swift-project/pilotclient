@@ -514,13 +514,22 @@ namespace BlackCore
 
     void CWebDataServices::ps_readFromSwiftDb(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
     {
+        static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::webservice()}));
         if (CEntityFlags::isWarningOrAbove(state))
         {
-            CLogMessage(this).warning("Read data %1 entries: %2 state: %3") << CEntityFlags::flagToString(entity) << number << CEntityFlags::flagToString(state);
+            CStatusMessage::StatusSeverity severity = CEntityFlags::flagToSeverity(state);
+            if (severity == CStatusMessage::SeverityWarning)
+            {
+                CLogMessage(cats).warning("Read data %1 entries: %2 state: %3") << CEntityFlags::flagToString(entity) << number << CEntityFlags::flagToString(state);
+            }
+            else
+            {
+                CLogMessage(cats).error("Read data %1 entries: %2 state: %3") << CEntityFlags::flagToString(entity) << number << CEntityFlags::flagToString(state);
+            }
         }
         else
         {
-            CLogMessage(this).info("Read data %1 entries: %2 state: %3") << CEntityFlags::flagToString(entity) << number << CEntityFlags::flagToString(state);
+            CLogMessage(cats).info("Read data %1 entries: %2 state: %3") << CEntityFlags::flagToString(entity) << number << CEntityFlags::flagToString(state);
         }
     }
 

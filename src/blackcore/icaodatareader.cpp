@@ -203,13 +203,14 @@ namespace BlackCore
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
         QString urlString(nwReply->url().toString());
-        QJsonArray array = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
-        if (array.isEmpty())
+        CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+        if (res.hasErrorMessage())
         {
+            CLogMessage(this).preformatted(res.lastWarningOrAbove());
             emit dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFailed, 0);
             return;
         }
-        CAircraftIcaoCodeList codes = CAircraftIcaoCodeList::fromDatabaseJson(array);
+        CAircraftIcaoCodeList codes = CAircraftIcaoCodeList::fromDatabaseJson(res);
 
         // this part needs to be synchronized
         int n = codes.size();
@@ -225,13 +226,14 @@ namespace BlackCore
     {
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
         QString urlString(nwReply->url().toString());
-        QJsonArray array = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
-        if (array.isEmpty())
+        CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+        if (res.hasErrorMessage())
         {
+            CLogMessage(this).preformatted(res.lastWarningOrAbove());
             emit dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFailed, 0);
             return;
         }
-        CAirlineIcaoCodeList codes = CAirlineIcaoCodeList::fromDatabaseJson(array);
+        CAirlineIcaoCodeList codes = CAirlineIcaoCodeList::fromDatabaseJson(res);
 
         // this part needs to be synchronized
         int n = codes.size();
@@ -247,13 +249,14 @@ namespace BlackCore
     {
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
         QString urlString(nwReply->url().toString());
-        QJsonArray array = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
-        if (array.isEmpty())
+        CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+        if (res.hasErrorMessage())
         {
+            CLogMessage(this).preformatted(res.lastWarningOrAbove());
             emit dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFailed, 0);
             return;
         }
-        CCountryList countries = CCountryList::fromDatabaseJson(array);
+        CCountryList countries = CCountryList::fromDatabaseJson(res);
 
         // this part needs to be synchronized
         int n = m_countries.size();

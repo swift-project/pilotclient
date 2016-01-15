@@ -77,7 +77,7 @@ namespace BlackMisc
             case StartRead:
                 return CStatusMessage::SeverityInfo;
             case ReadFailed:
-                return CStatusMessage::SeverityWarning;
+                return CStatusMessage::SeverityError;
             default:
                 Q_ASSERT_X(false, Q_FUNC_INFO, "Missing state");
                 return CStatusMessage::SeverityInfo;

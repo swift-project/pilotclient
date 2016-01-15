@@ -162,7 +162,7 @@ namespace BlackCore
                 if (!newerThan.isNull())
                 {
                     const QString tss(newerThan.toString(Qt::ISODate));
-                    url.appendQuery("newer=" + tss);
+                    url.appendQuery(QString(parameterLatestTimestamp() + "=" + tss));
                 }
                 QNetworkRequest requestLivery(url);
                 CNetworkUtils::ignoreSslVerification(requestLivery);
@@ -183,7 +183,7 @@ namespace BlackCore
                 if (!newerThan.isNull())
                 {
                     const QString tss(newerThan.toString(Qt::ISODate));
-                    url.appendQuery("newer=" + tss);
+                    url.appendQuery(QString(parameterLatestTimestamp() + "=" + tss));
                 }
                 QNetworkRequest requestDistributor(url);
                 CNetworkUtils::ignoreSslVerification(requestDistributor);
@@ -204,7 +204,7 @@ namespace BlackCore
                 if (!newerThan.isNull())
                 {
                     const QString tss(newerThan.toString(Qt::ISODate));
-                    url.appendQuery("newer=" + tss);
+                    url.appendQuery(QString(parameterLatestTimestamp() + "=" + tss));
                 }
                 QNetworkRequest requestModel(url);
                 CNetworkUtils::ignoreSslVerification(requestModel);
@@ -230,8 +230,9 @@ namespace BlackCore
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
         QString urlString(nwReply->url().toString());
         CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
-        if (res.isEmpty())
+        if (res.hasErrorMessage())
         {
+            CLogMessage(this).preformatted(res.lastWarningOrAbove());
             emit dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFailed, 0);
             return;
         }
@@ -267,8 +268,9 @@ namespace BlackCore
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
         QString urlString(nwReply->url().toString());
         CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
-        if (res.isEmpty())
+        if (res.hasErrorMessage())
         {
+            CLogMessage(this).preformatted(res.lastWarningOrAbove());
             emit dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFailed, 0);
             return;
         }
@@ -302,8 +304,9 @@ namespace BlackCore
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
         QString urlString(nwReply->url().toString());
         CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
-        if (res.isEmpty())
+        if (res.hasErrorMessage())
         {
+            CLogMessage(this).preformatted(res.lastWarningOrAbove());
             emit dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFailed, 0);
             return;
         }
@@ -451,6 +454,18 @@ namespace BlackCore
     CUrl CModelDataReader::getModelUrl() const
     {
         return getBaseUrl().withAppendedPath("service/jsonaircraftmodel.php");
+    }
+
+    const QString &CModelDataReader::parameterLatestTimestamp()
+    {
+        static const QString p("latestTimestamp");
+        return p;
+    }
+
+    const QString &CModelDataReader::parameterLatestId()
+    {
+        static const QString p("latestId");
+        return p;
     }
 
 } // namespace

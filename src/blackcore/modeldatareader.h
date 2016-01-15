@@ -109,6 +109,12 @@ namespace BlackCore
         //! Write to JSON file
         bool writeToJsonFiles(const QString &dir) const;
 
+        //! Name of latest timestamp
+        static const QString &parameterLatestTimestamp();
+
+        //! Name of latest timestamp
+        static const QString &parameterLatestId();
+
     signals:
         //! Combined read signal
         void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);

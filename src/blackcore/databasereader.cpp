@@ -39,11 +39,13 @@ namespace BlackCore
     CDatabaseReader::JsonDatastoreResponse CDatabaseReader::transformReplyIntoDatastoreResponse(QNetworkReply *nwReply) const
     {
         this->threadAssertCheck();
+        static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::webservice()}));
+
         JsonDatastoreResponse datastoreResponse;
         if (this->isAbandoned())
         {
-            CLogMessage(this).info("Terminated data parsing process"); // for users
             nwReply->abort();
+            datastoreResponse.setMessage(CStatusMessage(cats, CStatusMessage::SeverityError, "Terminated data parsing process"));
             return datastoreResponse; // stop, terminate straight away, ending thread
         }
 
@@ -51,22 +53,27 @@ namespace BlackCore
         {
             const QString dataFileData = nwReply->readAll().trimmed();
             nwReply->close(); // close asap
-            if (dataFileData.isEmpty()) { datastoreResponse.updated = QDateTime::currentDateTimeUtc(); return datastoreResponse; }
+            if (dataFileData.isEmpty())
+            {
+                datastoreResponse.setMessage(CStatusMessage(cats, CStatusMessage::SeverityError, "Empty response, no data"));
+                datastoreResponse.m_updated = QDateTime::currentDateTimeUtc();
+                return datastoreResponse;
+            }
 
             QJsonDocument jsonResponse = QJsonDocument::fromJson(dataFileData.toUtf8());
             if (jsonResponse.isArray())
             {
                 // directly an array, no further info
-                datastoreResponse.jsonArray = jsonResponse.array();
-                datastoreResponse.updated = QDateTime::currentDateTimeUtc();
+                datastoreResponse.m_jsonArray = jsonResponse.array();
+                datastoreResponse.m_updated = QDateTime::currentDateTimeUtc();
             }
             else
             {
                 QJsonObject responseObject(jsonResponse.object());
-                datastoreResponse.jsonArray = responseObject["data"].toArray();
+                datastoreResponse.m_jsonArray = responseObject["data"].toArray();
                 QString ts(responseObject["latest"].toString());
-                datastoreResponse.updated = ts.isEmpty() ? QDateTime::currentDateTimeUtc() : CDatastoreUtility::parseTimestamp(ts);
-                datastoreResponse.restricted = responseObject["restricted"].toBool();
+                datastoreResponse.m_updated = ts.isEmpty() ? QDateTime::currentDateTimeUtc() : CDatastoreUtility::parseTimestamp(ts);
+                datastoreResponse.m_restricted = responseObject["restricted"].toBool();
             }
             return datastoreResponse;
         }
@@ -74,8 +81,9 @@ namespace BlackCore
         // no valid response
         QString error(nwReply->errorString());
         QString url(nwReply->url().toString());
-        CLogMessage(this).warning("Reading data failed %1 %2") << error << url;
         nwReply->abort();
+        datastoreResponse.setMessage(CStatusMessage(cats, CStatusMessage::SeverityError,
+                                     QString("Reading data failed: " + error + " " + url)));
         return datastoreResponse;
     }
 
@@ -159,5 +167,4 @@ namespace BlackCore
         bool ok = CNetworkUtils::canConnect(url, m);
         this->setConnectionStatus(ok, m);
     }
-
 } // namespace

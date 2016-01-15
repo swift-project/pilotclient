@@ -31,30 +31,49 @@ namespace BlackCore
         //!  Response from our database
         struct JsonDatastoreResponse
         {
-            QJsonArray jsonArray;           //!< JSON array data
-            QDateTime  updated;             //!< when was the latest updated?
-            bool       restricted = false;  //!< restricted reponse, only data changed
+            QJsonArray m_jsonArray;              //!< JSON array data
+            QDateTime  m_updated;                //!< when was the latest updated?
+            bool       m_restricted = false;     //!< restricted reponse, only data changed
+            BlackMisc::CStatusMessage m_message; //!< last error or warning
 
             //! Any data?
-            bool isEmpty() const { return jsonArray.isEmpty(); }
+            bool isEmpty() const { return m_jsonArray.isEmpty(); }
 
             //! Number of elements
-            int size() const { return jsonArray.size(); }
+            int size() const { return m_jsonArray.size(); }
 
             //! Any timestamp?
-            bool hasTimestamp() const { return updated.isValid(); }
+            bool hasTimestamp() const { return m_updated.isValid(); }
 
             //! Is response newer?
-            bool isNewer(const QDateTime &ts) const { return updated.toMSecsSinceEpoch() > ts.toMSecsSinceEpoch(); }
+            bool isNewer(const QDateTime &ts) const { return m_updated.toMSecsSinceEpoch() > ts.toMSecsSinceEpoch(); }
 
             //! Is response newer?
-            bool isNewer(qint64 mSecsSinceEpoch) const { return updated.toMSecsSinceEpoch() > mSecsSinceEpoch; }
+            bool isNewer(qint64 mSecsSinceEpoch) const { return m_updated.toMSecsSinceEpoch() > mSecsSinceEpoch; }
 
             //! Incremental data
-            bool isRestricted() const { return restricted; }
+            bool isRestricted() const { return m_restricted; }
+
+            //! Error message?
+            bool hasErrorMessage() const { return m_message.getSeverity() == BlackMisc::CStatusMessage::SeverityError; }
+
+            //! Warning or error message?
+            bool hasWarningOrAboveMessage() const { return m_message.isWarningOrAbove(); }
+
+            //! Last error or warning
+            const BlackMisc::CStatusMessage &lastWarningOrAbove() const { return m_message; }
+
+            //! Set the error/warning message
+            void setMessage(const BlackMisc::CStatusMessage &lastErrorOrWarning) { m_message = lastErrorOrWarning; }
+
+            //! Get the JSON array
+            QJsonArray getJsonArray() const { return m_jsonArray; }
+
+            //! Set the JSON array
+            void setJsonArray(const QJsonArray &value) { m_jsonArray = value; }
 
             //! Implicit conversion
-            operator QJsonArray() const { return jsonArray; }
+            operator QJsonArray() const { return m_jsonArray; }
         };
 
         //! Start reading in own thread
