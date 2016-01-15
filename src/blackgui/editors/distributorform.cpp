@@ -61,12 +61,7 @@ namespace BlackGui
         CStatusMessageList CDistributorForm::validate() const
         {
             CDistributor distributor(getValue());
-            CStatusMessageList msgs;
-            if (!distributor.getDbKey().isEmpty())
-            {
-                // optional distributor
-                msgs = distributor.validate();
-            }
+            CStatusMessageList msgs(distributor.validate());
             if (this->isReadOnly())
             {
                 // in readonly I cannot change the data anyway, so skip warnings

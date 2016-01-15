@@ -55,6 +55,10 @@ namespace BlackGui
             //! \copydoc CFilterWidget::onRowCountChanged
             virtual void onRowCountChanged(int count, bool withFilter) override;
 
+        private slots:
+            //! Country has been changed
+            void ps_CountryChanged(const BlackMisc::CCountry &country);
+
         protected:
             //! Clear form
             virtual void clearForm() override;

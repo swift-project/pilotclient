@@ -10,6 +10,7 @@
 #include "dbcountryselectorcomponent.h"
 #include "ui_dbcountryselectorcomponent.h"
 #include "blackgui/guiutility.h"
+#include "blackgui/uppercasevalidator.h"
 #include <QMimeData>
 
 using namespace BlackGui;
@@ -32,6 +33,8 @@ namespace BlackGui
             connect(ui->le_CountryName, &QLineEdit::returnPressed, this, &CDbCountrySelectorComponent::ps_dataChanged);
             connect(ui->le_CountryIso, &QLineEdit::editingFinished, this, &CDbCountrySelectorComponent::ps_dataChanged);
             connect(ui->le_CountryName, &QLineEdit::returnPressed, this, &CDbCountrySelectorComponent::ps_dataChanged);
+
+            this->ui->le_CountryIso->setValidator(new CUpperCaseValidator(this));
         }
 
         CDbCountrySelectorComponent::~CDbCountrySelectorComponent()

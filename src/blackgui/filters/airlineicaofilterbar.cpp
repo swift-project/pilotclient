@@ -9,10 +9,12 @@
 
 #include "airlineicaofilterbar.h"
 #include "ui_airlineicaofilterbar.h"
+#include "blackgui/uppercasevalidator.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackGui::Models;
+using namespace BlackGui::Components;
 
 namespace BlackGui
 {
@@ -27,6 +29,9 @@ namespace BlackGui
 
             connect(ui->le_Designator, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_Name, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+            connect(ui->country_Selector, &CDbCountrySelectorComponent::countryChanged, this, &CAirlineIcaoFilterBar::ps_CountryChanged);
+
+            ui->le_Designator->setValidator(new CUpperCaseValidator(this));
         }
 
         CAirlineIcaoFilterBar::~CAirlineIcaoFilterBar() { }
@@ -71,6 +76,14 @@ namespace BlackGui
         void CAirlineIcaoFilterBar::onRowCountChanged(int count, bool withFilter)
         {
             this->ui->filter_Buttons->onRowCountChanged(count, withFilter);
+        }
+
+        void CAirlineIcaoFilterBar::ps_CountryChanged(const CCountry &country)
+        {
+            if (country.hasIsoCode())
+            {
+                this->ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
+            }
         }
 
         void CAirlineIcaoFilterBar::clearForm()
