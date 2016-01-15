@@ -10,9 +10,9 @@
 #include "dbairlineicaoselectorcomponent.h"
 #include "ui_dbairlineicaoselectorcomponent.h"
 #include "blackgui/guiutility.h"
+#include "blackgui/uppercasevalidator.h"
 #include "blackmisc/datastoreutility.h"
 #include <QMimeData>
-
 
 using namespace BlackGui;
 using namespace BlackMisc;
@@ -27,6 +27,7 @@ namespace BlackGui
             ui(new Ui::CDbAirlineIcaoSelectorComponent)
         {
             ui->setupUi(this);
+            ui->le_Airline->setValidator(new CUpperCaseValidator(this));
             connect(ui->le_Airline, &QLineEdit::returnPressed, this, &CDbAirlineIcaoSelectorComponent::ps_dataChanged);
         }
 

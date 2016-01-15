@@ -58,11 +58,18 @@ namespace BlackGui
             //! \copydoc CForm::setReadOnly
             virtual void setReadOnly(bool readOnly) override;
 
+            //! \copydoc CForm::setSelectOnly
+            virtual void setSelectOnly() override;
+
             //! Clear
             void clear();
 
             //! \copydoc CWebDataReaderAware::setProvider
             virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
+
+        signals:
+            //! Airline has been changed
+            void airlineChanged(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao);
 
         private slots:
             //! Variant has been dropped

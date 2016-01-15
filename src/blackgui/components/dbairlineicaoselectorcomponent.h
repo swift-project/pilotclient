@@ -44,7 +44,7 @@ namespace BlackGui
             //! \copydoc CDbAirlineIcaoSelectorBase::setAirlineIcao
             virtual void setAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao) override;
 
-            //! Display distributor description
+            //! Display ICAO description
             void withIcaoDescription(bool description);
 
             //! \copydoc CDbAirlineIcaoSelectorBase::clear

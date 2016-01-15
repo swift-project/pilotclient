@@ -55,11 +55,11 @@ namespace BlackGui
             //! \copydoc CForm::setReadOnly
             virtual void setReadOnly(bool readOnly) override;
 
+            //! \copydoc CForm::setSelectOnly
+            virtual void setSelectOnly() override;
+
             //! Clear
             void clear();
-
-            //! Mapping mode
-            void setMappingMode(bool mappingMode);
 
             //! \copydoc CWebDataServicesAware::setProvider
             virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;

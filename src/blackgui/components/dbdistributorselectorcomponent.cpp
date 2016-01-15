@@ -164,12 +164,12 @@ namespace BlackGui
                     this->connect(c, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CDbDistributorSelectorComponent::ps_completerActivated);
 
                     this->ui->le_Distributor->setCompleter(c);
-                    m_completerDistributorNames.reset(c); // deletes any old completer
+                    m_completerDistributors.reset(c); // deletes any old completer
                     this->setReadOnly(false);
                 }
                 else
                 {
-                    this->m_completerDistributorNames.reset(nullptr);
+                    this->m_completerDistributors.reset(nullptr);
                     this->setReadOnly(true);
                 }
             }

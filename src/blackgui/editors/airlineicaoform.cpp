@@ -45,15 +45,23 @@ namespace BlackGui
 
         void CAirlineIcaoForm::setValue(const BlackMisc::Aviation::CAirlineIcaoCode &icao)
         {
-            this->m_originalCode = icao;
-            this->ui->selector_AirlineDesignator->setAirlineIcao(icao);
-            this->ui->selector_AirlineName->setAirlineIcao(icao);
-            this->ui->le_Id->setText(icao.getDbKeyAsString());
-            this->ui->le_TelephonyDesignator->setText(icao.getTelephonyDesignator());
-            this->ui->le_Updated->setText(icao.getFormattedUtcTimestampYmdhms());
-            this->ui->cb_Va->setChecked(icao.isVirtualAirline());
-            this->ui->country_Selector->setCountry(icao.getCountry());
-            this->ui->lbl_AirlineIcon->setPixmap(icao.toPixmap());
+            if (this->m_originalCode != icao)
+            {
+                this->m_originalCode = icao;
+                this->ui->selector_AirlineDesignator->setAirlineIcao(icao);
+                this->ui->selector_AirlineName->setAirlineIcao(icao);
+                this->ui->le_Id->setText(icao.getDbKeyAsString());
+                this->ui->le_TelephonyDesignator->setText(icao.getTelephonyDesignator());
+                this->ui->le_Updated->setText(icao.getFormattedUtcTimestampYmdhms());
+                this->ui->cb_Va->setChecked(icao.isVirtualAirline());
+                this->ui->country_Selector->setCountry(icao.getCountry());
+                this->ui->lbl_AirlineIcon->setPixmap(icao.toPixmap());
+
+                if (this->m_originalCode.hasCompleteData())
+                {
+                    emit airlineChanged(this->m_originalCode);
+                }
+            }
         }
 
         CAirlineIcaoCode CAirlineIcaoForm::getValue() const
@@ -97,6 +105,13 @@ namespace BlackGui
             this->ui->le_TelephonyDesignator->setReadOnly(readOnly);
             this->ui->country_Selector->setReadOnly(readOnly);
             this->ui->cb_Va->setEnabled(!readOnly);
+        }
+
+        void CAirlineIcaoForm::setSelectOnly()
+        {
+            this->setReadOnly(true);
+            this->ui->selector_AirlineDesignator->setReadOnly(false);
+            this->ui->selector_AirlineName->setReadOnly(false);
         }
 
         void CAirlineIcaoForm::clear()

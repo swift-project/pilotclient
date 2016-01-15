@@ -13,6 +13,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackGui::Components;
 
 namespace BlackGui
 {
@@ -26,11 +27,18 @@ namespace BlackGui
             this->ui->le_Id->setReadOnly(true);
             this->ui->le_Updated->setReadOnly(true);
             this->ui->lai_Id->set(CIcons::appLiveries16(), "Id:");
+            this->ui->livery_Selector->withLiveryDescription(false);
+
+            // selector
+            connect(this->ui->livery_Selector, &CDbLiverySelectorComponent::changedLivery, this, &CLiveryForm::setValue);
 
             // drag and drop
             connect(this->ui->drop_DropData, &CDropSite::droppedValueObject, this, &CLiveryForm::ps_droppedLivery);
             this->ui->drop_DropData->setInfoText("<drop livery>");
             this->ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CLivery>(), qMetaTypeId<CLiveryList>()});
+
+            // embedded form
+            connect(this->ui->editor_AirlineIcao, &CAirlineIcaoForm::airlineChanged, this, &CLiveryForm::ps_airlineChanged);
         }
 
         CLiveryForm::~CLiveryForm() { }
@@ -39,23 +47,22 @@ namespace BlackGui
         {
             CWebDataServicesAware::setProvider(provider);
             this->ui->editor_AirlineIcao->setProvider(provider);
+            this->ui->livery_Selector->setProvider(provider);
         }
 
         CLivery CLiveryForm::getValue() const
         {
-            CLivery livery(this->m_originalLivery);
+            CLivery livery(this->ui->livery_Selector->getLivery());
             CAirlineIcaoCode airline(this->ui->editor_AirlineIcao->getValue());
             livery.setAirlineIcaoCode(airline);
-            livery.setCombinedCode(this->ui->le_Code->text());
             livery.setDescription(this->ui->le_Description->text());
             return livery;
         }
 
         void CLiveryForm::setValue(const CLivery &livery)
         {
-            this->m_originalLivery = livery;
+            this->ui->livery_Selector->setLivery(livery);
             this->ui->le_Id->setText(livery.getDbKeyAsString());
-            this->ui->le_Code->setText(livery.getCombinedCode());
             this->ui->le_Description->setText(livery.getDescription());
             this->ui->le_Updated->setText(livery.getFormattedUtcTimestampYmdhms());
             this->ui->color_Fuselage->setColor(livery.getColorFuselage());
@@ -94,15 +101,18 @@ namespace BlackGui
         void CLiveryForm::setReadOnly(bool readOnly)
         {
             this->m_readOnly = readOnly;
-            this->ui->le_Code->setReadOnly(readOnly);
+            this->ui->livery_Selector->setReadOnly(readOnly);
             this->ui->le_Description->setReadOnly(readOnly);
             this->ui->color_Fuselage->setReadOnly(readOnly);
             this->ui->color_Tail->setReadOnly(readOnly);
+            this->ui->editor_AirlineIcao->setReadOnly(readOnly);
         }
 
-        void CLiveryForm::setMappingMode(bool mappingMode)
+        void CLiveryForm::setSelectOnly()
         {
-            this->setReadOnly(mappingMode);
+            this->setReadOnly(true);
+            this->ui->livery_Selector->setReadOnly(false);
+            this->ui->editor_AirlineIcao->setSelectOnly();
         }
 
         void CLiveryForm::clear()
@@ -127,5 +137,16 @@ namespace BlackGui
             this->setValue(livery);
         }
 
+        void CLiveryForm::ps_airlineChanged(const CAirlineIcaoCode &code)
+        {
+            if (!code.hasCompleteData()) { return; }
+            if (!code.hasValidDbKey()) { return; }
+
+            CLivery stdLivery(this->getLiveries().findStdLiveryByAirlineIcaoDesignator(code));
+            if (stdLivery.hasValidDbKey())
+            {
+                this->setValue(stdLivery);
+            }
+        }
     } // ns
 } // ns

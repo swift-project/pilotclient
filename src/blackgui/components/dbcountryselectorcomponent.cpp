@@ -95,7 +95,9 @@ namespace BlackGui
         {
             this->ui->le_CountryIso->setReadOnly(readOnly);
             this->ui->le_CountryName->setReadOnly(readOnly);
+            this->ui->le_CountryName->setEnabled((!readOnly));
             this->ui->lbl_CountryIcon->setVisible(!readOnly);
+            this->setEnabled(!readOnly);
         }
 
         bool CDbCountrySelectorComponent::isSet() const
@@ -165,12 +167,10 @@ namespace BlackGui
 
                     this->ui->le_CountryName->setCompleter(c);
                     m_completerCountryNames.reset(c); // deletes any old completer
-                    this->setReadOnly(false);
                 }
                 else
                 {
                     this->m_completerCountryNames.reset(nullptr);
-                    this->setReadOnly(true);
                 }
             }
         }

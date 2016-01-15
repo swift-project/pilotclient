@@ -56,6 +56,11 @@ namespace BlackGui
             this->ui->le_Name->setReadOnly(readOnly);
         }
 
+        void CModelMappingForm::setSelectOnly()
+        {
+            this->setReadOnly(true);
+        }
+
         void CModelMappingForm::setValue(BlackMisc::Simulation::CAircraftModel &model)
         {
             ui->le_ModelKey->setText(model.getModelString());

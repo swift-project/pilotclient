@@ -96,10 +96,10 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CDbDistributorSelectorComponent> ui;
-            QScopedPointer<QCompleter> m_completerDistributorNames;
-            QMetaObject::Connection m_signalConnection;
+            QScopedPointer<QCompleter>          m_completerDistributors;
+            QMetaObject::Connection             m_signalConnection;
             BlackMisc::Simulation::CDistributor m_currentDistributor;
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard

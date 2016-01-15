@@ -61,9 +61,12 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QLineEdit" name="le_Code">
-           <property name="placeholderText">
-            <string>Livery code</string>
+          <widget class="BlackGui::Components::CDbLiverySelectorComponent" name="livery_Selector">
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
            </property>
           </widget>
          </item>
@@ -125,9 +128,6 @@
        <widget class="QLabel" name="lbl_Code">
         <property name="text">
          <string>Code:</string>
-        </property>
-        <property name="buddy">
-         <cstring>le_Code</cstring>
         </property>
        </widget>
       </item>
@@ -246,10 +246,15 @@
    <header>blackgui/editors/airlineicaoform.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CDbLiverySelectorComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/dbliveryselectorcomponent.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>le_Id</tabstop>
-  <tabstop>le_Code</tabstop>
   <tabstop>le_Description</tabstop>
   <tabstop>le_Updated</tabstop>
  </tabstops>

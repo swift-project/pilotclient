@@ -89,15 +89,16 @@ namespace BlackGui
             this->ui->distributor_Selector->setReadOnly(readOnly);
         }
 
+        void CDistributorForm::setSelectOnly()
+        {
+            this->setReadOnly(true);
+            this->ui->distributor_Selector->setReadOnly(false);
+        }
+
         void CDistributorForm::clear()
         {
             setValue(CDistributor());
             this->ui->distributor_Selector->setReadOnly(false);
-        }
-
-        void CDistributorForm::setMappingMode(bool mappingMode)
-        {
-            this->setReadOnly(mappingMode);
         }
 
         void CDistributorForm::setProvider(Network::IWebDataServicesProvider *webDataReaderProvider)

@@ -127,17 +127,21 @@ namespace BlackGui
             this->ui->cb_Legacy->setCheckable(!readOnly);
             this->ui->cb_Military->setCheckable(!readOnly);
             this->ui->cb_RealWorld->setCheckable(!readOnly);
+
+            this->ui->cb_Wtc->setEnabled(!readOnly);
+            this->ui->cb_Rank->setEnabled(!readOnly);
+            this->ui->combined_TypeSelector->setReadOnly(readOnly);
+        }
+
+        void CAircraftIcaoForm::setSelectOnly()
+        {
+            this->setReadOnly(true);
+            this->ui->aircraft_Selector->setReadOnly(false);
         }
 
         void CAircraftIcaoForm::clear()
         {
             setValue(CAircraftIcaoCode());
-        }
-
-        void CAircraftIcaoForm::setMappingMode(bool mappingMode)
-        {
-            this->setReadOnly(mappingMode);
-            this->ui->aircraft_Selector->setReadOnly(!mappingMode);
         }
 
         void CAircraftIcaoForm::setProvider(Network::IWebDataServicesProvider *webDataReaderProvider)

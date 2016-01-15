@@ -35,6 +35,10 @@ namespace BlackGui
             //! Set editable
             virtual void setReadOnly(bool readOnly) = 0;
 
+            //! Read only, but entity can be selected (normally used in mapping).
+            //! Use setReadOnly to reset this very state
+            virtual void setSelectOnly() = 0;
+
             //! Is read only?
             bool isReadOnly() const { return m_readOnly; }
 

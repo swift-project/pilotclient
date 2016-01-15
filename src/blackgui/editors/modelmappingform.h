@@ -45,6 +45,9 @@ namespace BlackGui
             //! \copydoc CForm::setReadOnly
             virtual void setReadOnly(bool readOnly) override;
 
+            //! \copydoc CForm::setSelectOnly
+            virtual void setSelectOnly() override;
+
         public slots:
             //! Set model
             void setValue(BlackMisc::Simulation::CAircraftModel &model);

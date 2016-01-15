@@ -45,9 +45,6 @@ namespace BlackGui
             //! Value
             BlackMisc::Aviation::CLivery getValue() const;
 
-            //! Value
-            void setValue(const BlackMisc::Aviation::CLivery &livery);
-
             //! Validate, empty list means OK
             BlackMisc::CStatusMessageList validate(bool withNestedForms) const;
 
@@ -60,21 +57,26 @@ namespace BlackGui
             //! \copydoc CForm::setReadOnly
             virtual void setReadOnly(bool readOnly) override;
 
-            //! Mapping mode
-            void setMappingMode(bool mappingMode);
+            //! \copydoc CForm::setSelectOnly
+            virtual void setSelectOnly() override;
 
             //! Clear data
             void clear();
+
+        public slots:
+            //! Value
+            void setValue(const BlackMisc::Aviation::CLivery &livery);
 
         private slots:
             //! Livery dropped
             void ps_droppedLivery(const BlackMisc::CVariant &variantDropped);
 
+            //! Airline of embedded form has changed
+            void ps_airlineChanged(const BlackMisc::Aviation::CAirlineIcaoCode &code);
+
         private:
             QScopedPointer<Ui::CLiveryForm> ui;
-            BlackMisc::Aviation::CLivery    m_originalLivery; //!< object whose values will be overridden
         };
-
     } // ns
 } // ns
 

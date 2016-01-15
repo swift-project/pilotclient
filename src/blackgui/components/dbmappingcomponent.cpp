@@ -62,9 +62,9 @@ namespace BlackGui
             ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(this->m_cachedOwnModels.get());
 
             // how to display forms
-            ui->editor_AircraftIcao->setMappingMode(true);
-            ui->editor_Distributor->setMappingMode(true);
-            ui->editor_Livery->setMappingMode(true);
+            ui->editor_AircraftIcao->setSelectOnly();
+            ui->editor_Distributor->setSelectOnly();
+            ui->editor_Livery->setSelectOnly();
 
             this->ui->tw_ModelsToBeMapped->setTabIcon(TabStash, CIcons::appDbStash16());
             this->ui->tw_ModelsToBeMapped->setTabIcon(TabOwnModels, CIcons::appModels16());
