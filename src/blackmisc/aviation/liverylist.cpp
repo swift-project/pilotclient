@@ -13,6 +13,7 @@
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 
+
 namespace BlackMisc
 {
     namespace Aviation
@@ -55,6 +56,22 @@ namespace BlackMisc
             {
                 return livery.matchesCombinedCode(combinedCode);
             });
+        }
+
+        QStringList CLiveryList::getCombinedCodes(bool sort) const
+        {
+            if (this->isEmpty()) { return QStringList(); }
+            QStringList codes = this->transform(Predicates::MemberTransform(&CLivery::getCombinedCode));
+            if (sort) { codes.sort(); }
+            return codes;
+        }
+
+        QStringList CLiveryList::getCombinedCodesPlusInfo(bool sort) const
+        {
+            if (this->isEmpty()) { return QStringList(); }
+            QStringList codes = this->transform(Predicates::MemberTransform(&CLivery::getCombinedCodePlusInfo));
+            if (sort) { codes.sort(); }
+            return codes;
         }
 
         CLivery CLiveryList::smartLiverySelector(const CLivery &liveryPattern) const

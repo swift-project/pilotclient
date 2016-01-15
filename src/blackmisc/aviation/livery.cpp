@@ -53,6 +53,18 @@ namespace BlackMisc
             m_military(isMilitary)
         { }
 
+        QString CLivery::getCombinedCodePlusInfo() const
+        {
+            QString s(getCombinedCode());
+            if (!this->getDescription().isEmpty())
+            {
+                s += " (";
+                s += this->getDescription();
+                s += ")";
+            }
+            return s;
+        }
+
         bool CLivery::setAirlineIcaoCode(const CAirlineIcaoCode &airlineIcao)
         {
             if (m_airline == airlineIcao) { return false; }

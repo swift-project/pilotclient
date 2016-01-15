@@ -14,8 +14,8 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/datastoreobjectlist.h"
-
 #include "blackmisc/aviation/livery.h"
+#include <QStringList>
 
 namespace BlackMisc
 {
@@ -47,6 +47,12 @@ namespace BlackMisc
 
             //! Find livery by combined code
             CLivery findByCombinedCode(const QString &combinedCode) const;
+
+            //! All combined codes
+            QStringList getCombinedCodes(bool sort = false) const;
+
+            //! All combined codes plus more info
+            QStringList getCombinedCodesPlusInfo(bool sort = false) const;
 
             //! Find
             CLivery smartLiverySelector(const CLivery &liveryPattern) const;
