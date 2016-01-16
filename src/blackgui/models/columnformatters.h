@@ -239,7 +239,7 @@ namespace BlackGui
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &valueObject) const override;
 
             //! \copydoc CDefaultFormatter::decorationRole
-            virtual BlackMisc::CVariant decorationRole(const BlackMisc::CVariant &valueObject) const;
+            virtual BlackMisc::CVariant decorationRole(const BlackMisc::CVariant &valueObject) const override;
         };
 
         //! Formatter when column contains QDateTime, QDate or QTime
