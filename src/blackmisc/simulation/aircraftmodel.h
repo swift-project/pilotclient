@@ -70,8 +70,9 @@ namespace BlackMisc
                 IndexModelTypeAsString,
                 IndexModelMode,
                 IndexModelModeAsString,
+                IndexModelModeAsIcon,
                 IndexHasQueriedModelString,
-                IndexPartsDbStatus
+                IndexMembersDbStatus
             };
 
             //! \copydoc BlackMisc::CValueObject::registerMetadata
@@ -189,10 +190,16 @@ namespace BlackMisc
             ModelMode getModelMode() const { return m_modelMode; }
 
             //! Model mode as string
-            QString getModelModeAsString() const { return modelModeToString(getModelMode()); }
+            const QString &getModelModeAsString() const { return modelModeToString(getModelMode()); }
+
+            //! Model mode as string
+            const BlackMisc::CIcon &getModelModeAsIcon() const;
 
             //! Set model mode
             void setModelMode(ModelMode mode) { m_modelMode = mode; }
+
+            //! Set model mode as string
+            void setModelModeAsString(const QString &mode);
 
             //! Simulator info
             CSimulatorInfo getSimulatorInfo() const { return this->m_simulator; }
@@ -227,8 +234,8 @@ namespace BlackMisc
             //! Valid simulator
             bool hasValidSimulator() const;
 
-            //! Info, which parts/subparts (Livery, Aircraft ICAO, ...) are already based on DB data
-            QString getPartsDbStatus() const;
+            //! Info, which members (Livery, Aircraft ICAO, ...) are already based on DB data
+            QString getMembersDbStatus() const;
 
             //! Matches model string?
             bool matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const;
@@ -252,7 +259,7 @@ namespace BlackMisc
             static ModelMode modelModeFromString(const QString &mode);
 
             //! Model mode
-            static QString modelModeToString(ModelMode mode);
+            static const QString &modelModeToString(ModelMode mode);
 
             //! From swift DB JSON
             static CAircraftModel fromDatabaseJson(const QJsonObject &json, const QString prefix = QString("mod_"));

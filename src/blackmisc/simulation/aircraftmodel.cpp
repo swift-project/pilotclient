@@ -14,6 +14,7 @@
 #include <QString>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include "blackmisc/verify.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -116,7 +117,9 @@ namespace BlackMisc
             case IndexModelMode:
                 return CVariant::fromValue(this->m_modelMode);
             case IndexModelModeAsString:
-                return CVariant(this->getModelModeAsString());
+                return CVariant::fromValue(this->getModelModeAsString());
+            case IndexModelModeAsIcon:
+                return CVariant::fromValue(this->getModelModeAsIcon());
             case IndexDistributor:
                 return m_distributor.propertyByIndex(index.copyFrontRemoved());
             case IndexSimulatorInfo:
@@ -135,8 +138,8 @@ namespace BlackMisc
                 return m_livery.propertyByIndex(index.copyFrontRemoved());
             case IndexCallsign:
                 return m_callsign.propertyByIndex(index.copyFrontRemoved());
-            case IndexPartsDbStatus:
-                return getPartsDbStatus();
+            case IndexMembersDbStatus:
+                return getMembersDbStatus();
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -179,7 +182,14 @@ namespace BlackMisc
                 this->m_modelType = variant.value<ModelType>();
                 break;
             case IndexModelMode:
-                this->m_modelMode = variant.value<ModelMode>();
+                if (variant.type() == QMetaType::QString)
+                {
+                    this->setModelModeAsString(variant.toQString());
+                }
+                else
+                {
+                    this->m_modelMode = variant.value<ModelMode>();
+                }
                 break;
             default:
                 CValueObject::setPropertyByIndex(variant, index);
@@ -216,9 +226,11 @@ namespace BlackMisc
             case IndexModelType:
                 return Compare::compare(this->m_modelType, compareValue.getModelType());
             case IndexModelMode:
+            case IndexModelModeAsString:
+            case IndexModelModeAsIcon:
                 return Compare::compare(this->m_modelMode, compareValue.getModelMode());
-            case IndexPartsDbStatus:
-                return getPartsDbStatus().compare(compareValue.getPartsDbStatus());
+            case IndexMembersDbStatus:
+                return getMembersDbStatus().compare(compareValue.getMembersDbStatus());
             default:
                 break;
             }
@@ -257,6 +269,26 @@ namespace BlackMisc
         bool CAircraftModel::hasAirlineDesignator() const
         {
             return this->m_livery.hasValidAirlineDesignator();
+        }
+
+        const CIcon &CAircraftModel::getModelModeAsIcon() const
+        {
+            switch (this->getModelMode())
+            {
+            case Include:
+                return CIconList::iconByIndex(CIcons::ModelInclude);
+            case Exclude:
+                return CIconList::iconByIndex(CIcons::ModelExclude);
+            default:
+                Q_ASSERT_X(false, Q_FUNC_INFO, "wrong mode");
+                break;
+            }
+            return CIconList::iconByIndex(CIcons::ModelInclude);
+        }
+
+        void CAircraftModel::setModelModeAsString(const QString &mode)
+        {
+            this->setModelMode(CAircraftModel::modelModeFromString(mode));
         }
 
         void CAircraftModel::updateMissingParts(const CAircraftModel &otherModel)
@@ -305,7 +337,7 @@ namespace BlackMisc
             return m_simulator.isAnySimulator();
         }
 
-        QString CAircraftModel::getPartsDbStatus() const
+        QString CAircraftModel::getMembersDbStatus() const
         {
             QString s(hasValidDbKey() ? "M" : "m");
             s = s.append(getDistributor().hasValidDbKey() ? 'D' : 'd');
@@ -363,19 +395,22 @@ namespace BlackMisc
         {
             if (mode.isEmpty() || mode.startsWith('I', Qt::CaseInsensitive)) { return Include;}
             if (mode.startsWith('E', Qt::CaseInsensitive)) { return Exclude; }
-            Q_ASSERT_X(false, Q_FUNC_INFO, "wrong mode");
+            BLACK_VERIFY_X(false, Q_FUNC_INFO, "wrong mode");
             return Include; // default
         }
 
-        QString CAircraftModel::modelModeToString(CAircraftModel::ModelMode mode)
+        const QString &CAircraftModel::modelModeToString(CAircraftModel::ModelMode mode)
         {
+            static const QString i("Include");
+            static const QString e("Exclude");
+
             switch (mode)
             {
-            case Include: return "Include";
-            case Exclude: return "Exclude";
+            case Include: return i;
+            case Exclude: return e;
             default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong mode");
             }
-            return "Include";
+            return i; // default
         }
 
         CAircraftModel CAircraftModel::fromDatabaseJson(const QJsonObject &json, const QString prefix)
@@ -399,7 +434,7 @@ namespace BlackMisc
                 modelString, CAircraftModel::TypeDatabaseEntry, simInfo, modelName, modelDescription, aircraftIcao, livery
             );
             model.setDistributor(distributor);
-            model.setModelMode(modelModeFromString(modelMode));
+            model.setModelModeAsString(modelMode);
             model.setKeyAndTimestampFromDatabaseJson(json, prefix);
             return model;
         }
