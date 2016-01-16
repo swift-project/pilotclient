@@ -161,6 +161,28 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="6">
+       <widget class="QComboBox" name="cb_Include">
+        <item>
+         <property name="text">
+          <string>Include</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../blackmisc/blackmisc.qrc">
+           <normaloff>:/diagona/icons/diagona/icons/paper-plane--plus.png</normaloff>:/diagona/icons/diagona/icons/paper-plane--plus.png</iconset>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Exclude</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../blackmisc/blackmisc.qrc">
+           <normaloff>:/diagona/icons/diagona/icons/paper-plane--minus.png</normaloff>:/diagona/icons/diagona/icons/paper-plane--minus.png</iconset>
+         </property>
+        </item>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -194,6 +216,8 @@
   <tabstop>pb_Stash</tabstop>
   <tabstop>le_LastUpdated</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../../blackmisc/blackmisc.qrc"/>
+ </resources>
  <connections/>
 </ui>

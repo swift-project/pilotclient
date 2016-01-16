@@ -19,5 +19,15 @@ namespace BlackGui
 
         CForm::~CForm() { }
 
+        const BlackMisc::Network::CAuthenticatedUser &CForm::getUser() const
+        {
+            return this->m_user.get();
+        }
+
+        void CForm::ps_userChanged()
+        {
+            // void
+        }
+
     } // ns
 } // ns

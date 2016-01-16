@@ -59,6 +59,10 @@ namespace BlackGui
             //! Request stashing for model
             void requestStash();
 
+        protected slots:
+            //! User has been changed
+            virtual void ps_userChanged() override;
+
         private:
             QScopedPointer<Ui::CModelMappingForm> ui;
             BlackMisc::Simulation::CAircraftModel m_originalModel;

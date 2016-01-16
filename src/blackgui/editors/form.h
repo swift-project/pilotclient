@@ -12,6 +12,8 @@
 #ifndef BLACKGUI_EDITORS_FORM_H
 #define BLACKGUI_EDITORS_FORM_H
 
+#include "blackmisc/network/authenticateduser.h"
+#include "blackcore/data/authenticateduser.h"
 #include <QFrame>
 
 namespace BlackGui
@@ -42,8 +44,16 @@ namespace BlackGui
             //! Is read only?
             bool isReadOnly() const { return m_readOnly; }
 
+            //! Authenticated user
+            const BlackMisc::Network::CAuthenticatedUser &getUser() const;
+
         protected:
             bool m_readOnly = false; //!< read only
+            BlackMisc::CData<BlackCore::Data::AuthenticatedUser> m_user {this, &CForm::ps_userChanged}; //!< authenticated user
+
+        protected slots:
+            //! User has been changed
+            virtual void ps_userChanged();
         };
 
     } // ns
