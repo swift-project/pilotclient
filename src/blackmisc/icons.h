@@ -53,6 +53,8 @@ namespace BlackMisc
             AviationAtis,
             AviationMetar,
             GeoPosition,
+            ModelExclude,
+            ModelInclude,
             NetworkCapabilityTextOnly,
             NetworkCapabilityUnknown,
             NetworkCapabilityVoice,
@@ -603,6 +605,16 @@ namespace BlackMisc
 
         //! Geo position
         static const QPixmap &geoPosition16();
+
+        // -------------------------------------------------------------
+        // Mapping
+        // -------------------------------------------------------------
+
+        //! Model include
+        static const QPixmap &modelInclude16();
+
+        //! Model exclude
+        static const QPixmap &modelExclude16();
 
         // -------------------------------------------------------------
         // By index

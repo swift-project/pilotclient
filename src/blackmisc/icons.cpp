@@ -346,9 +346,22 @@ namespace BlackMisc
         return pm;
     }
 
+    QPixmap transparentPixmapImpl(const QSize &size)
+    {
+        // http://curtis.humphreyonline.us/code/qt-code/making-a-qpixmap-transparent-wrong-way-right-way
+        QPixmap pix(size);
+        pix.fill(Qt::transparent);
+
+        QPainter painter;
+        painter.begin(&pix);
+        painter.drawPixmap(pix.rect(), pix);
+        painter.end();
+        return pix;
+    }
+
     const QPixmap &CIcons::empty16()
     {
-        static const QPixmap pm(16, 16);
+        static const QPixmap pm(transparentPixmapImpl(QSize(16, 16)));
         return pm;
     }
 
@@ -793,6 +806,19 @@ namespace BlackMisc
         return globe16();
     }
 
+    const QPixmap &CIcons::modelInclude16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/paper-plane--plus.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::modelExclude16()
+    {
+        // static const QPixmap pm(":/diagona/icons/diagona/icons/paper-plane--minus.png");
+        // return pm;
+        return cross16();
+    }
+
     const QPixmap &CIcons::pixmapByIndex(CIcons::IconIndex index)
     {
         switch (index)
@@ -843,6 +869,10 @@ namespace BlackMisc
             return metar();
         case GeoPosition:
             return geoPosition16();
+        case ModelExclude:
+            return modelExclude16();
+        case ModelInclude:
+            return modelInclude16();
         case NetworkCapabilityTextOnly:
             return capabilityTextOnly();
         case NetworkCapabilityUnknown:
