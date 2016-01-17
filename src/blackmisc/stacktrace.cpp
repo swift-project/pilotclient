@@ -92,10 +92,16 @@ namespace BlackMisc
 
             demangled = abi::__cxa_demangle(QByteArray(symbol, symbolEnd - symbol).constData(), demangled, &size, nullptr);
 
-            auto details = '(' % QLatin1String(basename, basenameEnd - basename) % ' ' % QLatin1String(symbol, end - symbol) % ')';
-            result.push_back(demangled ? QLatin1String(demangled) % ' ' % details : QString(details));
-
-            if (! demangled) { demangled = temp; }
+            if (demangled)
+            {
+                result.push_back(QLatin1String(demangled) % ' ' %
+                                 '(' % QLatin1String(basename, basenameEnd - basename) % ' ' % QLatin1String(symbol, end - symbol) % ')');
+            }
+            else
+            {
+                result.push_back('(' % QLatin1String(basename, basenameEnd - basename) % ' ' % QLatin1String(symbol, end - symbol) % ')');
+                demangled = temp;
+            }
         }
         free(symbols);
         free(demangled);
