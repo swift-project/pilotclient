@@ -39,6 +39,11 @@ namespace BlackGui
         };
 
         //! Constructor
+        //! \param mode                    window mode as defined in WindowMode
+        //! \param isMainApplicationWindow is this the main (there should be only one) application window
+        //! \param framelessPropertyname   qss property indication frameless
+        //! \param correspondingWidget     the widget representing the window
+        //!
         CEnableForFramelessWindow(WindowMode mode, bool isMainApplicationWindow, const char *framelessPropertyname, QWidget *correspondingWidget);
 
         //! Window mode
@@ -66,13 +71,17 @@ namespace BlackGui
         static QString windowModeToString(WindowMode m);
 
     protected:
-        QPoint       m_framelessDragPosition;          //!< position, if moving is handled with frameless window */
-        QPushButton *m_framelessCloseButton = nullptr; //!< close button
-        WindowMode   m_windowMode = WindowNormal;      //!< Window mode, \sa WindowMode
-        bool         m_mainApplicationWindow = false;  //!< is the main application window (only 1)
-        QWidget     *m_widget = nullptr;               //!< corresponding main window or dock widget
-        QSizeGrip   *m_framelessSizeGrip = nullptr;    //!< size grip object
-        QByteArray   m_framelessPropertyName;          //!< property name for frameless widgets
+        QPoint       m_framelessDragPosition;             //!< position, if moving is handled with frameless window */
+        QPushButton *m_framelessCloseButton = nullptr;    //!< close button
+        WindowMode   m_windowMode = WindowNormal;         //!< Window mode, \sa WindowMode
+        WindowMode   m_originalWindowMode = WindowNormal; //!< mode when initialized
+        bool         m_mainApplicationWindow = false;     //!< is the main application window (only 1)
+        QWidget     *m_widget = nullptr;                  //!< corresponding main window or dock widget
+        QSizeGrip   *m_framelessSizeGrip = nullptr;       //!< size grip object
+        QByteArray   m_framelessPropertyName;             //!< property name for frameless widgets
+
+        //! Can be used as notification if window mode changes
+        virtual void windowFlagsChanged();
 
         //! Resize grip handle
         void addFramelessSizeGripToStatusBar(QStatusBar *statusBar);

@@ -20,28 +20,33 @@ using namespace BlackMisc;
 
 namespace BlackGui
 {
-
     CEnableForFramelessWindow::CEnableForFramelessWindow(CEnableForFramelessWindow::WindowMode mode, bool isMainApplicationWindow, const char *framelessPropertyName, QWidget *correspondingWidget) :
         m_windowMode(mode), m_mainApplicationWindow(isMainApplicationWindow), m_widget(correspondingWidget), m_framelessPropertyName(framelessPropertyName)
     {
         Q_ASSERT(correspondingWidget);
         Q_ASSERT(!m_framelessPropertyName.isEmpty());
+        this->m_originalWindowMode = mode;
         this->setWindowAttributes(mode);
+        this->windowFlagsChanged();
     }
 
     void CEnableForFramelessWindow::setMode(CEnableForFramelessWindow::WindowMode mode)
     {
         if (mode == this->m_windowMode) { return; }
+        this->m_windowMode = mode;
+
         // set the main window or dock widget flags and attributes
         this->m_widget->setWindowFlags(modeToWindowFlags(mode));
+        this->windowFlagsChanged();
         this->setWindowAttributes(mode);
         this->m_widget->show();
-        this->m_windowMode = mode;
     }
 
     void CEnableForFramelessWindow::setFrameless(bool frameless)
     {
-        setMode(frameless ? WindowFrameless : WindowTool);
+        WindowMode nonFrameLessMode = this->m_originalWindowMode;
+        if (nonFrameLessMode == WindowFrameless) { nonFrameLessMode = WindowNormal; }
+        setMode(frameless ? WindowFrameless : nonFrameLessMode);
     }
 
     void CEnableForFramelessWindow::alwaysOnTop(bool onTop)
@@ -56,6 +61,7 @@ namespace BlackGui
             flags &= ~Qt::WindowStaysOnTopHint;
         }
         this->m_widget->setWindowFlags(flags);
+        this->windowFlagsChanged();
     }
 
     CEnableForFramelessWindow::WindowMode CEnableForFramelessWindow::stringToWindowMode(const QString &s)
@@ -80,6 +86,11 @@ namespace BlackGui
         return "normal";
     }
 
+    void CEnableForFramelessWindow::windowFlagsChanged()
+    {
+        // void
+    }
+
     void CEnableForFramelessWindow::setWindowAttributes(CEnableForFramelessWindow::WindowMode mode)
     {
         Q_ASSERT_X(this->m_widget, "CEnableForFramelessWindow::setWindowAttributes", "Missing widget representing window");
@@ -92,7 +103,7 @@ namespace BlackGui
 
         // Qt::WA_PaintOnScreen leads to a warning
         // setMask(QRegion(10, 10, 10, 10) would work, but requires "complex" calcs for rounded corners
-        //! \todo Transparent dock widget,try out void QWidget::setMask
+        //! \todo Transparent widget, try out void QWidget::setMask
         this->setDynamicProperties(frameless);
     }
 
@@ -225,11 +236,15 @@ namespace BlackGui
     void CEnableForFramelessWindow::toolToNormalWindow()
     {
         this->m_widget->setWindowFlags((this->m_widget->windowFlags() & (~Qt::Tool)) | Qt::Window);
+        this->windowFlagsChanged();
+        this->m_originalWindowMode = WindowNormal;
     }
 
     void CEnableForFramelessWindow::normalToToolWindow()
     {
         this->m_widget->setWindowFlags(this->m_widget->windowFlags() | Qt::Tool);
+        this->windowFlagsChanged();
+        this->m_originalWindowMode = WindowTool;
     }
 
     bool CEnableForFramelessWindow::isToolWindow() const
@@ -252,5 +267,4 @@ namespace BlackGui
             return (Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
         }
     }
-
 } // namespace
