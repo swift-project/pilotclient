@@ -583,6 +583,7 @@ namespace BlackGui
 
     void CInfoArea::iniFileBasedSettings()
     {
+        // with Qt 5.5 still needed
         const QString section(this->objectName());
         const QSettings *settings = CStyleSheetUtility::instance().iniFile();
         if (settings && !section.isEmpty())
