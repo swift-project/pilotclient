@@ -22,7 +22,6 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include <QMouseEvent>
-#include <QMainWindow>
 
 using namespace BlackCore;
 using namespace BlackSound;
@@ -88,7 +87,6 @@ void SwiftGuiStd::performGracefulShutdown()
 
     // clean up GUI
     this->ui->comp_MainInfoArea->dockAllWidgets();
-    this->ui->comp_InvisibleInfoArea->dockAllWidgets();
 
     // allow some other parts to react
     QApplication::processEvents(QEventLoop::AllEvents, 100);
@@ -203,7 +201,6 @@ void SwiftGuiStd::ps_displayStatusMessageInGui(const CStatusMessage &statusMessa
 
     // main info areas
     this->ui->comp_MainInfoArea->displayStatusMessage(statusMessage);
-    this->ui->comp_InvisibleInfoArea->displayStatusMessage(statusMessage);
 
     // list
     this->ui->comp_MainInfoArea->getLogComponent()->appendStatusMessageToList(statusMessage);

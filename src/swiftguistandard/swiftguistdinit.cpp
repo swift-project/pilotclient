@@ -81,15 +81,12 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     this->ui->dw_InfoBarStatus->setPreferredSizeWhenFloating(this->ui->dw_InfoBarStatus->size()); // set floating size
 
     // navigator
-    CNavigatorDockWidget *nav = this->ui->comp_InvisibleInfoArea->getNavigatorComponent();
-    Q_ASSERT(nav);
-    nav->addAction(this->getToggleWindowVisibilityAction(nav));
-    nav->addActions(this->ui->comp_MainInfoArea->getInfoAreaToggleFloatingActions(nav));
-    nav->addAction(this->getWindowNormalAction(nav));
-    nav->addAction(this->getWindowMinimizeAction(nav));
-    nav->addAction(this->getToggleStayOnTopAction(nav));
-
-    this->ui->comp_InvisibleInfoArea->getNavigatorComponent()->buildNavigator(1);
+    this->m_navigator->addAction(this->getToggleWindowVisibilityAction(this->m_navigator.data()));
+    this->m_navigator->addActions(this->ui->comp_MainInfoArea->getInfoAreaToggleFloatingActions(this->m_navigator.data()));
+    this->m_navigator->addAction(this->getWindowNormalAction(this->m_navigator.data()));
+    this->m_navigator->addAction(this->getWindowMinimizeAction(this->m_navigator.data()));
+    this->m_navigator->addAction(this->getToggleStayOnTopAction(this->m_navigator.data()));
+    this->m_navigator->buildNavigator(1);
 
     // wire GUI signals
     this->initGuiSignals();
@@ -181,7 +178,7 @@ void SwiftGuiStd::initGuiSignals()
     connect(this->ui->menu_WindowFont, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_WindowMinimize, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_WindowToggleOnTop, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_WindowToggleNavigator, &QAction::triggered, this->ui->comp_InvisibleInfoArea, &CInvisibleInfoAreaComponent::toggleNavigator);
+    connect(this->ui->menu_WindowToggleNavigator, &QAction::triggered, this->m_navigator.data(), &CNavigatorDialog::toggleNavigator);
 
     connect(this->ui->menu_InternalsCompileInfo, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_InternalsEnvVars, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);

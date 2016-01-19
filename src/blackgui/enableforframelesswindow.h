@@ -55,7 +55,7 @@ namespace BlackGui
         //! Frameless?
         bool isFrameless() const { return this->m_windowMode == WindowFrameless; }
 
-        //! The main application
+        //! Is main application, explicitly set
         bool isMainApplicationWindow() const { return m_mainApplicationWindow; }
 
         //! Always on top?
@@ -76,7 +76,7 @@ namespace BlackGui
         WindowMode   m_windowMode = WindowNormal;         //!< Window mode, \sa WindowMode
         WindowMode   m_originalWindowMode = WindowNormal; //!< mode when initialized
         bool         m_mainApplicationWindow = false;     //!< is the main application window (only 1)
-        QWidget     *m_widget = nullptr;                  //!< corresponding main window or dock widget
+        QWidget     *m_widget = nullptr;                  //!< corresponding widget or dock widget
         QSizeGrip   *m_framelessSizeGrip = nullptr;       //!< size grip object
         QByteArray   m_framelessPropertyName;             //!< property name for frameless widgets
 

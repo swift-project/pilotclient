@@ -14,6 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/enableforframelesswindow.h"
+#include "blackmisc/icons.h"
 #include <QDialog>
 #include <QScopedPointer>
 #include <QMenu>
@@ -24,13 +25,12 @@ namespace BlackGui
 {
     namespace Components
     {
-
         /*!
-         * Navigators dialog
+         * Navigator dialog
          */
         class BLACKGUI_EXPORT CNavigatorDialog :
-                public QDialog,
-                public CEnableForFramelessWindow
+            public QDialog,
+            public CEnableForFramelessWindow
         {
             Q_OBJECT
 
@@ -44,8 +44,12 @@ namespace BlackGui
             //! Navigator
             void buildNavigator(int columns);
 
+        public slots:
             //! Toggle frameless mode
             void toggleFrameless();
+
+            //! Toggle visibility
+            void toggleNavigator();
 
         protected:
             //! Style sheet has changed
@@ -56,6 +60,12 @@ namespace BlackGui
 
             //! \copydoc QMainWindow::mousePressEvent
             virtual void mousePressEvent(QMouseEvent *event) override;
+
+            //! \copydoc QMainWindow::mousePressEvent
+            virtual void changeEvent(QEvent *evt) override;
+
+            //! \copydoc CEnableForFramelessWindow::windowFlagsChanged
+            virtual void windowFlagsChanged() override;
 
         private slots:
             //! Context menu
@@ -76,8 +86,8 @@ namespace BlackGui
 
             QScopedPointer<Ui::CNavigatorDialog> ui;
             bool m_firstBuild = true;
+            int  m_currentColumns = 1;
         };
-
     } // ns
 } // ns
 

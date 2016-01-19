@@ -124,7 +124,7 @@
           <enum>QFrame::NoFrame</enum>
          </property>
          <property name="currentIndex">
-          <number>2</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="pg_MainInfoArea">
           <layout class="QVBoxLayout" name="vl_MainInfoArea">
@@ -192,28 +192,6 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="pg_InvisibleAreas">
-          <layout class="QVBoxLayout" name="vl_InvisibleArea">
-           <property name="spacing">
-            <number>0</number>
-           </property>
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="BlackGui::Components::CInvisibleInfoAreaComponent" name="comp_InvisibleInfoArea" native="true"/>
-           </item>
-          </layout>
-         </widget>
         </widget>
        </item>
        <item>
@@ -243,7 +221,7 @@
      <x>0</x>
      <y>0</y>
      <width>350</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -603,12 +581,6 @@
    <class>BlackGui::Components::CInternalsComponent</class>
    <extends>QWidget</extends>
    <header>blackgui/components/internalscomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Components::CInvisibleInfoAreaComponent</class>
-   <extends>QWidget</extends>
-   <header>blackgui/components/invisibleinfoareacomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

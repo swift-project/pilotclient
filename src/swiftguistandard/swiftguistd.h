@@ -22,6 +22,7 @@
 #include "blackcore/data/globalsetup.h"
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/maininfoareacomponent.h"
+#include "blackgui/components/navigatordialog.h"
 #include "blackgui/transpondermodeselector.h"
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackgui/models/serverlistmodel.h"
@@ -110,6 +111,8 @@ protected:
 
 private:
     QScopedPointer<Ui::SwiftGuiStd> ui;
+    // if I pass the parent, the dialog is always center over the parent
+    QScopedPointer<BlackGui::Components::CNavigatorDialog> m_navigator{new BlackGui::Components::CNavigatorDialog()};
     bool                                           m_init = false;
     BlackGui::CManagedStatusBar                    m_statusBar;
     BlackMisc::CLogSubscriber                      m_logSubscriber { this, &SwiftGuiStd::ps_displayStatusMessageInGui };

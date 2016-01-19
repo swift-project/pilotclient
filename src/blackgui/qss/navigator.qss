@@ -1,10 +1,17 @@
-#fr_NavigatorDockWidgetInner[framelessDockWidget="true"] {
+#fr_NavigatorDialogInner[navigatorFrameless="true"] {
   margin: 0px;
   padding: 3px;
   border: 2px solid green;
   border-radius: 10px;
 }
 
-#fr_NavigatorDockWidgetInner QToolButton {
+#fr_NavigatorDialogInner[navigatorFrameless="false"] {
+  margin: 0px;
+  padding: 3px;
+  border: 0px;
+  border-radius: 0px;
+}
+
+#fr_NavigatorDialogInner QToolButton {
   margin: 0px;
 }

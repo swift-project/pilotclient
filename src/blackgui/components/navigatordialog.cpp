@@ -9,10 +9,8 @@
 
 #include "navigatordialog.h"
 #include "ui_navigatordialog.h"
-#include "blackgui/infoarea.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/stylesheetutility.h"
-
 #include <QToolButton>
 #include <QGridLayout>
 #include <QAction>
@@ -24,10 +22,12 @@ namespace BlackGui
 {
     namespace Components
     {
-
+        // If the dialog is a normal window, it stays open when the parent is minimized
+        // (and the parent is null for the dialog). If the dialog is a tool winow it is always
+        // minimized, regardless of dialog`s parent
         CNavigatorDialog::CNavigatorDialog(QWidget *parent) :
-            QDialog(parent, Qt::Tool),
-            CEnableForFramelessWindow(CEnableForFramelessWindow::WindowTool, false, "NavigatorDialog", this),
+            QDialog(parent, modeToWindowFlags(CEnableForFramelessWindow::WindowTool)),
+            CEnableForFramelessWindow(CEnableForFramelessWindow::WindowTool, false, "navigatorFrameless", this),
             ui(new Ui::CNavigatorDialog)
         {
             ui->setupUi(this);
@@ -64,7 +64,8 @@ namespace BlackGui
             this->ui->fr_NavigatorDialogInner->setLayout(gridLayout);
             int r = 0;
             int c = 0;
-            for (const auto &action : actions())
+
+            for (const auto &action : this->actions())
             {
                 QToolButton *tb = new QToolButton(this->ui->fr_NavigatorDialogInner);
                 tb->setDefaultAction(action);
@@ -79,7 +80,8 @@ namespace BlackGui
 
             int w = 16 * gridLayout->columnCount();
             int h = 16 * gridLayout->rowCount();
-            QSize min(w, h);
+            this->m_currentColumns = gridLayout->columnCount();
+            QSize min(w + 2, h + 2);
             this->ui->fr_NavigatorDialogInner->setMinimumSize(min);
             this->setMinimumSize(min);
             this->adjustSize();
@@ -90,11 +92,17 @@ namespace BlackGui
             this->setFrameless(!this->isFrameless());
         }
 
+        void CNavigatorDialog::toggleNavigator()
+        {
+            this->setVisible(!this->isVisible());
+        }
+
         void CNavigatorDialog::ps_onStyleSheetsChanged()
         {
             const QString fn(CStyleSheetUtility::fileNameNavigator());
             const QString qss(CStyleSheetUtility::instance().style(fn));
             this->setStyleSheet(qss);
+            this->repaint();
         }
 
         void CNavigatorDialog::mouseMoveEvent(QMouseEvent *event)
@@ -105,6 +113,27 @@ namespace BlackGui
         void CNavigatorDialog::mousePressEvent(QMouseEvent *event)
         {
             if (!handleMousePressEvent(event)) { QDialog::mousePressEvent(event); }
+        }
+
+        void CNavigatorDialog::changeEvent(QEvent *evt)
+        {
+            QEvent::Type t = evt->type();
+            if (t == QEvent::WindowStateChange)
+            {
+                evt->ignore();
+                hide();
+            }
+            else
+            {
+                QDialog::changeEvent(evt);
+            }
+        }
+
+        void CNavigatorDialog::windowFlagsChanged()
+        {
+            if (this->m_firstBuild) { return; }
+            this->ps_onStyleSheetsChanged();
+            this->buildNavigator(this->m_currentColumns);
         }
 
         void CNavigatorDialog::ps_showContextMenu(const QPoint &pos)
@@ -129,8 +158,20 @@ namespace BlackGui
 
         void CNavigatorDialog::insertOwnActions()
         {
+            // add some space for frameless navigators where I can move the navigator
+            QAction *a = new QAction(BlackMisc::CIcons::empty16(), "move navigator here", this);
+            if (this->actions().isEmpty())
+            {
+                this->addAction(a);
+            }
+            else
+            {
+                this->insertAction(this->actions().first(), a);
+            }
+
+            // close
             QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarCloseButton), Qt::white, QSize(16, 16)));
-            QAction *a = new QAction(i, "Close", this);
+            a = new QAction(i, "Close", this);
             connect(a, &QAction::triggered, this, &CNavigatorDialog::close);
             this->addAction(a);
         }
@@ -145,20 +186,19 @@ namespace BlackGui
 
         void CNavigatorDialog::addToContextMenu(QMenu *contextMenu) const
         {
-            QAction *a;
-            a = contextMenu->addAction(CIcons::resize16(), "1 row", this, &CNavigatorDialog::ps_changeLayout);
+            QAction *a = contextMenu->addAction(CIcons::resize16(), "1 row", this, SLOT(ps_changeLayout()));
             a->setData("1r");
-            a = contextMenu->addAction(CIcons::resize16(), "2 rows", this, &CNavigatorDialog::ps_changeLayout);
+            a = contextMenu->addAction(CIcons::resize16(), "2 rows", this, SLOT(ps_changeLayout()));
             a->setData("2r");
-            a = contextMenu->addAction(CIcons::resize16(), "1 column", this, &CNavigatorDialog::ps_changeLayout);
+            a = contextMenu->addAction(CIcons::resize16(), "1 column", this, SLOT(ps_changeLayout()));
             a->setData("1c");
-            a = contextMenu->addAction(CIcons::resize16(), "2 columns", this, &CNavigatorDialog::ps_changeLayout);
+            a = contextMenu->addAction(CIcons::resize16(), "2 columns", this, SLOT(ps_changeLayout()));
             a->setData("2c");
 
             contextMenu->addSeparator();
 
             QString frameLessActionText = this->isFrameless() ? "Normal window" : "Frameless";
-            contextMenu->addAction(BlackMisc::CIcons::tableSheet16(), frameLessActionText, this, &CNavigatorDialog::toggleFrameless);
+            contextMenu->addAction(BlackMisc::CIcons::tableSheet16(), frameLessActionText, this, SLOT(toggleFrameless()));
         }
 
     } // ns
