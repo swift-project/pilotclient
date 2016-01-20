@@ -82,8 +82,14 @@ namespace BlackGui
 
         bool CDataInfoAreaComponent::writeDbDataToResourceDir() const
         {
-            bool s = hasProvider() &&
-                     this->writeDbDataToDisk(CProject::getSwiftStaticDbFilesDir());
+            if (!this->hasProvider() || !this->canConnectSwiftDb())
+            {
+                CLogMessage(this).warning("No connection to DB yet, no new data loaded which can be written");
+                return false;
+            }
+
+            // write to disk
+            bool s = this->writeDbDataToDisk(CProject::getSwiftStaticDbFilesDir());
             if (s)
             {
                 CLogMessage(this).info("Written DB data");
@@ -103,7 +109,7 @@ namespace BlackGui
             // info
             if (s)
             {
-                CLogMessage(this).info("Read DB data: %1") << CProject::getSwiftStaticDbFilesDir();
+                CLogMessage(this).info("Read DB data from directory: %1") << CProject::getSwiftStaticDbFilesDir();
                 this->ui->comp_DbAircraftIcao->showLoadIndicator();
                 this->ui->comp_DbAirlineIcao->showLoadIndicator();
                 this->ui->comp_DbCountries->showLoadIndicator();
@@ -153,6 +159,11 @@ namespace BlackGui
             default:
                 return CIcons::empty();
             }
+        }
+
+        void CDataInfoAreaComponent::requestUpdateOfAllDbData()
+        {
+            this->triggerRead(CEntityFlags::AllDbEntities, QDateTime());
         }
 
         void CDataInfoAreaComponent::requestUpdatedData(CEntityFlags::Entity entity)

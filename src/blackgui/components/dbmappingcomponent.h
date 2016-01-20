@@ -19,6 +19,7 @@
 #include "blackgui/menudelegate.h"
 #include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/components/dbautostashingcomponent.h"
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
 #include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
@@ -175,11 +176,15 @@ namespace BlackGui
             //! Stash current model
             void ps_stashCurrentModel();
 
+            //! Display auto stashing dialog
+            void ps_displayAutoStashingDialog();
+
             //! Remove DB models from current view
             void ps_removeDbModelsFromView();
 
         private:
             QScopedPointer<Ui::CDbMappingComponent> ui;
+            QScopedArrayPointer<CDbAutoStashingComponent> m_autostashDialog { new CDbAutoStashingComponent(this) };
             BlackMisc::Simulation::FsCommon::CVPilotRulesReader           m_vPilotReader;                //!< read vPilot rules
             BlackMisc::CData<BlackCore::Data::VPilotAircraftModels>       m_cachedVPilotModels { this, &CDbMappingComponent::ps_onVPilotCacheChanged }; //!< cache for latest vPilot rules
             std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>  m_modelLoader;                 //!< read own aircraft models
@@ -240,13 +245,15 @@ namespace BlackGui
                 CDbMappingComponent *mappingComponent() const;
             };
 
-            //! Menu for removing DB models from current view
+            //! Menu for tools:
+            //! 1) removing DB models from current view and
+            //! 2) for auto stashing
             //! \note This is a specific menu for that very component
-            class CRemoveDbModelsMenu : public BlackGui::IMenuDelegate
+            class CModelStashTools : public BlackGui::IMenuDelegate
             {
             public:
                 //! Constructor
-                CRemoveDbModelsMenu(CDbMappingComponent *mappingComponent, bool separator = true) :
+                CModelStashTools(CDbMappingComponent *mappingComponent, bool separator = true) :
                     BlackGui::IMenuDelegate(mappingComponent, separator)
                 {}
 

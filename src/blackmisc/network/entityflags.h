@@ -39,9 +39,10 @@ namespace BlackMisc
                 DistributorEntity      = 1 << 6, ///< distributors
                 LiveryEntity           = 1 << 7, ///< liveries
                 ModelEntity            = 1 << 8, ///< models
-                AllIcaoEntities        = AircraftIcaoEntity | AirlineIcaoEntity, ///< all ICAO codes
+                AllIcaoEntities        = AircraftIcaoEntity | AirlineIcaoEntity,                 ///< all ICAO codes
                 AllIcaoAndCountries    = AircraftIcaoEntity | AirlineIcaoEntity | CountryEntity, ///< all ICAO codes and countries
-                DistributorLiveryModel = DistributorEntity | LiveryEntity | ModelEntity, ///< Combinded
+                DistributorLiveryModel = DistributorEntity | LiveryEntity | ModelEntity,         ///< Combinded
+                AllDbEntities          = AllIcaoEntities | DistributorLiveryModel,               ///< All DB stuff
                 AllEntities            = 0xFFFF  ///< everything
             };
             Q_DECLARE_FLAGS(Entity, EntityFlag)

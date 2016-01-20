@@ -89,6 +89,9 @@ namespace BlackGui
             //! Load from resource dir
             bool readDbDataFromResourceDir();
 
+            //! Request update of all DB data
+            void requestUpdateOfAllDbData();
+
             //! Load new data (based on timestamp, incremental)
             void requestUpdatedData(BlackMisc::Network::CEntityFlags::Entity entity);
 

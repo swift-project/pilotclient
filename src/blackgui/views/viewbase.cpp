@@ -207,11 +207,15 @@ namespace BlackGui
             {
                 if (sm == SingleSelection)
                 {
-                    menu.addAction(QIcon(), "Switch to multi selection", this, SLOT(ps_toggleSelectionMode()));
+                    QAction *a = menu.addAction(QIcon(), "Switch to multi selection", this, SLOT(ps_toggleSelectionMode()));
+                    a->setData("multi");
+                    a = menu.addAction(QIcon(), "Switch to extended selection", this, SLOT(ps_toggleSelectionMode()));
+                    a->setData("extended");
                 }
                 else if (sm == MultiSelection || sm == ExtendedSelection)
                 {
-                    menu.addAction(QIcon(), "Switch to single selection", this, SLOT(ps_toggleSelectionMode()));
+                    QAction *a = menu.addAction(QIcon(), "Switch to single selection", this, SLOT(ps_toggleSelectionMode()));
+                    a->setData("single");
                 }
             }
             if (sm != NoSelection)
@@ -533,9 +537,29 @@ namespace BlackGui
             {
                 if (this->selectionMode() == SingleSelection)
                 {
-                    this->setSelectionMode(this->m_originalSelectionMode);
+                    QAction *action = qobject_cast<QAction *>(sender());
+                    if (action && action->data().canConvert<QString>())
+                    {
+                        QString data(action->data().toString().toLower());
+                        if (data.startsWith('e'))
+                        {
+                            this->setSelectionMode(ExtendedSelection);
+                        }
+                        else if (data.startsWith('m'))
+                        {
+                            this->setSelectionMode(MultiSelection);
+                        }
+                        else
+                        {
+                            this->setSelectionMode(this->m_originalSelectionMode);
+                        }
+                    }
+                    else
+                    {
+                        this->setSelectionMode(this->m_originalSelectionMode);
+                    }
                 }
-                else if (this->selectionMode() == MultiSelection)
+                else if (this->selectionMode() == MultiSelection || this->selectionMode() == ExtendedSelection)
                 {
                     this->setSelectionMode(SingleSelection);
                 }
