@@ -213,6 +213,9 @@ namespace BlackGui
             //! Similar to ContainerType::insert here inserts at first position
             virtual void insert(const ObjectType &object);
 
+            //! Similar to ContainerType::insert here inserts at first position
+            virtual void insert(const ContainerType &container);
+
             //! Remove object
             virtual void remove(const ObjectType &object);
 

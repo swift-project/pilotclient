@@ -144,7 +144,7 @@ namespace BlackGui
             QModelIndexList selectedRows() const;
 
             //! Number of selected rows
-            int selectedRowsCount() const;
+            int selectedRowCount() const;
 
             //! Single selected row
             bool hasSingleSelectedRow() const;
@@ -155,8 +155,11 @@ namespace BlackGui
             //! Filter dialog
             void setFilterDialog(BlackGui::Filters::CFilterDialog *filterDialog);
 
+            //! Filter widget if any
+            QWidget *getFilterWidget() const { return m_filterWidget; }
+
             //! Set filter widget
-            void setFilterWidget(BlackGui::Filters::CFilterWidget *filterDialog);
+            void setFilterWidget(BlackGui::Filters::CFilterWidget *filterWidget);
 
             //! Set custom menu if applicable
             void setCustomMenu(BlackGui::IMenuDelegate *menu, bool nestPreviousMenu = true);
@@ -244,6 +247,7 @@ namespace BlackGui
 
             //! Method creating the menu
             //! \remarks override this method to contribute to the menu
+            //! \sa CViewBaseNonTemplate::ps_customMenuRequested
             virtual void customMenu(QMenu &menu) const;
 
             //! \copydoc QTableView::paintEvent
@@ -288,24 +292,24 @@ namespace BlackGui
             //! Default file for load/save operations
             QString getDefaultFilename() const;
 
-            ResizeMode     m_resizeMode = ResizingOnceSubset;        //!< mode
-            RowsResizeMode m_rowResizeMode            = Interactive; //!< row resize mode for row height
+            ResizeMode     m_resizeMode = ResizingOnceSubset;                  //!< mode
+            RowsResizeMode m_rowResizeMode            = Interactive;           //!< row resize mode for row height
             SelectionMode m_originalSelectionMode     = this->selectionMode(); //!< Selection mode set
-            int m_resizeCount                         = 0;           //!< flag / counter, how many resize activities
-            int m_skipResizeThreshold                 = 40;          //!< when to skip resize (rows count)
-            int m_resizeAutoNthTime                   = 1;           //!< with ResizeAuto, resize every n-th time
-            bool m_forceStretchLastColumnWhenResized  = false;       //!< a small table might (few columns) might to fail stretching, force again
-            bool m_showingLoadIndicator               = false;       //!< showing loading indicator
-            bool m_enabledLoadIndicator               = true;        //!< loading indicator enabled/disabled
-            bool m_acceptClickSelection               = false;       //!< clicked
-            bool m_acceptRowSelected                  = false;       //!< selection changed
-            bool m_acceptDoubleClickSelection         = false;       //!< double clicked
-            bool m_displayAutomatically               = true;        //!< display directly when loaded
-            bool m_enableDeleteSelectedRows           = false;       //!< selected rows can be deleted
-            QWidget *m_filterWidget                   = nullptr;     //!< filter widget if any
-            Menu                      m_menus         = MenuDefault; //!< Default menu settings
-            BlackGui::IMenuDelegate  *m_menu          = nullptr;     //!< custom menu if any
-            BlackGui::CLoadIndicator *m_loadIndicator = nullptr;     //!< load indicator if neeeded
+            int m_resizeCount                         = 0;                     //!< flag / counter, how many resize activities
+            int m_skipResizeThreshold                 = 40;                    //!< when to skip resize (rows count)
+            int m_resizeAutoNthTime                   = 1;                     //!< with ResizeAuto, resize every n-th time
+            bool m_forceStretchLastColumnWhenResized  = false;                 //!< a small table might (few columns) might to fail stretching, force again
+            bool m_showingLoadIndicator               = false;                 //!< showing loading indicator
+            bool m_enabledLoadIndicator               = true;                  //!< loading indicator enabled/disabled
+            bool m_acceptClickSelection               = false;                 //!< clicked
+            bool m_acceptRowSelected                  = false;                 //!< selection changed
+            bool m_acceptDoubleClickSelection         = false;                 //!< double clicked
+            bool m_displayAutomatically               = true;                  //!< display directly when loaded
+            bool m_enableDeleteSelectedRows           = false;                 //!< selected rows can be deleted
+            QWidget *m_filterWidget                   = nullptr;               //!< filter widget or dialog
+            Menu                      m_menus         = MenuDefault;           //!< Default menu settings
+            BlackGui::IMenuDelegate  *m_menu          = nullptr;               //!< custom menu if any
+            BlackGui::CLoadIndicator *m_loadIndicator = nullptr;               //!< load indicator if neeeded
 
         protected slots:
             //! Helper method with template free signature serving as callback from threaded worker
@@ -371,6 +375,7 @@ namespace BlackGui
 
         private:
             //! Set the filter widget internally
+            //! \remarks used for dialog and filter widget
             void setFilterWidgetImpl(QWidget *filterWidget);
         };
         Q_DECLARE_OPERATORS_FOR_FLAGS(BlackGui::Views::CViewBaseNonTemplate::Menu)
@@ -406,6 +411,9 @@ namespace BlackGui
 
             //! Insert
             void insert(const ObjectType &value, bool resize = true);
+
+            //! Insert
+            void insert(const ContainerType &container, bool resize = true);
 
             //! Value object at
             const ObjectType &at(const QModelIndex &index) const;

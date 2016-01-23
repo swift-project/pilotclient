@@ -76,6 +76,7 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::setFilterWidgetImpl(QWidget *filterWidget)
         {
+            // dialog or filter widget
             if (this->m_filterWidget)
             {
                 disconnect(this->m_filterWidget);
@@ -191,8 +192,8 @@ namespace BlackGui
             items = menu.actions().size();
             if (this->m_menus.testFlag(MenuFilter))
             {
-                menu.addAction(BlackMisc::CIcons::tableSheet16(), "Filter", this, SLOT(ps_displayFilterDialog()), CShortcut::keyDisplayFilter());
-                menu.addAction(BlackMisc::CIcons::tableSheet16(), "Remove Filter", this, SLOT(ps_removeFilter()));
+                menu.addAction(CIcons::filter16(), "Filter", this, SLOT(ps_displayFilterDialog()), CShortcut::keyDisplayFilter());
+                menu.addAction(CIcons::filter16(), "Remove Filter", this, SLOT(ps_removeFilter()));
             }
             if (menu.actions().size() > items) { menu.addSeparator(); }
 
@@ -205,17 +206,22 @@ namespace BlackGui
             }
             if ((this->m_originalSelectionMode == MultiSelection || this->m_originalSelectionMode == ExtendedSelection) && this->m_menus.testFlag(MenuToggleSelectionMode))
             {
-                if (sm == SingleSelection)
+                if (sm != MultiSelection)
                 {
                     QAction *a = menu.addAction(QIcon(), "Switch to multi selection", this, SLOT(ps_toggleSelectionMode()));
-                    a->setData("multi");
-                    a = menu.addAction(QIcon(), "Switch to extended selection", this, SLOT(ps_toggleSelectionMode()));
-                    a->setData("extended");
+                    a->setData(MultiSelection);
                 }
-                else if (sm == MultiSelection || sm == ExtendedSelection)
+
+                if (sm != ExtendedSelection)
+                {
+                    QAction *a = menu.addAction(QIcon(), "Switch to extended selection", this, SLOT(ps_toggleSelectionMode()));
+                    a->setData(ExtendedSelection);
+                }
+
+                if (sm != SingleSelection)
                 {
                     QAction *a = menu.addAction(QIcon(), "Switch to single selection", this, SLOT(ps_toggleSelectionMode()));
-                    a->setData("single");
+                    a->setData(SingleSelection);
                 }
             }
             if (sm != NoSelection)
@@ -319,7 +325,7 @@ namespace BlackGui
             return this->selectionModel()->selectedRows();
         }
 
-        int CViewBaseNonTemplate::selectedRowsCount() const
+        int CViewBaseNonTemplate::selectedRowCount() const
         {
             if (!this->hasSelection()) { return 0;}
             return this->selectedRows().count();
@@ -327,12 +333,12 @@ namespace BlackGui
 
         bool CViewBaseNonTemplate::hasSingleSelectedRow() const
         {
-            return this->selectedRowsCount() == 1;
+            return this->selectedRowCount() == 1;
         }
 
         bool CViewBaseNonTemplate::hasMultipleSelectedRows() const
         {
-            return this->selectedRowsCount() > 1;
+            return this->selectedRowCount() > 1;
         }
 
         void CViewBaseNonTemplate::init()
@@ -535,33 +541,15 @@ namespace BlackGui
         {
             if (this->m_originalSelectionMode == ExtendedSelection || this->m_originalSelectionMode == MultiSelection)
             {
-                if (this->selectionMode() == SingleSelection)
+                QAction *action = qobject_cast<QAction *>(sender());
+                if (action && action->data().isValid() && action->data().canConvert<int>())
                 {
-                    QAction *action = qobject_cast<QAction *>(sender());
-                    if (action && action->data().canConvert<QString>())
-                    {
-                        QString data(action->data().toString().toLower());
-                        if (data.startsWith('e'))
-                        {
-                            this->setSelectionMode(ExtendedSelection);
-                        }
-                        else if (data.startsWith('m'))
-                        {
-                            this->setSelectionMode(MultiSelection);
-                        }
-                        else
-                        {
-                            this->setSelectionMode(this->m_originalSelectionMode);
-                        }
-                    }
-                    else
-                    {
-                        this->setSelectionMode(this->m_originalSelectionMode);
-                    }
+                    SelectionMode sm = static_cast<SelectionMode>(action->data().toInt());
+                    this->setSelectionMode(sm);
                 }
-                else if (this->selectionMode() == MultiSelection || this->selectionMode() == ExtendedSelection)
+                else
                 {
-                    this->setSelectionMode(SingleSelection);
+                    this->setSelectionMode(this->m_originalSelectionMode);
                 }
             }
         }
@@ -701,6 +689,14 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::insert(const ContainerType &container, bool resize)
+        {
+            Q_ASSERT(this->m_model);
+            this->m_model->insert(container);
+            if (resize) { this->performModeBasedResizeToContent(); }
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
         const ObjectType &CViewBase<ModelClass, ContainerType, ObjectType>::at(const QModelIndex &index) const
         {
             Q_ASSERT(this->m_model);
@@ -777,7 +773,7 @@ namespace BlackGui
             if (this->isEmpty()) { return 0; }
 
             int currentRows = this->rowCount();
-            if (currentRows == selectedRowsCount())
+            if (currentRows == selectedRowCount())
             {
                 this->clear();
                 return currentRows;
@@ -972,6 +968,7 @@ namespace BlackGui
                 }
                 else
                 {
+                    // takes the filter and triggers the filtering
                     IModelFilterProvider<ContainerType> *provider = dynamic_cast<IModelFilterProvider<ContainerType>*>(this->m_filterWidget);
                     Q_ASSERT_X(provider, Q_FUNC_INFO, "Filter widget does not provide interface");
                     if (!provider) { return false; }

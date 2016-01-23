@@ -435,6 +435,23 @@ namespace BlackGui
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
+        void CListModelBase<ObjectType, ContainerType, UseCompare>::insert(const ContainerType &container)
+        {
+            if (container.isEmpty()) { return; }
+            beginInsertRows(QModelIndex(), 0, 0);
+            this->m_container.insert(container);
+            endInsertRows();
+
+            if (this->hasFilter())
+            {
+                this->beginResetModel();
+                this->updateFilteredContainer();
+                this->endResetModel();
+            }
+            this->emitRowCountChanged();
+        }
+
+        template <typename ObjectType, typename ContainerType, bool UseCompare>
         void CListModelBase<ObjectType, ContainerType, UseCompare>::remove(const ObjectType &object)
         {
             int oldSize = this->m_container.size();
