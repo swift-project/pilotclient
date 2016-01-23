@@ -45,10 +45,10 @@ namespace BlackGui
             return model;
         }
 
-        CStatusMessageList CModelMappingForm::validate(bool withNestedForms) const
+        CStatusMessageList CModelMappingForm::validate(bool withNestedObjects) const
         {
             CAircraftModel model(getValue());
-            CStatusMessageList msgs(model.validate(withNestedForms));
+            CStatusMessageList msgs(model.validate(withNestedObjects));
             this->ui->val_Indicator->setState(msgs);
             return msgs;
         }

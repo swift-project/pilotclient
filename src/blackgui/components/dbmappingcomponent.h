@@ -85,10 +85,16 @@ namespace BlackGui
             QStringList getStashedModelStrings() const;
 
             //! Own (installed) model for given model string
-            BlackMisc::Simulation::CAircraftModel getOwnModelForModelString(const QString &modelString);
+            BlackMisc::Simulation::CAircraftModel getOwnModelForModelString(const QString &modelString) const;
 
             //! Current tab index
             TabIndex currentTabIndex() const;
+
+            //! Current model view
+            const BlackGui::Views::CAircraftModelView *currentModelView() const;
+
+            //! Current model view
+            BlackGui::Views::CAircraftModelView *currentModelView();
 
             //! Is stashed view
             bool isStashedTab() const;
@@ -98,11 +104,29 @@ namespace BlackGui
             BlackMisc::Simulation::CAircraftModel getEditorAircraftModel() const;
 
         public slots:
-            //! Stash model
-            BlackMisc::CStatusMessage stashModel(const BlackMisc::Simulation::CAircraftModel &model);
+            //! \copydoc CDbStashComponent::stashModel
+            BlackMisc::CStatusMessage stashModel(const BlackMisc::Simulation::CAircraftModel &model, bool replace = false);
+
+            //! \copydoc CDbStashComponent::stashModels
+            BlackMisc::CStatusMessageList stashModels(const BlackMisc::Simulation::CAircraftModelList &models);
+
+            //! \copydoc CDbStashComponent::consolidateModel
+            BlackMisc::Simulation::CAircraftModel consolidateModel(const BlackMisc::Simulation::CAircraftModel &model) const;
+
+            //! \copydoc CDbStashComponent::replaceModelsUnvalidated
+            void replaceStashedModelsUnvalidated(const BlackMisc::Simulation::CAircraftModelList &models) const;
+
+            //! Validate, empty list means OK
+            BlackMisc::CStatusMessageList validateCurrentModel(bool withNestedForms) const;
+
+            //! Resize so that selection is easy (larger table view)
+            void resizeForSelect();
+
+            //! Resize so that mapping is easier
+            void resizeForMapping();
 
             //! Stash models
-            BlackMisc::CStatusMessageList stashModels(const BlackMisc::Simulation::CAircraftModelList &models);
+            void stashSelectedModels();
 
         signals:
             //! Request to filter by livery
@@ -117,19 +141,6 @@ namespace BlackGui
             //! Request latest (incrementall) data from backend
             void requestUpdatedData(BlackMisc::Network::CEntityFlags::Entity entities);
 
-        public slots:
-            //! Validate, empty list means OK
-            BlackMisc::CStatusMessageList validateCurrentModel(bool withNestedForms) const;
-
-            //! Resize so that selection is easy (larger table view)
-            void resizeForSelect();
-
-            //! Resize so that mapping is easier
-            void resizeForMapping();
-
-            //! Stash models
-            void stashSelectedModels();
-
         private slots:
             //! Load the vPilot rules
             void ps_loadVPilotData();
@@ -139,6 +150,9 @@ namespace BlackGui
 
             //! vPilot cached models changed
             void ps_onVPilotCacheChanged();
+
+            //! Request update of vPilot data
+            void ps_requestVPilotDataUpdate();
 
             //! Stashed models changed
             void ps_onStashedModelsChanged();
@@ -182,6 +196,9 @@ namespace BlackGui
             //! Remove DB models from current view
             void ps_removeDbModelsFromView();
 
+            //! Toggle auto filtering
+            void ps_toggleAutoFiltering();
+
         private:
             QScopedPointer<Ui::CDbMappingComponent> ui;
             QScopedArrayPointer<CDbAutoStashingComponent> m_autostashDialog { new CDbAutoStashingComponent(this) };
@@ -190,8 +207,9 @@ namespace BlackGui
             std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>  m_modelLoader;                 //!< read own aircraft models
             BlackMisc::CData<BlackCore::Data::OwnSimulatorAircraftModels> m_cachedOwnModels { this };    //!< cache for own installed models
             BlackMisc::CData<BlackCore::Data::AuthenticatedUser>          m_user {this, &CDbMappingComponent::ps_userChanged};
-            bool m_vPilot1stInit = true;
-            bool m_withVPilot    = false;
+            bool m_vPilot1stInit       = true;
+            bool m_withVPilot          = false;
+            bool m_autoFilterInDbViews = false; //!< automatically filter the DB view by the current model
 
             //! Init vPilot if rights and suitable
             void initVPilotLoading();
@@ -202,12 +220,6 @@ namespace BlackGui
             //! Model for given index from sender/current view
             BlackMisc::Simulation::CAircraftModel getModelFromView(const QModelIndex &index) const;
 
-            //! Current model view
-            const BlackGui::Views::CAircraftModelView *currentModelView() const;
-
-            //! Current model view
-            BlackGui::Views::CAircraftModelView *currentModelView();
-
             //! Current tab text
             QString currentTabText() const;
 
@@ -215,11 +227,11 @@ namespace BlackGui
 
             //! The menu for loading and handling own models for mapping tasks
             //! \note This is specific for that very component
-            class CMappingSimulatorModelMenu : public BlackGui::IMenuDelegate
+            class CMappingOwnSimulatorModelMenu : public BlackGui::IMenuDelegate
             {
             public:
                 //! Constructor
-                CMappingSimulatorModelMenu(CDbMappingComponent *mappingComponent, bool separator = true) :
+                CMappingOwnSimulatorModelMenu(CDbMappingComponent *mappingComponent, bool separator = true) :
                     BlackGui::IMenuDelegate(mappingComponent, separator)
                 {}
 

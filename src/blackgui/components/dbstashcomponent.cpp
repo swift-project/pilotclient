@@ -76,37 +76,25 @@ namespace BlackGui
             if (!allowReplace && this->ui->tvp_StashAircraftModels->container().containsModelStringOrId(model))
             {
                 const QString msg("Model \"%1\" already stashed");
-                return CStatusMessage(validationCats(), CStatusMessage::SeverityError, msg.arg(model.getModelString()));
+                return CStatusMessage(validationCategories(), CStatusMessage::SeverityError, msg.arg(model.getModelString()));
             }
             return CStatusMessage();
         }
 
         CStatusMessage CDbStashComponent::stashModel(const CAircraftModel &model, bool replace)
         {
-            CAircraftModel pushModel(model);
 
-            // merge with own models if any
-            if (pushModel.getModelType() != CAircraftModel::TypeOwnSimulatorModel)
-            {
-                pushModel = this->consolidateWithOwnModels(pushModel);
-            }
-
-            // merge with DB data if any
-            if (!pushModel.hasValidDbKey())
-            {
-                pushModel = this->consolidateWithDbData(pushModel);
-            }
-
-            CStatusMessage m(validateStashModel(pushModel, replace));
+            CAircraftModel stashModel(this->consolidateModel(model));
+            CStatusMessage m(validateStashModel(stashModel, replace));
             if (!m.isWarningOrAbove())
             {
                 if (replace)
                 {
-                    this->ui->tvp_StashAircraftModels->replaceOrAdd(&CAircraftModel::getModelString, pushModel.getModelString(), pushModel);
+                    this->ui->tvp_StashAircraftModels->replaceOrAdd(&CAircraftModel::getModelString, stashModel.getModelString(), stashModel);
                 }
                 else
                 {
-                    this->ui->tvp_StashAircraftModels->insert(pushModel);
+                    this->ui->tvp_StashAircraftModels->insert(stashModel);
                 }
             }
             return m;
@@ -122,6 +110,11 @@ namespace BlackGui
                 if (m.isWarningOrAbove()) { msgs.push_back(m); }
             }
             return msgs;
+        }
+
+        void CDbStashComponent::replaceModelsUnvalidated(const CAircraftModelList &models)
+        {
+            this->ui->tvp_StashAircraftModels->updateContainerMaybeAsync(models);
         }
 
         int CDbStashComponent::unstashModels(QList<int> keys)
@@ -228,7 +221,17 @@ namespace BlackGui
             if (!this->validateAndDisplay()) { return; }
             CAircraftModelList models(getSelectedOrAllModels());
             if (models.isEmpty()) { return; }
-            CStatusMessageList msgs = this->asyncPublishModels(models);
+
+            CStatusMessageList msgs;
+            if (models.size() > MaxModelPublished)
+            {
+                CAircraftModelList::iterator i = models.begin();
+                std::advance(i, MaxModelPublished);
+                models.erase(i, models.end());
+                msgs.push_back(CStatusMessage(validationCategories(), CStatusMessage::SeverityWarning, QString("More than %1 values, values skipped").arg(MaxModelPublished)));
+            }
+
+            msgs.push_back(this->asyncPublishModels(models));
             if (msgs.hasWarningOrErrorMessages())
             {
                 this->showMessages(msgs);
@@ -276,7 +279,7 @@ namespace BlackGui
             {
                 return CStatusMessageList(
                 {
-                    CStatusMessage(validationCats(), CStatusMessage::SeverityInfo, QString("No errors in %1 model(s)").arg(models.size()))
+                    CStatusMessage(validationCategories(), CStatusMessage::SeverityInfo, QString("No errors in %1 model(s)").arg(models.size()))
                 });
             }
             else
@@ -301,7 +304,7 @@ namespace BlackGui
                 if (displayInfo)
                 {
                     QString no = QString::number(this->getStashedModelsCount());
-                    CStatusMessage msg(validationCats(), CStatusMessage::SeverityInfo, "Validation passed for " + no + " models");
+                    CStatusMessage msg(validationCategories(), CStatusMessage::SeverityInfo, "Validation passed for " + no + " models");
                     this->showMessage(msg);
                 }
                 return true; // no error
@@ -320,7 +323,7 @@ namespace BlackGui
             this->ui->pb_Validate->setEnabled(e);
         }
 
-        const CLogCategoryList &CDbStashComponent::validationCats() const
+        const CLogCategoryList &CDbStashComponent::validationCategories() const
         {
             static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
             return cats;
@@ -333,19 +336,58 @@ namespace BlackGui
             return models;
         }
 
-        CAircraftModel CDbStashComponent::consolidateWithDbData(const CAircraftModel &model)
+        CAircraftModel CDbStashComponent::consolidateWithDbData(const CAircraftModel &model) const
         {
             if (!model.hasModelString()) { return model; }
             CAircraftModel dbModel(this->getModelForModelString(model.getModelString()));
 
-            if (!dbModel.hasValidDbKey()) { return model; }
+            // we try to best update by DB data here
+            if (!dbModel.hasValidDbKey())
+            {
+                // we have no(!) DB model, so we update ecach of it subobjects
+                CAircraftModel consolidatedModel(model); // copy over
+                if (!consolidatedModel.getLivery().hasValidDbKey() && consolidatedModel.hasAirlineDesignator())
+                {
+                    // we try to find a DB livery for the airline
+                    // maybe slow because all liveries always copied over
+                    CLivery dbLivery(this->getLiveries().findStdLiveryByAirlineIcaoDesignator(model.getAirlineIcaoCode()));
+                    if (dbLivery.hasValidDbKey())
+                    {
+                        consolidatedModel.setLivery(dbLivery);
+                    }
+                }
+                if (!consolidatedModel.getAircraftIcaoCode().hasValidDbKey() && consolidatedModel.hasAircraftDesignator())
+                {
+                    // try to find DB aircraft ICAO here
+                    CAircraftIcaoCode dbIcao(this->getAircraftIcaoCodeForDesignator(consolidatedModel.getAircraftIcaoCode().getDesignator()));
+                    if (dbIcao.hasValidDbKey())
+                    {
+                        consolidatedModel.setAircraftIcaoCode(dbIcao);
+                    }
+                }
+
+                // key alone here can be misleading, as the key can be valid but no DB key
+                // mostly happens when key is an alias
+                QString keyOrAlias(consolidatedModel.getDistributor().getDbKey());
+                CDistributor dbDistributor(this->getDistributors().findByKeyOrAlias(keyOrAlias));
+
+                // if no distributor is found, it is now empty because it was invalid
+                // otherwise replaced with the current DB data
+                consolidatedModel.setDistributor(dbDistributor);
+
+                // copy over
+                dbModel = consolidatedModel;
+            }
+
+            bool someDbData = dbModel.hasValidDbKey() || dbModel.getLivery().hasValidDbKey() || dbModel.getAircraftIcaoCode().hasValidDbKey();
+            if (!someDbData) { return model; }
 
             // use DB model as base, update everything else
             dbModel.updateMissingParts(model);
             return dbModel;
         }
 
-        CAircraftModel CDbStashComponent::consolidateWithOwnModels(const CAircraftModel &model)
+        CAircraftModel CDbStashComponent::consolidateWithOwnModels(const CAircraftModel &model) const
         {
             if (!model.hasModelString()) { return model; }
             if (model.getModelType() == CAircraftModel::TypeOwnSimulatorModel) { return model; }
@@ -353,6 +395,25 @@ namespace BlackGui
             if (!ownModel.hasModelString()) { return model; }
             ownModel.updateMissingParts(model);
             return ownModel;
+        }
+
+        CAircraftModel CDbStashComponent::consolidateModel(const CAircraftModel &model) const
+        {
+            CAircraftModel stashModel(model);
+
+            // merge with own models if any
+            if (stashModel.getModelType() != CAircraftModel::TypeOwnSimulatorModel)
+            {
+                stashModel = this->consolidateWithOwnModels(stashModel);
+            }
+
+            // merge with DB data if any
+            if (!stashModel.hasValidDbKey())
+            {
+                stashModel = this->consolidateWithDbData(stashModel);
+            }
+
+            return stashModel;
         }
 
         void CDbStashComponent::ps_copyOverPartsToSelected()

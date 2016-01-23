@@ -40,6 +40,9 @@ namespace BlackGui
             Q_OBJECT
 
         public:
+            //! Number of models which can be published at once
+            static const int MaxModelPublished = 1000;
+
             //! Constructor
             explicit CDbStashComponent(QWidget *parent = nullptr);
 
@@ -91,12 +94,18 @@ namespace BlackGui
             //! Apply object to select objects
             void applyToSelected(const BlackMisc::Simulation::CDistributor &distributor, bool acceptWarnings = true);
 
+            //! Consolidate with other available data
+            BlackMisc::Simulation::CAircraftModel consolidateModel(const BlackMisc::Simulation::CAircraftModel &model) const;
+
         public slots:
-            //! Stash given model
+            //! Stash given model (includes validation and consolidation with DB data)
             BlackMisc::CStatusMessage stashModel(const BlackMisc::Simulation::CAircraftModel &model, bool replace = false);
 
-            //! Stash given models
+            //! Stash given models (includes validation and consolidation with DB data)
             BlackMisc::CStatusMessageList stashModels(const BlackMisc::Simulation::CAircraftModelList &models);
+
+            //! Replace models, no validation
+            void replaceModelsUnvalidated(const BlackMisc::Simulation::CAircraftModelList &models);
 
         signals:
             //! Unstash
@@ -151,16 +160,16 @@ namespace BlackGui
             void enableButtonRow();
 
             //! Validation categories
-            const BlackMisc::CLogCategoryList &validationCats() const;
+            const BlackMisc::CLogCategoryList &validationCategories() const;
 
             //! Get the selected only models or all models depending on checkbox
             BlackMisc::Simulation::CAircraftModelList getSelectedOrAllModels() const;
 
             //! Consolidate with any DB data (if available).
-            BlackMisc::Simulation::CAircraftModel consolidateWithDbData(const BlackMisc::Simulation::CAircraftModel &model);
+            BlackMisc::Simulation::CAircraftModel consolidateWithDbData(const BlackMisc::Simulation::CAircraftModel &model) const;
 
             //! Consolidate with own models (if available).
-            BlackMisc::Simulation::CAircraftModel consolidateWithOwnModels(const BlackMisc::Simulation::CAircraftModel &model);
+            BlackMisc::Simulation::CAircraftModel consolidateWithOwnModels(const BlackMisc::Simulation::CAircraftModel &model) const;
         };
     } // ns
 } // ns

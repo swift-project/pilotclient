@@ -40,7 +40,7 @@ namespace BlackGui
             BlackMisc::Simulation::CAircraftModel getValue() const;
 
             //! Validate
-            BlackMisc::CStatusMessageList validate(bool withNestedForms) const;
+            BlackMisc::CStatusMessageList validate(bool withNestedObjects) const;
 
             //! \copydoc CForm::setReadOnly
             virtual void setReadOnly(bool readOnly) override;
@@ -53,9 +53,6 @@ namespace BlackGui
             void setValue(BlackMisc::Simulation::CAircraftModel &model);
 
         signals:
-            //! Request validation
-            void requestValidation();
-
             //! Request stashing for model
             void requestStash();
 
