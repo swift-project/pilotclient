@@ -125,6 +125,11 @@ namespace BlackGui
             return delta;
         }
 
+        int CAircraftModelView::removeModelsWithModelString(const CAircraftModelList &models, Qt::CaseSensitivity sensitivity)
+        {
+            return this->removeModelsWithModelString(models.getModelStrings(), sensitivity);
+        }
+
         void CAircraftModelView::setHighlightModelStrings(const QStringList &highlightModels)
         {
             this->derivedModel()->setHighlightModelStrings(highlightModels);
@@ -249,7 +254,7 @@ namespace BlackGui
                 // this function requires that someone provides the model strings to be highlighted
                 QAction *a = menu.addAction(CIcons::appDbStash16(), "Highlight stashed", this, SLOT(ps_toggleHighlightStashedModels()));
                 a->setCheckable(true);
-                a->setChecked(this->derivedModel()->highlightDbData());
+                a->setChecked(this->derivedModel()->highlightModelStrings());
             }
             if (this->m_menus.testFlag(MenuHighlightInvalid))
             {

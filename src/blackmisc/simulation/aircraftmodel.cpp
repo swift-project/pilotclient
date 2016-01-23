@@ -349,15 +349,8 @@ namespace BlackMisc
 
         bool CAircraftModel::matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
-            if (sensitivity == Qt::CaseSensitive)
-            {
-                return modelString == this->m_modelString;
-            }
-            else
-            {
-                return this->m_modelString.length() == modelString.length() &&
-                       this->m_modelString.indexOf(modelString) == 0;
-            }
+            return this->m_modelString.length() == modelString.length() &&
+                   this->m_modelString.startsWith(modelString, sensitivity);
         }
 
         CStatusMessageList CAircraftModel::validate(bool withNestedObjects) const

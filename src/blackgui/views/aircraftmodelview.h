@@ -55,6 +55,9 @@ namespace BlackGui
             //! Remove models with model strings
             int removeModelsWithModelString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive);
 
+            //! Remove models with model strings
+            int removeModelsWithModelString(const BlackMisc::Simulation::CAircraftModelList &models, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive);
+
             //! \copydoc BlackGui::Models::CAircraftModelListModel::setHighlightModelStrings(const QStringList &)
             void setHighlightModelStrings(const QStringList &highlightModels);
 
