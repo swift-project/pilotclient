@@ -389,6 +389,11 @@ namespace BlackMisc
         return pm;
     }
 
+    const QPixmap &CIcons::filter16()
+    {
+        return tableSheet16();
+    }
+
     const QPixmap &CIcons::database16()
     {
         static const QPixmap pm(":/pastel/icons/pastel/16/database.png");

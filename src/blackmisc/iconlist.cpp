@@ -126,6 +126,7 @@ namespace BlackMisc
             CIcon(CIcons::StandardIconEmpty, "empty"),
             CIcon(CIcons::StandardIconEmpty16, "empty"),
             CIcon(CIcons::StandardIconError16, "error"),
+            CIcon(CIcons::StandardIconFilter16, "filter"),
             CIcon(CIcons::StandardIconFloatAll16, "float all"),
             CIcon(CIcons::StandardIconFloatOne16, "floast one"),
             CIcon(CIcons::StandardIconGlobe16, "globe"),

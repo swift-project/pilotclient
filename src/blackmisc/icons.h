@@ -119,6 +119,7 @@ namespace BlackMisc
             StandardIconEmpty,
             StandardIconEmpty16,
             StandardIconError16,
+            StandardIconFilter16,
             StandardIconFloatAll16,
             StandardIconFloatOne16,
             StandardIconGlobe16,
@@ -351,6 +352,9 @@ namespace BlackMisc
 
         //! Empty icon
         static const QPixmap &empty16();
+
+        //! Filter
+        static const QPixmap &filter16();
 
         //! Arrow
         static const QPixmap &arrowMediumNorth16();
