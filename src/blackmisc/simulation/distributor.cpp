@@ -34,6 +34,13 @@ namespace BlackMisc
             return (getDbKey() == s || getAlias1() == s || getAlias2() == s);
         }
 
+        bool CDistributor::matchesKeyOrAlias(const CDistributor &distributor) const
+        {
+            if (distributor.hasValidDbKey() && this->matchesKeyOrAlias(distributor.getDbKey())) { return true; }
+            if (distributor.hasAlias1() && this->matchesKeyOrAlias(distributor.getAlias1())) { return true; }
+            return (distributor.hasAlias2() && this->matchesKeyOrAlias(distributor.getAlias2()));
+        }
+
         CVariant CDistributor::propertyByIndex(const CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }

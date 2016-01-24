@@ -113,6 +113,11 @@ namespace BlackGui
             this->setFilterDialog(new CAircraftModelFilterDialog(this));
         }
 
+        CAircraftModelFilterDialog *CAircraftModelView::getFilterDialog() const
+        {
+            return qobject_cast<CAircraftModelFilterDialog *>(this->getFilterWidget());
+        }
+
         int CAircraftModelView::removeModelsWithModelString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity)
         {
             if (modelStrings.isEmpty()) { return 0; }
@@ -245,21 +250,21 @@ namespace BlackGui
             if (this->m_menus.testFlag(MenuCanStashModels))
             {
                 menu.addAction(CIcons::appDbStash16(), "Stash", this, SLOT(ps_requestStash()));
-                QAction *a = menu.addAction(CIcons::appDbStash16(), "Stashing clears selection", this, SLOT(ps_stashingClearsSelection()));
+                QAction *a = menu.addAction(CIcons::appDbStash16(), "Stashing clears selection (on/off)", this, SLOT(ps_stashingClearsSelection()));
                 a->setCheckable(true);
                 a->setChecked(m_stashingClearsSelection);
             }
             if (this->m_menus.testFlag(MenuHighlightStashed))
             {
                 // this function requires that someone provides the model strings to be highlighted
-                QAction *a = menu.addAction(CIcons::appDbStash16(), "Highlight stashed", this, SLOT(ps_toggleHighlightStashedModels()));
+                QAction *a = menu.addAction(CIcons::appDbStash16(), "Highlight stashed (on/off)", this, SLOT(ps_toggleHighlightStashedModels()));
                 a->setCheckable(true);
                 a->setChecked(this->derivedModel()->highlightModelStrings());
             }
             if (this->m_menus.testFlag(MenuHighlightInvalid))
             {
                 // this function requires that someone provides the model strings to be highlighted
-                QAction *a = menu.addAction(CIcons::appDbStash16(), "Highlight invalid models", this, SLOT(ps_to));
+                QAction *a = menu.addAction(CIcons::appDbStash16(), "Highlight invalid models (on/off)", this, SLOT(ps_toggleHighlightDbData()));
                 a->setCheckable(true);
                 a->setChecked(this->derivedModel()->highlightDbData());
             }

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>658</width>
-    <height>44</height>
+    <height>48</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,7 +41,7 @@
    <item row="0" column="11">
     <widget class="QLineEdit" name="le_AircraftManufacturer">
      <property name="placeholderText">
-      <string>manufacturer</string>
+      <string>Manufacturer</string>
      </property>
     </widget>
    </item>
@@ -84,14 +84,14 @@
    <item row="1" column="7">
     <widget class="QLineEdit" name="le_LiveryCode">
      <property name="placeholderText">
-      <string>code</string>
+      <string>Code</string>
      </property>
     </widget>
    </item>
    <item row="1" column="11">
     <widget class="QLineEdit" name="le_AirlineName">
      <property name="placeholderText">
-      <string>airline name</string>
+      <string>Airline name</string>
      </property>
     </widget>
    </item>
@@ -115,14 +115,14 @@
       <string/>
      </property>
      <property name="placeholderText">
-      <string>description</string>
+      <string>Description</string>
      </property>
     </widget>
    </item>
    <item row="0" column="7">
     <widget class="QLineEdit" name="le_ModelKey">
      <property name="placeholderText">
-      <string>key</string>
+      <string>Key</string>
      </property>
     </widget>
    </item>
@@ -168,9 +168,25 @@
    <item row="1" column="0" colspan="6">
     <widget class="BlackGui::CSimulatorSelector" name="frp_SimulatorSelector"/>
    </item>
+   <item row="1" column="8">
+    <widget class="BlackGui::Components::CDbDistributorSelectorComponent" name="comp_DistributorSelector">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>BlackGui::CSimulatorSelector</class>
+   <extends>QFrame</extends>
+   <header>blackgui/simulatorselector.h</header>
+   <container>1</container>
+  </customwidget>
   <customwidget>
    <class>BlackGui::Filters::CFilterBarButtons</class>
    <extends>QFrame</extends>
@@ -178,9 +194,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::CSimulatorSelector</class>
+   <class>BlackGui::Components::CDbDistributorSelectorComponent</class>
    <extends>QFrame</extends>
-   <header>blackgui/simulatorselector.h</header>
+   <header>blackgui/components/dbdistributorselectorcomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

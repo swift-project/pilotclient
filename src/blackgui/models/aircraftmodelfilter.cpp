@@ -22,12 +22,14 @@ namespace BlackGui
             const QString &aircraftIcao, const QString &aircraftManufacturer,
             const QString &airlineIcao, const QString &airlineName,
             const QString &liveryCode,
-            const CSimulatorInfo &simInfo) :
+            const CSimulatorInfo &simInfo,
+            const CDistributor &distributor) :
             m_modelKey(modelKey.trimmed()), m_description(description.trimmed()),
             m_aircraftIcao(aircraftIcao.trimmed().toUpper()), m_aircraftManufacturer(aircraftManufacturer.trimmed().toUpper()),
             m_airlineIcao(airlineIcao.trimmed().toUpper()), m_airlineName(airlineName.trimmed().toUpper()),
             m_liveryCode(liveryCode.trimmed().toUpper()),
-            m_simulatorInfo(simInfo)
+            m_simulatorInfo(simInfo),
+            m_distributor(distributor)
         {  }
 
         BlackMisc::Simulation::CAircraftModelList CAircraftModelFilter::filter(const CAircraftModelList &inContainer) const
@@ -75,6 +77,12 @@ namespace BlackGui
                 {
                     if (!this->stringMatchesFilterExpression(model.getLivery().getCombinedCode(), this->m_liveryCode)) { continue; }
                 }
+
+                if (this->m_distributor.hasValidDbKey())
+                {
+                    if (!model.getDistributor().matchesKeyOrAlias(this->m_distributor)) { continue; }
+                }
+
                 outContainer.push_back(model);
             }
             return outContainer;
@@ -86,6 +94,7 @@ namespace BlackGui
                      this->m_aircraftManufacturer.isEmpty() && this->m_aircraftIcao.isEmpty() &&
                      this->m_airlineIcao.isEmpty() && this->m_airlineName.isEmpty() &&
                      this->m_liveryCode.isEmpty() &&
+                     !this->m_distributor.hasValidDbKey() &&
                      this->m_simulatorInfo.isNoSimulator()
                     );
         }

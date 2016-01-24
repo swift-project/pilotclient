@@ -30,7 +30,9 @@ namespace BlackGui
                                  const QString &aircraftIcao, const QString &aircraftManufacturer,
                                  const QString &airlineIcao, const QString &airlineName,
                                  const QString &liveryCode,
-                                 const BlackMisc::Simulation::CSimulatorInfo &simInfo = BlackMisc::Simulation::CSimulatorInfo::allSimulators());
+                                 const BlackMisc::Simulation::CSimulatorInfo &simInfo = BlackMisc::Simulation::CSimulatorInfo::allSimulators(),
+                                 const BlackMisc::Simulation::CDistributor &distributor = BlackMisc::Simulation::CDistributor()
+                                );
 
             //! \copydoc IModelFilter::filter
             virtual BlackMisc::Simulation::CAircraftModelList filter(const BlackMisc::Simulation::CAircraftModelList &inContainer) const override;
@@ -47,6 +49,7 @@ namespace BlackGui
             QString m_airlineName;
             QString m_liveryCode;
             BlackMisc::Simulation::CSimulatorInfo m_simulatorInfo;
+            BlackMisc::Simulation::CDistributor m_distributor;
         };
 
     } // namespace

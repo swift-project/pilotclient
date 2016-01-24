@@ -52,6 +52,9 @@ namespace BlackGui
             //! Add my own filter dialog
             void addFilterDialog();
 
+            //! Filter dialog if any
+            BlackGui::Filters::CAircraftModelFilterDialog *getFilterDialog() const;
+
             //! Remove models with model strings
             int removeModelsWithModelString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive);
 

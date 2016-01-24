@@ -13,6 +13,7 @@
 
 using namespace BlackGui;
 using namespace BlackGui::Models;
+using namespace BlackGui::Components;
 
 namespace BlackGui
 {
@@ -24,6 +25,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->ui->frp_SimulatorSelector->setAll();
+            this->ui->comp_DistributorSelector->withDistributorDescription(false);
             this->setButtonsAndCount(this->ui->filter_Buttons);
             connect(ui->le_AircraftIcao, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_AircraftManufacturer, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
@@ -32,6 +34,8 @@ namespace BlackGui
             connect(ui->le_LiveryCode, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_ModelDescription, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_ModelKey, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+            connect(ui->frp_SimulatorSelector, &CSimulatorSelector::changed, this, &CAircraftModelFilterBar::ps_simulatorSelectionChanged);
+            connect(ui->comp_DistributorSelector, &CDbDistributorSelectorComponent::changedDistributor, this, &CAircraftModelFilterBar::ps_distributorChanged);
 
             CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
             this->ui->le_AircraftIcao->setValidator(ucv);
@@ -54,8 +58,15 @@ namespace BlackGui
                            this->ui->le_AirlineIcao->text(),
                            this->ui->le_AirlineName->text(),
                            this->ui->le_LiveryCode->text(),
-                           this->ui->frp_SimulatorSelector->getValue()
+                           this->ui->frp_SimulatorSelector->getValue(),
+                           this->ui->comp_DistributorSelector->getDistributor()
                        ));
+        }
+
+        void CAircraftModelFilterBar::setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider)
+        {
+            CWebDataServicesAware::setProvider(webDataReaderProvider);
+            this->ui->comp_DistributorSelector->setProvider(webDataReaderProvider);
         }
 
         void CAircraftModelFilterBar::onRowCountChanged(int count, bool withFilter)
@@ -73,6 +84,19 @@ namespace BlackGui
             this->ui->le_AirlineName->clear();
             this->ui->le_LiveryCode->clear();
             this->ui->frp_SimulatorSelector->setAll();
+            this->ui->comp_DistributorSelector->clear();
+        }
+
+        void CAircraftModelFilterBar::ps_simulatorSelectionChanged(const BlackMisc::Simulation::CSimulatorInfo &info)
+        {
+            Q_UNUSED(info);
+            this->triggerFilter();
+        }
+
+        void CAircraftModelFilterBar::ps_distributorChanged(const BlackMisc::Simulation::CDistributor &distributor)
+        {
+            Q_UNUSED(distributor);
+            this->triggerFilter();
         }
     } // ns
 } // ns

@@ -12,6 +12,7 @@
 
 using namespace BlackGui::Models;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Network;
 
 namespace BlackGui
 {
@@ -32,6 +33,11 @@ namespace BlackGui
         std::unique_ptr<IModelFilter<CAircraftModelList>> CAircraftModelFilterDialog::createModelFilter() const
         {
             return ui->filter_Models->createModelFilter();
+        }
+
+        void CAircraftModelFilterDialog::setProvider(IWebDataServicesProvider *webDataReaderProvider)
+        {
+            this->ui->filter_Models->setProvider(webDataReaderProvider);
         }
     } // namespace
 } // namespace

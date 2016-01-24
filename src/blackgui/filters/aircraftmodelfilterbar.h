@@ -44,6 +44,9 @@ namespace BlackGui
             //! \copydoc IModelFilter::getModelFilter
             virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Simulation::CAircraftModelList>> createModelFilter() const override;
 
+            //! Set the provider
+            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
+
         public slots:
             //! \copydoc CFilterWidget::onRowCountChanged
             virtual void onRowCountChanged(int count, bool withFilter) override;
@@ -51,6 +54,13 @@ namespace BlackGui
         protected:
             //! Clear form
             virtual void clearForm() override;
+
+        private slots:
+            //! Simulator selection changed
+            void ps_simulatorSelectionChanged(const BlackMisc::Simulation::CSimulatorInfo &info);
+
+            //! Distributor changed
+            void ps_distributorChanged(const BlackMisc::Simulation::CDistributor &distributor);
 
         private:
             QScopedPointer<Ui::CAircraftModelFilterBar> ui;

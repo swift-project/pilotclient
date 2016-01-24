@@ -171,6 +171,16 @@ namespace BlackGui
             this->ui->editor_Distributor->setProvider(provider);
             this->ui->editor_AircraftIcao->setProvider(provider);
             this->ui->comp_StashAircraft->setProvider(provider);
+
+            if (this->ui->tvp_AircraftModelsForVPilot->getFilterDialog())
+            {
+                this->ui->tvp_AircraftModelsForVPilot->getFilterDialog()->setProvider(provider);
+            }
+
+            if (this->ui->tvp_OwnAircraftModels->getFilterDialog())
+            {
+                this->ui->tvp_OwnAircraftModels->getFilterDialog()->setProvider(provider);
+            }
         }
 
         void CDbMappingComponent::gracefulShutdown()

@@ -60,6 +60,11 @@ namespace BlackGui
             {
                 ps_modelsRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, c);
             }
+
+            if (this->ui->filter_AircraftModelFilter)
+            {
+                this->ui->filter_AircraftModelFilter->setProvider(webDataReaderProvider);
+            }
         }
 
         bool CDbModelComponent::hasModels() const

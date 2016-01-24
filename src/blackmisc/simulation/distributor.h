@@ -72,8 +72,11 @@ namespace BlackMisc
             //! Alias 2?
             bool hasAlias2() const { return !this->m_alias2.isEmpty(); }
 
-            //! Matches id or alias
+            //! Matches key or alias
             bool matchesKeyOrAlias(const QString &keyOrAlias) const;
+
+            //! Matches key or alias
+            bool matchesKeyOrAlias(const CDistributor &distributor) const;
 
             //! \copydoc CValueObject::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
