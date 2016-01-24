@@ -42,6 +42,9 @@ namespace BlackGui
         //! How to display
         void setMode(Mode mode);
 
+        //! No selection treated same as all selected (filters)
+        void setNoSelectionMeansAll(bool v) { this->m_noSelectionMeansAll = v; }
+
         //! Get the value
         BlackMisc::Simulation::CSimulatorInfo getValue() const;
 
@@ -51,9 +54,27 @@ namespace BlackGui
         //! Set all, only making sense with checkboxes
         void setAll();
 
+        //! Not selected at all
+        bool isUnselected() const;
+
+        //! All selected
+        bool areAllSelected() const;
+
+    signals:
+        //! Value has been changed
+        void changed(const BlackMisc::Simulation::CSimulatorInfo &info);
+
+    private slots:
+        //! Radio button changed
+        void ps_RadioButtonChanged(bool checked);
+
+        //! Checkbox changed
+        void ps_CheckBoxChanged(bool checked);
+
     private:
         QScopedPointer<Ui::CSimulatorSelector> ui;
         Mode m_mode = CheckBoxes;
+        bool m_noSelectionMeansAll = false; //!< for filters, no selection means all
     };
 }
 

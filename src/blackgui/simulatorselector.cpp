@@ -20,6 +20,16 @@ namespace BlackGui
     {
         ui->setupUi(this);
         this->setMode(CheckBoxes);
+
+        connect(this->ui->rb_FS9, &QRadioButton::clicked, this, &CSimulatorSelector::ps_RadioButtonChanged);
+        connect(this->ui->rb_FSX, &QRadioButton::clicked, this, &CSimulatorSelector::ps_RadioButtonChanged);
+        connect(this->ui->rb_P3D, &QRadioButton::clicked, this, &CSimulatorSelector::ps_RadioButtonChanged);
+        connect(this->ui->rb_XPlane, &QRadioButton::clicked, this, &CSimulatorSelector::ps_RadioButtonChanged);
+
+        connect(this->ui->cb_FS9, &QRadioButton::clicked, this, &CSimulatorSelector::ps_CheckBoxChanged);
+        connect(this->ui->cb_FSX, &QRadioButton::clicked, this, &CSimulatorSelector::ps_CheckBoxChanged);
+        connect(this->ui->cb_P3D, &QRadioButton::clicked, this, &CSimulatorSelector::ps_CheckBoxChanged);
+        connect(this->ui->cb_XPlane, &QRadioButton::clicked, this, &CSimulatorSelector::ps_CheckBoxChanged);
     }
 
     CSimulatorSelector::~CSimulatorSelector()
@@ -44,6 +54,11 @@ namespace BlackGui
 
     CSimulatorInfo CSimulatorSelector::getValue() const
     {
+        if (this->m_noSelectionMeansAll && this->isUnselected())
+        {
+            return CSimulatorInfo::allSimulators();
+        }
+
         switch (this->m_mode)
         {
         default:
@@ -71,11 +86,63 @@ namespace BlackGui
 
     void CSimulatorSelector::setAll()
     {
+        // checkboxes
         this->ui->cb_FSX->setChecked(true);
         this->ui->cb_FS9->setChecked(true);
         this->ui->cb_XPlane->setChecked(true);
         this->ui->cb_P3D->setChecked(true);
 
-        this->ui->cb_FSX->setChecked(true);
+        // radio
+        this->ui->rb_FSX->setChecked(true);
     }
-}
+
+    bool CSimulatorSelector::isUnselected() const
+    {
+        bool c = false;
+        switch (this->m_mode)
+        {
+        default:
+        case CheckBoxes:
+            c = this->ui->cb_FSX->isChecked() || this->ui->cb_FS9->isChecked() ||
+                this->ui->cb_XPlane->isChecked() || this->ui->cb_P3D->isChecked();
+            break;
+        case RadioButtons:
+            c = this->ui->rb_FSX->isChecked() || this->ui->rb_FS9->isChecked() ||
+                this->ui->rb_XPlane->isChecked() || this->ui->cb_P3D->isChecked();
+            break;
+        }
+        return !c;
+    }
+
+    bool CSimulatorSelector::areAllSelected() const
+    {
+        bool c = false;
+        switch (this->m_mode)
+        {
+        default:
+        case CheckBoxes:
+            c = this->ui->cb_FSX->isChecked() && this->ui->cb_FS9->isChecked() &&
+                this->ui->cb_XPlane->isChecked() && this->ui->cb_P3D->isChecked();
+            break;
+        case RadioButtons:
+            // actually this should never be true
+            c = false;
+            break;
+        }
+        return c;
+    }
+
+    void CSimulatorSelector::ps_RadioButtonChanged(bool checked)
+    {
+        if (this->m_mode != RadioButtons) { return; }
+        if (!checked) { return; } // only the checked ones are relevant, as the unchecked ones are accompanied with checked events
+        emit this->changed(this->getValue());
+    }
+
+    void CSimulatorSelector::ps_CheckBoxChanged(bool checked)
+    {
+        if (this->m_mode != CheckBoxes) { return; }
+        Q_UNUSED(checked);
+        emit this->changed(this->getValue());
+    }
+} // ns
