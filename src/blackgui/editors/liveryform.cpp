@@ -59,6 +59,11 @@ namespace BlackGui
             return livery;
         }
 
+        CAirlineIcaoCode CLiveryForm::getValueAirlineIcao() const
+        {
+            return this->ui->editor_AirlineIcao->getValue();
+        }
+
         void CLiveryForm::setValue(const CLivery &livery)
         {
             this->ui->livery_Selector->setLivery(livery);
@@ -86,6 +91,11 @@ namespace BlackGui
             }
             this->ui->val_Indicator->setState(msgs);
             return msgs;
+        }
+
+        CStatusMessageList CLiveryForm::validateAirlineIcao() const
+        {
+            return this->ui->editor_AirlineIcao->validate();
         }
 
         void CLiveryForm::allowDrop(bool allowDrop)

@@ -138,7 +138,7 @@ namespace BlackGui
             //! Request to filter by distributor
             void filterByDistributor(const BlackMisc::Simulation::CDistributor &distributor);
 
-            //! Request latest (incrementall) data from backend
+            //! Request latest (incremental) data from backend
             void requestUpdatedData(BlackMisc::Network::CEntityFlags::Entity entities);
 
         private slots:
@@ -198,6 +198,9 @@ namespace BlackGui
 
             //! Toggle auto filtering
             void ps_toggleAutoFiltering();
+
+            //! Apply current DB data from form
+            void ps_applyDbData();
 
         private:
             QScopedPointer<Ui::CDbMappingComponent> ui;
@@ -260,12 +263,30 @@ namespace BlackGui
             //! Menu for tools:
             //! 1) removing DB models from current view and
             //! 2) for auto stashing
+            //! 3) toggle auto filtering
             //! \note This is a specific menu for that very component
             class CModelStashTools : public BlackGui::IMenuDelegate
             {
             public:
                 //! Constructor
                 CModelStashTools(CDbMappingComponent *mappingComponent, bool separator = true) :
+                    BlackGui::IMenuDelegate(mappingComponent, separator)
+                {}
+
+                //! \copydoc IMenuDelegate::customMenu
+                virtual void customMenu(QMenu &menu) const override;
+
+            private:
+                //! Mapping component
+                CDbMappingComponent *mappingComponent() const;
+            };
+
+            //! Apply DB data to selected models
+            class CApplyDbDataMenu : public BlackGui::IMenuDelegate
+            {
+            public:
+                //! Constructor
+                CApplyDbDataMenu(CDbMappingComponent *mappingComponent, bool separator = true) :
                     BlackGui::IMenuDelegate(mappingComponent, separator)
                 {}
 

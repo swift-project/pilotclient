@@ -68,6 +68,7 @@ namespace BlackGui
 
             this->ui->tw_ModelsToBeMapped->setTabIcon(TabStash, CIcons::appDbStash16());
             this->ui->tw_ModelsToBeMapped->setTabIcon(TabOwnModels, CIcons::appModels16());
+            this->ui->comp_StashAircraft->getView()->setCustomMenu(new CApplyDbDataMenu(this));
 
             // vPilot
             this->initVPilotLoading();
@@ -340,6 +341,55 @@ namespace BlackGui
         void CDbMappingComponent::ps_toggleAutoFiltering()
         {
             this->m_autoFilterInDbViews = !this->m_autoFilterInDbViews;
+        }
+
+        void CDbMappingComponent::ps_applyDbData()
+        {
+            QAction *sender = qobject_cast<QAction *>(this->sender());
+            if (!sender) { return; }
+            QString cn(sender->data().toString());
+            if (cn.isEmpty()) { return; }
+            if (this->ui->comp_StashAircraft->getView()->selectedRowCount() < 1) { return; }
+
+            CStatusMessageList msgs;
+            if (CLivery().getClassName() == cn)
+            {
+                msgs = this->ui->editor_Livery->validate(true);
+                if (!msgs.hasErrorMessages())
+                {
+                    this->ui->comp_StashAircraft->applyToSelected(this->ui->editor_Livery->getValue());
+                }
+            }
+            else if (CDistributor().getClassName() == cn)
+            {
+                msgs = this->ui->editor_Distributor->validate();
+                if (!msgs.hasErrorMessages())
+                {
+                    this->ui->comp_StashAircraft->applyToSelected(this->ui->editor_Distributor->getValue());
+                }
+            }
+            else if (CAircraftIcaoCode().getClassName() == cn)
+            {
+                msgs = this->ui->editor_AircraftIcao->validate();
+                if (!msgs.hasErrorMessages())
+                {
+                    this->ui->comp_StashAircraft->applyToSelected(this->ui->editor_AircraftIcao->getValue());
+                }
+            }
+            else if (CAirlineIcaoCode().getClassName() == cn)
+            {
+                msgs = this->ui->editor_Livery->validateAirlineIcao();
+                if (!msgs.hasErrorMessages())
+                {
+                    this->ui->comp_StashAircraft->applyToSelected(this->ui->editor_Livery->getValueAirlineIcao());
+                }
+            }
+
+            // errors if any
+            if (msgs.hasErrorMessages())
+            {
+                this->showMessages(msgs);
+            }
         }
 
         void CDbMappingComponent::resizeForSelect()
@@ -698,7 +748,7 @@ namespace BlackGui
                     }
 
                     // auto filter in DB views
-                    QAction *a = menu.addAction(CIcons::filter16(), "Auto filtering (DB views)", mapComp, SLOT(ps_toggleAutoFiltering()));
+                    QAction *a = menu.addAction(CIcons::filter16(), "Auto filtering in DB views (on/off)", mapComp, SLOT(ps_toggleAutoFiltering()));
                     a->setCheckable(true);
                     a->setChecked(mapComp->m_autoFilterInDbViews);
                 }
@@ -707,6 +757,37 @@ namespace BlackGui
         }
 
         CDbMappingComponent *CDbMappingComponent::CModelStashTools::mappingComponent() const
+        {
+            return qobject_cast<CDbMappingComponent *>(this->parent());
+        }
+
+        void CDbMappingComponent::CApplyDbDataMenu::customMenu(QMenu &menu) const
+        {
+            CDbMappingComponent *mapComp = mappingComponent();
+            Q_ASSERT_X(mapComp, Q_FUNC_INFO, "no mapping component");
+
+            if (mapComp->currentTabIndex() == CDbMappingComponent::TabStash && mapComp->currentModelView()->hasSelection())
+            {
+                // stash view and selection
+                QMenu *subMenu = menu.addMenu(CIcons::database16(), "Apply DB data (to selected)");
+                QAction *a = nullptr;
+
+                a = subMenu->addAction(CIcons::appAircraftIcao16(), "Current aircraft ICAO", mapComp, SLOT(ps_applyDbData()));
+                a->setData(CAircraftIcaoCode().getClassName());
+
+                a = subMenu->addAction(CIcons::appDistributors16(), "Current distributor", mapComp, SLOT(ps_applyDbData()));
+                a->setData(CDistributor().getClassName());
+
+                a = subMenu->addAction(CIcons::appLiveries16(), "Current livery", mapComp, SLOT(ps_applyDbData()));
+                a->setData(CLivery().getClassName());
+
+                // a = subMenu->addAction(CIcons::appAirlineIcao16(), "Current airline ICAO", mapComp, SLOT(ps_applyDbData()));
+                // a->setData(CAirlineIcaoCode().getClassName());
+            }
+            this->nestedCustomMenu(menu);
+        }
+
+        CDbMappingComponent *CDbMappingComponent::CApplyDbDataMenu::mappingComponent() const
         {
             return qobject_cast<CDbMappingComponent *>(this->parent());
         }

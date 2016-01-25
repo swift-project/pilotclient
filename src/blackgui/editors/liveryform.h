@@ -45,8 +45,14 @@ namespace BlackGui
             //! Value
             BlackMisc::Aviation::CLivery getValue() const;
 
+            //! Embedded ariline
+            BlackMisc::Aviation::CAirlineIcaoCode getValueAirlineIcao() const;
+
             //! Validate, empty list means OK
             BlackMisc::CStatusMessageList validate(bool withNestedForms) const;
+
+            //! Validate airline ICAO code only
+            BlackMisc::CStatusMessageList validateAirlineIcao() const;
 
             //! Allow to drop
             void allowDrop(bool allowDrop);
