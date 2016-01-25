@@ -10,6 +10,7 @@
 #include "dbdistributorselectorcomponent.h"
 #include "ui_dbdistributorselectorcomponent.h"
 #include "blackgui/guiutility.h"
+#include "blackgui/uppercasevalidator.h"
 #include <QMimeData>
 
 using namespace BlackGui;
@@ -28,8 +29,8 @@ namespace BlackGui
             ui->setupUi(this);
             this->setAcceptDrops(true);
             this->setAcceptedMetaTypeIds({qMetaTypeId<CDistributor>(), qMetaTypeId<CDistributorList>()});
+            this->ui->le_Distributor->setValidator(new CUpperCaseValidator(this));
 
-            connect(ui->le_Distributor, &QLineEdit::returnPressed, this, &CDbDistributorSelectorComponent::ps_dataChanged);
             connect(ui->le_Distributor, &QLineEdit::returnPressed, this, &CDbDistributorSelectorComponent::ps_dataChanged);
         }
 

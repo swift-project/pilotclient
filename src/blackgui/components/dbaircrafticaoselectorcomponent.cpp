@@ -10,6 +10,7 @@
 #include "dbaircrafticaoselectorcomponent.h"
 #include "ui_dbaircrafticaoselectorcomponent.h"
 #include "blackgui/guiutility.h"
+#include "blackgui/uppercasevalidator.h"
 #include "blackmisc/datastoreutility.h"
 #include <QMimeData>
 
@@ -29,6 +30,7 @@ namespace BlackGui
             ui->setupUi(this);
             this->setAcceptDrops(true);
             this->setAcceptedMetaTypeIds({qMetaTypeId<CAircraftIcaoCode>(), qMetaTypeId<CAircraftIcaoCodeList>()});
+            this->ui->le_Aircraft->setValidator(new CUpperCaseValidator(this));
 
             connect(ui->le_Aircraft, &QLineEdit::returnPressed, this, &CDbAircraftIcaoSelectorComponent::ps_dataChanged);
         }
