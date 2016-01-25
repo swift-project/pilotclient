@@ -383,8 +383,9 @@ namespace BlackGui
         CIdentifier CMappingComponent::mappingIdentifier()
         {
             if (m_identifier.getName().isEmpty())
+            {
                 m_identifier = CIdentifier(QStringLiteral("MAPPINGCOMPONENT"));
-
+            }
             return m_identifier;
         }
 

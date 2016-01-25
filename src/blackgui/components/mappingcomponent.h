@@ -123,16 +123,21 @@ namespace BlackGui
             void ps_onMenuHighlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
         private:
+            //! Identifier for data send from this component
             BlackMisc::CIdentifier mappingIdentifier();
+
+            //! Update simulated aircraft view
             void updateSimulatedAircraftView(bool forceUpdate = false);
+
             QScopedPointer<Ui::CMappingComponent> ui;
-            QScopedPointer<CUpdateTimer> m_updateTimer;
-            QCompleter *m_modelCompleter = nullptr;
-            bool m_missedSimulatedAircraftUpdate = true;
-            BlackGui::Views::CCheckBoxDelegate *m_currentMappingsViewDelegate = nullptr;
-            BlackMisc::CIdentifier m_identifier;
+            QScopedPointer<CUpdateTimer>          m_updateTimer;
+            QCompleter                           *m_modelCompleter = nullptr;
+            bool                                  m_missedSimulatedAircraftUpdate = true;
+            BlackGui::Views::CCheckBoxDelegate   *m_currentMappingsViewDelegate = nullptr;
+            BlackMisc::CIdentifier                m_identifier;
 
         private slots:
+            //! Updated by timer
             void ps_backgroundUpdate();
         };
 

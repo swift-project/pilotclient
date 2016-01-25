@@ -371,7 +371,7 @@ namespace BlackGui
         {
             if (!filter)
             {
-                this->removeFilter();    // empty filter
+                this->removeFilter();    // clear filter
                 return;
             }
             if (filter->isValid())
@@ -384,6 +384,7 @@ namespace BlackGui
             }
             else
             {
+                // invalid filter, so clear filter
                 this->removeFilter();
             }
         }
