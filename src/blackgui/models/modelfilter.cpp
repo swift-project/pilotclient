@@ -38,15 +38,16 @@ namespace BlackGui
                 return v.contains(filterNoWildcard, cs);
             }
 
+            // ends with
+            if (f.endsWith('*'))
+            {
+                return v.startsWith(filterNoWildcard, cs);
+            }
+
             // starting with
             if (f.startsWith('*'))
             {
                 return v.endsWith(filterNoWildcard, cs);
-            }
-
-            if (f.endsWith('*'))
-            {
-                return v.startsWith(filterNoWildcard, cs);
             }
 
             // should never happen

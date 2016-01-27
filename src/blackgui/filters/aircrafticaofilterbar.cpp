@@ -32,6 +32,9 @@ namespace BlackGui
             CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
             this->ui->le_Designator->setValidator(ucv);
             this->ui->le_Manufacturer->setValidator(ucv);
+
+            // reset form
+            this->clearForm();
         }
 
         CAircraftIcaoFilterBar::~CAircraftIcaoFilterBar()
@@ -44,7 +47,7 @@ namespace BlackGui
                            this->ui->le_Designator->text(),
                            this->ui->le_Manufacturer->text(),
                            this->ui->le_Description->text(),
-                           this->ui->combinedtype_Selector->getCombinedType()
+                           this->ui->combinedType_Selector->getCombinedType()
                        ));
         }
 
@@ -82,7 +85,7 @@ namespace BlackGui
             ui->le_Designator->clear();
             ui->le_Manufacturer->clear();
             ui->le_Description->clear();
-            ui->combinedtype_Selector->clear();
+            ui->combinedType_Selector->clear();
         }
 
         void CAircraftIcaoFilterBar::setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider)

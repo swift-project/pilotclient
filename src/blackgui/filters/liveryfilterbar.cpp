@@ -37,6 +37,9 @@ namespace BlackGui
             CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
             ui->le_AirlineIcaoCode->setValidator(ucv);
             ui->le_LiveryCode->setValidator(ucv);
+
+            // reset form
+            this->clearForm();
         }
 
         CLiveryFilterBar::~CLiveryFilterBar()

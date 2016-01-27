@@ -95,7 +95,7 @@ namespace BlackGui
                      this->m_airlineIcao.isEmpty() && this->m_airlineName.isEmpty() &&
                      this->m_liveryCode.isEmpty() &&
                      !this->m_distributor.hasValidDbKey() &&
-                     this->m_simulatorInfo.isNoSimulator()
+                     (this->m_simulatorInfo.isNoSimulator() || this->m_simulatorInfo.isAllSimulators())
                     );
         }
 

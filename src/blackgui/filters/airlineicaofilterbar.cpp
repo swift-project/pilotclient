@@ -32,6 +32,9 @@ namespace BlackGui
             connect(ui->country_Selector, &CDbCountrySelectorComponent::countryChanged, this, &CAirlineIcaoFilterBar::ps_CountryChanged);
 
             ui->le_Designator->setValidator(new CUpperCaseValidator(this));
+
+            // reset form
+            this->clearForm();
         }
 
         CAirlineIcaoFilterBar::~CAirlineIcaoFilterBar() { }

@@ -31,6 +31,9 @@ namespace BlackGui
 
             CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
             this->ui->le_IsoCode->setValidator(ucv);
+
+            // reset form
+            this->clearForm();
         }
 
         CCountryFilterBar::~CCountryFilterBar()
