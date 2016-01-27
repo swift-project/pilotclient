@@ -12,3 +12,12 @@ win32-msvc*:QMAKE_CXXFLAGS_WARN_ON *= /wd4351 /wd4661
 
 # noisy warning in std <functional> header of MSVC2015 (QTBUG-50108)
 win32-msvc2015:QMAKE_CXXFLAGS_WARN_ON -= -w34100
+
+# gcc 5 can warn about missing override keyword
+g++ {
+    GCC_VERSION = $$system($$QMAKE_CXX -dumpversion)
+    GCC_MAJOR = $$section(GCC_VERSION, ., 0, 0)
+    greaterThan(GCC_MAJOR, 4) {
+        QMAKE_CXXFLAGS_WARN_ON *= -Wsuggest-override
+    }
+}
