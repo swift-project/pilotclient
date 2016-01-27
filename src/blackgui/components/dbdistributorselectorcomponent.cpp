@@ -84,8 +84,16 @@ namespace BlackGui
         CDistributor CDbDistributorSelectorComponent::getDistributor() const
         {
             if (!hasProvider()) { return CDistributor(); }
-            QString distributorKey(this->ui->le_Distributor->text().trimmed().toUpper());
-            CDistributor d(getDistributors().findByKey(distributorKey));
+            QString distributorKeyOrAlias(this->ui->le_Distributor->text().trimmed().toUpper());
+            if (distributorKeyOrAlias.isEmpty()) { return CDistributor(); }
+            if (this->m_currentDistributor.matchesKeyOrAlias(distributorKeyOrAlias)) { return this->m_currentDistributor; }
+
+            CDistributor d(getDistributors().findByKey(distributorKeyOrAlias));
+            if (d.hasValidDbKey())
+            {
+                // for some reason we have a new distributor here
+                // normally that should not happen
+            }
             return d;
         }
 
@@ -179,9 +187,9 @@ namespace BlackGui
         void CDbDistributorSelectorComponent::ps_dataChanged()
         {
             if (!hasProvider()) { return; }
-            QString key(this->ui->le_Distributor->text().trimmed().toUpper());
-            if (key.isEmpty()) { return; }
-            CDistributor d(this->getDistributors().findByKeyOrAlias(key));
+            QString keyOrAlias(this->ui->le_Distributor->text().trimmed().toUpper());
+            if (keyOrAlias.isEmpty()) { return; }
+            CDistributor d(this->getDistributors().findByKeyOrAlias(keyOrAlias));
             this->setDistributor(d);
         }
 
