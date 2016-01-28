@@ -39,10 +39,10 @@ namespace BlackCore
         virtual void removeLogSubscription(const BlackMisc::CIdentifier &subscriber, const BlackMisc::CLogPattern &pattern) override;
 
         //! \copydoc IContextApplication::getAllLogSubscriptions
-        virtual CLogSubscriptionHash getAllLogSubscriptions() const;
+        virtual CLogSubscriptionHash getAllLogSubscriptions() const override;
 
         //! \copydoc IContextApplication::synchronizeLogSubscriptions
-        virtual void synchronizeLogSubscriptions();
+        virtual void synchronizeLogSubscriptions() override;
 
         //! \copydoc IContextApplication::changeSettings
         virtual void changeSettings(const BlackMisc::CValueCachePacket &settings, const BlackMisc::CIdentifier &origin) override;

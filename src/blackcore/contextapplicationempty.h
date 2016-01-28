@@ -53,14 +53,14 @@ namespace BlackCore
         }
 
         //! \copydoc IContextApplication::getAllLogSubscriptions
-        virtual CLogSubscriptionHash getAllLogSubscriptions() const
+        virtual CLogSubscriptionHash getAllLogSubscriptions() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             return CLogSubscriptionHash();
         }
 
         //! \copydoc IContextApplication::synchronizeLogSubscriptions
-        virtual void synchronizeLogSubscriptions()
+        virtual void synchronizeLogSubscriptions() override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
         }
