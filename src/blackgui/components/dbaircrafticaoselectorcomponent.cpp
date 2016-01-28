@@ -154,7 +154,7 @@ namespace BlackGui
             {
                 if (count > 0)
                 {
-                    QCompleter *c = new QCompleter(this->getAircraftIcaoCodes().toCompleterStrings(), this);
+                    QCompleter *c = new QCompleter(this->getAircraftIcaoCodes().toCompleterStrings(true, true), this);
                     c->setCaseSensitivity(Qt::CaseInsensitive);
                     c->setCompletionMode(QCompleter::PopupCompletion);
                     c->setMaxVisibleItems(10);

@@ -27,7 +27,7 @@ namespace BlackGui
     namespace Components
     {
         /*!
-         * Distributor selector
+         * Aircraft ICAO selector
          */
         class BLACKGUI_EXPORT CDbAircraftIcaoSelectorComponent :
             public QFrame,
