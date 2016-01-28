@@ -35,6 +35,8 @@ namespace BlackMisc
             enum ColumnIndex
             {
                 IndexAircraftDesignator = BlackMisc::CPropertyIndex::GlobalIndexCAircraftIcaoCode,
+                IndexIataCode,
+                IndexFamily,
                 IndexCombinedAircraftType,
                 IndexManufacturer,
                 IndexModelDescription,
@@ -57,6 +59,10 @@ namespace BlackMisc
             CAircraftIcaoCode(const QString &icao, const QString &combinedType, const QString &manufacturer,
                               const QString &model, const QString &wtc, bool realworld, bool legacy, bool military, int rank);
 
+            //! Constructor
+            CAircraftIcaoCode(const QString &icao, const QString &iata, const QString &combinedType, const QString &manufacturer,
+                              const QString &model, const QString &wtc, bool realworld, bool legacy, bool military, int rank);
+
             //! Get ICAO designator, e.g. "B737"
             const QString &getDesignator() const { return m_designator; }
 
@@ -68,6 +74,30 @@ namespace BlackMisc
 
             //! Has designator and designator is not "ZZZZ"
             bool hasKnownDesignator() const;
+
+            //! IATA code
+            const QString &getIataCode() const { return m_iataCode; }
+
+            //! Set IATA code
+            void setIataCode(const QString &iata) { this->m_iataCode = iata.toUpper().trimmed(); }
+
+            //! Has IATA code?
+            bool hasIataCode() const { return !this->m_iataCode.isEmpty(); }
+
+            //! IATA code same as designator?
+            bool isIataSameAsDesignator() const;
+
+            //! Family (e.g. A350)
+            const QString &getFamily() const { return m_family; }
+
+            //! Set family
+            void setFamily(const QString &family) { this->m_family = family.toUpper().trimmed(); }
+
+            //! Has family?
+            bool hasFamily() const { return !this->m_family.isEmpty(); }
+
+            //! Family same as designator?
+            bool isFamilySameAsDesignator() const;
 
             //! Get type, e.g. "L2J"
             const QString &getCombinedType() const { return this->m_combinedType; }
@@ -129,7 +159,7 @@ namespace BlackMisc
             //! Real world aircraft?
             bool isRealWorld() const { return m_realWorld; }
 
-            //! Legacy aircraft
+            //! Legacy aircraft (no current ICAO code)
             bool isLegacyAircraft() const { return m_legacy; }
 
             //! Flags
@@ -153,14 +183,32 @@ namespace BlackMisc
             //! Ranking
             void setRank(int rank);
 
-            //! Comined descriptive string with key
-            QString getCombinedStringWithKey() const;
+            //! Combined ICAO descriptive string with key
+            QString getCombinedIcaoStringWithKey() const;
+
+            //! Combined IATA descriptive string with key
+            QString getCombinedIataStringWithKey() const;
+
+            //! Combined family descriptive string with key
+            QString getCombinedFamilyStringWithKey() const;
 
             //! All data set?
             bool hasCompleteData() const;
 
             //! Matches designator string?
             bool matchesDesignator(const QString &designator) const;
+
+            //! Matches IATA string?
+            bool matchesIataCode(const QString &iata) const;
+
+            //! Matches family?
+            bool matchesFamily(const QString &family) const;
+
+            //! Matches ICAO or IATA code
+            bool matchesDesignatorOrIata(const QString &icaoOrIata) const;
+
+            //! Matches ICAO, IATA, family?
+            bool matchesDesignatorIataOrFamily(const QString &icaoIataOrFamily) const;
 
             //! \copydoc CValueObject::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -195,6 +243,8 @@ namespace BlackMisc
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftIcaoCode)
             QString m_designator;         //!< "B737"
+            QString m_iataCode;           //!< "320"
+            QString m_family;             //!< "A350" (not a real ICAO code, but a family)
             QString m_combinedType;       //!< "L2J"
             QString m_manufacturer;       //!< "Airbus"
             QString m_modelDescription;   //!< "A-330-200"
@@ -218,6 +268,8 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftIcaoCode, (
                                    o.m_dbKey,
                                    o.m_timestampMSecsSinceEpoch,
                                    o.m_designator,
+                                   o.m_iataCode,
+                                   o.m_family,
                                    o.m_combinedType,
                                    o.m_manufacturer,
                                    o.m_modelDescription,

@@ -39,16 +39,28 @@ namespace BlackMisc
             CAircraftIcaoCodeList(const CSequence<CAircraftIcaoCode> &other);
 
             //! Find by designator
-            CAircraftIcaoCodeList findByDesignator(const QString &designator);
+            CAircraftIcaoCodeList findByDesignator(const QString &designator) const;
+
+            //! Find by IATA code
+            CAircraftIcaoCodeList findByIataCode(const QString &iata) const;
+
+            //! Find by family
+            CAircraftIcaoCodeList findByFamily(const QString &family) const;
+
+            //! Find by ICAO/IATA code
+            CAircraftIcaoCodeList findByDesignatorOrIataCode(const QString &icaoOrIata) const;
+
+            //! Find by ICAO/IATA code or family
+            CAircraftIcaoCodeList findByDesignatorIataOrFamily(const QString &icaoIataOrFamily) const;
 
             //! Find by manufacturer
-            CAircraftIcaoCodeList findByManufacturer(const QString &manufacturer);
+            CAircraftIcaoCodeList findByManufacturer(const QString &manufacturer) const;
 
             //! Find by model description
-            CAircraftIcaoCodeList findByDescription(const QString &description);
+            CAircraftIcaoCodeList findByDescription(const QString &description) const;
 
             //! Find by designator, then best match by rank
-            CAircraftIcaoCode findFirstByDesignatorAndRank(const QString &designator);
+            CAircraftIcaoCode findFirstByDesignatorAndRank(const QString &designator) const;
 
             //! Best selection by given pattern
             CAircraftIcaoCode smartAircraftIcaoSelector(const CAircraftIcaoCode &icaoPattern) const;
@@ -57,7 +69,7 @@ namespace BlackMisc
             void sortByRank();
 
             //! For selection completion
-            QStringList toCompleterStrings() const;
+            QStringList toCompleterStrings(bool withIataCodes = false, bool withFamily = false) const;
 
             //! From our database JSON format
             static CAircraftIcaoCodeList fromDatabaseJson(const QJsonArray &array, bool ignoreIncomplete = true);

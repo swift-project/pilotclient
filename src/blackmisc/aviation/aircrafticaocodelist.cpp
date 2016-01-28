@@ -18,7 +18,7 @@ namespace BlackMisc
             CSequence<CAircraftIcaoCode>(other)
         { }
 
-        CAircraftIcaoCodeList CAircraftIcaoCodeList::findByDesignator(const QString &designator)
+        CAircraftIcaoCodeList CAircraftIcaoCodeList::findByDesignator(const QString &designator) const
         {
             if (!CAircraftIcaoCode::isValidDesignator(designator)) { return CAircraftIcaoCodeList(); }
             return this->findBy([&](const CAircraftIcaoCode & code)
@@ -27,7 +27,43 @@ namespace BlackMisc
             });
         }
 
-        CAircraftIcaoCodeList CAircraftIcaoCodeList::findByManufacturer(const QString &manufacturer)
+        CAircraftIcaoCodeList CAircraftIcaoCodeList::findByDesignatorOrIataCode(const QString &icaoOrIata) const
+        {
+            if (icaoOrIata.isEmpty()) { return CAircraftIcaoCodeList(); }
+            return this->findBy([&](const CAircraftIcaoCode & code)
+            {
+                return code.matchesDesignatorOrIata(icaoOrIata);
+            });
+        }
+
+        CAircraftIcaoCodeList CAircraftIcaoCodeList::findByDesignatorIataOrFamily(const QString &icaoIataOrFamily) const
+        {
+            if (icaoIataOrFamily.isEmpty()) { return CAircraftIcaoCodeList(); }
+            return this->findBy([&](const CAircraftIcaoCode & code)
+            {
+                return code.matchesDesignatorIataOrFamily(icaoIataOrFamily);
+            });
+        }
+
+        CAircraftIcaoCodeList CAircraftIcaoCodeList::findByIataCode(const QString &iata) const
+        {
+            if (iata.isEmpty()) { return CAircraftIcaoCodeList(); }
+            return this->findBy([&](const CAircraftIcaoCode & code)
+            {
+                return code.matchesIataCode(iata);
+            });
+        }
+
+        CAircraftIcaoCodeList CAircraftIcaoCodeList::findByFamily(const QString &family) const
+        {
+            if (family.isEmpty()) { return CAircraftIcaoCodeList(); }
+            return this->findBy([&](const CAircraftIcaoCode & code)
+            {
+                return code.matchesFamily(family);
+            });
+        }
+
+        CAircraftIcaoCodeList CAircraftIcaoCodeList::findByManufacturer(const QString &manufacturer) const
         {
             if (manufacturer.isEmpty()) { return CAircraftIcaoCodeList(); }
             return this->findBy([&](const CAircraftIcaoCode & code)
@@ -36,7 +72,7 @@ namespace BlackMisc
             });
         }
 
-        CAircraftIcaoCodeList CAircraftIcaoCodeList::findByDescription(const QString &description)
+        CAircraftIcaoCodeList CAircraftIcaoCodeList::findByDescription(const QString &description) const
         {
             if (description.isEmpty()) { return CAircraftIcaoCodeList(); }
             return this->findBy([&](const CAircraftIcaoCode & code)
@@ -45,7 +81,7 @@ namespace BlackMisc
             });
         }
 
-        CAircraftIcaoCode CAircraftIcaoCodeList::findFirstByDesignatorAndRank(const QString &designator)
+        CAircraftIcaoCode CAircraftIcaoCodeList::findFirstByDesignatorAndRank(const QString &designator) const
         {
             if (!CAircraftIcaoCode::isValidDesignator(designator)) { return CAircraftIcaoCode(); }
             CAircraftIcaoCodeList codes(findByDesignator(designator));
@@ -60,12 +96,20 @@ namespace BlackMisc
             this->sortBy(&CAircraftIcaoCode::getRank);
         }
 
-        QStringList CAircraftIcaoCodeList::toCompleterStrings() const
+        QStringList CAircraftIcaoCodeList::toCompleterStrings(bool withIataCodes, bool withFamily) const
         {
             QStringList c;
             for (const CAircraftIcaoCode &icao : *this)
             {
-                c.append(icao.getCombinedStringWithKey());
+                c.append(icao.getCombinedIcaoStringWithKey());
+                if (withIataCodes && icao.hasIataCode() && !icao.isIataSameAsDesignator())
+                {
+                    c.append(icao.getCombinedIataStringWithKey());
+                }
+                if (withFamily && icao.hasFamily() && !icao.isFamilySameAsDesignator())
+                {
+                    c.append(icao.getCombinedFamilyStringWithKey());
+                }
             }
             return c;
         }
@@ -96,8 +140,21 @@ namespace BlackMisc
             {
                 const QString d(icaoPattern.getDesignator());
                 codes = codes.findByDesignator(d);
+
+                // we have an exact match
                 if (codes.size() == 1) { return codes.front(); }
-                if (codes.isEmpty()) { return icaoPattern; }
+
+                if (codes.isEmpty())
+                {
+                    // now we search if the ICAO designator is
+                    // actually an IATA code
+                    codes = codes.findByIataCode(d);
+                    if (codes.isEmpty())
+                    {
+                        // still empty, bye
+                        return icaoPattern;
+                    }
+                }
                 codes.sortByRank();
 
                 // intentionally continue here

@@ -29,7 +29,19 @@ namespace BlackMisc
         {}
 
         CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &combinedType, const QString &manufacturer, const QString &model, const QString &wtc, bool realworld, bool legacy, bool military, int rank)
-            : m_designator(icao.trimmed().toUpper()), m_combinedType(combinedType.trimmed().toUpper()), m_manufacturer(manufacturer.trimmed()),
+            : m_designator(icao.trimmed().toUpper()),
+              m_combinedType(combinedType.trimmed().toUpper()),
+              m_manufacturer(manufacturer.trimmed()),
+              m_modelDescription(model.trimmed()), m_wtc(wtc.trimmed().toUpper()), m_realWorld(realworld), m_legacy(legacy), m_military(military), m_rank(rank)
+        {
+            if (m_rank < 0 || m_rank >= 10) { m_rank = 10; }
+        }
+
+        CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &iata, const QString &combinedType, const QString &manufacturer, const QString &model, const QString &wtc, bool realworld, bool legacy, bool military, int rank)
+            : m_designator(icao.trimmed().toUpper()),
+              m_iataCode(iata.trimmed().toUpper()),
+              m_combinedType(combinedType.trimmed().toUpper()),
+              m_manufacturer(manufacturer.trimmed()),
               m_modelDescription(model.trimmed()), m_wtc(wtc.trimmed().toUpper()), m_realWorld(realworld), m_legacy(legacy), m_military(military), m_rank(rank)
         {
             if (m_rank < 0 || m_rank >= 10) { m_rank = 10; }
@@ -60,7 +72,7 @@ namespace BlackMisc
 
         CStatusMessageList CAircraftIcaoCode::validate() const
         {
-            static const CLogCategoryList cats( { CLogCategory("swift.blackmisc.aircrafticao"), CLogCategory::validation()});
+            static const CLogCategoryList cats({ CLogCategory("swift.blackmisc.aircrafticao"), CLogCategory::validation()});
             CStatusMessageList msg;
             if (!hasKnownDesignator()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Aircraft ICAO: unknown designator")); }
             if (!hasValidCombinedType()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Aircraft ICAO: invalid combined type")); }
@@ -78,6 +90,16 @@ namespace BlackMisc
         bool CAircraftIcaoCode::hasKnownDesignator() const
         {
             return (this->hasDesignator() && this->getDesignator() != "ZZZZ");
+        }
+
+        bool CAircraftIcaoCode::isIataSameAsDesignator() const
+        {
+            return hasDesignator() && hasIataCode() && m_iataCode == m_designator;
+        }
+
+        bool CAircraftIcaoCode::isFamilySameAsDesignator() const
+        {
+            return hasFamily() && hasDesignator() && m_designator == m_family;
         }
 
         bool CAircraftIcaoCode::hasValidCombinedType() const
@@ -191,9 +213,29 @@ namespace BlackMisc
             }
         }
 
-        QString CAircraftIcaoCode::getCombinedStringWithKey() const
+        QString CAircraftIcaoCode::getCombinedIcaoStringWithKey() const
         {
             QString s(getDesignator());
+            if (hasManufacturer()) { s = s.append(" ").append(getManufacturer()); }
+            if (hasModelDescription()) { s = s.append(" ").append(getModelDescription()); }
+            return s.append(" ").append(getDbKeyAsStringInParentheses());
+        }
+
+        QString CAircraftIcaoCode::getCombinedIataStringWithKey() const
+        {
+            if (!this->hasIataCode()) { return ""; }
+            QString s(getIataCode());
+            s = s.append(" [IATA]");
+            if (hasManufacturer()) { s = s.append(" ").append(getManufacturer()); }
+            if (hasModelDescription()) { s = s.append(" ").append(getModelDescription()); }
+            return s.append(" ").append(getDbKeyAsStringInParentheses());
+        }
+
+        QString CAircraftIcaoCode::getCombinedFamilyStringWithKey() const
+        {
+            if (!this->hasFamily()) { return ""; }
+            QString s(getFamily());
+            s = s.append(" [family]");
             if (hasManufacturer()) { s = s.append(" ").append(getManufacturer()); }
             if (hasModelDescription()) { s = s.append(" ").append(getModelDescription()); }
             return s.append(" ").append(getDbKeyAsStringInParentheses());
@@ -210,6 +252,32 @@ namespace BlackMisc
             return designator.trimmed().toUpper() == this->m_designator;
         }
 
+        bool CAircraftIcaoCode::matchesIataCode(const QString &iata) const
+        {
+            if (iata.isEmpty()) { return false; }
+            return iata.trimmed().toUpper() == this->m_iataCode;
+        }
+
+        bool CAircraftIcaoCode::matchesFamily(const QString &family) const
+        {
+            if (family.isEmpty()) { return false; }
+            return family.trimmed().toUpper() == this->m_family;
+        }
+
+        bool CAircraftIcaoCode::matchesDesignatorOrIata(const QString &icaoOrIata) const
+        {
+            if (icaoOrIata.isEmpty()) { return false; }
+            return matchesDesignator(icaoOrIata) || matchesIataCode(icaoOrIata);
+        }
+
+        bool CAircraftIcaoCode::matchesDesignatorIataOrFamily(const QString &icaoIataOrFamily) const
+        {
+            if (icaoIataOrFamily.isEmpty()) { return false; }
+            return matchesDesignator(icaoIataOrFamily) ||
+                   matchesIataCode(icaoIataOrFamily) ||
+                   matchesFamily(icaoIataOrFamily);
+        }
+
         CVariant CAircraftIcaoCode::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
@@ -219,6 +287,10 @@ namespace BlackMisc
             {
             case IndexAircraftDesignator:
                 return CVariant::fromValue(this->m_designator);
+            case IndexIataCode:
+                return CVariant::fromValue(this->m_iataCode);
+            case IndexFamily:
+                return CVariant::fromValue(this->m_family);
             case IndexCombinedAircraftType:
                 return CVariant::fromValue(this->m_combinedType);
             case IndexModelDescription:
@@ -253,6 +325,12 @@ namespace BlackMisc
             {
             case IndexAircraftDesignator:
                 this->setDesignator(variant.value<QString>());
+                break;
+            case IndexIataCode:
+                this->setIataCode(variant.value<QString>());
+                break;
+            case IndexFamily:
+                this->setFamily(variant.value<QString>());
                 break;
             case IndexCombinedAircraftType:
                 this->setCombinedType(variant.value<QString>());
@@ -290,6 +368,10 @@ namespace BlackMisc
             {
             case IndexAircraftDesignator:
                 return m_designator.compare(compareValue.getDesignator(), Qt::CaseInsensitive);
+            case IndexIataCode:
+                return m_iataCode.compare(compareValue.getIataCode(), Qt::CaseInsensitive);
+            case IndexFamily:
+                return m_family.compare(compareValue.getFamily(), Qt::CaseInsensitive);
             case IndexCombinedAircraftType:
                 return m_combinedType.compare(compareValue.getCombinedType(), Qt::CaseInsensitive);
             case IndexModelDescription:
@@ -358,6 +440,8 @@ namespace BlackMisc
             }
 
             QString designator(json.value(prefix + "designator").toString());
+            QString iata(json.value(prefix + "iata").toString());
+            QString family(json.value(prefix + "family").toString());
             QString manufacturer(json.value(prefix + "manufacturer").toString());
             QString model(json.value(prefix + "model").toString());
             QString type(json.value(prefix + "type").toString());
@@ -378,10 +462,11 @@ namespace BlackMisc
             Q_ASSERT_X(wtc.length() < 2, Q_FUNC_INFO, "WTC too long");
 
             CAircraftIcaoCode code(
-                designator, combined,
+                designator, iata, combined,
                 manufacturer, model, wtc,
                 real, legacy, military, rank
             );
+            code.setFamily(family);
             code.setKeyAndTimestampFromDatabaseJson(json, prefix);
             return code;
         }
