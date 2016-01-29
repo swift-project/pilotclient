@@ -151,9 +151,6 @@ namespace BlackMisc
     //! Hash value, but with int list
     BLACKMISC_EXPORT uint calculateHash(const QList<int> &values, const char *className);
 
-    //! Get local host name env.variable
-    BLACKMISC_EXPORT const QString &localHostNameEnvVariable();
-
     //! Own implementation of std::make_unique, a C++14 feature not provided by GCC in C++11 mode
     template<typename T, typename... Args>
     std::unique_ptr<T> make_unique(Args &&... args)

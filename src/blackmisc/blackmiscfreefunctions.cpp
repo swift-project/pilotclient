@@ -72,9 +72,3 @@ uint BlackMisc::calculateHash(const QList<int> &values, const char *className)
     }
     return calculateHash(list, className);
 }
-
-const QString &BlackMisc::localHostNameEnvVariable()
-{
-    static const QString hostName = QProcessEnvironment::systemEnvironment().value("COMPUTERNAME", QProcessEnvironment::systemEnvironment().value("HOSTNAME"));
-    return hostName;
-}

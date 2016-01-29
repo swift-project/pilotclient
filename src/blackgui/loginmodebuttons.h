@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_LOGINMODEBUTTONS_H
-#define BLACKMISC_LOGINMODEBUTTONS_H
+#ifndef BLACKGUI_LOGINMODEBUTTONS_H
+#define BLACKGUI_LOGINMODEBUTTONS_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackcore/network.h"
@@ -43,7 +43,6 @@ namespace BlackGui
     private:
         QScopedPointer<Ui::CLoginModeButtons> ui;
     };
-
 }
 
 #endif // guard

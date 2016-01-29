@@ -14,7 +14,6 @@ using namespace BlackCore;
 
 namespace BlackGui
 {
-
     CLoginModeButtons::CLoginModeButtons(QWidget *parent) :
         QGroupBox(parent),
         ui(new Ui::CLoginModeButtons)
