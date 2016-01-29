@@ -47,41 +47,6 @@
       <string>Distributor</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="1">
-       <widget class="BlackGui::Components::CDbDistributorSelectorComponent" name="distributor_Selector">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>20</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QWidget" name="wi_Timestamps" native="true">
-        <layout class="QHBoxLayout" name="hl_Timestamps">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QLineEdit" name="le_Updated">
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
       <item row="0" column="0">
        <widget class="BlackGui::CLabelAndIcon" name="lai_Id">
         <property name="minimumSize">
@@ -98,63 +63,7 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="lbl_Timestamp">
-        <property name="text">
-         <string>Last updated</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="lbl_Alias2">
-        <property name="text">
-         <string>Alias 2:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="lbl_Description">
-        <property name="text">
-         <string>Description:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLineEdit" name="le_Alias1">
-        <property name="placeholderText">
-         <string>An alias</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="lbl_Alias1">
-        <property name="text">
-         <string>Alias1:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QLineEdit" name="le_Alias2">
-        <property name="placeholderText">
-         <string>Another alias</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="le_Description">
-        <property name="placeholderText">
-         <string>Describe distributor</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0" colspan="2">
-       <widget class="BlackGui::CDropSite" name="drop_DropData">
-        <property name="text">
-         <string>Drop data here</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2" rowspan="6">
+      <item row="0" column="3" rowspan="5">
        <widget class="BlackGui::Editors::CValidationIndicator" name="val_Indicator">
         <property name="minimumSize">
          <size>
@@ -167,6 +76,72 @@
         </property>
         <property name="frameShadow">
          <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="le_Alias1">
+        <property name="placeholderText">
+         <string>An alias</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="2">
+       <widget class="BlackGui::Components::CDbDistributorSelectorComponent" name="distributor_Selector">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>20</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QLineEdit" name="le_Alias2">
+        <property name="placeholderText">
+         <string>Another alias</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_Alias">
+        <property name="text">
+         <string>Alias1/2:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_Description">
+        <property name="text">
+         <string>Description:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="lbl_Timestamp">
+        <property name="text">
+         <string>Last updated</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="3">
+       <widget class="BlackGui::CDropSite" name="drop_DropData">
+        <property name="text">
+         <string>Drop data here</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="2">
+       <widget class="QLineEdit" name="le_Description">
+        <property name="placeholderText">
+         <string>Describe distributor</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1" colspan="2">
+       <widget class="QLineEdit" name="le_Updated">
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -202,9 +177,6 @@
  </customwidgets>
  <tabstops>
   <tabstop>le_Description</tabstop>
-  <tabstop>le_Alias1</tabstop>
-  <tabstop>le_Alias2</tabstop>
-  <tabstop>le_Updated</tabstop>
  </tabstops>
  <resources/>
  <connections/>
