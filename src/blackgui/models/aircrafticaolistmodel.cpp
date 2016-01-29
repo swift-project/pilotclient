@@ -22,12 +22,14 @@ namespace BlackGui
             CListModelDbObjects("AircraftIcaoListModel", parent)
         {
             this->m_columns.addColumn(CColumn::standardString("id", CAircraftIcaoCode::IndexDbIntegerKey, CDefaultFormatter::alignRightVCenter()));
-            this->m_columns.addColumn(CColumn::standardValueObject("ICAO", CAircraftIcaoCode::IndexAircraftDesignator));
+            this->m_columns.addColumn(CColumn::standardString("ICAO", CAircraftIcaoCode::IndexAircraftDesignator));
+            this->m_columns.addColumn(CColumn::standardString("IATA", CAircraftIcaoCode::IndexIataCode));
             this->m_columns.addColumn(CColumn::standardValueObject("rank", CAircraftIcaoCode::IndexRank, CDefaultFormatter::alignRightVCenter()));
-            this->m_columns.addColumn(CColumn::standardValueObject("manufacturer", CAircraftIcaoCode::IndexManufacturer));
-            this->m_columns.addColumn(CColumn::standardValueObject("desc.", "description", CAircraftIcaoCode::IndexModelDescription));
-            this->m_columns.addColumn(CColumn::standardValueObject("code", "combined code", CAircraftIcaoCode::IndexCombinedAircraftType));
-            this->m_columns.addColumn(CColumn::standardValueObject("WTC", "wake turbulence category", CAircraftIcaoCode::IndexWtc));
+            this->m_columns.addColumn(CColumn::standardString("manufacturer", CAircraftIcaoCode::IndexManufacturer));
+            this->m_columns.addColumn(CColumn::standardString("family", CAircraftIcaoCode::IndexFamily));
+            this->m_columns.addColumn(CColumn::standardString("desc.", "description", CAircraftIcaoCode::IndexModelDescription));
+            this->m_columns.addColumn(CColumn::standardString("code", "combined code", CAircraftIcaoCode::IndexCombinedAircraftType));
+            this->m_columns.addColumn(CColumn::standardString("WTC", "wake turbulence category", CAircraftIcaoCode::IndexWtc));
             this->m_columns.addColumn(CColumn("mil.", "military", CAircraftIcaoCode::IndexIsMilitary, new CBoolIconFormatter("military", "civil")));
             this->m_columns.addColumn(CColumn("VTOL", "vertical take-off and landing", CAircraftIcaoCode::IndexIsVtol, new CBoolIconFormatter("VTOL", "non VTOL")));
             this->m_columns.addColumn(CColumn("leg.", "legacy", CAircraftIcaoCode::IndexIsLegacy, new CBoolIconFormatter("legacy", "operating")));
