@@ -20,6 +20,7 @@
 #include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/dbautostashingcomponent.h"
+#include "blackgui/components/dbmodelmappingmodifycomponent.h"
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
 #include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
@@ -202,9 +203,13 @@ namespace BlackGui
             //! Apply current DB data from form
             void ps_applyDbData();
 
+            //! Open model modify dialog
+            void ps_modifyModelDialog();
+
         private:
             QScopedPointer<Ui::CDbMappingComponent> ui;
-            QScopedArrayPointer<CDbAutoStashingComponent> m_autostashDialog { new CDbAutoStashingComponent(this) };
+            QScopedPointer<CDbAutoStashingComponent> m_autoStashDialog { new CDbAutoStashingComponent(this) };
+            QScopedPointer<CDbModelMappingModifyComponent> m_modelModifyDialog { new CDbModelMappingModifyComponent(this) };
             BlackMisc::Simulation::FsCommon::CVPilotRulesReader           m_vPilotReader;                //!< read vPilot rules
             BlackMisc::CData<BlackCore::Data::VPilotAircraftModels>       m_cachedVPilotModels { this, &CDbMappingComponent::ps_onVPilotCacheChanged }; //!< cache for latest vPilot rules
             std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>  m_modelLoader;                 //!< read own aircraft models

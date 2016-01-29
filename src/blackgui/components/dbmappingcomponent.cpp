@@ -167,7 +167,7 @@ namespace BlackGui
         void CDbMappingComponent::setProvider(BlackMisc::Network::IWebDataServicesProvider *provider)
         {
             CWebDataServicesAware::setProvider(provider);
-            this->m_autostashDialog->setProvider(provider);
+            this->m_autoStashDialog->setProvider(provider);
             this->ui->editor_Livery->setProvider(provider);
             this->ui->editor_Distributor->setProvider(provider);
             this->ui->editor_AircraftIcao->setProvider(provider);
@@ -325,7 +325,7 @@ namespace BlackGui
 
         void CDbMappingComponent::ps_displayAutoStashingDialog()
         {
-            this->m_autostashDialog->exec();
+            this->m_autoStashDialog->exec();
         }
 
         void CDbMappingComponent::ps_removeDbModelsFromView()
@@ -390,6 +390,20 @@ namespace BlackGui
             {
                 this->showMessages(msgs);
             }
+        }
+
+        void CDbMappingComponent::ps_modifyModelDialog()
+        {
+            // only one model selected, use as default
+            if (this->ui->comp_StashAircraft->getView()->hasSingleSelectedRow())
+            {
+                this->m_modelModifyDialog->setValue(this->ui->comp_StashAircraft->getView()->selectedObject());
+            }
+
+            QDialog::DialogCode s = static_cast<QDialog::DialogCode>(this->m_modelModifyDialog->exec());
+            if (s == QDialog::Rejected) { return; }
+            CPropertyIndexVariantMap vm = this->m_modelModifyDialog->getValues();
+            this->ui->comp_StashAircraft->applyToSelected(vm);
         }
 
         void CDbMappingComponent::resizeForSelect()
@@ -742,9 +756,9 @@ namespace BlackGui
                     const QString msgAutoStash("Auto stashing");
                     menu.addAction(CIcons::appDbStash16(), msgAutoStash, mapComp, SLOT(ps_displayAutoStashingDialog()));
 
-                    if (mapComp->m_autostashDialog && mapComp->m_autostashDialog->isCompleted())
+                    if (mapComp->m_autoStashDialog && mapComp->m_autoStashDialog->isCompleted())
                     {
-                        menu.addAction(CIcons::appDbStash16(), "Last auto stash run", mapComp->m_autostashDialog.data(), SLOT(showLastResults()));
+                        menu.addAction(CIcons::appDbStash16(), "Last auto stash run", mapComp->m_autoStashDialog.data(), SLOT(showLastResults()));
                     }
 
                     // auto filter in DB views
@@ -783,6 +797,8 @@ namespace BlackGui
 
                 // a = subMenu->addAction(CIcons::appAirlineIcao16(), "Current airline ICAO", mapComp, SLOT(ps_applyDbData()));
                 // a->setData(CAirlineIcaoCode().getClassName());
+
+                menu.addAction(CIcons::databaseTable16(), "Modify model data", mapComp, SLOT(ps_modifyModelDialog()));
             }
             this->nestedCustomMenu(menu);
         }
