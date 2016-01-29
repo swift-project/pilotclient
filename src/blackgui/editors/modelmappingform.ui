@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>592</width>
-    <height>93</height>
+    <height>95</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,6 +41,18 @@
       <string>Simulator model</string>
      </property>
      <layout class="QGridLayout" name="gl_ModelMappingForm">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
+       <number>3</number>
+      </property>
       <item row="0" column="0">
        <widget class="BlackGui::CLabelAndIcon" name="lai_Id">
         <property name="frameShape">
@@ -162,25 +174,13 @@
        </widget>
       </item>
       <item row="1" column="6">
-       <widget class="QComboBox" name="cb_Include">
-        <item>
-         <property name="text">
-          <string>Include</string>
-         </property>
-         <property name="icon">
-          <iconset resource="../../blackmisc/blackmisc.qrc">
-           <normaloff>:/diagona/icons/diagona/icons/paper-plane--plus.png</normaloff>:/diagona/icons/diagona/icons/paper-plane--plus.png</iconset>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Exclude</string>
-         </property>
-         <property name="icon">
-          <iconset resource="../../blackmisc/blackmisc.qrc">
-           <normaloff>:/diagona/icons/diagona/icons/paper-plane--minus.png</normaloff>:/diagona/icons/diagona/icons/paper-plane--minus.png</iconset>
-         </property>
-        </item>
+       <widget class="BlackGui::CModelModeSelector" name="selector_ModelMode">
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
        </widget>
       </item>
      </layout>
@@ -189,6 +189,18 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>BlackGui::CSimulatorSelector</class>
+   <extends>QFrame</extends>
+   <header>blackgui/simulatorselector.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CModelModeSelector</class>
+   <extends>QFrame</extends>
+   <header>blackgui/modelmodeselector.h</header>
+   <container>1</container>
+  </customwidget>
   <customwidget>
    <class>BlackGui::CLabelAndIcon</class>
    <extends>QFrame</extends>
@@ -201,12 +213,6 @@
    <header>blackgui/editors/validationindicator.h</header>
    <container>1</container>
   </customwidget>
-  <customwidget>
-   <class>BlackGui::CSimulatorSelector</class>
-   <extends>QFrame</extends>
-   <header>blackgui/simulatorselector.h</header>
-   <container>1</container>
-  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>le_Id</tabstop>
@@ -216,8 +222,6 @@
   <tabstop>pb_Stash</tabstop>
   <tabstop>le_LastUpdated</tabstop>
  </tabstops>
- <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

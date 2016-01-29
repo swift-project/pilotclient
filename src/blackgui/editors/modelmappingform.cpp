@@ -41,7 +41,7 @@ namespace BlackGui
             model.setDescription(this->ui->le_Description->text());
             model.setModelString(this->ui->le_ModelKey->text());
             model.setName(this->ui->le_Name->text());
-            model.setModelModeAsString(this->ui->cb_Include->currentText());
+            model.setModelMode(this->ui->selector_ModelMode->getMode());
             return model;
         }
 
@@ -72,7 +72,7 @@ namespace BlackGui
             ui->le_Id->setText(model.getDbKeyAsString());
             ui->le_Description->setText(model.getDescription());
             ui->le_Name->setText(model.getName());
-            ui->cb_Include->setCurrentText(model.getModelModeAsString());
+            ui->selector_ModelMode->setValue(model.getModelMode());
             ui->selector_Simulator->setValue(model.getSimulatorInfo());
             m_originalModel = model;
         }
@@ -82,11 +82,12 @@ namespace BlackGui
             const CAuthenticatedUser user(this->getUser());
             if (user.isAdmin())
             {
-                ui->cb_Include->setEnabled(true);
+                ui->selector_ModelMode->setValue(CAircraftModel::Include);
+                ui->selector_ModelMode->setReadOnly(false);
             }
             else
             {
-                ui->cb_Include->setEnabled(false);
+                ui->selector_ModelMode->setReadOnly(true);
             }
 
             CForm::ps_userChanged();
