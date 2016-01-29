@@ -128,10 +128,26 @@
         </layout>
        </widget>
       </item>
-      <item row="4" column="1">
-       <widget class="BlackGui::CAircraftCombinedTypeSelector" name="combined_TypeSelector"/>
+      <item row="0" column="2" rowspan="9">
+       <widget class="BlackGui::Editors::CValidationIndicator" name="val_Indicator">
+        <property name="minimumSize">
+         <size>
+          <width>10</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
       </item>
       <item row="5" column="1">
+       <widget class="BlackGui::CAircraftCombinedTypeSelector" name="combined_TypeSelector"/>
+      </item>
+      <item row="6" column="1">
        <widget class="QWidget" name="wi_Checkboxes" native="true">
         <layout class="QHBoxLayout" name="hl_CheckBoxes">
          <property name="leftMargin">
@@ -223,78 +239,10 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QLineEdit" name="le_Manufacturer">
-        <property name="placeholderText">
-         <string>e.g. Boeing, Airbus</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="lbl_ModelDescription">
-        <property name="text">
-         <string>Model:</string>
-        </property>
-        <property name="buddy">
-         <cstring>le_ModelDescription</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QLineEdit" name="le_ModelDescription">
-        <property name="placeholderText">
-         <string>Aircraft model</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="lbl_CombinedCode">
-        <property name="toolTip">
-         <string>Type / Engine / Engine count</string>
-        </property>
-        <property name="text">
-         <string>Combined type:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="lbl_MiscFlags">
-        <property name="text">
-         <string>Misc.:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0">
-       <widget class="QLabel" name="lbl_Timestamp">
-        <property name="text">
-         <string>Last updated:</string>
-        </property>
-        <property name="buddy">
-         <cstring>le_Updated</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="1">
-       <widget class="QLineEdit" name="le_Updated">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="lbl_IcaoDesignator">
-        <property name="text">
-         <string>Design./Rank:</string>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="lbl_Manufacturer">
+       <widget class="QLabel" name="lbl_IataFamily">
         <property name="text">
-         <string>Manufacturer:</string>
-        </property>
-        <property name="buddy">
-         <cstring>le_Manufacturer</cstring>
+         <string>IATA/family:</string>
         </property>
        </widget>
       </item>
@@ -314,27 +262,130 @@
         </property>
        </widget>
       </item>
-      <item row="7" column="0" colspan="2">
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="le_Manufacturer">
+        <property name="placeholderText">
+         <string>e.g. Boeing, Airbus</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="lbl_ModelDescription">
+        <property name="text">
+         <string>Model:</string>
+        </property>
+        <property name="buddy">
+         <cstring>le_ModelDescription</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="lbl_MiscFlags">
+        <property name="text">
+         <string>Misc.:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="lbl_CombinedCode">
+        <property name="toolTip">
+         <string>Type / Engine / Engine count</string>
+        </property>
+        <property name="text">
+         <string>Combined type:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLineEdit" name="le_ModelDescription">
+        <property name="placeholderText">
+         <string>Aircraft model</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QLineEdit" name="le_Updated">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>Last updated</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="lbl_Timestamp">
+        <property name="text">
+         <string>Last updated:</string>
+        </property>
+        <property name="buddy">
+         <cstring>le_Updated</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_IcaoDesignator">
+        <property name="text">
+         <string>Design./Rank:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="lbl_Manufacturer">
+        <property name="text">
+         <string>Manufacturer:</string>
+        </property>
+        <property name="buddy">
+         <cstring>le_Manufacturer</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0" colspan="2">
        <widget class="BlackGui::CDropSite" name="drop_DropData">
         <property name="text">
          <string>Drop data here</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="2" rowspan="8">
-       <widget class="BlackGui::Editors::CValidationIndicator" name="val_Indicator">
-        <property name="minimumSize">
-         <size>
-          <width>10</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
+      <item row="2" column="1">
+       <widget class="QWidget" name="wi_IataFmily" native="true">
+        <layout class="QHBoxLayout" name="hl_IataFamily">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLineEdit" name="le_Iata">
+           <property name="layoutDirection">
+            <enum>Qt::RightToLeft</enum>
+           </property>
+           <property name="maxLength">
+            <number>10</number>
+           </property>
+           <property name="placeholderText">
+            <string>IATA</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="le_Family">
+           <property name="maxLength">
+            <number>10</number>
+           </property>
+           <property name="placeholderText">
+            <string>Family</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
      </layout>

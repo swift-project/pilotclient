@@ -47,6 +47,8 @@ namespace BlackGui
             this->ui->aircraft_Selector->setAircraftIcao(icao);
             this->ui->le_Manufacturer->setText(icao.getManufacturer());
             this->ui->le_ModelDescription->setText(icao.getModelDescription());
+            this->ui->le_Family->setText(icao.getFamily());
+            this->ui->le_Iata->setText(icao.getIataCode());
 
             this->ui->cb_Legacy->setChecked(icao.isLegacyAircraft());
             this->ui->cb_Military->setChecked(icao.isMilitary());
@@ -80,10 +82,12 @@ namespace BlackGui
                 }
             }
 
-            QString manufacturer(this->ui->le_Manufacturer->text().trimmed().toUpper());
-            QString modelDescription(this->ui->le_ModelDescription->text());
-            QString wtc(ui->cb_Wtc->currentText().left(1));
-            QString combined(ui->combined_TypeSelector->getCombinedType());
+            const QString manufacturer(this->ui->le_Manufacturer->text().trimmed().toUpper());
+            const QString modelDescription(this->ui->le_ModelDescription->text().trimmed());
+            const QString iata(this->ui->le_Family->text().trimmed().toUpper());
+            const QString family(this->ui->le_Iata->text().trimmed().toUpper());
+            const QString wtc(ui->cb_Wtc->currentText().left(1));
+            const QString combined(ui->combined_TypeSelector->getCombinedType());
             bool ok;
             int rank = this->ui->cb_Rank->currentText().toInt(&ok);
             if (!ok) { rank = 10; }
@@ -96,6 +100,8 @@ namespace BlackGui
             icao.setCodeFlags(military, legacy, realWorld);
             icao.setRank(rank);
             icao.setCombinedType(combined);
+            icao.setFamily(family);
+            icao.setIataCode(iata);
             return icao;
         }
 
@@ -123,6 +129,8 @@ namespace BlackGui
             this->ui->aircraft_Selector->setReadOnly(readOnly);
             this->ui->le_Manufacturer->setReadOnly(readOnly);
             this->ui->le_ModelDescription->setReadOnly(readOnly);
+            this->ui->le_Family->setReadOnly(readOnly);
+            this->ui->le_Iata->setReadOnly(readOnly);
 
             this->ui->cb_Legacy->setCheckable(!readOnly);
             this->ui->cb_Military->setCheckable(!readOnly);
