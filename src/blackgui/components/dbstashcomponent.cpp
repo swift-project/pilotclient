@@ -204,6 +204,13 @@ namespace BlackGui
             this->ui->tvp_StashAircraftModels->applyToSelected(distributor);
         }
 
+        void CDbStashComponent::applyToSelected(const CPropertyIndexVariantMap &vm)
+        {
+            if (vm.isEmpty()) { return; }
+            if (!this->ui->tvp_StashAircraftModels->hasSelection()) { return; }
+            this->ui->tvp_StashAircraftModels->applyToSelected(vm);
+        }
+
         void CDbStashComponent::ps_onUnstashPressed()
         {
             this->ui->tvp_StashAircraftModels->removeSelectedRows();

@@ -43,6 +43,9 @@ namespace BlackGui
             //! Apply to selected objects
             int applyToSelected(const BlackMisc::Simulation::CDistributor &distributor);
 
+            //! Apply to selected objects
+            int applyToSelected(const BlackMisc::CPropertyIndexVariantMap &vm);
+
             //! Has any models to stash and it is allowed to stash
             bool hasSelectedModelsToStash() const;
 

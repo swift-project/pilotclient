@@ -434,6 +434,9 @@ namespace BlackGui
             //! Update selected objects
             int updateSelected(const BlackMisc::CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
+            //! Update selected objects
+            int updateSelected(const BlackMisc::CPropertyIndexVariantMap &vm);
+
             //! Selected object (or default)
             ObjectType selectedObject() const;
 

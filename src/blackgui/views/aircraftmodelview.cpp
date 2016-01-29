@@ -91,6 +91,13 @@ namespace BlackGui
             return c;
         }
 
+        int CAircraftModelView::applyToSelected(const CPropertyIndexVariantMap &vm)
+        {
+            if (!hasSelection()) { return 0; }
+            int c = this->updateSelected(vm);
+            return c;
+        }
+
         bool CAircraftModelView::hasSelectedModelsToStash() const
         {
             return m_menus.testFlag(MenuCanStashModels) && hasSelection();

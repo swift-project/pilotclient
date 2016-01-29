@@ -82,17 +82,20 @@ namespace BlackGui
             //! The stashed models
             const BlackMisc::Simulation::CAircraftModelList &getStashedModels() const;
 
-            //! Apply object to select objects
+            //! Apply livery to selected objects
             void applyToSelected(const BlackMisc::Aviation::CLivery &livery, bool acceptWarnings = true);
 
-            //! Apply object to select objects
+            //! Apply airline ICAO code to selected objects
             void applyToSelected(const BlackMisc::Aviation::CAircraftIcaoCode &icao, bool acceptWarnings = true);
 
-            //! Apply object to select objects
+            //! Apply aircraft ICAO code to selected objects
             void applyToSelected(const BlackMisc::Aviation::CAirlineIcaoCode &icao, bool acceptWarnings = true);
 
-            //! Apply object to select objects
+            //! Apply distributor to selected objects
             void applyToSelected(const BlackMisc::Simulation::CDistributor &distributor, bool acceptWarnings = true);
+
+            //! Apply set of properties to selected objects
+            void applyToSelected(const BlackMisc::CPropertyIndexVariantMap &vm);
 
             //! Consolidate with other available data
             BlackMisc::Simulation::CAircraftModel consolidateModel(const BlackMisc::Simulation::CAircraftModel &model) const;

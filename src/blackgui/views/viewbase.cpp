@@ -731,21 +731,31 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
-        int CViewBase<ModelClass, ContainerType, ObjectType>::updateSelected(const CVariant &variant, const CPropertyIndex &index)
+        int CViewBase<ModelClass, ContainerType, ObjectType>::updateSelected(const CPropertyIndexVariantMap &vm)
         {
+            if (vm.isEmpty()) { return 0; }
             if (!hasSelection()) { return 0; }
-            QModelIndexList indexes = this->selectedRows();
             int c = 0;
-            int lastRow = -1;
-            int firstRow = -1;
+
+            QModelIndexList indexes = this->selectedRows();
+            int lastUpdatedRow = -1;
+            int firstUpdatedRow = -1;
+            const CPropertyIndexList pis(vm.indexes());
 
             for (const QModelIndex &i : indexes)
             {
-                if (i.row() == lastRow) { continue; }
-                lastRow = i.row();
-                if (firstRow < 0 || lastRow < firstRow) { firstRow = lastRow; }
+                if (i.row() == lastUpdatedRow) { continue; }
+                lastUpdatedRow = i.row();
+                if (firstUpdatedRow < 0 || lastUpdatedRow < firstUpdatedRow) { firstUpdatedRow = lastUpdatedRow; }
                 ObjectType obj(this->at(i));
-                obj.setPropertyByIndex(variant, index);
+
+                // update all properties in map
+                for (const CPropertyIndex &pi : pis)
+                {
+                    obj.setPropertyByIndex(vm.value(pi), pi);
+                }
+
+                // and update container
                 if (this->derivedModel()->setInContainer(i, obj))
                 {
                     c++;
@@ -754,9 +764,16 @@ namespace BlackGui
 
             if (c > 0)
             {
-                this->derivedModel()->sendDataChanged(firstRow, lastRow);
+                this->derivedModel()->sendDataChanged(firstUpdatedRow, lastUpdatedRow);
             }
             return c;
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        int CViewBase<ModelClass, ContainerType, ObjectType>::updateSelected(const CVariant &variant, const CPropertyIndex &index)
+        {
+            const CPropertyIndexVariantMap vm(index, variant);
+            return this->updateSelected(vm);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
