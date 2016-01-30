@@ -31,8 +31,7 @@ namespace BlackGui
             {
                 if (!m_vDesignator.isEmpty())
                 {
-                    if (!icao.matchesVDesignator(m_vDesignator)) { continue; }
-                    end = true; // there should me only one designator
+                    if (!this->stringMatchesFilterExpression(icao.getVDesignator(), m_vDesignator)) { continue; }
                 }
 
                 if (!this->m_name.isEmpty())

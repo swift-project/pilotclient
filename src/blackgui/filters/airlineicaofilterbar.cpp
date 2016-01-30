@@ -43,8 +43,8 @@ namespace BlackGui
         {
             return std::unique_ptr<CAirlineIcaoFilter>(
                        new CAirlineIcaoFilter(
-                           this->ui->le_Designator->text(),
-                           this->ui->le_Name->text(),
+                           this->ui->le_Designator->text().trimmed(),
+                           this->ui->le_Name->text().trimmed(),
                            this->ui->country_Selector->isSet() ? this->ui->country_Selector->getCountry().getIsoCode() : "",
                            this->ui->cb_RealAirline->isChecked(),
                            this->ui->cb_VirtualAirline->isChecked()
