@@ -62,7 +62,7 @@ namespace BlackMisc
             //! Find by designator, then best match by rank
             CAircraftIcaoCode findFirstByDesignatorAndRank(const QString &designator) const;
 
-            //! Best selection by given pattern
+            //! Best selection by given pattern, also searches IATA and family information
             CAircraftIcaoCode smartAircraftIcaoSelector(const CAircraftIcaoCode &icaoPattern) const;
 
             //! Sort by rank

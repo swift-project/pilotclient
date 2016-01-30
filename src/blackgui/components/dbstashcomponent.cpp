@@ -225,10 +225,13 @@ namespace BlackGui
         void CDbStashComponent::ps_onPublishPressed()
         {
             if (this->ui->tvp_StashAircraftModels->isEmpty()) {return; }
-            if (!this->validateAndDisplay()) { return; }
+
+            // get models right here, because later steps might affect selection
             CAircraftModelList models(getSelectedOrAllModels());
             if (models.isEmpty()) { return; }
 
+            // validate
+            if (!this->validateAndDisplay()) { return; }
             CStatusMessageList msgs;
             if (models.size() > MaxModelPublished)
             {
@@ -339,7 +342,7 @@ namespace BlackGui
         CAircraftModelList CDbStashComponent::getSelectedOrAllModels() const
         {
             bool selectedOnly = ui->cb_SelectedOnly->isChecked();
-            const CAircraftModelList models(selectedOnly ? this->ui->tvp_StashAircraftModels->selectedObjects() : this->ui->tvp_StashAircraftModels->container());
+            const CAircraftModelList models(selectedOnly ? this->ui->tvp_StashAircraftModels->selectedObjects() : this->ui->tvp_StashAircraftModels->containerOrFilteredContainer());
             return models;
         }
 
@@ -351,13 +354,11 @@ namespace BlackGui
             // we try to best update by DB data here
             if (!dbModel.hasValidDbKey())
             {
-                // we have no(!) DB model, so we update ecach of it subobjects
+                // we have no(!) DB model, so we update each of it subobjects
                 CAircraftModel consolidatedModel(model); // copy over
-                if (!consolidatedModel.getLivery().hasValidDbKey() && consolidatedModel.hasAirlineDesignator())
+                if (!consolidatedModel.getLivery().hasValidDbKey())
                 {
-                    // we try to find a DB livery for the airline
-                    // maybe slow because all liveries always copied over
-                    CLivery dbLivery(this->getLiveries().findStdLiveryByAirlineIcaoDesignator(model.getAirlineIcaoCode()));
+                    const CLivery dbLivery(this->smartLiverySelector(consolidatedModel.getLivery()));
                     if (dbLivery.hasValidDbKey())
                     {
                         consolidatedModel.setLivery(dbLivery);
@@ -366,7 +367,7 @@ namespace BlackGui
                 if (!consolidatedModel.getAircraftIcaoCode().hasValidDbKey() && consolidatedModel.hasAircraftDesignator())
                 {
                     // try to find DB aircraft ICAO here
-                    CAircraftIcaoCode dbIcao(this->getAircraftIcaoCodeForDesignator(consolidatedModel.getAircraftIcaoCode().getDesignator()));
+                    const CAircraftIcaoCode dbIcao(this->smartAircraftIcaoSelector(consolidatedModel.getAircraftIcaoCode()));
                     if (dbIcao.hasValidDbKey())
                     {
                         consolidatedModel.setAircraftIcaoCode(dbIcao);
@@ -407,17 +408,18 @@ namespace BlackGui
         CAircraftModel CDbStashComponent::consolidateModel(const CAircraftModel &model) const
         {
             CAircraftModel stashModel(model);
-
-            // merge with own models if any
-            if (stashModel.getModelType() != CAircraftModel::TypeOwnSimulatorModel)
-            {
-                stashModel = this->consolidateWithOwnModels(stashModel);
-            }
+            bool ownModel = stashModel.getModelType() == CAircraftModel::TypeOwnSimulatorModel;
 
             // merge with DB data if any
             if (!stashModel.hasValidDbKey())
             {
                 stashModel = this->consolidateWithDbData(stashModel);
+            }
+
+            // merge with own models if any
+            if (!ownModel)
+            {
+                stashModel = this->consolidateWithOwnModels(stashModel);
             }
 
             return stashModel;

@@ -135,29 +135,40 @@ namespace BlackMisc
                 if (c.hasCompleteData()) { return c; }
             }
 
-            CAircraftIcaoCodeList codes(*this); // copy and reduce
+            CAircraftIcaoCodeList codes;
             if (icaoPattern.hasKnownDesignator())
             {
                 const QString d(icaoPattern.getDesignator());
-                codes = codes.findByDesignator(d);
+                codes = this->findByDesignator(d);
 
-                // we have an exact match
+                // we have one exact match
                 if (codes.size() == 1) { return codes.front(); }
 
                 if (codes.isEmpty())
                 {
                     // now we search if the ICAO designator is
                     // actually an IATA code
-                    codes = codes.findByIataCode(d);
+                    codes = this->findByIataCode(d);
+
+                    // we have one exact match
+                    if (codes.size() == 1) { return codes.front(); }
+
                     if (codes.isEmpty())
                     {
-                        // still empty, bye
-                        return icaoPattern;
+                        // still empty, try to find by family
+                        codes = this->findByFamily(d);
+
+                        // we have one exact match
+                        if (codes.size() == 1) { return codes.front(); }
+
+                        // still empty, hopeless
+                        if (codes.isEmpty()) { return icaoPattern; }
+
+                        // continue here, we have more than one code and
+                        // will try to further reduce
                     }
                 }
                 codes.sortByRank();
-
-                // intentionally continue here
             }
 
             // further reduce by manufacturer
@@ -166,7 +177,6 @@ namespace BlackMisc
                 const QString m(icaoPattern.getManufacturer());
                 codes = codes.findByManufacturer(m);
                 if (codes.size() == 1) { return codes.front(); }
-                if (codes.isEmpty()) { return icaoPattern; }
 
                 // intentionally continue here
             }
