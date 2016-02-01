@@ -26,7 +26,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->setViewWithIndicator(this->ui->tvp_AircraftIcao);
-            this->ui->tvp_AircraftIcao->setResizeMode(CViewBaseNonTemplate::ResizingOff);
+            this->ui->tvp_AircraftIcao->setResizeMode(CAircraftIcaoCodeView::ResizingOff);
             connect(this->ui->tvp_AircraftIcao, &CAircraftIcaoCodeView::requestNewBackendData, this, &CDbAircraftIcaoComponent::ps_reload);
 
             this->ui->tvp_AircraftIcao->allowDragDropValueObjects(true, false);

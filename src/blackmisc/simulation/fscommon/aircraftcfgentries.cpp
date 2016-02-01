@@ -121,7 +121,11 @@ namespace BlackMisc
                 model.setFileName(this->getFileName());
                 model.setName(this->getSimName());
 
-                CAircraftIcaoCode aircraft(getAtcModel());
+                const QString designator(CAircraftIcaoCode::normalizeDesignator(getAtcModel()));
+                CAircraftIcaoCode aircraft(
+                    CAircraftIcaoCode::isValidDesignator(designator) ?
+                    designator :
+                    CAircraftIcaoCode::getUnassignedDesignator());
                 aircraft.setManufacturer(this->getUiManufacturer());
                 model.setAircraftIcaoCode(aircraft);
 
