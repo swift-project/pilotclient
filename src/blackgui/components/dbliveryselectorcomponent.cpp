@@ -91,9 +91,19 @@ namespace BlackGui
         CLivery CDbLiverySelectorComponent::getLivery() const
         {
             if (!hasProvider()) { return CLivery(); }
-            QString liveryCode(this->ui->le_Livery->text().trimmed().toUpper());
-            CLivery d(getLiveries().findByCombinedCode(liveryCode));
-            return d;
+            const QString liveryCode(
+                this->stripExtraInfo(this->ui->le_Livery->text())
+            );
+            const CLivery liv(getLiveries().findByCombinedCode(liveryCode));
+            if (liv.hasCompleteData() && liv.hasValidDbKey())
+            {
+                // full data fetched
+                return liv;
+            }
+            else
+            {
+                return this->m_currentLivery;
+            }
         }
 
         void CDbLiverySelectorComponent::setReadOnly(bool readOnly)
@@ -183,15 +193,28 @@ namespace BlackGui
         void CDbLiverySelectorComponent::ps_dataChanged()
         {
             if (!hasProvider()) { return; }
-            QString code(this->ui->le_Livery->text().trimmed().toUpper());
+            const QString code(
+                this->stripExtraInfo(this->ui->le_Livery->text())
+            );
             if (code.isEmpty()) { return; }
-            CLivery d(this->getLiveries().findByCombinedCode(code));
-            this->setLivery(d);
+            const CLivery livery(this->getLiveries().findByCombinedCode(code));
+            this->setLivery(livery);
         }
 
         void CDbLiverySelectorComponent::ps_completerActivated(const QString &liveryCode)
         {
             this->setlivery(liveryCode);
+        }
+
+        QString CDbLiverySelectorComponent::stripExtraInfo(const QString &liveryCode) const
+        {
+            if (liveryCode.isEmpty()) { return ""; }
+            const QString l(liveryCode.trimmed().toUpper());
+            int is = l.indexOf(' ');
+            int ib = l.indexOf('(');
+            int i = qMin(is, ib);
+            if (i < 0) { return l; }
+            return l.left(i);
         }
 
     } // ns

@@ -96,6 +96,8 @@ namespace BlackGui
             ui->color_Fuselage->clear();
             ui->color_Tail->clear();
             ui->hs_ColorDistance->setValue(0.25 *  100.0);
+            ui->cb_Airlines->setChecked(true);
+            ui->cb_Colors->setChecked(true);
         }
 
         void CLiveryFilterBar::ps_colorChanged(const BlackMisc::CRgbColor &color)

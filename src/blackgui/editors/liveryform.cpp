@@ -53,6 +53,12 @@ namespace BlackGui
         CLivery CLiveryForm::getValue() const
         {
             CLivery livery(this->ui->livery_Selector->getLivery());
+            if (livery.hasCompleteData() && livery.hasValidDbKey())
+            {
+                // already complete data from selector
+                return livery;
+            }
+
             CAirlineIcaoCode airline(this->ui->editor_AirlineIcao->getValue());
             livery.setAirlineIcaoCode(airline);
             livery.setDescription(this->ui->le_Description->text());

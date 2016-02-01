@@ -96,6 +96,9 @@ namespace BlackGui
             void ps_completerActivated(const QString &liveryCode);
 
         private:
+            //! Strip extra info from livery code
+            QString stripExtraInfo(const QString &liveryCode) const;
+
             QScopedPointer<Ui::CDbLiverySelectorComponent> ui;
             QScopedPointer<QCompleter>   m_completerLiveries;
             QMetaObject::Connection      m_signalConnection;

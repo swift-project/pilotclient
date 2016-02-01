@@ -175,8 +175,15 @@ namespace BlackMisc
         bool CLivery::isValidCombinedCode(const QString &candidate)
         {
             if (candidate.isEmpty()) { return false; }
-            if (candidate.count('.') != 1) { return false; }
-            return candidate.length() > 2;
+            if (candidate.startsWith(colorLiveryMarker()))
+            {
+                return candidate.length() > colorLiveryMarker().length() + 1;
+            }
+            else
+            {
+                if (candidate.count('.') != 1) { return false; }
+                return candidate.length() > 2;
+            }
         }
 
         const QString &CLivery::standardLiveryMarker()
