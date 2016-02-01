@@ -64,6 +64,9 @@ namespace BlackMisc
             //! Find by model string
             CAircraftModelList findByAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const;
 
+            //! With file name
+            CAircraftModelList findWithFileName() const;
+
             //! Set simulator for all elements
             void setSimulatorInfo(const BlackMisc::Simulation::CSimulatorInfo &info);
 

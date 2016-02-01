@@ -135,6 +135,7 @@ namespace BlackMisc
                 if (c.hasCompleteData()) { return c; }
             }
 
+            // get an initial set of data we can choose from
             CAircraftIcaoCodeList codes;
             if (icaoPattern.hasKnownDesignator())
             {
@@ -172,7 +173,7 @@ namespace BlackMisc
             }
 
             // further reduce by manufacturer
-            if (icaoPattern.hasManufacturer())
+            if (icaoPattern.hasManufacturer() && codes.contains(&CAircraftIcaoCode::getManufacturer, icaoPattern.getManufacturer()))
             {
                 const QString m(icaoPattern.getManufacturer());
                 codes = codes.findByManufacturer(m);
@@ -181,17 +182,25 @@ namespace BlackMisc
                 // intentionally continue here
             }
 
+            // further reduce by IATA
+            if (icaoPattern.hasIataCode() && codes.contains(&CAircraftIcaoCode::getIataCode, icaoPattern.getIataCode()))
+            {
+                const QString i(icaoPattern.getIataCode());
+                codes = codes.findByIataCode(i);
+                if (codes.size() == 1) { return codes.front(); }
+
+                // intentionally continue here
+            }
+
             // lucky punch on description?
-            if (icaoPattern.hasModelDescription())
+            if (icaoPattern.hasModelDescription() && codes.contains(&CAircraftIcaoCode::getModelDescription, icaoPattern.getModelDescription()))
             {
                 // do not affect codes here, it might return no results
                 const QString d(icaoPattern.getModelDescription());
                 CAircraftIcaoCodeList cm(codes.findByDescription(d));
                 if (cm.size() == 1) { return cm.front(); }
-                if (cm.size() > 1 && cm.size() < codes.size()) { return codes.front(); }
             }
             return codes.frontOrDefault(); // sorted by rank
         }
-
     } // namespace
 } // namespace

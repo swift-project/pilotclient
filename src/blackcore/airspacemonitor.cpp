@@ -32,7 +32,6 @@ using namespace BlackMisc::Weather;
 
 namespace BlackCore
 {
-
     CAirspaceMonitor::CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider, INetwork *network, CWebDataServices *webDataReader, QObject *parent)
         : QObject(parent),
           COwnAircraftAware(ownAircraftProvider),
@@ -855,7 +854,7 @@ namespace BlackCore
             if (!model.hasValidDbKey() && !model.getLivery().hasValidDbKey())
             {
                 // create a pseudo livery, try to find airline first
-                CAirlineIcaoCode airlineIcao(this->getAirlineIcaoCodeForDesignator(airlineIcaoDesignator));
+                CAirlineIcaoCode airlineIcao(this->smartAirlineIcaoSelector(CAirlineIcaoCode(airlineIcaoDesignator)));
                 if (!airlineIcao.hasValidDbKey())
                 {
                     // no DB data, we update as much as possible

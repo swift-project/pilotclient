@@ -34,6 +34,7 @@ namespace BlackMisc
             enum ColumnIndex
             {
                 IndexAirlineDesignator = BlackMisc::CPropertyIndex::GlobalIndexCAirlineIcaoCode,
+                IndexIataCode,
                 IndexAirlineName,
                 IndexAirlineCountryIso,
                 IndexAirlineCountry,
@@ -59,7 +60,13 @@ namespace BlackMisc
             const QString getVDesignator() const;
 
             //! Set airline, e.g. "DLH"
-            void setDesignator(const QString &icaoDesignator) { this->m_designator = icaoDesignator.trimmed().toUpper(); }
+            void setDesignator(const QString &icaoDesignator);
+
+            //! IATA code
+            const QString &getIataCode() const { return m_iataCode; }
+
+            //! Set IATA code
+            void setIataCode(const QString &iataCode) { this->m_iataCode = iataCode.trimmed().toUpper(); }
 
             //! Get country, e.g. "FR"
             const QString &getCountryIso() const { return this->m_country.getIsoCode(); }
@@ -106,11 +113,23 @@ namespace BlackMisc
             //! Airline designator available?
             bool hasValidDesignator() const;
 
+            //! IATA code?
+            bool hasIataCode() const;
+
             //! Matches designator string?
             bool matchesDesignator(const QString &designator) const;
 
             //! Matches v-designator string?
             bool matchesVDesignator(const QString &designator) const;
+
+            //! Matches IATA code?
+            bool matchesIataCode(const QString &iata) const;
+
+            //! Matches IATA code or designator?
+            bool matchesDesignatorOrIataCode(const QString &candidate) const;
+
+            //! Matches IATA code or v-designator?
+            bool matchesVDesignatorOrIataCode(const QString &candidate) const;
 
             //! Telephony designator?
             bool hasTelephonyDesignator() const { return !this->m_telephonyDesignator.isEmpty(); }
@@ -154,6 +173,7 @@ namespace BlackMisc
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAirlineIcaoCode)
             QString m_designator;           //!< "DLH"
+            QString m_iataCode;             //!< "LH"
             QString m_name;                 //!< "Lufthansa"
             BlackMisc::CCountry m_country;  //!< Country
             QString m_telephonyDesignator;  //!< "Speedbird"

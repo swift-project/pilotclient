@@ -205,11 +205,18 @@ namespace BlackMisc
             return this->m_webDataReaderProvider->getAirlineIcaoCodesCount();
         }
 
-        CAirlineIcaoCode CWebDataServicesAware::getAirlineIcaoCodeForDesignator(const QString &designator) const
+        CAirlineIcaoCodeList CWebDataServicesAware::getAirlineIcaoCodesForDesignator(const QString &designator) const
+        {
+            Q_ASSERT_X(this->m_webDataReaderProvider, Q_FUNC_INFO, "Missing provider");
+            if (!hasProvider()) { return CAirlineIcaoCodeList(); }
+            return this->m_webDataReaderProvider->getAirlineIcaoCodeForDesignator(designator);
+        }
+
+        CAirlineIcaoCode CWebDataServicesAware::smartAirlineIcaoSelector(const CAirlineIcaoCode &code) const
         {
             Q_ASSERT_X(this->m_webDataReaderProvider, Q_FUNC_INFO, "Missing provider");
             if (!hasProvider()) { return CAirlineIcaoCode(); }
-            return this->m_webDataReaderProvider->getAirlineIcaoCodeForDesignator(designator);
+            return this->m_webDataReaderProvider->smartAirlineIcaoSelector(code);
         }
 
         CAirlineIcaoCode CWebDataServicesAware::getAirlineIcaoCodeForDbKey(int id) const

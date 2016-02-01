@@ -90,7 +90,7 @@ namespace BlackCore
         return m_countries.findBestMatchByCountryName(name);
     }
 
-    CAirlineIcaoCode CIcaoDataReader::getAirlineIcaoCodeForDesignator(const QString &designator) const
+    CAirlineIcaoCodeList CIcaoDataReader::getAirlineIcaoCodesForDesignator(const QString &designator) const
     {
         return getAirlineIcaoCodes().findByVDesignator(designator);
     }

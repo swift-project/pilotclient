@@ -38,6 +38,17 @@ namespace BlackMisc
             return QString("V").append(this->m_designator);
         }
 
+        void CAirlineIcaoCode::setDesignator(const QString &icaoDesignator)
+        {
+            this->m_designator = icaoDesignator.trimmed().toUpper();
+            if (this->m_designator.length() == 4 && this->m_designator.startsWith("V"))
+            {
+                // a virtual designator was provided
+                this->setVirtualAirline(true);
+                this->m_designator = this->m_designator.right(3);
+            }
+        }
+
         QString CAirlineIcaoCode::getDesignatorNameCountry() const
         {
             QString s(this->getDesignator());
@@ -56,6 +67,11 @@ namespace BlackMisc
             return isValidAirlineDesignator(m_designator);
         }
 
+        bool CAirlineIcaoCode::hasIataCode() const
+        {
+            return !this->m_iataCode.isEmpty();
+        }
+
         bool CAirlineIcaoCode::matchesDesignator(const QString &designator) const
         {
             if (designator.isEmpty()) { return false; }
@@ -66,6 +82,24 @@ namespace BlackMisc
         {
             if (designator.isEmpty()) { return false; }
             return designator.trimmed().toUpper() == this->getVDesignator();
+        }
+
+        bool CAirlineIcaoCode::matchesIataCode(const QString &iata) const
+        {
+            if (iata.isEmpty()) { return false; }
+            return iata.trimmed().toUpper() == this->m_iataCode;
+        }
+
+        bool CAirlineIcaoCode::matchesDesignatorOrIataCode(const QString &candidate) const
+        {
+            if (candidate.isEmpty()) { return false; }
+            return this->matchesDesignator(candidate) || this->matchesIataCode(candidate);
+        }
+
+        bool CAirlineIcaoCode::matchesVDesignatorOrIataCode(const QString &candidate) const
+        {
+            if (candidate.isEmpty()) { return false; }
+            return this->matchesVDesignator(candidate) || this->matchesIataCode(candidate);
         }
 
         bool CAirlineIcaoCode::hasCompleteData() const
@@ -105,6 +139,8 @@ namespace BlackMisc
             {
             case IndexAirlineDesignator:
                 return CVariant::fromValue(this->m_designator);
+            case IndexIataCode:
+                return CVariant::fromValue(this->m_iataCode);
             case IndexAirlineCountryIso:
                 return CVariant::fromValue(this->getCountryIso());
             case IndexAirlineCountry:
@@ -133,6 +169,9 @@ namespace BlackMisc
             {
             case IndexAirlineDesignator:
                 this->setDesignator(variant.value<QString>());
+                break;
+            case IndexIataCode:
+                this->setIataCode(variant.value<QString>());
                 break;
             case IndexAirlineCountry:
                 this->setCountry(variant.value<CCountry>());
@@ -164,6 +203,8 @@ namespace BlackMisc
             {
             case IndexAirlineDesignator:
                 return this->m_designator.compare(compareValue.getDesignator());
+            case IndexIataCode:
+                return this->m_iataCode.compare(compareValue.getIataCode());
             case IndexAirlineCountry:
                 return this->m_country.comparePropertyByIndex(compareValue.getCountry(), index.copyFrontRemoved());
             case IndexDesignatorNameCountry:
@@ -198,7 +239,7 @@ namespace BlackMisc
             if (airline.length() < 2 || airline.length() > 5) return false;
 
             static QThreadStorage<QRegularExpression> tsRegex;
-            if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("^[A-Z]+[A-Z0-9]*$")); }
+            if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("^[A-Z0-9]+$")); }
             const QRegularExpression &regexp = tsRegex.localData();
             return (regexp.match(airline).hasMatch());
         }
@@ -255,6 +296,7 @@ namespace BlackMisc
             }
 
             QString designator(json.value(prefix + "designator").toString());
+            QString iata(json.value(prefix + "iata").toString());
             QString telephony(json.value(prefix + "callsign").toString());
             QString name(json.value(prefix + "name").toString());
             QString countryIso(json.value(prefix + "country").toString());
@@ -266,6 +308,7 @@ namespace BlackMisc
                 CCountry(countryIso, countryName),
                 telephony, va, operating
             );
+            code.setIataCode(iata);
             code.setKeyAndTimestampFromDatabaseJson(json, prefix);
             return code;
         }

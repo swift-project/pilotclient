@@ -25,7 +25,7 @@ namespace BlackMisc
     namespace Aviation
     {
         CAircraftIcaoCode::CAircraftIcaoCode(const QString &designator, const QString &combinedType) :
-            m_designator(designator), m_combinedType(combinedType)
+            m_designator(designator.trimmed().toUpper()), m_combinedType(combinedType.trimmed().toUpper())
         {}
 
         CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &combinedType, const QString &manufacturer, const QString &model, const QString &wtc, bool realworld, bool legacy, bool military, int rank)
@@ -58,13 +58,14 @@ namespace BlackMisc
 
         void CAircraftIcaoCode::updateMissingParts(const CAircraftIcaoCode &otherIcaoCode)
         {
-            if (!this->hasDesignator()) { this->setDesignator(otherIcaoCode.getDesignator()); }
-            if (!this->hasValidWtc()) { this->setWtc(otherIcaoCode.getDesignator()); }
-            if (!this->hasValidCombinedType()) { this->setCombinedType(otherIcaoCode.getCombinedType()); }
+            if (!this->hasValidDesignator() && otherIcaoCode.hasValidDesignator()) { this->setDesignator(otherIcaoCode.getDesignator()); }
+            if (!this->hasValidWtc() && otherIcaoCode.hasValidWtc()) { this->setWtc(otherIcaoCode.getDesignator()); }
+            if (!this->hasValidCombinedType() && otherIcaoCode.hasValidCombinedType()) { this->setCombinedType(otherIcaoCode.getCombinedType()); }
             if (this->m_manufacturer.isEmpty()) { this->setManufacturer(otherIcaoCode.getManufacturer());}
             if (this->m_modelDescription.isEmpty()) { this->setModelDescription(otherIcaoCode.getModelDescription()); }
             if (!this->hasValidDbKey())
             {
+                // need to observe if it makes sense to copy the key but not copying the whole object
                 this->setDbKey(otherIcaoCode.getDbKey());
                 this->setUtcTimestamp(otherIcaoCode.getUtcTimestamp());
             }
@@ -87,9 +88,14 @@ namespace BlackMisc
             return !this->m_designator.isEmpty();
         }
 
+        bool CAircraftIcaoCode::hasValidDesignator() const
+        {
+            return isValidDesignator(this->m_designator);
+        }
+
         bool CAircraftIcaoCode::hasKnownDesignator() const
         {
-            return (this->hasDesignator() && this->getDesignator() != "ZZZZ");
+            return (this->hasValidDesignator() && this->getDesignator() != getUnassignedDesignator());
         }
 
         bool CAircraftIcaoCode::isIataSameAsDesignator() const
@@ -429,6 +435,29 @@ namespace BlackMisc
                 return candidate == "L" || candidate == "M" || candidate == "H";
             }
             return false;
+        }
+
+        const QString &CAircraftIcaoCode::getUnassignedDesignator()
+        {
+            static const QString i("ZZZZ");
+            return i;
+        }
+
+        const QStringList &CAircraftIcaoCode::getSpecialDesignators()
+        {
+            static const QStringList s({ "ZZZZ", "SHIP", "BALL", "GLID", "ULAC", "GYRO", "UHEL", "GLID", "ULAC", "GYRO", "UHEL"});
+            return s;
+        }
+
+        const QString CAircraftIcaoCode::normalizeDesignator(const QString candidate)
+        {
+            QString n(candidate.trimmed().toUpper());
+            if (n.isEmpty()) { return n; }
+
+            static QThreadStorage<QRegularExpression> tsRegex;
+            if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("[^a-zA-Z\\d\\s]")); }
+            const QRegularExpression &regexp = tsRegex.localData();
+            return n.remove(regexp);
         }
 
         CAircraftIcaoCode CAircraftIcaoCode::fromDatabaseJson(const QJsonObject &json, const QString &prefix)

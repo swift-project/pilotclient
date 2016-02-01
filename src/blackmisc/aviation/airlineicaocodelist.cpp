@@ -17,12 +17,58 @@ namespace BlackMisc
             CSequence<CAirlineIcaoCode>(other)
         { }
 
-        CAirlineIcaoCodeList CAirlineIcaoCodeList::findByDesignator(const QString &designator)
+        CAirlineIcaoCodeList CAirlineIcaoCodeList::findByDesignator(const QString &designator) const
         {
             if (CAirlineIcaoCode::isValidAirlineDesignator(designator)) { return CAirlineIcaoCodeList(); }
             return this->findBy([&](const CAirlineIcaoCode & code)
             {
                 return code.matchesDesignator(designator);
+            });
+        }
+
+        CAirlineIcaoCodeList CAirlineIcaoCodeList::findByIataCode(const QString &iata) const
+        {
+            if (iata.isEmpty()) { return CAirlineIcaoCodeList(); }
+            return this->findBy([&](const CAirlineIcaoCode & code)
+            {
+                return code.matchesIataCode(iata);
+            });
+        }
+
+        CAirlineIcaoCodeList CAirlineIcaoCodeList::findByDesignatorOrIataCode(const QString &designatorOrIata) const
+        {
+            if (designatorOrIata.isEmpty()) { return CAirlineIcaoCodeList(); }
+            return this->findBy([&](const CAirlineIcaoCode & code)
+            {
+                return code.matchesDesignatorOrIataCode(designatorOrIata);
+            });
+        }
+
+        CAirlineIcaoCodeList CAirlineIcaoCodeList::findByVDesignator(const QString &designator) const
+        {
+            if (!CAirlineIcaoCode::isValidAirlineDesignator(designator)) { return CAirlineIcaoCodeList(); }
+            return this->findBy([&](const CAirlineIcaoCode & code)
+            {
+                return code.matchesVDesignator(designator);
+            });
+        }
+
+        CAirlineIcaoCodeList CAirlineIcaoCodeList::findByVDesignatorOrIataCode(const QString &designatorOrIata) const
+        {
+            if (designatorOrIata.isEmpty()) { return CAirlineIcaoCodeList(); }
+            return this->findBy([&](const CAirlineIcaoCode & code)
+            {
+                return code.matchesVDesignatorOrIataCode(designatorOrIata);
+            });
+        }
+
+        CAirlineIcaoCodeList CAirlineIcaoCodeList::findByCountryIsoCode(const QString &isoCode) const
+        {
+            if (isoCode.length() != 2) { return CAirlineIcaoCodeList(); }
+            const QString iso(isoCode.toUpper());
+            return this->findBy([&](const CAirlineIcaoCode & code)
+            {
+                return code.getCountry().getIsoCode() == iso;
             });
         }
 
@@ -33,19 +79,28 @@ namespace BlackMisc
                 return this->findByKey(icaoPattern.getDbKey(), icaoPattern);
             }
 
-            if (!icaoPattern.hasValidDesignator()) { return CAirlineIcaoCode(); }
-
-            //! \todo smart airline selector, further criteria
-            return icaoPattern;
-        }
-
-        CAirlineIcaoCode CAirlineIcaoCodeList::findByVDesignator(const QString &designator)
-        {
-            if (!CAirlineIcaoCode::isValidAirlineDesignator(designator)) { return CAirlineIcaoCode(); }
-            return this->findFirstByOrDefault([&](const CAirlineIcaoCode & code)
+            // search by parts
+            CAirlineIcaoCodeList codes;
+            if (icaoPattern.hasValidDesignator())
             {
-                return code.matchesVDesignator(designator);
-            });
+                codes = this->findByVDesignator(icaoPattern.getVDesignator());
+            }
+            else
+            {
+                codes == this->findByIataCode(icaoPattern.getIataCode());
+            }
+
+            if (codes.size() == 1) { return codes.front(); }
+
+            // further reduce
+            if (icaoPattern.hasValidCountry())
+            {
+                CAirlineIcaoCodeList countryCodes = codes.findByCountryIsoCode(icaoPattern.getCountry().getIsoCode());
+                if (!countryCodes.isEmpty()) { return countryCodes.front(); }
+            }
+
+            if (!codes.isEmpty()) { return codes.front(); }
+            return icaoPattern;
         }
 
         CAirlineIcaoCodeList CAirlineIcaoCodeList::fromDatabaseJson(const QJsonArray &array,  bool ignoreIncomplete)

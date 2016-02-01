@@ -41,13 +41,26 @@ namespace BlackMisc
 
             //! Find by designator
             //! Not unique because of virtual airlines
-            CAirlineIcaoCodeList findByDesignator(const QString &designator);
+            CAirlineIcaoCodeList findByDesignator(const QString &designator) const;
+
+            //! Find by v-designator, this should be unique
+            CAirlineIcaoCodeList findByVDesignator(const QString &designator) const;
+
+            //! Find by IATA code
+            //! Not unique because of virtual airlines
+            CAirlineIcaoCodeList findByIataCode(const QString &iata) const;
+
+            //! Find by designator or IATA code
+            CAirlineIcaoCodeList findByDesignatorOrIataCode(const QString &designatorOrIata) const;
+
+            //! Find by v-designator or IATA code
+            CAirlineIcaoCodeList findByVDesignatorOrIataCode(const QString &designatorOrIata) const;
+
+            //! Find by country code
+            CAirlineIcaoCodeList findByCountryIsoCode(const QString &isoCode) const;
 
             //! Best selection by given pattern
             CAirlineIcaoCode smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern) const;
-
-            //! Find by v-designator, this should be unique
-            CAirlineIcaoCode findByVDesignator(const QString &designator);
 
             //! String list for completion by ICAO designator
             QStringList toIcaoDesignatorCompleterStrings() const;

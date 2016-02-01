@@ -74,7 +74,7 @@ namespace BlackCore
 
         //! Get airline ICAO information for designator
         //! \threadsafe
-        BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForDesignator(const QString &designator) const;
+        BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodesForDesignator(const QString &designator) const;
 
         //! Get airline ICAO information for key
         //! \threadsafe

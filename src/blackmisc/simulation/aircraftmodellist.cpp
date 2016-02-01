@@ -90,6 +90,14 @@ namespace BlackMisc
             });
         }
 
+        CAircraftModelList CAircraftModelList::findWithFileName() const
+        {
+            return this->findBy([ = ](const CAircraftModel & model)
+            {
+                return model.hasFileName();
+            });
+        }
+
         void CAircraftModelList::setSimulatorInfo(const CSimulatorInfo &info)
         {
             for (CAircraftModel &model : (*this))

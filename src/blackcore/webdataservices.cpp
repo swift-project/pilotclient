@@ -362,6 +362,12 @@ namespace BlackCore
         return 0;
     }
 
+    CAirlineIcaoCode CWebDataServices::smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern) const
+    {
+        if (m_icaoDataReader) { return m_icaoDataReader->smartAirlineIcaoSelector(icaoPattern); }
+        return CAirlineIcaoCode();
+    }
+
     CAirlineIcaoCode CWebDataServices::getAirlineIcaoCodeForDbKey(int key) const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getAirlineIcaoCodeForDbKey(key); }
@@ -410,10 +416,10 @@ namespace BlackCore
         return 0;
     }
 
-    CAirlineIcaoCode CWebDataServices::getAirlineIcaoCodeForDesignator(const QString &designator) const
+    CAirlineIcaoCodeList CWebDataServices::getAirlineIcaoCodeForDesignator(const QString &designator) const
     {
-        if (m_icaoDataReader) { return m_icaoDataReader->getAirlineIcaoCodeForDesignator(designator); }
-        return CAirlineIcaoCode();
+        if (m_icaoDataReader) { return m_icaoDataReader->getAirlineIcaoCodesForDesignator(designator); }
+        return CAirlineIcaoCodeList();
     }
 
     void CWebDataServices::gracefulShutdown()

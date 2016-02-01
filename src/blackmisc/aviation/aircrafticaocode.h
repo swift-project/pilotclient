@@ -72,6 +72,9 @@ namespace BlackMisc
             //! Aircraft designator?
             bool hasDesignator() const;
 
+            //! Valid aircraft designator?
+            bool hasValidDesignator() const;
+
             //! Has designator and designator is not "ZZZZ"
             bool hasKnownDesignator() const;
 
@@ -236,6 +239,15 @@ namespace BlackMisc
 
             //! Valid WTC code?
             static bool isValidWtc(const QString &candidate);
+
+            //! The unassigned designator ("ZZZZ")
+            static const QString &getUnassignedDesignator();
+
+            //! List of the special designators ("ZZZZ", "UHEL", ...)
+            static const QStringList &getSpecialDesignators();
+
+            //! Normalize designator, remove illegal characters
+            static const QString normalizeDesignator(const QString candidate);
 
             //! From our database JSON format
             static CAircraftIcaoCode fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());

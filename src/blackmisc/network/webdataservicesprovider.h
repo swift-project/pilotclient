@@ -158,11 +158,15 @@ namespace BlackMisc
 
             //! ICAO code for designator
             //! \threadsafe
-            virtual BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForDesignator(const QString &designator) const = 0;
+            virtual BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodeForDesignator(const QString &designator) const = 0;
 
             //! ICAO code for id
             //! \threadsafe
             virtual BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForDbKey(int id) const = 0;
+
+            //! Smart airline selector
+            //! \threadsafe
+            virtual Aviation::CAirlineIcaoCode smartAirlineIcaoSelector(const BlackMisc::Aviation::CAirlineIcaoCode &code) const = 0;
 
             //! Countries
             //! \threadsafe
@@ -315,7 +319,10 @@ namespace BlackMisc
             int getAirlineIcaoCodesCount() const;
 
             //! \copydoc IWebDataServicesProvider::getAirlineIcaoCodeForDesignator
-            BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForDesignator(const QString &designator) const;
+            Aviation::CAirlineIcaoCodeList getAirlineIcaoCodesForDesignator(const QString &designator) const;
+
+            //! \copydoc IWebDataServicesProvider::smartAirlineIcaoSelector
+            Aviation::CAirlineIcaoCode smartAirlineIcaoSelector(const BlackMisc::Aviation::CAirlineIcaoCode &code) const;
 
             //! \copydoc IWebDataServicesProvider::getAirlineIcaoCodeForDbKey
             BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForDbKey(int id) const;
