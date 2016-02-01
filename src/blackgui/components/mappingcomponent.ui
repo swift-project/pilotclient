@@ -2,8 +2,16 @@
 <ui version="4.0">
  <class>CMappingComponent</class>
  <widget class="QFrame" name="CMappingComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>360</width>
+    <height>272</height>
+   </rect>
+  </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>Mapping component</string>
   </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>
