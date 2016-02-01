@@ -155,6 +155,9 @@ namespace BlackGui
             //! Request update of vPilot data
             void ps_requestVPilotDataUpdate();
 
+            //! Request own models
+            void ps_requestOwnModelsUpdate();
+
             //! Stashed models changed
             void ps_onStashedModelsChanged();
 
@@ -177,7 +180,10 @@ namespace BlackGui
             void ps_loadInstalledModels(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
 
             //! Model loading finished
-            void ps_onInstalledModelLoadingFinished(bool success);
+            void ps_onOwnModelsLoadingFinished(bool success);
+
+            //! Own models cache changed
+            void ps_ownModelsCacheChanged();
 
             //! Own model count changed
             void ps_onOwnModelsCountChanged(int count, bool withFilter);
@@ -206,6 +212,9 @@ namespace BlackGui
             //! Open model modify dialog
             void ps_modifyModelDialog();
 
+            //! Open simulator file
+            void ps_showSimulatorFile();
+
         private:
             QScopedPointer<Ui::CDbMappingComponent> ui;
             QScopedPointer<CDbAutoStashingComponent> m_autoStashDialog { new CDbAutoStashingComponent(this) };
@@ -213,7 +222,7 @@ namespace BlackGui
             BlackMisc::Simulation::FsCommon::CVPilotRulesReader           m_vPilotReader;                //!< read vPilot rules
             BlackMisc::CData<BlackCore::Data::VPilotAircraftModels>       m_cachedVPilotModels { this, &CDbMappingComponent::ps_onVPilotCacheChanged }; //!< cache for latest vPilot rules
             std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>  m_modelLoader;                 //!< read own aircraft models
-            BlackMisc::CData<BlackCore::Data::OwnSimulatorAircraftModels> m_cachedOwnModels { this };    //!< cache for own installed models
+            BlackMisc::CData<BlackCore::Data::OwnSimulatorAircraftModels> m_cachedOwnModels { this, &CDbMappingComponent::ps_ownModelsCacheChanged };   //!< cache for own installed models
             BlackMisc::CData<BlackCore::Data::AuthenticatedUser>          m_user {this, &CDbMappingComponent::ps_userChanged};
             bool m_vPilot1stInit       = true;
             bool m_withVPilot          = false;
@@ -292,6 +301,23 @@ namespace BlackGui
             public:
                 //! Constructor
                 CApplyDbDataMenu(CDbMappingComponent *mappingComponent, bool separator = true) :
+                    BlackGui::IMenuDelegate(mappingComponent, separator)
+                {}
+
+                //! \copydoc IMenuDelegate::customMenu
+                virtual void customMenu(QMenu &menu) const override;
+
+            private:
+                //! Mapping component
+                CDbMappingComponent *mappingComponent() const;
+            };
+
+            //! Open up the simulator file (e.g. aircraft.cfg) in the standard text editor
+            class CShowSimulatorFile : public BlackGui::IMenuDelegate
+            {
+            public:
+                //! Constructor
+                CShowSimulatorFile(CDbMappingComponent *mappingComponent, bool separator = true) :
                     BlackGui::IMenuDelegate(mappingComponent, separator)
                 {}
 
