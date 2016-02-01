@@ -25,16 +25,6 @@ namespace BlackMisc
 
     class CPropertyIndexVariantMap;
 
-    // workaround GCC 4.7 bug
-    namespace Aviation { template <typename AVIO> class CModulator; }
-    namespace Private
-    {
-        template <typename T> struct is_default_constructible : std::is_default_constructible<T> {};
-#       if __GNUC__ == 4 && __GNUC_MINOR__ <= 7
-        template <typename T> struct is_default_constructible<Aviation::CModulator<T>> : std::false_type {};
-#       endif
-    }
-
     namespace Mixin
     {
 
@@ -76,14 +66,14 @@ namespace BlackMisc
             const Derived *derived() const { return static_cast<const Derived *>(this); }
             Derived *derived() { return static_cast<Derived *>(this); }
 
-            template <typename T, typename std::enable_if<Private::is_default_constructible<T>::value, int>::type = 0>
+            template <typename T, typename std::enable_if<std::is_default_constructible<T>::value, int>::type = 0>
             CVariant myself() const { return CVariant::from(*derived()); }
-            template <typename T, typename std::enable_if<Private::is_default_constructible<T>::value, int>::type = 0>
+            template <typename T, typename std::enable_if<std::is_default_constructible<T>::value, int>::type = 0>
             void myself(const CVariant &variant) { *derived() = variant.to<T>(); }
 
-            template <typename T, typename std::enable_if<! Private::is_default_constructible<T>::value, int>::type = 0>
+            template <typename T, typename std::enable_if<! std::is_default_constructible<T>::value, int>::type = 0>
             CVariant myself() const { qFatal("isMyself should have been handled before reaching here"); return {}; }
-            template <typename T, typename std::enable_if<! Private::is_default_constructible<T>::value, int>::type = 0>
+            template <typename T, typename std::enable_if<! std::is_default_constructible<T>::value, int>::type = 0>
             void myself(const CVariant &) { qFatal("isMyself should have been handled before reaching here"); }
 
             template <typename T>
