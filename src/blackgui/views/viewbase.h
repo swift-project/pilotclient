@@ -74,6 +74,7 @@ namespace BlackGui
                 MenuRefresh              = 1 << 2,  ///< allow refreshing the view via menu
                 MenuBackend              = 1 << 3,  ///< allow to request data from backend
                 MenuDisplayAutomatically = 1 << 4,  ///< allow to switch display automatically
+                MenuDisplayAutomaticallyAndRefresh = MenuDisplayAutomatically | MenuRefresh, ///< should come together
                 MenuFilter               = 1 << 5,  ///< filter can be opened
                 MenuSave                 = 1 << 6,  ///< save as JSON
                 MenuLoad                 = 1 << 7,  ///< load from JSON
@@ -81,7 +82,9 @@ namespace BlackGui
                 MenuStandard             = MenuClear | MenuRemoveSelectedRows | MenuRefresh | MenuBackend |
                                            MenuDisplayAutomatically | MenuFilter | MenuSave | MenuLoad | MenuToggleSelectionMode,
                 MenuLoadAndSave          = MenuLoad  | MenuSave,
-                MenuDefault              = MenuClear | MenuDisplayAutomatically | MenuToggleSelectionMode,
+                MenuDefault              = MenuClear | MenuDisplayAutomaticallyAndRefresh | MenuToggleSelectionMode,
+                MenuDefaultNoClear       = MenuDisplayAutomaticallyAndRefresh | MenuToggleSelectionMode,
+                MenuDefaultDbViews       = MenuToggleSelectionMode | MenuBackend,
                 // special menus, should be in derived classes, but enums cannot be inherited
                 // maybe shifted in the future to elsewhere
                 MenuHighlightDbData      = 1 << 9,  ///< highlight DB data
@@ -181,6 +184,12 @@ namespace BlackGui
 
             //! Add given menu items
             void menuAddItems(Menu menusToRemove);
+
+            //! Set menu items
+            void setMenu(Menu menuItems) { this->m_menus = menuItems; }
+
+            //! Menus
+            Menu getMenu() const { return this->m_menus; }
 
             //! \copydoc QTableView::setSelectionModel();
             virtual void setSelectionModel(QItemSelectionModel *model) override;

@@ -16,10 +16,11 @@ namespace BlackGui
 {
     namespace Views
     {
-        CCountryView::CCountryView(QWidget *parent) : CViewBase(parent)
+        CCountryView::CCountryView(QWidget *parent) :
+            CViewBase(parent)
         {
-            this->m_menus |= MenuBackend;
             this->standardInit(new CCountryListModel(this));
+            this->setMenu(MenuDefaultDbViews);
         }
     }
 } // namespace

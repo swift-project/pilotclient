@@ -16,10 +16,11 @@ namespace BlackGui
 {
     namespace Views
     {
-        CDistributorView::CDistributorView(QWidget *parent) : CViewWithDbObjects(parent)
+        CDistributorView::CDistributorView(QWidget *parent) :
+            CViewWithDbObjects(parent)
         {
-            this->m_menus |= MenuBackend;
             this->standardInit(new CDistributorListModel(this));
+            this->setMenu(MenuDefaultDbViews);
         }
     }
 } // namespace
