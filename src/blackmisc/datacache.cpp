@@ -103,7 +103,7 @@ namespace BlackMisc
 
     void CDataCache::saveToStoreAsync(const BlackMisc::CValueCachePacket &values)
     {
-        auto baseline = getAllValues();
+        auto baseline = getAllValuesWithTimestamps();
         QTimer::singleShot(0, &m_serializer, [this, baseline, values]
         {
             m_serializer.saveToStore(values.toVariantMap(), baseline);
@@ -112,7 +112,7 @@ namespace BlackMisc
 
     void CDataCache::loadFromStoreAsync()
     {
-        auto baseline = getAllValues();
+        auto baseline = getAllValuesWithTimestamps();
         QTimer::singleShot(0, &m_serializer, [this, baseline]
         {
             m_serializer.loadFromStore(baseline);
@@ -130,14 +130,15 @@ namespace BlackMisc
         return m_cache->persistentStore();
     }
 
-    void CDataCacheSerializer::saveToStore(const BlackMisc::CVariantMap &values, const BlackMisc::CVariantMap &baseline)
+    void CDataCacheSerializer::saveToStore(const BlackMisc::CVariantMap &values, const BlackMisc::CValueCachePacket &baseline)
     {
         m_cache->m_revision.notifyPendingWrite();
         auto lock = loadFromStore(baseline, true); // last-minute check for remote changes before clobbering the revision file
         for (const auto &key : values.keys()) { m_deferredChanges.remove(key); } // ignore changes that we are about to overwrite
 
         if (! lock) { return; }
-        m_cache->m_revision.writeNewRevision();
+        m_cache->m_revision.writeNewRevision(baseline.toTimestampMap());
+
         m_cache->saveToFiles(persistentStore(), values);
 
         if (! m_deferredChanges.isEmpty()) // apply changes which we grabbed at the last minute above
@@ -148,13 +149,13 @@ namespace BlackMisc
         }
     }
 
-    CDataCacheRevision::LockGuard CDataCacheSerializer::loadFromStore(const BlackMisc::CVariantMap &baseline, bool defer)
+    CDataCacheRevision::LockGuard CDataCacheSerializer::loadFromStore(const BlackMisc::CValueCachePacket &baseline, bool defer)
     {
-        auto lock = m_cache->m_revision.beginUpdate();
+        auto lock = m_cache->m_revision.beginUpdate(baseline.toTimestampMap());
         if (lock && m_cache->m_revision.isPendingRead())
         {
             CValueCachePacket newValues;
-            m_cache->loadFromFiles(persistentStore(), baseline, newValues);
+            m_cache->loadFromFiles(persistentStore(), m_cache->m_revision.keysWithNewerTimestamps(), baseline.toVariantMap(), newValues);
             m_deferredChanges.insert(newValues);
         }
 
@@ -167,7 +168,7 @@ namespace BlackMisc
         return lock;
     }
 
-    CDataCacheRevision::LockGuard CDataCacheRevision::beginUpdate()
+    CDataCacheRevision::LockGuard CDataCacheRevision::beginUpdate(const QMap<QString, qint64> &timestamps)
     {
         QMutexLocker lock(&m_mutex);
 
@@ -182,6 +183,8 @@ namespace BlackMisc
         m_updateInProgress = true;
         LockGuard guard(this);
 
+        m_timestamps.clear();
+
         QFile revisionFile(m_basename + "/.rev");
         if (revisionFile.exists())
         {
@@ -191,9 +194,35 @@ namespace BlackMisc
                 return {};
             }
 
-            QUuid uuid(revisionFile.readAll());
-            if (uuid == m_uuid)
+            auto json = QJsonDocument::fromJson(revisionFile.readAll()).object();
+            if (json.contains("uuid") && json.contains("timestamps"))
             {
+                QUuid uuid(json.value("uuid").toString());
+                if (uuid == m_uuid)
+                {
+                    if (m_pendingWrite) { return guard; }
+                    return {};
+                }
+                m_uuid = uuid;
+
+                auto newTimestamps = fromJson(json.value("timestamps").toObject());
+                for (auto it = newTimestamps.cbegin(); it != newTimestamps.cend(); ++it)
+                {
+                    if (timestamps.value(it.key(), 0) < it.value())
+                    {
+                        m_timestamps.insert(it.key(), it.value());
+                    }
+                }
+                if (m_timestamps.isEmpty())
+                {
+                    if (m_pendingWrite) { return guard; }
+                    return {};
+                }
+            }
+            else if (revisionFile.size() > 0)
+            {
+                CLogMessage(this).error("Invalid format of %1") << revisionFile.fileName();
+
                 if (m_pendingWrite) { return guard; }
                 return {};
             }
@@ -203,11 +232,12 @@ namespace BlackMisc
         return guard;
     }
 
-    void CDataCacheRevision::writeNewRevision()
+    void CDataCacheRevision::writeNewRevision(const QMap<QString, qint64> &i_timestamps)
     {
         QMutexLocker lock(&m_mutex);
 
         Q_ASSERT(m_updateInProgress);
+        Q_ASSERT(m_pendingWrite);
         Q_ASSERT(m_lockFile.isLocked());
 
         QFile revisionFile(m_basename + "/.rev");
@@ -218,7 +248,16 @@ namespace BlackMisc
         }
 
         m_uuid = CIdentifier().toUuid();
-        revisionFile.write(m_uuid.toByteArray());
+        auto timestamps = m_timestamps;
+        for (auto it = i_timestamps.cbegin(); it != i_timestamps.cend(); ++it)
+        {
+            timestamps.insert(it.key(), it.value());
+        }
+
+        QJsonObject json;
+        json.insert("uuid", m_uuid.toString());
+        json.insert("timestamps", toJson(timestamps));
+        revisionFile.write(QJsonDocument(json).toJson());
     }
 
     void CDataCacheRevision::finishUpdate()
@@ -245,5 +284,40 @@ namespace BlackMisc
     void CDataCacheRevision::notifyPendingWrite()
     {
         m_pendingWrite = true;
+    }
+
+    QSet<QString> CDataCacheRevision::keysWithNewerTimestamps() const
+    {
+        QMutexLocker lock(&m_mutex);
+
+        Q_ASSERT(m_updateInProgress);
+        return QSet<QString>::fromList(m_timestamps.keys());
+    }
+
+    bool CDataCacheRevision::isNewerValueAvailable(const QString &key) const
+    {
+        QMutexLocker lock(&m_mutex);
+
+        return m_updateInProgress && m_timestamps.contains(key);
+    }
+
+    QJsonObject CDataCacheRevision::toJson(const QMap<QString, qint64> &timestamps)
+    {
+        QJsonObject result;
+        for (auto it = timestamps.begin(); it != timestamps.end(); ++it)
+        {
+            result.insert(it.key(), it.value());
+        }
+        return result;
+    }
+
+    QMap<QString, qint64> CDataCacheRevision::fromJson(const QJsonObject &timestamps)
+    {
+        QMap<QString, qint64> result;
+        for (auto it = timestamps.begin(); it != timestamps.end(); ++it)
+        {
+            result.insert(it.key(), static_cast<qint64>(it.value().toDouble()));
+        }
+        return result;
     }
 }

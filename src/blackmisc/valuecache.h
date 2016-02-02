@@ -59,6 +59,9 @@ namespace BlackMisc
         //! Discard timestamps and return as variant map.
         CVariantMap toVariantMap() const;
 
+        //! Discard values and return as map of timestamps.
+        QMap<QString, qint64> toTimestampMap() const;
+
         //! \copydoc CValueObject::registerMetadata`
         static void registerMetadata();
 
@@ -207,7 +210,7 @@ namespace BlackMisc
 
         //! Load from Json files in a given directory any values which differ from the current ones, and insert them in o_values.
         //! \threadsafe
-        CStatusMessage loadFromFiles(const QString &directory, const CVariantMap &current, CValueCachePacket &o_values) const;
+        CStatusMessage loadFromFiles(const QString &directory, const QSet<QString> &keys, const CVariantMap &current, CValueCachePacket &o_values) const;
 
         //! Mark all values with keys that start with the given prefix as having been saved.
         //! \threadsafe

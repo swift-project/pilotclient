@@ -42,12 +42,13 @@ namespace BlackMisc
         //! RAII class to keep the revision file locked during update.
         class LockGuard;
 
-        //! Get the state of the disk cache, and prepare to update values.
+        //! Get the state of the disk cache, and prepare to update any values which are out of date.
         //! Return value can be converted to bool, false means update is not started (error, or already up-to-date).
-        LockGuard beginUpdate();
+        //! \param timestamps Current in-memory timestamps, to be compared with the on-disk ones.
+        LockGuard beginUpdate(const QMap<QString, qint64> &timestamps);
 
-        //! During update, writes a new revision file.
-        void writeNewRevision();
+        //! During update, writes a new revision file with new timestamps.
+        void writeNewRevision(const QMap<QString, qint64> &timestamps);
 
         //! Release the revision file lock and mark everything up-to-date (called by LockGuard destructor).
         void finishUpdate();
@@ -58,6 +59,12 @@ namespace BlackMisc
         //! Call before beginUpdate if there is a write pending, so update will start even if there is nothing to read.
         void notifyPendingWrite();
 
+        //! During update, returns keys which have on-disk timestamps newer than in-memory. Guaranteed not empty.
+        QSet<QString> keysWithNewerTimestamps() const;
+
+        //! During update, returns true if the on-disk timestamp of this key is newer than in-memory.
+        bool isNewerValueAvailable(const QString &key) const;
+
     private:
         mutable QMutex m_mutex { QMutex::Recursive };
         bool m_updateInProgress = false;
@@ -66,6 +73,10 @@ namespace BlackMisc
         QString m_basename;
         QLockFile m_lockFile { m_basename + "/.lock" };
         QUuid m_uuid;
+        QMap<QString, qint64> m_timestamps;
+
+        static QJsonObject toJson(const QMap<QString, qint64> &timestamps);
+        static QMap<QString, qint64> fromJson(const QJsonObject &timestamps);
     };
 
     /*!
@@ -81,14 +92,14 @@ namespace BlackMisc
         CDataCacheSerializer(CDataCache *owner, const QString &revisionFileName);
 
         //! Save values to persistent store. Called whenever a value is changed locally.
-        void saveToStore(const BlackMisc::CVariantMap &values, const BlackMisc::CVariantMap &baseline);
+        void saveToStore(const BlackMisc::CVariantMap &values, const BlackMisc::CValueCachePacket &baseline);
 
         //! Load values from persistent store. Called once per second.
         //! Also called by saveToStore, to ensure that remote changes to unrelated values are not lost.
         //! \param baseline A snapshot of the currently loaded values, taken when the load is queued.
         //! \param defer Whether to defer applying the changes. Used when called by saveToStore.
         //! \return Usually ignored, but can be held in order to retain the revision file lock.
-        CDataCacheRevision::LockGuard loadFromStore(const BlackMisc::CVariantMap &baseline, bool defer = false);
+        CDataCacheRevision::LockGuard loadFromStore(const BlackMisc::CValueCachePacket &baseline, bool defer = false);
 
     signals:
         //! Signal back to the cache when values have been loaded.

@@ -62,6 +62,16 @@ namespace BlackMisc
         return result;
     }
 
+    QMap<QString, qint64> CValueCachePacket::toTimestampMap() const
+    {
+        QMap<QString, qint64> result;
+        for (auto it = cbegin(); it != cend(); ++it)
+        {
+            implementationOf(result).insert(result.cend(), it.key(), it.timestamp());
+        }
+        return result;
+    }
+
     void CValueCachePacket::registerMetadata()
     {
         MetaType::registerMetadata();
@@ -259,13 +269,13 @@ namespace BlackMisc
     {
         QMutexLocker lock(&m_mutex);
         CValueCachePacket values;
-        auto status = loadFromFiles(dir, getAllValues(), values);
+        auto status = loadFromFiles(dir, {}, getAllValues(), values);
         values.setSaved();
         insertValues(values);
         return status;
     }
 
-    CStatusMessage CValueCache::loadFromFiles(const QString &dir, const CVariantMap &currentValues, CValueCachePacket &o_values) const
+    CStatusMessage CValueCache::loadFromFiles(const QString &dir, const QSet<QString> &keys, const CVariantMap &currentValues, CValueCachePacket &o_values) const
     {
         if (! QDir(dir).isReadable())
         {
@@ -285,6 +295,7 @@ namespace BlackMisc
             }
             CVariantMap temp;
             temp.convertFromJson(json.object());
+            temp.removeByKeyIf([&keys](const QString &key) { return keys.contains(key); }); // TODO optimize by skipping files
             temp.removeDuplicates(currentValues);
             o_values.insert(temp, QFileInfo(file).lastModified().toMSecsSinceEpoch());
         }
