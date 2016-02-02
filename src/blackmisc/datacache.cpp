@@ -11,10 +11,33 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/identifier.h"
 #include <QStandardPaths>
-#include <QLockFile>
 
 namespace BlackMisc
 {
+    class CDataCacheRevision::LockGuard
+    {
+    public:
+        LockGuard(const LockGuard &) = delete;
+        LockGuard &operator =(const LockGuard &) = delete;
+        LockGuard(LockGuard &&other) : m_movedFrom(true) { *this = std::move(other); }
+        LockGuard &operator =(LockGuard &&other) { std::swap(m_movedFrom, other.m_movedFrom); std::swap(m_rev, other.m_rev); return *this; }
+
+        ~LockGuard()
+        {
+            if (! m_movedFrom) { m_rev->finishUpdate(); }
+        }
+
+        operator bool() const { return ! m_movedFrom; }
+
+    private:
+        LockGuard() : m_movedFrom(true) {}
+        LockGuard(CDataCacheRevision *rev) : m_movedFrom(! rev), m_rev(rev) {}
+        friend class CDataCacheRevision;
+
+        bool m_movedFrom = false;
+        CDataCacheRevision *m_rev = nullptr;
+    };
+
     CDataCache::CDataCache() :
         CValueCache(CValueCache::Distributed)
     {
@@ -109,25 +132,12 @@ namespace BlackMisc
 
     void CDataCacheSerializer::saveToStore(const BlackMisc::CVariantMap &values, const BlackMisc::CVariantMap &baseline)
     {
-        QLockFile revisionFileLock(m_revisionFileName + ".lock");
-        if (! revisionFileLock.lock())
-        {
-            CLogMessage(this).error("Failed to lock %1: %2") << m_revisionFileName << lockFileError(revisionFileLock);
-            return;
-        }
-
-        loadFromStore(baseline, false, true); // last-minute check for remote changes before clobbering the revision file
+        m_cache->m_revision.notifyPendingWrite();
+        auto lock = loadFromStore(baseline, true); // last-minute check for remote changes before clobbering the revision file
         for (const auto &key : values.keys()) { m_deferredChanges.remove(key); } // ignore changes that we are about to overwrite
 
-        QFile revisionFile(m_revisionFileName);
-        if (! revisionFile.open(QFile::WriteOnly))
-        {
-            CLogMessage(this).error("Failed to open %1: %2") << m_revisionFileName << revisionFile.errorString();
-            return;
-        }
-        m_revision = CIdentifier().toUuid();
-        revisionFile.write(m_revision.toByteArray());
-
+        if (! lock) { return; }
+        m_cache->m_revision.writeNewRevision();
         m_cache->saveToFiles(persistentStore(), values);
 
         if (! m_deferredChanges.isEmpty()) // apply changes which we grabbed at the last minute above
@@ -138,30 +148,11 @@ namespace BlackMisc
         }
     }
 
-    void CDataCacheSerializer::loadFromStore(const BlackMisc::CVariantMap &baseline, bool revLock, bool defer)
+    CDataCacheRevision::LockGuard CDataCacheSerializer::loadFromStore(const BlackMisc::CVariantMap &baseline, bool defer)
     {
-        QLockFile revisionFileLock(m_revisionFileName + ".lock");
-        if (revLock && ! revisionFileLock.lock())
+        auto lock = m_cache->m_revision.beginUpdate();
+        if (lock && m_cache->m_revision.isPendingRead())
         {
-            CLogMessage(this).error("Failed to lock %1: %2") << m_revisionFileName << lockFileError(revisionFileLock);
-            return;
-        }
-
-        QFile revisionFile(m_revisionFileName);
-        if (! revisionFile.exists())
-        {
-            return;
-        }
-        if (! revisionFile.open(QFile::ReadOnly))
-        {
-            CLogMessage(this).error("Failed to open %1: %2") << m_revisionFileName << revisionFile.errorString();
-            return;
-        }
-
-        QUuid newRevision(revisionFile.readAll());
-        if (m_revision != newRevision)
-        {
-            m_revision = newRevision;
             CValueCachePacket newValues;
             m_cache->loadFromFiles(persistentStore(), baseline, newValues);
             m_deferredChanges.insert(newValues);
@@ -173,5 +164,86 @@ namespace BlackMisc
             emit valuesLoadedFromStore(m_deferredChanges, CIdentifier::anonymous());
             m_deferredChanges.clear();
         }
+        return lock;
+    }
+
+    CDataCacheRevision::LockGuard CDataCacheRevision::beginUpdate()
+    {
+        QMutexLocker lock(&m_mutex);
+
+        Q_ASSERT(! m_updateInProgress);
+        Q_ASSERT(! m_lockFile.isLocked());
+
+        if (! m_lockFile.lock())
+        {
+            CLogMessage(this).error("Failed to lock %1: %2") << m_basename << lockFileError(m_lockFile);
+            return {};
+        }
+        m_updateInProgress = true;
+        LockGuard guard(this);
+
+        QFile revisionFile(m_basename + "/.rev");
+        if (revisionFile.exists())
+        {
+            if (! revisionFile.open(QFile::ReadOnly))
+            {
+                CLogMessage(this).error("Failed to open %1: %2") << revisionFile.fileName() << revisionFile.errorString();
+                return {};
+            }
+
+            QUuid uuid(revisionFile.readAll());
+            if (uuid == m_uuid)
+            {
+                if (m_pendingWrite) { return guard; }
+                return {};
+            }
+        }
+
+        m_pendingRead = true;
+        return guard;
+    }
+
+    void CDataCacheRevision::writeNewRevision()
+    {
+        QMutexLocker lock(&m_mutex);
+
+        Q_ASSERT(m_updateInProgress);
+        Q_ASSERT(m_lockFile.isLocked());
+
+        QFile revisionFile(m_basename + "/.rev");
+        if (! revisionFile.open(QFile::WriteOnly))
+        {
+            CLogMessage(this).error("Failed to open %1: %2") << revisionFile.fileName() << revisionFile.errorString();
+            return;
+        }
+
+        m_uuid = CIdentifier().toUuid();
+        revisionFile.write(m_uuid.toByteArray());
+    }
+
+    void CDataCacheRevision::finishUpdate()
+    {
+        QMutexLocker lock(&m_mutex);
+
+        Q_ASSERT(m_updateInProgress);
+        Q_ASSERT(m_lockFile.isLocked());
+
+        m_updateInProgress = false;
+        m_pendingRead = false;
+        m_pendingWrite = false;
+        m_lockFile.unlock();
+    }
+
+    bool CDataCacheRevision::isPendingRead() const
+    {
+        QMutexLocker lock(&m_mutex);
+
+        Q_ASSERT(m_updateInProgress);
+        return ! m_timestamps.isEmpty();
+    }
+
+    void CDataCacheRevision::notifyPendingWrite()
+    {
+        m_pendingWrite = true;
     }
 }

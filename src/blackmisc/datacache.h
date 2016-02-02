@@ -17,10 +17,56 @@
 #include "blackmisc/worker.h"
 #include <QUuid>
 #include <QFileSystemWatcher>
+#include <QLockFile>
 
 namespace BlackMisc
 {
     class CDataCache;
+
+    /*!
+     * Encapsulates metastate about how the version of the cache in memory compares to the one on disk.
+     * \threadsafe
+     */
+    class BLACKMISC_EXPORT CDataCacheRevision
+    {
+    public:
+        //! Construct the single instance of the revision metastate.
+        CDataCacheRevision(const QString &basename) : m_basename(basename) {}
+
+        //! Non-copyable.
+        //! @{
+        CDataCacheRevision(const CDataCacheRevision &) = delete;
+        CDataCacheRevision &operator =(const CDataCacheRevision &) = delete;
+        //! @}
+
+        //! RAII class to keep the revision file locked during update.
+        class LockGuard;
+
+        //! Get the state of the disk cache, and prepare to update values.
+        //! Return value can be converted to bool, false means update is not started (error, or already up-to-date).
+        LockGuard beginUpdate();
+
+        //! During update, writes a new revision file.
+        void writeNewRevision();
+
+        //! Release the revision file lock and mark everything up-to-date (called by LockGuard destructor).
+        void finishUpdate();
+
+        //! True if beginUpdate found some values with timestamps newer than in memory.
+        bool isPendingRead() const;
+
+        //! Call before beginUpdate if there is a write pending, so update will start even if there is nothing to read.
+        void notifyPendingWrite();
+
+    private:
+        mutable QMutex m_mutex { QMutex::Recursive };
+        bool m_updateInProgress = false;
+        bool m_pendingRead = false;
+        bool m_pendingWrite = false;
+        QString m_basename;
+        QLockFile m_lockFile { m_basename + "/.lock" };
+        QUuid m_uuid;
+    };
 
     /*!
      * Worker which performs (de)serialization on behalf of CDataCache, in a separate thread
@@ -40,9 +86,9 @@ namespace BlackMisc
         //! Load values from persistent store. Called once per second.
         //! Also called by saveToStore, to ensure that remote changes to unrelated values are not lost.
         //! \param baseline A snapshot of the currently loaded values, taken when the load is queued.
-        //! \param lock Whether to acquire the revision file lock. Used when called by saveToStore.
         //! \param defer Whether to defer applying the changes. Used when called by saveToStore.
-        void loadFromStore(const BlackMisc::CVariantMap &baseline, bool lock = true, bool defer = false);
+        //! \return Usually ignored, but can be held in order to retain the revision file lock.
+        CDataCacheRevision::LockGuard loadFromStore(const BlackMisc::CVariantMap &baseline, bool defer = false);
 
     signals:
         //! Signal back to the cache when values have been loaded.
@@ -51,7 +97,7 @@ namespace BlackMisc
     private:
         const QString &persistentStore() const;
 
-        const CDataCache *const m_cache = nullptr;
+        CDataCache *const m_cache = nullptr;
         QUuid m_revision;
         const QString m_revisionFileName;
         BlackMisc::CValueCachePacket m_deferredChanges;
@@ -89,7 +135,8 @@ namespace BlackMisc
         const QString m_revisionFileName { persistentStore() + "/.rev" };
 
         CDataCacheSerializer m_serializer { this, m_revisionFileName };
-        friend class CDataCacheSerializer; // to access protected members of CValueCache
+        CDataCacheRevision m_revision { persistentStore() + "/" };
+        friend class CDataCacheSerializer; // to access m_revision and protected members of CValueCache
     };
 
     /*!
