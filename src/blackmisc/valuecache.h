@@ -279,10 +279,10 @@ namespace BlackMisc
         const T &get() const { static const T empty {}; return *(isValid() ? static_cast<const T *>(getVariant().data()) : &empty); }
 
         //! Write a new value. Must be called from the thread in which the owner lives.
-        CStatusMessage set(const T &value) { return m_page.setValue(m_element, CVariant::from(value)); }
+        CStatusMessage set(const T &value, qint64 timestamp = 0) { return m_page.setValue(m_element, CVariant::from(value), timestamp); }
 
         //! Write and save in the same step. Must be called from the thread in which the owner lives.
-        CStatusMessage setAndSave(const T &value) { return m_page.setValue(m_element, CVariant::from(value), true); }
+        CStatusMessage setAndSave(const T &value, qint64 timestamp = 0) { return m_page.setValue(m_element, CVariant::from(value), timestamp, true); }
 
         //! Get the key string of this value.
         const QString &getKey() const { return m_page.getKey(m_element); }

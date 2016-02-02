@@ -178,7 +178,7 @@ namespace BlackMisc
         QString getFilename() const { return CDataCache::filenameForKey(this->getKey()); }
 
         //! Data cache doesn't support setAndSave (because set() already causes save anyway).
-        CStatusMessage setAndSave(const typename Trait::type &value) = delete;
+        CStatusMessage setAndSave(const typename Trait::type &value, qint64 timestamp = 0) = delete;
     };
 
     /*!

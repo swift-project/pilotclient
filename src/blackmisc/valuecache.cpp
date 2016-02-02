@@ -410,11 +410,12 @@ namespace BlackMisc
         return element.m_value.read();
     }
 
-    CStatusMessage CValuePage::setValue(Element &element, const CVariant &value, bool save)
+    CStatusMessage CValuePage::setValue(Element &element, const CVariant &value, qint64 timestamp, bool save)
     {
         Q_ASSERT(QThread::currentThread() == thread());
 
-        if (element.m_value.read() == value) { return {}; }
+        if (timestamp == 0) { timestamp = QDateTime::currentMSecsSinceEpoch(); }
+        if (element.m_value.read() == value && element.m_timestamp == timestamp) { return {}; }
 
         auto error = validate(element, value);
         if (error.isEmpty())
@@ -430,7 +431,7 @@ namespace BlackMisc
                 element.m_saved = save;
 
                 element.m_value.uniqueWrite() = value;
-                emit valuesWantToCache({ { { element.m_key, value } }, QDateTime::currentMSecsSinceEpoch(), save });
+                emit valuesWantToCache({ { { element.m_key, value } }, timestamp, save });
             }
         }
         else
