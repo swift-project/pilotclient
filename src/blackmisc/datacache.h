@@ -107,6 +107,7 @@ namespace BlackMisc
 
     private:
         const QString &persistentStore() const;
+        void applyDeferredChanges();
 
         CDataCache *const m_cache = nullptr;
         QUuid m_revision;

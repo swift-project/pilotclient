@@ -141,12 +141,7 @@ namespace BlackMisc
 
         m_cache->saveToFiles(persistentStore(), values);
 
-        if (! m_deferredChanges.isEmpty()) // apply changes which we grabbed at the last minute above
-        {
-            m_deferredChanges.setSaved();
-            emit valuesLoadedFromStore(m_deferredChanges, CIdentifier::anonymous());
-            m_deferredChanges.clear();
-        }
+        applyDeferredChanges(); // apply changes which we grabbed at the last minute above
     }
 
     CDataCacheRevision::LockGuard CDataCacheSerializer::loadFromStore(const BlackMisc::CValueCachePacket &baseline, bool defer)
@@ -159,13 +154,18 @@ namespace BlackMisc
             m_deferredChanges.insert(newValues);
         }
 
-        if (! (m_deferredChanges.isEmpty() || defer))
+        if (! defer) { applyDeferredChanges(); }
+        return lock;
+    }
+
+    void CDataCacheSerializer::applyDeferredChanges()
+    {
+        if (! m_deferredChanges.isEmpty())
         {
             m_deferredChanges.setSaved();
             emit valuesLoadedFromStore(m_deferredChanges, CIdentifier::anonymous());
             m_deferredChanges.clear();
         }
-        return lock;
     }
 
     CDataCacheRevision::LockGuard CDataCacheRevision::beginUpdate(const QMap<QString, qint64> &timestamps)
