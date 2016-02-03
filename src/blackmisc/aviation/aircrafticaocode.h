@@ -78,6 +78,9 @@ namespace BlackMisc
             //! Has designator and designator is not "ZZZZ"
             bool hasKnownDesignator() const;
 
+            //! Special designator
+            bool hasSpecialDesignator() const;
+
             //! IATA code
             const QString &getIataCode() const { return m_iataCode; }
 

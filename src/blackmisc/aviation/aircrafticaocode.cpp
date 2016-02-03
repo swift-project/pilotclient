@@ -98,6 +98,12 @@ namespace BlackMisc
             return (this->hasValidDesignator() && this->getDesignator() != getUnassignedDesignator());
         }
 
+        bool CAircraftIcaoCode::hasSpecialDesignator() const
+        {
+            if (!this->hasDesignator()) { return false; }
+            return getSpecialDesignators().contains(this->getDesignator());
+        }
+
         bool CAircraftIcaoCode::isIataSameAsDesignator() const
         {
             return hasDesignator() && hasIataCode() && m_iataCode == m_designator;

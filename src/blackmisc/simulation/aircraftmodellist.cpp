@@ -202,7 +202,11 @@ namespace BlackMisc
                 if (!model.getDistributor().hasValidDbKey()) { subMsgs << "No distributor from DB"; }
                 if (!model.getAircraftIcaoCode().hasValidDbKey()) { subMsgs << "No aircraft ICAO from DB"; }
                 if (!model.getLivery().hasValidDbKey()) { subMsgs << "No livery from DB"; }
-                if (!model.getLivery().getAirlineIcaoCode().hasValidDbKey()) { subMsgs << "No airline ICAO from DB"; }
+                if (model.getLivery().isAirlineLivery())
+                {
+                    // for color codes we do not need to check
+                    if (!model.getLivery().getAirlineIcaoCode().hasValidDbKey()) { subMsgs << "No airline ICAO from DB"; }
+                }
                 CStatusMessage msgDb(CStatusMessage::SeverityError, subMsgs.join(", "));
 
                 CStatusMessage singleMsg(CStatusMessageList({msgModel, msgDb}).toSingleMessage());

@@ -58,7 +58,11 @@ namespace BlackGui
         void CDbLiverySelectorComponent::setLivery(const CLivery &livery)
         {
             QString code(livery.getCombinedCode());
-            if (code.isEmpty()) { return; }
+            if (code.isEmpty())
+            {
+                this->ui->le_Livery->clear();
+                return;
+            }
             if (livery != m_currentLivery)
             {
                 this->ui->le_Livery->setText(code);

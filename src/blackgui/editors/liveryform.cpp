@@ -79,16 +79,26 @@ namespace BlackGui
             this->ui->color_Fuselage->setColor(livery.getColorFuselage());
             this->ui->color_Tail->setColor(livery.getColorTail());
 
-            this->ui->editor_AirlineIcao->setValue(livery.getAirlineIcaoCode());
+            if (livery.isColorLivery())
+            {
+                this->ui->editor_AirlineIcao->clear();
+            }
+            else
+            {
+                this->ui->editor_AirlineIcao->setValue(livery.getAirlineIcaoCode());
+            }
         }
 
         CStatusMessageList CLiveryForm::validate(bool withNestedForms) const
         {
             CLivery livery(getValue());
             CStatusMessageList msgs(livery.validate());
-            if (withNestedForms && (livery.hasValidDbKey() || !livery.getAirlineIcaoCodeDesignator().isEmpty()))
+            if (withNestedForms)
             {
-                msgs.push_back(this->ui->editor_AirlineIcao->validate());
+                if (!livery.isColorLivery())
+                {
+                    msgs.push_back(this->ui->editor_AirlineIcao->validate());
+                }
             }
             if (this->isReadOnly())
             {

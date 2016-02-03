@@ -115,7 +115,18 @@ namespace BlackMisc
             if (!hasCombinedCode()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Livery: missing livery code")); }
             if (!hasColorFuselage()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, "Livery: no fuselage color")); }
             if (!hasColorTail()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, "Livery: no tail color")); }
-            if (!getAirlineIcaoCodeDesignator().isEmpty()) { msg.push_back(m_airline.validate()); }
+            if (this->isColorLivery())
+            {
+                if (!this->getAirlineIcaoCodeDesignator().isEmpty())
+                {
+                    // color livery, supposed to have empty airline
+                    msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, "Livery: color livery, but airline looks odd"));
+                }
+            }
+            else
+            {
+                msg.push_back(m_airline.validate());
+            }
             return msg;
         }
 

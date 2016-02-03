@@ -120,7 +120,7 @@ namespace BlackMisc
             for (const QJsonValue &value : array)
             {
                 CAircraftIcaoCode icao(CAircraftIcaoCode::fromDatabaseJson(value.toObject()));
-                if (ignoreIncomplete && !icao.hasCompleteData()) { continue; }
+                if (ignoreIncomplete && !icao.hasSpecialDesignator() && !icao.hasCompleteData()) { continue; }
                 codes.push_back(icao);
             }
             return codes;
