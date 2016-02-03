@@ -246,10 +246,15 @@ namespace BlackGui
             {
                 this->showMessages(msgs);
             }
+            else
+            {
+                this->ui->tvp_StashAircraftModels->showLoadIndicator();
+            }
         }
 
         void CDbStashComponent::ps_publishResponse(const CAircraftModelList &publishedModels, const CAircraftModelList &skippedModels, const CStatusMessageList &msgs)
         {
+            this->ui->tvp_StashAircraftModels->hideLoadIndicator();
             if (!publishedModels.isEmpty())
             {
                 emit this->modelsSuccessfullyPublished(publishedModels);
