@@ -91,6 +91,13 @@ namespace BlackMisc
                 return getLastExistingPathFromFile(xplaneInstallFilePath);
             }
 
+            QString CXPlaneUtil::xplaneRootDir()
+            {
+                if (!xplane10Dir().isEmpty()) { return xplane10Dir(); }
+                else if (!xplane9Dir().isEmpty()) { return xplane9Dir(); }
+                else { return {}; }
+            }
+
             QString CXPlaneUtil::xbusLegacyDir()
             {
                 QString legacyPath("/Resources/plugins/xbus/LegacyData");

@@ -36,6 +36,10 @@ namespace BlackMisc
                 //! \todo Test on OSX
                 static QString xplane10Dir();
 
+                //! XPlane root directory
+                //! In case more then one XPlane version is found, the path to the highest version is used
+                static QString xplaneRootDir();
+
                 //! XBus legacy directory
                 static QString xbusLegacyDir();
             };
