@@ -16,6 +16,7 @@
 #include <QTextStream>
 #include <QFile>
 #include <QRegularExpression>
+#include <QDirIterator>
 
 #include <functional>
 
@@ -123,6 +124,82 @@ namespace BlackMisc
             }
 
             CAircraftModelList CAircraftModelLoaderXPlane::performParsing(const QString &rootDirectory, const QStringList &excludeDirectories)
+            {
+                CAircraftModelList allModels;
+                allModels.push_back(parseCslPackages(CXPlaneUtil::xbusLegacyDir(), excludeDirectories));
+                allModels.push_back(parseFlyableAirplanes(rootDirectory, excludeDirectories));
+                return allModels;
+            }
+
+            //! Add model only if there no other model with the same model string
+            void addUniqueModel(const CAircraftModel &model, CAircraftModelList &models)
+            {
+                if (models.containsModelString(model.getModelString()))
+                {
+                    CLogMessage(static_cast<CAircraftModelLoaderXPlane*>(nullptr)).warning("Model %1 exists already! Potential model string conflict! Ignoring it.") << model.getModelString();
+                }
+                models.push_back(model);
+            }
+
+            CAircraftModelList CAircraftModelLoaderXPlane::parseFlyableAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories)
+            {
+                Q_UNUSED(excludeDirectories);
+                if (rootDirectory.isEmpty()) { return {}; }
+
+                QDir searchPath(rootDirectory, "*.acf");
+                QDirIterator aircraftIt(searchPath, QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
+
+                CAircraftModelList installedModels;
+                while (aircraftIt.hasNext())
+                {
+                    aircraftIt.next();
+
+                    // <dirname> <filename> for the default model and <dirname> <filename> <texturedir> for the liveries
+                    QString modelString = QString("%1 %2").arg(aircraftIt.fileInfo().dir().dirName(), aircraftIt.fileInfo().baseName());
+
+                    CAircraftModel model;
+                    model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
+                    model.setSimulatorInfo(m_simulatorInfo);
+                    model.setFileName(aircraftIt.filePath());
+                    model.setModelString(modelString);
+
+                    QFile file(aircraftIt.filePath());
+                    file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+                    QTextStream ts(&file);
+                    if (ts.readLine() == "I" && ts.readLine().contains("version") && ts.readLine() == "ACF")
+                    {
+                        while (!ts.atEnd())
+                        {
+                            QString line = ts.readLine();
+                            QStringList tokens = line.split(' ');
+                            if (tokens.size() != 3) { continue; }
+                            if (tokens.at(1) == "acf/_ICAO")
+                            {
+                                CAircraftIcaoCode icao(tokens.at(2));
+                                model.setAircraftIcaoCode(icao);
+                                break;
+                            }
+                        }
+                    }
+                    file.close();
+
+                    addUniqueModel(model, installedModels);
+
+                    QDirIterator liveryIt(aircraftIt.fileInfo().canonicalPath() + "/liveries", QDir::Dirs | QDir::NoDotAndDotDot);
+                    while (liveryIt.hasNext())
+                    {
+                        liveryIt.next();
+                        QString modelStringWithLivery = modelString + liveryIt.fileName();
+                        model.setModelString(modelStringWithLivery);
+
+                        addUniqueModel(model, installedModels);
+                    }
+                }
+                return installedModels;
+            }
+
+            CAircraftModelList CAircraftModelLoaderXPlane::parseCslPackages(const QString &rootDirectory, const QStringList &excludeDirectories)
             {
                 Q_UNUSED(excludeDirectories);
                 QStringList packages;

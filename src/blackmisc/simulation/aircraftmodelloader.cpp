@@ -61,7 +61,7 @@ namespace BlackMisc
             {
                 return make_unique<CAircraftModelLoaderXPlane>(
                            CSimulatorInfo(CSimulatorInfo::XPLANE),
-                           CXPlaneUtil::xbusLegacyDir());
+                           CXPlaneUtil::xplaneRootDir());
             }
             else
             {

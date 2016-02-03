@@ -89,6 +89,9 @@ namespace BlackMisc
                 };
 
                 BlackMisc::Simulation::CAircraftModelList performParsing(const QString &rootDirectory, const QStringList &excludeDirectories);
+                BlackMisc::Simulation::CAircraftModelList parseFlyableAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories);
+                BlackMisc::Simulation::CAircraftModelList parseCslPackages(const QString &rootDirectory, const QStringList &excludeDirectories);
+
                 //! Does the directory exist?
                 bool existsDir(const QString &directory = QString()) const;
                 bool doPackageSub(QString &ioPath);
