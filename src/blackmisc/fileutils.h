@@ -43,6 +43,24 @@ namespace BlackMisc
         //! If `sourceDir` is a directory, copies it recursively, so that `sourceDir` becomes `destinationDir`.
         //! If it is a file, just copies the file.
         static bool copyRecursively(const QString &sourceDir, const QString &destinationDir);
+
+        //! Returns path to first file in dir which matches the optional wildcard and predicate, or empty string.
+        static QString findFirstFile(const QDir &dir, bool recursive, const QString &wildcard = {}, std::function<bool(const QFileInfo &)> predicate = {});
+
+        //! True if there exists a file in dir which matches the optional wildcard and predicate.
+        static bool containsFile(const QDir &dir, bool recursive, const QString &wildcard = {}, std::function<bool(const QFileInfo &)> predicate = {});
+
+        //! Returns path to first file in dir newer than the given time, optionally matching a wildcard, or empty string.
+        static QString findFirstNewerThan(const QDateTime &time, const QDir &dir, bool recursive, const QString &wildcard = {});
+
+        //! True if there exists a file in dir newer than the given time, optionally matching a wildcard.
+        static bool containsFileNewerThan(const QDateTime &time, const QDir &dir, bool recursive, const QString &wildcard = {});
+
+        //! Returns list of all files in dir, optionally matching a wildcard and predicate.
+        static QFileInfoList enumerateFiles(const QDir &dir, bool recursive, const QString &wildcard = {}, std::function<bool(const QFileInfo &)> predicate = {});
+
+        //! Returns path to the newest file in dir, optionally matching a wildcard, or empty string.
+        static QString findNewestFile(const QDir &dir, bool recursive, const QString &wildcard = {});
     };
 } // ns
 

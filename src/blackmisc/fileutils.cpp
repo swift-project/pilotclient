@@ -87,4 +87,70 @@ namespace BlackMisc
         return true;
     }
 
+    QString CFileUtils::findFirstFile(const QDir &dir, bool recursive, const QString &wildcard, std::function<bool(const QFileInfo &)> predicate)
+    {
+        QFileInfoList result = dir.entryInfoList({ wildcard }, QDir::Files);
+        if (predicate)
+        {
+            auto it = std::find_if(result.cbegin(), result.cend(), predicate);
+            if (it != result.cend()) { return it->filePath(); }
+        }
+        else
+        {
+            if (! result.isEmpty()) { return result.first().filePath(); }
+        }
+        if (recursive)
+        {
+            for (const auto &subdir : dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot))
+            {
+                QString first = findFirstFile(subdir.filePath(), true, wildcard, predicate);
+                if (! first.isEmpty()) { return first; }
+            }
+        }
+        return {};
+    }
+
+    bool CFileUtils::containsFile(const QDir &dir, bool recursive, const QString &wildcard, std::function<bool(const QFileInfo &)> predicate)
+    {
+        return ! findFirstFile(dir, recursive, wildcard, predicate).isEmpty();
+    }
+
+    QString CFileUtils::findFirstNewerThan(const QDateTime &time, const QDir &dir, bool recursive, const QString &wildcard)
+    {
+        return findFirstFile(dir, recursive, wildcard, [time](const QFileInfo &fi) { return fi.lastModified() > time; });
+    }
+
+    bool CFileUtils::containsFileNewerThan(const QDateTime &time, const QDir &dir, bool recursive, const QString &wildcard)
+    {
+        return ! findFirstNewerThan(time, dir, recursive, wildcard).isEmpty();
+    }
+
+    QFileInfoList CFileUtils::enumerateFiles(const QDir &dir, bool recursive, const QString &wildcard, std::function<bool(const QFileInfo &)> predicate)
+    {
+        QFileInfoList result = dir.entryInfoList({ wildcard }, QDir::Files);
+        if (predicate)
+        {
+            result.erase(std::remove_if(result.begin(), result.end(), std::not1(predicate)), result.end());
+        }
+        if (recursive)
+        {
+            for (const auto &subdir : dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot))
+            {
+                result += enumerateFiles(subdir.filePath(), true, wildcard, predicate);
+            }
+        }
+        return result;
+    }
+
+    QString CFileUtils::findNewestFile(const QDir &dir, bool recursive, const QString &wildcard)
+    {
+        const QFileInfoList files = enumerateFiles(dir, recursive, wildcard);
+        if (files.isEmpty()) { return {}; }
+
+        auto it = std::max_element(files.cbegin(), files.cend(), [](const QFileInfo &a, const QFileInfo &b)
+        {
+            return a.lastModified() < b.lastModified();
+        });
+        return it->filePath();
+    }
 } // ns
