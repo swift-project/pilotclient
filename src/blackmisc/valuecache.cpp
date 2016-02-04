@@ -102,7 +102,7 @@ namespace BlackMisc
         CVariant m_value;
         int m_pendingChanges = 0;
         bool m_saved = false;
-        std::atomic<qint64> m_timestamp { QDateTime::currentMSecsSinceEpoch() };
+        std::atomic<qint64> m_timestamp { 0 };
     };
 
     CValueCache::Element &CValueCache::getElement(const QString &key)
@@ -329,7 +329,7 @@ namespace BlackMisc
         QMutexLocker lock(&m_mutex);
         auto values = getAllValues(keyPrefix);
         for (auto it = values.begin(); it != values.end(); ++it) { it.value() = CVariant(); }
-        changeValues({ values, QDateTime::currentMSecsSinceEpoch() });
+        changeValues({ values, 0 });
     }
 
     CValueCache::BatchGuard CValueCache::batchChanges(QObject *owner)
@@ -378,7 +378,7 @@ namespace BlackMisc
         {}
         const QString m_key;
         LockFree<CVariant> m_value;
-        std::atomic<qint64> m_timestamp { QDateTime::currentMSecsSinceEpoch() };
+        std::atomic<qint64> m_timestamp { 0 };
         const int m_metaType = QMetaType::UnknownType;
         const Validator m_validator;
         const CVariant m_default;
