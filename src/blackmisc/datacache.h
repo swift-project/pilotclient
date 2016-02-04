@@ -18,6 +18,7 @@
 #include <QUuid>
 #include <QFileSystemWatcher>
 #include <QLockFile>
+#include <future>
 
 namespace BlackMisc
 {
@@ -65,6 +66,12 @@ namespace BlackMisc
         //! During update, returns true if the on-disk timestamp of this key is newer than in-memory.
         bool isNewerValueAvailable(const QString &key) const;
 
+        //! Return a future which will be made ready when the value is loaded. Future is invalid if value is not loading.
+        std::future<CVariant> promiseLoadedValue(QObject *pageOwner, const QString &key);
+
+        //! Returns (by move) the container of promises to load values.
+        std::vector<std::tuple<QObject *, QString, std::promise<CVariant>>> loadedValuePromises();
+
     private:
         mutable QMutex m_mutex { QMutex::Recursive };
         bool m_updateInProgress = false;
@@ -74,6 +81,7 @@ namespace BlackMisc
         QLockFile m_lockFile { m_basename + "/.lock" };
         QUuid m_uuid;
         QMap<QString, qint64> m_timestamps;
+        std::vector<std::tuple<QObject *, QString, std::promise<CVariant>>> m_promises;
 
         static QJsonObject toJson(const QMap<QString, qint64> &timestamps);
         static QMap<QString, qint64> fromJson(const QJsonObject &timestamps);
@@ -108,6 +116,7 @@ namespace BlackMisc
     private:
         const QString &persistentStore() const;
         void applyDeferredChanges();
+        void deliverPromises(std::vector<std::tuple<QObject *, QString, std::promise<CVariant>>>);
 
         CDataCache *const m_cache = nullptr;
         QUuid m_revision;
@@ -136,6 +145,9 @@ namespace BlackMisc
 
         //! Return all files where data may be stored.
         QStringList enumerateStore() const;
+
+        //! Method used for implementing CData::syncLoad.
+        std::future<CVariant> syncLoad(QObject *pageOwner, const QString &key);
 
     private:
         CDataCache();
@@ -169,7 +181,8 @@ namespace BlackMisc
         //!             Must be a void, non-const member function of the owner.
         template <typename T>
         CData(T *owner, NotifySlot<T> slot = nullptr) :
-            CData::CCached(CDataCache::instance(), Trait::key(), Trait::isValid, Trait::defaultValue(), owner, slot)
+            CData::CCached(CDataCache::instance(), Trait::key(), Trait::isValid, Trait::defaultValue(), owner, slot),
+            m_owner(owner)
         {}
 
         //! Reset the data to its default value.
@@ -178,8 +191,15 @@ namespace BlackMisc
         //! Return the file that is used for persistence for this value.
         QString getFilename() const { return CDataCache::filenameForKey(this->getKey()); }
 
+        //! Return a future providing the value. If the value is still loading, the future will wait for it.
+        //! If the value is not present, the variant is null. Bypasses async get and inhibits notification slot.
+        std::future<CVariant> syncLoad() { return CDataCache::instance()->syncLoad(m_owner, this->getKey()); }
+
         //! Data cache doesn't support setAndSave (because set() already causes save anyway).
         CStatusMessage setAndSave(const typename Trait::type &value, qint64 timestamp = 0) = delete;
+
+    private:
+        QObject *m_owner = nullptr;
     };
 
     /*!

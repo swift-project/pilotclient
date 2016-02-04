@@ -11,6 +11,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/identifier.h"
 #include <QStandardPaths>
+#include <utility>
 
 namespace BlackMisc
 {
@@ -81,6 +82,21 @@ namespace BlackMisc
     QStringList CDataCache::enumerateStore() const
     {
         return enumerateFiles(persistentStore());
+    }
+
+    std::future<CVariant> CDataCache::syncLoad(QObject *pageOwner, const QString &key)
+    {
+        auto future = m_revision.promiseLoadedValue(pageOwner, key);
+        if (future.valid())
+        {
+            return future;
+        }
+        else // value is not currently loading, so immediately return the current value
+        {
+            std::promise<CVariant> p;
+            p.set_value(getValueSync(key));
+            return p.get_future();
+        }
     }
 
     QString lockFileError(const QLockFile &lock)
@@ -162,10 +178,38 @@ namespace BlackMisc
     {
         if (! m_deferredChanges.isEmpty())
         {
+            auto promises = m_cache->m_revision.loadedValuePromises();
+            for (const auto &tuple : promises)
+            {
+                QObject *pageOwner = nullptr;
+                QString key;
+                std::tie(pageOwner, key, std::ignore) = tuple;
+
+                m_deferredChanges.inhibit(pageOwner, key); // don't fire notification slots for objects waiting on syncLoad futures
+            }
+
             m_deferredChanges.setSaved();
             emit valuesLoadedFromStore(m_deferredChanges, CIdentifier::anonymous());
+            deliverPromises(std::move(promises));
             m_deferredChanges.clear();
         }
+    }
+
+    void CDataCacheSerializer::deliverPromises(std::vector<std::tuple<QObject *, QString, std::promise<CVariant>>> i_promises)
+    {
+        auto changes = m_deferredChanges;
+        auto promises = std::make_shared<decltype(i_promises)>(std::move(i_promises)); // \todo use C++14 lambda init-capture
+        QTimer::singleShot(0, Qt::PreciseTimer, this, [this, changes, promises]
+        {
+            for (auto &tuple : *promises)
+            {
+                QString key;
+                std::promise<CVariant> promise;
+                std::tie(std::ignore, key, promise) = std::move(tuple);
+
+                promise.set_value(changes.value(key).first);
+            }
+        });
     }
 
     CDataCacheRevision::LockGuard CDataCacheRevision::beginUpdate(const QMap<QString, qint64> &timestamps)
@@ -174,6 +218,7 @@ namespace BlackMisc
 
         Q_ASSERT(! m_updateInProgress);
         Q_ASSERT(! m_lockFile.isLocked());
+        Q_ASSERT(m_promises.empty());
 
         if (! m_lockFile.lock())
         {
@@ -299,6 +344,28 @@ namespace BlackMisc
         QMutexLocker lock(&m_mutex);
 
         return m_updateInProgress && m_timestamps.contains(key);
+    }
+
+    std::future<CVariant> CDataCacheRevision::promiseLoadedValue(QObject *pageOwner, const QString &key)
+    {
+        QMutexLocker lock(&m_mutex);
+
+        if (isNewerValueAvailable(key))
+        {
+            std::promise<CVariant> promise;
+            auto future = promise.get_future();
+            m_promises.emplace_back(pageOwner, key, std::move(promise));
+            return future;
+        }
+        return {};
+    }
+
+    std::vector<std::tuple<QObject *, QString, std::promise<CVariant>>> CDataCacheRevision::loadedValuePromises()
+    {
+        QMutexLocker lock(&m_mutex);
+
+        Q_ASSERT(m_updateInProgress);
+        return std::move(m_promises); // move into the return value, so m_promises becomes empty
     }
 
     QJsonObject CDataCacheRevision::toJson(const QMap<QString, qint64> &timestamps)

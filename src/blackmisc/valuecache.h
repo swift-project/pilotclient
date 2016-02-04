@@ -224,6 +224,11 @@ namespace BlackMisc
         //! Mutex protecting operations which are critical on m_elements.
         mutable QMutex m_mutex { QMutex::Recursive };
 
+    protected:
+        //! Synchronously return a current value.
+        //! \threadsafe
+        CVariant getValueSync(const QString &key) { return std::get<0>(getValue(key)); }
+
     private:
         friend class Private::CValuePage;
         struct Element;
