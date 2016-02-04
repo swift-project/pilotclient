@@ -72,6 +72,9 @@ namespace BlackMisc
         //! Returns (by move) the container of promises to load values.
         std::vector<std::tuple<QObject *, QString, std::promise<CVariant>>> loadedValuePromises();
 
+        //! Set TTL value that will be written to the revision file.
+        void setTimeToLive(const QString &key, int ttl);
+
     private:
         mutable QMutex m_mutex { QMutex::Recursive };
         bool m_updateInProgress = false;
@@ -81,6 +84,7 @@ namespace BlackMisc
         QLockFile m_lockFile { m_basename + "/.lock" };
         QUuid m_uuid;
         QMap<QString, qint64> m_timestamps;
+        QMap<QString, qint64> m_timesToLive;
         std::vector<std::tuple<QObject *, QString, std::promise<CVariant>>> m_promises;
 
         static QJsonObject toJson(const QMap<QString, qint64> &timestamps);
@@ -149,6 +153,9 @@ namespace BlackMisc
         //! Method used for implementing CData::syncLoad.
         std::future<CVariant> syncLoad(QObject *pageOwner, const QString &key);
 
+        //! Method used for implementing TTL.
+        void setTimeToLive(const QString &key, int ttl);
+
     private:
         CDataCache();
 
@@ -183,13 +190,18 @@ namespace BlackMisc
         CData(T *owner, NotifySlot<T> slot = nullptr) :
             CData::CCached(CDataCache::instance(), Trait::key(), Trait::isValid, Trait::defaultValue(), owner, slot),
             m_owner(owner)
-        {}
+        {
+            if (Trait::timeToLive() >= 0) { CDataCache::instance()->setTimeToLive(Trait::key(), Trait::timeToLive()); }
+        }
 
         //! Reset the data to its default value.
         void setDefault() { this->set(Trait::defaultValue()); }
 
         //! Return the file that is used for persistence for this value.
         QString getFilename() const { return CDataCache::filenameForKey(this->getKey()); }
+
+        //! True if the current timestamp is older than the TTL (time to live).
+        bool isStale() const { return this->getTimestamp() + Trait::timeToLive() > QDateTime::currentMSecsSinceEpoch(); }
 
         //! Return a future providing the value. If the value is still loading, the future will wait for it.
         //! If the value is not present, the variant is null. Bypasses async get and inhibits notification slot.
@@ -221,6 +233,10 @@ namespace BlackMisc
         //! Return the value to use in case the supplied value does not satisfy the validator.
         //! Default implementation returns a default-constructed value.
         static const T &defaultValue() { static const T def {}; return def; }
+
+        //! Number of milliseconds after which cached value becomes stale.
+        //! Default is -1 which means value never becomes stale.
+        static int timeToLive() { return -1; }
 
         //! Deleted default constructor.
         CDataTrait() = delete;

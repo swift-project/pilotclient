@@ -99,6 +99,11 @@ namespace BlackMisc
         }
     }
 
+    void CDataCache::setTimeToLive(const QString &key, int ttl)
+    {
+        QTimer::singleShot(0, &m_serializer, [this, key, ttl] { m_revision.setTimeToLive(key, ttl); });
+    }
+
     QString lockFileError(const QLockFile &lock)
     {
         switch (lock.error())
@@ -250,10 +255,13 @@ namespace BlackMisc
                 }
                 m_uuid = uuid;
 
+                auto timesToLive = fromJson(json.value("ttl").toObject());
                 auto newTimestamps = fromJson(json.value("timestamps").toObject());
                 for (auto it = newTimestamps.cbegin(); it != newTimestamps.cend(); ++it)
                 {
-                    if (timestamps.value(it.key(), 0) < it.value())
+                    auto current = timestamps.value(it.key(), 0);
+                    auto ttl = timesToLive.value(it.key(), -1);
+                    if (current < it.value() && (ttl < 0 || QDateTime::currentMSecsSinceEpoch() < it.value() + ttl))
                     {
                         m_timestamps.insert(it.key(), it.value());
                     }
@@ -302,6 +310,7 @@ namespace BlackMisc
         QJsonObject json;
         json.insert("uuid", m_uuid.toString());
         json.insert("timestamps", toJson(timestamps));
+        json.insert("ttl", toJson(m_timesToLive));
         revisionFile.write(QJsonDocument(json).toJson());
     }
 
@@ -366,6 +375,13 @@ namespace BlackMisc
 
         Q_ASSERT(m_updateInProgress);
         return std::move(m_promises); // move into the return value, so m_promises becomes empty
+    }
+
+    void CDataCacheRevision::setTimeToLive(const QString &key, int ttl)
+    {
+        Q_ASSERT(! m_updateInProgress);
+
+        m_timesToLive.insert(key, ttl);
     }
 
     QJsonObject CDataCacheRevision::toJson(const QMap<QString, qint64> &timestamps)
