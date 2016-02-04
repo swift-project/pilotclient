@@ -199,11 +199,11 @@ namespace BlackMisc
         //! Returns a range referring to all elements which start with the given prefix.
         //! \todo Use C++14 auto deduced return type.
         //! @{
-        auto elementsStartingWith(const QString &keyPrefix) -> CRange<QMap<QString, QSharedPointer<Element>>::iterator>
+        CRange<QMap<QString, QSharedPointer<Element>>::iterator> elementsStartingWith(const QString &keyPrefix)
         {
             return makeRange(m_elements.lowerBound(keyPrefix), m_elements.lowerBound(keyPrefix + QChar(QChar::LastValidCodePoint)));
         }
-        auto elementsStartingWith(const QString &keyPrefix) const -> CRange<QMap<QString, QSharedPointer<Element>>::const_iterator>
+        CRange<QMap<QString, QSharedPointer<Element>>::const_iterator> elementsStartingWith(const QString &keyPrefix) const
         {
             return makeRange(m_elements.lowerBound(keyPrefix), m_elements.lowerBound(keyPrefix + QChar(QChar::LastValidCodePoint)));
         }
