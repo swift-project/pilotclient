@@ -72,6 +72,14 @@ namespace BlackMisc
             });
         }
 
+        CAirlineIcaoCodeList CAirlineIcaoCodeList::findByMilitary(bool military) const
+        {
+            return this->findBy([&](const CAirlineIcaoCode & code)
+            {
+                return code.isMilitary() == military;
+            });
+        }
+
         CAirlineIcaoCode CAirlineIcaoCodeList::smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern) const
         {
             if (icaoPattern.hasValidDbKey())

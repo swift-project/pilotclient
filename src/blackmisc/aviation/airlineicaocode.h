@@ -41,6 +41,7 @@ namespace BlackMisc
                 IndexTelephonyDesignator,
                 IndexIsVirtualAirline,
                 IndexIsOperating,
+                IndexIsMilitary,
                 IndexDesignatorNameCountry,
             };
 
@@ -106,6 +107,12 @@ namespace BlackMisc
 
             //! Operating airline?
             void setOperating(bool operating) { m_isOperating = operating; }
+
+            //! Military, air force or such?
+            bool isMilitary() const { return m_isMilitary; }
+
+            //! Military, air force or such?
+            void setMilitary(bool military) { m_isMilitary = military; }
 
             //! Country?
             bool hasValidCountry() const;
@@ -179,6 +186,7 @@ namespace BlackMisc
             QString m_telephonyDesignator;  //!< "Speedbird"
             bool m_isVa = false;            //!< virtual airline
             bool m_isOperating = true;      //!< still operating?
+            bool m_isMilitary = false;      //!< air force or such
         };
     } // namespace
 } // namespace
@@ -192,7 +200,8 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAirlineIcaoCode, (
                                    o.m_country,
                                    o.m_telephonyDesignator,
                                    o.m_isVa,
-                                   o.m_isOperating
+                                   o.m_isOperating,
+                                   o.m_isMilitary
                                ))
 
 #endif // guard

@@ -59,6 +59,9 @@ namespace BlackMisc
             //! Find by country code
             CAirlineIcaoCodeList findByCountryIsoCode(const QString &isoCode) const;
 
+            //! Find by military flag
+            CAirlineIcaoCodeList findByMilitary(bool military) const;
+
             //! Best selection by given pattern
             CAirlineIcaoCode smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern) const;
 

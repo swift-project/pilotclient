@@ -451,7 +451,7 @@ namespace BlackMisc
 
         const QStringList &CAircraftIcaoCode::getSpecialDesignators()
         {
-            static const QStringList s({ "ZZZZ", "SHIP", "BALL", "GLID", "ULAC", "GYRO", "UHEL", "GLID", "ULAC", "GYRO", "UHEL"});
+            static const QStringList s({ "ZZZZ", "SHIP", "BALL", "GLID", "ULAC", "GYRO", "UHEL" });
             return s;
         }
 
@@ -483,18 +483,18 @@ namespace BlackMisc
             QString engine(json.value(prefix + "engine").toString());
             int engineCount(json.value(prefix + "enginecount").toInt(-1));
             QString combined(createdCombinedString(type, engineCount, engine));
-            QString wtc(json.value("wtc").toString());
+            QString wtc(json.value(prefix + "wtc").toString());
             if (wtc.length() > 1 && wtc.contains("/"))
             {
                 // "L/M" -> "M"
                 wtc = wtc.right(1);
             }
+            Q_ASSERT_X(wtc.length() < 2, Q_FUNC_INFO, "WTC too long");
+
             bool real = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "realworld").toString());
             bool legacy = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "legacy").toString());
             bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "military").toString());
-            int rank(json.value("rank").toInt(10));
-
-            Q_ASSERT_X(wtc.length() < 2, Q_FUNC_INFO, "WTC too long");
+            int rank(json.value(prefix + "rank").toInt(10));
 
             CAircraftIcaoCode code(
                 designator, iata, combined,

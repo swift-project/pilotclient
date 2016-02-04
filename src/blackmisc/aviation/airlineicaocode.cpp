@@ -12,6 +12,7 @@
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/comparefunctions.h"
+#include "blackmisc/datastoreutility.h"
 
 #include <tuple>
 #include <QThreadStorage>
@@ -153,6 +154,8 @@ namespace BlackMisc
                 return CVariant::fromValue(this->m_isVa);
             case IndexIsOperating:
                 return CVariant::fromValue(this->m_isOperating);
+            case IndexIsMilitary:
+                return CVariant::fromValue(this->m_isMilitary);
             case IndexDesignatorNameCountry:
                 return CVariant::fromValue(this->getDesignatorNameCountry());
             default:
@@ -188,6 +191,9 @@ namespace BlackMisc
             case IndexIsOperating:
                 this->setOperating(variant.toBool());
                 break;
+            case IndexIsMilitary:
+                this->setMilitary(variant.toBool());
+                break;
             default:
                 CValueObject::setPropertyByIndex(variant, index);
                 break;
@@ -217,6 +223,8 @@ namespace BlackMisc
                 return Compare::compare(this->isVirtualAirline(), compareValue.isVirtualAirline());
             case IndexIsOperating:
                 return Compare::compare(this->isOperating(), compareValue.isOperating());
+            case IndexIsMilitary:
+                return Compare::compare(this->isMilitary(), compareValue.isMilitary());
             default:
                 break;
             }
@@ -301,14 +309,17 @@ namespace BlackMisc
             QString name(json.value(prefix + "name").toString());
             QString countryIso(json.value(prefix + "country").toString());
             QString countryName(json.value(prefix + "countryname").toString());
-            bool va = json.value(prefix + "va").toString().startsWith("Y", Qt::CaseInsensitive); // VA
-            bool operating = json.value(prefix + "operating").toString().startsWith("Y", Qt::CaseInsensitive); // operating
+            bool va = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "va").toString());
+            bool operating = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "operating").toString());
+            bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "military").toString());
+
             CAirlineIcaoCode code(
                 designator, name,
                 CCountry(countryIso, countryName),
                 telephony, va, operating
             );
             code.setIataCode(iata);
+            code.setMilitary(military);
             code.setKeyAndTimestampFromDatabaseJson(json, prefix);
             return code;
         }
