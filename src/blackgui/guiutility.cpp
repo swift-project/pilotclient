@@ -13,6 +13,7 @@
 #include "blackmisc/filelogger.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/project.h"
+#include "blackmisc/verify.h"
 #include <QMainWindow>
 #include <QApplication>
 #include <QGuiApplication>
@@ -200,11 +201,29 @@ namespace BlackGui
         return m;
     }
 
+    void CGuiUtility::checkBoxReadOnly(QCheckBox *checkBox, bool readOnly)
+    {
+        static const QCheckBox defaultBox;
+        BLACK_VERIFY_X(checkBox, Q_FUNC_INFO, "no checkbox");
+        if (!checkBox) { return; }
+
+        if (readOnly)
+        {
+            checkBox->setAttribute(Qt::WA_TransparentForMouseEvents);
+            checkBox->setFocusPolicy(Qt::NoFocus);
+        }
+        else
+        {
+            checkBox->setAttribute(Qt::WA_TransparentForMouseEvents, defaultBox.testAttribute(Qt::WA_TransparentForMouseEvents));
+            checkBox->setFocusPolicy(defaultBox.focusPolicy());
+        }
+    }
+
     QWidgetList CGuiUtility::topLevelApplicationWidgetsWithName()
     {
         QWidgetList tlw = QApplication::topLevelWidgets();
         QWidgetList rl;
-        foreach(QWidget * w, tlw)
+        foreach (QWidget *w, tlw)
         {
             if (w->objectName().isEmpty()) { continue; }
             rl.append(w);

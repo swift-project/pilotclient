@@ -198,6 +198,9 @@
          </item>
          <item>
           <widget class="QCheckBox" name="cb_RealWorld">
+           <property name="toolTip">
+            <string>Real world aircraft</string>
+           </property>
            <property name="text">
             <string>Real</string>
            </property>
@@ -205,6 +208,9 @@
          </item>
          <item>
           <widget class="QCheckBox" name="cb_Legacy">
+           <property name="toolTip">
+            <string>Legacy aircraft, e.g. Concord, ME109</string>
+           </property>
            <property name="text">
             <string>Legacy</string>
            </property>
@@ -213,7 +219,7 @@
          <item>
           <widget class="QCheckBox" name="cb_Military">
            <property name="toolTip">
-            <string>Military</string>
+            <string>Military aircraft</string>
            </property>
            <property name="text">
             <string>Mil.</string>

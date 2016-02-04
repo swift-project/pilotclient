@@ -132,9 +132,9 @@ namespace BlackGui
             this->ui->le_Family->setReadOnly(readOnly);
             this->ui->le_Iata->setReadOnly(readOnly);
 
-            this->ui->cb_Legacy->setCheckable(!readOnly);
-            this->ui->cb_Military->setCheckable(!readOnly);
-            this->ui->cb_RealWorld->setCheckable(!readOnly);
+            CGuiUtility::checkBoxReadOnly(this->ui->cb_Legacy, readOnly);
+            CGuiUtility::checkBoxReadOnly(this->ui->cb_Military, readOnly);
+            CGuiUtility::checkBoxReadOnly(this->ui->cb_RealWorld, readOnly);
 
             this->ui->cb_Wtc->setEnabled(!readOnly);
             this->ui->cb_Rank->setEnabled(!readOnly);

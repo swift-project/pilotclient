@@ -17,6 +17,7 @@
 #include "enableforframelesswindow.h"
 #include <QWidgetList>
 #include <QComboBox>
+#include <QCheckBox>
 #include <QCommandLineParser>
 
 namespace BlackGui
@@ -79,6 +80,9 @@ namespace BlackGui
 
         //! Metatype
         static const QString &swiftJsonDragAndDropMimeType();
+
+        //! Pseudo readonly state for checkbox
+        static void checkBoxReadOnly(QCheckBox *checkBox, bool readOnly);
 
     private:
         //! Constructor, use static methods only
