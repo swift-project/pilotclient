@@ -118,6 +118,9 @@ namespace BlackMisc
 
         //! Return the file that is used for persistence for this value.
         QString getFilename() const { return CDataCache::filenameForKey(this->getKey()); }
+
+        //! Data cache doesn't support setAndSave (because set() already causes save anyway).
+        CStatusMessage setAndSave(const typename Trait::type &value) = delete;
     };
 
     /*!
@@ -148,9 +151,6 @@ namespace BlackMisc
 
         //! Deleted copy assignment operator.
         CDataTrait &operator =(const CDataTrait &) = delete;
-
-        //! Data cache doesn't support setAndSave (because set() already causes save anyway).
-        CStatusMessage setAndSave(const T &value) = delete;
     };
 }
 
