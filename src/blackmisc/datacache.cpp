@@ -10,6 +10,7 @@
 #include "datacache.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/identifier.h"
+#include "blackmisc/atomicfile.h"
 #include <QStandardPaths>
 #include <utility>
 
@@ -293,7 +294,7 @@ namespace BlackMisc
         Q_ASSERT(m_pendingWrite);
         Q_ASSERT(m_lockFile.isLocked());
 
-        QFile revisionFile(m_basename + "/.rev");
+        CAtomicFile revisionFile(m_basename + "/.rev");
         if (! revisionFile.open(QFile::WriteOnly))
         {
             CLogMessage(this).error("Failed to open %1: %2") << revisionFile.fileName() << revisionFile.errorString();
