@@ -105,6 +105,11 @@ namespace BlackMisc
         QTimer::singleShot(0, &m_serializer, [this, key, ttl] { m_revision.setTimeToLive(key, ttl); });
     }
 
+    void CDataCache::renewTimestamp(const QString &key, qint64 timestamp)
+    {
+        QTimer::singleShot(0, &m_serializer, [this, key, timestamp] { m_revision.overrideTimestamp(key, timestamp); });
+    }
+
     QString lockFileError(const QLockFile &lock)
     {
         switch (lock.error())
@@ -383,6 +388,41 @@ namespace BlackMisc
         Q_ASSERT(! m_updateInProgress);
 
         m_timesToLive.insert(key, ttl);
+    }
+
+    void CDataCacheRevision::overrideTimestamp(const QString &key, qint64 timestamp)
+    {
+        Q_ASSERT(! m_updateInProgress);
+        Q_ASSERT(! m_lockFile.isLocked());
+
+        if (! m_lockFile.lock())
+        {
+            CLogMessage(this).error("Failed to lock %1: %2") << m_basename << lockFileError(m_lockFile);
+            m_lockFile.unlock();
+            return;
+        }
+
+        CAtomicFile revisionFile(m_basename + "/.rev");
+        if (revisionFile.exists())
+        {
+            if (! revisionFile.open(QFile::ReadWrite | QFile::Text))
+            {
+                CLogMessage(this).error("Failed to open %1: %2") << revisionFile.fileName() << revisionFile.errorString();
+                m_lockFile.unlock();
+                return;
+            }
+
+            auto json = QJsonDocument::fromJson(revisionFile.readAll()).object();
+            auto timestamps = json.value("timestamps").toObject();
+            timestamps.insert(key, timestamp);
+            json.insert("timestamps", timestamps);
+
+            if (! (revisionFile.seek(0) && revisionFile.resize(0) && revisionFile.write(QJsonDocument(json).toJson()) && revisionFile.checkedClose()))
+            {
+                CLogMessage(this).error("Failed to write to %1: %2") << revisionFile.fileName() << revisionFile.errorString();
+            }
+        }
+        m_lockFile.unlock();
     }
 
     QJsonObject CDataCacheRevision::toJson(const QMap<QString, qint64> &timestamps)

@@ -76,6 +76,9 @@ namespace BlackMisc
         //! Set TTL value that will be written to the revision file.
         void setTimeToLive(const QString &key, int ttl);
 
+        //! Causes the new timestamp to be written to the revision file.
+        void overrideTimestamp(const QString &key, qint64 timestamp);
+
     private:
         mutable QMutex m_mutex { QMutex::Recursive };
         bool m_updateInProgress = false;
@@ -157,6 +160,9 @@ namespace BlackMisc
         //! Method used for implementing TTL.
         void setTimeToLive(const QString &key, int ttl);
 
+        //! Method used for implementing timestamp renewal.
+        void renewTimestamp(const QString &key, qint64 timestamp);
+
     private:
         CDataCache();
 
@@ -203,6 +209,9 @@ namespace BlackMisc
 
         //! True if the current timestamp is older than the TTL (time to live).
         bool isStale() const { return this->getTimestamp() + Trait::timeToLive() > QDateTime::currentMSecsSinceEpoch(); }
+
+        //! Don't change the value, but write a new timestamp, to extend the life of the value.
+        void renewTimestamp(qint64 timestamp) { return CDataCache::instance()->renewTimestamp(this->getKey(), timestamp); }
 
         //! Return a future providing the value. If the value is still loading, the future will wait for it.
         //! If the value is not present, the variant is null. Bypasses async get and inhibits notification slot.
