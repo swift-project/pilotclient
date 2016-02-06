@@ -244,7 +244,7 @@ namespace BlackMisc
         QFile revisionFile(m_basename + "/.rev");
         if (revisionFile.exists())
         {
-            if (! revisionFile.open(QFile::ReadOnly))
+            if (! revisionFile.open(QFile::ReadOnly | QFile::Text))
             {
                 CLogMessage(this).error("Failed to open %1: %2") << revisionFile.fileName() << revisionFile.errorString();
                 return {};
@@ -300,7 +300,7 @@ namespace BlackMisc
         Q_ASSERT(m_lockFile.isLocked());
 
         CAtomicFile revisionFile(m_basename + "/.rev");
-        if (! revisionFile.open(QFile::WriteOnly))
+        if (! revisionFile.open(QFile::WriteOnly | QFile::Text))
         {
             CLogMessage(this).error("Failed to open %1: %2") << revisionFile.fileName() << revisionFile.errorString();
             return;
