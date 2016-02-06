@@ -229,6 +229,10 @@ namespace BlackMisc
         //! \threadsafe
         CVariant getValueSync(const QString &key) { return std::get<0>(getValue(key)); }
 
+        //! Synchronously return a current timestamp.
+        //! \threadsafe
+        qint64 getTimestampSync(const QString &key) { return std::get<1>(getValue(key)); }
+
     private:
         friend class Private::CValuePage;
         struct Element;

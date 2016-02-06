@@ -86,12 +86,12 @@ namespace BlackMisc
 
     std::future<CVariant> CDataCache::syncLoad(QObject *pageOwner, const QString &key)
     {
-        auto future = m_revision.promiseLoadedValue(pageOwner, key);
+        auto future = m_revision.promiseLoadedValue(pageOwner, key, getTimestampSync(key));
         if (future.valid())
         {
             return future;
         }
-        else // value is not currently loading, so immediately return the current value
+        else // value is not awaiting load, so immediately return the current value
         {
             std::promise<CVariant> p;
             p.set_value(getValueSync(key));
@@ -217,7 +217,7 @@ namespace BlackMisc
         });
     }
 
-    CDataCacheRevision::LockGuard CDataCacheRevision::beginUpdate(const QMap<QString, qint64> &timestamps)
+    CDataCacheRevision::LockGuard CDataCacheRevision::beginUpdate(const QMap<QString, qint64> &timestamps, bool updateUuid)
     {
         QMutexLocker lock(&m_mutex);
 
@@ -253,7 +253,7 @@ namespace BlackMisc
                     if (m_pendingWrite) { return guard; }
                     return {};
                 }
-                m_uuid = uuid;
+                if (updateUuid) { m_uuid = uuid; }
 
                 auto timesToLive = fromJson(json.value("ttl").toObject());
                 auto newTimestamps = fromJson(json.value("timestamps").toObject());
@@ -348,18 +348,18 @@ namespace BlackMisc
         return QSet<QString>::fromList(m_timestamps.keys());
     }
 
-    bool CDataCacheRevision::isNewerValueAvailable(const QString &key) const
+    bool CDataCacheRevision::isNewerValueAvailable(const QString &key, qint64 timestamp)
     {
         QMutexLocker lock(&m_mutex);
 
-        return m_updateInProgress && m_timestamps.contains(key);
+        return (m_updateInProgress || beginUpdate({{ key, timestamp }}, false)) && m_timestamps.contains(key);
     }
 
-    std::future<CVariant> CDataCacheRevision::promiseLoadedValue(QObject *pageOwner, const QString &key)
+    std::future<CVariant> CDataCacheRevision::promiseLoadedValue(QObject *pageOwner, const QString &key, qint64 currentTimestamp)
     {
         QMutexLocker lock(&m_mutex);
 
-        if (isNewerValueAvailable(key))
+        if (isNewerValueAvailable(key, currentTimestamp))
         {
             std::promise<CVariant> promise;
             auto future = promise.get_future();

@@ -46,7 +46,8 @@ namespace BlackMisc
         //! Get the state of the disk cache, and prepare to update any values which are out of date.
         //! Return value can be converted to bool, false means update is not started (error, or already up-to-date).
         //! \param timestamps Current in-memory timestamps, to be compared with the on-disk ones.
-        LockGuard beginUpdate(const QMap<QString, qint64> &timestamps);
+        //! \param updateUuid Whether to prepare for an actual update, or just interrograte whether one is needed.
+        LockGuard beginUpdate(const QMap<QString, qint64> &timestamps, bool updateUuid = true);
 
         //! During update, writes a new revision file with new timestamps.
         void writeNewRevision(const QMap<QString, qint64> &timestamps);
@@ -64,10 +65,10 @@ namespace BlackMisc
         QSet<QString> keysWithNewerTimestamps() const;
 
         //! During update, returns true if the on-disk timestamp of this key is newer than in-memory.
-        bool isNewerValueAvailable(const QString &key) const;
+        bool isNewerValueAvailable(const QString &key, qint64 timestamp);
 
         //! Return a future which will be made ready when the value is loaded. Future is invalid if value is not loading.
-        std::future<CVariant> promiseLoadedValue(QObject *pageOwner, const QString &key);
+        std::future<CVariant> promiseLoadedValue(QObject *pageOwner, const QString &key, qint64 currentTimestamp);
 
         //! Returns (by move) the container of promises to load values.
         std::vector<std::tuple<QObject *, QString, std::promise<CVariant>>> loadedValuePromises();
