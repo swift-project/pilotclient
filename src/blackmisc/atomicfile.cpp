@@ -22,14 +22,18 @@ namespace BlackMisc
 
     bool CAtomicFile::open(CAtomicFile::OpenMode mode)
     {
-        Q_ASSERT_X(!(mode & (ReadOnly | Append)), Q_FUNC_INFO, "ReadOnly and Append flags are incompatible with CAtomicFile");
-
         m_originalFilename = fileName();
         QFileInfo fileInfo(fileName());
         setFileName(QFileInfo(fileInfo.dir(), ".tmp." + fileInfo.fileName() + "." + randomSuffix()).filePath());
         if (exists()) { remove(); }
 
-        bool ok = QFile::open(mode);
+        bool ok = true;
+        if (mode & ReadOnly)
+        {
+            if (exists(m_originalFilename) && ! copy(m_originalFilename, fileName())) { ok = false; }
+        }
+
+        if (ok && ! QFile::open(mode)) { ok = false; }
         if (! ok) { setFileName(m_originalFilename); }
         return ok;
     }

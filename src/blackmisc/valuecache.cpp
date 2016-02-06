@@ -241,25 +241,24 @@ namespace BlackMisc
         }
         for (auto it = namespaces.cbegin(); it != namespaces.cend(); ++it)
         {
-            QFile readFile(dir + "/" + it.key() + ".json");
-            if (! readFile.open(QFile::ReadWrite | QFile::Text))
+            CAtomicFile file(dir + "/" + it.key() + ".json");
+            if (! file.open(QFile::ReadWrite | QFile::Text))
             {
-                return CLogMessage(this).error("Failed to open %1: %2") << readFile.fileName() << readFile.errorString();
+                return CLogMessage(this).error("Failed to open %1: %2") << file.fileName() << file.errorString();
             }
-            auto json = QJsonDocument::fromJson(readFile.readAll());
+            auto json = QJsonDocument::fromJson(file.readAll());
             if (json.isArray() || (json.isNull() && ! json.isEmpty()))
             {
-                return CLogMessage(this).error("Invalid JSON format in %1") << readFile.fileName();
+                return CLogMessage(this).error("Invalid JSON format in %1") << file.fileName();
             }
             CVariantMap storedValues;
             storedValues.convertFromJson(json.object());
             storedValues.insert(*it);
             json.setObject(storedValues.toJson());
-            readFile.close();
-            CAtomicFile writeFile(readFile.fileName());
-            if (! (writeFile.open(QFile::WriteOnly | QFile::Text) && writeFile.write(json.toJson()) > 0 && writeFile.checkedClose()))
+
+            if (! (file.seek(0) && file.resize(0) && file.write(json.toJson()) > 0 && file.checkedClose()))
             {
-                return CLogMessage(this).error("Failed to write to %1: %2") << writeFile.fileName() << writeFile.errorString();
+                return CLogMessage(this).error("Failed to write to %1: %2") << file.fileName() << file.errorString();
             }
         }
         return {};
