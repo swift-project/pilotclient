@@ -229,7 +229,7 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulatorFactory::create
             virtual BlackCore::ISimulator *create(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                                                   BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
-                                                  BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
+                                                  BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                                                   BlackMisc::IPluginStorageProvider *pluginStorageProvider) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::createListener

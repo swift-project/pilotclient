@@ -80,8 +80,8 @@ namespace BlackSimPlugin
             //! \copydoc XBus::CTraffic::setMaxPlanes
             void setMaxPlanes(int planes);
 
-            void setDrawDistance(float nauticalMiles);
             //! \copydoc XBus::CTraffic::setMaxDrawDistance
+            void setMaxDrawDistance(float nauticalMiles);
 
             //! \copydoc XBus::CTraffic::addPlane
             void addPlane(const QString &callsign, const QString &modelName, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);

@@ -48,13 +48,13 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBusAsync(QLatin1String("getAircraftModelFilename"), setterCallback(o_modelFilename));
         }
 
-        QString CXBusServiceProxy::getAircraftModelLivery() const
+        QString CXBusServiceProxy::getAircraftLivery() const
         {
-            return m_dbusInterface->callDBusRet<QString>(QLatin1String("getAircraftModelLivery"));
+            return m_dbusInterface->callDBusRet<QString>(QLatin1String("getAircraftLivery"));
         }
-        void CXBusServiceProxy::getAircraftModelLiveryAsync(QString *o_modelLivery)
+        void CXBusServiceProxy::getAircraftLiveryAsync(QString *o_modelLivery)
         {
-            m_dbusInterface->callDBusAsync(QLatin1String("getAircraftModelLivery"), setterCallback(o_modelLivery));
+            m_dbusInterface->callDBusAsync(QLatin1String("getAircraftLivery"), setterCallback(o_modelLivery));
         }
 
         QString CXBusServiceProxy::getAircraftIcaoCode() const

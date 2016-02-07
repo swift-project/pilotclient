@@ -509,10 +509,10 @@ namespace BlackSimPlugin
 
         BlackCore::ISimulator *CSimulatorXPlaneFactory::create(const CSimulatorPluginInfo &info,
                 IOwnAircraftProvider *ownAircraftProvider,
-                IRemoteAircraftProvider *renderedAircraftProvider,
+                IRemoteAircraftProvider *remoteAircraftProvider,
                 IPluginStorageProvider *pluginStorageProvider)
         {
-            return new CSimulatorXPlane(info, ownAircraftProvider, renderedAircraftProvider, pluginStorageProvider, this);
+            return new CSimulatorXPlane(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, this);
         }
 
         CSimulatorXPlaneListener::CSimulatorXPlaneListener(const CSimulatorPluginInfo &info): ISimulatorListener(info)

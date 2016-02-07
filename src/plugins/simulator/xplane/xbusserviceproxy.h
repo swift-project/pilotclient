@@ -99,8 +99,8 @@ namespace BlackSimPlugin
 
             //! \copydoc XBus::CService::getAircraftLivery
             //! @{
-            QString getAircraftModelLivery() const;
-            void getAircraftModelLiveryAsync(QString *o_modelLivery);
+            QString getAircraftLivery() const;
+            void getAircraftLiveryAsync(QString *o_modelLivery);
             //! @}
 
             //! \copydoc XBus::CService::getAircraftIcaoCode

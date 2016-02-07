@@ -73,8 +73,8 @@ namespace BlackGui
             //! \copydoc BlackGui::Models::CAircraftModelListModel::setHighlightModelStringsColor
             void setHighlightModelStringsColor(const QBrush &brush);
 
-            bool highlightModelsStrings() const;
             //! \copydoc BlackGui::Models::CAircraftModelListModel::highlightModelStrings
+            bool highlightModelStrings() const;
 
         signals:
             //! Request to stash if applicable

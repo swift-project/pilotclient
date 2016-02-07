@@ -157,7 +157,7 @@ namespace BlackGui
             this->derivedModel()->setHighlightModelStringsColor(brush);
         }
 
-        bool CAircraftModelView::highlightModelsStrings() const
+        bool CAircraftModelView::highlightModelStrings() const
         {
             return this->derivedModel()->highlightModelStrings();
         }
@@ -287,7 +287,7 @@ namespace BlackGui
 
         void CAircraftModelView::ps_toogleHighlightInvalidModels()
         {
-            bool h = this->highlightModelsStrings();
+            bool h = this->highlightModelStrings();
             this->setHighlightModelStrings(!h);
         }
 

@@ -282,7 +282,7 @@ namespace BlackCore
         virtual ISimulator *create(
             const BlackMisc::Simulation::CSimulatorPluginInfo &info,
             BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-            BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
+            BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
             BlackMisc::IPluginStorageProvider *pluginStorageProvider) = 0;
 
         //! Simulator listener instance
