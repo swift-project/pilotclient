@@ -41,7 +41,7 @@ namespace BlackGui
             //! Destructor
             ~CAircraftModelFilterBar();
 
-            //! \copydoc IModelFilter::getModelFilter
+            //! \copydoc Models::IModelFilterProvider::createModelFilter
             virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Simulation::CAircraftModelList>> createModelFilter() const override;
 
             //! Set the provider

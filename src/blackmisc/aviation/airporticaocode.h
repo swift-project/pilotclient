@@ -51,7 +51,7 @@ namespace BlackMisc
             //! Valid ICAO designator
             static bool isValidIcaoDesignator(const QString &icaoCode);
 
-            //! \copydoc CValueObject::convertToQString()
+            //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;
 
             //! Compare for index

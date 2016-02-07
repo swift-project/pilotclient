@@ -44,7 +44,7 @@ namespace BlackGui
             void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
 
         public slots:
-            //! \copydoc CAtcStationListModel::changedAtcStationConnectionStatus
+            //! \copydoc Models::CAtcStationListModel::changedAtcStationConnectionStatus
             void changedAtcStationConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
 
         protected:

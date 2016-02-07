@@ -54,10 +54,10 @@ namespace BlackMisc
             //! Set button object
             void setButtonObject(const CJoystickButton &button);
 
-            //! \copydoc CValueObject::setPropertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
-            //! \copydoc CValueObject::propertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const CPropertyIndex &index) const;
 
             //! Button index to string
@@ -69,7 +69,7 @@ namespace BlackMisc
             //! Invalid button index
             static int getInvalidIndex() { return m_invalidIndex; }
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         private:

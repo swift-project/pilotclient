@@ -39,7 +39,7 @@ namespace BlackSimPlugin
                                                   BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
                                                   BlackMisc::IPluginStorageProvider *pluginStorageProvider) override;
 
-            //! \copydoc BlackCore::ISimulatorFactory::getListener
+            //! \copydoc BlackCore::ISimulatorFactory::createListener
             virtual BlackCore::ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) override;
         };
 

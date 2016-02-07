@@ -52,7 +52,7 @@ namespace BlackGui
             //! Numer of models
             int countAircraftModels() const;
 
-            //! \copydoc CListModelBase::getModelsStartsWith
+            //! Find models starting with
             BlackMisc::Simulation::CAircraftModelList findModelsStartingWith(const QString modelName, Qt::CaseSensitivity cs);
 
         signals:
@@ -60,7 +60,7 @@ namespace BlackGui
             void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
 
         protected:
-            //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
+            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
             virtual void runtimeHasBeenSet() override;
 
         private slots:

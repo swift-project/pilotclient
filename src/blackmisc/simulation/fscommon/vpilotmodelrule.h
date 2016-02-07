@@ -73,13 +73,13 @@ namespace BlackMisc
                 //! Callsign prefix
                 void setCallsignPrefix(const QString &callsign) { this->m_callsignPrefix = callsign.trimmed().toUpper(); }
 
-                //! \copydoc CValueObject::propertyByIndex
+                //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
                 CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-                //! \copydoc CValueObject::setPropertyByIndex
+                //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
                 void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
-                //! \copydoc CValueObject::convertToQString
+                //! \copydoc BlackMisc::Mixin::String::toQString
                 QString convertToQString(bool i18n = false) const;
 
                 //! Convert into aircraft model

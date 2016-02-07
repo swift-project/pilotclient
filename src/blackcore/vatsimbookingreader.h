@@ -44,7 +44,7 @@ namespace BlackCore
         void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
     protected:
-        //! \copydoc CThreadedReader::cleanup
+        //! \copydoc BlackMisc::CThreadedReader::cleanup
         virtual void cleanup() override;
 
     private slots:

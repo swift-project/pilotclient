@@ -84,10 +84,10 @@ namespace BlackCore
         //! \copydoc IContextAudio::setCurrentAudioDevice()
         virtual void setCurrentAudioDevice(const BlackMisc::Audio::CAudioDeviceInfo &audioDevice) override;
 
-        //!\copydoc IContext::setVoiceOutputVolume
+        //!\copydoc IContextAudio::setVoiceOutputVolume
         virtual void setVoiceOutputVolume(int volume) override;
 
-        //! \copydoc IContext::getVoiceOutputVolume
+        //! \copydoc IContextAudio::getVoiceOutputVolume
         virtual int getVoiceOutputVolume() const override;
 
         //! \copydoc IContextAudio::setMute

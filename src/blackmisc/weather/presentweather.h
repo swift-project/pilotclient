@@ -115,13 +115,13 @@ namespace BlackMisc
             //! Get weather phenomenas
             int getWeatherPhenomena() const { return m_weatherPhenomena; }
 
-            //! \copydoc CValueObject::propertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-            //! \copydoc CValueObject::setPropertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         private:

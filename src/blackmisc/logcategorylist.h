@@ -100,7 +100,7 @@ namespace BlackMisc
         //! Register metadata
         static void registerMetadata();
 
-        //! \copydoc BlackMisc::CValueObject::convertToQString
+        //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
     private:

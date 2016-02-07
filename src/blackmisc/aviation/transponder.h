@@ -154,10 +154,10 @@ namespace BlackMisc
                 return CTransponder(transponderCode, mode);
             }
 
-            //! \copydoc CValueObject::propertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-            //! \copydoc CValueObject::setPropertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! Is valid transponder code?
@@ -166,7 +166,7 @@ namespace BlackMisc
             //! Is valid transponder code?
             static bool isValidTransponderCode(qint32 transponderMode);
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         private:

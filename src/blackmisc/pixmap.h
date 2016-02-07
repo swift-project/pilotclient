@@ -48,7 +48,7 @@ namespace BlackMisc
         //! \copydoc CValueObject::toPixmap
         QPixmap toPixmap() const;
 
-        //! \copydoc CValueObject::convertToQString
+        //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
     private:

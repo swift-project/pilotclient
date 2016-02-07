@@ -119,7 +119,7 @@ namespace BlackMisc
         //! Implicit conversion
         operator QPixmap() const { return this->toPixmap(); }
 
-        //! \copydoc CValueObject::convertToQString
+        //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
         //! Icon for given index

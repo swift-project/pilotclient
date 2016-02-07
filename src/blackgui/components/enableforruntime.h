@@ -108,7 +108,7 @@ namespace BlackGui
             //! \remarks use this methods to hook up signal/slots with runtime
             virtual void runtimeHasBeenSet() {}
 
-            //! \copydoc CRuntime::hasRemoteApplicationContext
+            //! \copydoc BlackCore::CRuntime::hasRemoteApplicationContext
             bool hasRemoteApplicationContext() const { return this->m_runtime->hasRemoteApplicationContext(); }
 
             //! Play a given notification sound

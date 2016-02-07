@@ -138,7 +138,7 @@ namespace BlackMisc
         //! Returns true if the category string contains the given substring.
         bool contains(const QString &substring) const { return m_string.contains(substring); }
 
-        //! \copydoc CValueObject::convertToQString()
+        //! \copydoc BlackMisc::Mixin::String::toQString()
         QString convertToQString(bool i18n = false) const;
 
     private:

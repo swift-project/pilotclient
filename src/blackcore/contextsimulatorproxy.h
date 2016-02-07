@@ -86,7 +86,7 @@ namespace BlackCore
         //! \copydoc IContextSimulator::getMaxRenderedAircraft
         virtual int getMaxRenderedAircraft() const override;
 
-        //! \copydoc IContextSimulator::setMaxRenderedRemoteAircraft
+        //! \copydoc IContextSimulator::setMaxRenderedAircraft
         virtual void setMaxRenderedAircraft(int number) override;
 
         //! \copydoc IContextSimulator::setMaxRenderedDistance
@@ -119,7 +119,7 @@ namespace BlackCore
         //! \copydoc IContextSimulator::highlightAircraft
         virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
 
-        //! \copydoc ISimulator::enableDebuggingMessages
+        //! \copydoc ISimulator::enableDebugMessages
         virtual void enableDebugMessages(bool driver, bool interpolator) override;
     };
 } // namespace BlackCore

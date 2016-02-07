@@ -50,7 +50,7 @@ namespace BlackMisc
                 //! Current root directory
                 QString getRootDirectory() const { return this->m_rootDirectory; }
 
-                //! \copydoc IAircraftModelLoader::getPixmapForModel
+                //! \copydoc IAircraftModelLoader::iconForModel
                 virtual BlackMisc::CPixmap iconForModel(const QString &modelName, BlackMisc::CStatusMessage &statusMessage) const override;
 
                 //! \copydoc IAircraftModelLoader::startLoading

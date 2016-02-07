@@ -64,7 +64,7 @@ namespace BlackGui
             //! Destructor
             ~CDbMappingComponent();
 
-            //! \copydoc CWebDataReaderAware::setProvider
+            //! \copydoc BlackMisc::Network::CWebDataServicesAware::setProvider
             virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *provider) override;
 
             //! Graceful shutdown

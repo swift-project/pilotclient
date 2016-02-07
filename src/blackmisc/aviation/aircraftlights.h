@@ -42,10 +42,10 @@ namespace BlackMisc
             //! Constructor
             CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn);
 
-            //! \copydoc CValueObject::propertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-            //! \copydoc CValueObject::setPropertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! Strobes lights on?
@@ -96,7 +96,7 @@ namespace BlackMisc
             //! Returns object with all lights switched off
             static CAircraftLights allLightsOff();
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         private:

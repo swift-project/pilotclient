@@ -46,7 +46,7 @@ namespace BlackMisc
             //! Multiply operator *
             LATorLON operator *(double multiply) const;
 
-            //! \copydoc CValueObject::toIcon
+            //! \copydoc BlackMisc::Mixin::Icon::toIcon
             CIcon toIcon() const;
 
             /*!
@@ -67,7 +67,7 @@ namespace BlackMisc
             CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle);
 
         public:
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         private:

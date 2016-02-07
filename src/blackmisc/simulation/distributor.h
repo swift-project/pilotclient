@@ -78,16 +78,16 @@ namespace BlackMisc
             //! Matches key or alias
             bool matchesKeyOrAlias(const CDistributor &distributor) const;
 
-            //! \copydoc CValueObject::propertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-            //! \copydoc CValueObject::setPropertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! Compare for index
             int comparePropertyByIndex(const CDistributor &compareValue, const CPropertyIndex &index) const;
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
             //! Complete data?

@@ -82,28 +82,28 @@ namespace BlackCore
         //! \copydoc IContextAudio::setCurrentAudioDevice()
         virtual void setCurrentAudioDevice(const BlackMisc::Audio::CAudioDeviceInfo &audioDevice) override;
 
-        //! \copydoc IContext::setVoiceOutputVolume
+        //! \copydoc IContextAudio::setVoiceOutputVolume
         virtual void setVoiceOutputVolume(int volume) override;
 
-        //! \copydoc IContext::getVoiceOutputVolume
+        //! \copydoc IContextAudio::getVoiceOutputVolume
         virtual int getVoiceOutputVolume() const override;
 
-        //! \copydoc ICOntext::setMute
+        //! \copydoc IContextAudio::setMute
         virtual void setMute(bool muted) override;
 
         //! \copydoc IContextAudio::isMuted()
         virtual bool isMuted() const override;
 
-        //! \copydoc IContextAudio::playSelcalTone()
+        //! \copydoc IContextAudio::playSelcalTone
         virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) const override;
 
-        //! \copydoc IContextAudio::playNotification()
+        //! \copydoc IContextAudio::playNotification
         virtual void playNotification(BlackMisc::Audio::CNotificationSounds::Notification notification, bool considerSettings) const override;
 
-        //! \copydoc IContextAudio::enableAudioLoopback()
+        //! \copydoc IContextAudio::enableAudioLoopback
         virtual void enableAudioLoopback(bool enable = true) override;
 
-        //! \copydoc ICOntextAudio::isAudioLoopbackEnabled
+        //! \copydoc IContextAudio::isAudioLoopbackEnabled
         virtual bool isAudioLoopbackEnabled() const override;
 
         //! \addtogroup commandline

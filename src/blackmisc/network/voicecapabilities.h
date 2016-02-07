@@ -51,7 +51,7 @@ namespace BlackMisc
             //! Is capability known
             bool isUnknown() const { return m_voiceCapabilities == Unknown; }
 
-            //! \copydoc CValueObject::toIcon()
+            //! \copydoc BlackMisc::Mixin::Icon::toIcon()
             CIcon toIcon() const;
 
             //! From enum
@@ -66,7 +66,7 @@ namespace BlackMisc
             //! All capabilities as list
             static const QList<CVoiceCapabilities> &allCapabilities();
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         private:

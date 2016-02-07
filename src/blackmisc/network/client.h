@@ -111,22 +111,22 @@ namespace BlackMisc
             //! Model
             const BlackMisc::Simulation::CAircraftModel &getAircraftModel() const { return this->m_model; }
 
-            //! \copydoc CAircraftModel::hasQueriedModelString
+            //! \copydoc Simulation::CAircraftModel::hasQueriedModelString
             bool hasQueriedModelString() const { return this->m_model.hasQueriedModelString(); }
 
             //! Set model
             void setAircraftModel(const BlackMisc::Simulation::CAircraftModel &model) { this->m_model = model; }
 
-            //! \copydoc CValueObject::toIcon()
+            //! \copydoc BlackMisc::Mixin::Icon::toIcon()
             CIcon toIcon() const { return this->m_user.toIcon(); }
 
-            //! \copydoc CValueObject::propertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-            //! \copydoc CValueObject::setPropertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         private:

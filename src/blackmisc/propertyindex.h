@@ -157,11 +157,11 @@ namespace BlackMisc
             return static_cast<int>(ev) == l.first();
         }
 
-        //! \copydoc CValueObject::convertToQString
+        //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
     protected:
-        //! \copydoc CValueObject::parseFromString
+        //! Parse indexes from string
         void parseFromString(const QString &indexes);
 
     private:

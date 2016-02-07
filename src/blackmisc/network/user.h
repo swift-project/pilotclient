@@ -113,13 +113,13 @@ namespace BlackMisc
             //! Set associated callsign
             void setCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
-            //! \copydoc CValueObject::toIcon()
+            //! \copydoc BlackMisc::Mixin::Icon::toIcon()
             BlackMisc::CIcon toIcon() const { return this->getCallsign().toIcon(); }
 
-            //! \copydoc CValueObject::propertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-            //! \copydoc CValueObject::setPropertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! Compare by index
@@ -137,7 +137,7 @@ namespace BlackMisc
             //! Beautify real name, e.g. "JOE DoE" -> "Joe Doe";
             static QString beautifyRealName(const QString &realName);
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         private:

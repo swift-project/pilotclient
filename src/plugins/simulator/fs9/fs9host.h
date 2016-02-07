@@ -52,10 +52,10 @@ namespace BlackSimPlugin
             void statusChanged(BlackSimPlugin::Fs9::CFs9Host::HostStatus);
 
         protected:
-            //! \copydoc CContinuousWorker::initialize
+            //! \copydoc BlackMisc::CContinuousWorker::initialize
             virtual void initialize() override;
 
-            //! \copydoc CContinuousWorker::cleanup
+            //! \copydoc BlackMisc::CContinuousWorker::cleanup
             virtual void cleanup() override;
 
         private:

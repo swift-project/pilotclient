@@ -64,7 +64,7 @@ namespace BlackCore
         //! \copydoc IContextApplication::registerApplication
         virtual BlackMisc::CIdentifier registerApplication(const BlackMisc::CIdentifier &application) override;
 
-        //! \copydoc IContextApplication::unRegisterApplication
+        //! \copydoc IContextApplication::unregisterApplication
         virtual void unregisterApplication(const BlackMisc::CIdentifier &application) override;
 
         //! \copydoc IContextApplication::getRegisteredApplications

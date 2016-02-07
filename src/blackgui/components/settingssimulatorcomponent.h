@@ -36,7 +36,7 @@ namespace BlackGui
             ~CSettingsSimulatorComponent();
 
         protected:
-            //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet()
+            //! \copydoc CEnableForRuntime::runtimeHasBeenSet()
             virtual void runtimeHasBeenSet() override;
 
         private slots:

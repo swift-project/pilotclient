@@ -52,7 +52,7 @@ namespace BlackMisc
                     degrees + minutes / 100.0,
                     CAngleUnit::sexagesimalDegMin()) {}
 
-            //! \copydoc CValueObject::toIcon
+            //! \copydoc BlackMisc::Mixin::Icon::toIcon
             BlackMisc::CIcon toIcon() const;
 
             //! Value as factor of PI (e.g. 0.5PI)

@@ -306,7 +306,7 @@ namespace BlackGui
             //! Constructor
             CPhysiqalQuantiyFormatter(MU unit = MU::defaultUnit(), int digits = 2, int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true, QList<int> supportedRoles = roleDisplay()) : CValueObjectFormatter(alignment, i18n, supportedRoles), m_unit(unit), m_digits(digits), m_withUnit(withUnit) {}
 
-            //! \copydoc CValueObjectFormatter::displayRole
+            //! \copydoc BlackGui::Models::CDefaultFormatter::displayRole
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &physicalQuantity) const override
             {
                 if (physicalQuantity.canConvert<PQ>())

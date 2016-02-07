@@ -41,7 +41,7 @@ namespace BlackGui
             //! \copydoc QAbstractTableModel::rowCount
             int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
-            //! \copydoc QAbstractTableModel::columCount
+            //! \copydoc QAbstractTableModel::columnCount
             int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
             //! \copydoc QAbstractTableModel::data

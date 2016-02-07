@@ -108,13 +108,13 @@ namespace BlackMisc
             //! Equals callsign string?
             bool equalsString(const QString &callsignString) const;
 
-            //! \copydoc CValueObject::toIcon()
+            //! \copydoc BlackMisc::Mixin::Icon::toIcon()
             BlackMisc::CIcon toIcon() const { return convertToIcon(*this); }
 
-            //! \copydoc CValueObject::propertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-            //! \copydoc CValueObject::setPropertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! Compare for index
@@ -147,7 +147,7 @@ namespace BlackMisc
             //! Representing icon
             static const CIcon &convertToIcon(const CCallsign &callsign);
 
-            //! \copydoc CValueObject::convertToQString()
+            //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;
 
         protected:

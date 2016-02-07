@@ -166,10 +166,10 @@ namespace BlackMisc
         //! Severities as strings
         static const QStringList &allSeverityStrings();
 
-        //! \copydoc CValueObject::propertyByIndex
+        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
         CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-        //! \copydoc CValueObject::setPropertyByIndex
+        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
         void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
         //! Compare for index
@@ -178,7 +178,7 @@ namespace BlackMisc
         //! To HTML
         QString toHtml() const;
 
-        //! \copydoc CValueObject::convertToQString
+        //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
         //! Representing icon

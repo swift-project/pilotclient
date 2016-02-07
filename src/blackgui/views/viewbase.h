@@ -110,13 +110,13 @@ namespace BlackGui
             //! Allow to drag and/or drop value objects
             virtual void allowDragDropValueObjects(bool allowDrag, bool allowDrop);
 
-            //! \copydoc CDockWidget::allowDrop
+            //! \copydoc CDropBase::allowDrop
             virtual void allowDrop(bool allow) override;
 
-            //! \copydoc CDockWidget::isDropAllowed
+            //! \copydoc CDropBase::isDropAllowed
             virtual bool isDropAllowed() const override;
 
-            //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
+            //! \copydoc Components::CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
             virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget);
 
             //! Resize mode
@@ -191,7 +191,7 @@ namespace BlackGui
             //! Menus
             Menu getMenu() const { return this->m_menus; }
 
-            //! \copydoc QTableView::setSelectionModel();
+            //! \copydoc QTableView::setSelectionModel
             virtual void setSelectionModel(QItemSelectionModel *model) override;
 
             //! Main application window widget if any
@@ -256,7 +256,7 @@ namespace BlackGui
 
             //! Method creating the menu
             //! \remarks override this method to contribute to the menu
-            //! \sa CViewBaseNonTemplate::ps_customMenuRequested
+            //! \sa BlackGui::Views::CViewBaseNonTemplate::ps_customMenuRequested
             virtual void customMenu(QMenu &menu) const;
 
             //! \copydoc QTableView::paintEvent
@@ -430,13 +430,13 @@ namespace BlackGui
             //! Access to container
             const ContainerType &container() const;
 
-            //! \copydoc BlackGui::Models::ListModelBase::containerOrFilteredContainer
+            //! \copydoc BlackGui::Models::CListModelBase::containerOrFilteredContainer
             const ContainerType &containerOrFilteredContainer() const;
 
             //! Selected objects
             ContainerType selectedObjects() const;
 
-            //! \copydoc CViewBaseNonTemplate::removeSelectedRows
+            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::removeSelectedRows
             //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
             virtual int removeSelectedRows() override;
 
@@ -476,7 +476,7 @@ namespace BlackGui
             //! Column count
             int columnCount() const;
 
-            //! \copydoc CViewBaseNonTemplate::isEmpty
+            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::isEmpty
             virtual bool isEmpty() const override;
 
             //! Convert to JSON

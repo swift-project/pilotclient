@@ -133,7 +133,7 @@ namespace BlackMisc
             //! Returns the metar in a descriptive text
             QString getMetarText() const;
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
             //! Return CAVOK metar

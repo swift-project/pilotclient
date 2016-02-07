@@ -97,13 +97,13 @@ namespace BlackMisc
         //! Representing icon
         CIcon toIcon() const;
 
-        //! \copydoc CValueObject::convertToQString
+        //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
-        //! \copydoc CValueObject::propertyByIndex
+        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
         CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-        //! \copydoc CValueObject::setPropertyByIndex
+        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
         void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
         //! Compare for index

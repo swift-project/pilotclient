@@ -42,7 +42,7 @@ namespace BlackMisc
             //! Set to on/off
             void setOn(bool on) { m_on = on; }
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         private:

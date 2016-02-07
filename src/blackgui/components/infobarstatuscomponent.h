@@ -48,7 +48,7 @@ namespace BlackGui
             void setDBusTooltip(const QString &tooltip);
 
         protected:
-            //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
+            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
             virtual void runtimeHasBeenSet() override;
 
         private:

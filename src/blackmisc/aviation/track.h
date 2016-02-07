@@ -81,7 +81,7 @@ namespace BlackMisc
             //! \brief Get reference north (magnetic or true)
             ReferenceNorth getReferenceNorth() const { return m_north; }
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         private:

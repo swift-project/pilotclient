@@ -183,7 +183,7 @@ namespace BlackMisc
         //! \copydoc CValueObject::qHash
         friend uint qHash(const CPropertyIndexVariantMap &vm) { return vm.getValueHash(); }
 
-        //! \copydoc CValueObject::convertToQString
+        //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
     protected:
@@ -191,10 +191,10 @@ namespace BlackMisc
         bool m_wildcard; //!< wildcard
 
     public:
-        //! \copydoc CValueObject::marshallToDbus
+        //! \copydoc BlackMisc::Mixin::DBusByTuple::marshallToDbus
         void marshallToDbus(QDBusArgument &argument) const;
 
-        //! \copydoc CValueObject::unmarshallFromDbus
+        //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
         void unmarshallFromDbus(const QDBusArgument &argument);
 
     };

@@ -70,7 +70,7 @@ namespace BlackCore
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
 
-        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::connectSignals
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::connectRemoteAircraftProviderSignals
         //! \ingroup remoteaircraftprovider
         virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
             QObject *receiver,
@@ -117,7 +117,7 @@ namespace BlackCore
         //! \copydoc IContextNetwork::getAtcStationsBooked()
         virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override;
 
-        //! \copydoc IContextNetwork::getAircraftInRange
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftInRange
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;
 
@@ -125,11 +125,11 @@ namespace BlackCore
         //! \ingroup remoteaircraftprovider
         virtual int getAircraftInRangeCount() const override;
 
-        //! \copydoc IContextNetwork::getAircraftInRangeForCallsign
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftInRangeForCallsign
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
-        //! \copydoc IContextNetwork::getAircraftinRangeModelForCallsign
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftInRangeModelForCallsign
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Simulation::CAircraftModel getAircraftInRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
@@ -186,13 +186,13 @@ namespace BlackCore
         //! \copydoc IContextNetwork::getUsersForCallsigns
         virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override;
 
-        //! \copydoc IContextNetwork::getUsersForCallsign
+        //! \copydoc IContextNetwork::getUserForCallsign
         virtual BlackMisc::Network::CUser getUserForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
         //! \copydoc IContextNetwork::getOtherClients
         virtual BlackMisc::Network::CClientList getOtherClients() const override;
 
-        //! \copydoc IContextNetwork::getOtherClientForCallsigns
+        //! \copydoc IContextNetwork::getOtherClientsForCallsigns
         virtual BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override;
 
         //! \copydoc IContextNetwork::getVatsimFsdServers

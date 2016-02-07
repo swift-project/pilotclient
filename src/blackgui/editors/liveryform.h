@@ -39,7 +39,7 @@ namespace BlackGui
             //! Destructor
             ~CLiveryForm();
 
-            //! \copydoc CWebDataServicesAware::setProvider
+            //! \copydoc BlackMisc::Network::CWebDataServicesAware::setProvider
             virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *provider) override;
 
             //! Value

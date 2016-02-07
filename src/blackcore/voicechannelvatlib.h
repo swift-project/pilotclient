@@ -47,7 +47,7 @@ namespace BlackCore
         //! \copydoc IVoiceChannel::getVoiceRoomCallsigns
         virtual BlackMisc::Aviation::CCallsignSet getVoiceRoomCallsigns() const override;
 
-        //! \copydoc IVoiceChannel::setMyAircraftCallsign
+        //! \copydoc IVoiceChannel::setOwnAircraftCallsign
         virtual void setOwnAircraftCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
 
         //! \copydoc IVoiceChannel::getVoiceRoom

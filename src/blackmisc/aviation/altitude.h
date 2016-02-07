@@ -57,7 +57,7 @@ namespace BlackMisc
                 FlightLevel         //!< Flight level
             };
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
             //! Default constructor: 0 Altitude true
@@ -90,13 +90,13 @@ namespace BlackMisc
             //! Flightlevel to MSL
             void toMeanSeaLevel();
 
-            //! \copydoc CValueObject::parseFromString(const QString &value)
+            //! Parse value from string
             void parseFromString(const QString &value);
 
-            //! \copydoc CValueObject::parseFromString(const QString &value, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode)
+            //! Parse value from string, with specified separator
             void parseFromString(const QString &value, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode);
 
-            //! \copydoc CValueObject::toIcon
+            //! \copydoc BlackMisc::Mixin::Icon::toIcon
             BlackMisc::CIcon toIcon() const;
 
         private:

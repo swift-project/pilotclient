@@ -97,7 +97,7 @@ namespace BlackSimPlugin
             void getAircraftModelFilenameAsync(QString *o_modelFilename);
             //! @}
 
-            //! \copydoc XBus::CService::getAircraftModelLivery
+            //! \copydoc XBus::CService::getAircraftLivery
             //! @{
             QString getAircraftModelLivery() const;
             void getAircraftModelLiveryAsync(QString *o_modelLivery);

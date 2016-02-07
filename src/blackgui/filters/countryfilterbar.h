@@ -39,10 +39,10 @@ namespace BlackGui
             //! Destructor
             ~CCountryFilterBar();
 
-            //! \copydoc IModelFilter::getModelFilter
+            //! \copydoc Models::IModelFilterProvider::createModelFilter
             virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::CCountryList>> createModelFilter() const override;
 
-            //! \copydoc CWebDataReaderAware::setProvider
+            //! \copydoc BlackMisc::Network::CWebDataServicesAware::setProvider
             virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
         public slots:

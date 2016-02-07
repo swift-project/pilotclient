@@ -144,7 +144,7 @@ namespace BlackMisc
                 return u;
             }
 
-            //! \copydoc CValueObject::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
@@ -243,7 +243,7 @@ namespace BlackMisc
                 return u;
             }
 
-            //! \copydoc CValueObject::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
@@ -333,7 +333,7 @@ namespace BlackMisc
                 return u;
             }
 
-            //! \copydoc CValueObject::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
@@ -432,7 +432,7 @@ namespace BlackMisc
                 return u;
             }
 
-            //! \copydoc CValueObject::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
@@ -548,7 +548,7 @@ namespace BlackMisc
                 return u;
             }
 
-            //! \copydoc CValueObject::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
@@ -639,7 +639,7 @@ namespace BlackMisc
                 return u;
             }
 
-            //! \copydoc CValueObject::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
@@ -748,7 +748,7 @@ namespace BlackMisc
                 return u;
             }
 
-            //! \copydoc CValueObject::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
@@ -881,7 +881,7 @@ namespace BlackMisc
                 return u;
             }
 
-            //! \copydoc CValueObject::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
@@ -955,7 +955,7 @@ namespace BlackMisc
                 return u;
             }
 
-            //! \copydoc CValueObject::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;

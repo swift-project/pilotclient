@@ -69,7 +69,7 @@ namespace BlackGui
             void onMainInfoAreaChanged(int currentTabIndex, QList<int> dockedIndexes, QList<int> floatingIndexes);
 
         protected:
-            //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
+            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
             virtual void runtimeHasBeenSet() override;
 
         private slots:

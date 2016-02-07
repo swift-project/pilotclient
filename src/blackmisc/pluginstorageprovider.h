@@ -44,7 +44,7 @@ namespace BlackMisc
             return m_pluginStorageProvider->getPluginData(obj, key);
         }
 
-        //! \copydoc IOwnAircraftProvider::ownAircraft
+        //! \copydoc IPluginStorageProvider::setPluginData
         virtual void setPluginData(const QObject *obj, const QString &key, const CVariant &value)
         {
             m_pluginStorageProvider->setPluginData(obj, key, value);

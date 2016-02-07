@@ -104,7 +104,7 @@ namespace BlackMisc
         //! Simplifies composition, returns 0 for performance
         friend uint qHash(const C<T> &) { return 0; }
 
-        //! \copydoc CValueObject::toJson
+        //! \copydoc BlackMisc::Mixin::JsonByTuple::toJson
         QJsonObject toJson() const
         {
             QJsonArray array;
@@ -124,7 +124,7 @@ namespace BlackMisc
             return jsonDoc.toJson(format);
         }
 
-        //! \copydoc CValueObject::convertFromJson
+        //! \copydoc BlackMisc::Mixin::JsonByTuple::convertFromJson
         void convertFromJson(const QJsonObject &json)
         {
             derived().clear();
@@ -144,7 +144,7 @@ namespace BlackMisc
             this->convertFromJson(BlackMisc::Json::jsonObjectFromString(jsonString));
         }
 
-        //! \copydoc BlackMisc::CValueObject::convertToQString
+        //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const
         {
             QString str;

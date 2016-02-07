@@ -35,16 +35,16 @@ namespace BlackCore
         //! \copydoc IContextOwnAircraft::getOwnAircraft()
         virtual BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const override;
 
-        //! \copydoc IContextOwnAircraft::updatePosition
+        //! \copydoc IContextOwnAircraft::updateOwnPosition
         virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) override;
 
         //! \copydoc IContextOwnAircraft::updateCockpit
         virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const BlackMisc::CIdentifier &originator) override;
 
-        //! \copydoc IContextOwnAircraft::updateComFrequency
+        //! \copydoc IContextOwnAircraft::updateActiveComFrequency
         virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit comUnit, const BlackMisc::CIdentifier &originator) override;
 
-        //! \copydoc IContextOwnAircraft::updatePilot
+        //! \copydoc IContextOwnAircraft::updateOwnAircraftPilot
         virtual bool updateOwnAircraftPilot(const BlackMisc::Network::CUser &pilot) override;
 
         //! \copydoc IContextOwnAircraft::updateSelcal
@@ -56,7 +56,7 @@ namespace BlackCore
         //! \copydoc IContextOwnAircraft::updateOwnIcaoCodes
         virtual bool updateOwnIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode, const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcaoCode) override;
 
-        //! \copydoc IContextOwnAircraft::setAudioOutputVolumes
+        //! \copydoc IContextOwnAircraft::setAudioOutputVolume
         virtual void setAudioOutputVolume(int outputVolume) override;
 
         //! \copydoc IContextOwnAircraft::setAudioVoiceRoomOverrideUrls

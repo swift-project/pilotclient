@@ -75,7 +75,7 @@ namespace BlackGui
             void showCorrespondingTab(const BlackMisc::Aviation::CCallsign &callsign);
 
         protected:
-            //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
+            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
             void runtimeHasBeenSet() override;
 
         private:

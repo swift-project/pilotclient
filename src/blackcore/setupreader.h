@@ -41,10 +41,10 @@ namespace BlackCore
         void versionSynchronized(bool success);
 
     protected slots:
-        //! \copydoc CThreadedReader::initialize
+        //! \copydoc BlackMisc::CThreadedReader::initialize
         virtual void initialize() override;
 
-        //! \copydoc CThreadedReader::cleanup
+        //! \copydoc BlackMisc::CThreadedReader::cleanup
         virtual void cleanup() override;
 
     private slots:

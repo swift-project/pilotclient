@@ -37,13 +37,13 @@ namespace BlackMisc
                 //! Notification flag (play notification?)
                 void setNotificationFlag(BlackMisc::Audio::CNotificationSounds::Notification notification, bool value);
 
-                //! \copydoc BlackCore::IContextSettings::value
+                //! Settings value
                 BlackMisc::CStatusMessage value(const QString &path, const QString &command, const BlackMisc::CVariant &value, bool &changedFlag);
 
                 //! Init with meaningful default values
                 void initDefaultValues();
 
-                //! \copydoc CValueObject::convertToQString
+                //! \copydoc BlackMisc::Mixin::String::toQString
                 QString convertToQString(bool i18n = false) const;
 
             private:

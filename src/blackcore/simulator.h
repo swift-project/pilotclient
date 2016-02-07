@@ -276,7 +276,7 @@ namespace BlackCore
         //! Create a new instance of a driver
         //! \param info                      metadata about simulator
         //! \param ownAircraftProvider       in memory access to own aircraft data
-        //! \param renderedAircraftProvider  in memory access to rendered aircraft data such as situation history and aircraft itself
+        //! \param remoteAircraftProvider    in memory access to rendered aircraft data such as situation history and aircraft itself
         //! \param pluginStorageProvider     in memory access to persistent plugin data store
         //! \return driver instance
         virtual ISimulator *create(

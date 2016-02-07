@@ -126,7 +126,7 @@ namespace BlackCore
         //! \copydoc IContextNetwork::getVatsimFsdServers
         virtual BlackMisc::Network::CServerList getVatsimFsdServers() const override;
 
-        //! \copydoc IContextNetwork::getOtherClientForCallsigns
+        //! \copydoc IContextNetwork::getOtherClientsForCallsigns
         virtual BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override;
 
         //! \copydoc IContextNetwork::requestDataUpdates

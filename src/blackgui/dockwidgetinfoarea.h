@@ -48,7 +48,7 @@ namespace BlackGui
         //! Contribute to menu
         virtual void addToContextMenu(QMenu *contextMenu) const override;
 
-        //! \copydoc CDockWidget::initalFloating
+        //! \copydoc CDockWidget::initialFloating
         virtual void initialFloating() override;
 
     private:

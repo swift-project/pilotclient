@@ -105,10 +105,10 @@ namespace BlackMisc
         //! Constructor
         ITimestampBased(const QDateTime &timestamp);
 
-        //! \copydoc CValueObject::propertyByIndex
+        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
         CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-        //! \copydoc CValueObject::setPropertyByIndex
+        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
         void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
         //! Compare for index

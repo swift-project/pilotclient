@@ -104,7 +104,7 @@ namespace BlackMisc
             //! Compare for index
             int comparePropertyByIndex(const CSimulatorInfo &compareValue, const CPropertyIndex &index) const;
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
             //! Add simulator

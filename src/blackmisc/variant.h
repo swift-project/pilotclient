@@ -228,7 +228,7 @@ namespace BlackMisc
         //! Convert this variant to the type with the given metatype ID and return true if successful.
         bool convert(int typeId) { return m_v.convert(typeId); }
 
-        //! \copydoc CValueObject::convertToQString
+        //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
         //! True if this variant's type is an integral type.
@@ -267,28 +267,28 @@ namespace BlackMisc
         //! Return the metatype ID of the value in this variant.
         int userType() const { return m_v.userType(); }
 
-        //! \copydoc CValueObject::toJson
+        //! \copydoc BlackMisc::Mixin::JsonByTuple::toJson
         QJsonObject toJson() const;
 
-        //! \copydoc CValueObject::convertFromJson
+        //! \copydoc BlackMisc::Mixin::JsonByTuple::convertFromJson
         void convertFromJson(const QJsonObject &json);
 
-        //! \copydoc CValueObject::marshallToDbus
+        //! \copydoc BlackMisc::Mixin::DBusByTuple::marshallToDbus
         void marshallToDbus(QDBusArgument &argument) const;
 
-        //! \copydoc CValueObject::unmarshallFromDbus
+        //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
         void unmarshallFromDbus(const QDBusArgument &argument);
 
         //! \copydoc CValueObject::compare
         friend int compare(const CVariant &a, const CVariant &b) { return compareImpl(a, b); }
 
-        //! \copydoc CValueObject::setPropertyByIndex
+        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
         void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index);
 
-        //! \copydoc CValueObject::propertyByIndex
+        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
         CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-        //! \copydoc CValueObject::propertyByIndexAsString
+        //! \copydoc BlackMisc::Mixin::Index::propertyByIndexAsString
         QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const;
 
         //! \copydoc CValueObject::equalsPropertyByIndex
@@ -297,7 +297,7 @@ namespace BlackMisc
         //! \copydoc CValueObject::toPixmap
         QPixmap toPixmap() const;
 
-        //! \copydoc CValueObject::toIcon
+        //! \copydoc BlackMisc::Mixin::Icon::toIcon
         CIcon toIcon() const;
 
     private:

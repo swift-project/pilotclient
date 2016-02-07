@@ -64,10 +64,10 @@ namespace BlackMisc
                                const BlackMisc::PhysicalQuantities::CAngle &bank = {},
                                const BlackMisc::PhysicalQuantities::CSpeed &gs = {});
 
-            //! \copydoc CValueObject::propertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-            //! \copydoc CValueObject::setPropertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! Get position
@@ -76,23 +76,23 @@ namespace BlackMisc
             //! Set position
             void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { this->m_position = position; }
 
-            //! \copydoc ICoordinateGeodetic::latitude()
+            //! \copydoc Geo::ICoordinateGeodetic::latitude()
             virtual BlackMisc::Geo::CLatitude latitude() const override { return this->m_position.latitude(); }
 
-            //! \copydoc ICoordinateGeodetic::longitude()
+            //! \copydoc Geo::ICoordinateGeodetic::longitude()
             virtual BlackMisc::Geo::CLongitude longitude() const override { return this->m_position.longitude(); }
 
             //! Guess if aircraft is "on ground"
             virtual bool isOnGroundGuessed() const;
 
-            //! \copydoc ICoordinateGeodetic::geodeticHeight
+            //! \copydoc Geo::ICoordinateGeodetic::geodeticHeight
             //! \remarks this should be used for elevation as depicted here: http://en.wikipedia.org/wiki/Altitude#mediaviewer/File:Vertical_distances.svg
             const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override { return this->m_position.geodeticHeight(); }
 
-            //! \copydoc ICoordinateGeodetic::normalVector
+            //! \copydoc Geo::ICoordinateGeodetic::normalVector
             virtual QVector3D normalVector() const override { return this->m_position.normalVector(); }
 
-            //! \copydoc ICoordinateGeodetic::normalVectorDouble
+            //! \copydoc Geo::ICoordinateGeodetic::normalVectorDouble
             virtual std::array<double, 3> normalVectorDouble() const override { return this->m_position.normalVectorDouble(); }
 
             //! Elevation
@@ -143,7 +143,7 @@ namespace BlackMisc
             //! Corresponding callsign
             void setCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         private:

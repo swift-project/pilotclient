@@ -25,10 +25,10 @@ namespace BlackSimPlugin
          */
         struct XBusServer : public BlackMisc::CSettingTrait<QString>
         {
-            //! \copydoc BlackMisc::CSetting::key
+            //! \copydoc BlackMisc::CSettingTrait::key
             static const char *key() { return "xbus/server"; }
 
-            //! \copydoc BlackMisc::CSetting::defaultValue
+            //! \copydoc BlackMisc::CSettingTrait::defaultValue
             static QString defaultValue() { return QStringLiteral("session"); }
         };
 

@@ -68,7 +68,7 @@ namespace BlackGui
             //! Get METAR for given ICAO airport code
             void getMetar(const QString &airportIcaoCode);
 
-            //! \copydoc CAtcStationListModel::changedAtcStationConnectionStatus
+            //! \copydoc Models::CAtcStationListModel::changedAtcStationConnectionStatus
             void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
 
         protected:

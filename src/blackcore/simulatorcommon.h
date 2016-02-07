@@ -66,34 +66,34 @@ namespace BlackCore
         //! \copydoc ISimulator::isMaxDistanceRestricted
         virtual bool isMaxDistanceRestricted() const override;
 
-        //! \copydoc ISimulator::enableDebuggingMessages
+        //! \copydoc ISimulator::enableDebugMessages
         virtual void enableDebugMessages(bool driverMessages, bool interpolatorMessages) override;
 
         //! \copydoc ISimulator::getInstalledModelsCount
         virtual int getInstalledModelsCount() const override;
 
-        //! \copydoc IContextSimulator::highlightAircraft
+        //! \copydoc ISimulator::highlightAircraft
         virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
 
-        //! \copydoc IContextSimulator::isRenderingEnabled
+        //! \copydoc ISimulator::isRenderingEnabled
         virtual bool isRenderingEnabled() const override;
 
-        //! \copydoc IContextSimulator::isRenderingRestricted
+        //! \copydoc ISimulator::isRenderingRestricted
         virtual bool isRenderingRestricted() const override;
 
-        //! \copydoc IContextSimulator::getSimulatorPluginInfo
+        //! \copydoc ISimulator::getSimulatorPluginInfo
         virtual const BlackMisc::Simulation::CSimulatorPluginInfo &getSimulatorPluginInfo() const override;
 
-        //! \copydoc IContextSimulator::getSimulatorSetup
+        //! \copydoc ISimulator::getSimulatorSetup
         virtual const BlackMisc::Simulation::CSimulatorSetup &getSimulatorSetup() const override;
 
-        //! \copydoc IContextSimulator::unload
+        //! \copydoc ISimulator::unload
         virtual void unload();
 
         //! \copydoc IContextSimulator::deleteAllRenderingRestrictions
         virtual void deleteAllRenderingRestrictions() override;
 
-        //! \copydoc IContextSimulator::physicallyRemoveRemoteAircraft
+        //! \copydoc ISimulator::physicallyRemoveMultipleRemoteAircraft
         virtual int physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) override;
 
     protected slots:
@@ -120,10 +120,10 @@ namespace BlackCore
                          BlackMisc::IPluginStorageProvider *pluginStorageProvider,
                          QObject *parent);
 
-        //! \copydoc IContextSimulator::logicallyAddRemoteAircraft
+        //! \copydoc ISimulator::logicallyAddRemoteAircraft
         virtual bool logicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
 
-        //! \copydoc IContextSimulator::logicallyRemoveRemoteAircraft
+        //! \copydoc ISimulator::logicallyRemoveRemoteAircraft
         virtual bool logicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 
         //! Blink the highlighted aircraft

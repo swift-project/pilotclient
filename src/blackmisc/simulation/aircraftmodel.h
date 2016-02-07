@@ -90,10 +90,10 @@ namespace BlackMisc
             //! Constructor.
             CAircraftModel(const QString &model, ModelType type, CSimulatorInfo &simulator, const QString &name, const QString &description, const BlackMisc::Aviation::CAircraftIcaoCode &icao, const BlackMisc::Aviation::CLivery &livery = BlackMisc::Aviation::CLivery());
 
-            //! \copydoc CValueObject::propertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-            //! \copydoc CValueObject::setPropertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! Can be initialized from FSD
@@ -243,7 +243,7 @@ namespace BlackMisc
             //! Validate
             BlackMisc::CStatusMessageList validate(bool withNestedObjects) const;
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
             //! To database JSON

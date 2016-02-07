@@ -36,14 +36,14 @@ namespace BlackSimPlugin
             Q_OBJECT
 
         public:
-            //! \copydoc BlackCore::ISimulatorFactory::create(ownAircraftProvider, remoteAircraftProvider, parent)
+            //! Constructor
             CSimulatorXPlane(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                              BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                              BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                              BlackMisc::IPluginStorageProvider *pluginStorageProvider,
                              QObject *parent = nullptr);
 
-            //! \copydoc ISimulator::isTimeSynchronized
+            //! \copydoc BlackCore::ISimulator::isTimeSynchronized
             virtual bool isTimeSynchronized() const override { return false; } // TODO: Can we query the XP intrinisc feature?
 
             //! \copydoc BlackCore::ISimulator::connectTo
@@ -52,7 +52,7 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::disconnectFrom
             virtual bool disconnectFrom() override;
 
-            //! \copydoc ISimulator::physicallyAddRemoteAircraft()
+            //! \copydoc BlackCore::ISimulator::physicallyAddRemoteAircraft()
             virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
 
             //! \copydoc BlackCore::ISimulator::physicallyRemoveRemoteAircraft
@@ -61,16 +61,16 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::physicallyRemoveAllRemoteAircraft
             virtual int physicallyRemoveAllRemoteAircraft() override;
 
-            //! \copydoc ISimulator::physicallyRenderedAircraft
+            //! \copydoc BlackCore::ISimulator::physicallyRenderedAircraft
             virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
 
-            //! \copydoc ISimulator::isPhysicallyRenderedAircraft
+            //! \copydoc BlackCore::ISimulator::isPhysicallyRenderedAircraft
             virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
-            //! \copydoc ISimulator::changeRenderedAircraftModel
+            //! \copydoc BlackCore::ISimulator::changeRemoteAircraftModel
             virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) override;
 
-            //! \copydoc ISimulator::changeAircraftEnabled
+            //! \copydoc BlackCore::ISimulator::changeRemoteAircraftEnabled
             virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) override;
 
             //! \copydoc BlackCore::ISimulator::updateOwnSimulatorCockpit
@@ -79,52 +79,52 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::displayStatusMessage
             virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const override;
 
-            //! \copydoc ISimulator::displayTextMessage
+            //! \copydoc BlackCore::ISimulator::displayTextMessage
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
 
             //! \copydoc BlackCore::ISimulator::getInstalledModels
             virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override;
 
-            //! \copydoc ISimulator::reloadInstalledModels
+            //! \copydoc BlackCore::ISimulator::reloadInstalledModels
             virtual void reloadInstalledModels() override;
 
             //! \copydoc BlackCore::ISimulator::getAirportsInRange
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const;
 
-            //! \copydoc ISimulator::setTimeSynchronization
+            //! \copydoc BlackCore::ISimulator::setTimeSynchronization
             virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
 
-            //! \copydoc ISimulator::getTimeSynchronizationOffset
+            //! \copydoc BlackCore::ISimulator::getTimeSynchronizationOffset
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override { return BlackMisc::PhysicalQuantities::CTime(0, BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()); }
 
-            //! \copydoc ISimulator::iconForModel
+            //! \copydoc BlackCore::ISimulator::iconForModel
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
 
             //! Creates an appropriate dbus connection from the string describing it
             static QDBusConnection connectionFromString(const QString &str);
 
         protected slots:
-            //! \copydoc CSimulatorCommon::ps_remoteProviderAddAircraftSituation
+            //! \copydoc BlackCore::CSimulatorCommon::ps_remoteProviderAddAircraftSituation
             virtual void ps_remoteProviderAddAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
 
-            //! \copydoc CSimulatorCommon::ps_remoteProvideraddAircraftParts
+            //! \copydoc BlackCore::CSimulatorCommon::ps_remoteProviderAddAircraftParts
             virtual void ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts) override;
 
-            //! \copydoc CSimulatorCommon::ps_remoteProviderRemovedAircraft
+            //! \copydoc BlackCore::CSimulatorCommon::ps_remoteProviderRemovedAircraft
             virtual void ps_remoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 
         protected:
             //! \copydoc BlackCore::ISimulator::isConnected
             virtual bool isConnected() const override;
 
-            //! \copydoc ISimulator::isPaused
+            //! \copydoc BlackCore::ISimulator::isPaused
             virtual bool isPaused() const override
             {
                 //! \todo XP: provide correct pause state
                 return false;
             }
 
-            //! \copydoc ISimulator::isSimulating
+            //! \copydoc BlackCore::ISimulator::isSimulating
             virtual bool isSimulating() const override { return isConnected(); }
 
         private slots:
@@ -226,7 +226,7 @@ namespace BlackSimPlugin
             Q_INTERFACES(BlackCore::ISimulatorFactory)
 
         public:
-            //! \copydoc BlackCore::ISimulatorFactory::create()
+            //! \copydoc BlackCore::ISimulatorFactory::create
             virtual BlackCore::ISimulator *create(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                                                   BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
                                                   BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,

@@ -83,13 +83,13 @@ namespace BlackMisc
         //!          topological sorting algorithm, to sort patterns by their generality.
         bool isProperSubsetOf(const CLogPattern &other) const;
 
-        //! \copydoc CValueObject::convertToQString()
+        //! \copydoc BlackMisc::Mixin::String::toQString()
         QString convertToQString(bool i18n = false) const;
 
-        //! \copydoc CValueObject::marshallToDbus()
+        //! \copydoc BlackMisc::Mixin::DBusByTuple::marshallToDbus()
         void marshallToDbus(QDBusArgument &argument) const;
 
-        //! \copydoc CValueObject::marshallFromDbus()
+        //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus()
         void unmarshallFromDbus(const QDBusArgument &argument);
 
         //! \copydoc CValueObject::qHash

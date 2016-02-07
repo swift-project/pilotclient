@@ -39,7 +39,7 @@ namespace BlackGui
             //! Set color for highlighting
             void setHighlightColor(QColor color) { m_highlightColor = color; }
 
-            //! \copydoc CListModelBase::data
+            //! Get data for index and role
             virtual QVariant data(const QModelIndex &index, int role) const override;
 
             //! DB key for given index
@@ -49,7 +49,7 @@ namespace BlackGui
             bool isHighlightIndex(const QModelIndex &index) const;
 
         protected:
-            //! \copydoc CListModelDbObjectsNonTemplate::CListModelDbObjectsNonTemplate
+            //! Constructor
             CListModelDbObjects(const QString &translationContext, QObject *parent = nullptr);
 
         private:

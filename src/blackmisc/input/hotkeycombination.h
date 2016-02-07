@@ -70,7 +70,7 @@ namespace BlackMisc
             //! E.g. CTRL would be a subset of CTRL+D
             bool isSubsetOf(const CHotkeyCombination &other) const;
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         private:

@@ -52,7 +52,7 @@ namespace BlackMisc
             //! \copydoc IOwnAircraftProvider::updateCockpit
             virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const BlackMisc::CIdentifier &originator) override;
 
-            //! \copydoc IOwnAircraftProvider::updateComFrequency
+            //! \copydoc IOwnAircraftProvider::updateActiveComFrequency
             virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit comUnit, const BlackMisc::CIdentifier &originator) override;
 
             //! \copydoc IOwnAircraftProvider::updateSelcal

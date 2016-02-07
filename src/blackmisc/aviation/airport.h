@@ -77,41 +77,41 @@ namespace BlackMisc
             //! \sa setGeodeticHeight
             void setElevation(const BlackMisc::PhysicalQuantities::CLength &elevation) { return this->m_position.setGeodeticHeight(elevation); }
 
-            //! \copydoc ICoordinateGeodetic::geodeticHeight
+            //! \copydoc Geo::ICoordinateGeodetic::geodeticHeight
             //! \remarks this should be used for elevation as depicted here: http://en.wikipedia.org/wiki/Altitude#mediaviewer/File:Vertical_distances.svg
             const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override { return this->m_position.geodeticHeight(); }
 
             //! Valid ICAO code
             bool hasValidIcaoCode() const { return !this->getIcao().isEmpty(); }
 
-            //! \copydoc ICoordinateGeodetic::latitude
+            //! \copydoc Geo::ICoordinateGeodetic::latitude
             virtual BlackMisc::Geo::CLatitude latitude() const override
             {
                 return this->getPosition().latitude();
             }
 
-            //! \copydoc ICoordinateGeodetic::longitude
+            //! \copydoc Geo::ICoordinateGeodetic::longitude
             virtual BlackMisc::Geo::CLongitude longitude() const override
             {
                 return this->getPosition().longitude();
             }
 
-            //! \copydoc ICoordinateGeodetic::normalVector
+            //! \copydoc Geo::ICoordinateGeodetic::normalVector
             virtual QVector3D normalVector() const override { return this->getPosition().normalVector(); }
 
-            //! \copydoc ICoordinateGeodetic::normalVectorDouble
+            //! \copydoc Geo::ICoordinateGeodetic::normalVectorDouble
             virtual std::array<double, 3> normalVectorDouble() const override { return this->getPosition().normalVectorDouble(); }
 
-            //! \copydoc CValueObject::propertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-            //! \copydoc CValueObject::setPropertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! Compare for index
             int comparePropertyByIndex(const CAirport &compareValue, const CPropertyIndex &index) const;
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         private:

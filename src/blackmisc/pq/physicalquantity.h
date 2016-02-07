@@ -181,40 +181,40 @@ namespace BlackMisc
             //! Make value always negative
             void makeNegative();
 
-            //! \copydoc CValueObject::marshallToDbus
+            //! \copydoc BlackMisc::Mixin::DBusByTuple::marshallToDbus
             void marshallToDbus(QDBusArgument &argument) const;
 
-            //! \copydoc CValueObject::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &argument);
 
-            //! \copydoc CValueObject::qHash
+            //! \copydoc BlackMisc::Mixin::HashByTuple::qHash
             uint getValueHash() const;
 
             //! \copydoc CValueObject::qHash
             friend uint qHash(const PQ &pq) { return pq.getValueHash(); }
 
-            //! \copydoc CValueObject::toJson
+            //! \copydoc BlackMisc::Mixin::JsonByTuple::toJson
             QJsonObject toJson() const;
 
-            //! \copydoc CValueObject::convertFromJson
+            //! \copydoc BlackMisc::Mixin::JsonByTuple::convertFromJson
             void convertFromJson(const QJsonObject &json);
 
             //! Parse to string, with specified separator
             void parseFromString(const QString &value, CPqString::SeparatorMode mode);
 
-            //! \copydoc CValueObject::parseFromString
+            //! Parse value from string
             void parseFromString(const QString &value);
 
-            //! \copydoc CValueObject::propertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-            //! \copydoc CValueObject::setPropertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! Compare
             int comparePropertyByIndex(const PQ &pq, const CPropertyIndex &index) const;
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         protected:

@@ -70,7 +70,7 @@ namespace BlackMisc
             //! All valid code pairs: AB, AC, AD ...
             static const QStringList &codePairs();
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         private:

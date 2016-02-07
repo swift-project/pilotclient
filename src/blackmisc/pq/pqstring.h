@@ -30,7 +30,7 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CPqString : public CValueObject<CPqString>
         {
         public:
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
             //! Number separators / group separators

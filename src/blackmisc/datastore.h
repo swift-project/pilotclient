@@ -71,10 +71,10 @@ namespace BlackMisc
         //! Is a key available?
         static bool existsKey(const QJsonObject &json, const QString &prefix = QString());
 
-        //! \copydoc CValueObject::propertyByIndex
+        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
         CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-        //! \copydoc CValueObject::setPropertyByIndex
+        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
         void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
         //! Compare by index
@@ -126,10 +126,10 @@ namespace BlackMisc
         //! Is a key available?
         static bool existsKey(const QJsonObject &json, const QString &prefix = QString());
 
-        //! \copydoc CValueObject::propertyByIndex
+        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
         CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-        //! \copydoc CValueObject::setPropertyByIndex
+        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
         void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
         //! Compare by index

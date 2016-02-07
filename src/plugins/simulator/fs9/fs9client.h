@@ -65,10 +65,10 @@ namespace BlackSimPlugin
             virtual void timerEvent(QTimerEvent *event) override;
 
         protected:
-            //! \copydoc CContinuousWorker::initialize
+            //! \copydoc BlackMisc::CContinuousWorker::initialize
             virtual void initialize() override;
 
-            //! \copydoc CContinuousWorker::cleanup
+            //! \copydoc BlackMisc::CContinuousWorker::cleanup
             virtual void cleanup() override;
 
         private:

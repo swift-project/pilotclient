@@ -67,7 +67,7 @@ namespace BlackMisc
                         bool isOnline = false, const QDateTime &bookedFromUtc = QDateTime(),  const QDateTime &bookedUntilUtc = QDateTime(),
                         const CInformationMessage &atis = CInformationMessage(CInformationMessage::ATIS), const CInformationMessage &metar = CInformationMessage(CInformationMessage::METAR));
 
-            //! \copydoc CValueObject::toIcon()
+            //! \copydoc BlackMisc::Mixin::Icon::toIcon()
             BlackMisc::CIcon toIcon() const { return this->m_callsign.toIcon(); }
 
             //! Has booking times?
@@ -220,29 +220,29 @@ namespace BlackMisc
             //! Set booked until
             void setBookedUntilUtc(const QDateTime &until) { this->m_bookedUntilUtc = until; }
 
-            //! \copydoc ICoordinateGeodetic::latitude
+            //! \copydoc Geo::ICoordinateGeodetic::latitude
             virtual BlackMisc::Geo::CLatitude latitude() const override;
 
-            //! \copydoc ICoordinateGeodetic::longitude
+            //! \copydoc Geo::ICoordinateGeodetic::longitude
             virtual BlackMisc::Geo::CLongitude longitude() const override;
 
-            //! \copydoc ICoordinateGeodetic::geodeticHeight
+            //! \copydoc Geo::ICoordinateGeodetic::geodeticHeight
             //! \remarks this should be used for elevation as depicted here: http://en.wikipedia.org/wiki/Altitude#mediaviewer/File:Vertical_distances.svg
             const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override;
 
-            //! \copydoc ICoordinateGeodetic::normalVector
+            //! \copydoc Geo::ICoordinateGeodetic::normalVector
             virtual QVector3D normalVector() const override;
 
-            //! \copydoc ICoordinateGeodetic::normalVectorDouble
+            //! \copydoc Geo::ICoordinateGeodetic::normalVectorDouble
             virtual std::array<double, 3> normalVectorDouble() const override;
 
-            //! \copydoc CValueObject::propertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-            //! \copydoc CValueObject::setPropertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index);
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         private:

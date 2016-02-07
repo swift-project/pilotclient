@@ -42,10 +42,10 @@ namespace BlackGui
             //! Destructor
             ~CAirlineIcaoFilterBar();
 
-            //! \copydoc IModelFilter::getModelFilter
+            //! \copydoc Models::IModelFilterProvider::createModelFilter
             virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Aviation::CAirlineIcaoCodeList>> createModelFilter() const override;
 
-            //! \copydoc CWebDataReaderAware::setProvider
+            //! \copydoc BlackMisc::Network::CWebDataServicesAware::setProvider
             virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
             //! Filter default values by ICAO code

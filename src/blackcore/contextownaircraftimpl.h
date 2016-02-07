@@ -41,31 +41,31 @@ namespace BlackCore
         //! Destructor
         virtual ~CContextOwnAircraft();
 
-        //! \copydoc IOwnAircraftProvider::getOwnAircraftPosition
+        //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::getOwnAircraftPosition
         //! \ingroup ownaircraftprovider
         virtual BlackMisc::Geo::CCoordinateGeodetic getOwnAircraftPosition() const override;
 
-        //! \copydoc IOwnAircraftProvider::getOwnAircraftParts
+        //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::getOwnAircraftParts
         //! \ingroup ownaircraftprovider
         virtual BlackMisc::Aviation::CAircraftParts getOwnAircraftParts() const;
 
-        //! \copydoc IOwnAircraftProvider::getOwnAircraftModel
+        //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::getOwnAircraftModel
         //! \ingroup ownaircraftprovider
         virtual BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const;
 
-        //! \copydoc IOwnAircraftProvider::getDistanceToOwnAircraft
+        //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::getDistanceToOwnAircraft
         //! \ingroup ownaircraftprovider
         virtual BlackMisc::PhysicalQuantities::CLength getDistanceToOwnAircraft(const BlackMisc::Geo::ICoordinateGeodetic &position) const override;
 
-        //! \copydoc IOwnAircraftProvider::updateOwnModel
+        //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::updateOwnModel
         //! \ingroup ownaircraftprovider
         virtual bool updateOwnModel(const BlackMisc::Simulation::CAircraftModel &model) override;
 
-        //! \copydoc IOwnAircraftProvider::updateOwnSituation
+        //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::updateOwnSituation
         //! \ingroup ownaircraftprovider
         virtual bool updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
 
-        //! \copydoc IOwnAircraftProvider::updateOwnParts
+        //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::updateOwnParts
         //! \ingroup ownaircraftprovider
         virtual bool updateOwnParts(const BlackMisc::Aviation::CAircraftParts &parts) override;
 
@@ -82,7 +82,7 @@ namespace BlackCore
         //! \ingroup ownaircraftprovider
         virtual bool updateOwnIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode, const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcaoCode) override;
 
-        //! \copydoc IContextOwnAircraft::updatePosition
+        //! \copydoc IContextOwnAircraft::updateOwnPosition
         virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) override;
 
         //! \copydoc IContextOwnAircraft::updateCockpit
@@ -91,10 +91,10 @@ namespace BlackCore
         //! \copydoc IContextOwnAircraft::updateSelcal
         virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator) override;
 
-        //! \copydoc IContextOwnAircraft::updateComFrequency
+        //! \copydoc IContextOwnAircraft::updateActiveComFrequency
         virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit comUnit, const BlackMisc::CIdentifier &originator) override;
 
-        //! \copydoc IContextOwnAircraft::updatePilot
+        //! \copydoc IContextOwnAircraft::updateOwnAircraftPilot
         virtual bool updateOwnAircraftPilot(const BlackMisc::Network::CUser &pilot) override;
 
         //! \copydoc IContextOwnAircraft::setAudioOutputVolume

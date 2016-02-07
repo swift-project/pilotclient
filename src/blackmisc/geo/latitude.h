@@ -36,7 +36,7 @@ namespace BlackMisc
             BLACKMISC_DECLARE_USING_MIXIN_STRING(CLatitude)
             BLACKMISC_DECLARE_USING_MIXIN_INDEX(CLatitude)
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const
             {
                 QString s(CEarthAngle::convertToQString(i18n));

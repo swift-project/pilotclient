@@ -231,7 +231,7 @@ namespace BlackMisc
             }
         }
 
-        //! \copydoc CValueObject::toJson
+        //! \copydoc BlackMisc::Mixin::JsonByTuple::toJson
         QJsonObject toJson() const
         {
             QJsonArray array;
@@ -245,7 +245,7 @@ namespace BlackMisc
             return json;
         }
 
-        //! \copydoc CValueObject::convertFromJson
+        //! \copydoc BlackMisc::Mixin::JsonByTuple::convertFromJson
         void convertFromJson(const QJsonObject &json)
         {
             QJsonArray array = json.value("associativecontainerbase").toArray();
@@ -410,7 +410,7 @@ namespace BlackMisc
         //! Test for inequality.
         friend bool operator !=(const CDictionary &a, const CDictionary &b) { return !(a == b); }
 
-        //! \copydoc BlackMisc::CValueObject::convertToQString
+        //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const
         {
             QString str;

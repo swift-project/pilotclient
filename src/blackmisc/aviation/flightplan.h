@@ -179,10 +179,10 @@ namespace BlackMisc
             //! Get remarks string
             const QString &getRemarks() const { return m_remarks; }
 
-            //! \copydoc CValueObject::toIcon
+            //! \copydoc BlackMisc::Mixin::Icon::toIcon
             CIcon toIcon() const;
 
-            //! \copydoc CValueObject::convertToQString()
+            //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;
 
         private:

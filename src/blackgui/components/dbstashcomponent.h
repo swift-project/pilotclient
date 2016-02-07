@@ -49,7 +49,7 @@ namespace BlackGui
             //! Destructor
             ~CDbStashComponent();
 
-            //! \copydoc CWebDataReaderAware::setProvider
+            //! \copydoc BlackMisc::Network::CWebDataServicesAware::setProvider
             virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *provider) override;
 
             //! Graceful shutdown

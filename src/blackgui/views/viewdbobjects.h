@@ -44,11 +44,11 @@ namespace BlackGui
             //! Constructor
             explicit CViewWithDbObjects(QWidget *parent = nullptr);
 
-            //! \copydoc QWidget::customMenu
+            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::customMenu
             virtual void customMenu(QMenu &menu) const override;
 
         protected slots:
-            //! \copydoc CViewBaseNonTemplate::ps_toggleHighlightDbData
+            //! \copydoc BlackGui::Views::CViewBase::ps_toggleHighlightDbData
             virtual void ps_toggleHighlightDbData() override;
         };
     } // namespace

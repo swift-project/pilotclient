@@ -50,10 +50,10 @@ namespace BlackMisc
                   m_spoilersOut(spoilersOut), m_isOnGround(onGround)
             {}
 
-            //! \copydoc CValueObject::propertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-            //! \copydoc CValueObject::setPropertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! Compare for index
@@ -110,7 +110,7 @@ namespace BlackMisc
             //! Set aircraft on ground
             void setOnGround(bool onGround) { m_isOnGround = onGround; }
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         private:

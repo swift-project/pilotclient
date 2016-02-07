@@ -67,14 +67,14 @@ namespace BlackGui
             //! \copydoc BlackGui::Models::CAircraftModelListModel::setHighlightModelStrings(const QStringList &)
             void setHighlightModelStrings(const QStringList &highlightModels);
 
-            //! \copydoc BlackGui::Models::CAircraftModelListModel::setHighlightModelsStrings(bool)
+            //! \copydoc BlackGui::Models::CAircraftModelListModel::setHighlightModelStrings(bool)
             void setHighlightModelStrings(bool highlight);
 
             //! \copydoc BlackGui::Models::CAircraftModelListModel::setHighlightModelStringsColor
             void setHighlightModelStringsColor(const QBrush &brush);
 
-            //! \copydoc BlackGui::Models::CAircraftModelListModel::highlightModelsStrings
             bool highlightModelsStrings() const;
+            //! \copydoc BlackGui::Models::CAircraftModelListModel::highlightModelStrings
 
         signals:
             //! Request to stash if applicable

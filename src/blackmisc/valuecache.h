@@ -66,7 +66,7 @@ namespace BlackMisc
         //! Discard values and return as map of timestamps.
         QMap<QString, qint64> toTimestampMap() const;
 
-        //! \copydoc CValueObject::registerMetadata`
+        //! \copydoc BlackMisc::Mixin::MetaType::registerMetadata
         static void registerMetadata();
 
         //! \private Iterator behaves like a CVariantMap::const_iterator with an additional timestamp() method.

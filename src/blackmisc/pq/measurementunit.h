@@ -237,19 +237,19 @@ namespace BlackMisc
             //! Destructor
             virtual ~CMeasurementUnit() = default;
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const
             {
                 return this->getSymbol(i18n);
             }
 
-            //! \copydoc CValueObject::marshallToDbus
+            //! \copydoc BlackMisc::Mixin::DBusByTuple::marshallToDbus
             void marshallToDbus(QDBusArgument &argument) const
             {
                 argument << this->m_symbol;
             }
 
-            //! \copydoc CValueObject::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &)
             {
                 // the concrete implementations will override this default

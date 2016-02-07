@@ -37,7 +37,7 @@ namespace BlackGui
             //! Destructor
             ~CCockpitComponent();
 
-            //! \copydoc CDockWidgetInfoArea::setParentDockWidgetInfoArea
+            //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
             virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget) override;
 
             //! Is the info area shown?

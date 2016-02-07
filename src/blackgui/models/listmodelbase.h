@@ -219,7 +219,7 @@ namespace BlackGui
             //! Remove object
             virtual void remove(const ObjectType &object);
 
-            //! \copydoc BlackMisc::ContainerBase::removeIf
+            //! \copydoc BlackMisc::CContainerBase::removeIf
             template <class K0, class V0, class... KeysValues>
             int removeIf(K0 k0, V0 v0, KeysValues... keysValues)
             {
@@ -238,10 +238,10 @@ namespace BlackGui
             //! \copydoc QStandardItemModel::mimeData
             virtual QMimeData *mimeData(const QModelIndexList &indexes) const override;
 
-            //! \copydoc CListModelBaseNonTemplate::toJosn
+            //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::toJson
             virtual QJsonObject toJson() const override;
 
-            //! \copydoc CListModelBaseNonTemplate::toJsonString
+            //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::toJsonString
             virtual QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented) const override;
 
             //! Filter available
@@ -254,10 +254,10 @@ namespace BlackGui
             void takeFilterOwnership(std::unique_ptr<IModelFilter<ContainerType> > &filter);
 
         protected:
-            //! \copydoc CListModelBaseNonTemplate::CListModelBaseNonTemplate
+            //! Constructor
             CListModelBase(const QString &translationContext, QObject *parent = nullptr);
 
-            //! \copydoc CModelBaseNonTemplate::performUpdateContainer
+            //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::performUpdateContainer
             virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort) override;
 
             //! Update filtered container

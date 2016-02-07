@@ -37,7 +37,7 @@ namespace BlackGui
             //! Destructor
             virtual ~CDbAirlineIcaoSelectorBase();
 
-            //! \copydoc CWebDataReaderAware::setProvider
+            //! \copydoc BlackMisc::Network::CWebDataServicesAware::setProvider
             virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
             //! Current airline ICAO

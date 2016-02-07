@@ -52,7 +52,7 @@ namespace BlackMisc
                 True = 1        //!< true north
             };
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
             //! \brief Default constructor: 0 heading true

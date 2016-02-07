@@ -56,7 +56,7 @@ namespace BlackMisc
             //! Description
             const QString &getDescription() const { return m_description; }
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         private:

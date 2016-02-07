@@ -78,7 +78,7 @@ namespace BlackMisc
                 return CAudioDeviceInfo(InputDevice, defaultDeviceIndex(), "default");
             }
 
-            //! \copydoc CValueObject::convertToQString
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         private:

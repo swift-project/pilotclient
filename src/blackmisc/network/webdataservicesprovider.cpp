@@ -261,7 +261,7 @@ namespace BlackMisc
             return this->m_webDataReaderProvider->getMetarForAirport(icao);
         }
 
-        int CWebDataServicesAware::getMetarCount() const
+        int CWebDataServicesAware::getMetarsCount() const
         {
             Q_ASSERT_X(this->m_webDataReaderProvider, Q_FUNC_INFO, "Missing provider");
             if (!hasProvider()) { return 0; }

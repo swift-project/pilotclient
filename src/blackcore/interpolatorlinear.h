@@ -30,7 +30,7 @@ namespace BlackCore
             IInterpolator(provider, "CInterpolatorLinear", parent)
         {}
 
-        //! \copydoc IInterpolator::getCurrentInterpolatedSituation
+        //! \copydoc IInterpolator::getInterpolatedSituation
         virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc, bool vtolAiracraft, InterpolationStatus &status) const override;
 
         //! Log category

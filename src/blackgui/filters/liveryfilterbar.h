@@ -41,10 +41,10 @@ namespace BlackGui
             //! Destructor
             ~CLiveryFilterBar();
 
-            //! \copydoc IModelFilter::getModelFilter
+            //! \copydoc Models::IModelFilterProvider::createModelFilter
             virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Aviation::CLiveryList>> createModelFilter() const override;
 
-            //! \copydoc CWebDataReaderAware::setProvider
+            //! \copydoc BlackMisc::Network::CWebDataServicesAware::setProvider
             virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
             //! Filter by livery as default values

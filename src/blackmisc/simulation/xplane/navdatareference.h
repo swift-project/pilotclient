@@ -46,13 +46,13 @@ namespace BlackMisc
                 virtual QVector3D normalVector() const override { return m_position.normalVector(); }
                 virtual std::array<double, 3> normalVectorDouble() const override { return this->m_position.normalVectorDouble(); }
 
-                //! \copydoc CValueObject::propertyByIndex
+                //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
                 CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-                //! \copydoc CValueObject::setPropertyByIndex
+                //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
                 void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
-                //! \copydoc CValueObject::convertToQString
+                //! \copydoc BlackMisc::Mixin::String::toQString
                 QString convertToQString(bool i18n = false) const;
 
             private:

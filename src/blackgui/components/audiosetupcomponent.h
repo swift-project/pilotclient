@@ -43,7 +43,7 @@ namespace BlackGui
             bool playNotificationSounds() const;
 
         protected:
-            //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
+            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
             virtual void runtimeHasBeenSet() override;
 
         private slots:

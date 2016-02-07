@@ -345,8 +345,8 @@ namespace BlackMisc
             //! \copydoc IWebDataServicesProvider::getMetars
             BlackMisc::Weather::CMetarSet getMetars() const;
 
-            //! \copydoc IWebDataServicesProvider::getMetarCount
             int getMetarCount() const;
+            //! \copydoc IWebDataServicesProvider::getMetarsCount
 
             //! \copydoc IWebDataServicesProvider::updateWithVatsimDataFileData
             void updateWithVatsimDataFileData(BlackMisc::Simulation::CSimulatedAircraft &aircraftToBeUdpated) const;

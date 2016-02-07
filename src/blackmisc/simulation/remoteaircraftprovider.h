@@ -130,8 +130,8 @@ namespace BlackMisc
             //! \copydoc IRemoteAircraftProvider::getAircraftInRangeForCallsign
             virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const Aviation::CCallsign &callsign) const;
 
-            //! \copydoc IRemoteAircraftProvider::getAircraftinRangeModelForCallsign
             virtual BlackMisc::Simulation::CAircraftModel getAircraftinRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+            //! \copydoc IRemoteAircraftProvider::getAircraftInRangeModelForCallsign
 
             //! \copydoc IRemoteAircraftProvider::getLatestAirspaceAircraftSnapshot
             virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const;

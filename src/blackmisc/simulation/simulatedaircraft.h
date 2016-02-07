@@ -70,7 +70,7 @@ namespace BlackMisc
             //! Constructor.
             CSimulatedAircraft(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Network::CUser &user, const BlackMisc::Aviation::CAircraftSituation &situation);
 
-            //! \copydoc CValueObject::toIcon()
+            //! \copydoc BlackMisc::Mixin::Icon::toIcon()
             BlackMisc::CIcon toIcon() const { return this->m_callsign.toIcon(); }
 
             //! Get callsign.
@@ -304,10 +304,10 @@ namespace BlackMisc
             //! Combined ICAO / color string
             QString getCombinedIcaoLiveryString() const;
 
-            //! \copydoc CValueObject::propertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-            //! \copydoc CValueObject::setPropertyByIndex
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! Compare for index
@@ -355,7 +355,7 @@ namespace BlackMisc
             //! Set the synchronisation flag
             void setPartsSynchronized(bool synchronized) { m_partsSynchronized = synchronized; }
 
-            //! \copydoc CValueObject::convertToQString()
+            //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;
 
         private:
