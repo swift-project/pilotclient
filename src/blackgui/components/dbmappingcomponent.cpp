@@ -9,6 +9,8 @@
 
 #include "dbmappingcomponent.h"
 #include "ui_dbmappingcomponent.h"
+#include "blackgui/components/dbautostashingcomponent.h"
+#include "blackgui/components/dbmodelmappingmodifycomponent.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/shortcut.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
@@ -34,7 +36,9 @@ namespace BlackGui
     {
         CDbMappingComponent::CDbMappingComponent(QWidget *parent) :
             COverlayMessagesFrame(parent),
-            ui(new Ui::CDbMappingComponent)
+            ui(new Ui::CDbMappingComponent),
+            m_autoStashDialog(new CDbAutoStashingComponent(this)),
+            m_modelModifyDialog(new CDbModelMappingModifyComponent(this))
         {
             ui->setupUi(this);
             this->ui->comp_StashAircraft->setMappingComponent(this);
