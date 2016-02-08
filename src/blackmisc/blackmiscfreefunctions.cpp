@@ -8,67 +8,8 @@
  */
 
 #include "blackmiscfreefunctions.h"
-#include "math/math.h"
-#include "geo/geo.h"
-#include "audio/audio.h"
-#include "input/input.h"
-#include "propertyindexlist.h"
-#include "propertyindexvariantmap.h"
-#include "namevariantpairlist.h"
-#include "variantlist.h"
-#include "variantmap.h"
-#include "valuecache.h"
-#include "rgbcolor.h"
-#include "countrylist.h"
-#include "statusmessagelist.h"
-#include "pixmap.h"
-#include "iconlist.h"
-#include "identifierlist.h"
-#include "logpattern.h"
-#include <QtNetwork/QHostInfo>
-#include <QProcessEnvironment>
-#include <QSysInfo>
-#include <QProcess>
-#include <QBuffer>
 
 void BlackMisc::initResources()
 {
     initBlackMiscResources();
-}
-
-uint BlackMisc::calculateHash(const QList<uint> &values, const char *className)
-{
-    // http://stackoverflow.com/questions/113511/hash-code-implementation/113600#113600
-    if (values.isEmpty()) return 0;
-    uint hash = values.first();
-    for (int i = 1; i < values.size(); i++)
-    {
-        hash = 37 * hash + values.at(i);
-    }
-
-    // same values, but different class?
-    if (className)
-    {
-        hash = 37 * hash + qHash(QString(className));
-    }
-    return hash;
-}
-
-uint BlackMisc::calculateHash(const QList<int> &values, const char *className)
-{
-    QList<uint> list;
-    uint s = 0;
-    foreach(int i, values)
-    {
-        if (i >= 0)
-        {
-            list.append(static_cast<uint>(i));
-        }
-        else
-        {
-            list.append(static_cast<uint>(i));
-            list.append(s++);
-        }
-    }
-    return calculateHash(list, className);
 }

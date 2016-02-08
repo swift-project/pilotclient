@@ -13,7 +13,7 @@
 #define BLACKMISC_PROPERTYINDEX_H
 
 #include "blackmiscexport.h"
-#include "blackmiscfreefunctions.h"
+#include "dictionary.h"
 #include "stringutils.h"
 #include "variant.h"
 #include "dbus.h"

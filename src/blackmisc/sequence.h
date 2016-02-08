@@ -14,6 +14,7 @@
 
 #include "iterator.h"
 #include "containerbase.h"
+#include "icon.h"
 #include <QScopedPointer>
 #include <algorithm>
 #include <type_traits>
@@ -31,7 +32,9 @@ namespace BlackMisc
      * Can take any suitable container class as its implementation at runtime.
      */
     template <class T>
-    class CSequence : public CContainerBase<CSequence, T, Iterators::ConstBidirectionalIterator<T>>
+    class CSequence :
+        public CContainerBase<CSequence, T, Iterators::ConstBidirectionalIterator<T>>,
+        public Mixin::Icon<CSequence<T>>
     {
     public:
         //! \brief STL compatibility

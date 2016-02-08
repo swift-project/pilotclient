@@ -17,6 +17,7 @@
 #include "variant.h"
 #include "tuple.h"
 #include "inheritancetraits.h"
+#include "dictionary.h"
 #include <QIcon>
 
 namespace BlackMisc

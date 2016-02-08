@@ -9,7 +9,7 @@
 
 #include "propertyindexvariantmap.h"
 #include "propertyindexlist.h"
-#include "blackmiscfreefunctions.h"
+#include "dictionary.h"
 
 namespace BlackMisc
 {

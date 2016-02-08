@@ -18,7 +18,6 @@
 #include "json.h"
 #include "variant.h"
 #include "dbus.h"
-#include "icon.h"
 #include <algorithm>
 #include <QStringList>
 
@@ -56,8 +55,7 @@ namespace BlackMisc
         public Mixin::MetaType<C<T>>,
         public Mixin::DBusOperators<C<T>>,
         public Mixin::JsonOperators<C<T>>,
-        public Mixin::String<C<T>>,
-        public Mixin::Icon<C<T>>
+        public Mixin::String<C<T>>
     {
     public:
 

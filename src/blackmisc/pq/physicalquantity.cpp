@@ -9,7 +9,7 @@
 
 #include "blackmisc/pq/pq.h"
 #include "blackmisc/comparefunctions.h"
-#include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/dictionary.h"
 #include <QCoreApplication>
 
 namespace BlackMisc

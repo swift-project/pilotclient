@@ -38,45 +38,6 @@ namespace BlackMisc
     //! Init resources
     BLACKMISC_EXPORT void initResources();
 
-    namespace Mixin
-    {
-        /*!
-         * CRTP class template from which a derived class can inherit common methods dealing with hashing instances by metatuple.
-         *
-         * \tparam Derived Must be registered with BLACK_DECLARE_TUPLE_CONVERSION.
-         */
-        template <class Derived>
-        class HashByTuple : private Private::EncapsulationBreaker
-        {
-        public:
-            //! qHash overload, needed for storing value in a QSet.
-            friend uint qHash(const Derived &value, uint seed = 0)
-            {
-                return ::qHash(hashImpl(value), seed);
-            }
-
-        private:
-            static uint hashImpl(const Derived &value)
-            {
-                return BlackMisc::qHash(toMetaTuple(value)) ^ baseHash(static_cast<const BaseOfT<Derived> *>(&value));
-            }
-
-            template <typename T> static uint baseHash(const T *base) { return qHash(*base); }
-            static uint baseHash(const void *) { return 0; }
-        };
-    } // Mixin
-
-    /*!
-     * \brief Calculate a single hash value based on a list of individual hash values
-     * \param values
-     * \param className   add a hash value for class name on top
-     * \return
-     */
-    BLACKMISC_EXPORT uint calculateHash(const QList<uint> &values, const char *className);
-
-    //! Hash value, but with int list
-    BLACKMISC_EXPORT uint calculateHash(const QList<int> &values, const char *className);
-
     //! Own implementation of std::make_unique, a C++14 feature not provided by GCC in C++11 mode
     template<typename T, typename... Args>
     std::unique_ptr<T> make_unique(Args &&... args)

@@ -20,7 +20,7 @@
 #include "variant.h"
 #include "propertyindexvariantmap.h"
 #include "iconlist.h"
-#include "blackmiscfreefunctions.h"
+#include "dictionary.h"
 #include "stringutils.h"
 #include <QtDBus/QDBusMetaType>
 #include <QString>
