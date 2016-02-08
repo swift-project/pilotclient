@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_EDITORS_DISTRIBUTORFORM_H
 #define BLACKGUI_EDITORS_DISTRIBUTORFORM_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackgui/editors/form.h"
 #include "blackmisc/simulation/distributor.h"
 #include "blackmisc/network/webdataservicesprovider.h"
@@ -27,7 +28,7 @@ namespace BlackGui
         /*!
          * Distributor form
          */
-        class CDistributorForm :
+        class BLACKGUI_EXPORT CDistributorForm :
             public CForm,
             public BlackMisc::Network::CWebDataServicesAware
         {

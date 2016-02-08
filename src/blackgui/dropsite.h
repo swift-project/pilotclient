@@ -10,6 +10,7 @@
 #ifndef BLACKGUI_DROPSITE_H
 #define BLACKGUI_DROPSITE_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/variant.h"
 #include "blackgui/dropbase.h"
 #include <QLabel>
@@ -21,7 +22,7 @@ namespace BlackGui
      * Area where items can be dropped
      * \remark inspired by Qt example: http://doc.qt.io/qt-4.8/qt-draganddrop-dropsite-example.html
      */
-    class CDropSite :
+    class BLACKGUI_EXPORT CDropSite :
         public QLabel,
         public CDropBase
     {

@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_AIRCRAFTCOMBINEDTYPESELECTOR_H
 #define BLACKGUI_AIRCRAFTCOMBINEDTYPESELECTOR_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -24,7 +25,7 @@ namespace BlackGui
     /*!
      * Select by comined type ("L2J", "H1T", ...)
      */
-    class CAircraftCombinedTypeSelector : public QFrame
+    class BLACKGUI_EXPORT CAircraftCombinedTypeSelector : public QFrame
     {
         Q_OBJECT
 

@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COLORSELECTOR_H
 #define BLACKGUI_COLORSELECTOR_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/rgbcolor.h"
 #include <QFrame>
 
@@ -22,7 +23,7 @@ namespace BlackGui
     /*!
      * Select a color
      */
-    class CColorSelector : public QFrame
+    class BLACKGUI_EXPORT CColorSelector : public QFrame
     {
         Q_OBJECT
 

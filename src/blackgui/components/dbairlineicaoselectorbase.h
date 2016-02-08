@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_DBAIRLINEICAOSELECTORBASE_H
 #define BLACKGUI_DBAIRLINEICAOSELECTORBASE_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackcore/webdataservices.h"
 #include "blackgui/dropbase.h"
 #include "blackmisc/aviation/airlineicaocode.h"
@@ -26,7 +27,7 @@ namespace BlackGui
         /*!
          * Airline ICAO selector base class
          */
-        class CDbAirlineIcaoSelectorBase :
+        class BLACKGUI_EXPORT CDbAirlineIcaoSelectorBase :
             public QFrame,
             public BlackMisc::Network::CWebDataServicesAware,
             public BlackGui::CDropBase

@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_HOTKEYDIALOG_H
 #define BLACKGUI_HOTKEYDIALOG_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackgui/models/actionmodel.h"
 #include "blackcore/inputmanager.h"
 #include "blackmisc/input/hotkeycombination.h"
@@ -32,7 +33,7 @@ namespace BlackGui
     /*!
      * Combobox for selecting keyboard keys
      */
-    class CKeySelectionBox : public QComboBox
+    class BLACKGUI_EXPORT CKeySelectionBox : public QComboBox
     {
         Q_OBJECT
 
@@ -57,7 +58,7 @@ namespace BlackGui
     /*!
      * Hotkey dialog
      */
-    class CHotkeyDialog : public QDialog
+    class BLACKGUI_EXPORT CHotkeyDialog : public QDialog
     {
         Q_OBJECT
 

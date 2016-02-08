@@ -13,6 +13,7 @@
 #define BLACKGUI_EDITORS_MODELMAPPINGFORM_H
 
 #include "blackgui/editors/form.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include <QScopedPointer>
 
@@ -25,7 +26,7 @@ namespace BlackGui
         /*!
          * Model mapping form
          */
-        class CModelMappingForm : public CForm
+        class BLACKGUI_EXPORT CModelMappingForm : public CForm
         {
             Q_OBJECT
 

@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_EDITORS_MODELMAPPINGMODIFYFORM_H
 #define BLACKGUI_EDITORS_MODELMAPPINGMODIFYFORM_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include <QFrame>
@@ -28,7 +29,7 @@ namespace BlackGui
         /*!
          * Allows to modify individual fields of the model form
          */
-        class CModelMappingModifyForm : public QFrame
+        class BLACKGUI_EXPORT CModelMappingModifyForm : public QFrame
         {
             Q_OBJECT
 

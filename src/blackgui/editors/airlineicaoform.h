@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_EDITORS_AIRLINEICAOFORM_H
 #define BLACKGUI_EDITORS_AIRLINEICAOFORM_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/network/webdataservicesprovider.h"
 #include "blackmisc/statusmessagelist.h"
@@ -27,7 +28,7 @@ namespace BlackGui
         /*!
          * Airline ICAO code form
          */
-        class CAirlineIcaoForm :
+        class BLACKGUI_EXPORT CAirlineIcaoForm :
             public CForm,
             public BlackMisc::Network::CWebDataServicesAware
         {

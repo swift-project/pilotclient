@@ -10,6 +10,7 @@
 #ifndef BLACKGUI_SIMULATORSELECTOR_H
 #define BLACKGUI_SIMULATORSELECTOR_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include <QScopedPointer>
 #include <QFrame>
@@ -21,7 +22,7 @@ namespace BlackGui
     /*!
      * Select simulator
      */
-    class CSimulatorSelector : public QFrame
+    class BLACKGUI_EXPORT CSimulatorSelector : public QFrame
     {
         Q_OBJECT
 

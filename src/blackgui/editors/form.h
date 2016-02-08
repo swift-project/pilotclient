@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_EDITORS_FORM_H
 #define BLACKGUI_EDITORS_FORM_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/network/authenticateduser.h"
 #include "blackcore/data/authenticateduser.h"
 #include <QFrame>
@@ -23,7 +24,7 @@ namespace BlackGui
         /*!
          * Form base class
          */
-        class CForm : public QFrame
+        class BLACKGUI_EXPORT CForm : public QFrame
         {
             Q_OBJECT
 

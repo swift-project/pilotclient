@@ -10,6 +10,7 @@
 #ifndef BLACKGUI_LABELANDICON_H
 #define BLACKGUI_LABELANDICON_H
 
+#include "blackgui/blackguiexport.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -20,7 +21,7 @@ namespace BlackGui
     /*!
      * Label and icon frame
      */
-    class CLabelAndIcon : public QFrame
+    class BLACKGUI_EXPORT CLabelAndIcon : public QFrame
     {
         Q_OBJECT
 

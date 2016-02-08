@@ -14,6 +14,7 @@
 #ifndef BLACKGUI_SHORTCUT_H
 #define BLACKGUI_SHORTCUT_H
 
+#include "blackgui/blackguiexport.h"
 #include <QShortcut>
 
 namespace BlackGui
@@ -21,7 +22,7 @@ namespace BlackGui
     /*!
      * Shortcut class to avoid overlapping shortcut defintions
      */
-    class CShortcut
+    class BLACKGUI_EXPORT CShortcut
     {
     public:
         //! No constructor

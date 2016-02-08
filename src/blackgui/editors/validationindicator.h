@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_EDITOR_VALIDATIONINDICATOR_H
 #define BLACKGUI_EDITOR_VALIDATIONINDICATOR_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/statusmessagelist.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -26,7 +27,7 @@ namespace BlackGui
         /*!
          * Indication state of validation
          */
-        class CValidationIndicator : public QFrame
+        class BLACKGUI_EXPORT CValidationIndicator : public QFrame
         {
             Q_OBJECT
 

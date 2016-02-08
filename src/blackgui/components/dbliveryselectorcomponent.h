@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_CDBLIVERYSELECTORCOMPONENT_H
 #define BLACKGUI_COMPONENTS_CDBLIVERYSELECTORCOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/livery.h"
 #include "blackcore/webdataservices.h"
 #include "blackgui/dropbase.h"
@@ -29,7 +30,7 @@ namespace BlackGui
         /*!
          * Selector for liveries
          */
-        class CDbLiverySelectorComponent :
+        class BLACKGUI_EXPORT CDbLiverySelectorComponent :
             public QFrame,
             public BlackMisc::Network::CWebDataServicesAware,
             public BlackGui::CDropBase

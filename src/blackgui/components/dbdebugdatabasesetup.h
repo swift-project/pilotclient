@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_DBDEBUGDATABASESETUP_H
 #define BLACKGUI_COMPONENTS_DBDEBUGDATABASESETUP_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackcore/data/globalsetup.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -26,7 +27,7 @@ namespace BlackGui
          * Debug settings for DB (only to be used as developer)
          * \remarks Disabled when not runnig in dev.environment
          */
-        class CDbDebugDatabaseSetup : public QFrame
+        class BLACKGUI_EXPORT CDbDebugDatabaseSetup : public QFrame
         {
             Q_OBJECT
 

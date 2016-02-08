@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_ACTIONMODEL_H
 #define BLACKGUI_ACTIONMODEL_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackcore/actionbind.h"
 #include <QAbstractItemModel>
 #include <QScopedPointer>
@@ -25,7 +26,7 @@ namespace BlackGui
         /*!
          * Action tree model
          */
-        class CActionModel : public QAbstractItemModel
+        class BLACKGUI_EXPORT CActionModel : public QAbstractItemModel
         {
             Q_OBJECT
 

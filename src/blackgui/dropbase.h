@@ -10,6 +10,7 @@
 #ifndef BLACKGUI_DROPBASE_H
 #define BLACKGUI_DROPBASE_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/variant.h"
 #include <QLabel>
 #include <QMimeData>
@@ -19,7 +20,7 @@ namespace BlackGui
     /*!
      * Utilities for dropping swift value objects
      */
-    class CDropBase
+    class BLACKGUI_EXPORT CDropBase
     {
     public:
         //! Set text for drop site

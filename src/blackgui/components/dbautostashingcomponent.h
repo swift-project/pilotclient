@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_DBAUTOSTASHINGCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DBAUTOSTASHINGCOMPONENT_H
 
+#include "blackgui/blackguiexport.h"
 #include "blackcore/webdataservices.h"
 #include "dbmappingcomponentaware.h"
 #include "blackmisc/logcategorylist.h"
@@ -27,7 +28,7 @@ namespace BlackGui
         /*!
          * Stashing component
          */
-        class CDbAutoStashingComponent :
+        class BLACKGUI_EXPORT CDbAutoStashingComponent :
             public QDialog,
             public BlackMisc::Network::CWebDataServicesAware,
             public BlackGui::Components::CDbMappingComponentAware

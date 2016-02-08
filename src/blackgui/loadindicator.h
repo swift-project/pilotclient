@@ -25,7 +25,7 @@ namespace BlackGui
      * Progress indicators are indeterminate and do nothing more than spin to show that the application is busy.
      * \note based on https://github.com/mojocorp/QProgressIndicator under MIT license
      */
-    class CLoadIndicator : public QWidget
+    class BLACKGUI_EXPORT CLoadIndicator : public QWidget
     {
         Q_OBJECT
 
