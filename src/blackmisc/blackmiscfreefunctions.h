@@ -26,7 +26,6 @@ inline void initBlackMiscResources()
     Q_INIT_RESOURCE(blackmisc);
 }
 
-//! Free functions in BlackMisc
 namespace BlackMisc
 {
     //! Init resources

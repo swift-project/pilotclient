@@ -497,15 +497,16 @@ namespace BlackMisc
     }
 
     /*!
-     * \brief Calculate a single hash value based on a list of individual hash values
+     * Calculate a single hash value based on a list of individual hash values.
      * \param values
-     * \param className   add a hash value for class name on top
+     * \param className Will be hashed and used as an additional value in the list.
      * \return
      */
+    //! @{
     BLACKMISC_EXPORT uint calculateHash(const QList<uint> &values, const char *className);
 
-    //! Hash value, but with int list
     BLACKMISC_EXPORT uint calculateHash(const QList<int> &values, const char *className);
+    //! @}
 
 } // namespace BlackMisc
 
