@@ -13,13 +13,7 @@
 #define BLACKMISC_FREEFUNCTIONS_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/tuple.h"
-#include "blackmisc/inheritancetraits.h"
 #include <QDir> // for Q_INIT_RESOURCE
-#include <QList>
-#include <QVariant>
-#include <QMetaType>
-#include <memory>
 
 /*!
  * Workaround, to call initResource from namespace. Used in BlackMisc::initResources().
@@ -37,13 +31,6 @@ namespace BlackMisc
 {
     //! Init resources
     BLACKMISC_EXPORT void initResources();
-
-    //! Own implementation of std::make_unique, a C++14 feature not provided by GCC in C++11 mode
-    template<typename T, typename... Args>
-    std::unique_ptr<T> make_unique(Args &&... args)
-    {
-        return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
-    }
-} // ns
+}
 
 #endif // guard

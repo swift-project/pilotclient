@@ -12,6 +12,7 @@
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/makeunique.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;

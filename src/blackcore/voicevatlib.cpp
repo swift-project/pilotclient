@@ -13,6 +13,7 @@
 #include "audiomixervatlib.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/makeunique.h"
 #include <QDebug>
 #include <QTimer>
 #include <memory>

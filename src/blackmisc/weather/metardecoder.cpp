@@ -11,6 +11,7 @@
 #include "blackmiscfreefunctions.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/weather/presentweather.h"
+#include "blackmisc/makeunique.h"
 #include <QRegularExpression>
 #include <QDebug>
 

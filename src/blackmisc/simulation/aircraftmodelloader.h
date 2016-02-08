@@ -18,6 +18,7 @@
 #include "blackmisc/pixmap.h"
 #include <QObject>
 #include <atomic>
+#include <memory>
 
 namespace BlackMisc
 {

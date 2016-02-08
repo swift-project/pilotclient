@@ -16,6 +16,7 @@
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/simulation/modelmappingsprovider.h"
 #include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/makeunique.h"
 #include <QDBusServiceWatcher>
 #include <QTimer>
 #include <QString>
