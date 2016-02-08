@@ -2022,13 +2022,11 @@ SKIP_FUNCTION_MACROS   = YES
 # http://stackoverflow.com/questions/22244779/doxygen-generated-documentation-with-auto-generated-links-to-qt-project
 # https://blog.qt.io/blog/2014/08/13/qt-weekly-17-linking-qt-classes-in-documentation-generated-with-doxygen/
 
-TAGFILES = qtcore.tags=http://doc.qt.io/qt-5/ qtgui.tags=http://doc.qt.io/qt-5/ \
-           qtwidgets.tags=http://doc.qt.io/qt-5/ qtxml.tags=http://doc.qt.io/qt-5/ \
-           qtnetwork.tags=http://doc.qt.io/qt-5/
-
-# TAGFILES = qtcore.tags=qthelp://org.qt-project.qtcore/qtcore/ \
-#            qtgui.tags=qthelp://org.qt-project.qtgui/qtgui/ \
-#            qtxml.tags=qthelp://org.qt-project.qtxml/qtxml/
+TAGFILES               = $(QDOC_PATH)/qtcore/qtcore.tags=http://doc.qt.io/qt-5/ \
+                         $(QDOC_PATH)/qtgui/qtgui.tags=http://doc.qt.io/qt-5/ \
+                         $(QDOC_PATH)/qtwidgets/qtwidgets.tags=http://doc.qt.io/qt-5/ \
+                         $(QDOC_PATH)/qtxml/qtxml.tags=http://doc.qt.io/qt-5/ \
+                         $(QDOC_PATH)/qtnetwork/qtnetwork.tags=http://doc.qt.io/qt-5/
 
 # When a file name is specified after GENERATE_TAGFILE, doxygen will create a
 # tag file that is based on the input files it reads. See section "Linking to
