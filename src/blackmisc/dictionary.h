@@ -12,7 +12,9 @@
 #ifndef BLACKMISC_DICTIONARY_H
 #define BLACKMISC_DICTIONARY_H
 
-#include "valueobject.h"
+#include "dbus.h"
+#include "json.h"
+#include "stringutils.h"
 #include "iterator.h"
 #include "range.h"
 #include "containerbase.h"

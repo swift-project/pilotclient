@@ -21,6 +21,7 @@
 #include "propertyindexvariantmap.h"
 #include "iconlist.h"
 #include "blackmiscfreefunctions.h"
+#include "stringutils.h"
 #include <QtDBus/QDBusMetaType>
 #include <QString>
 #include <QtGlobal>

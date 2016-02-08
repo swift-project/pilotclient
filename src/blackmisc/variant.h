@@ -14,7 +14,7 @@
 
 #include "variantprivate.h"
 #include "blackmiscexport.h"
-#include "blackmiscfreefunctions.h"
+#include "stringutils.h"
 #include "tuple.h"
 #include "compare.h"
 #include "dbus.h"

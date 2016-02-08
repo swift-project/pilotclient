@@ -14,6 +14,7 @@
 
 #include "blackmiscexport.h"
 #include "blackmiscfreefunctions.h"
+#include "stringutils.h"
 #include "variant.h"
 #include "dbus.h"
 #include "json.h"

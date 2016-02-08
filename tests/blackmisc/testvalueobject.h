@@ -16,6 +16,7 @@
 #include "blackmisc/sequence.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/dictionary.h"
+#include "blackmisc/valueobject.h"
 
 namespace BlackMisc
 {
