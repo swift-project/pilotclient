@@ -34,8 +34,6 @@ using namespace BlackMisc::Simulation;
 namespace BlackCore
 {
 
-    void exceptionDispatcher(const char *caller);
-
     CNetworkVatlib::CNetworkVatlib(Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent)
         : INetwork(parent), COwnAircraftAware(ownAircraft),
           m_loginMode(LoginNormal),
