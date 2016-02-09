@@ -16,17 +16,17 @@ isEmpty(DOXYGEN_BIN) {
 
     DOXY_INPUT = .
     win32-g++ {
-            doxy.commands = set DOXY_SRC_ROOT=$$SourceRoot\\src & \
+            doxy.commands = set DOXY_SRC_ROOT=$$SourceRoot & \
                             set QDOC_PATH=$$[QT_INSTALL_DOCS] & \
                             doxygen $$PWD/$$DOXYFILE
     }
     else:win32 {
-            doxy.commands = set DOXY_SRC_ROOT=$$SourceRoot\\src & \
+            doxy.commands = set DOXY_SRC_ROOT=$$SourceRoot & \
                             set QDOC_PATH=$$[QT_INSTALL_DOCS] & \
                             doxygen $$PWD\\$$DOXYFILE
     }
     else {
-            doxy.commands = DOXY_SRC_ROOT="$$SourceRoot/src" \
+            doxy.commands = DOXY_SRC_ROOT="$$SourceRoot" \
                             QDOC_PATH="$$[QT_INSTALL_DOCS]" \
                             doxygen $$PWD/$$DOXYFILE
     }
