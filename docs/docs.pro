@@ -6,6 +6,10 @@ TEMPLATE = lib
 CONFIG += staticlib
 CONFIG -= qt
 
+OTHER_FILES += Doxyfile.qmake
+OTHER_FILES += src/*.dox
+OTHER_FILES += src/wiki/*.dox
+
 win32: DOXYGEN_BIN = $$system(where doxygen)
 else: DOXYGEN_BIN = $$system(which doxygen)
 
@@ -38,7 +42,6 @@ isEmpty(DOXYGEN_BIN) {
     doxy.output = html/index.html
 
     QMAKE_EXTRA_COMPILERS += doxy
-    OTHER_FILES += Doxyfile.qmake
 }
 
 load(common_post)

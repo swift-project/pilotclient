@@ -1,0 +1,37 @@
+// doxygen index page
+/*!
+
+\mainpage
+
+\section overview Overview
+
+\a swift is a cross-platform, open source client application for virtual air traffic simulation written in C++/Qt.
+The application allows users of flight simulation software to connect to online networks as pilots and interact with virtual air traffic controllers.
+
+\section starthere Start here
+
+- \ref developersguide "Developers’ Guide"<br>
+Guide and design documentation
+
+- \ref samples "Samples"<br>
+Simple sample programs demonstrating swift library usage
+
+\if PRIVATE_TESTS
+- \ref tests "Tests"<br>
+Unit and integration tests
+\endif
+
+- \ref license <br>
+\a swift is licenced under the GPLv3 with exceptions.
+
+\section resources Resources
+
+- <a href="http://www.swift-project.org">swift website</a>
+
+- <a href="http://build.swift-project.org:8080">Jenkins Continous Integration</a><br>
+
+- <a href="https://dev.vatsim-germany.org/projects/vatpilotclient">swift Development</a>
+
+- Add other links here
+
+*/
