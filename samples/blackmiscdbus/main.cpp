@@ -7,6 +7,9 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+//! \ingroup sampleblackmiscdbus
+
 #include "blackmisc/registermetadata.h"
 #include "servicetool.h"
 #include "blackmisc/dbusserver.h"

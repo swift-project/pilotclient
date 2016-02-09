@@ -7,6 +7,9 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+//! \ingroup sampleblackmiscquantities
+
 #include "samplesaviation.h"
 #include "blackmisc/pq/constants.h"
 #include "blackmisc/aviation/heading.h"

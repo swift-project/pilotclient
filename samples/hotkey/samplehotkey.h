@@ -1,4 +1,4 @@
-/* Copyright (C) 2013
+/* Copyright (C) 2014
  * swift Project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -7,21 +7,15 @@
  * contained in the LICENSE file.
  */
 
-//! \file
-//! \ingroup sampleblackmisc
+#ifndef BLACKSAMPLE_WEATHERDATA_H
+#define BLACKSAMPLE_WEATHERDATA_H
 
-#ifndef BLACKSAMPLE_SAMPLESCHANGEDATA_H
-#define BLACKSAMPLE_SAMPLESCHANGEDATA_H
+// just a dummy header, documentation will go here
 
-namespace BlackSample
-{
-    //! Samples for metadata
-    class CSamplesChangeObject
-    {
-    public:
-        //! Run the samples
-        static int samples();
-    };
-} // namespace
+/*!
+ * \defgroup samplehotkey Sample Hotkey
+ * \ingroup samples
+ * \brief TBW
+ */
 
 #endif

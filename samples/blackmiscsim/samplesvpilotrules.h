@@ -8,6 +8,7 @@
  */
 
 //! \file
+//! \ingroup sampleblackmiscsim
 
 #ifndef BLACKSAMPLE_SAMPLESVPILOTRULES_H
 #define BLACKSAMPLE_SAMPLESVPILOTRULES_H

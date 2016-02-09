@@ -7,6 +7,9 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+//! \ingroup sampleblackmiscsim
+
 #include "samplesvpilotrules.h"
 #include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
 #include "blackmisc/blackmiscfreefunctions.h"

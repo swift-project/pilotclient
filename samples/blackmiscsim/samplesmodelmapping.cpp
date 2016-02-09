@@ -7,6 +7,9 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+//! \ingroup sampleblackmiscsim
+
 #include "samplesmodelmapping.h"
 #include "blackmisc/registermetadata.h"
 #include "blackmisc/stringutils.h"

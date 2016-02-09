@@ -8,6 +8,7 @@
  */
 
 //! \file
+//! \ingroup sampleblackmiscquantities
 
 #ifndef BLACKSAMPLE_SAMPLESGEO_H
 #define BLACKSAMPLE_SAMPLESGEO_H

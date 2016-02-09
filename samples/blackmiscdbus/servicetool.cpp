@@ -7,6 +7,9 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+//! \ingroup sampleblackmiscdbus
+
 #include "servicetool.h"
 #include "testservice.h"
 #include "testserviceinterface.h"

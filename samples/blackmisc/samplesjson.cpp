@@ -7,6 +7,9 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+//! \ingroup sampleblackmisc
+
 #include "samplesjson.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/simulation/simulatedaircraft.h"

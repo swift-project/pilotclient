@@ -8,6 +8,7 @@
  */
 
 //! \file
+//! \ingroup sampleblackmiscsim
 
 #ifndef BLACKSAMPLE_SAMPLESFSX_H
 #define BLACKSAMPLE_SAMPLESFSX_H

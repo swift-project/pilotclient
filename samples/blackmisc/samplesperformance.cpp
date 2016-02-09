@@ -7,6 +7,9 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+//! \ingroup sampleblackmisc
+
 #include "samplesperformance.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/geo/coordinategeodetic.h"

@@ -10,6 +10,9 @@
 #ifndef BLACKSAMPLE_WEATERDATA_WEATHERDATAPRINTER_H
 #define BLACKSAMPLE_WEATERDATA_WEATHERDATAPRINTER_H
 
+//! \file
+//! \ingroup sampleweatherdata
+
 #include "blackcore/pluginmanagerweatherdata.h"
 #include "blackcore/weatherdata.h"
 #include "blackmisc/geo/latitude.h"

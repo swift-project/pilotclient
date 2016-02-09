@@ -7,6 +7,9 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+//! \ingroup sampleweatherdata
+
 #include "reader.h"
 #include <QFile>
 #include <QRegularExpression>

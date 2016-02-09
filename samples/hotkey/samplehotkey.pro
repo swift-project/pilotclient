@@ -13,6 +13,7 @@ CONFIG   += blackmisc blackinput blackcore blackgui
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src
 
+HEADERS += *.h
 SOURCES += *.cpp
 
 DESTDIR = $$DestRoot/bin

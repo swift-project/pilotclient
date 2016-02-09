@@ -18,6 +18,9 @@
 #include <QDebug>
 #include <QTime>
 
+//! \file
+//! \ingroup sampleblackmiscsim
+
 //! main
 int main(int argc, char *argv[])
 {

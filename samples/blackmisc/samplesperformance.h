@@ -8,6 +8,7 @@
  */
 
 //! \file
+//! \ingroup sampleblackmisc
 
 #ifndef BLACKSAMPLE_SAMPLESPERFORMANCE_H
 #define BLACKSAMPLE_SAMPLESPERFORMANCE_H

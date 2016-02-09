@@ -7,6 +7,9 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+//! \ingroup sampleblackmiscdbus
+
 #include "testserviceinterface.h"
 
 namespace BlackSample

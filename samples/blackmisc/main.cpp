@@ -18,6 +18,9 @@
 #include "blackmisc/registermetadata.h"
 #include "blackmisc/pq/pq.h"
 
+//! \file
+//! \ingroup sampleblackmisc
+
 using namespace BlackMisc;
 using namespace BlackSample;
 

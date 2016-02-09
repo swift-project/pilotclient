@@ -8,6 +8,7 @@
  */
 
 //! \file
+//! \ingroup sampleblackmiscsim
 
 #ifndef BLACKSAMPLE_SAMPLESMODELMAPPING_H
 #define BLACKSAMPLE_SAMPLESMODELMAPPING_H

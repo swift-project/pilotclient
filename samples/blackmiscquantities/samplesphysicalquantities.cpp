@@ -7,6 +7,9 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+//! \ingroup sampleblackmiscquantities
+
 #include "samplesphysicalquantities.h"
 #include "blackmisc/variant.h"
 

@@ -7,6 +7,9 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+//! \ingroup sampleblackmiscsim
+
 #include "samplesfsx.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
 #include "blackmisc/registermetadata.h"

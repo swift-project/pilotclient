@@ -8,6 +8,7 @@
  */
 
 //! \file
+//! \ingroup sampleblackmiscquantities
 
 #ifndef BLACKSAMPLE_SAMPLESPHYSICALQUANTITIES_H
 #define BLACKSAMPLE_SAMPLESPHYSICALQUANTITIES_H

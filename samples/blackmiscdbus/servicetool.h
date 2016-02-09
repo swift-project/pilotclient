@@ -8,6 +8,7 @@
  */
 
 //! \file
+//! \ingroup sampleblackmiscdbus
 
 #ifndef BLACKSAMPLE_SERVICETOOL_H
 #define BLACKSAMPLE_SERVICETOOL_H

@@ -7,6 +7,9 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+//! \ingroup sampleblackmisc
+
 #include "samplesalgorithm.h"
 #include "blackmisc/algorithm.h"
 #include "blackmisc/sequence.h"

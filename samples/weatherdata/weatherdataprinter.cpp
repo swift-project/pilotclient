@@ -2,6 +2,9 @@
 #include "blackmisc/logmessage.h"
 #include <QTextStream>
 
+//! \file
+//! \ingroup sampleweatherdata
+
 using namespace BlackMisc;
 using namespace BlackMisc::Weather;
 using namespace BlackMisc::Geo;

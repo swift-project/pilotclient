@@ -8,6 +8,7 @@
  */
 
 //! \file
+//! \ingroup sampleblackmisc
 
 #ifndef BLACKSAMPLE_SAMPLESCONTAINER_H
 #define BLACKSAMPLE_SAMPLESCONTAINER_H

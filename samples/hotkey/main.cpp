@@ -7,6 +7,9 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+//! \ingroup samplehotkey
+
 #include "blackgui/components/settingshotkeycomponent.h"
 #include "blackmisc/registermetadata.h"
 #include <QApplication>

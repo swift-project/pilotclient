@@ -8,6 +8,7 @@
  */
 
 //! \file
+//! \ingroup samplecliclient
 
 #ifndef BLACKSAMPLE_CLICLIENT_CLIENT_H
 #define BLACKSAMPLE_CLICLIENT_CLIENT_H

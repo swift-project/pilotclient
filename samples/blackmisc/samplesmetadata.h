@@ -8,6 +8,7 @@
  */
 
 //! \file
+//! \ingroup sampleblackmisc
 
 #ifndef BLACKSAMPLE_SAMPLESMETADATA_H
 #define BLACKSAMPLE_SAMPLESMETADATA_H

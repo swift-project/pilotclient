@@ -8,6 +8,7 @@
  */
 
 //! \file
+//! \ingroup sampleblackmisc
 
 #ifndef BLACKSAMPLE_SAMPLESJSON_H
 #define BLACKSAMPLE_SAMPLESJSON_H

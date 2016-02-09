@@ -7,6 +7,9 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+//! \ingroup sampleblackmiscdbus
+
 #include "testservice.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 

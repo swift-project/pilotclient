@@ -7,6 +7,9 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+//! \ingroup sampleblackmisc
+
 #include "samplesmetadata.h"
 #include "blackmisc/registermetadata.h"
 #include "blackmisc/metadatautils.h"

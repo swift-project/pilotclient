@@ -7,10 +7,11 @@
  * contained in the LICENSE file.
  */
 
-//! \file
-
 #ifndef BLACKSAMPLE_WEATHERDATA_LINEREADER_H
 #define BLACKSAMPLE_WEATHERDATA_LINEREADER_H
+
+//! \file
+//! \ingroup sampleweatherdata
 
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"

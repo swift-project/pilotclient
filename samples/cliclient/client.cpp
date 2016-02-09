@@ -7,6 +7,9 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+//! \ingroup samplecliclient
+
 #include "client.h"
 #include "blackcore/networkvatlib.h"
 #include <iostream>

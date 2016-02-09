@@ -7,6 +7,9 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+//! \ingroup sampleblackmiscsim
+
 #include "samplesfscommon.h"
 #include "blackmisc/sampleutils.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
