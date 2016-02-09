@@ -21,8 +21,8 @@ using namespace BlackMisc::Network;
 namespace BlackMiscTest
 {
 
-    const QString Testservice::ServiceName = QString(BLACKMISCKTEST_TESTSERVICE_INTERFACENAME);
-    const QString Testservice::ServicePath = QString(BLACKMISCKTEST_TESTSERVICE_SERVICEPATH);
+    const QString Testservice::InterfaceName = QString(BLACKSAMPLE_TESTSERVICE_INTERFACENAME);
+    const QString Testservice::ObjectPath = QString(BLACKSAMPLE_TESTSERVICE_OBJECTPATH);
 
     /*
      * Constructor
@@ -208,7 +208,7 @@ namespace BlackMiscTest
         QList<QDBusObjectPath> paths;
         for (int i = 0; i < number; i++)
         {
-            paths.append(QDBusObjectPath(BLACKMISCKTEST_TESTSERVICE_SERVICEPATH));
+            paths.append(QDBusObjectPath(BLACKSAMPLE_TESTSERVICE_OBJECTPATH));
         }
         return paths;
     }

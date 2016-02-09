@@ -30,8 +30,8 @@
 #include <QDBusConnection>
 #include <QDBusObjectPath>
 
-#define BLACKMISCKTEST_TESTSERVICE_INTERFACENAME "blackmisctest.testservice"
-#define BLACKMISCKTEST_TESTSERVICE_SERVICEPATH "/ts"
+#define BLACKSAMPLE_TESTSERVICE_INTERFACENAME "blackmisctest.testservice"
+#define BLACKSAMPLE_TESTSERVICE_OBJECTPATH "/ts"
 
 namespace BlackMiscTest
 {
@@ -40,7 +40,7 @@ namespace BlackMiscTest
     class Testservice : public QObject
     {
         Q_OBJECT
-        Q_CLASSINFO("D-Bus Interface", BLACKMISCKTEST_TESTSERVICE_INTERFACENAME)
+        Q_CLASSINFO("D-Bus Interface", BLACKSAMPLE_TESTSERVICE_INTERFACENAME)
 
         // For some reasons the interface name in the XML is not set correctly
         // to the above name
@@ -169,8 +169,10 @@ namespace BlackMiscTest
         QList<QDBusObjectPath> getObjectPaths(int number) const;
 
     public:
-        static const QString ServiceName;
-        static const QString ServicePath;
+        //! DBus interface name
+        static const QString InterfaceName;
+        //! DBus object path
+        static const QString ObjectPath;
 
         //! Constructor
         explicit Testservice(QObject *parent = nullptr);

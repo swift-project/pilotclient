@@ -62,14 +62,14 @@ namespace BlackMiscTest
     void ServiceTool::dataTransferTestServer(BlackMisc::CDBusServer *dBusServer)
     {
         QDBusConnection sessionBusConnection = QDBusConnection::sessionBus();
-        if (sessionBusConnection.interface()->isServiceRegistered(Testservice::ServiceName))
+        if (sessionBusConnection.interface()->isServiceRegistered(Testservice::InterfaceName))
         {
             qFatal("Testservice already registed on session bus");
         }
 
         // as this is the receiver side, the slots can be debugged too
         Testservice *testservice = ServiceTool::registerTestservice(sessionBusConnection, QCoreApplication::instance());
-        dBusServer->addObject(Testservice::ServicePath, testservice);
+        dBusServer->addObject(Testservice::ObjectPath, testservice);
     }
 
     void ServiceTool::dataTransferTestClient(const QString &address)
@@ -185,7 +185,7 @@ namespace BlackMiscTest
     Testservice *ServiceTool::registerTestservice(QDBusConnection &connection, QObject *parent)
     {
         Testservice *pTestservice = new Testservice(parent);  // just a QObject with signals / slots and  Q_CLASSINFO("D-Bus Interface", some service name)
-        if (!connection.registerService(Testservice::ServiceName))
+        if (!connection.registerService(Testservice::InterfaceName))
         {
             QDBusError err = connection.lastError();
             qWarning() << err.message();
@@ -195,7 +195,7 @@ namespace BlackMiscTest
             qFatal("Could not register service!");
         }
 
-        if (!connection.registerObject(Testservice::ServicePath, pTestservice, QDBusConnection::ExportAllSlots | QDBusConnection::ExportAllSignals | QDBusConnection::ExportAdaptors))
+        if (!connection.registerObject(Testservice::ObjectPath, pTestservice, QDBusConnection::ExportAllSlots | QDBusConnection::ExportAllSignals | QDBusConnection::ExportAdaptors))
         {
             qFatal("Could not register service object!");
         }
@@ -205,7 +205,7 @@ namespace BlackMiscTest
 
         QString service; // service not needed
         if (connection.connect(
-                    service, Testservice::ServicePath, Testservice::ServiceName,
+                    service, Testservice::ObjectPath, Testservice::InterfaceName,
                     "sendStringMessage", pTestservice, SLOT(receiveStringMessage(const QString &))))
         {
             qDebug() << "Connected object with bus sendStringMessage";
@@ -220,7 +220,7 @@ namespace BlackMiscTest
     void ServiceTool::sendDataToTestservice(const QDBusConnection &connection)
     {
         // on the client's side
-        TestServiceInterface testserviceInterface(Testservice::ServiceName, Testservice::ServicePath, connection);
+        TestServiceInterface testserviceInterface(Testservice::InterfaceName, Testservice::ObjectPath, connection);
 
         CSpeed speed(200, CSpeedUnit::km_h());
         CSpeed speedNull(0, CSpeedUnit::nullUnit());
@@ -231,7 +231,7 @@ namespace BlackMiscTest
         while (true)
         {
             QDBusMessage m = QDBusMessage::createSignal(
-                                 Testservice::ServicePath, Testservice::ServiceName,
+                                 Testservice::ObjectPath, Testservice::InterfaceName,
                                  "sendStringMessage");
 
             // The << operator is used to add the parameters for the slot
