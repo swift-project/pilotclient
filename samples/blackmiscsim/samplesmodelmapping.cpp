@@ -24,7 +24,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Aviation;
 
-namespace BlackSimTest
+namespace BlackSample
 {
 
     /*

@@ -9,24 +9,29 @@
 
 //! \file
 
-#ifndef __BLACKSAMPLE_CLI_CLIENT_READER_H__
-#define __BLACKSAMPLE_CLI_CLIENT_READER_H__
+#ifndef BLACKSAMPLE_CLICLIENT_LINEREADER_H
+#define BLACKSAMPLE_CLICLIENT_LINEREADER_H
 
 #include <QThread>
 #include <QString>
 
-class LineReader : public QThread
+namespace BlackSample
 {
-    Q_OBJECT
 
-public:
-    LineReader() {}
+    class LineReader : public QThread
+    {
+        Q_OBJECT
 
-protected:
-    void run();
+    public:
+        LineReader() {}
 
-signals:
-    void command(const QString &line);
-};
+    protected:
+        void run();
 
-#endif //__BLACKSAMPLE_CLI_CLIENT_READER_H__
+    signals:
+        void command(const QString &line);
+    };
+
+} // ns
+
+#endif // guard

@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISCKTEST_TESTSERVICE_H
-#define BLACKMISCKTEST_TESTSERVICE_H
+#ifndef BLACKSAMPLE_TESTSERVICE_H
+#define BLACKSAMPLE_TESTSERVICE_H
 
 // clash with struct interface in objbase.h used to happen
 #pragma push_macro("interface")
@@ -33,7 +33,7 @@
 #define BLACKSAMPLE_TESTSERVICE_INTERFACENAME "blackmisctest.testservice"
 #define BLACKSAMPLE_TESTSERVICE_OBJECTPATH "/ts"
 
-namespace BlackMiscTest
+namespace BlackSample
 {
 
     //! Testservice for PQ / CValueObject DBus tests

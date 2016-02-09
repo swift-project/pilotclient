@@ -9,13 +9,13 @@
 
 //! \file
 
-#ifndef BLACKMISCTEST_SAMPLESPERFORMANCEINDEX_H
-#define BLACKMISCTEST_SAMPLESPERFORMANCEINDEX_H
+#ifndef BLACKSAMPLE_SAMPLESPERFORMANCE_H
+#define BLACKSAMPLE_SAMPLESPERFORMANCE_H
 
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include <QTextStream>
 
-namespace BlackMiscTest
+namespace BlackSample
 {
     //! Samples for our containers
     class CSamplesPerformance

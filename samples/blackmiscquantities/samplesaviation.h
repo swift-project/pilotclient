@@ -9,12 +9,12 @@
 
 //! \file
 
-#ifndef BLACKMISCTEST_SAMPLESAVIATION_H
-#define BLACKMISCTEST_SAMPLESAVIATION_H
+#ifndef BLACKSAMPLE_SAMPLESAVIATION_H
+#define BLACKSAMPLE_SAMPLESAVIATION_H
 
 #include <QTextStream>
 
-namespace BlackMiscTest
+namespace BlackSample
 {
 
 //! Samples for aviation

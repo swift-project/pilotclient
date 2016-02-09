@@ -14,6 +14,8 @@
 #include <QCoreApplication>
 #include <QTextCodec>
 
+using namespace BlackSample;
+
 int main(int argc, char *argv[])
 {
     QCoreApplication app (argc, argv);

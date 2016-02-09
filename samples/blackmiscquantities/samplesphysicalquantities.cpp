@@ -13,7 +13,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 
-namespace BlackMiscTest
+namespace BlackSample
 {
     int CSamplesPhysicalQuantities::samples(QTextStream &out)
     {

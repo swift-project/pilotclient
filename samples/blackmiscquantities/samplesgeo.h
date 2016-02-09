@@ -9,13 +9,13 @@
 
 //! \file
 
-#ifndef BLACKMISCTEST_SAMPLESGEO_H
-#define BLACKMISCTEST_SAMPLESGEO_H
+#ifndef BLACKSAMPLE_SAMPLESGEO_H
+#define BLACKSAMPLE_SAMPLESGEO_H
 
 #include "blackmisc/pq/constants.h"
 #include <QTextStream>
 
-namespace BlackMiscTest
+namespace BlackSample
 {
     //! Samples for physical quantities
     class CSamplesGeo

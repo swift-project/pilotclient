@@ -9,10 +9,10 @@
 
 //! \file
 
-#ifndef BLACKMISCTEST_SAMPLESJSON_H
-#define BLACKMISCTEST_SAMPLESJSON_H
+#ifndef BLACKSAMPLE_SAMPLESJSON_H
+#define BLACKSAMPLE_SAMPLESJSON_H
 
-namespace BlackMiscTest
+namespace BlackSample
 {
 
     //! Samples for metadata

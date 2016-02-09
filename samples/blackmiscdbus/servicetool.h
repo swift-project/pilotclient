@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISCTEST_SERVICETOOL_H
-#define BLACKMISCTEST_SERVICETOOL_H
+#ifndef BLACKSAMPLE_SERVICETOOL_H
+#define BLACKSAMPLE_SERVICETOOL_H
 
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/aviation/atcstationlist.h"
@@ -21,7 +21,7 @@
 #include <QProcess>
 #include <QDBusConnection>
 
-namespace BlackMiscTest
+namespace BlackSample
 {
     class Testservice; // forward declaration
 

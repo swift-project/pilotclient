@@ -9,13 +9,13 @@
 
 //! \file
 
-#ifndef BLACKMISCTEST_SAMPLESPHYSICALQUANTITIES_H
-#define BLACKMISCTEST_SAMPLESPHYSICALQUANTITIES_H
+#ifndef BLACKSAMPLE_SAMPLESPHYSICALQUANTITIES_H
+#define BLACKSAMPLE_SAMPLESPHYSICALQUANTITIES_H
 
 #include "blackmisc/pq/constants.h"
 #include <QTextStream>
 
-namespace BlackMiscTest
+namespace BlackSample
 {
 
     //! Samples for physical quantities

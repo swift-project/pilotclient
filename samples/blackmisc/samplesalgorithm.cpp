@@ -15,7 +15,7 @@
 #include <QString>
 #include <numeric>
 
-namespace BlackMiscTest
+namespace BlackSample
 {
 
     /*

@@ -9,12 +9,12 @@
 
 //! \file
 
-#ifndef BLACKSIMTEST_SAMPLESVPILOTRULES_H
-#define BLACKSIMTEST_SAMPLESVPILOTRULES_H
+#ifndef BLACKSAMPLE_SAMPLESVPILOTRULES_H
+#define BLACKSAMPLE_SAMPLESVPILOTRULES_H
 
 #include <QTextStream>
 
-namespace BlackSimTest
+namespace BlackSample
 {
     //! Samples for vPilot rules
     class CSamplesVPilotRules

@@ -9,10 +9,10 @@
 
 //! \file
 
-#ifndef BLACKMISCTEST_SAMPLESCONTAINER_H
-#define BLACKMISCTEST_SAMPLESCONTAINER_H
+#ifndef BLACKSAMPLE_SAMPLESCONTAINER_H
+#define BLACKSAMPLE_SAMPLESCONTAINER_H
 
-namespace BlackMiscTest
+namespace BlackSample
 {
     //! Samples for our containers
     class CSamplesContainer

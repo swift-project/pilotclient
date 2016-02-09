@@ -140,12 +140,12 @@ int main(int argc, char *argv[])
             args << ip;
             args << port;
         }
-        BlackMiscTest::ServiceTool::startNewProcess(executable, args, &a);
+        BlackSample::ServiceTool::startNewProcess(executable, args, &a);
 
         // run tests
         if (mode == "testservice")
         {
-            BlackMiscTest::ServiceTool::dataTransferTestServer(dBusServer);
+            BlackSample::ServiceTool::dataTransferTestServer(dBusServer);
         }
 
         // loop
@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
         // run tests
         if (cmdlineArgs.contains("testservice", Qt::CaseInsensitive))
         {
-            BlackMiscTest::ServiceTool::dataTransferTestClient(address);
+            BlackSample::ServiceTool::dataTransferTestClient(address);
         }
 
         // loop

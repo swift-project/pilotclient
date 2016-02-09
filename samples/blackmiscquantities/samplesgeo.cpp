@@ -17,7 +17,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 
-namespace BlackMiscTest
+namespace BlackSample
 {
     int CSamplesGeo::samples(QTextStream &out)
     {

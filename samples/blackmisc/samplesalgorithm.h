@@ -9,10 +9,10 @@
 
 //! \file
 
-#ifndef BLACKMISCTEST_SAMPLESALGORITHM_H
-#define BLACKMISCTEST_SAMPLESALGORITHM_H
+#ifndef BLACKSAMPLE_SAMPLESALGORITHM_H
+#define BLACKSAMPLE_SAMPLESALGORITHM_H
 
-namespace BlackMiscTest
+namespace BlackSample
 {
     //! Samples for our algorithms
     class CSamplesAlgorithm

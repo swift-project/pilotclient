@@ -9,12 +9,12 @@
 
 //! \file
 
-#ifndef BLACKSIMTEST_SAMPLESMODELMAPPING_H
-#define BLACKSIMTEST_SAMPLESMODELMAPPING_H
+#ifndef BLACKSAMPLE_SAMPLESMODELMAPPING_H
+#define BLACKSAMPLE_SAMPLESMODELMAPPING_H
 
 #include <QTextStream>
 
-namespace BlackSimTest
+namespace BlackSample
 {
     //! Samples for model mapping classes
     class CSamplesModelMapping

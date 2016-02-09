@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKSAMPLE_WEATERDATA_READER_H
-#define BLACKSAMPLE_WEATERDATA_READER_H
+#ifndef BLACKSAMPLE_WEATHERDATA_LINEREADER_H
+#define BLACKSAMPLE_WEATHERDATA_LINEREADER_H
 
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
@@ -40,4 +40,4 @@ signals:
     void quit();
 };
 
-#endif
+#endif // guard

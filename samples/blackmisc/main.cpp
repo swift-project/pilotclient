@@ -19,7 +19,7 @@
 #include "blackmisc/pq/pq.h"
 
 using namespace BlackMisc;
-using namespace BlackMiscTest;
+using namespace BlackSample;
 
 //! Sample tests
 int main(int argc, char *argv[])

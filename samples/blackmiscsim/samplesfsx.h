@@ -9,12 +9,12 @@
 
 //! \file
 
-#ifndef BLACKSIMTEST_SAMPLESFSX_H
-#define BLACKSIMTEST_SAMPLESFSX_H
+#ifndef BLACKSAMPLE_SAMPLESFSX_H
+#define BLACKSAMPLE_SAMPLESFSX_H
 
 #include <QTextStream>
 
-namespace BlackSimTest
+namespace BlackSample
 {
     //! Samples for FSX classes
     class CSamplesFsx

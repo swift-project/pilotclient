@@ -14,7 +14,7 @@
 
 using namespace BlackMisc::Simulation::Fsx;
 
-namespace BlackSimTest
+namespace BlackSample
 {
 
     /*

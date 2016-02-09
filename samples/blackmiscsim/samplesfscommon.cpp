@@ -23,7 +23,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation::FsCommon;
 
-namespace BlackSimTest
+namespace BlackSample
 {
 
     /*

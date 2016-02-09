@@ -10,16 +10,19 @@
 #include "reader.h"
 #include <QFile>
 
-void LineReader::run()
+namespace BlackSample
 {
-    QFile file;
-    file.open(stdin, QIODevice::ReadOnly | QIODevice::Text);
-    forever
+    void LineReader::run()
     {
-        QString line = file.readLine().trimmed();
-        if (! line.isEmpty())
+        QFile file;
+        file.open(stdin, QIODevice::ReadOnly | QIODevice::Text);
+        forever
         {
-            emit command(line);
+            QString line = file.readLine().trimmed();
+            if (! line.isEmpty())
+            {
+                emit command(line);
+            }
         }
     }
 }

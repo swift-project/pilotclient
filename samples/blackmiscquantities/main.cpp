@@ -14,7 +14,7 @@
 #include <QTextStream>
 
 using namespace BlackMisc;
-using namespace BlackMiscTest;
+using namespace BlackSample;
 
 //! Samples
 int main(int argc, char *argv[])

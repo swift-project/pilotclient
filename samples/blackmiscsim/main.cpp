@@ -42,19 +42,19 @@ int main(int argc, char *argv[])
     t.start();
     if (i.startsWith("1"))
     {
-        BlackSimTest::CSamplesFsCommon::samples(streamOut, streamIn);
+        BlackSample::CSamplesFsCommon::samples(streamOut, streamIn);
     }
     else if (i.startsWith("2"))
     {
-        BlackSimTest::CSamplesFsx::samplesMisc(streamOut);
+        BlackSample::CSamplesFsx::samplesMisc(streamOut);
     }
     else if (i.startsWith("3"))
     {
-        BlackSimTest::CSamplesModelMapping::samples(streamOut, streamIn);
+        BlackSample::CSamplesModelMapping::samples(streamOut, streamIn);
     }
     else if (i.startsWith("4"))
     {
-        BlackSimTest::CSamplesVPilotRules::samples(streamOut, streamIn);
+        BlackSample::CSamplesVPilotRules::samples(streamOut, streamIn);
     }
     else if (i.startsWith("x"))
     {

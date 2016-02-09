@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISCTEST_TESTSERVICE_INTERFACE_H
-#define BLACKMISCTEST_TESTSERVICE_INTERFACE_H
+#ifndef BLACKSAMPLE_TESTSERVICE_INTERFACE_H
+#define BLACKSAMPLE_TESTSERVICE_INTERFACE_H
 
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/aviation/atcstationlist.h"
@@ -31,7 +31,7 @@
 #include <QtCore/QVariant>
 #include <QtDBus/QtDBus>
 
-namespace BlackMiscTest
+namespace BlackSample
 {
 
     //! Proxy class for interface blackmisctest.testservice

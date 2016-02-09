@@ -9,10 +9,10 @@
 
 //! \file
 
-#ifndef BLACKMISCTEST_SAMPLESMETADATA_H
-#define BLACKMISCTEST_SAMPLESMETADATA_H
+#ifndef BLACKSAMPLE_SAMPLESMETADATA_H
+#define BLACKSAMPLE_SAMPLESMETADATA_H
 
-namespace BlackMiscTest
+namespace BlackSample
 {
 
     //! Samples for metadata

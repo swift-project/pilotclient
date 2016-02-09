@@ -9,10 +9,10 @@
 
 //! \file
 
-#ifndef BLACKMISCTEST_SAMPLESCHANGEDATA_H
-#define BLACKMISCTEST_SAMPLESCHANGEDATA_H
+#ifndef BLACKSAMPLE_SAMPLESCHANGEDATA_H
+#define BLACKSAMPLE_SAMPLESCHANGEDATA_H
 
-namespace BlackMiscTest
+namespace BlackSample
 {
     //! Samples for metadata
     class CSamplesChangeObject

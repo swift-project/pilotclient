@@ -24,9 +24,8 @@ using namespace BlackMisc::Math;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation::FsCommon;
-using namespace BlackMiscTest;
 
-namespace BlackMiscTest
+namespace BlackSample
 {
     QProcess *ServiceTool::startNewProcess(const QString &executable, const QStringList &arguments, QObject *parent)
     {

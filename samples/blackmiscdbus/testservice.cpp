@@ -18,7 +18,7 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;
 
-namespace BlackMiscTest
+namespace BlackSample
 {
 
     const QString Testservice::InterfaceName = QString(BLACKSAMPLE_TESTSERVICE_INTERFACENAME);

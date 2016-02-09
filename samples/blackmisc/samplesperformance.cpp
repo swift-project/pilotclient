@@ -19,7 +19,7 @@ using namespace BlackMisc::PhysicalQuantities;
 
 #include <QRegularExpression>
 
-namespace BlackMiscTest
+namespace BlackSample
 {
 
     /*

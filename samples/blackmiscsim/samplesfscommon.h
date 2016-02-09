@@ -9,12 +9,12 @@
 
 //! \file
 
-#ifndef BLACKSIMTEST_SAMPLESFSCOMMON_H
-#define BLACKSIMTEST_SAMPLESFSCOMMON_H
+#ifndef BLACKSAMPLE_SAMPLESFSCOMMON_H
+#define BLACKSAMPLE_SAMPLESFSCOMMON_H
 
 #include <QTextStream>
 
-namespace BlackSimTest
+namespace BlackSample
 {
     //! Samples for FsCommon classes
     class CSamplesFsCommon
