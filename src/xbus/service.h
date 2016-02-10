@@ -27,7 +27,7 @@ class QTimer;
 
 //! \cond PRIVATE
 #define XBUS_SERVICE_INTERFACENAME "org.swift_project.xbus.service"
-#define XBUS_SERVICE_OBJECTPATH "/xbus"
+#define XBUS_SERVICE_OBJECTPATH "/xbus/service"
 //! \endcond
 
 //! Typedef needed to use QList<double> as a DBus argument

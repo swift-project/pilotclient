@@ -16,7 +16,7 @@
 
 //! \cond PRIVATE
 #define XBUS_WEATHER_INTERFACENAME "org.swift_project.xbus.weather"
-#define XBUS_WEATHER_OBJECTPATH "/xbus"
+#define XBUS_WEATHER_OBJECTPATH "/xbus/weather"
 //! \endcond
 
 namespace BlackSimPlugin
