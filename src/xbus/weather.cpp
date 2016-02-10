@@ -38,17 +38,17 @@ namespace XBus
 
     //! Set wind layer
     template <class T>
-    void setWindLayerImpl(T &layer, int altitude, float direction, int speed, int shearDirection, int shearSpeed, int turbulence)
+    void setWindLayerImpl(T &layer, int altitude, double direction, int speed, int shearDirection, int shearSpeed, int turbulence)
     {
         layer.altitude.set(altitude);
-        layer.direction.set(direction);
+        layer.direction.set(static_cast<float>(direction));
         layer.speed.set(speed);
         layer.shearDirection.set(shearDirection);
         layer.shearSpeed.set(shearSpeed);
         layer.turbulence.set(turbulence);
     }
 
-    void CWeather::setWindLayer(int layer, int altitude, float direction, int speed, int shearDirection, int shearSpeed, int turbulence)
+    void CWeather::setWindLayer(int layer, int altitude, double direction, int speed, int shearDirection, int shearSpeed, int turbulence)
     {
         switch (layer)
         {

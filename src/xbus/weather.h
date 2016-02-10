@@ -60,7 +60,7 @@ namespace XBus
         void setUseRealWeather(bool enable) { m_useRealWeather.set(enable ? 1 : 0); }
 
         //! Set reported visibility in meters.
-        void setVisibility(float visibilityM) { m_visibilityM.set(visibilityM); }
+        void setVisibility(double visibilityM) { m_visibilityM.set(static_cast<float>(visibilityM)); }
 
         //! Set temperature at sea level in degrees C.
         void setTemperature(int degreesC) { m_temperatureC.set(degreesC); }
@@ -69,16 +69,16 @@ namespace XBus
         void setDewPoint(int degreesC) { m_dewPointC.set(degreesC); }
 
         //! Set barometric pressure at sea level in inches of mercury.
-        void setQNH(float inHg) { m_qnhInhg.set(inHg); }
+        void setQNH(double inHg) { m_qnhInhg.set(static_cast<float>(inHg)); }
 
         //! Set amount of precipitation between 0 and 1.
-        void setPrecipitationRatio(float precipRatio) { m_precipRatio.set(precipRatio); }
+        void setPrecipitationRatio(double precipRatio) { m_precipRatio.set(static_cast<float>(precipRatio)); }
 
         //! Set amount of thunderstorms between 0 and 1.
-        void setThunderstormRatio(float cbRatio) { m_cbRatio.set(cbRatio); }
+        void setThunderstormRatio(double cbRatio) { m_cbRatio.set(static_cast<float>(cbRatio)); }
 
         //! Set amount of turbulence between 0 and 1.
-        void setTurbulenceRatio(float turbulenceRatio) { m_turbulenceRatio.set(turbulenceRatio); }
+        void setTurbulenceRatio(double turbulenceRatio) { m_turbulenceRatio.set(static_cast<float>(turbulenceRatio)); }
 
         //! Set runway friction, 0=dry, 1=damp, 2=wet.
         void setRunwayFriction(int friction) { m_runwayFriction.set(friction); }
@@ -99,7 +99,7 @@ namespace XBus
         //! \param shearDirection Direction from which wind shears blow in degrees true.
         //! \param shearSpeed Wind speed gain in knots (e.g. speed=10 and shearSpeed=5 means speed varies between 10 and 15).
         //! \param turbulence Amount of turbulence [0,10].
-        void setWindLayer(int layer, int altitude, float direction, int speed, int shearDirection, int shearSpeed, int turbulence);
+        void setWindLayer(int layer, int altitude, double direction, int speed, int shearDirection, int shearSpeed, int turbulence);
 
     private:
         DataRef<xplane::data::sim::weather::use_real_weather_bool> m_useRealWeather;

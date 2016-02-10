@@ -89,7 +89,7 @@ namespace XBus
         void setMaxPlanes(int planes);
 
         //! Set the maximum distance at which to draw aircraft (nautical miles).
-        void setMaxDrawDistance(float nauticalMiles);
+        void setMaxDrawDistance(double nauticalMiles);
 
         //! Introduce a new traffic aircraft
         void addPlane(const QString &callsign, const QString &modelName, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);

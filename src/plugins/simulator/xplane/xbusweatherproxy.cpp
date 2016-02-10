@@ -32,7 +32,7 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBus(QLatin1String("setUseRealWeather"), enable);
         }
 
-        void CXBusWeatherProxy::setVisibility(float visibilityM)
+        void CXBusWeatherProxy::setVisibility(double visibilityM)
         {
             m_dbusInterface->callDBus(QLatin1String("setVisibility"), visibilityM);
         }
@@ -47,22 +47,22 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBus(QLatin1String("setDewPoint"), degreesC);
         }
 
-        void CXBusWeatherProxy::setQNH(float inHg)
+        void CXBusWeatherProxy::setQNH(double inHg)
         {
             m_dbusInterface->callDBus(QLatin1String("setQNH"), inHg);
         }
 
-        void CXBusWeatherProxy::setPrecipitationRatio(float precipRatio)
+        void CXBusWeatherProxy::setPrecipitationRatio(double precipRatio)
         {
             m_dbusInterface->callDBus(QLatin1String("setPrecipitationRatio"), precipRatio);
         }
 
-        void CXBusWeatherProxy::setThunderstormRatio(float cbRatio)
+        void CXBusWeatherProxy::setThunderstormRatio(double cbRatio)
         {
             m_dbusInterface->callDBus(QLatin1String("setThunderstormRatio"), cbRatio);
         }
 
-        void CXBusWeatherProxy::setTurbulenceRatio(float turbulenceRatio)
+        void CXBusWeatherProxy::setTurbulenceRatio(double turbulenceRatio)
         {
             m_dbusInterface->callDBus(QLatin1String("setTurbulenceRatio"), turbulenceRatio);
         }
@@ -77,7 +77,7 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBus(QLatin1String("setCloudLayer"), layer, base, tops, type, coverage);
         }
 
-        void CXBusWeatherProxy::setWindLayer(int layer, int altitude, float direction, int speed, int shearDirection, int shearSpeed, int turbulence)
+        void CXBusWeatherProxy::setWindLayer(int layer, int altitude, double direction, int speed, int shearDirection, int shearSpeed, int turbulence)
         {
             m_dbusInterface->callDBus(QLatin1String("setWindLayer"), layer, altitude, direction, speed, shearDirection, shearSpeed, turbulence);
         }

@@ -194,9 +194,9 @@ namespace XBus
         g_maxPlanes = planes;
     }
 
-    void CTraffic::setMaxDrawDistance(float nauticalMiles)
+    void CTraffic::setMaxDrawDistance(double nauticalMiles)
     {
-        g_drawDistance = nauticalMiles;
+        g_drawDistance = static_cast<float>(nauticalMiles);
     }
 
     void CTraffic::addPlane(const QString &callsign, const QString &modelName, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery)

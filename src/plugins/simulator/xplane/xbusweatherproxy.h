@@ -63,7 +63,7 @@ namespace BlackSimPlugin
             void setUseRealWeather(bool enable);
 
             //! \copydoc XBus::CWeather::setVisibility
-            void setVisibility(float visibilityM);
+            void setVisibility(double visibilityM);
 
             //! \copydoc XBus::CWeather::setTemperature
             void setTemperature(int degreesC);
@@ -72,16 +72,16 @@ namespace BlackSimPlugin
             void setDewPoint(int degreesC);
 
             //! \copydoc XBus::CWeather::setQNH
-            void setQNH(float inHg);
+            void setQNH(double inHg);
 
             //! \copydoc XBus::CWeather::setPrecipitationRatio
-            void setPrecipitationRatio(float precipRatio);
+            void setPrecipitationRatio(double precipRatio);
 
             //! \copydoc XBus::CWeather::setThunderstormRatio
-            void setThunderstormRatio(float cbRatio);
+            void setThunderstormRatio(double cbRatio);
 
             //! \copydoc XBus::CWeather::setTurbulenceRatio
-            void setTurbulenceRatio(float turbulenceRatio);
+            void setTurbulenceRatio(double turbulenceRatio);
 
             //! \copydoc XBus::CWeather::setRunwayFriction
             void setRunwayFriction(int friction);
@@ -90,7 +90,7 @@ namespace BlackSimPlugin
             void setCloudLayer(int layer, int base, int tops, int type, int coverage);
 
             //! \copydoc XBus::CWeather::setWindLayer
-            void setWindLayer(int layer, int altitude, float direction, int speed, int shearDirection, int shearSpeed, int turbulence);
+            void setWindLayer(int layer, int altitude, double direction, int speed, int shearDirection, int shearSpeed, int turbulence);
         };
 
     }
