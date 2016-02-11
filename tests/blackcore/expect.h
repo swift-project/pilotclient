@@ -21,6 +21,7 @@
 
 /*!
  * \file
+ * \ingroup testblackcore
  */
 
 namespace BlackCoreTest

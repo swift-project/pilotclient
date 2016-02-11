@@ -14,6 +14,7 @@
 
 /*!
  * \file
+ * \ingroup testblackcore
  */
 
 #include "blackmisc/valueobject.h" // for qHash overload, include before Qt stuff due GCC issue

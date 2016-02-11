@@ -14,6 +14,7 @@
 
 /*!
  * \file
+ * \ingroup testblackcore
  */
 
 #include "blackcore/networkvatlib.h"

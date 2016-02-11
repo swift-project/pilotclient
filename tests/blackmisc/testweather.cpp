@@ -11,6 +11,7 @@
 
 /*!
  * \file
+ * \ingroup testblackmisc
  */
 
 #include "testweather.h"

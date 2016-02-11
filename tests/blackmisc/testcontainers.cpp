@@ -11,6 +11,7 @@
 
 /*!
  * \file
+ * \ingroup testblackmisc
  */
 
 #include "testcontainers.h"

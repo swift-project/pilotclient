@@ -14,6 +14,7 @@
 
 /*!
  * \file
+ * \ingroup testblackmisc
  */
 
 #include "blackmisc/valuecache.h"

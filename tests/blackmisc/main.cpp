@@ -11,7 +11,7 @@
 
 /*!
  * \file
- * \internal
+ * \ingroup testblackmisc
  */
 
 #include "testblackmiscmain.h"

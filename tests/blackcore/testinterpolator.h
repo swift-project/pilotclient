@@ -14,6 +14,7 @@
 
 /*!
  * \file
+ * \ingroup testblackcore
  */
 
 #include "blackmisc/aviation/aircraftsituation.h"

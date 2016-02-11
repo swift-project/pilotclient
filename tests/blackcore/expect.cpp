@@ -11,6 +11,7 @@
 
 /*!
  * \file
+ * \ingroup testblackcore
  */
 
 #include "expect.h"

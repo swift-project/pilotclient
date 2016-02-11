@@ -14,6 +14,8 @@
 
 /*!
  * \namespace BlackMiscTest
+ * \defgroup testblackmisc BlackMisc Unit Tests
+ * \ingroup tests
  * \internal
  * Unit tests for BlackMisc. Unit tests do have their own namespace, so
  * the regular namespace BlackMisc is completely free of unit tests.

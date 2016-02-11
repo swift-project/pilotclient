@@ -11,6 +11,7 @@
 
 /*!
  * \file
+ * \ingroup testblackgui
  */
 
 #ifndef BLACKCORETEST_TESTMAIN_H

@@ -11,6 +11,7 @@
 
 /*!
  * \file
+ * \ingroup testblackgui
  */
 
 #include "testblackguimain.h"

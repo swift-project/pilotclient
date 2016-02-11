@@ -14,7 +14,8 @@
 
 /*!
  * \namespace BlackCoreTest
- * \internal
+ * \defgroup testblackcore BlackCore Unit Tests
+ * \ingroup tests
  * Unit tests for BlackCore. Unit tests do have their own namespace, so
  * the regular namespace BlackCore is completely free of unit tests.
  * Add any new tests to TestMain::unitMain as shown there.

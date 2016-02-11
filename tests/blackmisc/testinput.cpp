@@ -10,6 +10,7 @@
 //! \cond PRIVATE_TESTS
 
 /*!
+ * \file
  * \ingroup testblackmisc
  */
 
