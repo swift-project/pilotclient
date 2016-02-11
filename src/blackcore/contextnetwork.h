@@ -65,7 +65,7 @@ namespace BlackCore
         virtual QString getPathAndContextId() const { return this->buildPathAndContextId(ObjectPath()); }
 
         //! Factory method
-        static IContextNetwork *create(CRuntime *parent, CRuntimeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &connection);
+        static IContextNetwork *create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &connection);
 
         //! Destructor
         virtual ~IContextNetwork() {}
@@ -248,7 +248,7 @@ namespace BlackCore
 
     protected:
         //! Constructor
-        IContextNetwork(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : CContext(mode, runtime) {}
+        IContextNetwork(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : CContext(mode, runtime) {}
     };
 }
 

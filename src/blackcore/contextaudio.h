@@ -46,7 +46,7 @@ namespace BlackCore
 
     protected:
         //! Constructor
-        IContextAudio(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : CContext(mode, runtime) {}
+        IContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : CContext(mode, runtime) {}
 
     public:
         //! Interface name
@@ -67,7 +67,7 @@ namespace BlackCore
         virtual QString getPathAndContextId() const { return this->buildPathAndContextId(ObjectPath()); }
 
         //! Factory method
-        static IContextAudio *create(CRuntime *runtime, CRuntimeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &conn);
+        static IContextAudio *create(CCoreFacade *runtime, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &conn);
 
         //! Destructor
         virtual ~IContextAudio() {}

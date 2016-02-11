@@ -26,7 +26,7 @@ namespace BlackCore
 
     public:
         //! Constructor
-        CContextNetworkEmpty(CRuntime *runtime) : IContextNetwork(CRuntimeConfig::NotUsed, runtime) {}
+        CContextNetworkEmpty(CCoreFacade *runtime) : IContextNetwork(CCoreFacadeConfig::NotUsed, runtime) {}
 
     public slots: // IContextNetwork overrides
 

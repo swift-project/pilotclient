@@ -25,7 +25,7 @@ namespace BlackCore
 
     public:
         //! Constructor
-        CContextSimulatorEmpty(CRuntime *runtime) : IContextSimulator(CRuntimeConfig::NotUsed, runtime) {}
+        CContextSimulatorEmpty(CCoreFacade *runtime) : IContextSimulator(CCoreFacadeConfig::NotUsed, runtime) {}
 
     public slots:
         //! \copydoc IContextSimulator::getSimulatorPluginInfo()

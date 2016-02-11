@@ -22,7 +22,7 @@ using namespace BlackMisc::Simulation;
 namespace BlackCore
 {
 
-    CContextSimulatorProxy::CContextSimulatorProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextSimulator(mode, runtime), m_dBusInterface(nullptr)
+    CContextSimulatorProxy::CContextSimulatorProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextSimulator(mode, runtime), m_dBusInterface(nullptr)
     {
         this->m_dBusInterface = new BlackMisc::CGenericDBusInterface(
             serviceName , IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),

@@ -71,7 +71,7 @@ public:
     ~SwiftGuiStd();
 
     //! Init data
-    void init(const BlackCore::CRuntimeConfig &runtimeConfig);
+    void init(const BlackCore::CCoreFacadeConfig &runtimeConfig);
 
     //! Log message category
     static QString getMessageCategory() { return "swift.gui.stdgui"; }

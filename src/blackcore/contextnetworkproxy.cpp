@@ -23,7 +23,7 @@ namespace BlackCore
     /*
      * Constructor for DBus
      */
-    CContextNetworkProxy::CContextNetworkProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextNetwork(mode, runtime), m_dBusInterface(nullptr)
+    CContextNetworkProxy::CContextNetworkProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextNetwork(mode, runtime), m_dBusInterface(nullptr)
     {
         this->m_dBusInterface = new BlackMisc::CGenericDBusInterface(
             serviceName , IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),

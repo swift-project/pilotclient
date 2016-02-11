@@ -45,10 +45,10 @@ namespace BlackCore
 
     protected:
         //! Contructor
-        CContextAudioProxy(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextAudio(mode, runtime), m_dBusInterface(nullptr) {}
+        CContextAudioProxy(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextAudio(mode, runtime), m_dBusInterface(nullptr) {}
 
         //! DBus version constructor
-        CContextAudioProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime);
+        CContextAudioProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
 
     public slots:
         //! \copydoc IContextAudio::getComVoiceRooms()

@@ -25,25 +25,25 @@ using namespace BlackMisc;
 namespace BlackCore
 {
 
-    IContextApplication *IContextApplication::create(CRuntime *parent, CRuntimeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &connection)
+    IContextApplication *IContextApplication::create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &connection)
     {
         switch (mode)
         {
-        case CRuntimeConfig::Local:
-        case CRuntimeConfig::LocalInDbusServer:
+        case CCoreFacadeConfig::Local:
+        case CCoreFacadeConfig::LocalInDbusServer:
             return (new CContextApplication(mode, parent))->registerWithDBus(server);
-        case CRuntimeConfig::Remote:
+        case CCoreFacadeConfig::Remote:
             return new BlackCore::CContextApplicationProxy(BlackMisc::CDBusServer::coreServiceName(), connection, mode, parent);
-        case CRuntimeConfig::NotUsed:
+        case CCoreFacadeConfig::NotUsed:
         default:
             return new CContextApplicationEmpty(parent);
         }
     }
 
-    IContextApplication::IContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
+    IContextApplication::IContextApplication(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
         CContext(mode, runtime)
     {
-        if (mode == CRuntimeConfig::NotUsed) { return; }
+        if (mode == CCoreFacadeConfig::NotUsed) { return; }
         connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, this, [this](const CStatusMessage & message)
         {
             this->logMessage(message, {});

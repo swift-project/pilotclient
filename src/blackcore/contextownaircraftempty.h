@@ -25,7 +25,7 @@ namespace BlackCore
 
     public:
         //! Constructor
-        CContextOwnAircraftEmpty(CRuntime *runtime) : IContextOwnAircraft(CRuntimeConfig::NotUsed, runtime) {}
+        CContextOwnAircraftEmpty(CCoreFacade *runtime) : IContextOwnAircraft(CCoreFacadeConfig::NotUsed, runtime) {}
 
     public slots:
         //! \copydoc IContextOwnAircraft::getOwnAircraft()

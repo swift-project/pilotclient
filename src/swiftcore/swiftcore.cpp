@@ -143,11 +143,11 @@ void CSwiftCore::startCore(const SetupInfo &setup)
 
     // context
     this->createRuntime(setup.m_coreAudio ?
-                        CRuntimeConfig::forCoreAllLocalInDBus(setup.m_dbusAddress) :
-                        CRuntimeConfig::forCoreAllLocalInDBusNoAudio(setup.m_dbusAddress),
+                        CCoreFacadeConfig::forCoreAllLocalInDBus(setup.m_dbusAddress) :
+                        CCoreFacadeConfig::forCoreAllLocalInDBusNoAudio(setup.m_dbusAddress),
                         this);
     CEnableForRuntime::setRuntimeForComponents(this->getRuntime(), this);
-    connect(ui->le_CommandLineInput, &CCommandInput::commandEntered, getRuntime(), &CRuntime::parseCommandLine);
+    connect(ui->le_CommandLineInput, &CCommandInput::commandEntered, getRuntime(), &CCoreFacade::parseCommandLine);
 }
 
 void CSwiftCore::stopCore()

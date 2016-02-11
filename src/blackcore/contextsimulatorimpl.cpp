@@ -13,7 +13,7 @@
 #include "contextapplication.h"
 #include "contextnetworkimpl.h"
 #include "pluginmanagersimulator.h"
-#include "contextruntime.h"
+#include "corefacade.h"
 #include "blackcore/registermetadata.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/logmessage.h"
@@ -32,7 +32,7 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {
-    CContextSimulator::CContextSimulator(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
+    CContextSimulator::CContextSimulator(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
         IContextSimulator(mode, runtime),
         m_plugins(new CPluginManagerSimulator(this))
     {

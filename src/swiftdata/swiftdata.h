@@ -12,7 +12,7 @@
 #ifndef SWIFTDATA_H
 #define SWIFTDATA_H
 
-#include "blackcore/contextruntime.h"
+#include "blackcore/corefacade.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
 #include "blackcore/setupreader.h"

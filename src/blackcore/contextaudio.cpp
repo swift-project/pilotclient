@@ -15,14 +15,14 @@
 namespace BlackCore
 {
 
-    IContextAudio *IContextAudio::create(CRuntime *runtime, CRuntimeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &conn)
+    IContextAudio *IContextAudio::create(CCoreFacade *runtime, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &conn)
     {
         switch (mode)
         {
-        case CRuntimeConfig::Local:
-        case CRuntimeConfig::LocalInDbusServer:
+        case CCoreFacadeConfig::Local:
+        case CCoreFacadeConfig::LocalInDbusServer:
             return (new CContextAudio(mode, runtime))->registerWithDBus(server);
-        case CRuntimeConfig::Remote:
+        case CCoreFacadeConfig::Remote:
             return new CContextAudioProxy(BlackMisc::CDBusServer::coreServiceName(), conn, mode, runtime);
         default:
             return new CContextAudioEmpty(runtime); // audio not mandatory

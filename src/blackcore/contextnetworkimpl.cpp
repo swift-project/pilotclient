@@ -8,7 +8,7 @@
  */
 
 #include "contextnetworkimpl.h"
-#include "contextruntime.h"
+#include "corefacade.h"
 #include "contextapplication.h"
 #include "contextsimulator.h"
 #include "contextownaircraftimpl.h"
@@ -37,7 +37,7 @@ using namespace BlackMisc::Weather;
 
 namespace BlackCore
 {
-    CContextNetwork::CContextNetwork(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
+    CContextNetwork::CContextNetwork(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
         IContextNetwork(mode, runtime)
     {
         Q_ASSERT(this->getRuntime());
@@ -80,7 +80,7 @@ namespace BlackCore
 
     CContextNetwork *CContextNetwork::registerWithDBus(BlackMisc::CDBusServer *server)
     {
-        if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) return this;
+        if (!server || this->m_mode != CCoreFacadeConfig::LocalInDbusServer) return this;
         server->addObject(IContextNetwork::ObjectPath(), this);
         return this;
     }

@@ -14,7 +14,7 @@
 
 #include "blackcoreexport.h"
 #include "blackcore/contextnetwork.h"
-#include "blackcore/contextruntime.h"
+#include "blackcore/corefacade.h"
 #include "blackcore/network.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
@@ -44,7 +44,7 @@ namespace BlackCore
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTNETWORK_INTERFACENAME)
 
         friend class IContextNetwork;
-        friend class CRuntime;
+        friend class CCoreFacade;
 
     public:
         //! Destructor
@@ -230,7 +230,7 @@ namespace BlackCore
 
     protected:
         //! Constructor, with link to runtime
-        CContextNetwork(CRuntimeConfig::ContextMode, CRuntime *runtime);
+        CContextNetwork(CCoreFacadeConfig::ContextMode, CCoreFacade *runtime);
 
         //! Register myself in DBus
         CContextNetwork *registerWithDBus(BlackMisc::CDBusServer *server);

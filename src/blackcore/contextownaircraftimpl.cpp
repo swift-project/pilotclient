@@ -12,7 +12,7 @@
 #include "contextnetwork.h"
 #include "contextaudio.h"
 #include "contextapplication.h"
-#include "contextruntime.h"
+#include "corefacade.h"
 #include "blackmisc/simplecommandparser.h"
 #include "blackmisc/logmessage.h"
 
@@ -26,7 +26,7 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {
-    CContextOwnAircraft::CContextOwnAircraft(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
+    CContextOwnAircraft::CContextOwnAircraft(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
         IContextOwnAircraft(mode, runtime),
         CIdentifiable(this)
     {

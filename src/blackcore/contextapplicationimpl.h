@@ -12,20 +12,20 @@
 
 #include "blackcoreexport.h"
 #include "contextapplication.h"
-#include "contextruntime.h"
+#include "corefacade.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/identifierlist.h"
 
 namespace BlackCore
 {
-    class CRuntime;
+    class CCoreFacade;
 
     //! Application context
     class BLACKCORE_EXPORT CContextApplication : public IContextApplication
     {
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME)
         Q_OBJECT
-        friend class CRuntime;
+        friend class CCoreFacade;
         friend class IContextApplication;
 
     public slots:
@@ -92,7 +92,7 @@ namespace BlackCore
 
     protected:
         //! Constructor
-        CContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime);
+        CContextApplication(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
 
         //! Register myself in DBus, fail safe
         CContextApplication *registerWithDBus(BlackMisc::CDBusServer *server);

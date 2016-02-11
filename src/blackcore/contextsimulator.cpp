@@ -34,16 +34,16 @@ namespace BlackCore
         return t;
     }
 
-    IContextSimulator *IContextSimulator::create(CRuntime *parent, CRuntimeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &conn)
+    IContextSimulator *IContextSimulator::create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &conn)
     {
         switch (mode)
         {
-        case CRuntimeConfig::Local:
-        case CRuntimeConfig::LocalInDbusServer:
+        case CCoreFacadeConfig::Local:
+        case CCoreFacadeConfig::LocalInDbusServer:
             return (new CContextSimulator(mode, parent))->registerWithDBus(server);
-        case CRuntimeConfig::Remote:
+        case CCoreFacadeConfig::Remote:
             return new CContextSimulatorProxy(BlackMisc::CDBusServer::coreServiceName(), conn, mode, parent);
-        case CRuntimeConfig::NotUsed:
+        case CCoreFacadeConfig::NotUsed:
         default:
             return new CContextSimulatorEmpty(parent);
         }

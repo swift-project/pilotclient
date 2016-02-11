@@ -11,7 +11,7 @@
 #include "guimodeenums.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/registermetadata.h"
-#include "blackcore/contextruntimeconfig.h"
+#include "blackcore/corefacadeconfig.h"
 #include "blackgui/guiutility.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/logmessage.h"
@@ -132,17 +132,17 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    BlackCore::CRuntimeConfig runtimeConfig;
+    BlackCore::CCoreFacadeConfig runtimeConfig;
     switch (coreMode)
     {
     case GuiModes::CoreExternalCoreAudio:
-        runtimeConfig = CRuntimeConfig::remote(dBusAddress);
+        runtimeConfig = CCoreFacadeConfig::remote(dBusAddress);
         break;
     case GuiModes::CoreInGuiProcess:
-        runtimeConfig = CRuntimeConfig::local(dBusAddress);
+        runtimeConfig = CCoreFacadeConfig::local(dBusAddress);
         break;
     case GuiModes::CoreExternalAudioGui:
-        runtimeConfig = CRuntimeConfig::remoteLocalAudio(dBusAddress);
+        runtimeConfig = CCoreFacadeConfig::remoteLocalAudio(dBusAddress);
         break;
     }
 

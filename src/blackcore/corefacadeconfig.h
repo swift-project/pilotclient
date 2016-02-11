@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKCORE_CONTEXT_RUNTIME_CONFIG_H
-#define BLACKCORE_CONTEXT_RUNTIME_CONFIG_H
+#ifndef BLACKCORE_COREFACADECONFIG_H
+#define BLACKCORE_COREFACADECONFIG_H
 
 #include "blackcoreexport.h"
 #include <QString>
@@ -18,9 +18,8 @@
 namespace BlackCore
 {
     //! Helper to correctly run a context
-    class BLACKCORE_EXPORT CRuntimeConfig
+    class BLACKCORE_EXPORT CCoreFacadeConfig
     {
-
     public:
         //! How to handle a given context
         enum ContextMode
@@ -42,13 +41,13 @@ namespace BlackCore
 
     public:
         //! Constructor
-        CRuntimeConfig(ContextMode allTheSame = NotUsed, const QString &dbusBootstrapAddress = ""):
+        CCoreFacadeConfig(ContextMode allTheSame = NotUsed, const QString &dbusBootstrapAddress = ""):
             m_application(allTheSame), m_audio(allTheSame), m_network(allTheSame), m_ownAircraft(allTheSame), m_settings(allTheSame), m_simulator(allTheSame),
             m_dbusAddress(dbusBootstrapAddress)
         {}
 
         //! Constructor
-        CRuntimeConfig(ContextMode application, ContextMode audio, ContextMode network, ContextMode ownAircraft, ContextMode settings, ContextMode simulator, const QString &dbusBootstrapAddress = ""):
+        CCoreFacadeConfig(ContextMode application, ContextMode audio, ContextMode network, ContextMode ownAircraft, ContextMode settings, ContextMode simulator, const QString &dbusBootstrapAddress = ""):
             m_application(application), m_audio(audio), m_network(network), m_ownAircraft(ownAircraft) , m_settings(settings), m_simulator(simulator),
             m_dbusAddress(dbusBootstrapAddress)
         {}
@@ -87,19 +86,19 @@ namespace BlackCore
         bool hasDBusAddress() const { return !this->m_dbusAddress.isEmpty(); }
 
         //! predefined for Core
-        static const CRuntimeConfig &forCoreAllLocalInDBus(const QString &dbusBootstrapAddress = "");
+        static CCoreFacadeConfig forCoreAllLocalInDBus(const QString &dbusBootstrapAddress = "");
 
         //! predefined for Core
-        static const CRuntimeConfig &forCoreAllLocalInDBusNoAudio(const QString &dbusBootstrapAddress = "");
+        static CCoreFacadeConfig forCoreAllLocalInDBusNoAudio(const QString &dbusBootstrapAddress = "");
 
         //! predefined, completely local (e.g. for unit tests)
-        static const CRuntimeConfig &local(const QString &dbusBootstrapAddress = "");
+        static CCoreFacadeConfig local(const QString &dbusBootstrapAddress = "");
 
         //! predefined, completely remote (e.g. for GUI with core)
-        static const CRuntimeConfig &remote(const QString &dbusBootstrapAddress = "");
+        static CCoreFacadeConfig remote(const QString &dbusBootstrapAddress = "");
 
         //! predefined, remote with local audio (e.g. Aduio in GUI)
-        static const CRuntimeConfig &remoteLocalAudio(const QString &dbusBootstrapAddress = "");
+        static CCoreFacadeConfig remoteLocalAudio(const QString &dbusBootstrapAddress = "");
     };
 }
 #endif // guard

@@ -13,8 +13,8 @@
 #define BLACKCORE_CONTEXT_H
 
 #include "blackcoreexport.h"
-#include "blackcore/contextruntimeconfig.h"
-#include "blackcore/contextruntime.h"
+#include "blackcore/corefacadeconfig.h"
+#include "blackcore/corefacade.h"
 #include "blackmisc/logmessage.h"
 #include <QObject>
 #include <QDateTime>
@@ -34,37 +34,37 @@ namespace BlackCore
         //! Using local implementing object?
         bool isUsingImplementingObject() const
         {
-            return m_mode == CRuntimeConfig::Local || m_mode == CRuntimeConfig::LocalInDbusServer;
+            return m_mode == CCoreFacadeConfig::Local || m_mode == CCoreFacadeConfig::LocalInDbusServer;
         }
 
         //! Local or remote object?
         bool isLocalObject() const
         {
-            return isUsingImplementingObject() || m_mode == CRuntimeConfig::NotUsed;
+            return isUsingImplementingObject() || m_mode == CCoreFacadeConfig::NotUsed;
         }
 
         //! Empty object?
         bool isEmptyObject() const
         {
-            return m_mode == CRuntimeConfig::NotUsed;
+            return m_mode == CCoreFacadeConfig::NotUsed;
         }
 
         //! Runtime
-        CRuntime *getRuntime()
+        CCoreFacade *getRuntime()
         {
             Q_ASSERT(this->parent());
-            return static_cast<CRuntime *>(this->parent());
+            return static_cast<CCoreFacade *>(this->parent());
         }
 
         //! Const runtime
-        const CRuntime *getRuntime() const
+        const CCoreFacade *getRuntime() const
         {
             Q_ASSERT(this->parent());
-            return static_cast<CRuntime *>(this->parent());
+            return static_cast<CCoreFacade *>(this->parent());
         }
 
         //! Mode
-        CRuntimeConfig::ContextMode getMode() const { return this->m_mode; }
+        CCoreFacadeConfig::ContextMode getMode() const { return this->m_mode; }
 
         //! Unique id
         qint64 getUniqueId() const { return this->m_contextId; }
@@ -113,12 +113,12 @@ namespace BlackCore
         virtual QString getPathAndContextId() const = 0;
 
     protected:
-        CRuntimeConfig::ContextMode m_mode; //!< How context is used
+        CCoreFacadeConfig::ContextMode m_mode; //!< How context is used
         qint64 m_contextId;                 //!< unique identifer, avoid redirection rountrips
         bool m_debugEnabled = false;        //!< debug messages enabled
 
         //! Constructor
-        CContext(CRuntimeConfig::ContextMode mode, QObject *parent) :
+        CContext(CCoreFacadeConfig::ContextMode mode, QObject *parent) :
             QObject(parent), m_mode(mode), m_contextId(QDateTime::currentMSecsSinceEpoch())
         {}
 

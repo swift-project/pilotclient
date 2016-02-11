@@ -17,7 +17,7 @@ namespace BlackGui
 {
     namespace Components
     {
-        void CEnableForRuntime::setRuntime(BlackCore::CRuntime *runtime, bool runtimeOwner)
+        void CEnableForRuntime::setRuntime(BlackCore::CCoreFacade *runtime, bool runtimeOwner)
         {
             Q_ASSERT(runtime);
             this->m_runtime = runtime;
@@ -25,7 +25,7 @@ namespace BlackGui
             this->runtimeHasBeenSet();
         }
 
-        void CEnableForRuntime::setRuntimeForComponents(BlackCore::CRuntime *runtime, QWidget *parent)
+        void CEnableForRuntime::setRuntimeForComponents(BlackCore::CCoreFacade *runtime, QWidget *parent)
         {
             if (!parent) return;
 
@@ -39,9 +39,9 @@ namespace BlackGui
             }
         }
 
-        void CEnableForRuntime::createRuntime(const BlackCore::CRuntimeConfig &config, QObject *parent)
+        void CEnableForRuntime::createRuntime(const BlackCore::CCoreFacadeConfig &config, QObject *parent)
         {
-            this->m_runtime = new BlackCore::CRuntime(config, parent);
+            this->m_runtime = new BlackCore::CCoreFacade(config, parent);
             this->m_runtimeOwner = true;
         }
 

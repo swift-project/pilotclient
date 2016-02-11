@@ -26,20 +26,18 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {
-    CRuntime::CRuntime(const CRuntimeConfig &config, QObject *parent) : QObject(parent)
+    CCoreFacade::CCoreFacade(const CCoreFacadeConfig &config, QObject *parent) : QObject(parent)
     {
         this->init(config);
     }
 
-    void CRuntime::init(const CRuntimeConfig &config)
+    void CCoreFacade::init(const CCoreFacadeConfig &config)
     {
         if (m_init) { return; }
 
         QMap<QString, int> times;
         QTime time;
         registerMetadata();
-
-        this->connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &CRuntime::gracefulShutdown);
 
         // either use explicit setting or last value
         QString dbusAddress;
@@ -102,20 +100,19 @@ namespace BlackCore
         m_init = true;
     }
 
-    bool CRuntime::hasRemoteApplicationContext() const
+    bool CCoreFacade::hasRemoteApplicationContext() const
     {
         Q_ASSERT(this->m_contextApplication);
         return !this->m_contextApplication->isUsingImplementingObject();
     }
 
-    void CRuntime::registerMetadata()
+    void CCoreFacade::registerMetadata()
     {
         BlackMisc::registerMetadata();
         BlackCore::registerMetadata();
-        BlackMisc::initResources();
     }
 
-    bool CRuntime::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
+    bool CCoreFacade::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
     {
         bool handled = false;
         if (this->getIContextAudio()) { handled = handled || this->getIContextAudio()->parseCommandLine(commandLine, originator); }
@@ -124,7 +121,7 @@ namespace BlackCore
         return handled;
     }
 
-    void CRuntime::initDBusServer(const QString &dBusAddress)
+    void CCoreFacade::initDBusServer(const QString &dBusAddress)
     {
         if (this->m_dbusServer) { return; }
         Q_ASSERT(!dBusAddress.isEmpty());
@@ -132,7 +129,7 @@ namespace BlackCore
         CLogMessage(this).info("DBus server on address: %1") << dBusAddress;
     }
 
-    void CRuntime::initPostSetup(QMap<QString, int> &times)
+    void CCoreFacade::initPostSetup(QMap<QString, int> &times)
     {
         bool c = false;
         Q_UNUSED(c); // for release version
@@ -207,7 +204,7 @@ namespace BlackCore
         }
     }
 
-    void CRuntime::gracefulShutdown()
+    void CCoreFacade::gracefulShutdown()
     {
         if (!this->m_init) return;
         this->m_init = false;
@@ -229,7 +226,7 @@ namespace BlackCore
             }
             this->getIContextSimulator()->deleteLater();
             QDBusConnection defaultConnection("default");
-            this->m_contextSimulator = IContextSimulator::create(this, CRuntimeConfig::NotUsed, nullptr, defaultConnection);
+            this->m_contextSimulator = IContextSimulator::create(this, CCoreFacadeConfig::NotUsed, nullptr, defaultConnection);
         }
 
         // log off from network, if connected
@@ -244,7 +241,7 @@ namespace BlackCore
             this->getIContextNetwork()->deleteLater();
             // replace by dummy object avoiding nullptr issues during shutdown phase
             QDBusConnection defaultConnection("default");
-            this->m_contextNetwork = IContextNetwork::create(this, CRuntimeConfig::NotUsed, nullptr, defaultConnection);
+            this->m_contextNetwork = IContextNetwork::create(this, CCoreFacadeConfig::NotUsed, nullptr, defaultConnection);
         }
 
         if (this->getIContextAudio())
@@ -253,7 +250,7 @@ namespace BlackCore
             this->getIContextAudio()->deleteLater();
             // replace by dummy object avoiding nullptr issues during shutdown phase
             QDBusConnection defaultConnection("default");
-            this->m_contextAudio = IContextAudio::create(this, CRuntimeConfig::NotUsed, nullptr, defaultConnection);
+            this->m_contextAudio = IContextAudio::create(this, CCoreFacadeConfig::NotUsed, nullptr, defaultConnection);
         }
 
         if (this->getIContextOwnAircraft())
@@ -261,7 +258,7 @@ namespace BlackCore
             disconnect(this->getIContextOwnAircraft());
             this->getIContextOwnAircraft()->deleteLater();
             QDBusConnection defaultConnection("default");
-            this->m_contextOwnAircraft = IContextOwnAircraft::create(this, CRuntimeConfig::NotUsed, nullptr, defaultConnection);
+            this->m_contextOwnAircraft = IContextOwnAircraft::create(this, CCoreFacadeConfig::NotUsed, nullptr, defaultConnection);
         }
 
         if (this->getIContextApplication())
@@ -269,11 +266,11 @@ namespace BlackCore
             disconnect(this->getIContextApplication());
             this->getIContextApplication()->deleteLater();
             QDBusConnection defaultConnection("default");
-            this->m_contextApplication = IContextApplication::create(this, CRuntimeConfig::NotUsed, nullptr, defaultConnection);
+            this->m_contextApplication = IContextApplication::create(this, CCoreFacadeConfig::NotUsed, nullptr, defaultConnection);
         }
     }
 
-    void CRuntime::initDBusConnection(const QString &address)
+    void CCoreFacade::initDBusConnection(const QString &address)
     {
         if (this->m_initDBusConnection) { return; }
         if (address.isEmpty() || address == CDBusServer::sessionBusAddress())
@@ -290,167 +287,113 @@ namespace BlackCore
         }
     }
 
-    const IContextApplication *CRuntime::getIContextApplication() const
+    const IContextApplication *CCoreFacade::getIContextApplication() const
     {
         return this->m_contextApplication;
     }
 
-    IContextApplication *CRuntime::getIContextApplication()
+    IContextApplication *CCoreFacade::getIContextApplication()
     {
         return this->m_contextApplication;
     }
 
-    IContextAudio *CRuntime::getIContextAudio()
+    IContextAudio *CCoreFacade::getIContextAudio()
     {
         return this->m_contextAudio;
     }
 
-    const IContextAudio *CRuntime::getIContextAudio() const
+    const IContextAudio *CCoreFacade::getIContextAudio() const
     {
         return this->m_contextAudio;
     }
 
-    IContextNetwork *CRuntime::getIContextNetwork()
+    IContextNetwork *CCoreFacade::getIContextNetwork()
     {
         return this->m_contextNetwork;
     }
 
-    const IContextNetwork *CRuntime::getIContextNetwork() const
+    const IContextNetwork *CCoreFacade::getIContextNetwork() const
     {
         return this->m_contextNetwork;
     }
 
-    IContextOwnAircraft *CRuntime::getIContextOwnAircraft()
+    IContextOwnAircraft *CCoreFacade::getIContextOwnAircraft()
     {
         return this->m_contextOwnAircraft;
     }
 
-    const IContextOwnAircraft *CRuntime::getIContextOwnAircraft() const
+    const IContextOwnAircraft *CCoreFacade::getIContextOwnAircraft() const
     {
         return this->m_contextOwnAircraft;
     }
 
-    const IContextSimulator *CRuntime::getIContextSimulator() const
+    const IContextSimulator *CCoreFacade::getIContextSimulator() const
     {
         return this->m_contextSimulator;
     }
 
-    IContextSimulator *CRuntime::getIContextSimulator()
+    IContextSimulator *CCoreFacade::getIContextSimulator()
     {
         return this->m_contextSimulator;
     }
 
-    CContextAudio *CRuntime::getCContextAudio()
+    CContextAudio *CCoreFacade::getCContextAudio()
     {
         Q_ASSERT_X(this->m_contextAudio && this->m_contextAudio->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextAudio *>(this->m_contextAudio);
     }
 
-    const CContextAudio *CRuntime::getCContextAudio() const
+    const CContextAudio *CCoreFacade::getCContextAudio() const
     {
         Q_ASSERT_X(this->m_contextAudio && this->m_contextAudio->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextAudio *>(this->m_contextAudio);
     }
 
-    CContextApplication *CRuntime::getCContextApplication()
+    CContextApplication *CCoreFacade::getCContextApplication()
     {
         Q_ASSERT_X(this->m_contextApplication && this->m_contextApplication->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextApplication *>(this->m_contextApplication);
     }
 
-    const CContextApplication *CRuntime::getCContextApplication() const
+    const CContextApplication *CCoreFacade::getCContextApplication() const
     {
         Q_ASSERT_X(this->m_contextApplication && this->m_contextApplication->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextApplication *>(this->m_contextApplication);
     }
 
-    CContextNetwork *CRuntime::getCContextNetwork()
+    CContextNetwork *CCoreFacade::getCContextNetwork()
     {
         Q_ASSERT_X(this->m_contextNetwork && this->m_contextNetwork->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextNetwork *>(this->m_contextNetwork);
     }
 
-    const CContextNetwork *CRuntime::getCContextNetwork() const
+    const CContextNetwork *CCoreFacade::getCContextNetwork() const
     {
         Q_ASSERT_X(this->m_contextNetwork && this->m_contextNetwork->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextNetwork *>(this->m_contextNetwork);
     }
 
-    CContextOwnAircraft *CRuntime::getCContextOwnAircraft()
+    CContextOwnAircraft *CCoreFacade::getCContextOwnAircraft()
     {
         Q_ASSERT_X(this->m_contextOwnAircraft && this->m_contextOwnAircraft->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextOwnAircraft *>(this->m_contextOwnAircraft);
     }
 
-    const CContextOwnAircraft *CRuntime::getCContextOwnAircraft() const
+    const CContextOwnAircraft *CCoreFacade::getCContextOwnAircraft() const
     {
         Q_ASSERT_X(this->m_contextOwnAircraft && this->m_contextOwnAircraft->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextOwnAircraft *>(this->m_contextOwnAircraft);
     }
 
-    CContextSimulator *CRuntime::getCContextSimulator()
+    CContextSimulator *CCoreFacade::getCContextSimulator()
     {
         Q_ASSERT_X(this->m_contextSimulator && this->m_contextSimulator->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextSimulator *>(this->m_contextSimulator);
     }
 
-    const CContextSimulator *CRuntime::getCContextSimulator() const
+    const CContextSimulator *CCoreFacade::getCContextSimulator() const
     {
         Q_ASSERT_X(this->m_contextSimulator && this->m_contextSimulator->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextSimulator *>(this->m_contextSimulator);
-    }
-
-    bool CRuntimeConfig::requiresDBusSever() const
-    {
-        return (
-                   // those 3 should decide whether we are running the server
-                   this->m_network == LocalInDbusServer ||
-                   this->m_ownAircraft == LocalInDbusServer ||
-                   this->m_simulator == LocalInDbusServer ||
-
-                   // added as work around
-                   this->m_audio == LocalInDbusServer
-               );
-    }
-
-    bool CRuntimeConfig::requiresDBusConnection() const
-    {
-        return (this->m_application == Remote ||
-                this->m_audio == Remote ||
-                this->m_network == Remote ||
-                this->m_ownAircraft == Remote ||
-                this->m_simulator == Remote);
-    }
-
-    const CRuntimeConfig &CRuntimeConfig::forCoreAllLocalInDBus(const QString &dbusBootstrapAddress)
-    {
-        static CRuntimeConfig cfg = CRuntimeConfig(CRuntimeConfig(CRuntimeConfig::LocalInDbusServer, dbusBootstrapAddress));
-        return cfg;
-    }
-
-    const CRuntimeConfig &CRuntimeConfig::forCoreAllLocalInDBusNoAudio(const QString &dbusBootstrapAddress)
-    {
-        static CRuntimeConfig cfg = CRuntimeConfig(CRuntimeConfig(CRuntimeConfig::LocalInDbusServer, dbusBootstrapAddress));
-        cfg.m_audio = CRuntimeConfig::NotUsed;
-        return cfg;
-    }
-
-    const CRuntimeConfig &CRuntimeConfig::local(const QString &dbusBootstrapAddress)
-    {
-        static CRuntimeConfig cfg = CRuntimeConfig(CRuntimeConfig(CRuntimeConfig::Local, dbusBootstrapAddress));
-        return cfg;
-    }
-
-    const CRuntimeConfig &CRuntimeConfig::remote(const QString &dbusBootstrapAddress)
-    {
-        static CRuntimeConfig cfg = CRuntimeConfig(CRuntimeConfig(CRuntimeConfig::Remote, dbusBootstrapAddress));
-        return cfg;
-    }
-
-    const CRuntimeConfig &CRuntimeConfig::remoteLocalAudio(const QString &dbusBootstrapAddress)
-    {
-        static CRuntimeConfig cfg = CRuntimeConfig(CRuntimeConfig(CRuntimeConfig::Remote, dbusBootstrapAddress));
-        cfg.m_audio = CRuntimeConfig::LocalInDbusServer;
-        return cfg;
     }
 } // namespace

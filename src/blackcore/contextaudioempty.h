@@ -26,7 +26,7 @@ namespace BlackCore
     {
     public:
         //! Constructor
-        CContextAudioEmpty(CRuntime *runtime) : IContextAudio(CRuntimeConfig::NotUsed, runtime) {}
+        CContextAudioEmpty(CCoreFacade *runtime) : IContextAudio(CCoreFacadeConfig::NotUsed, runtime) {}
 
     public slots:
         //! \copydoc IContextAudio::getComVoiceRooms()

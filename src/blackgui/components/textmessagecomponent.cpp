@@ -169,7 +169,7 @@ namespace BlackGui
 
             connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CTextMessageComponent::ps_onChangedAircraftCockpit);
             connect(this->getDockWidgetInfoArea(), &CDockWidgetInfoArea::widgetTopLevelChanged, this, &CTextMessageComponent::ps_topLevelChanged);
-            connect(this, &CTextMessageComponent::commandEntered, this->getRuntime(), &CRuntime::parseCommandLine);
+            connect(this, &CTextMessageComponent::commandEntered, this->getRuntime(), &CCoreFacade::parseCommandLine);
         }
 
         /*

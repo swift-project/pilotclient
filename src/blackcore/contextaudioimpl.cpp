@@ -31,7 +31,7 @@ using namespace BlackSound;
 
 namespace BlackCore
 {
-    CContextAudio::CContextAudio(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
+    CContextAudio::CContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
         IContextAudio(mode, runtime),
         m_voice(new CVoiceVatlib())
     {

@@ -9,11 +9,11 @@
 
 //! \file
 
-#ifndef BLACKCORE_CONTEXT_RUNTIME_H
-#define BLACKCORE_CONTEXT_RUNTIME_H
+#ifndef BLACKCORE_COREFACADE_H
+#define BLACKCORE_COREFACADE_H
 
 #include "blackcoreexport.h"
-#include "blackcore/contextruntimeconfig.h"
+#include "blackcore/corefacadeconfig.h"
 #include "blackcore/settings/network.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/statusmessagelist.h"
@@ -41,17 +41,24 @@ namespace BlackCore
     class IContextOwnAircraft;
     class IContextSimulator;
 
-    //! The Context runtime class
-    class BLACKCORE_EXPORT CRuntime : public QObject
+    /*!
+     * The runtime class providing facades (the contexts) for all DBus relevant operations.
+     * - Initializes all contexts in correct order
+     * - Allows a ordered and correct shutdown
+     * - Connects all signal/slots between contexts
+     *   (such cross context dependencies are not desired but sometimes required)
+     * - Loads the application settings
+     */
+    class BLACKCORE_EXPORT CCoreFacade : public QObject
     {
         Q_OBJECT
 
     public:
         //! Constructor
-        CRuntime(const CRuntimeConfig &config, QObject *parent = nullptr);
+        CCoreFacade(const CCoreFacadeConfig &config, QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CRuntime() { this->gracefulShutdown(); }
+        virtual ~CCoreFacade() { this->gracefulShutdown(); }
 
         //! DBus server (if applicable)
         const BlackMisc::CDBusServer *getDBusServer() const { return this->m_dbusServer; }
@@ -137,7 +144,7 @@ namespace BlackCore
         const CContextSimulator *getCContextSimulator() const;
 
         //! Init
-        void init(const CRuntimeConfig &config);
+        void init(const CCoreFacadeConfig &config);
 
         //! Remote application context, indicates distributed environment
         bool hasRemoteApplicationContext() const;
@@ -155,8 +162,8 @@ namespace BlackCore
 
         // DBus
         BlackMisc::CDBusServer *m_dbusServer = nullptr;
-        QDBusConnection m_dbusConnection = QDBusConnection("default");
-        bool m_initDBusConnection        = false;
+        QDBusConnection m_dbusConnection     = QDBusConnection("default");
+        bool m_initDBusConnection            = false;
 
         // contexts:
         // There is a reason why we do not use smart pointers here. When the context is deleted

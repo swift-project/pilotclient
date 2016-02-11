@@ -19,7 +19,7 @@ using namespace BlackMisc::Simulation;
 namespace BlackCore
 {
 
-    CContextOwnAircraftProxy::CContextOwnAircraftProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextOwnAircraft(mode, runtime), m_dBusInterface(nullptr)
+    CContextOwnAircraftProxy::CContextOwnAircraftProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextOwnAircraft(mode, runtime), m_dBusInterface(nullptr)
     {
         this->m_dBusInterface = new BlackMisc::CGenericDBusInterface(
             serviceName , IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),

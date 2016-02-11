@@ -92,10 +92,10 @@ namespace BlackCore
 
     protected:
         //! Constructor
-        CContextApplicationProxy(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextApplication(mode, runtime), m_dBusInterface(nullptr) {}
+        CContextApplicationProxy(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextApplication(mode, runtime), m_dBusInterface(nullptr) {}
 
         //! DBus version constructor
-        CContextApplicationProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime);
+        CContextApplicationProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
 
     private:
         BlackMisc::CGenericDBusInterface *m_dBusInterface;

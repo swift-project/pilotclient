@@ -14,7 +14,7 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/contextaudio.h"
-#include "blackcore/contextruntime.h"
+#include "blackcore/corefacade.h"
 #include "blackcore/voice.h"
 #include "blackcore/voicechannel.h"
 #include "blackcore/audiodevice.h"
@@ -40,7 +40,7 @@ namespace BlackCore
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAUDIO_INTERFACENAME)
         Q_OBJECT
 
-        friend class CRuntime;
+        friend class CCoreFacade;
         friend class IContextAudio;
 
     public:
@@ -119,12 +119,12 @@ namespace BlackCore
 
     protected:
         //! Constructor
-        CContextAudio(CRuntimeConfig::ContextMode mode, CRuntime *runtime);
+        CContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
 
         //! Register myself in DBus
         CContextAudio *registerWithDBus(BlackMisc::CDBusServer *server)
         {
-            if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) { return this; }
+            if (!server || this->m_mode != CCoreFacadeConfig::LocalInDbusServer) { return this; }
             server->addObject(IContextAudio::ObjectPath(), this);
             return this;
         }

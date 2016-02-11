@@ -8,7 +8,7 @@
  */
 
 #include "swiftcore.h"
-#include "blackcore/contextruntime.h"
+#include "blackcore/corefacade.h"
 #include "blackcore/contextapplication.h"
 #include "blackcore/contextapplicationimpl.h"
 #include "blackmisc/dbusserver.h"

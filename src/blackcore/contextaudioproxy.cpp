@@ -20,7 +20,7 @@ namespace BlackCore
     /*
      * Constructor for DBus
      */
-    CContextAudioProxy::CContextAudioProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextAudio(mode, runtime), m_dBusInterface(nullptr)
+    CContextAudioProxy::CContextAudioProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextAudio(mode, runtime), m_dBusInterface(nullptr)
     {
         this->m_dBusInterface = new BlackMisc::CGenericDBusInterface(
             serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(), connection, this);

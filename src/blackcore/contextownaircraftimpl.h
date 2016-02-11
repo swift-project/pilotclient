@@ -14,7 +14,7 @@
 
 #include "blackcoreexport.h"
 #include "blackcore/contextownaircraft.h"
-#include "blackcore/contextruntime.h"
+#include "blackcore/corefacade.h"
 #include "blackcore/settings/network.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/aviation/atcstation.h"
@@ -34,7 +34,7 @@ namespace BlackCore
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTOWNAIRCRAFT_INTERFACENAME)
         Q_INTERFACES(BlackMisc::Simulation::IOwnAircraftProvider)
-        friend class CRuntime;
+        friend class CCoreFacade;
         friend class IContextOwnAircraft;
 
     public:
@@ -119,12 +119,12 @@ namespace BlackCore
 
     protected:
         //! Constructor, with link to runtime
-        CContextOwnAircraft(CRuntimeConfig::ContextMode, CRuntime *runtime);
+        CContextOwnAircraft(CCoreFacadeConfig::ContextMode, CCoreFacade *runtime);
 
         //! Register myself in DBus
         CContextOwnAircraft *registerWithDBus(BlackMisc::CDBusServer *server)
         {
-            if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) return this;
+            if (!server || this->m_mode != CCoreFacadeConfig::LocalInDbusServer) return this;
             server->addObject(IContextOwnAircraft::ObjectPath(), this);
             return this;
         }

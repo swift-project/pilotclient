@@ -34,7 +34,7 @@ namespace BlackCore
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME)
-        friend class CRuntime;
+        friend class CCoreFacade;
         friend class IContextSimulator;
 
     public:
@@ -125,12 +125,12 @@ namespace BlackCore
 
     protected:
         //! Constructor
-        CContextSimulator(CRuntimeConfig::ContextMode, CRuntime *runtime);
+        CContextSimulator(CCoreFacadeConfig::ContextMode, CCoreFacade *runtime);
 
         //! Register myself in DBus
         CContextSimulator *registerWithDBus(BlackMisc::CDBusServer *server)
         {
-            if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) return this;
+            if (!server || this->m_mode != CCoreFacadeConfig::LocalInDbusServer) return this;
             server->addObject(CContextSimulator::ObjectPath(), this);
             return this;
         }

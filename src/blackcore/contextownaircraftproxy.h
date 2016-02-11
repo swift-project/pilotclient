@@ -70,10 +70,10 @@ namespace BlackCore
 
     protected:
         //! \brief Constructor
-        CContextOwnAircraftProxy(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextOwnAircraft(mode, runtime), m_dBusInterface(nullptr) {}
+        CContextOwnAircraftProxy(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextOwnAircraft(mode, runtime), m_dBusInterface(nullptr) {}
 
         //! \brief DBus version constructor
-        CContextOwnAircraftProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime);
+        CContextOwnAircraftProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
 
     private:
         BlackMisc::CGenericDBusInterface *m_dBusInterface; //!< DBus interface */

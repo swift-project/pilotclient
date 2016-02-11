@@ -51,7 +51,7 @@ namespace BlackCore
 
     protected:
         //! Constructor
-        IContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime);
+        IContextApplication(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
 
     public:
         //! Service name
@@ -72,7 +72,7 @@ namespace BlackCore
         virtual QString getPathAndContextId() const { return this->buildPathAndContextId(ObjectPath()); }
 
         //! Factory method
-        static IContextApplication *create(CRuntime *parent, CRuntimeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &conn);
+        static IContextApplication *create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &conn);
 
         //! Destructor
         virtual ~IContextApplication() {}

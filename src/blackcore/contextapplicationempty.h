@@ -12,19 +12,19 @@
 
 #include "blackcoreexport.h"
 #include "contextapplication.h"
-#include "contextruntime.h"
+#include "corefacade.h"
 #include "blackmisc/identifierlist.h"
 
 namespace BlackCore
 {
-    class CRuntime;
+    class CCoreFacade;
 
     //! Application context
     class BLACKCORE_EXPORT CContextApplicationEmpty : public IContextApplication
     {
     public:
         //! Constructor
-        CContextApplicationEmpty(CRuntime *runtime) : IContextApplication(CRuntimeConfig::NotUsed, runtime) {}
+        CContextApplicationEmpty(CCoreFacade *runtime) : IContextApplication(CCoreFacadeConfig::NotUsed, runtime) {}
 
     public slots:
         //! \copydoc IContextApplication::logMessage

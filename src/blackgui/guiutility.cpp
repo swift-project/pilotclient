@@ -8,7 +8,7 @@
  */
 
 #include "guiutility.h"
-#include "blackcore/contextruntime.h"
+#include "blackcore/corefacade.h"
 #include "blackcore/cookiemanager.h"
 #include "blackmisc/filelogger.h"
 #include "blackmisc/logmessage.h"
@@ -71,7 +71,7 @@ namespace BlackGui
 
     void CGuiUtility::initSwiftGuiApplication(QApplication &a, const QString &applicationName, const QPixmap &icon)
     {
-        CRuntime::registerMetadata(); // register metadata
+        CCoreFacade::registerMetadata(); // register metadata
         CCookieManager::instance(); // init cookie manager if ever needed
 
         CLogHandler::instance()->install(); // make sure we have a log handler!

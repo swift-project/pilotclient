@@ -29,7 +29,7 @@ using namespace BlackMisc::Input;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 
-void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
+void SwiftGuiStd::init(const CCoreFacadeConfig &runtimeConfig)
 {
     // POST(!) GUI init
 

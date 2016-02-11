@@ -59,7 +59,7 @@ namespace BlackCore
         virtual QString getPathAndContextId() const { return this->buildPathAndContextId(ObjectPath()); }
 
         //! Factory method
-        static IContextOwnAircraft *create(CRuntime *parent, CRuntimeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &conn);
+        static IContextOwnAircraft *create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &conn);
 
         //! Destructor
         virtual ~IContextOwnAircraft() {}
@@ -122,7 +122,7 @@ namespace BlackCore
 
     protected:
         //! Constructor
-        IContextOwnAircraft(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : CContext(mode, runtime) {}
+        IContextOwnAircraft(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : CContext(mode, runtime) {}
     };
 }
 

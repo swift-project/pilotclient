@@ -8,7 +8,7 @@
  */
 
 #include "contextapplicationimpl.h"
-#include "contextruntime.h"
+#include "corefacade.h"
 #include "inputmanager.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/logmessage.h"
@@ -20,7 +20,7 @@ using namespace BlackMisc;
 
 namespace BlackCore
 {
-    CContextApplication::CContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
+    CContextApplication::CContextApplication(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
         IContextApplication(mode, runtime)
     {
         connect(CSettingsCache::instance(), &CSettingsCache::valuesSaveRequested, CSettingsCache::instance(), &CSettingsCache::saveToStoreByPacket);
@@ -28,7 +28,7 @@ namespace BlackCore
 
     CContextApplication *CContextApplication::registerWithDBus(BlackMisc::CDBusServer *server)
     {
-        if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) { return this; }
+        if (!server || this->m_mode != CCoreFacadeConfig::LocalInDbusServer) { return this; }
         server->addObject(IContextApplication::ObjectPath(), this);
         return this;
     }
