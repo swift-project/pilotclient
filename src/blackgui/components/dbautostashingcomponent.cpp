@@ -89,7 +89,7 @@ namespace BlackGui
 
         void CDbAutoStashingComponent::ps_entitiesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
-            if (!readState != CEntityFlags::ReadFinished) { return; }
+            if (readState != CEntityFlags::ReadFinished) { return; }
             Q_UNUSED(count);
             Q_UNUSED(entity);
         }

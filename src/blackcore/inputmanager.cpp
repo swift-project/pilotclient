@@ -15,8 +15,8 @@ namespace BlackCore
 
     CInputManager::CInputManager(QObject *parent) :
         QObject(parent),
-        m_keyboard(std::move(IKeyboard::create(this))),
-        m_joystick(std::move(IJoystick::create(this)))
+        m_keyboard(IKeyboard::create(this)),
+        m_joystick(IJoystick::create(this))
     {
         connect(m_keyboard.get(), &IKeyboard::keyCombinationChanged, this, &CInputManager::ps_processKeyCombinationChanged);
         connect(m_joystick.get(), &IJoystick::buttonCombinationChanged, this, &CInputManager::ps_processButtonCombinationChanged);

@@ -169,10 +169,10 @@ namespace BlackMisc
             virtual const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override { return this->m_geodeticHeight; }
 
             //! \copydoc ICoordinateGeodetic::normalVector
-            virtual QVector3D normalVector() const;
+            virtual QVector3D normalVector() const override;
 
             //! \copydoc ICoordinateGeodetic::normalVectorDouble
-            virtual std::array<double, 3> normalVectorDouble() const;
+            virtual std::array<double, 3> normalVectorDouble() const override;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;

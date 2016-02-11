@@ -45,7 +45,7 @@ namespace BlackGui
             virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
             //! \copydoc Models::IModelFilterProvider::createModelFilter
-            std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Aviation::CAircraftIcaoCodeList> > createModelFilter() const;
+            std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Aviation::CAircraftIcaoCodeList> > createModelFilter() const override;
 
             //! Filter by ICAO object as default values
             void filter(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
@@ -56,7 +56,7 @@ namespace BlackGui
 
         protected:
             //! \copydoc CFilterWidget::clearForm
-            void clearForm();
+            void clearForm() override;
 
         private:
             QScopedPointer<Ui::CAircraftIcaoFilterBar> ui;

@@ -63,7 +63,7 @@ namespace BlackGui
             void clear();
 
             //! \copydoc BlackMisc::Network::CWebDataServicesAware::setProvider
-            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider);
+            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
         public slots:
             //! Set value

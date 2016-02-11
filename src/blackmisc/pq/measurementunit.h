@@ -315,7 +315,7 @@ namespace BlackMisc
             {
                 if (this->isNull()) return false;
                 if (value == 0) return true;
-                return abs(value) <= this->m_epsilon;
+                return std::abs(value) <= this->m_epsilon;
             }
 
             //! Is unit null?

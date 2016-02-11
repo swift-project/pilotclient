@@ -95,7 +95,7 @@ namespace BlackMisc
             }
             else
             {
-                codes == this->findByIataCode(icaoPattern.getIataCode());
+                codes = this->findByIataCode(icaoPattern.getIataCode());
             }
 
             if (codes.size() == 1) { return codes.front(); }

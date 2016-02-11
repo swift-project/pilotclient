@@ -137,7 +137,7 @@ namespace BlackCore
         }
 
         //! \copydoc IContextSimulator::setMaxRenderedDistance
-        virtual void setMaxRenderedDistance(const BlackMisc::PhysicalQuantities::CLength &distance)
+        virtual void setMaxRenderedDistance(const BlackMisc::PhysicalQuantities::CLength &distance) override
         {
             Q_UNUSED(distance);
             logEmptyContextWarning(Q_FUNC_INFO);

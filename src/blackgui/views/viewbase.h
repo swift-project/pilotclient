@@ -117,7 +117,7 @@ namespace BlackGui
             virtual bool isDropAllowed() const override;
 
             //! \copydoc Components::CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
-            virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget);
+            virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget) override;
 
             //! Resize mode
             ResizeMode getResizeMode() const { return m_resizeMode; }

@@ -47,11 +47,11 @@ namespace BlackCore
 
         //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::getOwnAircraftParts
         //! \ingroup ownaircraftprovider
-        virtual BlackMisc::Aviation::CAircraftParts getOwnAircraftParts() const;
+        virtual BlackMisc::Aviation::CAircraftParts getOwnAircraftParts() const override;
 
         //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::getOwnAircraftModel
         //! \ingroup ownaircraftprovider
-        virtual BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const;
+        virtual BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const override;
 
         //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::getDistanceToOwnAircraft
         //! \ingroup ownaircraftprovider

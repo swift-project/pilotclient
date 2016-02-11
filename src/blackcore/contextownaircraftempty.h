@@ -106,7 +106,7 @@ namespace BlackCore
         }
 
         //! \copydoc IContextOwnAircraft::setAudioVoiceRoomOverrideUrls
-        virtual void setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url)
+        virtual void setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url) override
         {
             Q_UNUSED(voiceRoom1Url);
             Q_UNUSED(voiceRoom2Url);
@@ -114,7 +114,7 @@ namespace BlackCore
         }
 
         //! \copydoc IContextOwnAircraft::enableAutomaticVoiceRoomResolution
-        virtual void enableAutomaticVoiceRoomResolution(bool enable)
+        virtual void enableAutomaticVoiceRoomResolution(bool enable) override
         {
             Q_UNUSED(enable);
             logEmptyContextWarning(Q_FUNC_INFO);

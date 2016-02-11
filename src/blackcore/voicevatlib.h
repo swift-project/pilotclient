@@ -80,7 +80,7 @@ namespace BlackCore
     protected: // QObject overrides
 
         //! Process voice lib
-        virtual void timerEvent(QTimerEvent *);
+        virtual void timerEvent(QTimerEvent *) override;
 
     private:
 

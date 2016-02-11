@@ -105,7 +105,7 @@ namespace BlackMisc
         protected:
             QString getRegExp() const override { return QStringLiteral("^(?<airport>\\w{4}) "); }
 
-            bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const
+            bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const override
             {
                 QString airportAsString = match.captured("airport");
                 Q_ASSERT(!airportAsString.isEmpty());
@@ -475,7 +475,7 @@ namespace BlackMisc
                 return hash;
             }
 
-            virtual bool isRepeatable() const { return true; }
+            virtual bool isRepeatable() const override { return true; }
 
             // w'w' represents present weather, coded in accordance with WMO Code Table 4678.
             // As many groups as necessary are included, with each group containing from 2 to 9 characters.
@@ -550,7 +550,7 @@ namespace BlackMisc
                 return hash;
             }
 
-            virtual bool isRepeatable() const { return true; }
+            virtual bool isRepeatable() const override { return true; }
 
             QString getRegExp() const override
             {

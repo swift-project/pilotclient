@@ -158,8 +158,8 @@ namespace BlackSimPlugin
                         m_xplaneData.strobeLightsOn, m_xplaneData.landingLightsOn, m_xplaneData.taxiLightsOn,
                         m_xplaneData.beaconLightsOn, m_xplaneData.navLightsOn, false
                     },
-                    { m_xplaneData.gearReployRatio > 0 }, { static_cast<int>(m_xplaneData.flapsReployRatio * 100) },
-                    { m_xplaneData.speedBrakeRatio > 0.5 }, engines, { m_xplaneData.onGroundAll }
+                    m_xplaneData.gearReployRatio > 0, static_cast<int>(m_xplaneData.flapsReployRatio * 100) ,
+                    m_xplaneData.speedBrakeRatio > 0.5, engines, m_xplaneData.onGroundAll
                 };
                 updateOwnParts(parts);
             }

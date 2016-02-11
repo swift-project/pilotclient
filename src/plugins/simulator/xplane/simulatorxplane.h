@@ -89,7 +89,7 @@ namespace BlackSimPlugin
             virtual void reloadInstalledModels() override;
 
             //! \copydoc BlackCore::ISimulator::getAirportsInRange
-            virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const;
+            virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
 
             //! \copydoc BlackCore::ISimulator::setTimeSynchronization
             virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;

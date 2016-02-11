@@ -29,13 +29,13 @@ namespace BlackWxPlugin
     {
         const CWeatherDataGfs::Grib2ParameterTable CWeatherDataGfs::m_grib2ParameterTable
         {
-            { {0, 0}, { TMP, "Temperature", "K" } },
-            { {1, 1}, { RH, "Relative Humidity", "%" } },
-            { {2, 2}, { UGRD, "U-Component of Wind", "m s-1" } },
-            { {2, 3}, { VGRD, "V-Component of Wind", "m s-1" } },
-            { {3, 0}, { PRES, "Pressure", "Pa" } },
-            { {3, 1}, { PRMSL, "Pressure Reduced to MSL", "Pa" } },
-            { {6, 1}, { TCDC, "Total Cloud Cover", "%" } },
+            { { {0, 0} }, { TMP, "Temperature", "K" } },
+            { { {1, 1} }, { RH, "Relative Humidity", "%" } },
+            { { {2, 2} }, { UGRD, "U-Component of Wind", "m s-1" } },
+            { { {2, 3} }, { VGRD, "V-Component of Wind", "m s-1" } },
+            { { {3, 0} }, { PRES, "Pressure", "Pa" } },
+            { { {3, 1} }, { PRMSL, "Pressure Reduced to MSL", "Pa" } },
+            { { {6, 1} }, { TCDC, "Total Cloud Cover", "%" } },
         };
 
         double millibarToLevel(double millibar)
@@ -137,7 +137,7 @@ namespace BlackWxPlugin
                 "VGRD",
             };
 
-            static const std::array<int, 4> cycles = { 0, 6, 12, 18 };
+            static const std::array<int, 4> cycles = { { 0, 6, 12, 18 } };
             const QDateTime now = QDateTime::currentDateTimeUtc();
 
             // GFS data is published after 4 yours.
@@ -443,7 +443,7 @@ namespace BlackWxPlugin
             g2int parameterNumber = gfld->ipdtmpl[1];
             g2int valueFirstFixedSurface = gfld->ipdtmpl[11];
 
-            std::array<g2int, 2> key { parameterCategory, parameterNumber };
+            std::array<g2int, 2> key { { parameterCategory, parameterNumber } };
             // Make sure the key exists
             if (!m_grib2ParameterTable.contains(key))
             {
@@ -488,7 +488,7 @@ namespace BlackWxPlugin
             g2int parameterNumber = gfld->ipdtmpl[1];
             g2int typeFirstFixedSurface = gfld->ipdtmpl[9];
 
-            std::array<g2int, 2> key { parameterCategory, parameterNumber };
+            std::array<g2int, 2> key { { parameterCategory, parameterNumber } };
             // Make sure the key exists
             if (!m_grib2ParameterTable.contains(key))
             {

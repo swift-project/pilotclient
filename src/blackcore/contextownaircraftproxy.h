@@ -60,10 +60,10 @@ namespace BlackCore
         virtual void setAudioOutputVolume(int outputVolume) override;
 
         //! \copydoc IContextOwnAircraft::setAudioVoiceRoomOverrideUrls
-        virtual void setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url);
+        virtual void setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url) override;
 
         //! \copydoc IContextOwnAircraft::enableAutomaticVoiceRoomResolution
-        virtual void enableAutomaticVoiceRoomResolution(bool enable);
+        virtual void enableAutomaticVoiceRoomResolution(bool enable) override;
 
         //! \copydoc IContextOwnAircraft::parseCommandLine
         virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;

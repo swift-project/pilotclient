@@ -43,13 +43,13 @@ namespace BlackMisc
             { }
 
             //! Set active frequency
-            void setFrequencyActiveMHz(double frequencyMHz)
+            void setFrequencyActiveMHz(double frequencyMHz) override
             {
                 this->CModulator::setFrequencyActiveMHz(frequencyMHz);
             }
 
             //! Set standby frequency
-            void setFrequencyStandbyMHz(double frequencyMHz)
+            void setFrequencyStandbyMHz(double frequencyMHz) override
             {
                 this->CModulator::setFrequencyStandbyMHz(frequencyMHz);
             }

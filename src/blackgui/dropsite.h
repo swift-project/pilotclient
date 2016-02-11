@@ -36,7 +36,7 @@ namespace BlackGui
         void setInfoText(const QString &dropSiteText);
 
         //! Drop allowed
-        void allowDrop(bool allowed);
+        void allowDrop(bool allowed) override;
 
     signals:
         //! Dropped value object

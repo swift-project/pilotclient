@@ -43,7 +43,7 @@ namespace BlackMisc
             virtual BlackMisc::Aviation::CAircraftParts getOwnAircraftParts() const override;
 
             //! \copydoc IOwnAircraftProvider::getOwnAircraftModel
-            virtual BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const;
+            virtual BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const override;
 
             //! \copydoc IOwnAircraftProvider::getDistanceToOwnAircraft
             virtual BlackMisc::PhysicalQuantities::CLength getDistanceToOwnAircraft(const BlackMisc::Geo::ICoordinateGeodetic &position) const override;

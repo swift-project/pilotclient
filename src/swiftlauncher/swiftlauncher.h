@@ -56,7 +56,7 @@ protected:
     virtual void mousePressEvent(QMouseEvent *event) override;
 
     //! \copydoc QDialog::mouseMoveEvent
-    void mouseMoveEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event) override;
 
 private:
     QScopedPointer<Ui::CSwiftLauncher>             ui;

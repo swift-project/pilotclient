@@ -88,7 +88,7 @@ namespace BlackCore
         virtual const BlackMisc::Simulation::CSimulatorSetup &getSimulatorSetup() const override;
 
         //! \copydoc ISimulator::unload
-        virtual void unload();
+        virtual void unload() override;
 
         //! \copydoc IContextSimulator::deleteAllRenderingRestrictions
         virtual void deleteAllRenderingRestrictions() override;
