@@ -31,6 +31,12 @@ linux-g++-32 {
 linux-g++-64 {
     WORD_SIZE = 64
 }
+
+linux-clang {
+    # Assume 64 bit until we find out how to detect the compiler architecture
+    WORD_SIZE = 64
+}
+
 macx-clang {
     # TODO
     WORD_SIZE = 64
