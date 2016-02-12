@@ -7,6 +7,12 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
+
 #include "testutils.h"
 #include "blackgui/guiutility.h"
 
@@ -26,3 +32,5 @@ namespace BlackCoreTest
         QVERIFY2(!CGuiUtility::lenientTitleComparison("foo", "bar"), "wrong title mismatch");
     }
 } // ns
+
+//! \endcond

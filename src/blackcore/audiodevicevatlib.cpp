@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+
 #include "audiodevicevatlib.h"
 #include "blackmisc/logmessage.h"
 
@@ -16,11 +18,13 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackCore
 {
+    //! Cast void* to a pointer of CAudioInputDeviceVatlib
     CAudioInputDeviceVatlib *cbvar_cast_inputDevice(void *cbvar)
     {
         return static_cast<CAudioInputDeviceVatlib *>(cbvar);
     }
 
+    //! Cast void* to a pointer of CAudioOutputDeviceVatlib
     CAudioOutputDeviceVatlib *cbvar_cast_outputDevice(void *cbvar)
     {
         return static_cast<CAudioOutputDeviceVatlib *>(cbvar);
@@ -129,3 +133,5 @@ namespace BlackCore
         cbvar_cast_outputDevice(cbVar)->m_devices.push_back(outputDevice);
     }
 }
+
+//! \endcond

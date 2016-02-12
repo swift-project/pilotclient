@@ -4,6 +4,11 @@
 //! \file
 
 /*!
+ * \defgroup blackcore BlackCore Library
+ * Backend services of the swift project, like dealing with the network or the simulators.
+ */
+
+/*!
  * \namespace BlackCore
  * Backend services of the swift project, like dealing with the network or the simulators.
  */
@@ -23,8 +28,9 @@
  * Network settings traits.
  */
 
-/**
+/*!
  * \defgroup dbus DBus related functions, classes, or definitions.
+ * \ingroup blackcore
  */
 
 #endif // guard

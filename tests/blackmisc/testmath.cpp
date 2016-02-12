@@ -7,6 +7,12 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
+
 #include "testmath.h"
 #include "blackmisc/math/mathutils.h"
 
@@ -36,3 +42,5 @@ namespace BlackMiscTest
     }
 
 } // namespace
+
+//! \endcond

@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
@@ -38,9 +40,11 @@ namespace XBus
         surfaces.lights.timeOffset = static_cast<quint16>(qrand() % 0xffff);
     }
 
+
     QString g_xplanePath;
     QString g_sep;
 
+    //! Init global xplane path
     void initXPlanePath()
     {
         char xplanePath[512];
@@ -297,7 +301,7 @@ namespace XBus
         }
     }
 
-    // memcmp function which ignores the header ("size" member) and compares only the payload (the rest of the struct)
+    //! memcmp function which ignores the header ("size" member) and compares only the payload (the rest of the struct)
     template <typename T>
     int memcmpPayload(T *dst, T *src)
     {
@@ -306,7 +310,7 @@ namespace XBus
                            sizeof(*dst) - sizeof(dst->size));
     }
 
-    // linearly interpolate angle in degrees
+    //! linearly interpolate angle in degrees
     template <typename T>
     T lerpDegrees(T from, T to, double factor)
     {
@@ -394,3 +398,5 @@ namespace XBus
     }
 
 }
+
+//! \endcond

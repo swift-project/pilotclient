@@ -7,6 +7,12 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
+
 #include "testblackguimain.h"
 #include <QCoreApplication>
 #include <QDebug>
@@ -21,3 +27,5 @@ int main(int argc, char *argv[])
 
     return CBlackGuiTestMain::unitMain(argc, argv);
 }
+
+//! \endcond

@@ -10,11 +10,15 @@
 #ifndef BLACKGUITEST_H
 #define BLACKGUITEST_H
 
+//! \cond PRIVATE_TESTS
+
 /*!
  * \namespace BlackGuiTest
  * Unit tests for BlackGui. Unit tests do have their own namespace, so
  * the regular namespace BlackGui is completely free of unit tests.
  * Add any new tests to TestMain::unitMain as shown there.
  */
+
+//! \endcond
 
 #endif // guard

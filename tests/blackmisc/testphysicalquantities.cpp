@@ -7,6 +7,12 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
+
 #include "testphysicalquantities.h"
 
 using namespace BlackMisc::PhysicalQuantities;
@@ -279,3 +285,5 @@ namespace BlackMiscTest
 
     }
 } // namespace
+
+//! \endcond

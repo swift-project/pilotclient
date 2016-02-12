@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+
 #include "menus.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/makeunique.h"
@@ -16,14 +18,16 @@
 
 namespace XBus
 {
-    template <typename T> void *voidptr_cast(T i) // "safe" cast from integer to void*
+    //! "safe" cast from integer to void*
+    template <typename T> void *voidptr_cast(T i)
     {
         static_assert(std::is_integral<T>::value, "voidptr_cast expects an integer");
         typedef typename std::conditional<std::is_signed<T>::value, intptr_t, uintptr_t>::type intptr_type;
         return reinterpret_cast<void *>(static_cast<intptr_type>(i));
     }
 
-    template <typename T> T intptr_cast(void *p) // "safe" cast from void* to integer
+    //! "safe" cast from void* to integer
+    template <typename T> T intptr_cast(void *p)
     {
         static_assert(std::is_integral<T>::value, "voidptr_cast returns an integer");
         typedef typename std::conditional<std::is_signed<T>::value, intptr_t, uintptr_t>::type intptr_type;
@@ -119,3 +123,5 @@ namespace XBus
     }
 
 }
+
+//! \endcond

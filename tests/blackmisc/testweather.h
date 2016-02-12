@@ -7,10 +7,14 @@
  * contained in the LICENSE file.
  */
 
-//! \file
-
 #ifndef BLACKMISCTEST_TESTWEATHER_H
 #define BLACKMISCTEST_TESTWEATHER_H
+
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
 
 #include <QtTest/QtTest>
 
@@ -32,5 +36,7 @@ namespace BlackMiscTest
     };
 
 } // namespace
+
+//! \endcond
 
 #endif // guard

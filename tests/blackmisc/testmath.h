@@ -7,17 +7,23 @@
  * contained in the LICENSE file.
  */
 
-//! \file
-
 #ifndef BLACKMISCTEST_TESTMATH_H
 #define BLACKMISCTEST_TESTMATH_H
+
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
 
 #include <QtTest/QtTest>
 
 namespace BlackMiscTest
 {
 
-    //! Math classes tests
+    /*!
+     * Math classes tests
+     */
     class CTestMath : public QObject
     {
         Q_OBJECT
@@ -32,5 +38,7 @@ namespace BlackMiscTest
     };
 
 } // namespace
+
+//! \endcond
 
 #endif // guard

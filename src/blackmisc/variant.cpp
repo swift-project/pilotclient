@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+
 #include "variant.h"
 #include "blackmiscfreefunctions.h"
 #include "icon.h"
@@ -238,9 +240,14 @@ namespace BlackMisc
         }
     }
 
-    // 2 functions required for unmarshallFromDbus
+    /*!
+     * 2 functions required for unmarshallFromDbus
+     * \internal
+     */
+    //! @{
     QVariant fixQVariantFromDbusArgument(const QVariant &variant, int localUserType);
     QVariant complexQtTypeFromDbusArgument(const QDBusArgument &argument, int type);
+    //! @}
 
     void CVariant::unmarshallFromDbus(const QDBusArgument &arg)
     {
@@ -416,3 +423,5 @@ namespace BlackMisc
     }
 
 } // namespace
+
+//! \endcond

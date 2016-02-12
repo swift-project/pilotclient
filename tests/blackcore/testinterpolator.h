@@ -7,10 +7,14 @@
  * contained in the LICENSE file.
  */
 
-//! \file
-
 #ifndef BLACKCORETEST_TESTINTERPOLATOR_H
 #define BLACKCORETEST_TESTINTERPOLATOR_H
+
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
 
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftparts.h"
@@ -20,7 +24,9 @@
 namespace BlackCoreTest
 {
 
-    //! Interpolator classes basic tests
+    /*!
+     * Interpolator classes basic tests
+     */
     class CTestInterpolator : public QObject
     {
         Q_OBJECT
@@ -43,5 +49,7 @@ namespace BlackCoreTest
     };
 
 } // namespace
+
+//! \endcond
 
 #endif // guard

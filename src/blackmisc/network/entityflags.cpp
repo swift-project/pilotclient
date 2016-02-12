@@ -39,7 +39,7 @@ namespace BlackMisc
             }
         }
 
-        QString CEntityFlags::flagToString(Entity flag)
+        QString CEntityFlags::flagToString(BlackMisc::Network::CEntityFlags::Entity flag)
         {
             QStringList list;
             if (flag.testFlag(NoEntity)) list << "no data";

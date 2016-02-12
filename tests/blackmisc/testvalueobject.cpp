@@ -7,6 +7,12 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
+
 #include "testvalueobject.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <tuple>
@@ -63,3 +69,5 @@ namespace BlackMisc
     }
 
 } // namespace
+
+//! \endcond

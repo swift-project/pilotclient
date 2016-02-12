@@ -7,6 +7,12 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
+
 #include "testphysicalquantities.h"
 #include "testaviation.h"
 #include "testgeo.h"
@@ -52,3 +58,5 @@ namespace BlackMiscTest
         return status;
     }
 } // namespace
+
+//! \endcond

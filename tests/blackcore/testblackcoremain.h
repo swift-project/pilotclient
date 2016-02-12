@@ -7,10 +7,14 @@
  * contained in the LICENSE file.
  */
 
-//! \file
-
 #ifndef BLACKCORETEST_TESTMAIN_H
 #define BLACKCORETEST_TESTMAIN_H
+
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
 
 #include "blackmisc/valueobject.h" // for qHash overload, include before Qt stuff due GCC issue
 #include <QtTest/QtTest>
@@ -30,5 +34,7 @@ namespace BlackCoreTest
         static int unitMain(int argc, char *argv[]);
     };
 }
+
+//! \endcond
 
 #endif // guard

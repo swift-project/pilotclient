@@ -16,10 +16,7 @@
 #include <QCoreApplication>
 #include <QList>
 
-/*!
- * DBus tests, tests marshalling / unmarshalling of many value classes.
- * Forks two processes and sends data via DBus among them.
- */
+//! main
 int main(int argc, char *argv[])
 {
     // of course the code here is containing too many lines, but as it

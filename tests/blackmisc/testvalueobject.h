@@ -7,10 +7,14 @@
  * contained in the LICENSE file.
  */
 
-//! \file
-
 #ifndef BLACKMISC_TESTVALUEOBJECT_H
 #define BLACKMISC_TESTVALUEOBJECT_H
+
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
 
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/sequence.h"
@@ -89,9 +93,17 @@ Q_DECLARE_METATYPE(BlackMisc::CNotHashable)
 
 // We need to typedef because 'commas' confuse the Q_DECLARE_METATYPE macro
 // https://bugreports.qt-project.org/browse/QTBUG-11485
+
+//! Test value object dictionary using ordered container
 typedef BlackMisc::CDictionary<BlackMisc::CTestValueObject, BlackMisc::CTestValueObject> CValueObjectDictionary;
+
+//! Test value object dictionary using unordered container
 typedef BlackMisc::CDictionary<BlackMisc::CTestValueObject, BlackMisc::CTestValueObject, QHash> CValueObjectHashDictionary;
+
+//! Test value object dictionary using ordered container with not hashable key
 typedef BlackMisc::CDictionary<BlackMisc::CNotHashable, QString> CNotHashableDictionary;
+
+//! Test value object dictionary using unordered container with not hashable key
 typedef BlackMisc::CDictionary<BlackMisc::CNotHashable, QString, QMap> CNotHashableMapDictionary;
 Q_DECLARE_METATYPE(CValueObjectDictionary)
 Q_DECLARE_METATYPE(CNotHashableDictionary)
@@ -103,5 +115,7 @@ static_assert(std::is_same<CValueObjectDictionary::impl_type, CValueObjectHashDi
 static_assert(std::is_same<CNotHashableDictionary::impl_type, CNotHashableMapDictionary::impl_type>::value,
               "Expected CDictionary<CNotHashableDictionary, Value> to use QMap");
 #endif // ! Q_CC_MSVC
+
+//! \endcond
 
 #endif // guard

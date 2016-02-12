@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+
 #include "project.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/stringutils.h"
@@ -310,6 +312,7 @@ namespace BlackMisc
         return QProcessEnvironment::systemEnvironment().value(envVarPrivateSetupDir());
     }
 
+    //! Get application directory
     QString getApplicationDirImpl()
     {
         QFileInfo executable(QCoreApplication::applicationFilePath());
@@ -323,6 +326,7 @@ namespace BlackMisc
         return s;
     }
 
+    //! Get swift resource directory
     QString getSwiftResourceDirImpl()
     {
         QDir dir(CProject::getApplicationDir());
@@ -347,6 +351,7 @@ namespace BlackMisc
         return dir;
     }
 
+    //! Get static database directory
     QString getSwiftStaticDbFilesDirImpl()
     {
         QString d(CProject::getSwiftResourceDir());
@@ -362,6 +367,7 @@ namespace BlackMisc
         return s;
     }
 
+    //! Get images directory
     QString getImagesDirImpl()
     {
         QString d(CProject::getSwiftResourceDir());
@@ -452,3 +458,5 @@ namespace BlackMisc
 
 #undef BLACK_VERSION_STR
 #undef BLACK_VERSION_STR_X
+
+//! \endcond

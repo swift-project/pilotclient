@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
@@ -16,6 +18,7 @@
 
 namespace XBus
 {
+
 
     const int c_screenWidth = 1024;
     const int c_screenHeight = 768;
@@ -141,3 +144,5 @@ namespace XBus
     }
 
 }
+
+//! \endcond

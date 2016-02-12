@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+
 #include "webreaderflags.h"
 
 using namespace BlackMisc::Network;
@@ -47,7 +49,7 @@ namespace BlackCore
         return f;
     }
 
-    bool CWebReaderFlags::isFromSwiftDb(CEntityFlags::Entity entity)
+    bool CWebReaderFlags::isFromSwiftDb(BlackMisc::Network::CEntityFlags::Entity entity)
     {
         return isFromSwiftDb(entityToReader(entity));
     }
@@ -58,3 +60,5 @@ namespace BlackCore
     }
 
 } // namespace
+
+//! \endcond

@@ -7,12 +7,15 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+
 #include "weather.h"
 #include <QDebug>
 
 namespace XBus
 {
 
+    //! Set cloud layer
     template <class T>
     void setCloudLayerImpl(T &layer, int base, int tops, int type, int coverage)
     {
@@ -33,6 +36,7 @@ namespace XBus
         }
     }
 
+    //! Set wind layer
     template <class T>
     void setWindLayerImpl(T &layer, int altitude, float direction, int speed, int shearDirection, int shearSpeed, int turbulence)
     {
@@ -56,3 +60,5 @@ namespace XBus
     }
 
 }
+
+//! \endcond

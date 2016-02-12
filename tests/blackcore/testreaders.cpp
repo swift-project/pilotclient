@@ -7,6 +7,12 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
+
 #include "testreaders.h"
 #include "expect.h"
 #include "blackcore/data/globalsetup.h"
@@ -86,3 +92,5 @@ namespace BlackCoreTest
         return true;
     }
 } // ns
+
+//! \endcond

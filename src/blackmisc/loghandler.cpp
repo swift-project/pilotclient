@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+
 #include "loghandler.h"
 #include "algorithm.h"
 #include "worker.h"
@@ -23,6 +25,7 @@ namespace BlackMisc
         return g_handler;
     }
 
+    //! Qt message handler
     void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message)
     {
         CStatusMessage statusMessage(type, context, message);
@@ -264,3 +267,5 @@ namespace BlackMisc
         }
     }
 }
+
+//! \endcond

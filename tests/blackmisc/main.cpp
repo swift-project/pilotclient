@@ -7,6 +7,13 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ * \internal
+ */
+
 #include "testblackmiscmain.h"
 #include "blackmisc/registermetadata.h"
 #include <QCoreApplication>
@@ -29,3 +36,5 @@ int main(int argc, char *argv[])
     BlackMisc::registerMetadata();
     return CBlackMiscTestMain::unitMain(argc, argv);;
 }
+
+//! \endcond

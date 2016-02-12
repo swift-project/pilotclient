@@ -11,6 +11,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/simulation/fscommon/modelmappingsprovidervpilot.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/makeunique.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;

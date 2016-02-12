@@ -21,7 +21,7 @@
 using namespace BlackMisc;
 using namespace BlackSample;
 
-//! Sample tests
+//! main
 int main(int argc, char *argv[])
 {
     // I use QGuiApplication and not core application

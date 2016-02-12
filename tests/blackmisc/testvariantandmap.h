@@ -7,10 +7,14 @@
  * contained in the LICENSE file.
  */
 
-//! \file
-
 #ifndef BLACKMISCTEST_TESTVARIANTANDMAP_H
 #define BLACKMISCTEST_TESTVARIANTANDMAP_H
+
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
 
 #include "blackmisc/pq/constants.h"
 #include "blackmisc/aviation/atcstation.h"
@@ -35,5 +39,7 @@ namespace BlackMiscTest
     };
 
 } // namespace
+
+//! \endcond
 
 #endif // guard

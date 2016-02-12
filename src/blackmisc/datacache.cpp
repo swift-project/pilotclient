@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+
 #include "datacache.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/identifier.h"
@@ -16,6 +18,7 @@
 
 namespace BlackMisc
 {
+
     class CDataCacheRevision::LockGuard
     {
     public:
@@ -445,3 +448,5 @@ namespace BlackMisc
         return result;
     }
 }
+
+//! \endcond

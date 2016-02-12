@@ -7,6 +7,12 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
+
 #include "testaviation.h"
 #include "blackmisc/pq/constants.h"
 #include "blackmisc/aviation/heading.h"
@@ -184,3 +190,5 @@ namespace BlackMiscTest
     }
 
 } // namespace
+
+//! \endcond

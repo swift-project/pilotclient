@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+
 #include "logmessage.h"
 #include "blackmiscfreefunctions.h"
 #include "indexsequence.h"
@@ -155,11 +157,13 @@ namespace BlackMisc
         }
     }
 
+    //! Does category contain flag?
     bool hasFlag(const QString &category, const QString &flag)
     {
         return category.section("/", 1, -1).split("/").contains(flag);
     }
 
+    //! Add flag to category
     QString addFlag(QString category, const QString &flag)
     {
         if (category.isEmpty() || hasFlag(category, flag)) return category;
@@ -188,3 +192,5 @@ namespace BlackMisc
         }
     }
 } // ns
+
+//! \endcond

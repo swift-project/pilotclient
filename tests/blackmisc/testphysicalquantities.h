@@ -7,10 +7,14 @@
  * contained in the LICENSE file.
  */
 
-//! \file
-
 #ifndef BLACKMISCTEST_TESTPHYSICALQUANTITIESBASE_H
 #define BLACKMISCTEST_TESTPHYSICALQUANTITIESBASE_H
+
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
 
 #include <QtTest/QtTest>
 #include "blackmisc/pq/constants.h"
@@ -69,5 +73,7 @@ namespace BlackMiscTest
     };
 
 } // namespace
+
+//! \endcond
 
 #endif // guard

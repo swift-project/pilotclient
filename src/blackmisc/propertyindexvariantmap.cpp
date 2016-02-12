@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+
 #include "propertyindexvariantmap.h"
 #include "propertyindexlist.h"
 #include "dictionary.h"
@@ -125,3 +127,5 @@ namespace BlackMisc
         return BlackMisc::calculateHash(h, "CPropertyIndexVariantMap");
     }
 } // namespace
+
+//! \endcond

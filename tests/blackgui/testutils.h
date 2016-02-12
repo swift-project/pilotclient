@@ -7,7 +7,11 @@
  * contained in the LICENSE file.
  */
 
-//! \file
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
 
 #ifndef BLACKCORETEST_TESTUTILS_H
 #define BLACKCORETEST_TESTUTILS_H
@@ -34,5 +38,7 @@ namespace BlackCoreTest
     };
 
 } //namespace
+
+//! \endcond
 
 #endif // guard

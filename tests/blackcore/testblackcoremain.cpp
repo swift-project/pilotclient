@@ -7,6 +7,12 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
+
 #include "testblackcoremain.h"
 #include "testinterpolator.h"
 #include "testreaders.h"
@@ -36,3 +42,5 @@ namespace BlackCoreTest
         return status;
     }
 } // namespace
+
+//! \endcond

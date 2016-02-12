@@ -7,10 +7,14 @@
  * contained in the LICENSE file.
  */
 
-//! \file
-
 #ifndef BLACKMISCTEST_TESTINPUT_H
 #define BLACKMISCTEST_TESTINPUT_H
+
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
 
 #include <QtTest/QtTest>
 
@@ -41,5 +45,7 @@ namespace BlackMiscTest
         void hotkeyFindSubsetOf();
     };
 } // namespace
+
+//! \endcond
 
 #endif // guard

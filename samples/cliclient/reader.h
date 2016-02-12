@@ -18,6 +18,13 @@
 namespace BlackSample
 {
 
+    /*!
+     * \brief Simple console command reader
+     *
+     * This class reads the user input per line and emits each line
+     * as a command signals.
+     * This task is running in the background and does not block.
+     */
     class LineReader : public QThread
     {
         Q_OBJECT
@@ -26,9 +33,11 @@ namespace BlackSample
         LineReader() {}
 
     protected:
+        //! Run reader in background
         void run();
 
     signals:
+        //! User command
         void command(const QString &line);
     };
 

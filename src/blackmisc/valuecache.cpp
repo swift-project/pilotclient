@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+
 #include "blackmisc/valuecache.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/logmessage.h"
@@ -21,7 +23,7 @@ namespace BlackMisc
 
     using Private::CValuePage;
 
-    // Used in asserts to protect against signed integer overflow.
+    //! Used in asserts to protect against signed integer overflow.
     template <typename T>
     bool isSafeToIncrement(const T &value) { return value < std::numeric_limits<T>::max(); }
 
@@ -557,3 +559,5 @@ namespace BlackMisc
     }
 
 }
+
+//! \endcond

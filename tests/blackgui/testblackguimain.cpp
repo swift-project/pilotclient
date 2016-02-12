@@ -7,6 +7,12 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
+
 #include "testblackguimain.h"
 #include "testutils.h"
 
@@ -25,3 +31,5 @@ namespace BlackCoreTest
         return status;
     }
 } // namespace
+
+//! \endcond

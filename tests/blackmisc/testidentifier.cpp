@@ -7,6 +7,12 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
+
 #include "testidentifier.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/identifierlist.h"
@@ -37,3 +43,5 @@ namespace BlackMiscTest
     { }
 
 } //namespace
+
+//! \endcond

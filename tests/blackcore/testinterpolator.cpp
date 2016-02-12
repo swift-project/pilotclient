@@ -7,6 +7,13 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ * \ingroup testblackcore
+ */
+
 #include "testinterpolator.h"
 #include "blackcore/interpolatorlinear.h"
 #include "blackmisc/simulation/remoteaircraftproviderdummy.h"
@@ -148,3 +155,5 @@ namespace BlackCoreTest
     }
 
 } // namespace
+
+//! \endcond

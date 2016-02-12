@@ -16,6 +16,7 @@
 
 using namespace BlackSample;
 
+//! main
 int main(int argc, char *argv[])
 {
     QCoreApplication app (argc, argv);

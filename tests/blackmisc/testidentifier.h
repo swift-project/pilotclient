@@ -7,10 +7,14 @@
  * contained in the LICENSE file.
  */
 
-//! \file
-
 #ifndef BLACKMISCTEST_TESTIDENTIFIER_H
 #define BLACKMISCTEST_TESTIDENTIFIER_H
+
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
 
 #include "blackmisc/identifiable.h"
 #include <QtTest/QtTest>
@@ -40,5 +44,7 @@ namespace BlackMiscTest
     };
 
 } // namespace
+
+//! \endcond
 
 #endif // guard

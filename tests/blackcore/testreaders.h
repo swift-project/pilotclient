@@ -7,10 +7,14 @@
  * contained in the LICENSE file.
  */
 
-//! \file
-
 #ifndef BLACKCORETEST_TESTREADERS_H
 #define BLACKCORETEST_TESTREADERS_H
+
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
 
 #include "blackcore/networkvatlib.h"
 #include "blackcore/modeldatareader.h"
@@ -19,7 +23,7 @@
 
 namespace BlackCoreTest
 {
-    /**
+    /*!
      * Test data readers (for bookings, JSON, etc.)
      */
     class CTestReaders : public QObject
@@ -47,5 +51,7 @@ namespace BlackCoreTest
     };
 
 } //namespace
+
+//! \endcond
 
 #endif // guard

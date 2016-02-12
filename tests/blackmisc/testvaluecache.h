@@ -7,10 +7,14 @@
  * contained in the LICENSE file.
  */
 
-//! \file
-
 #ifndef BLACKMISCTEST_TESTVALUECACHE_H
 #define BLACKMISCTEST_TESTVALUECACHE_H
+
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
 
 #include "blackmisc/valuecache.h"
 #include <QtTest/QtTest>
@@ -76,5 +80,7 @@ namespace BlackMiscTest
     };
 
 }
+
+//! \endcond
 
 #endif

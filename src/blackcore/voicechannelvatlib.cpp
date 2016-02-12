@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+
 #include "voicechannelvatlib.h"
 #include "blackmisc/logmessage.h"
 
@@ -177,6 +179,7 @@ namespace BlackCore
         emit connectionStatusChanged(oldStatus, m_roomStatus);
     }
 
+    //! Cast void* to a pointer of CVoiceChannelVatlib
     CVoiceChannelVatlib *cbvar_cast_voiceChannel(void *cbvar)
     {
         return static_cast<CVoiceChannelVatlib *>(cbvar);
@@ -206,3 +209,5 @@ namespace BlackCore
         obj->updateRoomStatus(channel, oldStatus, newStatus);
     }
 } // ns
+
+//! \endcond

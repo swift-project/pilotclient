@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+
 #include "networkvatlib.h"
 #include "blackmisc/project.h"
 #include "blackmisc/logmessage.h"
@@ -154,6 +156,7 @@ namespace BlackCore
         }
     }
 
+    //! Convert vatlib status code to INetwork::ConnectionStatus
     INetwork::ConnectionStatus convertConnectionStatus(VatConnectionStatus status)
     {
         switch (status)
@@ -640,6 +643,7 @@ namespace BlackCore
     /**********************************           shimlib callbacks           ************************************/
     /********************************** * * * * * * * * * * * * * * * * * * * ************************************/
 
+    //! Cast void* to a pointer of CNetworkVatlib
     CNetworkVatlib *cbvar_cast(void *cbvar)
     {
         return static_cast<CNetworkVatlib *>(cbvar);
@@ -1018,3 +1022,5 @@ namespace BlackCore
     }
 
 } // namespace
+
+//! \endcond

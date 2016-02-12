@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+
 #include "metardecoder.h"
 #include "blackmiscfreefunctions.h"
 #include "blackmisc/logmessage.h"
@@ -804,7 +806,6 @@ namespace BlackMisc
             virtual QString getDecoderType() const override { return "WindShear"; }
         };
 
-
         CMetarDecoder::CMetarDecoder()
         {
             allocateDecoders();
@@ -854,3 +855,5 @@ namespace BlackMisc
 
     } // namespace
 } // namespace
+
+//! \endcond

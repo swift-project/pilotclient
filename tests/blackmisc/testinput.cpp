@@ -7,6 +7,12 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \ingroup testblackmisc
+ */
+
 #include "testinput.h"
 #include "blackmisc/input/keyboardkey.h"
 #include "blackmisc/input/hotkeycombination.h"
@@ -173,3 +179,5 @@ namespace BlackMiscTest
     }
 
 } // namespace
+
+//! \endcond

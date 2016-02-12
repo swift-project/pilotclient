@@ -16,7 +16,7 @@
 using namespace BlackMisc;
 using namespace BlackSample;
 
-//! Samples
+//! main
 int main(int argc, char *argv[])
 {
     QTextStream out(stdout, QIODevice::WriteOnly);

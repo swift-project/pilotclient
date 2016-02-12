@@ -36,8 +36,10 @@ namespace BlackMisc
 
     namespace Private
     {
+        //! \cond PRIVATE
         //! \private
         BLACKMISC_EXPORT QMutex *atomicSharedPtrMutex();
+        //! \endcond
 
         //! \private
         template <typename T>

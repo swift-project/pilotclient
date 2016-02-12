@@ -72,6 +72,7 @@ namespace BlackSample
         /*!
          * \brief Display QDBusArgument
          * \param arg
+         * \param level
          */
         static void displayQDBusArgument(const QDBusArgument &arg, qint32 level = 0);
 

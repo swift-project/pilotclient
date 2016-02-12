@@ -18,9 +18,7 @@
 #include <QDebug>
 #include <QTime>
 
-/*!
- * Samples
- */
+//! main
 int main(int argc, char *argv[])
 {
     Q_UNUSED(argc);

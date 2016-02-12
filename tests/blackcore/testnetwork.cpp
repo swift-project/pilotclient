@@ -7,6 +7,12 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
+
 #include "testnetwork.h"
 #include "expect.h"
 #include "blackmisc/network/networkutils.h"
@@ -91,3 +97,5 @@ namespace BlackCoreTest
     }
 
 }
+
+//! \endcond

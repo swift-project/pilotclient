@@ -7,6 +7,12 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
+
 #include "testcontainers.h"
 #include "testvalueobject.h"
 #include "blackmisc/registermetadata.h"
@@ -279,3 +285,5 @@ namespace BlackMiscTest
     }
 
 } //namespace
+
+//! \endcond

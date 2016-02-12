@@ -23,6 +23,13 @@
 namespace BlackSample
 {
 
+    /*!
+     * \brief Simple command line interface client
+     *
+     * This class implements a simple and limited command line interace class.
+     * It accepts commands from the console via \sa command. Note that the class
+     * does not send anything on its own, not even position packets.
+     */
     class Client :
         public QObject,
         public BlackMisc::Simulation::COwnAircraftAware,
@@ -31,6 +38,7 @@ namespace BlackSample
         Q_OBJECT
 
     public:
+        //! Constructor
         Client(QObject *parent = nullptr);
 
     signals:
@@ -72,6 +80,8 @@ namespace BlackSample
         void sendCustomPacketCmd(QTextStream &args);
 
     signals: //to send to INetwork
+        //! \name Signals to INetwork
+        //! @{
         void presetServer(const BlackMisc::Network::CServer &server);
         void presetCallsign(const BlackMisc::Aviation::CCallsign &callsign);
         void presetRealName(const QString &name);
@@ -96,8 +106,11 @@ namespace BlackSample
         void sendPing(const BlackMisc::Aviation::CCallsign &callsign);
         void sendMetarQuery(const QString &airportICAO);
         void sendCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
+        //! @}
 
-    public slots: //to receive from INetwork
+    public slots:
+        //! \name Slots connected to INetwork
+        //! @{
         void atcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq,
                                const BlackMisc::Geo::CCoordinateGeodetic &pos, const BlackMisc::PhysicalQuantities::CLength &range);
         void atcDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
@@ -117,6 +130,7 @@ namespace BlackSample
         void pongReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CTime &elapsedTime);
         void textMessagesReceived(const BlackMisc::Network::CTextMessageList &messages);
         void customPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
+        //! @}
 
     private:
         QMap<QString, std::function<void(QTextStream &)>> m_commands;

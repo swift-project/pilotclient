@@ -7,10 +7,14 @@
  * contained in the LICENSE file.
  */
 
-//! \file
-
 #ifndef BLACKCORETEST_TESTNETWORK_H
 #define BLACKCORETEST_TESTNETWORK_H
+
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
 
 #include "blackcore/networkvatlib.h"
 #include "blackcore/data/globalsetup.h"
@@ -20,7 +24,9 @@
 namespace BlackCoreTest
 {
 
-    //! INetwork implementation classes tests
+    /*!
+     * INetwork implementation classes tests
+     */
     class CTestNetwork : public QObject
     {
         Q_OBJECT
@@ -47,5 +53,7 @@ namespace BlackCoreTest
     };
 
 } //namespace
+
+//! \endcond
 
 #endif // guard

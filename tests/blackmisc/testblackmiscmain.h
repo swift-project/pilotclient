@@ -10,13 +10,21 @@
 #ifndef BLACKMISCTEST_TESTMAIN_H
 #define BLACKMISCTEST_TESTMAIN_H
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
+
 #include <QtTest/QtTest>
 
 namespace BlackMiscTest
 {
-    //! Class firing all unit tests in this namespace.
-    //! Avoids clashes with other main(..) functions and allows to fire the test cases
-    //! simply from any other main.
+    /*!
+     * Class firing all unit tests in this namespace.
+     * Avoids clashes with other main(..) functions and allows to fire the test cases
+     * simply from any other main.
+     */
     class CBlackMiscTestMain
     {
     public:
@@ -24,5 +32,7 @@ namespace BlackMiscTest
         static int unitMain(int argc, char *argv[]);
     };
 }
+
+//! \endcond
 
 #endif // guard

@@ -10,11 +10,16 @@
 #ifndef BLACKMISCTEST_H
 #define BLACKMISCTEST_H
 
+//! \cond PRIVATE_TESTS
+
 /*!
- * @namespace BlackMiscTest
+ * \namespace BlackMiscTest
+ * \internal
  * Unit tests for BlackMisc. Unit tests do have their own namespace, so
  * the regular namespace BlackMisc is completely free of unit tests.
  * Add any new tests to TestMain::unitMain as shown there.
  */
+
+//! \endcond
 
 #endif // guard

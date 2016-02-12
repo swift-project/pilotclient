@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+
 #include "icons.h"
 #include "blackmisc/project.h"
 #include "blackmisc/fileutils.h"
@@ -1173,3 +1175,5 @@ namespace BlackMisc
     }
 
 } // namespace
+
+//! \endcond

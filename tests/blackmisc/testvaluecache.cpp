@@ -7,6 +7,12 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
+
 #include "testvaluecache.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/identifier.h"
@@ -55,6 +61,7 @@ namespace BlackMiscTest
         QVERIFY(cache.getAllValues() == testDataCombined);
     }
 
+    //! \cond PRIVATE
     void waitForQueueOf(QObject *object)
     {
         if (object->thread() != QThread::currentThread())
@@ -96,6 +103,7 @@ namespace BlackMiscTest
         singleShotAndWait(&user2, [ & ] { QVERIFY(user2.m_value2.get() == 42); });
         QVERIFY(user1.m_value2.get() == 42);
     }
+    //! \endcond
 
     void CTestValueCache::localOnly()
     {
@@ -231,6 +239,7 @@ namespace BlackMiscTest
         QCOMPARE(cache2.getAllValues(), testData);
     }
 
+    //! Is value between 0 - 100?
     bool validator(int value)
     {
         return value >= 0 && value <= 100;
@@ -260,3 +269,5 @@ namespace BlackMiscTest
         return false;
     }
 } // ns
+
+//! \endcond

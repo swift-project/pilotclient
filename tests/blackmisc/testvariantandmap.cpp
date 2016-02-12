@@ -7,6 +7,12 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
+
 #include "testvariantandmap.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/propertyindexallclasses.h"
@@ -115,3 +121,5 @@ namespace BlackMiscTest
     }
 
 } // namespace
+
+//! \endcond

@@ -18,6 +18,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 
+//! main
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);

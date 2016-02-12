@@ -30,7 +30,10 @@
 #include <QDBusConnection>
 #include <QDBusObjectPath>
 
+//! DBus interface for test service
 #define BLACKSAMPLE_TESTSERVICE_INTERFACENAME "blackmisctest.testservice"
+
+//! DBus object path for test service
 #define BLACKSAMPLE_TESTSERVICE_OBJECTPATH "/ts"
 
 namespace BlackSample

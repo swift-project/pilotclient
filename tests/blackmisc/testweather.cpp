@@ -7,6 +7,12 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
+
 #include "testweather.h"
 #include "blackmisc/weather/metardecoder.h"
 
@@ -81,3 +87,5 @@ namespace BlackMiscTest
     }
 
 } // namespace
+
+//! \endcond

@@ -7,8 +7,6 @@
  * contained in the LICENSE file.
  */
 
-//! \file
-
 #ifndef BLACKCORETEST_EXPECT_H
 #define BLACKCORETEST_EXPECT_H
 
@@ -19,11 +17,19 @@
 #include <QSet>
 #include <functional>
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
+
 namespace BlackCoreTest
 {
     class Expect;
 
-    //! Class representing a position in a source code file, for error reporting. Used in combination with the SOURCE_LOCATION macro.
+    /*!
+     * Class representing a position in a source code file, for error reporting. Used in combination with the SOURCE_LOCATION macro.
+     */
     class SourceLocation
     {
     public:
@@ -35,7 +41,9 @@ namespace BlackCoreTest
 //! Evaluates to an instance of SourceLocation representing the position where the macro is used.
 #define SOURCE_LOCATION (BlackCoreTest::SourceLocation(__FILE__, __LINE__))
 
-//! RAII class for Qt signal/slot connections. All connections are closed when object is destroyed.
+    /*!
+     * RAII class for Qt signal/slot connections. All connections are closed when object is destroyed.
+     */
     class ConnectGuard
     {
     public:
@@ -45,7 +53,7 @@ namespace BlackCoreTest
         //! Destructor.
         ~ConnectGuard() { cleanup(); }
 
-        //! Add a connection to the object.
+        //! Add a connection to the object..
         ConnectGuard &operator+= (const QMetaObject::Connection &conn) { m_conns += conn; return *this; }
 
         //! Disconnect and remove all stored connections.
@@ -74,14 +82,37 @@ namespace BlackCoreTest
          * \param slot A pointer-to-member-function of the subject class.
          * \return this object, so methods can be chained.
          */
-        //! @{
         template <class F> ExpectUnit &send(F slot) { m_sends.push_back(std::bind(slot, subject<F>())); return *this; }
+
+        /*!
+         * \copydoc send(F)
+         * \param arg1
+         */
         template <class F, class T1> ExpectUnit &send(F slot, T1 arg1) { m_sends.push_back(std::bind(slot, subject<F>(), arg1)); return *this; }
+
+        /*!
+         * \copydoc send(F,T1)
+         * \param arg2
+         */
         template <class F, class T1, class T2> ExpectUnit &send(F slot, T1 arg1, T2 arg2) { m_sends.push_back(std::bind(slot, subject<F>(), arg1, arg2)); return *this; }
+
+        /*!
+         * \copydoc send(F,T1,T2)
+         * \param arg3
+         */
         template <class F, class T1, class T2, class T3> ExpectUnit &send(F slot, T1 arg1, T2 arg2, T3 arg3) { m_sends.push_back(std::bind(slot, subject<F>(), arg1, arg2, arg3)); return *this; }
+
+        /*!
+         * \copydoc send(F,T1,T2,T3)
+         * \param arg4
+         */
         template <class F, class T1, class T2, class T3, class T4> ExpectUnit &send(F slot, T1 arg1, T2 arg2, T3 arg3, T4 arg4) { m_sends.push_back(std::bind(slot, subject<F>(), arg1, arg2, arg3, arg4)); return *this; }
+
+        /*!
+         * \copydoc send(F,T1,T2,T3,T4)
+         * \param arg5
+         */
         template <class F, class T1, class T2, class T3, class T4, class T5> ExpectUnit &send(F slot, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) { m_sends.push_back(std::bind(slot, subject<F>(), arg1, arg2, arg3, arg4, arg5)); return *this; }
-        //! @}
 
         /*!
          * Adds a signal to the list of signals which are expects to be received.
@@ -183,14 +214,33 @@ namespace BlackCoreTest
          * Allows two or more units of expectation to be waited on simultaneously. Commonly valled via the EXPECT_WAIT macro.
          * \param srcloc Represents the caller's location in the source code, for error reporting.
          * \param timeout Time to wait in seconds. Qt event queue is processed when waiting.
+         * \param u1
          */
-        //! @{
         void wait(const SourceLocation &srcloc, int timeout, const ExpectUnit &u1) { m_units.insert(&u1); wait(srcloc, timeout); }
+
+        /*!
+         * \copydoc wait(const SourceLocation&,int,const ExpectUnit&)
+         * \param u2
+         */
         void wait(const SourceLocation &srcloc, int timeout, const ExpectUnit &u1, const ExpectUnit &u2) { m_units.insert(&u1); m_units.insert(&u2); wait(srcloc, timeout); }
+
+        /*!
+         * \copydoc wait(const SourceLocation&,int,const ExpectUnit&,const ExpectUnit&)
+         * \param u3
+         */
         void wait(const SourceLocation &srcloc, int timeout, const ExpectUnit &u1, const ExpectUnit &u2, const ExpectUnit &u3) { m_units.insert(&u1); m_units.insert(&u2); m_units.insert(&u3); wait(srcloc, timeout); }
+
+        /*!
+         * \copydoc wait(const SourceLocation&,int,const ExpectUnit&,const ExpectUnit&,const ExpectUnit&)
+         * \param u4
+         */
         void wait(const SourceLocation &srcloc, int timeout, const ExpectUnit &u1, const ExpectUnit &u2, const ExpectUnit &u3, const ExpectUnit &u4) { m_units.insert(&u1); m_units.insert(&u2); m_units.insert(&u3); m_units.insert(&u4); wait(srcloc, timeout); }
+
+        /*!
+         * \copydoc wait(const SourceLocation&,int,const ExpectUnit&,const ExpectUnit&,const ExpectUnit&,const ExpectUnit&)
+         * \param u5
+         */
         void wait(const SourceLocation &srcloc, int timeout, const ExpectUnit &u1, const ExpectUnit &u2, const ExpectUnit &u3, const ExpectUnit &u4, const ExpectUnit &u5) { m_units.insert(&u1); m_units.insert(&u2); m_units.insert(&u3); m_units.insert(&u4); m_units.insert(&u5); wait(srcloc, timeout); }
-        //! @}
 
     private:
         friend class ExpectUnit;
@@ -216,14 +266,30 @@ namespace BlackCoreTest
      * Allows two or more units of expectation to be waited on simultaneously.
      * \param EXP Instance of Expect on which to call wait().
      * \param TIME Time to wait in seconds. Qt event queue is processed when waiting.
+     * \param U1, U2
      */
-//! @{
 #define EXPECT_WAIT_2(EXP, TIME, U1, U2) ((EXP).wait(SOURCE_LOCATION, (TIME), (U1), (U2)))
+
+    /*!
+     * \copydoc EXPECT_WAIT_2(EXP,TIME,U1,U2)
+     * \param U3
+     */
 #define EXPECT_WAIT_3(EXP, TIME, U1, U2, U3) ((EXP).wait(SOURCE_LOCATION, (TIME), (U1), (U2), (U3)))
+
+    /*!
+     * \copydoc EXPECT_WAIT_3(EXP,TIME,U1,U2,U3)
+     * \param U4
+     */
 #define EXPECT_WAIT_4(EXP, TIME, U1, U2, U3, U4) ((EXP).wait(SOURCE_LOCATION, (TIME), (U1), (U2), (U3), (U4)))
+
+    /*!
+     * \copydoc EXPECT_WAIT_4(EXP,TIME,U1,U2,U3,U4)
+     * \param U5
+     */
 #define EXPECT_WAIT_5(EXP, TIME, U1, U2, U3, U4, U5) ((EXP).wait(SOURCE_LOCATION, (TIME), (U1), (U2), (U3), (U4), (U5)))
-//! @}
 
 } // ns
+
+//! \endcond
 
 #endif // guard

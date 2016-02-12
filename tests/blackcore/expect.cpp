@@ -7,6 +7,12 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE_TESTS
+
+/*!
+ * \file
+ */
+
 #include "expect.h"
 #include <QCoreApplication>
 #include <QTimer>
@@ -107,5 +113,7 @@ void Expect::reportTimeout(const SourceLocation& srcloc, const QSet<const Expect
     }
     QTest::qFail(qPrintable(msg), qPrintable(srcloc.file), srcloc.line);
 }
+
+//! \endcond
 
 } //namespace
