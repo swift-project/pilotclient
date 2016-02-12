@@ -76,6 +76,7 @@ namespace BlackMisc
     {
         MetaType::registerMetadata();
         qDBusRegisterMetaType<value_type>();
+        qDBusRegisterMetaType<decltype(m_inhibitions)::value_type>();
     }
 
     ////////////////////////////////
