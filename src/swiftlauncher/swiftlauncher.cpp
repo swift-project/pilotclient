@@ -55,7 +55,8 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     this->ui->le_DBusServerPort->setValidator(new QIntValidator(0, 65535, this));
 
     // default from settings
-    this->ui->cb_DBusServerAddress->setCurrentText(this->m_dbusServerAddress.get());
+    const QString dbus(this->m_dbusServerAddress.get());
+    this->setDefault(dbus);
 }
 
 CSwiftLauncher::~CSwiftLauncher()
@@ -86,9 +87,10 @@ QString CSwiftLauncher::getDBusAddress() const
 {
     if (this->ui->rb_DBusSession->isChecked()) { return CDBusServer::sessionBusAddress(); }
     if (this->ui->rb_DBusSystem->isChecked()) { return CDBusServer::systemBusAddress(); }
-    return CDBusServer::normalizeAddress(
+    return CDBusServer::p2pAddress(
                this->ui->cb_DBusServerAddress->currentText() + ":" +
-               this->ui->le_DBusServerPort->text());
+               this->ui->le_DBusServerPort->text()
+           );
 }
 
 void CSwiftLauncher::mouseMoveEvent(QMouseEvent *event)
@@ -176,10 +178,12 @@ void CSwiftLauncher::initLogDisplay()
 
 void CSwiftLauncher::startSwiftCore()
 {
+    const QString dBus(this->getDBusAddress());
+    this->m_dbusServerAddress.setAndSave(dBus);
     QStringList args(
     {
         "--start",
-        "--dbus", this->getDBusAddress()
+        "--dbus", dBus
     });
 
     if (this->ui->rb_SwiftCoreAudio->isChecked())
@@ -190,7 +194,7 @@ void CSwiftLauncher::startSwiftCore()
     // I set this for debug purpose only
     this->m_executableArgs = args;
     this->m_executable = CProject::swiftCoreExecutableName();
-    CLogMessage(this).debug() << this->getCmdLine();
+    CLogMessage(this).info(this->getCmdLine());
 
     // start
     QProcess::startDetached(this->m_executable, this->m_executableArgs);
@@ -207,7 +211,6 @@ bool CSwiftLauncher::setSwiftGuiExecutable()
     QString msg;
     if (this->isStandaloneGuiSelected() || this->canConnectDBusServer(msg))
     {
-
         m_executable = CProject::swiftGuiExecutableName();
         QStringList args
         {
@@ -216,8 +219,11 @@ bool CSwiftLauncher::setSwiftGuiExecutable()
         };
         if (!this->isStandaloneGuiSelected())
         {
+            const QString dBus(this->getDBusAddress());
+            this->m_dbusServerAddress.setAndSave(dBus);
+
             args.append("--dbus");
-            args.append(getDBusAddress()); // already converted
+            args.append(dBus); // already converted
         }
         m_executableArgs = args;
         return true;
@@ -243,6 +249,23 @@ bool CSwiftLauncher::canConnectDBusServer(QString &msg) const
 bool CSwiftLauncher::isStandaloneGuiSelected() const
 {
     return this->ui->rb_SwiftStandalone->isChecked();
+}
+
+void CSwiftLauncher::setDefault(const QString &value)
+{
+    QString v(value.toLower().trimmed());
+    if (v.isEmpty() || v.startsWith("session"))
+    {
+        this->ui->rb_DBusSession->setChecked(true);
+    }
+    else if (v.startsWith("sys"))
+    {
+        this->ui->rb_DBusSystem->setChecked(true);
+    }
+    else
+    {
+        this->ui->rb_DBusP2P->setChecked(true);
+    }
 }
 
 QString CSwiftLauncher::toCmdLine(const QString &exe, const QStringList &exeArgs)

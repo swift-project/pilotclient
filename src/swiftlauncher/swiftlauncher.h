@@ -108,6 +108,9 @@ private:
     //! Standalone GUI selected
     bool isStandaloneGuiSelected() const;
 
+    //! Set default
+    void setDefault(const QString &value);
+
     //! Command line
     static QString toCmdLine(const QString &exe, const QStringList &exeArgs);
 
