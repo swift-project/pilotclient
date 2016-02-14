@@ -11,7 +11,6 @@
 //! \ingroup sampleblackmisc
 
 #include "samplescontainer.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/propertyindexallclasses.h"
 #include <QDebug>
@@ -25,10 +24,6 @@ using namespace BlackMisc::Network;
 
 namespace BlackSample
 {
-
-    /*
-     * Samples
-     */
     int CSamplesContainer::samples()
     {
         // ATC stations

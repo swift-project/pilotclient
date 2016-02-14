@@ -9,7 +9,6 @@
 
 #include "systemtraywindow.h"
 #include "blackmisc/icons.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include <QStatusBar>
 #include <QPushButton>
 #include <QApplication>

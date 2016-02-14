@@ -9,7 +9,6 @@
 
 #include "propertyindex.h"
 #include "predicates.h"
-#include "blackmiscfreefunctions.h"
 
 namespace BlackMisc
 {

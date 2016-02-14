@@ -12,7 +12,6 @@
 #include "blackmisc/aviation/navsystem.h"
 #include "blackmisc/aviation/adfsystem.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/variant.h"
 
 using BlackMisc::PhysicalQuantities::CFrequency;

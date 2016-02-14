@@ -15,7 +15,6 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/input/keyboardkeylist.h"
 #include "blackmisc/input/joystickbuttonlist.h"
 

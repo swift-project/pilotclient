@@ -8,7 +8,6 @@
  */
 
 #include "identifierlistmodel.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include <QMetaProperty>
 #include <QBrush>
 

@@ -8,7 +8,6 @@
  */
 
 #include "blackmisc/input/hotkeycombination.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
 #include <QStringList>

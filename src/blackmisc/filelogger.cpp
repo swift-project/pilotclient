@@ -11,6 +11,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QCoreApplication>
+#include <QDir>
 
 namespace BlackMisc
 {

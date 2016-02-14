@@ -8,7 +8,6 @@
  */
 
 #include "blackmisc/input/joystickbutton.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/variant.h"
 #include <QCoreApplication>
 

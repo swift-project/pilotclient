@@ -9,11 +9,9 @@
 
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/datastoreutility.h"
-
 #include <tuple>
 #include <QThreadStorage>
 #include <QRegularExpression>

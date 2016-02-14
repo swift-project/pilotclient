@@ -8,7 +8,6 @@
  */
 
 #include "namevariantpairlistmodel.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 
 using namespace BlackMisc;
 

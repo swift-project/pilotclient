@@ -10,7 +10,6 @@
 //! \cond PRIVATE
 
 #include "variant.h"
-#include "blackmiscfreefunctions.h"
 #include "icon.h"
 #include "logmessage.h"
 #include <QDBusArgument>

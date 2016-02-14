@@ -9,7 +9,6 @@
 
 #include "blackmisc/weather/gridpoint.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/variant.h"
 
 using namespace BlackMisc::Aviation;
@@ -19,7 +18,6 @@ namespace BlackMisc
 {
     namespace Weather
     {
-
         CGridPoint::CGridPoint(const Geo::CLatitude &latitude, const Geo::CLongitude longitude,
                                const CCloudLayerList &cloudLayers,
                                const CTemperatureLayerList &temperatureLayers,

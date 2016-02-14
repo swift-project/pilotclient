@@ -15,7 +15,6 @@
 #include "blackmisc/project.h"
 #include "blackmisc/testing.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindexallclasses.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/verify.h"

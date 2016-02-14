@@ -14,7 +14,6 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/variant.h"
 
 namespace BlackMisc
@@ -23,7 +22,7 @@ namespace BlackMisc
     {
 
         /*!
-         * \brief Represents a physical quantity by a string
+         * Represents a physical quantity by a string
          * \details Used to parse strings into physical quantities, validate strings
          * \sa BlackMisc::PhysicalQuantity
          */

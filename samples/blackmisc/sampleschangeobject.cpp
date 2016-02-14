@@ -19,7 +19,6 @@
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/propertyindexallclasses.h"
 #include "blackmisc/predicates.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include <QDebug>
 
 using namespace BlackMisc;

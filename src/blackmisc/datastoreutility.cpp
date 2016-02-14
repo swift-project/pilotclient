@@ -9,7 +9,6 @@
 
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/datastoreutility.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/stringutils.h"
 #include <QJsonObject>
 #include <QJsonDocument>

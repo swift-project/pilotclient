@@ -10,7 +10,6 @@
 //! \cond PRIVATE
 
 #include "logmessage.h"
-#include "blackmiscfreefunctions.h"
 #include "indexsequence.h"
 
 namespace BlackMisc

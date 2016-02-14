@@ -8,7 +8,6 @@
  */
 
 #include "aircraftcfgparser.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/logmessage.h"

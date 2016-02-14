@@ -13,7 +13,6 @@
 #ifndef BLACKSAMPLE_TESTSERVICE_INTERFACE_H
 #define BLACKSAMPLE_TESTSERVICE_INTERFACE_H
 
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/track.h"
 #include "blackmisc/aviation/transponder.h"

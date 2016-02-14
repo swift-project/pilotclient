@@ -9,7 +9,6 @@
 
 #include "blackmisc/datastore.h"
 #include "blackmisc/datastoreutility.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/comparefunctions.h"
 
 namespace BlackMisc

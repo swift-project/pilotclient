@@ -17,7 +17,6 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/measurementunit.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include <QtDBus/QDBusArgument>
 #include <QList>
 #include <QtCore/qmath.h>

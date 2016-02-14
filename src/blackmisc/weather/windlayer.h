@@ -15,7 +15,6 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/aviation/altitude.h"

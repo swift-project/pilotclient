@@ -8,7 +8,6 @@
  */
 
 #include "aircraftmodelloader.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "blackmisc/simulation/xplane/aircraftmodelloaderxplane.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"

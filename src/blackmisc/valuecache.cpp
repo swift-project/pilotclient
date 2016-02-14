@@ -17,6 +17,7 @@
 #include "blackmisc/atomicfile.h"
 #include <QThread>
 #include <QJsonDocument>
+#include <QDir>
 
 namespace BlackMisc
 {

@@ -15,7 +15,6 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/datastore.h"
 #include "blackmisc/statusmessagelist.h"
 

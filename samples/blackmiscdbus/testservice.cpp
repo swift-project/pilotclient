@@ -11,7 +11,6 @@
 //! \ingroup sampleblackmiscdbus
 
 #include "testservice.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

@@ -8,7 +8,6 @@
  */
 
 #include "blackmisc/aviation/informationmessage.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 
 namespace BlackMisc
 {

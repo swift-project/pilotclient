@@ -8,7 +8,6 @@
  */
 
 #include "distributorlistmodel.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include <QMetaProperty>
 #include <QBrush>
 

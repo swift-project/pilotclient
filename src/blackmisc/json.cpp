@@ -8,7 +8,6 @@
  */
 
 #include "json.h"
-#include "blackmiscfreefunctions.h"
 #include "stringutils.h"
 #include "imageutils.h"
 #include <QJsonDocument>

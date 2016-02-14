@@ -7,7 +7,6 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/aviation/heading.h"
 
 using BlackMisc::PhysicalQuantities::CAngle;

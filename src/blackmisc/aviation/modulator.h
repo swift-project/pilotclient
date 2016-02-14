@@ -14,7 +14,6 @@
 
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/math/mathutils.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/pq/constants.h"
 #include "blackmisc/pq/frequency.h"
 
@@ -22,7 +21,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         //! Base class for COM, NAV, Squawk units.
         template <class AVIO> class CModulator : public CValueObject<CModulator<AVIO>>
         {

@@ -15,6 +15,7 @@
 #include "blackmisc/atomicfile.h"
 #include <QStandardPaths>
 #include <QTimer>
+#include <QDir>
 #include <utility>
 
 namespace BlackMisc

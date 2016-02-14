@@ -9,7 +9,6 @@
 
 #include "namevariantpair.h"
 #include "iconlist.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 
 namespace BlackMisc
 {

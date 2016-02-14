@@ -8,7 +8,6 @@
  */
 
 #include "clientlistmodel.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/icons.h"
 #include <QMetaProperty>
 #include <QBrush>

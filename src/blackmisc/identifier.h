@@ -15,7 +15,6 @@
 #include "blackmiscexport.h"
 #include "valueobject.h"
 #include "timestampbased.h"
-#include "blackmiscfreefunctions.h"
 #include <QByteArray>
 #include <QString>
 #include <QUuid>

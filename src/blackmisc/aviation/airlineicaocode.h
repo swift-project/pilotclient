@@ -18,7 +18,6 @@
 #include "blackmisc/valueobject.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 
 namespace BlackMisc
 {

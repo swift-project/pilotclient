@@ -8,7 +8,6 @@
  */
 
 #include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/variant.h"

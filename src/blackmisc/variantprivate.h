@@ -13,7 +13,6 @@
 #define BLACKMISC_VARIANT_PRIVATE_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/inheritancetraits.h"
 #include <QString>
 #include <QMetaType>

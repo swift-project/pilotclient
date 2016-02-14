@@ -14,11 +14,11 @@ Set search path for plugins: env.var. QT_PLUGIN_PATH
 
 Done automatically (qmake), but if required manually
 Interface:
-qdbusxml2cpp -i blackmisc/blackmiscfreefunctions.h -i blackmisc/blackmiscallvalueclasses.h -p contextnetwork_interface.h: H:\Projects\Qt\VatsimClient\client\src\blackcore\blackcore.contextnetwork.xml
+qdbusxml2cpp -i blackmisc/blackmiscallvalueclasses.h -p contextnetwork_interface.h: H:\Projects\Qt\VatsimClient\client\src\blackcore\blackcore.contextnetwork.xml
 qdbusxml2cpp -i contextnetwork_interface.h -p :contextnetwork_interface.cpp H:\Projects\Qt\VatsimClient\client\src\blackcore\blackcore.contextnetwork.xml
 
 Adaptor: The : indicates generation of cpp file
-qdbusxml2cpp -i blackmisc/blackmiscfreefunctions.h -i blackmisc/blackmiscallvalueclasses.h -a contextnetwork_adaptor.h blackcore.contextnetwork.xml
+qdbusxml2cpp -i blackmisc/blackmiscallvalueclasses.h -a contextnetwork_adaptor.h blackcore.contextnetwork.xml
 qdbusxml2cpp -i context_adaptor.h -a :contextnetwork_adaptor.cpp blackcore.contextnetwork.xml
 
 Manually:
@@ -30,12 +30,12 @@ Removed generation:
 # Causes nmake to run qdbusxml2cpp to automatically generate the dbus adaptor and interface classes,
 # then automatically adds them to the sources to compile
 # !! Make sure the plugin is available as release build and known QT_PLUGIN_PATH
-# QDBUSXML2CPP_ADAPTOR_HEADER_FLAGS = -i blackmisc/blackmiscfreefunctions.h -i blackmisc/blackmiscallvalueclasses.h
+# QDBUSXML2CPP_ADAPTOR_HEADER_FLAGS = -i blackmisc/blackmiscallvalueclasses.h
 # DBUS_ADAPTORS += blackcore.contextnetwork.xml
 # DBUS_ADAPTORS += blackcore.contextvoice.xml
 # DBUS_ADAPTORS += blackcore.contextsettings.xml
 # DBUS_ADAPTORS += blackcore.contextapplication.xml
 
-# QDBUSXML2CPP_INTERFACE_HEADER_FLAGS = -i blackmisc/blackmiscfreefunctions.h -i blackmisc/blackmiscallvalueclasses.h
+# QDBUSXML2CPP_INTERFACE_HEADER_FLAGS = -i blackmisc/blackmiscallvalueclasses.h
 # DBUS_INTERFACES += blackcore.contextnetwork.xml
 

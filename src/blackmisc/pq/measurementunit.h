@@ -15,7 +15,6 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/math/mathutils.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include <QCoreApplication>
 #include <QtDBus/QDBusArgument>
 #include <QString>

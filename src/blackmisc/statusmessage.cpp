@@ -9,7 +9,6 @@
 
 #include "statusmessage.h"
 #include "statusexception.h"
-#include "blackmiscfreefunctions.h"
 #include "propertyindex.h"
 #include "iconlist.h"
 #include "loghandler.h"

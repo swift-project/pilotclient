@@ -9,7 +9,6 @@
 
 #include "statusmessagelistmodel.h"
 #include "blackmisc/icon.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include <QMetaProperty>
 #include <QBrush>
 #include <QIcon>

@@ -10,7 +10,6 @@
 #include "blackmisc/network/user.h"
 #include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/icon.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
 #include <tuple>

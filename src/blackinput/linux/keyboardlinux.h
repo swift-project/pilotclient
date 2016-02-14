@@ -7,9 +7,7 @@
  * contained in the LICENSE file.
  */
 
-/*!
-    \file
-*/
+//! \file
 
 #ifndef BLACKINPUT_KEYBOARD_LINUX_H
 #define BLACKINPUT_KEYBOARD_LINUX_H
@@ -17,12 +15,11 @@
 #include "blackinput/keyboard.h"
 #include "blackmisc/input/hotkeycombination.h"
 #include <QHash>
+#include <QDir>
+#include <QFileSystemWatcher>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
-
-class QFileSystemWatcher;
-class QFile;
 
 namespace BlackInput
 {
@@ -32,23 +29,20 @@ namespace BlackInput
         Q_OBJECT
 
     public:
-
-        //! \brief Copy Constructor
+        //! Copy Constructor
         CKeyboardLinux(CKeyboardLinux const &) = delete;
 
-        //! \brief Assignment operator
+        //! Assignment operator
         CKeyboardLinux &operator=(CKeyboardLinux const &) = delete;
 
-        //! \brief Destructor
+        //! Destructor
         virtual ~CKeyboardLinux();
 
     protected:
-
         //! \copydoc IKeyboard::init()
         virtual bool init() override;
 
     private slots:
-
         //! Changed directory to linux devices
         void deviceDirectoryChanged(const QString &);
 
@@ -56,10 +50,9 @@ namespace BlackInput
         void inputReadyRead(int);
 
     private:
-
         friend class IKeyboard;
 
-        //! \brief Constructor
+        //! Constructor
         CKeyboardLinux(QObject *parent = nullptr);
 
         void addRawInputDevice(const QString &filePath);
@@ -77,4 +70,4 @@ namespace BlackInput
     };
 }
 
-#endif // BLACKINPUT_KEYBOARD_LINUX_H
+#endif // guard

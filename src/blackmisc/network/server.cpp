@@ -8,7 +8,6 @@
  */
 
 #include "blackmisc/network/server.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
 #include <tuple>
@@ -17,7 +16,6 @@ namespace BlackMisc
 {
     namespace Network
     {
-
         QString CServer::convertToQString(bool i18n) const
         {
             QString s(this->m_name);

@@ -8,7 +8,6 @@
  */
 
 #include "updateinfo.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/project.h"
 #include <QStringList>
 

@@ -10,9 +10,6 @@
 #include "keyboardlinux.h"
 #include "blackmisc/logmessage.h"
 #include <QDebug>
-#include <QFileSystemWatcher>
-#include <QDir>
-#include <QFile>
 #include <QHash>
 #include <QSocketNotifier>
 #include <linux/input.h>

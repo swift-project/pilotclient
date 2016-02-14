@@ -8,7 +8,6 @@
  */
 
 #include "blackmisc/aviation/airport.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
 

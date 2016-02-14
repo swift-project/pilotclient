@@ -9,7 +9,6 @@
 
 #include "aircraftmodellistmodel.h"
 #include "blackmisc/icons.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;

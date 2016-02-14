@@ -14,7 +14,6 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include <QString>
 #include <QDateTime>
 

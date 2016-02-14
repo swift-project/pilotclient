@@ -10,7 +10,6 @@
 #include "blackcore/contextapplicationproxy.h"
 #include "blackcore/inputmanager.h"
 #include "blackmisc/settingscache.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/identifierlist.h"
 #include <QObject>

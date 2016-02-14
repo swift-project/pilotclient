@@ -8,7 +8,6 @@
  */
 
 #include "countrylistmodel.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include <QMetaProperty>
 
 using namespace BlackMisc;

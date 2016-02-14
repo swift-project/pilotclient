@@ -16,7 +16,6 @@
 #include "blackgui/led.h"
 #include "blackmisc/pq/pq.h"
 #include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/icon.h"
 #include <QDateTime>
 #include <QDate>

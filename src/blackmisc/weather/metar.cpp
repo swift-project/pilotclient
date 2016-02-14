@@ -8,7 +8,6 @@
  */
 
 #include "metar.h"
-#include "blackmiscfreefunctions.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;

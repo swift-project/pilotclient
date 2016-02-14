@@ -7,7 +7,6 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/aviation/comsystem.h"
 
 using namespace BlackMisc::PhysicalQuantities;

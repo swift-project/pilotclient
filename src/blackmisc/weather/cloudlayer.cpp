@@ -9,7 +9,6 @@
 
 #include "blackmisc/weather/cloudlayer.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/variant.h"
 
 #include <tuple>

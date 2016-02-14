@@ -8,7 +8,6 @@
  */
 
 #include "textmessagelistmodel.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;

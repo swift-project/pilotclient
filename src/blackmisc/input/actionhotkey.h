@@ -15,7 +15,6 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/input/hotkeycombination.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/identifier.h"
 #include <QStringList>
 

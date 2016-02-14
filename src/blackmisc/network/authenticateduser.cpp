@@ -9,7 +9,6 @@
 
 #include "blackmisc/network/authenticateduser.h"
 #include "blackmisc/iconlist.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
 #include <tuple>

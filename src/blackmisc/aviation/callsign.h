@@ -16,7 +16,6 @@
 #include "blackmisc/valueobject.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/icon.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 
 namespace BlackMisc
 {

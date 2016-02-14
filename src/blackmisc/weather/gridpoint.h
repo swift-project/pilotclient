@@ -15,7 +15,6 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
 #include "blackmisc/weather/cloudlayerlist.h"

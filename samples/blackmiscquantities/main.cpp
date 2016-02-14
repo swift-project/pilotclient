@@ -13,7 +13,6 @@
 #include "samplesphysicalquantities.h"
 #include "samplesaviation.h"
 #include "samplesgeo.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include <QTextStream>
 
 using namespace BlackMisc;

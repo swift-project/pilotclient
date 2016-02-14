@@ -9,7 +9,6 @@
 
 #include "liverylistmodel.h"
 #include "blackmisc/rgbcolor.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include <QMetaProperty>
 #include <QBrush>
 

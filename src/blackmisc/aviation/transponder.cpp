@@ -9,14 +9,12 @@
 
 #include "blackmisc/aviation/transponder.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/variant.h"
 
 namespace BlackMisc
 {
     namespace Aviation
     {
-
         void CTransponder::registerMetadata()
         {
             CValueObject<CTransponder>::registerMetadata();

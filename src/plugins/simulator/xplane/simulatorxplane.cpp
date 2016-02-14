@@ -13,7 +13,6 @@
 #include "xbusweatherproxy.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/simulation/modelmappingsprovider.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/makeunique.h"

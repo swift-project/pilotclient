@@ -12,7 +12,6 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include <QString>
 
 #ifndef BLACKMISC_AUDIO_VOICEROOM_H

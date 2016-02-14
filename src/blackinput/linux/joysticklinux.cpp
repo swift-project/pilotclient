@@ -13,6 +13,7 @@
 #include <QFileSystemWatcher>
 #include <QSocketNotifier>
 #include <QSignalMapper>
+#include <QDir>
 #include <linux/joystick.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -137,4 +138,4 @@ namespace BlackInput
             }
         }
     }
-} // namespace BlackInput
+} // ns

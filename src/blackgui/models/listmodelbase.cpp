@@ -16,7 +16,6 @@
 #include "blackmisc/verify.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/json.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/comparefunctions.h"
 #include <QMimeData>

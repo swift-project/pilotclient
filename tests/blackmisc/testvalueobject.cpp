@@ -15,7 +15,6 @@
  */
 
 #include "testvalueobject.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include <tuple>
 
 namespace BlackMisc

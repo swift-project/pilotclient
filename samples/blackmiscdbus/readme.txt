@@ -19,6 +19,6 @@ Adaptor: qdbusxml2cpp blackbus.testservice.xml -a atestservice
 # DBUS_ADAPTORS += BlackMiscTest.Testservice.xml BlackMiscTest.Datacontext.xml
 # DBUS_INTERFACES += BlackMiscTest.Testservice.xml BlackMiscTest.Datacontext.xml
 # DBUS_INTERFACES += BlackMiscTest.Datacontext.xml
-# QDBUSXML2CPP_INTERFACE_HEADER_FLAGS = -i blackmisc/blackmiscfreefunctions.h -i blackmisc/blackmiscallvalueclasses.h
-# QDBUSXML2CPP_ADAPTOR_HEADER_FLAGS = -i blackmisc/blackmiscfreefunctions.h -i blackmisc/blackmiscallvalueclasses.h
+# QDBUSXML2CPP_INTERFACE_HEADER_FLAGS = -i blackmisc/blackmiscallvalueclasses.h
+# QDBUSXML2CPP_ADAPTOR_HEADER_FLAGS = -i blackmisc/blackmiscallvalueclasses.h
 

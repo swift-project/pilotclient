@@ -40,7 +40,7 @@ namespace BlackMisc
 {
     void registerMetadata()
     {
-        initBlackMiscResources();
+        initBlackMiscResourcesImpl();
 
         CCountry::registerMetadata();
         CCountryList::registerMetadata();

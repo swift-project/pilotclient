@@ -8,8 +8,8 @@
  */
 
 #include "aircraftcfgentries.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/variant.h"
+#include <QDir>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
