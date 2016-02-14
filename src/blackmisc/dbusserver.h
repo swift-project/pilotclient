@@ -85,9 +85,12 @@ namespace BlackMisc
 
         //! Address denoting a P2P server at the given host and port.
         //! \remarks Port number may be embedding in the host string after a colon.
-        static QString p2pAddress(const QString &host = "127.0.0.1", const QString &port = "");
+        //! \return p2p address like "tcp:host=foo.bar.com,port=1234"
+        static QString p2pAddress(const QString &host, const QString &port = "");
 
         //! Turn something like 127.0.0.1:45000 into "tcp:host=127.0.0.1,port=45000"
+        //! \note Handles also "session" and "system" as valid address while CDBusServer::p2pAddress is for
+        //! P2P addresses only.
         static QString normalizeAddress(const QString &address);
 
         //! Return the server mode of the given address

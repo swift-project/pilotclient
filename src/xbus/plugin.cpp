@@ -26,7 +26,7 @@ namespace XBus
     {
         m_startServerMenuItems.push_back(m_menu.item("Start server on session bus", [this]{ startServer(BlackMisc::CDBusServer::sessionBusAddress()); }));
         m_startServerMenuItems.push_back(m_menu.item("Start server on system bus", [this]{ startServer(BlackMisc::CDBusServer::systemBusAddress()); }));
-        m_startServerMenuItems.push_back(m_menu.item("Start server on localhost P2P", [this]{ startServer(BlackMisc::CDBusServer::p2pAddress()); }));
+        m_startServerMenuItems.push_back(m_menu.item("Start server on localhost P2P", [this]{ startServer(BlackMisc::CDBusServer::p2pAddress("localhost")); }));
     }
 
     void CPlugin::startServer(const QString &address)

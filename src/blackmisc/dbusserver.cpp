@@ -291,17 +291,34 @@ namespace BlackMisc
 
     QString CDBusServer::p2pAddress(const QString &host, const QString &port)
     {
-        QString h = host.isEmpty() ? "127.0.0.1" : host.trimmed();
-        QString p = port;
+        QString h = host.trimmed().toLower().remove(' ');
+        if (h.isEmpty()) { h = "127.0.0.1"; }
+
+        // check port
+        bool ok = false;
+        QString p = port.toLower().trimmed();
+        if (!p.isEmpty())
+        {
+            p.toInt(&ok);
+            if (!ok)
+            {
+                p = ""; // was not a number
+            }
+        }
 
         // can handle host and port separately or combined, e.g. "myhost:1234"
         if (port.isEmpty())
         {
+            if (h.startsWith("tcp:") && h.contains("host=") && h.contains("port="))
+            {
+                // looks we already got a full string
+                return h;
+            }
+
+            // 192.168.5.3:9300 style
             if (h.contains(":"))
             {
                 QStringList parts = h.split(":");
-                // todo: Replace assert with input validation
-                Q_ASSERT_X(parts.length() == 2, "p2pAdress", "Wrong IP string split");
                 h = parts.at(0).trimmed();
                 p = parts.at(1).trimmed();
             }
@@ -318,7 +335,16 @@ namespace BlackMisc
 
     QString CDBusServer::normalizeAddress(const QString &address)
     {
-        if (address.isEmpty() || address == sessionBusAddress() || address == systemBusAddress()) { return address; }
+        QString lc(address.toLower().trimmed());
+
+        if (lc.isEmpty()) { return sessionBusAddress(); }
+        if (lc == sessionBusAddress() || lc == systemBusAddress()) { return lc; }
+
+        // some aliases
+        if (lc.startsWith("sys")) { return systemBusAddress(); }
+        if (lc.startsWith("ses")) { return sessionBusAddress(); }
+
+        // Qt / p2p
         if (isQtDBusAddress(address)) { return address; }
         return p2pAddress(address);
     }
