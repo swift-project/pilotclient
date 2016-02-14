@@ -30,10 +30,18 @@
 #include "identifierlist.h"
 #include "logpattern.h"
 
+void initBlackMiscResourcesImpl()
+{
+    // cannot be declared within namespace, see docu
+    Q_INIT_RESOURCE(blackmisc);
+}
+
 namespace BlackMisc
 {
     void registerMetadata()
     {
+        initBlackMiscResources();
+
         CCountry::registerMetadata();
         CCountryList::registerMetadata();
         CIcon::registerMetadata();
