@@ -1,11 +1,12 @@
 #include "settingssimulatorcomponent.h"
 #include "ui_settingssimulatorcomponent.h"
 
+#include "blackgui/guiapplication.h"
+#include "blackgui/pluginconfigwindow.h"
+#include "blackgui/plugindetailswindow.h"
 #include "blackcore/contextsimulator.h"
 #include "blackcore/contextnetwork.h"
 #include "blackgui/pluginconfig.h"
-#include "blackgui/pluginconfigwindow.h"
-#include "blackgui/plugindetailswindow.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/logmessage.h"
@@ -26,7 +27,6 @@ namespace BlackGui
     {
         CSettingsSimulatorComponent::CSettingsSimulatorComponent(QWidget *parent) :
             QFrame(parent),
-            CEnableForRuntime(nullptr, false),
             ui(new Ui::CSettingsSimulatorComponent),
             m_plugins(new CPluginManagerSimulator(this))
         {
@@ -35,14 +35,6 @@ namespace BlackGui
             CLedWidget::LedShape shape = CLedWidget::Circle;
             this->ui->led_RestrictedRendering->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Limited", "Unlimited", 14);
             this->ui->led_RenderingEnabled->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Rendering enabled", "No aircraft will be rendered", 14);
-        }
-
-        CSettingsSimulatorComponent::~CSettingsSimulatorComponent()
-        { }
-
-        void CSettingsSimulatorComponent::runtimeHasBeenSet()
-        {
-            Q_ASSERT_X(this->getIContextSimulator(), Q_FUNC_INFO, "missing simulator");
 
             // set values
             for (const auto &p : getAvailablePlugins())
@@ -52,7 +44,7 @@ namespace BlackGui
             }
 
             // connects
-            connect(this->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CSettingsSimulatorComponent::ps_simulatorPluginChanged);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CSettingsSimulatorComponent::ps_simulatorPluginChanged);
             connect(this->ui->ps_EnabledSimulators, &CPluginSelector::pluginStateChanged, this, &CSettingsSimulatorComponent::ps_pluginStateChanged);
             connect(this->ui->ps_EnabledSimulators, &CPluginSelector::pluginDetailsRequested, this, &CSettingsSimulatorComponent::ps_showPluginDetails);
             connect(this->ui->ps_EnabledSimulators, &CPluginSelector::pluginConfigRequested, this, &CSettingsSimulatorComponent::ps_showPluginConfig);
@@ -65,21 +57,22 @@ namespace BlackGui
             connect(this->ui->sb_MaxDistance, &QSpinBox::editingFinished, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedDistance);
 
             // values
-            this->ps_simulatorPluginChanged(getIContextSimulator()->getSimulatorPluginInfo());
+            this->ps_simulatorPluginChanged(sGui->getIContextSimulator()->getSimulatorPluginInfo());
         }
+
+        CSettingsSimulatorComponent::~CSettingsSimulatorComponent()
+        { }
 
         void CSettingsSimulatorComponent::setGuiValues()
         {
-            Q_ASSERT(getIContextSimulator());
-
             // time sync
             this->ui->cb_TimeSync->setEnabled(m_pluginLoaded);
             this->ui->le_TimeSyncOffset->setEnabled(m_pluginLoaded);
             this->ui->pb_ApplyTimeSync->setEnabled(m_pluginLoaded);
 
             // led
-            this->ui->led_RestrictedRendering->setOn(m_pluginLoaded ? getIContextSimulator()->isRenderingRestricted() : false);
-            this->ui->lbl_RestrictionText->setText(m_pluginLoaded ? getIContextSimulator()->getRenderRestrictionText() : "");
+            this->ui->led_RestrictedRendering->setOn(m_pluginLoaded ? sGui->getIContextSimulator()->isRenderingRestricted() : false);
+            this->ui->lbl_RestrictionText->setText(m_pluginLoaded ? sGui->getIContextSimulator()->getRenderRestrictionText() : "");
 
             this->ui->sb_MaxDistance->setEnabled(m_pluginLoaded);
             this->ui->sb_MaxAircraft->setEnabled(m_pluginLoaded);
@@ -90,21 +83,21 @@ namespace BlackGui
 
             if (m_pluginLoaded)
             {
-                bool timeSynced = this->getIContextSimulator()->isTimeSynchronized();
+                bool timeSynced = sGui->getIContextSimulator()->isTimeSynchronized();
                 this->ui->cb_TimeSync->setChecked(timeSynced);
-                CTime timeOffset = this->getIContextSimulator()->getTimeSynchronizationOffset();
+                CTime timeOffset = sGui->getIContextSimulator()->getTimeSynchronizationOffset();
                 this->ui->le_TimeSyncOffset->setText(timeOffset.formattedHrsMin());
 
-                int maxAircraft = getIContextSimulator()->getMaxRenderedAircraft();
+                int maxAircraft = sGui->getIContextSimulator()->getMaxRenderedAircraft();
                 this->ui->sb_MaxAircraft->setValue(maxAircraft);
 
-                CLength distanceBoundary(getIContextSimulator()->getRenderedDistanceBoundary());
+                CLength distanceBoundary(sGui->getIContextSimulator()->getRenderedDistanceBoundary());
                 int distanceBoundaryNM = distanceBoundary.valueInteger(CLengthUnit::NM());
-                CLength maxDistance(getIContextSimulator()->getMaxRenderedDistance());
+                CLength maxDistance(sGui->getIContextSimulator()->getMaxRenderedDistance());
                 int distanceNM = maxDistance.isNull() ? distanceBoundaryNM : maxDistance.valueInteger(CLengthUnit::NM());
                 this->ui->sb_MaxDistance->setMaximum(distanceBoundaryNM);
                 this->ui->sb_MaxDistance->setValue(distanceNM);
-                this->ui->led_RenderingEnabled->setOn(getIContextSimulator()->isRenderingEnabled());
+                this->ui->led_RenderingEnabled->setOn(sGui->getIContextSimulator()->isRenderingEnabled());
             }
             else
             {
@@ -114,12 +107,12 @@ namespace BlackGui
 
         CSimulatorPluginInfoList CSettingsSimulatorComponent::getAvailablePlugins() const
         {
-            return getIContextSimulator()->getAvailableSimulatorPlugins();
+            return sGui->getIContextSimulator()->getAvailableSimulatorPlugins();
         }
 
         void CSettingsSimulatorComponent::ps_pluginStateChanged(const QString &identifier, bool enabled)
         {
-            Q_ASSERT(getIContextSimulator());
+            Q_ASSERT(sGui->getIContextSimulator());
 
             CSimulatorPluginInfoList simDrivers(getAvailablePlugins());
             auto selected = std::find_if(simDrivers.begin(), simDrivers.end(),
@@ -136,12 +129,12 @@ namespace BlackGui
 
             if (enabled)
             {
-                getIContextSimulator()->startSimulatorPlugin(*selected);
+                sGui->getIContextSimulator()->startSimulatorPlugin(*selected);
                 CLogMessage(this).info("Started listening for %1") << selected->getName();
             }
             else
             {
-                getIContextSimulator()->stopSimulatorPlugin(*selected);
+                sGui->getIContextSimulator()->stopSimulatorPlugin(*selected);
                 CLogMessage(this).info("Stopped listening for %1") << selected->getName();
             }
 
@@ -150,18 +143,16 @@ namespace BlackGui
 
         void CSettingsSimulatorComponent::ps_onApplyMaxRenderedAircraft()
         {
-            Q_ASSERT(getIContextSimulator());
-
             // get initial aircraft to render
             int noRequested = this->ui->sb_MaxAircraft->value();
-            int oldValue = this->getIContextSimulator()->getMaxRenderedAircraft();
+            int oldValue = sGui->getIContextSimulator()->getMaxRenderedAircraft();
             if (oldValue == noRequested) { return; }
 
             // set value
-            this->getIContextSimulator()->setMaxRenderedAircraft(noRequested);
+            sGui->getIContextSimulator()->setMaxRenderedAircraft(noRequested);
 
             // re-read real value
-            int noRendered = this->getIContextSimulator()->getMaxRenderedAircraft();
+            int noRendered = sGui->getIContextSimulator()->getMaxRenderedAircraft();
             if (noRequested == noRendered)
             {
                 CLogMessage(this).info("Max.rendered aircraft: %1") << noRendered;
@@ -176,11 +167,9 @@ namespace BlackGui
 
         void CSettingsSimulatorComponent::ps_onApplyMaxRenderedDistance()
         {
-            Q_ASSERT_X(getIContextSimulator(), Q_FUNC_INFO, "missing context");
-
             // get initial aircraft to render
             int maxDistanceNM = this->ui->sb_MaxDistance->value();
-            CLength currentDistance(this->getIContextSimulator()->getMaxRenderedDistance());
+            CLength currentDistance(sGui->getIContextSimulator()->getMaxRenderedDistance());
             if (maxDistanceNM == currentDistance.valueInteger(CLengthUnit::NM()))
             {
                 return;
@@ -189,15 +178,14 @@ namespace BlackGui
             {
                 CLength distance(maxDistanceNM, CLengthUnit::NM());
                 CLogMessage(this).info("Max.distance requested: %1") << distance.valueRoundedWithUnit(2, true);
-                this->getIContextSimulator()->setMaxRenderedDistance(distance);
+                sGui->getIContextSimulator()->setMaxRenderedDistance(distance);
                 this->setGuiValues();
             }
         }
 
         void CSettingsSimulatorComponent::ps_onApplyDisableRendering()
         {
-            Q_ASSERT(getIContextSimulator());
-            this->getIContextSimulator()->setMaxRenderedAircraft(0);
+            sGui->getIContextSimulator()->setMaxRenderedAircraft(0);
             this->setGuiValues();
         }
 
@@ -216,14 +204,13 @@ namespace BlackGui
             }
             else
             {
-                getIContextSimulator()->setTimeSynchronization(timeSync, ost);
+                sGui->getIContextSimulator()->setTimeSynchronization(timeSync, ost);
             }
         }
 
         void CSettingsSimulatorComponent::ps_clearRestricedRendering()
         {
-            Q_ASSERT(getIContextSimulator());
-            this->getIContextSimulator()->deleteAllRenderingRestrictions();
+            sGui->getIContextSimulator()->deleteAllRenderingRestrictions();
             this->setGuiValues();
         }
 
@@ -283,7 +270,6 @@ namespace BlackGui
             }
 
             CPluginConfigWindow *window = config->createConfigWindow(qApp->activeWindow());
-            CEnableForRuntime::setRuntimeForComponents(getRuntime(), window);
             window->setAttribute(Qt::WA_DeleteOnClose);
             window->show();
         }

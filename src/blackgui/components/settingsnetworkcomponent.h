@@ -13,7 +13,6 @@
 #define BLACKGUI_SETTINGSNETWORKCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/components/enableforruntime.h"
 #include <QFrame>
 
 namespace Ui { class CSettingsNetworkComponent; }
@@ -25,8 +24,7 @@ namespace BlackGui
 
         //! General settings for network
         class BLACKGUI_EXPORT CSettingsNetworkComponent :
-            public QFrame,
-            public CEnableForRuntime
+            public QFrame
         {
             Q_OBJECT
 
@@ -36,10 +34,6 @@ namespace BlackGui
 
             //! Destructor
             ~CSettingsNetworkComponent();
-
-        protected:
-            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
-            virtual void runtimeHasBeenSet() override;
 
         private:
             //! GUI values have been changed

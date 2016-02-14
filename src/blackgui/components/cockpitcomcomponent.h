@@ -14,9 +14,9 @@
 
 #include "blackgui/blackguiexport.h"
 #include "enablefordockwidgetinfoarea.h"
-#include "enableforruntime.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/aviation/transponder.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -31,8 +31,7 @@ namespace BlackGui
         class BLACKGUI_EXPORT CCockpitComComponent :
             public QFrame,
             public BlackMisc::CIdentifiable,
-            public CEnableForDockWidgetInfoArea,
-            public CEnableForRuntime
+            public CEnableForDockWidgetInfoArea
         {
             Q_OBJECT
 
@@ -57,9 +56,6 @@ namespace BlackGui
         protected:
             //! \copydoc QWidget::paintEvent
             virtual void paintEvent(QPaintEvent *event) override;
-
-            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
-            virtual void runtimeHasBeenSet() override;
 
         private slots:
             //! Cockpit values have been changed in GUI

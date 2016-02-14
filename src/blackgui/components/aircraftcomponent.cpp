@@ -10,7 +10,8 @@
 #include "aircraftcomponent.h"
 #include "ui_aircraftcomponent.h"
 #include "enablefordockwidgetinfoarea.h"
-#include "../guiutility.h"
+#include "blackgui/guiutility.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/contextnetwork.h"
 #include "blackcore/contextsimulator.h"
 #include "blackcore/network.h"
@@ -43,6 +44,7 @@ namespace BlackGui
             connect(this->ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestTextMessageWidget, this, &CAircraftComponent::requestTextMessageWidget);
             connect(this->ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestHighlightInSimulator, this, &CAircraftComponent::ps_onMenuHighlightInSimulator);
             connect(this->ui->tvp_AirportsInRange, &CSimulatedAircraftView::rowCountChanged, this, &CAircraftComponent::ps_onRowCountChanged);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAircraftComponent::ps_connectionStatusChanged);
         }
 
         CAircraftComponent::~CAircraftComponent()
@@ -60,35 +62,37 @@ namespace BlackGui
             return this->ui->tvp_AirportsInRange->rowCount();
         }
 
+        bool CAircraftComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
+        {
+            CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(parentDockableWidget);
+            bool c = connect(this->getParentInfoArea(), &CInfoArea::changedInfoAreaTabBarIndex, this, &CAircraftComponent::ps_infoAreaTabBarChanged);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "failed connect");
+            Q_ASSERT_X(parentDockableWidget, Q_FUNC_INFO, "missing parent");
+            return c && parentDockableWidget;
+        }
+
         void CAircraftComponent::update()
         {
             Q_ASSERT(this->ui->tvp_AircraftInRange);
-            Q_ASSERT(this->getIContextNetwork());
-            Q_ASSERT(this->getIContextSimulator());
+            Q_ASSERT(sGui->getIContextNetwork());
+            Q_ASSERT(sGui->getIContextSimulator());
 
-            if (this->getIContextNetwork()->isConnected())
+            if (sGui->getIContextNetwork()->isConnected())
             {
                 bool visible = (this->isVisibleWidget() && this->currentWidget() == this->ui->tb_AircraftInRange);
                 if (this->countAircraft() < 1 || visible)
                 {
-                    this->ui->tvp_AircraftInRange->updateContainer(this->getIContextNetwork()->getAircraftInRange());
+                    this->ui->tvp_AircraftInRange->updateContainer(sGui->getIContextNetwork()->getAircraftInRange());
                 }
             }
-            if (this->getIContextSimulator()->getSimulatorStatus() > 0)
+            if (sGui->getIContextSimulator()->getSimulatorStatus() > 0)
             {
                 bool visible = (this->isVisibleWidget() && this->currentWidget() == this->ui->tb_AirportsInRange);
                 if (this->countAirportsInRange() < 1 || visible)
                 {
-                    this->ui->tvp_AirportsInRange->updateContainer(this->getIContextSimulator()->getAirportsInRange());
+                    this->ui->tvp_AirportsInRange->updateContainer(sGui->getIContextSimulator()->getAirportsInRange());
                 }
             }
-        }
-
-        void CAircraftComponent::runtimeHasBeenSet()
-        {
-            Q_ASSERT(this->getIContextNetwork());
-            connect(this->getParentInfoArea(), &CInfoArea::changedInfoAreaTabBarIndex, this, &CAircraftComponent::ps_infoAreaTabBarChanged);
-            connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAircraftComponent::ps_connectionStatusChanged);
         }
 
         void CAircraftComponent::ps_infoAreaTabBarChanged(int index)
@@ -96,10 +100,10 @@ namespace BlackGui
             // ignore in those cases
             if (!this->isVisibleWidget()) return;
             if (this->isParentDockWidgetFloating()) return;
-            if (!this->getIContextNetwork()->isConnected()) return;
+            if (!sGui->getIContextNetwork()->isConnected()) return;
 
-            // here I know I am the selected widget, update, but keep GUI responsive (hence
-            QTimer::singleShot(1000, this, SLOT(update()));
+            // here I know I am the selected widget, update, but keep GUI responsive (hence I use a timer)
+            QTimer::singleShot(1000, this, &CAircraftComponent::update);
             Q_UNUSED(index);
         }
 
@@ -128,9 +132,9 @@ namespace BlackGui
 
         void CAircraftComponent::ps_onMenuHighlightInSimulator(const CSimulatedAircraft &aircraft)
         {
-            if (getIContextSimulator())
+            if (sGui->getIContextSimulator())
             {
-                getIContextSimulator()->highlightAircraft(aircraft, true, IContextSimulator::HighlightTime());
+                sGui->getIContextSimulator()->highlightAircraft(aircraft, true, IContextSimulator::HighlightTime());
             }
         }
 

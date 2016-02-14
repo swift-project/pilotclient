@@ -13,7 +13,6 @@
 #define BLACKGUI_AIRCRAFTCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/updatetimer.h"
 #include "blackcore/network.h"
@@ -29,8 +28,7 @@ namespace BlackGui
         //! Aircraft widget
         class BLACKGUI_EXPORT CAircraftComponent :
             public QTabWidget,
-            public CEnableForDockWidgetInfoArea,
-            public CEnableForRuntime
+            public CEnableForDockWidgetInfoArea
         {
             Q_OBJECT
 
@@ -47,6 +45,9 @@ namespace BlackGui
             //! Airports in range
             int countAirportsInRange() const;
 
+            //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
+            virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget) override;
+
         signals:
             //! Request a text message
             void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
@@ -60,10 +61,6 @@ namespace BlackGui
 
             //! \copydoc CUpdateTimer::stopTimer
             void stopTimer() { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->stopTimer(); }
-
-        protected:
-            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
-            void runtimeHasBeenSet() override;
 
         private slots:
             //! Info area tab bar has changed

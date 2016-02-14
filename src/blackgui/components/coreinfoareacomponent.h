@@ -23,7 +23,6 @@ namespace BlackGui
 {
     namespace Components
     {
-        // break compile dependency
         class CLogComponent;
         class CCoreStatusComponent;
 

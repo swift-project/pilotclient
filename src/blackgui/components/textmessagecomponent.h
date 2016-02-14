@@ -13,7 +13,6 @@
 #define BLACKGUI_TEXTMESSAGECOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/textmessagetextedit.h"
 #include "blackmisc/identifier.h"
@@ -33,7 +32,6 @@ namespace BlackGui
         //! Text message widget
         class BLACKGUI_EXPORT CTextMessageComponent :
             public QFrame,
-            public CEnableForRuntime,
             public CEnableForDockWidgetInfoArea
         {
             Q_OBJECT
@@ -74,10 +72,6 @@ namespace BlackGui
             //! Display the tab for given callsign
             void showCorrespondingTab(const BlackMisc::Aviation::CCallsign &callsign);
 
-        protected:
-            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
-            void runtimeHasBeenSet() override;
-
         private:
             QScopedPointer<Ui::CTextMessageComponent> ui;
             BlackMisc::CIdentifier m_identifier;
@@ -93,7 +87,6 @@ namespace BlackGui
 
             //! Add new text message tab
             //! \param tabName   name of the new tab, usually the channel name
-            //! \return
             QWidget *addNewTextMessageTab(const QString &tabName);
 
             //! Find text message tab by callsign

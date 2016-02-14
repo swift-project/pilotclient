@@ -13,8 +13,6 @@
 #include "blackcore/pluginmanagersimulator.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
-#include "enableforruntime.h"
-#include "enableforruntime.h"
 #include <QFrame>
 
 namespace Ui { class CSettingsSimulatorComponent; }
@@ -24,7 +22,7 @@ namespace BlackGui
     namespace Components
     {
         //! All simulator settings component (GUI)
-        class BLACKGUI_EXPORT CSettingsSimulatorComponent : public QFrame, public CEnableForRuntime
+        class BLACKGUI_EXPORT CSettingsSimulatorComponent : public QFrame
         {
             Q_OBJECT
 
@@ -34,10 +32,6 @@ namespace BlackGui
 
             //! Destructor
             ~CSettingsSimulatorComponent();
-
-        protected:
-            //! \copydoc CEnableForRuntime::runtimeHasBeenSet()
-            virtual void runtimeHasBeenSet() override;
 
         private slots:
             //! Driver plugin enabled/disabled
@@ -69,7 +63,6 @@ namespace BlackGui
             void ps_showPluginConfig(const QString &identifier);
 
         private:
-
             //! Set the GUI values
             void setGuiValues();
 

@@ -13,7 +13,6 @@
 #define BLACKGUI_SIMULATORCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "enableforruntime.h"
 #include "blackmisc/icon.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/updatetimer.h"
@@ -30,8 +29,7 @@ namespace BlackGui
         //! Simulator component
         class BLACKGUI_EXPORT CSimulatorComponent :
             public QTabWidget,
-            public CEnableForDockWidgetInfoArea,
-            public CEnableForRuntime
+            public CEnableForDockWidgetInfoArea
         {
             Q_OBJECT
 
@@ -67,10 +65,6 @@ namespace BlackGui
 
             //! \copydoc CUpdateTimer::stopTimer
             void stopTimer() { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->stopTimer(); }
-
-        protected:
-            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
-            void runtimeHasBeenSet() override;
 
         private slots:
             //! \copydoc ISimulator::simulatorStatusChanged

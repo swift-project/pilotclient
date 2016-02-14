@@ -9,6 +9,7 @@
 
 #include "internalscomponent.h"
 #include "ui_internalscomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/contextallinterfaces.h"
 #include <QJsonParseError>
 
@@ -22,7 +23,6 @@ namespace BlackGui
     {
         CInternalsComponent::CInternalsComponent(QWidget *parent) :
             QWidget(parent),
-            CEnableForRuntime(nullptr, false),
             ui(new Ui::CInternalsComponent)
         {
             ui->setupUi(this);
@@ -41,14 +41,10 @@ namespace BlackGui
             connect(ui->cb_DebugContextSimulator, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
             connect(ui->cb_DebugDriver, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
             connect(ui->cb_DebugInterpolator, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
+            contextFlagsToGui();
         }
 
         CInternalsComponent::~CInternalsComponent() { }
-
-        void CInternalsComponent::runtimeHasBeenSet()
-        {
-            contextFlagsToGui();
-        }
 
         void CInternalsComponent::showEvent(QShowEvent *event)
         {
@@ -59,8 +55,8 @@ namespace BlackGui
 
         void CInternalsComponent::ps_sendAircraftParts()
         {
-            Q_ASSERT(this->getIContextNetwork());
-            if (!this->getIContextNetwork()->isConnected())
+            Q_ASSERT(sGui->getIContextNetwork());
+            if (!sGui->getIContextNetwork()->isConnected())
             {
                 CLogMessage(this).validationError("Cannot send aircraft parts, network not connected");
                 return;
@@ -99,7 +95,7 @@ namespace BlackGui
                 this->ps_guiToJson();
             }
 
-            this->getIContextNetwork()->testAddAircraftParts(callsign, parts, this->ui->cb_AircraftPartsIncremental->isChecked());
+            sGui->getIContextNetwork()->testAddAircraftParts(callsign, parts, this->ui->cb_AircraftPartsIncremental->isChecked());
             CLogMessage(this).info("Added parts for %1") << callsign.toQString();
         }
 
@@ -134,24 +130,24 @@ namespace BlackGui
 
         void CInternalsComponent::ps_enableDebug(int state)
         {
-            Q_ASSERT(this->getIContextApplication());
-            Q_ASSERT(this->getIContextAudio());
-            Q_ASSERT(this->getIContextNetwork());
-            Q_ASSERT(this->getIContextOwnAircraft());
-            Q_ASSERT(this->getIContextSimulator());
+            Q_ASSERT(sGui->getIContextApplication());
+            Q_ASSERT(sGui->getIContextAudio());
+            Q_ASSERT(sGui->getIContextNetwork());
+            Q_ASSERT(sGui->getIContextOwnAircraft());
+            Q_ASSERT(sGui->getIContextSimulator());
 
             Qt::CheckState checkState = static_cast<Qt::CheckState>(state);
             bool debug = (checkState == Qt::Checked);
             QObject *sender = QObject::sender();
 
-            if (sender == ui->cb_DebugContextApplication) { getIContextApplication()->setDebugEnabled(debug); }
-            else if (sender == ui->cb_DebugContextAudio)  { getIContextAudio()->setDebugEnabled(debug); }
-            else if (sender == ui->cb_DebugContextNetwork)  { getIContextNetwork()->setDebugEnabled(debug);}
-            else if (sender == ui->cb_DebugContextOwnAircraft)  { getIContextOwnAircraft()->setDebugEnabled(debug); }
-            else if (sender == ui->cb_DebugContextSimulator)  { getIContextSimulator()->setDebugEnabled(debug);}
+            if (sender == ui->cb_DebugContextApplication) { sGui->getIContextApplication()->setDebugEnabled(debug); }
+            else if (sender == ui->cb_DebugContextAudio)  { sGui->getIContextAudio()->setDebugEnabled(debug); }
+            else if (sender == ui->cb_DebugContextNetwork)  { sGui->getIContextNetwork()->setDebugEnabled(debug);}
+            else if (sender == ui->cb_DebugContextOwnAircraft)  { sGui->getIContextOwnAircraft()->setDebugEnabled(debug); }
+            else if (sender == ui->cb_DebugContextSimulator)  { sGui->getIContextSimulator()->setDebugEnabled(debug);}
             else if (sender == ui->cb_DebugDriver || sender == ui->cb_DebugInterpolator)
             {
-                this->getIContextSimulator()->enableDebugMessages(
+                sGui->getIContextSimulator()->enableDebugMessages(
                     this->ui->cb_DebugDriver->isChecked(),
                     this->ui->cb_DebugInterpolator->isChecked()
                 );
@@ -215,10 +211,10 @@ namespace BlackGui
 
         void CInternalsComponent::contextFlagsToGui()
         {
-            ui->cb_DebugContextApplication->setChecked(getIContextApplication()->isDebugEnabled());
-            ui->cb_DebugContextNetwork->setChecked(getIContextNetwork()->isDebugEnabled());
-            ui->cb_DebugContextOwnAircraft->setChecked(getIContextOwnAircraft()->isDebugEnabled());
-            ui->cb_DebugContextSimulator->setChecked(getIContextSimulator()->isDebugEnabled());
+            ui->cb_DebugContextApplication->setChecked(sGui->getIContextApplication()->isDebugEnabled());
+            ui->cb_DebugContextNetwork->setChecked(sGui->getIContextNetwork()->isDebugEnabled());
+            ui->cb_DebugContextOwnAircraft->setChecked(sGui->getIContextOwnAircraft()->isDebugEnabled());
+            ui->cb_DebugContextSimulator->setChecked(sGui->getIContextSimulator()->isDebugEnabled());
         }
 
     } // namespace

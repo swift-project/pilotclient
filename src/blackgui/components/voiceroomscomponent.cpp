@@ -9,6 +9,7 @@
 
 #include "voiceroomscomponent.h"
 #include "ui_voiceroomscomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/contextaudio.h"
 #include "blackcore/contextownaircraft.h"
 #include "blackmisc/audio/notificationsounds.h"
@@ -20,7 +21,6 @@ namespace BlackGui
 {
     namespace Components
     {
-
         CVoiceRoomsComponent::CVoiceRoomsComponent(QWidget *parent) :
             QFrame(parent),
             ui(new Ui::CVoiceRoomsComponent)
@@ -31,16 +31,12 @@ namespace BlackGui
             connect(ui->cb_CockpitVoiceRoom2Override, &QCheckBox::toggled, this, &CVoiceRoomsComponent::ps_onVoiceRoomOverrideChanged);
             connect(ui->le_CockpitVoiceRoomCom1, &QLineEdit::returnPressed, this, &CVoiceRoomsComponent::ps_onVoiceRoomUrlsReturnPressed);
             connect(ui->le_CockpitVoiceRoomCom2, &QLineEdit::returnPressed, this, &CVoiceRoomsComponent::ps_onVoiceRoomUrlsReturnPressed);
+            this->connect(sGui->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CVoiceRoomsComponent::ps_updateAudioVoiceRoomsFromContext);
+            this->connect(sGui->getIContextAudio(), &IContextAudio::changedVoiceRoomMembers, this, &CVoiceRoomsComponent::ps_updateVoiceRoomMembers);
         }
 
         CVoiceRoomsComponent::~CVoiceRoomsComponent()
         { }
-
-        void CVoiceRoomsComponent::runtimeHasBeenSet()
-        {
-            this->connect(this->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CVoiceRoomsComponent::ps_updateAudioVoiceRoomsFromContext);
-            this->connect(this->getIContextAudio(), &IContextAudio::changedVoiceRoomMembers, this, &CVoiceRoomsComponent::ps_updateVoiceRoomMembers);
-        }
 
         void CVoiceRoomsComponent::ps_onVoiceRoomOverrideChanged(bool checked)
         {
@@ -51,12 +47,12 @@ namespace BlackGui
 
         void CVoiceRoomsComponent::ps_onVoiceRoomUrlsReturnPressed()
         {
-            Q_ASSERT(this->getIContextOwnAircraft()); // voice room resolution is part of own aircraft
+            Q_ASSERT(sGui->getIContextOwnAircraft()); // voice room resolution is part of own aircraft
             QString url1;
             QString url2;
             if (this->ui->cb_CockpitVoiceRoom1Override->isChecked()) { url1 = this->ui->le_CockpitVoiceRoomCom1->text().trimmed(); }
             if (this->ui->cb_CockpitVoiceRoom2Override->isChecked()) { url2 = this->ui->le_CockpitVoiceRoomCom2->text().trimmed(); }
-            this->getIContextOwnAircraft()->setAudioVoiceRoomOverrideUrls(url1, url2);
+            sGui->getIContextOwnAircraft()->setAudioVoiceRoomOverrideUrls(url1, url2);
         }
 
         void CVoiceRoomsComponent::setVoiceRoomUrlFieldsReadOnlyState()
@@ -81,7 +77,7 @@ namespace BlackGui
             if (room1.isConnected())
             {
                 this->ui->le_CockpitVoiceRoomCom1->setStyleSheet("background: green");
-                if (this->getIContextAudio()) this->ui->tvp_CockpitVoiceRoom1->updateContainer(this->getIContextAudio()->getRoomUsers(BlackMisc::Aviation::CComSystem::Com1));
+                if (sGui->getIContextAudio()) this->ui->tvp_CockpitVoiceRoom1->updateContainer(sGui->getIContextAudio()->getRoomUsers(BlackMisc::Aviation::CComSystem::Com1));
             }
             else
             {
@@ -105,22 +101,22 @@ namespace BlackGui
                 this->ps_updateVoiceRoomMembers();
 
                 // notify
-                if (this->getIContextAudio())
+                if (sGui->getIContextAudio())
                 {
                     CNotificationSounds::Notification sound = connected ?
                             CNotificationSounds::NotificationVoiceRoomJoined :
                             CNotificationSounds::NotificationVoiceRoomLeft;
-                    this->getIContextAudio()->playNotification(sound, true);
+                    sGui->getIContextAudio()->playNotification(sound, true);
                 }
             }
         }
 
         void CVoiceRoomsComponent::ps_updateVoiceRoomMembers()
         {
-            if (!this->getIContextAudio()) { return; }
+            if (!sGui->getIContextAudio()) { return; }
             if (!this->ui->le_CockpitVoiceRoomCom1->text().trimmed().isEmpty())
             {
-                this->ui->tvp_CockpitVoiceRoom1->updateContainer(this->getIContextAudio()->getRoomUsers(BlackMisc::Aviation::CComSystem::Com1));
+                this->ui->tvp_CockpitVoiceRoom1->updateContainer(sGui->getIContextAudio()->getRoomUsers(BlackMisc::Aviation::CComSystem::Com1));
             }
             else
             {
@@ -129,7 +125,7 @@ namespace BlackGui
 
             if (!this->ui->le_CockpitVoiceRoomCom2->text().trimmed().isEmpty())
             {
-                this->ui->tvp_CockpitVoiceRoom2->updateContainer(this->getIContextAudio()->getRoomUsers(BlackMisc::Aviation::CComSystem::Com2));
+                this->ui->tvp_CockpitVoiceRoom2->updateContainer(sGui->getIContextAudio()->getRoomUsers(BlackMisc::Aviation::CComSystem::Com2));
             }
             else
             {

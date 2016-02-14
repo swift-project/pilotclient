@@ -9,6 +9,8 @@
 
 #include "logincomponent.h"
 #include "ui_logincomponent.h"
+#include "blackgui/uppercasevalidator.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/contextnetwork.h"
 #include "blackcore/contextownaircraft.h"
 #include "blackcore/contextaudio.h"
@@ -17,7 +19,6 @@
 #include "blackcore/simulator.h"
 #include "blackcore/setupreader.h"
 #include "blackmisc/logmessage.h"
-#include "blackgui/uppercasevalidator.h"
 #include <QIntValidator>
 
 using namespace BlackMisc;
@@ -32,7 +33,6 @@ namespace BlackGui
 {
     namespace Components
     {
-
         CLoginComponent::CLoginComponent(QWidget *parent) :
             QFrame(parent),
             ui(new Ui::CLoginComponent)
@@ -97,6 +97,22 @@ namespace BlackGui
             // server GUI element
             this->ui->frp_CurrentServer->setReadOnly(true);
             this->ui->frp_CurrentServer->showPasswordField(false);
+
+            connect(sGui->getIContextNetwork(), &IContextNetwork::webServiceDataRead, this, &CLoginComponent::ps_onWebServiceDataRead);
+
+            // inital setup, if data already available
+            ps_validateAircraftValues();
+            ps_validateVatsimValues();
+            ps_onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1);
+            CServerList otherServers(this->m_otherTrafficNetworkServers.get());
+
+            // add a testserver when no servers can be loaded
+            if (otherServers.isEmpty() && CProject::isRunningInBetaOrDeveloperEnvironment())
+            {
+                otherServers.push_back(m_setup.get().fsdTestServersPlusHardcodedServers());
+                CLogMessage(this).info("Added servers for testing");
+            }
+            this->ui->cbp_OtherServers->setServers(otherServers);
         }
 
         CLoginComponent::~CLoginComponent()
@@ -122,32 +138,12 @@ namespace BlackGui
                 else
                 {
                     this->m_visible = true;
-                    bool isConnected = this->getIContextNetwork()->isConnected();
+                    bool isConnected = sGui->getIContextNetwork()->isConnected();
                     this->setGuiVisibility(isConnected);
                     this->setOkButtonString(isConnected);
                     if (isConnected) { this->startLogoffTimerCountdown(); }
                 }
             }
-        }
-
-        void CLoginComponent::runtimeHasBeenSet()
-        {
-            Q_ASSERT(getIContextNetwork());
-            connect(getIContextNetwork(), &IContextNetwork::webServiceDataRead, this, &CLoginComponent::ps_onWebServiceDataRead);
-
-            // inital setup, if data already available
-            ps_validateAircraftValues();
-            ps_validateVatsimValues();
-            ps_onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1);
-            CServerList otherServers(this->m_otherTrafficNetworkServers.get());
-
-            // add a testserver when no servers can be loaded
-            if (otherServers.isEmpty() && CProject::isRunningInBetaOrDeveloperEnvironment())
-            {
-                otherServers.push_back(m_setup.get().fsdTestServersPlusHardcodedServers());
-                CLogMessage(this).info("Added servers for testing");
-            }
-            this->ui->cbp_OtherServers->setServers(otherServers);
         }
 
         void CLoginComponent::ps_loginCancelled()
@@ -159,11 +155,7 @@ namespace BlackGui
 
         void CLoginComponent::ps_toggleNetworkConnection()
         {
-            Q_ASSERT(this->getIContextNetwork());
-            Q_ASSERT(this->getIContextOwnAircraft());
-            Q_ASSERT(this->getIContextAudio());
-
-            bool isConnected = this->getIContextNetwork()->isConnected();
+            bool isConnected = sGui->getIContextNetwork()->isConnected();
             CStatusMessage msg;
             if (!isConnected)
             {
@@ -183,7 +175,7 @@ namespace BlackGui
 
                 // sync values with GUI values
                 CGuiAircraftValues aircraftValues = this->getAircraftValuesFromGui();
-                CSimulatedAircraft ownAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
+                CSimulatedAircraft ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
                 CAircraftIcaoCode aircraftCode(ownAircraft.getAircraftIcaoCode());
                 CAirlineIcaoCode airlineCode(ownAircraft.getAirlineIcaoCode());
 
@@ -202,13 +194,13 @@ namespace BlackGui
                 if (ownAircraft.getCallsign().asString() != aircraftValues.ownCallsign)
                 {
                     ownAircraft.setCallsign(aircraftValues.ownCallsign);
-                    this->getIContextOwnAircraft()->updateOwnCallsign(ownAircraft.getCallsign());
+                    sGui->getIContextOwnAircraft()->updateOwnCallsign(ownAircraft.getCallsign());
                 }
 
                 if (setIcaoCodes)
                 {
                     ownAircraft.setIcaoCodes(aircraftCode, airlineCode);
-                    this->getIContextOwnAircraft()->updateOwnIcaoCodes(ownAircraft.getAircraftIcaoCode(), ownAircraft.getAirlineIcaoCode());
+                    sGui->getIContextOwnAircraft()->updateOwnIcaoCodes(ownAircraft.getAircraftIcaoCode(), ownAircraft.getAirlineIcaoCode());
                 }
 
                 // Login mode
@@ -239,16 +231,16 @@ namespace BlackGui
                     currentServer = this->getCurrentOtherServer();
                 }
                 this->ui->frp_CurrentServer->setServer(currentServer);
-                this->getIContextOwnAircraft()->updateOwnAircraftPilot(currentServer.getUser());
+                sGui->getIContextOwnAircraft()->updateOwnAircraftPilot(currentServer.getUser());
 
                 // Login
-                msg = this->getIContextNetwork()->connectToNetwork(currentServer, mode);
+                msg = sGui->getIContextNetwork()->connectToNetwork(currentServer, mode);
             }
             else
             {
                 // disconnect from network
-                this->getIContextAudio()->leaveAllVoiceRooms();
-                msg = this->getIContextNetwork()->disconnectFromNetwork();
+                sGui->getIContextAudio()->leaveAllVoiceRooms();
+                msg = sGui->getIContextNetwork()->disconnectFromNetwork();
             }
 
             // log message and trigger events
@@ -271,8 +263,7 @@ namespace BlackGui
             CEntityFlags::ReadState state = static_cast<CEntityFlags::ReadState>(stateI);
             if (entity != CEntityFlags::VatsimDataFile || state != CEntityFlags::ReadFinished) { return; }
             Q_UNUSED(number);
-            Q_ASSERT_X(getIContextNetwork(), Q_FUNC_INFO, "Missing context");
-            CServerList vatsimFsdServers = this->getIContextNetwork()->getVatsimFsdServers();
+            CServerList vatsimFsdServers = sGui->getIContextNetwork()->getVatsimFsdServers();
             if (vatsimFsdServers.isEmpty()) { return; }
             this->ui->cbp_VatsimServer->setServers(vatsimFsdServers);
         }
@@ -363,19 +354,19 @@ namespace BlackGui
 
         void CLoginComponent::setOwnModel()
         {
-            Q_ASSERT(this->getIContextOwnAircraft());
-            Q_ASSERT(this->getIContextSimulator());
+            Q_ASSERT(sGui->getIContextOwnAircraft());
+            Q_ASSERT(sGui->getIContextSimulator());
 
             static const CAircraftModel defaultModel(
                 "", CAircraftModel::TypeOwnSimulatorModel, "default model",
                 CAircraftIcaoCode("C172", "L1P", "Cessna", "172", "L", true, false, false, 0));
 
             CAircraftModel model;
-            bool simulating = this->getIContextSimulator() &&
-                              (this->getIContextSimulator()->getSimulatorStatus() & ISimulator::Simulating);
+            bool simulating = sGui->getIContextSimulator() &&
+                              (sGui->getIContextSimulator()->getSimulatorStatus() & ISimulator::Simulating);
             if (simulating)
             {
-                model = this->getIContextOwnAircraft()->getOwnAircraft().getModel();
+                model = sGui->getIContextOwnAircraft()->getOwnAircraft().getModel();
                 this->ui->le_SimulatorModel->setText(model.getModelString());
             }
             else
@@ -473,11 +464,8 @@ namespace BlackGui
 
         void CLoginComponent::ps_reverseLookupModel()
         {
-            Q_ASSERT(getIContextOwnAircraft());
-            Q_ASSERT(getIContextSimulator());
-
-            if (!this->getIContextSimulator()->isSimulatorAvailable()) { return; }
-            CAircraftModel model(this->getIContextOwnAircraft()->getOwnAircraft().getModel());
+            if (!sGui->getIContextSimulator()->isSimulatorAvailable()) { return; }
+            CAircraftModel model(sGui->getIContextOwnAircraft()->getOwnAircraft().getModel());
             QString modelStr(model.hasModelString() ? model.getModelString() : "<unknown>");
             if (model.getAircraftIcaoCode().hasDesignator())
             {

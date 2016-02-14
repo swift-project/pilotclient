@@ -13,9 +13,9 @@
 #define BLACKGUI_FLIGHTPLANCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/components/enableforruntime.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/aviation/flightplan.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 
 #include <QTabWidget>
 
@@ -27,8 +27,7 @@ namespace BlackGui
 
         //! Flight plan widget
         class BLACKGUI_EXPORT CFlightPlanComponent :
-            public QTabWidget,
-            public CEnableForRuntime
+            public QTabWidget
         {
             Q_OBJECT
 
@@ -51,10 +50,6 @@ namespace BlackGui
 
             //! Get this flight plan
             BlackMisc::Aviation::CFlightPlan getFlightPlan() const;
-
-        protected:
-            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
-            void runtimeHasBeenSet() override;
 
         private:
             QScopedPointer<Ui::CFlightPlanComponent> ui;

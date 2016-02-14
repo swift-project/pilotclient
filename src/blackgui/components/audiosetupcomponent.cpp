@@ -9,6 +9,7 @@
 
 #include "audiosetupcomponent.h"
 #include "ui_audiosetupcomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/contextaudio.h"
 #include "blackmisc/logmessage.h"
 
@@ -32,39 +33,37 @@ namespace BlackGui
 
             bool c = connect(this->ui->tb_ExpandNotificationSounds, &QToolButton::toggled, this, &CAudioSetupComponent::ps_onToggleNotificationSoundsVisibility);
             Q_ASSERT(c);
+            Q_UNUSED(c);
             c = connect(this->ui->cb_SetupAudioLoopback, &QCheckBox::toggled, this, &CAudioSetupComponent::ps_onLoopbackToggled);
             Q_ASSERT(c);
             Q_UNUSED(c);
-        }
 
-        CAudioSetupComponent::~CAudioSetupComponent()
-        { }
-
-        void CAudioSetupComponent::runtimeHasBeenSet()
-        {
-            // based on audio context
-            Q_ASSERT_X(this->getIContextAudio(), Q_FUNC_INFO, "missing audio");
-            if (this->getIContextAudio())
+            if (sGui->getIContextAudio())
             {
                 this->initAudioDeviceLists();
 
                 // default
-                this->ui->cb_SetupAudioLoopback->setChecked(this->getIContextAudio()->isAudioLoopbackEnabled());
+                this->ui->cb_SetupAudioLoopback->setChecked(sGui->getIContextAudio()->isAudioLoopbackEnabled());
 
                 // the connects depend on initAudioDeviceLists
-                bool connected = this->connect(this->ui->cb_SetupAudioInputDevice,  static_cast<void (QComboBox::*)(int)> (&QComboBox::currentIndexChanged), this, &CAudioSetupComponent::ps_audioDeviceSelected);
-                Q_ASSERT(connected);
-                connected = this->connect(this->ui->cb_SetupAudioOutputDevice, static_cast<void (QComboBox::*)(int)> (&QComboBox::currentIndexChanged), this, &CAudioSetupComponent::ps_audioDeviceSelected);
-                Q_ASSERT(connected);
-                Q_UNUSED(connected);
+                c = this->connect(this->ui->cb_SetupAudioInputDevice,  static_cast<void (QComboBox::*)(int)> (&QComboBox::currentIndexChanged), this, &CAudioSetupComponent::ps_audioDeviceSelected);
+                Q_ASSERT(c);
+                Q_UNUSED(c);
+
+                c = this->connect(this->ui->cb_SetupAudioOutputDevice, static_cast<void (QComboBox::*)(int)> (&QComboBox::currentIndexChanged), this, &CAudioSetupComponent::ps_audioDeviceSelected);
+                Q_ASSERT(c);
+                Q_UNUSED(c);
 
                 // context
-                this->connect(this->getIContextAudio(), &IContextAudio::changedAudioDevices, this, &CAudioSetupComponent::ps_onAudioDevicesChanged);
-                this->connect(this->getIContextAudio(), &IContextAudio::changedSelectedAudioDevices, this, &CAudioSetupComponent::ps_onCurrentAudioDevicesChanged);
+                this->connect(sGui->getIContextAudio(), &IContextAudio::changedAudioDevices, this, &CAudioSetupComponent::ps_onAudioDevicesChanged);
+                this->connect(sGui->getIContextAudio(), &IContextAudio::changedSelectedAudioDevices, this, &CAudioSetupComponent::ps_onCurrentAudioDevicesChanged);
             }
             this->ps_reloadSettings();
             this->ui->tb_ExpandNotificationSounds->setChecked(false); // collapse
         }
+
+        CAudioSetupComponent::~CAudioSetupComponent()
+        { }
 
         void CAudioSetupComponent::ps_reloadSettings()
         {
@@ -81,9 +80,9 @@ namespace BlackGui
 
         void CAudioSetupComponent::initAudioDeviceLists()
         {
-            if (!this->getIContextAudio()) { return; }
-            this->ps_onAudioDevicesChanged(this->getIContextAudio()->getAudioDevices());
-            this->ps_onCurrentAudioDevicesChanged(this->getIContextAudio()->getCurrentAudioDevices());
+            if (!sGui->getIContextAudio()) { return; }
+            this->ps_onAudioDevicesChanged(sGui->getIContextAudio()->getAudioDevices());
+            this->ps_onCurrentAudioDevicesChanged(sGui->getIContextAudio()->getCurrentAudioDevices());
         }
 
         bool CAudioSetupComponent::playNotificationSounds() const
@@ -93,10 +92,10 @@ namespace BlackGui
 
         void CAudioSetupComponent::ps_audioDeviceSelected(int index)
         {
-            if (!this->getIContextAudio()) return;
+            if (!sGui->getIContextAudio()) return;
             if (index < 0) { return; }
 
-            CAudioDeviceInfoList devices = this->getIContextAudio()->getAudioDevices();
+            CAudioDeviceInfoList devices = sGui->getIContextAudio()->getAudioDevices();
             if (devices.isEmpty()) { return; }
             CAudioDeviceInfo selectedDevice;
             QObject *sender = QObject::sender();
@@ -105,14 +104,14 @@ namespace BlackGui
                 CAudioDeviceInfoList inputDevices = devices.getInputDevices();
                 if (index >= inputDevices.size()) { return; }
                 selectedDevice = inputDevices[index];
-                this->getIContextAudio()->setCurrentAudioDevice(selectedDevice);
+                sGui->getIContextAudio()->setCurrentAudioDevice(selectedDevice);
             }
             else if (sender == this->ui->cb_SetupAudioOutputDevice)
             {
                 CAudioDeviceInfoList outputDevices = devices.getOutputDevices();
                 if (index >= outputDevices.size()) { return; }
                 selectedDevice = outputDevices[index];
-                this->getIContextAudio()->setCurrentAudioDevice(selectedDevice);
+                sGui->getIContextAudio()->setCurrentAudioDevice(selectedDevice);
             }
         }
 
@@ -151,9 +150,9 @@ namespace BlackGui
 
         void CAudioSetupComponent::ps_onLoopbackToggled(bool loopback)
         {
-            Q_ASSERT(this->getIContextAudio());
-            if (this->getIContextAudio()->isAudioLoopbackEnabled() == loopback) { return; }
-            this->getIContextAudio()->enableAudioLoopback(loopback);
+            Q_ASSERT(sGui->getIContextAudio());
+            if (sGui->getIContextAudio()->isAudioLoopbackEnabled() == loopback) { return; }
+            sGui->getIContextAudio()->enableAudioLoopback(loopback);
         }
 
     } // namespace

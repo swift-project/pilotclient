@@ -14,8 +14,8 @@
 #include "blackmisc/project.h"
 #include "blackmisc/dbusserver.h"
 #include "blackgui/guiapplication.h"
+#include "blackgui/guiapplication.h"
 #include "blackgui/components/logcomponent.h"
-#include "blackgui/components/enableforruntime.h"
 #include "blackgui/stylesheetutility.h"
 #include <QMenu>
 #include <QMessageBox>
@@ -131,7 +131,6 @@ void CSwiftCore::initLogDisplay()
 
 void CSwiftCore::startCore(const QString &dBusAdress)
 {
-    if (getRuntime()) { return; }
     if (dBusAdress.isEmpty()) { return; }
 
     ui->pb_StartCore->setEnabled(false);
@@ -140,27 +139,17 @@ void CSwiftCore::startCore(const QString &dBusAdress)
     QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 
     // context
-    this->createRuntime(sGui->isParserOptionSet("coreaudio") ?
-                        CCoreFacadeConfig::forCoreAllLocalInDBus(dBusAdress) :
-                        CCoreFacadeConfig::forCoreAllLocalInDBusNoAudio(dBusAdress),
-                        this);
-    CEnableForRuntime::setRuntimeForComponents(this->getRuntime(), this);
-    connect(ui->le_CommandLineInput, &CCommandInput::commandEntered, getRuntime(), &CCoreFacade::parseCommandLine);
+    connect(ui->le_CommandLineInput, &CCommandInput::commandEntered, sGui->getCoreFacade(), &CCoreFacade::parseCommandLine);
 }
 
 void CSwiftCore::stopCore()
 {
-    if (!getRuntime()) { return; }
-
     ui->pb_StartCore->setEnabled(true);
     ui->pb_StopCore->setEnabled(false);
     ui->gb_DBusMode->setDisabled(false);
     QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 
-    getRuntime()->gracefulShutdown();
-
-    // Force quit, since we cannot close the runtime
-    qApp->quit();
+    sGui->exit();
 }
 
 QString CSwiftCore::getDBusAddress() const

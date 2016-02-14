@@ -13,7 +13,6 @@
 #define BLACKGUI_SETTINGSCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/components/enableforruntime.h"
 #include "blackmisc/network/server.h"
 #include <QTabWidget>
 #include <QModelIndex>
@@ -28,8 +27,7 @@ namespace BlackGui
     {
         //! Settings component
         class BLACKGUI_EXPORT CSettingsComponent :
-            public QTabWidget,
-            public CEnableForRuntime
+            public QTabWidget
         {
             Q_OBJECT
 
@@ -83,10 +81,6 @@ namespace BlackGui
         public slots:
             //! Set the tab
             void setSettingsTab(SettingTab tab);
-
-        protected:
-            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
-            virtual void runtimeHasBeenSet() override;
 
         private slots:
             //! Font has been changed

@@ -13,7 +13,6 @@
 #define BLACKGUI_VOICEROOMSCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "enableforruntime.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -26,8 +25,7 @@ namespace BlackGui
     {
         //! Displays the voice rooms
         class BLACKGUI_EXPORT CVoiceRoomsComponent :
-            public QFrame,
-            public CEnableForRuntime
+            public QFrame
         {
             Q_OBJECT
 
@@ -37,10 +35,6 @@ namespace BlackGui
 
             //! Destructor
             ~CVoiceRoomsComponent();
-
-        protected:
-            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
-            virtual void runtimeHasBeenSet() override;
 
         private slots:
             //! Override for voice was changed

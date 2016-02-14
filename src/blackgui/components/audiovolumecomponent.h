@@ -15,7 +15,6 @@
 #include "blackgui/blackguiexport.h"
 #include <QFrame>
 #include <QScopedPointer>
-#include "enableforruntime.h"
 
 namespace Ui { class CAudioVolumeComponent; }
 namespace BlackGui
@@ -24,8 +23,7 @@ namespace BlackGui
     {
         //! Audio volume, mixer
         class BLACKGUI_EXPORT CAudioVolumeComponent :
-            public QFrame,
-            public CEnableForRuntime
+            public QFrame
         {
             Q_OBJECT
 
@@ -35,10 +33,6 @@ namespace BlackGui
 
             //! Destructor
             ~CAudioVolumeComponent();
-
-        protected:
-            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
-            void runtimeHasBeenSet() override;
 
         private slots:
             //! Mute toggle

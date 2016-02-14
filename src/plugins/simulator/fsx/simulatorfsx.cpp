@@ -9,7 +9,7 @@
 
 #include "simulatorfsx.h"
 #include "blackcore/interpolatorlinear.h"
-#include "blackcore/registermetadata.h"
+#include "blackcore/application.h"
 #include "blackmisc/simulation/fscommon/bcdconversions.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
 #include "blackmisc/simulation/fsx/fsxsimulatorsetup.h"
@@ -47,8 +47,9 @@ namespace BlackSimPlugin
                                      QObject *parent) :
             CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, parent)
         {
-            Q_ASSERT(ownAircraftProvider);
-            Q_ASSERT(remoteAircraftProvider);
+            Q_ASSERT_X(ownAircraftProvider, Q_FUNC_INFO, "Missing provider");
+            Q_ASSERT_X(remoteAircraftProvider, Q_FUNC_INFO, "Missing provider");
+            Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing global object");
             this->m_simulatorSetup = CFsxSimulatorSetup::getInitialSetup();
 
             m_useFsuipc = true; // Temporarily enabled until Simconnect Weather is implemented.
@@ -80,7 +81,7 @@ namespace BlackSimPlugin
         bool CSimulatorFsx::connectTo()
         {
             if (this->isConnected()) { return true; }
-            if (FAILED(SimConnect_Open(&m_hSimConnect, BlackMisc::CProject::swiftVersionChar(), nullptr, 0, 0, 0)))
+            if (FAILED(SimConnect_Open(&m_hSimConnect, sApp->swiftVersionChar(), nullptr, 0, 0, 0)))
             {
                 // reset state as expected for unconnected
                 if (m_simconnectTimerId >= 0) { killTimer(m_simconnectTimerId); }
@@ -858,7 +859,7 @@ namespace BlackSimPlugin
         {
             Q_ASSERT_X(!CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background");
             HANDLE hSimConnect;
-            HRESULT result = SimConnect_Open(&hSimConnect, BlackMisc::CProject::swiftVersionChar(), nullptr, 0, 0, 0);
+            HRESULT result = SimConnect_Open(&hSimConnect, sApp->swiftVersionChar(), nullptr, 0, 0, 0);
             SimConnect_Close(hSimConnect);
             if (result == S_OK)
             {

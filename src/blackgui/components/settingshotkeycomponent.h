@@ -13,7 +13,6 @@
 #define BLACKGUI_COMPONENTS_SETTINGSHOTKEYCOMPONENT_H
 
 #include "blackgui/models/actionhotkeylistmodel.h"
-#include "blackgui/components/enableforruntime.h"
 #include "blackcore/settings/application.h"
 #include "blackcore/actionbind.h"
 #include <QFrame>
@@ -29,8 +28,7 @@ namespace BlackGui
 
         //! Configure hotkeys
         class BLACKGUI_EXPORT CSettingsHotkeyComponent :
-            public QFrame,
-            public CEnableForRuntime
+            public QFrame
         {
             Q_OBJECT
 

@@ -14,7 +14,6 @@
 
 #include "blackgui/blackguiexport.h"
 #include "maininfoareacomponent.h"
-#include "enableforruntime.h"
 #include "blackcore/network.h"
 #include "blackmisc/identifier.h"
 
@@ -28,12 +27,10 @@ namespace BlackGui
 {
     namespace Components
     {
-
         //! Main keypad area as used with main info area
         //! \sa CMainInfoAreaComponent
         class BLACKGUI_EXPORT CMainKeypadAreaComponent :
-            public QFrame,
-            public CEnableForRuntime
+            public QFrame
         {
             Q_OBJECT
 
@@ -67,10 +64,6 @@ namespace BlackGui
         public slots:
             //! Main info area changed
             void onMainInfoAreaChanged(int currentTabIndex, QList<int> dockedIndexes, QList<int> floatingIndexes);
-
-        protected:
-            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
-            virtual void runtimeHasBeenSet() override;
 
         private slots:
             //! Button was clicked

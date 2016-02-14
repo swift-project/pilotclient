@@ -13,7 +13,6 @@
 #define BLACKGUI_LOGCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "enableforruntime.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackgui/menudelegate.h"
 #include <QPlainTextEdit>
@@ -42,8 +41,7 @@ namespace BlackGui
 
         //! GUI displaying log and status messages
         class BLACKGUI_EXPORT CLogComponent :
-            public QFrame,
-            public CEnableForRuntime
+            public QFrame
         {
             Q_OBJECT
 

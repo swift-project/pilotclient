@@ -13,7 +13,6 @@
 #define BLACKMISC_COCKPITTRANSPONDERMODELEDSCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "enableforruntime.h"
 #include "../led.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
@@ -28,7 +27,6 @@ namespace BlackGui
         //! LEDs representing transponder mode state
         class BLACKGUI_EXPORT CCockpitTransponderModeLedsComponent :
             public QFrame,
-            public CEnableForRuntime,
             public BlackMisc::CIdentifiable
         {
             Q_OBJECT
@@ -36,10 +34,6 @@ namespace BlackGui
         public:
             //! Constructor
             explicit CCockpitTransponderModeLedsComponent(QWidget *parent = nullptr);
-
-        protected:
-            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
-            virtual void runtimeHasBeenSet() override;
 
         private slots:
             //! \copydoc IContextOwnAircraft::changedAircraftCockpit

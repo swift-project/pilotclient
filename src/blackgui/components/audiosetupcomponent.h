@@ -13,7 +13,6 @@
 #define BLACKGUI_AUDIOSETUPCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/components/enableforruntime.h"
 #include "blackcore/settings/audio.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include <QFrame>
@@ -27,8 +26,7 @@ namespace BlackGui
     {
         //! Audio setup such as input / output devices
         class BLACKGUI_EXPORT CAudioSetupComponent :
-            public QFrame,
-            public CEnableForRuntime
+            public QFrame
         {
             Q_OBJECT
 
@@ -41,10 +39,6 @@ namespace BlackGui
 
             //! Play notification sounds (at all)
             bool playNotificationSounds() const;
-
-        protected:
-            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
-            virtual void runtimeHasBeenSet() override;
 
         private slots:
             //! Reload settings

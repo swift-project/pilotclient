@@ -13,7 +13,6 @@
 #define BLACKGUI_INFOBARSTATUSCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "enableforruntime.h"
 #include "blackcore/network.h"
 #include "../led.h"
 #include <QFrame>
@@ -26,8 +25,7 @@ namespace BlackGui
     {
         //! Info bar displaying status (Network, Simulator, DBus)
         class BLACKGUI_EXPORT CInfoBarStatusComponent :
-            public QFrame,
-            public CEnableForRuntime
+            public QFrame
         {
             Q_OBJECT
 
@@ -46,10 +44,6 @@ namespace BlackGui
 
             //! Tooltip for DBus
             void setDBusTooltip(const QString &tooltip);
-
-        protected:
-            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
-            virtual void runtimeHasBeenSet() override;
 
         private:
             QScopedPointer<Ui::CInfoBarStatusComponent> ui;

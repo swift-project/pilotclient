@@ -6,11 +6,13 @@
  * including this file, may be copied, modified, propagated, or distributed except according to the terms
  * contained in the LICENSE file.
  */
+
 #define _CRT_SECURE_NO_WARNINGS
 
+#include "blackcore/actionbind.h"
+#include "blackcore/application.h"
 #include "directplayerror.h"
 #include "directplayutils.h"
-#include "blackmisc/project.h"
 #include "fs9.h"
 #include "lobbyclient.h"
 #include "blackmisc/logmessage.h"
@@ -30,6 +32,7 @@ namespace BlackSimPlugin
               m_callbackWrapper(this, &CLobbyClient::directPlayMessageHandler),
               m_lobbyCallbackWrapper(this, &CLobbyClient::directPlayLobbyMessageHandler)
         {
+            Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing global object");
             initDirectPlay();
         }
 
@@ -208,7 +211,7 @@ namespace BlackSimPlugin
             // Set the device addresses
             apDevAddress[0] = pDeviceAddress;
 
-            QString session = BlackMisc::CProject::swiftVersionString();
+            QString session = sApp->swiftVersionString();
             QScopedArrayPointer<wchar_t> wstrSessionName(new wchar_t[session.size() + 1]);
             session.toWCharArray(wstrSessionName.data());
             wstrSessionName[session.size()] = 0;

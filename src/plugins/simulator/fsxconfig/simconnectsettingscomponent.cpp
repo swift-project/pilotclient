@@ -1,5 +1,15 @@
+/* Copyright (C) 2015
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
 #include "simconnectsettingscomponent.h"
 #include "ui_simconnectsettingscomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/contextapplication.h"
 #include "blackcore/contextsimulator.h"
 #include "blackmisc/network/networkutils.h"
@@ -20,7 +30,6 @@ namespace BlackSimPlugin
 {
     namespace Fsx
     {
-
         CSimConnectSettingsComponent::CSimConnectSettingsComponent(QWidget *parent) :
             QFrame(parent),
             ui(new Ui::CSimConnectSettingsComponent)
@@ -36,7 +45,7 @@ namespace BlackSimPlugin
 
         CSimConnectSettingsComponent::~CSimConnectSettingsComponent()
         {
-
+            // void
         }
 
         void CSimConnectSettingsComponent::openSimConnectCfgFile()
@@ -49,7 +58,7 @@ namespace BlackSimPlugin
         void CSimConnectSettingsComponent::deleteSimConnectCfgFile()
         {
             QString fileName = CSimConnectUtilities::getLocalSimConnectCfgFilename();
-            bool result = getIContextApplication()->removeFile(fileName);
+            bool result = sGui->getIContextApplication()->removeFile(fileName);
             if (result)
             {
                 QMessageBox::information(qApp->activeWindow(), tr("File deleted"),
@@ -62,7 +71,7 @@ namespace BlackSimPlugin
         void CSimConnectSettingsComponent::checkSimConnectCfgFile()
         {
             QString fileName = CSimConnectUtilities::getLocalSimConnectCfgFilename();
-            if (getIContextApplication()->existsFile(fileName))
+            if (sGui->getIContextApplication()->existsFile(fileName))
             {
                 ui->le_SettingsFsxExistsSimconncetCfg->setText(fileName);
             }
@@ -134,9 +143,9 @@ namespace BlackSimPlugin
             int p = port.toInt();
             QString fileName;
 
-            if (getIContextSimulator())
+            if (sGui->getIContextSimulator())
             {
-                fileName = getIContextSimulator()->getSimulatorSetup().getStringValue(CFsxSimulatorSetup::KeyLocalSimConnectCfgFilename());
+                fileName = sGui->getIContextSimulator()->getSimulatorSetup().getStringValue(CFsxSimulatorSetup::KeyLocalSimConnectCfgFilename());
             }
 
             if (fileName.isEmpty())
@@ -151,7 +160,7 @@ namespace BlackSimPlugin
                 return;
             }
 
-            if (getIContextApplication()->writeToFile(fileName, CSimConnectUtilities::simConnectCfg(address, p)))
+            if (sGui->getIContextApplication()->writeToFile(fileName, CSimConnectUtilities::simConnectCfg(address, p)))
             {
                 QMessageBox::information(qApp->activeWindow(), tr("File saved"),
                                          tr("File %1 saved.").arg(fileName));
@@ -163,6 +172,5 @@ namespace BlackSimPlugin
                                      tr("Failed writing %1!").arg(fileName));
             }
         }
-
-    }
-}
+    } // ns
+} // ns

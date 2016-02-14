@@ -9,6 +9,7 @@
 
 #include "settingsnetworkserverscomponent.h"
 #include "ui_settingsnetworkserverscomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/contextnetwork.h"
 #include "blackcore/setupreader.h"
 #include "blackcore/contextapplication.h"
@@ -109,7 +110,7 @@ namespace BlackGui
 
             if (msgs.isEmpty() && sender == this->ui->pb_SaveServer)
             {
-                msg = this->getIContextApplication()->saveSettings(m_trafficNetworkServers.getKey());
+                msg = sGui->getIContextApplication()->saveSettings(m_trafficNetworkServers.getKey());
             }
 
             if (!msg.isEmpty())

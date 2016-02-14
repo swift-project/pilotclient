@@ -9,6 +9,7 @@
 
 #include "settingsnetworkcomponent.h"
 #include "ui_settingsnetworkcomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/contextnetwork.h"
 
 using namespace BlackCore;
@@ -17,34 +18,26 @@ namespace BlackGui
 {
     namespace Components
     {
-
         CSettingsNetworkComponent::CSettingsNetworkComponent(QWidget *parent) :
             QFrame(parent),
             ui(new Ui::CSettingsNetworkComponent)
         {
             ui->setupUi(this);
             connect(this->ui->cb_FastPositionUpdates, &QCheckBox::released, this, &CSettingsNetworkComponent::ps_guiValuesChanged);
+            bool enabled =  sGui->getIContextNetwork()->isFastPositionSendingEnabled();
+            this->ui->cb_FastPositionUpdates->setChecked(enabled);
         }
 
         CSettingsNetworkComponent::~CSettingsNetworkComponent() { }
 
-        void CSettingsNetworkComponent::runtimeHasBeenSet()
-        {
-            Q_ASSERT(this->getIContextNetwork());
-            bool enabled =  this->getIContextNetwork()->isFastPositionSendingEnabled();
-            this->ui->cb_FastPositionUpdates->setChecked(enabled);
-        }
-
         void CSettingsNetworkComponent::ps_guiValuesChanged()
         {
-            Q_ASSERT(this->getIContextNetwork());
             QObject *sender = QObject::sender();
             if (sender == ui->cb_FastPositionUpdates)
             {
                 bool enabled = this->ui->cb_FastPositionUpdates->isChecked();
-                this->getIContextNetwork()->enableFastPositionSending(enabled);
+                sGui->getIContextNetwork()->enableFastPositionSending(enabled);
             }
         }
-
     } // ns
 } // ns

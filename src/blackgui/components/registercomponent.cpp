@@ -9,6 +9,7 @@
 
 #include "registercomponent.h"
 #include "ui_registercomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/contextapplication.h"
 
 using namespace BlackCore;
@@ -23,6 +24,8 @@ namespace BlackGui
             m_updateTimer(new CUpdateTimer("CRegisterComponent", &CRegisterComponent::ps_update, this))
         {
             ui->setupUi(this);
+            m_updateTimer->setUpdateIntervalSeconds(20);
+            connect(sGui->getIContextApplication(), &IContextApplication::registrationChanged, this, &CRegisterComponent::ps_update);
         }
 
         CRegisterComponent::~CRegisterComponent()
@@ -30,15 +33,7 @@ namespace BlackGui
 
         void CRegisterComponent::ps_update()
         {
-            this->ui->tvp_RegisteredComponents->updateContainer(getIContextApplication()->getRegisteredApplications());
+            this->ui->tvp_RegisteredComponents->updateContainer(sGui->getIContextApplication()->getRegisteredApplications());
         }
-
-        void CRegisterComponent::runtimeHasBeenSet()
-        {
-            Q_ASSERT_X(getIContextApplication(), Q_FUNC_INFO, "Missing context");
-            m_updateTimer->setUpdateIntervalSeconds(20);
-            QObject::connect(getIContextApplication(), &IContextApplication::registrationChanged, this, &CRegisterComponent::ps_update);
-        }
-
     } // ns
 } // ns

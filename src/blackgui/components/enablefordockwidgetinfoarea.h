@@ -64,7 +64,7 @@ namespace BlackGui
 
         protected:
             //! Constructor
-            //! \remarks Normally the infoa area will be provided later \sa setParentDockWidgetInfoArea
+            //! \remarks Normally the info area will be provided later \sa setParentDockWidgetInfoArea
             CEnableForDockWidgetInfoArea(CDockWidgetInfoArea *parentInfoArea = nullptr);
 
         private:

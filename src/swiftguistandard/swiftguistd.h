@@ -19,7 +19,6 @@
 #include "blackcore/contextallinterfaces.h"
 #include "blackcore/actionbind.h"
 #include "blackcore/data/globalsetup.h"
-#include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/maininfoareacomponent.h"
 #include "blackgui/components/navigatordialog.h"
 #include "blackgui/transpondermodeselector.h"

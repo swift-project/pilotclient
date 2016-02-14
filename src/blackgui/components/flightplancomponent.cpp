@@ -8,7 +8,8 @@
  */
 
 #include "flightplancomponent.h"
-#include "../stylesheetutility.h"
+#include "blackgui/stylesheetutility.h"
+#include "blackgui/guiapplication.h"
 #include "ui_flightplancomponent.h"
 #include "blackmisc/logmessage.h"
 #include "blackcore/contextnetwork.h"
@@ -58,6 +59,9 @@ namespace BlackGui
             connect(this->ui->frp_SelcalCode, &CSelcalCodeSelector::valueChanged, this, &CFlightPlanComponent::ps_setSelcalInOwnAircraft);
             connect(this->ui->pb_CopyOver, &QPushButton::pressed, this, &CFlightPlanComponent::ps_copyRemarks);
             connect(this->ui->pb_RemarksGenerator, &QPushButton::clicked, this, &CFlightPlanComponent::ps_currentTabGenerator);
+
+            this->ps_resetFlightPlan();
+            this->ps_buildRemarksString();
         }
 
         CFlightPlanComponent::~CFlightPlanComponent()
@@ -66,8 +70,8 @@ namespace BlackGui
         void CFlightPlanComponent::loginDataSet()
         {
             if (this->m_flightPlan.wasSentOrLoaded()) { return; } // when loaded or sent do not override
-            if (!this->getIContextOwnAircraft()) { return; }
-            this->prefillWithAircraftData(this->getIContextOwnAircraft()->getOwnAircraft());
+            if (!sGui->getIContextOwnAircraft()) { return; }
+            this->prefillWithAircraftData(sGui->getIContextOwnAircraft()->getOwnAircraft());
         }
 
         void CFlightPlanComponent::prefillWithAircraftData(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft)
@@ -113,13 +117,6 @@ namespace BlackGui
         CFlightPlan CFlightPlanComponent::getFlightPlan() const
         {
             return this->m_flightPlan;
-        }
-
-        void CFlightPlanComponent::runtimeHasBeenSet()
-        {
-            // context dependent calls
-            this->ps_resetFlightPlan();
-            this->ps_buildRemarksString();
         }
 
         BlackMisc::CStatusMessageList CFlightPlanComponent::validateAndInitializeFlightPlan(BlackMisc::Aviation::CFlightPlan &flightPlan)
@@ -276,10 +273,10 @@ namespace BlackGui
             if (messages.isEmpty())
             {
                 // no error, send if possible
-                if (this->getIContextNetwork()->isConnected())
+                if (sGui->getIContextNetwork()->isConnected())
                 {
                     flightPlan.setWhenLastSentOrLoaded(QDateTime::currentDateTimeUtc());
-                    this->getIContextNetwork()->sendFlightPlan(flightPlan);
+                    sGui->getIContextNetwork()->sendFlightPlan(flightPlan);
                     this->ui->le_LastSent->setText(flightPlan.whenLastSentOrLoaded().toString());
                     CLogMessage(this).info("Sent flight plan");
                 }
@@ -304,9 +301,9 @@ namespace BlackGui
 
         void CFlightPlanComponent::ps_resetFlightPlan()
         {
-            Q_ASSERT(this->getIContextNetwork());
-            Q_ASSERT(this->getIContextOwnAircraft());
-            if (this->getIContextOwnAircraft()) { this->prefillWithAircraftData(this->getIContextOwnAircraft()->getOwnAircraft()); }
+            Q_ASSERT(sGui->getIContextNetwork());
+            Q_ASSERT(sGui->getIContextOwnAircraft());
+            if (sGui->getIContextOwnAircraft()) { this->prefillWithAircraftData(sGui->getIContextOwnAircraft()->getOwnAircraft()); }
             this->ui->le_AircraftRegistration->clear();
             this->ui->le_AirlineOperator->clear();
             this->ui->le_CrusingAltitude->setText("FL70");
@@ -323,26 +320,26 @@ namespace BlackGui
 
         void CFlightPlanComponent::ps_setSelcalInOwnAircraft()
         {
-            if (!this->getIContextOwnAircraft()) return;
+            if (!sGui->getIContextOwnAircraft()) return;
             if (!this->ui->frp_SelcalCode->hasValidCode()) return;
-            this->getIContextOwnAircraft()->updateSelcal(this->ui->frp_SelcalCode->getSelcal(), flightPlanIdentifier());
+            sGui->getIContextOwnAircraft()->updateSelcal(this->ui->frp_SelcalCode->getSelcal(), flightPlanIdentifier());
         }
 
         void CFlightPlanComponent::ps_loadFlightPlanFromNetwork()
         {
-            if (!this->getIContextNetwork())
+            if (!sGui->getIContextNetwork())
             {
                 CLogMessage(this).info("Cannot load flight plan, network not available");
                 return;
             }
-            if (!this->getIContextNetwork()->isConnected())
+            if (!sGui->getIContextNetwork()->isConnected())
             {
                 CLogMessage(this).warning("Cannot load flight plan, network not connected");
                 return;
             }
 
-            CSimulatedAircraft ownAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
-            CFlightPlan loadedPlan = this->getIContextNetwork()->loadFlightPlanFromNetwork(ownAircraft.getCallsign());
+            CSimulatedAircraft ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
+            CFlightPlan loadedPlan = sGui->getIContextNetwork()->loadFlightPlanFromNetwork(ownAircraft.getCallsign());
             if (loadedPlan.wasSentOrLoaded())
             {
                 this->fillWithFlightPlanData(loadedPlan);

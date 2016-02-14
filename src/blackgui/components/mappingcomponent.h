@@ -13,7 +13,6 @@
 #define BLACKGUI_MAPPINGCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/updatetimer.h"
 #include "blackgui/views/checkboxdelegate.h"
@@ -34,8 +33,7 @@ namespace BlackGui
         //! Mappings, models etc.
         class BLACKGUI_EXPORT CMappingComponent :
             public QFrame,
-            public CEnableForDockWidgetInfoArea,
-            public CEnableForRuntime
+            public CEnableForDockWidgetInfoArea
         {
             Q_OBJECT
 
@@ -58,10 +56,6 @@ namespace BlackGui
         signals:
             //! Request a text message
             void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
-
-        protected:
-            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
-            virtual void runtimeHasBeenSet() override;
 
         private slots:
             //! Aircraft models available

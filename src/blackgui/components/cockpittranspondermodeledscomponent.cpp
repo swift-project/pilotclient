@@ -8,6 +8,7 @@
  */
 
 #include "cockpittranspondermodeledscomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/contextownaircraft.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -29,12 +30,7 @@ namespace BlackGui
             m_ledIdent(new CLedWidget(false, CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Rounded, "ident", "", LedWidth, this))
         {
             this->init(true);
-        }
-
-        void CCockpitTransponderModeLedsComponent::runtimeHasBeenSet()
-        {
-            Q_ASSERT(this->getIContextOwnAircraft());
-            connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CCockpitTransponderModeLedsComponent::ps_onAircraftCockpitChanged);
+            connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CCockpitTransponderModeLedsComponent::ps_onAircraftCockpitChanged);
             this->setMode(getOwnTransponder().getTransponderMode());
         }
 
@@ -48,7 +44,7 @@ namespace BlackGui
         {
             QWidget *w = qobject_cast<QWidget *>(QObject::sender());
             if (!w) { return; }
-            if (!this->getIContextOwnAircraft()) { return; }
+            if (!sGui->getIContextOwnAircraft()) { return; }
             CTransponder::TransponderMode mode;
             if (this->m_ledStandby.data() == w)
             {
@@ -72,7 +68,7 @@ namespace BlackGui
             this->setMode(mode);
             CTransponder xpdr = ownAircraft.getTransponder();
             xpdr.setTransponderMode(mode);
-            this->getIContextOwnAircraft()->updateCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), xpdr, identifier());
+            sGui->getIContextOwnAircraft()->updateCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), xpdr, identifier());
         }
 
         void CCockpitTransponderModeLedsComponent::init(bool horizontal)
@@ -91,7 +87,7 @@ namespace BlackGui
             this->setLayout(ledLayout);
 
             // if context is already available set mode
-            if (this->getIContextOwnAircraft()) { this->setMode(getOwnTransponder().getTransponderMode()); }
+            if (sGui->getIContextOwnAircraft()) { this->setMode(getOwnTransponder().getTransponderMode()); }
         }
 
         void CCockpitTransponderModeLedsComponent::setMode(BlackMisc::Aviation::CTransponder::TransponderMode mode)
@@ -125,14 +121,12 @@ namespace BlackGui
 
         CTransponder CCockpitTransponderModeLedsComponent::getOwnTransponder() const
         {
-            Q_ASSERT(getIContextOwnAircraft());
-            return getIContextOwnAircraft()->getOwnAircraft().getTransponder();
+            return sGui->getIContextOwnAircraft()->getOwnAircraft().getTransponder();
         }
 
         CSimulatedAircraft CCockpitTransponderModeLedsComponent::getOwnAircraft() const
         {
-            Q_ASSERT(getIContextOwnAircraft());
-            return getIContextOwnAircraft()->getOwnAircraft();
+            return sGui->getIContextOwnAircraft()->getOwnAircraft();
         }
 
     } // namespace

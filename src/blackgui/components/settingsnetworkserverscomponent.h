@@ -13,7 +13,6 @@
 #define BLACKGUI_SETTINGSNETWORKSERVERSCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/components/enableforruntime.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/settings/network.h"
 #include <QFrame>
@@ -27,8 +26,7 @@ namespace BlackGui
     {
         //! Settings for network servers
         class BLACKGUI_EXPORT CSettingsNetworkServersComponent :
-            public QFrame,
-            public CEnableForRuntime
+            public QFrame
         {
             Q_OBJECT
 

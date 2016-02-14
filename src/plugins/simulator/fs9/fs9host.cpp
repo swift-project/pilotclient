@@ -9,13 +9,13 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
+#include "blackcore/application.h"
+#include "blackmisc/logmessage.h"
 #include "directplayerror.h"
 #include "directplayutils.h"
 #include "fs9host.h"
 #include "multiplayerpacketparser.h"
 #include "multiplayerpackets.h"
-#include "blackmisc/project.h"
-#include "blackmisc/logmessage.h"
 #include <QScopedArrayPointer>
 #include <QVector>
 
@@ -26,9 +26,8 @@ namespace BlackSimPlugin
     namespace Fs9
     {
         CFs9Host::CFs9Host(QObject *owner) :
-            CDirectPlayPeer(owner, CProject::swiftVersionString())
-        {
-        }
+            CDirectPlayPeer(owner, sApp->swiftVersionString())
+        {}
 
         QString CFs9Host::getHostAddress()
         {
@@ -78,7 +77,7 @@ namespace BlackSimPlugin
         {
             initDirectPlay();
             createHostAddress();
-            startHosting(CProject::swiftVersionString(), m_callsign.toQString());
+            startHosting(sApp->swiftVersionString(), m_callsign.toQString());
         }
 
         void CFs9Host::cleanup()
@@ -142,7 +141,7 @@ namespace BlackSimPlugin
             }
             else
             {
-                BlackMisc::CLogMessage(this).info("Hosting successfully started");
+                CLogMessage(this).info("Hosting successfully started");
                 m_hostStatus = Hosting;
             }
 
@@ -172,7 +171,7 @@ namespace BlackSimPlugin
 
             if (m_hostStatus == Terminated) return hr;
 
-            BlackMisc::CLogMessage(this).info("Hosting terminated!");
+            CLogMessage(this).info("Hosting terminated!");
             if (FAILED(hr = m_directPlayPeer->TerminateSession(nullptr, 0, 0)))
             {
                 return logDirectPlayError(hr);

@@ -10,6 +10,7 @@
 #include "settingshotkeycomponent.h"
 #include "ui_settingshotkeycomponent.h"
 #include "blackgui/hotkeydialog.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/contextapplication.h"
 #include <QMessageBox>
 
@@ -43,7 +44,7 @@ namespace BlackGui
         void CSettingsHotkeyComponent::ps_addEntry()
         {
             BlackMisc::CIdentifierList registeredApps;
-            if (getIContextApplication()) registeredApps = getIContextApplication()->getRegisteredApplications();
+            if (sGui->getIContextApplication()) registeredApps = sGui->getIContextApplication()->getRegisteredApplications();
             // add local application
             registeredApps.push_back(CIdentifier());
             auto selectedActionHotkey = CHotkeyDialog::getActionHotkey(CActionHotkey(), registeredApps, this);
@@ -67,7 +68,7 @@ namespace BlackGui
             Q_ASSERT(indexHotkey.data(CActionHotkeyListModel::ActionHotkeyRole).canConvert<CActionHotkey>());
             CActionHotkey actionHotkey = indexHotkey.data(CActionHotkeyListModel::ActionHotkeyRole).value<CActionHotkey>();
             BlackMisc::CIdentifierList registeredApps;
-            if (getIContextApplication()) registeredApps = getIContextApplication()->getRegisteredApplications();
+            if (sGui->getIContextApplication()) registeredApps = sGui->getIContextApplication()->getRegisteredApplications();
             // add local application
             registeredApps.push_back(CIdentifier());
             auto selectedActionHotkey = CHotkeyDialog::getActionHotkey(actionHotkey, registeredApps, this);

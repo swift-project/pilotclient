@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackgui/guiapplication.h"
 #include "blackcore/contextaudio.h"
 #include "blackmisc/audio/audioutils.h"
 #include "audiovolumecomponent.h"
@@ -18,7 +19,6 @@ namespace BlackGui
 {
     namespace Components
     {
-
         CAudioVolumeComponent::CAudioVolumeComponent(QWidget *parent) :
             QFrame(parent),
             ui(new Ui::CAudioVolumeComponent)
@@ -26,33 +26,30 @@ namespace BlackGui
             ui->setupUi(this);
             bool c = connect(this->ui->pb_ShowWinMixer, &QPushButton::pressed, this, &CAudioVolumeComponent::ps_onWindowsMixerRequested);
             Q_ASSERT(c);
+            Q_UNUSED(c);
             c = connect(this->ui->hs_Volume, &QSlider::valueChanged, this, &CAudioVolumeComponent::ps_changeOutputVolumeFromSlider);
             Q_ASSERT(c);
+            Q_UNUSED(c);
             c = connect(this->ui->sb_Volume, static_cast<void (QSpinBox::*)(int)> (&QSpinBox::valueChanged), this, &CAudioVolumeComponent::ps_changeOutputVolumeFromSpinBox);
             Q_ASSERT(c);
+            Q_UNUSED(c);
             c = connect(this->ui->pb_Volume100, &QPushButton::clicked, this, &CAudioVolumeComponent::ps_setVolume100);
             Q_ASSERT(c);
             Q_UNUSED(c);
-        }
 
-        CAudioVolumeComponent::~CAudioVolumeComponent()
-        { }
-
-        void CAudioVolumeComponent::runtimeHasBeenSet()
-        {
-            // from audio context
-            Q_ASSERT(this->getIContextAudio());
-            bool c = connect(this->getIContextAudio(), &IContextAudio::changedMute, this, &CAudioVolumeComponent::ps_onMuteChanged);
+            c = connect(sGui->getIContextAudio(), &IContextAudio::changedMute, this, &CAudioVolumeComponent::ps_onMuteChanged);
             Q_ASSERT(c);
-            connect(this->getIContextAudio(), &IContextAudio::changedAudioVolume, this, &CAudioVolumeComponent::ps_onOutputVolumeChanged);
-            Q_ASSERT(c);
-
-            // to audio audio context
-            c = connect(this->ui->pb_Mute, &QPushButton::toggled, this->getIContextAudio(), &IContextAudio::setMute);
+            Q_UNUSED(c);
+            connect(sGui->getIContextAudio(), &IContextAudio::changedAudioVolume, this, &CAudioVolumeComponent::ps_onOutputVolumeChanged);
             Q_ASSERT(c);
             Q_UNUSED(c);
 
-            if (this->getIContextAudio()->isUsingImplementingObject())
+            // to audio audio context
+            c = connect(this->ui->pb_Mute, &QPushButton::toggled, sGui->getIContextAudio(), &IContextAudio::setMute);
+            Q_ASSERT(c);
+            Q_UNUSED(c);
+
+            if (sGui->getIContextAudio()->isUsingImplementingObject())
             {
                 this->ui->lbl_ContextLocation->setText("local");
             }
@@ -62,8 +59,11 @@ namespace BlackGui
             }
 
             // init volume
-            this->ps_changeOutputVolumeFromSlider(this->getIContextAudio()->getVoiceOutputVolume()); // init volume
+            this->ps_changeOutputVolumeFromSlider(sGui->getIContextAudio()->getVoiceOutputVolume()); // init volume
         }
+
+        CAudioVolumeComponent::~CAudioVolumeComponent()
+        { }
 
         void CAudioVolumeComponent::ps_onMuteChanged(bool muted)
         {
@@ -111,20 +111,20 @@ namespace BlackGui
             }
             this->ui->hs_Volume->setToolTip(QString::number(volume));
 
-            Q_ASSERT(this->getIContextAudio());
-            if (this->getIContextAudio()->getVoiceOutputVolume() != volume)
+            Q_ASSERT(sGui->getIContextAudio());
+            if (sGui->getIContextAudio()->getVoiceOutputVolume() != volume)
             {
-                this->getIContextAudio()->setVoiceOutputVolume(volume);
+                sGui->getIContextAudio()->setVoiceOutputVolume(volume);
             }
         }
 
         void CAudioVolumeComponent::ps_changeOutputVolumeFromSpinBox(int volume)
         {
             this->ui->sb_Volume->setToolTip(QString::number(volume));
-            Q_ASSERT(this->getIContextAudio());
-            if (this->getIContextAudio()->getVoiceOutputVolume() != volume)
+            Q_ASSERT(sGui->getIContextAudio());
+            if (sGui->getIContextAudio()->getVoiceOutputVolume() != volume)
             {
-                this->getIContextAudio()->setVoiceOutputVolume(volume);
+                sGui->getIContextAudio()->setVoiceOutputVolume(volume);
             }
         }
 

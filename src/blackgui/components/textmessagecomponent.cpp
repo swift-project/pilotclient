@@ -9,6 +9,7 @@
 
 #include "textmessagecomponent.h"
 #include "ui_textmessagecomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/contextaudio.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/audio/notificationsounds.h"
@@ -36,7 +37,6 @@ namespace BlackGui
 
         CTextMessageComponent::CTextMessageComponent(QWidget *parent) :
             QFrame(parent),
-            CEnableForRuntime(nullptr, false),
             ui(new Ui::CTextMessageComponent)
         {
             ui->setupUi(this);
@@ -45,6 +45,10 @@ namespace BlackGui
             connect(this->ui->le_textMessages, &QLineEdit::returnPressed, this, &CTextMessageComponent::ps_textMessageEntered);
 
             this->ui->tvp_TextMessagesAll->setResizeMode(CTextMessageView::ResizingAuto);
+
+            connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CTextMessageComponent::ps_onChangedAircraftCockpit);
+            connect(this->getDockWidgetInfoArea(), &CDockWidgetInfoArea::widgetTopLevelChanged, this, &CTextMessageComponent::ps_topLevelChanged);
+            connect(this, &CTextMessageComponent::commandEntered, sApp->getCoreFacade(), &CCoreFacade::parseCommandLine);
         }
 
         CTextMessageComponent::~CTextMessageComponent()
@@ -63,7 +67,7 @@ namespace BlackGui
             case TextMessagesUnicom:
                 return this->ui->tb_TextMessagesUnicom;
             default:
-                qFatal("Wrong index");
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong index");
                 break;
             }
             return nullptr;
@@ -81,7 +85,7 @@ namespace BlackGui
         void CTextMessageComponent::displayTextMessage(const CTextMessageList &messages)
         {
             if (messages.isEmpty()) return;
-            foreach(CTextMessage message, messages)
+            foreach (CTextMessage message, messages)
             {
                 bool relevantForMe = false;
 
@@ -89,9 +93,9 @@ namespace BlackGui
                 if (message.isSelcalMessage() && getOwnAircraft().isSelcalSelected(message.getSelcalCode()))
                 {
                     // this is SELCAL for me
-                    if (this->getIContextAudio())
+                    if (sGui->getIContextAudio())
                     {
-                        this->getIContextAudio()->playSelcalTone(message.getSelcalCode());
+                        sGui->getIContextAudio()->playSelcalTone(message.getSelcalCode());
                     }
                     else
                     {
@@ -161,20 +165,6 @@ namespace BlackGui
             this->showCurrentFrequenciesFromCockpit();
         }
 
-        void CTextMessageComponent::runtimeHasBeenSet()
-        {
-            Q_ASSERT(this->getIContextOwnAircraft());
-            Q_ASSERT(this->getIContextNetwork());
-            Q_ASSERT(this->getIContextAudio());
-
-            connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CTextMessageComponent::ps_onChangedAircraftCockpit);
-            connect(this->getDockWidgetInfoArea(), &CDockWidgetInfoArea::widgetTopLevelChanged, this, &CTextMessageComponent::ps_topLevelChanged);
-            connect(this, &CTextMessageComponent::commandEntered, this->getRuntime(), &CCoreFacade::parseCommandLine);
-        }
-
-        /*
-         * Is the tab of the message's receiver selected?
-         */
         bool CTextMessageComponent::isCorrespondingTextMessageTabSelected(CTextMessage textMessage) const
         {
             if (!this->isVisibleWidget()) { return false; }
@@ -208,7 +198,7 @@ namespace BlackGui
 
         bool CTextMessageComponent::isNetworkConnected() const
         {
-            return this->getIContextNetwork() && this->getIContextNetwork()->isConnected() ;
+            return sGui->getIContextNetwork() && sGui->getIContextNetwork()->isConnected() ;
         }
 
         void CTextMessageComponent::showCurrentFrequenciesFromCockpit()
@@ -248,9 +238,9 @@ namespace BlackGui
             this->connect(closeButton, &QPushButton::released, this, &CTextMessageComponent::ps_closeTextMessageTab);
             this->ui->tw_TextMessages->setCurrentIndex(index);
 
-            if (this->getIContextNetwork())
+            if (sGui->getIContextNetwork())
             {
-                QString realName = this->getIContextNetwork()->getUserForCallsign(CCallsign(tabName)).getRealName();
+                QString realName = sGui->getIContextNetwork()->getUserForCallsign(CCallsign(tabName)).getRealName();
                 if (!realName.isEmpty()) this->ui->tw_TextMessages->setTabToolTip(index, realName);
             }
             return newTab;
@@ -270,16 +260,16 @@ namespace BlackGui
             textEdit->insertTextMessage(textMessage);
 
             // sound
-            if (this->getIContextAudio())
+            if (sGui->getIContextAudio())
             {
-                this->getIContextAudio()->playNotification(CNotificationSounds::NotificationTextMessagePrivate, true);
+                sGui->getIContextAudio()->playNotification(CNotificationSounds::NotificationTextMessagePrivate, true);
             }
         }
 
         const CSimulatedAircraft CTextMessageComponent::getOwnAircraft() const
         {
-            Q_ASSERT(this->getIContextOwnAircraft());
-            return this->getIContextOwnAircraft()->getOwnAircraft();
+            Q_ASSERT(sGui->getIContextOwnAircraft());
+            return sGui->getIContextOwnAircraft()->getOwnAircraft();
         }
 
         QWidget *CTextMessageComponent::findTextMessageTabByCallsign(const CCallsign &callsign, bool callsignResolution) const
@@ -289,7 +279,7 @@ namespace BlackGui
             if (!callsignResolution) { return nullptr; }
 
             // resolve callsign
-            CAtcStation station(getIContextNetwork()->getOnlineStationForCallsign(callsign));
+            CAtcStation station(sGui->getIContextNetwork()->getOnlineStationForCallsign(callsign));
             if (!station.getCallsign().isEmpty())
             {
                 if (this->getOwnAircraft().getCom1System().isActiveFrequencyWithin25kHzChannel(station.getFrequency()))
@@ -447,18 +437,15 @@ namespace BlackGui
 
         void CTextMessageComponent::showCorrespondingTab(const CCallsign &callsign)
         {
-            Q_ASSERT(getIContextOwnAircraft());
-            Q_ASSERT(getIContextNetwork());
-
             if (callsign.isEmpty())
             {
                 CLogMessage(this).warning("No callsign to display text message");
                 return;
             }
             QWidget *w = findTextMessageTabByCallsign(callsign, true);
-            if (!w && getIContextNetwork())
+            if (!w && sGui->getIContextNetwork())
             {
-                CSimulatedAircraft aircraft(getIContextNetwork()->getAircraftInRangeForCallsign(callsign));
+                CSimulatedAircraft aircraft(sGui->getIContextNetwork()->getAircraftInRangeForCallsign(callsign));
                 if (!aircraft.getCallsign().isEmpty())
                 {
                     // we assume a private message

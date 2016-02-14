@@ -9,6 +9,7 @@
 
 #include "simulatorcomponent.h"
 #include "ui_simulatorcomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/contextsimulator.h"
 #include "blackcore/contextownaircraft.h"
 #include "blackcore/simulator.h"
@@ -33,6 +34,13 @@ namespace BlackGui
             this->ui->tvp_LiveData->setIconMode(true);
             this->ui->tvp_LiveData->setAutoResizeFrequency(10); // only resize every n-th time
             this->addOrUpdateByName("info", "no data yet", CIcons::StandardIconWarning16);
+
+            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CSimulatorComponent::ps_onSimulatorStatusChanged);
+            this->setUpdateInterval(getUpdateIntervalMs());
+            if (sGui->getIContextSimulator()->getSimulatorStatus() == 0)
+            {
+                this->stopTimer();
+            }
         }
 
         CSimulatorComponent::~CSimulatorComponent()
@@ -61,12 +69,10 @@ namespace BlackGui
 
         void CSimulatorComponent::update()
         {
-            Q_ASSERT_X(getIContextSimulator(), Q_FUNC_INFO, "No simulator context");
-
             if (!this->isVisibleWidget()) return; // no updates on invisible widgets
-            if (!this->getIContextOwnAircraft()) return;
+            if (!sGui->getIContextOwnAircraft()) return;
 
-            int simualtorStatus = this->getIContextSimulator()->getSimulatorStatus();
+            int simualtorStatus = sGui->getIContextSimulator()->getSimulatorStatus();
             if (simualtorStatus == 0)
             {
                 addOrUpdateByName("info", tr("No simulator available"), CIcons::StandardIconWarning16);
@@ -77,7 +83,7 @@ namespace BlackGui
             {
                 this->addOrUpdateByName("info",
                                         tr("Simulator (%1) not yet running").arg(
-                                            getIContextSimulator()->getSimulatorPluginInfo().getSimulator()
+                                            sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator()
                                         ),
                                         CIcons::StandardIconWarning16);
                 return;
@@ -89,7 +95,7 @@ namespace BlackGui
                 this->clear();
             }
 
-            CSimulatedAircraft ownAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
+            CSimulatedAircraft ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
             CAircraftSituation s = ownAircraft.getSituation();
             CComSystem c1 = ownAircraft.getCom1System();
             CComSystem c2 = ownAircraft.getCom2System();
@@ -109,19 +115,6 @@ namespace BlackGui
             this->addOrUpdateByName("Transponder", ownAircraft.getTransponderCodeFormatted(), CIcons::StandardIconRadio16);
         }
 
-        void CSimulatorComponent::runtimeHasBeenSet()
-        {
-            Q_ASSERT_X(this->getIContextSimulator(), Q_FUNC_INFO, "Missing simulator context");
-            if (!this->getIContextSimulator()) { return; }
-            QObject::connect(this->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CSimulatorComponent::ps_onSimulatorStatusChanged);
-
-            this->setUpdateInterval(getUpdateIntervalMs());
-            if (getIContextSimulator()->getSimulatorStatus() == 0)
-            {
-                this->stopTimer();
-            }
-        }
-
         void CSimulatorComponent::ps_onSimulatorStatusChanged(int status)
         {
             if (status & ISimulator::Connected)
@@ -139,10 +132,8 @@ namespace BlackGui
 
         int CSimulatorComponent::getUpdateIntervalMs() const
         {
-            Q_ASSERT(this->getIContextSimulator());
-
             // much slower updates via DBus
-            return this->getIContextSimulator()->isUsingImplementingObject() ? 500 : 5000;
+            return sGui->getIContextSimulator()->isUsingImplementingObject() ? 500 : 5000;
         }
     }
 } // namespace

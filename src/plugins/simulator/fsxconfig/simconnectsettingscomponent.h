@@ -14,11 +14,8 @@
 
 #include <QFrame>
 #include <QScopedPointer>
-#include "blackgui/components/enableforruntime.h"
 
-namespace Ui {
-class CSimConnectSettingsComponent;
-}
+namespace Ui { class CSimConnectSettingsComponent; }
 
 namespace BlackSimPlugin
 {
@@ -27,7 +24,7 @@ namespace BlackSimPlugin
         /**
          * A component that gathers all SimConnect-related settings.
          */
-        class CSimConnectSettingsComponent : public QFrame, public BlackGui::Components::CEnableForRuntime
+        class CSimConnectSettingsComponent : public QFrame
         {
             Q_OBJECT
 
@@ -56,10 +53,8 @@ namespace BlackSimPlugin
 
         private:
             QScopedPointer<Ui::CSimConnectSettingsComponent> ui;
-
         };
-
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard

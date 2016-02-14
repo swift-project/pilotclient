@@ -10,7 +10,6 @@
 #ifndef BLACKGUI_COMPONENTS_REGISTERCOMPONENT_H
 #define BLACKGUI_COMPONENTS_REGISTERCOMPONENT_H
 
-#include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/updatetimer.h"
 #include <QFrame>
 
@@ -22,8 +21,7 @@ namespace BlackGui
     {
         //! Register components in the GUI
         class BLACKGUI_EXPORT CRegisterComponent :
-            public QFrame,
-            public CEnableForRuntime
+            public QFrame
         {
             Q_OBJECT
 
@@ -33,10 +31,6 @@ namespace BlackGui
 
             //! Destructor
             ~CRegisterComponent();
-
-        protected:
-            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
-            virtual void runtimeHasBeenSet() override;
 
         private slots:
             //! Update data

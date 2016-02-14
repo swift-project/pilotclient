@@ -9,7 +9,8 @@
 
 #include "usercomponent.h"
 #include "ui_usercomponent.h"
-#include "../guiutility.h"
+#include "blackgui/guiutility.h"
+#include "blackgui/guiapplication.h"
 #include "blackmisc/network/userlist.h"
 #include "blackcore/contextnetwork.h"
 #include "blackcore/network.h"
@@ -25,7 +26,6 @@ namespace BlackGui
         CUserComponent::CUserComponent(QWidget *parent) :
             QTabWidget(parent),
             CEnableForDockWidgetInfoArea(),
-            CEnableForRuntime(nullptr, false),
             ui(new Ui::CUserComponent),
             m_updateTimer(new CUpdateTimer("CUserComponent", &CUserComponent::update, this))
         {
@@ -33,6 +33,7 @@ namespace BlackGui
             this->tabBar()->setExpanding(false);
             connect(this->ui->tvp_AllUsers, &CUserView::rowCountChanged, this, &CUserComponent::ps_onCountChanged);
             connect(this->ui->tvp_Clients, &CClientView::rowCountChanged, this, &CUserComponent::ps_onCountChanged);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CUserComponent::ps_connectionStatusChanged);
         }
 
         CUserComponent::~CUserComponent()
@@ -54,9 +55,9 @@ namespace BlackGui
         {
             Q_ASSERT(this->ui->tvp_AllUsers);
             Q_ASSERT(this->ui->tvp_Clients);
-            Q_ASSERT(this->getIContextNetwork());
+            Q_ASSERT(sGui->getIContextNetwork());
 
-            if (this->getIContextNetwork()->isConnected())
+            if (sGui->getIContextNetwork()->isConnected())
             {
                 bool withData = countUsers() > 0 || countClients() > 0;
                 if (withData && !isVisibleWidget())
@@ -66,15 +67,9 @@ namespace BlackGui
                 }
 
                 // load data
-                this->ui->tvp_Clients->updateContainer(this->getIContextNetwork()->getOtherClients());
-                this->ui->tvp_AllUsers->updateContainer(this->getIContextNetwork()->getUsers());
+                this->ui->tvp_Clients->updateContainer(sGui->getIContextNetwork()->getOtherClients());
+                this->ui->tvp_AllUsers->updateContainer(sGui->getIContextNetwork()->getUsers());
             }
-        }
-
-        void CUserComponent::runtimeHasBeenSet()
-        {
-            Q_ASSERT(this->getIContextNetwork());
-            this->connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CUserComponent::ps_connectionStatusChanged);
         }
 
         void CUserComponent::ps_onCountChanged(int count, bool withFilter)

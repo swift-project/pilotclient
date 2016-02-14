@@ -13,7 +13,6 @@
 #define BLACKGUI_ATCSTATIONCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/updatetimer.h"
 #include "blackcore/network.h"
@@ -33,7 +32,6 @@ namespace BlackGui
         class BLACKGUI_EXPORT CAtcStationComponent :
             public QTabWidget,
             public CEnableForDockWidgetInfoArea,
-            public CEnableForRuntime,
             public BlackMisc::CIdentifiable
         {
             Q_OBJECT
@@ -50,6 +48,9 @@ namespace BlackGui
 
             //! Number of online stations
             int countOnlineStations() const;
+
+            //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
+            virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget) override;
 
         signals:
             //! Request a text message
@@ -70,10 +71,6 @@ namespace BlackGui
 
             //! \copydoc Models::CAtcStationListModel::changedAtcStationConnectionStatus
             void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
-
-        protected:
-            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
-            void runtimeHasBeenSet() override;
 
         private slots:
             //! Get all METARs

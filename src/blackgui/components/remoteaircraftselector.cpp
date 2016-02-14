@@ -9,6 +9,7 @@
 
 #include "remoteaircraftselector.h"
 #include "ui_remoteaircraftselector.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/contextnetwork.h"
 
 using namespace BlackMisc;
@@ -20,13 +21,16 @@ namespace BlackGui
 {
     namespace Components
     {
-
         CRemoteAircraftSelector::CRemoteAircraftSelector(QWidget *parent) :
             QFrame(parent),
-            CEnableForRuntime(nullptr, false),
             ui(new Ui::CRemoteAircraftSelector)
         {
             ui->setupUi(this);
+            bool s = connect(sGui->getIContextNetwork(), &IContextNetwork::removedAircraft, this, &CRemoteAircraftSelector::ps_onRemovedAircraft);
+            Q_ASSERT(s);
+            s = connect(sGui->getIContextNetwork(), &IContextNetwork::addedAircraft, this, &CRemoteAircraftSelector::ps_onAddedAircraft);
+            Q_ASSERT(s);
+            Q_UNUSED(s);
         }
 
         CRemoteAircraftSelector::~CRemoteAircraftSelector() { }
@@ -37,16 +41,6 @@ namespace BlackGui
             int index = ui->cb_RemoteAircraftSelector->currentIndex();
             if (index < 0 || index > this->m_aircraft.size()) { return empty; }
             return m_aircraft[index].getCallsign();
-        }
-
-        void CRemoteAircraftSelector::runtimeHasBeenSet()
-        {
-            Q_ASSERT(getIContextNetwork());
-            bool s = connect(getIContextNetwork(), &IContextNetwork::removedAircraft, this, &CRemoteAircraftSelector::ps_onRemovedAircraft);
-            Q_ASSERT(s);
-            s = connect(getIContextNetwork(), &IContextNetwork::addedAircraft, this, &CRemoteAircraftSelector::ps_onAddedAircraft);
-            Q_ASSERT(s);
-            Q_UNUSED(s);
         }
 
         void CRemoteAircraftSelector::showEvent(QShowEvent *event)
@@ -76,8 +70,7 @@ namespace BlackGui
         void CRemoteAircraftSelector::fillComboBox()
         {
             if (!this->isVisible()) { return; } // for performance reasons
-            Q_ASSERT(getIContextNetwork());
-            m_aircraft = getIContextNetwork()->getAircraftInRange();
+            m_aircraft = sGui->getIContextNetwork()->getAircraftInRange();
             this->ui->cb_RemoteAircraftSelector->clear();
             if (m_aircraft.isEmpty()) { return; }
 

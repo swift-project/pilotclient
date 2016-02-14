@@ -13,7 +13,7 @@
 #define BLACKGUI_INTERNALSCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "enableforruntime.h"
+#include "blackmisc/aviation/aircraftparts.h"
 #include <QWidget>
 #include <QScopedArrayPointer>
 
@@ -23,11 +23,9 @@ namespace BlackGui
 {
     namespace Components
     {
-
         //! Internals for debugging, statistics
         class BLACKGUI_EXPORT CInternalsComponent :
-            public QWidget,
-            public CEnableForRuntime
+            public QWidget
         {
             Q_OBJECT
 
@@ -39,9 +37,6 @@ namespace BlackGui
             ~CInternalsComponent();
 
         protected:
-            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
-            virtual void runtimeHasBeenSet() override;
-
             //! \copydoc QWidget::showEvent
             virtual void showEvent(QShowEvent *event) override;
 

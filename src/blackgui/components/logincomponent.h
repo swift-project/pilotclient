@@ -13,9 +13,9 @@
 #define BLACKGUI_LOGINCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/components/enableforruntime.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/settings/network.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/entityflags.h"
 #include <QFrame>
@@ -29,8 +29,7 @@ namespace BlackGui
     {
         //! Login component
         class BLACKGUI_EXPORT CLoginComponent :
-            public QFrame,
-            public CEnableForRuntime
+            public QFrame
         {
             Q_OBJECT
 
@@ -54,10 +53,6 @@ namespace BlackGui
         public slots:
             //! Main info area chnaged
             void mainInfoAreaChanged(const QWidget *currentWidget);
-
-        protected:
-            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
-            virtual void runtimeHasBeenSet() override;
 
         private slots:
             //! Login cancelled

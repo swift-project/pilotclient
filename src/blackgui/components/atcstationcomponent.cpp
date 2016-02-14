@@ -8,8 +8,9 @@
  */
 
 #include "atcstationcomponent.h"
-#include "../guiutility.h"
 #include "ui_atcstationcomponent.h"
+#include "blackgui/guiutility.h"
+#include "blackgui/guiapplication.h"
 #include "blackmisc/aviation/informationmessage.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/weather/metar.h"
@@ -70,6 +71,12 @@ namespace BlackGui
             connect(this->ui->tvp_AtcStationsBooked, &CAtcStationView::rowCountChanged, this, &CAtcStationComponent::ps_onCountChanged);
 
             connect(this->ui->pb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::ps_requestAtis);
+
+            // runtime based connects
+            this->connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this, &CAtcStationComponent::ps_changedAtcStationsOnline);
+            this->connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsBookedDigest, this, &CAtcStationComponent::ps_changedAtcStationsBooked);
+            this->connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationOnlineConnectionStatus, this, &CAtcStationComponent::changedAtcStationOnlineConnectionStatus);
+            this->connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAtcStationComponent::ps_connectionStatusChanged);
         }
 
         CAtcStationComponent::~CAtcStationComponent()
@@ -85,25 +92,20 @@ namespace BlackGui
             return ui->tvp_AtcStationsOnline->rowCount();
         }
 
-        void CAtcStationComponent::runtimeHasBeenSet()
+        bool CAtcStationComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
         {
-            Q_ASSERT(this->getRuntime());
-            Q_ASSERT(this->getIContextNetwork());
-            if (this->getIContextNetwork())
-            {
-                this->connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this, &CAtcStationComponent::ps_changedAtcStationsOnline);
-                this->connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationsBookedDigest, this, &CAtcStationComponent::ps_changedAtcStationsBooked);
-                this->connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationOnlineConnectionStatus, this, &CAtcStationComponent::changedAtcStationOnlineConnectionStatus);
-                this->connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAtcStationComponent::ps_connectionStatusChanged);
-            }
-            connect(this->getParentInfoArea(), &CInfoArea::changedInfoAreaTabBarIndex, this, &CAtcStationComponent::ps_infoAreaTabBarChanged);
+            CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(parentDockableWidget);
+            bool c = connect(this->getParentInfoArea(), &CInfoArea::changedInfoAreaTabBarIndex, this, &CAtcStationComponent::ps_infoAreaTabBarChanged);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "failed connect");
+            Q_ASSERT_X(parentDockableWidget, Q_FUNC_INFO, "missing parent");
+            return c && parentDockableWidget;
         }
 
         void CAtcStationComponent::update()
         {
             Q_ASSERT(this->ui->tvp_AtcStationsBooked);
             Q_ASSERT(this->ui->tvp_AtcStationsOnline);
-            Q_ASSERT(this->getIContextNetwork());
+            Q_ASSERT(sGui->getIContextNetwork());
 
             // check if component is visible, if we have already data then skip udpate
             bool hasData = this->countBookedStations() > 0 || this->countOnlineStations() > 0;
@@ -120,15 +122,15 @@ namespace BlackGui
             }
 
             // online stations, only when connected
-            if (this->getIContextNetwork()->isConnected())
+            if (sGui->getIContextNetwork()->isConnected())
             {
                 // update
                 if (this->m_timestampOnlineStationsChanged > this->m_timestampLastReadOnlineStations)
                 {
                     this->ui->tvp_AtcStationsOnline->updateContainerMaybeAsync(
                         // test: filter by frequency, see if this is better
-                        // this->getIContextNetwork()->getAtcStationsOnline().stationsWithValidVoiceRoom()
-                        this->getIContextNetwork()->getAtcStationsOnline().stationsWithValidFrequency()
+                        // sGui->getIContextNetwork()->getAtcStationsOnline().stationsWithValidVoiceRoom()
+                        sGui->getIContextNetwork()->getAtcStationsOnline().stationsWithValidFrequency()
                     );
                     this->m_timestampLastReadOnlineStations = QDateTime::currentDateTimeUtc();
                     this->m_timestampOnlineStationsChanged = this->m_timestampLastReadOnlineStations;
@@ -152,7 +154,7 @@ namespace BlackGui
             QString icao(airportIcaoCode.isEmpty() ? this->ui->le_AtcStationsOnlineMetar->text().trimmed().toUpper() : airportIcaoCode.trimmed().toUpper());
             this->ui->le_AtcStationsOnlineMetar->setText(icao);
             if (icao.length() != 4) { return; }
-            CMetar metar(this->getIContextNetwork()->getMetarForAirport(icao));
+            CMetar metar(sGui->getIContextNetwork()->getMetarForAirport(icao));
             if (metar == CMetar())
             {
                 this->ui->te_AtcStationsOnlineInfo->clear();
@@ -170,18 +172,18 @@ namespace BlackGui
         void CAtcStationComponent::ps_reloadAtcStationsBooked()
         {
             Q_ASSERT(this->ui->tvp_AtcStationsBooked);
-            Q_ASSERT(this->getIContextNetwork());
+            Q_ASSERT(sGui->getIContextNetwork());
 
             QObject *sender = QObject::sender();
-            if (sender == this->ui->tvp_AtcStationsBooked && this->getIContextNetwork())
+            if (sender == this->ui->tvp_AtcStationsBooked && sGui->getIContextNetwork())
             {
                 // trigger new read, which takes some time. A signal will be received when this is done
                 CLogMessage(this).info("Requested new bookings");
-                this->getIContextNetwork()->readAtcBookingsFromSource();
+                sGui->getIContextNetwork()->readAtcBookingsFromSource();
             }
             else
             {
-                this->ui->tvp_AtcStationsBooked->updateContainerMaybeAsync(this->getIContextNetwork()->getAtcStationsBooked());
+                this->ui->tvp_AtcStationsBooked->updateContainerMaybeAsync(sGui->getIContextNetwork()->getAtcStationsBooked());
                 this->m_timestampLastReadBookedStations = QDateTime::currentDateTimeUtc();
             }
         }
@@ -214,9 +216,9 @@ namespace BlackGui
 
         void CAtcStationComponent::ps_testCreateDummyOnlineAtcStations(int number)
         {
-            if (this->getIContextNetwork())
+            if (sGui->getIContextNetwork())
             {
-                this->getIContextNetwork()->testCreateDummyOnlineAtcStations(number);
+                sGui->getIContextNetwork()->testCreateDummyOnlineAtcStations(number);
             }
         }
 
@@ -255,7 +257,7 @@ namespace BlackGui
         {
             if (unit != CComSystem::Com1 && unit != CComSystem::Com2) { return; }
             if (!CComSystem::isValidComFrequency(frequency)) { return; }
-            this->getIContextOwnAircraft()->updateActiveComFrequency(frequency, unit, identifier());
+            sGui->getIContextOwnAircraft()->updateActiveComFrequency(frequency, unit, identifier());
         }
 
         void CAtcStationComponent::updateTreeView()
@@ -307,8 +309,8 @@ namespace BlackGui
 
         void CAtcStationComponent::ps_requestAtis()
         {
-            if (!this->getIContextNetwork()->isConnected()) return;
-            this->getIContextNetwork()->requestAtisUpdates();
+            if (!sGui->getIContextNetwork()->isConnected()) return;
+            sGui->getIContextNetwork()->requestAtisUpdates();
         }
     } // namespace
 } // namespace

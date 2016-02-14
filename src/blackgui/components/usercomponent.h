@@ -13,7 +13,6 @@
 #define BLACKGUI_USERCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/updatetimer.h"
 #include "blackcore/network.h"
@@ -30,8 +29,7 @@ namespace BlackGui
         //! User componenet (users, clients)
         class BLACKGUI_EXPORT CUserComponent :
             public QTabWidget,
-            public CEnableForDockWidgetInfoArea,
-            public CEnableForRuntime
+            public CEnableForDockWidgetInfoArea
         {
             Q_OBJECT
 
@@ -57,10 +55,6 @@ namespace BlackGui
 
             //! \copydoc CUpdateTimer::stopTimer
             void stopTimer() { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->stopTimer(); }
-
-        protected:
-            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
-            void runtimeHasBeenSet() override;
 
         private slots:
             //! Number of elements changed

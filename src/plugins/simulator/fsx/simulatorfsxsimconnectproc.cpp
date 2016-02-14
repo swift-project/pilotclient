@@ -8,15 +8,16 @@
  */
 
 #include "simulatorfsx.h"
+#include "blackcore/application.h"
 #include "simconnectdatadefinition.h"
 #include "blackmisc/simulation/fscommon/bcdconversions.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
 #include "blackmisc/simulation/fsx/fsxsimulatorsetup.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/project.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/logmessage.h"
 
+using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;
@@ -43,7 +44,7 @@ namespace BlackSimPlugin
                                                      .arg(event->szApplicationName)
                                                      .arg(event->dwApplicationVersionMajor).arg(event->dwApplicationVersionMinor).arg(event->dwApplicationBuildMajor).arg(event->dwApplicationBuildMinor)
                                                      .arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
-                    CLogMessage(static_cast<CSimulatorFsx *>(nullptr)).info("Connect to FSX: %1") << CProject::swiftVersionString();
+                    CLogMessage(static_cast<CSimulatorFsx *>(nullptr)).info("Connect to FSX: %1") << sApp->swiftVersionString();
                     break;
                 }
             case SIMCONNECT_RECV_ID_EXCEPTION:

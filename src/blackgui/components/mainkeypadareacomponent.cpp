@@ -9,6 +9,7 @@
 
 #include "mainkeypadareacomponent.h"
 #include "ui_mainkeypadareacomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/contextaudio.h"
 #include "blackcore/contextnetwork.h"
 #include "blackcore/contextownaircraft.h"
@@ -54,6 +55,11 @@ namespace BlackGui
 
             // command line
             this->connect(this->ui->le_CommandLineInput, &QLineEdit::returnPressed, this, &CMainKeypadAreaComponent::ps_commandEntered);
+
+            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMainKeypadAreaComponent::ps_connectionStatusChanged);
+            connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CMainKeypadAreaComponent::ps_ownAircraftCockpitChanged);
+            connect(sGui->getIContextAudio(), &IContextAudio::changedMute, this, &CMainKeypadAreaComponent::ps_muteChanged);
+            connect(this, &CMainKeypadAreaComponent::commandEntered, sGui->getCoreFacade(), &CCoreFacade::parseCommandLine);
         }
 
         CMainKeypadAreaComponent::~CMainKeypadAreaComponent()
@@ -72,25 +78,13 @@ namespace BlackGui
                 }
             }
 
-            foreach(int floatingIndex, floatingIndexes)
+            foreach (int floatingIndex, floatingIndexes)
             {
                 QPushButton *pb = this->mainInfoAreaToButton(static_cast<CMainInfoAreaComponent::InfoArea>(floatingIndex));
                 if (pb) {pb->setChecked(true); }
             }
 
             Q_UNUSED(dockedIndexes);
-        }
-
-        void CMainKeypadAreaComponent::runtimeHasBeenSet()
-        {
-            Q_ASSERT(this->getIContextOwnAircraft());
-            Q_ASSERT(this->getIContextNetwork());
-            Q_ASSERT(this->getIContextAudio());
-
-            connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMainKeypadAreaComponent::ps_connectionStatusChanged);
-            connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CMainKeypadAreaComponent::ps_ownAircraftCockpitChanged);
-            connect(this->getIContextAudio(), &IContextAudio::changedMute, this, &CMainKeypadAreaComponent::ps_muteChanged);
-            connect(this, &CMainKeypadAreaComponent::commandEntered, this->getRuntime(), &CCoreFacade::parseCommandLine);
         }
 
         void CMainKeypadAreaComponent::ps_buttonSelected()
@@ -106,7 +100,7 @@ namespace BlackGui
                 senderButton->setChecked(true); // re-check if got unchecked, we use checked buttons like normal buttons
                 return;
             }
-            else if (senderButton == this->ui->pb_CockpitIdent && this->getIContextOwnAircraft())
+            else if (senderButton == this->ui->pb_CockpitIdent && sGui->getIContextOwnAircraft())
             {
                 emit identPressed();
             }
@@ -118,14 +112,14 @@ namespace BlackGui
             {
                 emit changedOpacity(100);
             }
-            else if (senderButton == this->ui->pb_SoundMaxVolume && this->getIContextAudio())
+            else if (senderButton == this->ui->pb_SoundMaxVolume && sGui->getIContextAudio())
             {
-                this->getIContextAudio()->setVoiceOutputVolume(100);
+                sGui->getIContextAudio()->setVoiceOutputVolume(100);
             }
-            else if (senderButton == this->ui->pb_SoundMute && this->getIContextAudio())
+            else if (senderButton == this->ui->pb_SoundMute && sGui->getIContextAudio())
             {
-                bool mute = this->getIContextAudio()->isMuted();
-                this->getIContextAudio()->setMute(!mute);
+                bool mute = sGui->getIContextAudio()->isMuted();
+                sGui->getIContextAudio()->setMute(!mute);
             }
             else if (senderButton == this->ui->pb_Connect)
             {

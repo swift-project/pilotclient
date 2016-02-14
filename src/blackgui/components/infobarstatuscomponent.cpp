@@ -9,6 +9,7 @@
 
 #include "infobarstatuscomponent.h"
 #include "ui_infobarstatuscomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/contextsimulator.h"
 #include "blackcore/contextnetwork.h"
 #include "blackcore/contextapplication.h"
@@ -38,6 +39,32 @@ namespace BlackGui
 
             this->ui->lbl_Audio->setContextMenuPolicy(Qt::CustomContextMenu);
             connect(this->ui->lbl_Audio, &QLabel::customContextMenuRequested, this, &CInfoBarStatusComponent::ps_customAudioContextMenuRequested);
+
+            if (sGui->getIContextSimulator())
+            {
+                connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CInfoBarStatusComponent::ps_onSimulatorStatusChanged);
+                connect(sGui->getIContextSimulator(), &IContextSimulator::installedAircraftModelsChanged, this, &CInfoBarStatusComponent::ps_onMapperReady);
+
+                // initial values
+                this->ps_onMapperReady();
+                this->ps_onSimulatorStatusChanged(sGui->getIContextSimulator()->getSimulatorStatus());
+            }
+
+            if (sGui->getIContextNetwork())
+            {
+                connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CInfoBarStatusComponent::ps_onNetworkConnectionChanged);
+            }
+
+            if (sGui->getIContextApplication())
+            {
+                this->ui->led_DBus->setOn(sGui->getIContextApplication()->isUsingImplementingObject());
+            }
+
+            if (sGui->getIContextAudio())
+            {
+                this->ui->led_Audio->setOn(!sGui->getIContextAudio()->isMuted());
+                connect(sGui->getIContextAudio(), &IContextAudio::changedMute, this, &CInfoBarStatusComponent::ps_onMuteChanged);
+            }
         }
 
         CInfoBarStatusComponent::~CInfoBarStatusComponent()
@@ -66,48 +93,12 @@ namespace BlackGui
             this->ui->led_DBus->setOnToolTip(tooltip);
         }
 
-        void CInfoBarStatusComponent::runtimeHasBeenSet()
-        {
-            if (getIContextApplication()->isEmptyObject()) return;
-
-            // TODO: remove checks when empty contexts are fully introduced
-            Q_ASSERT(getIContextSimulator());
-            Q_ASSERT(getIContextAudio());
-            Q_ASSERT(getIContextNetwork());
-
-            if (this->getIContextSimulator())
-            {
-                connect(this->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CInfoBarStatusComponent::ps_onSimulatorStatusChanged);
-                connect(this->getIContextSimulator(), &IContextSimulator::installedAircraftModelsChanged, this, &CInfoBarStatusComponent::ps_onMapperReady);
-
-                // initial values
-                this->ps_onMapperReady();
-                this->ps_onSimulatorStatusChanged(this->getIContextSimulator()->getSimulatorStatus());
-            }
-
-            if (this->getIContextNetwork())
-            {
-                connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CInfoBarStatusComponent::ps_onNetworkConnectionChanged);
-            }
-
-            if (this->getIContextApplication())
-            {
-                this->ui->led_DBus->setOn(this->getIContextApplication()->isUsingImplementingObject());
-            }
-
-            if (this->getIContextAudio())
-            {
-                this->ui->led_Audio->setOn(!this->getIContextAudio()->isMuted());
-                connect(getIContextAudio(), &IContextAudio::changedMute, this, &CInfoBarStatusComponent::ps_onMuteChanged);
-            }
-        }
-
         void CInfoBarStatusComponent::ps_onSimulatorStatusChanged(int status)
         {
             if (status > 0 && (status & ISimulator::Connected))
             {
                 QString s(
-                    getIContextSimulator()->getSimulatorPluginInfo().getDescription() + ": " +
+                    sGui->getIContextSimulator()->getSimulatorPluginInfo().getDescription() + ": " +
                     ISimulator::statusToString(status));
 
                 // at least connected
@@ -148,7 +139,7 @@ namespace BlackGui
                 break;
             case INetwork::Connected:
                 this->ui->led_Network->setOn(true);
-                this->ui->led_Network->setOnToolTip("Connected: " + getIContextNetwork()->getConnectedServer().getName());
+                this->ui->led_Network->setOnToolTip("Connected: " + sGui->getIContextNetwork()->getConnectedServer().getName());
                 break;
             case INetwork::Connecting:
                 this->ui->led_Network->setTriStateColor(CLedWidget::Yellow);
@@ -180,7 +171,7 @@ namespace BlackGui
                 const QList<QAction *> actions = menuAudio.actions();
                 if (selectedItem == actions.at(0))
                 {
-                    this->getIContextAudio()->setMute(!this->getIContextAudio()->isMuted());
+                    sGui->getIContextAudio()->setMute(!sGui->getIContextAudio()->isMuted());
                 }
                 else if (actions.size() > 1 && selectedItem == actions.at(1))
                 {
@@ -196,13 +187,13 @@ namespace BlackGui
 
         void CInfoBarStatusComponent::ps_onMapperReady()
         {
-            if (!getIContextSimulator())
+            if (!sGui->getIContextSimulator())
             {
                 this->ui->led_MapperReady->setOn(false);
                 return;
             }
 
-            int models = this->getIContextSimulator()->getInstalledModelsCount();
+            int models = sGui->getIContextSimulator()->getInstalledModelsCount();
             bool on = (models > 0);
             this->ui->led_MapperReady->setOn(on);
             if (on)

@@ -13,7 +13,6 @@
 #define BLACKGUI_REMOTEAIRCRAFTSELECTOR_H
 
 #include "blackgui/blackguiexport.h"
-#include "enableforruntime.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 
@@ -28,7 +27,7 @@ namespace BlackGui
     namespace Components
     {
         //! Select a remote aircraft
-        class BLACKGUI_EXPORT CRemoteAircraftSelector : public QFrame, public CEnableForRuntime
+        class BLACKGUI_EXPORT CRemoteAircraftSelector : public QFrame
         {
             Q_OBJECT
 
@@ -43,9 +42,6 @@ namespace BlackGui
             BlackMisc::Aviation::CCallsign getSelectedCallsign() const;
 
         protected:
-            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
-            virtual void runtimeHasBeenSet() override;
-
             //! \copydoc QWidget::showEvent
             virtual void showEvent(QShowEvent *event) override;
 
