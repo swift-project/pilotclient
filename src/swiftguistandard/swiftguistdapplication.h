@@ -25,17 +25,17 @@ class CSwiftGuiStdApplication : public BlackGui::CGuiApplication
 
 public:
     //! Constructor
-    CSwiftGuiStdApplication(int argc, char *argv[]);
+    CSwiftGuiStdApplication();
 
     //! Single instance
     CSwiftGuiStdApplication *instance();
 
-    //! Start facade by cmd arguments
-    void startCoreFacade();
-
 protected:
     //! Parsing of special CMD args
-    virtual void parsingHookIn() override;
+    virtual bool parsingHookIn() override;
+
+    //! Start facade by cmd arguments
+    virtual bool startHookIn() override;
 
 private:
     QCommandLineOption m_cmdFacadeMode

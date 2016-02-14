@@ -13,34 +13,23 @@
 #include "samplesphysicalquantities.h"
 #include "samplesaviation.h"
 #include "samplesgeo.h"
+#include "blackcore/application.h"
 #include <QTextStream>
 
 using namespace BlackMisc;
 using namespace BlackSample;
+using namespace BlackCore;
 
 //! main
 int main(int argc, char *argv[])
 {
+    QCoreApplication(argc, argv);
+    CApplication a;
+    Q_UNUSED(a);
+
     QTextStream out(stdout, QIODevice::WriteOnly);
-
-    BlackMisc::initResources();
-    QFile file(":blackmisc/translations/blackmisc_i18n_de.qm");
-    out << (file.exists() ? "Found translations in resources" : "No translations in resources") << endl;
-    QTranslator translator;
-    bool t = translator.load("blackmisc_i18n_de", ":blackmisc/translations/");
-    out << (t ? "Translator loaded" : "Translator not loaded") << endl;
-
-    QCoreApplication a(argc, argv);
-    out << "Use I18N version, y? n?";
-    out.flush();
-    int yn = getchar();
-    t = (yn == 'y' || yn == 'Y');
-    t =  t ? a.installTranslator(&translator) : false;
-    out << (t ? "Installed translator" : "No translator ");
-
     CSamplesPhysicalQuantities::samples(out);
     CSamplesAviation::samples(out);
     CSamplesGeo::samples(out);
-
     return 0;
 }

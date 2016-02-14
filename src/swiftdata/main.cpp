@@ -27,8 +27,9 @@ using namespace BlackGui;
 
 int main(int argc, char *argv[])
 {
-    CGuiApplication a(argc, argv, "swift mapping tool");
-    a.setWindowIcon(CIcons::swiftDatabase48());
+    QApplication qa(argc, argv);
+    CGuiApplication a("swift mapping tool", CIcons::swiftDatabase48());
+    a.start();
     CSwiftData w;
     w.show();
     int r = a.exec();

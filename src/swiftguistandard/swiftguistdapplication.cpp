@@ -14,16 +14,16 @@
 using namespace BlackMisc;
 using namespace BlackCore;
 
-CSwiftGuiStdApplication::CSwiftGuiStdApplication(int argc, char *argv[]) : CGuiApplication(argc, argv, "swift pilot client GUI")
+CSwiftGuiStdApplication::CSwiftGuiStdApplication() : CGuiApplication("swift pilot client GUI", CIcons::swift24())
 {
-    this->setWindowIcon(CIcons::swift24());
     this->addParserOption(this->m_cmdFacadeMode);
     this->addWindowModeOption();
     this->addDBusAddressOption();
 }
 
-void CSwiftGuiStdApplication::startCoreFacade()
+bool CSwiftGuiStdApplication::startHookIn()
 {
+    Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Not yet parsed cmd line arguments");
     CoreModes::CoreMode coreMode = CoreModes::CoreInGuiProcess;
     const QString dBusAddress(this->getCmdDBusAddressValue());
     if (this->isParserOptionSet(this->m_cmdFacadeMode))
@@ -47,9 +47,10 @@ void CSwiftGuiStdApplication::startCoreFacade()
         break;
     }
     this->useContexts(runtimeConfig);
+    return true;
 }
 
-void CSwiftGuiStdApplication::parsingHookIn()
+bool CSwiftGuiStdApplication::parsingHookIn()
 {
     // Parse core relevant arguments
     const QString dBusAddress(this->getCmdDBusAddressValue());
@@ -58,10 +59,11 @@ void CSwiftGuiStdApplication::parsingHookIn()
         // check if rechable
         if (!CDBusServer::isDBusAvailable(dBusAddress))
         {
-            this->parserErrorMessage("DBus server at " + dBusAddress + " can not be reached");
-            exit(EXIT_FAILURE);
+            this->errorMessage("DBus server at " + dBusAddress + " can not be reached");
+            return false;
         }
     }
+    return CGuiApplication::parsingHookIn();
 }
 
 CSwiftGuiStdApplication *instance()

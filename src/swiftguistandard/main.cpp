@@ -12,6 +12,7 @@
 #include "blackgui/enableforframelesswindow.h"
 
 #include <QtGlobal>
+#include <QApplication>
 #include <QPushButton>
 #include <QProcessEnvironment>
 
@@ -21,8 +22,9 @@ using namespace BlackCore;
 
 int main(int argc, char *argv[])
 {
-    CSwiftGuiStdApplication a(argc, argv);
-    a.startCoreFacade();
+    QApplication qa(argc, argv);
+    CSwiftGuiStdApplication a;
+    if (!a.start()) { return EXIT_FAILURE; }
 
     // show window
     CEnableForFramelessWindow::WindowMode windowMode = a.getWindowMode();

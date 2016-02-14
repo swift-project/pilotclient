@@ -13,7 +13,6 @@
 #include "samplesmodelmapping.h"
 #include "samplesvpilotrules.h"
 
-#include <QCoreApplication>
 #include <QTextStream>
 #include <QDebug>
 #include <QTime>

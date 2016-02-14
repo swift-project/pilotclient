@@ -20,10 +20,6 @@
 
 namespace BlackSample
 {
-
-    /*
-     * Samples
-     */
     int CSamplesAlgorithm::samples()
     {
         BlackMisc::CSequence<int> seq;

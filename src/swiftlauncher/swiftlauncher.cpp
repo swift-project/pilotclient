@@ -49,7 +49,7 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(ui->tb_SwiftGui, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
     connect(ui->tb_Database, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
     connect(ui->tb_BackToMain, &QToolButton::pressed, this, &CSwiftLauncher::ps_showMainPage);
-    connect(&CSetupReader::instance(), &CSetupReader::versionSynchronized, this, &CSwiftLauncher::ps_loadedSetup);
+    // connect(&CSetupReader::instance(), &CSetupReader::updateInfoSynchronized, this, &CSwiftLauncher::ps_loadedSetup);
 
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_L), this, SLOT(ps_showLogPage()));
     this->ui->le_DBusServerPort->setValidator(new QIntValidator(0, 65535, this));
@@ -261,7 +261,8 @@ void CSwiftLauncher::ps_loadSetup()
     if (!this->ui->le_LatestVersion->text().isEmpty())
     {
         this->ui->le_LatestVersion->setText("");
-        CSetupReader::instance().requestReload();
+        CStatusMessage m(sApp->requestReloadOfSetupAndVersion());
+        this->ps_appendLogMessage(m);
     }
 }
 

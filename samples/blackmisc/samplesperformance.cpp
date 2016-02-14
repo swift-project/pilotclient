@@ -24,10 +24,6 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackSample
 {
-
-    /*
-     * Samples
-     */
     int CSamplesPerformance::samplesMisc(QTextStream &out)
     {
         QTime timer;

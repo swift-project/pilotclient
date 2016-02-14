@@ -29,10 +29,6 @@ using namespace BlackMisc::Network;
 
 namespace BlackSample
 {
-
-    /*
-     * Samples
-     */
     int CSamplesChangeObject::samples()
     {
         // ATC station

@@ -28,10 +28,6 @@ using namespace BlackMisc::Simulation::FsCommon;
 
 namespace BlackSample
 {
-
-    /*
-     * Samples
-     */
     void CSamplesFsCommon::samples(QTextStream &streamOut, QTextStream &streamIn)
     {
         QString fsxDir = CSampleUtils::selectDirectory({"C:/Program Files (x86)/Microsoft Games/Microsoft Flight Simulator X/SimObjects",
@@ -71,5 +67,4 @@ namespace BlackSample
         streamOut << "read entries from disk: " << entriesList.size() << " in " << time.restart() << "ms" << endl;
         tempFile.close();
     }
-
 } // namespace

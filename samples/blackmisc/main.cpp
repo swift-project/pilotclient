@@ -7,13 +7,13 @@
  * contained in the LICENSE file.
  */
 
-#include <QGuiApplication>
 #include "sampleschangeobject.h"
 #include "samplesmetadata.h"
 #include "samplescontainer.h"
 #include "samplesjson.h"
 #include "samplesperformance.h"
 #include "samplesalgorithm.h"
+#include "blackcore/application.h"
 #include "blackmisc/registermetadata.h"
 #include "blackmisc/pq/pq.h"
 
@@ -22,20 +22,18 @@
 
 using namespace BlackMisc;
 using namespace BlackSample;
+using namespace BlackCore;
 
 //! main
 int main(int argc, char *argv[])
 {
-    // I use QGuiApplication and not core application
+    // I use CGuiApplication and not core application
     // otherwise no QPixmap metadata (metadata sample)
-    QGuiApplication a(argc, argv);
-    Q_UNUSED(a);
+    QCoreApplication qa(argc, argv);
+    CApplication a;
 
     QTextStream qtout(stdout);
     QTextStream qtin(stdin);
-
-    BlackMisc::initResources();
-    BlackMisc::registerMetadata();
 
     do
     {

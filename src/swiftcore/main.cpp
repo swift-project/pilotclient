@@ -18,6 +18,7 @@
 #include "blackmisc/worker.h"
 #include "blackmisc/network/networkutils.h"
 #include <QMessageBox>
+#include <QApplication>
 
 using namespace BlackMisc;
 using namespace BlackCore;
@@ -25,13 +26,13 @@ using namespace BlackGui;
 
 int main(int argc, char *argv[])
 {
-    CGuiApplication a(argc, argv, "swift core");
-    a.setWindowIcon(CIcons::swiftNova24());
+    QApplication qa(argc, argv);
+    CGuiApplication a("swift core", CIcons::swiftNova24());
     a.addWindowStateOption();
     a.addDBusAddressOption();
     a.addParserOption({{"r", "start"}, QCoreApplication::translate("main", "Start the server.")});
     a.addParserOption({{"c", "coreaudio"}, QCoreApplication::translate("main", "Audio in core.")});
-    a.parse();
+    if (!a.parse()) { return EXIT_FAILURE; }
 
     const QString dBusAdress(a.getCmdDBusAddressValue());
     a.useContexts(a.isParserOptionSet("coreaudio") ?
@@ -40,7 +41,7 @@ int main(int argc, char *argv[])
 
     if (!QSystemTrayIcon::isSystemTrayAvailable())
     {
-        a.parserErrorMessage("I could not detect any system tray on this system.");
+        a.errorMessage("I could not detect any system tray on this system.");
         return EXIT_FAILURE;
     }
 
