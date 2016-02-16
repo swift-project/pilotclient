@@ -13,9 +13,9 @@
 #include "blackcoreexport.h"
 #include "contextapplication.h"
 #include "corefacade.h"
-#include "blackmisc/dbusserver.h"
 #include "blackmisc/identifierlist.h"
 
+namespace BlackMisc { class CDBusServer; }
 namespace BlackCore
 {
     class CCoreFacade;

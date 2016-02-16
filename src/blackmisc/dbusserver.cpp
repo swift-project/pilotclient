@@ -17,7 +17,6 @@ using namespace BlackMisc::Network;
 
 namespace BlackMisc
 {
-
     CDBusServer::CDBusServer(const QString &service, const QString &address, QObject *parent) : QObject(parent)
     {
         m_serverMode = modeOfAddress(address);
@@ -248,6 +247,7 @@ namespace BlackMisc
 
     void CDBusServer::removeAllObjects()
     {
+        if (m_objects.isEmpty()) { return; }
         for (const QString &path : m_objects.keys())
         {
             switch (m_serverMode)

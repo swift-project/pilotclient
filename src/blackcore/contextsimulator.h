@@ -27,7 +27,6 @@
 #include "context.h"
 #include "blackcore/simulator.h"
 #include "blackcore/corefacade.h"
-#include "blackmisc/dbusserver.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorsetup.h"
@@ -39,6 +38,7 @@
 #include "blackmisc/pq/time.h"
 #include <QObject>
 
+namespace BlackMisc { class CDBusServer; }
 namespace BlackCore
 {
     //! Network context

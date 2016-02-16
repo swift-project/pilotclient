@@ -12,6 +12,7 @@
 #include "blackcore/contextapplicationproxy.h"
 #include "blackcore/contextapplicationempty.h"
 #include "blackcore/inputmanager.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/loghandler.h"

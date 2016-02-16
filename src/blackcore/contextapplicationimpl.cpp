@@ -10,6 +10,7 @@
 #include "contextapplicationimpl.h"
 #include "corefacade.h"
 #include "inputmanager.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/loghandler.h"

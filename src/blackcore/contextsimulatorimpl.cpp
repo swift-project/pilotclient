@@ -15,6 +15,7 @@
 #include "pluginmanagersimulator.h"
 #include "corefacade.h"
 #include "blackcore/registermetadata.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/loghandler.h"
@@ -38,6 +39,13 @@ namespace BlackCore
     {
         this->setObjectName("CContextSimulator");
         m_plugins->collectPlugins();
+    }
+
+    CContextSimulator *CContextSimulator::registerWithDBus(CDBusServer *server)
+    {
+        if (!server || this->m_mode != CCoreFacadeConfig::LocalInDbusServer) return this;
+        server->addObject(CContextSimulator::ObjectPath(), this);
+        return this;
     }
 
     CContextSimulator::~CContextSimulator()

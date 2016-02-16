@@ -22,7 +22,6 @@
 #include "blackcore/actionbind.h"
 #include "blackinput/keyboard.h"
 #include "blackcore/settings/audio.h"
-#include "blackmisc/dbusserver.h"
 #include "blackmisc/audio/voiceroomlist.h"
 
 #include <QThread>
@@ -30,6 +29,7 @@
 #include <QPointer>
 #include <QScopedPointer>
 
+namespace BlackMisc { class CDBusServer; }
 namespace BlackCore
 {
     class IVoiceChannel;
@@ -44,7 +44,6 @@ namespace BlackCore
         friend class IContextAudio;
 
     public:
-
         //! Destructor
         virtual ~CContextAudio();
 
@@ -122,12 +121,7 @@ namespace BlackCore
         CContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
 
         //! Register myself in DBus
-        CContextAudio *registerWithDBus(BlackMisc::CDBusServer *server)
-        {
-            if (!server || this->m_mode != CCoreFacadeConfig::LocalInDbusServer) { return this; }
-            server->addObject(IContextAudio::ObjectPath(), this);
-            return this;
-        }
+        CContextAudio *registerWithDBus(BlackMisc::CDBusServer *server);
 
     private slots:
 

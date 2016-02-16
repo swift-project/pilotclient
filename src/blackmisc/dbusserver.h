@@ -26,7 +26,6 @@
 
 namespace BlackMisc
 {
-
     /*!
      * Custom DBusServer
      * \details This class implements a custom DBusServer for DBus peer connections, but can also be used

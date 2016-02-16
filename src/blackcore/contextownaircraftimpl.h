@@ -16,14 +16,13 @@
 #include "blackcore/contextownaircraft.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/settings/network.h"
-#include "blackmisc/dbusserver.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/identifiable.h"
 
+namespace BlackMisc { class CDbusServer; }
 namespace BlackCore
 {
-
     //! Own aircraft context implementation.
     //! Central instance of data for \sa IOwnAircraftProvider .
     class BLACKCORE_EXPORT CContextOwnAircraft :
@@ -122,12 +121,7 @@ namespace BlackCore
         CContextOwnAircraft(CCoreFacadeConfig::ContextMode, CCoreFacade *runtime);
 
         //! Register myself in DBus
-        CContextOwnAircraft *registerWithDBus(BlackMisc::CDBusServer *server)
-        {
-            if (!server || this->m_mode != CCoreFacadeConfig::LocalInDbusServer) return this;
-            server->addObject(IContextOwnAircraft::ObjectPath(), this);
-            return this;
-        }
+        CContextOwnAircraft *registerWithDBus(BlackMisc::CDBusServer *server);
 
     private slots:
         //! Station has been changed, needed to tune in/out voice room

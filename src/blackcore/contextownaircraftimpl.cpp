@@ -13,6 +13,7 @@
 #include "contextaudio.h"
 #include "contextapplication.h"
 #include "corefacade.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/simplecommandparser.h"
 #include "blackmisc/logmessage.h"
 
@@ -35,6 +36,13 @@ namespace BlackCore
 
         // Init own aircraft
         this->initOwnAircraft();
+    }
+
+    CContextOwnAircraft *CContextOwnAircraft::registerWithDBus(CDBusServer *server)
+    {
+        if (!server || this->m_mode != CCoreFacadeConfig::LocalInDbusServer) return this;
+        server->addObject(IContextOwnAircraft::ObjectPath(), this);
+        return this;
     }
 
     CContextOwnAircraft::~CContextOwnAircraft() { }

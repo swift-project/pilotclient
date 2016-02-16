@@ -11,6 +11,7 @@
 #include "contextsimulatorimpl.h"
 #include "contextsimulatorproxy.h"
 #include "contextsimulatorempty.h"
+#include "blackmisc/dbusserver.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 

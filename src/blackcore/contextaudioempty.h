@@ -15,7 +15,6 @@
 #include "blackcoreexport.h"
 #include "contextaudio.h"
 #include "voice.h"
-#include "blackmisc/dbusserver.h"
 
 namespace BlackCore
 {

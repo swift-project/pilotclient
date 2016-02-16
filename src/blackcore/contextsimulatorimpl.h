@@ -24,6 +24,7 @@
 #include <QTimer>
 #include <QDir>
 
+namespace BlackMisc { class CDBusServer; }
 namespace BlackCore
 {
     class CPluginManagerSimulator;
@@ -128,12 +129,7 @@ namespace BlackCore
         CContextSimulator(CCoreFacadeConfig::ContextMode, CCoreFacade *runtime);
 
         //! Register myself in DBus
-        CContextSimulator *registerWithDBus(BlackMisc::CDBusServer *server)
-        {
-            if (!server || this->m_mode != CCoreFacadeConfig::LocalInDbusServer) return this;
-            server->addObject(CContextSimulator::ObjectPath(), this);
-            return this;
-        }
+        CContextSimulator *registerWithDBus(BlackMisc::CDBusServer *server);
 
     private slots:
         //! Remote aircraft added

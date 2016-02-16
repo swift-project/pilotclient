@@ -13,7 +13,6 @@
 #ifndef BLACKSAMPLE_SERVICETOOL_H
 #define BLACKSAMPLE_SERVICETOOL_H
 
-#include "blackmisc/dbusserver.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/network/clientlist.h"
@@ -22,8 +21,9 @@
 #include <QProcess>
 #include <QDBusConnection>
 
-namespace BlackSample
-{
+namespace BlackMisc { class CDBusServer; }
+namespace BlackSample {
+	
     class Testservice; // forward declaration
 
     /*!

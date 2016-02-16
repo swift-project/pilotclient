@@ -13,8 +13,8 @@
 #include "contextapplication.h"
 #include "voicechannel.h"
 #include "voicevatlib.h"
-
 #include "blacksound/soundgenerator.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/logmessage.h"
@@ -70,6 +70,13 @@ namespace BlackCore
 
         m_unusedVoiceChannels.push_back(m_channel1);
         m_unusedVoiceChannels.push_back(m_channel2);
+    }
+
+    CContextAudio *CContextAudio::registerWithDBus(CDBusServer *server)
+    {
+        if (!server || this->m_mode != CCoreFacadeConfig::LocalInDbusServer) { return this; }
+        server->addObject(IContextAudio::ObjectPath(), this);
+        return this;
     }
 
     CContextAudio::~CContextAudio()

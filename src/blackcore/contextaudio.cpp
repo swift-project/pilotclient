@@ -11,6 +11,7 @@
 #include "contextaudioimpl.h"
 #include "contextaudioproxy.h"
 #include "contextaudioempty.h"
+#include "blackmisc/dbusserver.h"
 
 namespace BlackCore
 {

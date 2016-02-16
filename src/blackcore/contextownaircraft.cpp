@@ -11,6 +11,7 @@
 #include "contextownaircraftimpl.h"
 #include "contextownaircraftproxy.h"
 #include "contextownaircraftempty.h"
+#include "blackmisc/dbusserver.h"
 
 namespace BlackCore
 {
