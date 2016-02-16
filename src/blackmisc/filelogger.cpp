@@ -9,6 +9,7 @@
 
 #include "filelogger.h"
 #include <QString>
+#include <QStringBuilder>
 #include <QDateTime>
 #include <QCoreApplication>
 #include <QDir>
@@ -16,8 +17,10 @@
 namespace BlackMisc
 {
 
-    CFileLogger::CFileLogger(QObject *parent) : CFileLogger(QCoreApplication::applicationName(), QString(), parent)
+    CFileLogger::CFileLogger(QObject *parent) :
+        CFileLogger(QCoreApplication::applicationName(), QString(), parent)
     {
+        // void
     }
 
     CFileLogger::CFileLogger(const QString &applicationName, const QString &logPath, QObject *parent) :
@@ -41,23 +44,29 @@ namespace BlackMisc
 
     CFileLogger::~CFileLogger()
     {
+        this->close();
+    }
+
+    void CFileLogger::close()
+    {
         if (m_logFile.isOpen())
         {
-            writeContentToFile(QStringLiteral("Application stopped."));
+            disconnect(this); // disconnect from log handler
+            writeContentToFile(QStringLiteral("Logging stops."));
             m_logFile.close();
         }
     }
 
     void CFileLogger::ps_writeStatusMessageToFile(const BlackMisc::CStatusMessage &statusMessage)
     {
+        if (!m_logFile.isOpen()) { return; }
         if (! m_logPattern.match(statusMessage)) { return; }
-
-        QString finalContent = QDateTime::currentDateTime().toString(QStringLiteral("hh:mm:ss "));
-        finalContent += statusMessage.getHumanReadablePattern();
-        finalContent += " ";
-        finalContent += statusMessage.getSeverityAsString();
-        finalContent += ": ";
-        finalContent += statusMessage.getMessage();
+        const QString finalContent(QDateTime::currentDateTime().toString(QStringLiteral("hh:mm:ss "))
+                                   % statusMessage.getHumanReadablePattern()
+                                   % " "
+                                   % statusMessage.getSeverityAsString()
+                                   % ": "
+                                   % statusMessage.getMessage());
         writeContentToFile(finalContent);
     }
 

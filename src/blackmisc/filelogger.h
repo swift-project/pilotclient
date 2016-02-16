@@ -27,7 +27,6 @@ namespace BlackMisc
         Q_OBJECT
 
     public:
-
         //! Constructor.
         //! Filename defaults to QCoreApplication::applicationName() and path to "."
         CFileLogger(QObject *parent = nullptr);
@@ -48,8 +47,11 @@ namespace BlackMisc
         //! Change the log pattern. Default is to log all messages.
         void changeLogPattern(const CLogPattern &pattern) { m_logPattern = pattern; }
 
-    private slots:
+        //! Close file
+        void close();
 
+    private slots:
+        //! Write single status message to file
         void ps_writeStatusMessageToFile(const BlackMisc::CStatusMessage &statusMessage);
 
     private:
