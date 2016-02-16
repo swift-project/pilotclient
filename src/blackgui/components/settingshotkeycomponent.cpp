@@ -9,7 +9,7 @@
 
 #include "settingshotkeycomponent.h"
 #include "ui_settingshotkeycomponent.h"
-#include "blackgui/hotkeydialog.h"
+#include "blackgui/components/hotkeydialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/contextapplication.h"
 #include <QMessageBox>
@@ -22,7 +22,6 @@ namespace BlackGui
 {
     namespace Components
     {
-
         CSettingsHotkeyComponent::CSettingsHotkeyComponent(QWidget *parent) :
             QFrame(parent),
             ui(new Ui::CSettingsHotkeyComponent)

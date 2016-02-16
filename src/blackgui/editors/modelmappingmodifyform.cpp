@@ -13,6 +13,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
+using namespace BlackGui::Components;
 
 namespace BlackGui
 {

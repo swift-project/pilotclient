@@ -43,10 +43,10 @@ namespace BlackGui
             ~CCockpitComComponent();
 
         signals:
-            //! \copydoc BlackGui::CTransponderModeSelector::transponderModeChanged
+            //! \copydoc BlackGui::Components::CTransponderModeSelector::transponderModeChanged
             void transponderModeChanged(BlackMisc::Aviation::CTransponder::TransponderMode newMode);
 
-            //! \copydoc BlackGui::CTransponderModeSelector::transponderStateIdentEnded
+            //! \copydoc BlackGui::Components::CTransponderModeSelector::transponderStateIdentEnded
             void transponderStateIdentEnded();
 
         public slots:

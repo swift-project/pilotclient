@@ -166,7 +166,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="BlackGui::CStatusMessageForm" name="form_StatusMessage">
+           <widget class="BlackGui::Components::CStatusMessageForm" name="form_StatusMessage">
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -195,7 +195,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="BlackGui::CStatusMessageFormSmall" name="form_StatusMessageSmall">
+           <widget class="BlackGui::Components::CStatusMessageFormSmall" name="form_StatusMessageSmall">
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -332,15 +332,15 @@
    <header>blackgui/views/statusmessageview.h</header>
   </customwidget>
   <customwidget>
-   <class>BlackGui::CStatusMessageForm</class>
+   <class>BlackGui::Components::CStatusMessageForm</class>
    <extends>QFrame</extends>
-   <header>blackgui/statusmessageform.h</header>
+   <header>blackgui/components/statusmessageform.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::CStatusMessageFormSmall</class>
+   <class>BlackGui::Components::CStatusMessageFormSmall</class>
    <extends>QFrame</extends>
-   <header>blackgui/statusmessageformsmall.h</header>
+   <header>blackgui/components/statusmessageformsmall.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

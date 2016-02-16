@@ -52,7 +52,7 @@
     </widget>
    </item>
    <item>
-    <widget class="BlackGui::CServerForm" name="frp_ServerForm">
+    <widget class="BlackGui::Components::CServerForm" name="frp_ServerForm">
      <property name="minimumSize">
       <size>
        <width>0</width>
@@ -157,9 +157,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::CServerForm</class>
+   <class>BlackGui::Components::CServerForm</class>
    <extends>QFrame</extends>
-   <header>blackgui/serverform.h</header>
+   <header>blackgui/components/serverform.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_SETTINGSCOMPONENT_H
-#define BLACKGUI_SETTINGSCOMPONENT_H
+#ifndef BLACKGUI_COMPONENTS_SETTINGSCOMPONENT_H
+#define BLACKGUI_COMPONENTS_SETTINGSCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/network/server.h"

@@ -166,7 +166,7 @@
     </spacer>
    </item>
    <item row="1" column="0" colspan="6">
-    <widget class="BlackGui::CSimulatorSelector" name="frp_SimulatorSelector"/>
+    <widget class="BlackGui::Components::CSimulatorSelector" name="frp_SimulatorSelector"/>
    </item>
    <item row="1" column="8">
     <widget class="BlackGui::Components::CDbDistributorSelectorComponent" name="comp_DistributorSelector">
@@ -182,9 +182,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::CSimulatorSelector</class>
+   <class>BlackGui::Components::CSimulatorSelector</class>
    <extends>QFrame</extends>
-   <header>blackgui/simulatorselector.h</header>
+   <header>blackgui/components/simulatorselector.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

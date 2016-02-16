@@ -71,7 +71,7 @@
          <number>0</number>
         </property>
         <item row="1" column="0" colspan="2">
-         <widget class="BlackGui::CSelcalCodeSelector" name="frp_ComPanelSelcalBottom">
+         <widget class="BlackGui::Components::CSelcalCodeSelector" name="frp_ComPanelSelcalBottom">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -492,7 +492,7 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="BlackGui::CTransponderCodeSpinBox" name="sbp_ComPanelTransponder">
+            <widget class="BlackGui::Components::CTransponderCodeSpinBox" name="sbp_ComPanelTransponder">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                <horstretch>0</horstretch>
@@ -514,7 +514,7 @@
             </widget>
            </item>
            <item>
-            <widget class="BlackGui::CTransponderModeSelector" name="cbp_ComPanelTransponderMode">
+            <widget class="BlackGui::Components::CTransponderModeSelector" name="cbp_ComPanelTransponderMode">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                <horstretch>0</horstretch>
@@ -618,19 +618,19 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::CTransponderModeSelector</class>
+   <class>BlackGui::Components::CTransponderModeSelector</class>
    <extends>QComboBox</extends>
-   <header>blackgui/transpondermodeselector.h</header>
+   <header>blackgui/components/transpondermodeselector.h</header>
   </customwidget>
   <customwidget>
-   <class>BlackGui::CTransponderCodeSpinBox</class>
+   <class>BlackGui::Components::CTransponderCodeSpinBox</class>
    <extends>QSpinBox</extends>
-   <header>blackgui/transpondercodespinbox.h</header>
+   <header>blackgui/components/transpondercodespinbox.h</header>
   </customwidget>
   <customwidget>
-   <class>BlackGui::CSelcalCodeSelector</class>
+   <class>BlackGui::Components::CSelcalCodeSelector</class>
    <extends>QFrame</extends>
-   <header>blackgui/selcalcodeselector.h</header>
+   <header>blackgui/components/selcalcodeselector.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

@@ -83,7 +83,7 @@
         </widget>
        </item>
        <item>
-        <widget class="BlackGui::CStatusMessageForm" name="form_StatusMessage">
+        <widget class="BlackGui::Components::CStatusMessageForm" name="form_StatusMessage">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -171,9 +171,9 @@
    <header>blackgui/views/statusmessageview.h</header>
   </customwidget>
   <customwidget>
-   <class>BlackGui::CStatusMessageForm</class>
+   <class>BlackGui::Components::CStatusMessageForm</class>
    <extends>QFrame</extends>
-   <header>blackgui/statusmessageform.h</header>
+   <header>blackgui/components/statusmessageform.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

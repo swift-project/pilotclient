@@ -21,7 +21,7 @@
 #include "blackcore/data/globalsetup.h"
 #include "blackgui/components/maininfoareacomponent.h"
 #include "blackgui/components/navigatordialog.h"
-#include "blackgui/transpondermodeselector.h"
+#include "blackgui/components/transpondermodeselector.h"
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackgui/models/serverlistmodel.h"
 #include "blackgui/models/userlistmodel.h"

@@ -1,4 +1,4 @@
-/* Copyright (C) 2015
+/* Copyright (C) 2013
  * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -9,36 +9,28 @@
 
 //! \file
 
-#ifndef BLACKGUI_COMPONENTS_CORESTATUSCOMPONENT_H
-#define BLACKGUI_COMPONENTS_CORESTATUSCOMPONENT_H
+#ifndef BLACKGUI_COMPONENTS_TRANSPONDERCODESPINBOX_H
+#define BLACKGUI_COMPONENTS_TRANSPONDERCODESPINBOX_H
 
 #include "blackgui/blackguiexport.h"
-#include <QFrame>
-#include <QScopedPointer>
-
-namespace Ui { class CCoreStatusComponent; }
+#include <QSpinBox>
 
 namespace BlackGui
 {
     namespace Components
     {
-        //! Display status information about the core
-        class BLACKGUI_EXPORT CCoreStatusComponent : public QFrame
+        //! Specialized spin box for Transponder codes
+        class BLACKGUI_EXPORT CTransponderCodeSpinBox : public QSpinBox
         {
             Q_OBJECT
-
         public:
             //! Constructor
-            explicit CCoreStatusComponent(QWidget *parent = nullptr);
+            explicit CTransponderCodeSpinBox(QWidget *parent = nullptr);
 
-            //! Destructor
-            ~CCoreStatusComponent();
-
-        private:
-            QScopedPointer<Ui::CCoreStatusComponent> ui;
+            //! \copydoc QDoubleSpinBox::textFromValue
+            virtual QString textFromValue(int value) const override;
         };
-
-    } // namespace
-} // namespace
+    } // ns
+} // ns
 
 #endif // guard

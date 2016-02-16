@@ -764,7 +764,7 @@
            </widget>
           </item>
           <item row="9" column="2">
-           <widget class="BlackGui::CSelcalCodeSelector" name="frp_SelcalCode">
+           <widget class="BlackGui::Components::CSelcalCodeSelector" name="frp_SelcalCode">
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -945,9 +945,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::CSelcalCodeSelector</class>
+   <class>BlackGui::Components::CSelcalCodeSelector</class>
    <extends>QFrame</extends>
-   <header>blackgui/selcalcodeselector.h</header>
+   <header>blackgui/components/selcalcodeselector.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

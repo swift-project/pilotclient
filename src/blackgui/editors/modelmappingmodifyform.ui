@@ -28,7 +28,7 @@
     </widget>
    </item>
    <item row="2" column="3">
-    <widget class="BlackGui::CSimulatorSelector" name="frp_SimulatorSelector">
+    <widget class="BlackGui::Components::CSimulatorSelector" name="frp_SimulatorSelector">
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -109,7 +109,7 @@
     </widget>
    </item>
    <item row="3" column="3">
-    <widget class="BlackGui::CModelModeSelector" name="frp_IncludeSelector">
+    <widget class="BlackGui::Components::CModelModeSelector" name="frp_IncludeSelector">
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -129,15 +129,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::CSimulatorSelector</class>
+   <class>BlackGui::Components::CSimulatorSelector</class>
    <extends>QFrame</extends>
-   <header>blackgui/simulatorselector.h</header>
+   <header>blackgui/components/simulatorselector.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::CModelModeSelector</class>
+   <class>BlackGui::Components::CModelModeSelector</class>
    <extends>QFrame</extends>
-   <header>blackgui/modelmodeselector.h</header>
+   <header>blackgui/components/modelmodeselector.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

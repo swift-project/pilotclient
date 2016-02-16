@@ -85,9 +85,7 @@ namespace BlackGui
         QAction *m_actionWithSender = nullptr;
         QAction *m_actionWithRecipient = nullptr;
         QAction *m_actionWordWrap = nullptr;
-
     };
-
 } // namespace
 
 #endif // guard

@@ -14,21 +14,23 @@ using namespace BlackMisc;
 
 namespace BlackGui
 {
-
-    CCommandInput::CCommandInput(QWidget *parent) :
-        QLineEdit(parent),
-        CIdentifiable(this)
+    namespace Components
     {
-        connect(this, &CCommandInput::returnPressed, this, &CCommandInput::ps_validateCommand);
-    }
-
-    void CCommandInput::ps_validateCommand()
-    {
-        QString commandLine(this->text().trimmed());
-        this->setText(QString());
-        if (commandLine.startsWith('.'))
+        CCommandInput::CCommandInput(QWidget *parent) :
+            QLineEdit(parent),
+            CIdentifiable(this)
         {
-            emit commandEntered(commandLine, identifier());
+            connect(this, &CCommandInput::returnPressed, this, &CCommandInput::ps_validateCommand);
         }
-    }
+
+        void CCommandInput::ps_validateCommand()
+        {
+            QString commandLine(this->text().trimmed());
+            this->setText(QString());
+            if (commandLine.startsWith('.'))
+            {
+                emit commandEntered(commandLine, identifier());
+            }
+        }
+    } // ns
 } // ns

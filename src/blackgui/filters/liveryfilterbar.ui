@@ -124,7 +124,7 @@
        </widget>
       </item>
       <item>
-       <widget class="BlackGui::CColorSelector" name="color_Fuselage">
+       <widget class="BlackGui::Components::CColorSelector" name="color_Fuselage">
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
         </property>
@@ -134,7 +134,7 @@
        </widget>
       </item>
       <item>
-       <widget class="BlackGui::CColorSelector" name="color_Tail">
+       <widget class="BlackGui::Components::CColorSelector" name="color_Tail">
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
         </property>
@@ -236,9 +236,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::CColorSelector</class>
+   <class>BlackGui::Components::CColorSelector</class>
    <extends>QFrame</extends>
-   <header>blackgui/colorselector.h</header>
+   <header>blackgui/components/colorselector.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

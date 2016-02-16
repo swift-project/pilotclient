@@ -13,6 +13,7 @@
 
 using namespace BlackMisc::Aviation;
 using namespace BlackGui::Models;
+using namespace BlackGui::Components;
 
 namespace BlackGui
 {

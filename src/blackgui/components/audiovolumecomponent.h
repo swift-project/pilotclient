@@ -35,7 +35,7 @@ namespace BlackGui
             ~CAudioVolumeComponent();
 
         private slots:
-            //! Mute toggle
+            //! Mute toggleBlackGui::Components::CHotkeyDialog
             void ps_onMuteChanged(bool muted);
 
             //! Volumes changed (elsewhere)

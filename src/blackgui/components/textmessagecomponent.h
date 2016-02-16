@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_TEXTMESSAGECOMPONENT_H
-#define BLACKGUI_TEXTMESSAGECOMPONENT_H
+#ifndef BLACKGUI_COMPONENTS_TEXTMESSAGECOMPONENT_H
+#define BLACKGUI_COMPONENTS_TEXTMESSAGECOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"

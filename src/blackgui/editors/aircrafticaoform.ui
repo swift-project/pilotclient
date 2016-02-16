@@ -145,7 +145,7 @@
        </widget>
       </item>
       <item row="5" column="1">
-       <widget class="BlackGui::CAircraftCombinedTypeSelector" name="combined_TypeSelector"/>
+       <widget class="BlackGui::Components::CAircraftCombinedTypeSelector" name="combined_TypeSelector"/>
       </item>
       <item row="6" column="1">
        <widget class="QWidget" name="wi_Checkboxes" native="true">
@@ -418,9 +418,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::CAircraftCombinedTypeSelector</class>
+   <class>BlackGui::Components::CAircraftCombinedTypeSelector</class>
    <extends>QFrame</extends>
-   <header>blackgui/aircraftcombinedtypeselector.h</header>
+   <header>blackgui/components/aircraftcombinedtypeselector.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

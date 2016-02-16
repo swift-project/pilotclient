@@ -25,7 +25,6 @@ namespace BlackGui
 {
     namespace Components
     {
-
         //! Configure hotkeys
         class BLACKGUI_EXPORT CSettingsHotkeyComponent :
             public QFrame

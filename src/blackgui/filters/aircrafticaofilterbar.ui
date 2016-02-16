@@ -122,7 +122,7 @@
     </widget>
    </item>
    <item row="1" column="0" colspan="5">
-    <widget class="BlackGui::CAircraftCombinedTypeSelector" name="combinedType_Selector">
+    <widget class="BlackGui::Components::CAircraftCombinedTypeSelector" name="combinedType_Selector">
      <property name="minimumSize">
       <size>
        <width>0</width>
@@ -141,9 +141,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::CAircraftCombinedTypeSelector</class>
+   <class>BlackGui::Components::CAircraftCombinedTypeSelector</class>
    <extends>QFrame</extends>
-   <header>blackgui/aircraftcombinedtypeselector.h</header>
+   <header>blackgui/components/aircraftcombinedtypeselector.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
