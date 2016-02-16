@@ -82,6 +82,11 @@ namespace BlackMisc
         }
     }
 
+    CDBusServer::~CDBusServer()
+    {
+        this->removeAllObjects();
+    }
+
     const QString &CDBusServer::coreServiceName()
     {
         static const QString sn = SWIFT_SERVICENAME;
@@ -93,7 +98,7 @@ namespace BlackMisc
         const QString program = QStringLiteral("dbus-daemon");
         const QStringList arguments = { QStringLiteral("--config-file=../share/dbus-1/session.conf") };
         bool success = QProcess::startDetached(program, arguments);
-        if (!success) { CLogMessage(this).warning("Failed to launch dbus-daemon!"); }
+        if (!success) { CLogMessage(this).error("Failed to launch dbus-daemon!"); }
     }
 
     bool CDBusServer::isP2PAddress(const QString &address)

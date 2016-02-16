@@ -56,6 +56,9 @@ namespace BlackMisc
         //! Construct a server for some arbitrary service
         CDBusServer(const QString &service, const QString &address, QObject *parent = nullptr);
 
+        //! Destructor
+        virtual ~CDBusServer();
+
         //! Add a QObject to be exposed via DBus
         void addObject(const QString &name, QObject *object);
 
