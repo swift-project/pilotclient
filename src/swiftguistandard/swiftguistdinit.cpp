@@ -69,10 +69,6 @@ void SwiftGuiStd::init()
         this->m_timerContextWatchdog->setObjectName(this->objectName().append(":m_timerContextWatchdog"));
     }
 
-    // context
-    CEnableForRuntime::setRuntimeForComponents(sGui->getCoreFacade(), this);
-    sGui->getIContextApplication()->loadSettings();
-
     // info bar and status bar
     this->m_statusBar.initStatusBar(this->ui->sb_MainStatusBar);
     this->ui->dw_InfoBarStatus->allowStatusBar(false);

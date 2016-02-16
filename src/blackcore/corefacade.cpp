@@ -177,6 +177,13 @@ namespace BlackCore
                             this->getCContextOwnAircraft(), &CContextOwnAircraft::ps_changedSimulatorModel);
                 Q_ASSERT(c);
             }
+
+            // settings
+            if (this->getIContextApplication()) {
+                this->getIContextApplication()->loadSettings();
+            }
+
+            // times
             times.insert("Post setup, sim.connects", time.restart());
         }
 
