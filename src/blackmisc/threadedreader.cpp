@@ -9,6 +9,7 @@
 
 #include "threadedreader.h"
 #include "blackmisc/threadutils.h"
+#include "blackmisc/network/networkutils.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
@@ -26,15 +27,7 @@ namespace BlackMisc
 
     qint64 CThreadedReader::lastModifiedMsSinceEpoch(QNetworkReply *nwReply) const
     {
-        if (nwReply)
-        {
-            QVariant lastModifiedQv = nwReply->header(QNetworkRequest::LastModifiedHeader);
-            if (lastModifiedQv.isValid() && lastModifiedQv.canConvert<QDateTime>())
-            {
-                return lastModifiedQv.value<QDateTime>().toMSecsSinceEpoch();
-            }
-        }
-        return -1;
+        return CNetworkUtils::lastModifiedMsSinceEpoch(nwReply);
     }
 
     QDateTime CThreadedReader::getUpdateTimestamp() const

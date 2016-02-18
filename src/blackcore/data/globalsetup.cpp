@@ -122,6 +122,11 @@ namespace BlackCore
             QString s("timestamp: ");
             s.append(this->getFormattedUtcTimestampYmdhms());
             s.append(separator);
+
+            s.append("Loaded: ");
+            s.append(boolToYesNo(this->wasLoaded()));
+            s.append(separator);
+
             s.append("For development: ");
             s.append(boolToYesNo(isDevelopment()));
             s.append(separator);
@@ -200,6 +205,8 @@ namespace BlackCore
                 return CVariant::fromValue(this->swiftDbDataFileLocationUrls());
             case IndexShared:
                 return CVariant::fromValue(this->m_sharedUrls);
+            case IndexWasLoaded:
+                return CVariant::fromValue(this->m_wasLoaded);
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -239,6 +246,9 @@ namespace BlackCore
                 break;
             case IndexShared:
                 this->m_sharedUrls = variant.value<CUrlList>();
+                break;
+            case IndexWasLoaded:
+                this->m_wasLoaded = variant.toBool();
                 break;
             default:
                 CValueObject::setPropertyByIndex(variant, index);

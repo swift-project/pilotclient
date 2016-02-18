@@ -43,6 +43,7 @@ namespace BlackCore
                 IndexSwiftDbFiles,
                 IndexBootstrap,
                 IndexUpdateInfo,
+                IndexWasLoaded,
                 IndexShared
             };
 
@@ -51,6 +52,12 @@ namespace BlackCore
 
             //! Destructor.
             ~CGlobalSetup() {}
+
+            //! Has data loaded from web
+            bool wasLoaded() const { return m_wasLoaded; }
+
+            //! Mark as loaded
+            void markAsLoaded(bool loaded) { this->m_wasLoaded = loaded; }
 
             //! Http port
             int dbHttpPort() const { return m_dbHttpPort; }
@@ -133,6 +140,7 @@ namespace BlackCore
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(BlackCore::Data::CGlobalSetup)
 
+            bool                            m_wasLoaded = false;    //!< Loaded from web
             int                             m_dbHttpPort = 80;      //!< port
             int                             m_dbHttpsPort = 443;    //!< SSL port
             bool                            m_development = false;  //!< dev. version?
@@ -167,6 +175,7 @@ namespace BlackCore
 
 Q_DECLARE_METATYPE(BlackCore::Data::CGlobalSetup)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackCore::Data::CGlobalSetup, (
+                                   attr(o.m_wasLoaded),
                                    attr(o.m_timestampMSecsSinceEpoch),
                                    attr(o.m_dbRootDirectoryUrl),
                                    attr(o.m_dbHttpPort),

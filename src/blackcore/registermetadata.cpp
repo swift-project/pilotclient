@@ -30,6 +30,5 @@ namespace BlackCore
 
         BlackCore::Data::CGlobalSetup::registerMetadata();
         BlackCore::Data::CUpdateInfo::registerMetadata();
-        BlackCore::CSetupReader::instance(); //! \todo will go into new runtime
     }
 } // namespace

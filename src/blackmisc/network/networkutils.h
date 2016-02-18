@@ -20,6 +20,7 @@
 #include <QStringList>
 #include <QUrlQuery>
 #include <QNetworkRequest>
+#include <QNetworkReply>
 #include <QJsonObject>
 
 namespace BlackMisc
@@ -110,10 +111,12 @@ namespace BlackMisc
             //! Our tweakes network request
             static QNetworkRequest getNetworkRequest(const CUrl &url, RequestType type = Get);
 
+            //! Last modified from reply
+            static qint64 lastModifiedMsSinceEpoch(QNetworkReply *nwReply);
+
         private:
             //! Hidden constructor
             CNetworkUtils() {}
-
         };
     } // namespace
 } // namespace

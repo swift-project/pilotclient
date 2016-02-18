@@ -21,39 +21,56 @@
 #include <QObject>
 #include <QTimer>
 #include <QNetworkReply>
+#include <QCommandLineOption>
 
 namespace BlackCore
 {
-    //! Read the central URLs / locations of our data / setup
-    class BLACKCORE_EXPORT CSetupReader : public BlackMisc::CThreadedReader
+    //! Read the central URLs / locations of our data / setup.
+    //! This should be only used in BlackCore::CApplication
+    //! \note This class is no(!) BlackCore::CThreadedReader as it will be loaded once during startup
+    //!       and is usually fast.
+    //! \sa BlackCore::Data::GlobalSetup
+    //! \sa BlackCore::Data::UpdateInfo
+    class BLACKCORE_EXPORT CSetupReader : public QObject
     {
         Q_OBJECT
 
-    public:
-        //! Single instance
-        static CSetupReader &instance();
+        friend class CApplication; //!< only using class
+
+    protected:
+        //! Constructor
+        explicit CSetupReader(QObject *parent);
+
+        //! Load the data
+        BlackMisc::CStatusMessage asyncLoad();
+
+        //! Parse cmd line arguments
+        bool parseCmdLineArguments();
+
+        //! Add cmd line arguments to BlackCore::CApplication
+        QList<QCommandLineOption> getCmdLineOptions() const;
+
+        //! Terminate
+        void gracefulShutdown();
+
+        //! Setup loaded?
+        bool isSetupSyncronized() const { return m_setupSyncronized; }
+
+        //! Version info loaded?
+        bool isUpdateSyncronized() const { return m_updateInfoSyncronized; }
 
     signals:
         //! Setup has been read
         void setupSynchronized(bool success);
 
         //! Version bas been read
-        void versionSynchronized(bool success);
-
-    protected slots:
-        //! \copydoc BlackMisc::CThreadedReader::initialize
-        virtual void initialize() override;
-
-        //! \copydoc BlackMisc::CThreadedReader::cleanup
-        virtual void cleanup() override;
+        void updateInfoSynchronized(bool success);
 
     private slots:
         //! Setup has been read
-        //! \threadsafe
         void ps_parseSetupFile(QNetworkReply *nwReply);
 
         //! Update info has been read
-        //! \threadsafe
         void ps_parseUpdateInfoFile(QNetworkReply *nwReplyPtr);
 
         //! Do reading
@@ -65,25 +82,56 @@ namespace BlackCore
         //! Setup has beem syncronized
         void ps_setupSyncronized(bool success);
 
+        //! Version info has beem syncronized
+        void ps_versionInfoSyncronized(bool success);
+
         //! Setup has been changed
         void ps_setupChanged();
 
     private:
-        QNetworkAccessManager              *m_networkManagerBootstrap = nullptr;
-        QNetworkAccessManager              *m_networkManagerUpdateInfo = nullptr;
-        BlackMisc::LockFree<BlackMisc::Network::CFailoverUrlList> m_bootstrapUrls;
-        BlackMisc::LockFree<BlackMisc::Network::CFailoverUrlList> m_updateInfoUrls;
+        //! Bootstrap mode
+        enum BootsrapMode
+        {
+            Default,
+            Explicit,
+            CacheOnly
+        };
+
+        bool    m_shutdown = false;
+        bool    m_setupSyncronized = false;
+        bool    m_updateInfoSyncronized = false;
+        QString m_localSetupFileValue;
+        QString m_bootsrapUrlFileValue;
+        BootsrapMode m_bootstrapMode;
+        BlackMisc::Network::CFailoverUrlList m_bootstrapUrls;
+        BlackMisc::Network::CFailoverUrlList m_updateInfoUrls;
         BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this, &CSetupReader::ps_setupChanged};  //!< data cache setup
         BlackMisc::CData<BlackCore::Data::UpdateInfo>  m_updateInfo {this};                             //!< data cache update info
 
-        //! Constructor
-        explicit CSetupReader(QObject *owner);
+        QCommandLineOption m_cmdBootstrapUrl
+        {
+            { "url", "bootstrap-url", "bootstrapurl" },
+            QCoreApplication::translate("application", "bootsrap URL, e.g. datastore.swift-project.org"),
+            "bootstrapurl"
+        };                                              //!< bootstrap URL
+        QCommandLineOption m_cmdBootstrapMode
+        {
+            { "bmode", "bootstrap-mode", "bootstrapmode" },
+            QCoreApplication::translate("application", "bootstrap mode: (e)xplicit, d(default), (c)ache-only"),
+            "bootstrapmode", "default"
+        };                                              //!< bootstrap mode
 
         //! Read by local individual file
-        bool localBootstrapFile(QString &fileName);
+        bool readLocalBootstrapFile(QString &fileName);
+
+        //! Convert string to mode
+        static BootsrapMode stringToEnum(const QString &s);
 
         //! Read for development environment?
         static bool isForDevelopment();
+
+        //! Categories
+        const BlackMisc::CLogCategoryList &cats();
     };
 } // ns
 

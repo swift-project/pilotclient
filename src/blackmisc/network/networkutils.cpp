@@ -246,5 +246,18 @@ namespace BlackMisc
             CNetworkUtils::ignoreSslVerification(request);
             return request;
         }
+
+        qint64 CNetworkUtils::lastModifiedMsSinceEpoch(QNetworkReply *nwReply)
+        {
+            if (nwReply)
+            {
+                QVariant lastModifiedQv = nwReply->header(QNetworkRequest::LastModifiedHeader);
+                if (lastModifiedQv.isValid() && lastModifiedQv.canConvert<QDateTime>())
+                {
+                    return lastModifiedQv.value<QDateTime>().toMSecsSinceEpoch();
+                }
+            }
+            return -1;
+        }
     } // namespace
 } // namespacee

@@ -7,9 +7,11 @@
  * contained in the LICENSE file.
  */
 
+#include "blackcore/application.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/logcategory.h"
 #include "blackmisc/json.h"
 #include "blackmisc/project.h"
 #include "blackmisc/fileutils.h"
@@ -26,93 +28,145 @@ using namespace BlackCore::Data;
 
 namespace BlackCore
 {
-    CSetupReader::CSetupReader(QObject *owner) :
-        CThreadedReader(owner, "CSetupReader")
+    CSetupReader::CSetupReader(QObject *parent) :
+        QObject(parent)
     {
         connect(this, &CSetupReader::setupSynchronized, this, &CSetupReader::ps_setupSyncronized);
-        QString localFileName;
-        if (this->localBootstrapFile(localFileName))
+        connect(this, &CSetupReader::updateInfoSynchronized, this, &CSetupReader::ps_versionInfoSyncronized);
+    }
+
+    QList<QCommandLineOption> CSetupReader::getCmdLineOptions() const
+    {
+        return  QList<QCommandLineOption>
+        {
+            {
+                this->m_cmdBootstrapUrl,
+                this->m_cmdBootstrapMode
+            }
+        };
+    }
+
+    CStatusMessage CSetupReader::asyncLoad()
+    {
+        if (this->readLocalBootstrapFile(this->m_localSetupFileValue))
         {
             // initialized by local file for testing
-            // I do not even need to start in background here
-            CLogMessage(this).info("Using local bootstrap file: %1") << localFileName;
-            BlackMisc::singleShot(1000, QThread::currentThread(), [ = ]()
-            {
-                emit this->setupSynchronized(true);
-            });
+            emit this->setupSynchronized(true);
+            return CStatusMessage(cats(), CStatusMessage::SeverityInfo, "Using local bootstrap file: " + this->m_localSetupFileValue);
+        }
+        else if (this->m_bootstrapMode == CacheOnly)
+        {
+            m_setup.synchronize();
+            CGlobalSetup currentSetup = m_setup.get();
+            this->m_updateInfoUrls = currentSetup.updateInfoFileUrls();
+            emit this->setupSynchronized(true);
+            emit this->updateInfoSynchronized(true);
+            return CStatusMessage(cats(), CStatusMessage::SeverityInfo, "Cache only setup, using it as it is");
         }
         else
         {
-            this->m_bootstrapUrls.uniqueWrite()->push_back(m_setup.get().bootstrapUrls());
-            this->m_updateInfoUrls.uniqueWrite()->push_back(m_setup.get().updateInfoUrls());
+            // web URL
+            if (!this->m_bootsrapUrlFileValue.isEmpty())
+            {
+                // start with the one from cmd args
+                this->m_bootstrapUrls.push_front(CUrl(this->m_bootsrapUrlFileValue));
+            }
 
-            this->m_networkManagerBootstrap = new QNetworkAccessManager(this);
-            this->connect(this->m_networkManagerBootstrap, &QNetworkAccessManager::finished, this, &CSetupReader::ps_parseSetupFile);
+            // if ever loaded add those URLs
+            m_setup.synchronize();
+            CGlobalSetup currentSetup = m_setup.get();
+            if (currentSetup.wasLoaded())
+            {
+                if (this->m_bootstrapMode != Explicit || this->m_bootstrapUrls.isEmpty())
+                {
+                    // also use previously cached URLS
+                    this->m_bootstrapUrls.push_back(currentSetup.bootstrapFileUrls());
+                }
+            }
 
-            this->m_networkManagerUpdateInfo = new QNetworkAccessManager(this);
-            this->connect(this->m_networkManagerUpdateInfo, &QNetworkAccessManager::finished, this, &CSetupReader::ps_parseUpdateInfoFile);
-
-            this->start(QThread::LowPriority);
+            if (this->m_bootstrapUrls.isEmpty())
+            {
+                return CStatusMessage(cats(), CStatusMessage::SeverityError, "No bootstrap URLs, cannot load setup");
+            }
+            else
+            {
+                this->m_bootstrapUrls.removeDuplicates();
+                this->ps_readSetup(); // start reading
+                return CStatusMessage(cats(), CStatusMessage::SeverityInfo, "Will start loading setup");
+            }
         }
     }
 
-    CSetupReader &CSetupReader::instance()
+    bool CSetupReader::parseCmdLineArguments()
     {
-        static CSetupReader reader(QCoreApplication::instance());
-        return reader;
+        this->m_bootsrapUrlFileValue = CGlobalSetup::buildBootstrapFileUrl(
+                                           sApp->getParserOptionValue(this->m_cmdBootstrapUrl)
+                                       );
+        this->m_bootstrapMode = stringToEnum(sApp->getParserOptionValue(this->m_cmdBootstrapMode));
+        QUrl url(this->m_bootsrapUrlFileValue);
+
+        // check on local file
+        if (url.isLocalFile())
+        {
+            this->m_localSetupFileValue = url.toLocalFile();
+            QFile f(this->m_localSetupFileValue);
+            if (!f.exists())
+            {
+                sApp->errorMessage("File " + this->m_localSetupFileValue + " does not exist");
+                return false;
+            }
+        }
+
+        // check on explicit URL
+        if (this->m_bootstrapMode == Explicit)
+        {
+            if (!url.isLocalFile())
+            {
+                if (!CNetworkUtils::canConnect(url))
+                {
+                    sApp->errorMessage("URL " + url.toString() + " not reachable");
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
-    void CSetupReader::initialize()
+    void CSetupReader::gracefulShutdown()
     {
-        // start to read by myself
-        CThreadedReader::initialize();
-        QTimer::singleShot(500, this, &CSetupReader::ps_readSetup);
-    }
-
-    void CSetupReader::cleanup()
-    {
-        delete this->m_networkManagerBootstrap;
-        this->m_networkManagerBootstrap = nullptr;
-
-        delete this->m_networkManagerUpdateInfo;
-        this->m_networkManagerUpdateInfo = nullptr;
+        this->m_shutdown = true;
     }
 
     void CSetupReader::ps_readSetup()
     {
-        this->threadAssertCheck();
-        Q_ASSERT_X(this->m_networkManagerBootstrap, Q_FUNC_INFO, "Missing network manager");
-        CUrl url(this->m_bootstrapUrls.uniqueWrite()->getNextWorkingUrl());
+        CUrl url(this->m_bootstrapUrls.getNextWorkingUrl());
         if (url.isEmpty())
         {
-            CLogMessage(this).warning("Cannot read setup, failed URLs: %1") << this->m_bootstrapUrls.read()->getFailedUrls();
+            CLogMessage(this).warning("Cannot read setup, failed URLs: %1") << this->m_bootstrapUrls.getFailedUrls();
             emit setupSynchronized(false);
             return;
         }
-        QNetworkRequest request(url);
-        CNetworkUtils::ignoreSslVerification(request);
-        this->m_networkManagerBootstrap->get(request);
+        if (m_shutdown) { return; }
+        sApp->requestNetworkResource(url.toNetworkRequest(), { this, &CSetupReader::ps_parseSetupFile });
     }
 
     void CSetupReader::ps_readUpdateInfo()
     {
-        this->threadAssertCheck();
-        Q_ASSERT_X(this->m_networkManagerUpdateInfo, Q_FUNC_INFO, "Missing network manager");
-        CUrl url(this->m_updateInfoUrls.uniqueWrite()->getNextWorkingUrl());
+        CUrl url(this->m_updateInfoUrls.getNextWorkingUrl());
         if (url.isEmpty())
         {
-            CLogMessage(this).warning("Cannot read update info, failed URLs: %1") << this->m_updateInfoUrls.read()->getFailedUrls();
-            emit versionSynchronized(false);
+            CLogMessage(this).warning("Cannot read update info, failed URLs: %1") << this->m_updateInfoUrls.getFailedUrls();
+            emit updateInfoSynchronized(false);
             return;
         }
-        QNetworkRequest request(url);
-        CNetworkUtils::ignoreSslVerification(request);
-        this->m_networkManagerUpdateInfo->get(request);
+        if (m_shutdown) { return; }
+        sApp->requestNetworkResource(url.toNetworkRequest(), { this, &CSetupReader::ps_parseUpdateInfoFile});
     }
 
     void CSetupReader::ps_setupSyncronized(bool success)
     {
-        // trigger
+        // trigger consecutive read
+        this->m_setupSyncronized = success;
         if (success)
         {
             CLogMessage(this).info("Setup synchronized, will trigger read of update information");
@@ -124,19 +178,44 @@ namespace BlackCore
         }
     }
 
+    void CSetupReader::ps_versionInfoSyncronized(bool success)
+    {
+        this->m_updateInfoSyncronized = success;
+    }
+
     void CSetupReader::ps_setupChanged()
     {
         // settings have changed on disk
     }
 
-    bool CSetupReader::localBootstrapFile(QString &fileName)
+    CSetupReader::BootsrapMode CSetupReader::stringToEnum(const QString &s)
     {
-        QString dir(CProject::getSwiftPrivateResourceDir());
-        if (dir.isEmpty()) { return false; }
+        const QString bsm(s.toLower().trimmed());
+        if (bsm.startsWith("expl")) return Explicit;
+        if (bsm.startsWith("cache")) return CacheOnly;
+        return Default;
+    }
 
-        // no version for local files, as those come withe the current code
-        fileName = CFileUtils::appendFilePaths(dir, "bootstrap/bootstrap.json");
-        QString content(CFileUtils::readFileToString(fileName));
+    bool CSetupReader::readLocalBootstrapFile(QString &fileName)
+    {
+        if (fileName.isEmpty()) { return false; }
+        QString fn;
+        QFile file(fileName);
+        if (!file.exists())
+        {
+            // relative name?
+            QString dir(CProject::getSwiftPrivateResourceDir());
+            if (dir.isEmpty()) { return false; }
+
+            // no version for local files, as those come withe the current code
+            fn = CFileUtils::appendFilePaths(dir, "bootstrap/bootstrap.json");
+        }
+        else
+        {
+            fn = fileName;
+        }
+
+        QString content(CFileUtils::readFileToString(fn));
         if (content.isEmpty()) { return false; }
         CGlobalSetup s;
         s.convertFromJson(content);
@@ -155,22 +234,15 @@ namespace BlackCore
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-        this->threadAssertCheck();
+        if (m_shutdown) { return; }
+
         QUrl url(nwReply->url());
         QString urlString(url.toString());
         QString replyMessage(nwReply->errorString());
 
-        if (this->isAbandoned())
-        {
-            CLogMessage(this).info("Terminated loading bootstrap files");
-            nwReply->abort();
-            emit setupSynchronized(false);
-            return; // stop, terminate straight away, ending thread
-        }
-
         if (nwReply->error() == QNetworkReply::NoError)
         {
-            qint64 lastModified = this->lastModifiedMsSinceEpoch(nwReply.data());
+            qint64 lastModified = CNetworkUtils::lastModifiedMsSinceEpoch(nwReply.data());
             QString setupJson(nwReplyPtr->readAll());
             nwReplyPtr->close();
             if (setupJson.isEmpty())
@@ -180,13 +252,11 @@ namespace BlackCore
             }
             else
             {
-                CGlobalSetup currentSetup(m_setup.get()); // from cache
+                CGlobalSetup currentSetup = m_setup.get();
                 CGlobalSetup loadedSetup;
                 loadedSetup.convertFromJson(Json::jsonObjectFromString(setupJson));
-                loadedSetup.setDevelopment(isForDevelopment()); // always update, regardless what persistent setting says
-                if (loadedSetup.getMSecsSinceEpoch() == 0 && lastModified > 0) { loadedSetup.setMSecsSinceEpoch(lastModified); }
-                qint64 currentVersionTimestamp = currentSetup.getMSecsSinceEpoch();
-                qint64 newVersionTimestamp = loadedSetup.getMSecsSinceEpoch();
+                loadedSetup.markAsLoaded(true);
+                if (lastModified > 0 && lastModified > loadedSetup.getMSecsSinceEpoch()) { loadedSetup.setMSecsSinceEpoch(lastModified); }
                 bool sameVersionLoaded = (loadedSetup == currentSetup);
                 if (sameVersionLoaded)
                 {
@@ -195,24 +265,27 @@ namespace BlackCore
                     return; // success
                 }
 
-                bool sameType = loadedSetup.hasSameType(currentSetup);
-                bool outdatedVersionLoaded = sameType && (newVersionTimestamp  < currentVersionTimestamp);
-                if (outdatedVersionLoaded)
+                qint64 currentVersionTimestamp = currentSetup.getMSecsSinceEpoch();
+                qint64 newVersionTimestamp = loadedSetup.getMSecsSinceEpoch();
+                bool outdatedVersionLoaded = (newVersionTimestamp  < currentVersionTimestamp);
+                if (this->m_bootstrapMode != Explicit && outdatedVersionLoaded)
                 {
                     CLogMessage(this).info("Setup loaded from %1 outdated, older than version in data cache %2") << urlString << m_setup.getFilename();
                     // try next URL
                 }
                 else
                 {
-                    CStatusMessage m = m_setup.set(loadedSetup);
-                    if (!m.isEmpty())
+                    CStatusMessage m = m_setup.set(loadedSetup, loadedSetup.getMSecsSinceEpoch());
+                    if (m.isWarningOrAbove())
                     {
+                        m.setCategories(cats());
                         CLogMessage(this).preformatted(m);
                         emit setupSynchronized(false);
                         return; // issue with cache
                     }
                     else
                     {
+                        this->m_updateInfoUrls = loadedSetup.updateInfoFileUrls();
                         CLogMessage(this).info("Setup: Updated data cache in %1") << this->m_setup.getFilename();
                         emit setupSynchronized(true);
                         return; // success
@@ -229,7 +302,7 @@ namespace BlackCore
         }
 
         // try next one if any
-        if (this->m_bootstrapUrls.uniqueWrite()->addFailedUrl(url))
+        if (this->m_bootstrapUrls.addFailedUrl(url))
         {
             QTimer::singleShot(500, this, &CSetupReader::ps_readSetup);
         }
@@ -244,22 +317,15 @@ namespace BlackCore
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-        this->threadAssertCheck();
+        if (m_shutdown) { return; }
+
         QUrl url(nwReply->url());
         QString urlString(url.toString());
         QString replyMessage(nwReply->errorString());
 
-        if (this->isAbandoned())
-        {
-            CLogMessage(this).info("Terminated loading of update info");
-            nwReply->abort();
-            emit versionSynchronized(false);
-            return; // stop, terminate straight away, ending thread
-        }
-
         if (nwReply->error() == QNetworkReply::NoError)
         {
-            qint64 lastModified = this->lastModifiedMsSinceEpoch(nwReply.data());
+            qint64 lastModified = CNetworkUtils::lastModifiedMsSinceEpoch(nwReply.data());
             QString setupJson(nwReplyPtr->readAll());
             nwReplyPtr->close();
             if (setupJson.isEmpty())
@@ -273,20 +339,18 @@ namespace BlackCore
                 CUpdateInfo loadedUpdateInfo;
                 loadedUpdateInfo.convertFromJson(Json::jsonObjectFromString(setupJson));
                 loadedUpdateInfo.setDevelopment(isForDevelopment()); // always update, regardless what persistent setting says
-                if (loadedUpdateInfo.getMSecsSinceEpoch() == 0 && lastModified > 0) { loadedUpdateInfo.setMSecsSinceEpoch(lastModified); }
-                qint64 currentVersionTimestamp = currentUpdateInfo.getMSecsSinceEpoch();
-                qint64 newVersionTimestamp = loadedUpdateInfo.getMSecsSinceEpoch();
+                if (lastModified > 0 && lastModified > loadedUpdateInfo.getMSecsSinceEpoch()) { loadedUpdateInfo.setMSecsSinceEpoch(lastModified); }
                 bool sameVersionLoaded = (loadedUpdateInfo == currentUpdateInfo);
                 if (sameVersionLoaded)
                 {
-                    CLogMessage(this).info("Same update info loaded from %1 as already in data cache %2") << urlString << m_updateInfo.getFilename();
-                    this->setUpdateTimestamp();
-                    emit versionSynchronized(true);
+                    CLogMessage(this).info("Same update info version loaded from %1 as already in data cache %2") << urlString << m_setup.getFilename();
+                    emit updateInfoSynchronized(true);
                     return; // success
                 }
 
-                bool sameType = loadedUpdateInfo.hasSameType(currentUpdateInfo);
-                bool outdatedVersionLoaded = sameType && (newVersionTimestamp  < currentVersionTimestamp);
+                qint64 currentVersionTimestamp = currentUpdateInfo.getMSecsSinceEpoch();
+                qint64 newVersionTimestamp = loadedUpdateInfo.getMSecsSinceEpoch();
+                bool outdatedVersionLoaded = (newVersionTimestamp  < currentVersionTimestamp);
                 if (outdatedVersionLoaded)
                 {
                     CLogMessage(this).info("Update info loaded from %1 outdated, older than version in data cache %2") << urlString << m_updateInfo.getFilename();
@@ -294,21 +358,21 @@ namespace BlackCore
                 }
                 else
                 {
-                    CStatusMessage m = m_updateInfo.set(loadedUpdateInfo);
+                    CStatusMessage m = m_updateInfo.set(loadedUpdateInfo, loadedUpdateInfo.getMSecsSinceEpoch());
                     if (!m.isEmpty())
                     {
+                        m.setCategories(cats());
                         CLogMessage(this).preformatted(m);
-                        emit versionSynchronized(false);
+                        emit updateInfoSynchronized(false);
                         return; // issue with cache
                     }
                     else
                     {
                         CLogMessage(this).info("Update info: Updated data cache in %1") << m_updateInfo.getFilename();
-                        this->setUpdateTimestamp();
-                        emit versionSynchronized(true);
+                        emit updateInfoSynchronized(true);
                         return; // success
                     } // cache
-                } // outdated?
+                } // outdated
 
             } // json empty
         } // no error
@@ -320,14 +384,20 @@ namespace BlackCore
         }
 
         // try next one if any
-        if (this->m_updateInfoUrls.uniqueWrite()->addFailedUrl(url))
+        if (this->m_updateInfoUrls.addFailedUrl(url))
         {
             QTimer::singleShot(500, this, &CSetupReader::ps_readSetup);
         }
         else
         {
-            emit versionSynchronized(false);
+            emit updateInfoSynchronized(false);
         }
-    } // method
+    } // function
+
+    const CLogCategoryList &CSetupReader::cats()
+    {
+        static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::webservice()}));
+        return cats;
+    }
 
 } // namespace
