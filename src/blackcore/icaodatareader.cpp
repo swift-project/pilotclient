@@ -7,7 +7,6 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/setupreader.h"
 #include "blackcore/cookiemanager.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/network/networkutils.h"

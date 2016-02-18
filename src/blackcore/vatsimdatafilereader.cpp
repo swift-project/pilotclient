@@ -15,7 +15,6 @@
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/logmessage.h"
 #include "blackcore/vatsimdatafilereader.h"
-#include "blackcore/setupreader.h"
 
 #include <QRegularExpression>
 

@@ -7,7 +7,6 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/setupreader.h"
 #include "blackcore/vatsimmetarreader.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/sequence.h"

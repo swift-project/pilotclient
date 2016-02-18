@@ -17,7 +17,6 @@
 #include "blackcore/contextsimulator.h"
 #include "blackcore/network.h"
 #include "blackcore/simulator.h"
-#include "blackcore/setupreader.h"
 #include "blackmisc/logmessage.h"
 #include <QIntValidator>
 
