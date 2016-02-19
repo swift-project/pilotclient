@@ -23,8 +23,6 @@ namespace BlackCore
     {
         CGlobalSetup::CGlobalSetup() :
             ITimestampBased(0),
-            m_dbHttpPort(80),
-            m_dbHttpsPort(443),
             m_development(CProject::isRunningInDeveloperEnvironment()),
             m_dbRootDirectoryUrl("http://ubuntu12/swiftdatastore/public"),
             m_vatsimBookingsUrl("http://vatbook.euroutepro.com/xml2.php"),
@@ -80,28 +78,46 @@ namespace BlackCore
             return this->m_vatsimMetarsUrl.withAppendedQuery("id=all");
         }
 
-        CUrlList CGlobalSetup::bootstrapUrls() const
+        CUrlList CGlobalSetup::bootstrapFileUrls() const
         {
             CUrlList urls(m_sharedUrls);
-            return urls.appendPath(isDevelopment() ?
-                                   CGlobalSetup::versionString() + "/development/bootstrap/bootstrap.json" :
-                                   CGlobalSetup::versionString() + "/productive/bootstrap/bootstrap.json");
+            return urls.appendPath(CGlobalSetup::versionString() + "/bootstrap/bootstrap.json");
         }
 
-        CUrlList CGlobalSetup::updateInfoUrls() const
+        QString CGlobalSetup::buildBootstrapFileUrl(const QString &candidate)
         {
-            CUrlList urls(m_sharedUrls);
-            return urls.appendPath(isDevelopment() ?
-                                   CGlobalSetup::versionString() + "/development/updateinfo/updateinfo.json" :
-                                   CGlobalSetup::versionString() + "/productive/updateinfo/updateinfo.json");
+            static const QString vS(QString(versionString()).append("/"));
+            if (candidate.endsWith("bootstrap.json")) { return candidate; }
+            CUrl url(candidate);
+            if (candidate.contains("/bootstrap"))
+            {
+                url.appendPath("bootstrap.json");
+            }
+            else if (candidate.endsWith(versionString()) || candidate.endsWith(vS))
+            {
+                url.appendPath("/bootstrap/bootstrap.json");
+            }
+            else if (candidate.endsWith("shared") || candidate.endsWith("shared/"))
+            {
+                url.appendPath(CGlobalSetup::versionString() + "/bootstrap/bootstrap.json");
+            }
+            else
+            {
+                url.appendPath("shared/" + CGlobalSetup::versionString() + "/bootstrap/bootstrap.json");
+            }
+            return url.getFullUrl();
+        }
+
+        CUrlList CGlobalSetup::updateInfoFileUrls() const
+        {
+            const CUrlList urls(m_sharedUrls);
+            return urls.appendPath(CGlobalSetup::versionString() + "/development/updateinfo/updateinfo.json");
         }
 
         CUrlList CGlobalSetup::swiftDbDataFileLocationUrls() const
         {
-            CUrlList urls(m_sharedUrls);
-            return urls.appendPath(isDevelopment() ?
-                                   CGlobalSetup::versionString() + "/development/dbdata/" :
-                                   CGlobalSetup::versionString() + "/productive/dbdata/");
+            const CUrlList urls(m_sharedUrls);
+            return urls.appendPath(CGlobalSetup::versionString() + "/dbdata/");
         }
 
         CServerList CGlobalSetup::fsdTestServersPlusHardcodedServers() const
@@ -132,10 +148,10 @@ namespace BlackCore
             s.append(separator);
 
             s.append("Update info URLs: ");
-            s.append(updateInfoUrls().toQString(i18n));
+            s.append(updateInfoFileUrls().toQString(i18n));
             s.append(separator);
             s.append("Bootstrap URLs: ");
-            s.append(bootstrapUrls().toQString(i18n));
+            s.append(bootstrapFileUrls().toQString(i18n));
             s.append(separator);
             s.append("News URLs: ");
             s.append(swiftLatestNewsUrls().toQString(i18n));
@@ -198,9 +214,9 @@ namespace BlackCore
             case IndexVatsimMetars:
                 return CVariant::fromValue(this->m_vatsimMetarsUrl);
             case IndexUpdateInfo:
-                return CVariant::fromValue(this->updateInfoUrls());
+                return CVariant::fromValue(this->updateInfoFileUrls());
             case IndexBootstrap:
-                return CVariant::fromValue(this->bootstrapUrls());
+                return CVariant::fromValue(this->bootstrapFileUrls());
             case IndexSwiftDbFiles:
                 return CVariant::fromValue(this->swiftDbDataFileLocationUrls());
             case IndexShared:
@@ -261,5 +277,6 @@ namespace BlackCore
             static const QString v("0.6.1");
             return v;
         }
+
     } // ns
 } // ns

@@ -106,7 +106,7 @@ namespace BlackCore
         struct UpdateInfo : public BlackMisc::CDataTrait<CUpdateInfo>
         {
             //! Key in data cache
-            static const char *key() { return "readers/updateinfo"; }
+            static const char *key() { return "version"; }
 
             //! Default value
             static const CUpdateInfo &defaultValue()

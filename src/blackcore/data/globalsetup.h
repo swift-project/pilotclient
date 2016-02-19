@@ -99,10 +99,10 @@ namespace BlackCore
             const BlackMisc::Network::CUrlList &vatsimDataFileUrls() const { return m_vatsimDataFileUrls; }
 
             //! Bootstrap URLs (where the data for the setup itself can be downloaded)
-            BlackMisc::Network::CUrlList bootstrapUrls() const;
+            BlackMisc::Network::CUrlList bootstrapFileUrls() const;
 
             //! Version and download locations
-            BlackMisc::Network::CUrlList updateInfoUrls() const;
+            BlackMisc::Network::CUrlList updateInfoFileUrls() const;
 
             //! Alternative locations of swift DB data files
             BlackMisc::Network::CUrlList swiftDbDataFileLocationUrls() const;
@@ -137,6 +137,9 @@ namespace BlackCore
             //! Schema version
             static const QString &versionString();
 
+            //! Build bootstrap file URL
+            static QString buildBootstrapFileUrl(const QString &candidate);
+
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(BlackCore::Data::CGlobalSetup)
 
@@ -160,7 +163,7 @@ namespace BlackCore
         struct GlobalSetup : public BlackMisc::CDataTrait<CGlobalSetup>
         {
             //! Key in data cache
-            static const char *key() { return "readers/setup"; }
+            static const char *key() { return "bootstrap"; }
 
             //! Default value
             static const CGlobalSetup &defaultValue()
