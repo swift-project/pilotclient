@@ -56,6 +56,12 @@ namespace BlackMisc
             return m_path;
         }
 
+        int CUrl::getPort() const
+        {
+            if (m_port > 0) { return m_port; }
+            return protocolToDefaultPort(this->getScheme());
+        }
+
         bool CUrl::hasPort() const
         {
             return m_port >= 0;
@@ -126,6 +132,11 @@ namespace BlackMisc
             this->setScheme(url.scheme());
             this->setPath(url.path());
             this->setQuery(url.query());
+        }
+
+        QNetworkRequest CUrl::toNetworkRequest() const
+        {
+            return QNetworkRequest(this->toQUrl());
         }
 
         CUrl CUrl::withAppendedPath(const QString &path) const

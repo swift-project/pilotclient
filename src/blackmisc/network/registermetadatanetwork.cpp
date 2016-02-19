@@ -28,6 +28,7 @@ namespace BlackMisc
             CTextMessageList::registerMetadata();
             CUrl::registerMetadata();
             CUrlList::registerMetadata();
+            CFailoverUrlList::registerMetadata();
             CUser::registerMetadata();
             CUserList::registerMetadata();
             CVoiceCapabilities::registerMetadata();

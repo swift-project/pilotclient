@@ -15,6 +15,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 #include <QUrl>
+#include <QNetworkRequest>
 
 namespace BlackMisc
 {
@@ -75,7 +76,7 @@ namespace BlackMisc
             bool hasPath() const { return !m_path.isEmpty(); }
 
             //! Get port
-            int getPort() const { return m_port; }
+            int getPort() const;
 
             //! Set port
             void setPort(int port) { m_port = port; }
@@ -112,6 +113,9 @@ namespace BlackMisc
 
             //! To QUrl
             void setQUrl(const QUrl &url);
+
+            //! To request
+            QNetworkRequest toNetworkRequest() const;
 
             //! Append path
             CUrl withAppendedPath(const QString &path) const;

@@ -90,6 +90,9 @@ namespace BlackMisc
             //! Construct from a base class object.
             CFailoverUrlList(const CSequence<CUrl> &other, int maxTrials = 2);
 
+            //! From url list
+            CFailoverUrlList(const CUrlList &urlIst);
+
             //! All failed URLs
             const CUrlList &getFailedUrls() const { return m_failedUrls; }
 
@@ -117,6 +120,7 @@ namespace BlackMisc
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Network::CUrlList)
+Q_DECLARE_METATYPE(BlackMisc::Network::CFailoverUrlList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Network::CUrl>)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Network::CUrl>)
 
