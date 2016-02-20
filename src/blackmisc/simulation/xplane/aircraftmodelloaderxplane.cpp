@@ -460,7 +460,7 @@ namespace BlackMisc
 
                 // Flyable aircrafts are parsed by a different method. We don't know any aircraft files in CSL packages.
                 // If there is one, implement this method here.
-                qFatal("Not implemented yet.");
+                CLogMessage(this).warning("Not implemented yet.");
                 return true;
             }
 
@@ -474,7 +474,7 @@ namespace BlackMisc
                 }
 
                 // RW: I need an example of the file to properly implement and test it.
-                qFatal("Not implemented yet.");
+                CLogMessage(this).warning("Not implemented yet.");
                 return false;
             }
 
@@ -488,7 +488,7 @@ namespace BlackMisc
                 }
 
                 // RW: I need an example of the file to properly implement and test it.
-                qFatal("Not implemented yet.");
+                CLogMessage(this).warning("Not implemented yet.");
                 return false;
             }
 
