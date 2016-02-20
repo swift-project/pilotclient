@@ -123,6 +123,16 @@ namespace BlackMisc
                 emit loadingFinished(true);
             }
 
+            QString CAircraftModelLoaderXPlane::CSLPlane::getModelName() const
+            {
+                QString modelName = dirNames.join(' ');
+                modelName += " ";
+                modelName += objectName;
+                modelName += " ";
+                modelName += textureName;
+                return modelName;
+            }
+
             CAircraftModelList CAircraftModelLoaderXPlane::performParsing(const QString &rootDirectory, const QStringList &excludeDirectories)
             {
                 CAircraftModelList allModels;
@@ -202,19 +212,18 @@ namespace BlackMisc
             CAircraftModelList CAircraftModelLoaderXPlane::parseCslPackages(const QString &rootDirectory, const QStringList &excludeDirectories)
             {
                 Q_UNUSED(excludeDirectories);
-                QStringList packages;
-                QDirIterator it(rootDirectory, QDirIterator::Subdirectories);
-                while (it.hasNext())
-                {
-                    it.next();
-                    if (it.fileName() == "xsb_aircraft.txt") { packages << it.fileInfo().absolutePath(); }
-                }
+                if (rootDirectory.isEmpty()) { return {}; }
 
                 m_cslPackages.clear();
-                for (const auto &packageFilePath : packages)
+
+
+                QDir searchPath(rootDirectory, "xsb_aircraft.txt");
+                QDirIterator it(searchPath, QDirIterator::Subdirectories);
+                while (it.hasNext())
                 {
-                    QString packageFile(packageFilePath);
-                    packageFile += "/xsb_aircraft.txt";
+                    QString packageFile = it.next();
+
+                    QString packageFilePath = it.fileInfo().absolutePath();
                     QFile file(packageFile);
                     file.open(QIODevice::ReadOnly);
                     QString content;
@@ -228,6 +237,7 @@ namespace BlackMisc
                 }
 
                 CAircraftModelList installedModels;
+
                 // Now we do a full run
                 for (auto &package : m_cslPackages)
                 {
@@ -244,7 +254,13 @@ namespace BlackMisc
 
                     for (const auto &plane : package.planes)
                     {
-                        CAircraftModel model(plane.modelName, CAircraftModel::TypeOwnSimulatorModel);
+                        if (installedModels.containsModelString(plane.getModelName()))
+                        {
+                            CLogMessage(this).warning("Model %1 exists already! Potential model string conflict! Ignoring it.") << plane.getModelName();
+                            continue;
+                        }
+
+                        CAircraftModel model(plane.getModelName(), CAircraftModel::TypeOwnSimulatorModel);
                         model.setFileName(plane.filePath);
 
                         CAircraftIcaoCode icao(plane.icao);
@@ -252,8 +268,7 @@ namespace BlackMisc
 
                         CLivery livery;
                         livery.setCombinedCode(plane.livery);
-                        CAirlineIcaoCode airline;
-                        airline.setName(plane.airline);
+                        CAirlineIcaoCode airline(plane.airline);
                         livery.setAirlineIcaoCode(airline);
                         model.setLivery(livery);
 
@@ -329,6 +344,19 @@ namespace BlackMisc
                 return true;
             }
 
+            //! Reads the next line from stream ignoring empty ones.
+            //! Returns a null QString if stream is at the end.
+            QString readLineFrom(QTextStream &stream)
+            {
+                QString line;
+                do
+                {
+                    line = stream.readLine();
+                }
+                while(line.isEmpty() && !stream.atEnd());
+                return line;
+            }
+
             bool CAircraftModelLoaderXPlane::parseObjectCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum)
             {
                 if (tokens.size() != 2)
@@ -336,17 +364,57 @@ namespace BlackMisc
                     CLogMessage(this).warning("%1 - %2: OBJECT command requires 1 argument.") << path << lineNum;
                     return false;
                 }
+
                 QString relativePath(tokens[1]);
                 normalizePath(relativePath);
                 QString fullPath(relativePath);
                 if (!doPackageSub(fullPath))
                 {
-                    CLogMessage(this).warning("%1 - %2: package not found..") << path << lineNum;
+                    CLogMessage(this).warning("%1 - %2: package not found.") << path << lineNum;
                     return false;
                 }
 
+                // Get obj header
+                QFile objFile(fullPath);
+                if(!objFile.open(QIODevice::ReadOnly | QIODevice::Text))
+                {
+                    CLogMessage(this).warning("Object %1 does not exist.") << fullPath;
+                    return false;
+                }
+                QTextStream ts(&objFile);
+
+                // First line is about line endings. We don't need it.
+                readLineFrom(ts);
+
+                // Version number.
+                QString versionLine = readLineFrom(ts);
+                if (versionLine.isNull()) { return false; }
+                QString version = versionLine.split(QRegularExpression("\\s"), QString::SkipEmptyParts).at(0);
+
+                // For version 7, there is another line 'obj'
+                if (version == "700") { readLineFrom(ts); }
+
+                // Texture
+                QString textureLine = readLineFrom(ts);
+                if (textureLine.isNull()) { return false; }
+                QString texture = textureLine.split(QRegularExpression("\\s"), QString::SkipEmptyParts).at(0);
+
+                objFile.close();
+
                 package.planes.push_back(CSLPlane());
-                package.planes.back().modelName = relativePath;
+                QFileInfo fileInfo(fullPath);
+
+                QStringList dirNames;
+                dirNames.append(relativePath.split('/', QString::SkipEmptyParts));
+                // Replace the first one being the package name with the package root dir
+                QString packageRootDir = package.path.mid(package.path.lastIndexOf('/') + 1);
+                dirNames.replace(0, packageRootDir);
+                // Remove the last one being the obj itself
+                dirNames.removeLast();
+
+                package.planes.back().dirNames = dirNames;
+                package.planes.back().objectName = fileInfo.completeBaseName();
+                package.planes.back().textureName = texture;
                 package.planes.back().filePath = fullPath;
                 return true;
             }
@@ -366,34 +434,33 @@ namespace BlackMisc
 
                 if (!doPackageSub(absoluteTexPath))
                 {
-                    CLogMessage(this).warning("%1 - %2: package not found..") << path << lineNum;
+                    CLogMessage(this).warning("%1 - %2: package not found.") << path << lineNum;
                     return false;
                 }
 
-                package.planes.back().modelName += " ";
-                package.planes.back().modelName += relativeTexPath;
+                QFileInfo fileInfo(absoluteTexPath);
+                if (!fileInfo.exists())
+                {
+                    CLogMessage(this).warning("Texture %1 does not exist.") << absoluteTexPath;
+                    return false;
+                }
+
+                package.planes.back().textureName = fileInfo.completeBaseName();
                 return true;
             }
 
             bool CAircraftModelLoaderXPlane::parseAircraftCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum)
             {
+                Q_UNUSED(package)
                 // AIRCAFT <min> <max> <path>
                 if (tokens.size() != 4)
                 {
                     CLogMessage(this).warning("%1 - %2: AIRCRAFT command requires 3 arguments.") << path << lineNum;
                 }
 
-                QString relativePath = tokens[3];
-                normalizePath(relativePath);
-                QString absolutePath(relativePath);
-                if (!doPackageSub(absolutePath))
-                {
-                    CLogMessage(this).warning("%1 - %2: package not found..") << path << lineNum;
-                    return false;
-                }
-                package.planes.push_back(CSLPlane());
-                package.planes.back().modelName = relativePath;
-                package.planes.back().filePath = absolutePath;
+                // Flyable aircrafts are parsed by a different method. We don't know any aircraft files in CSL packages.
+                // If there is one, implement this method here.
+                qFatal("Not implemented yet.");
                 return true;
             }
 
@@ -545,6 +612,7 @@ namespace BlackMisc
 
                 QString localCopy(content);
                 QTextStream in(&localCopy);
+
                 while (!in.atEnd())
                 {
                     ++lineNum;

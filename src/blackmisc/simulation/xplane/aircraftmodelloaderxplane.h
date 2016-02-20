@@ -69,7 +69,13 @@ namespace BlackMisc
             private:
                 struct CSLPlane
                 {
-                    QString modelName;  //!< Unique model name
+                    QString getModelName() const;
+
+                    // Model name parts
+                    QStringList dirNames; //!< List dir names starting from xsb_aircrafts.txt parent down to obj folder
+                    QString objectName;   //!< Complete basename of the object file
+                    QString textureName;  //!< Complete basename of the texture file
+
                     QString filePath;   //!< object filePath
                     QString icao;       //!< Icao type of this model
                     QString airline;    //!< Airline identifier. Can be empty.
