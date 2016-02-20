@@ -436,7 +436,7 @@ namespace BlackCore
     bool CContextAudio::isAudioLoopbackEnabled() const
     {
         Q_ASSERT(this->m_audioMixer);
-        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
         return this->m_audioMixer->hasMixerConnection(IAudioMixer::InputMicrophone, IAudioMixer::OutputOutputDevice1);
     }
 
