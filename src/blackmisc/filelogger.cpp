@@ -78,11 +78,12 @@ namespace BlackMisc
         nameFilter += QLatin1String("*.log");
         QDir dir(m_logPath, nameFilter, QDir::Name, QDir::Files);
 
-        for (const auto &logFile : dir.entryList())
+        QDateTime now = QDateTime::currentDateTime();
+        for (const auto &logFileInfo : dir.entryInfoList())
         {
-            if (QFileInfo(logFile).lastModified().daysTo(QDateTime::currentDateTime()) > 7 )
+            if (logFileInfo.lastModified().daysTo(now) > 7 )
             {
-                dir.remove(logFile);
+                dir.remove(logFileInfo.fileName());
             }
         }
     }
