@@ -11,7 +11,6 @@
 #include <QHash>
 #include <QtWidgets/QMessageBox>
 #include <CoreFoundation/CoreFoundation.h>
-#include <ApplicationServices/ApplicationServices.h>
 #include <AppKit/NSEvent.h>
 #include <AppKit/NSAlert.h>
 #include <Foundation/NSString.h>
@@ -110,7 +109,7 @@ namespace BlackInput
         CGEventMask eventMask = ((1 << kCGEventKeyDown) | (1 << kCGEventKeyUp) | (1 << kCGEventFlagsChanged));
 
         // try creating an event tap just for keypresses. if it fails, we need Universal Access.
-        CFMachPortRef eventTap = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, 0,
+        CFMachPortRef eventTap = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault,
                                  eventMask, myCGEventCallback, this);
 
         CFRunLoopSourceRef source = CFMachPortCreateRunLoopSource(kCFAllocatorDefault,

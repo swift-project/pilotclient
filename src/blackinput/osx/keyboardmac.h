@@ -14,15 +14,8 @@
 
 #include "blackinput/keyboard.h"
 #include "blackmisc/input/hotkeycombination.h"
+#include <ApplicationServices/ApplicationServices.h>
 #include <QHash>
-
-class __CGEvent;
-
-typedef __CGEvent* CGEventRef; //!< Mac event definition
-typedef unsigned int CGEventType; //!< Max event type definition
-
-class __CGEventTapProxy;
-typedef __CGEventTapProxy* CGEventTapProxy; //!< Max event proxy definition
 
 namespace BlackInput
 {
