@@ -8,6 +8,7 @@ TEMPLATE = app
 CONFIG   += console
 CONFIG   -= app_bundle
 CONFIG   += blackmisc blacksim
+CONFIG  -= app_bundle
 
 DEPENDPATH += . ../../src/blackmisc
 INCLUDEPATH += . ../../src

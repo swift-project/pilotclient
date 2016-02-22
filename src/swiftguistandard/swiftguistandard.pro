@@ -13,10 +13,9 @@ SOURCES += *.cpp
 HEADERS += *.h
 FORMS   += *.ui
 CONFIG  += blackmisc blacksound blackinput blackcore blackgui
+CONFIG  -= app_bundle
 
 macx {
-    CONFIG  += app_bundle
-
     deployment.files = ../blackgui/qss
     deployment.path = Contents/MacOS
     QMAKE_BUNDLE_DATA += deployment

@@ -8,6 +8,7 @@ TEMPLATE = app
 CONFIG   += console
 CONFIG   -= app_bundle
 CONFIG   += blackmisc blackcore
+CONFIG  -= app_bundle
 
 DEPENDPATH += . $$SourceRoot/src/blackmisc $$SourceRoot/src/blackcore
 INCLUDEPATH += . $$SourceRoot/src
