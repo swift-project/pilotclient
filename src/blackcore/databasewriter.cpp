@@ -8,7 +8,7 @@
  */
 
 #include "databasewriter.h"
-#include "blackcore/cookiemanager.h"
+#include "blackcore/application.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/datastoreutility.h"
 #include "blackmisc/network/networkutils.h"
@@ -28,9 +28,7 @@ namespace BlackCore
         QObject(parent),
         m_modelPublishUrl(getModelPublishUrl(baseUrl))
     {
-        this->m_networkManager = new QNetworkAccessManager(this);
-        CCookieManager::setToAccessManager(this->m_networkManager);
-        this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CDatabaseWriter::ps_postResponse);
+        // void
     }
 
     CStatusMessageList CDatabaseWriter::asyncPublishModels(const CAircraftModelList &models)
@@ -58,7 +56,7 @@ namespace BlackCore
             multiPart->append(CNetworkUtils::getMultipartWithDebugFlag());
         }
 
-        m_pendingReply = this->m_networkManager->post(request, multiPart);
+        m_pendingReply = sApp->postToNetwork(request, multiPart, { this, &CDatabaseWriter::ps_postResponse});
         multiPart->setParent(m_pendingReply);
         return msgs;
     }

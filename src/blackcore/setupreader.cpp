@@ -147,7 +147,7 @@ namespace BlackCore
             return;
         }
         if (m_shutdown) { return; }
-        sApp->requestNetworkResource(url.toNetworkRequest(), { this, &CSetupReader::ps_parseSetupFile });
+        sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::ps_parseSetupFile });
     }
 
     void CSetupReader::ps_readUpdateInfo()
@@ -160,7 +160,7 @@ namespace BlackCore
             return;
         }
         if (m_shutdown) { return; }
-        sApp->requestNetworkResource(url.toNetworkRequest(), { this, &CSetupReader::ps_parseUpdateInfoFile});
+        sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::ps_parseUpdateInfoFile});
     }
 
     void CSetupReader::ps_setupSyncronized(bool success)

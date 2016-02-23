@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/cookiemanager.h"
+#include "blackcore/application.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/logmessage.h"
@@ -31,16 +31,7 @@ namespace BlackCore
     CIcaoDataReader::CIcaoDataReader(QObject *owner) :
         CDatabaseReader(owner, "CIcaoDataReader")
     {
-        this->m_networkManagerAircraft = new QNetworkAccessManager(this);
-        CCookieManager::setToAccessManager(this->m_networkManagerAircraft);
-        this->m_networkManagerAirlines = new QNetworkAccessManager(this);
-        CCookieManager::setToAccessManager(this->m_networkManagerAirlines);
-        this->m_networkManagerCountries = new QNetworkAccessManager(this);
-        CCookieManager::setToAccessManager(this->m_networkManagerCountries);
-
-        this->connect(this->m_networkManagerAircraft, &QNetworkAccessManager::finished, this, &CIcaoDataReader::ps_parseAircraftIcaoData);
-        this->connect(this->m_networkManagerAirlines, &QNetworkAccessManager::finished, this, &CIcaoDataReader::ps_parseAirlineIcaoData);
-        this->connect(this->m_networkManagerCountries, &QNetworkAccessManager::finished, this, &CIcaoDataReader::ps_parseCountryData);
+        // void
     }
 
     CAircraftIcaoCodeList CIcaoDataReader::getAircraftIcaoCodes() const
@@ -131,9 +122,6 @@ namespace BlackCore
     void CIcaoDataReader::ps_read(BlackMisc::Network::CEntityFlags::Entity entities, const QDateTime &newerThan)
     {
         this->threadAssertCheck(); // runs in background thread
-        Q_ASSERT(this->m_networkManagerAircraft);
-        Q_ASSERT(this->m_networkManagerAirlines);
-        Q_ASSERT(this->m_networkManagerCountries);
 
         CEntityFlags::Entity entitiesTriggered = CEntityFlags::NoEntity;
         if (entities.testFlag(CEntityFlags::AircraftIcaoEntity))
@@ -142,8 +130,7 @@ namespace BlackCore
             if (!url.isEmpty())
             {
                 if (!newerThan.isNull()) { url.appendQuery("newer=" + newerThan.toString(Qt::ISODate)); }
-                QNetworkRequest requestAircraft(CNetworkUtils::getNetworkRequest(url));
-                this->m_networkManagerAircraft->get(requestAircraft);
+                sApp->getFromNetwork(url, { this, &CIcaoDataReader::ps_parseAircraftIcaoData });
                 entitiesTriggered |= CEntityFlags::AircraftIcaoEntity;
             }
             else
@@ -158,8 +145,7 @@ namespace BlackCore
             if (!url.isEmpty())
             {
                 if (!newerThan.isNull()) { url.appendQuery("newer=" + newerThan.toString(Qt::ISODate)); }
-                QNetworkRequest requestAirline(CNetworkUtils::getNetworkRequest(url));
-                this->m_networkManagerAirlines->get(requestAirline);
+                sApp->getFromNetwork(url, { this, &CIcaoDataReader::ps_parseAirlineIcaoData });
                 entitiesTriggered |= CEntityFlags::AirlineIcaoEntity;
             }
             else
@@ -174,8 +160,7 @@ namespace BlackCore
             if (!url.isEmpty())
             {
                 if (!newerThan.isNull()) { url.appendQuery("newer=" + newerThan.toString(Qt::ISODate)); }
-                QNetworkRequest requestCountry(CNetworkUtils::getNetworkRequest(url));
-                this->m_networkManagerCountries->get(requestCountry);
+                sApp->getFromNetwork(url, { this, &CIcaoDataReader::ps_parseCountryData });
                 entitiesTriggered |= CEntityFlags::CountryEntity;
             }
             else

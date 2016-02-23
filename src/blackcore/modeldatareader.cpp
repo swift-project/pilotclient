@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/cookiemanager.h"
+#include "blackcore/application.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/networkutils.h"
@@ -30,16 +30,7 @@ namespace BlackCore
     CModelDataReader::CModelDataReader(QObject *owner) :
         CDatabaseReader(owner, "CModelDataReader")
     {
-        this->m_networkManagerLivery = new QNetworkAccessManager(this);
-        CCookieManager::setToAccessManager(this->m_networkManagerLivery);
-        this->m_networkManagerDistributor = new QNetworkAccessManager(this);
-        CCookieManager::setToAccessManager(this->m_networkManagerDistributor);
-        this->m_networkManagerModel = new QNetworkAccessManager(this);
-        CCookieManager::setToAccessManager(this->m_networkManagerModel);
-
-        this->connect(this->m_networkManagerLivery, &QNetworkAccessManager::finished, this, &CModelDataReader::ps_parseLiveryData);
-        this->connect(this->m_networkManagerDistributor, &QNetworkAccessManager::finished, this, &CModelDataReader::ps_parseDistributorData);
-        this->connect(this->m_networkManagerModel, &QNetworkAccessManager::finished, this, &CModelDataReader::ps_parseModelData);
+        // void
     }
 
     CLiveryList CModelDataReader::getLiveries() const
@@ -148,9 +139,6 @@ namespace BlackCore
     void CModelDataReader::ps_read(CEntityFlags::Entity entity, const QDateTime &newerThan)
     {
         this->threadAssertCheck();
-        Q_ASSERT(this->m_networkManagerLivery);
-        Q_ASSERT(this->m_networkManagerDistributor);
-        Q_ASSERT(this->m_networkManagerModel);
 
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
         if (entity.testFlag(CEntityFlags::LiveryEntity))
@@ -163,9 +151,7 @@ namespace BlackCore
                     const QString tss(newerThan.toString(Qt::ISODate));
                     url.appendQuery(QString(parameterLatestTimestamp() + "=" + tss));
                 }
-                QNetworkRequest requestLivery(url);
-                CNetworkUtils::ignoreSslVerification(requestLivery);
-                this->m_networkManagerLivery->get(requestLivery);
+                sApp->getFromNetwork(url, { this, &CModelDataReader::ps_parseLiveryData});
                 triggeredRead |= CEntityFlags::LiveryEntity;
             }
             else
@@ -184,9 +170,7 @@ namespace BlackCore
                     const QString tss(newerThan.toString(Qt::ISODate));
                     url.appendQuery(QString(parameterLatestTimestamp() + "=" + tss));
                 }
-                QNetworkRequest requestDistributor(url);
-                CNetworkUtils::ignoreSslVerification(requestDistributor);
-                this->m_networkManagerDistributor->get(requestDistributor);
+                sApp->getFromNetwork(url, { this, &CModelDataReader::ps_parseDistributorData});
                 triggeredRead |= CEntityFlags::DistributorEntity;
             }
             else
@@ -205,9 +189,7 @@ namespace BlackCore
                     const QString tss(newerThan.toString(Qt::ISODate));
                     url.appendQuery(QString(parameterLatestTimestamp() + "=" + tss));
                 }
-                QNetworkRequest requestModel(url);
-                CNetworkUtils::ignoreSslVerification(requestModel);
-                this->m_networkManagerModel->get(requestModel);
+                sApp->getFromNetwork(url, { this, &CModelDataReader::ps_parseModelData});
                 triggeredRead |= CEntityFlags::ModelEntity;
             }
             else

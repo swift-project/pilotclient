@@ -10,6 +10,7 @@
 #include "application.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/setupreader.h"
+#include "blackcore/webdataservices.h"
 #include "blackcore/contextapplication.h"
 #include "blackcore/registermetadata.h"
 #include "blackcore/cookiemanager.h"
@@ -57,7 +58,8 @@ namespace BlackCore
             QCoreApplication::instance()->installTranslator(&translator);
 
             // Global setup / bootstraping
-            CCookieManager::instance(); // init cookie manager if ever needed
+            this->m_cookieManager.setParent(&this->m_accessManager);
+            this->m_accessManager.setCookieJar(&this->m_cookieManager);
 
             // trigger loading of settings
             //! \todo maybe loaded twice, context initializing might trigger loading of settings a second time
@@ -152,17 +154,68 @@ namespace BlackCore
         }
     }
 
-    QNetworkReply *CApplication::requestNetworkResource(const QNetworkRequest &request, const BlackMisc::CSlot<void(QNetworkReply *)> &callback)
+    bool CApplication::hasWebDataServices() const
+    {
+        return this->m_webDataServices;
+    }
+
+    CWebDataServices *CApplication::getWebDataServices() const
+    {
+        Q_ASSERT_X(this->m_webDataServices, Q_FUNC_INFO, "Missing web data services");
+        return this->m_webDataServices.data();
+    }
+
+    QNetworkReply *CApplication::getFromNetwork(const CUrl &url, const BlackMisc::CSlot<void (QNetworkReply *)> &callback)
+    {
+        if (this->m_shutdown) { return nullptr; }
+        return getFromNetwork(url.toNetworkRequest(), callback);
+    }
+
+    QNetworkReply *CApplication::getFromNetwork(const QNetworkRequest &request, const BlackMisc::CSlot<void(QNetworkReply *)> &callback)
     {
         if (this->m_shutdown) { return nullptr; }
         QNetworkRequest r(request);
         CNetworkUtils::ignoreSslVerification(r);
+        QWriteLocker locker(&m_accessManagerLock);
         QNetworkReply *reply = this->m_accessManager.get(r);
         if (callback)
         {
             connect(reply, &QNetworkReply::finished, callback.object(), [ = ] { callback(reply); });
         }
         return reply;
+    }
+
+    QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, const QByteArray &data, const BlackMisc::CSlot<void (QNetworkReply *)> &callback)
+    {
+        if (this->m_shutdown) { return nullptr; }
+        QNetworkRequest r(request);
+        CNetworkUtils::ignoreSslVerification(r);
+        QWriteLocker locker(&m_accessManagerLock);
+        QNetworkReply *reply = this->m_accessManager.post(r, data);
+        if (callback)
+        {
+            connect(reply, &QNetworkReply::finished, callback.object(), [ = ] { callback(reply); });
+        }
+        return reply;
+    }
+
+    QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, QHttpMultiPart *multiPart, const BlackMisc::CSlot<void (QNetworkReply *)> &callback)
+    {
+        if (this->m_shutdown) { return nullptr; }
+        QNetworkRequest r(request);
+        CNetworkUtils::ignoreSslVerification(r);
+        QWriteLocker locker(&m_accessManagerLock);
+        QNetworkReply *reply = this->m_accessManager.post(r, multiPart);
+        if (callback)
+        {
+            connect(reply, &QNetworkReply::finished, callback.object(), [ = ] { callback(reply); });
+        }
+        return reply;
+    }
+
+    void CApplication::deleteAllCookies()
+    {
+        this->m_cookieManager.deleteAllCookies();
     }
 
     int CApplication::exec()
@@ -195,6 +248,15 @@ namespace BlackCore
         return this->startCoreFacade(); // will do nothing if setup is not yet loaded
     }
 
+    bool CApplication::useWebDataServices(const CWebReaderFlags::WebReader webReader, CWebReaderFlags::DbReaderHint hint)
+    {
+        Q_ASSERT_X(this->m_webDataServices.isNull(), Q_FUNC_INFO, "Services already started");
+        this->m_webReader = webReader;
+        this->m_dbReaderHint = hint;
+        this->m_useWebData = true;
+        return this->startWebDataServices();
+    }
+
     bool CApplication::startCoreFacade()
     {
         if (!this->m_useContexts) { return true; } // we do not use context, so no need to startup
@@ -203,10 +265,30 @@ namespace BlackCore
 
         Q_ASSERT_X(this->m_coreFacade.isNull(), Q_FUNC_INFO, "Cannot alter facade");
         Q_ASSERT_X(this->m_setupReader, Q_FUNC_INFO, "No facade without setup possible");
+        Q_ASSERT_X(this->m_useWebData, Q_FUNC_INFO, "Need web data services");
+
+        this->startWebDataServices();
 
         CLogMessage(this).info("Will start core facade now");
         this->m_coreFacade.reset(new CCoreFacade(this->m_coreFacadeConfig));
         emit this->coreFacadeStarted();
+        return true;
+    }
+
+    bool CApplication::startWebDataServices()
+    {
+        if (!this->m_useWebData) { return true; }
+        if (!this->m_parsed) { return false; }
+        if (!this->m_setupReader || !this->m_setupReader->isSetupSyncronized()) { return false; }
+
+        Q_ASSERT_X(this->m_setupReader, Q_FUNC_INFO, "No web data services without setup possible");
+        if (!this->m_webDataServices)
+        {
+            CLogMessage(this).info("Will start web data services now");
+            this->m_webDataServices.reset(
+                new CWebDataServices(this->m_webReader, this->m_dbReaderHint)
+            );
+        }
         return true;
     }
 
@@ -259,16 +341,22 @@ namespace BlackCore
         sApp = nullptr;
         disconnect(this);
 
-        if (this->m_setupReader)
-        {
-            this->m_setupReader->gracefulShutdown();
-        }
-
         if (this->supportsContexts())
         {
             // clean up facade
             this->m_coreFacade->gracefulShutdown();
             this->m_coreFacade.reset();
+        }
+
+        if (this->m_webDataServices)
+        {
+            this->m_webDataServices->gracefulShutdown();
+            this->m_webDataServices.reset();
+        }
+
+        if (this->m_setupReader)
+        {
+            this->m_setupReader->gracefulShutdown();
         }
 
         this->m_fileLogger->close();
@@ -280,8 +368,9 @@ namespace BlackCore
         {
             if (!this->m_started)
             {
-                // follow up startup
-                this->m_started = this->startCoreFacade();
+                // follow up startups
+                bool s = this->startWebDataServices();
+                this->m_started = s && this->startCoreFacade();
             }
         }
         this->m_startUpCompleted = true;

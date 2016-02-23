@@ -59,11 +59,9 @@ namespace BlackCore
         void ps_userChanged();
 
     private:
-        BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< data cache
+        BlackMisc::CData<BlackCore::Data::GlobalSetup>       m_setup {this}; //!< data cache
         BlackMisc::CData<BlackCore::Data::AuthenticatedUser> m_user {this, &CDatabaseAuthenticationService::ps_userChanged};
-
-        QNetworkAccessManager  *m_networkManager = nullptr;
-        bool                    m_shutdown = false;
+        bool m_shutdown = false;
     };
 } // namespace
 

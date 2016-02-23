@@ -123,9 +123,6 @@ namespace BlackCore
         void ps_read(BlackMisc::Network::CEntityFlags::Entity entities, const QDateTime &newerThan);
 
     private:
-        QNetworkAccessManager *m_networkManagerAircraft  = nullptr;
-        QNetworkAccessManager *m_networkManagerAirlines  = nullptr;
-        QNetworkAccessManager *m_networkManagerCountries = nullptr;
         BlackMisc::Aviation::CAircraftIcaoCodeList m_aircraftIcaos;
         BlackMisc::Aviation::CAirlineIcaoCodeList  m_airlineIcaos;
         BlackMisc::CCountryList                    m_countries;

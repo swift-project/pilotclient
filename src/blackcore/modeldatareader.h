@@ -133,9 +133,6 @@ namespace BlackCore
         void ps_read(BlackMisc::Network::CEntityFlags::Entity entity = BlackMisc::Network::CEntityFlags::DistributorLiveryModel, const QDateTime &newerThan = QDateTime());
 
     private:
-        QNetworkAccessManager *m_networkManagerLivery = nullptr;
-        QNetworkAccessManager *m_networkManagerDistributor = nullptr;
-        QNetworkAccessManager *m_networkManagerModel = nullptr;
         BlackMisc::Aviation::CLiveryList m_liveries;
         BlackMisc::Simulation::CDistributorList m_distributors;
         BlackMisc::Simulation::CAircraftModelList m_models;

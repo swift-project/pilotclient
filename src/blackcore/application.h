@@ -13,6 +13,9 @@
 #define BLACKCORE_APPLICATION_H
 
 #include "corefacadeconfig.h"
+#include "cookiemanager.h"
+#include "webreaderflags.h"
+#include "blackmisc/network/url.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/filelogger.h"
 #include "blackmisc/slot.h"
@@ -21,11 +24,13 @@
 #include <QScopedPointer>
 #include <QNetworkAccessManager>
 #include <QCommandLineParser>
+#include <atomic>
 
 namespace BlackCore
 {
     class CCoreFacade;
     class CSetupReader;
+    class CWebDataServices;
 
     class IContextApplication;
     class IContextAudio;
@@ -73,14 +78,39 @@ namespace BlackCore
         bool waitForStart();
 
         //! Request to get network reply
-        QNetworkReply *requestNetworkResource(const QNetworkRequest &request,
-                                              const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
+        //! \threadsafe
+        QNetworkReply *getFromNetwork(const BlackMisc::Network::CUrl &url,
+                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
+
+        //! Request to get network reply
+        //! \threadsafe
+        QNetworkReply *getFromNetwork(const QNetworkRequest &request,
+                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
+
+        //! Post to network
+        //! \threadsafe
+        QNetworkReply *postToNetwork(const QNetworkRequest &request, const QByteArray &data,
+                                     const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
+
+        //! Post to network
+        //! \threadsafe
+        QNetworkReply *postToNetwork(const QNetworkRequest &request, QHttpMultiPart *multiPart,
+                                     const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
+
+        //! Delete all cookies from cookier manager
+        void deleteAllCookies();
 
         //! Setup already syncronized
         bool isSetupSyncronized() const;
 
         //! Reload setup and version
         BlackMisc::CStatusMessage requestReloadOfSetupAndVersion();
+
+        //! Web data services available?
+        bool hasWebDataServices() const;
+
+        //! Get the web data services
+        CWebDataServices *getWebDataServices() const;
 
         //! Run event loop
         static int exec();
@@ -138,6 +168,10 @@ namespace BlackCore
         //! \sa coreFacadeStarted
         bool useContexts(const CCoreFacadeConfig &coreConfig);
 
+        //! Init web data services and start them
+        //! \sa webDataServicesStarted
+        bool useWebDataServices(const CWebReaderFlags::WebReader webReader, CWebReaderFlags::DbReaderHint hint);
+
         //! Get the facade
         CCoreFacade *getCoreFacade() { return m_coreFacade.data(); }
 
@@ -166,6 +200,9 @@ namespace BlackCore
     signals:
         //! Facade started
         void coreFacadeStarted();
+
+        //! Web data services started
+        void webDataServicesStarted();
 
     protected slots:
         //! Setup read/syncronized
@@ -196,13 +233,17 @@ namespace BlackCore
         //! \note does nothing when setup is not yet loaded
         bool startCoreFacade();
 
+        //! Start the web data services
+        //! \note does nothing when setup is not yet loaded
+        bool startWebDataServices();
+
         //! executable name
         static const QString &executable();
 
         // cmd parsing
         QCommandLineParser m_parser;                    //!< cmd parser
         QCommandLineOption m_cmdHelp {"help"};          //!< help option
-        QCommandLineOption m_cmdVersion { "version" };  //!< version option
+        QCommandLineOption m_cmdVersion {"version"};    //!< version option
         QCommandLineOption m_cmdDBusAddress {"empty"};  //!< DBus address
         bool               m_parsed = false;            //!< Parsing accomplished?
         bool               m_started = false;           //!< started with success?
@@ -221,12 +262,18 @@ namespace BlackCore
 
         QScopedPointer<CCoreFacade>            m_coreFacade;             //!< core facade if any
         QScopedPointer<CSetupReader>           m_setupReader;            //!< setup reader
+        QScopedPointer<CWebDataServices>       m_webDataServices;        //!< web data services
         QScopedPointer<BlackMisc::CFileLogger> m_fileLogger;             //!< file logger
         QNetworkAccessManager                  m_accessManager { this }; //!< single network access manager
+        CCookieManager                         m_cookieManager;          //!< single cookie manager for our access manager
         QString                                m_applicationName;        //!< application name
+        QReadWriteLock                         m_accessManagerLock;      //!< lock to make accessmanager access threadsafe
         CCoreFacadeConfig                      m_coreFacadeConfig;       //!< Core facade config if any
-        bool                                   m_shutdown = false;       //!< is being shut down
+        CWebReaderFlags::WebReader             m_webReader;              //!< Readers used
+        CWebReaderFlags::DbReaderHint          m_dbReaderHint;           //!< Load or used caching?
+        std::atomic<bool>                      m_shutdown { false };     //!< is being shutdown?
         bool                                   m_useContexts = false;    //!< use contexts
+        bool                                   m_useWebData = false;     //!< use web data
     };
 } // namespace
 

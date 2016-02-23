@@ -49,7 +49,6 @@ namespace BlackCore
     private:
         BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< data cache
         BlackMisc::Network::CUrl                       m_modelPublishUrl;
-        QNetworkAccessManager                         *m_networkManager = nullptr;
         QNetworkReply                                 *m_pendingReply = nullptr;
         bool                                           m_shutdown = false;
 

@@ -8,7 +8,7 @@
  */
 
 #include "databaseauthentication.h"
-#include "blackcore/cookiemanager.h"
+#include "blackcore/application.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/logmessage.h"
@@ -26,11 +26,9 @@ using namespace BlackMisc::Network;
 namespace BlackCore
 {
     CDatabaseAuthenticationService::CDatabaseAuthenticationService(QObject *parent) :
-        QObject(parent),
-        m_networkManager(new QNetworkAccessManager(this))
+        QObject(parent)
     {
-        this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CDatabaseAuthenticationService::ps_parseServerResponse);
-        CCookieManager::setToAccessManager(this->m_networkManager);
+        // void
     }
 
     void CDatabaseAuthenticationService::gracefulShutdown()
@@ -67,8 +65,8 @@ namespace BlackCore
         if (m_setup.get().dbDebugFlag()) { CNetworkUtils::addDebugFlag(params); }
 
         QString query = params.toString();
-        QNetworkRequest request(CNetworkUtils::getNetworkRequest(url, CNetworkUtils::PostUrlEncoded));
-        QNetworkReply *r = this->m_networkManager->post(request, query.toUtf8());
+        const QNetworkRequest request(CNetworkUtils::getNetworkRequest(url, CNetworkUtils::PostUrlEncoded));
+        QNetworkReply *r = sApp->postToNetwork(request, query.toUtf8(), { this, &CDatabaseAuthenticationService::ps_parseServerResponse});
         if (!r)
         {
             QString rm("Cannot send request to authentication server %1");
@@ -87,7 +85,7 @@ namespace BlackCore
         CUrl url(this->m_setup.get().dbLoginServiceUrl());
         url.setQuery("logoff=true");
         QNetworkRequest request(CNetworkUtils::getNetworkRequest(url));
-        this->m_networkManager->get(request);
+        sApp->getFromNetwork(request, { this, &CDatabaseAuthenticationService::ps_parseServerResponse });
         this->m_user.set(CAuthenticatedUser());
     }
 
@@ -100,7 +98,7 @@ namespace BlackCore
         QString urlString(nwReply->url().toString());
         if (urlString.toLower().contains("logoff"))
         {
-            CCookieManager::instance()->deleteAllCookies();
+            sApp->deleteAllCookies();
             emit logoffFinished();
             return;
         }
