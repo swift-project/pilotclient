@@ -46,8 +46,7 @@ bool CSwiftGuiStdApplication::startHookIn()
         runtimeConfig = CCoreFacadeConfig::remoteLocalAudio(dBusAddress);
         break;
     }
-    this->useContexts(runtimeConfig);
-    return true;
+    return this->useContexts(runtimeConfig);
 }
 
 bool CSwiftGuiStdApplication::parsingHookIn()

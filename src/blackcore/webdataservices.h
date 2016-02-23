@@ -51,8 +51,7 @@ namespace BlackCore
 
     public:
         //! Constructor
-        CWebDataServices(CWebReaderFlags::WebReader readerFlags,
-                         int autoReadAfterSetupSynchronizedMs, QObject *parent = nullptr);
+        CWebDataServices(CWebReaderFlags::WebReader readerFlags, QObject *parent = nullptr);
 
         //! Shutdown
         void gracefulShutdown();
@@ -155,14 +154,8 @@ namespace BlackCore
         //! Read from model reader
         void ps_readFromSwiftDb(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
-        //! Setup has been read
-        void ps_setupRead(bool success);
-
-        //! Setup has been changed
+        //! Setup changed
         void ps_setupChanged();
-
-        //! Setup timed out
-        void ps_setupTimedOut();
 
     private:
         //! Init the readers
@@ -172,7 +165,6 @@ namespace BlackCore
         void initWriters();
 
         CWebReaderFlags::WebReader m_readerFlags = CWebReaderFlags::WebReaderFlag::None; //!< which readers are available
-        int m_autoReadAfterSetupMs               = -1;                                   //!< directly read all known readers after setup was syncronized
         bool m_initialRead                       = false;                                //!< Initial read conducted
         BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this, &CWebDataServices::ps_setupChanged}; //!< setup cache
 

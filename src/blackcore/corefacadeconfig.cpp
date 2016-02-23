@@ -66,4 +66,10 @@ namespace BlackCore
         cfg.m_audio = CCoreFacadeConfig::LocalInDbusServer;
         return cfg;
     }
+
+    CCoreFacadeConfig CCoreFacadeConfig::allEmpty()
+    {
+        const CCoreFacadeConfig cfg = CCoreFacadeConfig();
+        return cfg;
+    }
 } // namespace

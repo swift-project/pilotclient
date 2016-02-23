@@ -33,7 +33,7 @@ CSwiftData::CSwiftData(QWidget *parent) :
     QMainWindow(parent),
     CIdentifiable(this),
     ui(new Ui::CSwiftData),
-    m_webDataReader(new CWebDataServices(CWebReaderFlags::AllSwiftDbReaders, 500))
+    m_webDataReader(new CWebDataServices(CWebReaderFlags::AllSwiftDbReaders, this))
 {
     ui->setupUi(this);
     this->init();

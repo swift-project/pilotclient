@@ -37,28 +37,18 @@ using namespace BlackMisc::Weather;
 namespace BlackCore
 {
     CWebDataServices::CWebDataServices(
-        CWebReaderFlags::WebReader readerFlags, int autoReadAfterSetupSynchronizedMs, QObject *parent) :
-        QObject(parent), m_readerFlags(readerFlags), m_autoReadAfterSetupMs(autoReadAfterSetupSynchronizedMs)
+        CWebReaderFlags::WebReader readerFlags, QObject *parent) :
+        QObject(parent), m_readerFlags(readerFlags)
     {
+        if (!sApp) { return; } // shutting down
+
         Q_ASSERT_X(QSslSocket::supportsSsl(), Q_FUNC_INFO, "missing SSL support");
-        if (!sApp) { return; } // shutting doen
+        Q_ASSERT_X(sApp->isSetupSyncronized(), Q_FUNC_INFO, "Setup not syncronized");
         this->setObjectName("CWebDataReader");
         this->initReaders(readerFlags);
         this->initWriters();
-        if (autoReadAfterSetupSynchronizedMs >= 0)
-        {
-            // wait for setup read completion
-            // in case this was already fired or will never be fired set a time out
-            if (sApp->isSetupSyncronized())
-            {
-                QTimer::singleShot(500, this, &CWebDataServices::ps_setupTimedOut);
-            }
-            else
-            {
-                //! \todo change !!!!!!
-                QTimer::singleShot(2500, this, &CWebDataServices::ps_setupTimedOut);
-            }
-        }
+
+        this->readInBackground(CEntityFlags::AllEntities, 500);
     }
 
     QList<QMetaObject::Connection> CWebDataServices::connectDataReadSignal(QObject *receiver, std::function<void(CEntityFlags::Entity, CEntityFlags::ReadState, int)> dataRead)
@@ -437,7 +427,7 @@ namespace BlackCore
 
     const CLogCategoryList &CWebDataServices::getLogCategories()
     {
-        static const BlackMisc::CLogCategoryList cats { CLogCategory("swift.datareader") };
+        static const BlackMisc::CLogCategoryList cats { CLogCategory("swift.datareader"), CLogCategory::webservice() };
         return cats;
     }
 
@@ -541,33 +531,9 @@ namespace BlackCore
         }
     }
 
-    void CWebDataServices::ps_setupRead(bool success)
-    {
-        // setup has been changed
-        if (success)
-        {
-            if (m_autoReadAfterSetupMs >= 0)
-            {
-                if (m_initialRead) { return; }
-                CLogMessage(this).info("Setup synchronized, will trigger read of web service data");
-                this->readInBackground(CEntityFlags::AllEntities, m_autoReadAfterSetupMs);
-            }
-        }
-        else
-        {
-            CLogMessage(this).error("Failed to read setup, will not(!) trigger web data read");
-        }
-    }
-
     void CWebDataServices::ps_setupChanged()
     {
-        CLogMessage(this).debug() << "Setup changed";
-    }
-
-    void CWebDataServices::ps_setupTimedOut()
-    {
-        if (this->m_initialRead) { return; }
-        this->ps_setupRead(true);
+        // void
     }
 
     void CWebDataServices::readInBackground(CEntityFlags::Entity entities, int delayMs)

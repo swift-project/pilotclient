@@ -57,7 +57,7 @@ namespace BlackCore
         this->m_networkDataUpdateTimer->start(30 * 1000);
 
         // 3. data reader, start reading when setup is synced with xx delay
-        this->m_webDataReader = new CWebDataServices(CWebReaderFlags::AllReaders, 1000, this);
+        this->m_webDataReader = new CWebDataServices(CWebReaderFlags::AllReaders, this);
         this->m_webReaderSignalConnections.append(
             this->m_webDataReader->connectDataReadSignal(
                 this, // the object here must be the same as in the bind

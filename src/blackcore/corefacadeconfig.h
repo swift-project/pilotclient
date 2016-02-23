@@ -99,6 +99,9 @@ namespace BlackCore
 
         //! predefined, remote with local audio (e.g. Aduio in GUI)
         static CCoreFacadeConfig remoteLocalAudio(const QString &dbusBootstrapAddress = "");
+
+        //! predefined all empty config (normlly used when the real config can only be determined later)
+        static CCoreFacadeConfig allEmpty();
     };
 }
 #endif // guard
