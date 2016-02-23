@@ -501,7 +501,7 @@ namespace BlackCore
     void CWebDataServices::initWriters()
     {
         this->m_databaseWriter = new CDatabaseWriter(
-            m_setup.get().dbModelReaderUrl(),
+            m_setup.get().dbRootDirectoryUrl(),
             this);
     }
 

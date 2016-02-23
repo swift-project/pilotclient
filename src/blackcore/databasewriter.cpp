@@ -50,6 +50,7 @@ namespace BlackCore
 
         QUrl url(m_modelPublishUrl.toQUrl());
         QNetworkRequest request(url);
+        CNetworkUtils::ignoreSslVerification(request);
         QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType, this);
         multiPart->append(CNetworkUtils::getJsonTextMultipart(models.toDatabaseJson()));
         if (m_setup.get().dbDebugFlag())
