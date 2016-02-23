@@ -32,8 +32,7 @@ using namespace BlackGui::Components;
 CSwiftData::CSwiftData(QWidget *parent) :
     QMainWindow(parent),
     CIdentifiable(this),
-    ui(new Ui::CSwiftData),
-    m_webDataReader(new CWebDataServices(CWebReaderFlags::AllSwiftDbReaders, this))
+    ui(new Ui::CSwiftData)
 {
     ui->setupUi(this);
     this->init();
@@ -58,7 +57,7 @@ void CSwiftData::closeEvent(QCloseEvent *event)
 {
     Q_UNUSED(event);
     this->performGracefulShutdown();
-    QApplication::exit();
+    sGui->exit();
 }
 
 void CSwiftData::ps_appendLogMessage(const CStatusMessage &message)
@@ -100,9 +99,9 @@ void CSwiftData::initLogDisplay()
 
 void CSwiftData::initReaders()
 {
-    Q_ASSERT_X(this->m_webDataReader, Q_FUNC_INFO, "Missing reader");
-    this->ui->comp_MainInfoArea->setProvider(this->m_webDataReader);
-    this->ui->comp_InfoBar->setProvider(this->m_webDataReader);
+    Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "Missing reader");
+    this->ui->comp_MainInfoArea->setProvider(sApp->getWebDataServices());
+    this->ui->comp_InfoBar->setProvider(sApp->getWebDataServices());
     // web data will be read automatically when setup is syncronized
 }
 
@@ -139,11 +138,7 @@ void CSwiftData::initMenu()
 
 void CSwiftData::performGracefulShutdown()
 {
-    if (this->m_webDataReader)
-    {
-        m_webDataReader->gracefulShutdown();
-        m_webDataReader = nullptr;
-    }
+    // void
 }
 
 void CSwiftData::displayConsole()

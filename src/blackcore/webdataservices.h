@@ -38,6 +38,7 @@ namespace BlackCore
     class CIcaoDataReader;
     class CModelDataReader;
     class CDatabaseWriter;
+    class CApplication;
 
     /*!
      * Encapsulates reading data from web sources
@@ -49,10 +50,9 @@ namespace BlackCore
         Q_OBJECT
         Q_INTERFACES(BlackMisc::Network::IWebDataServicesProvider)
 
-    public:
-        //! Constructor
-        CWebDataServices(CWebReaderFlags::WebReader readerFlags, QObject *parent = nullptr);
+        friend class CApplication;
 
+    public:
         //! Shutdown
         void gracefulShutdown();
 
@@ -70,6 +70,9 @@ namespace BlackCore
 
         //! Reader flags
         CWebReaderFlags::WebReader getReaderFlags() const { return m_readerFlags; }
+
+        //! Reader flags
+        CWebReaderFlags::DbReaderHint getDbHint() const { return m_dbHint; }
 
         //! Log categories
         static const BlackMisc::CLogCategoryList &getLogCategories();
@@ -133,10 +136,13 @@ namespace BlackCore
 
         // ------------------------ provider functionality end ----------------------------
 
+    protected:
+        //! Constructor
+        CWebDataServices(CWebReaderFlags::WebReader readerFlags, CWebReaderFlags:: DbReaderHint hint, QObject *parent = nullptr);
+
         // ---------------------------------------------
         // Consider to use the connect method of the provider to connect by entity
         // ---------------------------------------------
-
     public slots:
         //! First read (allows to immediately read in background)
         void readInBackground(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::AllEntities, int delayMs = 0);
@@ -165,6 +171,7 @@ namespace BlackCore
         void initWriters();
 
         CWebReaderFlags::WebReader m_readerFlags = CWebReaderFlags::WebReaderFlag::None; //!< which readers are available
+        CWebReaderFlags::DbReaderHint m_dbHint   = CWebReaderFlags::NoHint;              //!< how to read DB data
         bool m_initialRead                       = false;                                //!< Initial read conducted
         BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this, &CWebDataServices::ps_setupChanged}; //!< setup cache
 

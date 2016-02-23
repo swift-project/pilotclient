@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
+#include "application.h"
 #include "contextnetworkimpl.h"
-#include "corefacade.h"
 #include "contextapplication.h"
 #include "contextsimulator.h"
 #include "contextownaircraftimpl.h"
@@ -57,9 +57,9 @@ namespace BlackCore
         this->m_networkDataUpdateTimer->start(30 * 1000);
 
         // 3. data reader, start reading when setup is synced with xx delay
-        this->m_webDataReader = new CWebDataServices(CWebReaderFlags::AllReaders, this);
+        Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "Missing web data services");
         this->m_webReaderSignalConnections.append(
-            this->m_webDataReader->connectDataReadSignal(
+            sApp->getWebDataServices()->connectDataReadSignal(
                 this, // the object here must be the same as in the bind
                 std::bind(&CContextNetwork::webServiceDataRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
             )
@@ -67,8 +67,7 @@ namespace BlackCore
 
         // 4. Airspace contents
         Q_ASSERT_X(this->getRuntime()->getCContextOwnAircraft(), Q_FUNC_INFO, "this and own aircraft context must be local");
-        Q_ASSERT_X(this->m_webDataReader, Q_FUNC_INFO, "Missing reader");
-        this->m_airspace = new CAirspaceMonitor(this->getRuntime()->getCContextOwnAircraft(), this->m_network, this->m_webDataReader, this);
+        this->m_airspace = new CAirspaceMonitor(this->getRuntime()->getCContextOwnAircraft(), this->m_network, sApp->getWebDataServices(), this);
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationsOnline, this, &CContextNetwork::changedAtcStationsOnline);
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked);
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus);
@@ -135,7 +134,6 @@ namespace BlackCore
     {
         this->disconnect(); // all signals
         this->disconnectReaderSignals(); // disconnect
-        this->m_webDataReader->gracefulShutdown();
 
         if (this->isConnected()) { this->disconnectFromNetwork(); }
         if (this->m_airspace) { this->m_airspace->gracefulShutdown(); }
@@ -374,16 +372,16 @@ namespace BlackCore
 
     CServerList CContextNetwork::getVatsimFsdServers() const
     {
-        Q_ASSERT_X(this->m_webDataReader, Q_FUNC_INFO, "Missing data reader");
+        Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "Missing data reader");
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        return this->m_webDataReader->getVatsimFsdServers();
+        return sApp->getWebDataServices()->getVatsimFsdServers();
     }
 
     CServerList CContextNetwork::getVatsimVoiceServers() const
     {
-        Q_ASSERT_X(this->m_webDataReader, Q_FUNC_INFO, "Missing data reader");
+        Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "Missing data reader");
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        return this->m_webDataReader->getVatsimVoiceServers();
+        return sApp->getWebDataServices()->getVatsimVoiceServers();
     }
 
     void CContextNetwork::ps_fsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
@@ -569,8 +567,8 @@ namespace BlackCore
     void CContextNetwork::readAtcBookingsFromSource() const
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        Q_ASSERT_X(this->m_webDataReader, Q_FUNC_INFO, "missing reader");
-        this->m_webDataReader->readInBackground(BlackMisc::Network::CEntityFlags::BookingEntity);
+        Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "missing reader");
+        sApp->getWebDataServices()->readInBackground(BlackMisc::Network::CEntityFlags::BookingEntity);
     }
 
     bool CContextNetwork::updateAircraftRendered(const CCallsign &callsign, bool rendered, const CIdentifier &originator)

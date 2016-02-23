@@ -36,9 +36,8 @@ using namespace BlackMisc::Weather;
 
 namespace BlackCore
 {
-    CWebDataServices::CWebDataServices(
-        CWebReaderFlags::WebReader readerFlags, QObject *parent) :
-        QObject(parent), m_readerFlags(readerFlags)
+    CWebDataServices::CWebDataServices(CWebReaderFlags::WebReader readerFlags, CWebReaderFlags::DbReaderHint hint, QObject *parent) :
+        QObject(parent), m_readerFlags(readerFlags), m_dbHint(hint)
     {
         if (!sApp) { return; } // shutting down
 
@@ -47,7 +46,6 @@ namespace BlackCore
         this->setObjectName("CWebDataReader");
         this->initReaders(readerFlags);
         this->initWriters();
-
         this->readInBackground(CEntityFlags::AllEntities, 500);
     }
 

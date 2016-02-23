@@ -21,13 +21,16 @@
 
 namespace BlackCore
 {
+    class CApplication;
+
     /*!
-     * Centralized cookie manager,
-     * which allows thread safe sharing of cookies
+     * Cookie manager, which allows thread safe sharing of cookies
      */
-    class BLACKCORE_EXPORT CCookieManager : QNetworkCookieJar
+    class BLACKCORE_EXPORT CCookieManager : public QNetworkCookieJar
     {
         Q_OBJECT
+
+        friend class CApplication;
 
     public:
         //! cookiesForUrl::setCookiesFromUrl
@@ -58,18 +61,9 @@ namespace BlackCore
         //! \threadsafe
         virtual bool updateCookie(const QNetworkCookie &cookie) override;
 
-        //! Our central access manager
-        static CCookieManager *instance();
-
-        //! Set the central instance to the given access manager
-        static void setToAccessManager(QNetworkAccessManager *manager);
-
     private:
         //! Constructor
         CCookieManager(QObject *parent = nullptr);
-
-        //! Reset the parent, required when CookieManager is set to QNetworkAccessManager
-        static void resetParent();
 
         mutable QReadWriteLock m_lock { QReadWriteLock::Recursive };
     };

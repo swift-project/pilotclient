@@ -18,29 +18,6 @@ using namespace BlackMisc;
 
 namespace BlackCore
 {
-    CCookieManager *CCookieManager::instance()
-    {
-        static CCookieManager *manager = nullptr;
-        if (!manager)
-        {
-            Q_ASSERT_X(CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Supposed to run in application thread");
-            manager = new CCookieManager(QCoreApplication::instance());
-        }
-        return manager;
-    }
-
-    void CCookieManager::resetParent()
-    {
-        instance()->setParent(nullptr);
-    }
-
-    void CCookieManager::setToAccessManager(QNetworkAccessManager *manager)
-    {
-        if (!manager) { return; }
-        manager->setCookieJar(instance());
-        resetParent();
-    }
-
     CCookieManager::CCookieManager(QObject *parent) : QNetworkCookieJar(parent)
     {
         // code

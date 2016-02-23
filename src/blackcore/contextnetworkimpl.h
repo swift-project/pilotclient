@@ -238,7 +238,6 @@ namespace BlackCore
     private:
         CAirspaceMonitor              *m_airspace = nullptr;
         INetwork                      *m_network  = nullptr;
-        CWebDataServices              *m_webDataReader = nullptr;                //!< web service readers
         QList<QMetaObject::Connection> m_webReaderSignalConnections;
         INetwork::ConnectionStatus     m_currentStatus = INetwork::Disconnected; //!< used to detect pending connections
         QTimer                        *m_networkDataUpdateTimer = nullptr;       //!< general updates such as ATIS, frequencies, see requestDataUpdates()

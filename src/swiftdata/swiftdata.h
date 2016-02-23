@@ -72,7 +72,6 @@ private:
 
     QScopedPointer<Ui::CSwiftData> ui;
     BlackGui::CManagedStatusBar    m_statusBar;
-    BlackCore::CWebDataServices   *m_webDataReader = nullptr;
     BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this, &CSwiftData::ps_setupChanged}; //!< setup cache
     BlackMisc::CData<BlackCore::Data::UpdateInfo>  m_updateInfo { this };                        //!< download / version data
 };

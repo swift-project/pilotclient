@@ -28,7 +28,9 @@ using namespace BlackGui;
 int main(int argc, char *argv[])
 {
     QApplication qa(argc, argv);
+    Q_UNUSED(qa);
     CGuiApplication a("swift mapping tool", CIcons::swiftDatabase48());
+    a.useWebDataServices(BlackCore::CWebReaderFlags::AllSwiftDbReaders, BlackCore::CWebReaderFlags::FromDb);
     a.start();
     CSwiftData w;
     w.show();
