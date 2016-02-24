@@ -67,7 +67,7 @@ namespace BlackCore
 
         // 4. Airspace contents
         Q_ASSERT_X(this->getRuntime()->getCContextOwnAircraft(), Q_FUNC_INFO, "this and own aircraft context must be local");
-        this->m_airspace = new CAirspaceMonitor(this->getRuntime()->getCContextOwnAircraft(), this->m_network, sApp->getWebDataServices(), this);
+        this->m_airspace = new CAirspaceMonitor(this->getRuntime()->getCContextOwnAircraft(), this->m_network, this);
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationsOnline, this, &CContextNetwork::changedAtcStationsOnline);
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked);
         connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus);
@@ -632,7 +632,7 @@ namespace BlackCore
     CMetar CContextNetwork::getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) const
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << airportIcaoCode; }
-        return m_airspace->getMetarForAirport(airportIcaoCode);
+        return sApp->getWebDataServices()->getMetarForAirport(airportIcaoCode);
     }
 
     CAtcStationList CContextNetwork::getSelectedAtcStations() const

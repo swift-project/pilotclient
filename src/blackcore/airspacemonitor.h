@@ -37,15 +37,14 @@ namespace BlackCore
     class BLACKCORE_EXPORT CAirspaceMonitor :
         public QObject,
         public BlackMisc::Simulation::IRemoteAircraftProvider,  // those data will be provided from the class CAirspaceMonitor
-        public BlackMisc::Simulation::COwnAircraftAware, // used to obtain in memory information about own aircraft
-        public BlackMisc::Network::CWebDataServicesAware // used to get web service data
+        public BlackMisc::Simulation::COwnAircraftAware // used to obtain in memory information about own aircraft
     {
         Q_OBJECT
         Q_INTERFACES(BlackMisc::Simulation::IRemoteAircraftProvider)
 
     public:
         //! Constructor
-        CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, INetwork *network, CWebDataServices *webDataReader, QObject *parent);
+        CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, INetwork *network, QObject *parent);
 
         //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftInRange
         //! \ingroup remoteaircraftprovider

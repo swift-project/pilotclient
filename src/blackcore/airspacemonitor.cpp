@@ -8,6 +8,7 @@
  */
 
 #include "airspacemonitor.h"
+#include "blackcore/application.h"
 #include "blackcore/registermetadata.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/vatsimbookingreader.h"
@@ -31,10 +32,9 @@ using namespace BlackMisc::Weather;
 
 namespace BlackCore
 {
-    CAirspaceMonitor::CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider, INetwork *network, CWebDataServices *webDataReader, QObject *parent)
+    CAirspaceMonitor::CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider, INetwork *network, QObject *parent)
         : QObject(parent),
           COwnAircraftAware(ownAircraftProvider),
-          CWebDataServicesAware(webDataReader),
           m_network(network),
           m_analyzer(new CAirspaceAnalyzer(ownAircraftProvider, this, network, this))
     {
@@ -61,12 +61,9 @@ namespace BlackCore
         this->connect(&m_interimPositionUpdateTimer, &QTimer::timeout, this, &CAirspaceMonitor::ps_sendInterimPositions);
 
         // AutoConnection: this should also avoid race conditions by updating the bookings
-        Q_ASSERT_X(webDataReader, Q_FUNC_INFO, "Missing data reader");
-        if (webDataReader)
-        {
-            this->connect(webDataReader->getBookingReader(), &CVatsimBookingReader::atcBookingsRead, this, &CAirspaceMonitor::ps_receivedBookings);
-            this->connect(webDataReader->getDataFileReader(), &CVatsimDataFileReader::dataFileRead, this, &CAirspaceMonitor::ps_receivedDataFile);
-        }
+        Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "Missing data reader");
+        this->connect(sApp->getWebDataServices()->getBookingReader(), &CVatsimBookingReader::atcBookingsRead, this, &CAirspaceMonitor::ps_receivedBookings);
+        this->connect(sApp->getWebDataServices()->getDataFileReader(), &CVatsimDataFileReader::dataFileRead, this, &CAirspaceMonitor::ps_receivedDataFile);
 
         // Force snapshot in the main event loop
         this->connect(this->m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, this, &CAirspaceMonitor::airspaceAircraftSnapshot, Qt::QueuedConnection);
@@ -305,7 +302,7 @@ namespace BlackCore
         // those are the ones not in range
         for (const CCallsign &callsign : searchList)
         {
-            CUserList usersByCallsign = this->getUsersForCallsign(callsign);
+            CUserList usersByCallsign = sApp->getWebDataServices()->getUsersForCallsign(callsign);
             if (usersByCallsign.isEmpty())
             {
                 CUser user;
@@ -453,7 +450,7 @@ namespace BlackCore
         }
 
         // Client
-        CVoiceCapabilities caps = this->getVoiceCapabilityForCallsign(callsign);
+        const CVoiceCapabilities caps = sApp->getWebDataServices()->getVoiceCapabilityForCallsign(callsign);
         vm = CPropertyIndexVariantMap({CClient::IndexUser, CUser::IndexRealName}, realname);
         vm.addValue({ CClient::IndexVoiceCapabilities }, caps);
         if (!this->m_otherClients.containsCallsign(callsign)) { this->m_otherClients.push_back(CClient(callsign)); }
@@ -470,7 +467,7 @@ namespace BlackCore
         capabilities.addValue(CClient::FsdWithAircraftConfig, (flags & INetwork::SupportsAircraftConfigs));
 
         CPropertyIndexVariantMap vm(CClient::IndexCapabilities, CVariant::from(capabilities));
-        CVoiceCapabilities caps = this->getVoiceCapabilityForCallsign(callsign);
+        const CVoiceCapabilities caps = sApp->getWebDataServices()->getVoiceCapabilityForCallsign(callsign);
         vm.addValue({CClient::IndexVoiceCapabilities}, caps);
         if (!this->m_otherClients.containsCallsign(callsign)) { this->m_otherClients.push_back(CClient(callsign)); }
         this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
@@ -569,7 +566,7 @@ namespace BlackCore
         for (auto client = this->m_otherClients.begin(); client != this->m_otherClients.end(); ++client)
         {
             if (client->hasSpecifiedVoiceCapabilities()) { continue; } // we already have voice caps
-            CVoiceCapabilities vc = this->getVoiceCapabilityForCallsign(client->getCallsign());
+            const CVoiceCapabilities vc = sApp->getWebDataServices()->getVoiceCapabilityForCallsign(client->getCallsign());
             if (vc.isUnknown()) { continue; }
             client->setVoiceCapabilities(vc);
         }
@@ -630,7 +627,7 @@ namespace BlackCore
         if (stationsWithCallsign.isEmpty())
         {
             // new station, init with data from data file
-            CAtcStation station(this->getAtcStationsForCallsign(callsign).frontOrDefault());
+            CAtcStation station(sApp->getWebDataServices()->getAtcStationsForCallsign(callsign).frontOrDefault());
             station.setCallsign(callsign);
             station.setRange(range);
             station.setFrequency(frequency);
@@ -820,8 +817,12 @@ namespace BlackCore
         if (model.hasModelString())
         {
             // if we find the model here we have a fully defined DB model
-            CAircraftModel modelFromDb(this->getModelForModelString(model.getModelString()));
-            if (modelFromDb.hasValidDbKey()) { model = modelFromDb; }
+            const CAircraftModel modelFromDb(sApp->getWebDataServices()->getModelForModelString(model.getModelString()));
+            if (modelFromDb.hasValidDbKey())
+            {
+                model = modelFromDb;
+                this->logMatching(QString("Reverse looked up DB model `%1` for %2").arg(modelFromDb.getDbKey()).arg(callsign.toQString()));
+            }
         }
 
         // only if not yet matched with DB
@@ -831,11 +832,11 @@ namespace BlackCore
             if (CLivery::isValidCombinedCode(livery))
             {
                 // search DB model by livery
-                CAircraftModelList models(this->getModelsForAircraftDesignatorAndLiveryCombinedCode(aircraftIcaoDesignator, livery));
+                const CAircraftModelList models(sApp->getWebDataServices()->getModelsForAircraftDesignatorAndLiveryCombinedCode(aircraftIcaoDesignator, livery));
                 if (models.isEmpty())
                 {
                     // no models for that livery, search for livery only
-                    CLivery databaseLivery(this->getLiveryForCombinedCode(livery));
+                    const CLivery databaseLivery(sApp->getWebDataServices()->getLiveryForCombinedCode(livery));
                     if (databaseLivery.hasValidDbKey())
                     {
                         // we have found a livery in the DB
@@ -853,7 +854,7 @@ namespace BlackCore
             if (!model.hasValidDbKey() && !model.getLivery().hasValidDbKey())
             {
                 // create a pseudo livery, try to find airline first
-                CAirlineIcaoCode airlineIcao(this->smartAirlineIcaoSelector(CAirlineIcaoCode(airlineIcaoDesignator)));
+                CAirlineIcaoCode airlineIcao(sApp->getWebDataServices()->smartAirlineIcaoSelector(CAirlineIcaoCode(airlineIcaoDesignator)));
                 if (!airlineIcao.hasValidDbKey())
                 {
                     // no DB data, we update as much as possible
@@ -866,7 +867,7 @@ namespace BlackCore
 
             if (!model.getAircraftIcaoCode().hasValidDbKey())
             {
-                CAircraftIcaoCode aircraftIcao(this->getAircraftIcaoCodeForDesignator(aircraftIcaoDesignator));
+                CAircraftIcaoCode aircraftIcao(sApp->getWebDataServices()->getAircraftIcaoCodeForDesignator(aircraftIcaoDesignator));
                 if (!aircraftIcao.hasValidDbKey())
                 {
                     // no DB data, we update as much as possible
@@ -913,7 +914,7 @@ namespace BlackCore
             aircraft.setSituation(situation);
             aircraft.setTransponder(transponder);
             aircraft.calculcateDistanceAndBearingToOwnAircraft(getOwnAircraftPosition()); // distance from myself
-            this->updateWithVatsimDataFileData(aircraft);
+            sApp->getWebDataServices()->updateWithVatsimDataFileData(aircraft);
 
             // ICAO from cache if avialable
             bool setModelFromCache = false;

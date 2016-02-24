@@ -19,6 +19,7 @@
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/registermetadata.h"
 #include "blackmisc/network/networkutils.h"
+#include "blackmisc/verify.h"
 #include <QStandardPaths>
 #include <QFile>
 #include <QFileInfo>
@@ -26,6 +27,9 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Weather;
 using namespace BlackCore;
 
 BlackCore::CApplication *sApp = nullptr; // set by constructor
@@ -576,7 +580,4 @@ namespace BlackCore
         if (!supportsContexts()) { return nullptr; }
         return this->m_coreFacade->getIContextSimulator();
     }
-
-    // ---------------------------------------------------------------------------------
-
 } // ns

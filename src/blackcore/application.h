@@ -14,7 +14,7 @@
 
 #include "corefacadeconfig.h"
 #include "cookiemanager.h"
-#include "webreaderflags.h"
+#include "webdataservices.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/filelogger.h"
@@ -30,7 +30,6 @@ namespace BlackCore
 {
     class CCoreFacade;
     class CSetupReader;
-    class CWebDataServices;
 
     class IContextApplication;
     class IContextAudio;
