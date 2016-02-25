@@ -297,7 +297,7 @@ namespace BlackMisc
             }
             CVariantMap temp;
             temp.convertFromJson(json.object());
-            temp.removeByKeyIf([&keys](const QString &key) { return keys.contains(key); }); // TODO optimize by skipping files
+            temp.removeByKeyIf([&keys](const QString & key) { return ! keys.contains(key); }); // TODO optimize by skipping files
             temp.removeDuplicates(currentValues);
             o_values.insert(temp, QFileInfo(file).lastModified().toMSecsSinceEpoch());
         }

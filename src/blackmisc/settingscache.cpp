@@ -37,10 +37,7 @@ namespace BlackMisc
     void CSettingsCache::saveToStoreByPacket(const CValueCachePacket &values)
     {
         CStatusMessage status = saveToFiles(persistentStore(), values.toVariantMap());
-        if (! status.isEmpty())
-        {
-            CLogMessage(this).preformatted(status);
-        }
+        CLogMessage(this).preformatted(status);
     }
 
     BlackMisc::CStatusMessage CSettingsCache::loadFromStore()
