@@ -113,6 +113,9 @@ namespace BlackMisc
             Distributed     //!< Distributed among multiple processes.
         };
 
+        //! Log categories
+        static const CLogCategoryList &getLogCategories();
+
         //! Constructor.
         //! \param mode Whether or not the cache can be distributed among multiple processes.
         //! \param parent The parent of the QObject.

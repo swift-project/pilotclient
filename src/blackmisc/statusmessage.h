@@ -107,6 +107,12 @@ namespace BlackMisc
         //! Warning or above
         bool isWarningOrAbove() const { return this->m_severity == SeverityWarning || this->m_severity == SeverityError; }
 
+        //! Operation considered successful
+        bool isSuccess() const;
+
+        //! Operation considered unsuccessful
+        bool isFailure() const;
+
         //! Message
         QString getMessage() const { return this->m_message; }
 

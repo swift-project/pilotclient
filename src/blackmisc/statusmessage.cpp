@@ -142,6 +142,16 @@ namespace BlackMisc
         return c.isEmpty() ? this->getCategoriesAsString() : c;
     }
 
+    bool CStatusMessage::isSuccess() const
+    {
+        return !isFailure();
+    }
+
+    bool CStatusMessage::isFailure() const
+    {
+        return getSeverity() == SeverityError;
+    }
+
     void CStatusMessage::prependMessage(const QString &msg)
     {
         if (msg.isEmpty()) { return; }

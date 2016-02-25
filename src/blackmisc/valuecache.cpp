@@ -85,13 +85,19 @@ namespace BlackMisc
     // CValueCache
     ////////////////////////////////
 
+    const CLogCategoryList &CValueCache::getLogCategories()
+    {
+        static const CLogCategoryList cats({ CLogCategory("swift.valuecache") , CLogCategory::services()} );
+        return cats;
+    }
+
     CValueCache::CValueCache(CValueCache::DistributionMode mode, QObject *parent) :
         QObject(parent)
     {
         if (mode == LocalOnly)
         {
             // loopback signal to own slot for local operation
-            connect(this, &CValueCache::valuesChangedByLocal, this, [ = ](const CValueCachePacket &values)
+            connect(this, &CValueCache::valuesChangedByLocal, this, [ = ](const CValueCachePacket & values)
             {
                 changeValuesFromRemote(values, CIdentifier());
             });
@@ -227,7 +233,7 @@ namespace BlackMisc
         QMutexLocker lock(&m_mutex);
         auto values = getAllValues(keyPrefix);
         auto status = saveToFiles(dir, values);
-        if (! status.isEmpty()) { markAllAsSaved(keyPrefix); }
+        if (status.isSuccess()) { markAllAsSaved(keyPrefix); }
         return status;
     }
 
@@ -240,31 +246,33 @@ namespace BlackMisc
         }
         if (! QDir::root().mkpath(dir))
         {
-            return CLogMessage(this).error("Failed to create directory %1") << dir;
+            return CStatusMessage(this, CStatusMessage::SeverityError, "Failed to create directory " + dir);
         }
         for (auto it = namespaces.cbegin(); it != namespaces.cend(); ++it)
         {
             CAtomicFile file(dir + "/" + it.key() + ".json");
             if (! file.open(QFile::ReadWrite | QFile::Text))
             {
-                return CLogMessage(this).error("Failed to open %1: %2") << file.fileName() << file.errorString();
+                return CStatusMessage(this, CStatusMessage::SeverityError, QString("Failed to open %1: %2").arg(file.fileName()).arg(file.errorString()));
             }
             auto json = QJsonDocument::fromJson(file.readAll());
             if (json.isArray() || (json.isNull() && ! json.isEmpty()))
             {
-                return CLogMessage(this).error("Invalid JSON format in %1") << file.fileName();
+                return CStatusMessage(this, CStatusMessage::SeverityError, "Invalid JSON format in " + file.fileName());
             }
             CVariantMap storedValues;
             storedValues.convertFromJson(json.object());
             storedValues.insert(*it);
             json.setObject(storedValues.toJson());
 
-            if (! (file.seek(0) && file.resize(0) && file.write(json.toJson()) > 0 && file.checkedClose()))
+            if (!(file.seek(0) && file.resize(0) && file.write(json.toJson()) > 0 && file.checkedClose()))
             {
-                return CLogMessage(this).error("Failed to write to %1: %2") << file.fileName() << file.errorString();
+                return CStatusMessage(this, CStatusMessage::SeverityError,
+                                      QString("Failed to write to %1: %2").arg(file.fileName()).arg(file.errorString()));
             }
         }
-        return {};
+        return CStatusMessage(this, CStatusMessage::SeverityInfo,
+                              QString("Written %1 files for value cache in %2").arg(namespaces.size()).arg(dir));
     }
 
     CStatusMessage CValueCache::loadFromFiles(const QString &dir)
@@ -281,19 +289,21 @@ namespace BlackMisc
     {
         if (! QDir(dir).isReadable())
         {
-            return CLogMessage(this).error("Failed to read directory %1") << dir;
+            return CStatusMessage(this, CStatusMessage::SeverityError, "Failed to create directory " + dir);
         }
-        for (const auto &filename : QDir(dir).entryList({ "*.json" }, QDir::Files))
+
+        const QStringList entries(QDir(dir).entryList({ "*.json" }, QDir::Files));
+        for (const auto &filename : entries)
         {
             QFile file(dir + "/" + filename);
             if (! file.open(QFile::ReadOnly | QFile::Text))
             {
-                return CLogMessage(this).error("Failed to open %1 : %2") << file.fileName() << file.errorString();
+                return CStatusMessage(this, CStatusMessage::SeverityError, QString("Failed to open %1: %2").arg(file.fileName()).arg(file.errorString()));
             }
             auto json = QJsonDocument::fromJson(file.readAll());
             if (json.isArray() || (json.isNull() && ! json.isEmpty()))
             {
-                return CLogMessage(this).error("Invalid JSON format in %1") << file.fileName();
+                return CStatusMessage(this, CStatusMessage::SeverityError, "Invalid JSON format in " + file.fileName());
             }
             CVariantMap temp;
             temp.convertFromJson(json.object());
@@ -304,7 +314,8 @@ namespace BlackMisc
             temp.removeDuplicates(currentValues);
             o_values.insert(temp, QFileInfo(file).lastModified().toMSecsSinceEpoch());
         }
-        return {};
+        return CStatusMessage(this, CStatusMessage::SeverityInfo,
+                              QString("Loaded value cache from %1 files in %2").arg(entries.size()).arg(dir));
     }
 
     void CValueCache::markAllAsSaved(const QString &keyPrefix)
@@ -371,7 +382,7 @@ namespace BlackMisc
     CValuePage &CValuePage::getPageFor(QObject *parent, CValueCache *cache)
     {
         auto pages = parent->findChildren<CValuePage *>();
-        auto it = std::find_if(pages.cbegin(), pages.cend(), [cache](CValuePage *page) { return page->m_cache == cache; });
+        auto it = std::find_if(pages.cbegin(), pages.cend(), [cache](CValuePage * page) { return page->m_cache == cache; });
         if (it == pages.cend()) { return *new CValuePage(parent, cache); }
         else { return **it; }
     }
@@ -401,12 +412,13 @@ namespace BlackMisc
         auto &element = *(m_elements[key] = ElementPtr(new Element(key, metaType, validator, defaultValue, slot)));
         std::forward_as_tuple(element.m_value.uniqueWrite(), element.m_timestamp, element.m_saved) = m_cache->getValue(key);
 
-        auto error = validate(element, element.m_value.read());
-        if (! error.isEmpty())
+        auto status = validate(element, element.m_value.read(), CStatusMessage::SeverityDebug);
+        if (!status.isEmpty()) // intentionally kept !empty here, debug message supposed to write default value
         {
-            CLogMessage::preformatted(error);
             element.m_value.uniqueWrite() = defaultValue;
+            CLogMessage::preformatted(status);
         }
+
         return element;
     }
 
@@ -422,8 +434,8 @@ namespace BlackMisc
         if (timestamp == 0) { timestamp = QDateTime::currentMSecsSinceEpoch(); }
         if (element.m_value.read() == value && element.m_timestamp == timestamp) { return {}; }
 
-        auto error = validate(element, value);
-        if (error.isEmpty())
+        auto status = validate(element, value, CStatusMessage::SeverityError);
+        if (status.isSuccess())
         {
             if (m_batchMode > 0)
             {
@@ -439,11 +451,7 @@ namespace BlackMisc
                 emit valuesWantToCache({ { { element.m_key, value } }, timestamp, save });
             }
         }
-        else
-        {
-            CLogMessage::preformatted(error);
-        }
-        return error;
+        return status;
     }
 
     const QString &CValuePage::getKey(const Element &element) const
@@ -472,7 +480,7 @@ namespace BlackMisc
 
         QList<NotifySlot> notifySlots;
 
-        forEachIntersection(m_elements, values, [changedBy, this, &notifySlots, &values](const QString &key, const ElementPtr &element, CValueCachePacket::const_iterator it)
+        forEachIntersection(m_elements, values, [changedBy, this, &notifySlots, &values](const QString & key, const ElementPtr & element, CValueCachePacket::const_iterator it)
         {
             if (changedBy == this) // round trip
             {
@@ -481,8 +489,8 @@ namespace BlackMisc
             }
             else if (element->m_pendingChanges == 0) // ratify a change only if own change is not pending, to ensure consistency
             {
-                auto error = validate(*element, it.value());
-                if (error.isEmpty())
+                auto error = validate(*element, it.value(), CStatusMessage::SeverityError);
+                if (error.isSuccess())
                 {
                     element->m_value.uniqueWrite() = it.value();
                     element->m_timestamp = it.timestamp();
@@ -529,7 +537,7 @@ namespace BlackMisc
         if (m_batchMode <= 0 && ! m_batchedValues.empty())
         {
             qint64 timestamp = QDateTime::currentMSecsSinceEpoch();
-            forEachIntersection(m_elements, m_batchedValues, [timestamp](const QString &, const ElementPtr &element, CVariantMap::const_iterator it)
+            forEachIntersection(m_elements, m_batchedValues, [timestamp](const QString &, const ElementPtr & element, CVariantMap::const_iterator it)
             {
                 Q_ASSERT(isSafeToIncrement(element->m_pendingChanges));
                 element->m_pendingChanges++;
@@ -541,11 +549,11 @@ namespace BlackMisc
         }
     }
 
-    CStatusMessage CValuePage::validate(const Element &element, const CVariant &value) const
+    CStatusMessage CValuePage::validate(const Element &element, const CVariant &value, CStatusMessage::StatusSeverity invalidSeverity) const
     {
         if (! value.isValid())
         {
-            return CStatusMessage(this, CStatusMessage::SeverityDebug, "Uninitialized value for " + element.m_key);
+            return CStatusMessage(this, invalidSeverity, "Uninitialized value for " + element.m_key);
         }
         else if (value.userType() != element.m_metaType)
         {

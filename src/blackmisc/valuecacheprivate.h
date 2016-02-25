@@ -105,7 +105,7 @@ namespace BlackMisc
             CVariantMap m_batchedValues;
 
             CValuePage(QObject *parent, CValueCache *cache);
-            CStatusMessage validate(const Element &element, const CVariant &value) const;
+            CStatusMessage validate(const Element &element, const CVariant &value, CStatusMessage::StatusSeverity invalidSeverity) const;
         };
 
     } // namespace

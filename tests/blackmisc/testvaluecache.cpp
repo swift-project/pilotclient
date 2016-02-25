@@ -227,7 +227,7 @@ namespace BlackMiscTest
         if (dir.exists()) { dir.removeRecursively(); }
 
         auto status = cache.saveToFiles(dir.absolutePath());
-        QVERIFY(status.isEmpty());
+        QVERIFY(status.isSuccess());
 
         auto files = dir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot, QDir::Name);
         QCOMPARE(files.size(), 2);
@@ -236,7 +236,7 @@ namespace BlackMiscTest
 
         CValueCache cache2(CValueCache::LocalOnly);
         status = cache2.loadFromFiles(dir.absolutePath());
-        QVERIFY(status.isEmpty());
+        QVERIFY(status.isSuccess());
         QCOMPARE(cache2.getAllValues(), testData);
     }
 

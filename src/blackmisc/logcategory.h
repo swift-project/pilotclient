@@ -50,6 +50,13 @@ namespace BlackMisc
             return cat;
         }
 
+        //! Core/base services such as caching etc.
+        static const CLogCategory &services()
+        {
+            static const CLogCategory cat { "swift.services" };
+            return cat;
+        }
+
         //! Contexts
         static const CLogCategory &context()
         {
@@ -106,6 +113,7 @@ namespace BlackMisc
             static const QList<CLogCategory> cats
             {
                 uncategorized(),
+                services(),
                 validation(),
                 context(),
                 contextSlot(),
