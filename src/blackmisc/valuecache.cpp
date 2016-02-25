@@ -381,7 +381,7 @@ namespace BlackMisc
 
     CValuePage &CValuePage::getPageFor(QObject *parent, CValueCache *cache)
     {
-        auto pages = parent->findChildren<CValuePage *>();
+        auto pages = parent->findChildren<CValuePage *>("", Qt::FindDirectChildrenOnly);
         auto it = std::find_if(pages.cbegin(), pages.cend(), [cache](CValuePage * page) { return page->m_cache == cache; });
         if (it == pages.cend()) { return *new CValuePage(parent, cache); }
         else { return **it; }
