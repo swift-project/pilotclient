@@ -183,7 +183,7 @@ namespace BlackGui
             void menuRemoveItems(Menu menusToRemove);
 
             //! Add given menu items
-            void menuAddItems(Menu menusToRemove);
+            void menuAddItems(Menu menusToAdd);
 
             //! Set menu items
             void setMenu(Menu menuItems) { this->m_menus = menuItems; }

@@ -103,7 +103,7 @@ namespace BlackGui
             CStatusMessageList msgs;
             for (const CAircraftModel &model : models)
             {
-                CStatusMessage m(stashModel(model));
+                const CStatusMessage m(stashModel(model));
                 if (m.isWarningOrAbove()) { msgs.push_back(m); }
             }
             return msgs;

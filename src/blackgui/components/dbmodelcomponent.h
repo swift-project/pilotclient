@@ -74,24 +74,6 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CDbModelComponent> ui;
-
-            //! The menu for stashing models
-            //! \note This is a specific menu for that very component
-            class CStashMenu : public BlackGui::IMenuDelegate
-            {
-            public:
-                //! Constructor
-                CStashMenu(CDbModelComponent *modelComponent, bool separatorAtEnd) :
-                    BlackGui::IMenuDelegate(modelComponent, separatorAtEnd)
-                {}
-
-                //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(QMenu &menu) const override;
-
-            private:
-                //! Mapping component
-                CDbModelComponent *modelComponent() const;
-            };
         };
     } // ns
 } // ns

@@ -863,7 +863,7 @@ namespace BlackGui
             if (mapComp->currentTabIndex() == CDbMappingComponent::TabOwnModels && mapComp->currentModelView()->hasSelection())
             {
                 this->addSeparator(menu);
-                menu.addAction(CIcons::text16(), "Open simulator file", this, SLOT(ps_showSimulatorFile()));
+                menu.addAction(CIcons::text16(), "Open simulator file", mapComp, SLOT(ps_showSimulatorFile()));
             }
 
             this->nestedCustomMenu(menu);

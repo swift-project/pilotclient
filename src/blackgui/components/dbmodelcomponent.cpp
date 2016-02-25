@@ -36,6 +36,8 @@ namespace BlackGui
             ui->setupUi(this);
             this->setViewWithIndicator(this->ui->tvp_AircraftModel);
             this->ui->tvp_AircraftModel->setAircraftModelMode(CAircraftModelListModel::Database);
+            this->ui->tvp_AircraftModel->menuAddItems(CAircraftModelView::MenuStashing);
+            this->ui->tvp_AircraftModel->menuRemoveItems(CAircraftModelView::MenuHighlightStashed); // not supported here
             connect(this->ui->tvp_AircraftModel, &CAircraftModelView::requestNewBackendData, this, &CDbModelComponent::ps_reload);
             connect(this->ui->tvp_AircraftModel, &CAircraftModelView::requestStash, this, &CDbModelComponent::requestStash);
             connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CDbModelComponent::ps_onStyleSheetChanged);
@@ -101,22 +103,5 @@ namespace BlackGui
                 emit requestStash(models);
             }
         }
-
-        void CDbModelComponent::CStashMenu::customMenu(QMenu &menu) const
-        {
-            CDbModelComponent *modelComponent = qobject_cast<CDbModelComponent *>(this->parent());
-            Q_ASSERT_X(modelComponent, Q_FUNC_INFO, "Cannot access model component");
-            if (modelComponent->hasModels())
-            {
-                menu.addAction(CIcons::appMappings16(), "Stash", modelComponent, SLOT(ps_stashSelectedModels()), CShortcut::keyStash());
-            }
-            this->nestedCustomMenu(menu);
-        }
-
-        CDbModelComponent *CDbModelComponent::CStashMenu::modelComponent() const
-        {
-            return qobject_cast<CDbModelComponent *>(this->parent());
-        }
-
     } // ns
 } // ns
