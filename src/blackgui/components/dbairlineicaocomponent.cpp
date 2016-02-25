@@ -9,11 +9,13 @@
 
 #include "dbairlineicaocomponent.h"
 #include "ui_dbairlineicaocomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
 #include <functional>
 
 using namespace BlackCore;
 using namespace BlackMisc::Network;
+using namespace BlackGui;
 using namespace BlackGui::Views;
 
 namespace BlackGui
@@ -31,39 +33,27 @@ namespace BlackGui
             this->ui->tvp_AirlineIcao->allowDragDropValueObjects(true, false);
             this->ui->tvp_AirlineIcao->setFilterWidget(this->ui->filter_AirlineIcao);
             connect(this->ui->tvp_AirlineIcao, &CAirlineIcaoCodeView::requestNewBackendData, this, &CDbAirlineIcaoComponent::ps_reload);
+
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAirlineIcaoComponent::ps_icaoRead);
+            this->ps_icaoRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getAirlineIcaoCodesCount());
         }
 
         CDbAirlineIcaoComponent::~CDbAirlineIcaoComponent()
         { }
-
-        void CDbAirlineIcaoComponent::setProvider(IWebDataServicesProvider *webDataReaderProvider)
-        {
-            CWebDataServicesAware::setProvider(webDataReaderProvider);
-            this->ui->filter_AirlineIcao->setProvider(webDataReaderProvider);
-            webDataReaderProvider->connectDataReadSignal(
-                this,
-                std::bind(&CDbAirlineIcaoComponent::ps_icaoRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
-            );
-            int c = this->getAirlineIcaoCodesCount();
-            if (c > 0)
-            {
-                this->ps_icaoRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, c);
-            }
-        }
 
         void CDbAirlineIcaoComponent::ps_icaoRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);
             if (entity.testFlag(CEntityFlags::AirlineIcaoEntity) && readState == CEntityFlags::ReadFinished)
             {
-                this->ui->tvp_AirlineIcao->updateContainerMaybeAsync(this->getAirlineIcaoCodes());
+                this->ui->tvp_AirlineIcao->updateContainerMaybeAsync(sGui->getWebDataServices()->getAirlineIcaoCodes());
             }
         }
 
         void CDbAirlineIcaoComponent::ps_reload()
         {
-            if (!hasProvider()) { return; }
-            triggerRead(CEntityFlags::AirlineIcaoEntity, QDateTime());
+            if (!sGui) { return; }
+            sGui->getWebDataServices()->triggerRead(CEntityFlags::AirlineIcaoEntity, QDateTime());
         }
 
     } // ns

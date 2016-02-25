@@ -22,7 +22,6 @@
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
 #include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
-#include "blackmisc/network/webdataservicesprovider.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/statusmessagelist.h"
 #include <QFrame>
@@ -43,8 +42,7 @@ namespace BlackGui
         class BLACKGUI_EXPORT CDbMappingComponent :
             public BlackGui::COverlayMessagesFrame,
             public CEnableForDockWidgetInfoArea,
-            public BlackGui::CEnableForViewBasedIndicator,
-            public BlackMisc::Network::CWebDataServicesAware
+            public BlackGui::CEnableForViewBasedIndicator
         {
             Q_OBJECT
 
@@ -64,9 +62,6 @@ namespace BlackGui
 
             //! Destructor
             ~CDbMappingComponent();
-
-            //! \copydoc BlackMisc::Network::CWebDataServicesAware::setProvider
-            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *provider) override;
 
             //! Graceful shutdown
             void gracefulShutdown();

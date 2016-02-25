@@ -15,7 +15,6 @@
 #include "blackguiexport.h"
 #include "blackgui/filters/filterwidget.h"
 #include "blackgui/models/aircrafticaofilter.h"
-#include "blackmisc/network/webdataservicesprovider.h"
 #include <QFrame>
 
 namespace Ui { class CAircraftIcaoFilterBar; }
@@ -29,8 +28,7 @@ namespace BlackGui
          */
         class BLACKGUI_EXPORT CAircraftIcaoFilterBar :
             public CFilterWidget,
-            public BlackGui::Models::IModelFilterProvider<BlackMisc::Aviation::CAircraftIcaoCodeList>,
-            public BlackMisc::Network::CWebDataServicesAware
+            public BlackGui::Models::IModelFilterProvider<BlackMisc::Aviation::CAircraftIcaoCodeList>
         {
             Q_OBJECT
 
@@ -40,9 +38,6 @@ namespace BlackGui
 
             //! Destructor
             ~CAircraftIcaoFilterBar();
-
-            //! \copydoc BlackMisc::Network::CWebDataServicesAware::setProvider
-            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
             //! \copydoc Models::IModelFilterProvider::createModelFilter
             std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Aviation::CAircraftIcaoCodeList> > createModelFilter() const override;

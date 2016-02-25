@@ -31,7 +31,6 @@ namespace BlackGui
          */
         class BLACKGUI_EXPORT CDbAircraftIcaoSelectorComponent :
             public QFrame,
-            public BlackMisc::Network::CWebDataServicesAware,
             public BlackGui::CDropBase
         {
             Q_OBJECT
@@ -42,9 +41,6 @@ namespace BlackGui
 
             //! Destructor
             ~CDbAircraftIcaoSelectorComponent();
-
-            //! \copydoc BlackMisc::Network::CWebDataServicesAware::setProvider
-            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
             //! Current aircraft ICAO
             void setAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);

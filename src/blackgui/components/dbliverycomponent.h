@@ -15,7 +15,7 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
-#include "blackmisc/network/webdataservicesprovider.h"
+#include "blackmisc/network/entityflags.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -31,8 +31,7 @@ namespace BlackGui
         class BLACKGUI_EXPORT CDbLiveryComponent :
             public QFrame,
             public CEnableForDockWidgetInfoArea,
-            public BlackGui::CEnableForViewBasedIndicator,
-            public BlackMisc::Network::CWebDataServicesAware
+            public BlackGui::CEnableForViewBasedIndicator
         {
             Q_OBJECT
 
@@ -42,9 +41,6 @@ namespace BlackGui
 
             //! Destructor
             virtual ~CDbLiveryComponent();
-
-            //! Set the provider
-            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
         public slots:
             //! Filter by livery as default

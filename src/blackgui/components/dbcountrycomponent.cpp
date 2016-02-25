@@ -9,6 +9,7 @@
 
 #include "dbcountrycomponent.h"
 #include "ui_dbcountrycomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
 #include <functional>
 
@@ -32,38 +33,27 @@ namespace BlackGui
             // filter and drag and drop
             this->ui->tvp_Countries->setFilterWidget(this->ui->filter_CountryComponent);
             this->ui->tvp_Countries->allowDragDropValueObjects(true, false);
+
+            connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbCountryComponent::ps_countriesRead);
+            this->ps_countriesRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getCountriesCount());
         }
 
         CDbCountryComponent::~CDbCountryComponent()
         { }
-
-        void CDbCountryComponent::setProvider(IWebDataServicesProvider *webDataReaderProvider)
-        {
-            CWebDataServicesAware::setProvider(webDataReaderProvider);
-            connectDataReadSignal(
-                this,
-                std::bind(&CDbCountryComponent::ps_countriesRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
-            );
-            int c = getCountriesCount();
-            if (c > 0)
-            {
-                ps_countriesRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, c);
-            }
-        }
 
         void CDbCountryComponent::ps_countriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);
             if (entity.testFlag(CEntityFlags::CountryEntity) && readState == CEntityFlags::ReadFinished)
             {
-                this->ui->tvp_Countries->updateContainerMaybeAsync(this->getCountries());
+                this->ui->tvp_Countries->updateContainerMaybeAsync(sApp->getWebDataServices()->getCountries());
             }
         }
 
         void CDbCountryComponent::ps_reload()
         {
-            if (!hasProvider()) { return; }
-            triggerRead(CEntityFlags::CountryEntity, QDateTime());
+            if (!sGui) { return; }
+            sApp->getWebDataServices()->triggerRead(CEntityFlags::CountryEntity);
         }
     } // ns
 } // ns

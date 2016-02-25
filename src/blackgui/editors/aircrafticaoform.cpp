@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "aircrafticaoform.h"
@@ -73,7 +74,7 @@ namespace BlackGui
                 if (k >= 0)
                 {
                     // we got an id, we get the DB object for it
-                    CAircraftIcaoCode fromDb(this->getAircraftIcaoCodeForDbKey(k));
+                    CAircraftIcaoCode fromDb(sGui->getWebDataServices()->getAircraftIcaoCodeForDbKey(k));
                     if (fromDb.getDesignator() == icao.getDesignator())
                     {
                         // we replace by DB object
@@ -150,12 +151,6 @@ namespace BlackGui
         void CAircraftIcaoForm::clear()
         {
             setValue(CAircraftIcaoCode());
-        }
-
-        void CAircraftIcaoForm::setProvider(Network::IWebDataServicesProvider *webDataReaderProvider)
-        {
-            CWebDataServicesAware::setProvider(webDataReaderProvider);
-            this->ui->aircraft_Selector->setProvider(webDataReaderProvider);
         }
 
         void CAircraftIcaoForm::ps_droppedCode(const BlackMisc::CVariant &variantDropped)

@@ -14,7 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/livery.h"
-#include "blackcore/webdataservices.h"
+#include "blackmisc/network/entityflags.h"
 #include "blackgui/dropbase.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -32,7 +32,6 @@ namespace BlackGui
          */
         class BLACKGUI_EXPORT CDbLiverySelectorComponent :
             public QFrame,
-            public BlackMisc::Network::CWebDataServicesAware,
             public BlackGui::CDropBase
         {
             Q_OBJECT
@@ -43,9 +42,6 @@ namespace BlackGui
 
             //! Destructor
             ~CDbLiverySelectorComponent();
-
-            //! \copydoc BlackMisc::Network::CWebDataServicesAware::setProvider
-            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
             //! Current livery
             void setLivery(const BlackMisc::Aviation::CLivery &livery);
@@ -68,9 +64,6 @@ namespace BlackGui
             //! Clear selection
             void clear();
 
-        public slots:
-            //! Distributors have been read
-            void ps_liveriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
 
         signals:
             //! Distributor was changed
@@ -95,6 +88,9 @@ namespace BlackGui
 
             //! Completer activated
             void ps_completerActivated(const QString &liveryCode);
+
+            //! Distributors have been read
+            void ps_liveriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
 
         private:
             //! Strip extra info from livery code

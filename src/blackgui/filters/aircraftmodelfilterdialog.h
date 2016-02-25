@@ -15,7 +15,6 @@
 #include "blackgui/blackguiexport.h"
 #include "filterdialog.h"
 #include "blackgui/models/aircraftmodelfilter.h"
-#include "blackmisc/network/webdataservicesprovider.h"
 #include <QDialog>
 #include <QScopedPointer>
 
@@ -41,9 +40,6 @@ namespace BlackGui
 
             //! \copydoc Models::IModelFilterProvider::createModelFilter
             virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Simulation::CAircraftModelList>> createModelFilter() const override;
-
-            //! Set the provider
-            void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider);
 
         private:
             QScopedPointer<Ui::CAircraftModelFilterDialog> ui;

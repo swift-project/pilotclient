@@ -9,8 +9,10 @@
 
 #include "dbmodelcomponent.h"
 #include "dbmappingcomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/shortcut.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "ui_dbmodelcomponent.h"
 #include <functional>
@@ -18,6 +20,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
+using namespace BlackCore;
 using namespace BlackGui::Views;
 using namespace BlackGui::Models;
 
@@ -40,30 +43,14 @@ namespace BlackGui
             // configure view
             this->ui->tvp_AircraftModel->setFilterWidget(this->ui->filter_AircraftModelFilter);
             this->ui->tvp_AircraftModel->allowDragDropValueObjects(true, false);
+
+            connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbModelComponent::ps_modelsRead);
+            this->ps_modelsRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, sApp->getWebDataServices()->getModelsCount());
         }
 
         CDbModelComponent::~CDbModelComponent()
         {
-            gracefulShutdown();
-        }
-
-        void CDbModelComponent::setProvider(IWebDataServicesProvider *webDataReaderProvider)
-        {
-            CWebDataServicesAware::setProvider(webDataReaderProvider);
-            webDataReaderProvider->connectDataReadSignal(
-                this,
-                std::bind(&CDbModelComponent::ps_modelsRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
-            );
-            int c = getModelsCount();
-            if (c > 0)
-            {
-                ps_modelsRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, c);
-            }
-
-            if (this->ui->filter_AircraftModelFilter)
-            {
-                this->ui->filter_AircraftModelFilter->setProvider(webDataReaderProvider);
-            }
+            // void
         }
 
         bool CDbModelComponent::hasModels() const
@@ -79,7 +66,7 @@ namespace BlackGui
                 CAircraftModel model(this->ui->tvp_AircraftModel->container().latestObject());
                 ts = model.getUtcTimestamp();
             }
-            this->triggerRead(CEntityFlags::ModelEntity, ts);
+            sGui->getWebDataServices()->triggerRead(CEntityFlags::ModelEntity, ts);
         }
 
         void CDbModelComponent::ps_modelsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
@@ -89,15 +76,15 @@ namespace BlackGui
             {
                 if (readState == CEntityFlags::ReadFinished || readState == CEntityFlags::ReadFinishedRestricted)
                 {
-                    this->ui->tvp_AircraftModel->updateContainerMaybeAsync(this->getModels());
+                    this->ui->tvp_AircraftModel->updateContainerMaybeAsync(sGui->getWebDataServices()->getModels());
                 }
             }
         }
 
         void CDbModelComponent::ps_reload()
         {
-            if (!this->hasProvider()) { return; }
-            this->triggerRead(CEntityFlags::ModelEntity, QDateTime());
+            if (!sGui) { return; }
+            sGui->getWebDataServices()->triggerRead(CEntityFlags::ModelEntity);
         }
 
         void CDbModelComponent::ps_onStyleSheetChanged()

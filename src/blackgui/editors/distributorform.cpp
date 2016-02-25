@@ -22,7 +22,6 @@ namespace BlackGui
     {
         CDistributorForm::CDistributorForm(QWidget *parent) :
             CForm(parent),
-            BlackMisc::Network::CWebDataServicesAware(nullptr),
             ui(new Ui::CDistributorForm)
         {
             ui->setupUi(this);
@@ -99,12 +98,6 @@ namespace BlackGui
         {
             setValue(CDistributor());
             this->ui->distributor_Selector->setReadOnly(false);
-        }
-
-        void CDistributorForm::setProvider(Network::IWebDataServicesProvider *webDataReaderProvider)
-        {
-            CWebDataServicesAware::setProvider(webDataReaderProvider);
-            this->ui->distributor_Selector->setProvider(webDataReaderProvider);
         }
 
         void CDistributorForm::ps_droppedCode(const BlackMisc::CVariant &variantDropped)

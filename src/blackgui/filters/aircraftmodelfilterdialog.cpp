@@ -34,10 +34,5 @@ namespace BlackGui
         {
             return ui->filter_Models->createModelFilter();
         }
-
-        void CAircraftModelFilterDialog::setProvider(IWebDataServicesProvider *webDataReaderProvider)
-        {
-            this->ui->filter_Models->setProvider(webDataReaderProvider);
-        }
     } // namespace
 } // namespace

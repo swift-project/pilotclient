@@ -14,7 +14,6 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/network/webdataservicesprovider.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackgui/editors/form.h"
 #include <QScopedPointer>
@@ -29,8 +28,7 @@ namespace BlackGui
          * Airline ICAO code form
          */
         class BLACKGUI_EXPORT CAirlineIcaoForm :
-            public CForm,
-            public BlackMisc::Network::CWebDataServicesAware
+            public CForm
         {
             Q_OBJECT
 
@@ -64,9 +62,6 @@ namespace BlackGui
 
             //! Clear
             void clear();
-
-            //! \copydoc BlackMisc::Network::CWebDataServicesAware::setProvider
-            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
         signals:
             //! Airline has been changed

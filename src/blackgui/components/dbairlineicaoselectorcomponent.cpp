@@ -9,13 +9,15 @@
 
 #include "dbairlineicaoselectorcomponent.h"
 #include "ui_dbairlineicaoselectorcomponent.h"
-#include "blackgui/guiutility.h"
+#include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
 #include "blackmisc/datastoreutility.h"
 #include <QMimeData>
 
+using namespace BlackCore;
 using namespace BlackGui;
 using namespace BlackMisc;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
 
 namespace BlackGui
@@ -62,7 +64,7 @@ namespace BlackGui
 
         QCompleter *CDbAirlineIcaoSelectorComponent::createCompleter()
         {
-            QCompleter *c = new QCompleter(this->getAirlineIcaoCodes().toIcaoDesignatorCompleterStrings(), this);
+            QCompleter *c = new QCompleter(sGui->getWebDataServices()->getAirlineIcaoCodes().toIcaoDesignatorCompleterStrings(), this);
             c->setCaseSensitivity(Qt::CaseInsensitive);
             c->setCompletionMode(QCompleter::PopupCompletion);
             c->setMaxVisibleItems(10);
@@ -72,20 +74,14 @@ namespace BlackGui
 
         void CDbAirlineIcaoSelectorComponent::ps_dataChanged()
         {
-            if (!hasProvider()) { return; }
+            if (!sGui) { return; }
             QString s(this->ui->le_Airline->text());
             if (s.isEmpty()) { return; }
             int dbKey = CDatastoreUtility::extractIntegerKey(s);
             if (dbKey >= 0)
             {
-                CAirlineIcaoCode icao(getAirlineIcaoCodeForDbKey(dbKey));
+                CAirlineIcaoCode icao(sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(dbKey));
                 this->setAirlineIcao(icao);
-            }
-            else
-            {
-                // second choice, first object by name
-                // CAirlineIcaoCode icao(getAirlineDesignatorWithName(s, starting with));
-                // this->setAirlineIcao(icao);
             }
         }
     }// class

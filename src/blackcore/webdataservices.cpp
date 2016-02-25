@@ -16,7 +16,7 @@
 #include "blackcore/vatsimbookingreader.h"
 #include "blackcore/vatsimdatafilereader.h"
 #include "blackcore/vatsimmetarreader.h"
-#include "data/globalsetup.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/fileutils.h"
@@ -46,68 +46,45 @@ namespace BlackCore
         this->setObjectName("CWebDataReader");
         this->initReaders(readerFlags);
         this->initWriters();
-        this->readInBackground(CEntityFlags::AllEntities, 500);
-    }
 
-    QList<QMetaObject::Connection> CWebDataServices::connectDataReadSignal(QObject *receiver, std::function<void(CEntityFlags::Entity, CEntityFlags::ReadState, int)> dataRead)
-    {
-        Q_ASSERT_X(receiver, Q_FUNC_INFO, "Missing receiver");
-
-        // bind does not allow to define connection type
-        // so anything in its own thread will be sent with this thread affinity
-        QList<QMetaObject::Connection> cl;
-
+        bool c = false;
+        Q_UNUSED(c);
         if (m_readerFlags.testFlag(CWebReaderFlags::WebReaderFlag::IcaoDataReader))
         {
             Q_ASSERT_X(this->m_icaoDataReader, Q_FUNC_INFO, "Missing reader ICAO");
-            QMetaObject::Connection con = connect(this->m_icaoDataReader, &CIcaoDataReader::dataRead, receiver, dataRead);
-            Q_ASSERT_X(con, Q_FUNC_INFO, "connect failed ICAO");
-            cl.append(con);
+            c = connect(this->m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::dataRead);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed ICAO");
         }
 
         if (m_readerFlags.testFlag(CWebReaderFlags::WebReaderFlag::ModelReader))
         {
             Q_ASSERT_X(this->m_modelDataReader, Q_FUNC_INFO, "Missing reader models");
-            QMetaObject::Connection con = connect(this->m_modelDataReader, &CModelDataReader::dataRead, receiver, dataRead);
-            Q_ASSERT_X(con, Q_FUNC_INFO, "connect failed models");
-            cl.append(con);
+            c = connect(this->m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::dataRead);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed models");
         }
 
         if (m_readerFlags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimBookingReader))
         {
             Q_ASSERT_X(this->m_vatsimBookingReader, Q_FUNC_INFO, "Missing reader bookings");
-            QMetaObject::Connection con = connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, receiver, dataRead);
-            Q_ASSERT_X(con, Q_FUNC_INFO, "connect failed bookings");
-            cl.append(con);
+            c = connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CWebDataServices::dataRead);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed bookings");
         }
 
         if (m_readerFlags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimDataReader))
         {
             Q_ASSERT_X(this->m_vatsimDataFileReader, Q_FUNC_INFO, "Missing reader data file");
-            QMetaObject::Connection con = connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, receiver, dataRead);
-            Q_ASSERT_X(con, Q_FUNC_INFO, "connect failed VATSIM data file");
-            cl.append(con);
+            c = connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CWebDataServices::dataRead);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM data file");
         }
 
         if (m_readerFlags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimMetarReader))
         {
             Q_ASSERT_X(this->m_vatsimMetarReader, Q_FUNC_INFO, "Missing reader metars");
-            QMetaObject::Connection con = connect(this->m_vatsimMetarReader, &CVatsimMetarReader::dataRead, receiver, dataRead);
-            Q_ASSERT_X(con, Q_FUNC_INFO, "connect failed VATSIM METAR");
-            cl.append(con);
+            c = connect(this->m_vatsimMetarReader, &CVatsimMetarReader::dataRead, this, &CWebDataServices::dataRead);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM METAR");
         }
-        return cl;
-    }
 
-    QList<QMetaObject::Connection> CWebDataServices::connectDataPublishSignal(QObject *receiver, std::function<void (const CAircraftModelList &, const CAircraftModelList &, const CStatusMessageList &)> dataPublished)
-    {
-        Q_ASSERT_X(receiver, Q_FUNC_INFO, "Missing receiver");
-        QList<QMetaObject::Connection> cl;
-        if (!m_databaseWriter) { return cl; }
-        QMetaObject::Connection con = connect(this->m_databaseWriter, &CDatabaseWriter::published, receiver, dataPublished);
-        Q_ASSERT_X(con, Q_FUNC_INFO, "connect failed publishing signal");
-        cl.push_back(con);
-        return cl;
+        this->readInBackground(CEntityFlags::AllEntities, 500);
     }
 
     CServerList CWebDataServices::getVatsimFsdServers() const

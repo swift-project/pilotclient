@@ -31,7 +31,6 @@ namespace BlackGui
          */
         class BLACKGUI_EXPORT CDbCountrySelectorComponent :
             public QFrame,
-            public BlackMisc::Network::CWebDataServicesAware,
             public BlackGui::CDropBase
         {
             Q_OBJECT
@@ -42,9 +41,6 @@ namespace BlackGui
 
             //! Destructor
             ~CDbCountrySelectorComponent();
-
-            //! \copydoc BlackMisc::Network::CWebDataServicesAware::setProvider
-            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
             //! Current country
             void setCountry(const BlackMisc::CCountry &country);

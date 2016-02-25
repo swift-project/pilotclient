@@ -11,6 +11,7 @@
 #include "ui_dbmappingcomponent.h"
 #include "blackgui/components/dbautostashingcomponent.h"
 #include "blackgui/components/dbmodelmappingmodifycomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/shortcut.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
@@ -175,30 +176,9 @@ namespace BlackGui
             return v->at(index);
         }
 
-        void CDbMappingComponent::setProvider(BlackMisc::Network::IWebDataServicesProvider *provider)
-        {
-            CWebDataServicesAware::setProvider(provider);
-            this->m_autoStashDialog->setProvider(provider);
-            this->ui->editor_Livery->setProvider(provider);
-            this->ui->editor_Distributor->setProvider(provider);
-            this->ui->editor_AircraftIcao->setProvider(provider);
-            this->ui->comp_StashAircraft->setProvider(provider);
-
-            if (this->ui->tvp_AircraftModelsForVPilot->getFilterDialog())
-            {
-                this->ui->tvp_AircraftModelsForVPilot->getFilterDialog()->setProvider(provider);
-            }
-
-            if (this->ui->tvp_OwnAircraftModels->getFilterDialog())
-            {
-                this->ui->tvp_OwnAircraftModels->getFilterDialog()->setProvider(provider);
-            }
-        }
-
         void CDbMappingComponent::gracefulShutdown()
         {
             this->disconnect();
-            CWebDataServicesAware::gracefulShutdown();
             this->m_vPilotReader.gracefulShutdown();
             if (this->m_modelLoader) { this->m_modelLoader->gracefulShutdown(); }
         }
@@ -313,7 +293,7 @@ namespace BlackGui
 
         void CDbMappingComponent::ps_handleStashDropRequest(const CAirlineIcaoCode &code) const
         {
-            CLivery stdLivery(this->getStdLiveryForAirlineCode(code));
+            CLivery stdLivery(sGui->getWebDataServices()->getStdLiveryForAirlineCode(code));
             if (!stdLivery.hasValidDbKey()) { return; }
             this->ui->comp_StashAircraft->applyToSelected(stdLivery);
         }
@@ -341,7 +321,7 @@ namespace BlackGui
 
         void CDbMappingComponent::ps_removeDbModelsFromView()
         {
-            QStringList modelStrings(this->getModelStrings());
+            QStringList modelStrings(sGui->getWebDataServices()->getModelStrings());
             if (modelStrings.isEmpty()) { return; }
             if (currentTabIndex() == TabVPilot || currentTabIndex() == TabOwnModels)
             {
@@ -625,9 +605,9 @@ namespace BlackGui
 
             // we either use the model, or try to resolve the data to DB data
             bool dbModel = model.hasValidDbKey();
-            const CLivery livery(dbModel ? model.getLivery() : this->smartLiverySelector(model.getLivery()));
-            const CAircraftIcaoCode aircraftIcao(dbModel ? model.getAircraftIcaoCode() : this->smartAircraftIcaoSelector(model.getAircraftIcaoCode()));
-            const CDistributor distributor(dbModel ? model.getDistributor() : this->smartDistributorSelector(model.getDistributor()));
+            const CLivery livery(dbModel ? model.getLivery() : sGui->getWebDataServices()->smartLiverySelector(model.getLivery()));
+            const CAircraftIcaoCode aircraftIcao(dbModel ? model.getAircraftIcaoCode() : sGui->getWebDataServices()->smartAircraftIcaoSelector(model.getAircraftIcaoCode()));
+            const CDistributor distributor(dbModel ? model.getDistributor() : sGui->getWebDataServices()->smartDistributorSelector(model.getDistributor()));
 
             // set model part
             this->ui->editor_Model->setValue(model);
@@ -803,14 +783,13 @@ namespace BlackGui
         {
             CDbMappingComponent *mapComp = mappingComponent();
             Q_ASSERT_X(mapComp, Q_FUNC_INFO, "no mapping component");
-            bool canConnectDb = mapComp->canConnectSwiftDb();
-
+            bool canConnectDb = sGui->getWebDataServices()->canConnectSwiftDb();
             if (canConnectDb)
             {
                 if (!mapComp->currentModelView()->isEmpty() && mapComp->currentModelView()->getMenu().testFlag(CViewBaseNonTemplate::MenuCanStashModels))
                 {
                     this->addSeparator(menu);
-                    int dbModels = mapComp->getModelsCount();
+                    int dbModels = sGui->getWebDataServices()->getModelsCount();
                     if (dbModels > 0)
                     {
                         // we have keys and data where we could delete them from

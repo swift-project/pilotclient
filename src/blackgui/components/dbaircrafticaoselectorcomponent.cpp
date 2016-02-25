@@ -9,12 +9,13 @@
 
 #include "dbaircrafticaoselectorcomponent.h"
 #include "ui_dbaircrafticaoselectorcomponent.h"
-#include "blackgui/guiutility.h"
+#include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
 #include "blackmisc/datastoreutility.h"
 #include <QMimeData>
 
 using namespace BlackGui;
+using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
@@ -31,27 +32,13 @@ namespace BlackGui
             this->setAcceptDrops(true);
             this->setAcceptedMetaTypeIds({qMetaTypeId<CAircraftIcaoCode>(), qMetaTypeId<CAircraftIcaoCodeList>()});
             this->ui->le_Aircraft->setValidator(new CUpperCaseValidator(this));
-
             connect(ui->le_Aircraft, &QLineEdit::returnPressed, this, &CDbAircraftIcaoSelectorComponent::ps_dataChanged);
+            connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAircraftIcaoSelectorComponent::ps_codesRead);
+            this->ps_codesRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, sApp->getWebDataServices()->getAircraftIcaoCodesCount());
         }
 
         CDbAircraftIcaoSelectorComponent::~CDbAircraftIcaoSelectorComponent()
         { }
-
-        void CDbAircraftIcaoSelectorComponent::setProvider(Network::IWebDataServicesProvider *webDataReaderProvider)
-        {
-            if (!webDataReaderProvider) { return; }
-            CWebDataServicesAware::setProvider(webDataReaderProvider);
-            connectDataReadSignal(
-                this,
-                std::bind(&CDbAircraftIcaoSelectorComponent::ps_codesRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
-            );
-            int c = this->getAircraftIcaoCodesCount();
-            if (c > 0)
-            {
-                this->ps_codesRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, c);
-            }
-        }
 
         void CDbAircraftIcaoSelectorComponent::setAircraftIcao(const CAircraftIcaoCode &icao)
         {
@@ -67,7 +54,7 @@ namespace BlackGui
 
         void CDbAircraftIcaoSelectorComponent::setAircraftIcao(int key)
         {
-            CAircraftIcaoCode icao(getAircraftIcaoCodeForDbKey(key));
+            CAircraftIcaoCode icao(sGui->getWebDataServices()->getAircraftIcaoCodeForDbKey(key));
             ui->lbl_Description->setText("");
             if (icao.hasCompleteData())
             {
@@ -83,7 +70,7 @@ namespace BlackGui
             {
                 return CAircraftIcaoCode(text);
             }
-            CAircraftIcaoCode icao(getAircraftIcaoCodeForDbKey(key));
+            CAircraftIcaoCode icao(sGui->getWebDataServices()->getAircraftIcaoCodeForDbKey(key));
             return icao;
         }
 
@@ -149,12 +136,12 @@ namespace BlackGui
 
         void CDbAircraftIcaoSelectorComponent::ps_codesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
-            if (!hasProvider()) { return; }
+            if (!sGui) { return; }
             if (entity.testFlag(CEntityFlags::AircraftIcaoEntity) && readState == CEntityFlags::ReadFinished)
             {
                 if (count > 0)
                 {
-                    QCompleter *c = new QCompleter(this->getAircraftIcaoCodes().toCompleterStrings(true, true), this);
+                    QCompleter *c = new QCompleter(sGui->getWebDataServices()->getAircraftIcaoCodes().toCompleterStrings(true, true), this);
                     c->setCaseSensitivity(Qt::CaseInsensitive);
                     c->setCompletionMode(QCompleter::PopupCompletion);
                     c->setMaxVisibleItems(10);
@@ -174,9 +161,9 @@ namespace BlackGui
 
         void CDbAircraftIcaoSelectorComponent::ps_dataChanged()
         {
-            if (!hasProvider()) { return; }
+            if (!sGui) { return; }
             int key = CDatastoreUtility::extractIntegerKey(this->ui->le_Aircraft->text());
-            CAircraftIcaoCode icao(getAircraftIcaoCodeForDbKey(key));
+            CAircraftIcaoCode icao(sGui->getWebDataServices()->getAircraftIcaoCodeForDbKey(key));
             this->setAircraftIcao(icao);
         }
 

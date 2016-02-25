@@ -9,11 +9,12 @@
 
 #include "dbdistributorselectorcomponent.h"
 #include "ui_dbdistributorselectorcomponent.h"
-#include "blackgui/guiutility.h"
+#include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
 #include <QMimeData>
 
 using namespace BlackGui;
+using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Network;
@@ -32,25 +33,13 @@ namespace BlackGui
             this->ui->le_Distributor->setValidator(new CUpperCaseValidator(this));
 
             connect(ui->le_Distributor, &QLineEdit::returnPressed, this, &CDbDistributorSelectorComponent::ps_dataChanged);
+            connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbDistributorSelectorComponent::ps_distributorsRead);
+            this->ps_distributorsRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, sApp->getWebDataServices()->getDistributorsCount());
         }
 
         CDbDistributorSelectorComponent::~CDbDistributorSelectorComponent()
         {
-            gracefulShutdown();
-        }
-
-        void CDbDistributorSelectorComponent::setProvider(Network::IWebDataServicesProvider *webDataReaderProvider)
-        {
-            CWebDataServicesAware::setProvider(webDataReaderProvider);
-            connectDataReadSignal(
-                this,
-                std::bind(&CDbDistributorSelectorComponent::ps_distributorsRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
-            );
-            int c = getDistributorsCount();
-            if (c > 0)
-            {
-                ps_distributorsRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, c);
-            }
+            //
         }
 
         void CDbDistributorSelectorComponent::setDistributor(const CDistributor &distributor)
@@ -69,7 +58,7 @@ namespace BlackGui
         {
             QString keyOrAlias(distributorKeyOrAlias.toUpper().trimmed());
             if (this->m_currentDistributor.matchesKeyOrAlias(keyOrAlias)) { return; }
-            CDistributor d(getDistributors().findByKeyOrAlias(keyOrAlias));
+            CDistributor d(sGui->getWebDataServices()->getDistributors().findByKeyOrAlias(keyOrAlias));
             if (d.hasCompleteData())
             {
                 this->setDistributor(d);
@@ -83,12 +72,12 @@ namespace BlackGui
 
         CDistributor CDbDistributorSelectorComponent::getDistributor() const
         {
-            if (!hasProvider()) { return CDistributor(); }
+            if (!sGui) { return CDistributor(); }
             QString distributorKeyOrAlias(this->ui->le_Distributor->text().trimmed().toUpper());
             if (distributorKeyOrAlias.isEmpty()) { return CDistributor(); }
             if (this->m_currentDistributor.matchesKeyOrAlias(distributorKeyOrAlias)) { return this->m_currentDistributor; }
 
-            CDistributor d(getDistributors().findByKey(distributorKeyOrAlias));
+            CDistributor d(sGui->getWebDataServices()->getDistributors().findByKey(distributorKeyOrAlias));
             if (d.hasValidDbKey())
             {
                 // for some reason we have a new distributor here
@@ -159,12 +148,12 @@ namespace BlackGui
 
         void CDbDistributorSelectorComponent::ps_distributorsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
-            if (!hasProvider()) { return; }
+            if (!sGui) { return; }
             if (entity.testFlag(CEntityFlags::DistributorEntity) && readState == CEntityFlags::ReadFinished)
             {
                 if (count > 0)
                 {
-                    QStringList keysAndAliases(this->getDistributors().getDbKeysAndAliases());
+                    QStringList keysAndAliases(sGui->getWebDataServices()->getDistributors().getDbKeysAndAliases());
                     keysAndAliases.sort(Qt::CaseInsensitive);
                     QCompleter *c = new QCompleter(keysAndAliases, this);
                     c->setCaseSensitivity(Qt::CaseInsensitive);
@@ -186,10 +175,10 @@ namespace BlackGui
 
         void CDbDistributorSelectorComponent::ps_dataChanged()
         {
-            if (!hasProvider()) { return; }
+            if (!sGui) { return; }
             QString keyOrAlias(this->ui->le_Distributor->text().trimmed().toUpper());
             if (keyOrAlias.isEmpty()) { return; }
-            CDistributor d(this->getDistributors().findByKeyOrAlias(keyOrAlias));
+            CDistributor d(sGui->getWebDataServices()->getDistributors().findByKeyOrAlias(keyOrAlias));
             this->setDistributor(d);
         }
 

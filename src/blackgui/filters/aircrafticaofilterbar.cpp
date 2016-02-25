@@ -87,11 +87,5 @@ namespace BlackGui
             ui->le_Description->clear();
             ui->combinedType_Selector->clear();
         }
-
-        void CAircraftIcaoFilterBar::setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider)
-        {
-            Q_UNUSED(webDataReaderProvider);
-        }
-
     } // ns
 } // nss

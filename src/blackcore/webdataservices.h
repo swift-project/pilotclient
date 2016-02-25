@@ -21,7 +21,6 @@
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/voicecapabilities.h"
-#include "blackmisc/network/webdataservicesprovider.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/weather/metarset.h"
@@ -44,15 +43,15 @@ namespace BlackCore
      * Encapsulates reading data from web sources
      */
     class BLACKCORE_EXPORT CWebDataServices :
-        public QObject,
-        public BlackMisc::Network::IWebDataServicesProvider
+        public QObject
     {
         Q_OBJECT
-        Q_INTERFACES(BlackMisc::Network::IWebDataServicesProvider)
-
         friend class CApplication;
 
     public:
+        //! Log categories
+        static const BlackMisc::CLogCategoryList &getLogCategories();
+
         //! Shutdown
         void gracefulShutdown();
 
@@ -68,84 +67,193 @@ namespace BlackCore
         //! Metar reader
         CVatsimMetarReader *getMetarReader() const { return m_vatsimMetarReader; }
 
+        //! DB writer class
+        CDatabaseWriter *getDatabaseWriter() const { return m_databaseWriter; }
+
         //! Reader flags
         CWebReaderFlags::WebReader getReaderFlags() const { return m_readerFlags; }
 
         //! Reader flags
         CWebReaderFlags::DbReaderHint getDbHint() const { return m_dbHint; }
 
-        //! Log categories
-        static const BlackMisc::CLogCategoryList &getLogCategories();
+        //! FSD servers
+        //! \threadsafe
+        BlackMisc::Network::CServerList getVatsimFsdServers() const;
 
-        // ------------------------ provider functionality start ------------------------------
+        //! Voice servers
+        //! \threadsafe
+        BlackMisc::Network::CServerList getVatsimVoiceServers() const;
 
-        //! \name Provider interface functions
-        //! @{
-        virtual QList<QMetaObject::Connection> connectDataReadSignal(
-            QObject *receiver,
-            std::function<void (BlackMisc::Network::CEntityFlags::Entity, BlackMisc::Network::CEntityFlags::ReadState, int)> dataRead) override;
+        //! Users by callsign
+        //! \threadsafe
+        BlackMisc::Network::CUserList getUsersForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
-        virtual QList<QMetaObject::Connection> connectDataPublishSignal(
-            QObject *receiver,
-            std::function<void (const BlackMisc::Simulation::CAircraftModelList &, const BlackMisc::Simulation::CAircraftModelList &, const BlackMisc::CStatusMessageList &)> dataPublished) override;
+        //! ATC stations by callsign
+        //! \threadsafe
+        BlackMisc::Aviation::CAtcStationList getAtcStationsForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
-        virtual BlackMisc::Network::CEntityFlags::Entity triggerRead(BlackMisc::Network::CEntityFlags::Entity whatToRead, const QDateTime &newerThan = QDateTime()) override;
-        virtual BlackMisc::Network::CServerList getVatsimFsdServers() const override;
-        virtual BlackMisc::Network::CServerList getVatsimVoiceServers() const override;
-        virtual BlackMisc::Simulation::CDistributorList getDistributors() const override;
-        virtual int getDistributorsCount() const override;
-        virtual BlackMisc::Simulation::CDistributor smartDistributorSelector(const BlackMisc::Simulation::CDistributor &distributor) const override;
-        virtual BlackMisc::Aviation::CLiveryList getLiveries() const override;
-        virtual int getLiveriesCount() const override;
-        virtual BlackMisc::Aviation::CLivery getLiveryForCombinedCode(const QString &combinedCode) const override;
-        virtual BlackMisc::Aviation::CLivery getStdLiveryForAirlineCode(const BlackMisc::Aviation::CAirlineIcaoCode &icao) const override;
-        virtual BlackMisc::Aviation::CLivery getLiveryForDbKey(int id) const override;
-        virtual BlackMisc::Aviation::CLivery smartLiverySelector(const BlackMisc::Aviation::CLivery &livery) const override;
-        virtual BlackMisc::Simulation::CAircraftModelList getModels() const override;
-        virtual int getModelsCount() const override;
-        virtual QList<int> getModelDbKeys() const override;
-        virtual QStringList getModelStrings() const override;
-        virtual BlackMisc::Simulation::CAircraftModelList getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const override;
-        virtual BlackMisc::Simulation::CAircraftModel getModelForModelString(const QString &modelString) const override;
-        virtual BlackMisc::Aviation::CAircraftIcaoCodeList getAircraftIcaoCodes() const override;
-        virtual int getAircraftIcaoCodesCount() const override;
-        virtual BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDesignator(const QString &designator) const override;
-        virtual BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDbKey(int key) const override;
-        virtual BlackMisc::Aviation::CAircraftIcaoCode smartAircraftIcaoSelector(const BlackMisc::Aviation::CAircraftIcaoCode &icao) const override;
-        virtual BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodes() const override;
-        virtual int getAirlineIcaoCodesCount() const override;
-        virtual BlackMisc::Aviation::CAirlineIcaoCode smartAirlineIcaoSelector(const BlackMisc::Aviation::CAirlineIcaoCode &icaoPattern) const override;
-        virtual BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForDbKey(int key) const override;
-        virtual BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodeForDesignator(const QString &designator) const override;
-        virtual BlackMisc::CCountryList getCountries() const override;
-        virtual int getCountriesCount() const override;
-        virtual BlackMisc::CCountry getCountryForName(const QString &name) const override;
-        virtual BlackMisc::CCountry getCountryForIsoCode(const QString &iso) const override;
-        virtual BlackMisc::Weather::CMetarSet getMetars() const override;
-        virtual BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &icao) const override;
-        virtual int getMetarsCount() const override;
-        virtual BlackMisc::Network::CUserList getUsersForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
-        virtual BlackMisc::Aviation::CAtcStationList getAtcStationsForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
-        virtual BlackMisc::Network::CVoiceCapabilities getVoiceCapabilityForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
-        virtual void updateWithVatsimDataFileData(BlackMisc::Simulation::CSimulatedAircraft &aircraftToBeUdpated) const override;
-        virtual BlackMisc::CStatusMessageList asyncPublishModels(const BlackMisc::Simulation::CAircraftModelList &models) const override;
-        virtual bool canConnectSwiftDb() const override;
-        virtual bool writeDbDataToDisk(const QString &dir) const override;
-        virtual bool readDbDataFromDisk(const QString &dir, bool inBackground) override;
-        //! }@
+        //! Voice capabilities for given callsign
+        //! \threadsafe
+        BlackMisc::Network::CVoiceCapabilities getVoiceCapabilityForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
-        // ------------------------ provider functionality end ----------------------------
+        //! Update with web data
+        //! \threadsafe
+        void updateWithVatsimDataFileData(BlackMisc::Simulation::CSimulatedAircraft &aircraftToBeUdpated) const;
+
+        //! Distributors
+        //! \threadsafe
+        BlackMisc::Simulation::CDistributorList getDistributors() const;
+
+        //! Distributors count
+        //! \threadsafe
+        int getDistributorsCount() const;
+
+        //! Use distributor object to select the best complete distributor from DB
+        //! \threadsafe
+        BlackMisc::Simulation::CDistributor smartDistributorSelector(const BlackMisc::Simulation::CDistributor &distributor) const;
+
+        //! Liveries
+        //! \threadsafe
+        BlackMisc::Aviation::CLiveryList getLiveries() const;
+
+        //! Liveries count
+        //! \threadsafe
+        int getLiveriesCount() const;
+
+        //! Livery for its combined code
+        //! \threadsafe
+        BlackMisc::Aviation::CLivery getLiveryForCombinedCode(const QString &combinedCode) const;
+
+        //! Standard livery for airline code
+        //! \threadsafe
+        BlackMisc::Aviation::CLivery getStdLiveryForAirlineCode(const BlackMisc::Aviation::CAirlineIcaoCode &icao) const;
+
+        //! Livery for id
+        //! \threadsafe
+        BlackMisc::Aviation::CLivery getLiveryForDbKey(int id) const;
+
+        //! Use a livery as template and select the best complete livery from DB for it
+        //! \threadsafe
+        BlackMisc::Aviation::CLivery smartLiverySelector(const BlackMisc::Aviation::CLivery &livery) const;
+
+        //! Models
+        //! \threadsafe
+        BlackMisc::Simulation::CAircraftModelList getModels() const;
+
+        //! Models count
+        //! \threadsafe
+        int getModelsCount() const;
+
+        //! Model keys
+        //! \threadsafe
+        QList<int> getModelDbKeys() const;
+
+        //! Model strings
+        //! \threadsafe
+        QStringList getModelStrings() const;
+
+        //! Models for combined code and aircraft designator
+        //! \threadsafe
+        BlackMisc::Simulation::CAircraftModelList getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const;
+
+        //! Model for key if any
+        //! \threadsafe
+        BlackMisc::Simulation::CAircraftModel getModelForModelString(const QString &modelKey) const;
+
+        //! Aircraft ICAO codes
+        //! \threadsafe
+        BlackMisc::Aviation::CAircraftIcaoCodeList getAircraftIcaoCodes() const;
+
+        //! Aircraft ICAO codes count
+        //! \threadsafe
+        int getAircraftIcaoCodesCount() const;
+
+        //! ICAO code for designator
+        //! \threadsafe
+        BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDesignator(const QString &designator) const;
+
+        //! ICAO code for id
+        //! \threadsafe
+        BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDbKey(int id) const;
+
+        //! Use an ICAO object to select the best complete ICAO object from DB for it
+        //! \threadsafe
+        BlackMisc::Aviation::CAircraftIcaoCode smartAircraftIcaoSelector(const BlackMisc::Aviation::CAircraftIcaoCode &icao) const;
+
+        //! Airline ICAO codes
+        //! \threadsafe
+        BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodes() const;
+
+        //! Airline ICAO codes count
+        //! \threadsafe
+        int getAirlineIcaoCodesCount() const;
+
+        //! ICAO code for designator
+        //! \threadsafe
+        BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodeForDesignator(const QString &designator) const;
+
+        //! ICAO code for id
+        //! \threadsafe
+        BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForDbKey(int id) const;
+
+        //! Smart airline selector
+        //! \threadsafe
+        BlackMisc::Aviation::CAirlineIcaoCode smartAirlineIcaoSelector(const BlackMisc::Aviation::CAirlineIcaoCode &code) const;
+
+        //! Countries
+        //! \threadsafe
+        BlackMisc::CCountryList getCountries() const;
+
+        //! Country count
+        //! \threadsafe
+        int getCountriesCount() const;
+
+        //! Country by ISO code (GB, US...)
+        //! \threadsafe
+        BlackMisc::CCountry getCountryForIsoCode(const QString &iso) const;
+
+        //! Country by name (France, China ..)
+        //! \threadsafe
+        BlackMisc::CCountry getCountryForName(const QString &name) const;
+
+        //! Get METARs
+        //! \threadsafe
+        BlackMisc::Weather::CMetarSet getMetars() const;
+
+        //! Get METAR for airport
+        //! \threadsafe
+        BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &icao) const;
+
+        //! Get METARs count
+        //! \threadsafe
+        int getMetarsCount() const;
+
+        //! Publish models to database
+        BlackMisc::CStatusMessageList asyncPublishModels(const BlackMisc::Simulation::CAircraftModelList &models) const;
+
+        //! Trigger read of new data
+        BlackMisc::Network::CEntityFlags::Entity triggerRead(BlackMisc::Network::CEntityFlags::Entity whatToRead, const QDateTime &dateTime = QDateTime());
+
+        //! Can connect to swift DB?
+        bool canConnectSwiftDb() const;
+
+        //! Write data to disk (mainly for testing scenarios)
+        bool writeDbDataToDisk(const QString &dir) const;
+
+        //! Load DB data from disk (mainly for testing scenarios)
+        bool readDbDataFromDisk(const QString &dir, bool inBackground);
+
+    signals:
+        //! Combined read signal
+        void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+
+    public slots:
+        //! First read (allows to immediately read in background)
+        void readInBackground(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::AllEntities, int delayMs = 0);
 
     protected:
         //! Constructor
         CWebDataServices(CWebReaderFlags::WebReader readerFlags, CWebReaderFlags:: DbReaderHint hint, QObject *parent = nullptr);
-
-        // ---------------------------------------------
-        // Consider to use the connect method of the provider to connect by entity
-        // ---------------------------------------------
-    public slots:
-        //! First read (allows to immediately read in background)
-        void readInBackground(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::AllEntities, int delayMs = 0);
 
     private slots:
         //! ATC bookings received

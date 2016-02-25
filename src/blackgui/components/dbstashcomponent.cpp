@@ -10,14 +10,18 @@
 #include "dbstashcomponent.h"
 #include "dbmappingcomponent.h"
 #include "ui_dbstashcomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackgui/views/aircraftmodelview.h"
+#include "blackcore/databasewriter.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 
+using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
+using namespace BlackGui;
 using namespace BlackGui::Models;
 using namespace BlackGui::Views;
 
@@ -52,19 +56,12 @@ namespace BlackGui
             ui->tvp_StashAircraftModels->setHighlightModelStrings(true);
             ui->tvp_StashAircraftModels->setHighlightModelStringsColor(Qt::red);
             this->enableButtonRow();
+
+            connect(sApp->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::published, this, &CDbStashComponent::ps_publishResponse);
         }
 
         CDbStashComponent::~CDbStashComponent()
         { }
-
-        void CDbStashComponent::setProvider(IWebDataServicesProvider *provider)
-        {
-            CWebDataServicesAware::setProvider(provider);
-            provider->connectDataPublishSignal(
-                this,
-                std::bind(&CDbStashComponent::ps_publishResponse, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
-            );
-        }
 
         void CDbStashComponent::gracefulShutdown()
         {
@@ -185,7 +182,7 @@ namespace BlackGui
             }
 
             // retrieve the std livery
-            const CLivery stdLivery(this->getStdLiveryForAirlineCode(icao));
+            const CLivery stdLivery(sApp->getWebDataServices()->getStdLiveryForAirlineCode(icao));
             if (!stdLivery.hasValidDbKey())
             {
                 static const CStatusMessage msg(CStatusMessage::SeverityError, "No valid standard livery for " + icao.getDesignator());
@@ -241,7 +238,7 @@ namespace BlackGui
                 msgs.push_back(CStatusMessage(validationCategories(), CStatusMessage::SeverityWarning, QString("More than %1 values, values skipped").arg(MaxModelPublished)));
             }
 
-            msgs.push_back(this->asyncPublishModels(models));
+            msgs.push_back(sApp->getWebDataServices()->asyncPublishModels(models));
             if (msgs.hasWarningOrErrorMessages())
             {
                 this->showMessages(msgs);
@@ -354,7 +351,7 @@ namespace BlackGui
         CAircraftModel CDbStashComponent::consolidateWithDbData(const CAircraftModel &model) const
         {
             if (!model.hasModelString()) { return model; }
-            CAircraftModel dbModel(this->getModelForModelString(model.getModelString()));
+            CAircraftModel dbModel(sApp->getWebDataServices()->getModelForModelString(model.getModelString()));
 
             // we try to best update by DB data here
             if (!dbModel.hasValidDbKey())
@@ -363,7 +360,7 @@ namespace BlackGui
                 CAircraftModel consolidatedModel(model); // copy over
                 if (!consolidatedModel.getLivery().hasValidDbKey())
                 {
-                    const CLivery dbLivery(this->smartLiverySelector(consolidatedModel.getLivery()));
+                    const CLivery dbLivery(sApp->getWebDataServices()->smartLiverySelector(consolidatedModel.getLivery()));
                     if (dbLivery.hasValidDbKey())
                     {
                         consolidatedModel.setLivery(dbLivery);
@@ -372,7 +369,7 @@ namespace BlackGui
                 if (!consolidatedModel.getAircraftIcaoCode().hasValidDbKey() && consolidatedModel.hasAircraftDesignator())
                 {
                     // try to find DB aircraft ICAO here
-                    const CAircraftIcaoCode dbIcao(this->smartAircraftIcaoSelector(consolidatedModel.getAircraftIcaoCode()));
+                    const CAircraftIcaoCode dbIcao(sGui->getWebDataServices()->smartAircraftIcaoSelector(consolidatedModel.getAircraftIcaoCode()));
                     if (dbIcao.hasValidDbKey())
                     {
                         consolidatedModel.setAircraftIcaoCode(dbIcao);
@@ -382,7 +379,7 @@ namespace BlackGui
                 // key alone here can be misleading, as the key can be valid but no DB key
                 // mostly happens when key is an alias
                 QString keyOrAlias(consolidatedModel.getDistributor().getDbKey());
-                CDistributor dbDistributor(this->getDistributors().findByKeyOrAlias(keyOrAlias));
+                CDistributor dbDistributor(sGui->getWebDataServices()->getDistributors().findByKeyOrAlias(keyOrAlias));
 
                 // if no distributor is found, it is now empty because it was invalid
                 // otherwise replaced with the current DB data

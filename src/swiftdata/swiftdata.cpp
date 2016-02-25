@@ -81,7 +81,6 @@ void CSwiftData::init()
     this->initStyleSheet();
     this->initLogDisplay();
     connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CSwiftData::ps_onStyleSheetsChanged);
-    this->initReaders();
     this->initMenu();
 }
 
@@ -95,14 +94,6 @@ void CSwiftData::initLogDisplay()
                           CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo)
                       );
     logHandler->subscribe(this, &CSwiftData::ps_appendLogMessage);
-}
-
-void CSwiftData::initReaders()
-{
-    Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "Missing reader");
-    this->ui->comp_MainInfoArea->setProvider(sApp->getWebDataServices());
-    this->ui->comp_InfoBar->setProvider(sApp->getWebDataServices());
-    // web data will be read automatically when setup is syncronized
 }
 
 void CSwiftData::initMenu()

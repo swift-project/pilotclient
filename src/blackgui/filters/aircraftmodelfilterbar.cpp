@@ -66,12 +66,6 @@ namespace BlackGui
                        ));
         }
 
-        void CAircraftModelFilterBar::setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider)
-        {
-            CWebDataServicesAware::setProvider(webDataReaderProvider);
-            this->ui->comp_DistributorSelector->setProvider(webDataReaderProvider);
-        }
-
         void CAircraftModelFilterBar::onRowCountChanged(int count, bool withFilter)
         {
             this->ui->filter_Buttons->onRowCountChanged(count, withFilter);

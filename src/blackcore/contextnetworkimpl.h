@@ -238,7 +238,6 @@ namespace BlackCore
     private:
         CAirspaceMonitor              *m_airspace = nullptr;
         INetwork                      *m_network  = nullptr;
-        QList<QMetaObject::Connection> m_webReaderSignalConnections;
         INetwork::ConnectionStatus     m_currentStatus = INetwork::Disconnected; //!< used to detect pending connections
         QTimer                        *m_networkDataUpdateTimer = nullptr;       //!< general updates such as ATIS, frequencies, see requestDataUpdates()
 
@@ -249,9 +248,6 @@ namespace BlackCore
 
         //! Own aircraft from \sa CContextOwnAircraft
         const BlackMisc::Simulation::CSimulatedAircraft ownAircraft() const;
-
-        //! Disconnect all signals from swift DB readers
-        void disconnectReaderSignals();
 
     private slots:
         //! Update METAR collection

@@ -11,9 +11,11 @@
 #include "dbautostashingcomponent.h"
 #include "dbmappingcomponent.h"
 #include "dbstashcomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include <QIntValidator>
 
+using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
@@ -33,19 +35,12 @@ namespace BlackGui
             this->ui->tvp_StatusMessages->menuAddItems(CAircraftModelView::MenuSave);
             this->ui->le_MaxModelsStashed->setValidator(new QIntValidator(10, CDbStashComponent::MaxModelPublished, this));
             Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "Expect mapping componet");
+
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAutoStashingComponent::ps_entitiesRead);
         }
 
         CDbAutoStashingComponent::~CDbAutoStashingComponent()
         { }
-
-        void CDbAutoStashingComponent::setProvider(IWebDataServicesProvider *webDataReaderProvider)
-        {
-            CWebDataServicesAware::setProvider(webDataReaderProvider);
-            connectDataReadSignal(
-                this,
-                std::bind(&CDbAutoStashingComponent::ps_entitiesRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
-            );
-        }
 
         void CDbAutoStashingComponent::accept()
         {

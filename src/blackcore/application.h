@@ -16,6 +16,7 @@
 #include "cookiemanager.h"
 #include "webdataservices.h"
 #include "blackmisc/network/url.h"
+#include "blackmisc/network/entityflags.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/filelogger.h"
 #include "blackmisc/slot.h"
@@ -266,7 +267,7 @@ namespace BlackCore
         QNetworkAccessManager                  m_accessManager { this }; //!< single network access manager
         CCookieManager                         m_cookieManager;          //!< single cookie manager for our access manager
         QString                                m_applicationName;        //!< application name
-        QReadWriteLock                         m_accessManagerLock;      //!< lock to make accessmanager access threadsafe
+        QReadWriteLock                         m_accessManagerLock;      //!< lock to make access manager access threadsafe
         CCoreFacadeConfig                      m_coreFacadeConfig;       //!< Core facade config if any
         CWebReaderFlags::WebReader             m_webReader;              //!< Readers used
         CWebReaderFlags::DbReaderHint          m_dbReaderHint;           //!< Load or used caching?

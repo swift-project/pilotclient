@@ -9,11 +9,13 @@
 
 #include "dbcountryselectorcomponent.h"
 #include "ui_dbcountryselectorcomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/uppercasevalidator.h"
 #include <QMimeData>
 
 using namespace BlackGui;
+using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 
@@ -35,26 +37,13 @@ namespace BlackGui
             connect(ui->le_CountryName, &QLineEdit::returnPressed, this, &CDbCountrySelectorComponent::ps_dataChanged);
 
             this->ui->le_CountryIso->setValidator(new CUpperCaseValidator(this));
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbCountrySelectorComponent::ps_CountriesRead);
+            this->ps_CountriesRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getCountriesCount());
         }
 
         CDbCountrySelectorComponent::~CDbCountrySelectorComponent()
         {
-            gracefulShutdown();
-        }
-
-        void CDbCountrySelectorComponent::setProvider(Network::IWebDataServicesProvider *webDataReaderProvider)
-        {
-            if (!webDataReaderProvider) { return; }
-            CWebDataServicesAware::setProvider(webDataReaderProvider);
-            webDataReaderProvider->connectDataReadSignal(
-                this,
-                std::bind(&CDbCountrySelectorComponent::ps_CountriesRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
-            );
-            int c = this->getCountriesCount();
-            if (c > 0)
-            {
-                this->ps_CountriesRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, c);
-            }
+            //
         }
 
         void CDbCountrySelectorComponent::setCountry(const BlackMisc::CCountry &country)
@@ -71,23 +60,23 @@ namespace BlackGui
 
         void CDbCountrySelectorComponent::setCountry(const QString &isoCode)
         {
-            CCountry c(this->getCountryForIsoCode(isoCode));
+            CCountry c(sGui->getWebDataServices()->getCountryForIsoCode(isoCode));
             this->setCountry(c);
         }
 
         BlackMisc::CCountry CDbCountrySelectorComponent::getCountry() const
         {
-            if (!hasProvider()) { return CCountry(); }
+            if (!sGui) { return CCountry(); }
             QString iso(this->ui->le_CountryIso->text().trimmed().toUpper());
             QString name(this->ui->le_CountryName->text().trimmed());
             if (CCountry::isValidIsoCode(iso))
             {
-                return this->getCountryForIsoCode(iso);
+                return sGui->getWebDataServices()->getCountryForIsoCode(iso);
             }
             else
             {
                 if (name.isEmpty()) { return CCountry(); }
-                return this->getCountryForName(name);
+                return sGui->getWebDataServices()->getCountryForName(name);
             }
         }
 
@@ -154,19 +143,19 @@ namespace BlackGui
 
         void CDbCountrySelectorComponent::ps_CountriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
-            if (!hasProvider()) { return; }
+            if (!sGui) { return; }
             if (entity.testFlag(CEntityFlags::DistributorEntity) && readState == CEntityFlags::ReadFinished)
             {
                 if (count > 0)
                 {
-                    QCompleter *c = new QCompleter(this->getCountries().toNameList(), this);
+                    QCompleter *c = new QCompleter(sGui->getWebDataServices()->getCountries().toNameList(), this);
                     c->setCaseSensitivity(Qt::CaseInsensitive);
                     c->setCompletionMode(QCompleter::PopupCompletion);
                     c->setMaxVisibleItems(10);
                     this->connect(c, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CDbCountrySelectorComponent::ps_completerActivated);
 
                     this->ui->le_CountryName->setCompleter(c);
-                    m_completerCountryNames.reset(c); // deletes any old completer
+                    this->m_completerCountryNames.reset(c); // deletes any old completer
                 }
                 else
                 {
@@ -177,14 +166,14 @@ namespace BlackGui
 
         void CDbCountrySelectorComponent::ps_dataChanged()
         {
-            if (!hasProvider()) { return; }
+            if (!sGui) { return; }
             QObject *sender = this->sender();
             if (sender == this->ui->le_CountryIso)
             {
                 QString iso(this->ui->le_CountryIso->text().trimmed().toUpper());
                 if (CCountry::isValidIsoCode(iso))
                 {
-                    this->setCountry(getCountryForIsoCode(iso));
+                    this->setCountry(sGui->getWebDataServices()->getCountryForIsoCode(iso));
                 }
             }
             else if (sender == this->ui->le_CountryName)
@@ -192,7 +181,7 @@ namespace BlackGui
                 QString name(this->ui->le_CountryName->text().trimmed());
                 if (!name.isEmpty())
                 {
-                    this->setCountry(getCountryForName(name));
+                    this->setCountry(sGui->getWebDataServices()->getCountryForName(name));
                 }
             }
         }
@@ -200,7 +189,7 @@ namespace BlackGui
         void CDbCountrySelectorComponent::ps_completerActivated(const QString &countryName)
         {
             this->ui->le_CountryName->setText(countryName);
-            this->setCountry(getCountryForName(countryName));
+            this->setCountry(sGui->getWebDataServices()->getCountryForName(countryName));
         }
 
     }// class

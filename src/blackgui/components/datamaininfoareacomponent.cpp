@@ -57,13 +57,6 @@ namespace BlackGui
             return this->ui->comp_DataInfoArea;
         }
 
-        void CDataMainInfoAreaComponent::setProvider(BlackMisc::Network::IWebDataServicesProvider *provider)
-        {
-            Q_ASSERT_X(provider, Q_FUNC_INFO, "Missing provider");
-            this->ui->comp_DataInfoArea->setProvider(provider);
-            this->ui->comp_Mapping->setProvider(provider);
-        }
-
         void CDataMainInfoAreaComponent::displayLog()
         {
             this->selectArea(InfoAreaLog);

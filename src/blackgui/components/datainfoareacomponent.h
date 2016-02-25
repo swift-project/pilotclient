@@ -14,7 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/infoarea.h"
-#include "blackmisc/network/webdataservicesprovider.h"
+#include "blackmisc/network/entityflags.h"
 #include <QMainWindow>
 #include <QScopedPointer>
 
@@ -36,8 +36,7 @@ namespace BlackGui
          * Info area containing the DB data (models, liveries ...)
          */
         class BLACKGUI_EXPORT CDataInfoAreaComponent :
-            public BlackGui::CInfoArea,
-            public BlackMisc::Network::CWebDataServicesAware
+            public BlackGui::CInfoArea
         {
             Q_OBJECT
 
@@ -78,9 +77,6 @@ namespace BlackGui
 
             //! DB country component
             CDbCountryComponent *getCountryComponent() const;
-
-            //! Set data reader
-            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReader) override;
 
         public slots:
             //! Write to resource dir

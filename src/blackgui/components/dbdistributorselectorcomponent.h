@@ -13,8 +13,8 @@
 #define BLACKGUI_DBDISTRIBUTORSELECTORCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackcore/webdataservices.h"
 #include "blackgui/dropbase.h"
+#include "blackmisc/network/entityflags.h"
 #include "blackmisc/simulation/distributor.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -31,7 +31,6 @@ namespace BlackGui
          */
         class BLACKGUI_EXPORT CDbDistributorSelectorComponent :
             public QFrame,
-            public BlackMisc::Network::CWebDataServicesAware,
             public BlackGui::CDropBase
         {
             Q_OBJECT
@@ -42,9 +41,6 @@ namespace BlackGui
 
             //! Destructor
             ~CDbDistributorSelectorComponent();
-
-            //! \copydoc BlackMisc::Network::CWebDataServicesAware::setProvider
-            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
             //! Current distributor
             void setDistributor(const BlackMisc::Simulation::CDistributor &distributor);

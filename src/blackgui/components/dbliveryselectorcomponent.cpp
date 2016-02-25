@@ -10,10 +10,12 @@
 #include "dbliveryselectorcomponent.h"
 #include "ui_dbliveryselectorcomponent.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackmisc/variant.h"
+#include "blackgui/guiapplication.h"
 #include "blackmisc/aviation/liverylist.h"
 #include <QDragEnterEvent>
 
+using namespace BlackGui;
+using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
@@ -34,25 +36,14 @@ namespace BlackGui
 
             connect(ui->le_Livery, &QLineEdit::returnPressed, this, &CDbLiverySelectorComponent::ps_dataChanged);
             connect(ui->le_Livery, &QLineEdit::returnPressed, this, &CDbLiverySelectorComponent::ps_dataChanged);
+
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLiverySelectorComponent::ps_liveriesRead);
+            this->ps_liveriesRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getLiveriesCount());
         }
 
         CDbLiverySelectorComponent::~CDbLiverySelectorComponent()
         {
-            gracefulShutdown();
-        }
-
-        void CDbLiverySelectorComponent::setProvider(IWebDataServicesProvider *webDataReaderProvider)
-        {
-            CWebDataServicesAware::setProvider(webDataReaderProvider);
-            connectDataReadSignal(
-                this,
-                std::bind(&CDbLiverySelectorComponent::ps_liveriesRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
-            );
-            int c = getLiveriesCount();
-            if (c > 0)
-            {
-                this->ps_liveriesRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, c);
-            }
+            // void
         }
 
         void CDbLiverySelectorComponent::setLivery(const CLivery &livery)
@@ -80,7 +71,7 @@ namespace BlackGui
             if (s >= 1) { liveryCode = liveryCode.left(s).trimmed(); }
 
             if (this->m_currentLivery.matchesCombinedCode(liveryCode)) { return; }
-            CLivery d(getLiveries().findByCombinedCode(liveryCode));
+            CLivery d(sApp->getWebDataServices()->getLiveries().findByCombinedCode(liveryCode));
             if (d.hasCompleteData())
             {
                 this->setLivery(d);
@@ -94,11 +85,11 @@ namespace BlackGui
 
         CLivery CDbLiverySelectorComponent::getLivery() const
         {
-            if (!hasProvider()) { return CLivery(); }
+            if (!sApp) { return CLivery(); }
             const QString liveryCode(
                 this->stripExtraInfo(this->ui->le_Livery->text())
             );
-            const CLivery liv(getLiveries().findByCombinedCode(liveryCode));
+            const CLivery liv(sApp->getWebDataServices()->getLiveries().findByCombinedCode(liveryCode));
             if (liv.hasCompleteData() && liv.hasValidDbKey())
             {
                 // full data fetched
@@ -172,12 +163,12 @@ namespace BlackGui
 
         void CDbLiverySelectorComponent::ps_liveriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
-            if (!hasProvider()) { return; }
+            if (!sApp) { return; }
             if (entity.testFlag(CEntityFlags::LiveryEntity) && readState == CEntityFlags::ReadFinished)
             {
                 if (count > 0)
                 {
-                    QStringList codes(this->getLiveries().getCombinedCodesPlusInfo(true));
+                    QStringList codes(sApp->getWebDataServices()->getLiveries().getCombinedCodesPlusInfo(true));
                     QCompleter *c = new QCompleter(codes, this);
                     c->setCaseSensitivity(Qt::CaseInsensitive);
                     c->setCompletionMode(QCompleter::PopupCompletion);
@@ -196,12 +187,12 @@ namespace BlackGui
 
         void CDbLiverySelectorComponent::ps_dataChanged()
         {
-            if (!hasProvider()) { return; }
+            if (!sApp) { return; }
             const QString code(
                 this->stripExtraInfo(this->ui->le_Livery->text())
             );
             if (code.isEmpty()) { return; }
-            const CLivery livery(this->getLiveries().findByCombinedCode(code));
+            const CLivery livery(sApp->getWebDataServices()->getLiveries().findByCombinedCode(code));
             this->setLivery(livery);
         }
 

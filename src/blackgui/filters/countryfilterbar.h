@@ -15,7 +15,6 @@
 #include "blackguiexport.h"
 #include "blackgui/filters/filterwidget.h"
 #include "blackgui/models/countryfilter.h"
-#include "blackmisc/network/webdataservicesprovider.h"
 #include <QScopedPointer>
 
 namespace Ui { class CCountryFilterBar; }
@@ -29,8 +28,7 @@ namespace BlackGui
          */
         class BLACKGUI_EXPORT CCountryFilterBar :
             public CFilterWidget,
-            public BlackGui::Models::IModelFilterProvider<BlackMisc::CCountryList>,
-            public BlackMisc::Network::CWebDataServicesAware
+            public BlackGui::Models::IModelFilterProvider<BlackMisc::CCountryList>
         {
         public:
             //! Constructor
@@ -41,9 +39,6 @@ namespace BlackGui
 
             //! \copydoc Models::IModelFilterProvider::createModelFilter
             virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::CCountryList>> createModelFilter() const override;
-
-            //! \copydoc BlackMisc::Network::CWebDataServicesAware::setProvider
-            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
         public slots:
             //! \copydoc CFilterWidget::onRowCountChanged

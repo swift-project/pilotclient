@@ -15,7 +15,6 @@
 #include "blackguiexport.h"
 #include "blackgui/models/aircraftmodelfilter.h"
 #include "blackgui/filters/filterwidget.h"
-#include "blackmisc/network/webdataservicesprovider.h"
 #include <QScopedPointer>
 
 namespace Ui { class CAircraftModelFilterBar; }
@@ -29,8 +28,7 @@ namespace BlackGui
          */
         class BLACKGUI_EXPORT CAircraftModelFilterBar :
             public CFilterWidget,
-            public BlackGui::Models::IModelFilterProvider<BlackMisc::Simulation::CAircraftModelList>,
-            public BlackMisc::Network::CWebDataServicesAware
+            public BlackGui::Models::IModelFilterProvider<BlackMisc::Simulation::CAircraftModelList>
         {
             Q_OBJECT
 
@@ -43,9 +41,6 @@ namespace BlackGui
 
             //! \copydoc Models::IModelFilterProvider::createModelFilter
             virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Simulation::CAircraftModelList>> createModelFilter() const override;
-
-            //! Set the provider
-            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
         public slots:
             //! \copydoc CFilterWidget::onRowCountChanged

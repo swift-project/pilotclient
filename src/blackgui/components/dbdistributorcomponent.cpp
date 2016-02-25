@@ -8,10 +8,12 @@
  */
 
 #include "ui_dbdistributorcomponent.h"
+#include "blackgui/guiapplication.h"
 #include "dbdistributorcomponent.h"
 #include <QFrame>
 #include <QScopedPointer>
 
+using namespace BlackCore;
 using namespace BlackMisc::Network;
 using namespace BlackGui::Views;
 
@@ -28,38 +30,26 @@ namespace BlackGui
             this->ui->tvp_Distributors->setResizeMode(CViewBaseNonTemplate::ResizingAuto);
             this->ui->tvp_Distributors->allowDragDropValueObjects(true, false);
             connect(this->ui->tvp_Distributors, &CDistributorView::requestNewBackendData, this, &CDbDistributorComponent::ps_reload);
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbDistributorComponent::ps_distributorsRead);
+            this->ps_distributorsRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getDistributorsCount());
         }
 
         CDbDistributorComponent::~CDbDistributorComponent()
         { }
-
-        void CDbDistributorComponent::setProvider(IWebDataServicesProvider *webDataReaderProvider)
-        {
-            CWebDataServicesAware::setProvider(webDataReaderProvider);
-            connectDataReadSignal(
-                this,
-                std::bind(&CDbDistributorComponent::ps_distributorsRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
-            );
-            int c = getDistributorsCount();
-            if (c > 0)
-            {
-                ps_distributorsRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, c);
-            }
-        }
 
         void CDbDistributorComponent::ps_distributorsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);
             if (entity.testFlag(CEntityFlags::DistributorEntity) && readState == CEntityFlags::ReadFinished)
             {
-                this->ui->tvp_Distributors->updateContainer(this->getDistributors());
+                this->ui->tvp_Distributors->updateContainer(sGui->getWebDataServices()->getDistributors());
             }
         }
 
         void CDbDistributorComponent::ps_reload()
         {
-            if (!hasProvider()) { return; }
-            triggerRead(CEntityFlags::DistributorEntity, QDateTime());
+            if (!sGui) { return; }
+            sGui->getWebDataServices()->triggerRead(CEntityFlags::DistributorEntity);
         }
     } // ns
 } // ns

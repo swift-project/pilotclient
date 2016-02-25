@@ -8,6 +8,7 @@
  */
 
 #include "ui_datainfoareacomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/datainfoareacomponent.h"
 #include "blackmisc/network/entityflags.h"
@@ -68,28 +69,16 @@ namespace BlackGui
             return this->ui->comp_DbCountries;
         }
 
-        void CDataInfoAreaComponent::setProvider(BlackMisc::Network::IWebDataServicesProvider *provider)
-        {
-            Q_ASSERT_X(provider, Q_FUNC_INFO, "Missing provider");
-            this->ui->comp_DbAircraftIcao->setProvider(provider);
-            this->ui->comp_DbAirlineIcao->setProvider(provider);
-            this->ui->comp_DbDistributors->setProvider(provider);
-            this->ui->comp_DbLiveries->setProvider(provider);
-            this->ui->comp_DbModels->setProvider(provider);
-            this->ui->comp_DbCountries->setProvider(provider);
-            CWebDataServicesAware::setProvider(provider);
-        }
-
         bool CDataInfoAreaComponent::writeDbDataToResourceDir() const
         {
-            if (!this->hasProvider() || !this->canConnectSwiftDb())
+            if (!sGui || !sGui->getWebDataServices()->canConnectSwiftDb())
             {
                 CLogMessage(this).warning("No connection to DB yet, no new data loaded which can be written");
                 return false;
             }
 
             // write to disk
-            bool s = this->writeDbDataToDisk(CProject::getSwiftStaticDbFilesDir());
+            bool s = sGui->getWebDataServices()->writeDbDataToDisk(CProject::getSwiftStaticDbFilesDir());
             if (s)
             {
                 CLogMessage(this).info("Written DB data");
@@ -103,8 +92,8 @@ namespace BlackGui
 
         bool CDataInfoAreaComponent::readDbDataFromResourceDir()
         {
-            bool s = hasProvider() &&
-                     this->readDbDataFromDisk(CProject::getSwiftStaticDbFilesDir(), true);
+            bool s = sGui &&
+                     sGui->getWebDataServices()->readDbDataFromDisk(CProject::getSwiftStaticDbFilesDir(), true);
 
             // info
             if (s)
@@ -163,7 +152,7 @@ namespace BlackGui
 
         void CDataInfoAreaComponent::requestUpdateOfAllDbData()
         {
-            this->triggerRead(CEntityFlags::AllDbEntities, QDateTime());
+            sGui->getWebDataServices()->triggerRead(CEntityFlags::AllDbEntities, QDateTime());
         }
 
         void CDataInfoAreaComponent::requestUpdatedData(CEntityFlags::Entity entity)

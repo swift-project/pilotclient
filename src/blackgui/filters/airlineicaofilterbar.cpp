@@ -51,11 +51,6 @@ namespace BlackGui
                        ));
         }
 
-        void CAirlineIcaoFilterBar::setProvider(Network::IWebDataServicesProvider *webDataReaderProvider)
-        {
-            this->ui->country_Selector->setProvider(webDataReaderProvider);
-        }
-
         void CAirlineIcaoFilterBar::filter(const CAirlineIcaoCode &icao)
         {
             bool filter = false;

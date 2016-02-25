@@ -17,7 +17,6 @@
 #include "blackgui/menudelegate.h"
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackmisc/verify.h"
-#include "blackmisc/network/webdataservicesprovider.h"
 #include <QFrame>
 #include <QScopedPointer>
 #include <QStringList>
@@ -34,8 +33,7 @@ namespace BlackGui
         class BLACKGUI_EXPORT CDbStashComponent :
             public QFrame,
             public CDbMappingComponentAware,
-            public CEnableForDockWidgetInfoArea,
-            public BlackMisc::Network::CWebDataServicesAware
+            public CEnableForDockWidgetInfoArea
         {
             Q_OBJECT
 
@@ -48,9 +46,6 @@ namespace BlackGui
 
             //! Destructor
             ~CDbStashComponent();
-
-            //! \copydoc BlackMisc::Network::CWebDataServicesAware::setProvider
-            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *provider) override;
 
             //! Graceful shutdown
             void gracefulShutdown();

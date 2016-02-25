@@ -58,12 +58,7 @@ namespace BlackCore
 
         // 3. data reader, start reading when setup is synced with xx delay
         Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "Missing web data services");
-        this->m_webReaderSignalConnections.append(
-            sApp->getWebDataServices()->connectDataReadSignal(
-                this, // the object here must be the same as in the bind
-                std::bind(&CContextNetwork::webServiceDataRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
-            )
-        );
+        connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CContextNetwork::webServiceDataRead);
 
         // 4. Airspace contents
         Q_ASSERT_X(this->getRuntime()->getCContextOwnAircraft(), Q_FUNC_INFO, "this and own aircraft context must be local");
@@ -133,8 +128,6 @@ namespace BlackCore
     void CContextNetwork::gracefulShutdown()
     {
         this->disconnect(); // all signals
-        this->disconnectReaderSignals(); // disconnect
-
         if (this->isConnected()) { this->disconnectFromNetwork(); }
         if (this->m_airspace) { this->m_airspace->gracefulShutdown(); }
     }
@@ -455,15 +448,6 @@ namespace BlackCore
         Q_ASSERT(this->getRuntime());
         Q_ASSERT(this->getRuntime()->getCContextOwnAircraft());
         return this->getRuntime()->getCContextOwnAircraft()->getOwnAircraft();
-    }
-
-    void CContextNetwork::disconnectReaderSignals()
-    {
-        for (QMetaObject::Connection c : m_webReaderSignalConnections)
-        {
-            QObject::disconnect(c);
-        }
-        m_webReaderSignalConnections.clear();
     }
 
     CAtcStationList CContextNetwork::getAtcStationsOnline() const

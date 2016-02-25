@@ -62,11 +62,6 @@ namespace BlackGui
                        ));
         }
 
-        void CLiveryFilterBar::setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider)
-        {
-            Q_UNUSED(webDataReaderProvider);
-        }
-
         void CLiveryFilterBar::filter(const CLivery &livery)
         {
             if (livery.hasCombinedCode())

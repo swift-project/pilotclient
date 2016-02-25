@@ -14,7 +14,6 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/infoarea.h"
-#include "blackmisc/network/webdataservicesprovider.h"
 #include <QMainWindow>
 #include <QScopedPointer>
 
@@ -32,9 +31,8 @@ namespace BlackGui
          * Main info area for data entry tool
          */
         class BLACKGUI_EXPORT CDataMainInfoAreaComponent :
-            public BlackGui::CInfoArea,
-            public BlackMisc::Network::CWebDataServicesAware
-        {
+            public BlackGui::CInfoArea
+       {
             Q_OBJECT
 
         public:
@@ -63,9 +61,6 @@ namespace BlackGui
 
             //! Mapping component
             CDataInfoAreaComponent *getDataInfoAreaComponent() const;
-
-            //! Set data reader
-            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *provider) override;
 
             //! Display the log
             void displayLog();

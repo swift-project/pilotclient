@@ -9,9 +9,11 @@
 
 #include "dbairlinenameselectorcomponent.h"
 #include "ui_dbairlinenameselectorcomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/datastoreutility.h"
 
+using namespace BlackCore;
 using namespace BlackGui;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -52,7 +54,7 @@ namespace BlackGui
 
         QCompleter *CDbAirlineNameSelectorComponent::createCompleter()
         {
-            QCompleter *c = new QCompleter(this->getAirlineIcaoCodes().toNameCompleterStrings(), this);
+            QCompleter *c = new QCompleter(sGui->getWebDataServices()->getAirlineIcaoCodes().toNameCompleterStrings(), this);
             c->setCaseSensitivity(Qt::CaseInsensitive);
             c->setCompletionMode(QCompleter::PopupCompletion);
             c->setMaxVisibleItems(10);
@@ -62,13 +64,13 @@ namespace BlackGui
 
         void CDbAirlineNameSelectorComponent::ps_dataChanged()
         {
-            if (!hasProvider()) { return; }
+            if (!sGui) { return; }
             QString s(this->ui->le_AirlineName->text());
             if (s.isEmpty()) { return; }
             int dbKey = CDatastoreUtility::extractIntegerKey(s);
             if (dbKey >= 0)
             {
-                CAirlineIcaoCode icao(getAirlineIcaoCodeForDbKey(dbKey));
+                CAirlineIcaoCode icao(sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(dbKey));
                 this->setAirlineIcao(icao);
             }
             else

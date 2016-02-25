@@ -15,7 +15,6 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/databasereader.h"
 #include "blackcore/data/globalsetup.h"
-#include "blackmisc/network/webdataservicesprovider.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/simulation/aircraftmodellist.h"

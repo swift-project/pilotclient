@@ -8,13 +8,15 @@
  */
 
 #include "dbairlineicaoselectorbase.h"
-#include "blackgui/guiutility.h"
+#include "blackgui/guiapplication.h"
 #include "blackmisc/datastoreutility.h"
 #include <QMimeData>
 #include <QStringList>
 
 using namespace BlackGui;
+using namespace BlackCore;
 using namespace BlackMisc;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 
@@ -27,28 +29,14 @@ namespace BlackGui
         {
             this->setAcceptDrops(true);
             this->setAcceptedMetaTypeIds({qMetaTypeId<CAirlineIcaoCode>(), qMetaTypeId<CAirlineIcaoCodeList>()});
+
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAirlineIcaoSelectorBase::ps_codesRead);
+            this->ps_codesRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getAirlineIcaoCodesCount());
         }
 
         CDbAirlineIcaoSelectorBase::~CDbAirlineIcaoSelectorBase()
         {
-            gracefulShutdown();
-        }
-
-        void CDbAirlineIcaoSelectorBase::setProvider(Network::IWebDataServicesProvider *webDataReaderProvider)
-        {
-            if (!webDataReaderProvider) { return; }
-            CWebDataServicesAware::setProvider(webDataReaderProvider);
-            connectDataReadSignal(
-                this,
-                std::bind(&CDbAirlineIcaoSelectorBase::ps_codesRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
-            );
-
-            // already read a this time
-            int c = this->getAirlineIcaoCodesCount();
-            if (c > 0)
-            {
-                this->ps_codesRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, c);
-            }
+            //
         }
 
         void CDbAirlineIcaoSelectorBase::setAirlineIcao(const CAirlineIcaoCode &icao)
@@ -62,7 +50,7 @@ namespace BlackGui
 
         bool CDbAirlineIcaoSelectorBase::setAirlineIcao(int key)
         {
-            CAirlineIcaoCode icao(getAirlineIcaoCodeForDbKey(key));
+            CAirlineIcaoCode icao(sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(key));
             if (icao.hasCompleteData())
             {
                 this->setAirlineIcao(icao);
@@ -116,7 +104,7 @@ namespace BlackGui
 
         void CDbAirlineIcaoSelectorBase::ps_codesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
-            if (!hasProvider()) { return; }
+            if (!sGui) { return; }
             if (entity.testFlag(CEntityFlags::AirlineIcaoEntity) && readState == CEntityFlags::ReadFinished)
             {
                 if (count > 0)

@@ -9,6 +9,7 @@
 
 #include "infobarwebreadersstatuscomponent.h"
 #include "ui_infobarwebreadersstatuscomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/webreaderflags.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/verify.h"
@@ -31,6 +32,7 @@ namespace BlackGui
             m_timer.setInterval(30 * 1000);
             m_timer.start();
             m_timer.setObjectName("CInfoBarWebReadersStatusComponent::CheckSwiftDbTimer");
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CInfoBarWebReadersStatusComponent::ps_dataRead);
         }
 
         CInfoBarWebReadersStatusComponent::~CInfoBarWebReadersStatusComponent()
@@ -52,15 +54,6 @@ namespace BlackGui
             this->ui->led_Distributors->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle", "failed", 14);
         }
 
-        void CInfoBarWebReadersStatusComponent::setProvider(IWebDataServicesProvider *webDataReaderProvider)
-        {
-            CWebDataServicesAware::setProvider(webDataReaderProvider);
-            connectDataReadSignal(
-                this,
-                std::bind(&CInfoBarWebReadersStatusComponent::ps_dataRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
-            );
-        }
-
         void CInfoBarWebReadersStatusComponent::ps_dataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);
@@ -71,8 +64,8 @@ namespace BlackGui
         void CInfoBarWebReadersStatusComponent::ps_checkServerAndData()
         {
             bool swift =
-                this->hasProvider() &&
-                this->canConnectSwiftDb();
+                sGui &&
+                sGui->getWebDataServices()->canConnectSwiftDb();
             this->ui->led_SwiftDb->setOn(swift);
 
             bool allData = hasAllData();
@@ -123,12 +116,12 @@ namespace BlackGui
 
         bool CInfoBarWebReadersStatusComponent::hasAllData() const
         {
-            if (!hasProvider()) { return false; }
-            return getAirlineIcaoCodesCount() > 0 &&
-                   getAircraftIcaoCodesCount() > 0 &&
-                   getDistributorsCount() > 0 &&
-                   getModelsCount() > 0 &&
-                   getLiveriesCount() > 0;
+            if (!sGui) { return false; }
+            return sGui->getWebDataServices()->getAirlineIcaoCodesCount() > 0 &&
+                   sGui->getWebDataServices()->getAircraftIcaoCodesCount() > 0 &&
+                   sGui->getWebDataServices()->getDistributorsCount() > 0 &&
+                   sGui->getWebDataServices()->getModelsCount() > 0 &&
+                   sGui->getWebDataServices()->getLiveriesCount() > 0;
         }
 
     } // namespace

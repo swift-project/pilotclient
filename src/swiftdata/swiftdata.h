@@ -62,7 +62,6 @@ private:
     void init();
     void initLogDisplay();
     void initStyleSheet();
-    void initReaders();
     void initMenu();
     void initDynamicMenus();
     void performGracefulShutdown();

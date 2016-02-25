@@ -15,7 +15,6 @@
 #include "blackgui/editors/form.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/livery.h"
-#include "blackmisc/network/webdataservicesprovider.h"
 #include "blackmisc/statusmessagelist.h"
 
 namespace Ui { class CLiveryForm; }
@@ -28,8 +27,7 @@ namespace BlackGui
          * Livery form class
          */
         class BLACKGUI_EXPORT CLiveryForm :
-            public CForm,
-            public BlackMisc::Network::CWebDataServicesAware
+            public CForm
         {
             Q_OBJECT
 
@@ -39,9 +37,6 @@ namespace BlackGui
 
             //! Destructor
             ~CLiveryForm();
-
-            //! \copydoc BlackMisc::Network::CWebDataServicesAware::setProvider
-            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *provider) override;
 
             //! Value
             BlackMisc::Aviation::CLivery getValue() const;

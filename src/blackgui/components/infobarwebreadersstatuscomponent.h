@@ -14,7 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/led.h"
-#include "blackmisc/network/webdataservicesprovider.h"
+#include "blackmisc/network/entityflags.h"
 #include <QFrame>
 #include <QScopedPointer>
 #include <QTimer>
@@ -26,8 +26,7 @@ namespace BlackGui
     {
         //! Info bar displaying status of web readers(swift DB, ...)
         class BLACKGUI_EXPORT CInfoBarWebReadersStatusComponent :
-            public QFrame,
-            public BlackMisc::Network::CWebDataServicesAware
+            public QFrame
         {
             Q_OBJECT
 
@@ -40,9 +39,6 @@ namespace BlackGui
 
             //! Init the LEDs
             void initLeds();
-
-            //! Set the provider
-            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
         private slots:
             //! Data have been read

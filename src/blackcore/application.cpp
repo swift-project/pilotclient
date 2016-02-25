@@ -19,6 +19,7 @@
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/registermetadata.h"
 #include "blackmisc/network/networkutils.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/verify.h"
 #include <QStandardPaths>
 #include <QFile>

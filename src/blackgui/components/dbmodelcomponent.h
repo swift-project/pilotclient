@@ -17,7 +17,7 @@
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/dbmappingcomponentaware.h"
 #include "blackgui/menudelegate.h"
-#include "blackmisc/network/webdataservicesprovider.h"
+#include "blackmisc/network/entityflags.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -34,8 +34,7 @@ namespace BlackGui
             public QFrame,
             public CDbMappingComponentAware,
             public CEnableForDockWidgetInfoArea,
-            public BlackGui::CEnableForViewBasedIndicator,
-            public BlackMisc::Network::CWebDataServicesAware
+            public BlackGui::CEnableForViewBasedIndicator
         {
             Q_OBJECT
 
@@ -45,9 +44,6 @@ namespace BlackGui
 
             //! Destructor
             virtual ~CDbModelComponent();
-
-            //! Set the provider
-            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
             //! Get latest model if any
             BlackMisc::Simulation::CAircraftModel getLatestModel() const;

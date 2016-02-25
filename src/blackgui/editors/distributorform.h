@@ -15,7 +15,6 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/editors/form.h"
 #include "blackmisc/simulation/distributor.h"
-#include "blackmisc/network/webdataservicesprovider.h"
 #include "blackmisc/statusmessagelist.h"
 #include <QScopedPointer>
 
@@ -29,8 +28,7 @@ namespace BlackGui
          * Distributor form
          */
         class BLACKGUI_EXPORT CDistributorForm :
-            public CForm,
-            public BlackMisc::Network::CWebDataServicesAware
+            public CForm
         {
             Q_OBJECT
 
@@ -61,9 +59,6 @@ namespace BlackGui
 
             //! Clear
             void clear();
-
-            //! \copydoc BlackMisc::Network::CWebDataServicesAware::setProvider
-            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
         public slots:
             //! Set value

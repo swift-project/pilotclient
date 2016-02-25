@@ -9,6 +9,7 @@
 
 #include "ui_dbliverycomponent.h"
 #include "dbliverycomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
 #include <functional>
 
@@ -31,24 +32,13 @@ namespace BlackGui
             // filter and drag and drop
             this->ui->tvp_Liveries->setFilterWidget(this->ui->filter_Livery);
             this->ui->tvp_Liveries->allowDragDropValueObjects(true, false);
+
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLiveryComponent::ps_liveriesRead);
+            this->ps_liveriesRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getLiveriesCount());
         }
 
         CDbLiveryComponent::~CDbLiveryComponent()
         { }
-
-        void CDbLiveryComponent::setProvider(IWebDataServicesProvider *webDataReaderProvider)
-        {
-            CWebDataServicesAware::setProvider(webDataReaderProvider);
-            connectDataReadSignal(
-                this,
-                std::bind(&CDbLiveryComponent::ps_liveriesRead, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
-            );
-            int c = getLiveriesCount();
-            if (c > 0)
-            {
-                ps_liveriesRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, c);
-            }
-        }
 
         void CDbLiveryComponent::filter(const BlackMisc::Aviation::CLivery &livery)
         {
@@ -60,14 +50,14 @@ namespace BlackGui
             Q_UNUSED(count);
             if (entity.testFlag(CEntityFlags::LiveryEntity) && readState == CEntityFlags::ReadFinished)
             {
-                this->ui->tvp_Liveries->updateContainerMaybeAsync(this->getLiveries());
+                this->ui->tvp_Liveries->updateContainerMaybeAsync(sGui->getWebDataServices()->getLiveries());
             }
         }
 
         void CDbLiveryComponent::ps_reload()
         {
-            if (!hasProvider()) { return; }
-            triggerRead(CEntityFlags::LiveryEntity, QDateTime());
+            if (!sGui) { return; }
+            sGui->getWebDataServices()->triggerRead(CEntityFlags::LiveryEntity);
         }
 
     } // ns

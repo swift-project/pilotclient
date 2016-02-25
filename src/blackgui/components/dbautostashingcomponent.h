@@ -30,7 +30,6 @@ namespace BlackGui
          */
         class BLACKGUI_EXPORT CDbAutoStashingComponent :
             public QDialog,
-            public BlackMisc::Network::CWebDataServicesAware,
             public BlackGui::Components::CDbMappingComponentAware
         {
             Q_OBJECT
@@ -49,9 +48,6 @@ namespace BlackGui
 
             //! Destructor
             ~CDbAutoStashingComponent();
-
-            //! \copydoc BlackMisc::Network::CWebDataServicesAware::setProvider
-            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
             //! At least run once and completed
             bool isCompleted() const { return m_state == Completed; }

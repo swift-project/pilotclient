@@ -15,7 +15,6 @@
 #include "blackguiexport.h"
 #include "blackgui/filters/filterwidget.h"
 #include "blackgui/models/liveryfilter.h"
-#include "blackmisc/network/webdataservicesprovider.h"
 #include <QFrame>
 
 namespace Ui { class CLiveryFilterBar; }
@@ -29,8 +28,7 @@ namespace BlackGui
          */
         class BLACKGUI_EXPORT CLiveryFilterBar :
             public CFilterWidget,
-            public BlackGui::Models::IModelFilterProvider<BlackMisc::Aviation::CLiveryList>,
-            public BlackMisc::Network::CWebDataServicesAware
+            public BlackGui::Models::IModelFilterProvider<BlackMisc::Aviation::CLiveryList>
         {
             Q_OBJECT
 
@@ -43,9 +41,6 @@ namespace BlackGui
 
             //! \copydoc Models::IModelFilterProvider::createModelFilter
             virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Aviation::CLiveryList>> createModelFilter() const override;
-
-            //! \copydoc BlackMisc::Network::CWebDataServicesAware::setProvider
-            virtual void setProvider(BlackMisc::Network::IWebDataServicesProvider *webDataReaderProvider) override;
 
             //! Filter by livery as default values
             void filter(const BlackMisc::Aviation::CLivery &livery);

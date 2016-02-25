@@ -7,12 +7,14 @@
  * contained in the LICENSE file.
  */
 
+#include "blackgui/guiapplication.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "liveryform.h"
 #include "ui_liveryform.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackGui;
 using namespace BlackGui::Components;
 
 namespace BlackGui
@@ -42,13 +44,6 @@ namespace BlackGui
         }
 
         CLiveryForm::~CLiveryForm() { }
-
-        void CLiveryForm::setProvider(BlackMisc::Network::IWebDataServicesProvider *provider)
-        {
-            CWebDataServicesAware::setProvider(provider);
-            this->ui->editor_AirlineIcao->setProvider(provider);
-            this->ui->livery_Selector->setProvider(provider);
-        }
 
         CLivery CLiveryForm::getValue() const
         {
@@ -168,7 +163,7 @@ namespace BlackGui
             if (!code.hasCompleteData()) { return; }
             if (!code.hasValidDbKey()) { return; }
 
-            CLivery stdLivery(this->getLiveries().findStdLiveryByAirlineIcaoDesignator(code));
+            CLivery stdLivery(sGui->getWebDataServices()->getLiveries().findStdLiveryByAirlineIcaoDesignator(code));
             if (stdLivery.hasValidDbKey())
             {
                 this->setValue(stdLivery);

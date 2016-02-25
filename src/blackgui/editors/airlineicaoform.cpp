@@ -22,7 +22,6 @@ namespace BlackGui
     {
         CAirlineIcaoForm::CAirlineIcaoForm(QWidget *parent) :
             CForm(parent),
-            BlackMisc::Network::CWebDataServicesAware(nullptr),
             ui(new Ui::CAirlineIcaoForm)
         {
             ui->setupUi(this);
@@ -117,14 +116,6 @@ namespace BlackGui
         void CAirlineIcaoForm::clear()
         {
             setValue(CAirlineIcaoCode());
-        }
-
-        void CAirlineIcaoForm::setProvider(Network::IWebDataServicesProvider *webDataReaderProvider)
-        {
-            CWebDataServicesAware::setProvider(webDataReaderProvider);
-            this->ui->country_Selector->setProvider(webDataReaderProvider);
-            this->ui->selector_AirlineDesignator->setProvider(webDataReaderProvider);
-            this->ui->selector_AirlineName->setProvider(webDataReaderProvider);
         }
 
         void CAirlineIcaoForm::ps_droppedCode(const BlackMisc::CVariant &variantDropped)

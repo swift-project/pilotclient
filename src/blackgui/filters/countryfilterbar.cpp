@@ -48,11 +48,6 @@ namespace BlackGui
                        ));
         }
 
-        void CCountryFilterBar::setProvider(IWebDataServicesProvider *webDataReaderProvider)
-        {
-            Q_UNUSED(webDataReaderProvider);
-        }
-
         void CCountryFilterBar::onRowCountChanged(int count, bool withFilter)
         {
             this->ui->filter_Buttons->onRowCountChanged(count, withFilter);

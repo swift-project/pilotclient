@@ -22,7 +22,6 @@
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/weather/metarset.h"
-#include "blackmisc/network/webdataservicesprovider.h"
 #include "blackmisc/network/clientlist.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/aviation/flightplan.h"
