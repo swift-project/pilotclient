@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+#include "blackcore/vatsimdatafilereader.h"
+#include "blackcore/application.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/network/user.h"
@@ -14,8 +16,6 @@
 #include "blackmisc/network/urllist.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/logmessage.h"
-#include "blackcore/vatsimdatafilereader.h"
-
 #include <QRegularExpression>
 
 using namespace BlackMisc;
@@ -31,8 +31,6 @@ namespace BlackCore
     CVatsimDataFileReader::CVatsimDataFileReader(QObject *owner) :
         CThreadedReader(owner, "CVatsimDataFileReader")
     {
-        this->m_networkManager = new QNetworkAccessManager(this);
-        this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CVatsimDataFileReader::ps_parseVatsimFile);
         this->connect(this->m_updateTimer, &QTimer::timeout, this, &CVatsimDataFileReader::ps_read);
     }
 
@@ -150,8 +148,7 @@ namespace BlackCore
 
     void CVatsimDataFileReader::cleanup()
     {
-        delete this->m_networkManager;
-        this->m_networkManager = nullptr;
+        // void
     }
 
     void CVatsimDataFileReader::ps_read()
@@ -163,9 +160,9 @@ namespace BlackCore
         // see http://qt-project.org/doc/qt-4.7/qnetworkaccessmanager.html
         QUrl url(m_setup.get().vatsimDataFileUrls().getRandomUrl());
         if (url.isEmpty()) { return; }
-        Q_ASSERT_X(this->m_networkManager, Q_FUNC_INFO, "Missing network manager");
-        QNetworkRequest request(url);
-        this->m_networkManager->get(request);
+        Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing application");
+        sApp->getFromNetwork(url, { this, &CVatsimDataFileReader::ps_parseVatsimFile});
+
     }
 
     void CVatsimDataFileReader::ps_parseVatsimFile(QNetworkReply *nwReplyPtr)

@@ -57,7 +57,6 @@ namespace BlackCore
 
     private:
         BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
-        QNetworkAccessManager *m_networkManager = nullptr;
     };
 }
 

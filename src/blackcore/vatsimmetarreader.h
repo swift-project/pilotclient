@@ -20,7 +20,6 @@
 
 #include <QObject>
 #include <QTimer>
-#include <QNetworkReply>
 #include <QReadWriteLock>
 
 namespace BlackCore
@@ -69,7 +68,6 @@ namespace BlackCore
         void ps_readMetars();
 
     private:
-        QNetworkAccessManager            *m_networkManager = nullptr;
         BlackMisc::Weather::CMetarDecoder m_metarDecoder;
         BlackMisc::Weather::CMetarSet     m_metars;
         BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache

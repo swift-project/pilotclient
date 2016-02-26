@@ -24,7 +24,6 @@
 
 #include <QObject>
 #include <QTimer>
-#include <QNetworkReply>
 #include <QReadWriteLock>
 
 namespace BlackCore
@@ -124,7 +123,6 @@ namespace BlackCore
         void ps_read();
 
     private:
-        QNetworkAccessManager *m_networkManager = nullptr;
         BlackMisc::Network::CServerList               m_voiceServers;
         BlackMisc::Network::CServerList               m_fsdServers;
         BlackMisc::Aviation::CAtcStationList          m_atcStations;
@@ -147,7 +145,6 @@ namespace BlackCore
 
         //! Get current section
         static Section currentLineToSection(const QString &currentLine);
-
     };
 } // ns
 

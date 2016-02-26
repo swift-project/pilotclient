@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackcore/application.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/network/user.h"
@@ -25,8 +26,6 @@ namespace BlackCore
     CVatsimBookingReader::CVatsimBookingReader(QObject *owner) :
         CThreadedReader(owner, "CVatsimBookingReader")
     {
-        this->m_networkManager = new QNetworkAccessManager(this);
-        this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CVatsimBookingReader::ps_parseBookings);
         this->connect(this->m_updateTimer, &QTimer::timeout, this, &CVatsimBookingReader::ps_read);
     }
 
@@ -39,19 +38,17 @@ namespace BlackCore
 
     void CVatsimBookingReader::cleanup()
     {
-        delete this->m_networkManager;
-        this->m_networkManager = nullptr;
+        // void
     }
 
     void CVatsimBookingReader::ps_read()
     {
         this->threadAssertCheck();
-        Q_ASSERT_X(this->m_networkManager, Q_FUNC_INFO, "No network manager");
+        Q_ASSERT_X(sApp, Q_FUNC_INFO, "No application");
         QUrl url(m_setup.get().vatsimBookingsUrl());
         if (url.isEmpty()) { return; }
 
-        QNetworkRequest request(url);
-        this->m_networkManager->get(request);
+        sApp->getFromNetwork(url, { this, &CVatsimBookingReader::ps_parseBookings});
     }
 
     void CVatsimBookingReader::ps_parseBookings(QNetworkReply *nwReplyPtr)

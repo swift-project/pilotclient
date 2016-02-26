@@ -150,7 +150,7 @@ namespace BlackCore
             BlackMisc::Network::CUrl        m_dbRootDirectoryUrl;   //!< Root directory of DB
             BlackMisc::Network::CUrl        m_vatsimBookingsUrl;    //!< ATC bookings
             BlackMisc::Network::CUrl        m_vatsimMetarsUrl;      //!< METAR data
-            BlackMisc::Network::CUrlList    m_vatsimDataFileUrls;   //!< Overall VATSIM data file
+            BlackMisc::Network::CUrlList    m_vatsimDataFileUrls;   //!< Overall VATSIM data file / merely for bootstrapping the first time
             BlackMisc::Network::CUrlList    m_sharedUrls;           //!< where we can obtain shared info files such as bootstrap, ..
             BlackMisc::Network::CUrlList    m_newsUrls;             //!< where we can obtain latest news
             BlackMisc::Network::CServerList m_fsdTestServers;       //!< FSD test servers

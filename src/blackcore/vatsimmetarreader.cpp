@@ -8,6 +8,7 @@
  */
 
 #include "blackcore/vatsimmetarreader.h"
+#include "blackcore/application.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/logmessage.h"
@@ -26,8 +27,6 @@ namespace BlackCore
     CVatsimMetarReader::CVatsimMetarReader(QObject *owner) :
         CThreadedReader(owner, "CVatsimMetarReader")
     {
-        this->m_networkManager = new QNetworkAccessManager(this);
-        this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CVatsimMetarReader::ps_decodeMetars);
         this->connect(this->m_updateTimer, &QTimer::timeout, this, &CVatsimMetarReader::ps_readMetars);
     }
 
@@ -58,8 +57,7 @@ namespace BlackCore
 
     void CVatsimMetarReader::cleanup()
     {
-        delete this->m_networkManager;
-        this->m_networkManager = nullptr;
+        // void
     }
 
     void CVatsimMetarReader::ps_readMetars()
@@ -67,9 +65,8 @@ namespace BlackCore
         this->threadAssertCheck();
         QUrl url(m_setup.get().vatsimMetarsUrl());
         if (url.isEmpty()) { return; }
-        Q_ASSERT_X(this->m_networkManager, Q_FUNC_INFO, "No network manager");
-        QNetworkRequest request(url);
-        this->m_networkManager->get(request);
+        Q_ASSERT_X(sApp, Q_FUNC_INFO, "No Application");
+        sApp->getFromNetwork(url, { this, &CVatsimMetarReader::ps_decodeMetars});
     }
 
     void CVatsimMetarReader::ps_decodeMetars(QNetworkReply *nwReplyPtr)
