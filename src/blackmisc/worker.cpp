@@ -8,6 +8,7 @@
  */
 
 #include "worker.h"
+#include "blackmisc/threadutils.h"
 #include <future>
 
 namespace BlackMisc
@@ -91,11 +92,13 @@ namespace BlackMisc
 
     void CContinuousWorker::quit() Q_DECL_NOEXCEPT
     {
+        Q_ASSERT_X(!CThreadUtils::isApplicationThreadObjectThread(this), Q_FUNC_INFO, "Try to stop main thread");
         thread()->quit();
     }
 
     void CContinuousWorker::quitAndWait() Q_DECL_NOEXCEPT
     {
+        Q_ASSERT_X(!CThreadUtils::isApplicationThreadObjectThread(this), Q_FUNC_INFO, "Try to stop main thread");
         auto *ownThread = thread();
         quit();
         ownThread->wait();
