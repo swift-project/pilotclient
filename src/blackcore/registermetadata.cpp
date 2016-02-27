@@ -12,6 +12,7 @@
 #include "blackcore/webreaderflags.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
+#include "blackcore/data/vatsimsetup.h"
 #include "voicechannel.h"
 #include "network.h"
 #include "setupreader.h"
@@ -30,5 +31,6 @@ namespace BlackCore
 
         BlackCore::Data::CGlobalSetup::registerMetadata();
         BlackCore::Data::CUpdateInfo::registerMetadata();
+        BlackCore::Data::CVatsimSetup::registerMetadata();
     }
 } // namespace
