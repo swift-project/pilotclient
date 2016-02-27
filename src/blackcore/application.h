@@ -71,31 +71,9 @@ namespace BlackCore
         //! Application name and version
         QString getApplicationNameAndVersion() const;
 
-        //! Start services, if not yet parsed call CApplication::parse
-        virtual bool start(bool waitForStart = true);
-
-        //! Wait for stert by calling the event loop and waiting until everything is ready
-        bool waitForStart();
-
-        //! Request to get network reply
+        //! Global setup
         //! \threadsafe
-        QNetworkReply *getFromNetwork(const BlackMisc::Network::CUrl &url,
-                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
-
-        //! Request to get network reply
-        //! \threadsafe
-        QNetworkReply *getFromNetwork(const QNetworkRequest &request,
-                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
-
-        //! Post to network
-        //! \threadsafe
-        QNetworkReply *postToNetwork(const QNetworkRequest &request, const QByteArray &data,
-                                     const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
-
-        //! Post to network
-        //! \threadsafe
-        QNetworkReply *postToNetwork(const QNetworkRequest &request, QHttpMultiPart *multiPart,
-                                     const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
+        BlackCore::Data::CGlobalSetup getGlobalSetup() const;
 
         //! Delete all cookies from cookier manager
         void deleteAllCookies();
@@ -112,6 +90,9 @@ namespace BlackCore
         //! Get the web data services
         CWebDataServices *getWebDataServices() const;
 
+        //! Currently running in application thread?
+        bool isApplicationThread() const;
+
         //! Run event loop
         static int exec();
 
@@ -120,6 +101,9 @@ namespace BlackCore
 
         //! Similar to QCoreApplication::arguments
         static QStringList arguments();
+
+        //! Process all events for some time
+        static void processEventsFor(int milliseconds);
 
         // ----------------------- parsing ----------------------------------------
 
@@ -197,9 +181,38 @@ namespace BlackCore
         //! Graceful shutdown
         virtual void gracefulShutdown();
 
+        //! Start services, if not yet parsed call CApplication::parse
+        virtual bool start(bool waitForStart = true);
+
+        //! Wait for stert by calling the event loop and waiting until everything is ready
+        bool waitForStart();
+
+        //! Request to get network reply
+        //! \threadsafe
+        QNetworkReply *getFromNetwork(const BlackMisc::Network::CUrl &url,
+                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
+
+        //! Request to get network reply
+        //! \threadsafe
+        QNetworkReply *getFromNetwork(const QNetworkRequest &request,
+                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
+
+        //! Post to network
+        //! \threadsafe
+        QNetworkReply *postToNetwork(const QNetworkRequest &request, const QByteArray &data,
+                                     const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
+
+        //! Post to network
+        //! \threadsafe
+        QNetworkReply *postToNetwork(const QNetworkRequest &request, QHttpMultiPart *multiPart,
+                                     const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
+
     signals:
         //! Setup syncronized
         void setupSyncronized();
+
+        //! Startup has been completed
+        void startUpCompleted(bool success);
 
         //! Facade started
         void coreFacadeStarted();
@@ -212,9 +225,6 @@ namespace BlackCore
         void ps_setupSyncronized(bool success);
 
     protected:
-        //! Constructor
-        CApplication(const QString &applicationName, QCoreApplication *app);
-
         //! Display help message
         virtual void cmdLineHelpMessage();
 

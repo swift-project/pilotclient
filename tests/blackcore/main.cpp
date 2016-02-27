@@ -15,6 +15,7 @@
  */
 
 #include "testblackcoremain.h"
+#include "blackcore/application.h"
 #include <QCoreApplication>
 #include <QDebug>
 
@@ -23,9 +24,11 @@ using namespace BlackCoreTest;
 //! Starter for test cases
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
-    Q_UNUSED(a);
-
+    QCoreApplication qa(argc, argv);
+    Q_UNUSED(qa);
+    BlackCore::CApplication a;
+    a.addVatlibOptions();
+    a.start();
     return CBlackCoreTestMain::unitMain(argc, argv);
 }
 

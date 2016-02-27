@@ -11,11 +11,8 @@
 #define BLACKCORETEST_TESTREADERS_H
 
 //! \cond PRIVATE_TESTS
-
-/*!
- * \file
- * \ingroup testblackcore
- */
+//! \file
+//! \ingroup testblackcore
 
 #include "blackcore/networkvatlib.h"
 #include "blackcore/modeldatareader.h"
@@ -35,6 +32,9 @@ namespace BlackCoreTest
         //! Constructor.
         explicit CTestReaders(QObject *parent = nullptr);
 
+        //! Destructor
+        ~CTestReaders();
+
     private slots:
         //! Read ICAO data
         void readIcaoData();
@@ -43,9 +43,8 @@ namespace BlackCoreTest
         void readModelData();
 
     private:
-        BlackCore::CIcaoDataReader  m_icaoReader;
-        BlackCore::CModelDataReader m_modelReader;
-        BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
+        BlackCore::CIcaoDataReader  *m_icaoReader = nullptr;
+        BlackCore::CModelDataReader *m_modelReader = nullptr;
 
         //! Test if server is available
         static bool pingServer(const BlackMisc::Network::CUrl &url);

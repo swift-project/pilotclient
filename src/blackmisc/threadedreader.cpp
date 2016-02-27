@@ -20,9 +20,7 @@ namespace BlackMisc
         CContinuousWorker(owner, name),
         m_updateTimer(new QTimer(this))
     {
-        bool c = connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &CThreadedReader::gracefulShutdown);
-        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-        Q_UNUSED(c);
+        // void
     }
 
     qint64 CThreadedReader::lastModifiedMsSinceEpoch(QNetworkReply *nwReply) const

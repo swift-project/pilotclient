@@ -18,6 +18,7 @@
 #include "blackmisc/project.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/registermetadata.h"
+#include "blackmisc/threadutils.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/verify.h"
@@ -32,6 +33,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Weather;
 using namespace BlackCore;
+using namespace BlackCore::Data;
 
 BlackCore::CApplication *sApp = nullptr; // set by constructor
 
@@ -96,6 +98,13 @@ namespace BlackCore
         return QCoreApplication::instance()->applicationName() + " " + CProject::version();
     }
 
+    Data::CGlobalSetup CApplication::getGlobalSetup() const
+    {
+        const CSetupReader *r = this->m_setupReader.data();
+        if (!r) { return CGlobalSetup(); }
+        return r->getSetup();
+    }
+
     bool CApplication::start(bool waitForStart)
     {
         if (!this->m_parsed)
@@ -130,7 +139,9 @@ namespace BlackCore
         const QTime dieTime = QTime::currentTime().addMSecs(5000);
         while (QTime::currentTime() < dieTime && !this->m_started && !this->m_startUpCompleted)
         {
+            // Alternative: use QEventLoop, which seemed to make the scenario here more complex
             QCoreApplication::instance()->processEvents(QEventLoop::AllEvents, 250);
+            QThread::msleep(250); // avoid CPU loop overload by "infinite loop"
         }
         if (!this->m_startUpCompleted)
         {
@@ -170,46 +181,75 @@ namespace BlackCore
         return this->m_webDataServices.data();
     }
 
-    QNetworkReply *CApplication::getFromNetwork(const CUrl &url, const BlackMisc::CSlot<void (QNetworkReply *)> &callback)
+    bool CApplication::isApplicationThread() const
+    {
+        return CThreadUtils::isCurrentThreadApplicationThread();
+    }
+
+    QNetworkReply *CApplication::getFromNetwork(const CUrl &url, const CSlot<void(QNetworkReply *)> &callback)
     {
         if (this->m_shutdown) { return nullptr; }
         return getFromNetwork(url.toNetworkRequest(), callback);
     }
 
-    QNetworkReply *CApplication::getFromNetwork(const QNetworkRequest &request, const BlackMisc::CSlot<void(QNetworkReply *)> &callback)
+    QNetworkReply *CApplication::getFromNetwork(const QNetworkRequest &request, const CSlot<void(QNetworkReply *)> &callback)
     {
         if (this->m_shutdown) { return nullptr; }
-        QNetworkRequest r(request);
-        CNetworkUtils::ignoreSslVerification(r);
         QWriteLocker locker(&m_accessManagerLock);
+        Q_ASSERT_X(QCoreApplication::instance()->thread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager supposed to be in main thread");
+        if (QThread::currentThread() != this->m_accessManager.thread())
+        {
+            QTimer::singleShot(0, this, [this, request, callback]() { this->getFromNetwork(request, callback); });
+            return nullptr; // not yet started
+        }
+
+        Q_ASSERT_X(QThread::currentThread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager thread mismatch");
+        QNetworkRequest r(request); // no QObject
+        CNetworkUtils::ignoreSslVerification(r);
         QNetworkReply *reply = this->m_accessManager.get(r);
         if (callback)
         {
-            connect(reply, &QNetworkReply::finished, callback.object(), [ = ] { callback(reply); });
+            connect(reply, &QNetworkReply::finished, callback.object(), [ = ] { callback(reply); }, Qt::QueuedConnection);
         }
         return reply;
     }
 
-    QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, const QByteArray &data, const BlackMisc::CSlot<void (QNetworkReply *)> &callback)
+    QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, const QByteArray &data, const CSlot<void(QNetworkReply *)> &callback)
     {
         if (this->m_shutdown) { return nullptr; }
+        QWriteLocker locker(&m_accessManagerLock);
+        Q_ASSERT_X(QCoreApplication::instance()->thread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager supposed to be in main thread");
+        if (QThread::currentThread() != this->m_accessManager.thread())
+        {
+            QTimer::singleShot(0, this, [this, request, data, callback]() { this->postToNetwork(request, data, callback); });
+            return nullptr; // not yet started
+        }
+
+        Q_ASSERT_X(QThread::currentThread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager thread mismatch");
         QNetworkRequest r(request);
         CNetworkUtils::ignoreSslVerification(r);
-        QWriteLocker locker(&m_accessManagerLock);
         QNetworkReply *reply = this->m_accessManager.post(r, data);
         if (callback)
         {
-            connect(reply, &QNetworkReply::finished, callback.object(), [ = ] { callback(reply); });
+            connect(reply, &QNetworkReply::finished, callback.object(), [ = ] { callback(reply); }, Qt::QueuedConnection);
         }
         return reply;
     }
 
-    QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, QHttpMultiPart *multiPart, const BlackMisc::CSlot<void (QNetworkReply *)> &callback)
+    QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, QHttpMultiPart *multiPart, const CSlot<void(QNetworkReply *)> &callback)
     {
         if (this->m_shutdown) { return nullptr; }
+        QWriteLocker locker(&m_accessManagerLock);
+        Q_ASSERT_X(QCoreApplication::instance()->thread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager supposed to be in main thread");
+        if (QThread::currentThread() != this->m_accessManager.thread())
+        {
+            QTimer::singleShot(0, this, [this, request, multiPart, callback]() { this->postToNetwork(request, multiPart, callback); });
+            return nullptr; // not yet started
+        }
+
+        Q_ASSERT_X(QThread::currentThread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager thread mismatch");
         QNetworkRequest r(request);
         CNetworkUtils::ignoreSslVerification(r);
-        QWriteLocker locker(&m_accessManagerLock);
         QNetworkReply *reply = this->m_accessManager.post(r, multiPart);
         if (callback)
         {
@@ -242,6 +282,16 @@ namespace BlackCore
     QStringList CApplication::arguments()
     {
         return QCoreApplication::arguments();
+    }
+
+    void CApplication::processEventsFor(int milliseconds)
+    {
+        const QTime end = QTime::currentTime().addMSecs(milliseconds);
+        while (QTime::currentTime() <= end)
+        {
+            QCoreApplication::processEvents();
+            QThread::msleep(100);
+        }
     }
 
     bool CApplication::useContexts(const CCoreFacadeConfig &coreConfig)
@@ -380,6 +430,7 @@ namespace BlackCore
             this->m_started = this->asyncWebAndContextStart();
         }
         this->m_startUpCompleted = true;
+        emit this->startUpCompleted(this->m_started);
     }
 
     bool CApplication::asyncWebAndContextStart()

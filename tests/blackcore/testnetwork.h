@@ -11,11 +11,8 @@
 #define BLACKCORETEST_TESTNETWORK_H
 
 //! \cond PRIVATE_TESTS
-
-/*!
- * \file
- * \ingroup testblackcore
- */
+//! \file
+//! \ingroup testblackcore
 
 #include "blackcore/networkvatlib.h"
 #include "blackcore/data/globalsetup.h"
@@ -24,7 +21,6 @@
 
 namespace BlackCoreTest
 {
-
     /*!
      * INetwork implementation classes tests
      */

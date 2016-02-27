@@ -84,6 +84,8 @@ namespace BlackCoreTest
             qDebug() << "DISCONNECTED";
         })
         .wait(10);
+
+        QThread::msleep(250); // make sure the last debug messages are written
     }
 
     bool CTestNetwork::pingServer(const CServer &server)

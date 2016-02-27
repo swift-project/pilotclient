@@ -21,10 +21,6 @@
 
 namespace BlackCoreTest
 {
-
-    /*
-     * Starting main, equivalent to QTEST_APPLESS_MAIN for multiple test classes.
-     */
     int CBlackCoreTestMain::unitMain(int argc, char *argv[])
     {
         int status = 0;

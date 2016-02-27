@@ -8,15 +8,11 @@
  */
 
 //! \cond PRIVATE_TESTS
-
-/*!
- * \file
- * \ingroup testblackcore
- */
+//! \file
+//! \ingroup testblackcore
 
 #include "testreaders.h"
-#include "expect.h"
-#include "blackcore/data/globalsetup.h"
+#include "blackcore/application.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airlineicaocode.h"
@@ -32,54 +28,67 @@ namespace BlackCoreTest
 {
     CTestReaders::CTestReaders(QObject *parent) :
         QObject(parent),
-        m_icaoReader(this),
-        m_modelReader(this)
+        m_icaoReader(new CIcaoDataReader(this)),
+        m_modelReader(new CModelDataReader(this))
     { }
+
+    CTestReaders::~CTestReaders()
+    {
+        this->m_icaoReader->gracefulShutdown();
+        this->m_modelReader->gracefulShutdown();
+    }
 
     void CTestReaders::readIcaoData()
     {
-        CUrl url(m_setup.get().dbIcaoReaderUrl());
+        const CUrl url(sApp->getGlobalSetup().dbIcaoReaderUrl());
         if (!this->pingServer(url)) { return; }
-        m_icaoReader.start();
-        Expect e(&this->m_icaoReader);
-        EXPECT_UNIT(e)
-        .send(&CIcaoDataReader::readInBackgroundThread, CEntityFlags::AllIcaoEntities, QDateTime())
-        .expect(&CIcaoDataReader::dataRead, [url]()
+        m_icaoReader->start();
+        m_icaoReader->readInBackgroundThread(CEntityFlags::AllIcaoEntities, QDateTime());
+
+        // expect does not work here, as I receive multiple signals for all entities and read states
+        // I have to run my "own event loop"
+        for (int i = 0; i < 60; i++)
         {
-            qDebug() << "Read ICAO data from" << url.getFullUrl();
-        })
-        .wait(10);
+            CApplication::processEventsFor(500);
+            if (this->m_icaoReader->getAircraftIcaoCodesCount() > 0 && this->m_icaoReader->getAirlineIcaoCodesCount() > 0)
+            {
+                break;
+            }
+        }
 
-        QVERIFY2(this->m_icaoReader.getAircraftIcaoCodesCount() > 0, "No aircraft ICAOs");
-        QVERIFY2(this->m_icaoReader.getAirlineIcaoCodesCount() > 0, "No airline ICAOs");
+        QVERIFY2(this->m_icaoReader->getAircraftIcaoCodesCount() > 0, "No aircraft ICAOs");
+        QVERIFY2(this->m_icaoReader->getAirlineIcaoCodesCount() > 0, "No airline ICAOs");
 
-        CAircraftIcaoCode aircraftIcao(this->m_icaoReader.getAircraftIcaoCodes().front());
-        CAirlineIcaoCode airlineIcao(this->m_icaoReader.getAirlineIcaoCodes().front());
-        QVERIFY2(aircraftIcao.hasCompleteData(), "Missing data for aircraft ICAO");
-        QVERIFY2(airlineIcao.hasCompleteData(), "Missing data for airline ICAO");
+        const CAircraftIcaoCode aircraftIcao(this->m_icaoReader->getAircraftIcaoCodes().frontOrDefault());
+        const CAirlineIcaoCode airlineIcao(this->m_icaoReader->getAirlineIcaoCodes().frontOrDefault());
+        QVERIFY2(aircraftIcao.hasDesignator(), "Missing data for aircraft ICAO");
+        QVERIFY2(airlineIcao.hasValidDesignator(), "Missing data for airline ICAO");
+
+        CApplication::processEventsFor(2500); // make sure events are processed
     }
 
     void CTestReaders::readModelData()
     {
-        CUrl url(m_setup.get().dbModelReaderUrl());
+        const CUrl url(sApp->getGlobalSetup().dbModelReaderUrl());
         if (!this->pingServer(url)) { return; }
-        m_modelReader.start();
-        Expect e(&this->m_modelReader);
-        EXPECT_UNIT(e)
-        .send(&CModelDataReader::readInBackgroundThread, CEntityFlags::DistributorLiveryModel, QDateTime())
-        .expect(&CModelDataReader::dataRead, [url]()
+        m_modelReader->start();
+        m_modelReader->readInBackgroundThread(CEntityFlags::ModelEntity, QDateTime());
+
+        for (int i = 0; i < 120; i++)
         {
-            qDebug() << "Read model data " << url;
-        })
-        .wait(10);
+            CApplication::processEventsFor(500);
+            if (this->m_modelReader->getModelsCount() > 0)
+            {
+                break;
+            }
+        }
 
-        QVERIFY2(this->m_modelReader.getDistributorsCount() > 0, "No distributors");
-        QVERIFY2(this->m_modelReader.getLiveriesCount() > 0, "No liveries");
+        QVERIFY2(this->m_modelReader->getModelsCount() > 0, "No models");
 
-        CLivery livery(this->m_modelReader.getLiveries().front());
-        CDistributor distributor(this->m_modelReader.getDistributors().front());
-        QVERIFY2(livery.hasCompleteData(), "Missing data for livery");
-        QVERIFY2(distributor.hasCompleteData(), "Missing data for distributor");
+        const CAircraftModel model(m_modelReader->getModels().frontOrDefault());
+        QVERIFY2(model.getLivery().hasCompleteData(), "Missing data for livery");
+
+        CApplication::processEventsFor(2500); // make sure events are processed
     }
 
     bool CTestReaders::pingServer(const CUrl &url)
