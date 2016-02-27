@@ -14,7 +14,6 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/databasereader.h"
-#include "blackcore/data/globalsetup.h"
 #include "blackmisc/countrylist.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
@@ -130,8 +129,6 @@ namespace BlackCore
         mutable QReadWriteLock m_lockAirline;
         mutable QReadWriteLock m_lockAircraft;
         mutable QReadWriteLock m_lockCountry;
-
-        BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
 
         //! Base URL
         BlackMisc::Network::CUrl getBaseUrl() const;

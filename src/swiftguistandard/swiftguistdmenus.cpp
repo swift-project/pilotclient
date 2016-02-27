@@ -9,8 +9,7 @@
 
 #include "swiftguistd.h"
 #include "ui_swiftguistd.h"
-#include "blackmisc/datacache.h"
-#include "blackmisc/settingscache.h"
+#include "blackcore/application.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/components/settingscomponent.h"
 #include "blackgui/components/logcomponent.h"
@@ -131,7 +130,7 @@ void SwiftGuiStd::ps_onMenuClicked()
     }
     else if (sender == this->ui->menu_InternalsSetup)
     {
-        QString setup(this->m_setup.get().convertToQString("\n", true));
+        QString setup(sApp->getGlobalSetup().convertToQString("\n", true));
         this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(setup);
         this->displayConsole();
     }

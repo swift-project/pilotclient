@@ -14,7 +14,6 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/databasereader.h"
-#include "blackcore/data/globalsetup.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
@@ -142,8 +141,6 @@ namespace BlackCore
         mutable QReadWriteLock m_lockDistributor;
         mutable QReadWriteLock m_lockLivery;
         mutable QReadWriteLock m_lockModels;
-
-        BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
 
         //! Base URL
         BlackMisc::Network::CUrl getBaseUrl() const;

@@ -13,7 +13,6 @@
 #define BLACKCORE_VATSIMMETARREADER_H
 
 #include "blackcoreexport.h"
-#include "blackcore/data/globalsetup.h"
 #include "blackmisc/threadedreader.h"
 #include "blackmisc/weather/metardecoder.h"
 #include "blackmisc/weather/metarset.h"
@@ -70,7 +69,6 @@ namespace BlackCore
     private:
         BlackMisc::Weather::CMetarDecoder m_metarDecoder;
         BlackMisc::Weather::CMetarSet     m_metars;
-        BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
     };
 }
 #endif // guard

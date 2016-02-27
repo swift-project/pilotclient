@@ -177,7 +177,7 @@ namespace BlackCore
 
     CUrl CIcaoDataReader::getBaseUrl() const
     {
-        CUrl baseUrl(this->m_setup.get().dbIcaoReaderUrl());
+        const CUrl baseUrl(sApp->getGlobalSetup().dbIcaoReaderUrl());
         return baseUrl;
     }
 

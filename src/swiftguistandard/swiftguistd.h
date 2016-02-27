@@ -28,7 +28,6 @@
 #include "blackgui/mainwindowaccess.h"
 #include "blackcore/contextallinterfaces.h"
 #include "blackcore/actionbind.h"
-#include "blackcore/data/globalsetup.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/identifiable.h"
@@ -117,7 +116,6 @@ private:
     bool                                           m_init = false;
     BlackGui::CManagedStatusBar                    m_statusBar;
     BlackMisc::CLogSubscriber                      m_logSubscriber { this, &SwiftGuiStd::ps_displayStatusMessageInGui };
-    BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this};  //!< setup cache
 
     // contexts
     bool m_coreAvailable           = false;
