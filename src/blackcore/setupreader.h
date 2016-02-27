@@ -22,6 +22,7 @@
 #include <QTimer>
 #include <QNetworkReply>
 #include <QCommandLineOption>
+#include <atomic>
 
 namespace BlackCore
 {
@@ -34,8 +35,26 @@ namespace BlackCore
     class BLACKCORE_EXPORT CSetupReader : public QObject
     {
         Q_OBJECT
-
         friend class CApplication; //!< only using class
+
+    public:
+        //! Categories
+        static const BlackMisc::CLogCategoryList &getLogCategories();
+
+        //! Current setup
+        //! \threadsafe
+        BlackCore::Data::CGlobalSetup getSetup() const;
+
+        //! Update info
+        //! \threadsafe
+        BlackCore::Data::CUpdateInfo getUpdateInfo() const;
+
+    signals:
+        //! Setup has been read
+        void setupSynchronized(bool success);
+
+        //! Version bas been read
+        void updateInfoSynchronized(bool success);
 
     protected:
         //! Constructor
@@ -54,17 +73,12 @@ namespace BlackCore
         void gracefulShutdown();
 
         //! Setup loaded?
+        //! \threadsafe
         bool isSetupSyncronized() const { return m_setupSyncronized; }
 
         //! Version info loaded?
+        //! \threadsafe
         bool isUpdateSyncronized() const { return m_updateInfoSyncronized; }
-
-    signals:
-        //! Setup has been read
-        void setupSynchronized(bool success);
-
-        //! Version bas been read
-        void updateInfoSynchronized(bool success);
 
     private slots:
         //! Setup has been read
@@ -98,13 +112,13 @@ namespace BlackCore
         };
 
         bool    m_shutdown = false;
-        bool    m_setupSyncronized = false;
-        bool    m_updateInfoSyncronized = false;
+        std::atomic<bool> m_setupSyncronized { false };
+        std::atomic<bool> m_updateInfoSyncronized { false };
         QString m_localSetupFileValue;
         QString m_bootsrapUrlFileValue;
         BootsrapMode m_bootstrapMode;
-        BlackMisc::Network::CFailoverUrlList m_bootstrapUrls;
-        BlackMisc::Network::CFailoverUrlList m_updateInfoUrls;
+        BlackMisc::Network::CFailoverUrlList m_bootstrapUrls;  //!< location of setup files
+        BlackMisc::Network::CFailoverUrlList m_updateInfoUrls; //!< location of info files
         BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this, &CSetupReader::ps_setupChanged};  //!< data cache setup
         BlackMisc::CData<BlackCore::Data::UpdateInfo>  m_updateInfo {this};                             //!< data cache update info
 
@@ -129,9 +143,6 @@ namespace BlackCore
 
         //! Read for development environment?
         static bool isForDevelopment();
-
-        //! Categories
-        const BlackMisc::CLogCategoryList &cats();
     };
 } // ns
 

@@ -52,16 +52,16 @@ namespace BlackCore
         {
             // initialized by local file for testing
             emit this->setupSynchronized(true);
-            return CStatusMessage(cats(), CStatusMessage::SeverityInfo, "Using local bootstrap file: " + this->m_localSetupFileValue);
+            return CStatusMessage(this, CStatusMessage::SeverityInfo, "Using local bootstrap file: " + this->m_localSetupFileValue);
         }
         else if (this->m_bootstrapMode == CacheOnly)
         {
             m_setup.synchronize();
-            CGlobalSetup currentSetup = m_setup.get();
+            CGlobalSetup currentSetup = m_setup.getCopy();
             this->m_updateInfoUrls = currentSetup.updateInfoFileUrls();
             emit this->setupSynchronized(true);
             emit this->updateInfoSynchronized(true);
-            return CStatusMessage(cats(), CStatusMessage::SeverityInfo, "Cache only setup, using it as it is");
+            return CStatusMessage(this, CStatusMessage::SeverityInfo, "Cache only setup, using it as it is");
         }
         else
         {
@@ -74,7 +74,7 @@ namespace BlackCore
 
             // if ever loaded add those URLs
             m_setup.synchronize();
-            CGlobalSetup currentSetup = m_setup.get();
+            CGlobalSetup currentSetup = m_setup.getCopy();
             if (currentSetup.wasLoaded())
             {
                 if (this->m_bootstrapMode != Explicit || this->m_bootstrapUrls.isEmpty())
@@ -86,13 +86,13 @@ namespace BlackCore
 
             if (this->m_bootstrapUrls.isEmpty())
             {
-                return CStatusMessage(cats(), CStatusMessage::SeverityError, "No bootstrap URLs, cannot load setup");
+                return CStatusMessage(this, CStatusMessage::SeverityError, "No bootstrap URLs, cannot load setup");
             }
             else
             {
                 this->m_bootstrapUrls.removeDuplicates();
                 this->ps_readSetup(); // start reading
-                return CStatusMessage(cats(), CStatusMessage::SeverityInfo, "Will start loading setup");
+                return CStatusMessage(this, CStatusMessage::SeverityInfo, "Will start loading setup");
             }
         }
     }
@@ -139,10 +139,12 @@ namespace BlackCore
 
     void CSetupReader::ps_readSetup()
     {
-        CUrl url(this->m_bootstrapUrls.obtainNextWorkingUrl());
+        const CUrl url(this->m_bootstrapUrls.obtainNextWorkingUrl());
         if (url.isEmpty())
         {
-            CLogMessage(this).warning("Cannot read setup, failed URLs: %1") << this->m_bootstrapUrls.getFailedUrls();
+            CLogMessage(this).warning("Cannot read setup, URLs: %1, failed URLs: %2")
+                    << this->m_bootstrapUrls
+                    << this->m_bootstrapUrls.getFailedUrls();
             emit setupSynchronized(false);
             return;
         }
@@ -152,10 +154,12 @@ namespace BlackCore
 
     void CSetupReader::ps_readUpdateInfo()
     {
-        CUrl url(this->m_updateInfoUrls.obtainNextWorkingUrl());
+        const CUrl url(this->m_updateInfoUrls.obtainNextWorkingUrl());
         if (url.isEmpty())
         {
-            CLogMessage(this).warning("Cannot read update info, failed URLs: %1") << this->m_updateInfoUrls.getFailedUrls();
+            CLogMessage(this).warning("Cannot read update info, URLs: %1, failed URLs: %2")
+                    << this->m_updateInfoUrls
+                    << this->m_updateInfoUrls.getFailedUrls();
             emit updateInfoSynchronized(false);
             return;
         }
@@ -252,7 +256,8 @@ namespace BlackCore
             }
             else
             {
-                CGlobalSetup currentSetup = m_setup.get();
+                const CGlobalSetup currentSetup = m_setup.get();
+                this->m_updateInfoUrls = currentSetup.updateInfoFileUrls();
                 CGlobalSetup loadedSetup;
                 loadedSetup.convertFromJson(Json::jsonObjectFromString(setupJson));
                 loadedSetup.markAsLoaded(true);
@@ -278,7 +283,7 @@ namespace BlackCore
                     CStatusMessage m = m_setup.set(loadedSetup, loadedSetup.getMSecsSinceEpoch());
                     if (m.isWarningOrAbove())
                     {
-                        m.setCategories(cats());
+                        m.setCategories(getLogCategories());
                         CLogMessage(this).preformatted(m);
                         emit setupSynchronized(false);
                         return; // issue with cache
@@ -361,7 +366,7 @@ namespace BlackCore
                     CStatusMessage m = m_updateInfo.set(loadedUpdateInfo, loadedUpdateInfo.getMSecsSinceEpoch());
                     if (!m.isEmpty())
                     {
-                        m.setCategories(cats());
+                        m.setCategories(getLogCategories());
                         CLogMessage(this).preformatted(m);
                         emit updateInfoSynchronized(false);
                         return; // issue with cache
@@ -394,10 +399,19 @@ namespace BlackCore
         }
     } // function
 
-    const CLogCategoryList &CSetupReader::cats()
+    const CLogCategoryList &CSetupReader::getLogCategories()
     {
-        static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::webservice()}));
+        static const CLogCategoryList cats({ CLogCategory("swift.setupreader"), CLogCategory::webservice()});
         return cats;
     }
 
+    CGlobalSetup CSetupReader::getSetup() const
+    {
+        return m_setup.getCopy();
+    }
+
+    CUpdateInfo CSetupReader::getUpdateInfo() const
+    {
+        return m_updateInfo.getCopy();
+    }
 } // namespace
