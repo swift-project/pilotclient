@@ -38,6 +38,12 @@ namespace BlackMisc
 
             //! Construct from a base class object.
             CWeatherGrid(const CSequence<CGridPoint> &other);
+
+            //! CAVOK grid
+            static const BlackMisc::Weather::CWeatherGrid &getCavokGrid();
+
+            //! Thunderstorm grid
+            static const BlackMisc::Weather::CWeatherGrid &getThunderStormGrid();
         };
 
     } //namespace
