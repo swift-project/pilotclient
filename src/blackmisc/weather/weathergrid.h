@@ -33,6 +33,9 @@ namespace BlackMisc
             //! Default constructor.
             CWeatherGrid() = default;
 
+            //! Initializer list constructor.
+            CWeatherGrid(std::initializer_list<CGridPoint> il) : CSequence<CGridPoint>(il) {}
+
             //! Construct from a base class object.
             CWeatherGrid(const CSequence<CGridPoint> &other);
         };
