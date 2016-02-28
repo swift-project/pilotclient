@@ -28,6 +28,7 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Weather;
 
 namespace
 {
@@ -189,7 +190,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::isConnected() const
         {
-            return m_service && m_traffic;
+            return m_service && m_traffic && m_weather;
         }
 
         bool CSimulatorXPlane::connectTo()
@@ -198,8 +199,9 @@ namespace BlackSimPlugin
             m_conn = QDBusConnection::sessionBus(); // TODO make this configurable
             m_service = new CXBusServiceProxy(m_conn, this);
             m_traffic = new CXBusTrafficProxy(m_conn, this);
+            m_weather = new CXBusWeatherProxy(m_conn, this);
 
-            if (m_service->isValid() && m_traffic->isValid() && m_traffic->initialize())
+            if (m_service->isValid() && m_traffic->isValid() && m_weather->isValid() && m_traffic->initialize())
             {
                 // FIXME duplication
                 connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::ps_emitOwnAircraftModelChanged);
@@ -209,6 +211,10 @@ namespace BlackSimPlugin
                 m_traffic->updateInstalledModels();
                 m_watcher->setConnection(m_conn);
                 emitSimulatorCombinedStatus();
+
+                // Pull weather data from core.
+                // Since we don't get weather data from core yet, use hard coded weather.
+                injectWeatherGrid(CWeatherGrid::getCavokGrid());
                 return true;
             }
             else
@@ -230,8 +236,10 @@ namespace BlackSimPlugin
             m_watcher->setConnection(m_conn);
             delete m_service;
             delete m_traffic;
+            delete m_weather;
             m_service = nullptr;
             m_traffic = nullptr;
+            m_weather = nullptr;
             emitSimulatorCombinedStatus();
             return true;
         }
@@ -242,8 +250,10 @@ namespace BlackSimPlugin
             m_watcher->setConnection(m_conn);
             delete m_service;
             delete m_traffic;
+            delete m_weather;
             m_service = nullptr;
             m_traffic = nullptr;
+            m_weather = nullptr;
             emitSimulatorCombinedStatus();
         }
 
@@ -506,6 +516,62 @@ namespace BlackSimPlugin
                 this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
             }
             return true;
+        }
+
+        void CSimulatorXPlane::injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid)
+        {
+            m_weather->setUseRealWeather(false);
+
+            // todo: find the closest
+            CGridPoint gridPoint = weatherGrid.front();
+
+            // todo: find the closest
+            const CVisibilityLayer visibilityLayer = gridPoint.getVisibilityLayers().frontOrDefault();
+            m_weather->setVisibility(visibilityLayer.getVisibility().value(CLengthUnit::m()));
+
+            const CTemperatureLayer temperatureLayer = gridPoint.getTemperatureLayers().frontOrDefault();
+            m_weather->setTemperature(temperatureLayer.getTemperature().value(CTemperatureUnit::C()));
+            m_weather->setDewPoint(temperatureLayer.getDewPoint().value(CTemperatureUnit::C()));
+
+            CPressure pressure(989.1875, CPressureUnit::hPa());
+            m_weather->setQNH(pressure.value(CPressureUnit::inHg()));
+
+            m_weather->setPrecipitationRatio(1.0);
+            m_weather->setThunderstormRatio(1.0);
+
+            int layerNumber = 0;
+            const CCloudLayerList cloudLayers = gridPoint.getCloudLayers();
+            for (const auto &cloudLayer : cloudLayers)
+            {
+                int base = cloudLayer.getBase().value(CLengthUnit::m());
+                int top = cloudLayer.getCeiling().value(CLengthUnit::m());
+
+                int coverage = 0;
+                switch(cloudLayer.getCoverage())
+                {
+                case CCloudLayer::None: coverage = 0; break;
+                case CCloudLayer::Few: coverage = 2; break;
+                case CCloudLayer::Scattered: coverage = 3; break;
+                case CCloudLayer::Broken: coverage = 4; break;
+                case CCloudLayer::Overcast: coverage = 6; break;
+                default: coverage = 0;
+                }
+
+                // Clear = 0, High Cirrus = 1, Scattered = 2, Broken = 3, Overcast = 4, Stratus = 5
+                int type = 0;
+                switch(cloudLayer.getClouds())
+                {
+                case CCloudLayer::NoClouds: type = 0; break;
+                case CCloudLayer::Cirrus: type = 1; break;
+                case CCloudLayer::Stratus: type = 5; break;
+                //case CCloudLayer::Cumulus: cloud.Type = 9; break;
+                //case CCloudLayer::Thunderstorm: cloud.Type = 10; break;
+                default: type = 0;
+                }
+
+                m_weather->setCloudLayer(layerNumber, base, top, type, coverage);
+                layerNumber++;
+            }
         }
 
         BlackCore::ISimulator *CSimulatorXPlaneFactory::create(const CSimulatorPluginInfo &info,

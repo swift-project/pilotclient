@@ -17,6 +17,7 @@
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/pixmap.h"
+#include "blackmisc/weather/weathergrid.h"
 #include "plugins/simulator/xplaneconfig/simulatorxplaneconfig.h"
 #include <QDBusConnection>
 
@@ -136,6 +137,9 @@ namespace BlackSimPlugin
             void ps_installedModelsUpdated(const QStringList &modelStrings, const QStringList &icaos, const QStringList &airlines, const QStringList &liveries);
 
         private:
+            //! Inject weather grid to simulator
+            void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
+
             QDBusConnection m_conn { "default" };
             QDBusServiceWatcher *m_watcher { nullptr };
             CXBusServiceProxy *m_service { nullptr };
