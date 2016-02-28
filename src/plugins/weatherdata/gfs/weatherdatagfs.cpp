@@ -246,7 +246,7 @@ namespace BlackWxPlugin
                     GfsIsobaricLayer isobaricLayer = isobaricLayerIt.value();
                     CAltitude level(isobaricLayerIt.key(), CAltitude::MeanSeaLevel, CLengthUnit::ft());
 
-                    CTemperatureLayer temperature(level, CTemperature(isobaricLayer.temperature, CTemperatureUnit::K()), isobaricLayer.relativeHumidity);
+                    CTemperatureLayer temperature(level, CTemperature(isobaricLayer.temperature, CTemperatureUnit::K()), {}, isobaricLayer.relativeHumidity);
                     temperatureLayers.insert(temperature);
 
                     double windDirection = -1 * CMathUtils::rad2deg(std::atan2(-isobaricLayer.windU, isobaricLayer.windV));

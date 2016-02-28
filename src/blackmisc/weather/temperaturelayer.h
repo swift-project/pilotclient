@@ -42,7 +42,10 @@ namespace BlackMisc
             CTemperatureLayer() = default;
 
             //! Constructor
-            CTemperatureLayer(const BlackMisc::Aviation::CAltitude &level, const PhysicalQuantities::CTemperature &value, double relativeHumidity);
+            CTemperatureLayer(const BlackMisc::Aviation::CAltitude &level,
+                              const PhysicalQuantities::CTemperature &temperature,
+                              const PhysicalQuantities::CTemperature &dewPoint,
+                              double relativeHumidity);
 
             //! Set level
             void setLevel(const BlackMisc::Aviation::CAltitude &level) { m_level = level; }
@@ -55,6 +58,12 @@ namespace BlackMisc
 
             //! Get temperature
             PhysicalQuantities::CTemperature getTemperature() const { return m_temperature; }
+
+            //! Set dew point
+            void setDewPoint(const PhysicalQuantities::CTemperature &value) { m_dewPoint = value; }
+
+            //! Get dew point
+            PhysicalQuantities::CTemperature getDewPoint() const { return m_dewPoint; }
 
             //! Set relative humidity
             void setRelativeHumidity(double value) { m_relativeHumidity = value; }
@@ -75,6 +84,7 @@ namespace BlackMisc
             BLACK_ENABLE_TUPLE_CONVERSION(CTemperatureLayer)
             BlackMisc::Aviation::CAltitude m_level;
             PhysicalQuantities::CTemperature m_temperature;
+            PhysicalQuantities::CTemperature m_dewPoint;
             double m_relativeHumidity = 0;
         };
     } // namespace
@@ -84,6 +94,7 @@ Q_DECLARE_METATYPE(BlackMisc::Weather::CTemperatureLayer)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Weather::CTemperatureLayer, (
                                    attr(o.m_level),
                                    attr(o.m_temperature),
+                                   attr(o.m_dewPoint),
                                    attr(o.m_relativeHumidity)
 ))
 

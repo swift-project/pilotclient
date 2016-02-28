@@ -23,8 +23,11 @@ namespace BlackMisc
     namespace Weather
     {
 
-        CTemperatureLayer::CTemperatureLayer(const CAltitude &level, const CTemperature &value, double relativeHumidity) :
-            m_level(level), m_temperature(value), m_relativeHumidity(relativeHumidity)
+        CTemperatureLayer::CTemperatureLayer(const CAltitude &level,
+                                             const CTemperature &value,
+                                             const CTemperature &dewPoint,
+                                             double relativeHumidity) :
+            m_level(level), m_temperature(value), m_dewPoint(dewPoint), m_relativeHumidity(relativeHumidity)
         { }
 
         CVariant CTemperatureLayer::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
