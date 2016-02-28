@@ -590,7 +590,7 @@ namespace BlackMisc
                 ceiling *= 100;
                 if (!ok) return false;
 
-                CCloudLayer cloudLayer(CAltitude(ceiling, CAltitude::AboveGround, CLengthUnit::ft()), getCoverage().value(coverageAsString));
+                CCloudLayer cloudLayer(CAltitude(ceiling, CAltitude::AboveGround, CLengthUnit::ft()), {}, getCoverage().value(coverageAsString));
                 metar.addCloudLayer(cloudLayer);
                 QString cb_tcu = match.captured("cb_tcu");
                 if (!cb_tcu.isEmpty()) { }

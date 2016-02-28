@@ -38,6 +38,24 @@ namespace BlackMisc
                 Overcast
             };
 
+            //! Cloud type
+            enum Clouds
+            {
+                NoClouds,
+                Cirrus,
+                Stratus,
+                Cumulus,
+                Thunderstorm
+            };
+
+            //! Precipitation Type
+            enum Precipitation
+            {
+                NoPrecipitation,
+                Rain,
+                Snow
+            };
+
             //! Properties by index
             enum ColumnIndex
             {
@@ -50,7 +68,17 @@ namespace BlackMisc
             CCloudLayer() = default;
 
             //! Constructor
-            CCloudLayer(BlackMisc::Aviation::CAltitude ceiling, Coverage coverage);
+            CCloudLayer(BlackMisc::Aviation::CAltitude base,
+                        BlackMisc::Aviation::CAltitude ceiling,
+                        Coverage coverage);
+
+            //! Constructor
+            CCloudLayer(BlackMisc::Aviation::CAltitude base,
+                        BlackMisc::Aviation::CAltitude ceiling,
+                        int precipitationRate,
+                        Precipitation precipitation,
+                        Clouds clouds,
+                        Coverage coverage);
 
             //! Set base
             void setBase(const BlackMisc::Aviation::CAltitude &base) { m_base = base; }
@@ -63,6 +91,24 @@ namespace BlackMisc
 
             //! Get ceiling
             BlackMisc::Aviation::CAltitude getCeiling() const { return m_ceiling; }
+
+            //! Set precipitation rate
+            void setPrecipitationRate(int rate) { m_precipitationRate = rate; }
+
+            //! Get precipitation rate
+            int getPrecipitationRate() const { return m_precipitationRate; }
+
+            //! Set precipitation
+            void setPrecipitation(Precipitation type) { m_precipitation = type; }
+
+            //! Get precipitation
+            Precipitation getPrecipitation() const { return m_precipitation; }
+
+            //! Set cloud type
+            void setClouds(Clouds type) { m_clouds = type; }
+
+            //! Get cloud type
+            Clouds getClouds() const { return m_clouds; }
 
             //! Set coverage
             void setCoverage(Coverage coverage) { m_coverage = coverage; }
@@ -89,6 +135,9 @@ namespace BlackMisc
             BLACK_ENABLE_TUPLE_CONVERSION(CCloudLayer)
             BlackMisc::Aviation::CAltitude m_base;
             BlackMisc::Aviation::CAltitude m_ceiling;
+            int m_precipitationRate = 0;
+            Precipitation m_precipitation = NoPrecipitation;
+            Clouds m_clouds = NoClouds;
             Coverage m_coverage;
             int m_coveragePercent;
         };
@@ -98,8 +147,13 @@ namespace BlackMisc
 Q_DECLARE_METATYPE(BlackMisc::Weather::CCloudLayer)
 Q_DECLARE_METATYPE(BlackMisc::Weather::CCloudLayer::Coverage)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Weather::CCloudLayer, (
-    attr(o.m_ceiling),
-    attr(o.m_coverage)
+                                   attr(o.m_base),
+                                   attr(o.m_ceiling),
+                                   attr(o.m_precipitationRate),
+                                   attr(o.m_precipitation),
+                                   attr(o.m_clouds),
+                                   attr(o.m_coverage),
+                                   attr(o.m_coveragePercent)
 ))
 
 #endif // guard

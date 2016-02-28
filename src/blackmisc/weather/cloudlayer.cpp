@@ -22,8 +22,20 @@ namespace BlackMisc
     namespace Weather
     {
 
-        CCloudLayer::CCloudLayer(CAltitude ceiling, Coverage coverage) :
-            m_ceiling(ceiling), m_coverage(coverage)
+        CCloudLayer::CCloudLayer(BlackMisc::Aviation::CAltitude base,
+                                 BlackMisc::Aviation::CAltitude ceiling,
+                                 Coverage coverage) :
+            m_ceiling(ceiling), m_base(base), m_coverage(coverage)
+        { }
+
+        CCloudLayer::CCloudLayer(BlackMisc::Aviation::CAltitude base,
+                                 BlackMisc::Aviation::CAltitude ceiling,
+                                 int precipitationRate,
+                                 Precipitation precipitation,
+                                 Clouds clouds,
+                                 Coverage coverage) :
+            m_ceiling(ceiling), m_base(base), m_precipitationRate(precipitationRate),
+            m_precipitation(precipitation), m_clouds(clouds), m_coverage(coverage)
         { }
 
         CVariant CCloudLayer::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
