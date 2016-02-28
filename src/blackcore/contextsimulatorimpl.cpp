@@ -69,6 +69,7 @@ namespace BlackCore
         }
 
         ISimulatorListener *listener = m_plugins->getListener(simulatorInfo.getIdentifier());
+        Q_ASSERT(listener);
         QMetaObject::invokeMethod(listener, "stop");
     }
 
@@ -396,7 +397,7 @@ namespace BlackCore
             m_listenersThread.start(QThread::LowPriority);
         }
 
-        ISimulatorListener *listener = m_plugins->getListener(simulatorInfo.getIdentifier());
+        ISimulatorListener *listener = m_plugins->createListener(simulatorInfo.getIdentifier());
         Q_ASSERT_X(listener, Q_FUNC_INFO, "No listener");
 
         if (listener->thread() != &m_listenersThread)
@@ -584,7 +585,7 @@ namespace BlackCore
         for (const auto &info : getAvailableSimulatorPlugins())
         {
             ISimulatorListener *listener = m_plugins->getListener(info.getIdentifier());
-            QMetaObject::invokeMethod(listener, "stop");
+            if(listener) { QMetaObject::invokeMethod(listener, "stop"); }
         }
     }
 

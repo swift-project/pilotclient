@@ -47,7 +47,12 @@ namespace BlackCore
         //! Get simulator factory from the plugin
         ISimulatorFactory *getFactory(const QString &pluginId);
 
-        //! Get simulator listener from the plugin
+        //! Create simulator listener from the plugin
+        //! In case one is existing already, it is returned instead.
+        ISimulatorListener *createListener(const QString &pluginId);
+
+        //! Get previously created simulator listener from the plugin
+        //! Returns nullptr if listener is not yet created
         ISimulatorListener *getListener(const QString &pluginId);
 
         //! Get all simulator driver plugins
