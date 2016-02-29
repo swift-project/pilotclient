@@ -85,7 +85,7 @@ namespace BlackGui
             {
                 this->setModeLogin(true);
                 this->displayOverlayMessages(status);
-                CLogMessage(this).preformatted(status);
+                CLogMessage::preformatted(status);
             }
         }
 

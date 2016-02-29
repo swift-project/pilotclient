@@ -76,7 +76,7 @@ namespace BlackCore
             if (!m.isEmpty())
             {
                 m.setCategories(getLogCategories());
-                CLogMessage(this).preformatted(m);
+                CLogMessage::preformatted(m);
             }
 
             // global setup
@@ -541,7 +541,7 @@ namespace BlackCore
 
     void CApplication::severeStartupProblem(const CStatusMessage &message)
     {
-        CLogMessage(this).preformatted(message);
+        CLogMessage::preformatted(message);
         this->cmdLineErrorMessage(message.getMessage());
         this->exit(EXIT_FAILURE);
 

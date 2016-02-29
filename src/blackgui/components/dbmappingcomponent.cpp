@@ -476,7 +476,7 @@ namespace BlackGui
                 CStatusMessage msg = m_cachedVPilotModels.set(models);
                 if (msg.isWarningOrAbove())
                 {
-                    CLogMessage(this).preformatted(msg);
+                    CLogMessage::preformatted(msg);
                 }
                 else
                 {

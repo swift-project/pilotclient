@@ -137,7 +137,7 @@ namespace BlackSimPlugin
         {
             CStatusMessage msg;
             CPixmap pm(m_aircraftCfgParser->iconForModel(modelString, msg));
-            if (!msg.isEmpty()) { CLogMessage(this).preformatted(msg);}
+            if (!msg.isEmpty()) { CLogMessage::preformatted(msg);}
             return pm;
         }
 

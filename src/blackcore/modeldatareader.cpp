@@ -213,7 +213,7 @@ namespace BlackCore
         CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (res.hasErrorMessage())
         {
-            CLogMessage(this).preformatted(res.lastWarningOrAbove());
+            CLogMessage::preformatted(res.lastWarningOrAbove());
             emit dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFailed, 0);
             return;
         }
@@ -251,7 +251,7 @@ namespace BlackCore
         CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (res.hasErrorMessage())
         {
-            CLogMessage(this).preformatted(res.lastWarningOrAbove());
+            CLogMessage::preformatted(res.lastWarningOrAbove());
             emit dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFailed, 0);
             return;
         }
@@ -287,7 +287,7 @@ namespace BlackCore
         CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (res.hasErrorMessage())
         {
-            CLogMessage(this).preformatted(res.lastWarningOrAbove());
+            CLogMessage::preformatted(res.lastWarningOrAbove());
             emit dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFailed, 0);
             return;
         }

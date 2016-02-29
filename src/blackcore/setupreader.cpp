@@ -279,7 +279,7 @@ namespace BlackCore
                     if (m.isWarningOrAbove())
                     {
                         m.setCategories(getLogCategories());
-                        CLogMessage(this).preformatted(m);
+                        CLogMessage::preformatted(m);
                         emit setupSynchronized(false);
                         return; // issue with cache
                     }
@@ -361,7 +361,7 @@ namespace BlackCore
                     if (!m.isEmpty())
                     {
                         m.setCategories(getLogCategories());
-                        CLogMessage(this).preformatted(m);
+                        CLogMessage::preformatted(m);
                         emit updateInfoSynchronized(false);
                         return; // issue with cache
                     }
