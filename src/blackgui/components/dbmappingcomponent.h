@@ -213,16 +213,16 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CDbMappingComponent> ui;
-            QScopedPointer<CDbAutoStashingComponent> m_autoStashDialog;
-            QScopedPointer<CDbModelMappingModifyComponent> m_modelModifyDialog;
-            BlackMisc::Simulation::FsCommon::CVPilotRulesReader           m_vPilotReader;                //!< read vPilot rules
+            QScopedPointer<CDbAutoStashingComponent>                      m_autoStashDialog;
+            QScopedPointer<CDbModelMappingModifyComponent>                m_modelModifyDialog;
+            BlackMisc::Simulation::FsCommon::CVPilotRulesReader           m_vPilotReader; //!< read vPilot rules
+            std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>  m_modelLoader;  //!< read own aircraft models
             BlackMisc::CData<BlackCore::Data::VPilotAircraftModels>       m_cachedVPilotModels { this, &CDbMappingComponent::ps_onVPilotCacheChanged }; //!< cache for latest vPilot rules
-            std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>  m_modelLoader;                 //!< read own aircraft models
             BlackMisc::CData<BlackCore::Data::OwnSimulatorAircraftModels> m_cachedOwnModels { this, &CDbMappingComponent::ps_ownModelsCacheChanged };   //!< cache for own installed models
-            BlackMisc::CData<BlackCore::Data::AuthenticatedUser>          m_user {this, &CDbMappingComponent::ps_userChanged};
+            BlackMisc::CData<BlackCore::Data::AuthenticatedDbUser>        m_swiftDbUser {this, &CDbMappingComponent::ps_userChanged};
             bool m_vPilot1stInit       = true;
             bool m_withVPilot          = false;
-            bool m_autoFilterInDbViews = false; //!< automatically filter the DB view by the current model
+            bool m_autoFilterInDbViews = false;  //!< automatically filter the DB view by the current model
 
             //! Init vPilot if rights and suitable
             void initVPilotLoading();

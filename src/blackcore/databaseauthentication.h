@@ -59,8 +59,8 @@ namespace BlackCore
         void ps_userChanged();
 
     private:
-        BlackMisc::CData<BlackCore::Data::GlobalSetup>       m_setup {this}; //!< data cache
-        BlackMisc::CData<BlackCore::Data::AuthenticatedUser> m_user {this, &CDatabaseAuthenticationService::ps_userChanged};
+        BlackMisc::CData<BlackCore::Data::GlobalSetup>         m_setup {this}; //!< data cache
+        BlackMisc::CData<BlackCore::Data::AuthenticatedDbUser> m_swiftDbUser {this, &CDatabaseAuthenticationService::ps_userChanged};
         bool m_shutdown = false;
     };
 } // namespace

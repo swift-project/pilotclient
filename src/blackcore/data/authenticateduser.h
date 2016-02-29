@@ -20,11 +20,12 @@ namespace BlackCore
 {
     namespace Data
     {
-        //! Trait for for global setup data
-        struct AuthenticatedUser : public BlackMisc::CDataTrait<BlackMisc::Network::CAuthenticatedUser>
+        //! Trait for for global cached DB user.
+        //! This user has authenticated with the swift DB.
+        struct AuthenticatedDbUser : public BlackMisc::CDataTrait<BlackMisc::Network::CAuthenticatedUser>
         {
             //! Key in data cache
-            static const char *key() { return "readers/global/user"; }
+            static const char *key() { return "dbuser"; }
 
             //! Default value
             static const BlackMisc::Network::CAuthenticatedUser &defaultValue()

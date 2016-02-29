@@ -19,9 +19,9 @@ namespace BlackGui
 
         CForm::~CForm() { }
 
-        const BlackMisc::Network::CAuthenticatedUser &CForm::getUser() const
+        const BlackMisc::Network::CAuthenticatedUser &CForm::getSwiftDbUser() const
         {
-            return this->m_user.get();
+            return this->m_swiftDbUser.get();
         }
 
         void CForm::ps_userChanged()

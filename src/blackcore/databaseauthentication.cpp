@@ -78,7 +78,7 @@ namespace BlackCore
         url.setQuery("logoff=true");
         QNetworkRequest request(CNetworkUtils::getNetworkRequest(url));
         sApp->getFromNetwork(request, { this, &CDatabaseAuthenticationService::ps_parseServerResponse });
-        this->m_user.set(CAuthenticatedUser());
+        this->m_swiftDbUser.set(CAuthenticatedUser());
     }
 
     void CDatabaseAuthenticationService::ps_parseServerResponse(QNetworkReply *nwReplyPtr)
@@ -124,7 +124,7 @@ namespace BlackCore
                     msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "User has no roles"));
                 }
             }
-            this->m_user.set(user);
+            this->m_swiftDbUser.set(user);
             emit userAuthenticationFinished(user, msgs);
         }
         else

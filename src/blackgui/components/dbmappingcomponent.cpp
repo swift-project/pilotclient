@@ -91,7 +91,7 @@ namespace BlackGui
         void CDbMappingComponent::initVPilotLoading()
         {
             bool canUseVPilot = true; // general flag if vPilot can be used/not used
-            this->m_withVPilot = canUseVPilot && this->m_user.get().isMappingAdmin();
+            this->m_withVPilot = canUseVPilot && this->m_swiftDbUser.get().isMappingAdmin();
             static const QString tabName(this->ui->tw_ModelsToBeMapped->tabText(TabVPilot));
 
             if (this->m_vPilot1stInit && canUseVPilot)
