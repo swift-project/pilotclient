@@ -23,16 +23,15 @@
 
 namespace BlackGui
 {
+    class CGuiApplication;
+
     //! Reads and provides style sheets
     class BLACKGUI_EXPORT CStyleSheetUtility : public QObject
     {
         Q_OBJECT
+        friend class CGuiApplication;
 
     public:
-
-        //! Read the *.qss files
-        bool read();
-
         //! Style for given file name
         QString style(const QString &fileName) const;
 
@@ -136,6 +135,9 @@ namespace BlackGui
         void styleSheetsChanged();
 
     private:
+        //! Read the *.qss files
+        bool read();
+
         QMap<QString, QString> m_styleSheets; //!< filename, stylesheet
         QScopedPointer<QSettings> m_iniFile;
 

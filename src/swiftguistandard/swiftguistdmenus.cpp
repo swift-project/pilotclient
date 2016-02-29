@@ -10,7 +10,7 @@
 #include "swiftguistd.h"
 #include "ui_swiftguistd.h"
 #include "blackcore/application.h"
-#include "blackgui/stylesheetutility.h"
+#include "blackgui/guiapplication.h"
 #include "blackgui/components/settingscomponent.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackmisc/statusmessagelist.h"
@@ -58,7 +58,7 @@ void SwiftGuiStd::ps_onMenuClicked()
     }
     else if (sender == this->ui->menu_FileReloadStyleSheets)
     {
-        CStyleSheetUtility::instance().read();
+        sGui->reloadStyleSheets();
     }
     else if (sender == this->ui->menu_WindowFont)
     {
@@ -136,13 +136,7 @@ void SwiftGuiStd::ps_onMenuClicked()
     }
     else if (sender == this->ui->menu_InternalsCompileInfo)
     {
-        QString project(CProject::convertToQString("\n"));
-        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(project);
-        this->displayConsole();
-    }
-    else if (sender == this->ui->menu_InternalsEnvVars)
-    {
-        QString project(CProject::getEnvironmentVariables());
+        QString project(sGui->convertToQString("\n"));
         this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(project);
         this->displayConsole();
     }

@@ -137,7 +137,6 @@
      </widget>
      <addaction name="menuTemplates"/>
      <addaction name="menu_InternalsMetatypes"/>
-     <addaction name="menu_InternalsEnvVars"/>
      <addaction name="menu_InternalsSetup"/>
      <addaction name="menu_InternalsCompileInfo"/>
     </widget>

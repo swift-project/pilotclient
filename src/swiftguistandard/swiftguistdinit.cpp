@@ -38,10 +38,6 @@ void SwiftGuiStd::init()
     this->setVisible(false); // hide all, so no flashing windows during init
     sGui->initMainApplicationWindow(this);
 
-    // init window
-    this->setWindowTitle(CProject::versionStringDevBetaInfo());
-    this->initStyleSheet();
-
     // with frameless window, we shift menu and statusbar into central widget
     // http://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5
     if (this->isFrameless())
@@ -110,7 +106,7 @@ void SwiftGuiStd::init()
     this->initMenuIcons();
 
     // info
-    this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CProject::swiftVersionString());
+    this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(sGui->swiftVersionString());
     this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CProject::compiledWithInfo());
 
     // update timers

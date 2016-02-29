@@ -100,9 +100,9 @@ namespace BlackCore
     bool CSetupReader::parseCmdLineArguments()
     {
         this->m_bootsrapUrlFileValue = CGlobalSetup::buildBootstrapFileUrl(
-                                           sApp->getParserOptionValue(this->m_cmdBootstrapUrl)
+                                           sApp->getParserValue(this->m_cmdBootstrapUrl)
                                        );
-        this->m_bootstrapMode = stringToEnum(sApp->getParserOptionValue(this->m_cmdBootstrapMode));
+        this->m_bootstrapMode = stringToEnum(sApp->getParserValue(this->m_cmdBootstrapMode));
         QUrl url(this->m_bootsrapUrlFileValue);
 
         // check on local file
@@ -208,7 +208,7 @@ namespace BlackCore
         if (!file.exists())
         {
             // relative name?
-            QString dir(CProject::getSwiftPrivateResourceDir());
+            QString dir(sApp->getCmdSwiftPrivateSharedDir());
             if (dir.isEmpty()) { return false; }
 
             // no version for local files, as those come withe the current code
@@ -226,11 +226,6 @@ namespace BlackCore
         s.setDevelopment(true);
         m_setup.set(s);
         return true;
-    }
-
-    bool CSetupReader::isForDevelopment()
-    {
-        return CProject::useDevelopmentSetup();
     }
 
     void CSetupReader::ps_parseSetupFile(QNetworkReply *nwReplyPtr)
@@ -343,7 +338,6 @@ namespace BlackCore
                 CUpdateInfo currentUpdateInfo(m_updateInfo.get()); // from cache
                 CUpdateInfo loadedUpdateInfo;
                 loadedUpdateInfo.convertFromJson(Json::jsonObjectFromString(setupJson));
-                loadedUpdateInfo.setDevelopment(isForDevelopment()); // always update, regardless what persistent setting says
                 if (lastModified > 0 && lastModified > loadedUpdateInfo.getMSecsSinceEpoch()) { loadedUpdateInfo.setMSecsSinceEpoch(lastModified); }
                 bool sameVersionLoaded = (loadedUpdateInfo == currentUpdateInfo);
                 if (sameVersionLoaded)

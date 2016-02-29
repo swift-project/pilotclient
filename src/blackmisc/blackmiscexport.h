@@ -40,4 +40,8 @@
 #  define BLACKMISC_EXPORT_TEMPLATE
 #endif
 
-#endif // BLACKMISC_MACROS_H
+//! make a define quoted (normally to be used then with QString)
+#define BLACK_STRINGIFY_X(v) #v
+#define BLACK_STRINGIFY(v) BLACK_STRINGIFY_X(v)
+
+#endif // guard

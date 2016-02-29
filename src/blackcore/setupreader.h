@@ -111,7 +111,7 @@ namespace BlackCore
             CacheOnly
         };
 
-        bool    m_shutdown = false;
+        bool m_shutdown = false;
         std::atomic<bool> m_setupSyncronized { false };
         std::atomic<bool> m_updateInfoSyncronized { false };
         QString m_localSetupFileValue;
@@ -140,9 +140,6 @@ namespace BlackCore
 
         //! Convert string to mode
         static BootsrapMode stringToEnum(const QString &s);
-
-        //! Read for development environment?
-        static bool isForDevelopment();
     };
 } // ns
 

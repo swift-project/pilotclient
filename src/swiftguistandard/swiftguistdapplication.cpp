@@ -19,6 +19,7 @@ CSwiftGuiStdApplication::CSwiftGuiStdApplication() : CGuiApplication("swift pilo
     this->addParserOption(this->m_cmdFacadeMode);
     this->addWindowModeOption();
     this->addDBusAddressOption();
+    this->addVatlibOptions();
 }
 
 bool CSwiftGuiStdApplication::startHookIn()
@@ -28,7 +29,7 @@ bool CSwiftGuiStdApplication::startHookIn()
     const QString dBusAddress(this->getCmdDBusAddressValue());
     if (this->isParserOptionSet(this->m_cmdFacadeMode))
     {
-        const QString v(this->getParserOptionValue(this->m_cmdFacadeMode));
+        const QString v(this->getParserValue(this->m_cmdFacadeMode));
         coreMode = CoreModes::stringToCoreMode(v);
     }
 

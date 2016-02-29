@@ -63,7 +63,7 @@ namespace BlackGui
     {
         if (this->isParserOptionSet(m_cmdWindowMode))
         {
-            const QString v(this->getParserOptionValue(this->m_cmdWindowMode));
+            const QString v(this->getParserValue(this->m_cmdWindowMode));
             return CEnableForFramelessWindow::stringToWindowMode(v);
         }
         else
@@ -91,7 +91,7 @@ namespace BlackGui
     void CGuiApplication::initMainApplicationWindow(QWidget *mainWindow) const
     {
         if (!mainWindow) { return; }
-        const QString name(this->getApplicationNameAndVersion());
+        const QString name(this->getApplicationNameVersionBetaDev());
         mainWindow->setObjectName(QCoreApplication::applicationName());
         mainWindow->setWindowTitle(name);
         mainWindow->setWindowIcon(m_windowIcon);
@@ -137,6 +137,11 @@ namespace BlackGui
         BLACK_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
         if (!m) { return false; }
         return m->displayInOverlayWindow(message);
+    }
+
+    bool CGuiApplication::reloadStyleSheets() const
+    {
+        return CStyleSheetUtility::instance().read();
     }
 
     void CGuiApplication::cmdLineHelpMessage()

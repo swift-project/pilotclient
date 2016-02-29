@@ -53,11 +53,11 @@ namespace BlackGui
 
             // add swift test servers in case we have no servers:
             // this is debug/bootstrap feature we can continue to test when something goes wrong
-            if (serverList.isEmpty() && CProject::isRunningInBetaOrDeveloperEnvironment())
+            if (serverList.isEmpty() && (CProject::isBetaTest() || sGui->isRunningInDeveloperEnvironment()))
             {
                 serverList.push_back(m_setup.get().fsdTestServersPlusHardcodedServers());
+                this->ui->tvp_Servers->updateContainer(serverList);
             }
-            this->ui->tvp_Servers->updateContainer(serverList);
         }
 
         void CSettingsNetworkServersComponent::ps_serverSelected(const QModelIndex &index)

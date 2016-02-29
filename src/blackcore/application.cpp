@@ -10,6 +10,7 @@
 #include "application.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/setupreader.h"
+#include "blackcore/networkvatlib.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/contextapplication.h"
 #include "blackcore/registermetadata.h"
@@ -22,6 +23,7 @@
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/verify.h"
+#include "blackmisc/stringutils.h"
 #include <QStandardPaths>
 #include <QFile>
 #include <QFileInfo>
@@ -93,9 +95,16 @@ namespace BlackCore
         this->gracefulShutdown();
     }
 
-    QString CApplication::getApplicationNameAndVersion() const
+    const QString &CApplication::getApplicationNameAndVersion() const
     {
-        return QCoreApplication::instance()->applicationName() + " " + CProject::version();
+        static const QString s(QCoreApplication::instance()->applicationName() + " " + CProject::version());
+        return s;
+    }
+
+    const QString &CApplication::getApplicationNameVersionBetaDev() const
+    {
+        static const QString s(QCoreApplication::instance()->applicationName() + " " + this->versionStringDevBetaInfo());
+        return s;
     }
 
     Data::CGlobalSetup CApplication::getGlobalSetup() const
@@ -184,6 +193,76 @@ namespace BlackCore
     bool CApplication::isApplicationThread() const
     {
         return CThreadUtils::isCurrentThreadApplicationThread();
+    }
+
+    const QString &CApplication::versionStringDevBetaInfo() const
+    {
+        if (isRunningInDeveloperEnvironment() && CProject::isBetaTest())
+        {
+            static const QString s(CProject::version() + " [DEV, BETA]");
+            return s;
+        }
+        if (isRunningInDeveloperEnvironment())
+        {
+            static const QString s(CProject::version() + " [DEV]");
+            return s;
+        }
+        if (CProject::isBetaTest())
+        {
+            static const QString s(CProject::version() + " [BETA]");
+            return s;
+        }
+        return CProject::version();
+    }
+
+    const QString &CApplication::swiftVersionString() const
+    {
+        static const QString s(QString("swift %1").arg(versionStringDevBetaInfo()));
+        return s;
+    }
+
+    const char *CApplication::swiftVersionChar()
+    {
+        static const QByteArray a(swiftVersionString().toUtf8());
+        return a.constData();
+    }
+
+    bool CApplication::isRunningInDeveloperEnvironment() const
+    {
+        if (!CProject::canRunInDeveloperEnvironment()) { return false; }
+        if (!this->m_parser.value(this->m_cmdDevelopment).isEmpty())
+        {
+            // explicit value
+            const QString v(this->m_parser.value(this->m_cmdDevelopment));
+            return stringToBool(v);
+        }
+        else if (this->isSetupSyncronized())
+        {
+            // assume value from setup
+            return this->getGlobalSetup().isDevelopment();
+        }
+        return false;
+    }
+
+    QString CApplication::getEnvironmentInfoString(const QString &separator) const
+    {
+        QString env("Beta: ");
+        env.append(boolToYesNo(CProject::isBetaTest()));
+        env = env.append(" dev.env,: ").append(boolToYesNo(isRunningInDeveloperEnvironment()));
+        env = env.append(separator);
+        env.append("Windows: ").append(boolToYesNo(CProject::isRunningOnWindowsNtPlatform()));
+        return env;
+    }
+
+    QString CApplication::getInfoString(const QString &separator) const
+    {
+        QString str(CProject::version());
+        str = str.append(" ").append(CProject::isReleaseBuild() ? "Release build" : "Debug build");
+        str = str.append(separator);
+        str = str.append(getEnvironmentInfoString(separator));
+        str = str.append(separator);
+        str.append(CProject::compiledWithInfo(false));
+        return str;
     }
 
     QNetworkReply *CApplication::getFromNetwork(const CUrl &url, const CSlot<void(QNetworkReply *)> &callback)
@@ -296,14 +375,15 @@ namespace BlackCore
 
     bool CApplication::useContexts(const CCoreFacadeConfig &coreConfig)
     {
-        Q_ASSERT_X(this->m_parsed, Q_FUNC_INFO, "Call this after parsing");
+        Q_ASSERT_X(this->m_parsed, Q_FUNC_INFO, "Call this function after parsing");
 
         this->m_useContexts = true;
         this->m_coreFacadeConfig = coreConfig;
 
         if (!this->m_useWebData)
         {
-            this->useWebDataServices(CWebReaderFlags::AllReaders, CWebReaderFlags::FromCache);
+            bool s = this->useWebDataServices(CWebReaderFlags::AllReaders, CWebReaderFlags::FromCache);
+            if (!s) { return false; }
         }
         return this->startCoreFacade(); // will do nothing if setup is not yet loaded
     }
@@ -311,6 +391,13 @@ namespace BlackCore
     bool CApplication::useWebDataServices(const CWebReaderFlags::WebReader webReader, CWebReaderFlags::DbReaderHint hint)
     {
         Q_ASSERT_X(this->m_webDataServices.isNull(), Q_FUNC_INFO, "Services already started");
+        BLACK_VERIFY_X(QSslSocket::supportsSsl(), Q_FUNC_INFO, "No SSL");
+        if (!QSslSocket::supportsSsl())
+        {
+            this->cmdLineErrorMessage("No SSL supported, can`t be used");
+            return false;
+        }
+
         this->m_webReader = webReader;
         this->m_dbReaderHint = hint;
         this->m_useWebData = true;
@@ -368,6 +455,16 @@ namespace BlackCore
         this->m_parser.setApplicationDescription(m_applicationName);
         this->m_cmdHelp = this->m_parser.addHelpOption();
         this->m_cmdVersion = this->m_parser.addVersionOption();
+
+        this->m_cmdDevelopment = QCommandLineOption({ "dev", "developemnt" },
+                                 QCoreApplication::translate("application", "Dev.system feature?"),
+                                 "development");
+        this->addParserOption(this->m_cmdDevelopment);
+
+        this->m_cmdSharedDir = QCommandLineOption({ "shared", "shareddir" },
+                               QCoreApplication::translate("application", "Local shred directory."),
+                               "shared");
+        this->addParserOption(this->m_cmdSharedDir);
     }
 
     void CApplication::initEnvironment()
@@ -478,6 +575,11 @@ namespace BlackCore
         return this->m_parser.addOption(option);
     }
 
+    bool CApplication::addParserOptions(const QList<QCommandLineOption> &options)
+    {
+        return this->m_parser.addOptions(options);
+    }
+
     void CApplication::addDBusAddressOption()
     {
         this->m_cmdDBusAddress = QCommandLineOption({ "dbus", "dbus-address", "dbusaddress" },
@@ -486,11 +588,16 @@ namespace BlackCore
         this->addParserOption(this->m_cmdDBusAddress);
     }
 
+    void CApplication::addVatlibOptions()
+    {
+        this->addParserOptions(CNetworkVatlib::getCmdLineOptions());
+    }
+
     QString CApplication::getCmdDBusAddressValue() const
     {
         if (this->isParserOptionSet(this->m_cmdDBusAddress))
         {
-            const QString v(this->getParserOptionValue(m_cmdDBusAddress));
+            const QString v(this->getParserValue(m_cmdDBusAddress));
             const QString dBusAddress(CDBusServer:: normalizeAddress(v));
             return dBusAddress;
         }
@@ -498,6 +605,11 @@ namespace BlackCore
         {
             return "";
         }
+    }
+
+    QString CApplication::getCmdSwiftPrivateSharedDir() const
+    {
+        return this->m_parser.value(this->m_cmdSharedDir);
     }
 
     bool CApplication::isParserOptionSet(const QString &option) const
@@ -510,12 +622,12 @@ namespace BlackCore
         return this->m_parser.isSet(option);
     }
 
-    QString CApplication::getParserOptionValue(const QString &option) const
+    QString CApplication::getParserValue(const QString &option) const
     {
         return this->m_parser.value(option).trimmed();
     }
 
-    QString CApplication::getParserOptionValue(const QCommandLineOption &option) const
+    QString CApplication::getParserValue(const QCommandLineOption &option) const
     {
         return this->m_parser.value(option).trimmed();
     }
@@ -523,9 +635,14 @@ namespace BlackCore
     bool CApplication::parse()
     {
         if (this->m_parsed) { return m_parsed; }
+        if (CProject::isLifetimeExpired())
+        {
+            this->cmdLineErrorMessage("Program exired " + CProject::getEol().toString());
+            return false;
+        }
 
         // we call parse because we also want to display a GUI error message when applicable
-        QStringList args(QCoreApplication::instance()->arguments());
+        const QStringList args(QCoreApplication::instance()->arguments());
         if (!this->m_parser.parse(args))
         {
             this->cmdLineErrorMessage(this->m_parser.errorText());

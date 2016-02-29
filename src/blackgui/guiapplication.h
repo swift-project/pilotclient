@@ -71,6 +71,9 @@ namespace BlackGui
         virtual bool displayInOverlayWindow(const BlackMisc::CStatusMessage &message) override;
         //! }@
 
+        //! Reload style sheets
+        bool reloadStyleSheets() const;
+
         //! Set icon
         //! \note Pixmap requires a valid QApplication, so it cannot be passed as constructor parameter
         static void setWindowIcon(const QPixmap &icon);
@@ -78,7 +81,7 @@ namespace BlackGui
         //! Main application window
         static QWidget *mainApplicationWindow();
 
-        //! Main window access
+        //! Main window access interface
         static BlackGui::IMainWindowAccess *mainWindowAccess();
 
         //! Exit application, perform graceful shutdown and exit

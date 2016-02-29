@@ -12,7 +12,7 @@
 #include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/components/datainfoareacomponent.h"
 #include "blackgui/components/logcomponent.h"
-#include "blackgui/stylesheetutility.h"
+#include "blackgui/guiapplication.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/settingscache.h"
 #include "blackcore/webdataservices.h"
@@ -37,7 +37,7 @@ void CSwiftData::ps_onMenuClicked()
     QObject *sender = QObject::sender();
     if (sender == this->ui->menu_FileReloadStyleSheets)
     {
-        CStyleSheetUtility::instance().read();
+        sGui->reloadStyleSheets();
     }
     else if (sender == this->ui->menu_WindowFont)
     {
@@ -129,13 +129,7 @@ void CSwiftData::ps_onMenuClicked()
     }
     else if (sender == this->ui->menu_InternalsCompileInfo)
     {
-        QString project(CProject::convertToQString("\n"));
-        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(project);
-        this->displayConsole();
-    }
-    else if (sender == this->ui->menu_InternalsEnvVars)
-    {
-        QString project(CProject::getEnvironmentVariables());
+        QString project(sGui->convertToQString("\n"));
         this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(project);
         this->displayConsole();
     }
@@ -159,7 +153,7 @@ void CSwiftData::initDynamicMenus()
         Q_ASSERT_X(this->ui->comp_MainInfoArea->getDataInfoAreaComponent(), Q_FUNC_INFO, "Missing DB info area");
         this->ui->menu_Mapping->addAction(CIcons::database16(), "Load all DB data", this->ui->comp_MainInfoArea->getDataInfoAreaComponent(), SLOT(requestUpdateOfAllDbData()));
         this->ui->menu_Mapping->addAction(CIcons::load16(), "Load DB test data from disk", this->ui->comp_MainInfoArea->getDataInfoAreaComponent(), SLOT(readDbDataFromResourceDir()));
-        if (CProject::isRunningInDeveloperEnvironment())
+        if (sGui->isRunningInDeveloperEnvironment())
         {
             this->ui->menu_Mapping->addAction(CIcons::save16(), "Save DB test data to disk", this->ui->comp_MainInfoArea->getDataInfoAreaComponent(), SLOT(writeDbDataToResourceDir()));
         }

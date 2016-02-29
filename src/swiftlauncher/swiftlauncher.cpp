@@ -163,7 +163,7 @@ void CSwiftLauncher::initDBusGui()
 
 void CSwiftLauncher::initVersion()
 {
-    this->ui->le_CurrentVersion->setText(CProject::versionStringDevBetaInfo());
+    this->ui->le_CurrentVersion->setText(sGui->versionStringDevBetaInfo());
 }
 
 void CSwiftLauncher::initLogDisplay()

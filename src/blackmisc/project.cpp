@@ -18,9 +18,13 @@
 #include <QCoreApplication>
 #include <QProcessEnvironment>
 
+#if !defined(BLACK_VERSION)
+#error Missing version
+#endif
 
-#define BLACK_VERSION_STR_X(v) #v
-#define BLACK_VERSION_STR(v) BLACK_VERSION_STR_X(v)
+#if !defined(BLACK_EOL)
+#error Missing EOL
+#endif
 
 namespace BlackMisc
 {
@@ -122,43 +126,11 @@ namespace BlackMisc
     const QString &CProject::version()
     {
 #ifdef BLACK_VERSION
-        const static QString v(BLACK_VERSION_STR(BLACK_VERSION));
+        static const QString v(BLACK_STRINGIFY(BLACK_VERSION));
 #else
-        const static QString v("?");
+        static const QString v("?");
 #endif
         return v;
-    }
-
-    const QString &CProject::swiftVersionString()
-    {
-        static const QString s(QString("swift %1").arg(versionStringDevBetaInfo()));
-        return s;
-    }
-
-    const QString &CProject::versionStringDevBetaInfo()
-    {
-        if (isRunningInDeveloperEnvironment() && isBetaTest())
-        {
-            static const QString s(version() + " [DEV, BETA]");
-            return s;
-        }
-        if (isRunningInDeveloperEnvironment())
-        {
-            static const QString s(version() + " [DEV]");
-            return s;
-        }
-        if (isBetaTest())
-        {
-            static const QString s(version() + " [BETA]");
-            return s;
-        }
-        return version();
-    }
-
-    const char *CProject::swiftVersionChar()
-    {
-        static const QByteArray a(swiftVersionString().toUtf8());
-        return a.constData();
     }
 
     int CProject::versionMajor()
@@ -207,43 +179,36 @@ namespace BlackMisc
 
     bool CProject::isBetaTest()
     {
-        //! \todo however we do it
+#ifdef SWIFT_BETA
+        return true;
+#else
         return false;
+#endif
+    }
+
+    bool CProject::canRunInDeveloperEnvironment()
+    {
+        if (isBetaTest()) { return true; }
+        return !isShippedVersion();
+    }
+
+    bool CProject::isShippedVersion()
+    {
+#ifdef SWIFT_SHIPPED
+        return true;
+#else
+        return false;
+#endif
     }
 
     bool CProject::isRunningOnWindowsNtPlatform()
     {
 #ifdef Q_OS_WIN
         // QSysInfo::WindowsVersion only available on Win platforms
-        return (QSysInfo::WindowsVersion & QSysInfo::WV_NT_based) ? true : false;
+        return (QSysInfo::WindowsVersion & QSysInfo::WV_NT_based);
 #else
         return false;
 #endif
-    }
-
-    bool CProject::isRunningInDeveloperEnvironment()
-    {
-        static const bool dev = BlackMisc::stringToBool(envVarDevelopmentValue());
-        return dev;
-    }
-
-    bool CProject::useDevelopmentSetup()
-    {
-        static const QString v(envVarDevelopmentValue());
-        if (v.isEmpty())
-        {
-            // no explicit value
-            return isRunningInBetaOrDeveloperEnvironment();
-        }
-        else
-        {
-            return stringToBool(v);
-        }
-    }
-
-    bool CProject::isRunningInBetaOrDeveloperEnvironment()
-    {
-        return isBetaTest() || isRunningInDeveloperEnvironment();
     }
 
     QList<int> CProject::getVersionParts(const QString &versionString)
@@ -266,23 +231,6 @@ namespace BlackMisc
         return partsInt[index];
     }
 
-    const QString &CProject::envVarDevelopment()
-    {
-        static const QString s("SWIFT_DEV");
-        return s;
-    }
-
-    QString CProject::envVarDevelopmentValue()
-    {
-        return QProcessEnvironment::systemEnvironment().value(envVarDevelopment());
-    }
-
-    const QString &CProject::envVarPrivateSetupDir()
-    {
-        static const QString s("SWIFT_SETUP_DIR");
-        return s;
-    }
-
     const QString &CProject::swiftGuiExecutableName()
     {
         static const QString s("swiftguistd");
@@ -303,16 +251,29 @@ namespace BlackMisc
 
     const QStringList &CProject::swiftTeamDefaultServers()
     {
-        static const QStringList s( { "https://vatsim-germany.org:50443/mapping/public/shared", "http://ubuntu12/public/bootstrap/shared"});
+        static const QStringList s({ "https://vatsim-germany.org:50443/mapping/public/shared", "http://ubuntu12/public/bootstrap/shared"});
         return s;
     }
 
-    QString CProject::envVarPrivateSetupDirValue()
+    const QDateTime &CProject::getEol()
     {
-        return QProcessEnvironment::systemEnvironment().value(envVarPrivateSetupDir());
+        static const QString eol(BLACK_STRINGIFY(BLACK_EOL));
+        static const QDateTime dt(eol.isEmpty() ? QDateTime() : QDateTime::fromString(eol, "yyyyMMdd"));
+        return dt;
     }
 
-    //! Get application directory
+    bool CProject::isLifetimeExpired()
+    {
+        if (getEol().isValid())
+        {
+            return QDateTime::currentDateTime() > getEol();
+        }
+        else
+        {
+            return true;
+        }
+    }
+
     QString getApplicationDirImpl()
     {
         QFileInfo executable(QCoreApplication::applicationFilePath());
@@ -326,7 +287,6 @@ namespace BlackMisc
         return s;
     }
 
-    //! Get swift resource directory
     QString getSwiftResourceDirImpl()
     {
         QDir dir(CProject::getApplicationDir());
@@ -345,13 +305,6 @@ namespace BlackMisc
         return s;
     }
 
-    QString CProject::getSwiftPrivateResourceDir()
-    {
-        static const QString dir(envVarPrivateSetupDirValue());
-        return dir;
-    }
-
-    //! Get static database directory
     QString getSwiftStaticDbFilesDirImpl()
     {
         QString d(CProject::getSwiftResourceDir());
@@ -367,7 +320,6 @@ namespace BlackMisc
         return s;
     }
 
-    //! Get images directory
     QString getImagesDirImpl()
     {
         QString d(CProject::getSwiftResourceDir());
@@ -380,17 +332,6 @@ namespace BlackMisc
     {
         static const QString s(getImagesDirImpl());
         return s;
-    }
-
-    QString CProject::getEnvironmentVariables(const QString &separator)
-    {
-        QString e(envVarDevelopment());
-        e = e.append(": ").append(envVarDevelopmentValue());
-        e = e.append(separator);
-
-        e = e.append(envVarPrivateSetupDir());
-        e = e.append(": ").append(envVarPrivateSetupDirValue());
-        return e;
     }
 
     const QString &CProject::compiledWithInfo(bool shortVersion)
@@ -432,31 +373,6 @@ namespace BlackMisc
             return infoLong;
         }
     }
-
-    QString CProject::environmentInfo(const QString &separator)
-    {
-        QString env("Beta: ");
-        env.append(boolToYesNo(isBetaTest()));
-        env = env.append(" dev.env,: ").append(boolToYesNo(isRunningInDeveloperEnvironment()));
-        env = env.append(separator);
-        env.append("Windows: ").append(boolToYesNo(isRunningOnWindowsNtPlatform()));
-        return env;
-    }
-
-    QString CProject::convertToQString(const QString &separator)
-    {
-        QString str(version());
-        str = str.append(" ").append(isReleaseBuild() ? "Release build" : "Debug build");
-        str = str.append(separator);
-        str = str.append(environmentInfo(separator));
-        str = str.append(separator);
-        str.append(compiledWithInfo(false));
-        return str;
-    }
-
 } // ns
-
-#undef BLACK_VERSION_STR
-#undef BLACK_VERSION_STR_X
 
 //! \endcond

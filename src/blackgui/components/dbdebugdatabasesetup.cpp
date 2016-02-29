@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackgui/guiapplication.h"
 #include "blackmisc/project.h"
 #include "dbdebugdatabasesetup.h"
 #include "ui_dbdebugdatabasesetup.h"
@@ -23,7 +24,7 @@ namespace BlackGui
             ui(new Ui::CDbDebugDatabaseSetup)
         {
             ui->setupUi(this);
-            bool enabled = CProject::isRunningInDeveloperEnvironment();
+            bool enabled = sGui->isRunningInDeveloperEnvironment();
             this->setEnabled(enabled);
             if (!enabled)
             {

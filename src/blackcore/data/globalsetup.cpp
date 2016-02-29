@@ -23,7 +23,6 @@ namespace BlackCore
     {
         CGlobalSetup::CGlobalSetup() :
             ITimestampBased(0),
-            m_development(CProject::isRunningInDeveloperEnvironment()),
             m_dbRootDirectoryUrl("http://ubuntu12/swiftdatastore/public"),
             m_vatsimBookingsUrl("http://vatbook.euroutepro.com/xml2.php"),
             m_vatsimMetarsUrl("http://metar.vatsim.net/metar.php"),

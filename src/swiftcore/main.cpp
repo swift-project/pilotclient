@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
     CGuiApplication a("swift core", CIcons::swiftNova24());
     a.addWindowStateOption();
     a.addDBusAddressOption();
+    a.addVatlibOptions();
     a.addParserOption({{"r", "start"}, QCoreApplication::translate("main", "Start the server.")});
     a.addParserOption({{"c", "coreaudio"}, QCoreApplication::translate("main", "Audio in core.")});
     if (!a.parse()) { return EXIT_FAILURE; }

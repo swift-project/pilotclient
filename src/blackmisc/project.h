@@ -63,15 +63,6 @@ namespace BlackMisc
         //! Version info
         static const QString &version();
 
-        //! System's name and version
-        static const QString &swiftVersionString();
-
-        //! System's name and version
-        static const char *swiftVersionChar();
-
-        //! System's name and version + info if dev.environment / beta
-        static const QString &versionStringDevBetaInfo();
-
         //! Version major
         static int versionMajor();
 
@@ -90,17 +81,14 @@ namespace BlackMisc
         //! Beta test?
         static bool isBetaTest();
 
+        //! Can run in dev. environment
+        static bool canRunInDeveloperEnvironment();
+
+        //! Shipped version?
+        static bool isShippedVersion();
+
         //! Running on Windows NT platform?
         static bool isRunningOnWindowsNtPlatform();
-
-        //! Running in dev.environment, so on a programmers machine
-        static bool isRunningInDeveloperEnvironment();
-
-        //! Use development setup?
-        static bool useDevelopmentSetup();
-
-        //! Beta / dev.environment?
-        static bool isRunningInBetaOrDeveloperEnvironment();
 
         //! Application directory where current application is located
         static const QString &getApplicationDir();
@@ -108,32 +96,17 @@ namespace BlackMisc
         //! Where resource files (static DB files, ...) etc are located
         static const QString &getSwiftResourceDir();
 
-        //! Private resource dir for developer's own resource files
-        static QString getSwiftPrivateResourceDir();
-
         //! Where static DB files are located
         static const QString &getSwiftStaticDbFilesDir();
 
         //! Where images are located
         static const QString &getImagesDir();
 
-        //! Dump all env.variables
-        static QString getEnvironmentVariables(const QString &separator = QString("\n"));
-
         //! Info string about compilation
         static const QString &compiledWithInfo(bool shortVersion = true);
 
-        //! Env.information
-        static QString environmentInfo(const QString &separator = QString("\n"));
-
         //! Whole info
         static QString convertToQString(const QString &separator = QString("\n"));
-
-        //! Environment variable indicating "dev.environment"
-        static const QString &envVarDevelopment();
-
-        //! Environment variable private resources directory
-        static const QString &envVarPrivateSetupDir();
 
         //! Executable name for swift GUI, no(!) appendix
         static const QString &swiftGuiExecutableName();
@@ -147,6 +120,12 @@ namespace BlackMisc
         //! swift team default servers for DB, bootstrap etc.
         static const QStringList &swiftTeamDefaultServers();
 
+        //! End of lifetime
+        static const QDateTime &getEol();
+
+        //! Lifetime ended?
+        static bool isLifetimeExpired();
+
     private:
         //! Constructor
         CProject() {}
@@ -156,17 +135,6 @@ namespace BlackMisc
 
         //! Split version
         static int getMajorMinor(int index);
-
-        // --------------- env.vars. -------------
-        // centralized in one place here so we have an overview
-
-        //! Value
-        //! \return true|false
-        static QString envVarDevelopmentValue();
-
-        //! Value
-        //! \return directory path
-        static QString envVarPrivateSetupDirValue();
     };
 } // ns
 

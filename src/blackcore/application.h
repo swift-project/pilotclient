@@ -48,6 +48,7 @@ namespace BlackCore
      * - The core facade (aka core runtime) is now part of the application. It can be started via cmd line arguments.
      * - Settings are loaded
      * - Setup is loaded (load the so called bootsrap file) to find servers and other resources
+     * - An end of lifetime can be specified, aka time bombing
      *
      * \sa BlackGui::CGuiApplication for the GUI version of application
      */
@@ -69,7 +70,10 @@ namespace BlackCore
         virtual ~CApplication();
 
         //! Application name and version
-        QString getApplicationNameAndVersion() const;
+        const QString &getApplicationNameAndVersion() const;
+
+        //! Version, name beta and dev info
+        const QString &getApplicationNameVersionBetaDev() const;
 
         //! Global setup
         //! \threadsafe
@@ -93,6 +97,24 @@ namespace BlackCore
         //! Currently running in application thread?
         bool isApplicationThread() const;
 
+        //! String with beta, dev. and version
+        const QString &versionStringDevBetaInfo() const;
+
+        //! swift info string
+        const QString &swiftVersionString() const;
+
+        //! swift info string
+        const char *swiftVersionChar();
+
+        //! Running in dev.environment?
+        bool isRunningInDeveloperEnvironment() const;
+
+        //! Info string
+        QString getEnvironmentInfoString(const QString &separator) const;
+
+        //! To string
+        QString getInfoString(const QString &separator) const;
+
         //! Run event loop
         static int exec();
 
@@ -110,14 +132,23 @@ namespace BlackCore
         //! \name parsing of command line options
         //! @{
 
-        //! \copydoc QCommandLineParser::addOption(const QCommandLineOption &)
+        //! \copydoc QCommandLineParser::addOption
         bool addParserOption(const QCommandLineOption &option);
+
+        //! \copydoc QCommandLineParser::addOptions
+        bool addParserOptions(const QList<QCommandLineOption> &options);
 
         //! CMD line argument for DBus address
         void addDBusAddressOption();
 
         //! DBus address from CMD line, otherwise ""
         QString getCmdDBusAddressValue() const;
+
+        //! Add the VATLIB options
+        void addVatlibOptions();
+
+        //! Private resource dir for developer's own resource files
+        QString getCmdSwiftPrivateSharedDir() const;
 
         //! Delegates to QCommandLineParser::isSet
         bool isParserOptionSet(const QString &option) const;
@@ -126,10 +157,10 @@ namespace BlackCore
         bool isParserOptionSet(const QCommandLineOption &option) const;
 
         //! Delegates to QCommandLineParser::value
-        QString getParserOptionValue(const QString &option) const;
+        QString getParserValue(const QString &option) const;
 
         //! Delegates to QCommandLineParser::value
-        QString getParserOptionValue(const QCommandLineOption &option) const;
+        QString getParserValue(const QCommandLineOption &option) const;
 
         //! Display parser error message
         virtual void cmdLineErrorMessage(const QString &cmdLineErrorMessage) const;
@@ -258,6 +289,9 @@ namespace BlackCore
         QCommandLineOption m_cmdHelp {"help"};          //!< help option
         QCommandLineOption m_cmdVersion {"version"};    //!< version option
         QCommandLineOption m_cmdDBusAddress {"empty"};  //!< DBus address
+        QCommandLineOption m_cmdDevelopment {"dev"};    //!< Dev flag
+        QCommandLineOption m_cmdSharedDir {"shared"};   //!< Dev flag
+
         bool               m_parsed = false;            //!< Parsing accomplished?
         bool               m_started = false;           //!< started with success?
         bool               m_startUpCompleted = false;  //!< startup phase completed? Can mean startup failed
