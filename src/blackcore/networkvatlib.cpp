@@ -10,6 +10,7 @@
 //! \cond PRIVATE
 
 #include "networkvatlib.h"
+#include "application.h"
 #include "blackmisc/project.h"
 #include "blackmisc/logmessage.h"
 #include <QJsonDocument>
@@ -19,11 +20,13 @@
 static_assert(! std::is_abstract<BlackCore::CNetworkVatlib>::value, "Must implement all pure virtuals");
 static_assert(VAT_LIBVATLIB_VERSION == 905, "Wrong vatlib header installed");
 
-// TODO just placeholders to allow this to compile
-// This is just a test key and is NOT valid on the live network.
-// Replace it with the BoG assigned key before shipping the installer
-#define CLIENT_PUBLIC_ID 0xb9ba
-#define CLIENT_PRIVATE_KEY "727d1efd5cb9f8d2c28372469d922bb4"
+#if !defined(BLACK_CLIENT_PUBLIC_ID)
+#error Missing definition of id
+#endif
+
+#if !defined(BLACK_CLIENT_PRIVATE_KEY)
+#error Missing definition of pk
+#endif
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -35,7 +38,6 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {
-
     CNetworkVatlib::CNetworkVatlib(Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent)
         : INetwork(parent), COwnAircraftAware(ownAircraft),
           m_loginMode(LoginNormal),
@@ -69,9 +71,11 @@ namespace BlackCore
             clientCapabilities |= vatCapsStealth;
         }
 
-        m_net.reset(Vat_CreateNetworkSession(vatServerLegacyFsd, CProject::swiftVersionChar(),
+        static const QString pkDef(BLACK_STRINGIFY(BLACK_CLIENT_PRIVATE_KEY));
+        static const QByteArray pk(this->getCmdLineFsdKey().isEmpty() ? pkDef.toLocal8Bit() : this->getCmdLineFsdKey().toLocal8Bit());
+        m_net.reset(Vat_CreateNetworkSession(vatServerLegacyFsd, sApp->swiftVersionChar(),
                                              CProject::versionMajor(), CProject::versionMinor(),
-                                             "None", CLIENT_PUBLIC_ID, CLIENT_PRIVATE_KEY,
+                                             "None", BLACK_CLIENT_PUBLIC_ID, pk.constData(),
                                              clientCapabilities));
 
         Vat_SetStateChangeHandler(m_net.data(), onConnectionStatusChanged, this);
@@ -591,6 +595,25 @@ namespace BlackCore
         Vat_RequestMetar(m_net.data(), toFSD(airportIcao.asString()));
     }
 
+    const QList<QCommandLineOption> &CNetworkVatlib::getCmdLineOptions()
+    {
+        static const QList<QCommandLineOption> e;
+        static const QList<QCommandLineOption> opts
+        {
+            QCommandLineOption({ "key", "fsdkey" },
+            QCoreApplication::translate("application", "Key for FSD"),
+            "fsdkey")
+        };
+
+        // only in not officially shipped versions
+        return (CProject::isShippedVersion() && !CProject::isBetaTest()) ? e : opts;
+    }
+
+    QString CNetworkVatlib::getCmdLineFsdKey() const
+    {
+        return sApp->getParserValue("fsdkey").toLower();
+    }
+
     void CNetworkVatlib::sendCustomFsinnQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
@@ -643,7 +666,7 @@ namespace BlackCore
     /**********************************           shimlib callbacks           ************************************/
     /********************************** * * * * * * * * * * * * * * * * * * * ************************************/
 
-    //! Cast void* to a pointer of CNetworkVatlib
+//! Cast void* to a pointer of CNetworkVatlib
     CNetworkVatlib *cbvar_cast(void *cbvar)
     {
         return static_cast<CNetworkVatlib *>(cbvar);

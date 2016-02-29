@@ -23,13 +23,14 @@
 #include <QTextCodec>
 #include <QByteArray>
 #include <QMap>
+#include <QCommandLineOption>
 
 namespace BlackCore
 {
     //! Implementation of INetwork using the vatlib shim
     class BLACKCORE_EXPORT CNetworkVatlib :
-            public INetwork,
-            public BlackMisc::Simulation::COwnAircraftAware // network vatlib consumes own aircraft data and sets ICAO/callsign data
+        public INetwork,
+        public BlackMisc::Simulation::COwnAircraftAware // network vatlib consumes own aircraft data and sets ICAO/callsign data
     {
         Q_OBJECT
 
@@ -90,6 +91,12 @@ namespace BlackCore
         //! @{
         virtual void sendMetarQuery(const BlackMisc::Aviation::CAirportIcaoCode &airportIcao) override;
         //! @}
+
+        //! Cmd.line options this library can handle
+        static const QList<QCommandLineOption> &getCmdLineOptions();
+
+        //! Key if any from cmd.line arguments
+        QString getCmdLineFsdKey() const;
 
     private slots:
         void replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign);
@@ -189,6 +196,6 @@ namespace BlackCore
         CTokenBucket m_tokenBucket;
     };
 
-} //namespace BlackCore
+} //namespace
 
 #endif // guard
