@@ -26,10 +26,6 @@
 #include <QShortcut>
 #include <qcompilerdetection.h>
 
-#ifndef Q_CC_MINGW
-#include <QtWebEngineWidgets/QWebEngineView>
-#endif
-
 using namespace BlackGui;
 using namespace BlackCore;
 using namespace BlackCore::Data;
@@ -98,6 +94,16 @@ void CSwiftLauncher::mouseMoveEvent(QMouseEvent *event)
     if (!handleMouseMoveEvent(event)) { QDialog::mouseMoveEvent(event); }
 }
 
+void CSwiftLauncher::ps_displayLatestNews(QNetworkReply *reply)
+{
+    QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(reply);
+    if (nwReply->error() == QNetworkReply::NoError)
+    {
+        const QString html = nwReply->readAll().trimmed();
+        this->ui->te_LatestNews->setHtml(html);
+    }
+}
+
 void CSwiftLauncher::mousePressEvent(QMouseEvent *event)
 {
     if (!handleMousePressEvent(event)) { QDialog::mousePressEvent(event); }
@@ -106,6 +112,11 @@ void CSwiftLauncher::mousePressEvent(QMouseEvent *event)
 void CSwiftLauncher::init()
 {
     sGui->initMainApplicationWindow(this);
+
+    this->m_mwaOverlayFrame = this->ui->fr_SwiftLauncherMain;
+    this->m_mwaStatusBar = nullptr;
+    this->m_mwaLogComponent = this->ui->fr_SwiftLauncherLog;
+
     this->ui->lbl_NewVersionUrl->setTextFormat(Qt::RichText);
     this->ui->lbl_NewVersionUrl->setTextInteractionFlags(Qt::TextBrowserInteraction);
     this->ui->lbl_NewVersionUrl->setOpenExternalLinks(true);
@@ -131,22 +142,12 @@ void CSwiftLauncher::initStyleSheet()
     this->setStyleSheet(s);
 }
 
-void CSwiftLauncher::displayLatestNews()
+void CSwiftLauncher::loadLatestNews()
 {
-#ifndef Q_CC_MINGW
     CFailoverUrlList newsUrls(sGui->getGlobalSetup().swiftLatestNewsUrls());
-    QUrl newUrl(newsUrls.obtainNextWorkingUrl());
-
-    Q_UNUSED(newUrl);
-    /** Qt bug
-    QWebEngineView *view = new QWebEngineView(this->ui->pg_LatestNews);
-    if (view->url() != newUrl)
-    {
-        view->load(newUrl));
-    }
-    view->show();
-    **/
-#endif
+    const CUrl newsUrl(newsUrls.obtainNextWorkingUrl());
+    if (newsUrl.isEmpty()) { return; }
+    sGui->getFromNetwork(newsUrl, { this, &CSwiftLauncher::ps_displayLatestNews});
 }
 
 void CSwiftLauncher::initDBusGui()
@@ -313,7 +314,7 @@ void CSwiftLauncher::ps_loadedSetup(bool success)
         this->ui->lbl_NewVersionUrl->setText(hl.arg(urlStr).arg(urlStr).arg(latestVersion));
     }
 
-    this->displayLatestNews();
+    this->loadLatestNews();
 }
 
 void CSwiftLauncher::ps_changedCache()

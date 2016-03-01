@@ -12,14 +12,16 @@
 #ifndef SWIFTLAUNCHER_H
 #define SWIFTLAUNCHER_H
 
-#include <QDialog>
-#include <QScopedPointer>
+#include "blackgui/overlaymessagesframe.h"
+#include "blackgui/enableforframelesswindow.h"
+#include "blackgui/mainwindowaccess.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
 #include "blackcore/coremodeenums.h"
 #include "blackcore/settings/network.h"
-#include "blackgui/enableforframelesswindow.h"
-#include "blackgui/overlaymessagesframe.h"
+#include <QDialog>
+#include <QScopedPointer>
+#include <QNetworkReply>
 
 namespace Ui { class CSwiftLauncher; }
 
@@ -31,7 +33,8 @@ namespace Ui { class CSwiftLauncher; }
  */
 class CSwiftLauncher :
     public QDialog,
-    public BlackGui::CEnableForFramelessWindow
+    public BlackGui::CEnableForFramelessWindow,
+    public BlackGui::IMainWindowAccess
 {
     Q_OBJECT
 
@@ -58,12 +61,15 @@ protected:
     //! \copydoc QDialog::mouseMoveEvent
     void mouseMoveEvent(QMouseEvent *event) override;
 
+private slots:
+    void ps_displayLatestNews(QNetworkReply *reply);
+
 private:
     QScopedPointer<Ui::CSwiftLauncher>             ui;
     BlackMisc::CData<BlackCore::Data::UpdateInfo>  m_updateInfo { this, &CSwiftLauncher::ps_changedCache }; //!< version cache
-    QString     m_executable;
-    QStringList m_executableArgs;
-    BlackMisc::CSetting<BlackCore::Settings::Network::DBusServerAddress> m_dbusServerAddress { this };
+    BlackMisc::CSetting<BlackCore::Settings::Network::DBusServerAddress> m_dbusServerAddress { this };      //!< DBus address
+    QString         m_executable;
+    QStringList     m_executableArgs;
 
     //! Get core mode
     BlackCore::CoreModes::CoreMode getCoreMode() const;
@@ -90,7 +96,7 @@ private:
     void initLogDisplay();
 
     //! latest news
-    void displayLatestNews();
+    void loadLatestNews();
 
     //! Start the core
     void startSwiftCore();
